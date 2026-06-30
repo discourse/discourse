@@ -6,10 +6,10 @@ import DButton from "discourse/ui-kit/d-button";
 import ChatModalDeleteChannel from "discourse/plugins/chat/discourse/components/chat/modal/delete-channel";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 
 export default class ChatStyleguideChatModalDeleteChannel extends Component {

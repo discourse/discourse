@@ -12,10 +12,10 @@ import { i18n } from "discourse-i18n";
 import ChatUpload from "discourse/plugins/chat/discourse/components/chat-upload";
 import Collapser from "discourse/plugins/chat/discourse/components/collapser";
 import LazyVideo from "discourse/plugins/discourse-lazy-videos/discourse/components/lazy-video" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 import getVideoAttributes from "discourse/plugins/discourse-lazy-videos/lib/lazy-video-attributes" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 
 export default class ChatMessageCollapser extends Component {

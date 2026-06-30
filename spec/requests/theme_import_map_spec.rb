@@ -12,8 +12,8 @@ RSpec.describe "Theme cross-bundle plugin imports" do
 
   it "stubs imports of an absent plugin: null for optional, throwing for required" do
     theme.set_field(target: :extra_js, name: "discourse/initializers/cross-bundle.js", value: <<~JS)
-        import Optional from "discourse/plugins/absent-optional-plugin/lib/thing" with { discoursePlugin: "optional" };
-        import Required from "discourse/plugins/absent-required-plugin/lib/thing" with { discoursePlugin: "required" };
+        import Optional from "discourse/plugins/absent-optional-plugin/lib/thing" with { discourseImport: "optional" };
+        import Required from "discourse/plugins/absent-required-plugin/lib/thing" with { discourseImport: "required" };
         export default { name: "cross-bundle", initialize() { Optional(); Required(); } };
       JS
     theme.save!

@@ -8,7 +8,7 @@ import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import ChatChannel from "discourse/plugins/chat/discourse/components/chat-channel" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 
 export default class EmbedableChatChannel extends Component {

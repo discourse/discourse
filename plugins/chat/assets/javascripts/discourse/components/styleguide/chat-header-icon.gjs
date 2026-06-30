@@ -12,16 +12,16 @@ import {
   HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 
 export default class ChatStyleguideChatHeaderIcon extends Component {

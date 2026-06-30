@@ -7,10 +7,10 @@ import ReviewableTopicLink from "discourse/components/reviewable/topic-link";
 import highlightWatchedWords from "discourse/lib/highlight-watched-words";
 import { i18n } from "discourse-i18n";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 import ModelAccuracies from "../model-accuracies";
 

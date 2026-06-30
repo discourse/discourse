@@ -8,16 +8,16 @@ import Channel from "discourse/plugins/chat/discourse/components/chat/composer/c
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { CHANNEL_STATUSES } from "discourse/plugins/chat/discourse/models/chat-channel";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 
 export default class ChatStyleguideChatComposer extends Component {

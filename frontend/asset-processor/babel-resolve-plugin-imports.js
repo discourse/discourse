@@ -27,12 +27,12 @@ export default function (babel) {
 
   function isOptionalPluginImport(path) {
     const attribute = (path.node.attributes ?? []).find(
-      (a) => (a.key.name ?? a.key.value) === "discoursePlugin"
+      (a) => (a.key.name ?? a.key.value) === "discourseImport"
     );
     const mode = attribute?.value.value;
     if (![undefined, "optional", "required"].includes(mode)) {
       throw path.buildCodeFrameError(
-        `Invalid \`discoursePlugin\` import attribute "${mode}". Allowed values are "optional" and "required".`
+        `Invalid \`discourseImport\` import attribute "${mode}". Allowed values are "optional" and "required".`
       );
     }
     return mode !== "required";
@@ -40,7 +40,7 @@ export default function (babel) {
 
   return {
     manipulateOptions(_opts, parserOpts) {
-      // Allow the `with { discoursePlugin: ... }` attribute to parse.
+      // Allow the `with { discourseImport: ... }` attribute to parse.
       parserOpts.plugins.push("importAttributes");
     },
     pre() {

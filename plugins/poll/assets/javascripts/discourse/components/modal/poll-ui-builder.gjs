@@ -26,7 +26,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
 import generateCurrentDateMarkup from "discourse/plugins/discourse-local-dates/lib/generate-current-date-markup" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 
 export const BAR_CHART_TYPE = "bar";

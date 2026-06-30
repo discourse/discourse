@@ -5,10 +5,10 @@ import { next } from "@ember/runloop";
 import Item from "discourse/plugins/chat/discourse/components/chat/thread-list/item";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 
 export default class ChatStyleguideChatThreadListItem extends Component {

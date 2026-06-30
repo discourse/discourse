@@ -4,10 +4,10 @@ import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
 import ChatModalCreateChannel from "discourse/plugins/chat/discourse/components/chat/modal/create-channel";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 
 export default class ChatStyleguideChatModalCreateChannel extends Component {

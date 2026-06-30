@@ -6,10 +6,10 @@ import DButton from "discourse/ui-kit/d-button";
 import ChatModalToggleChannelStatus from "discourse/plugins/chat/discourse/components/chat/modal/toggle-channel-status";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example" with {
-  discoursePlugin: "optional",
+  discourseImport: "optional",
 };
 
 export default class ChatStyleguideChatModalToggleChannelStatus extends Component {
