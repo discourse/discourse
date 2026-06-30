@@ -1163,6 +1163,21 @@ TEXT
       expect(parsed_body[:reasoning_effort]).to eq("xhigh")
     end
 
+    it "collapses minimal to low since some models reject it outright" do
+      parsed_body = nil
+      stub_request(:post, "https://api.openai.com/v1/chat/completions").with(
+        body:
+          proc do |req_body|
+            parsed_body = JSON.parse(req_body, symbolize_names: true)
+            true
+          end,
+      ).to_return(status: 200, body: { choices: [{ message: { content: "test" } }] }.to_json)
+
+      endpoint.perform_completion!(dialect, user, { thinking_effort: "minimal" })
+
+      expect(parsed_body[:reasoning_effort]).to eq("low")
+    end
+
     it "strips temperature and top_p when reasoning_effort is set" do
       model.update!(provider_params: { reasoning_effort: "low" })
 

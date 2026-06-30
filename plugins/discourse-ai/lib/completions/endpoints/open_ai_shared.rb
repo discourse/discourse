@@ -6,6 +6,10 @@ module DiscourseAi
       module OpenAiShared
         OPEN_AI_REASONING_EFFORTS = %w[none minimal low medium high xhigh].freeze
         OPEN_AI_REASONING_OUTPUT_RESERVATION = 25_000
+        # "minimal" isn't a distinct tier on some OpenAI reasoning models (e.g.
+        # gpt-5.5 rejects it outright) — collapse it into "low", same as vLLM's
+        # own reasoning effort scale already does.
+        OPEN_AI_EFFORT_ALIASES = { "max" => "xhigh", "minimal" => "low" }.freeze
 
         def default_options
           { model: llm_model.name }
@@ -65,7 +69,7 @@ module DiscourseAi
 
           return DiscourseAi::Completions::ThinkingConfig.disabled if effort.blank?
 
-          provider_effort = effort == "max" ? "xhigh" : effort
+          provider_effort = OPEN_AI_EFFORT_ALIASES[effort] || effort
           if !OPEN_AI_REASONING_EFFORTS.include?(provider_effort)
             return DiscourseAi::Completions::ThinkingConfig.unsupported(canonical_effort: effort)
           end
