@@ -296,6 +296,25 @@ module("Integration | Component | Post", function (hooks) {
     assert.dom(".post-info.whisper").exists({ count: 1 });
   });
 
+  test("warning first post gets the moderator staff color", async function (assert) {
+    this.post.topic.is_warning = true;
+
+    await renderComponent(this.post);
+
+    assert.dom(".topic-post.moderator").exists({ count: 1 });
+    assert.dom(".topic-post.regular").doesNotExist();
+  });
+
+  test("warning reply does not get the moderator staff color", async function (assert) {
+    this.post.topic.is_warning = true;
+    this.post.post_number = 2;
+
+    await renderComponent(this.post);
+
+    assert.dom(".topic-post.moderator").doesNotExist();
+    assert.dom(".topic-post.regular").exists({ count: 1 });
+  });
+
   test("language", async function (assert) {
     this.post.is_localized = true;
     this.post.language = "en";
