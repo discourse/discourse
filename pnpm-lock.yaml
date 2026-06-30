@@ -209,7 +209,7 @@ importers:
         version: 6.12.3
       '@codemirror/state':
         specifier: ^6.6.0
-        version: 6.6.0
+        version: 6.7.0
       '@codemirror/view':
         specifier: ^6.43.2
         version: 6.43.2
@@ -1548,9 +1548,6 @@ packages:
   '@codemirror/search@6.7.0':
     resolution: {integrity: sha512-ZvGm99wc/s2cITtMT15LFdn8aH/aS+V+DqyGq/N5ZlV5vWtH+nILvC2nw0zX7ByNoHHDZ2IxxdW38O0tc5nVHg==}
 
-  '@codemirror/state@6.6.0':
-    resolution: {integrity: sha512-4nbvra5R5EtiCzr9BTHiTLc+MLXK2QGiAVYMyi8PkQd3SR+6ixar/Q/01Fa21TBIDOZXgeWV4WppsQolSreAPQ==}
-
   '@codemirror/state@6.7.0':
     resolution: {integrity: sha512-Zbl9NyscLMZkfXPQnNAIIAFftidrA1UbcJEIMp24C0Bukc2I5T8wJS0wsXYsnDOqCFJUeJ1BITGNs5CqPDSmSg==}
 
@@ -2233,9 +2230,6 @@ packages:
 
   '@lezer/lr@1.4.10':
     resolution: {integrity: sha512-rnCpTIBafOx4mRp43xOxDJbFipJm/c0cia/V5TiGlhmMa+wsSdoGmUN3w5Bqrks/09Q/D4tNAmWaT8p6NRi77A==}
-
-  '@marijn/find-cluster-break@1.0.2':
-    resolution: {integrity: sha512-l0h88YhZFyKdXIFNfSWpyjStDjGHwZ/U7iobcK1cQQD8sejsONdQtTVU+1wVN1PBw40PiiHB1vA5S7VTfQiP9g==}
 
   '@marijn/find-cluster-break@1.0.3':
     resolution: {integrity: sha512-FY+MKLBoTsLNJF/eLWaOsXGdz6uh3Iu1axjPf6TUq92IYumcTcXWHoS747JARLkcdlJ/Waiaxc5wQfFO8jC6NA==}
@@ -9061,14 +9055,14 @@ snapshots:
   '@codemirror/autocomplete@6.20.3':
     dependencies:
       '@codemirror/language': 6.12.3
-      '@codemirror/state': 6.6.0
+      '@codemirror/state': 6.7.0
       '@codemirror/view': 6.43.2
       '@lezer/common': 1.5.2
 
   '@codemirror/commands@6.10.3':
     dependencies:
       '@codemirror/language': 6.12.3
-      '@codemirror/state': 6.6.0
+      '@codemirror/state': 6.7.0
       '@codemirror/view': 6.43.2
       '@lezer/common': 1.5.2
 
@@ -9077,14 +9071,14 @@ snapshots:
       '@codemirror/autocomplete': 6.20.3
       '@codemirror/language': 6.12.3
       '@codemirror/lint': 6.9.6
-      '@codemirror/state': 6.6.0
+      '@codemirror/state': 6.7.0
       '@codemirror/view': 6.43.2
       '@lezer/common': 1.5.2
       '@lezer/javascript': 1.5.4
 
   '@codemirror/language@6.12.3':
     dependencies:
-      '@codemirror/state': 6.6.0
+      '@codemirror/state': 6.7.0
       '@codemirror/view': 6.43.2
       '@lezer/common': 1.5.2
       '@lezer/highlight': 1.2.3
@@ -9102,10 +9096,6 @@ snapshots:
       '@codemirror/state': 6.7.0
       '@codemirror/view': 6.43.2
       crelt: 1.0.7
-
-  '@codemirror/state@6.6.0':
-    dependencies:
-      '@marijn/find-cluster-break': 1.0.2
 
   '@codemirror/state@6.7.0':
     dependencies:
@@ -10072,8 +10062,6 @@ snapshots:
   '@lezer/lr@1.4.10':
     dependencies:
       '@lezer/common': 1.5.2
-
-  '@marijn/find-cluster-break@1.0.2': {}
 
   '@marijn/find-cluster-break@1.0.3': {}
 
@@ -11638,7 +11626,7 @@ snapshots:
       '@codemirror/language': 6.12.3
       '@codemirror/lint': 6.9.6
       '@codemirror/search': 6.7.0
-      '@codemirror/state': 6.6.0
+      '@codemirror/state': 6.7.0
       '@codemirror/view': 6.43.2
 
   codsen-utils@1.7.3:
