@@ -150,6 +150,47 @@ acceptance("User Preferences - Second Factor", function (needs) {
 });
 
 acceptance(
+  "User Preferences - Second Factor - Escaping Name",
+  function (needs) {
+    needs.user();
+
+    const name = '<img src=x onerror="window.__xssTriggered = true">';
+
+    needs.pretender((server, helper) => {
+      server.post("/u/second_factors.json", () => {
+        return helper.response({
+          success: "OK",
+          totps: [
+            { id: 1, name },
+            { id: 3, name: "safe one" },
+          ],
+          security_keys: [{ id: 2, name: "key" }],
+        });
+      });
+
+      server.get("/u/trusted-session.json", () => {
+        return helper.response({ success: "OK" });
+      });
+    });
+
+    test("escapes the authenticator name in the delete confirmation", async function (assert) {
+      updateCurrentUser({ moderator: false, admin: false, trust_level: 1 });
+      await visit("/u/eviltrout/preferences/second-factor");
+
+      await click(".token-based-auth-dropdown .select-kit-header");
+      await click("li[data-name='Disable']");
+
+      assert
+        .dom(".dialog-body img")
+        .doesNotExist("does not render the name as an HTML element");
+      assert
+        .dom(".dialog-body")
+        .includesText(name, "shows the authenticator name as plain text");
+    });
+  }
+);
+
+acceptance(
   "User Preferences - Second Factor - Unconfirmed Session",
   function (needs) {
     needs.user();
