@@ -106,22 +106,22 @@
     align-items: flex-start;
     gap: var(--space-2);
     padding: var(--space-2);
-    border-left: 3px solid transparent;
+    border-inline-start: 3px solid transparent;
 
     & + & {
       border-top: 1px solid var(--primary-low);
     }
 
     &.--import {
-      border-left-color: var(--success);
+      border-inline-start-color: var(--success);
     }
 
     &.--update {
-      border-left-color: var(--tertiary);
+      border-inline-start-color: var(--tertiary);
     }
 
     &.--skip {
-      border-left-color: var(--primary-low-mid);
+      border-inline-start-color: var(--primary-low-mid);
 
       .rss-polling-feed-test__item-title {
         color: var(--primary-high);
@@ -349,7 +349,7 @@
       }
 
       > .d-table__cell.--detail {
-        text-align: right;
+        text-align: end;
         white-space: nowrap;
       }
     }
@@ -359,12 +359,12 @@
     display: inline-flex;
     gap: var(--space-2);
     align-items: center;
-    text-align: left;
-    padding-left: 0;
-    padding-right: calc(var(--space-8) * 6);
+    text-align: start;
+    padding-inline-start: 0;
+    padding-inline-end: calc(var(--space-8) * 6);
 
     svg.d-icon {
-      margin-right: 0;
+      margin-inline-end: 0;
     }
   }
 
