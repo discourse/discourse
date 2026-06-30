@@ -187,3 +187,79 @@ module PlaywrightErrorPatch
   end
 end
 Playwright::Error.prepend(PlaywrightErrorPatch)
+
+module PlaywrightSoftReset
+  RESET_STORAGE_TYPES = "local_storage,indexeddb,websql,cache_storage"
+  private_constant :RESET_STORAGE_TYPES
+
+  module Browser
+    def create_browser_context
+      @page_options = { serviceWorkers: "block" }.merge(@page_options)
+      @context_downloaded = false
+      super.tap do |browser_context|
+        browser_context.on("download", ->(_download) { @context_downloaded = true })
+      end
+    end
+
+    def soft_reset!
+      contexts = @playwright_browser.contexts
+      return false unless contexts.size == 1
+      return false if @context_downloaded
+
+      context = contexts.first
+      context.clear_cookies
+      context.clear_permissions
+      context.pages.each(&:close)
+      new_page = create_page(context)
+      return false if fake_clock_installed?(new_page)
+
+      clear_storage(new_page)
+      @playwright_page = new_page.tap(&:bring_to_front)
+      true
+    end
+
+    private
+
+    def fake_clock_installed?(pw_page)
+      !pw_page.evaluate("() => setTimeout.toString()").include?("[native code]")
+    end
+
+    def clear_storage(pw_page)
+      cdp = pw_page.context.new_cdp_session(pw_page)
+      cdp.send_message(
+        "Storage.clearDataForOrigin",
+        params: {
+          origin: "*",
+          storageTypes: RESET_STORAGE_TYPES,
+        },
+      )
+    ensure
+      cdp&.detach
+    end
+  end
+
+  module Driver
+    def reset!
+      return super if !soft_reset_enabled?
+
+      if callback_on_save_screenshot? && (screenshot = @browser&.raw_screenshot)
+        callback_on_save_screenshot(screenshot)
+      end
+
+      return if @browser&.soft_reset!
+
+      @browser&.clear_browser_contexts
+      @browser = nil
+    end
+
+    private
+
+    def soft_reset_enabled?
+      return false if ENV["CAPYBARA_PLAYWRIGHT_SOFT_RESET"] == "0"
+      !(callback_on_save_screenrecord? || @callback_on_save_trace)
+    end
+  end
+end
+
+Capybara::Playwright::Browser.prepend(PlaywrightSoftReset::Browser)
+Capybara::Playwright::Driver.prepend(PlaywrightSoftReset::Driver)
