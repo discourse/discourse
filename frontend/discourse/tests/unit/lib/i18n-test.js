@@ -289,6 +289,17 @@ module("Unit | Utility | i18n", function (hooks) {
     );
   });
 
+  test("empty string translation in the current locale is not treated as missing", function (assert) {
+    I18n.locale = "en";
+    I18n.fallbackLocale = "fr";
+
+    assert.strictEqual(
+      i18n("hello.universe"),
+      "",
+      "returns the empty string instead of falling through to the missing-translation key when a fallback locale is configured but lacks the key"
+    );
+  });
+
   test("Dollar signs are properly escaped", function (assert) {
     assert.strictEqual(
       i18n("dollar_sign", {
