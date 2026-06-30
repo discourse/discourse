@@ -27,9 +27,9 @@ export default function (babel) {
     }
   }
 
-  // Cross-plugin imports are optional unless explicitly marked required.
+  // Cross-plugin imports are required unless explicitly marked optional.
   function isOptionalPluginImport(path) {
-    return readDiscourseImportMode(path) !== "required";
+    return readDiscourseImportMode(path) === "optional";
   }
 
   return {
