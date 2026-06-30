@@ -5,8 +5,6 @@ module Migrations
     module Discourse
       class Users < Conversion::ProgressStep
         source do
-          attr_accessor :source_db
-
           def max_progress
             @source_db.count <<~SQL
               SELECT COUNT(*)

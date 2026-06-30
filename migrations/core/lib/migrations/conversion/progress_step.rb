@@ -48,18 +48,38 @@ module Migrations
       class Source
         include AttributeAssignment
 
-        attr_accessor :settings
+        # `source_db` is the step's connection to the source data, when it has
+        # one. Steps that read from somewhere else (a file, fixed data) leave it
+        # nil. The converter injects it through `step_args`.
+        attr_accessor :settings, :source_db
+
+        class << self
+          # Read a whole table: defines `items` (`SELECT * FROM <name>`) and
+          # `max_progress` (its row count), both filtered by `where`. Override
+          # `items`/`max_progress` for anything custom.
+          def reads_table(name, where: nil)
+            @table = { name:, where: }
+          end
+
+          attr_reader :table
+
+          def reads_table?
+            !table.nil?
+          end
+        end
 
         def initialize(args = {})
           assign_attributes(args)
         end
 
         def max_progress
-          nil
+          return unless self.class.reads_table?
+          @source_db.count_all(self.class.table[:name], where: self.class.table[:where])
         end
 
         def items
-          raise NotImplementedError
+          raise NotImplementedError unless self.class.reads_table?
+          @source_db.select_all(self.class.table[:name], where: self.class.table[:where])
         end
       end
 

@@ -248,6 +248,47 @@ RSpec.describe Migrations::Conversion::ProgressStep do
     end
   end
 
+  describe "reads_table defaults" do
+    # Stands in for the source DB adapter, recording the calls it receives (the
+    # adapter builds the actual SQL; that's covered in its own spec).
+    let(:source_db) do
+      Class
+        .new do
+          attr_reader :select_args, :count_args
+
+          def select_all(table, where:)
+            @select_args = [table, where]
+            [:row]
+          end
+
+          def count_all(table, where:)
+            @count_args = [table, where]
+            4
+          end
+        end
+        .new
+    end
+
+    it "reads the whole table through the adapter" do
+      step_class = define_step { source { reads_table "things", where: "active" } }
+      source = step_class.source_class.new(source_db:)
+
+      expect(source.items).to eq([:row])
+      expect(source_db.select_args).to eq(%w[things active])
+
+      expect(source.max_progress).to eq(4)
+      expect(source_db.count_args).to eq(%w[things active])
+    end
+
+    it "passes no filter when `reads_table` has no `where`" do
+      step_class = define_step { source { reads_table "things" } }
+      source = step_class.source_class.new(source_db:)
+
+      source.items
+      expect(source_db.select_args).to eq(["things", nil])
+    end
+  end
+
   describe "constant resolution" do
     # The role blocks of real steps are written inside a step class body, so
     # constants in their methods resolve through the step's lexical scope and
