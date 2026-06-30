@@ -112,4 +112,40 @@ RSpec.describe Jobs::CleanUpInactiveUsers do
 
     expect { described_class.new.execute({}) }.to change { User.count }.by(-1)
   end
+
+  it "supports plugins extending eligibility via the clean_up_inactive_users_query modifier" do
+    SiteSetting.clean_up_inactive_users_after_days = 4
+
+    eligible_user =
+      Fabricate(
+        :user,
+        created_at: 5.days.ago,
+        last_seen_at: 5.days.ago,
+        trust_level: TrustLevel.levels[:newuser],
+      )
+    protected_user =
+      Fabricate(
+        :user,
+        created_at: 5.days.ago,
+        last_seen_at: 5.days.ago,
+        trust_level: TrustLevel.levels[:newuser],
+      )
+
+    modifier_proc = Proc.new { |relation| relation.where.not(id: protected_user.id) }
+
+    plugin_instance = Plugin::Instance.new
+    plugin_instance.register_modifier(:clean_up_inactive_users_query, &modifier_proc)
+
+    begin
+      expect { described_class.new.execute({}) }.to change { User.count }.by(-1)
+      expect(User.exists?(eligible_user.id)).to eq(false)
+      expect(User.exists?(protected_user.id)).to eq(true)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin_instance,
+        :clean_up_inactive_users_query,
+        &modifier_proc
+      )
+    end
+  end
 end
