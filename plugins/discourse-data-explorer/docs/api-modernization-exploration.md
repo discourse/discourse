@@ -168,7 +168,7 @@ starting point.
 
 | Project | Latest release | Read |
 |---|---|---|
-| **jsonapi-resources (JR)** | v0.10.6 (2022-02) | **Effectively dormant** — ~4yr, no Rails 8 |
+| **jsonapi-resources (JR)** | v0.10.7 (2022-03); v0.11 beta stalled since 2023-09 | **Minimally maintained, not Rails-8-ready** — no stable release in ~4y; CI only to Rails 7.0; open Rails-8 bugs (#1488 `ArgumentError` on 8.1, #1477 on 8.0.2). Installs (no version cap) but breaks |
 | **Graphiti** | 1.10.2 (2026-03) | **Genuinely active** — real features, multiple contributors |
 | **jsonapi.rb** (controller mixins) | 2.1.1 (2024-06); no tagged releases since | Sleepy — a few community commits, small surface |
 | **Grape** | active & popular (exact version/downloads unverified) | Active framework — *but its JSON:API support is an output formatter only* |
@@ -191,13 +191,17 @@ starting point.
 > compound-document engine the dead gem already provides. See Part 9.)
 
 The single most important data point: **jsonapi-resources was *the* batteries-included
-JSON:API framework for Rails, and it is now ~4 years without a meaningful release and no
-Rails 8 support.** That is exactly the failure mode we're trying to avoid for a
-decade-long standard — and it already happened to the most popular option in this space.
+JSON:API framework for Rails, and it has had no stable release since 2022 — its v0.11
+modernization beta stalled in 2023 — and is not Rails-8-ready.** CI only tests to Rails 7.0,
+and open issues report `ArgumentError` on Rails 8.1 (#1488) and broken responses on 8.0.2
+(#1477), with a "Rails 8 support" issue (#1480) still open. It still *installs* (its gemspec
+has no version cap), but it breaks. That is exactly the failure mode we're trying to avoid for
+a decade-long standard — and it happened to the most popular option in this space (2.3k stars,
+256 open issues).
 
 ### Decision matrix (weighted for *public* + *full JSON:API embrace*)
 
-JR is dropped (dead). Grape's JSON:API support is an **output formatter only** — it
+JR is dropped (minimally maintained, not Rails-8-ready). Grape's JSON:API support is an **output formatter only** — it
 gives the document shape but none of the query surface, so it cannot "fully embrace" the
 spec without re-implementing `include`/`fields`/`filter`/`sort`/`page` by hand.
 
@@ -689,7 +693,7 @@ all writes through attributes + a service.
 - [JSON:API 1.1 specification](https://jsonapi.org/format/)
 - [Graphiti](https://www.graphiti.dev/) · [releases](https://github.com/graphiti-api/graphiti/releases)
 - [jsonapi.rb](https://github.com/stas/jsonapi.rb)
-- [jsonapi-resources](https://github.com/JSONAPI-Resources/jsonapi-resources) (cautionary — dormant)
+- [jsonapi-resources](https://github.com/JSONAPI-Resources/jsonapi-resources) (cautionary — minimally maintained, not Rails-8-ready)
 - [Grape](https://github.com/ruby-grape/grape) · [grape-jsonapi](https://github.com/emcousin/grape-jsonapi)
 - [WarpDrive guides](https://warp-drive.io/guides/) · [`@ember-data/json-api`](https://www.npmjs.com/package/@ember-data/json-api)
 - Stripe — *APIs as infrastructure: future-proofing Stripe with versioning* (Brandur Leach)
