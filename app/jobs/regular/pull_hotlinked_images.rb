@@ -171,7 +171,15 @@ module Jobs
 
       if Discourse.store.has_been_uploaded?(src) || normalize_src(src).start_with?(*local_bases) ||
            src =~ %r{\A/[^/]}i
-        return false if !(src =~ %r{/uploads/} || Upload.secure_uploads_url?(src))
+        if Upload.secure_uploads_url?(src)
+          upload = Upload.fetch_from(sha1: Upload.sha1_from_long_url(src), url: src)
+          return false if upload.nil?
+          return false if !can_see_upload?(upload, guardian: post&.user&.guardian)
+        elsif src.match?(%r{/uploads/})
+          upload = Upload.get_from_url(src)
+        else
+          return false
+        end
 
         # Someone could hotlink a file from a different site on the same CDN,
         # so check whether we have it in this database
@@ -181,8 +189,7 @@ module Jobs
         # media was enabled, then we definitely want to redownload again otherwise
         # we end up reusing existing uploads which may be linked to many posts
         # already.
-        upload = Upload.consider_for_reuse(Upload.get_from_url(src), post)
-
+        upload = Upload.consider_for_reuse(upload, post)
         return !upload.present?
       end
 
@@ -211,6 +218,15 @@ module Jobs
     end
 
     protected
+
+    def can_see_upload?(upload, guardian:)
+      return false if guardian.blank?
+
+      access_control_post = upload.access_control_post
+      return false if access_control_post.blank?
+
+      guardian.can_see_post?(access_control_post)
+    end
 
     def replace_encoded_src(src)
       PostHotlinkedMedia.normalize_src(src, reset_scheme: false)
