@@ -3148,6 +3148,27 @@ RSpec.describe Topic do
       expect(topic.featured_link).to eq("https://github.com/discourse/discourse")
     end
 
+    it "normalizes unsafe characters in the featured link before saving" do
+      topic.featured_link = 'https://example.com/?"onclick="alert(1)"'
+
+      expect(topic.save).to be_truthy
+      expect(topic.featured_link).to eq("https://example.com/?%22onclick=%22alert(1)%22")
+    end
+
+    it "preserves an already percent-encoded featured link without double-encoding" do
+      topic.featured_link = "https://en.wikipedia.org/wiki/C%2B%2B?q=a%20b"
+
+      expect(topic.save).to be_truthy
+      expect(topic.featured_link).to eq("https://en.wikipedia.org/wiki/C%2B%2B?q=a%20b")
+    end
+
+    it "rejects a featured link that cannot be normalized instead of storing it raw" do
+      topic.featured_link = 'https://evil.com/?"onclick="alert(1)"&pad=' + ("a" * 2000)
+
+      expect(topic).not_to be_valid
+      expect(topic.errors[:featured_link]).to be_present
+    end
+
     context "when category restricts present" do
       let!(:link_category) { Fabricate(:link_category) }
       let(:link_topic) { Fabricate(:topic, category: link_category) }

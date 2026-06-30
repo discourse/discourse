@@ -1,3 +1,4 @@
+import escape from "discourse/lib/escape";
 import { renderIcon } from "discourse/lib/icon-library";
 import User from "discourse/models/user";
 
@@ -44,11 +45,11 @@ export function extractLinkMeta(topic) {
 export default function renderTopicFeaturedLink(topic) {
   const meta = extractLinkMeta(topic);
   if (meta) {
-    return `<a class="topic-featured-link" rel="${meta.rel}" target="${
+    return `<a class="topic-featured-link" rel="${escape(meta.rel)}" target="${escape(
       meta.target
-    }" href="${meta.href}">${renderIcon("string", "up-right-from-square")} ${
+    )}" href="${escape(meta.href)}">${renderIcon("string", "up-right-from-square")} ${escape(
       meta.domain
-    }</a>`;
+    )}</a>`;
   } else {
     return "";
   }
