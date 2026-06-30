@@ -36,14 +36,14 @@ import { isReversedFlexLayout } from "../lib/reversed-flex";
  * layer (locating entries and outlets), the selection concern (which entry is
  * selected, restoring selection after a move), the drop authority (whether a
  * drop / insert is allowed), and the reveal/flash leaf (drawing the eye to a
- * freshly inserted block). It never reaches back up into the kernel; the kernel
+ * freshly inserted block). It never reaches back up into the orchestrator; the orchestrator
  * keeps thin facades so its consumers (the toolbar, chrome, panels, outline,
  * drop-dispatch, grid manipulator, and keyboard shortcuts) stay unchanged.
  */
 export default class WireframeBlockMutationsService extends Service {
   @service wireframeBlockReveal;
   @service wireframeDropAuthority;
-  @service wireframeEditEngine;
+  @service wireframeMutationEngine;
   @service wireframeLayoutQuery;
   @service wireframeSelection;
 
@@ -100,7 +100,7 @@ export default class WireframeBlockMutationsService extends Service {
     // implicit root layout, never as a sibling of it — that's what keeps the
     // "single root layout per outlet" invariant intact.
     if (targetKey == null) {
-      this.wireframeEditEngine.ensureDraft(targetOutletName);
+      this.wireframeMutationEngine.ensureDraft(targetOutletName);
       targetKey = this.wireframeLayoutQuery.outletRootKey(targetOutletName);
       position = "inside";
     }
@@ -108,36 +108,39 @@ export default class WireframeBlockMutationsService extends Service {
       source.outletName === targetOutletName
         ? [source.outletName]
         : [source.outletName, targetOutletName];
-    return this.wireframeEditEngine.recordStructural(outletsAffected, () => {
-      const moved =
-        source.outletName === targetOutletName
-          ? this.#moveWithinOutlet(
-              source.outletName,
-              sourceKey,
-              targetKey,
-              position
-            )
-          : this.moveAcrossOutlets({
-              sourceOutletName: source.outletName,
-              targetOutletName,
-              sourceEntry: source.entry,
-              sourceKey,
-              targetKey,
-              position,
-            });
-      // Focus the moved block so it's the active selection afterwards — the
-      // same treatment an inserted block gets. For a tabs / carousel child this
-      // brings the moved tab or slide to the front via the reveal-on-select
-      // path. A same-outlet move keeps the block's key; only select when the key
-      // still resolves, so a cross-outlet re-key doesn't clear the selection.
-      if (
-        moved &&
-        this.wireframeLayoutQuery.findEntryAndOutletSync(sourceKey)
-      ) {
-        this.wireframeSelection.restoreSelection(sourceKey);
+    return this.wireframeMutationEngine.recordStructural(
+      outletsAffected,
+      () => {
+        const moved =
+          source.outletName === targetOutletName
+            ? this.#moveWithinOutlet(
+                source.outletName,
+                sourceKey,
+                targetKey,
+                position
+              )
+            : this.moveAcrossOutlets({
+                sourceOutletName: source.outletName,
+                targetOutletName,
+                sourceEntry: source.entry,
+                sourceKey,
+                targetKey,
+                position,
+              });
+        // Focus the moved block so it's the active selection afterwards — the
+        // same treatment an inserted block gets. For a tabs / carousel child this
+        // brings the moved tab or slide to the front via the reveal-on-select
+        // path. A same-outlet move keeps the block's key; only select when the key
+        // still resolves, so a cross-outlet re-key doesn't clear the selection.
+        if (
+          moved &&
+          this.wireframeLayoutQuery.findEntryAndOutletSync(sourceKey)
+        ) {
+          this.wireframeSelection.restoreSelection(sourceKey);
+        }
+        return moved;
       }
-      return moved;
-    });
+    );
   }
 
   /**
@@ -210,7 +213,10 @@ export default class WireframeBlockMutationsService extends Service {
               position
             )
           : insertion.layout;
-      this.wireframeEditEngine.publishStructuralChange(sourceOutletName, final);
+      this.wireframeMutationEngine.publishStructuralChange(
+        sourceOutletName,
+        final
+      );
       return true;
     }
 
@@ -219,7 +225,8 @@ export default class WireframeBlockMutationsService extends Service {
     // Mint a draft for the target outlet if it doesn't have one yet —
     // the user may be dragging an existing block into a previously
     // empty outlet via the empty-outlet drop zone.
-    const targetLayout = this.wireframeEditEngine.ensureDraft(targetOutletName);
+    const targetLayout =
+      this.wireframeMutationEngine.ensureDraft(targetOutletName);
     if (!sourceLayout || !targetLayout) {
       return false;
     }
@@ -265,11 +272,11 @@ export default class WireframeBlockMutationsService extends Service {
     // Publish both outlets in one go — the editor service holds both as
     // session-draft layers, so each `_setLayoutLayer` call only re-resolves
     // its own outlet's chain.
-    this.wireframeEditEngine.publishStructuralChange(
+    this.wireframeMutationEngine.publishStructuralChange(
       sourceOutletName,
       removal.layout
     );
-    this.wireframeEditEngine.publishStructuralChange(
+    this.wireframeMutationEngine.publishStructuralChange(
       targetOutletName,
       targetFinal
     );
@@ -293,7 +300,7 @@ export default class WireframeBlockMutationsService extends Service {
       return false;
     }
     const copies = Math.max(1, Math.floor(count));
-    return this.wireframeEditEngine.recordStructural(
+    return this.wireframeMutationEngine.recordStructural(
       [located.outletName],
       () => {
         let layout = this.wireframeLayoutQuery.readResolvedLayout(
@@ -318,7 +325,7 @@ export default class WireframeBlockMutationsService extends Service {
         if (!changed) {
           return false;
         }
-        this.wireframeEditEngine.publishStructuralChange(
+        this.wireframeMutationEngine.publishStructuralChange(
           located.outletName,
           layout
         );
@@ -367,59 +374,63 @@ export default class WireframeBlockMutationsService extends Service {
     ) {
       return false;
     }
-    return this.wireframeEditEngine.recordStructural([targetOutletName], () => {
-      // Mint a draft on the fly for outlets the user is populating from
-      // scratch (no published layout → `#materializeAllDrafts` skipped
-      // them on `enter()`). The empty-outlet drop zone needs this.
-      const layout = this.wireframeEditEngine.ensureDraft(targetOutletName);
-      if (!layout) {
-        return false;
+    return this.wireframeMutationEngine.recordStructural(
+      [targetOutletName],
+      () => {
+        // Mint a draft on the fly for outlets the user is populating from
+        // scratch (no published layout → `#materializeAllDrafts` skipped
+        // them on `enter()`). The empty-outlet drop zone needs this.
+        const layout =
+          this.wireframeMutationEngine.ensureDraft(targetOutletName);
+        if (!layout) {
+          return false;
+        }
+        // An outlet-level insert (no target block) lands INSIDE the outlet's
+        // implicit root layout, preserving the single-root invariant. Resolved
+        // after `ensureDraft` so a freshly-seeded outlet has its root key.
+        if (targetKey == null) {
+          targetKey = this.wireframeLayoutQuery.outletRootKey(targetOutletName);
+          position = "inside";
+        }
+        // Mint a fresh entry. Spread the defaults so future mutations don't
+        // bleed back into the caller's object. Args left missing here get
+        // filled in from the block's schema `default:` values via
+        // `applyArgDefaults` at render time.
+        const fresh = { block: blockName, args: { ...defaultArgs } };
+        // A container that forces its children to one kind (e.g. tabs → `layout`)
+        // must never be empty — it would be invalid AND have no first tab to fill.
+        // Seed it with one child of that kind so dropping the block lands a ready
+        // first panel (and the block's "add" affordance grows it from there).
+        const seedKind = this.#implicitChildKind(blockName);
+        if (seedKind) {
+          fresh.children = [{ block: seedKind, args: {} }];
+        }
+        // Annotate with `containerArgs.grid` defaults when the destination
+        // parent is a `wf:layout` in grid mode — that's the placement
+        // namespace the grid layout reads to position each direct child.
+        const entry = this.#annotateForDestination({
+          entry: fresh,
+          layout,
+          targetKey,
+          position,
+        });
+        const insertion = insertEntryAt(layout, targetKey, entry, position);
+        if (!insertion.changed) {
+          return false;
+        }
+        this.wireframeMutationEngine.publishStructuralChange(
+          targetOutletName,
+          insertion.layout
+        );
+        // Auto-select the freshly inserted block so the inspector immediately
+        // shows its form (and, for a `wf:layout` in grid mode, the grid overlay
+        // mounts without the author having to click first).
+        // `publishStructuralChange` runs `assignStableKeys`, so `entry`
+        // has a `__stableKey` by the time this fires.
+        this.selectInsertedEntry(entry);
+        return true;
       }
-      // An outlet-level insert (no target block) lands INSIDE the outlet's
-      // implicit root layout, preserving the single-root invariant. Resolved
-      // after `ensureDraft` so a freshly-seeded outlet has its root key.
-      if (targetKey == null) {
-        targetKey = this.wireframeLayoutQuery.outletRootKey(targetOutletName);
-        position = "inside";
-      }
-      // Mint a fresh entry. Spread the defaults so future mutations don't
-      // bleed back into the caller's object. Args left missing here get
-      // filled in from the block's schema `default:` values via
-      // `applyArgDefaults` at render time.
-      const fresh = { block: blockName, args: { ...defaultArgs } };
-      // A container that forces its children to one kind (e.g. tabs → `layout`)
-      // must never be empty — it would be invalid AND have no first tab to fill.
-      // Seed it with one child of that kind so dropping the block lands a ready
-      // first panel (and the block's "add" affordance grows it from there).
-      const seedKind = this.#implicitChildKind(blockName);
-      if (seedKind) {
-        fresh.children = [{ block: seedKind, args: {} }];
-      }
-      // Annotate with `containerArgs.grid` defaults when the destination
-      // parent is a `wf:layout` in grid mode — that's the placement
-      // namespace the grid layout reads to position each direct child.
-      const entry = this.#annotateForDestination({
-        entry: fresh,
-        layout,
-        targetKey,
-        position,
-      });
-      const insertion = insertEntryAt(layout, targetKey, entry, position);
-      if (!insertion.changed) {
-        return false;
-      }
-      this.wireframeEditEngine.publishStructuralChange(
-        targetOutletName,
-        insertion.layout
-      );
-      // Auto-select the freshly inserted block so the inspector immediately
-      // shows its form (and, for a `wf:layout` in grid mode, the grid overlay
-      // mounts without the author having to click first).
-      // `publishStructuralChange` runs `assignStableKeys`, so `entry`
-      // has a `__stableKey` by the time this fires.
-      this.selectInsertedEntry(entry);
-      return true;
-    });
+    );
   }
 
   /**
@@ -476,7 +487,7 @@ export default class WireframeBlockMutationsService extends Service {
     if (!located) {
       return false;
     }
-    return this.wireframeEditEngine.recordStructural(
+    return this.wireframeMutationEngine.recordStructural(
       [located.outletName],
       () => {
         const layout = this.wireframeLayoutQuery.readResolvedLayout(
@@ -496,7 +507,7 @@ export default class WireframeBlockMutationsService extends Service {
         if (this.wireframeSelection.selectedBlockKey === blockKey) {
           this.wireframeSelection.selectBlock(null);
         }
-        this.wireframeEditEngine.publishStructuralChange(
+        this.wireframeMutationEngine.publishStructuralChange(
           located.outletName,
           result.layout
         );
@@ -527,7 +538,7 @@ export default class WireframeBlockMutationsService extends Service {
       return false;
     }
     const outletNames = [...new Set(located.map((l) => l.outletName))];
-    return this.wireframeEditEngine.recordStructural(outletNames, () => {
+    return this.wireframeMutationEngine.recordStructural(outletNames, () => {
       let anyChanged = false;
       for (const outletName of outletNames) {
         let layout = this.wireframeLayoutQuery.readResolvedLayout(outletName);
@@ -545,7 +556,10 @@ export default class WireframeBlockMutationsService extends Service {
           }
         }
         if (outletChanged) {
-          this.wireframeEditEngine.publishStructuralChange(outletName, layout);
+          this.wireframeMutationEngine.publishStructuralChange(
+            outletName,
+            layout
+          );
           anyChanged = true;
         }
       }
@@ -676,7 +690,7 @@ export default class WireframeBlockMutationsService extends Service {
     // rule path.
     // `placeEntering: false` callers set an exact cell themselves and opt out.
     if (sameGrid && besideCell && placeEntering) {
-      this.wireframeEditEngine.publishStructuralChange(
+      this.wireframeMutationEngine.publishStructuralChange(
         outletName,
         positionEntering(layout, destGridKey, sourceKey, targetKey, position)
       );
@@ -691,7 +705,7 @@ export default class WireframeBlockMutationsService extends Service {
       if (!result.changed) {
         return false;
       }
-      this.wireframeEditEngine.publishStructuralChange(
+      this.wireframeMutationEngine.publishStructuralChange(
         outletName,
         syncGridOrder
           ? this.#syncDestGridOrder(result.layout, targetKey, position)
@@ -739,14 +753,17 @@ export default class WireframeBlockMutationsService extends Service {
               position
             )
           : insertion.layout;
-      this.wireframeEditEngine.publishStructuralChange(outletName, finalLayout);
+      this.wireframeMutationEngine.publishStructuralChange(
+        outletName,
+        finalLayout
+      );
       return true;
     }
     const result = moveEntry(layout, sourceKey, targetKey, position);
     if (!result.changed) {
       return false;
     }
-    this.wireframeEditEngine.publishStructuralChange(
+    this.wireframeMutationEngine.publishStructuralChange(
       outletName,
       syncGridOrder
         ? this.#syncDestGridOrder(result.layout, targetKey, position)

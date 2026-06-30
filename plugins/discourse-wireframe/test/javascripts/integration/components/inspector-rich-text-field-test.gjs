@@ -28,8 +28,8 @@ class StubWireframeService extends Service {
   selectedBlockData = null;
 }
 
-// Stub inline-edit service: the read-only guard reads the session identity
-// (`isActive` / `argName` / `blockKey`) off the inline-edit leaf directly.
+// Stub in-place text service: the read-only guard reads the session identity
+// (`isActive` / `argName` / `blockKey`) off the in-place text leaf directly.
 class StubInlineEditService extends Service {
   isActive = false;
 
@@ -54,8 +54,11 @@ module("Integration | Wireframe | InspectorRichTextField", function (hooks) {
     this.owner.register("service:wireframe-selection", wireframe, {
       instantiate: false,
     });
-    this.owner.unregister("service:wireframe-inline-edit");
-    this.owner.register("service:wireframe-inline-edit", StubInlineEditService);
+    this.owner.unregister("service:wireframe-inplace-text");
+    this.owner.register(
+      "service:wireframe-inplace-text",
+      StubInlineEditService
+    );
   });
 
   test("heading schema mounts the editor with a formatting toolbar", async function (assert) {
@@ -73,7 +76,7 @@ module("Integration | Wireframe | InspectorRichTextField", function (hooks) {
       .dom(".wireframe-inspector-rich-text__btn")
       .exists({ count: 3 }, "three formatting buttons");
     assert
-      .dom(".wireframe-inspector-rich-text__editor .wf-inline-editor")
+      .dom(".wireframe-inspector-rich-text__editor .wf-rich-text-editor")
       .exists("the ProseMirror editor mounted into the control");
   });
 
@@ -89,14 +92,14 @@ module("Integration | Wireframe | InspectorRichTextField", function (hooks) {
       .dom(".wireframe-inspector-rich-text__toolbar")
       .doesNotExist("plain has no marks, so no toolbar");
     assert
-      .dom(".wireframe-inspector-rich-text__editor .wf-inline-editor")
+      .dom(".wireframe-inspector-rich-text__editor .wf-rich-text-editor")
       .exists("the editor still mounts");
   });
 
   test("goes inert (dimmed, formatting kept, buttons disabled) while the canvas edits this target", async function (assert) {
     const stub = this.owner.lookup("service:wireframe-workspace");
     stub.selectedBlockKey = "block-1";
-    const inlineEdit = this.owner.lookup("service:wireframe-inline-edit");
+    const inlineEdit = this.owner.lookup("service:wireframe-inplace-text");
     inlineEdit.isActive = true;
     inlineEdit.argName = "text";
     inlineEdit.blockKey = "block-1";
@@ -118,7 +121,7 @@ module("Integration | Wireframe | InspectorRichTextField", function (hooks) {
       .exists("the editor box is marked inert");
     // Formatting is preserved because the live editor keeps rendering the doc.
     assert
-      .dom(".wireframe-inspector-rich-text__editor .wf-inline-editor strong")
+      .dom(".wireframe-inspector-rich-text__editor .wf-rich-text-editor strong")
       .hasText(
         "Hi",
         "marks still render (not flattened to plain text/markdown)"
@@ -147,7 +150,7 @@ module("Integration | Wireframe | InspectorRichTextField", function (hooks) {
     );
 
     assert
-      .dom(".wireframe-inspector-rich-text__editor .wf-inline-editor")
+      .dom(".wireframe-inspector-rich-text__editor .wf-rich-text-editor")
       .hasText(
         "live value",
         "seeds from the live entry args, not the frozen FormKit draft"

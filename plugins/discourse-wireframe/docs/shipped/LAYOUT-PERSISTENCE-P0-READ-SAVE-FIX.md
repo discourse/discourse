@@ -29,7 +29,7 @@ autotracks its `trackedMap` reads — the fix was to expose non-DEBUG reactive w
   (transitively fixing the ~50 callers through it: 31 here, 15 in `grid-manipulator.js`, 4 in
   `inline-edit-state.js`); the 6 direct `_getOutletLayouts()` calls now use `_getResolvedLayouts()`;
   import updated; two stale doc-comments referencing `_getOutletLayouts()` updated.
-- `services/wireframe-persistence.js` — permanent save backstop in `_saveOutlet`: throws when
+- `services/wireframe-live-layout.js` — permanent save backstop in `_saveOutlet`: throws when
   `layout.length === 0 && resolvedLayout == null` (read failed), so the outlet routes into
   `saveAll`'s catch, is reported as an error, and is **not** cleared from `editedOutlets` — the
   draft is preserved instead of silently lost. A deliberate delete-all resolves to a real `[]`
@@ -55,7 +55,7 @@ autotracks its `trackedMap` reads — the fix was to expose non-DEBUG reactive w
   outlet resolves to a non-empty array (not `null`); unregistered outlet → `null`;
   `_getResolvedLayouts().get(outlet).layout` is the same resolved array with `size > 0`; a
   no-DEBUG-gate regression guard. **4/4 pass.**
-- **Plugin unit** — extended `wireframe-persistence-test.gjs`: the POSTed layout is asserted
+- **Plugin unit** — extended `wireframe-live-layout-test.gjs`: the POSTed layout is asserted
   non-empty, plus a new "refuses to POST and keeps the draft when the resolved read fails" test
   (stubs `readResolvedLayout → null`; asserts an error is recorded, `editedOutlets` retained, no
   POST issued). The full `service:wireframe` unit suite (move/drop/paste/undo/insert/delete — every

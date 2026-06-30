@@ -16,16 +16,16 @@ import { OUTLET_STATE } from "../../services/wireframe-layout-query";
  * section is read-only status only.
  */
 export default class InspectorOutletSection extends Component {
-  @service wireframeEditEngine;
+  @service wireframeMutationEngine;
   @service wireframeLayoutQuery;
-  @service wireframeTheme;
+  @service wireframePublishTarget;
 
   get state() {
     return this.wireframeLayoutQuery.outletState(this.args.outletName);
   }
 
   get isEditing() {
-    return this.wireframeEditEngine.isOutletEdited(this.args.outletName);
+    return this.wireframeMutationEngine.isOutletEdited(this.args.outletName);
   }
 
   get isPublished() {
@@ -39,7 +39,8 @@ export default class InspectorOutletSection extends Component {
    * @returns {string|null}
    */
   get ownerName() {
-    return this.wireframeTheme.outletOwner(this.args.outletName).themeName;
+    return this.wireframePublishTarget.outletOwner(this.args.outletName)
+      .themeName;
   }
 
   <template>

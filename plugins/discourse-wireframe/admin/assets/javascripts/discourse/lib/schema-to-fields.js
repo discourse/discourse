@@ -76,7 +76,7 @@ function pickControl(argDef) {
     case "any":
       return "code";
     case "richInline":
-      // Inline rich text is edited on the canvas via the InlineEditController.
+      // Inline rich text is edited on the canvas via the InplaceTextController.
       // The inspector field shows a read-only summary so authors can see
       // the current content without having a parallel edit surface here.
       return "rich-inline";

@@ -16,7 +16,7 @@ const VE_DRAG_TYPES = ["wf-block", "wf-palette-block"];
 import BlockBreadcrumb from "./block-breadcrumb";
 import ConditionsFloatingPanel from "./conditions-floating-panel";
 import DropPreview from "./drop-preview";
-import InlineEditController from "./inline-edit-controller";
+import InplaceTextController from "./inplace-text-controller";
 import InspectorPanel from "./inspector-panel";
 import OutletJumpSelect from "./outlet-jump-select";
 import OutlinePanel from "./outline-panel";
@@ -37,9 +37,9 @@ import SimulationControls from "./simulation-controls";
 export default class EditorShell extends Component {
   @service dragAndDrop;
   @service wireframeWorkspace;
-  @service wireframeDragNav;
-  @service wireframeEditEngine;
-  @service wireframeSession;
+  @service wireframeDragDwell;
+  @service wireframeMutationEngine;
+  @service wireframeEditMode;
   @service wireframeStaging;
   @service wireframeValidation;
 
@@ -124,12 +124,12 @@ export default class EditorShell extends Component {
 
   @action
   undo() {
-    this.wireframeEditEngine.undo();
+    this.wireframeMutationEngine.undo();
   }
 
   @action
   redo() {
-    this.wireframeEditEngine.redo();
+    this.wireframeMutationEngine.redo();
   }
 
   #syncBodyClasses() {
@@ -148,22 +148,22 @@ export default class EditorShell extends Component {
   }
 
   <template>
-    {{#if this.wireframeSession.active}}
+    {{#if this.wireframeEditMode.active}}
       <div
         class={{this.shellClasses}}
         {{didInsert this.setupBodyClasses}}
         {{dDragAndDropAutoScroll target="window" types=VE_DRAG_TYPES}}
         {{dDragAndDropMonitor
           types=VE_DRAG_TYPES
-          onDragStart=this.wireframeDragNav.handleDragStart
-          onDrag=this.wireframeDragNav.handleDrag
-          onDrop=this.wireframeDragNav.handleDrop
+          onDragStart=this.wireframeDragDwell.handleDragStart
+          onDrag=this.wireframeDragDwell.handleDrag
+          onDrop=this.wireframeDragDwell.handleDrop
         }}
       >
-        {{! Mounts a ProseMirror editor over whichever inline-edit region is
+        {{! Mounts a ProseMirror editor over whichever in-place edit region is
             active. Rendered as a no-DOM controller — its only visible output
             is the editor it portals into the renderer's span. }}
-        <InlineEditController />
+        <InplaceTextController />
         <div class="wireframe-toolbar">
           <div class="toolbar-left">
             {{dIcon "wand-magic-sparkles"}}
@@ -197,14 +197,14 @@ export default class EditorShell extends Component {
               class="wireframe-btn-undo"
               @icon="arrow-rotate-left"
               @title="wireframe.chrome.undo"
-              @disabled={{if this.wireframeEditEngine.canUndo false true}}
+              @disabled={{if this.wireframeMutationEngine.canUndo false true}}
               @action={{this.undo}}
             />
             <DButton
               class="wireframe-btn-redo"
               @icon="arrow-rotate-right"
               @title="wireframe.chrome.redo"
-              @disabled={{if this.wireframeEditEngine.canRedo false true}}
+              @disabled={{if this.wireframeMutationEngine.canRedo false true}}
               @action={{this.redo}}
             />
             <PublishTargetIndicator />

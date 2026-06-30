@@ -54,7 +54,7 @@ function isModifier(event) {
  * Installs the document-level keydown listener and returns a `detach`
  * thunk the caller can invoke to remove it. Designed for ergonomic use
  * from an effect-style observer that runs whenever the editor's
- * `wireframeSession.active` flips.
+ * `wireframeEditMode.active` flips.
  *
  * @param {import("../services/wireframe-workspace").default} editor
  * @returns {() => void}
@@ -70,7 +70,7 @@ export function attachEditorShortcuts(editor) {
     if (
       editor.isDestroyed ||
       editor.isDestroying ||
-      !editor.wireframeSession.active
+      !editor.wireframeEditMode.active
     ) {
       return;
     }

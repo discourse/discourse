@@ -78,7 +78,7 @@ module(
     });
 
     // BLOCK_ARG_SELECTOR — core's editable blocks stamp `data-block-arg` on
-    // each inline-editable / image arg element. The editor reads it to wire
+    // each in-place-editable / image arg element. The editor reads it to wire
     // the URL popover and image-arg overlays. A rename breaks those silently.
     //
     //   rendered button-link

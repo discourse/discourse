@@ -35,11 +35,11 @@ import {
  * A peer command service in the editor's acyclic graph: it injects the
  * mutation/undo engine (records each reshape as one structural-undo entry) and
  * the read-only layout query layer (locating the grid + its resolved layout).
- * It never reaches back into the editor session service; the kernel keeps thin
+ * It never reaches back into the orchestrator; the orchestrator keeps thin
  * facades so the inspector layout form stays unchanged.
  */
 export default class WireframeGridTemplateService extends Service {
-  @service wireframeEditEngine;
+  @service wireframeMutationEngine;
   @service wireframeLayoutQuery;
 
   /**
@@ -83,7 +83,7 @@ export default class WireframeGridTemplateService extends Service {
     if (content.length > cells.length) {
       return false;
     }
-    return this.wireframeEditEngine.recordStructural(
+    return this.wireframeMutationEngine.recordStructural(
       [located.outletName],
       () => {
         const layout = this.wireframeLayoutQuery.readResolvedLayout(
@@ -107,7 +107,7 @@ export default class WireframeGridTemplateService extends Service {
         if (!result.changed) {
           return false;
         }
-        this.wireframeEditEngine.publishStructuralChange(
+        this.wireframeMutationEngine.publishStructuralChange(
           located.outletName,
           result.layout
         );
@@ -148,7 +148,7 @@ export default class WireframeGridTemplateService extends Service {
     if (content.length > cells.length) {
       return false;
     }
-    return this.wireframeEditEngine.recordStructural(
+    return this.wireframeMutationEngine.recordStructural(
       [located.outletName],
       () => {
         const layout = this.wireframeLayoutQuery.readResolvedLayout(
@@ -167,7 +167,7 @@ export default class WireframeGridTemplateService extends Service {
         if (!result.changed) {
           return false;
         }
-        this.wireframeEditEngine.publishStructuralChange(
+        this.wireframeMutationEngine.publishStructuralChange(
           located.outletName,
           result.layout
         );
@@ -221,7 +221,7 @@ export default class WireframeGridTemplateService extends Service {
     if (offenders.length === 0) {
       return false;
     }
-    return this.wireframeEditEngine.recordStructural(
+    return this.wireframeMutationEngine.recordStructural(
       [located.outletName],
       () => {
         for (const slot of located.entry.children ?? []) {
@@ -250,7 +250,7 @@ export default class WireframeGridTemplateService extends Service {
           if (!result.changed) {
             continue;
           }
-          this.wireframeEditEngine.publishStructuralChange(
+          this.wireframeMutationEngine.publishStructuralChange(
             located.outletName,
             result.layout
           );

@@ -1,7 +1,7 @@
 // @ts-check
 import { get } from "@ember/helper";
 import { and, eq, not, or } from "discourse/truth-helpers";
-import { toFlatMarkdown } from "discourse/plugins/discourse-wireframe/discourse/lib/inline-rich-text";
+import { toFlatMarkdown } from "discourse/plugins/discourse-wireframe/discourse/lib/rich-text";
 import InspectorCategoryField from "./inspector-category-field";
 import InspectorDimensionField from "./inspector-dimension-field";
 import InspectorGroupField from "./inspector-group-field";
@@ -204,7 +204,7 @@ const InspectorField = <template>
       </formField.Control>
     {{else if (eq @field.control "rich-inline")}}
       {{#if (and @field.schema.ui.schema (not @disabled))}}
-        {{! Editable inline rich-text editor (bold / italic / link), mounted in
+        {{! Editable rich text editor (bold / italic / link), mounted in
             the inspector for headless editing. Reads the schema variant from
             the arg's ui.schema. }}
         <formField.Control>

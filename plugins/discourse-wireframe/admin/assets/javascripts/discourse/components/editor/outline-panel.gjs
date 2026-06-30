@@ -44,10 +44,10 @@ export default class OutlinePanel extends Component {
   @service wireframeBlockMutations;
   @service wireframeBlockReveal;
   @service wireframeDragSession;
-  @service wireframeEditEngine;
-  @service wireframeRevision;
+  @service wireframeMutationEngine;
+  @service wireframeLayoutSignal;
   @service wireframeSelection;
-  @service wireframeSession;
+  @service wireframeEditMode;
 
   /** "tree" — flat per-block view (default); "outlets" — per-outlet summary. */
   @tracked viewMode = "tree";
@@ -120,8 +120,8 @@ export default class OutlinePanel extends Component {
    * can read `.value` without juggling a `@tracked outlets` field and
    * a `didUpdate`-driven `refresh()`. Recomputes when:
    *
-   *   - `wireframeSession.active` flips (editor opens / closes)
-   *   - `wireframeRevision.version` bumps (structural mutation lands; the layer
+   *   - `wireframeEditMode.active` flips (editor opens / closes)
+   *   - `wireframeLayoutSignal.version` bumps (structural mutation lands; the layer
    *     is republished and validation re-runs against the fresh entries)
    *   - any entry's soft-failure stamp changes — `walkAllOutlets`'s sync
    *     prefix touches `__failureType` / `__failureReason` on every
@@ -136,12 +136,14 @@ export default class OutlinePanel extends Component {
    */
   @cached
   get outletsData() {
-    void this.wireframeSession.active;
-    void this.wireframeRevision.version;
+    void this.wireframeEditMode.active;
+    void this.wireframeLayoutSignal.version;
     return new TrackedAsyncData(
       walkAllOutlets({
         blocksService: this.blocks,
-        alwaysInclude: new Set(this.wireframeEditEngine.draftedOutletNames()),
+        alwaysInclude: new Set(
+          this.wireframeMutationEngine.draftedOutletNames()
+        ),
       })
     );
   }

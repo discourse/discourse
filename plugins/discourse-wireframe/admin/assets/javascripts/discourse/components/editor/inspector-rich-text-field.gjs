@@ -18,7 +18,7 @@ import {
   SCHEMAS,
   toDoc,
   toStorage,
-} from "discourse/plugins/discourse-wireframe/discourse/lib/inline-rich-text";
+} from "discourse/plugins/discourse-wireframe/discourse/lib/rich-text";
 
 /**
  * Compares two stored rich-inline values (each a plain string or a doc-JSON
@@ -60,8 +60,8 @@ function valuesEqual(a, b) {
  *            allowed marks / line breaks. Supplied from the arg's `ui.schema`.
  */
 export default class InspectorRichTextField extends Component {
-  @service wireframeInlineEdit;
-  @service wireframeRevision;
+  @service wireframeInplaceText;
+  @service wireframeLayoutSignal;
   @service wireframeSelection;
 
   @tracked linkMode = false;
@@ -92,7 +92,7 @@ export default class InspectorRichTextField extends Component {
   }
 
   /**
-   * `true` when the canvas is inline-editing this exact block + arg. The editor
+   * `true` when the canvas is in-place editing this exact block + arg. The editor
    * stays mounted but goes inert (non-editable, dimmed, toolbar disabled) so
    * there's never a second live editor competing for the same value — and no
    * component swap, so the rendered formatting and layout stay put.
@@ -100,7 +100,7 @@ export default class InspectorRichTextField extends Component {
    * @returns {boolean}
    */
   get readOnly() {
-    const inlineEdit = this.wireframeInlineEdit;
+    const inlineEdit = this.wireframeInplaceText;
     return !!(
       inlineEdit?.isActive &&
       inlineEdit.argName === this.args.custom?.name &&
@@ -112,7 +112,7 @@ export default class InspectorRichTextField extends Component {
    * The value to seed (and re-seed) the editor from. Prefers the LIVE block-arg
    * value off the entry's tracked args, so an external edit — the canvas inline
    * editor committing the same arg, a paste, an undo — flows back into this
-   * editor; reading the property opens a tracked dep, and `wireframeRevision.version`
+   * editor; reading the property opens a tracked dep, and `wireframeLayoutSignal.version`
    * covers the entry being replaced under the selection. Falls back to the
    * FormKit draft for non-block-arg fields (container args like tab labels,
    * whose value lives outside `args`), which keep their selection-time value.
@@ -121,7 +121,7 @@ export default class InspectorRichTextField extends Component {
    */
   get liveValue() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const data = this.wireframeSelection.selectedBlockData;
     const name = this.args.custom?.name;
     if (name && data?.metadata?.args && name in data.metadata.args) {
@@ -212,7 +212,7 @@ export default class InspectorRichTextField extends Component {
 
     this.#view = new pm.EditorView(container, {
       state: pm.EditorState.create({ schema, doc, plugins }),
-      attributes: { class: "wf-inline-editor" },
+      attributes: { class: "wf-rich-text-editor" },
       // Inert while the canvas owns this value; `syncReadOnly` re-applies it
       // when the guard toggles (PM only re-reads `editable` on a prop update).
       editable: () => !this.readOnly,

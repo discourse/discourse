@@ -16,7 +16,7 @@ import { schemaToFields } from "../../lib/schema-to-fields";
  *
  * Like the image control, it bypasses FormKit's draft: it reads the live array
  * from `entry.args` and writes the whole array back via
- * `wireframeEditEngine.setArg` (an immediate write, so add-then-remove reads a fresh value
+ * `wireframeMutationEngine.setArg` (an immediate write, so add-then-remove reads a fresh value
  * rather than a stale pre-flush one). The inspector and canvas stay in sync.
  *
  * Each item is one row; each row's fields are derived from the arg's
@@ -25,9 +25,9 @@ import { schemaToFields } from "../../lib/schema-to-fields";
  * added, removed, and reordered, and a whole array can be pasted in as JSON.
  */
 export default class InspectorRepeatableField extends Component {
-  @service wireframeEditEngine;
+  @service wireframeMutationEngine;
   @service wireframeLayoutQuery;
-  @service wireframeRevision;
+  @service wireframeLayoutSignal;
   @service wireframeSelection;
 
   /** Draft text for the JSON import box; committed on demand. */
@@ -62,13 +62,13 @@ export default class InspectorRepeatableField extends Component {
 
   /**
    * Live array value off `entry.args`. Reading through the trackedObject (and
-   * touching `wireframeRevision.version`) re-renders this control on any mutation.
+   * touching `wireframeLayoutSignal.version`) re-renders this control on any mutation.
    *
    * @returns {Array<Object>}
    */
   get items() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const key = this.blockKey;
     if (!key) {
       return [];
@@ -160,7 +160,7 @@ export default class InspectorRepeatableField extends Component {
     if (!this.blockKey) {
       return;
     }
-    this.wireframeEditEngine.setArg(this.blockKey, this.argName, next);
+    this.wireframeMutationEngine.setArg(this.blockKey, this.argName, next);
   }
 
   /**

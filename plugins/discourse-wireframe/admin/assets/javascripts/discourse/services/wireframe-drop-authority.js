@@ -13,7 +13,7 @@ import Service, { service } from "@ember/service";
  *
  * A pure-read peer service: it injects the drag-session signal (the in-flight
  * source block) and the read-only layout query layer (entry + block metadata
- * lookups). Only query methods (no mutators), so the kernel exposes the instance
+ * lookups). Only query methods (no mutators), so the orchestrator exposes the instance
  * directly through its `dropAuthority` facade.
  */
 export default class WireframeDropAuthorityService extends Service {

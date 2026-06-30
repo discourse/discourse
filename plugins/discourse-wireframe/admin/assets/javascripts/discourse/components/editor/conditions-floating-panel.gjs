@@ -31,7 +31,7 @@ const DEFAULT_HEIGHT = 560;
  */
 export default class ConditionsFloatingPanel extends Component {
   @service wireframeConditionsPanel;
-  @service wireframeSession;
+  @service wireframeEditMode;
 
   /**
    * Track resize via ResizeObserver — the `resize: both` corner grip
@@ -101,7 +101,7 @@ export default class ConditionsFloatingPanel extends Component {
 
   get isOpen() {
     return (
-      this.wireframeSession.active && this.wireframeConditionsPanel.detached
+      this.wireframeEditMode.active && this.wireframeConditionsPanel.detached
     );
   }
 

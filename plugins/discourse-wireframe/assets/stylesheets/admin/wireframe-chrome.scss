@@ -5013,13 +5013,13 @@ body.wireframe-active {
   }
 }
 
-.wf-inline-editor {
+.wf-rich-text-editor {
   &.ProseMirror {
     padding: 0;
     margin: 0;
 
     /* `inline` so PM lays out in the exact same inline formatting context
-       as the rendered content it replaces — `.wf-inline-rich-text__content`
+       as the rendered content it replaces — `.wf-rich-text__content`
        is also `inline`, so the glyphs stay put when display→edit swaps one
        for the other. An `inline-block` here is an atomic box positioned by
        `vertical-align` (baseline), and its baseline is derived from its own
@@ -5051,7 +5051,7 @@ body.wireframe-active {
    content, the focus ring while the block is selected, and the content
    hide while ProseMirror is mounted via {{in-element}}. */
 
-.wf-inline-rich-text {
+.wf-rich-text {
   /* Block is selected — re-enable pointer events on the renderer so the
      "click-on-text → edit" gesture can read which region got clicked.
      The chrome's outer rule
@@ -5059,7 +5059,7 @@ body.wireframe-active {
      forces every first click to hit the chrome wrapper itself, so
      selection fires reliably anywhere on the block. Once selected, we
      want `event.target` on the next click to land inside the
-     `[data-wf-inline-edit-arg]` region so `event.target.closest(...)`
+     `[data-wf-rich-text-arg]` region so `event.target.closest(...)`
      can resolve it. Also show a text cursor so the affordance is
      discoverable.
 
@@ -5075,21 +5075,21 @@ body.wireframe-active {
     pointer-events: auto;
     cursor: text;
 
-    .wf-inline-rich-text__content,
-    .wf-inline-rich-text__content::before {
+    .wf-rich-text__content,
+    .wf-rich-text__content::before {
       pointer-events: auto;
     }
 
     /* Hover affordance — dashed outline hints that the region is
        click-to-edit. Suppressed while PM is mounted so it doesn't
        double up with the active-edit ring (drawn on the PM editor
-       div itself via `.wf-inline-editor.ProseMirror` above — the
+       div itself via `.wf-rich-text-editor.ProseMirror` above — the
        renderer span is `display: inline` and outlines on inline
        parents of a block PM editor render around line fragments,
        not the editor area). `outline` (not `border`) keeps the ring
        outside the box so adjacent text doesn't shift on first paint. */
 
-    &:hover:not(:has(.wf-inline-editor-mount)) {
+    &:hover:not(:has(.wf-rich-text-editor-mount)) {
       outline: 1px dashed var(--tertiary);
       outline-offset: 2px;
       border-radius: 2px;
@@ -5106,12 +5106,12 @@ body.wireframe-active {
     pointer-events: auto;
     cursor: text;
 
-    .wf-inline-rich-text__content,
-    .wf-inline-rich-text__content::before {
+    .wf-rich-text__content,
+    .wf-rich-text__content::before {
       pointer-events: auto;
     }
 
-    &:hover:not(:has(.wf-inline-editor-mount)) {
+    &:hover:not(:has(.wf-rich-text-editor-mount)) {
       outline: 1px dashed var(--tertiary);
       outline-offset: 2px;
       border-radius: 2px;
@@ -5260,13 +5260,13 @@ body.wireframe-active
    positioning, and the hover bridge between trigger and content
    via `interactive: true`. */
 
-.wf-link-edit-popover {
+.wf-inplace-link-popover {
   display: inline-flex;
   align-items: center;
   gap: 4px;
 }
 
-.wf-link-edit-popover__chip {
+.wf-inplace-link-popover__chip {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
@@ -5283,7 +5283,7 @@ body.wireframe-active
   }
 }
 
-.wf-link-edit-popover__input {
+.wf-inplace-link-popover__input {
   width: 220px;
   height: 24px;
   padding: 0 6px;
@@ -5310,8 +5310,7 @@ body.wireframe-active
    comment / whitespace text nodes inside the renderer span would
    defeat `:empty`. */
 
-.wf-inline-rich-text.--empty
-  > .wf-inline-rich-text__content[data-wf-placeholder]::before {
+.wf-rich-text.--empty > .wf-rich-text__content[data-wf-placeholder]::before {
   content: attr(data-wf-placeholder);
   color: var(--primary-medium);
   opacity: 0.55;
@@ -5322,8 +5321,8 @@ body.wireframe-active
      `__content` span has no real content, just the pseudo's rendered
      text) and the chrome wrapper ends up as the click target instead
      of the renderer span. With `pointer-events: auto` (the default),
-     the click hits `__content`, bubbles to `.wf-inline-rich-text`, and
-     `block-chrome.onClick`'s `closest("[data-wf-inline-edit-arg]")`
+     the click hits `__content`, bubbles to `.wf-rich-text`, and
+     `block-chrome.onClick`'s `closest("[data-wf-rich-text-arg]")`
      finds the renderer span as expected. `user-select: none` still
      keeps the placeholder text from being draggable / text-selectable. */
 }
@@ -5331,8 +5330,8 @@ body.wireframe-active
 /* Active edit — ProseMirror is mounted inside the outer span as a
    sibling of `__content`. Hide the rendered content so the user sees
    only the editor. We gate the hide on the *mounted editor element*
-   (`.wf-inline-editor`, which ProseMirror creates inside the mount
-   span) rather than the `wf-inline-editor-mount` placeholder span
+   (`.wf-rich-text-editor`, which ProseMirror creates inside the mount
+   span) rather than the `wf-rich-text-editor-mount` placeholder span
    itself. Glimmer inserts that placeholder synchronously when the
    session opens, but ProseMirror only renders into it after an async
    module load — so keying on the placeholder hid `__content` during
@@ -5344,8 +5343,8 @@ body.wireframe-active
    chrome SCSS so the live-site render path never evaluates the
    `:has()` (no mount spans exist there). */
 
-.wf-inline-rich-text:has(.wf-inline-editor-mount .wf-inline-editor)
-  > .wf-inline-rich-text__content {
+.wf-rich-text:has(.wf-rich-text-editor-mount .wf-rich-text-editor)
+  > .wf-rich-text__content {
   display: none;
 }
 
@@ -5353,19 +5352,19 @@ body.wireframe-active
    selected, so authors can click the placeholder to start editing a
    field that the block author hid via a `--empty` BEM modifier on the
    wrapper (see e.g. `d-block-cta-banner__title--empty`).
-   The `:has(> .wf-inline-rich-text.--empty)` selector finds any element
+   The `:has(> .wf-rich-text.--empty)` selector finds any element
    whose direct child is an empty renderer — works for `<h3>`, `<h4>`,
    `<p>`, `<a>`, custom blocks. The second selector covers the renderer's
    own outer span in case something hid it directly. `display: revert`
    falls back to the wrapper's user-agent default. */
 
-.wireframe-block-chrome.--selected :has(> .wf-inline-rich-text.--empty),
-.wireframe-block-chrome.--selected .wf-inline-rich-text.--empty {
+.wireframe-block-chrome.--selected :has(> .wf-rich-text.--empty),
+.wireframe-block-chrome.--selected .wf-rich-text.--empty {
   display: revert;
 }
 
 /* The media-card badge wraps its renderer one extra level deep (via
-   `__badge-label`), so the generic `:has(> .wf-inline-rich-text.--empty)`
+   `__badge-label`), so the generic `:has(> .wf-rich-text.--empty)`
    reveal above can't reach it — reveal the collapsed badge explicitly on
    selection. Same for the card's empty avatar slot, so its "add image"
    target has a box to measure while the card is selected. */
@@ -5470,7 +5469,7 @@ body.wireframe-active
       border-color: var(--tertiary);
     }
 
-    .wf-inline-editor {
+    .wf-rich-text-editor {
       outline: none;
       min-width: 0;
       color: var(--primary);

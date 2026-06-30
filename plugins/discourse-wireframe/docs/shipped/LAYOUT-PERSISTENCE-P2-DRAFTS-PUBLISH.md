@@ -166,7 +166,7 @@ upserts via `find_or_initialize_by(user_id, theme_id, outlet)`.
   contract / 1 MB cap.
 - `DELETE /admin/plugins/wireframe/block-layout-drafts` → idempotent `200 { success }`.
 
-## Client (`wireframe-persistence.js`) — the verb split
+## Client (`wireframe-live-layout.js`) — the verb split
 
 `saveAll` → four verbs (the toolbar's live "Save" calls `publish`; the draft/reset
 verbs exist but their UI wiring lands in P3):
@@ -203,7 +203,7 @@ and can be removed by hand.
 - **RSpec request** — core `block_layouts_controller_spec.rb` (publish 200/409/422,
   reset DELETE); plugin `block_layout_drafts_controller_spec.rb` (draft POST/DELETE,
   non-admin/disabled → 404). 52 specs green.
-- **JS** — `wireframe-persistence-test.gjs` (9 tests): publish posts the token /
+- **JS** — `wireframe-live-layout-test.gjs` (9 tests): publish posts the token /
   collapses to THEME / 409 keeps the edit / refuses an empty resolved read; saveDraft
   hits the plugin endpoint and leaves THEME untouched; resetToDefault + discardDraft
   issue DELETEs.

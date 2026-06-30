@@ -58,7 +58,7 @@ module(
         name: "heading",
       });
       getOwner(editor)
-        .lookup("service:wireframe-arg-edit")
+        .lookup("service:wireframe-inspector-args")
         .updateSelectedArg("text", "Edited");
       await settled();
     }
@@ -144,7 +144,9 @@ module(
 
       await render(<template><EditorShell /></template>);
 
-      const theme = getOwner(this.editor).lookup("service:wireframe-theme");
+      const theme = getOwner(this.editor).lookup(
+        "service:wireframe-publish-target"
+      );
       assert.strictEqual(
         theme.activeThemeId,
         7,
@@ -182,7 +184,7 @@ module(
         name: "heading",
       });
       getOwner(this.editor)
-        .lookup("service:wireframe-arg-edit")
+        .lookup("service:wireframe-inspector-args")
         .updateSelectedArg("text", "Edited again");
       await settled();
 

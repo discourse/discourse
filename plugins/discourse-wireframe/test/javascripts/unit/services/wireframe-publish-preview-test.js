@@ -3,7 +3,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 
 // The drawer-driven preview (change counts + raw JSON) is exercised end-to-end
-// by the publish-review-drawer integration test (through the kernel facade).
+// by the publish-review-drawer integration test (through the orchestrator facade).
 // These cases cover the service's wiring and its empty/unresolvable-outlet paths.
 module(
   "Unit | Discourse Wireframe | service:wireframe-publish-preview",

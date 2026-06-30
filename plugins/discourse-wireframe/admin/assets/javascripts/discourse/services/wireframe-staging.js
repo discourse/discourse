@@ -34,7 +34,7 @@ import { OUTLET_STATE } from "./wireframe-layout-query";
  * owns the review-drawer state that surfaces those commands.
  *
  * It is a coordinator over the lower-level I/O peers — `wireframeDrafts`
- * (draft-endpoint I/O), `wireframePersistence` (live-field I/O), and the
+ * (draft-endpoint I/O), `wireframeLiveLayout` (live-field I/O), and the
  * mutation/undo engine — never reaching up into the orchestrator that opens and
  * closes the session. The orchestrator drives this service one-way via
  * `beginSession`/`endSession`/`rediscover`; everything else is called by the
@@ -42,14 +42,14 @@ import { OUTLET_STATE } from "./wireframe-layout-query";
  */
 export default class WireframeStagingService extends Service {
   @service modal;
-  @service wireframeArgEdit;
+  @service wireframeInspectorArgs;
   @service wireframeDrafts;
-  @service wireframeEditEngine;
-  @service wireframeInlineEdit;
+  @service wireframeMutationEngine;
+  @service wireframeInplaceText;
   @service wireframeLayoutQuery;
-  @service wireframePersistence;
-  @service wireframeSession;
-  @service wireframeTheme;
+  @service wireframeLiveLayout;
+  @service wireframeEditMode;
+  @service wireframePublishTarget;
 
   /**
    * Whether the publish review surface (the save/publish drawer) is open. Held
@@ -63,7 +63,7 @@ export default class WireframeStagingService extends Service {
   /**
    * Whether the on-entry companion lookup is still in flight. Set true at
    * `beginSession` only when the bound theme can't be published to directly, then
-   * cleared once the lookup settles (re-pointing `wireframeTheme.activeThemeId` to
+   * cleared once the lookup settles (re-pointing `wireframePublishTarget.activeThemeId` to
    * the companion if one is found). The blocked callout and the indicator's
    * blocked state read this so they don't flash during the brief lookup — the
    * callout appears only once it's settled that there is genuinely no companion.
@@ -118,7 +118,7 @@ export default class WireframeStagingService extends Service {
    */
   get hasUnsavedDraftEdits() {
     const outlets = new Set([
-      ...this.wireframeEditEngine.editedOutletNames(),
+      ...this.wireframeMutationEngine.editedOutletNames(),
       ...this.#persistedDraftLayouts.keys(),
     ]);
     for (const outletName of outlets) {
@@ -138,7 +138,7 @@ export default class WireframeStagingService extends Service {
    * @returns {boolean}
    */
   get canOpenReview() {
-    return this.wireframeEditEngine.isDirty || this.hasUnsavedDraftEdits;
+    return this.wireframeMutationEngine.isDirty || this.hasUnsavedDraftEdits;
   }
 
   /**
@@ -154,7 +154,7 @@ export default class WireframeStagingService extends Service {
     // retarget to; suppress the blocked callout until the after-render lookup
     // settles.
     this.publishTargetResolving =
-      this.wireframeTheme.activeThemeTarget?.publishable === false;
+      this.wireframePublishTarget.activeThemeTarget?.publishable === false;
     this.#materializeAllDrafts();
 
     // Seed each outlet from the live layout first (above) so the canvas paints
@@ -180,7 +180,8 @@ export default class WireframeStagingService extends Service {
     // restores directly-mutated code-default entries so test isolation holds),
     // clears the undo/dirty structures, and returns the drafted outlets so their
     // draft layers can be cleared.
-    const draftedOutlets = this.wireframeEditEngine.flushSnapshotsAndReset();
+    const draftedOutlets =
+      this.wireframeMutationEngine.flushSnapshotsAndReset();
     for (const outletName of draftedOutlets) {
       _clearLayoutLayer(outletName, LAYOUT_LAYERS.SESSION_DRAFT);
     }
@@ -201,7 +202,7 @@ export default class WireframeStagingService extends Service {
   rediscover() {
     // The session may have ended (or the page changed again) between scheduling
     // and running.
-    if (!this.wireframeSession.active) {
+    if (!this.wireframeEditMode.active) {
       return;
     }
     const materialized = this.#materializeAllDrafts();
@@ -235,14 +236,14 @@ export default class WireframeStagingService extends Service {
    */
   @action
   async discardOutlet(outletName) {
-    this.wireframeEditEngine.rollbackOutletInMemory(outletName);
+    this.wireframeMutationEngine.rollbackOutletInMemory(outletName);
     this.#persistedDraftLayouts.delete(outletName);
     // Drop the outlet's own undo/redo history so a later undo can't resurrect a
     // draft we just discarded.
-    this.wireframeEditEngine.dropUndoEntriesForOutlet(outletName);
+    this.wireframeMutationEngine.dropUndoEntriesForOutlet(outletName);
     await this.wireframeDrafts.deleteDraft(
-      this.wireframeTheme.outletOwner(outletName).themeId ??
-        this.wireframeTheme.defaultThemeId,
+      this.wireframePublishTarget.outletOwner(outletName).themeId ??
+        this.wireframePublishTarget.defaultThemeId,
       outletName
     );
   }
@@ -256,19 +257,19 @@ export default class WireframeStagingService extends Service {
    */
   @action
   async discardAll() {
-    if (!this.wireframeEditEngine.isDirty) {
+    if (!this.wireframeMutationEngine.isDirty) {
       return false;
     }
-    for (const outletName of this.wireframeEditEngine.editedOutletNames()) {
+    for (const outletName of this.wireframeMutationEngine.editedOutletNames()) {
       await this.discardOutlet(outletName);
     }
-    this.wireframeEditEngine.clearStacks();
+    this.wireframeMutationEngine.clearStacks();
     return true;
   }
 
   /**
    * Resets a published outlet to its default: deletes the live `block_layout`
-   * field (via the persistence service), drops the caller's draft, clears the
+   * field (via the live-layout service), drops the caller's draft, clears the
    * local theme + session-draft layers so the underlying code default resolves,
    * then re-seeds a fresh editable draft from it. Only valid for a PUBLISHED
    * outlet whose owner is not Git-managed.
@@ -278,7 +279,7 @@ export default class WireframeStagingService extends Service {
    */
   @action
   async resetToDefault(outletName) {
-    const owner = this.wireframeTheme.outletOwner(outletName);
+    const owner = this.wireframePublishTarget.outletOwner(outletName);
     if (
       this.wireframeLayoutQuery.outletState(outletName) !==
         OUTLET_STATE.PUBLISHED ||
@@ -286,7 +287,7 @@ export default class WireframeStagingService extends Service {
     ) {
       return false;
     }
-    await this.wireframePersistence.resetToDefault(owner.themeId, outletName);
+    await this.wireframeLiveLayout.resetToDefault(owner.themeId, outletName);
     await this.wireframeDrafts.deleteDraft(owner.themeId, outletName);
 
     // The live field and theme layer are gone; clear our session draft and edit
@@ -295,7 +296,7 @@ export default class WireframeStagingService extends Service {
     _clearLayoutLayer(outletName, LAYOUT_LAYERS.SESSION_DRAFT);
     // Drop the engine's baseline + edit bookkeeping for this outlet; the
     // persisted-draft baseline is owned here, cleared here.
-    this.wireframeEditEngine.dropOutlet(outletName);
+    this.wireframeMutationEngine.dropOutlet(outletName);
     this.#persistedDraftLayouts.delete(outletName);
     this.#materializeAllDrafts();
     return true;
@@ -311,8 +312,8 @@ export default class WireframeStagingService extends Service {
    */
   @action
   async publishEditedOutlets() {
-    const result = await this.wireframePersistence.publish(
-      this.wireframeTheme.activeThemeId
+    const result = await this.wireframeLiveLayout.publish(
+      this.wireframePublishTarget.activeThemeId
     );
     return this.#processPublishResult(result);
   }
@@ -327,9 +328,9 @@ export default class WireframeStagingService extends Service {
    */
   @action
   async publishOutlet(outletName) {
-    const result = await this.wireframePersistence.publishOutlet(
+    const result = await this.wireframeLiveLayout.publishOutlet(
       outletName,
-      this.wireframeTheme.activeThemeId
+      this.wireframePublishTarget.activeThemeId
     );
     return this.#processPublishResult(result);
   }
@@ -349,7 +350,7 @@ export default class WireframeStagingService extends Service {
   async saveAllEditedDrafts() {
     const errors = [];
     const outlets = new Set([
-      ...this.wireframeEditEngine.editedOutletNames(),
+      ...this.wireframeMutationEngine.editedOutletNames(),
       ...this.#persistedDraftLayouts.keys(),
     ]);
     for (const outletName of outlets) {
@@ -379,9 +380,14 @@ export default class WireframeStagingService extends Service {
    */
   @action
   async saveDraftOutlet(outletName) {
+    const themeId = this.wireframePublishTarget.activeThemeId;
+    // The live-layout layer owns the version-token map; read the baseline token
+    // here and hand it to the draft-I/O leaf so that leaf needn't depend on the
+    // live-layout service (keeps the peer graph acyclic).
     await this.wireframeDrafts.saveDraftOutlet(
-      this.wireframeTheme.activeThemeId,
-      outletName
+      themeId,
+      outletName,
+      this.wireframeLiveLayout.tokenFor(themeId, outletName)
     );
     // The persisted draft now matches the canvas — advance the baseline so the
     // outlet reads as having no unsaved draft edits until the next change.
@@ -404,11 +410,11 @@ export default class WireframeStagingService extends Service {
   @action
   async exportOutlet(outletName) {
     const themeId =
-      this.wireframeTheme.outletOwner(outletName).themeId ??
-      this.wireframeTheme.defaultThemeId;
+      this.wireframePublishTarget.outletOwner(outletName).themeId ??
+      this.wireframePublishTarget.defaultThemeId;
     try {
-      await this.wireframePersistence.exportOutlet(themeId, outletName, {
-        useDraft: this.wireframeEditEngine.isOutletEdited(outletName),
+      await this.wireframeLiveLayout.exportOutlet(themeId, outletName, {
+        useDraft: this.wireframeMutationEngine.isOutletEdited(outletName),
       });
       return null;
     } catch (error) {
@@ -427,8 +433,8 @@ export default class WireframeStagingService extends Service {
   async createCustomizationComponent() {
     try {
       const { theme_id } =
-        await this.wireframePersistence.createCustomizationComponent(
-          this.wireframeTheme.activeThemeId
+        await this.wireframeLiveLayout.createCustomizationComponent(
+          this.wireframePublishTarget.activeThemeId
         );
       return { themeId: theme_id };
     } catch (error) {
@@ -451,8 +457,8 @@ export default class WireframeStagingService extends Service {
   @action
   async duplicateForEditing() {
     try {
-      const { theme_id } = await this.wireframePersistence.duplicateTheme(
-        this.wireframeTheme.activeThemeId
+      const { theme_id } = await this.wireframeLiveLayout.duplicateTheme(
+        this.wireframePublishTarget.activeThemeId
       );
       return { themeId: theme_id };
     } catch (error) {
@@ -505,7 +511,7 @@ export default class WireframeStagingService extends Service {
    * @param {string} outletName
    */
   #clearOutletEditState(outletName) {
-    this.wireframeEditEngine.clearOutletEditState(outletName);
+    this.wireframeMutationEngine.clearOutletEditState(outletName);
     // Publishing deletes the server-side draft, so its baseline no longer applies.
     this.#persistedDraftLayouts.delete(outletName);
   }
@@ -529,8 +535,8 @@ export default class WireframeStagingService extends Service {
     // Undo/redo references draft entries that no longer exist once everything is
     // published; clear it only when nothing is left edited, so a partial publish
     // keeps history for the outlets still open.
-    if (this.wireframeEditEngine.editedOutletsSize === 0) {
-      this.wireframeEditEngine.clearStacks();
+    if (this.wireframeMutationEngine.editedOutletsSize === 0) {
+      this.wireframeMutationEngine.clearStacks();
     }
     const otherErrors = result.errors.filter((error) => !error.conflict);
     if (otherErrors.length === 0) {
@@ -555,7 +561,7 @@ export default class WireframeStagingService extends Service {
     if (result?.choice !== "overwrite") {
       return;
     }
-    const ok = await this.wireframePersistence.overwriteOutlet(
+    const ok = await this.wireframeLiveLayout.overwriteOutlet(
       conflict.outlet,
       conflict.themeId,
       conflict.currentVersion
@@ -612,7 +618,7 @@ export default class WireframeStagingService extends Service {
   #materializeAllDrafts() {
     let materialized = 0;
     for (const outletName of this.wireframeLayoutQuery.editableOutlets) {
-      if (this.wireframeEditEngine.isOutletDrafted(outletName)) {
+      if (this.wireframeMutationEngine.isOutletDrafted(outletName)) {
         continue;
       }
       // A LOCKED outlet is owned by a non-overridable programmatic layout: it
@@ -656,7 +662,7 @@ export default class WireframeStagingService extends Service {
         // validation as warned and keeps the layout rendering.
         { permissive: true }
       );
-      this.wireframeEditEngine.markOutletDrafted(outletName);
+      this.wireframeMutationEngine.markOutletDrafted(outletName);
       materialized++;
       // Record the root layout's key (minted by the publish above) so
       // selection / chrome can recognise it as the outlet.
@@ -666,7 +672,7 @@ export default class WireframeStagingService extends Service {
       // and the minted root `__stableKey` — that keeps the recorded root key
       // valid after a reset re-publishes this snapshot. A separate clone so
       // in-place arg mutations on the draft never leak into the snapshot.
-      this.wireframeEditEngine.captureBaseline(
+      this.wireframeMutationEngine.captureBaseline(
         outletName,
         cloneLayoutForDraft(
           this.wireframeLayoutQuery.readResolvedLayout(outletName) ?? []
@@ -678,7 +684,7 @@ export default class WireframeStagingService extends Service {
 
   /**
    * When the bound theme can't be published to directly, look up its companion
-   * component and re-point `wireframeTheme.activeThemeId` to it — so the editor
+   * component and re-point `wireframePublishTarget.activeThemeId` to it — so the editor
    * targets the publishable companion the user already set up instead of the
    * unpublishable parent. A no-op (and clears the resolving flag) when the theme
    * is already publishable or has no companion. Generation-guarded so a late
@@ -688,19 +694,19 @@ export default class WireframeStagingService extends Service {
    * @returns {Promise<void>}
    */
   async #resolveCompanionTarget(generation) {
-    const target = this.wireframeTheme.activeThemeTarget;
+    const target = this.wireframePublishTarget.activeThemeTarget;
     if (!target || target.publishable) {
       this.publishTargetResolving = false;
       return;
     }
     const companionId = await this.wireframeDrafts.companionId(
-      this.wireframeTheme.activeThemeId
+      this.wireframePublishTarget.activeThemeId
     );
-    if (generation !== this.#generation || !this.wireframeSession.active) {
+    if (generation !== this.#generation || !this.wireframeEditMode.active) {
       return;
     }
     if (companionId != null) {
-      this.wireframeTheme.setActiveTheme(companionId);
+      this.wireframePublishTarget.setActiveTheme(companionId);
     }
     this.publishTargetResolving = false;
   }
@@ -720,19 +726,19 @@ export default class WireframeStagingService extends Service {
     // outlets, the indicator, publish targeting, and the draft fetch below all
     // resolve against the companion the user already set up.
     await this.#resolveCompanionTarget(generation);
-    if (generation !== this.#generation || !this.wireframeSession.active) {
+    if (generation !== this.#generation || !this.wireframeEditMode.active) {
       return;
     }
     const themeIds = [
       ...new Set(
         this.wireframeLayoutQuery.editableOutlets
-          .map((name) => this.wireframeTheme.outletOwner(name).themeId)
+          .map((name) => this.wireframePublishTarget.outletOwner(name).themeId)
           .filter((id) => id != null)
       ),
     ];
     const drafts = await this.wireframeDrafts.fetchDrafts(themeIds);
     // Bail if the user exited or re-entered while the fetch was in flight.
-    if (generation !== this.#generation || !this.wireframeSession.active) {
+    if (generation !== this.#generation || !this.wireframeEditMode.active) {
       return;
     }
 
@@ -742,12 +748,12 @@ export default class WireframeStagingService extends Service {
       // hasn't started touching since enter — re-seeding would clobber a live
       // edit (committed or still in flight).
       if (
-        !this.wireframeEditEngine.isOutletDrafted(outlet) ||
+        !this.wireframeMutationEngine.isOutletDrafted(outlet) ||
         !this.#isOutletPristineSinceEnter(outlet)
       ) {
         continue;
       }
-      const liveToken = this.wireframePersistence.tokenFor(
+      const liveToken = this.wireframeLiveLayout.tokenFor(
         draft.themeId,
         outlet
       );
@@ -790,7 +796,7 @@ export default class WireframeStagingService extends Service {
       { permissive: true }
     );
     this.wireframeLayoutQuery.recordOutletRoot(outlet);
-    this.wireframeEditEngine.markOutletStructurallyEdited(outlet);
+    this.wireframeMutationEngine.markOutletStructurallyEdited(outlet);
     // Record what the saved draft holds, so an edit that returns the canvas to the
     // published layout is still recognized as differing from the persisted draft.
     this.#persistedDraftLayouts.set(
@@ -811,9 +817,9 @@ export default class WireframeStagingService extends Service {
    */
   #isOutletPristineSinceEnter(outlet) {
     return (
-      !this.wireframeEditEngine.isOutletEdited(outlet) &&
-      !this.wireframeArgEdit.hasPending &&
-      this.wireframeInlineEdit.blockKey == null
+      !this.wireframeMutationEngine.isOutletEdited(outlet) &&
+      !this.wireframeInspectorArgs.hasPending &&
+      this.wireframeInplaceText.blockKey == null
     );
   }
 

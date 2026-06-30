@@ -70,7 +70,7 @@ export default class ImageArgOverlay extends Component {
   @service wireframeDragOverlay;
   @service wireframeImageUpload;
   @service wireframeLayoutQuery;
-  @service wireframeRevision;
+  @service wireframeLayoutSignal;
   @service wireframeSelection;
 
   /**
@@ -315,7 +315,7 @@ export default class ImageArgOverlay extends Component {
       this.wireframeSelection.selectedBlockKey === this.args.blockKey
         ? "1"
         : "0";
-    return `${selected}:${this.wireframeRevision.version}`;
+    return `${selected}:${this.wireframeLayoutSignal.version}`;
   }
 
   /**

@@ -72,10 +72,12 @@ function stubWireframe(owner, args, fieldErrors) {
   owner.register("service:wireframe-workspace", stub, { instantiate: false });
   owner.unregister("service:wireframe-selection");
   owner.register("service:wireframe-selection", stub, { instantiate: false });
-  // The form writes arg edits through the arg-edit service and reads grid-shape
+  // The form writes arg edits through the inspector-args service and reads grid-shape
   // helpers off the grid-template service; point both at the same stub.
-  owner.unregister("service:wireframe-arg-edit");
-  owner.register("service:wireframe-arg-edit", stub, { instantiate: false });
+  owner.unregister("service:wireframe-inspector-args");
+  owner.register("service:wireframe-inspector-args", stub, {
+    instantiate: false,
+  });
   owner.unregister("service:wireframe-grid-template");
   owner.register("service:wireframe-grid-template", stub, {
     instantiate: false,

@@ -14,7 +14,7 @@ import { imageArgEntries } from "discourse/plugins/discourse-wireframe/discourse
  * selection concern (which block/arg a paste or drop targets), the drag overlay
  * (dispatches an external drop's previewed insert), and the session signal (the
  * file-drag guard only fires while the editor is open). It never reaches back up
- * into the kernel; the kernel keeps thin facades so its consumers stay unchanged.
+ * into the orchestrator; the orchestrator keeps thin facades so its consumers stay unchanged.
  *
  * It owns window/document listeners (file `dragover`/`drop`, image `paste`)
  * installed at construction and removed on teardown; the composition root looks
@@ -24,9 +24,9 @@ import { imageArgEntries } from "discourse/plugins/discourse-wireframe/discourse
  */
 export default class WireframeImageUploadService extends Service {
   @service wireframeDragOverlay;
-  @service wireframeEditEngine;
+  @service wireframeMutationEngine;
   @service wireframeSelection;
-  @service wireframeSession;
+  @service wireframeEditMode;
 
   /**
    * Files dropped onto an empty slot, staged by `"blockKey\0argName"` until
@@ -237,7 +237,7 @@ export default class WireframeImageUploadService extends Service {
    * @param {*} value
    */
   setImageArg(blockKey, argName, value) {
-    this.wireframeEditEngine.setArg(blockKey, argName, value);
+    this.wireframeMutationEngine.setArg(blockKey, argName, value);
   }
 
   /**
@@ -252,7 +252,7 @@ export default class WireframeImageUploadService extends Service {
   }
 
   /**
-   * Drops any files staged for empty-slot drops. Called by the kernel on editor
+   * Drops any files staged for empty-slot drops. Called by the orchestrator on editor
    * enter / exit so a stale drop can't be consumed by a later session.
    */
   clearPending() {
@@ -281,7 +281,7 @@ export default class WireframeImageUploadService extends Service {
       if (this.isDestroyed || this.isDestroying) {
         return;
       }
-      if (!this.wireframeSession.active) {
+      if (!this.wireframeEditMode.active) {
         return;
       }
       if (!event.dataTransfer?.types?.includes?.("Files")) {
@@ -293,7 +293,7 @@ export default class WireframeImageUploadService extends Service {
       if (this.isDestroyed || this.isDestroying) {
         return;
       }
-      if (!this.wireframeSession.active) {
+      if (!this.wireframeEditMode.active) {
         return;
       }
       if (!event.dataTransfer?.types?.includes?.("Files")) {

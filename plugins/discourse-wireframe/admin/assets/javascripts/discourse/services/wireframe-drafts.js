@@ -10,14 +10,13 @@ const COMPANION_URL = "/admin/plugins/wireframe/companion.json";
 /**
  * Owns all per-user block-layout draft I/O — read, save, and delete — against
  * the plugin's drafts endpoint. Drafts are private and never live; promoting one
- * to the live `block_layout` ThemeField is the persistence service's `publish`.
+ * to the live `block_layout` ThemeField is the live-layout service's `publish`.
  *
  * A draft records the live version token it was based on (`base_version_token`)
  * so a later session can tell whether the live layout moved on underneath it.
  */
 export default class WireframeDraftsService extends Service {
   @service wireframeLayoutQuery;
-  @service wireframePersistence;
 
   /** Per-session cache of `themeId → companion id (or null)`; the mapping is stable within a load. */
   #companionCache = new Map();
@@ -120,9 +119,13 @@ export default class WireframeDraftsService extends Service {
    *
    * @param {number} themeId - the id of the theme owning the outlet.
    * @param {string} outlet - the outlet identifier.
+   * @param {string} baseVersionToken - the live version token the draft is based
+   *   on, supplied by the caller (the live-layout layer owns the token map, so it
+   *   is passed in rather than read here — that keeps this draft-I/O leaf free of
+   *   a dependency on the live-layout service).
    * @returns {Promise<void>}
    */
-  saveDraftOutlet(themeId, outlet) {
+  saveDraftOutlet(themeId, outlet, baseVersionToken) {
     const resolvedLayout = this.wireframeLayoutQuery.readResolvedLayout(outlet);
     const layout = serializeLayoutForSave(resolvedLayout ?? []);
 
@@ -140,7 +143,7 @@ export default class WireframeDraftsService extends Service {
         theme_id: themeId,
         outlet_name: outlet,
         layout_json: JSON.stringify({ schema_version: SCHEMA_VERSION, layout }),
-        base_version_token: this.wireframePersistence.tokenFor(themeId, outlet),
+        base_version_token: baseVersionToken,
       },
     });
   }

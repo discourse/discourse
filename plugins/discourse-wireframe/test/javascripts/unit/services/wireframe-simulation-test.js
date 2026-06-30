@@ -60,8 +60,8 @@ module(
       assert.strictEqual(this.sim.value, null);
     });
 
-    test("every mutation bumps the shared revision signal", function (assert) {
-      const revision = getOwner(this).lookup("service:wireframe-revision");
+    test("every mutation bumps the shared layout signal", function (assert) {
+      const revision = getOwner(this).lookup("service:wireframe-layout-signal");
       const before = revision.version;
       this.sim.setUser({ trust_level: 2 });
       assert.strictEqual(revision.version, before + 1, "setUser bumps");

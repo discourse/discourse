@@ -146,10 +146,10 @@ function descriptorsEqual(a, b) {
  */
 export default class GridOverlay extends Component {
   @service wireframeDragOverlay;
-  @service wireframeGridManipulator;
+  @service wireframeGridPlacement;
   @service wireframeImageUpload;
   @service wireframeLayoutQuery;
-  @service wireframeRevision;
+  @service wireframeLayoutSignal;
   @service wireframeSelection;
   @service blocks;
   @service dragAndDrop;
@@ -305,11 +305,11 @@ export default class GridOverlay extends Component {
   }
 
   get gridEntry() {
-    // Open a tracked dep on wireframeRevision.version so re-renders fire on
+    // Open a tracked dep on wireframeLayoutSignal.version so re-renders fire on
     // every layout mutation (slot insertions / removals / placement
     // changes).
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     return this.wireframeLayoutQuery.findEntryAndOutletSync(this.args.gridKey)
       ?.entry;
   }
@@ -319,7 +319,7 @@ export default class GridOverlay extends Component {
    * what the children occupy (core's `gridDimensions`), so the overlay's
    * empty-cell math and resize handles always agree with the rendered
    * grid rather than a bare default. Reads `gridEntry` for its
-   * `wireframeRevision.version` dependency.
+   * `wireframeLayoutSignal.version` dependency.
    */
   get columns() {
     const entry = this.gridEntry;
@@ -485,7 +485,7 @@ export default class GridOverlay extends Component {
    */
   @action
   commitColumnFractions(fractions) {
-    this.wireframeGridManipulator.resizeColumns({
+    this.wireframeGridPlacement.resizeColumns({
       gridKey: this.args.gridKey,
       fractions,
     });
@@ -709,7 +709,7 @@ export default class GridOverlay extends Component {
 
   @action
   pickBlockForCell(cell, blockEntry) {
-    this.wireframeGridManipulator.drop({
+    this.wireframeGridPlacement.drop({
       targetGridKey: this.args.gridKey,
       gesture: GRID_DROP_GESTURES.INTO,
       cell: { column: cell.column, row: cell.row },
@@ -843,7 +843,7 @@ export default class GridOverlay extends Component {
       next.column.end - next.column.start > 1 ||
       next.row.end - next.row.start > 1;
     if (spansMultipleCells) {
-      this.wireframeGridManipulator.mergeCells({
+      this.wireframeGridPlacement.mergeCells({
         gridKey: this.args.gridKey,
         rect: next,
       });

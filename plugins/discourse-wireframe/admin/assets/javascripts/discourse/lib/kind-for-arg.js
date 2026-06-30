@@ -1,7 +1,7 @@
 // @ts-check
 
 /**
- * Derives the inline-edit "kind" for a block arg from the block's
+ * Derives the in-place edit "kind" for a block arg from the block's
  * schema metadata. Used by `block-chrome.gjs`'s onClick handler to
  * dispatch a click on a `[data-block-arg="..."]` element to the right
  * edit-state (rich text editor, icon picker, link popover, …).
@@ -19,7 +19,7 @@
  *   object (returned by `blocks.getBlock(blockName)?.metadata` or
  *   passed in from a block-chrome instance via `this.metadata`).
  * @param {string} argName - The arg name from `data-block-arg`.
- * @returns {"rich-text"|"icon"|"url"|"image"|null} The inline-edit kind,
+ * @returns {"rich-text"|"icon"|"url"|"image"|null} The in-place edit kind,
  *   or `null` when the arg's schema doesn't match a supported kind (the
  *   click should fall through to block selection).
  */

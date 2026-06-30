@@ -55,7 +55,7 @@ import containerDropTarget, {
 } from "../../modifiers/container-drop-target";
 import proxyDragSources from "../../modifiers/proxy-drag-sources";
 import { OUTLET_STATE } from "../../services/wireframe-layout-query";
-import LinkEditPopover from "../link-edit-popover";
+import InplaceLinkPopover from "../inplace-link-popover";
 import BlockToolbar from "./block-toolbar";
 import EditorEmptyDropPlaceholder from "./editor-empty-drop-placeholder";
 import GridOverlay from "./grid-overlay";
@@ -94,17 +94,17 @@ export default class BlockChrome extends Component {
   @service wireframeBlockReveal;
   @service wireframeDragOverlay;
   @service wireframeDropAuthority;
-  @service wireframeEditEngine;
+  @service wireframeMutationEngine;
   @service wireframeForceExpand;
-  @service wireframeGridManipulator;
-  @service wireframeIconEdit;
+  @service wireframeGridPlacement;
+  @service wireframeInplaceIcon;
   @service wireframeImageUpload;
-  @service wireframeInlineEdit;
+  @service wireframeInplaceText;
   @service wireframeLayoutQuery;
-  @service wireframeLinkEdit;
-  @service wireframeRevision;
+  @service wireframeInplaceLink;
+  @service wireframeLayoutSignal;
   @service wireframeSelection;
-  @service wireframeSession;
+  @service wireframeEditMode;
 
   /**
    * Reference to the chrome's outer `<div>`, set on insert. Passed to
@@ -163,13 +163,13 @@ export default class BlockChrome extends Component {
    * keyed `"row,col"`. Captured at the start of a span-resize so the gesture
    * can clamp a growing edge at the first occupied neighbour and never commit
    * an overlapping placement. Reads through the service (opens a tracked dep
-   * on `wireframeRevision.version`) so it reflects the live layout.
+   * on `wireframeLayoutSignal.version`) so it reflects the live layout.
    *
    * @returns {Set<string>}
    */
   getResizeOccupied = () => {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const grid = this.wireframeLayoutQuery.findEntryParent(this.args.blockKey);
     if (!grid) {
       return new Set();
@@ -304,7 +304,7 @@ export default class BlockChrome extends Component {
   /**
    * Live `containerArgs.grid` for this block, or `null` when the block
    * doesn't sit in a grid. Reads through the wireframe service
-   * (opens a tracked dep on `wireframeRevision.version`) so placement commits
+   * (opens a tracked dep on `wireframeLayoutSignal.version`) so placement commits
    * trigger re-evaluation; the curried `@blockArgs` snapshot taken at
    * chrome-curry time wouldn't pick up the change.
    *
@@ -312,7 +312,7 @@ export default class BlockChrome extends Component {
    */
   get gridPlacement() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
@@ -353,7 +353,7 @@ export default class BlockChrome extends Component {
    * Accepts the legacy `"free-grid"` mode value as an alias for
    * `"grid"` so existing saved layouts keep working.
    *
-   * Opens a tracked dep on `wireframeRevision.version` so this re-evaluates
+   * Opens a tracked dep on `wireframeLayoutSignal.version` so this re-evaluates
    * every time the layout changes.
    *
    * @returns {boolean}
@@ -363,7 +363,7 @@ export default class BlockChrome extends Component {
       return false;
     }
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
@@ -415,7 +415,7 @@ export default class BlockChrome extends Component {
       return "stack";
     }
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
@@ -471,7 +471,7 @@ export default class BlockChrome extends Component {
    */
   get slotGridColumns() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const grid = this.wireframeLayoutQuery.findEntryParent(this.args.blockKey);
     return gridDimensions(
       {
@@ -485,7 +485,7 @@ export default class BlockChrome extends Component {
   /** @returns {number} */
   get slotGridRows() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const grid = this.wireframeLayoutQuery.findEntryParent(this.args.blockKey);
     return gridDimensions(
       {
@@ -641,7 +641,7 @@ export default class BlockChrome extends Component {
    */
   get parentLayoutAxis() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const parent = this.wireframeLayoutQuery.findEntryParent(
       this.args.blockKey
     );
@@ -689,10 +689,10 @@ export default class BlockChrome extends Component {
     if (this.isGridLayout) {
       return false;
     }
-    // Open a tracked dep on wireframeRevision.version so this re-evaluates
+    // Open a tracked dep on wireframeLayoutSignal.version so this re-evaluates
     // after every layout mutation (insert / remove / move).
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
@@ -722,7 +722,7 @@ export default class BlockChrome extends Component {
    */
   get imageArgEntries() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
@@ -841,7 +841,7 @@ export default class BlockChrome extends Component {
       return false;
     }
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const rect = this.chromeEl.getBoundingClientRect();
     return (
       rect.width > arg.value.width + 1 || rect.height > arg.value.height + 1
@@ -904,7 +904,7 @@ export default class BlockChrome extends Component {
    */
   get #parentContext() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const parent = this.wireframeLayoutQuery.findEntryParent(
       this.args.blockKey
     );
@@ -1025,7 +1025,7 @@ export default class BlockChrome extends Component {
 
   /** @returns {boolean} */
   get isOutletEditing() {
-    return this.wireframeEditEngine.isOutletEdited(this.args.outletName);
+    return this.wireframeMutationEngine.isOutletEdited(this.args.outletName);
   }
 
   /**
@@ -1039,10 +1039,10 @@ export default class BlockChrome extends Component {
     if (!this.isOutletRoot) {
       return false;
     }
-    // Open a tracked dep on wireframeRevision.version so this re-evaluates after every
+    // Open a tracked dep on wireframeLayoutSignal.version so this re-evaluates after every
     // layout mutation (the first dropped block flips it non-empty).
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     )?.entry;
@@ -1237,7 +1237,7 @@ export default class BlockChrome extends Component {
    */
   @action
   pickBlockForCell(blockEntry) {
-    this.wireframeGridManipulator.placeInCell({
+    this.wireframeGridPlacement.placeInCell({
       cellKey: this.args.blockKey,
       blockName: blockEntry.name,
     });
@@ -1384,7 +1384,7 @@ export default class BlockChrome extends Component {
     const next = this.#gridResize?.next;
     this.#endGridResize();
     if (next) {
-      this.wireframeGridManipulator.resizeSlot({
+      this.wireframeGridPlacement.resizeSlot({
         slotKey: this.args.blockKey,
         column: formatTrack(next.column),
         row: formatTrack(next.row),
@@ -1415,14 +1415,14 @@ export default class BlockChrome extends Component {
    *
    * Click model:
    *   - Block not selected → first click selects it.
-   *   - Block already selected, click landed on an `[data-wf-inline-edit-arg]`
+   *   - Block already selected, click landed on an `[data-wf-rich-text-arg]`
    *     region → start editing that arg (the "click again to edit" gesture).
    *   - Block already selected, click landed elsewhere on the chrome → no-op
    *     (re-selecting the already-selected block is a no-op).
    */
   @action
   onClick(event) {
-    if (!this.wireframeSession.active) {
+    if (!this.wireframeEditMode.active) {
       return;
     }
     // A LOCKED outlet is read-only — swallow the click so nothing inside it can
@@ -1476,7 +1476,7 @@ export default class BlockChrome extends Component {
         this.wireframeSelection.selectedBlockKey === panelKey &&
         tabEl.dataset.wfContainerArgKey
       ) {
-        this.wireframeInlineEdit.startContainerArg(
+        this.wireframeInplaceText.startContainerArg(
           tabEl.dataset.wfContainerArgKey,
           tabEl.dataset.wfContainerArgNamespace,
           tabEl.dataset.wfContainerArgField,
@@ -1512,7 +1512,7 @@ export default class BlockChrome extends Component {
       return;
     }
 
-    // Other inline-editable args follow the "click to select, click
+    // Other in-place-editable args follow the "click to select, click
     // again to edit" pattern — placing the cursor inside text or
     // anchoring a popover requires the click to be on the already-
     // selected block, otherwise the first click is interpreted as
@@ -1523,19 +1523,19 @@ export default class BlockChrome extends Component {
     ) {
       switch (kind) {
         case "rich-text":
-          this.wireframeInlineEdit.start(this.args.blockKey, argName, {
+          this.wireframeInplaceText.start(this.args.blockKey, argName, {
             coords: { x: event.clientX, y: event.clientY },
           });
           return;
         case "icon":
-          this.wireframeIconEdit.start({
+          this.wireframeInplaceIcon.start({
             blockKey: this.args.blockKey,
             argName,
             anchorEl: argEl,
           });
           return;
         case "url":
-          this.wireframeLinkEdit.start({
+          this.wireframeInplaceLink.start({
             blockKey: this.args.blockKey,
             argName,
           });
@@ -1736,10 +1736,10 @@ export default class BlockChrome extends Component {
   }
 
   /**
-   * Registers a FloatKit tooltip per URL inline-editable arg on this
+   * Registers a FloatKit tooltip per URL in-place-editable arg on this
    * block, anchored to the rendered link element (matched via
    * `[data-block-arg]` + `kindForArg` lookup). The tooltip hosts a
-   * `LinkEditPopover` that swaps between a chip and an input mode in
+   * `InplaceLinkPopover` that swaps between a chip and an input mode in
    * place — `data` carries the `(blockKey, argName)` the popover needs
    * to drive its own `linkEdit` session.
    *
@@ -1765,8 +1765,8 @@ export default class BlockChrome extends Component {
         continue;
       }
       const instance = this.tooltip.register(linkEl, {
-        identifier: "wf-link-edit-popover",
-        component: LinkEditPopover,
+        identifier: "wf-inplace-link-popover",
+        component: InplaceLinkPopover,
         interactive: true,
         hoverGracePeriod: 120,
         placement: "right",
@@ -1863,7 +1863,7 @@ export default class BlockChrome extends Component {
   }
 
   <template>
-    {{#if this.wireframeSession.active}}
+    {{#if this.wireframeEditMode.active}}
       {{! Outer wrapper hosts the sibling drop zones (before/after) for
         stack / row layouts and the bordered chrome frame in between.
         Grid cell occupants skip the sibling drop zones — their
@@ -1914,7 +1914,7 @@ export default class BlockChrome extends Component {
             Re-scans on each structural edit. }}
           {{proxyDragSources
             outletName=@outletName
-            version=this.wireframeRevision.version
+            version=this.wireframeLayoutSignal.version
           }}
           {{! Chrome-level external file drop. One target per chrome handles
             both paths: filling a passive background image arg, and creating a

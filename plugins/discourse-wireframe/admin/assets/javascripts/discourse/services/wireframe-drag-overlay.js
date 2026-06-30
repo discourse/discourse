@@ -4,7 +4,7 @@ import Service from "@ember/service";
 
 /**
  * @typedef {{ action: string, args: Object }} DropDispatch
- *   A layout mutation to run at drop time, executed by the kernel-registered
+ *   A layout mutation to run at drop time, executed by the orchestrator-registered
  *   drop dispatcher (see `registerDispatcher`).
  *
  * @typedef {{ top: number, left: number, width: number, height: number }} OverlayGeometry
@@ -93,7 +93,7 @@ export default class WireframeDragOverlay extends Service {
   #stickyDispatch = null;
 
   /**
-   * The synchronous dispatcher the kernel registers via `registerDispatcher`.
+   * The synchronous dispatcher the orchestrator registers via `registerDispatcher`.
    * Given a drop payload it runs the layout mutation and returns whether one
    * ran; `null` until registered.
    *
@@ -198,8 +198,8 @@ export default class WireframeDragOverlay extends Service {
 
   /**
    * Registers the synchronous dispatcher that runs a drop's layout mutation. The
-   * kernel registers a callback into its own dispatch logic, so this service
-   * never reaches up into the kernel. The dispatcher MUST be synchronous and
+   * orchestrator registers a callback into its own dispatch logic, so this service
+   * never reaches up into the orchestrator. The dispatcher MUST be synchronous and
    * return a boolean: `completeExternalImageDrop` branches on the result, then
    * reads the selection the mutation set, so an async dispatcher would break
    * that contract.
@@ -213,7 +213,7 @@ export default class WireframeDragOverlay extends Service {
   /**
    * Runs the active slot-insert's dispatch at drop time, then clears it. Called
    * from a target's `onDrop` (before the deferred `endDrag` cleanup runs). Routes
-   * through the kernel-registered handler, so this service has no upward
+   * through the orchestrator-registered handler, so this service has no upward
    * dependency; returns `false` when nothing is claimed or no handler is set.
    *
    * @returns {boolean} `true` when an operation ran.

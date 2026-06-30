@@ -54,7 +54,7 @@ export function computeTier(avail, naturalFull, naturalCompact) {
  *
  * This is a dependency-free coordination leaf in the spirit of
  * `wireframe-drag-overlay`: it injects nothing, never reaches back into the
- * editor kernel or any component, and writes only a data attribute on the
+ * orchestrator or any component, and writes only a data attribute on the
  * chrome elements it's handed. Its lifetime is the app instance; `willDestroy`
  * tears the observer down, and each badge unregisters as it deselects or unmounts.
  */

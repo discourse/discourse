@@ -134,7 +134,7 @@ const GAP_MAX = 4;
 const GAP_STEP = 0.25;
 
 export default class InspectorLayoutForm extends Component {
-  @service wireframeArgEdit;
+  @service wireframeInspectorArgs;
   @service wireframeGridTemplate;
   @service wireframeSelection;
   @service dialog;
@@ -568,7 +568,7 @@ export default class InspectorLayoutForm extends Component {
     const writeValue =
       value === "" && argDef?.default === undefined ? null : value;
     await ctx.set(ctx.name, value);
-    this.wireframeArgEdit.updateSelectedArg(ctx.name, writeValue);
+    this.wireframeInspectorArgs.updateSelectedArg(ctx.name, writeValue);
   }
 
   /**
@@ -633,7 +633,7 @@ export default class InspectorLayoutForm extends Component {
   }
 
   #set(name, value) {
-    this.wireframeArgEdit.updateSelectedArg(name, value);
+    this.wireframeInspectorArgs.updateSelectedArg(name, value);
   }
 
   /**

@@ -129,17 +129,15 @@ module(
 
     test("releasing a filled cell's resize handle commits through the grid manipulator", async function (assert) {
       // Regression: BlockChrome's `onGridResizeEnd` calls
-      // `wireframeGridManipulator.resizeSlot`, so the component must inject that
-      // service. It once read `this.wireframeGridManipulator` without an
+      // `wireframeGridPlacement.resizeSlot`, so the component must inject that
+      // service. It once read `this.wireframeGridPlacement` without an
       // `@service` declaration, so the pointer-up threw and the span-resize
       // silently died. Unit / service tests never mount the chrome, and the
       // missing injection doesn't throw at render — only on the release — so it
       // takes an interaction test through the real handle to catch it.
       const wireframe = await renderGridInEditMode(this.owner);
 
-      const manipulator = this.owner.lookup(
-        "service:wireframe-grid-manipulator"
-      );
+      const manipulator = this.owner.lookup("service:wireframe-grid-placement");
       const calls = [];
       manipulator.resizeSlot = (args) => calls.push(args);
 
@@ -174,7 +172,7 @@ module(
       assert.strictEqual(
         calls.length,
         1,
-        "the release commits the new span through wireframeGridManipulator.resizeSlot"
+        "the release commits the new span through wireframeGridPlacement.resizeSlot"
       );
       const grid = queryOf(wireframe).readResolvedLayout(OUTLET)[0];
       const cellKey = `grid-overlay-rendering-leaf:${grid.children[0].__stableKey}`;

@@ -27,16 +27,16 @@ import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-rende
  * is-open/can-edit signal everything else reads.
  */
 export default class WireframeWorkspaceService extends Service {
-  @service wireframeArgEdit;
+  @service wireframeInspectorArgs;
   @service wireframeBlockReveal;
   @service wireframeDragOverlay;
   @service wireframeDragSession;
   @service wireframeForceExpand;
   @service wireframeImageUpload;
   @service wireframeSelection;
-  @service wireframeSession;
+  @service wireframeEditMode;
   @service wireframeStaging;
-  @service wireframeTheme;
+  @service wireframePublishTarget;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -47,12 +47,12 @@ export default class WireframeWorkspaceService extends Service {
 
   @action
   enter({ themeId } = {}) {
-    if (!this.wireframeSession.canEdit) {
+    if (!this.wireframeEditMode.canEdit) {
       return;
     }
-    this.wireframeSession.activate();
+    this.wireframeEditMode.activate();
     this.wireframeImageUpload.clearPending();
-    this.wireframeTheme.setActiveTheme(themeId);
+    this.wireframePublishTarget.setActiveTheme(themeId);
     document.body.classList.add("wireframe-active");
     // Swap in the editor-aware rich-text renderer so every richInline arg gains
     // its click-to-edit scaffold. The minimal (live-style) renderer is restored
@@ -65,7 +65,7 @@ export default class WireframeWorkspaceService extends Service {
     // render.
     this.wireframeStaging.beginSession();
 
-    // Warm the inline-rich-text editor bundle in the background so the first
+    // Warm the rich-text editor bundle in the background so the first
     // click-to-edit doesn't pay a load-the-PM-chunk latency hit. Webpack dedupes
     // dynamic-import promises by module id, so the controller's later
     // `loadInlineRichEditor()` resolves from cache even if the user enters edit
@@ -86,7 +86,7 @@ export default class WireframeWorkspaceService extends Service {
    */
   @action
   rediscoverOutlets() {
-    if (!this.wireframeSession.active) {
+    if (!this.wireframeEditMode.active) {
       return;
     }
     // Defer to after render so the just-navigated page's `<BlockOutlet>`s have
@@ -107,8 +107,8 @@ export default class WireframeWorkspaceService extends Service {
     // into them is cleared.
     this.wireframeStaging.endSession();
 
-    this.wireframeSession.deactivate();
-    this.wireframeTheme.reset();
+    this.wireframeEditMode.deactivate();
+    this.wireframePublishTarget.reset();
     // Tear the selection down WITHOUT firing the select hooks (flush args,
     // commit in-session edits, reveal-into-view) — they're meaningless once
     // the session is ending, and `selectBlock(null)` would fire them.
@@ -120,7 +120,7 @@ export default class WireframeWorkspaceService extends Service {
     // Revert to the minimal rich-text renderer so admin pages without
     // an open editor render the same DOM as live.
     resetBlockArgRenderer("rich-text");
-    this.wireframeArgEdit.clear();
+    this.wireframeInspectorArgs.clear();
     this.wireframeForceExpand.reset();
     // Clear every editor body class, including the chrome's collapse / dim
     // modifiers. These are separate class tokens from `wireframe-active`, so
@@ -135,7 +135,7 @@ export default class WireframeWorkspaceService extends Service {
 
   @action
   toggle() {
-    if (this.wireframeSession.active) {
+    if (this.wireframeEditMode.active) {
       this.exit();
     } else {
       this.enter();

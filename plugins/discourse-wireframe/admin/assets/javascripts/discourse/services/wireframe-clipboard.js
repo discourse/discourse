@@ -16,7 +16,7 @@ import { cloneEntryForPaste, insertEntryAt } from "../lib/mutate-layout";
  *
  * It is purely command-driven — `copySelected` / `cutSelected` /
  * `pasteFromClipboard` are invoked imperatively (the keyboard shortcuts) — so,
- * unlike the reveal / inline-edit / arg-edit services, it does NOT subscribe to
+ * unlike the reveal / in-place-text / inspector-args services, it does NOT subscribe to
  * the selection seam and needs no boot-time instantiation.
  *
  * Cut is a composition: this service stashes the entry (mode `"cut"`) and then
@@ -25,7 +25,7 @@ import { cloneEntryForPaste, insertEntryAt } from "../lib/mutate-layout";
  */
 export default class WireframeClipboardService extends Service {
   @service wireframeBlockMutations;
-  @service wireframeEditEngine;
+  @service wireframeMutationEngine;
   @service wireframeLayoutQuery;
   @service wireframeSelection;
 
@@ -113,7 +113,7 @@ export default class WireframeClipboardService extends Service {
     if (!located) {
       return false;
     }
-    return this.wireframeEditEngine.recordStructural(
+    return this.wireframeMutationEngine.recordStructural(
       [located.outletName],
       () => {
         const layout = this.wireframeLayoutQuery.readResolvedLayout(
@@ -131,7 +131,7 @@ export default class WireframeClipboardService extends Service {
         if (!insertion.changed) {
           return false;
         }
-        this.wireframeEditEngine.publishStructuralChange(
+        this.wireframeMutationEngine.publishStructuralChange(
           located.outletName,
           insertion.layout
         );
@@ -143,7 +143,7 @@ export default class WireframeClipboardService extends Service {
   /**
    * Clones the currently-selected entry into the stash with the given mode.
    * Stable keys are stripped by `cloneEntryForPaste` so a paste mints fresh
-   * ones. No outlet-root guard — root-ness is the kernel `removeBlock`'s
+   * ones. No outlet-root guard — root-ness is block-mutations' `removeBlock`'s
    * concern, not the stash's.
    *
    * @param {"copy"|"cut"} mode

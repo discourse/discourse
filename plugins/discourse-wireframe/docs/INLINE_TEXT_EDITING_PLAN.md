@@ -65,7 +65,7 @@ The block validator (`frontend/discourse/app/lib/blocks/-internals/validation/ar
    case "richInline":
      if (typeof value === "string") break;
      if (isInlineDoc(value)) break;
-     return argValidationError(argName, "must be a string or inline-rich-text doc");
+     return argValidationError(argName, "must be a string or rich-text doc");
    ```
 3. `isInlineDoc` lives in the plugin and structurally checks `{ type: "doc", content: [...] }` with only `text` / `hard_break` nodes and an enum of `strong | em | link` marks. Unknown marks, foreign nodes, or invalid `href`s are rejected.
 
@@ -102,7 +102,7 @@ wf-heading.gjs / wf-paragraph.gjs       (chooses <h1..h6> / <p>, applies block s
 **Admin-only (the editor chrome):**
 ```
 <EditorCanvas>                          (existing — owns selection/keys/clicks/wrapper)
-  └─ <InlineEditController>             (new — watches service state, mounts editor on the active region)
+  └─ <InplaceTextController>             (new — watches service state, mounts editor on the active region)
       └─ <ProsemirrorEditor>            (rendered via {{in-element}} into the active renderer's span)
 ```
 
@@ -113,8 +113,8 @@ wf-heading.gjs / wf-paragraph.gjs       (chooses <h1..h6> / <p>, applies block s
 // Props: @arg (the argName, used as a marker), @schema, @value
 <template>
   <span
-    data-wf-inline-edit-arg={{@arg}}
-    data-wf-inline-edit-schema={{@schema}}
+    data-wf-rich-text-arg={{@arg}}
+    data-wf-rich-text-schema={{@schema}}
     ...attributes
   >
     {{#each (this.runs @value) as |run|}}
@@ -163,20 +163,20 @@ Mark order is determined by the ProseMirror schema's `markSpec` ordering (canoni
 
 ```js
 onCanvasClick(event) {
-  const target = event.target.closest("[data-wf-inline-edit-arg]");
+  const target = event.target.closest("[data-wf-rich-text-arg]");
   if (!target) return;
   const blockEl = target.closest("[data-wf-block-id]");
   if (!blockEl) return;
   const blockKey = blockEl.dataset.wfBlockId;
   if (this.wireframe.selectedBlockKey !== blockKey) return;  // click-on-selected gesture
-  this.wireframe.startEditingArg(blockKey, target.dataset.wfInlineEditArg);
+  this.wireframe.startEditingArg(blockKey, target.dataset.wfRichTextArg);
 }
 ```
 
-A new `<InlineEditController>`, mounted once at the canvas level, watches `(editingBlockKey, editingArgName)`. When set, it locates the active renderer span, reads `data-wf-inline-edit-schema` to pick the PM extension list, and mounts a `<ProsemirrorEditor>` into that span via `{{in-element}}`. The renderer's content is hidden (via a class toggle) while the editor is mounted, so the user sees the PM editor exactly where the rendered text was — same parent (`<h2>`, `<p>`), same styles.
+A new `<InplaceTextController>`, mounted once at the canvas level, watches `(editingBlockKey, editingArgName)`. When set, it locates the active renderer span, reads `data-wf-rich-text-schema` to pick the PM extension list, and mounts a `<ProsemirrorEditor>` into that span via `{{in-element}}`. The renderer's content is hidden (via a class toggle) while the editor is mounted, so the user sees the PM editor exactly where the rendered text was — same parent (`<h2>`, `<p>`), same styles.
 
 ```gjs
-// InlineEditController.gjs — admin chrome, mounted once at canvas level
+// InplaceTextController.gjs — admin chrome, mounted once at canvas level
 <template>
   {{#if this.activeRendererEl}}
     {{#in-element this.activeRendererEl}}
@@ -257,12 +257,12 @@ Three `@schema` variants govern what's allowed in each field:
 | `"heading"` | strong, em, link | none (Enter commits) | Single-line rich content (`wf:heading` text, `wf-media-card` title) |
 | `"paragraph"` | strong, em, link | `hard_break` (Enter inserts) | Multi-line rich content (`wf:paragraph` text, `wf-cta-banner` content, `wf-callout` body) |
 
-`@schema` is emitted as a data-attr on the renderer span; the `InlineEditController` reads it to pick the right PM extension list and toolbar config when entering edit mode. `"plain"` has no toolbar (no marks). For a `"plain"` arg, `toStorage` always returns a string — the doc-JSON upgrade path is unreachable because no marks can be applied.
+`@schema` is emitted as a data-attr on the renderer span; the `InplaceTextController` reads it to pick the right PM extension list and toolbar config when entering edit mode. `"plain"` has no toolbar (no marks). For a `"plain"` arg, `toStorage` always returns a string — the doc-JSON upgrade path is unreachable because no marks can be applied.
 
 ### Click-to-edit gesture (canvas-owned)
 
 - Block not selected → click selects it (existing behavior, unchanged).
-- Block selected → click on an element with `data-wf-inline-edit-arg` → canvas calls `wireframe.startEditingArg(blockKey, argName)`. This implicitly commits + exits any other arg currently being edited.
+- Block selected → click on an element with `data-wf-rich-text-arg` → canvas calls `wireframe.startEditingArg(blockKey, argName)`. This implicitly commits + exits any other arg currently being edited.
 - Escape, blur to outside the block, or click outside → canvas calls `wireframe.stopEditing()`.
 - The inspector form works in parallel; both paths write through `updateBlockArg` and stay in sync via the existing `trackedObject` reactivity.
 
@@ -283,13 +283,13 @@ Small floating bubble (bold / italic / link) appears on non-empty text selection
 Ships the new primitive, the editor controller, the validator type, and adoption on the two simplest text blocks. This is the proving ground for the design; Phase 2 is mostly find-and-replace once it lands.
 
 **New — shared / live-site (dumb, no service):**
-- `plugins/discourse-wireframe/assets/javascripts/discourse/components/inline-rich-text-renderer.gjs` — Props: `@arg`, `@schema`, `@value` (`string | doc-JSON`). Emits `<span data-wf-inline-edit-arg data-wf-inline-edit-schema>` and walks runs via `<MarkedText>`.
+- `plugins/discourse-wireframe/assets/javascripts/discourse/components/rich-text-renderer.gjs` — Props: `@arg`, `@schema`, `@value` (`string | doc-JSON`). Emits `<span data-wf-rich-text-arg data-wf-rich-text-schema>` and walks runs via `<MarkedText>`.
 - `plugins/discourse-wireframe/assets/javascripts/discourse/components/marked-text.gjs` — recursive mark wrapper. Renders `<strong>`, `<em>`, `<a>`. `href` passes through `safeHref`.
-- `plugins/discourse-wireframe/assets/javascripts/discourse/lib/inline-rich-text.js` — `isInlineDoc`, `toDoc`, `toStorage`, `safeHref`, and a `SCHEMAS` map of `{ plain, heading, paragraph } → ProseMirror extension list`.
-- `plugins/discourse-wireframe/assets/stylesheets/common/inline-rich-text.scss` — renderer span styling, the `is-editing` class that hides renderer content while the editor mounts inside it, focus ring, placeholder.
+- `plugins/discourse-wireframe/assets/javascripts/discourse/lib/rich-text.js` — `isInlineDoc`, `toDoc`, `toStorage`, `safeHref`, and a `SCHEMAS` map of `{ plain, heading, paragraph } → ProseMirror extension list`.
+- `plugins/discourse-wireframe/assets/stylesheets/common/rich-text.scss` — renderer span styling, the `is-editing` class that hides renderer content while the editor mounts inside it, focus ring, placeholder.
 
 **New — admin-only (editor chrome):**
-- `plugins/discourse-wireframe/admin/assets/javascripts/discourse/components/editor/inline-edit-controller.gjs` — mounted once at canvas level. Watches `(editingBlockKey, editingArgName)`; locates the matching renderer span; mounts `<ProsemirrorEditor>` into it via `{{in-element}}`. Reads `@schema` off the renderer's data-attr to pick the extension list. Handles `@change → updateBlockArg`, Escape / outside-click → `stopEditing`.
+- `plugins/discourse-wireframe/admin/assets/javascripts/discourse/components/editor/inplace-text-controller.gjs` — mounted once at canvas level. Watches `(editingBlockKey, editingArgName)`; locates the matching renderer span; mounts `<ProsemirrorEditor>` into it via `{{in-element}}`. Reads `@schema` off the renderer's data-attr to pick the extension list. Handles `@change → updateBlockArg`, Escape / outside-click → `stopEditing`.
 - `plugins/discourse-wireframe/admin/assets/javascripts/discourse/components/editor/inline-edit-toolbar.gjs` — bold / italic / link bubble menu, subclasses `ToolbarBase`. Mounted by the controller; only when `schema !== "plain"`.
 
 **Modified — core:**
@@ -300,7 +300,7 @@ Ships the new primitive, the editor controller, the validator type, and adoption
 - `plugins/discourse-wireframe/assets/javascripts/discourse/blocks/wf-paragraph.gjs` — same change with `@schema="paragraph"` (the outer `<p>` stays in the block template).
 - `plugins/discourse-wireframe/admin/assets/javascripts/discourse/services/wireframe.js` — add `@tracked editingBlockKey`, `@tracked editingArgName`, `_editingPrevSnapshot`; methods `startEditingArg`, `stopEditing` (with undo-entry push on commit), `applyInlineEditChange` (per-keystroke, no undo push), `updateBlockArg` (split from `updateSelectedArg`).
 - `plugins/discourse-wireframe/admin/assets/javascripts/discourse/lib/schema-to-fields.js` — add `"rich-inline"` branch in `pickControl()`.
-- `plugins/discourse-wireframe/admin/assets/javascripts/discourse/components/editor/canvas.gjs` — add the canvas-level click handler that matches `[data-wf-inline-edit-arg]` inside the selected block; render `<InlineEditController />` once at canvas level; wire Escape / outside-click to `stopEditing`; suspend the canvas-level Cmd+Z handler while `editingBlockKey` is set.
+- `plugins/discourse-wireframe/admin/assets/javascripts/discourse/components/editor/canvas.gjs` — add the canvas-level click handler that matches `[data-wf-rich-text-arg]` inside the selected block; render `<InplaceTextController />` once at canvas level; wire Escape / outside-click to `stopEditing`; suspend the canvas-level Cmd+Z handler while `editingBlockKey` is set.
 
 **Reusable utilities (do not re-implement):**
 - `<ProsemirrorEditor>` at `frontend/discourse/app/static/prosemirror/components/prosemirror-editor.gjs` — `@includeDefault={{false}}`, `@extensions`, `@disabled`, `@change`, `@onSetup`.
@@ -310,12 +310,12 @@ Ships the new primitive, the editor controller, the validator type, and adoption
 
 **Verification:**
 1. **Validator unit test** — `frontend/discourse/tests/unit/lib/blocks/validation/args-test.js` (or adjacent): `type: "richInline"` accepts a plain string, accepts a valid doc-JSON, rejects unknown marks, rejects foreign node types, rejects invalid `href` values.
-2. **Renderer component test** — `plugins/discourse-wireframe/test/javascripts/components/inline-rich-text-renderer-test.gjs`:
+2. **Renderer component test** — `plugins/discourse-wireframe/test/javascripts/components/rich-text-renderer-test.gjs`:
    - Renders a plain string as text.
    - Renders a doc-JSON with marks → `<strong>`, `<em>`, `<a>` wrapping.
-   - Emits `data-wf-inline-edit-arg` / `data-wf-inline-edit-schema` on the root span.
+   - Emits `data-wf-rich-text-arg` / `data-wf-rich-text-schema` on the root span.
    - `safeHref` returns `#` for invalid URLs; valid URLs flow through.
-3. **Editor controller component test** — `plugins/discourse-wireframe/test/javascripts/components/editor/inline-edit-controller-test.gjs`:
+3. **Editor controller component test** — `plugins/discourse-wireframe/test/javascripts/components/editor/inplace-text-controller-test.gjs`:
    - When service state is `(blockKey=…, argName=…)`, the controller finds the matching renderer span and mounts PM into it.
    - Typing emits `@change`; controller calls `updateBlockArg` with the result of `toStorage` (string when no marks, doc-JSON when marks present).
    - Bold via `Cmd+B`, italic via `Cmd+I`, link via toolbar — round-trip preserves marks.
@@ -348,7 +348,7 @@ Once Phase 1 ships and the primitive is proven, the remaining text-bearing block
 - `plugins/discourse-wireframe/assets/javascripts/discourse/blocks/wf-cta-banner.gjs` — `title` (`heading`), `content` (`paragraph`), `linkLabel` (`plain`).
 - `plugins/discourse-wireframe/assets/javascripts/discourse/blocks/wf-callout.gjs` — `body` (`paragraph`).
 - `plugins/discourse-wireframe/assets/javascripts/discourse/blocks/wf-button-link.gjs` — `label` (`plain`).
-- `plugins/discourse-wireframe/admin/assets/javascripts/discourse/components/editor/inline-edit-controller.gjs` — add a `Tab` / `Shift+Tab` keymap to the PM editor: on Tab, find the next `[data-wf-inline-edit-arg]` in DOM order within the same `[data-wf-block-id]`, call `startEditingArg` for it (which implicitly commits the current one). Shift+Tab walks backwards. If no next/previous exists in the current block, leave the keystroke alone (default browser behavior).
+- `plugins/discourse-wireframe/admin/assets/javascripts/discourse/components/editor/inplace-text-controller.gjs` — add a `Tab` / `Shift+Tab` keymap to the PM editor: on Tab, find the next `[data-wf-rich-text-arg]` in DOM order within the same `[data-wf-block-id]`, call `startEditingArg` for it (which implicitly commits the current one). Shift+Tab walks backwards. If no next/previous exists in the current block, leave the keystroke alone (default browser behavior).
 
 **Example adoption (wf-media-card):**
 
@@ -408,7 +408,7 @@ In a `paragraph`-schema editor, change Enter from `hard_break` to **split the cu
 - "Top row" / "bottom row" detection uses PM's `endOfTextblock` checks (it has helpers for `up` / `down` / `left` / `right` boundary detection).
 
 **Modified — plugin:**
-- `plugins/discourse-wireframe/admin/assets/javascripts/discourse/components/editor/inline-edit-controller.gjs` — extend the PM keymap with Enter / Backspace / arrow handlers as above. Each handler calls into the service for the layout mutation, then re-focuses the editor on the destination block.
+- `plugins/discourse-wireframe/admin/assets/javascripts/discourse/components/editor/inplace-text-controller.gjs` — extend the PM keymap with Enter / Backspace / arrow handlers as above. Each handler calls into the service for the layout mutation, then re-focuses the editor on the destination block.
 - `plugins/discourse-wireframe/admin/assets/javascripts/discourse/services/wireframe.js` — new methods: `splitInlineEditAt(cursorPos)`, `mergeInlineEditWithPrevious()`, `enterEditFromNeighbor({ direction, blockKey, cursorHint })`. All wrap layout mutations in `_recordStructural`.
 - `plugins/discourse-wireframe/admin/assets/javascripts/discourse/lib/mutate-layout.js` — small helpers for "find previous/next text-bearing sibling in layout order" if not already present.
 

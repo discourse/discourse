@@ -20,7 +20,7 @@ module("Unit | Discourse Wireframe | lib:editor-shortcuts", function (hooks) {
 
   // Minimal stand-in for the wireframe service exposing only what the Delete
   // shortcut reads. `removed` records whether the shortcut acted. The shortcut
-  // reads the selection off `wireframeSession`/`wireframeSelection` and removes
+  // reads the selection off `wireframeEditMode`/`wireframeSelection` and removes
   // through the block-mutations service, which it resolves off the editor's
   // owner — so the stub is registered there and the stub editor carries the
   // owner via `setOwner`.
@@ -37,7 +37,7 @@ module("Unit | Discourse Wireframe | lib:editor-shortcuts", function (hooks) {
     );
 
     const editor = {
-      wireframeSession: { active: true },
+      wireframeEditMode: { active: true },
       isDestroyed: false,
       isDestroying: false,
       wireframeSelection: {

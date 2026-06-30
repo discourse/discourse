@@ -36,7 +36,7 @@ module(
 
     hooks.beforeEach(function () {
       this.editor = getOwner(this).lookup("service:wireframe-workspace");
-      this.theme = getOwner(this).lookup("service:wireframe-theme");
+      this.theme = getOwner(this).lookup("service:wireframe-publish-target");
       withTestBlockRegistration(() => registerBlock(StateTile));
     });
 
@@ -138,7 +138,7 @@ module(
         metadata: { args: { title: { type: "string" } } },
       });
       getOwner(this)
-        .lookup("service:wireframe-arg-edit")
+        .lookup("service:wireframe-inspector-args")
         .updateSelectedArg("title", "Edited");
       await settled();
 
@@ -189,7 +189,9 @@ module(
 
       // The session was entered against theme 7, so that's the save target —
       // not a computed default theme.
-      getOwner(this).lookup("service:wireframe-theme").setActiveTheme(7);
+      getOwner(this)
+        .lookup("service:wireframe-publish-target")
+        .setActiveTheme(7);
       assert.strictEqual(
         this.theme.outletOwner("homepage-blocks").themeId,
         7,

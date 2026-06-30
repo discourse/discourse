@@ -42,7 +42,7 @@ async function editTitle(editor, outlet, value) {
     metadata: { args: { title: { type: "string" } } },
   });
   getOwner(editor)
-    .lookup("service:wireframe-arg-edit")
+    .lookup("service:wireframe-inspector-args")
     .updateSelectedArg("title", value);
   await settled();
 }

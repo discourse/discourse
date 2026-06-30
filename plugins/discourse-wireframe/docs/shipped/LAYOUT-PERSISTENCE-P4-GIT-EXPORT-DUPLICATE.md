@@ -74,7 +74,7 @@ entry," so they followed automatically — `outletOwner` is now the most-derived
 
 ## Plugin (client)
 
-- `wireframe-persistence.js` — `exportOutlet` / `duplicateTheme` / `createCustomizationComponent`
+- `wireframe-live-layout.js` — `exportOutlet` / `duplicateTheme` / `createCustomizationComponent`
   verbs; a factored `#serializeLayoutJson` (refuse-on-null) reused by publish/export/draft-build;
   `#editedDrafts`; a `_triggerDownload` seam over the helper (stubbable in tests).
 - `lib/download-json.js` (new, generically named) — Blob + object-URL anchor download; `content` is an

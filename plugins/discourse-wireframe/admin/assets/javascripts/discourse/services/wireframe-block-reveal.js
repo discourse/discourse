@@ -21,7 +21,7 @@ const FLASH_DURATION_MS = 1100;
  *
  * A peer service that reads the draft-aware layout via the layout-query service
  * and subscribes itself to the selection seam — it never reaches back into the
- * editor kernel. It owns transient presentation state (pending keys + the flash
+ * orchestrator. It owns transient presentation state (pending keys + the flash
  * timer) and has side effects (DOM + timers).
  */
 export default class WireframeBlockRevealService extends Service {
@@ -144,7 +144,7 @@ export default class WireframeBlockRevealService extends Service {
   /**
    * Drops all transient state: cancels an in-flight flash, strips the flash
    * class from the last flashed element, and clears the pending reveal/flash
-   * keys. Idempotent. The kernel calls it both when the editing session closes
+   * keys. Idempotent. The orchestrator calls it both when the editing session closes
    * and at service teardown, so a flash awaiting a mount can't replay against a
    * later session.
    */

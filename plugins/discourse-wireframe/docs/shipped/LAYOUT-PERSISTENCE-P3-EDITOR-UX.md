@@ -56,8 +56,8 @@ layer/version mechanism, no editor vocabulary:
   shared by the toolbar Save and the per-outlet Publish; `saveDraftOutlet`.
 - `services/wireframe-drafts.js` (new) — owns all draft I/O: `fetchDrafts` (error-swallowing,
   drops unparseable rows), `saveDraftOutlet`, `deleteDraft` (idempotent, swallows transport
-  errors). The draft write/delete verbs moved here out of `wireframe-persistence.js`.
-- `services/wireframe-persistence.js` — per-owner publish loop (keeps the passed `themeId` as the
+  errors). The draft write/delete verbs moved here out of `wireframe-live-layout.js`.
+- `services/wireframe-live-layout.js` — per-owner publish loop (keeps the passed `themeId` as the
   owner *fallback*); Git-owned outlets are **skipped** (never written, draft preserved — handed to
   P4); `overwriteOutlet`; `tokenFor` made public (the drafts service stamps a draft's baseline
   with it); post-publish `deleteDraft` cleanup (the P2-deferred wiring).
@@ -84,7 +84,7 @@ layer/version mechanism, no editor vocabulary:
 
 - **qunit** — full plugin suite 439/439; core `resolved-layout accessors` 6/6 (incl.
   `_getResolvedLayoutMeta` + `ignoreSessionDraft`). New: `wireframe-drafts-test`,
-  `wireframe-outlet-state-test`; rewritten `wireframe-persistence-test` for the verb split +
+  `wireframe-outlet-state-test`; rewritten `wireframe-live-layout-test` for the verb split +
   per-owner publish + 409 metadata + `overwriteOutlet`; the inspector-outlet stub gained the new
   surface. A shared `setupBlockLayoutDraftsStub(hooks)` helper stubs the drafts GET in the 8
   `enter()`-using test files (hydration fetches on enter).

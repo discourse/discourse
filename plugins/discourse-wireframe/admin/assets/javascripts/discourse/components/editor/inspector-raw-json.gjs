@@ -30,7 +30,7 @@ import { i18n } from "discourse-i18n";
  * from `<pre>` JSON editors elsewhere in Discourse.
  */
 export default class InspectorRawJson extends Component {
-  @service wireframeEntryEdits;
+  @service wireframeEntryConfig;
   @service wireframeSelection;
 
   @tracked draft = "";
@@ -108,7 +108,7 @@ export default class InspectorRawJson extends Component {
       this.error = e.message;
       return;
     }
-    const ok = this.wireframeEntryEdits.replaceSelectedEntryRaw(parsed);
+    const ok = this.wireframeEntryConfig.replaceSelectedEntryRaw(parsed);
     if (!ok) {
       this.error = i18n("wireframe.inspector.raw_json.apply_failed");
       return;

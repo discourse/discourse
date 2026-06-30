@@ -10,7 +10,7 @@ module(
   function (hooks) {
     setupRenderingTest(hooks);
 
-    test("emits the dedicated inline-edit marker carrying the arg name", async function (assert) {
+    test("emits the dedicated rich-text marker carrying the arg name", async function (assert) {
       await render(
         <template>
           <ScaffoldedRichTextRenderer
@@ -23,14 +23,14 @@ module(
         </template>
       );
 
-      // The inline-edit subsystem (tab navigation + editor mount target) keys
+      // The in-place text subsystem (tab navigation + editor mount target) keys
       // off this dedicated marker, NOT the generic `data-block-arg`, so only
       // real rich-text fields are reachable for inline editing.
       assert
-        .dom("[data-wf-inline-edit-arg]")
-        .exists("the rich-text field carries the inline-edit marker")
+        .dom("[data-wf-rich-text-arg]")
+        .exists("the rich-text field carries the rich-text marker")
         .hasAttribute(
-          "data-wf-inline-edit-arg",
+          "data-wf-rich-text-arg",
           "title",
           "the marker carries the arg name"
         );

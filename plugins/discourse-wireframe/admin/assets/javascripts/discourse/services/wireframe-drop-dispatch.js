@@ -23,7 +23,7 @@ import Service, { service } from "@ember/service";
 export default class WireframeDropDispatchService extends Service {
   @service wireframeBlockMutations;
   @service wireframeDragOverlay;
-  @service wireframeGridManipulator;
+  @service wireframeGridPlacement;
 
   constructor() {
     super(...arguments);
@@ -46,9 +46,9 @@ export default class WireframeDropDispatchService extends Service {
     const handler = {
       insertBlock: (a) => this.wireframeBlockMutations.insertBlock(a),
       moveBlock: (a) => this.wireframeBlockMutations.moveBlock(a),
-      applyGridDrop: (a) => this.wireframeGridManipulator.drop(a),
-      moveBlockIntoCell: (a) => this.wireframeGridManipulator.moveIntoCell(a),
-      placeBlockInCell: (a) => this.wireframeGridManipulator.placeInCell(a),
+      applyGridDrop: (a) => this.wireframeGridPlacement.drop(a),
+      moveBlockIntoCell: (a) => this.wireframeGridPlacement.moveIntoCell(a),
+      placeBlockInCell: (a) => this.wireframeGridPlacement.placeInCell(a),
     }[actionName];
     if (!handler) {
       return false;

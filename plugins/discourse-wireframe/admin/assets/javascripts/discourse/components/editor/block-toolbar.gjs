@@ -52,9 +52,9 @@ const DUPLICATE_PRESETS = [2, 3, 5, 10];
  * `actionItems` descriptor list, so the two can't drift.
  *
  * Inline-format buttons (bold / italic / link) appear when the user
- * has entered an inline-edit session on this block AND has a non-empty
- * text selection inside it. The controller (`InlineEditController`)
- * registers itself with the service as `wireframeInlineEdit.controller`; we
+ * has entered an in-place text session on this block AND has a non-empty
+ * text selection inside it. The controller (`InplaceTextController`)
+ * registers itself with the service as `wireframeInplaceText.controller`; we
  * read its `markState` (a tracked-on-PM-transactions getter) and call
  * its commands.
  *
@@ -70,16 +70,16 @@ const DUPLICATE_PRESETS = [2, 3, 5, 10];
 export default class BlockToolbar extends Component {
   @service wireframeBlockMutations;
   @service wireframeDragSession;
-  @service wireframeEntryEdits;
+  @service wireframeEntryConfig;
   @service wireframeForceExpand;
-  @service wireframeInlineEdit;
+  @service wireframeInplaceText;
   @service wireframeLayoutQuery;
-  @service wireframeRevision;
+  @service wireframeLayoutSignal;
   @service wireframeSelection;
 
   /**
    * Working value of the URL input while a field-editor slot is
-   * active. Seeded from `wireframeInlineEdit.fieldEditor.value` when the input
+   * active. Seeded from `wireframeInplaceText.fieldEditor.value` when the input
    * mounts (see `seedFieldEditorValue`). The slot's `value` is the
    * INITIAL value; this is the live edit-in-progress string the user
    * is typing.
@@ -149,7 +149,7 @@ export default class BlockToolbar extends Component {
    */
   get canForceExpand() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const located = this.wireframeLayoutQuery.findEntryAndOutletSync(
       this.args.blockKey
     );
@@ -170,16 +170,16 @@ export default class BlockToolbar extends Component {
   }
 
   /**
-   * The active inline-edit controller, or `null` when no inline
+   * The active in-place text controller, or `null` when no inline
    * session is open.
    */
   get inlineController() {
-    return this.wireframeInlineEdit.controller;
+    return this.wireframeInplaceText.controller;
   }
 
   /**
    * Whether the inline-format buttons should be visible. Requires:
-   *   - an active inline-edit session on THIS block,
+   *   - an active in-place text session on THIS block,
    *   - a non-empty PM selection that the schema marks can apply to.
    *
    * @returns {boolean}
@@ -187,7 +187,7 @@ export default class BlockToolbar extends Component {
   get showInlineFormat() {
     return (
       !!this.inlineController &&
-      this.wireframeInlineEdit.blockKey === this.args.blockKey &&
+      this.wireframeInplaceText.blockKey === this.args.blockKey &&
       this.inlineController.markState !== null
     );
   }
@@ -198,17 +198,17 @@ export default class BlockToolbar extends Component {
 
   /**
    * `true` when the toolbar should render its URL-edit surface for
-   * the inline rich-text link mark — i.e. PM has entered link-mark
-   * mode (`enterLinkMode` in `inline-edit-controller.gjs`), which
-   * populates `wireframeInlineEdit.fieldEditor` with `kind === "url"`.
+   * the rich text link mark — i.e. PM has entered link-mark
+   * mode (`enterLinkMode` in `inplace-text-controller.gjs`), which
+   * populates `wireframeInplaceText.fieldEditor` with `kind === "url"`.
    *
    * Block-arg URL edits (e.g. a button's `href`) are no longer routed
-   * through here — those open an anchored `LinkEditPopover` next to
+   * through here — those open an anchored `InplaceLinkPopover` next to
    * the link element instead. The rich-text link mark has no DOM
    * anchor of its own, so it stays on the toolbar.
    */
   get isUrlFieldEditing() {
-    return this.wireframeInlineEdit.fieldEditor?.kind === "url";
+    return this.wireframeInplaceText.fieldEditor?.kind === "url";
   }
 
   /**
@@ -256,7 +256,7 @@ export default class BlockToolbar extends Component {
    */
   get canDetach() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     return this.wireframeLayoutQuery.isComposedComposite(this.args.blockKey);
   }
 
@@ -436,7 +436,7 @@ export default class BlockToolbar extends Component {
 
   @action
   detach() {
-    this.wireframeEntryEdits.detachSelectedComposite();
+    this.wireframeEntryConfig.detachSelectedComposite();
   }
 
   /**
@@ -482,17 +482,17 @@ export default class BlockToolbar extends Component {
 
   @action
   applyFieldEditor() {
-    this.wireframeInlineEdit.fieldEditor?.apply?.(this.editorValue);
+    this.wireframeInplaceText.fieldEditor?.apply?.(this.editorValue);
   }
 
   @action
   removeFieldEditor() {
-    this.wireframeInlineEdit.fieldEditor?.remove?.();
+    this.wireframeInplaceText.fieldEditor?.remove?.();
   }
 
   @action
   cancelFieldEditor() {
-    this.wireframeInlineEdit.fieldEditor?.cancel?.();
+    this.wireframeInplaceText.fieldEditor?.cancel?.();
   }
 
   @action
@@ -519,7 +519,7 @@ export default class BlockToolbar extends Component {
    */
   @action
   seedFieldEditorValue(element) {
-    this.editorValue = this.wireframeInlineEdit.fieldEditor?.value ?? "";
+    this.editorValue = this.wireframeInplaceText.fieldEditor?.value ?? "";
     element.focus();
     element.select();
   }
@@ -630,7 +630,7 @@ export default class BlockToolbar extends Component {
             @action={{this.applyFieldEditor}}
             @preventFocus={{true}}
           />
-          {{#if this.wireframeInlineEdit.fieldEditor.remove}}
+          {{#if this.wireframeInplaceText.fieldEditor.remove}}
             <DButton
               class="btn-flat wireframe-block-toolbar__btn"
               @icon="link-slash"

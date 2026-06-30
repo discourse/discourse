@@ -27,7 +27,7 @@ import ConditionRule from "./condition-rule";
  *
  * The tree shape itself is unchanged (`[a, b]` / `{any}` / `{not}` /
  * `{type, ...args}`). Every mutation routes through
- * `wireframeEntryEdits.updateSelectedConditions`, so each edit lands on the
+ * `wireframeEntryConfig.updateSelectedConditions`, so each edit lands on the
  * structural undo stack.
  *
  * Display normalisation:
@@ -37,7 +37,7 @@ import ConditionRule from "./condition-rule";
  *  - Anything else → a `<ConditionGroup>` rendered as the root.
  */
 export default class ConditionsTree extends Component {
-  @service wireframeEntryEdits;
+  @service wireframeEntryConfig;
   @service wireframeSelection;
   @service blocks;
 
@@ -129,7 +129,7 @@ export default class ConditionsTree extends Component {
    * @param {*} next
    */
   commit(next) {
-    this.wireframeEntryEdits.updateSelectedConditions(next ?? null);
+    this.wireframeEntryConfig.updateSelectedConditions(next ?? null);
   }
 
   @action

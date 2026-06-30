@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import { richInlineToPlainText } from "discourse/plugins/discourse-wireframe/discourse/lib/walk-layout";
 
-// `richInlineToPlainText` flattens an inline rich-text arg value (a tab's label,
+// `richInlineToPlainText` flattens a rich text arg value (a tab's label,
 // for instance) to plain text for the outline chip. The value is either a plain
 // string or doc JSON with a `content` array of runs.
 module("Unit | Discourse Wireframe | walk-layout", function () {

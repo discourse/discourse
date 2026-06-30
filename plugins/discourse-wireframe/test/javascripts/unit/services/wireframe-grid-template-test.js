@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 
 // The apply / reflow / clamp logic is exercised end-to-end against real grid
 // layouts by the inspector-layout-form integration test and the wireframe-test
-// grid scenarios (through the kernel facades). These cases cover the service's
+// grid scenarios (through the orchestrator facades). These cases cover the service's
 // wiring and its early-return guards, which need no rendered layout.
 module(
   "Unit | Discourse Wireframe | service:wireframe-grid-template",

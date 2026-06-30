@@ -8,11 +8,11 @@ import { _getResolvedLayouts } from "discourse/blocks/block-outlet";
  * the publish drawer banner render. A read-only peer service: it owns no state,
  * deriving everything from the live resolved layouts on each read.
  *
- * Depends only on the revision signal (to re-evaluate after a structural
- * republish); consumers reach it through the editor session service's facades.
+ * Depends only on the layout signal (to re-evaluate after a structural
+ * republish); consumers reach it through the orchestrator's facades.
  */
 export default class WireframeValidationService extends Service {
-  @service wireframeRevision;
+  @service wireframeLayoutSignal;
 
   /**
    * Validation warnings across every outlet the editor is currently
@@ -28,7 +28,7 @@ export default class WireframeValidationService extends Service {
    * touch the layer array. The two surfaces (per-block ghost chrome,
    * outlet-wide banner) now agree on the live state.
    *
-   * Reactivity: reads the revision signal so structural republishes
+   * Reactivity: reads the layout signal so structural republishes
    * re-evaluate; entry stamp reads (on the trackedObject-wrapped entry)
    * open their own deps so arg-edit stamp clears propagate too.
    * Validation itself is async (`validatedLayout` is a lazy Promise
@@ -39,12 +39,12 @@ export default class WireframeValidationService extends Service {
    * @returns {Array<{outletName: string, message: string}>}
    */
   get validationWarnings() {
-    // The revision signal covers republishes (validation re-runs against
+    // The layout signal covers republishes (validation re-runs against
     // the freshly-published layer). In-place stamp changes propagate via
     // the per-entry `trackedObject` wrap — each `entry.__failureReason`
     // read below opens a per-key dep that fires when `revalidateEntryStamps`
     // rewrites or deletes `entry.__failureReason` on an arg edit.
-    void this.wireframeRevision.version;
+    void this.wireframeLayoutSignal.version;
     const layoutMap = _getResolvedLayouts();
     const warnings = [];
     for (const [outletName, record] of layoutMap) {

@@ -19,7 +19,7 @@ module("Integration | discourse-wireframe | block drag-nav", function (hooks) {
   setupRenderingTest(hooks);
 
   test("dwelling a tab reveals it by clicking the tab button", async function (assert) {
-    const service = this.owner.lookup("service:wireframe-drag-nav");
+    const service = this.owner.lookup("service:wireframe-drag-dwell");
     const clicks = [];
     const record = (key) => clicks.push(key);
 
@@ -58,7 +58,7 @@ module("Integration | discourse-wireframe | block drag-nav", function (hooks) {
   });
 
   test("a tab's edge third does not reveal (reserved for the strip's insert zone)", async function (assert) {
-    const service = this.owner.lookup("service:wireframe-drag-nav");
+    const service = this.owner.lookup("service:wireframe-drag-dwell");
     const clicks = [];
     const record = (key) => clicks.push(key);
 
@@ -87,7 +87,7 @@ module("Integration | discourse-wireframe | block drag-nav", function (hooks) {
   });
 
   test("a steady dwell reveals once, not every frame", async function (assert) {
-    const service = this.owner.lookup("service:wireframe-drag-nav");
+    const service = this.owner.lookup("service:wireframe-drag-dwell");
     const clicks = [];
     const record = (key) => clicks.push(key);
 
@@ -113,7 +113,7 @@ module("Integration | discourse-wireframe | block drag-nav", function (hooks) {
   });
 
   test("sweeping off a tab before the dwell elapses reveals nothing", async function (assert) {
-    const service = this.owner.lookup("service:wireframe-drag-nav");
+    const service = this.owner.lookup("service:wireframe-drag-dwell");
     const clicks = [];
     const record = (key) => clicks.push(key);
 
@@ -138,7 +138,7 @@ module("Integration | discourse-wireframe | block drag-nav", function (hooks) {
   });
 
   test("dwelling a carousel dot scrolls its slide into view", async function (assert) {
-    const service = this.owner.lookup("service:wireframe-drag-nav");
+    const service = this.owner.lookup("service:wireframe-drag-dwell");
 
     await render(
       <template>

@@ -233,7 +233,7 @@ export const CHILD_NOUN_KEY_BY_PARENT = Object.freeze({
 });
 
 /**
- * Flattens an inline rich-text value to its plain text for compact display in
+ * Flattens a rich text value to its plain text for compact display in
  * the outline. The value is either a plain string or doc JSON with a `content`
  * array of text runs (`{ type: "text", text }`); anything else yields "".
  *

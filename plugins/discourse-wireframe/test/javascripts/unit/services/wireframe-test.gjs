@@ -72,7 +72,7 @@ function registerTestLayout(owner) {
  */
 async function editArg(editor, argName, value) {
   getOwner(editor)
-    .lookup("service:wireframe-arg-edit")
+    .lookup("service:wireframe-inspector-args")
     .updateSelectedArg(argName, value);
   await settled();
 }
@@ -89,17 +89,17 @@ function outletChildren(editor, outlet = "homepage-blocks") {
 
 // Block insertion / relocation and grid placement live on their own peer
 // services; these tests reach them directly through the owner rather than the
-// kernel, which no longer injects them.
+// orchestrator, which no longer injects them.
 function mutationsOf(editor) {
   return getOwner(editor).lookup("service:wireframe-block-mutations");
 }
 
 function gridOf(editor) {
-  return getOwner(editor).lookup("service:wireframe-grid-manipulator");
+  return getOwner(editor).lookup("service:wireframe-grid-placement");
 }
 
 // The publish/save/discard workflow + the in-session draft layer live on the
-// staging service; the kernel only delegates to it via begin/end session.
+// staging service; the orchestrator only delegates to it via begin/end session.
 function stagingOf(editor) {
   return getOwner(editor).lookup("service:wireframe-staging");
 }
@@ -1021,7 +1021,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.strictEqual(cell.containerArgs.grid.column, "2");
 
       const ok = getOwner(this)
-        .lookup("service:wireframe-grid-manipulator")
+        .lookup("service:wireframe-grid-placement")
         .resizeSlot({
           slotKey: cellKey,
           column: "3",
@@ -1064,7 +1064,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       );
 
       const ok = getOwner(this)
-        .lookup("service:wireframe-grid-manipulator")
+        .lookup("service:wireframe-grid-placement")
         .resizeSlot({
           slotKey: seedKey,
           column: "1 / 6", // trailing edge (line 6) reaches past the 4 columns
@@ -1137,7 +1137,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
     test("mergeCells inserts a spanning merged cell and grows declared to fit", function (assert) {
       const ok = getOwner(this)
-        .lookup("service:wireframe-grid-manipulator")
+        .lookup("service:wireframe-grid-placement")
         .mergeCells({
           gridKey: gridKeyOf(this.editor),
           // Columns 2–3, rows 1–2 — free, and the second row is past the
@@ -1181,7 +1181,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "homepage-blocks"
       )[0].children.length;
       const ok = getOwner(this)
-        .lookup("service:wireframe-grid-manipulator")
+        .lookup("service:wireframe-grid-placement")
         .mergeCells({
           gridKey: gridKeyOf(this.editor),
           // Columns 1–2 overlaps the seed at column 1.
@@ -1198,7 +1198,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
     test("splitCell dissolves a merged cell, leaving declared untouched", function (assert) {
       getOwner(this)
-        .lookup("service:wireframe-grid-manipulator")
+        .lookup("service:wireframe-grid-placement")
         .mergeCells({
           gridKey: gridKeyOf(this.editor),
           rect: { column: { start: 2, end: 4 }, row: { start: 1, end: 2 } },
@@ -1207,7 +1207,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const cellKey = `layout-merged-cell:${cell.__stableKey}`;
 
       const ok = getOwner(this)
-        .lookup("service:wireframe-grid-manipulator")
+        .lookup("service:wireframe-grid-placement")
         .splitCell({ cellKey });
       assert.true(ok);
       assert.strictEqual(
@@ -1225,7 +1225,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
     test("resizeSlot shrinking a merged cell to 1×1 dissolves it", function (assert) {
       getOwner(this)
-        .lookup("service:wireframe-grid-manipulator")
+        .lookup("service:wireframe-grid-placement")
         .mergeCells({
           gridKey: gridKeyOf(this.editor),
           rect: { column: { start: 2, end: 4 }, row: { start: 1, end: 2 } },
@@ -1234,7 +1234,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const cellKey = `layout-merged-cell:${cell.__stableKey}`;
 
       const ok = getOwner(this)
-        .lookup("service:wireframe-grid-manipulator")
+        .lookup("service:wireframe-grid-placement")
         .resizeSlot({
           slotKey: cellKey,
           column: "2",
@@ -1250,7 +1250,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
     test("resizeSlot keeps a merged cell that stays multi-cell", function (assert) {
       getOwner(this)
-        .lookup("service:wireframe-grid-manipulator")
+        .lookup("service:wireframe-grid-placement")
         .mergeCells({
           gridKey: gridKeyOf(this.editor),
           rect: { column: { start: 2, end: 4 }, row: { start: 1, end: 2 } },
@@ -1259,7 +1259,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const cellKey = `layout-merged-cell:${cell.__stableKey}`;
 
       const ok = getOwner(this)
-        .lookup("service:wireframe-grid-manipulator")
+        .lookup("service:wireframe-grid-placement")
         .resizeSlot({
           slotKey: cellKey,
           column: "2 / 4",
@@ -2353,7 +2353,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     // which path it belongs to before it can silently bypass the rules.
     test("manipulator's public surface is the known set", function (assert) {
       const gridManipulator = getOwner(this).lookup(
-        "service:wireframe-grid-manipulator"
+        "service:wireframe-grid-placement"
       );
       const expected = [
         // Decided placement — routes through `decideGridDrop`. (The pure
@@ -2401,7 +2401,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       this.editor.siteSettings.wireframe_enabled = true;
       logIn(getOwner(this));
       this.editor = getOwner(this).lookup("service:wireframe-workspace");
-      this.inlineEdit = getOwner(this).lookup("service:wireframe-inline-edit");
+      this.inlineEdit = getOwner(this).lookup("service:wireframe-inplace-text");
       this.editor.enter();
     });
 
@@ -2449,7 +2449,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         logIn(getOwner(this));
         this.editor = getOwner(this).lookup("service:wireframe-workspace");
         this.inlineEdit = getOwner(this).lookup(
-          "service:wireframe-inline-edit"
+          "service:wireframe-inplace-text"
         );
         this.editor.enter();
 
@@ -2527,7 +2527,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         logIn(getOwner(this));
         this.editor = getOwner(this).lookup("service:wireframe-workspace");
         this.inlineEdit = getOwner(this).lookup(
-          "service:wireframe-inline-edit"
+          "service:wireframe-inplace-text"
         );
         this.editor.enter();
         const draft = outletChildren(this.editor);
@@ -2834,7 +2834,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const next = { type: "user", loggedIn: true };
       assert.true(
         getOwner(this)
-          .lookup("service:wireframe-entry-edits")
+          .lookup("service:wireframe-entry-config")
           .updateSelectedConditions(next)
       );
 
@@ -2845,14 +2845,14 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
 
     test("clears conditions when passed null", function (assert) {
       getOwner(this)
-        .lookup("service:wireframe-entry-edits")
+        .lookup("service:wireframe-entry-config")
         .updateSelectedConditions({
           type: "user",
           loggedIn: true,
         });
       assert.true(
         getOwner(this)
-          .lookup("service:wireframe-entry-edits")
+          .lookup("service:wireframe-entry-config")
           .updateSelectedConditions(null)
       );
 
@@ -2864,7 +2864,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       this.editor.wireframeSelection.selectBlock(null);
       assert.false(
         getOwner(this)
-          .lookup("service:wireframe-entry-edits")
+          .lookup("service:wireframe-entry-config")
           .updateSelectedConditions({
             type: "user",
             loggedIn: true,
@@ -2875,7 +2875,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     test("selectedBlockConditions live-resolves the latest tree", function (assert) {
       const next = { type: "user", admin: true };
       getOwner(this)
-        .lookup("service:wireframe-entry-edits")
+        .lookup("service:wireframe-entry-config")
         .updateSelectedConditions(next);
       assert.deepEqual(
         this.editor.wireframeSelection.selectedBlockConditions,
@@ -3140,7 +3140,7 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       const next = { type: "user", admin: true };
       assert.true(
         getOwner(this)
-          .lookup("service:wireframe-entry-edits")
+          .lookup("service:wireframe-entry-config")
           .updateSelectedConditions(next)
       );
 
@@ -3297,10 +3297,10 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     innerHooks.beforeEach(function () {
       // The simulation slot lives in its own service (editor-session-state that
       // survives without an active session); we still test from a clean state.
-      // The simulation service bumps the revision signal directly on a change,
+      // The simulation service bumps the layout signal directly on a change,
       // so consumers re-render — assert that through the revision service.
       this.sim = getOwner(this).lookup("service:wireframe-simulation");
-      this.revision = getOwner(this).lookup("service:wireframe-revision");
+      this.revision = getOwner(this).lookup("service:wireframe-layout-signal");
     });
 
     innerHooks.afterEach(function () {
@@ -3355,12 +3355,12 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       assert.strictEqual(this.sim.value, null);
     });
 
-    test("a sim change bumps the revision signal (re-renders consumers)", function (assert) {
+    test("a sim change bumps the layout signal (re-renders consumers)", function (assert) {
       const before = this.revision.version;
       this.sim.setUser({ trust_level: 2 });
       assert.true(
         this.revision.version > before,
-        "the simulation change bumps the revision signal"
+        "the simulation change bumps the layout signal"
       );
     });
   });

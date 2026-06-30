@@ -43,7 +43,7 @@ export const OUTLET_STATE = Object.freeze({
  * `_resolved*` seam methods below) plus block metadata from the `blocks`
  * service, and never reaches back into the editor. It is mostly read-only; the
  * one write surface is the outlet-root identity bookkeeping
- * (`recordOutletRoot` / `clearOutletRoots`) the kernel drives.
+ * (`recordOutletRoot` / `clearOutletRoots`) the orchestrator drives.
  *
  * Kept un-cached on purpose: the resolved-layout reads feed off tracked sources
  * at call time, so a template binding re-runs when those layers change; caching
@@ -59,7 +59,7 @@ export default class WireframeLayoutQueryService extends Service {
    * "selects the outlet", and `isOutletRoot` consults this map to suppress
    * block-level affordances (move / duplicate / delete) on the root.
    *
-   * Populated when the draft is materialised (the kernel calls
+   * Populated when the draft is materialised (the orchestrator calls
    * `recordOutletRoot`) and cleared on `exit`. Not persisted — the root key is
    * re-derived from the published draft each session.
    *
@@ -89,7 +89,7 @@ export default class WireframeLayoutQueryService extends Service {
 
   /**
    * Returns the resolved layout array for an outlet, or null when no layout
-   * is registered. Used by the persistence service to grab the snapshot of
+   * is registered. Used by the live-layout service to grab the snapshot of
    * an edited outlet that needs to be POSTed.
    *
    * Pass `ignoreSessionDraft: true` to resolve the underlying source's layout —

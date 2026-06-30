@@ -22,14 +22,14 @@ import { inferSchemaFromValues } from "../lib/schema-to-fields";
  * editor. Cross-concern effects that used to live inline (flushing pending
  * arg edits, committing an in-flight in-session text edit, revealing the
  * selection into view) are not known here — they are registered by the
- * kernel as before/after hooks so this service never reaches up into the
- * editor that drives it. It injects only the revision beacon and the
- * layout-query service (both downward, dependency-free) — never the kernel.
+ * orchestrator as before/after hooks so this service never reaches up into the
+ * editor that drives it. It injects only the layout-signal beacon and the
+ * layout-query service (both downward, dependency-free) — never the orchestrator.
  */
 export default class WireframeSelectionService extends Service {
-  @service wireframeRevision;
+  @service wireframeLayoutSignal;
   @service wireframeLayoutQuery;
-  @service wireframeSession;
+  @service wireframeEditMode;
 
   /**
    * The PRIMARY (anchor) selected block key — the block whose form the
@@ -66,7 +66,7 @@ export default class WireframeSelectionService extends Service {
 
   /**
    * Callbacks fired at the start of `selectBlock`, BEFORE the selection
-   * mutates — each receives `{ nextKey, prevKey }`. The kernel registers
+   * mutates — each receives `{ nextKey, prevKey }`. The orchestrator registers
    * its cross-concern pre-change effects here (flush pending args, commit
    * an in-flight in-session edit).
    *
@@ -76,7 +76,7 @@ export default class WireframeSelectionService extends Service {
 
   /**
    * Callbacks fired at the end of `selectBlock`, AFTER the selection has
-   * settled — each receives `{ key }` (the new primary key). The kernel
+   * settled — each receives `{ key }` (the new primary key). The orchestrator
    * registers its cross-concern post-change effects here (reveal the
    * selection into view).
    *
@@ -101,7 +101,7 @@ export default class WireframeSelectionService extends Service {
   /**
    * Document-level mouseup handler that clears the selection when BOTH the
    * mousedown and mouseup landed outside the allowed scope. Installed once at
-   * construction and gated on `wireframeSession.active`, so it's a no-op outside
+   * construction and gated on `wireframeEditMode.active`, so it's a no-op outside
    * an editor session. Guards on `isDestroyed`/`isDestroying` (plain instance
    * flags, no service lookup) so a leaked listener firing after teardown bails.
    *
@@ -113,7 +113,7 @@ export default class WireframeSelectionService extends Service {
     if (this.isDestroyed || this.isDestroying) {
       return;
     }
-    if (!this.wireframeSession.active || !this.selectedBlockKey) {
+    if (!this.wireframeEditMode.active || !this.selectedBlockKey) {
       return;
     }
     if (this.isInsideAllowedScope(downTarget)) {
@@ -153,7 +153,7 @@ export default class WireframeSelectionService extends Service {
     // Republishes bump `structuralVersion`; in-place stamp clears
     // propagate via the per-entry `trackedObject` wrap (the
     // `entry.__failureType` read below opens a per-key dep).
-    void this.wireframeRevision.version;
+    void this.wireframeLayoutSignal.version;
     const key = this.selectedBlockKey;
     if (!key) {
       return null;
@@ -186,7 +186,7 @@ export default class WireframeSelectionService extends Service {
    * @returns {Object<string, Array<Object>>}
    */
   get selectedBlockFieldErrors() {
-    void this.wireframeRevision.version;
+    void this.wireframeLayoutSignal.version;
     const key = this.selectedBlockKey;
     if (!key) {
       return {};
@@ -212,7 +212,7 @@ export default class WireframeSelectionService extends Service {
    * @returns {Array<Object>}
    */
   get selectedBlockNonFieldErrors() {
-    void this.wireframeRevision.version;
+    void this.wireframeLayoutSignal.version;
     const key = this.selectedBlockKey;
     if (!key) {
       return [];
@@ -281,7 +281,7 @@ export default class WireframeSelectionService extends Service {
   get selectedBlockAncestry() {
     // Read structuralVersion so this re-evaluates after every mutation.
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const key = this.selectedBlockKey;
     if (!key) {
       return [];
@@ -337,7 +337,7 @@ export default class WireframeSelectionService extends Service {
    */
   get selectedBlockRawEntry() {
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const key = this.selectedBlockKey;
     if (!key) {
       return null;
@@ -362,7 +362,7 @@ export default class WireframeSelectionService extends Service {
     // Force a tracked read so consumers re-render when structural
     // mutations re-publish.
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const key = this.selectedBlockKey;
     if (!key) {
       return null;
@@ -388,7 +388,7 @@ export default class WireframeSelectionService extends Service {
    * Tells whether a given block key is part of the current selection. Reads the
    * `selectedKeys` set (not just the primary), so under a multi-selection every
    * selected block's chrome / outline row highlights. Used only for highlight;
-   * identity checks (e.g. "is this the block being inline-edited") read
+   * identity checks (e.g. "is this the block being edited in place") read
    * `selectedBlockKey` directly.
    *
    * @param {string|null} key - The composite block key (`${name}:${__stableKey}`).
@@ -705,7 +705,7 @@ export default class WireframeSelectionService extends Service {
     // Read `structuralVersion` so this getter re-evaluates after every
     // structural mutation — keeps the toolbar's move buttons reactive.
     // eslint-disable-next-line no-unused-vars
-    const _v = this.wireframeRevision.version;
+    const _v = this.wireframeLayoutSignal.version;
     const key = this.selectedBlockKey;
     if (!key) {
       return -1;

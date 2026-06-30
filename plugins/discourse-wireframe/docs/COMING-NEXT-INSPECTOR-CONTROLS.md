@@ -26,7 +26,7 @@ index + the polish items that have no doc of their own yet.
   edit in place with bold / italic / link on a minimal ProseMirror schema,
   factored as the reusable `richInline` primitive. Shipped: the renderer +
   `marked-text` + `richInline` core validator type (`args.js`); the canvas
-  `inline-edit-controller.gjs` + `inline-edit-state.js`; multi-field + Tab +
+  `inplace-text-controller.gjs` + `wireframe-inplace-text.js`; multi-field + Tab +
   container-arg (tabs-label) editing; Enter-split / Backspace-merge / arrow-key
   cross-block navigation. Nine core blocks declare `richInline`. See
   `INLINE_TEXT_EDITING_PLAN.md` for the design (historical — file paths predate
@@ -35,7 +35,7 @@ index + the polish items that have no doc of their own yet.
 ## Deferred phases (recommended sequence)
 
 ### P5 — Inline-editing tail (deferred from P4)
-Two real features the inline-editing design supports but didn't require:
+Two real features the in-place editing design supports but didn't require:
 - **Slash menu** — `/` while editing opens a block-insertion menu (heading,
   image, list, …), building on the Phase-3 split mechanism. No artifacts exist
   yet.
@@ -73,7 +73,7 @@ Low-risk consistency sweep, no new capability:
 
 ## Rationale for the order
 P6 (token-aware color) is the highest-value remaining feature: net-new control
-type, contained to color args, big visual payoff. P5 (inline-editing tail) is
+type, contained to color args, big visual payoff. P5 (in-place editing tail) is
 optional polish on an already-shipped feature — do the editable inspector
 fallback if headless editing matters; the slash menu is a larger separate
 feature. P7 (responsive) is last among features: most architectural,

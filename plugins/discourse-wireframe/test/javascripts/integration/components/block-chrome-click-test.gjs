@@ -22,10 +22,10 @@ module(
 
     test("ignores keyboard-synthesized clicks on a URL arg", async function (assert) {
       const wireframe = this.owner.lookup("service:wireframe-workspace");
-      const linkEdit = this.owner.lookup("service:wireframe-link-edit");
+      const linkEdit = this.owner.lookup("service:wireframe-inplace-link");
       const blockKey = "button-link:test";
 
-      this.owner.lookup("service:wireframe-session").activate();
+      this.owner.lookup("service:wireframe-edit-mode").activate();
       // `LinkEditState.start` bails unless the block resolves to a real
       // layout entry, so stub the lookup — opening that session is exactly
       // the behavior we're asserting the guard suppresses.

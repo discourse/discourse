@@ -11,7 +11,7 @@ const STORAGE_KEY = "wireframe.conditions-panel";
  * not session state (they are not reset on editor exit).
  *
  * A dependency-free peer service: it injects nothing and is read/commanded
- * through the kernel's thin facades, so the condition-panel chrome stays
+ * through the orchestrator's thin facades, so the condition-panel chrome stays
  * decoupled from the rest of the editor.
  */
 export default class WireframeConditionsPanelService extends Service {

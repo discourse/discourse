@@ -16,10 +16,10 @@ import { i18n } from "discourse-i18n";
  */
 export default class PublishTargetIndicator extends Component {
   @service wireframeStaging;
-  @service wireframeTheme;
+  @service wireframePublishTarget;
 
   get targets() {
-    return this.wireframeTheme.publishTargets;
+    return this.wireframePublishTarget.publishTargets;
   }
 
   /**
@@ -33,7 +33,7 @@ export default class PublishTargetIndicator extends Component {
       return this.targets[0];
     }
     if (this.targets.length === 0) {
-      return this.wireframeTheme.activeThemeTarget;
+      return this.wireframePublishTarget.activeThemeTarget;
     }
     return null;
   }
@@ -41,7 +41,8 @@ export default class PublishTargetIndicator extends Component {
   /** Whether there's anything to show (a resolvable target). */
   get hasTarget() {
     return (
-      this.targets.length > 0 || this.wireframeTheme.activeThemeTarget != null
+      this.targets.length > 0 ||
+      this.wireframePublishTarget.activeThemeTarget != null
     );
   }
 

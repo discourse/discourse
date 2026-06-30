@@ -9,7 +9,7 @@ module(
 
     hooks.beforeEach(function () {
       this.overlay = getOwner(this).lookup("service:wireframe-drag-overlay");
-      // The kernel normally registers this in `enter()`; in isolation we
+      // The orchestrator normally registers this in `enter()`; in isolation we
       // register a stub dispatcher that records what the overlay dispatches.
       this.dispatched = [];
       this.overlay.registerDispatcher((payload) => {

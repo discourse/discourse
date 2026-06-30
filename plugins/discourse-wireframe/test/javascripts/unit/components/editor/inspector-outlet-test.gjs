@@ -119,11 +119,13 @@ function stubWireframe(owner, blockData) {
   owner.register("service:wireframe-grid-template", stub, {
     instantiate: false,
   });
-  owner.unregister("service:wireframe-arg-edit");
-  owner.register("service:wireframe-arg-edit", stub, { instantiate: false });
-  // The per-outlet section reads its editing flag from the edit engine.
-  owner.unregister("service:wireframe-edit-engine");
-  owner.register("service:wireframe-edit-engine", stub, {
+  owner.unregister("service:wireframe-inspector-args");
+  owner.register("service:wireframe-inspector-args", stub, {
+    instantiate: false,
+  });
+  // The per-outlet section reads its editing flag from the mutation engine.
+  owner.unregister("service:wireframe-mutation-engine");
+  owner.register("service:wireframe-mutation-engine", stub, {
     instantiate: false,
   });
 }

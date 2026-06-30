@@ -51,21 +51,21 @@ export default apiInitializer((api) => {
     api.container.lookup("service:wireframe-simulation")
   );
   // Instantiate these services at boot so their constructors run before any
-  // user interaction: block-reveal/inline-edit/arg-edit subscribe to the
+  // user interaction: block-reveal/in-place-text/inspector-args subscribe to the
   // selection seam before the first selection change, image-upload installs its
   // window/document file-drag + paste listeners before the first drag/paste, and
   // drop-dispatch hands the overlay its drop dispatcher before the first drop.
   api.container.lookup("service:wireframe-block-reveal");
-  api.container.lookup("service:wireframe-inline-edit");
-  api.container.lookup("service:wireframe-arg-edit");
+  api.container.lookup("service:wireframe-inplace-text");
+  api.container.lookup("service:wireframe-inspector-args");
   api.container.lookup("service:wireframe-image-upload");
   api.container.lookup("service:wireframe-drop-dispatch");
   installVeThemeAutoEnter(api, editor);
   // The editor stays open across SPA navigation, so re-discover the new page's
   // outlets after each transition. `rediscoverOutlets` self-gates on
-  // `editor.wireframeSession.active`, so this is a no-op while the editor is closed.
+  // `editor.wireframeEditMode.active`, so this is a no-op while the editor is closed.
   api.onPageChange(() => editor.rediscoverOutlets());
-  // The shortcut listener self-gates on `editor.wireframeSession.active`, so we install it
+  // The shortcut listener self-gates on `editor.wireframeEditMode.active`, so we install it
   // once rather than attach/detach on editor enter. Tie its removal to the
   // editor service's teardown: in production that's app shutdown, but in tests
   // — where the initializer boots once per owner — it stops a document
@@ -120,7 +120,7 @@ function installSimulationContext(simulation) {
 function installGhostBlocksWhileEditing(editor) {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.GHOST_BLOCKS);
   debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, () => {
-    if (editor.wireframeSession.active) {
+    if (editor.wireframeEditMode.active) {
       return true;
     }
     return previous ? previous() : false;
@@ -139,7 +139,7 @@ function installGhostBlocksWhileEditing(editor) {
 function installEditPresentationWhileEditing(editor) {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.EDIT_PRESENTATION);
   debugHooks.setCallback(DEBUG_CALLBACK.EDIT_PRESENTATION, () => {
-    if (editor.wireframeSession.active) {
+    if (editor.wireframeEditMode.active) {
       return true;
     }
     return previous ? previous() : false;
@@ -168,8 +168,8 @@ function installVeThemeAutoEnter(api, editor) {
       return;
     }
     if (
-      editor.wireframeSession.active &&
-      editor.wireframeTheme.activeThemeId === themeId
+      editor.wireframeEditMode.active &&
+      editor.wireframePublishTarget.activeThemeId === themeId
     ) {
       return;
     }
@@ -372,7 +372,7 @@ function installGhostChildrenCreator() {
 function installOutletBoundary(editor) {
   const previous = debugHooks.getCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT);
   debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT, () => {
-    if (editor.wireframeSession.active) {
+    if (editor.wireframeEditMode.active) {
       return OutletBoundary;
     }
     return previous ? previous() : null;

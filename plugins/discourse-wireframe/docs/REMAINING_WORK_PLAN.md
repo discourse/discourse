@@ -18,8 +18,8 @@ lands on the production render path without a passing test.
 panels are arbitrary children. Tab labels live in each child's
 `containerArgs.tab.label` (the parent-readable channel — no core capability was
 added, since `containerArgs` already carries per-child metadata). Labels are
-inline-edited on the strip via a third inline-edit target type
-(`#containerArgContext` in `inline-edit-state.js`, mirroring the composite-part
+inline-edited on the strip via a third in-place text target type
+(`#containerArgContext` in `wireframe-inplace-text.js`, mirroring the composite-part
 path). Editor reuses `EDIT_PRESENTATION` to stack all panels. See
 `blocks/builtin/tabs.gjs` + the inline-edit extension.
 

@@ -12,13 +12,13 @@ import Service, { service } from "@ember/service";
  *
  * A standalone service so any consumer (the simulation controls, the condition
  * evaluator wiring) injects it directly without reaching through the editor
- * kernel. On a change it bumps the shared revision signal so every surface that
+ * orchestrator. On a change it bumps the shared layout signal so every surface that
  * tracks the resolved layout re-runs (a simulation toggle changes what
  * condition-gated blocks resolve to). Its only dependency is that signal, which
  * depends on nothing — so the graph stays acyclic.
  */
 export default class WireframeSimulationService extends Service {
-  @service wireframeRevision;
+  @service wireframeLayoutSignal;
 
   // The slot, shape `{ user, viewport }` (each null for "use the real value")
   // or null when no slot is set. Reassigned wholesale on every change — never
@@ -56,7 +56,7 @@ export default class WireframeSimulationService extends Service {
    */
   setUser(user) {
     this._simulation = this.#patch(this._simulation, "user", user);
-    this.wireframeRevision.bump();
+    this.wireframeLayoutSignal.bump();
   }
 
   /**
@@ -67,7 +67,7 @@ export default class WireframeSimulationService extends Service {
    */
   setViewport(viewport) {
     this._simulation = this.#patch(this._simulation, "viewport", viewport);
-    this.wireframeRevision.bump();
+    this.wireframeLayoutSignal.bump();
   }
 
   /**
@@ -75,7 +75,7 @@ export default class WireframeSimulationService extends Service {
    */
   clear() {
     this._simulation = null;
-    this.wireframeRevision.bump();
+    this.wireframeLayoutSignal.bump();
   }
 
   /**

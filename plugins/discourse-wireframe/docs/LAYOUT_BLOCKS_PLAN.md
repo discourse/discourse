@@ -147,7 +147,7 @@ Reflowing card grids use a NEW `layout` mode, **Tiles**:
 
 ### 1j. `list` — leaf (array items), ordered/unordered
 - **args:** `ordered{boolean}`, `items{array itemType:"object", itemSchema:{content:richInline}}`.
-- **Array track** → reuses the repeatable inspector control (§2); item text inline-editable on canvas.
+- **Array track** → reuses the repeatable inspector control (§2); item text in-place-editable on canvas.
 - **render:** `<ol>`/`<ul>` of `<li>` rich-inline. Nested lists (sub-lists) → a children variant; defer the nesting affordance, ship flat lists first.
 
 ### 1k. `tabs` + `tab` — container (collapsing family, §4h)
@@ -181,11 +181,11 @@ Reflowing card grids use a NEW `layout` mode, **Tiles**:
 
 ### 1n. `quote` — leaf (testimonial)
 - **args:** `content{richInline, required}`, `attribution{richInline}`, `role{richInline}`, `avatar{image, allowDark, aspectRatio:1}`.
-- **reuses** `RichTextRenderer` (all text, inline-editable) + `DLightDarkImg` (avatar). **render:** `<figure><blockquote>{content}</blockquote><figcaption>` avatar + attribution + role `</figcaption></figure>`.
+- **reuses** `RichTextRenderer` (all text, in-place-editable) + `DLightDarkImg` (avatar). **render:** `<figure><blockquote>{content}</blockquote><figcaption>` avatar + attribution + role `</figcaption></figure>`.
 
 ### 1o. `icon` — leaf (standalone)
 - **args:** `icon{string, icon control, required}`, `size{enum sm/md/lg}`, `color{color}`, `href{url}` (stretched-link or `<a>`).
-- **reuses** `dIcon`. **render:** `<span>`/`<a>` wrapping the icon; honors the `data-block-arg="icon"` inline-edit marker.
+- **reuses** `dIcon`. **render:** `<span>`/`<a>` wrapping the icon; honors the `data-block-arg="icon"` rich-text marker.
 
 ### 1p. `video` — leaf
 - **args:** `source{string url/upload, required}`, `poster{image}`, `autoplay{boolean default false}`, `loop{boolean}`, `muted{boolean}`, `controls{boolean default true}`, `aspectRatio{string}`.
@@ -319,7 +319,7 @@ generalization MUST preserve the `decideGridDrop` sole-chokepoint invariant and 
 ## 5. Editor support summary (per surface)
 
 - **Array items (link-list/stats):** the inspector **repeatable control** is their structural editor (add/remove/reorder
-  rows, recursive sub-fields, paste-array) — §2; item *text* is also inline-editable on the canvas for a WYSIWYG feel.
+  rows, recursive sub-fields, paste-array) — §2; item *text* is also in-place-editable on the canvas for a WYSIWYG feel.
 - **Children-track structure (hero, card, Tiles cards, slides):** **canvas + outline** — WYSIWYG, no inspector list (§3).
 - **Carousel:** canvas (all slides via `EDIT_PRESENTATION`) **plus** the opt-in inspector slide-manager DnD list (§3).
 - **Scale affordances** (canvas/toolbar/outline, not a list): **bulk duplicate / "repeat ×N"** (`block-toolbar.gjs`),

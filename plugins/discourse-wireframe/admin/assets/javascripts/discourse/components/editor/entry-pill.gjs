@@ -10,20 +10,20 @@ import { i18n } from "discourse-i18n";
  * pages with at least one Block Outlet.
  *
  * Hidden when:
- *  - the user is not permitted (see `wireframeSession.canEdit`)
+ *  - the user is not permitted (see `wireframeEditMode.canEdit`)
  *  - there are no editable outlets on this page
  *  - the editor is already active
  */
 export default class EntryPill extends Component {
   @service wireframeWorkspace;
   @service wireframeLayoutQuery;
-  @service wireframeSession;
+  @service wireframeEditMode;
 
   get visible() {
-    if (!this.wireframeSession.canEdit) {
+    if (!this.wireframeEditMode.canEdit) {
       return false;
     }
-    if (this.wireframeSession.active) {
+    if (this.wireframeEditMode.active) {
       return false;
     }
     return this.wireframeLayoutQuery.editableOutlets.length > 0;

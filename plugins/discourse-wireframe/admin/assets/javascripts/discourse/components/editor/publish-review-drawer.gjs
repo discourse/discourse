@@ -31,12 +31,12 @@ import { OUTLET_STATE } from "../../services/wireframe-layout-query";
 export default class PublishReviewDrawer extends Component {
   @service wireframeWorkspace;
   @service dialog;
-  @service wireframeEditEngine;
+  @service wireframeMutationEngine;
   @service wireframeLayoutQuery;
   @service wireframePublishPreview;
-  @service wireframeSession;
+  @service wireframeEditMode;
   @service wireframeStaging;
-  @service wireframeTheme;
+  @service wireframePublishTarget;
   @service wireframeValidation;
 
   /** In-flight save or publish; disables the action buttons while awaiting. */
@@ -65,13 +65,13 @@ export default class PublishReviewDrawer extends Component {
 
   get isOpen() {
     return (
-      this.wireframeSession.active && this.wireframeStaging.reviewDrawerOpen
+      this.wireframeEditMode.active && this.wireframeStaging.reviewDrawerOpen
     );
   }
 
   /** The edited outlets grouped by owner theme — the publish plan. */
   get targets() {
-    return this.wireframeTheme.publishTargets;
+    return this.wireframePublishTarget.publishTargets;
   }
 
   /** A flat list of every edited outlet, for the Changes tab. */
@@ -88,12 +88,12 @@ export default class PublishReviewDrawer extends Component {
    * @returns {boolean}
    */
   get showActiveThemeEscapeHatch() {
-    const target = this.wireframeTheme.activeThemeTarget;
+    const target = this.wireframePublishTarget.activeThemeTarget;
     return target != null && !target.publishable;
   }
 
   get activeThemeTarget() {
-    return this.wireframeTheme.activeThemeTarget;
+    return this.wireframePublishTarget.activeThemeTarget;
   }
 
   /** Whether at least one edited outlet can be published directly. */
@@ -106,7 +106,7 @@ export default class PublishReviewDrawer extends Component {
     return (
       !this.isSaving &&
       this.wireframeStaging.hasUnsavedDraftEdits &&
-      this.wireframeTheme.activeThemeId != null
+      this.wireframePublishTarget.activeThemeId != null
     );
   }
 
@@ -244,7 +244,7 @@ export default class PublishReviewDrawer extends Component {
     try {
       const { themeId, error } = await produce();
       if (themeId) {
-        this.wireframeTheme.navigateToEditTheme(themeId);
+        this.wireframePublishTarget.navigateToEditTheme(themeId);
       } else {
         this.actionError = error;
       }
@@ -486,7 +486,7 @@ export default class PublishReviewDrawer extends Component {
           <DButton
             class="btn-flat wireframe-review__discard"
             @label="wireframe.review.discard_all"
-            @disabled={{unless this.wireframeEditEngine.isDirty true}}
+            @disabled={{unless this.wireframeMutationEngine.isDirty true}}
             @action={{this.discardAll}}
           />
           <DButton

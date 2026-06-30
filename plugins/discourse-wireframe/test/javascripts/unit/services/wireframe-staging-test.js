@@ -6,7 +6,7 @@ import { module, test } from "qunit";
 // workflow. These tests cover the commit-orchestration logic — publish-result
 // processing, the stale-version conflict prompt, and the git escape-hatch error
 // formatting — which previously had no direct unit coverage (it was exercised
-// only through the kernel). The draft-layer materialize/hydrate paths are covered
+// only through the orchestrator). The draft-layer materialize/hydrate paths are covered
 // end-to-end by the navigation + service integration tests.
 
 // Minimal stubs for the nine peers the staging service injects. Each test
@@ -14,9 +14,9 @@ import { module, test } from "qunit";
 // so a single lookup can back several scenarios.
 const DEFAULTS = {
   "service:modal": () => ({ show: async () => ({}) }),
-  "service:wireframe-arg-edit": () => ({ hasPending: false }),
-  "service:wireframe-inline-edit": () => ({ blockKey: null }),
-  "service:wireframe-session": () => ({ active: true }),
+  "service:wireframe-inspector-args": () => ({ hasPending: false }),
+  "service:wireframe-inplace-text": () => ({ blockKey: null }),
+  "service:wireframe-edit-mode": () => ({ active: true }),
   "service:wireframe-drafts": () => ({
     deleteDraft: async () => {},
     saveDraftOutlet: async () => {},
@@ -27,13 +27,13 @@ const DEFAULTS = {
     readResolvedLayout: () => [],
     outletState: () => "default",
   }),
-  "service:wireframe-theme": () => ({
+  "service:wireframe-publish-target": () => ({
     activeThemeId: 5,
     defaultThemeId: 5,
     activeThemeTarget: { publishable: true },
     outletOwner: () => ({ themeId: 5, isGit: false }),
   }),
-  "service:wireframe-edit-engine": () => ({
+  "service:wireframe-mutation-engine": () => ({
     isDirty: false,
     editedOutletNames: () => [],
     editedOutletsSize: 0,
@@ -43,7 +43,7 @@ const DEFAULTS = {
     rollbackOutletInMemory() {},
     dropUndoEntriesForOutlet() {},
   }),
-  "service:wireframe-persistence": () => ({
+  "service:wireframe-live-layout": () => ({
     publish: async () => ({ saved: [], errors: [] }),
     publishOutlet: async () => ({ saved: [], errors: [] }),
     overwriteOutlet: async () => true,
@@ -81,7 +81,7 @@ module(
 
     test("canOpenReview is true when the engine is dirty", function (assert) {
       const staging = buildStaging(getOwner(this), {
-        "service:wireframe-edit-engine": { isDirty: true },
+        "service:wireframe-mutation-engine": { isDirty: true },
       });
       assert.true(staging.canOpenReview);
     });
@@ -98,13 +98,13 @@ module(
 
     test("publishEditedOutlets surfaces non-conflict errors as a banner", async function (assert) {
       const staging = buildStaging(getOwner(this), {
-        "service:wireframe-persistence": {
+        "service:wireframe-live-layout": {
           publish: async () => ({
             saved: [],
             errors: [{ outlet: "homepage-blocks", message: "boom" }],
           }),
         },
-        "service:wireframe-edit-engine": { editedOutletsSize: 1 },
+        "service:wireframe-mutation-engine": { editedOutletsSize: 1 },
       });
       assert.strictEqual(
         await staging.publishEditedOutlets(),
@@ -115,7 +115,7 @@ module(
     test("a stale-version conflict prompts and overwrites on confirm", async function (assert) {
       const calls = [];
       const staging = buildStaging(getOwner(this), {
-        "service:wireframe-persistence": {
+        "service:wireframe-live-layout": {
           publish: async () => ({
             saved: [],
             errors: [
@@ -132,7 +132,7 @@ module(
             return true;
           },
         },
-        "service:wireframe-edit-engine": {
+        "service:wireframe-mutation-engine": {
           editedOutletsSize: 0,
           clearOutletEditState: (outlet) => calls.push(["clear", outlet]),
         },
@@ -151,7 +151,7 @@ module(
     test("a dismissed conflict does not overwrite", async function (assert) {
       let overwritten = false;
       const staging = buildStaging(getOwner(this), {
-        "service:wireframe-persistence": {
+        "service:wireframe-live-layout": {
           publish: async () => ({
             saved: [],
             errors: [{ outlet: "homepage-blocks", conflict: true, themeId: 5 }],
@@ -161,7 +161,7 @@ module(
             return true;
           },
         },
-        "service:wireframe-edit-engine": { editedOutletsSize: 1 },
+        "service:wireframe-mutation-engine": { editedOutletsSize: 1 },
         "service:modal": { show: async () => ({ choice: "cancel" }) },
       });
 
@@ -176,7 +176,7 @@ module(
 
     test("exportOutlet returns the server's error as a banner on failure", async function (assert) {
       const staging = buildStaging(getOwner(this), {
-        "service:wireframe-persistence": {
+        "service:wireframe-live-layout": {
           exportOutlet: async () => {
             throw { jqXHR: { responseJSON: { errors: ["no repo"] } } };
           },
@@ -190,7 +190,7 @@ module(
 
     test("duplicateForEditing returns the new theme id on success", async function (assert) {
       const staging = buildStaging(getOwner(this), {
-        "service:wireframe-persistence": {
+        "service:wireframe-live-layout": {
           duplicateTheme: async () => ({ theme_id: 9 }),
         },
       });
@@ -199,7 +199,7 @@ module(
 
     test("duplicateForEditing returns an error message on failure", async function (assert) {
       const staging = buildStaging(getOwner(this), {
-        "service:wireframe-persistence": {
+        "service:wireframe-live-layout": {
           duplicateTheme: async () => {
             throw { jqXHR: { responseJSON: { errors: ["nope"] } } };
           },

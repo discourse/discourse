@@ -60,7 +60,7 @@ function coerceToSchemaType(value, argDef) {
  * supported extension point — see `fk/field-data.gjs:71`.)
  */
 export default class InspectorForm extends Component {
-  @service wireframeArgEdit;
+  @service wireframeInspectorArgs;
   @service wireframeSelection;
 
   /**
@@ -250,12 +250,12 @@ export default class InspectorForm extends Component {
     // default keep the existing behaviour: clearing the field stores
     // `""` so the user's explicit empty overrides the default — matches
     // the inline-text editor's same convention in
-    // `inline-edit-state.js:344-356`.
+    // `wireframe-inplace-text.js`.
     const writeValue =
       coerced === "" && argDef?.default === undefined ? null : coerced;
 
     await ctx.set(ctx.name, coerced);
-    this.wireframeArgEdit.updateSelectedArg(ctx.name, writeValue);
+    this.wireframeInspectorArgs.updateSelectedArg(ctx.name, writeValue);
   }
 
   /**

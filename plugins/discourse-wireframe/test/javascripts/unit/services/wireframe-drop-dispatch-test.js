@@ -29,7 +29,7 @@ module(
           },
         ],
         [
-          "service:wireframe-grid-manipulator",
+          "service:wireframe-grid-placement",
           {
             drop: record("drop"),
             moveIntoCell: record("moveIntoCell"),

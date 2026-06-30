@@ -56,7 +56,7 @@ module(
         metadata: { args: { title: { type: "string" } } },
       });
       getOwner(context.editor)
-        .lookup("service:wireframe-arg-edit")
+        .lookup("service:wireframe-inspector-args")
         .updateSelectedArg("title", "Edited");
       await settled();
     }
@@ -68,15 +68,16 @@ module(
         const body = parsePostData(request.requestBody);
         assert.strictEqual(body.theme_id, "5");
         assert.strictEqual(body.outlet_name, "homepage-blocks");
-        // No live field has been observed, so the baseline is the empty token.
-        assert.strictEqual(body.base_version_token, "");
+        // The caller (staging) owns the baseline token; the service forwards
+        // whatever it is given, as-is.
+        assert.strictEqual(body.base_version_token, "v-7");
         const payload = JSON.parse(body.layout_json);
         assert.strictEqual(payload.layout[0].args.title, "Edited");
         assert.step("drafted");
         return response({ success: true });
       });
 
-      await this.drafts.saveDraftOutlet(5, "homepage-blocks");
+      await this.drafts.saveDraftOutlet(5, "homepage-blocks", "v-7");
       assert.verifySteps(["drafted"]);
     });
 
@@ -92,7 +93,7 @@ module(
         return response({ success: true });
       });
 
-      await this.drafts.saveDraftOutlet(-1, "homepage-blocks");
+      await this.drafts.saveDraftOutlet(-1, "homepage-blocks", "");
       assert.verifySteps(["drafted"]);
     });
 

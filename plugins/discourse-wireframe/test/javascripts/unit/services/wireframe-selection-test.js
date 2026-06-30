@@ -39,7 +39,7 @@ module(
     hooks.beforeEach(function () {
       this.selection = this.owner.lookup("service:wireframe-selection");
       this.query = this.owner.lookup("service:wireframe-layout-query");
-      this.revision = this.owner.lookup("service:wireframe-revision");
+      this.revision = this.owner.lookup("service:wireframe-layout-signal");
     });
 
     module("selectBlock", function () {
@@ -173,7 +173,7 @@ module(
         );
 
         // Simulate a republish stamping a failure on the entry, then bumping
-        // the revision beacon — the getter reads `version`, so it re-runs.
+        // the layout-signal beacon — the getter reads `version`, so it re-runs.
         failureType = "TYPE_MISMATCH";
         this.revision.bump();
 

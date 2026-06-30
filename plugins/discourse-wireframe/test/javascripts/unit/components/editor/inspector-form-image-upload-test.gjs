@@ -75,10 +75,12 @@ function stubWireframe(owner, blockData, options) {
   owner.register("service:wireframe-layout-query", stub, {
     instantiate: false,
   });
-  // The form writes arg edits through the arg-edit service; point it at the
+  // The form writes arg edits through the inspector-args service; point it at the
   // same stub so `updateSelectedArgCalls` records them.
-  owner.unregister("service:wireframe-arg-edit");
-  owner.register("service:wireframe-arg-edit", stub, { instantiate: false });
+  owner.unregister("service:wireframe-inspector-args");
+  owner.register("service:wireframe-inspector-args", stub, {
+    instantiate: false,
+  });
 }
 
 module(
