@@ -316,7 +316,7 @@ class Upload < ActiveRecord::Base
               "-ping",
               "-format",
               "%w %h",
-              path,
+              "MSVG:#{path}",
               timeout: MAX_IDENTIFY_SECONDS,
             ).split(" ")
           rescue StandardError
