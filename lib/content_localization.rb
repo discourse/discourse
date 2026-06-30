@@ -45,4 +45,9 @@ class ContentLocalization
   def self.show_translated_tag?(tag, scope)
     SiteSetting.content_localization_enabled && tag.locale.present? && !tag.in_user_locale?
   end
+
+  def self.crawler_locale_param_enabled?
+    SiteSetting.content_localization_enabled && SiteSetting.content_localization_crawler_param &&
+      SiteSetting.set_locale_from_param
+  end
 end

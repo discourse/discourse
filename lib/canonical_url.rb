@@ -34,8 +34,7 @@ module CanonicalURL
     private
 
     def append_content_localization_param(url)
-      return url unless SiteSetting.content_localization_enabled
-      return url unless SiteSetting.content_localization_crawler_param
+      return url unless ContentLocalization.crawler_locale_param_enabled?
       return url unless use_crawler_layout?
 
       locale = params[Discourse::LOCALE_PARAM]
