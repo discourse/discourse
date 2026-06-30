@@ -698,7 +698,12 @@ class UsersController < ApplicationController
 
     params[:locale] ||= I18n.locale unless current_user
 
-    new_user_params = user_params.except(:timezone)
+    new_user_params =
+      if current_user&.admin? && is_api?
+        user_params.except(:timezone)
+      else
+        user_params.except(:timezone, :primary_group_id, :flair_group_id)
+      end
 
     user = User.where(staged: true).with_email(new_user_params[:email].strip.downcase).first
 
