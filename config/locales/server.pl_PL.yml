@@ -2114,6 +2114,7 @@ pl_PL:
     include_secure_categories_in_tag_counts: "Gdy opcja ta jest włączona, liczba tematów dla tagu będzie obejmować tematy, które znajdują się w kategoriach z ograniczeniami odczytu dla wszystkich użytkowników. Gdy opcja ta jest wyłączona, zwykłym użytkownikom wyświetlana jest tylko liczba tematów dla tagu, w którym wszystkie tematy znajdują się w kategoriach publicznych."
     display_personal_messages_tag_counts: "Gdy ta opcja jest włączona, zostanie wyświetlona liczba prywatnych wiadomości oznaczonych danym tagiem."
     top_menu: "Określ, które elementy pojawiają się w nawigacji na stronie głównej i w jakiej kolejności."
+    custom_homepage_crawler_route: "Trasa pokazywana robotom sieciowym, gdy włączona jest niestandardowa strona główna."
     post_menu: "Skonfiguruj widoczność i kolejność domyślnych elementów menu postów. Dodatkowe elementy dodane przez wtyczki lub motywy są zarządzane osobno i nie pojawią się na tej liście."
     post_menu_hidden_items: "Elementy menu, które mają być domyślnie ukrywane w menu posta, chyba że zostanie kliknięty wielokropek. Dodatkowe elementy dodane przez wtyczki lub motywy są zarządzane osobno i nie pojawią się na tej liście."
     share_links: "Określ które elementy menu udostępniania powinny być widoczne i w jakiej kolejności. "
@@ -3347,6 +3348,7 @@ pl_PL:
       many: "Użytkownik %{username} ma %{count} posty w publicznym wątku lub prywatnej wiadomości, więc nie można ich usunąć."
       other: "Użytkownik %{username} ma %{count} postów w publicznych wątkach lub prywatnych wiadomościach, więc nie można ich usunąć."
     cannot_bulk_delete: "Jeden lub więcej użytkowników nie może zostać usuniętych, ponieważ są administratorami, mają zbyt wiele postów lub mają bardzo stare posty."
+    cannot_bulk_suspend: "Nie można zawiesić jednego lub większej liczby wybranych użytkowników."
     cannot_remove_all_auth: "Musisz mieć co najmniej jedno powiązane konto, klucz dostępu lub ustawione hasło."
   unsubscribe_mailer:
     title: "Przestań obserwować mailera"

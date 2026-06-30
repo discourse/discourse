@@ -8026,11 +8026,12 @@ tr_TR:
         silence_reason: "Susturulma sebebi"
         bulk_actions:
           title: "Toplu eylemler"
-          admin_cant_be_deleted: "Bu kullanıcı, yönetici olduğu için silinemez"
-          too_many_or_old_posts: "Bu kullanıcı silinemez, çok fazla sayıda gönderisi veya çok eski bir gönderisi var"
-          too_many_selected_users:
-            one: "Toplu silme için %{count} kullanıcı limitine ulaştınız"
-            other: "Toplu silme için %{count} kullanıcı limitine ulaştınız"
+          select_all: "Tümünü seç"
+          clear_all: "Tümünü temizle"
+          suspend:
+            confirmation_modal:
+              close: "Bitir"
+              confirm: "Askıya al"
           delete:
             label: "Kullanıcı sil…"
             confirmation_modal:
@@ -8058,6 +8059,9 @@ tr_TR:
           suspended: "Askıya Alındı"
           silenced: "Susturuldu"
           staged: "Aşamalı"
+        activation_filter:
+          all: "Tüm kullanıcılar"
+          activated: "Etkinleştirildi"
         approved: "Onaylanmış mı?"
         titles:
           active: "Aktif kullanıcılar"

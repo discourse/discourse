@@ -9361,15 +9361,12 @@ ar:
         silence_reason: "سبب الكتم"
         bulk_actions:
           title: "الإجراءات الجماعية"
-          admin_cant_be_deleted: "لا يمكن حذف هذا المستخدم لأنه مسؤول."
-          too_many_or_old_posts: "لا يمكن حذف هذا المستخدم لأن لديه عدد كبير جدًا من المنشورات أو منشور قديم للغاية"
-          too_many_selected_users:
-            zero: "لقد بلغت حد عدد المستخدمين البالغ %{count} للحذف الجماعي"
-            one: "لقد بلغت حد عدد المستخدمين البالغ %{count} للحذف الجماعي"
-            two: "لقد بلغت حد عدد المستخدمين البالغ %{count} للحذف الجماعي"
-            few: "لقد بلغت حد عدد المستخدمين البالغ %{count} للحذف الجماعي"
-            many: "لقد بلغت حد عدد المستخدمين البالغ %{count} للحذف الجماعي"
-            other: "لقد بلغت حد عدد المستخدمين البالغ %{count} للحذف الجماعي"
+          select_all: "تحديد الكل"
+          clear_all: "مسح الكل"
+          suspend:
+            confirmation_modal:
+              close: "إغلاق"
+              confirm: "تعليق"
           delete:
             label: "حذف المستخدمين…"
             confirmation_modal:
@@ -9409,6 +9406,9 @@ ar:
           suspended: "المعلَّقون"
           silenced: "مكتوم"
           staged: "مؤقت"
+        activation_filter:
+          all: "جميع المستخدمين"
+          activated: "نشط"
         approved: "تمت الموافقة عليه؟"
         titles:
           active: "المستخدمون النشطون"

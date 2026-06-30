@@ -7793,11 +7793,12 @@ hu:
         silence_reason: "Némítás oka"
         bulk_actions:
           title: "Csoportos műveletek"
-          admin_cant_be_deleted: "Ez a felhasználó nem törölhető, mert rendszergazda"
-          too_many_or_old_posts: "Ezt a felhasználót nem lehet törölni, mert túl sok, vagy nagyon régi bejegyzése van"
-          too_many_selected_users:
-            one: "Elérte a csoportos törlés %{count} felhasználós korlátját"
-            other: "Elérte a csoportos törlés %{count} felhasználós korlátját"
+          select_all: "Összes kiválasztása"
+          clear_all: "Összes törlése"
+          suspend:
+            confirmation_modal:
+              close: "Bezárás"
+              confirm: "Felfüggesztett"
           delete:
             label: "Felhasználók törlése…"
             confirmation_modal:
@@ -7825,6 +7826,9 @@ hu:
           suspended: "Felfüggesztett"
           silenced: "Némított"
           staged: "Lépcsőzetes"
+        activation_filter:
+          all: "Minden felhasználó"
+          activated: "Aktiválva"
         approved: "Jóváhagyott?"
         titles:
           active: "Aktív felhasználók"

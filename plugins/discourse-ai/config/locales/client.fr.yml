@@ -538,9 +538,7 @@ fr:
             custom: "Personnalisé…"
           hours: "heures"
           max_tokens_help: "Nombre maximal de jetons (mots et caractères) que chaque utilisateur de ce groupe peut utiliser dans la durée spécifiée. Les jetons sont les unités utilisées par les modèles d'IA pour traiter le texte : environ 1 jeton = 4 caractères ou 3/4 d'un mot."
-          max_tokens_required: "Doit être défini si le nombre maximum d'utilisations n'est pas défini"
           max_usages_help: "Nombre maximal de fois que chaque utilisateur de ce groupe peut utiliser le modèle d'IA dans la durée spécifiée. Ce quota est suivi par utilisateur individuel et n'est pas partagé au sein du groupe."
-          max_usages_required: "Doit être défini si le nombre maximum de jetons n'est pas défini"
         usage:
           ai_bot: "Robot IA"
           ai_helper: "Assistant (%{agent})"

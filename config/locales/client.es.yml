@@ -7929,11 +7929,12 @@ es:
         silence_reason: "Motivo para silenciar"
         bulk_actions:
           title: "Acciones en bloque"
-          admin_cant_be_deleted: "Este usuario no se puede eliminar porque es administrador"
-          too_many_or_old_posts: "Este usuario no se puede eliminar porque tiene demasiadas publicaciones o una publicación muy antigua."
-          too_many_selected_users:
-            one: "Has alcanzado el límite de %{count} usuario para la eliminación en bloque"
-            other: "Has alcanzado el límite de %{count} usuarios para la eliminación en bloque"
+          select_all: "Seleccionar todo"
+          clear_all: "Borrar todo"
+          suspend:
+            confirmation_modal:
+              close: "Cerrar"
+              confirm: "Suspender"
           delete:
             label: "Eliminar usuarios…"
             confirmation_modal:
@@ -7961,6 +7962,9 @@ es:
           suspended: "Suspendidos"
           silenced: "Silenciados"
           staged: "Temporal"
+        activation_filter:
+          all: "Todos los usuarios"
+          activated: "Activados"
         approved: "¿Aprobado/s?"
         titles:
           active: "Usuarios activos"

@@ -54,7 +54,13 @@ uk:
     access_control:
       manage:
         access_permission_editor: "Редактор"
+        access_permission_editor_description: "Дозволяє створювати і редагувати вміст для цього об'єкта"
+        access_permission_viewer: "Переглядач"
+        access_permission_viewer_description: "Може переглядати вміст для цього об'єкта"
         access_permission_remove: "Вилучити"
+        access_permission_remove_description: "Видалити дозвіл для цієї групи"
+        add_group: "Додати групу"
+        mandatory_acl_tooltip: "Цей дозвіл є обов’язковим для цього об’єкта і не може бути скасований"
     carousel:
       go_to_slide: "Перейти до слайда %{index}"
       previous: "Попередній слайд"
@@ -1880,6 +1886,7 @@ uk:
       enable_smart_lists: "Увімкніть розумні списки під час запису в композитор"
       enable_defer: "Увімкнути позначення тем як непрочитані"
       enable_markdown_monospace_font: "Використовувати моноширинний шрифт у режимі Markdown редактора тексту"
+      show_original_content: "Показати оригінальний текст замість перекладеного."
       experimental_sidebar:
         enable: "Увімкнути бічну панель"
         options: "Параметри"
@@ -2999,9 +3006,27 @@ uk:
     code_login:
       email_label: "E-mail"
       continue_button: "Продовжити"
+      check_your_email: "Перевірте свою електронну пошту"
+      code_instructions: "Ми надіслали 6-значний код на <b>%{email}</b>. Введіть його нижче, щоб продовжити."
       verify_button: "Продовжити"
+      resend: "Надіслати код повторно"
+      resend_countdown: "Надіслати код повторно (%{count}с)"
+      code_resent: "Ми надіслали новий код."
+      use_different_email: "Використовувати іншу адресу електронної пошти"
+      use_password_instead: "Увійдіть, використовуючи свій пароль"
+      email_me_code: "Надішліть мені одноразовий код входу"
+      signup_title: "Приєднатися до цієї спільноти"
+      signup_instructions: "Введіть свою адресу електронної пошти, щоб приєднатися до цієї спільноти. Ми надішлемо вам код для підтвердження, і ви зможете продовжити!"
+      user_fields_title: "Майже готово"
+      user_fields_instructions: "Ще трохи деталей, щоб закінчити створення вашого облікового запису."
+      account_ready_title: "Ваш обліковий запис готовий! 🎉"
+      account_ready_edit: "Оберіть ваше ім'я користувача та аватар"
       account_ready_continue: "Продовжити"
       username_label: "Імʼя користувача"
+      username_placeholder: "Виберіть ім'я користувача"
+      change_avatar: "Змінити аватар"
+      username_taken: "Це ім'я користувача вже зайняте. Спробуйте інше."
+      username_unavailable: "Це ім'я користувача недоступне. Спробуйте %{suggestion}."
     login:
       header_title: "З поверненням"
       title: "Вхід"
@@ -3020,6 +3045,9 @@ uk:
       security_key_description: "Підготувавши фізичний ключ безпеки або сумісний мобільний пристрій, натисніть кнопку Автентифікувати за допомогою ключа безпеки нижче."
       security_key_alternative: "Спробуйте інший спосіб"
       security_key_authenticate: "Автентифікація за допомогою ключа безпеки"
+      passkey_2fa_description: "Підтвердьте свою особу за допомогою клавіші доступу."
+      use_passkey: "Використовувати passkey"
+      use_security_key: "Використовуйте ключ безпеки"
       security_key_not_allowed_error: "Час перевірки автентичності ключа безпеки минув або дію було скасовано."
       security_key_no_matching_credential_error: "У зазначеному ключі безпеки не знайдено відповідних облікових даних."
       security_key_support_missing_error: "Ваше поточний пристрій або оглядач не підтримує використання ключів безпеки. Будь ласка, використовуйте інший метод."
@@ -3094,6 +3122,7 @@ uk:
         totp: "Натомість використовуйте застосунок автентифікації"
         backup_code: "Замість цього використовуйте резервний код"
         security_key: "Натомість використовуйте ключ безпеки"
+        passkey: "Використовувати passkey замість нього"
       no_login_methods:
         title: "Немає методів входу"
         description: "Методи входу не налаштовані. Адміністратори можуть відвідати <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> , щоб переналаштувати сайт."
@@ -3268,7 +3297,29 @@ uk:
     codemirror:
       expression:
         sections:
+          recommended: "Рекомендовані"
+          properties: "Властивості"
+          methods: "Методи"
           metadata: "Метадані"
+          globals: "Глобально"
+        methods:
+          string:
+            length: "Кількість символів у рядку."
+            includes: "Повертає значення true, якщо рядок містить підрядок."
+            startsWith: "Повертає значення true, якщо рядок починається з заданих символів."
+            endsWith: "Повертає значення true, якщо рядок закінчується заданими символами."
+            split: "Розбиває рядок на масив підрядків."
+            replaceAll: "Замінює всі входження пошукового рядка."
+            replace: "Замінює перше входження рядка пошуку."
+            trim: "Видаляє пробіли з обох кінців рядка."
+            trimStart: "Видаляє пробіли з початку рядка."
+            trimEnd: "Видаляє пробіли з кінця рядка."
+            toLowerCase: "Перетворює рядок у малі літери."
+            toUpperCase: "Перетворює рядок у верхній регістр."
+            slice: "Витягує розділ рядка."
+            substring: "Повертає частину рядка між двома індексами."
+            indexOf: "Повертає індекс першого входження, або -1, якщо не знайдено."
+            match: "Відповідає рядку з регулярним виразом."
     composer:
       autocomplete:
         username_missing: "У вибраному результаті автозаповнення відсутнє ім’я користувача."
@@ -9063,13 +9114,12 @@ uk:
         silence_reason: "Причина заморожування"
         bulk_actions:
           title: "Масові дії"
-          admin_cant_be_deleted: "Цього користувача не можна видалити, оскільки він адміністратор"
-          too_many_or_old_posts: "Цей користувач не може бути видалений, у нього занадто багато повідомлень або дуже старий пост"
-          too_many_selected_users:
-            one: "Ви досягли ліміту користувачів %{count} для масового видалення"
-            few: "Ви досягли ліміту користувачів %{count} для масового видалення"
-            many: "Ви досягли ліміту користувачів %{count} для масового видалення"
-            other: "Ви досягли ліміту користувачів %{count} для масового видалення"
+          select_all: "Вибрати все"
+          clear_all: "Очистити все"
+          suspend:
+            confirmation_modal:
+              close: "Закрити"
+              confirm: "Призупинити"
           delete:
             label: "Видалити користувачів…"
             confirmation_modal:
@@ -9103,6 +9153,9 @@ uk:
           suspended: "Призупинені"
           silenced: "Відключені"
           staged: "Попередньо"
+        activation_filter:
+          all: "Всі користувачі"
+          activated: "Активоване"
         approved: "Схвалено?"
         titles:
           active: "Активні користувачі"

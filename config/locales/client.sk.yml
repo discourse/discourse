@@ -7681,13 +7681,11 @@ sk:
         silence_reason: "Dôvod ticha"
         bulk_actions:
           title: "Hromadné akcie"
-          admin_cant_be_deleted: "Tento používateľ nemôže byť odstránený, pretože je správcom"
-          too_many_or_old_posts: "Tento používateľ nemôže byť odstránený, má príliš veľa príspevkov alebo veľmi starý príspevok"
-          too_many_selected_users:
-            one: "Dosiahli ste limit %{count} používateľa na hromadné odstránenie"
-            few: "Dosiahli ste limit %{count} používateľov na hromadné odstránenie"
-            many: "Dosiahli ste limit %{count} používateľov na hromadné odstránenie"
-            other: "Dosiahli ste limit %{count} používateľov na hromadné odstránenie"
+          clear_all: "Vymazať všetko"
+          suspend:
+            confirmation_modal:
+              close: "Zatvoriť"
+              confirm: "Odobrať"
           delete:
             label: "Odstrániť používateľov…"
             confirmation_modal:
@@ -7721,6 +7719,9 @@ sk:
           suspended: "Odobrate práva"
           silenced: "Umlčané"
           staged: "Dočasný"
+        activation_filter:
+          all: "Všetci používatelia"
+          activated: "Aktivované"
         approved: "Schválený?"
         titles:
           active: "Aktívni používatelia"

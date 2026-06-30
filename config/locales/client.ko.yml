@@ -5029,6 +5029,10 @@ ko:
         active: "활성화됨"
         status: "상태"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "닫기"
+              confirm: "차단됨"
           delete:
             confirmation_modal:
               close: "닫기"
@@ -5041,6 +5045,9 @@ ko:
           suspended: "정지됨"
           silenced: "차단됨"
           staged: "스테이징됨"
+        activation_filter:
+          all: "모든 사용자"
+          activated: "활성화됨"
         approved: "승인되었나요?"
         titles:
           pending: "검토 대기 중인 사용자"

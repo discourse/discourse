@@ -5834,6 +5834,11 @@ da:
         active: "Aktiveret"
         status: "Status"
         bulk_actions:
+          clear_all: "Ryd alle"
+          suspend:
+            confirmation_modal:
+              close: "Luk"
+              confirm: "Suspendér"
           delete:
             confirmation_modal:
               close: "Luk"
@@ -5845,6 +5850,9 @@ da:
           suspended: "Suspenderet"
           silenced: "Mådeholdt (silenced)"
           staged: "Forhåndsoprettet"
+        activation_filter:
+          all: "Alle brugere"
+          activated: "Aktiveret"
         approved: "Godkendt?"
         titles:
           active: "Aktive brugere"

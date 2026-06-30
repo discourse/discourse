@@ -7841,11 +7841,12 @@ el:
         hide_emails: "Απόκρυψη email"
         bulk_actions:
           title: "Μαζικές ενέργειες"
-          admin_cant_be_deleted: "Αυτός ο χρήστης δεν μπορεί να διαγραφεί επειδή είναι διαχειριστής"
-          too_many_or_old_posts: "Αυτός ο χρήστης δεν μπορεί να διαγραφεί επειδή έχει πάρα πολλές αναρτήσεις ή μια πολύ παλιά ανάρτηση"
-          too_many_selected_users:
-            one: "Έχετε φτάσει το όριο %{count} χρήστη για μαζική διαγραφή"
-            other: "Έχετε φτάσει το όριο %{count} χρηστών για μαζική διαγραφή"
+          select_all: "Επιλογή όλων"
+          clear_all: "Εκκαθάριση όλων"
+          suspend:
+            confirmation_modal:
+              close: "Κλείσιμο"
+              confirm: "Αποβολή"
           delete:
             label: "Διαγραφή χρηστών…"
             confirmation_modal:
@@ -7868,6 +7869,9 @@ el:
           suspended: "Αποβλημένοι"
           silenced: "Σιγήθηκαν"
           staged: "Υπό μετάβαση"
+        activation_filter:
+          all: "Όλοι οι χρήστες"
+          activated: "Ενεργοποιήθηκε"
         approved: "Εγκεκριμένο;"
         titles:
           active: "Ενεργοί χρήστες"

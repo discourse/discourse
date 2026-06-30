@@ -541,9 +541,7 @@ sk:
             custom: "Vlastné..."
           hours: "hodiny"
           max_tokens_help: "Maximálny počet tokenov (slov a znakov), ktoré môže každý používateľ v tejto skupine použiť v rámci zadaného trvania. Tokeny sú jednotky, ktoré modely umelej inteligencie používajú na spracovanie textu – približne 1 token = 4 znaky alebo 3/4 slova."
-          max_tokens_required: "Musí byť nastavené, ak nie je nastavený maximálny počet použití"
           max_usages_help: "Maximálny počet použití modelu AI pre každého používateľa v tejto skupine v rámci zadaného trvania. Táto kvóta sa sleduje pre jednotlivých používateľov a nezdieľa sa v rámci skupiny."
-          max_usages_required: "Musí byť nastavené, ak nie je nastavený maximálny počet tokenov"
         usage:
           ai_bot: "AI bot"
           ai_helper_image_caption: "Popis obrázka"
