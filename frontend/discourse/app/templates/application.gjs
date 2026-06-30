@@ -154,6 +154,13 @@ export default <template>
       {{#if @controller.showPoweredBy}}
         <PoweredByDiscourse />
       {{/if}}
+
+      {{! Composer lives inside the grid so themes can place it in a grid
+      column (e.g. Horizon peek mode). It is position:fixed in its default
+      state, so its DOM location here does not affect normal positioning —
+      however this relies on #main-outlet-wrapper never establishing a containing
+      block (no transform/filter/contain/will-change/perspective). }}
+      <ComposerContainer />
     </div>
 
     <PluginOutlet
@@ -177,7 +184,6 @@ export default <template>
     <ModalContainer />
     <DialogHolder />
     <TopicEntrance />
-    <ComposerContainer />
     <RenderGlimmerContainer />
 
     {{#if @controller.showFooterNav}}
