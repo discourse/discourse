@@ -3,6 +3,17 @@
 class BrowserPageviewSessionEngagement < ActiveRecord::Base
   MAX_SESSION_ID_LENGTH = 32
 
+  GREATEST_COLUMNS = %i[
+    mouse_move_events
+    click_events
+    key_events
+    scroll_events
+    touch_events
+    back_forward_events
+    engaged_seconds
+    time_to_first_interaction_ms
+  ]
+
   def self.upsert_from_payload(
     session_id:,
     mouse_move_events:,
@@ -31,9 +42,20 @@ class BrowserPageviewSessionEngagement < ActiveRecord::Base
         },
       ],
       unique_by: :session_id,
+      on_duplicate: greatest_on_duplicate_clause,
       record_timestamps: true,
     )
   end
+
+  def self.greatest_on_duplicate_clause
+    assignments =
+      GREATEST_COLUMNS.map do |column|
+        "#{column} = GREATEST(#{table_name}.#{column}, EXCLUDED.#{column})"
+      end
+    assignments << "updated_at = EXCLUDED.updated_at"
+    Arel.sql(assignments.join(", "))
+  end
+  private_class_method :greatest_on_duplicate_clause
 end
 
 # == Schema Information

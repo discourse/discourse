@@ -60,5 +60,20 @@ RSpec.describe BrowserPageviewSessionEngagement do
         engaged_seconds: 9000,
       )
     end
+
+    it "keeps the largest value per column across snapshots" do
+      described_class.upsert_from_payload(
+        **attributes.merge(mouse_move_events: 40, click_events: 3),
+      )
+
+      described_class.upsert_from_payload(
+        **attributes.merge(mouse_move_events: 12, click_events: 20),
+      )
+
+      expect(described_class.find_by(session_id: "sess-1")).to have_attributes(
+        mouse_move_events: 40,
+        click_events: 20,
+      )
+    end
   end
 end
