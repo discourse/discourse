@@ -4,8 +4,6 @@ module Migrations
   module Converters
     module Discourse
       class PermalinkNormalizations < Conversion::Step
-        attr_accessor :source_db
-
         def execute
           normalizations = @source_db.query_value <<~SQL
             SELECT value

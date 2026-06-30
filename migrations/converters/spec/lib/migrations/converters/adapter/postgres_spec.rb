@@ -37,6 +37,35 @@ RSpec.describe Migrations::Converters::Adapter::Postgres do
       end
     end
 
+    describe "#select_all and #count_all" do
+      before { allow(connection).to receive(:quote_ident) { |id| %("#{id}") } }
+
+      it "selects all rows from a quoted table" do
+        create_adapter do |adapter|
+          allow(adapter).to receive(:query).with('SELECT * FROM "things" WHERE active').and_return(
+            [:row],
+          )
+          expect(adapter.select_all("things", where: "active")).to eq([:row])
+        end
+      end
+
+      it "counts rows in a quoted table" do
+        create_adapter do |adapter|
+          allow(adapter).to receive(:count).with(
+            'SELECT COUNT(*) FROM "things" WHERE active',
+          ).and_return(7)
+          expect(adapter.count_all("things", where: "active")).to eq(7)
+        end
+      end
+
+      it "omits the WHERE clause when there's no filter" do
+        create_adapter do |adapter|
+          allow(adapter).to receive(:query).with('SELECT * FROM "things"').and_return([:row])
+          expect(adapter.select_all("things")).to eq([:row])
+        end
+      end
+    end
+
     describe "#discard!" do
       it "redirects the connection's socket to the null device without closing it" do
         create_adapter do |adapter|

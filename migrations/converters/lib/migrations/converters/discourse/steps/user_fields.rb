@@ -4,23 +4,7 @@ module Migrations
   module Converters
     module Discourse
       class UserFields < Conversion::ProgressStep
-        source do
-          attr_accessor :source_db
-
-          def max_progress
-            @source_db.count <<~SQL
-              SELECT COUNT(*) FROM user_fields
-            SQL
-          end
-
-          def items
-            @source_db.query <<~SQL
-              SELECT *
-              FROM user_fields
-              ORDER BY id
-            SQL
-          end
-        end
+        source { reads_table "user_fields" }
 
         processor do
           def process(item)
