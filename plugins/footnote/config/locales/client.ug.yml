@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 ug:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          footnote: "Discourse بەت ئاستى ئىزاھاتى"
   js:
     footnote:
       title: "بەت ئاستى ئىزاھات"

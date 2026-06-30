@@ -6225,6 +6225,12 @@ zh_CN:
             headline:
               healthy_growth:
                 title: "成员们正在养成回来的习惯。"
+                summary: "在此期间，用户黏性、日活跃用户和新注册用户数均有所增长。"
+              declining:
+                title: "成员回来的频率降低了。"
+                summary: "在此期间，用户黏性、日活跃用户和新注册用户数均有所下降。"
+              engaged_but_shrinking:
+                title: "社区成员保持活跃，但社区规模正在缩小。"
         reports_section:
           modal:
             enabled_heading: "已启用"
