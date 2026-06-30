@@ -705,8 +705,7 @@ class Middleware::RequestTracker
       next if Discourse.pg_readonly_mode?
 
       BrowserPageviewSessionEngagement.upsert_from_payload(
-        session_id:
-          payload["session_id"]&.slice(0, BrowserPageviewSessionEngagement::MAX_SESSION_ID_LENGTH),
+        session_id: payload["session_id"],
         mouse_move_events: payload["mouse_move_events"].to_i,
         click_events: payload["click_events"].to_i,
         key_events: payload["key_events"].to_i,

@@ -2054,17 +2054,6 @@ RSpec.describe Middleware::RequestTracker do
       }.not_to change { BrowserPageviewSessionEngagement.count }
     end
 
-    it "truncates an over-long session id to the column limit" do
-      middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
-      long_id = "a" * (BrowserPageviewSessionEngagement::MAX_SESSION_ID_LENGTH + 10)
-
-      middleware.call(engagement_env(payload.merge(session_id: long_id), same_origin))
-
-      expect(BrowserPageviewSessionEngagement.first.session_id).to eq(
-        "a" * BrowserPageviewSessionEngagement::MAX_SESSION_ID_LENGTH,
-      )
-    end
-
     it "coerces string and float metric values to integers" do
       middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
 

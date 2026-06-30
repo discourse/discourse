@@ -27,6 +27,8 @@ class BrowserPageviewSessionEngagement < ActiveRecord::Base
   )
     return if session_id.blank?
 
+    session_id = session_id.slice(0, MAX_SESSION_ID_LENGTH)
+
     upsert_all(
       [
         {

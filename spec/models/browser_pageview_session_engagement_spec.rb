@@ -39,6 +39,14 @@ RSpec.describe BrowserPageviewSessionEngagement do
       expect(described_class.find_by(session_id: "sess-1").time_to_first_interaction_ms).to be_nil
     end
 
+    it "truncates an over-long session id to the column limit" do
+      long_id = "a" * (described_class::MAX_SESSION_ID_LENGTH + 10)
+
+      described_class.upsert_from_payload(**attributes.merge(session_id: long_id))
+
+      expect(described_class.first.session_id).to eq("a" * described_class::MAX_SESSION_ID_LENGTH)
+    end
+
     it "writes nothing when the session id is blank" do
       expect {
         described_class.upsert_from_payload(**attributes.merge(session_id: ""))
