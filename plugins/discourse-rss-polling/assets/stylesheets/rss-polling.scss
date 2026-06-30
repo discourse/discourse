@@ -3,7 +3,7 @@
 @mixin feed-url {
   font-family: var(--d-font-family--monospace);
   font-weight: normal;
-  word-break: break-all;
+  overflow-wrap: anywhere;
 }
 
 .rss-polling-feed-editor {
@@ -25,27 +25,19 @@
     > .form-kit__field {
       flex: 1 1 14em;
     }
-
-    .select-kit-header {
-      min-height: var(--space-9);
-    }
-
-    .combo-box .select-kit-header {
-      min-height: calc(var(--space-9) + 2px);
-    }
   }
 
   &__buttons {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5em;
+    gap: var(--space-2);
     align-items: center;
   }
 
   &__enabled-control {
     display: flex;
     align-items: center;
-    gap: 0.5em;
+    gap: var(--space-2);
   }
 
   &__enabled {
@@ -56,7 +48,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.5em;
+    gap: var(--space-2);
     margin-top: var(--space-1);
     font-size: var(--font-down-1);
     color: var(--primary-medium);
@@ -71,7 +63,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 0.5em;
+    gap: var(--space-2);
   }
 
   &__header {
@@ -112,7 +104,7 @@
   &__item {
     display: flex;
     align-items: flex-start;
-    gap: 0.5em;
+    gap: var(--space-2);
     padding: var(--space-2);
     border-left: 3px solid transparent;
 
@@ -140,12 +132,12 @@
   &__body {
     display: flex;
     flex-direction: column;
-    gap: 0.15em;
+    gap: var(--space-half);
     min-width: 0;
   }
 
   &__item-title {
-    word-break: break-word;
+    overflow-wrap: anywhere;
 
     &:hover {
       text-decoration: underline;
@@ -199,7 +191,7 @@
 
     > * + *::before {
       content: "·";
-      margin-inline: 0.5em;
+      margin-inline: var(--space-2);
       color: var(--primary-low-mid);
     }
 
@@ -216,7 +208,7 @@
   }
 
   &__author {
-    gap: 0.5em;
+    gap: var(--space-2);
 
     a {
       color: var(--primary-high);
@@ -229,18 +221,21 @@
 
   &__tags {
     flex-wrap: wrap;
-    gap: 0.25em;
+    gap: var(--space-1);
   }
 
   &__filter {
-    gap: 0.25em;
+    gap: var(--space-1);
 
     .d-icon {
       color: var(--primary-medium);
     }
   }
 
-  &__toggle {
+  // Set on the .d-toggle-switch root, which defines these vars and passes them
+  // to the slider; the __toggle class lands on the inner button, a sibling that
+  // can't reach the slider via inheritance.
+  .d-toggle-switch {
     --toggle-switch-width: 36px;
     --toggle-switch-height: 20px;
   }
@@ -294,7 +289,7 @@
       }
 
       > * {
-        gap: 0.5em;
+        gap: var(--space-2);
       }
 
       > * + *::before {
@@ -310,7 +305,7 @@
       flex: 1 1 auto;
       display: flex;
       align-items: center;
-      gap: 0.5em;
+      gap: var(--space-2);
 
       .d-table__mobile-label {
         color: var(--primary-medium);
@@ -331,6 +326,10 @@
 .rss-polling-feed-history {
   &__table {
     margin: 0;
+  }
+
+  .d-button-label {
+    display: none;
   }
 
   &__attempt {
@@ -358,9 +357,15 @@
 
   &__summary {
     display: inline-flex;
-    gap: 0.5em;
+    gap: var(--space-2);
     align-items: center;
     text-align: left;
+    padding-left: 0;
+    padding-right: calc(var(--space-8) * 6);
+
+    svg.d-icon {
+      margin-right: 0;
+    }
   }
 
   &__date {
@@ -382,6 +387,11 @@
 
   &__more {
     margin-top: var(--space-2);
+  }
+
+  &__empty {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
   }
 
   .rss-polling-feed-test__list {

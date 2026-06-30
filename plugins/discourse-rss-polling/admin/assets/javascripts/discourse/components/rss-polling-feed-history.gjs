@@ -115,6 +115,9 @@ export default class RssPollingFeedHistory extends Component {
                         "angle-down"
                         "angle-right"
                       }}
+                      @ariaExpanded={{eq this.openId attempt.id}}
+                      @ariaLabel={{attempt.summary}}
+                      @translatedLabel={{attempt.summary}}
                       class="btn-flat rss-polling-feed-history__summary"
                     >
                       <span class="rss-polling-feed-history__date">
@@ -163,7 +166,7 @@ export default class RssPollingFeedHistory extends Component {
             />
           {{/if}}
         {{else}}
-          <p class="rss-polling-feed-test__empty">
+          <p class="rss-polling-feed-history__empty">
             {{i18n "admin.rss_polling.history.empty"}}
           </p>
         {{/if}}

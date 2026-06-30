@@ -115,7 +115,7 @@ export default class RssPollingFeedRow extends Component {
       <td class="d-table__cell rss-polling-feed__status">
         <DToggleSwitch
           @state={{this.feedToggle.enabled}}
-          title={{if
+          aria-label={{if
             this.feedToggle.enabled
             (i18n "admin.rss_polling.feeds.disable")
             (i18n "admin.rss_polling.feeds.enable")

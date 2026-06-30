@@ -250,7 +250,7 @@ export default class RssPollingFeedForm extends Component {
           <div class="rss-polling-feed-form__enabled-control">
             <DToggleSwitch
               @state={{this.feedToggle.enabled}}
-              title={{if
+              aria-label={{if
                 this.feedToggle.enabled
                 (i18n "admin.rss_polling.feeds.disable")
                 (i18n "admin.rss_polling.feeds.enable")
