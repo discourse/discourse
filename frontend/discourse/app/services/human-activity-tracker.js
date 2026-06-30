@@ -15,7 +15,6 @@ const EVENT_COUNTERS = {
   keydown: "key_events",
   touchstart: "touch_events",
   scroll: "scroll_events",
-  wheel: "scroll_events",
   popstate: "back_forward_events",
 };
 
