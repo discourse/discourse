@@ -505,7 +505,14 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
   end
 
   it "correctly configures thinking level when set" do
-    model.update!(provider_params: { enable_thinking: true, thinking_level: "high" })
+    model.update!(
+      name: "gemini-3-flash",
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview",
+      provider_params: {
+        enable_thinking: true,
+        thinking_level: "high",
+      },
+    )
 
     response = gemini_mock.response("Using thinking level").to_json
     req_body = nil
@@ -528,7 +535,14 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
   end
 
   it "requests Gemini thought summaries when enabled" do
-    model.update!(provider_params: { enable_thinking: true, thinking_level: "medium" })
+    model.update!(
+      name: "gemini-3-flash",
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview",
+      provider_params: {
+        enable_thinking: true,
+        thinking_level: "medium",
+      },
+    )
 
     response = gemini_mock.response("Using thought summaries").to_json
     req_body = nil
@@ -628,6 +642,8 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
 
   it "thinking_level takes priority over enable_thinking" do
     model.update!(
+      name: "gemini-3-flash",
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview",
       provider_params: {
         enable_thinking: true,
         thinking_level: "medium",
@@ -673,6 +689,135 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     ).to_return(status: 200, body: response)
 
     response = llm.generate("Hello", user: user)
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to be_nil
+  end
+
+  it "maps thinking_effort to Gemini 3 thinking levels" do
+    model.update!(
+      name: "gemini-3-flash",
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview",
+    )
+
+    response = gemini_mock.response("Using thinking effort").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate("Hello", user: user, thinking_effort: "xhigh", temperature: 0.5)
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to eq({ thinkingLevel: "high" })
+    expect(parsed.dig(:generationConfig, :temperature)).to be_nil
+  end
+
+  it "maps minimal thinking_effort to low for Gemini 3.1 Pro" do
+    model.update!(
+      name: "gemini-3.1-pro",
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro-preview",
+    )
+
+    response = gemini_mock.response("Using minimal effort").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate("Hello", user: user, thinking_effort: "minimal")
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to eq({ thinkingLevel: "low" })
+  end
+
+  it "maps unsupported Gemini 3 Pro thinking levels to supported levels" do
+    model.update!(
+      name: "gemini-3-pro",
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-preview",
+    )
+
+    response = gemini_mock.response("Using medium effort").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate("Hello", user: user, thinking_effort: "medium")
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to eq({ thinkingLevel: "high" })
+  end
+
+  it "uses thinkingBudget 0 for explicit none thinking_effort" do
+    response = gemini_mock.response("No thinking").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate(
+      "Hello",
+      user: user,
+      thinking_effort: "none",
+      output_thinking: true,
+      extra_model_params: {
+        include_thought_summaries: true,
+      },
+    )
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to eq({ thinkingBudget: 0 })
+  end
+
+  it "does not send thinking levels to pre-Gemini 3 generateContent models" do
+    response = gemini_mock.response("Unsupported thinking level").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate("Hello", user: user, thinking_effort: "high")
     parsed = JSON.parse(req_body, symbolize_names: true)
 
     expect(parsed.dig(:generationConfig, :thinkingConfig)).to be_nil
@@ -754,7 +899,14 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
   end
 
   it "strips temperature when thinking_level is set" do
-    model.update!(provider_params: { enable_thinking: true, thinking_level: "high" })
+    model.update!(
+      name: "gemini-3-flash",
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview",
+      provider_params: {
+        enable_thinking: true,
+        thinking_level: "high",
+      },
+    )
 
     response = gemini_mock.response("Stripped temp").to_json
     req_body = nil

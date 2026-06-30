@@ -4,7 +4,7 @@ module DiscourseAi
   module Completions
     module Endpoints
       class Base
-        attr_reader :partial_tool_calls, :output_thinking
+        attr_reader :partial_tool_calls, :output_thinking, :thinking_config
 
         CompletionFailed = Class.new(StandardError)
         FAIL_THRESHOLD = 5
@@ -101,6 +101,11 @@ module DiscourseAi
           @llm_model = llm_model
         end
 
+        def prepare_model_params(model_params)
+          @thinking_config = resolve_thinking_config(model_params)
+          apply_thinking_config_to_model_params(model_params.dup)
+        end
+
         def enforce_max_output_tokens(value)
           if @llm_model.max_output_tokens.to_i > 0
             value = @llm_model.max_output_tokens if (value.to_i > @llm_model.max_output_tokens) ||
@@ -149,6 +154,8 @@ module DiscourseAi
 
           max_tokens = enforce_max_output_tokens(model_params[:max_tokens])
           model_params[:max_tokens] = max_tokens if max_tokens
+          @thinking_config ||= resolve_thinking_config(model_params)
+          model_params = apply_thinking_config_to_model_params(model_params)
           model_params = normalize_model_params(model_params)
 
           if block_given? && disable_streaming?
@@ -251,7 +258,8 @@ module DiscourseAi
           retried = false
           next_attempt_delay_ms = 0
           @forced_json_through_prefill = false
-          request_body = prepare_payload(prompt, model_params, dialect).to_json
+          request_body =
+            prepare_payload(prompt, provider_model_params(model_params), dialect).to_json
           log =
             start_completion_log(
               request_body: request_body,
@@ -552,12 +560,43 @@ module DiscourseAi
           raise NotImplementedError
         end
 
+        def resolve_thinking_config(_model_params)
+          DiscourseAi::Completions::ThinkingConfig.disabled
+        end
+
+        def apply_thinking_config_to_model_params(model_params)
+          return model_params if thinking_config.blank?
+
+          if thinking_config.reserved_output_tokens
+            model_params[:reserved_output_tokens] = thinking_config.reserved_output_tokens
+          end
+
+          model_params
+        end
+
+        def thinking_configured?
+          thinking_config.present? && !thinking_config.unsupported? &&
+            (thinking_config.enabled? || thinking_config.explicit_none?)
+        end
+
+        def strip_sampling_params_for_thinking!(model_params)
+          return model_params if thinking_config.blank?
+
+          model_params.delete(:temperature) if thinking_config.strip_temperature?
+          model_params.delete(:top_p) if thinking_config.strip_top_p?
+          model_params
+        end
+
         def model_uri
           raise NotImplementedError
         end
 
         def prepare_payload(_prompt, _model_params)
           raise NotImplementedError
+        end
+
+        def provider_model_params(model_params)
+          model_params.except(:thinking_effort, :reserved_output_tokens, :provider_output_tokens)
         end
 
         def prepare_request(_payload)

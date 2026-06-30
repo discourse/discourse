@@ -5,17 +5,24 @@ module DiscourseAi
     module Endpoints
       module AnthropicShared
         EFFORT_VALUES = %w[low medium high xhigh max].freeze
+        THINKING_BUDGETS = {
+          "minimal" => 1024,
+          "low" => 4096,
+          "medium" => 8192,
+          "high" => 16_384,
+          "xhigh" => 32_768,
+          "max" => 32_768,
+        }.freeze
+        DEFAULT_VISIBLE_OUTPUT_TOKENS = 30_000
+        DEFAULT_ADAPTIVE_OUTPUT_TOKENS = 32_000
+        MIN_THINKING_BUDGET = 1024
+        MIN_VISIBLE_OUTPUT_TOKENS = 1024
 
         def normalize_model_params(model_params)
           model_params = model_params.dup
 
-          thinking_enabled =
-            llm_model.lookup_custom_param("adaptive_thinking") ||
-              llm_model.lookup_custom_param("enable_reasoning")
-
-          if thinking_enabled
-            model_params.delete(:temperature)
-            model_params.delete(:top_p)
+          if thinking_config.present? && thinking_config.enabled?
+            strip_sampling_params_for_thinking!(model_params)
           else
             model_params.delete(:top_p) if llm_model.lookup_custom_param("disable_top_p")
             if llm_model.lookup_custom_param("disable_temperature")
@@ -30,6 +37,40 @@ module DiscourseAi
           AiApiAuditLog::Provider::Anthropic
         end
 
+        def resolve_thinking_config(model_params)
+          effort =
+            DiscourseAi::Completions::ThinkingConfig.normalize_effort(
+              model_params[:thinking_effort],
+            )
+
+          if effort.blank?
+            provider_param_config = provider_param_thinking_config(model_params)
+            return provider_param_config if provider_param_config
+            return DiscourseAi::Completions::ThinkingConfig.disabled
+          end
+
+          if !supports_anthropic_thinking?
+            return DiscourseAi::Completions::ThinkingConfig.unsupported(canonical_effort: effort)
+          end
+
+          return DiscourseAi::Completions::ThinkingConfig.explicit_none if effort == "none"
+
+          budget = THINKING_BUDGETS[effort]
+          if budget.blank?
+            return DiscourseAi::Completions::ThinkingConfig.unsupported(canonical_effort: effort)
+          end
+
+          config =
+            budget_thinking_config(
+              canonical_effort: effort,
+              budget: budget,
+              model_params: model_params,
+            )
+          return config if config
+
+          DiscourseAi::Completions::ThinkingConfig.unsupported(canonical_effort: effort)
+        end
+
         def xml_tags_to_strip(dialect)
           if dialect.prompt.has_tools?
             %w[thinking search_quality_reflection search_quality_score]
@@ -39,6 +80,128 @@ module DiscourseAi
         end
 
         private
+
+        def supports_anthropic_thinking?
+          true
+        end
+
+        def provider_param_thinking_config(model_params)
+          return if !supports_anthropic_thinking?
+
+          if llm_model.lookup_custom_param("adaptive_thinking")
+            total_output_tokens = adaptive_total_output_tokens(model_params)
+            return(
+              DiscourseAi::Completions::ThinkingConfig.new(
+                canonical_effort: "adaptive",
+                enabled: true,
+                provider_effort: "adaptive",
+                provider_output_tokens: total_output_tokens,
+                reserved_output_tokens: total_output_tokens,
+                strip_temperature: true,
+                strip_top_p: true,
+              )
+            )
+          end
+
+          if llm_model.lookup_custom_param("enable_reasoning")
+            budget = llm_model.lookup_custom_param("reasoning_tokens").to_i.clamp(1024, 32_768)
+            config =
+              budget_thinking_config(
+                canonical_effort: "custom",
+                budget: budget,
+                model_params: model_params,
+              )
+            return config if config
+
+            DiscourseAi::Completions::ThinkingConfig.unsupported(canonical_effort: "custom")
+          end
+        end
+
+        def adaptive_total_output_tokens(model_params)
+          requested_output_tokens = model_params[:max_tokens].presence&.to_i
+          output_token_limit = llm_model.max_output_tokens.to_i
+
+          if output_token_limit.positive?
+            if requested_output_tokens&.positive?
+              [requested_output_tokens, output_token_limit].min
+            else
+              output_token_limit
+            end
+          else
+            if requested_output_tokens&.positive?
+              requested_output_tokens
+            else
+              DEFAULT_ADAPTIVE_OUTPUT_TOKENS
+            end
+          end
+        end
+
+        def budget_thinking_config(canonical_effort:, budget:, model_params:)
+          requested_visible_output_tokens = model_params[:max_tokens].presence&.to_i
+          output_token_limit = llm_model.max_output_tokens.to_i
+
+          if output_token_limit.positive?
+            provider_output_tokens = output_token_limit
+            return if provider_output_tokens <= MIN_THINKING_BUDGET
+
+            max_visible_output_tokens = provider_output_tokens - MIN_THINKING_BUDGET
+            visible_output_floor = [MIN_VISIBLE_OUTPUT_TOKENS, max_visible_output_tokens].min
+
+            visible_output_tokens = provider_output_tokens - budget
+            visible_output_tokens =
+              requested_visible_output_tokens if requested_visible_output_tokens&.positive?
+            visible_output_tokens = [visible_output_tokens, visible_output_floor].max
+            visible_output_tokens = [visible_output_tokens, max_visible_output_tokens].min
+
+            budget = provider_output_tokens - visible_output_tokens
+            return if budget < MIN_THINKING_BUDGET
+          else
+            visible_output_tokens = requested_visible_output_tokens || DEFAULT_VISIBLE_OUTPUT_TOKENS
+            provider_output_tokens = visible_output_tokens + budget
+          end
+
+          DiscourseAi::Completions::ThinkingConfig.new(
+            canonical_effort: canonical_effort,
+            enabled: true,
+            thinking_token_budget: budget,
+            visible_output_tokens: visible_output_tokens,
+            provider_output_tokens: provider_output_tokens,
+            reserved_output_tokens: provider_output_tokens,
+            strip_temperature: true,
+            strip_top_p: true,
+          )
+        end
+
+        def apply_anthropic_effort_config!(options)
+          effort = llm_model.lookup_custom_param("effort")
+          options[:output_config] = { effort: effort } if AnthropicShared::EFFORT_VALUES.include?(
+            effort,
+          )
+        end
+
+        def apply_anthropic_thinking_config!(options)
+          @thinking_config ||=
+            provider_param_thinking_config({}) || DiscourseAi::Completions::ThinkingConfig.disabled
+          return if thinking_config.blank? || thinking_config.unsupported?
+
+          if thinking_config.explicit_none?
+            options.delete(:thinking)
+            return
+          end
+
+          if thinking_config.provider_effort == "adaptive"
+            options[:thinking] = { type: "adaptive" }
+          elsif thinking_config.thinking_token_budget
+            options[:thinking] = {
+              type: "enabled",
+              budget_tokens: thinking_config.thinking_token_budget,
+            }
+          end
+
+          return if thinking_config.provider_output_tokens.blank?
+
+          options[:max_tokens] = thinking_config.provider_output_tokens
+        end
 
         def prompt_size(prompt)
           tokenizer.size(prompt.system_prompt.to_s + " " + prompt.messages.to_s)
@@ -85,6 +248,7 @@ module DiscourseAi
             default_options(dialect).merge(model_params.except(:response_format)).merge(
               messages: prompt.messages,
             )
+          apply_anthropic_thinking_config!(payload)
 
           if prompt.has_tools?
             payload[:tools] = prompt.tools

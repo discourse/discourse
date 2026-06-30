@@ -16,6 +16,16 @@ RSpec.describe AiAgent do
 
   before { enable_current_plugin }
 
+  it "exposes system agent thinking effort on class instances" do
+    agent_record =
+      AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::Creative])
+    agent_record.update!(thinking_effort: "max")
+
+    agent = agent_record.class_instance.new
+
+    expect(agent.thinking_effort).to eq("max")
+  end
+
   it "validates context settings" do
     expect(basic_agent.valid?).to eq(true)
 
