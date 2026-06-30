@@ -9,8 +9,10 @@ import Service, { service } from "@ember/service";
  * sources call.
  *
  * The `begin*`/`clear` methods record state ONLY; the public
- * `startDrag`/`startPaletteDrag`/`endDrag` wrap them with the side effects (the
- * `wireframe-dragging` body class, resetting the drag overlay).
+ * `startDrag`/`startPaletteDrag`/`endDrag` wrap them with the side effect of
+ * resetting the drag overlay. The `wireframe-dragging` body class is a
+ * declarative binding the editor chrome drives off `dragActive`, not a side
+ * effect set here.
  */
 export default class WireframeDragSessionService extends Service {
   @service wireframeDragOverlay;
@@ -57,6 +59,18 @@ export default class WireframeDragSessionService extends Service {
   }
 
   /**
+   * Whether any drag is in progress — an existing-block move OR a palette
+   * (new-block) drag. Unlike `isDragging`, this stays `true` through a palette
+   * drag, so it's the signal the editor chrome binds the `wireframe-dragging`
+   * body class to. Cleared by `clear()` on drop or cancel.
+   *
+   * @returns {boolean}
+   */
+  get dragActive() {
+    return this.#state.source != null;
+  }
+
+  /**
    * Records the start of an existing-block drag.
    *
    * @param {{ blockKey: string, outletName: string }} payload
@@ -90,8 +104,9 @@ export default class WireframeDragSessionService extends Service {
   }
 
   /**
-   * Begins an existing-block drag: resets any stale preview, records the source,
-   * and flags the editor as dragging via the body class.
+   * Begins an existing-block drag: resets any stale preview and records the
+   * source. Recording the source flips `dragActive`, which drives the editor's
+   * `wireframe-dragging` body class.
    *
    * @param {{ blockKey: string, outletName: string }} payload
    */
@@ -99,7 +114,6 @@ export default class WireframeDragSessionService extends Service {
   startDrag({ blockKey, outletName }) {
     this.wireframeDragOverlay.clear();
     this.beginBlock({ blockKey, outletName });
-    document.body.classList.add("wireframe-dragging");
   }
 
   /**
@@ -113,7 +127,6 @@ export default class WireframeDragSessionService extends Service {
   startPaletteDrag({ blockName, defaultArgs }) {
     this.wireframeDragOverlay.clear();
     this.beginPalette({ blockName, defaultArgs });
-    document.body.classList.add("wireframe-dragging");
   }
 
   /**
@@ -125,6 +138,5 @@ export default class WireframeDragSessionService extends Service {
   endDrag() {
     this.clear();
     this.wireframeDragOverlay.clear();
-    document.body.classList.remove("wireframe-dragging");
   }
 }

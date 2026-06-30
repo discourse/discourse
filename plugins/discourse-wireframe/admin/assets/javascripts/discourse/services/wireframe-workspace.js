@@ -53,7 +53,6 @@ export default class WireframeWorkspaceService extends Service {
     this.wireframeEditMode.activate();
     this.wireframeImageUpload.clearPending();
     this.wireframePublishTarget.setActiveTheme(themeId);
-    document.body.classList.add("wireframe-active");
     // Swap in the editor-aware rich-text renderer so every richInline arg gains
     // its click-to-edit scaffold. The minimal (live-style) renderer is restored
     // in `exit()`. Icon args carry their own `data-block-arg` wrapper in the
@@ -122,15 +121,6 @@ export default class WireframeWorkspaceService extends Service {
     resetBlockArgRenderer("rich-text");
     this.wireframeInspectorArgs.clear();
     this.wireframeForceExpand.reset();
-    // Clear every editor body class, including the chrome's collapse / dim
-    // modifiers. These are separate class tokens from `wireframe-active`, so
-    // leaving them would keep the live page dimmed after the editor closes.
-    document.body.classList.remove(
-      "wireframe-active",
-      "wireframe-active--left-collapsed",
-      "wireframe-active--right-collapsed",
-      "wireframe-active--dim-non-editable"
-    );
   }
 
   @action

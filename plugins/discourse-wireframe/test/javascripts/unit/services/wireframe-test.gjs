@@ -560,15 +560,12 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
       });
       assert.true(dragSession.isDragging);
       assert.true(
-        document.body.classList.contains("wireframe-dragging"),
-        "body class is added during drag"
+        dragSession.dragActive,
+        "dragActive is set during drag (drives the wireframe-dragging body class)"
       );
       dragSession.endDrag();
       assert.false(dragSession.isDragging);
-      assert.false(
-        document.body.classList.contains("wireframe-dragging"),
-        "body class is removed after drag"
-      );
+      assert.false(dragSession.dragActive, "dragActive is cleared after drag");
     });
 
     test("startPaletteDrag does not set isDragging (palette drags aren't moves)", function (assert) {
@@ -584,8 +581,8 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         "a palette drag carries no source block"
       );
       assert.true(
-        document.body.classList.contains("wireframe-dragging"),
-        "but the canvas drag body class is still applied"
+        dragSession.dragActive,
+        "but dragActive is still set (drives the wireframe-dragging body class)"
       );
       dragSession.endDrag();
     });

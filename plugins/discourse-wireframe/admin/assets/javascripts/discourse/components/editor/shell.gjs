@@ -3,8 +3,8 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import bodyClass from "discourse/helpers/body-class";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -37,6 +37,7 @@ import SimulationControls from "./simulation-controls";
 export default class EditorShell extends Component {
   @service dragAndDrop;
   @service wireframeWorkspace;
+  @service wireframeDragSession;
   @service wireframeDragDwell;
   @service wireframeMutationEngine;
   @service wireframeEditMode;
@@ -83,33 +84,18 @@ export default class EditorShell extends Component {
   toggleLeftCollapsed() {
     this.leftCollapsed = !this.leftCollapsed;
     writeBoolStorage("ve.leftCollapsed", this.leftCollapsed);
-    this.#syncBodyClasses();
   }
 
   @action
   toggleRightCollapsed() {
     this.rightCollapsed = !this.rightCollapsed;
     writeBoolStorage("ve.rightCollapsed", this.rightCollapsed);
-    this.#syncBodyClasses();
   }
 
   @action
   toggleDimNonEditable() {
     this.dimNonEditable = !this.dimNonEditable;
     writeBoolStorage("ve.dimNonEditable", this.dimNonEditable);
-    this.#syncBodyClasses();
-  }
-
-  /**
-   * Mirrors the collapsed-rail state onto `body` so the underlying
-   * page's `padding-left` / `padding-right` (set by
-   * `body.wireframe-active`) can shrink to match. Driven by
-   * `body.wireframe-active.--left-collapsed` / `.--right-collapsed`
-   * CSS rules.
-   */
-  @action
-  setupBodyClasses() {
-    this.#syncBodyClasses();
   }
 
   @action
@@ -132,26 +118,17 @@ export default class EditorShell extends Component {
     this.wireframeMutationEngine.redo();
   }
 
-  #syncBodyClasses() {
-    document.body.classList.toggle(
-      "wireframe-active--left-collapsed",
-      this.leftCollapsed
-    );
-    document.body.classList.toggle(
-      "wireframe-active--right-collapsed",
-      this.rightCollapsed
-    );
-    document.body.classList.toggle(
-      "wireframe-active--dim-non-editable",
-      this.dimNonEditable
-    );
-  }
-
   <template>
     {{#if this.wireframeEditMode.active}}
+      {{bodyClass
+        "wireframe-active"
+        (if this.leftCollapsed "wireframe-active--left-collapsed")
+        (if this.rightCollapsed "wireframe-active--right-collapsed")
+        (if this.dimNonEditable "wireframe-active--dim-non-editable")
+        (if this.wireframeDragSession.dragActive "wireframe-dragging")
+      }}
       <div
         class={{this.shellClasses}}
-        {{didInsert this.setupBodyClasses}}
         {{dDragAndDropAutoScroll target="window" types=VE_DRAG_TYPES}}
         {{dDragAndDropMonitor
           types=VE_DRAG_TYPES

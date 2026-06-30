@@ -437,6 +437,16 @@ export default class GridOverlay extends Component {
    * @param {Object} dragInfo
    * @returns {void}
    */
+  /**
+   * Paints a live preview of the new column widths as the user drags a track
+   * divider. Writes the fractions straight to the `--d-block-layout-cols` CSS
+   * var on each pointer-move — too high-frequency to round-trip through the
+   * layout model — and commits the final value in `onTrackResizeEnd`.
+   *
+   * @param {number} leftTrack - Index of the track left of the dragged divider.
+   * @param {object} dragInfo - The drag delta and originating event.
+   * @returns {void}
+   */
   @action
   onTrackResize(leftTrack, dragInfo) {
     const session = this.#trackResize;
@@ -782,6 +792,9 @@ export default class GridOverlay extends Component {
     };
     if (this.#cellMerge.ghost) {
       this.#applyGhostStyle(this.#cellMerge.ghost, this.#cellMerge.origin);
+      // The merge ghost is a transient drag artifact that lives outside the
+      // reactive layout, so its visibility is toggled imperatively for the
+      // duration of the drag and hidden again in #endCellMerge.
       this.#cellMerge.ghost.classList.add("--visible");
     }
   }
@@ -857,6 +870,9 @@ export default class GridOverlay extends Component {
   }
 
   #applyGhostStyle(ghost, placement) {
+    // Rewritten on every pointer-move as the merge preview follows the cursor —
+    // too high-frequency for a template binding. The committed placement flows
+    // through the layout model in onCellMergeEnd; this only paints the preview.
     ghost.style.gridColumn = `${placement.column.start} / ${placement.column.end}`;
     ghost.style.gridRow = `${placement.row.start} / ${placement.row.end}`;
   }

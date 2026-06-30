@@ -1331,6 +1331,9 @@ export default class BlockChrome extends Component {
     };
     if (ghost) {
       this.#applyGhostStyle(ghost, origin);
+      // The resize ghost is a transient drag artifact that lives outside the
+      // reactive layout, so its visibility is toggled imperatively for the
+      // duration of the drag and hidden again in #endGridResize.
       ghost.classList.add("--visible");
     }
   }
@@ -1399,6 +1402,9 @@ export default class BlockChrome extends Component {
   }
 
   #applyGhostStyle(ghost, placement) {
+    // Rewritten on every pointer-move as the resize preview follows the cursor —
+    // too high-frequency for a template binding. The committed placement flows
+    // through the layout model in onGridResizeEnd; this only paints the preview.
     ghost.style.gridColumn = `${placement.column.start} / ${placement.column.end}`;
     ghost.style.gridRow = `${placement.row.start} / ${placement.row.end}`;
   }

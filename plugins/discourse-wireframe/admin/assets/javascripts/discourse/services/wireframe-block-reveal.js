@@ -315,6 +315,10 @@ export default class WireframeBlockRevealService extends Service {
       }
 
       el.classList.remove("--just-selected");
+      // Force a synchronous reflow between the remove and the re-add so the
+      // browser restarts the CSS flash animation from the top; without it the
+      // remove/add collapse into one frame and the animation never replays.
+      // This is inherently imperative — there's no declarative equivalent.
       void el.offsetWidth;
       el.classList.add("--just-selected");
       this.#flashedEl = el;
