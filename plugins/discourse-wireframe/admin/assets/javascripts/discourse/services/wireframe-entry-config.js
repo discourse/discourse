@@ -8,7 +8,7 @@ import {
   replaceEntryId,
   replaceEntryInPlace,
   wrapAsOutletRoot,
-} from "../lib/mutate-layout";
+} from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 
 /**
  * Owns the "edit the selected entry in place" structural commands — conditions,

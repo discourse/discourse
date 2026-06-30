@@ -1,6 +1,7 @@
 // @ts-check
 import Service, { service } from "@ember/service";
 import { LAYOUT_MERGED_CELL_BLOCK, parsePlacement } from "discourse/blocks";
+import { positionEntering } from "discourse/plugins/discourse-wireframe/discourse/lib/grid/grid-placement";
 // `grid-math` holds the editor-only grid geometry. Absolute addon path
 // because this admin service crosses into the plugin's universal bundle.
 import {
@@ -8,7 +9,6 @@ import {
   placementsOverlap,
   syncContentToArrayOrder,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
-import { positionEntering } from "../lib/grid-placement";
 import {
   cloneEntryForPaste,
   entryKey,
@@ -19,8 +19,8 @@ import {
   moveEntry,
   removeEntry,
   replaceEntryInPlace,
-} from "../lib/mutate-layout";
-import { isReversedFlexLayout } from "../lib/reversed-flex";
+} from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
+import { isReversedFlexLayout } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/reversed-flex";
 
 /**
  * Owns the block-structural commands — move, duplicate, remove, insert, and

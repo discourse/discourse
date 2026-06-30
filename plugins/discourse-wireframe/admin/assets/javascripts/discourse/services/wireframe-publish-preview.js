@@ -1,6 +1,6 @@
 // @ts-check
 import Service, { service } from "@ember/service";
-import { serializeLayoutForSave } from "../lib/mutate-layout";
+import { serializeLayoutForSave } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 import { diffLayouts } from "../lib/outlet-change-summary";
 
 /**

@@ -15,9 +15,9 @@ import { i18n } from "discourse-i18n";
 // this api-initializer is admin-only. Cross-bundle imports must use
 // the absolute `discourse/plugins/<plugin>/discourse/...` form.
 import WFGhostBlock from "discourse/plugins/discourse-wireframe/discourse/components/blocks/wf-ghost-block";
-import BlockChrome from "../components/editor/block-chrome";
-import EntryPill from "../components/editor/entry-pill";
-import OutletBoundary from "../components/editor/outlet-boundary";
+import BlockChrome from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/block-chrome";
+import EntryPill from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/entry-pill";
+import OutletBoundary from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/outlet-boundary";
 import EditorShell from "../components/editor/shell";
 import { attachEditorShortcuts } from "../lib/editor-shortcuts";
 

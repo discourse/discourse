@@ -13,18 +13,18 @@ import dDragAndDropMonitor from "discourse/ui-kit/modifiers/d-drag-and-drop-moni
 import { i18n } from "discourse-i18n";
 
 const VE_DRAG_TYPES = ["wf-block", "wf-palette-block"];
-import BlockBreadcrumb from "./block-breadcrumb";
-import ConditionsFloatingPanel from "./conditions-floating-panel";
-import DropPreview from "./drop-preview";
-import InplaceTextController from "./inplace-text-controller";
-import InspectorPanel from "./inspector-panel";
-import OutletJumpSelect from "./outlet-jump-select";
-import OutlinePanel from "./outline-panel";
-import PalettePanel from "./palette-panel";
-import PublishBlockedCallout from "./publish-blocked-callout";
-import PublishReviewDrawer from "./publish-review-drawer";
-import PublishTargetIndicator from "./publish-target-indicator";
-import SimulationControls from "./simulation-controls";
+import BlockBreadcrumb from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/block-breadcrumb";
+import ConditionsFloatingPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/conditions-floating-panel";
+import DropPreview from "discourse/plugins/discourse-wireframe/discourse/components/editor/drag-drop/drop-preview";
+import InplaceTextController from "discourse/plugins/discourse-wireframe/discourse/components/editor/inplace/inplace-text-controller";
+import InspectorPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-panel";
+import OutletJumpSelect from "discourse/plugins/discourse-wireframe/discourse/components/editor/outline/outlet-jump-select";
+import OutlinePanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/outline/outline-panel";
+import PalettePanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/palette-panel";
+import PublishBlockedCallout from "discourse/plugins/discourse-wireframe/discourse/components/editor/publish/publish-blocked-callout";
+import PublishReviewDrawer from "discourse/plugins/discourse-wireframe/discourse/components/editor/publish/publish-review-drawer";
+import PublishTargetIndicator from "discourse/plugins/discourse-wireframe/discourse/components/editor/publish/publish-target-indicator";
+import SimulationControls from "discourse/plugins/discourse-wireframe/discourse/components/editor/simulation/simulation-controls";
 
 /**
  * The 3-pane editor chrome (toolbar + outline + canvas + inspector).

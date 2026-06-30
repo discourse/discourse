@@ -7,6 +7,10 @@ import {
   LAYOUT_MERGED_CELL_BLOCK,
   parsePlacement,
 } from "discourse/blocks";
+import {
+  matchGridTemplate,
+  resolveTemplateLayout,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/grid/grid-templates";
 // `grid-math` holds the editor-only grid geometry. Absolute addon path
 // because this admin service crosses into the plugin's universal bundle.
 import {
@@ -15,14 +19,10 @@ import {
   reflowChildrenIntoCells,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
 import {
-  matchGridTemplate,
-  resolveTemplateLayout,
-} from "../lib/grid-templates";
-import {
   entryKey,
   replaceEntryContainerArgs,
   replaceEntryInPlace,
-} from "../lib/mutate-layout";
+} from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 
 /**
  * Owns the whole-grid template / dimension reshaping of a `wf:layout` block —

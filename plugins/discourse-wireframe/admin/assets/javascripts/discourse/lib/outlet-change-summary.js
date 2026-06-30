@@ -1,5 +1,5 @@
 // @ts-check
-import { serializeEntryForSave } from "./mutate-layout";
+import { serializeEntryForSave } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 
 /**
  * Computes a structural change summary between two resolved layouts for the same

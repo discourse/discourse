@@ -4,7 +4,10 @@ import { cancel, schedule } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import discourseLater from "discourse/lib/later";
 import { prefersReducedMotion } from "discourse/lib/utilities";
-import { entryKey, findAncestryPath } from "../lib/mutate-layout";
+import {
+  entryKey,
+  findAncestryPath,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 
 // Duration of the just-selected flash; mirror the CSS animation length in
 // `wireframe-chrome.scss` (`.wireframe-block-chrome.--just-selected`).

@@ -2,7 +2,7 @@
 import { action } from "@ember/object";
 import Service, { service } from "@ember/service";
 import discourseDebounce from "discourse/lib/debounce";
-import { setPartOverride } from "../lib/mutate-layout";
+import { setPartOverride } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 
 // Idle delay after the last keystroke before a burst of inspector-arg edits is
 // flushed into the layout as a single batch.

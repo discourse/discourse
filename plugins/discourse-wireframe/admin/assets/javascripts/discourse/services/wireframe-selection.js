@@ -10,8 +10,8 @@ import {
   findEntrySiblings,
   resolvePartDef,
   serializeEntryForSave,
-} from "../lib/mutate-layout";
-import { inferSchemaFromValues } from "../lib/schema-to-fields";
+} from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
+import { inferSchemaFromValues } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/schema-to-fields";
 
 /**
  * Owns the editor's block-selection concern: the primary selection, the

@@ -20,7 +20,7 @@ import pretender, {
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 import { attachEditorShortcuts } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-shortcuts";
 import { GRID_DROP_GESTURES } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-drop";
-import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/mutate-layout";
+import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 import { setupBlockLayoutDraftsStub } from "../../helpers/stub-block-layout-drafts";
 import { engineOf, queryOf } from "../../helpers/wireframe-peers";
 

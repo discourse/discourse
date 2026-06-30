@@ -18,7 +18,7 @@ import {
   sameValue,
   serializeLayoutForSave,
   wrapAsOutletRoot,
-} from "../lib/mutate-layout";
+} from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 import { OUTLET_STATE } from "./wireframe-layout-query";
 
 /**

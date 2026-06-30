@@ -12,7 +12,7 @@ import {
   findAncestryPath,
   findEntry,
   findEntryByStableKey,
-} from "../lib/mutate-layout";
+} from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 
 /**
  * @typedef {import("discourse/blocks/block-outlet").LayoutEntry} LayoutEntry

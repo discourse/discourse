@@ -2,7 +2,10 @@
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import Service, { service } from "@ember/service";
-import { cloneEntryForPaste, insertEntryAt } from "../lib/mutate-layout";
+import {
+  cloneEntryForPaste,
+  insertEntryAt,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 
 /**
  * Owns the copy / cut / paste clipboard for whole-block subtrees. The stash

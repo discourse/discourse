@@ -8,11 +8,11 @@ import {
 } from "discourse/blocks/block-outlet";
 import { ajax } from "discourse/lib/ajax";
 import PreloadStore from "discourse/lib/preload-store";
-import { downloadJson as triggerJsonDownload } from "../lib/download-json";
 import {
   cloneLayoutForDraft,
   serializeLayoutForSave,
-} from "../lib/mutate-layout";
+} from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
+import { downloadJson as triggerJsonDownload } from "../lib/download-json";
 
 const SCHEMA_VERSION = 1;
 

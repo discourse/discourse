@@ -11,14 +11,14 @@ import {
   LAYOUT_LAYERS,
 } from "discourse/blocks/block-outlet";
 import { i18n } from "discourse-i18n";
-import ConflictModal from "../components/editor/conflict-modal";
-import StaleDraftModal from "../components/editor/stale-draft-modal";
+import ConflictModal from "discourse/plugins/discourse-wireframe/discourse/components/editor/publish/conflict-modal";
+import StaleDraftModal from "discourse/plugins/discourse-wireframe/discourse/components/editor/publish/stale-draft-modal";
 import {
   cloneLayoutForDraft,
   normalizeImplicitChildren,
   serializeLayoutForSave,
   wrapAsOutletRoot,
-} from "../lib/mutate-layout";
+} from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 import { OUTLET_STATE } from "./wireframe-layout-query";
 
 /**

@@ -1,6 +1,6 @@
 // @ts-check
 import { service } from "@ember/service";
-import InplaceIconPopover from "../components/inplace-icon-popover";
+import InplaceIconPopover from "discourse/plugins/discourse-wireframe/discourse/components/editor/inplace/inplace-icon-popover";
 import InplaceArgEditSession from "../lib/inplace-arg-edit-session";
 
 /**

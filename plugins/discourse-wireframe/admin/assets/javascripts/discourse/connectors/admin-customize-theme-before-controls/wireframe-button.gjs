@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
-import PagePickerModal from "../../components/editor/page-picker-modal";
+import PagePickerModal from "discourse/plugins/discourse-wireframe/discourse/components/editor/simulation/page-picker-modal";
 
 /**
  * Adds a "Wireframe" button next to the existing theme-show controls

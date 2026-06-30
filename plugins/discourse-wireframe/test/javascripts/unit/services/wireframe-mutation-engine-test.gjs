@@ -13,7 +13,7 @@ import {
   registerBlock,
   withTestBlockRegistration,
 } from "discourse/tests/helpers/block-testing";
-import { cloneLayoutForDraft } from "discourse/plugins/discourse-wireframe/discourse/lib/mutate-layout";
+import { cloneLayoutForDraft } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 
 @block("wf:engine-test-tile", { args: { title: { type: "string" } } })
 class EngineTile extends Component {

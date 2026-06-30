@@ -1,7 +1,7 @@
 // @ts-check
 import Service, { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
-import { serializeLayoutForSave } from "../lib/mutate-layout";
+import { serializeLayoutForSave } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 
 const SCHEMA_VERSION = 1;
 const DRAFTS_URL = "/admin/plugins/wireframe/block-layout-drafts.json";

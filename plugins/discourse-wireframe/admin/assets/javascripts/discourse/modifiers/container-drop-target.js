@@ -6,11 +6,11 @@ import { LAYOUT_MERGED_CELL_BLOCK } from "discourse/blocks";
 import { registerDragAndDropAutoScroll } from "discourse/ui-kit/modifiers/d-drag-and-drop-auto-scroll";
 import { registerDragAndDropTarget } from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
 import { i18n } from "discourse-i18n";
-import { resolveLinearDrop } from "discourse/plugins/discourse-wireframe/discourse/lib/linear-drop";
 import {
   flipPosition,
   isReversedFlexLayout,
-} from "discourse/plugins/discourse-wireframe/discourse/lib/reversed-flex";
+} from "discourse/plugins/discourse-wireframe/discourse/lib/layout/reversed-flex";
+import { resolveLinearDrop } from "discourse/plugins/discourse-wireframe/discourse/lib/linear-drop";
 
 const ACCEPTED_KINDS = ["wf-block", "wf-palette-block"];
 

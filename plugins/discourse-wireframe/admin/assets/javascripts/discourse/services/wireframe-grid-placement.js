@@ -6,6 +6,7 @@ import {
   LAYOUT_MERGED_CELL_BLOCK,
   parsePlacement,
 } from "discourse/blocks";
+import { syncDeclaredToUsage } from "discourse/plugins/discourse-wireframe/discourse/lib/grid/grid-placement";
 import {
   decideGridDrop,
   GRID_DROP_ACTIONS,
@@ -15,7 +16,6 @@ import {
   formatTrack,
   isMergedCell,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-math";
-import { syncDeclaredToUsage } from "../lib/grid-placement";
 import {
   entryKey,
   findEntry,
@@ -23,7 +23,7 @@ import {
   removeEntry,
   replaceEntryContainerArgs,
   replaceEntryInPlace,
-} from "../lib/mutate-layout";
+} from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
 
 /**
  * Owns block placement into a grid `wf:layout` so the drop rules can't be

@@ -4,7 +4,6 @@ import { getOwner } from "@ember/owner";
 import { next as nextRunloop } from "@ember/runloop";
 import Service, { service } from "@ember/service";
 import { resolvePartArgs } from "discourse/lib/blocks/-internals/composite";
-import { toStorage } from "discourse/plugins/discourse-wireframe/discourse/lib/rich-text";
 import {
   clearValidatorStamps,
   entryKey,
@@ -16,7 +15,8 @@ import {
   revalidateEntryStamps,
   sameValue,
   setPartOverride,
-} from "../lib/mutate-layout";
+} from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
+import { toStorage } from "discourse/plugins/discourse-wireframe/discourse/lib/rich-text";
 
 /**
  * Owns all state and operations for an inline-text edit session: which
