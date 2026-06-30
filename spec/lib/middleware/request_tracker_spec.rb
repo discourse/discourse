@@ -2120,6 +2120,16 @@ RSpec.describe Middleware::RequestTracker do
       )
     end
 
+    it "writes nothing when the database is in readonly mode" do
+      Discourse.stubs(:pg_readonly_mode?).returns(true)
+      middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
+
+      expect {
+        status, = middleware.call(engagement_env(payload, same_origin))
+        expect(status).to eq(204)
+      }.not_to change { BrowserPageviewSessionEngagement.count }
+    end
+
     it "does not intercept the request when dashboard_improvements is disabled" do
       SiteSetting.dashboard_improvements = false
       middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })

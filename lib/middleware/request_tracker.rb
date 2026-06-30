@@ -702,6 +702,8 @@ class Middleware::RequestTracker
     return unless payload.is_a?(Hash)
 
     Scheduler::Defer.later("Track session engagement") do
+      next if Discourse.pg_readonly_mode?
+
       BrowserPageviewSessionEngagement.upsert_from_payload(
         session_id:
           payload["session_id"]&.slice(0, BrowserPageviewSessionEngagement::MAX_SESSION_ID_LENGTH),
