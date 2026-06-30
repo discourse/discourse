@@ -8,9 +8,12 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
 import AvatarSelectorModal from "discourse/components/modal/avatar-selector";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import SecondFactorForm from "discourse/components/second-factor-form";
 import SecurityKeyForm from "discourse/components/security-key-form";
 import UserField from "discourse/components/user-field";
+import WelcomeHeader from "discourse/components/welcome-header";
+import lazyHash from "discourse/helpers/lazy-hash";
 import valueEntered from "discourse/helpers/value-entered";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -113,6 +116,37 @@ export default class CodeLoginForm extends Component {
 
   get isCompleteStep() {
     return this.step === "complete";
+  }
+
+  // Login has its own page heading; only signup needs a per-step one here.
+  get heading() {
+    if (!this.isSignup) {
+      return null;
+    }
+
+    switch (this.step) {
+      case "code":
+        return {
+          title: i18n("code_login.check_your_email"),
+          subtitle: this.codeInstructions,
+        };
+      case "user-fields":
+        return {
+          title: i18n("code_login.user_fields_title"),
+          subtitle: i18n("code_login.user_fields_instructions"),
+        };
+      case "complete":
+        return {
+          title: i18n("code_login.account_ready_title"),
+          subtitle: this.usernameEditable
+            ? i18n("code_login.account_ready_edit")
+            : null,
+        };
+      case "second-factor":
+        return { title: i18n("login.second_factor_title"), subtitle: null };
+      default:
+        return { title: i18n("code_login.signup_title"), subtitle: null };
+    }
   }
 
   get continueDisabled() {
@@ -515,6 +549,28 @@ export default class CodeLoginForm extends Component {
 
   <template>
     <div class="code-login-form">
+      {{#if this.heading}}
+        {{! Plugins can replace this via the signup-heading outlet. }}
+        <PluginOutlet
+          @name="signup-heading"
+          @outletArgs={{lazyHash
+            step=this.step
+            context=@context
+            title=this.heading.title
+            subtitle=this.heading.subtitle
+          }}
+        >
+          <WelcomeHeader
+            id="create-account-title"
+            @header={{this.heading.title}}
+          >
+            {{#if this.heading.subtitle}}
+              <p class="login-subheader">{{this.heading.subtitle}}</p>
+            {{/if}}
+          </WelcomeHeader>
+        </PluginOutlet>
+      {{/if}}
+
       {{#if this.isEmailStep}}
         {{#if this.isSignup}}
           <p class="code-login-form__instructions">
@@ -560,12 +616,14 @@ export default class CodeLoginForm extends Component {
         </Form>
       {{else if this.isCodeStep}}
         <div class="code-login-form__code-step">
-          <h2 class="code-login-form__title">
-            {{i18n "code_login.check_your_email"}}
-          </h2>
-          <p class="code-login-form__instructions">
-            {{this.codeInstructions}}
-          </p>
+          {{#unless this.isSignup}}
+            <h2 class="code-login-form__title">
+              {{i18n "code_login.check_your_email"}}
+            </h2>
+            <p class="code-login-form__instructions">
+              {{this.codeInstructions}}
+            </p>
+          {{/unless}}
 
           {{#each this.otpGenerationArray as |generation|}}
             <DOtp
@@ -609,14 +667,16 @@ export default class CodeLoginForm extends Component {
         </div>
       {{else if this.isCompleteStep}}
         <div class="code-login-form__complete-step">
-          <h2 class="code-login-form__title">
-            {{i18n "code_login.account_ready_title"}}
-          </h2>
-          {{#if this.usernameEditable}}
-            <p class="code-login-form__instructions">
-              {{i18n "code_login.account_ready_edit"}}
-            </p>
-          {{/if}}
+          {{#unless this.isSignup}}
+            <h2 class="code-login-form__title">
+              {{i18n "code_login.account_ready_title"}}
+            </h2>
+            {{#if this.usernameEditable}}
+              <p class="code-login-form__instructions">
+                {{i18n "code_login.account_ready_edit"}}
+              </p>
+            {{/if}}
+          {{/unless}}
 
           <div class="code-login-form__new-account">
             <button
@@ -672,12 +732,14 @@ export default class CodeLoginForm extends Component {
         </div>
       {{else if this.isUserFieldsStep}}
         <div class="code-login-form__user-fields-step">
-          <h2 class="code-login-form__title">
-            {{i18n "code_login.user_fields_title"}}
-          </h2>
-          <p class="code-login-form__instructions">
-            {{i18n "code_login.user_fields_instructions"}}
-          </p>
+          {{#unless this.isSignup}}
+            <h2 class="code-login-form__title">
+              {{i18n "code_login.user_fields_title"}}
+            </h2>
+            <p class="code-login-form__instructions">
+              {{i18n "code_login.user_fields_instructions"}}
+            </p>
+          {{/unless}}
 
           <div class="user-fields">
             {{#each this.userFields as |f|}}

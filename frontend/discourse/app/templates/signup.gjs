@@ -50,22 +50,28 @@ export default <template>
         }}
       >
         {{#unless @controller.skipConfirmation}}
+          {{! Code signup renders its own heading inside CodeLoginForm. }}
           {{#unless @controller.showCodeSignupForm}}
             <SignupProgressBar @step={{@controller.progressBarStep}} />
-          {{/unless}}
-          <WelcomeHeader
-            id="create-account-title"
-            @header={{if
-              @controller.showCodeSignupForm
-              (i18n "code_login.signup_title")
-              (i18n "create_account.header_title")
-            }}
-          >
             <PluginOutlet
-              @name="create-account-header-bottom"
-              @outletArgs={{lazyHash showLogin=(routeAction "showLogin")}}
-            />
-          </WelcomeHeader>
+              @name="signup-heading"
+              @outletArgs={{lazyHash
+                step="form"
+                context="signup"
+                title=(i18n "create_account.header_title")
+              }}
+            >
+              <WelcomeHeader
+                id="create-account-title"
+                @header={{i18n "create_account.header_title"}}
+              >
+                <PluginOutlet
+                  @name="create-account-header-bottom"
+                  @outletArgs={{lazyHash showLogin=(routeAction "showLogin")}}
+                />
+              </WelcomeHeader>
+            </PluginOutlet>
+          {{/unless}}
         {{/unless}}
         {{#if @controller.showCodeSignupForm}}
           <CodeLoginForm
