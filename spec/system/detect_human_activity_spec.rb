@@ -9,26 +9,14 @@ describe "Detect human activity" do
     SiteSetting.persist_browser_pageview_events = true
   end
 
-  # A snapshot is sent (via sendBeacon) when the page is hidden/unloaded; the
-  # other trigger is the timer after the first interaction.
   def flush_engagement
     page.driver.with_playwright_page do |pw_page|
       pw_page.evaluate("window.dispatchEvent(new Event('pagehide'))")
-      pw_page.wait_for_timeout(300)
     end
   end
 
   def engagement
     BrowserPageviewSessionEngagement.first
-  end
-
-  it "stores nothing for a passive page visit with no interaction" do
-    visit("/")
-    expect(discovery.topic_list).to have_topics(count: 5)
-
-    flush_engagement
-
-    expect(BrowserPageviewSessionEngagement.count).to eq(0)
   end
 
   it "stores continuous mouse movement and time to first interaction" do

@@ -1,5 +1,5 @@
 import { cancel } from "@ember/runloop";
-import Service from "@ember/service";
+import Service, { service } from "@ember/service";
 import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
 import {
@@ -24,6 +24,8 @@ const MAX_HUMAN_STEP = 100;
 const FLUSH_DELAY_MS = 3 * 60 * 1000;
 
 export default class HumanActivityTracker extends Service {
+  @service siteSettings;
+
   now = () => performance.now();
 
   transport = (body) => {
@@ -161,7 +163,10 @@ export default class HumanActivityTracker extends Service {
   #engagedSeconds() {
     const live =
       this.#engagedSince === null ? 0 : this.now() - this.#engagedSince;
-    return Math.floor((this.#engagedMs + live) / 1000);
+    return Math.min(
+      Math.floor((this.#engagedMs + live) / 1000),
+      this.siteSettings.browser_pageview_max_engaged_seconds
+    );
   }
 
   #buildPayload() {

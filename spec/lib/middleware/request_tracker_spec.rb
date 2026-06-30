@@ -1988,7 +1988,7 @@ RSpec.describe Middleware::RequestTracker do
         scroll_events: 7,
         touch_events: 0,
         back_forward_events: 1,
-        engaged_seconds: 4200,
+        engaged_seconds: 420,
         time_to_first_interaction_ms: 800,
       }
     end
@@ -2004,7 +2004,7 @@ RSpec.describe Middleware::RequestTracker do
       row = BrowserPageviewSessionEngagement.find_by(session_id: "sess-1")
       expect(row.mouse_move_events).to eq(12)
       expect(row.back_forward_events).to eq(1)
-      expect(row.engaged_seconds).to eq(4200)
+      expect(row.engaged_seconds).to eq(420)
       expect(row.time_to_first_interaction_ms).to eq(800)
     end
 
@@ -2012,7 +2012,7 @@ RSpec.describe Middleware::RequestTracker do
       middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
       middleware.call(engagement_env(payload, same_origin))
 
-      later = payload.merge(mouse_move_events: 40, engaged_seconds: 9000)
+      later = payload.merge(mouse_move_events: 40, engaged_seconds: 900)
 
       expect { middleware.call(engagement_env(later, same_origin)) }.not_to change {
         BrowserPageviewSessionEngagement.count
@@ -2020,7 +2020,7 @@ RSpec.describe Middleware::RequestTracker do
 
       row = BrowserPageviewSessionEngagement.find_by(session_id: "sess-1")
       expect(row.mouse_move_events).to eq(40)
-      expect(row.engaged_seconds).to eq(9000)
+      expect(row.engaged_seconds).to eq(900)
     end
 
     it "returns 403 and writes nothing for a cross-origin request" do
@@ -2107,6 +2107,17 @@ RSpec.describe Middleware::RequestTracker do
           expect(status).to eq(204)
         }.not_to change { BrowserPageviewSessionEngagement.count }
       end
+    end
+
+    it "clamps engaged seconds to the configured maximum" do
+      SiteSetting.browser_pageview_max_engaged_seconds = 60
+      middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
+
+      middleware.call(engagement_env(payload.merge(engaged_seconds: 5000), same_origin))
+
+      expect(BrowserPageviewSessionEngagement.find_by(session_id: "sess-1").engaged_seconds).to eq(
+        60,
+      )
     end
 
     it "does not intercept the request when dashboard_improvements is disabled" do

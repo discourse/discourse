@@ -5,8 +5,6 @@ import { processBrowserAttentionChange } from "discourse/lib/user-presence";
 
 const SESSION_ID = "S".repeat(32);
 
-// The tracker leans on user-presence's attention signal, whose own DOM
-// listeners are disabled under isTesting(); drive the signal directly.
 function blur(context) {
   context.focused = false;
   processBrowserAttentionChange();
@@ -126,6 +124,16 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
     hide(this);
 
     assert.strictEqual(this.sent.length, 1);
+    assert.strictEqual(this.sent.at(-1).engaged_seconds, 5);
+  });
+
+  test("caps engaged seconds at the configured maximum", function (assert) {
+    this.tracker.siteSettings.browser_pageview_max_engaged_seconds = 5;
+    window.dispatchEvent(new KeyboardEvent("keydown"));
+
+    this.clock.ms = 9000;
+    pagehide();
+
     assert.strictEqual(this.sent.at(-1).engaged_seconds, 5);
   });
 });

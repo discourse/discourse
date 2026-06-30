@@ -711,7 +711,11 @@ class Middleware::RequestTracker
         scroll_events: payload["scroll_events"].to_i,
         touch_events: payload["touch_events"].to_i,
         back_forward_events: payload["back_forward_events"].to_i,
-        engaged_seconds: payload["engaged_seconds"].to_i,
+        engaged_seconds:
+          payload["engaged_seconds"].to_i.clamp(
+            0,
+            SiteSetting.browser_pageview_max_engaged_seconds,
+          ),
         time_to_first_interaction_ms: payload["time_to_first_interaction_ms"].presence&.to_i,
       )
     rescue => e
