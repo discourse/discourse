@@ -47,6 +47,10 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
     this.tracker = this.owner.lookup("service:human-activity-tracker");
     this.tracker.now = () => this.clock.ms;
     this.tracker.transport = (body) => this.sent.push(body);
+    this.tracker.scheduleFlush = (callback) => {
+      this.flushTick = callback;
+      return 1;
+    };
     this.tracker.start();
   });
 
@@ -168,6 +172,18 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
     focus(this);
     this.clock.ms = 3000;
     pagehide();
+
+    assert.strictEqual(this.sent.length, 2);
+  });
+
+  test("keeps sending periodic snapshots on each flush cadence", function (assert) {
+    window.dispatchEvent(new KeyboardEvent("keydown"));
+
+    this.clock.ms = 180_000;
+    this.flushTick();
+
+    this.clock.ms = 360_000;
+    this.flushTick();
 
     assert.strictEqual(this.sent.length, 2);
   });

@@ -36,6 +36,8 @@ export default class HumanActivityTracker extends Service {
     );
   };
 
+  scheduleFlush = (callback) => discourseLater(callback, FLUSH_DELAY_MS);
+
   #sessionId;
   #startedAt;
   #firstInteractionAt = null;
@@ -91,7 +93,14 @@ export default class HumanActivityTracker extends Service {
     window.addEventListener("pagehide", this.#pagehideListener);
 
     this.#handleAttentionChange(browserAttention());
-    this.#flushTimer = discourseLater(() => this.#flush(), FLUSH_DELAY_MS);
+    this.#scheduleNextFlush();
+  }
+
+  #scheduleNextFlush() {
+    this.#flushTimer = this.scheduleFlush(() => {
+      this.#flush();
+      this.#scheduleNextFlush();
+    });
   }
 
   stop() {
@@ -181,7 +190,7 @@ export default class HumanActivityTracker extends Service {
   }
 
   #flush({ force = false } = {}) {
-    if (this.#flushTimer) {
+    if (force && this.#flushTimer) {
       cancel(this.#flushTimer);
       this.#flushTimer = null;
     }
