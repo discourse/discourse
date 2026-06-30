@@ -38,7 +38,7 @@ export default class AiUsage extends Component {
 
   @tracked startDate = moment().subtract(30, "days").toDate();
   @tracked endDate = new Date();
-  @tracked data = this.args.model;
+  @tracked data;
   @tracked selectedFeature;
   @tracked selectedModel;
   @tracked selectedPeriod = DEFAULT_PERIOD;
@@ -48,6 +48,7 @@ export default class AiUsage extends Component {
 
   constructor() {
     super(...arguments);
+    this.data = this.args.model;
     this.initializeFilters(this.args.queryParams);
     this.fetchData();
     if (this.selectedFeature || this.selectedModel) {
