@@ -82,7 +82,13 @@ module DiscourseAi
             return DiscourseAi::Completions::ThinkingConfig.disabled
           end
 
-          return DiscourseAi::Completions::ThinkingConfig.explicit_none if effort == "none"
+          if effort == "none"
+            # some Gemini 3 Pro-tier models can't run with thinking disabled at
+            # all and reject a forced thinkingBudget: 0 outright — omit the
+            # override entirely and let the model use its own default instead.
+            return DiscourseAi::Completions::ThinkingConfig.disabled if always_thinking_model?
+            return DiscourseAi::Completions::ThinkingConfig.explicit_none
+          end
 
           provider_effort = thinking_level_for_effort(effort)
           if provider_effort.blank?
@@ -198,6 +204,10 @@ module DiscourseAi
 
         def gemini_3_model?
           gemini_model_id.include?("gemini-3")
+        end
+
+        def always_thinking_model?
+          gemini_3_model? && gemini_model_id.include?("-pro")
         end
 
         def gemini_model_id

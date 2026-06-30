@@ -802,6 +802,31 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Gemini do
     expect(parsed.dig(:generationConfig, :thinkingConfig)).to eq({ thinkingBudget: 0 })
   end
 
+  it "omits thinkingConfig entirely for none on Gemini 3 Pro-tier models that can't disable thinking" do
+    model.update!(
+      name: "gemini-3.1-pro",
+      url: "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.1-pro-preview",
+    )
+    response = gemini_mock.response("Still thinking").to_json
+    req_body = nil
+
+    llm = DiscourseAi::Completions::Llm.proxy(model)
+    url = "#{model.url}:generateContent?key=123"
+
+    stub_request(:post, url).with(
+      body:
+        proc do |_req_body|
+          req_body = _req_body
+          true
+        end,
+    ).to_return(status: 200, body: response)
+
+    llm.generate("Hello", user: user, thinking_effort: "none")
+    parsed = JSON.parse(req_body, symbolize_names: true)
+
+    expect(parsed.dig(:generationConfig, :thinkingConfig)).to be_nil
+  end
+
   it "does not send thinking levels to pre-Gemini 3 generateContent models" do
     response = gemini_mock.response("Unsupported thinking level").to_json
     req_body = nil
