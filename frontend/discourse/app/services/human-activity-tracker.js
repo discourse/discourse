@@ -91,7 +91,14 @@ export default class HumanActivityTracker extends Service {
     window.addEventListener("pagehide", this.#pagehideListener);
 
     this.#handleAttentionChange(browserAttention());
-    this.#flushTimer = discourseLater(() => this.#flush(), FLUSH_DELAY_MS);
+    this.#armFlushTimer();
+  }
+
+  #armFlushTimer() {
+    this.#flushTimer = discourseLater(() => {
+      this.#flush();
+      this.#armFlushTimer();
+    }, FLUSH_DELAY_MS);
   }
 
   stop() {
@@ -181,11 +188,6 @@ export default class HumanActivityTracker extends Service {
   }
 
   #flush({ force = false } = {}) {
-    if (this.#flushTimer) {
-      cancel(this.#flushTimer);
-      this.#flushTimer = null;
-    }
-
     const total = Object.values(this.#counts).reduce((sum, n) => sum + n, 0);
     if (total === 0) {
       return;
