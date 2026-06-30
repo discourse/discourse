@@ -632,7 +632,7 @@ class Theme < ActiveRecord::Base
 
   # def foundation_theme
   # def horizon_theme
-  CORE_THEMES.each { |name, id| define_singleton_method("#{name}_theme") { Theme.find(id) } }
+  CORE_THEMES.each { |name, id| define_singleton_method("#{name}_theme") { Theme.find_by(id: id) } }
   def resolve_baked_field(target, name)
     list_baked_fields(target, name).map { |f| f.value_baked || f.value }.join("\n")
   end
