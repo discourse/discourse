@@ -1,6 +1,6 @@
 import { getOwner } from "@ember/owner";
 import { render, settled } from "@ember/test-helpers";
-import { module, skip, test } from "qunit";
+import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
@@ -23,7 +23,25 @@ module(
     // stub them so the test doesn't hit an unhandled request.
     setupBlockLayoutDraftsStub(hooks);
 
+    // QUnit's `#ember-testing-container` is an `overflow: auto` box that
+    // horizontally overflows once a block renders inside it, so the reveal
+    // logic's `#nearestInlineScroller` walk mistakes it for a real horizontal
+    // scroller (a carousel track) and reports an on-screen block as horizontally
+    // clipped — making the "already visible" case scroll. In production a plain
+    // block has no such ancestor, so we relax the container's overflow for the
+    // duration of each test to restore the real-world condition. The full
+    // `overflow` shorthand is required: with `overflow-y` left at `auto`, a lone
+    // `overflow-x: visible` computes back to `auto` per the CSS overflow spec.
+    hooks.beforeEach(function () {
+      this.testingContainer = document.getElementById(
+        "ember-testing-container"
+      );
+      this.originalOverflow = this.testingContainer.style.overflow;
+      this.testingContainer.style.overflow = "visible";
+    });
+
     hooks.afterEach(function () {
+      this.testingContainer.style.overflow = this.originalOverflow;
       getOwner(this).lookup("service:wireframe-workspace").exit();
     });
 
@@ -117,11 +135,7 @@ module(
       );
     });
 
-    // TODO: pre-existing flake, independent of the service decomposition (still
-    // fails with these changes reverted, and survived the editor-shortcuts
-    // listener-leak fix). An already-visible block intermittently scrolls under
-    // test isolation. Revisit and re-enable later.
-    skip("does not scroll a block that's already fully visible", async function (assert) {
+    test("does not scroll a block that's already fully visible", async function (assert) {
       const { blockKey, scrollSpy } = await setupBlock(this.owner, {
         top: 50,
         height: 100,
