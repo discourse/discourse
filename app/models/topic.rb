@@ -227,6 +227,7 @@ class Topic < ActiveRecord::Base
       errors.add(:featured_link)
     end
   end
+  validate :normalize_featured_link, if: -> { featured_link.present? && featured_link_changed? }
 
   validates :external_id,
             allow_nil: true,
@@ -1947,6 +1948,14 @@ class Topic < ActiveRecord::Base
 
   def featured_link_root_domain
     MiniSuffix.domain(UrlHelper.encode_and_parse(self.featured_link).hostname)
+  end
+
+  def normalize_featured_link
+    return if errors[:featured_link].present?
+
+    self.featured_link = UrlHelper.normalized_encode(featured_link)
+  rescue ArgumentError, URI::Error, Addressable::URI::InvalidURIError
+    errors.add(:featured_link, :invalid)
   end
 
   def self.private_message_topics_count_per_day(start_date, end_date, topic_subtype)
