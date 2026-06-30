@@ -4,24 +4,7 @@ module Migrations
   module Converters
     module Discourse
       class TopicTags < Conversion::ProgressStep
-        source do
-          attr_accessor :source_db
-
-          def max_progress
-            @source_db.count <<~SQL
-              SELECT COUNT(*)
-              FROM topic_tags
-            SQL
-          end
-
-          def items
-            @source_db.query <<~SQL
-              SELECT *
-              FROM topic_tags
-              ORDER BY topic_id, tag_id
-            SQL
-          end
-        end
+        source { reads_table "topic_tags" }
 
         processor do
           def process(item)
