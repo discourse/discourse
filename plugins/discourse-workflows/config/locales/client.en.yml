@@ -406,6 +406,11 @@ en:
         reply_to_post_number_description: "Reply to a specific post number in the topic"
         whisper: "Create as whisper"
         whisper_description: "Create the post as a whisper. The author must be allowed to create whispers."
+        authorization_mode: "Posting permission"
+        authorization_modes:
+          author: "Author permissions"
+          system: "System authorization"
+        authorization_mode_tooltip: "Author permissions requires the author to see and reply to the topic. System authorization allows trusted workflows to reply to the current topic as the selected author without adding that author as a PM participant."
         author_username: "Author"
         post_id: "Post ID"
         editor_username: "Editor"

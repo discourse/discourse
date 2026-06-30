@@ -3,6 +3,12 @@
 module DiscourseWorkflows
   class Executor
     class NodeExecutionContext
+      SYSTEM_AUTHORIZATION_MODE = "system"
+      SYSTEM_AUTHORIZED_POST_FIELD = "discourse_workflows_authorization_mode"
+      SYSTEM_AUTHORIZED_WORKFLOW_ID_FIELD = "discourse_workflows_workflow_id"
+      SYSTEM_AUTHORIZED_WORKFLOW_VERSION_ID_FIELD = "discourse_workflows_workflow_version_id"
+      SYSTEM_AUTHORIZED_NODE_ID_FIELD = "discourse_workflows_node_id"
+
       MISSING = ParameterResolver::MISSING
       RUN_CODE = CodeRunner::RUN_CODE
       RUN_ONCE_FOR_ALL_ITEMS = CodeRunner::RUN_ONCE_FOR_ALL_ITEMS
@@ -315,15 +321,26 @@ module DiscourseWorkflows
         HttpClient.new(self, item_index).request(method:, url:, headers:, body:, options:)
       end
 
-      def create_post(user:, raw:, topic_id:, reply_to_post_number: nil, whisper: false)
+      def create_post(
+        user:,
+        raw:,
+        topic_id:,
+        reply_to_post_number: nil,
+        whisper: false,
+        authorization_mode: "author"
+      )
         topic = ::Topic.find(topic_id)
-        guardian = user.guardian
-        guardian.ensure_can_see!(topic)
-        raise Discourse::InvalidAccess if !guardian.can_create_post?(topic)
+        system_authorization = system_authorization_mode?(authorization_mode)
+        guardian = system_authorization ? Discourse.system_user.guardian : user.guardian
 
-        if topic.closed? || topic.archived?
-          raise DiscourseWorkflows::NodeError,
-                I18n.t("discourse_workflows.errors.post.topic_closed_or_archived")
+        if !system_authorization
+          guardian.ensure_can_see!(topic)
+          raise Discourse::InvalidAccess if !guardian.can_create_post?(topic)
+
+          if topic.closed? || topic.archived?
+            raise DiscourseWorkflows::NodeError,
+                  I18n.t("discourse_workflows.errors.post.topic_closed_or_archived")
+          end
         end
 
         post_args = {
@@ -345,7 +362,11 @@ module DiscourseWorkflows
           post_args[:post_type] = ::Post.types[:whisper]
         end
 
-        PostCreator.new(user, post_args).create!
+        post_args[:skip_guardian] = true if system_authorization
+
+        post = PostCreator.new(user, post_args).create!
+        record_system_authorized_post!(post) if system_authorization
+        post
       end
 
       def edit_post(user:, post_id:, raw:)
@@ -447,6 +468,22 @@ module DiscourseWorkflows
       end
 
       private
+
+      def system_authorization_mode?(authorization_mode)
+        authorization_mode.to_s == SYSTEM_AUTHORIZATION_MODE
+      end
+
+      def record_system_authorized_post!(post)
+        post.custom_fields[SYSTEM_AUTHORIZED_POST_FIELD] = SYSTEM_AUTHORIZATION_MODE
+        post.custom_fields[SYSTEM_AUTHORIZED_WORKFLOW_ID_FIELD] = @workflow.id if @workflow&.id
+        if @workflow&.active_version_id
+          post.custom_fields[
+            SYSTEM_AUTHORIZED_WORKFLOW_VERSION_ID_FIELD
+          ] = @workflow.active_version_id
+        end
+        post.custom_fields[SYSTEM_AUTHORIZED_NODE_ID_FIELD] = @node_id if @node_id
+        post.save_custom_fields
+      end
 
       def fetch_credentials(slot, item_index)
         raise ArgumentError, "credential slot is required" if slot.blank?
