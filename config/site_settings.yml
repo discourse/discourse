@@ -2088,6 +2088,10 @@ email:
   sendgrid_verification_key:
     default: ""
     secret: true
+  aws_sns_topic_arn_allowlist:
+    default: ""
+    type: list
+    list_type: simple
   mailjet_webhook_token:
     default: ""
     secret: true
