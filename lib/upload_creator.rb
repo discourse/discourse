@@ -507,8 +507,11 @@ class UploadCreator
 
   def clean_svg!
     doc = Nokogiri.XML(@file)
+    doc.internal_subset&.remove
+    doc.external_subset&.remove
     doc.xpath(svg_allowlist_xpath).remove
     doc.xpath("//@*[starts-with(name(), 'on')]").remove
+    doc.traverse { |node| node.remove if node.type == Nokogiri::XML::Node::ENTITY_REF_NODE }
     doc
       .css("use")
       .each do |use_el|
