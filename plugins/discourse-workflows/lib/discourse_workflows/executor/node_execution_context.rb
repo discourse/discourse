@@ -362,7 +362,10 @@ module DiscourseWorkflows
           post_args[:post_type] = ::Post.types[:whisper]
         end
 
-        post_args[:skip_guardian] = true if system_authorization
+        if system_authorization
+          post_args[:guardian] = guardian
+          post_args[:skip_staff_author_pm_membership_sync] = true
+        end
 
         post = PostCreator.new(user, post_args).create!
         record_system_authorized_post!(post) if system_authorization
