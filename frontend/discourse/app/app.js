@@ -49,7 +49,10 @@ const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
 window.moduleBroker = {
-  lookup(moduleName) {
+  lookup(moduleName, optional = false) {
+    if (optional && !require.has(moduleName)) {
+      return {};
+    }
     return require(moduleName);
   },
 };

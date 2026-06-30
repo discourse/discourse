@@ -474,6 +474,8 @@ module Discourse
             plugin: plugin,
             type_module: true,
             importmap_name: "discourse/plugins/#{plugin.name}",
+            external_plugin_imports:
+              Plugin::JsManager.external_plugin_imports(plugin.directory_name, "main"),
           }
         end
       end
@@ -494,6 +496,8 @@ module Discourse
             imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "admin"),
             plugin: plugin,
             type_module: true,
+            external_plugin_imports:
+              Plugin::JsManager.external_plugin_imports(plugin.directory_name, "admin"),
           }
         end
       end
@@ -506,6 +510,8 @@ module Discourse
             imports: Plugin::JsManager.import_paths_for(plugin.directory_name, "test"),
             plugin: plugin,
             type_module: true,
+            external_plugin_imports:
+              Plugin::JsManager.external_plugin_imports(plugin.directory_name, "test"),
           }
         end
       end

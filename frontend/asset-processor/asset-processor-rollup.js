@@ -10,7 +10,8 @@ import StripTestSelectorsPlugin from "strip-test-selectors/src/strip-test-select
 import { browsers } from "../discourse/config/targets";
 import babelTransformModuleRenames from "../discourse/lib/babel-transform-module-renames";
 import AddThemeGlobals from "./add-theme-globals";
-import BabelReplaceImports from "./babel-replace-imports";
+import BabelResolveCoreImports from "./babel-resolve-core-imports";
+import BabelResolvePluginImports from "./babel-resolve-plugin-imports";
 import discourseColocation from "./rollup-plugins/discourse-colocation";
 import discourseExternalLoader from "./rollup-plugins/discourse-external-loader";
 import discourseFileSearch from "./rollup-plugins/discourse-file-search";
@@ -65,13 +66,15 @@ async function performRollup(modules, opts) {
       discourseExternalLoader({ basePath }),
       discourseColocation({ basePath }),
       getBabelOutputPlugin({
-        plugins: [BabelReplaceImports],
+        plugins: [BabelResolveCoreImports, BabelResolvePluginImports],
         compact: false,
       }),
       babel({
         extensions: [".js", ".gjs", ".hbs"],
         babelHelpers: "bundled",
         compact: false,
+        // Support `import ... with { ... }` for cross-plugin imports
+        parserOpts: { plugins: ["importAttributes"] },
         plugins: [
           [DecoratorTransforms, { runEarly: true }],
           opts.themeId ? AddThemeGlobals : null,
@@ -117,6 +120,7 @@ async function performRollup(modules, opts) {
   const bundle = await result.generate({
     format: "es",
     sourcemap: "hidden",
+    importAttributesKey: "with",
     entryFileNames: `${opts.filenamePrefix ?? ""}[name].[hash:6]${opts.filenameSuffix ?? ""}.js`,
     chunkFileNames: `${opts.filenamePrefix ?? ""}chunk.[hash:6]${opts.filenameSuffix ?? ""}.js`,
   });
@@ -124,6 +128,15 @@ async function performRollup(modules, opts) {
   if (opts.pluginName) {
     caches.set(opts.pluginName, result.cache);
   }
+
+  const externalPluginImports = [
+    ...new Set(
+      bundle.output
+        .flatMap((c) => c.imports ?? [])
+        .filter((i) => i.startsWith("discourse/plugins/"))
+        .map((i) => i.split("/")[2])
+    ),
+  ];
 
   const chunks = Object.fromEntries(
     bundle.output
@@ -139,6 +152,7 @@ async function performRollup(modules, opts) {
             imports: chunk.imports.filter((i) =>
               bundle.output.find((c) => c.fileName === i)
             ),
+            externalPluginImports,
           },
         ];
       })

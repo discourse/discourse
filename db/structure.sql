@@ -6282,6 +6282,7 @@ CREATE TABLE public.javascript_caches (
     theme_id bigint,
     source_map text,
     name character varying,
+    external_plugin_imports character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     CONSTRAINT enforce_theme_or_theme_field CHECK ((((theme_id IS NOT NULL) AND (theme_field_id IS NULL)) OR ((theme_id IS NULL) AND (theme_field_id IS NOT NULL))))
 );
 
@@ -22292,6 +22293,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260617180115'),
 ('20260617104005'),
 ('20260617053237'),
+('20260616114637'),
 ('20260615084100'),
 ('20260615082047'),
 ('20260612092612'),

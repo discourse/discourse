@@ -52,11 +52,13 @@ class ThemeJavascriptCompiler
       main = output.values.find { |chunk| chunk["name"] == "main" }
       @content = main["code"]
       @source_map = main["map"]
+      @external_plugin_imports = main["externalPluginImports"] || []
     end
     [@content, @source_map]
   rescue AssetProcessor::TranspileError => e
     message = "[THEME #{@theme_id} '#{@theme_name}'] Compile error: #{e.message}"
     @content = "throw new Error(#{message.to_json});\n"
+    @external_plugin_imports = []
     [@content, @source_map]
   end
 
@@ -68,6 +70,11 @@ class ThemeJavascriptCompiler
   def source_map
     compile!
     @source_map
+  end
+
+  def external_plugin_imports
+    compile!
+    @external_plugin_imports
   end
 
   def append_tree(tree)
