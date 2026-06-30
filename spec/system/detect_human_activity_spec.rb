@@ -80,6 +80,6 @@ describe "Detect human activity" do
     flush_engagement
 
     try_until_success { expect(BrowserPageviewSessionEngagement.count).to eq(1) }
-    expect(engagement.back_forward_events).to be > 0
+    expect(engagement.back_forward_events).to eq(1)
   end
 end
