@@ -11,7 +11,7 @@ class BrowserPageviewSessionEngagement < ActiveRecord::Base
     scroll_events:,
     touch_events:,
     back_forward_events:,
-    engaged_duration_ms:,
+    engaged_seconds:,
     time_to_first_interaction_ms:
   )
     return if session_id.blank?
@@ -26,7 +26,7 @@ class BrowserPageviewSessionEngagement < ActiveRecord::Base
           scroll_events:,
           touch_events:,
           back_forward_events:,
-          engaged_duration_ms:,
+          engaged_seconds:,
           time_to_first_interaction_ms:,
         },
       ],
@@ -43,7 +43,7 @@ end
 #  id                           :bigint           not null, primary key
 #  back_forward_events          :integer          default(0), not null
 #  click_events                 :integer          default(0), not null
-#  engaged_duration_ms          :integer          default(0), not null
+#  engaged_seconds              :integer          default(0), not null
 #  key_events                   :integer          default(0), not null
 #  mouse_move_events            :integer          default(0), not null
 #  scroll_events                :integer          default(0), not null

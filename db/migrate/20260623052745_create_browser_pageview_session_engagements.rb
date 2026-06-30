@@ -10,7 +10,7 @@ class CreateBrowserPageviewSessionEngagements < ActiveRecord::Migration[8.0]
       t.integer :scroll_events, null: false, default: 0
       t.integer :touch_events, null: false, default: 0
       t.integer :back_forward_events, null: false, default: 0
-      t.integer :engaged_duration_ms, null: false, default: 0
+      t.integer :engaged_seconds, null: false, default: 0
       t.integer :time_to_first_interaction_ms, null: true
       t.timestamps
     end

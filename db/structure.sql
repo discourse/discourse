@@ -2058,7 +2058,7 @@ CREATE TABLE public.browser_pageview_session_engagements (
     scroll_events integer DEFAULT 0 NOT NULL,
     touch_events integer DEFAULT 0 NOT NULL,
     back_forward_events integer DEFAULT 0 NOT NULL,
-    engaged_duration_ms integer DEFAULT 0 NOT NULL,
+    engaged_seconds integer DEFAULT 0 NOT NULL,
     time_to_first_interaction_ms integer,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL

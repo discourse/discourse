@@ -78,7 +78,7 @@ describe "Detect human activity" do
     flush_engagement
 
     try_until_success { expect(BrowserPageviewSessionEngagement.count).to eq(1) }
-    expect(engagement.engaged_duration_ms).to be >= 1000
+    expect(engagement.engaged_seconds).to be >= 1
   end
 
   it "counts back/forward navigation" do

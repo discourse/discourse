@@ -158,17 +158,17 @@ export default class HumanActivityTracker extends Service {
     this.#firstInteractionAt ??= this.now();
   }
 
-  #engagedDurationMs() {
+  #engagedSeconds() {
     const live =
       this.#engagedSince === null ? 0 : this.now() - this.#engagedSince;
-    return Math.round(this.#engagedMs + live);
+    return Math.floor((this.#engagedMs + live) / 1000);
   }
 
   #buildPayload() {
     return {
       session_id: this.#sessionId,
       ...this.#counts,
-      engaged_duration_ms: this.#engagedDurationMs(),
+      engaged_seconds: this.#engagedSeconds(),
       time_to_first_interaction_ms:
         this.#firstInteractionAt === null
           ? null

@@ -1988,7 +1988,7 @@ RSpec.describe Middleware::RequestTracker do
         scroll_events: 7,
         touch_events: 0,
         back_forward_events: 1,
-        engaged_duration_ms: 4200,
+        engaged_seconds: 4200,
         time_to_first_interaction_ms: 800,
       }
     end
@@ -2004,7 +2004,7 @@ RSpec.describe Middleware::RequestTracker do
       row = BrowserPageviewSessionEngagement.find_by(session_id: "sess-1")
       expect(row.mouse_move_events).to eq(12)
       expect(row.back_forward_events).to eq(1)
-      expect(row.engaged_duration_ms).to eq(4200)
+      expect(row.engaged_seconds).to eq(4200)
       expect(row.time_to_first_interaction_ms).to eq(800)
     end
 
@@ -2012,7 +2012,7 @@ RSpec.describe Middleware::RequestTracker do
       middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
       middleware.call(engagement_env(payload, same_origin))
 
-      later = payload.merge(mouse_move_events: 40, engaged_duration_ms: 9000)
+      later = payload.merge(mouse_move_events: 40, engaged_seconds: 9000)
 
       expect { middleware.call(engagement_env(later, same_origin)) }.not_to change {
         BrowserPageviewSessionEngagement.count
@@ -2020,7 +2020,7 @@ RSpec.describe Middleware::RequestTracker do
 
       row = BrowserPageviewSessionEngagement.find_by(session_id: "sess-1")
       expect(row.mouse_move_events).to eq(40)
-      expect(row.engaged_duration_ms).to eq(9000)
+      expect(row.engaged_seconds).to eq(9000)
     end
 
     it "returns 403 and writes nothing for a cross-origin request" do
@@ -2069,12 +2069,12 @@ RSpec.describe Middleware::RequestTracker do
       middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
 
       middleware.call(
-        engagement_env(payload.merge(click_events: "9", engaged_duration_ms: 1234.9), same_origin),
+        engagement_env(payload.merge(click_events: "9", engaged_seconds: 1234.9), same_origin),
       )
 
       expect(BrowserPageviewSessionEngagement.find_by(session_id: "sess-1")).to have_attributes(
         click_events: 9,
-        engaged_duration_ms: 1234,
+        engaged_seconds: 1234,
       )
     end
 

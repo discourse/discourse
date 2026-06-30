@@ -116,8 +116,7 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
     this.clock.ms = 13_000;
     pagehide();
 
-    // Engaged 0–4000ms and 10000–13000ms => 7000ms.
-    assert.strictEqual(this.sent.at(-1).engaged_duration_ms, 7000);
+    assert.strictEqual(this.sent.at(-1).engaged_seconds, 7);
   });
 
   test("flushes the latest snapshot when the tab is hidden", function (assert) {
@@ -127,6 +126,6 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
     hide(this);
 
     assert.strictEqual(this.sent.length, 1);
-    assert.strictEqual(this.sent.at(-1).engaged_duration_ms, 5000);
+    assert.strictEqual(this.sent.at(-1).engaged_seconds, 5);
   });
 });
