@@ -597,6 +597,51 @@ module DiscoursePostEvent
           end
         end
 
+        context "with a private event" do
+          fab!(:viewer, :user)
+          fab!(:invitee, :user)
+          fab!(:restricted_group) do
+            Fabricate(
+              :group,
+              visibility_level: Group.visibility_levels[:owners],
+              members_visibility_level: Group.visibility_levels[:owners],
+            ).tap { |group| group.add(invitee) }
+          end
+          fab!(:private_event_post) do
+            Fabricate(
+              :post,
+              user: Fabricate(:user, admin: true),
+              topic: Fabricate(:topic, category: Fabricate(:category)),
+            )
+          end
+          fab!(:private_event) do
+            Fabricate(
+              :event,
+              post: private_event_post,
+              status: DiscoursePostEvent::Event.statuses[:private],
+              raw_invitees: [restricted_group.name],
+            )
+          end
+
+          before do
+            private_event.create_invitees(
+              [{ user_id: invitee.id, status: Invitee.statuses[:going] }],
+            )
+            sign_in(viewer)
+          end
+
+          it "does not serialize invitee details for non-invited viewers who cannot see the invited group" do
+            get "/discourse-post-event/events/#{private_event.id}.json"
+
+            expect(response.status).to eq(200)
+            event = response.parsed_body["event"]
+            expect(event).not_to have_key("raw_invitees")
+            expect(event).not_to have_key("sample_invitees")
+            expect(event).not_to have_key("stats")
+            expect(event["should_display_invitees"]).to eq(false)
+          end
+        end
+
         context "when filtering by category" do
           fab!(:category)
 
