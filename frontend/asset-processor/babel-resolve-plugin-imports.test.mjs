@@ -89,7 +89,7 @@ test("optional and required imports of the same plugin get separate specifiers",
   expect(
     compile(`
 import { a } from "discourse/plugins/chat/lib/one";
-import { b } from "discourse/plugins/chat/lib/two" with { discoursePlugin: "required" };
+import { b } from "discourse/plugins/chat/lib/two" with { discourseImport: "required" };
 
 a();
 b();
@@ -102,10 +102,10 @@ b();
   `);
 });
 
-test('`discoursePlugin: "required"` consolidates to the plain specifier', () => {
+test('`discourseImport: "required"` consolidates to the plain specifier', () => {
   expect(
     compile(`
-import ChatChannel from "discourse/plugins/chat/models/chat-channel" with { discoursePlugin: "required" };
+import ChatChannel from "discourse/plugins/chat/models/chat-channel" with { discourseImport: "required" };
 
 ChatChannel.create();
   `)
@@ -118,7 +118,7 @@ ChatChannel.create();
 test("recognises the quoted attribute key form", () => {
   expect(
     compile(`
-import ChatChannel from "discourse/plugins/chat/models/chat-channel" with { "discoursePlugin": "required" };
+import ChatChannel from "discourse/plugins/chat/models/chat-channel" with { "discourseImport": "required" };
 
 ChatChannel.create();
   `)
@@ -128,13 +128,13 @@ ChatChannel.create();
   `);
 });
 
-test("throws on an unknown `discoursePlugin` value", () => {
+test("throws on an unknown `discourseImport` value", () => {
   expect(() =>
     compile(`
-import ChatChannel from "discourse/plugins/chat/models/chat-channel" with { discoursePlugin: "maybe" };
+import ChatChannel from "discourse/plugins/chat/models/chat-channel" with { discourseImport: "maybe" };
 ChatChannel.create();
   `)
-  ).toThrow(/Invalid `discoursePlugin` import attribute "maybe"/);
+  ).toThrow(/Invalid `discourseImport` import attribute "maybe"/);
 });
 
 test("leaves relative and core imports untouched", () => {

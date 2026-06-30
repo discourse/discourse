@@ -1,3 +1,4 @@
+import { readDiscourseImportMode } from "./discourse-import-attribute";
 import rollupVirtualImports from "./rollup-virtual-imports";
 
 export default function (babel) {
@@ -7,6 +8,12 @@ export default function (babel) {
     t.variableDeclaration("const", [t.variableDeclarator(id, init)]);
 
   return {
+    manipulateOptions(_opts, parserOpts) {
+      // Allow the `with { discourseImport: ... }` attribute to parse.
+      if (!parserOpts.plugins.includes("importAttributes")) {
+        parserOpts.plugins.push("importAttributes");
+      }
+    },
     visitor: {
       ImportDeclaration(path) {
         const moduleName = path.node.source.value;
@@ -19,6 +26,9 @@ export default function (babel) {
           return;
         }
 
+        // Core imports are required unless explicitly marked optional.
+        const optional = readDiscourseImportMode(path) === "optional";
+
         const lookup = () =>
           t.callExpression(
             t.memberExpression(
@@ -28,7 +38,9 @@ export default function (babel) {
               ),
               t.identifier("lookup")
             ),
-            [t.stringLiteral(moduleName)]
+            optional
+              ? [t.stringLiteral(moduleName), t.booleanLiteral(true)]
+              : [t.stringLiteral(moduleName)]
           );
 
         const replacements = [];

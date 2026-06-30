@@ -1,3 +1,5 @@
+import { readDiscourseImportMode } from "./discourse-import-attribute";
+
 export default function (babel) {
   const { types: t } = babel;
 
@@ -25,23 +27,17 @@ export default function (babel) {
     }
   }
 
+  // Cross-plugin imports are optional unless explicitly marked required.
   function isOptionalPluginImport(path) {
-    const attribute = (path.node.attributes ?? []).find(
-      (a) => (a.key.name ?? a.key.value) === "discourseImport"
-    );
-    const mode = attribute?.value.value;
-    if (![undefined, "optional", "required"].includes(mode)) {
-      throw path.buildCodeFrameError(
-        `Invalid \`discourseImport\` import attribute "${mode}". Allowed values are "optional" and "required".`
-      );
-    }
-    return mode !== "required";
+    return readDiscourseImportMode(path) !== "required";
   }
 
   return {
     manipulateOptions(_opts, parserOpts) {
       // Allow the `with { discourseImport: ... }` attribute to parse.
-      parserOpts.plugins.push("importAttributes");
+      if (!parserOpts.plugins.includes("importAttributes")) {
+        parserOpts.plugins.push("importAttributes");
+      }
     },
     pre() {
       this.pluginImports = new Map();

@@ -43,6 +43,40 @@ import defaultExport, * as MyModule2 from "discourse/module-2";
   `);
 });
 
+test("marks optional core imports with a second lookup argument", () => {
+  expect(
+    compile(`
+import concatClass from "discourse/helpers/concat-class" with { discourseImport: "optional" };
+import * as MyModule from "discourse/module-1" with { discourseImport: "optional" };
+  `)
+  ).toMatchInlineSnapshot(`
+    "const {
+      default: concatClass
+    } = window.moduleBroker.lookup("discourse/helpers/concat-class", true);
+    const MyModule = window.moduleBroker.lookup("discourse/module-1", true);"
+  `);
+});
+
+test('`discourseImport: "required"` keeps the default required lookup', () => {
+  expect(
+    compile(`
+import concatClass from "discourse/helpers/concat-class" with { discourseImport: "required" };
+  `)
+  ).toMatchInlineSnapshot(`
+    "const {
+      default: concatClass
+    } = window.moduleBroker.lookup("discourse/helpers/concat-class");"
+  `);
+});
+
+test("throws on an unknown `discourseImport` value", () => {
+  expect(() =>
+    compile(`
+import concatClass from "discourse/helpers/concat-class" with { discourseImport: "maybe" };
+  `)
+  ).toThrow(/Invalid `discourseImport` import attribute "maybe"/);
+});
+
 test("leaves relative, virtual, theme and plugin imports untouched", () => {
   expect(
     compile(`
