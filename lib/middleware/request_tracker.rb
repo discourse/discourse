@@ -714,6 +714,8 @@ class Middleware::RequestTracker
         engaged_duration_ms: payload["engaged_duration_ms"].to_i,
         time_to_first_interaction_ms: payload["time_to_first_interaction_ms"].to_i,
       )
+    rescue => e
+      Rails.logger.warn("Discarding session engagement: #{e.message}")
     end
   end
 

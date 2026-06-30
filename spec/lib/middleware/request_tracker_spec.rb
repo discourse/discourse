@@ -2042,6 +2042,21 @@ RSpec.describe Middleware::RequestTracker do
       }.not_to change { BrowserPageviewSessionEngagement.count }
     end
 
+    it "discards malformed-but-parseable payloads instead of raising in the deferred write" do
+      middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
+
+      [
+        payload.merge(session_id: 123),
+        payload.merge(mouse_move_events: { "x" => 1 }),
+        payload.merge(mouse_move_events: 9_999_999_999),
+      ].each do |malformed|
+        expect {
+          status, = middleware.call(engagement_env(malformed, same_origin))
+          expect(status).to eq(204)
+        }.not_to change { BrowserPageviewSessionEngagement.count }
+      end
+    end
+
     it "does not intercept the request when dashboard_improvements is disabled" do
       SiteSetting.dashboard_improvements = false
       middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
