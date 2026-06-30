@@ -55,6 +55,24 @@ module DiscourseAi
 
           return DiscourseAi::Completions::ThinkingConfig.explicit_none if effort == "none"
 
+          if requires_adaptive_thinking?
+            total_output_tokens = adaptive_total_output_tokens(model_params)
+            return(
+              DiscourseAi::Completions::ThinkingConfig.new(
+                canonical_effort: effort,
+                enabled: true,
+                provider_effort: "adaptive",
+                # output_config.effort only accepts low/medium/high/xhigh/max —
+                # no "minimal" — same collapse as the OpenAI effort scale.
+                output_effort: effort == "minimal" ? "low" : effort,
+                provider_output_tokens: total_output_tokens,
+                reserved_output_tokens: total_output_tokens,
+                strip_temperature: true,
+                strip_top_p: true,
+              )
+            )
+          end
+
           budget = THINKING_BUDGETS[effort]
           if budget.blank?
             return DiscourseAi::Completions::ThinkingConfig.unsupported(canonical_effort: effort)
@@ -83,6 +101,10 @@ module DiscourseAi
 
         def supports_anthropic_thinking?
           true
+        end
+
+        def requires_adaptive_thinking?
+          llm_model.lookup_custom_param("adaptive_thinking")
         end
 
         def provider_param_thinking_config(model_params)
@@ -173,6 +195,10 @@ module DiscourseAi
         end
 
         def apply_anthropic_effort_config!(options)
+          # a per-call thinking_effort that resolved to adaptive mode takes priority
+          # over the static admin-configured "effort" param
+          return if thinking_config.present? && thinking_config.output_effort.present?
+
           effort = llm_model.lookup_custom_param("effort")
           options[:output_config] = { effort: effort } if AnthropicShared::EFFORT_VALUES.include?(
             effort,
@@ -191,6 +217,9 @@ module DiscourseAi
 
           if thinking_config.provider_effort == "adaptive"
             options[:thinking] = { type: "adaptive" }
+            if thinking_config.output_effort.present?
+              options[:output_config] = { effort: thinking_config.output_effort }
+            end
           elsif thinking_config.thinking_token_budget
             options[:thinking] = {
               type: "enabled",

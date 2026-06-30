@@ -7,6 +7,7 @@ module DiscourseAi
 
       attr_reader :canonical_effort,
                   :provider_effort,
+                  :output_effort,
                   :thinking_token_budget,
                   :visible_output_tokens,
                   :provider_output_tokens,
@@ -33,6 +34,7 @@ module DiscourseAi
       def initialize(
         canonical_effort: nil,
         provider_effort: nil,
+        output_effort: nil,
         enabled: false,
         explicit_none: false,
         unsupported: false,
@@ -45,6 +47,7 @@ module DiscourseAi
       )
         @canonical_effort = canonical_effort
         @provider_effort = provider_effort
+        @output_effort = output_effort
         @enabled = enabled
         @explicit_none = explicit_none
         @unsupported = unsupported
