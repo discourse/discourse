@@ -122,6 +122,35 @@ RSpec.describe UserAvatarsController do
       end
     end
 
+    it "serves sanitized SVG avatars without DTD entities" do
+      SiteSetting.authorized_extensions = "svg"
+      user = Fabricate(:user)
+      file = Tempfile.new(%w[avatar .svg])
+      file.write(<<~SVG)
+        <?xml version="1.0" standalone="yes"?>
+        <!DOCTYPE svg [
+          <!ENTITY xss "<script xmlns='http://www.w3.org/2000/svg'>alert('XSS')</script>">
+        ]>
+        <svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">
+          <text x="10" y="40" font-size="20">&xss;</text>
+        </svg>
+      SVG
+      file.rewind
+
+      upload = UploadCreator.new(file, "avatar.svg", type: "avatar").create_for(user.id)
+      user.create_user_avatar! unless user.user_avatar
+      user.user_avatar.update!(custom_upload_id: upload.id)
+      user.update!(uploaded_avatar_id: upload.id)
+
+      get "/user_avatar/default/#{user.username}/200/#{upload.id}.png"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include("<!DOCTYPE")
+      expect(response.body).not_to include("<script")
+      expect(response.body).not_to include("&xss;")
+      expect(response.headers["Content-Disposition"]).to start_with("attachment;")
+    end
+
     it "handles non local content correctly" do
       setup_s3
       SiteSetting.avatar_sizes = "100|98|49"
@@ -170,6 +199,33 @@ RSpec.describe UserAvatarsController do
       expect(response).to redirect_to(
         "http://awesome.com/boom/user_avatar/default/#{user.encoded_username(lower: true)}/98/#{upload.id}_#{OptimizedImage::VERSION}.png",
       )
+    end
+
+    it "serves proxied SVG avatars as sandboxed attachments" do
+      setup_s3
+      SiteSetting.avatar_sizes = "98"
+      SiteSetting.s3_cdn_url = "http://cdn.com"
+      set_cdn_url("http://awesome.com/boom")
+
+      stub_request(:get, "http://cdn.com/avatar.svg").to_return(
+        body: "<svg xmlns=\"http://www.w3.org/2000/svg\"></svg>",
+      )
+
+      upload =
+        Fabricate(
+          :upload,
+          original_filename: "avatar.svg",
+          extension: "svg",
+          url: "//#{SiteSetting.s3_upload_bucket}.s3.dualstack.us-west-1.amazonaws.com/avatar.svg",
+        )
+
+      user = Fabricate(:user, uploaded_avatar_id: upload.id)
+
+      get "/user_avatar/default/#{user.username}/98/#{upload.id}.png"
+
+      expect(response.status).to eq(200)
+      expect(response.headers["Content-Disposition"]).to start_with("attachment;")
+      expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
     end
 
     it "redirects to external store when enabled" do
