@@ -10,6 +10,9 @@ loaderShim("@ember-compat/tracked-built-ins", () =>
 loaderShim("@ember/-internals/metal", () =>
   importSync("@ember/-internals/metal")
 );
+loaderShim("@ember/object/internals", () =>
+  importSync("@ember/object/internals")
+);
 loaderShim("@ember/application", () => importSync("@ember/application"));
 loaderShim("@ember/application/instance", () =>
   importSync("@ember/application/instance")

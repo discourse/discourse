@@ -1922,6 +1922,7 @@ export default class GridOverlay extends Component {
             <EditorEmptyDropPlaceholder
               @hint={{i18n "wireframe.canvas.empty_hint"}}
               @palette={{this.palette}}
+              @targetOutletName={{@outletName}}
               @onActivate={{fn this.selectEmptyCell cell}}
               @onPick={{fn this.pickBlockForCell cell}}
             />

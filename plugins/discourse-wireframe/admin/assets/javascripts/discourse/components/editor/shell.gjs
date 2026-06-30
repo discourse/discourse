@@ -25,6 +25,10 @@ import PublishBlockedCallout from "discourse/plugins/discourse-wireframe/discour
 import PublishReviewDrawer from "discourse/plugins/discourse-wireframe/discourse/components/editor/publish/publish-review-drawer";
 import PublishTargetIndicator from "discourse/plugins/discourse-wireframe/discourse/components/editor/publish/publish-target-indicator";
 import SimulationControls from "discourse/plugins/discourse-wireframe/discourse/components/editor/simulation/simulation-controls";
+import {
+  readBoolStorage,
+  writeBoolStorage,
+} from "discourse/plugins/discourse-wireframe/discourse/lib/storage";
 
 /**
  * The 3-pane editor chrome (toolbar + outline + canvas + inspector).
@@ -41,49 +45,30 @@ export default class EditorShell extends Component {
   @service wireframeDragDwell;
   @service wireframeMutationEngine;
   @service wireframeEditMode;
+  @service wireframeRail;
   @service wireframeStaging;
   @service wireframeValidation;
 
   @tracked warningsPanelOpen = false;
-  @tracked leftPanelTab = "palette";
-  @tracked leftCollapsed = readBoolStorage("ve.leftCollapsed");
   @tracked rightCollapsed = readBoolStorage("ve.rightCollapsed");
   @tracked dimNonEditable = readBoolStorage("ve.dimNonEditable", true);
 
-  isLeftPanelTabActive = (tab) => this.leftPanelTab === tab;
-
   /**
-   * CSS classes for the shell that drive the canvas grid template
-   * (`--left-collapsed` / `--right-collapsed` from
-   * `wireframe.scss` adjust `grid-template-columns`). `--dragging` (set while a
-   * block drag is in flight) lets editor-only affordances opt out of pointer
-   * events during a drag — e.g. an empty container's call-to-action button,
-   * which would otherwise swallow the drop instead of letting it land on the
-   * container's drop target.
+   * CSS classes for the shell. `--dragging` (set while a block drag is in flight)
+   * lets editor-only affordances opt out of pointer events during a drag — e.g.
+   * an empty container's call-to-action button, which would otherwise swallow the
+   * drop instead of letting it land on the container's drop target.
+   *
+   * Rail collapse is NOT a shell class: the shell grid reads the `--wf-*-rail`
+   * custom properties, which the `body` collapse classes (set via `bodyClass`
+   * below) flip to the slim-strip width.
    */
   get shellClasses() {
     const classes = ["wireframe-shell"];
-    if (this.leftCollapsed) {
-      classes.push("--left-collapsed");
-    }
-    if (this.rightCollapsed) {
-      classes.push("--right-collapsed");
-    }
     if (this.dragAndDrop.isDragging) {
       classes.push("--dragging");
     }
     return classes.join(" ");
-  }
-
-  @action
-  setLeftPanelTab(tab) {
-    this.leftPanelTab = tab;
-  }
-
-  @action
-  toggleLeftCollapsed() {
-    this.leftCollapsed = !this.leftCollapsed;
-    writeBoolStorage("ve.leftCollapsed", this.leftCollapsed);
   }
 
   @action
@@ -122,7 +107,7 @@ export default class EditorShell extends Component {
     {{#if this.wireframeEditMode.active}}
       {{bodyClass
         "wireframe-active"
-        (if this.leftCollapsed "wireframe-active--left-collapsed")
+        (if this.wireframeRail.leftCollapsed "wireframe-active--left-collapsed")
         (if this.rightCollapsed "wireframe-active--right-collapsed")
         (if this.dimNonEditable "wireframe-active--dim-non-editable")
         (if this.wireframeDragSession.dragActive "wireframe-dragging")
@@ -226,47 +211,57 @@ export default class EditorShell extends Component {
           class={{dConcatClass
             "wireframe-panel"
             "--left"
-            (if this.leftCollapsed "--collapsed")
+            (if this.wireframeRail.leftCollapsed "--collapsed")
           }}
         >
           <div class="panel-header panel-header--tabs">
-            {{#unless this.leftCollapsed}}
+            {{#unless this.wireframeRail.leftCollapsed}}
               <DButton
                 class={{dConcatClass
                   "btn-flat panel-tab"
-                  (if (this.isLeftPanelTabActive "palette") "--active")
+                  (if
+                    (this.wireframeRail.isLeftPanelTabActive "palette")
+                    "--active"
+                  )
                 }}
                 @label="wireframe.chrome.tab_palette"
-                @action={{fn this.setLeftPanelTab "palette"}}
+                @action={{fn this.wireframeRail.setLeftPanelTab "palette"}}
               />
               <DButton
                 class={{dConcatClass
                   "btn-flat panel-tab"
-                  (if (this.isLeftPanelTabActive "outline") "--active")
+                  (if
+                    (this.wireframeRail.isLeftPanelTabActive "outline")
+                    "--active"
+                  )
                 }}
                 @label="wireframe.chrome.tab_outline"
-                @action={{fn this.setLeftPanelTab "outline"}}
+                @action={{fn this.wireframeRail.setLeftPanelTab "outline"}}
               />
             {{/unless}}
             <DButton
               class="btn-flat panel-collapse-toggle"
-              @icon={{if this.leftCollapsed "chevron-right" "chevron-left"}}
+              @icon={{if
+                this.wireframeRail.leftCollapsed
+                "chevron-right"
+                "chevron-left"
+              }}
               @title={{if
-                this.leftCollapsed
+                this.wireframeRail.leftCollapsed
                 "wireframe.chrome.expand_panel"
                 "wireframe.chrome.collapse_panel"
               }}
               @ariaLabel={{if
-                this.leftCollapsed
+                this.wireframeRail.leftCollapsed
                 "wireframe.chrome.expand_panel"
                 "wireframe.chrome.collapse_panel"
               }}
-              @action={{this.toggleLeftCollapsed}}
+              @action={{this.wireframeRail.toggleLeftCollapsed}}
             />
           </div>
-          {{#unless this.leftCollapsed}}
+          {{#unless this.wireframeRail.leftCollapsed}}
             <div class="panel-body">
-              {{#if (this.isLeftPanelTabActive "palette")}}
+              {{#if (this.wireframeRail.isLeftPanelTabActive "palette")}}
                 <PalettePanel />
               {{else}}
                 <OutlinePanel />
@@ -319,40 +314,4 @@ export default class EditorShell extends Component {
       <PublishReviewDrawer />
     {{/if}}
   </template>
-}
-
-/**
- * Reads a boolean preference from `localStorage`. Swallows access
- * exceptions (private browsing, strict cookie settings) and returns
- * `false`, so the editor degrades to "expanded" when storage isn't
- * usable.
- *
- * @param {string} key
- * @returns {boolean}
- */
-function readBoolStorage(key, defaultValue = false) {
-  try {
-    const v = localStorage.getItem(key);
-    if (v === null) {
-      return defaultValue;
-    }
-    return v === "true";
-  } catch {
-    return defaultValue;
-  }
-}
-
-/**
- * Persists a boolean preference. Same swallow-and-no-op fallback as
- * the reader.
- *
- * @param {string} key
- * @param {boolean} value
- */
-function writeBoolStorage(key, value) {
-  try {
-    localStorage.setItem(key, value ? "true" : "false");
-  } catch {
-    /* no-op */
-  }
 }

@@ -29,9 +29,10 @@ import EditorBlockPickerMenu from "discourse/plugins/discourse-wireframe/discour
  * Args:
  *   - `@hint` (string) — pre-translated message. Visible label when
  *     there's room; tooltip content when there isn't.
- *   - `@palette` (Array<{name, displayName, icon}>) — already filtered
- *     to user-pickable blocks and sorted. Pass `buildBlockPalette` from
- *     `lib/palette.js`.
+ *   - `@palette` (Array<{name, displayName, icon, ...}>) — the shared
+ *     `buildBlockPalette` rows, already filtered to user-pickable blocks.
+ *   - `@targetOutletName` (string) — the outlet the drop target lives in.
+ *     The picker filters its suggestions to blocks valid for this outlet.
  *   - `@onPick` (`(blockEntry) => void`) — fired when the author picks
  *     a block from the popover. The placeholder closes the menu after
  *     `onPick` returns.
@@ -97,6 +98,7 @@ export default class EditorEmptyDropPlaceholder extends Component {
       maxWidth: 320,
       data: {
         palette: this.args.palette,
+        targetOutletName: this.args.targetOutletName,
         onPick: this.handlePick,
       },
     });

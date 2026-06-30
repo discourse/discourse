@@ -81,9 +81,13 @@ en:
       palette:
         search_placeholder: "Search blocks"
         empty: "No blocks match your filter."
-        category_core: "Core"
-        category_plugin: "Plugin"
-        category_theme: "Theme"
+        list_label: "Blocks"
+        insert_hint:
+          no_selection: "Select a block on the canvas to insert next to it."
+          grid: "Grids need a specific cell — use the + in the cell to add there."
+      inserter:
+        browse_all: "Browse all"
+        no_results: "No blocks match your search."
       inspector:
         empty: "Select a block to inspect."
         controls:

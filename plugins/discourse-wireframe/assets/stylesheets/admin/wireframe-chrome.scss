@@ -1092,22 +1092,12 @@ body.wireframe-active {
   inset: 0;
   z-index: z("modal", "content") - 200;
   display: grid;
-  grid-template-columns: 280px 1fr 320px;
 
-  /* Per-rail collapse states: shrink the affected column to a slim
-     icon strip so the canvas reclaims the space. */
-
-  &.--left-collapsed {
-    grid-template-columns: 40px 1fr 320px;
-  }
-
-  &.--right-collapsed {
-    grid-template-columns: 280px 1fr 40px;
-  }
-
-  &.--left-collapsed.--right-collapsed {
-    grid-template-columns: 40px 1fr 40px;
-  }
+  /* Single source of truth for the rail widths: the same `--wf-*-rail` custom
+     properties the body uses to inset the live page (see `body.wireframe-active`),
+     so the grid columns and the canvas inset can never drift. Collapsing a rail
+     flips its variable to the slim-strip width on the body; the grid inherits it. */
+  grid-template-columns: var(--wf-left-rail) 1fr var(--wf-right-rail);
 
   /* Toolbar / error banner / panels.
      The error banner row collapses to zero height when no error is present
@@ -1207,8 +1197,8 @@ body.wireframe-active {
 
 .wireframe-breadcrumb {
   position: fixed;
-  left: var(--wf-left-rail, 280px);
-  right: var(--wf-right-rail, 320px);
+  left: var(--wf-left-rail, 340px);
+  right: var(--wf-right-rail, 280px);
   bottom: 0;
   z-index: 1050;
   display: flex;
@@ -1361,45 +1351,34 @@ body.wireframe-active {
     margin: 0;
   }
 
-  &__chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-  }
+  /* Visual-only callout for a blocked palette insert; screen readers get the
+     same text via the core a11y announce service. */
 
-  &__chip {
-    padding: 0.15rem 0.5rem;
-    background: var(--primary-very-low);
-    border: 1px solid var(--primary-low);
-    border-radius: 999px;
+  &__hint {
+    padding: 0.35rem 0.5rem;
+    border-radius: var(--d-border-radius);
+    background: var(--highlight-low);
+    color: var(--primary-high);
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
-    cursor: pointer;
-
-    &:hover {
-      color: var(--primary);
-    }
-
-    &.--active {
-      background: var(--tertiary-low);
-      border-color: var(--tertiary);
-      color: var(--tertiary);
-    }
   }
+
+  /* One grid holds every tile across all category sections, so a single
+     roving-focus container can navigate them in DOM order and derive its column
+     count from these tracks. Section headers are emitted as direct grid children
+     that span every column (no per-section wrapper), keeping the grid flat. */
 
   &__list {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+
+    /* Fixed three columns; the left rail is sized so each tile is wide enough
+       for the long single-word block names (Accordion, Paragraph, Gamification),
+       with multi-word names wrapping at the space. */
+    grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
   }
 
-  &__section {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
   &__section-header {
+    grid-column: 1 / -1;
     position: sticky;
     top: 0;
     z-index: 5;
@@ -1414,20 +1393,37 @@ body.wireframe-active {
   }
 }
 
-.wireframe-palette-entry {
+.wireframe-block-tile {
   display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-  padding: 0.5rem 0.75rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-height: 44px;
+  padding: 0.5rem;
   border: 1px solid var(--primary-low);
-  border-radius: 4px;
+  border-radius: var(--d-border-radius);
   background: var(--secondary);
-  cursor: grab;
-  font-size: var(--font-down-1);
+  cursor: pointer;
+  font-size: var(--font-down-2);
+  text-align: center;
 
   &:hover {
     background: var(--primary-very-low);
     border-color: var(--primary-low-mid);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--wf-accent);
+    outline-offset: 1px;
+  }
+
+  /* Keyboard cursor highlight for the inserter's active (aria-activedescendant)
+     mode, where DOM focus stays on the search input. */
+
+  &.--active {
+    background: var(--primary-very-low);
+    border-color: var(--wf-accent);
   }
 
   &.is-dragging {
@@ -1436,42 +1432,67 @@ body.wireframe-active {
 
   &__icon {
     color: var(--primary-medium);
-    flex-shrink: 0;
-
-    /* Vertical-center on the label even when there's a second line. */
-    margin-top: 0.15rem;
+    font-size: var(--font-up-2);
   }
 
-  &__text {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.1rem;
-    overflow: hidden;
+  &__thumbnail {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--d-border-radius);
   }
 
   &__label {
+    /* Wrap multi-word names at the space, up to two lines, before ellipsizing.
+       `break-word` (not `anywhere`) keeps single words whole — they only break
+       if a lone word can't fit, which the wider columns avoid. */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    max-width: 100%;
+    font-weight: 500;
+    overflow-wrap: break-word;
+  }
+}
+
+.wireframe-block-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 240px;
+
+  &__thumbnail {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--d-border-radius);
+  }
+
+  &__icon {
+    color: var(--primary-medium);
+    font-size: var(--font-up-2);
+  }
+
+  &__name {
     font-weight: 500;
   }
 
   &__description {
-    font-size: var(--font-down-2);
+    font-size: var(--font-down-1);
     color: var(--primary-medium);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
   }
 }
 
 body.wireframe-active {
-  /* Rail widths exposed as custom properties so fixed-position editor
-     chrome (breadcrumb, future floating UI) can position itself
-     correctly when the user collapses one or both rails. */
-  --wf-left-rail: 280px;
-  --wf-right-rail: 320px;
+  /* Rail widths exposed as custom properties so both the shell grid columns and
+     this body padding (which insets the live page under the canvas) read one
+     source and can't drift, and so fixed-position editor chrome (breadcrumb,
+     future floating UI) can position itself when a rail collapses.
+     `--wf-rail-collapsed` is the slim icon-strip width a collapsed rail shrinks
+     to. */
+  --wf-rail-collapsed: 40px;
+  --wf-left-rail: 320px;
+  --wf-right-rail: 300px;
 
   /* Height of the fixed editor toolbar. Single source of truth: the shell's
      grid row, this top padding, and the block scroll clearance all derive
@@ -1483,11 +1504,11 @@ body.wireframe-active {
   box-sizing: border-box;
 
   &.wireframe-active--left-collapsed {
-    --wf-left-rail: 40px;
+    --wf-left-rail: var(--wf-rail-collapsed);
   }
 
   &.wireframe-active--right-collapsed {
-    --wf-right-rail: 40px;
+    --wf-right-rail: var(--wf-rail-collapsed);
   }
 }
 
@@ -2570,8 +2591,9 @@ body.wireframe-active
   }
 }
 
-/* FloatKit menu body opened from every empty-drop placeholder. Picker
-   header + 2-column grid of block chips. Targets the menu wrapper via
+/* FloatKit menu body opened from every empty-drop placeholder: the
+   quick-inserter — a search combobox over a grid of block tiles, plus a
+   "Browse all" link to the full sidebar palette. Targets the menu wrapper via
    the `data-identifier` attribute passed to `menu.show()` — FloatKit's
    `DHeadlessMenu` doesn't apply an identifier-derived class on its own,
    but the data attribute lands on the wrapper, so we can address it
@@ -2581,64 +2603,33 @@ body.wireframe-active
   .wireframe-block-picker {
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: 0.4rem;
     padding: 0.4rem;
-    width: 220px;
+    width: 260px;
   }
 
-  .wireframe-block-picker__header {
-    color: var(--primary-medium);
-    font-size: var(--font-down-2);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    font-weight: 600;
-    padding: 0.1rem 0.2rem;
+  .wireframe-block-picker__search {
+    width: 100%;
+    margin: 0;
   }
 
-  .wireframe-block-picker__grid {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
+  .wireframe-block-picker__results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
+    gap: 0.4rem;
     max-height: 260px;
     overflow-y: auto;
   }
 
-  .wireframe-block-picker__chip {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 0.45rem;
-    padding: 0.4rem 0.55rem;
-    width: 100%;
-    overflow: hidden;
-    background: var(--secondary);
-    border: 1px solid var(--primary-low);
-    border-radius: 4px;
-    cursor: pointer;
-    color: var(--primary);
+  .wireframe-block-picker__empty {
+    grid-column: 1 / -1;
+    color: var(--primary-medium);
     font-size: var(--font-down-1);
-    text-align: left;
+    padding: 0.4rem 0.2rem;
+  }
 
-    &:hover {
-      background: var(--primary-very-low);
-      border-color: var(--primary-low-mid);
-    }
-
-    /* `.btn` from core sets `white-space: nowrap`; pair it with overflow
-       on the chip so long block names ellipsize instead of overflowing
-       the popover (which is clipped at the viewport edge). */
-
-    .d-button-label {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      min-width: 0;
-    }
-
-    .d-icon {
-      flex: 0 0 auto;
-      color: var(--primary-medium);
-      font-size: 0.8rem;
-    }
+  .wireframe-block-picker__browse-all {
+    align-self: flex-start;
   }
 }
 

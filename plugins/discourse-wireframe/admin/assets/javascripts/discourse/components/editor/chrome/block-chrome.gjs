@@ -2006,6 +2006,7 @@ export default class BlockChrome extends Component {
               <EditorEmptyDropPlaceholder
                 @hint={{i18n "wireframe.canvas.empty_hint"}}
                 @palette={{this.palette}}
+                @targetOutletName={{@outletName}}
                 @onActivate={{this.selectSelf}}
                 @onPick={{this.pickBlockForCell}}
               />
@@ -2081,6 +2082,7 @@ export default class BlockChrome extends Component {
             <EditorEmptyDropPlaceholder
               @hint={{this.emptyHint}}
               @palette={{this.palette}}
+              @targetOutletName={{@outletName}}
               @onActivate={{this.selectSelf}}
               @onPick={{this.pickBlockForContainer}}
             />
