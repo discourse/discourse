@@ -245,6 +245,11 @@ bg:
       trust_level_2: "trust_level_2 "
       trust_level_3: "trust_level_3 "
       trust_level_4: "trust_level_4 "
+    default_full_names:
+      everyone: "Всички"
+      admins: "Админи"
+      moderators: "Модератори"
+      staff: "Персонал"
   education:
     until_posts:
       one: "%{count} публикация"

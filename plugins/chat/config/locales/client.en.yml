@@ -321,8 +321,11 @@ en:
         title: "Desktop chat notification sound"
       sounds:
         none: "None"
-        bell: "Bell"
-        ding: "Ding"
+        classic: "Classic and clean"
+        soft: "Soft marimba"
+        retro: "Retro 8-bit"
+        bubble: "Playful bubble"
+        ethereal: "Ethereal glass"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Attach a file"
@@ -499,6 +502,10 @@ en:
           other: "<span>You, %{commaSeparatedUsernames} and %{count} others reacted with </span>:%{emoji}:"
         single_user: "<span>%{username} reacted with </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} and %{username} reacted with </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} reaction"
+            other: "%{count} reactions"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} and %{count} other reacted with </span>:%{emoji}:"
           other: "<span>%{commaSeparatedUsernames} and %{count} others reacted with </span>:%{emoji}:"

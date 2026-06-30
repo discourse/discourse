@@ -183,6 +183,68 @@ CREATE TABLE permalink_normalizations
 );
 
 
+CREATE TABLE post_events
+(
+    event_id    NUMERIC,
+    placeholder TEXT    NOT NULL,
+    post_id     NUMERIC NOT NULL
+);
+
+CREATE INDEX idx_post_events_post_id ON post_events (post_id);
+
+CREATE TABLE post_links
+(
+    placeholder     TEXT    NOT NULL,
+    post_id         NUMERIC NOT NULL,
+    target_post_id  NUMERIC,
+    target_topic_id NUMERIC,
+    text            TEXT,
+    url             TEXT
+);
+
+CREATE INDEX idx_post_links_post_id ON post_links (post_id);
+
+CREATE TABLE post_mentions
+(
+    mention_type TEXT,
+    name         TEXT,
+    placeholder  TEXT    NOT NULL,
+    post_id      NUMERIC NOT NULL,
+    target_id    NUMERIC
+);
+
+CREATE INDEX idx_post_mentions_post_id ON post_mentions (post_id);
+
+CREATE TABLE post_polls
+(
+    placeholder TEXT    NOT NULL,
+    poll_id     NUMERIC,
+    post_id     NUMERIC NOT NULL
+);
+
+CREATE INDEX idx_post_polls_post_id ON post_polls (post_id);
+
+CREATE TABLE post_quotes
+(
+    placeholder     TEXT    NOT NULL,
+    post_id         NUMERIC NOT NULL,
+    quoted_name     TEXT,
+    quoted_post_id  NUMERIC,
+    quoted_user_id  NUMERIC,
+    quoted_username TEXT
+);
+
+CREATE INDEX idx_post_quotes_post_id ON post_quotes (post_id);
+
+CREATE TABLE post_uploads
+(
+    placeholder TEXT    NOT NULL,
+    post_id     NUMERIC NOT NULL,
+    upload_id   TEXT
+);
+
+CREATE INDEX idx_post_uploads_post_id ON post_uploads (post_id);
+
 CREATE TABLE site_settings
 (
     name            TEXT         NOT NULL PRIMARY KEY,
@@ -307,6 +369,7 @@ CREATE TABLE topics
     external_id          NUMERIC,
     featured_link        TEXT,
     locale               TEXT,
+    og_image_upload_id   TEXT,
     pinned_at            DATETIME,
     pinned_globally      BOOLEAN,
     pinned_until         DATETIME,

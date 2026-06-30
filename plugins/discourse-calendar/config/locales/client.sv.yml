@@ -427,11 +427,6 @@ sv:
             last: "senaste"
         attendance:
           none: "Ingen"
-        url:
-          label: "URL"
-          placeholder: "Valfritt"
-        location:
-          label: "Plats"
         description:
           label: "Beskrivning"
         name:

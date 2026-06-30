@@ -17,7 +17,13 @@ RSpec.describe DiscourseCalendar::Livestream do
 
       before { topic.update!(category: category) }
 
-      context "when the topic has no 'livestream' tag" do
+      context "when the first post is not a livestream event" do
+        before do
+          SiteSetting.calendar_enabled = true
+          post = Fabricate(:post, topic: topic)
+          Fabricate(:event, post: post, livestream: false)
+        end
+
         it "does not create a chat channel" do
           described_class.handle_topic_chat_channel_creation(topic)
 
@@ -25,13 +31,11 @@ RSpec.describe DiscourseCalendar::Livestream do
         end
       end
 
-      context "when the topic has a 'livestream' tag" do
-        let(:tag) { Fabricate(:tag, name: "livestream") }
-
+      context "when the first post is a livestream event" do
         before do
           SiteSetting.calendar_enabled = true
-          SiteSetting.livestream_enabled = true
-          topic.tags << tag
+          post = Fabricate(:post, topic: topic)
+          Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
         end
 
         it "creates a chat channel" do

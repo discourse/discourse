@@ -2529,6 +2529,25 @@ RSpec.describe UsersController do
           expect(invites[0]).to include("id" => invite.id)
         end
       end
+
+      context "with expired invites" do
+        it "returns an empty list without permission to see invite details" do
+          viewer = Fabricate(:user, trust_level: TrustLevel[2])
+          sign_in(viewer)
+          Fabricate(:invite, invited_by: inviter, expires_at: 1.day.ago)
+
+          get "/u/#{inviter.username}/invited/expired.json"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["can_see_invite_details"]).to eq(false)
+          expect(response.parsed_body["invites"]).to eq([])
+          expect(response.parsed_body["counts"]).to include(
+            "pending" => 0,
+            "expired" => 0,
+            "total" => 0,
+          )
+        end
+      end
     end
   end
 
@@ -5714,7 +5733,7 @@ RSpec.describe UsersController do
               }
           expect(response.status).to eq(200)
           groups = response.parsed_body["groups"]
-          expect(groups).to eq([{ "name" => "admins", "full_name" => nil }])
+          expect(groups).to eq([{ "name" => "admins", "full_name" => "Admins" }])
 
           DiscoursePluginRegistry.reset!
         end
@@ -8188,6 +8207,47 @@ RSpec.describe UsersController do
         expect(unread_notifications.map { |notification| notification["id"] }).to eq(
           [unread_pm_notification.id, unread_group_message_summary_notification.id],
         )
+      end
+
+      context "with notifications for inaccessible private messages" do
+        fab!(:sender, :coding_horror)
+
+        fab!(:forbidden_pm) do
+          Fabricate(
+            :private_message_topic,
+            title: "Confidential Acquisition Plan",
+            user: sender,
+            recipient: user,
+          )
+        end
+
+        fab!(:forbidden_post) { Fabricate(:post, topic: forbidden_pm, user: sender) }
+
+        fab!(:forbidden_pm_notification) do
+          Fabricate(
+            :private_message_notification,
+            read: false,
+            user: user,
+            topic: forbidden_pm,
+            post: forbidden_post,
+            created_at: 3.minutes.ago,
+          )
+        end
+
+        before { TopicAllowedUser.where(topic: forbidden_pm, user: user).delete_all }
+
+        it "does not disclose titles of PMs the user can no longer access" do
+          get "/u/#{user.username}/user-menu-private-messages"
+
+          expect(response.status).to eq(200)
+          expect(response.body).not_to include(forbidden_pm.title)
+          expect(
+            response.parsed_body["unread_notifications"].map { |notification| notification["id"] },
+          ).to contain_exactly(
+            unread_pm_notification.id,
+            unread_group_message_summary_notification.id,
+          )
+        end
       end
 
       it "sends an array of read group_message_summary notifications" do

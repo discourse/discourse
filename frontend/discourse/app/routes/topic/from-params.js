@@ -62,10 +62,7 @@ export default class TopicFromParams extends DiscourseRoute {
     const topic = this.modelFor("topic");
 
     const queryParams = transition?.to?.queryParams || {};
-    const flatParam = this.#truthyQueryParam(
-      queryParams.flat || transition?.to?.parent?.queryParams?.flat
-    );
-    if (topic.is_nested_view && !flatParam && !topic._forcedFlat) {
+    if (topic.is_nested_view) {
       return this.#loadNestedModel(topic, params, queryParams).catch((e) => {
         if (!isTesting()) {
           // eslint-disable-next-line no-console
@@ -87,7 +84,7 @@ export default class TopicFromParams extends DiscourseRoute {
     return postStream
       .refresh(params)
       .then(() => {
-        if (topic.is_nested_view && !flatParam && !topic._forcedFlat) {
+        if (topic.is_nested_view) {
           return this.#loadNestedModel(topic, params, queryParams);
         }
         return params;
@@ -102,22 +99,12 @@ export default class TopicFromParams extends DiscourseRoute {
       });
   }
 
-  afterModel(model, transition) {
+  afterModel(model) {
     const topic = this.modelFor("topic");
 
     if (model._nested) {
       this.header.enterTopic(model._nested.topic, !model._nested.contextMode);
       return;
-    }
-
-    if (topic.is_nested_view) {
-      const flatParam = this.#truthyQueryParam(
-        transition?.to?.queryParams?.flat ||
-          transition?.to?.parent?.queryParams?.flat
-      );
-      if (flatParam || topic._forcedFlat) {
-        topic.set("_forcedFlat", true);
-      }
     }
 
     const isLoadingFirstPost =

@@ -475,7 +475,6 @@ he:
         create_event_title: "יצירת אירוע"
         update_event_title: "עריכת אירוע"
         advanced_settings_title: "הגדרות מתקדמות"
-        advanced_settings: "הגדרות מתקדמות"
         confirm_delete: "למחוק את האירוע הזה?"
         confirm_close: "לסגור את האירוע הזה?"
         confirm_open: "לפתוח את האירוע הזה?"
@@ -514,11 +513,7 @@ he:
         allow_chat:
           label: "שילוב צ׳אט"
           checkbox_label: "יצירה וניהול של ערוץ צ׳אט ייעודי לאירוע"
-        url:
-          label: "כתובת"
-          placeholder: "רשות"
         location:
-          label: "מיקום"
           placeholder: "הוספת מיקום, קישור או משהו."
         description:
           label: "תיאור"

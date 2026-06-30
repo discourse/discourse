@@ -655,7 +655,7 @@ class TopicsController < ApplicationController
     params.require(:duration_minutes) if based_on_last_post
 
     topic = Topic.find_by(id: params[:topic_id])
-    guardian.ensure_can_moderate!(topic)
+    guardian.ensure_can_set_topic_timer!(topic)
 
     guardian.ensure_can_delete!(topic) if TopicTimer.destructive_types.values.include?(status_type)
 
@@ -717,7 +717,8 @@ class TopicsController < ApplicationController
   end
 
   def remove_bookmarks
-    topic = Topic.find(params[:topic_id].to_i)
+    topic = find_visible_topic_from_topic_id
+
     BookmarkManager.new(current_user).destroy_for_topic(topic)
     render body: nil
   end
@@ -769,7 +770,7 @@ class TopicsController < ApplicationController
   end
 
   def bookmark
-    topic = Topic.find(params[:topic_id].to_i)
+    topic = find_visible_topic_from_topic_id
 
     bookmark_manager = BookmarkManager.new(current_user)
     bookmark_manager.create_for(bookmarkable_id: topic.id, bookmarkable_type: "Topic")
@@ -1177,6 +1178,9 @@ class TopicsController < ApplicationController
       changed_topic_ids = operator.perform!
       result = { topic_ids: changed_topic_ids }
       result[:errors] = operator.errors if operator.errors.present?
+      if operator.tag_category_errors.present?
+        result[:tag_category_errors] = operator.tag_category_errors
+      end
       render_json_dump result
     rescue Discourse::InvalidParameters => ex
       render_json_error(ex, status: 400)
@@ -1405,6 +1409,13 @@ class TopicsController < ApplicationController
 
   def topic_params
     params.permit(:topic_id, :topic_time, timings: {})
+  end
+
+  def find_visible_topic_from_topic_id
+    topic = Topic.find_by(id: params[:topic_id].to_i)
+    raise Discourse::NotFound unless guardian.can_see?(topic)
+
+    topic
   end
 
   def fetch_topic_view(options)

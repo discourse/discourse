@@ -84,6 +84,17 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "post.topic_id" => "integer",
       "post.post_url" => "string",
     )
+    expect(nodes_by_type.dig("action:user", :output_schema)).to include(
+      "user.id" => "integer",
+      "user.username" => "string",
+      "user.bio_raw" => "string|null",
+      "user.title" => "string|null",
+      "user.manual_locked_trust_level" => "integer|null",
+      "user.trust_level_locked" => "boolean",
+      "user.user_fields" => "object",
+      "user.groups" => "array<object>",
+      "user.groups[].name" => "string",
+    )
     expect(nodes_by_type.dig("action:send_personal_message", :output_schema)).to include(
       "topic.id" => "integer",
       "topic.slug" => "string",
@@ -97,7 +108,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     result =
       invoke_tool(
         query:
-          "trigger topic_closed action topic get condition filter chat message dm group membership",
+          "trigger topic_closed action topic get condition filter chat message dm group membership user profile trust title",
         include_examples: true,
       )
     node_types = result[:nodes].map { |node| node[:type] }
@@ -107,6 +118,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "action:topic",
       "condition:filter",
       "action:group",
+      "action:user",
       "action:send_chat_message",
       "action:send_personal_message",
     )
@@ -126,6 +138,7 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
     result = invoke_tool(include_examples: true)
     filter_node = result[:nodes].find { |node| node[:type] == "condition:filter" }
     group_node = result[:nodes].find { |node| node[:type] == "action:group" }
+    user_node = result[:nodes].find { |node| node[:type] == "action:user" }
     topic_node = result[:nodes].find { |node| node[:type] == "action:topic" }
     post_node = result[:nodes].find { |node| node[:type] == "action:post" }
     personal_message_node =
@@ -161,6 +174,16 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
             operation: "check_membership",
             username: "={{ $json.user.username }}",
             group_id: 123,
+          ),
+      ),
+    )
+    expect(user_node[:examples]).to contain_exactly(
+      include(parameters: include(operation: "get", username: "={{ $json.user.username }}")),
+      include(
+        parameters:
+          include(
+            operation: "edit",
+            updates: include(title: "Member", trust_level: "2", trust_level_locked: true),
           ),
       ),
     )

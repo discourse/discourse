@@ -170,11 +170,6 @@ ko:
             last: "마지막"
         attendance:
           none: "없음"
-        url:
-          label: "URL"
-          placeholder: "선택 사항"
-        location:
-          label: "위치"
         description:
           label: "내용"
         name:

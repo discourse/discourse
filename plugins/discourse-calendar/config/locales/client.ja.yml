@@ -451,7 +451,6 @@ ja:
         create_event_title: "イベントを作成"
         update_event_title: "イベントを編集"
         advanced_settings_title: "高度な設定"
-        advanced_settings: "高度な設定"
         confirm_delete: "このイベントを削除してもよろしいですか？"
         confirm_close: "このイベントを終了してもよろしいですか？"
         confirm_open: "このイベント開いてもよろしいですか？"
@@ -492,11 +491,7 @@ ja:
         allow_chat:
           label: "チャットの統合"
           checkbox_label: "イベント専用のチャットチャンネルを作成して管理する"
-        url:
-          label: "URL"
-          placeholder: "オプション"
         location:
-          label: "場所"
           placeholder: "場所、リンクなどを追加します。"
         description:
           label: "説明"

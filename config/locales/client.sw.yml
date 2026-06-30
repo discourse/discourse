@@ -17,6 +17,10 @@ sw:
       ghost:
         hidden: "imefichwa"
         failed: "kushindwa"
+    access_control:
+      manage:
+        access_permission_editor: "Mhariri"
+        access_permission_remove: "Ondoa"
     number:
       format:
         separator: "."
@@ -190,6 +194,9 @@ sw:
     age: "Umri"
     joined: "Alijiunga"
     admin_title: "Kiongozi"
+    advanced_mode_toggle:
+      advanced_mode: "Hali-tumizi ya juu"
+      simple_mode: "Hali-tumizi rahisi"
     show_more: "onyesha zaidi"
     show_help: "Machaguo"
     links: "Viungo"
@@ -1161,6 +1168,8 @@ sw:
       email_label: "Barua Pepe"
       continue_button: "Endelea"
       verify_button: "Endelea"
+      account_ready_continue: "Endelea"
+      username_label: "Jina la mtumiaji"
     login:
       title: "Ingia"
       username: "Mtumiaji"
@@ -2460,6 +2469,9 @@ sw:
           form:
             mobile: "Kifaa cha kiganjani"
             email: "Barua pepe"
+            og_image_preview:
+              generate: "Tengeneza"
+              topic_id_label: "Utambulisho wa Mada"
         fonts:
           backfill_modal:
             modal_yes: "Ndio"
@@ -2548,7 +2560,7 @@ sw:
         no_check_performed: "Utafutaji wa toleo la sasa haujafanywa. Hakikisha sidekiq inafanya kazi."
         stale_data: "Utafutaji wa toleo la sasa haujafanyika hivi karibuni. Hakikisha sidekiq inafanya kazi."
         installed_version: "Imesanikishwa"
-        latest_version: "Hivi Karibuni"
+        github: "GitHub"
         dismiss_notice: "Puuzia"
         new_features:
           learn_more: "Jifunze zaidi..."

@@ -22,6 +22,10 @@ hr:
         in_location: "u"
         hidden: "skriveno"
         failed: "neuspješno"
+    access_control:
+      manage:
+        access_permission_editor: "Urednik"
+        access_permission_remove: "Ukloni"
     number:
       format:
         separator: "."
@@ -415,6 +419,9 @@ hr:
     age: "Dob"
     joined: "Prijavljen"
     admin_title: "Administrator"
+    advanced_mode_toggle:
+      advanced_mode: "Napredni način rada"
+      simple_mode: "Jednostavni način rada"
     show_more: "Prikaži više"
     show_help: "Mogućnosti"
     links: "Linkovi"
@@ -2585,6 +2592,8 @@ hr:
       email_label: "Email"
       continue_button: "Nastavi"
       verify_button: "Nastavi"
+      account_ready_continue: "Nastavi"
+      username_label: "Korisničko ime"
     login:
       header_title: "Dobro došli natrag"
       title: "Prijava"
@@ -3589,43 +3598,6 @@ hr:
       read_more: "Želite čitati više? <a href='%{categoryLink}'>Pregledajte sve kategorije</a> ili <a href='%{latestLink}'>pogledajte najnovije teme</a>."
       unread_indicator: "Još nijedan član nije pročitao zadnji post ove teme."
       participant_groups: "Grupe sudionika"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Postoji <a href="{basePath}/unread"># nepročitano</a>}
-                 few {Ima ih <a href="{basePath}/unread"># nepročitanih</a>}
-              other {Ima ih <a href="{basePath}/unread"># nepročitanih</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { i <a href="{basePath}/new"># nova</a> preostala tema,}
-                 few { i <a href="{basePath}/new"># nove</a> preostale teme,}
-              other { i <a href="{basePath}/new"># nove</a> preostale teme,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Preostalo je <a href="{basePath}/unread"># nepročitanih</a> tema,}
-                 few {Preostalo je <a href="{basePath}/unread"># nepročitanih</a> tema,}
-              other {Preostalo je <a href="{basePath}/unread"># nepročitanih</a> tema,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Preostalo je <a href="{basePath}/new"># novih</a> tema,}
-                 few {Preostalo je <a href="{basePath}/new"># novih</a> tema,}
-              other {Preostalo je <a href="{basePath}/new"># novih</a> tema,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { ili pregledajte druge teme u {categoryLink}}
-          false { ili <a href="{basePath}/latest">pogledajte najnovije teme</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} odgovor, idite na prvu objavu"
         few: "%{count} odgovora, idite na prvu objavu"
@@ -5601,6 +5573,9 @@ hr:
             opengraph_image:
               title: "OpenGraph slika"
               description: "Zadana opengraph slika, koristi se kada stranica nema drugu prikladnu sliku. Ako je ostavljeno prazno, koristit će se large_icon."
+            og_image_preview:
+              generate: "Generiraj"
+              topic_id_label: "ID teme"
             x_summary_large_image:
               title: "X sažetak velike slike"
               description: "X kartica 'sažetak velike slike'. Ako se ostavi prazno, generiraju se uobičajeni metapodaci kartice pomoću OpenGraph_image, sve dok to nije ujedno i .svg."
@@ -5804,7 +5779,7 @@ hr:
         no_check_performed: "Nije učinjena provjera za nadogradnje. Provjerite radi li pomoćnik."
         stale_data: "Nije dugo učinjena provjera za nadogradnje. Provjerite radi li pomoćnik."
         installed_version: "Instalirano"
-        latest_version: "Posljednje"
+        github: "GitHub"
         problems_found: "Nekoliko savjeta na temelju vaših trenutnih postavki web mjesta"
         dismiss_notice: "Zanemari"
         new_features:

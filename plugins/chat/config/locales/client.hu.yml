@@ -264,8 +264,6 @@ hu:
         title: "Asztali csevegőértesítés hangja"
       sounds:
         none: "Egyik sem"
-        bell: "Harang"
-        ding: "Csengettyű"
       title: "csevegés"
       title_capitalized: "Csevegés"
       upload: "Fájl csatolása"

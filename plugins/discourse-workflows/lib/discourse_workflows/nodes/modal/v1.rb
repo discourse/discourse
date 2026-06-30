@@ -118,7 +118,7 @@ module DiscourseWorkflows
           username = exec_ctx.get_node_parameter("target_user", 0).presence
 
           if username
-            user = User.find_by(username: username)
+            user = ::User.find_by(username: username)
             if user.nil?
               raise_node_error!(
                 I18n.t("discourse_workflows.errors.modal.user_not_found", username: username),

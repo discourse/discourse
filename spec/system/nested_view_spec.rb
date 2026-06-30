@@ -300,6 +300,8 @@ RSpec.describe "Nested view" do
   end
 
   describe "mobile focused branch navigation" do
+    before { SiteSetting.nested_replies_max_depth = 10 }
+
     fab!(:root_reply) do
       Fabricate(:post, topic: topic, user: Fabricate(:user), raw: "Post with children")
     end

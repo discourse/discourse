@@ -48,6 +48,16 @@ en:
         no_visible_children_hint: "This container block is not rendered because none of its children are visible."
         condition_failed_hint: "This block is not rendered because its conditions failed."
         head_hidden_tail_hint: "This block is not rendered because another block was rendered first in the `head` container."
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_editor_description: "Can create and edit content for this entity"
+        access_permission_viewer: "Viewer"
+        access_permission_viewer_description: "Can view content for this entity"
+        access_permission_remove: "Remove"
+        access_permission_remove_description: "Remove permission for this group"
+        add_group: "Add group"
+        mandatory_acl_tooltip: "This permission is mandatory for this entity and cannot be removed"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -497,6 +507,9 @@ en:
     age: "Age"
     joined: "Joined"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Advanced mode"
+      simple_mode: "Simple mode"
     show_more: "show more"
     show_help: "Options"
     links: "Links"
@@ -2929,6 +2942,18 @@ en:
       use_different_email: "Use a different email address"
       use_password_instead: "Log in with your password instead"
       email_me_code: "Email me a one-time login code"
+      signup_title: "Join this community"
+      signup_instructions: "Enter your email address to join this community. We'll send you a code to confirm it and you'll be on your way!"
+      user_fields_title: "Almost done"
+      user_fields_instructions: "Just a few more details to finish creating your account."
+      account_ready_title: "Your account is ready! 🎉"
+      account_ready_edit: "Pick your username and avatar"
+      account_ready_continue: "Continue"
+      username_label: "Username"
+      username_placeholder: "Choose a username"
+      change_avatar: "Change avatar"
+      username_taken: "That username is taken. Try another."
+      username_unavailable: "That username isn't available. Try %{suggestion}."
 
     login:
       header_title: "Welcome back"
@@ -4059,6 +4084,9 @@ en:
         error_topic_count:
           one: "%{count} topic"
           other: "%{count} topics"
+        tag_not_allowed_in_category:
+          one: "%{tags} isn't allowed in the %{category} category."
+          other: "These tags aren't allowed in the %{category} category: %{tags}."
 
       none:
         unread: "You have no unread topics."
@@ -4269,25 +4297,25 @@ en:
           true {
             { UNREAD, plural,
                  =0 {}
-                one {There is <a href="{basePath}/unread"># unread</a>}
-              other {There are <a href="{basePath}/unread"># unread</a>}
+                one {There is <a href="{unreadUrl}"># unread</a>}
+              other {There are <a href="{unreadUrl}"># unread</a>}
             }
             { NEW, plural,
                  =0 {}
-                one { and <a href="{basePath}/new"># new</a> topic remaining,}
-              other { and <a href="{basePath}/new"># new</a> topics remaining,}
+                one { and <a href="{newUrl}"># new</a> topic remaining,}
+              other { and <a href="{newUrl}"># new</a> topics remaining,}
             }
           }
           false {
             { UNREAD, plural,
                  =0 {}
-                one {There is <a href="{basePath}/unread"># unread</a> topic remaining,}
-              other {There are <a href="{basePath}/unread"># unread</a> topics remaining,}
+                one {There is <a href="{unreadUrl}"># unread</a> topic remaining,}
+              other {There are <a href="{unreadUrl}"># unread</a> topics remaining,}
             }
             { NEW, plural,
                  =0 {}
-                one {There is <a href="{basePath}/new"># new</a> topic remaining,}
-              other {There are <a href="{basePath}/new"># new</a> topics remaining,}
+                one {There is <a href="{newUrl}"># new</a> topic remaining,}
+              other {There are <a href="{newUrl}"># new</a> topics remaining,}
             }
           }
           other {}
@@ -5833,7 +5861,6 @@ en:
       category_restrictions:
         one: "It can only be used in the %{categories} category."
         other: "It can only be used in these categories: %{categories}."
-      restricted_to: "Restricted to"
       no_synonyms: "This tag has no synonyms."
       edit_synonyms: "Edit Synonyms"
       add_synonyms_label: "Add synonyms:"
@@ -6672,9 +6699,25 @@ en:
               title: "Digest logo"
               description: "The alternate logo image used at the top of your site's email summary. If left blank, the image from the `logo` setting will be used."
               help_text: "Use a wide rectangle image. Don't use an SVG image."
+            og_image_source:
+              title: "OpenGraph image source"
+              description: "Choose how OpenGraph preview images are provided for topics that don't have their own image."
+              uploaded: "Use an uploaded image"
+              generated: "Generate an image per topic"
             opengraph_image:
               title: "OpenGraph image"
               description: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used."
+            generate_topic_og_image:
+              title: "Generate topic OG images"
+              description: "Automatically generate OpenGraph preview images for topics that don't have an image. Uses topic title, category, and site colors."
+            og_image_preview:
+              title: "Generated OG image preview"
+              description: "Preview of automatically generated OpenGraph images for topics without images. Enter a topic ID to test."
+              generate: "Generate"
+              topic_id_label: "Topic ID"
+              topic_id_placeholder: "e.g. 123"
+              placeholder: "Enter a topic ID and click Generate to preview."
+              error: "Could not generate preview. Check the topic ID and try again."
             x_summary_large_image:
               title: "X summary large image"
               description: "X card 'summary large image'. If left blank, regular card metadata is generated using the OpenGraph_image, as long as that is not also a .svg."
@@ -7004,6 +7047,9 @@ en:
         discourse_last_updated: "Discourse updated:"
         version: "Version"
         up_to_date: "You're up to date!"
+        up_to_date_newer_commits:
+          one: "You're on the most recent release, but %{count} new change is available."
+          other: "You're on the most recent release, but %{count} new changes are available."
         critical_available: "A critical update is available."
         updates_available: "Updates are available."
         please_update: "Please update!"
@@ -7011,7 +7057,13 @@ en:
         stale_data: "A check for updates has not been performed lately. Ensure Sidekiq is running."
         version_check_pending: "Looks like you updated recently. Fantastic!"
         installed_version: "Installed"
-        latest_version: "Latest"
+        latest_version: "Available"
+        github: "GitHub"
+        commit_on_github: "View commit %{sha} on GitHub"
+        changelog: "Changelog"
+        commits_ahead:
+          one: "Running %{count} additional change since the start of this release series"
+          other: "Running %{count} additional changes since the start of this release series"
         problems_found: "Some advice based on your current site settings"
         dismiss_notice: "Ignore"
         site_advice:
@@ -7267,6 +7319,9 @@ en:
             logged_in_share:
               label: "Logged-in share"
               tooltip: "The share of pageviews from logged-in members."
+            direct_traffic:
+              label: "Direct traffic"
+              tooltip: "The share of pageviews that came directly to your community, such as by typing your URL or using a browser bookmark."
           top_countries:
             title: "Top countries"
             empty: "No country data for this period."
@@ -7828,6 +7883,9 @@ en:
             initial_members: "Expanded members"
             initial_members_description: "Number of group members to display before adding a View more button."
             show_description: "Include description"
+          locale_selector:
+            title: "Language"
+            description: "Only translatable About page fields are shown."
           optional: "(optional)"
           update: "Update"
           toasts:
@@ -8745,6 +8803,7 @@ en:
             discourse_id_regenerate_credentials: "regenerate Discourse ID credentials"
             configure_category_type: "configure category type"
             unconfigure_category_type: "unconfigure category type"
+            change_access_control_list_permissions: "change access control list permissions"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -8954,13 +9013,33 @@ en:
         show_emails: "Show emails"
         hide_emails: "Hide emails"
         silence_reason: "Silence reason"
+        suspend_reason: "Suspend reason"
         bulk_actions:
           title: "Bulk actions"
-          admin_cant_be_deleted: "This user can't be deleted because they're an admin"
-          too_many_or_old_posts: "This user can't be deleted they have too many posts or a very old post"
+          select_all: "Select all"
+          clear_all: "Clear all"
+          staff_cant_be_actioned: "This user can't be deleted or suspended because they're a staff member"
+          no_users_can_be_deleted: "None of the selected users can be deleted."
+          no_users_can_be_suspended: "None of the selected users can be suspended."
           too_many_selected_users:
-            one: "You've reached the %{count} user limit for bulk deletion"
-            other: "You've reached the %{count} users limit for bulk deletion"
+            one: "You've reached the %{count} user limit for bulk actions"
+            other: "You've reached the %{count} users limit for bulk actions"
+          suspend:
+            label: "Suspend users…"
+            confirmation_modal:
+              prompt_text:
+                one: "You're about to suspend %{count} user. Set a duration and reason below:"
+                other: "You're about to suspend %{count} users. Set a duration and reason below:"
+              close: "Close"
+              confirm: "Suspend"
+              title:
+                one: "Suspend %{count} user"
+                other: "Suspend %{count} users"
+              bulk_suspend_starting: "Starting bulk suspend…"
+              user_suspend_succeeded: "[%{position}/%{total}] Successfully suspended @%{username}"
+              user_suspend_failed: "[%{position}/%{total}] Failed to suspend @%{username} - %{error}"
+              bulk_suspend_finished: "Bulk suspend operation completed."
+              failed_to_suspend_users: "The following users failed to be suspended:"
           delete:
             label: "Delete users…"
             confirmation_modal:
@@ -8988,6 +9067,11 @@ en:
           suspended: "Suspended"
           silenced: "Silenced"
           staged: "Staged"
+        activation_filter:
+          label: "Activation status"
+          all: "All users"
+          activated: "Activated"
+          not_activated: "Not activated"
         approved: "Approved?"
         titles:
           active: "Active users"

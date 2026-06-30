@@ -113,6 +113,11 @@ lv:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Ikviens"
+      admins: "Administratori"
+      moderators: "Moderātori"
+      staff: "Personāls"
   education:
     until_posts:
       zero: "%{count} raksti"

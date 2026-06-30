@@ -22,8 +22,6 @@ ar:
       create:
         form:
           insert: إدراج
-          advanced_mode: الوضع المتقدّم
-          simple_mode: الوضع البسيط
           format_description: "التنسيق المستخدم لعرض التاريخ للمستخدم. استخدم Z لعرض الإزاحة وzz لاسم المنطقة الزمنية."
           timezones_title: المناطق الزمنية لعرضها
           timezones_description: سيتم استخدام المناطق الزمنية لعرض التواريخ في المعاينة والنسخة الاحتياطية.

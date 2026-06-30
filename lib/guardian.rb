@@ -104,6 +104,10 @@ class Guardian
     def in_any_groups?(group_ids)
       group_ids.include?(Group::AUTO_GROUPS[:anonymous_users])
     end
+
+    def permission_acl
+      @permission_acl ||= AccessControlList.matching_user(nil).user_acl
+    end
   end
 
   attr_reader :request
@@ -171,6 +175,26 @@ class Guardian
 
   def is_anonymous?
     @user.anonymous?
+  end
+
+  def has_acl_permission?(target, permission)
+    @user.permission_acl.has_target_permission?(target, permission)
+  end
+
+  def has_any_acl_permission?(target, permissions)
+    @user.permission_acl.has_any_target_permission?(target, permissions)
+  end
+
+  def target_ids_with_acl_permission(target_klass, permission)
+    @user.permission_acl.target_ids_with_permission(target_klass, permission)
+  end
+
+  def target_ids_with_any_acl_permissions(target_klass, permissions)
+    @user.permission_acl.target_ids_with_any_permissions(target_klass, permissions)
+  end
+
+  def in_any_groups?(group_ids)
+    @user.in_any_groups?(group_ids)
   end
 
   # Can the user see the object?
@@ -445,7 +469,7 @@ class Guardian
   ##
   # This should be used as a final check for when a user is sending a message
   # to a target user or group.
-  def can_send_private_message?(target, notify_moderators: false)
+  def can_send_private_message?(target, notify_moderators: false, private_message_context: nil)
     target_is_user = target.is_a?(User)
     target_is_group = target.is_a?(Group)
     from_system = @user.is_system_user?
@@ -465,8 +489,22 @@ class Guardian
     # even if they are not in personal_message_enabled_groups
     group_is_messageable = target_is_group && Group.messageable(@user).where(id: target.id).exists?
 
+    plugin_can_send_private_message_to_target =
+      authenticated? &&
+        DiscoursePluginRegistry.apply_modifier(
+          :guardian_can_send_private_message_to_target,
+          false,
+          guardian: self,
+          target: target,
+          private_message_context: private_message_context,
+          notify_moderators: notify_moderators,
+        )
+
     # User is authenticated and can send PMs, this can be covered by trust levels as well via AUTO_GROUPS
-    (can_send_private_messages?(notify_moderators: notify_moderators) || group_is_messageable) &&
+    (
+      can_send_private_messages?(notify_moderators: notify_moderators) || group_is_messageable ||
+        plugin_can_send_private_message_to_target
+    ) &&
       # User disabled private message
       (is_staff? || target_is_group || target.user_option.allow_private_messages) &&
       # Can't send PMs to suspended users

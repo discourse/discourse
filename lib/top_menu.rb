@@ -12,4 +12,8 @@ module TopMenu
     end
     base
   end
+
+  def self.crawler_homepage_choices
+    choices & (Discourse.anonymous_filters.map(&:to_s) + %w[new categories])
+  end
 end

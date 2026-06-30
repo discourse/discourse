@@ -6,6 +6,7 @@ module DiscoursePostEvent
     MIN_NAME_LENGTH = 5
     MAX_NAME_LENGTH = 255
     MAX_DESCRIPTION_LENGTH = 1000
+    DEFAULT_TIMEZONE = "UTC"
 
     self.table_name = "discourse_post_event_events"
     self.ignored_columns = %w[starts_at ends_at]
@@ -21,9 +22,12 @@ module DiscoursePostEvent
     scope :visible, -> { where(deleted_at: nil) }
     scope :open, -> { where(closed: false) }
 
+    before_validation :reset_invalid_livestream
     before_save :chat_channel_sync
     # prepend so it runs before `dependent: :delete_all` wipes the invitees
     before_destroy :reset_invitees_topic_tracking, prepend: true
+    after_commit :create_livestream_chat_channel, on: %i[create update]
+    after_commit :warm_livestream_onebox, on: %i[create update]
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]
     after_save do
@@ -48,6 +52,32 @@ module DiscoursePostEvent
 
     def self.attributes_protected_by_default
       super - %w[id]
+    end
+
+    def reset_invalid_livestream
+      return unless livestream?
+
+      self.livestream = false unless livestream_location? && post&.is_first_post?
+    end
+
+    def livestream_location?
+      location.to_s.match?(%r{\Ahttps?://}i)
+    end
+
+    def create_livestream_chat_channel
+      return unless livestream? && SiteSetting.chat_enabled
+      return unless post&.is_first_post?
+      return if post.topic.blank?
+
+      DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
+    end
+
+    def warm_livestream_onebox
+      return if !livestream? || location.blank?
+      return if !saved_change_to_livestream? && !saved_change_to_location?
+      return if Oneboxer.cached_onebox(location).present?
+
+      Jobs.enqueue(:warm_livestream_onebox, event_id: id, url: location)
     end
 
     def destroy_topic_custom_field
@@ -312,6 +342,27 @@ module DiscoursePostEvent
       pruned_user_ids = pruned.pluck(:user_id)
       pruned.delete_all
       Invitee.reset_topic_tracking!(user_ids: pruned_user_ids, topic_id: post.topic_id)
+      unfollow_livestream_chat(pruned_user_ids)
+    end
+
+    # Unfollow users from the livestream chat channel once they are no longer
+    # attending (e.g. pruned when a private event's invited groups change). Chat
+    # following tracks attendance, so removed attendees should not keep the
+    # channel in their chat list.
+    def unfollow_livestream_chat(user_ids)
+      return if user_ids.blank?
+
+      channel = post.topic.topic_chat_channel&.chat_channel
+      return if channel.nil?
+
+      manager = Chat::ChannelMembershipManager.new(channel)
+      User
+        .where(id: user_ids)
+        .find_each do |user|
+          membership = manager.unfollow(user)
+          next if membership.nil?
+          DiscourseCalendar::Livestream.publish_livestream_chat_status(membership, user:)
+        end
     end
 
     def can_user_update_attendance?(user)
@@ -320,25 +371,6 @@ module DiscoursePostEvent
 
       private? &&
         (invitees.exists?(user_id: user.id) || (user.groups.pluck(:name) & raw_invitees).any?)
-    end
-
-    def self.resolve_image_upload(image_param, post)
-      return if image_param.blank?
-
-      upload =
-        if image_param.start_with?("upload://")
-          sha1 = Upload.sha1_from_short_url(image_param)
-          Upload.find_by(sha1: sha1) if sha1
-        else
-          Upload.get_from_url(image_param)
-        end
-
-      return if upload.nil?
-
-      if !upload.secure? || upload.user_id == post.user_id ||
-           UserUpload.exists?(upload_id: upload.id, user_id: post.user_id)
-        upload
-      end
     end
 
     def sync_image_to_post_and_topic(generate_thumbnails: false)
@@ -367,71 +399,6 @@ module DiscoursePostEvent
       elsif !post.event && had_event_before
         payload = WebHook.build_calendar_event_payload(event_before)
         WebHook.enqueue_calendar_event_hooks(:calendar_event_destroyed, event_before, payload)
-      end
-    end
-
-    def self.update_from_raw(post)
-      events = DiscoursePostEvent::EventParser.extract_events(post)
-
-      if events.present?
-        event_params = events.first
-        event = post.event || DiscoursePostEvent::Event.new(id: post.id)
-
-        tz = ActiveSupport::TimeZone[event_params[:timezone] || "UTC"]
-        parsed_starts_at = tz.parse(event_params[:start])
-        parsed_ends_at = event_params[:end] ? tz.parse(event_params[:end]) : nil
-        parsed_recurrence_until =
-          event_params[:"recurrence-until"] ? tz.parse(event_params[:"recurrence-until"]) : nil
-
-        parsed_all_day = event_params[:"all-day"] == "true"
-        if parsed_all_day
-          parsed_starts_at = Time.utc(*event_params[:start].split("-").map(&:to_i))
-          parsed_ends_at =
-            (
-              if event_params[:end]
-                Time.utc(*event_params[:end].split("-").map(&:to_i)).end_of_day
-              else
-                nil
-              end
-            )
-        end
-
-        params = {
-          name: event_params[:name],
-          original_starts_at: parsed_starts_at,
-          original_ends_at: parsed_ends_at,
-          url: event_params[:url],
-          description: event_params[:description],
-          location: event_params[:location],
-          recurrence: event_params[:recurrence],
-          recurrence_until: parsed_recurrence_until,
-          timezone: event_params[:timezone],
-          show_local_time: event_params[:"show-local-time"] == "true",
-          status: Event.statuses[event_params[:status]&.to_sym] || event.status,
-          reminders: event_params[:reminders],
-          raw_invitees: event_params[:"allowed-groups"]&.split(","),
-          minimal: event_params[:minimal],
-          closed: event_params[:closed] || false,
-          chat_enabled: event_params[:"chat-enabled"]&.downcase == "true",
-          max_attendees: event_params[:"max-attendees"]&.to_i,
-          all_day: parsed_all_day,
-          image_upload_id: resolve_image_upload(event_params[:image], post)&.id,
-        }
-
-        params[:custom_fields] = {}
-        SiteSetting
-          .discourse_post_event_allowed_custom_fields
-          .split("|")
-          .each do |setting|
-            if event_params[setting.to_sym].present?
-              params[:custom_fields][setting] = event_params[setting.to_sym]
-            end
-          end
-
-        event.update_with_params!(params)
-        event.set_topic_bump
-      elsif post.event
-        post.event.destroy!
       end
     end
 
@@ -512,9 +479,14 @@ module DiscoursePostEvent
       next_starts_at = calculate_next_recurring_date
       return nil unless next_starts_at
 
-      event_duration =
-        original_ends_at ? original_ends_at - original_starts_at : (all_day ? 86_400 : 3600)
-      next_ends_at = next_starts_at + event_duration
+      next_ends_at =
+        if original_ends_at
+          next_starts_at + (original_ends_at - original_starts_at)
+        elsif all_day
+          next_starts_at.end_of_day
+        else
+          next_starts_at + 3600
+        end
       [next_starts_at, next_ends_at]
     end
 
@@ -527,9 +499,14 @@ module DiscoursePostEvent
       next_starts_at = calculate_next_recurring_date_from(from_time)
       return nil unless next_starts_at
 
-      event_duration =
-        original_ends_at ? original_ends_at - original_starts_at : (all_day ? 86_400 : 3600)
-      next_ends_at = next_starts_at + event_duration
+      next_ends_at =
+        if original_ends_at
+          next_starts_at + (original_ends_at - original_starts_at)
+        elsif all_day
+          next_starts_at.end_of_day
+        else
+          next_starts_at + 3600
+        end
       { starts_at: next_starts_at, ends_at: next_ends_at }
     end
 
@@ -545,7 +522,7 @@ module DiscoursePostEvent
     end
 
     def rrule_timezone
-      timezone || "UTC"
+      timezone || DEFAULT_TIMEZONE
     end
 
     private
@@ -645,6 +622,7 @@ end
 #  custom_fields      :jsonb            not null
 #  deleted_at         :datetime
 #  description        :string(1000)
+#  livestream         :boolean          default(FALSE), not null
 #  location           :string(1000)
 #  max_attendees      :integer
 #  minimal            :boolean

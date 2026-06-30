@@ -261,6 +261,13 @@ be:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "усе"
+      admins: "Адміністратары"
+      moderators: "Мадэратары"
+      staff: "Персанал"
+      anonymous_users: "ананімныя карыстальнікі"
+      logged_in_users: "Запісаны карыстальнікаў"
     request_membership_pm:
       title: "Заяўка на ўступ у @%{group_name}"
   education:

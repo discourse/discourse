@@ -110,9 +110,44 @@ export default class TopicAdminMenu extends Component {
   get showAdminButton() {
     return (
       this.currentUser?.canManageTopic ||
+      this.currentUser?.canSetTopicTimer ||
       this.details?.can_archive_topic ||
       this.details?.can_close_topic ||
       this.details?.can_split_merge_topic
+    );
+  }
+
+  get showTopicTimerItem() {
+    return this.currentUser?.canSetTopicTimer;
+  }
+
+  get showTopicManagementSection() {
+    return this.currentUser?.canManageTopic || this.showTopicTimerItem;
+  }
+
+  get showTopicManagementSectionDivider() {
+    const showsMultiSelect =
+      this.currentUser?.canManageTopic || this.details?.can_split_merge_topic;
+    const showsDeleteOrRecover =
+      (this.currentUser?.canManageTopic ||
+        this.details?.can_moderate_category) &&
+      (this.canDelete || this.canRecover);
+    const showsPin =
+      this.details?.can_pin_unpin_topic &&
+      !this.isPrivateMessage &&
+      (this.visible || this.featured || this.details?.can_banner_topic);
+    const showsArchive =
+      this.details?.can_archive_topic && !this.isPrivateMessage;
+
+    return (
+      this.showTopicManagementSection &&
+      (showsMultiSelect ||
+        showsDeleteOrRecover ||
+        this.details?.can_close_topic ||
+        showsPin ||
+        showsArchive ||
+        this.details?.can_toggle_topic_visibility ||
+        this.details?.can_convert_topic)
     );
   }
 
@@ -144,7 +179,6 @@ export default class TopicAdminMenu extends Component {
         data: { enabled: newValue },
       });
       topic.set("is_nested_view", newValue);
-      topic.set("_forcedFlat", !newValue);
 
       if (newValue) {
         DiscourseURL.routeTo(`/t/${slug}/${topicId}`);
@@ -302,42 +336,48 @@ export default class TopicAdminMenu extends Component {
               </dropdown.item>
             {{/if}}
 
-            <dropdown.divider />
+            {{#if this.showTopicManagementSection}}
+              {{#if this.showTopicManagementSectionDivider}}
+                <dropdown.divider />
+              {{/if}}
 
-            {{#if this.currentUser.canManageTopic}}
-              <dropdown.item class="admin-topic-timer-update">
-                <DButton
-                  @label="topic.actions.timed_update"
-                  @action={{fn this.onButtonAction "showTopicTimerModal"}}
-                  @icon="far-clock"
-                />
-              </dropdown.item>
-
-              {{#if this.currentUser.staff}}
-                <dropdown.item class="topic-admin-change-timestamp">
+              {{#if this.showTopicTimerItem}}
+                <dropdown.item class="admin-topic-timer-update">
                   <DButton
-                    @label="topic.change_timestamp.title"
-                    @action={{fn this.onButtonAction "showChangeTimestamp"}}
-                    @icon="calendar-days"
+                    @label="topic.actions.timed_update"
+                    @action={{fn this.onButtonAction "showTopicTimerModal"}}
+                    @icon="far-clock"
                   />
                 </dropdown.item>
               {{/if}}
 
-              <dropdown.item class="topic-admin-reset-bump-date">
-                <DButton
-                  @label="topic.actions.reset_bump_date"
-                  @action={{fn this.onButtonAction "resetBumpDate"}}
-                  @icon="anchor"
-                />
-              </dropdown.item>
+              {{#if this.currentUser.canManageTopic}}
+                {{#if this.currentUser.staff}}
+                  <dropdown.item class="topic-admin-change-timestamp">
+                    <DButton
+                      @label="topic.change_timestamp.title"
+                      @action={{fn this.onButtonAction "showChangeTimestamp"}}
+                      @icon="calendar-days"
+                    />
+                  </dropdown.item>
+                {{/if}}
 
-              <dropdown.item class="topic-admin-slow-mode">
-                <DButton
-                  @label="topic.actions.slow_mode"
-                  @action={{fn this.onButtonAction "showTopicSlowModeUpdate"}}
-                  @icon="hourglass-start"
-                />
-              </dropdown.item>
+                <dropdown.item class="topic-admin-reset-bump-date">
+                  <DButton
+                    @label="topic.actions.reset_bump_date"
+                    @action={{fn this.onButtonAction "resetBumpDate"}}
+                    @icon="anchor"
+                  />
+                </dropdown.item>
+
+                <dropdown.item class="topic-admin-slow-mode">
+                  <DButton
+                    @label="topic.actions.slow_mode"
+                    @action={{fn this.onButtonAction "showTopicSlowModeUpdate"}}
+                    @icon="hourglass-start"
+                  />
+                </dropdown.item>
+              {{/if}}
             {{/if}}
 
             {{#if

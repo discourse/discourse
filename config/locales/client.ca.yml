@@ -21,6 +21,10 @@ ca:
         status: "Estat"
         hidden: "amagat"
         failed: "fallits"
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Elimina"
     number:
       format:
         separator: "."
@@ -271,6 +275,9 @@ ca:
     age: "Edat"
     joined: "Registrat"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Mode avançat"
+      simple_mode: "Mode simple"
     show_more: "mostra'n més"
     show_help: "Opcions"
     links: "Enllaços"
@@ -1565,6 +1572,8 @@ ca:
       email_label: "Correu electrònic"
       continue_button: "Continua"
       verify_button: "Continua"
+      account_ready_continue: "Continua"
+      username_label: "Nom d'usuari "
     login:
       title: "Inicia la sessió"
       username: "Usuari"
@@ -3143,6 +3152,9 @@ ca:
           form:
             mobile: "Mòbil"
             email: "Correu electrònic"
+            og_image_preview:
+              generate: "Genera"
+              topic_id_label: "ID de tema"
         fonts:
           backfill_modal:
             modal_yes: "Sí"
@@ -3247,7 +3259,7 @@ ca:
         no_check_performed: "No s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."
         stale_data: "Darrerament no s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."
         installed_version: "Instal·lat"
-        latest_version: "Més recents"
+        github: "GitHub"
         problems_found: "Uns quants consells basats en la configuració actual del lloc web."
         dismiss_notice: "Ignora"
         new_features:

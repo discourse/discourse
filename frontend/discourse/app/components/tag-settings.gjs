@@ -16,6 +16,7 @@ import { eq } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DHorizontalOverflowNav from "discourse/ui-kit/d-horizontal-overflow-nav";
 import DPageHeader from "discourse/ui-kit/d-page-header";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 
 export default class TagSettings extends Component {
@@ -105,13 +106,14 @@ export default class TagSettings extends Component {
     }
 
     if (this.hasCategories) {
-      const categoriesHtml = this.args.tag.categories
-        .map(
-          (cat) =>
-            `<a href="/c/${cat.slug}/${cat.id}" class="badge-category">${cat.name}</a>`
-        )
-        .join(" ");
-      parts.push(`${i18n("tagging.restricted_to")} ${categoriesHtml}.`);
+      parts.push(
+        i18n("tagging.category_restrictions", {
+          count: this.args.tag.categories.length,
+          categories: this.args.tag.categories
+            .map((cat) => categoryBadgeHTML(cat))
+            .join(" "),
+        })
+      );
     } else if (this.isCategoryRestricted) {
       parts.push(i18n("tagging.category_restricted"));
     }

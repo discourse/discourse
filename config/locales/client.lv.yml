@@ -17,6 +17,9 @@ lv:
         status: "Statuss"
         hidden: "paslēpts"
         failed: "neizdevies"
+    access_control:
+      manage:
+        access_permission_remove: "Atcelt"
     number:
       format:
         separator: ","
@@ -227,6 +230,9 @@ lv:
     age: "Vecums"
     joined: "Pievienojās"
     admin_title: "Administrators"
+    advanced_mode_toggle:
+      advanced_mode: "Uzlabots režīms"
+      simple_mode: "Vienkāršs režīms"
     show_more: "parādīt vairāk"
     show_help: "Opcijas"
     links: "Saites"
@@ -1563,6 +1569,8 @@ lv:
       email_label: "E-pasts"
       continue_button: "Turpināt"
       verify_button: "Turpināt"
+      account_ready_continue: "Turpināt"
+      username_label: "Lietotājvārds"
     login:
       header_title: "Laipni lūdzam"
       title: "Ienākt"
@@ -2927,6 +2935,9 @@ lv:
           form:
             mobile: "Mobilais"
             email: "E-pasts"
+            og_image_preview:
+              generate: "Radīt"
+              topic_id_label: "Tēmas ID"
         fonts:
           backfill_modal:
             modal_yes: "Jā"
@@ -3018,7 +3029,7 @@ lv:
         no_check_performed: "Nav veikta atjauninājumu pārbaude. Pārliecinieties, ka sidekiq darbojas."
         stale_data: "Pēdējā laikā nav veikta atjauninājumu pārbaude. Pārliecinieties, ka sidekiq darbojas."
         installed_version: "Uzinstalēts"
-        latest_version: "Pēdējais"
+        github: "GitHub"
         dismiss_notice: "Ignorēt"
         new_features:
           learn_more: "Uzzināt vairāk..."

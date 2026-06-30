@@ -95,6 +95,15 @@ export default class DashboardTraffic extends Component {
     return `${this.args.traffic?.kpis?.logged_in_share?.value ?? 0}%`;
   }
 
+  get showDirectTraffic() {
+    const directTraffic = this.args.traffic?.kpis?.direct_traffic?.value;
+    return directTraffic !== null && directTraffic !== undefined;
+  }
+
+  get directTraffic() {
+    return `${this.args.traffic?.kpis?.direct_traffic?.value ?? 0}%`;
+  }
+
   get chartModel() {
     return {
       start_date: this.args.startDate,
@@ -224,29 +233,55 @@ export default class DashboardTraffic extends Component {
             </p> }}
           </div>
 
-          {{#if this.showLoggedInShare}}
+          {{#if (or this.showLoggedInShare this.showDirectTraffic)}}
             <div class="db-section__metrics">
-              <div class="db-section__metric">
-                <div
-                  class="db-section__metric-number"
-                >{{this.loggedInShare}}</div>
-                <div class="db-section__metric-label">
-                  {{i18n
-                    "admin.dashboard.site_traffic.kpi.logged_in_share.label"
-                  }}
-                  <DTooltip
-                    class="db-section__info"
-                    @identifier="site-traffic-logged-in-share-tooltip"
-                    @icon="far-circle-question"
-                  >
-                    <:content>
-                      {{i18n
-                        "admin.dashboard.site_traffic.kpi.logged_in_share.tooltip"
-                      }}
-                    </:content>
-                  </DTooltip>
+              {{#if this.showLoggedInShare}}
+                <div class="db-section__metric">
+                  <div
+                    class="db-section__metric-number"
+                  >{{this.loggedInShare}}</div>
+                  <div class="db-section__metric-label">
+                    {{i18n
+                      "admin.dashboard.site_traffic.kpi.logged_in_share.label"
+                    }}
+                    <DTooltip
+                      class="db-section__info"
+                      @identifier="site-traffic-logged-in-share-tooltip"
+                      @icon="far-circle-question"
+                    >
+                      <:content>
+                        {{i18n
+                          "admin.dashboard.site_traffic.kpi.logged_in_share.tooltip"
+                        }}
+                      </:content>
+                    </DTooltip>
+                  </div>
                 </div>
-              </div>
+              {{/if}}
+
+              {{#if this.showDirectTraffic}}
+                <div class="db-section__metric">
+                  <div
+                    class="db-section__metric-number"
+                  >{{this.directTraffic}}</div>
+                  <div class="db-section__metric-label">
+                    {{i18n
+                      "admin.dashboard.site_traffic.kpi.direct_traffic.label"
+                    }}
+                    <DTooltip
+                      class="db-section__info"
+                      @identifier="site-traffic-direct-traffic-tooltip"
+                      @icon="far-circle-question"
+                    >
+                      <:content>
+                        {{i18n
+                          "admin.dashboard.site_traffic.kpi.direct_traffic.tooltip"
+                        }}
+                      </:content>
+                    </DTooltip>
+                  </div>
+                </div>
+              {{/if}}
             </div>
           {{/if}}
         </div>

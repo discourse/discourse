@@ -20,6 +20,10 @@ hy:
         status: "Ստատուս"
         hidden: "թաքցված"
         failed: "ձախողված"
+    access_control:
+      manage:
+        access_permission_editor: "Խմբագրիչ"
+        access_permission_remove: "Հեռացնել"
     number:
       format:
         separator: "."
@@ -262,6 +266,9 @@ hy:
     age: "Տարիք"
     joined: "Միացել է "
     admin_title: "Ադմին"
+    advanced_mode_toggle:
+      advanced_mode: "Ընդլայնված ռեժիմ"
+      simple_mode: "Հասարակ ռեժիմ"
     show_more: "ցույց տալ ավելին"
     show_help: "Տարբերակներ"
     links: "Հղումներ"
@@ -2079,6 +2086,8 @@ hy:
       email_label: "Էլ. հասցե"
       continue_button: "Շարունակել"
       verify_button: "Շարունակել"
+      account_ready_continue: "Շարունակել"
+      username_label: "Օգտանուն"
     login:
       header_title: "Բարի վերադարձ"
       title: "Մուտք Գործել"
@@ -3856,6 +3865,9 @@ hy:
           form:
             mobile: "Հեռախոսային"
             email: "Էլ. փոստ"
+            og_image_preview:
+              generate: "Գեներացնել"
+              topic_id_label: "Թեմայի ID"
         fonts:
           backfill_modal:
             modal_yes: "Այո"
@@ -3954,7 +3966,7 @@ hy:
         no_check_performed: "Թարմացումների ստուգում չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
         stale_data: "Թարմացումների ստուգում վերջերս չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
         installed_version: "Տեղադրված է "
-        latest_version: "Վերջինը"
+        github: "GitHub"
         problems_found: "Որոշ խորհուրդներ՝ հիմնված Ձեր կայքի ընթացիկ կարգավորումների վրա"
         dismiss_notice: "Անտեսել"
         new_features:

@@ -49,6 +49,9 @@ en:
     use_local_event_date: "Use local date after topic title instead of relative time."
     discourse_post_event_allowed_on_groups: "Groups that are allowed to create events."
     discourse_post_event_allowed_custom_fields: "Allows to let each event to set the value of custom fields."
+    discourse_post_event_allowed_custom_fields_invalid: "These custom field names are invalid: %{names}. Names must start and end with a letter or number and use single dots, dashes, or underscores as separators (for example: dress_code, live-stream, q.and.a)."
+    discourse_post_event_allowed_custom_fields_collision: "These custom field names resolve to the same name once dots, dashes, and letter case are normalized: %{names}. Each custom field must be unique."
+    discourse_post_event_allowed_custom_fields_reserved: "These custom field names are reserved by built-in event options (for example name, url, status, location): %{names}. Please choose different names."
     discourse_post_event_edit_notifications_time_extension: "Extends (in minutes) the period after the end of an event when `going` invitees are still being notified from edit in the original post."
     holiday_calendar_topic_id: "Topic ID of staffs holiday / absence calendar."
     holiday_status_emoji: Defines the emoji used for the holiday status.
@@ -70,8 +73,6 @@ en:
     sidebar_show_upcoming_events: "Show upcoming events link in the sidebar under 'More'."
     calendar_first_day_of_week: "Set the first day of the week for calendar display. Options are Saturday, Sunday, or Monday."
     enable_events_category_type_setup: "Enables the Events category type option during category creation setup."
-    livestream_enabled: "Enable livestream chat for topics tagged 'livestream'."
-    livestream_chat_allowed_groups: "Only allowlisted groups can chat in the livestream channel."
     livestream_embeddable_chat_allowed_paths: "Allowed paths for the embeddable livestream chat."
     livestream_enable_modal_chat_on_mobile: "Show livestream chat in a modal on mobile."
 

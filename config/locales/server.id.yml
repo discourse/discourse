@@ -438,6 +438,12 @@ id:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Semua orang"
+      moderators: "Moderator"
+      staff: "Staf"
+      anonymous_users: "Pengguna anonim"
+      logged_in_users: "Pengguna yang masuk"
     request_membership_pm:
       title: "Permintaan Keanggotaan untuk @%{group_name}"
     request_accepted_pm:

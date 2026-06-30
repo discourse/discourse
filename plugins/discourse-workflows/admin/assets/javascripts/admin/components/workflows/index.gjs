@@ -112,6 +112,9 @@ export default class WorkflowsIndex extends Component {
       </:toolbar>
       <:head>
         <th class="d-table__header-cell">{{i18n
+            "discourse_workflows.creator"
+          }}</th>
+        <th class="d-table__header-cell">{{i18n
             "discourse_workflows.workflow_name"
           }}</th>
         <th class="d-table__header-cell">{{i18n
@@ -128,6 +131,19 @@ export default class WorkflowsIndex extends Component {
           }}</th>
       </:head>
       <:row as |workflow|>
+        <td class="d-table__cell --detail workflows-index__creator">
+          <div class="d-table__mobile-label">
+            {{i18n "discourse_workflows.creator"}}
+          </div>
+          {{#if workflow.createdBy}}
+            <a
+              href={{workflow.createdBy.path}}
+              class="workflows-index__creator-link"
+            >
+              {{dAvatar workflow.createdBy imageSize="tiny"}}
+            </a>
+          {{/if}}
+        </td>
         <td class="d-table__cell --overview workflows-index__name">
           <LinkTo
             @route="adminPlugins.show.discourse-workflows.show"

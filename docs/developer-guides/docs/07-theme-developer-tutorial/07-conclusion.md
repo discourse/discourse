@@ -8,11 +8,11 @@ This tutorial has been a whistle-stop tour through the process of creating a Dis
 
 ## Existing themes & theme component
 
-One of the best resources when learning about theme development is to read through the code of existing themes. Check out the directories in #theme and #theme-component, or jump straight to our [all-the-themes](http://github.com/discourse/all-the-themes) meta-repository for even more example code!
+One of the best resources when learning about theme development is to read through the code of existing themes. Check out the directories in #customization:theme and #customization:theme-component, or jump straight to our [all-the-themes](http://github.com/discourse/all-the-themes) meta-repository for even more example code!
 
 ## Sharing your themes
 
-Once you have a theme or theme component you're happy with, and it's published on GitHub, it's time to share it! Make a new topic in #theme or #theme-component and we'll review/publish it.
+Once you have a theme or theme component you're happy with, and it's published on GitHub, it's time to share it! Make a new topic in #customization:theme or #customization:theme-component and we'll review/publish it.
 
 ## How to ask for help
 

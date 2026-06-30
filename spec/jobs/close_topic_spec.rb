@@ -50,6 +50,26 @@ RSpec.describe Jobs::CloseTopic do
     end
   end
 
+  describe "when user is allowed to set topic timers" do
+    fab!(:user)
+    fab!(:group)
+    fab!(:topic) { Fabricate(:topic_timer, user: user).topic }
+
+    before do
+      group.add(user)
+      user.reload
+      SiteSetting.topic_timers_allowed_groups = group.id.to_s
+    end
+
+    it "closes the topic" do
+      freeze_time(topic.public_topic_timer.execute_at + 1.minute)
+
+      described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
+
+      expect(topic.reload.closed).to eq(true)
+    end
+  end
+
   describe "when user is no longer authorized to close topics" do
     fab!(:user)
 

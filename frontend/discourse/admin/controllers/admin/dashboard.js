@@ -268,7 +268,7 @@ export default class AdminDashboardController extends Controller {
           };
 
           if (versionChecks) {
-            properties.versionCheck = VersionCheck.create(model.version_check);
+            properties.versionCheck = new VersionCheck(model.version_check);
           }
 
           this.setProperties(properties);

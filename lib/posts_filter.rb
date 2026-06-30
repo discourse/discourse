@@ -203,6 +203,7 @@ class PostsFilter
         alias: "topics:",
         description: I18n.t("posts_filter.description.topic"),
         type: "number",
+        prefixes: [{ name: "-", description: I18n.t("posts_filter.description.exclude_topic") }],
       },
       { name: "after:", description: I18n.t("posts_filter.description.after"), type: "date" },
       { name: "before:", description: I18n.t("posts_filter.description.before"), type: "date" },
@@ -450,8 +451,10 @@ class PostsFilter
     when "category", "tag"
       true
     when "before", "after", "topic_before", "topic_after", "keywords", "topic_keywords",
-         "usernames", "groups", "topics"
+         "usernames", "groups"
       !parsed_filter[:exclude] && parsed_filter[:prefix].exclude?("=")
+    when "topics"
+      parsed_filter[:prefix].exclude?("=")
     when "status"
       !parsed_filter[:exclude] && STATUS_VALUES.include?(value.downcase)
     when "post_type"
@@ -498,7 +501,7 @@ class PostsFilter
       set_order!(order_value(parsed_filter[:value]))
       relation
     when "topics"
-      filter_topics(relation, parsed_filter[:value])
+      filter_topics(relation, parsed_filter)
     when "post_type"
       filter_post_type(relation, parsed_filter[:value])
     else
@@ -643,11 +646,15 @@ class PostsFilter
     )
   end
 
-  def filter_topics(relation, topics_param)
-    topic_ids = split_values(topics_param).map(&:to_i).reject(&:zero?)
-    return relation.where("1 = 0") if topic_ids.empty?
+  def filter_topics(relation, parsed_filter)
+    topic_ids = split_values(parsed_filter[:value]).map(&:to_i).reject(&:zero?)
+    return parsed_filter[:exclude] ? relation : relation.where("1 = 0") if topic_ids.empty?
 
-    relation.where("posts.topic_id IN (?)", topic_ids)
+    if parsed_filter[:exclude]
+      relation.where.not(topic_id: topic_ids)
+    else
+      relation.where("posts.topic_id IN (?)", topic_ids)
+    end
   end
 
   def filter_post_type(relation, post_type)

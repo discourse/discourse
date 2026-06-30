@@ -440,6 +440,36 @@ RSpec.describe Chat::GuardianExtensions do
       end
     end
 
+    describe "#can_see_chat_message?" do
+      fab!(:message) { Fabricate(:chat_message, chat_channel: channel, user: user) }
+
+      it "returns true for a visible message in a channel the user can preview" do
+        expect(guardian.can_see_chat_message?(message)).to eq(true)
+      end
+
+      it "returns false when the user cannot preview the channel" do
+        message.update!(chat_channel: private_channel)
+        expect(guardian.can_see_chat_message?(message)).to eq(false)
+      end
+
+      context "when the message is trashed" do
+        before { message.trash! }
+
+        it "returns false for another user" do
+          other_guardian = Guardian.new(Fabricate(:user, group_ids: [chatters.id]))
+          expect(other_guardian.can_see_chat_message?(message)).to eq(false)
+        end
+
+        it "returns true for the author" do
+          expect(guardian.can_see_chat_message?(message)).to eq(true)
+        end
+
+        it "returns true for staff" do
+          expect(staff_guardian.can_see_chat_message?(message)).to eq(true)
+        end
+      end
+    end
+
     describe "#can_moderate_chat?" do
       context "for category channel" do
         fab!(:category) { Fabricate(:category, read_restricted: true) }

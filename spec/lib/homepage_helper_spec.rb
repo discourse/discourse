@@ -8,11 +8,18 @@ RSpec.describe HomepageHelper do
       expect(HomepageHelper.resolve).to eq("latest")
     end
 
-    context "when theme has a custom homepage" do
-      before { ThemeModifierHelper.any_instance.expects(:custom_homepage).returns(true) }
+    context "when a theme has a custom homepage" do
+      before { ThemeModifierHelper.any_instance.stubs(:custom_homepage).returns(true) }
 
       it "returns custom" do
         expect(HomepageHelper.resolve).to eq("custom")
+      end
+
+      it "returns the configured crawler route for crawler requests" do
+        SiteSetting.custom_homepage_crawler_route = "categories"
+        request = ActionDispatch::TestRequest.create("HTTP_USER_AGENT" => "Googlebot")
+
+        expect(HomepageHelper.resolve(request)).to eq("categories")
       end
     end
 

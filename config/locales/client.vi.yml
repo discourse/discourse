@@ -18,6 +18,10 @@ vi:
         in_location: "trong"
         hidden: "ẩn"
         failed: "thất bại"
+    access_control:
+      manage:
+        access_permission_editor: "Lần Đầu Sửa Tút"
+        access_permission_remove: "Bỏ"
     carousel:
       go_to_slide: "Đến slide %{index}"
       previous: "Slide trước"
@@ -361,6 +365,9 @@ vi:
     age: "Tuổi"
     joined: "Đã tham gia"
     admin_title: "Quản trị"
+    advanced_mode_toggle:
+      advanced_mode: "Chế độ nâng cao"
+      simple_mode: "Chế độ đơn giản"
     show_more: "Thêm"
     show_help: "Tùy chọn"
     links: "Liên kết"
@@ -2410,6 +2417,8 @@ vi:
       email_label: "Email"
       continue_button: "Tiếp tục"
       verify_button: "Tiếp tục"
+      account_ready_continue: "Tiếp tục"
+      username_label: "Tên người dùng"
     login:
       header_title: "Chào mừng trở lại"
       title: "Đăng nhập"
@@ -3348,35 +3357,6 @@ vi:
       read_more: "Bạn muốn đọc thêm? <a href='%{categoryLink}'>Duyệt tất cả chuyên mục</a> hoặc <a href='%{latestLink}'>xem các chủ đề mới nhất</a>."
       unread_indicator: "Chưa có thành viên nào đọc bài cuối cùng của chủ đề này."
       participant_groups: "Các nhóm tham gia"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-              other {Vẫn còn <a href="{basePath}/unread"># chủ đề chưa đọc</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-              other { và <a href="{basePath}/new"># chủ đề mới</a>}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-              other {Vẫn còn <a href="{basePath}/unread"># chủ đề chưa đọc</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-              other {Vẫn còn <a href="{basePath}/new"># chủ đề mới</a>}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { trong {categoryLink}}
-          false { hoặc <a href="{basePath}/latest">xem những chủ đề mới nhất</a>}
-          other {}
-        }
       reply_count_link:
         other: "%{count} trả lời, chuyển đến tút đầu tiên"
       created_at: "Ngày tạo: %{date}"
@@ -5354,6 +5334,9 @@ vi:
             opengraph_image:
               title: "Hình ảnh OpenGraph"
               description: "Ảnh mặc định của OpenGraph, được sử dụng khi trang không có ảnh nào khác phù hợp. Nếu để trống, ảnh large_icon sẽ được sử dụng."
+            og_image_preview:
+              generate: "Khởi tạo"
+              topic_id_label: "ID Chủ đề"
             x_summary_large_image:
               title: "Hình ảnh tóm tắt X lớn"
               description: "Thẻ X 'hình ảnh tóm tắt lớn'. Nếu để trống, siêu dữ liệu thẻ thông thường sẽ được tạo bằng OpenGraph_image, miễn là hình ảnh đó không phải là định dạng .svg."
@@ -5668,7 +5651,7 @@ vi:
         stale_data: "Kiểm tra phiên bản mới đã không được thực hiện gần đây, đảm bảo rằng Sidekiq đang chạy."
         version_check_pending: "Có vẻ như bạn đã cập nhật gần đây. Tuyệt vời!"
         installed_version: "Đã cài đặt"
-        latest_version: "Gần đây"
+        github: "GitHub"
         problems_found: "Một số lời khuyên dựa trên cài đặt trang web hiện tại của bạn"
         dismiss_notice: "Bỏ qua"
         new_features:

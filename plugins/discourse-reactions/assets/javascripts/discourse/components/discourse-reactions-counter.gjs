@@ -90,7 +90,7 @@ export default class DiscourseReactionsCounter extends Component {
     }
 
     if (this.useNewMenu) {
-      if (event.target.closest(".post-users-popup")) {
+      if (event.target.closest(".users-popup")) {
         return;
       }
 

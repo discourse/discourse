@@ -320,8 +320,6 @@ tr_TR:
         title: "Masaüstü sohbet bildirim sesi"
       sounds:
         none: "Hiçbiri"
-        bell: "Zil"
-        ding: "Ding"
       title: "sohbet"
       title_capitalized: "Sohbet"
       upload: "Dosya ekle"
@@ -480,6 +478,10 @@ tr_TR:
           other: "<span>Siz, %{commaSeparatedUsernames} ve %{count} kişi daha şu şekilde tepki verdiniz: </span>:%{emoji}:"
         single_user: "<span>%{username} şu şekilde tepki verdi</span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} ve %{username} şu şekilde tepki verdi</span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} yorum"
+            other: "%{count} yorum"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} ve %{count} kişi daha şu şekilde tepki verdi: </span>:%{emoji}:"
           other: "<span>%{commaSeparatedUsernames} ve %{count} kişi daha şu şekilde tepki verdi: </span>:%{emoji}:"

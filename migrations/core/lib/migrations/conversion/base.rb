@@ -17,17 +17,31 @@ module Migrations
 
         create_database
 
-        filter_steps(steps, only_steps, skip_steps).each do |step_class|
+        @worker_pool = WorkerPool.new
+
+        # Titles are known from the step classes (no instantiation, no queries),
+        # so the reporter can reserve its title column up front. The steps
+        # themselves are built and sized lazily in the loop — each step's count
+        # is computed only when it runs.
+        step_classes = filter_steps(steps, only_steps, skip_steps)
+        @reporter = Reporting::Factory.build(titles: step_classes.map(&:title))
+
+        step_classes.each do |step_class|
           step = create_step(step_class)
           before_step_execution(step)
           execute_step(step)
           after_step_execution(step)
         end
       rescue SignalException
-        STDERR.puts "\nAborted"
-        exit(1)
+        @aborted = true
+        exit(130)
       ensure
         Database::IntermediateDB.close
+        # Restore the terminal (and flush the final frame) before printing the
+        # run-level abort line, so it lands cleanly below the reporter output
+        # instead of fighting the live region.
+        @reporter&.close
+        STDERR.puts "\n#{I18n.t("cli.aborted")}" if @aborted
       end
 
       def steps
@@ -54,12 +68,12 @@ module Migrations
       def execute_step(step)
         executor =
           if step.is_a?(ProgressStep)
-            ProgressStepExecutor
+            ProgressStepExecutor.new(step, pool: @worker_pool, reporter: @reporter)
           else
-            StepExecutor
+            StepExecutor.new(step, reporter: @reporter)
           end
 
-        executor.new(step).execute
+        executor.execute
       end
 
       def after_step_execution(step)

@@ -394,6 +394,13 @@ vi:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Mọi người"
+      admins: "Quản trị"
+      moderators: "Điều hành viên"
+      staff: "Nhân viên"
+      anonymous_users: "Người dùng ẩn danh"
+      logged_in_users: "Người dùng đã đăng nhập"
   education:
     until_posts:
       other: "%{count} tút"

@@ -18,6 +18,10 @@ sr:
         in_location: "u"
         hidden: "sakriveno"
         failed: "neuspešno"
+    access_control:
+      manage:
+        access_permission_editor: "Urednik"
+        access_permission_remove: "Ukloni"
     number:
       format:
         separator: ","
@@ -1723,6 +1727,8 @@ sr:
       email_label: "E-mail"
       continue_button: "Nastavi"
       verify_button: "Nastavi"
+      account_ready_continue: "Nastavi"
+      username_label: "Korisničko Ime"
     login:
       header_title: "Dobro došli nazad"
       title: "Prijava"
@@ -2836,6 +2842,9 @@ sr:
         logo:
           form:
             email: "Email"
+            og_image_preview:
+              generate: "Generiši"
+              topic_id_label: "ID Teme"
         fonts:
           backfill_modal:
             modal_yes: "Da"
@@ -2915,7 +2924,6 @@ sr:
         no_check_performed: "Nije učinjena provera za nadogradnju. Proverite radi li pomoćnik."
         stale_data: "Nije dugo učinjena provera za nadogradnju. Proverite radi li pomoćnik."
         installed_version: "Instalirano"
-        latest_version: "Poslednje"
         dismiss_notice: "Ignoriši"
         new_features:
           learn_more: "Saznaj više..."

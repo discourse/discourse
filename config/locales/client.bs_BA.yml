@@ -17,6 +17,10 @@ bs_BA:
         status: "Status"
         hidden: "hidden"
         failed: "neuspješno"
+    access_control:
+      manage:
+        access_permission_editor: "Urednik"
+        access_permission_remove: "Ukloni"
     number:
       format:
         separator: "."
@@ -234,6 +238,9 @@ bs_BA:
     age: "Godište"
     joined: "Pridružio se"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Napredni način"
+      simple_mode: "Jednostavan način"
     show_more: "prikaži još"
     show_help: "Opcije"
     links: "Linkovi"
@@ -1560,6 +1567,8 @@ bs_BA:
       email_label: "Email"
       continue_button: "Nastavi"
       verify_button: "Nastavi"
+      account_ready_continue: "Nastavi"
+      username_label: "Nadimak"
     login:
       title: "Prijava"
       username: "Korisnik"
@@ -3200,6 +3209,9 @@ bs_BA:
           form:
             mobile: "Mobilno"
             email: "Email"
+            og_image_preview:
+              generate: "Generate"
+              topic_id_label: "ID teme"
         fonts:
           backfill_modal:
             modal_yes: "Da"
@@ -3300,7 +3312,7 @@ bs_BA:
         no_check_performed: "A check for updates has not been performed. Ensure sidekiq is running."
         stale_data: "A check for updates has not been performed lately. Ensure sidekiq is running."
         installed_version: "Installed"
-        latest_version: "Zadnje"
+        github: "GitHub"
         problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
         dismiss_notice: "Zanemari"
         new_features:

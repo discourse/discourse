@@ -57,6 +57,49 @@ RSpec.describe LlmModel do
     end
   end
 
+  describe "#estimated_cost_for_tokens" do
+    it "calculates request, response, cache read, and cache write cost" do
+      model =
+        Fabricate.build(
+          :llm_model,
+          input_cost: 3.0,
+          output_cost: 15.0,
+          cached_input_cost: 0.3,
+          cache_write_cost: 3.75,
+        )
+
+      cost =
+        model.estimated_cost_for_tokens(
+          request_tokens: 1_000_000,
+          response_tokens: 100_000,
+          cache_read_tokens: 10_000,
+          cache_write_tokens: 1_000,
+        )
+
+      expect(cost).to eq(BigDecimal("4.50675"))
+    end
+
+    it "returns nil when no costs are configured" do
+      model =
+        Fabricate.build(
+          :llm_model,
+          input_cost: nil,
+          output_cost: nil,
+          cached_input_cost: nil,
+          cache_write_cost: 0,
+        )
+
+      expect(
+        model.estimated_cost_for_tokens(
+          request_tokens: 1_000_000,
+          response_tokens: 100_000,
+          cache_read_tokens: 10_000,
+          cache_write_tokens: 1_000,
+        ),
+      ).to be_nil
+    end
+  end
+
   describe "allowed_attachment_types" do
     it "normalizes markdown attachments to md" do
       model = Fabricate.build(:llm_model)

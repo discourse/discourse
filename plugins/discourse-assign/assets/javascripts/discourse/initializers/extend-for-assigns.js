@@ -710,7 +710,7 @@ export default {
         id: "assign-topics",
         label: "topics.bulk.assign",
         icon: "user-plus",
-        class: "btn-default assign-topics",
+        class: "assign-topics",
         description: "topics.bulk.assign_description",
         confirmButtonTranslationKey: "topics.bulk.confirm_assign_topics",
         action({ setComponent }) {
@@ -723,7 +723,7 @@ export default {
         id: "unassign-topics",
         label: "topics.bulk.unassign",
         icon: "user-xmark",
-        class: "btn-default unassign-topics",
+        class: "unassign-topics",
         description: "topics.bulk.unassign_description",
         confirmButtonTranslationKey: "topics.bulk.confirm_unassign_topics",
         action({ performAndRefresh }) {
