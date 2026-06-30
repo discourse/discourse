@@ -5255,6 +5255,12 @@ ro:
         show_emails: "Arată emailuri"
         hide_emails: "Ascunde emailuri"
         bulk_actions:
+          select_all: "Selectează tot"
+          clear_all: "Șterge tot"
+          suspend:
+            confirmation_modal:
+              close: "Închide"
+              confirm: "Suspendă"
           delete:
             confirmation_modal:
               close: "Închide sondajul"
@@ -5266,6 +5272,8 @@ ro:
           staff: "Membrii echipei"
           suspended: "Suspendați"
           staged: "Pus în scenă"
+        activation_filter:
+          all: "Toți utilizatorii"
         approved: "Aprobați?"
         titles:
           active: "Utilizatori activi"

@@ -6578,11 +6578,11 @@ fa_IR:
         silence_reason: "دلیل سکوت"
         bulk_actions:
           title: "عملیات گروهی"
-          admin_cant_be_deleted: "این کاربر نمی تواند حذف شود زیرا او یک مدیر است"
-          too_many_or_old_posts: "این کاربر را نمی توان حذف کرد زیرا پست های زیادی دارد یا یک پست بسیار قدیمی دارد"
-          too_many_selected_users:
-            one: "شما به حد مجاز %{count} کاربر برای حذف دسته‌جمعی رسیده‌اید."
-            other: "شما به حد مجاز %{count} کاربر برای حذف دسته‌جمعی رسیده‌اید."
+          clear_all: "پاکسازی همه"
+          suspend:
+            confirmation_modal:
+              close: "بستن"
+              confirm: "تعلیق"
           delete:
             label: "حذف کاربران…"
             confirmation_modal:
@@ -6610,6 +6610,9 @@ fa_IR:
           suspended: "تعلیق شد "
           silenced: "ساکت شده"
           staged: "کاربر از راه دور"
+        activation_filter:
+          all: "همه کاربران"
+          activated: "فعال شد"
         approved: "تایید شده ؟"
         titles:
           active: "کاربران فعال"

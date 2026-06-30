@@ -4190,6 +4190,10 @@ bs_BA:
         active: "Aktivirano"
         status: "Status"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Zatvori"
+              confirm: "Suspend"
           delete:
             confirmation_modal:
               close: "Zatvori"
@@ -4201,6 +4205,8 @@ bs_BA:
           suspended: "Suspended"
           silenced: "Stišano"
           staged: "Priređen"
+        activation_filter:
+          activated: "Aktivirano"
         approved: "Approved?"
         titles:
           pending: "Users Pending Review"

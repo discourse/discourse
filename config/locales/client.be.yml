@@ -2706,6 +2706,10 @@ be:
         id_not_found: "Карыстальніка з такім нумарам няма ў нашай сістэме."
         status: "Статус"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Закрыць"
+              confirm: "Прыпыніць"
           delete:
             confirmation_modal:
               close: "Закрыць"

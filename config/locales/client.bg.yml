@@ -4241,6 +4241,10 @@ bg:
         id_not_found: "Съжаляваме, това потребителско име не съществува при нас. "
         status: "Статус"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Затвори"
+              confirm: "Отстрани "
           delete:
             confirmation_modal:
               close: "Затвори"

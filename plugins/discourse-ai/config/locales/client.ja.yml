@@ -646,9 +646,7 @@ ja:
             custom: "カスタム..."
           hours: "時間"
           max_tokens_help: "このグループの各ユーザーが指定された期間内に使用できるトークン（単語と文字）の最大数。トークンは、AI モデルがテキストを処理するときに使用する単位です。およそ 1 トークン = 4 文字または 1 単語の 3/4 です。"
-          max_tokens_required: "最大使用量が設定されていない場合は設定する必要があります"
           max_usages_help: "このグループの各ユーザーが指定された期間内に AI モデルを使用できる最大回数。この使用量制限はグループ全体で共有されるのではなく、ユーザーごとに追跡されます。"
-          max_usages_required: "最大トークンが設定されていない場合は設定する必要があります"
         credit_allocation:
           credits_remaining: "クレジット残り %{remaining} / %{total} (%{percentage}%)"
           soft_limit_warning: "このモデルの今日の AI クレジット残量は %{percentage}% です"

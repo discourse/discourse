@@ -5810,6 +5810,10 @@ sv:
         active: "Aktiverad"
         status: "Status"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Stäng"
+              confirm: "Stäng av användare"
           delete:
             confirmation_modal:
               close: "Stäng"
@@ -5821,6 +5825,9 @@ sv:
           suspended: "Avstängd"
           silenced: "Tystad"
           staged: "Arrangerad"
+        activation_filter:
+          all: "Alla användare"
+          activated: "Aktiverad"
         approved: "Godkänd?"
         titles:
           active: "Aktiva användare"

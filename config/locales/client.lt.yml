@@ -5289,6 +5289,10 @@ lt:
         active: "aktyvuota"
         status: "Statusas"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Uždaryti"
+              confirm: "Sustabdyti"
           delete:
             confirmation_modal:
               close: "Uždaryti"
@@ -5300,6 +5304,8 @@ lt:
           suspended: "Sustabdyti"
           silenced: "Nutildytas"
           staged: "Inscenizuotas"
+        activation_filter:
+          activated: "aktyvuota"
         approved: "Patvirtinta?"
         titles:
           pending: "Vartotojai laukiantys patvirtinimo"

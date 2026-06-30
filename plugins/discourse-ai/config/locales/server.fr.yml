@@ -581,7 +581,6 @@ fr:
       removed: "supprimé"
     errors:
       quota_exceeded: "Vous avez dépassé le quota pour ce modèle. Veuillez réessayer dans %{relative_time}."
-      quota_required: "Vous devez spécifier un nombre maximal de jetons ou d'utilisations pour ce modèle"
       no_query_specified: Le paramètre de requête est obligatoire, veuillez le spécifier.
       no_user_specified: Le nom d'utilisateur ou le paramètre user_unique_id est obligatoire. Veuillez le préciser.
       user_not_found: L'utilisateur spécifié n'existe pas. Vérifiez le paramètre du nom d'utilisateur.

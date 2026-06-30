@@ -7664,8 +7664,12 @@ ur:
         status: "حیثیت"
         show_emails: "ای میلیں دکھائیں"
         bulk_actions:
-          admin_cant_be_deleted: "اس صارف کو حذف نہیں کیا جا سکتا کیونکہ وہ ایک منتظم ہیں۔"
-          too_many_or_old_posts: "اس صارف کو حذف نہیں کیا جا سکتا کیونکہ اس کے بہت زیادہ دھاگے ہیں یا اس کی ایک بہت پرانا دھاگہ ہے۔"
+          select_all: "سبھی منتخب کریں"
+          clear_all: "سبھی ہٹا دیں"
+          suspend:
+            confirmation_modal:
+              close: "بند کریں"
+              confirm: "معطل کریں"
           delete:
             label: "حذف اراکین…"
             confirmation_modal:
@@ -7678,6 +7682,9 @@ ur:
           suspended: "معطل کردہ"
           silenced: "خاموش"
           staged: "عارضی"
+        activation_filter:
+          all: "تمام اراکین"
+          activated: "فعال"
         approved: "منظورشدہ؟"
         titles:
           active: "فعال اراکین"

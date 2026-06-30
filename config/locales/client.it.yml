@@ -7244,11 +7244,11 @@ it:
         silence_reason: "Motivo del silenzio"
         bulk_actions:
           title: "Azioni collettive"
-          admin_cant_be_deleted: "Questo utente non può essere eliminato perché è un amministratore"
-          too_many_or_old_posts: "Questo utente non può essere eliminato perché ha troppi messaggi o un messaggio molto vecchio"
-          too_many_selected_users:
-            one: "Hai raggiunto il limite di %{count} utente per l'eliminazione collettiva"
-            other: "Hai raggiunto il limite di %{count} utenti per l'eliminazione collettiva"
+          clear_all: "Deseleziona tutto"
+          suspend:
+            confirmation_modal:
+              close: "Chiudi"
+              confirm: "Sospendi"
           delete:
             label: "Elimina utenti…"
             confirmation_modal:
@@ -7276,6 +7276,9 @@ it:
           suspended: "Sospesi"
           silenced: "Silenziato"
           staged: "Temporaneo"
+        activation_filter:
+          all: "Tutti gli utenti"
+          activated: "Attivati"
         approved: "Approvato?"
         titles:
           active: "Utenti attivi"

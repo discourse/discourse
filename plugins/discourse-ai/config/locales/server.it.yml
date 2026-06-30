@@ -581,7 +581,6 @@ it:
       removed: "rimosso"
     errors:
       quota_exceeded: "Hai superato la quota per questo modello. Riprova tra %{relative_time}."
-      quota_required: "È necessario specificare il numero massimo di token o utilizzi per questo modello"
       no_query_specified: Il parametro di query è obbligatorio, specificalo.
       no_user_specified: Il parametro username o user_unique_id è obbligatorio, specificalo.
       user_not_found: L'utente specificato non esiste. Controlla il parametro username.

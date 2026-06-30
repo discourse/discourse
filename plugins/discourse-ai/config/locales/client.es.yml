@@ -867,9 +867,7 @@ es:
             custom: "Personalizado..."
           hours: "horas"
           max_tokens_help: "Número máximo de tokens (palabras y caracteres) que cada usuario de este grupo puede utilizar dentro de la duración especificada. Los tokens son las unidades que utilizan los modelos de IA para procesar texto: aproximadamente 1 token = 4 caracteres o 3/4 de una palabra."
-          max_tokens_required: "Debe configurarse si no se establece el número máximo de usos"
           max_usages_help: "Número máximo de veces que cada usuario de este grupo puede utilizar el modelo de IA dentro de la duración especificada. Esta cuota se controla por usuario individual, no se comparte con todo el grupo."
-          max_usages_required: "Debe configurarse si no se establece el número máximo de tokens"
         credit_allocation:
           credits_remaining: "%{remaining} de %{total} créditos restantes (%{percentage}%)"
           soft_limit_warning: "A este modelo le quedan %{percentage}% de créditos de IA hoy"

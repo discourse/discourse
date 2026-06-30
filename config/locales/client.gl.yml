@@ -4576,6 +4576,10 @@ gl:
         active: "Activado"
         status: "Estado"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Pechar"
+              confirm: "Suspender"
           delete:
             confirmation_modal:
               close: "Pechar"
@@ -4587,6 +4591,8 @@ gl:
           suspended: "Suspendido"
           silenced: "Silenciado"
           staged: "Transitorio"
+        activation_filter:
+          activated: "Activado"
         approved: "Aprobado?"
         titles:
           pending: "Usuarios pendentes de revisión"

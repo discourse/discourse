@@ -6500,10 +6500,11 @@ zh_TW:
         silence_reason: "禁言原因"
         bulk_actions:
           title: "批次操作"
-          admin_cant_be_deleted: "無法刪除此使用者，因為他們是管理員"
-          too_many_or_old_posts: "無法刪除此使用者，因為他們有太多的貼文或很舊的貼文。"
-          too_many_selected_users:
-            other: "您已達到批量刪除使用者上限 %{count}"
+          clear_all: "清除全部"
+          suspend:
+            confirmation_modal:
+              close: "關閉"
+              confirm: "停權"
           delete:
             label: "刪除使用者…"
             confirmation_modal:
@@ -6528,6 +6529,9 @@ zh_TW:
           suspended: "已停權"
           silenced: "被靜音"
           staged: "暫存"
+        activation_filter:
+          all: "所有使用者"
+          activated: "已啟動"
         approved: "已批准？"
         titles:
           active: "活躍使用者"

@@ -2886,6 +2886,9 @@ id:
         not_found: "Maaf, username tersebut tidak ada ditemukan."
         status: "Status"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Tutup"
           delete:
             confirmation_modal:
               close: "Tutup"

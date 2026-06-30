@@ -870,9 +870,7 @@ nl:
             custom: "Aangepast..."
           hours: "uur"
           max_tokens_help: "Maximum aantal tokens (woorden en tekens) dat elke gebruiker in deze groep kan gebruiken binnen de opgegeven tijdsduur. Tokens zijn de eenheden die door AI-modellen worden gebruikt om tekst te verwerken. Ruwweg 1 token = 4 tekens of 3/4 van een woord."
-          max_tokens_required: "Moet worden ingesteld als het maximale aantal gebruiken niet is ingesteld"
           max_usages_help: "Maximum aantal keren dat elke gebruiker in deze groep het AI-model kan gebruiken binnen de opgegeven tijdsduur. Dit quotum wordt bijgehouden per individuele gebruiker, niet gedeeld door de groep."
-          max_usages_required: "Moet worden ingesteld als het maximale aantal tokens niet is ingesteld"
         credit_allocation:
           credits_remaining: "%{remaining} van %{total} credits resterend (%{percentage}%)"
           soft_limit_warning: "Dit model heeft nog %{percentage}% van de AI-credits voor vandaag."

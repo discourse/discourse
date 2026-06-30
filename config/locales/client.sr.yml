@@ -3536,6 +3536,10 @@ sr:
         id_not_found: "Žao nam je, taj korisnički ID ne postoji u našem sistemu."
         active: "Aktivirano"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Zatvori"
+              confirm: "Suspenduj"
           delete:
             confirmation_modal:
               close: "Zatvori"
@@ -3545,6 +3549,8 @@ sr:
           active: "Aktivno"
           staff: "Osoblje"
           suspended: "Suspendovani"
+        activation_filter:
+          activated: "Aktivirano"
         approved: "Potvrđenji?"
         titles:
           pending: "Korisnici koji čekaju reviziju"

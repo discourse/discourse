@@ -7816,11 +7816,12 @@ pt_BR:
         silence_reason: "Motivo do silêncio"
         bulk_actions:
           title: "Ações em massa"
-          admin_cant_be_deleted: "Não é possível excluir este(a) usuário(a), pois faz parte da administração"
-          too_many_or_old_posts: "Este(s) usuário(s) não poderá ser excluído(a), pois tem postagens de mais ou uma postagem muito antiga"
-          too_many_selected_users:
-            one: "Você atingiu o limite de usuários(as) de %{count} para exclusão em massa"
-            other: "Você atingiu o limite de usuários(as) de %{count} para a exclusão em massa"
+          select_all: "Selecionar tudo"
+          clear_all: "Limpar tudo"
+          suspend:
+            confirmation_modal:
+              close: "Fechar"
+              confirm: "Suspender"
           delete:
             label: "Excluir usuários(as)…"
             confirmation_modal:
@@ -7848,6 +7849,9 @@ pt_BR:
           suspended: "Suspenso(a)"
           silenced: "Silenciado(a)"
           staged: "Encenado(a)"
+        activation_filter:
+          all: "Todos(as) os(as) usuários(as)"
+          activated: "Ativado(a)"
         approved: "Aprovado(a)?"
         titles:
           active: "Usuários(as) ativos(as)"

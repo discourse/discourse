@@ -891,7 +891,6 @@ es:
       limit_exceeded_admin: "Has alcanzado tu límite de créditos de IA. Vuelve a intentarlo en %{reset_time}."
     errors:
       quota_exceeded: "Has superado la cuota para este modelo. Inténtalo de nuevo en %{relative_time}."
-      quota_required: "Debes especificar los tokens o usos máximos para este modelo"
       no_query_specified: El parámetro de consulta es obligatorio, especifícalo.
       no_user_for_agent: El agente especificado no tiene ningún usuario asociado.
       no_user_specified: El nombre de usuario o user_unique_id es obligatorio, por favor, especifícalo.

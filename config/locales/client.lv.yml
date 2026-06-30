@@ -3637,6 +3637,10 @@ lv:
         id_not_found: "Piedod, šāds lietotāja ID neeksistē mūsu sistēmā."
         status: "Statuss"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Aizvērt"
+              confirm: "Apturēt"
           delete:
             confirmation_modal:
               close: "Aizvērt"

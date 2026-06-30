@@ -4147,6 +4147,10 @@ ca:
         active: "Activat"
         status: "Estat"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Tanca"
+              confirm: "Suspèn"
           delete:
             confirmation_modal:
               close: "Tanca"
@@ -4158,6 +4162,8 @@ ca:
           suspended: "Suspesos"
           silenced: "Silenciat"
           staged: "Fictici"
+        activation_filter:
+          activated: "Activat"
         approved: "Aprovat?"
         titles:
           pending: "Usuaris pendents de revisar"
