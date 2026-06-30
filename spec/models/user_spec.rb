@@ -3394,6 +3394,19 @@ RSpec.describe User do
       expect(admin.whisperer?).to eq(false)
     end
 
+    context "when primary_group_id is set without matching group membership" do
+      fab!(:user)
+
+      before do
+        SiteSetting.whispers_allowed_groups = group.id.to_s
+        user.update_column(:primary_group_id, group.id)
+      end
+
+      it "does not grant whisper access" do
+        expect(user).not_to be_a_whisperer
+      end
+    end
+
     it "returns true for user belonging to whisperers groups" do
       whisperer = Fabricate(:user)
       user = Fabricate(:user)
