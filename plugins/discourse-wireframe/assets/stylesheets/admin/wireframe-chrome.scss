@@ -28,10 +28,23 @@
  */
 
 :root {
-  --wireframe-block-color: #d97706;
-  --wireframe-block-hover-color: #b45309;
-  --wireframe-block-outlet-color: #f59e0b;
-  --wireframe-block-outlet-hover-color: #d97706;
+  /* Brandable editor accent (default = the dev-tools amber). Selection, handles,
+     and drop affordances all key off these, so one override re-themes the
+     editor. The `-rgb` triplets feed `rgb(var(--wf-accent-rgb), α)` tints, the
+     same pattern core uses for `--primary-rgb` etc. */
+  --wf-accent: #d97706;
+  --wf-accent-rgb: 217, 119, 6;
+  --wf-accent-strong: #b45309;
+  --wf-outlet-accent: #f59e0b;
+  --wf-outlet-accent-rgb: 245, 158, 11;
+  --wf-on-accent: #fff;
+
+  /* Semantic aliases kept for readability at the use sites; they resolve to the
+     accent tokens above. */
+  --wireframe-block-color: var(--wf-accent);
+  --wireframe-block-hover-color: var(--wf-accent-strong);
+  --wireframe-block-outlet-color: var(--wf-outlet-accent);
+  --wireframe-block-outlet-hover-color: var(--wf-accent);
   --wireframe-bg-opacity: 0.05;
   --wireframe-badge-font-size: 0.75rem;
   --wireframe-badge-padding: 2px 5px;
@@ -117,7 +130,7 @@ body.wireframe-active {
       ):hover:not(:has(.wireframe-block-chrome:hover)) {
       outline: var(--wireframe-container-border-width) dotted
         var(--wireframe-block-color);
-      background: rgb(217 119 6 / var(--wireframe-bg-opacity));
+      background: rgb(var(--wf-accent-rgb), var(--wireframe-bg-opacity));
     }
 
     /* Selected — solid darker-orange outline (visibly distinct from the
@@ -127,7 +140,7 @@ body.wireframe-active {
     &.--selected {
       outline: var(--wireframe-container-border-width) solid
         var(--wireframe-block-hover-color);
-      background: rgb(217 119 6 / var(--wireframe-bg-opacity));
+      background: rgb(var(--wf-accent-rgb), var(--wireframe-bg-opacity));
     }
 
     /* Composite part — a code-defined inner block rendered by its composite,
@@ -168,7 +181,7 @@ body.wireframe-active {
     &.--overlapping {
       outline: var(--wireframe-container-border-width) solid var(--danger);
       box-shadow: 0 0 0 1px var(--danger);
-      background: rgb(220 53 69 / 0.18);
+      background: rgb(var(--danger-rgb), 0.18);
     }
 
     /* The chrome wrapper itself is always clickable so its selection
@@ -347,12 +360,12 @@ body.wireframe-active {
        with them. */
 
     &--info {
-      background: #f5a623;
-      color: #000;
+      background: var(--highlight);
+      color: var(--primary);
       text-shadow: none;
 
       .d-icon {
-        color: #000 !important;
+        color: var(--primary) !important;
         filter: none;
       }
     }
@@ -748,7 +761,7 @@ body.wireframe-active {
       flex: none;
       padding: var(--wireframe-badge-padding);
       background: var(--wireframe-block-color);
-      color: white;
+      color: var(--wf-on-accent);
       font-size: var(--wireframe-badge-font-size);
       font-weight: bold;
       text-shadow: var(--wireframe-shadow);
@@ -763,7 +776,7 @@ body.wireframe-active {
       }
 
       .d-icon {
-        color: white !important;
+        color: var(--wf-on-accent) !important;
         font-size: var(--wireframe-badge-font-size) !important;
         width: var(--wireframe-badge-font-size) !important;
         filter: drop-shadow(var(--wireframe-shadow));
@@ -1008,7 +1021,7 @@ body.wireframe-active {
   .wireframe-block-chrome.--outlet-root {
     outline: var(--wireframe-container-border-width) dashed
       var(--wireframe-block-outlet-color);
-    background: rgb(245 158 11 / var(--wireframe-bg-opacity));
+    background: rgb(var(--wf-outlet-accent-rgb), var(--wireframe-bg-opacity));
 
     /* Keep the outlet amber in every state — both hover and selection are
        signalled by the line going dashed → solid, never a colour change, so
@@ -1067,11 +1080,11 @@ body.wireframe-active {
   /* Design tokens — scoped to the editor shell so they don't leak into
      the host page. New surfaces should reach for these rather than
      ad-hoc paddings / radii. */
-  --wf-radius: 4px;
-  --wf-radius-lg: 6px;
-  --wf-gap-tight: 0.25rem;
-  --wf-gap: 0.5rem;
-  --wf-gap-loose: 0.75rem;
+  --wf-radius: var(--d-border-radius);
+  --wf-radius-lg: calc(var(--d-border-radius) * 1.5);
+  --wf-gap-tight: var(--space-1);
+  --wf-gap: var(--space-2);
+  --wf-gap-loose: var(--space-3);
   --wf-selection-color: var(--tertiary);
   --wf-hover-color: var(--primary-low-mid);
   --wf-overlay-tint: rgb(0 0 0 / 0.04);
@@ -2331,13 +2344,13 @@ body.wireframe-active {
       ) {
       outline: var(--wireframe-container-border-width) dotted
         var(--wireframe-block-color);
-      background: rgb(217 119 6 / var(--wireframe-bg-opacity));
+      background: rgb(var(--wf-accent-rgb), var(--wireframe-bg-opacity));
     }
 
     &.--selected {
       outline: var(--wireframe-container-border-width) solid
         var(--wireframe-block-hover-color);
-      background: rgb(217 119 6 / var(--wireframe-bg-opacity));
+      background: rgb(var(--wf-accent-rgb), var(--wireframe-bg-opacity));
     }
 
     /* Overlapping / out-of-bounds — always-on danger treatment, wins over
@@ -2352,7 +2365,7 @@ body.wireframe-active {
     &.--out-of-bounds {
       outline: var(--wireframe-container-border-width) solid var(--danger);
       box-shadow: 0 0 0 1px var(--danger);
-      background: rgb(220 53 69 / 0.18);
+      background: rgb(var(--danger-rgb), 0.18);
     }
 
     /* Per-zone drop feedback lives on the grid overlay, not the slot:
@@ -2442,14 +2455,14 @@ body.wireframe-active
   justify-content: center;
   border: 1px dashed var(--wireframe-block-color);
   border-radius: 3px;
-  background: rgb(217 119 6 / 0.04);
+  background: rgb(var(--wf-accent-rgb), 0.04);
   min-height: 40px;
   transition:
     background 80ms ease-out,
     border-color 80ms ease-out;
 
   &:hover {
-    background: rgb(217 119 6 / 0.1);
+    background: rgb(var(--wf-accent-rgb), 0.1);
     border-color: var(--wireframe-block-hover-color);
   }
 
@@ -2457,7 +2470,7 @@ body.wireframe-active
      so the drop target reads unambiguously even on dense pages. */
 
   &.--drag-target {
-    background: rgb(217 119 6 / 0.18);
+    background: rgb(var(--wf-accent-rgb), 0.18);
     border-style: solid;
     border-color: var(--wireframe-block-hover-color);
   }
@@ -2676,7 +2689,7 @@ body.wireframe-active
     color 80ms ease-out;
 
   &:hover {
-    background: rgb(217 119 6 / 0.08);
+    background: rgb(var(--wf-accent-rgb), 0.08);
     color: var(--wireframe-block-color);
   }
 
@@ -3070,14 +3083,14 @@ body.wireframe-active
 }
 
 /* Just-selected attention flash (see `.wireframe-block-chrome.--just-selected`).
-   Matches the amber the selection outline uses (`--wireframe-block-color`). */
+   Uses the editor accent the selection outline uses (`--wf-accent`). */
 @keyframes wireframe-block-flash {
   from {
-    box-shadow: 0 0 0 16px rgb(217 119 6 / 0.55);
+    box-shadow: 0 0 0 16px rgb(var(--wf-accent-rgb), 0.55);
   }
 
   to {
-    box-shadow: 0 0 0 16px rgb(217 119 6 / 0);
+    box-shadow: 0 0 0 16px rgb(var(--wf-accent-rgb), 0);
   }
 }
 
@@ -3102,7 +3115,7 @@ body.wireframe-active
 .wireframe-grid-ghost {
   pointer-events: none;
   border: 1px dashed var(--wireframe-block-hover-color);
-  background: rgb(217 119 6 / 0.2);
+  background: rgb(var(--wf-accent-rgb), 0.2);
   border-radius: 3px;
   opacity: 0;
   z-index: 3;
@@ -3202,17 +3215,17 @@ body.wireframe-active
 
   &.--rect-swap {
     border: 2px solid var(--tertiary);
-    background: rgb(0 123 255 / 0.08);
+    background: rgb(var(--tertiary-rgb), 0.08);
   }
 
   &.--rect-replace {
     border: 2px solid var(--danger);
-    background: rgb(220 53 69 / 0.08);
+    background: rgb(var(--danger-rgb), 0.08);
   }
 
   &.--rect-move {
     border: 2px dashed var(--wireframe-block-hover-color);
-    background: rgb(217 119 6 / 0.08);
+    background: rgb(var(--wf-accent-rgb), 0.08);
   }
 
   &.--rect-swap,
@@ -3274,7 +3287,7 @@ body.wireframe-active
     padding: 0.5rem 0.6rem;
     border: 1px solid var(--danger);
     border-radius: 4px;
-    background: rgb(220 53 69 / 0.08);
+    background: rgb(var(--danger-rgb), 0.08);
 
     .d-icon {
       color: var(--danger);
@@ -4867,7 +4880,7 @@ body.wireframe-active {
     &:focus {
       outline: none;
       border-color: var(--tertiary);
-      box-shadow: 0 0 0 2px rgb(0 119 204 / 0.15);
+      box-shadow: 0 0 0 2px rgb(var(--tertiary-rgb), 0.15);
     }
   }
 
@@ -4901,7 +4914,7 @@ body.wireframe-active {
   .wireframe-block-chrome.--error,
   .wireframe-block-chrome-wrapper.--error > .wireframe-block-chrome {
     outline: var(--wireframe-container-border-width) solid var(--danger);
-    background: rgb(220 53 69 / 0.06);
+    background: rgb(var(--danger-rgb), 0.06);
   }
 
   /* Empty-cell chrome — a merged-cell entry is an empty grid cell.
@@ -4914,11 +4927,11 @@ body.wireframe-active {
   .wireframe-block-chrome.--cell {
     outline: var(--wireframe-container-border-width) dashed
       var(--wireframe-block-outlet-color);
-    background: rgb(245 158 11 / 0.06);
+    background: rgb(var(--wf-outlet-accent-rgb), 0.06);
 
     &:hover {
       outline-color: var(--wireframe-block-outlet-hover-color);
-      background: rgb(245 158 11 / 0.12);
+      background: rgb(var(--wf-outlet-accent-rgb), 0.12);
     }
   }
 
@@ -4947,7 +4960,7 @@ body.wireframe-active {
   z-index: z("modal", "content");
   border-radius: 4px;
   border: 2px solid var(--tertiary);
-  background: rgb(0 119 204 / 0.18);
+  background: rgb(var(--tertiary-rgb), 0.18);
 
   /* `transform` is composited (no layout, no paint) so position
      updates per dragover stay cheap. `width` / `height` still go
@@ -4988,12 +5001,12 @@ body.wireframe-active {
   &--inside,
   &--occupy,
   &--shift {
-    background: rgb(0 119 204 / 0.12);
+    background: rgb(var(--tertiary-rgb), 0.12);
   }
 
   &--replace,
   &--swap {
-    background: rgb(0 119 204 / 0.22);
+    background: rgb(var(--tertiary-rgb), 0.22);
   }
 
   /* Invalid variant — the cursor IS over a valid drop SHAPE, but
@@ -5005,7 +5018,7 @@ body.wireframe-active {
 
   &--invalid {
     border-color: var(--danger);
-    background: rgb(220 38 38 / 0.15);
+    background: rgb(var(--danger-rgb), 0.15);
 
     .wireframe-drop-preview__label {
       background: var(--danger);
@@ -5626,13 +5639,13 @@ body.wireframe-active--dim-non-editable
     gap: 0.4rem;
     padding: 0.35rem 0.5rem;
     border-radius: 4px;
-    background: rgb(255 193 7 / 0.1);
-    border: 1px solid rgb(255 193 7 / 0.4);
+    background: rgb(var(--highlight-rgb), 0.1);
+    border: 1px solid rgb(var(--highlight-rgb), 0.4);
     color: var(--primary);
     font-size: var(--font-down-1);
 
     .d-icon {
-      color: rgb(255 152 0);
+      color: var(--highlight);
       flex-shrink: 0;
     }
   }

@@ -102,8 +102,8 @@
     background:
       repeating-linear-gradient(
         45deg,
-        rgb(217 48 37 / 0.04),
-        rgb(217 48 37 / 0.04) 6px,
+        rgb(var(--danger-rgb), 0.04),
+        rgb(var(--danger-rgb), 0.04) 6px,
         transparent 6px,
         transparent 12px
       ),
