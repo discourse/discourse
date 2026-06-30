@@ -24,6 +24,7 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked generatedDescription = "";
   @tracked mode = "ai";
   @tracked schema = null;
+  @tracked hideSchema = false;
   @tracked manualSql = "SELECT 1";
   @tracked previewLoading = false;
   @tracked previewResults = null;
@@ -96,6 +97,11 @@ export default class AdminPluginsExplorerNew extends Controller {
   @action
   updateManualSql(value) {
     this.manualSql = value;
+  }
+
+  @action
+  updateHideSchema(value) {
+    this.hideSchema = value;
   }
 
   @action
@@ -280,6 +286,7 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.generatedDescription = "";
     this.mode = "ai";
     this.schema = null;
+    this.hideSchema = false;
     this.manualSql = "SELECT 1";
     this.loading = false;
     this.manualFormData = { name: "", description: "" };

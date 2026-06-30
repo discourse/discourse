@@ -31,6 +31,7 @@ export default class PluginsExplorerController extends Controller {
   @tracked results = this.model.results;
   @tracked dirty = false;
   @tracked isCachedResult = false;
+  @tracked hideSchema = false;
   @tracked view = "table";
   @tracked mode = "manual";
   @tracked aiPrompt = "";
@@ -183,6 +184,11 @@ export default class PluginsExplorerController extends Controller {
     if (queryId) {
       viewStore.set({ key: `view_${queryId}`, value });
     }
+  }
+
+  @action
+  updateHideSchema(value) {
+    this.hideSchema = value;
   }
 
   @action
