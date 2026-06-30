@@ -23,6 +23,8 @@ const MAX_HUMAN_STEP = 100;
 
 const FLUSH_DELAY_MS = 3 * 60 * 1000;
 
+const THROTTLE_MS = 3000;
+
 export default class HumanActivityTracker extends Service {
   @service siteSettings;
 
@@ -42,6 +44,7 @@ export default class HumanActivityTracker extends Service {
   #flushTimer = null;
   #engagedMs = 0;
   #engagedSince = null;
+  #lastSentMs = null;
   #counts;
   #activityListener;
   #mouseMoveListener;
@@ -75,7 +78,7 @@ export default class HumanActivityTracker extends Service {
     this.#mouseMoveListener = (event) => this.#handleMouseMove(event);
     this.#attentionListener = (attention) =>
       this.#handleAttentionChange(attention);
-    this.#pagehideListener = () => this.#flush();
+    this.#pagehideListener = () => this.#flush({ force: true });
 
     Object.keys(EVENT_COUNTERS).forEach((eventName) => {
       window.addEventListener(eventName, this.#activityListener, {
@@ -149,9 +152,6 @@ export default class HumanActivityTracker extends Service {
     } else if (!engaged && this.#engagedSince !== null) {
       this.#engagedMs += this.now() - this.#engagedSince;
       this.#engagedSince = null;
-    }
-
-    if (!visible) {
       this.#flush();
     }
   }
@@ -181,7 +181,7 @@ export default class HumanActivityTracker extends Service {
     };
   }
 
-  #flush() {
+  #flush({ force = false } = {}) {
     if (this.#flushTimer) {
       cancel(this.#flushTimer);
       this.#flushTimer = null;
@@ -191,6 +191,16 @@ export default class HumanActivityTracker extends Service {
     if (total === 0) {
       return;
     }
+
+    const now = this.now();
+    if (
+      !force &&
+      this.#lastSentMs !== null &&
+      now - this.#lastSentMs < THROTTLE_MS
+    ) {
+      return;
+    }
+    this.#lastSentMs = now;
 
     this.transport(this.#buildPayload());
   }

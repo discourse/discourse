@@ -136,4 +136,39 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
 
     assert.strictEqual(this.sent.at(-1).engaged_seconds, 5);
   });
+
+  test("throttles sends to at most one every three seconds", function (assert) {
+    window.dispatchEvent(new KeyboardEvent("keydown"));
+
+    this.clock.ms = 1000;
+    blur(this);
+
+    this.clock.ms = 2000;
+    focus(this);
+    this.clock.ms = 3000;
+    blur(this);
+
+    assert.strictEqual(this.sent.length, 1);
+
+    this.clock.ms = 6000;
+    focus(this);
+    this.clock.ms = 7000;
+    blur(this);
+
+    assert.strictEqual(this.sent.length, 2);
+  });
+
+  test("always flushes on pagehide, bypassing the throttle", function (assert) {
+    window.dispatchEvent(new KeyboardEvent("keydown"));
+
+    this.clock.ms = 1000;
+    blur(this);
+
+    this.clock.ms = 2000;
+    focus(this);
+    this.clock.ms = 3000;
+    pagehide();
+
+    assert.strictEqual(this.sent.length, 2);
+  });
 });
