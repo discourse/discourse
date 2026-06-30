@@ -518,7 +518,8 @@ CREATE TABLE public.ai_api_audit_logs (
     cache_read_tokens integer,
     llm_id bigint,
     response_status integer,
-    request_attempts jsonb
+    request_attempts jsonb,
+    estimated_cost numeric(20,10)
 );
 
 
@@ -560,7 +561,8 @@ CREATE TABLE public.ai_api_request_stats (
     usage_count integer DEFAULT 1 NOT NULL,
     rolled_up boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    estimated_cost numeric(20,10)
 );
 
 
@@ -6529,7 +6531,10 @@ CREATE TABLE public.llm_quota_usages (
     started_at timestamp(6) without time zone NOT NULL,
     reset_at timestamp(6) without time zone NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    cost_used numeric(20,10) DEFAULT 0.0 NOT NULL,
+    cache_read_tokens_used integer DEFAULT 0 NOT NULL,
+    cache_write_tokens_used integer DEFAULT 0 NOT NULL
 );
 
 
@@ -6564,7 +6569,8 @@ CREATE TABLE public.llm_quotas (
     max_usages integer,
     duration_seconds integer NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    max_cost numeric(20,10)
 );
 
 
@@ -22275,6 +22281,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260629233141'),
 ('20260629022603'),
 ('20260626055145'),
 ('20260624140945'),

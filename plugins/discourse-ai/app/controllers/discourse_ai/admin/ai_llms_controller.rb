@@ -182,6 +182,7 @@ module DiscourseAi
             mapped[:group_id] = quota[:group_id].to_i
             mapped[:max_tokens] = quota[:max_tokens].to_i if quota[:max_tokens].present?
             mapped[:max_usages] = quota[:max_usages].to_i if quota[:max_usages].present?
+            mapped[:max_cost] = quota[:max_cost] if quota[:max_cost].present?
             mapped[:duration_seconds] = quota[:duration_seconds].to_i
             mapped
           end
@@ -316,7 +317,13 @@ module DiscourseAi
           entity_details[:quotas] = llm_model
             .llm_quotas
             .map do |quota|
-              "Group #{quota.group_id}: #{quota.max_tokens} tokens, #{quota.max_usages} usages, #{quota.duration_seconds}s"
+              quota_summary(
+                quota.group_id,
+                quota.max_tokens,
+                quota.max_usages,
+                quota.max_cost,
+                quota.duration_seconds,
+              )
             end
             .join("; ")
         end
@@ -333,11 +340,27 @@ module DiscourseAi
         if initial_quotas != current_quotas
           initial_quota_summary =
             initial_quotas
-              .map { |q| "Group #{q["group_id"]}: #{q["max_tokens"]} tokens" }
+              .map do |q|
+                quota_summary(
+                  q["group_id"],
+                  q["max_tokens"],
+                  q["max_usages"],
+                  q["max_cost"],
+                  q["duration_seconds"],
+                )
+              end
               .join("; ")
           current_quota_summary =
             current_quotas
-              .map { |q| "Group #{q["group_id"]}: #{q["max_tokens"]} tokens" }
+              .map do |q|
+                quota_summary(
+                  q["group_id"],
+                  q["max_tokens"],
+                  q["max_usages"],
+                  q["max_cost"],
+                  q["duration_seconds"],
+                )
+              end
               .join("; ")
           entity_details[:quotas_changed] = true
           entity_details[:quotas] = "#{initial_quota_summary} → #{current_quota_summary}"
@@ -350,6 +373,20 @@ module DiscourseAi
           ai_llm_logger_fields,
           entity_details,
         )
+      end
+
+      def quota_summary(group_id, max_tokens, max_usages, max_cost, duration_seconds)
+        limits = []
+        limits << "#{max_tokens} tokens" if max_tokens.present?
+        limits << "#{max_usages} usages" if max_usages.present?
+        limits << "$#{formatted_decimal(max_cost)} cost" if max_cost.present?
+        limits << "#{duration_seconds}s" if duration_seconds.present?
+
+        "Group #{group_id}: #{limits.join(", ")}"
+      end
+
+      def formatted_decimal(value)
+        value.is_a?(BigDecimal) ? value.to_s("F") : value
       end
 
       def log_llm_model_deletion(model_details)

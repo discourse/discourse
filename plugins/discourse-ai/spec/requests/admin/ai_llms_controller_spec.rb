@@ -154,7 +154,15 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
     context "with quotas" do
       let(:group) { Fabricate(:group) }
       let(:quota_params) do
-        [{ group_id: group.id, max_tokens: 1000, max_usages: 10, duration_seconds: 86_400 }]
+        [
+          {
+            group_id: group.id,
+            max_tokens: 1000,
+            max_usages: 10,
+            max_cost: "1.25",
+            duration_seconds: 86_400,
+          },
+        ]
       end
 
       it "creates model with quotas" do
@@ -168,6 +176,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(created_model.llm_quotas.count).to eq(1)
         quota = created_model.llm_quotas.first
         expect(quota.max_tokens).to eq(1000)
+        expect(quota.max_cost).to eq(BigDecimal("1.25"))
         expect(quota.group_id).to eq(group.id)
       end
     end
@@ -483,12 +492,14 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
                       group_id: group1.id,
                       max_tokens: 1500,
                       max_usages: 15,
+                      max_cost: "1.50",
                       duration_seconds: 43_200,
                     },
                     {
                       group_id: group3.id,
                       max_tokens: 3000,
                       max_usages: 30,
+                      max_cost: "3.00",
                       duration_seconds: 86_400,
                     },
                   ],
@@ -503,6 +514,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
           updated_quota1 = llm_model.llm_quotas.find_by(group: group1)
           expect(updated_quota1.max_tokens).to eq(1500)
           expect(updated_quota1.max_usages).to eq(15)
+          expect(updated_quota1.max_cost).to eq(BigDecimal("1.5"))
           expect(updated_quota1.duration_seconds).to eq(43_200)
 
           expect(llm_model.llm_quotas.find_by(group: group2)).to be_nil
@@ -511,6 +523,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
           expect(new_quota).to be_present
           expect(new_quota.max_tokens).to eq(3000)
           expect(new_quota.max_usages).to eq(30)
+          expect(new_quota.max_cost).to eq(BigDecimal("3.0"))
           expect(new_quota.duration_seconds).to eq(86_400)
         end
       end

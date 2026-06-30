@@ -1,4 +1,3 @@
-/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
@@ -400,11 +399,7 @@ export default class AiUsage extends Component {
       } else if (costType === "mixed") {
         totalSpending += this.getCostOnlySpending(f.feature_name);
       } else {
-        totalSpending +=
-          (f.input_spending || 0) +
-          (f.cache_read_spending || 0) +
-          (f.cache_write_spending || 0) +
-          (f.output_spending || 0);
+        totalSpending += this.spendingValue(f);
       }
     });
 
@@ -421,12 +416,7 @@ export default class AiUsage extends Component {
       usage_count: models.reduce((sum, m) => sum + (m.usage_count || 0), 0),
       total_tokens: models.reduce((sum, m) => sum + (m.total_tokens || 0), 0),
       total_spending: models.reduce(
-        (sum, m) =>
-          sum +
-          (m.input_spending || 0) +
-          (m.cache_read_spending || 0) +
-          (m.cache_write_spending || 0) +
-          (m.output_spending || 0),
+        (sum, model) => sum + this.spendingValue(model),
         0
       ),
     };
@@ -438,15 +428,20 @@ export default class AiUsage extends Component {
       usage_count: users.reduce((sum, u) => sum + (u.usage_count || 0), 0),
       total_tokens: users.reduce((sum, u) => sum + (u.total_tokens || 0), 0),
       total_spending: users.reduce(
-        (sum, u) =>
-          sum +
-          (u.input_spending || 0) +
-          (u.cache_read_spending || 0) +
-          (u.cache_write_spending || 0) +
-          (u.output_spending || 0),
+        (sum, user) => sum + this.spendingValue(user),
         0
       ),
     };
+  }
+
+  spendingValue(row) {
+    return (
+      row.total_spending ??
+      (row.input_spending || 0) +
+        (row.cache_read_spending || 0) +
+        (row.cache_write_spending || 0) +
+        (row.output_spending || 0)
+    );
   }
 
   @bind
@@ -491,12 +486,7 @@ export default class AiUsage extends Component {
   getCostOnlySpending(featureName) {
     const costModels = this.getCostModelsForFeature(featureName);
     return costModels.reduce(
-      (sum, m) =>
-        sum +
-        (m.input_spending || 0) +
-        (m.cache_read_spending || 0) +
-        (m.cache_write_spending || 0) +
-        (m.output_spending || 0),
+      (sum, model) => sum + this.spendingValue(model),
       0
     );
   }
@@ -609,13 +599,15 @@ export default class AiUsage extends Component {
     inputSpending,
     cacheReadSpending,
     cacheWriteSpending,
-    outputSpending
+    outputSpending,
+    estimatedSpending
   ) {
     const total =
+      estimatedSpending ??
       (inputSpending || 0) +
-      (cacheReadSpending || 0) +
-      (cacheWriteSpending || 0) +
-      (outputSpending || 0);
+        (cacheReadSpending || 0) +
+        (cacheWriteSpending || 0) +
+        (outputSpending || 0);
     return `$${total.toFixed(2)}`;
   }
 
@@ -777,6 +769,7 @@ export default class AiUsage extends Component {
                                 feature.cache_read_spending
                                 feature.cache_write_spending
                                 feature.output_spending
+                                feature.total_spending
                               }}
                             {{else}}
                               <span class="ai-usage__mixed-cost">
@@ -903,6 +896,7 @@ export default class AiUsage extends Component {
                                                       model.cache_read_spending
                                                       model.cache_write_spending
                                                       model.output_spending
+                                                      model.total_spending
                                                     }}</td>
                                                 </tr>
                                               {{/each}}
@@ -1009,6 +1003,7 @@ export default class AiUsage extends Component {
                               model.cache_read_spending
                               model.cache_write_spending
                               model.output_spending
+                              model.total_spending
                             }}
                           </td>
                         </tr>
@@ -1095,6 +1090,7 @@ export default class AiUsage extends Component {
                                 user.cache_read_spending
                                 user.cache_write_spending
                                 user.output_spending
+                                user.total_spending
                               }}
                             </td>
                           </tr>
@@ -1161,6 +1157,7 @@ export default class AiUsage extends Component {
                                   user.cache_read_spending
                                   user.cache_write_spending
                                   user.output_spending
+                                  user.total_spending
                                 }}
                               </td>
                             </tr>
