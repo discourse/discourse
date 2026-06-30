@@ -2078,6 +2078,22 @@ RSpec.describe Middleware::RequestTracker do
       )
     end
 
+    it "treats a null or blank time to first interaction as null rather than zero" do
+      middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
+
+      [nil, ""].each do |value|
+        middleware.call(
+          engagement_env(payload.merge(time_to_first_interaction_ms: value), same_origin),
+        )
+
+        expect(
+          BrowserPageviewSessionEngagement.find_by(
+            session_id: "sess-1",
+          ).time_to_first_interaction_ms,
+        ).to be_nil
+      end
+    end
+
     it "discards malformed-but-parseable payloads instead of raising in the deferred write" do
       middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
 
