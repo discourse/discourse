@@ -68,21 +68,23 @@ module DiscourseAi
         initial_quotas = llm_model.llm_quotas.map(&:attributes)
 
         if params[:ai_llm].key?(:llm_quotas)
-          if quota_params
-            existing_quota_group_ids = llm_model.llm_quotas.pluck(:group_id)
-            new_quota_group_ids = quota_params.map { |q| q[:group_id] }
+          ActiveRecord::Base.transaction do
+            if quota_params
+              existing_quota_group_ids = llm_model.llm_quotas.pluck(:group_id)
+              new_quota_group_ids = quota_params.map { |q| q[:group_id] }
 
-            llm_model
-              .llm_quotas
-              .where(group_id: existing_quota_group_ids - new_quota_group_ids)
-              .destroy_all
+              llm_model
+                .llm_quotas
+                .where(group_id: existing_quota_group_ids - new_quota_group_ids)
+                .destroy_all
 
-            quota_params.each do |quota_param|
-              quota = llm_model.llm_quotas.find_or_initialize_by(group_id: quota_param[:group_id])
-              quota.update!(quota_param)
+              quota_params.each do |quota_param|
+                quota = llm_model.llm_quotas.find_or_initialize_by(group_id: quota_param[:group_id])
+                quota.update!(quota_param)
+              end
+            else
+              llm_model.llm_quotas.destroy_all
             end
-          else
-            llm_model.llm_quotas.destroy_all
           end
         end
 
@@ -103,6 +105,8 @@ module DiscourseAi
         else
           render_json_error llm_model
         end
+      rescue ActiveRecord::RecordInvalid => e
+        render_json_error e.record
       end
 
       def destroy
@@ -180,13 +184,18 @@ module DiscourseAi
           params[:ai_llm][:llm_quotas].map do |quota|
             mapped = {}
             mapped[:group_id] = quota[:group_id].to_i
-            mapped[:max_tokens] = quota[:max_tokens].to_i if quota[:max_tokens].present?
-            mapped[:max_usages] = quota[:max_usages].to_i if quota[:max_usages].present?
-            mapped[:max_cost] = quota[:max_cost] if quota[:max_cost].present?
+            %i[max_tokens max_usages].each do |key|
+              mapped[key] = optional_integer_param(quota[key]) if quota.key?(key)
+            end
+            mapped[:max_cost] = quota[:max_cost].presence if quota.key?(:max_cost)
             mapped[:duration_seconds] = quota[:duration_seconds].to_i
             mapped
           end
         end
+      end
+
+      def optional_integer_param(value)
+        value.presence&.to_i
       end
 
       def credit_allocation_params

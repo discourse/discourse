@@ -526,6 +526,76 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
           expect(new_quota.max_cost).to eq(BigDecimal("3.0"))
           expect(new_quota.duration_seconds).to eq(86_400)
         end
+
+        it "returns validation errors for invalid quota limits" do
+          group1 = Fabricate(:group)
+          group2 = Fabricate(:group)
+          quota =
+            Fabricate(
+              :llm_quota,
+              llm_model: llm_model,
+              group: group1,
+              max_tokens: 1000,
+              max_usages: nil,
+              max_cost: "1.50",
+              duration_seconds: 86_400,
+            )
+          other_quota = Fabricate(:llm_quota, llm_model: llm_model, group: group2)
+
+          put "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json",
+              params: {
+                ai_llm: {
+                  llm_quotas: [
+                    {
+                      group_id: group1.id,
+                      max_tokens: 0,
+                      max_usages: nil,
+                      max_cost: "1.50",
+                      duration_seconds: 86_400,
+                    },
+                  ],
+                },
+              }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include("Max tokens must be greater than 0")
+          expect(quota.reload.max_tokens).to eq(1000)
+          expect(LlmQuota.exists?(other_quota.id)).to eq(true)
+        end
+
+        it "clears optional quota limits when blank values are submitted" do
+          group = Fabricate(:group)
+          quota =
+            Fabricate(
+              :llm_quota,
+              llm_model: llm_model,
+              group: group,
+              max_tokens: 1000,
+              max_usages: 10,
+              max_cost: "1.50",
+              duration_seconds: 86_400,
+            )
+
+          put "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json",
+              params: {
+                ai_llm: {
+                  llm_quotas: [
+                    {
+                      group_id: group.id,
+                      max_tokens: "",
+                      max_usages: "",
+                      max_cost: "2.50",
+                      duration_seconds: 86_400,
+                    },
+                  ],
+                },
+              }
+
+          expect(response.status).to eq(200)
+          expect(quota.reload.max_tokens).to be_nil
+          expect(quota.max_usages).to be_nil
+          expect(quota.max_cost).to eq(BigDecimal("2.5"))
+        end
       end
 
       it "updates the model" do
