@@ -56,6 +56,7 @@ en:
     enable_ai_bot_starred_conversations: "Allow users to star AI bot conversations and show them in a Starred sidebar section."
     ai_default_llm_model: "The default LLM model to use for all AI features"
     ai_artifact_security: "The AI artifact system generates IFRAMEs with runnable code. Strict mode forces an extra click to run code. Lax mode runs code immediately. Hybrid mode allows user to supply data-ai-artifact-autorun to show right away. Disabled mode disables the artifact system."
+    ai_artifact_allowed_groups: "Groups whose members can author AI artifacts directly from the composer toolbar."
     ai_toxicity_enabled: "Enable the toxicity module."
     ai_toxicity_inference_service_api_endpoint: "URL where the API is running for the toxicity module"
     ai_toxicity_inference_service_api_key: "API key for the toxicity API"

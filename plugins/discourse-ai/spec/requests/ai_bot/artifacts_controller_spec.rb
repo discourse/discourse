@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseAi::AiBot::ArtifactsController do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:admin)
   fab!(:topic) { Fabricate(:private_message_topic, user: user) }
-  fab!(:post) { Fabricate(:post, user: user, topic: topic) }
+  fab!(:pm_post) { Fabricate(:post, user: user, topic: topic) }
   fab!(:artifact) do
     AiArtifact.create!(
       user: user,
-      post: post,
+      post: pm_post,
       name: "Test Artifact",
       html: "<div>Hello World</div>",
       css: "div { color: blue; }",
@@ -25,6 +26,7 @@ RSpec.describe DiscourseAi::AiBot::ArtifactsController do
   before do
     enable_current_plugin
     SiteSetting.ai_artifact_security = "strict"
+    SiteSetting.ai_artifact_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
   end
 
   describe "#show" do
@@ -113,6 +115,45 @@ RSpec.describe DiscourseAi::AiBot::ArtifactsController do
       end
     end
 
+    context "with version=latest" do
+      it "returns the base content when the artifact has no versions" do
+        sign_in(user)
+
+        get "/discourse-ai/ai-bot/artifacts/#{artifact.id}/latest"
+
+        expect(response.status).to eq(200)
+        expect(parse_srcdoc(response.body)).to include(artifact.html)
+      end
+
+      it "returns the latest version when one exists" do
+        artifact.create_new_version(html: "<div>v2</div>")
+        sign_in(user)
+
+        get "/discourse-ai/ai-bot/artifacts/#{artifact.id}/latest"
+
+        expect(response.status).to eq(200)
+        expect(parse_srcdoc(response.body)).to include("<div>v2</div>")
+      end
+    end
+
+    context "with orphan artifact" do
+      before { artifact.update!(post_id: nil) }
+
+      it "returns 404 to anonymous viewers" do
+        get "/discourse-ai/ai-bot/artifacts/#{artifact.id}"
+
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 200 to the artifact owner" do
+        sign_in(user)
+
+        get "/discourse-ai/ai-bot/artifacts/#{artifact.id}"
+
+        expect(response.status).to eq(200)
+      end
+    end
+
     it "sanitizes CSS to prevent style tag breakout" do
       sign_in(user)
       malicious_css = '</style><script>alert("XSS from CSS")</script><style>'
@@ -159,6 +200,147 @@ RSpec.describe DiscourseAi::AiBot::ArtifactsController do
 
       expect(kv_handler_script).to be_present
       expect(kv_handler_script).to match(/event\.source\s*!==?\s*\w+\.contentWindow/)
+    end
+
+    context "with JSON format" do
+      it "returns 200 with the artifact attributes when the user can see the post" do
+        sign_in(user)
+
+        get "/discourse-ai/ai-bot/artifacts/#{artifact.id}/latest.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body).to eq(
+          "id" => artifact.id,
+          "name" => artifact.name,
+          "html" => artifact.html,
+          "css" => artifact.css,
+          "js" => artifact.js,
+        )
+      end
+
+      it "returns 200 to admins" do
+        sign_in(admin)
+
+        get "/discourse-ai/ai-bot/artifacts/#{artifact.id}/latest.json"
+
+        expect(response.status).to eq(200)
+      end
+
+      it "returns 404 to users who cannot see the post" do
+        sign_in(Fabricate(:user))
+
+        get "/discourse-ai/ai-bot/artifacts/#{artifact.id}/latest.json"
+
+        expect(response.status).to eq(404)
+      end
+
+      it "returns the latest version attributes when a newer version exists" do
+        artifact.create_new_version(html: "<div>v2</div>", css: ".x{}", js: "console.log(2)")
+        sign_in(user)
+
+        get "/discourse-ai/ai-bot/artifacts/#{artifact.id}/latest.json"
+
+        expect(response.parsed_body).to include(
+          "html" => "<div>v2</div>",
+          "css" => ".x{}",
+          "js" => "console.log(2)",
+        )
+      end
+    end
+  end
+
+  describe "#create" do
+    let(:valid_params) { { name: "Composer artifact", html: "<p>hi</p>", css: "", js: "" } }
+
+    it "returns 403 to anonymous users" do
+      post "/discourse-ai/ai-bot/artifacts.json", params: valid_params
+
+      expect(response.status).to eq(403)
+    end
+
+    it "returns 403 to users who are not in the `ai_artifact_allowed_groups` site setting" do
+      SiteSetting.ai_artifact_allowed_groups = ""
+      sign_in(user)
+
+      post "/discourse-ai/ai-bot/artifacts.json", params: valid_params
+
+      expect(response.status).to eq(403)
+    end
+
+    it "returns 404 when the `ai_artifact_security` site setting is disabled" do
+      SiteSetting.ai_artifact_security = "disabled"
+      sign_in(admin)
+
+      post "/discourse-ai/ai-bot/artifacts.json", params: valid_params
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 200 and creates an artifact not associated to a post for admins" do
+      sign_in(admin)
+
+      post "/discourse-ai/ai-bot/artifacts.json", params: valid_params
+
+      expect(response.status).to eq(200)
+      created = AiArtifact.find(response.parsed_body["id"])
+      expect(created).to have_attributes(
+        user_id: admin.id,
+        post_id: nil,
+        name: "Composer artifact",
+        html: "<p>hi</p>",
+      )
+    end
+
+    it "returns 200 and creates an artifact not associated to a post for users in the `ai_artifact_allowed_groups` site setting" do
+      group = Fabricate(:group)
+      group.add(user)
+      SiteSetting.ai_artifact_allowed_groups = group.id.to_s
+      sign_in(user)
+
+      post "/discourse-ai/ai-bot/artifacts.json", params: valid_params
+
+      expect(response.status).to eq(200)
+      expect(AiArtifact.find(response.parsed_body["id"]).user_id).to eq(user.id)
+    end
+  end
+
+  describe "#update" do
+    let(:valid_params) { { html: "<p>new</p>", css: ".x{color:red}", js: "" } }
+
+    it "returns 200 and appends a new version when called by the owner" do
+      sign_in(user)
+
+      expect {
+        put "/discourse-ai/ai-bot/artifacts/#{artifact.id}.json", params: valid_params
+      }.to change { artifact.versions.count }.by(1)
+
+      expect(response.status).to eq(200)
+      expect(artifact.versions.order(:version_number).last.html).to eq("<p>new</p>")
+    end
+
+    it "returns 200 when called by an admin who does not own the artifact" do
+      sign_in(admin)
+
+      put "/discourse-ai/ai-bot/artifacts/#{artifact.id}.json", params: valid_params
+
+      expect(response.status).to eq(200)
+    end
+
+    it "returns 403 to users who do not own the artifact" do
+      sign_in(Fabricate(:user))
+
+      put "/discourse-ai/ai-bot/artifacts/#{artifact.id}.json", params: valid_params
+
+      expect(response.status).to eq(403)
+    end
+
+    it "returns 404 when the `ai_artifact_security` site setting is disabled" do
+      SiteSetting.ai_artifact_security = "disabled"
+      sign_in(user)
+
+      put "/discourse-ai/ai-bot/artifacts/#{artifact.id}.json", params: valid_params
+
+      expect(response.status).to eq(404)
     end
   end
 end

@@ -1207,6 +1207,17 @@ en:
         expand_view_label: "Expand view"
         collapse_view_label: "Exit Fullscreen (ESC or Back button)"
         click_to_run_label: "Run Artifact"
+        edit_label: "Edit artifact"
+        open_label: "Open in new tab"
+        save_label: "Save"
+        composer:
+          insert_title: "Insert AI artifact"
+          edit_title: "Edit AI artifact"
+          name_label: "Name"
+          html_label: "HTML"
+          css_label: "CSS"
+          js_label: "JavaScript"
+          insert_button: "Insert"
 
       ai_bot:
         title: "AI bot"

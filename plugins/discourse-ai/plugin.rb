@@ -88,6 +88,8 @@ after_initialize do
     Rack::MiniProfiler.config.skip_paths << "/discourse-ai/ai-bot/artifacts"
   end
 
+  on(:post_process_cooked) { |doc, post| AiArtifact.link_artifacts_from_cooked(doc, post) }
+
   # Avoid a mini_sql warning ("no type cast defined") by registering a halfvec text decoder.
   if !GlobalSetting.skip_db?
     if halfvec_oid = DB.query_single("SELECT oid FROM pg_type WHERE typname = 'halfvec'").first
@@ -172,6 +174,33 @@ after_initialize do
     Guardian.prepend DiscourseAi::GuardianExtensions
     Topic.prepend DiscourseAi::TopicExtensions
     Post.prepend DiscourseAi::PostExtensions
+  end
+
+  TopicView.on_preload do |topic_view|
+    next if SiteSetting.ai_artifact_security == "disabled"
+
+    by_post_id = AiArtifact.where(post_id: topic_view.posts.map(&:id)).group_by(&:post_id)
+    topic_view.set_preloaded_post_data(:ai_artifacts, by_post_id)
+  end
+
+  add_to_serializer(:current_user, :can_create_ai_artifact) { scope.can_create_ai_artifact? }
+
+  add_to_serializer(
+    :post,
+    :editable_ai_artifact_ids,
+    include_condition: -> do
+      scope.authenticated? && SiteSetting.ai_artifact_security != "disabled" &&
+        post_ai_artifacts.present?
+    end,
+  ) { post_ai_artifacts.select { |a| scope.can_edit_ai_artifact?(a) }.map(&:id) }
+
+  add_to_class(:post_serializer, :post_ai_artifacts) do
+    @post_ai_artifacts ||=
+      if @topic_view
+        @topic_view.preloaded_post_data(:ai_artifacts)&.dig(object.id) || []
+      else
+        AiArtifact.where(post_id: object.id).to_a
+      end
   end
 
   # AI bots reply via `skip_guardian: true`, so the reachability warning is misleading.

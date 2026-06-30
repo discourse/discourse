@@ -8,11 +8,15 @@ import htmlClass from "discourse/helpers/html-class";
 import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 
+import AiArtifactBuilder from "./modal/ai-artifact-builder";
+
 export default class AiArtifactComponent extends Component {
   @service siteSettings;
+  @service modal;
 
   @tracked expanded = false;
   @tracked showingArtifact = false;
+  @tracked cacheBuster = 0;
 
   constructor() {
     super(...arguments);
@@ -48,6 +52,10 @@ export default class AiArtifactComponent extends Component {
       return false;
     }
 
+    if (this.args.previewMode) {
+      return true;
+    }
+
     if (this.siteSettings.ai_artifact_security === "strict") {
       return true;
     }
@@ -65,8 +73,15 @@ export default class AiArtifactComponent extends Component {
   }
 
   get artifactUrl() {
-    let url = getURL(`/discourse-ai/ai-bot/artifacts/${this.args.artifactId}`);
+    let url = this.openUrl;
+    if (this.cacheBuster) {
+      url = `${url}?_=${this.cacheBuster}`;
+    }
+    return url;
+  }
 
+  get openUrl() {
+    let url = getURL(`/discourse-ai/ai-bot/artifacts/${this.args.artifactId}`);
     if (this.args.artifactVersion) {
       url = `${url}/${this.args.artifactVersion}`;
     }
@@ -93,6 +108,18 @@ export default class AiArtifactComponent extends Component {
     this.expanded = !this.expanded;
   }
 
+  @action
+  editArtifact() {
+    this.modal.show(AiArtifactBuilder, {
+      model: {
+        artifactId: this.args.artifactId,
+        onSaved: () => {
+          this.cacheBuster = Date.now();
+        },
+      },
+    });
+  }
+
   get wrapperClasses() {
     return `ai-artifact__wrapper ${
       this.expanded ? "ai-artifact__expanded" : ""
@@ -112,11 +139,11 @@ export default class AiArtifactComponent extends Component {
     if (this.args.artifactHeight) {
       let height = parseInt(this.args.artifactHeight, 10);
       if (isNaN(height) || height <= 0) {
-        height = 500; // default height if the provided value is invalid
+        height = 500;
       }
 
       if (height > 2000) {
-        height = 2000; // cap the height to a maximum of 2000px
+        height = 2000;
       }
 
       return trustHTML(`height: ${height}px;`);
@@ -132,7 +159,11 @@ export default class AiArtifactComponent extends Component {
   }
 
   get showFooter() {
-    return !this.seamless && !this.requireClickToRun;
+    return !this.seamless && (!this.requireClickToRun || this.args.canEdit);
+  }
+
+  get showExpandButton() {
+    return !this.requireClickToRun;
   }
 
   <template>
@@ -171,11 +202,29 @@ export default class AiArtifactComponent extends Component {
       {{#if this.showFooter}}
         <div class="ai-artifact__footer">
           <DButton
-            class="btn-transparent btn-icon-text ai-artifact__expand-button"
-            @icon="discourse-expand"
-            @label="discourse_ai.ai_artifact.expand_view_label"
-            @action={{this.toggleView}}
+            class="btn-transparent btn-icon-text ai-artifact__open-button"
+            @icon="up-right-from-square"
+            @label="discourse_ai.ai_artifact.open_label"
+            @href={{this.openUrl}}
+            target="_blank"
+            rel="noopener"
           />
+          {{#if @canEdit}}
+            <DButton
+              class="btn-transparent btn-icon-text ai-artifact__edit-button"
+              @icon="pencil"
+              @label="discourse_ai.ai_artifact.edit_label"
+              @action={{this.editArtifact}}
+            />
+          {{/if}}
+          {{#if this.showExpandButton}}
+            <DButton
+              class="btn-transparent btn-icon-text ai-artifact__expand-button"
+              @icon="discourse-expand"
+              @label="discourse_ai.ai_artifact.expand_view_label"
+              @action={{this.toggleView}}
+            />
+          {{/if}}
         </div>
       {{/if}}
     </div>

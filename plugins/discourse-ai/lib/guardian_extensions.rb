@@ -122,5 +122,23 @@ module DiscourseAi
 
       conversation.user_id == user.id || is_admin?
     end
+
+    def can_create_ai_artifact?
+      return false if anonymous?
+      return false if SiteSetting.ai_artifact_security == "disabled"
+      is_admin? || user.in_any_groups?(SiteSetting.ai_artifact_allowed_groups_map)
+    end
+
+    def can_view_ai_artifact?(artifact)
+      return true if artifact.public?
+      return true if !anonymous? && artifact.user_id == user.id
+      return false if artifact.post_id.nil?
+      can_see?(artifact.post)
+    end
+
+    def can_edit_ai_artifact?(artifact)
+      return false if !can_create_ai_artifact?
+      is_admin? || artifact.user_id == user.id
+    end
   end
 end

@@ -51,8 +51,10 @@ DiscourseAi::Engine.routes.draw do
   end
 
   scope module: :ai_bot, path: "/ai-bot/artifacts" do
+    post "/" => "artifacts#create", :defaults => { format: :json }
+    put "/:id" => "artifacts#update", :defaults => { format: :json }
     get "/:id" => "artifacts#show"
-    get "/:id/:version" => "artifacts#show"
+    get "/:id/:version" => "artifacts#show", :constraints => { version: /\d+|latest/ }
   end
 
   scope module: :ai_bot, path: "/ai-bot/artifact-key-values/:artifact_id" do

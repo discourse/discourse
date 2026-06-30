@@ -12,29 +12,86 @@ module DiscourseAi
       def show
         artifact = AiArtifact.find(params[:id])
 
-        post = Post.find_by(id: artifact.post_id)
-        if artifact.public?
-          # no guardian needed
+        if !artifact.public?
+          raise Discourse::NotFound if !guardian.can_view_ai_artifact?(artifact)
+        end
+
+        artifact_version = resolve_artifact_version(artifact)
+        content = artifact_version || artifact
+
+        respond_to do |format|
+          format.json do
+            render json: {
+                     id: artifact.id,
+                     name: artifact.name,
+                     html: content.html,
+                     css: content.css,
+                     js: content.js,
+                   }
+          end
+
+          format.html do
+            untrusted_html = build_untrusted_html(content, artifact.name)
+            trusted_html =
+              build_trusted_html(artifact, artifact_version, artifact.name, untrusted_html)
+
+            set_security_headers
+            render html: trusted_html.html_safe, layout: false, content_type: "text/html"
+          end
+        end
+      end
+
+      def create
+        guardian.ensure_can_create_ai_artifact!
+
+        artifact =
+          AiArtifact.new(
+            user: current_user,
+            name: artifact_params[:name].to_s.presence&.[](0...255) || "Untitled",
+            html: artifact_params[:html],
+            css: artifact_params[:css],
+            js: artifact_params[:js],
+          )
+
+        if artifact.save
+          render json: success_json.merge(id: artifact.id)
         else
-          raise Discourse::NotFound if !guardian.can_see?(post)
+          render_json_error artifact
+        end
+      end
+
+      def update
+        artifact = AiArtifact.find(params[:id])
+        raise Discourse::InvalidAccess if !guardian.can_edit_ai_artifact?(artifact)
+
+        if artifact_params[:name].present?
+          artifact.update!(name: artifact_params[:name].to_s[0...255])
         end
 
-        name = artifact.name
-        artifact_version = nil
+        artifact.create_new_version(
+          html: artifact_params[:html],
+          css: artifact_params[:css],
+          js: artifact_params[:js],
+        )
 
-        if params[:version].present?
-          artifact_version = artifact.versions.find_by(version_number: params[:version])
-          raise Discourse::NotFound if !artifact_version
-        end
-
-        untrusted_html = build_untrusted_html(artifact_version || artifact, name)
-        trusted_html = build_trusted_html(artifact, artifact_version, name, untrusted_html)
-
-        set_security_headers
-        render html: trusted_html.html_safe, layout: false, content_type: "text/html"
+        render json: success_json
       end
 
       private
+
+      def resolve_artifact_version(artifact)
+        return artifact.versions.order(:version_number).last if params[:version] == "latest"
+        return nil if params[:version].blank?
+
+        version = artifact.versions.find_by(version_number: params[:version])
+        raise Discourse::NotFound if version.nil?
+
+        version
+      end
+
+      def artifact_params
+        params.permit(:name, :html, :css, :js)
+      end
 
       def build_untrusted_html(artifact, name)
         js = prepare_javascript(artifact.js)
