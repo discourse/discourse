@@ -101,6 +101,12 @@ acceptance("New Query", function (needs) {
       .dom(".query-new__manual-form .editor-panel .ace-wrapper")
       .exists("SQL editor renders alongside the schema sidebar");
 
+    await click(".query-new__manual-form .schema__toggle.--collapse");
+
+    assert
+      .dom(".query-new__manual-form .schema-search__input")
+      .doesNotExist("schema sidebar can be hidden");
+
     await fillIn(".query-new__manual-form [data-name='name'] input", "foo");
     await fillIn(
       ".query-new__manual-form [data-name='description'] textarea",
@@ -112,6 +118,10 @@ acceptance("New Query", function (needs) {
       currentURL(),
       "/admin/plugins/discourse-data-explorer/queries/-15"
     );
+
+    assert
+      .dom(".query-editor.no-schema .schema__toggle.--expand")
+      .exists("schema hidden state persists across Data Explorer pages");
   });
 });
 
