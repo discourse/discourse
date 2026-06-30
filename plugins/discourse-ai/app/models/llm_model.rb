@@ -45,12 +45,49 @@ class LlmModel < ActiveRecord::Base
     COST_COMPONENTS.keys.map { |k| spending_component_sql(k, table) }.join(" + ")
   end
 
+  def self.spending_dollars_sql(table)
+    "(#{spending_sql(table)}) / 1000000.0"
+  end
+
+  def self.estimated_or_calculated_spending_sql(table)
+    qt = connection.quote_table_name(table.to_s)
+    "COALESCE(#{qt}.estimated_cost, CASE WHEN llm_models.id IS NULL THEN NULL ELSE #{spending_dollars_sql(table)} END)"
+  end
+
+  def estimated_cost_for_tokens(
+    request_tokens:,
+    response_tokens:,
+    cache_read_tokens: 0,
+    cache_write_tokens: 0
+  )
+    return nil if !costs_configured?
+
+    [
+      [request_tokens, input_cost],
+      [response_tokens, output_cost],
+      [cache_read_tokens, cached_input_cost],
+      [cache_write_tokens, cache_write_cost],
+    ].sum(BigDecimal("0")) do |tokens, cost|
+      BigDecimal(tokens.to_i.to_s) * BigDecimal((cost || 0).to_s) / 1_000_000
+    end
+  end
+
   def spending_for(record)
-    total =
-      COST_COMPONENTS.values.sum do |info|
-        record.public_send(info[:tokens]).to_i * public_send(info[:cost]).to_f
-      end
-    (total / 1_000_000.0).round(6)
+    if record.respond_to?(:estimated_cost) && record.estimated_cost.present?
+      record.estimated_cost.to_d.round(6).to_f
+    else
+      estimated_cost_for_tokens(
+        request_tokens: record.request_tokens,
+        response_tokens: record.response_tokens,
+        cache_read_tokens: record.cache_read_tokens,
+        cache_write_tokens: record.cache_write_tokens,
+      )&.round(6)&.to_f
+    end
+  end
+
+  def costs_configured?
+    [input_cost, output_cost, cached_input_cost].any? { |cost| !cost.nil? } ||
+      cache_write_cost.to_f != 0
   end
 
   has_many :llm_quotas, dependent: :destroy

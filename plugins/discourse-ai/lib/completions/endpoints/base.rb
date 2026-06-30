@@ -474,6 +474,15 @@ module DiscourseAi
           # for people that need to override
         end
 
+        def estimated_cost_for(log)
+          llm_model.estimated_cost_for_tokens(
+            request_tokens: log.request_tokens,
+            response_tokens: log.response_tokens,
+            cache_read_tokens: log.cache_read_tokens,
+            cache_write_tokens: log.cache_write_tokens,
+          )
+        end
+
         def default_options
           raise NotImplementedError
         end
@@ -760,6 +769,7 @@ module DiscourseAi
           final_log_update(log)
           log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
           log.response_status ||= 200 if call_status == :success
+          log.estimated_cost = estimated_cost_for(log)
           log.created_at = start_time
           log.updated_at = Time.now
           log.duration_msecs = (Time.now - start_time) * 1000
@@ -768,7 +778,15 @@ module DiscourseAi
           execution_context&.token_usage_tracker&.add_from_audit_log(log)
 
           AiApiRequestStat.record_from_audit_log(log, llm_model: @llm_model)
-          LlmQuota.log_usage(@llm_model, user, log.request_tokens, log.response_tokens)
+          LlmQuota.log_usage(
+            @llm_model,
+            user,
+            request_tokens: log.request_tokens,
+            response_tokens: log.response_tokens,
+            cache_read_tokens: log.cache_read_tokens,
+            cache_write_tokens: log.cache_write_tokens,
+            estimated_cost: log.estimated_cost,
+          )
           LlmCreditAllocation.deduct_credits!(
             @llm_model,
             feature_name,
