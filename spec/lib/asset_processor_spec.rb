@@ -214,6 +214,30 @@ RSpec.describe AssetProcessor do
       expect(code).to include("keep")
     end
 
+    it "preserves optionality of cross-plugin imports" do
+      script = <<~JS.chomp
+        import Example from "discourse/plugins/styleguide/discourse/components/example" with { discourseImport: "optional" };
+        console.log(Example);
+      JS
+
+      result =
+        AssetProcessor.new.rollup(
+          { "discourse/components/foo.js" => script },
+          {
+            pluginName: "chat",
+            entrypoints: {
+              main: {
+                modules: ["discourse/components/foo.js"],
+              },
+            },
+          },
+        )
+
+      code = entrypoint(result, "main")["code"]
+      expect(code).to include('"discourse/plugins/styleguide?"')
+      expect(code).not_to include('"discourse/plugins/styleguide"')
+    end
+
     it "can use themePrefix not in a template" do
       script = <<~JS.chomp
         export default function foo() {
