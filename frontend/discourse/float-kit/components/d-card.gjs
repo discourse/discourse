@@ -61,6 +61,7 @@ export default class DCard extends Component {
       @presented={{@presented}}
       @onPresentedChange={{@onPresentedChange}}
       @onClosed={{@onClosed}}
+      ...attributes
       as |sheet|
     >
       {{yield

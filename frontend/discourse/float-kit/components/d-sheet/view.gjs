@@ -57,7 +57,36 @@ export default class View extends Component {
   }
 
   <template>
-    {{effect this.configureSheet @sheet}}
+    {{effect
+      this.configureSheet
+      @sheet
+      @contentPlacement
+      @tracks
+      @detents
+      @swipe
+      @swipeDismissal
+      @swipeOvershoot
+      @swipeTrap
+      @nativeFocusScrollPrevention
+      @pageScroll
+      @inertOutside
+      @onClickOutside
+      @onEscapeKeyDown
+      @onPresentAutoFocus
+      @onDismissAutoFocus
+      @enteringAnimationSettings
+      @exitingAnimationSettings
+      @steppingAnimationSettings
+      @snapOutAcceleration
+      @snapToEndDetentsAcceleration
+      @themeColorDimming
+      @themeColorDimmingAlpha
+      @onTravelStatusChange
+      @onTravelRangeChange
+      @onTravel
+      @onTravelStart
+      @onTravelEnd
+    }}
 
     <div
       id={{@sheet.id}}

@@ -38,6 +38,23 @@ export default class SheetStackRegistry extends Service {
     this.stackStagingData.delete(stackId);
   }
 
+  registerStackingAnimation(stackId, animation) {
+    const stack = this.stacks.get(stackId);
+
+    if (!stack) {
+      return () => {};
+    }
+
+    stack.stackingAnimations.push(animation);
+
+    return () => {
+      const index = stack.stackingAnimations.indexOf(animation);
+      if (index !== -1) {
+        stack.stackingAnimations.splice(index, 1);
+      }
+    };
+  }
+
   registerSheetWithStack(stackId, controller) {
     const sheets = this.stackSheets.get(stackId);
     if (!sheets) {

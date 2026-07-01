@@ -3,8 +3,6 @@ import { action } from "@ember/object";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 
 export default class ScrollController {
-  @tracked viewElement = null;
-  @tracked contentElement = null;
   @tracked startSpacerHeight = 0;
   @tracked endSpacerHeight = 0;
   @tracked scrollOngoing = false;
@@ -12,6 +10,9 @@ export default class ScrollController {
   @tracked overflowY = false;
   @tracked scrollTrapX = false;
   @tracked scrollTrapY = false;
+  viewElement = null;
+  contentElement = null;
+
   startSpacerElement = null;
   endSpacerElement = null;
   axis = "y";
@@ -48,22 +49,32 @@ export default class ScrollController {
 
   @action
   registerView(element) {
+    this.#unobserveElement(this.viewElement);
     this.viewElement = element;
+    this.#observeElement(element);
+    this.updateOverflowState();
   }
 
   @action
   registerContent(element) {
+    this.#unobserveElement(this.contentElement);
     this.contentElement = element;
+    this.#observeElement(element);
+    this.updateOverflowState();
   }
 
   @action
   registerStartSpacer(element) {
+    this.#unobserveElement(this.startSpacerElement);
     this.startSpacerElement = element;
+    this.#observeElement(element);
   }
 
   @action
   registerEndSpacer(element) {
+    this.#unobserveElement(this.endSpacerElement);
     this.endSpacerElement = element;
+    this.#observeElement(element);
   }
 
   @action
@@ -76,12 +87,24 @@ export default class ScrollController {
       this.updateOverflowState();
     });
 
-    this.resizeObserver.observe(this.viewElement);
-    if (this.contentElement) {
-      this.resizeObserver.observe(this.contentElement);
-    }
+    this.#observeElement(this.viewElement);
+    this.#observeElement(this.contentElement);
+    this.#observeElement(this.startSpacerElement);
+    this.#observeElement(this.endSpacerElement);
 
     this.updateOverflowState();
+  }
+
+  #observeElement(element) {
+    if (element && this.resizeObserver) {
+      this.resizeObserver.observe(element, { box: "border-box" });
+    }
+  }
+
+  #unobserveElement(element) {
+    if (element && this.resizeObserver) {
+      this.resizeObserver.unobserve(element);
+    }
   }
 
   @action

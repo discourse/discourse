@@ -1,4 +1,5 @@
 import { on } from "@ember/modifier";
+import { i18n } from "discourse-i18n";
 import SheetActionBase from "./sheet-action-base";
 
 export default class Handle extends SheetActionBase {
@@ -12,7 +13,9 @@ export default class Handle extends SheetActionBase {
   }
 
   get defaultText() {
-    return this.actionType === "dismiss" ? "Dismiss" : "Cycle";
+    return i18n(
+      this.actionType === "dismiss" ? "d_sheet.dismiss" : "d_sheet.cycle"
+    );
   }
 
   get isPresented() {
