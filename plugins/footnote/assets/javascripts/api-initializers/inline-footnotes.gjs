@@ -53,13 +53,31 @@ export default apiInitializer((api) => {
       }
 
       const footnoteId = refLink.getAttribute("href");
-
       const footnoteElement = elem.querySelector(footnoteId)?.cloneNode(true);
+
       footnoteElement
         ?.querySelectorAll("sup.footnote-ref")
         .forEach((nestedRef) => {
-          nestedRef.replaceWith(nestedRef.textContent);
+          const nestedId = nestedRef.querySelector("a")?.getAttribute("href");
+
+          if (!nestedId || nestedId === footnoteId) {
+            nestedRef.remove();
+            return;
+          }
+
+          const nestedNote = elem.querySelector(nestedId)?.cloneNode(true);
+          nestedNote
+            ?.querySelectorAll(".footnote-backref")
+            .forEach((backref) => backref.remove());
+
+          nestedRef.replaceWith(
+            nestedNote?.textContent.trim() ?? nestedRef.textContent
+          );
         });
+
+      footnoteElement
+        ?.querySelectorAll(".footnote-backref")
+        .forEach((backref) => backref.remove());
 
       const footnoteContent = footnoteElement?.innerHTML;
 
