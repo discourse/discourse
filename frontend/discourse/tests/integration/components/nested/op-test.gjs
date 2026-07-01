@@ -19,6 +19,7 @@ function renderComponent(context) {
         @showHistory={{noop}}
         @replyToPost={{noop}}
         @deletePost={{context.deletePost}}
+        @recoverPost={{context.recoverPost}}
         @changeNotice={{noop}}
         @changePostOwner={{noop}}
         @grantBadge={{noop}}
@@ -64,6 +65,7 @@ module("Integration | Component | Nested | Op", function (hooks) {
     this.multiSelect = false;
     this.showPostMenu = false;
     this.deletePost = noop;
+    this.recoverPost = noop;
     this.togglePostSelection = noop;
     this.selectReplies = noop;
     this.selectBelow = noop;
@@ -109,6 +111,36 @@ module("Integration | Component | Nested | Op", function (hooks) {
     await click(".nested-view__op-menu .post-action-menu__delete");
 
     assert.verifySteps(["delete action"], "invokes the delete action");
+  });
+
+  test("renders a deleted OP with an enabled recover-topic button", async function (assert) {
+    this.showPostMenu = true;
+    this.topic.setProperties({
+      deleted_at: "2026-01-01T00:00:00.000Z",
+      details: { can_recover: true },
+    });
+    this.recoverPost = (post) => {
+      assert.strictEqual(
+        post,
+        this.post,
+        "passes the OP to the recover action"
+      );
+      assert.step("recover action");
+    };
+
+    await renderComponent(this);
+
+    assert
+      .dom(".nested-view__op-article")
+      .hasClass("is-deleted", "marks the deleted OP for nested view styling")
+      .hasClass("deleted", "reuses the flat deleted post style hooks");
+    assert
+      .dom(".nested-view__op-menu .post-action-menu__recover")
+      .isNotDisabled("the OP recover-topic button is actionable");
+
+    await click(".nested-view__op-menu .post-action-menu__recover");
+
+    assert.verifySteps(["recover action"], "invokes the recover action");
   });
 
   test("renders multi-select controls for the OP", async function (assert) {
