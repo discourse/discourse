@@ -38,6 +38,7 @@ module DiscoursePostEvent
                     after: after_time,
                     before: before_time,
                     limit: 52,
+                    current_occurrence_only: current_occurrence_only_event_ids.include?(event.id),
                   )
                 expanded[:occurrences].map { |occ| { event: event, **occ } }
               else
@@ -63,6 +64,7 @@ module DiscoursePostEvent
                   after: filtered_events_params[:after]&.to_datetime || Time.current,
                   before: filtered_events_params[:before]&.to_datetime,
                   limit: filtered_events_params[:limit]&.to_i || 50,
+                  current_occurrence_only: current_occurrence_only_event_ids.include?(event.id),
                 )
 
               formatted_occurrences =
@@ -175,6 +177,25 @@ module DiscoursePostEvent
         :after,
         :order,
       )
+    end
+
+    def current_occurrence_only_event_ids
+      @current_occurrence_only_event_ids ||= single_occurrence_rsvp_event_ids
+    end
+
+    def single_occurrence_rsvp_event_ids
+      attending_username = filtered_events_params[:attending_user]
+      return Set.new if attending_username.blank?
+
+      attending_user = User.find_by(username_lower: attending_username.downcase)
+      return Set.new if attending_user.blank?
+
+      DiscoursePostEvent::Invitee
+        .unscoped
+        .with_status(:going)
+        .where(post_id: @events.map(&:id), user_id: attending_user.id, recurring: false)
+        .pluck(:post_id)
+        .to_set
     end
 
     def format_time(event, time)
