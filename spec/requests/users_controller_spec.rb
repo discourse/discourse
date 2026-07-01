@@ -2354,6 +2354,36 @@ RSpec.describe UsersController do
       expect(invites[0]["user"]).to be_present
     end
 
+    it "hides last seen timestamps for hidden profiles" do
+      SiteSetting.allow_users_to_hide_profile = true
+
+      inviter = Fabricate(:user, trust_level: TrustLevel[2])
+      hidden_invitee = Fabricate(:user, last_seen_at: 1.hour.ago)
+      hidden_invitee.user_option.update!(hide_profile: true)
+      visible_invitee = Fabricate(:user, last_seen_at: 2.hours.ago)
+
+      [hidden_invitee, visible_invitee].each do |redeemed_user|
+        invite = Fabricate(:invite, invited_by: inviter)
+        Fabricate(:invited_user, invite: invite, user: redeemed_user)
+      end
+
+      sign_in(inviter)
+      get "/u/#{inviter.username}/invited.json"
+
+      expect(response.status).to eq(200)
+
+      invited_users = response.parsed_body["invites"].map { |invite| invite["user"] }
+      hidden_user_record =
+        invited_users.find { |invited_user| invited_user["id"] == hidden_invitee.id }
+      visible_user_record =
+        invited_users.find { |invited_user| invited_user["id"] == visible_invitee.id }
+
+      expect(hidden_user_record).to be_present
+      expect(visible_user_record).to be_present
+      expect(hidden_user_record).not_to include("last_seen_at")
+      expect(visible_user_record).to include("last_seen_at")
+    end
+
     it "doesn't filter by email if another regular user" do
       inviter = Fabricate(:user, trust_level: TrustLevel[2])
       sign_in(Fabricate(:user, trust_level: TrustLevel[2]))
