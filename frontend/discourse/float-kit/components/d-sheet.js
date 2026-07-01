@@ -4,6 +4,7 @@ import ScrollView from "./d-scroll/view";
 import Backdrop from "./d-sheet/backdrop";
 import BleedingBackground from "./d-sheet/bleeding-background";
 import Content from "./d-sheet/content";
+import Description from "./d-sheet/description";
 import Handle from "./d-sheet/handle";
 import Header from "./d-sheet/header";
 import Outlet from "./d-sheet/outlet";
@@ -11,6 +12,7 @@ import Portal from "./d-sheet/portal";
 import Root from "./d-sheet/root";
 import SpecialWrapperContent from "./d-sheet/special-wrapper/content";
 import SpecialWrapperRoot from "./d-sheet/special-wrapper/root";
+import Title from "./d-sheet/title";
 import Trigger from "./d-sheet/trigger";
 import View from "./d-sheet/view";
 import StackRoot from "./d-sheet-stack";
@@ -27,8 +29,10 @@ import StackRoot from "./d-sheet-stack";
  *   Portal: typeof Portal,
  *   View: typeof View,
  *   Content: typeof Content,
+ *   Description: typeof Description,
  *   Trigger: typeof Trigger,
  *   Header: typeof Header,
+ *   Title: typeof Title,
  *   SpecialWrapper: { Root: typeof SpecialWrapperRoot, Content: typeof SpecialWrapperContent },
  *   Scroll: { Root: typeof ScrollRoot, View: typeof ScrollView, Content: typeof ScrollContent },
  *   Stack: { Root: typeof StackRoot }
@@ -51,10 +55,14 @@ const DSheet = {
   View,
   /** @type {typeof Content} */
   Content,
+  /** @type {typeof Description} */
+  Description,
   /** @type {typeof Trigger} */
   Trigger,
   /** @type {typeof Header} */
   Header,
+  /** @type {typeof Title} */
+  Title,
   /**
    * Sub-components for special wrapper layouts (e.g. Toast).
    *

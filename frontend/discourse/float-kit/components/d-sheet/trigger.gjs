@@ -73,7 +73,7 @@ export default class Trigger extends SheetActionBase {
         if (root) {
           root.dismiss();
         } else {
-          this.sheet?.close();
+          this.sheet?.requestDismiss();
         }
         break;
       case "step":
@@ -84,7 +84,7 @@ export default class Trigger extends SheetActionBase {
         if (root) {
           root.present();
         } else {
-          this.sheet?.open();
+          this.sheet?.requestPresent();
         }
         break;
     }

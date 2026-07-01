@@ -123,7 +123,9 @@ export default class AssignTopicSheet extends Component {
                   Edit Assignment
                 </:title>
                 <:right as |Button|>
-                  <Button @action={{fn this.saveAndDismiss form editContent.dismiss}}>
+                  <Button
+                    @action={{fn this.saveAndDismiss form editContent.dismiss}}
+                  >
                     Save
                   </Button>
                 </:right>
@@ -151,6 +153,7 @@ export default class AssignTopicSheet extends Component {
                   <AssigneesList
                     @assignment={{this.assignment}}
                     @sheet={{assigneesContent.sheet}}
+                    @dismiss={{assigneesContent.dismiss}}
                     @form={{form}}
                     @data={{data}}
                   />
