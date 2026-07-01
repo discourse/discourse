@@ -72,7 +72,7 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
         queryParams: {
           ...params,
           type: "consolidated_page_views",
-          return_url: this.controller.return_url,
+          return_url: params.return_url || this.controller?.return_url,
         },
       });
     }
