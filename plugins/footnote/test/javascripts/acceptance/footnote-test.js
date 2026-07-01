@@ -19,6 +19,7 @@ acceptance("Discourse Footnote Plugin", function (needs) {
         <p>Lorem ipsum dolor sit amet<sup class="footnote-ref"><a href="#footnote-17-1" id="footnote-ref-17-1">[1]</a></sup></p>
         <p class="second">Second reference should also work. <sup class="footnote-ref"><a href="#footnote-17-1" id="footnote-ref-17-0">[1]</a></sup></p>
         <p class="other">Other page should close<sup class="footnote-ref"><a href="#footnote-17-2" id="footnote-ref-17-2">[2]</a></sup></p>
+        <p class="nested">Nested footnote<sup class="footnote-ref"><a href="#footnote-17-3" id="footnote-ref-17-3">[3]</a></sup></p>
         <hr class="footnotes-sep">
         <ol class="footnotes-list">
           <li id="footnote-17-1" class="footnote-item">
@@ -26,6 +27,9 @@ acceptance("Discourse Footnote Plugin", function (needs) {
           </li>
           <li id="footnote-17-2" class="footnote-item">
           <p><a class="link-in-tooltip" href="/">Index ↩︎</a></p>
+          </li>
+          <li id="footnote-17-3" class="footnote-item">
+          <p>Nested content <sup class="footnote-ref"><a href="#footnote-17-4" id="footnote-ref-17-4">[4]</a></sup> <a href="#footnote-ref-17-3" class="footnote-backref">↩︎</a></p>
           </li>
         </ol>
       `;
@@ -66,5 +70,18 @@ acceptance("Discourse Footnote Plugin", function (needs) {
 
     await click(".link-in-tooltip");
     assert.dom(TOOLTIP_SELECTOR).doesNotExist();
+  });
+
+  test("flattens a nested footnote ref inside the tooltip", async function (assert) {
+    await visit("/t/-/45");
+
+    await click(".nested .expand-footnote");
+
+    // the nested footnote does not work, so it is shown as flat text rather
+    // than being styled as an interactive footnote ref
+    assert
+      .dom(`${TOOLTIP_SELECTOR} sup.footnote-ref`)
+      .doesNotExist("removes the nested footnote-ref styling");
+    assert.dom(TOOLTIP_SELECTOR).hasText("Nested content [4] ↩︎");
   });
 });
