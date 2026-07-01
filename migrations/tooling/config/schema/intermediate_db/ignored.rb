@@ -168,6 +168,7 @@ Migrations::Tooling::Schema.ignored do
          :bookmarks,
          :browser_pageview_event_scores,
          :browser_pageview_events,
+         :browser_pageview_session_engagements,
          :custom_emojis,
          :developers,
          :directory_columns,
