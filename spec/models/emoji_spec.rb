@@ -15,6 +15,56 @@ RSpec.describe Emoji do
       expect(emoji.name).to eq("test")
       expect(emoji.url).to be_nil
     end
+
+    it "caches the raw upload url, not the CDN-transformed one" do
+      upload = Fabricate(:upload, url: "//my-bucket.s3.amazonaws.com/images/my-emoji.png")
+      CustomEmoji.create!(name: "my_s3_emoji", upload: upload)
+
+      Emoji.clear_cache
+      emoji = Emoji.load_custom.find { |e| e.name == "my_s3_emoji" }
+
+      # The cached object must hold the raw url so that later CDN setting
+      # changes are reflected (CDN is applied lazily via #cdn_url).
+      expect(emoji.url).to eq(upload.url)
+    end
+  end
+
+  describe "#cdn_url" do
+    it "returns nil when there is no url" do
+      expect(Emoji.new.cdn_url).to be_nil
+    end
+
+    context "with a configured S3 store and CDN" do
+      before do
+        setup_s3
+        SiteSetting.s3_cdn_url = "https://cdn.example.com"
+      end
+
+      def custom_emoji_for(raw_url)
+        upload = Fabricate(:upload, url: raw_url)
+        CustomEmoji.create!(name: "my_s3_emoji", upload: upload)
+        Emoji.clear_cache
+        Emoji.load_custom.find { |e| e.name == "my_s3_emoji" }
+      end
+
+      it "rewrites a schemaless S3 bucket url to the configured s3_cdn_url" do
+        raw_url = "#{SiteSetting.Upload.absolute_base_url}/original/1X/my-emoji.png"
+        emoji = custom_emoji_for(raw_url)
+
+        # the cache still holds the raw bucket url...
+        expect(emoji.url).to eq(raw_url)
+        # ...and the CDN conversion happens lazily on read.
+        expect(emoji.cdn_url).to eq("https://cdn.example.com/original/1X/my-emoji.png")
+      end
+
+      it "does not leak the bucket subfolder into the rewritten url" do
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket/emojis"
+        raw_url = "#{SiteSetting.Upload.absolute_base_url}/emojis/original/1X/my-emoji.png"
+        emoji = custom_emoji_for(raw_url)
+
+        expect(emoji.cdn_url).to eq("https://cdn.example.com/original/1X/my-emoji.png")
+      end
+    end
   end
 
   describe ".unicode_replacements" do
