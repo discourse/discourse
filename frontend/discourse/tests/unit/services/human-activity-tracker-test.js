@@ -1,3 +1,4 @@
+import { triggerEvent } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
@@ -49,7 +50,7 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
     this.tracker.transport = (body) => this.sent.push(body);
     this.tracker.scheduleFlush = (callback) => {
       this.flushTick = callback;
-      return 1;
+      return {};
     };
     this.tracker.start();
   });
@@ -66,10 +67,10 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
     assert.strictEqual(this.sent.length, 0);
   });
 
-  test("counts interaction events and reports them on flush", function (assert) {
-    window.dispatchEvent(new KeyboardEvent("keydown"));
-    window.dispatchEvent(new MouseEvent("mousedown"));
-    window.dispatchEvent(new Event("scroll"));
+  test("counts interaction events and reports them on flush", async function (assert) {
+    await triggerEvent(window, "keydown");
+    await triggerEvent(window, "mousedown");
+    await triggerEvent(window, "scroll");
     pagehide();
 
     const payload = this.sent.at(-1);
@@ -79,26 +80,20 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
     assert.strictEqual(payload.scroll_events, 1);
   });
 
-  test("counts continuous mouse movement but ignores teleporting jumps", function (assert) {
-    window.dispatchEvent(
-      new MouseEvent("mousemove", { clientX: 10, clientY: 10 })
-    );
+  test("counts continuous mouse movement but ignores teleporting jumps", async function (assert) {
+    await triggerEvent(window, "mousemove", { clientX: 10, clientY: 10 });
     // Within MAX_HUMAN_STEP of the previous point — counted.
-    window.dispatchEvent(
-      new MouseEvent("mousemove", { clientX: 30, clientY: 30 })
-    );
+    await triggerEvent(window, "mousemove", { clientX: 30, clientY: 30 });
     // A large jump — ignored.
-    window.dispatchEvent(
-      new MouseEvent("mousemove", { clientX: 900, clientY: 900 })
-    );
+    await triggerEvent(window, "mousemove", { clientX: 900, clientY: 900 });
     pagehide();
 
     assert.strictEqual(this.sent.at(-1).mouse_move_events, 1);
   });
 
-  test("reports the time to the first interaction", function (assert) {
+  test("reports the time to the first interaction", async function (assert) {
     this.clock.ms = 2500;
-    window.dispatchEvent(new KeyboardEvent("keydown"));
+    await triggerEvent(window, "keydown");
 
     this.clock.ms = 9000;
     pagehide();
@@ -106,8 +101,8 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
     assert.strictEqual(this.sent.at(-1).time_to_first_interaction_ms, 2500);
   });
 
-  test("accumulates only visible-and-focused time as engaged duration", function (assert) {
-    window.dispatchEvent(new KeyboardEvent("keydown"));
+  test("accumulates only visible-and-focused time as engaged duration", async function (assert) {
+    await triggerEvent(window, "keydown");
 
     this.clock.ms = 4000;
     blur(this);
@@ -121,8 +116,8 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
     assert.strictEqual(this.sent.at(-1).engaged_seconds, 7);
   });
 
-  test("flushes the latest snapshot when the tab is hidden", function (assert) {
-    window.dispatchEvent(new KeyboardEvent("keydown"));
+  test("flushes the latest snapshot when the tab is hidden", async function (assert) {
+    await triggerEvent(window, "keydown");
 
     this.clock.ms = 5000;
     hide(this);
@@ -131,9 +126,9 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
     assert.strictEqual(this.sent.at(-1).engaged_seconds, 5);
   });
 
-  test("caps engaged seconds at the configured maximum", function (assert) {
+  test("caps engaged seconds at the configured maximum", async function (assert) {
     this.tracker.siteSettings.browser_pageview_max_engaged_seconds = 5;
-    window.dispatchEvent(new KeyboardEvent("keydown"));
+    await triggerEvent(window, "keydown");
 
     this.clock.ms = 9000;
     pagehide();
@@ -141,8 +136,8 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
     assert.strictEqual(this.sent.at(-1).engaged_seconds, 5);
   });
 
-  test("throttles sends to at most one every three seconds", function (assert) {
-    window.dispatchEvent(new KeyboardEvent("keydown"));
+  test("throttles sends to at most one every three seconds", async function (assert) {
+    await triggerEvent(window, "keydown");
 
     this.clock.ms = 1000;
     blur(this);
@@ -162,8 +157,8 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
     assert.strictEqual(this.sent.length, 2);
   });
 
-  test("always flushes on pagehide, bypassing the throttle", function (assert) {
-    window.dispatchEvent(new KeyboardEvent("keydown"));
+  test("always flushes on pagehide, bypassing the throttle", async function (assert) {
+    await triggerEvent(window, "keydown");
 
     this.clock.ms = 1000;
     blur(this);
@@ -176,8 +171,8 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
     assert.strictEqual(this.sent.length, 2);
   });
 
-  test("keeps sending periodic snapshots on each flush cadence", function (assert) {
-    window.dispatchEvent(new KeyboardEvent("keydown"));
+  test("keeps sending periodic snapshots on each flush cadence", async function (assert) {
+    await triggerEvent(window, "keydown");
 
     this.clock.ms = 180_000;
     this.flushTick();
