@@ -11,6 +11,7 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
     filters: { refreshModel: true },
     chart_grouping: { refreshModel: true },
     mode: { refreshModel: true },
+    return_url: { refreshModel: false },
   };
 
   model(params) {
@@ -83,6 +84,7 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
       end_date: params.endDate
         ? params.endDate.toISOString(true).split("T")[0]
         : null,
+      return_url: this.controller.return_url,
     };
 
     this.router.transitionTo("adminReports.show", { queryParams });

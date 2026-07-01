@@ -9,11 +9,20 @@ export default class AdminReportsShowController extends Controller {
     "filters",
     "chart_grouping",
     "mode",
+    "return_url",
   ]);
   start_date = null;
   end_date = null;
   filters = null;
   chart_grouping = null;
+  return_url = null;
+
+  get dashboardReturnUrl() {
+    if (this.return_url?.match(/^\/admin(?:\?|$)/)) {
+      return this.return_url;
+    }
+    return null;
+  }
 
   @computed("model.type")
   get reportOptions() {

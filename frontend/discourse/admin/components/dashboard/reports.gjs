@@ -22,9 +22,15 @@ const VISIBLE_CAP = 10;
 
 const rendererFor = (source) => lookupAdminDashboardReportRenderer(source);
 
+function reportUrlWithReturnUrl(url, returnUrl) {
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}return_url=${encodeURIComponent(returnUrl)}`;
+}
+
 export default class DashboardReports extends Component {
   @service currentUser;
   @service modal;
+  @service router;
 
   @tracked cards = [];
   @tracked loading = false;
@@ -139,7 +145,10 @@ export default class DashboardReports extends Component {
         {{#each this.cards key="key" as |card|}}
           <div class="db-report__card" data-identifier={{card.key}}>
             <div class="db-report__header">
-              <a href={{card.url}} class="db-report__name">{{card.title}}</a>
+              <a
+                href={{reportUrlWithReturnUrl card.url this.router.currentURL}}
+                class="db-report__name"
+              >{{card.title}}</a>
               {{#if card.label}}
                 <div
                   class={{dConcatClass
