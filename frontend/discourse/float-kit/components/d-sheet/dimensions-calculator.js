@@ -96,6 +96,7 @@ export default class DimensionCalculator {
     );
 
     return {
+      webkitSmallSpacerMode: context.webkitSmallSpacerMode,
       view: viewDimensions,
       scroll: viewDimensions,
       content: parseDimensionsFromStyle(

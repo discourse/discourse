@@ -2,7 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import { trackedArray } from "@ember/reactive/collections";
-import { next } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
 import { capabilities } from "discourse/services/capabilities";
 import AnimationTravel from "./animation-travel";
 import {
@@ -36,6 +36,19 @@ const BROWSER_SUPPORTS_REQUIRED_FEATURES = (() => {
   return supportsScrollSnap && supportsIntersectionObserver;
 })();
 
+const RENDER_AFFECTING_OPTIONS = new Set([
+  "contentPlacement",
+  "role",
+  "tracks",
+  "swipe",
+  "swipeDismissal",
+  "swipeOvershoot",
+  "swipeTrap",
+  "nativeFocusScrollPrevention",
+  "pageScroll",
+  "inertOutside",
+]);
+
 export default class Controller {
   static EVENT_HANDLER_DEFAULTS = {
     onClickOutside: {
@@ -49,6 +62,30 @@ export default class Controller {
     },
     onPresentAutoFocus: { focus: true },
     onDismissAutoFocus: { focus: true },
+  };
+
+  static OPTION_DEFAULTS = {
+    role: "dialog",
+    swipe: true,
+    swipeDismissal: true,
+    swipeOvershoot: true,
+    swipeTrap: true,
+    onFocusInside: null,
+    nativeFocusScrollPrevention: true,
+    pageScroll: false,
+    inertOutside: true,
+    enteringAnimationSettings: null,
+    exitingAnimationSettings: null,
+    steppingAnimationSettings: null,
+    snapOutAcceleration: "auto",
+    snapToEndDetentsAcceleration: "auto",
+    onTravelStatusChange: null,
+    onTravelRangeChange: null,
+    onTravel: null,
+    onTravelStart: null,
+    onTravelEnd: null,
+    sheetStackRegistry: null,
+    sheetRegistry: null,
   };
 
   static get browserSupportsRequiredFeatures() {
@@ -69,12 +106,11 @@ export default class Controller {
   @tracked isPresented = false;
   @tracked safeToUnmount = true;
   @tracked detentsConfig = null;
-  @tracked swipeOvershoot = true;
   @tracked backdropSwipeable = true;
-  @tracked inertOutside = true;
+  @tracked configurationVersion = 0;
   detentMarkers = trackedArray();
   id = guidFor(this);
-  contentPlacement = "bottom";
+
   dimensions = null;
   activeDetent = 0;
   targetDetent = 1;
@@ -84,13 +120,6 @@ export default class Controller {
   travelRange = { start: 0, end: 0 };
   lastProcessedProgress = null;
   progressSmoother = null;
-  role = "dialog";
-  tracks = "bottom";
-  swipe = true;
-  swipeDismissal = true;
-  swipeTrap = true;
-  nativeFocusScrollPrevention = true;
-  pageScroll = false;
   enteringAnimationSettings = null;
   exitingAnimationSettings = null;
   steppingAnimationSettings = null;
@@ -138,7 +167,18 @@ export default class Controller {
   rootComponent = null;
   isDestroying = false;
   isDestroyed = false;
+  #configurationVersionBumpScheduled = false;
+  #contentPlacement = "bottom";
+  #inertOutside = true;
+  #nativeFocusScrollPrevention = true;
+  #pageScroll = false;
+  #role = "dialog";
   #subscriptionDefinitions = [];
+  #swipe = true;
+  #swipeDismissal = true;
+  #swipeOvershoot = true;
+  #swipeTrap = true;
+  #tracks = "bottom";
 
   constructor() {
     this.touchHandler = new TouchHandler(this);
@@ -156,9 +196,109 @@ export default class Controller {
     this.setupSubscriptions();
   }
 
+  get contentPlacement() {
+    this.configurationVersion;
+    return this.#contentPlacement;
+  }
+
+  set contentPlacement(value) {
+    this.#contentPlacement = value;
+  }
+
+  get role() {
+    this.configurationVersion;
+    return this.#role;
+  }
+
+  set role(value) {
+    this.#role = value;
+  }
+
+  get tracks() {
+    this.configurationVersion;
+    return this.#tracks;
+  }
+
+  set tracks(value) {
+    this.#tracks = value;
+  }
+
+  get swipe() {
+    this.configurationVersion;
+    return this.#swipe;
+  }
+
+  set swipe(value) {
+    this.#swipe = value;
+  }
+
+  get swipeDismissal() {
+    this.configurationVersion;
+    return this.#swipeDismissal;
+  }
+
+  set swipeDismissal(value) {
+    this.#swipeDismissal = value;
+  }
+
+  get swipeOvershoot() {
+    this.configurationVersion;
+    return this.#swipeOvershoot;
+  }
+
+  set swipeOvershoot(value) {
+    this.#swipeOvershoot = value;
+  }
+
+  get swipeTrap() {
+    this.configurationVersion;
+    return this.#swipeTrap;
+  }
+
+  set swipeTrap(value) {
+    this.#swipeTrap = value;
+  }
+
+  get nativeFocusScrollPrevention() {
+    this.configurationVersion;
+    return this.#nativeFocusScrollPrevention;
+  }
+
+  set nativeFocusScrollPrevention(value) {
+    this.#nativeFocusScrollPrevention = value;
+  }
+
+  get pageScroll() {
+    this.configurationVersion;
+    return this.#pageScroll;
+  }
+
+  set pageScroll(value) {
+    this.#pageScroll = value;
+  }
+
+  get inertOutside() {
+    this.configurationVersion;
+    return this.#inertOutside;
+  }
+
+  set inertOutside(value) {
+    this.#inertOutside = value;
+  }
+
   configure(options = {}) {
-    if (options.role !== undefined) {
-      this.role = options.role;
+    let configurationChanged = false;
+    const assignConfig = (key, value) => {
+      if (this[key] !== value) {
+        this[key] = value;
+        if (RENDER_AFFECTING_OPTIONS.has(key)) {
+          configurationChanged = true;
+        }
+      }
+    };
+
+    if ("role" in options) {
+      assignConfig("role", options.role ?? Controller.OPTION_DEFAULTS.role);
     }
 
     if (options.activeDetent !== undefined) {
@@ -183,8 +323,8 @@ export default class Controller {
       tracks: this.tracks,
       contentPlacement: this.contentPlacement,
     });
-    this.tracks = result.tracks;
-    this.contentPlacement = result.contentPlacement;
+    assignConfig("tracks", result.tracks);
+    assignConfig("contentPlacement", result.contentPlacement);
 
     const propsToAssign = [
       "swipe",
@@ -210,8 +350,8 @@ export default class Controller {
     ];
 
     for (const key of propsToAssign) {
-      if (options[key] !== undefined) {
-        this[key] = options[key];
+      if (key in options) {
+        assignConfig(key, options[key] ?? Controller.OPTION_DEFAULTS[key]);
       }
     }
 
@@ -223,9 +363,11 @@ export default class Controller {
     ];
 
     for (const key of eventHandlers) {
-      if (options[key] !== undefined) {
+      if (key in options) {
         if (typeof options[key] === "function") {
           this[key] = options[key];
+        } else if (options[key] === undefined || options[key] === null) {
+          this[key] = { ...Controller.EVENT_HANDLER_DEFAULTS[key] };
         } else {
           this[key] = {
             ...Controller.EVENT_HANDLER_DEFAULTS[key],
@@ -236,6 +378,28 @@ export default class Controller {
     }
 
     this.themeColorAdapter.configure(options);
+
+    if (configurationChanged) {
+      this.#scheduleConfigurationVersionBump();
+    }
+  }
+
+  #scheduleConfigurationVersionBump() {
+    if (this.#configurationVersionBumpScheduled) {
+      return;
+    }
+
+    this.#configurationVersionBumpScheduled = true;
+
+    schedule("afterRender", () => {
+      this.#configurationVersionBumpScheduled = false;
+
+      if (this.isDestroying || this.isDestroyed) {
+        return;
+      }
+
+      this.configurationVersion++;
+    });
   }
 
   setupSubscriptions() {

@@ -2,7 +2,14 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
-import { click, find, render, waitFor, waitUntil } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  render,
+  settled,
+  waitFor,
+  waitUntil,
+} from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DSheet from "discourse/float-kit/components/d-sheet";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -177,6 +184,145 @@ module("Integration | Component | FloatKit | d-sheet", function (hooks) {
     assert
       .dom("[data-d-sheet~='view']")
       .exists("clicks in registered external layers are ignored");
+  });
+
+  test("detects body layers added after an inert sheet", async function (assert) {
+    let externalLayer;
+    let externalButton;
+
+    try {
+      await render(
+        <template>
+          <DSheet.Root @defaultPresented={{true}} as |sheet|>
+            <DSheet.Portal @sheet={{sheet}}>
+              <DSheet.View @sheet={{sheet}}>
+                <DSheet.Content @sheet={{sheet}} as |ContentTag|>
+                  <ContentTag>
+                    <p>Content</p>
+                  </ContentTag>
+                </DSheet.Content>
+              </DSheet.View>
+            </DSheet.Portal>
+          </DSheet.Root>
+        </template>
+      );
+
+      await waitFor(
+        "[data-d-sheet~='view'][data-d-sheet~='staging-none']:not([data-d-sheet~='closed'])"
+      );
+
+      externalLayer = document.createElement("div");
+      externalLayer.className = "external-body-layer";
+      externalButton = document.createElement("button");
+      externalButton.type = "button";
+      externalButton.className = "external-body-layer-button";
+      externalButton.textContent = "Layer";
+      externalLayer.appendChild(externalButton);
+      document.body.appendChild(externalLayer);
+
+      await settled();
+      await waitUntil(() => !externalLayer.inert, { timeout: 3000 });
+
+      await click(externalButton);
+
+      assert
+        .dom("[data-d-sheet~='view']")
+        .exists("clicks in detected body layers are ignored");
+    } finally {
+      externalLayer?.remove();
+    }
+  });
+
+  test("view options return to defaults when args become undefined", async function (assert) {
+    const state = new (class {
+      @tracked swipe = false;
+      @tracked onClickOutside = { dismiss: false };
+    })();
+
+    const resetSwipe = () => {
+      state.swipe = undefined;
+    };
+
+    const resetOnClickOutside = () => {
+      state.onClickOutside = undefined;
+    };
+
+    await render(
+      <template>
+        <button type="button" class="outside-click-target">Outside</button>
+
+        <DSheet.Root @defaultPresented={{true}} as |sheet|>
+          <DSheet.Portal @sheet={{sheet}}>
+            <DSheet.View
+              @sheet={{sheet}}
+              @swipe={{state.swipe}}
+              @inertOutside={{false}}
+              @onClickOutside={{state.onClickOutside}}
+            >
+              <DSheet.Content @sheet={{sheet}} as |ContentTag|>
+                <ContentTag>
+                  <button
+                    type="button"
+                    class="reset-swipe"
+                    {{on "click" resetSwipe}}
+                  >
+                    Reset swipe
+                  </button>
+                  <button
+                    type="button"
+                    class="reset-click-outside"
+                    {{on "click" resetOnClickOutside}}
+                  >
+                    Reset click outside
+                  </button>
+                </ContentTag>
+              </DSheet.Content>
+            </DSheet.View>
+          </DSheet.Portal>
+        </DSheet.Root>
+      </template>
+    );
+
+    await waitFor(
+      "[data-d-sheet~='view'][data-d-sheet~='staging-none']:not([data-d-sheet~='closed'])"
+    );
+
+    assert
+      .dom("[data-d-sheet~='scroll-container']")
+      .hasAttribute(
+        "data-d-sheet",
+        /swipe-disabled/,
+        "false swipe args disable swiping"
+      );
+
+    await click(".reset-swipe");
+    await waitUntil(
+      () =>
+        !find("[data-d-sheet~='scroll-container']")
+          ?.dataset.dSheet.split(" ")
+          .includes("swipe-disabled")
+    );
+
+    assert.false(
+      find("[data-d-sheet~='scroll-container']")
+        ?.dataset.dSheet.split(" ")
+        .includes("swipe-disabled"),
+      "undefined swipe args return to the default"
+    );
+
+    await click(".outside-click-target");
+
+    assert
+      .dom("[data-d-sheet~='view']")
+      .exists("the custom click-outside handler is still active");
+
+    await click(".reset-click-outside");
+    await click(".outside-click-target");
+    await waitUntil(() => !find("[data-d-sheet~='view']"), { timeout: 3000 });
+
+    assert
+      .dom("[data-d-sheet~='view']")
+      .doesNotExist("undefined handlers return to the default behavior");
   });
 
   test("header close button dismisses the sheet", async function (assert) {

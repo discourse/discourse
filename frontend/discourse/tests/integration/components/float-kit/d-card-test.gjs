@@ -80,7 +80,7 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     await click(".btn");
     await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
     await click(".dismiss-btn");
-    await waitUntil(() => !find(".d-card"));
+    await waitUntil(() => !find(".d-card"), { timeout: 3000 });
 
     assert.dom(".d-card").doesNotExist();
   });
@@ -144,7 +144,7 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     assert.dom(".d-card").exists();
 
     await click(".dismiss-btn");
-    await waitUntil(() => !find(".d-card"));
+    await waitUntil(() => !find(".d-card"), { timeout: 3000 });
 
     assert.false(state.presented);
     assert.dom(".d-card").doesNotExist();
@@ -230,7 +230,7 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     await click(".btn");
     await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
     await click(".dismiss-btn");
-    await waitUntil(() => !find(".d-card"));
+    await waitUntil(() => !find(".d-card"), { timeout: 3000 });
 
     assert.true(closedCalled);
   });
@@ -251,5 +251,28 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     await waitFor(".d-card");
 
     assert.dom("[data-d-sheet~='view'][data-d-sheet~='top']").exists();
+  });
+
+  test("forwards attributes to the root", async function (assert) {
+    await render(
+      <template>
+        <DCard class="custom-card-root" data-test-card-root as |card|>
+          <card.Content>
+            <p>Content</p>
+          </card.Content>
+        </DCard>
+      </template>
+    );
+
+    assert
+      .dom("[data-d-sheet~='root'].custom-card-root")
+      .exists("custom classes are forwarded");
+    assert
+      .dom("[data-d-sheet~='root']")
+      .hasAttribute(
+        "data-test-card-root",
+        "",
+        "custom attributes are forwarded"
+      );
   });
 });

@@ -16,6 +16,7 @@ import Title from "./d-sheet/title";
 import Trigger from "./d-sheet/trigger";
 import View from "./d-sheet/view";
 import StackRoot from "./d-sheet-stack";
+import StackOutlet from "./d-sheet-stack-outlet";
 
 const DSheet = {
   Root,
@@ -41,6 +42,7 @@ const DSheet = {
   },
   Stack: {
     Root: StackRoot,
+    Outlet: StackOutlet,
   },
 };
 

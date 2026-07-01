@@ -3,6 +3,7 @@ import { registerDestructor } from "@ember/destroyable";
 import { hash } from "@ember/helper";
 import { guidFor } from "@ember/object/internals";
 import { service } from "@ember/service";
+import StackOutlet from "./d-sheet-stack-outlet";
 
 export default class Root extends Component {
   @service sheetStackRegistry;
@@ -20,5 +21,9 @@ export default class Root extends Component {
     });
   }
 
-  <template>{{yield (hash stackId=this.id)}}</template>
+  <template>
+    {{yield
+      (hash stackId=this.id Outlet=(component StackOutlet stackId=this.id))
+    }}
+  </template>
 }

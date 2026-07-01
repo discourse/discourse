@@ -404,6 +404,10 @@ en:
 
     back_button: "Back"
 
+    d_sheet:
+      dismiss: "Dismiss"
+      cycle: "Cycle"
+
     welcome_banner:
       header:
         new_members: "Welcome, %{preferred_display_name}!"

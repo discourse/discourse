@@ -9,6 +9,7 @@ import {
   waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import DSheet from "discourse/float-kit/components/d-sheet";
 import DStack from "discourse/float-kit/components/d-stack";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
@@ -288,5 +289,44 @@ module("Integration | Component | FloatKit | d-stack", function (hooks) {
     await waitUntil(() => !find(".close-nested"));
 
     assert.dom(".d-stack__view").exists({ count: 1 });
+  });
+
+  test("forwards attributes to the root", async function (assert) {
+    await render(
+      <template>
+        <DStack class="custom-stack-root" data-test-stack-root as |stack|>
+          <stack.Content>
+            <p>Content</p>
+          </stack.Content>
+        </DStack>
+      </template>
+    );
+
+    assert
+      .dom("[data-d-sheet~='root'].custom-stack-root")
+      .exists("custom classes are forwarded");
+    assert
+      .dom("[data-d-sheet~='root']")
+      .hasAttribute(
+        "data-test-stack-root",
+        "",
+        "custom attributes are forwarded"
+      );
+  });
+
+  test("exports a stack outlet", async function (assert) {
+    await render(
+      <template>
+        <DSheet.Stack.Root as |stack|>
+          <stack.Outlet class="custom-stack-outlet">
+            Main content
+          </stack.Outlet>
+        </DSheet.Stack.Root>
+      </template>
+    );
+
+    assert
+      .dom("[data-d-sheet-stack~='outlet'].custom-stack-outlet")
+      .hasText("Main content", "the yielded stack outlet renders");
   });
 });

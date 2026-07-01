@@ -11,8 +11,11 @@ export default class SheetLayerStore extends Service {
   rootsByComponentId = new Map();
   layerFocusState = new Map();
   inertElements = new Set();
-  automaticLayerElements = new Set();
+  manualAutomaticLayerElements = new Set();
+  detectedAutomaticLayerElements = new Set();
   mutationObserver = null;
+  automaticLayerDetectionObserver = null;
+  automaticLayerDetectionView = null;
   recalculateInertTimeout = null;
   clickOutsideCleanup = null;
   escapeKeyCleanup = null;
@@ -22,6 +25,7 @@ export default class SheetLayerStore extends Service {
     super.willDestroy();
     cancel(this.recalculateInertTimeout);
     this.cleanupInert();
+    this.#cleanupAutomaticLayerDetection();
     this.#cleanupClickOutsideListener();
     this.#cleanupEscapeKeyListener();
   }
@@ -77,7 +81,7 @@ export default class SheetLayerStore extends Service {
   @action
   registerAutomaticLayerElement(element) {
     if (element) {
-      this.automaticLayerElements.add(element);
+      this.manualAutomaticLayerElements.add(element);
       this.recalculateInertOutside();
     }
   }
@@ -85,7 +89,7 @@ export default class SheetLayerStore extends Service {
   @action
   unregisterAutomaticLayerElement(element) {
     if (element) {
-      this.automaticLayerElements.delete(element);
+      this.manualAutomaticLayerElements.delete(element);
       this.recalculateInertOutside();
     }
   }
@@ -366,10 +370,13 @@ export default class SheetLayerStore extends Service {
     const hasInertOutside = sheetsInOrder.some((sheet) => sheet.inertOutside);
 
     if (!hasInertOutside || sheetsInOrder.length === 0) {
+      this.#cleanupAutomaticLayerDetection();
       return;
     }
 
     const rootElements = new Set();
+
+    let automaticLayerDetectionView = null;
 
     for (let i = sheetsInOrder.length - 1; i >= 0; i--) {
       const sheet = sheetsInOrder[i];
@@ -383,15 +390,18 @@ export default class SheetLayerStore extends Service {
       }
 
       if (sheet.inertOutside) {
+        automaticLayerDetectionView = sheet.view;
         break;
       }
     }
+
+    this.#setupAutomaticLayerDetection(automaticLayerDetectionView);
 
     document.querySelectorAll("[aria-live]").forEach((el) => {
       rootElements.add(el);
     });
 
-    for (const element of this.automaticLayerElements) {
+    for (const element of this.#automaticLayerElements()) {
       if (element.isConnected) {
         rootElements.add(element);
       }
@@ -406,7 +416,7 @@ export default class SheetLayerStore extends Service {
       return false;
     }
 
-    for (const element of this.automaticLayerElements) {
+    for (const element of this.#automaticLayerElements()) {
       if (element.isConnected && element.contains(target)) {
         return true;
       }
@@ -526,6 +536,109 @@ export default class SheetLayerStore extends Service {
     });
   }
 
+  #automaticLayerElements() {
+    return new Set([
+      ...this.manualAutomaticLayerElements,
+      ...this.detectedAutomaticLayerElements,
+    ]);
+  }
+
+  #setupAutomaticLayerDetection(viewElement) {
+    if (!viewElement) {
+      this.#cleanupAutomaticLayerDetection();
+      return;
+    }
+
+    const viewChanged = this.automaticLayerDetectionView !== viewElement;
+    if (viewChanged) {
+      this.#cleanupAutomaticLayerDetection();
+      this.automaticLayerDetectionView = viewElement;
+    }
+
+    this.#scanAutomaticLayerElements(viewElement);
+
+    if (this.automaticLayerDetectionObserver) {
+      return;
+    }
+
+    this.automaticLayerDetectionObserver = new MutationObserver(() => {
+      if (this.#scanAutomaticLayerElements(viewElement)) {
+        this.recalculateInertOutside();
+      }
+    });
+
+    this.automaticLayerDetectionObserver.observe(document.documentElement, {
+      childList: true,
+    });
+    this.automaticLayerDetectionObserver.observe(document.body, {
+      childList: true,
+    });
+  }
+
+  #cleanupAutomaticLayerDetection() {
+    if (this.automaticLayerDetectionObserver) {
+      this.automaticLayerDetectionObserver.disconnect();
+      this.automaticLayerDetectionObserver = null;
+    }
+
+    this.automaticLayerDetectionView = null;
+    this.detectedAutomaticLayerElements = new Set();
+  }
+
+  #scanAutomaticLayerElements(viewElement) {
+    const detectedElements = new Set();
+    const topLevelElement = this.#bodyChildForElement(viewElement);
+    let candidate = topLevelElement
+      ? topLevelElement.nextElementSibling
+      : document.body.firstElementChild;
+
+    while (candidate) {
+      if (!this.#isIgnoredAutomaticLayerElement(candidate)) {
+        detectedElements.add(candidate);
+      }
+      candidate = candidate.nextElementSibling;
+    }
+
+    const changed = !this.#setsAreEqual(
+      detectedElements,
+      this.detectedAutomaticLayerElements
+    );
+
+    this.detectedAutomaticLayerElements = detectedElements;
+    return changed;
+  }
+
+  #bodyChildForElement(element) {
+    for (let parent = element; parent; parent = parent.parentElement) {
+      if (parent.parentElement === document.body) {
+        return parent;
+      }
+    }
+
+    return element.parentElement === document.body ? element : null;
+  }
+
+  #isIgnoredAutomaticLayerElement(element) {
+    return (
+      element.tagName === "SCRIPT" ||
+      element.matches("[data-d-sheet], [data-d-sheet-clone]")
+    );
+  }
+
+  #setsAreEqual(first, second) {
+    if (first.size !== second.size) {
+      return false;
+    }
+
+    for (const value of first) {
+      if (!second.has(value)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   #setupClickOutsideListener() {
     if (this.clickOutsideCleanup) {
       return;
@@ -599,6 +712,7 @@ export default class SheetLayerStore extends Service {
       return;
     }
 
+    this.#cleanupAutomaticLayerDetection();
     this.#cleanupClickOutsideListener();
     this.#cleanupEscapeKeyListener();
   }

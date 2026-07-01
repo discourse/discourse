@@ -132,6 +132,7 @@ export default class DStack extends Component {
         @presented={{@presented}}
         @onPresentedChange={{@onPresentedChange}}
         @onClosed={{@onClosed}}
+        ...attributes
         as |sheet|
       >
         {{yield

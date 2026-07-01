@@ -20,11 +20,11 @@ export default class ThemeColorAdapter {
   }
 
   configure(options) {
-    if (options.themeColorDimming !== undefined) {
-      this.themeColorDimming = options.themeColorDimming;
+    if ("themeColorDimming" in options) {
+      this.themeColorDimming = options.themeColorDimming ?? false;
     }
-    if (options.themeColorDimmingAlpha !== undefined) {
-      this.themeColorDimmingAlpha = options.themeColorDimmingAlpha;
+    if ("themeColorDimmingAlpha" in options) {
+      this.themeColorDimmingAlpha = options.themeColorDimmingAlpha ?? null;
     }
   }
 }
