@@ -2,81 +2,30 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { prefersReducedMotion } from "discourse/lib/utilities";
 
-/**
- * Scroll Controller - manages scroll state and provides imperative methods for programmatic scrolling.
- *
- * @class ScrollController
- */
 export default class ScrollController {
-  /** @type {HTMLElement|null} */
   @tracked viewElement = null;
-
-  /** @type {HTMLElement|null} */
   @tracked contentElement = null;
-
-  /** @type {number} */
   @tracked startSpacerHeight = 0;
-
-  /** @type {number} */
   @tracked endSpacerHeight = 0;
-
-  /** @type {boolean} - Hides caret during scroll to avoid visual glitches */
   @tracked scrollOngoing = false;
-
-  /** @type {boolean} - Whether content overflows on x-axis */
   @tracked overflowX = false;
-
-  /** @type {boolean} - Whether content overflows on y-axis */
   @tracked overflowY = false;
-
-  /** @type {boolean} - Whether x-axis scroll trap is active */
   @tracked scrollTrapX = false;
-
-  /** @type {boolean} - Whether y-axis scroll trap is active */
   @tracked scrollTrapY = false;
-
-  /** @type {HTMLElement|null} */
   startSpacerElement = null;
-
-  /** @type {HTMLElement|null} */
   endSpacerElement = null;
-
-  /** @type {string} */
   axis = "y";
-
-  /** @type {string} */
   safeArea = "visual-viewport";
-
-  /** @type {Object} */
   scrollAnimationSettings = { skip: "auto" };
-
-  /** @type {boolean} */
   pageScroll = false;
-
-  /** @type {Function|null} */
   onScroll = null;
-
-  /** @type {Function|null} */
   onScrollStart = null;
-
-  /** @type {Function|null} */
   onScrollEnd = null;
-
-  /** @type {boolean} */
   scrollingActive = false;
-
-  /** @type {number|null} */
   scrollStartTime = null;
-
-  /** @type {number|null} */
   scrollEndTimeout = null;
-
-  /** @type {ResizeObserver|null} */
   resizeObserver = null;
 
-  /**
-   * @param {Object} options - Configuration options
-   */
   constructor(options = {}) {
     if (options.axis) {
       this.axis = options.axis;
@@ -89,67 +38,34 @@ export default class ScrollController {
     }
   }
 
-  /**
-   * Whether to use window for scroll operations.
-   *
-   * @returns {boolean}
-   */
   get usesWindowScroll() {
     return this.pageScroll;
   }
 
-  /**
-   * Get the scroll target element (window or viewElement).
-   *
-   * @returns {Window|HTMLElement|null}
-   */
   get scrollTarget() {
     return this.usesWindowScroll ? window : this.viewElement;
   }
 
-  /**
-   * Register the view element.
-   *
-   * @param {HTMLElement} element
-   */
   @action
   registerView(element) {
     this.viewElement = element;
   }
 
-  /**
-   * Register the content element.
-   *
-   * @param {HTMLElement} element
-   */
   @action
   registerContent(element) {
     this.contentElement = element;
   }
 
-  /**
-   * Register the start spacer element.
-   *
-   * @param {HTMLElement|null} element
-   */
   @action
   registerStartSpacer(element) {
     this.startSpacerElement = element;
   }
 
-  /**
-   * Register the end spacer element.
-   *
-   * @param {HTMLElement|null} element
-   */
   @action
   registerEndSpacer(element) {
     this.endSpacerElement = element;
   }
 
-  /**
-   * Set up ResizeObserver to track overflow state.
-   */
   @action
   setupOverflowObserver() {
     if (this.resizeObserver || !this.viewElement) {
@@ -168,9 +84,6 @@ export default class ScrollController {
     this.updateOverflowState();
   }
 
-  /**
-   * Update overflow state based on current scroll dimensions.
-   */
   @action
   updateOverflowState() {
     const el = this.viewElement;
@@ -185,21 +98,11 @@ export default class ScrollController {
     }
   }
 
-  /**
-   * Returns the scroll progress from 0 to 1.
-   *
-   * @returns {number}
-   */
   @action
   getProgress() {
     return this.getDistance() / this.getAvailableDistance();
   }
 
-  /**
-   * Returns the distance in pixels traveled by Content from its start position.
-   *
-   * @returns {number|undefined}
-   */
   @action
   getDistance() {
     if (this.axis === "x") {
@@ -210,11 +113,6 @@ export default class ScrollController {
     return this.usesWindowScroll ? window.scrollY : this.viewElement?.scrollTop;
   }
 
-  /**
-   * Returns the total scrollable distance in pixels.
-   *
-   * @returns {number|undefined}
-   */
   @action
   getAvailableDistance() {
     if (this.axis === "x") {
@@ -227,14 +125,6 @@ export default class ScrollController {
       : this.viewElement?.scrollHeight - this.viewElement?.offsetHeight;
   }
 
-  /**
-   * Make Content travel to the defined progress or distance.
-   *
-   * @param {Object} options - Scroll options
-   * @param {number} [options.progress] - Target progress (0-1)
-   * @param {number} [options.distance] - Target distance in pixels
-   * @param {Object} [options.animationSettings] - Animation settings { skip: "default" | "auto" | boolean }
-   */
   @action
   scrollTo(options = {}) {
     const target = this.scrollTarget;
@@ -260,14 +150,6 @@ export default class ScrollController {
     });
   }
 
-  /**
-   * Make Content travel by the defined progress or distance.
-   *
-   * @param {Object} options - Scroll options
-   * @param {number} [options.progress] - Progress delta to scroll by
-   * @param {number} [options.distance] - Distance delta in pixels to scroll by
-   * @param {Object} [options.animationSettings] - Animation settings { skip: "default" | "auto" | boolean }
-   */
   @action
   scrollBy(options = {}) {
     const target = this.scrollTarget;
@@ -293,12 +175,6 @@ export default class ScrollController {
     });
   }
 
-  /**
-   * Get scroll behavior based on animation settings.
-   *
-   * @param {Object} animationSettings - { skip: "default" | "auto" | boolean }
-   * @returns {string} Scroll behavior: "instant", "smooth", or "auto"
-   */
   getScrollBehavior(animationSettings) {
     const skip = animationSettings?.skip ?? "default";
 
@@ -314,11 +190,6 @@ export default class ScrollController {
     return prefersReducedMotion() ? "instant" : "smooth";
   }
 
-  /**
-   * Get current scroll state for event callbacks.
-   *
-   * @returns {{ progress: number, distance: number|undefined, availableDistance: number|undefined }}
-   */
   @action
   getScrollState() {
     return {
@@ -328,9 +199,6 @@ export default class ScrollController {
     };
   }
 
-  /**
-   * Clean up all resources.
-   */
   @action
   cleanup() {
     if (this.scrollEndTimeout) {
@@ -350,12 +218,6 @@ export default class ScrollController {
     this.onScrollEnd = null;
   }
 
-  /**
-   * Update spacer heights for safeArea feature.
-   *
-   * @param {number} startHeight - Height for start spacer
-   * @param {number} endHeight - Height for end spacer
-   */
   @action
   updateSpacerHeights(startHeight, endHeight) {
     this.startSpacerHeight = startHeight;

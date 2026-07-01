@@ -5,13 +5,6 @@ import {
 } from "./animation";
 import { toKebabCase, TRANSFORM_PROPS } from "./css-utils";
 
-/**
- * Builds a single keyframe object from config at a given progress.
- *
- * @param {Record<string, [string, string] | ((ctx: {progress: number, tween: (start: string, end: string) => string}) => string) | string | null | undefined>} config - Animation config with property template functions
- * @param {number} progress - Progress value
- * @returns {Record<string, string>} Keyframe object for Web Animations API
- */
 function buildKeyframe(config, progress) {
   const keyframe = {};
   const transforms = [];
@@ -50,14 +43,6 @@ function buildKeyframe(config, progress) {
 
   return keyframe;
 }
-
-/**
- * Sets the scroll position on a scroll container for a given axis.
- *
- * @param {HTMLElement} scrollContainer - The scroll container element
- * @param {string} scrollAxis - The scroll axis ("x" or "y")
- * @param {number} position - The position to scroll to
- */
 function setScrollPosition(scrollContainer, scrollAxis, position) {
   if (scrollAxis === "x") {
     scrollContainer.scrollTo(position, 0);
@@ -67,16 +52,6 @@ function setScrollPosition(scrollContainer, scrollAxis, position) {
     scrollContainer.scrollTop = position;
   }
 }
-
-/**
- * Builds keyframes array from config and progress values.
- *
- * @param {Object} config - Animation config
- * @param {number[]} progressValues - Array of progress values
- * @param {boolean} supportsLinear - Whether linear() easing is supported
- * @param {Object|null} [stackingInfo] - Stacking info with reversedStackingIndex and selfAndAboveTravelProgressSum
- * @returns {Object[]} Array of keyframe objects
- */
 function buildKeyframesFromConfig(
   config,
   progressValues,
@@ -86,13 +61,6 @@ function buildKeyframesFromConfig(
   if (!progressValues || progressValues.length === 0) {
     return [];
   }
-
-  /**
-   * Adjusts progress value based on stacking info.
-   *
-   * @param {number} progress - The progress value to adjust
-   * @returns {number} The adjusted progress value
-   */
   const adjustProgress = (progress) => {
     if (!stackingInfo) {
       return progress;
@@ -118,18 +86,6 @@ function buildKeyframesFromConfig(
   }
   return progressValues.map((p) => buildKeyframe(config, adjustProgress(p)));
 }
-
-/**
- * Animates a single target element and returns a promise that resolves when complete.
- * Persists final keyframe styles to the element after animation finishes.
- *
- * @param {Object} params - Animation parameters
- * @param {HTMLElement} params.target - Element to animate
- * @param {Object[]} params.keyframes - Keyframes array
- * @param {Object} params.animationOptions - WAAPI animation options
- * @param {string} [params.transformOrigin] - Optional transform origin
- * @returns {Promise<void>}
- */
 function animateTarget({
   target,
   keyframes,
@@ -143,17 +99,10 @@ function animateTarget({
   const animation = target.animate(keyframes, animationOptions);
 
   return new Promise((resolve) => {
-    /**
-     * Cleanup animation event listeners.
-     */
     const cleanup = () => {
       animation.removeEventListener("finish", onEnd);
       animation.removeEventListener("cancel", onEnd);
     };
-
-    /**
-     * Handles animation end, applies final keyframe styles.
-     */
     const onEnd = () => {
       const finalKeyframe = keyframes[keyframes.length - 1];
       if (finalKeyframe && animation.playState === "finished") {
@@ -169,31 +118,9 @@ function animateTarget({
     animation.addEventListener("cancel", onEnd);
   });
 }
-
-/**
- * Resolves the destination detent, using active detent as fallback.
- * @param {number|undefined} desiredDetent - Desired detent index
- * @param {number} activeDetent - Current active detent index
- * @returns {number} Resolved detent index
- */
 export function resolveDestinationDetent(desiredDetent, activeDetent) {
   return typeof desiredDetent === "number" ? desiredDetent : activeDetent;
 }
-
-/**
- * Calculates the scroll position needed to reach a specific detent.
- *
- * @param {Object} config - Configuration object
- * @param {string} config.trackToTravelOn - Track direction (top, bottom, left, right, horizontal, vertical)
- * @param {number} config.destinationDetent - Target detent index
- * @param {number} config.detentCount - Total number of detents
- * @param {boolean} config.swipeOutDisabledWithDetent - Whether swipe-out is disabled with detent
- * @param {boolean} config.hasOppositeTracks - Whether sheet has opposite tracks
- * @param {string} config.contentPlacement - Content placement (center or edge)
- * @param {Object} config.elementsDimensions - Dimensions of sheet elements
- * @param {number} [config.snapBackAcceleratorSize] - Size of snap-back accelerator
- * @returns {{positionToScrollTo: number|null, scrollAxis: string|null}} Scroll position and axis
- */
 export function calculateScrollPositionForDetent(config) {
   const {
     trackToTravelOn,
@@ -292,28 +219,6 @@ export function calculateScrollPositionForDetent(config) {
         : "y",
   };
 }
-
-/**
- * Executes animated sheet travel to a destination detent using Web Animations API.
- * @param {Object} config - Configuration object
- * @param {number} config.destinationDetent - Target detent index
- * @param {Function} config.setSegment - Function to update current segment
- * @param {HTMLElement} config.view - View element
- * @param {HTMLElement} config.scrollContainer - Scroll container element
- * @param {HTMLElement} config.contentWrapper - Content wrapper element
- * @param {Array} config.travelAnimations - Array of travel animation callbacks
- * @param {Array} config.belowSheetsInStack - Sheets below in the stack
- * @param {string} config.contentPlacement - Content placement
- * @param {number} config.positionToScrollTo - Target scroll position
- * @param {string} config.scrollAxis - Scroll axis (x or y)
- * @param {Object} config.animationConfig - Animation configuration
- * @param {Function} [config.onTravel] - Callback during travel
- * @param {Function} [config.onTravelStart] - Callback at travel start
- * @param {Function} [config.onTravelEnd] - Callback at travel end
- * @param {boolean} [config.runOnTravelStart] - Whether to run onTravelStart
- * @param {Object} config.dimensions - Sheet dimensions
- * @param {string} config.trackToTravelOn - Track direction
- */
 export function executeSheetTravel(config) {
   const {
     destinationDetent,
@@ -456,19 +361,9 @@ export function executeSheetTravel(config) {
           transform: `translate${transformAxis}(${transformDistance * (1 - progressValue)}px)`,
         }))
     : [{ transform: "translateY(0px)" }, { transform: "translateY(0px)" }];
-
-  /**
-   * Sets the scroll position on the scroll container.
-   */
   const setScroll = () => {
     setScrollPosition(scrollContainer, scrollAxis, finalScrollPosition);
   };
-
-  /**
-   * Animates the content wrapper element.
-   *
-   * @returns {Promise<void>} Resolves when animation completes
-   */
   const animateContent = () => {
     if (!needsTransform || !contentWrapper) {
       return Promise.resolve();
@@ -480,18 +375,10 @@ export function executeSheetTravel(config) {
         easing: easingValue,
         delay,
       });
-
-      /**
-       * Cleanup content animation event listeners.
-       */
       const cleanup = () => {
         contentAnimation.removeEventListener("finish", onEnd);
         contentAnimation.removeEventListener("cancel", onEnd);
       };
-
-      /**
-       * Handles content animation end.
-       */
       const onEnd = () => {
         cleanup();
         resolve();
@@ -501,12 +388,6 @@ export function executeSheetTravel(config) {
       contentAnimation.addEventListener("cancel", onEnd);
     });
   };
-
-  /**
-   * Animates all travel callbacks and stacking animations.
-   *
-   * @returns {Promise<void>} Resolves when all animations complete
-   */
   const animateTravelCallbacks = () => {
     const animationOptions = { duration, easing: easingValue, delay };
     const progressValues = useLinearEasing
@@ -552,12 +433,6 @@ export function executeSheetTravel(config) {
 
     return new Promise((resolve) => {
       let startTime = null;
-
-      /**
-       * Animation loop that reports progress updates.
-       *
-       * @param {number} timestamp - Current timestamp from requestAnimationFrame
-       */
       const progressReportLoop = (timestamp) => {
         if (startTime === null) {
           startTime = timestamp;
@@ -644,33 +519,6 @@ export function executeSheetTravel(config) {
     });
   });
 }
-
-/**
- * Main entry point for traveling to a detent. Handles both smooth and instant behavior.
- * @param {Object} config - Configuration object
- * @param {number} [config.destinationDetent] - Target detent index
- * @param {number} config.currentDetent - Current detent index
- * @param {Object} config.dimensions - Sheet dimensions
- * @param {HTMLElement} config.scrollContainer - Scroll container element
- * @param {HTMLElement} config.contentWrapper - Content wrapper element
- * @param {HTMLElement} config.view - View element
- * @param {string} config.tracks - Track direction
- * @param {Array} config.travelAnimations - Array of travel animation callbacks
- * @param {Array} config.belowSheetsInStack - Sheets below in the stack
- * @param {string} [config.trackToTravelOn] - Track to travel on (overrides tracks)
- * @param {boolean} [config.runTravelCallbacksAndAnimations=true] - Whether to run callbacks
- * @param {boolean} [config.runOnTravelStart=true] - Whether to run onTravelStart
- * @param {Object} config.animationConfig - Animation configuration
- * @param {Function} [config.onTravel] - Callback during travel
- * @param {Function} [config.onTravelStart] - Callback at travel start
- * @param {Function} [config.onTravelEnd] - Callback at travel end
- * @param {number} [config.snapBackAcceleratorTravelAxisSize] - Snap-back accelerator size
- * @param {boolean} config.swipeOutDisabledWithDetent - Whether swipe-out is disabled
- * @param {Function} config.setSegment - Function to update segment
- * @param {string} config.contentPlacement - Content placement
- * @param {boolean} config.hasOppositeTracks - Whether sheet has opposite tracks
- * @param {string} [config.behavior] - Travel behavior (smooth or instant)
- */
 export function travelToDetent(config) {
   const {
     destinationDetent,

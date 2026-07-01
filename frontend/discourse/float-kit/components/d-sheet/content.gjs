@@ -9,28 +9,7 @@ import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 import ContentTag from "./content-tag";
 import scrollListenerModifier from "./scroll-listener-modifier";
 
-/**
- * Renders the scrollable content area of a sheet including scroll containers, content wrapper, and detent markers.
- *
- * @component Content
- * @param {import("./controller").default} sheet - The sheet controller instance managing state, dimensions, and interactions
- * @param {Record<string, [number, number] | ((params: { progress: number, tween: Function }) => string) | string | null>} [travelAnimation] - Travel animation config. Properties can be:
- *   - [start, end] array for keyframe tweening
- *   - ({ progress, tween }) => value function
- *   - string for static values
- *   - null to disable
- *   Supports: opacity, visibility, transforms (translate, scale, rotate, skew variants),
- *   and any CSS property
- * @param {Record<string, [number, number] | ((params: { progress: number, tween: Function }) => string) | string | null>} [stackingAnimation] - Custom stacking animation config (same format as travelAnimation)
- */
 export default class Content extends Component {
-  /**
-   * Generates inline CSS custom properties for positioning a detent marker relative to its neighbors.
-   *
-   * @param {Array<string>} detents - Array of CSS length values representing detent positions
-   * @param {number} index - Zero-based index of the current detent in the array
-   * @returns {import("@ember/template").SafeString} Inline style string with --d-sheet-marker-prev, --d-sheet-marker-current, and --d-sheet-marker-index custom properties
-   */
   stylesForDetentMarker(detents, index) {
     const currentDetent = detents[index];
     const prevDetent = index > 0 ? detents[index - 1] : "0px";

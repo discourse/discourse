@@ -11,46 +11,7 @@ import Backdrop from "./backdrop";
 import Content from "./content";
 import { scrollTrapModifier } from "./scroll-trap-modifier";
 
-/**
- * View component for d-sheet.
- *
- * Renders the sheet view and configures the Controller with behavioral/visual props.
- *
- * @component DSheetView
- * @param {Object} sheet - The sheet controller instance
- * @param {string} [contentPlacement] - Placement: "top" | "bottom" | "left" | "right" | "center"
- * @param {string|Array<string>} [tracks] - Track content travels on: "top" | "bottom" | "left" | "right" | ["top", "bottom"] | ["left", "right"]
- * @param {Array<string>} [detents] - Detent values for the sheet
- * @param {boolean} [swipe=true] - Enable swipe gestures
- * @param {boolean} [swipeDismissal=true] - Allow swipe to dismiss
- * @param {boolean} [swipeOvershoot=true] - Allow overshoot
- * @param {boolean|Object} [swipeTrap] - Trap swipes within the view
- * @param {boolean} [nativeFocusScrollPrevention=true] - Prevent scroll on focus
- * @param {boolean} [pageScroll] - Enable page-level scroll behavior
- * @param {boolean} [inertOutside=true] - Prevent interactions outside
- * @param {Object} [onClickOutside] - Click outside behavior config
- * @param {Object|Function} [onEscapeKeyDown] - Escape key behavior config
- * @param {Object|Function} [onPresentAutoFocus] - Auto-focus on present config
- * @param {Object|Function} [onDismissAutoFocus] - Auto-focus on dismiss config
- * @param {string|Object} [enteringAnimationSettings] - Animation settings for opening
- * @param {string|Object} [exitingAnimationSettings] - Animation settings for closing
- * @param {string|Object} [steppingAnimationSettings] - Animation settings for stepping
- * @param {number|string} [snapOutAcceleration] - Snap out acceleration
- * @param {number|string} [snapToEndDetentsAcceleration] - Snap to end detents acceleration
- * @param {boolean|string} [themeColorDimming] - Whether to dim theme color
- * @param {number} [themeColorDimmingAlpha] - Alpha value for theme color dimming
- * @param {Function} [onTravelStatusChange] - Callback when travel status changes
- * @param {Function} [onTravelRangeChange] - Callback when travel range changes
- * @param {Function} [onTravel] - Callback during travel with progress
- * @param {Function} [onTravelStart] - Callback when travel starts
- * @param {Function} [onTravelEnd] - Callback when travel ends
- */
 export default class View extends Component {
-  /**
-   * Modifier that registers the view element with the Controller.
-   *
-   * @type {import("ember-modifier").FunctionBasedModifier<{ Element: HTMLElement; Args: { Positional: [Object] } }>}
-   */
   registerView = modifierFn((element, [sheet]) => {
     sheet.registerView(element);
   });
@@ -59,13 +20,6 @@ export default class View extends Component {
     return (this.args.bottomColorHint ?? true) && capabilities.isWebKit;
   }
 
-  /**
-   * Configure the Controller with behavioral options.
-   * Called via effect helper when sheet or any configuration args change.
-   *
-   * @param {Object} sheet - The sheet controller instance
-   * @action
-   */
   @action
   configureSheet(sheet) {
     if (!sheet) {
@@ -123,8 +77,8 @@ export default class View extends Component {
       }}
       tabindex="-1"
       role={{@sheet.role}}
-      aria-labelledby={{@sheet.titleId}}
-      aria-describedby={{@sheet.descriptionId}}
+      aria-labelledby={{@sheet.labelledById}}
+      aria-describedby={{@sheet.describedById}}
       {{this.registerView @sheet}}
       {{on "focus" @sheet.handleFocus capture=true}}
       ...attributes

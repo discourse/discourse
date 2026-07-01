@@ -7,15 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DSheet from "discourse/float-kit/components/d-sheet";
 import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
-/** @type {string[]} Default detent stops for the bottom sheet view. */
 const DETENTS = ["66vh"];
-
-/**
- * Scrollable area within a bottom sheet that adapts scroll behavior based on detent state.
- *
- * @component BottomSheetScrollArea
- * @param {boolean} reachedLastDetent - Whether the sheet has expanded to its last detent position.
- */
 const BottomSheetScrollArea = <template>
   <DSheet.Scroll.Root as |controller|>
     <DSheet.Scroll.View
@@ -35,24 +27,9 @@ const BottomSheetScrollArea = <template>
     </DSheet.Scroll.View>
   </DSheet.Scroll.Root>
 </template>;
-
-/**
- * View wrapper that manages expandable detent behavior and travel state for the bottom sheet.
- *
- * @component ExpandableView
- * @param {Object} sheet - The DSheet instance controlling the sheet.
- * @param {boolean} reachedLastDetent - Whether the sheet has expanded to its last detent position.
- * @param {(value: boolean) => void} setReachedLastDetent - Callback to update the last detent state.
- */
 class ExpandableView extends Component {
-  /** @type {HTMLElement | undefined} Reference to the view DOM element. */
   view;
 
-  /**
-   * Resets the last detent state when travel moves outside the sheet.
-   *
-   * @param {string} status - The travel status identifier.
-   */
   @action
   handleTravelStatusChange(status) {
     if (status === "idleOutside") {
@@ -60,11 +37,6 @@ class ExpandableView extends Component {
     }
   }
 
-  /**
-   * Sets the last detent state when travel range reaches the final detent.
-   *
-   * @param {{ start: number }} range - The travel range with start position index.
-   */
   @action
   handleTravelRangeChange(range) {
     if (range.start === 2 && !this.args.reachedLastDetent) {
@@ -72,11 +44,6 @@ class ExpandableView extends Component {
     }
   }
 
-  /**
-   * Focuses the view element when travel progress is below threshold and focus is outside.
-   *
-   * @param {{ progress: number }} event - The travel event with progress value.
-   */
   @action
   handleTravel(event) {
     if (event.progress < 0.999 && this.view) {
@@ -86,11 +53,6 @@ class ExpandableView extends Component {
     }
   }
 
-  /**
-   * Stores a reference to the view DOM element on insert.
-   *
-   * @param {HTMLElement} element - The view DOM element.
-   */
   @action
   registerView(element) {
     this.view = element;
@@ -111,15 +73,6 @@ class ExpandableView extends Component {
     </DSheet.View>
   </template>
 }
-
-/**
- * Inner content layout for the bottom sheet including backdrop, handle, and bleeding background.
- *
- * @component BottomSheetInnerContent
- * @param {Object} sheet - The DSheet instance controlling the sheet.
- * @param {boolean} expandable - Whether the sheet supports expanding to additional detents.
- * @param {string} handleAction - The handle action type ("dismiss" or "step").
- */
 const BottomSheetInnerContent = <template>
   <DSheet.Backdrop @sheet={{@sheet}} />
   <DSheet.Content @sheet={{@sheet}} as |ContentTag|>
@@ -142,16 +95,6 @@ const BottomSheetInnerContent = <template>
     </ContentTag>
   </DSheet.Content>
 </template>;
-
-/**
- * Content wrapper that renders either an expandable or fixed bottom sheet layout.
- *
- * @component BottomSheetContent
- * @param {Object} sheet - The DSheet instance controlling the sheet.
- * @param {boolean} expandable - Whether the sheet supports expanding to additional detents.
- * @param {boolean} reachedLastDetent - Whether the sheet has expanded to its last detent position.
- * @param {(value: boolean) => void} setReachedLastDetent - Callback to update the last detent state.
- */
 const BottomSheetContent = <template>
   <DSheet.Portal @sheet={{@sheet}}>
     {{#if @expandable}}
@@ -200,35 +143,13 @@ const BottomSheetContent = <template>
   </DSheet.Portal>
 </template>;
 
-/**
- * A mobile-friendly bottom sheet component that slides up from the bottom of the screen.
- *
- * @component DBottomSheet
- * @param {string} [componentId] - Optional unique identifier for the sheet instance.
- * @param {boolean} [defaultPresented] - Whether the sheet is presented by default.
- * @param {boolean} [presented] - Controlled presentation state.
- * @param {(presented: boolean) => void} [onPresentedChange] - Callback when presentation state changes.
- * @param {() => void} [onClosed] - Callback when the sheet is closed.
- * @param {boolean} [expandable] - Whether the sheet supports expanding to additional detents.
- */
 export default class DBottomSheet extends Component {
-  /** @type {boolean} Whether the sheet has expanded to its last detent position. */
   @tracked reachedLastDetent = false;
 
-  /**
-   * Unique identifier for the sheet, falling back to a generated GUID.
-   *
-   * @returns {string}
-   */
   get componentId() {
     return this.args.componentId ?? guidFor(this);
   }
 
-  /**
-   * Updates the tracked state for whether the last detent has been reached.
-   *
-   * @param {boolean} value - The new reached last detent state.
-   */
   @action
   setReachedLastDetent(value) {
     this.reachedLastDetent = value;

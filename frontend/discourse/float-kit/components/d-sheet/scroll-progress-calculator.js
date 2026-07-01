@@ -1,32 +1,10 @@
-/**
- * @typedef {Object} ProgressResult
- * @property {number} rawProgress - Unbounded progress from scroll position
- * @property {number} clampedProgress - Progress clamped between first detent and max
- */
-
-/**
- * Handles scroll-based progress calculations for the sheet component.
- */
 export default class ScrollProgressCalculator {
-  /**
-   * The sheet controller instance.
-   *
-   * @type {import("./controller").default}
-   */
   controller;
 
-  /**
-   * @param {import("./controller").default} controller - The sheet controller instance
-   */
   constructor(controller) {
     this.controller = controller;
   }
 
-  /**
-   * Calculate all progress values from current scroll position.
-   *
-   * @returns {ProgressResult|null} Progress values or null if elements are missing
-   */
   calculateProgress() {
     const { scrollContainer, dimensions, contentPlacement, tracks } =
       this.controller;
@@ -76,11 +54,6 @@ export default class ScrollProgressCalculator {
     };
   }
 
-  /**
-   * Get the first detent progress value for clamping.
-   *
-   * @returns {number}
-   */
   #getFirstDetentProgress() {
     const { edgeAlignedNoOvershoot, swipeOutDisabledWithDetent, dimensions } =
       this.controller;
@@ -91,20 +64,10 @@ export default class ScrollProgressCalculator {
     return 0;
   }
 
-  /**
-   * Get the max clamp value for progress.
-   *
-   * @returns {number}
-   */
   #getMaxClamp() {
     return this.controller.edgeAlignedNoOvershoot ? 1 : 10;
   }
 
-  /**
-   * Get the edge padding value for progress calculations.
-   *
-   * @returns {number}
-   */
   #getEdgePadding() {
     const { edgeAlignedNoOvershoot, snapToEndDetentsAcceleration } =
       this.controller;
@@ -116,18 +79,6 @@ export default class ScrollProgressCalculator {
     return snapToEndDetentsAcceleration === "auto" ? 10 : 1;
   }
 
-  /**
-   * Calculate raw progress from scroll position based on content placement and track direction.
-   *
-   * @param {Object} params - Calculation parameters
-   * @param {number} params.scrollPosition - Current scroll position
-   * @param {number} params.contentSize - Size of the content on travel axis
-   * @param {number} params.effectiveContentSize - Effective size considering placement
-   * @param {number} params.edgePadding - Padding at the edges
-   * @param {number} params.snapAccelerator - Snap out accelerator value
-   * @param {boolean} params.isTopOrLeft - Whether track is top or left
-   * @returns {number} Raw progress value
-   */
   #calculateRawProgress({
     scrollPosition,
     contentSize,
@@ -166,12 +117,6 @@ export default class ScrollProgressCalculator {
     return (scrollPosition - snapAccelerator) / divisor;
   }
 
-  /**
-   * Determine the current segment from progress and detents.
-   *
-   * @param {number} progress - Segment progress value
-   * @returns {[number, number]|null} Segment as [start, end] indices or null if no change
-   */
   determineSegment(progress) {
     const { dimensions } = this.controller;
     const detents = dimensions?.progressValueAtDetents;

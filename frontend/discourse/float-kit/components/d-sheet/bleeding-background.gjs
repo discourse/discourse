@@ -3,12 +3,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
-/**
- * Renders a bleeding background div for the d-sheet that extends behind the sheet content.
- *
- * @component BleedingBackground
- * @param {import("./controller").default} sheet - The sheet controller instance providing placement, tracks, and staging state
- */
 const BleedingBackground = <template>
   <div
     data-d-sheet={{concatClass

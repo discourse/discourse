@@ -3,15 +3,6 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import DSheetTrigger from "discourse/float-kit/components/d-sheet/trigger";
 
-/**
- * DScroll.Trigger - A button that triggers scroll actions.
- *
- * @component
- * @param {Object} @controller - The scroll controller instance
- * @param {Object} @action - Action to execute: { type: "scroll-to" | "scroll-by", progress?, distance?, animationSettings? }
- * @param {Function|Object} @onPress - Press event handler or options: { forceFocus?: boolean, runAction?: boolean }
- * @param {Function} @onClick - Click handler invoked after the action logic
- */
 export default class DScrollTrigger extends Component {
   @action
   handlePress(pressEvent) {
@@ -35,12 +26,12 @@ export default class DScrollTrigger extends Component {
   }
 
   executeAction() {
-    const { action, controller } = this.args;
-    if (!action || !controller) {
+    const { action: scrollAction, controller } = this.args;
+    if (!scrollAction || !controller) {
       return;
     }
 
-    const { type, progress, distance, animationSettings } = action;
+    const { type, progress, distance, animationSettings } = scrollAction;
 
     if (type === "scroll-to") {
       controller.scrollTo({ progress, distance, animationSettings });
@@ -59,4 +50,3 @@ export default class DScrollTrigger extends Component {
     {{/if}}
   </template>
 }
-

@@ -1,8 +1,3 @@
-/**
- * CSS transform properties that should be combined into a single transform string.
- *
- * @type {Set<string>}
- */
 export const TRANSFORM_PROPS = new Set([
   "translate",
   "translateX",
@@ -20,13 +15,6 @@ export const TRANSFORM_PROPS = new Set([
   "skewX",
   "skewY",
 ]);
-
-/**
- * Converts a camelCase CSS property to kebab-case with vendor prefix handling.
- *
- * @param {string} property - camelCase property name
- * @returns {string} kebab-case property name
- */
 export function toKebabCase(property) {
   const prefix =
     property.startsWith("webkit") || property.startsWith("moz") ? "-" : "";

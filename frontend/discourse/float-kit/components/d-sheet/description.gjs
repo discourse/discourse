@@ -1,14 +1,13 @@
-/**
- * Renders the description region of a sheet, linked via ID for accessibility.
- *
- * @component DSheetDescription
- * @param {import("./controller").default} sheet - The sheet controller instance providing descriptionId
- */
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
+
 const DSheetDescription = <template>
   <div
     id={{@sheet.descriptionId}}
     class="Sheet-description"
     data-d-sheet="description"
+    {{didInsert @sheet.registerDescription}}
+    {{willDestroy @sheet.unregisterDescription}}
     ...attributes
   >
     {{yield}}

@@ -1,4 +1,5 @@
-import { cancel, schedule } from "@ember/runloop";
+import { action } from "@ember/object";
+import { cancel, run, schedule } from "@ember/runloop";
 import Service from "@ember/service";
 import { processBehavior } from "discourse/float-kit/lib/behavior-handler";
 
@@ -10,6 +11,7 @@ export default class SheetLayerStore extends Service {
   rootsByComponentId = new Map();
   layerFocusState = new Map();
   inertElements = new Set();
+  automaticLayerElements = new Set();
   mutationObserver = null;
   recalculateInertTimeout = null;
   clickOutsideCleanup = null;
@@ -70,6 +72,22 @@ export default class SheetLayerStore extends Service {
 
   getRootByComponentId(componentId) {
     return this.rootsByComponentId.get(componentId);
+  }
+
+  @action
+  registerAutomaticLayerElement(element) {
+    if (element) {
+      this.automaticLayerElements.add(element);
+      this.recalculateInertOutside();
+    }
+  }
+
+  @action
+  unregisterAutomaticLayerElement(element) {
+    if (element) {
+      this.automaticLayerElements.delete(element);
+      this.recalculateInertOutside();
+    }
   }
 
   recalculateInertOutside() {
@@ -133,6 +151,11 @@ export default class SheetLayerStore extends Service {
     }
 
     if (target === document.body && this.pointerDownTarget !== document.body) {
+      this.pointerDownTarget = null;
+      return;
+    }
+
+    if (this.#targetIsInAutomaticLayer(target)) {
       this.pointerDownTarget = null;
       return;
     }
@@ -289,6 +312,12 @@ export default class SheetLayerStore extends Service {
     const target = event.target;
     const content = sheet.content;
     const view = sheet.view;
+    const rootElement = sheet.rootElement;
+
+    if (rootElement?.contains(target) && !view?.contains(target)) {
+      return;
+    }
+
     const isClickOutside =
       (view && !view.contains(target)) ||
       (view && content && !content.contains(target));
@@ -349,6 +378,10 @@ export default class SheetLayerStore extends Service {
         rootElements.add(sheet.view);
       }
 
+      if (sheet.rootElement) {
+        rootElements.add(sheet.rootElement);
+      }
+
       if (sheet.inertOutside) {
         break;
       }
@@ -358,8 +391,28 @@ export default class SheetLayerStore extends Service {
       rootElements.add(el);
     });
 
+    for (const element of this.automaticLayerElements) {
+      if (element.isConnected) {
+        rootElements.add(element);
+      }
+    }
+
     this.#moveFocusIfNecessary(rootElements, sheetsInOrder);
     this.#applyInert(rootElements);
+  }
+
+  #targetIsInAutomaticLayer(target) {
+    if (!(target instanceof Node)) {
+      return false;
+    }
+
+    for (const element of this.automaticLayerElements) {
+      if (element.isConnected && element.contains(target)) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   #moveFocusIfNecessary(rootElements, sheetsInOrder) {
@@ -479,11 +532,13 @@ export default class SheetLayerStore extends Service {
     }
 
     const handlePointerDown = (event) => {
-      this.pointerDownTarget = event.target;
+      run(() => {
+        this.pointerDownTarget = event.target;
+      });
     };
 
     const handleClick = (event) => {
-      this.consumeClickOutside(event);
+      run(() => this.consumeClickOutside(event));
     };
 
     document.addEventListener("pointerdown", handlePointerDown, {
@@ -519,7 +574,7 @@ export default class SheetLayerStore extends Service {
 
     const handleKeyDown = (event) => {
       if (event.key === "Escape") {
-        this.consumeEscapeKey(event);
+        run(() => this.consumeEscapeKey(event));
       }
     };
 

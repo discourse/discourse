@@ -1,6 +1,9 @@
 import Component from "@glimmer/component";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import DHeadlessTooltip from "discourse/float-kit/components/d-headless-tooltip";
+import type SheetLayerStore from "discourse/float-kit/services/sheet-layer-store";
 import type TooltipService from "discourse/float-kit/services/tooltip";
 
 /**
@@ -11,10 +14,15 @@ import type TooltipService from "discourse/float-kit/services/tooltip";
  * `DTooltip`).
  */
 export default class DTooltips extends Component {
+  @service declare sheetLayerStore: SheetLayerStore;
   @service declare tooltip: TooltipService;
 
   <template>
-    <div id="d-tooltip-portals"></div>
+    <div
+      id="d-tooltip-portals"
+      {{didInsert this.sheetLayerStore.registerAutomaticLayerElement}}
+      {{willDestroy this.sheetLayerStore.unregisterAutomaticLayerElement}}
+    ></div>
 
     {{#each this.tooltip.registeredTooltips key="id" as |tooltip|}}
       {{#if tooltip.detachedTrigger}}

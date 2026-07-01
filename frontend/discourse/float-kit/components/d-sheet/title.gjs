@@ -1,17 +1,14 @@
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import concatClass from "discourse/ui-kit/helpers/d-concat-class";
 
-/**
- * Renders the title heading of a sheet, linked via ID for accessibility.
- *
- * @component DSheetTitle
- * @param {import("./controller").default} sheet - The sheet controller instance providing titleId
- * @param {string} [class] - Optional CSS class appended to the title element
- */
 const DSheetTitle = <template>
   <h2
     id={{@sheet.titleId}}
     class={{concatClass "Sheet-title" @class}}
     data-d-sheet="title"
+    {{didInsert @sheet.registerTitle}}
+    {{willDestroy @sheet.unregisterTitle}}
     ...attributes
   >
     {{yield}}

@@ -1,16 +1,3 @@
-/**
- * @module config-normalizer
- * Normalizes and resolves d-sheet track and placement configuration options.
- */
-
-/**
- * Convert track direction to content placement.
- * When only tracks is provided, contentPlacement is derived from tracks.
- * Array tracks and horizontal/vertical normalize to "center".
- *
- * @param {string | Array<string>} track - Track direction or array of tracks
- * @returns {"center" | string} Content placement value
- */
 function trackToPlacement(track) {
   if (Array.isArray(track)) {
     return "center";
@@ -23,29 +10,12 @@ function trackToPlacement(track) {
       return track;
   }
 }
-
-/**
- * Normalize array tracks to a single track string.
- * Array tracks like ["left", "right"] or ["top", "bottom"] are normalized
- * to "horizontal" or "vertical" respectively.
- *
- * @param {string | Array<string>} track - Track direction or array of tracks
- * @returns {"horizontal" | "vertical" | string} Normalized track value
- */
 function normalizeTrack(track) {
   if (Array.isArray(track)) {
     return track.includes("left") ? "horizontal" : "vertical";
   }
   return track;
 }
-
-/**
- * Convert API placement value to data-d-sheet attribute token.
- * Uses "start"/"end" for vertical, "left"/"right" for horizontal, "center" for centered.
- *
- * @param {"top" | "bottom" | "left" | "right" | "center"} placement - Placement value
- * @returns {"start" | "end" | "left" | "right" | "center"} Attribute token
- */
 export function placementToAttribute(placement) {
   switch (placement) {
     case "top":
@@ -62,30 +32,9 @@ export function placementToAttribute(placement) {
       return "end";
   }
 }
-
-/**
- * Convert content placement to track direction.
- * Inverse of trackToPlacement - when only contentPlacement is provided.
- *
- * @param {string} placement - Content placement value
- * @returns {string} Track direction
- */
 function placementToTrack(placement) {
   return placement === "center" ? "bottom" : placement;
 }
-
-/**
- * Resolve tracks and contentPlacement from partial options.
- * Handles the logic of deriving missing options from provided ones.
- *
- * @param {Object} options - Configuration options
- * @param {string | Array<string>} [options.tracks] - Track direction or array of tracks
- * @param {string} [options.contentPlacement] - Content placement
- * @param {Object} defaults - Default values
- * @param {string} defaults.tracks - Default track direction
- * @param {string} defaults.contentPlacement - Default content placement
- * @returns {{ tracks: string, contentPlacement: string }} Resolved values
- */
 export function resolveTracksAndPlacement(options, defaults) {
   const hasPlacement = options.contentPlacement !== undefined;
   const hasTracks = options.tracks !== undefined;
@@ -107,16 +56,6 @@ export function resolveTracksAndPlacement(options, defaults) {
   validateTracksPlacement(tracks, contentPlacement);
   return { tracks, contentPlacement };
 }
-
-/**
- * Validate that tracks and contentPlacement are compatible.
- * When both are provided, contentPlacement must match tracks (or be "center").
- * Logs a console warning when an invalid combination is detected.
- *
- * @param {string | Array<string>} tracks - Track direction or array of tracks
- * @param {string} contentPlacement - Content placement
- * @returns {boolean} Whether the combination is valid
- */
 export function validateTracksPlacement(tracks, contentPlacement) {
   if (!tracks || !contentPlacement) {
     return true;

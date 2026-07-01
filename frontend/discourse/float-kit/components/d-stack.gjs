@@ -4,11 +4,6 @@ import { guidFor } from "@ember/object/internals";
 import TrackedMediaQuery from "discourse/lib/tracked-media-query";
 import DSheet from "./d-sheet";
 
-/**
- * Returns a stacking animation configuration based on track direction.
- * @param {"right" | "bottom"} tracks - The direction the stack tracks
- * @returns {{ translateX?: Function, translateY?: Function, scale: [number, number], transformOrigin: string }}
- */
 function stackingAnimationFor(tracks) {
   return tracks === "right"
     ? {
@@ -28,15 +23,6 @@ function stackingAnimationFor(tracks) {
         transformOrigin: "50% 0",
       };
 }
-
-/**
- * Shared template for rendering stack content with portal, view, backdrop, and content layers.
- * @component DStackSharedContent
- * @param {Object} sheet - The sheet controller instance
- * @param {"right" | "bottom"} tracks - The direction the stack tracks
- * @param {string} stackRoot - The stack root ID for nested stack association
- * @param {Object} stackingAnimation - Animation configuration for stacking behavior
- */
 const DStackSharedContent = <template>
   <DSheet.Portal @sheet={{@sheet}}>
     <DSheet.View
@@ -73,19 +59,7 @@ const DStackSharedContent = <template>
     </DSheet.View>
   </DSheet.Portal>
 </template>;
-
-/**
- * Content wrapper that computes stacking animation from the track direction.
- * @component DStackContent
- * @param {Object} sheet - The sheet controller instance
- * @param {string} stackRoot - The stack root ID for nested stack association
- * @param {"right" | "bottom"} tracks - The direction the stack tracks
- */
 class DStackContent extends Component {
-  /**
-   * Computes the stacking animation config based on the track direction.
-   * @returns {{ translateX?: Function, translateY?: Function, scale: [number, number], transformOrigin: string }}
-   */
   get stackingAnimation() {
     return stackingAnimationFor(this.args.tracks);
   }
@@ -102,26 +76,11 @@ class DStackContent extends Component {
     </DStackSharedContent>
   </template>
 }
-
-/**
- * Nested stack component that creates a new sheet root within an existing stack.
- * @component DStackNested
- * @param {string} stackRoot - The parent stack root ID
- * @param {"right" | "bottom"} tracks - The direction the stack tracks
- */
 class DStackNested extends Component {
-  /**
-   * Auto-generated unique ID for this nested stack component.
-   * @returns {string}
-   */
   get componentId() {
     return guidFor(this);
   }
 
-  /**
-   * Computes the stacking animation config based on the track direction.
-   * @returns {{ translateX?: Function, translateY?: Function, scale: [number, number], transformOrigin: string }}
-   */
   get stackingAnimation() {
     return stackingAnimationFor(this.args.tracks);
   }
@@ -148,42 +107,18 @@ class DStackNested extends Component {
   </template>
 }
 
-/**
- * Responsive stacking sheet component. Tracks right on large viewports, bottom on small.
- * @component DStack
- * @param {string} [componentId] - Optional explicit ID for the stack component
- * @param {boolean} [defaultPresented] - Whether the stack is initially presented (uncontrolled mode)
- * @param {boolean} [presented] - Controls the presented state (controlled mode)
- * @param {Function} [onPresentedChange] - Callback when presented state changes (controlled mode)
- * @param {Function} [onClosed] - Callback when the stack has fully closed
- */
 export default class DStack extends Component {
-  /**
-   * Media query tracker for responsive direction switching.
-   * @type {TrackedMediaQuery}
-   */
   largeViewport = new TrackedMediaQuery("(min-width: 700px)");
 
-  /**
-   * Tears down the media query listener.
-   */
   willDestroy() {
     super.willDestroy(...arguments);
     this.largeViewport.teardown();
   }
 
-  /**
-   * Determines the track direction based on viewport width.
-   * @returns {"right" | "bottom"}
-   */
   get tracks() {
     return this.largeViewport.matches ? "right" : "bottom";
   }
 
-  /**
-   * Resolved component ID, from args or auto-generated.
-   * @returns {string}
-   */
   get componentId() {
     return this.args.componentId ?? guidFor(this);
   }

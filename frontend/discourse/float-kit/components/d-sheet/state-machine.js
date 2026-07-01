@@ -1,48 +1,7 @@
 import { tracked } from "@glimmer/tracking";
+import { trackedObject } from "@ember/reactive/collections";
 import { schedule } from "@ember/runloop";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 
-/**
- * @typedef {Object} Subscription
- * @property {Symbol} id - Unique identifier for the subscription
- * @property {string} timing - When to invoke callback ("immediate", "before-paint", "after-paint")
- * @property {string|string[]} state - State pattern(s) to match
- * @property {string|string[]} [transition] - Message type(s) that triggered the transition
- * @property {function(Object): void} callback - Function to call when state matches
- * @property {function(): boolean|boolean} guard - Guard condition
- */
-
-/**
- * @typedef {Object} QueuedMessage
- * @property {{type: string}} message - The message to process
- * @property {Object} context - Context data for guards
- */
-
-/**
- * @typedef {Object} StateDefinition
- * @property {string} initial - Initial state
- * @property {Object<string, Object>} states - Map of state names to configurations
- * @property {boolean} [silentOnly] - If true, state changes don't trigger reactive updates
- */
-
-/**
- * @typedef {Object} StateMachineOptions
- * @property {Object<string, function(string[], Object): boolean>} [guards] - Guard functions for transitions
- */
-
-/**
- * @typedef {Object} TransitionResult
- * @property {boolean} transitioned - Whether a transition occurred
- * @property {string[]} enteredStates - States that were entered
- * @property {string[]} exitedStates - States that were exited
- * @property {boolean} silent - Whether the transition was silent
- */
-
-/**
- * Debug logging utility for state machine diagnostics.
- *
- * @type {{enabled: boolean, log: (...args: any[]) => void}}
- */
 const DEBUG = {
   enabled: false,
   log(...args) {
@@ -59,170 +18,34 @@ if (typeof window !== "undefined") {
     DEBUG.log("Debug logging enabled");
   };
 }
-
-/**
- * Sentinel value representing an automatic (unnamed) transition.
- *
- * @type {string}
- */
 const AUTOMATIC_TRANSITION = "";
-
-/**
- * Subscription timing constants controlling when callbacks fire relative to rendering.
- *
- * @type {{IMMEDIATE: string, BEFORE_PAINT: string, AFTER_PAINT: string}}
- */
 const TIMING = {
   IMMEDIATE: "immediate",
   BEFORE_PAINT: "before-paint",
   AFTER_PAINT: "after-paint",
 };
-
-/**
- * Subscription type constants for entry and exit actions.
- *
- * @type {{ENTER: string, EXIT: string}}
- */
 const TYPE = {
   ENTER: "enter",
   EXIT: "exit",
 };
-
-/**
- * Hierarchical state machine with support for nested machines and subscriptions.
- * Uses Glimmer tracking for automatic reactivity when state changes.
- *
- * @example
- * const machine = new StateMachine(
- *   {
- *     initial: "idle",
- *     states: {
- *       idle: { messages: { START: "running" } },
- *       running: { messages: { STOP: "idle" } }
- *     }
- *   },
- *   "idle"
- * );
- *
- * machine.send("START");
- * machine.matches("running"); // true
- */
 class StateMachine {
-  /**
-   * Current state of the machine.
-   *
-   * @type {string}
-   */
   @tracked current;
-
-  /**
-   * The state machine definition.
-   *
-   * @type {StateDefinition}
-   */
   definition;
-
-  /**
-   * Context data used by guards.
-   *
-   * @type {Object<string, *>}
-   */
   context = {};
-
-  /**
-   * Tracked object containing states of nested machines.
-   *
-   * @type {TrackedObject<string, string>}
-   */
-  nestedMachines = new TrackedObject();
-
-  /**
-   * The last message that was processed.
-   *
-   * @type {{type: string}|null}
-   */
+  nestedMachines = trackedObject();
   lastProcessedMessage = null;
-
-  /**
-   * Queue of pending messages awaiting processing.
-   *
-   * @type {QueuedMessage[]}
-   */
   #messageQueue = [];
-
-  /**
-   * Whether the message queue is currently being drained.
-   *
-   * @type {boolean}
-   */
   #isProcessingQueue = false;
-
-  /**
-   * Timed subscriptions (before-paint and after-paint).
-   *
-   * @type {Subscription[]}
-   */
   #subscriptions = [];
-
-  /**
-   * Immediate-timing entry subscriptions.
-   *
-   * @type {Subscription[]}
-   */
   #entryActions = [];
-
-  /**
-   * Exit subscriptions fired when leaving a state.
-   *
-   * @type {Subscription[]}
-   */
   #exitActions = [];
-
-  /**
-   * Cache mapping state paths to their resolved configurations.
-   *
-   * @type {Map<string, Object|null>}
-   */
   #stateConfigCache = new Map();
-
-  /**
-   * Named guard functions for conditional transitions.
-   *
-   * @type {Object<string, (previousStates: string[], message: Object) => boolean>}
-   */
   #guards = {};
-
-  /**
-   * Machine definitions for the current state's nested machines.
-   *
-   * @type {Array<Object>|null}
-   */
   #currentStateMachines = null;
-
-  /**
-   * Names of nested machines marked as silent (no subscriber notifications).
-   *
-   * @type {Set<string>}
-   */
   #silentMachines = new Set();
-
-  /**
-   * Parent group if this machine is part of a StateMachineGroup.
-   * @type {Object|null}
-   */
   #parentGroup = null;
-
-  /**
-   * Name of this machine within its parent group.
-   * @type {string|null}
-   */
   #machineName = null;
 
-  /**
-   * @param {Object} definition - State machine definition with states and transitions
-   * @param {string} initialState - Initial state path (e.g., "closed.safe-to-unmount")
-   * @param {StateMachineOptions} [options] - Optional configuration including guards
-   */
   constructor(definition, initialState, options = {}) {
     this.definition = definition;
     this.current = initialState;
@@ -233,17 +56,6 @@ class StateMachine {
     this.#processAutomaticTransitions();
   }
 
-  /**
-   * Send a message to the state machine.
-   *
-   * @param {string|Object} message - Message type string or object with type property
-   * @param {Object} [context={}] - Context data for guards
-   * @returns {boolean} Whether any transition occurred
-   *
-   * @example
-   * machine.send("OPEN");
-   * machine.send({ type: "STEP", detent: 2 });
-   */
   send(message, context = {}) {
     const normalizedMessage =
       typeof message === "string" ? { type: message } : message;
@@ -262,17 +74,6 @@ class StateMachine {
     return true;
   }
 
-  /**
-   * Check if the machine is in a specific state.
-   *
-   * @param {string} state - State pattern to match
-   * @returns {boolean} Whether the machine matches the state
-   *
-   * @example
-   * machine.matches("open");                    // exact match
-   * machine.matches("closed");                  // matches "closed.pending"
-   * machine.matches("front.status:idle");       // nested machine state
-   */
   matches(state) {
     if (this.current === state) {
       return true;
@@ -288,15 +89,6 @@ class StateMachine {
     );
   }
 
-  /**
-   * Returns an array of all current state strings including nested machine states.
-   *
-   * @returns {string[]} Array of state strings
-   *
-   * @example
-   * // Returns ["open", "open.scroll:ended", "open.move:ended"]
-   * machine.toStrings();
-   */
   toStrings() {
     const strings = [this.current];
     const parentState = this.current.split(".")[0];
@@ -312,28 +104,6 @@ class StateMachine {
     return strings;
   }
 
-  /**
-   * Subscribe to state changes with timing control.
-   *
-   * @param {Object} options - Subscription options
-   * @param {string} options.timing - "immediate", "before-paint", or "after-paint"
-   * @param {string|string[]} options.state - State pattern(s) to match
-   * @param {string|string[]} [options.transition] - Message type(s) that triggered the transition
-   * @param {Function} options.callback - Function to call when state matches
-   * @param {Function|boolean} [options.guard] - Optional guard condition
-   * @param {string} [options.type] - "enter" (default) or "exit"
-   * @returns {Function} Unsubscribe function
-   *
-   * @example
-   * const unsubscribe = machine.subscribe({
-   *   timing: "immediate",
-   *   state: "open",
-   *   callback: (message) => console.log("Opened!", message),
-   *   guard: () => someCondition
-   * });
-   *
-   * // Later: unsubscribe();
-   */
   subscribe({
     timing,
     state,
@@ -356,21 +126,12 @@ class StateMachine {
     return () => this.#unsubscribe(id);
   }
 
-  /**
-   * Remove all subscriptions from this machine.
-   */
   cleanup() {
     this.#subscriptions = [];
     this.#entryActions = [];
     this.#exitActions = [];
   }
 
-  /**
-   * Get the configuration for a given state path.
-   *
-   * @param {string} statePath - Dot-notation state path
-   * @returns {Object|null} State configuration or null if not found
-   */
   getStateConfig(statePath) {
     if (this.#stateConfigCache.has(statePath)) {
       return this.#stateConfigCache.get(statePath);
@@ -381,22 +142,10 @@ class StateMachine {
     return config;
   }
 
-  /**
-   * Get the current state of a nested machine.
-   *
-   * @param {string} machineName - Nested machine name
-   * @returns {string|null} Current state or null
-   */
   getNestedMachineState(machineName) {
     return this.nestedMachines[machineName] || null;
   }
 
-  /**
-   * Walk the definition tree to resolve a dot-notation state path to its config.
-   *
-   * @param {string} statePath - Dot-notation state path
-   * @returns {Object|null} Resolved configuration or null
-   */
   #resolveStateConfig(statePath) {
     const parts = statePath.split(".");
     let config = this.definition.states[parts[0]];
@@ -429,22 +178,12 @@ class StateMachine {
     return config;
   }
 
-  /**
-   * Remove a subscription by its unique id from all subscription lists.
-   *
-   * @param {Symbol} id - Subscription identifier
-   */
   #unsubscribe(id) {
     this.#subscriptions = this.#subscriptions.filter((s) => s.id !== id);
     this.#entryActions = this.#entryActions.filter((s) => s.id !== id);
     this.#exitActions = this.#exitActions.filter((s) => s.id !== id);
   }
 
-  /**
-   * Initialize nested machines for a given state path.
-   *
-   * @param {string} statePath - State path to initialize nested machines for
-   */
   #initializeNestedMachines(statePath) {
     const stateConfig = this.getStateConfig(statePath);
     this.#silentMachines.clear();
@@ -467,42 +206,19 @@ class StateMachine {
     }
   }
 
-  /**
-   * Check if a nested machine is marked as silent.
-   *
-   * @param {string} machineName - Name of the nested machine
-   * @returns {boolean} Whether the machine is silent
-   */
   #isSilentMachine(machineName) {
     return this.#silentMachines.has(machineName);
   }
 
-  /**
-   * Set the state of a nested machine.
-   *
-   * @param {string} machineName - Name of the nested machine
-   * @param {string} stateName - Target state name
-   */
   #setNestedMachineState(machineName, stateName) {
     this.nestedMachines[machineName] = stateName;
   }
 
-  /**
-   * Get the parent state from a state path.
-   *
-   * @param {string} statePath - State path
-   * @returns {string|null} Parent state or null if no parent
-   */
   #getParentState(statePath) {
     const parts = statePath.split(".");
     return parts.length > 1 ? parts[0] : null;
   }
 
-  /**
-   * Process all queued messages sequentially.
-   *
-   * @returns {boolean} Whether any transitions occurred
-   */
   #processQueue() {
     if (this.#messageQueue.length === 0) {
       this.#isProcessingQueue = false;
@@ -534,13 +250,6 @@ class StateMachine {
     return anyTransitioned;
   }
 
-  /**
-   * Process a single message and attempt transitions.
-   *
-   * @param {Object} message - Message object with type property
-   * @param {Object} context - Context data for guards
-   * @returns {TransitionResult} Result indicating whether transition occurred
-   */
   #processMessage(message, context = {}) {
     // Merge context into message for guards
     const enrichedMessage = { ...message, ...context };
@@ -597,13 +306,6 @@ class StateMachine {
     };
   }
 
-  /**
-   * Attempt a transition for the main state machine.
-   *
-   * @param {Object} message - Message with type property
-   * @param {Object} context - Context data for guards
-   * @returns {boolean} Whether a transition occurred
-   */
   #tryMainStateTransition(message, context) {
     const messageType = message.type;
     const currentStateConfig = this.getStateConfig(this.current);
@@ -631,13 +333,6 @@ class StateMachine {
     );
   }
 
-  /**
-   * Attempt a transition for a nested state machine.
-   *
-   * @param {Object} message - Message with type property
-   * @param {Object} context - Context data for guards
-   * @returns {Object|null} Object with silent flag if transition occurred, null otherwise
-   */
   #tryNestedMachineTransition(message, context) {
     const messageType = message.type;
     const currentStateConfig = this.getStateConfig(this.current);
@@ -683,15 +378,6 @@ class StateMachine {
     return null;
   }
 
-  /**
-   * Try each transition in a list until one succeeds.
-   *
-   * @param {string|Object|Array} transitions - Transition or array of transitions
-   * @param {Object} message - Message being processed
-   * @param {Object} context - Context data for guards
-   * @param {Function} onSuccess - Callback to invoke with target state if transition succeeds
-   * @returns {boolean} Whether a transition succeeded
-   */
   #tryTransitions(transitions, message, context, onSuccess) {
     const transitionList = Array.isArray(transitions)
       ? transitions
@@ -732,33 +418,15 @@ class StateMachine {
     return false;
   }
 
-  /**
-   * Check if a guard condition passes.
-   *
-   * @param {string} guardName - Name of the guard function
-   * @param {string[]} previousStates - Previous state strings
-   * @param {Object} message - Message being processed
-   * @returns {boolean} Whether the guard passes
-   */
   #checkGuard(guardName, previousStates, message) {
     const guardFn = this.#guards[guardName];
     return guardFn ? guardFn(previousStates, message) : true;
   }
 
-  /**
-   * Transition to a specific state. Public method for StateMachineGroup.
-   *
-   * @param {string} targetState - Target state path
-   */
   transitionToState(targetState) {
     this.#transitionToState(targetState);
   }
 
-  /**
-   * Internal method to transition to a specific state.
-   *
-   * @param {string} targetState - Target state path
-   */
   #transitionToState(targetState) {
     const previousState = this.current;
     DEBUG.log(`transitionToState: ${previousState} -> ${targetState}`);
@@ -793,11 +461,6 @@ class StateMachine {
     }
   }
 
-  /**
-   * Transition to a nested machine path (format: "state.machine:state").
-   *
-   * @param {string} targetState - Target state with nested machine notation
-   */
   #transitionToNestedMachinePath(targetState) {
     const dotIndex = targetState.indexOf(".");
     const mainState = targetState.substring(0, dotIndex);
@@ -812,7 +475,7 @@ class StateMachine {
 
     if (this.#machinesAreDifferent(this.#currentStateMachines, newMachines)) {
       DEBUG.log(`transitionToState: reinitializing nested machines`);
-      this.nestedMachines = new TrackedObject();
+      this.nestedMachines = trackedObject();
       this.#initializeNestedMachines(mainState);
     }
 
@@ -825,11 +488,6 @@ class StateMachine {
     this.#setNestedMachineState(machineName, machineState);
   }
 
-  /**
-   * Transition to a simple state path.
-   *
-   * @param {string} targetState - Target state path
-   */
   #transitionToStatePath(targetState) {
     this.current = targetState;
 
@@ -837,18 +495,11 @@ class StateMachine {
     const newMachines = stateConfig?.machines || null;
 
     if (this.#machinesAreDifferent(this.#currentStateMachines, newMachines)) {
-      this.nestedMachines = new TrackedObject();
+      this.nestedMachines = trackedObject();
       this.#initializeNestedMachines(targetState);
     }
   }
 
-  /**
-   * Check if two machine definitions are different.
-   *
-   * @param {Array<Object>|null} oldMachines - Previous machine definitions
-   * @param {Array<Object>|null} newMachines - New machine definitions
-   * @returns {boolean} Whether the machines are different
-   */
   #machinesAreDifferent(oldMachines, newMachines) {
     if (oldMachines === newMachines) {
       return false;
@@ -867,13 +518,6 @@ class StateMachine {
     return false;
   }
 
-  /**
-   * Check if a transition target crosses hierarchical levels.
-   *
-   * @param {string} target - Target state
-   * @param {Object} machineDef - Machine definition
-   * @returns {boolean} Whether this is a cross-level transition
-   */
   #isCrossLevelTransition(target, machineDef) {
     if (machineDef.states?.[target]) {
       return false;
@@ -881,9 +525,6 @@ class StateMachine {
     return true;
   }
 
-  /**
-   * Process automatic (unnamed) transitions after a state change.
-   */
   #processAutomaticTransitions() {
     const currentStateConfig = this.getStateConfig(this.current);
 
@@ -894,12 +535,6 @@ class StateMachine {
     this.#processNestedMachinesAutomaticTransitions(currentStateConfig);
   }
 
-  /**
-   * Process automatic transition for the main state.
-   *
-   * @param {Object} currentStateConfig - Configuration for current state
-   * @returns {boolean} Whether an automatic transition occurred
-   */
   #processMainStateAutomaticTransition(currentStateConfig) {
     if (!currentStateConfig?.messages?.[AUTOMATIC_TRANSITION]) {
       return false;
@@ -928,11 +563,6 @@ class StateMachine {
     return false;
   }
 
-  /**
-   * Process automatic transitions for all nested machines.
-   *
-   * @param {Object} currentStateConfig - Configuration for current state
-   */
   #processNestedMachinesAutomaticTransitions(currentStateConfig) {
     if (!currentStateConfig?.machines) {
       return;
@@ -981,11 +611,6 @@ class StateMachine {
     }
   }
 
-  /**
-   * Process automatic transitions for a specific nested machine.
-   *
-   * @param {string} machineName - Name of the nested machine
-   */
   #processNestedMachineAutomaticTransitions(machineName) {
     const currentStateConfig = this.getStateConfig(this.current);
     if (!currentStateConfig?.machines) {
@@ -1020,12 +645,6 @@ class StateMachine {
     }
   }
 
-  /**
-   * Process silent-only nested machines with a message.
-   *
-   * @param {Object} message - Message being processed
-   * @param {Object} context - Context data for guards
-   */
   #processNestedMachinesSilently(message, context) {
     const messageType = message.type;
     const currentStateConfig = this.getStateConfig(this.current);
@@ -1077,12 +696,6 @@ class StateMachine {
     }
   }
 
-  /**
-   * Check if current state matches a nested machine state pattern.
-   *
-   * @param {string} state - State pattern (e.g., "open.scroll:ended")
-   * @returns {boolean} Whether the pattern matches
-   */
   #matchesNestedMachineState(state) {
     const dotIndex = state.indexOf(".");
     const colonIndex = state.indexOf(":");
@@ -1115,13 +728,6 @@ class StateMachine {
     );
   }
 
-  /**
-   * Calculate which states were entered and exited during a transition.
-   *
-   * @param {string} previousState - Previous main state
-   * @param {Object<string, string>} previousNestedStates - Previous nested machine states
-   * @returns {{entered: string[], exited: string[]}} Arrays of entered and exited states
-   */
   #calculateStateChanges(previousState, previousNestedStates) {
     const entered = [];
     const exited = [];
@@ -1165,13 +771,6 @@ class StateMachine {
     return { entered, exited };
   }
 
-  /**
-   * Notify subscribers of state changes.
-   *
-   * @param {Object} message - Message that triggered the change
-   * @param {string[]} enteredStates - States that were entered
-   * @param {string[]} exitedStates - States that were exited
-   */
   #notifySubscribers(message, enteredStates, exitedStates) {
     DEBUG.log(
       `notifySubscribers: message=${message.type}, enteredStates=`,
@@ -1188,12 +787,6 @@ class StateMachine {
     this.#dispatchTimedSubscriptions(message);
   }
 
-  /**
-   * Dispatch exit action callbacks for states that were exited.
-   *
-   * @param {Object} message - Message that triggered the change
-   * @param {string[]} exitedStates - States that were exited
-   */
   #dispatchExitActions(message, exitedStates) {
     for (const sub of this.#exitActions) {
       const wasExited = this.#didExitState(sub, exitedStates);
@@ -1211,12 +804,6 @@ class StateMachine {
     }
   }
 
-  /**
-   * Dispatch entry action callbacks for states that were entered.
-   *
-   * @param {Object} message - Message that triggered the change
-   * @param {string[]} enteredStates - States that were entered
-   */
   #dispatchEntryActions(message, enteredStates) {
     for (const sub of this.#entryActions) {
       const wasEntered = this.#didEnterState(sub, enteredStates);
@@ -1236,11 +823,6 @@ class StateMachine {
     }
   }
 
-  /**
-   * Dispatch timed subscriptions (before-paint and after-paint).
-   *
-   * @param {Object} message - Message that triggered the change
-   */
   #dispatchTimedSubscriptions(message) {
     let beforePaintSubs = null;
     let afterPaintSubs = null;
@@ -1286,12 +868,6 @@ class StateMachine {
     }
   }
 
-  /**
-   * Evaluate whether a subscription's state and guard conditions are met.
-   *
-   * @param {Subscription} sub - Subscription to evaluate
-   * @returns {boolean} Whether conditions are met
-   */
   #evaluateSubscriptionConditions(sub, message) {
     let stateMatches;
     if (Array.isArray(sub.state)) {
@@ -1322,13 +898,6 @@ class StateMachine {
     return sub.transition === messageType;
   }
 
-  /**
-   * Check if a subscription's state was entered.
-   *
-   * @param {Subscription} sub - Subscription to check
-   * @param {string[]} enteredStates - States that were entered
-   * @returns {boolean} Whether the subscription's state was entered
-   */
   #didEnterState(sub, enteredStates) {
     const subStates = Array.isArray(sub.state) ? sub.state : [sub.state];
 
@@ -1346,13 +915,6 @@ class StateMachine {
     return false;
   }
 
-  /**
-   * Check if a subscription's state was exited.
-   *
-   * @param {Subscription} sub - Subscription to check
-   * @param {string[]} exitedStates - States that were exited
-   * @returns {boolean} Whether the subscription's state was exited
-   */
   #didExitState(sub, exitedStates) {
     const subStates = Array.isArray(sub.state) ? sub.state : [sub.state];
 
