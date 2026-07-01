@@ -81,6 +81,11 @@ module("Integration | Component | DAccessControl", function (hooks) {
     assert.strictEqual(added.id, 42, "adds the chosen group");
     assert.strictEqual(added.type, "group", "marks the entry as a group");
     assert.strictEqual(
+      added.display_name,
+      "Team A",
+      "sets the display name from the chosen group"
+    );
+    assert.strictEqual(
       added.permission,
       "edit",
       "applies the default edit permission for a regular group"
@@ -125,8 +130,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         type: "group",
         id: 999,
         permission: "view",
-        name: "Some Group",
-        full_name: "Some Group",
+        display_name: "Some Group",
       },
     ]);
 
@@ -176,15 +180,13 @@ module("Integration | Component | DAccessControl", function (hooks) {
         type: "group",
         id: 999,
         permission: "view",
-        name: "Some Group",
-        full_name: "Some Group",
+        display_name: "Some Group",
       },
       {
         type: "group",
         id: 1001,
         permission: "edit",
-        name: "Another Group",
-        full_name: "Another Group",
+        display_name: "Another Group",
       },
     ]);
 
@@ -229,15 +231,13 @@ module("Integration | Component | DAccessControl", function (hooks) {
         type: "group",
         id: 999,
         permission: "view",
-        name: "Some Group",
-        full_name: "Some Group",
+        display_name: "Some Group",
       },
       {
         type: "group",
         id: 1001,
         permission: "edit",
-        name: "Another Group",
-        full_name: "Another Group",
+        display_name: "Another Group",
       },
     ]);
 
@@ -272,8 +272,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         type: "group",
         id: 999,
         permission: "view",
-        name: "Some Group",
-        full_name: "Some Group",
+        display_name: "Some Group",
       },
     ]);
 
@@ -309,8 +308,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         type: "group",
         id: 999,
         permission: "view",
-        name: "Some Group",
-        full_name: "Some Group",
+        display_name: "Some Group",
       },
     ]);
 
@@ -354,8 +352,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         type: "group",
         id: 42,
         permission: "view",
-        name: "Team A",
-        full_name: "Team A",
+        display_name: "Team A",
       },
     ]);
 
@@ -403,16 +400,14 @@ module("Integration | Component | DAccessControl", function (hooks) {
         type: "group",
         id: 999,
         permission: "view",
-        name: "Some Group",
-        full_name: "Some Group",
+        display_name: "Some Group",
         mandatory: true,
       },
       {
         type: "group",
         id: 1001,
         permission: "edit",
-        name: "Another Group",
-        full_name: "Another Group",
+        display_name: "Another Group",
       },
     ]);
 
@@ -493,8 +488,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         type: "group",
         id: 42,
         permission: "view",
-        name: "Team A",
-        full_name: "Team A",
+        display_name: "Team A",
       },
     ]);
 
