@@ -7153,8 +7153,10 @@ en:
                   one: "-%{count} dropping"
                   other: "-%{count} dropping"
               signups:
-                one: "%{formattedCount} signup"
-                other: "%{formattedCount} signups"
+                one: "+ %{formattedCount} signup"
+                other: "+ %{formattedCount} signups"
+              signups_title: "Number of new signups arriving at this trust level"
+              count_title: "Number of total members at this trust level"
               arrivals_aria:
                 one: "%{count} member got promoted to this trust level"
                 other: "%{count} members got promoted to this trust level"

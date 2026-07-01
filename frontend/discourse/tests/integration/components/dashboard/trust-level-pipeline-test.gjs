@@ -22,8 +22,6 @@ module(
       promoted_in,
       signups,
       demoted_in,
-      promoted_out: 0,
-      demoted_out: 0,
     });
 
     const data = {
@@ -110,18 +108,47 @@ module(
       assert.dom(".db-tl-pipeline__bar.--demoted", rowAt(1)).doesNotExist();
     });
 
-    test("shows the entry level's numbers inline on the title row, with no bar", async function (assert) {
+    test("shows the entry level's sign-ups inline as a plain count, never as a promotion", async function (assert) {
       await render(<template><TrustLevelPipeline @data={{data}} /></template>);
 
       assert
         .dom(".db-tl-pipeline__label .db-tl-pipeline__signups", rowAt(4))
-        .hasText("240 signups");
+        .hasText("+ 240 signups");
       assert.dom(".db-delta.--pos", rowAt(4)).doesNotExist();
+    });
+
+    test("still draws a directional bar on the entry level for real trust-level moves", async function (assert) {
+      await render(<template><TrustLevelPipeline @data={{data}} /></template>);
+
+      assert.dom(".db-tl-pipeline__flow", rowAt(4)).exists();
+      assert.dom(".db-tl-pipeline__bar.--demoted", rowAt(4)).exists();
       assert
-        .dom(".db-tl-pipeline__label .db-delta.--neg", rowAt(4))
+        .dom(".db-tl-pipeline__flow .db-delta.--neg", rowAt(4))
         .hasText("5");
-      assert.dom(".db-tl-pipeline__flow", rowAt(4)).doesNotExist();
-      assert.dom(".db-tl-pipeline__bar", rowAt(4)).doesNotExist();
+    });
+
+    test("an entry level above TL0 shows both its sign-ups and a promotion bar", async function (assert) {
+      const raisedEntry = {
+        ...data,
+        rows: [
+          row(4, 25, 0.55, 0),
+          row(3, 48, 0.85, 6),
+          row(2, 4_800, 4.6, 12, 300),
+          row(1, 30_000, 28.5, 3),
+          row(0, 69_000, 65.5, 0, 0, 5),
+        ],
+      };
+
+      await render(
+        <template><TrustLevelPipeline @data={{raisedEntry}} /></template>
+      );
+
+      assert.dom(".db-tl-pipeline__signups", rowAt(2)).hasText("+ 300 signups");
+      assert.dom(".db-tl-pipeline__bar", rowAt(2)).exists();
+      assert.dom(".db-tl-pipeline__bar.--demoted", rowAt(2)).doesNotExist();
+      assert.dom(".db-delta.--pos", rowAt(2)).hasText("12");
+
+      assert.dom(".db-delta.--pos", rowAt(3)).hasText("3");
     });
   }
 );

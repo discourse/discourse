@@ -226,9 +226,7 @@ describe AdminDashboardEngagement do
           :count,
           :share,
           :promoted_in,
-          :promoted_out,
           :demoted_in,
-          :demoted_out,
           :signups,
         )
         expect(pipeline[:trend]).to include(:direction, :net)

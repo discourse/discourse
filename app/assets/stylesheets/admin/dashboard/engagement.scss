@@ -200,12 +200,13 @@
   flex-direction: column;
   gap: var(--space-2);
 
-  .db-delta {
+  &__signups {
+    margin-left: auto;
     font-size: var(--font-down-3);
-
-    &.--signups {
-      color: var(--primary-medium);
-    }
+    border-radius: var(--d-border-radius-pill);
+    padding: var(--space-half) var(--space-2);
+    background: var(--primary-low);
+    white-space: nowrap;
   }
 
   &__rows {
@@ -246,13 +247,6 @@
   &__count {
     font-size: var(--font-down-1-rem);
     color: var(--primary-medium);
-  }
-
-  &__deltas {
-    margin-left: auto;
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
   }
 
   &__flow {

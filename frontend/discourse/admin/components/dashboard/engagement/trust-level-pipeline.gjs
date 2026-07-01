@@ -9,40 +9,28 @@ import I18n, { i18n } from "discourse-i18n";
 export default class TrustLevelPipeline extends Component {
   get rows() {
     const data = this.args.data?.rows ?? [];
-    // Each rung reports who arrived this period, split by direction. Members
-    // rise into a level (promoted_in) or, at the entry level, join (signups) —
-    // both are upward arrivals. Members can also fall into a level from above
-    // (demoted_in), a downward arrival.
+
     const promotedIn = (row) => row.promoted_in ?? 0;
     const demotedIn = (row) => row.demoted_in ?? 0;
     const signups = (row) => row.signups ?? 0;
 
-    // The lowest trust level is the entry point: members reach it by signing
-    // up, not by climbing the ladder. It never draws a bar — its numbers sit
-    // inline on the title row instead — and it's excluded from the bar scale so
-    // its sign-up firehose doesn't dwarf every other level.
-    const entryLevel = data.reduce(
-      (min, row) => Math.min(min, row.trust_level),
-      Infinity
-    );
+    // Sign-ups stay out of the scale so the entry level's sign-up volume
+    // can't flatten every ladder bar.
     const barMax = data.reduce(
-      (acc, row) =>
-        row.trust_level === entryLevel
-          ? acc
-          : Math.max(acc, promotedIn(row), demotedIn(row)),
+      (acc, row) => Math.max(acc, promotedIn(row), demotedIn(row)),
       0
     );
 
     return data.map((row) => {
-      const isEntry = row.trust_level === entryLevel;
-      const climbedIn = promotedIn(row) + signups(row);
-      const droppedIn = demotedIn(row);
-      // Within the ladder flow, the bar follows whichever direction dominates:
-      // green when more members were promoted into the level than demoted into
-      // it, red otherwise — so a net-downward level reads as a red bar.
-      const barDown = droppedIn > promotedIn(row);
-      const barValue = barDown ? droppedIn : promotedIn(row);
-      const hasMovement = climbedIn > 0 || droppedIn > 0;
+      const promoted = promotedIn(row);
+      const demoted = demotedIn(row);
+      const signupCount = signups(row);
+      // The bar follows whichever direction dominates: green when more members
+      // were promoted into the level than demoted into it, red otherwise — so a
+      // net-downward level reads as a red bar.
+      const barDown = demoted > promoted;
+      const barValue = barDown ? demoted : promoted;
+      const hasLadderFlow = promoted > 0 || demoted > 0;
       return {
         ...row,
         label: i18n(
@@ -50,20 +38,18 @@ export default class TrustLevelPipeline extends Component {
         ),
         shareFormatted: `${I18n.toNumber(row.share, { precision: 2 })}%`,
         countFormatted: I18n.toNumber(row.count, { precision: 0 }),
-        climbedInFormatted: I18n.toNumber(climbedIn, { precision: 0 }),
-        droppedInFormatted: I18n.toNumber(droppedIn, { precision: 0 }),
-        climbedIn,
-        droppedIn,
+        promotedInFormatted: I18n.toNumber(promoted, { precision: 0 }),
+        demotedInFormatted: I18n.toNumber(demoted, { precision: 0 }),
+        signups: signupCount,
+        signupsFormatted: I18n.toNumber(signupCount, { precision: 0 }),
         barDown,
-        hasBar: !isEntry && barValue > 0,
+        hasBar: barValue > 0,
         barStyle: trustHTML(`width: ${this.#barWidth(barValue, barMax)}%`),
-        hasClimbers: climbedIn > 0,
-        hasDroppers: droppedIn > 0,
-        hasMovement,
-        // The entry level has no bar, so its deltas sit inline on the title
-        // row; every other level shows them beside its bar on the row below.
-        showInlineDeltas: isEntry && hasMovement,
-        showFlow: !isEntry && hasMovement,
+        hasClimbers: promoted > 0,
+        hasDroppers: demoted > 0,
+        hasSignups: signupCount > 0,
+        hasLadderFlow,
+        hasMovement: hasLadderFlow || signupCount > 0,
       };
     });
   }
@@ -124,38 +110,31 @@ export default class TrustLevelPipeline extends Component {
           <li class="db-tl-pipeline__row">
             <div class="db-tl-pipeline__label">
               <span class="db-tl-pipeline__name">{{row.label}}</span>
-              <span class="db-tl-pipeline__count">
+              <span
+                class="db-tl-pipeline__count"
+                title={{i18n
+                  "admin.dashboard.sections.engagement.trust_level_pipeline.count_title"
+                }}
+              >
                 {{row.countFormatted}}
                 ({{row.shareFormatted}})
               </span>
-              {{#if row.showInlineDeltas}}
-                <span class="db-tl-pipeline__deltas">
-                  {{#if row.hasClimbers}}
-                    <span class="db-delta --signups">{{i18n
-                        "admin.dashboard.sections.engagement.trust_level_pipeline.signups"
-                        (hash
-                          count=row.climbedIn
-                          formattedCount=row.climbedInFormatted
-                        )
-                      }}</span>
-                  {{/if}}
-                  {{#if row.hasDroppers}}
-                    <span
-                      class="db-delta --neg"
-                      aria-label={{i18n
-                        "admin.dashboard.sections.engagement.trust_level_pipeline.demotions_in_aria"
-                        (hash count=row.droppedIn)
-                      }}
-                    >{{dIcon "arrow-down"}}
-                      {{row.droppedInFormatted}}</span>
-                  {{/if}}
-                </span>
+              {{#if row.hasSignups}}
+                <span
+                  class="db-tl-pipeline__signups"
+                  title={{i18n
+                    "admin.dashboard.sections.engagement.trust_level_pipeline.signups_title"
+                  }}
+                >{{i18n
+                    "admin.dashboard.sections.engagement.trust_level_pipeline.signups"
+                    (hash count=row.signups formattedCount=row.signupsFormatted)
+                  }}</span>
               {{/if}}
               {{#unless row.hasMovement}}
                 <span class="db-pill">{{i18n "admin.dashboard.stable"}}</span>
               {{/unless}}
             </div>
-            {{#if row.showFlow}}
+            {{#if row.hasLadderFlow}}
               <div class="db-tl-pipeline__flow">
                 <div class="db-tl-pipeline__bar-track">
                   {{#if row.hasBar}}
@@ -174,9 +153,9 @@ export default class TrustLevelPipeline extends Component {
                     class="db-delta --pos"
                     aria-label={{i18n
                       "admin.dashboard.sections.engagement.trust_level_pipeline.arrivals_aria"
-                      (hash count=row.climbedIn)
+                      (hash count=row.promoted_in)
                     }}
-                  >{{row.climbedInFormatted}}
+                  >{{row.promotedInFormatted}}
                     {{dIcon "arrow-up"}}</span>
                 {{/if}}
                 {{#if row.hasDroppers}}
@@ -184,10 +163,10 @@ export default class TrustLevelPipeline extends Component {
                     class="db-delta --neg"
                     aria-label={{i18n
                       "admin.dashboard.sections.engagement.trust_level_pipeline.demotions_in_aria"
-                      (hash count=row.droppedIn)
+                      (hash count=row.demoted_in)
                     }}
                   >{{dIcon "arrow-down"}}
-                    {{row.droppedInFormatted}}</span>
+                    {{row.demotedInFormatted}}</span>
                 {{/if}}
               </div>
             {{/if}}

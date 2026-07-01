@@ -38,7 +38,7 @@ describe Reports::TrustLevelPipeline do
     expect(report.data.sum { |r| r[:share] }).to be_within(0.1).of(100.0)
   end
 
-  it "splits promotions and demotions into directional in/out flows per level" do
+  it "counts promotions as arrivals at the destination level" do
     user = Fabricate(:user, trust_level: TrustLevel[2])
     record_promotion(user, from: 1, to: 2, at: start_date + 1.day)
     record_promotion(user, from: 2, to: 3, at: start_date + 5.days)
@@ -46,10 +46,8 @@ describe Reports::TrustLevelPipeline do
     report = build
 
     expect(row(report, 2)[:promoted_in]).to eq(1)
-    expect(row(report, 2)[:promoted_out]).to eq(1)
     expect(row(report, 3)[:promoted_in]).to eq(1)
-    expect(row(report, 1)[:promoted_out]).to eq(1)
-    expect(report.data.sum { |r| r[:demoted_in] + r[:demoted_out] }).to eq(0)
+    expect(report.data.sum { |r| r[:demoted_in] }).to eq(0)
   end
 
   it "counts auto_trust_level_change as well as manual change_trust_level" do
@@ -69,10 +67,8 @@ describe Reports::TrustLevelPipeline do
     report = build
 
     expect(row(report, 2)[:promoted_in]).to eq(1)
-    expect(row(report, 2)[:demoted_out]).to eq(1)
-    expect(row(report, 2)[:promoted_out]).to eq(0)
-    expect(row(report, 1)[:promoted_out]).to eq(1)
     expect(row(report, 1)[:demoted_in]).to eq(1)
+    expect(row(report, 1)[:promoted_in]).to eq(0)
   end
 
   it "counts members who joined in the period as sign-ups at the entry level" do
@@ -85,6 +81,16 @@ describe Reports::TrustLevelPipeline do
     entry = row(report, SiteSetting.default_trust_level)
     expect(entry[:signups]).to eq(2)
     expect(row(report, 4)[:signups]).to eq(0)
+  end
+
+  it "attributes sign-ups to the configured entry level, not to trust level 0" do
+    SiteSetting.default_trust_level = TrustLevel[1]
+    Fabricate(:user, created_at: start_date + 3.days)
+
+    report = build
+
+    expect(row(report, 1)[:signups]).to eq(1)
+    expect(row(report, 0)[:signups]).to eq(0)
   end
 
   it "does not count new sign-ups as trust-level moves" do
