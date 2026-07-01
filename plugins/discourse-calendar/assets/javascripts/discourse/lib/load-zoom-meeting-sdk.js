@@ -6,11 +6,18 @@ import loadScript from "discourse/lib/load-script";
 // script tags (rather than importing the package) because plugin assets are
 // externalized at build time and cannot bundle npm dependencies.
 //
-// These bundles expect their peer dependencies (React/ReactDOM for the
-// embedded SDK, React/Redux/ReduxThunk for the client SDK) to already exist as
-// globals, so we load the vendor copies shipped alongside the SDK first.
+// These bundles expect their peer dependencies to already exist as globals, so
+// we load the vendor copies shipped alongside the SDK first.
 const SDK_BASE_URL = "/plugins/discourse-calendar/javascripts/zoom";
 const VENDOR_BASE_URL = `${SDK_BASE_URL}/lib/vendor`;
+const SDK_VERSION = "6.2.0";
+const SHARED_VENDOR_FILES = [
+  "react.min.js",
+  "react-dom.min.js",
+  "react-redux.min.js",
+  "redux.min.js",
+  "redux-thunk.min.js",
+];
 
 let meetingSdkPromise;
 let meetingSdkEmbeddedPromise;
@@ -34,23 +41,17 @@ async function loadVendorDependencies(fileNames) {
 }
 
 export async function loadZoomMeetingSdk() {
-  meetingSdkPromise ??= loadVendorDependencies([
-    "react.min.js",
-    "react-dom.min.js",
-    "redux.min.js",
-    "redux-thunk.min.js",
-  ])
-    .then(() => loadScript(`${SDK_BASE_URL}/zoom-meeting-4.1.0.min.js`))
+  meetingSdkPromise ??= loadVendorDependencies(SHARED_VENDOR_FILES)
+    .then(() =>
+      loadScript(`${SDK_BASE_URL}/zoom-meeting-${SDK_VERSION}.min.js`)
+    )
     .then(() => resolveGlobal("ZoomMtg"));
 
   return meetingSdkPromise;
 }
 
 export async function loadZoomMeetingSdkEmbedded() {
-  meetingSdkEmbeddedPromise ??= loadVendorDependencies([
-    "react.min.js",
-    "react-dom.min.js",
-  ])
+  meetingSdkEmbeddedPromise ??= loadVendorDependencies(SHARED_VENDOR_FILES)
     .then(() => loadScript(`${SDK_BASE_URL}/zoom-meeting-embedded-ES5.min.js`))
     .then(() => resolveGlobal("ZoomMtgEmbedded"));
 

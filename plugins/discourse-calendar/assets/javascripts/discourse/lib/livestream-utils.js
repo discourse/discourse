@@ -1,3 +1,17 @@
+import { isEmpty } from "@ember/utils";
+
+export function eventHasLivestream(event) {
+  if (!event) {
+    return false;
+  }
+
+  return (
+    event.livestream &&
+    event.location &&
+    !isEmpty(event.livestream_onebox || event.livestreamOnebox)
+  );
+}
+
 export function parseZoomJoinUrl(url) {
   if (!url) {
     return null;

@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+# TODO (martin) In UI, when someone clicks Going to event, we need to load
+# in the Livestream component, like how we update the chat sidebar
 class DiscourseCalendar::Livestream::PrepareZoomJoin
+  ZOOM_PARTICIPANT_ROLE = 0
+
   include Service::Base
 
   params do
@@ -10,13 +14,12 @@ class DiscourseCalendar::Livestream::PrepareZoomJoin
   end
 
   model :topic
-  policy :livestream_enabled
+  policy :livestream_available
   policy :zoom_enabled
   policy :can_see_topic
-  policy :topic_has_livestream_tag
-  policy :topic_has_first_post_event
-  policy :event_has_zoom_url
-  step :build_join_payload
+  model :event
+  model :zoom_join_data, :build_zoom_join_data
+  model :zoom_join_payload, :build_zoom_join_payload
 
   private
 
@@ -24,8 +27,9 @@ class DiscourseCalendar::Livestream::PrepareZoomJoin
     Topic.includes(:tags, first_post: :event).find_by(id: params.topic_id)
   end
 
-  def livestream_enabled
-    SiteSetting.livestream_enabled && SiteSetting.discourse_post_event_enabled
+  def livestream_available
+    SiteSetting.chat_enabled && SiteSetting.calendar_enabled &&
+      SiteSetting.discourse_post_event_enabled
   end
 
   def zoom_enabled
@@ -37,46 +41,46 @@ class DiscourseCalendar::Livestream::PrepareZoomJoin
     guardian.can_see?(topic)
   end
 
-  def topic_has_livestream_tag(topic:)
-    topic.tags.any? { |tag| tag.name == "livestream" }
+  def fetch_event(topic:)
+    topic.first_post&.event
   end
 
-  def topic_has_first_post_event(topic:)
-    context[:event] = topic.first_post&.event
-    context[:event].present?
+  def build_zoom_join_data(event:)
+    DiscourseCalendar::Livestream::ZoomUrlParser.parse(event.location || event.url)
   end
 
-  def event_has_zoom_url(event:)
-    context[:zoom_join_data] = DiscourseCalendar::Livestream::ZoomUrlParser.parse(event.url)
-    context[:zoom_join_data].present?
-  end
-
-  def build_join_payload(topic:, zoom_join_data:, guardian:)
+  def build_zoom_join_payload(topic:, zoom_join_data:, guardian:)
     user = guardian.user
-    iat = Time.zone.now.to_i - 30
-    exp = iat + 2.hours.to_i
+    token_issue_timestamp = Time.zone.now.to_i - 30
+    expiration_timestamp = token_issue_timestamp + 2.hours.to_i
 
-    payload = {
+    # Generates a Zoom meeting SDK auth token using JWT,
+    # see https://developers.zoom.us/docs/meeting-sdk/auth/
+    # for details on each of these fields.
+    jwt_payload = {
       sdkKey: SiteSetting.livestream_zoom_sdk_key,
       appKey: SiteSetting.livestream_zoom_sdk_key,
       mn: zoom_join_data[:meeting_number],
-      role: 0,
-      iat: iat,
-      exp: exp,
-      tokenExp: exp,
+      role: ZOOM_PARTICIPANT_ROLE,
+      iat: token_issue_timestamp,
+      exp: expiration_timestamp,
+      tokenExp: expiration_timestamp,
     }
 
-    context[:sdk_key] = SiteSetting.livestream_zoom_sdk_key
-    context[:signature] = JWT.encode(
-      payload,
-      SiteSetting.livestream_zoom_sdk_secret,
-      "HS256",
-      { alg: "HS256", typ: "JWT" },
-    )
-    context[:meeting_number] = zoom_join_data[:meeting_number]
-    context[:password] = zoom_join_data[:password]
-    context[:user_name] = user.name.presence || user.username
-    context[:user_email] = user.email
-    context[:leave_url] = topic.relative_url
+    {
+      sdk_key: SiteSetting.livestream_zoom_sdk_key,
+      signature:
+        JWT.encode(
+          jwt_payload,
+          SiteSetting.livestream_zoom_sdk_secret,
+          "HS256",
+          { alg: "HS256", typ: "JWT" },
+        ),
+      meeting_number: zoom_join_data[:meeting_number],
+      password: zoom_join_data[:password],
+      user_name: user.display_name,
+      user_email: user.email,
+      leave_url: topic.relative_url,
+    }
   end
 end

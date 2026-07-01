@@ -13,7 +13,6 @@ module DiscourseCalendar
     before do
       SiteSetting.calendar_enabled = true
       SiteSetting.discourse_post_event_enabled = true
-      SiteSetting.livestream_enabled = true
       SiteSetting.livestream_zoom_enabled = true
       SiteSetting.livestream_zoom_sdk_key = "sdk-key"
       SiteSetting.livestream_zoom_sdk_secret = "sdk-secret"

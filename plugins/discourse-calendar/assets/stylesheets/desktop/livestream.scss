@@ -40,8 +40,17 @@
     }
   }
 
+  .discourse-calendar-livestream-zoom-entry {
+    width: min(100%, 1444px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .discourse-calendar-livestream-zoom-entry__frame {
-    min-height: 720px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    aspect-ratio: 16 / 9;
     border: 1px solid var(--primary-low);
     border-radius: 8px;
     overflow: hidden;

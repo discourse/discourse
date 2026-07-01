@@ -64,11 +64,7 @@ export default class LivestreamZoomPage extends Component {
   });
 
   get canOpenChat() {
-    return (
-      this.siteSettings.livestream_enabled &&
-      this.args.topic?.chat_channel_id &&
-      this.siteSettings.chat_enabled
-    );
+    return this.args.topic?.chat_channel_id && this.siteSettings.chat_enabled;
   }
 
   get zoomUrl() {

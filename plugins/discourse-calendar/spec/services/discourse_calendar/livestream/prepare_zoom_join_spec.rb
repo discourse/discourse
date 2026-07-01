@@ -22,7 +22,6 @@ RSpec.describe DiscourseCalendar::Livestream::PrepareZoomJoin do
     before do
       SiteSetting.calendar_enabled = true
       SiteSetting.discourse_post_event_enabled = true
-      SiteSetting.livestream_enabled = true
       SiteSetting.livestream_zoom_enabled = true
       SiteSetting.livestream_zoom_sdk_key = "sdk-key"
       SiteSetting.livestream_zoom_sdk_secret = "sdk-secret"
@@ -34,10 +33,10 @@ RSpec.describe DiscourseCalendar::Livestream::PrepareZoomJoin do
       it { is_expected.to fail_a_contract }
     end
 
-    context "when livestream is disabled" do
-      before { SiteSetting.livestream_enabled = false }
+    context "when post events are not enabled" do
+      before { SiteSetting.discourse_post_event_enabled = false }
 
-      it { is_expected.to fail_a_policy(:livestream_enabled) }
+      it { is_expected.to fail_a_policy(:livestream_available) }
     end
 
     context "when Zoom embedding is disabled" do

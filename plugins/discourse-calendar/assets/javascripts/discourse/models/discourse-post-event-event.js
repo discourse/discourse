@@ -91,6 +91,7 @@ export default class DiscoursePostEventEvent {
     this.chatEnabled = args.chat_enabled;
     this.livestream = args.livestream;
     this.livestreamOnebox = args.livestream_onebox;
+    this.livestreamChatChannelId = args.livestream_chat_channel_id;
     this.maxAttendees = args.max_attendees;
     this.atCapacity = args.at_capacity;
     this.recurrence = args.recurrence;

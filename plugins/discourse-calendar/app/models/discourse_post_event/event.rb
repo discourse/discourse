@@ -72,6 +72,9 @@ module DiscoursePostEvent
       DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
     end
 
+    # TODO (martin) For some reason the job here isn't enqueued sometimes?
+    # Which leads to a bad experience on the UI, since even reloading
+    # doesn't get the livestream onebox to show.
     def warm_livestream_onebox
       return if !livestream? || location.blank?
       return if !saved_change_to_livestream? && !saved_change_to_location?

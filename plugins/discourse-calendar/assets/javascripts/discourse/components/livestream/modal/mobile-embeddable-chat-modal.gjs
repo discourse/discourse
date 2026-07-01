@@ -33,6 +33,7 @@ export default class MobileEmbeddableChatModal extends Component {
         {{#if this.shouldRender}}
           <EmbeddableChatChannel
             @chatChannelId={{this.embeddableChat.chatChannelId}}
+            @onClose={{@closeModal}}
           />
         {{/if}}
       </:body>

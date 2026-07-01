@@ -11,14 +11,17 @@ export default class EmbeddableChat extends Service {
   @optionalService chat;
 
   @tracked isMobileChatVisible = false;
-  // TODO (martin) Make sure this is set everywhere that loads the embeddable chat e.g. topic routes
-  @tracked chatChannelId;
+  @tracked topicController = null;
 
   get userCanChat() {
     return this.chat?.userCanChat ?? false;
   }
 
   canRenderChatChannel(mobileViewAllowed = false) {
+    if (this.isZoomRoute) {
+      return false;
+    }
+
     if (
       this.isMobileViewport === mobileViewAllowed &&
       this.siteSettings.chat_enabled &&
@@ -46,6 +49,11 @@ export default class EmbeddableChat extends Service {
     this.isMobileChatVisible = !this.isMobileChatVisible;
   }
 
+  @action
+  closeChatVisibility() {
+    this.isMobileChatVisible = false;
+  }
+
   get isMobileModal() {
     return (
       this.siteSettings.livestream_enable_modal_chat_on_mobile &&
@@ -57,7 +65,10 @@ export default class EmbeddableChat extends Service {
     return !this.capabilities.viewport.lg;
   }
 
-  // TODO (martin) Fix these
+  get isZoomRoute() {
+    return this.router.currentRouteName === "topic-zoom";
+  }
+
   get topic() {
     return this.topicController?.model;
   }

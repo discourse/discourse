@@ -2,9 +2,9 @@ import { module, test } from "qunit";
 import {
   isSupportedZoomJoinUrl,
   parseZoomJoinUrl,
-} from "../../discourse/lib/zoom-url";
+} from "../../discourse/lib/livestream-utils";
 
-module("Unit | discourse-calendar | lib | zoom-url", function () {
+module("Unit | discourse-calendar | lib | livestream-utils", function () {
   test("parses supported Zoom join URLs", function (assert) {
     assert.deepEqual(
       parseZoomJoinUrl("https://us06web.zoom.us/j/123456789?pwd=secret"),
