@@ -4164,6 +4164,8 @@ sl:
           company_url: "Spletna stran"
           extra_groups:
             groups: "Skupine"
+          locale_selector:
+            title: "Jezik"
           optional: "(neobvezno)"
           saved: "shranjeno!"
         flags:

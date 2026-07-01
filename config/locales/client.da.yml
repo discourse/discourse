@@ -5044,6 +5044,8 @@ da:
           city_for_disputes_placeholder: "By"
           extra_groups:
             groups: "Grupper"
+          locale_selector:
+            title: "Sprog"
           optional: "(valgfri)"
           update: "Opdater"
           toasts:

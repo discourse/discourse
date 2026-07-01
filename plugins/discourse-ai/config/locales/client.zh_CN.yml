@@ -306,6 +306,7 @@ zh_CN:
             related_topics: "相关话题"
             semantic_search: "语义搜索"
         admin_dashboard:
+          highlights: "高亮显示"
           setting_groups:
             settings: "基本设置"
         discord:

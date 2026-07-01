@@ -6253,6 +6253,8 @@ vi:
             initial_members: "Thành viên mở rộng"
             initial_members_description: "Số lượng thành viên nhóm cần hiển thị trước khi thêm nút \"Xem thêm\"."
             show_description: "Bao gồm mô tả"
+          locale_selector:
+            title: "Ngôn ngữ"
           optional: "(tùy chọn)"
           update: "Cập nhật"
           toasts:

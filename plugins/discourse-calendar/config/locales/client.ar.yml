@@ -499,6 +499,8 @@ ar:
       composer_actions:
         create_event:
           label: "إنشاء حدث"
+        create_topic:
+          label: "أنشئ موضوع"
       builder_modal:
         custom_fields:
           label: "الحقول المخصَّصة"

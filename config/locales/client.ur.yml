@@ -6165,6 +6165,7 @@ ur:
         not_found_error: معذرت، یہ رپورٹ موجود نہیں
         custom_date_range: حسبِ ضرورت تاریخ کی حد
         loading: "ڈیش بورڈ کو ترتیب دیا جا رہا ہے…"
+        stable: "مستحکم"
         sections:
           highlights:
             title: "نمایاں نکات"
@@ -6220,6 +6221,7 @@ ur:
                 title: "نئے ارکان شامل ہو رہے ہیں، لیکن وہ ٹھہر نہیں رہے۔"
               metrics:
                 new_signups: "نئے جڑنے والے"
+                daily_engaged_users: "روزانہ کی شراکت"
           search:
             title: "تلاش کریں"
             count_headline:
@@ -6826,6 +6828,8 @@ ur:
             order: "ترتیب لگائیں"
             initial_members: "مزید اراکین"
             show_description: "بشمول تفصیل"
+          locale_selector:
+            title: "زبان"
           optional: "(اختیاری)"
           update: "اپ ڈیٹ"
           toasts:

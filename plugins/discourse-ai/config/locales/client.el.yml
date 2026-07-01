@@ -118,6 +118,7 @@ el:
         search:
           name: "Αναζήτηση"
         admin_dashboard:
+          highlights: "Σημαντικά σημεία"
           setting_groups:
             settings: "Βασικές ρυθμίσεις"
         ai_helper:

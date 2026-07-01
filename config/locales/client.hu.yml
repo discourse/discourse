@@ -6702,6 +6702,8 @@ hu:
             initial_members: "Bővített tagok"
             initial_members_description: "A Továbbiak megtekintése gomb hozzáadása előtt megjelenítendő csoporttagok száma."
             show_description: "Leírás hozzáadása"
+          locale_selector:
+            title: "Nyelv"
           optional: "(nem kötelező)"
           update: "Frissítés"
           toasts:

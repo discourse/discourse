@@ -7988,6 +7988,8 @@ uk:
             initial_members: "Розширений склад учасників"
             initial_members_description: "Кількість учасників групи, яку потрібно відобразити перед додаванням кнопки \"Переглянути більше\"."
             show_description: "Включити опис"
+          locale_selector:
+            title: "Мова"
           optional: "(опціонально)"
           update: "Оновити"
           toasts:
