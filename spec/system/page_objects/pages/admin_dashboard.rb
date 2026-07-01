@@ -16,20 +16,11 @@ module PageObjects
       end
 
       def visit_with_custom_range(from:, to:)
-        visit_with_query(range: "custom", start_date: from, end_date: to)
+        visit_with_query(custom_range_params(from: from, to: to))
       end
 
-      def remember_current_location
-        @remembered_request_uri = URI.parse(page.current_url).request_uri
-        self
-      end
-
-      def remembered_request_uri
-        @remembered_request_uri
-      end
-
-      def has_returned_to_remembered_location?
-        page.has_current_path?(remembered_request_uri)
+      def has_custom_range?(from:, to:)
+        page.has_current_path?("/admin?#{custom_range_params(from: from, to: to).to_query}")
       end
 
       def has_admin_notice?(message)
@@ -208,6 +199,10 @@ module PageObjects
       end
 
       private
+
+      def custom_range_params(from:, to:)
+        { range: "custom", start_date: from, end_date: to }
+      end
 
       def ensure_redesigned_dashboard
         page.refresh unless has_css?(".db-main", wait: 0)

@@ -10,8 +10,8 @@ module PageObjects
         self
       end
 
-      def has_back_to_dashboard?(dashboard)
-        has_link?("Back to dashboard", href: dashboard.remembered_request_uri)
+      def has_back_to_dashboard?
+        has_link?("Back to dashboard")
       end
 
       def has_no_back_to_dashboard?

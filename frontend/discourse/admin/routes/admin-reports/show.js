@@ -65,17 +65,12 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
   setupController(controller, model) {
     super.setupController(controller, model);
 
-    if (
-      !controller.dashboardReturnQueryParams &&
-      this.dashboardReturnQueryParams
-    ) {
-      controller.dashboardReturnQueryParams = this.dashboardReturnQueryParams;
-    }
+    controller.dashboardReturnQueryParams =
+      this.dashboardReturnQueryParams ?? null;
   }
 
   resetController(controller, isExiting) {
     if (isExiting) {
-      controller.dashboardReturnQueryParams = null;
       this.dashboardReturnQueryParams = null;
     }
   }

@@ -23,16 +23,15 @@ RSpec.describe "Admin report navigation" do
     expect(admin_report).to have_current_all_reports_path
 
     dashboard.visit_with_custom_range(from: "2026-01-01", to: "2026-01-31")
-    dashboard.remember_current_location
     expect(dashboard_reports).to have_default_report
 
     dashboard_reports.open_default_report
 
-    expect(admin_report).to have_back_to_dashboard(dashboard)
+    expect(admin_report).to have_back_to_dashboard
     expect(admin_report).to have_no_back_to_all_reports
 
     admin_report.go_back
 
-    expect(dashboard).to have_returned_to_remembered_location
+    expect(dashboard).to have_custom_range(from: "2026-01-01", to: "2026-01-31")
   end
 end
