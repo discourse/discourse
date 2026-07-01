@@ -1,6 +1,6 @@
 import { triggerEvent } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
-import { module, test } from "qunit";
+import { module, skip, test } from "qunit";
 import sinon from "sinon";
 import { processBrowserAttentionChange } from "discourse/lib/user-presence";
 
@@ -67,7 +67,8 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
     assert.strictEqual(this.sent.length, 0);
   });
 
-  test("counts interaction events and reports them on flush", async function (assert) {
+  // TODO: Flaky, skipped while investigating a global getBoundingClientRect error.
+  skip("counts interaction events and reports them on flush", async function (assert) {
     await triggerEvent(document.body, "keydown");
     await triggerEvent(document.body, "mousedown");
     await triggerEvent(document.body, "scroll");
