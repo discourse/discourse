@@ -57,6 +57,26 @@ RSpec.describe LlmModel do
     end
   end
 
+  describe "Google Vertex AI provider validation" do
+    it "does not require a URL or API key" do
+      model =
+        Fabricate.build(
+          :llm_model,
+          provider: "google_vertex_ai",
+          tokenizer: "DiscourseAi::Tokenizer::GeminiTokenizer",
+          name: "google/gemini-3.5-flash",
+          url: nil,
+          api_key: nil,
+          provider_params: {
+            project_id: "discourse-project",
+            region: "global",
+          },
+        )
+
+      expect(model).to be_valid
+    end
+  end
+
   describe "#estimated_cost_for_tokens" do
     it "calculates request, response, cache read, and cache write cost" do
       model =

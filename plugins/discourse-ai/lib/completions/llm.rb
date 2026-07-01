@@ -32,6 +32,7 @@ module DiscourseAi
             cohere
             open_ai
             google
+            google_vertex_ai
             azure
             samba_nova
             mistral

@@ -101,7 +101,7 @@ class LlmModel < ActiveRecord::Base
   validates :provider, presence: true, inclusion: DiscourseAi::Completions::Llm.provider_names
   validates :url,
             presence: true,
-            unless: -> { provider.in?([BEDROCK_PROVIDER_NAME, BEDROCK_CONVERSE_PROVIDER_NAME]) }
+            if: -> { llm_endpoint&.requires_configured_url? != false }
   validates :name, presence: true
   validate :api_key_or_secret_present
   validates :max_prompt_tokens, numericality: { greater_than: 0 }
@@ -300,6 +300,28 @@ class LlmModel < ActiveRecord::Base
           values: %w[default standard flex priority],
           default: "default",
         },
+      },
+      google_vertex_ai: {
+        project_id: :text,
+        region: :text,
+        disable_native_tools: :checkbox,
+        enable_thinking: :checkbox,
+        thinking_level: {
+          type: :enum,
+          values: %w[default minimal low medium high],
+          default: "default",
+          depends_on: :enable_thinking,
+        },
+        thinking_tokens: {
+          type: :number,
+          depends_on: :enable_thinking,
+          hidden_if: :thinking_level,
+        },
+        disable_temperature: {
+          type: :checkbox,
+          hidden_if: :enable_thinking,
+        },
+        disable_top_p: :checkbox,
       },
       azure: {
         disable_native_tools: :checkbox,
@@ -570,8 +592,9 @@ class LlmModel < ActiveRecord::Base
 
   def api_key_or_secret_present
     return if seeded?
-    # Converse provider supports auto-resolved credentials (env vars, instance profile)
-    return if provider == BEDROCK_CONVERSE_PROVIDER_NAME
+
+    return if llm_endpoint&.supports_environment_credentials?
+
     if ai_secret_id.present?
       unless AiSecret.exists?(ai_secret_id)
         errors.add(:ai_secret_id, I18n.t("discourse_ai.llm_models.secret_not_found"))
@@ -580,6 +603,12 @@ class LlmModel < ActiveRecord::Base
     end
     return if self[:api_key].present?
     errors.add(:base, I18n.t("discourse_ai.llm_models.secret_required"))
+  end
+
+  def llm_endpoint
+    DiscourseAi::Completions::Endpoints::Base.endpoint_for(self)
+  rescue DiscourseAi::Completions::Llm::UNKNOWN_MODEL
+    nil
   end
 
   def required_provider_params
@@ -596,6 +625,13 @@ class LlmModel < ActiveRecord::Base
         errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
       end
       # access_key_id and role_arn are optional — SDK can auto-resolve credentials
+    elsif provider == "google_vertex_ai"
+      if lookup_custom_param("region").blank?
+        errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "region"))
+      end
+      if lookup_custom_param("project_id").blank?
+        errors.add(:base, I18n.t("discourse_ai.llm_models.missing_provider_param", param: "project_id"))
+      end
     end
   end
 end
