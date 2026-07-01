@@ -114,22 +114,24 @@ describe "Solved | Shared issue button" do
     expect(shared_issue_button).to have_no_shared_issue_button
   end
 
-  it "hides the button when the topic is closed" do
+  it "shows the button as read-only when the topic is closed" do
     topic.update!(closed: true)
 
     sign_in(member)
     topic_page.visit_topic(topic)
 
-    expect(shared_issue_button).to have_no_shared_issue_button
+    expect(shared_issue_button).to have_shared_issue_button
+    expect(shared_issue_button).to have_read_only
   end
 
-  it "hides the button when the topic is archived" do
+  it "shows the button as read-only when the topic is archived" do
     topic.update!(archived: true)
 
     sign_in(member)
     topic_page.visit_topic(topic)
 
-    expect(shared_issue_button).to have_no_shared_issue_button
+    expect(shared_issue_button).to have_shared_issue_button
+    expect(shared_issue_button).to have_read_only
   end
 
   it "shows the button as read-only for the topic author" do
