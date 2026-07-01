@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
@@ -354,7 +355,8 @@ export default class LivestreamZoomEntry extends Component {
           ></div>
         {{else}}
           <DButton
-            @href={{this.mobileZoomRoute}}
+            @route="topic-zoom"
+            @routeModels={{array this.topic.slug this.topic.id}}
             @label="discourse_calendar.livestream.zoom.join"
             @icon="video"
             class="btn-primary"

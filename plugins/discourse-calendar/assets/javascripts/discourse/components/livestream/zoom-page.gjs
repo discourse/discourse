@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
+import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import fetchZoomJoinPayload from "../../lib/fetch-zoom-join-payload";
@@ -26,6 +27,33 @@ export default class LivestreamZoomPage extends Component {
     }
 
     this.hasLoaded = true;
+    await this.loadZoom();
+  });
+
+  get zoomUrl() {
+    return this.args.topic?.postStream?.posts?.[0]?.event?.url;
+  }
+
+  get mobileLeaveUrl() {
+    return getURL(
+      `/t/${this.args.topic.slug}/${this.args.topic.id}/zoom?zoom_left=1`
+    );
+  }
+
+  get retryZoomRoute() {
+    return getURL(`/t/${this.args.topic.slug}/${this.args.topic.id}/zoom`);
+  }
+
+  get returnedFromZoom() {
+    return new URLSearchParams(window.location.search).has("zoom_left");
+  }
+
+  @action
+  async loadZoom() {
+    if (this.returnedFromZoom) {
+      this.errorMessage = i18n("discourse_calendar.livestream.zoom.load_error");
+      return;
+    }
 
     try {
       const payload = await fetchZoomJoinPayload(this.args.topic.id);
@@ -38,7 +66,7 @@ export default class LivestreamZoomPage extends Component {
 
       await new Promise((resolve, reject) => {
         ZoomMtg.init({
-          leaveUrl: payload.leave_url,
+          leaveUrl: this.mobileLeaveUrl,
           patchJsMedia: true,
           disableCallOut: true,
           success: resolve,
@@ -61,14 +89,10 @@ export default class LivestreamZoomPage extends Component {
     } catch {
       this.errorMessage = i18n("discourse_calendar.livestream.zoom.load_error");
     }
-  });
+  }
 
   get canOpenChat() {
     return this.args.topic?.chat_channel_id && this.siteSettings.chat_enabled;
-  }
-
-  get zoomUrl() {
-    return this.args.topic?.postStream?.posts?.[0]?.event?.url;
   }
 
   @action
@@ -87,6 +111,15 @@ export default class LivestreamZoomPage extends Component {
             @label="discourse_calendar.livestream.zoom.open_in_zoom"
             @icon="up-right-from-square"
           />
+
+          {{#if this.returnedFromZoom}}
+            <DButton
+              @href={{this.retryZoomRoute}}
+              @label="discourse_calendar.livestream.zoom.join"
+              @icon="video"
+              class="btn-primary"
+            />
+          {{/if}}
         </div>
       {{/if}}
 

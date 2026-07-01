@@ -4,11 +4,11 @@ import MobileLivestreamChatIcon from "./mobile-livestream-chat-icon";
 
 export default class ResponsiveLivestreamChatIcon extends Component {
   @service capabilities;
-  @service siteSettings;
-  @service embeddableChat;
 
   get shouldShow() {
-    return !this.capabilities.viewport.lg && this.embeddableChat.chatChannelId;
+    // TODO (martin) Figure this out, topicController double-ref
+    //  && this.embeddableChat.chatChannelId;
+    return !this.capabilities.viewport.lg; //
   }
 
   <template>

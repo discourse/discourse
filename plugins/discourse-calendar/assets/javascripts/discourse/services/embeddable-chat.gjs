@@ -18,10 +18,6 @@ export default class EmbeddableChat extends Service {
   }
 
   canRenderChatChannel(mobileViewAllowed = false) {
-    if (this.isZoomRoute) {
-      return false;
-    }
-
     if (
       this.isMobileViewport === mobileViewAllowed &&
       this.siteSettings.chat_enabled &&
@@ -63,10 +59,6 @@ export default class EmbeddableChat extends Service {
 
   get isMobileViewport() {
     return !this.capabilities.viewport.lg;
-  }
-
-  get isZoomRoute() {
-    return this.router.currentRouteName === "topic-zoom";
   }
 
   get topic() {
