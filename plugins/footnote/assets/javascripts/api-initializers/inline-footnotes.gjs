@@ -56,28 +56,8 @@ export default apiInitializer((api) => {
       const footnoteElement = elem.querySelector(footnoteId)?.cloneNode(true);
 
       footnoteElement
-        ?.querySelectorAll("sup.footnote-ref")
-        .forEach((nestedRef) => {
-          const nestedId = nestedRef.querySelector("a")?.getAttribute("href");
-
-          if (!nestedId || nestedId === footnoteId) {
-            nestedRef.remove();
-            return;
-          }
-
-          const nestedNote = elem.querySelector(nestedId)?.cloneNode(true);
-          nestedNote
-            ?.querySelectorAll(".footnote-backref")
-            .forEach((backref) => backref.remove());
-
-          nestedRef.replaceWith(
-            nestedNote?.textContent.trim() ?? nestedRef.textContent
-          );
-        });
-
-      footnoteElement
-        ?.querySelectorAll(".footnote-backref")
-        .forEach((backref) => backref.remove());
+        ?.querySelectorAll("sup.footnote-ref, .footnote-backref")
+        .forEach((element) => element.remove());
 
       const footnoteContent = footnoteElement?.innerHTML;
 
