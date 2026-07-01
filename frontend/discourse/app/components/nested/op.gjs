@@ -19,6 +19,7 @@ import nestedPostUrl from "discourse/lib/nested-post-url";
 import postActionFeedback from "discourse/lib/post-action-feedback";
 import { nativeShare } from "discourse/lib/pwa-utils";
 import { clipboardCopy } from "discourse/lib/utilities";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class NestedOp extends Component {
   @service capabilities;
@@ -117,8 +118,12 @@ export default class NestedOp extends Component {
         {{#let (lazyHash post=@post nestedReplyView=true) as |postOutletArgs|}}
           <PluginOutlet @name="post-article" @outletArgs={{postOutletArgs}}>
             <article
-              class="nested-view__op-article boxed
-                {{if this.selected 'selected'}}"
+              class={{dConcatClass
+                "nested-view__op-article"
+                "boxed"
+                (if this.selected "selected")
+                (if @post.deleted "is-deleted deleted")
+              }}
               data-post-id={{@post.id}}
               data-post-number={{@post.post_number}}
               {{@registerPost @post}}
@@ -163,7 +168,9 @@ export default class NestedOp extends Component {
                           @canCreatePost={{this.canCreatePost}}
                           @copyLink={{this.copyLink}}
                           @replyToPost={{@replyToPost}}
+                          @deletePost={{fn @deletePost @post}}
                           @editPost={{fn @editPost @post}}
+                          @recoverPost={{fn @recoverPost @post}}
                           @changeNotice={{fn @changeNotice @post}}
                           @changePostOwner={{fn @changePostOwner @post}}
                           @grantBadge={{fn @grantBadge @post}}
