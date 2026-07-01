@@ -70,25 +70,11 @@ class SiteSetting::Action::RemoveAndReplaceUncategorizedToggled < Service::Actio
   def capture_snapshot(snapshot)
     return if snapshot_event.present?
 
-    opt_in_event =
-      UpcomingChangeEvent
-        .where(
-          upcoming_change_name: UPCOMING_CHANGE.to_s,
-          event_type: UpcomingChangeEvent.event_types[:manual_opt_in],
-        )
-        .order(created_at: :desc)
-        .first
-
-    if opt_in_event
-      opt_in_event.update!(event_data: snapshot)
-    else
-      UpcomingChangeEvent.create!(
-        event_type: :automatically_promoted,
-        upcoming_change_name: UPCOMING_CHANGE.to_s,
-        acting_user: Discourse.system_user,
-        event_data: snapshot,
-      )
-    end
+    UpcomingChangeEvent
+      .where(upcoming_change_name: UPCOMING_CHANGE.to_s, event_type: SNAPSHOT_EVENT_TYPES)
+      .order(created_at: :desc)
+      .first
+      &.update!(event_data: snapshot)
   end
 
   def read_snapshot

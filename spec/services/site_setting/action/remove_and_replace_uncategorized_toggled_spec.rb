@@ -42,15 +42,16 @@ RSpec.describe SiteSetting::Action::RemoveAndReplaceUncategorizedToggled do
       )
     end
 
-    it "creates an automatically_promoted event with the snapshot when there is no opt-in event" do
-      described_class.call(enabled: true)
-
+    it "snapshots the prior state onto the existing automatically_promoted event" do
       event =
-        UpcomingChangeEvent.find_by(
+        UpcomingChangeEvent.create!(
           event_type: :automatically_promoted,
           upcoming_change_name: "remove_and_replace_uncategorized",
         )
-      expect(event.event_data["uncategorized_category_id"]).to eq(uncategorized.id)
+
+      described_class.call(enabled: true)
+
+      expect(event.reload.event_data["uncategorized_category_id"]).to eq(uncategorized.id)
       expect(event.event_data["allow_uncategorized_topics"]).to eq(true)
     end
 
@@ -78,7 +79,12 @@ RSpec.describe SiteSetting::Action::RemoveAndReplaceUncategorizedToggled do
     end
 
     it "is idempotent and does not re-snapshot when already migrated" do
+      UpcomingChangeEvent.create!(
+        event_type: :automatically_promoted,
+        upcoming_change_name: "remove_and_replace_uncategorized",
+      )
       described_class.call(enabled: true)
+      snapshot = UpcomingChangeEvent.last.event_data
       original_event_count = UpcomingChangeEvent.count
 
       # Simulate drift that should be ignored because the change is already applied.
@@ -86,6 +92,7 @@ RSpec.describe SiteSetting::Action::RemoveAndReplaceUncategorizedToggled do
       described_class.call(enabled: true)
 
       expect(UpcomingChangeEvent.count).to eq(original_event_count)
+      expect(UpcomingChangeEvent.last.event_data).to eq(snapshot)
     end
   end
 
