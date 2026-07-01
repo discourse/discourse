@@ -7253,11 +7253,11 @@ fi:
         silence_reason: "Hiljennyksen syy"
         bulk_actions:
           title: "Joukkotoiminnot"
-          admin_cant_be_deleted: "Tätä käyttäjää ei voi poistaa, koska hän on ylläpitäjä"
-          too_many_or_old_posts: "Tätä käyttäjää ei voi poistaa, koska hänellä on liian monta viestiä tai erittäin vanha viesti"
-          too_many_selected_users:
-            one: "Olet saavuttanut joukkopoiston %{count} käyttäjän rajan"
-            other: "Olet saavuttanut joukkopoiston %{count} käyttäjän rajan"
+          clear_all: "Tyhjennä kaikki"
+          suspend:
+            confirmation_modal:
+              close: "Sulje"
+              confirm: "Hyllytä"
           delete:
             label: "Poista käyttäjät…"
             confirmation_modal:
@@ -7285,6 +7285,9 @@ fi:
           suspended: "Hyllytetyt"
           silenced: "Hiljennetty"
           staged: "Esikäyttäjät"
+        activation_filter:
+          all: "Kaikki käyttäjät"
+          activated: "Aktivoitu"
         approved: "Hyväksytty?"
         titles:
           active: "Aktiivisia käyttäjiä"

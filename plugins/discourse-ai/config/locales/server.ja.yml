@@ -647,7 +647,6 @@ ja:
       limit_exceeded_admin: "AI クレジットの上限に達しました。%{reset_time} 以降にもう一度お試しください。"
     errors:
       quota_exceeded: "このモデルの使用量制限を超過しました。%{relative_time}後にもう一度お試しください。"
-      quota_required: "このモデルのトークンまたは使用量の上限を指定する必要があります"
       no_query_specified: クエリパラメーターは必須です。指定してください。
       no_user_specified: username または user_unique_id パラメーターは必須です。指定してください。
       user_not_found: 指定されたユーザーは存在しません。username パラメーターを確認してください。

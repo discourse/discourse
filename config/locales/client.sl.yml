@@ -4560,6 +4560,10 @@ sl:
         active: "Aktiviran"
         status: "Stanje"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Zapri"
+              confirm: "Suspendiraj"
           delete:
             confirmation_modal:
               close: "Zapri"
@@ -4571,6 +4575,8 @@ sl:
           suspended: "Suspendirani"
           silenced: "Utišani"
           staged: "Prirejeni"
+        activation_filter:
+          activated: "Aktiviran"
         approved: "Potrjen?"
         titles:
           active: "Aktivni uporabniki"

@@ -7332,10 +7332,12 @@ vi:
         silence_reason: "Lý do hạn chế"
         bulk_actions:
           title: "Thao tác hàng loạt"
-          admin_cant_be_deleted: "Người dùng này không thể bị xóa vì họ là quản trị viên."
-          too_many_or_old_posts: "Người dùng này không thể bị xóa vì họ có quá nhiều tút hoặc một tút rất cũ."
-          too_many_selected_users:
-            other: "Bạn đã đạt đến giới hạn %{count} người dùng cho việc xóa hàng loạt."
+          select_all: "Chọn hết"
+          clear_all: "Xóa hết"
+          suspend:
+            confirmation_modal:
+              close: "Đóng lại"
+              confirm: "Đình chỉ"
           delete:
             label: "Xóa người dùng…"
             confirmation_modal:
@@ -7360,6 +7362,9 @@ vi:
           suspended: "Đã đình chỉ"
           silenced: "Đã hạn chế"
           staged: "Đóng thế"
+        activation_filter:
+          all: "Tất cả Thành viên"
+          activated: "Đã kích hoạt"
         approved: "Đã duyệt?"
         titles:
           active: "Thành viên đang hoạt động"

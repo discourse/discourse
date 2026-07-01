@@ -5749,6 +5749,10 @@ te:
         active: "యాక్టివేట్ చేయబడిన వారు"
         status: "స్థితి"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "మూసివేయండి"
+              confirm: "సస్పెండు"
           delete:
             confirmation_modal:
               close: "మూసివేయండి"
@@ -5760,6 +5764,8 @@ te:
           suspended: "సస్పెడయ్యాడు"
           silenced: "మౌనం వహించినవాళ్ళు"
           staged: "తాత్కాలిక"
+        activation_filter:
+          activated: "యాక్టివేట్ చేయబడిన వారు"
         approved: "అంగీకరించు"
         titles:
           active: "క్రియాశీల సభ్యులు"

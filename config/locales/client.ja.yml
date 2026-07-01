@@ -7344,10 +7344,12 @@ ja:
         silence_reason: "投稿禁止の理由"
         bulk_actions:
           title: "一括操作"
-          admin_cant_be_deleted: "このユーザーは管理者であるため削除できません"
-          too_many_or_old_posts: "このユーザーは投稿数が多すぎるか投稿が非常に古いため削除できません"
-          too_many_selected_users:
-            other: "一括削除できるユーザー数の制限 (%{count} 人) に達しました"
+          select_all: "すべて選択"
+          clear_all: "すべてクリア"
+          suspend:
+            confirmation_modal:
+              close: "閉じる"
+              confirm: "凍結"
           delete:
             label: "ユーザーを削除…"
             confirmation_modal:
@@ -7372,6 +7374,9 @@ ja:
           suspended: "凍結"
           silenced: "投稿禁止"
           staged: "ステージング"
+        activation_filter:
+          all: "すべてのユーザー"
+          activated: "有効"
         approved: "承認済み？"
         titles:
           active: "アクティブユーザー"

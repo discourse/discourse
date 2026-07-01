@@ -891,7 +891,6 @@ nl:
       limit_exceeded_admin: "Je hebt je AI-creditlimiet bereikt. Probeer het na %{reset_time} opnieuw."
     errors:
       quota_exceeded: "Je hebt het quotum voor dit model overschreden. Probeer het opnieuw over %{relative_time}."
-      quota_required: "Je moet het maximale aantal tokens of gebruiken opgeven voor dit model"
       no_query_specified: De queryparameter is verplicht. Geef deze op.
       no_user_for_agent: Er is geen gebruiker gekoppeld aan de opgegeven agent.
       no_user_specified: De gebruikersnaam of de parameter user_unique_id is vereist. Geef deze op.

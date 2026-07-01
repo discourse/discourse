@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import DMenu from "discourse/float-kit/components/d-menu";
+import { modifier } from "ember-modifier";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { eq } from "discourse/truth-helpers";
 import DCookText from "discourse/ui-kit/d-cook-text";
@@ -34,10 +34,33 @@ function stopPropagation(event) {
   event.stopPropagation();
 }
 
+const registerStickyNoteElement = modifier((element, [component]) => {
+  component.stickyNoteElement = element;
+
+  return () => {
+    if (component.stickyNoteElement === element) {
+      component.stickyNoteElement = null;
+    }
+  };
+});
+
 export default class StickyNote extends Component {
   @tracked isEditing = false;
+  @tracked colorPickerOpen = false;
+  stickyNoteElement = null;
   colorOptions = COLORS;
   resizeEdges = RESIZE_EDGES;
+
+  handleDocumentClick = (event) => {
+    if (!this.stickyNoteElement?.contains(event.target)) {
+      this.closeColorPicker();
+    }
+  };
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.closeColorPicker();
+  }
 
   get style() {
     const { position, size, color } = this.args.note;
@@ -49,6 +72,29 @@ export default class StickyNote extends Component {
     return trustHTML(
       `left:${x}px;top:${y}px;width:${w}px;height:${h}px;background:${match.bg};border-color:${match.border};`
     );
+  }
+
+  openColorPicker() {
+    if (this.colorPickerOpen) {
+      return;
+    }
+
+    this.colorPickerOpen = true;
+
+    requestAnimationFrame(() => {
+      if (this.colorPickerOpen) {
+        document.addEventListener("click", this.handleDocumentClick);
+      }
+    });
+  }
+
+  closeColorPicker() {
+    if (!this.colorPickerOpen) {
+      return;
+    }
+
+    this.colorPickerOpen = false;
+    document.removeEventListener("click", this.handleDocumentClick);
   }
 
   #startDrag(event, { onMove, onEnd }) {
@@ -169,9 +215,22 @@ export default class StickyNote extends Component {
   }
 
   @action
-  selectColor(colorName, close) {
+  toggleColorPicker(event) {
+    event.preventDefault();
+
+    if (this.colorPickerOpen) {
+      this.closeColorPicker();
+    } else {
+      this.openColorPicker();
+    }
+  }
+
+  @action
+  selectColor(colorName, event) {
+    event?.preventDefault();
+    event?.stopPropagation();
     this.args.onChangeColor?.(colorName);
-    close();
+    this.closeColorPicker();
     this.args.onAfterMutation?.();
   }
 
@@ -189,6 +248,7 @@ export default class StickyNote extends Component {
         (if @isSelected "is-selected")
       }}
       style={{this.style}}
+      {{registerStickyNoteElement this}}
       {{on "pointerdown" this.handlePointerDown}}
       {{on "dblclick" this.startEditing}}
     >
@@ -198,34 +258,15 @@ export default class StickyNote extends Component {
           @content={{i18n "discourse_workflows.sticky_note.change_color"}}
         >
           <:trigger>
-            <DMenu
-              @identifier="sticky-note-color-picker"
-              @inline={{true}}
+            <button
+              type="button"
               class="workflow-canvas-toolbar__btn"
+              aria-expanded={{if this.colorPickerOpen "true" "false"}}
+              {{on "pointerdown" stopPropagation}}
+              {{on "click" this.toggleColorPicker}}
             >
-              <:trigger>
-                {{dIcon "palette"}}
-              </:trigger>
-              <:content as |args|>
-                <div class="workflow-sticky-note__color-picker">
-                  {{#each this.colorOptions as |colorOpt|}}
-                    <button
-                      type="button"
-                      class={{dConcatClass
-                        "workflow-sticky-note__color-swatch"
-                        (if (eq @note.color colorOpt.name) "is-active")
-                      }}
-                      style={{swatchStyle colorOpt.bg}}
-                      title={{colorOpt.name}}
-                      {{on
-                        "click"
-                        (fn this.selectColor colorOpt.name args.close)
-                      }}
-                    />
-                  {{/each}}
-                </div>
-              </:content>
-            </DMenu>
+              {{dIcon "palette"}}
+            </button>
           </:trigger>
         </DTooltip>
         <DTooltip
@@ -244,6 +285,26 @@ export default class StickyNote extends Component {
           </:trigger>
         </DTooltip>
       </CanvasHoverToolbar>
+
+      {{#if this.colorPickerOpen}}
+        <div
+          class="workflow-sticky-note__color-picker"
+          {{on "pointerdown" stopPropagation}}
+        >
+          {{#each this.colorOptions as |colorOpt|}}
+            <button
+              type="button"
+              class={{dConcatClass
+                "workflow-sticky-note__color-swatch"
+                (if (eq @note.color colorOpt.name) "is-active")
+              }}
+              style={{swatchStyle colorOpt.bg}}
+              title={{colorOpt.name}}
+              {{on "click" (fn this.selectColor colorOpt.name)}}
+            />
+          {{/each}}
+        </div>
+      {{/if}}
 
       <div class="workflow-sticky-note__content">
         {{#if this.isEditing}}

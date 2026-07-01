@@ -449,6 +449,10 @@ export default class Post extends RestModel {
     return this.post_type === this.site.post_types.moderator_action;
   }
 
+  get isWarning() {
+    return this.topic?.is_warning;
+  }
+
   get isSmallAction() {
     return (
       this.post_type === this.site.post_types.small_action ||

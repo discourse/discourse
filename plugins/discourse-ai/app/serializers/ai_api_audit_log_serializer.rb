@@ -36,6 +36,8 @@ class AiApiAuditLogSerializer < ApplicationSerializer
   end
 
   def spending
+    return object.estimated_cost.to_d.round(6).to_f if !object.estimated_cost.nil?
+
     object.llm_model&.spending_for(object)
   end
 

@@ -215,15 +215,9 @@ RSpec.describe ThemeField do
     expect(js_field.value_baked).to eq("baked")
 
     # All together
-    expect(theme.javascript_cache.content).to include(
-      'compatModules["discourse/templates/discovery"]',
-    )
-    expect(theme.javascript_cache.content).to include(
-      'compatModules["discourse/controllers/discovery"]',
-    )
-    expect(theme.javascript_cache.content).to include(
-      'compatModules["discourse/controllers/discovery-2"]',
-    )
+    expect(theme.javascript_cache.content).to include('"discourse/templates/discovery":')
+    expect(theme.javascript_cache.content).to include('"discourse/controllers/discovery":')
+    expect(theme.javascript_cache.content).to include('"discourse/controllers/discovery-2":')
     expect(theme.javascript_cache.content).to include(
       "[THEME #{theme.id}] Unsupported file type: discourse/controllers/discovery.blah",
     )

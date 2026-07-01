@@ -5657,6 +5657,12 @@ pt:
         id_not_found: "Pedimos desculpa, esse id de utilizador não existe no nosso sistema."
         status: "Estado"
         bulk_actions:
+          select_all: "Selecionar tudo"
+          clear_all: "Limpar tudo"
+          suspend:
+            confirmation_modal:
+              close: "Fechar"
+              confirm: "Suspender"
           delete:
             confirmation_modal:
               close: "Fechar"

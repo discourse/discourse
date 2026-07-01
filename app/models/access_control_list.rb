@@ -267,8 +267,7 @@ class AccessControlList < ActiveRecord::Base
             id: group_id,
             mandatory:,
             permission: access_control_list.permission,
-            name: allowed_group.name,
-            full_name: allowed_group.full_name,
+            display_name: allowed_group.full_name.presence || allowed_group.name,
             metadata: {
               auto_group: allowed_group.automatic?,
             },

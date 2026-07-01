@@ -24,6 +24,7 @@ describe UserNotifications do
   before do
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.simple_email_subject = false
   end
 
   def create_message(chat_channel, message, mention_klass = nil)

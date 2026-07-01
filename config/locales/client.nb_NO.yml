@@ -5365,6 +5365,10 @@ nb_NO:
         id_not_found: "Beklager, den bruker-ID-en eksisterer ikke i systemet vårt."
         status: "Status"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Lukk"
+              confirm: "Utestengt"
           delete:
             confirmation_modal:
               close: "Lukk"

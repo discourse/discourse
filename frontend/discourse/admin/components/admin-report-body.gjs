@@ -1,6 +1,7 @@
 import { concat, fn } from "@ember/helper";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import AdminReport from "discourse/admin/components/admin-report";
+import DSegmentedControl from "discourse/components/d-segmented-control";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -24,24 +25,18 @@ import { i18n } from "discourse-i18n";
   >
     {{#unless @report.isHidden}}
       <DConditionalLoadingSection @isLoading={{@report.isLoading}}>
-        {{#if
-          (and @report.siteSettings.reporting_improvements @report.model.legacy)
-        }}
-          <div class="alert alert-info">
-            {{dIcon "triangle-exclamation"}}
-            <span>{{i18n "admin.reports.legacy_warning"}}</span>
-          </div>
-        {{/if}}
         {{#if @report.showHeader}}
+          {{#if @report.model.legacy}}
+            <div class="alert alert-info">
+              {{dIcon "triangle-exclamation"}}
+              <span>{{i18n "admin.reports.legacy_warning"}}</span>
+            </div>
+          {{/if}}
           <div class="header">
             {{#unless @report.showNotFoundError}}
               <DPageSubheader
                 @titleLabel={{@report.model.title}}
                 @titleUrl={{@report.model.reportUrl}}
-                @descriptionLabel={{unless
-                  @report.showDescriptionInTooltip
-                  @report.model.description
-                }}
                 @learnMoreUrl={{@report.model.description_link}}
               />
 
@@ -94,8 +89,61 @@ import { i18n } from "discourse-i18n";
           </div>
         {{/if}}
 
-        <div class="body">
-          <div class="main">
+        <div class="chart__wrapper">
+          {{#if @report.showFilteringUI}}
+            <div class="chart__filters">
+              {{#if @report.isChartMode}}
+
+                <DSegmentedControl
+                  class="chart-groupings"
+                  @name="chart-grouping-{{@report.model.type}}"
+                  @label="admin.dashboard.reports.chart_group_period"
+                  @items={{@report.chartGroupingSegmentItems}}
+                  @value={{@report.options.chartGrouping}}
+                  @onSelect={{@report.changeGrouping}}
+                />
+              {{/if}}
+
+              {{#if @report.showDatesOptions}}
+                <div class="chart__dates">
+                  <DDateTimeInputRange
+                    @from={{@report.startDate}}
+                    @to={{@report.endDate}}
+                    @onChange={{@report.onChangeDateRange}}
+                    @showFromTime={{false}}
+                    @showToTime={{false}}
+                  />
+                </div>
+              {{/if}}
+
+              <div class="chart__additional-filters">
+                {{#each @report.model.available_filters as |filter|}}
+                  <div
+                    class={{dConcatClass
+                      "chart__filter"
+                      (concat "--" filter.id)
+                    }}
+                  >
+                    <div class="input">
+                      {{component
+                        (@report.reportFilterComponent filter)
+                        model=@report.model
+                        filter=filter
+                        applyFilter=@report.applyFilter
+                      }}
+                    </div>
+                  </div>
+                {{/each}}
+              </div>
+
+            </div>
+          {{/if}}
+          <div class="chart__body">
+            {{#if (and @report.model.average @report.showFilteringUI)}}
+              <div class="average-chart">
+                {{i18n "admin.dashboard.reports.average_chart_label"}}
+              </div>
+            {{/if}}
             {{#if @report.showError}}
               {{#if @report.showTimeoutError}}
                 <div class="alert alert-error report-alert timeout">
@@ -160,11 +208,10 @@ import { i18n } from "discourse-i18n";
               {{/if}}
             {{/if}}
           </div>
-
           {{#if @report.showFilteringUI}}
-            <div class="filters">
+            <div class="chart__actions">
               {{#if @report.showModes}}
-                <div class="modes">
+                <div class="chart__modes">
                   {{#each @report.displayedModes as |displayedMode|}}
                     <DButton
                       @action={{fn @report.onChangeMode displayedMode.mode}}
@@ -174,64 +221,6 @@ import { i18n } from "discourse-i18n";
                   {{/each}}
                 </div>
               {{/if}}
-
-              {{#if @report.isChartMode}}
-                {{#if @report.model.average}}
-                  <span class="average-chart">
-                    {{i18n "admin.dashboard.reports.average_chart_label"}}
-                  </span>
-                {{/if}}
-                <div class="chart-groupings">
-                  {{#each @report.chartGroupings as |chartGrouping|}}
-                    <DButton
-                      @label={{chartGrouping.label}}
-                      @action={{fn @report.changeGrouping chartGrouping.id}}
-                      @disabled={{chartGrouping.disabled}}
-                      class={{chartGrouping.class}}
-                    />
-                  {{/each}}
-                </div>
-              {{/if}}
-
-              {{#if @report.showDatesOptions}}
-                <div class="control">
-                  <span class="label">
-                    {{i18n "admin.dashboard.reports.dates"}}
-                  </span>
-
-                  <div class="input">
-                    <DDateTimeInputRange
-                      @from={{@report.startDate}}
-                      @to={{@report.endDate}}
-                      @onChange={{@report.onChangeDateRange}}
-                      @showFromTime={{false}}
-                      @showToTime={{false}}
-                    />
-                  </div>
-                </div>
-              {{/if}}
-
-              {{#each @report.model.available_filters as |filter|}}
-                <div class="control">
-                  <span class="label">
-                    {{i18n
-                      (concat
-                        "admin.dashboard.reports.filters." filter.id ".label"
-                      )
-                    }}
-                  </span>
-
-                  <div class="input">
-                    {{component
-                      (@report.reportFilterComponent filter)
-                      model=@report.model
-                      filter=filter
-                      applyFilter=@report.applyFilter
-                    }}
-                  </div>
-                </div>
-              {{/each}}
-
               <div class="control">
                 <div class="input">
                   <DButton
@@ -250,7 +239,7 @@ import { i18n } from "discourse-i18n";
                       @action={{@report.refreshReport}}
                       @label="admin.dashboard.reports.refresh_report"
                       @icon="arrows-rotate"
-                      class="refresh-report-btn btn-primary"
+                      class="refresh-report-btn btn-default"
                     />
                   </div>
                 </div>

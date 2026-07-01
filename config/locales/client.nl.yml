@@ -8001,11 +8001,12 @@ nl:
         silence_reason: "Reden van dempen"
         bulk_actions:
           title: "Bulkacties"
-          admin_cant_be_deleted: "Deze gebruiker kan niet worden verwijderd omdat deze een beheerder is"
-          too_many_or_old_posts: "Deze gebruiker kan niet worden verwijderd omdat deze te veel berichten een heel oud bericht heeft."
-          too_many_selected_users:
-            one: "Je hebt de limiet van %{count} gebruiker voor bulkverwijdering bereikt"
-            other: "Je hebt de limiet van %{count} gebruikers voor bulkverwijdering bereikt"
+          select_all: "Selecteer alles"
+          clear_all: "Alles wissen"
+          suspend:
+            confirmation_modal:
+              close: "Sluiten"
+              confirm: "Schorsen"
           delete:
             label: "Gebruikers verwijderen…"
             confirmation_modal:
@@ -8033,6 +8034,9 @@ nl:
           suspended: "Geschorst"
           silenced: "Gedempt"
           staged: "Gefaseerd"
+        activation_filter:
+          all: "Alle gebruikers"
+          activated: "Geactiveerd"
         approved: "Goedgekeurd?"
         titles:
           active: "Actieve gebruikers"

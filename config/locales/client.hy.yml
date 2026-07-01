@@ -4902,6 +4902,10 @@ hy:
         active: "Ակտիվացված"
         status: "Ստատուս"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Փակել"
+              confirm: "Սառեցնել"
           delete:
             confirmation_modal:
               close: "Փակել"
@@ -4913,6 +4917,8 @@ hy:
           suspended: "Սառեցված"
           silenced: "Լռեցված"
           staged: "Աստիճանավորված (Staged)"
+        activation_filter:
+          activated: "Ակտիվացված"
         approved: "Հաստատվա՞ծ"
         titles:
           active: "Ակտիվ օգտատերեր"

@@ -6273,6 +6273,12 @@ zh_CN:
             headline:
               healthy_growth:
                 title: "成员们正在养成回来的习惯。"
+                summary: "在此期间，用户黏性、日活跃用户和新注册用户数均有所增长。"
+              declining:
+                title: "成员回来的频率降低了。"
+                summary: "在此期间，用户黏性、日活跃用户和新注册用户数均有所下降。"
+              engaged_but_shrinking:
+                title: "社区成员保持活跃，但社区规模正在缩小。"
               metrics:
                 new_signups: "新注册用户"
                 dau_mau: "日活跃用户（DAU）/月活跃用户（MAU）粘性"
@@ -7932,10 +7938,12 @@ zh_CN:
         silence_reason: "禁言原因"
         bulk_actions:
           title: "批量操作"
-          admin_cant_be_deleted: "无法删除此用户，因为他们是管理员"
-          too_many_or_old_posts: "无法删除此用户，因为他们有太多帖子或有很早之前的帖子"
-          too_many_selected_users:
-            other: "您已达到批量删除用户上限 %{count}"
+          select_all: "全选"
+          clear_all: "全部清除"
+          suspend:
+            confirmation_modal:
+              close: "关闭"
+              confirm: "封禁"
           delete:
             label: "删除用户…"
             confirmation_modal:
@@ -7960,6 +7968,9 @@ zh_CN:
           suspended: "被封禁"
           silenced: "被禁言"
           staged: "暂存"
+        activation_filter:
+          all: "所有用户"
+          activated: "已激活"
         approved: "已批准？"
         titles:
           active: "活跃用户"

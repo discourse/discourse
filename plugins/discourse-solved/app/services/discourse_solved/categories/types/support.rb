@@ -106,15 +106,23 @@ module DiscourseSolved
                   label:
                     I18n.t("discourse_solved.category_type.notify_on_staff_accept_solved.label"),
                 },
-                DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD => {
-                  default: true,
-                  type: :bool,
-                  label: I18n.t("discourse_solved.category_type.empty_box_on_unsolved.label"),
-                },
               },
               site_texts: {
               },
             }
+
+            # The empty-box-on-unsolved styling isn't used by the Horizon theme,
+            # so hide the toggle (and the field) when Horizon is the site's
+            # default theme.
+            unless default_theme_horizon?
+              schema[:category_custom_fields][
+                DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD
+              ] = {
+                default: true,
+                type: :bool,
+                label: I18n.t("discourse_solved.category_type.empty_box_on_unsolved.label"),
+              }
+            end
 
             if SiteSetting.enable_solved_shared_issues
               schema[:category_custom_fields][
@@ -140,6 +148,12 @@ module DiscourseSolved
 
           def icon
             "person_raising_hand"
+          end
+
+          private
+
+          def default_theme_horizon?
+            SiteSetting.default_theme_id == Theme.horizon_theme.id
           end
         end
       end

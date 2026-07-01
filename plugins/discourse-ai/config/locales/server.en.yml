@@ -991,7 +991,7 @@ en:
 
     errors:
       quota_exceeded: "You have exceeded the quota for this model. Please try again in %{relative_time}."
-      quota_required: "You must specify maximum tokens or usages for this model"
+      quota_required: "You must specify maximum tokens, uses, or cost for this model"
       no_query_specified: The query parameter is required, please specify it.
       no_user_for_agent: The agent specified does not have a user associated with it.
       agent_not_found: "The agent specified does not exist. Check the agent_name or agent_id params (legacy: persona_name or persona_id)."

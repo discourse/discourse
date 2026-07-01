@@ -32,6 +32,26 @@ RSpec.describe ApplicationHelper do
       expect(tags).to include('name="discourse-track-view-session-id"')
       expect(tags).to include('name="discourse-beacon-pageview-enabled"')
     end
+
+    it "includes the engagement tracking meta tag when pageview events are persisted" do
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.persist_browser_pageview_events = true
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-engagement-tracking-enabled"')
+    end
+
+    it "omits the engagement tracking meta tag in a trigger-only config so the browser does not send /srv/se beacons the server rejects" do
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.persist_browser_pageview_events = false
+      SiteSetting.trigger_browser_pageview_events = true
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-beacon-pageview-enabled"')
+      expect(tags).not_to include('name="discourse-engagement-tracking-enabled"')
+    end
   end
 
   describe "preload_script" do

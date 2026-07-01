@@ -163,8 +163,7 @@ export default class DAccessControl extends Component {
         acl.push({
           type: "group",
           id: entry.id,
-          name: group.name,
-          full_name: group.full_name,
+          display_name: group.full_name || group.name,
           permission: entry.permission,
           metadata: {
             auto_group: group.automatic,
@@ -185,7 +184,7 @@ export default class DAccessControl extends Component {
         key: `${entry.type}-${entry.id}-${entry.permission}`,
         id: entry.id,
         permission: entry.permission,
-        name: entry.full_name,
+        display_name: entry.display_name,
         type: entry.type,
         mandatory: entry.mandatory,
       }))
@@ -194,7 +193,7 @@ export default class DAccessControl extends Component {
           return a.mandatory ? -1 : 1;
         }
 
-        return (a.name || "").localeCompare(b.name || "");
+        return (a.display_name || "").localeCompare(b.display_name || "");
       });
   }
 
@@ -216,8 +215,7 @@ export default class DAccessControl extends Component {
 
     const newPermission = {
       id: selectedGroup.id,
-      name: selectedGroup.name,
-      full_name: selectedGroup.full_name,
+      display_name: selectedGroup.full_name || selectedGroup.name,
       type: "group",
       permission: READ_ONLY_DEFAULT_AUTO_GROUPS.includes(selectedGroup.id)
         ? READ_ONLY_PERMISSION
@@ -296,7 +294,8 @@ export default class DAccessControl extends Component {
                     </:trigger>
                   </DTooltip>
                 {{/if}}
-                {{row.name}}</span>
+                {{row.display_name}}
+              </span>
               <DropdownSelectBox
                 class="d-access-control__permission"
                 @value={{row.permission}}

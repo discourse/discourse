@@ -4,10 +4,12 @@ import { array } from "@ember/helper";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
-import { optionalRequire } from "discourse/lib/utilities";
 import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import ChatChannel from "discourse/plugins/chat/discourse/components/chat-channel" with {
+  discourseImport: "optional",
+};
 
 export default class EmbedableChatChannel extends Component {
   @service chatChannelsManager;
@@ -16,13 +18,6 @@ export default class EmbedableChatChannel extends Component {
   @service messageBus;
 
   @tracked activeChannel;
-
-  // Resolved at runtime rather than statically imported: cross-plugin static
-  // imports aren't resolvable in the compiled plugin bundle and break the whole
-  // bundle load.
-  chatChannelComponent = optionalRequire(
-    "discourse/plugins/chat/discourse/components/chat-channel"
-  );
 
   updateChannel = modifier(async () => {
     if (this.args.chatChannelId === this.activeChannel?.id) {
@@ -80,9 +75,9 @@ export default class EmbedableChatChannel extends Component {
         </div>
       {{/unless}}
       <div class="chat-drawer">
-        {{#if (and this.activeChannel this.chatChannelComponent)}}
+        {{#if (and this.activeChannel ChatChannel)}}
           {{#each (array this.activeChannel) as |channel|}}
-            <this.chatChannelComponent @channel={{channel}} />
+            <ChatChannel @channel={{channel}} />
           {{/each}}
         {{/if}}
       </div>

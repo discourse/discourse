@@ -108,6 +108,9 @@ class AdminDashboardSiteTraffic
 
     kpis[:logged_in_share] = { value: logged_in_share } if !logged_in_share.nil?
 
+    direct_traffic = direct_traffic_value
+    kpis[:direct_traffic] = { value: direct_traffic } if !direct_traffic.nil?
+
     kpis
   end
 
@@ -124,6 +127,25 @@ class AdminDashboardSiteTraffic
     return nil if login_required?
 
     totals[:human].positive? ? ((totals[:logged_in].to_f / totals[:human]) * 100).round : 0
+  end
+
+  def direct_traffic_value
+    return nil if !SiteSetting.persist_browser_pageview_events
+
+    count_column = login_required? ? "logged_in_count" : "count"
+
+    row = DB.query(<<~SQL, start_date: start_date.to_date, end_date: end_date.to_date).first
+          SELECT
+            COALESCE(SUM(#{count_column}), 0)::bigint AS total,
+            COALESCE(SUM(#{count_column}) FILTER (WHERE normalized_referrer IS NULL), 0)::bigint AS direct
+          FROM browser_pageview_referrer_daily_rollups
+          WHERE date >= :start_date
+            AND date <= :end_date
+        SQL
+
+    return nil if row.total.zero?
+
+    ((row.direct.to_f / row.total) * 100).round
   end
 
   def pageview_series(rows, include_embedded:)

@@ -8245,13 +8245,12 @@ cs:
         silence_reason: "Důvod ztišení"
         bulk_actions:
           title: "Hromadné akce"
-          admin_cant_be_deleted: "Tohoto uživatele nelze smazat, protože je administrátorem."
-          too_many_or_old_posts: "Tohoto uživatele nelze smazat, má příliš mnoho příspěvků nebo velmi starý příspěvek"
-          too_many_selected_users:
-            one: "Dosáhli jste limitu %{count} uživatele pro hromadné mazání"
-            few: "Dosáhli jste limitu %{count} uživatelů pro hromadné mazání"
-            many: "Dosáhli jste limitu %{count} uživatelů pro hromadné mazání"
-            other: "Dosáhli jste limitu %{count} uživatelů pro hromadné mazání"
+          select_all: "Vybrat vše"
+          clear_all: "Zrušit vše"
+          suspend:
+            confirmation_modal:
+              close: "Zavřít"
+              confirm: "Pozastavit"
           delete:
             label: "Smazat uživatele..."
             confirmation_modal:
@@ -8285,6 +8284,9 @@ cs:
           suspended: "Pozastavení"
           silenced: "Ztišení"
           staged: "Předběžní"
+        activation_filter:
+          all: "Všichni uživatelé"
+          activated: "Aktivován"
         approved: "Schválen?"
         titles:
           active: "Aktivní uživatelé"
