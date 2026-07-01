@@ -169,6 +169,54 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrockConverse do
       expect(AiApiAuditLog.last.response_tokens).to eq(8)
     end
 
+    it "passes thinking config for Claude models" do
+      response = mock_converse_response
+      client = stub_sdk_client(response: response)
+
+      llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+      llm.generate("hello", user: user, thinking_effort: "low")
+
+      expect(client).to have_received(:converse) do |params|
+        expect(params.dig(:additional_model_request_fields, :thinking)).to eq(
+          type: "enabled",
+          budget_tokens: 4096,
+        )
+      end
+    end
+
+    it "uses adaptive thinking for Claude models that only support it" do
+      model.update!(
+        name: "global.anthropic.claude-opus-4-7-v1:0",
+        provider_params:
+          model.provider_params.merge("enable_reasoning" => true, "adaptive_thinking" => true),
+      )
+      response = mock_converse_response
+      client = stub_sdk_client(response: response)
+
+      llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+      llm.generate("hello", user: user, thinking_effort: "high")
+
+      expect(client).to have_received(:converse) do |params|
+        expect(params.dig(:additional_model_request_fields, :thinking)).to eq(type: "adaptive")
+        expect(params.dig(:additional_model_request_fields, :output_config)).to eq(effort: "high")
+      end
+    end
+
+    it "does not pass Anthropic thinking config for non-Claude models" do
+      SiteSetting.ai_llm_temperature_top_p_enabled = true
+      model.update!(name: "meta.llama3-1-70b-instruct-v1:0")
+      response = mock_converse_response
+      client = stub_sdk_client(response: response)
+
+      llm = DiscourseAi::Completions::Llm.proxy("custom:#{model.id}")
+      llm.generate("hello", user: user, thinking_effort: "low", temperature: 0.7)
+
+      expect(client).to have_received(:converse) do |params|
+        expect(params[:additional_model_request_fields]).to be_blank
+        expect(params.dig(:inference_config, :temperature)).to eq(0.7)
+      end
+    end
+
     it "passes model name directly as model_id to SDK" do
       response = mock_converse_response
       client = stub_sdk_client(response: response)

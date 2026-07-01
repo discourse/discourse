@@ -113,5 +113,9 @@ DiscourseAi::Agents::Agent.system_agents.each do |agent_class, id|
   agent.system_prompt = instance.system_prompt
   agent.top_p = instance.top_p
   agent.temperature = instance.temperature
+  # Only seed the shipped default when the admin has never set one, so we don't
+  # clobber a per-agent choice on every deploy (thinking_effort is DB-driven and
+  # editable in the UI, unlike temperature/top_p which are code-owned).
+  agent.thinking_effort = instance.thinking_effort if agent.thinking_effort.nil?
   agent.save!(validate: false)
 end

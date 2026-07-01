@@ -134,6 +134,7 @@ module DiscourseAi
       # @param feature_context { Hash - Optional } - The feature context to use for the completion.
       # @param partial_tool_calls { Boolean - Optional } - If true, the completion will return partial tool calls.
       # @param output_thinking { Boolean - Optional } - If true, the completion will return the thinking output for thinking models.
+      # @param thinking_effort { String - Optional } - Provider-agnostic per-call thinking effort override.
       # @param response_format { Hash - Optional } - JSON schema passed to the API as the desired structured output.
       # @param [Experimental] extra_model_params { Hash - Optional } - Other params that are not available accross models. e.g. response_format JSON schema.
       # @param execution_context { DiscourseAi::Completions::ExecutionContext - Optional } - Explicit per-call context for token tracking and audit logging.
@@ -155,6 +156,7 @@ module DiscourseAi
         partial_tool_calls: false,
         output_thinking: false,
         response_format: nil,
+        thinking_effort: nil,
         extra_model_params: nil,
         cancel_manager: nil,
         execution_context: nil,
@@ -173,11 +175,16 @@ module DiscourseAi
             partial_tool_calls: partial_tool_calls,
             output_thinking: output_thinking,
             response_format: response_format,
+            thinking_effort: thinking_effort,
             extra_model_params: extra_model_params,
           },
         )
 
-        model_params = { max_tokens: max_tokens, stop_sequences: stop_sequences }
+        model_params = {
+          max_tokens: max_tokens,
+          stop_sequences: stop_sequences,
+          thinking_effort: thinking_effort,
+        }
 
         if SiteSetting.ai_llm_temperature_top_p_enabled
           model_params[:temperature] = temperature if temperature
@@ -208,9 +215,12 @@ module DiscourseAi
 
         model_params.keys.each { |key| model_params.delete(key) if model_params[key].nil? }
 
+        gateway = @gateway || gateway_klass.new(llm_model)
+        model_params = gateway.prepare_model_params(model_params) if gateway.respond_to?(
+          :prepare_model_params,
+        )
         dialect = dialect_klass.new(prompt, llm_model, opts: model_params)
 
-        gateway = @gateway || gateway_klass.new(llm_model)
         gateway.perform_completion!(
           dialect,
           user,

@@ -91,6 +91,7 @@ module DiscourseAi
         llm_kwargs[:user] = user
         llm_kwargs[:temperature] = agent.temperature if agent.temperature
         llm_kwargs[:top_p] = agent.top_p if agent.top_p
+        llm_kwargs[:thinking_effort] = agent.thinking_effort if agent.thinking_effort.present?
 
         if !context.bypass_response_format && agent.response_format.present?
           llm_kwargs[:response_format] = build_json_schema(agent.response_format)

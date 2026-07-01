@@ -471,7 +471,8 @@ CREATE TABLE public.ai_agents (
     max_turn_tokens integer,
     compression_threshold integer,
     execution_mode character varying DEFAULT 'default'::character varying NOT NULL,
-    require_approval boolean DEFAULT false NOT NULL
+    require_approval boolean DEFAULT false NOT NULL,
+    thinking_effort character varying
 );
 
 
@@ -22350,6 +22351,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260630034050'),
 ('20260629233141'),
 ('20260629081606'),
 ('20260629022603'),

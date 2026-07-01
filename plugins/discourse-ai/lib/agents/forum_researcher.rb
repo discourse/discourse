@@ -7,6 +7,10 @@ module DiscourseAi
         false
       end
 
+      def thinking_effort
+        "high"
+      end
+
       def tools
         [Tools::Researcher]
       end

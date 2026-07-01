@@ -108,6 +108,22 @@ export default class AgentEditor extends Component {
     ];
   }
 
+  get thinkingEffortValues() {
+    return [
+      "default",
+      "none",
+      "minimal",
+      "low",
+      "medium",
+      "high",
+      "xhigh",
+      "max",
+    ].map((id) => ({
+      id,
+      name: i18n(`discourse_ai.ai_agent.thinking_effort_options.${id}`),
+    }));
+  }
+
   get forcedToolStrategies() {
     const content = [
       {
@@ -772,6 +788,23 @@ export default class AgentEditor extends Component {
             <field.Control step="any" lang="en" />
           </form.Field>
         {{/if}}
+
+        <form.Field
+          @name="thinking_effort"
+          @title={{i18n "discourse_ai.ai_agent.thinking_effort"}}
+          @tooltip={{i18n "discourse_ai.ai_agent.thinking_effort_help"}}
+          @format="large"
+          @type="select"
+          as |field|
+        >
+          <field.Control as |select|>
+            {{#each this.thinkingEffortValues as |effort|}}
+              <select.Option
+                @value={{effort.id}}
+              >{{effort.name}}</select.Option>
+            {{/each}}
+          </field.Control>
+        </form.Field>
 
         {{#if (this.showExamples data)}}
           <form.Section
