@@ -1,5 +1,11 @@
 import { getOwner } from "@ember/owner";
-import { click, render, settled, triggerEvent } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  render,
+  settled,
+  triggerEvent,
+} from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import Post from "discourse/components/post";
@@ -8,7 +14,6 @@ import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import { i18n } from "discourse-i18n";
 
@@ -151,11 +156,11 @@ module("Integration | Component | Post", function (hooks) {
     await renderComponent(this.post);
 
     assert.strictEqual(
-      queryAll("a[data-clicks='1']")[0].getAttribute("data-clicks"),
+      find("a[data-clicks='1']").getAttribute("data-clicks"),
       "1"
     );
     assert.strictEqual(
-      queryAll("a[data-clicks='2']")[0].getAttribute("data-clicks"),
+      find("a[data-clicks='2']").getAttribute("data-clicks"),
       "2"
     );
   });
@@ -181,12 +186,12 @@ module("Integration | Component | Post", function (hooks) {
     await renderComponent(this.post);
 
     assert.strictEqual(
-      queryAll("a[data-clicks='1']")[0].getAttribute("data-clicks"),
+      find("a[data-clicks='1']").getAttribute("data-clicks"),
       "1",
       "First link has correct data attribute and content"
     );
     assert.strictEqual(
-      queryAll("a[data-clicks='2']")[0].getAttribute("data-clicks"),
+      find("a[data-clicks='2']").getAttribute("data-clicks"),
       "2",
       "Second link has correct data attribute and content"
     );
