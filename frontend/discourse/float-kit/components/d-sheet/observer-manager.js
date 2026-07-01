@@ -29,6 +29,12 @@ export default class ObserverManager {
    */
   #resizeObserver = null;
 
+  #resizeObserverOnResize = null;
+  #resizeObservedView = null;
+  #resizeObservedContent = null;
+  #viewFirstObservation = true;
+  #contentFirstObservation = true;
+
   /**
    * @type {(() => void)|null}
    */
@@ -184,38 +190,50 @@ export default class ObserverManager {
    * @returns {void}
    */
   setupResizeObserver(onResize) {
-    if (this.#resizeObserver) {
-      this.#resizeObserver.disconnect();
+    this.#resizeObserverOnResize = onResize;
+
+    if (!this.#resizeObserver) {
+      this.#resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.target === this.#resizeObservedView) {
+            if (this.#viewFirstObservation) {
+              this.#viewFirstObservation = false;
+              continue;
+            }
+            this.#resizeObserverOnResize?.();
+          } else if (entry.target === this.#resizeObservedContent) {
+            if (this.#contentFirstObservation) {
+              this.#controller.calculateDimensionsIfReady();
+              this.#contentFirstObservation = false;
+              continue;
+            }
+            this.#resizeObserverOnResize?.();
+          }
+        }
+      });
     }
 
+    this.#observeResizeTargets();
+  }
+
+  #observeResizeTargets() {
     const { view, content } = this.#controller;
 
-    let viewFirstObservation = true;
-    let contentFirstObservation = true;
-
-    this.#resizeObserver = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        if (entry.target === view) {
-          if (viewFirstObservation) {
-            viewFirstObservation = false;
-            continue;
-          }
-          onResize();
-        } else if (entry.target === content) {
-          if (contentFirstObservation) {
-            this.#controller.calculateDimensionsIfReady();
-            contentFirstObservation = false;
-            continue;
-          }
-          onResize();
-        }
+    if (view && view !== this.#resizeObservedView) {
+      if (this.#resizeObservedView) {
+        this.#resizeObserver.unobserve(this.#resizeObservedView);
       }
-    });
-
-    if (view) {
+      this.#resizeObservedView = view;
+      this.#viewFirstObservation = true;
       this.#resizeObserver.observe(view, { box: "border-box" });
     }
-    if (content) {
+
+    if (content && content !== this.#resizeObservedContent) {
+      if (this.#resizeObservedContent) {
+        this.#resizeObserver.unobserve(this.#resizeObservedContent);
+      }
+      this.#resizeObservedContent = content;
+      this.#contentFirstObservation = true;
       this.#resizeObserver.observe(content, { box: "border-box" });
     }
   }
@@ -232,5 +250,10 @@ export default class ObserverManager {
       this.#resizeObserver.disconnect();
       this.#resizeObserver = null;
     }
+    this.#resizeObserverOnResize = null;
+    this.#resizeObservedView = null;
+    this.#resizeObservedContent = null;
+    this.#viewFirstObservation = true;
+    this.#contentFirstObservation = true;
   }
 }

@@ -3,10 +3,10 @@ import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import AsyncContent from "discourse/components/async-content";
-import FilterInput from "discourse/components/filter-input";
 import DSheet from "discourse/float-kit/components/d-sheet";
 import userSearch from "discourse/lib/user-search";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
 import { i18n } from "discourse-i18n";
 import AssigneeRow from "./assignee-row";
 
@@ -62,7 +62,7 @@ export default class AssigneesList extends Component {
       });
     }
 
-    this.args.sheet.close();
+    this.args.dismiss();
   }
 
   <template>
@@ -78,13 +78,13 @@ export default class AssigneesList extends Component {
           @controller={{controller}}
         >
           <div class="assign-sheet__assignees-list">
-            <FilterInput
+            <DFilterInput
               @filterAction={{this.setFilter}}
               @icons={{hash left="magnifying-glass"}}
               placeholder={{i18n "discourse_assign.assign_to"}}
             />
 
-            <AsyncContent @asyncData={{this.loadAssignees}}>
+            <DAsyncContent @asyncData={{this.loadAssignees}}>
               <:content as |assignees|>
                 {{#each assignees as |assignee|}}
                   <AssigneeRow
@@ -94,7 +94,7 @@ export default class AssigneesList extends Component {
                   />
                 {{/each}}
               </:content>
-            </AsyncContent>
+            </DAsyncContent>
           </div>
         </DSheet.Scroll.Content>
       </DSheet.Scroll.View>

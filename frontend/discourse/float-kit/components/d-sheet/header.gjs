@@ -1,4 +1,4 @@
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import DButton from "discourse/ui-kit/d-button";
 
 /**
@@ -27,13 +27,13 @@ const Header = <template>
               DButton
               class="btn-transparent btn-primary"
               label="cancel"
-              action=@sheet.close
+              action=(fn @sheet.requestDismiss)
             )
             Close=(component
               DButton
               class="btn-transparent btn-primary"
               label="close"
-              action=@sheet.close
+              action=(fn @sheet.requestDismiss)
             )
           )
           to="left"

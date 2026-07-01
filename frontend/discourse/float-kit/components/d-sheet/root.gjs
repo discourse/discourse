@@ -375,8 +375,8 @@ export default class Root extends Component {
 
     if (shouldReopen) {
       this.openSheet();
-    } else {
-      this.dismiss();
+    } else if (!this.isControlled) {
+      this.internalPresented = false;
     }
 
     this.args.onClosed?.();

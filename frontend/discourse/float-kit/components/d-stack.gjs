@@ -64,7 +64,7 @@ const DStackSharedContent = <template>
                 Stack=(component
                   DStackNested stackRoot=@stackRoot tracks=@tracks
                 )
-                dismiss=@sheet.close
+                dismiss=@sheet.requestDismiss
               )
             }}
           </div>
@@ -140,8 +140,8 @@ class DStackNested extends Component {
             tracks=@tracks
             stackingAnimation=this.stackingAnimation
           )
-          present=sheet.open
-          dismiss=sheet.close
+          present=sheet.requestPresent
+          dismiss=sheet.requestDismiss
         )
       }}
     </DSheet.Root>
@@ -210,8 +210,8 @@ export default class DStack extends Component {
               stackRoot=stack.stackId
               tracks=this.tracks
             )
-            present=sheet.open
-            dismiss=sheet.close
+            present=sheet.requestPresent
+            dismiss=sheet.requestDismiss
           )
         }}
       </DSheet.Root>

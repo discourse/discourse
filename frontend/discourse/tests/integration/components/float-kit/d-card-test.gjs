@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import {
   click,
   find,
@@ -32,7 +33,15 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     await click(".btn");
     await waitFor(".d-card");
 
-    assert.dom(".d-card").exists();
+    assert.dom(".d-card").exists("the card opens");
+
+    assert
+      .dom(".btn")
+      .hasAttribute("aria-controls", /.+/, "the trigger has aria-controls");
+    const controlsId = find(".btn").getAttribute("aria-controls");
+    assert
+      .dom(`#${CSS.escape(controlsId)}`)
+      .exists("the trigger aria-controls target exists");
   });
 
   test("opens by default with @defaultPresented", async function (assert) {
@@ -99,8 +108,12 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     const state = new (class {
       @tracked presented = false;
     })();
+    const changes = [];
 
-    const onPresentedChange = (value) => (state.presented = value);
+    const onPresentedChange = (value) => {
+      changes.push(value);
+      state.presented = value;
+    };
 
     await render(
       <template>
@@ -135,6 +148,41 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
 
     assert.false(state.presented);
     assert.dom(".d-card").doesNotExist();
+    assert.deepEqual(
+      changes,
+      [true, false],
+      "controlled mode emits a single change for each state transition"
+    );
+  });
+
+  test("yielded actions open and close through the root lifecycle", async function (assert) {
+    await render(
+      <template>
+        <DCard as |card|>
+          <button type="button" class="present-btn" {{on "click" card.present}}>
+            Present
+          </button>
+          <button type="button" class="dismiss-btn" {{on "click" card.dismiss}}>
+            Dismiss
+          </button>
+          <card.Content>
+            <p>Content</p>
+          </card.Content>
+        </DCard>
+      </template>
+    );
+
+    await click(".present-btn");
+    await waitFor("[data-d-sheet~='view']:not([data-d-sheet~='closed'])");
+
+    assert.dom(".d-card").exists("the yielded present action opens the card");
+
+    await click(".dismiss-btn");
+    await waitUntil(() => !find(".d-card"));
+
+    assert
+      .dom(".d-card")
+      .doesNotExist("the yielded dismiss action closes the card");
   });
 
   test("closes on escape key", async function (assert) {

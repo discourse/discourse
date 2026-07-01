@@ -66,7 +66,11 @@ export default class Handle extends SheetActionBase {
   executeAction() {
     switch (this.actionType) {
       case "dismiss":
-        this.root.dismiss();
+        if (this.root) {
+          this.root.dismiss();
+        } else {
+          this.sheet?.requestDismiss();
+        }
         break;
       case "step":
         this.executeStepAction();

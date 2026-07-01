@@ -106,6 +106,7 @@ export default class View extends Component {
     {{effect this.configureSheet @sheet}}
 
     <div
+      id={{@sheet.id}}
       data-d-sheet={{concatClass
         "view"
         @sheet.tracks

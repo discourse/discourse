@@ -264,7 +264,7 @@ export default class SheetLayerStore extends Service {
     }
 
     if (behavior.dismiss !== false && sheet.role !== "alertdialog") {
-      sheet.close();
+      sheet.requestDismiss();
     }
 
     if (behavior.stopOverlayPropagation === false && layerIndex > 0) {
@@ -304,7 +304,7 @@ export default class SheetLayerStore extends Service {
     });
 
     if (behavior.dismiss && sheet.role !== "alertdialog") {
-      sheet.close();
+      sheet.requestDismiss();
     }
 
     if (!behavior.stopOverlayPropagation && layerIndex > 0) {

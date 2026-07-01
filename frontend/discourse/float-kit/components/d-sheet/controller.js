@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
+import { trackedArray } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
-import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { capabilities } from "discourse/services/capabilities";
 import AnimationTravel from "./animation-travel";
 import {
@@ -144,9 +144,9 @@ export default class Controller {
 
   /**
    * Array of detent marker elements.
-   * @type {TrackedArray<HTMLElement>}
+   * @type {HTMLElement[]}
    */
-  detentMarkers = new TrackedArray();
+  detentMarkers = trackedArray();
 
   /**
    * Unique ID for this controller instance.
@@ -805,7 +805,7 @@ export default class Controller {
     this.detentsConfig = value;
 
     if (oldValue !== value) {
-      this.detentMarkers = new TrackedArray();
+      this.detentMarkers = trackedArray();
 
       if (this.view && this.content && this.scrollContainer) {
         this.recalculateDimensionsFromResize();
@@ -1577,6 +1577,7 @@ export default class Controller {
   registerContent(content) {
     this.content = content;
     this.calculateDimensionsIfReady();
+    this.setupResizeObserver();
   }
 
   /**
@@ -1971,12 +1972,35 @@ export default class Controller {
     this.state.broadcastOpen();
   }
 
+  @action
+  requestPresent() {
+    if (this.rootComponent) {
+      this.rootComponent.present();
+    } else {
+      this.open();
+    }
+  }
+
   /**
    * Close the sheet.
    */
   @action
   close() {
+    const wasOpen = this.state.openness.isOpen;
     this.handleStateTransition({ type: EVENTS.CLOSE });
+
+    if (wasOpen && this.state.openness.isOpen) {
+      this.evaluateCloseMessage();
+    }
+  }
+
+  @action
+  requestDismiss() {
+    if (this.rootComponent) {
+      this.rootComponent.dismiss();
+    }
+
+    this.close();
   }
 
   /**
@@ -1994,12 +2018,18 @@ export default class Controller {
     const isSteppingWithSwipeOutDisabled =
       this.swipeOutDisabledWithDetent &&
       this.currentSegment[0] !== this.currentSegment[1];
+    const rootRequestedDismiss =
+      this.rootComponent?.effectivePresented === false;
     const canActuallyClose =
       this.state.position.isFront &&
-      !atInitialSegment &&
+      (!atInitialSegment || rootRequestedDismiss) &&
       !isSteppingWithSwipeOutDisabled;
 
     if (!canActuallyClose) {
+      if (rootRequestedDismiss) {
+        return;
+      }
+
       if (this.rootComponent?.effectivePresented === false) {
         this.rootComponent.present();
       }

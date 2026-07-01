@@ -250,7 +250,7 @@ export default class DToast extends Component {
               >
                 <@toast.options.component
                   @toast={{@toast}}
-                  @close={{sheet.close}}
+                  @close={{sheet.requestDismiss}}
                   @isFront={{this.isFront}}
                   @progressBarStyle={{this.progressBarStyle}}
                   @onProgressComplete={{this.handleProgressComplete}}

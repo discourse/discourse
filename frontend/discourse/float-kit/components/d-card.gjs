@@ -51,7 +51,7 @@ class DCardContent extends Component {
             {{yield
               (hash
                 Trigger=(component DSheet.Trigger sheet=@sheet)
-                dismiss=@sheet.close
+                dismiss=@sheet.requestDismiss
               )
             }}
           </ContentTag>
@@ -96,8 +96,8 @@ export default class DCard extends Component {
             DSheet.Trigger forComponent=this.componentId sheet=sheet
           )
           Content=(component DCardContent sheet=sheet)
-          present=sheet.open
-          dismiss=sheet.close
+          present=sheet.requestPresent
+          dismiss=sheet.requestDismiss
         )
       }}
     </DSheet.Root>

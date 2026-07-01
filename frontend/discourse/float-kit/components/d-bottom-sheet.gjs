@@ -173,7 +173,7 @@ const BottomSheetContent = <template>
               Trigger=(component DSheet.Trigger sheet=@sheet)
               expand=(fn @sheet.stepToDetent 2)
               isExpanded=@reachedLastDetent
-              dismiss=@sheet.close
+              dismiss=@sheet.requestDismiss
             )
           }}
         </BottomSheetInnerContent>
@@ -191,7 +191,7 @@ const BottomSheetContent = <template>
                 BottomSheetScrollArea reachedLastDetent=false
               )
               Trigger=(component DSheet.Trigger sheet=@sheet)
-              dismiss=@sheet.close
+              dismiss=@sheet.requestDismiss
             )
           }}
         </BottomSheetInnerContent>
@@ -257,8 +257,8 @@ export default class DBottomSheet extends Component {
             reachedLastDetent=this.reachedLastDetent
             setReachedLastDetent=this.setReachedLastDetent
           )
-          present=sheet.open
-          dismiss=sheet.close
+          present=sheet.requestPresent
+          dismiss=sheet.requestDismiss
         )
       }}
     </DSheet.Root>
