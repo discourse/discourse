@@ -1,6 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
+import VideoThumbnail from "discourse/components/svg/blocks/video";
 import { URL_PATTERN } from "discourse/lib/blocks";
 import { i18n } from "discourse-i18n";
 
@@ -11,6 +12,7 @@ import { i18n } from "discourse-i18n";
  * native controls.
  */
 @block("video", {
+  thumbnail: VideoThumbnail,
   displayName: "Video",
   icon: "video",
   category: "Content",

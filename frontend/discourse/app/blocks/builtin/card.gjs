@@ -2,6 +2,7 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
+import CardThumbnail from "discourse/components/svg/blocks/card";
 import {
   HEX_COLOR_PATTERN,
   ICON_NAME_PATTERN,
@@ -27,6 +28,7 @@ const VALID_VARIANTS = ["vertical", "horizontal"];
  * content; the editor reveals each field for inline editing.
  */
 @block("card", {
+  thumbnail: CardThumbnail,
   displayName: "Card",
   icon: "id-card",
   category: "Content",

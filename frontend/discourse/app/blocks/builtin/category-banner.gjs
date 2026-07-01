@@ -8,6 +8,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
 import CategoryLogo from "discourse/components/category-logo";
+import CategoryBannerThumbnail from "discourse/components/svg/blocks/category-banner";
 import CategoryCard from "discourse/lib/blocks/-internals/category-card";
 import Category from "discourse/models/category";
 import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
@@ -26,6 +27,7 @@ import { i18n } from "discourse-i18n";
  * outlet (`main-outlet-blocks`) and stay invisible elsewhere.
  */
 @block("category-banner", {
+  thumbnail: CategoryBannerThumbnail,
   displayName: "Category banner",
   icon: "folder",
   category: "Discourse data",

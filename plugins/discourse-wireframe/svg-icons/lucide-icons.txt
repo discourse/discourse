@@ -19,7 +19,6 @@ align-end-vertical
 align-start-horizontal
 align-start-vertical
 move-horizontal
-move-vertical
 stretch-horizontal
 stretch-vertical
 align-horizontal-justify-start
@@ -37,5 +36,4 @@ align-vertical-distribute-center
 align-left
 align-center
 align-right
-align-justify
 wrap-text

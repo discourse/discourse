@@ -3,6 +3,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { block } from "discourse/blocks";
+import CtaBannerThumbnail from "discourse/components/svg/blocks/cta-banner";
 import { ICON_NAME_PATTERN, URL_PATTERN } from "discourse/lib/blocks";
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
 import cookie from "discourse/lib/cookie";
@@ -22,6 +23,7 @@ const COOKIE_PREFIX = "discourse-cta-dismissed";
  * the block conditions system — the block itself just renders.
  */
 @block("cta-banner", {
+  thumbnail: CtaBannerThumbnail,
   displayName: "CTA banner",
   icon: "bullhorn",
   category: "Content",

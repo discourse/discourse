@@ -3,6 +3,7 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
+import TopicCardThumbnail from "discourse/components/svg/blocks/topic-card";
 import { fetchTopicCard } from "discourse/lib/blocks/-internals/fetch-topic-card";
 import { and, not, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -18,6 +19,7 @@ import { i18n } from "discourse-i18n";
  * arrives as `@data` and the block stays a pure renderer.
  */
 @block("topic-card", {
+  thumbnail: TopicCardThumbnail,
   displayName: "Topic card",
   icon: "book",
   category: "Discourse data",

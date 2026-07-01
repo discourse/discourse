@@ -1511,13 +1511,9 @@ body.wireframe-active {
     opacity: 0.5;
   }
 
-  &__icon {
-    color: var(--primary-medium);
-    font-size: var(--font-up-2);
-  }
-
   &__thumbnail {
-    max-width: 100%;
+    display: block;
+    width: 100%;
     height: auto;
     border-radius: var(--d-border-radius);
   }
@@ -1544,14 +1540,10 @@ body.wireframe-active {
   max-width: 240px;
 
   &__thumbnail {
-    max-width: 100%;
+    display: block;
+    width: 100%;
     height: auto;
     border-radius: var(--d-border-radius);
-  }
-
-  &__icon {
-    color: var(--primary-medium);
-    font-size: var(--font-up-2);
   }
 
   &__name {
@@ -1561,6 +1553,36 @@ body.wireframe-active {
   &__description {
     font-size: var(--font-down-1);
     color: var(--primary-medium);
+  }
+}
+
+/* Default thumbnail placeholder: a themed frame with the block's icon centered.
+   Rendered by BlockThumbnail whenever a block declares no thumbnail. */
+
+.wireframe-block-thumbnail-default {
+  position: relative;
+  display: block;
+  width: 100%;
+
+  &__frame {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  &__icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-medium);
+
+    .d-icon {
+      width: 1.5em;
+      height: 1.5em;
+      font-size: var(--font-up-2);
+    }
   }
 }
 

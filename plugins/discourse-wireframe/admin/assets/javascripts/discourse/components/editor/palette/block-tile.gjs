@@ -6,9 +6,10 @@ import { guidFor } from "@ember/object/internals";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import { isTesting } from "discourse/lib/environment";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 /** @type {import("./block-preview-card.gjs").default} */
 import BlockPreviewCard from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-preview-card";
+/** @type {import("./block-thumbnail.gjs").default} */
+import BlockThumbnail from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-thumbnail";
 
 /**
  * One block in the palette: an icon (or thumbnail) tile with its display name,
@@ -97,15 +98,11 @@ export default class BlockTile extends Component {
       {{this.registerPreview}}
       ...attributes
     >
-      {{#if @entry.thumbnail}}
-        <img
-          class="wireframe-block-tile__thumbnail"
-          src={{@entry.thumbnail}}
-          alt=""
-        />
-      {{else}}
-        <span class="wireframe-block-tile__icon">{{dIcon @entry.icon}}</span>
-      {{/if}}
+      <BlockThumbnail
+        class="wireframe-block-tile__thumbnail"
+        @thumbnail={{@entry.thumbnail}}
+        @icon={{@entry.icon}}
+      />
       <span class="wireframe-block-tile__label">{{@entry.displayName}}</span>
       <span
         id={{this.descriptionId}}

@@ -57,8 +57,8 @@ function previewArgsFromSchema(argsSchema) {
  *
  * @param {Function} component - A class decorated with `@block`.
  * @returns {{displayName: string, icon: string, category: string,
- *   previewArgs: Object, thumbnail: string|null, paletteHidden: boolean,
- *   transparent: boolean}|null}
+ *   previewArgs: Object, thumbnail: (string|Function|Object)|null,
+ *   paletteHidden: boolean, transparent: boolean}|null}
  *   The fully-resolved display metadata, or `null` if the component is
  *   not a registered block.
  */

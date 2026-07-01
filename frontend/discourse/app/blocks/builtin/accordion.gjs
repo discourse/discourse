@@ -1,6 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
+import AccordionThumbnail from "discourse/components/svg/blocks/accordion";
 
 /**
  * A stack of collapsible sections. Its children are `accordion-item` blocks,
@@ -9,6 +10,7 @@ import { block } from "discourse/blocks";
  * later refinement; for now sections open independently.)
  */
 @block("accordion", {
+  thumbnail: AccordionThumbnail,
   container: true,
   displayName: "Accordion",
   icon: "bars",

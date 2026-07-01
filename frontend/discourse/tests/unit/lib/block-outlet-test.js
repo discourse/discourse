@@ -14,6 +14,7 @@ import {
   LAYOUT_LAYERS,
 } from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
+import HeadingThumbnail from "discourse/components/svg/blocks/heading";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
@@ -216,13 +217,35 @@ module("Unit | Lib | block-outlet", function (hooks) {
       }, /"previewArgs" must be a plain object/);
     });
 
-    test("throws for non-string thumbnail", function (assert) {
+    test("throws for a thumbnail that is neither a URL string nor a component", function (assert) {
       assert.throws(() => {
         @block("metadata-bad-thumbnail", { thumbnail: 123 })
         class BadThumbnailBlock extends Component {}
 
         return BadThumbnailBlock;
-      }, /"thumbnail" must be a string/);
+      }, /"thumbnail" must be a non-empty URL string/);
+    });
+
+    test("accepts a component thumbnail", function (assert) {
+      @block("metadata-component-thumbnail", { thumbnail: HeadingThumbnail })
+      class ComponentThumbnailBlock extends Component {}
+
+      assert.strictEqual(
+        getBlockMetadata(ComponentThumbnailBlock).thumbnail,
+        HeadingThumbnail
+      );
+    });
+
+    test("accepts a { light, dark } thumbnail pair", function (assert) {
+      const pair = { light: "/uploads/light.png", dark: "/uploads/dark.png" };
+
+      @block("metadata-lightdark-thumbnail", { thumbnail: pair })
+      class LightDarkThumbnailBlock extends Component {}
+
+      assert.strictEqual(
+        getBlockMetadata(LightDarkThumbnailBlock).thumbnail,
+        pair
+      );
     });
 
     test("sets blockMetadata with allowedOutlets", function (assert) {

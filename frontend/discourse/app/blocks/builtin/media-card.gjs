@@ -2,6 +2,7 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
+import MediaCardThumbnail from "discourse/components/svg/blocks/media-card";
 import {
   HEX_COLOR_PATTERN,
   ICON_NAME_PATTERN,
@@ -22,6 +23,7 @@ import { i18n } from "discourse-i18n";
  * theme-specific placeholder content into a fresh insert.
  */
 @block("media-card", {
+  thumbnail: MediaCardThumbnail,
   displayName: "Media card",
   icon: "photo-film",
   category: "Content",

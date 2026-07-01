@@ -14,6 +14,7 @@ import {
   parseBlockName,
   VALID_NAMESPACED_BLOCK_PATTERN,
 } from "discourse/lib/blocks/-internals/patterns";
+import isComponent from "discourse/lib/is-component";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
@@ -143,8 +144,26 @@ export function validateDisplayMetadata(name, options) {
     }
   }
 
-  if (thumbnail != null && typeof thumbnail !== "string") {
-    raiseBlockError(`Block "${name}": "thumbnail" must be a string.`);
+  if (thumbnail != null) {
+    // A thumbnail is one of three forms:
+    // - a non-empty URL string (rendered through an `<img>`);
+    // - a `{ light, dark }` pair of URLs (rendered through `DLightDarkImg`);
+    // - a component reference (an inline SVG component), rendered inline so it
+    //   can use theme color tokens.
+    // `isComponent` positively identifies a real component (class or
+    // template-only), so anything else is rejected here at decoration time.
+    const isUrl = typeof thumbnail === "string" && thumbnail.trim() !== "";
+    // A `{ light, dark }` pair must carry `light` (the default source); `dark`
+    // alone is invalid.
+    const isLightDark =
+      typeof thumbnail === "object" &&
+      thumbnail !== null &&
+      "light" in thumbnail;
+    if (!isUrl && !isLightDark && !isComponent(thumbnail)) {
+      raiseBlockError(
+        `Block "${name}": "thumbnail" must be a non-empty URL string, a { light, dark } pair of URLs, or an inline SVG component.`
+      );
+    }
   }
 }
 

@@ -6,14 +6,26 @@ module DiscourseWireframe
   module PluginSetup
     # Registers every SVG icon the blocks system and editor UI need that isn't in
     # the default SVG subset, plus the generated Lucide sprite's icons.
+    #
+    # There are TWO independent registries here; adding to or removing from one
+    # never affects the other:
+    #
+    #   1. `EXTRA` below — plain (unprefixed) FontAwesome ids, e.g. `heading`.
+    #   2. The Lucide set — driven solely by `svg-icons/lucide-icons.txt` and
+    #      registered with a `wf-` prefix, e.g. `wf-align-center`. It does NOT
+    #      read `EXTRA`.
+    #
+    # A name may appear in both (e.g. `align-center` as a FontAwesome glyph and
+    # `wf-align-center` as a Lucide glyph) — they are different icons under
+    # different ids. Use the `wf-` form to reach a Lucide glyph; removing the
+    # plain name from `EXTRA` leaves the `wf-` one untouched, and vice versa.
     module Icons
-      # Icons used by block-metadata `icon:` fields and inspector UI that aren't
-      # in the default SVG subset. Without these the rendered icon is replaced by
-      # a placeholder square and the console logs a warning per missing glyph.
+      # Plain (unprefixed) FontAwesome ids used by block-metadata `icon:` fields
+      # and inspector UI that aren't in the default SVG subset. Without these the
+      # rendered icon is replaced by a placeholder square and the console logs a
+      # warning per missing glyph. (Lucide `wf-` icons are handled separately via
+      # the manifest — see the module comment above.)
       EXTRA = %w[
-        align-center
-        align-right
-        arrow-line-left
         arrows-left-right
         arrows-up-down
         border-none
@@ -40,12 +52,14 @@ module DiscourseWireframe
       ].freeze
 
       def self.apply(plugin)
+        # Registry 1: plain FontAwesome ids.
         EXTRA.each { |icon| plugin.register_svg_icon(icon) }
 
         regenerate_lucide_sprite_if_stale
 
-        # Each manifest entry is registered with a `wf-` prefix so it can be
-        # referenced as `wf-<name>` from templates.
+        # Registry 2: the Lucide set. Each manifest entry is registered with a
+        # `wf-` prefix so it can be referenced as `wf-<name>` from templates.
+        # This is independent of `EXTRA` — it reads only the manifest.
         LucideSprite.manifest_names.each do |name|
           plugin.register_svg_icon("#{LucideSprite::ICON_PREFIX}#{name}")
         end

@@ -1,6 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
+import AccordionItemThumbnail from "discourse/components/svg/blocks/accordion-item";
 import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 import { i18n } from "discourse-i18n";
 
@@ -14,6 +15,7 @@ import { i18n } from "discourse-i18n";
  * edit its content in place rather than having to expand it first.
  */
 @block("accordion-item", {
+  thumbnail: AccordionItemThumbnail,
   container: true,
   displayName: "Accordion item",
   icon: "chevron-down",

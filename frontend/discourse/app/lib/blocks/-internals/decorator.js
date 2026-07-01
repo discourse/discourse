@@ -87,8 +87,10 @@ const AUTH_TOKEN = Symbol("block-auth-token");
  * @property {Readonly<Object>|null} previewArgs - Optional sample args used
  *   when rendering a preview of the block. Frozen shallowly. Falls back to
  *   defaults derived from `args` when unset.
- * @property {string|null} thumbnail - Optional URL of a static thumbnail
- *   image shown instead of the icon.
+ * @property {(string|{light: string, dark?: string}|Function|Object)|null}
+ *   thumbnail - Optional thumbnail rendered instead of the icon: a URL string,
+ *   a `{ light, dark }` pair of URLs (light required, dark optional), or a
+ *   component reference (an inline SVG component).
  * @property {boolean} paletteHidden - When true, the block is excluded from
  *   lists of directly-insertable blocks. The block remains registered and
  *   renderable from layouts that reference it.
@@ -311,8 +313,15 @@ function freezeParts(parts) {
  *   preview of the block. Defaults to a shallow object built from each arg
  *   schema's `default` field.
  *
- * @param {string} [options.thumbnail] - URL of a static thumbnail image
- *   shown instead of the icon.
+ * @param {(string|{light: string, dark?: string}|Function|Object)} [options.thumbnail]
+ *   An optional thumbnail rendered instead of the icon. Three forms are
+ *   accepted:
+ *   - A URL string — the low-effort path.
+ *   - A `{ light, dark }` pair of URLs (`light` required, `dark` optional) for a
+ *     raster that adapts to the active color scheme.
+ *   - A component reference (an inline SVG component) that can use theme color
+ *     tokens (e.g. `var(--primary)`) and adapt to the active color scheme.
+ *   How each form is presented is up to the consumer.
  *
  * @param {boolean} [options.paletteHidden=false] - When true, the block is
  *   excluded from lists of directly-insertable blocks. The block is still
@@ -613,7 +622,7 @@ export function createBlockArgsWithReactiveGetters(
  * - `icon` - Icon ID (or `null` if not provided)
  * - `category` - Category label (or `null` if not provided)
  * - `previewArgs` - Sample args for a preview (or `null`)
- * - `thumbnail` - Thumbnail URL (or `null`)
+ * - `thumbnail` - Thumbnail URL, `{ light, dark }` pair, or component (or `null`)
  * - `paletteHidden` - When true, the block is excluded from lists of directly-insertable blocks
  * - `transparent` - When true, the block is treated as structural scaffolding
  *

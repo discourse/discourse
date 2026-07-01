@@ -17,14 +17,16 @@ import { getBlockDisplayMetadata } from "discourse/lib/blocks/-internals/display
  *
  * `description` and `namespaceType` are read off the raw block metadata
  * (they're not part of the resolved display metadata); `thumbnail` is the
- * optional preview image a block may declare (`null` when it doesn't).
+ * optional preview a block may declare — a URL string or an inline SVG
+ * component (`null` when it doesn't, in which case the tile falls back to a
+ * default placeholder).
  *
  * @param {*} blocksService - The `blocks` service (`@service blocks`).
  *   Must expose `listBlocksWithMetadata()` returning `{name, component,
  *   metadata}[]`.
  * @returns {Array<{name: string, displayName: string, icon: string,
  *   category: string, description: string, namespaceType: string,
- *   thumbnail: (string|null), paletteHidden: boolean}>}
+ *   thumbnail: ((string|Function|Object)|null), paletteHidden: boolean}>}
  */
 export function buildBlockPalette(blocksService) {
   return blocksService

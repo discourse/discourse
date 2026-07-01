@@ -1,6 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
+import FeaturedTagsThumbnail from "discourse/components/svg/blocks/featured-tags";
 import {
   fetchTags,
   VALID_TAG_SORTS,
@@ -14,6 +15,7 @@ import { i18n } from "discourse-i18n";
  * stays a pure renderer.
  */
 @block("featured-tags", {
+  thumbnail: FeaturedTagsThumbnail,
   displayName: "Featured tags",
   icon: "tag",
   category: "Discourse data",

@@ -1,6 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
+import QuoteThumbnail from "discourse/components/svg/blocks/quote";
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
 import DLightDarkImg from "discourse/ui-kit/d-light-dark-img";
 import { i18n } from "discourse-i18n";
@@ -11,6 +12,7 @@ import { i18n } from "discourse-i18n";
  * in place on the canvas.
  */
 @block("quote", {
+  thumbnail: QuoteThumbnail,
   displayName: "Quote",
   icon: "quote-left",
   category: "Content",
