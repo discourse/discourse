@@ -31,6 +31,7 @@ import {
   hasBlock,
   isBlockResolved,
   resolveBlock,
+  tryResolveBlock,
 } from "discourse/lib/blocks/-internals/registry/block";
 import {
   getAllOutlets,
@@ -322,9 +323,11 @@ function validateBlockConstraints(
  * next full republish.
  *
  * @param {Object} entry - The block entry whose current `args` to check.
- * @param {import("discourse/lib/blocks/-internals/registry/block").BlockClass} blockClass -
- *   The resolved, `@block`-decorated class. A class without registered
- *   metadata yields `[]` (nothing to validate against).
+ * @param {(import("discourse/lib/blocks/-internals/registry/block").BlockClass|string)} blockClass -
+ *   The `@block`-decorated class, OR a string block-name ref (as layout
+ *   entries carry — `entry.block` is usually the registered name). A string
+ *   is resolved to its class via the registry; a ref that resolves to no
+ *   registered metadata yields `[]` (nothing to validate against).
  * @param {Object} [options]
  * @param {Object} [options.owner] - Ember owner for registry lookups (only
  *   used by arg validation for `model:*` `instanceOf` checks).
@@ -333,7 +336,17 @@ function validateBlockConstraints(
  *   all pass.
  */
 export function collectEntryFailures(entry, blockClass, { owner } = {}) {
-  const metadata = getBlockMetadata(blockClass);
+  // `entry.block` is usually a string name, not the class. Resolve it the
+  // same way the render + publish paths do so string-referenced blocks get
+  // validated too — otherwise `getBlockMetadata` (keyed by class) misses and
+  // every edit looks valid, silently dropping the block's real failures.
+  const resolved = tryResolveBlock(blockClass);
+  // A non-class result means the ref is unregistered, an optional-missing
+  // marker, or a factory still resolving — nothing to validate against.
+  if (typeof resolved !== "function") {
+    return [];
+  }
+  const metadata = getBlockMetadata(resolved);
   if (!metadata) {
     return [];
   }
@@ -344,7 +357,7 @@ export function collectEntryFailures(entry, blockClass, { owner } = {}) {
   // the edit-time and republish-time stamps match exactly.
   const collector = [];
   try {
-    validateBlockArgs(entry, blockClass, { owner, collect: collector });
+    validateBlockArgs(entry, resolved, { owner, collect: collector });
   } catch (err) {
     // `validateBlockArgs` still throws for the "args provided but no schema"
     // case, which collect mode doesn't cover. Surface it as a single detail
@@ -360,7 +373,7 @@ export function collectEntryFailures(entry, blockClass, { owner } = {}) {
 
   validateBlockConstraints(
     metadata,
-    blockClass,
+    resolved,
     entry,
     metadata.blockName,
     null,

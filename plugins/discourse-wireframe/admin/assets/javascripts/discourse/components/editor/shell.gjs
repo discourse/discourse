@@ -18,6 +18,7 @@ import ConditionsFloatingPanel from "discourse/plugins/discourse-wireframe/disco
 import DropPreview from "discourse/plugins/discourse-wireframe/discourse/components/editor/drag-drop/drop-preview";
 import InplaceTextController from "discourse/plugins/discourse-wireframe/discourse/components/editor/inplace/inplace-text-controller";
 import InspectorPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-panel";
+import IssuesPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/issues/issues-panel";
 import OutletJumpSelect from "discourse/plugins/discourse-wireframe/discourse/components/editor/outline/outlet-jump-select";
 import OutlinePanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/outline/outline-panel";
 import PalettePanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/palette-panel";
@@ -48,10 +49,8 @@ export default class EditorShell extends Component {
   @service wireframeEditMode;
   @service wireframeRail;
   @service wireframeStaging;
-  @service wireframeValidation;
   @service keyValueStore;
 
-  @tracked warningsPanelOpen = false;
   @tracked rightCollapsed;
   @tracked dimNonEditable;
 
@@ -118,11 +117,6 @@ export default class EditorShell extends Component {
   }
 
   @action
-  toggleWarningsPanel() {
-    this.warningsPanelOpen = !this.warningsPanelOpen;
-  }
-
-  @action
   exit() {
     this.wireframeWorkspace.exit();
   }
@@ -177,18 +171,6 @@ export default class EditorShell extends Component {
               @title="wireframe.chrome.dim_non_editable_title"
               @action={{this.toggleDimNonEditable}}
             />
-            {{#if this.wireframeValidation.hasValidationWarnings}}
-              <DButton
-                class={{dConcatClass
-                  "btn-flat wireframe-btn-warnings"
-                  (if this.warningsPanelOpen "--open")
-                }}
-                @icon="triangle-exclamation"
-                @translatedLabel={{this.wireframeValidation.validationWarnings.length}}
-                @title="wireframe.chrome.warnings_button_title"
-                @action={{this.toggleWarningsPanel}}
-              />
-            {{/if}}
             <DButton
               class="wireframe-btn-undo"
               @icon="arrow-rotate-left"
@@ -221,26 +203,6 @@ export default class EditorShell extends Component {
 
         <PublishBlockedCallout />
 
-        {{#if this.warningsPanelOpen}}
-          <div class="wireframe-warnings-panel" role="region">
-            <div class="wireframe-warnings-panel__header">
-              {{dIcon "triangle-exclamation"}}
-              <span>{{i18n
-                  "wireframe.chrome.warnings_panel_title"
-                  count=this.wireframeValidation.validationWarnings.length
-                }}</span>
-            </div>
-            <ul class="wireframe-warnings-panel__list">
-              {{#each this.wireframeValidation.validationWarnings as |w|}}
-                <li>
-                  <code>{{w.outletName}}</code>
-                  <span>{{w.message}}</span>
-                </li>
-              {{/each}}
-            </ul>
-          </div>
-        {{/if}}
-
         <ActivityBar />
 
         {{! The wide left panel is rendered ONLY when expanded; the activity bar
@@ -257,15 +219,7 @@ export default class EditorShell extends Component {
               {{else if (this.wireframeRail.isLeftPanelTabActive "outline")}}
                 <OutlinePanel />
               {{else if (this.wireframeRail.isLeftPanelTabActive "issues")}}
-                <div
-                  class="wireframe-issues"
-                  role="region"
-                  aria-label={{i18n "wireframe.chrome.panel_issues"}}
-                >
-                  <div class="panel-empty">
-                    {{i18n "wireframe.chrome.issues_empty"}}
-                  </div>
-                </div>
+                <IssuesPanel />
               {{/if}}
             </div>
           </div>

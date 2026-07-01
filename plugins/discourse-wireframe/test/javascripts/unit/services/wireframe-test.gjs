@@ -9,6 +9,7 @@ import {
   _resetOutletLayoutsForTesting,
 } from "discourse/blocks/block-outlet";
 import Layout from "discourse/blocks/builtin/layout";
+import { ERROR_CODES } from "discourse/lib/blocks/-internals/validation/error-codes";
 import {
   registerBlock,
   withTestBlockRegistration,
@@ -18,6 +19,7 @@ import pretender, {
   response,
 } from "discourse/tests/helpers/create-pretender";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
+import { i18n } from "discourse-i18n";
 import { attachEditorShortcuts } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-shortcuts";
 import { GRID_DROP_GESTURES } from "discourse/plugins/discourse-wireframe/discourse/lib/grid-drop";
 import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/mutate-layout";
@@ -41,6 +43,21 @@ class TestTile extends Component {
 class TestConstrained extends Component {
   <template>
     <div class="constrained">{{@label}}</div>
+  </template>
+}
+
+// Three independently-required args, for exercising how edit-time
+// re-validation treats several simultaneous required-missing failures.
+@block("wf:svc-test-required-trio", {
+  args: {
+    heading: { type: "string", required: true },
+    subheading: { type: "string", required: true },
+    link: { type: "string", required: true },
+  },
+})
+class TestRequiredTrio extends Component {
+  <template>
+    <div class="trio">{{@heading}}</div>
   </template>
 }
 
@@ -279,6 +296,116 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
     });
   });
 
+  module(
+    "live re-validation with several required fields",
+    function (innerHooks) {
+      innerHooks.beforeEach(async function () {
+        withTestBlockRegistration(() => registerBlock(TestRequiredTrio));
+        // Reference the block BY NAME — the way the palette inserts blocks in
+        // production, so `entry.block` is a string ref (not a class). Render
+        // valid (all three set) so the base layer publishes cleanly.
+        const layout = await _renderBlocks(
+          "homepage-blocks",
+          [
+            {
+              block: "wf:svc-test-required-trio",
+              args: { heading: "H", subheading: "S", link: "L" },
+            },
+          ],
+          getOwner(this)
+        );
+        const stableKey = layout[0].__stableKey;
+        this.editor.wireframeSelection.selectBlock({
+          key: `wf:svc-test-required-trio:${stableKey}`,
+          name: "wf:svc-test-required-trio",
+        });
+      });
+
+      test("fixing one required field keeps the others flagged", async function (assert) {
+        const validation = getOwner(this).lookup(
+          "service:wireframe-validation"
+        );
+
+        // Clear all three → three required-missing failures on one block,
+        // collapsed into a single enumerated line.
+        await editArg(this.editor, "heading", null);
+        await editArg(this.editor, "subheading", null);
+        await editArg(this.editor, "link", null);
+
+        assert.strictEqual(
+          validation.validationIssues.length,
+          1,
+          "one failing block"
+        );
+        assert.strictEqual(
+          this.editor.wireframeSelection.selectedBlockFieldErrors.heading
+            ?.length,
+          1,
+          "heading is flagged"
+        );
+
+        // Fix ONE field. The other two are still missing, so the block must
+        // stay flagged — editing one field must not optimistically clear the
+        // rest.
+        await editArg(this.editor, "heading", "Fixed");
+
+        assert.strictEqual(
+          validation.validationIssues.length,
+          1,
+          "the block still has issues after fixing only one field"
+        );
+        assert.deepEqual(
+          Object.keys(this.editor.wireframeSelection.selectedBlockFieldErrors),
+          ["subheading", "link"],
+          "only the still-missing fields remain flagged"
+        );
+      });
+
+      test("fixing one field on a block that loaded already-invalid keeps the others flagged", async function (assert) {
+        // Closer to the reported flow: the block arrives with required fields
+        // missing (stamped by the publish-time validator), rather than being
+        // driven invalid by live edits.
+        const validation = getOwner(this).lookup(
+          "service:wireframe-validation"
+        );
+        const located = queryOf(this.editor).findEntryAndOutletSync(
+          this.editor.wireframeSelection.selectedBlockKey
+        );
+        // Simulate the publish pass: drop the args and stamp all three
+        // required-missing failures as `markEntrySoftFailure` would.
+        delete located.entry.args.heading;
+        delete located.entry.args.subheading;
+        delete located.entry.args.link;
+        located.entry.__failureType = "structural-invalid";
+        located.entry.__failureReason = "Required.";
+        located.entry.__failureDetails = [
+          { code: ERROR_CODES.REQUIRED_MISSING, field: "heading" },
+          { code: ERROR_CODES.REQUIRED_MISSING, field: "subheading" },
+          { code: ERROR_CODES.REQUIRED_MISSING, field: "link" },
+        ];
+
+        assert.strictEqual(
+          validation.validationIssues[0].messages.length,
+          1,
+          "three shared 'Required.' failures collapse to one line"
+        );
+
+        await editArg(this.editor, "heading", "Fixed");
+
+        assert.strictEqual(
+          validation.validationIssues.length,
+          1,
+          "the block still has issues after fixing only one field"
+        );
+        assert.deepEqual(
+          Object.keys(this.editor.wireframeSelection.selectedBlockFieldErrors),
+          ["subheading", "link"],
+          "only the still-missing fields remain flagged"
+        );
+      });
+    }
+  );
+
   module("updateSelectedArg / undo / redo / resetAll", function (innerHooks) {
     innerHooks.beforeEach(async function () {
       withTestBlockRegistration(() => registerBlock(TestTile));
@@ -447,6 +574,130 @@ module("Unit | Discourse Wireframe | service:wireframe", function (hooks) {
         validation.validationWarnings,
         [],
         "fixing the arg drops the warning in lockstep with the stamp clear"
+      );
+    });
+
+    test("validationIssues enriches each failing entry with its key, name and friendly messages", async function (assert) {
+      const validation = getOwner(this).lookup("service:wireframe-validation");
+      const located = queryOf(this.editor).findEntryAndOutletSync(
+        this.editor.wireframeSelection.selectedBlockKey
+      );
+      // Structured details are what the permissive validator stamps; the
+      // issue list maps each through the shared friendly-copy layer.
+      located.entry.__failureType = "structural-invalid";
+      located.entry.__failureReason = 'Arg "title" is required.';
+      located.entry.__failureDetails = [
+        { code: ERROR_CODES.REQUIRED_MISSING, field: "title" },
+      ];
+
+      assert.deepEqual(validation.validationIssues, [
+        {
+          outletName: "homepage-blocks",
+          blockKey: this.editor.wireframeSelection.selectedBlockKey,
+          // The palette's friendly display name (title-cased short name),
+          // not the raw `wf:svc-test-tile` ref.
+          blockName: "Svc Test Tile",
+          // The field name is folded into the message so a standalone list
+          // can tell apart several failures on the same block. This block
+          // declares no `ui.label`, so the raw arg key is used. Each message
+          // carries a stable id derived from its field(s).
+          messages: [
+            {
+              id: "field:title",
+              text: i18n("wireframe.inspector.errors.field_scoped", {
+                field: "title",
+                message: i18n("wireframe.inspector.errors.required"),
+              }),
+            },
+          ],
+        },
+      ]);
+      assert.strictEqual(
+        validation.validationIssues[0].blockKey,
+        entryKey(located.entry),
+        "the blockKey is the entry's composite key"
+      );
+    });
+
+    test("validationIssues collapses fields that share a message into one line", async function (assert) {
+      const validation = getOwner(this).lookup("service:wireframe-validation");
+      const located = queryOf(this.editor).findEntryAndOutletSync(
+        this.editor.wireframeSelection.selectedBlockKey
+      );
+      // Two fields with the same failure collapse to one enumerated line;
+      // a distinct failure stays on its own line.
+      located.entry.__failureType = "structural-invalid";
+      located.entry.__failureReason = "stale";
+      located.entry.__failureDetails = [
+        { code: ERROR_CODES.REQUIRED_MISSING, field: "title" },
+        { code: ERROR_CODES.REQUIRED_MISSING, field: "subtitle" },
+        { code: ERROR_CODES.TYPE_MISMATCH, field: "count" },
+      ];
+
+      assert.deepEqual(validation.validationIssues[0].messages, [
+        {
+          id: "field:title,subtitle",
+          text: i18n("wireframe.inspector.errors.field_scoped", {
+            field: "title, subtitle",
+            message: i18n("wireframe.inspector.errors.required"),
+          }),
+        },
+        {
+          id: "field:count",
+          text: i18n("wireframe.inspector.errors.field_scoped", {
+            field: "count",
+            message: i18n("wireframe.inspector.errors.type"),
+          }),
+        },
+      ]);
+    });
+
+    test("validationIssues falls back to the raw reason when there are no structured details", async function (assert) {
+      const validation = getOwner(this).lookup("service:wireframe-validation");
+      const located = queryOf(this.editor).findEntryAndOutletSync(
+        this.editor.wireframeSelection.selectedBlockKey
+      );
+      // Strict-mode layers (and empty `err.details`) leave only the raw
+      // reason; the issue must still surface, not vanish.
+      located.entry.__failureType = "structural-invalid";
+      located.entry.__failureReason = "Something went wrong.";
+      located.entry.__failureDetails = [];
+
+      assert.deepEqual(
+        validation.validationIssues.map((i) => i.messages.map((m) => m.text)),
+        [["Something went wrong."]],
+        "an empty details array falls back to the raw reason"
+      );
+
+      delete located.entry.__failureDetails;
+      assert.deepEqual(
+        validation.validationIssues.map((i) => i.messages.map((m) => m.text)),
+        [["Something went wrong."]],
+        "an absent details field falls back the same way"
+      );
+    });
+
+    test("validationIssues drops the entry the moment its stamp clears", async function (assert) {
+      const validation = getOwner(this).lookup("service:wireframe-validation");
+      const located = queryOf(this.editor).findEntryAndOutletSync(
+        this.editor.wireframeSelection.selectedBlockKey
+      );
+      located.entry.__failureType = "structural-invalid";
+      located.entry.__failureReason = 'Arg "title" must be a string.';
+      located.entry.__failureDetails = [{ code: ERROR_CODES.TYPE_MISMATCH }];
+
+      assert.strictEqual(
+        validation.validationIssues.length,
+        1,
+        "the stamp surfaces as an issue"
+      );
+
+      await editArg(this.editor, "title", "Edited");
+
+      assert.deepEqual(
+        validation.validationIssues,
+        [],
+        "fixing the arg drops the issue in lockstep with the stamp clear"
       );
     });
   });

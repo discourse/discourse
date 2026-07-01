@@ -21,22 +21,24 @@ module(
       const rail = this.owner.lookup("service:wireframe-rail");
       await render(<template><ActivityBar /></template>);
 
-      const entries = ".wireframe-activity-bar__entry";
+      // Each entry button lives inside its own wrap; address them through it.
+      const entry = (n) =>
+        `.wireframe-activity-bar__entry-wrap:nth-child(${n}) .wireframe-activity-bar__entry`;
 
       // Palette is the default open panel.
-      assert.dom(`${entries}:nth-child(1)`).hasAria("pressed", "true");
-      assert.dom(`${entries}:nth-child(2)`).hasAria("pressed", "false");
+      assert.dom(entry(1)).hasAria("pressed", "true");
+      assert.dom(entry(2)).hasAria("pressed", "false");
 
       // Activating Layers (outline) opens it and presses its entry.
-      await click(`${entries}:nth-child(2)`);
+      await click(entry(2));
       assert.strictEqual(rail.leftPanelTab, "outline");
-      assert.dom(`${entries}:nth-child(2)`).hasAria("pressed", "true");
-      assert.dom(`${entries}:nth-child(1)`).hasAria("pressed", "false");
+      assert.dom(entry(2)).hasAria("pressed", "true");
+      assert.dom(entry(1)).hasAria("pressed", "false");
 
       // Re-activating the open panel collapses the rail — nothing reads pressed.
-      await click(`${entries}:nth-child(2)`);
+      await click(entry(2));
       assert.true(rail.leftCollapsed);
-      assert.dom(`${entries}:nth-child(2)`).hasAria("pressed", "false");
+      assert.dom(entry(2)).hasAria("pressed", "false");
     });
 
     test("the bottom chevron toggles collapse and reflects state", async function (assert) {
@@ -53,6 +55,35 @@ module(
       await click(collapse);
       assert.false(rail.leftCollapsed, "expands again");
       assert.dom(collapse).hasAria("expanded", "true");
+    });
+
+    test("the Issues entry shows a count badge only when issues exist", async function (assert) {
+      class StubValidation {
+        issues = [];
+
+        get validationIssues() {
+          return this.issues;
+        }
+      }
+      const validation = new StubValidation();
+      this.owner.register("service:wireframe-validation", validation, {
+        instantiate: false,
+      });
+
+      await render(<template><ActivityBar /></template>);
+      assert
+        .dom(".wireframe-activity-bar__badge")
+        .doesNotExist("no badge at zero");
+
+      validation.issues = [
+        { outletName: "a", blockKey: "x:1", blockName: "x", messages: ["m"] },
+        { outletName: "a", blockKey: "y:2", blockName: "y", messages: ["m"] },
+      ];
+      await render(<template><ActivityBar /></template>);
+      assert
+        .dom(".wireframe-activity-bar__badge")
+        .exists({ count: 1 })
+        .hasText("2", "the badge shows the issue count");
     });
   }
 );

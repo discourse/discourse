@@ -1,6 +1,10 @@
 // @ts-check
 import Service, { service } from "@ember/service";
 import { _getResolvedLayouts } from "discourse/blocks/block-outlet";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
+import { getBlockDisplayMetadata } from "discourse/lib/blocks/-internals/display-metadata";
+import { entryKey } from "discourse/plugins/discourse-wireframe/discourse/lib/entry-key";
+import { friendlyEntryMessages } from "discourse/plugins/discourse-wireframe/discourse/lib/friendly-error-message";
 
 /**
  * Surfaces the editor's validation warnings — the per-entry `__failureReason`
@@ -12,6 +16,7 @@ import { _getResolvedLayouts } from "discourse/blocks/block-outlet";
  * republish); consumers reach it through the orchestrator's facades.
  */
 export default class WireframeValidationService extends Service {
+  @service blocks;
   @service wireframeLayoutSignal;
 
   /**
@@ -62,6 +67,54 @@ export default class WireframeValidationService extends Service {
   }
 
   /**
+   * The same failing entries as `validationWarnings`, but enriched for a
+   * navigable, author-facing issue list: each carries the offending
+   * block's key (so a consumer can select + reveal it), its block name,
+   * and the friendly per-detail messages `friendlyEntryMessages` derives
+   * from the structured `__failureDetails` stamps — rather than the raw
+   * developer string `validationWarnings` surfaces.
+   *
+   * `validationWarnings` is deliberately left untouched (the publish
+   * drawer depends on its flat `{outletName, message}` shape); this is a
+   * richer parallel projection over the same walk.
+   *
+   * Reactivity matches `validationWarnings`: the layout signal covers
+   * republishes, and reading `__failureReason` / `__failureDetails` on
+   * each entry opens the per-key `trackedObject` deps so an arg-edit
+   * stamp clear drops the issue live. Note `__failureDetails` is only
+   * populated in the permissive session-draft layer; strict-mode layers
+   * leave it absent and `friendlyEntryMessages` falls back to the reason.
+   *
+   * @returns {Array<{outletName: string, blockKey: string|null,
+   *   blockName: string|null, messages: Array<{id: string, text: string}>}>}
+   */
+  get validationIssues() {
+    void this.wireframeLayoutSignal.version;
+    const layoutMap = _getResolvedLayouts();
+    // Resolve string block refs to their component, so a failing entry can
+    // surface the same friendly display name + arg labels the palette and
+    // inspector show. Class refs carry their component directly.
+    const componentByName = new Map(
+      this.blocks
+        .listBlocksWithMetadata()
+        .map(({ name, component }) => [name, component])
+    );
+    const issues = [];
+    for (const [outletName, record] of layoutMap) {
+      if (!record?.layout) {
+        continue;
+      }
+      this.#collectStampedIssues(
+        record.layout,
+        outletName,
+        issues,
+        componentByName
+      );
+    }
+    return issues;
+  }
+
+  /**
    * Recursively walks `entries` and pushes one `{outletName, message}`
    * warning for every entry carrying a `__failureReason` stamp. Reads
    * `__failureReason` rather than the truthy stamp pair (`__failureType`
@@ -78,6 +131,51 @@ export default class WireframeValidationService extends Service {
       }
       if (entry?.children?.length) {
         this.#collectStampedWarnings(entry.children, outletName, warnings);
+      }
+    }
+  }
+
+  /**
+   * Recursively walks `entries` and pushes one enriched issue for every
+   * entry carrying a `__failureReason` stamp. Reads `__failureReason`
+   * first as the guard — that per-key dep is what fires when a stamp
+   * clears — then reads `__failureDetails` (via `friendlyEntryMessages`)
+   * only inside the branch, so a fresh, never-failed entry opens no
+   * detail dep (matching `validationWarnings`).
+   *
+   * @param {Array<Object>} entries
+   * @param {string} outletName
+   * @param {Array<{outletName: string, blockKey: string|null,
+   *   blockName: string|null, messages: Array<{id: string, text: string}>}>} issues
+   */
+  #collectStampedIssues(entries, outletName, issues, componentByName) {
+    for (const entry of entries) {
+      if (entry?.__failureReason) {
+        const component =
+          typeof entry.block === "string"
+            ? componentByName.get(entry.block)
+            : entry.block;
+        issues.push({
+          outletName,
+          blockKey: entryKey(entry),
+          // The palette's friendly display name; falls back to the raw
+          // string ref for an unregistered block (no resolvable component).
+          blockName:
+            getBlockDisplayMetadata(component)?.displayName ??
+            (typeof entry.block === "string" ? entry.block : null),
+          messages: friendlyEntryMessages(
+            entry,
+            getBlockMetadata(component)?.args
+          ),
+        });
+      }
+      if (entry?.children?.length) {
+        this.#collectStampedIssues(
+          entry.children,
+          outletName,
+          issues,
+          componentByName
+        );
       }
     }
   }

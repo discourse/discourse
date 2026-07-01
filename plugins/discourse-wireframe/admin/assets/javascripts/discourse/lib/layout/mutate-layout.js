@@ -860,9 +860,11 @@ export function clearValidatorStamps(entry) {
  * Re-validating keeps the current error visible and lets a genuine fix
  * clear it immediately.
  *
- * When the entry is valid — or its block exposes no metadata to validate
- * against (e.g. a string-referenced block) — the stamps are cleared.
- * Otherwise `__failureDetails` (read by the inspector) plus the
+ * When the entry is valid — or its block resolves to no registered
+ * metadata to validate against — the stamps are cleared. (`collectEntryFailures`
+ * resolves a string block ref to its class, so a name-referenced block is
+ * re-validated like any other; only a genuinely unregistered block yields
+ * nothing to check.) Otherwise `__failureDetails` (read by the inspector) plus the
  * `__failureType` / `__failureReason` summary (read by the outline) are
  * set from the current failures. `__visible` is deliberately left untouched
  * so the block the author is actively editing stays on the canvas; hiding

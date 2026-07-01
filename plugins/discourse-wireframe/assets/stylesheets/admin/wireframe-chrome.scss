@@ -1139,53 +1139,73 @@ body.wireframe-active {
   }
 }
 
-.wireframe-btn-warnings {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  color: var(--danger);
+/* The Issues panel body: validation problems grouped by outlet, each row a
+   clickable jump to the offending block. A separate class tree from the outline
+   (no shared selectors), but it borrows the outline's selected/error tones so
+   the two panels read as one design language. */
 
-  .d-icon {
-    color: var(--danger);
-  }
-
-  &.--open {
-    background: var(--danger-low);
-  }
-}
-
-.wireframe-warnings-panel {
-  grid-column: 1 / -1;
-  grid-row: 2;
-  background: var(--danger-low);
-  border-bottom: 1px solid var(--danger);
+.wireframe-issues {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
   font-size: var(--font-down-1);
 
-  &__header {
+  &__outlet-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
+    gap: 0.25rem;
+    margin-bottom: 0.25rem;
     font-weight: 600;
-    color: var(--danger);
+    color: var(--wireframe-block-outlet-color);
+  }
 
-    .d-icon {
+  &__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 0.25rem 0.5rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 3px;
+
+    &-icon .d-icon {
       color: var(--danger);
+    }
+
+    &-block {
+      font-weight: 600;
+    }
+
+    /* Interactive rows (a resolvable block) get pointer + hover/selected cues;
+       the static variant (a block with no addressable key) stays inert. */
+
+    &:not(.--static) {
+      cursor: pointer;
+
+      &:hover {
+        background: var(--primary-very-low);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--wf-accent);
+        outline-offset: -2px;
+      }
+    }
+
+    &.--selected {
+      background: var(--tertiary-low);
+      box-shadow: inset 3px 0 0 var(--tertiary);
     }
   }
 
-  &__list {
+  &__messages {
+    grid-column: 2;
     margin: 0;
-    padding: 0 1rem 0.5rem 2.25rem;
+    padding: 0;
+    list-style: none;
+    color: var(--primary-high);
 
     li {
-      padding: 0.25rem 0;
-      list-style: disc;
-
-      code {
-        margin-right: 0.5rem;
-        color: var(--primary-medium);
-      }
+      padding: 0.1rem 0;
     }
   }
 }
@@ -1213,6 +1233,41 @@ body.wireframe-active {
   background: var(--secondary);
   border-right: 1px solid var(--primary-low);
   overflow: hidden;
+
+  /* Wraps each entry button so the count badge can position against it.
+     Stretches full width as a column child; the button fills the wrap. */
+
+  &__entry-wrap {
+    position: relative;
+    display: flex;
+
+    .wireframe-activity-bar__entry {
+      flex: 1;
+    }
+  }
+
+  /* Count pip overlaid on the top-inline-end corner of an entry (the Issues
+     entry when problems exist). Purely visual — the entry's aria-label carries
+     the count for assistive tech. */
+
+  &__badge {
+    position: absolute;
+    top: 4px;
+    inset-inline-end: 4px;
+    min-width: 1rem;
+    height: 1rem;
+    padding: 0 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background: var(--danger);
+    color: var(--secondary);
+    font-size: var(--font-down-2);
+    font-weight: 700;
+    line-height: 1;
+    pointer-events: none;
+  }
 
   &__entry {
     display: flex;

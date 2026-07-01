@@ -49,6 +49,7 @@ export default class ActivityBar extends Component {
 
   @service tooltip;
   @service wireframeRail;
+  @service wireframeValidation;
 
   /**
    * Registers the entry's hover card (name + hint). Hover-only — focus moves
@@ -73,6 +74,41 @@ export default class ActivityBar extends Component {
     return () => instance.destroy();
   });
 
+  /**
+   * How many validation issues the page currently has. Drives the count
+   * badge on the Issues entry — equal to the number of rows the Issues
+   * panel renders, so the badge and the panel always agree.
+   *
+   * @returns {number}
+   */
+  get issueCount() {
+    return this.wireframeValidation.validationIssues.length;
+  }
+
+  /**
+   * The rail entries, each decorated with the count that its badge (if
+   * any) should show. Only the Issues entry carries a live count today;
+   * the rest stay at zero so the template renders no badge for them. When
+   * issues exist, the Issues entry also gets a count-aware aria-label so
+   * assistive tech announces the number without the (aria-hidden) badge.
+   *
+   * @returns {Array<Object>}
+   */
+  get entries() {
+    return ActivityBar.ENTRIES.map((entry) => {
+      if (entry.tab === "issues" && this.issueCount > 0) {
+        return {
+          ...entry,
+          badgeCount: this.issueCount,
+          translatedAriaLabel: i18n("wireframe.chrome.panel_issues_count", {
+            count: this.issueCount,
+          }),
+        };
+      }
+      return { ...entry, badgeCount: 0, translatedAriaLabel: null };
+    });
+  }
+
   <template>
     <div
       class="wireframe-activity-bar"
@@ -80,18 +116,29 @@ export default class ActivityBar extends Component {
       aria-orientation="vertical"
       aria-label={{i18n "wireframe.chrome.activity_bar_label"}}
     >
-      {{#each ActivityBar.ENTRIES as |entry|}}
-        <DButton
-          class={{dConcatClass
-            "btn-flat wireframe-activity-bar__entry"
-            (if (this.wireframeRail.isPanelOpen entry.tab) "--active")
-          }}
-          @icon={{entry.icon}}
-          @ariaLabel={{entry.label}}
-          @ariaPressed={{this.wireframeRail.isPanelOpen entry.tab}}
-          @action={{fn this.wireframeRail.activatePanel entry.tab}}
-          {{this.registerTooltip entry}}
-        />
+      {{#each this.entries key="tab" as |entry|}}
+        {{! Wraps the button so the count badge can position against it.
+            The badge is aria-hidden — the entry's aria-label carries the
+            count for assistive tech. }}
+        <span class="wireframe-activity-bar__entry-wrap">
+          <DButton
+            class={{dConcatClass
+              "btn-flat wireframe-activity-bar__entry"
+              (if (this.wireframeRail.isPanelOpen entry.tab) "--active")
+            }}
+            @icon={{entry.icon}}
+            @ariaLabel={{unless entry.translatedAriaLabel entry.label}}
+            @translatedAriaLabel={{entry.translatedAriaLabel}}
+            @ariaPressed={{this.wireframeRail.isPanelOpen entry.tab}}
+            @action={{fn this.wireframeRail.activatePanel entry.tab}}
+            {{this.registerTooltip entry}}
+          />
+          {{#if entry.badgeCount}}
+            <span class="wireframe-activity-bar__badge" aria-hidden="true">
+              {{entry.badgeCount}}
+            </span>
+          {{/if}}
+        </span>
       {{/each}}
 
       {{! Persistent two-way collapse toggle, pinned to the bottom of the rail.

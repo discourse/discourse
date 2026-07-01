@@ -15,17 +15,16 @@ en:
         publish_with_warnings_confirm:
           one: "%{count} block has structural issues and won't render until you fix it. Publish anyway?"
           other: "%{count} blocks have structural issues and won't render until you fix them. Publish anyway?"
-        warnings_button_title: "Show validation warnings"
         dim_non_editable_title: "Dim non-editable regions"
-        warnings_panel_title:
-          one: "%{count} block has issues"
-          other: "%{count} blocks have issues"
         panel_add: "Add"
         panel_add_description: "Insert blocks onto the page"
         panel_layers: "Layers"
         panel_layers_description: "The page's block structure"
         panel_issues: "Issues"
         panel_issues_description: "Validation problems on the page"
+        panel_issues_count:
+          one: "Issues (%{count} problem)"
+          other: "Issues (%{count} problems)"
         panel_inspector: "Inspector"
         activity_bar_label: "Editor panels"
         issues_empty: "No issues detected."
@@ -130,6 +129,7 @@ en:
         locked_field_hint: "Locked by the composite. Detach the block to edit it."
         unknown_type: "Unknown"
         errors:
+          field_scoped: "%{field}: %{message}"
           required: "Required."
           type: "Wrong value type."
           pattern: "Doesn't match the expected format."
