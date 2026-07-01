@@ -19,7 +19,6 @@ const CREATE_ATTRIBUTES = [
   "default_llm_id",
   "force_default_llm",
   "user",
-  "max_context_posts",
   "vision_enabled",
   "vision_max_pixels",
   "rag_uploads",
@@ -35,7 +34,6 @@ const CREATE_ATTRIBUTES = [
   "allow_chat_direct_messages",
   "mcp_server_ids",
   "mcp_server_tool_names",
-  "execution_mode",
   "max_turn_tokens",
 
   "compression_threshold",
@@ -55,7 +53,6 @@ const SYSTEM_ATTRIBUTES = [
   "default_llm_id",
   "force_default_llm",
   "user",
-  "max_context_posts",
   "vision_enabled",
   "vision_max_pixels",
   "rag_uploads",
@@ -71,7 +68,6 @@ const SYSTEM_ATTRIBUTES = [
   "allow_chat_direct_messages",
   "mcp_server_ids",
   "mcp_server_tool_names",
-  "execution_mode",
   "max_turn_tokens",
 
   "compression_threshold",

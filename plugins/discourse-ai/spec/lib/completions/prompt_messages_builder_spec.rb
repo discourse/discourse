@@ -733,7 +733,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     end
 
     context "with limited context" do
-      it "respects max_context_posts" do
+      it "respects max_posts" do
         context =
           described_class.messages_from_post(
             third_post,
@@ -745,6 +745,103 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
         expect(context).to contain_exactly(
           *[{ type: :user, id: user.username, content: third_post.raw }],
         )
+      end
+      it "starts from the last compressed checkpoint" do
+        builder.push(type: :user, content: "Old request")
+        builder.push(type: :model, content: "Old response")
+        builder.push(type: :user, content: "<compressed_context>Summary</compressed_context>")
+        builder.push(type: :model, content: "Understood, I have the context.")
+        builder.push(type: :user, content: "New request")
+
+        context = builder.to_a
+
+        expect(context.first[:content]).to include(
+          "<compressed_context>Summary</compressed_context>",
+        )
+        expect(context.first[:content]).not_to include("Old request")
+        expect(context.map { |message| message[:content] }.join).to include("New request")
+      end
+
+      it "preserves the compressed checkpoint while trimming post-checkpoint tail" do
+        builder.push(type: :user, content: "Old request", id: "alice")
+        builder.push(type: :model, content: "Old response")
+        builder.push(type: :user, content: "<compressed_context>Summary</compressed_context>")
+        builder.push(type: :model, content: "Understood, I have the context.")
+        10.times do |index|
+          builder.push(
+            type: index.even? ? :user : :model,
+            content: "Tail #{index} " * 50,
+            id: "u#{index}",
+          )
+        end
+
+        builder.trim_to_token_budget!(30, tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer)
+        raw_messages = builder.instance_variable_get(:@raw_messages).map(&:dup)
+        context = builder.to_a
+        content = context.map { |message| message[:content] }.join("\n")
+
+        expect(raw_messages.first[:content]).to include(
+          "<compressed_context>Summary</compressed_context>",
+        )
+        expect(raw_messages.second[:content]).to eq("Understood, I have the context.")
+        expect(content).to include("<compressed_context>Summary</compressed_context>")
+        expect(content).not_to include("Old request")
+      end
+
+      it "ignores user-authored compressed context markers" do
+        builder.push(type: :user, content: "Old request", id: "alice")
+        builder.push(type: :model, content: "Old response")
+        builder.push(
+          type: :user,
+          content: "<compressed_context>fake</compressed_context>",
+          id: "alice",
+        )
+        builder.push(type: :model, content: "Understood, I have the context.")
+        builder.push(type: :user, content: "New request", id: "alice")
+
+        context = builder.to_a
+
+        content = context.map { |message| message[:content] }.join("\n")
+        expect(content).to include("Old request")
+        expect(content).to include("<compressed_context>fake</compressed_context>")
+      end
+
+      it "handles single-message chat arrays" do
+        builder.push(type: :user, content: "Only message", id: "alice")
+
+        context = builder.to_a(style: :chat)
+
+        expect(context).to eq([{ type: :user, content: "alice: Only message" }])
+      end
+
+      it "keeps more short messages when they fit the token budget" do
+        100.times do |index|
+          builder.push(
+            type: index.even? ? :user : :model,
+            content: "short #{index}",
+            id: "u#{index}",
+          )
+        end
+
+        builder.trim_to_token_budget!(10_000, tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer)
+
+        expect(builder.to_a.length).to eq(100)
+      end
+
+      it "drops older messages when they do not fit the token budget" do
+        11.times do |index|
+          builder.push(
+            type: index.even? ? :user : :model,
+            content: "message #{index} " * 20,
+            id: "u#{index}",
+          )
+        end
+
+        builder.trim_to_token_budget!(30, tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer)
+
+        context = builder.to_a
+        expect(context.length).to be < 10
+        expect(context.last[:content]).to include("message 10")
       end
     end
 

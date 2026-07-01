@@ -79,20 +79,6 @@ RSpec.describe AiAgent do
     expect(DiscourseAi::AiHelper::Assistant.prompt_cache[:value]).to eq("cached prompts")
   end
 
-  it "validates context settings" do
-    expect(basic_agent.valid?).to eq(true)
-
-    basic_agent.max_context_posts = 0
-    expect(basic_agent.valid?).to eq(false)
-    expect(basic_agent.errors[:max_context_posts]).to eq(["must be greater than 0"])
-
-    basic_agent.max_context_posts = 1
-    expect(basic_agent.valid?).to eq(true)
-
-    basic_agent.max_context_posts = nil
-    expect(basic_agent.valid?).to eq(true)
-  end
-
   it "validates tools" do
     Fabricate(:ai_tool, id: 1)
     Fabricate(:ai_tool, id: 2, name: "Archie search", tool_name: "search")
@@ -205,7 +191,6 @@ RSpec.describe AiAgent do
     forum_helper.update!(
       user_id: 1,
       default_llm_id: llm_model.id,
-      max_context_posts: 3,
       allow_topic_mentions: true,
       allow_personal_messages: true,
       allow_chat_channel_mentions: true,
@@ -220,7 +205,6 @@ RSpec.describe AiAgent do
     expect(klass.allowed_group_ids).to eq([10])
     expect(klass.user_id).to eq(1)
     expect(klass.default_llm_id).to eq(llm_model.id)
-    expect(klass.max_context_posts).to eq(3)
     expect(klass.allow_topic_mentions).to eq(true)
     expect(klass.allow_personal_messages).to eq(true)
     expect(klass.allow_chat_channel_mentions).to eq(true)
@@ -236,7 +220,6 @@ RSpec.describe AiAgent do
         tools: [],
         allowed_group_ids: [],
         default_llm_id: llm_model.id,
-        max_context_posts: 3,
         allow_topic_mentions: true,
         allow_personal_messages: true,
         allow_chat_channel_mentions: true,
@@ -251,7 +234,6 @@ RSpec.describe AiAgent do
     expect(klass.allowed_group_ids).to eq([])
     expect(klass.user_id).to eq(1)
     expect(klass.default_llm_id).to eq(llm_model.id)
-    expect(klass.max_context_posts).to eq(3)
     expect(klass.allow_topic_mentions).to eq(true)
     expect(klass.allow_personal_messages).to eq(true)
     expect(klass.allow_chat_channel_mentions).to eq(true)
@@ -499,48 +481,24 @@ RSpec.describe AiAgent do
     end
   end
 
-  describe "agentic execution mode defaults and propagation" do
-    it "assigns safe defaults to a agent created without agentic fields" do
+  describe "token budget settings" do
+    it "allows an agent to use the default token budget" do
       agent =
         AiAgent.create!(
-          name: "legacy_agent",
-          description: "no agentic fields set",
-          system_prompt: "test",
-          tools: [],
-          allowed_group_ids: [],
-        )
-
-      expect(agent.execution_mode).to eq("default")
-      expect(agent.max_turn_tokens).to be_nil
-      expect(agent.compression_threshold).to be_nil
-
-      klass = agent.class_instance
-
-      expect(klass.execution_mode).to eq("default")
-      expect(klass.max_turn_tokens).to be_nil
-      expect(klass.compression_threshold).to be_nil
-    end
-
-    it "requires compression_threshold for agentic mode but not for default mode" do
-      agent =
-        AiAgent.new(
-          name: "agentic_agent",
+          name: "token_budget_agent",
           description: "test",
           system_prompt: "test",
           tools: [],
           allowed_group_ids: [],
-          execution_mode: "agentic",
         )
 
-      expect(agent.valid?).to eq(false)
-      expect(agent.errors[:compression_threshold]).to be_present
+      expect(agent.max_turn_tokens).to be_nil
+      expect(agent.compression_threshold).to eq(80)
 
-      agent.compression_threshold = 75
-      expect(agent.valid?).to eq(true)
+      klass = agent.class_instance
 
-      agent.execution_mode = "default"
-      agent.compression_threshold = nil
-      expect(agent.valid?).to eq(true)
+      expect(klass.max_turn_tokens).to be_nil
+      expect(klass.compression_threshold).to eq(80)
     end
   end
 

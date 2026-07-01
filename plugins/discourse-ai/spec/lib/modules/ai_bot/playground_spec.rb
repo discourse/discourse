@@ -765,7 +765,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
           )
         end
 
-        agent.update!(max_context_posts: 4, enabled: true)
+        agent.update!(enabled: true)
 
         prompts = nil
         DiscourseAi::Completions::Llm.with_prepared_responses(
@@ -790,11 +790,15 @@ RSpec.describe DiscourseAi::AiBot::Playground do
             .join("\n")
             .strip
 
-        # why?
-        # 1. we set context to 4
-        # 2. however PromptMessagesBuilder will enforce rules of starting with :user and ending with it
-        # so one of the model messages is dropped
         expected = <<~TEXT.strip
+          user: Hello
+          model: World
+          user: request 0
+          model: response 0
+          user: request 1
+          model: response 1
+          user: request 2
+          model: response 2
           user: request 3
           model: response 3
           user: Hello

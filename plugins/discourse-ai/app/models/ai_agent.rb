@@ -4,7 +4,15 @@ class AiAgent < ActiveRecord::Base
   # TODO remove tool_details from ignored_columns 01-02-2027
   # question_consolidator_llm_id is intentionally ignored after the RAG tool
   # migration; the column can be dropped in a later schema cleanup.
-  self.ignored_columns = %i[tool_details question_consolidator_llm_id]
+  # TODO remove max_context_posts and execution_mode from ignored_columns 01-01-2027
+  self.ignored_columns = %i[
+    tool_details
+    question_consolidator_llm_id
+    max_context_posts
+    execution_mode
+  ]
+
+  attribute :compression_threshold, :integer, default: 80
 
   # Between the regular migration (which creates ai_agents as a VIEW over
   # ai_personas) and the post-migration (which does the actual rename_table),
@@ -21,8 +29,6 @@ class AiAgent < ActiveRecord::Base
   validate :system_agent_unchangeable, on: :update, if: :system
   validate :chat_preconditions
   validate :well_formated_examples
-  validates :max_context_posts, numericality: { greater_than: 0 }, allow_nil: true
-  validates :execution_mode, inclusion: { in: %w[default agentic] }
   validates :max_turn_tokens,
             numericality: {
               greater_than: 0,
@@ -34,8 +40,7 @@ class AiAgent < ActiveRecord::Base
             numericality: {
               greater_than_or_equal_to: 20,
               less_than_or_equal_to: 99,
-            },
-            if: -> { execution_mode == "agentic" }
+            }
   # leaves some room for growth but sets a maximum to avoid memory issues
   # we may want to revisit this in the future
   validates :vision_max_pixels, numericality: { greater_than: 0, maximum: 4_000_000 }
@@ -65,6 +70,8 @@ class AiAgent < ActiveRecord::Base
 
   has_many :upload_references, as: :target, dependent: :destroy
   has_many :uploads, through: :upload_references
+
+  before_validation :set_default_compression_threshold
 
   before_update :regenerate_rag_fragments
   before_destroy :ensure_not_system
@@ -243,7 +250,6 @@ class AiAgent < ActiveRecord::Base
       system
       mentionable
       default_llm_id
-      max_context_posts
       vision_enabled
       vision_max_pixels
       rag_conversation_chunks
@@ -258,7 +264,6 @@ class AiAgent < ActiveRecord::Base
       show_thinking
       thinking_effort
       enabled
-      execution_mode
       max_turn_tokens
       compression_threshold
       require_approval
@@ -419,6 +424,10 @@ class AiAgent < ActiveRecord::Base
     user
   end
 
+  def set_default_compression_threshold
+    self.compression_threshold ||= 80
+  end
+
   def regenerate_rag_fragments
     if rag_chunk_tokens_changed? || rag_chunk_overlap_tokens_changed?
       RagDocumentFragment.where(target: self).delete_all
@@ -508,14 +517,12 @@ end
 #  allow_personal_messages     :boolean          default(TRUE), not null
 #  allow_topic_mentions        :boolean          default(FALSE), not null
 #  allowed_group_ids           :integer          default([]), not null, is an Array
-#  compression_threshold       :integer
+#  compression_threshold       :integer          default(80), not null
 #  description                 :string(2000)     not null
 #  enabled                     :boolean          default(TRUE), not null
 #  examples                    :jsonb
-#  execution_mode              :string           default("default"), not null
 #  force_default_llm           :boolean          default(FALSE), not null
 #  forced_tool_count           :integer          default(-1), not null
-#  max_context_posts           :integer
 #  max_turn_tokens             :integer
 #  name                        :string(100)      not null
 #  priority                    :boolean          default(FALSE), not null

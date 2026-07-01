@@ -449,7 +449,6 @@ CREATE TABLE public.ai_agents (
     temperature double precision,
     top_p double precision,
     user_id integer,
-    max_context_posts integer,
     vision_enabled boolean DEFAULT false NOT NULL,
     vision_max_pixels integer DEFAULT 1048576 NOT NULL,
     rag_chunk_tokens integer DEFAULT 374 NOT NULL,
@@ -469,8 +468,7 @@ CREATE TABLE public.ai_agents (
     examples jsonb,
     show_thinking boolean DEFAULT true NOT NULL,
     max_turn_tokens integer,
-    compression_threshold integer,
-    execution_mode character varying DEFAULT 'default'::character varying NOT NULL,
+    compression_threshold integer DEFAULT 80 NOT NULL,
     require_approval boolean DEFAULT false NOT NULL,
     thinking_effort character varying
 );
@@ -22593,6 +22591,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260703163425'),
 ('20260702102111'),
 ('20260701073045'),
+('20260701013609'),
+('20260701013606'),
 ('20260630034050'),
 ('20260629233141'),
 ('20260629081606'),
