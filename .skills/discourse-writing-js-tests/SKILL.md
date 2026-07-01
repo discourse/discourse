@@ -16,6 +16,9 @@ Discourse uses [QUnit](https://qunitjs.com/) with `ember-qunit` and
 - **One concept per `test`** — each `test()` verifies one behavior for clear failure diagnosis.
 - **Prefer `assert.dom(...)`** over manual DOM querying. It produces better failure messages
   and waits-free, synchronous DOM reads. See the [qunit-dom API](https://github.com/mainmatter/qunit-dom/blob/master/API.md).
+  When you need the element(s) themselves — for an interaction or a computed value — use
+  `find()` / `findAll()` from `@ember/test-helpers` (scoped to the test container), not
+  `document.querySelector` or the deprecated `queryAll()`.
 - **Always `await` interactions** — `render`, `click`, `fillIn`, `visit`, `settled`, etc. are
   async. Forgetting `await` causes flaky tests.
 - **Always pass a description** as the last argument to assertions — it documents intent and
@@ -121,7 +124,8 @@ module("Integration | Component | BookmarkIcon", function (hooks) {
 - Prefer **`.gjs`** with inline `<template>` so you can import and invoke the real component.
 - Options: `setupRenderingTest(hooks, { anonymous: true })` for an anonymous user;
   `{ stubRouter: true }` to stub `service:router`.
-- Interact with `@ember/test-helpers`: `click`, `fillIn`, `triggerKeyEvent`, `settled`, `find`.
+- Interact with `@ember/test-helpers`: `click`, `fillIn`, `triggerKeyEvent`, `settled`; query
+  the rendered DOM with `find` (first match) / `findAll` (all matches).
 - For select-kit and FormKit widgets, use `discourse/tests/helpers/select-kit-helper` and
   `discourse/tests/helpers/form-kit-helper` rather than poking the DOM directly.
 
@@ -187,10 +191,11 @@ import siteFixtures from "discourse/tests/fixtures/site-fixtures";
 - **Input simulation**: `createFile(name, type)`, `paste(selector, text)`,
   `selectText(selector)`, `simulateKey(el, key)` / `simulateKeys(el, keys)`, `metaModifier`.
 - **Conditional tests**: `conditionalTest`, `chromeTest`, `firefoxTest`.
-- **Legacy DOM helpers** (jQuery-backed): `query()`, `queryAll()`, `exists()`, `count()`,
-  `visible()`, `invisible()`, `fixture()`. **Prefer `assert.dom(...)` and `find()` in new
-  tests** — reach for these only when matching existing style.
-- **Deprecated**: `discourseModule` — use QUnit's `module` instead.
+- **DOM lookup helpers**: `query()`, `exists()`, `count()`, `visible()`, `invisible()`,
+  `fixture()`. **Prefer `assert.dom(...)` for assertions and `find()` / `findAll()` for
+  elements in new tests** — reach for these only when matching existing style.
+- **Deprecated, do not use**: `queryAll()` — use `findAll()` or `assert.dom(...)` instead;
+  `discourseModule` — use QUnit's `module` instead.
 
 ## Custom assertions
 
