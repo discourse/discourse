@@ -2,6 +2,7 @@
 import { run } from "@ember/runloop";
 import {
   find,
+  findAll,
   getApplication,
   settled,
   triggerKeyEvent,
@@ -45,6 +46,7 @@ import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import deprecated from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
+import { visible as isVisible } from "discourse/lib/dom-utils";
 import { clearRegisteredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { restoreBaseUri } from "discourse/lib/get-url";
@@ -497,6 +499,14 @@ export async function selectDate(selector, date) {
 }
 
 export function queryAll(selector, context) {
+  deprecated(
+    "`queryAll` is deprecated. Use `findAll` from `@ember/test-helpers` for elements, or `assert.dom` from qunit-dom for assertions.",
+    {
+      id: "discourse.qunit-helpers.query-all",
+      since: "2026.7.0-latest",
+    }
+  );
+
   context = context || "#ember-testing";
   return $(selector, context);
 }
@@ -506,20 +516,21 @@ export function query() {
 }
 
 export function invisible(selector) {
-  const $items = queryAll(selector + ":visible");
-  return (
-    $items.length === 0 ||
-    $items.css("opacity") !== "1" ||
-    $items.css("visibility") === "hidden"
-  );
+  const visibleItems = findAll(selector).filter(isVisible);
+  if (visibleItems.length === 0) {
+    return true;
+  }
+
+  const style = window.getComputedStyle(visibleItems[0]);
+  return style.opacity !== "1" || style.visibility === "hidden";
 }
 
 export function visible(selector) {
-  return queryAll(selector + ":visible").length > 0;
+  return findAll(selector).some(isVisible);
 }
 
 export function count(selector) {
-  return queryAll(selector).length;
+  return findAll(selector).length;
 }
 
 export function exists(selector) {
