@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
-require "seed_data/admin_dashboard_reports"
-
 module PageObjects
   module Pages
     class AdminReport < PageObjects::Pages::Base
       def visit_default_dashboard_report
-        visit(default_dashboard_report_type)
+        page.visit(
+          "/admin/reports/#{SeedData::AdminDashboardReports::DEFAULT_BUILTIN_REPORTS.first}",
+        )
+        self
       end
 
       def has_back_to_dashboard?(dashboard)
@@ -32,17 +33,6 @@ module PageObjects
 
       def has_current_all_reports_path?
         page.has_current_path?("/admin/reports")
-      end
-
-      private
-
-      def visit(identifier)
-        page.visit("/admin/reports/#{identifier}")
-        self
-      end
-
-      def default_dashboard_report_type
-        SeedData::AdminDashboardReports::DEFAULT_BUILTIN_REPORTS.first
       end
     end
   end

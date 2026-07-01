@@ -9,8 +9,6 @@ RSpec.describe "Admin report navigation" do
 
   before do
     SiteSetting.dashboard_improvements = true
-    dashboard.prepare_default_layout
-    dashboard_reports.prepare_default_reports
     sign_in(current_user)
   end
 

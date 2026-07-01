@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "seed_data/admin_dashboard_reports"
-
 module PageObjects
   module Pages
     class AdminDashboardReports < PageObjects::Pages::Base
@@ -50,12 +48,9 @@ module PageObjects
       end
 
       def open_default_report
-        open_report(default_report_identifier)
-      end
-
-      def prepare_default_reports
-        SiteSetting.admin_dashboard_reports_seeded = false
-        SeedData::AdminDashboardReports.create
+        within(
+          "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{default_report_identifier}']",
+        ) { find(".db-report__name").click }
         self
       end
 
@@ -94,19 +89,8 @@ module PageObjects
 
       private
 
-      def open_report(identifier)
-        within("#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']") do
-          find(".db-report__name").click
-        end
-        self
-      end
-
       def default_report_identifier
-        "#{::AdminDashboard::Reports::CoreReportProvider::SOURCE_NAME}:#{default_report_type}"
-      end
-
-      def default_report_type
-        SeedData::AdminDashboardReports::DEFAULT_BUILTIN_REPORTS.first
+        "#{::AdminDashboard::Reports::CoreReportProvider::SOURCE_NAME}:#{SeedData::AdminDashboardReports::DEFAULT_BUILTIN_REPORTS.first}"
       end
     end
   end

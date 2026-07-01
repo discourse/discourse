@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "seed_data/admin_dashboard_sections"
-
 module PageObjects
   module Pages
     class AdminDashboard < PageObjects::Pages::Base
@@ -21,13 +19,8 @@ module PageObjects
         visit_with_query(range: "custom", start_date: from, end_date: to)
       end
 
-      def prepare_default_layout
-        SeedData::AdminDashboardSections.create
-        self
-      end
-
       def remember_current_location
-        @remembered_request_uri = current_request_uri
+        @remembered_request_uri = URI.parse(page.current_url).request_uri
         self
       end
 
@@ -215,10 +208,6 @@ module PageObjects
       end
 
       private
-
-      def current_request_uri
-        URI.parse(page.current_url).request_uri
-      end
 
       def ensure_redesigned_dashboard
         page.refresh unless has_css?(".db-main", wait: 0)
