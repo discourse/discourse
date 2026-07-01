@@ -1923,6 +1923,7 @@ content_localization:
   content_localization_crawler_param:
     default: false
     area: "localization"
+    validator: "ContentLocalizationCrawlerParamValidator"
   content_localization_use_default_locale_when_unsupported:
     default: true
     area: "localization"
