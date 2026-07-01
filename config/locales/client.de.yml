@@ -3118,6 +3118,7 @@ de:
         toggle_whisper:
           label: Flüstermodus umschalten
         create_topic:
+          label: Erstelle ein neues Thema
           desc: Erstelle ein neues Thema
         create_personal_message:
           desc: "Erstelle eine neue persönliche Nachricht"
@@ -8002,11 +8003,12 @@ de:
         silence_reason: "Grund der Stummschaltung"
         bulk_actions:
           title: "Massenaktionen"
-          admin_cant_be_deleted: "Dieser Benutzer kann nicht gelöscht werden, weil er ein Administrator ist"
-          too_many_or_old_posts: "Dieser Benutzer kann nicht gelöscht werden, da er zu viele Beiträge oder einen sehr alten Beitrag hat"
-          too_many_selected_users:
-            one: "Du hast das Limit von %{count} Benutzer für die Massenlöschung erreicht"
-            other: "Du hast das Limit von %{count} Benutzern für die Massenlöschung erreicht"
+          select_all: "Alle auswählen"
+          clear_all: "Alle löschen"
+          suspend:
+            confirmation_modal:
+              close: "Schließen"
+              confirm: "Sperren"
           delete:
             label: "Benutzer löschen …"
             confirmation_modal:
@@ -8034,6 +8036,9 @@ de:
           suspended: "Gesperrt"
           silenced: "Stummgeschaltet"
           staged: "Vorbereitet"
+        activation_filter:
+          all: "Alle Benutzer"
+          activated: "Aktiviert"
         approved: "Genehmigt?"
         titles:
           active: "Aktive Benutzer"

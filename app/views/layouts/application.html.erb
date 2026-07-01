@@ -66,7 +66,9 @@
     <%- end %>
 
     <%- unless customization_disabled? %>
-      <%= theme_js_lookup %>
+      <%- theme_js_assets.each do |asset| %>
+        <link rel="modulepreload" href="<%= asset[:url] %>" data-theme-id="<%= asset[:theme_id] %>" nonce="<%= csp_nonce_placeholder %>">
+      <%- end %>
       <%= theme_lookup("head_tag") %>
     <%- end %>
 

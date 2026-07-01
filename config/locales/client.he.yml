@@ -8382,13 +8382,12 @@ he:
         silence_reason: "סיבת השתקה"
         bulk_actions:
           title: "פעולות במרוכז"
-          admin_cant_be_deleted: "אי אפשר למחוק את המשתמש כי הוא חבר הנהלה"
-          too_many_or_old_posts: "אי אפשר למחוק את המשתמש הזה כי יש לו יותר מדי פוסטים או פוסט ותיק מאוד"
-          too_many_selected_users:
-            one: "הגעת למגבלה של משתמש למחיקה במרוכז"
-            two: "הגעת למגבלה של שני משתמשים למחיקה במרוכז"
-            many: "הגעת למגבלה של %{count} משתמשים למחיקה במרוכז"
-            other: "הגעת למגבלה של %{count} משתמשים למחיקה במרוכז"
+          select_all: "בחירה בהכול"
+          clear_all: "לפנות הכול"
+          suspend:
+            confirmation_modal:
+              close: "סגירה"
+              confirm: "השעיה"
           delete:
             label: "מחיקת משתמשים…"
             confirmation_modal:
@@ -8422,6 +8421,9 @@ he:
           suspended: "מושעים"
           silenced: "מושתק"
           staged: "מבוים"
+        activation_filter:
+          all: "כל המשתמשים"
+          activated: "מופעל"
         approved: "מאושר?"
         titles:
           active: "משתמשים פעילים"

@@ -50,6 +50,19 @@ module Migrations
           query_value(sql).to_i
         end
 
+        # Reads every row of `table`, optionally narrowed by the `where` body
+        # (nil reads the whole table). Backs the `reads_table` default in a step's
+        # source; the table name is quoted here so the SQL stays in the adapter.
+        def select_all(table, where: nil)
+          query("SELECT * FROM #{connection.quote_ident(table)}#{where_clause(where)}")
+        end
+
+        # The row count of `table`, optionally narrowed by `where`. Backs
+        # `reads_table`'s default `max_progress`.
+        def count_all(table, where: nil)
+          count("SELECT COUNT(*) FROM #{connection.quote_ident(table)}#{where_clause(where)}")
+        end
+
         def close
           @connection.finish if @connection && !@connection.finished?
           @connection = nil
@@ -95,6 +108,13 @@ module Migrations
         end
 
         private
+
+        # `" WHERE <filter>"`, or "" when there's no filter — so a missing filter
+        # reads the whole table instead of leaning on a `WHERE TRUE` that not every
+        # dialect accepts.
+        def where_clause(filter)
+          filter ? " WHERE #{filter}" : ""
+        end
 
         def connection
           if @discarded

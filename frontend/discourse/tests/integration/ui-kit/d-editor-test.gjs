@@ -4,6 +4,7 @@ import {
   click,
   fillIn,
   find,
+  findAll,
   focus,
   render,
   settled,
@@ -19,7 +20,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import formatTextWithSelection from "discourse/tests/helpers/d-editor-helper";
 import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
-import { paste, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { paste } from "discourse/tests/helpers/qunit-helpers";
 import {
   getTextareaSelection,
   setTextareaSelection,
@@ -893,7 +894,7 @@ third line`
     async function (assert) {
       this.siteSettings.rich_editor = false;
       await render(<template><DEditor /></template>);
-      const buttons = queryAll(".d-editor-button-bar .btn");
+      const buttons = findAll(".d-editor-button-bar .btn");
 
       assert
         .dom(buttons[0])
@@ -907,7 +908,7 @@ third line`
     async function (assert) {
       this.siteSettings.rich_editor = true;
       await render(<template><DEditor /></template>);
-      const buttons = queryAll(".d-editor-button-bar .btn");
+      const buttons = findAll(".d-editor-button-bar .btn");
 
       assert
         .dom(buttons[0])

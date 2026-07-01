@@ -122,12 +122,19 @@ RSpec.describe AccessControlList do
         type: :group,
         id: group.id,
         permission: "view",
-        name: group.name,
-        full_name: group.full_name,
+        display_name: group.full_name || group.name,
         target_type: "Category",
         target_id: target.id,
       )
       expect(view_entry[:metadata]).to eq({ auto_group: false })
+    end
+
+    it "falls back to the group name for display_name" do
+      group.update!(full_name: "")
+
+      entry = described_class.where(target: target, permission: "view").flattened_list.first
+
+      expect(entry[:display_name]).to eq(group.name)
     end
 
     it "emits an entry for every allowed group on an acl" do

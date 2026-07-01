@@ -411,6 +411,8 @@ fa_IR:
       composer_actions:
         create_event:
           label: "ایجاد رویداد"
+        create_topic:
+          label: "ایجاد موضوع"
       builder_modal:
         custom_fields:
           label: "فیلدهای سفارشی"

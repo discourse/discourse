@@ -66,6 +66,15 @@ module PageObjects
         Tooltips.new("site-traffic-logged-in-share-tooltip").present?(text: text)
       end
 
+      def hover_direct_traffic_tooltip
+        find("[data-trigger][data-identifier='site-traffic-direct-traffic-tooltip']").hover
+        self
+      end
+
+      def has_direct_traffic_tooltip?(text)
+        Tooltips.new("site-traffic-direct-traffic-tooltip").present?(text: text)
+      end
+
       def has_no_top_countries_card?
         has_no_top_card?("Top countries")
       end

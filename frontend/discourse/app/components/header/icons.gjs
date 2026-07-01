@@ -150,7 +150,9 @@ export default class Icons extends Component {
           {{/if}}
         {{else if (eq entry.key "language-switcher")}}
           {{#if this.showLanguageSwitcher}}
-            <LanguageSwitcher />
+            <li class="header-dropdown-toggle language-switcher">
+              <LanguageSwitcher />
+            </li>
           {{/if}}
         {{else if entry.value}}
           <entry.value />

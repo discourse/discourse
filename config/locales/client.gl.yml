@@ -3917,6 +3917,8 @@ gl:
           company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grupos"
+          locale_selector:
+            title: "Idioma"
           optional: "(opcional)"
           update: "Actualizar"
           saved: "gardado!"
@@ -4576,6 +4578,10 @@ gl:
         active: "Activado"
         status: "Estado"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Pechar"
+              confirm: "Suspender"
           delete:
             confirmation_modal:
               close: "Pechar"
@@ -4587,6 +4593,8 @@ gl:
           suspended: "Suspendido"
           silenced: "Silenciado"
           staged: "Transitorio"
+        activation_filter:
+          activated: "Activado"
         approved: "Aprobado?"
         titles:
           pending: "Usuarios pendentes de revisión"

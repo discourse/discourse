@@ -693,7 +693,6 @@ pt_BR:
       limit_exceeded_admin: "Você atingiu seu limite de créditos de IA. Tente novamente após %{reset_time}."
     errors:
       quota_exceeded: "Você ultrapassou a cota deste modelo. Tente novamente em %{relative_time}."
-      quota_required: "Você deve especificar o máximo de tokens ou usos para este modelo"
       no_query_specified: Requer parâmetro de consulta, especifique um.
       no_user_specified: Requer o parâmetro username ou user_unique_id. Insira-o.
       user_not_found: O(a) usuário(a) especificado(a) não existe. Confira o parâmetro username.

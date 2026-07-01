@@ -30,6 +30,7 @@ describe DiscourseDataExplorer::Tools::RunSql do
 
     expect(result[:status]).to eq("success")
     expect(result[:columns]).to eq(["one"])
+    expect(result[:next_action]).to include("Call submit_query with the exact same sql value")
   end
 
   it "passes the current user when validating current_user_id params" do

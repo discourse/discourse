@@ -228,11 +228,32 @@ function reconnectLoopNode(connections, loopNodeClientId, idsToRemove) {
   );
 }
 
-export function removeNodesFromGraph(nodes, connections, clientIds) {
+export function removeNodesFromGraph(
+  nodes,
+  connections,
+  clientIds,
+  { reconnect = true } = {}
+) {
   const idsToRemove = new Set(clientIds);
 
   if (idsToRemove.size === 0) {
     return { nodes, connections };
+  }
+
+  const remainingNodes = nodes.filter(
+    (node) => !idsToRemove.has(node.clientId)
+  );
+  const remainingConnections = connections.filter(
+    (connection) =>
+      !idsToRemove.has(connection.sourceClientId) &&
+      !idsToRemove.has(connection.targetClientId)
+  );
+
+  if (!reconnect) {
+    return {
+      nodes: remainingNodes,
+      connections: remainingConnections,
+    };
   }
 
   const reconnects = [];
@@ -252,15 +273,6 @@ export function removeNodesFromGraph(nodes, connections, clientIds) {
       reconnects.push(...reconnectSingleNode(connections, clientId));
     }
   }
-
-  const remainingNodes = nodes.filter(
-    (node) => !idsToRemove.has(node.clientId)
-  );
-  const remainingConnections = connections.filter(
-    (connection) =>
-      !idsToRemove.has(connection.sourceClientId) &&
-      !idsToRemove.has(connection.targetClientId)
-  );
 
   return {
     nodes: remainingNodes,

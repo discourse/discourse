@@ -3295,6 +3295,10 @@ th:
         active: "เปิดใช้งานแล้ว"
         status: "สถานะ"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "ปิด"
+              confirm: "ระงับการใช้งาน"
           delete:
             confirmation_modal:
               close: "ปิด"
@@ -3304,6 +3308,8 @@ th:
           active: "ใช้งานอยู่"
           staff: "ทีมงาน"
           suspended: "ระงับการใช้งาน"
+        activation_filter:
+          activated: "เปิดใช้งานแล้ว"
         approved: "ยืนยันหรือไม่"
         titles:
           pending: "ผู้ใช้งานที่รอการยืนยัน"

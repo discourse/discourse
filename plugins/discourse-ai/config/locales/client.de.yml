@@ -870,9 +870,7 @@ de:
             custom: "Benutzerdefiniert …"
           hours: "Stunden"
           max_tokens_help: "Maximale Anzahl von Token (Wörtern und Zeichen), die jeder Benutzer in dieser Gruppe innerhalb der angegebenen Dauer verwenden kann. Token sind die Einheiten, die von KI-Modellen zur Textverarbeitung verwendet werden – etwa 1 Token = 4 Zeichen oder 3/4 eines Wortes."
-          max_tokens_required: "Muss gesetzt werden, wenn die maximale Nutzung nicht festgelegt ist"
           max_usages_help: "Die maximale Anzahl von Benutzern in dieser Gruppe, die das KI-Modell innerhalb der angegebenen Dauer nutzen können. Dieses Kontingent wird für jeden einzelnen Nutzer verfolgt und nicht für die ganze Gruppe."
-          max_usages_required: "Muss gesetzt werden, wenn die maximale Anzahl an Tokens nicht gesetzt ist"
         credit_allocation:
           credits_remaining: "Verbleibendes Guthaben: %{remaining} von %{total} (%{percentage} %)"
           soft_limit_warning: "Für dieses Modell sind heute noch %{percentage} % des KI-Guthabens übrig."

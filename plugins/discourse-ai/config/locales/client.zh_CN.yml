@@ -306,6 +306,7 @@ zh_CN:
             related_topics: "相关话题"
             semantic_search: "语义搜索"
         admin_dashboard:
+          highlights: "高亮显示"
           setting_groups:
             settings: "基本设置"
         discord:
@@ -869,9 +870,7 @@ zh_CN:
             custom: "自定义…"
           hours: "小时"
           max_tokens_help: "此群组中每个用户在指定时长内可以使用的最大词元（单词和字符）数。词元是 AI 模型处理文本时使用的单位，1 个词元约等于 4 个字符或 3/4 个单词。"
-          max_tokens_required: "如果未设置最大使用量，则必须设置"
           max_usages_help: "此群组中每个用户在指定时长内可以使用 AI 模型的最大次数。此配额按个别用户进行跟踪，不在整个群组中共享。"
-          max_usages_required: "如果未设置最大词元数，则必须设置"
         credit_allocation:
           credits_remaining: "剩余 %{remaining}/%{total} 点数 (%{percentage}%)"
           soft_limit_warning: "此模型今天剩余 %{percentage}% 的 AI 点数"

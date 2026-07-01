@@ -113,4 +113,4 @@ Ref: [discourse/icon-library.js at main · discourse/discourse (github.com)](htt
 
 ---
 
-Feel free to create other themes component and share it in our #theme-component category!
+Feel free to create other themes component and share it in our #customization:theme-component category!

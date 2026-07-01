@@ -3,7 +3,6 @@ import CategoryListControl from "discourse/components/setting-field/category-lis
 import CompactListControl from "discourse/components/setting-field/compact-list";
 import DurationControl from "discourse/components/setting-field/duration";
 import GroupListControl from "discourse/components/setting-field/group-list";
-import StringControl from "discourse/components/setting-field/string";
 import {
   resolveSettingFieldType,
   settingFieldValidation,
@@ -26,12 +25,17 @@ module("Unit | Lib | setting-field-registry", function () {
       );
     });
 
-    test("falls back to the string control for unknown/missing types", function (assert) {
+    test("falls back to the default text input for unknown/missing types", function (assert) {
       assert.strictEqual(
-        resolveSettingFieldType({ type: "not_a_real_type" }).renderer,
-        StringControl
+        resolveSettingFieldType({ type: "not_a_real_type" }).type,
+        "input"
       );
-      assert.strictEqual(resolveSettingFieldType({}).renderer, StringControl);
+      assert.strictEqual(resolveSettingFieldType({}).type, "input");
+      assert.strictEqual(
+        resolveSettingFieldType({}).renderer,
+        undefined,
+        "the default entry has no custom renderer; the field renders a bare control"
+      );
     });
 
     test("matches a registered subtype before the base type", function (assert) {

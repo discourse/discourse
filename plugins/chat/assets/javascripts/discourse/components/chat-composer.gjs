@@ -35,7 +35,6 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
-import { optionalRequire } from "discourse/lib/utilities";
 import virtualElementFromTextRange from "discourse/lib/virtual-element-from-text-range";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
@@ -53,6 +52,9 @@ import ChatReplyingIndicator from "discourse/plugins/chat/discourse/components/c
 import { chatComposerButtons } from "discourse/plugins/chat/discourse/lib/chat-composer-buttons";
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import TextareaInteractor from "discourse/plugins/chat/discourse/lib/textarea-interactor";
+import LocalDatesCreateModal from "discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create" with {
+  discourseImport: "optional",
+};
 
 const CHAT_PRESENCE_KEEP_ALIVE = 5 * 1000; // 5 seconds
 
@@ -217,10 +219,6 @@ export default class ChatComposer extends Component {
 
   @action
   insertDiscourseLocalDate() {
-    const LocalDatesCreateModal = optionalRequire(
-      "discourse/plugins/discourse-local-dates/discourse/components/modal/local-dates-create"
-    );
-
     this.modal.show(LocalDatesCreateModal, {
       model: {
         insertDate: (markup) => {

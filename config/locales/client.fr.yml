@@ -7273,11 +7273,12 @@ fr:
         silence_reason: "Raison de la mise en sourdine"
         bulk_actions:
           title: "Actions groupées"
-          admin_cant_be_deleted: "Cet utilisateur ne peut pas être supprimé, car il est administrateur"
-          too_many_or_old_posts: "Cet utilisateur ne peut pas être supprimé, car il a trop de publications ou une publication très ancienne"
-          too_many_selected_users:
-            one: "Vous avez atteint la limite de %{count} utilisateur pour la suppression groupée"
-            other: "Vous avez atteint la limite de %{count} utilisateurs pour la suppression groupée"
+          select_all: "Tout sélectionner"
+          clear_all: "Tout effacer"
+          suspend:
+            confirmation_modal:
+              close: "Fermer"
+              confirm: "Suspendre"
           delete:
             label: "Supprimer les utilisateurs…"
             confirmation_modal:
@@ -7305,6 +7306,9 @@ fr:
           suspended: "Suspendus"
           silenced: "En sourdine"
           staged: "Distants"
+        activation_filter:
+          all: "Tous les utilisateurs"
+          activated: "Activé"
         approved: "Approuvé ?"
         titles:
           active: "Utilisateurs actifs"

@@ -2487,7 +2487,6 @@ tr_TR:
     floating_dismiss_topics_on_mobile: "Daha kolay erişim ve konu listesinin üst kısmında yer açmak için mobil cihazlarda konu listesi üzerinde yüzen bir “Kapat...” düğmesi gösterir."
     enable_simplified_category_creation: "Daha az seçenek ve daha temiz bir arayüz ile basitleştirilmiş kategori oluşturma akışını etkinleştirir."
     modernize_foundation_theme: "Bu değişiklik, Discourse'daki Foundation temasına tasarım değişiklikleri getiriyor."
-    reporting_improvements: "Discourse'un yönetici raporlarının gezinme, tasarım ve kullanılabilirlik özelliklerinde iyileştirmeler."
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değeri girin."
       invalid_datetime: "Geçersiz tarih ve saat biçimi. Lütfen geçerli bir tarih ve saat girdiğinizden emin olun."

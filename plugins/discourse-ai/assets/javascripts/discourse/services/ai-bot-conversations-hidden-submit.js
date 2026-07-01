@@ -69,16 +69,12 @@ export default class AiBotConversationsHiddenSubmit extends Service {
     }
 
     try {
-      const response = await ajax("/posts.json", {
+      const response = await ajax("/discourse-ai/ai-bot/conversations.json", {
         method: "POST",
         data: {
           raw: rawContent,
-          title,
-          archetype: "private_message",
-          target_recipients: this.targetUsername,
-          meta_data: {
-            ai_agent_id: this.agentId,
-          },
+          target_username: this.targetUsername,
+          ai_agent_id: this.agentId,
         },
       });
 

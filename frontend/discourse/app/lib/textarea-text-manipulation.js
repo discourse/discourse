@@ -629,7 +629,7 @@ export default class TextareaTextManipulation {
 
     if (shouldAutocomplete) {
       let autocompletePrefix = `${indentationLevel}${newPrefix}`;
-      let autocompletePostfix = text.substring(offset);
+      let autocompletePostfix;
       const autocompletePrefixLength = autocompletePrefix.length;
       let scrollPosition;
 

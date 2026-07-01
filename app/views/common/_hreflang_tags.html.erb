@@ -1,4 +1,4 @@
-<% if SiteSetting.content_localization_enabled && SiteSetting.content_localization_crawler_param %>
+<% if ContentLocalization.crawler_locale_param_enabled? %>
   <% locales = SiteSetting.content_localization_supported_locales&.split('|') || [] %>
   <% if locales.any? %>
     <% current_path = request.path %>

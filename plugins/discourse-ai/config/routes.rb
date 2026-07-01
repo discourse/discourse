@@ -46,6 +46,7 @@ DiscourseAi::Engine.routes.draw do
 
   scope module: :ai_bot, path: "/ai-bot/conversations" do
     get "/" => "conversations#index"
+    post "/" => "conversations#create"
     put "/:topic_id/starred" => "conversations#update_starred"
   end
 

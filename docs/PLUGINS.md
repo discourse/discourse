@@ -1,7 +1,7 @@
 
 ## List of Discourse Plugins
 
-If you just want to get some plugins for your Discourse instance, check out [the plugin category](https://meta.discourse.org/c/plugin) at meta. This is the most up to date place for plugin discussion and listing.
+If you just want to get some plugins for your Discourse instance, check out [the plugin category](https://meta.discourse.org/c/customization/plugin) at meta. This is the most up to date place for plugin discussion and listing.
 
 If you want to be safe, use only plugins on this list of [Official Plugins](https://github.com/discourse/discourse/blob/main/lib/plugin/metadata.rb): 
 

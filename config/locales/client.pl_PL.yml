@@ -6926,7 +6926,7 @@ pl_PL:
               title: "Wygenerowany podgląd obrazu OG"
               description: "Podgląd automatycznie generowanych obrazów OpenGraph dla tematów bez obrazów. Wprowadź identyfikator tematu, aby przetestować."
               generate: "Generuj"
-              topic_id_label: "ID tematu"
+              topic_id_label: "Identyfikator tematu"
               topic_id_placeholder: "np. 123"
               placeholder: "Wprowadź identyfikator tematu i kliknij Generuj, aby wyświetlić podgląd."
               error: "Nie udało się wygenerować podglądu. Sprawdź identyfikator tematu i spróbuj ponownie."
@@ -7559,6 +7559,9 @@ pl_PL:
             logged_in_share:
               label: "Udział zalogowanych"
               tooltip: "Udział wyświetleń stron pochodzących od zalogowanych członków."
+            direct_traffic:
+              label: "Ruch bezpośredni"
+              tooltip: "Udział wyświetleń stron pochodzących bezpośrednio z Twojej społeczności, np. po wpisaniu adresu URL lub użyciu zakładki przeglądarki."
           top_countries:
             title: "Najpopularniejsze kraje"
             empty: "Brak danych krajowych dla tego okresu."
@@ -9263,15 +9266,39 @@ pl_PL:
         show_emails: "Pokaż e-maile"
         hide_emails: "Ukryj e-maile"
         silence_reason: "Powód wyciszenia"
+        suspend_reason: "Powód zawieszenia"
         bulk_actions:
           title: "Działania zbiorcze"
-          admin_cant_be_deleted: "Ten użytkownik nie może zostać usunięty, ponieważ jest administratorem"
-          too_many_or_old_posts: "Ten użytkownik nie może zostać usunięty, ma zbyt wiele postów lub bardzo stary post"
+          select_all: "Zaznacz wszystkie"
+          clear_all: "Wyczyść wszystkie"
+          staff_cant_be_actioned: "Tego użytkownika nie można usunąć ani zawiesić, ponieważ jest członkiem personelu"
+          no_users_can_be_deleted: "Żadnego z wybranych użytkowników nie można usunąć."
+          no_users_can_be_suspended: "Żadnego z wybranych użytkowników nie można zawiesić."
           too_many_selected_users:
-            one: "Osiągnięto limit %{count} użytkownika w przypadku usuwania zbiorczego"
-            few: "Osiągnięto limit %{count} użytkowników w przypadku usuwania zbiorczego"
-            many: "Osiągnięto limit %{count} użytkowników w przypadku usuwania zbiorczego"
-            other: "Osiągnięto limit %{count} użytkowników w przypadku usuwania zbiorczego"
+            one: "Osiągnięto limit %{count} użytkownika dla działań zbiorczych"
+            few: "Osiągnięto limit %{count} użytkowników dla działań zbiorczych"
+            many: "Osiągnięto limit %{count} użytkowników dla działań zbiorczych"
+            other: "Osiągnięto limit %{count} użytkowników dla działań zbiorczych"
+          suspend:
+            label: "Zawieś użytkowników…"
+            confirmation_modal:
+              prompt_text:
+                one: "Zamierzasz zawiesić %{count} użytkownika. Ustaw poniżej czas trwania i powód zawieszenia:"
+                few: "Zamierzasz zawiesić %{count} użytkowników. Ustaw poniżej czas trwania i powód zawieszenia:"
+                many: "Zamierzasz zawiesić %{count} użytkowników. Ustaw poniżej czas trwania i powód zawieszenia:"
+                other: "Zamierzasz zawiesić %{count} użytkowników. Ustaw poniżej czas trwania i powód zawieszenia:"
+              close: "Zamknij"
+              confirm: "Zawieś"
+              title:
+                one: "Zawieś %{count} użytkownika"
+                few: "Zawieś %{count} użytkowników"
+                many: "Zawieś %{count} użytkowników"
+                other: "Zawieś %{count} użytkowników"
+              bulk_suspend_starting: "Rozpoczęcie zawieszenia zbiorczego…"
+              user_suspend_succeeded: "[%{position}/%{total}] Pomyślnie zawieszono @%{username}"
+              user_suspend_failed: "[%{position}/%{total}] Nie udało się zawiesić @%{username} - %{error}"
+              bulk_suspend_finished: "Operacja zawieszenia zbiorczego została ukończona."
+              failed_to_suspend_users: "Następujących użytkowników nie udało się zawiesić:"
           delete:
             label: "Usuń użytkowników…"
             confirmation_modal:
@@ -9305,6 +9332,11 @@ pl_PL:
           suspended: "Zawieszeni"
           silenced: "Wyciszeni"
           staged: "Etapowi"
+        activation_filter:
+          label: "Status aktywacji"
+          all: "Wszyscy użytkownicy"
+          activated: "Aktywowane"
+          not_activated: "Nie aktywowano"
         approved: "Zatwierdzony?"
         titles:
           active: "Aktywni użytkownicy"

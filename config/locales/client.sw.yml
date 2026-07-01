@@ -3245,6 +3245,10 @@ sw:
         not_found: "Samahani, jina la mtumiaji halipo kwenye mfupo wetu."
         id_not_found: "Samahani, utambulisho wa mtumiaji haupo kwenye mfumo wetu."
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Funga"
+              confirm: "Sitisha"
           delete:
             confirmation_modal:
               close: "Funga"

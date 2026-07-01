@@ -4,26 +4,7 @@ module Migrations
   module Converters
     module Discourse
       class TopicAllowedUsers < Conversion::ProgressStep
-        source do
-          attr_accessor :source_db
-
-          def max_progress
-            @source_db.count <<~SQL
-              SELECT COUNT(*)
-              FROM topic_allowed_users
-              WHERE user_id > 0
-            SQL
-          end
-
-          def items
-            @source_db.query <<~SQL
-              SELECT *
-              FROM topic_allowed_users
-              WHERE user_id > 0
-              ORDER BY topic_id, user_id
-            SQL
-          end
-        end
+        source { reads_table "topic_allowed_users", where: "user_id > 0" }
 
         processor do
           def process(item)

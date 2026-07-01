@@ -195,6 +195,7 @@ branding:
   generate_topic_og_image:
     default: false
     client: true
+    hidden: true
   opengraph_image:
     default: ""
     client: true
@@ -628,6 +629,13 @@ basic:
     min: 1
     max: 20000
     hidden: true
+  browser_pageview_max_engaged_seconds:
+    default: 1800
+    type: integer
+    min: 1
+    max: 86400
+    hidden: true
+    client: true
   experimental_detect_crawler_pageviews:
     default: false
     hidden: true
@@ -1660,7 +1668,7 @@ posting:
     hidden: true
     area: "gifs"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/404829"
   klipy_api_key:
@@ -1915,6 +1923,7 @@ content_localization:
   content_localization_crawler_param:
     default: false
     area: "localization"
+    validator: "ContentLocalizationCrawlerParamValidator"
   content_localization_use_default_locale_when_unsupported:
     default: true
     area: "localization"
@@ -2048,7 +2057,7 @@ email:
     client: true
     hidden: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       allow_enabled_for:
         - everyone
@@ -2189,6 +2198,10 @@ email:
   sendgrid_verification_key:
     default: ""
     secret: true
+  aws_sns_topic_arn_allowlist:
+    default: ""
+    type: list
+    list_type: simple
   mailjet_webhook_token:
     default: ""
     secret: true
@@ -4463,19 +4476,6 @@ dashboard:
     client: true
 
 experimental:
-  reporting_improvements:
-    default: false
-    client: true
-    hidden: true
-    area: "experimental"
-    upcoming_change:
-      status: "beta"
-      impact: "feature,staff"
-      learn_more_url: "https://meta.discourse.org/t/-/395768"
-      allow_enabled_for:
-        - staff
-        - specific_groups
-      body_class: true
   enable_auto_grid_images:
     default: true
     client: true

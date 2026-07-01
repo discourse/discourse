@@ -47,6 +47,9 @@ register_svg_icon "user-plus"
 register_svg_icon "grip-vertical"
 register_svg_icon "paragraph"
 register_svg_icon "arrow-down-a-z"
+register_svg_icon "copy"
+register_svg_icon "paste"
+register_svg_icon "scissors"
 
 add_admin_route "discourse_workflows.admin.title", "discourse-workflows", use_new_show_route: true
 

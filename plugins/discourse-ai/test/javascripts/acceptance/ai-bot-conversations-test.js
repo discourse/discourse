@@ -5,7 +5,7 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 const INPUT = "#ai-bot-conversations-input";
 
 acceptance("AI Bot - Conversations IME handling", function (needs) {
-  let postRequests = 0;
+  let conversationRequests = 0;
 
   needs.user({
     ai_enabled_agents: [],
@@ -33,8 +33,8 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
       })
     );
 
-    server.post("/posts.json", () => {
-      postRequests += 1;
+    server.post("/discourse-ai/ai-bot/conversations.json", () => {
+      conversationRequests += 1;
       return helper.response({
         id: 1,
         topic_id: 1,
@@ -46,7 +46,7 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
     server.get("/t/:slug/:id.json", () => helper.response({}));
   });
 
-  needs.hooks.beforeEach(() => (postRequests = 0));
+  needs.hooks.beforeEach(() => (conversationRequests = 0));
 
   async function prepareDraft() {
     await visit("/discourse-ai/ai-bot/conversations");
@@ -59,7 +59,7 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
     await triggerEvent(INPUT, "keydown", { key: "Enter" });
     await triggerEvent(INPUT, "beforeinput", { inputType: "insertLineBreak" });
 
-    assert.strictEqual(postRequests, 1, "submitted once");
+    assert.strictEqual(conversationRequests, 1, "submitted once");
   });
 
   test("Shift+Enter does not submit", async function (assert) {
@@ -68,7 +68,7 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
     await triggerEvent(INPUT, "keydown", { key: "Enter", shiftKey: true });
     await triggerEvent(INPUT, "beforeinput", { inputType: "insertLineBreak" });
 
-    assert.strictEqual(postRequests, 0, "did not submit");
+    assert.strictEqual(conversationRequests, 0, "did not submit");
   });
 
   test("IME-confirming Enter does not submit", async function (assert) {
@@ -79,6 +79,6 @@ acceptance("AI Bot - Conversations IME handling", function (needs) {
       inputType: "insertCompositionText",
     });
 
-    assert.strictEqual(postRequests, 0, "did not submit");
+    assert.strictEqual(conversationRequests, 0, "did not submit");
   });
 });

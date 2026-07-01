@@ -581,7 +581,6 @@ fi:
       removed: "poistettu"
     errors:
       quota_exceeded: "Olet ylittänyt tämän mallin kiintiön. Odota %{relative_time} ja yritä sitten uudelleen."
-      quota_required: "Sinun on määritettävä tälle mallille saneiden tai käyttökertojen enimmäismäärä"
       no_query_specified: Kyselyparametri on pakollinen, määritä se.
       no_user_specified: Parametri username tai user_unique_id vaaditaan, määritä se.
       user_not_found: Määritettyä käyttäjää ei ole olemassa. Tarkista username-parametri.

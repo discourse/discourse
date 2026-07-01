@@ -6165,6 +6165,7 @@ ur:
         not_found_error: معذرت، یہ رپورٹ موجود نہیں
         custom_date_range: حسبِ ضرورت تاریخ کی حد
         loading: "ڈیش بورڈ کو ترتیب دیا جا رہا ہے…"
+        stable: "مستحکم"
         sections:
           highlights:
             title: "نمایاں نکات"
@@ -6220,6 +6221,7 @@ ur:
                 title: "نئے ارکان شامل ہو رہے ہیں، لیکن وہ ٹھہر نہیں رہے۔"
               metrics:
                 new_signups: "نئے جڑنے والے"
+                daily_engaged_users: "روزانہ کی شراکت"
           search:
             title: "تلاش کریں"
             count_headline:
@@ -6826,6 +6828,8 @@ ur:
             order: "ترتیب لگائیں"
             initial_members: "مزید اراکین"
             show_description: "بشمول تفصیل"
+          locale_selector:
+            title: "زبان"
           optional: "(اختیاری)"
           update: "اپ ڈیٹ"
           toasts:
@@ -7664,8 +7668,12 @@ ur:
         status: "حیثیت"
         show_emails: "ای میلیں دکھائیں"
         bulk_actions:
-          admin_cant_be_deleted: "اس صارف کو حذف نہیں کیا جا سکتا کیونکہ وہ ایک منتظم ہیں۔"
-          too_many_or_old_posts: "اس صارف کو حذف نہیں کیا جا سکتا کیونکہ اس کے بہت زیادہ دھاگے ہیں یا اس کی ایک بہت پرانا دھاگہ ہے۔"
+          select_all: "سبھی منتخب کریں"
+          clear_all: "سبھی ہٹا دیں"
+          suspend:
+            confirmation_modal:
+              close: "بند کریں"
+              confirm: "معطل کریں"
           delete:
             label: "حذف اراکین…"
             confirmation_modal:
@@ -7678,6 +7686,9 @@ ur:
           suspended: "معطل کردہ"
           silenced: "خاموش"
           staged: "عارضی"
+        activation_filter:
+          all: "تمام اراکین"
+          activated: "فعال"
         approved: "منظورشدہ؟"
         titles:
           active: "فعال اراکین"

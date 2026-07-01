@@ -22,23 +22,27 @@ describe "Admin Reports" do
     end
   end
 
-  context "with legacy reports" do
-    before { SiteSetting.reporting_improvements = true }
-    it "does not list bookmarks on the index page but allows direct access with a warning" do
-      visit "/admin/reports"
+  it "groups reports under headings, hides legacy reports from the index, and warns on direct access" do
+    visit "/admin/reports"
 
-      expect(page).to have_no_css(
-        ".admin-section-landing-item__title",
-        text: I18n.t("reports.bookmarks.title"),
-      )
-
-      visit "/admin/reports/bookmarks"
-
-      expect(page).to have_css(".admin-report")
+    within(".admin-reports-group", text: "Engagement") do
       expect(page).to have_css(
-        ".alert.alert-info",
-        text: I18n.t("admin_js.admin.reports.legacy_warning"),
+        ".admin-section-landing-item__title",
+        text: I18n.t("reports.signups.title"),
       )
     end
+    expect(page).to have_css(".admin-reports-group__title", text: "Traffic")
+    expect(page).to have_no_css(
+      ".admin-section-landing-item__title",
+      text: I18n.t("reports.bookmarks.title"),
+    )
+
+    visit "/admin/reports/bookmarks"
+
+    expect(page).to have_css(".admin-report")
+    expect(page).to have_css(
+      ".alert.alert-info",
+      text: I18n.t("admin_js.admin.reports.legacy_warning"),
+    )
   end
 end

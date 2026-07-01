@@ -77,6 +77,8 @@ ur:
           reset: "رِی سَیٹ"
         search:
           name: "تلاش کریں"
+        admin_dashboard:
+          highlights: "نمایاں نکات"
         ai_helper:
           setting_groups:
             automation: "آٹومیشن"
