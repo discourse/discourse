@@ -5,9 +5,12 @@ import DurationControl from "discourse/components/setting-field/duration";
 import EnumControl from "discourse/components/setting-field/enum";
 import GroupListControl from "discourse/components/setting-field/group-list";
 import IntegerControl from "discourse/components/setting-field/integer";
-import StringControl from "discourse/components/setting-field/string";
+import RadioGroupControl from "discourse/components/setting-field/radio-group";
 
 const REGISTRY = {};
+
+const ROW = { format: "large", labelFormat: "full" };
+const INLINE = { format: "full" };
 
 export function registerSettingFieldType(type, entry) {
   REGISTRY[type] = entry;
@@ -48,56 +51,49 @@ function typeKeyFor({ type, subtype, list_type }) {
   return "default";
 }
 
+registerSettingFieldType("default", { ...ROW, type: "input" });
+registerSettingFieldType("textarea", { ...ROW, type: "textarea" });
+registerSettingFieldType("email", { ...ROW, type: "input-email" });
+registerSettingFieldType("date", { ...ROW, type: "input-date" });
+registerSettingFieldType("password", { ...ROW, type: "password" });
+registerSettingFieldType("radio-group", {
+  ...ROW,
+  type: "radio-group",
+  renderer: RadioGroupControl,
+});
+registerSettingFieldType("enum", {
+  ...ROW,
+  type: "select",
+  renderer: EnumControl,
+});
+registerSettingFieldType("group_list", {
+  ...ROW,
+  type: "custom",
+  renderer: GroupListControl,
+});
+registerSettingFieldType("category_list", {
+  ...ROW,
+  type: "custom",
+  renderer: CategoryListControl,
+});
+registerSettingFieldType("compact_list", {
+  ...ROW,
+  type: "custom",
+  renderer: CompactListControl,
+});
 registerSettingFieldType("bool", {
+  ...INLINE,
   type: "checkbox",
-  format: "full",
   includeDescription: false,
   renderer: BoolControl,
 });
-
 registerSettingFieldType("integer", {
+  ...INLINE,
   type: "input-number",
-  format: "full",
   renderer: IntegerControl,
 });
-
-registerSettingFieldType("enum", {
-  type: "select",
-  format: "large",
-  labelFormat: "full",
-  renderer: EnumControl,
-});
-
-registerSettingFieldType("group_list", {
-  type: "custom",
-  format: "large",
-  labelFormat: "full",
-  renderer: GroupListControl,
-});
-
-registerSettingFieldType("category_list", {
-  type: "custom",
-  format: "large",
-  labelFormat: "full",
-  renderer: CategoryListControl,
-});
-
-registerSettingFieldType("compact_list", {
-  type: "custom",
-  format: "large",
-  labelFormat: "full",
-  renderer: CompactListControl,
-});
-
 registerSettingFieldType("duration", {
+  ...INLINE,
   type: "custom",
-  format: "full",
   renderer: DurationControl,
-});
-
-registerSettingFieldType("default", {
-  type: "input",
-  format: "large",
-  labelFormat: "full",
-  renderer: StringControl,
 });
