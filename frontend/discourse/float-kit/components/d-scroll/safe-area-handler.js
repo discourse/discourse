@@ -1,13 +1,6 @@
 import { action } from "@ember/object";
 import { getScrollBehavior } from "discourse/lib/utilities";
 
-/**
- * Wait for scroll to settle before calling callback.
- *
- * @param {HTMLElement} element - The scroll container
- * @param {Function} callback - Called when scroll settles
- * @param {number} timeout - Timeout in ms (default 300)
- */
 export function waitForScrollEnd(element, callback, timeout = 300) {
   let timeoutId;
   let lastScrollTop = element.scrollTop;
@@ -33,52 +26,23 @@ export function waitForScrollEnd(element, callback, timeout = 300) {
   element.addEventListener("scroll", onScroll);
 }
 
-/**
- * SafeAreaHandler - Manages safe area spacers for DScroll.View.
- *
- * Adjusts spacer heights based on visual viewport changes, handles keyboard
- * appearing/disappearing by growing spacers. Only active when axis is "y"
- * and safeArea is not "none".
- *
- * @class SafeAreaHandler
- */
 export default class SafeAreaHandler {
-  /** @type {number} */
   previousStartHeight = 0;
-
-  /** @type {number} */
   previousEndHeight = 0;
-
-  /** @type {number|null} */
   updateTimeout = null;
-
-  /** @type {number|null} */
   readdListenerTimeout = null;
-
-  /** @type {number|null} */
   fallbackUpdateTimeout = null;
 
-  /**
-   * @param {DScrollView} view - The View component instance
-   */
   constructor(view) {
     this.view = view;
   }
 
-  /**
-   * Whether safeArea handling is needed.
-   *
-   * @returns {boolean}
-   */
   get isNeeded() {
     const axis = this.view.args.axis ?? "y";
     const safeArea = this.view.args.safeArea ?? "visual-viewport";
     return axis === "y" && safeArea !== "none";
   }
 
-  /**
-   * Set up safeArea handlers for visual viewport changes.
-   */
   setup() {
     if (!this.isNeeded || !window.visualViewport) {
       return;
@@ -97,17 +61,11 @@ export default class SafeAreaHandler {
     this.update();
   }
 
-  /**
-   * Scroll handler for updates.
-   */
   @action
   handleScroll() {
     this.update();
   }
 
-  /**
-   * Resize handler with scroll listener coordination.
-   */
   @action
   handleResize() {
     const viewElement = this.view.viewElement;
@@ -144,9 +102,6 @@ export default class SafeAreaHandler {
     }, 350);
   }
 
-  /**
-   * Clean up safeArea handlers.
-   */
   cleanup() {
     const viewElement = this.view.viewElement;
 
@@ -173,11 +128,6 @@ export default class SafeAreaHandler {
     this.fallbackUpdateTimeout = null;
   }
 
-  /**
-   * Get view bounds with border adjustment.
-   *
-   * @returns {{ top: number, bottom: number }}
-   */
   getViewBoundsWithBorder() {
     const viewElement = this.view.viewElement;
     if (!viewElement) {
@@ -193,11 +143,6 @@ export default class SafeAreaHandler {
     };
   }
 
-  /**
-   * Get visual viewport bounds.
-   *
-   * @returns {{ top: number, bottom: number }}
-   */
   getVisualViewportBounds() {
     const visualViewport = window.visualViewport;
     if (!visualViewport) {
@@ -211,15 +156,6 @@ export default class SafeAreaHandler {
     };
   }
 
-  /**
-   * Update safeArea spacer heights based on visual viewport.
-   *
-   * @param {Object} options
-   * @param {boolean} options.scrollIntoPlace - Whether to scroll to keep content in place (default: true)
-   * @param {string} options.scrollBehavior - Scroll behavior: "instant" or "smooth" (default: platform-aware)
-   * @param {string} options.safeArea - Override safeArea setting: "none", "layout-viewport", or "visual-viewport"
-   * @returns {{ spacersHeightSetter: Function, verticalScrollOffsetRequired: number } | undefined}
-   */
   update({
     scrollIntoPlace = true,
     scrollBehavior = getScrollBehavior(),

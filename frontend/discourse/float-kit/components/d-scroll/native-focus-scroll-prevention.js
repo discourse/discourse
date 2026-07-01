@@ -11,32 +11,14 @@ import {
 } from "./focus-scroll-utils";
 import isTextInput from "./is-text-input";
 
-/**
- * Global state for native focus scroll prevention.
- */
 const globalState = {
-  /** @type {Set<string>} - IDs of registered preventers */
   preventers: new Set(),
-  /** @type {Function|null} - Cleanup function for global listeners */
   cleanup: null,
-  /** @type {number} - Counter for generating unique IDs */
   idCounter: 0,
 };
-
-/**
- * Generate a unique ID for a preventer instance.
- *
- * @returns {string}
- */
 function generatePreventerId() {
   return `d-scroll-focus-prevention-${++globalState.idCounter}`;
 }
-
-/**
- * Set up global document listeners for focus scroll prevention.
- *
- * @returns {Function} Cleanup function
- */
 function setupGlobalListeners() {
   const handleTouchStart = (event) => {
     const target = event.target;
@@ -154,33 +136,16 @@ function setupGlobalListeners() {
     document.removeEventListener("focusin", handleFocusIn);
   };
 }
-
-/**
- * Register a scroll container for focus scroll prevention.
- *
- * @returns {string} The preventer ID for unregistering
- */
 function registerPreventer() {
   const id = generatePreventerId();
   globalState.preventers.add(id);
   processPreventersChanges();
   return id;
 }
-
-/**
- * Unregister a scroll container from focus scroll prevention.
- *
- * @param {string} id - The preventer ID to remove
- */
 function unregisterPreventer(id) {
   globalState.preventers.delete(id);
   processPreventersChanges();
 }
-
-/**
- * Process changes to the preventers list.
- * Sets up or tears down global listeners based on whether any preventers are registered.
- */
 function processPreventersChanges() {
   if (!capabilities.isWebKit || !capabilities.isAppleMobile) {
     return;
@@ -200,16 +165,6 @@ function processPreventersChanges() {
   }
 }
 
-/**
- * Modifier to prevent the browser's native scroll-into-view behavior
- * when text inputs receive focus inside a scroll container.
- *
- * On WebKit iOS/iPadOS: Uses clone technique for certain inputs.
- * Uses global document-level event listeners (singleton pattern).
- *
- * @param {HTMLElement} scrollContainer - The scroll container element
- * @param {boolean} enabled - Whether prevention is enabled
- */
 export default modifier((scrollContainer, [enabled]) => {
   if (!enabled) {
     return;

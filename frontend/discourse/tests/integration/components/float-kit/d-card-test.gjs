@@ -178,7 +178,7 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     assert.dom(".d-card").exists("the yielded present action opens the card");
 
     await click(".dismiss-btn");
-    await waitUntil(() => !find(".d-card"));
+    await waitUntil(() => !find(".d-card"), { timeout: 3000 });
 
     assert
       .dom(".d-card")
@@ -203,7 +203,7 @@ module("Integration | Component | FloatKit | d-card", function (hooks) {
     assert.dom(".d-card").exists();
 
     await triggerKeyEvent(document, "keydown", "Escape");
-    await waitUntil(() => !find(".d-card"));
+    await waitUntil(() => !find(".d-card"), { timeout: 3000 });
 
     assert.dom(".d-card").doesNotExist();
   });

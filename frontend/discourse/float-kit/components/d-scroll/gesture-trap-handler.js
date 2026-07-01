@@ -2,58 +2,20 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { isKeyboardVisible } from "discourse/lib/utilities";
 
-/**
- * GestureTrapHandler - Manages scroll gesture trap via IntersectionObserver for DScroll.View.
- *
- * Uses IntersectionObserver to detect when at scroll boundaries and controls
- * overscroll-behavior based on position and configuration. Only needed when
- * trap values differ between start and end.
- *
- * @class GestureTrapHandler
- */
 export default class GestureTrapHandler {
-  /** @type {boolean} */
   @tracked xTrap = false;
-
-  /** @type {boolean} */
   @tracked yTrap = false;
-
-  /** @type {boolean} */
   @tracked keyboardVisible = false;
-
-  /**
-   * Internal flag tracking if scroll is at start boundary.
-   * @type {boolean}
-   */
   isAtStart = true;
-
-  /**
-   * Internal flag tracking if scroll is at end boundary.
-   * @type {boolean}
-   */
   isAtEnd = true;
-
-  /** @type {HTMLElement|null} */
   startSpyElement = null;
-
-  /** @type {HTMLElement|null} */
   endSpyElement = null;
-
-  /** @type {IntersectionObserver|null} */
   observer = null;
 
-  /**
-   * @param {DScrollView} view - The View component instance
-   */
   constructor(view) {
     this.view = view;
   }
 
-  /**
-   * Get effective trap value (scrollGestureOvershoot false forces trap to true).
-   *
-   * @returns {boolean|Object}
-   */
   get effectiveTrap() {
     if (this.view.args.scrollGestureOvershoot === false) {
       return true;
@@ -61,23 +23,11 @@ export default class GestureTrapHandler {
     return this.view.args.scrollGestureTrap ?? false;
   }
 
-  /**
-   * Whether we need the IntersectionObserver for dynamic trap state.
-   *
-   * @returns {boolean}
-   */
   get needsObserver() {
     const values = this.normalizedTrapValues;
     return values.xStart !== values.xEnd || values.yStart !== values.yEnd;
   }
 
-  /**
-   * Parse scrollGestureTrap config for specific edge.
-   *
-   * @param {string} edge - The edge to check (xStart, xEnd, yStart, yEnd)
-   * @param {string} axisKey - The axis key (x or y)
-   * @returns {boolean}
-   */
   getTrapValue(edge, axisKey) {
     const trap = this.effectiveTrap;
 
@@ -97,11 +47,6 @@ export default class GestureTrapHandler {
     return false;
   }
 
-  /**
-   * Get normalized trap values with non-scroll axis normalization.
-   *
-   * @returns {{ xStart: boolean, xEnd: boolean, yStart: boolean, yEnd: boolean }}
-   */
   get normalizedTrapValues() {
     const xStart = this.getTrapValue("xStart", "x");
     const xEnd = this.getTrapValue("xEnd", "x");
@@ -119,32 +64,15 @@ export default class GestureTrapHandler {
     }
   }
 
-  /**
-   * Whether swipe trap is incapable (pageScroll enabled).
-   *
-   * @returns {boolean}
-   */
   get swipeTrapIncapable() {
     return this.view.args.pageScroll ?? false;
   }
 
-  /**
-   * Get the current trap state for the scroll axis.
-   *
-   * @returns {boolean}
-   */
   get currentTrap() {
     const axis = this.view.args.axis ?? "y";
     return axis === "y" ? this.yTrap : this.xTrap;
   }
 
-  /**
-   * Handle IntersectionObserver entries.
-   *
-   * @param {string} axis - The scroll axis
-   * @param {Object} values - Normalized trap values
-   * @param {IntersectionObserverEntry[]} entries - Observer entries
-   */
   handleIntersection(axis, values, entries) {
     for (const entry of entries) {
       if (entry.target === this.startSpyElement) {
@@ -181,17 +109,11 @@ export default class GestureTrapHandler {
     }
   }
 
-  /**
-   * Handle visualViewport resize to track keyboard visibility.
-   */
   @action
   handleResize() {
     this.keyboardVisible = isKeyboardVisible();
   }
 
-  /**
-   * Set up IntersectionObserver and keyboard visibility tracking.
-   */
   setup() {
     const viewElement = this.view.viewElement;
     const axis = this.view.args.axis ?? "y";
@@ -225,11 +147,6 @@ export default class GestureTrapHandler {
     }
   }
 
-  /**
-   * Register start spy element and observe it.
-   *
-   * @param {HTMLElement} element
-   */
   registerStartSpy(element) {
     this.startSpyElement = element;
     if (this.observer && element) {
@@ -237,11 +154,6 @@ export default class GestureTrapHandler {
     }
   }
 
-  /**
-   * Unregister start spy element.
-   *
-   * @param {HTMLElement} element
-   */
   unregisterStartSpy(element) {
     if (this.observer && element) {
       this.observer.unobserve(element);
@@ -249,11 +161,6 @@ export default class GestureTrapHandler {
     this.startSpyElement = null;
   }
 
-  /**
-   * Register end spy element and observe it.
-   *
-   * @param {HTMLElement} element
-   */
   registerEndSpy(element) {
     this.endSpyElement = element;
     if (this.observer && element) {
@@ -261,11 +168,6 @@ export default class GestureTrapHandler {
     }
   }
 
-  /**
-   * Unregister end spy element.
-   *
-   * @param {HTMLElement} element
-   */
   unregisterEndSpy(element) {
     if (this.observer && element) {
       this.observer.unobserve(element);
@@ -273,9 +175,6 @@ export default class GestureTrapHandler {
     this.endSpyElement = null;
   }
 
-  /**
-   * Clean up observer and event listeners.
-   */
   cleanup() {
     if (window.visualViewport) {
       window.visualViewport.removeEventListener("resize", this.handleResize);

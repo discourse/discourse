@@ -1,32 +1,15 @@
 import Service, { service } from "@ember/service";
 
-/**
- * Service for managing sheet instances and scroll lock.
- */
 export default class SheetRegistry extends Service {
   @service sheetLayerStore;
 
-  /** @type {number} */
   scrollLockCount = 0;
-
-  /** @type {[number, number]} */
   savedScrollPosition = [0, 0];
-
-  /** @type {Function|null} */
   scrollLockCleanup = null;
-
-  /** @type {boolean} */
   isResizing = false;
-
-  /** @type {number|null} */
   resizeTimeout = null;
-
-  /** @type {Set<string>} */
   controllersWithScrollLock = new Set();
 
-  /**
-   * Cleans up all listeners and state when the service is destroyed.
-   */
   willDestroy() {
     super.willDestroy();
 
@@ -38,11 +21,6 @@ export default class SheetRegistry extends Service {
     this.scrollLockCount = 0;
   }
 
-  /**
-   * Registers a sheet controller with the registry.
-   *
-   * @param {Object} controller
-   */
   register(controller) {
     this.sheetLayerStore.registerSheet(controller);
 
@@ -54,11 +32,6 @@ export default class SheetRegistry extends Service {
     this.sheetLayerStore.recalculateInertOutside();
   }
 
-  /**
-   * Unregisters a sheet controller from the registry.
-   *
-   * @param {Object} controller
-   */
   unregister(controller) {
     if (this.controllersWithScrollLock.has(controller.id)) {
       this.removeScrollLock();
@@ -69,12 +42,6 @@ export default class SheetRegistry extends Service {
     this.sheetLayerStore.recalculateInertOutside();
   }
 
-  /**
-   * Updates scroll lock for a controller.
-   *
-   * @param {Object} controller
-   * @param {boolean} shouldLock
-   */
   updateScrollLock(controller, shouldLock) {
     const hasLock = this.controllersWithScrollLock.has(controller.id);
 
@@ -87,12 +54,6 @@ export default class SheetRegistry extends Service {
     }
   }
 
-  /**
-   * Notifies registry that a sheet's inertOutside state changed.
-   *
-   * @param {Object} controller
-   * @param {boolean} inertOutside
-   */
   updateInertOutside(controller, inertOutside) {
     this.updateScrollLock(controller, inertOutside);
 
@@ -107,9 +68,6 @@ export default class SheetRegistry extends Service {
     this.sheetLayerStore.recalculateInertOutside();
   }
 
-  /**
-   * Applies scroll lock with reference counting.
-   */
   applyScrollLock() {
     if (this.scrollLockCount === 0) {
       this.savedScrollPosition = [window.scrollX, window.scrollY];
@@ -144,9 +102,6 @@ export default class SheetRegistry extends Service {
     this.scrollLockCount++;
   }
 
-  /**
-   * Removes scroll lock with reference counting.
-   */
   removeScrollLock() {
     if (this.scrollLockCount > 0) {
       this.scrollLockCount--;

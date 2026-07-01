@@ -2,8 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
+import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
+import effect from "discourse/float-kit/helpers/effect";
 import { isKeyboardVisible } from "discourse/lib/utilities";
 import { capabilities } from "discourse/services/capabilities";
 import GestureTrapHandler from "./gesture-trap-handler";
@@ -12,29 +13,6 @@ import KeyboardFocusHandler from "./keyboard-focus-handler";
 import nativeFocusScrollPrevention from "./native-focus-scroll-prevention";
 import SafeAreaHandler from "./safe-area-handler";
 
-/**
- * DScroll.View - The scroll container component.
- *
- * @component
- * @param {Object} controller - The scroll controller instance (provided by Root)
- * @param {string} @axis - Scroll axis: "x" or "y" (default: "y")
- * @param {boolean|Object} @scrollGestureTrap - Trap scroll gestures at boundaries
- * @param {boolean} @scrollGestureOvershoot - Allow visual overscroll (default: true)
- * @param {boolean|string} @scrollGesture - Enable scroll gestures (default: "auto")
- * @param {Function} @onScroll - Callback on scroll
- * @param {Function|Object} @onScrollStart - Callback on scroll start
- * @param {Function} @onScrollEnd - Callback on scroll end
- * @param {boolean} @nativeFocusScrollPrevention - Prevent native focus scroll (default: true)
- * @param {Function|Object} @onFocusInside - Callback when descendant receives focus
- * @param {Object} @scrollAnimationSettings - Animation settings for programmatic scroll
- * @param {boolean} @pageScroll - Whether this is a page scroll container (default: false)
- * @param {string} @safeArea - Safe area: "none", "layout-viewport", "visual-viewport" (default: "visual-viewport")
- * @param {boolean} @scrollAnchoring - Enable scroll anchoring (default: true)
- * @param {string} @scrollSnapType - CSS scroll-snap-type value (default: "none")
- * @param {string} @scrollPadding - CSS scroll-padding value (default: "auto")
- * @param {string} @scrollTimelineName - CSS scroll-timeline-name value (default: "none")
- * @param {boolean} @nativeScrollbar - Show native scrollbar (default: true)
- */
 export default class DScrollView extends Component {
   @tracked viewElement = null;
 
@@ -198,40 +176,19 @@ export default class DScrollView extends Component {
     this.controller.onScrollEnd = this.handleScrollEnd;
   }
 
-  /**
-   * Whether we need the IntersectionObserver for dynamic trap state.
-   *
-   * @returns {boolean}
-   */
   get needsSwipeTrapObserver() {
     return this.gestureTrapHandler.needsObserver;
   }
 
-  /**
-   * Update safeArea spacer heights.
-   *
-   * @param {Object} options - Options to pass to SafeAreaHandler.update()
-   * @returns {Object|undefined}
-   */
   @action
   updateSafeArea(options) {
     return this.safeAreaHandler.update(options);
   }
 
-  /**
-   * Get view bounds with border adjustment.
-   *
-   * @returns {{ top: number, bottom: number }}
-   */
   getViewBoundsWithBorder() {
     return this.safeAreaHandler.getViewBoundsWithBorder();
   }
 
-  /**
-   * Get visual viewport bounds.
-   *
-   * @returns {{ top: number, bottom: number }}
-   */
   getVisualViewportBounds() {
     return this.safeAreaHandler.getVisualViewportBounds();
   }
@@ -345,11 +302,6 @@ export default class DScrollView extends Component {
     this.keyboardHandler.handleFocus(event, defaultBehavior.scrollIntoView);
   }
 
-  /**
-   * Handle blur event inside scroll view.
-   *
-   * @param {FocusEvent} event
-   */
   @action
   onBlurInsideEvent(event) {
     this.keyboardHandler.handleBlur(event);
@@ -398,11 +350,6 @@ export default class DScrollView extends Component {
     }
   }
 
-  /**
-   * Build data-d-scroll attribute value for outer View wrapper.
-   *
-   * @returns {string}
-   */
   get viewDataAttribute() {
     const parts = ["root", "view"];
     const axis = this.args.axis ?? "y";
@@ -416,11 +363,6 @@ export default class DScrollView extends Component {
     return parts.join(" ");
   }
 
-  /**
-   * Build data-d-scroll attribute value for inner scrollContainer element.
-   *
-   * @returns {string}
-   */
   get scrollContainerDataAttribute() {
     const parts = ["scroll-container"];
     const axis = this.args.axis ?? "y";
@@ -458,22 +400,11 @@ export default class DScrollView extends Component {
       parts.push("scroll-auto");
     }
 
-    const trapX = this.gestureTrapHandler.xTrap;
-    const handler = this.gestureTrapHandler;
-    const trapY =
-      (!capabilities.isAndroidChromiumBrowser && handler.yTrap) ||
-      (handler.keyboardVisible && !handler.swipeTrapIncapable);
-
-    if (trapX) {
+    if (this.scrollTrapX) {
       parts.push("trap-x");
     }
-    if (trapY) {
+    if (this.scrollTrapY) {
       parts.push("trap-y");
-    }
-
-    if (this.controller) {
-      this.controller.scrollTrapX = trapX;
-      this.controller.scrollTrapY = trapY;
     }
 
     const scrollGesture = this.args.scrollGesture ?? "auto";
@@ -507,16 +438,33 @@ export default class DScrollView extends Component {
       .filter(Boolean)
       .join(" ");
 
-    return htmlSafe(styles);
+    return trustHTML(styles);
   }
 
   get shouldPreventNativeFocus() {
     return this.args.nativeFocusScrollPrevention ?? true;
   }
 
-  /**
-   * @returns {string|undefined}
-   */
+  get scrollTrapX() {
+    return this.gestureTrapHandler.xTrap;
+  }
+
+  get scrollTrapY() {
+    const handler = this.gestureTrapHandler;
+    return (
+      (!capabilities.isAndroidChromiumBrowser && handler.yTrap) ||
+      (handler.keyboardVisible && !handler.swipeTrapIncapable)
+    );
+  }
+
+  @action
+  syncScrollTrapState(scrollTrapX, scrollTrapY, controller) {
+    if (controller) {
+      controller.scrollTrapX = scrollTrapX;
+      controller.scrollTrapY = scrollTrapY;
+    }
+  }
+
   get computedTabIndex() {
     const hasOverflow =
       this.controller?.overflowX || this.controller?.overflowY;
@@ -529,9 +477,6 @@ export default class DScrollView extends Component {
     return undefined;
   }
 
-  /**
-   * @returns {string|undefined}
-   */
   get computedRole() {
     const pageScroll = this.args.pageScroll ?? false;
 
@@ -553,11 +498,6 @@ export default class DScrollView extends Component {
     return `spy spy-end axis-${this.axis}`;
   }
 
-  /**
-   * Whether spacers should be rendered (only for vertical scrolling).
-   *
-   * @returns {boolean}
-   */
   get shouldRenderSpacers() {
     return this.axis === "y";
   }
@@ -571,10 +511,17 @@ export default class DScrollView extends Component {
   }
 
   get spacerStyle() {
-    return htmlSafe("height: 0px;");
+    return trustHTML("height: 0px;");
   }
 
   <template>
+    {{effect
+      this.syncScrollTrapState
+      this.scrollTrapX
+      this.scrollTrapY
+      this.controller
+    }}
+
     <div data-d-scroll={{this.viewDataAttribute}} ...attributes>
       <div
         data-d-scroll={{this.scrollContainerDataAttribute}}

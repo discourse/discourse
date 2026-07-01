@@ -1,8 +1,3 @@
-/**
- * Non-text input types that should not trigger scroll-into-view.
- *
- * @type {Set<string>}
- */
 const NON_TEXT_INPUT_TYPES = new Set([
   "checkbox",
   "radio",
@@ -16,14 +11,6 @@ const NON_TEXT_INPUT_TYPES = new Set([
   "hidden",
 ]);
 
-/**
- * Check if element is a text input that should trigger scroll-into-view.
- * Includes HTMLInputElement (excluding non-text types), HTMLTextAreaElement,
- * and any HTMLElement with contentEditable.
- *
- * @param {HTMLElement} element
- * @returns {boolean}
- */
 export default function isTextInput(element) {
   if (!element) {
     return false;

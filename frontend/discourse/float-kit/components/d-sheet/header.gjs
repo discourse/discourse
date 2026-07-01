@@ -1,16 +1,8 @@
 import { fn, hash } from "@ember/helper";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import DButton from "discourse/ui-kit/d-button";
 
-/**
- * Header component for the sheet, providing left/right action slots and a title.
- *
- * @component DSheetHeader
- * @param {import("./controller").default} sheet - The sheet controller instance providing close action and titleId
- *
- * @slot left - Yields a hash { Back, Cancel, Close } of pre-styled DButton components
- * @slot title - Yields the title content rendered inside the header h2
- * @slot right - Yields a pre-styled DButton component for right-side actions
- */
 const Header = <template>
   <div class="d-sheet-header">
     <div class="d-sheet-header__left">
@@ -41,11 +33,18 @@ const Header = <template>
       {{/if}}
     </div>
 
-    <h2 class="d-sheet-header__title" id={{@sheet.titleId}}>
-      {{#if (has-block "title")}}
+    {{#if (has-block "title")}}
+      <h2
+        class="d-sheet-header__title"
+        id={{@sheet.titleId}}
+        {{didInsert @sheet.registerTitle}}
+        {{willDestroy @sheet.unregisterTitle}}
+      >
         {{yield to="title"}}
-      {{/if}}
-    </h2>
+      </h2>
+    {{else}}
+      <div class="d-sheet-header__title"></div>
+    {{/if}}
 
     <div class="d-sheet-header__right">
       {{#if (has-block "right")}}

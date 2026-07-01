@@ -3,59 +3,22 @@ import { getScrollBehavior, isKeyboardVisible } from "discourse/lib/utilities";
 import { capabilities } from "discourse/services/capabilities";
 import isTextInput from "./is-text-input";
 
-/**
- * KeyboardFocusHandler - Manages keyboard focus scroll behavior for DScroll.View.
- *
- * Tracks keyboard open state, scrolls focused text inputs into view during
- * keyboard animation, and uses visualViewport resize events to continuously
- * adjust during keyboard animation.
- *
- * @class KeyboardFocusHandler
- */
 export default class KeyboardFocusHandler {
-  /** @type {boolean} */
   keyboardAlreadyOpen = false;
-
-  /** @type {boolean} */
   scrollTriggeredByFocus = false;
-
-  /** @type {HTMLElement|null} */
   focusedElement = null;
-
-  /** @type {number} */
   elementTop = 0;
-
-  /** @type {number} */
   elementBottom = 0;
-
-  /** @type {number} */
   scrollPortTop = 0;
-
-  /** @type {number} */
   scrollPortBottom = 0;
-
-  /** @type {number|null} */
   keyboardOpenCleanupTimeout = null;
-
-  /** @type {number|null} */
   keyboardOpeningFallbackTimeout = null;
-
-  /** @type {Function|null} */
   resizeHandler = null;
 
-  /**
-   * @param {DScrollView} view - The View component instance
-   */
   constructor(view) {
     this.view = view;
   }
 
-  /**
-   * Handle focus event on text input.
-   *
-   * @param {FocusEvent} event
-   * @param {boolean} shouldScrollIntoView - Whether to scroll element into view
-   */
   handleFocus(event, shouldScrollIntoView) {
     const target = event.target;
     const scrollContainer = this.view.viewElement;
@@ -126,11 +89,6 @@ export default class KeyboardFocusHandler {
     }
   }
 
-  /**
-   * Handle blur event on text input.
-   *
-   * @param {FocusEvent} event
-   */
   handleBlur(event) {
     const target = event.target;
     const relatedTarget = event.relatedTarget;
@@ -161,13 +119,6 @@ export default class KeyboardFocusHandler {
     this.focusedElement = null;
   }
 
-  /**
-   * Scroll focused element into view.
-   *
-   * @param {Object} [cachedViewport] - Optional cached viewport bounds for consistency
-   * @param {number} cachedViewport.top - Top of visual viewport
-   * @param {number} cachedViewport.bottom - Bottom of visual viewport
-   */
   scrollIntoView(cachedViewport) {
     const scrollContainer = this.view.viewElement;
     if (!scrollContainer || !this.focusedElement) {
@@ -218,27 +169,18 @@ export default class KeyboardFocusHandler {
     }
   }
 
-  /**
-   * Add visualViewport resize listener.
-   */
   addResizeListener() {
     if (this.resizeHandler && window.visualViewport) {
       window.visualViewport.addEventListener("resize", this.resizeHandler);
     }
   }
 
-  /**
-   * Remove visualViewport resize listener.
-   */
   removeResizeListener() {
     if (this.resizeHandler && window.visualViewport) {
       window.visualViewport.removeEventListener("resize", this.resizeHandler);
     }
   }
 
-  /**
-   * Clear all timeouts.
-   */
   clearTimeouts() {
     if (this.keyboardOpenCleanupTimeout) {
       clearTimeout(this.keyboardOpenCleanupTimeout);
@@ -250,9 +192,6 @@ export default class KeyboardFocusHandler {
     }
   }
 
-  /**
-   * Clean up all state and listeners.
-   */
   cleanup() {
     this.clearTimeouts();
     this.removeResizeListener();
