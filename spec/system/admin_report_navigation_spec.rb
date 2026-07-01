@@ -1,30 +1,29 @@
 # frozen_string_literal: true
 
+require "seed_data/admin_dashboard_reports"
+require "seed_data/admin_dashboard_sections"
+
 RSpec.describe "Admin report navigation" do
   fab!(:current_user, :admin)
 
   let(:dashboard) { PageObjects::Pages::AdminDashboard.new }
   let(:dashboard_reports) { PageObjects::Pages::AdminDashboardReports.new }
   let(:admin_report) { PageObjects::Pages::AdminReport.new }
+  let(:report_type) { SeedData::AdminDashboardReports::DEFAULT_BUILTIN_REPORTS.first }
+  let(:dashboard_report_identifier) do
+    "#{AdminDashboard::Reports::CoreReportProvider::SOURCE_NAME}:#{report_type}"
+  end
 
   before do
     SiteSetting.dashboard_improvements = true
-    AdminDashboardSectionConfiguration.update(
-      [
-        { id: "reports", visible: true },
-        { id: "highlights", visible: false },
-        { id: "traffic", visible: false },
-        { id: "engagement", visible: false },
-      ],
-      actor: current_user,
-    )
-    AdminDashboardReport.delete_all
-    AdminDashboardReport.create!(source: "core_report", identifier: "signups", position: 0)
+    SiteSetting.admin_dashboard_reports_seeded = false
+    SeedData::AdminDashboardSections.create
+    SeedData::AdminDashboardReports.create
     sign_in(current_user)
   end
 
   it "lets admins return to the dashboard after viewing a report" do
-    admin_report.visit("signups")
+    admin_report.visit(report_type)
 
     expect(admin_report).to have_back_to_all_reports
     expect(admin_report).to have_no_back_to_dashboard
@@ -35,9 +34,9 @@ RSpec.describe "Admin report navigation" do
 
     dashboard.visit_with_query(range: "custom", start_date: "2026-01-01", end_date: "2026-01-31")
     dashboard_path = dashboard.current_request_uri
-    expect(dashboard_reports).to have_card("core_report:signups")
+    expect(dashboard_reports).to have_card(dashboard_report_identifier)
 
-    dashboard_reports.open_report("core_report:signups")
+    dashboard_reports.open_report(dashboard_report_identifier)
 
     expect(admin_report).to have_back_to_dashboard(dashboard_path)
     expect(admin_report).to have_no_back_to_all_reports
