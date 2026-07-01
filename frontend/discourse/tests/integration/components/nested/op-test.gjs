@@ -18,6 +18,7 @@ function renderComponent(context) {
         @editPost={{noop}}
         @showHistory={{noop}}
         @replyToPost={{noop}}
+        @deletePost={{context.deletePost}}
         @changeNotice={{noop}}
         @changePostOwner={{noop}}
         @grantBadge={{noop}}
@@ -45,6 +46,10 @@ module("Integration | Component | Nested | Op", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
+    this.siteSettings.post_menu =
+      "read|like|copyLink|share|flag|edit|bookmark|delete|admin|reply";
+    this.siteSettings.post_menu_hidden_items = "";
+
     this.store = getOwner(this).lookup("service:store");
     this.topic = this.store.createRecord("topic", {
       id: 1,
@@ -58,6 +63,7 @@ module("Integration | Component | Nested | Op", function (hooks) {
     });
     this.multiSelect = false;
     this.showPostMenu = false;
+    this.deletePost = noop;
     this.togglePostSelection = noop;
     this.selectReplies = noop;
     this.selectBelow = noop;
@@ -84,6 +90,25 @@ module("Integration | Component | Nested | Op", function (hooks) {
     assert
       .dom(".nested-view__op-menu .post-action-menu__show-replies")
       .doesNotExist("nested OP menu suppresses the flat replies button");
+  });
+
+  test("renders an enabled delete-topic button for the OP", async function (assert) {
+    this.showPostMenu = true;
+    this.topic.details = { can_delete: true };
+    this.deletePost = (post) => {
+      assert.strictEqual(post, this.post, "passes the OP to the delete action");
+      assert.step("delete action");
+    };
+
+    await renderComponent(this);
+
+    assert
+      .dom(".nested-view__op-menu .post-action-menu__delete")
+      .isNotDisabled("the OP delete-topic button is actionable");
+
+    await click(".nested-view__op-menu .post-action-menu__delete");
+
+    assert.verifySteps(["delete action"], "invokes the delete action");
   });
 
   test("renders multi-select controls for the OP", async function (assert) {

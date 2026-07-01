@@ -163,6 +163,7 @@ export default class NestedOp extends Component {
                           @canCreatePost={{this.canCreatePost}}
                           @copyLink={{this.copyLink}}
                           @replyToPost={{@replyToPost}}
+                          @deletePost={{fn @deletePost @post}}
                           @editPost={{fn @editPost @post}}
                           @changeNotice={{fn @changeNotice @post}}
                           @changePostOwner={{fn @changePostOwner @post}}

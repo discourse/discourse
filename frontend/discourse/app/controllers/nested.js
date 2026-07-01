@@ -470,7 +470,11 @@ export default class NestedController extends Controller {
   }
 
   @action
-  deletePost(post) {
+  deletePost(post, opts) {
+    if (post.post_number === 1) {
+      return this.#topicController.deletePost(post, opts);
+    }
+
     if (!post.can_delete) {
       return;
     }

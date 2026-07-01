@@ -808,6 +808,7 @@ export default class Nested extends Component {
           @replyToPost={{@replyToPost}}
           @changeNotice={{@changeNotice}}
           @changePostOwner={{@changePostOwner}}
+          @deletePost={{@deletePost}}
           @grantBadge={{@grantBadge}}
           @lockPost={{@lockPost}}
           @unlockPost={{@unlockPost}}
