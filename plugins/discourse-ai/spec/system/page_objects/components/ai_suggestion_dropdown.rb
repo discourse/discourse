@@ -5,20 +5,10 @@ module PageObjects
     class AiSuggestionDropdown < PageObjects::Components::Base
       SUGGESTION_BUTTON_SELECTOR = ".suggestion-button"
       TITLE_BUTTON_SELECTOR = "#{SUGGESTION_BUTTON_SELECTOR}.suggest-titles-button"
-      CATEGORY_BUTTON_SELECTOR = "#{SUGGESTION_BUTTON_SELECTOR}.suggest-category-button"
-      TAG_BUTTON_SELECTOR = "#{SUGGESTION_BUTTON_SELECTOR}.suggest-tags-button"
       MENU_SELECTOR = ".ai-suggestions-menu"
 
       def click_suggest_titles_button
         page.find(TITLE_BUTTON_SELECTOR, visible: :all).click
-      end
-
-      def click_suggest_category_button
-        find(CATEGORY_BUTTON_SELECTOR, visible: :all).click
-      end
-
-      def click_suggest_tags_button
-        find(TAG_BUTTON_SELECTOR, visible: :all).click
       end
 
       def select_suggestion_by_value(index)
