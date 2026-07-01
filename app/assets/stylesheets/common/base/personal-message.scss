@@ -166,7 +166,6 @@
     grid-template-areas: "contents additional" "pm-map pm-map";
     grid-template-columns: 1fr auto;
     border-radius: var(--d-border-radius);
-    row-gap: var(--space-2);
     border: 1px solid var(--content-border-color);
     max-width: calc(
       var(--topic-body-width) + (var(--topic-body-width-padding) * 2) + 1.3em
