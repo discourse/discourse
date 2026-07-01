@@ -633,13 +633,9 @@ class TopicTrackingState
   end
 
   def self.report_totals(user)
-    if user.unified_new_enabled?
-      { new: report(user).count }
-    else
-      new = report_count_by_type(user, type: "new")
-      unread = report_count_by_type(user, type: "unread")
-      { new: new, unread: unread }
-    end
+    new = report_count_by_type(user, type: "new")
+    unread = report_count_by_type(user, type: "unread")
+    { new:, unread:, unified_new_enabled: user.unified_new_enabled? }
   end
 
   def self.secure_category_group_ids(topic)

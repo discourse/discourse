@@ -854,49 +854,49 @@ RSpec.describe TopicTrackingState do
 
     it "correctly returns new/unread totals" do
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 0, unread: 0 })
+      expect(report).to eq({ new: 0, unread: 0, unified_new_enabled: false })
 
       post.topic.notifier.watch_topic!(post.topic.user_id)
 
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 1, unread: 0 })
+      expect(report).to eq({ new: 1, unread: 0, unified_new_enabled: false })
 
       create_post(user: user, topic: post.topic)
 
       # when user replies, they have 0 new count
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 0, unread: 0 })
+      expect(report).to eq({ new: 0, unread: 0, unified_new_enabled: false })
 
       # when we reply the poster will have an unread item
       report = TopicTrackingState.report_totals(post.user)
-      expect(report).to eq({ new: 0, unread: 1 })
+      expect(report).to eq({ new: 0, unread: 1, unified_new_enabled: false })
 
       create_post(user: user2, topic: post.topic)
 
       # when a third user replies, the original user should have an unread item
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 0, unread: 1 })
+      expect(report).to eq({ new: 0, unread: 1, unified_new_enabled: false })
 
       # the post user still has one unread
       report = TopicTrackingState.report_totals(post.user)
-      expect(report).to eq({ new: 0, unread: 1 })
+      expect(report).to eq({ new: 0, unread: 1, unified_new_enabled: false })
 
       post2 = create_post
       post2.topic.notifier.watch_topic!(user.id)
 
       # watching another new topic bumps the new count
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 1, unread: 1 })
+      expect(report).to eq({ new: 1, unread: 1, unified_new_enabled: false })
     end
 
     it "respects treat_as_new_topic_start_date user option" do
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 0, unread: 0 })
+      expect(report).to eq({ new: 0, unread: 0, unified_new_enabled: false })
 
       post.topic.notifier.watch_topic!(post.topic.user_id)
 
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 1, unread: 0 })
+      expect(report).to eq({ new: 1, unread: 0, unified_new_enabled: false })
 
       user.user_option.new_topic_duration_minutes = 5
       user.user_option.save
@@ -904,14 +904,14 @@ RSpec.describe TopicTrackingState do
       post.topic.save
 
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 0, unread: 0 })
+      expect(report).to eq({ new: 0, unread: 0, unified_new_enabled: false })
     end
 
     it "respects unified_new_enabled" do
       SiteSetting.enable_unified_new = true
 
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 0 })
+      expect(report).to eq({ new: 0, unread: 0, unified_new_enabled: true })
 
       post.topic.notifier.watch_topic!(post.topic.user_id)
 
@@ -926,7 +926,7 @@ RSpec.describe TopicTrackingState do
       TopicUser.change(user.id, post2.topic_id, tracking)
 
       report = TopicTrackingState.report_totals(user)
-      expect(report).to eq({ new: 2 })
+      expect(report).to eq({ new: 1, unread: 1, unified_new_enabled: true })
     end
   end
 
