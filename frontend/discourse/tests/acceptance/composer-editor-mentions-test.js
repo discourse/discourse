@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import { setCaretPosition } from "discourse/lib/utilities";
@@ -7,7 +7,6 @@ import {
   acceptance,
   fakeTime,
   loggedInUser,
-  queryAll,
   simulateKeys,
 } from "discourse/tests/helpers/qunit-helpers";
 
@@ -132,14 +131,14 @@ acceptance("Composer - editor mentions", function (needs) {
     await simulateKeys(".d-editor-input", "abc @u");
 
     assert.deepEqual(
-      [...queryAll(".ac-user .username")].map((e) => e.innerText),
+      findAll(".ac-user .username").map((e) => e.innerText),
       ["user", "user2", "user_group", "johndoe", "foo"]
     );
 
     await simulateKeys(".d-editor-input", "\bf");
 
     assert.deepEqual(
-      [...queryAll(".ac-user .username")].map((e) => e.innerText),
+      findAll(".ac-user .username").map((e) => e.innerText),
       ["foo", "user", "user2", "johndoe"]
     );
   });

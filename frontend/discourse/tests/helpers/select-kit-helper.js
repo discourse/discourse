@@ -1,8 +1,8 @@
 /* eslint-disable ember/no-jquery */
-import { click, fillIn, triggerEvent } from "@ember/test-helpers";
+import { click, fillIn, findAll, triggerEvent } from "@ember/test-helpers";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";
-import { exists, query, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { exists, query } from "discourse/tests/helpers/qunit-helpers";
 
 function checkSelectKitIsNotExpanded(selector) {
   if (query(selector).classList.contains("is-expanded")) {
@@ -58,7 +58,7 @@ async function selectKitSelectNoneRow(selector) {
 
 async function selectKitSelectRowByIndex(index, selector) {
   checkSelectKitIsNotCollapsed(selector);
-  await click(queryAll(`${selector} .select-kit-row`)[index]);
+  await click(findAll(`${selector} .select-kit-row`)[index]);
 }
 
 async function keyboardHelper(value, target, selector) {
@@ -317,7 +317,7 @@ export default function selectKit(selector) {
 
     async deselectItemByIndex(index) {
       await click(
-        queryAll(`${selector} .selected-content .selected-choice`)[index]
+        findAll(`${selector} .selected-content .selected-choice`)[index]
       );
     },
 

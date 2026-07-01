@@ -4,6 +4,7 @@ import {
   click,
   currentRouteName,
   currentURL,
+  findAll,
   triggerEvent,
   triggerKeyEvent,
   visit,
@@ -20,7 +21,6 @@ import {
   acceptance,
   loggedInUser,
   publishToMessageBus,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import DButton from "discourse/ui-kit/d-button";
@@ -281,7 +281,7 @@ acceptance("User menu", function (needs) {
       .dom("#user-menu-button-custom-tab-2")
       .exists("second custom tab is rendered");
 
-    const tabs = [...queryAll(".tabs-list.top-tabs .btn")];
+    const tabs = findAll(".tabs-list.top-tabs .btn");
 
     assert.deepEqual(
       tabs.reduce((acc, tab) => {
@@ -343,7 +343,7 @@ acceptance("User menu", function (needs) {
     await visit("/");
     await click(".d-header-icons .current-user button");
 
-    const notifications = queryAll(
+    const notifications = findAll(
       "#quick-access-all-notifications ul li.notification"
     );
     assert
