@@ -562,31 +562,40 @@ describe "Request tracking" do
     fab!(:topic)
     fab!(:post) { Fabricate(:post, topic: topic) }
 
+    def browser_pageview_event_for_topic(events:, topic:)
+      events
+        .find do |event|
+          event[:event_name] == :browser_pageview && event[:params].last[:topic_id] == topic.id
+        end
+        &.dig(:params)
+        &.last
+    end
+
     context "when logged in" do
       before { sign_in(current_user) }
 
       it "tracks user viewing a topic correctly with deferred tracking" do
-        events =
-          DiscourseEvent.track_events(:browser_pageview) do
-            visit topic.url
+        event = nil
 
-            try_until_success do
-              CachedCounting.flush
-              expect(TopicViewItem.exists?(topic_id: topic.id, user_id: current_user.id)).to eq(
-                true,
-              )
-              expect(
-                TopicViewStat.exists?(
-                  topic_id: topic.id,
-                  viewed_at: Time.zone.now.to_date,
-                  anonymous_views: 0,
-                  logged_in_views: 1,
-                ),
-              ).to eq(true)
-            end
+        DiscourseEvent.track_events do |captured_events|
+          visit topic.url
+
+          try_until_success do
+            CachedCounting.flush
+            expect(TopicViewItem.exists?(topic_id: topic.id, user_id: current_user.id)).to eq(true)
+            expect(
+              TopicViewStat.exists?(
+                topic_id: topic.id,
+                viewed_at: Time.zone.now.to_date,
+                anonymous_views: 0,
+                logged_in_views: 1,
+              ),
+            ).to eq(true)
+
+            event = browser_pageview_event_for_topic(events: captured_events, topic: topic)
+            expect(event).to be_present
           end
-
-        event = events[0][:params].last
+        end
 
         expect(event[:user_id]).to eq(current_user.id)
         expect(event[:url]).to eq(topic.url)
@@ -634,25 +643,27 @@ describe "Request tracking" do
 
     context "when anonymous" do
       it "tracks an anonymous user viewing a topic correctly with deferred tracking" do
-        events =
-          DiscourseEvent.track_events(:browser_pageview) do
-            visit topic.url
+        event = nil
 
-            try_until_success do
-              CachedCounting.flush
-              expect(TopicViewItem.exists?(topic_id: topic.id, user_id: nil)).to eq(true)
-              expect(
-                TopicViewStat.exists?(
-                  topic_id: topic.id,
-                  viewed_at: Time.zone.now.to_date,
-                  anonymous_views: 1,
-                  logged_in_views: 0,
-                ),
-              ).to eq(true)
-            end
+        DiscourseEvent.track_events do |captured_events|
+          visit topic.url
+
+          try_until_success do
+            CachedCounting.flush
+            expect(TopicViewItem.exists?(topic_id: topic.id, user_id: nil)).to eq(true)
+            expect(
+              TopicViewStat.exists?(
+                topic_id: topic.id,
+                viewed_at: Time.zone.now.to_date,
+                anonymous_views: 1,
+                logged_in_views: 0,
+              ),
+            ).to eq(true)
+
+            event = browser_pageview_event_for_topic(events: captured_events, topic: topic)
+            expect(event).to be_present
           end
-
-        event = events[0][:params].last
+        end
 
         expect(event[:user_id]).to be_blank
         expect(event[:url]).to eq(topic.url)
