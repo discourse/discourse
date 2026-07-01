@@ -71,11 +71,9 @@ function addHashtag(buffer, matches, state) {
     token.attrs = [["class", "hashtag-raw"]];
     buffer.push(token);
 
-    token = new state.Token("span_open", "span", 1);
     token = new state.Token("text", "", 0);
     token.content = matches[0];
     buffer.push(token);
-    token = new state.Token("span_close", "span", -1);
 
     token = new state.Token("span_close", "span", -1);
     buffer.push(token);

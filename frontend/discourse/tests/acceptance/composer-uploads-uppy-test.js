@@ -43,7 +43,7 @@ function pretender(server, helper) {
   server.post(
     "/uploads.json",
     () => {
-      let response = null;
+      let response;
       if (uploadNumber === 1) {
         response = {
           extension: "jpeg",
