@@ -453,7 +453,7 @@ class FinalDestination
       has_wildcard = hostname_parts.first == "*"
 
       if has_wildcard
-        @uri.hostname.end_with?(hostname_parts[1..-1].join("."))
+        @uri.hostname.end_with?(".#{hostname_parts[1..-1].join(".")}")
       else
         @uri.hostname == url.hostname
       end
