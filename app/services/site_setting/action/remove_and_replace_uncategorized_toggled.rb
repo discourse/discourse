@@ -7,7 +7,10 @@
 # Enabling demotes the special Uncategorized category to a normal category
 # in place by repointing `uncategorized_category_id` to -1 (the category's
 # "special" behavior is derived entirely from that setting), then disallows
-# uncategorized topics. No category is created and no topics are moved.
+# uncategorized topics. No category is created and no topics are moved. If the
+# composer defaulted to the special Uncategorized category (explicitly or
+# because no default was set), the now-normal category is pinned as the
+# `default_composer_category` so the composer keeps pre-selecting it.
 #
 # The site's prior state is snapshotted onto the change's UpcomingChangeEvent
 # so that opt-out can either restore the special category or do nothing.
@@ -33,12 +36,19 @@ class SiteSetting::Action::RemoveAndReplaceUncategorizedToggled < Service::Actio
     # -1 is the canonical "already migrated" marker, so this is idempotent.
     return if SiteSetting.uncategorized_category_id == -1
 
+    former_uncategorized_id = SiteSetting.uncategorized_category_id
+
     ActiveRecord::Base.transaction do
       capture_snapshot(
         allow_uncategorized_topics: SiteSetting.allow_uncategorized_topics,
         default_composer_category: SiteSetting.default_composer_category,
-        uncategorized_category_id: SiteSetting.uncategorized_category_id,
+        uncategorized_category_id: former_uncategorized_id,
       )
+
+      if SiteSetting.default_composer_category.blank? ||
+           SiteSetting.default_composer_category == former_uncategorized_id.to_s
+        SiteSetting.set_and_log(:default_composer_category, former_uncategorized_id.to_s)
+      end
 
       SiteSetting.set_and_log(:uncategorized_category_id, -1)
       SiteSetting.set_and_log(:allow_uncategorized_topics, false)
@@ -82,10 +92,11 @@ class SiteSetting::Action::RemoveAndReplaceUncategorizedToggled < Service::Actio
   end
 
   def snapshot_event
-    UpcomingChangeEvent
-      .where(upcoming_change_name: UPCOMING_CHANGE.to_s, event_type: SNAPSHOT_EVENT_TYPES)
-      .where.not(event_data: nil)
-      .order(created_at: :desc)
-      .first
+    @snapshot_event ||=
+      UpcomingChangeEvent
+        .where(upcoming_change_name: UPCOMING_CHANGE.to_s, event_type: SNAPSHOT_EVENT_TYPES)
+        .where.not(event_data: nil)
+        .order(created_at: :desc)
+        .first
   end
 end

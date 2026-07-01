@@ -25,6 +25,23 @@ RSpec.describe SiteSetting::Action::RemoveAndReplaceUncategorizedToggled do
       expect(SiteSetting.default_composer_category).to eq(uncategorized.id.to_s)
     end
 
+    it "pins the now-normal category as the composer default when none was set" do
+      SiteSetting.default_composer_category = ""
+
+      described_class.call(enabled: true)
+
+      expect(SiteSetting.default_composer_category).to eq(uncategorized.id.to_s)
+    end
+
+    it "leaves an unrelated default_composer_category untouched" do
+      other_category = Fabricate(:category)
+      SiteSetting.default_composer_category = other_category.id.to_s
+
+      described_class.call(enabled: true)
+
+      expect(SiteSetting.default_composer_category).to eq(other_category.id.to_s)
+    end
+
     it "snapshots the prior state onto the existing manual_opt_in event" do
       SiteSetting.default_composer_category = uncategorized.id.to_s
       event =
