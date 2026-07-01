@@ -84,6 +84,55 @@ module(
         .exists("clicking Save opens the review drawer");
     });
 
+    test("the View toggle reflects an active simulation", async function (assert) {
+      await render(<template><EditorShell /></template>);
+
+      assert
+        .dom(".wireframe-view-toggle")
+        .doesNotHaveClass("--active", "inactive while showing the real view");
+
+      getOwner(this).lookup("service:wireframe-simulation").setUser(null);
+      await settled();
+
+      assert
+        .dom(".wireframe-view-toggle")
+        .hasClass("--active", "active while a simulation runs");
+    });
+
+    test("the Save button's dirty indicator distinguishes unsaved-draft from unpublished edits", async function (assert) {
+      pretender.post(DRAFTS_URL, () => response({ success: true }));
+
+      await render(<template><EditorShell /></template>);
+      assert
+        .dom(".wireframe-btn-save")
+        .hasAttribute(
+          "data-wf-save-state",
+          "clean",
+          "clean with nothing edited"
+        );
+
+      await makeDirty(this.editor);
+      assert
+        .dom(".wireframe-btn-save")
+        .hasAttribute(
+          "data-wf-save-state",
+          "unsaved",
+          "edits not yet written to a draft read as unsaved"
+        );
+
+      // Save the draft: the edits are now persisted (nothing losable) but still
+      // differ from the published layout, so the state drops to unpublished.
+      await click(".wireframe-btn-save");
+      await click(".wireframe-review__save-draft");
+      assert
+        .dom(".wireframe-btn-save")
+        .hasAttribute(
+          "data-wf-save-state",
+          "unpublished",
+          "a saved draft that differs from published reads as unpublished"
+        );
+    });
+
     test("the drawer's Save draft drafts the edited outlets without publishing; Publish writes the live field", async function (assert) {
       await makeDirty(this.editor);
 

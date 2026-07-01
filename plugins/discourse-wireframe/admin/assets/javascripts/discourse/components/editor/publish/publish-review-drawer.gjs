@@ -256,7 +256,7 @@ export default class PublishReviewDrawer extends Component {
   <template>
     {{#if this.isOpen}}
       <div
-        class="wireframe-review"
+        class="wireframe-review wireframe-editor-overlay"
         role="dialog"
         aria-label={{i18n "wireframe.review.title"}}
         {{! Clicking anywhere outside the drawer closes it; the toolbar Save

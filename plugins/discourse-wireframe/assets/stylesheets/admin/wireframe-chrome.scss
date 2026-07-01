@@ -1123,7 +1123,8 @@ body.wireframe-active {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1rem;
+  gap: 0.75rem;
+  padding: 0 0.75rem;
   background: var(--secondary);
   border-bottom: 1px solid var(--primary-low);
 
@@ -1131,11 +1132,173 @@ body.wireframe-active {
   .toolbar-right {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.25rem;
+    flex: 0 0 auto;
+  }
+
+  /* Center zone holds passive status; it takes the slack and truncates rather
+     than pushing the flanking zones off-screen. */
+
+  .toolbar-center {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
   }
 
   .toolbar-title {
     font-weight: 600;
+    margin-inline-end: 0.5rem;
+  }
+
+  /* Brand mark sits a touch dimmer than its label so the controls lead. */
+  .toolbar-left > .d-icon {
+    color: var(--primary-high);
+    margin-inline-end: 0.4rem;
+  }
+
+  /* One flat treatment for every secondary control (history, view, exit) so the
+     bar reads as a single group with Save as the lone primary. */
+
+  .btn-flat {
+    color: var(--primary-medium);
+
+    &:hover,
+    &:focus {
+      color: var(--primary);
+    }
+  }
+}
+
+/* Passive center status naming where edits will publish; warns when the target
+   can't be published to directly. Not a control — the publish flow is the Save
+   button's review drawer. */
+
+.wireframe-target-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+
+  .d-icon {
+    font-size: var(--font-down-2);
+  }
+
+  &__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &.--blocked {
+    color: var(--danger);
+
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+}
+
+/* The topbar's View toggle lights up while a simulation is active so the
+   drawer's folded state stays discoverable. */
+
+.wireframe-view-toggle.--active {
+  color: rgb(var(--wf-accent-rgb));
+}
+
+/* View drawer: a right-docked panel (mirrors the review drawer) holding the dim
+   toggle + simulation controls. Fixed positioning keeps its placement exact,
+   sidestepping the floating-overlay collision padding that dogged the dropdown. */
+
+.wireframe-view-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: z("modal", "popover");
+  width: 340px;
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  background: var(--secondary);
+  border-left: 1px solid var(--primary-low-mid);
+  box-shadow: var(--shadow-card);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  &__body {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  /* Dim toggle + its description: a full-width block, divided from the
+     simulation section below. */
+
+  &__dim {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    width: 100%;
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__dim-description {
+    margin: 0;
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-large);
+    color: var(--primary-medium);
+  }
+}
+
+/* Two-tier dirty indicator on the Save button: a warning dot for unsaved edits
+   (the losable state) and a quieter dot for changes saved to a draft but not yet
+   published. The `title` carries the precise meaning for hover / assistive tech. */
+
+.wireframe-btn-save {
+  position: relative;
+
+  &[data-wf-save-state="unsaved"]::after,
+  &[data-wf-save-state="unpublished"]::after {
+    content: "";
+    position: absolute;
+    top: 0.2rem;
+    inset-inline-end: 0.2rem;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+  }
+
+  &[data-wf-save-state="unsaved"]::after {
+    background: var(--highlight);
+  }
+
+  &[data-wf-save-state="unpublished"]::after {
+    background: var(--secondary);
   }
 }
 
@@ -3884,34 +4047,102 @@ body.wireframe-active {
   }
 }
 
-/* Simulation controls */
+/* Simulation controls, a labeled section inside the View drawer. */
 .wireframe-simulation {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  margin-right: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
 
-  &.--active {
-    border-radius: 4px;
-    padding: 0 0.25rem;
-    background: var(--highlight-low);
-  }
-
-  select {
+  &__title {
     margin: 0;
-    max-width: 140px;
+    font-size: 1em;
+    font-weight: 700;
   }
 
-  &__dot .d-icon {
-    color: var(--highlight);
-    font-size: 0.5rem;
+  &__intro {
+    margin: 0;
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-large);
+    color: var(--primary-medium);
   }
-}
 
-/* Outlet jump dropdown */
-.wireframe-outlet-jump {
-  margin: 0 0 0 0.5rem;
-  max-width: 200px;
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  &__label {
+    font-size: var(--font-down-1);
+    font-weight: 600;
+    color: var(--primary-high);
+  }
+
+  /* The persona combobox spans the row. */
+  &__persona.select-kit {
+    width: 100%;
+  }
+
+  /* The viewport segmented control fills the row with equal-width segments,
+     matching the inspector's segmented fields (which override the base
+     inline-flex + content width). */
+
+  &__viewport.d-segmented-control {
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    .d-segmented-control__label {
+      flex: 1 1 0;
+      min-width: 0;
+      justify-content: center;
+    }
+  }
+
+  /* The active-simulation callout is a FormKit alert (`.alert` supplies the
+     surface); lay the leading icon beside the wrapping message (as the
+     inspector's alert does), stack the message, and give the reset button a
+     solid fill so it reads clearly against the tinted alert. */
+
+  &__status {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5em;
+
+    > .d-icon {
+      margin-top: 0.15em;
+      flex-shrink: 0;
+    }
+
+    .form-kit__alert-message {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
+  }
+
+  &__status-text {
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-large);
+    color: var(--primary-high);
+
+    /* Lead sentence reads as a small heading: full-strength colour, a touch
+       larger, bold, with a little breathing room above the dimmer body. */
+
+    strong {
+      display: block;
+      margin-bottom: var(--space-1);
+      font-size: var(--font-0);
+      font-weight: 700;
+      color: var(--primary);
+    }
+  }
+
+  &__clear {
+    background: var(--secondary);
+  }
 }
 
 /* Inline-expand conditions surface. Each rule is a row that toggles
@@ -4033,28 +4264,6 @@ body.wireframe-active {
     flex: 1 1 auto;
     overflow: auto;
     padding: 0.75rem;
-  }
-}
-
-/* Toolbar chip naming where edits will publish; opens the review drawer. */
-.wireframe-target-indicator {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  max-width: 16rem;
-
-  .d-button-label {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  &.--blocked {
-    color: var(--danger);
-
-    .d-icon {
-      color: var(--danger);
-    }
   }
 }
 
@@ -5334,6 +5543,14 @@ body.wireframe-active {
   .fk-d-tooltip {
     z-index: 1500;
   }
+
+  /* A select-kit dropdown opened from inside a FloatKit menu (e.g. the persona
+     combobox in the View menu) mounts its own body portal; keep it above the
+     menu that hosts it so its options can't render behind the chrome. */
+
+  .select-kit-body {
+    z-index: 1600;
+  }
 }
 
 /* Inline URL edit — the rendered link element (an `<a>` inside DButton
@@ -5624,6 +5841,16 @@ body.wireframe-active
   }
 }
 
+/* The dim system fades everything on the page except the editor's own chrome.
+   Chrome that mounts OUTSIDE `.wireframe-shell` (the docked drawers, and any
+   future floating overlay) carries the shared `.wireframe-editor-overlay` marker
+   so it's exempt from both the transition below and the dim opacity — add that
+   class to a new overlay instead of enumerating it here. The remaining entries
+   are non-wireframe global mounts (FloatKit portals, modal, dialog) we can't
+   class. NOTE: this blanket `transition` uses the shorthand, so any non-exempt
+   descendant loses its own transitions (e.g. a segmented control's slider) —
+   which is why chrome must be exempted, not just left undimmed. */
+
 body.wireframe-active
   *:not(
     :has(.wireframe-outlet-boundary) > *,
@@ -5632,6 +5859,8 @@ body.wireframe-active
     :has(.wireframe-shell) > *,
     .wireframe-shell,
     .wireframe-shell *,
+    .wireframe-editor-overlay,
+    .wireframe-editor-overlay *,
     #d-menu-portals,
     #d-menu-portals *,
     #d-tooltip-portals,
@@ -5654,8 +5883,8 @@ body.wireframe-active--dim-non-editable
     :has(.wireframe-shell) > *,
     .wireframe-shell,
     .wireframe-shell *,
-    .wireframe-review,
-    .wireframe-review *,
+    .wireframe-editor-overlay,
+    .wireframe-editor-overlay *,
     #d-menu-portals,
     #d-menu-portals *,
     #d-tooltip-portals,

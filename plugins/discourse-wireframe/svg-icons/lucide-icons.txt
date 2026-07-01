@@ -37,3 +37,7 @@ align-left
 align-center
 align-right
 wrap-text
+
+# View drawer: simulation status + reset glyphs.
+rotate-ccw
+info

@@ -32,22 +32,29 @@ module DiscourseWireframe
         bullhorn
         circle-dashed
         circle-half-stroke
+        circle-user
         cube
         cubes
+        desktop
         down-left-and-up-right-to-center
         down-long
         fire
         folder-tree
         grip-lines
         heading
+        mobile-screen-button
         object-group
         paragraph
         photo-film
+        shield-halved
         table-cells-large
         table-columns
+        tablet-screen-button
         triangle-exclamation
         up-long
         up-right-and-down-left-from-center
+        user
+        user-xmark
         wand-magic-sparkles
       ].freeze
 
