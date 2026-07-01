@@ -16,8 +16,8 @@
     "jsdoc": "^4.0.5",
     "lefthook": "^2.1.9",
     "licensee": "^11.1.1",
-    "lint-to-the-future": "^2.6.4",
-    "lint-to-the-future-eslint": "^3.3.0",
+    "lint-to-the-future": "^3.2.0",
+    "lint-to-the-future-eslint": "^4.0.0",
     "playwright": "1.59.1",
     "prettier": "3.8.1",
     "stylelint": "17.5.0",
@@ -65,7 +65,6 @@
     },
     "peerDependencyRules": {
       "allowedVersions": {
-        "lint-to-the-future-eslint>eslint": "*",
         "@mixer/parallel-prettier>prettier": "*",
         "ember-this-fallback>ember-source": "*",
         "ember-this-fallback>ember-cli-htmlbars": "*",
