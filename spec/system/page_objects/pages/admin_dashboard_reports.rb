@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "seed_data/admin_dashboard_reports"
+
 module PageObjects
   module Pages
     class AdminDashboardReports < PageObjects::Pages::Base
@@ -15,6 +17,10 @@ module PageObjects
 
       def has_card?(identifier)
         has_css?("#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']")
+      end
+
+      def has_default_report?
+        has_card?(default_report_identifier)
       end
 
       def has_no_card?(identifier)
@@ -43,10 +49,13 @@ module PageObjects
         )
       end
 
-      def open_report(identifier)
-        within("#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']") do
-          find(".db-report__name").click
-        end
+      def open_default_report
+        open_report(default_report_identifier)
+      end
+
+      def prepare_default_reports
+        SiteSetting.admin_dashboard_reports_seeded = false
+        SeedData::AdminDashboardReports.create
         self
       end
 
@@ -81,6 +90,23 @@ module PageObjects
         has_css?(
           "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}'] .db-report__empty",
         )
+      end
+
+      private
+
+      def open_report(identifier)
+        within("#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']") do
+          find(".db-report__name").click
+        end
+        self
+      end
+
+      def default_report_identifier
+        "#{AdminDashboard::Reports::CoreReportProvider::SOURCE_NAME}:#{default_report_type}"
+      end
+
+      def default_report_type
+        SeedData::AdminDashboardReports::DEFAULT_BUILTIN_REPORTS.first
       end
     end
   end
