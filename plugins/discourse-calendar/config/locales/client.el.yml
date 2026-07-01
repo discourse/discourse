@@ -375,6 +375,8 @@ el:
       composer_actions:
         create_event:
           label: "Δημιουργία εκδήλωσης"
+        create_topic:
+          label: "Δημιουργία θέματος"
       builder_modal:
         custom_fields:
           label: "Προσαρμοσμένα πεδία"
