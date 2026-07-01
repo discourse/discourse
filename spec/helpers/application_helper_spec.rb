@@ -34,7 +34,6 @@ RSpec.describe ApplicationHelper do
     end
 
     it "includes the engagement tracking meta tag when pageview events are persisted" do
-      SiteSetting.dashboard_improvements = true
       SiteSetting.persist_browser_pageview_events = true
 
       tags = helper.discourse_pageview_tracking_meta_tags
