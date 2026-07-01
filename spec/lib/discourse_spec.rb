@@ -631,6 +631,45 @@ RSpec.describe Discourse do
     end
   end
 
+  describe "Utils.atomic_ln_s" do
+    let(:source) { Dir.mktmpdir }
+
+    it "creates the destination symlink pointing at the source" do
+      Dir.mktmpdir do |dir|
+        destination = File.join(dir, "link")
+        Discourse::Utils.atomic_ln_s(source, destination)
+
+        expect(File.symlink?(destination)).to eq(true)
+        expect(File.readlink(destination)).to eq(source)
+      end
+    end
+
+    it "replaces an existing symlink at the destination" do
+      Dir.mktmpdir do |dir|
+        destination = File.join(dir, "link")
+        File.symlink(Dir.mktmpdir, destination)
+
+        Discourse::Utils.atomic_ln_s(source, destination)
+
+        expect(File.readlink(destination)).to eq(source)
+      end
+    end
+
+    it "falls back to a copy when tmp and destination are on different filesystems" do
+      # rename(2) raises EXDEV across filesystem boundaries (e.g. containers
+      # where Rails.root/tmp is a separate mount). The link must still land.
+      Dir.mktmpdir do |dir|
+        destination = File.join(dir, "link")
+        allow(File).to receive(:rename).and_raise(Errno::EXDEV)
+
+        Discourse::Utils.atomic_ln_s(source, destination)
+
+        expect(File.symlink?(destination)).to eq(true)
+        expect(File.readlink(destination)).to eq(source)
+      end
+    end
+  end
+
   describe ".clear_all_theme_cache!" do
     before do
       setup_s3
