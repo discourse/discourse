@@ -76,7 +76,7 @@ pt:
           with_images: Imagens
           with_links: Hiperligações
           with_code: Código
-          with_uploads: Envios
+          with_uploads: Uploads
         category_created_edited:
           fields:
             restricted_category:
@@ -101,7 +101,7 @@ pt:
         post:
           fields:
             topic:
-              label: Id. do Tópico
+              label: ID do Tópico
         group_category_notification_default:
           fields:
             group:

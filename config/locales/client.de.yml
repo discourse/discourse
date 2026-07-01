@@ -3118,6 +3118,7 @@ de:
         toggle_whisper:
           label: Flüstermodus umschalten
         create_topic:
+          label: Erstelle ein neues Thema
           desc: Erstelle ein neues Thema
         create_personal_message:
           desc: "Erstelle eine neue persönliche Nachricht"

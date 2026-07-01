@@ -4348,6 +4348,8 @@ ko:
           company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "그룹"
+          locale_selector:
+            title: "언어"
           optional: "(선택 사항)"
           update: "업데이트"
           saved: "저장되었습니다!"

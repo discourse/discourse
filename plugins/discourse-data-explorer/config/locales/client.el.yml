@@ -69,6 +69,8 @@ el:
     group:
       reports: "Αναφορές"
     discourse_workflows:
+      nodes:
+        "action:sql": "Data Explorer"
       sql:
         operation: "Λειτουργία"
         operation_description: "Πώς να εκτελέσετε το ερώτημα"

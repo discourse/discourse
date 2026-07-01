@@ -4668,6 +4668,8 @@ lt:
           company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grupės"
+          locale_selector:
+            title: "Kalba"
           optional: "(pasoronktinai)"
           update: "Atnaujinti"
           saved: "išsaugota!"
