@@ -3,7 +3,6 @@ import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminReportsShowRoute extends DiscourseRoute {
-  @service routeHistory;
   @service router;
 
   queryParams = {
@@ -16,7 +15,7 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
 
   beforeModel(transition) {
     if (this.isAdminDashboardRoute(transition.from)) {
-      this.dashboardReturnUrl = this.routeHistory.lastURL;
+      this.dashboardReturnQueryParams = transition.from.queryParams;
     }
   }
 
@@ -66,15 +65,18 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
   setupController(controller, model) {
     super.setupController(controller, model);
 
-    if (!controller.dashboardReturnUrl && this.dashboardReturnUrl) {
-      controller.dashboardReturnUrl = this.dashboardReturnUrl;
+    if (
+      !controller.dashboardReturnQueryParams &&
+      this.dashboardReturnQueryParams
+    ) {
+      controller.dashboardReturnQueryParams = this.dashboardReturnQueryParams;
     }
   }
 
   resetController(controller, isExiting) {
     if (isExiting) {
-      controller.dashboardReturnUrl = null;
-      this.dashboardReturnUrl = null;
+      controller.dashboardReturnQueryParams = null;
+      this.dashboardReturnQueryParams = null;
     }
   }
 

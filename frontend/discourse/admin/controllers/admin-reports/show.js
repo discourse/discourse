@@ -4,7 +4,7 @@ import { computed } from "@ember/object";
 import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class AdminReportsShowController extends Controller {
-  @tracked dashboardReturnUrl = null;
+  @tracked dashboardReturnQueryParams = null;
   queryParams = applyValueTransformer("admin-reports-show-query-params", [
     "start_date",
     "end_date",
