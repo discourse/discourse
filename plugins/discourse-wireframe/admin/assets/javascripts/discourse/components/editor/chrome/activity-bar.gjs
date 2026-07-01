@@ -1,0 +1,122 @@
+// @ts-check
+import Component from "@glimmer/component";
+import { fn } from "@ember/helper";
+import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
+import { isTesting } from "discourse/lib/environment";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import { i18n } from "discourse-i18n";
+/** @type {import("./activity-entry-tooltip.gjs").default} */
+import ActivityEntryTooltip from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/activity-entry-tooltip";
+
+/**
+ * The editor's left activity bar: a persistent vertical strip of icon-only
+ * toggle buttons that pick which wide panel the left rail shows (Add, Layers,
+ * and the Issues slot whose body lands in a later phase). It stays visible even
+ * when the wide panel is collapsed — the strip IS the collapsed state.
+ *
+ * The entries carry no visible text (the 48px rail is too narrow for legible
+ * labels); each is named for assistive tech via `aria-label` and, for sighted
+ * users, by a hover card showing the name plus a one-line hint.
+ *
+ * Modeled as a toolbar of toggle buttons (not a tablist): clicking the open
+ * panel's entry collapses it, so `aria-pressed` cleanly tracks "this panel is
+ * open" without an ARIA tab pointing at a hidden panel. Future panels are
+ * reserved by extending `ENTRIES`, not by rendering disabled placeholders.
+ */
+export default class ActivityBar extends Component {
+  static ENTRIES = [
+    {
+      tab: "palette",
+      icon: "plus",
+      label: "wireframe.chrome.panel_add",
+      description: "wireframe.chrome.panel_add_description",
+    },
+    {
+      tab: "outline",
+      icon: "layer-group",
+      label: "wireframe.chrome.panel_layers",
+      description: "wireframe.chrome.panel_layers_description",
+    },
+    {
+      tab: "issues",
+      icon: "triangle-exclamation",
+      label: "wireframe.chrome.panel_issues",
+      description: "wireframe.chrome.panel_issues_description",
+    },
+  ];
+
+  @service tooltip;
+  @service wireframeRail;
+
+  /**
+   * Registers the entry's hover card (name + hint). Hover-only — focus moves
+   * between entries on Tab, so a focus trigger would flash the card on every
+   * step; the `aria-label` already names the button for keyboard / SR users.
+   * Suppressed in tests, where FloatKit timing would make assertions flaky and
+   * the card adds no coverage. Mirrors the palette tile's preview registration.
+   */
+  registerTooltip = modifier((element, [entry]) => {
+    if (isTesting()) {
+      return;
+    }
+    const instance = this.tooltip.register(element, {
+      component: ActivityEntryTooltip,
+      data: { entry },
+      interactive: false,
+      triggers: ["hover"],
+      placement: "right",
+      fallbackPlacements: ["top", "bottom"],
+      animated: false,
+    });
+    return () => instance.destroy();
+  });
+
+  <template>
+    <div
+      class="wireframe-activity-bar"
+      role="toolbar"
+      aria-orientation="vertical"
+      aria-label={{i18n "wireframe.chrome.activity_bar_label"}}
+    >
+      {{#each ActivityBar.ENTRIES as |entry|}}
+        <DButton
+          class={{dConcatClass
+            "btn-flat wireframe-activity-bar__entry"
+            (if (this.wireframeRail.isPanelOpen entry.tab) "--active")
+          }}
+          @icon={{entry.icon}}
+          @ariaLabel={{entry.label}}
+          @ariaPressed={{this.wireframeRail.isPanelOpen entry.tab}}
+          @action={{fn this.wireframeRail.activatePanel entry.tab}}
+          {{this.registerTooltip entry}}
+        />
+      {{/each}}
+
+      {{! Persistent two-way collapse toggle, pinned to the bottom of the rail.
+          Mirrors the right panel's chevron; lives in the always-visible rail so
+          it survives collapse and keeps focus inside the rail. }}
+      <DButton
+        class="btn-flat wireframe-activity-bar__collapse"
+        @icon={{if
+          this.wireframeRail.leftCollapsed
+          "chevron-right"
+          "chevron-left"
+        }}
+        @ariaExpanded={{if this.wireframeRail.leftCollapsed false true}}
+        @title={{if
+          this.wireframeRail.leftCollapsed
+          "wireframe.chrome.expand_panel"
+          "wireframe.chrome.collapse_panel"
+        }}
+        @ariaLabel={{if
+          this.wireframeRail.leftCollapsed
+          "wireframe.chrome.expand_panel"
+          "wireframe.chrome.collapse_panel"
+        }}
+        @action={{this.wireframeRail.toggleLeftCollapsed}}
+      />
+    </div>
+  </template>
+}

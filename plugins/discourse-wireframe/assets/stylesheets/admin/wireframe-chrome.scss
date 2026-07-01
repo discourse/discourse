@@ -1093,11 +1093,17 @@ body.wireframe-active {
   z-index: z("modal", "content") - 200;
   display: grid;
 
-  /* Single source of truth for the rail widths: the same `--wf-*-rail` custom
+  /* Single source of truth for the rail widths: the same `--wf-*` custom
      properties the body uses to inset the live page (see `body.wireframe-active`),
-     so the grid columns and the canvas inset can never drift. Collapsing a rail
-     flips its variable to the slim-strip width on the body; the grid inherits it. */
-  grid-template-columns: var(--wf-left-rail) 1fr var(--wf-right-rail);
+     so the grid columns and the canvas inset can never drift. The left side is
+     two columns — a persistent activity bar and the wide panel; their sum is
+     `--wf-left-rail`, which the body padding mirrors. Collapsing the left panel
+     flips `--wf-left-panel` to zero (the activity bar stays); collapsing the
+     right flips `--wf-right-rail` to the slim-strip width. The grid inherits all
+     of these from the body. */
+  grid-template-columns: var(--wf-activity-bar) var(--wf-left-panel) 1fr var(
+      --wf-right-rail
+    );
 
   /* Toolbar / error banner / panels.
      The error banner row collapses to zero height when no error is present
@@ -1185,10 +1191,110 @@ body.wireframe-active {
 }
 
 .wireframe-canvas {
-  grid-column: 2;
+  grid-column: 3;
   grid-row: 3;
   pointer-events: none;
   position: relative;
+}
+
+/* Persistent left activity bar: a vertical strip of icon-only toggle buttons
+   that pick the active left panel. It stays visible when the wide panel is
+   collapsed (it IS the collapsed state), so it owns the separator between the
+   left chrome and the canvas. Entries are named via `aria-label` + a hover card
+   (`.wireframe-activity-tooltip`); the rail is too narrow for legible text. */
+
+.wireframe-activity-bar {
+  grid-column: 1;
+  grid-row: 3;
+  display: flex;
+  flex-direction: column;
+  gap: var(--wf-gap-tight);
+  padding: var(--wf-gap-tight) 0;
+  background: var(--secondary);
+  border-right: 1px solid var(--primary-low);
+  overflow: hidden;
+
+  &__entry {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.25rem;
+    border: none;
+    border-inline-start: 2px solid transparent;
+    background: transparent;
+    color: var(--primary-medium);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--primary);
+      background: var(--primary-very-low);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--wf-accent);
+      outline-offset: -2px;
+    }
+
+    /* Open panel: tinted with an inline-start accent marker, mirroring the
+       active-tab cue used elsewhere in the chrome. */
+
+    &.--active {
+      color: var(--primary);
+      background: var(--primary-very-low);
+      border-inline-start-color: var(--tertiary);
+    }
+
+    .d-icon {
+      font-size: var(--font-up-3);
+    }
+  }
+
+  /* Collapse / expand toggle pinned to the bottom of the rail (a two-way peer of
+     the right panel's chevron). `margin-top: auto` pushes it below the entries. */
+
+  &__collapse {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.25rem;
+    border: none;
+    border-top: 1px solid var(--primary-low);
+    background: transparent;
+    color: var(--primary-medium);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--primary);
+      background: var(--primary-very-low);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--wf-accent);
+      outline-offset: -2px;
+    }
+  }
+}
+
+/* Hover card for an activity-bar entry — the panel name plus a one-line hint,
+   shown via FloatKit since the icon-only rail carries no visible text. */
+
+.wireframe-activity-tooltip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  max-width: 220px;
+
+  &__name {
+    font-weight: 600;
+  }
+
+  &__description {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
 }
 
 /* Sticky breadcrumb pinned to the bottom of the canvas. Shows the
@@ -1197,8 +1303,8 @@ body.wireframe-active {
 
 .wireframe-breadcrumb {
   position: fixed;
-  left: var(--wf-left-rail, 340px);
-  right: var(--wf-right-rail, 280px);
+  left: var(--wf-left-rail, 368px);
+  right: var(--wf-right-rail, 300px);
   bottom: 0;
   z-index: 1050;
   display: flex;
@@ -1249,13 +1355,13 @@ body.wireframe-active {
   overflow: hidden;
 
   &.--left {
-    grid-column: 1;
+    grid-column: 2;
     grid-row: 3;
     border-right: 1px solid var(--primary-low);
   }
 
   &.--right {
-    grid-column: 3;
+    grid-column: 4;
     grid-row: 3;
     border-left: 1px solid var(--primary-low);
   }
@@ -1294,31 +1400,6 @@ body.wireframe-active {
 
     &:hover {
       color: var(--primary);
-    }
-  }
-
-  .panel-header--tabs {
-    padding: 0;
-    display: flex;
-
-    .panel-tab {
-      flex: 1;
-      padding: 0.75rem 1rem;
-      background: transparent;
-      border: none;
-      border-bottom: 2px solid transparent;
-      font-weight: 600;
-      color: var(--primary-medium);
-      cursor: pointer;
-
-      &:hover {
-        color: var(--primary);
-      }
-
-      &.--active {
-        color: var(--primary);
-        border-bottom-color: var(--tertiary);
-      }
     }
   }
 
@@ -1488,10 +1569,17 @@ body.wireframe-active {
      this body padding (which insets the live page under the canvas) read one
      source and can't drift, and so fixed-position editor chrome (breadcrumb,
      future floating UI) can position itself when a rail collapses.
-     `--wf-rail-collapsed` is the slim icon-strip width a collapsed rail shrinks
-     to. */
+     The left side is two columns: a persistent `--wf-activity-bar` icon strip
+     plus the wide `--wf-left-panel`. `--wf-left-rail` is their sum — the single
+     value the body padding and breadcrumb mirror. Collapsing the left flips only
+     `--wf-left-panel` to zero, so the activity bar stays and `--wf-left-rail`
+     shrinks to the bar width. `--wf-rail-collapsed` (40px) is the slim strip the
+     RIGHT rail shrinks to when collapsed (the left collapses to the activity
+     bar instead). */
   --wf-rail-collapsed: 40px;
-  --wf-left-rail: 320px;
+  --wf-activity-bar: 48px;
+  --wf-left-panel: 320px;
+  --wf-left-rail: calc(var(--wf-activity-bar) + var(--wf-left-panel));
   --wf-right-rail: 300px;
 
   /* Height of the fixed editor toolbar. Single source of truth: the shell's
@@ -1504,7 +1592,7 @@ body.wireframe-active {
   box-sizing: border-box;
 
   &.wireframe-active--left-collapsed {
-    --wf-left-rail: var(--wf-rail-collapsed);
+    --wf-left-panel: 0px;
   }
 
   &.wireframe-active--right-collapsed {
@@ -1515,71 +1603,7 @@ body.wireframe-active {
 .wireframe-outline {
   font-size: var(--font-down-1);
 
-  &__view-switch {
-    display: flex;
-    margin-bottom: 0.5rem;
-    background: var(--primary-very-low);
-    border-radius: 4px;
-    padding: 2px;
-  }
-
-  &__view-tab {
-    flex: 1;
-    background: transparent;
-    border: none;
-    padding: 0.3rem 0.5rem;
-    cursor: pointer;
-    color: var(--primary-medium);
-    border-radius: 3px;
-    font-size: var(--font-down-1);
-
-    &:hover {
-      color: var(--primary);
-    }
-
-    &.--active {
-      background: var(--secondary);
-      color: var(--primary);
-      box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
-    }
-  }
-
-  &__outlets {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  &__outlet-row {
-    display: flex;
-    flex-direction: column;
-    gap: 0.125rem;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--primary-low);
-    border-radius: 4px;
-    background: var(--secondary);
-    text-align: left;
-    cursor: pointer;
-    color: var(--primary);
-
-    &:hover {
-      background: var(--primary-very-low);
-      border-color: var(--primary-low-mid);
-    }
-  }
-
-  &__outlet-name {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  &__outlet-meta {
-    color: var(--primary-medium);
-    font-size: var(--font-down-2);
-  }
-
-  /* Filter bar — text search + status chips, shown only in tree view. */
+  /* Filter bar — text search + status chips. */
   &__filter-bar {
     display: flex;
     flex-direction: column;

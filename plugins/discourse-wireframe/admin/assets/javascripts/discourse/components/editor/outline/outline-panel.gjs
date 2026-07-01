@@ -52,9 +52,6 @@ export default class OutlinePanel extends Component {
   @service wireframeSelection;
   @service wireframeEditMode;
 
-  /** "tree" — flat per-block view (default); "outlets" — per-outlet summary. */
-  @tracked viewMode = "tree";
-
   /**
    * Free-text query that filters tree rows by block name / id (case-
    * insensitive substring). Empty string disables the filter.
@@ -68,7 +65,6 @@ export default class OutlinePanel extends Component {
    */
   @tracked statusFilter = "all";
   acceptedDragKinds = ["wf-block", "wf-palette-block"];
-  isViewMode = (mode) => this.viewMode === mode;
   isStatusFilter = (filter) => this.statusFilter === filter;
   /**
    * Whether a container row is collapsed. A row the user has explicitly toggled
@@ -190,27 +186,6 @@ export default class OutlinePanel extends Component {
         rows,
         rootKey: group.rootKey,
         mode: group.mode,
-      };
-    });
-  }
-
-  /**
-   * Decorated per-outlet entries for the "Outlets" view mode — joins
-   * `walkAllOutlets`'s row counts with `listOutletsWithMetadata()`
-   * display info. Mounted-outlet filtering already happens inside
-   * `walkAllOutlets`, so any outlet here is on the current page.
-   */
-  get outletsWithMetadata() {
-    const meta = new Map(
-      this.blocks.listOutletsWithMetadata().map((entry) => [entry.name, entry])
-    );
-    return this.outlets.map((group) => {
-      const m = meta.get(group.outletName);
-      return {
-        name: group.outletName,
-        displayName: m?.displayName ?? group.outletName,
-        description: m?.description ?? null,
-        blockCount: group.rows.length,
       };
     });
   }
@@ -416,11 +391,6 @@ export default class OutlinePanel extends Component {
   }
 
   @action
-  setViewMode(mode) {
-    this.viewMode = mode;
-  }
-
-  @action
   setStatusFilter(filter) {
     this.statusFilter = filter;
   }
@@ -433,16 +403,6 @@ export default class OutlinePanel extends Component {
   @action
   clearQuery() {
     this.query = "";
-  }
-
-  @action
-  jumpToOutlet(outletName) {
-    const el = document.querySelector(
-      `.wireframe-outlet-boundary[data-outlet-name="${outletName}"]`
-    );
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
   }
 
   /**
@@ -617,106 +577,58 @@ export default class OutlinePanel extends Component {
 
   <template>
     <div class="wireframe-outline">
-      <div class="wireframe-outline__view-switch" role="tablist">
-        <DButton
-          class={{dConcatClass
-            "wireframe-outline__view-tab"
-            (if (this.isViewMode "tree") "--active")
-          }}
-          @label="wireframe.outline.view_tree"
-          @action={{fn this.setViewMode "tree"}}
-        />
-        <DButton
-          class={{dConcatClass
-            "wireframe-outline__view-tab"
-            (if (this.isViewMode "outlets") "--active")
-          }}
-          @label="wireframe.outline.view_outlets"
-          @action={{fn this.setViewMode "outlets"}}
-        />
+      <div class="wireframe-outline__filter-bar">
+        <div class="wireframe-outline__search">
+          {{dIcon "magnifying-glass"}}
+          <input
+            type="search"
+            value={{this.query}}
+            placeholder={{i18n "wireframe.outline.filter.placeholder"}}
+            spellcheck="false"
+            autocomplete="off"
+            aria-label={{i18n "wireframe.outline.filter.placeholder"}}
+            {{on "input" this.onQueryInput}}
+          />
+          {{#if this.query}}
+            <DButton
+              class="wireframe-outline__search-clear"
+              @icon="xmark"
+              @ariaLabel="wireframe.outline.filter.clear"
+              @action={{this.clearQuery}}
+            />
+          {{/if}}
+        </div>
+        <div class="wireframe-outline__chips" role="tablist">
+          <DButton
+            class={{dConcatClass
+              "wireframe-outline__chip"
+              (if (this.isStatusFilter "all") "--active")
+            }}
+            @label="wireframe.outline.filter.chip_all"
+            @action={{fn this.setStatusFilter "all"}}
+          />
+          <DButton
+            class={{dConcatClass
+              "wireframe-outline__chip"
+              (if (this.isStatusFilter "errors") "--active")
+            }}
+            @icon="triangle-exclamation"
+            @label="wireframe.outline.filter.chip_errors"
+            @action={{fn this.setStatusFilter "errors"}}
+          />
+          <DButton
+            class={{dConcatClass
+              "wireframe-outline__chip"
+              (if (this.isStatusFilter "conditions") "--active")
+            }}
+            @icon="filter"
+            @label="wireframe.outline.filter.chip_conditions"
+            @action={{fn this.setStatusFilter "conditions"}}
+          />
+        </div>
       </div>
 
-      {{#if (this.isViewMode "tree")}}
-        <div class="wireframe-outline__filter-bar">
-          <div class="wireframe-outline__search">
-            {{dIcon "magnifying-glass"}}
-            <input
-              type="search"
-              value={{this.query}}
-              placeholder={{i18n "wireframe.outline.filter.placeholder"}}
-              spellcheck="false"
-              autocomplete="off"
-              aria-label={{i18n "wireframe.outline.filter.placeholder"}}
-              {{on "input" this.onQueryInput}}
-            />
-            {{#if this.query}}
-              <DButton
-                class="wireframe-outline__search-clear"
-                @icon="xmark"
-                @ariaLabel="wireframe.outline.filter.clear"
-                @action={{this.clearQuery}}
-              />
-            {{/if}}
-          </div>
-          <div class="wireframe-outline__chips" role="tablist">
-            <DButton
-              class={{dConcatClass
-                "wireframe-outline__chip"
-                (if (this.isStatusFilter "all") "--active")
-              }}
-              @label="wireframe.outline.filter.chip_all"
-              @action={{fn this.setStatusFilter "all"}}
-            />
-            <DButton
-              class={{dConcatClass
-                "wireframe-outline__chip"
-                (if (this.isStatusFilter "errors") "--active")
-              }}
-              @icon="triangle-exclamation"
-              @label="wireframe.outline.filter.chip_errors"
-              @action={{fn this.setStatusFilter "errors"}}
-            />
-            <DButton
-              class={{dConcatClass
-                "wireframe-outline__chip"
-                (if (this.isStatusFilter "conditions") "--active")
-              }}
-              @icon="filter"
-              @label="wireframe.outline.filter.chip_conditions"
-              @action={{fn this.setStatusFilter "conditions"}}
-            />
-          </div>
-        </div>
-      {{/if}}
-
-      {{#if (this.isViewMode "outlets")}}
-        {{#if this.outletsWithMetadata.length}}
-          <div class="wireframe-outline__outlets">
-            {{#each this.outletsWithMetadata as |entry|}}
-              <DButton
-                class="wireframe-outline__outlet-row"
-                @translatedTitle={{entry.description}}
-                @action={{fn this.jumpToOutlet entry.name}}
-              >
-                <span class="wireframe-outline__outlet-name">
-                  {{dIcon "cubes"}}
-                  <span>{{entry.displayName}}</span>
-                </span>
-                <span class="wireframe-outline__outlet-meta">
-                  {{entry.name}}
-                  ·
-                  {{i18n
-                    "wireframe.outlets.block_count"
-                    count=entry.blockCount
-                  }}
-                </span>
-              </DButton>
-            {{/each}}
-          </div>
-        {{else}}
-          <div class="panel-empty">{{i18n "wireframe.outline.empty"}}</div>
-        {{/if}}
-      {{else if this.decoratedGroups.length}}
+      {{#if this.decoratedGroups.length}}
         {{#each this.decoratedGroups as |group|}}
           <div class="outline-outlet">
             {{! The header chevron toggles collapse; the label selects the

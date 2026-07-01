@@ -1,7 +1,6 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import bodyClass from "discourse/helpers/body-class";
@@ -13,6 +12,7 @@ import dDragAndDropMonitor from "discourse/ui-kit/modifiers/d-drag-and-drop-moni
 import { i18n } from "discourse-i18n";
 
 const VE_DRAG_TYPES = ["wf-block", "wf-palette-block"];
+import ActivityBar from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/activity-bar";
 import BlockBreadcrumb from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/block-breadcrumb";
 import ConditionsFloatingPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/conditions-floating-panel";
 import DropPreview from "discourse/plugins/discourse-wireframe/discourse/components/editor/drag-drop/drop-preview";
@@ -25,10 +25,11 @@ import PublishBlockedCallout from "discourse/plugins/discourse-wireframe/discour
 import PublishReviewDrawer from "discourse/plugins/discourse-wireframe/discourse/components/editor/publish/publish-review-drawer";
 import PublishTargetIndicator from "discourse/plugins/discourse-wireframe/discourse/components/editor/publish/publish-target-indicator";
 import SimulationControls from "discourse/plugins/discourse-wireframe/discourse/components/editor/simulation/simulation-controls";
-import {
-  readBoolStorage,
-  writeBoolStorage,
-} from "discourse/plugins/discourse-wireframe/discourse/lib/storage";
+
+// Persisted under core's global key-value store; the `wireframe_` prefix
+// namespaces our keys within its shared `discourse_` bucket to avoid collisions.
+const RIGHT_COLLAPSED_KEY = "wireframe_rightCollapsed";
+const DIM_NON_EDITABLE_KEY = "wireframe_dimNonEditable";
 
 /**
  * The 3-pane editor chrome (toolbar + outline + canvas + inspector).
@@ -48,10 +49,20 @@ export default class EditorShell extends Component {
   @service wireframeRail;
   @service wireframeStaging;
   @service wireframeValidation;
+  @service keyValueStore;
 
   @tracked warningsPanelOpen = false;
-  @tracked rightCollapsed = readBoolStorage("ve.rightCollapsed");
-  @tracked dimNonEditable = readBoolStorage("ve.dimNonEditable", true);
+  @tracked rightCollapsed;
+  @tracked dimNonEditable;
+
+  constructor() {
+    super(...arguments);
+    // Hydrate persisted prefs in the constructor so `keyValueStore` is resolved.
+    this.rightCollapsed =
+      this.keyValueStore.getObject(RIGHT_COLLAPSED_KEY) ?? false;
+    this.dimNonEditable =
+      this.keyValueStore.getObject(DIM_NON_EDITABLE_KEY) ?? true;
+  }
 
   /**
    * CSS classes for the shell. `--dragging` (set while a block drag is in flight)
@@ -71,16 +82,39 @@ export default class EditorShell extends Component {
     return classes.join(" ");
   }
 
+  /**
+   * The i18n key for the active left panel's header title. Mirrors the activity
+   * bar's entry labels so the open panel and its rail entry read the same name.
+   *
+   * @returns {string}
+   */
+  get leftPanelTitleKey() {
+    switch (this.wireframeRail.leftPanelTab) {
+      case "outline":
+        return "wireframe.chrome.panel_layers";
+      case "issues":
+        return "wireframe.chrome.panel_issues";
+      default:
+        return "wireframe.chrome.panel_add";
+    }
+  }
+
   @action
   toggleRightCollapsed() {
     this.rightCollapsed = !this.rightCollapsed;
-    writeBoolStorage("ve.rightCollapsed", this.rightCollapsed);
+    this.keyValueStore.setObject({
+      key: RIGHT_COLLAPSED_KEY,
+      value: this.rightCollapsed,
+    });
   }
 
   @action
   toggleDimNonEditable() {
     this.dimNonEditable = !this.dimNonEditable;
-    writeBoolStorage("ve.dimNonEditable", this.dimNonEditable);
+    this.keyValueStore.setObject({
+      key: DIM_NON_EDITABLE_KEY,
+      value: this.dimNonEditable,
+    });
   }
 
   @action
@@ -207,68 +241,35 @@ export default class EditorShell extends Component {
           </div>
         {{/if}}
 
-        <div
-          class={{dConcatClass
-            "wireframe-panel"
-            "--left"
-            (if this.wireframeRail.leftCollapsed "--collapsed")
-          }}
-        >
-          <div class="panel-header panel-header--tabs">
-            {{#unless this.wireframeRail.leftCollapsed}}
-              <DButton
-                class={{dConcatClass
-                  "btn-flat panel-tab"
-                  (if
-                    (this.wireframeRail.isLeftPanelTabActive "palette")
-                    "--active"
-                  )
-                }}
-                @label="wireframe.chrome.tab_palette"
-                @action={{fn this.wireframeRail.setLeftPanelTab "palette"}}
-              />
-              <DButton
-                class={{dConcatClass
-                  "btn-flat panel-tab"
-                  (if
-                    (this.wireframeRail.isLeftPanelTabActive "outline")
-                    "--active"
-                  )
-                }}
-                @label="wireframe.chrome.tab_outline"
-                @action={{fn this.wireframeRail.setLeftPanelTab "outline"}}
-              />
-            {{/unless}}
-            <DButton
-              class="btn-flat panel-collapse-toggle"
-              @icon={{if
-                this.wireframeRail.leftCollapsed
-                "chevron-right"
-                "chevron-left"
-              }}
-              @title={{if
-                this.wireframeRail.leftCollapsed
-                "wireframe.chrome.expand_panel"
-                "wireframe.chrome.collapse_panel"
-              }}
-              @ariaLabel={{if
-                this.wireframeRail.leftCollapsed
-                "wireframe.chrome.expand_panel"
-                "wireframe.chrome.collapse_panel"
-              }}
-              @action={{this.wireframeRail.toggleLeftCollapsed}}
-            />
-          </div>
-          {{#unless this.wireframeRail.leftCollapsed}}
+        <ActivityBar />
+
+        {{! The wide left panel is rendered ONLY when expanded; the activity bar
+            is the persistent collapsed state. Rendering it at zero width instead
+            would mount a clipped header and paint a stray border seam. }}
+        {{#unless this.wireframeRail.leftCollapsed}}
+          <div class="wireframe-panel --left">
+            <div class="panel-header">
+              <span>{{i18n this.leftPanelTitleKey}}</span>
+            </div>
             <div class="panel-body">
               {{#if (this.wireframeRail.isLeftPanelTabActive "palette")}}
                 <PalettePanel />
-              {{else}}
+              {{else if (this.wireframeRail.isLeftPanelTabActive "outline")}}
                 <OutlinePanel />
+              {{else if (this.wireframeRail.isLeftPanelTabActive "issues")}}
+                <div
+                  class="wireframe-issues"
+                  role="region"
+                  aria-label={{i18n "wireframe.chrome.panel_issues"}}
+                >
+                  <div class="panel-empty">
+                    {{i18n "wireframe.chrome.issues_empty"}}
+                  </div>
+                </div>
               {{/if}}
             </div>
-          {{/unless}}
-        </div>
+          </div>
+        {{/unless}}
 
         <div class="wireframe-canvas">
           <BlockBreadcrumb />

@@ -20,13 +20,17 @@ en:
         warnings_panel_title:
           one: "%{count} block has issues"
           other: "%{count} blocks have issues"
-        panel_outline: "Outline"
-        panel_palette: "Palette"
+        panel_add: "Add"
+        panel_add_description: "Insert blocks onto the page"
+        panel_layers: "Layers"
+        panel_layers_description: "The page's block structure"
+        panel_issues: "Issues"
+        panel_issues_description: "Validation problems on the page"
         panel_inspector: "Inspector"
+        activity_bar_label: "Editor panels"
+        issues_empty: "No issues detected."
         collapse_panel: "Collapse panel"
         expand_panel: "Expand panel"
-        tab_palette: "Palette"
-        tab_outline: "Outline"
         outlet_jump_label: "Jump to outlet"
         outlet_jump_placeholder: "Jump to outlet…"
         simulation:
@@ -70,14 +74,6 @@ en:
         count_removed: "%{count} removed"
         count_edited: "%{count} changed"
         count_moved: "%{count} moved"
-      outlets:
-        empty: "No registered outlets."
-        group_core: "Core"
-        group_plugin: "Plugin"
-        group_theme: "Theme"
-        block_count:
-          one: "%{count} block"
-          other: "%{count} blocks"
       palette:
         search_placeholder: "Search blocks"
         empty: "No blocks match your filter."
@@ -339,8 +335,6 @@ en:
       outline:
         empty: "No editable outlets on this page."
         outlet_label: "Outlet"
-        view_tree: "Tree"
-        view_outlets: "Outlets"
         expand_row: "Expand children"
         collapse_row: "Collapse children"
         child_count:
