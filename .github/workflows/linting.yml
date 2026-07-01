@@ -52,6 +52,10 @@ jobs:
       - name: pnpm install
         run: pnpm install --frozen-lockfile
 
+      - name: pnpm dedupe check
+        if: ${{ !cancelled() }}
+        run: pnpm dedupe --check
+
       - name: Bundler checksums
         if: ${{ !cancelled() }}
         shell: bash
