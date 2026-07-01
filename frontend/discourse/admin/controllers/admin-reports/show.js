@@ -1,8 +1,10 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { computed } from "@ember/object";
 import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class AdminReportsShowController extends Controller {
+  @tracked return_url = null;
   queryParams = applyValueTransformer("admin-reports-show-query-params", [
     "start_date",
     "end_date",
@@ -15,7 +17,6 @@ export default class AdminReportsShowController extends Controller {
   end_date = null;
   filters = null;
   chart_grouping = null;
-  return_url = null;
 
   get dashboardReturnUrl() {
     if (this.return_url?.match(/^\/admin(?:\?|$)/)) {

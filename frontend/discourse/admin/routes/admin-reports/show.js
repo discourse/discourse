@@ -59,7 +59,7 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
 
   resetController(controller, isExiting) {
     if (isExiting) {
-      controller.return_url = null;
+      controller.set("return_url", null);
     }
   }
 
