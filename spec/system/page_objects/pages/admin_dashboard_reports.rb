@@ -43,6 +43,13 @@ module PageObjects
         )
       end
 
+      def open_report(identifier)
+        within("#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']") do
+          find(".db-report__name").click
+        end
+        self
+      end
+
       def open_manage_reports_via_tile
         find("#{SECTION_SELECTOR} .db-report__add-report").click
         self

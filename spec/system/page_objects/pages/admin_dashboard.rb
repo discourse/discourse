@@ -23,6 +23,14 @@ module PageObjects
         has_no_css?(".dashboard-problem", text: message)
       end
 
+      def current_request_uri
+        URI.parse(page.current_url).request_uri
+      end
+
+      def has_current_dashboard_path?(path)
+        page.has_current_path?(path)
+      end
+
       def dismiss_notice(message)
         find(".dashboard-problem", text: message).find(".btn").click
       end
