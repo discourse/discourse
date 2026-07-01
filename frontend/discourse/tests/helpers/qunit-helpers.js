@@ -515,8 +515,39 @@ export function query() {
   return document.querySelector("#ember-testing").querySelector(...arguments);
 }
 
+const JQUERY_SELECTOR_PATTERN =
+  /:(contains|visible|hidden|eq|lt|gt|even|odd|first|last|header|input|checkbox|radio|selected|parent)\b(?!-)/i;
+
+function elementsFor(target) {
+  if (isEmpty(target)) {
+    return [];
+  }
+
+  if (typeof target === "string") {
+    if (JQUERY_SELECTOR_PATTERN.test(target)) {
+      deprecated(
+        `"${target}" uses a jQuery-only selector. Use a native CSS selector instead; jQuery selector support will be removed.`,
+        {
+          id: "discourse.qunit-helpers.jquery-selector",
+          since: "2026.7.0-latest",
+        }
+      );
+
+      return $(target, "#ember-testing").toArray();
+    }
+
+    return findAll(target);
+  }
+
+  if (target instanceof Element) {
+    return [target];
+  }
+
+  return Array.from(target);
+}
+
 export function invisible(selector) {
-  const visibleItems = findAll(selector).filter(isVisible);
+  const visibleItems = elementsFor(selector).filter(isVisible);
   if (visibleItems.length === 0) {
     return true;
   }
@@ -526,11 +557,11 @@ export function invisible(selector) {
 }
 
 export function visible(selector) {
-  return findAll(selector).some(isVisible);
+  return elementsFor(selector).some(isVisible);
 }
 
 export function count(selector) {
-  return findAll(selector).length;
+  return elementsFor(selector).length;
 }
 
 export function exists(selector) {
