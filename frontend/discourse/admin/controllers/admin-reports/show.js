@@ -4,26 +4,18 @@ import { computed } from "@ember/object";
 import { applyValueTransformer } from "discourse/lib/transformer";
 
 export default class AdminReportsShowController extends Controller {
-  @tracked return_url = null;
+  @tracked dashboardReturnUrl = null;
   queryParams = applyValueTransformer("admin-reports-show-query-params", [
     "start_date",
     "end_date",
     "filters",
     "chart_grouping",
     "mode",
-    "return_url",
   ]);
   start_date = null;
   end_date = null;
   filters = null;
   chart_grouping = null;
-
-  get dashboardReturnUrl() {
-    if (this.return_url?.match(/^\/admin(?:\?|$)/)) {
-      return this.return_url;
-    }
-    return null;
-  }
 
   @computed("model.type")
   get reportOptions() {

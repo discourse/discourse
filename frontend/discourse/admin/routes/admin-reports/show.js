@@ -3,6 +3,7 @@ import { service } from "@ember/service";
 import DiscourseRoute from "discourse/routes/discourse";
 
 export default class AdminReportsShowRoute extends DiscourseRoute {
+  @service routeHistory;
   @service router;
 
   queryParams = {
@@ -11,7 +12,6 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
     filters: { refreshModel: true },
     chart_grouping: { refreshModel: true },
     mode: { refreshModel: true },
-    return_url: { refreshModel: false },
   };
 
   model(params) {
@@ -57,10 +57,25 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
     return super.serializeQueryParam(value, urlKey, defaultValueType);
   }
 
+  setupController(controller, model) {
+    super.setupController(controller, model);
+
+    if (
+      !controller.dashboardReturnUrl &&
+      this.isDashboardUrl(this.routeHistory.lastURL)
+    ) {
+      controller.dashboardReturnUrl = this.routeHistory.lastURL;
+    }
+  }
+
   resetController(controller, isExiting) {
     if (isExiting) {
-      controller.set("return_url", null);
+      controller.dashboardReturnUrl = null;
     }
+  }
+
+  isDashboardUrl(url) {
+    return url?.match(/^\/admin(?:\?|$)/);
   }
 
   redirect(params) {
@@ -72,7 +87,6 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
         queryParams: {
           ...params,
           type: "consolidated_page_views",
-          return_url: params.return_url || this.controller?.return_url,
         },
       });
     }
@@ -91,7 +105,6 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
       end_date: params.endDate
         ? params.endDate.toISOString(true).split("T")[0]
         : null,
-      return_url: this.controller.return_url,
     };
 
     this.router.transitionTo("adminReports.show", { queryParams });
