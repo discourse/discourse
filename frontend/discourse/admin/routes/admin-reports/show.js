@@ -57,6 +57,12 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
     return super.serializeQueryParam(value, urlKey, defaultValueType);
   }
 
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.return_url = null;
+    }
+  }
+
   redirect(params) {
     if (
       params.type === "site_traffic" &&
