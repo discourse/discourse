@@ -14,6 +14,8 @@ export default class AiAdminDashboardHighlight extends Component {
   @tracked loading = true;
   @tracked failed = false;
 
+  loadId = 0;
+
   get queryKey() {
     const { period, startDate, endDate } = this.args.outletArgs;
     return `${period}:${this.formatDate(startDate)}:${this.formatDate(endDate)}`;
@@ -29,6 +31,7 @@ export default class AiAdminDashboardHighlight extends Component {
 
   @action
   async loadHighlight() {
+    const loadId = ++this.loadId;
     this.loading = true;
     this.failed = false;
 
@@ -45,11 +48,19 @@ export default class AiAdminDashboardHighlight extends Component {
           },
         }
       );
+      if (loadId !== this.loadId) {
+        return;
+      }
       this.highlight = result.highlight;
     } catch {
+      if (loadId !== this.loadId) {
+        return;
+      }
       this.failed = true;
     } finally {
-      this.loading = false;
+      if (loadId === this.loadId) {
+        this.loading = false;
+      }
     }
   }
 
