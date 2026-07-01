@@ -102,7 +102,7 @@ module PageObjects
       end
 
       def default_report_identifier
-        "#{AdminDashboard::Reports::CoreReportProvider::SOURCE_NAME}:#{default_report_type}"
+        "#{::AdminDashboard::Reports::CoreReportProvider::SOURCE_NAME}:#{default_report_type}"
       end
 
       def default_report_type
