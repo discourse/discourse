@@ -848,6 +848,31 @@ RSpec.describe GroupsController do
       expect(response.status).to eq(403)
     end
 
+    it "hides activity timestamps for hidden profiles" do
+      SiteSetting.allow_users_to_hide_profile = true
+
+      hidden_user = Fabricate(:user, last_seen_at: 1.hour.ago, last_posted_at: 2.hours.ago)
+      hidden_user.user_option.update!(hide_profile: true)
+      visible_user = Fabricate(:user, last_seen_at: 3.hours.ago, last_posted_at: 4.hours.ago)
+      viewer = Fabricate(:user, trust_level: TrustLevel[2])
+      group.add(hidden_user)
+      group.add(visible_user)
+
+      sign_in(viewer)
+      get "/groups/#{group.name}/members.json"
+
+      expect(response.status).to eq(200)
+
+      members = response.parsed_body["members"]
+      hidden_member = members.find { |member| member["id"] == hidden_user.id }
+      visible_member = members.find { |member| member["id"] == visible_user.id }
+
+      expect(hidden_member).to be_present
+      expect(visible_member).to be_present
+      expect(hidden_member).not_to include("last_seen_at", "last_posted_at")
+      expect(visible_member).to include("last_seen_at", "last_posted_at")
+    end
+
     it "ensures that membership can be paginated" do
       freeze_time
 
