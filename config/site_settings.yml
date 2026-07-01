@@ -1366,7 +1366,7 @@ posting:
       hide_settings:
         - allow_uncategorized_topics
         - suppress_uncategorized_badge
-      learn_more_url: "https://meta.discourse.org/t/-/123456"
+      learn_more_url: "https://meta.discourse.org/t/-/406373"
   allow_duplicate_topic_titles:
     default: false
     area: "posts_and_topics"
