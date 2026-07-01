@@ -44,7 +44,7 @@ export default class ChatMessageCollapser extends Component {
   }
 
   get uploadsHeader() {
-    let name = "";
+    let name;
     if (this.args.uploads.length === 1) {
       const upload = this.args.uploads[0];
       name =

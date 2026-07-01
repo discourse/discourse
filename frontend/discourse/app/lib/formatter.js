@@ -325,7 +325,7 @@ function relativeAgeMedium(date, options) {
   const fiveDaysAgo = 432000;
   const oneMinuteAgo = 60;
 
-  let displayDate = "";
+  let displayDate;
   if (distance < oneMinuteAgo) {
     displayDate = i18n("now");
   } else if (distance > fiveDaysAgo) {

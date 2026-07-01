@@ -192,7 +192,7 @@ export default class TopicNavigation extends Component {
     const timelineContainer = document.querySelector(".timeline-container");
     const maxOffset = timelineContainer.offsetHeight;
 
-    let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
+    let durationMs;
     if (this._swipeEvents.shouldCloseMenu(e, "bottom")) {
       const distancePx = maxOffset - this.pxClosed;
       durationMs = this._swipeEvents.getMaxAnimationTimeMs(
