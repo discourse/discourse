@@ -2,6 +2,8 @@
 import { registerDestructor } from "@ember/destroyable";
 import { next } from "@ember/runloop";
 import { draggable } from "@atlaskit/pragmatic-drag-and-drop/element/adapter";
+import { pointerOutsideOfPreview } from "@atlaskit/pragmatic-drag-and-drop/element/pointer-outside-of-preview";
+import { setCustomNativeDragPreview } from "@atlaskit/pragmatic-drag-and-drop/element/set-custom-native-drag-preview";
 import Modifier from "ember-modifier";
 
 /**
@@ -23,8 +25,8 @@ import Modifier from "ember-modifier";
  * @param {() => Object} getArgsRef - Closure returning the latest args.
  *   PDND callbacks read this on every invocation, so arg changes take
  *   effect without re-registering. Args shape matches the modifier:
- *   `type`, `data`, `getInitialData`, `dragPreview`, `canDrag`,
- *   `onDragStart`, `onDrop`.
+ *   `type`, `data`, `getInitialData`, `dragPreview`, `dragPreviewOffset`,
+ *   `canDrag`, `onDragStart`, `onDrop`.
  * @returns {() => void} Cleanup function. Caller invokes it once on
  *   teardown.
  */
@@ -45,7 +47,27 @@ export function registerDragAndDropSource(element, getArgsRef) {
     },
     onGenerateDragPreview: ({ nativeSetDragImage }) => {
       const args = getArgsRef();
-      if (args.dragPreview && nativeSetDragImage) {
+      if (!nativeSetDragImage) {
+        return;
+      }
+      // A function `dragPreview` renders a fresh preview into an isolated,
+      // offscreen container the browser photographs — nothing around the source
+      // element can bleed into the drag image — and can be pushed clear of the
+      // pointer via `dragPreviewOffset`.
+      if (typeof args.dragPreview === "function") {
+        setCustomNativeDragPreview({
+          nativeSetDragImage,
+          getOffset: args.dragPreviewOffset
+            ? pointerOutsideOfPreview(args.dragPreviewOffset)
+            : undefined,
+          render: ({ container }) => args.dragPreview({ container, element }),
+        });
+        return;
+      }
+      // An `Element` is photographed in place. The browser clamps the hotspot
+      // to within the element, so `dragPreviewOffset` cannot push it off the
+      // pointer here — it applies only to the render-function form above.
+      if (args.dragPreview) {
         nativeSetDragImage(args.dragPreview, 0, 0);
       }
     },
@@ -129,8 +151,18 @@ export function registerDragAndDropSource(element, getArgsRef) {
  *    callbacks.
  *  - `getInitialData` — alternative to `data` for dynamic payloads.
  *    Called once just before `dragstart`; merged with `{type}`.
- *  - `dragPreview` — optional `Element` to use as the native drag
- *    preview. Defaults to the source element if omitted.
+ *  - `dragPreview` — optional custom native drag preview, in one of two
+ *    forms. An `Element` is photographed in place (the browser controls
+ *    the hotspot). A render function `({container, element}) =>
+ *    cleanupFn` mounts a fresh preview into an isolated, offscreen
+ *    container the browser photographs, so nothing around the source
+ *    element bleeds into the drag image; return a cleanup function that
+ *    tears the preview down. Defaults to the source element if omitted.
+ *  - `dragPreviewOffset` — optional `{x, y}` of CSS length values (e.g.
+ *    `{x: "1rem", y: "0.5rem"}`) that pushes the preview clear of the
+ *    pointer for better drop accuracy. Applies only to the render-
+ *    function `dragPreview` form; ignored for an `Element` preview, whose
+ *    hotspot the browser clamps to within the image.
  *  - `canDrag` — `({source, input}) => boolean`. Returning `false`
  *    blocks the drag from starting.
  *  - `onDragStart` — `({source, input}) => void`. Fires once the

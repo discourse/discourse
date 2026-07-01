@@ -226,6 +226,32 @@ export default class PalettePanel extends Component {
   }
 
   /**
+   * Builds the native drag preview for a palette tile: a faithful clone of the
+   * dragged tile, rendered into the isolated offscreen container so no
+   * neighboring tile bleeds into the drag image the way the browser's default
+   * snapshot of the live tile does.
+   *
+   * @param {Object} args
+   * @param {HTMLElement} args.container - The offscreen host the browser
+   *   photographs; appended to `document.body` and removed after cleanup.
+   * @param {HTMLElement} args.element - The dragged tile.
+   * @returns {() => void} Cleanup that removes the cloned preview.
+   */
+  @action
+  renderDragPreview({ container, element }) {
+    const clone = /** @type {HTMLElement} */ (element.cloneNode(true));
+    // Drop the source-only drag styling and the screen-reader-only description
+    // span so the preview shows just the tile's thumbnail and label.
+    clone.classList.remove("is-dragging");
+    clone.querySelector(".sr-only")?.remove();
+    // Pin the clone to the source width so it renders at the tile's size rather
+    // than shrinking to its content in the unconstrained container.
+    clone.style.width = `${element.offsetWidth}px`;
+    container.append(clone);
+    return () => clone.remove();
+  }
+
+  /**
    * Shows an insert hint, tagged with the current selection so the visible
    * callout auto-hides once the selection changes, and announces it through the
    * core live-region service for screen readers (the visible callout is
@@ -278,9 +304,13 @@ export default class PalettePanel extends Component {
                 @entry={{row}}
                 @onActivate={{this.insertFromPalette}}
                 @activateOn="dblclick"
+                {{! The offset pushes the ghost ahead of the pointer so it
+                    doesn't cover the drop point. }}
                 {{dDragAndDropSource
                   type="wf-palette-block"
                   data=(hash blockName=row.name)
+                  dragPreview=this.renderDragPreview
+                  dragPreviewOffset=(hash x="1rem" y="0.5rem")
                   onDragStart=this.handleDragStart
                   onDrop=this.wireframeDragSession.endDrag
                 }}
