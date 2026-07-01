@@ -53,7 +53,15 @@ export default apiInitializer((api) => {
       }
 
       const footnoteId = refLink.getAttribute("href");
-      const footnoteContent = elem.querySelector(footnoteId)?.innerHTML;
+
+      const footnoteElement = elem.querySelector(footnoteId)?.cloneNode(true);
+      footnoteElement
+        ?.querySelectorAll("sup.footnote-ref")
+        .forEach((nestedRef) => {
+          nestedRef.replaceWith(nestedRef.textContent);
+        });
+
+      const footnoteContent = footnoteElement?.innerHTML;
 
       const expandableFootnote = document.createElement("span");
       expandableFootnote.className = "inline-footnote";
