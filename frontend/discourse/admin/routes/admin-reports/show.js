@@ -14,6 +14,12 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
     mode: { refreshModel: true },
   };
 
+  beforeModel(transition) {
+    if (this.isAdminDashboardRoute(transition.from)) {
+      this.dashboardReturnUrl = this.routeHistory.lastURL;
+    }
+  }
+
   model(params) {
     params.customFilters = params.filters;
     delete params.filters;
@@ -60,22 +66,20 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
   setupController(controller, model) {
     super.setupController(controller, model);
 
-    if (
-      !controller.dashboardReturnUrl &&
-      this.isDashboardUrl(this.routeHistory.lastURL)
-    ) {
-      controller.dashboardReturnUrl = this.routeHistory.lastURL;
+    if (!controller.dashboardReturnUrl && this.dashboardReturnUrl) {
+      controller.dashboardReturnUrl = this.dashboardReturnUrl;
     }
   }
 
   resetController(controller, isExiting) {
     if (isExiting) {
       controller.dashboardReturnUrl = null;
+      this.dashboardReturnUrl = null;
     }
   }
 
-  isDashboardUrl(url) {
-    return url?.match(/^\/admin(?:\?|$)/);
+  isAdminDashboardRoute(route) {
+    return route?.name === "admin.dashboard.general";
   }
 
   redirect(params) {
