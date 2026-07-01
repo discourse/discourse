@@ -3,15 +3,11 @@ import BackButton from "discourse/components/back-button";
 import routeAction from "discourse/helpers/route-action";
 
 export default <template>
-  {{#if @controller.dashboardReturnQueryParams}}
-    <BackButton
-      @route="admin.dashboard.general"
-      @query={{@controller.dashboardReturnQueryParams}}
-      @label="admin.reports.back_to_dashboard"
-    />
-  {{else}}
-    <BackButton @route="adminReports" @label="admin.reports.back" />
-  {{/if}}
+  <BackButton
+    @route={{@controller.backLink.route}}
+    @query={{@controller.backLink.query}}
+    @label={{@controller.backLink.label}}
+  />
   <div class="admin-container admin-config-page__main-area">
     <div class="admin-config-area">
       <AdminReport

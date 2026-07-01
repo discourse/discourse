@@ -15,7 +15,11 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
 
   beforeModel(transition) {
     if (this.isAdminDashboardRoute(transition.from)) {
-      this.dashboardReturnQueryParams = transition.from.queryParams;
+      this.backLink = {
+        route: "admin.dashboard.general",
+        query: transition.from.queryParams,
+        label: "admin.reports.back_to_dashboard",
+      };
     }
   }
 
@@ -65,13 +69,15 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
   setupController(controller, model) {
     super.setupController(controller, model);
 
-    controller.dashboardReturnQueryParams =
-      this.dashboardReturnQueryParams ?? null;
+    controller.backLink = this.backLink ?? {
+      route: "adminReports",
+      label: "admin.reports.back",
+    };
   }
 
   resetController(controller, isExiting) {
     if (isExiting) {
-      this.dashboardReturnQueryParams = null;
+      this.backLink = null;
     }
   }
 
