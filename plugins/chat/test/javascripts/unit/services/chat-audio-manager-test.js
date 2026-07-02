@@ -9,6 +9,10 @@ class MockAudioContext {
   destination = {};
   oscillators = [];
 
+  resume() {
+    return Promise.resolve();
+  }
+
   createOscillator() {
     const oscillator = {
       frequency: {
@@ -96,8 +100,11 @@ module("Unit | Service | chat-audio-manager", function (hooks) {
   });
 
   test("throttles notification sounds by default", async function (assert) {
-    await this.subject.play("classic");
-    await this.subject.play("soft");
+    assert.true(await this.subject.play("classic"), "plays the first sound");
+    assert.true(
+      await this.subject.play("soft"),
+      "reports a throttled drop as handled"
+    );
 
     assert.strictEqual(
       this.context.oscillators.length,
@@ -114,6 +121,20 @@ module("Unit | Service | chat-audio-manager", function (hooks) {
       this.context.oscillators.length,
       4,
       "plays each selected preview sound"
+    );
+  });
+
+  test("skips the sound when the audio context stays suspended", async function (assert) {
+    this.context.state = "suspended";
+
+    assert.false(
+      await this.subject.play("classic"),
+      "reports the sound as unplayable"
+    );
+    assert.strictEqual(
+      this.context.oscillators.length,
+      0,
+      "does not schedule a sound without user interaction"
     );
   });
 
