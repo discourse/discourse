@@ -7163,12 +7163,17 @@ en:
                 dropping:
                   one: "-%{count} dropping"
                   other: "-%{count} dropping"
-              moves_in_aria:
-                one: "%{count} member moved up"
-                other: "%{count} members moved up"
-              moves_out_aria:
-                one: "%{count} member moved down"
-                other: "%{count} members moved down"
+              signups:
+                one: "+ %{formattedCount} signup"
+                other: "+ %{formattedCount} signups"
+              signups_title: "Number of new signups arriving at this trust level"
+              count_title: "Number of total members at this trust level"
+              arrivals_aria:
+                one: "%{count} member got promoted to this trust level"
+                other: "%{count} members got promoted to this trust level"
+              demotions_in_aria:
+                one: "%{count} member got demoted to this trust level"
+                other: "%{count} members got demoted to this trust level"
               stable_aria: "no movement"
             headline:
               healthy_growth:
