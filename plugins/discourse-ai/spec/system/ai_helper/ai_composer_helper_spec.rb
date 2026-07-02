@@ -371,8 +371,8 @@ RSpec.describe "AI Composer helper" do
       expect(edit_tag_chooser).to have_no_option_name(music.name)
     end
 
-    it "applies a suggested tag to the topic" do
-      response = [{ id: cloud.id, name: cloud.name, count: 1 }]
+    it "applies a suggested tag and stops offering it once added" do
+      response = [cloud, feedback].map { |t| { id: t.id, name: t.name, count: 1 } }
       DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
 
       topic_page.visit_topic(topic)
@@ -382,10 +382,9 @@ RSpec.describe "AI Composer helper" do
       edit_tag_chooser.select_row_by_value("ai-tag-suggest")
       edit_tag_chooser.select_row_by_name(cloud.name)
 
-      expect(page).to have_css(
-        ".edit-tags__wrapper .mini-tag-chooser .discourse-tag",
-        text: cloud.name,
-      )
+      expect(edit_tag_chooser).to have_selected_choice_name(cloud.name)
+      expect(edit_tag_chooser).to have_no_option_name(cloud.name)
+      expect(edit_tag_chooser).to have_option_name(feedback.name)
     end
   end
 
