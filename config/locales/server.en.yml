@@ -2870,8 +2870,6 @@ en:
     share_quote_buttons: "Determine which items appear in the quote sharing widget, and in what order."
     share_quote_visibility: "Determine when to show quote sharing buttons: never, to anonymous users only or all users. "
 
-    create_revision_on_bulk_topic_moves: "Create revision for first posts when topics are moved into a new category in bulk."
-
     allow_changing_staged_user_tracking: "Allow a staged user's category and tag notification preferences to be changed by an admin user."
     use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Warning: This can make it easier for bad actors to discover the email address of your members (because many people use common email providers like `gmail.com`)."
     use_name_for_username_suggestions: "Use a user's full name when suggesting usernames during SSO and OAuth signup flows."

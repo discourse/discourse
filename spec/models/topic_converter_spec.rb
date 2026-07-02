@@ -130,7 +130,7 @@ RSpec.describe TopicConverter do
         ).to be_present
       end
 
-      it "skips small action, revision, and bump when silent" do
+      it "records a revision but skips small action and bump when silent" do
         Jobs.run_immediately!
         first_post
         bumped_at = private_message.reload.bumped_at
@@ -139,8 +139,9 @@ RSpec.describe TopicConverter do
           TopicConverter.new(private_message, admin, silent: true).convert_to_public_topic(
             category.id,
           )
-        end.to not_change { PostRevision.count }
+        end.to change { PostRevision.count }.by(1)
 
+        expect(private_message.first_post.revisions.last.hidden).to eq(true)
         expect(private_message.posts.where(post_type: Post.types[:small_action])).to be_empty
         expect(private_message.reload.bumped_at).to be_within(1.second).of(bumped_at)
       end
@@ -270,14 +271,15 @@ RSpec.describe TopicConverter do
         ).to be_present
       end
 
-      it "skips small action, revision, and bump when silent" do
+      it "records a revision but skips small action and bump when silent" do
         Jobs.run_immediately!
         bumped_at = topic.bumped_at
 
         expect do
           TopicConverter.new(topic, admin, silent: true).convert_to_private_message
-        end.to not_change { PostRevision.count }
+        end.to change { PostRevision.count }.by(1)
 
+        expect(topic.first_post.revisions.last.hidden).to eq(true)
         expect(topic.posts.where(post_type: Post.types[:small_action])).to be_empty
         expect(topic.reload.bumped_at).to be_within(1.second).of(bumped_at)
       end
