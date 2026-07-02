@@ -138,6 +138,24 @@ module("Unit | Service | chat-audio-manager", function (hooks) {
     );
   });
 
+  test("a failed attempt does not consume the throttle", async function (assert) {
+    this.context.state = "suspended";
+
+    assert.false(await this.subject.play("classic"), "first attempt fails");
+
+    this.context.state = "running";
+
+    assert.true(
+      await this.subject.play("classic"),
+      "the next alert can play immediately"
+    );
+    assert.strictEqual(
+      this.context.oscillators.length,
+      2,
+      "schedules the sound"
+    );
+  });
+
   test("normalizes legacy sound names to the default theme", function (assert) {
     assert.strictEqual(
       normalizeChatSoundName("ding"),

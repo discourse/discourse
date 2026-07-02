@@ -200,6 +200,8 @@ const SOUND_SEQUENCES = {
 export default class ChatAudioManager extends Service {
   canPlay = true;
 
+  #throttleTimer;
+
   // resolves false only when audio could not be produced in this tab (e.g.
   // suspended context); a rate-limited drop is intentional and still counts
   // as handled
@@ -212,12 +214,22 @@ export default class ChatAudioManager extends Service {
       // consume the throttle before awaiting so concurrent calls can't all
       // slip past the check
       this.canPlay = false;
-      discourseLater(() => {
+      this.#throttleTimer = discourseLater(() => {
         this.canPlay = true;
       }, THROTTLE_TIME);
     }
 
-    return await this.#tryPlay(name, type);
+    const played = await this.#tryPlay(name, type);
+
+    if (throttle && !played) {
+      // a failed attempt played nothing, so it shouldn't burn the window —
+      // otherwise alerts arriving in the next 3s report handled and keep
+      // their claims without any tab making a sound
+      cancel(this.#throttleTimer);
+      this.canPlay = true;
+    }
+
+    return played;
   }
 
   async #tryPlay(name, type) {
