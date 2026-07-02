@@ -1,3 +1,4 @@
+import { get } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import {
   MIN_CHARACTER_COUNT,
@@ -73,7 +74,8 @@ class EditTopicSuggestionContext {
   }
 
   get selectedTagNames() {
-    return tagNames(this.topicController.model?.tags);
+    const buffered = this.topicController.buffered;
+    return tagNames(buffered && get(buffered, "tags"));
   }
 
   get available() {
