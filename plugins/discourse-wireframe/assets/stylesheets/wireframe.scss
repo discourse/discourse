@@ -12,28 +12,12 @@
  * plugin stylesheet pipeline today. See
  * `plugins/discourse-wireframe/docs/REVISIT.md` for the follow-up. */
 
-/* Inline rich text — the scaffolded renderer the editor swaps in mounts
-   inside this wrapper. The reader page never emits these classes (its
-   minimal renderer emits the value directly), so these rules are inert
-   off the canvas. The editing affordances themselves (focus ring,
-   placeholder, content-hide while the rich editor is mounted) live in
-   `admin/wireframe-chrome.scss`. */
-
-.wf-rich-text {
-  /* The renderer's outer span is the portal target for the rich editor;
-     keep it inline so it doesn't disturb the surrounding heading/p
-     layout when no editor is mounted. */
-}
-
 .wf-rich-text__content {
   display: inline;
 }
 
-/* Editor-native ghost block. The surrounding `BlockChrome` wrapper
-   already paints the dashed border (via its `.--ghost` modifier) and
-   `--error` color, so this component focuses on the content surface:
-   diagonal-stripe background, icon, name, and hint message. Drawing
-   a border here too would double up. */
+/* The surrounding chrome wrapper already paints the ghost's dashed border and
+   error color; adding a border here too would double up. */
 
 .wf-ghost-block {
   display: flex;
@@ -79,10 +63,6 @@
     color: var(--primary-medium);
   }
 
-  /* Container that nests recursively-rendered ghost children (the
-     output of `GHOST_CHILDREN_CREATOR`). Each child carries its own
-     chrome + ghost, so this is just a vertical-stack scaffold. */
-
   &__children {
     display: flex;
     flex-direction: column;
@@ -92,11 +72,9 @@
     border-top: 1px dashed var(--primary-low);
   }
 
-  /* Error modifier — applied when the failure is a genuine authoring
-     mistake (UNKNOWN_BLOCK). Repaints the silhouette's background and
-     text in danger tones so a typo'd block jumps out, distinct from
-     an intentionally condition-gated block. Border color comes from
-     the surrounding chrome's own `--error` modifier. */
+  /* Error modifier (UNKNOWN_BLOCK — an authoring mistake, distinct from an
+     intentionally condition-gated block). Border color comes from the
+     surrounding chrome's `--error` modifier, not here. */
 
   &.--error {
     background:
