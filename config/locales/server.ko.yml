@@ -937,6 +937,7 @@ ko:
         level: "신뢰 레벨"
         count: "회원"
         share: "공유하기"
+        signups: "가입하기"
       levels:
         "0": "신규"
         "1": "초보회원"

@@ -1086,6 +1086,7 @@ sv:
         level: "Förtroendenivå"
         count: "Medlemmar"
         share: "Dela"
+        signups: "Registreringar"
       levels:
         "0": "Nya"
         "1": "Grundläggande"

@@ -108,6 +108,12 @@ sl:
         enabled: "Vključeno?"
         allowed_groups: "Dovoljene skupine"
         delete: "Izbriši"
+        thinking_effort_options:
+          none: "Brez"
+          low: "Nizka"
+          medium: "Srednja"
+          high: "Visoka"
+          max: "Največ"
         response_format:
           open_modal: "Uredi"
         filters:

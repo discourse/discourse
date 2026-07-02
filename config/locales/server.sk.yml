@@ -1411,6 +1411,7 @@ sk:
         level: "Úroveň dôvery"
         count: "Členovia"
         share: "Zdieľať"
+        signups: "Registrácie"
       levels:
         "0": "Nový"
         "1": "Základné"

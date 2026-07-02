@@ -384,6 +384,12 @@ fi:
         temperature_help: "LLM:lle käytettävä lämpötila. Lisää luovuutta kasvattamalla arvoa (jätä tyhjäksi, jos haluat käyttää mallin oletusta, yleensä arvo välillä 0,0–2,0)"
         top_p: "Top-p"
         top_p_help: "LLM:lle käytettävä top-p, lisää satunnaisuutta kasvattamalla arvoa (jätä tyhjäksi, jos haluat käyttää mallin oletusta, yleensä arvo välillä 0,0–1,0)"
+        thinking_effort_options:
+          none: "Ei valittu"
+          low: "Matala"
+          medium: "Keskitaso"
+          high: "Korkea"
+          max: "Enint."
         priority: "Prioriteetti"
         tool_options: "Työkaluasetukset"
         rag_conversation_chunks: "Hakukeskustelulohkot"

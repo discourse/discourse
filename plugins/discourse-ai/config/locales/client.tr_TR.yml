@@ -617,6 +617,12 @@ tr_TR:
         temperature_help: "LLM için kullanılacak sıcaklık. Yaratıcılığı artırmak için artırın (model varsayılanını kullanmak için boş bırakın, genellikle 0,0 ila 2,0 arasında bir değer)"
         top_p: "Üst P"
         top_p_help: "LLM için kullanılacak en yüksek P, rastgeleliği artırmak için artırın (model varsayılanını kullanmak için boş bırakın, genellikle 0,0 ila 1,0 arasında bir değer)"
+        thinking_effort_options:
+          none: "Hiçbiri"
+          low: "Düşük"
+          medium: "Orta"
+          high: "Yüksek"
+          max: "En fazla"
         priority: "Öncelik"
         priority_help: "Öncelikli ajanlar, ajan listesinin en üstünde kullanıcılara gösterilir. Birden fazla ajanın önceliği varsa, bunlar alfabetik sıraya göre sıralanır."
         tool_options: "Araç seçenekleri"

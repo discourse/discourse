@@ -132,6 +132,12 @@ fa_IR:
         mcp_tools_modal:
           clear_all: "پاکسازی همه"
         delete: "حذف"
+        thinking_effort_options:
+          none: "هیچ‌کدام"
+          low: "کم"
+          medium: "متوسط"
+          high: "بالا"
+          max: "بیشترین"
         response_format:
           open_modal: "ویرایش"
           modal:

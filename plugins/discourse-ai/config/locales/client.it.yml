@@ -384,6 +384,12 @@ it:
         temperature_help: "Temperatura da utilizzare per LLM. Aumenta per aumentare la creatività (lascia vuoto per utilizzare il modello predefinito, generalmente un valore compreso tra 0,0 e 2,0)"
         top_p: "P superiore"
         top_p_help: "P superiore da utilizzare per LLM, aumenta per aumentare la casualità (lascia vuoto per utilizzare l'impostazione predefinita del modello, generalmente un valore compreso tra 0,0 e 1,0)"
+        thinking_effort_options:
+          none: "Nessuna"
+          low: "Bassa"
+          medium: "Media"
+          high: "Alta"
+          max: "Massimo"
         priority: "Priorità"
         tool_options: "Opzioni dello strumento"
         rag_conversation_chunks: "Cerca blocchi di conversazione"

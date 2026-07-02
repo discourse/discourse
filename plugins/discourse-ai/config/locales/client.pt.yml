@@ -183,6 +183,12 @@ pt:
           clear_all: "Limpar tudo"
         allowed_groups: "Grupos permitidos"
         delete: "Eliminar"
+        thinking_effort_options:
+          none: "Nenhuma"
+          low: "Baixa"
+          medium: "Médio"
+          high: "Elevado"
+          max: "Máximo"
         response_format:
           open_modal: "Editar"
           modal:

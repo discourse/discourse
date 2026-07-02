@@ -1277,6 +1277,7 @@ pt_BR:
         level: "Nível de confiança"
         count: "Membros"
         share: "Compartilhar"
+        signups: "Cadastros"
       levels:
         "0": "Nova"
         "1": "Básico"
@@ -2443,9 +2444,9 @@ pt_BR:
     reviewable_ui_refresh: "Grupos que podem usar a nova IU experimental na fila de revisão."
     content_localization_use_default_locale_when_unsupported: "Servir conteúdo traduzido no idioma padrão do site para usuários cujo idioma preferido não esteja listado em 'content localization supported locales'."
     content_localization_allow_author_localization: "Permitir que os autores atualizem a localização de seus próprios tópicos e postagens por meio do menu da postagem."
-    fake_upcoming_change: "Esta é uma alteração prevista fictícia para fins de teste. Não é necessário traduzir esta string."
     floating_dismiss_topics_on_mobile: "Exibe um botão flutuante \"Fechar...\" na lista de tópicos em dispositivos móveis para facilitar o acesso e liberar espaço na parte superior da lista."
     enable_simplified_category_creation: "Ativa um fluxo de criação de categorias simplificado, com menos opções e uma interface mais limpa."
+    reporting_improvements: "Melhorias na navegação, design e usabilidade dos relatórios administrativos do Discourse."
     modernize_foundation_theme: "Essa alteração introduz modificações de design ao tema Foundation no Discourse."
     errors:
       invalid_css_color: "Cor inválida. Digite o nome da cor ou valor hexadecimal."

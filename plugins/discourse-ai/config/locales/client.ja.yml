@@ -493,6 +493,12 @@ ja:
         temperature_help: "LLM に使用する Temperature。値を増やすと創造性が増加します (モデルのデフォルトを使用する場合は空白にします。一般に 0.0～2.0 の値です)"
         top_p: "Top P"
         top_p_help: "LLM に使用する Top P。値を増やすとランダム性が増加します (モデルのデフォルトを使用する場合は空白にします。一般に 0.0～1.0 の値です)"
+        thinking_effort_options:
+          none: "なし"
+          low: "低"
+          medium: "普通"
+          high: "高"
+          max: "最大"
         priority: "優先度"
         tool_options: "ツールのオプション"
         rag_conversation_chunks: "会話チャンクを検索"

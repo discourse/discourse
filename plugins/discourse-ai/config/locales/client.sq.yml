@@ -94,6 +94,12 @@ sq:
         save: "Ruani"
         enabled: "Aktivizuar?"
         delete: "Fshij"
+        thinking_effort_options:
+          none: "Asnjë"
+          low: "I ulët"
+          medium: "Mesatar"
+          high: "I lartë"
+          max: "Maksimumi"
         response_format:
           open_modal: "Redaktoni"
         filters:

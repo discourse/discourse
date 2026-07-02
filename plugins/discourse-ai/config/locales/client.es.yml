@@ -614,6 +614,12 @@ es:
         temperature_help: "Temperatura que se utilizará para el LLM. Aumentar para aumentar la creatividad (dejar vacío para utilizar el valor por defecto del modelo, generalmente un valor de 0,0 a 2,0)"
         top_p: "Top P"
         top_p_help: "Top P que se utilizará para el LLM. Aumentar para aumentar la aleatoriedad (dejar vacío para utilizar el modelo por defecto, generalmente un valor de 0,0 a 1,0)"
+        thinking_effort_options:
+          none: "Ninguna"
+          low: "Baja"
+          medium: "Medio"
+          high: "Alto"
+          max: "Máximo"
         priority: "Prioridad"
         priority_help: "Los agentes prioritarios se muestran a los usuarios en la parte superior de la lista de agentes. Si varios agentes tienen prioridad, se ordenarán alfabéticamente."
         tool_options: "Opciones de herramientas"

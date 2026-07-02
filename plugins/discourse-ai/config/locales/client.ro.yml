@@ -143,6 +143,12 @@ ro:
           select_all: "Selectează tot"
           clear_all: "Șterge tot"
         delete: "Șterge"
+        thinking_effort_options:
+          none: "Nimic"
+          low: "Scăzut"
+          medium: "Medie"
+          high: "Ridicată"
+          max: "Maxim"
         response_format:
           open_modal: "Editează"
         filters:
