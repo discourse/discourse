@@ -4130,6 +4130,44 @@ ALTER SEQUENCE public.discourse_reactions_reactions_id_seq OWNED BY public.disco
 
 
 --
+-- Name: discourse_rss_polling_poll_attempts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_rss_polling_poll_attempts (
+    id bigint NOT NULL,
+    rss_feed_id bigint NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    imported_count integer DEFAULT 0 NOT NULL,
+    updated_count integer DEFAULT 0 NOT NULL,
+    skipped_count integer DEFAULT 0 NOT NULL,
+    failed_count integer DEFAULT 0 NOT NULL,
+    error text,
+    items jsonb DEFAULT '[]'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_rss_polling_poll_attempts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_rss_polling_poll_attempts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_rss_polling_poll_attempts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_rss_polling_poll_attempts_id_seq OWNED BY public.discourse_rss_polling_poll_attempts.id;
+
+
+--
 -- Name: discourse_rss_polling_rss_feeds; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4142,7 +4180,8 @@ CREATE TABLE public.discourse_rss_polling_rss_feeds (
     tags character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    user_id bigint
+    user_id bigint,
+    enabled boolean DEFAULT true NOT NULL
 );
 
 
@@ -12783,6 +12822,13 @@ ALTER TABLE ONLY public.discourse_reactions_reactions ALTER COLUMN id SET DEFAUL
 
 
 --
+-- Name: discourse_rss_polling_poll_attempts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_rss_polling_poll_attempts ALTER COLUMN id SET DEFAULT nextval('public.discourse_rss_polling_poll_attempts_id_seq'::regclass);
+
+
+--
 -- Name: discourse_rss_polling_rss_feeds id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -15073,6 +15119,14 @@ ALTER TABLE ONLY public.discourse_reactions_reaction_users
 
 ALTER TABLE ONLY public.discourse_reactions_reactions
     ADD CONSTRAINT discourse_reactions_reactions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_rss_polling_poll_attempts discourse_rss_polling_poll_attempts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_rss_polling_poll_attempts
+    ADD CONSTRAINT discourse_rss_polling_poll_attempts_pkey PRIMARY KEY (id);
 
 
 --
@@ -17433,6 +17487,13 @@ CREATE INDEX idx_posts_user_id_deleted_at ON public.posts USING btree (user_id) 
 --
 
 CREATE INDEX idx_reviewables_score_desc_created_at_desc ON public.reviewables USING btree (score DESC, created_at DESC);
+
+
+--
+-- Name: idx_rss_polling_poll_attempts_on_feed_created_id_desc; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_rss_polling_poll_attempts_on_feed_created_id_desc ON public.discourse_rss_polling_poll_attempts USING btree (rss_feed_id, created_at DESC, id DESC);
 
 
 --
@@ -22362,6 +22423,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260622201006'),
 ('20260622201005'),
 ('20260622140747'),
+('20260619085855'),
 ('20260617180115'),
 ('20260617104005'),
 ('20260617053237'),
@@ -22369,6 +22431,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260615084100'),
 ('20260615082047'),
 ('20260612092612'),
+('20260612064730'),
+('20260611102547'),
 ('20260610205840'),
 ('20260610075829'),
 ('20260610064425'),

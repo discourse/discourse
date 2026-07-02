@@ -5,6 +5,7 @@ import { setPrefix } from "discourse/lib/get-url";
 import DiscourseURL, {
   getCanonicalUrl,
   getCategoryAndTagUrl,
+  isHttpUrl,
   prefixProtocol,
   userPath,
 } from "discourse/lib/url";
@@ -223,6 +224,20 @@ module("Unit | Utility | url", function (hooks) {
     );
     assert.strictEqual(prefixProtocol("/my/preferences"), "/my/preferences");
     assert.strictEqual(prefixProtocol("#anchor-fragment"), "#anchor-fragment");
+  });
+
+  test("isHttpUrl", function (assert) {
+    assert.true(isHttpUrl("http://www.discourse.org"));
+    assert.true(isHttpUrl("https://www.discourse.org"));
+    assert.true(isHttpUrl("  https://www.discourse.org  "));
+
+    assert.false(isHttpUrl("ftp://www.discourse.org"));
+    assert.false(isHttpUrl("mailto:mr-beaver@aol.com"));
+    assert.false(isHttpUrl("www.discourse.org"));
+    assert.false(isHttpUrl("not a url"));
+    assert.false(isHttpUrl(""));
+    assert.false(isHttpUrl(null));
+    assert.false(isHttpUrl(undefined));
   });
 
   test("getCategoryAndTagUrl", function (assert) {

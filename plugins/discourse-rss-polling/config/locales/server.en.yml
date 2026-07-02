@@ -1,9 +1,13 @@
 en:
   site_settings:
-    rss_polling_enabled: "[RSS Polling] Enable importing embed posts from multiple RSS feeds"
-    rss_polling_frequency: "[RSS Polling] Feed polling frequency, in minutes"
-    rss_polling_use_pubdate: "[RSS Polling] Set topic creation date to the pubDate found in the RSS feed"
-    rss_polling_update_tags: "[RSS Polling] Update topic tags when a topic is updated. Disabling this pulls initial tags but disables further tag changes."
+    rss_polling_enabled: "Enable importing embed posts from multiple RSS feeds"
+    rss_polling_frequency: "Feed polling frequency, in minutes"
+    rss_polling_feed_request_timeout: "Maximum time, in seconds, to wait for a feed to respond when fetching it."
+    rss_polling_verbose_logging: "Log detailed information for each poll attempt, including which items were imported or skipped and why."
+    rss_polling_use_pubdate: "Set topic creation date to the pubDate found in the RSS feed"
+    rss_polling_update_tags: "Update topic tags when a topic is updated. Disabling this pulls initial tags but disables further tag changes."
   rss_polling:
     errors:
+      feed_url_must_be_http: "The feed URL must start with http:// or https://."
       unknown_author_username: "No user found with username '%{username}'."
+      required_tag_group: "Topics in \"%{category}\" require at least %{count} tag(s) from the \"%{tag_group}\" group (%{tags}). Add one of those tags so imported items aren't rejected."
