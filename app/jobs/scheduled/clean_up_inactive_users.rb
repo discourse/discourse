@@ -20,7 +20,17 @@ module Jobs
           .where("users.created_at < ?", inactive_days)
           .where("users.last_seen_at < ? OR users.last_seen_at IS NULL", inactive_days)
           .where
-          .missing(:posts, :topics)
+          .missing(:posts, :topics, :bookmarks)
+          .where(
+            "NOT EXISTS (
+              SELECT 1 FROM post_actions pa
+              INNER JOIN posts p ON p.id = pa.post_id
+              WHERE pa.user_id = users.id
+                AND pa.post_action_type_id = #{PostActionType::LIKE_POST_ACTION_ID}
+                AND pa.deleted_at IS NULL
+                AND p.deleted_at IS NULL
+            )",
+          )
 
       users_to_clean =
         DiscoursePluginRegistry.apply_modifier(:clean_up_inactive_users_query, users_to_clean)

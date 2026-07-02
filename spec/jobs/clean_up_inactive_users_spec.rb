@@ -113,6 +113,56 @@ RSpec.describe Jobs::CleanUpInactiveUsers do
     expect { described_class.new.execute({}) }.to change { User.count }.by(-1)
   end
 
+  it "doesn't delete a user who has liked a post" do
+    SiteSetting.clean_up_inactive_users_after_days = 4
+    user =
+      Fabricate(
+        :user,
+        created_at: 5.days.ago,
+        last_seen_at: 5.days.ago,
+        trust_level: TrustLevel.levels[:newuser],
+      )
+    Fabricate(:post_action, user: user, post_action_type_id: PostActionType.types[:like])
+
+    expect { described_class.new.execute({}) }.not_to change { User.count }
+    expect(User.exists?(user.id)).to eq(true)
+  end
+
+  it "deletes a user whose only like was on a deleted post" do
+    SiteSetting.clean_up_inactive_users_after_days = 4
+    user =
+      Fabricate(
+        :user,
+        created_at: 5.days.ago,
+        last_seen_at: 5.days.ago,
+        trust_level: TrustLevel.levels[:newuser],
+      )
+    Fabricate(
+      :post_action,
+      user: user,
+      post_action_type_id: PostActionType.types[:like],
+      post: Fabricate(:post, deleted_at: Time.now),
+    )
+
+    expect { described_class.new.execute({}) }.to change { User.count }.by(-1)
+    expect(User.exists?(user.id)).to eq(false)
+  end
+
+  it "doesn't delete a user who has a bookmark" do
+    SiteSetting.clean_up_inactive_users_after_days = 4
+    user =
+      Fabricate(
+        :user,
+        created_at: 5.days.ago,
+        last_seen_at: 5.days.ago,
+        trust_level: TrustLevel.levels[:newuser],
+      )
+    Fabricate(:bookmark, user: user)
+
+    expect { described_class.new.execute({}) }.not_to change { User.count }
+    expect(User.exists?(user.id)).to eq(true)
+  end
+
   it "supports plugins extending eligibility via the clean_up_inactive_users_query modifier" do
     SiteSetting.clean_up_inactive_users_after_days = 4
 
