@@ -262,12 +262,12 @@ be:
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
     default_full_names:
-      everyone: "усе"
+      everyone: "Усе"
       admins: "Адміністратары"
       moderators: "Мадэратары"
       staff: "Персанал"
-      anonymous_users: "ананімныя карыстальнікі"
-      logged_in_users: "Запісаны карыстальнікаў"
+      anonymous_users: "Ананімныя карыстальнікі"
+      logged_in_users: "Карыстальнікі ў сістэме"
     request_membership_pm:
       title: "Заяўка на ўступ у @%{group_name}"
   education:
@@ -1279,7 +1279,7 @@ be:
     results_page: "Вынікі пошуку для '%{term}'"
   posts_filter:
     description:
-      order_latest: "Апошнія паведамленні"
+      order_latest: "Апошнія допісы"
       order_latest_topic: "Апошнія тэмы"
   discourse_connect:
     login_error: "Памылка ўваходу"
