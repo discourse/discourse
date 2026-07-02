@@ -23,7 +23,7 @@ module PageObjects
 
       def has_topic_outcome?(label, count:)
         within("#{SELECTOR} .db-support-outcomes__row", text: label) do
-          has_css?(".db-support-outcomes__count", exact_text: count.to_s)
+          has_css?(".db-support-outcomes__share", exact_text: count.to_s)
         end
       end
 

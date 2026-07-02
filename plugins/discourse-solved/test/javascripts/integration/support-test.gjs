@@ -54,7 +54,9 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       </template>
     );
 
-    assert.dom(".db-support .db-delta.--pos").hasText("+3%");
+    assert
+      .dom(".db-section__metric:first-child .db-delta.--pos")
+      .hasText("+3%");
   });
 
   test("renders a negative resolution-rate delta", async function (assert) {
@@ -76,7 +78,9 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       </template>
     );
 
-    assert.dom(".db-support .db-delta.--neg").hasText("-9%");
+    assert
+      .dom(".db-section__metric:first-child .db-delta.--neg")
+      .hasText("-9%");
   });
 
   test("shows a placeholder when the average first reply is unknown", async function (assert) {
@@ -98,7 +102,7 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       </template>
     );
 
-    assert.dom(".db-support__body").exists();
+    assert.dom(".db-section__metrics").exists();
     assert.dom(".db-section__metrics").includesText("—");
   });
 
