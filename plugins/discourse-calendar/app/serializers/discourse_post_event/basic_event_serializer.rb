@@ -19,10 +19,12 @@ module DiscoursePostEvent
                :custom_fields
 
     def category_id
-      object.post.topic.category_id
+      object.post&.topic&.category_id
     end
 
     def post
+      return nil if object.post.blank?
+
       {
         id: object.post.id,
         post_number: object.post.post_number,
