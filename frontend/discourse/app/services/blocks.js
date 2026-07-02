@@ -1,6 +1,7 @@
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
+import { TrackedAsyncData } from "ember-async-data";
 /** @type {import("discourse/blocks/block-outlet.gjs")} */
 import {
   _getResolvedLayout,
@@ -31,6 +32,7 @@ import {
 } from "discourse/lib/blocks/-internals/registry/outlet";
 import { applyArgDefaults } from "discourse/lib/blocks/-internals/utils";
 import { validateConditions } from "discourse/lib/blocks/-internals/validation/conditions";
+import isComponent from "discourse/lib/is-component";
 
 /**
  * Unified service for block registry and condition evaluation.
@@ -78,6 +80,17 @@ export default class Blocks extends Service {
    * @type {Map<string, import("discourse/blocks/conditions").BlockCondition>}
    */
   #conditionInstances = new Map();
+
+  /**
+   * Resolved lazy block thumbnails, keyed by the loader function. A lazily-loaded
+   * thumbnail (`() => import(...)`) is fetched at most once and its resolution
+   * reused everywhere, so a thumbnail that already resolved renders without a
+   * loading state on later renders. Keyed by the loader reference, which is
+   * stable (it lives in the frozen `@block` metadata).
+   *
+   * @type {Map<Function, InstanceType<typeof TrackedAsyncData>>}
+   */
+  #thumbnailData = new Map();
 
   /**
    * Tracks the registry size at last initialization to detect new registrations.
@@ -420,6 +433,63 @@ export default class Blocks extends Service {
     }
     const entry = getBlockEntry(name);
     return !isBlockFactory(entry);
+  }
+
+  /**
+   * Resolves a lazy thumbnail loader to its component, caching the resolution so
+   * each loader is fetched at most once. The loader may resolve to the component
+   * directly or to a module whose `default` export is the component, so both
+   * shapes are unwrapped.
+   *
+   * Returns a `TrackedAsyncData` (not a bare promise) so a consumer can render
+   * loading, resolved, and error states reactively, and so an already-resolved
+   * loader reports `content` immediately on later renders — no repeated loading
+   * state. `TrackedAsyncData` handles rejection internally.
+   *
+   * @param {Function} loader - A thumbnail loader thunk (e.g. `() => import(...)`).
+   * @returns {InstanceType<typeof TrackedAsyncData>} The resolution state.
+   *
+   * @example
+   * ```javascript
+   * const data = this.blocks.thumbnailData(metadata.thumbnail);
+   * if (data.isResolved) {
+   *   const ThumbnailComponent = data.value;
+   * }
+   * ```
+   */
+  thumbnailData(loader) {
+    let data = this.#thumbnailData.get(loader);
+    if (!data) {
+      const promise = Promise.resolve(loader()).then(
+        (resolved) => resolved?.default ?? resolved
+      );
+      data = new TrackedAsyncData(promise);
+      this.#thumbnailData.set(loader, data);
+    }
+    return data;
+  }
+
+  /**
+   * Warms the thumbnail cache for every registered block that declares a lazy
+   * loader thumbnail, so a later render shows the thumbnails without a loading
+   * state. Fire-and-forget and safe to call repeatedly — resolution is deduped
+   * per loader.
+   *
+   * @example
+   * ```javascript
+   * // On entering an editing context, ahead of rendering the thumbnails:
+   * this.blocks.prefetchThumbnails();
+   * ```
+   */
+  prefetchThumbnails() {
+    for (const { metadata } of this.listBlocksWithMetadata()) {
+      const thumbnail = metadata?.thumbnail;
+      // A component is itself a function, so a lazy loader is a function that is
+      // not already a renderable component.
+      if (typeof thumbnail === "function" && !isComponent(thumbnail)) {
+        this.thumbnailData(thumbnail);
+      }
+    }
   }
 
   /*

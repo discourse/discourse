@@ -27,6 +27,7 @@ import ScaffoldedRichTextRenderer from "../components/scaffolded-rich-text-rende
  * is-open/can-edit signal everything else reads.
  */
 export default class WireframeWorkspaceService extends Service {
+  @service blocks;
   @service wireframeInspectorArgs;
   @service wireframeBlockReveal;
   @service wireframeDragOverlay;
@@ -70,6 +71,10 @@ export default class WireframeWorkspaceService extends Service {
     // `loadInlineRichEditor()` resolves from cache even if the user enters edit
     // mode before this preload finishes.
     loadInlineRichEditor();
+
+    // Warm every block's palette thumbnail now so the palette renders them
+    // resolved (no loading skeleton) once it mounts a render cycle later.
+    this.blocks.prefetchThumbnails();
   }
 
   /**

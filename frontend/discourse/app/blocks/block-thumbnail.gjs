@@ -1,24 +1,11 @@
 // @ts-check
 import Component from "@glimmer/component";
-import { TrackedAsyncData } from "ember-async-data";
+import { service } from "@ember/service";
 import isComponent from "discourse/lib/is-component";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DLightDarkImg from "discourse/ui-kit/d-light-dark-img";
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-
-/**
- * A `TrackedAsyncData` per lazy loader, so a lazily-loaded thumbnail is fetched
- * at most once across the whole app. `DAsyncContent` builds a fresh
- * `TrackedAsyncData` per instance, which would re-enter the loading state every
- * time the component remounts; caching it here and handing the same (already-resolved)
- * instance to `DAsyncContent` makes every later render report `content`
- * immediately — no loading flash. Keyed by the loader function reference, which
- * is stable (it lives in the frozen `@block` metadata).
- *
- * @type {Map<Function, InstanceType<typeof TrackedAsyncData>>}
- */
-const thumbnailDataByLoader = new Map();
 
 /**
  * The terminal placeholder shown when there is no thumbnail to render — either
@@ -72,6 +59,8 @@ const ThumbnailPlaceholder = <template>
  *   (nothing-declared or load-error) instead of the bare icon.
  */
 export default class BlockThumbnail extends Component {
+  @service blocks;
+
   /**
    * Whether the thumbnail is a component to render inline. Uses the core
    * `isComponent` helper to positively identify a real component (class or
@@ -140,29 +129,17 @@ export default class BlockThumbnail extends Component {
   }
 
   /**
-   * The cached `TrackedAsyncData` for the lazy loader, created (and the load
-   * kicked off) once per loader. Handed to `DAsyncContent`, which renders the
-   * loading, resolved, and error states from it. Because the same instance is
-   * reused across mounts, a thumbnail that already resolved reports `content`
-   * immediately on later renders — no repeated loading state. The loader may
-   * resolve to the component directly or to a module whose `default` export is
-   * the component, so both shapes are unwrapped.
+   * The `TrackedAsyncData` for the lazy loader, resolved and cached by the
+   * `blocks` service (so each loader is fetched at most once app-wide and can be
+   * prefetched). Handed to `DAsyncContent`, which renders the loading, resolved,
+   * and error states from it; an already-resolved loader reports `content`
+   * immediately, so no loading state re-shows on later renders.
    *
-   * @returns {InstanceType<typeof TrackedAsyncData>} The resolution state.
+   * @returns {InstanceType<typeof import("ember-async-data").TrackedAsyncData>}
+   *   The resolution state.
    */
   get thumbnailData() {
-    const loader = this.args.thumbnail;
-    let data = thumbnailDataByLoader.get(loader);
-    if (!data) {
-      const promise = Promise.resolve(loader()).then(
-        (resolved) => resolved?.default ?? resolved
-      );
-      // `TrackedAsyncData` handles rejection internally and registers its own
-      // test waiter, so tests wait for the load to settle.
-      data = new TrackedAsyncData(promise);
-      thumbnailDataByLoader.set(loader, data);
-    }
-    return data;
+    return this.blocks.thumbnailData(this.args.thumbnail);
   }
 
   <template>

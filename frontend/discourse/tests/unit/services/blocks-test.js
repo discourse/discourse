@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
+import { settled } from "@ember/test-helpers";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
@@ -97,6 +98,68 @@ module("Unit | Service | blocks", function (hooks) {
       assert.deepEqual(found.metadata.args, {
         title: { type: "string", required: true },
       });
+    });
+  });
+
+  module("thumbnails", function () {
+    // Stand-ins for the resolved thumbnail component. These tests exercise
+    // resolution/caching, not rendering, so a plain marker suffices.
+    const STUB_THUMBNAIL = { name: "stub-thumbnail" };
+
+    test("thumbnailData resolves a lazy loader to its component", async function (assert) {
+      const loader = () => Promise.resolve(STUB_THUMBNAIL);
+
+      const data = this.blocks.thumbnailData(loader);
+      await settled();
+
+      assert.true(data.isResolved, "the loader resolves");
+      assert.strictEqual(
+        data.value,
+        STUB_THUMBNAIL,
+        "it resolves to the component"
+      );
+    });
+
+    test("thumbnailData unwraps a module default export", async function (assert) {
+      const loader = () => Promise.resolve({ default: STUB_THUMBNAIL });
+
+      const data = this.blocks.thumbnailData(loader);
+      await settled();
+
+      assert.strictEqual(
+        data.value,
+        STUB_THUMBNAIL,
+        "the module's default export is unwrapped"
+      );
+    });
+
+    test("thumbnailData caches one resolution per loader", function (assert) {
+      const loader = () => Promise.resolve(STUB_THUMBNAIL);
+
+      assert.strictEqual(
+        this.blocks.thumbnailData(loader),
+        this.blocks.thumbnailData(loader),
+        "the same loader returns the same cached instance"
+      );
+    });
+
+    test("prefetchThumbnails warms lazy loader thumbnails", async function (assert) {
+      const loader = () => Promise.resolve(STUB_THUMBNAIL);
+
+      @block("prefetch-thumb-block", { thumbnail: loader })
+      class PrefetchThumbBlock extends Component {}
+
+      withTestBlockRegistration(() => registerBlock(PrefetchThumbBlock));
+
+      this.blocks.prefetchThumbnails();
+      await settled();
+
+      const data = this.blocks.thumbnailData(loader);
+      assert.true(
+        data.isResolved,
+        "the block's thumbnail is already resolved after prefetch"
+      );
+      assert.strictEqual(data.value, STUB_THUMBNAIL);
     });
   });
 
