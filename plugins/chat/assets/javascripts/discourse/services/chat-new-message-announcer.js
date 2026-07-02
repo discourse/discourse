@@ -11,7 +11,7 @@ const ANNOUNCEMENT_INTERVAL_MS = 1000;
 // minimum gap between new-message sounds to avoid flooding
 const NEW_MESSAGE_SOUND_INTERVAL_MS = 2000;
 
-export default class ChatNewMessageNotifier extends Service {
+export default class ChatNewMessageAnnouncer extends Service {
   @service a11y;
   @service chatAudioManager;
   @service currentUser;
