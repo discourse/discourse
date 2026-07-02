@@ -56,7 +56,7 @@ module DiscourseAi
         end
 
         def max_prompt_tokens
-          llm_model.max_prompt_tokens
+          max_prompt_tokens_with_reserved_output
         end
 
         def native_tool_support?

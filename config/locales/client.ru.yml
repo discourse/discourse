@@ -3391,6 +3391,7 @@ ru:
         toggle_whisper:
           label: Скрытое сообщение
         create_topic:
+          label: Создать тему
           desc: Создать новую тему
         create_personal_message:
           desc: "Создать новое личное сообщение"

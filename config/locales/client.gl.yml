@@ -3917,6 +3917,8 @@ gl:
           company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grupos"
+          locale_selector:
+            title: "Idioma"
           optional: "(opcional)"
           update: "Actualizar"
           saved: "gardado!"

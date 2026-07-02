@@ -13,6 +13,7 @@ class LocalizedAiAgentSerializer < ApplicationSerializer
              :system_prompt,
              :allowed_group_ids,
              :temperature,
+             :thinking_effort,
              :top_p,
              :default_llm_id,
              :user_id,

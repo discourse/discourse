@@ -6249,6 +6249,8 @@ hr:
           extra_groups:
             groups: "Grupe"
             order: "Redoslijed sortiranja"
+          locale_selector:
+            title: "Jezik"
           optional: "(opcionalno)"
           update: "Ažuriraj"
           saved: "spremljeno!"

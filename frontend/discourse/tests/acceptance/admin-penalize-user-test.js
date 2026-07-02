@@ -1,10 +1,9 @@
-import { click, fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import {
   acceptance,
   fakeTime,
   loggedInUser,
-  queryAll,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -113,9 +112,9 @@ acceptance("Admin - Suspend User - timeframe choosing", function (needs) {
     await click(".suspend-user");
     await click(".future-date-input-selector-header");
 
-    const options = Array.from(
-      queryAll(`ul.select-kit-collection li span.name`)
-    ).map((el) => el.innerText.trim());
+    const options = findAll(`ul.select-kit-collection li span.name`).map((el) =>
+      el.innerText.trim()
+    );
 
     const expected = [
       i18n("time_shortcut.later_today"),
@@ -155,10 +154,8 @@ acceptance("Admin - Silence User", function (needs) {
     await click(".silence-user");
     await click(".future-date-input-selector-header");
 
-    const options = Array.from(
-      queryAll(`ul.select-kit-collection li span.name`).map((_, x) =>
-        x.innerText.trim()
-      )
+    const options = findAll(`ul.select-kit-collection li span.name`).map((x) =>
+      x.innerText.trim()
     );
 
     const expected = [

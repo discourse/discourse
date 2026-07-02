@@ -553,7 +553,7 @@ RSpec.describe Discourse do
     end
   end
 
-  describe "Utils.execute_command" do
+  describe ".execute_command" do
     it "works for individual commands" do
       expect(Discourse::Utils.execute_command("pwd").strip).to eq(Rails.root.to_s)
       expect(Discourse::Utils.execute_command("pwd", chdir: "plugins").strip).to eq(
@@ -628,6 +628,52 @@ RSpec.describe Discourse do
       expect do
         Discourse::Utils.execute_command("false", "'foo'", failure_message: "oops")
       end.to raise_error(RuntimeError, "false 'foo'\noops")
+    end
+  end
+
+  describe ".atomic_ln_s" do
+    it "creates the destination symlink pointing at the source" do
+      Dir.mktmpdir do |dir|
+        source = File.join(dir, "source")
+        Dir.mkdir(source)
+        destination = File.join(dir, "link")
+
+        Discourse::Utils.atomic_ln_s(source, destination)
+
+        expect(File.symlink?(destination)).to eq(true)
+        expect(File.readlink(destination)).to eq(source)
+      end
+    end
+
+    it "replaces an existing symlink at the destination" do
+      Dir.mktmpdir do |dir|
+        source = File.join(dir, "source")
+        Dir.mkdir(source)
+        old_target = File.join(dir, "old")
+        Dir.mkdir(old_target)
+        destination = File.join(dir, "link")
+        File.symlink(old_target, destination)
+
+        Discourse::Utils.atomic_ln_s(source, destination)
+
+        expect(File.readlink(destination)).to eq(source)
+      end
+    end
+
+    it "falls back to a copy when tmp and destination are on different filesystems" do
+      # rename(2) raises EXDEV across filesystem boundaries (e.g. containers
+      # where Rails.root/tmp is a separate mount). The link must still land.
+      Dir.mktmpdir do |dir|
+        source = File.join(dir, "source")
+        Dir.mkdir(source)
+        destination = File.join(dir, "link")
+        allow(File).to receive(:rename).and_raise(Errno::EXDEV)
+
+        Discourse::Utils.atomic_ln_s(source, destination)
+
+        expect(File.symlink?(destination)).to eq(true)
+        expect(File.readlink(destination)).to eq(source)
+      end
     end
   end
 

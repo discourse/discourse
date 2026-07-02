@@ -73,7 +73,7 @@ class FKForm extends Component {
 
   @action
   async checkIsDirty(transition) {
-    let triggerConfirm = false;
+    let triggerConfirm;
 
     // In some cases (e.g., subroute -> parent),
     // queryParamsOnly is true even though the route name changes

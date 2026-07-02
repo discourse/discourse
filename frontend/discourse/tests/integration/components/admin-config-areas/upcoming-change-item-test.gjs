@@ -1,7 +1,8 @@
-import { render } from "@ember/test-helpers";
+import { fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import UpcomingChangeItem from "discourse/admin/components/admin-config-areas/upcoming-change-item";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { i18n } from "discourse-i18n";
 
 function buildChange(overrides = {}) {
@@ -248,5 +249,98 @@ module("Integration | Component | UpcomingChangeItem", function (hooks) {
           `does not show the permanent soon notice for ${status} changes`
         );
     });
+  });
+
+  test("selecting staff on a change that excludes 'everyone' saves the staff group before enabling", async function (assert) {
+    const requests = [];
+    let groupSaved = false;
+
+    pretender.put("/admin/config/upcoming-changes/groups", () => {
+      requests.push("groups");
+      groupSaved = true;
+      return response({ success: "OK" });
+    });
+    pretender.put("/admin/config/upcoming-changes/toggle", () => {
+      requests.push("toggle");
+      if (!groupSaved) {
+        return response(422, { errors: ["everyone is not an allowed target"] });
+      }
+      return response({ success: "OK" });
+    });
+
+    const change = buildChange({
+      setting: "reporting_improvements",
+      value: false,
+      upcoming_change: {
+        status: "beta",
+        impact: "feature,staff",
+        impact_type: "feature",
+        impact_role: "staff",
+        enabled_for: "no_one",
+        allow_enabled_for: ["staff", "specific_groups"],
+      },
+    });
+
+    await render(
+      <template>
+        <table>
+          <tbody><UpcomingChangeItem @change={{change}} /></tbody>
+        </table>
+      </template>
+    );
+
+    await fillIn(".upcoming-change__enabled-for", "staff");
+
+    assert.deepEqual(
+      requests,
+      ["groups", "toggle"],
+      "persists the staff group first, so the toggle passes instead of 422ing"
+    );
+    assert
+      .dom(".upcoming-change__enabled-for")
+      .hasValue("staff", "keeps staff selected");
+  });
+
+  test("selecting everyone toggles the change then clears any groups", async function (assert) {
+    const requests = [];
+
+    pretender.put("/admin/config/upcoming-changes/toggle", () => {
+      requests.push("toggle");
+      return response({ success: "OK" });
+    });
+    pretender.put("/admin/config/upcoming-changes/groups", () => {
+      requests.push("groups");
+      return response({ success: "OK" });
+    });
+
+    const change = buildChange({
+      value: false,
+      upcoming_change: {
+        status: "beta",
+        impact: "feature,all_members",
+        impact_type: "feature",
+        impact_role: "all_members",
+        enabled_for: "no_one",
+      },
+    });
+
+    await render(
+      <template>
+        <table>
+          <tbody><UpcomingChangeItem @change={{change}} /></tbody>
+        </table>
+      </template>
+    );
+
+    await fillIn(".upcoming-change__enabled-for", "everyone");
+
+    assert.deepEqual(
+      requests,
+      ["toggle", "groups"],
+      "enables first then clears groups when 'everyone' is allowed"
+    );
+    assert
+      .dom(".upcoming-change__enabled-for")
+      .hasValue("everyone", "keeps everyone selected");
   });
 });

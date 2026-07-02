@@ -7,6 +7,19 @@ module DiscourseAi
         GEMINI_PROVIDER_KEY = :gemini
         GROUNDING_METADATA_KEYS = %i[webSearchQueries groundingChunks groundingSupports]
         THOUGHT_SIGNATURE_PROVIDER_KEY = :thought_signature_parts
+        THINKING_LEVELS = %w[minimal low medium high].freeze
+        THINKING_LEVEL_BY_EFFORT = {
+          "minimal" => "minimal",
+          "low" => "low",
+          "medium" => "medium",
+          "high" => "high",
+          "xhigh" => "high",
+          "max" => "high",
+        }.freeze
+        THINKING_LEVEL_WITHOUT_MINIMAL_BY_EFFORT =
+          THINKING_LEVEL_BY_EFFORT.merge("minimal" => "low").freeze
+        LOW_HIGH_THINKING_LEVEL_BY_EFFORT =
+          THINKING_LEVEL_WITHOUT_MINIMAL_BY_EFFORT.merge("medium" => "high").freeze
 
         def self.can_contact?(llm_model)
           llm_model.provider == "google"
@@ -40,9 +53,7 @@ module DiscourseAi
 
           model_params[:topP] = model_params.delete(:top_p) if model_params[:top_p]
 
-          thinking_enabled =
-            %w[minimal low medium high].include?(llm_model.lookup_custom_param("thinking_level")) ||
-              llm_model.lookup_custom_param("enable_thinking")
+          thinking_enabled = thinking_config.present? && thinking_config.enabled?
 
           if thinking_enabled
             model_params.delete(:temperature)
@@ -57,6 +68,39 @@ module DiscourseAi
 
         def provider_id
           AiApiAuditLog::Provider::Gemini
+        end
+
+        def resolve_thinking_config(model_params)
+          effort =
+            DiscourseAi::Completions::ThinkingConfig.normalize_effort(
+              model_params[:thinking_effort],
+            )
+
+          if effort.blank?
+            legacy_config = legacy_thinking_config
+            return legacy_config if legacy_config
+            return DiscourseAi::Completions::ThinkingConfig.disabled
+          end
+
+          if effort == "none"
+            # some Gemini 3 Pro-tier models can't run with thinking disabled at
+            # all and reject a forced thinkingBudget: 0 outright — omit the
+            # override entirely and let the model use its own default instead.
+            return DiscourseAi::Completions::ThinkingConfig.disabled if always_thinking_model?
+            return DiscourseAi::Completions::ThinkingConfig.explicit_none
+          end
+
+          provider_effort = thinking_level_for_effort(effort)
+          if provider_effort.blank?
+            return DiscourseAi::Completions::ThinkingConfig.unsupported(canonical_effort: effort)
+          end
+
+          DiscourseAi::Completions::ThinkingConfig.new(
+            canonical_effort: effort,
+            provider_effort: provider_effort,
+            enabled: true,
+            strip_temperature: true,
+          )
         end
 
         private
@@ -125,16 +169,9 @@ module DiscourseAi
             end
           end
 
-          thinking_level = llm_model.lookup_custom_param("thinking_level")
-          if %w[minimal low medium high].include?(thinking_level)
-            payload[:generationConfig][:thinkingConfig] = { thinkingLevel: thinking_level }
-          elsif llm_model.lookup_custom_param("enable_thinking")
-            thinking_tokens = llm_model.lookup_custom_param("thinking_tokens").to_i
-            thinking_tokens = thinking_tokens.clamp(0, 24_576)
-            payload[:generationConfig][:thinkingConfig] = { thinkingBudget: thinking_tokens }
-          end
+          apply_thinking_config!(payload)
 
-          if @include_thought_summaries
+          if @include_thought_summaries && !thinking_config&.explicit_none?
             payload[:generationConfig][:thinkingConfig] ||= {}
             payload[:generationConfig][:thinkingConfig][:includeThoughts] = true
           end
@@ -142,6 +179,82 @@ module DiscourseAi
           payload[:serviceTier] = service_tier if service_tier.present?
 
           payload
+        end
+
+        def thinking_level_for_effort(effort)
+          return if !THINKING_LEVEL_BY_EFFORT.key?(effort)
+
+          if gemini_3_pro_preview_model?
+            LOW_HIGH_THINKING_LEVEL_BY_EFFORT[effort]
+          elsif supports_minimal_thinking_level?
+            THINKING_LEVEL_BY_EFFORT[effort]
+          elsif gemini_3_model?
+            THINKING_LEVEL_WITHOUT_MINIMAL_BY_EFFORT[effort]
+          end
+        end
+
+        def gemini_3_pro_preview_model?
+          gemini_model_id.include?("gemini-3-pro") && !gemini_model_id.include?("gemini-3.1-pro")
+        end
+
+        def supports_minimal_thinking_level?
+          gemini_model_id.include?("gemini-3-flash") ||
+            gemini_model_id.include?("gemini-3.1-flash-lite")
+        end
+
+        def gemini_3_model?
+          gemini_model_id.include?("gemini-3")
+        end
+
+        def always_thinking_model?
+          gemini_3_model? && gemini_model_id.include?("-pro")
+        end
+
+        def gemini_model_id
+          @gemini_model_id ||= [llm_model.name, llm_model.url].compact.join(" ")
+        end
+
+        def legacy_thinking_config
+          thinking_level = llm_model.lookup_custom_param("thinking_level")
+          provider_effort = thinking_level_for_effort(thinking_level)
+          if provider_effort
+            return(
+              DiscourseAi::Completions::ThinkingConfig.new(
+                canonical_effort: thinking_level,
+                provider_effort: provider_effort,
+                enabled: true,
+                strip_temperature: true,
+              )
+            )
+          end
+
+          if llm_model.lookup_custom_param("enable_thinking")
+            thinking_tokens = llm_model.lookup_custom_param("thinking_tokens").to_i.clamp(0, 24_576)
+            return DiscourseAi::Completions::ThinkingConfig.explicit_none if thinking_tokens.zero?
+
+            DiscourseAi::Completions::ThinkingConfig.new(
+              canonical_effort: "custom",
+              enabled: true,
+              thinking_token_budget: thinking_tokens,
+              strip_temperature: true,
+            )
+          end
+        end
+
+        def apply_thinking_config!(payload)
+          return if thinking_config.blank? || thinking_config.unsupported?
+
+          if thinking_config.explicit_none?
+            payload[:generationConfig][:thinkingConfig] = { thinkingBudget: 0 }
+          elsif thinking_config.provider_effort.present?
+            payload[:generationConfig][:thinkingConfig] = {
+              thinkingLevel: thinking_config.provider_effort,
+            }
+          elsif thinking_config.thinking_token_budget
+            payload[:generationConfig][:thinkingConfig] = {
+              thinkingBudget: thinking_config.thinking_token_budget,
+            }
+          end
         end
 
         def service_tier

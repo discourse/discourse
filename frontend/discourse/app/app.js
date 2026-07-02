@@ -72,7 +72,7 @@ async function loadThemeFromModulePreload(link) {
     );
 
     if (DEBUG && (isRailsTesting() || isTesting())) {
-      throw new Error(error);
+      throw new Error(error, { cause: error });
     }
 
     fireThemeErrorEvent({ themeId: link.dataset.themeId, error });
@@ -95,7 +95,7 @@ async function loadPluginFromModulePreload(link) {
 
     if (DEBUG) {
       if (isRailsTesting() || isTesting()) {
-        throw new Error(error);
+        throw new Error(error, { cause: error });
       }
 
       let { addError } = importSync("discourse/static/development-error");

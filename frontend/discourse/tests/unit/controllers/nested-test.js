@@ -234,6 +234,27 @@ module("Unit | Controller | nested", function (hooks) {
     );
   });
 
+  test("deletePost delegates first post deletion to the topic controller", function (assert) {
+    const topic = buildTopic(this.store, 724);
+    const op = buildPost(this.store, topic, 1001, 1);
+    const topicController = this.owner.lookup("controller:topic");
+    const opts = { force_destroy: true };
+    let destroyArgs;
+
+    topic.destroy = (deletedBy, passedOpts) => {
+      destroyArgs = { deletedBy, passedOpts };
+    };
+    topicController.set("model", topic);
+
+    this.controller.deletePost(op, opts);
+
+    assert.deepEqual(
+      destroyArgs,
+      { deletedBy: this.currentUser, passedOpts: opts },
+      "uses the topic delete path for the OP"
+    );
+  });
+
   test("context view still dispatches live child replies", async function (assert) {
     const topic = buildTopic(this.store, 724);
     const childPostId = 2001;

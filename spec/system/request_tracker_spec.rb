@@ -567,7 +567,7 @@ describe "Request tracking" do
 
       it "tracks user viewing a topic correctly with deferred tracking" do
         events =
-          DiscourseEvent.track_events(:browser_pageview) do
+          DiscourseEvent.track_events(:browser_pageview) do |captured_events|
             visit topic.url
 
             try_until_success do
@@ -582,6 +582,9 @@ describe "Request tracking" do
                   anonymous_views: 0,
                   logged_in_views: 1,
                 ),
+              ).to eq(true)
+              expect(
+                captured_events.any? { |event| event[:event_name] == :browser_pageview },
               ).to eq(true)
             end
           end
@@ -635,7 +638,7 @@ describe "Request tracking" do
     context "when anonymous" do
       it "tracks an anonymous user viewing a topic correctly with deferred tracking" do
         events =
-          DiscourseEvent.track_events(:browser_pageview) do
+          DiscourseEvent.track_events(:browser_pageview) do |captured_events|
             visit topic.url
 
             try_until_success do
@@ -648,6 +651,9 @@ describe "Request tracking" do
                   anonymous_views: 1,
                   logged_in_views: 0,
                 ),
+              ).to eq(true)
+              expect(
+                captured_events.any? { |event| event[:event_name] == :browser_pageview },
               ).to eq(true)
             end
           end

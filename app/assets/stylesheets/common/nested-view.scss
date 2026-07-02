@@ -304,6 +304,12 @@
     min-width: 0;
   }
 
+  &__op-article.is-deleted {
+    .nested-view__op-content > .cooked {
+      background-color: var(--danger-low-mid);
+    }
+  }
+
   &__op-content {
     margin-top: 0.5em;
   }

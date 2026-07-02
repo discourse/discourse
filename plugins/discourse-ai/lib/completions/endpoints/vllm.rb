@@ -7,6 +7,15 @@ module DiscourseAi
         ENABLE_THINKING_PARSERS = %w[qwen3 gemma4 deepseek_v4].freeze
         THINKING_PARSERS = %w[granite deepseek_v3 holo2].freeze
         VLLM_REASONING_EFFORTS = %w[none low medium high].freeze
+        VLLM_REASONING_EFFORT_BY_CANONICAL = {
+          "none" => "none",
+          "minimal" => "low",
+          "low" => "low",
+          "medium" => "medium",
+          "high" => "high",
+          "xhigh" => "high",
+          "max" => "high",
+        }.freeze
 
         def self.can_contact?(llm_model)
           llm_model.provider == "vllm"
@@ -69,6 +78,35 @@ module DiscourseAi
             @thinking = nil
           end
           result.concat(processor.finish)
+        end
+
+        def resolve_thinking_config(model_params)
+          effort =
+            DiscourseAi::Completions::ThinkingConfig.normalize_effort(
+              model_params[:thinking_effort],
+            )
+
+          if effort.present?
+            provider_effort = VLLM_REASONING_EFFORT_BY_CANONICAL[effort]
+          else
+            provider_effort = raw_custom_param("reasoning_effort")
+            effort = provider_effort
+          end
+
+          return DiscourseAi::Completions::ThinkingConfig.disabled if effort.blank?
+
+          if provider_effort.blank? || !VLLM_REASONING_EFFORTS.include?(provider_effort)
+            return DiscourseAi::Completions::ThinkingConfig.unsupported(canonical_effort: effort)
+          end
+
+          DiscourseAi::Completions::ThinkingConfig.new(
+            canonical_effort: effort,
+            provider_effort: provider_effort,
+            enabled: provider_effort != "none",
+            explicit_none: provider_effort == "none",
+            strip_temperature: provider_effort != "none",
+            strip_top_p: provider_effort != "none",
+          )
         end
 
         private
@@ -134,11 +172,7 @@ module DiscourseAi
         end
 
         def reasoning_effort
-          return @reasoning_effort if defined?(@reasoning_effort)
-
-          @reasoning_effort = raw_custom_param("reasoning_effort")
-          @reasoning_effort = nil if !VLLM_REASONING_EFFORTS.include?(@reasoning_effort)
-          @reasoning_effort
+          thinking_config&.provider_effort
         end
 
         def raw_custom_param(key)

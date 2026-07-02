@@ -187,6 +187,13 @@ module DiscourseAi
           raise NotImplemented
         end
 
+        def max_prompt_tokens_with_reserved_output
+          reserved_output_tokens = opts[:reserved_output_tokens].to_i
+          return llm_model.max_prompt_tokens if reserved_output_tokens <= 0
+
+          [llm_model.max_prompt_tokens - reserved_output_tokens, 0].max
+        end
+
         attr_reader :prompt
 
         private
