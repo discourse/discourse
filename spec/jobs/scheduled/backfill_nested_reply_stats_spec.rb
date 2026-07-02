@@ -190,26 +190,37 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     expect(NestedViewPostStat.find_by(post_id: op.id).updated_at).to eq_time(initial_updated_at)
   end
 
-  it "backfills explicit topic ids with existing OP stats" do
-    parent = Fabricate(:post, topic: topic, reply_to_post_number: 1)
-    Fabricate(:post, topic: topic, reply_to_post_number: parent.post_number)
+  it "limits backfill to the requested category" do
+    category = Fabricate(:category)
+    other_category = Fabricate(:category)
+    category_topic = Fabricate(:topic, category: category)
+    other_topic = Fabricate(:topic, category: other_category)
+    Fabricate(:nested_topic, topic: category_topic)
+    Fabricate(:nested_topic, topic: other_topic)
+    category_op = Fabricate(:post, topic: category_topic, post_number: 1)
+    other_op = Fabricate(:post, topic: other_topic, post_number: 1)
+    Fabricate(:post, topic: category_topic, reply_to_post_number: 1)
+    Fabricate(:post, topic: other_topic, reply_to_post_number: 1)
+
     NestedViewPostStat.delete_all
-    NestedViewPostStat.create!(post_id: op.id)
+    execute(category_id: category.id)
 
-    execute(topic_ids: [topic.id])
-
-    stat = NestedViewPostStat.find_by(post_id: parent.id)
-    expect(stat.direct_reply_count).to eq(1)
+    expect(NestedViewPostStat.exists?(post_id: category_op.id)).to eq(true)
+    expect(NestedViewPostStat.exists?(post_id: other_op.id)).to eq(false)
   end
 
-  it "skips explicit topic ids without nested topics" do
-    non_nested_topic = Fabricate(:topic)
-    non_nested_op = Fabricate(:post, topic: non_nested_topic, post_number: 1)
-    Fabricate(:post, topic: non_nested_topic, reply_to_post_number: 1)
+  it "respects the configured batch size" do
+    other_topic = Fabricate(:topic)
+    Fabricate(:nested_topic, topic: other_topic)
+    other_op = Fabricate(:post, topic: other_topic, post_number: 1)
+    Fabricate(:post, topic: other_topic, reply_to_post_number: 1)
+    Fabricate(:post, topic: topic, reply_to_post_number: 1)
+    SiteSetting.nested_replies_backfill_batch_size = 1
+
     NestedViewPostStat.delete_all
+    execute
 
-    execute(topic_ids: [non_nested_topic.id])
-
-    expect(NestedViewPostStat.find_by(post_id: non_nested_op.id)).to be_nil
+    expect(NestedViewPostStat.exists?(post_id: other_op.id)).to eq(true)
+    expect(NestedViewPostStat.exists?(post_id: op.id)).to eq(false)
   end
 end

@@ -70,13 +70,21 @@ RSpec.describe NestedTopic::ConvertCategory do
         ).to(true)
       end
 
-      it "enqueues stats backfill for nested topics in the category" do
+      it "enqueues one stats backfill job" do
         expect_enqueued_with(
           job: :backfill_nested_reply_stats,
           args: {
-            topic_ids: [topic.id, already_nested_topic.id],
+            category_id: category.id,
           },
         ) { result }
+      end
+
+      it "does not enqueue one stats backfill job per converted batch" do
+        SiteSetting.nested_replies_backfill_batch_size = 1
+        Fabricate(:topic, category: category)
+        Fabricate(:topic, category: category)
+
+        expect { result }.to change { Jobs::BackfillNestedReplyStats.jobs.size }.by(1)
       end
 
       it "skips stats backfill when no topics are converted" do
