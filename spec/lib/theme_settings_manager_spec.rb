@@ -141,6 +141,52 @@ RSpec.describe ThemeSettingsManager do
       list_setting = theme_settings[:compact_list_setting]
       expect(list_setting.list_type).to eq("compact")
     end
+
+    describe "#resolve_group_membership?" do
+      it "returns true when opted-in with list_type group" do
+        yaml = <<~YAML
+          test_setting:
+            type: list
+            list_type: group
+            resolve_group_membership: true
+            default: "1|2"
+        YAML
+        theme.set_field(target: :settings, name: "yaml", value: yaml)
+        theme.save!
+
+        setting = theme.settings[:test_setting]
+        expect(setting.resolve_group_membership?).to eq(true)
+      end
+
+      it "returns false when list_type is not group" do
+        yaml = <<~YAML
+          test_setting:
+            type: list
+            list_type: compact
+            resolve_group_membership: true
+            default: "a|b"
+        YAML
+        theme.set_field(target: :settings, name: "yaml", value: yaml)
+        theme.save!
+
+        setting = theme.settings[:test_setting]
+        expect(setting.resolve_group_membership?).to eq(false)
+      end
+
+      it "returns false when not opted-in" do
+        yaml = <<~YAML
+          test_setting:
+            type: list
+            list_type: group
+            default: "1|2"
+        YAML
+        theme.set_field(target: :settings, name: "yaml", value: yaml)
+        theme.save!
+
+        setting = theme.settings[:test_setting]
+        expect(setting.resolve_group_membership?).to eq(false)
+      end
+    end
   end
 
   describe "Upload" do

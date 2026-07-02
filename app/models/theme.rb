@@ -842,6 +842,26 @@ class Theme < ActiveRecord::Base
     hash
   end
 
+  def resolve_group_settings_for_user(settings_hash, guardian)
+    resolved_hash = settings_hash.dup
+
+    settings.each do |name, setting|
+      next unless setting.type == ThemeSetting.types[:list]
+      unless setting.respond_to?(:resolve_group_membership?) && setting.resolve_group_membership?
+        next
+      end
+
+      # Parse group IDs from the cached value
+      group_ids = settings_hash[name].to_s.split("|").map(&:to_i).reject(&:zero?)
+
+      # Replace group list with user_in_ prefixed boolean (prevents leaking group IDs)
+      resolved_hash.delete(name.to_s)
+      resolved_hash["user_in_#{name}"] = guardian.in_any_groups?(group_ids)
+    end
+
+    resolved_hash
+  end
+
   # Retrieves a theme setting
   #
   # @param setting_name [String, Symbol] The name of the setting to retrieve.

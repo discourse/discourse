@@ -139,7 +139,10 @@ class ApplicationLayoutPreloader
     Theme
       .where(id: ids)
       .each_with_object({}) do |theme, hash|
-        hash[theme.id] = { name: theme.name, settings: theme.cached_settings }
+        settings = theme.cached_settings
+        # Resolve group membership for current user (adds user_in_ prefixed booleans)
+        settings = theme.resolve_group_settings_for_user(settings, @guardian)
+        hash[theme.id] = { name: theme.name, settings: settings }
       end
       .to_json
   end

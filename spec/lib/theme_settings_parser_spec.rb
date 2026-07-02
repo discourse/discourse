@@ -88,4 +88,43 @@ RSpec.describe ThemeSettingsParser do
       expect(list_type).to eq("compact")
     end
   end
+
+  describe "resolve_group_membership" do
+    it "parses resolve_group_membership option" do
+      yaml = <<~YAML
+        groups_setting:
+          type: list
+          list_type: group
+          resolve_group_membership: true
+          default: "1|2"
+      YAML
+
+      field = ThemeField.create!(theme_id: -1, target_id: 3, name: "yaml", value: yaml)
+      parsed = []
+      ThemeSettingsParser
+        .new(field)
+        .load { |name, default, type, opts| parsed << { name: name, opts: opts } }
+
+      setting = parsed.find { |s| s[:name] == :groups_setting }
+      expect(setting[:opts][:resolve_group_membership]).to eq(true)
+    end
+
+    it "defaults to false when not specified" do
+      yaml = <<~YAML
+        groups_setting:
+          type: list
+          list_type: group
+          default: "1|2"
+      YAML
+
+      field = ThemeField.create!(theme_id: -1, target_id: 3, name: "yaml", value: yaml)
+      parsed = []
+      ThemeSettingsParser
+        .new(field)
+        .load { |name, default, type, opts| parsed << { name: name, opts: opts } }
+
+      setting = parsed.find { |s| s[:name] == :groups_setting }
+      expect(setting[:opts][:resolve_group_membership]).to eq(false)
+    end
+  end
 end

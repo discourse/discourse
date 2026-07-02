@@ -1638,4 +1638,161 @@ RSpec.describe Theme do
       expect(theme.system?).to be false
     end
   end
+
+  describe "#resolve_group_settings_for_user" do
+    fab!(:user)
+    fab!(:group)
+    fab!(:other_group, :group)
+
+    before do
+      group.add(user)
+      yaml = <<~YAML
+        member_setting:
+          type: list
+          list_type: group
+          resolve_group_membership: true
+          default: "#{group.id}"
+        non_member_setting:
+          type: list
+          list_type: group
+          resolve_group_membership: true
+          default: "#{other_group.id}"
+        no_resolve_setting:
+          type: list
+          list_type: group
+          default: "#{group.id}"
+        regular_setting:
+          type: string
+          default: "test"
+      YAML
+      theme.set_field(target: :settings, name: "yaml", value: yaml)
+      theme.save!
+    end
+
+    it "adds user_in_ prefixed boolean for opted-in settings" do
+      guardian = Guardian.new(user)
+      settings = theme.cached_settings
+      resolved_settings = theme.resolve_group_settings_for_user(settings, guardian)
+
+      expect(resolved_settings["user_in_member_setting"]).to eq(true)
+      expect(resolved_settings["user_in_non_member_setting"]).to eq(false)
+      expect(resolved_settings).not_to have_key("user_in_no_resolve_setting")
+      expect(resolved_settings).not_to have_key("user_in_regular_setting")
+    end
+
+    it "removes original group list when resolve_group_membership is true" do
+      guardian = Guardian.new(user)
+      settings = theme.cached_settings
+      resolved_settings = theme.resolve_group_settings_for_user(settings, guardian)
+
+      # Settings with resolve_group_membership should have group list removed
+      expect(resolved_settings).not_to have_key("member_setting")
+      expect(resolved_settings).not_to have_key("non_member_setting")
+      # Settings without resolve_group_membership keep their values
+      expect(resolved_settings["no_resolve_setting"]).to eq(group.id.to_s)
+    end
+
+    it "handles anonymous users correctly" do
+      guardian = Guardian.new(nil)
+      settings = theme.cached_settings
+      resolved_settings = theme.resolve_group_settings_for_user(settings, guardian)
+
+      # Anonymous users are not in any groups
+      expect(resolved_settings["user_in_member_setting"]).to eq(false)
+      expect(resolved_settings["user_in_non_member_setting"]).to eq(false)
+    end
+
+    it "handles everyone auto-group correctly" do
+      yaml = <<~YAML
+        everyone_setting:
+          type: list
+          list_type: group
+          resolve_group_membership: true
+          default: "#{Group::AUTO_GROUPS[:everyone]}"
+      YAML
+      theme.set_field(target: :settings, name: "yaml", value: yaml)
+      theme.save!
+
+      guardian = Guardian.new(user)
+      settings = theme.cached_settings
+      resolved_settings = theme.resolve_group_settings_for_user(settings, guardian)
+
+      # everyone group includes all logged in users (when granular feature off)
+      expect(resolved_settings["user_in_everyone_setting"]).to eq(true)
+    end
+
+    it "handles logged_in_users auto-group correctly" do
+      yaml = <<~YAML
+        logged_in_setting:
+          type: list
+          list_type: group
+          resolve_group_membership: true
+          default: "#{Group::AUTO_GROUPS[:logged_in_users]}"
+      YAML
+      theme.set_field(target: :settings, name: "yaml", value: yaml)
+      theme.save!
+
+      guardian = Guardian.new(user)
+      settings = theme.cached_settings
+      resolved_settings = theme.resolve_group_settings_for_user(settings, guardian)
+
+      expect(resolved_settings["user_in_logged_in_setting"]).to eq(true)
+    end
+
+    it "handles anonymous_users auto-group correctly" do
+      yaml = <<~YAML
+        anonymous_setting:
+          type: list
+          list_type: group
+          resolve_group_membership: true
+          default: "#{Group::AUTO_GROUPS[:anonymous_users]}"
+      YAML
+      theme.set_field(target: :settings, name: "yaml", value: yaml)
+      theme.save!
+
+      guardian = Guardian.new(nil)
+      settings = theme.cached_settings
+      resolved_settings = theme.resolve_group_settings_for_user(settings, guardian)
+
+      # Anonymous users should be in anonymous_users group
+      expect(resolved_settings["user_in_anonymous_setting"]).to eq(true)
+    end
+
+    it "handles empty group list" do
+      yaml = <<~YAML
+        empty_setting:
+          type: list
+          list_type: group
+          resolve_group_membership: true
+          default: ""
+      YAML
+      theme.set_field(target: :settings, name: "yaml", value: yaml)
+      theme.save!
+
+      guardian = Guardian.new(user)
+      settings = theme.cached_settings
+      resolved_settings = theme.resolve_group_settings_for_user(settings, guardian)
+
+      expect(resolved_settings["user_in_empty_setting"]).to eq(false)
+    end
+
+    it "handles multiple groups correctly" do
+      yaml = <<~YAML
+        multi_group_setting:
+          type: list
+          list_type: group
+          resolve_group_membership: true
+          default: "#{group.id}|#{other_group.id}"
+      YAML
+      theme.set_field(target: :settings, name: "yaml", value: yaml)
+      theme.save!
+
+      guardian = Guardian.new(user)
+      settings = theme.cached_settings
+      resolved_settings = theme.resolve_group_settings_for_user(settings, guardian)
+
+      # User is in at least one of the groups
+      expect(resolved_settings["user_in_multi_group_setting"]).to eq(true)
+    end
+  end
 end
