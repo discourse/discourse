@@ -338,7 +338,7 @@ RSpec.describe ListController do
       before { topic.update!(category: subcategory) }
 
       it "returns categories and parent categories if true" do
-        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}"
 
         get "/latest.json"
 

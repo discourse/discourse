@@ -4502,7 +4502,7 @@ RSpec.describe TopicsController do
     end
 
     it "returns a list of categories when `lazy_load_categories_group` site setting is enabled for the current user" do
-      SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+      SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}"
 
       topic_post_2 = Fabricate(:post, topic: topic)
       topic_post_3 = Fabricate(:post, topic: topic)

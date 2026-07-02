@@ -28,16 +28,9 @@ RSpec.describe Reports::ListQuery do
     end
 
     it "sorts reports by title" do
-      expect(result.map { |r| r[:title] }[0..5]).to eq(
-        [
-          I18n.t("reports.activity_by_category.title"),
-          I18n.t("reports.admin_logins.title"),
-          I18n.t("reports.page_view_anon_browser_reqs.title"),
-          I18n.t("reports.dau_by_mau.title"),
-          I18n.t("reports.daily_engaged_users.title"),
-          I18n.t("reports.emails.title"),
-        ],
-      )
+      report_titles = result.map { |report| report[:title] }
+
+      expect(report_titles).to eq(report_titles.sort)
     end
 
     context "when using legacy pageviews" do
