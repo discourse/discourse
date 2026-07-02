@@ -11437,7 +11437,9 @@ CREATE TABLE public.user_options (
     discourse_rewind_enabled boolean DEFAULT true NOT NULL,
     notify_on_solved boolean DEFAULT true NOT NULL,
     show_original_content boolean DEFAULT false NOT NULL,
-    enable_upcoming_change_available_notifications boolean DEFAULT true NOT NULL
+    enable_upcoming_change_available_notifications boolean DEFAULT true NOT NULL,
+    chat_announce_new_messages boolean DEFAULT true NOT NULL,
+    chat_new_message_sound boolean DEFAULT false NOT NULL
 );
 
 
@@ -22419,6 +22421,7 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260629022603'),
 ('20260626055145'),
 ('20260624140945'),
+('20260623201925'),
 ('20260623090824'),
 ('20260623052745'),
 ('20260622201006'),
