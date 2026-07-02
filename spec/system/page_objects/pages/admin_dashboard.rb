@@ -15,6 +15,14 @@ module PageObjects
         self
       end
 
+      def visit_with_custom_range(from:, to:)
+        visit_with_query(custom_range_params(from: from, to: to))
+      end
+
+      def has_custom_range?(from:, to:)
+        page.has_current_path?("/admin?#{custom_range_params(from: from, to: to).to_query}")
+      end
+
       def has_admin_notice?(message)
         has_css?(".dashboard-problem", text: message)
       end
@@ -191,6 +199,10 @@ module PageObjects
       end
 
       private
+
+      def custom_range_params(from:, to:)
+        { range: "custom", start_date: from, end_date: to }
+      end
 
       def ensure_redesigned_dashboard
         page.refresh unless has_css?(".db-main", wait: 0)

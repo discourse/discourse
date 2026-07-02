@@ -17,6 +17,10 @@ module PageObjects
         has_css?("#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']")
       end
 
+      def has_default_report?
+        has_card?(default_report_identifier)
+      end
+
       def has_no_card?(identifier)
         has_no_css?("#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}']")
       end
@@ -41,6 +45,13 @@ module PageObjects
         has_no_css?(
           "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}'] .db-report__remove",
         )
+      end
+
+      def open_default_report
+        within(
+          "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{default_report_identifier}']",
+        ) { find(".db-report__name").click }
+        self
       end
 
       def open_manage_reports_via_tile
@@ -74,6 +85,12 @@ module PageObjects
         has_css?(
           "#{SECTION_SELECTOR} .db-report__card[data-identifier='#{identifier}'] .db-report__empty",
         )
+      end
+
+      private
+
+      def default_report_identifier
+        "#{::AdminDashboard::Reports::CoreReportProvider::SOURCE_NAME}:#{SeedData::AdminDashboardReports::DEFAULT_BUILTIN_REPORTS.first}"
       end
     end
   end
