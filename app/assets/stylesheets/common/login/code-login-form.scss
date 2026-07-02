@@ -17,6 +17,16 @@
   flex-direction: column;
   gap: 1em;
 
+  // No waving-hand icon here, so drop the welcome header's icon grid.
+  .login-welcome-header {
+    display: block;
+
+    // Keep a trailing emoji/short word from orphaning onto its own line.
+    .login-title {
+      text-wrap: pretty;
+    }
+  }
+
   &__email-step {
     display: flex;
     flex-direction: column;
