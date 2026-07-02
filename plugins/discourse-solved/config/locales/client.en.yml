@@ -10,6 +10,72 @@ en:
             accepted_solutions:
               label: "Accepted solutions"
               tooltip: "The number of topics that had a post marked as the solution."
+        sections:
+          support:
+            title: "Support"
+            fetch_error: "Support data couldn't be loaded."
+            filter:
+              all_categories: "All categories"
+            headline:
+              healthy:
+                title: "The community is solving its own problems."
+                summary:
+                  one: "Resolution rate reached %{resolution_rate}% this period. Keep an eye on the %{count} topic still waiting for a reply."
+                  other: "Resolution rate reached %{resolution_rate}% this period. Keep an eye on the %{count} topics still waiting for a reply."
+              struggling:
+                title: "Most questions aren't getting answered."
+                summary:
+                  one: "Resolution rate dropped to %{resolution_rate}%, and %{count} topic from this period still has zero replies."
+                  other: "Resolution rate dropped to %{resolution_rate}%, and %{count} topics from this period still have zero replies."
+              mixed:
+                title: "Support is holding steady."
+                summary:
+                  one: "Resolution rate is %{resolution_rate}% this period, with %{count} topic still unanswered."
+                  other: "Resolution rate is %{resolution_rate}% this period, with %{count} topics still unanswered."
+              no_data:
+                title: "Not enough support activity yet"
+                summary: "There's no support activity in this period yet. Once topics come in, you'll see how your community is handling them."
+            kpi:
+              resolution_rate:
+                label: "Resolution rate"
+                tooltip: "The percentage of open support topics that were solved."
+              staff_involvement:
+                label: "Staff involvement"
+                tooltip: "The percentage of open support topics where a staff member made the first reply."
+                from: "from %{value}"
+              avg_first_reply:
+                label: "Avg. first reply"
+                tooltip: "The average time between when a support topic was posted and when it received its first reply."
+            outcomes:
+              title: "Topic outcomes"
+              resolved:
+                label: "Resolved"
+                tooltip: "The number of topics that were marked solved."
+              in_progress:
+                label: "In progress"
+                tooltip: "The number of topics with at least one reply."
+              unanswered:
+                label: "Unanswered"
+                tooltip: "The number of topics with no replies."
+            answerers:
+              title: "Who's answering?"
+              empty: "No replies in this period."
+              staff: "Staff"
+              leader: "Leaders"
+              regular: "Regulars"
+              member: "Members"
+              basic: "Basic"
+            response_time:
+              title: "Response time distribution"
+              buckets:
+                lt_1h: "< 1 hour"
+                "1_4h": "1–4 hours"
+                "4_24h": "4–24 hours"
+                gt_24h: "> 24 hours"
+              trend:
+                faster: "%{duration} faster"
+                slower: "%{duration} slower"
+                tooltip: "The average response time trend."
   js:
     notifications:
       alt:
