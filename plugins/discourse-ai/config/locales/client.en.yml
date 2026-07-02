@@ -1072,9 +1072,6 @@ en:
         choose: "Choose for me"
         suggestions: "Suggestions"
         suggest_errors:
-          too_many_tags:
-            one: "You can only have up to %{count} tag"
-            other: "You can only have up to %{count} tags"
           no_suggestions: "No suggestions available"
         missing_content: "Please enter some content to generate suggestions."
         context_menu:
