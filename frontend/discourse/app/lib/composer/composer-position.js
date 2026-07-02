@@ -7,9 +7,11 @@ export function setupComposerPosition(editor) {
   // for Safari iOS/iPad and Firefox on Android
   // The fixes here go together with styling in base/compose.css
   const html = document.documentElement;
+  const isMobileOrIpad =
+    html.classList.contains("mobile-device") ||
+    html.classList.contains("ipados-device");
   const isIOS = html.classList.contains("ios-device");
   const isIpadOS = html.classList.contains("ipados-device");
-  const isMobileOrIpad = isIOS || isIpadOS;
 
   let editorFocused = document.activeElement === editor;
   let scrollLocked = false;
