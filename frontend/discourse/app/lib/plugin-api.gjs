@@ -1,6 +1,7 @@
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
 import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
+import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
@@ -2993,6 +2994,27 @@ class _PluginApi {
    */
   registerAdminDashboardReportRenderer(source, componentClass) {
     registerAdminDashboardReportRenderer(source, componentClass);
+  }
+
+  /**
+   * Registers a whole section in the redesigned admin dashboard (gated by the
+   * dashboard_improvements upcoming change). Pair with the server-side
+   * `register_admin_dashboard_section` registration: the id passed here matches
+   * the one registered there. The component is rendered for each visible
+   * section whose id matches, and receives `@data` (the section's payload),
+   * `@period`, `@loading`, `@fetchError`, `@startDate`, and `@endDate`.
+   *
+   * ```
+   * import MySection from "discourse/plugins/my-plugin/admin/components/dashboard/my-section";
+   *
+   * api.registerAdminDashboardSection("my_section", MySection);
+   * ```
+   *
+   * @param {string} id - The section id, matching the server-side registration.
+   * @param {Component} componentClass - A Glimmer component for the section.
+   */
+  registerAdminDashboardSection(id, componentClass) {
+    registerAdminDashboardSection(id, componentClass);
   }
 
   /**

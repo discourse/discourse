@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class AdminDashboardSectionLoader
-  POOL_SIZE = AdminDashboardSectionConfiguration::KNOWN_SECTIONS.size
-
   def self.build(section_ids:, current_user:, start_date:, end_date:)
     new(
       section_ids: section_ids,
@@ -12,9 +10,14 @@ class AdminDashboardSectionLoader
     ).build
   end
 
+  def self.pool_size
+    AdminDashboardSectionConfiguration::KNOWN_SECTIONS.size +
+      DiscoursePluginRegistry.admin_dashboard_sections.size
+  end
+
   def self.thread_pool
     @thread_pool ||=
-      Scheduler::ThreadPool.new(min_threads: 0, max_threads: POOL_SIZE, idle_time: 30)
+      Scheduler::ThreadPool.new(min_threads: 0, max_threads: pool_size, idle_time: 30)
   end
 
   def initialize(section_ids:, current_user:, start_date:, end_date:)
@@ -67,6 +70,9 @@ class AdminDashboardSectionLoader
       AdminDashboard::Reports::Section.build(guardian: user.guardian)
     when "search"
       AdminDashboardSearch.build(start_date: start_date, end_date: end_date)
+    else
+      section = DiscoursePluginRegistry.admin_dashboard_sections.find { |s| s[:id] == id }
+      section&.dig(:loader)&.call(start_date: start_date, end_date: end_date, current_user: user)
     end
   end
 end

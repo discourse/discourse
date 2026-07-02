@@ -10,7 +10,7 @@ development:
   adapter: postgresql
   database: <%= ENV['DISCOURSE_DEV_DB'] || 'discourse_development' %>
   min_messages: warning
-  pool: 5
+  pool: 10
   checkout_timeout: <%= ENV['CHECKOUT_TIMEOUT'] || 5 %>
   host_names:
     ### Don't include the port number here. Change the "port" site setting instead, at /admin/site_settings.

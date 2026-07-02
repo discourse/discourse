@@ -380,7 +380,10 @@
     }
 
     @include viewport.until(sm) {
-      border-bottom: 1px solid var(--content-border-color);
+      &:not(:last-child) {
+        border-right: 0;
+        border-bottom: 1px solid var(--content-border-color);
+      }
     }
   }
 
