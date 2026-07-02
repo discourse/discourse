@@ -7,10 +7,10 @@
 be:
   js:
     user_api_key:
-      authorize: "санкцыянаваць"
+      authorize: "Аўтарызаваць"
       deny: "Скасаваць"
-      no_trust_level: "На жаль, у вас няма неабходнага ўзроўню даверу для доступу да API карыстацкага"
-      generic_error: "На жаль, мы не можам выдаць ключы карыстальніка API, гэтая функцыя можа быць адключаная адміністратарам сайта"
+      no_trust_level: "На жаль, у вас няма неабходнага ўзроўню даверу для доступу да карыстальніцкага API"
+      generic_error: "На жаль, мы не можам выдаваць ключы карыстальніцкага API, гэтая функцыя можа быць адключана адміністратарам сайта."
       device:
         continue: "Працягнуць"
     blocks:
@@ -19,7 +19,7 @@ be:
         failed: "памылка"
     access_control:
       manage:
-        access_permission_editor: "рэдактар"
+        access_permission_editor: "Рэдактар"
         access_permission_remove: "Выдаліць"
     number:
       format:
@@ -2811,7 +2811,7 @@ be:
           topics_viewed_all_time: "Тэм прагледжана (за ўвесь час)"
           posts_read: "Допісаў прачытана"
           posts_read_all_time: "Допісаў прачытана (за ўвесь час)"
-          flagged_posts: "абскарджаны паведамлення"
+          flagged_posts: "Допісаў са скаргамі"
           likes_given: "упадабаныя"
           likes_received: "атрыманыя перавагі"
         discourse_connect:
