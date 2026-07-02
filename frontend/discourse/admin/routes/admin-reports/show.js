@@ -18,14 +18,17 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
       return;
     }
 
-    this.controllerFor(this.routeName).backLink =
-      transition.from?.name === "admin.dashboard.general"
-        ? {
-            route: "admin.dashboard.general",
-            query: transition.from.queryParams,
-            label: "admin.reports.back_to_dashboard",
-          }
-        : { route: "adminReports", label: "admin.reports.back" };
+    const controller = this.controllerFor(this.routeName);
+
+    if (transition.from?.name === "admin.dashboard.general") {
+      controller.setBackLink({
+        route: "admin.dashboard.general",
+        query: transition.from.queryParams,
+        label: "admin.reports.back_to_dashboard",
+      });
+    } else {
+      controller.resetBackLink();
+    }
   }
 
   model(params) {
