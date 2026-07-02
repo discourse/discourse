@@ -2213,10 +2213,27 @@ body.wireframe-active {
 }
 
 /* Tab-based inspector layout. */
+
+/* A small preview of the selected block sits beside its name in the header.
+   The fixed-width box constrains the thumbnail (an inline SVG only honors a
+   percentage width against a sized parent, not an absolute width of its own),
+   and the explicit aspect ratio keeps the SVG from collapsing to zero height. */
+
+.wireframe-inspector__preview {
+  flex: none;
+  width: 48px;
+}
+
+.wireframe-inspector__thumbnail {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 120 / 80;
+}
+
 .wireframe-inspector__header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 0.5rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid var(--primary-low);
@@ -2242,6 +2259,8 @@ body.wireframe-active {
 }
 
 .wireframe-inspector__block-name {
+  flex: 1;
+  min-width: 0;
   font-weight: 600;
 }
 

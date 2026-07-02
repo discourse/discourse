@@ -7,6 +7,8 @@
 # mark applied there round-trips (plain string upgrades to doc-JSON, rendering
 # as <strong> on the canvas).
 describe "Wireframe inspector rich-text control" do
+  include ThemeScreenshotMarker
+
   fab!(:admin)
 
   let(:editor) { PageObjects::Pages::WireframeEditor.new }
@@ -34,6 +36,19 @@ describe "Wireframe inspector rich-text control" do
     find(".d-block-heading").click
 
     expect(page).to have_css(RICH_EDITOR, text: "Hello world")
+  end
+
+  it "shows the block preview in the inspector header" do
+    visit("/latest")
+    editor.enter
+    find(".d-block-heading").click
+
+    # The inspector header shows a preview of the selected block above its name.
+    expect(page).to have_css(".wireframe-inspector__thumbnail")
+
+    # Desktop only — the wireframe editor is a desktop admin tool and isn't
+    # operable at mobile width, so the marker skips the mobile capture leg.
+    screenshot_marker(label: "wireframe-inspector-preview", only: :desktop)
   end
 
   it "commits an inspector edit back to the block on blur" do

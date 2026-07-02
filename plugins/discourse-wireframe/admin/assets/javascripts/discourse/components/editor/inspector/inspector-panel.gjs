@@ -18,6 +18,8 @@ import InspectorLayoutForm from "discourse/plugins/discourse-wireframe/discourse
 import InspectorMetadataSection from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-metadata-section";
 import InspectorOutletSection from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-outlet-section";
 import InspectorRawJson from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-raw-json";
+/** @type {import("../palette/block-thumbnail.gjs").default} */
+import BlockThumbnail from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-thumbnail";
 
 /**
  * Inspector for the selected block. Organises content into a tab strip
@@ -313,6 +315,15 @@ export default class InspectorPanel extends Component {
       </div>
     {{else if this.hasSelection}}
       <div class="wireframe-inspector__header">
+        {{#if this.metadata}}
+          <div class="wireframe-inspector__preview">
+            <BlockThumbnail
+              class="wireframe-inspector__thumbnail"
+              @thumbnail={{this.metadata.thumbnail}}
+              @icon={{or this.metadata.icon "cube"}}
+            />
+          </div>
+        {{/if}}
         <span class="wireframe-inspector__block-name">
           {{this.displayTitle}}
         </span>

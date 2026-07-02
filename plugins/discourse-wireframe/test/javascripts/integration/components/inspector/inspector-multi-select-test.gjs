@@ -61,6 +61,37 @@ module(
         .exists("the single-block form header shows");
     });
 
+    test("shows a block preview beside the name for a single selection", async function (assert) {
+      this.editor.wireframeSelection.selectBlock({ key: this.firstKey });
+
+      await render(
+        <template>
+          <div class="wireframe-shell"><InspectorPanel /></div>
+        </template>
+      );
+
+      assert
+        .dom(".wireframe-inspector__header .wireframe-inspector__thumbnail")
+        .exists("the selected block's preview renders beside its name");
+    });
+
+    test("shows no block preview for a multi-selection", async function (assert) {
+      this.editor.wireframeSelection.selectBlock({ key: this.firstKey });
+      this.editor.wireframeSelection.toggleBlockSelection({
+        key: this.secondKey,
+      });
+
+      await render(
+        <template>
+          <div class="wireframe-shell"><InspectorPanel /></div>
+        </template>
+      );
+
+      assert
+        .dom(".wireframe-inspector__thumbnail")
+        .doesNotExist("the bulk panel shows no single-block preview");
+    });
+
     test("shows a bulk-action panel that deletes the whole selection", async function (assert) {
       this.editor.wireframeSelection.selectBlock({ key: this.firstKey });
       this.editor.wireframeSelection.toggleBlockSelection({
