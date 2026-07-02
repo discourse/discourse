@@ -14,13 +14,18 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
   };
 
   beforeModel(transition) {
-    if (this.isAdminDashboardRoute(transition.from)) {
-      this.backLink = {
-        route: "admin.dashboard.general",
-        query: transition.from.queryParams,
-        label: "admin.reports.back_to_dashboard",
-      };
+    if (transition.from?.name === this.routeName) {
+      return;
     }
+
+    this.controllerFor(this.routeName).backLink =
+      transition.from?.name === "admin.dashboard.general"
+        ? {
+            route: "admin.dashboard.general",
+            query: transition.from.queryParams,
+            label: "admin.reports.back_to_dashboard",
+          }
+        : { route: "adminReports", label: "admin.reports.back" };
   }
 
   model(params) {
@@ -64,25 +69,6 @@ export default class AdminReportsShowRoute extends DiscourseRoute {
     }
 
     return super.serializeQueryParam(value, urlKey, defaultValueType);
-  }
-
-  setupController(controller, model) {
-    super.setupController(controller, model);
-
-    controller.backLink = this.backLink ?? {
-      route: "adminReports",
-      label: "admin.reports.back",
-    };
-  }
-
-  resetController(controller, isExiting) {
-    if (isExiting) {
-      this.backLink = null;
-    }
-  }
-
-  isAdminDashboardRoute(route) {
-    return route?.name === "admin.dashboard.general";
   }
 
   redirect(params) {
