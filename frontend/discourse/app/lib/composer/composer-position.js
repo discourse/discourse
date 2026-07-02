@@ -1,4 +1,5 @@
 import { later } from "@ember/runloop";
+import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import { applyBehaviorTransformer } from "discourse/lib/transformer";
 
 export function setupComposerPosition(editor) {
@@ -6,6 +7,54 @@ export function setupComposerPosition(editor) {
   // for Safari iOS/iPad and Firefox on Android
   // The fixes here go together with styling in base/compose.css
   const html = document.documentElement;
+  const isIOS = html.classList.contains("ios-device");
+  const isIpadOS = html.classList.contains("ipados-device");
+  const isMobileOrIpad = isIOS || isIpadOS;
+
+  let editorFocused = document.activeElement === editor;
+  let scrollLocked = false;
+  let scrollLockTargets = null;
+
+  function shouldLockScroll() {
+    const ipadHardwareKeyboard =
+      isIpadOS && !html.classList.contains("keyboard-visible");
+    return (
+      editorFocused &&
+      html.classList.contains("ios-device") &&
+      !ipadHardwareKeyboard
+    );
+  }
+
+  function getAllowedScrollTargets() {
+    const replyControl = document.getElementById("reply-control");
+    return [
+      editor,
+      replyControl?.querySelector(".d-editor-preview-wrapper"),
+      replyControl?.querySelector(".d-editor-button-bar__wrap"),
+    ].filter(Boolean);
+  }
+
+  function refreshScrollLock() {
+    if (shouldLockScroll() && !scrollLocked) {
+      scrollLockTargets = getAllowedScrollTargets();
+      lock(scrollLockTargets);
+      scrollLocked = true;
+    } else if (!shouldLockScroll() && scrollLocked) {
+      unlock(scrollLockTargets);
+      scrollLockTargets = null;
+      scrollLocked = false;
+    }
+  }
+
+  function onFocus() {
+    editorFocused = true;
+    refreshScrollLock();
+  }
+
+  function onBlur() {
+    editorFocused = false;
+    refreshScrollLock();
+  }
 
   function editorTouchMove(event) {
     // This is an alternative to locking up the body
@@ -21,23 +70,47 @@ export function setupComposerPosition(editor) {
     });
   }
 
-  if (
-    html.classList.contains("mobile-device") ||
-    html.classList.contains("ipados-device")
-  ) {
+  let classObserver;
+  if (isMobileOrIpad) {
     window.addEventListener("scroll", correctScrollPosition);
     correctScrollPosition();
     editor.addEventListener("touchmove", editorTouchMove);
   }
 
+  if (isIOS) {
+    editor.addEventListener("focus", onFocus);
+    editor.addEventListener("blur", onBlur);
+    refreshScrollLock();
+  }
+
+  if (isIpadOS) {
+    classObserver = new MutationObserver(refreshScrollLock);
+    classObserver.observe(html, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  }
+
   // destructor
   return () => {
-    if (
-      html.classList.contains("mobile-device") ||
-      html.classList.contains("ipados-device")
-    ) {
+    if (isMobileOrIpad) {
       window.removeEventListener("scroll", correctScrollPosition);
       editor.removeEventListener("touchmove", editorTouchMove);
+    }
+
+    if (isIOS) {
+      editor.removeEventListener("focus", onFocus);
+      editor.removeEventListener("blur", onBlur);
+
+      if (scrollLocked) {
+        unlock(scrollLockTargets);
+        scrollLockTargets = null;
+        scrollLocked = false;
+      }
+    }
+
+    if (isIpadOS) {
+      classObserver?.disconnect();
     }
   };
 }
