@@ -49,6 +49,7 @@ module SvgSprite
         caret-up
         certificate
         chart-bar
+        chart-column
         chart-pie
         check
         chevron-down

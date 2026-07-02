@@ -657,7 +657,24 @@ export default class OutlinePanel extends Component {
       ariaLevel,
       statusIcon: this.#statusIconFor(row, conditionFailing),
       statusTooltip: this.#statusTooltipFor(row, conditionFailing),
+      typeIcon: this.#typeIconFor(row),
     };
+  }
+
+  /**
+   * Picks the icon that identifies the row's block type, shown before the
+   * block name so the tree is scannable at a glance.
+   *   - A synthesized composite part keeps the dashed-circle "not directly
+   *     editable" cue rather than borrowing its block's icon.
+   *   - Otherwise the block's own declared icon; `cube` mirrors the core
+   *     default for blocks that declare none (and for unknown blocks whose
+   *     metadata can't be resolved).
+   */
+  #typeIconFor(row) {
+    if (row.isPart) {
+      return "circle-dashed";
+    }
+    return this.lookupMetadataFor(row.blockName)?.icon ?? "cube";
   }
 
   /**
@@ -909,10 +926,17 @@ export default class OutlinePanel extends Component {
                         @action={{fn this.toggleCollapse row}}
                       />
                     {{else}}
-                      <span class="outline-block__leaf">
-                        {{dIcon (if row.isPart "circle-dashed" "cube")}}
-                      </span>
+                      {{! An empty spacer sized to match the chevron so leaf rows
+                      line up under their container's toggle. The block-type icon
+                      that identifies the row now lives beside the name below. }}
+                      <span class="outline-block__leaf"></span>
                     {{/if}}
+                    {{! The block-type icon, shown on every row (container and
+                    leaf) so the tree reads at a glance. Decorative; the block
+                    name below is the row's accessible label. }}
+                    <span class="outline-block__type" aria-hidden="true">
+                      {{dIcon row.typeIcon}}
+                    </span>
                     {{! The block name is the row's primary text; a child of an
                       ordinal-naming container (a carousel slide, a tabs panel)
                       gets its position as a separate chip below, and its own

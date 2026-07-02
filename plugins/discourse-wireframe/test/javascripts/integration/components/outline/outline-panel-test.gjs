@@ -113,6 +113,38 @@ module(
         .exists({ count: 4 }, "the container plus its three children render");
     });
 
+    test("shows each block's declared type icon on containers and leaves", async function (assert) {
+      // A `section` container (icon `image`) holding three `heading` leaves
+      // (icon `heading`); with only three children it renders expanded.
+      await setupOutline(this.owner, 3);
+
+      await render(
+        <template>
+          <div class="wireframe-shell"><OutlinePanel /></div>
+        </template>
+      );
+      await waitFor(".outline-block");
+      await settled();
+
+      assert
+        .dom(".outline-block__type")
+        .exists(
+          { count: 4 },
+          "every row carries a type icon — the container and its three leaves"
+        );
+      // The section container is the first row in document order.
+      const container = document.querySelector(".outline-block");
+      assert
+        .dom(container.querySelector(".outline-block__type .d-icon-image"))
+        .exists("the container row shows the section block's own icon");
+      assert
+        .dom(".outline-block__type .d-icon-heading")
+        .exists(
+          { count: 3 },
+          "each heading leaf shows the heading block's own icon"
+        );
+    });
+
     test("numbers a carousel's child slides", async function (assert) {
       await _renderBlocks(
         "homepage-blocks",

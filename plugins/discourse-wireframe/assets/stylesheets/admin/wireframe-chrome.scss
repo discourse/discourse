@@ -2075,6 +2075,24 @@ body.wireframe-active {
       color: var(--primary-medium);
     }
 
+    /* Block-type icon shown before the name on every row, so the tree is
+       scannable. Neutral by default; echoes the row's `.--error` state like
+       the status badge does (muted rows already tint it via inherited color). */
+
+    .outline-block__type {
+      display: inline-flex;
+      align-items: center;
+      color: var(--primary-medium);
+
+      .d-icon {
+        font-size: 0.9em;
+      }
+    }
+
+    .outline-block.--error .outline-block__type {
+      color: var(--danger);
+    }
+
     .outline-block__name {
       flex: 1;
       min-width: 0;
