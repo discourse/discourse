@@ -183,6 +183,7 @@ after_initialize do
   require_relative "lib/discourse_post_event/export_csv_controller_extension"
   require_relative "lib/discourse_post_event/export_csv_file_extension"
   require_relative "lib/discourse_post_event/post_extension"
+  require_relative "lib/discourse_post_event/topic_extension"
   require_relative "lib/discourse_post_event/rrule_generator"
   require_relative "lib/discourse_post_event/rrule_configurator"
   require_relative "lib/discourse_post_event/web_hook_extension"
@@ -223,6 +224,7 @@ after_initialize do
     Jobs::ExportCsvFile.prepend(DiscoursePostEvent::ExportPostEventCsvReportExtension)
     Post.prepend(DiscoursePostEvent::PostExtension)
     ::WebHook.prepend(DiscoursePostEvent::WebHookExtension)
+    Topic.prepend(DiscoursePostEvent::TopicExtension)
     Topic.prepend(DiscourseCalendar::Livestream::TopicExtension)
     Chat::Channel.prepend(DiscourseCalendar::Livestream::ChatChannelExtension)
   end
