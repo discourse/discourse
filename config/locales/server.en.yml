@@ -1427,7 +1427,7 @@ en:
         staff: "Staff"
     trust_level_pipeline:
       title: "Trust level pipeline"
-      description: "Current membership at each trust level and the arrivals at each level during the selected period: members promoted into the level, members demoted into it, and new sign-ups at the entry trust level."
+      description: "Member movement between trust levels for the selected period. Counts the members currently at each trust level, their share of the total membership, the number of members promoted or demoted into each trust level during the period, and new sign-ups, counted at the site's default trust level."
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
         level: "Trust level"
