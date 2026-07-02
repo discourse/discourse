@@ -14,6 +14,21 @@ module Reports::TrustLevelPipeline
           title: I18n.t("reports.trust_level_pipeline.labels.count"),
         },
         { property: :share_formatted, title: I18n.t("reports.trust_level_pipeline.labels.share") },
+        {
+          property: :promoted_in,
+          type: :number,
+          title: I18n.t("reports.trust_level_pipeline.labels.promoted_in"),
+        },
+        {
+          property: :demoted_in,
+          type: :number,
+          title: I18n.t("reports.trust_level_pipeline.labels.demoted_in"),
+        },
+        {
+          property: :signups,
+          type: :number,
+          title: I18n.t("reports.trust_level_pipeline.labels.signups"),
+        },
       ]
 
       snapshot = User.real.group(:trust_level).count
