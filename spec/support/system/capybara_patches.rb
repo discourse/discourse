@@ -194,6 +194,7 @@ module PlaywrightSoftReset
 
   module Browser
     def create_browser_context
+      @page_options = { serviceWorkers: "block" }.merge(@page_options)
       @context_downloaded = false
       super.tap do |browser_context|
         browser_context.on("download", ->(_download) { @context_downloaded = true })
