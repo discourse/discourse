@@ -1,4 +1,7 @@
 @use "lib/viewport";
+
+$db-bar-height: var(--space-2);
+
 @import "admin/dashboard/engagement";
 @import "admin/dashboard/highlights";
 @import "admin/dashboard/reports";
