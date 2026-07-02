@@ -154,22 +154,20 @@ export default class DAccessControl extends Component {
 
     // TODO (martin) Handle user type ACLs here in next PR
     this.mandatoryAcl.forEach((entry) => {
-      if (entry.type !== "group") {
-        return;
-      }
-
-      const group = (this.args.groups || []).find((g) => g.id === entry.id);
-      if (group) {
-        acl.push({
-          type: "group",
-          id: entry.id,
-          display_name: group.full_name || group.name,
-          permission: entry.permission,
-          metadata: {
-            auto_group: group.automatic,
-          },
-          mandatory: true,
-        });
+      if (entry.type === "group") {
+        const group = (this.args.groups || []).find((g) => g.id === entry.id);
+        if (group) {
+          acl.push({
+            type: "group",
+            id: entry.id,
+            display_name: group.full_name || group.name,
+            permission: entry.permission,
+            metadata: {
+              auto_group: group.automatic,
+            },
+            mandatory: true,
+          });
+        }
       }
     });
 
@@ -231,23 +229,23 @@ export default class DAccessControl extends Component {
     this.addingGroup = false;
   }
 
-  // TODO (martin) Handle user type ACLs here in next PR
   @action
-  onPermissionChange(groupId, permission) {
+  onPermissionChange(granteeType, granteeId, permission) {
     if (permission === REMOVE_ACTION.id) {
       this.args.onChange(
         this.acl.filter(
-          (entry) => !(entry.type === "group" && entry.id === groupId)
+          (entry) => !(entry.type === granteeType && entry.id === granteeId)
         )
       );
       return;
     }
 
     const next = this.acl.map((entry) =>
-      entry.type === "group" && entry.id === groupId
+      entry.type === granteeType && entry.id === granteeId
         ? { ...entry, permission }
         : entry
     );
+
     this.args.onChange(next);
   }
 
@@ -303,7 +301,7 @@ export default class DAccessControl extends Component {
                   this.permissionOptions
                   row
                 }}
-                @onChange={{fn this.onPermissionChange row.id}}
+                @onChange={{fn this.onPermissionChange row.type row.id}}
                 @options={{hash
                   showCaret=true
                   showFullTitle=true

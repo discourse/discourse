@@ -25,7 +25,7 @@ Basic usage:
 Arguments:
 
 - `@groups`: group records available for selection. Each group should have `id`, `name`, `full_name`, and `automatic`.
-- `@acl`: flattened ACL entries from the backend or form state.
+- `@acl`: flattened ACL entries from the backend or form state. The backend can emit group and user entries, but this component currently edits group entries only.
 - `@onChange`: called with the next flattened ACL array when the user adds/removes/changes a row.
 - `@aclTarget`: optional key used to load mandatory ACL entries from `site.access_control.mandatory_acl` and banned entries from `site.access_control.banned_acl`.
 - `@transformPermissionOptions`: optional callback to customize default permission labels/descriptions or add target-specific permissions.
@@ -92,7 +92,7 @@ Target-specific options added via `@transformPermissionOptions` can still be ban
 - Already selected groups are removed from the add-group chooser.
 - Row DOM metadata uses `data-row-type` and `data-row-id`; tests should not rely on the old `data-group-id` attribute.
 
-The component remains group-first. It can display entries derived from mandatory ACL metadata for groups, but it does not provide user picking or complete user ACL editing.
+The component remains group-first. Backend ACL rows can include `type: :user` entries and lookup helpers understand them, but `DAccessControl` does not yet provide user picking or complete user ACL editing. Treat shared UI support for `allowed_user_ids` as the remaining gap.
 
 ## FormKit Integration
 

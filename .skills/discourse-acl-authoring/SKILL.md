@@ -24,7 +24,7 @@ Use this skill before adding or reviewing ACL-backed resource permissions in Dis
 - Use Guardian ACL helpers or `AclTarget` visibility scopes for checks and target scopes instead of hand-querying ACL tables in controllers.
 - Register plugin ACL targets with `DiscoursePluginRegistry.register_acl_target_class` so `Site#access_control` exposes mandatory and banned ACL metadata to the frontend.
 - Treat `banned_acl` as a server-enforced restriction. `DAccessControl` hides banned permission choices for UX, but `AccessControlListManager` must still reject submitted banned entries.
-- Do not claim user ACL support is complete. Current authoring and UI flows are group-first; `allowed_user_ids` and user entries exist in lower layers but are not fully wired by `expand_list`, `preload_allowed`, cleanup jobs, or `DAccessControl`.
+- Do not claim user ACL support is complete. Backend support is partially wired for `allowed_user_ids` in expansion, flattening, preloading, lookup helpers, matching scopes, and cleanup jobs, but `DAccessControl` remains group-first and does not yet provide complete user ACL editing.
 
 ## Local Anchors
 
@@ -34,7 +34,7 @@ Use this skill before adding or reviewing ACL-backed resource permissions in Dis
 - Guardian helpers: `lib/guardian.rb`
 - User ACL cache: `app/models/user.rb`
 - Write manager: `app/services/access_control_list_manager.rb`
-- Deleted group cleanup: `app/jobs/regular/cleanup_acls_for_deleted.rb`, `app/models/group.rb`
+- Deleted grantee cleanup: `app/jobs/regular/cleanup_acls_for_deleted.rb`, `app/models/group.rb`, `app/models/user.rb`
 - Site metadata: `app/models/site.rb`, `app/serializers/site_serializer.rb`
 - Frontend component: `frontend/discourse/app/ui-kit/d-access-control.gjs`
 - Core specs: `spec/models/access_control_list_spec.rb`, `spec/models/concerns/acl_target_spec.rb`, `spec/lib/acl/target_spec.rb`, `spec/jobs/regular/cleanup_acls_for_deleted_spec.rb`, `spec/services/access_control_list_manager_spec.rb`, `spec/serializers/site_serializer_spec.rb`, `frontend/discourse/tests/integration/components/d-access-control-test.gjs`
