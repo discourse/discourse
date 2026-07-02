@@ -1980,6 +1980,10 @@ class Topic < ActiveRecord::Base
     ApplicationLayoutPreloader.banner_json_cache.clear if archetype == "banner"
   end
 
+  def plain_text_excerpt
+    ExcerptParser.to_plain_text(excerpt)
+  end
+
   def pm_with_non_human_user?
     sql = <<~SQL
     SELECT 1 FROM topics

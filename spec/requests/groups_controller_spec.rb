@@ -526,6 +526,27 @@ RSpec.describe GroupsController do
       )
     end
 
+    it "renders a single-escaped, tag-free meta description from the bio" do
+      group.update!(bio_raw: "Tom & Jerry [blog](https://evil.example) win")
+
+      get "/groups/#{group.name}.html"
+
+      expect(response.body).to have_tag(
+        :meta,
+        with: {
+          name: "description",
+          content: "Tom & Jerry blog win",
+        },
+      )
+      expect(response.body).to have_tag(
+        :meta,
+        with: {
+          property: "og:description",
+          content: "Tom & Jerry blog win",
+        },
+      )
+    end
+
     describe "when accessing by name" do
       include_examples "group show behavior", "/groups", :name
 

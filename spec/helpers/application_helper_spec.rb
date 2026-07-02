@@ -602,6 +602,16 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "crawlable_meta_data" do
+    it "escapes the description exactly once" do
+      result =
+        helper.crawlable_meta_data(description: %(Tom & O'Reilly "><script>alert(1)</script>))
+
+      expect(result).to include(
+        %(<meta property="og:description" content="Tom &amp; O&#39;Reilly &quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;" />),
+      )
+      expect(result).not_to include("<script>")
+    end
+
     it "Supports ASCII URLs with odd chars" do
       result =
         helper.crawlable_meta_data(
