@@ -947,6 +947,7 @@ hr:
       labels:
         count: "Članovi"
         share: "Podijeli"
+        signups: "Učlanjenja"
       levels:
         "0": "Novo"
         "1": "Osnovno"

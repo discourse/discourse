@@ -1258,6 +1258,7 @@ fi:
         level: "Luottamustaso"
         count: "Jäsenet"
         share: "Jaa"
+        signups: "Rekisteröitymiset"
       levels:
         "0": "Uudet"
         "1": "Haastaja"

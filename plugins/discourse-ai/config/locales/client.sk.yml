@@ -387,6 +387,12 @@ sk:
         temperature_help: "Teplota, ktorá sa má použiť pre LLM. Zvýšte pre zvýšenie kreativity (nechajte prázdne pre použitie predvolenej hodnoty modelu, zvyčajne hodnoty od 0,0 do 2,0)"
         top_p: "Top P"
         top_p_help: "Top P použiť pre LLM, zvýšiť pre zvýšenie náhodnosti (nechať prázdne pre použitie predvoleného modelu, zvyčajne hodnota od 0,0 do 1,0)"
+        thinking_effort_options:
+          none: "Žiadny"
+          low: "Nízka"
+          medium: "Stredná"
+          high: "Vysoká"
+          max: "Max"
         priority: "Priorita"
         tool_options: "Možnosti nástroja"
         rag_conversation_chunks: "Vyhľadávanie v častiach konverzácie"

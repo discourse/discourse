@@ -769,6 +769,7 @@ zh_TW:
         level: "信任等級"
         count: "成員"
         share: "分享"
+        signups: "註冊"
       levels:
         "0": "新使用者"
         "1": "初級使用者"

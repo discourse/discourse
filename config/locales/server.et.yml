@@ -589,6 +589,7 @@ et:
       labels:
         count: "Liikmed"
         share: "Jaga"
+        signups: "Registreerumised"
       levels:
         "0": "Uus"
         "1": "Tavakasutaja"

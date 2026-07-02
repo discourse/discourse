@@ -344,14 +344,12 @@ sr:
         staff: "Osoblje"
     trust_level_pipeline:
       title: "Pipeline nivoa poverenja"
-      description: "Kretanje članova između nivoa poverenja za izabrani period. Broji trenutne članove na svakom nivou poverenja, njihov udeo u ukupnom članstvu i broj članova koji su tokom perioda prešli u ili iz svakog nivoa poverenja."
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
         level: "Nivo poverenja"
         count: "Članovi"
         share: "Podeli"
-        moves_in: "Ulazi"
-        moves_out: "Izlazi"
+        signups: "Registracija"
       levels:
         "0": "Novo"
         "1": "Osnovno"

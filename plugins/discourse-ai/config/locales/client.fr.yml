@@ -385,6 +385,12 @@ fr:
         temperature_help: "Température à utiliser pour le LLM. Augmentez la valeur pour augmenter la créativité (laissez le champ vide pour utiliser la valeur par défaut du modèle, généralement une valeur comprise entre 0,0 et 2,0)"
         top_p: "Top P"
         top_p_help: "Top P à utiliser pour le LLM, augmentez pour augmenter le caractère aléatoire (laissez vide pour utiliser la valeur par défaut du modèle, généralement une valeur comprise entre 0,0 et 1,0)"
+        thinking_effort_options:
+          none: "Jamais"
+          low: "Faible"
+          medium: "Moyenne"
+          high: "Élevée"
+          max: "Max"
         priority: "Priorité"
         tool_options: "Options de l'outil"
         rag_conversation_chunks: "Rechercher des morceaux de conversation"

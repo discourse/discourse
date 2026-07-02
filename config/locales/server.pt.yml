@@ -782,6 +782,7 @@ pt:
       labels:
         count: "Membros"
         share: "Partilhar"
+        signups: "Registos"
       levels:
         "0": "Novo"
         "1": "Básico"

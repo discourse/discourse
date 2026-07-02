@@ -1296,6 +1296,7 @@ nl:
         level: "Vertrouwensniveau"
         count: "Leden"
         share: "Delen"
+        signups: "Registraties"
       levels:
         "0": "Nieuw"
         "1": "Basis"
@@ -2483,9 +2484,9 @@ nl:
     nested_replies_max_depth: "Maximale visuele nestdiepte voor antwoorden in thread. Berichten die dieper zijn dan dit tonen een link 'Doorgaan met deze thread'."
     nested_replies_backfill_batch_size: "Aantal topics om statistieken van geneste antwoorden aan te vullen per geplande run."
     nested_replies_cap_nesting_depth: "Beperk antwoordnesting op de maximale visuele diepte. Als dit is ingeschakeld, worden antwoorden op het diepste niveau opnieuw gelijkliggend in plaats van onderliggend."
-    fake_upcoming_change: "Dit is een nep aankomende wijziging voor testdoeleinden. Je hoeft deze string niet te vertalen."
     floating_dismiss_topics_on_mobile: "Toont een zwevende knop 'Negeren...' op mobiel voor de topiclijst voor eenvoudigere toegang en om ruimte vrij te maken bovenaan de topiclijst"
     enable_simplified_category_creation: "Maakt eenvoudigere flow voor het maken van categorieën mogelijk met minder opties en een schonere interface."
+    reporting_improvements: "Verbeteringen in de navigatie, het ontwerp en de bruikbaarheid van de beheerdersrapporten van Discourse."
     modernize_foundation_theme: "Deze wijziging introduceert ontwerpwijzigingen van het Foundation-thema in Discourse."
     errors:
       invalid_css_color: "Ongeldige kleur. Voer een kleurnaam of hexadecimale waarde in."

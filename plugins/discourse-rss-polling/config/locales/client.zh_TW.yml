@@ -12,3 +12,13 @@ zh_TW:
         feed_url: 網址
         discourse_category: 分類
         discourse_tags: 標記
+        feeds:
+          edit: 編輯
+          delete: 刪除
+          save: 儲存
+        test:
+          title: 預覽
+          dismiss: 忽略
+        status:
+          enabled: 啟用
+          disabled: 停用
