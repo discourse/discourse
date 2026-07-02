@@ -2,14 +2,9 @@ import { get } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import {
   MIN_CHARACTER_COUNT,
+  tagNames,
   tagSuggestionParams,
 } from "./ai-helper-suggestions";
-
-function tagNames(tags) {
-  return (tags ?? [])
-    .map((tag) => (typeof tag === "string" ? tag : tag?.name))
-    .filter(Boolean);
-}
 
 class ComposerSuggestionContext {
   constructor(composer) {

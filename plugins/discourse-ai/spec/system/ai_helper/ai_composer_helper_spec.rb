@@ -339,6 +339,19 @@ RSpec.describe "AI Composer helper" do
       expect(edit_category_chooser).to have_selected_name(category_2.name)
       expect(page).to have_no_css(".edit-category__wrapper .category-chooser.is-expanded")
     end
+
+    it "does not offer a suggestion when embeddings are disabled" do
+      SiteSetting.ai_embeddings_enabled = false
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+
+      edit_category_chooser.expand
+
+      expect(page).to have_no_css(
+        ".edit-category__wrapper .category-chooser .select-kit-row[data-value='ai-category-suggest']",
+      )
+    end
   end
 
   context "when suggesting tags inline when editing a topic" do
@@ -385,6 +398,19 @@ RSpec.describe "AI Composer helper" do
       expect(edit_tag_chooser).to have_selected_choice_name(cloud.name)
       expect(edit_tag_chooser).to have_no_option_name(cloud.name)
       expect(edit_tag_chooser).to have_option_name(feedback.name)
+    end
+
+    it "does not offer a suggestion when embeddings are disabled" do
+      SiteSetting.ai_embeddings_enabled = false
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+
+      edit_tag_chooser.expand
+
+      expect(page).to have_no_css(
+        ".edit-tags__wrapper .mini-tag-chooser .select-kit-row[data-value='ai-tag-suggest']",
+      )
     end
   end
 
