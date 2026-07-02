@@ -1,4 +1,4 @@
-import { click, render, settled } from "@ember/test-helpers";
+import { click, findAll, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import NotificationsList from "discourse/components/user-menu/notifications-list";
 import { cloneJSON } from "discourse/lib/object";
@@ -6,7 +6,6 @@ import { NOTIFICATION_TYPES } from "discourse/tests/fixtures/concerns/notificati
 import NotificationFixtures from "discourse/tests/fixtures/notification-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
 function getNotificationsData() {
@@ -217,7 +216,7 @@ module(
         });
       });
       await render(<template><NotificationsList /></template>);
-      const items = queryAll("ul li");
+      const items = findAll("ul li");
       assert
         .dom(items[0])
         .includesText(

@@ -4,6 +4,13 @@ module DiscourseAi
   module Completions
     module Endpoints
       module OpenAiShared
+        OPEN_AI_REASONING_EFFORTS = %w[none minimal low medium high xhigh].freeze
+        OPEN_AI_REASONING_OUTPUT_RESERVATION = 25_000
+        # "minimal" isn't a distinct tier on some OpenAI reasoning models (e.g.
+        # gpt-5.5 rejects it outright) — collapse it into "low", same as vLLM's
+        # own reasoning effort scale already does.
+        OPEN_AI_EFFORT_ALIASES = { "max" => "xhigh", "minimal" => "low" }.freeze
+
         def default_options
           { model: llm_model.name }
         end
@@ -35,9 +42,8 @@ module DiscourseAi
             model_params[:stop] = model_params.delete(:stop_sequences)
           end
 
-          if reasoning_effort
-            model_params.delete(:temperature)
-            model_params.delete(:top_p)
+          if thinking_configured?
+            strip_sampling_params_for_thinking!(model_params)
           else
             model_params.delete(:top_p) if llm_model.lookup_custom_param("disable_top_p")
             if llm_model.lookup_custom_param("disable_temperature")
@@ -54,13 +60,56 @@ module DiscourseAi
           @disable_streaming ||= llm_model.lookup_custom_param("disable_streaming")
         end
 
-        def reasoning_effort
-          return @reasoning_effort if defined?(@reasoning_effort)
-          @reasoning_effort = llm_model.lookup_custom_param("reasoning_effort")
-          @reasoning_effort = nil if !%w[none minimal low medium high xhigh].include?(
-            @reasoning_effort,
+        def resolve_thinking_config(model_params)
+          effort =
+            DiscourseAi::Completions::ThinkingConfig.normalize_effort(
+              model_params[:thinking_effort],
+            )
+          effort ||= legacy_reasoning_effort
+
+          return DiscourseAi::Completions::ThinkingConfig.disabled if effort.blank?
+
+          provider_effort = OPEN_AI_EFFORT_ALIASES[effort] || effort
+          if !OPEN_AI_REASONING_EFFORTS.include?(provider_effort)
+            return DiscourseAi::Completions::ThinkingConfig.unsupported(canonical_effort: effort)
+          end
+
+          output_reservation = open_ai_reasoning_output_reservation(model_params, provider_effort)
+
+          DiscourseAi::Completions::ThinkingConfig.new(
+            canonical_effort: effort,
+            provider_effort: provider_effort,
+            enabled: provider_effort != "none",
+            explicit_none: provider_effort == "none",
+            reserved_output_tokens: output_reservation,
+            strip_temperature: provider_effort != "none",
+            strip_top_p: provider_effort != "none",
           )
-          @reasoning_effort
+        end
+
+        def open_ai_reasoning_output_reservation(model_params, provider_effort)
+          return if provider_effort == "none"
+
+          requested_output_tokens = model_params[:max_tokens].presence&.to_i
+          return requested_output_tokens if requested_output_tokens&.positive?
+
+          model_output_tokens = llm_model.max_output_tokens.to_i
+          return model_output_tokens if model_output_tokens.positive?
+
+          OPEN_AI_REASONING_OUTPUT_RESERVATION
+        end
+
+        def reasoning_effort
+          thinking_config&.provider_effort
+        end
+
+        def legacy_reasoning_effort
+          return @legacy_reasoning_effort if defined?(@legacy_reasoning_effort)
+          @legacy_reasoning_effort = llm_model.lookup_custom_param("reasoning_effort")
+          @legacy_reasoning_effort = nil if !OPEN_AI_REASONING_EFFORTS.include?(
+            @legacy_reasoning_effort,
+          )
+          @legacy_reasoning_effort
         end
 
         def service_tier

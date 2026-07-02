@@ -1,5 +1,11 @@
 import { getOwner } from "@ember/owner";
-import { click, render, settled, triggerEvent } from "@ember/test-helpers";
+import {
+  click,
+  find,
+  render,
+  settled,
+  triggerEvent,
+} from "@ember/test-helpers";
 import hbs from "htmlbars-inline-precompile";
 import { module, test } from "qunit";
 import Post from "discourse/components/post";
@@ -8,7 +14,6 @@ import { forceMobile, resetMobile } from "discourse/lib/mobile";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { registerTemporaryModule } from "discourse/tests/helpers/temporary-module-helper";
 import { i18n } from "discourse-i18n";
 
@@ -151,11 +156,11 @@ module("Integration | Component | Post", function (hooks) {
     await renderComponent(this.post);
 
     assert.strictEqual(
-      queryAll("a[data-clicks='1']")[0].getAttribute("data-clicks"),
+      find("a[data-clicks='1']").getAttribute("data-clicks"),
       "1"
     );
     assert.strictEqual(
-      queryAll("a[data-clicks='2']")[0].getAttribute("data-clicks"),
+      find("a[data-clicks='2']").getAttribute("data-clicks"),
       "2"
     );
   });
@@ -181,12 +186,12 @@ module("Integration | Component | Post", function (hooks) {
     await renderComponent(this.post);
 
     assert.strictEqual(
-      queryAll("a[data-clicks='1']")[0].getAttribute("data-clicks"),
+      find("a[data-clicks='1']").getAttribute("data-clicks"),
       "1",
       "First link has correct data attribute and content"
     );
     assert.strictEqual(
-      queryAll("a[data-clicks='2']")[0].getAttribute("data-clicks"),
+      find("a[data-clicks='2']").getAttribute("data-clicks"),
       "2",
       "Second link has correct data attribute and content"
     );
@@ -294,6 +299,25 @@ module("Integration | Component | Post", function (hooks) {
 
     assert.dom(".topic-post.whisper").exists({ count: 1 });
     assert.dom(".post-info.whisper").exists({ count: 1 });
+  });
+
+  test("warning first post gets the moderator staff color", async function (assert) {
+    this.post.topic.is_warning = true;
+
+    await renderComponent(this.post);
+
+    assert.dom(".topic-post.moderator").exists({ count: 1 });
+    assert.dom(".topic-post.regular").doesNotExist();
+  });
+
+  test("warning reply does not get the moderator staff color", async function (assert) {
+    this.post.topic.is_warning = true;
+    this.post.post_number = 2;
+
+    await renderComponent(this.post);
+
+    assert.dom(".topic-post.moderator").doesNotExist();
+    assert.dom(".topic-post.regular").exists({ count: 1 });
   });
 
   test("language", async function (assert) {

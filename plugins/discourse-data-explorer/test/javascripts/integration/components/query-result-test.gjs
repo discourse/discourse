@@ -49,6 +49,48 @@ module("Integration | Component | QueryResult", function (hooks) {
     assert.dom("table tbody tr:nth-child(2) td:nth-child(2)").hasText("20");
   });
 
+  test("renders JSON columns as escaped text with a viewer action", async function (assert) {
+    const content = {
+      colrender: { 1: "json" },
+      result_count: 1,
+      columns: ["name", "response_format"],
+      rows: [["classifier", '[{"key":"<img src=x onerror=alert(1)>"}]']],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert
+      .dom("table tbody tr:nth-child(1) td:nth-child(2) .result-json-value")
+      .hasText(
+        '[{"key":"<img src=x onerror=alert(1)>"}]',
+        "renders JSON as readable text without HTML entities"
+      );
+    assert
+      .dom("table tbody tr:nth-child(1) td:nth-child(2) img")
+      .doesNotExist("does not render HTML from JSON values");
+    assert
+      .dom("table tbody tr:nth-child(1) td:nth-child(2) .result-json-button")
+      .exists("renders a JSON viewer action");
+  });
+
+  test("renders plain text without double-escaping HTML entities", async function (assert) {
+    const content = {
+      colrender: [],
+      result_count: 1,
+      columns: ["value"],
+      rows: [['{"key":"<script>alert(1)</script>"}']],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert
+      .dom("table tbody tr:nth-child(1) td:nth-child(1)")
+      .hasText('{"key":"<script>alert(1)</script>"}', "renders readable text");
+    assert
+      .dom("table tbody tr:nth-child(1) td:nth-child(1) script")
+      .doesNotExist("does not render HTML from text values");
+  });
+
   test("renders badge names in query results", async function (assert) {
     const content = {
       colrender: { 0: "badge" },

@@ -109,7 +109,13 @@ class StaticController < ApplicationController
           @topic.title
         end
       @title = "#{title_prefix} - #{SiteSetting.title}"
-      @body = @topic.posts.first.cooked
+      post = @topic.posts.first
+      @body =
+        if ContentLocalization.show_translated_post?(post, guardian)
+          post.get_localization&.cooked || post.cooked
+        else
+          post.cooked
+        end
       @faq_overridden = SiteSetting.faq_url.present?
       @rename_faq_to_guidelines = rename_faq
 

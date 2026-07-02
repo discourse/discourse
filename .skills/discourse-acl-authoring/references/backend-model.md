@@ -141,17 +141,27 @@ The concern provides:
 - `.acl_target_key`, defaulting to `name`
 - `.has_mandatory_acl?`
 - `.acl_is_mandatory?(acl)`
+- `.has_banned_acl?`
+- `.acl_is_banned?(acl)`
 - `mandatory_acl_as_expanded_list(owner)`
 
-`AclTarget.acl_matches?(acl_a, acl_b)` is the shared comparator for mandatory ACL matching. It normalizes `type` to symbols and compares `permission` as strings.
+`AclTarget.acl_matches?(acl_a, acl_b)` is the shared comparator for mandatory and banned ACL matching. It normalizes `type` to symbols and compares `permission` as strings.
 
-## Mandatory ACLs
+## Mandatory and Banned ACLs
 
 Define `self.mandatory_acl` on the target class when some grants must always exist:
 
 ```ruby
 def self.mandatory_acl
   [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }]
+end
+```
+
+Define `self.banned_acl` on the target class when specific grants must never be selectable or persisted:
+
+```ruby
+def self.banned_acl
+  [{ type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" }]
 end
 ```
 
@@ -162,7 +172,13 @@ Mandatory entries are consumed by both backend writes and frontend rendering:
 - `flattened_list` marks matching entries with `mandatory: true`.
 - `Site#access_control` exposes mandatory ACL metadata for registered targets.
 
-Keep mandatory ACLs group-based unless user ACL support has been completed end-to-end.
+Banned entries are consumed by both backend writes and frontend rendering:
+
+- `AccessControlListManager` rejects submitted ACLs that match the target class's `banned_acl` via the `has_no_banned_acl` policy.
+- `Site#access_control` exposes banned ACL metadata for registered targets.
+- `DAccessControl` filters banned permission options for the matching grantee.
+
+Keep mandatory and banned ACLs group-based unless user ACL support has been completed end-to-end.
 
 ## Stale References
 

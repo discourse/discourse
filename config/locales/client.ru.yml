@@ -47,6 +47,10 @@ ru:
         no_visible_children_hint: "Этот контейнерный блок не отображается, потому что ни один из его дочерних элементов не виден."
         condition_failed_hint: "Этот блок не отображается, поскольку условия его выполнения не выполнены."
         head_hidden_tail_hint: "Этот блок не отображается, потому что в контейнере `head` сначала отобразился другой блок."
+    access_control:
+      manage:
+        access_permission_editor: "Редактор"
+        access_permission_remove: "Отозвать"
     carousel:
       go_to_slide: "Перейти к слайду %{index}"
       previous: "Предыдущий слайд"
@@ -495,6 +499,9 @@ ru:
     age: "Возраст"
     joined: "Регистрация"
     admin_title: "Администрирование"
+    advanced_mode_toggle:
+      advanced_mode: "Расширенный режим"
+      simple_mode: "Простой режим"
     show_more: "показать ещё"
     show_help: "Варианты"
     links: "Ссылки"
@@ -3384,6 +3391,7 @@ ru:
         toggle_whisper:
           label: Скрытое сообщение
         create_topic:
+          label: Создать тему
           desc: Создать новую тему
         create_personal_message:
           desc: "Создать новое личное сообщение"
@@ -4068,47 +4076,6 @@ ru:
       read_more: "Хотите почитать что-нибудь ещё? Можно <a href='%{categoryLink}'>просмотреть все категории</a> или <a href='%{latestLink}'>ознакомиться с последними темами</a>."
       unread_indicator: "Никто ещё не дочитал до конца этой темы."
       participant_groups: "Группы участников"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Осталась <a href="{basePath}/unread"># непрочитанная</a>}
-                 few {Остались <a href="{basePath}/unread"># непрочитанные</a>}
-                 many {Осталось <a href="{basePath}/unread"># непрочитанных</a>}
-              other {Остались <a href="{basePath}/unread"># непрочитанной</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { и <a href="{basePath}/new"># новая</a> тема,}
-                 few { и <a href="{basePath}/new"># новые</a> темы,}
-                 many { и <a href="{basePath}/new"># новых</a> тем,}
-              other { и <a href="{basePath}/new"># новой</a> темы,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Осталась <a href="{basePath}/unread"># непрочитанная</a> тема,}
-                 few {Остались <a href="{basePath}/unread"># непрочитанные</a> темы,}
-                 many {Осталось <a href="{basePath}/unread"># непрочитанных</a> тем,}
-              other {Остались <a href="{basePath}/unread"># непрочитанной</a> темы,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Осталась <a href="{basePath}/new"># новая</a> тема,}
-                 few {Остались <a href="{basePath}/new"># новые</a> темы,}
-                 many {Осталось <a href="{basePath}/new"># новых</a> тем,}
-              other {Остались <a href="{basePath}/new"># новой</a> темы,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { вы также можете посмотреть другие темы в категории {categoryLink}}
-          false { вы также можете <a href="{basePath}/latest">просмотреть последние темы</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} ответ, перейти к первой публикации"
         few: "%{count} ответа, перейти к первой публикации"
@@ -5556,7 +5523,6 @@ ru:
       synonyms: "Синонимы"
       synonyms_inline: "Эти синонимы будут заменены на %{base_tag_name}:"
       save: "Сохранить имя и описание тега"
-      restricted_to: "Ограничено"
       no_synonyms: "У этого тега нет синонимов."
       edit_synonyms: "Редактировать синонимы"
       add_synonyms_label: "Добавить синонимы:"
@@ -6357,6 +6323,9 @@ ru:
             opengraph_image:
               title: "Изображение OpenGraph"
               description: "Изображение Open Graph по умолчанию, используемое, если на странице нет другого подходящего изображения. Если оставить поле пустым, будет использовано значение из настройки large_icon."
+            og_image_preview:
+              generate: "Сгенерировать"
+              topic_id_label: "ID темы"
             x_summary_large_image:
               title: "Большое изображение сводной карточки X"
               description: "Большое изображение сводной карточки X. Если оставить поле пустым, будут сгенерированы обычные метаданные карточки с использованием OpenGraph_image (если исходное изображение также не в формате «.svg»)."
@@ -6676,7 +6645,7 @@ ru:
         stale_data: "Проверка обновлений в последнее время не производилась. Убедитесь, что запущен процесс sidekiq."
         version_check_pending: "Вы недавно обновились. Замечательно!"
         installed_version: "Установленная версия"
-        latest_version: "Последняя версия"
+        github: "GitHub"
         problems_found: "Несколько советов по текущим настройкам сайта"
         dismiss_notice: "Игнорировать"
         new_features:
@@ -7330,6 +7299,8 @@ ru:
             initial_members: "Расширенный состав участников"
             initial_members_description: "Количество участников группы, которое будет отображаться перед добавлением кнопки «Показать больше»."
             show_description: "Включить описание"
+          locale_selector:
+            title: "Язык"
           optional: "(необязательно)"
           update: "Обновить"
           toasts:
@@ -8443,13 +8414,12 @@ ru:
         silence_reason: "Причина заморозки"
         bulk_actions:
           title: "Массовые действия"
-          admin_cant_be_deleted: "Этого пользователя нельзя удалить, так как он является администратором"
-          too_many_or_old_posts: "Этого пользователя нельзя удалить, так как у него слишком много публикаций или одна из них очень старая"
-          too_many_selected_users:
-            one: "Вы достигли лимита в %{count} пользователя для массового удаления"
-            few: "Вы достигли лимита в %{count} пользователей для массового удаления"
-            many: "Вы достигли лимита в %{count} пользователей для массового удаления"
-            other: "Вы достигли лимита в %{count} пользователя для массового удаления"
+          select_all: "Выбрать все"
+          clear_all: "Сбросить все"
+          suspend:
+            confirmation_modal:
+              close: "Закрыть"
+              confirm: "Заблокировать"
           delete:
             label: "Удаление пользователей…"
             confirmation_modal:
@@ -8483,6 +8453,9 @@ ru:
           suspended: "Заблокированные"
           silenced: "Замороженные"
           staged: "Сымитированные"
+        activation_filter:
+          all: "Все пользователи"
+          activated: "Активирован"
         approved: "Подтвердить?"
         titles:
           active: "Активные пользователи"

@@ -3,7 +3,7 @@
 class Report
   # Change this line each time report format change
   # and you want to ensure cache is reset
-  SCHEMA_VERSION = 4
+  SCHEMA_VERSION = 5
 
   FILTERS = %i[
     name
@@ -355,7 +355,7 @@ class Report
     report.guardian ||= report.current_user&.guardian
     report.labels = Report.default_labels
 
-    report.legacy = LEGACY_REPORTS.include?(type) if SiteSetting.reporting_improvements
+    report.legacy = LEGACY_REPORTS.include?(type)
 
     report
   end

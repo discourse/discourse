@@ -420,7 +420,7 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
   end
 
   it "uses reasoning object format for responses API" do
-    model.update!(provider_params: { reasoning_effort: "minimal" })
+    model.update!(provider_params: { reasoning_effort: "medium" })
 
     parsed_body = nil
     stub_request(:post, "https://api.openai.com/v1/responses").with(
@@ -441,7 +441,7 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
 
     endpoint.perform_completion!(dialect, Discourse.system_user)
 
-    expect(parsed_body[:reasoning]).to include(effort: "minimal", summary: "auto")
+    expect(parsed_body[:reasoning]).to include(effort: "medium", summary: "auto")
     expect(parsed_body).not_to have_key(:reasoning_effort)
     expect(parsed_body).to have_key(:input)
   end

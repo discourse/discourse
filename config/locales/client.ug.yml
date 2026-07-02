@@ -27,6 +27,15 @@ ug:
         not_registered: "خەتلەتمىگەن"
         no_visible_children: "كۆرۈنۈشچان تارماق تۈرى يوق"
         failed: "مەغلۇب بولدى"
+      ghost_reasons:
+        optional_missing_hint: "بۇ تاللاشچان بۆلەك تىزىملىتىلمىغاچقا كۆرسىتىلمىدى."
+        no_visible_children_hint: "بۇ يۈكدان بۆلىكى كۆرسىتىلمىدى چۈنكى ئۇنىڭ تارماقلىرىنىڭ ھېچقايسىسى كۆرۈنمەيدۇ."
+        condition_failed_hint: "بۇ بۆلەكنىڭ شەرتلىرى مەغلۇپ بولغانلىقى ئۈچۈن كۆرسىتىلمىدى."
+        head_hidden_tail_hint: "بۇ بۆلەك كۆرسىتىلمىدى چۈنكى «head» يۈكداندا ئالدى بىلەن باشقا بىر بۆلەك كۆرسىتىلدى."
+    access_control:
+      manage:
+        access_permission_editor: "تەھرىر"
+        access_permission_remove: "چىقىرىۋەت"
     carousel:
       go_to_slide: "%{index}-سىيرىلمىغا يۆتكەل"
       previous: "ئالدىنقى سىيرىلما"
@@ -424,6 +433,9 @@ ug:
     age: "يېشى"
     joined: "قوشۇلغان ۋاقىت"
     admin_title: "باشقۇرغۇچى"
+    advanced_mode_toggle:
+      advanced_mode: "ئالىي ھالەت"
+      simple_mode: "ئاددىي ھالەت"
     show_more: "تېخىمۇ كۆپ كۆرسەت"
     show_help: "تاللانما"
     links: "ئۇلانما"
@@ -3580,39 +3592,6 @@ ug:
       read_more: "كۆپرەك ئوقۇماقچىمۇ؟ <a href='%{categoryLink}'>بارلىق سەھىپىگە كۆز يۈگۈرتۈڭ</a> ياكى <a href='%{latestLink}'>ئاخىرقى تېمىنى كۆرۈڭ</a>."
       unread_indicator: "بۇ تېمىدىكى ئاخىرقى يازمىنى تېخى ھېچقانداق ئەزا ئوقۇمىدى."
       participant_groups: "قاتناشقۇچىلار گۇرۇپپىسى"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {<a href="{basePath}/unread"># ئوقۇلمىغان</a> تېما}
-              other {<a href="{basePath}/unread"># ئوقۇلمىغان</a> تېما}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { ۋە <a href="{basePath}/new"># يېڭى</a> تېما بار،}
-              other { ۋە <a href="{basePath}/new"># يېڭى</a>  تېما بار،}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {<a href="{basePath}/unread"># ئوقۇلمىغان</a> تېما،}
-              other {<a href="{basePath}/unread"># ئوقۇلمىغان</a> تېما،}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {<a href="{basePath}/new"># يېڭى</a> تېما بار،}
-              other {There are <a href="{basePath}/new"># يېڭى</a> تېما بار،}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true {ياكى {categoryLink} دىكى باشقا تېمىغا كۆز يۈگۈرتۈڭ}
-          false {ياكى <a href="{basePath}/latest"> ئاخىرقى تېمىنى كۆرۈڭ</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} جاۋاب، تۇنجى يازمىغا ئاتلايدۇ"
         other: "%{count} جاۋاب، تۇنجى يازمىغا ئاتلايدۇ"
@@ -5626,6 +5605,9 @@ ug:
             opengraph_image:
               title: "OpenGraph سۈرىتى"
               description: "كۆڭۈلدىكى opengraph سۈرەت، بەتتە ھېچقانداق مۇۋاپىق سۈرەت بولمىغاندا ئىشلىتىلىدۇ. ئەگەر بوش قالدۇرۇلسا، large_icon نى ئىشلىتىدۇ."
+            og_image_preview:
+              generate: "ھاسىللا"
+              topic_id_label: "تېما كىملىكى"
             x_summary_large_image:
               title: "X خۇلاسە چوڭ سۈرەت"
               description: "X كارتا «خۇلاسە چوڭ سۈرەت». ئەگەر بوش قالدۇرۇلسا، ئۇ .svg بولمىسىلا، OpenGraph_image ئارقىلىق ئادەتتىكى كارتا تەپسىلىي ئۇچۇرىنى شەكىللەندۈرىدۇ."
@@ -5912,7 +5894,7 @@ ug:
         stale_data: "يېقىندا يېڭىلانما تەكشۈرۈش ئىجرا قىلىنمىدى. Sidekiq ئىجرا قىلىنىۋاتقانلىقىنى جەزملەڭ."
         version_check_pending: "يېقىندا يېڭىلىغان ئوخشايسىز. قالتىس!"
         installed_version: "ئورنىتىلدى"
-        latest_version: "ئاخىرقى"
+        github: "GitHub"
         problems_found: "نۆۋەتتىكى تور بېكىتىڭىزنىڭ تەڭشىكى ئاساسىدىكى بەزى مەسلىھەتلەر"
         dismiss_notice: "پەرۋا قىلما"
         new_features:
@@ -6521,6 +6503,8 @@ ug:
             initial_members: "كېڭەيتىلگەن ئەزا"
             initial_members_description: "كۆرۈنۈشكە تېخىمۇ كۆپ توپچە قوشۇشتىن ئىلگىرى كۆرسىتىدىغان گۇرۇپپا ئەزالىرىنىڭ سانى."
             show_description: "چۈشەندۈرۈشنى ئۆز ئىچىگە ئالىدۇ"
+          locale_selector:
+            title: "تىل"
           optional: "(تاللاشچان)"
           update: "يېڭىلا"
           toasts:
@@ -7591,11 +7575,12 @@ ug:
         silence_reason: "ئۈنسىز قىلىش سەۋەبى"
         bulk_actions:
           title: "توپ مەشغۇلات"
-          admin_cant_be_deleted: "بۇ ئىشلەتكۈچى باشقۇرغۇچى بولغاچقا ئۆچۈرگىلى بولمايدۇ"
-          too_many_or_old_posts: "بۇ ئىشلەتكۈچىنى ئۆچۈرگىلى بولمايدۇ، ئۇنىڭ بەك كۆپ يازمىلىرى ياكى ناھايىتى كونا يازمىسى بار"
-          too_many_selected_users:
-            one: "توپ مەشغۇلاتنىڭ %{count} ئىشلەتكۈچى چېكىگە يەتتىڭىز"
-            other: "توپ مەشغۇلاتنىڭ %{count} ئىشلەتكۈچى چېكىگە يەتتىڭىز"
+          select_all: "ھەممىنى تاللا"
+          clear_all: "ھەممىنى تازىلا"
+          suspend:
+            confirmation_modal:
+              close: "تاقا"
+              confirm: "توختات"
           delete:
             label: "ئىشلەتكۈچى ئۆچۈر…"
             confirmation_modal:
@@ -7623,6 +7608,9 @@ ug:
           suspended: "توختىتىلغان"
           silenced: "ئۈنسىزلەندى"
           staged: "ۋاقىتلىق"
+        activation_filter:
+          all: "بارلىق ئىشلەتكۈچى"
+          activated: "ئاكتىپلاندى"
         approved: "تەستىقلاندىمۇ؟"
         titles:
           active: "ئاكتىپ ئىشلەتكۈچى"

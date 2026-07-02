@@ -69,5 +69,13 @@ module AclTarget
       has_mandatory_acl? &&
         mandatory_acl.any? { |mandatory_acl| AclTarget.acl_matches?(acl, mandatory_acl) }
     end
+
+    def has_banned_acl?
+      defined?(banned_acl).present? && banned_acl.length.positive?
+    end
+
+    def acl_is_banned?(acl)
+      has_banned_acl? && banned_acl.any? { |banned_acl| AclTarget.acl_matches?(acl, banned_acl) }
+    end
   end
 end

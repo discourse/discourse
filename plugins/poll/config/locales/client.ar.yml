@@ -192,5 +192,3 @@ ar:
           add: إضافة خيار
         automatic_close:
           label: إغلاق الاستطلاع تلقائيًا
-        show_advanced: "إظهار الخيارات المتقدمة"
-        hide_advanced: "إخفاء الخيارات المتقدمة"

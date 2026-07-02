@@ -39,6 +39,11 @@ class AiAgent < ActiveRecord::Base
   # leaves some room for growth but sets a maximum to avoid memory issues
   # we may want to revisit this in the future
   validates :vision_max_pixels, numericality: { greater_than: 0, maximum: 4_000_000 }
+  validates :thinking_effort,
+            inclusion: {
+              in: ["default", *DiscourseAi::Completions::ThinkingConfig::VALUES],
+            },
+            allow_nil: true
 
   validates :rag_chunk_tokens, numericality: { greater_than: 0, maximum: 50_000 }
   validates :rag_chunk_overlap_tokens, numericality: { greater_than: -1, maximum: 200 }
@@ -249,6 +254,7 @@ class AiAgent < ActiveRecord::Base
       description
       allowed_group_ids
       show_thinking
+      thinking_effort
       enabled
       execution_mode
       max_turn_tokens
@@ -334,6 +340,7 @@ class AiAgent < ActiveRecord::Base
             # description/name are localized
             define_singleton_method(key) { value } if key != :description && key != :name
           end
+          define_method(:thinking_effort) { self.class.thinking_effort }
           define_method(:options) { options }
           define_method(:native_tools) { native_tools }
         end
@@ -363,6 +370,7 @@ class AiAgent < ActiveRecord::Base
       define_method(:options) { options }
       define_method(:temperature) { @ai_agent&.temperature }
       define_method(:top_p) { @ai_agent&.top_p }
+      define_method(:thinking_effort) { @ai_agent&.thinking_effort }
       define_method(:system_prompt) { @ai_agent&.system_prompt || "You are a helpful bot." }
       define_method(:uploads) { @ai_agent&.uploads }
       define_method(:response_format) { @ai_agent&.response_format }
@@ -518,6 +526,7 @@ end
 #  system                      :boolean          default(FALSE), not null
 #  system_prompt               :string(10000000) not null
 #  temperature                 :float
+#  thinking_effort             :string
 #  tools                       :json             not null
 #  top_p                       :float
 #  vision_enabled              :boolean          default(FALSE), not null

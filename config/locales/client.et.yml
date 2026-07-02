@@ -18,6 +18,9 @@ et:
         status: "Staatus"
         hidden: "peidetud"
         failed: "ebaõnnestunud"
+    access_control:
+      manage:
+        access_permission_remove: "Eemalda"
     number:
       format:
         separator: "."
@@ -2798,6 +2801,9 @@ et:
           form:
             mobile: "Mobiil"
             email: "Meiliaadress"
+            og_image_preview:
+              generate: "Genereeri"
+              topic_id_label: "Teema ID"
         fonts:
           backfill_modal:
             modal_yes: "Jah"
@@ -2894,7 +2900,7 @@ et:
         no_check_performed: "Uuenduste kontrolli pole tehtud. Kontrolli, et Sidekiq töötab."
         stale_data: "Uuenduste kontrolli pole ammu tehtud. Kontrolli, et Sidekiq töötab."
         installed_version: "Paigaldatud"
-        latest_version: "Viimased"
+        github: "GitHub"
         dismiss_notice: "Ignoreeri"
         new_features:
           learn_more: "Uuri veel..."
@@ -3595,6 +3601,10 @@ et:
         active: "Aktiveeritud"
         status: "Staatus"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Sulge"
+              confirm: "Peata"
           delete:
             confirmation_modal:
               close: "Sulge"
@@ -3606,6 +3616,8 @@ et:
           suspended: "Peatatud"
           silenced: "Vaigistatud"
           staged: "Ettevalmistamisel"
+        activation_filter:
+          activated: "Aktiveeritud"
         approved: "Heakskiidetud?"
         titles:
           active: "Aktiivsed kasutajad"

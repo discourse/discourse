@@ -127,8 +127,6 @@ da:
       select: "Vælg"
       sounds:
         none: "Ingen"
-        bell: "Klokke"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Vedhæft en fil"

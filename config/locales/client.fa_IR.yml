@@ -22,6 +22,10 @@ fa_IR:
         in_location: "در"
         hidden: "مخفی"
         failed: "ناموفق"
+    access_control:
+      manage:
+        access_permission_editor: "ویرایشگر"
+        access_permission_remove: "پاک کردن"
     number:
       format:
         separator: "."
@@ -318,6 +322,9 @@ fa_IR:
     age: "سن"
     joined: "ملحق شده"
     admin_title: "مدیر"
+    advanced_mode_toggle:
+      advanced_mode: "حالت پیشرفته"
+      simple_mode: "حالت ساده"
     show_more: "بیش‌تر نشان بده"
     show_help: "تنظیمات"
     links: "پیوندها"
@@ -3179,39 +3186,6 @@ fa_IR:
       read_more: "می‌خواهید بیشتر بخوانید؟ <a href='%{categoryLink}'>همه دسته‌‌بندی‌ها را مرور کنید</a> یا <a href='%{latestLink}'>آخرین موضوعات را مشاهده کنید</a>."
       unread_indicator: "هیچ کاربری آخرین فرستهٔ این مبحث را نخوانده است."
       participant_groups: "گروه‌های شرکت کننده"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {<a href="{basePath}/unread"># خوانده نشده وجود دارد</a>}
-              other {<a href="{basePath}/unread"># خوانده نشده وجود دارد</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { و<a href="{basePath}/new"># موضوع جدید</a> باقی مانده است،}
-              other { و <a href="{basePath}/new"># موضوع جدید</a> باقی مانده‌است،}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {<a href="{basePath}/unread"># موضوع خوانده‌نشده</a> باقی مانده است،}
-              other {<a href="{basePath}/unread"># موضوع خوانده‌نشده‌</a> باقی مانده‌است،}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {<a href="{basePath}/new"># موضوع جدید</a> باقی مانده است،}
-              other {<a href="{basePath}/new"># موضوع جدید</a> باقی مانده‌است،}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { یا سایر موضوعات را در {categoryLink} مرور کنید}
-          false { یا <a href="{basePath}/latest">آخرین موضوعات را ببینید</a>}
-          other {}
-        }
       created_at: "تاریخ ایجاد: %{date}"
       bumped_at: "جدیدترین: %{date}"
       suggest_create_topic: برای <a href>شروع یک موضوع جدید آماده‌اید؟</a>
@@ -4938,6 +4912,9 @@ fa_IR:
               title: "لوگوی اصلی"
             mobile: "موبایل"
             email: "ایمیل"
+            og_image_preview:
+              generate: "تولید کردن"
+              topic_id_label: "شناسه موضوع"
         fonts:
           backfill_modal:
             modal_yes: "بله"
@@ -5111,7 +5088,7 @@ fa_IR:
         stale_data: "بررسی برای بروزرسانی اخیراً انجام نگرفته است. از اجرای sidekiq اطمینان حاصل کنید."
         version_check_pending: "گویا به‌تازگی به‌روز کرده‌اید. عالیه!"
         installed_version: "نصب"
-        latest_version: "آخرین"
+        github: "گیت‌هاب"
         problems_found: "چند توصیه بر اساس تنظیمات فعلی سایت شما"
         dismiss_notice: "چشم پوشی"
         new_features:
@@ -5690,6 +5667,8 @@ fa_IR:
             شهر حل و فصل اختلافات حقوقی مربوط به این انجمن را مشخص کنید.
           extra_groups:
             groups: "گروه‌ها"
+          locale_selector:
+            title: "زبان"
           optional: "(اختیاری)"
           update: "به روز رسانی"
           toasts:
@@ -6601,11 +6580,11 @@ fa_IR:
         silence_reason: "دلیل سکوت"
         bulk_actions:
           title: "عملیات گروهی"
-          admin_cant_be_deleted: "این کاربر نمی تواند حذف شود زیرا او یک مدیر است"
-          too_many_or_old_posts: "این کاربر را نمی توان حذف کرد زیرا پست های زیادی دارد یا یک پست بسیار قدیمی دارد"
-          too_many_selected_users:
-            one: "شما به حد مجاز %{count} کاربر برای حذف دسته‌جمعی رسیده‌اید."
-            other: "شما به حد مجاز %{count} کاربر برای حذف دسته‌جمعی رسیده‌اید."
+          clear_all: "پاکسازی همه"
+          suspend:
+            confirmation_modal:
+              close: "بستن"
+              confirm: "تعلیق"
           delete:
             label: "حذف کاربران…"
             confirmation_modal:
@@ -6633,6 +6612,9 @@ fa_IR:
           suspended: "تعلیق شد "
           silenced: "ساکت شده"
           staged: "کاربر از راه دور"
+        activation_filter:
+          all: "همه کاربران"
+          activated: "فعال شد"
         approved: "تایید شده ؟"
         titles:
           active: "کاربران فعال"

@@ -471,7 +471,8 @@ CREATE TABLE public.ai_agents (
     max_turn_tokens integer,
     compression_threshold integer,
     execution_mode character varying DEFAULT 'default'::character varying NOT NULL,
-    require_approval boolean DEFAULT false NOT NULL
+    require_approval boolean DEFAULT false NOT NULL,
+    thinking_effort character varying
 );
 
 
@@ -517,7 +518,9 @@ CREATE TABLE public.ai_api_audit_logs (
     cache_write_tokens integer,
     cache_read_tokens integer,
     llm_id bigint,
-    response_status integer
+    response_status integer,
+    request_attempts jsonb,
+    estimated_cost numeric(20,10)
 );
 
 
@@ -559,7 +562,8 @@ CREATE TABLE public.ai_api_request_stats (
     usage_count integer DEFAULT 1 NOT NULL,
     rolled_up boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    estimated_cost numeric(20,10)
 );
 
 
@@ -2043,6 +2047,45 @@ CREATE SEQUENCE public.browser_pageview_referrer_daily_rollups_id_seq
 --
 
 ALTER SEQUENCE public.browser_pageview_referrer_daily_rollups_id_seq OWNED BY public.browser_pageview_referrer_daily_rollups.id;
+
+
+--
+-- Name: browser_pageview_session_engagements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_session_engagements (
+    id bigint NOT NULL,
+    session_id character varying(32) NOT NULL,
+    mouse_move_events integer DEFAULT 0 NOT NULL,
+    click_events integer DEFAULT 0 NOT NULL,
+    key_events integer DEFAULT 0 NOT NULL,
+    scroll_events integer DEFAULT 0 NOT NULL,
+    touch_events integer DEFAULT 0 NOT NULL,
+    back_forward_events integer DEFAULT 0 NOT NULL,
+    engaged_seconds integer DEFAULT 0 NOT NULL,
+    time_to_first_interaction_ms integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: browser_pageview_session_engagements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.browser_pageview_session_engagements_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: browser_pageview_session_engagements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.browser_pageview_session_engagements_id_seq OWNED BY public.browser_pageview_session_engagements.id;
 
 
 --
@@ -6279,6 +6322,7 @@ CREATE TABLE public.javascript_caches (
     theme_id bigint,
     source_map text,
     name character varying,
+    external_plugin_imports character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     CONSTRAINT enforce_theme_or_theme_field CHECK ((((theme_id IS NOT NULL) AND (theme_field_id IS NULL)) OR ((theme_id IS NULL) AND (theme_field_id IS NOT NULL))))
 );
 
@@ -6528,7 +6572,10 @@ CREATE TABLE public.llm_quota_usages (
     started_at timestamp(6) without time zone NOT NULL,
     reset_at timestamp(6) without time zone NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    cost_used numeric(20,10) DEFAULT 0.0 NOT NULL,
+    cache_read_tokens_used integer DEFAULT 0 NOT NULL,
+    cache_write_tokens_used integer DEFAULT 0 NOT NULL
 );
 
 
@@ -6563,7 +6610,8 @@ CREATE TABLE public.llm_quotas (
     max_usages integer,
     duration_seconds integer NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    max_cost numeric(20,10)
 );
 
 
@@ -7151,7 +7199,9 @@ CREATE TABLE public.polls (
     chart_type integer DEFAULT 0 NOT NULL,
     groups character varying,
     title character varying,
-    dynamic boolean DEFAULT false NOT NULL
+    dynamic boolean DEFAULT false NOT NULL,
+    closed_by_id integer,
+    closed_at timestamp(6) without time zone
 );
 
 
@@ -12320,6 +12370,13 @@ ALTER TABLE ONLY public.browser_pageview_referrer_daily_rollups ALTER COLUMN id 
 
 
 --
+-- Name: browser_pageview_session_engagements id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_session_engagements ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_session_engagements_id_seq'::regclass);
+
+
+--
 -- Name: calendar_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14528,6 +14585,14 @@ ALTER TABLE ONLY public.browser_pageview_events
 
 ALTER TABLE ONLY public.browser_pageview_referrer_daily_rollups
     ADD CONSTRAINT browser_pageview_referrer_daily_rollups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_session_engagements browser_pageview_session_engagements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_session_engagements
+    ADD CONSTRAINT browser_pageview_session_engagements_pkey PRIMARY KEY (id);
 
 
 --
@@ -18131,6 +18196,20 @@ CREATE INDEX index_browser_pageview_events_on_topic_id ON public.browser_pagevie
 --
 
 CREATE INDEX index_browser_pageview_events_on_user_id ON public.browser_pageview_events USING btree (user_id);
+
+
+--
+-- Name: index_browser_pageview_session_engagements_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_browser_pageview_session_engagements_on_created_at ON public.browser_pageview_session_engagements USING brin (created_at);
+
+
+--
+-- Name: index_browser_pageview_session_engagements_on_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_browser_pageview_session_engagements_on_session_id ON public.browser_pageview_session_engagements USING btree (session_id);
 
 
 --
@@ -22272,14 +22351,21 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260630034050'),
+('20260629233141'),
+('20260629081606'),
+('20260629022603'),
 ('20260626055145'),
 ('20260624140945'),
 ('20260623090824'),
+('20260623052745'),
 ('20260622201006'),
 ('20260622201005'),
 ('20260622140747'),
 ('20260617180115'),
+('20260617104005'),
 ('20260617053237'),
+('20260616114637'),
 ('20260615084100'),
 ('20260615082047'),
 ('20260612092612'),

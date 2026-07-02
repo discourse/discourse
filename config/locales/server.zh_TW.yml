@@ -313,6 +313,12 @@ zh_TW:
       trust_level_2: "信任等級 2"
       trust_level_3: "信任等級 3"
       trust_level_4: "信任等級 4"
+    default_full_names:
+      everyone: "所有使用者"
+      moderators: "板主"
+      staff: "管理員"
+      anonymous_users: "匿名的使用者"
+      logged_in_users: "登入的使用者"
     request_membership_pm:
       title: "@%{group_name} 的群組會員要求"
   education:

@@ -37,6 +37,10 @@ hu:
         no_visible_children_hint: "Ez a konténerblokk nem jelenik meg, mert egyetlen aleleme sem látható."
         condition_failed_hint: "Ez a blokk nem jelenik meg, mert a feltételei nem teljesültek."
         head_hidden_tail_hint: "Ez a blokk nem jelenik meg, mert a head konténerben már egy másik blokk korábban megjelent."
+    access_control:
+      manage:
+        access_permission_editor: "Szerkesztő"
+        access_permission_remove: "Eltávolítás"
     carousel:
       go_to_slide: "%{index} elemre ugrás"
       previous: "Előző elem"
@@ -425,6 +429,9 @@ hu:
     age: "Életkor"
     joined: "Tagság kezdete"
     admin_title: "Adminisztrátor"
+    advanced_mode_toggle:
+      advanced_mode: "Speciális mód"
+      simple_mode: "Egyszerű mód"
     show_more: "több megjelenítése"
     show_help: "Beállítások"
     links: "Hivatkozások"
@@ -3649,39 +3656,6 @@ hu:
       read_more: "Szeretne többet olvasni? <a href='%{categoryLink}'>Összes kategória böngészése</a> vagy <a href='%{latestLink}'> legújabb témák megtekintése</a>."
       unread_indicator: "Egyetlen tag sem olvasta még a téma utolsó bejegyzését."
       participant_groups: "Résztvevő csoportok"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {<a href="{basePath}/unread"># olvasatlan</a>}
-              other {<a href="{basePath}/unread"># olvasatlan</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { és <a href="{basePath}/new"># új</a> téma van hátra,}
-              other { és <a href="{basePath}/new"># új</a> téma van hátra,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {<a href="{basePath}/unread"># olvasatlan</a> téma van hátra,}
-              other {<a href="{basePath}/unread"># olvasatlan</a> téma van hátra,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {<a href="{basePath}/new"># új</a> téma van hátra,}
-              other {<a href="{basePath}/new"># új</a> téma van hátra,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { vagy böngésszen a(z) {categoryLink} témái között}
-          false { vagy <a href="{basePath}/latest">nézze meg a legújabb témákat</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} válasz, ugrás az első bejegyzésre"
         other: "%{count} válasz, ugrás az első bejegyzésre"
@@ -5003,7 +4977,6 @@ hu:
       synonyms: "Szinonimák"
       synonyms_inline: "Ezek a szinonimák a következőre lesznek lecserélve: %{base_tag_name}:"
       save: "Címke nevének és leírásának mentése"
-      restricted_to: "Korlátozva a következőre:"
       no_synonyms: "Ennek a címkének nincsenek szinonimái."
       edit_synonyms: "Szinonimák szerkesztése"
       add_synonyms_label: "Szinonimák hozzáadása:"
@@ -5790,6 +5763,9 @@ hu:
             opengraph_image:
               title: "OpenGraph kép"
               description: "Alapértelmezett opengraph kép, amely akkor használatos, amikor az oldalnak nincs más megfelelő képe. Ha üresen hagyja, a large_icon lesz használva."
+            og_image_preview:
+              generate: "Generálás"
+              topic_id_label: "Témaazonosító"
             x_summary_large_image:
               title: "X összefoglaló nagy kép"
               description: "X kártya 'összefoglaló nagy kép'. Ha üresen hagyja, a kártya metaadatai az OpenGraph_image segítségével generálódnak, feltéve, hogy az nem .svg."
@@ -6110,7 +6086,7 @@ hu:
         stale_data: "Rég nem volt ellenőrizve hogy van-e új frissítés. Győződjön meg arról hogy a sidekiq fut."
         version_check_pending: "Úgy nézik nem rég frissítettél. Fantasztikus!"
         installed_version: "Telepítve"
-        latest_version: "Legfrissebb"
+        github: "GitHub"
         problems_found: "Néhány tanács az aktuális webhelybeállítások alapján"
         dismiss_notice: "Letiltás"
         new_features:
@@ -6726,6 +6702,8 @@ hu:
             initial_members: "Bővített tagok"
             initial_members_description: "A Továbbiak megtekintése gomb hozzáadása előtt megjelenítendő csoporttagok száma."
             show_description: "Leírás hozzáadása"
+          locale_selector:
+            title: "Nyelv"
           optional: "(nem kötelező)"
           update: "Frissítés"
           toasts:
@@ -7817,11 +7795,12 @@ hu:
         silence_reason: "Némítás oka"
         bulk_actions:
           title: "Csoportos műveletek"
-          admin_cant_be_deleted: "Ez a felhasználó nem törölhető, mert rendszergazda"
-          too_many_or_old_posts: "Ezt a felhasználót nem lehet törölni, mert túl sok, vagy nagyon régi bejegyzése van"
-          too_many_selected_users:
-            one: "Elérte a csoportos törlés %{count} felhasználós korlátját"
-            other: "Elérte a csoportos törlés %{count} felhasználós korlátját"
+          select_all: "Összes kiválasztása"
+          clear_all: "Összes törlése"
+          suspend:
+            confirmation_modal:
+              close: "Bezárás"
+              confirm: "Felfüggesztett"
           delete:
             label: "Felhasználók törlése…"
             confirmation_modal:
@@ -7849,6 +7828,9 @@ hu:
           suspended: "Felfüggesztett"
           silenced: "Némított"
           staged: "Lépcsőzetes"
+        activation_filter:
+          all: "Minden felhasználó"
+          activated: "Aktiválva"
         approved: "Jóváhagyott?"
         titles:
           active: "Aktív felhasználók"

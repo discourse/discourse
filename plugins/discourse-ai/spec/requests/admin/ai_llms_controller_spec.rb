@@ -84,6 +84,18 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       expect(vllm_params).not_to have_key("enable_thinking")
     end
 
+    it "includes Gemini service tier metadata" do
+      get "/admin/plugins/discourse-ai/ai-llms.json"
+      expect(response).to be_successful
+
+      google_params = response.parsed_body.dig("meta", "provider_params", "google")
+      expect(google_params["service_tier"]).to include(
+        "type" => "enum",
+        "values" => %w[default standard flex priority],
+        "default" => "default",
+      )
+    end
+
     it "lists enabled features on appropriate LLMs" do
       SiteSetting.ai_bot_enabled = true
       SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
@@ -142,7 +154,15 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
     context "with quotas" do
       let(:group) { Fabricate(:group) }
       let(:quota_params) do
-        [{ group_id: group.id, max_tokens: 1000, max_usages: 10, duration_seconds: 86_400 }]
+        [
+          {
+            group_id: group.id,
+            max_tokens: 1000,
+            max_usages: 10,
+            max_cost: "1.25",
+            duration_seconds: 86_400,
+          },
+        ]
       end
 
       it "creates model with quotas" do
@@ -156,6 +176,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(created_model.llm_quotas.count).to eq(1)
         quota = created_model.llm_quotas.first
         expect(quota.max_tokens).to eq(1000)
+        expect(quota.max_cost).to eq(BigDecimal("1.25"))
         expect(quota.group_id).to eq(group.id)
       end
     end
@@ -471,12 +492,14 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
                       group_id: group1.id,
                       max_tokens: 1500,
                       max_usages: 15,
+                      max_cost: "1.50",
                       duration_seconds: 43_200,
                     },
                     {
                       group_id: group3.id,
                       max_tokens: 3000,
                       max_usages: 30,
+                      max_cost: "3.00",
                       duration_seconds: 86_400,
                     },
                   ],
@@ -491,6 +514,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
           updated_quota1 = llm_model.llm_quotas.find_by(group: group1)
           expect(updated_quota1.max_tokens).to eq(1500)
           expect(updated_quota1.max_usages).to eq(15)
+          expect(updated_quota1.max_cost).to eq(BigDecimal("1.5"))
           expect(updated_quota1.duration_seconds).to eq(43_200)
 
           expect(llm_model.llm_quotas.find_by(group: group2)).to be_nil
@@ -499,7 +523,78 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
           expect(new_quota).to be_present
           expect(new_quota.max_tokens).to eq(3000)
           expect(new_quota.max_usages).to eq(30)
+          expect(new_quota.max_cost).to eq(BigDecimal("3.0"))
           expect(new_quota.duration_seconds).to eq(86_400)
+        end
+
+        it "returns validation errors for invalid quota limits" do
+          group1 = Fabricate(:group)
+          group2 = Fabricate(:group)
+          quota =
+            Fabricate(
+              :llm_quota,
+              llm_model: llm_model,
+              group: group1,
+              max_tokens: 1000,
+              max_usages: nil,
+              max_cost: "1.50",
+              duration_seconds: 86_400,
+            )
+          other_quota = Fabricate(:llm_quota, llm_model: llm_model, group: group2)
+
+          put "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json",
+              params: {
+                ai_llm: {
+                  llm_quotas: [
+                    {
+                      group_id: group1.id,
+                      max_tokens: 0,
+                      max_usages: nil,
+                      max_cost: "1.50",
+                      duration_seconds: 86_400,
+                    },
+                  ],
+                },
+              }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include("Max tokens must be greater than 0")
+          expect(quota.reload.max_tokens).to eq(1000)
+          expect(LlmQuota.exists?(other_quota.id)).to eq(true)
+        end
+
+        it "clears optional quota limits when blank values are submitted" do
+          group = Fabricate(:group)
+          quota =
+            Fabricate(
+              :llm_quota,
+              llm_model: llm_model,
+              group: group,
+              max_tokens: 1000,
+              max_usages: 10,
+              max_cost: "1.50",
+              duration_seconds: 86_400,
+            )
+
+          put "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json",
+              params: {
+                ai_llm: {
+                  llm_quotas: [
+                    {
+                      group_id: group.id,
+                      max_tokens: "",
+                      max_usages: "",
+                      max_cost: "2.50",
+                      duration_seconds: 86_400,
+                    },
+                  ],
+                },
+              }
+
+          expect(response.status).to eq(200)
+          expect(quota.reload.max_tokens).to be_nil
+          expect(quota.max_usages).to be_nil
+          expect(quota.max_cost).to eq(BigDecimal("2.5"))
         end
       end
 

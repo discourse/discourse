@@ -464,6 +464,13 @@ ur:
       trust_level_2: "فعالیت_کا_درجہ_2"
       trust_level_3: "فعالیت_کا_درجہ_3"
       trust_level_4: "فعالیت_کا_درجہ_4"
+    default_full_names:
+      everyone: "ہر ایک"
+      admins: "منتظمین"
+      moderators: "نگران"
+      staff: "عملہ"
+      anonymous_users: "گمنام صارفین"
+      logged_in_users: "لاگڈ اِن صارفین"
     default_descriptions:
       staff: "منتظمین اور نگرانوں پر مشتمل خودکار گروپ"
       admins: "تمام اراکین اور سرگرمی کے ڈیٹا تک رسائی کے ساتھ اس سائٹ کی تنظیم اور برقرار رکھنے کے لیے ذمہ دار"

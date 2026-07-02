@@ -90,6 +90,8 @@ en:
         title: "Database Schema"
         filter: "Search..."
         search_tables: "Search tables"
+        hide: "Hide schema"
+        show: "Show schema"
         sensitive: "The contents of this column may contain particularly sensitive or private information. Please exercise caution when using the contents of this column."
       types:
         bool:

@@ -170,6 +170,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
 
       expect(traffic).to have_no_top_countries_card
       expect(traffic).to have_no_top_referrers_card
+      expect(traffic).to have_no_metric("Direct traffic")
     end
 
     it "shows ranked top countries and top referrers when events exist in the period",
@@ -234,6 +235,13 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
           { referrer: "reddit.com/r/discourse", percent: 33 },
         ],
       )
+
+      expect(traffic).to have_metric("Direct traffic", "10%")
+
+      traffic.hover_direct_traffic_tooltip
+      expect(traffic).to have_direct_traffic_tooltip(
+        "The share of pageviews that came directly to your community, such as by typing your URL or using a browser bookmark.",
+      )
     end
 
     it "shows an empty state in both cards but keeps the headers as drill-down links when no events qualify",
@@ -245,6 +253,7 @@ describe "Admin Dashboard Redesign | Site Traffic section" do
       expect(traffic).to have_top_referrers_empty_state
       expect(traffic).to have_top_referrers_drilldown
       expect(traffic).to have_top_countries_drilldown
+      expect(traffic).to have_no_metric("Direct traffic")
     end
 
     it "drills into the full top referrers report scoped to the dashboard period",

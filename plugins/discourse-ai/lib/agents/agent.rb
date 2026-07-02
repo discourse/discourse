@@ -275,6 +275,10 @@ module DiscourseAi
         nil
       end
 
+      def thinking_effort
+        nil
+      end
+
       def options
         {}
       end

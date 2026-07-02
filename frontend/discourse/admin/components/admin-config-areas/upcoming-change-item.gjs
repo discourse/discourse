@@ -261,15 +261,15 @@ export default class UpcomingChangeItem extends Component {
     const isEnabled = newValue !== "no_one";
 
     try {
-      await this.toggleChange(isEnabled, newValue);
-
       if (newValue === this.staffGroupName) {
         this.groupsChanged(this.staffGroupName);
-      } else if (newValue === "everyone" || newValue === "no_one") {
+        await this.saveGroups({ silenceToast: true });
+        await this.toggleChange(isEnabled, newValue);
+      } else {
+        await this.toggleChange(isEnabled, newValue);
         this.groupsChanged("");
+        await this.saveGroups({ silenceToast: true });
       }
-
-      await this.saveGroups({ silenceToast: true });
 
       this.args.enabledForChanged?.(this.args.change.setting, newValue);
     } catch (error) {

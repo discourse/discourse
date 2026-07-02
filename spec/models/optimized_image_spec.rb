@@ -280,12 +280,6 @@ RSpec.describe OptimizedImage do
       expect(File.read(Discourse.store.path_for(resized))).to eq(
         File.read(Discourse.store.path_for(upload)),
       )
-
-      resized = upload.get_optimized_image(50, 50, format: "gif", raise_on_error: true)
-      expect(resized.extension).to eq(".gif")
-      # lets ensure we have a gif with the identify tool
-      path = Shellwords.escape(Discourse.store.path_for(resized))
-      expect(`identify -format %m #{path}`.strip).to eq("GIF")
     end
 
     context "when using an internal store" do

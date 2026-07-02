@@ -230,6 +230,11 @@ sl:
       admins: "administratorji"
       moderators: "moderatorji"
       staff: "osebje"
+    default_full_names:
+      everyone: "Vsi"
+      admins: "Administratorji"
+      moderators: "Moderatorji"
+      staff: "Osebje"
   education:
     until_posts:
       one: "%{count} prispevek"

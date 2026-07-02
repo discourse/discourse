@@ -573,6 +573,13 @@ zh_CN:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "所有人"
+      admins: "管理员"
+      moderators: "版主"
+      staff: "管理人员"
+      anonymous_users: "匿名用户"
+      logged_in_users: "登录用户"
     default_descriptions:
       everyone: "包括所有成员的自动群组"
       staff: "包括管理员和版主的自动群组"
@@ -2490,7 +2497,6 @@ zh_CN:
     rename_faq_to_guidelines: "此次更改将常见问题解答页面重命名为准则。常见问题解答页面仍可通过 /faq 访问。'faq url' 设置与以前一样有效。"
     enable_simplified_category_creation: "使用更少的选项和更简洁的界面简化类别创建流程。"
     modernize_foundation_theme: "此次更改对 Discourse 中的 Foundation 主题引入了设计修改。"
-    reporting_improvements: "改进了 Discourse 管理员报告的导航、设计和实用性。"
     dashboard_improvements: "启用重新设计的管理仪表板，可让您固定自定义报告，并包含改进的网站流量、参与度和其他与社区成功和价值相关的分析。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"

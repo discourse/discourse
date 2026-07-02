@@ -27,7 +27,7 @@ Arguments:
 - `@groups`: group records available for selection. Each group should have `id`, `name`, `full_name`, and `automatic`.
 - `@acl`: flattened ACL entries from the backend or form state.
 - `@onChange`: called with the next flattened ACL array when the user adds/removes/changes a row.
-- `@aclTarget`: optional key used to load mandatory ACL entries from `site.access_control.mandatory_acl`.
+- `@aclTarget`: optional key used to load mandatory ACL entries from `site.access_control.mandatory_acl` and banned entries from `site.access_control.banned_acl`.
 - `@transformPermissionOptions`: optional callback to customize default permission labels/descriptions or add target-specific permissions.
 
 `@aclTarget` must match `target_class.acl_target_key`; by default this is the Ruby class name such as `"DiscourseKanban::Board"`.
@@ -46,6 +46,8 @@ aclChanged(acl) {
 ```
 
 Mandatory ACL rows are injected for display from `this.site.access_control`. The component does not call `@onChange` during render when it injects mandatory rows. Backend saves must still call `AccessControlListManager` with the submitted ACL array so mandatory entries are injected server-side too.
+
+Banned ACL rows are also read from `this.site.access_control`. The component filters matching permission options for the row's grantee by comparing `permission`, `type`, and `id`. This is only a UX guard; backend saves must still go through `AccessControlListManager`, which rejects banned entries.
 
 ## Permission Options
 
@@ -76,11 +78,15 @@ transformPermissionOptions(options) {
 
 Keep permission copy aligned with backend semantics. If a displayed `manage` role also requires a global site setting or staff gate, make that clear in the surrounding UI or choose a different label.
 
+Target-specific options added via `@transformPermissionOptions` can still be banned for individual grantees. For example, a target may add `manage` and then define `banned_acl` entries that remove `edit` and `manage` from the `anonymous_users` auto group.
+
 ## Row Behavior
 
 - Rows are sorted with mandatory rows first, then by group name.
 - Mandatory rows show a lock icon, are styled with `--mandatory`, and have their permission select disabled.
 - A mandatory ACL replaces an existing row for the same type/id in the component's display list.
+- Banned permissions are filtered per row only when the banned entry's `type`, `id`, and `permission` match the row.
+- The remove action remains available unless the row is mandatory.
 - Newly added regular groups default to `edit`.
 - Read-only default auto groups (`anonymous_users`, `everyone`, `trust_level_0`) default to `view`.
 - Already selected groups are removed from the add-group chooser.
@@ -124,6 +130,7 @@ Consumer tests should cover:
 
 - target-specific permission options are present
 - `@aclTarget` renders mandatory rows from `site.access_control`
+- `@aclTarget` filters banned permissions from `site.access_control` for the matching grantee only
 - mandatory rows are locked and not duplicated
 - `@onChange` updates parent/form state when the user changes a row
 - default ACL construction for new records includes expected groups, if the consumer builds defaults

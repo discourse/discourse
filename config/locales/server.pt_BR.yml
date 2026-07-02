@@ -617,6 +617,13 @@ pt_BR:
       trust_level_2: "nivel_de_confianca_2"
       trust_level_3: "nivel_de_confianca_3"
       trust_level_4: "nivel_de_confianca_4"
+    default_full_names:
+      everyone: "Todos(as)"
+      admins: "Administradores(as):"
+      moderators: "Moderadores(as)"
+      staff: "Equipe"
+      anonymous_users: "Usuários(as) anônimos(as)"
+      logged_in_users: "Usuários(as) que entraram com a conta"
     default_descriptions:
       everyone: "Grupo automático incluindo todos os membros"
       staff: "Grupo automático incluindo a moderação e a administração"
@@ -2440,7 +2447,6 @@ pt_BR:
     floating_dismiss_topics_on_mobile: "Exibe um botão flutuante \"Fechar...\" na lista de tópicos em dispositivos móveis para facilitar o acesso e liberar espaço na parte superior da lista."
     enable_simplified_category_creation: "Ativa um fluxo de criação de categorias simplificado, com menos opções e uma interface mais limpa."
     modernize_foundation_theme: "Essa alteração introduz modificações de design ao tema Foundation no Discourse."
-    reporting_improvements: "Melhorias na navegação, design e usabilidade dos relatórios administrativos do Discourse."
     errors:
       invalid_css_color: "Cor inválida. Digite o nome da cor ou valor hexadecimal."
       invalid_datetime: "Formato de data e hora inválido. Certifique-se de ter inserido uma data e hora válidas."

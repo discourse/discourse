@@ -10,26 +10,7 @@ module Reports::Visits
 
       report.icon = "user"
 
-      if SiteSetting.reporting_improvements
-        report_visits_stacked(report, group_filter)
-      else
-        basic_report_about report,
-                           UserVisit,
-                           :by_day,
-                           report.start_date,
-                           report.end_date,
-                           group_filter
-        add_counts report, UserVisit, "visited_at"
-
-        if report.facets.include?(:prev30Days)
-          report.prev30Days =
-            UserVisit.where(
-              "visited_at >= ? AND visited_at < ?",
-              report.start_date - 30.days,
-              report.start_date,
-            ).count
-        end
-      end
+      report_visits_stacked(report, group_filter)
     end
 
     private
@@ -56,20 +37,25 @@ module Reports::Visits
         end
       end
 
-      report.data = [
-        {
-          req: "desktop",
-          label: I18n.t("reports.visits.xaxis.desktop"),
-          color: report.colors[:turquoise],
-          data: desktop_data,
-        },
-        {
-          req: "mobile",
-          label: I18n.t("reports.visits.xaxis.mobile"),
-          color: report.colors[:lime],
-          data: mobile_data,
-        },
-      ]
+      report.data =
+        if results.empty?
+          []
+        else
+          [
+            {
+              req: "desktop",
+              label: I18n.t("reports.visits.xaxis.desktop"),
+              color: report.colors[:turquoise],
+              data: desktop_data,
+            },
+            {
+              req: "mobile",
+              label: I18n.t("reports.visits.xaxis.mobile"),
+              color: report.colors[:lime],
+              data: mobile_data,
+            },
+          ]
+        end
 
       report.total = results.first&.total || 0
 

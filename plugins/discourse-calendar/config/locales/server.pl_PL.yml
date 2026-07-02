@@ -51,6 +51,9 @@ pl_PL:
     use_local_event_date: "Użyj daty lokalnej po tytule tematu zamiast czasu względnego."
     discourse_post_event_allowed_on_groups: "Grupy, które mogą tworzyć wydarzenia."
     discourse_post_event_allowed_custom_fields: "Umożliwia każdemu zdarzeniu ustawienie wartości pól niestandardowych."
+    discourse_post_event_allowed_custom_fields_invalid: "Te nazwy pól niestandardowych są nieprawidłowe: %{names}. Nazwy muszą zaczynać się i kończyć literą lub cyfrą, a jako separatory należy używać kropek, myślników lub podkreśleń (na przykład: dress_code, live-stream, q.and.a)."
+    discourse_post_event_allowed_custom_fields_collision: "Te niestandardowe nazwy pól odpowiadają tej samej nazwie po znormalizowaniu kropek, myślników i wielkości liter: %{names}. Każde pole niestandardowe musi być unikatowe."
+    discourse_post_event_allowed_custom_fields_reserved: "Te niestandardowe nazwy pól są zarezerwowane przez wbudowane opcje zdarzeń (na przykład nazwa, adres URL, status, lokalizacja): %{names}. Wybierz inne nazwy."
     discourse_post_event_edit_notifications_time_extension: "Wydłuża (w minutach) okres po zakończeniu wydarzenia, w którym osoby zaproszone są nadal powiadamiane o edycji w oryginalnym poście."
     holiday_calendar_topic_id: "Identyfikator tematu kalendarza świąt/nieobecności personelu."
     holiday_status_emoji: Określa emoji używane dla statusu świąt.
@@ -72,8 +75,6 @@ pl_PL:
     sidebar_show_upcoming_events: "Pokaż link do nadchodzących wydarzeń na pasku bocznym w sekcji „Więcej”."
     calendar_first_day_of_week: "Ustaw pierwszy dzień tygodnia, w którym będzie wyświetlany kalendarz. Dostępne opcje to sobota, niedziela lub poniedziałek."
     enable_events_category_type_setup: "Włącza opcję typu kategorii Wydarzenia podczas konfiguracji tworzenia kategorii."
-    livestream_enabled: "Włącz czat na żywo dla tematów oznaczonych tagiem „na żywo”."
-    livestream_chat_allowed_groups: "Tylko grupy znajdujące się na liście dozwolonych mogą czatować na kanale transmisji na żywo."
     livestream_embeddable_chat_allowed_paths: "Dozwolone ścieżki dla osadzanego czatu na żywo."
     livestream_enable_modal_chat_on_mobile: "Pokaż czat na żywo w oknie modalnym na urządzeniu mobilnym."
   discourse_calendar:

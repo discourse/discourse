@@ -1,19 +1,14 @@
-import { federatedExportNameFor } from "./federated-modules-helper";
-
 const SUPPORTED_FILE_EXTENSIONS = [".js", ".js.es6", ".hbs", ".gjs"];
 
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
 export default {
-  "virtual:entrypoint": async (
-    moduleFilenames,
-    { themeId, pluginName },
-    { basePath, context }
-  ) => {
+  "virtual:entrypoint": (moduleFilenames, { themeId, pluginName }) => {
     const label = pluginName ? `PLUGIN ${pluginName}` : `THEME ${themeId}`;
-    let output = `const compatModules = {};`;
+    const imports = [];
+    const entries = [];
+    const warnings = [];
 
-    const moduleFilenamesSet = new Set(moduleFilenames);
     const exportedModules = new Set();
 
     let i = 1;
@@ -22,7 +17,9 @@ export default {
         !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
       ) {
         // Unsupported file type. Log a warning and skip
-        output += `console.warn("[${label}] Unsupported file type: ${moduleFilename}");\n`;
+        warnings.push(
+          `console.warn("[${label}] Unsupported file type: ${moduleFilename}");`
+        );
         continue;
       }
 
@@ -60,42 +57,21 @@ export default {
       }
       exportedModules.add(importPath);
 
-      output += `import * as Mod${i} from "./${importPath}";\n`;
-      output += `compatModules["${compatModuleName}"] = Mod${i};\n\n`;
-
-      const resolvedId = await context.resolve(
-        `./${importPath}`,
-        `${basePath}virtual:main`
-      );
-      const loadedModule = await context.load(resolvedId);
-
-      const reexportPairs = loadedModule.exports.map((exportedName) => {
-        return `${exportedName} as ${federatedExportNameFor(compatModuleName, exportedName)}`;
-      });
-
-      const isIndexModule =
-        compatModuleName.endsWith("/index") &&
-        !moduleFilenamesSet.has(moduleFilename.replace("/index", ""));
-
-      if (isIndexModule) {
-        loadedModule.exports.forEach((exportedName) => {
-          const federatedExportName = federatedExportNameFor(
-            compatModuleName.replace(/\/index$/, ""),
-            exportedName
-          );
-          reexportPairs.push(`${exportedName} as ${federatedExportName}`);
-        });
-      }
-
-      output += `export * as ${federatedExportNameFor(compatModuleName, "*")} from "./${importPath}";\n`;
-      output += `export {\n${reexportPairs.join(",\n")}\n} from "./${importPath}";\n`;
+      imports.push(`import * as Mod${i} from "./${importPath}";`);
+      entries.push(`  "${compatModuleName}": Mod${i},`);
 
       i += 1;
     }
 
-    output += "export default compatModules;\n";
-
-    return output;
+    return [
+      ...imports,
+      ...warnings,
+      "const compatModules = {",
+      ...entries,
+      "};",
+      "export default compatModules;",
+      "",
+    ].join("\n");
   },
   "virtual:theme": ({ themeId }) => {
     return cleanMultiline(`

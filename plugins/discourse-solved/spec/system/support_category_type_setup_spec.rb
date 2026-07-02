@@ -165,6 +165,16 @@ RSpec.describe "Support Category Type Setup" do
       expect(SiteSetting.show_who_marked_solved).to eq(true)
     end
 
+    it "hides the empty box on unsolved toggle when the Horizon theme is the default" do
+      Theme.horizon_theme.update_columns(enabled: true, user_selectable: true)
+      SiteSetting.default_theme_id = Theme.horizon_theme.id
+
+      visit("/c/#{category.slug}/edit/support")
+
+      expect(form).to have_field_with_name("custom_fields.notify_on_staff_accept_solved")
+      expect(form).to have_no_field_with_name("custom_fields.empty_box_on_unsolved")
+    end
+
     it "edits the shared issue label as a translation override when enabled" do
       SiteSetting.enable_solved_shared_issues = true
       visit("/c/#{category.slug}/edit/support")

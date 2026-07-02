@@ -340,8 +340,11 @@ pl_PL:
         title: "Dźwięk powiadomienia czatu na pulpicie"
       sounds:
         none: "Brak"
-        bell: "Dzwonek"
-        ding: "Ding"
+        classic: "Klasyczny i czysty"
+        soft: "Miękka marimba"
+        retro: "Retro 8-bitowy"
+        bubble: "Zabawna bańka"
+        ethereal: "Eteryczne szkło"
       title: "czat"
       title_capitalized: "Czat"
       upload: "Dołącz plik"
@@ -522,6 +525,12 @@ pl_PL:
           other: "<span>Ty, %{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
         single_user: "<span>%{username} zareagował za pomocą </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} i %{username} zareagowali za pomocą </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} reakcja"
+            few: "%{count} reakcje"
+            many: "%{count} reakcji"
+            other: "%{count} reakcje"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
           few: "<span>%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"

@@ -81,6 +81,11 @@ module("Integration | Component | DAccessControl", function (hooks) {
     assert.strictEqual(added.id, 42, "adds the chosen group");
     assert.strictEqual(added.type, "group", "marks the entry as a group");
     assert.strictEqual(
+      added.display_name,
+      "Team A",
+      "sets the display name from the chosen group"
+    );
+    assert.strictEqual(
       added.permission,
       "edit",
       "applies the default edit permission for a regular group"
@@ -125,8 +130,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         type: "group",
         id: 999,
         permission: "view",
-        name: "Some Group",
-        full_name: "Some Group",
+        display_name: "Some Group",
       },
     ]);
 
@@ -176,15 +180,13 @@ module("Integration | Component | DAccessControl", function (hooks) {
         type: "group",
         id: 999,
         permission: "view",
-        name: "Some Group",
-        full_name: "Some Group",
+        display_name: "Some Group",
       },
       {
         type: "group",
         id: 1001,
         permission: "edit",
-        name: "Another Group",
-        full_name: "Another Group",
+        display_name: "Another Group",
       },
     ]);
 
@@ -229,15 +231,13 @@ module("Integration | Component | DAccessControl", function (hooks) {
         type: "group",
         id: 999,
         permission: "view",
-        name: "Some Group",
-        full_name: "Some Group",
+        display_name: "Some Group",
       },
       {
         type: "group",
         id: 1001,
         permission: "edit",
-        name: "Another Group",
-        full_name: "Another Group",
+        display_name: "Another Group",
       },
     ]);
 
@@ -272,8 +272,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         type: "group",
         id: 999,
         permission: "view",
-        name: "Some Group",
-        full_name: "Some Group",
+        display_name: "Some Group",
       },
     ]);
 
@@ -309,8 +308,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         type: "group",
         id: 999,
         permission: "view",
-        name: "Some Group",
-        full_name: "Some Group",
+        display_name: "Some Group",
       },
     ]);
 
@@ -339,22 +337,77 @@ module("Integration | Component | DAccessControl", function (hooks) {
     );
   });
 
+  test("filters banned permissions for the matching grantee", async function (assert) {
+    this.site.access_control = {
+      banned_acl: {
+        TestTarget: [
+          { type: "group", id: 42, permission: "edit" },
+          { type: "group", id: 42, permission: "manage" },
+          { type: "group", id: 999, permission: "view" },
+        ],
+      },
+    };
+    const state = controlledState([
+      {
+        type: "group",
+        id: 42,
+        permission: "view",
+        display_name: "Team A",
+      },
+    ]);
+
+    const transformPermissionOptions = (permissions) => [
+      ...permissions,
+      { id: "manage", level: 3, name: "Manager", description: "Full control" },
+    ];
+
+    await render(
+      <template>
+        <DAccessControl
+          @groups={{GROUPS}}
+          @acl={{state.acl}}
+          @aclTarget="TestTarget"
+          @onChange={{state.onChange}}
+          @transformPermissionOptions={{transformPermissionOptions}}
+        />
+      </template>
+    );
+
+    const permission = selectKit(".d-access-control__permission");
+    await permission.expand();
+
+    assert.true(
+      permission.rowByValue("view").exists(),
+      "keeps permissions not banned for this grantee"
+    );
+    assert.false(
+      permission.rowByValue("edit").exists(),
+      "removes a banned default permission"
+    );
+    assert.false(
+      permission.rowByValue("manage").exists(),
+      "removes a banned transformed permission"
+    );
+    assert.true(
+      permission.rowByValue("remove").exists(),
+      "keeps the remove action"
+    );
+  });
+
   test("puts mandatory permissions at the top of the rows and disables removing the permission", async function (assert) {
     const state = controlledState([
       {
         type: "group",
         id: 999,
         permission: "view",
-        name: "Some Group",
-        full_name: "Some Group",
+        display_name: "Some Group",
         mandatory: true,
       },
       {
         type: "group",
         id: 1001,
         permission: "edit",
-        name: "Another Group",
-        full_name: "Another Group",
+        display_name: "Another Group",
       },
     ]);
 
@@ -435,8 +488,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
         type: "group",
         id: 42,
         permission: "view",
-        name: "Team A",
-        full_name: "Team A",
+        display_name: "Team A",
       },
     ]);
 

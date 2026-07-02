@@ -38,6 +38,10 @@ ar:
         no_visible_children_hint: "لا يتم عرض كتلة الحاوية هذه لأنه لا توجد أي تبعيات ظاهرة."
         condition_failed_hint: "لا يتم عرض هذه الكتلة نظرًا لإخفاق شروطها."
         head_hidden_tail_hint: "لا يتم عرض هذه الكتلة لأنه يجري عرض كتلة أخرى أولًا في الحاوية `head`."
+    access_control:
+      manage:
+        access_permission_editor: "المحرِّر"
+        access_permission_remove: "إزالة"
     carousel:
       go_to_slide: "الانتقال إلى الشريحة %{index}"
       previous: "الشريحة السابقة"
@@ -558,6 +562,9 @@ ar:
     age: "العمر"
     joined: "تاريخ الانضمام"
     admin_title: "المسؤول"
+    advanced_mode_toggle:
+      advanced_mode: "الوضع المتقدّم"
+      simple_mode: "الوضع البسيط"
     show_more: "عرض المزيد"
     show_help: "الخيارات"
     links: "الروابط"
@@ -4682,51 +4689,6 @@ ar:
       read_more: "هل تريد قراءة المزيد؟ <a href='%{categoryLink}'>استعرض كل الفئات</a> أو <a href='%{latestLink}'>شاهد آخر الموضوعات</a>."
       unread_indicator: "لم يقرأ أي عضو آخر منشور في هذا الموضوع بعد."
       participant_groups: "المجموعات المشاركة"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 zero {}=0 {}
-                one {هناك <a href="{basePath}/unread">رسالة غير مقروءة</a>}
-                 two {هناك <a href="{basePath}/unread">رسالتان غير مقروءتين</a>}
-                 few {هناك <a href="{basePath}/unread"># رسائل غير مقروءة</a>}
-                 many {هناك <a href="{basePath}/unread"># رسالة غير مقروءة</a>}
-                 other {هناك <a href="{basePath}/unread"># رسالة غير مقروءة</a>}
-            }
-            { NEW, plural,
-                 zero {}=0 {}
-                one { و<a href="{basePath}/new">موضوع جديد</a> متبقٍ،}
-                 two { و<a href="{basePath}/new">موضوعان جديدان</a> متبقيان،}
-                 few { و<a href="{basePath}/new"># موضوعات جديدة</a> متبقية،}
-                 many { و<a href="{basePath}/new"># موضوعًا جديدًا</a> متبقيًا،}
-              other { و<a href="{basePath}/new"># موضوع جديد</a> متبقٍ،}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 zero {}=0 {}
-                one {هناك <a href="{basePath}/unread">موضوع غير مقروء</a> متبقٍ،}
-                 two {هناك <a href="{basePath}/unread">موضوعان غير مقروءين</a> متبقيان،}
-                 few {هناك <a href="{basePath}/unread"># موضوعات غير مقروءة</a> متبقية،}
-                 many {هناك <a href="{basePath}/unread"># موضوعًا غير مقروء</a> متبقيًا،}
-              other {هناك <a href="{basePath}/unread"># موضوع غير مقروء</a>متبقٍ،}
-            }
-            { NEW, plural,
-                 zero {}=0 {}
-                one {هناك <a href="{basePath}/new">موضوع جديد</a> متبقٍ،}
-                 two {هناك <a href="{basePath}/new">موضوعان جديدان</a> متبقيان،}
-                 few {هناك <a href="{basePath}/new"># موضوعات جديدة</a> متبقية،}
-                 many {هناك <a href="{basePath}/new"># موضوعًا جديدًا</a> متبقيًا،}
-              other {هناك <a href="{basePath}/new"># موضوع جديد</a> متبقٍ،}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { أو استعرض الموضوعات الأخرى في {categoryLink}}
-          false { أو <a href="{basePath}/latest">شاهد آخر الموضوعات</a>}
-          other {}
-        }
       reply_count_link:
         zero: "%{count} من الردود، الانتقال إلى المنشور الأول"
         one: "رد واحد (%{count})، الانتقال إلى المنشور الأول"
@@ -6343,7 +6305,6 @@ ar:
       synonyms: "المرادفات"
       synonyms_inline: "سيتم استبدال هذه المرادفات بـ %{base_tag_name}:"
       save: "حفظ اسم الوسم ووصفه"
-      restricted_to: "مقيد إلى"
       no_synonyms: "هذا الوسم ليست له مرادفات."
       edit_synonyms: "تعديل المرادفات"
       add_synonyms_label: "إضافة المرادفات:"
@@ -7221,6 +7182,9 @@ ar:
             opengraph_image:
               title: "صورة OpenGraph"
               description: "صورة Open Graph الافتراضية، تُستخدم عندما لا تحتوي الصفحة على صورة مناسبة أخرى. إذا تُركت فارغة، سيتم استخدام large_icon."
+            og_image_preview:
+              generate: "إنشاء"
+              topic_id_label: "معرِّف الموضوع"
             x_summary_large_image:
               title: "صورة كبيرة لملخص X"
               description: "بطاقة X من نوع 'ملخص مع صورة كبيرة'. إذا تُرك الحقل فارغًا، سيتم إنشاء بيانات البطاقة العادية باستخدام OpenGraph_image، شريطة ألا تكون أيضًا بصيغة .svg."
@@ -7557,7 +7521,7 @@ ar:
         stale_data: "لم يتم التحقُّق من توفُّر تحديثات مؤخرًا. تأكَّد أن sidekiq قيد التشغيل."
         version_check_pending: "يبدو أنك قمت بالتحديث مؤخرًا. رائع!"
         installed_version: "مثبَّت"
-        latest_version: "الحديثة"
+        github: "GitHub"
         problems_found: "بعض النصائح بناءً على إعدادات موقعك الحالية"
         dismiss_notice: "تجاهل"
         new_features:
@@ -8253,6 +8217,8 @@ ar:
             initial_members: "الأعضاء الموسّعون"
             initial_members_description: "عدد أعضاء المجموعة المراد عرضهم قبل تضمين زر \"عرض المزيد\"."
             show_description: "تضمين الوصف"
+          locale_selector:
+            title: "اللغة"
           optional: "(اختياري)"
           update: "تحديث"
           toasts:
@@ -9395,15 +9361,12 @@ ar:
         silence_reason: "سبب الكتم"
         bulk_actions:
           title: "الإجراءات الجماعية"
-          admin_cant_be_deleted: "لا يمكن حذف هذا المستخدم لأنه مسؤول."
-          too_many_or_old_posts: "لا يمكن حذف هذا المستخدم لأن لديه عدد كبير جدًا من المنشورات أو منشور قديم للغاية"
-          too_many_selected_users:
-            zero: "لقد بلغت حد عدد المستخدمين البالغ %{count} للحذف الجماعي"
-            one: "لقد بلغت حد عدد المستخدمين البالغ %{count} للحذف الجماعي"
-            two: "لقد بلغت حد عدد المستخدمين البالغ %{count} للحذف الجماعي"
-            few: "لقد بلغت حد عدد المستخدمين البالغ %{count} للحذف الجماعي"
-            many: "لقد بلغت حد عدد المستخدمين البالغ %{count} للحذف الجماعي"
-            other: "لقد بلغت حد عدد المستخدمين البالغ %{count} للحذف الجماعي"
+          select_all: "تحديد الكل"
+          clear_all: "مسح الكل"
+          suspend:
+            confirmation_modal:
+              close: "إغلاق"
+              confirm: "تعليق"
           delete:
             label: "حذف المستخدمين…"
             confirmation_modal:
@@ -9443,6 +9406,9 @@ ar:
           suspended: "المعلَّقون"
           silenced: "مكتوم"
           staged: "مؤقت"
+        activation_filter:
+          all: "جميع المستخدمين"
+          activated: "نشط"
         approved: "تمت الموافقة عليه؟"
         titles:
           active: "المستخدمون النشطون"

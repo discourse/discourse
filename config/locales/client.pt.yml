@@ -21,6 +21,10 @@ pt:
         in_location: "em"
         hidden: "escondido"
         failed: "falhado"
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Remover"
     number:
       format:
         separator: "."
@@ -383,6 +387,9 @@ pt:
     age: "Idade"
     joined: "Juntou-se"
     admin_title: "Administração"
+    advanced_mode_toggle:
+      advanced_mode: "Modo Avançado"
+      simple_mode: "Modo Simples"
     show_more: "mostrar mais"
     show_help: "Opções"
     links: "Hiperligações"
@@ -4646,6 +4653,9 @@ pt:
               title: "Logótipo móvel"
             manifest_screenshots:
               description: "Capturas de ecrã que mostram as caraterísticas e a funcionalidade da instância na página de aviso da instalação. Todas as imagens deverão ser envios locais e das mesmas dimensões."
+            og_image_preview:
+              generate: "Gerar"
+              topic_id_label: "Id. do Tópico"
         fonts:
           backfill_modal:
             modal_yes: "Sim"
@@ -4765,7 +4775,7 @@ pt:
         no_check_performed: "Não foi feita nenhuma verificação por atualizações. Certifique-se que o sidekiq está em execução."
         stale_data: "Não foi feita verificação por atualizações ultimamente. Certifique-se de que o sidekiq está em execução."
         installed_version: "Instalado"
-        latest_version: "Recentes"
+        github: "GitHub"
         problems_found: "Alguns conselhos com base nas configurações atuais do seu site"
         dismiss_notice: "Ignorar"
         new_features:
@@ -5647,6 +5657,12 @@ pt:
         id_not_found: "Pedimos desculpa, esse id de utilizador não existe no nosso sistema."
         status: "Estado"
         bulk_actions:
+          select_all: "Selecionar tudo"
+          clear_all: "Limpar tudo"
+          suspend:
+            confirmation_modal:
+              close: "Fechar"
+              confirm: "Suspender"
           delete:
             confirmation_modal:
               close: "Fechar"

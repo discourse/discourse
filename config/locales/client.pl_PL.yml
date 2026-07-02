@@ -51,6 +51,16 @@ pl_PL:
         no_visible_children_hint: "Ten blok kontenera nie jest renderowany, ponieważ żaden z jego elementów podrzędnych nie jest widoczny."
         condition_failed_hint: "Ten blok nie został wyrenderowany, ponieważ jego warunki nie zostały spełnione."
         head_hidden_tail_hint: "Ten blok nie jest renderowany, ponieważ w kontenerze `head` najpierw został renderowany inny blok."
+    access_control:
+      manage:
+        access_permission_editor: "Edytor"
+        access_permission_editor_description: "Może tworzyć i edytować treść dla tego podmiotu"
+        access_permission_viewer: "Przeglądający"
+        access_permission_viewer_description: "Może przeglądać treści związane z tym podmiotem"
+        access_permission_remove: "Usuń"
+        access_permission_remove_description: "Usuń uprawnienia dla tej grupy"
+        add_group: "Dodaj grupę"
+        mandatory_acl_tooltip: "To uprawnienie jest obowiązkowe dla tego podmiotu i nie można go usunąć"
     carousel:
       go_to_slide: "Przejdź do slajdu %{index}"
       previous: "Poprzedni slajd"
@@ -516,6 +526,9 @@ pl_PL:
     age: "Wiek"
     joined: "Dołączył"
     admin_title: "Administracja"
+    advanced_mode_toggle:
+      advanced_mode: "Tryb zaawansowany"
+      simple_mode: "Tryb prosty"
     show_more: "pokaż więcej"
     show_help: "Opcje"
     links: "Linki"
@@ -4226,6 +4239,11 @@ pl_PL:
           few: "%{count} tematy"
           many: "%{count} tematów"
           other: "%{count} tematów"
+        tag_not_allowed_in_category:
+          one: "%{tags} nie jest dozwolony w kategorii %{category}."
+          few: "Te tagi nie są dozwolone w kategorii „%{category}”: %{tags}"
+          many: "Te tagi nie są dozwolone w kategorii „%{category}”: %{tags}"
+          other: "Te tagi nie są dozwolone w kategorii „%{category}”: %{tags}"
       none:
         unread: "Nie masz nieprzeczytanych tematów."
         unseen: "Nie masz niewidzianych tematów."
@@ -4443,39 +4461,39 @@ pl_PL:
           true {
             { UNREAD, plural,
                  =0 {}
-                one {Pozostał <a href="{basePath}/unread"># nieprzeczytany</a>}
-                 few {Pozostały <a href="{basePath}/unread"># nieprzeczytane</a>}
-                 many {Pozostało <a href="{basePath}/unread"># nieprzeczytanych</a>}
-              other {Pozostało <a href="{basePath}/unread"># nieprzeczytanych</a>}
+                one {Jest <a href="{unreadUrl}"># nieprzeczytany</a>}
+                 few {Są <a href="{unreadUrl}"># nieprzeczytane</a>}
+                 many {Jest<a href="{unreadUrl}"># nieprzeczytanych</a>}
+              other {Jest <a href="{unreadUrl}"># nieprzeczytanych</a>}
             }
             { NEW, plural,
                  =0 {}
-                one { i <a href="{basePath}/new"># nowy</a> temat,}
-                 few { i <a href="{basePath}/new"># nowe</a> tematy,}
-                 many { i <a href="{basePath}/new"># nowych</a> tematów,}
-              other { i <a href="{basePath}/new"># nowych</a> tematów,}
+                one { i pozostał <a href="{newUrl}"># nowy</a> temat,}
+                 few { i pozostały <a href="{newUrl}"># nowe</a> tematy,}
+                 many { i pozostało <a href="{newUrl}"># nowych</a> tematów,}
+              other { i pozostało <a href="{newUrl}"># nowych</a> tematów,}
             }
           }
           false {
             { UNREAD, plural,
                  =0 {}
-                one {Pozostał <a href="{basePath}/unread"># nieprzeczytany</a> temat,}
-                 few {Pozostały <a href="{basePath}/unread"># nieprzeczytane</a> tematy,}
-                 many {Pozostało <a href="{basePath}/unread"># nieprzeczytanych</a> tematów,}
-              other {Pozostało <a href="{basePath}/unread"># nieprzeczytanych</a> tematów,}
+                one {Pozostał <a href="{unreadUrl}"># nieprzeczytany</a> temat,}
+                 few {Pozostały <a href="{unreadUrl}"># nieprzeczytane</a> tematy,}
+                 many {Pozostało <a href="{unreadUrl}"># nieprzeczytanych</a> tematów,}
+              other {Pozostało <a href="{unreadUrl}"># nieprzeczytanych</a> tematów,}
             }
             { NEW, plural,
                  =0 {}
-                one {Pozostał <a href="{basePath}/new"># nowy</a> temat,}
-                 few {Pozostały <a href="{basePath}/new"># nowe</a> tematy,}
-                 many {Pozostało <a href="{basePath}/new"># nowych</a> tematów,}
-              other {Pozostało <a href="{basePath}/new"># nowych</a> tematów,}
+                one {Pozostał <a href="{newUrl}"># nowy</a> temat,}
+                 few {Pozostały <a href="{newUrl}"># nowe</a> tematy,}
+                 many {Pozostało <a href="{newUrl}"># nowych</a> tematów,}
+              other {Pozostało <a href="{newUrl}"># nowych</a> tematów,}
             }
           }
           other {}
         }
         { HAS_CATEGORY, select,
-          true { lub przejrzyj inne tematy w {categoryLink}}
+          true { lub przeglądaj inne tematy w {categoryLink}}
           false { lub <a href="{basePath}/latest">zobacz najnowsze tematy</a>}
           other {}
         }
@@ -6056,7 +6074,6 @@ pl_PL:
         few: "Można go używać tylko w tych kategoriach: %{categories}"
         many: "Można go używać tylko w tych kategoriach: %{categories}"
         other: "Można go używać tylko w tych kategoriach: %{categories}"
-      restricted_to: "Ograniczone do"
       no_synonyms: "Ten tag nie ma synonimów."
       edit_synonyms: "Edytuj synonimy"
       add_synonyms_label: "Dodaj synonimy:"
@@ -6894,9 +6911,25 @@ pl_PL:
               title: "Logo skrótu"
               description: "Alternatywny obraz logo używany w górnej części podsumowania wiadomości e-mail Twojej witryny. Jeśli pozostanie puste, użyty zostanie obraz z ustawienia `logo`."
               help_text: "Użyj obrazu w kształcie szerokiego prostokąta. Nie używaj obrazu SVG."
+            og_image_source:
+              title: "Źródło obrazu OpenGraph"
+              description: "Wybierz sposób udostępniania obrazów podglądu OpenGraph dla tematów, które nie mają własnego obrazu."
+              uploaded: "Użyj przesłanego obrazu"
+              generated: "Wygeneruj obraz na temat"
             opengraph_image:
               title: "Obraz OpenGraph"
               description: "Domyślny obraz opengraph, używany, gdy strona nie ma innego odpowiedniego obrazu. Jeśli pozostanie puste, zostanie użyty large_icon."
+            generate_topic_og_image:
+              title: "Generuj obrazy OG tematu"
+              description: "Automatycznie generuj obrazy podglądu OpenGraph dla tematów, które nie mają obrazu. Używaj kolorów tytułu tematu, kategorii i witryny."
+            og_image_preview:
+              title: "Wygenerowany podgląd obrazu OG"
+              description: "Podgląd automatycznie generowanych obrazów OpenGraph dla tematów bez obrazów. Wprowadź identyfikator tematu, aby przetestować."
+              generate: "Generuj"
+              topic_id_label: "Identyfikator tematu"
+              topic_id_placeholder: "np. 123"
+              placeholder: "Wprowadź identyfikator tematu i kliknij Generuj, aby wyświetlić podgląd."
+              error: "Nie udało się wygenerować podglądu. Sprawdź identyfikator tematu i spróbuj ponownie."
             x_summary_large_image:
               title: "Duży obraz w podsumowaniu X"
               description: "Karta X 'summary large image'. Jeśli pozostanie puste, standardowe metadane karty zostaną wygenerowane na podstawie obrazu OpenGraph, o ile nie jest on w formacie .svg."
@@ -7225,6 +7258,11 @@ pl_PL:
         discourse_last_updated: "Discourse zaktualizowane:"
         version: "Wersja"
         up_to_date: "Wersja aktualna!"
+        up_to_date_newer_commits:
+          one: "Korzystasz z najnowszej wersji, ale dostępna jest %{count} nowa zmiana."
+          few: "Korzystasz z najnowszej wersji, ale dostępne są %{count} nowe zmiany."
+          many: "Korzystasz z najnowszej wersji, ale dostępnych jest %{count} nowych zmian."
+          other: "Korzystasz z najnowszej wersji, ale dostępnych jest %{count} nowych zmian."
         critical_available: "Ważna aktualizacja jest dostępna."
         updates_available: "Aktualizacje są dostępne."
         please_update: "Koniecznie zaktualizuj!"
@@ -7232,7 +7270,15 @@ pl_PL:
         stale_data: "Sprawdzanie dostępności aktualizacji nie było ostatnio wykonywane. Sprawdź czy działa sidekiq."
         version_check_pending: "Wygląda na to, że ostatnio była wykonana aktualizacja. Fantastycznie!"
         installed_version: "Zainstalowana"
-        latest_version: "Najnowsza"
+        latest_version: "Dostępny"
+        github: "GitHub"
+        commit_on_github: "Wyświetl zatwierdzenie %{sha} na GitHubie"
+        changelog: "Dziennik zmian"
+        commits_ahead:
+          one: "Wprowadzono %{count} dodatkową zmianę od początku tej serii wydań"
+          few: "Wprowadzono %{count} dodatkowe zmiany od początku tej serii wydań"
+          many: "Wprowadzono %{count} dodatkowych zmian od początku tej serii wydań"
+          other: "Wprowadzono %{count} dodatkowych zmian od początku tej serii wydań"
         problems_found: "Porada bazująca na twoich aktualnych ustawieniach"
         dismiss_notice: "Ignoruj"
         site_advice:
@@ -7513,6 +7559,9 @@ pl_PL:
             logged_in_share:
               label: "Udział zalogowanych"
               tooltip: "Udział wyświetleń stron pochodzących od zalogowanych członków."
+            direct_traffic:
+              label: "Ruch bezpośredni"
+              tooltip: "Udział wyświetleń stron pochodzących bezpośrednio z Twojej społeczności, np. po wpisaniu adresu URL lub użyciu zakładki przeglądarki."
           top_countries:
             title: "Najpopularniejsze kraje"
             empty: "Brak danych krajowych dla tego okresu."
@@ -8081,6 +8130,9 @@ pl_PL:
             initial_members: "Rozszerzeni członkowie"
             initial_members_description: "Liczba członków grupy do wyświetlenia przed dodaniem przycisku „Zobacz więcej”."
             show_description: "Dołącz opis"
+          locale_selector:
+            title: "Język"
+            description: "Wyświetlane są tylko pola do tłumaczenia Informacje o stronie."
           optional: "(opcjonalne)"
           update: "Aktualizuj"
           toasts:
@@ -9006,6 +9058,7 @@ pl_PL:
             discourse_id_regenerate_credentials: "wygeneruj ponownie dane uwierzytelniające Discourse ID"
             configure_category_type: "skonfiguruj typ kategorii"
             unconfigure_category_type: "usuń konfigurację typu kategorii"
+            change_access_control_list_permissions: "zmień uprawnienia listy kontroli dostępu"
         screened_emails:
           title: "Sprawdzone e-maile"
           description: "Kiedy ktoś próbuje założyć nowe konto, jego adres email zostaje sprawdzony i rejestracja zostaje zablokowana, lub inna akcja jest podejmowana."
@@ -9213,15 +9266,39 @@ pl_PL:
         show_emails: "Pokaż e-maile"
         hide_emails: "Ukryj e-maile"
         silence_reason: "Powód wyciszenia"
+        suspend_reason: "Powód zawieszenia"
         bulk_actions:
           title: "Działania zbiorcze"
-          admin_cant_be_deleted: "Ten użytkownik nie może zostać usunięty, ponieważ jest administratorem"
-          too_many_or_old_posts: "Ten użytkownik nie może zostać usunięty, ma zbyt wiele postów lub bardzo stary post"
+          select_all: "Zaznacz wszystkie"
+          clear_all: "Wyczyść wszystkie"
+          staff_cant_be_actioned: "Tego użytkownika nie można usunąć ani zawiesić, ponieważ jest członkiem personelu"
+          no_users_can_be_deleted: "Żadnego z wybranych użytkowników nie można usunąć."
+          no_users_can_be_suspended: "Żadnego z wybranych użytkowników nie można zawiesić."
           too_many_selected_users:
-            one: "Osiągnięto limit %{count} użytkownika w przypadku usuwania zbiorczego"
-            few: "Osiągnięto limit %{count} użytkowników w przypadku usuwania zbiorczego"
-            many: "Osiągnięto limit %{count} użytkowników w przypadku usuwania zbiorczego"
-            other: "Osiągnięto limit %{count} użytkowników w przypadku usuwania zbiorczego"
+            one: "Osiągnięto limit %{count} użytkownika dla działań zbiorczych"
+            few: "Osiągnięto limit %{count} użytkowników dla działań zbiorczych"
+            many: "Osiągnięto limit %{count} użytkowników dla działań zbiorczych"
+            other: "Osiągnięto limit %{count} użytkowników dla działań zbiorczych"
+          suspend:
+            label: "Zawieś użytkowników…"
+            confirmation_modal:
+              prompt_text:
+                one: "Zamierzasz zawiesić %{count} użytkownika. Ustaw poniżej czas trwania i powód zawieszenia:"
+                few: "Zamierzasz zawiesić %{count} użytkowników. Ustaw poniżej czas trwania i powód zawieszenia:"
+                many: "Zamierzasz zawiesić %{count} użytkowników. Ustaw poniżej czas trwania i powód zawieszenia:"
+                other: "Zamierzasz zawiesić %{count} użytkowników. Ustaw poniżej czas trwania i powód zawieszenia:"
+              close: "Zamknij"
+              confirm: "Zawieś"
+              title:
+                one: "Zawieś %{count} użytkownika"
+                few: "Zawieś %{count} użytkowników"
+                many: "Zawieś %{count} użytkowników"
+                other: "Zawieś %{count} użytkowników"
+              bulk_suspend_starting: "Rozpoczęcie zawieszenia zbiorczego…"
+              user_suspend_succeeded: "[%{position}/%{total}] Pomyślnie zawieszono @%{username}"
+              user_suspend_failed: "[%{position}/%{total}] Nie udało się zawiesić @%{username} - %{error}"
+              bulk_suspend_finished: "Operacja zawieszenia zbiorczego została ukończona."
+              failed_to_suspend_users: "Następujących użytkowników nie udało się zawiesić:"
           delete:
             label: "Usuń użytkowników…"
             confirmation_modal:
@@ -9255,6 +9332,11 @@ pl_PL:
           suspended: "Zawieszeni"
           silenced: "Wyciszeni"
           staged: "Etapowi"
+        activation_filter:
+          label: "Status aktywacji"
+          all: "Wszyscy użytkownicy"
+          activated: "Aktywowane"
+          not_activated: "Nie aktywowano"
         approved: "Zatwierdzony?"
         titles:
           active: "Aktywni użytkownicy"

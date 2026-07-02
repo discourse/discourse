@@ -537,9 +537,7 @@ fi:
             custom: "Mukautettu..."
           hours: "tuntia"
           max_tokens_help: "Saneiden (sanojen ja merkkien) enimmäismäärä, jonka kukin tämän ryhmän käyttäjä voi käyttää määritetyn keston aikana. Saneet ovat yksiköitä, joita tekoälymallit käyttävät tekstin käsittelyyn – noin 1 merkki = 4 merkkiä tai 3/4 sanasta."
-          max_tokens_required: "Täytyy asettaa, jos enimmäiskäyttöä ei ole asetettu"
           max_usages_help: "Enimmäismäärä kertoja, jonka kukin tämän ryhmän käyttäjä voi käyttää tekoälymallia määritetyn ajan kuluessa. Tätä kiintiötä seurataan yksittäistä käyttäjää kohti, eikä sitä jaeta ryhmän kesken."
-          max_usages_required: "Täytyy asettaa, jos enimmäissaneita ei ole asetettu"
         usage:
           ai_bot: "Tekoälybotti"
           ai_helper: "Apuri (%{agent})"

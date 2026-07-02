@@ -6,6 +6,8 @@ import { i18n } from "discourse-i18n";
 acceptance("Admin - Users List", function (needs) {
   needs.user();
 
+  let lastActivationFilter;
+
   needs.pretender((server, helper) => {
     server.get("/admin/users/list/silenced.json", () =>
       helper.response([
@@ -18,6 +20,33 @@ acceptance("Admin - Users List", function (needs) {
         },
       ])
     );
+
+    server.get("/admin/users/list/suspended.json", () =>
+      helper.response([
+        {
+          id: 4,
+          username: "ben",
+          email: "<small>ben@example.com</small>",
+          suspended_at: "2020-01-01T00:00:00.000Z",
+          suspend_reason: "<strong>spam</strong>",
+        },
+      ])
+    );
+
+    server.get("/admin/users/list/new.json", (request) => {
+      lastActivationFilter = request.queryParams.activation;
+
+      const users = [
+        { id: 2, username: "sam", active: true },
+        { id: 3, username: "notactivated", active: false },
+      ];
+
+      if (request.queryParams.activation === "not_activated") {
+        return helper.response(users.filter((user) => !user.active));
+      }
+
+      return helper.response(users);
+    });
   });
 
   test("lists users", async function (assert) {
@@ -116,5 +145,40 @@ acceptance("Admin - Users List", function (needs) {
     assert
       .dom(".silence_reason .directory-table__value")
       .hasHtml("<strong>spam</strong>");
+  });
+
+  test("shows the suspend reason on the suspended tab", async function (assert) {
+    await visit("/admin/users/list/suspended");
+
+    assert.dom(".suspend_reason").hasAttribute("title", "spam");
+    assert
+      .dom(".suspend_reason .directory-table__value")
+      .hasHtml("<strong>spam</strong>");
+  });
+
+  test("activation filter is only shown on the new tab", async function (assert) {
+    await visit("/admin/users/list/active");
+    assert.dom(".admin-users-list__activation-filter").doesNotExist();
+
+    await visit("/admin/users/list/new");
+    assert.dom(".admin-users-list__activation-filter").exists();
+  });
+
+  test("filters the new tab by activation status", async function (assert) {
+    await visit("/admin/users/list/new");
+
+    assert.dom(".users-list .user").exists({ count: 2 });
+
+    await fillIn(".admin-users-list__activation-filter", "not_activated");
+
+    assert.strictEqual(
+      lastActivationFilter,
+      "not_activated",
+      "sends the activation filter to the server"
+    );
+    assert.dom(".users-list .user").exists({ count: 1 });
+    assert
+      .dom(".users-list .user:nth-child(1) .username")
+      .includesText("notactivated");
   });
 });

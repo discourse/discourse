@@ -74,6 +74,29 @@ describe "Upcoming Events" do
     end
   end
 
+  describe "recurring events on the My events calendar" do
+    it "shows a single occurrence when the user RSVPed to only the next event",
+       time: Time.utc(2026, 6, 11, 12, 0) do
+      post =
+        create_post(
+          user: admin,
+          category:,
+          title: "Daily team sync",
+          raw:
+            "[event status='public' start='2026-06-11 18:00' end='2026-06-11 18:30' recurrence='every_day']\n[/event]",
+        )
+      event = DiscoursePostEvent::Event.find(post.id)
+
+      DiscoursePostEvent::Invitee.create_attendance!(admin.id, event.id, :going, recurring: false)
+
+      visit("/upcoming-events/mine/month/2026/6/1")
+
+      expect(upcoming_events).to have_calendar
+      expect(upcoming_events).to have_event(post.topic.title)
+      expect(upcoming_events).to have_event_count(1)
+    end
+  end
+
   describe "event description in popup" do
     let(:post_event_page) { PageObjects::Pages::DiscourseCalendar::PostEvent.new }
 

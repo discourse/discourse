@@ -42,6 +42,29 @@ module DiscourseAi
         SQL
       end
 
+      def self.personal_message_bot_user_ids(user)
+        return [] if user.blank? || !SiteSetting.ai_bot_enabled
+
+        bot_user_ids = []
+
+        if user.in_any_groups?(SiteSetting.ai_bot_allowed_groups_map)
+          bot_user_ids.concat(
+            LlmModel
+              .where(id: LlmModel.enabled_chat_bot_ids)
+              .where.not(user_id: nil)
+              .pluck(:user_id),
+          )
+        end
+
+        bot_user_ids.concat(
+          AiAgent
+            .allowed_modalities(user: user, allow_personal_messages: true)
+            .map { |agent| agent[:user_id] },
+        )
+
+        bot_user_ids.compact
+      end
+
       # Most errors are simply "not_allowed"
       # we do not want to reveal information about this system
       # the 2 exceptions are "other_people_in_pm" and "other_content_in_pm"
@@ -85,6 +108,14 @@ module DiscourseAi
               AND tcf_pm_inbox.value = 't'
             )
           SQL
+        end
+
+        plugin.register_modifier(:guardian_can_send_private_message_to_target) do |allowed, params|
+          allowed ||
+            (
+              params[:private_message_context] == PERSONAL_MESSAGE_CONTEXT &&
+                params[:guardian].can_send_pm_to_ai_bot?(params[:target])
+            )
         end
 
         plugin.on(:topic_created) do |topic|

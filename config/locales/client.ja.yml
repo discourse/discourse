@@ -27,6 +27,10 @@ ja:
         in_location: "場所:"
         hidden: "非表示"
         failed: "失敗しました"
+    access_control:
+      manage:
+        access_permission_editor: "編集者"
+        access_permission_remove: "削除"
     carousel:
       go_to_slide: "スライド %{index} に移動"
       previous: "前のスライド"
@@ -371,6 +375,9 @@ ja:
     age: "年齢"
     joined: "参加"
     admin_title: "管理"
+    advanced_mode_toggle:
+      advanced_mode: "詳細モード"
+      simple_mode: "シンプルモード"
     show_more: "もっと表示"
     show_help: "オプション"
     links: "リンク"
@@ -3360,35 +3367,6 @@ ja:
       read_more: "もっと読みますか？<a href='%{categoryLink}'>すべてのカテゴリを閲覧</a>するか、<a href='%{latestLink}'>最新のトピックを表示</a>してください。"
       unread_indicator: "このトピックの最後の投稿を読んだメンバーはまだいません。"
       participant_groups: "参加グループ"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-              other {残り <a href="{basePath}/unread"># 件の未読</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-              other {と <a href="{basePath}/new"># 件の新規</a>トピックがあります。}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-              other {残り <a href="{basePath}/unread"># 件の未読</a>トピックがあります。}
-            }
-            { NEW, plural,
-                 =0 {}
-              other {残り <a href="{basePath}/new"># 件の新規</a>トピックがあります。}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true {または、{categoryLink} で他のトピックを閲覧してください}
-          false {または、<a href="{basePath}/latest">最新のトピックを表示</a>してください}
-          other {}
-        }
       reply_count_link:
         other: "%{count} 件の返信、最初の投稿にジャンプ"
       created_at: "作成日: %{date}"
@@ -5361,6 +5339,9 @@ ja:
             opengraph_image:
               title: "OpenGraph 画像"
               description: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空白の場合、large_icon が使用されます."
+            og_image_preview:
+              generate: "生成"
+              topic_id_label: "トピック ID"
             x_summary_large_image:
               title: "X 要約の大きい画像"
               description: "X カードの「要約の大きい画像」。空白の場合、.svg でない OpenGraph_image を使って通常のカードのメタデータが生成されます。"
@@ -5677,7 +5658,7 @@ ja:
         stale_data: "最近、更新のチェックが行われていません。sidekiq が動作しているか確認してください。"
         version_check_pending: "最近更新したようですね。素晴らしいです！"
         installed_version: "インストール済み"
-        latest_version: "最新"
+        github: "GitHub"
         problems_found: "現在のサイト設定に基づいたアドバイス"
         dismiss_notice: "無視"
         new_features:
@@ -6282,6 +6263,8 @@ ja:
             initial_members: "拡大メンバー"
             initial_members_description: "「さらに表示」ボタンを追加する前に表示するグループメンバーの数。"
             show_description: "説明を含める"
+          locale_selector:
+            title: "言語"
           optional: "(オプション)"
           update: "更新"
           toasts:
@@ -7361,10 +7344,12 @@ ja:
         silence_reason: "投稿禁止の理由"
         bulk_actions:
           title: "一括操作"
-          admin_cant_be_deleted: "このユーザーは管理者であるため削除できません"
-          too_many_or_old_posts: "このユーザーは投稿数が多すぎるか投稿が非常に古いため削除できません"
-          too_many_selected_users:
-            other: "一括削除できるユーザー数の制限 (%{count} 人) に達しました"
+          select_all: "すべて選択"
+          clear_all: "すべてクリア"
+          suspend:
+            confirmation_modal:
+              close: "閉じる"
+              confirm: "凍結"
           delete:
             label: "ユーザーを削除…"
             confirmation_modal:
@@ -7389,6 +7374,9 @@ ja:
           suspended: "凍結"
           silenced: "投稿禁止"
           staged: "ステージング"
+        activation_filter:
+          all: "すべてのユーザー"
+          activated: "有効"
         approved: "承認済み？"
         titles:
           active: "アクティブユーザー"

@@ -1,4 +1,11 @@
 strictPeerDependencies: true
+strictDepBuilds: true
+onlyBuiltDependencies:
+- lefthook
+ignoredBuiltDependencies:
+- "@zoom/meetingsdk"
+- core-js
+- rete
 packages:
 - "docs/developer-guides"
 - "frontend/deprecation-silencer"

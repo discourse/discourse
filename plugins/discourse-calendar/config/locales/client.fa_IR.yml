@@ -411,6 +411,8 @@ fa_IR:
       composer_actions:
         create_event:
           label: "ایجاد رویداد"
+        create_topic:
+          label: "ایجاد موضوع"
       builder_modal:
         custom_fields:
           label: "فیلدهای سفارشی"
@@ -447,11 +449,6 @@ fa_IR:
             last: "آخرین"
         attendance:
           none: "هیچ‌کدام"
-        url:
-          label: "نشانی اینترنتی"
-          placeholder: "اختیاری"
-        location:
-          label: "موقعیت"
         description:
           label: "توضیح"
         name:

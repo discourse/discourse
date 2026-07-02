@@ -46,6 +46,10 @@ RSpec.describe SiteSerializer do
         def self.mandatory_acl
           [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }]
         end
+
+        def self.banned_acl
+          [{ type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" }]
+        end
       end
     end
 
@@ -59,6 +63,18 @@ RSpec.describe SiteSerializer do
       expect(serialized.dig(:access_control, :mandatory_acl)).to include(
         "SiteSerializerSpecTarget" => [
           { type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" },
+        ],
+      )
+    end
+
+    it "includes banned ACLs by target class" do
+      target_class
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized.dig(:access_control, :banned_acl)).to include(
+        "SiteSerializerSpecTarget" => [
+          { type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" },
         ],
       )
     end

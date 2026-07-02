@@ -19,6 +19,10 @@ sq:
         in_location: "në"
         hidden: "fshehur"
         failed: "dështoi"
+    access_control:
+      manage:
+        access_permission_editor: "Redaktor"
+        access_permission_remove: "Hiq"
     number:
       format:
         separator: "."
@@ -4028,6 +4032,9 @@ sq:
           form:
             mobile: "Mobile"
             email: "Email"
+            og_image_preview:
+              generate: "Gjenero"
+              topic_id_label: "ID e temës"
         fonts:
           backfill_modal:
             modal_yes: "Po"
@@ -4121,7 +4128,7 @@ sq:
         no_check_performed: "Verifikimi i updejteve nuk është kryer. Sigurohuni që sidekiq punon. "
         stale_data: "Verifikimi i updejteve nuk është kryer këto kohët e fundit. Sigurohuni që sidekiq punon. "
         installed_version: "Instaluar"
-        latest_version: "Të fundit"
+        github: "Github"
         dismiss_notice: "Injoroni"
         new_features:
           learn_more: "Mëso më shumë..."
@@ -4688,6 +4695,10 @@ sq:
         not_found: "Na vjen keq, por ky emër nuk u gjet në sistem."
         id_not_found: "Na vjen keq, por ky emër nuk ekziston në sistem."
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Mbyll"
+              confirm: "Pezullo"
           delete:
             confirmation_modal:
               close: "Mbyll"

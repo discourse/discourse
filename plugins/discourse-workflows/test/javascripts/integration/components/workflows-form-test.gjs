@@ -106,6 +106,20 @@ module("Integration | Component | WorkflowsForm", function (hooks) {
     assert.dom('input[name="tracking_id"]').doesNotExist();
   });
 
+  test("autofocuses the first field", async function (assert) {
+    this.set("model", {
+      data: { name: "", email: "" },
+      fields: [
+        { name: "name", title: "Name", type: "input" },
+        { name: "email", title: "Email", type: "input-email" },
+      ],
+    });
+
+    await render(<template><WorkflowsForm @model={{this.model}} /></template>);
+
+    assert.dom('input[name="name"]').isFocused();
+  });
+
   test("renders the test mode banner", async function (assert) {
     this.set("model", {
       form_mode: "test",

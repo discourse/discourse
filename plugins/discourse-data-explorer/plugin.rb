@@ -206,6 +206,7 @@ after_initialize do
 
   if defined?(DiscourseAi)
     require_relative "lib/discourse_data_explorer/ai_query_params"
+    require_relative "lib/discourse_data_explorer/tools/find_queries"
     require_relative "lib/discourse_data_explorer/tools/run_sql"
     require_relative "lib/discourse_data_explorer/tools/submit_query"
     require_relative "lib/discourse_data_explorer/ai_query_generator"

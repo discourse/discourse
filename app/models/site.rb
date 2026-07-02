@@ -84,6 +84,13 @@ class Site
 
           mandatory_acl[target_class.acl_target_key] = target_class.mandatory_acl
         end,
+      banned_acl:
+        target_classes.each_with_object({}) do |target_class, banned_acl|
+          next if !target_class.respond_to?(:has_banned_acl?)
+          next if !target_class.has_banned_acl?
+
+          banned_acl[target_class.acl_target_key] = target_class.banned_acl
+        end,
     }
   end
 

@@ -4,9 +4,13 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import KeyValueStore from "discourse/lib/key-value-store";
 import I18n, { i18n } from "discourse-i18n";
 import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
 import { defaultView } from "discourse/plugins/discourse-data-explorer/discourse/lib/chart-helpers";
+
+const dataExplorerStore = new KeyValueStore("discourse_data_explorer_");
+const HIDE_SCHEMA_KEY = "hide_schema";
 
 export default class AdminPluginsExplorerNew extends Controller {
   @service store;
@@ -24,6 +28,7 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked generatedDescription = "";
   @tracked mode = "ai";
   @tracked schema = null;
+  @tracked hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
   @tracked manualSql = "SELECT 1";
   @tracked previewLoading = false;
   @tracked previewResults = null;
@@ -96,6 +101,12 @@ export default class AdminPluginsExplorerNew extends Controller {
   @action
   updateManualSql(value) {
     this.manualSql = value;
+  }
+
+  @action
+  updateHideSchema(value) {
+    this.hideSchema = value;
+    dataExplorerStore.set({ key: HIDE_SCHEMA_KEY, value: value.toString() });
   }
 
   @action
@@ -280,6 +291,7 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.generatedDescription = "";
     this.mode = "ai";
     this.schema = null;
+    this.hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
     this.manualSql = "SELECT 1";
     this.loading = false;
     this.manualFormData = { name: "", description: "" };

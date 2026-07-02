@@ -395,7 +395,7 @@ export default class DockedComposer extends Component {
     // pointer drags.
     const STEP = 16;
     const max = this.maxResizeOffset ?? 400;
-    let next = this.dragOffset;
+    let next;
     switch (event.key) {
       case "ArrowUp":
         next = Math.min(max, this.dragOffset + STEP);

@@ -471,7 +471,6 @@ es:
         create_event_title: "Crear evento"
         update_event_title: "Editar evento"
         advanced_settings_title: "Ajustes avanzados"
-        advanced_settings: "Ajustes avanzados"
         confirm_delete: "¿Seguro que quieres eliminar este evento?"
         confirm_close: "¿Seguro que quieres cerrar ese evento?"
         confirm_open: "¿Seguro que quieres abrir ese evento?"
@@ -514,11 +513,7 @@ es:
         allow_chat:
           label: "Integración de chat"
           checkbox_label: "Crea y gestiona un canal de chat específico para cada evento"
-        url:
-          label: "URL"
-          placeholder: "Opcional"
         location:
-          label: "Ubicación"
           placeholder: "Añade una ubicación, enlace o cualquier cosa."
         description:
           label: "Descripción"

@@ -20,6 +20,10 @@ hy:
         status: "Ստատուս"
         hidden: "թաքցված"
         failed: "ձախողված"
+    access_control:
+      manage:
+        access_permission_editor: "Խմբագրիչ"
+        access_permission_remove: "Հեռացնել"
     number:
       format:
         separator: "."
@@ -262,6 +266,9 @@ hy:
     age: "Տարիք"
     joined: "Միացել է "
     admin_title: "Ադմին"
+    advanced_mode_toggle:
+      advanced_mode: "Ընդլայնված ռեժիմ"
+      simple_mode: "Հասարակ ռեժիմ"
     show_more: "ցույց տալ ավելին"
     show_help: "Տարբերակներ"
     links: "Հղումներ"
@@ -3858,6 +3865,9 @@ hy:
           form:
             mobile: "Հեռախոսային"
             email: "Էլ. փոստ"
+            og_image_preview:
+              generate: "Գեներացնել"
+              topic_id_label: "Թեմայի ID"
         fonts:
           backfill_modal:
             modal_yes: "Այո"
@@ -3956,7 +3966,7 @@ hy:
         no_check_performed: "Թարմացումների ստուգում չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
         stale_data: "Թարմացումների ստուգում վերջերս չի կատարվել: Համոզվեք, որ sidekiq-ը միացված է:"
         installed_version: "Տեղադրված է "
-        latest_version: "Վերջինը"
+        github: "GitHub"
         problems_found: "Որոշ խորհուրդներ՝ հիմնված Ձեր կայքի ընթացիկ կարգավորումների վրա"
         dismiss_notice: "Անտեսել"
         new_features:
@@ -4892,6 +4902,10 @@ hy:
         active: "Ակտիվացված"
         status: "Ստատուս"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Փակել"
+              confirm: "Սառեցնել"
           delete:
             confirmation_modal:
               close: "Փակել"
@@ -4903,6 +4917,8 @@ hy:
           suspended: "Սառեցված"
           silenced: "Լռեցված"
           staged: "Աստիճանավորված (Staged)"
+        activation_filter:
+          activated: "Ակտիվացված"
         approved: "Հաստատվա՞ծ"
         titles:
           active: "Ակտիվ օգտատերեր"

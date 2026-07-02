@@ -620,6 +620,13 @@ nl:
       trust_level_2: "vertrouwensniveau_2"
       trust_level_3: "vertrouwensniveau_3"
       trust_level_4: "vertrouwensniveau_4"
+    default_full_names:
+      everyone: "Iedereen"
+      admins: "Beheerders"
+      moderators: "Moderators"
+      staff: "Medewerker"
+      anonymous_users: "Anonieme gebruikers"
+      logged_in_users: "Aangemelde gebruikers"
     default_descriptions:
       everyone: "Automatische groep inclusief alle leden"
       staff: "Automatische groep inclusief beheerders en moderators"
@@ -2480,7 +2487,6 @@ nl:
     floating_dismiss_topics_on_mobile: "Toont een zwevende knop 'Negeren...' op mobiel voor de topiclijst voor eenvoudigere toegang en om ruimte vrij te maken bovenaan de topiclijst"
     enable_simplified_category_creation: "Maakt eenvoudigere flow voor het maken van categorieën mogelijk met minder opties en een schonere interface."
     modernize_foundation_theme: "Deze wijziging introduceert ontwerpwijzigingen van het Foundation-thema in Discourse."
-    reporting_improvements: "Verbeteringen in de navigatie, het ontwerp en de bruikbaarheid van de beheerdersrapporten van Discourse."
     errors:
       invalid_css_color: "Ongeldige kleur. Voer een kleurnaam of hexadecimale waarde in."
       invalid_datetime: "Ongeldig tijdnotatie. Controleer of je een geldige datum en tijd hebt ingevoerd."

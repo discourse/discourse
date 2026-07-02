@@ -320,8 +320,6 @@ de:
         title: "Desktop-Chat-Benachrichtigungston"
       sounds:
         none: "Keiner"
-        bell: "Glocke"
-        ding: "Ding"
       title: "Chat"
       title_capitalized: "Chat"
       upload: "Datei anhängen"
@@ -480,6 +478,10 @@ de:
           other: "<span>Du, %{commaSeparatedUsernames} und %{count} andere Personen habt reagiert mit </span>:%{emoji}:"
         single_user: "<span>%{username} reagierte mit </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} und %{username} reagierten mit </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} Reaktion"
+            other: "%{count} Reaktionen"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} und %{count} andere Person reagierten mit </span>:%{emoji}:"
           other: "<span>%{commaSeparatedUsernames} und %{count} andere Personen reagierten mit </span>:%{emoji}:"

@@ -19,6 +19,7 @@ class AccessControlListManager
 
   model :previous_permissions, optional: true
   model :flattened_acl_with_mandatory, optional: true
+  policy :has_no_banned_acl
   policy :has_at_least_one_acl
 
   transaction do
@@ -44,6 +45,11 @@ class AccessControlListManager
 
   def fetch_flattened_acl_with_mandatory(params:)
     AccessControlList.inject_mandatory_acl(params.flattened_acl, params.target)
+  end
+
+  def has_no_banned_acl(params:, flattened_acl_with_mandatory:)
+    return true if !params.target.class.has_banned_acl?
+    flattened_acl_with_mandatory.none? { |acl| params.target.class.acl_is_banned?(acl) }
   end
 
   def has_at_least_one_acl(flattened_acl_with_mandatory:)

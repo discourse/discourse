@@ -304,8 +304,6 @@ zh_CN:
         title: "桌面聊天通知声音"
       sounds:
         none: "无"
-        bell: "钟声"
-        ding: "叮叮"
       title: "聊天"
       title_capitalized: "聊天"
       upload: "附加文件"
@@ -450,6 +448,9 @@ zh_CN:
           other: "<span>您、%{commaSeparatedUsernames} 和其他 %{count} 人回应了 </span>:%{emoji}:"
         single_user: "<span>%{username} 回应了 </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} 和 %{username} 回应了 </span>:%{emoji}:"
+        users_popup:
+          title:
+            other: "%{count} 个回应"
         multiple_users_and_more:
           other: "<span>%{commaSeparatedUsernames} 和其他 %{count} 人回应了 </span>:%{emoji}:"
       composer:

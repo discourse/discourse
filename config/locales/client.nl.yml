@@ -37,6 +37,10 @@ nl:
         no_visible_children_hint: "Dit containerblok wordt niet weergegeven omdat geen van de onderliggende zichtbaar is."
         condition_failed_hint: "Dit blok wordt niet gerenderd omdat niet aan de voorwaarden is voldaan."
         head_hidden_tail_hint: "Dit blok wordt niet gerenderd omdat er eerst een ander blok is gerenderd in de container `head`."
+    access_control:
+      manage:
+        access_permission_editor: "Bewerker"
+        access_permission_remove: "Verwijderen"
     carousel:
       go_to_slide: "Ga naar dia %{index}"
       previous: "Vorige dia"
@@ -427,6 +431,9 @@ nl:
     age: "Leeftijd"
     joined: "Lid sinds"
     admin_title: "Beheer"
+    advanced_mode_toggle:
+      advanced_mode: "Geavanceerde modus"
+      simple_mode: "Simpele modus"
     show_more: "meer weergeven"
     show_help: "Opties"
     links: "Links"
@@ -3787,39 +3794,6 @@ nl:
       read_more: "Meer lezen? <a href='%{categoryLink}'>Blader door alle categorieën</a> of <a href='%{latestLink}'>bekijk de nieuwste topics</a>."
       unread_indicator: "Laatste bericht van dit topic is nog niet gelezen door een lid gelezen."
       participant_groups: "Deelnemersgroepen"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Er is <a href="{basePath}/unread"># ongelezen</a>}
-              other {Er zijn <a href="{basePath}/unread"># ongelezen</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { en <a href="{basePath}/new"># nieuw</a> topic resterend,}
-              other { en <a href="{basePath}/new"># nieuwe</a> topics resterend,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Er is <a href="{basePath}/unread"># ongelezen</a> topic resterend,}
-              other {Er zijn <a href="{basePath}/unread"># ongelezen</a> topics resterend,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Er is <a href="{basePath}/new"># nieuw</a> topic resterend,}
-              other {Er zijn <a href="{basePath}/new"># nieuwe</a> topics resterend,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { of blader door andere topics in {categoryLink}}
-          false { of <a href="{basePath}/latest">bekijk de nieuwste topics</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} antwoord, ga naar eerste bericht"
         other: "%{count} antwoorden, ga naar eerste bericht"
@@ -5173,7 +5147,6 @@ nl:
       synonyms: "Synoniemen"
       synonyms_inline: "Deze synoniemen worden vervangen door %{base_tag_name}:"
       save: "Sla de naam en beschrijving van de tag op"
-      restricted_to: "Beperkt tot"
       no_synonyms: "Deze tag heeft geen synoniemen."
       edit_synonyms: "Synoniemen bewerken"
       add_synonyms_label: "Synoniemen toevoegen:"
@@ -5971,6 +5944,9 @@ nl:
             opengraph_image:
               title: "OpenGraph-afbeelding"
               description: "Standaard Opengraph-afbeelding die wordt gebruikt wanneer de pagina geen andere geschikte afbeelding heeft. Als dit leeg wordt gelaten, wordt large_icon gebruikt."
+            og_image_preview:
+              generate: "Genereren"
+              topic_id_label: "Topic-ID"
             x_summary_large_image:
               title: "Grote afbeelding voor X-samenvatting"
               description: "Grote samenvattingsafbeelding voor X-kaart. Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met de OpenGraph_image, zolang die niet ook een .svg is."
@@ -6299,7 +6275,7 @@ nl:
         stale_data: "Er is de laatste tijd niet op updates gecontroleerd. Zorg dat Sidekiq actief is."
         version_check_pending: "Zo te zien heb je onlangs bijgewerkt. Fantastisch!"
         installed_version: "Geïnstalleerd"
-        latest_version: "Nieuwste"
+        github: "GitHub"
         problems_found: "Advies op basis van je huidige website-instellingen"
         dismiss_notice: "Negeren"
         new_features:
@@ -6920,6 +6896,8 @@ nl:
             initial_members: "Uitgevouwen leden"
             initial_members_description: "Aantal groepsleden dat om weer te geven voordat de knop 'Meer weergeven' wordt toegevoegd."
             show_description: "Inclusief beschrijving"
+          locale_selector:
+            title: "Taal"
           optional: "(optioneel)"
           update: "Bijwerken"
           toasts:
@@ -8023,11 +8001,12 @@ nl:
         silence_reason: "Reden van dempen"
         bulk_actions:
           title: "Bulkacties"
-          admin_cant_be_deleted: "Deze gebruiker kan niet worden verwijderd omdat deze een beheerder is"
-          too_many_or_old_posts: "Deze gebruiker kan niet worden verwijderd omdat deze te veel berichten een heel oud bericht heeft."
-          too_many_selected_users:
-            one: "Je hebt de limiet van %{count} gebruiker voor bulkverwijdering bereikt"
-            other: "Je hebt de limiet van %{count} gebruikers voor bulkverwijdering bereikt"
+          select_all: "Selecteer alles"
+          clear_all: "Alles wissen"
+          suspend:
+            confirmation_modal:
+              close: "Sluiten"
+              confirm: "Schorsen"
           delete:
             label: "Gebruikers verwijderen…"
             confirmation_modal:
@@ -8055,6 +8034,9 @@ nl:
           suspended: "Geschorst"
           silenced: "Gedempt"
           staged: "Gefaseerd"
+        activation_filter:
+          all: "Alle gebruikers"
+          activated: "Geactiveerd"
         approved: "Goedgekeurd?"
         titles:
           active: "Actieve gebruikers"

@@ -1362,7 +1362,7 @@ export default class ComposerService extends Service {
           buttons: [
             {
               label: i18n("composer.cancel"),
-              class: "btn-flat btn-text btn-reply-where__cancel",
+              class: "btn-default btn-text btn-reply-where__cancel",
             },
           ],
           class: "reply-where-modal",
