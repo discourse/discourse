@@ -189,12 +189,11 @@ end
 Playwright::Error.prepend(PlaywrightErrorPatch)
 
 module PlaywrightSoftReset
-  RESET_STORAGE_TYPES = "local_storage,indexeddb,websql,cache_storage"
+  RESET_STORAGE_TYPES = "all"
   private_constant :RESET_STORAGE_TYPES
 
   module Browser
     def create_browser_context
-      @page_options = { serviceWorkers: "block" }.merge(@page_options)
       @context_downloaded = false
       super.tap do |browser_context|
         browser_context.on("download", ->(_download) { @context_downloaded = true })
@@ -207,13 +206,12 @@ module PlaywrightSoftReset
       return false if @context_downloaded
 
       context = contexts.first
-      context.clear_cookies
-      context.clear_permissions
       context.pages.each(&:close)
       new_page = create_page(context)
       return false if fake_clock_installed?(new_page)
 
       clear_storage(new_page)
+      context.clear_permissions
       @playwright_page = new_page.tap(&:bring_to_front)
       true
     end
