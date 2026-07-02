@@ -159,17 +159,16 @@ RSpec.describe ThemeSettingsManager do
       end
 
       it "returns false when list_type is not group" do
-        yaml = <<~YAML
-          test_setting:
-            type: list
-            list_type: compact
-            resolve_group_membership: true
-            default: "a|b"
-        YAML
-        theme.set_field(target: :settings, name: "yaml", value: yaml)
-        theme.save!
+        setting =
+          described_class.create(
+            :test_setting,
+            "a|b",
+            ThemeSetting.types[:list],
+            theme,
+            list_type: "compact",
+            resolve_group_membership: true,
+          )
 
-        setting = theme.settings[:test_setting]
         expect(setting.resolve_group_membership?).to eq(false)
       end
 

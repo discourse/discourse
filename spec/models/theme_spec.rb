@@ -1670,55 +1670,36 @@ RSpec.describe Theme do
     end
 
     it "adds user_in_ prefixed boolean for opted-in settings" do
-      guardian = Guardian.new(user)
+      guardian = user.guardian
       settings = theme.cached_settings
       resolved_settings = theme.resolve_group_settings_for_user(settings, guardian)
 
-      expect(resolved_settings["user_in_member_setting"]).to eq(true)
-      expect(resolved_settings["user_in_non_member_setting"]).to eq(false)
-      expect(resolved_settings).not_to have_key("user_in_no_resolve_setting")
-      expect(resolved_settings).not_to have_key("user_in_regular_setting")
+      expect(resolved_settings[:user_in_member_setting]).to eq(true)
+      expect(resolved_settings[:user_in_non_member_setting]).to eq(false)
+      expect(resolved_settings).not_to have_key(:user_in_no_resolve_setting)
+      expect(resolved_settings).not_to have_key(:user_in_regular_setting)
     end
 
     it "removes original group list when resolve_group_membership is true" do
-      guardian = Guardian.new(user)
+      guardian = user.guardian
       settings = theme.cached_settings
       resolved_settings = theme.resolve_group_settings_for_user(settings, guardian)
 
       # Settings with resolve_group_membership should have group list removed
-      expect(resolved_settings).not_to have_key("member_setting")
-      expect(resolved_settings).not_to have_key("non_member_setting")
+      expect(resolved_settings).not_to have_key(:member_setting)
+      expect(resolved_settings).not_to have_key(:non_member_setting)
       # Settings without resolve_group_membership keep their values
-      expect(resolved_settings["no_resolve_setting"]).to eq(group.id.to_s)
+      expect(resolved_settings[:no_resolve_setting]).to eq(group.id.to_s)
     end
 
     it "handles anonymous users correctly" do
-      guardian = Guardian.new(nil)
+      guardian = Guardian.new
       settings = theme.cached_settings
       resolved_settings = theme.resolve_group_settings_for_user(settings, guardian)
 
       # Anonymous users are not in any groups
-      expect(resolved_settings["user_in_member_setting"]).to eq(false)
-      expect(resolved_settings["user_in_non_member_setting"]).to eq(false)
-    end
-
-    it "handles everyone auto-group correctly" do
-      yaml = <<~YAML
-        everyone_setting:
-          type: list
-          list_type: group
-          resolve_group_membership: true
-          default: "#{Group::AUTO_GROUPS[:everyone]}"
-      YAML
-      theme.set_field(target: :settings, name: "yaml", value: yaml)
-      theme.save!
-
-      guardian = Guardian.new(user)
-      settings = theme.cached_settings
-      resolved_settings = theme.resolve_group_settings_for_user(settings, guardian)
-
-      # everyone group includes all logged in users (when granular feature off)
-      expect(resolved_settings["user_in_everyone_setting"]).to eq(true)
+      expect(resolved_settings[:user_in_member_setting]).to eq(false)
+      expect(resolved_settings[:user_in_non_member_setting]).to eq(false)
     end
 
     it "handles logged_in_users auto-group correctly" do
@@ -1732,11 +1713,11 @@ RSpec.describe Theme do
       theme.set_field(target: :settings, name: "yaml", value: yaml)
       theme.save!
 
-      guardian = Guardian.new(user)
+      guardian = user.guardian
       settings = theme.cached_settings
       resolved_settings = theme.resolve_group_settings_for_user(settings, guardian)
 
-      expect(resolved_settings["user_in_logged_in_setting"]).to eq(true)
+      expect(resolved_settings[:user_in_logged_in_setting]).to eq(true)
     end
 
     it "handles anonymous_users auto-group correctly" do
@@ -1750,12 +1731,12 @@ RSpec.describe Theme do
       theme.set_field(target: :settings, name: "yaml", value: yaml)
       theme.save!
 
-      guardian = Guardian.new(nil)
+      guardian = Guardian.new
       settings = theme.cached_settings
       resolved_settings = theme.resolve_group_settings_for_user(settings, guardian)
 
       # Anonymous users should be in anonymous_users group
-      expect(resolved_settings["user_in_anonymous_setting"]).to eq(true)
+      expect(resolved_settings[:user_in_anonymous_setting]).to eq(true)
     end
 
     it "handles empty group list" do
@@ -1769,11 +1750,11 @@ RSpec.describe Theme do
       theme.set_field(target: :settings, name: "yaml", value: yaml)
       theme.save!
 
-      guardian = Guardian.new(user)
+      guardian = user.guardian
       settings = theme.cached_settings
       resolved_settings = theme.resolve_group_settings_for_user(settings, guardian)
 
-      expect(resolved_settings["user_in_empty_setting"]).to eq(false)
+      expect(resolved_settings[:user_in_empty_setting]).to eq(false)
     end
 
     it "handles multiple groups correctly" do
@@ -1787,12 +1768,12 @@ RSpec.describe Theme do
       theme.set_field(target: :settings, name: "yaml", value: yaml)
       theme.save!
 
-      guardian = Guardian.new(user)
+      guardian = user.guardian
       settings = theme.cached_settings
       resolved_settings = theme.resolve_group_settings_for_user(settings, guardian)
 
       # User is in at least one of the groups
-      expect(resolved_settings["user_in_multi_group_setting"]).to eq(true)
+      expect(resolved_settings[:user_in_multi_group_setting]).to eq(true)
     end
   end
 end

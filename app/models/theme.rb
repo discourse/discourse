@@ -855,8 +855,8 @@ class Theme < ActiveRecord::Base
       group_ids = settings_hash[name].to_s.split("|").map(&:to_i).reject(&:zero?)
 
       # Replace group list with user_in_ prefixed boolean (prevents leaking group IDs)
-      resolved_hash.delete(name.to_s)
-      resolved_hash["user_in_#{name}"] = guardian.in_any_groups?(group_ids)
+      resolved_hash.delete(name)
+      resolved_hash[:"user_in_#{name}"] = guardian.in_any_groups?(group_ids)
     end
 
     resolved_hash
