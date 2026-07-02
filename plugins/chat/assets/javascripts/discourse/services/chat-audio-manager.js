@@ -1,5 +1,7 @@
+import { cancel } from "@ember/runloop";
 import Service from "@ember/service";
 import { isTesting } from "discourse/lib/environment";
+import discourseLater from "discourse/lib/later";
 
 export const CHAT_SOUNDS = {
   classic: {},
@@ -12,6 +14,7 @@ export const CHAT_SOUNDS = {
 export const DEFAULT_SOUND_NAME = "classic";
 
 const THROTTLE_TIME = 3000; // 3 seconds
+const RESUME_TIMEOUT = 500;
 const MIN_GAIN = 0.001;
 
 let sharedAudioContext;
@@ -32,7 +35,24 @@ async function getAudioContext() {
   }
 
   if (sharedAudioContext.state === "suspended") {
-    await sharedAudioContext.resume();
+    // browsers keep resume() pending until the user interacts with the page;
+    // racing a timeout keeps sounds from queuing up and bursting all at once
+    // on the next interaction
+    let timer;
+    try {
+      await Promise.race([
+        sharedAudioContext.resume().catch(() => {}),
+        new Promise((resolve) => {
+          timer = discourseLater(resolve, RESUME_TIMEOUT);
+        }),
+      ]);
+    } finally {
+      cancel(timer);
+    }
+
+    if (sharedAudioContext.state === "suspended") {
+      throw new Error("audio context is suspended");
+    }
   }
 
   return sharedAudioContext;
@@ -180,19 +200,36 @@ const SOUND_SEQUENCES = {
 export default class ChatAudioManager extends Service {
   canPlay = true;
 
-  async play(name, { throttle = true, type = "incoming" } = {}) {
-    if (!throttle || this.canPlay) {
-      await this.#tryPlay(name, type);
+  #throttleTimer;
 
-      if (!throttle) {
-        return;
+  // resolves false only when audio could not be produced in this tab (e.g.
+  // suspended context); a rate-limited drop is intentional and still counts
+  // as handled
+  async play(name, { throttle = true, type = "incoming" } = {}) {
+    if (throttle) {
+      if (!this.canPlay) {
+        return true;
       }
 
+      // consume the throttle before awaiting so concurrent calls can't all
+      // slip past the check
       this.canPlay = false;
-      setTimeout(() => {
+      this.#throttleTimer = discourseLater(() => {
         this.canPlay = true;
       }, THROTTLE_TIME);
     }
+
+    const played = await this.#tryPlay(name, type);
+
+    if (throttle && !played) {
+      // a failed attempt played nothing, so it shouldn't burn the window —
+      // otherwise alerts arriving in the next 3s report handled and keep
+      // their claims without any tab making a sound
+      cancel(this.#throttleTimer);
+      this.canPlay = true;
+    }
+
+    return played;
   }
 
   async #tryPlay(name, type) {
@@ -200,13 +237,15 @@ export default class ChatAudioManager extends Service {
       const ctx = await getAudioContext();
       const sequence = SOUND_SEQUENCES[normalizeChatSoundName(name)];
       (sequence[type] || sequence.incoming)(ctx, ctx.currentTime);
+      return true;
     } catch {
       if (!isTesting()) {
         // eslint-disable-next-line no-console
         console.info(
-          "[chat] User needs to interact with DOM before we can play notification sounds."
+          "[chat] User needs to interact with page before we can play notification sounds."
         );
       }
+      return false;
     }
   }
 }
