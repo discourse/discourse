@@ -26,17 +26,12 @@
  */
 
 :root {
-  /* Brandable editor accent. Selection, handles, and drop affordances all key
-     off these, so one override re-themes the editor. The `-rgb` triplets exist
-     to feed alpha tints, mirroring core's `--primary-rgb`. */
   --wf-accent: #d97706;
   --wf-accent-rgb: 217, 119, 6;
   --wf-accent-strong: #b45309;
   --wf-outlet-accent: #f59e0b;
   --wf-outlet-accent-rgb: 245, 158, 11;
   --wf-on-accent: #fff;
-
-  /* Semantic aliases for readability at the use sites. */
   --wireframe-block-color: var(--wf-accent);
   --wireframe-block-hover-color: var(--wf-accent-strong);
   --wireframe-block-outlet-color: var(--wf-outlet-accent);
@@ -84,13 +79,7 @@ body.wireframe-active {
     transition:
       outline-color 80ms ease-out,
       background-color 80ms ease-out;
-
-    /* When scrolling a block to the top, clear the fixed toolbar and the
-       handle badge that sits above the block's top edge. */
     scroll-margin-top: calc(var(--wf-toolbar-height) + 2rem);
-
-    /* Empty layouts collapse to zero height, so give the chrome a baseline
-       height for the empty-state placeholder to anchor to. */
 
     &.--empty-container {
       min-height: 4rem;
@@ -128,24 +117,14 @@ body.wireframe-active {
       outline-color: var(--wireframe-block-color);
     }
 
-    /* Brief attention flash when a block is selected other than by a direct
-       click (from the outline, or insert auto-select). */
-
     &.--just-selected {
       animation: wireframe-block-flash 1.1s ease-out;
     }
-
-    /* Inside a grid cell, zero the margin and padding so the outline lands
-       exactly on the cell's edges. */
 
     &.--in-grid-slot {
       margin: 0;
       padding: 0;
     }
-
-    /* Free-grid slot overlapping a sibling. Overlap is allowed (sometimes
-       intentional) but looks like a bug, so it's flagged loudly and always-on,
-       regardless of hover / selection — a warning, not an interaction state. */
 
     &.--overlapping {
       outline: var(--wireframe-container-border-width) solid var(--danger);
@@ -239,10 +218,6 @@ body.wireframe-active {
     .d-block-carousel__viewport {
       --wf-carousel-pad: 2rem;
       padding-top: var(--wf-carousel-pad);
-
-      /* A faint diagonal hatch marks the reserved band as editor scaffolding.
-         Painted on the scroll container's box (not its content) so it stays put
-         as slides scroll. */
       background-image: repeating-linear-gradient(
         -45deg,
         transparent,
@@ -255,9 +230,6 @@ body.wireframe-active {
       background-position: top left;
     }
   }
-
-  /* Overlap badge — always fully visible (no opacity gating like the handle),
-     so the warning is the loudest element on the block. */
 
   .wireframe-block-chrome__overlap-badge {
     position: absolute;
@@ -284,9 +256,6 @@ body.wireframe-active {
       filter: drop-shadow(var(--wireframe-shadow));
     }
 
-    /* Informational variant — a content issue (e.g. unresolved image URL),
-       not a layout error, so it's styled distinctly from the error badges. */
-
     &--info {
       background: var(--highlight);
       color: var(--primary);
@@ -298,10 +267,6 @@ body.wireframe-active {
       }
     }
   }
-
-  /* Image arg present but the URL didn't resolve (no intrinsic dims). Keep a
-     minimum height so the broken image isn't a sliver and the badge stays
-     reachable. */
 
   .wireframe-block-chrome.--unresolved-image {
     min-height: 6rem;
@@ -328,10 +293,6 @@ body.wireframe-active {
       box-shadow 60ms ease-out;
     position: relative;
 
-    /* Drop indicator — active while the cursor hovers the zone during a drag.
-       Outlined, not just tinted, so the landing position stays legible even on
-       light backgrounds. */
-
     &.--active {
       background: var(--tertiary-low);
       box-shadow: 0 0 0 1px var(--tertiary);
@@ -349,11 +310,6 @@ body.wireframe-active {
         border-color: var(--tertiary);
         background: var(--tertiary-low);
       }
-
-      /* Empty containers swap the invisible "drop inside" hint for a
-         persistent "Drag a block here" affordance so authors can see (and
-         aim at) the otherwise-zero-height target. Reads as an empty-state
-         hint rather than a hover-only indicator. */
 
       &.--empty {
         height: auto;
@@ -380,10 +336,6 @@ body.wireframe-active {
       color: var(--primary-medium);
     }
   }
-
-  /* Row-mode layouts lay children out horizontally, so the before / after
-     drop zones must become vertical strips — otherwise a drop would land above
-     / below a sibling instead of left / right of it. */
 
   .wireframe-block-chrome-wrapper.--axis-horizontal {
     display: flex;
@@ -430,10 +382,6 @@ body.wireframe-active {
     }
   }
 
-  /* Grid-cell content slot. Chrome sets `display: grid` + `place-items` inline
-     (per the block's align / justify); this rule only makes the slot fill its
-     area. */
-
   .wireframe-block-chrome__content {
     width: 100%;
     min-width: 0;
@@ -450,9 +398,6 @@ body.wireframe-active {
     justify-content: center;
     z-index: 3;
     color: var(--primary-medium);
-
-    /* Fade the drag-over tint in/out so handing the overlay off between
-       image args (e.g. body → avatar) reads as a smooth swap, not a flash. */
     transition:
       background-color 150ms ease,
       outline-color 150ms ease;
@@ -470,10 +415,6 @@ body.wireframe-active {
       }
     }
 
-    /* Drop-to-replace overlay over a filled image marker — transparent at rest
-       so the existing picture stays visible; the drag-over state tints rather
-       than washing it out so the image still reads underneath. */
-
     &--filled {
       background: transparent;
     }
@@ -487,9 +428,6 @@ body.wireframe-active {
     &--passive {
       pointer-events: none;
     }
-
-    /* Compact affordance for small in-place slots (e.g. an avatar): the icon
-       + label don't fit, so collapse to an icon-only badge inside the slot. */
 
     &--compact {
       .wireframe-image-arg-overlay__content {
@@ -517,10 +455,6 @@ body.wireframe-active {
       backdrop-filter: blur(2px);
     }
 
-    /* A failed upload keeps the empty card in place but recolours it to a
-       danger tint so the failure isn't silent; the card stays clickable to
-       retry (it's still `--empty`). */
-
     &--error {
       cursor: pointer;
       color: var(--danger);
@@ -545,11 +479,6 @@ body.wireframe-active {
     &__label {
       font-size: var(--font-down-1);
     }
-
-    /* Upload progress — same visual pattern as the FormKit
-       UppyImageUploader (`file-uploader__progress-status`). Sits
-       inside the overlay so it tracks the marker rect (or the
-       chrome rect for whole-block drop zones). */
 
     &__progress {
       display: flex;
@@ -614,27 +543,8 @@ body.wireframe-active {
     }
   }
 
-  /* Unified floating bar above each block chrome. Two regions:
-       - `__handle` (always rendered): grip + display name, painted
-         with the block-color badge styling — preserves the block's
-         visual identity at all times the bar is shown. Also the
-         drag source.
-       - action buttons (`__btn`, only when the chrome is selected):
-         move up / down, duplicate, optional expand toggle, inline
-         format, delete. Buttons override DButton's default
-         `btn-icon` dimensions so the bar stays at the compact
-         badge height instead of inflating.
-
-     Anchored as a tab merging into the chrome's top-left border via
-     `bottom: 100%` + `left: ~-border-width` — same trick the outlet
-     badge uses. Default `opacity: 0`; reveals on hover (innermost
-     chrome only) or selection. Keeping the bar in the DOM at idle
-     (rather than `display: none`) means the drag-source modifier's
-     registration stays stable across hover transitions.
-
-     Outlet badges (`.wireframe-outlet-boundary__badge`) keep their
-     always-visible treatment so the outlet cascade stays readable at
-     every nesting level. */
+  /* Keep the bar in the DOM at idle (`opacity: 0`, not `display: none`) so the
+     drag-source modifier's registration stays stable across hover transitions. */
 
   .wireframe-block-toolbar {
     position: absolute;
@@ -692,11 +602,6 @@ body.wireframe-active {
       }
     }
 
-    /* Ordinal chip on the handle: a small pill reading the block's position in
-       an ordinal-naming container ("Tab 2" / "Slide 2"), beside the block name.
-       Translucent dark on the handle's colored background, mirroring the
-       outlet status chip. */
-
     &__ordinal {
       padding: 0 6px;
       border-radius: 999px;
@@ -706,11 +611,6 @@ body.wireframe-active {
       text-shadow: none;
       font-variant-numeric: tabular-nums;
     }
-
-    /* Overrides DButton's default `btn-icon` dimensions so the bar stays at
-       compact badge height. `btn-flat` keeps the resting background
-       transparent. Active state mirrors the composer toolbar's `--active`
-       treatment (`common/d-editor.scss`) via the shared `--d-selected` token. */
 
     &__btn {
       color: var(--primary);
@@ -741,11 +641,6 @@ body.wireframe-active {
         }
       }
 
-      /* Danger modifier — stays flat at rest, tipping into the danger
-         palette only on hover/focus so the destructive action signals
-         intent without dominating the row. Same approach as
-         `.btn-flat.close` in `common/components/buttons.scss`. */
-
       &--danger {
         &:hover:not([disabled]),
         &:focus-visible:not([disabled]) {
@@ -758,10 +653,6 @@ body.wireframe-active {
         }
       }
     }
-
-    /* Duplicate ×N split-button. Both halves render as compact flat buttons
-       matching the rest of the bar — the combo's default chrome is sized for
-       primary actions and looks oversized in this icon row. */
 
     &__duplicate {
       display: inline-flex;
@@ -807,10 +698,6 @@ body.wireframe-active {
       flex: none;
       width: max-content;
     }
-
-    /* The hamburger that holds the folded actions. Off-tier (hidden but still
-       measurable) at the full tier; the data-attr rules below put it in flow
-       once the actions fold away. */
 
     &__more {
       position: absolute;
@@ -865,10 +752,6 @@ body.wireframe-active {
     }
   }
 
-  /* Narrower: even handle + hamburger doesn't fit, so drop the name (it stays
-     available as the handle's `title` tooltip) and the ordinal chip — only the
-     grip (still the drag source) and the hamburger remain. */
-
   .wireframe-block-chrome[data-wf-toolbar-fit="narrower"] {
     .wireframe-block-toolbar__handle
       > span:not(
@@ -880,24 +763,12 @@ body.wireframe-active {
     }
   }
 
-  /* Reveal the bar on hover (innermost chrome only — matches the
-     outline / tint gating so a hovered nested block doesn't also
-     reveal every ancestor's bar) or when the block is selected. */
-
   .wireframe-block-chrome:hover:not(:has(.wireframe-block-chrome:hover))
     > .wireframe-block-toolbar,
   .wireframe-block-chrome.--selected > .wireframe-block-toolbar {
     opacity: 1;
     pointer-events: auto;
   }
-
-  /* Ghost block softening.
-     Dev-tools renders condition-failed / unknown blocks with a bold
-     red treatment that reads as an error to authors. In the editor's
-     context, ghosts are an expected outcome of conditions / sim mode
-     / mid-edit invalid state — they should read as muted placeholders
-     instead. We override only while the editor is active; dev-tools
-     keeps its harsh red when used standalone. */
 
   .block-debug-ghost {
     opacity: 0.6;
@@ -915,28 +786,15 @@ body.wireframe-active {
     display: contents;
   }
 
-  /* The implicit root layout IS the outlet: its chrome carries the outlet
-     frame (always-on dashed amber outline + amber tint) and the
-     always-visible badge. */
-
   .wireframe-block-chrome.--outlet-root {
     outline: var(--wireframe-container-border-width) dashed
       var(--wireframe-block-outlet-color);
     background: rgb(var(--wf-outlet-accent-rgb), var(--wireframe-bg-opacity));
 
-    /* Keep the outlet amber in every state — both hover and selection are
-       signalled by the line going dashed → solid, never a colour change, so
-       the outlet outline reads the same gold everywhere. Hover is scoped to
-       the innermost (the `:has()` guard) so hovering a child block reacts on
-       the child, not the outlet frame — matching the base hover convention. */
-
     &:hover:not(:has(.wireframe-block-chrome:hover)),
     &.--selected {
       outline-style: solid;
     }
-
-    /* The badge (toolbar handle) stays visible always so the outlet identity
-       reads without hovering. */
 
     > .wireframe-block-toolbar {
       opacity: 1;
@@ -944,17 +802,12 @@ body.wireframe-active {
     }
 
     .wireframe-block-toolbar__handle {
-      /* The outlet root isn't draggable, so no grab cursor. */
       background: var(--wireframe-block-outlet-color);
       cursor: default;
 
       &:hover {
         background: var(--wireframe-block-outlet-hover-color);
       }
-
-      /* Inner status chip on the amber handle, showing the outlet's state.
-         Editing and Published get distinct hues so the state reads at a
-         glance. */
 
       .wireframe-block-toolbar__status {
         padding: 0 6px;
@@ -977,9 +830,6 @@ body.wireframe-active {
 }
 
 .wireframe-shell {
-  /* Design tokens — scoped to the editor shell so they don't leak into
-     the host page. New surfaces should reach for these rather than
-     ad-hoc paddings / radii. */
   --wf-radius: var(--d-border-radius);
   --wf-radius-lg: calc(var(--d-border-radius) * 1.5);
   --wf-gap-tight: var(--space-1);
@@ -998,10 +848,6 @@ body.wireframe-active {
   grid-template-columns: var(--wf-activity-bar) var(--wf-left-panel) 1fr var(
       --wf-right-rail
     );
-
-  /* The error banner row collapses to zero height when no error is present:
-     its only content, `.wireframe-save-error`, isn't rendered when
-     saveErrorMessage is null. */
   grid-template-rows: var(--wf-toolbar-height) auto 1fr;
   pointer-events: none;
 
@@ -1029,9 +875,6 @@ body.wireframe-active {
     flex: 0 0 auto;
   }
 
-  /* Center zone holds passive status; it takes the slack and truncates rather
-     than pushing the flanking zones off-screen. */
-
   .toolbar-center {
     flex: 1 1 auto;
     min-width: 0;
@@ -1044,14 +887,10 @@ body.wireframe-active {
     margin-inline-end: 0.5rem;
   }
 
-  /* Brand mark sits a touch dimmer than its label so the controls lead. */
   .toolbar-left > .d-icon {
     color: var(--primary-high);
     margin-inline-end: 0.4rem;
   }
-
-  /* One flat treatment for every secondary control (history, view, exit) so the
-     bar reads as a single group with Save as the lone primary. */
 
   .btn-flat {
     color: var(--primary-medium);
@@ -1062,10 +901,6 @@ body.wireframe-active {
     }
   }
 }
-
-/* Passive center status naming where edits will publish; warns when the target
-   can't be published to directly. Not a control — the publish flow is the Save
-   button's review drawer. */
 
 .wireframe-target-status {
   display: inline-flex;
@@ -1094,16 +929,9 @@ body.wireframe-active {
   }
 }
 
-/* The topbar's View toggle lights up while a simulation is active so the
-   drawer's folded state stays discoverable. */
-
 .wireframe-view-toggle.--active {
   color: rgb(var(--wf-accent-rgb));
 }
-
-/* View drawer: a right-docked panel (mirrors the review drawer) holding the dim
-   toggle + simulation controls. Fixed positioning avoids floating-overlay
-   collision padding. */
 
 .wireframe-view-drawer {
   position: fixed;
@@ -1165,10 +993,6 @@ body.wireframe-active {
   }
 }
 
-/* Two-tier dirty indicator on the Save button: a warning dot for unsaved edits
-   (the losable state) and a quieter dot for changes saved to a draft but not yet
-   published. The `title` carries the precise meaning for hover / assistive tech. */
-
 .wireframe-btn-save {
   position: relative;
 
@@ -1191,11 +1015,6 @@ body.wireframe-active {
     background: var(--secondary);
   }
 }
-
-/* The Issues panel body: validation problems grouped by outlet, each row a
-   clickable jump to the offending block. A separate class tree from the outline
-   (no shared selectors), but it borrows the outline's selected/error tones so
-   the two panels read as one design language. */
 
 .wireframe-issues {
   display: flex;
@@ -1227,9 +1046,6 @@ body.wireframe-active {
     &-block {
       font-weight: 600;
     }
-
-    /* Interactive rows (a resolvable block) get pointer + hover/selected cues;
-       the static variant (a block with no addressable key) stays inert. */
 
     &:not(.--static) {
       cursor: pointer;
@@ -1270,12 +1086,6 @@ body.wireframe-active {
   position: relative;
 }
 
-/* Persistent left activity bar: a vertical strip of icon-only toggle buttons
-   that pick the active left panel. It stays visible when the wide panel is
-   collapsed (it IS the collapsed state), so it owns the separator between the
-   left chrome and the canvas. Entries are named via `aria-label` + a hover card
-   (`.wireframe-activity-tooltip`); the rail is too narrow for legible text. */
-
 .wireframe-activity-bar {
   grid-column: 1;
   grid-row: 3;
@@ -1287,9 +1097,6 @@ body.wireframe-active {
   border-right: 1px solid var(--primary-low);
   overflow: hidden;
 
-  /* Wraps each entry button so the count badge can position against it. The
-     entry button fills the wrap via the parent column's default stretch. */
-
   &__entry-wrap {
     position: relative;
     display: flex;
@@ -1298,10 +1105,6 @@ body.wireframe-active {
       flex: 1;
     }
   }
-
-  /* Count pip overlaid on the top-inline-end corner of an entry (the Issues
-     entry when problems exist). Purely visual — the entry's aria-label carries
-     the count for assistive tech. */
 
   &__badge {
     position: absolute;
@@ -1344,9 +1147,6 @@ body.wireframe-active {
       outline-offset: -2px;
     }
 
-    /* Open panel — mirrors the active-tab accent cue used elsewhere in the
-       chrome. */
-
     &.--active {
       color: var(--primary);
       background: var(--primary-very-low);
@@ -1357,9 +1157,6 @@ body.wireframe-active {
       font-size: var(--font-up-3);
     }
   }
-
-  /* Collapse / expand toggle pinned to the bottom of the rail — a two-way peer
-     of the right panel's chevron. */
 
   &__collapse {
     margin-top: auto;
@@ -1386,9 +1183,6 @@ body.wireframe-active {
   }
 }
 
-/* Hover card for an activity-bar entry — the panel name plus a one-line hint,
-   shown via FloatKit since the icon-only rail carries no visible text. */
-
 .wireframe-activity-tooltip {
   display: flex;
   flex-direction: column;
@@ -1404,9 +1198,6 @@ body.wireframe-active {
     color: var(--primary-medium);
   }
 }
-
-/* Sticky breadcrumb pinned to the bottom of the canvas, showing the
-   outlet → … → selected-block ancestry. Hidden when nothing is selected. */
 
 .wireframe-breadcrumb {
   position: fixed;
@@ -1470,14 +1261,12 @@ body.wireframe-active {
   cursor: col-resize;
 
   &--left {
-    /* The canvas-facing edge of the left panel column. */
     grid-column: 2;
     justify-self: end;
     margin-right: -4px;
   }
 
   &--right {
-    /* The canvas-facing edge of the right rail column. */
     grid-column: 4;
     justify-self: start;
     margin-left: -4px;
@@ -1546,9 +1335,6 @@ body.wireframe-active {
     border-left: 1px solid var(--primary-low);
   }
 
-  /* Collapsed-rail variant: the panel body is removed by the template;
-     the header keeps just the collapse-toggle button. */
-
   &.--collapsed {
     overflow: hidden;
 
@@ -1612,9 +1398,6 @@ body.wireframe-active {
     margin: 0;
   }
 
-  /* Visual-only callout for a blocked palette insert; screen readers get the
-     same text via the core a11y announce service. */
-
   &__hint {
     padding: 0.35rem 0.5rem;
     border-radius: var(--d-border-radius);
@@ -1630,9 +1413,6 @@ body.wireframe-active {
 
   &__list {
     display: grid;
-
-    /* Fixed three columns, sized so the widest single-word block names fit
-       without truncating; multi-word names wrap at the space instead. */
     grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
   }
@@ -1698,9 +1478,6 @@ body.wireframe-active {
   }
 
   &__label {
-    /* Wrap multi-word names at the space before ellipsizing. `break-word`
-       (not `anywhere`) keeps single words whole — they only break if a lone
-       word can't fit, which the wider columns avoid. */
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
@@ -1734,9 +1511,6 @@ body.wireframe-active {
     color: var(--primary-medium);
   }
 }
-
-/* Default thumbnail placeholder: a themed frame with the block's icon centered.
-   Rendered by BlockThumbnail whenever a block declares no thumbnail. */
 
 .wireframe-block-thumbnail-default {
   position: relative;
@@ -1803,10 +1577,6 @@ body.wireframe-active {
 .wireframe-outline {
   font-size: var(--font-down-1);
 
-  /* Small metadata chip shared across the outline (layout mode, child ordinal,
-     hidden-child count). One rule so the variants can't drift; each element
-     layers on its own specifics (casing, tabular figures, alignment). */
-
   .outline-chip {
     padding: 0.1rem 0.35rem;
     border-radius: 3px;
@@ -1863,9 +1633,6 @@ body.wireframe-active {
   .outline-outlet {
     margin-bottom: 0.75rem;
 
-    /* Header row: a chevron (collapse) and a label (select the outlet, i.e.
-       its implicit root layout). Two distinct controls sharing one row. */
-
     .outline-outlet__header {
       display: flex;
       align-items: center;
@@ -1879,16 +1646,10 @@ body.wireframe-active {
         background: var(--primary-very-low);
       }
 
-      /* Selection — mirrors the block rows' selected treatment so the
-         outlet header reads as active when its root layout is selected. */
-
       &.--selected {
         background: var(--tertiary-low);
         box-shadow: inset 3px 0 0 var(--tertiary);
       }
-
-      /* Roving-focus keyboard ring — the header is a treeitem in the same
-         roving list as the block rows, so it needs the same focus indicator. */
 
       &:focus-visible {
         outline: 2px solid var(--tertiary);
@@ -1897,7 +1658,6 @@ body.wireframe-active {
     }
 
     .outline-outlet__toggle {
-      /* Reset native button chrome — a bare chevron toggle. */
       background: transparent;
       border: none;
       padding: 0;
@@ -1912,10 +1672,6 @@ body.wireframe-active {
       gap: 0.25rem;
       font-weight: 600;
       color: var(--wireframe-block-outlet-color);
-
-      /* Reset the native button chrome — the label is a button so the
-         outlet can be selected via the heading, but it needs to read
-         visually as a heading row, not a UI button. */
       background: transparent;
       border: none;
       padding: 0;
@@ -1929,7 +1685,6 @@ body.wireframe-active {
       }
     }
 
-    /* Compact mode chip next to the outlet name (stack / row / grid). */
     .outline-outlet__mode {
       margin-inline-start: auto;
       text-transform: lowercase;
@@ -1949,16 +1704,10 @@ body.wireframe-active {
       border-radius: 3px;
       transition: padding-right 100ms;
 
-      /* Hover is a subtle background tint, matching core's tree lists
-         (schema-setting-editor), rather than a text-color shift. */
-
       &:hover {
         background: var(--primary-very-low);
       }
 
-      // Roving-focus keyboard ring. The modifier moves real DOM focus between
-      // treeitems, so the focused row needs a visible indicator distinct from
-      // hover / selection.
       &:focus-visible {
         outline: 2px solid var(--tertiary);
         outline-offset: -2px;
@@ -1975,19 +1724,9 @@ body.wireframe-active {
         font-weight: 600;
       }
 
-      /* Error tone — text-only `--danger` so the row reads as an alert
-         without competing with the canvas ghost's tinted background.
-         The status icon picks up the same color via the cascade rule
-         on `.outline-block.--error .outline-block__status`. */
-
       &.--error {
         color: var(--danger);
       }
-
-      /* Muted tone mirrors the canvas ghost's neutral faded silhouette
-         (`condition-failed` entries that aren't authoring mistakes but
-         won't render on the live page). Stays out of the way of
-         hover / selection. */
 
       &.--muted:not(:hover, .--selected) {
         color: var(--primary-medium);
@@ -2000,10 +1739,6 @@ body.wireframe-active {
         color: var(--primary-medium);
       }
     }
-
-    /* Chevron toggle on container rows — clicking it expands /
-       collapses the branch. Sized to match `.outline-block__leaf` so
-       container and leaf rows line up vertically. */
 
     .outline-block__toggle {
       background: transparent;
@@ -2020,19 +1755,12 @@ body.wireframe-active {
       }
     }
 
-    /* Leaf icon — placeholder slot that matches the chevron's width,
-       so container and leaf rows have the same icon-to-text gap. */
-
     .outline-block__leaf {
       display: inline-flex;
       align-items: center;
       width: 1rem;
       color: var(--primary-medium);
     }
-
-    /* Block-type icon shown before the name on every row, so the tree is
-       scannable. Neutral by default; echoes the row's `.--error` state like
-       the status badge does (muted rows already tint it via inherited color). */
 
     .outline-block__type {
       display: inline-flex;
@@ -2062,31 +1790,17 @@ body.wireframe-active {
       font-size: var(--font-down-2);
     }
 
-    /* Compact mode chip on nested layout rows (stack / row / grid) —
-       matches the chip the outlet header shows for its root layout. */
-
     .outline-block__mode {
       text-transform: lowercase;
     }
-
-    /* Per-child ordinal chip on a noun-framed container's children
-       (a carousel slide, a tabs panel), so each is identifiable in the tree.
-       Mirrors the mode chip, but keeps its label casing ("Slide 2" / "Tab 2"). */
 
     .outline-block__ordinal {
       font-variant-numeric: tabular-nums;
     }
 
-    /* Hidden-child count shown on a collapsed container row, so a compacted
-       large container still tells you how much it holds. */
-
     .outline-block__child-count {
       font-variant-numeric: tabular-nums;
     }
-
-    /* Status badge — gates / failure indicator at the end of each row.
-       Color mirrors the row's `.--error` state so failing blocks read
-       as a single coherent warning rather than a row + lone icon. */
 
     .outline-block__status {
       display: inline-flex;
@@ -2099,10 +1813,6 @@ body.wireframe-active {
     .outline-block.--error .outline-block__status {
       color: var(--danger);
     }
-
-    /* Leading drag grip — sits in the row's indent gutter and is revealed on
-       hover / keyboard focus. Purely an affordance: the whole row is the drag
-       source, so the grip only signals draggability. */
 
     .outline-block__grip {
       position: absolute;
@@ -2117,9 +1827,6 @@ body.wireframe-active {
       transition: opacity 100ms;
       font-size: 0.85em;
     }
-
-    /* Trailing kebab overflow menu (Duplicate / Delete), absolutely positioned
-       in the reserved right gutter. */
 
     .outline-block__actions {
       position: absolute;
@@ -2136,8 +1843,6 @@ body.wireframe-active {
     .outline-block:focus-visible,
     .outline-block:focus-within,
     .outline-block.--selected {
-      // Reserve the kebab gutter only while it's shown, so a resting row keeps
-      // its full width for the name and trailing chips.
       padding-right: 1.75rem;
 
       .outline-block__grip,
@@ -2153,11 +1858,6 @@ body.wireframe-active {
   }
 }
 
-/* Args tab gets a warning glyph when any of its fields fail validation,
-   so users on a different tab still notice. FormKit's `<FKErrorsSummary>`
-   inside the form is the canonical in-tab surface; the tab glyph covers
-   the cross-tab case. */
-
 .wireframe-inspector__tab.--has-errors {
   color: var(--danger);
 
@@ -2166,10 +1866,9 @@ body.wireframe-active {
   }
 }
 
-/* A small preview of the selected block sits beside its name in the header.
-   The fixed-width box constrains the thumbnail (an inline SVG only honors a
-   percentage width against a sized parent, not an absolute width of its own),
-   and the explicit aspect ratio keeps the SVG from collapsing to zero height. */
+/* The fixed-width box constrains the thumbnail: an inline SVG only honors a
+   percentage width against a sized parent, and the explicit aspect ratio keeps
+   it from collapsing to zero height. */
 
 .wireframe-inspector__preview {
   flex: none;
@@ -2191,9 +1890,6 @@ body.wireframe-active {
   border-bottom: 1px solid var(--primary-low);
   margin-bottom: 0.5rem;
 }
-
-/* Bulk-action panel shown in place of the per-block form when more than one
-   block is selected. */
 
 .wireframe-inspector__multi {
   display: flex;
@@ -2225,10 +1921,6 @@ body.wireframe-active {
 }
 
 .wireframe-inspector__unregistered-notice {
-  // The FormKit alert supplies the background, colour, radius, and padding;
-  // these rules only lay the icon out cleanly beside wrapping text in the
-  // narrow inspector column and add the spacing the panel rhythm expects
-  // (the base `.form-kit__alert` resets its own margin to zero).
   display: flex;
   align-items: flex-start;
   gap: 0.5em;
@@ -2248,8 +1940,6 @@ body.wireframe-active {
     gap: 0.15em;
   }
 
-  // Keep the button sized to its label rather than stretching the full alert
-  // width.
   .wireframe-inspector__unregistered-notice-action {
     align-self: flex-start;
     margin-top: 0.5em;
@@ -2261,9 +1951,6 @@ body.wireframe-active {
     }
   }
 }
-
-/* Per-outlet section in the inspector: state badges + verbs + the Git escape
-   hatches (create-component / export / duplicate). */
 
 .wireframe-inspector__outlet {
   display: flex;
@@ -2340,12 +2027,6 @@ body.wireframe-active {
   min-width: 0;
 }
 
-/* Inspector form polish: a tighter section gap than FormKit's default (which
-   reads as disconnected sections in a narrow panel), explicit max-width on
-   fields/inputs so long values (URLs, filenames, multi-id strings) don't
-   overflow horizontally, and a small gap on the container-args block so its
-   sub-forms visually breathe. */
-
 .wireframe-inspector-form {
   display: flex;
   flex-direction: column;
@@ -2367,10 +2048,6 @@ body.wireframe-active {
     gap: 0.75rem;
   }
 
-  /* Section-header divider sits above the title (overriding FormKit's default
-     underline) so it reads as introducing the content below, not underlining
-     the title. */
-
   .form-kit__section-header {
     margin-top: 0.5rem;
     padding-top: 0.75rem;
@@ -2379,9 +2056,6 @@ body.wireframe-active {
     border-bottom: 0;
   }
 
-  /* First section in the inspector form: no top rule, no top margin —
-     it's already the first thing under the metadata block / banner. */
-
   > .form-kit__section:first-child .form-kit__section-header,
   > * + .form-kit__section:first-of-type .form-kit__section-header {
     margin-top: 0;
@@ -2389,21 +2063,9 @@ body.wireframe-active {
     border-top: 0;
   }
 
-  /* Hide FormKit's "(optional)" marker. Inside the inspector almost
-     every arg is optional — the marker becomes noise on every label.
-     Required fields still surface via the FormKit indicator (driven
-     by `@validation="required"`). */
-
   .form-kit__container-optional {
     display: none;
   }
-
-  /* Segmented radio-group control. Renders short enums (alignment,
-     heading level, layout mode, etc.) as a single bordered row of
-     toggle buttons instead of FormKit's default vertical stack of
-     "○ label" rows. Options with an `ui.optionIcons` entry render the
-     matching icon in place of the value text; everything else falls
-     back to the enum value as a button label. */
 
   .form-kit__control-radio-group {
     display: inline-flex;
@@ -2416,9 +2078,6 @@ body.wireframe-active {
     margin: 0;
     overflow: hidden;
     max-width: 100%;
-
-    /* Each radio entry becomes a button-styled cell. Stack horizontally,
-       lose the per-radio padding/margin FormKit applies by default. */
 
     .form-kit__field-radio {
       flex: 1 0 auto;
@@ -2474,9 +2133,6 @@ body.wireframe-active {
       pointer-events: none;
     }
 
-    /* When an option renders an icon, hide the textual value next to
-       it (the icon plus its title attribute carry the meaning). */
-
     .form-kit__control-radio-label.--icon-only .form-kit__control-radio-title {
       display: none;
     }
@@ -2514,12 +2170,6 @@ body.wireframe-active {
     max-width: 100%;
     box-sizing: border-box;
   }
-
-  /* Collapsible "Advanced" group rendered with native <details> so
-     state is browser-managed and the disclosure is accessible by
-     default. Hide the native marker, render our own chevron via
-     ::before so the visual matches the disclosure pattern in
-     `inspector-layout-form.gjs` (Advanced Templates). */
 
   &__advanced {
     margin-top: 0.5rem;
@@ -2569,11 +2219,6 @@ body.wireframe-active {
   margin-top: 1rem;
 }
 
-/* Single source of truth for the inspector's control-label treatment: a
-   compact uppercase legend, applied uniformly across every inspector form and
-   the two bespoke surfaces that render their own label markup, so nothing
-   drifts. */
-
 .wireframe-layout-form__legend,
 .wireframe-condition-editor__legend,
 .wireframe-inspector-form .form-kit__container-title,
@@ -2584,9 +2229,6 @@ body.wireframe-active {
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
-
-/* FormKit renders the titles as an <h2> / labelled element with their own
-   margins; reset them so they sit like the bespoke legend spans. */
 
 .wireframe-inspector-form {
   .form-kit__container-title,
@@ -2699,11 +2341,6 @@ body.wireframe-active {
   }
 }
 
-/* When a grid layout is selected, tone down the inner block chromes so the
-   grid overlay's tile / `+` handles are the dominant authoring surface.
-   Without this, every nested block shows its own selection-style chrome,
-   adding visual noise. */
-
 body.wireframe-active
   .wireframe-block-chrome.--selected.--container
   .wireframe-transparent-slot
@@ -2725,11 +2362,6 @@ body.wireframe-active
 .wireframe-grid-edit-marker {
   display: none;
 }
-
-/* Empty cell placeholder — sits at an unoccupied (column, row) in the
-   layout's grid via inline `grid-column` / `grid-row`. Uses the same amber
-   chrome tokens as the rest of the editor, with a dashed border so it reads
-   as the placeholder version of an occupied cell's chrome. */
 
 .wireframe-grid-cell {
   /* Placement consumed from custom properties set by `cellStyle` in
@@ -2755,23 +2387,15 @@ body.wireframe-active
     border-color: var(--wireframe-block-hover-color);
   }
 
-  /* Cell currently being hovered during a drag. Brighter than `:hover`
-     so the drop target reads unambiguously even on dense pages. */
-
   &.--drag-target {
     background: rgb(var(--wf-accent-rgb), 0.18);
     border-style: solid;
     border-color: var(--wireframe-block-hover-color);
   }
 
-  /* Per-zone drop feedback lives on the grid overlay, not the cell: during a
-     drag the overlay paints a single rect or line at the cursor's target
-     position, while the cell keeps its idle dashed border so the empty space
-     stays scannable.
-
-     Suppress the foundation `is-drag-*` pseudo-element indicators (a tertiary
-     line above/below/left/right that the shared drop modifier toggles by
-     default) so the overlay is the sole feedback surface during a drag. */
+  /* Suppress the foundation `is-drag-*` pseudo-element indicators here too, so
+     the grid overlay stays the sole drop-feedback surface (see the same note on
+     `.wireframe-transparent-slot`). */
 
   &.is-drag-above::before,
   &.is-drag-below::after,
@@ -2779,11 +2403,6 @@ body.wireframe-active
   &.is-drag-right::after {
     content: none;
   }
-
-  /* The shared empty-state placeholder takes over the cell's interior
-     (centred `+` icon + hint label, or icon-only at narrow widths via
-     the container query); the cell itself only contributes the dashed
-     border + drag-target chrome. */
 }
 
 /* FloatKit menu hosting Replace / Remove for a clicked image marker.
@@ -2820,20 +2439,11 @@ body.wireframe-active
   }
 }
 
-/* Outline row kebab menu (Duplicate / Delete), opened via `menu.show`. Styled
-   through the component's own root class so it's independent of the FloatKit
-   portal's identifier-derived classes. */
-
 .wireframe-outline-row-actions {
   .wireframe-outline__row-action--danger {
     color: var(--danger);
   }
 }
-
-/* Duplicate ×N dropdown opened from the block toolbar's Duplicate split-button.
-   A compact list of preset counts plus a custom-count row. Rendered in a
-   FloatKit portal, so it's addressed by its identifier-derived content class
-   (the bare `data-identifier` also lands on the trigger). */
 
 .wireframe-duplicate-count-content {
   .dropdown-menu {
@@ -2846,7 +2456,6 @@ body.wireframe-active
     font-variant-numeric: tabular-nums;
   }
 
-  /* Custom-count row: a narrow number field beside its own apply button. */
   .wireframe-block-toolbar__duplicate-custom {
     display: flex;
     gap: 0.5rem;
@@ -2866,14 +2475,6 @@ body.wireframe-active
     }
   }
 }
-
-/* FloatKit menu body opened from every empty-drop placeholder: the
-   quick-inserter — a search combobox over a grid of block tiles, plus a
-   "Browse all" link to the full sidebar palette. Targets the menu wrapper via
-   the `data-identifier` attribute passed to `menu.show()` — FloatKit's
-   `DHeadlessMenu` doesn't apply an identifier-derived class on its own,
-   but the data attribute lands on the wrapper, so we can address it
-   without leaking classes into the menu container. */
 
 [data-identifier="wireframe-block-picker"] {
   .wireframe-block-picker {
@@ -2909,20 +2510,9 @@ body.wireframe-active
   }
 }
 
-/* Unified empty-state placeholder — the canonical "drag/click a block
-   here" affordance, rendered in four contexts: empty outlets, empty
-   non-grid containers, unfilled `wf:slot` entries, and unoccupied grid
-   cells. The button is the full click target; clicking it opens a
-   FloatKit menu (see the `[data-identifier="wireframe-block-picker"]`
-   block above) anchored to the button.
-
-   Responsive degradation: the placeholder defines a `wireframe-empty`
-   inline-size container so the hint label can be hidden below a width
-   threshold (see the `@container` rule below). In the narrow case the
-   sibling `__tooltip-host` element switches from `display: none` to
-   covering the whole button, letting its FloatKit tooltip surface the hint
-   on hover. That gate is purely CSS — when the host is `display: none` its
-   listeners never fire, so the visible label and the tooltip never appear
+/* The narrow-width tooltip-host swap (below) relies on `display: none` — not
+   `visibility: hidden` — so its FloatKit listeners stay dormant until the host
+   is shown; that's what keeps the label and the tooltip from ever appearing
    simultaneously. */
 
 /* While a block drag is in flight, the empty-state call to action stops
@@ -2970,19 +2560,8 @@ body.wireframe-active
   }
 
   &__tooltip-host {
-    /* Invisible by default. When the hint label is visible there's no
-       reason to surface the same string in a tooltip, so the host
-       receives no pointer events and the FloatKit listeners attached
-       to it stay dormant. */
     display: none;
   }
-
-  /* Inside a grid cell the placeholder fills the cell rectangle (the
-     cell's dashed border is the surrounding affordance). Drop the
-     outer margin so the placeholder hugs the border, and stretch to the
-     cell's full height (the cell flex-centers its children, which would
-     otherwise leave the placeholder content-tall and the cell's top /
-     bottom dead) so the whole cell is the pick + select click target. */
 
   .wireframe-grid-cell > & {
     align-self: stretch;
@@ -3067,12 +2646,6 @@ body.wireframe-active
   }
 }
 
-/* Hide the resize handle when a slot's parent grid is currently
-   collapsed AND not force-expanded — there's only one track, so
-   dragging the handle to "expand columns 2-3" has no meaningful visual
-   effect. The force-expand toggle is the discoverable way back into
-   resizing tracks. */
-
 @container d-block-layout (max-width: 40rem) {
   .d-block-layout--grid.d-block-layout--collapse-default
     .wireframe-block-chrome__resize-handle {
@@ -3091,13 +2664,6 @@ body.wireframe-active
   .wireframe-block-chrome__resize-handle {
   display: block;
 }
-
-/* Span-resize handles — rendered on the chrome of a selected block inside a
-   grid layout. Four edge bars move one axis; four corner nubs move both. The
-   flat bar / nub language is deliberately distinct from the image block's
-   round resize dots so the structural (span) gesture and the content (pixel)
-   gesture are never confused. Only the handles catch pointer events; the rest
-   of the chrome keeps receiving clicks for selection. */
 
 .wireframe-block-chrome__resize-handle {
   position: absolute;
@@ -3179,11 +2745,6 @@ body.wireframe-active
   }
 }
 
-/* Empty-cell merge handles reuse the filled-cell resize visual, but a blank
-   cell isn't selected by default — keep them out of sight until the author
-   hovers the cell or selects it, then they read identically to a filled
-   cell's handles. */
-
 .wireframe-grid-cell {
   .wireframe-block-chrome__resize-handle {
     opacity: 0;
@@ -3202,17 +2763,6 @@ body.wireframe-active
     }
   }
 }
-
-/* Filled grid cells reveal their resize handles on the same trigger as empty
-   cells — hover or selection — so the two read identically. The handles are
-   always in the DOM for a grid cell; this gate keeps them invisible and inert
-   until the author hovers the cell or selects it.
-
-   The `:not(:has(...))` restricts the hover reveal to DIRECT hover of the
-   cell's own chrome: when the cell holds a container, hovering the blocks
-   nested inside it bubbles `:hover` up to this wrapper, which would otherwise
-   flash the cell's handles while the author works inside it. Selection still
-   reveals them unconditionally. */
 
 .wireframe-block-chrome-wrapper.--in-grid-cell {
   .wireframe-block-chrome__resize-handle {
@@ -3342,8 +2892,6 @@ body.wireframe-active
   }
 }
 
-/* Just-selected attention flash (see `.wireframe-block-chrome.--just-selected`).
-   Uses the editor accent the selection outline uses (`--wf-accent`). */
 @keyframes wireframe-block-flash {
   from {
     box-shadow: 0 0 0 16px rgb(var(--wf-accent-rgb), 0.55);
@@ -3359,17 +2907,6 @@ body.wireframe-active
     animation: none;
   }
 }
-
-/* Drag ghost — invisible until either a cell drop target marks it
-   visible (`--visible`) or the resize modifier writes a grid placement
-   onto it directly. Lives in the same grid as the cells, so its
-   `grid-column` / `grid-row` transitions glide between cells during a
-   drag rather than snapping.
-
-   Border treatment mirrors `.wireframe-grid-cell` exactly so the ghost
-   outline sits on the same pixel positions as a cell would — it reads as a
-   brighter version of the cell underneath, not a foreign element offset
-   from the grid. */
 
 .wireframe-grid-ghost {
   pointer-events: none;
@@ -3387,22 +2924,10 @@ body.wireframe-active
   }
 }
 
-/* Column resize handles. The overlay renders one run per contiguous
-   stretch of rows where line N actually divides two cells (see
-   `columnHandles`): a continuous strip down that gutter that breaks only
-   where a block spans the line, so it never strikes through a span. Each
-   run is centred on the line by a translate of half the handle plus half
-   the gap.
-
-   The element is a wide hit area so the boundary is grabbable across the
-   segment; its `::before` is the visible stroke — a faint
-   hairline idle (discoverable) that brightens and thickens on hover /
-   while dragging.
-
-   `pointer-events: auto` opts back into interaction: the editor grid is
-   `pointer-events: none` so stray clicks fall through to block selection,
-   and the interactive overlay bits (empty cells, these handles) each
-   re-enable it. */
+/* `pointer-events: auto` opts back into interaction: the editor grid overlay
+   is `pointer-events: none` so stray clicks fall through to block selection,
+   and each interactive overlay piece (empty cells, these handles) re-enables
+   it individually. */
 
 .wireframe-grid-track-handle {
   pointer-events: auto;
@@ -3440,22 +2965,6 @@ body.wireframe-active
     touch-action: none;
   }
 }
-
-/* Drop-preview overlay — one element per grid that the editor
-   repositions during a drag to mark the proposed drop target. Two
-   shapes:
-   - `--rect-*` variants are rectangles over a cell (swap / replace /
-     move). The rect's tint names the action.
-   - `--line-*` variants are 4px strips drawn midway in a grid gap,
-     i.e. "insert between adjacent cells". The same line is produced
-     from the right edge of one cell AND the left edge of its
-     neighbour, so the visual stays put as the cursor crosses the
-     boundary between sibling drop targets.
-
-   Positioned absolutely against the grid container (which carries
-   `position: relative` for this purpose). CSS transitions on
-   `top/left/width/height` give a smooth glide between adjacent
-   candidates. */
 
 .wireframe-grid-drop-overlay {
   position: absolute;
@@ -3510,21 +3019,11 @@ body.wireframe-active
   }
 }
 
-/* Custom inspector form for the layout block. Mode-specific controls:
-   segmented mode picker, integer steppers (columns / rows), gap slider
-   with live value, and an advanced disclosure for column / row
-   templates. */
-
 .wireframe-layout-form {
   display: flex;
   flex-direction: column;
   gap: 0.65rem;
   font-size: var(--font-down-1);
-
-  /* Bespoke field wrapper for the non-FormKit controls (the source picker and
-     the Advanced track-template inputs). Like the FormKit fields, it has to be
-     forced full-width — the form's children don't stretch on their own — so the
-     source picker and its template dropdown span the panel. */
 
   &__field {
     display: flex;
@@ -3532,12 +3031,6 @@ body.wireframe-active
     gap: 0.25rem;
     width: 100%;
   }
-
-  /* Out-of-bounds warning banner — surfaced when the layout loaded
-     with slots whose explicit column/row references fall outside the
-     declared `columns` × `rows`. Danger palette to match the
-     overlap-warning treatment elsewhere; the embedded button routes
-     through `clampGridSlotPlacements` to fix in one click. */
 
   &__warning {
     display: flex;
@@ -3567,12 +3060,6 @@ body.wireframe-active
     }
   }
 
-  /* The mode / align / auto-collapse pickers render core `DSegmentedControl`,
-     which owns its own track / slider / radio styling. Other enum controls
-     render via the shared `.wireframe-segmented-field` (icon segments with a
-     dropdown fallback); its width / dark-chrome adjustments live in the block
-     below. */
-
   /* Columns / rows sit on one row, each at its natural width, pushed to opposite
      ends. The fields default to full width in the inspector, so reset them to
      auto here or they'd each claim the whole row. */
@@ -3587,10 +3074,6 @@ body.wireframe-active
       width: auto;
     }
   }
-
-  /* Informational hint shown beneath the mode picker for grid / row
-     layouts — surfaces the `@container` auto-collapse behaviour so
-     authors discover it without having to test at narrow widths. */
 
   &__hint {
     display: flex;
@@ -3609,10 +3092,6 @@ body.wireframe-active
       flex-shrink: 0;
     }
   }
-
-  /* Source picker: two side-by-side options — a "Free" toggle and the
-     template dropdown. The active one (free vs. a matched preset) reads
-     like the segmented control's `--active` segment. */
 
   &__source {
     display: grid;
@@ -3652,10 +3131,6 @@ body.wireframe-active
     }
   }
 
-  /* The template option carries the active preset's name and a trailing
-     chevron, so it reads as a dropdown trigger rather than a plain
-     toggle. */
-
   &__template-dropdown {
     justify-content: space-between;
     flex-direction: row-reverse;
@@ -3691,7 +3166,6 @@ body.wireframe-active
     }
   }
 
-  /* Miniature grid preview used inside the template dropdown rows. */
   &__preview {
     width: 100%;
     height: 100%;
@@ -3708,17 +3182,10 @@ body.wireframe-active
   }
 }
 
-/* Shared inspector control primitives. Used by both the bespoke layout form and
-   the generic schema-driven form (the latter mounts them through FormKit's
-   custom slot), so they're styled once here rather than per surface. */
-
 .wireframe-dimension-field {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-
-  /* The slider takes the free space; the numeric entry stays a fixed-width
-     trailer beside it. */
 
   &--with-slider .wireframe-dimension-field__slider {
     flex: 1 1 auto;
@@ -3754,24 +3221,10 @@ body.wireframe-active
   }
 }
 
-/* Stepper: a −/number/+ trio rendered as three equal-height pills with a small
-   gap. Each keeps its own border (the number input keeps its native one; the
-   buttons are given a matching one) so there's no nested double-border, and
-   `align-items: stretch` keeps the buttons exactly the input's height. */
-
 .wireframe-stepper-field {
   display: inline-flex;
   align-items: stretch;
   gap: 0.25rem;
-
-  /* Content-width, not full-width: a small-integer stepper reads best compact.
-     Stretching it to the field would balloon the number box (e.g. a lone Grow
-     control spanning the whole panel). The number input is a fixed box; the
-     control sits at its natural width inside whatever cell holds it. */
-
-  /* `[type="number"]` qualifier raises specificity above the global
-     `input[type=number]` rule, whose `margin-bottom` would otherwise offset the
-     input within the stretch row and break vertical alignment with the buttons. */
 
   &__number[type="number"] {
     flex: 0 0 auto;
@@ -3780,8 +3233,6 @@ body.wireframe-active
     margin: 0;
     text-align: center;
     font-variant-numeric: tabular-nums;
-
-    /* The +/- buttons replace the native spinners, so hide those. */
     appearance: textfield;
 
     &::-webkit-outer-spin-button,
@@ -3807,13 +3258,10 @@ body.wireframe-active
   }
 }
 
-/* Core `DSegmentedControl` is tuned for the light admin surface and a roomier
-   layout; the inspector panel is dark and narrow. Stretch it to the panel width
-   with equal-width segments, and trim the per-segment horizontal padding so a
-   control with several options (e.g. alignment) can't push the panel into
-   horizontal scroll — `min-width: 0` lets the segments shrink, and the flex
-   grow keeps them filling the row evenly. The default height / vertical
-   padding is kept. */
+/* Core `DSegmentedControl` is tuned for the light admin surface; stretch it to
+   the panel width instead. `min-width: 0` on the segment label overrides
+   flexbox's default min-content floor — without it, a control with several
+   options (e.g. alignment) pushes the narrow panel into horizontal scroll. */
 
 .wireframe-layout-form,
 .wireframe-inspector-form {
@@ -3833,25 +3281,14 @@ body.wireframe-active
     }
   }
 
-  /* Segment glyphs (an option renders icon-only when it has an icon) get a
-     touch more presence than body text. */
-
   .wireframe-segmented-field .d-segmented-control__text .d-icon {
     font-size: var(--font-up-1);
   }
-
-  /* The dropdown fallback (an option set too wide for a segmented row, or a rail
-     dragged too narrow) fills the field width like the segments it replaces. */
 
   .wireframe-segmented-field__dropdown {
     width: 100%;
   }
 }
-
-/* Preset picker opened from the layout form's template dropdown. One
-   row per template: a miniature preview, the name, and a check on the
-   active one. Disabled rows (presets that can't hold the current
-   content) dim out. */
 
 .wireframe-template-menu {
   display: flex;
@@ -3974,11 +3411,6 @@ body.wireframe-active
   }
 }
 
-/* Drop-zone visual treatment during an active drag (set by
-   `body.wireframe-dragging`). The zones are already present in layout
-   and registered as Pragmatic dnd targets — this class only changes how
-   they look. */
-
 body.wireframe-dragging {
   .wireframe-drop-zone {
     background: var(--primary-very-low);
@@ -3991,10 +3423,9 @@ body.wireframe-dragging {
       opacity: 0.65;
     }
 
-    /* Hover / active: only change colors. Resizing the zone on hover
-       triggers a layout shift that bounces the cursor outside the zone
-       and cancels the drop — see the comment on `.wireframe-drop-zone`
-       above. Stable size means a stable hit target. */
+    /* Only colors change here — resizing the zone on hover would bounce the
+       cursor out of the zone mid-drag and cancel the drop (see the note on
+       `.wireframe-drop-zone` above). */
 
     &:hover,
     &.--active {
@@ -4012,7 +3443,6 @@ body.wireframe-dragging {
     }
   }
 
-  /* Outline rows highlight while being dragged to confirm the source. */
   .outline-block.--dragging {
     opacity: 0.5;
   }
@@ -4030,20 +3460,12 @@ body.wireframe-dragging {
   }
 }
 
-/* Empty-container affordance — the shared `EditorEmptyDropPlaceholder`
-   is rendered inside an empty non-grid container. `min-height` keeps
-   the chrome from collapsing to zero before the placeholder paints. */
-
 .wireframe-block-chrome.--empty-container {
   min-height: 4rem;
 }
 
-/* Editor-only chrome support: anchor for the absolute-positioned
-   `GridOverlay` and padding compensating for the chrome's own outer
-   margin INSIDE the layout. Scoped to `body.wireframe-active` so
-   it doesn't apply on the live page where the overlay never mounts.
-   A follow-up will migrate all editor-chrome CSS into a JS-injected
-   stylesheet so these rules don't ship to non-editor users at all. */
+/* `position: relative` anchor for the absolute-positioned `GridOverlay`;
+   padding compensates for the chrome's own outer margin inside the layout. */
 
 body.wireframe-active {
   .d-block-layout--grid {
@@ -4052,7 +3474,6 @@ body.wireframe-active {
   }
 }
 
-/* Simulation controls, a labeled section inside the View drawer. */
 .wireframe-simulation {
   display: flex;
   flex-direction: column;
@@ -4087,9 +3508,6 @@ body.wireframe-active {
     width: 100%;
   }
 
-  /* The viewport segmented control fills the row with equal-width segments,
-     matching the inspector's segmented fields. */
-
   &__viewport.d-segmented-control {
     display: flex;
     width: 100%;
@@ -4102,11 +3520,6 @@ body.wireframe-active {
       justify-content: center;
     }
   }
-
-  /* The active-simulation callout is a FormKit alert (`.alert` supplies the
-     surface), laid out like the inspector's other alerts (icon beside the
-     message). The reset button gets a solid fill so it reads clearly against
-     the tinted alert. */
 
   &__status {
     display: flex;
@@ -4145,13 +3558,6 @@ body.wireframe-active {
   }
 }
 
-/* Inline-expand conditions surface. Each rule is a row that toggles
-   open in-flow to reveal its per-type editor — no popovers, so we
-   don't fight z-index against the editor shell. The combinator
-   selector is a chip-toggle, not a dropdown, so authors can see and
-   switch combinators in one click. */
-
-/* Inspector Conditions tab header — hosts the detach button. */
 .wireframe-inspector__conditions-header {
   display: flex;
   justify-content: flex-end;
@@ -4192,11 +3598,6 @@ body.wireframe-active {
   border: 1px dashed var(--primary-low-mid);
   border-radius: 4px;
 }
-
-/* Detached conditions floating panel — draggable + resizable, lives above the
-   editor shell (`z("modal", "content") - 200`, see `.wireframe-shell`). The
-   header bar is the drag surface; the corner grip uses `resize: both` on the
-   host element. */
 
 .wireframe-conditions-floating {
   position: fixed;
@@ -4265,7 +3666,6 @@ body.wireframe-active {
   }
 }
 
-/* One-time notice under the toolbar when the active theme can't be published to. */
 .wireframe-blocked-callout {
   grid-column: 1 / -1;
   grid-row: 2;
@@ -4292,7 +3692,6 @@ body.wireframe-active {
   }
 }
 
-/* The save-and-publish review surface: a right-docked drawer over the editor. */
 .wireframe-review {
   position: fixed;
   top: 0;
@@ -4602,10 +4001,6 @@ body.wireframe-active {
     margin-left: 0.25rem;
   }
 
-  /* Per-combinator left-bar tint so nesting depth + combinator are
-     legible at a glance. Subtle on purpose — we don't want to scream
-     "warning" at the author for using NOT. */
-
   &.--and:not(.--root) {
     border-left-color: var(--tertiary);
   }
@@ -4882,12 +4277,6 @@ body.wireframe-active {
   }
 }
 
-/* Per-type editor surface. Renders inline inside a rule's expanded
-   body — no popover/portal, so the controls live in normal document
-   flow and grow the inspector column naturally. The styling leans on
-   segmented chips + light borders for an authoring feel rather than
-   form-y radio lists. */
-
 .wireframe-condition-editor {
   display: flex;
   flex-direction: column;
@@ -4899,10 +4288,6 @@ body.wireframe-active {
     flex-direction: column;
     gap: 0.25rem;
   }
-
-  /* Segmented control: a chip-toggle for short mutually-exclusive
-     options. Mirrors the group-header combinator chips so the visual
-     language is consistent across the conditions surface. */
 
   &__segmented {
     display: inline-flex;
@@ -4934,9 +4319,6 @@ body.wireframe-active {
     }
   }
 
-  /* Checkbox row: a horizontal strip of `<label><checkbox> Text</label>`
-     for OR-combined boolean flags (role checkboxes, etc). */
-
   &__check-row {
     display: flex;
     flex-wrap: wrap;
@@ -4953,9 +4335,6 @@ body.wireframe-active {
       margin: 0;
     }
   }
-
-  /* Pair row: two side-by-side labelled controls. Used for the trust
-     min / max selects. */
 
   &__pair {
     display: grid;
@@ -4978,9 +4357,6 @@ body.wireframe-active {
       margin: 0;
     }
   }
-
-  /* Chip grid: a wrap-aware grid of toggle chips. Used by the route
-     editor's page-type picker (multi-select). */
 
   &__chip-grid {
     display: grid;
@@ -5013,10 +4389,6 @@ body.wireframe-active {
     }
   }
 
-  /* Textarea variant for multi-line input (URL patterns, JSON, list
-     values). Monospace modifier for JSON-shape fields where alignment
-     reads as structure. */
-
   &__textarea {
     margin: 0;
     font-size: var(--font-down-1);
@@ -5035,16 +4407,12 @@ body.wireframe-active {
     font-style: italic;
   }
 
-  /* Inline JSON-parse error surfaced from the route editor's params fields,
-     in the same slot as the help text. */
-
   &__error {
     color: var(--danger);
     font-size: var(--font-down-2);
     font-family: var(--d-font-family--monospace);
   }
 
-  /* "Advanced ▾" disclosure toggle below the primary controls. */
   &__advanced-toggle {
     align-self: flex-start;
     background: transparent;
@@ -5061,7 +4429,6 @@ body.wireframe-active {
     }
   }
 
-  /* Viewport quick-pick chips — icon + label chips. */
   &__viewport-chips {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -5123,9 +4490,6 @@ body.wireframe-active {
     margin: 0;
   }
 }
-
-/* Inspector metadata section — collapsible block holding entry-level
-   metadata (currently the block `id`). Sits above the tab strip. */
 
 .wireframe-inspector-metadata {
   margin-bottom: 1rem;
@@ -5193,11 +4557,6 @@ body.wireframe-active {
   }
 }
 
-/* Block-chrome ghost modifier — the wrapper that surrounds WFGhostBlock
-   paints a dashed outline (the ghost component itself fills in the
-   silhouette). Always-on so the preview clone remains identifiable as
-   it travels with the drag. */
-
 body.wireframe-active {
   .wireframe-block-chrome.--ghost {
     outline: var(--wireframe-container-border-width) dashed
@@ -5205,22 +4564,11 @@ body.wireframe-active {
     background: transparent;
   }
 
-  /* Error-tone chrome — applied alongside `.--ghost` for genuine
-     authoring mistakes (UNKNOWN_BLOCK). Always-on danger outline so the
-     bad block can't be missed. */
-
   .wireframe-block-chrome.--error,
   .wireframe-block-chrome-wrapper.--error > .wireframe-block-chrome {
     outline: var(--wireframe-container-border-width) solid var(--danger);
     background: rgb(var(--danger-rgb), 0.06);
   }
-
-  /* Empty-cell chrome — a merged-cell entry is an empty grid cell.
-     Always visible (unlike normal blocks, an empty cell is meaningless
-     without an affordance pointing it out). Dashed amber outline + tinted
-     background mirror the grid overlay's auto-empty cells so the two read
-     as the same affordance. The chrome's inner `__content` carries the
-     `EditorEmptyDropPlaceholder`, so this is just the frame around it. */
 
   .wireframe-block-chrome.--cell {
     outline: var(--wireframe-container-border-width) dashed
@@ -5243,12 +4591,6 @@ body.wireframe-active {
     min-height: 60px;
   }
 }
-
-/* The editor's single drop indicator. Positioned in viewport
-   coordinates (the descriptor's `geometry` is `getBoundingClientRect`-
-   style), so it lives at the document root and is reachable from any
-   scroll context. Mounted once by `EditorShell` — by construction
-   only one indicator is on screen at a time. */
 
 .wireframe-drop-preview {
   position: fixed;
@@ -5288,13 +4630,6 @@ body.wireframe-active {
     line-height: 18px;
   }
 
-  /* Kind variants — for now all valid kinds share the same tertiary color
-     scheme. The label carries the operation difference; the overlay shape
-     itself stays consistent so authors learn one vocabulary. Subtle
-     differentiation reserved for later (e.g. an outline-only stroke for
-     insert-lines vs a filled rect for replace), once the single-indicator
-     pattern is in user hands. */
-
   &--insert,
   &--inside,
   &--occupy,
@@ -5306,13 +4641,6 @@ body.wireframe-active {
   &--swap {
     background: rgb(var(--tertiary-rgb), 0.22);
   }
-
-  /* Invalid variant — the cursor IS over a valid drop SHAPE, but
-     the operation underneath would be rejected (out-of-bounds shift,
-     denied outlet, self-drop, etc.). Render in danger tones so the
-     author sees the target but knows it won't accept the drop. The
-     label still describes the proposed operation so the author can
-     reason about what would happen if it were valid. */
 
   &--invalid {
     border-color: var(--danger);
@@ -5342,25 +4670,14 @@ body.wireframe-active {
        of `inline` vs `inline-block`. */
     display: inline;
 
-    /* Replaces the browser's default contenteditable focus ring. PM is
-       only mounted when the field is actively being edited, so any time
-       this rule applies the user IS editing — no extra gating needed.
-       On an `inline` editor the outline follows the text's line
-       fragments, so a single-line field gets a clean rectangle and a
-       wrapped multi-line field (paragraph / callout body) gets a ring
-       that hugs each line — acceptable since it only marks the active
-       edit. */
+    /* Replaces the browser's default contenteditable focus ring. PM is only
+       mounted while the field is actively being edited, so this rule needs no
+       extra `--editing` gate — the ring only ever marks the active edit. */
     outline: 2px solid var(--tertiary);
     outline-offset: 2px;
     border-radius: 2px;
   }
 }
-
-/* Inline rich text — editor-only affordances.
-   The renderer span itself is shared with the live site (see
-   `wireframe.scss`); this section adds the placeholder for empty
-   content, the focus ring while the block is selected, and the content
-   hide while ProseMirror is mounted via {{in-element}}. */
 
 .wf-rich-text {
   /* Block is selected — re-enable pointer events on the renderer so the
@@ -5391,14 +4708,9 @@ body.wireframe-active {
       pointer-events: auto;
     }
 
-    /* Hover affordance — dashed outline hints that the region is
-       click-to-edit. Suppressed while PM is mounted so it doesn't
-       double up with the active-edit ring (drawn on the PM editor
-       div itself via `.wf-rich-text-editor.ProseMirror` above — the
-       renderer span is `display: inline` and outlines on inline
-       parents of a block PM editor render around line fragments,
-       not the editor area). `outline` (not `border`) keeps the ring
-       outside the box so adjacent text doesn't shift on first paint. */
+    /* Suppressed while PM is mounted so this dashed hover ring doesn't double
+       up with the active-edit ring drawn on the PM editor div itself (see
+       `.wf-rich-text-editor.ProseMirror` above). */
 
     &:hover:not(:has(.wf-rich-text-editor-mount)) {
       outline: 1px dashed var(--tertiary);
@@ -5447,10 +4759,6 @@ body.wireframe-active {
   }
 }
 
-/* Inline icon edit — the wrapper hugs the icon glyph and carries the
-   `data-block-arg` the chrome's onClick handler reads to open the
-   icon picker popover. Emitted directly by block templates. */
-
 /* Image arg targets — explicit carve-out from the chrome's
    `> *:not(...)` rule that sets `pointer-events: none` on every
    direct child of `.wireframe-block-chrome` (see the top-of-file
@@ -5481,11 +4789,9 @@ picture,
   align-items: center;
   border-radius: 2px;
 
-  /* When the parent block is selected, the icon becomes clickable
-     and shows a hover affordance to telegraph "click to edit." The
-     chrome's `pointer-events: none` rule on non-structural children
-     suppresses clicks anywhere else inside the block, so this
-     re-enable is essential. */
+  /* Essential re-enable: the chrome's `pointer-events: none` rule on
+     non-structural children (see the top-of-file rule) would otherwise
+     suppress clicks here too. */
 
   .wireframe-block-chrome.--selected & {
     pointer-events: auto;
@@ -5497,11 +4803,6 @@ picture,
     }
   }
 
-  /* Empty-icon slot. Reveal a small dashed square only while the
-     parent block is selected, so authors can click to add an icon
-     without leaving the canvas for the inspector. Hidden everywhere
-     else (live + non-selected canvas — see `wireframe.scss`). */
-
   &--empty {
     .wireframe-block-chrome.--selected & {
       display: inline-block;
@@ -5512,8 +4813,7 @@ picture,
   }
 }
 
-/* Picker CSS variables.
-   The picker's grid layout depends on `--icon-grid-*` CSS variables
+/* The picker's grid layout depends on `--icon-grid-*` CSS variables
    that core sets on `.fk-d-menu.d-icon-grid-picker-content`. That
    class is only applied through the `<DMenu>` template path; when the
    menu is opened programmatically via `menu.show(...)` the
@@ -5541,22 +4841,15 @@ body.wireframe-active {
     z-index: 1500;
   }
 
-  /* A select-kit dropdown opened from inside a FloatKit menu (e.g. the persona
-     combobox in the View menu) mounts its own body portal; keep it above the
-     menu that hosts it so its options can't render behind the chrome. */
-
   .select-kit-body {
     z-index: 1600;
   }
 }
 
-/* Inline URL edit — the rendered link element (an `<a>` inside DButton
-   or a raw `<a>`) carries `data-block-arg` so the chrome's onClick
-   routes to `linkEdit.start()`. The chrome's `pointer-events: none`
-   rule on non-structural children of `.wireframe-block-chrome`
-   inherits down to descendants; this rule re-enables click handling
-   on the marked link elements when the block is selected, and adds
-   a dashed hover affordance to telegraph "click to edit URL." */
+/* Re-enables click handling that the chrome's `pointer-events: none` rule on
+   non-structural children (see the top-of-file rule) would otherwise
+   suppress, so `linkEdit.start()` can fire on click; the hover ring
+   telegraphs "click to edit URL." */
 
 body.wireframe-active .wireframe-block-chrome.--selected a[data-block-arg],
 body.wireframe-active
@@ -5571,13 +4864,6 @@ body.wireframe-active
     border-radius: 2px;
   }
 }
-
-/* URL-edit chip — a small "Edit URL" button shown in a FloatKit
-   tooltip anchored to the rendered link. The chrome registers the
-   tooltip per URL arg on `didInsert` (see `block-chrome.gjs`'s
-   `_setupUrlTooltips`). FloatKit handles the hover-trigger,
-   positioning, and the hover bridge between trigger and content
-   via `interactive: true`. */
 
 .wf-inplace-link-popover {
   display: inline-flex;
@@ -5667,15 +4953,11 @@ body.wireframe-active
   display: none;
 }
 
-/* Reveal empty inline-text wrappers on the canvas when their block is
-   selected, so authors can click the placeholder to start editing a
-   field that the block author hid via a `--empty` BEM modifier on the
-   wrapper (see e.g. `d-block-cta-banner__title--empty`).
-   The `:has(> .wf-rich-text.--empty)` selector finds any element
-   whose direct child is an empty renderer — works for `<h3>`, `<h4>`,
-   `<p>`, `<a>`, custom blocks. The second selector covers the renderer's
-   own outer span in case something hid it directly. `display: revert`
-   falls back to the wrapper's user-agent default. */
+/* Reveal empty inline-text wrappers when selected, so authors can click a
+   block-hidden `--empty` field to start editing (see e.g.
+   `d-block-cta-banner__title--empty`). `display: revert` (not `block`) falls
+   back to each wrapper's own user-agent default — `<h3>`, `<p>`, and `<a>`
+   wrappers each need a different display value restored. */
 
 .wireframe-block-chrome.--selected :has(> .wf-rich-text.--empty),
 .wireframe-block-chrome.--selected .wf-rich-text.--empty {
@@ -5704,11 +4986,6 @@ body.wireframe-active
   min-height: 8rem;
 }
 
-/* Inspector form — read-only summary for `rich-inline` args. The actual
-   editor lives on the canvas; this gives authors a flat view of what
-   they've typed (with marks rendered as inline markdown) without an
-   editing surface here. */
-
 .wireframe-inspector-rich-inline {
   display: flex;
   flex-direction: column;
@@ -5732,10 +5009,6 @@ body.wireframe-active
   color: var(--primary-medium);
   font-style: italic;
 }
-
-/* Editable inline rich-text control in the inspector: a small bold / italic /
-   link toolbar above a bordered box that hosts the constrained ProseMirror
-   editor. Mirrors the other inspector controls' dark-panel chrome. */
 
 .wireframe-inspector-rich-text {
   display: flex;
@@ -5794,9 +5067,9 @@ body.wireframe-active
       color: var(--primary);
     }
 
-    /* Inert state while the same value is being edited on the canvas: the same
-       editor stays mounted (formatting preserved, no layout shift) but reads as
-       inactive — dimmed and non-interactive. */
+    /* Dimmed and inert rather than unmounted, so the same editor instance
+       keeps its formatting state and the canvas doesn't reflow when the
+       canvas-side edit finishes. */
 
     &.--disabled {
       opacity: 0.55;
@@ -5808,14 +5081,6 @@ body.wireframe-active
     }
   }
 }
-
-/* Inline-format additions to the block-toolbar — bold / italic / link
-   buttons appear in the same chrome strip as the move / duplicate /
-   delete buttons when the user has a non-empty PM selection inside a
-   `richInline` arg. See block-toolbar.gjs.
-
-   The block-toolbar's existing `__btn.--active` rule handles the
-   pressed state for bold/italic/link buttons. */
 
 .wireframe-block-toolbar__url-input {
   width: 220px;
@@ -5896,13 +5161,6 @@ body.wireframe-active--dim-non-editable
   opacity: 0.75;
 }
 
-/* InspectorImageField — custom FormKit control for image args. Owns
-   the full value shape (`{ source, url, width?, height?, dark? }`)
-   and dispatches between Upload | URL tabs with an optional dark
-   variant. Tab styling intentionally lightweight: text-only buttons
-   with a bottom-border underline for the active tab so the field
-   stays compact inside the inspector. */
-
 .wireframe-image-field {
   display: flex;
   flex-direction: column;
@@ -5968,11 +5226,6 @@ body.wireframe-active--dim-non-editable
     }
   }
 
-  /* Informational bar (NOT a warning) — used for the resize state, styled
-     calmer than `__warning` so the user knows the image is fine, just
-     resized. The right-aligned action button is the "Reset to natural"
-     link. */
-
   &__info {
     display: flex;
     align-items: center;
@@ -6017,9 +5270,6 @@ body.wireframe-active--dim-non-editable
     }
   }
 }
-
-/* Repeatable array-of-object control: one editable row per item, with
-   add / remove / reorder affordances and a JSON import box. */
 
 .wireframe-repeatable {
   display: flex;
