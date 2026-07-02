@@ -53,23 +53,24 @@ export default class AdminDashboardController extends Controller {
   }
 
   get startDate() {
-    if (this.safePeriod === PERIOD_CUSTOM && this.start_date) {
-      const parsed = moment(this.start_date, "YYYY-MM-DD", true);
-      if (parsed.isValid()) {
-        return parsed.startOf("day").toDate();
-      }
-    }
-    return calculatePresetStartDate(this.safePeriod);
+    return (
+      this.#customDate(this.start_date, "startOf") ??
+      calculatePresetStartDate(this.safePeriod)
+    );
   }
 
   get endDate() {
-    if (this.safePeriod === PERIOD_CUSTOM && this.end_date) {
-      const parsed = moment(this.end_date, "YYYY-MM-DD", true);
-      if (parsed.isValid()) {
-        return parsed.endOf("day").toDate();
-      }
+    return (
+      this.#customDate(this.end_date, "endOf") ?? moment().endOf("day").toDate()
+    );
+  }
+
+  #customDate(value, edge) {
+    if (this.safePeriod !== PERIOD_CUSTOM || !value) {
+      return null;
     }
-    return moment().endOf("day").toDate();
+    const parsed = moment(value, "YYYY-MM-DD", true);
+    return parsed.isValid() ? parsed[edge]("day").toDate() : null;
   }
 
   @action

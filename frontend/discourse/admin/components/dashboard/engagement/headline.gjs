@@ -1,27 +1,19 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import {
+  formatDeltaPercent,
+  formatKpiValue,
+} from "discourse/admin/lib/dashboard-format";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { eq } from "discourse/truth-helpers";
-import I18n, { i18n } from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const PRESET_PERIODS = ["last_7_days", "last_30_days", "last_3_months"];
-const PERCENTAGE_KPIS = ["dau_mau"];
 
 class MetricItem extends Component {
-  get isPercentage() {
-    return PERCENTAGE_KPIS.includes(this.args.metric.type);
-  }
-
   get displayValue() {
-    const value = this.args.metric.value;
-    if (value == null) {
-      return "—";
-    }
-    if (this.isPercentage) {
-      return `${I18n.toNumber(value, { precision: 1 })}%`;
-    }
-    return I18n.toNumber(value, { precision: 0 });
+    return formatKpiValue(this.args.metric.type, this.args.metric.value);
   }
 
   get hasDelta() {
@@ -39,17 +31,7 @@ class MetricItem extends Component {
   }
 
   get deltaText() {
-    const value = this.args.metric.percent_change;
-    const abs = Math.abs(value);
-
-    if (abs > 0 && abs < 1) {
-      const sign = value > 0 ? "+" : "-";
-      return `${sign}${I18n.toNumber(abs, { precision: 1 })}%`;
-    }
-
-    const rounded = Math.round(value);
-    const sign = rounded > 0 ? "+" : "";
-    return `${sign}${I18n.toNumber(rounded, { precision: 0 })}%`;
+    return formatDeltaPercent(this.args.metric.percent_change);
   }
 
   <template>

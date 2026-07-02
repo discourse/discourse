@@ -28,13 +28,21 @@ export default class WhosPosting extends Component {
     return (category?.subcategories?.length ?? 0) > 0;
   }
 
+  get #categoryFilters() {
+    if (!this.categoryId) {
+      return null;
+    }
+    const filters = { category: this.categoryId };
+    if (this.includeSubcategories) {
+      filters.include_subcategories = true;
+    }
+    return filters;
+  }
+
   get reportQuery() {
     const query = {};
-    if (this.categoryId) {
-      const filters = { category: this.categoryId };
-      if (this.includeSubcategories) {
-        filters.include_subcategories = true;
-      }
+    const filters = this.#categoryFilters;
+    if (filters) {
       query.filters = filters;
     }
     if (this.args.startDate) {
@@ -110,11 +118,9 @@ export default class WhosPosting extends Component {
       start_date: this.args.startDate?.toISOString().slice(0, 10),
       end_date: this.args.endDate?.toISOString().slice(0, 10),
     };
-    if (this.categoryId) {
-      data.filters = { category: this.categoryId };
-      if (this.includeSubcategories) {
-        data.filters.include_subcategories = true;
-      }
+    const filters = this.#categoryFilters;
+    if (filters) {
+      data.filters = filters;
     }
 
     try {
