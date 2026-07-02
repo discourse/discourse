@@ -43,7 +43,7 @@ acceptance("Discourse Footnote Plugin", function (needs) {
     // open
     await click(".expand-footnote");
 
-    assert.dom(TOOLTIP_SELECTOR).hasText("consectetur adipiscing elit ↩︎");
+    assert.dom(TOOLTIP_SELECTOR).hasText("consectetur adipiscing elit");
 
     // close by clicking outside
     await triggerEvent(".d-header", "pointerdown");
@@ -51,14 +51,14 @@ acceptance("Discourse Footnote Plugin", function (needs) {
 
     // open again
     await click(".expand-footnote");
-    assert.dom(TOOLTIP_SELECTOR).hasText("consectetur adipiscing elit ↩︎");
+    assert.dom(TOOLTIP_SELECTOR).hasText("consectetur adipiscing elit");
   });
 
   test("clicking a second footnote with same name works", async function (assert) {
     await visit("/t/-/45");
 
     await click(".second .expand-footnote");
-    assert.dom(TOOLTIP_SELECTOR).hasText("consectetur adipiscing elit ↩︎");
+    assert.dom(TOOLTIP_SELECTOR).hasText("consectetur adipiscing elit");
   });
 
   test("closes tooltip when clicking link within tooltip content", async function (assert) {
@@ -72,16 +72,15 @@ acceptance("Discourse Footnote Plugin", function (needs) {
     assert.dom(TOOLTIP_SELECTOR).doesNotExist();
   });
 
-  test("flattens a nested footnote ref inside the tooltip", async function (assert) {
+  test("removes nested footnotes", async function (assert) {
     await visit("/t/-/45");
 
     await click(".nested .expand-footnote");
 
-    // the nested footnote does not work, so it is shown as flat text rather
-    // than being styled as an interactive footnote ref
+    // the nested footnote does not work, so we strip them out completely
     assert
       .dom(`${TOOLTIP_SELECTOR} sup.footnote-ref`)
-      .doesNotExist("removes the nested footnote-ref styling");
-    assert.dom(TOOLTIP_SELECTOR).hasText("Nested content [4] ↩︎");
+      .doesNotExist("removes the nested footnote-ref");
+    assert.dom(TOOLTIP_SELECTOR).hasText("Nested content");
   });
 });
