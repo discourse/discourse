@@ -58,6 +58,11 @@ describe "Admin Reports" do
           description: I18n.t("reports.signups.description"),
         },
         {
+          type: "visits",
+          title: I18n.t("reports.visits.title"),
+          description: I18n.t("reports.visits.description"),
+        },
+        {
           type: "flags",
           title: I18n.t("reports.flags.title"),
           description: I18n.t("reports.flags.description"),
@@ -72,31 +77,54 @@ describe "Admin Reports" do
       ],
     )
 
-    reports_page.visit_index(group: "plugin-missing")
+    reports_page.visit_index(group: "missing")
 
     expect(reports_page).to have_current_all_reports_path
+    expect(reports_page.filter_controls).to have_dropdown_accessible_name("Report group")
     expect(reports_page.filter_controls).to have_dropdown_value("All groups")
     expect(reports_page).to have_group("Engagement")
     expect(reports_page).to have_group("Moderation & Security")
     expect(reports_page).to have_group("Alpha Metrics")
-    expect(reports_page).to have_no_group_link("Engagement")
-    expect(reports_page).to have_no_group_link("Alpha Metrics")
+    expect(reports_page).to have_static_group_heading("Engagement")
+    expect(reports_page).to have_static_group_heading("Alpha Metrics")
+
+    reports_page.visit_index(group: "plugin-missing")
+
+    expect(reports_page).to have_current_all_reports_path
+    expect(reports_page.filter_controls).to have_dropdown_accessible_name("Report group")
+    expect(reports_page.filter_controls).to have_dropdown_value("All groups")
+    expect(reports_page).to have_group("Engagement")
+    expect(reports_page).to have_group("Moderation & Security")
+    expect(reports_page).to have_group("Alpha Metrics")
+    expect(reports_page).to have_static_group_heading("Engagement")
+    expect(reports_page).to have_static_group_heading("Alpha Metrics")
 
     reports_page.visit_index(group: "engagement")
 
     expect(reports_page).to have_current_reports_path(group: "engagement")
+    expect(reports_page.filter_controls).to have_dropdown_accessible_name("Report group")
     expect(reports_page.filter_controls).to have_dropdown_value("Engagement")
     expect(reports_page).to have_group("Engagement")
-    expect(reports_page).to have_no_group_link("Engagement")
+    expect(reports_page).to have_static_group_heading("Engagement")
     expect(reports_page).to have_no_group("Moderation & Security")
     expect(reports_page).to have_no_group("Alpha Metrics")
     expect(reports_page).to have_report(I18n.t("reports.signups.title"))
+    expect(reports_page).to have_report(I18n.t("reports.visits.title"))
     expect(reports_page).to have_no_report(I18n.t("reports.flags.title"))
     expect(reports_page).to have_no_report("Alpha report")
 
+    reports_page.filter_controls.type_in_search(I18n.t("reports.signups.title"))
+
+    expect(reports_page).to have_report(I18n.t("reports.signups.title"))
+    expect(reports_page).to have_no_report(I18n.t("reports.visits.title"))
+    expect(reports_page.filter_controls).to have_no_no_results_reset_button
+
+    reports_page.filter_controls.clear_search
     reports_page.filter_controls.type_in_search(I18n.t("reports.flags.title"))
 
-    expect(reports_page.filter_controls).to have_no_results_message
+    expect(reports_page.filter_controls).to have_no_results_message(
+      I18n.t("admin_js.admin.filter_reports_no_results"),
+    )
 
     reports_page.filter_controls.click_no_results_reset_button
 
@@ -106,6 +134,7 @@ describe "Admin Reports" do
     expect(reports_page).to have_group("Engagement")
     expect(reports_page).to have_group("Moderation & Security")
     expect(reports_page).to have_group("Alpha Metrics")
+    expect(reports_page).to have_report(I18n.t("reports.visits.title"))
 
     reports_page.filter_controls.select_dropdown_option("Moderation & Security")
 
@@ -143,6 +172,7 @@ describe "Admin Reports" do
     reports_page.visit_index(group: "plugin-alpha-plugin")
 
     expect(reports_page).to have_current_reports_path(group: "plugin-alpha-plugin")
+    expect(reports_page.filter_controls).to have_dropdown_accessible_name("Report group")
     expect(reports_page.filter_controls).to have_dropdown_value("Alpha Metrics")
     expect(reports_page).to have_group("Alpha Metrics")
     expect(reports_page).to have_no_group("Engagement")

@@ -60,12 +60,23 @@ module PageObjects
         component.has_no_css?(".admin-filter-controls__inputs .admin-filter-controls__reset")
       end
 
-      def has_no_results_message?
-        page.has_css?(".admin-filter-controls__no-results")
+      def has_no_results_message?(message = nil)
+        if message
+          page.has_css?(".admin-filter-controls__no-results", text: message)
+        else
+          page.has_css?(".admin-filter-controls__no-results")
+        end
       end
 
       def search_input_value
         component.find(".admin-filter-controls__input").value
+      end
+
+      def has_dropdown_accessible_name?(name, dropdown_id: nil)
+        selector = ".admin-filter-controls__dropdown"
+        selector += "#{selector}--#{dropdown_id}" if dropdown_id
+
+        component.has_select?(name) || component.has_css?("#{selector}[aria-label='#{name}']")
       end
 
       def has_dropdown_value?(text, dropdown_id: nil)
