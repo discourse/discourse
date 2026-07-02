@@ -1,38 +1,12 @@
 // Styles for the Support section of the redesigned admin dashboard. Layout
 // primitives (.db-section__*, .db-delta, .db-pill, .db-whos-posting__*) are
 // owned by core; only Support-specific rules live here.
-.db-support {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
 
-  &__filter {
-    .select-kit.combo-box {
-      max-width: 220px;
-    }
-  }
+$db-bar-height: var(--space-2);
 
-  &__metric-trend {
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
-    font-size: var(--font-down-1-rem);
-    color: var(--primary-medium);
-
-    .d-icon {
-      font-size: var(--font-down-2-rem);
-    }
-  }
-
-  &__body {
-    border-top: 1px solid var(--primary-low);
-    padding-top: var(--space-4);
-  }
-
-  &__col {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-5);
+.db-support__filter {
+  .select-kit.combo-box {
+    max-width: 220px;
   }
 }
 
@@ -40,82 +14,89 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
+  container-type: inline-size;
+  container-name: db-support-outcomes;
 
-  &__title {
-    margin: 0;
+  &__bars {
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(120px, 1fr) 2.5rem;
+    gap: var(--space-2);
+
+    @container db-support-outcomes (width < 22rem) {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
   }
 
   &__row {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-1);
-  }
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: center;
 
-  &__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: var(--space-2);
+    @container db-support-outcomes (width < 22rem) {
+      grid-template-columns: 1fr auto;
+      gap: 0 var(--space-2);
+    }
   }
 
   &__label {
     display: flex;
     align-items: center;
     gap: var(--space-1);
+    min-width: 0;
     color: var(--primary);
-  }
+    cursor: help;
 
-  &__count {
-    color: var(--primary);
-    font-variant-numeric: tabular-nums;
+    @container db-support-outcomes (width < 22rem) {
+      grid-column: 1 / -1;
+    }
   }
 
   &__track {
-    height: 4px;
-    border-radius: 2px;
+    height: $db-bar-height;
+    border-radius: var(--d-border-radius-fixed);
     background: var(--primary-low);
   }
 
   &__fill {
     display: block;
     height: 100%;
-    border-radius: 2px;
+    border-radius: var(--d-border-radius-fixed);
 
     &.--resolved {
       background: var(--success);
     }
 
     &.--in-progress {
-      background: var(--tertiary);
+      background: var(--tertiary-medium);
     }
 
     &.--unanswered {
       background: var(--danger);
     }
   }
+
+  &__share {
+    color: var(--primary-medium);
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+    line-height: 1;
+  }
 }
 
 // Reuse the who's-posting bar layout, recolouring fills per answerer group.
 .db-support-answerers {
+  &.db-section__row-block {
+    // overrule since there is no block next to this one
+    border-right: 0;
+  }
+
   .db-whos-posting__bar-fill {
+    background: var(--tertiary-medium);
+
     &.--staff {
       background: var(--primary-medium);
-    }
-
-    &.--leader {
-      background: var(--tertiary-high);
-    }
-
-    &.--regular {
-      background: var(--tertiary-medium);
-    }
-
-    &.--member {
-      background: var(--tertiary);
-    }
-
-    &.--basic {
-      background: var(--tertiary-low);
     }
   }
 }
@@ -124,38 +105,18 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: var(--space-2);
-  }
-
-  &__title {
-    margin: 0;
-  }
-
-  &__trend {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-1);
-
-    &.--faster {
-      background: var(--success-low);
-      color: var(--success);
-    }
-
-    &.--slower {
-      background: var(--danger-low);
-      color: var(--danger);
-    }
-  }
+  container-type: inline-size;
+  container-name: db-support-response;
 
   &__bars {
     display: grid;
     grid-template-columns: minmax(0, auto) minmax(120px, 1fr) 2.5rem;
     gap: var(--space-2);
+
+    @container db-support-response (width < 22rem) {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
   }
 
   &__row {
@@ -163,22 +124,31 @@
     grid-column: 1 / -1;
     grid-template-columns: subgrid;
     align-items: center;
+
+    @container db-support-response (width < 22rem) {
+      grid-template-columns: 1fr auto;
+      gap: 0 var(--space-2);
+    }
   }
 
   &__label {
     @include ellipsis;
+
+    @container db-support-response (width < 22rem) {
+      grid-column: 1 / -1;
+    }
   }
 
   &__track {
-    height: var(--space-3);
-    border-radius: 1em;
+    height: $db-bar-height;
+    border-radius: var(--d-border-radius-fixed);
     background: var(--primary-low);
   }
 
   &__fill {
     display: block;
     height: 100%;
-    border-radius: 1em;
+    border-radius: var(--d-border-radius-fixed);
 
     &.--bucket-lt_1h {
       background: var(--success);

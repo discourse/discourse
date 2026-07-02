@@ -42,7 +42,6 @@ en:
               staff_involvement:
                 label: "Staff involvement"
                 tooltip: "The percentage of open support topics where a staff member made the first reply."
-                from: "from %{value}"
               avg_first_reply:
                 label: "Avg. first reply"
                 tooltip: "The average time between when a support topic was posted and when it received its first reply."

@@ -1,7 +1,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { trustHTML } from "@ember/template";
-import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { i18n } from "discourse-i18n";
 
 const ROWS = ["resolved", "in_progress", "unanswered"];
@@ -26,31 +25,34 @@ export default class SupportTopicOutcomes extends Component {
     });
   }
 
+  get ariaLabel() {
+    return this.rows.map((row) => `${row.label} ${row.count}`).join(", ");
+  }
+
   <template>
-    <div class="db-support-outcomes">
-      <h3 class="db-support-outcomes__title">
+    <div class="db-section__row-block-header">
+      <h3 class="db-section__row-block-title">
         {{i18n "admin.dashboard.sections.support.outcomes.title"}}
       </h3>
+    </div>
+
+    <div
+      class="db-support-outcomes__bars"
+      role="img"
+      aria-label={{this.ariaLabel}}
+    >
       {{#each this.rows as |row|}}
         <div class="db-support-outcomes__row">
-          <div class="db-support-outcomes__head">
-            <span class="db-support-outcomes__label">
-              {{row.label}}
-              <DTooltip
-                class="db-support-outcomes__info"
-                @identifier={{concat "support-outcome-" row.key "-tooltip"}}
-                @icon="far-circle-question"
-                @content={{row.tooltip}}
-              />
-            </span>
-            <span class="db-support-outcomes__count">{{row.count}}</span>
-          </div>
+          <span class="db-support-outcomes__label" title={{row.tooltip}}>
+            {{row.label}}
+          </span>
           <span class="db-support-outcomes__track">
             <span
               class={{concat "db-support-outcomes__fill " row.fillClass}}
               style={{row.fillStyle}}
             ></span>
           </span>
+          <span class="db-support-outcomes__share">{{row.count}}</span>
         </div>
       {{/each}}
     </div>

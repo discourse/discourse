@@ -30,39 +30,37 @@ export default class SupportWhosAnswering extends Component {
   }
 
   <template>
-    <div class="db-support-answerers db-whos-posting">
-      <div class="db-section__row-block-header">
-        <span class="db-section__row-block-title --label">
-          {{i18n "admin.dashboard.sections.support.answerers.title"}}
-        </span>
-      </div>
-
-      {{#if this.hasData}}
-        <div
-          class="db-whos-posting__bars"
-          role="img"
-          aria-label={{this.ariaLabel}}
-        >
-          {{#each this.rows as |row|}}
-            <div class="db-whos-posting__bar-row">
-              <span class="db-whos-posting__bar-label">{{row.label}}</span>
-              <span class="db-whos-posting__bar-track">
-                <span
-                  class={{concat "db-whos-posting__bar-fill " row.fillClass}}
-                  style={{row.fillStyle}}
-                ></span>
-              </span>
-              <span
-                class="db-whos-posting__bar-share"
-              >{{row.shareFormatted}}</span>
-            </div>
-          {{/each}}
-        </div>
-      {{else}}
-        <p class="db-whos-posting__empty">
-          {{i18n "admin.dashboard.sections.support.answerers.empty"}}
-        </p>
-      {{/if}}
+    <div class="db-section__row-block-header">
+      <h3 class="db-section__row-block-title">
+        {{i18n "admin.dashboard.sections.support.answerers.title"}}
+      </h3>
     </div>
+
+    {{#if this.hasData}}
+      <div
+        class="db-whos-posting__bars"
+        role="img"
+        aria-label={{this.ariaLabel}}
+      >
+        {{#each this.rows as |row|}}
+          <div class="db-whos-posting__bar-row">
+            <span class="db-whos-posting__bar-label">{{row.label}}</span>
+            <span class="db-whos-posting__bar-track">
+              <span
+                class={{concat "db-whos-posting__bar-fill " row.fillClass}}
+                style={{row.fillStyle}}
+              ></span>
+            </span>
+            <span
+              class="db-whos-posting__bar-share"
+            >{{row.shareFormatted}}</span>
+          </div>
+        {{/each}}
+      </div>
+    {{else}}
+      <p class="db-whos-posting__empty">
+        {{i18n "admin.dashboard.sections.support.answerers.empty"}}
+      </p>
+    {{/if}}
   </template>
 }

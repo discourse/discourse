@@ -10,7 +10,6 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { durationTiny } from "discourse/lib/formatter";
 import ComboBox from "discourse/select-kit/components/combo-box";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import SupportResponseTime from "./support/response-time";
 import SupportTopicOutcomes from "./support/topic-outcomes";
@@ -79,16 +78,12 @@ export default class SupportSection extends Component {
     const kpi = this.data?.kpis?.staff_involvement ?? {};
     const value = kpi.value ?? 0;
     const previous = kpi.previous_value;
+    const diff = previous == null ? null : Math.round(value - previous);
     return {
       value: `${Math.round(value)}%`,
-      hasTrend: previous != null,
-      icon: value >= (previous ?? 0) ? "arrow-up" : "arrow-down",
-      fromText: i18n(
-        "admin.dashboard.sections.support.kpi.staff_involvement.from",
-        {
-          value: `${Math.round(previous ?? 0)}%`,
-        }
-      ),
+      hasDelta: diff != null,
+      deltaText: diff == null ? null : `${diff > 0 ? "+" : ""}${diff}%`,
+      deltaClass: diff <= 0 ? "--pos" : "--neg",
     };
   }
 
@@ -157,135 +152,138 @@ export default class SupportSection extends Component {
       @startDate={{@startDate}}
       @endDate={{@endDate}}
       ...attributes
+      {{didUpdate this.onPeriodChange @startDate @endDate}}
     >
       {{#if @fetchError}}
         <div class="db-section__error" role="alert">
           {{i18n "admin.dashboard.sections.support.fetch_error"}}
         </div>
       {{else}}
-        <div
-          class="db-support"
-          {{didUpdate this.onPeriodChange @startDate @endDate}}
-        >
-          {{#if this.headline}}
-            <div class="db-section__subheader">
-              <div class="db-section__subintro">
-                <h3>{{i18n this.headline.titleKey}}</h3>
-                <p>{{i18n
-                    this.headline.summaryKey
-                    this.headline.summaryArgs
-                  }}</p>
+        {{#if this.headline}}
+          <div class="db-section__subheader">
+            <div class="db-section__subintro">
+              <h3>{{i18n this.headline.titleKey}}</h3>
+              <p>{{i18n this.headline.summaryKey this.headline.summaryArgs}}</p>
+            </div>
+
+            <div class="db-section__metrics">
+              <div class="db-section__metric">
+                <div class="db-section__metric-number">
+                  {{this.resolutionRate.value}}
+                </div>
+                <div class="db-section__metric-label">
+                  <LinkTo
+                    @route="adminReports.show"
+                    @model={{this.resolutionRate.reportType}}
+                    @query={{this.resolutionRate.reportQuery}}
+                  >
+                    {{i18n
+                      "admin.dashboard.sections.support.kpi.resolution_rate.label"
+                    }}
+                  </LinkTo>
+                  <DTooltip
+                    class="db-section__info"
+                    @icon="far-circle-question"
+                    @content={{i18n
+                      "admin.dashboard.sections.support.kpi.resolution_rate.tooltip"
+                    }}
+                  />
+                </div>
+                {{#if this.resolutionRate.hasDelta}}
+                  <div
+                    class={{concat "db-delta " this.resolutionRate.deltaClass}}
+                  >
+                    {{this.resolutionRate.deltaText}}
+                  </div>
+                {{/if}}
               </div>
 
-              <div class="db-section__metrics">
-                <div class="db-section__metric">
-                  <div class="db-section__metric-number">
-                    {{this.resolutionRate.value}}
-                  </div>
-                  <div class="db-section__metric-label">
-                    <LinkTo
-                      @route="adminReports.show"
-                      @model={{this.resolutionRate.reportType}}
-                      @query={{this.resolutionRate.reportQuery}}
-                    >
-                      {{i18n
-                        "admin.dashboard.sections.support.kpi.resolution_rate.label"
-                      }}
-                    </LinkTo>
-                    <DTooltip
-                      class="db-section__info"
-                      @icon="far-circle-question"
-                      @content={{i18n
-                        "admin.dashboard.sections.support.kpi.resolution_rate.tooltip"
-                      }}
-                    />
-                  </div>
-                  {{#if this.resolutionRate.hasDelta}}
-                    <div
-                      class={{concat
-                        "db-delta "
-                        this.resolutionRate.deltaClass
-                      }}
-                    >
-                      {{this.resolutionRate.deltaText}}
-                    </div>
-                  {{/if}}
+              <div class="db-section__metric">
+                <div class="db-section__metric-number">
+                  {{this.staffInvolvement.value}}
                 </div>
-
-                <div class="db-section__metric">
-                  <div class="db-section__metric-number">
-                    {{this.staffInvolvement.value}}
-                  </div>
-                  <div class="db-section__metric-label">
-                    {{i18n
-                      "admin.dashboard.sections.support.kpi.staff_involvement.label"
+                <div class="db-section__metric-label">
+                  {{i18n
+                    "admin.dashboard.sections.support.kpi.staff_involvement.label"
+                  }}
+                  <DTooltip
+                    class="db-section__info"
+                    @icon="far-circle-question"
+                    @content={{i18n
+                      "admin.dashboard.sections.support.kpi.staff_involvement.tooltip"
                     }}
-                    <DTooltip
-                      class="db-section__info"
-                      @icon="far-circle-question"
-                      @content={{i18n
-                        "admin.dashboard.sections.support.kpi.staff_involvement.tooltip"
-                      }}
-                    />
-                  </div>
-                  {{#if this.staffInvolvement.hasTrend}}
-                    <div class="db-support__metric-trend">
-                      {{dIcon this.staffInvolvement.icon}}
-                      {{this.staffInvolvement.fromText}}
-                    </div>
-                  {{/if}}
+                  />
                 </div>
-
-                <div class="db-section__metric">
-                  <div class="db-section__metric-number">
-                    {{this.avgFirstReply.value}}
-                  </div>
-                  <div class="db-section__metric-label">
-                    {{i18n
-                      "admin.dashboard.sections.support.kpi.avg_first_reply.label"
+                {{#if this.staffInvolvement.hasDelta}}
+                  <div
+                    class={{concat
+                      "db-delta "
+                      this.staffInvolvement.deltaClass
                     }}
-                    <DTooltip
-                      class="db-section__info"
-                      @icon="far-circle-question"
-                      @content={{i18n
-                        "admin.dashboard.sections.support.kpi.avg_first_reply.tooltip"
-                      }}
-                    />
+                  >
+                    {{this.staffInvolvement.deltaText}}
                   </div>
-                  {{#if this.avgFirstReply.hasDelta}}
-                    <div
-                      class={{concat "db-delta " this.avgFirstReply.deltaClass}}
-                    >
-                      {{this.avgFirstReply.deltaText}}
-                    </div>
-                  {{/if}}
+                {{/if}}
+              </div>
+
+              <div class="db-section__metric">
+                <div class="db-section__metric-number">
+                  {{this.avgFirstReply.value}}
                 </div>
+                <div class="db-section__metric-label">
+                  {{i18n
+                    "admin.dashboard.sections.support.kpi.avg_first_reply.label"
+                  }}
+                  <DTooltip
+                    class="db-section__info"
+                    @icon="far-circle-question"
+                    @content={{i18n
+                      "admin.dashboard.sections.support.kpi.avg_first_reply.tooltip"
+                    }}
+                  />
+                </div>
+                {{#if this.avgFirstReply.hasDelta}}
+                  <div
+                    class={{concat "db-delta " this.avgFirstReply.deltaClass}}
+                  >
+                    {{this.avgFirstReply.deltaText}}
+                  </div>
+                {{/if}}
               </div>
             </div>
-          {{/if}}
+          </div>
+        {{/if}}
 
-          {{#if this.showFilter}}
-            <div class="db-support__filter">
-              <ComboBox
-                @content={{this.categoryOptions}}
-                @value={{this.categoryId}}
-                @onChange={{this.onCategoryChange}}
-                @valueProperty="id"
-                @nameProperty="name"
-              />
-            </div>
-          {{/if}}
+        {{#if this.showFilter}}
+          <div class="db-support__filter">
+            <ComboBox
+              @content={{this.categoryOptions}}
+              @value={{this.categoryId}}
+              @onChange={{this.onCategoryChange}}
+              @valueProperty="id"
+              @nameProperty="name"
+            />
+          </div>
+        {{/if}}
 
-          <div class="db-support__body db-section__row">
-            <div class="db-section__row-block db-support__col">
+        <div class="db-section__row-group">
+          <div class="db-section__row">
+            <div class="db-section__row-block db-support-outcomes">
               <SupportTopicOutcomes @outcomes={{this.data.topic_outcomes}} />
-              <SupportWhosAnswering @data={{this.data.whos_answering}} />
+
             </div>
-            <div class="db-section__row-block">
+            <div class="db-section__row-block db-support-response">
               <SupportResponseTime
                 @data={{this.data.response_time_distribution}}
               />
             </div>
+          </div>
+
+          <div class="db-section__row">
+            <div class="db-section__row-block db-support-answerers">
+              <SupportWhosAnswering @data={{this.data.whos_answering}} />
+            </div>
+            <div class="db-section__row-block"></div>
           </div>
         </div>
       {{/if}}
