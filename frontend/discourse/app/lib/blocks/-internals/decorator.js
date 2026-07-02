@@ -89,8 +89,9 @@ const AUTH_TOKEN = Symbol("block-auth-token");
  *   defaults derived from `args` when unset.
  * @property {(string|{light: string, dark?: string}|Function|Object)|null}
  *   thumbnail - Optional thumbnail rendered instead of the icon: a URL string,
- *   a `{ light, dark }` pair of URLs (light required, dark optional), or a
- *   component reference (an inline SVG component).
+ *   a `{ light, dark }` pair of URLs (light required, dark optional), a
+ *   component reference (an inline SVG component), or a loader that resolves to
+ *   such a component (a lazily-loaded thumbnail, e.g. `() => import(...)`).
  * @property {boolean} paletteHidden - When true, the block is excluded from
  *   lists of directly-insertable blocks. The block remains registered and
  *   renderable from layouts that reference it.
@@ -314,13 +315,18 @@ function freezeParts(parts) {
  *   schema's `default` field.
  *
  * @param {(string|{light: string, dark?: string}|Function|Object)} [options.thumbnail]
- *   An optional thumbnail rendered instead of the icon. Three forms are
+ *   An optional thumbnail rendered instead of the icon. Four forms are
  *   accepted:
  *   - A URL string — the low-effort path.
  *   - A `{ light, dark }` pair of URLs (`light` required, `dark` optional) for a
  *     raster that adapts to the active color scheme.
  *   - A component reference (an inline SVG component) that can use theme color
  *     tokens (e.g. `var(--primary)`) and adapt to the active color scheme.
+ *   - A loader function that resolves to such a component (e.g.
+ *     `() => import("...")`). This is the preferred form for a component
+ *     thumbnail: because it is a dynamic import, the component stays out of any
+ *     bundle that never renders the thumbnail. The loader may resolve to the
+ *     component directly or to a module whose `default` export is the component.
  *   How each form is presented is up to the consumer.
  *
  * @param {boolean} [options.paletteHidden=false] - When true, the block is
@@ -622,7 +628,7 @@ export function createBlockArgsWithReactiveGetters(
  * - `icon` - Icon ID (or `null` if not provided)
  * - `category` - Category label (or `null` if not provided)
  * - `previewArgs` - Sample args for a preview (or `null`)
- * - `thumbnail` - Thumbnail URL, `{ light, dark }` pair, or component (or `null`)
+ * - `thumbnail` - Thumbnail URL, `{ light, dark }` pair, component, or a loader that resolves to one (or `null`)
  * - `paletteHidden` - When true, the block is excluded from lists of directly-insertable blocks
  * - `transparent` - When true, the block is treated as structural scaffolding
  *

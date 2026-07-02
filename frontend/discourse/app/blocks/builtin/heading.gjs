@@ -2,7 +2,6 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { block } from "discourse/blocks";
-import HeadingThumbnail from "discourse/components/svg/blocks/heading";
 import { ICON_NAME_PATTERN } from "discourse/lib/blocks";
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
 import dElement from "discourse/ui-kit/helpers/d-element";
@@ -13,7 +12,7 @@ const VALID_LEVELS = [1, 2, 3, 4, 5, 6];
 const VALID_ALIGNMENTS = ["left", "center", "right"];
 
 @block("heading", {
-  thumbnail: HeadingThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/heading"),
   displayName: "Heading",
   icon: "heading",
   category: "Content",

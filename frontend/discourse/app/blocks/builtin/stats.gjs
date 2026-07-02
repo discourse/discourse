@@ -2,7 +2,6 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
-import StatsThumbnail from "discourse/components/svg/blocks/stats";
 import { ICON_NAME_PATTERN, URL_PATTERN } from "discourse/lib/blocks";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -13,7 +12,7 @@ import { i18n } from "discourse-i18n";
  * `{ value, label, icon, href }` objects) reflowed into equal columns.
  */
 @block("stats", {
-  thumbnail: StatsThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/stats"),
   displayName: "Stats",
   icon: "chart-column",
   category: "Content",

@@ -2,7 +2,6 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
-import EmbedThumbnail from "discourse/components/svg/blocks/embed";
 import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
 import { i18n } from "discourse-i18n";
 
@@ -14,7 +13,7 @@ import { i18n } from "discourse-i18n";
  * trust level as the HTML staff already write in themes.
  */
 @block("embed", {
-  thumbnail: EmbedThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/embed"),
   displayName: "Embed",
   icon: "code",
   category: "Content",

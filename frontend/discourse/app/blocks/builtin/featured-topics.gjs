@@ -2,7 +2,6 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
-import FeaturedTopicsThumbnail from "discourse/components/svg/blocks/featured-topics";
 import { URL_PATTERN } from "discourse/lib/blocks";
 import {
   fetchTopicList,
@@ -21,7 +20,7 @@ import { i18n } from "discourse-i18n";
  * view/activity columns, use the `recent-topics` block instead.
  */
 @block("featured-topics", {
-  thumbnail: FeaturedTopicsThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/featured-topics"),
   displayName: "Topic highlights",
   icon: "fire",
   category: "Discourse data",

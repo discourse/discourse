@@ -1,14 +1,13 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
-import ParagraphThumbnail from "discourse/components/svg/blocks/paragraph";
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
 import { i18n } from "discourse-i18n";
 
 const VALID_ALIGNMENTS = ["left", "center", "right"];
 
 @block("paragraph", {
-  thumbnail: ParagraphThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/paragraph"),
   displayName: "Paragraph",
   icon: "paragraph",
   category: "Content",

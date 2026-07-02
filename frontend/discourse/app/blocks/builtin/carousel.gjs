@@ -8,7 +8,6 @@ import { throttle } from "@ember/runloop";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import { block } from "discourse/blocks";
-import CarouselThumbnail from "discourse/components/svg/blocks/carousel";
 import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 import { isTesting } from "discourse/lib/environment";
 import { eq } from "discourse/truth-helpers";
@@ -32,7 +31,7 @@ const MAX_DOTS = 10;
  * child machinery.
  */
 @block("carousel", {
-  thumbnail: CarouselThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/carousel"),
   container: true,
   displayName: "Carousel",
   icon: "images",

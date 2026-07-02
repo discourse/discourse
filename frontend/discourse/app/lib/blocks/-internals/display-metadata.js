@@ -53,7 +53,10 @@ function previewArgsFromSchema(argsSchema) {
  * - `category` falls back to `"Misc"`.
  * - `previewArgs` falls back to a shallow object harvested from each arg
  *   schema's `default` field.
- * - `thumbnail` falls back to `null` (the icon is rendered instead).
+ * - `thumbnail` falls back to `null` (the icon is rendered instead). When set,
+ *   it is a URL string, a `{ light, dark }` pair, a component, or a loader that
+ *   resolves to a component; it is passed through untouched for the consumer to
+ *   present (and to resolve, if it is a loader).
  *
  * @param {Function} component - A class decorated with `@block`.
  * @returns {{displayName: string, icon: string, category: string,

@@ -7,7 +7,6 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { modifier } from "ember-modifier";
 import { block } from "discourse/blocks";
-import TabsThumbnail from "discourse/components/svg/blocks/tabs";
 import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
 import { and, eq } from "discourse/truth-helpers";
@@ -33,7 +32,7 @@ const VALID_ALIGNS = ["start", "center", "end"];
  * affordance at the end of the strip and marks each label as editable in place.
  */
 @block("tabs", {
-  thumbnail: TabsThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/tabs"),
   container: true,
   displayName: "Tabs",
   icon: "table-columns",

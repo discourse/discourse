@@ -2,14 +2,13 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
-import DividerThumbnail from "discourse/components/svg/blocks/divider";
 import { HEX_COLOR_PATTERN } from "discourse/lib/blocks";
 import { i18n } from "discourse-i18n";
 
 const VALID_STYLES = ["solid", "dashed", "dotted"];
 
 @block("divider", {
-  thumbnail: DividerThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/divider"),
   displayName: "Divider",
   icon: "minus",
   category: "Layout",

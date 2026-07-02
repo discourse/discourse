@@ -1,5 +1,5 @@
 import { module, test } from "qunit";
-import HeadingThumbnail from "discourse/components/svg/blocks/heading";
+import HeadingThumbnail from "discourse/blocks/thumbnails/heading";
 import isComponent from "discourse/lib/is-component";
 import DLightDarkImg from "discourse/ui-kit/d-light-dark-img";
 

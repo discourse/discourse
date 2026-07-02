@@ -3,7 +3,6 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { block } from "discourse/blocks";
-import FeaturedCategoriesThumbnail from "discourse/components/svg/blocks/featured-categories";
 import CategoryCard from "discourse/lib/blocks/-internals/category-card";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
@@ -16,7 +15,7 @@ import { i18n } from "discourse-i18n";
  * `Category.findById`; unresolvable IDs are dropped silently.
  */
 @block("featured-categories", {
-  thumbnail: FeaturedCategoriesThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/featured-categories"),
   displayName: "Featured categories",
   icon: "folder-tree",
   category: "Discourse data",

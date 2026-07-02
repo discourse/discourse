@@ -2,7 +2,6 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
-import SectionThumbnail from "discourse/components/svg/blocks/section";
 import { HEX_COLOR_PATTERN, URL_PATTERN } from "discourse/lib/blocks";
 import { i18n } from "discourse-i18n";
 
@@ -22,7 +21,7 @@ const VALID_CONTENT_WIDTHS = ["contained", "wide", "full"];
  * accessible name.
  */
 @block("section", {
-  thumbnail: SectionThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/section"),
   container: true,
   displayName: "Section",
   icon: "image",

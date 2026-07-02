@@ -2,11 +2,10 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
-import SpacerThumbnail from "discourse/components/svg/blocks/spacer";
 import { i18n } from "discourse-i18n";
 
 @block("spacer", {
-  thumbnail: SpacerThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/spacer"),
   displayName: "Spacer",
   icon: "arrows-up-down",
   category: "Layout",

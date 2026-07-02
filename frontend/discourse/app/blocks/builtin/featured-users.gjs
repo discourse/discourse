@@ -1,7 +1,6 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
-import FeaturedUsersThumbnail from "discourse/components/svg/blocks/featured-users";
 import {
   fetchUsers,
   VALID_USER_ORDERS,
@@ -18,7 +17,7 @@ import { i18n } from "discourse-i18n";
  * `.user` drives the avatar and link.
  */
 @block("featured-users", {
-  thumbnail: FeaturedUsersThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/featured-users"),
   displayName: "Top contributors",
   icon: "users",
   category: "Discourse data",

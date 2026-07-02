@@ -1,7 +1,6 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
-import ButtonLinkThumbnail from "discourse/components/svg/blocks/button-link";
 import { ICON_NAME_PATTERN, URL_PATTERN } from "discourse/lib/blocks";
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
 import DButton from "discourse/ui-kit/d-button";
@@ -11,7 +10,7 @@ import { i18n } from "discourse-i18n";
 const VALID_VARIANTS = ["primary", "default", "danger"];
 
 @block("button-link", {
-  thumbnail: ButtonLinkThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/button-link"),
   displayName: "Button Link",
   icon: "link",
   category: "Navigation",

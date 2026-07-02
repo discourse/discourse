@@ -6,7 +6,6 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { block } from "discourse/blocks";
-import TagBannerThumbnail from "discourse/components/svg/blocks/tag-banner";
 import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
 import { i18n } from "discourse-i18n";
 
@@ -19,7 +18,7 @@ import { i18n } from "discourse-i18n";
  * lazily from the `tag-info` endpoint.
  */
 @block("tag-banner", {
-  thumbnail: TagBannerThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/tag-banner"),
   displayName: "Tag banner",
   icon: "tag",
   category: "Discourse data",

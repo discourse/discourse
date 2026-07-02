@@ -3,7 +3,6 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { block } from "discourse/blocks";
-import NewTopicButtonThumbnail from "discourse/components/svg/blocks/new-topic-button";
 import { ICON_NAME_PATTERN } from "discourse/lib/blocks";
 import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
@@ -22,7 +21,7 @@ const VALID_VARIANTS = ["primary", "default", "danger"];
  * editing must not open the composer over the author's canvas.
  */
 @block("new-topic-button", {
-  thumbnail: NewTopicButtonThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/new-topic-button"),
   displayName: "New topic button",
   icon: "plus",
   category: "Navigation",

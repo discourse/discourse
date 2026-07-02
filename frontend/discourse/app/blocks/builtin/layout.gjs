@@ -3,7 +3,6 @@ import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
-import LayoutThumbnail from "discourse/components/svg/blocks/layout";
 import {
   DEFAULT_GRID_COLUMNS,
   DEFAULT_GRID_ROWS,
@@ -56,7 +55,7 @@ const VALID_ALIGN_CONTENT = [
  *     than a deliberately-placed layout.
  */
 @block("layout", {
-  thumbnail: LayoutThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/layout"),
   container: true,
   displayName: "Layout",
   icon: "table-cells-large",

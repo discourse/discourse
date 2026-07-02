@@ -1,7 +1,6 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
-import TableThumbnail from "discourse/components/svg/blocks/table";
 import {
   DEFAULT_GRID_COLUMNS,
   DEFAULT_GRID_ROWS,
@@ -24,7 +23,7 @@ import { i18n } from "discourse-i18n";
  * cell, place a container (a `group`, say) there.
  */
 @block("table", {
-  thumbnail: TableThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/table"),
   container: true,
   // Marks this container as positionable on a 2D grid, so editing tooling can
   // offer the same cell-placement affordances it offers any grid container.

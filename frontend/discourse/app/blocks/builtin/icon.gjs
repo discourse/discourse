@@ -2,7 +2,6 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
-import IconThumbnail from "discourse/components/svg/blocks/icon";
 import {
   HEX_COLOR_PATTERN,
   ICON_NAME_PATTERN,
@@ -19,7 +18,7 @@ const VALID_SIZES = ["sm", "md", "lg", "xl"];
  * this one stands on its own.
  */
 @block("icon", {
-  thumbnail: IconThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/icon"),
   displayName: "Icon",
   icon: "star",
   category: "Content",

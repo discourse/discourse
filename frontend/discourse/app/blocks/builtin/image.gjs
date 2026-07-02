@@ -1,7 +1,6 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
-import ImageThumbnail from "discourse/components/svg/blocks/image";
 import { URL_PATTERN } from "discourse/lib/blocks";
 import DLightDarkImg from "discourse/ui-kit/d-light-dark-img";
 import { i18n } from "discourse-i18n";
@@ -36,7 +35,7 @@ function darkVariantWithLightFrame(image) {
 }
 
 @block("image", {
-  thumbnail: ImageThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/image"),
   displayName: "Image",
   icon: "image",
   category: "Content",

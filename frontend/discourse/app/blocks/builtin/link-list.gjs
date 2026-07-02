@@ -2,7 +2,6 @@
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
-import LinkListThumbnail from "discourse/components/svg/blocks/link-list";
 import { ICON_NAME_PATTERN, URL_PATTERN } from "discourse/lib/blocks";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -17,7 +16,7 @@ const VALID_LAYOUTS = ["vertical", "horizontal"];
  * blocks.
  */
 @block("link-list", {
-  thumbnail: LinkListThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/link-list"),
   displayName: "Link list",
   icon: "link",
   category: "Content",

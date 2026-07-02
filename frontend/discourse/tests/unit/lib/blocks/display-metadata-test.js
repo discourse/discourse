@@ -81,4 +81,20 @@ module("Unit | Lib | blocks/display-metadata", function () {
       null
     );
   });
+
+  test("passes a loader-thunk thumbnail through untouched", function (assert) {
+    // A lazily-loaded thumbnail: a function that resolves to a component. It is
+    // accepted at decoration time and stored (and returned) as-is, so the
+    // consumer can resolve it when it actually needs to render.
+    const loader = () => Promise.resolve({ default: class {} });
+
+    @block("display-lazy-thumbnail", { thumbnail: loader })
+    class LazyThumbnailBlock extends Component {}
+
+    assert.strictEqual(
+      getBlockDisplayMetadata(LazyThumbnailBlock).thumbnail,
+      loader,
+      "the loader function is stored and returned untouched"
+    );
+  });
 });

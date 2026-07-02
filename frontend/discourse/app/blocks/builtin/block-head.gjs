@@ -2,7 +2,6 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { block } from "discourse/blocks";
-import HeadThumbnail from "discourse/components/svg/blocks/head";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -58,7 +57,7 @@ import { i18n } from "discourse-i18n";
 @block("head", {
   container: true,
   description: "Renders only the first child whose conditions pass",
-  thumbnail: HeadThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/head"),
 })
 export default class HeadBlock extends Component {
   @service blocks;

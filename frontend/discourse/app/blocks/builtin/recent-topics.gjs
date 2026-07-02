@@ -2,7 +2,6 @@
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
 import BasicTopicList from "discourse/components/basic-topic-list";
-import RecentTopicsThumbnail from "discourse/components/svg/blocks/recent-topics";
 import { URL_PATTERN } from "discourse/lib/blocks";
 import {
   fetchTopicList,
@@ -21,7 +20,7 @@ import { i18n } from "discourse-i18n";
  * cases.
  */
 @block("recent-topics", {
-  thumbnail: RecentTopicsThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/recent-topics"),
   displayName: "Topic list",
   icon: "list",
   category: "Discourse data",

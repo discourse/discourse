@@ -145,11 +145,14 @@ export function validateDisplayMetadata(name, options) {
   }
 
   if (thumbnail != null) {
-    // A thumbnail is one of three forms:
+    // A thumbnail is one of four forms:
     // - a non-empty URL string (rendered through an `<img>`);
     // - a `{ light, dark }` pair of URLs (rendered through `DLightDarkImg`);
     // - a component reference (an inline SVG component), rendered inline so it
-    //   can use theme color tokens.
+    //   can use theme color tokens;
+    // - a loader function that resolves to such a component (a lazily-loaded
+    //   thumbnail, e.g. `() => import("...")`), so the component stays out of
+    //   any bundle that never renders the thumbnail.
     // `isComponent` positively identifies a real component (class or
     // template-only), so anything else is rejected here at decoration time.
     const isUrl = typeof thumbnail === "string" && thumbnail.trim() !== "";
@@ -159,9 +162,13 @@ export function validateDisplayMetadata(name, options) {
       typeof thumbnail === "object" &&
       thumbnail !== null &&
       "light" in thumbnail;
-    if (!isUrl && !isLightDark && !isComponent(thumbnail)) {
+    // A component class is itself a function, so a lazy loader is any function
+    // that is not already a renderable component.
+    const isLazyLoader =
+      typeof thumbnail === "function" && !isComponent(thumbnail);
+    if (!isUrl && !isLightDark && !isComponent(thumbnail) && !isLazyLoader) {
       raiseBlockError(
-        `Block "${name}": "thumbnail" must be a non-empty URL string, a { light, dark } pair of URLs, or an inline SVG component.`
+        `Block "${name}": "thumbnail" must be a non-empty URL string, a { light, dark } pair of URLs, an inline SVG component, or a loader that resolves to one (e.g. () => import(...)).`
       );
     }
   }

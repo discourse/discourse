@@ -1,7 +1,6 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
-import ListThumbnail from "discourse/components/svg/blocks/list";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -11,7 +10,7 @@ import { i18n } from "discourse-i18n";
  * separate `list` blocks for nesting.
  */
 @block("list", {
-  thumbnail: ListThumbnail,
+  thumbnail: () => import("discourse/blocks/thumbnails/list"),
   displayName: "List",
   icon: "list",
   category: "Content",

@@ -14,7 +14,7 @@ import {
   LAYOUT_LAYERS,
 } from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
-import HeadingThumbnail from "discourse/components/svg/blocks/heading";
+import HeadingThumbnail from "discourse/blocks/thumbnails/heading";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
