@@ -2,6 +2,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import bodyClass from "discourse/helpers/body-class";
 import DButton from "discourse/ui-kit/d-button";
@@ -15,6 +16,7 @@ const VE_DRAG_TYPES = ["wf-block", "wf-palette-block"];
 import ActivityBar from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/activity-bar";
 import BlockBreadcrumb from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/block-breadcrumb";
 import PublishTargetStatus from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/publish-target-status";
+import RailResizeHandle from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/rail-resize-handle";
 import ViewDrawer from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/view-drawer";
 import ConditionsFloatingPanel from "discourse/plugins/discourse-wireframe/discourse/components/editor/conditions/conditions-floating-panel";
 import DropPreview from "discourse/plugins/discourse-wireframe/discourse/components/editor/drag-drop/drop-preview";
@@ -28,7 +30,6 @@ import PublishReviewDrawer from "discourse/plugins/discourse-wireframe/discourse
 
 // Persisted under core's global key-value store; the `wireframe_` prefix
 // namespaces our keys within its shared `discourse_` bucket to avoid collisions.
-const RIGHT_COLLAPSED_KEY = "wireframe_rightCollapsed";
 const DIM_NON_EDITABLE_KEY = "wireframe_dimNonEditable";
 
 /**
@@ -51,15 +52,13 @@ export default class EditorShell extends Component {
   @service wireframeSimulation;
   @service keyValueStore;
 
-  @tracked rightCollapsed;
   @tracked dimNonEditable;
   @tracked viewSettingsOpen = false;
 
   constructor() {
     super(...arguments);
     // Hydrate persisted prefs in the constructor so `keyValueStore` is resolved.
-    this.rightCollapsed =
-      this.keyValueStore.getObject(RIGHT_COLLAPSED_KEY) ?? false;
+    // Right-rail collapse + both rail widths live on the `wireframeRail` service.
     this.dimNonEditable =
       this.keyValueStore.getObject(DIM_NON_EDITABLE_KEY) ?? true;
   }
@@ -129,15 +128,6 @@ export default class EditorShell extends Component {
   }
 
   @action
-  toggleRightCollapsed() {
-    this.rightCollapsed = !this.rightCollapsed;
-    this.keyValueStore.setObject({
-      key: RIGHT_COLLAPSED_KEY,
-      value: this.rightCollapsed,
-    });
-  }
-
-  @action
   toggleDimNonEditable() {
     this.dimNonEditable = !this.dimNonEditable;
     this.keyValueStore.setObject({
@@ -176,12 +166,15 @@ export default class EditorShell extends Component {
       {{bodyClass
         "wireframe-active"
         (if this.wireframeRail.leftCollapsed "wireframe-active--left-collapsed")
-        (if this.rightCollapsed "wireframe-active--right-collapsed")
+        (if
+          this.wireframeRail.rightCollapsed "wireframe-active--right-collapsed"
+        )
         (if this.dimNonEditable "wireframe-active--dim-non-editable")
         (if this.wireframeDragSession.dragActive "wireframe-dragging")
       }}
       <div
         class={{this.shellClasses}}
+        {{didInsert this.wireframeRail.applyRailWidths}}
         {{dDragAndDropAutoScroll target="window" types=VE_DRAG_TYPES}}
         {{dDragAndDropMonitor
           types=VE_DRAG_TYPES
@@ -273,40 +266,51 @@ export default class EditorShell extends Component {
               {{/if}}
             </div>
           </div>
+          {{! Resize handle on the left panel's inner (canvas-facing) seam;
+              hidden while collapsed since a collapsed rail isn't resizable. }}
+          <RailResizeHandle @side="left" />
         {{/unless}}
 
         <div class="wireframe-canvas">
           <BlockBreadcrumb />
         </div>
 
+        {{#unless this.wireframeRail.rightCollapsed}}
+          <RailResizeHandle @side="right" />
+        {{/unless}}
+
         <div
           class={{dConcatClass
             "wireframe-panel"
             "--right"
-            (if this.rightCollapsed "--collapsed")
+            (if this.wireframeRail.rightCollapsed "--collapsed")
           }}
         >
           <div class="panel-header">
             <DButton
               class="btn-flat panel-collapse-toggle"
-              @icon={{if this.rightCollapsed "chevron-left" "chevron-right"}}
+              @icon={{if
+                this.wireframeRail.rightCollapsed
+                "chevron-left"
+                "chevron-right"
+              }}
               @title={{if
-                this.rightCollapsed
+                this.wireframeRail.rightCollapsed
                 "wireframe.chrome.expand_panel"
                 "wireframe.chrome.collapse_panel"
               }}
               @ariaLabel={{if
-                this.rightCollapsed
+                this.wireframeRail.rightCollapsed
                 "wireframe.chrome.expand_panel"
                 "wireframe.chrome.collapse_panel"
               }}
-              @action={{this.toggleRightCollapsed}}
+              @action={{this.wireframeRail.toggleRightCollapsed}}
             />
-            {{#unless this.rightCollapsed}}
+            {{#unless this.wireframeRail.rightCollapsed}}
               <span>{{i18n "wireframe.chrome.panel_inspector"}}</span>
             {{/unless}}
           </div>
-          {{#unless this.rightCollapsed}}
+          {{#unless this.wireframeRail.rightCollapsed}}
             <div class="panel-body">
               <InspectorPanel />
             </div>

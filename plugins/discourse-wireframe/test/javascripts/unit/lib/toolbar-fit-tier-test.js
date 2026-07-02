@@ -1,11 +1,11 @@
 import { module, test } from "qunit";
-import { computeTier } from "discourse/plugins/discourse-wireframe/discourse/services/wireframe-toolbar-fit";
+import { computeTier } from "discourse/plugins/discourse-wireframe/discourse/lib/toolbar-fit-tier";
 
 // The fit decision is a pure function of three measured widths, so it can be
 // table-tested without a DOM. `naturalFull` here is 100, `naturalCompact` 40;
-// the service requires 1px of slack (EPSILON) before a tier may win.
+// the decision requires 1px of slack (EPSILON) before a tier may win.
 module(
-  "Unit | Discourse Wireframe | service:wireframe-toolbar-fit computeTier",
+  "Unit | Discourse Wireframe | lib:toolbar-fit-tier computeTier",
   function () {
     test("plenty of room → full", function (assert) {
       assert.strictEqual(computeTier(500, 100, 40), "full");

@@ -15,8 +15,9 @@ import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
+import dFit from "discourse/ui-kit/modifiers/d-fit";
 import { i18n } from "discourse-i18n";
-import toolbarFit from "discourse/plugins/discourse-wireframe/discourse/modifiers/toolbar-fit";
+import { computeTier } from "discourse/plugins/discourse-wireframe/discourse/lib/toolbar-fit-tier";
 
 // Quick-pick copy counts offered by the Duplicate button's dropdown, alongside
 // a custom field. Stamping out a row of identical cards is then one gesture
@@ -43,13 +44,13 @@ const DUPLICATE_PRESETS = [2, 3, 5, 10];
  * anchor as the outlet badge.
  *
  * On a narrow block the bar would overflow, so its collapsible (structural)
- * actions fold into a hamburger as space runs out. The `toolbar-fit` modifier
- * registers this bar's chrome with the `wireframe-toolbar-fit` coordinator,
- * which measures the chrome's width and writes a `data-wf-toolbar-fit` tier on
- * it; the stylesheet keys off that to swap the inline action row for the
- * hamburger and, when even that doesn't fit, drop the handle's name to its
- * tooltip. The inline buttons and the hamburger menu render from one
- * `actionItems` descriptor list, so the two can't drift.
+ * actions fold into a hamburger as space runs out. The shared `d-fit` modifier
+ * registers this bar's chrome with the fit coordinator, which measures the
+ * chrome's width and writes a `data-wf-toolbar-fit` tier on it; the stylesheet
+ * keys off that to swap the inline action row for the hamburger and, when even
+ * that doesn't fit, drop the handle's name to its tooltip. The inline buttons
+ * and the hamburger menu render from one `actionItems` descriptor list, so the
+ * two can't drift.
  *
  * Inline-format buttons (bold / italic / link) appear when the user
  * has entered an in-place text session on this block AND has a non-empty
@@ -368,7 +369,7 @@ export default class BlockToolbar extends Component {
   /**
    * A string that changes whenever the bar's rendered content changes width:
    * the handle's name / ordinal, the URL-edit and inline-format sub-modes, and
-   * the identity / disabled / active / icon of every action. The `toolbar-fit`
+   * the identity / disabled / active / icon of every action. The `d-fit`
    * modifier reads this so it re-measures on a content change; a plain resize
    * is caught by the coordinator's observer instead.
    *
@@ -387,6 +388,46 @@ export default class BlockToolbar extends Component {
       );
     }
     return parts.join("|");
+  }
+
+  /**
+   * The fit coordinator's READ step for this badge. Reads the natural widths of
+   * the bar's parts from the toolbar element. The leading group (handle + any
+   * always-inline format buttons) and BOTH the collapsible action row and the
+   * hamburger are always in the DOM — the off-tier one sits absolutely
+   * positioned at `max-content`, so every `offsetWidth` reports its true
+   * intrinsic width regardless of the current tier. No styles are toggled to
+   * measure.
+   *
+   * @param {HTMLElement} toolbarEl - The bar root (the element `d-fit` is on).
+   * @returns {{ naturalFull: number, naturalCompact: number }} The bar's natural
+   *   width with the actions inline vs. folded into the hamburger.
+   */
+  @action
+  measureFit(toolbarEl) {
+    const widthOf = (selector) =>
+      toolbarEl.querySelector(selector)?.offsetWidth ?? 0;
+
+    const leading =
+      widthOf(".wireframe-block-toolbar__handle") +
+      widthOf(".wireframe-block-toolbar__format");
+    const actions = widthOf(".wireframe-block-toolbar__actions");
+    const more = widthOf(".wireframe-block-toolbar__more");
+
+    return { naturalFull: leading + actions, naturalCompact: leading + more };
+  }
+
+  /**
+   * The fit coordinator's pure DECIDE step: maps the chrome's available width
+   * plus the measured natural widths to a fit tier.
+   *
+   * @param {number} avail - The chrome's available content width.
+   * @param {{ naturalFull: number, naturalCompact: number }} data
+   * @returns {"full"|"narrow"|"narrower"}
+   */
+  @action
+  decideFit(avail, data) {
+    return computeTier(avail, data.naturalFull, data.naturalCompact);
   }
 
   @action
@@ -533,8 +574,11 @@ export default class BlockToolbar extends Component {
     <div
       class="wireframe-block-toolbar"
       role="toolbar"
-      {{toolbarFit
-        chromeEl=@chromeEl
+      {{dFit
+        observedEl=@chromeEl
+        measure=this.measureFit
+        decide=this.decideFit
+        apply=(hash attribute="data-wf-toolbar-fit")
         active=this.fitActive
         fingerprint=this.fitFingerprint
       }}

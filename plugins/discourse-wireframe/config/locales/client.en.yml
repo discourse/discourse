@@ -31,6 +31,8 @@ en:
         issues_empty: "No issues detected."
         collapse_panel: "Collapse panel"
         expand_panel: "Expand panel"
+        resize_left_panel: "Resize left panel"
+        resize_right_panel: "Resize inspector panel"
         view_menu: "View"
         view_close: "Close view settings"
         save_state:

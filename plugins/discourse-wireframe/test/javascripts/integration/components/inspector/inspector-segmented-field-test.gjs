@@ -1,4 +1,4 @@
-import { click, render } from "@ember/test-helpers";
+import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import InspectorSegmentedField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-segmented-field";
@@ -81,5 +81,61 @@ module("Integration | Wireframe | InspectorSegmentedField", function (hooks) {
 
     await click("input[value='b']");
     assert.deepEqual(captured, ["b"]);
+  });
+
+  // Six icon options: enough that the control fits at a wide rail but folds
+  // once the rail is dragged to its narrowest, which is what these tests flex.
+  const SIX_ITEMS = ["a", "b", "c", "d", "e", "f"].map((value) => ({
+    value,
+    label: value.toUpperCase(),
+    icon: "wf-align-left",
+  }));
+
+  test("folds to a dropdown when the inspector rail is narrow", async function (assert) {
+    this.owner.lookup("service:wireframe-rail").setRightRailWidth(240);
+    const items = SIX_ITEMS;
+    await render(
+      <template>
+        <InspectorSegmentedField @items={{items}} @value="a" />
+      </template>
+    );
+
+    assert
+      .dom(".wireframe-segmented-field__dropdown")
+      .exists("a narrow rail folds the six-option control to a dropdown");
+    assert.dom(".d-segmented-control").doesNotExist();
+  });
+
+  test("keeps segments when the inspector rail is wide", async function (assert) {
+    this.owner.lookup("service:wireframe-rail").setRightRailWidth(500);
+    const items = SIX_ITEMS;
+    await render(
+      <template>
+        <InspectorSegmentedField @items={{items}} @value="a" />
+      </template>
+    );
+
+    assert.dom(".d-segmented-control").exists("a wide rail keeps segments");
+    assert.dom(".wireframe-segmented-field__dropdown").doesNotExist();
+  });
+
+  test("re-widening the rail unfolds the control back to segments", async function (assert) {
+    const rail = this.owner.lookup("service:wireframe-rail");
+    rail.setRightRailWidth(240);
+    const items = SIX_ITEMS;
+    await render(
+      <template>
+        <InspectorSegmentedField @items={{items}} @value="a" />
+      </template>
+    );
+    assert
+      .dom(".wireframe-segmented-field__dropdown")
+      .exists("folded while narrow");
+
+    rail.setRightRailWidth(500);
+    await settled();
+    assert
+      .dom(".d-segmented-control")
+      .exists("widening the rail restores the segmented control");
   });
 });
