@@ -38,6 +38,41 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert.dom(".a").isFocused("ArrowLeft moves focus to the previous item");
   });
 
+  test("focus mode: focus on a descendant of an item resolves to that item", async function (assert) {
+    // An item may contain its own focusable controls (an inline button, or the
+    // trigger a closed popover just handed focus back to). Focus resting on such
+    // a descendant should navigate from its containing item, not fall back to
+    // the tab stop.
+    await render(
+      <template>
+        <div
+          role="tree"
+          {{dRovingFocus
+            orientation="horizontal"
+            itemSelector="[role=treeitem]"
+          }}
+        >
+          <div class="a" role="treeitem">A</div>
+          <div class="b" role="treeitem">
+            B
+            {{! Intentionally nests a focusable control in the item to exercise
+              descendant-focus resolution. }}
+            {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+            <span class="b-inner" tabindex="0">x</span>
+          </div>
+          <div class="c" role="treeitem">C</div>
+        </div>
+      </template>
+    );
+
+    // Focus a control *inside* item B (not B itself), then navigate.
+    await focus(".b-inner");
+    await triggerKeyEvent(".b-inner", "keydown", "ArrowRight");
+    assert
+      .dom(".c")
+      .isFocused("ArrowRight navigates from the item containing the focus");
+  });
+
   test("focus mode: grid down/up moves by the live column count", async function (assert) {
     await render(
       <template>

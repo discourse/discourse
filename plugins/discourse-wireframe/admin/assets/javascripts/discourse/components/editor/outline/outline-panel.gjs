@@ -9,11 +9,14 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { TrackedAsyncData } from "ember-async-data";
 import DButton from "discourse/ui-kit/d-button";
+import DFilterInput from "discourse/ui-kit/d-filter-input";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropSource from "discourse/ui-kit/modifiers/d-drag-and-drop-source";
 import dDragAndDropTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-target";
+import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
+import OutlineRowActions from "discourse/plugins/discourse-wireframe/discourse/components/editor/outline/outline-row-actions";
 import {
   normalizeLayoutMode,
   walkAllOutlets,
@@ -36,6 +39,9 @@ function rowPadding(depth) {
 // still expand it; their explicit choice overrides this default.
 const CHILD_COUNT_THRESHOLD = 6;
 
+// FloatKit identifier for the per-row kebab menu, so only one is ever open.
+const ROW_ACTIONS_MENU = "wireframe-outline-row-actions";
+
 /**
  * Read-only outline of registered block outlet layouts. Renders one section
  * per outlet, each containing a flattened tree of its blocks. Clicking a row
@@ -44,6 +50,7 @@ const CHILD_COUNT_THRESHOLD = 6;
  */
 export default class OutlinePanel extends Component {
   @service blocks;
+  @service menu;
   @service wireframeBlockMutations;
   @service wireframeBlockReveal;
   @service wireframeDragSession;
@@ -317,6 +324,127 @@ export default class OutlinePanel extends Component {
     this.wireframeSelection.selectOutlet(outletName);
   }
 
+  /**
+   * Keyboard activation (Enter / Space) for a tree item, dispatched by the
+   * `dRovingFocus` modifier. The modifier hands back the focused DOM element,
+   * so we branch on which kind of item it is and read the identity off the
+   * element's data attributes:
+   *   - an outlet header selects that outlet's implicit root layout,
+   *   - a block row runs the same selection path as a click.
+   *
+   * @param {Element} element - The focused tree item.
+   * @param {KeyboardEvent} event - Forwarded so `selectRow` can honor modifiers.
+   */
+  @action
+  activateTreeItem(element, event) {
+    if (element.classList.contains("outline-outlet__header")) {
+      const { outletName } = element.dataset;
+      if (outletName) {
+        this.selectOutletRoot(outletName);
+      }
+      return;
+    }
+    const found = this.#findRow(element.dataset.blockKey);
+    if (found) {
+      this.selectRow(found.outletName, found.row, event);
+    }
+  }
+
+  /**
+   * Tree expand/collapse via Left/Right arrows. The `dRovingFocus` modifier
+   * runs in vertical orientation, so it leaves Left/Right un-prevented for this
+   * sibling handler: Right expands a collapsed container, Left collapses an
+   * expanded one. Leaves and already-in-state containers are a no-op, so the
+   * event stays un-prevented and can bubble.
+   *
+   * @param {KeyboardEvent} event
+   */
+  @action
+  onTreeKeydown(event) {
+    if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
+      return;
+    }
+    const element = document.activeElement;
+    if (!element) {
+      return;
+    }
+    const expand = event.key === "ArrowRight";
+
+    if (element.classList.contains("outline-outlet__header")) {
+      const { outletName } = element.dataset;
+      if (outletName && this.isOutletCollapsed(outletName) === expand) {
+        event.preventDefault();
+        this.toggleOutlet(outletName);
+      }
+      return;
+    }
+
+    const found = this.#findRow(element.dataset.blockKey);
+    if (found?.row.hasChildren && this.isRowCollapsed(found.row) === expand) {
+      event.preventDefault();
+      this.toggleCollapse(found.row);
+    }
+  }
+
+  /**
+   * Opens the row's kebab overflow menu (Duplicate / Delete) anchored to the
+   * clicked button. Uses FloatKit's programmatic `menu.show` so exactly one
+   * menu instance exists regardless of row count, mirroring core's
+   * DButton-triggered menu pattern (`topic-bookmarks-menu`): DButton defers its
+   * action through the runloop and clears `currentTarget`, so the trigger
+   * element is recovered via `event.target.closest`.
+   *
+   * @param {Object} row - The decorated row the actions apply to.
+   * @param {MouseEvent} event - Forwarded by DButton (`@forwardEvent`).
+   */
+  @action
+  openRowActions(row, event) {
+    const trigger = event.target.closest(".outline-block__actions");
+    // Select the row this menu acts on, exactly as a row click would, so the
+    // acted-on item is clearly highlighted and the inspector reflects it while
+    // the menu is open.
+    const found = this.#findRow(row.blockKey);
+    if (found) {
+      this.selectRow(found.outletName, found.row, event);
+    }
+    // `autofocus` moves focus into the menu (its first item) so it's keyboard-
+    // operable; Tab cycles the items and Escape closes, returning focus to the
+    // trigger. The trigger is the kebab inside the row, so `dRovingFocus`
+    // resolves the tree cursor back to that row and arrow-nav resumes there.
+    this.menu.show(trigger, {
+      identifier: ROW_ACTIONS_MENU,
+      component: OutlineRowActions,
+      placement: "bottom-end",
+      autofocus: true,
+      data: {
+        onDuplicate: () =>
+          this.wireframeBlockMutations.duplicateBlock(row.blockKey),
+        onDelete: () => this.wireframeBlockMutations.removeBlock(row.blockKey),
+      },
+    });
+  }
+
+  /**
+   * Resolves a decorated row (and its owning outlet) from a block key by
+   * scanning the current groups. Called only on a keyboard activation, so the
+   * linear scan is cheap relative to a per-render index.
+   *
+   * @param {string|undefined} blockKey
+   * @returns {{outletName: string, row: Object}|null}
+   */
+  #findRow(blockKey) {
+    if (!blockKey) {
+      return null;
+    }
+    for (const group of this.decoratedGroups) {
+      const row = group.rows.find((r) => r.blockKey === blockKey);
+      if (row) {
+        return { outletName: group.outletName, row };
+      }
+    }
+    return null;
+  }
+
   lookupMetadataFor(blockName) {
     if (!this.#metaIndex) {
       this.#metaIndex = new Map(
@@ -514,6 +642,10 @@ export default class OutlinePanel extends Component {
     // `null` so the badge only renders where a mode is meaningful.
     const layoutMode =
       row.blockName === "layout" ? normalizeLayoutMode(row.args?.mode) : null;
+    // `aria-level` for the flattened tree: the outlet header is level 1, so a
+    // top-level row (depth 0) is level 2, and so on. Computed here in the single
+    // decoration pass rather than as a per-row template getter.
+    const ariaLevel = row.depth + 2;
     return {
       ...row,
       conditionPassing,
@@ -522,6 +654,7 @@ export default class OutlinePanel extends Component {
       hasError,
       isMuted,
       layoutMode,
+      ariaLevel,
       statusIcon: this.#statusIconFor(row, conditionFailing),
       statusTooltip: this.#statusTooltipFor(row, conditionFailing),
     };
@@ -578,26 +711,19 @@ export default class OutlinePanel extends Component {
   <template>
     <div class="wireframe-outline">
       <div class="wireframe-outline__filter-bar">
-        <div class="wireframe-outline__search">
-          {{dIcon "magnifying-glass"}}
-          <input
-            type="search"
-            value={{this.query}}
-            placeholder={{i18n "wireframe.outline.filter.placeholder"}}
-            spellcheck="false"
-            autocomplete="off"
-            aria-label={{i18n "wireframe.outline.filter.placeholder"}}
-            {{on "input" this.onQueryInput}}
-          />
-          {{#if this.query}}
-            <DButton
-              class="wireframe-outline__search-clear"
-              @icon="xmark"
-              @ariaLabel="wireframe.outline.filter.clear"
-              @action={{this.clearQuery}}
-            />
-          {{/if}}
-        </div>
+        {{! Core's shared filter input: leading icon, clear button, and the
+          proper container-level focus ring (a bare input would render the
+          global input focus shadow as a stray inner ring). }}
+        <DFilterInput
+          @value={{this.query}}
+          @filterAction={{this.onQueryInput}}
+          @onClearInput={{this.clearQuery}}
+          @icons={{hash left="magnifying-glass"}}
+          placeholder={{i18n "wireframe.outline.filter.placeholder"}}
+          aria-label={{i18n "wireframe.outline.filter.placeholder"}}
+          spellcheck="false"
+          autocomplete="off"
+        />
         <div class="wireframe-outline__chips" role="tablist">
           <DButton
             class={{dConcatClass
@@ -629,163 +755,232 @@ export default class OutlinePanel extends Component {
       </div>
 
       {{#if this.decoratedGroups.length}}
-        {{#each this.decoratedGroups as |group|}}
-          <div class="outline-outlet">
-            {{! The header chevron toggles collapse; the label selects the
+        {{! The tree is one flat roving-focus list: its DOM order (each outlet
+          header followed by its visible rows) already matches the visible tree
+          order, since collapsed outlets/containers render no descendants. The
+          modifier owns the single tab stop and Up/Down/Home/End/Enter; Left and
+          Right bubble to onTreeKeydown for expand/collapse. itemsKey re-seeds
+          the tab stop whenever the row set changes (filter, collapse, delete). }}
+        <div
+          class="wireframe-outline__tree"
+          role="tree"
+          aria-label={{i18n "wireframe.outline.tree_label"}}
+          {{dRovingFocus
+            orientation="vertical"
+            itemSelector=".outline-outlet__header, .outline-block"
+            onActivate=this.activateTreeItem
+            itemsKey=this.decoratedGroups
+          }}
+          {{on "keydown" this.onTreeKeydown}}
+        >
+          {{#each this.decoratedGroups key="outletName" as |group|}}
+            {{! Each outlet is a group of tree nodes (its header treeitem plus
+              its block-row treeitems), giving the treeitems the tree/group
+              container the role requires. }}
+            <div class="outline-outlet" role="group">
+              {{! The header chevron toggles collapse; the label selects the
               outlet (its implicit root layout) so the inspector shows the
               layout form. Two distinct interactions, so two controls. }}
-            <div
-              class={{dConcatClass
-                "outline-outlet__header"
-                (if (this.isOutletSelected group.rootKey) "--selected")
-              }}
-            >
-              <DButton
-                class="outline-outlet__toggle"
-                @ariaExpanded={{if
-                  (this.isOutletCollapsed group.outletName)
-                  false
-                  true
+              <div
+                class={{dConcatClass
+                  "outline-outlet__header"
+                  (if (this.isOutletSelected group.rootKey) "--selected")
                 }}
-                @icon={{if
+                role="treeitem"
+                aria-level="1"
+                aria-expanded={{if
                   (this.isOutletCollapsed group.outletName)
-                  "chevron-right"
-                  "chevron-down"
+                  "false"
+                  "true"
                 }}
-                @ariaLabel={{if
-                  (this.isOutletCollapsed group.outletName)
-                  "wireframe.outline.expand_row"
-                  "wireframe.outline.collapse_row"
+                aria-selected={{if
+                  (this.isOutletSelected group.rootKey)
+                  "true"
+                  "false"
                 }}
-                @action={{fn this.toggleOutlet group.outletName}}
-              />
-              <DButton
-                class="outline-outlet__label"
-                @action={{fn this.selectOutletRoot group.outletName}}
+                data-outlet-name={{group.outletName}}
               >
-                {{dIcon "cubes"}}
-                <span class="outline-outlet__name">{{group.outletName}}</span>
-                {{#if group.mode}}
-                  <span class="outline-outlet__mode">
-                    {{i18n
-                      (concat "wireframe.inspector.layout.mode_" group.mode)
-                    }}
-                  </span>
-                {{/if}}
-              </DButton>
-            </div>
-            {{#unless (this.isOutletCollapsed group.outletName)}}
-              {{#each group.rows as |row|}}
-                <div
-                  class={{dConcatClass
-                    "outline-block"
-                    (if
-                      (this.wireframeSelection.isBlockSelected row.blockKey)
-                      "--selected"
-                    )
-                    (if (this.isRowDragSource row.blockKey) "--dragging")
-                    (if row.hasError "--error")
-                    (if row.isMuted "--muted")
-                    (if row.isPart "--part")
+                <DButton
+                  class="outline-outlet__toggle"
+                  @ariaExpanded={{if
+                    (this.isOutletCollapsed group.outletName)
+                    false
+                    true
                   }}
-                  role="button"
-                  tabindex="0"
-                  style={{rowPadding row.depth}}
-                  {{on "click" (fn this.selectRow group.outletName row)}}
-                  {{dDragAndDropSource
-                    type="wf-block"
-                    data=(hash
-                      blockKey=row.blockKey
-                      outletName=group.outletName
-                      isPart=row.isPart
-                    )
-                    onDragStart=this.handleRowDragStart
-                    onDrop=this.wireframeDragSession.endDrag
+                  @icon={{if
+                    (this.isOutletCollapsed group.outletName)
+                    "chevron-right"
+                    "chevron-down"
                   }}
-                  {{dDragAndDropTarget
-                    accepts=this.acceptedDragKinds
-                    position="before"
-                    onDrop=(fn this.applyRowDrop group.outletName row)
+                  @ariaLabel={{if
+                    (this.isOutletCollapsed group.outletName)
+                    "wireframe.outline.expand_row"
+                    "wireframe.outline.collapse_row"
                   }}
+                  @action={{fn this.toggleOutlet group.outletName}}
+                />
+                <DButton
+                  class="outline-outlet__label"
+                  @action={{fn this.selectOutletRoot group.outletName}}
                 >
-                  {{! The chevron sits inside a row that's role="button"
-                    for selection. stopPropagation on `toggleCollapse`
-                    keeps the row click from firing alongside the
-                    collapse toggle, so the two interactions are
-                    logically distinct even though they nest. }}
-                  {{#if row.hasChildren}}
-
-                    <DButton
-                      class="outline-block__toggle"
-                      @icon={{if
-                        (this.isRowCollapsed row)
-                        "chevron-right"
-                        "chevron-down"
+                  {{dIcon "cubes"}}
+                  <span class="outline-outlet__name">{{group.outletName}}</span>
+                  {{#if group.mode}}
+                    <span class="outline-chip outline-outlet__mode">
+                      {{i18n
+                        (concat "wireframe.inspector.layout.mode_" group.mode)
                       }}
-                      @ariaLabel={{if
-                        (this.isRowCollapsed row)
-                        "wireframe.outline.expand_row"
-                        "wireframe.outline.collapse_row"
-                      }}
-                      @action={{fn this.toggleCollapse row}}
-                    />
-                  {{else}}
-                    <span class="outline-block__leaf">
-                      {{dIcon (if row.isPart "circle-dashed" "cube")}}
                     </span>
                   {{/if}}
-                  {{! The block name is the row's primary text; a child of an
+                </DButton>
+              </div>
+              {{#unless (this.isOutletCollapsed group.outletName)}}
+                {{#each group.rows key="blockKey" as |row|}}
+                  <div
+                    class={{dConcatClass
+                      "outline-block"
+                      (if
+                        (this.wireframeSelection.isBlockSelected row.blockKey)
+                        "--selected"
+                      )
+                      (if (this.isRowDragSource row.blockKey) "--dragging")
+                      (if row.hasError "--error")
+                      (if row.isMuted "--muted")
+                      (if row.isPart "--part")
+                    }}
+                    role="treeitem"
+                    aria-level={{row.ariaLevel}}
+                    aria-selected={{if
+                      (this.wireframeSelection.isBlockSelected row.blockKey)
+                      "true"
+                      "false"
+                    }}
+                    aria-expanded={{if
+                      row.hasChildren
+                      (if (this.isRowCollapsed row) "false" "true")
+                    }}
+                    data-block-key={{row.blockKey}}
+                    data-outlet-name={{group.outletName}}
+                    style={{rowPadding row.depth}}
+                    {{on "click" (fn this.selectRow group.outletName row)}}
+                    {{dDragAndDropSource
+                      type="wf-block"
+                      data=(hash
+                        blockKey=row.blockKey
+                        outletName=group.outletName
+                        isPart=row.isPart
+                      )
+                      onDragStart=this.handleRowDragStart
+                      onDrop=this.wireframeDragSession.endDrag
+                    }}
+                    {{dDragAndDropTarget
+                      accepts=this.acceptedDragKinds
+                      position="before"
+                      onDrop=(fn this.applyRowDrop group.outletName row)
+                    }}
+                  >
+                    {{! Drag grip — a hover-revealed affordance signalling the
+                    row is draggable. The whole row is the drag source (the
+                    modifiers above), so the grip is decorative; parts aren't
+                    reorderable, so they get none. }}
+                    {{#unless row.isPart}}
+                      <span class="outline-block__grip" aria-hidden="true">
+                        {{dIcon "grip-vertical"}}
+                      </span>
+                    {{/unless}}
+                    {{! The chevron sits inside a treeitem row that also handles
+                    selection. The toggle button stops its own click from
+                    propagating, so the row selection does not also fire; the two
+                    interactions stay logically distinct even though they nest. }}
+                    {{#if row.hasChildren}}
+
+                      <DButton
+                        class="outline-block__toggle"
+                        @icon={{if
+                          (this.isRowCollapsed row)
+                          "chevron-right"
+                          "chevron-down"
+                        }}
+                        @ariaLabel={{if
+                          (this.isRowCollapsed row)
+                          "wireframe.outline.expand_row"
+                          "wireframe.outline.collapse_row"
+                        }}
+                        @action={{fn this.toggleCollapse row}}
+                      />
+                    {{else}}
+                      <span class="outline-block__leaf">
+                        {{dIcon (if row.isPart "circle-dashed" "cube")}}
+                      </span>
+                    {{/if}}
+                    {{! The block name is the row's primary text; a child of an
                       ordinal-naming container (a carousel slide, a tabs panel)
                       gets its position as a separate chip below, and its own
                       label as the row's hover tooltip. }}
-                  <span class="outline-block__name" title={{row.childLabel}}>
-                    {{row.blockName}}
-                  </span>
-                  {{#if (this.isRowCollapsed row)}}
-                    {{! Count badge surfacing how many child rows are hidden
+                    <span class="outline-block__name" title={{row.childLabel}}>
+                      {{row.blockName}}
+                    </span>
+                    {{#if (this.isRowCollapsed row)}}
+                      {{! Count badge surfacing how many child rows are hidden
                       while the container is collapsed — the compaction cue for
                       large containers. }}
-                    <span class="outline-block__child-count">
-                      {{i18n
-                        "wireframe.outline.child_count"
-                        count=row.childCount
-                      }}
-                    </span>
-                  {{/if}}
-                  {{#if row.slideOrdinal}}
-                    {{! A noun-framed container's child (a carousel slide, a tabs
+                      <span class="outline-chip outline-block__child-count">
+                        {{i18n
+                          "wireframe.outline.child_count"
+                          count=row.childCount
+                        }}
+                      </span>
+                    {{/if}}
+                    {{#if row.slideOrdinal}}
+                      {{! A noun-framed container's child (a carousel slide, a tabs
                         panel) shows its 1-based position as a chip beside the
                         block name, ahead of the layout-mode chip. }}
-                    <span class="outline-block__ordinal">
-                      {{i18n row.slideNumberKey number=row.slideOrdinal}}
-                    </span>
-                  {{/if}}
-                  {{#if row.layoutMode}}
-                    <span class="outline-block__mode">
-                      {{i18n
-                        (concat
-                          "wireframe.inspector.layout.mode_" row.layoutMode
-                        )
-                      }}
-                    </span>
-                  {{/if}}
-                  {{#if row.blockId}}
-                    <span class="outline-block__id">#{{row.blockId}}</span>
-                  {{/if}}
-                  {{#if row.statusIcon}}
-                    <span
-                      class="outline-block__status"
-                      title={{row.statusTooltip}}
-                      aria-label={{row.statusTooltip}}
-                    >
-                      {{dIcon row.statusIcon}}
-                    </span>
-                  {{/if}}
-                </div>
-              {{/each}}
-            {{/unless}}
-          </div>
-        {{/each}}
+                      <span class="outline-chip outline-block__ordinal">
+                        {{i18n row.slideNumberKey number=row.slideOrdinal}}
+                      </span>
+                    {{/if}}
+                    {{#if row.layoutMode}}
+                      <span class="outline-chip outline-block__mode">
+                        {{i18n
+                          (concat
+                            "wireframe.inspector.layout.mode_" row.layoutMode
+                          )
+                        }}
+                      </span>
+                    {{/if}}
+                    {{#if row.blockId}}
+                      <span class="outline-block__id">#{{row.blockId}}</span>
+                    {{/if}}
+                    {{#if row.statusIcon}}
+                      <span
+                        class="outline-block__status"
+                        title={{row.statusTooltip}}
+                        aria-label={{row.statusTooltip}}
+                      >
+                        {{dIcon row.statusIcon}}
+                      </span>
+                    {{/if}}
+                    {{! Kebab overflow menu (Duplicate / Delete), revealed on
+                    hover, focus, or selection. Opens a single on-demand FloatKit
+                    menu; parts have no structural actions. Forwarding the event
+                    to the action lets the trigger element be recovered for
+                    anchoring. }}
+                    {{#unless row.isPart}}
+                      <DButton
+                        class="outline-block__actions btn-flat"
+                        @icon="ellipsis-vertical"
+                        @ariaLabel="wireframe.outline.actions_label"
+                        @actionParam={{row}}
+                        @action={{this.openRowActions}}
+                        @forwardEvent={{true}}
+                      />
+                    {{/unless}}
+                  </div>
+                {{/each}}
+              {{/unless}}
+            </div>
+          {{/each}}
+        </div>
       {{else}}
         <div class="panel-empty">{{i18n "wireframe.outline.empty"}}</div>
       {{/if}}

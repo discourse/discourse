@@ -1843,6 +1843,19 @@ body.wireframe-active {
 .wireframe-outline {
   font-size: var(--font-down-1);
 
+  /* Small metadata chip shared across the outline (layout mode, child ordinal,
+     hidden-child count). One rule so the variants can't drift; each element
+     layers on its own specifics (casing, tabular figures, alignment). */
+
+  .outline-chip {
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    background: var(--primary-low);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-weight: 500;
+  }
+
   /* Filter bar — text search + status chips. */
   &__filter-bar {
     display: flex;
@@ -1851,43 +1864,9 @@ body.wireframe-active {
     margin-bottom: 0.5rem;
   }
 
-  &__search {
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-    padding: 0.25rem 0.5rem;
-    border: 1px solid var(--primary-low);
-    border-radius: 4px;
-    background: var(--secondary);
-    color: var(--primary-medium);
-
-    input {
-      flex: 1;
-      border: none;
-      background: transparent;
-      font-size: var(--font-down-1);
-      color: var(--primary);
-      outline: none;
-
-      &::placeholder {
-        color: var(--primary-medium);
-      }
-    }
-  }
-
-  &__search-clear {
-    background: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    color: var(--primary-medium);
-    display: inline-flex;
-    align-items: center;
-
-    &:hover {
-      color: var(--primary);
-    }
-  }
+  /* The search box is core's DFilterInput (`.filter-input-container`), which
+     brings its own icon, clear button, and container-level focus ring — no
+     bespoke input styling needed here. */
 
   &__chips {
     display: flex;
@@ -1898,11 +1877,11 @@ body.wireframe-active {
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    padding: 0.2rem 0.5rem;
+    padding: 0.25rem 0.6rem;
     border: 1px solid var(--primary-low);
     background: var(--secondary);
     border-radius: 999px;
-    font-size: var(--font-down-2);
+    font-size: var(--font-down-1);
     color: var(--primary-medium);
     cursor: pointer;
 
@@ -1932,8 +1911,14 @@ body.wireframe-active {
       display: flex;
       align-items: center;
       gap: 0.25rem;
+      padding: 0.2rem 0 0.2rem 0.25rem;
       margin-bottom: 0.25rem;
       border-radius: 3px;
+      cursor: pointer;
+
+      &:hover:not(.--selected) {
+        background: var(--primary-very-low);
+      }
 
       /* Selection — mirrors the block rows' selected treatment so the
          outlet header reads as active when its root layout is selected. */
@@ -1941,6 +1926,14 @@ body.wireframe-active {
       &.--selected {
         background: var(--tertiary-low);
         box-shadow: inset 3px 0 0 var(--tertiary);
+      }
+
+      /* Roving-focus keyboard ring — the header is a treeitem in the same
+         roving list as the block rows, so it needs the same focus indicator. */
+
+      &:focus-visible {
+        outline: 2px solid var(--tertiary);
+        outline-offset: -2px;
       }
     }
 
@@ -1980,25 +1973,36 @@ body.wireframe-active {
     /* Compact mode chip next to the outlet name (stack / row / grid). */
     .outline-outlet__mode {
       margin-inline-start: auto;
-      padding: 0 0.35rem;
-      border-radius: 3px;
-      background: var(--primary-low);
-      color: var(--primary-medium);
-      font-size: var(--font-down-2);
-      font-weight: 400;
       text-transform: lowercase;
     }
 
     .outline-block {
-      padding: 0.25rem 0;
+      // `position: relative` anchors the absolutely-positioned kebab and the
+      // leading drag grip. The right gutter for the kebab is only reserved
+      // while it's revealed (see the reveal rule below), so a resting row uses
+      // its full width; the padding transition keeps that shift smooth.
+      position: relative;
+      padding: 0.2rem 0;
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: 0.5rem;
       border-radius: 3px;
+      transition: padding-right 100ms;
+
+      /* Hover is a subtle background tint, matching core's tree lists
+         (schema-setting-editor), rather than a text-color shift. */
 
       &:hover {
-        color: var(--wireframe-block-hover-color);
+        background: var(--primary-very-low);
+      }
+
+      // Roving-focus keyboard ring. The modifier moves real DOM focus between
+      // treeitems, so the focused row needs a visible indicator distinct from
+      // hover / selection.
+      &:focus-visible {
+        outline: 2px solid var(--tertiary);
+        outline-offset: -2px;
       }
 
       /* Selection — distinct from hover so the active row stands out
@@ -2089,12 +2093,6 @@ body.wireframe-active {
        matches the chip the outlet header shows for its root layout. */
 
     .outline-block__mode {
-      padding: 0 0.35rem;
-      border-radius: 3px;
-      background: var(--primary-low);
-      color: var(--primary-medium);
-      font-size: var(--font-down-2);
-      font-weight: 400;
       text-transform: lowercase;
     }
 
@@ -2103,12 +2101,6 @@ body.wireframe-active {
        Mirrors the mode chip, but keeps its label casing ("Slide 2" / "Tab 2"). */
 
     .outline-block__ordinal {
-      padding: 0 0.35rem;
-      border-radius: 3px;
-      background: var(--primary-low);
-      color: var(--primary-medium);
-      font-size: var(--font-down-2);
-      font-weight: 400;
       font-variant-numeric: tabular-nums;
     }
 
@@ -2116,12 +2108,6 @@ body.wireframe-active {
        so a compacted large container still tells you how much it holds. */
 
     .outline-block__child-count {
-      padding: 0 0.35rem;
-      border-radius: 3px;
-      background: var(--primary-low);
-      color: var(--primary-medium);
-      font-size: var(--font-down-2);
-      font-weight: 400;
       font-variant-numeric: tabular-nums;
     }
 
@@ -2139,6 +2125,53 @@ body.wireframe-active {
 
     .outline-block.--error .outline-block__status {
       color: var(--danger);
+    }
+
+    /* Leading drag grip — sits in the row's indent gutter and is revealed on
+       hover / keyboard focus. Purely an affordance: the whole row is the drag
+       source, so the grip only signals draggability. */
+
+    .outline-block__grip {
+      position: absolute;
+      left: 0.15rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-flex;
+      align-items: center;
+      color: var(--primary-medium);
+      cursor: grab;
+      opacity: 0;
+      transition: opacity 100ms;
+      font-size: 0.85em;
+    }
+
+    /* Trailing kebab overflow menu (Duplicate / Delete). Absolutely positioned
+       in the reserved right gutter; revealed on hover, on keyboard focus within
+       the row, or while the row is selected. */
+
+    .outline-block__actions {
+      position: absolute;
+      right: 0.1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 0.15rem 0.3rem;
+      color: var(--primary-medium);
+      opacity: 0;
+      transition: opacity 100ms;
+    }
+
+    .outline-block:hover,
+    .outline-block:focus-visible,
+    .outline-block:focus-within,
+    .outline-block.--selected {
+      // Reserve the kebab gutter only while it's shown, so a resting row keeps
+      // its full width for the name and trailing chips.
+      padding-right: 1.75rem;
+
+      .outline-block__grip,
+      .outline-block__actions {
+        opacity: 1;
+      }
     }
 
     .outline-children {
@@ -2814,6 +2847,16 @@ body.wireframe-active
     &--danger {
       color: var(--danger);
     }
+  }
+}
+
+/* Outline row kebab menu (Duplicate / Delete), opened via `menu.show`. Styled
+   through the component's own root class so it's independent of the FloatKit
+   portal's identifier-derived classes. */
+
+.wireframe-outline-row-actions {
+  .wireframe-outline__row-action--danger {
+    color: var(--danger);
   }
 }
 

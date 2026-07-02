@@ -353,8 +353,13 @@ en:
       outline:
         empty: "No editable outlets on this page."
         outlet_label: "Outlet"
+        tree_label: "Block outline"
         expand_row: "Expand children"
         collapse_row: "Collapse children"
+        actions_label: "Block actions"
+        action:
+          duplicate: "Duplicate"
+          delete: "Delete"
         child_count:
           one: "× %{count}"
           other: "× %{count}"

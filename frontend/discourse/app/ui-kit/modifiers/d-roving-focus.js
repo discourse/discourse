@@ -272,6 +272,11 @@ export default class DRovingFocusModifier extends Modifier {
    * (focus mode) or which item the controller's `aria-activedescendant` points at
    * (active mode), with a sensible fallback so a lost cursor lands on the tab stop.
    *
+   * In focus mode the active element is matched by containment, not identity, so
+   * focus resting on a focusable descendant of an item (e.g. an inline control
+   * inside a row, or the trigger a closed menu just handed focus back to) still
+   * resolves to that item.
+   *
    * @param {Element[]} items
    * @returns {number}
    */
@@ -280,7 +285,10 @@ export default class DRovingFocusModifier extends Modifier {
       const byId = items.findIndex((el) => el.id === this.#activeId);
       return byId >= 0 ? byId : 0;
     }
-    const focused = items.indexOf(document.activeElement);
+    const active = document.activeElement;
+    const focused = items.findIndex(
+      (el) => el === active || el.contains(active)
+    );
     if (focused >= 0) {
       return focused;
     }
