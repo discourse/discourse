@@ -20,11 +20,7 @@ export function setupComposerPosition(editor) {
   function shouldLockScroll() {
     const ipadHardwareKeyboard =
       isIpadOS && !html.classList.contains("keyboard-visible");
-    return (
-      editorFocused &&
-      html.classList.contains("ios-device") &&
-      !ipadHardwareKeyboard
-    );
+    return editorFocused && isIOS && !ipadHardwareKeyboard;
   }
 
   function getAllowedScrollTargets() {
