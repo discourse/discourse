@@ -2928,6 +2928,7 @@ en:
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
     rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The {{setting:faq_url}} setting works as before."
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
+    reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
     enable_horizon_high_context_topic_cards: "Shows richer topic cards in the Horizon theme, including topic excerpts, tags, and plugin extended information."
     granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous_users' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
