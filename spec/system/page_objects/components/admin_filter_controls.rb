@@ -68,6 +68,12 @@ module PageObjects
         component.find(".admin-filter-controls__input").value
       end
 
+      def has_dropdown_value?(text, dropdown_id: nil)
+        selector = ".admin-filter-controls__dropdown"
+        selector += "#{selector}--#{dropdown_id}" if dropdown_id
+        component.has_css?("#{selector} option:checked", text: text)
+      end
+
       def dropdown_value
         component.find(".admin-filter-controls__dropdown option:checked").text
       end
