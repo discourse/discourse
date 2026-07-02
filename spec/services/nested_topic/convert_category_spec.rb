@@ -69,6 +69,21 @@ RSpec.describe NestedTopic::ConvertCategory do
           false,
         ).to(true)
       end
+
+      it "enqueues stats backfill for nested topics in the category" do
+        expect_enqueued_with(
+          job: :backfill_nested_reply_stats,
+          args: {
+            topic_ids: [topic.id, already_nested_topic.id],
+          },
+        ) { result }
+      end
+
+      it "skips stats backfill when no topics are converted" do
+        Fabricate(:nested_topic, topic: topic)
+
+        expect_not_enqueued_with(job: :backfill_nested_reply_stats) { result }
+      end
     end
   end
 end

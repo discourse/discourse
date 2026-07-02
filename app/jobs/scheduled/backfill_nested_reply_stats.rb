@@ -6,25 +6,12 @@ module Jobs
 
     cluster_concurrency 1
 
-    def execute(_ = nil)
+    def execute(args = {})
       return unless SiteSetting.nested_replies_enabled
 
+      args ||= {}
       topic_ids =
-        DB.query_single(<<~SQL, batch_size: SiteSetting.nested_replies_backfill_batch_size)
-          SELECT t.id FROM topics t
-          INNER JOIN nested_topics nt ON nt.topic_id = t.id
-          LEFT JOIN nested_view_post_stats s ON s.post_id = (
-            SELECT p.id FROM posts p
-            WHERE p.topic_id = t.id AND p.post_number = 1
-            LIMIT 1
-          )
-          WHERE t.deleted_at IS NULL
-            AND t.archetype = 'regular'
-            AND s.post_id IS NULL
-          ORDER BY t.id DESC
-          LIMIT :batch_size
-        SQL
-
+        args[:topic_ids].present? ? explicit_topic_ids(args[:topic_ids]) : topic_ids_missing_stats
       return if topic_ids.empty?
 
       topic_ids.each do |topic_id|
@@ -34,6 +21,37 @@ module Jobs
     end
 
     private
+
+    def explicit_topic_ids(topic_ids)
+      topic_ids = Array(topic_ids).map(&:to_i).select(&:positive?).uniq
+      return [] if topic_ids.empty?
+
+      DB.query_single(<<~SQL, topic_ids: topic_ids)
+        SELECT t.id FROM topics t
+        INNER JOIN nested_topics nt ON nt.topic_id = t.id
+        WHERE t.id = ANY(ARRAY[:topic_ids]::bigint[])
+          AND t.deleted_at IS NULL
+          AND t.archetype = 'regular'
+        ORDER BY t.id DESC
+      SQL
+    end
+
+    def topic_ids_missing_stats
+      DB.query_single(<<~SQL, batch_size: SiteSetting.nested_replies_backfill_batch_size)
+        SELECT t.id FROM topics t
+        INNER JOIN nested_topics nt ON nt.topic_id = t.id
+        LEFT JOIN nested_view_post_stats s ON s.post_id = (
+          SELECT p.id FROM posts p
+          WHERE p.topic_id = t.id AND p.post_number = 1
+          LIMIT 1
+        )
+        WHERE t.deleted_at IS NULL
+          AND t.archetype = 'regular'
+          AND s.post_id IS NULL
+        ORDER BY t.id DESC
+        LIMIT :batch_size
+      SQL
+    end
 
     # Guarantees the OP has a stats row so the selector (which keys on
     # s.post_id IS NULL for post_number = 1) will not re-pick this topic

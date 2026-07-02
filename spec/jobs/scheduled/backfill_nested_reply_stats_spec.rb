@@ -7,8 +7,8 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
 
   before { SiteSetting.nested_replies_enabled = true }
 
-  def execute
-    described_class.new.execute(nil)
+  def execute(args = nil)
+    described_class.new.execute(args)
   end
 
   it "does nothing when feature is disabled" do
@@ -188,5 +188,28 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     freeze_time 1.hour.from_now
     execute
     expect(NestedViewPostStat.find_by(post_id: op.id).updated_at).to eq_time(initial_updated_at)
+  end
+
+  it "backfills explicit topic ids with existing OP stats" do
+    parent = Fabricate(:post, topic: topic, reply_to_post_number: 1)
+    Fabricate(:post, topic: topic, reply_to_post_number: parent.post_number)
+    NestedViewPostStat.delete_all
+    NestedViewPostStat.create!(post_id: op.id)
+
+    execute(topic_ids: [topic.id])
+
+    stat = NestedViewPostStat.find_by(post_id: parent.id)
+    expect(stat.direct_reply_count).to eq(1)
+  end
+
+  it "skips explicit topic ids without nested topics" do
+    non_nested_topic = Fabricate(:topic)
+    non_nested_op = Fabricate(:post, topic: non_nested_topic, post_number: 1)
+    Fabricate(:post, topic: non_nested_topic, reply_to_post_number: 1)
+    NestedViewPostStat.delete_all
+
+    execute(topic_ids: [non_nested_topic.id])
+
+    expect(NestedViewPostStat.find_by(post_id: non_nested_op.id)).to be_nil
   end
 end

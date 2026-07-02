@@ -21,6 +21,8 @@ class NestedTopic::ConvertCategory
     step :mark_conversion_completed
   end
 
+  only_if(:converted_topics?) { step :enqueue_nested_reply_stats_backfill }
+
   private
 
   def fetch_category(params:)
@@ -65,5 +67,22 @@ class NestedTopic::ConvertCategory
 
   def mark_conversion_completed(category:)
     category.mark_nested_replies_conversion_completed!
+  end
+
+  def converted_topics?(converted_topic_count:)
+    converted_topic_count.positive?
+  end
+
+  def enqueue_nested_reply_stats_backfill(category:)
+    category
+      .topics
+      .joins(:nested_topic)
+      .where(archetype: Archetype.default, deleted_at: nil)
+      .in_batches(of: SiteSetting.nested_replies_backfill_batch_size) do |topics|
+        topic_ids = topics.pluck(:id)
+        next if topic_ids.empty?
+
+        Jobs.enqueue(:backfill_nested_reply_stats, topic_ids: topic_ids)
+      end
   end
 end
