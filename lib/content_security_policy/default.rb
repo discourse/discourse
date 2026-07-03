@@ -5,10 +5,13 @@ class ContentSecurityPolicy
   class Default
     attr_reader :directives
 
-    def initialize
+    def initialize(report_only: false)
       @directives =
         {}.tap do |directives|
-          directives[:upgrade_insecure_requests] = [] if SiteSetting.force_https
+          # `upgrade-insecure-requests` is ignored in a report-only policy, and
+          # browsers log a console warning when it is present there, so only
+          # emit it for the enforced policy.
+          directives[:upgrade_insecure_requests] = [] if SiteSetting.force_https && !report_only
           directives[:base_uri] = [:self]
           directives[:object_src] = [:none]
           directives[:script_src] = script_src
