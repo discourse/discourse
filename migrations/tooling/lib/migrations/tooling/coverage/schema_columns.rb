@@ -62,7 +62,7 @@ module Migrations
           optional = []
 
           value
-            .method(:create)
+            .public_method(:create)
             .parameters
             .each do |type, name|
               case type
@@ -78,7 +78,7 @@ module Migrations
         private_class_method :build_model
 
         def self.generated?(model)
-          path, = model.method(:create).source_location
+          path, = model.public_method(:create).source_location
           return false unless path
 
           File.read(path).include?(GENERATED_MARKER)
