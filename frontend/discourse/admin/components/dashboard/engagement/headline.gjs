@@ -10,10 +10,17 @@ import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const PRESET_PERIODS = ["last_7_days", "last_30_days", "last_3_months"];
+const PERCENTAGE_KPIS = ["dau_mau"];
 
 class MetricItem extends Component {
+  get isPercentage() {
+    return PERCENTAGE_KPIS.includes(this.args.metric.type);
+  }
+
   get displayValue() {
-    return formatKpiValue(this.args.metric.type, this.args.metric.value);
+    return formatKpiValue(this.args.metric.value, {
+      percentage: this.isPercentage,
+    });
   }
 
   get hasDelta() {

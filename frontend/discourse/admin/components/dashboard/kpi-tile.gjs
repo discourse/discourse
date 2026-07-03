@@ -11,9 +11,15 @@ import DTooltip from "discourse/float-kit/components/d-tooltip";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+const PERCENTAGE_KPIS = ["dau_mau"];
+
 export default class KpiTile extends Component {
+  get isPercentage() {
+    return PERCENTAGE_KPIS.includes(this.args.type);
+  }
+
   get displayValue() {
-    return formatKpiValue(this.args.type, this.args.value);
+    return formatKpiValue(this.args.value, { percentage: this.isPercentage });
   }
 
   get label() {

@@ -1,12 +1,10 @@
 import I18n from "discourse-i18n";
 
-const PERCENTAGE_KPIS = ["dau_mau"];
-
-export function formatKpiValue(type, value) {
+export function formatKpiValue(value, { percentage = false } = {}) {
   if (value == null) {
     return "—";
   }
-  if (PERCENTAGE_KPIS.includes(type)) {
+  if (percentage) {
     return `${I18n.toNumber(value, { precision: 1 })}%`;
   }
   return I18n.toNumber(value, { precision: 0 });

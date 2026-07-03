@@ -10,15 +10,19 @@ module("Unit | Admin | Lib | dashboard-format", function (hooks) {
 
   module("formatKpiValue", function () {
     test("returns an em dash when the value is null", function (assert) {
-      assert.strictEqual(formatKpiValue("new_signups", null), "—");
+      assert.strictEqual(formatKpiValue(null), "—");
+    });
+
+    test("returns an em dash when the value is undefined", function (assert) {
+      assert.strictEqual(formatKpiValue(undefined), "—");
     });
 
     test("formats a count with no decimals and a thousands separator", function (assert) {
-      assert.strictEqual(formatKpiValue("new_signups", 1100), "1,100");
+      assert.strictEqual(formatKpiValue(1100), "1,100");
     });
 
-    test("formats a percentage KPI with a percent suffix and one decimal", function (assert) {
-      assert.strictEqual(formatKpiValue("dau_mau", 21.6), "21.6%");
+    test("formats a percentage value with a percent suffix and one decimal", function (assert) {
+      assert.strictEqual(formatKpiValue(21.6, { percentage: true }), "21.6%");
     });
   });
 
