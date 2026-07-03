@@ -1,5 +1,6 @@
 import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import sinon from "sinon";
 import SectionLink from "discourse/components/sidebar/section-link";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
@@ -7,10 +8,7 @@ module("Integration | Component | Sidebar | SectionLink", function (hooks) {
   setupRenderingTest(hooks);
 
   function setTouch(owner, value) {
-    Object.defineProperty(owner.lookup("service:capabilities"), "touch", {
-      configurable: true,
-      value,
-    });
+    sinon.stub(owner.lookup("service:capabilities"), "touch").get(() => value);
   }
 
   test("default class attribute for link", async function (assert) {
