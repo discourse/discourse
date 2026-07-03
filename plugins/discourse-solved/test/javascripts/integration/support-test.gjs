@@ -16,7 +16,17 @@ function buildData(overrides = {}) {
       staff_involvement: { value: 19, previous_value: 25 },
       avg_first_reply: { value: 11100, previous_value: 10620 },
     },
-    headline: { key: "healthy", resolution_rate: 72, unanswered_count: 3 },
+    headline: {
+      key: "healthy",
+      resolution_rate: 72,
+      resolution_direction: "up",
+      answerers_focus: "members",
+      answerers_share: 82,
+      first_reply_seconds: 11100,
+      first_reply_direction: "slower",
+      first_reply_delta_seconds: 480,
+      unanswered_count: 3,
+    },
     topic_outcomes: { resolved: 1, in_progress: 0, unanswered: 3 },
     whos_answering: {
       rows: [{ type: "staff", count: 1, share: 100 }],
@@ -104,6 +114,54 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
 
     assert.dom(".db-section__metrics .db-pill").exists({ count: 3 });
     assert.dom(".db-section__metrics .db-delta").doesNotExist();
+  });
+
+  test("composes a trend-aware headline summary from each metric's direction", async function (assert) {
+    const positive = buildData();
+
+    await render(
+      <template>
+        <SupportSection
+          @data={{positive}}
+          @startDate={{startDate}}
+          @endDate={{endDate}}
+        />
+      </template>
+    );
+
+    assert.dom(".db-section__subintro p").includesText("climbed to 72%");
+    assert
+      .dom(".db-section__subintro p")
+      .includesText("Members are handling 82%");
+
+    const negative = buildData({
+      headline: {
+        key: "struggling",
+        resolution_rate: 34,
+        resolution_direction: "down",
+        answerers_focus: "staff",
+        answerers_share: 81,
+        first_reply_seconds: 51720,
+        first_reply_direction: "slower",
+        first_reply_delta_seconds: 31200,
+        unanswered_count: 47,
+      },
+    });
+
+    await render(
+      <template>
+        <SupportSection
+          @data={{negative}}
+          @startDate={{startDate}}
+          @endDate={{endDate}}
+        />
+      </template>
+    );
+
+    assert.dom(".db-section__subintro p").includesText("dropped to 34%");
+    assert
+      .dom(".db-section__subintro p")
+      .includesText("47 topics from this period still have zero replies");
   });
 
   test("shows a placeholder when the average first reply is unknown", async function (assert) {

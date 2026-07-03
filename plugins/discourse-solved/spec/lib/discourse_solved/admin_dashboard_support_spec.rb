@@ -92,6 +92,42 @@ RSpec.describe DiscourseSolved::AdminDashboardSupport do
     end
   end
 
+  describe "headline" do
+    it "chooses the key from the absolute resolution rate, not the trend" do
+      solved_topic
+      unanswered_topic
+      unanswered_topic
+
+      expect(build[:headline][:key]).to eq("struggling")
+    end
+
+    it "reports the resolution direction against the previous period, independent of the level" do
+      previous =
+        Fabricate(:topic, category: support_category, user: author, created_at: 45.days.ago)
+      Fabricate(:post, topic: previous, user: author, created_at: 45.days.ago)
+
+      solved_topic
+      unanswered_topic
+      unanswered_topic
+
+      headline = build[:headline]
+      expect(headline[:key]).to eq("struggling")
+      expect(headline[:resolution_direction]).to eq("up")
+    end
+
+    it "focuses the answerers clause on staff when staff dominate replies" do
+      solved_topic(answerer: staff_user)
+
+      expect(build[:headline][:answerers_focus]).to eq("staff")
+    end
+
+    it "focuses the answerers clause on members when non-staff dominate replies" do
+      answered_topic(answerer: member_user)
+
+      expect(build[:headline][:answerers_focus]).to eq("members")
+    end
+  end
+
   describe "resolution rate KPI" do
     it "is the share of period topics that were solved" do
       solved_topic

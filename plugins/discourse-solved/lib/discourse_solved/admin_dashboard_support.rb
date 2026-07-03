@@ -155,6 +155,7 @@ module DiscourseSolved
       outcomes = topic_outcomes
       total = outcomes.values.sum
       rate = resolution_rate(outcomes)
+      prev_rate = resolution_rate(outcomes_for(prev_start_date, prev_end_date))
 
       key =
         if total.zero?
@@ -167,7 +168,29 @@ module DiscourseSolved
           "mixed"
         end
 
-      { key: key, resolution_rate: rate.round, unanswered_count: outcomes[:unanswered] }
+      reply_now = avg_first_reply_seconds(start_date, end_date)
+      reply_prev = avg_first_reply_seconds(prev_start_date, prev_end_date)
+
+      answerers = whos_answering
+      staff_share =
+        if answerers[:total].to_i.zero?
+          nil
+        else
+          (answerers[:rows].find { |r| r[:type] == "staff" }&.dig(:share) || 0).round
+        end
+      focus = staff_share.nil? ? nil : (staff_share >= 50 ? "staff" : "members")
+
+      {
+        key: key,
+        resolution_rate: rate.round,
+        resolution_direction: direction(rate, prev_rate),
+        answerers_focus: focus,
+        answerers_share: (focus == "staff" ? staff_share : (staff_share && 100 - staff_share)),
+        first_reply_seconds: reply_now,
+        first_reply_direction: time_direction(reply_now, reply_prev),
+        first_reply_delta_seconds: (reply_now && reply_prev ? (reply_now - reply_prev).abs : nil),
+        unanswered_count: outcomes[:unanswered],
+      }
     end
 
     # Mutually-exclusive status counts for topics created in the window:
@@ -319,8 +342,12 @@ module DiscourseSolved
       index.zero? ? 0 : RESPONSE_TIME_BUCKETS[index - 1][:max]
     end
 
-    # Share of replies in the window by author group (staff, then trust level).
     def whos_answering
+      @whos_answering ||= compute_whos_answering
+    end
+
+    # Share of replies in the window by author group (staff, then trust level).
+    def compute_whos_answering
       return { rows: [], total: 0 } if effective_category_ids.empty?
 
       rows = DB.query(<<~SQL, params_for(start_date, end_date))
@@ -371,6 +398,11 @@ module DiscourseSolved
         from: from,
         to: to,
       }
+    end
+
+    def direction(current, previous)
+      return "flat" if current.nil? || previous.nil? || current == previous
+      current > previous ? "up" : "down"
     end
 
     # For durations, lower is better, so "faster"/"slower" rather than up/down.

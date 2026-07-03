@@ -19,22 +19,27 @@ en:
             headline:
               healthy:
                 title: "The community is solving its own problems."
-                summary:
-                  one: "Resolution rate reached %{resolution_rate}% this period. Keep an eye on the %{count} topic still waiting for a reply."
-                  other: "Resolution rate reached %{resolution_rate}% this period. Keep an eye on the %{count} topics still waiting for a reply."
               struggling:
                 title: "Most questions aren't getting answered."
-                summary:
-                  one: "Resolution rate dropped to %{resolution_rate}%, and %{count} topic from this period still has zero replies."
-                  other: "Resolution rate dropped to %{resolution_rate}%, and %{count} topics from this period still have zero replies."
               mixed:
-                title: "Support is holding steady."
-                summary:
-                  one: "Resolution rate is %{resolution_rate}% this period, with %{count} topic still unanswered."
-                  other: "Resolution rate is %{resolution_rate}% this period, with %{count} topics still unanswered."
+                title: "Support is a mixed bag."
               no_data:
                 title: "Not enough support activity yet"
                 summary: "There's no support activity in this period yet. Once topics come in, you'll see how your community is handling them."
+              resolution:
+                up: "Resolution rate climbed to %{rate}%."
+                down: "Resolution rate dropped to %{rate}%."
+                flat: "Resolution rate held at %{rate}%."
+              answerers:
+                members: "Members are handling %{share}% of replies."
+                staff: "Staff are answering %{share}% of replies."
+              reply:
+                faster: "First-reply time improved to %{time}, %{delta} faster than the previous period."
+                slower: "First-reply time slipped to %{time}, %{delta} slower than the previous period."
+                flat: "First-reply time held at %{time}."
+              unanswered:
+                one: "%{count} topic from this period still has zero replies."
+                other: "%{count} topics from this period still have zero replies."
             kpi:
               resolution_rate:
                 label: "Resolution rate"

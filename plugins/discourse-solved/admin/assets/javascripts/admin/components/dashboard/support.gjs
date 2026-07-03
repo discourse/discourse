@@ -62,14 +62,56 @@ export default class SupportSection extends Component {
     if (!headline) {
       return null;
     }
-    return {
-      titleKey: `admin.dashboard.sections.support.headline.${headline.key}.title`,
-      summaryKey: `admin.dashboard.sections.support.headline.${headline.key}.summary`,
-      summaryArgs: {
-        resolution_rate: headline.resolution_rate,
-        count: headline.unanswered_count,
-      },
-    };
+
+    const prefix = "admin.dashboard.sections.support.headline";
+    const titleKey = `${prefix}.${headline.key}.title`;
+
+    if (headline.key === "no_data") {
+      return { titleKey, summary: i18n(`${prefix}.no_data.summary`) };
+    }
+
+    const parts = [
+      i18n(`${prefix}.resolution.${headline.resolution_direction}`, {
+        rate: headline.resolution_rate,
+      }),
+    ];
+
+    if (headline.answerers_focus) {
+      parts.push(
+        i18n(`${prefix}.answerers.${headline.answerers_focus}`, {
+          share: headline.answerers_share,
+        })
+      );
+    }
+
+    if (headline.first_reply_seconds != null) {
+      const dir = headline.first_reply_direction;
+      if (
+        (dir === "faster" || dir === "slower") &&
+        headline.first_reply_delta_seconds != null
+      ) {
+        parts.push(
+          i18n(`${prefix}.reply.${dir}`, {
+            time: durationTiny(headline.first_reply_seconds),
+            delta: durationTiny(headline.first_reply_delta_seconds),
+          })
+        );
+      } else {
+        parts.push(
+          i18n(`${prefix}.reply.flat`, {
+            time: durationTiny(headline.first_reply_seconds),
+          })
+        );
+      }
+    }
+
+    if (headline.key === "struggling" && headline.unanswered_count > 0) {
+      parts.push(
+        i18n(`${prefix}.unanswered`, { count: headline.unanswered_count })
+      );
+    }
+
+    return { titleKey, summary: parts.join(" ") };
   }
 
   get resolutionRate() {
@@ -178,7 +220,7 @@ export default class SupportSection extends Component {
           <div class="db-section__subheader">
             <div class="db-section__subintro">
               <h3>{{i18n this.headline.titleKey}}</h3>
-              <p>{{i18n this.headline.summaryKey this.headline.summaryArgs}}</p>
+              <p>{{this.headline.summary}}</p>
             </div>
 
             <div class="db-section__metrics">
