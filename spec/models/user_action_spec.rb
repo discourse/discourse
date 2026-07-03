@@ -8,6 +8,44 @@ RSpec.describe UserAction do
   it { is_expected.to validate_presence_of :action_type }
   it { is_expected.to validate_presence_of :user_id }
 
+  describe ".remove_action!" do
+    fab!(:user)
+    fab!(:target_post) { Fabricate(:post, user: user) }
+
+    it "scopes removal messages to the affected user", :aggregate_failures do
+      action =
+        described_class.log_action!(
+          action_type: UserAction::EDIT,
+          user_id: user.id,
+          acting_user_id: user.id,
+          target_topic_id: target_post.topic_id,
+          target_post_id: target_post.id,
+        )
+
+      messages =
+        MessageBus.track_publish("/user/#{user.id}") do
+          described_class.remove_action!(
+            action_type: UserAction::EDIT,
+            user_id: user.id,
+            acting_user_id: user.id,
+            target_topic_id: target_post.topic_id,
+            target_post_id: target_post.id,
+          )
+        end
+
+      expect(messages).to contain_exactly(
+        have_attributes(
+          data: {
+            user_action_id: action.id,
+            remove: true,
+          },
+          user_ids: [user.id],
+          group_ids: nil,
+        ),
+      )
+    end
+  end
+
   describe "#stream" do
     fab!(:public_post, :post)
     let(:public_topic) { public_post.topic }
