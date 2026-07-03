@@ -2050,6 +2050,39 @@ ALTER SEQUENCE public.browser_pageview_referrer_daily_rollups_id_seq OWNED BY pu
 
 
 --
+-- Name: browser_pageview_session_engagement_daily_rollups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_session_engagement_daily_rollups (
+    id bigint NOT NULL,
+    date date NOT NULL,
+    logged_in boolean NOT NULL,
+    sessions bigint NOT NULL,
+    bounced bigint NOT NULL,
+    engaged_seconds_total bigint NOT NULL
+);
+
+
+--
+-- Name: browser_pageview_session_engagement_daily_rollups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.browser_pageview_session_engagement_daily_rollups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: browser_pageview_session_engagement_daily_rollups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.browser_pageview_session_engagement_daily_rollups_id_seq OWNED BY public.browser_pageview_session_engagement_daily_rollups.id;
+
+
+--
 -- Name: browser_pageview_session_engagements; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -12411,6 +12444,13 @@ ALTER TABLE ONLY public.browser_pageview_referrer_daily_rollups ALTER COLUMN id 
 
 
 --
+-- Name: browser_pageview_session_engagement_daily_rollups id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_session_engagement_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_session_engagement_daily_rollups_id_seq'::regclass);
+
+
+--
 -- Name: browser_pageview_session_engagements id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14633,6 +14673,14 @@ ALTER TABLE ONLY public.browser_pageview_events
 
 ALTER TABLE ONLY public.browser_pageview_referrer_daily_rollups
     ADD CONSTRAINT browser_pageview_referrer_daily_rollups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_session_engagement_daily_rollups browser_pageview_session_engagement_daily_rollups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_session_engagement_daily_rollups
+    ADD CONSTRAINT browser_pageview_session_engagement_daily_rollups_pkey PRIMARY KEY (id);
 
 
 --
@@ -17034,6 +17082,13 @@ CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING 
 --
 
 CREATE UNIQUE INDEX idx_bprd_rollups_date_referrer_unique ON public.browser_pageview_referrer_daily_rollups USING btree (date, normalized_referrer) NULLS NOT DISTINCT;
+
+
+--
+-- Name: idx_bpse_rollups_date_logged_in_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_bpse_rollups_date_logged_in_unique ON public.browser_pageview_session_engagement_daily_rollups USING btree (date, logged_in);
 
 
 --
@@ -22415,6 +22470,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260702102111'),
+('20260701073045'),
 ('20260630034050'),
 ('20260629233141'),
 ('20260629081606'),

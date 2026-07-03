@@ -5,6 +5,7 @@ import AdminReportStackedChart from "discourse/admin/components/admin-report-sta
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import { countryFlag, countryName } from "discourse/admin/lib/format-country";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import { formatMinutesSeconds } from "discourse/lib/formatter";
 import { or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
@@ -104,6 +105,32 @@ export default class DashboardTraffic extends Component {
 
   #kpiValue(key) {
     return this.args.traffic?.kpis?.[key]?.value;
+  }
+
+  get showSessionMetrics() {
+    return this.#kpiValue("bounce_rate") !== undefined;
+  }
+
+  get showMetrics() {
+    return (
+      this.showLoggedInShare ||
+      this.showDirectTraffic ||
+      this.showSessionMetrics
+    );
+  }
+
+  get sessionMetricsEmpty() {
+    return this.#kpiValue("bounce_rate") == null;
+  }
+
+  get bounceRate() {
+    const value = this.#kpiValue("bounce_rate");
+    return value == null ? "—" : `${value}%`;
+  }
+
+  get averageSessionDuration() {
+    const value = this.#kpiValue("average_session_duration_seconds");
+    return value == null ? "—" : formatMinutesSeconds(value);
   }
 
   get chartModel() {
@@ -230,7 +257,7 @@ export default class DashboardTraffic extends Component {
             </h3>
           </div>
 
-          {{#if (or this.showLoggedInShare this.showDirectTraffic)}}
+          {{#if this.showMetrics}}
             <div class="db-section__metrics">
               {{#if this.showLoggedInShare}}
                 <div class="db-section__metric">
@@ -274,6 +301,67 @@ export default class DashboardTraffic extends Component {
                         {{i18n
                           "admin.dashboard.site_traffic.kpi.direct_traffic.tooltip"
                         }}
+                      </:content>
+                    </DTooltip>
+                  </div>
+                </div>
+              {{/if}}
+
+              {{#if this.showSessionMetrics}}
+                <div class="db-section__metric" data-test-kpi="bounce_rate">
+                  <div
+                    class="db-section__metric-number"
+                  >{{this.bounceRate}}</div>
+                  <div class="db-section__metric-label">
+                    {{i18n
+                      "admin.dashboard.site_traffic.kpi.bounce_rate.label"
+                    }}
+                    <DTooltip
+                      class="db-section__info"
+                      @identifier="site-traffic-bounce-rate-tooltip"
+                      @icon="far-circle-question"
+                    >
+                      <:content>
+                        {{#if this.sessionMetricsEmpty}}
+                          {{i18n
+                            "admin.dashboard.site_traffic.kpi.session_metrics.empty_tooltip"
+                          }}
+                        {{else}}
+                          {{i18n
+                            "admin.dashboard.site_traffic.kpi.bounce_rate.tooltip"
+                          }}
+                        {{/if}}
+                      </:content>
+                    </DTooltip>
+                  </div>
+                </div>
+
+                <div
+                  class="db-section__metric"
+                  data-test-kpi="average_session_duration"
+                >
+                  <div
+                    class="db-section__metric-number"
+                  >{{this.averageSessionDuration}}</div>
+                  <div class="db-section__metric-label">
+                    {{i18n
+                      "admin.dashboard.site_traffic.kpi.average_session_duration.label"
+                    }}
+                    <DTooltip
+                      class="db-section__info"
+                      @identifier="site-traffic-average-session-duration-tooltip"
+                      @icon="far-circle-question"
+                    >
+                      <:content>
+                        {{#if this.sessionMetricsEmpty}}
+                          {{i18n
+                            "admin.dashboard.site_traffic.kpi.session_metrics.empty_tooltip"
+                          }}
+                        {{else}}
+                          {{i18n
+                            "admin.dashboard.site_traffic.kpi.average_session_duration.tooltip"
+                          }}
+                        {{/if}}
                       </:content>
                     </DTooltip>
                   </div>
