@@ -699,4 +699,26 @@ RSpec.describe SiteSerializer do
       expect(serialized[:upcoming_changes_with_css]).not_to include(:enable_user_tips)
     end
   end
+
+  describe "#permanent_upcoming_change_names" do
+    before do
+      UpcomingChanges.stubs(:permanent_upcoming_change_names).returns(%w[enable_permanent_feature])
+    end
+
+    it "returns the permanent change names for staff" do
+      admin = Fabricate(:admin)
+      admin_guardian = Guardian.new(admin)
+      serialized =
+        described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
+      expect(serialized[:permanent_upcoming_change_names]).to eq(%w[enable_permanent_feature])
+    end
+
+    it "is not included for non-staff users" do
+      user = Fabricate(:user)
+      user_guardian = Guardian.new(user)
+      serialized =
+        described_class.new(Site.new(user_guardian), scope: user_guardian, root: false).as_json
+      expect(serialized).not_to have_key(:permanent_upcoming_change_names)
+    end
+  end
 end
