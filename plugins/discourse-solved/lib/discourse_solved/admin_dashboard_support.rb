@@ -182,7 +182,7 @@ module DiscourseSolved
 
       {
         key: key,
-        resolution_rate: rate.round,
+        resolution_rate: rate&.round,
         resolution_direction: direction(rate, prev_rate),
         answerers_focus: focus,
         answerers_share: (focus == "staff" ? staff_share : (staff_share && 100 - staff_share)),
@@ -243,16 +243,16 @@ module DiscourseSolved
 
     def resolution_rate(outcomes)
       total = outcomes.values.sum
-      return 0.0 if total.zero?
+      return nil if total.zero?
       (outcomes[:resolved].to_f / total * 100).round(1)
     end
 
     # Percentage of topics in the window whose first reply was authored by staff.
     def staff_involvement(from, to)
-      return 0.0 if effective_category_ids.empty?
+      return nil if effective_category_ids.empty?
 
       total = outcomes_for(from, to).values.sum
-      return 0.0 if total.zero?
+      return nil if total.zero?
 
       staff_first = DB.query_single(<<~SQL, params_for(from, to)).first.to_i
           SELECT COUNT(*)

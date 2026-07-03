@@ -150,6 +150,16 @@ RSpec.describe DiscourseSolved::AdminDashboardSupport do
 
       expect(build[:kpis][:resolution_rate][:report_query]).not_to have_key(:filters)
     end
+
+    it "reports a nil previous value when the previous period had no topics" do
+      solved_topic
+      answered_topic
+
+      kpis = build[:kpis]
+      expect(kpis[:resolution_rate][:value]).to eq(50.0)
+      expect(kpis[:resolution_rate][:previous_value]).to be_nil
+      expect(kpis[:staff_involvement][:previous_value]).to be_nil
+    end
   end
 
   describe "staff involvement KPI" do

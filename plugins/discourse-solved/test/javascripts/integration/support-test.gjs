@@ -116,6 +116,29 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
     assert.dom(".db-section__metrics .db-delta").doesNotExist();
   });
 
+  test("shows no delta or stable tag when the previous period has no data", async function (assert) {
+    const data = buildData({
+      kpis: {
+        resolution_rate: { value: 40, previous_value: null, report_query: {} },
+        staff_involvement: { value: 30, previous_value: null },
+        avg_first_reply: { value: 11100, previous_value: null },
+      },
+    });
+
+    await render(
+      <template>
+        <SupportSection
+          @data={{data}}
+          @startDate={{startDate}}
+          @endDate={{endDate}}
+        />
+      </template>
+    );
+
+    assert.dom(".db-section__metrics .db-delta").doesNotExist();
+    assert.dom(".db-section__metrics .db-pill").doesNotExist();
+  });
+
   test("composes a trend-aware headline summary from each metric's direction", async function (assert) {
     const positive = buildData();
 
