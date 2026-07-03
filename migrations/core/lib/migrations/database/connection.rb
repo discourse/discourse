@@ -87,13 +87,20 @@ module Migrations
       end
 
       # `ATTACH` can't run inside a transaction, so commit any open batch first.
-      def merge_database(other_path, tables:)
+      # `dedupe_tables` merge with `INSERT OR IGNORE`; the rest raise on a
+      # duplicate row (see `Consolidator`).
+      def merge_database(other_path, tables:, dedupe_tables: [])
         commit_transaction
         @db.execute("ATTACH DATABASE ? AS merge_source", other_path)
         begin
           tables.each do |table|
             quoted = quote_identifier(table)
-            @db.execute("INSERT OR IGNORE INTO main.#{quoted} SELECT * FROM merge_source.#{quoted}")
+            conflict_clause = dedupe_tables.include?(table) ? "OR IGNORE " : ""
+            @db.execute(
+              "INSERT #{conflict_clause}INTO main.#{quoted} SELECT * FROM merge_source.#{quoted}",
+            )
+          rescue Extralite::Error => e
+            raise "Failed to merge table #{table.inspect}: #{e.message}"
           end
         ensure
           @db.execute("DETACH DATABASE merge_source")

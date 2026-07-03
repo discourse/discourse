@@ -535,7 +535,25 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
     Object.send(:remove_const, "TempIntegrationSteps")
   end
 
-  it "adds new rows to an existing IntermediateDB without dropping or overwriting" do
+  # Runs `TempIntegrationSteps::Keyed`, whose processor writes each item into the
+  # `keyed` table. `keyed` has no `INSERT OR IGNORE` model, so its shard merges
+  # with a plain, raising `INSERT`.
+  def run_keyed_step
+    step_classes = [TempIntegrationSteps::Keyed]
+    reporter = Migrations::Reporting::Factory.build(titles: step_classes.map(&:title))
+    Migrations::Conversion::StepScheduler.new(
+      step_classes:,
+      budget: 2,
+      reporter:,
+      step_factory: ->(step_class) { step_class.new },
+      shard_manager: @shard_manager,
+      writer: @writer,
+    ).run
+  ensure
+    reporter&.close
+  end
+
+  it "adds new, non-colliding rows to an existing IntermediateDB" do
     # A row from a previous run already lives in the DB.
     Migrations::Database::IntermediateDB.insert("INSERT INTO keyed VALUES (?, ?)", 1, "existing")
 
@@ -547,8 +565,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
           Class.new(Migrations::Conversion::Step) do
             source do
               def items
-                # id 1 collides with the existing row; id 2 is new
-                [{ id: 1, label: "new" }, { id: 2, label: "added" }]
+                # both ids are new; neither collides with the existing row
+                [{ id: 2, label: "added" }, { id: 3, label: "more" }]
               end
             end
 
@@ -566,25 +584,52 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
       end,
     )
 
-    step_classes = [TempIntegrationSteps::Keyed]
-    reporter = Migrations::Reporting::Factory.build(titles: step_classes.map(&:title))
-    Migrations::Conversion::StepScheduler.new(
-      step_classes:,
-      budget: 2,
-      reporter:,
-      step_factory: ->(step_class) { step_class.new },
-      shard_manager: @shard_manager,
-      writer: @writer,
-    ).run
-    reporter.close
+    run_keyed_step
 
     Migrations::Database::IntermediateDB.close
 
     db = Extralite::Database.new(@db_path)
     keyed = db.query_array("SELECT id, label FROM keyed ORDER BY id")
     db.close
-    # the existing row is kept as-is (not overwritten), and the new row is added
-    expect(keyed).to eq([[1, "existing"], [2, "added"]])
+    # the existing row is kept and the new, non-colliding rows are appended
+    expect(keyed).to eq([[1, "existing"], [2, "added"], [3, "more"]])
+  ensure
+    Object.send(:remove_const, "TempIntegrationSteps")
+  end
+
+  it "fails the run, naming the table, when a shard row collides with an existing one" do
+    # `keyed` merges with a plain `INSERT`, so a shard row that duplicates a row
+    # already in the run DB is a genuine double-write: it fails the run loudly
+    # instead of being silently dropped, matching the single-writer contract.
+    Migrations::Database::IntermediateDB.insert("INSERT INTO keyed VALUES (?, ?)", 1, "existing")
+
+    Object.const_set(
+      "TempIntegrationSteps",
+      Module.new do
+        const_set(
+          "Keyed",
+          Class.new(Migrations::Conversion::Step) do
+            source do
+              def items
+                [{ id: 1, label: "collides" }] # id 1 already lives in the run DB
+              end
+            end
+
+            processor do
+              def process(item)
+                Migrations::Database::IntermediateDB.insert(
+                  "INSERT INTO keyed VALUES (?, ?)",
+                  item[:id],
+                  item[:label],
+                )
+              end
+            end
+          end,
+        )
+      end,
+    )
+
+    expect { run_keyed_step }.to raise_error(Migrations::Conversion::ConvertError, /keyed/)
   ensure
     Object.send(:remove_const, "TempIntegrationSteps")
   end
