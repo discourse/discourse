@@ -16,9 +16,8 @@ export default class ChatNavbarPinnedMessagesButton extends Component {
     event.stopPropagation();
   };
 
-  // Only shown while the pinned bar is dismissed, as the way back to the pins
-  // panel (whose footer offers to show the bar again). While the bar is
-  // visible its own list button is the entry point.
+  // Only shown while the bar is dismissed, as the way back to the pins panel.
+  // When the bar is visible, its own list button is the entry point.
   get showButton() {
     return (
       this.siteSettings.chat_pinned_messages &&

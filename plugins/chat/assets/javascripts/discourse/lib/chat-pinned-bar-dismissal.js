@@ -1,13 +1,8 @@
 import KeyValueStore from "discourse/lib/key-value-store";
 
-// A user can hide the pinned bar for a channel; the dismissal is recorded as
-// "everything up to this pin id" so the bar stays hidden until a newer pin is
-// added. Pin ids auto-increment, so "a newer pin exists" === "the newest pin
-// id increased" — order-independent.
-//
-// The live dismissal is a tracked prop on the channel (reactive within the
-// session); this store is the per-device fallback that restores it across
-// reloads without writing during render.
+// Per-device dismissal: we record the newest dismissed pin id and reveal the
+// bar again once a higher id arrives. Kept on the channel (reactive) and
+// mirrored to local storage (survives reloads).
 export const STORE_NAMESPACE = "discourse_chat_pinned_bar_";
 
 const store = new KeyValueStore(STORE_NAMESPACE);

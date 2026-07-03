@@ -490,6 +490,11 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
     assert
       .dom(".chat-pinned-bar")
       .doesNotHaveClass("--dismissed", "reappears for the newer pin");
+    assert.strictEqual(
+      this.channel.pinsDismissedAboveId,
+      null,
+      "clears the stale dismissal so the navbar re-show button doesn't linger"
+    );
   });
 
   test("stays dismissed after reload via stored state", async function (assert) {

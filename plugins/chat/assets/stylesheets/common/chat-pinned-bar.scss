@@ -40,10 +40,8 @@
   }
 
   &__indicator {
-    // a vertical strip of equal bars, one per pin, filling the bar height; the
-    // component sizes the bars (whole px) and the strip so the visible ones
-    // fill it. With more pins than fit, the active bar stays centred and the
-    // bars stream past it, fading at whichever edge has more pins beyond it.
+    // vertical strip of equal bars, one per pin; the component sizes them and
+    // scrolls the strip past a centred highlight when there are more than fit
     align-self: center;
     flex-shrink: 0;
     width: 3px;
@@ -82,9 +80,8 @@
     flex: 0 0 auto;
     height: var(--chat-pinned-bar-seg, 6px);
 
-    // a translucent tint of the active colour so the dim bars keep contrast in
-    // both light and dark schemes (unlike --tertiary-low, which collapses into
-    // the background in dark mode)
+    // translucent tint of the active colour so dim bars keep contrast in both
+    // schemes (--tertiary-low collapses into the dark-mode background)
     background: var(--tertiary);
     opacity: 0.4;
     border-radius: 3px;
