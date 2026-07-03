@@ -3,6 +3,7 @@
 
   &__wrap .search-menu {
     align-items: center;
+    margin-inline: var(--welcome-banner-search-menu-margin-inline);
   }
 
   &__subheader {
@@ -13,9 +14,5 @@
     font-size: var(--font-up-5);
     font-weight: 500;
     text-align: var(--welcome-banner-text-align);
-  }
-
-  &__wrap .search-menu {
-    margin-inline: var(--welcome-banner-search-menu-margin-inline);
   }
 }
