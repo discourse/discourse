@@ -352,6 +352,12 @@ class DiscourseCLI < Thor
     puts "", "Done", ""
   end
 
+  desc "db", "Open the database console"
+  def db
+    puts "Entering PostgreSQL console for Discourse..."
+    exec("sudo -u postgres psql discourse")
+  end
+
   private
 
   def confirm!(message, prompt = "ARE YOU SURE (type YES):")
