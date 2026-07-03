@@ -83,6 +83,29 @@ module("Integration | Component | Dashboard | Support", function (hooks) {
       .hasText("-9%");
   });
 
+  test("renders a stable tag for metrics that did not change", async function (assert) {
+    const data = buildData({
+      kpis: {
+        resolution_rate: { value: 50, previous_value: 50, report_query: {} },
+        staff_involvement: { value: 20, previous_value: 20 },
+        avg_first_reply: { value: 11100, previous_value: 11100 },
+      },
+    });
+
+    await render(
+      <template>
+        <SupportSection
+          @data={{data}}
+          @startDate={{startDate}}
+          @endDate={{endDate}}
+        />
+      </template>
+    );
+
+    assert.dom(".db-section__metrics .db-pill").exists({ count: 3 });
+    assert.dom(".db-section__metrics .db-delta").doesNotExist();
+  });
+
   test("shows a placeholder when the average first reply is unknown", async function (assert) {
     const data = buildData({
       kpis: {

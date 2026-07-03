@@ -10,12 +10,25 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { durationTiny } from "discourse/lib/formatter";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import SupportResponseTime from "./support/response-time";
 import SupportTopicOutcomes from "./support/topic-outcomes";
 import SupportWhosAnswering from "./support/whos-answering";
 
 const ALL_CATEGORIES = "all";
+
+const DeltaPill = <template>
+  {{#if @delta.hasDelta}}
+    {{#if (eq @delta.deltaClass "--neutral")}}
+      <span class="db-pill">{{i18n "admin.dashboard.stable"}}</span>
+    {{else}}
+      <div class={{concat "db-delta " @delta.deltaClass}}>
+        {{@delta.deltaText}}
+      </div>
+    {{/if}}
+  {{/if}}
+</template>;
 
 export default class SupportSection extends Component {
   @tracked categoryId = ALL_CATEGORIES;
@@ -70,7 +83,7 @@ export default class SupportSection extends Component {
       reportQuery: kpi.report_query ?? {},
       hasDelta: diff != null,
       deltaText: diff == null ? null : `${diff > 0 ? "+" : ""}${diff}%`,
-      deltaClass: diff >= 0 ? "--pos" : "--neg",
+      deltaClass: diff === 0 ? "--neutral" : diff > 0 ? "--pos" : "--neg",
     };
   }
 
@@ -83,7 +96,7 @@ export default class SupportSection extends Component {
       value: `${Math.round(value)}%`,
       hasDelta: diff != null,
       deltaText: diff == null ? null : `${diff > 0 ? "+" : ""}${diff}%`,
-      deltaClass: diff <= 0 ? "--pos" : "--neg",
+      deltaClass: diff === 0 ? "--neutral" : diff < 0 ? "--pos" : "--neg",
     };
   }
 
@@ -91,15 +104,17 @@ export default class SupportSection extends Component {
     const kpi = this.data?.kpis?.avg_first_reply ?? {};
     const value = kpi.value;
     const previous = kpi.previous_value;
-    const hasDelta = value != null && previous != null && value !== previous;
+    const hasDelta = value != null && previous != null;
+    const diff = hasDelta ? value - previous : null;
     const slower = value > previous;
     return {
       value: value == null ? "—" : durationTiny(value),
       hasDelta,
-      deltaText: hasDelta
-        ? `${slower ? "+" : "-"}${durationTiny(Math.abs(value - previous))}`
-        : null,
-      deltaClass: slower ? "--neg" : "--pos",
+      deltaText:
+        !hasDelta || diff === 0
+          ? null
+          : `${slower ? "+" : "-"}${durationTiny(Math.abs(diff))}`,
+      deltaClass: diff === 0 ? "--neutral" : slower ? "--neg" : "--pos",
     };
   }
 
@@ -189,13 +204,7 @@ export default class SupportSection extends Component {
                     }}
                   />
                 </div>
-                {{#if this.resolutionRate.hasDelta}}
-                  <div
-                    class={{concat "db-delta " this.resolutionRate.deltaClass}}
-                  >
-                    {{this.resolutionRate.deltaText}}
-                  </div>
-                {{/if}}
+                <DeltaPill @delta={{this.resolutionRate}} />
               </div>
 
               <div class="db-section__metric">
@@ -214,16 +223,7 @@ export default class SupportSection extends Component {
                     }}
                   />
                 </div>
-                {{#if this.staffInvolvement.hasDelta}}
-                  <div
-                    class={{concat
-                      "db-delta "
-                      this.staffInvolvement.deltaClass
-                    }}
-                  >
-                    {{this.staffInvolvement.deltaText}}
-                  </div>
-                {{/if}}
+                <DeltaPill @delta={{this.staffInvolvement}} />
               </div>
 
               <div class="db-section__metric">
@@ -242,13 +242,7 @@ export default class SupportSection extends Component {
                     }}
                   />
                 </div>
-                {{#if this.avgFirstReply.hasDelta}}
-                  <div
-                    class={{concat "db-delta " this.avgFirstReply.deltaClass}}
-                  >
-                    {{this.avgFirstReply.deltaText}}
-                  </div>
-                {{/if}}
+                <DeltaPill @delta={{this.avgFirstReply}} />
               </div>
             </div>
           </div>
