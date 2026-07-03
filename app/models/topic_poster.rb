@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class TopicPoster < OpenStruct
+class TopicPoster
   include ActiveModel::Serialization
 
   attr_accessor :user, :description, :extras, :id, :primary_group, :flair_group
