@@ -22,7 +22,7 @@ module Migrations
         @shard_manager = shard_manager
         @connection = connection
         @fork_mutex = fork_mutex
-        @queue = Thread::Queue.new
+        @queue = Queue.new
         @errors = []
         @thread = Thread.new { run }
         @thread.name = "consolidator"

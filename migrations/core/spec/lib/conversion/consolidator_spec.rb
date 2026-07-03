@@ -38,6 +38,26 @@ RSpec.describe Migrations::Conversion::Consolidator do
     expect(errors).to be_empty
   end
 
+  it "holds the fork mutex while merging so a merge can't overlap a worker fork" do
+    owned_during_merge = nil
+    allow(connection).to receive(:merge_database) do
+      owned_during_merge = fork_mutex.owned?
+      nil
+    end
+
+    consolidator = described_class.new(shard_manager, connection, fork_mutex)
+    consolidator.enqueue(%w[a.db])
+    consolidator.drain
+
+    expect(owned_during_merge).to eq(true)
+  end
+
+  it "runs the background merges on a thread named `consolidator`" do
+    consolidator = described_class.new(shard_manager, connection, fork_mutex)
+    Timeout.timeout(5) { sleep 0.001 until Thread.list.any? { |t| t.name == "consolidator" } }
+    consolidator.drain
+  end
+
   it "collects a merge error and still discards the shard" do
     boom = StandardError.new("merge boom")
     allow(connection).to receive(:merge_database).with(
