@@ -173,7 +173,7 @@ class NewPostManager
 
     result = manager.enqueue(reason)
 
-    if result.success?
+    if result.success? || (reason == :email_spam && is_first_post?(manager))
       I18n.with_locale(SiteSetting.default_locale) do
         if is_fast_typer?(manager)
           UserSilencer.auto_silence(
