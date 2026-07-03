@@ -12,6 +12,42 @@ RSpec.describe Migrations::Tooling::Coverage::CreateCallScanner do
       expect(result.columns["User"]).to contain_exactly(:username, :trust_level)
     end
 
+    it "records the model with no columns when a call site passes none" do
+      result = scan("IntermediateDB::User.create")
+
+      expect(result.columns.keys).to contain_exactly("User")
+      expect(result.columns["User"]).to be_empty
+    end
+
+    it "ignores positional arguments and only collects the keyword hash" do
+      result = scan('IntermediateDB::User.create("positional", username: "a")')
+
+      expect(result.columns["User"]).to contain_exactly(:username)
+    end
+
+    it "visits create calls nested inside other expressions" do
+      result = scan("wrapper(IntermediateDB::User.create(username: 'a'))")
+
+      expect(result.columns["User"]).to contain_exactly(:username)
+    end
+
+    it "treats an IntermediateDB constant that does not respond to create as unknown" do
+      # `Enums` exists under IntermediateDB but is not a model.
+      result = scan("IntermediateDB::Enums.create(foo: 1)")
+
+      expect(result.columns).to be_empty
+      expect(result.unknown_models).to eq("Enums" => ["(spec):1"])
+    end
+
+    it "resolves the constant without inheriting from enclosing scopes" do
+      stub_const("TopLevelCreatable", Class.new { def self.create(**); end })
+
+      result = scan("IntermediateDB::TopLevelCreatable.create(foo: 1)")
+
+      expect(result.columns).to be_empty
+      expect(result.unknown_models).to eq("TopLevelCreatable" => ["(spec):1"])
+    end
+
     it "matches the trailing segment regardless of leading qualification" do
       bare = scan("IntermediateDB::User.create(username: 'a')")
       qualified = scan("Migrations::Database::IntermediateDB::User.create(name: 'n')")
@@ -62,17 +98,17 @@ RSpec.describe Migrations::Tooling::Coverage::CreateCallScanner do
       expect(result.unknown_models).to be_empty
     end
 
-    it "raises when a call site passes a ** splat" do
+    it "raises with the offending model in the message when a call site passes a ** splat" do
       expect { scan("IntermediateDB::User.create(**attributes)") }.to raise_error(
         Migrations::Tooling::Coverage::AnalysisError,
-        /splat/,
+        /IntermediateDB::User\.create.*a `\*\*` splat/,
       )
     end
 
-    it "raises when a call site passes a non-literal keyword" do
+    it "raises with the offending model in the message on a non-literal keyword" do
       expect { scan("IntermediateDB::User.create(dynamic => 1)") }.to raise_error(
         Migrations::Tooling::Coverage::AnalysisError,
-        /non-literal keyword/,
+        /IntermediateDB::User\.create.*a non-literal keyword/,
       )
     end
 
@@ -83,10 +119,12 @@ RSpec.describe Migrations::Tooling::Coverage::CreateCallScanner do
       )
     end
 
-    it "raises with the source path when the source cannot be parsed" do
-      expect { described_class.scan("def broken(", path: "steps/users.rb") }.to raise_error(
+    it "raises with the source path and every parse error detail" do
+      expect { described_class.scan("x = 1\n1 +", path: "steps/users.rb") }.to raise_error(
         Migrations::Tooling::Coverage::AnalysisError,
-        %r{steps/users\.rb},
+        "Failed to parse steps/users.rb: unexpected end-of-input; expected an expression " \
+          "after the operator (line 2), unexpected end-of-input, assuming it is closing " \
+          "the parent top level context (line 2)",
       )
     end
   end

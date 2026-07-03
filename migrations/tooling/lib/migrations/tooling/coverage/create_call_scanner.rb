@@ -116,7 +116,10 @@ module Migrations
             raise AnalysisError, unverifiable_message("a `**` splat", model_name, node)
           end
 
-          key = element.key if element.is_a?(Prism::AssocNode)
+          # A `KeywordHashNode` only ever holds `AssocNode`/`AssocSplatNode`
+          # elements, and the splat is handled above, so `element` is an
+          # `AssocNode` here and always responds to `key`.
+          key = element.key
           unless key.is_a?(Prism::SymbolNode)
             raise AnalysisError, unverifiable_message("a non-literal keyword", model_name, node)
           end
