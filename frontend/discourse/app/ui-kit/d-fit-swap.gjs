@@ -47,6 +47,7 @@ const HIDDEN_PANE_STYLE = trustHTML(
  * @property {unknown} [Args.remeasureOn] - Forwarded to the fit modifier's re-measure trigger.
  * @property {boolean} [Args.active] - Whether to track at all; defaults to true.
  * @property {HTMLElement} [Args.observedEl] - Optional override for the observed element.
+ * @property {(decision: "full" | "collapsed") => void} [Args.onFit] - Notified with each applied decision.
  * @property {object} Blocks
  * @property {[]} Blocks.full - The roomier rendition (the default).
  * @property {[]} Blocks.collapsed - The compact fallback.
@@ -88,8 +89,10 @@ const HIDDEN_PANE_STYLE = trustHTML(
  * Pitfalls (each fails silently — no error, just wrong behavior):
  *  - The `<:full>` rendition is only HIDDEN while collapsed, never torn down, so
  *    its side effects keep running: timers, subscriptions, autofocus, and media
- *    playback do not stop. Keep anything that must pause when hidden outside
- *    this component.
+ *    playback do not stop. Pause and resume them from `@onFit`, or keep anything
+ *    that must stop when hidden outside this component. `@onFit` runs in the fit
+ *    WRITE phase, so its handler must not synchronously resize the content (the
+ *    same rule as the fit `compute`), or it re-triggers the fit pass.
  *  - Both renditions can be in the DOM at once (the full one stays present while
  *    collapsed), so a duplicate `id`, or the same form control repeated across
  *    `<:full>` and `<:collapsed>`, collides. Give the two renditions distinct
@@ -102,6 +105,11 @@ const HIDDEN_PANE_STYLE = trustHTML(
  *  - `@active` — whether to track at all; defaults to true.
  *  - `@observedEl` — optional override for the element whose width drives the
  *    decision, when the host's own container is not the right reference.
+ *  - `@onFit` — `(decision) => …`, called with the resolved `"full"`/
+ *    `"collapsed"` decision on the initial fit pass and on each subsequent
+ *    change. It piggybacks on the coordinator's diffed writes, so a re-measure
+ *    that yields the same decision does not call it again. Use it to pause or
+ *    resume work in a rendition that keeps running while hidden (see Pitfalls).
  *
  * @extends {Component<DFitSwapSignature>}
  */
@@ -169,13 +177,16 @@ export default class DFitSwap extends Component {
   }
 
   /**
-   * Applies a changed fit decision, swapping which rendition is active.
+   * Applies a changed fit decision, swapping which rendition is active, then
+   * forwards it to `@onFit` so a consumer can react (state is updated first so
+   * the handler sees the new decision).
    *
    * @param {"full" | "collapsed"} decision
    */
   @action
   onDecision(decision) {
     this.decision = decision;
+    this.args.onFit?.(decision);
   }
 
   <template>

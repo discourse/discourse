@@ -119,4 +119,43 @@ module("Integration | ui-kit | DFitSwap", function (hooks) {
     assert.dom(".d-fit-swap").hasAttribute("data-fit", "collapsed");
     assert.dom(".collapsed-marker").exists();
   });
+
+  test("notifies @onFit with each applied decision", async function (assert) {
+    const state = new (class {
+      @tracked contentWidth = 100;
+
+      get widthStyle() {
+        return trustHTML(`width: ${this.contentWidth}px`);
+      }
+    })();
+    const decisions = [];
+    const onFit = (decision) => decisions.push(decision);
+
+    await render(
+      <template>
+        <div style="width: 300px">
+          <DFitSwap @remeasureOn={{state.contentWidth}} @onFit={{onFit}}>
+            <:full><div style={{state.widthStyle}}>content</div></:full>
+            <:collapsed><div class="collapsed-marker">c</div></:collapsed>
+          </DFitSwap>
+        </div>
+      </template>
+    );
+
+    assert.deepEqual(
+      decisions,
+      ["full"],
+      "fires once with the initial resolved decision"
+    );
+
+    // Grow the content past the host so the decision flips.
+    state.contentWidth = 800;
+    await settled();
+
+    assert.deepEqual(
+      decisions,
+      ["full", "collapsed"],
+      "fires again on a changed decision, and the observer's redundant pass does not double-fire"
+    );
+  });
 });
