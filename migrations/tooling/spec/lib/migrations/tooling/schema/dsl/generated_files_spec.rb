@@ -90,5 +90,16 @@ RSpec.describe Migrations::Tooling::Schema::DSL::GeneratedFiles do
 
       expect(stale).to be_empty
     end
+
+    it "scans a shared model/enum directory only once" do
+      config = output_config(models: "lib/shared", enums: "lib/shared")
+      FileUtils.mkdir_p(File.join(@root, "lib/shared"))
+      write("lib/shared/old.rb", "# #{described_class::MARKER} ...\n")
+
+      expected = described_class.expected_paths(definition, config, @root)
+      result = described_class.stale_paths(config, @root, expected)
+
+      expect(result).to contain_exactly(File.join(@root, "lib/shared/old.rb"))
+    end
   end
 end
