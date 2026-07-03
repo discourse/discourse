@@ -180,24 +180,30 @@ after_initialize do
 
   BookmarkQuery.on_preload do |bookmarks, _bookmark_query|
     if SiteSetting.assign_enabled?
-      topics =
-        Bookmark
-          .select_type(bookmarks, "Topic")
-          .map(&:bookmarkable)
-          .concat(Bookmark.select_type(bookmarks, "Post").map { |bm| bm.bookmarkable.topic })
-          .uniq
+      topics = Bookmark.select_type(bookmarks, "Topic").map(&:bookmarkable)
+      posts = Bookmark.select_type(bookmarks, "Post").map(&:bookmarkable)
+
       assignments =
         Assignment
           .strict_loading
-          .where(topic_id: topics)
+          .active
+          .where(topic_id: topics.map(&:id).concat(posts.map(&:topic_id)).uniq)
           .includes(:assigned_to)
-          .index_by(&:topic_id)
+
+      topic_assignments, post_assignments = assignments.partition { it.target_type == "Topic" }
+      topic_assignments_map = topic_assignments.index_by(&:target_id)
+      post_assignments_map = post_assignments.index_by(&:target_id)
 
       topics.each do |topic|
-        assignment = assignments[topic.id]
+        assignment = topic_assignments_map[topic.id]
         # NOTE: preloading to `nil` is necessary to avoid N+1 queries
         topic.preload_assigned_to(assignment&.assigned_to)
         topic.preload_assignment_status(assignment&.status)
+      end
+
+      posts.each do |post|
+        assignment = post_assignments_map[post.id]
+        post.preload_assigned_to(assignment&.assigned_to)
       end
     end
   end
@@ -516,6 +522,13 @@ after_initialize do
     @indirectly_assigned_to = indirectly_assigned_to
   end
 
+  add_to_class(:post, :assigned_to) do
+    return @assigned_to if defined?(@assigned_to)
+    @assigned_to = assignment.assigned_to if assignment&.active
+  end
+
+  add_to_class(:post, :preload_assigned_to) { |assigned_to| @assigned_to = assigned_to }
+
   # TopicList serializer
   add_to_serializer(
     :topic_list,
@@ -713,8 +726,7 @@ after_initialize do
   register_permitted_bulk_action_parameter :note
 
   add_to_class(:user_bookmark_base_serializer, :assigned_to) do
-    @assigned_to ||=
-      bookmarkable_type == "Topic" ? bookmarkable.assigned_to : bookmarkable.topic.assigned_to
+    @assigned_to ||= bookmarkable.assigned_to
   end
 
   add_to_class(:user_bookmark_base_serializer, :can_have_assignment?) do
