@@ -1238,7 +1238,11 @@ class Plugin::Instance
   # }
   def register_stat(name, expose_via_api: false, stat_type: nil, &block)
     # We do not want to register and display the same group multiple times.
-    return if DiscoursePluginRegistry.stats.any? { |stat| stat.name == name }
+    if DiscoursePluginRegistry.stats.any? { |stat|
+         stat.name == name && stat.stat_type == stat_type
+       }
+      return
+    end
 
     stat = Stat.new(name, expose_via_api: expose_via_api, stat_type: stat_type, &block)
     DiscoursePluginRegistry.register_stat(stat, self)

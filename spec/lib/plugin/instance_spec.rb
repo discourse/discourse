@@ -1073,6 +1073,18 @@ TEXT
       plugin.register_stat("some_group") { stats }
       expect(DiscoursePluginRegistry.stats.count).to eq(1)
     end
+
+    it "allows the same name under different stat_types" do
+      stats = { count: 1 }
+      plugin.register_stat("total", stat_type: :foo) { stats }
+      plugin.register_stat("total", stat_type: :bar) { stats }
+      plugin.register_stat("total", stat_type: :foo) { stats }
+
+      expect(DiscoursePluginRegistry.stats.count).to eq(2)
+      expect(Stat.all_stats.with_indifferent_access).to match(
+        hash_including(foo: { total_count: 1 }, bar: { total_count: 1 }),
+      )
+    end
   end
 
   describe "#register_user_destroyer_on_content_deletion_callback" do
