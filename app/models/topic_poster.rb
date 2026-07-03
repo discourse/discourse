@@ -3,7 +3,7 @@
 class TopicPoster < OpenStruct
   include ActiveModel::Serialization
 
-  attr_accessor :user, :description, :extras, :id, :primary_group
+  attr_accessor :user, :description, :extras, :id, :primary_group, :flair_group
 
   def attributes
     {
