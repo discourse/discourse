@@ -29,7 +29,7 @@ import { i18n } from "discourse-i18n";
       integer: true,
       min: 1,
       ui: {
-        control: "number",
+        control: "topic-select",
         label: i18n("blocks.builtin.topic_card.topic_id"),
         helpText: i18n("blocks.builtin.topic_card.topic_id_help"),
       },

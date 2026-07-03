@@ -51,6 +51,7 @@ export const VALID_UI_CONTROLS = Object.freeze([
   "tag-select",
   "user-select",
   "group-select",
+  "topic-select",
   // For an array of structured items (`itemType: "object"` + `itemSchema`):
   // a consumer renders one editable row per item, each row built from the
   // item field schema.

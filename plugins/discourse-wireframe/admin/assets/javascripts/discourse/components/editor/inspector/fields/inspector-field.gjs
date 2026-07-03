@@ -10,6 +10,7 @@ import InspectorRichTextField from "discourse/plugins/discourse-wireframe/discou
 import InspectorSegmentedField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-segmented-field";
 import InspectorStepperField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-stepper-field";
 import InspectorTagField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-tag-field";
+import InspectorTopicField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-topic-field";
 import InspectorUserField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-user-field";
 import { toFlatMarkdown } from "discourse/plugins/discourse-wireframe/discourse/lib/rich-text";
 
@@ -60,6 +61,7 @@ export const FORM_KIT_TYPE_BY_CONTROL = Object.freeze({
   "tag-select": "custom",
   "user-select": "custom",
   "group-select": "custom",
+  "topic-select": "custom",
   // An array of structured items (`itemType: "object"`). Rides the `custom`
   // slot; the bespoke control renders one editable row per item.
   repeatable: "custom",
@@ -183,6 +185,10 @@ const InspectorField = <template>
     {{else if (eq @field.control "group-select")}}
       <formField.Control>
         <InspectorGroupField @custom={{formField}} />
+      </formField.Control>
+    {{else if (eq @field.control "topic-select")}}
+      <formField.Control>
+        <InspectorTopicField @custom={{formField}} />
       </formField.Control>
     {{else if (eq @field.control "dimension")}}
       {{! Numeric value with an optional unit selector and inline slider. Reads

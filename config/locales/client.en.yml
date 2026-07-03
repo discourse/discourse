@@ -119,8 +119,8 @@ en:
           link_label: "Link label"
           link_href: "Link href"
         topic_card:
-          topic_id: "Topic ID"
-          topic_id_help: "The numeric ID of the topic to feature."
+          topic_id: "Topic"
+          topic_id_help: "The topic to feature."
           image: "Image override"
           image_help: "Overrides the topic's own image."
           show_excerpt: "Show excerpt"
