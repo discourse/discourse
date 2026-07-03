@@ -6872,6 +6872,16 @@ RSpec.describe TopicsController do
         end
       end
 
+      it "does not disclose an existing user from an email invite" do
+        pm = Fabricate(:private_message_topic, user: user)
+
+        post "/t/#{pm.id}/invite.json", params: { email: user_2.email }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["failed"]).to eq("FAILED")
+        expect(pm.reload.topic_allowed_users.pluck(:user_id)).not_to include(user_2.id)
+      end
+
       context "when user does not have permission to invite to the topic" do
         fab!(:topic) { pm }
 
