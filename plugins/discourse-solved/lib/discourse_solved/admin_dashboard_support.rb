@@ -8,6 +8,7 @@ module DiscourseSolved
   class AdminDashboardSupport
     DEFAULT_RANGE_DAYS = 30
     AVAILABILITY_CACHE_KEY = "solved_admin_dashboard_support_available"
+    DATA_CACHE_DURATION = 30.minutes
 
     # Response-time buckets, in seconds. Open-ended final bucket uses nil.
     RESPONSE_TIME_BUCKETS = [
@@ -45,14 +46,18 @@ module DiscourseSolved
     end
 
     def build
-      {
-        category_options: category_options,
-        kpis: build_kpis,
-        headline: build_headline,
-        topic_outcomes: topic_outcomes,
-        whos_answering: whos_answering,
-        response_time_distribution: response_time_distribution,
-      }
+      Discourse
+        .cache
+        .fetch(cache_key, expires_in: DATA_CACHE_DURATION) do
+          {
+            category_options: category_options,
+            kpis: build_kpis,
+            headline: build_headline,
+            topic_outcomes: topic_outcomes,
+            whos_answering: whos_answering,
+            response_time_distribution: response_time_distribution,
+          }
+        end
     end
 
     private
@@ -103,6 +108,19 @@ module DiscourseSolved
 
     def category_options
       support_categories.order(:name).pluck(:id, :name).map { |id, name| { id: id, name: name } }
+    end
+
+    def cache_key
+      digest =
+        Digest::SHA1.hexdigest(
+          [
+            all_support_category_ids.sort,
+            selected_category_id,
+            start_date.to_i,
+            end_date.to_i,
+          ].to_json,
+        )
+      "solved_admin_dashboard_support_data:#{digest}"
     end
 
     def build_kpis

@@ -72,6 +72,16 @@ RSpec.describe DiscourseSolved::AdminDashboardSupport do
 
       expect(build[:topic_outcomes]).to eq(resolved: 1, in_progress: 1, unanswered: 1)
     end
+
+    it "serves cached data for the same scope and window within the TTL" do
+      solved_topic
+
+      expect(build[:topic_outcomes]).to eq(resolved: 1, in_progress: 0, unanswered: 0)
+
+      solved_topic
+
+      expect(build[:topic_outcomes]).to eq(resolved: 1, in_progress: 0, unanswered: 0)
+    end
   end
 
   describe "resolution rate KPI" do
