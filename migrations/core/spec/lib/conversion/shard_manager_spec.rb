@@ -19,7 +19,9 @@ RSpec.describe Migrations::Conversion::ShardManager do
       db.execute("INSERT INTO widgets (id, name) VALUES (1, 'existing')")
       db.close
 
-      example.run
+      # Run from the tmpdir so a stray relative shard path (e.g. under mutation)
+      # can't drop shard-*.db / template.db into the repo.
+      Dir.chdir(dir) { example.run }
     end
   end
 
