@@ -23,6 +23,16 @@ RSpec.describe TopicPostersSummary do
       end
     end
 
+    context "when building posters" do
+      let!(:topic) { Fabricate(:topic, user: topic_creator) }
+
+      let!(:summary) { described_class.new(topic).summary }
+
+      it "assigns every field through a real accessor, not OpenStruct#method_missing" do
+        summary.each { |topic_poster| expect(topic_poster.singleton_methods).to be_empty }
+      end
+    end
+
     context "when the last poster is also the topic creator" do
       fab!(:featured_user1, :user)
 
