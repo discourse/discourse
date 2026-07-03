@@ -28,7 +28,7 @@ module DiscourseCalendar
         expect(response.parsed_body["sdk_key"]).to eq("sdk-key")
         expect(response.parsed_body["meeting_number"]).to eq("123456789")
         expect(response.parsed_body["password"]).to eq("secret")
-        expect(response.parsed_body["user_name"]).to eq(current_user.name)
+        expect(response.parsed_body["user_name"]).to eq(current_user.display_name)
         expect(response.parsed_body["user_email"]).to eq(current_user.email)
         expect(response.parsed_body["leave_url"]).to eq(topic.relative_url)
         expect(response.parsed_body["signature"]).to be_present

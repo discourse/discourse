@@ -290,13 +290,17 @@
                   },
                   "tags_descriptions": {
                     "type": "object"
+                  },
+                  "slug": {
+                    "type": "string"
                   }
                 },
                 "required": [
                   "id",
                   "title",
                   "tags",
-                  "tags_descriptions"
+                  "tags_descriptions",
+                  "slug"
                 ]
               }
             },

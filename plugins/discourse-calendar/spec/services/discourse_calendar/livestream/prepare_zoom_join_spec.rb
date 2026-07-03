@@ -13,7 +13,12 @@ RSpec.describe DiscourseCalendar::Livestream::PrepareZoomJoin do
     fab!(:topic) { Fabricate(:topic, user: current_user, tags: [tag]) }
     fab!(:post) { Fabricate(:post, user: current_user, topic: topic, post_number: 1) }
     fab!(:event) do
-      Fabricate(:event, post: post, url: "https://us06web.zoom.us/j/123456789?pwd=secret")
+      Fabricate(
+        :event,
+        post: post,
+        livestream: true,
+        location: "https://us06web.zoom.us/j/123456789?pwd=secret",
+      )
     end
 
     let(:guardian) { current_user.guardian }
@@ -55,7 +60,12 @@ RSpec.describe DiscourseCalendar::Livestream::PrepareZoomJoin do
         Fabricate(:post, user: current_user, topic: private_topic, post_number: 1)
       end
       fab!(:private_event) do
-        Fabricate(:event, post: private_post, url: "https://zoom.us/j/123456789?pwd=secret")
+        Fabricate(
+          :event,
+          post: private_post,
+          livestream: true,
+          location: "https://zoom.us/j/123456789?pwd=secret",
+        )
       end
       fab!(:outsider, :user)
 
@@ -63,20 +73,6 @@ RSpec.describe DiscourseCalendar::Livestream::PrepareZoomJoin do
       let(:guardian) { outsider.guardian }
 
       it { is_expected.to fail_a_policy(:can_see_topic) }
-    end
-
-    context "when the topic is not tagged as a livestream" do
-      fab!(:regular_topic) { Fabricate(:topic, user: current_user) }
-      fab!(:regular_post) do
-        Fabricate(:post, user: current_user, topic: regular_topic, post_number: 1)
-      end
-      fab!(:regular_event) do
-        Fabricate(:event, post: regular_post, url: "https://zoom.us/j/123456789?pwd=secret")
-      end
-
-      let(:params) { { topic_id: regular_topic.id } }
-
-      it { is_expected.to fail_a_policy(:topic_has_livestream_tag) }
     end
 
     context "when there is no first-post event" do
@@ -87,26 +83,40 @@ RSpec.describe DiscourseCalendar::Livestream::PrepareZoomJoin do
 
       let(:params) { { topic_id: topic_without_event.id } }
 
-      it { is_expected.to fail_a_policy(:topic_has_first_post_event) }
+      it { is_expected.to fail_to_find_a_model(:event) }
     end
 
-    context "when the event URL is not a supported Zoom URL" do
-      before { event.update!(url: "https://example.com/stream") }
+    context "when the event is not a livestream" do
+      before { event.update!(livestream: false) }
 
-      it { is_expected.to fail_a_policy(:event_has_zoom_url) }
+      it { is_expected.to fail_a_policy(:event_has_livestream) }
+    end
+
+    context "when the livestream has no location or URL" do
+      before { event.update_columns(location: nil, url: nil) }
+
+      it { is_expected.to fail_a_policy(:event_has_livestream) }
+    end
+
+    context "when the livestream URL is not a supported Zoom URL" do
+      before { event.update!(location: "https://example.com/stream") }
+
+      it { is_expected.to fail_to_find_a_model(:zoom_join_data) }
     end
 
     context "when everything is valid" do
       it { is_expected.to run_successfully }
 
       it "returns the Zoom join payload" do
-        expect(result.sdk_key).to eq("sdk-key")
-        expect(result.signature).to be_present
-        expect(result.meeting_number).to eq("123456789")
-        expect(result.password).to eq("secret")
-        expect(result.user_name).to eq(current_user.name)
-        expect(result.user_email).to eq(current_user.email)
-        expect(result.leave_url).to eq(topic.relative_url)
+        expect(result.zoom_join_payload).to include(
+          sdk_key: "sdk-key",
+          signature: be_present,
+          meeting_number: "123456789",
+          password: "secret",
+          user_name: current_user.display_name,
+          user_email: current_user.email,
+          leave_url: topic.relative_url,
+        )
       end
     end
   end

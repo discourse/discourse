@@ -18,6 +18,7 @@ class DiscourseCalendar::Livestream::PrepareZoomJoin
   policy :zoom_enabled
   policy :can_see_topic
   model :event
+  policy :event_has_livestream
   model :zoom_join_data, :build_zoom_join_data
   model :zoom_join_payload, :build_zoom_join_payload
 
@@ -43,6 +44,10 @@ class DiscourseCalendar::Livestream::PrepareZoomJoin
 
   def fetch_event(topic:)
     topic.first_post&.event
+  end
+
+  def event_has_livestream(event:)
+    event.livestream? && (event.location.presence || event.url.presence)
   end
 
   def build_zoom_join_data(event:)
