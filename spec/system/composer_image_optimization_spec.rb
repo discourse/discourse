@@ -113,9 +113,58 @@ describe "Composer image optimization for uploads using media-optimization-worke
 
       upload = Upload.find_by(original_filename: File.basename(file.path).gsub("png", "webp"))
 
-      # Original large_and_unoptimized.png is 421_730 bytes; transparent PNGs are
-      # re-encoded as WEBP instead of JPEG.
-      expect(upload.filesize).to eq(135_594)
+      # Original large_and_unoptimized.png is 421_730 bytes and 2032px wide;
+      # transparent PNGs are resized and re-encoded as WEBP instead of JPEG.
+      expect(upload.filesize).to eq(126_626)
+    end
+
+    it "keeps the original transparent png when webp is not an authorized extension" do
+      SiteSetting.authorized_extensions = "jpg|jpeg|png|gif"
+
+      visit "/new-topic"
+      expect(composer).to be_opened
+
+      file = file_from_fixtures("large_and_unoptimized.png", "images")
+      attach_file("file-uploader", [file.path], make_visible: true)
+
+      expect(composer).to have_no_in_progress_uploads
+      expect(composer.preview).to have_css(".image-wrapper", count: 1)
+
+      upload = Upload.find_by(original_filename: File.basename(file.path))
+
+      # Original large_and_unoptimized.png is 421_730 bytes, uploaded untouched
+      # because converting it to WEBP would produce an unauthorized extension.
+      expect(upload.filesize).to eq(421_730)
+    end
+
+    it "keeps an animated png untouched in the composer" do
+      visit "/new-topic"
+      expect(composer).to be_opened
+
+      file = file_from_fixtures("large_and_unoptimized.png", "images")
+      apng_path = file.path.gsub("unoptimized", "animated")
+
+      # Emulate an APNG by inserting an acTL chunk right after IHDR; the
+      # optimizer's decoder would only keep the first frame, so it must skip
+      # animated PNGs entirely.
+      png = File.binread(file.path)
+      actl_data = [2, 0].pack("N2")
+      actl_chunk =
+        [actl_data.bytesize].pack("N") + "acTL" + actl_data +
+          [Zlib.crc32("acTL" + actl_data)].pack("N")
+      ihdr_end = 8 + 4 + 4 + 13 + 4 # signature + IHDR length/type/data/crc
+      File.binwrite(apng_path, png[0...ihdr_end] + actl_chunk + png[ihdr_end..])
+
+      attach_file("file-uploader", [apng_path], make_visible: true)
+
+      expect(composer).to have_no_in_progress_uploads
+      expect(composer.preview).to have_css(".image-wrapper", count: 1)
+
+      upload = Upload.find_by(original_filename: File.basename(apng_path))
+
+      expect(upload.filesize).to eq(File.size(apng_path))
+    ensure
+      FileUtils.rm(apng_path)
     end
   end
 end

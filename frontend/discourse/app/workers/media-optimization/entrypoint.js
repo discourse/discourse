@@ -16,16 +16,24 @@ self.onmessage = async function (e) {
           e.data.originalFileSize,
           e.data.settings
         );
-        postMessage(
-          {
-            type: "file",
-            file: converted.data,
+        if (converted) {
+          postMessage(
+            {
+              type: "file",
+              file: converted.data,
+              fileName: e.data.fileName,
+              fileId: e.data.fileId,
+              outputType: converted.outputType,
+            },
+            [converted.data]
+          );
+        } else {
+          postMessage({
+            type: "skipped",
             fileName: e.data.fileName,
             fileId: e.data.fileId,
-            outputType: converted.outputType,
-          },
-          [converted.data]
-        );
+          });
+        }
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error);
