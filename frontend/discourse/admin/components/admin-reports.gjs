@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { service } from "@ember/service";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
@@ -70,8 +69,6 @@ const REPORT_GROUPS = {
 export default class AdminReports extends Component {
   @service router;
   @service siteSettings;
-
-  @tracked selectedGroupKeyOverride;
 
   @bind
   async loadReports() {
@@ -162,7 +159,9 @@ export default class AdminReports extends Component {
 
   @bind
   groupDropdownOptions(reports) {
-    const groups = this.groupReports(reports);
+    const groups = this.groupReports(reports).filter(
+      (group) => !group.key.startsWith("plugin-")
+    );
 
     return [
       {
@@ -180,34 +179,32 @@ export default class AdminReports extends Component {
 
   @bind
   selectedGroupKey(reports) {
-    const requestedGroupKey =
-      this.selectedGroupKeyOverride || this.requestedGroupKey;
     const options = this.groupDropdownOptions(reports);
 
-    return options.some((option) => option.value === requestedGroupKey)
-      ? requestedGroupKey
+    return options.some((option) => option.value === this.requestedGroupKey)
+      ? this.requestedGroupKey
       : "all";
   }
 
   @bind
-  filterReportsByGroup(reports) {
-    const selectedGroupKey = this.selectedGroupKey(reports);
+  filterReportsByGroup(reports, availableReports) {
+    const selectedGroupKey = this.selectedGroupKey(availableReports);
 
     if (selectedGroupKey === "all") {
       return reports;
     }
 
-    const group = this.groupReports(reports).find(
+    const group = this.groupReports(availableReports).find(
       (reportGroup) => reportGroup.key === selectedGroupKey
     );
 
-    return group?.reports || reports;
+    return group?.reports
+      ? reports.filter((report) => group.reports.includes(report))
+      : reports;
   }
 
   @bind
   updateGroupFilter(groupKey) {
-    this.selectedGroupKeyOverride = groupKey;
-
     this.router.transitionTo({
       queryParams: { group: groupKey === "all" ? null : groupKey },
     });
@@ -216,40 +213,40 @@ export default class AdminReports extends Component {
   <template>
     <DAsyncContent @asyncData={{this.loadReports}}>
       <:content as |reports|>
-        <AdminFilterControls
-          @array={{this.filterReports reports}}
-          @searchableProps={{array "title" "description"}}
-          @dropdownOptions={{this.groupDropdownOptions
-            (this.filterReports reports)
-          }}
-          @defaultDropdownValue={{this.selectedGroupKey
-            (this.filterReports reports)
-          }}
-          @inputPlaceholder={{i18n "admin.filter_reports"}}
-          @noResultsMessage={{i18n "admin.filter_reports_no_results"}}
-          @onClientDropdownFilterChange={{this.updateGroupFilter}}
-        >
-          <:content as |filteredReports|>
-            {{#each
-              (this.groupReports (this.filterReportsByGroup filteredReports))
-              as |group|
-            }}
-              <section class="admin-reports-group">
-                <h2 class="admin-reports-group__title">{{group.name}}</h2>
-                <AdminSectionLandingWrapper class="admin-reports-list">
-                  {{#each group.reports as |report|}}
-                    <AdminSectionLandingItem
-                      @titleLabelTranslated={{report.title}}
-                      @descriptionLabelTranslated={{report.description}}
-                      @titleRoute="adminReports.show"
-                      @titleRouteModel={{report.type}}
-                    />
-                  {{/each}}
-                </AdminSectionLandingWrapper>
-              </section>
-            {{/each}}
-          </:content>
-        </AdminFilterControls>
+        {{#let (this.filterReports reports) as |visibleReports|}}
+          <AdminFilterControls
+            @array={{visibleReports}}
+            @searchableProps={{array "title" "description"}}
+            @dropdownOptions={{this.groupDropdownOptions visibleReports}}
+            @defaultDropdownValue={{this.selectedGroupKey visibleReports}}
+            @inputPlaceholder={{i18n "admin.filter_reports"}}
+            @noResultsMessage={{i18n "admin.filter_reports_no_results"}}
+            @onClientDropdownFilterChange={{this.updateGroupFilter}}
+          >
+            <:content as |filteredReports|>
+              {{#each
+                (this.groupReports
+                  (this.filterReportsByGroup filteredReports visibleReports)
+                )
+                as |group|
+              }}
+                <section class="admin-reports-group">
+                  <h2 class="admin-reports-group__title">{{group.name}}</h2>
+                  <AdminSectionLandingWrapper class="admin-reports-list">
+                    {{#each group.reports as |report|}}
+                      <AdminSectionLandingItem
+                        @titleLabelTranslated={{report.title}}
+                        @descriptionLabelTranslated={{report.description}}
+                        @titleRoute="adminReports.show"
+                        @titleRouteModel={{report.type}}
+                      />
+                    {{/each}}
+                  </AdminSectionLandingWrapper>
+                </section>
+              {{/each}}
+            </:content>
+          </AdminFilterControls>
+        {{/let}}
       </:content>
     </DAsyncContent>
   </template>
