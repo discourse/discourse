@@ -1,12 +1,20 @@
 # Mutation-testing config for the core gem. See tooling/.mutant.yml for the
-# rationale; only pure, non-`:rails` subjects are listed here.
+# rationale; only non-`:rails` subjects with isolated specs are listed here.
 #
-# Core is mostly the conversion runtime, which forks workers and talks to the
-# intermediate DB -- not mutant-friendly. But the step-orchestration layer added
-# with the concurrent-steps work has a chunk of pure decision logic (dependency
-# ordering, worker budgeting, partition math, progress counters) that runs under
-# the gem's isolated (non-`:rails`) suite, so it belongs here. The forking parts
-# (StepRunner/StepCoordinator/Step::Processor) stay out.
+# Core is the conversion runtime. The step-orchestration layer added with the
+# concurrent-steps work has a lot of logic that runs under the gem's isolated
+# (non-`:rails`) suite -- not just the pure decision helpers (dependency
+# ordering, worker budgeting, partition math, progress counters) but also the
+# step base class and the runner/consolidator/shard/setup pieces, whose specs
+# stub the forking, so mutant can actually reach them.
+#
+# Left out on purpose:
+#   * StepScheduler -- spins up real worker threads, so mutations to the
+#     concurrency logic deadlock into the mutation timeout (noisy, flaky). It
+#     needs its pure scheduling decisions split from the thread plumbing before
+#     it's a useful target.
+#   * StepCoordinator, Step::Processor, Step::Source -- no isolated specs (they
+#     drive the actual fork/process orchestration).
 integration:
   name: rspec
 requires:
@@ -14,6 +22,12 @@ requires:
 matcher:
   subjects:
     - "Migrations::StepDependencies"
+    - "Migrations::Conversion::Base"
+    - "Migrations::Conversion::Step"
+    - "Migrations::Conversion::StepRunner"
     - "Migrations::Conversion::StepTracker"
+    - "Migrations::Conversion::Consolidator"
+    - "Migrations::Conversion::ShardManager"
+    - "Migrations::Conversion::SetupGuard"
     - "Migrations::Conversion::WorkerBudget"
     - "Migrations::Conversion::Partitioner"
