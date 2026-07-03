@@ -11,6 +11,7 @@ RSpec.describe Migrations::StepDependencies do
     DependenciesTestModule.const_set("TopicUsers", Class.new(DependenciesTestModule::BaseStep))
     DependenciesTestModule.const_set("Users", Class.new(DependenciesTestModule::BaseStep))
     DependenciesTestModule.const_set("NotAStep", Class.new)
+    DependenciesTestModule.const_set("NotAClass", 42)
   end
 
   after { Object.send(:remove_const, "DependenciesTestModule") }
@@ -51,6 +52,14 @@ RSpec.describe Migrations::StepDependencies do
       expect { DependenciesTestModule::Posts.depends_on(:not_a_step) }.to raise_error(
         NameError,
         "Step 'NotAStep' (declared via depends_on in DependenciesTestModule::Posts) " \
+          "not found in DependenciesTestModule",
+      )
+    end
+
+    it "raises a NameError when the name resolves to a constant that isn't a class" do
+      expect { DependenciesTestModule::Posts.depends_on(:not_a_class) }.to raise_error(
+        NameError,
+        "Step 'NotAClass' (declared via depends_on in DependenciesTestModule::Posts) " \
           "not found in DependenciesTestModule",
       )
     end
@@ -152,6 +161,14 @@ RSpec.describe Migrations::StepDependencies do
   end
 
   describe "the dependency base class captured by `extend`" do
+    it "keeps the captured base class as a private helper" do
+      expect(DependenciesTestModule::BaseStep).not_to respond_to(:dependency_base_class)
+      expect { DependenciesTestModule::BaseStep.dependency_base_class }.to raise_error(
+        NoMethodError,
+        /private method [`']dependency_base_class'/,
+      )
+    end
+
     it "captures each extending hierarchy independently" do
       DependenciesTestModule.const_set(
         "OtherBase",

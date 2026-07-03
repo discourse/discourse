@@ -23,9 +23,23 @@ RSpec.describe Migrations::Conversion::WorkerBudget do
       expect(described_class.usable_cpus).to eq(4)
     end
 
+    it "keeps the affinity count when it is the tighter one" do
+      allow(Etc).to receive(:nprocessors).and_return(4) # host affinity
+      allow(Concurrent).to receive(:available_processor_count).and_return(64.0) # generous quota
+
+      expect(described_class.usable_cpus).to eq(4)
+    end
+
     it "floors a fractional quota and never reports fewer than one" do
       allow(Etc).to receive(:nprocessors).and_return(8)
       allow(Concurrent).to receive(:available_processor_count).and_return(0.5)
+
+      expect(described_class.usable_cpus).to eq(1)
+    end
+
+    it "floors a fractional quota down to the lower whole CPU" do
+      allow(Etc).to receive(:nprocessors).and_return(8)
+      allow(Concurrent).to receive(:available_processor_count).and_return(1.5)
 
       expect(described_class.usable_cpus).to eq(1)
     end
