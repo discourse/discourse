@@ -143,7 +143,7 @@ class Group < ActiveRecord::Base
     everyone: 99,
   }
 
-  VALID_DOMAIN_REGEX = /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}(:[0-9]{1,5})?(\/.*)?\Z/i
+  VALID_DOMAIN_REGEX = /\A[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,24}\Z/i
 
   def self.visibility_levels
     @visibility_levels = Enum.new(public: 0, logged_on_users: 1, members: 2, staff: 3, owners: 4)
@@ -1189,8 +1189,16 @@ class Group < ActiveRecord::Base
     value
       .split("|")
       .each do |domain|
-        domain.sub!(%r{\Ahttps?://}, "")
-        domain.sub!(%r{/.*\z}, "")
+        domain =
+          domain
+            .strip
+            .downcase
+            .sub(%r{\Ahttps?://}, "")
+            .sub(%r{/.*\z}, "")
+            .sub(/\A.*@/, "")
+            .sub(/:\d+\z/, "")
+
+        next if domain.blank?
 
         if domain =~ Group::VALID_DOMAIN_REGEX
           valid_domains << domain
@@ -1199,7 +1207,7 @@ class Group < ActiveRecord::Base
         end
       end
 
-    valid_domains
+    valid_domains.uniq
   end
 
   private
