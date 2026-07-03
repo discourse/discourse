@@ -66,8 +66,6 @@ const REPORT_GROUPS = {
   other: [],
 };
 
-const CORE_REPORT_GROUP_KEYS = new Set(Object.keys(REPORT_GROUPS));
-
 export default class AdminReports extends Component {
   @service siteSettings;
 
@@ -160,9 +158,7 @@ export default class AdminReports extends Component {
 
   @bind
   groupDropdownOptions(reports) {
-    const groups = this.groupReports(reports).filter((group) =>
-      CORE_REPORT_GROUP_KEYS.has(group.key)
-    );
+    const groups = this.groupReports(reports);
 
     return [
       {
