@@ -906,18 +906,26 @@ RSpec.describe UsersController do
         end
       end
 
-      context "when signup params include group assignments" do
+      context "when signup params include protected profile attributes" do
         fab!(:whisperers_group, :group)
 
         let(:created_user) { User.find(response.parsed_body["user_id"]) }
 
         before { SiteSetting.whispers_allowed_groups = whisperers_group.id.to_s }
 
-        it "ignores primary_group_id and flair_group_id on unauthenticated signup" do
-          post_user(primary_group_id: whisperers_group.id, flair_group_id: whisperers_group.id)
+        it "ignores protected profile attributes on unauthenticated signup" do
+          post_user(
+            title: "Moderator",
+            primary_group_id: whisperers_group.id,
+            flair_group_id: whisperers_group.id,
+          )
 
           expect(response).to have_http_status(:ok)
-          expect(created_user).to have_attributes(primary_group_id: nil, flair_group_id: nil)
+          expect(created_user).to have_attributes(
+            title: nil,
+            primary_group_id: nil,
+            flair_group_id: nil,
+          )
           expect(created_user).not_to be_a_whisperer
         end
       end
