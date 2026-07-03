@@ -3256,6 +3256,8 @@ rate_limits:
   max_topic_invitations_per_minute: 5
   max_topics_in_first_day: 3
   max_replies_in_first_day: 10
+  tl1_max_topics_in_first_day: 6
+  tl1_max_replies_in_first_day: 30
   tl2_additional_likes_per_day_multiplier: 1.5
   tl3_additional_likes_per_day_multiplier: 2
   tl4_additional_likes_per_day_multiplier: 3
