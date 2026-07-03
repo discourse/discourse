@@ -42,10 +42,10 @@ class ComposerController < ApplicationController
       groups
         .values
         .reduce({}) do |hash, group|
-          serialized_group = { user_count: group.user_count }
+          members_visible = members_visible_group_ids.include?(group.id)
+          serialized_group = members_visible ? { user_count: group.user_count } : {}
 
-          if group_reasons[group.name] == :not_allowed &&
-               members_visible_group_ids.include?(group.id) &&
+          if group_reasons[group.name] == :not_allowed && members_visible &&
                (@topic&.private_message? || @allowed_names.present?)
             # Find users that are notified already because they have been invited
             # directly or via a group
