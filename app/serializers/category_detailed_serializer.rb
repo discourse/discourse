@@ -57,7 +57,11 @@ class CategoryDetailedSerializer < BasicCategorySerializer
   def count_with_subcategories(method)
     count = object.public_send(method) || 0
 
-    object.subcategories.each { |category| count += category.public_send(method) || 0 }
+    object.subcategories.each do |category|
+      next if !scope.can_see_category?(category)
+
+      count += category.public_send(method) || 0
+    end
 
     count
   end
