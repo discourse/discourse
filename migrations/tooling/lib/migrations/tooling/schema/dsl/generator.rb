@@ -147,9 +147,13 @@ module Migrations
             return nil unless end_comment
 
             start_byte = start_comment.location.start_offset
+            # start_comment is a whole-line comment and end_comment sits on a
+            # later line, so the newline ending the start marker's line always
+            # exists before end_comment: `index` never returns nil here, and the
+            # slice always covers a real (possibly empty) range, never nil.
             line_end = content.b.index("\n", start_byte)
-            start_offset = line_end ? line_end + 1 : content.bytesize
-            content.byteslice(start_offset...end_comment.location.start_offset)&.presence
+            start_offset = line_end + 1
+            content.byteslice(start_offset...end_comment.location.start_offset).presence
           end
 
           def format_ruby_files!

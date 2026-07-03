@@ -94,8 +94,31 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
 
         expect { described_class.new(Migrations::Tooling::Schema).generate }.to raise_error(
           Migrations::Tooling::Schema::GenerationError,
-          /Schema validation failed with 1 error/,
+          /Schema validation failed with 1 error:/,
         )
+      end
+    end
+
+    it "lists every validation error and pluralizes the count" do
+      Dir.mktmpdir do |tmpdir|
+        configure_output(tmpdir)
+
+        allow(Migrations::Tooling::Schema).to receive(:preflight).and_return(
+          Migrations::Tooling::Schema::PreflightResult.new(
+            resolved: nil,
+            errors: ["Table 'a': first problem", "Table 'b': second problem"],
+          ),
+        )
+
+        expect { described_class.new(Migrations::Tooling::Schema).generate }.to raise_error(
+          Migrations::Tooling::Schema::GenerationError,
+        ) do |error|
+          expect(error.message).to eq(<<~MESSAGE.chomp)
+            Schema validation failed with 2 errors:
+              - Table 'a': first problem
+              - Table 'b': second problem
+          MESSAGE
+        end
       end
     end
 
@@ -113,6 +136,7 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
         expect(Dir.exist?(paths[:enums])).to be true
 
         sql_content = File.read(paths[:sql])
+        expect(sql_content).to include("This file is auto-generated from the")
         expect(sql_content).to include("CREATE TABLE users")
         expect(sql_content).to include("id")
         expect(sql_content).to include("username")
@@ -124,6 +148,60 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
         enum_files = Dir[File.join(paths[:enums], "*.rb")]
         expect(enum_files.size).to eq(1)
         expect(File.basename(enum_files.first)).to eq("visibility.rb")
+
+        enum_content = File.read(enum_files.first)
+        expect(enum_content).to include("module Enums")
+        expect(enum_content).to include("PUBLIC = 0")
+        expect(enum_content).to include("PRIVATE = 1")
+      end
+    end
+
+    it "passes the configured database through to preflight" do
+      Dir.mktmpdir do |tmpdir|
+        configure_output(tmpdir)
+        stub_validation_and_resolution(resolved_definition)
+
+        described_class.new(Migrations::Tooling::Schema).generate
+
+        expect(Migrations::Tooling::Schema).to have_received(:preflight).with(
+          database: :intermediate_db,
+        )
+      end
+    end
+
+    it "expands paths against output_root and reports deletions relative to it" do
+      Dir.mktmpdir do |tmpdir|
+        Migrations::Tooling::Schema.configure do
+          output do
+            # Nested, non-existent directory so the `mkdir_p` is load-bearing.
+            schema_file "db/schema.sql"
+            models_directory "models"
+            models_namespace "Test::Models"
+            enums_directory "enums"
+            enums_namespace "Test::Enums"
+          end
+        end
+        stub_validation_and_resolution(resolved_definition)
+
+        expect(Migrations::Tooling::Schema::Helpers).to receive(:format_ruby_files).with(
+          File.join(tmpdir, "models"),
+        )
+        expect(Migrations::Tooling::Schema::Helpers).to receive(:format_ruby_files).with(
+          File.join(tmpdir, "enums"),
+        )
+
+        FileUtils.mkdir_p(File.join(tmpdir, "models"))
+        stale = File.join(tmpdir, "models", "old_model.rb")
+        File.write(stale, "# This file is auto-generated from the Models schema.\n")
+
+        generator = described_class.new(Migrations::Tooling::Schema, output_root: tmpdir)
+        generator.generate
+
+        expect(File.exist?(File.join(tmpdir, "db", "schema.sql"))).to be true
+        expect(File.exist?(File.join(tmpdir, "models", "user.rb"))).to be true
+        expect(File.exist?(File.join(tmpdir, "enums", "visibility.rb"))).to be true
+        expect(File.exist?(stale)).to be false
+        expect(generator.deleted_files).to eq(["models/old_model.rb"])
       end
     end
 
@@ -159,9 +237,30 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
         definition = Migrations::Tooling::Schema::Definition.new(tables: [table], enums: [])
         stub_validation_and_resolution(definition)
 
-        described_class.new(Migrations::Tooling::Schema).generate
+        generator = described_class.new(Migrations::Tooling::Schema)
+        generator.generate
 
         expect(Dir[File.join(paths[:models], "*.rb")]).to be_empty
+        # A manual table must be skipped outright, not written and then removed
+        # as a stale file.
+        expect(generator.deleted_files).to be_empty
+      end
+    end
+
+    it "still generates later models when an earlier table is :manual" do
+      Dir.mktmpdir do |tmpdir|
+        paths = configure_output(tmpdir)
+
+        manual = make_table("log_entries", model_mode: :manual)
+        normal = make_table("users")
+        definition =
+          Migrations::Tooling::Schema::Definition.new(tables: [manual, normal], enums: [])
+        stub_validation_and_resolution(definition)
+
+        described_class.new(Migrations::Tooling::Schema).generate
+
+        expect(File.exist?(File.join(paths[:models], "log_entry.rb"))).to be false
+        expect(File.exist?(File.join(paths[:models], "user.rb"))).to be true
       end
     end
 
@@ -226,7 +325,9 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
 
         expect(File.exist?(stale_path)).to be false
         expect(generator.deleted_files.size).to eq(1)
-        expect(generator.deleted_files.first).to end_with("old_model.rb")
+        # The stale file lives outside the default output_root (the repository
+        # root), so its display path stays absolute rather than a `../…` string.
+        expect(generator.deleted_files.first).to eq(stale_path)
       end
     end
 
@@ -312,8 +413,11 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
 
         expect { described_class.new(Migrations::Tooling::Schema).generate }.to raise_error(
           Migrations::Tooling::Schema::GenerationError,
-          /Failed to parse/,
-        )
+        ) do |error|
+          expect(error.message).to start_with("Failed to parse")
+          # Each parse error is formatted as a bullet carrying its line number.
+          expect(error.message).to match(/\n {2}- .+ \(line 1\)/)
+        end
       end
     end
 
@@ -327,6 +431,214 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
         content = File.read(File.join(paths[:models], "user.rb"))
         expect(content).not_to include("# -- custom code --")
         expect(content).not_to include("# -- end custom code --")
+      end
+    end
+
+    it "references the enums namespace for enum-backed columns" do
+      Dir.mktmpdir do |tmpdir|
+        paths = configure_output(tmpdir)
+
+        enum =
+          Migrations::Tooling::Schema::EnumDefinition.new(
+            name: "visibility",
+            values: {
+              "public" => 0,
+              "private" => 1,
+            },
+            datatype: :integer,
+          )
+        table =
+          Migrations::Tooling::Schema::TableDefinition.new(
+            name: "users",
+            conflict_strategy: :raise,
+            columns: [
+              Migrations::Tooling::Schema::ColumnDefinition.new(
+                name: "id",
+                datatype: :integer,
+                nullable: false,
+                max_length: nil,
+                is_primary_key: true,
+                enum: nil,
+              ),
+              Migrations::Tooling::Schema::ColumnDefinition.new(
+                name: "visibility",
+                datatype: :integer,
+                nullable: false,
+                max_length: nil,
+                is_primary_key: false,
+                enum:,
+              ),
+            ],
+            indexes: [],
+            primary_key_column_names: ["id"],
+            constraints: [],
+            model_mode: nil,
+          )
+        definition = Migrations::Tooling::Schema::Definition.new(tables: [table], enums: [enum])
+        stub_validation_and_resolution(definition)
+
+        described_class.new(Migrations::Tooling::Schema).generate
+
+        content = File.read(File.join(paths[:models], "user.rb"))
+        expect(content).to include("Test::Enums::Visibility")
+      end
+    end
+
+    it "still succeeds when formatting raises" do
+      Dir.mktmpdir do |tmpdir|
+        configure_output(tmpdir)
+        stub_validation_and_resolution(resolved_definition)
+        allow(Migrations::Tooling::Schema::Helpers).to receive(:format_ruby_files).and_raise(
+          StandardError.new("stree blew up"),
+        )
+
+        expect(described_class.new(Migrations::Tooling::Schema).generate).to eq(resolved_definition)
+      end
+    end
+  end
+
+  describe "#extract_custom_code (private)" do
+    def extract(content)
+      Dir.mktmpdir do |tmpdir|
+        configure_output(tmpdir)
+        path = File.join(tmpdir, "model.rb")
+        File.write(path, content)
+        described_class.new(Migrations::Tooling::Schema).send(:extract_custom_code, path)
+      end
+    end
+
+    it "returns nil when the file does not exist" do
+      Dir.mktmpdir do |tmpdir|
+        configure_output(tmpdir)
+        generator = described_class.new(Migrations::Tooling::Schema)
+        expect(generator.send(:extract_custom_code, File.join(tmpdir, "missing.rb"))).to be_nil
+      end
+    end
+
+    it "returns exactly the bytes between the markers" do
+      # A comment sits both before the start marker and after the end marker, so
+      # the markers must be located with `find` (not `first`/`last`). The leading
+      # comment holds a multi-byte character (é) so the marker's byte offset
+      # differs from its character offset — the slicing has to work on bytes.
+      content =
+        "# café – leading note\n" \
+          "module M\n" \
+          "  # -- custom code --\n" \
+          "  def foo; end\n" \
+          "  # -- end custom code --\n" \
+          "  # trailing note\n" \
+          "end\n"
+      expect(extract(content)).to eq("  def foo; end\n  ")
+    end
+
+    it "returns nil when nothing sits between the markers" do
+      content = "module M\n  # -- custom code --\n  # -- end custom code --\nend\n"
+      expect(extract(content)).to be_nil
+    end
+
+    it "returns nil when the start marker is missing" do
+      expect(extract("module M\nend\n")).to be_nil
+    end
+
+    it "returns nil when only an end marker is present" do
+      # Guards against dereferencing a missing start comment while looking for
+      # the end marker.
+      content = "module M\n  # -- end custom code --\nend\n"
+      expect(extract(content)).to be_nil
+    end
+
+    it "returns nil when the end marker is missing" do
+      content = "module M\n  # -- custom code --\n  def foo; end\nend\n"
+      expect(extract(content)).to be_nil
+    end
+
+    it "keeps a comment inside the custom block and stops at the end marker" do
+      # The inner comment's offset is past the start marker, so the end finder
+      # must still match on the end marker's text rather than the first later
+      # comment.
+      content =
+        "module M\n" \
+          "  # -- custom code --\n" \
+          "  # an inner comment\n" \
+          "  def foo; end\n" \
+          "  # -- end custom code --\n" \
+          "end\n"
+      expect(extract(content)).to eq("  # an inner comment\n  def foo; end\n  ")
+    end
+
+    it "ignores an end marker that appears before the start marker" do
+      content =
+        "module M\n" \
+          "  # -- end custom code --\n" \
+          "  # -- custom code --\n" \
+          "  def foo; end\n" \
+          "  # -- end custom code --\n" \
+          "end\n"
+      expect(extract(content)).to eq("  def foo; end\n  ")
+    end
+
+    it "raises with a per-error bullet carrying the line number for invalid Ruby" do
+      Dir.mktmpdir do |tmpdir|
+        configure_output(tmpdir)
+        path = File.join(tmpdir, "model.rb")
+        File.write(path, "def broken(\n")
+
+        generator = described_class.new(Migrations::Tooling::Schema)
+
+        # `def broken(` yields several parse errors; build the expectation from
+        # Prism itself so the exact bullet format (message + line, one per line,
+        # prefixed with the file path) is pinned down.
+        bullets =
+          Prism
+            .parse(File.read(path))
+            .errors
+            .map { |e| "  - #{e.message} (line #{e.location.start_line})" }
+        expect(bullets.size).to be > 1
+        expected = "Failed to parse '#{path}':\n#{bullets.join("\n")}"
+
+        expect { generator.send(:extract_custom_code, path) }.to raise_error(
+          Migrations::Tooling::Schema::GenerationError,
+          expected,
+        )
+      end
+    end
+  end
+
+  describe "#generate for :extended models" do
+    it "reads custom code from the committed source tree, not the output root" do
+      Dir.mktmpdir do |source_root|
+        Dir.mktmpdir do |out_root|
+          allow(Migrations).to receive(:root_path).and_return(source_root)
+
+          Migrations::Tooling::Schema.configure do
+            output do
+              schema_file "schema.sql"
+              models_directory "models"
+              models_namespace "Test::Models"
+              enums_directory "enums"
+              enums_namespace "Test::Enums"
+            end
+          end
+
+          table = make_table("uploads", model_mode: :extended)
+          definition = Migrations::Tooling::Schema::Definition.new(tables: [table], enums: [])
+          stub_validation_and_resolution(definition)
+
+          FileUtils.mkdir_p(File.join(source_root, "models"))
+          File.write(
+            File.join(source_root, "models", "upload.rb"),
+            "module M\n" \
+              "  # -- custom code --\n" \
+              "  def self.committed_helper; end\n" \
+              "  # -- end custom code --\n" \
+              "end\n",
+          )
+
+          described_class.new(Migrations::Tooling::Schema, output_root: out_root).generate
+
+          content = File.read(File.join(out_root, "models", "upload.rb"))
+          expect(content).to include("def self.committed_helper")
+        end
       end
     end
   end
