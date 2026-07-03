@@ -3209,6 +3209,7 @@ ar:
       email_label: "البريد الإلكتروني"
       continue_button: "متابعة"
       verify_button: "متابعة"
+      signup_title: "إنشاء حسابك"
       account_ready_continue: "متابعة"
       username_label: "اسم المستخدم"
     login:
@@ -5476,7 +5477,6 @@ ar:
           many: "هل تريد بالتأكيد دمج تلك المنشورات البالغ عددها %{count}؟"
           other: "هل تريد بالتأكيد دمج تلك المنشورات البالغ عددها %{count}؟"
       revisions:
-        diff_too_complex: "من المعقد للغاية عرض الفروقات. يُرجى محاولة عرض تعديلات فردية أصغر."
         locale:
           no_locale_set: "لم تُحدد أي لغة بعد"
           locale_removed: "تمت إزالة اللغة"

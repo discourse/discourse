@@ -260,7 +260,6 @@ hu:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    diff_too_complex: "A változtatások összehasonlítása túl összetett a biztonságos kiszámításhoz. Kérjük, próbálkozzon kisebb módosításokkal."
     messages:
       invalid_locale: "%{invalid_locale} nem érvényes nyelv"
       too_long_validation:
@@ -2413,7 +2412,6 @@ hu:
     gravatar_base_url: "Adja meg a Gravatar szolgáltató API-jának elérési URL-jét. Ez a beállítás kulcsfontosságú az e-mail címek Gravatar URL-é alakításához, ahol az avatar képek tárolva vannak."
     share_quote_buttons: "Határozza meg, hogy mely elemek jelenjenek meg az idézet megosztási widgetben, és milyen sorrendben."
     share_quote_visibility: "Határozza meg, mikor jelenjenek meg az idézet megosztási gombok: soha, csak névtelen felhasználóknak, vagy minden felhasználónak. "
-    create_revision_on_bulk_topic_moves: "Hozzon létre egy revíziót az első bejegyzésekhez, amikor a témákat tömegesen áthelyezik egy új kategóriába."
     allow_changing_staged_user_tracking: "Egy átmeneti felhasználó kategória- és címke értesítési beállításainak módosításának engedélyezése adminisztrátor által."
     use_email_for_username_and_name_suggestions: "Használja az e-mail címek első részét felhasználónév- és névjavaslatokhoz. Figyelmeztetés: Ez megkönnyítheti a rossz szereplők számára, hogy felfedezzék tagjaid e-mail-címét (mert sokan olyan általános e-mail-szolgáltatókat használnak, mint a \"gmail.com\")."
     suggest_weekends_in_date_pickers: "Tartalmazza a hétvégéket (szombat és vasárnap) a dátumválasztó javaslatai között (tiltsa le ezt, ha a Discourse-t csak hétköznap, hétfőtől péntekig használja)."

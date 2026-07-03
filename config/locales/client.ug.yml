@@ -2599,6 +2599,7 @@ ug:
       email_label: "ئېلخەت"
       continue_button: "داۋاملاشتۇر"
       verify_button: "داۋاملاشتۇر"
+      signup_title: "ھېساباتىڭىزنى قۇرايلى"
       account_ready_continue: "داۋاملاشتۇر"
       username_label: "ئىشلەتكۈچى ئاتى"
     login:

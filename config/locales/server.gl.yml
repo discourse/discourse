@@ -1723,7 +1723,6 @@ gl:
     dashboard_general_tab_activity_metrics: "Escolla os informes que se amosarán como métricas de actividade na lapela xeral."
     share_quote_buttons: "Determinar que elementos aparecen no trebello de compartir cota e a súa orde."
     share_quote_visibility: "Determine cando amosar os botóns de compartir cota: nunca, só para usuarios anónimos ou para todos os usuarios. "
-    create_revision_on_bulk_topic_moves: "Crear revisión para as primeiras publicacións cando os temas se moven a unha nova categoría en masa."
     errors:
       invalid_email: "Enderezo electrónico non válido."
       invalid_username: "Non hai un usuario con este nome."

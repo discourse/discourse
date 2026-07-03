@@ -2462,6 +2462,7 @@ it:
       email_label: "E-mail"
       continue_button: "Continua"
       verify_button: "Continua"
+      signup_title: "Crea il tuo account"
       account_ready_continue: "Continua"
       username_label: "Nome utente"
     login:

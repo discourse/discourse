@@ -788,9 +788,6 @@ pt_BR:
         description: "Escolha uma das opções abaixo, e a IA vai sugerir uma nova versão do texto."
         selection_hint: "Dica: antes de abrir o ajudante, você pode selecionar uma parte do texto para reescrever apenas ela."
         suggest_errors:
-          too_many_tags:
-            one: "Você pode ter até %{count} etiqueta"
-            other: "Você pode ter até %{count} etiquetas"
           no_suggestions: "Sem sugestões disponíveis"
         missing_content: "Insira conteúdo para gerar sugestões."
         context_menu:

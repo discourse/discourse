@@ -261,6 +261,10 @@ de:
         header: "Chat-Kopfzeile"
         composer: "Chat-Composer"
         channels_list: "Liste der Chat-Kanäle"
+      screen_reader:
+        new_messages:
+          one: "%{count} neue Nachricht"
+          other: "%{count} neue Nachrichten"
       no_direct_message_channels: "Du bist noch keiner Unterhaltung per Direktnachricht beigetreten!"
       no_direct_message_channels_cta: "Eine Unterhaltung starten"
       no_public_channels: "Du bist noch keinem Kanal beigetreten!"

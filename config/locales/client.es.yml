@@ -2662,6 +2662,7 @@ es:
       email_label: "Correo electrónico"
       continue_button: "Continuar"
       verify_button: "Continuar"
+      signup_title: "Crea tu cuenta"
       account_ready_continue: "Continuar"
       username_label: "Nombre de usuario"
     login:
@@ -4365,7 +4366,6 @@ es:
           one: "¿Seguro que quieres fusionar estas publicaciones?"
           other: "¿Seguro que quieres fusionar estas %{count} publicaciones?"
       revisions:
-        diff_too_complex: "La diferencia es demasiado compleja para mostrarla. Intenta ver las ediciones individuales más pequeñas."
         locale:
           no_locale_set: "No hay ningún idioma establecido"
           locale_removed: "Idioma eliminado"

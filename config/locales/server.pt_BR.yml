@@ -260,7 +260,6 @@ pt_BR:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    diff_too_complex: "O diff é muito complexo para ser computado com segurança. Por favor, tente fazer edições menores."
     messages:
       invalid_locale: "%{invalid_locale} não é uma localização válida"
       too_long_validation:
@@ -2410,7 +2409,6 @@ pt_BR:
     gravatar_base_url: "Especifique a URL para acessar a API do provedor do Gravatar. Esta configuração é fundamental para converter endereços de e-mail em URLs do Gravatar onde as imagens de avatares estão armazenadas."
     share_quote_buttons: "Determine quais e em que ordem os itens são exibidos na citação compartilhando widget."
     share_quote_visibility: "Determine quando exibir botões de compartilhamento de citações: nunca, apenas para usuários(as) anônimos(as) ou todos(as) os(as) usuários(as). "
-    create_revision_on_bulk_topic_moves: "Crie revisão para as primeiras postagens quando os tópicos forem movidos em massa para uma nova categoria."
     allow_changing_staged_user_tracking: "Permitir a alteração das preferências de notificação de etiquetas e categoria do(a) usuário(a) por parte de um(a) usuário(a) administrador(a)."
     use_email_for_username_and_name_suggestions: "Use a primeira parte dos endereços de e-mail para sugerir nomes e nomes de usuário(a). Aviso: isso pode facilitar que agentes inescrupulosos descubram o endereço de e-mail dos seus membros (já que muita gente usa provedores comuns de e-mail, como o \"gmail.com\")."
     suggest_weekends_in_date_pickers: "Inclua fins de semana (sábado e domingo) nas sugestões do seletor de datas (desative isso se você usar o Discourse apenas durante a semana, de segunda a sexta)."

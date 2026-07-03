@@ -93,6 +93,7 @@ zh_CN:
           other: "< %{count} 分钟"
         x_minutes:
           other: "%{count} 分钟"
+        x_minutes_seconds: "%{minutes}分钟 %{seconds}秒"
         about_x_hours:
           other: "%{count} 小时"
         x_days:
@@ -2558,6 +2559,7 @@ zh_CN:
       email_label: "电子邮件"
       continue_button: "继续"
       verify_button: "继续"
+      signup_title: "创建您的帐户"
       account_ready_continue: "继续"
       username_label: "用户名"
     login:
@@ -4285,7 +4287,6 @@ zh_CN:
         confirm:
           other: "确定要合并这 %{count} 个帖子吗？"
       revisions:
-        diff_too_complex: "差异过于复杂，无法显示。请尝试查看各个较小的编辑。"
         locale:
           no_locale_set: "未设置语言"
           locale_removed: "语言已移除"
@@ -6302,6 +6303,15 @@ zh_CN:
             daily_engaged_users:
               tooltip: "社区每天平均点赞或发帖的成员人数。"
         site_traffic:
+          kpi:
+            bounce_rate:
+              label: "跳出率"
+              tooltip: "单次页面浏览且停留时间少于 10 秒的会话占比。"
+            average_session_duration:
+              label: "平均会话时长"
+              tooltip: "在选定时间段内，访客在您的社区停留的平均时间。"
+            session_metrics:
+              empty_tooltip: "本周期有访问记录后显示访问量。"
           series:
             anonymous: "匿名"
             embedded: "嵌入式页面浏览量"
