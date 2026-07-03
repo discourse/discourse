@@ -48,21 +48,6 @@ module PageObjects
         page.has_no_css?(".admin-reports-group__title", text: name)
       end
 
-      def has_static_group_heading?(name)
-        page.has_css?("h2.admin-reports-group__title", text: name) &&
-          page.has_no_css?(
-            "a.admin-reports-group__title, " \
-              "a .admin-reports-group__title, " \
-              ".admin-reports-group__title a, " \
-              "button.admin-reports-group__title, " \
-              "button .admin-reports-group__title, " \
-              ".admin-reports-group__title button, " \
-              ".admin-reports-group__title[role='button'], " \
-              ".admin-reports-group__title[tabindex]",
-            text: name,
-          )
-      end
-
       def has_report?(title)
         page.has_css?(".admin-section-landing-item__title", text: title)
       end

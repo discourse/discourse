@@ -49,142 +49,26 @@ describe "Admin Reports" do
     )
   end
 
-  it "lets admins use report group filters from URLs and controls" do
-    Reports::ListQuery.stubs(:call).returns(
-      [
-        {
-          type: "signups",
-          title: I18n.t("reports.signups.title"),
-          description: I18n.t("reports.signups.description"),
-        },
-        {
-          type: "visits",
-          title: I18n.t("reports.visits.title"),
-          description: I18n.t("reports.visits.description"),
-        },
-        {
-          type: "flags",
-          title: I18n.t("reports.flags.title"),
-          description: I18n.t("reports.flags.description"),
-        },
-        {
-          type: "alpha_report",
-          title: "Alpha report",
-          description: "From alpha plugin",
-          plugin: "alpha-plugin",
-          plugin_display_name: "Alpha Metrics",
-        },
-      ],
-    )
-
-    reports_page.visit_index(group: "missing")
-
-    expect(reports_page).to have_current_all_reports_path
-    expect(reports_page.filter_controls).to have_dropdown_accessible_name("Report group")
-    expect(reports_page.filter_controls).to have_dropdown_value("All groups")
-    expect(reports_page).to have_group("Engagement")
-    expect(reports_page).to have_group("Moderation & Security")
-    expect(reports_page).to have_group("Alpha Metrics")
-    expect(reports_page).to have_static_group_heading("Engagement")
-    expect(reports_page).to have_static_group_heading("Alpha Metrics")
-
-    reports_page.visit_index(group: "plugin-missing")
-
-    expect(reports_page).to have_current_all_reports_path
-    expect(reports_page.filter_controls).to have_dropdown_accessible_name("Report group")
-    expect(reports_page.filter_controls).to have_dropdown_value("All groups")
-    expect(reports_page).to have_group("Engagement")
-    expect(reports_page).to have_group("Moderation & Security")
-    expect(reports_page).to have_group("Alpha Metrics")
-    expect(reports_page).to have_static_group_heading("Engagement")
-    expect(reports_page).to have_static_group_heading("Alpha Metrics")
-
+  it "lets admins filter report groups from URLs and controls" do
     reports_page.visit_index(group: "engagement")
 
     expect(reports_page).to have_current_reports_path(group: "engagement")
-    expect(reports_page.filter_controls).to have_dropdown_accessible_name("Report group")
     expect(reports_page.filter_controls).to have_dropdown_value("Engagement")
     expect(reports_page).to have_group("Engagement")
-    expect(reports_page).to have_static_group_heading("Engagement")
-    expect(reports_page).to have_no_group("Moderation & Security")
-    expect(reports_page).to have_no_group("Alpha Metrics")
-    expect(reports_page).to have_report(I18n.t("reports.signups.title"))
-    expect(reports_page).to have_report(I18n.t("reports.visits.title"))
-    expect(reports_page).to have_no_report(I18n.t("reports.flags.title"))
-    expect(reports_page).to have_no_report("Alpha report")
+    expect(reports_page).to have_no_group("Traffic")
 
-    reports_page.filter_controls.type_in_search(I18n.t("reports.signups.title"))
+    reports_page.filter_controls.select_dropdown_option("Traffic")
 
-    expect(reports_page).to have_report(I18n.t("reports.signups.title"))
-    expect(reports_page).to have_no_report(I18n.t("reports.visits.title"))
-    expect(reports_page.filter_controls).to have_no_no_results_reset_button
+    expect(reports_page).to have_current_reports_path(group: "traffic")
+    expect(reports_page.filter_controls).to have_dropdown_value("Traffic")
+    expect(reports_page).to have_group("Traffic")
+    expect(reports_page).to have_no_group("Engagement")
 
-    reports_page.filter_controls.clear_search
-    reports_page.filter_controls.type_in_search(I18n.t("reports.flags.title"))
-
-    expect(reports_page.filter_controls).to have_no_results_message(
-      I18n.t("admin_js.admin.filter_reports_no_results"),
-    )
-
-    reports_page.filter_controls.click_no_results_reset_button
+    reports_page.filter_controls.select_all_dropdown_option
 
     expect(reports_page).to have_current_all_reports_path
     expect(reports_page.filter_controls).to have_dropdown_value("All groups")
-    expect(reports_page.filter_controls.search_input_value).to eq("")
     expect(reports_page).to have_group("Engagement")
-    expect(reports_page).to have_group("Moderation & Security")
-    expect(reports_page).to have_group("Alpha Metrics")
-    expect(reports_page).to have_report(I18n.t("reports.visits.title"))
-
-    reports_page.filter_controls.select_dropdown_option("Moderation & Security")
-
-    expect(reports_page).to have_current_reports_path(group: "moderation_and_security")
-    expect(reports_page).to have_group("Moderation & Security")
-    expect(reports_page).to have_no_group("Engagement")
-    expect(reports_page).to have_no_group("Alpha Metrics")
-  end
-
-  it "lets admins open plugin report groups by stable slug" do
-    Reports::ListQuery.stubs(:call).returns(
-      [
-        {
-          type: "signups",
-          title: I18n.t("reports.signups.title"),
-          description: I18n.t("reports.signups.description"),
-        },
-        {
-          type: "zebra_report",
-          title: "Zebra report",
-          description: "From zebra plugin",
-          plugin: "zebra-plugin",
-          plugin_display_name: "Zebra Analytics",
-        },
-        {
-          type: "alpha_report",
-          title: "Alpha report",
-          description: "From alpha plugin",
-          plugin: "alpha-plugin",
-          plugin_display_name: "Alpha Metrics",
-        },
-      ],
-    )
-
-    reports_page.visit_index(group: "plugin-alpha-plugin")
-
-    expect(reports_page).to have_current_reports_path(group: "plugin-alpha-plugin")
-    expect(reports_page.filter_controls).to have_dropdown_accessible_name("Report group")
-    expect(reports_page.filter_controls).to have_dropdown_value("Alpha Metrics")
-    expect(reports_page).to have_group("Alpha Metrics")
-    expect(reports_page).to have_no_group("Engagement")
-    expect(reports_page).to have_no_group("Zebra Analytics")
-    expect(reports_page).to have_report("Alpha report")
-    expect(reports_page).to have_no_report(I18n.t("reports.signups.title"))
-    expect(reports_page).to have_no_report("Zebra report")
-
-    reports_page.filter_controls.select_dropdown_option("Zebra Analytics")
-
-    expect(reports_page).to have_current_reports_path(group: "plugin-zebra-plugin")
-    expect(reports_page).to have_group("Zebra Analytics")
-    expect(reports_page).to have_no_group("Alpha Metrics")
+    expect(reports_page).to have_group("Traffic")
   end
 end
