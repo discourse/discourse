@@ -41,11 +41,11 @@ module PageObjects
       end
 
       def has_reset_button?
-        page.has_css?(".admin-filter-controls__inputs .admin-filter-controls__reset")
+        component.has_css?("> .admin-filter-controls__reset")
       end
 
       def click_reset_button
-        page.find(".admin-filter-controls__inputs .admin-filter-controls__reset").click
+        component.find("> .admin-filter-controls__reset").click
       end
 
       def click_no_results_reset_button
@@ -57,7 +57,7 @@ module PageObjects
       end
 
       def has_no_reset_button?
-        component.has_no_css?(".admin-filter-controls__inputs .admin-filter-controls__reset")
+        component.has_no_css?("> .admin-filter-controls__reset")
       end
 
       def has_no_results_message?

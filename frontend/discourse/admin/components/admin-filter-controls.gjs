@@ -278,15 +278,6 @@ export default class AdminFilterControls extends Component {
             @icons={{hash left="magnifying-glass"}}
           />
 
-          {{#if (and this.hasActiveFilters (not @loading))}}
-            <DButton
-              @icon="arrow-rotate-left"
-              @label="reset_filter"
-              @action={{this.resetFilters}}
-              class="btn-default admin-filter-controls__reset"
-            />
-          {{/if}}
-
           {{#if this.hasMultipleDropdowns}}
             <DButton
               class="btn-transparent admin-filter-controls__toggle-filters"
@@ -332,6 +323,15 @@ export default class AdminFilterControls extends Component {
               </DSelect>
             {{/if}}
           </div>
+        {{/if}}
+
+        {{#if (and this.hasActiveFilters (not @loading))}}
+          <DButton
+            @icon="arrow-rotate-left"
+            @label="reset_filter"
+            @action={{this.resetFilters}}
+            class="btn-default admin-filter-controls__reset"
+          />
         {{/if}}
 
         {{yield to="actions"}}
