@@ -1,6 +1,6 @@
 # Request Specs
 
-Discourse uses **request specs** (`spec/requests/`) rather than controller specs to test controllers. They drive real HTTP requests against the Rails router, so they verify routing, middleware, controller actions, and response payloads end-to-end.
+Discourse uses **request specs** (`spec/requests/`) rather than controller specs to exercise controllers. They drive real HTTP requests against the Rails router, so they verify routing, middleware, controller actions, and response payloads end-to-end.
 
 ## File and Top-Level Naming
 

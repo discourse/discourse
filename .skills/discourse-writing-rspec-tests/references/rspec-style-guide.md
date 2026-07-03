@@ -1,6 +1,7 @@
 # RSpec Style Guide
 
-> Adapted from: https://rspec.rubystyle.guide/
+> Source: https://rspec.rubystyle.guide/
+> Last updated: 2026-02-24
 
 ## Layout
 
@@ -39,11 +40,13 @@
 
 ## Example Group Structure
 
-- **Declaration order**: `subject` → `fab!`/`let!`/`let` → `before` → `after`
+- **First level of nesting is the method under test** — inside `RSpec.describe SomeClass`, group examples by public method: `describe "#instance_method"` / `describe ".class_method"`. Scenario `describe`/`context` blocks nest *below* the method group, never directly under the class.
+- **Declaration order**: `subject` → `let!`/`let` → `before` → `after`
 - **Use `context` blocks** to organize test conditions; avoid conditional logic in example descriptions
 - **Pair context cases** — include both positive and negative contexts (e.g. "when present" and "when not present")
-- **Use `fab!`** for shared test data, `let` for computed values or non-persisted objects
+- **Use `let`** for shared data, `let!` when the value must exist even if unused in specific examples
 - **Prefer `let` over instance variables** — `let(:name) { "John" }` not `before { @name = "John" }`
+- **Extract shared examples** — use `shared_examples` with `it_behaves_like` to reduce duplicated test blocks
 - **Omit `:each`/`:example`** scope on `before`/`after`/`around` hooks (they're the default)
 - **Use `:context` over `:all`** when specifying hook scope
 - **Minimize `:context`-scoped hooks** to prevent state leakage
@@ -59,9 +62,11 @@
 - **Don't generate tests via iteration** — write each test explicitly
 - **Avoid incidental state** — use matchers like `change` instead of depending on shared state
 - **Balance DRY with clarity** — some duplication in tests is preferable to fragile shared setup
+- **Use factories** (`FactoryBot.create`) for test data in integration tests; avoid `Model.create` and fixtures
 - **Load only needed data** — minimum objects required for the test
-- **Freeze time with `freeze_time`** — don't stub `Time.now` or `Date.today`
-- **Stub HTTP requests** with WebMock
+- **Use verifying doubles** — `instance_double`, `class_double`, `object_double` over plain `double`
+- **Freeze time with Timecop** — don't stub `Time.now` or `Date.today`
+- **Stub HTTP requests** with WebMock or VCR
 - **Don't define classes in example groups** (they leak to global scope) — use `stub_const` or `Class.new`
 - **Use explicit block expectations** — `expect { do_something }.to change(...)` not implicit block subjects
 
@@ -72,6 +77,8 @@
 - **Keep descriptions under 60 characters**
 - **Avoid "should"** — use third-person present tense: `it "returns the summary"` not `it "should return the summary"`
 - **Describe methods**: `.method_name` for class methods, `#method_name` for instance methods
+- **Avoid double negatives** — state the positive condition: `"returns true when status is approved or pre_approval"`, not `"returns true when status is not none"`. Be specific about the values being tested.
+- **No single-letter block variables** — `|vote|`, `|option|`, not `|v|`, `|o|`.
 
 ## Expectations
 
@@ -84,7 +91,39 @@
 - **Avoid bare `be`** — use `be_truthy`, `be_nil`, `be_an(Type)` etc.
 - **Extract custom matchers** for repeated expectation patterns
 - **Avoid `any_instance_of`** — mock injected dependencies directly
+- **Use matcher libraries** (e.g. Shoulda Matchers) for common validation checks
 
 ## Capybara
 
 - **Use negative selectors** — `have_no_selector` not `to_not have_selector`
+
+## Rails: Controllers
+
+- **Mock models** in controller specs
+- **Test only controller responsibilities** — method execution, assigns, render/redirect
+- **Use `context` blocks** for different controller behaviors
+
+## Rails: Models
+
+- **Don't mock the model under test**
+- **Use `FactoryBot.create`** or `subject` with new instances
+- **Mocking associations is acceptable**
+- **Define model once** via `let` for reuse
+- **Verify factory validity** — `expect(article).to be_valid`
+- **Test validations via `errors[:attribute].size`** not just `be_valid`/`not_to be_valid`
+- **Separate `describe` blocks** per validated attribute
+- **Name alternate objects** `another_*` for uniqueness tests
+
+## Rails: Mailers
+
+- **Mock models** in mailer specs
+- **Verify subject, sender, recipient, and body content**
+
+## Rails: Views
+
+- **Mirror `app/views` structure** in `spec/views`
+- **Append `_spec.rb`** to the view filename
+- **Use relative view path** as outer `describe` string
+- **Mock models** in view specs
+- **Use `assign`** for instance variables
+- **Stub helpers** on the `template` object

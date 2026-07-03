@@ -18,6 +18,39 @@ expect(Post.count).to eq(1)
 
 Only reach into the database when no UI signal exists for the behavior being tested, which should be rare. If you find yourself needing database assertions, consider whether the feature is missing user-visible feedback.
 
+## Don't Assert on Transient States
+
+**Do not assert on transient UI states in system tests** — loading spinners, in-flight error banners, optimistic UI mid-flip, skeleton placeholders, or any state that resolves on its own as the page settles. By the time Capybara polls for the assertion, the state has usually already changed, producing flaky tests. Even when they pass, they exercise timing-dependent code paths that drift with unrelated network and perf shifts.
+
+Route transient-state verification to the layer that lets you pin the state without racing the runner:
+
+- **qunit component tests** — state can be stubbed or held in a known value while the assertion runs. This is the right home for `{{#if loading}}` / `{{#if error}}` guards and other mid-flight branches.
+- **Code review** — for simple structural guards (e.g., a button that's only rendered when a chart has loaded), reading the template is more reliable than racing a test against the transition.
+
+System tests own the **stable outcomes**: the final rendered state after the flow completes, persisted changes the user can see, navigation results. Mid-flight is qunit's job.
+
+## URL Assertions
+
+**Use exact-string matches with `have_current_path`.** Do not pass a regex unless the URL genuinely contains a value you cannot predict (a UUID, an auto-generated slug, a server-assigned id).
+
+```rb
+# Good - exact match: catches extra params, wrong separators, encoding bugs
+expect(page).to have_current_path(
+  "/admin/reports/site_traffic?end_date=2026-05-31&start_date=2026-05-01"
+)
+
+# Bad - regex tolerates extra params, wrong path prefixes, and encoding bugs
+expect(page).to have_current_path(
+  %r{\A/admin/reports/site_traffic\?.*start_date=2026-05-01}
+)
+```
+
+Regex assertions look like a clean fix for query-param ordering surprises, but they trade away the test's strongest property — it stops asserting **the exact URL the user sees**. A regex passes when extra params get silently appended, when the path prefix drifts, when the separator is wrong, when encoding breaks. An exact match catches all of those.
+
+**When the framework produces a URL ordering that surprises you, update the expected string — don't soften the matcher.** Ember sorts query params alphabetically on navigation, so a link declared as `?start_date=…&end_date=…` lands on `?end_date=…&start_date=…`. The correct response is to spell the expected URL in the order the framework actually produces. If the ordering is non-obvious, add a one-line comment explaining why — but keep the assertion exact.
+
+Reach for regex only when the URL genuinely contains a value you can't predict at write time (UUID, generated token). Even then, anchor the regex (`\A...\z`) and pin everything except the unpredictable segment, so the matcher still catches the failures it would have caught with an exact string.
+
 **Verify persistence by refreshing the page.** After a save action, refresh (or revisit) the current page and assert the saved state is still visible. This is what a real user would do to confirm their changes persisted.
 
 ```rb
@@ -168,6 +201,8 @@ Because the addon strips these in production, never use `data-test-*` for stylin
 ## Page Objects
 
 **Always use page objects** - never write raw selectors or Capybara finders directly in test files. Encapsulate all selectors and interactions in page object classes. Only add methods that are actually used by your tests - don't add methods speculatively.
+
+**Design page object APIs from the call site.** Page object methods should make the spec read in product/user language. Prefer explicit methods and named arguments that describe the behavior being exercised over generic helpers that require the spec to know implementation details. If a test has to pass route/query param names, internal identifiers, selector fragments, enum values, or serialized keys, the page object abstraction has leaked. Keep that translation inside the page object so the spec remains stable when implementation details change.
 
 **Prefer passing entire objects** to page object methods instead of just attributes. Let the page object extract what it needs:
 

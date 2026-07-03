@@ -5,79 +5,54 @@ description: Write and structure RSpec tests for Discourse core, plugins, themes
 
 # Writing RSpec Tests
 
-Discourse uses RSpec for testing. Follow these patterns for all test types.
+Discourse uses RSpec at every layer — models, requests, services, jobs, system tests. This skill is the *judgment* for writing them. Mechanical style rules (layout, naming, matchers, nesting) live in [references/rspec-style-guide.md](references/rspec-style-guide.md); read it before writing.
 
-## Testing Principles
+## The core idea: test the interface, not the innards
 
-- **Test behavior, not implementation** — test public interfaces; don't assert on internal state or private methods. Refactoring internals shouldn't break tests.
-- **One concept per test** — each `it` block verifies one behavior for clear failure diagnosis.
-- **Don't over-mock** — mock external boundaries (HTTP, third-party services), not internal collaborators. Too many mocks signals a design problem.
-- **Don't assert that internal methods are or aren't called** — assertions like `SomeService.expects(:some_method).never` (or `.once`, `.with(...)`) couple the test to internal implementation details that the caller shouldn't care about. Assert on the observable outcome instead: returned value, persisted state, emitted event, response body, rendered output. If the implementation is later refactored, inlined, or renamed, a behavior-focused test still passes when the behavior is correct.
-- **Prefer readability over DRYness** — tests are documentation. Some duplication is fine. Avoid deep `shared_examples`/`let` chains that hurt readability.
-- **Test edge cases** — nil inputs, empty collections, boundary values, permission failures — not just happy paths.
-- **Keep tests independent** — no test should depend on another test's execution or shared mutable state.
-- **Verify placement in parent context** — before adding a new test, always read the surrounding `describe`/`context` block to confirm the test belongs there. Check that the parent context's description, `let`/`fab!` setup, and `before` hooks match the scenario being tested. A misplaced test inherits the wrong setup and produces misleading results.
-- **Arrange-Act-Assert** — clear separation of setup, action, and verification in each test.
-- **Don't test framework behavior** — don't test that Rails validations work; test your business logic.
-- **Avoid redundant multi-layer testing** — if a model spec tests a validation, the controller spec doesn't need to re-verify that same validation logic.
-- **No single-letter block variables** — use descriptive names like `|vote|`, `|option|`, not `|v|`, `|o|`.
-- **Assert collections in a single assertion** — use `contain_exactly` or `eq` instead of multiple `include`/`not_to include` checks.
-- **Reference objects, not literal strings, in negative assertions** — `expect(response.body).not_to include("hidden data explorer excerpt")` silently passes if the literal has a typo or drifts from the source, giving a false sense of security. Reference the object directly (`expect(response.body).not_to include(private_post.raw)`) so the assertion stays in sync with the data under test. The same applies to any `not_to include`/`not_to match` against hardcoded strings.
-- **Optimise for human readability** — minimise context overload when reading an example. Avoid too many indirections.
-- **Limit nesting to 2 levels** — avoid more than 2 levels of `describe`/`context` nesting. Instead of deeply nested contexts, put the full scenario description in the `it` block itself. Flat tests are easier to read and maintain.
-- **Avoid double negatives in descriptions** — write test descriptions that state the positive condition. For example, prefer `"returns true when topic_approval_type is approval or pre_approval"` over `"returns true when topic_approval_type is not none"`. Be specific about the values being tested.
+A spec pins down a method's **public interface** — the messages you send it and what you observably get back — so the implementation underneath stays free to change. (Sandi Metz, *The Magic Tricks of Testing*.) Choose what to assert by the kind of message:
 
-## Style Guide Reference
+- **Query (returns a value, changes nothing)** — assert the **return value**.
+- **Command (changes state)** — assert the **direct public side effect** it owns: persisted columns, an enqueued job, an emitted event, a response body, rendered DOM. Drive the public entry point and check the state it left behind; that entry point names the spec's group — `describe "#execute"` for a job, `".call"` for a service, `"#expire!"` for a model command.
+- **Private method (a message to self)** — don't test it, don't assert it was called. `expects(:internal)` / `.to receive(:internal)` on the object under test freezes tomorrow's refactor. This is the anti-pattern.
+- **Outgoing query (to a collaborator)** — don't assert on it; the collaborator's own spec owns it.
+- **Outgoing command (to a collaborator)** — the only observable fact is *that it was sent*, so assert that with the capture helpers `DiscourseEvent.track_events` / `MessageBus.track_publish`, never `expects(:trigger)` / `expects(:publish)`.
 
-Before writing any RSpec code, read [references/rspec-style-guide.md](references/rspec-style-guide.md) and apply those conventions alongside the Discourse-specific patterns below.
+The throughline: **test the messages crossing the public boundary; ignore what happens inside.** A test that breaks only because you renamed a private method or reordered internal calls — with no change to the return value or persisted state — is testing the wrong thing.
 
-## Test Data with Fabricators
+## Principles that follow
 
-Use `fab!` for shared test data, or `Fabricate` inline within the test example:
+- **One behavior per example** — a failure should name its cause. (Batch assertions about the *same* state; see Cost.)
+- **Assert observable outcomes, including edge cases** — nil, empty, boundary, permission failures, not just the happy path. Don't test framework behavior (Rails validations work; your logic is what's under test).
+- **Each layer asserts what it owns** — models own validations/scopes/persisted state; services own orchestration/authorization/return values; request specs own HTTP status and response shape; jobs own enqueue/idempotency. Don't re-assert a lower layer's contract from above — trust it. (Callbacks belong to the model that defines them: drive the public op that fires them; never `describe "after_commit :x"`.)
+- **Readable beats DRY; flat beats nested** — tests are documentation. Some duplication is fine; deep `shared_examples`/`let` chains and more than two levels of `describe`/`context` nesting are not — push the scenario into the `it` description instead.
+- **Keep assertions in sync with the data** — match collections exactly (`contain_exactly`/`eq`, not a pile of `include`s), and reference the object under test, not a copied string literal that silently rots (`not_to include(private_post.raw)`, not a hardcoded `"..."`).
+- **Place each test where its setup fits** — read the surrounding `describe`/`before`/`fab!` before adding an example; a misplaced test inherits the wrong world.
 
-```rb
-fab!(:user)
-fab!(:category)
-fab!(:tag)
-fab!(:topic) { Fabricate(:topic, category: category, tags: [tag]) }
+## Test data: fabricators
 
-it "displays the topic" do
-  sign_in(user)
-  visit("/")
-end
+`fab!` for shared data, `Fabricate` inline for one-off data — **never** a `before` block to fabricate; `let!` only when truly needed. Fabricators live in `spec/fabricators/` (core and each plugin) — grep before assuming none exists or hand-rolling setup.
 
-it "creates a new topic" do
-  new_category = Fabricate(:category, name: "Special")
-  # ... test using new_category
-end
-```
+Name a fixture for the role it plays at the call site (`fab!(:topic_creator)`, not `fab!(:user)`). For a recurring non-default variant, declare a derived fabricator (`Fabricator(:variant, from: :base)`) named for its *data state* — reusable across tests — rather than an ad-hoc helper named after one test's scenario.
 
-Never use `before` blocks for Fabricate calls. Use `let!` only when absolutely necessary.
+## Cost: the cheapest test that proves the behavior
 
-## Test Efficiency
+Every example has setup cost; system tests cost orders of magnitude more.
 
-Tests have setup overhead. **Optimize for the fewest test examples possible:**
+- Batch assertions about the same page/state into one example; don't split trivial variations.
+- **One system test per user flow, not per internal code path.** If two scenarios look the same to the user but differ only in internals, test the flow once and cover the branches with cheaper unit/component tests.
 
-- Combine related assertions in a single `it` block when testing the same page/state
-- Avoid separate tests for trivial variations
-- Each `it` block incurs setup overhead; batch checks where logical
-
-## Running Tests
+## Running tests
 
 ```sh
-# Run specific file
-bin/rspec spec/models/topic_spec.rb
-
-# Run specific line
-bin/rspec spec/models/topic_spec.rb:15
+bin/rspec spec/models/topic_spec.rb        # a file
+bin/rspec spec/models/topic_spec.rb:15     # one example
+SELENIUM_HEADLESS=0 bin/rspec spec/system/my_spec.rb   # visible browser
 ```
 
-## Specialized Test Types
+## Where to go next
 
-- **Request specs**: See [references/request-specs.md](references/request-specs.md) for controller/request spec structure, action-based `describe` grouping, and what to assert.
-- **System tests**: See [references/system-tests.md](references/system-tests.md) for file naming, test structure, page objects, and scoping patterns.
-- **Theme/component tests**: See [references/theme-tests.md](references/theme-tests.md) for theme upload helpers, settings, and directory structure.
-
-## Tracking Helpers
-
-See [references/tracking-helpers.md](references/tracking-helpers.md) for `DiscourseEvent.track_events`, `MessageBus.track_publish`, and `track_sql_queries` — block helpers that capture events, message-bus publishes, and SQL queries so tests can assert on side effects.
+- Request specs → [references/request-specs.md](references/request-specs.md)
+- System tests → [references/system-tests.md](references/system-tests.md)
+- Theme / component tests → [references/theme-tests.md](references/theme-tests.md)
+- Capturing events / publishes / SQL → [references/tracking-helpers.md](references/tracking-helpers.md)
+- General RSpec style → [references/rspec-style-guide.md](references/rspec-style-guide.md)
