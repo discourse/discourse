@@ -183,13 +183,6 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
         end
         stub_validation_and_resolution(resolved_definition)
 
-        expect(Migrations::Tooling::Schema::Helpers).to receive(:format_ruby_files).with(
-          File.join(tmpdir, "models"),
-        )
-        expect(Migrations::Tooling::Schema::Helpers).to receive(:format_ruby_files).with(
-          File.join(tmpdir, "enums"),
-        )
-
         FileUtils.mkdir_p(File.join(tmpdir, "models"))
         stale = File.join(tmpdir, "models", "old_model.rb")
         File.write(stale, "# This file is auto-generated from the Models schema.\n")
@@ -197,6 +190,12 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
         generator = described_class.new(Migrations::Tooling::Schema, output_root: tmpdir)
         generator.generate
 
+        expect(Migrations::Tooling::Schema::Helpers).to have_received(:format_ruby_files).with(
+          File.join(tmpdir, "models"),
+        )
+        expect(Migrations::Tooling::Schema::Helpers).to have_received(:format_ruby_files).with(
+          File.join(tmpdir, "enums"),
+        )
         expect(File.exist?(File.join(tmpdir, "db", "schema.sql"))).to be true
         expect(File.exist?(File.join(tmpdir, "models", "user.rb"))).to be true
         expect(File.exist?(File.join(tmpdir, "enums", "visibility.rb"))).to be true
@@ -450,7 +449,6 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
         table =
           Migrations::Tooling::Schema::TableDefinition.new(
             name: "users",
-            conflict_strategy: :raise,
             columns: [
               Migrations::Tooling::Schema::ColumnDefinition.new(
                 name: "id",

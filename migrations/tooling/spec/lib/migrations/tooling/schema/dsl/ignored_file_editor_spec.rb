@@ -244,11 +244,11 @@ RSpec.describe Migrations::Tooling::Schema::DSL::IgnoredFileEditor do
             tables :a
           end
         RUBY
-        expect(Migrations::Tooling::Schema::Helpers).to receive(:format_ruby_file).with(
+        editor.add_table(:b)
+
+        expect(Migrations::Tooling::Schema::Helpers).to have_received(:format_ruby_file).with(
           ignored_path,
         )
-
-        editor.add_table(:b)
       end
     end
 
@@ -482,11 +482,11 @@ RSpec.describe Migrations::Tooling::Schema::DSL::IgnoredFileEditor do
             tables :a, :b
           end
         RUBY
-        expect(Migrations::Tooling::Schema::Helpers).to receive(:format_ruby_file).with(
+        editor.remove_table(:a)
+
+        expect(Migrations::Tooling::Schema::Helpers).to have_received(:format_ruby_file).with(
           ignored_path,
         )
-
-        editor.remove_table(:a)
       end
     end
   end
