@@ -14,23 +14,6 @@
     --d-button-default-border: none;
   }
 
-  .topic-replies-toggle-wrapper .topics-replies-toggle.active:hover {
-    background-color: var(--d-nav-bg-color--active);
-    color: var(--d-nav-color--active);
-  }
-
-  .bookmark-menu-content .bookmark-menu__title,
-  .bookmark-menu-content .bookmark-menu__row-title {
-    padding-block: 0;
-    padding-inline: var(--d-sidebar-row-horizontal-padding);
-    height: var(--d-sidebar-row-height);
-  }
-
-  .bookmark-menu-content .bookmark-menu__row-title {
-    display: flex;
-    align-items: center;
-  }
-
   // button on /my/badges
   .favorite-btn {
     border-color: var(--primary-low);
