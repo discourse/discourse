@@ -28,15 +28,15 @@ module Migrations
             content = File.read(@ignored_path)
             ignored_block = parse_ignored_block(content)
 
-            if ignored_block[:table_names].include?(table_name)
+            if ignored_block.fetch(:table_names).include?(table_name)
               raise ConfigError, "Table #{table_name} is already ignored"
             end
 
             content =
-              if reason.nil? && ignored_block[:last_tables_group]
-                append_to_tables_group(content, ignored_block[:last_tables_group], table_name)
+              if reason.nil? && ignored_block.fetch(:last_tables_group)
+                append_to_tables_group(content, ignored_block.fetch(:last_tables_group), table_name)
               else
-                insert_standalone_entry(content, ignored_block[:end_offset], table_name, reason)
+                insert_standalone_entry(content, ignored_block.fetch(:end_offset), table_name, reason)
               end
 
             File.write(@ignored_path, content)
@@ -61,12 +61,12 @@ module Migrations
           private
 
           def append_to_tables_group(content, tables_group, table_name)
-            all_names = (tables_group[:names] + [table_name]).sort
+            all_names = (tables_group.fetch(:names) + [table_name]).sort
             replacement = "tables " + all_names.map { |n| ":#{n}" }.join(", ")
-            replacement += ", #{tables_group[:keyword_source]}" if tables_group[:keyword_source]
+            replacement += ", #{tables_group.fetch(:keyword_source)}" if tables_group.fetch(:keyword_source)
 
-            content.byteslice(0, tables_group[:start_offset]) + replacement +
-              content.byteslice(tables_group[:end_offset]..)
+            content.byteslice(0, tables_group.fetch(:start_offset)) + replacement +
+              content.byteslice(tables_group.fetch(:end_offset)..)
           end
 
           def insert_standalone_entry(content, end_offset, table_name, reason)
@@ -83,12 +83,12 @@ module Migrations
           end
 
           def find_call_with_table(block_node, table_name)
-            body = block_node&.body
-            return nil unless body.is_a?(Prism::StatementsNode)
+            body = block_node.body
+            return nil unless body
 
             body.body.find do |statement|
-              statement.is_a?(Prism::CallNode) &&
-                %w[table tables].include?(statement.message.to_s) &&
+              statement.instance_of?(Prism::CallNode) &&
+                %w[table tables].include?(statement.message) &&
                 table_names_from(statement).include?(table_name)
             end
           end
@@ -101,18 +101,16 @@ module Migrations
             keyword_source = trailing_keyword_source(call_node, content)
             replacement += ", #{keyword_source}" if keyword_source
 
-            content.byteslice(0, call_node.location.start_offset) + replacement +
-              content.byteslice(call_node.location.end_offset..)
+            content.byteslice(0, call_node.start_offset) + replacement +
+              content.byteslice(call_node.end_offset..)
           end
 
           # Removes the statement including the lines it spans.
           def delete_statement(content, node)
             bytes = content.b
-            start_offset = node.location.start_offset
-            end_offset = node.location.end_offset
 
-            line_start = start_offset.zero? ? 0 : ((bytes.rindex("\n", start_offset - 1) || -1) + 1)
-            newline_after = bytes.index("\n", end_offset)
+            line_start = (bytes.rindex("\n", node.start_offset - 1) || -1) + 1
+            newline_after = bytes.index("\n", node.end_offset)
             line_end = newline_after ? newline_after + 1 : bytes.bytesize
 
             (bytes[0...line_start] + bytes[line_end..]).force_encoding(content.encoding)
@@ -144,8 +142,8 @@ module Migrations
               last_tables_group:
                 last_tables &&
                   {
-                    start_offset: last_tables.location.start_offset,
-                    end_offset: last_tables.location.end_offset,
+                    start_offset: last_tables.start_offset,
+                    end_offset: last_tables.end_offset,
                     names: table_names_from(last_tables),
                     keyword_source: trailing_keyword_source(last_tables, content),
                   },
@@ -153,7 +151,7 @@ module Migrations
           end
 
           def find_ignored_declaration(node)
-            return node if node.is_a?(Prism::CallNode) && ignored_declaration?(node)
+            return node if node.instance_of?(Prism::CallNode) && ignored_declaration?(node)
 
             node.compact_child_nodes.each do |child|
               found = find_ignored_declaration(child)
@@ -164,48 +162,48 @@ module Migrations
           end
 
           def ignored_declaration?(node)
-            return false unless node.message.to_s == "ignored"
+            return false unless node.message == "ignored"
             return false unless node.block
 
             receiver = node.receiver
-            return false unless receiver.is_a?(Prism::ConstantPathNode)
+            return false unless receiver.instance_of?(Prism::ConstantPathNode)
 
-            receiver.full_name.to_s.sub(/\A::/, "") == "Migrations::Tooling::Schema"
+            receiver.full_name.sub(/\A::/, "") == "Migrations::Tooling::Schema"
           end
 
           def find_last_tables_group(block_node)
-            body = block_node&.body
-            return nil unless body.is_a?(Prism::StatementsNode)
+            body = block_node.body
+            return nil unless body
 
-            body.body.select { |s| s.is_a?(Prism::CallNode) && s.message.to_s == "tables" }.last
+            body.body.select { |s| s.instance_of?(Prism::CallNode) && s.message == "tables" }.last
           end
 
           def table_names_from(call_node)
             args = call_node.arguments&.arguments || []
-            args.filter_map { |arg| arg.unescaped if arg.is_a?(Prism::SymbolNode) }
+            args.filter_map { |arg| arg.unescaped if arg.instance_of?(Prism::SymbolNode) }
           end
 
           def trailing_keyword_source(call_node, content)
             args = call_node.arguments&.arguments || []
-            keyword_hash = args.find { |arg| arg.is_a?(Prism::KeywordHashNode) }
+            keyword_hash = args.find { |arg| arg.instance_of?(Prism::KeywordHashNode) }
             return nil unless keyword_hash
 
-            content.byteslice(keyword_hash.location.start_offset...keyword_hash.location.end_offset)
+            content.byteslice(keyword_hash.start_offset...keyword_hash.end_offset)
           end
 
           def extract_all_table_names(block_node)
             names = Set.new
-            body = block_node&.body
-            return names unless body.is_a?(Prism::StatementsNode)
+            body = block_node.body
+            return names unless body
 
             body.body.each do |statement|
-              next unless statement.is_a?(Prism::CallNode)
+              next unless statement.instance_of?(Prism::CallNode)
 
-              message = statement.message.to_s
+              message = statement.message
               next unless message == "table" || message == "tables"
 
               args = statement.arguments&.arguments || []
-              args.each { |arg| names << arg.unescaped if arg.is_a?(Prism::SymbolNode) }
+              args.each { |arg| names << arg.unescaped if arg.instance_of?(Prism::SymbolNode) }
             end
 
             names
