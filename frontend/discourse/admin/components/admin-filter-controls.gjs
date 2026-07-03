@@ -4,6 +4,7 @@ import { fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { schedule } from "@ember/runloop";
 import { isTesting } from "discourse/lib/environment";
 import { resettableTracked } from "discourse/lib/tracked-tools";
@@ -251,6 +252,7 @@ export default class AdminFilterControls extends Component {
           (if this.hasMultipleDropdowns "--multiple-dropdowns")
         }}
         {{didInsert this.setupComponent}}
+        {{didUpdate this.setupComponent @defaultDropdownValue}}
       >
         <div class="admin-filter-controls__inputs">
           <DFilterInput
