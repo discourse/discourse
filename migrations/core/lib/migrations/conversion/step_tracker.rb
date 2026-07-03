@@ -36,7 +36,7 @@ module Migrations
 
       private
 
-      def log(type, message, exception: nil, details: nil)
+      def log(type, message, exception: nil, details:)
         Database::IntermediateDB::LogEntry.create(type:, message:, exception:, details:)
       end
     end

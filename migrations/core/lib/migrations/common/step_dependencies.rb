@@ -21,7 +21,7 @@ module Migrations
       classes =
         step_names.map do |step_name|
           const_name = step_name.to_s.camelize
-          klass = scope.const_get(const_name, false) if scope.const_defined?(const_name, false)
+          klass = scope.const_get(const_name) if scope.const_defined?(const_name, false)
 
           unless klass.is_a?(Class) && klass < dependency_base_class
             raise NameError,
