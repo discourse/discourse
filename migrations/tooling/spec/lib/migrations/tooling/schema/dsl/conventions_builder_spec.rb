@@ -18,9 +18,7 @@ RSpec.describe Migrations::Tooling::Schema::DSL::ConventionsBuilder do
     end
 
     it "applies a regex pattern to columns matched only by the pattern" do
-      Migrations::Tooling::Schema.conventions do
-        columns_matching(/^post/) { rename_to :renamed }
-      end
+      Migrations::Tooling::Schema.conventions { columns_matching(/^post/) { rename_to :renamed } }
 
       conventions = Migrations::Tooling::Schema.conventions_config
       expect(conventions.effective_name("post_number")).to eq("renamed")
@@ -28,9 +26,7 @@ RSpec.describe Migrations::Tooling::Schema::DSL::ConventionsBuilder do
     end
 
     it "converts a string pattern into a regex before matching" do
-      Migrations::Tooling::Schema.conventions do
-        columns_matching("_at$") { rename_to :timestamp }
-      end
+      Migrations::Tooling::Schema.conventions { columns_matching("_at$") { rename_to :timestamp } }
 
       conventions = Migrations::Tooling::Schema.conventions_config
       expect(conventions.effective_name("created_at")).to eq("timestamp")

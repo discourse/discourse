@@ -46,8 +46,7 @@ RSpec.describe Migrations::Tooling::Coverage::ConverterAnalyzer do
     it "reports call site locations relative to the working directory" do
       write_source("steps/old.rb", "IntermediateDB::RemovedModel.create(foo: 1)")
 
-      result =
-        Dir.chdir(@converter_path) { described_class.new(@converter_path).analyze }
+      result = Dir.chdir(@converter_path) { described_class.new(@converter_path).analyze }
 
       expect(result.unknown_models["RemovedModel"]).to eq(["steps/old.rb:1"])
     end

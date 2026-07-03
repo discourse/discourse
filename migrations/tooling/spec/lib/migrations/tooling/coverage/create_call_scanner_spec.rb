@@ -40,7 +40,13 @@ RSpec.describe Migrations::Tooling::Coverage::CreateCallScanner do
     end
 
     it "resolves the constant without inheriting from enclosing scopes" do
-      stub_const("TopLevelCreatable", Class.new { def self.create(**); end })
+      stub_const(
+        "TopLevelCreatable",
+        Class.new do
+          def self.create(**)
+          end
+        end,
+      )
 
       result = scan("IntermediateDB::TopLevelCreatable.create(foo: 1)")
 

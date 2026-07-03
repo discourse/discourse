@@ -170,9 +170,12 @@ RSpec.describe Migrations::Tooling::Coverage::ReferenceCheck do
         "discourse" => analysis(written: { "User" => %i[id name], "Category" => [:id] }),
         "phpbb" =>
           analysis(
-            written: { "User" => %i[id name zzz bogus], "Category" => %i[id x] },
+            written: {
+              "User" => %i[id name zzz bogus],
+              "Category" => %i[id x],
+            },
             unknown: {
-              "Ghost" => ["steps/a.rb:1", "steps/b.rb:2"],
+              "Ghost" => %w[steps/a.rb:1 steps/b.rb:2],
               "Abc" => ["s.rb:3"],
             },
           ),

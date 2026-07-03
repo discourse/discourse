@@ -79,7 +79,7 @@ RSpec.describe Migrations::Tooling::Schema::DSL::IgnoredBuilder do
 
       entries = builder.build.entries
       expect(entries.map(&:name)).to eq(%w[temp_data old_logs])
-      expect(entries.map(&:reason)).to eq(["Legacy", "Legacy"])
+      expect(entries.map(&:reason)).to eq(%w[Legacy Legacy])
     end
 
     it "defaults the shared reason to nil when it is omitted" do

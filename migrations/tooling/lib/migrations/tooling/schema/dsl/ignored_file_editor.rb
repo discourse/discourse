@@ -36,7 +36,12 @@ module Migrations
               if reason.nil? && ignored_block.fetch(:last_tables_group)
                 append_to_tables_group(content, ignored_block.fetch(:last_tables_group), table_name)
               else
-                insert_standalone_entry(content, ignored_block.fetch(:end_offset), table_name, reason)
+                insert_standalone_entry(
+                  content,
+                  ignored_block.fetch(:end_offset),
+                  table_name,
+                  reason,
+                )
               end
 
             File.write(@ignored_path, content)
@@ -63,7 +68,9 @@ module Migrations
           def append_to_tables_group(content, tables_group, table_name)
             all_names = (tables_group.fetch(:names) + [table_name]).sort
             replacement = "tables " + all_names.map { |n| ":#{n}" }.join(", ")
-            replacement += ", #{tables_group.fetch(:keyword_source)}" if tables_group.fetch(:keyword_source)
+            replacement += ", #{tables_group.fetch(:keyword_source)}" if tables_group.fetch(
+              :keyword_source,
+            )
 
             content.byteslice(0, tables_group.fetch(:start_offset)) + replacement +
               content.byteslice(tables_group.fetch(:end_offset)..)
