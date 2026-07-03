@@ -440,6 +440,13 @@ module UpcomingChanges
       end
   end
 
+  # The setting names of all permanent upcoming changes. Used on the frontend
+  # to decide whether a notification should link to the upcoming changes page
+  # or to the What's New page (where permanent changes are surfaced).
+  def self.permanent_upcoming_change_names
+    permanent_upcoming_changes.map { |uc| uc[:setting].to_s }
+  end
+
   # No point in notifying admins on brand new sites, the upcoming change system
   # is more about notifying admins of changes to established sites.
   #
