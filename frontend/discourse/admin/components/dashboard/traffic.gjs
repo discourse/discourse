@@ -31,7 +31,7 @@ export default class DashboardTraffic extends Component {
   hiddenLabels = ["page_view_crawler"];
 
   get browserPageviews() {
-    return this.args.traffic?.kpis?.browser_pageviews?.value ?? 0;
+    return this.#kpiValue("browser_pageviews") ?? 0;
   }
 
   get headlineCount() {
@@ -87,21 +87,23 @@ export default class DashboardTraffic extends Component {
   }
 
   get showLoggedInShare() {
-    const loggedInShare = this.args.traffic?.kpis?.logged_in_share?.value;
-    return loggedInShare !== null && loggedInShare !== undefined;
+    return this.#kpiValue("logged_in_share") != null;
   }
 
   get loggedInShare() {
-    return `${this.args.traffic?.kpis?.logged_in_share?.value ?? 0}%`;
+    return `${this.#kpiValue("logged_in_share") ?? 0}%`;
   }
 
   get showDirectTraffic() {
-    const directTraffic = this.args.traffic?.kpis?.direct_traffic?.value;
-    return directTraffic !== null && directTraffic !== undefined;
+    return this.#kpiValue("direct_traffic") != null;
   }
 
   get directTraffic() {
-    return `${this.args.traffic?.kpis?.direct_traffic?.value ?? 0}%`;
+    return `${this.#kpiValue("direct_traffic") ?? 0}%`;
+  }
+
+  #kpiValue(key) {
+    return this.args.traffic?.kpis?.[key]?.value;
   }
 
   get chartModel() {
@@ -226,11 +228,6 @@ export default class DashboardTraffic extends Component {
                 </DTooltip>
               {{/if}}
             </h3>
-            {{! <p>
-              Placeholder: Logged-in traffic is growing steadily. Two spikes on
-              Mar 8-9 drove a burst of anonymous visitors who didn't log in,
-              pulling the logged-in share down slightly to 38%.
-            </p> }}
           </div>
 
           {{#if (or this.showLoggedInShare this.showDirectTraffic)}}
@@ -285,11 +282,6 @@ export default class DashboardTraffic extends Component {
             </div>
           {{/if}}
         </div>
-
-        {{! <div class="db-section__callout">
-          Placeholder: Spikes on Mar 8 and Mar 9 - a Hacker News post linking to
-          the plugin release docs drove a surge in anonymous pageviews.
-        </div> }}
 
         {{#if @fetchError}}
           <div class="db-section__traffic-chart">

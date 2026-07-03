@@ -3,9 +3,13 @@ import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
+import {
+  formatDeltaPercent,
+  formatKpiValue,
+} from "discourse/admin/lib/dashboard-format";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import I18n, { i18n } from "discourse-i18n";
+import { i18n } from "discourse-i18n";
 
 const PERCENTAGE_KPIS = ["dau_mau"];
 
@@ -15,14 +19,7 @@ export default class KpiTile extends Component {
   }
 
   get displayValue() {
-    const value = this.args.value;
-    if (value == null) {
-      return "—";
-    }
-    if (this.isPercentage) {
-      return `${I18n.toNumber(value, { precision: 1 })}%`;
-    }
-    return I18n.toNumber(value, { precision: 0 });
+    return formatKpiValue(this.args.value, { percentage: this.isPercentage });
   }
 
   get label() {
@@ -42,17 +39,7 @@ export default class KpiTile extends Component {
   }
 
   get deltaText() {
-    const value = this.args.percentChange;
-    const abs = Math.abs(value);
-
-    if (abs > 0 && abs < 1) {
-      const sign = value > 0 ? "+" : "-";
-      return `${sign}${I18n.toNumber(abs, { precision: 1 })}%`;
-    }
-
-    const rounded = Math.round(value);
-    const sign = rounded > 0 ? "+" : "";
-    return `${sign}${I18n.toNumber(rounded, { precision: 0 })}%`;
+    return formatDeltaPercent(this.args.percentChange);
   }
 
   get ariaLabel() {
