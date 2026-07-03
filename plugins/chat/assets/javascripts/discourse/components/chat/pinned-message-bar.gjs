@@ -6,12 +6,31 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
-import KeyValueStore from "discourse/lib/key-value-store";
-import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
+import {
+  dismissPinsUpTo,
+  newestPinId,
+  pinsDismissedAboveId,
+} from "discourse/plugins/chat/discourse/lib/chat-pinned-bar-dismissal";
+
+// Most indicator bars visible at once. Up to this many pins each get their own
+// bar and the highlight slides between them; beyond it the highlight stays
+// centred and the bars stream past it (scrolling) as you move through.
+const INDICATOR_WINDOW = 4;
+
+// Indicator geometry, in px. The strip fills ~the bar's text height; the
+// visible bars split it evenly, so fewer pins => taller bars. Sizes are
+// computed as whole pixels here (rather than dividing in CSS) so every bar
+// renders identically instead of drifting on sub-pixel rounding.
+const INDICATOR_HEIGHT = 30;
+const SEGMENT_GAP = 2;
+// Edge fade applied to whichever side has more pins, so bars dissolve as they
+// scroll past the centred highlight instead of popping in/out.
+const INDICATOR_FADE = 8;
 
 export default class ChatPinnedMessageBar extends Component {
   @service chatApi;
@@ -35,23 +54,21 @@ export default class ChatPinnedMessageBar extends Component {
     return () => this.messageBus.unsubscribe(key, this.onBusMessage);
   });
   #loadSequence = 0;
-  #dismissStore = new KeyValueStore("discourse_chat_pinned_bar_");
 
   // A user can hide the bar from the pins panel; it stays hidden until a pin
-  // newer than the one they dismissed above is added. Pin ids auto-increment,
-  // so "a newer pin exists" === "the max pin id increased" — order-independent.
-  // The live dismissal lives on the channel (tracked, set by the pins list);
-  // the local-storage fallback restores it across reloads without writing
-  // during render.
+  // newer than the one they dismissed above is added (see
+  // lib/chat-pinned-bar-dismissal). Pin managers bypass any stored dismissal —
+  // they curate the pins, so the bar always shows for them (this also
+  // un-sticks a dismissal recorded before a user gained manage rights).
   get dismissed() {
-    const dismissedAbove =
-      this.args.channel.pinsDismissedAboveId ??
-      this.#dismissStore.getObject(String(this.args.channel.id));
+    if (this.args.channel.canManagePins) {
+      return false;
+    }
+    const dismissedAbove = pinsDismissedAboveId(this.args.channel);
     if (dismissedAbove == null || this.pins.length === 0) {
       return false;
     }
-    const maxPinId = Math.max(...this.pins.map((pin) => pin.id));
-    return maxPinId <= dismissedAbove;
+    return newestPinId(this.pins) <= dismissedAbove;
   }
 
   get showBar() {
@@ -82,21 +99,56 @@ export default class ChatPinnedMessageBar extends Component {
     return this.pins.length > 1;
   }
 
-  // Index of the first segment visible in the indicator. With more pins than
-  // the visible window, this shifts to keep the active segment in view, which
-  // gives the strip a "scroll" feel as you move through the pins.
+  // Index of the first bar visible in the indicator. The active bar is kept
+  // around the middle of the window so the bars stream past it (with the
+  // trailing edge fading) as the rail scrolls, rather than the highlight
+  // parking at an edge where the scroll would be invisible.
   get indicatorTop() {
-    const window = 5;
     const total = this.pins.length;
-    if (total <= window) {
+    if (total <= INDICATOR_WINDOW) {
       return 0;
     }
-    const top = this.currentIndex - Math.floor(window / 2);
-    return Math.max(0, Math.min(top, total - window));
+    const top = this.currentIndex - Math.floor(INDICATOR_WINDOW / 2);
+    return Math.max(0, Math.min(top, total - INDICATOR_WINDOW));
+  }
+
+  // Number of bars actually on screen: the window, or fewer when there aren't
+  // enough pins to fill it. Drives the bar height so the strip always fills
+  // the bar (few pins => taller bars) rather than floating.
+  get visibleSegments() {
+    return Math.min(this.pins.length, INDICATOR_WINDOW);
   }
 
   get indicatorStyle() {
-    return trustHTML(`--chat-pinned-bar-indicator-top: ${this.indicatorTop}`);
+    const visible = this.visibleSegments;
+    // even whole-pixel bars that fill the height, with gaps only between;
+    // floor (not round) so the strip never exceeds INDICATOR_HEIGHT
+    const segment = Math.floor(
+      (INDICATOR_HEIGHT - SEGMENT_GAP * (visible - 1)) / visible
+    );
+    const height = segment * visible + SEGMENT_GAP * (visible - 1);
+    const top = this.indicatorTop;
+    // fade whichever edge has more pins beyond it, so the scroll reads
+    const fadeTop = top > 0 ? INDICATOR_FADE : 0;
+    const fadeBottom = top < this.pins.length - visible ? INDICATOR_FADE : 0;
+    return trustHTML(
+      `--chat-pinned-bar-seg: ${segment}px; ` +
+        `--chat-pinned-bar-gap: ${SEGMENT_GAP}px; ` +
+        `--chat-pinned-bar-indicator-height: ${height}px; ` +
+        `--chat-pinned-bar-indicator-top: ${top}; ` +
+        // thumb sits inside the track (which already offsets by -top), so its
+        // own position is the full-list index
+        `--chat-pinned-bar-active: ${this.currentIndex}; ` +
+        `--chat-pinned-bar-fade-top: ${fadeTop}px; ` +
+        `--chat-pinned-bar-fade-bottom: ${fadeBottom}px`
+    );
+  }
+
+  // With a single pin, the see-all button gives way to an inline dismiss (X) —
+  // there is no list worth opening, and the pin can be hidden in one tap.
+  // Managers keep the list button; they never dismiss.
+  get showInlineDismiss() {
+    return !this.hasMultiplePins && !this.args.channel.canManagePins;
   }
 
   get pinsPanelOpen() {
@@ -182,6 +234,11 @@ export default class ChatPinnedMessageBar extends Component {
     }
   }
 
+  @action
+  dismiss() {
+    dismissPinsUpTo(this.args.channel, newestPinId(this.pins));
+  }
+
   <template>
     {{#if this.showBar}}
       <div
@@ -200,20 +257,20 @@ export default class ChatPinnedMessageBar extends Component {
             {{on "click" this.jumpToCurrentPin}}
           >
             {{#if this.hasMultiplePins}}
-              <span class="chat-pinned-bar__indicator" aria-hidden="true">
-                <span
-                  class="chat-pinned-bar__indicator-track"
-                  style={{this.indicatorStyle}}
-                >
-                  {{#each this.pins as |pin index|}}
+              <span
+                class="chat-pinned-bar__indicator"
+                aria-hidden="true"
+                style={{this.indicatorStyle}}
+              >
+                <span class="chat-pinned-bar__indicator-track">
+                  {{#each this.pins as |pin|}}
                     <span
-                      class={{if
-                        (eq index this.currentIndex)
-                        "chat-pinned-bar__indicator-segment --active"
-                        "chat-pinned-bar__indicator-segment"
-                      }}
+                      class="chat-pinned-bar__indicator-segment"
+                      data-pin-id={{pin.id}}
                     ></span>
                   {{/each}}
+                  {{! a single bright bar that slides to the active pin }}
+                  <span class="chat-pinned-bar__indicator-thumb"></span>
                 </span>
               </span>
             {{/if}}
@@ -230,22 +287,32 @@ export default class ChatPinnedMessageBar extends Component {
           </button>
         {{/if}}
 
-        <LinkTo
-          @route={{this.seeAllRoute}}
-          @models={{@channel.routeModels}}
-          class={{if
-            this.pinsPanelOpen
-            "chat-pinned-bar__see-all btn no-text btn-transparent --active"
-            "chat-pinned-bar__see-all btn no-text btn-transparent"
-          }}
-          aria-label={{this.seeAllLabel}}
-          title={{this.seeAllLabel}}
-        >
-          {{dIcon "list"}}
-          {{#if @channel.hasUnseenPins}}
-            <span class="chat-pinned-bar__unread-indicator"></span>
-          {{/if}}
-        </LinkTo>
+        {{#if this.showInlineDismiss}}
+          <DButton
+            @action={{this.dismiss}}
+            @icon="xmark"
+            @title="chat.pinned_bar.dismiss"
+            @ariaLabel="chat.pinned_bar.dismiss"
+            class="chat-pinned-bar__dismiss btn-transparent no-text"
+          />
+        {{else}}
+          <LinkTo
+            @route={{this.seeAllRoute}}
+            @models={{@channel.routeModels}}
+            class={{if
+              this.pinsPanelOpen
+              "chat-pinned-bar__see-all btn no-text btn-transparent --active"
+              "chat-pinned-bar__see-all btn no-text btn-transparent"
+            }}
+            aria-label={{this.seeAllLabel}}
+            title={{this.seeAllLabel}}
+          >
+            {{dIcon "list"}}
+            {{#if @channel.hasUnseenPins}}
+              <span class="chat-pinned-bar__unread-indicator"></span>
+            {{/if}}
+          </LinkTo>
+        {{/if}}
       </div>
     {{/if}}
   </template>

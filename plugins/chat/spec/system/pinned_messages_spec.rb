@@ -156,9 +156,14 @@ RSpec.describe "Chat pinned messages" do
     expect(page).to have_no_css(".c-routes.--channel-pins")
   end
 
-  it "lets a user hide the bar from the pins panel" do
+  it "lets a user without pin permissions hide the bar from the pins panel" do
+    user = Fabricate(:user)
+    channel.add(user)
+    other_message = Fabricate(:chat_message, chat_channel: channel, message: "Second message")
     Chat::PinnedMessage.create!(chat_message: message, chat_channel: channel, user: admin)
+    Chat::PinnedMessage.create!(chat_message: other_message, chat_channel: channel, user: admin)
 
+    sign_in(user)
     chat_page.visit_channel(channel)
     expect(page).to have_css(".chat-pinned-bar")
 
@@ -168,6 +173,39 @@ RSpec.describe "Chat pinned messages" do
     # the panel closes and the bar is dismissed (hidden) until a newer pin
     expect(page).to have_no_css(".c-routes.--channel-pins")
     expect(page).to have_no_css(".chat-pinned-bar")
+  end
+
+  it "lets a user without pin permissions dismiss a single pin from the bar and show it again" do
+    user = Fabricate(:user)
+    channel.add(user)
+    Chat::PinnedMessage.create!(chat_message: message, chat_channel: channel, user: admin)
+
+    sign_in(user)
+    chat_page.visit_channel(channel)
+
+    # a single pin offers an inline dismiss instead of the see-all button
+    expect(page).to have_no_css(".chat-pinned-bar__see-all")
+    find(".chat-pinned-bar__dismiss").click
+    expect(page).to have_no_css(".chat-pinned-bar")
+
+    # the navbar button reappears as the way back to the pins panel
+    find(".c-navbar__pinned-messages-btn").click
+    find(".chat-pinned-messages-list__show").click
+
+    expect(page).to have_no_css(".c-routes.--channel-pins")
+    expect(page).to have_css(".chat-pinned-bar")
+    expect(page).to have_no_css(".c-navbar__pinned-messages-btn")
+  end
+
+  it "does not offer the dismiss button to users who can manage pins" do
+    Chat::PinnedMessage.create!(chat_message: message, chat_channel: channel, user: admin)
+
+    chat_page.visit_channel(channel)
+    find(".chat-pinned-bar__see-all").click
+
+    expect(page).to have_css(".c-routes.--channel-pins")
+    expect(page).to have_content("Important message")
+    expect(page).to have_no_css(".chat-pinned-messages-list__dismiss")
   end
 
   context "when viewing pinned messages attribution" do

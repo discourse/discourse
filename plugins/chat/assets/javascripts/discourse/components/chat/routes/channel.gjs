@@ -87,6 +87,7 @@ export default class ChatRoutesChannel extends Component {
           {{/if}}
 
           <a.OpenDrawerButton />
+          <a.PinnedMessagesButton @channel={{@channel}} />
           <a.ThreadsListButton @channel={{@channel}} />
         </navbar.Actions>
       </Navbar>

@@ -6,6 +6,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { publishToMessageBus } from "discourse/tests/helpers/qunit-helpers";
 import ChatPinnedMessageBar from "discourse/plugins/chat/discourse/components/chat/pinned-message-bar";
+import { STORE_NAMESPACE } from "discourse/plugins/chat/discourse/lib/chat-pinned-bar-dismissal";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
 function pinResponse(channel, count) {
@@ -133,8 +134,25 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
 
     assert.dom(".chat-pinned-bar__indicator-segment").exists({ count: 3 });
     assert
-      .dom(".chat-pinned-bar__indicator-segment.--active")
-      .exists({ count: 1 });
+      .dom(".chat-pinned-bar__indicator-thumb")
+      .exists({ count: 1 }, "a single bright bar marks the active pin");
+    assert
+      .dom(".chat-pinned-bar__indicator")
+      .hasAttribute(
+        "style",
+        /--chat-pinned-bar-active:\s*0/,
+        "starts on pin 0"
+      );
+
+    await click(".chat-pinned-bar__main");
+
+    assert
+      .dom(".chat-pinned-bar__indicator")
+      .hasAttribute(
+        "style",
+        /--chat-pinned-bar-active:\s*1/,
+        "the highlight follows the active pin"
+      );
   });
 
   test("scrolls the indicator window when there are more pins than fit", async function (assert) {
@@ -155,7 +173,7 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
     // every pin has a segment; the window is capped/scrolled via the track
     assert.dom(".chat-pinned-bar__indicator-segment").exists({ count: 8 });
     assert
-      .dom(".chat-pinned-bar__indicator-track")
+      .dom(".chat-pinned-bar__indicator")
       .hasAttribute("style", /indicator-top:\s*0/, "window starts at the top");
 
     // advance past the visible window — it scrolls to keep the active in view
@@ -163,12 +181,13 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       await click(".chat-pinned-bar__main");
     }
 
+    // window of 4, active at index 6 => centred top = index - 2 = 4
     assert
-      .dom(".chat-pinned-bar__indicator-track")
+      .dom(".chat-pinned-bar__indicator")
       .hasAttribute(
         "style",
-        /indicator-top:\s*3/,
-        "window scrolled to keep the active segment visible"
+        /indicator-top:\s*4/,
+        "rail scrolled to keep the active bar centred"
       );
   });
 
@@ -208,9 +227,9 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
   });
 
   test("links to the full pinned messages list via the see-all icon", async function (assert) {
-    this.channel.pinnedMessagesCount = 1;
+    this.channel.pinnedMessagesCount = 2;
     pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
-      pinResponse(this.channel, 1)
+      pinResponse(this.channel, 2)
     );
 
     await render(
@@ -228,10 +247,53 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       .hasAttribute("href", new RegExp(`/${this.channel.id}/pins$`));
   });
 
-  test("shows an unread indicator when there are unseen pins", async function (assert) {
+  test("shows an inline dismiss instead of the see-all icon for a single pin", async function (assert) {
     this.channel.pinnedMessagesCount = 1;
     pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
       pinResponse(this.channel, 1)
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert.dom(".chat-pinned-bar__see-all").doesNotExist();
+    assert.dom(".chat-pinned-bar__dismiss").exists();
+
+    await click(".chat-pinned-bar__dismiss");
+
+    assert.dom(".chat-pinned-bar").hasClass("--dismissed");
+  });
+
+  test("keeps the see-all icon for pin managers with a single pin", async function (assert) {
+    this.channel.meta.can_manage_pins = true;
+    this.channel.pinnedMessagesCount = 1;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      pinResponse(this.channel, 1)
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert.dom(".chat-pinned-bar__dismiss").doesNotExist();
+    assert.dom(".chat-pinned-bar__see-all").exists();
+  });
+
+  test("shows an unread indicator when there are unseen pins", async function (assert) {
+    this.channel.pinnedMessagesCount = 2;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      pinResponse(this.channel, 2)
     );
 
     await render(
@@ -432,7 +494,7 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
 
   test("stays dismissed after reload via stored state", async function (assert) {
     // simulate a previous dismissal persisted to local storage
-    const store = new KeyValueStore("discourse_chat_pinned_bar_");
+    const store = new KeyValueStore(STORE_NAMESPACE);
     store.setObject({ key: String(this.channel.id), value: 100 });
 
     this.channel.pinnedMessagesCount = 1;
@@ -450,6 +512,31 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
     );
 
     assert.dom(".chat-pinned-bar").hasClass("--dismissed");
+  });
+
+  test("pin managers bypass a stored dismissal", async function (assert) {
+    // a dismissal recorded before the user could manage pins
+    const store = new KeyValueStore(STORE_NAMESPACE);
+    store.setObject({ key: String(this.channel.id), value: 100 });
+    this.channel.meta.can_manage_pins = true;
+
+    this.channel.pinnedMessagesCount = 1;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      dismissablePinResponse(100)
+    );
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".chat-pinned-bar")
+      .doesNotHaveClass("--dismissed", "managers always see the bar");
   });
 
   test("stays dismissed when the dismissed pin is unpinned", async function (assert) {

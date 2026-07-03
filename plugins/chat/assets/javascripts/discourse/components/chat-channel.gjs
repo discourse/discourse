@@ -99,13 +99,6 @@ export default class ChatChannel extends Component {
     return !!this.chatChannelScrollPositions.get(this.args.channel.id);
   }
 
-  get hasPinnedBar() {
-    return (
-      this.siteSettings.chat_pinned_messages &&
-      this.args.channel?.hasPinnedMessages
-    );
-  }
-
   get pendingContextKey() {
     return this.args.channel?.id ? `channel:${this.args.channel.id}` : null;
   }
@@ -754,7 +747,6 @@ export default class ChatChannel extends Component {
         (if this.pane.sending "chat-channel--sending")
         (if this.hasSavedScrollPosition "chat-channel--saved-scroll-position")
         (if this.messagesLoader.fetchedOnce "--loaded")
-        (if this.hasPinnedBar "--pinned-bar")
       }}
       {{willDestroy this.teardown}}
       {{didInsert this.setup}}

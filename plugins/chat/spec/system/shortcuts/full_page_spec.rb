@@ -27,6 +27,10 @@ RSpec.describe "Shortcuts | full page" do
   context "when pressing Esc" do
     fab!(:message) { Fabricate(:chat_message, chat_channel: channel_1, use_service: true) }
     fab!(:pin) { Fabricate(:chat_pinned_message, chat_message: message, user: current_user) }
+    fab!(:other_message) { Fabricate(:chat_message, chat_channel: channel_1, use_service: true) }
+    fab!(:other_pin) do
+      Fabricate(:chat_pinned_message, chat_message: other_message, user: current_user)
+    end
 
     before { SiteSetting.chat_pinned_messages = true }
 

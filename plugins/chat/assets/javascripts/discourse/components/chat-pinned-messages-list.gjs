@@ -1,14 +1,19 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
-import KeyValueStore from "discourse/lib/key-value-store";
+import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChatMessage from "discourse/plugins/chat/discourse/components/chat-message";
+import {
+  dismissPinsUpTo,
+  hasPinsDismissal,
+  newestPinId,
+  resetPinsDismissal,
+} from "discourse/plugins/chat/discourse/lib/chat-pinned-bar-dismissal";
 
 export default class ChatPinnedMessagesList extends Component {
   @service messageBus;
@@ -72,23 +77,31 @@ export default class ChatPinnedMessagesList extends Component {
   routeModels = (pin) => {
     return [...this.args.channel.routeModels, pin.message.id];
   };
-  #dismissStore = new KeyValueStore("discourse_chat_pinned_bar_");
-
   #lastViewedPinsAtSnapshot =
     this.args.channel.currentUserMembership?.lastViewedPinsAt;
+
+  // Only users who can't manage pins get the personal dismiss/show toggle.
+  // For pin managers "Dismiss pinned messages" reads as unpinning for everyone
+  // (which it isn't); they manage pins through the message actions instead.
+  get canToggleDismissal() {
+    return this.pinnedMessages.length > 0 && !this.args.channel.canManagePins;
+  }
+
+  get barDismissed() {
+    return hasPinsDismissal(this.args.channel);
+  }
 
   @action
   dismissBar() {
     const channel = this.args.channel;
-    if (this.pinnedMessages.length) {
-      // max id (not the first pin) so dismissal doesn't depend on ordering
-      const maxPinId = Math.max(...this.pinnedMessages.map((pin) => pin.id));
-      channel.pinsDismissedAboveId = maxPinId;
-      this.#dismissStore.setObject({
-        key: String(channel.id),
-        value: maxPinId,
-      });
-    }
+    dismissPinsUpTo(channel, newestPinId(this.pinnedMessages));
+    this.router.transitionTo("chat.channel", ...channel.routeModels);
+  }
+
+  @action
+  showBar() {
+    const channel = this.args.channel;
+    resetPinsDismissal(channel);
     this.router.transitionTo("chat.channel", ...channel.routeModels);
   }
 
@@ -166,15 +179,21 @@ export default class ChatPinnedMessagesList extends Component {
         {{/each}}
       </div>
 
-      {{#if this.pinnedMessages.length}}
+      {{#if this.canToggleDismissal}}
         <div class="chat-pinned-messages-list__footer">
-          <button
-            type="button"
-            class="chat-pinned-messages-list__dismiss btn btn-flat"
-            {{on "click" this.dismissBar}}
-          >
-            {{i18n "chat.pinned_messages.dismiss"}}
-          </button>
+          {{#if this.barDismissed}}
+            <DButton
+              @action={{this.showBar}}
+              @label="chat.pinned_messages.show"
+              class="btn-flat chat-pinned-messages-list__show"
+            />
+          {{else}}
+            <DButton
+              @action={{this.dismissBar}}
+              @label="chat.pinned_messages.dismiss"
+              class="btn-flat chat-pinned-messages-list__dismiss"
+            />
+          {{/if}}
         </div>
       {{/if}}
     </div>

@@ -273,9 +273,7 @@ export default class ChatChannelSubscriptionManager {
       message.pinned = true;
     }
 
-    if (!alreadyApplied) {
-      this.channel.pinnedMessagesCount++;
-    }
+    this.#syncPinnedMessagesCount(data, alreadyApplied, 1);
 
     if (
       this.channel.currentUserMembership &&
@@ -295,10 +293,20 @@ export default class ChatChannelSubscriptionManager {
       message.pinned = false;
     }
 
-    if (!alreadyApplied) {
+    this.#syncPinnedMessagesCount(data, alreadyApplied, -1);
+  }
+
+  // The event carries the authoritative count, so assigning it is idempotent —
+  // safe against replayed or double-delivered bus messages, which incremental
+  // updates are not. The delta fallback covers events published by an older
+  // server version still in the bus backlog.
+  #syncPinnedMessagesCount(data, alreadyApplied, delta) {
+    if (data.pinned_message_count !== undefined) {
+      this.channel.pinnedMessagesCount = data.pinned_message_count;
+    } else if (!alreadyApplied) {
       this.channel.pinnedMessagesCount = Math.max(
         0,
-        this.channel.pinnedMessagesCount - 1
+        this.channel.pinnedMessagesCount + delta
       );
     }
   }

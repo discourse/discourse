@@ -3,6 +3,22 @@
   transform: rotate(45deg);
 }
 
+.c-navbar__pinned-messages-btn {
+  position: relative;
+
+  .d-icon {
+    transform: rotate(45deg);
+  }
+
+  &__unread-indicator {
+    @include chat-unread-indicator;
+    position: absolute;
+    inset-block-start: 5px;
+    inset-inline-end: 5px;
+    border: 2px solid var(--secondary);
+  }
+}
+
 .chat-pinned-messages-list {
   display: flex;
   flex-direction: column;
@@ -35,7 +51,8 @@
   border-top: 1px solid var(--content-border-color);
 }
 
-.chat-pinned-messages-list__dismiss {
+.chat-pinned-messages-list__dismiss,
+.chat-pinned-messages-list__show {
   width: 100%;
   color: var(--primary-medium);
 }

@@ -40,20 +40,37 @@
   }
 
   &__indicator {
-    // a vertical strip of segments, one per pin, capped to a 5-segment window;
-    // with more pins the track scrolls to keep the active segment in view
-    --pin-slot: 6px; // segment height (4px) + spacing (2px)
+    // a vertical strip of equal bars, one per pin, filling the bar height; the
+    // component sizes the bars (whole px) and the strip so the visible ones
+    // fill it. With more pins than fit, the active bar stays centred and the
+    // bars stream past it, fading at whichever edge has more pins beyond it.
     align-self: center;
     flex-shrink: 0;
     width: 3px;
-    max-height: calc(var(--pin-slot) * 5);
+    height: var(--chat-pinned-bar-indicator-height, 1.875rem);
     overflow: hidden;
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black var(--chat-pinned-bar-fade-top, 0),
+      black calc(100% - var(--chat-pinned-bar-fade-bottom, 0px)),
+      transparent 100%
+    );
   }
 
   &__indicator-track {
-    display: block;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--chat-pinned-bar-gap, 2px);
+
+    // scroll by one slot (bar + gap) per step
     transform: translateY(
-      calc(var(--chat-pinned-bar-indicator-top, 0) * var(--pin-slot) * -1)
+      calc(
+        var(--chat-pinned-bar-indicator-top, 0) *
+          (var(--chat-pinned-bar-seg, 6px) + var(--chat-pinned-bar-gap, 2px)) *
+          -1
+      )
     );
 
     @media (prefers-reduced-motion: no-preference) {
@@ -62,13 +79,35 @@
   }
 
   &__indicator-segment {
-    height: 4px;
-    margin-block-end: 2px;
-    background: var(--tertiary-low);
+    flex: 0 0 auto;
+    height: var(--chat-pinned-bar-seg, 6px);
+
+    // a translucent tint of the active colour so the dim bars keep contrast in
+    // both light and dark schemes (unlike --tertiary-low, which collapses into
+    // the background in dark mode)
+    background: var(--tertiary);
+    opacity: 0.4;
+    border-radius: 3px;
+  }
+
+  &__indicator-thumb {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 0;
+    height: var(--chat-pinned-bar-seg, 6px);
+    background: var(--tertiary);
     border-radius: 3px;
 
-    &.--active {
-      background: var(--tertiary);
+    // slide to the active bar — one slot (bar + gap) per index
+    transform: translateY(
+      calc(
+        var(--chat-pinned-bar-active, 0) *
+          (var(--chat-pinned-bar-seg, 6px) + var(--chat-pinned-bar-gap, 2px))
+      )
+    );
+
+    @media (prefers-reduced-motion: no-preference) {
+      transition: transform 150ms ease;
     }
   }
 
@@ -99,7 +138,8 @@
     font-size: var(--font-down-1);
   }
 
-  &__see-all {
+  &__see-all,
+  &__dismiss {
     position: relative;
     align-self: center;
     flex-shrink: 0;
@@ -107,7 +147,9 @@
     .d-icon {
       color: var(--primary-medium);
     }
+  }
 
+  &__see-all {
     // the panel is open — the button now closes it
     &.--active .d-icon {
       color: var(--tertiary);
