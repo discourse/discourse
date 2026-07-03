@@ -335,15 +335,11 @@ begin
   memory["cluster_rss_kb"] = cluster_rss
   memory["cluster_pss_kb"] = cluster_pss
 
-  mem = get_mem(pid)
-
   results =
     results.merge(
       "timings" => @timings,
       "ruby-version" => "#{RUBY_DESCRIPTION}",
       "yjit" => RubyVM::YJIT.enabled?,
-      "rss_kb" => mem["rss_kb"],
-      "pss_kb" => mem["pss_kb"],
       "memory" => memory,
     ).merge(facts)
 
