@@ -3025,6 +3025,10 @@ security:
     requires_confirmation: "simple_on_disable"
   content_security_policy_report_only:
     default: false
+  content_security_policy_report_uri:
+    default: ""
+    regex: '\Ahttps?://[^\s;,]+\z'
+    regex_error: "site_settings.errors.invalid_csp_report_uri"
   content_security_policy_frame_ancestors:
     default: true
   content_security_policy_script_src:

@@ -15,13 +15,20 @@ class ContentSecurityPolicy
           directives[:worker_src] = worker_src
           directives[:frame_ancestors] = frame_ancestors if restrict_embed?
           directives[:manifest_src] = ["'self'"]
+          directives[:report_uri] = [report_uri] if report_uri.present?
         end
     end
 
     private
 
     def script_src
-      %w['strict-dynamic' 'wasm-unsafe-eval']
+      sources = %w['strict-dynamic' 'wasm-unsafe-eval']
+      sources << "'report-sample'" if report_uri.present?
+      sources
+    end
+
+    def report_uri
+      SiteSetting.content_security_policy_report_uri.presence
     end
 
     def worker_src

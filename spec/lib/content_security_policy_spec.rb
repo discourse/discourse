@@ -68,6 +68,22 @@ RSpec.describe ContentSecurityPolicy do
     end
   end
 
+  describe "report-uri" do
+    it "is not included when content_security_policy_report_uri is blank" do
+      SiteSetting.content_security_policy_report_uri = ""
+
+      expect(parse(policy)["report-uri"]).to eq(nil)
+      expect(parse(policy)["script-src"]).to_not include("'report-sample'")
+    end
+
+    it "points to the configured endpoint and enables report-sample when set" do
+      SiteSetting.content_security_policy_report_uri = "https://csp.example.com/report"
+
+      expect(parse(policy)["report-uri"]).to eq(["https://csp.example.com/report"])
+      expect(parse(policy)["script-src"]).to include("'report-sample'")
+    end
+  end
+
   describe "frame-ancestors" do
     context "with content_security_policy_frame_ancestors enabled" do
       before do
