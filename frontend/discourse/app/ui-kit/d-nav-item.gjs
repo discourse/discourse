@@ -74,7 +74,7 @@ export default class DNavItem extends Component {
   }
 
   get refreshHref() {
-    if (!this.session.requiresRefresh || !this.args.route) {
+    if (!this.args.route) {
       return null;
     }
     try {
@@ -82,11 +82,12 @@ export default class DNavItem extends Component {
         ? getURL(this.router.urlFor(this.args.route, this.args.routeParam))
         : getURL(this.router.urlFor(this.args.route));
 
-      return applyValueTransformer("full-page-refresh-on-navigation", true, {
-        url: href,
-      })
-        ? href
-        : null;
+      const shouldRefresh = applyValueTransformer(
+        "full-page-refresh-on-navigation",
+        this.session.requiresRefresh,
+        { url: href }
+      );
+      return shouldRefresh ? href : null;
     } catch {
       return null;
     }
