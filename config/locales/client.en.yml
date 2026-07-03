@@ -6477,6 +6477,7 @@ en:
         sidebar_title: "Reports"
         back: "Back to all reports"
         back_to_dashboard: "Back to dashboard"
+        all_groups: "All groups"
         group_engagement: "Engagement"
         group_traffic: "Traffic"
         group_members: "Members"

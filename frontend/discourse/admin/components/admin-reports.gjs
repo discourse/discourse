@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { service } from "@ember/service";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
@@ -67,7 +68,10 @@ const REPORT_GROUPS = {
 };
 
 export default class AdminReports extends Component {
+  @service router;
   @service siteSettings;
+
+  @tracked selectedGroupKeyOverride;
 
   @bind
   async loadReports() {
@@ -85,6 +89,10 @@ export default class AdminReports extends Component {
       .split("|")
       .filter(Boolean);
     return reports.filter((report) => !hiddenReports.includes(report.type));
+  }
+
+  get requestedGroupKey() {
+    return this.router.currentRoute?.queryParams?.group || "all";
   }
 
   @bind
@@ -152,17 +160,80 @@ export default class AdminReports extends Component {
     return groupedReports;
   }
 
+  @bind
+  groupDropdownOptions(reports) {
+    const groups = this.groupReports(reports);
+
+    return [
+      {
+        value: "all",
+        label: i18n("admin.reports.all_groups"),
+        filterFn: () => true,
+      },
+      ...groups.map((group) => ({
+        value: group.key,
+        label: group.name,
+        filterFn: (report) => group.reports.includes(report),
+      })),
+    ];
+  }
+
+  @bind
+  selectedGroupKey(reports) {
+    const requestedGroupKey =
+      this.selectedGroupKeyOverride || this.requestedGroupKey;
+    const options = this.groupDropdownOptions(reports);
+
+    return options.some((option) => option.value === requestedGroupKey)
+      ? requestedGroupKey
+      : "all";
+  }
+
+  @bind
+  filterReportsByGroup(reports) {
+    const selectedGroupKey = this.selectedGroupKey(reports);
+
+    if (selectedGroupKey === "all") {
+      return reports;
+    }
+
+    const group = this.groupReports(reports).find(
+      (reportGroup) => reportGroup.key === selectedGroupKey
+    );
+
+    return group?.reports || reports;
+  }
+
+  @bind
+  updateGroupFilter(groupKey) {
+    this.selectedGroupKeyOverride = groupKey;
+
+    this.router.transitionTo({
+      queryParams: { group: groupKey === "all" ? null : groupKey },
+    });
+  }
+
   <template>
     <DAsyncContent @asyncData={{this.loadReports}}>
       <:content as |reports|>
         <AdminFilterControls
           @array={{this.filterReports reports}}
           @searchableProps={{array "title" "description"}}
+          @dropdownOptions={{this.groupDropdownOptions
+            (this.filterReports reports)
+          }}
+          @defaultDropdownValue={{this.selectedGroupKey
+            (this.filterReports reports)
+          }}
           @inputPlaceholder={{i18n "admin.filter_reports"}}
           @noResultsMessage={{i18n "admin.filter_reports_no_results"}}
+          @onClientDropdownFilterChange={{this.updateGroupFilter}}
         >
           <:content as |filteredReports|>
-            {{#each (this.groupReports filteredReports) as |group|}}
+            {{#each
+              (this.groupReports (this.filterReportsByGroup filteredReports))
+              as |group|
+            }}
               <section class="admin-reports-group">
                 <h2 class="admin-reports-group__title">{{group.name}}</h2>
                 <AdminSectionLandingWrapper class="admin-reports-list">

@@ -34,6 +34,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
  * @param {Function} [onTextFilterChange] - Callback for text changes (enables server-side mode)
  * @param {Function} [onDropdownFilterChange] - Callback for dropdown changes (enables server-side mode).
  *                                              For multiple dropdowns: receives (key, value)
+ * @param {Function} [onClientDropdownFilterChange] - Callback for client-side dropdown changes
  * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
  * @param {String} [initialTextFilter] - Initial value to seed the text filter input on mount
  */
@@ -206,9 +207,11 @@ export default class AdminFilterControls extends Component {
     if (this.hasMultipleDropdowns) {
       this.dropdownFilters[keyOrValue] = value;
       this.args.onDropdownFilterChange?.(keyOrValue, value);
+      this.args.onClientDropdownFilterChange?.(keyOrValue, value);
     } else {
       this.dropdownFilter = keyOrValue;
       this.args.onDropdownFilterChange?.(keyOrValue);
+      this.args.onClientDropdownFilterChange?.(keyOrValue);
     }
   }
 
