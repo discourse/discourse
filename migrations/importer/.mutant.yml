@@ -3,8 +3,9 @@
 #
 # Most of the importer (copy steps, uploads, executor, the name finders that
 # pull in SiteSetting/UserNameSuggester) is either DB/fork/IO-bound or
-# `:rails`-tagged, so it isn't a useful mutant target. SuffixFinder is the one
-# pure algorithm with isolated specs.
+# `:rails`-tagged, so it isn't a useful mutant target. The subjects below are the
+# pure ones with isolated specs: SuffixFinder (name-suffix algorithm) and
+# PlaceholderResolver (in-memory token substitution, fed a mocked `maps` object).
 integration:
   name: rspec
 requires:
@@ -12,3 +13,4 @@ requires:
 matcher:
   subjects:
     - "Migrations::Importer::SuffixFinder"
+    - "Migrations::Importer::PlaceholderResolver"

@@ -1,0 +1,19 @@
+# Mutation-testing config for the core gem. See tooling/.mutant.yml for the
+# rationale; only pure, non-`:rails` subjects are listed here.
+#
+# Core is mostly the conversion runtime, which forks workers and talks to the
+# intermediate DB -- not mutant-friendly. But the step-orchestration layer added
+# with the concurrent-steps work has a chunk of pure decision logic (dependency
+# ordering, worker budgeting, partition math, progress counters) that runs under
+# the gem's isolated (non-`:rails`) suite, so it belongs here. The forking parts
+# (StepRunner/StepCoordinator/Step::Processor) stay out.
+integration:
+  name: rspec
+requires:
+  - migrations-core
+matcher:
+  subjects:
+    - "Migrations::StepDependencies"
+    - "Migrations::Conversion::StepTracker"
+    - "Migrations::Conversion::WorkerBudget"
+    - "Migrations::Conversion::Partitioner"
