@@ -194,6 +194,10 @@ module PlaywrightSoftReset
 
   module Browser
     def create_browser_context
+      # Each example registering a service worker that the soft reset then
+      # force-clears caused mass spec timeouts on CI. The exact cause requires
+      # further investigation, but system specs currently do not rely on
+      # service workers so blocking them is an acceptable trade-off.
       @page_options = { serviceWorkers: "block" }.merge(@page_options)
       @context_downloaded = false
       super.tap do |browser_context|
@@ -254,7 +258,7 @@ module PlaywrightSoftReset
     private
 
     def soft_reset_enabled?
-      return false if ENV["CAPYBARA_PLAYWRIGHT_SOFT_RESET"] == "0"
+      return false if ENV["CAPYBARA_PLAYWRIGHT_SOFT_RESET"] != "1"
       !(callback_on_save_screenrecord? || @callback_on_save_trace)
     end
   end
