@@ -5,26 +5,8 @@ module Migrations
     module Discourse
       class GroupUsers < Conversion::ProgressStep
         source do
-          attr_accessor :source_db
-
-          def max_progress
-            @source_db.count <<~SQL
-              SELECT COUNT(*)
-              FROM group_users
-              WHERE group_id NOT IN (10, 11, 12, 13, 14) -- Exclude Trust Level groups
-                    AND user_id > 0
-            SQL
-          end
-
-          def items
-            @source_db.query <<~SQL
-              SELECT *
-              FROM group_users
-              WHERE group_id NOT IN (10, 11, 12, 13, 14) -- Exclude Trust Level groups
-                    AND user_id > 0
-              ORDER BY group_id, user_id
-            SQL
-          end
+          # Skip the automatic Trust Level groups.
+          reads_table "group_users", where: "group_id NOT IN (10, 11, 12, 13, 14) AND user_id > 0"
         end
 
         processor do

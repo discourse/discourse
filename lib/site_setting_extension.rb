@@ -130,6 +130,10 @@ module SiteSettingExtension
     @themeable ||= {}
   end
 
+  def localizable_settings
+    @localizable_settings ||= {}
+  end
+
   def areas
     @areas ||= {}
   end
@@ -1191,7 +1195,7 @@ module SiteSettingExtension
     if %i[list emoji_list tag_list].include?(type_supervisor.get_type(name))
       list_type = type_supervisor.get_list_type(name)
 
-      if %w[simple compact].include?(list_type) || list_type.nil?
+      if %w[simple compact locale].include?(list_type) || list_type.nil?
         define_singleton_method("#{clean_name}_map") do |scoped_to = nil|
           public_send(clean_name, scoped_to).to_s.split("|")
         end
@@ -1334,6 +1338,19 @@ module SiteSettingExtension
       categories[name] = opts[:category] || :uncategorized
 
       themeable[name] = opts[:themeable] ? true : false
+
+      localizable_setting_name = name.to_s
+      if opts[:localizable]
+        localizable_settings[localizable_setting_name] = (
+          if opts[:localizable].is_a?(Hash)
+            opts[:localizable].symbolize_keys
+          else
+            {}
+          end
+        )
+      else
+        localizable_settings.delete(localizable_setting_name)
+      end
 
       if opts[:area]
         split_areas = opts[:area].split("|")

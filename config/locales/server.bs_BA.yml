@@ -190,6 +190,11 @@ bs_BA:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Svatko"
+      admins: "Admins"
+      moderators: "Moderators"
+      staff: "Staff"
   education:
     until_posts:
       one: "%{count} objava"

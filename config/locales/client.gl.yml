@@ -21,6 +21,10 @@ gl:
         status: "Estado"
         hidden: "agochado"
         failed: "fallou"
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Retirar"
     number:
       format:
         separator: ","
@@ -221,6 +225,9 @@ gl:
     age: "Idade"
     joined: "Inscrito"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Modo avanzado"
+      simple_mode: "Modo simple"
     show_more: "amosar máis"
     show_help: "Opcións"
     links: "Ligazóns"
@@ -3464,6 +3471,9 @@ gl:
               description: "Capturas de pantalla que presentan as funcionalidades da súa instalación e funcionalidade na páxina de arranque da instalación. Todas as imaxes deberían ser cargas en local e das mesmas dimensións."
             opengraph_image:
               description: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada."
+            og_image_preview:
+              generate: "Xerar"
+              topic_id_label: "ID do tema"
         fonts:
           title: "Tipos de letra"
           form:
@@ -3572,7 +3582,7 @@ gl:
         no_check_performed: "Non se efectuou unha busca de actualizacións. Asegúrese de que sidekiq está executándose."
         stale_data: "Non se efectuou unha busca de actualizacións ultimamente. Asegúrese de que sidekiq está executándose."
         installed_version: "Instalado"
-        latest_version: "Últimos"
+        github: "Github"
         problems_found: "Algúns consellos baseados na súa configuración actual do sitio"
         dismiss_notice: "Ignorar"
         new_features:
@@ -3907,6 +3917,8 @@ gl:
           company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grupos"
+          locale_selector:
+            title: "Idioma"
           optional: "(opcional)"
           update: "Actualizar"
           saved: "gardado!"
@@ -4566,6 +4578,10 @@ gl:
         active: "Activado"
         status: "Estado"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Pechar"
+              confirm: "Suspender"
           delete:
             confirmation_modal:
               close: "Pechar"
@@ -4577,6 +4593,8 @@ gl:
           suspended: "Suspendido"
           silenced: "Silenciado"
           staged: "Transitorio"
+        activation_filter:
+          activated: "Activado"
         approved: "Aprobado?"
         titles:
           pending: "Usuarios pendentes de revisión"

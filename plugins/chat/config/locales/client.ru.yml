@@ -346,8 +346,6 @@ ru:
         title: "Звук уведомления"
       sounds:
         none: "Нет"
-        bell: "Колокольчик"
-        ding: "Звонок"
       title: "чат"
       title_capitalized: "Чат"
       upload: "Прикрепить файл"
@@ -540,6 +538,12 @@ ru:
           other: "<span>Вы, %{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"
         single_user: "<span>%{username} отреагировал(-а) с эмодзи </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} и %{username} отреагировали с эмодзи </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} реакция"
+            few: "%{count} реакций"
+            many: "%{count} реакций"
+            other: "%{count} реакции"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"
           few: "<span>%{commaSeparatedUsernames} и еще %{count} отреагировали с эмодзи </span>:%{emoji}:"

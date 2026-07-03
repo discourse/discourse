@@ -460,6 +460,7 @@ module DiscourseAi
             :priority,
             :top_p,
             :temperature,
+            :thinking_effort,
             :default_llm_id,
             :user_id,
             :max_context_posts,

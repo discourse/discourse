@@ -617,6 +617,13 @@ hu:
       trust_level_2: "bizalmi_szint_2"
       trust_level_3: "bizalmi_szint_3"
       trust_level_4: "bizalmi_szint_4"
+    default_full_names:
+      everyone: "Mindenki"
+      admins: "Adminisztrátorok"
+      moderators: "Moderátorok"
+      staff: "Stáb"
+      anonymous_users: "Névtelen felhasználók"
+      logged_in_users: "Bejelentkezett felhasználók"
     default_descriptions:
       everyone: "Automatikus csoport, beleértve az összes tagot"
       staff: "Automatikus csoport, beleértve az adminokat és moderátorokat"
@@ -1273,6 +1280,7 @@ hu:
         level: "Bizalmi szint"
         count: "Tagok"
         share: "Megosztás"
+        signups: "Regisztrációk"
       levels:
         "0": "Új"
         "1": "Alapvető"
@@ -2439,11 +2447,10 @@ hu:
     reviewable_ui_refresh: "Csoportok, amelyek használhatják a kísérleti új felhasználói felületet a felülvizsgálati sorban."
     content_localization_use_default_locale_when_unsupported: "A webhely alapértelmezett területi beállításainak megfelelően lokalizált tartalmat jelenítsen meg azoknak a felhasználóknak, akiknek az előnyben részesített nyelve nem szerepel a „tartalom lokalizációjában támogatott területek” listában."
     content_localization_allow_author_localization: "Lehetővé teheti a szerzők számára saját témáik és bejegyzéseik lokalizációjának frissítését a bejegyzések menüjén keresztül."
-    fake_upcoming_change: "Ez egy hamis, közelgő változás tesztelési célokra. Nem kell lefordítani ezt a karakterláncot."
     floating_dismiss_topics_on_mobile: "Megjelenít egy lebegő „Elvetés...” gombot mobilon a témalistához a könnyebb hozzáférés és a témalista tetején lévő hely felszabadítása érdekében."
     enable_simplified_category_creation: "Leegyszerűsített kategória-létrehozási folyamatot tesz lehetővé kevesebb opcióval és letisztultabb felülettel."
-    modernize_foundation_theme: "Ez a módosítás dizájnbeli változtatásokat vezet be a Discourse Foundation témájába."
     reporting_improvements: "Navigációs, megjelenésbeli és használhatósági fejlesztések a Discourse adminisztrátori jelentéseihez."
+    modernize_foundation_theme: "Ez a módosítás dizájnbeli változtatásokat vezet be a Discourse Foundation témájába."
     errors:
       invalid_css_color: "Érvénytelen szín. Adjon meg egy színnevet vagy hexaértéket."
       invalid_datetime: "Érvénytelen dátum/idő formátum. Kérjük, győződjön meg arról, hogy érvényes dátumot és időpontot adott meg."

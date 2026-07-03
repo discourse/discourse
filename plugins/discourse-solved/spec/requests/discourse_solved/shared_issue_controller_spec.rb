@@ -64,6 +64,18 @@ RSpec.describe DiscourseSolved::SharedIssueController do
         expect(response.status).to eq(403)
       end
 
+      it "rejects when the topic is closed" do
+        topic.update!(closed: true)
+        post "/solution/shared_issue.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(403)
+      end
+
+      it "rejects when the topic is archived" do
+        topic.update!(archived: true)
+        post "/solution/shared_issue.json", params: { topic_id: topic.id }
+        expect(response.status).to eq(403)
+      end
+
       it "returns 404 for unknown topic" do
         post "/solution/shared_issue.json", params: { topic_id: -1 }
         expect(response.status).to eq(404)

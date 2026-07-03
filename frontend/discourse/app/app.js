@@ -49,7 +49,10 @@ const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
 window.moduleBroker = {
-  lookup(moduleName) {
+  lookup(moduleName, optional = false) {
+    if (optional && !require.has(moduleName)) {
+      return {};
+    }
     return require(moduleName);
   },
 };
@@ -69,7 +72,7 @@ async function loadThemeFromModulePreload(link) {
     );
 
     if (DEBUG && (isRailsTesting() || isTesting())) {
-      throw new Error(error);
+      throw new Error(error, { cause: error });
     }
 
     fireThemeErrorEvent({ themeId: link.dataset.themeId, error });
@@ -92,7 +95,7 @@ async function loadPluginFromModulePreload(link) {
 
     if (DEBUG) {
       if (isRailsTesting() || isTesting()) {
-        throw new Error(error);
+        throw new Error(error, { cause: error });
       }
 
       let { addError } = importSync("discourse/static/development-error");

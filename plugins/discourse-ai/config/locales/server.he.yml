@@ -643,7 +643,7 @@ he:
         all_posts_translated: "כל הפוסטים בנושא הזה כבר מתורגמים."
     errors:
       quota_exceeded: "חרגת מהמכסה למודל הזה. נא לנסות שוב בעוד %{relative_time}."
-      quota_required: "יש לציין את כמות האסימונים המרבית לשימוש למודל הזה"
+      quota_required: "חובה לציין כמות אסימונים מרבית, שימושים או עלות למודל הזה"
       no_query_specified: משתנה השאילתה נחוץ, נא לציין אותו.
       no_user_specified: המשתנים username או user_unique_id נחוצים, נא לציין לפחות אחד מהם.
       user_not_found: המשתמש שצוין לא קיים. נא לבדוק את המשתנה username.

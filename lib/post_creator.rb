@@ -52,6 +52,7 @@ class PostCreator
   #     target_user_ids       - array of user IDs for membership (private message, alternative to target_usernames)
   #     target_group_names    - comma delimited list of groups for membership (private message)
   #     target_emails         - comma delimited list of emails for membership (private message)
+  #     private_message_context - optional context for plugin PM permission modifiers
   #     created_at            - Topic creation time (optional)
   #     pinned_at             - Topic pinned time (optional)
   #     pinned_globally       - Is the topic pinned globally (optional)

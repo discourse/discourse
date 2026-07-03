@@ -1,4 +1,4 @@
-body.tag-livestream.chat-enabled {
+body.livestream-topic.chat-enabled {
   .d-header-icons {
     .livestream-header-icon {
       position: relative;
@@ -163,6 +163,6 @@ body.tag-livestream.chat-enabled {
   }
 }
 
-body:not(.tag-livestream) .d-header-icons .livestream-header-icon {
+body:not(.livestream-topic) .d-header-icons .livestream-header-icon {
   display: none;
 }

@@ -360,8 +360,6 @@ ar:
         title: "صوت إشعارات دردشة سطح المكتب"
       sounds:
         none: "لا يوجد"
-        bell: "جرس"
-        ding: "قرع"
       title: "دردشة"
       title_capitalized: "الدردشة"
       upload: "إرفاق ملف"
@@ -548,6 +546,14 @@ ar:
           other: "<span>لقد تفاعلت أنت و%{commaSeparatedUsernames} و%{count} مستخدم آخر بالرمز التعبيري </span>:%{emoji}:"
         single_user: "<span>لقد تفاعل %{username} بالرمز التعبيري </span>:%{emoji}:"
         multiple_users: "<span>لقد تفاعل %{commaSeparatedUsernames} و%{username} بالرمز التعبيري </span>:%{emoji}:"
+        users_popup:
+          title:
+            zero: "%{count} تفاعل"
+            one: "تفاعل واحد (%{count})"
+            two: "تفاعلان (%{count})"
+            few: "%{count} تفاعلات"
+            many: "%{count} تفاعلًا"
+            other: "%{count} تفاعل"
         multiple_users_and_more:
           zero: "<span>لقد تفاعل %{commaSeparatedUsernames} و%{count} مستخدم آخر بالرمز التعبيري </span>:%{emoji}:"
           one: "<span>لقد تفاعل %{commaSeparatedUsernames} ومستخدم واحد (%{count}) آخر بالرمز التعبيري </span>:%{emoji}:"

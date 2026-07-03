@@ -126,6 +126,12 @@ cs:
           select_all: "Vybrat vše"
           clear_all: "Zrušit vše"
         delete: "Smazat"
+        thinking_effort_options:
+          none: "Žádný"
+          low: "Nízká"
+          medium: "Střední"
+          high: "Vysoká"
+          max: "Max"
         response_format:
           open_modal: "Upravit"
           modal:

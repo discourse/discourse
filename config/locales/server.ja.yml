@@ -565,6 +565,13 @@ ja:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "全員"
+      admins: "管理者"
+      moderators: "モデレーター"
+      staff: "スタッフ"
+      anonymous_users: "匿名ユーザー"
+      logged_in_users: "ログインユーザー"
     default_descriptions:
       everyone: "すべてのメンバーを含む自動グループ"
       staff: "管理者とモデレーターを含む自動グループ"
@@ -1187,6 +1194,7 @@ ja:
         level: "信頼レベル"
         count: "メンバー"
         share: "共有"
+        signups: "登録数"
       levels:
         "0": "新規"
         "1": "ベーシック"
@@ -2340,7 +2348,6 @@ ja:
     reviewable_ui_refresh: "レビューキューで実験的な新しい UI を使用できるグループ。"
     content_localization_use_default_locale_when_unsupported: "優先言語が 'content localization supported locales' に含まれていないユーザーに、サイトのデフォルトのロケールでローカライズされたコンテンツを配信する。"
     content_localization_allow_author_localization: "作成者が投稿メニューから自分のトピックと投稿を更新することを許可する。"
-    fake_upcoming_change: "これは実際の次回の変更ではありません。テストを目的としているため、この文字列の翻訳は不要です。"
     floating_dismiss_topics_on_mobile: "モバイル版では、アクセスの簡易性とトピックリストの上部のスペースを空けるために「閉じる...」フローティングボタンを表示する"
     enable_simplified_category_creation: "より少ないオプションとクリーンなインターフェースによって、シンプルなカテゴリ作成フローを実現します。"
     errors:

@@ -251,40 +251,45 @@
   }
 }
 
+.edit-title__wrapper {
+  &:has(.ai-title-suggester-trigger) {
+    display: flex;
+    gap: var(--space-1);
+  }
+}
+
 .edit-title__wrapper,
 .edit-category__wrapper,
 .edit-tags__wrapper {
   position: relative;
 }
 
-.suggest-titles-button,
-.suggest-tags-button,
-.suggest-category-button {
-  position: absolute;
-  right: 0;
-  top: 1px; // container border width
-  z-index: z("dropdown");
-
-  #reply-control & {
-    z-index: z("composer", "dropdown") + 1;
-  }
-}
-
 .suggest-titles-button {
-  #reply-control & {
+  position: absolute;
+
+  #reply-control &,
+  .edit-topic-title & {
     background: var(--primary-low);
     right: var(--space-1);
-    top: 50%;
-    transform: translateY(
-      calc(-50% - 0.25em)
-    ); // .25em = half of input margin-bottom padding
+    bottom: 50%;
     border-radius: var(--d-input-border-radius); // to match surrounding input
     padding: 0.4em;
     font-size: var(--font-down-1-rem);
+    z-index: z("composer", "dropdown") + 1;
 
     .d-icon {
       color: var(--tertiary);
     }
+  }
+
+  .edit-topic-title & {
+    transform: translateY(50%);
+  }
+
+  #reply-control & {
+    transform: translateY(
+      calc(50% - 0.25em)
+    ); // .25em = half of input margin-bottom padding
   }
 }
 
@@ -306,50 +311,6 @@
 
 .ai-suggestions-menu .btn {
   text-align: left;
-}
-
-.ai-category-suggester-content {
-  .category-row {
-    padding: 0.25em 0.5em;
-    color: var(--primary-high);
-
-    &:hover {
-      background: var(--d-hover);
-    }
-  }
-
-  .topic-count {
-    font-size: var(--font-down-2);
-  }
-}
-
-.ai-tag-suggester-content {
-  .tag-row {
-    .discourse-tag-count {
-      margin-left: 5px;
-    }
-
-    .d-button-label {
-      display: none;
-    }
-  }
-}
-
-.edit-topic-title {
-  .suggestion-button {
-    margin: 0;
-    padding: 0.465rem;
-  }
-}
-
-#topic-title .edit-topic-title.showing-ai-suggestions {
-  #edit-title {
-    flex: 1 1 90%;
-  }
-
-  .suggest-titles-button {
-    padding: 0.5rem;
-  }
 }
 
 @keyframes spin {
@@ -675,9 +636,7 @@
 
 .fk-d-menu {
   &[data-identifier="ai-composer-helper-menu"],
-  &[data-identifier="ai-title-suggester"],
-  &[data-identifier="ai-category-suggester"],
-  &[data-identifier="ai-tag-suggester"] {
+  &[data-identifier="ai-title-suggester"] {
     z-index: z("modal", "dialog");
 
     .fullscreen-composer & {

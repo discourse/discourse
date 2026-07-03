@@ -393,6 +393,11 @@ pt:
       trust_level_2: "nivel_de_confianca_2"
       trust_level_3: "nivel_de_confianca_3"
       trust_level_4: "nivel_de_confianca_4"
+    default_full_names:
+      everyone: "Todos"
+      admins: "Administradores"
+      moderators: "Moderadores"
+      staff: "Pessoal"
     request_membership_pm:
       title: "Pedido de Adesão para @%{group_name}"
   education:
@@ -777,6 +782,7 @@ pt:
       labels:
         count: "Membros"
         share: "Partilhar"
+        signups: "Registos"
       levels:
         "0": "Novo"
         "1": "Básico"

@@ -317,8 +317,6 @@ pt_BR:
         title: "Som de notificação do chat no desktop"
       sounds:
         none: "Nenhum"
-        bell: "Sino"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Anexar arquivo"

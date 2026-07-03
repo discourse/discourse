@@ -101,6 +101,27 @@ describe DiscoursePostEvent::EventSerializer do
       end
     end
 
+    context "when event is a livestream" do
+      let(:livestream_url) { "https://example.com/live" }
+      let(:livestream_post) { Fabricate(:post, topic: topic) }
+      let(:livestream_event) do
+        Fabricate(:event, post: livestream_post, livestream: true, location: livestream_url)
+      end
+
+      before { Jobs.run_later! }
+
+      it "does not enqueue onebox warming while serializing" do
+        livestream_event
+
+        expect_not_enqueued_with(job: :warm_livestream_onebox) do
+          json =
+            DiscoursePostEvent::EventSerializer.new(livestream_event, scope: Guardian.new).as_json
+
+          expect(json[:event][:livestream_onebox]).to be_nil
+        end
+      end
+    end
+
     context "when event has duration" do
       fab!(:post_with_duration) { Fabricate(:post, topic: topic) }
       fab!(:event_with_duration) do

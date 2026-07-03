@@ -7,16 +7,20 @@
 be:
   js:
     user_api_key:
-      authorize: "санкцыянаваць"
+      authorize: "Аўтарызаваць"
       deny: "Скасаваць"
-      no_trust_level: "На жаль, у вас няма неабходнага ўзроўню даверу для доступу да API карыстацкага"
-      generic_error: "На жаль, мы не можам выдаць ключы карыстальніка API, гэтая функцыя можа быць адключаная адміністратарам сайта"
+      no_trust_level: "На жаль, у вас няма неабходнага ўзроўню даверу для доступу да карыстальніцкага API"
+      generic_error: "На жаль, мы не можам выдаваць ключы карыстальніцкага API, гэтая функцыя можа быць адключана адміністратарам сайта."
       device:
         continue: "Працягнуць"
     blocks:
       ghost:
         status: "Статус"
         failed: "памылка"
+    access_control:
+      manage:
+        access_permission_editor: "Рэдактар"
+        access_permission_remove: "Выдаліць"
     number:
       format:
         separator: ","
@@ -2085,6 +2089,9 @@ be:
             email: "Электронная пошта"
             opengraph_image:
               description: "Прадвызначаны відарыс OpenGraph, які выкарыстоўваецца, калі на старонцы няма іншага адпаведнага відарыса. Калі пакінуць пустым, будзе выкарыстоўвацца large_icon."
+            og_image_preview:
+              generate: "Згенерыраваць"
+              topic_id_label: "Ідэнтыфікатар тэмы"
         fonts:
           backfill_modal:
             modal_yes: "Так"
@@ -2170,7 +2177,6 @@ be:
         no_check_performed: "Праверка абнаўленняў не была выканана. Пераканайцеся, што Sidekiq працуе."
         stale_data: "Праверка абнаўленняў не праводзілася апошнім часам. Пераканайцеся, што Sidekiq працуе."
         installed_version: "Усталяваная"
-        latest_version: "Апошняя"
         dismiss_notice: "Ігнараваць"
         new_features:
           learn_more: "Даведацца больш..."
@@ -2700,6 +2706,10 @@ be:
         id_not_found: "Карыстальніка з такім нумарам няма ў нашай сістэме."
         status: "Статус"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Закрыць"
+              confirm: "Прыпыніць"
           delete:
             confirmation_modal:
               close: "Закрыць"
@@ -2801,7 +2811,7 @@ be:
           topics_viewed_all_time: "Тэм прагледжана (за ўвесь час)"
           posts_read: "Допісаў прачытана"
           posts_read_all_time: "Допісаў прачытана (за ўвесь час)"
-          flagged_posts: "абскарджаны паведамлення"
+          flagged_posts: "Допісаў са скаргамі"
           likes_given: "упадабаныя"
           likes_received: "атрыманыя перавагі"
         discourse_connect:

@@ -54,6 +54,8 @@ class SiteSerializer < ApplicationSerializer
     :admin_config_login_routes,
     :email_configured,
     :upcoming_changes_with_css,
+    :permanent_upcoming_change_names,
+    :access_control,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -131,6 +133,7 @@ class SiteSerializer < ApplicationSerializer
         .select(
           :id,
           :name,
+          :full_name,
           :flair_icon,
           :flair_upload_id,
           :flair_bg_color,
@@ -141,6 +144,7 @@ class SiteSerializer < ApplicationSerializer
           {
             id: g.id,
             name: g.name,
+            full_name: g.full_name.presence || g.name,
             flair_url: g.flair_url,
             flair_bg_color: g.flair_bg_color,
             flair_color: g.flair_color,
@@ -451,6 +455,14 @@ class SiteSerializer < ApplicationSerializer
 
   def upcoming_changes_with_css
     UpcomingChanges.including_css
+  end
+
+  def permanent_upcoming_change_names
+    UpcomingChanges.permanent_upcoming_change_names
+  end
+
+  def include_permanent_upcoming_change_names?
+    scope.is_staff?
   end
 
   private

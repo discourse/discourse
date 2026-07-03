@@ -106,6 +106,12 @@ hr:
           clear_all: "Obriši sve"
         allowed_groups: "Dopuštene grupe"
         delete: "Izbriši"
+        thinking_effort_options:
+          none: "Ništa"
+          low: "Nizak"
+          medium: "Srednji"
+          high: "Visok"
+          max: "Maks"
         response_format:
           open_modal: "Uredi"
           modal:

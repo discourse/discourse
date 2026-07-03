@@ -491,6 +491,13 @@ sv:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Alla"
+      admins: "Administratörer"
+      moderators: "Moderatorer"
+      staff: "Personal"
+      anonymous_users: "Anonyma användare"
+      logged_in_users: "Inloggade användare"
     request_membership_pm:
       title: "Begäran om medlemskap i @%{group_name}"
     request_accepted_pm:
@@ -1079,6 +1086,7 @@ sv:
         level: "Förtroendenivå"
         count: "Medlemmar"
         share: "Dela"
+        signups: "Registreringar"
       levels:
         "0": "Nya"
         "1": "Grundläggande"

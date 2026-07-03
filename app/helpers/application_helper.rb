@@ -103,6 +103,24 @@ module ApplicationHelper
         .map { [it[:importmap_name], script_asset_path(it[:name])] }
         .to_h
 
+    available_plugins = plugin_assets.map { |a| a[:plugin].directory_name }
+    external_plugin_imports =
+      (
+        plugin_assets.flat_map { |a| a[:external_plugin_imports] || [] } +
+          theme_js_assets.flat_map { |a| a[:external_plugin_imports] }
+      ).uniq
+
+    external_plugin_imports.each do |plugin_name|
+      if available_plugins.include?(plugin_name)
+        imports["discourse/plugins/#{plugin_name}?"] = imports["discourse/plugins/#{plugin_name}"]
+      else
+        imports["discourse/plugins/#{plugin_name}?"] = Plugin::JsManager.optional_plugin_stub
+        imports["discourse/plugins/#{plugin_name}"] = Plugin::JsManager.required_plugin_stub(
+          plugin_name,
+        )
+      end
+    end
+
     JSON.pretty_generate({ imports: }).html_safe
   end
 
@@ -433,6 +451,10 @@ module ApplicationHelper
     )
     if UpcomingChanges.enabled?(:dashboard_improvements)
       tags << tag.meta(name: "discourse-beacon-pageview-enabled", content: "true")
+    end
+
+    if SiteSetting.persist_browser_pageview_events
+      tags << tag.meta(name: "discourse-engagement-tracking-enabled", content: "true")
     end
     tags.html_safe
   end
@@ -804,13 +826,10 @@ module ApplicationHelper
     )
   end
 
-  def theme_js_lookup
-    Theme.lookup_field(
+  def theme_js_assets
+    Theme.js_asset_info(
       theme_id,
-      :extra_js,
-      nil,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
-      csp_nonce: csp_nonce_placeholder,
     )
   end
 

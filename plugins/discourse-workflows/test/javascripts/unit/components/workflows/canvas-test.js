@@ -287,4 +287,50 @@ module("Unit | Component | workflows canvas", function (hooks) {
       "discard changes is hidden for an unpublished workflow"
     );
   });
+
+  test("translateSelected moves selected sticky notes and selected nodes", async function (assert) {
+    const movedStickyNotes = [];
+    let translatedEntities;
+    const canvas = Object.create(WorkflowCanvas.prototype);
+
+    Object.defineProperty(canvas, "args", {
+      value: {
+        stickyNotes: [
+          { clientId: "note-1", position: { x: 10, y: 20 } },
+          { clientId: "note-2", position: { x: 30, y: 40 } },
+          { clientId: "note-3", position: { x: 50, y: 60 } },
+        ],
+        onStickyNoteMove(clientId, position) {
+          movedStickyNotes.push({ clientId, position });
+        },
+      },
+    });
+    canvas.rete = {
+      getSelectedIds() {
+        return {
+          nodeIds: new Set(["node-1"]),
+          stickyNoteIds: new Set(["note-1", "note-2", "note-3"]),
+        };
+      },
+      async translateSelectedEntities(...args) {
+        translatedEntities = args;
+      },
+    };
+
+    await canvas.translateSelected("note-1", 5, 10);
+
+    assert.deepEqual(
+      movedStickyNotes,
+      [
+        { clientId: "note-2", position: { x: 35, y: 50 } },
+        { clientId: "note-3", position: { x: 55, y: 70 } },
+      ],
+      "non-dragged selected sticky notes move by the drag delta"
+    );
+    assert.deepEqual(
+      translatedEntities,
+      ["note-1", "sticky-note", 5, 10, { labels: ["node"] }],
+      "Rete translates only selected nodes for sticky-note drags"
+    );
+  });
 });

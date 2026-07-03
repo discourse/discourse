@@ -32,6 +32,73 @@ RSpec.describe SiteSerializer do
     end
   end
 
+  describe "#access_control" do
+    let(:target_class) do
+      Class.new(ActiveRecord::Base) do
+        include AclTarget
+
+        self.table_name = "posts"
+
+        def self.name
+          "SiteSerializerSpecTarget"
+        end
+
+        def self.mandatory_acl
+          [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }]
+        end
+
+        def self.banned_acl
+          [{ type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" }]
+        end
+      end
+    end
+
+    after { DiscoursePluginRegistry.reset_register!(:acl_target_classes) }
+
+    it "includes mandatory ACLs by target class" do
+      target_class
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized.dig(:access_control, :mandatory_acl)).to include(
+        "SiteSerializerSpecTarget" => [
+          { type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" },
+        ],
+      )
+    end
+
+    it "includes banned ACLs by target class" do
+      target_class
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized.dig(:access_control, :banned_acl)).to include(
+        "SiteSerializerSpecTarget" => [
+          { type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" },
+        ],
+      )
+    end
+
+    it "includes plugin-registered target classes" do
+      Object.const_set(:SiteSerializerSpecTarget, target_class)
+      AclTarget.loaded_target_classes.delete(target_class)
+      DiscoursePluginRegistry.register_acl_target_class(
+        "SiteSerializerSpecTarget",
+        Plugin::Instance.new,
+      )
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized.dig(:access_control, :mandatory_acl)).to include(
+        "SiteSerializerSpecTarget" => [
+          { type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" },
+        ],
+      )
+    ensure
+      Object.send(:remove_const, :SiteSerializerSpecTarget) if defined?(SiteSerializerSpecTarget)
+    end
+  end
+
   it "includes category custom fields only if its preloaded" do
     category.custom_fields["enable_marketplace"] = true
     category.save_custom_fields
@@ -630,6 +697,28 @@ RSpec.describe SiteSerializer do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
       expect(serialized[:upcoming_changes_with_css]).to include(:enable_upload_debug_mode)
       expect(serialized[:upcoming_changes_with_css]).not_to include(:enable_user_tips)
+    end
+  end
+
+  describe "#permanent_upcoming_change_names" do
+    before do
+      UpcomingChanges.stubs(:permanent_upcoming_change_names).returns(%w[enable_permanent_feature])
+    end
+
+    it "returns the permanent change names for staff" do
+      admin = Fabricate(:admin)
+      admin_guardian = Guardian.new(admin)
+      serialized =
+        described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
+      expect(serialized[:permanent_upcoming_change_names]).to eq(%w[enable_permanent_feature])
+    end
+
+    it "is not included for non-staff users" do
+      user = Fabricate(:user)
+      user_guardian = Guardian.new(user)
+      serialized =
+        described_class.new(Site.new(user_guardian), scope: user_guardian, root: false).as_json
+      expect(serialized).not_to have_key(:permanent_upcoming_change_names)
     end
   end
 end

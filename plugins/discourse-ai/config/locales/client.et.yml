@@ -90,6 +90,11 @@ et:
         save: "Salvesta"
         enabled: "Sisse lülitatud?"
         delete: "Kustuta"
+        thinking_effort_options:
+          none: "Pole"
+          medium: "Keskmine"
+          high: "Kõrge"
+          max: "Maksimum"
         response_format:
           open_modal: "Muuda"
         filters:

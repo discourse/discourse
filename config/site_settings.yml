@@ -25,6 +25,10 @@
 #                         the setting is disabled).
 # themeable             - Set to true if themes can override this site setting. Generally, only client side affecting settings
 #                         that change the UI should be themeable, and try limit to simple setting types like bool, list, integer, enum.
+# localizable           - Set to true if content localization can translate this setting. Use a hash for translation-specific
+#                         options:
+#                          - max_length: maximum localized value length
+#                          - cooked: true when the localized value should be cooked markdown
 # upcoming_change_default_override - Allow an upcoming change to control the new default value of this setting.
 #                          - upcoming_change: The site setting of the upcoming change to control this
 #                          - new_default: The new default value when the upcoming change is enabled
@@ -88,9 +92,13 @@ required:
     client: true
     default: "Discourse"
     area: "about"
+    localizable:
+      max_length: 255
   site_description:
     default: ""
     area: "about"
+    localizable:
+      max_length: 1000
   short_site_description:
     default: ""
     client: true
@@ -184,6 +192,10 @@ branding:
     default: ""
     client: true
     type: upload
+  generate_topic_og_image:
+    default: false
+    client: true
+    hidden: true
   opengraph_image:
     default: ""
     client: true
@@ -295,6 +307,11 @@ basic:
     upcoming_change_default_override:
       upcoming_change: "enable_unified_new"
       new_default: "latest|new|hot|categories"
+  custom_homepage_crawler_route:
+    type: enum
+    default: "latest"
+    choices: "TopMenu.crawler_homepage_choices"
+    area: "interface"
   post_menu:
     client: true
     type: list
@@ -576,6 +593,9 @@ basic:
     max: 10_000
     hidden: true
     area: "about"
+    localizable:
+      max_length: 10_000
+      cooked: true
   extended_site_description_cooked:
     default: ""
     hidden: true
@@ -609,6 +629,13 @@ basic:
     min: 1
     max: 20000
     hidden: true
+  browser_pageview_max_engaged_seconds:
+    default: 1800
+    type: integer
+    min: 1
+    max: 86400
+    hidden: true
+    client: true
   experimental_detect_crawler_pageviews:
     default: false
     hidden: true
@@ -1641,7 +1668,7 @@ posting:
     hidden: true
     area: "gifs"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/404829"
   klipy_api_key:
@@ -1896,6 +1923,7 @@ content_localization:
   content_localization_crawler_param:
     default: false
     area: "localization"
+    validator: "ContentLocalizationCrawlerParamValidator"
   content_localization_use_default_locale_when_unsupported:
     default: true
     area: "localization"
@@ -1925,7 +1953,7 @@ nested_replies:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
   nested_replies_max_depth:
-    default: 10
+    default: 3
     client: true
     type: integer
     min: 1
@@ -1935,7 +1963,7 @@ nested_replies:
       - "nested_replies_enabled"
     depends_behavior: "hidden"
   nested_replies_cap_nesting_depth:
-    default: false
+    default: true
     client: true
     area: "posts_and_topics"
     depends_on:
@@ -2029,7 +2057,7 @@ email:
     client: true
     hidden: true
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       allow_enabled_for:
         - everyone
@@ -2170,6 +2198,10 @@ email:
   sendgrid_verification_key:
     default: ""
     secret: true
+  aws_sns_topic_arn_allowlist:
+    default: ""
+    type: list
+    list_type: simple
   mailjet_webhook_token:
     default: ""
     secret: true
@@ -3994,10 +4026,6 @@ uncategorized:
     min: 100
     hidden: true
 
-  create_revision_on_bulk_topic_moves:
-    default: true
-    area: "posts_and_topics"
-
   allow_changing_staged_user_tracking:
     default: false
     area: "users"
@@ -4450,13 +4478,9 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "permanent"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/395768"
-      allow_enabled_for:
-        - staff
-        - specific_groups
-      body_class: true
   enable_auto_grid_images:
     default: true
     client: true

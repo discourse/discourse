@@ -24,26 +24,11 @@ export default class CanvasContextMenu extends Component {
   }
 
   @action
-  open(event) {
+  async open(event) {
     event.preventDefault();
     this.contextMenu = null;
 
     if (!this.args.rete) {
-      return;
-    }
-
-    const nodeEl = event.target.closest(".workflow-rete-node");
-    if (nodeEl) {
-      const clientId = nodeEl.dataset.clientId;
-      if (clientId && !this.args.rete.getSelectedIds().nodeIds.has(clientId)) {
-        this.args.rete.selectableNodes.select(clientId, false);
-      }
-      this.contextMenu = {
-        nodeId: clientId,
-        isUnavailable: nodeEl.dataset.unavailable === "true",
-        screenX: event.clientX,
-        screenY: event.clientY,
-      };
       return;
     }
 
@@ -52,6 +37,32 @@ export default class CanvasContextMenu extends Component {
       event.clientX - rect.left,
       event.clientY - rect.top
     );
+    const nodeEl = event.target.closest(".workflow-rete-node");
+    if (nodeEl) {
+      const clientId = nodeEl.dataset.clientId;
+      const selectedIds = this.args.rete.getSelectedIds();
+      const useCurrentSelection = selectedIds.nodeIds.has(clientId);
+      const selection = useCurrentSelection
+        ? {
+            nodeIds: [...selectedIds.nodeIds],
+            stickyNoteIds: [...selectedIds.stickyNoteIds],
+          }
+        : { nodeIds: [clientId], stickyNoteIds: [] };
+
+      if (clientId && !useCurrentSelection) {
+        await this.args.rete.selectableNodes.select(clientId, false);
+      }
+      this.contextMenu = {
+        nodeId: clientId,
+        selection,
+        isUnavailable: nodeEl.dataset.unavailable === "true",
+        canvasPos,
+        screenX: event.clientX,
+        screenY: event.clientY,
+      };
+      return;
+    }
+
     this.contextMenu = {
       isCanvas: true,
       canvasPos,
@@ -74,8 +85,30 @@ export default class CanvasContextMenu extends Component {
 
   @action
   deleteNode() {
+    const selection = this.contextMenu.selection;
     this.contextMenu = null;
-    this.args.onDeleteSelected?.();
+    this.args.onDeleteSelected?.(selection);
+  }
+
+  @action
+  cutSelection() {
+    const selection = this.contextMenu.selection;
+    this.contextMenu = null;
+    this.args.onCut?.(selection);
+  }
+
+  @action
+  copySelection() {
+    const selection = this.contextMenu.selection;
+    this.contextMenu = null;
+    this.args.onCopy?.(selection);
+  }
+
+  @action
+  pasteSelection() {
+    const canvasPos = this.contextMenu?.canvasPos;
+    this.contextMenu = null;
+    this.args.onPaste?.(canvasPos);
   }
 
   @action
@@ -112,6 +145,12 @@ export default class CanvasContextMenu extends Component {
             @translatedLabel={{i18n "discourse_workflows.sticky_note.add"}}
             class="btn-transparent workflows-canvas__context-menu-item"
           />
+          <DButton
+            @action={{this.pasteSelection}}
+            @icon="paste"
+            @translatedLabel={{i18n "discourse_workflows.canvas.paste"}}
+            class="btn-transparent workflows-canvas__context-menu-item"
+          />
         {{else}}
           {{#unless this.contextMenu.isUnavailable}}
             <DButton
@@ -121,6 +160,24 @@ export default class CanvasContextMenu extends Component {
               class="btn-transparent workflows-canvas__context-menu-item"
             />
           {{/unless}}
+          <DButton
+            @action={{this.cutSelection}}
+            @icon="scissors"
+            @translatedLabel={{i18n "discourse_workflows.canvas.cut"}}
+            class="btn-transparent workflows-canvas__context-menu-item"
+          />
+          <DButton
+            @action={{this.copySelection}}
+            @icon="copy"
+            @translatedLabel={{i18n "discourse_workflows.canvas.copy"}}
+            class="btn-transparent workflows-canvas__context-menu-item"
+          />
+          <DButton
+            @action={{this.pasteSelection}}
+            @icon="paste"
+            @translatedLabel={{i18n "discourse_workflows.canvas.paste"}}
+            class="btn-transparent workflows-canvas__context-menu-item"
+          />
           <DButton
             @action={{this.deleteNode}}
             @icon="trash-can"

@@ -272,8 +272,6 @@ sv:
         title: "Meddelandeljud för chatt via dator"
       sounds:
         none: "Ingen"
-        bell: "Bell"
-        ding: "Ding"
       title: "chatt"
       title_capitalized: "Chatt"
       upload: "Bifoga en fil"

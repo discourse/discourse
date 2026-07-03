@@ -71,6 +71,58 @@ function shouldHideTriggerNodeTypes(context, nodes) {
   return isTriggerType(sourceNode?.type);
 }
 
+export function buildPastedGraph({
+  existingNodes,
+  existingConnections,
+  copiedNodes = [],
+  copiedConnections = [],
+  nodeTypeFor = (node) => node?.type,
+}) {
+  const newNodes = [];
+  const remappedClientIds = new Map();
+
+  for (const copiedNode of copiedNodes) {
+    const newNode = WorkflowNode.create({
+      type: copiedNode.type,
+      typeVersion: copiedNode.typeVersion,
+      name: generateNodeName(copiedNode.type, [...existingNodes, ...newNodes]),
+      configuration: structuredClone(copiedNode.configuration || {}),
+      position: copiedNode.position
+        ? { x: copiedNode.position.x, y: copiedNode.position.y }
+        : null,
+    });
+    remappedClientIds.set(copiedNode.clientId, newNode.clientId);
+    newNodes.push(newNode);
+  }
+
+  const updatedNodes = [...existingNodes, ...newNodes];
+  const remappedConnections = copiedConnections.flatMap((connection) => {
+    const sourceClientId = remappedClientIds.get(connection.sourceClientId);
+    const targetClientId = remappedClientIds.get(connection.targetClientId);
+
+    if (!sourceClientId || !targetClientId) {
+      return [];
+    }
+
+    return [
+      {
+        ...structuredClone(connection),
+        sourceClientId,
+        targetClientId,
+      },
+    ];
+  });
+
+  return {
+    updatedNodes,
+    updatedConnections: normalizeConnectionsForNodes(
+      [...existingConnections, ...remappedConnections],
+      updatedNodes,
+      nodeTypeFor
+    ),
+  };
+}
+
 export default class WorkflowsEditor extends Component {
   @service router;
   @service dialog;
@@ -495,16 +547,28 @@ export default class WorkflowsEditor extends Component {
     return nextAvailableTargetInputIndex(connections, targetClientId);
   }
 
+  #showMaxNodesReached() {
+    this.toasts.error({
+      data: {
+        message: i18n("discourse_workflows.canvas.max_nodes_reached", {
+          max: MAX_NODES,
+        }),
+      },
+    });
+  }
+
+  #canAddNodes(count, existingNodes = this.formApi.get("nodes")) {
+    if (existingNodes.length + count <= MAX_NODES) {
+      return true;
+    }
+
+    this.#showMaxNodesReached();
+    return false;
+  }
+
   #addNewNode(nodeType, position, configOverrides, wireConnections) {
     const existingNodes = this.formApi.get("nodes");
-    if (existingNodes.length >= MAX_NODES) {
-      this.toasts.error({
-        data: {
-          message: i18n("discourse_workflows.canvas.max_nodes_reached", {
-            max: MAX_NODES,
-          }),
-        },
-      });
+    if (!this.#canAddNodes(1, existingNodes)) {
       return;
     }
     this.#captureUndo();
@@ -880,13 +944,23 @@ export default class WorkflowsEditor extends Component {
 
   @action
   removeSelected({ nodeIds, stickyNoteIds }) {
+    this.#removeSelected({ nodeIds, stickyNoteIds });
+  }
+
+  @action
+  cutSelected({ nodeIds, stickyNoteIds }) {
+    this.#removeSelected({ nodeIds, stickyNoteIds }, { reconnect: false });
+  }
+
+  #removeSelected({ nodeIds, stickyNoteIds }, { reconnect = true } = {}) {
     this.#captureUndo();
 
     if (nodeIds.length > 0) {
       const updatedGraph = removeNodesFromGraph(
         this.formApi.get("nodes"),
         this.formApi.get("connections"),
-        nodeIds
+        nodeIds,
+        { reconnect }
       );
       this.formApi.set("nodes", updatedGraph.nodes);
       this.formApi.set("connections", updatedGraph.connections);
@@ -907,14 +981,7 @@ export default class WorkflowsEditor extends Component {
   @action
   addNodeToLoop(loopNodeClientId, nodeType, configOverrides = null) {
     const existingNodes = this.formApi.get("nodes");
-    if (existingNodes.length >= MAX_NODES) {
-      this.toasts.error({
-        data: {
-          message: i18n("discourse_workflows.canvas.max_nodes_reached", {
-            max: MAX_NODES,
-          }),
-        },
-      });
+    if (!this.#canAddNodes(1, existingNodes)) {
       return;
     }
     this.#captureUndo();
@@ -1061,14 +1128,7 @@ export default class WorkflowsEditor extends Component {
   @action
   importNodes(newNodes, newConnections, newStickyNotes, staticData) {
     const existingNodes = this.formApi.get("nodes");
-    if (existingNodes.length + newNodes.length > MAX_NODES) {
-      this.toasts.error({
-        data: {
-          message: i18n("discourse_workflows.canvas.max_nodes_reached", {
-            max: MAX_NODES,
-          }),
-        },
-      });
+    if (!this.#canAddNodes(newNodes.length, existingNodes)) {
       return;
     }
     this.#captureUndo();
@@ -1176,23 +1236,29 @@ export default class WorkflowsEditor extends Component {
   }
 
   @action
-  pasteEntities({ nodes, stickyNotes }) {
+  pasteEntities({ nodes = [], connections = [], stickyNotes = [] }) {
+    if (nodes.length === 0 && stickyNotes.length === 0) {
+      return;
+    }
+
+    const existingNodes = this.formApi.get("nodes");
+    if (!this.#canAddNodes(nodes.length, existingNodes)) {
+      return;
+    }
+
     this.#captureUndo();
 
     if (nodes.length > 0) {
-      const existingNodes = this.formApi.get("nodes");
-      const newNodes = nodes.map((copiedNode) =>
-        WorkflowNode.create({
-          type: copiedNode.type,
-          typeVersion: copiedNode.typeVersion,
-          name: generateNodeName(copiedNode.type, existingNodes),
-          configuration: structuredClone(copiedNode.configuration || {}),
-          position: copiedNode.position
-            ? { x: copiedNode.position.x, y: copiedNode.position.y }
-            : null,
-        })
-      );
-      this.formApi.set("nodes", [...existingNodes, ...newNodes]);
+      const { updatedNodes, updatedConnections } = buildPastedGraph({
+        existingNodes,
+        existingConnections: this.formApi.get("connections"),
+        copiedNodes: nodes,
+        copiedConnections: connections,
+        nodeTypeFor: (node) => this.#nodeTypeFor(node),
+      });
+
+      this.formApi.set("nodes", updatedNodes);
+      this.formApi.set("connections", updatedConnections);
     }
 
     if (stickyNotes.length > 0) {
@@ -1540,6 +1606,7 @@ export default class WorkflowsEditor extends Component {
           @onStickyNoteUpdateText={{this.stickyNoteUpdateText}}
           @onStickyNoteChangeColor={{this.stickyNoteChangeColor}}
           @onRemoveSelected={{this.removeSelected}}
+          @onCutSelected={{this.cutSelected}}
           @onPasteEntities={{this.pasteEntities}}
           @workflow={{@workflow}}
           @session={{this.workflowSession}}

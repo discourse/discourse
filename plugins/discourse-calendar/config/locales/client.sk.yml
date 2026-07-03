@@ -503,11 +503,7 @@ sk:
         allow_chat:
           label: "Integrácia chatu"
           checkbox_label: "Vytvorenie a správa kanála chatu pre konkrétnu udalosť"
-        url:
-          label: "URL"
-          placeholder: "Voliteľné"
         location:
-          label: "Poloha"
           placeholder: "Pridajte miesto, odkaz alebo niečo podobné."
         description:
           label: "Popis"

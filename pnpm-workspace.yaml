@@ -1,4 +1,10 @@
 strictPeerDependencies: true
+strictDepBuilds: true
+onlyBuiltDependencies:
+- lefthook
+ignoredBuiltDependencies:
+- core-js
+- rete
 packages:
 - "docs/developer-guides"
 - "frontend/deprecation-silencer"

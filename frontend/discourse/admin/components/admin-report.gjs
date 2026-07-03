@@ -4,11 +4,10 @@ import EmberObject, { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
+import AdminReportBody from "discourse/admin/components/admin-report-body";
 import AdminReportChart from "discourse/admin/components/admin-report-chart";
 import AdminReportCounters from "discourse/admin/components/admin-report-counters";
 import AdminReportInlineTable from "discourse/admin/components/admin-report-inline-table";
-import AdminReportLegacy from "discourse/admin/components/admin-report-legacy";
-import AdminReportNew from "discourse/admin/components/admin-report-new";
 import AdminReportRadar from "discourse/admin/components/admin-report-radar";
 import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
 import AdminReportStackedLineChart from "discourse/admin/components/admin-report-stacked-line-chart";
@@ -191,7 +190,7 @@ export default class AdminReport extends Component {
   changeGrouping(grouping) {
     const options = { chartGrouping: grouping };
 
-    if (this.siteSettings.reporting_improvements && !this.userHasCustomDates) {
+    if (!this.userHasCustomDates) {
       const endDate = moment().endOf("day");
       let startDate;
 
@@ -589,10 +588,6 @@ export default class AdminReport extends Component {
   }
 
   <template>
-    {{#if this.siteSettings.reporting_improvements}}
-      <AdminReportNew @report={{this}} @filters={{@filters}} />
-    {{else}}
-      <AdminReportLegacy @report={{this}} @filters={{@filters}} />
-    {{/if}}
+    <AdminReportBody @report={{this}} @filters={{@filters}} />
   </template>
 }

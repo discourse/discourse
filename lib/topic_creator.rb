@@ -356,6 +356,7 @@ class TopicCreator
              @guardian.can_send_private_message?(
                obj,
                notify_moderators: topic&.subtype == TopicSubtype.notify_moderators,
+               private_message_context: @opts[:private_message_context],
              )
       rollback_with!(topic, :cant_send_pm)
     end

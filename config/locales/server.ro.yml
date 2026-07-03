@@ -332,6 +332,11 @@ ro:
       trust_level_2: "nivel_de_încredere_2"
       trust_level_3: "nivel_de_încredere_3"
       trust_level_4: "nivel_de_încredere_4"
+    default_full_names:
+      everyone: "Toată lumea"
+      admins: "Admini"
+      moderators: "Moderatori"
+      staff: "Echipa"
     default_descriptions:
       everyone: "Grup automat care include toți membrii"
       staff: "Grup automat, inclusiv administratori și moderatori"
@@ -721,6 +726,7 @@ ro:
       labels:
         count: "Membri"
         share: "Partajează"
+        signups: "Înregistrări"
       levels:
         "0": "Nou"
         "1": "De bază"
@@ -1320,7 +1326,6 @@ ro:
     default_composition_mode: "Setează modul implicit pentru compozitorul comunității tale. Modul de text îmbogățit oferă o experienţă de scriere mai modernă, familiară pentru majoritatea utilizatorilor, în timp ce Markdown este potrivit pentru publicul mai tehnic. Membrii pot folosi o comutare în bara de instrumente a compozitorului pentru a comuta între moduri."
     reviewable_ui_refresh: "Grupuri care pot folosi noua interfață de utilizator experimentală în coada de revizuire."
     content_localization_allow_author_localization: "Permite autorilor să actualizeze localizările propriilor subiecte și postări prin intermediul meniului postări."
-    fake_upcoming_change: "Aceasta este o modificare viitoare falsă, în scopuri de testare. Nu este nevoie să traduci acest șir."
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."

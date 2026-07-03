@@ -3,7 +3,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
-import { MIN_CHARACTER_COUNT } from "../lib/ai-helper-suggestions";
+import { chooserSuggestionContext } from "../lib/chooser-suggestion-context";
 import { showComposerAiHelper } from "../lib/show-ai-helper";
 
 const SUGGEST_ID = "ai-category-suggest";
@@ -19,16 +19,6 @@ function stateFor(component) {
   return state;
 }
 
-function composerFor(component) {
-  return getOwner(component).lookup("service:composer");
-}
-
-// only attach to the composer's own chooser, not every category-chooser
-// elsewhere in the app while a draft happens to be open
-function inComposer(component) {
-  return !!component.element?.closest("#reply-control");
-}
-
 function noSuggestionsToast(component) {
   getOwner(component)
     .lookup("service:toasts")
@@ -40,17 +30,16 @@ function noSuggestionsToast(component) {
     });
 }
 
-async function applyBestSuggestion(component, selectKit) {
-  const composer = composerFor(component);
-  const text = composer?.model?.reply;
+async function applyBestSuggestion(component, selectKit, context) {
   const state = stateFor(component);
+  const data = context.categoryRequestData();
 
-  if (!text || text.length < MIN_CHARACTER_COUNT) {
+  if (!data) {
     noSuggestionsToast(component);
     return;
   }
 
-  const startCategoryId = composer.model.categoryId;
+  const startValue = selectKit.value;
   state.loading = true;
   selectKit.close();
   selectKit.set("isLoading", true);
@@ -58,14 +47,14 @@ async function applyBestSuggestion(component, selectKit) {
   try {
     const { assistant } = await ajax(
       "/discourse-ai/ai-helper/suggest_category",
-      { method: "POST", data: { text } }
+      { method: "POST", data }
     );
 
     if (component.isDestroying || component.isDestroyed) {
       return;
     }
 
-    if (composer.model.categoryId !== startCategoryId) {
+    if (selectKit.value !== startValue) {
       return;
     }
 
@@ -85,35 +74,27 @@ async function applyBestSuggestion(component, selectKit) {
   }
 }
 
-function triggerRow(component) {
+function triggerRow(component, context) {
   return {
     id: SUGGEST_ID,
     name: i18n("discourse_ai.ai_helper.choose"),
     icon: "discourse-sparkles",
     classNames: "ai-category-suggest-row",
-    onSelect: (selectKit) => applyBestSuggestion(component, selectKit),
+    onSelect: (selectKit) => applyBestSuggestion(component, selectKit, context),
   };
 }
 
-function enabledFor(component, siteSettings, currentUser) {
-  const composer = composerFor(component);
+function enabledFor(context, siteSettings, currentUser) {
   return (
+    !!context &&
     siteSettings.ai_embeddings_enabled &&
-    composer?.model &&
-    !composer.disableCategoryChooser &&
-    inComposer(component) &&
+    context.categoryChooserEnabled &&
     showComposerAiHelper(
-      composer.model,
+      context.model,
       siteSettings,
       currentUser,
       "suggestions"
     )
-  );
-}
-
-function hasEnoughContent(component) {
-  return (
-    (composerFor(component)?.model?.reply?.length ?? 0) > MIN_CHARACTER_COUNT
   );
 }
 
@@ -122,7 +103,8 @@ function initInlineCategorySuggester(api) {
   const siteSettings = api.container.lookup("service:site-settings");
 
   api.modifySelectKit("category-chooser").prependContent((component) => {
-    if (!enabledFor(component, siteSettings, currentUser)) {
+    const context = chooserSuggestionContext(component);
+    if (!enabledFor(context, siteSettings, currentUser)) {
       return;
     }
 
@@ -130,8 +112,8 @@ function initInlineCategorySuggester(api) {
       return;
     }
 
-    if (!stateFor(component).loading && hasEnoughContent(component)) {
-      return triggerRow(component);
+    if (!stateFor(component).loading && context.available) {
+      return triggerRow(component, context);
     }
   });
 }

@@ -37,6 +37,10 @@ he:
         no_visible_children_hint: "המקטע המכיל הזה לא עבר עיבוד כיוון שאף אחד מהצאצאים שלו לא גלוי."
         condition_failed_hint: "המקטע הזה לא עבר עיבוד כיוון שהתנאים שלו נכשלו."
         head_hidden_tail_hint: "המקטע הזה לא עבר עיבוד כיוון שמקטע אחר עבר עיבוד תחילה במקטה המכיל `head` (ראש)."
+    access_control:
+      manage:
+        access_permission_editor: "עורכים"
+        access_permission_remove: "הסרה"
     carousel:
       go_to_slide: "מעבר לשקופית %{index}"
       previous: "השקופית הקודמת"
@@ -480,6 +484,9 @@ he:
     age: "גיל"
     joined: "הצטרפות"
     admin_title: "ניהול"
+    advanced_mode_toggle:
+      advanced_mode: "מצב מתקדם"
+      simple_mode: "מצב פשוט"
     show_more: "להציג עוד"
     show_help: "אפשרויות"
     links: "קישורים"
@@ -4037,43 +4044,6 @@ he:
       read_more: "מעניין אותך לקרוא עוד? אפשר <a href='%{categoryLink}'>לעיין בכל הקטגוריות</a> או <a href='%{latestLink}'>לצפות בנושאים העדכניים ביותר</a>."
       unread_indicator: "אף אחד מהחברים לא קרא את הפוסט האחרון של הנושא הזה עדיין."
       participant_groups: "קבוצות משתתפים"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {נותר <a href="{basePath}/unread">נושא אחד</a> שלא נקרא}
-                 two {נותרו <a href="{basePath}/unread"># נושאים</a> שלא נקראו}
-              other {נותרו <a href="{basePath}/unread"># נושאים</a> שלא נקראו}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { ועוד <a href="{basePath}/new">אחד חדש</a>,}
-                 two { ועוד <a href="{basePath}/new"># חדשים</a>,}
-              other { ועוד <a href="{basePath}/new"># חדשים</a>,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {נותר <a href="{basePath}/unread">נושא אחד</a> שלא נקרא,}
-                 two {נותרו <a href="{basePath}/unread"># נושאים</a> שלא נקראו,}
-              other {נותרו <a href="{basePath}/unread"># נושאים</a> שלא נקראו,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {נותר <a href="{basePath}/new">נושא אחד</a> חדש,}
-                 two {נותרו <a href="{basePath}/new"># נושאים</a> חדשים,}
-              other {נותרו <a href="{basePath}/new"># נושאים</a> חדשים,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { או שניתן לעיין בנושאים חדשים תחת {categoryLink}}
-          false { או <a href="{basePath}/latest">לצפות בנושאים העדכניים ביותר</a>}
-          other {}
-        }
       reply_count_link:
         one: "תגובה אחת, קפיצה לפוסט הראשון"
         two: "שתי תגובות, קפיצה לפוסט הראשון"
@@ -5515,7 +5485,6 @@ he:
       synonyms: "מילים נרדפות"
       synonyms_inline: "המילים הנרדפות האלו יוחלפו ב־%{base_tag_name}:"
       save: "שמירת השם ותיאור התגית"
-      restricted_to: "מוגבלת לכדי"
       no_synonyms: "לתגית הזאת אין מילים נרדפות."
       edit_synonyms: "עריכת מילים נרדפות"
       add_synonyms_label: "הוספת מילים נרדפות:"
@@ -6327,6 +6296,9 @@ he:
             opengraph_image:
               title: "תמונת OpenGraph"
               description: "תמונת opengraph כברירת מחדל, נעשה בה שימוש כאשר לעמוד אין תמונות אחרות מתאימות. אם השדה נשאר ריק, ייעשה שימוש ב־large_icon (סמל גדול)."
+            og_image_preview:
+              generate: "ייצר"
+              topic_id_label: "מזהה נושא"
             x_summary_large_image:
               title: "תמונה גדולה לתקציר ב־X"
               help_text: "הגודל המומלץ הוא ‎280 × 150 פיקסלים לפחות. לא להשתמש בתמונת SVG."
@@ -6645,7 +6617,7 @@ he:
         stale_data: "לא בוצעה בדיקת עדכונים לאחרונה. וודא ש-sidekiq פועל."
         version_check_pending: "נראה שעדכנת לאחרונה. פנטסטי!"
         installed_version: "הותקן"
-        latest_version: "אחרונה"
+        github: "GitHub"
         problems_found: "עצה שמבוססת על הגדרות האתר הנוכחיות שלך"
         dismiss_notice: "התעלמות"
         new_features:
@@ -7295,6 +7267,8 @@ he:
             initial_members: "חברים בהרחבה"
             initial_members_description: "מספר חברי הקבוצה להצגה לפני הוספת כפתור ‚להציג עוד’."
             show_description: "כולל התיאור"
+          locale_selector:
+            title: "שפה"
           optional: "(רשות)"
           update: "עדכון"
           toasts:
@@ -8408,13 +8382,12 @@ he:
         silence_reason: "סיבת השתקה"
         bulk_actions:
           title: "פעולות במרוכז"
-          admin_cant_be_deleted: "אי אפשר למחוק את המשתמש כי הוא חבר הנהלה"
-          too_many_or_old_posts: "אי אפשר למחוק את המשתמש הזה כי יש לו יותר מדי פוסטים או פוסט ותיק מאוד"
-          too_many_selected_users:
-            one: "הגעת למגבלה של משתמש למחיקה במרוכז"
-            two: "הגעת למגבלה של שני משתמשים למחיקה במרוכז"
-            many: "הגעת למגבלה של %{count} משתמשים למחיקה במרוכז"
-            other: "הגעת למגבלה של %{count} משתמשים למחיקה במרוכז"
+          select_all: "בחירה בהכול"
+          clear_all: "לפנות הכול"
+          suspend:
+            confirmation_modal:
+              close: "סגירה"
+              confirm: "השעיה"
           delete:
             label: "מחיקת משתמשים…"
             confirmation_modal:
@@ -8448,6 +8421,9 @@ he:
           suspended: "מושעים"
           silenced: "מושתק"
           staged: "מבוים"
+        activation_filter:
+          all: "כל המשתמשים"
+          activated: "מופעל"
         approved: "מאושר?"
         titles:
           active: "משתמשים פעילים"

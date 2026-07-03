@@ -269,4 +269,86 @@ module("Unit | Utility | download-calendar", function (hooks) {
       "endsAt is one hour after startsAt"
     );
   });
+
+  test("all-day ICS uses DATE values with an exclusive end date", function (assert) {
+    const data = generateIcsData("all day event", [
+      { startsAt: "2026-03-12", endsAt: "2026-03-14", allDay: true },
+    ]);
+
+    assert.true(
+      data.includes("DTSTART;VALUE=DATE:20260312"),
+      "start is a DATE value"
+    );
+    assert.true(
+      data.includes("DTEND;VALUE=DATE:20260315"),
+      "end is the exclusive day after the last day"
+    );
+    assert.false(
+      data.includes("DTSTART:20260312T000000Z"),
+      "does not emit a midnight datetime"
+    );
+    assert.false(data.includes("TZID"), "does not emit a timezone");
+  });
+
+  test("single-day all-day ICS spans one day when no end given", function (assert) {
+    const data = generateIcsData("all day event", [
+      { startsAt: "2026-03-12", allDay: true },
+    ]);
+
+    assert.true(data.includes("DTSTART;VALUE=DATE:20260312"));
+    assert.true(
+      data.includes("DTEND;VALUE=DATE:20260313"),
+      "exclusive end is the day after the start"
+    );
+  });
+
+  test("all-day Google url uses a date-only range", function (assert) {
+    downloadGoogle("all day event", [
+      { startsAt: "2026-03-12", endsAt: "2026-03-14", allDay: true },
+    ]);
+
+    assert.true(
+      window.open.calledWith(
+        "https://www.google.com/calendar/event?action=TEMPLATE&text=all+day+event&dates=20260312%2F20260315",
+        "_blank",
+        "noopener",
+        "noreferrer"
+      )
+    );
+  });
+
+  test("formatDates preserves the all-day flag without adding a time", function (assert) {
+    let dates = formatDates([{ startsAt: "2026-03-12", allDay: true }]);
+    assert.deepEqual(dates, [
+      { startsAt: "2026-03-12", endsAt: null, allDay: true },
+    ]);
+  });
+
+  test("all-day ICS converts the RRULE UNTIL to a DATE value", function (assert) {
+    const data = generateIcsData(
+      "all day event",
+      [{ startsAt: "2026-03-12", allDay: true }],
+      { rrule: "FREQ=WEEKLY;BYDAY=TH;UNTIL=20260531T200000" }
+    );
+
+    assert.true(data.includes("DTSTART;VALUE=DATE:20260312"));
+    assert.true(
+      data.includes("RRULE:FREQ=WEEKLY;BYDAY=TH;UNTIL=20260531"),
+      "UNTIL matches the DATE value type of DTSTART"
+    );
+    assert.false(
+      data.includes("UNTIL=20260531T200000"),
+      "UNTIL carries no time component"
+    );
+  });
+
+  test("all-day Google url converts the RRULE UNTIL to a DATE value", function (assert) {
+    downloadGoogle("event", [{ startsAt: "2026-03-12", allDay: true }], {
+      rrule: "FREQ=WEEKLY;BYDAY=TH;UNTIL=20260531T200000Z",
+    });
+
+    const url = window.open.getCall(0).args[0];
+    assert.true(url.includes("UNTIL%3D20260531"), "UNTIL is present as a date");
+    assert.false(url.includes("20260531T"), "UNTIL carries no time component");
+  });
 });

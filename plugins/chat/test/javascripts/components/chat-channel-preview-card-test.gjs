@@ -23,46 +23,14 @@ module("Component | ChatChannelPreviewCard", function (hooks) {
     this.siteSettings.chat_enabled = true;
   });
 
-  test("channel title", async function (assert) {
+  test("card", async function (assert) {
     await render(
       <template><ChatChannelPreviewCard @channel={{this.channel}} /></template>
     );
 
     assert
-      .dom(".chat-channel-name__label")
-      .hasText(this.channel.title, "shows the channel title");
-
-    assert
-      .dom(".chat-channel-icon.--icon")
-      .exists("shows the category hashtag badge");
-  });
-
-  test("channel description", async function (assert) {
-    await render(
-      <template><ChatChannelPreviewCard @channel={{this.channel}} /></template>
-    );
-
-    assert
-      .dom(".chat-channel-preview-card__description")
-      .hasText(this.channel.description, "the channel description is shown");
-  });
-
-  test("no channel description", async function (assert) {
-    this.channel.description = null;
-
-    await render(
-      <template><ChatChannelPreviewCard @channel={{this.channel}} /></template>
-    );
-
-    assert
-      .dom(".chat-channel-preview-card__description")
-      .doesNotExist(
-        "no line is left for the channel description if there is none"
-      );
-
-    assert
-      .dom(".chat-channel-preview-card.-no-description")
-      .exists("adds a modifier class for styling");
+      .dom(".chat-channel-preview-card")
+      .exists("shows the channel preview card");
   });
 
   test("join", async function (assert) {
@@ -75,16 +43,6 @@ module("Component | ChatChannelPreviewCard", function (hooks) {
       .exists("shows the join channel button");
   });
 
-  test("browse all", async function (assert) {
-    await render(
-      <template><ChatChannelPreviewCard @channel={{this.channel}} /></template>
-    );
-
-    assert
-      .dom(".chat-channel-preview-card__browse-all")
-      .exists("shows a link to browse all channels");
-  });
-
   test("closed channel", async function (assert) {
     this.channel.status = "closed";
     await render(
@@ -92,26 +50,7 @@ module("Component | ChatChannelPreviewCard", function (hooks) {
     );
 
     assert
-      .dom(".chat-channel-preview-card__join-channel-btn")
+      .dom(".toggle-channel-membership-button.-join")
       .doesNotExist("it does not show the join channel button");
-  });
-});
-
-module("Component | ChatChannelPreviewCard | anonymous", function (hooks) {
-  setupRenderingTest(hooks, { anonymous: true });
-
-  hooks.beforeEach(function () {
-    this.channel = new ChatFabricators(getOwner(this)).channel({
-      chatable_type: "Category",
-      meta: { can_join_chat_channel: true },
-    });
-  });
-
-  test("browse all link is hidden", async function (assert) {
-    await render(
-      <template><ChatChannelPreviewCard @channel={{this.channel}} /></template>
-    );
-
-    assert.dom(".chat-channel-preview-card__browse-all").doesNotExist();
   });
 });

@@ -135,13 +135,19 @@ export default class AssignmentCollection extends Component {
         as |collection index item|
       >
         <div class="workflows-property-engine__collection-row">
-          <div class="workflows-property-engine__collection-delete">
-            <DButton
-              @action={{fn this.removeAssignment collection.remove index}}
-              @icon="trash-can"
-              class="btn-transparent btn-small btn-danger"
-            />
-          </div>
+          <DButton
+            @action={{fn this.removeAssignment collection.remove index}}
+            @icon="xmark"
+            class="workflows-property-engine__collection-delete"
+            @translatedAriaLabel={{i18n
+              "discourse_workflows.property_engine.remove_assignment"
+              name=item.name
+            }}
+            @translatedTitle={{i18n
+              "discourse_workflows.property_engine.remove_assignment"
+              name=item.name
+            }}
+          />
 
           <collection.Object
             class="workflows-property-engine__collection-fields"

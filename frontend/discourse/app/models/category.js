@@ -248,7 +248,7 @@ export default class Category extends RestModel {
     if (this.slugEncoded()) {
       parts = parts.map((urlPart) => decodeURI(urlPart));
     }
-    let category = null;
+    let category;
 
     if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
       const id = parseInt(parts.pop(), 10);

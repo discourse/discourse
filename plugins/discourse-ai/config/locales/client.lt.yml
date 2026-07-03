@@ -294,6 +294,11 @@ lt:
         delete: "Pašalinti"
         temperature: "Temperatūra"
         top_p: "Viršutinė P"
+        thinking_effort_options:
+          none: "Nieko"
+          low: "Žemas"
+          medium: "Vidutinis"
+          high: "Aukštas"
         response_format:
           open_modal: "Redaguoti"
           modal:

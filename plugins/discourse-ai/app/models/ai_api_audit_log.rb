@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class AiApiAuditLog < ActiveRecord::Base
-  self.ignored_columns = %w[cached_tokens] # TODO: Remove when 20251118000500_drop_cached_tokens_from_ai_api_audit_logs has been promoted to pre-deploy
+  self.ignored_columns += [
+    "cached_tokens", # TODO: Remove when 20251118000500_drop_cached_tokens_from_ai_api_audit_logs has been promoted to pre-deploy
+  ]
   belongs_to :post
   belongs_to :topic
   belongs_to :user
@@ -22,15 +24,20 @@ class AiApiAuditLog < ActiveRecord::Base
   end
 
   def self.token_and_spending_stats(scope)
-    spending_expr = LlmModel.spending_sql(table_name)
-    request_tokens, response_tokens, cache_read_tokens, cache_write_tokens, spending, model_count =
+    spending_expr = LlmModel.estimated_or_calculated_spending_sql(table_name)
+    request_tokens,
+    response_tokens,
+    cache_read_tokens,
+    cache_write_tokens,
+    spending,
+    spending_count =
       scope.joins("LEFT JOIN llm_models ON llm_models.id = #{table_name}.llm_id").pick(
         Arel.sql("COALESCE(SUM(COALESCE(#{table_name}.request_tokens, 0)), 0)"),
         Arel.sql("COALESCE(SUM(COALESCE(#{table_name}.response_tokens, 0)), 0)"),
         Arel.sql("COALESCE(SUM(COALESCE(#{table_name}.cache_read_tokens, 0)), 0)"),
         Arel.sql("COALESCE(SUM(COALESCE(#{table_name}.cache_write_tokens, 0)), 0)"),
-        Arel.sql("COALESCE(SUM(#{spending_expr}), 0) / 1000000.0"),
-        Arel.sql("COUNT(llm_models.id)"),
+        Arel.sql("SUM(#{spending_expr})"),
+        Arel.sql("COUNT(#{spending_expr})"),
       )
 
     {
@@ -38,7 +45,7 @@ class AiApiAuditLog < ActiveRecord::Base
       response_tokens: response_tokens.to_i,
       cache_read_tokens: cache_read_tokens.to_i,
       cache_write_tokens: cache_write_tokens.to_i,
-      spending: model_count.to_i.positive? ? spending.to_f.round(6) : nil,
+      spending: spending_count.to_i.positive? ? spending.to_f.round(6) : nil,
     }
   end
 
@@ -59,11 +66,13 @@ end
 #  cache_read_tokens    :integer
 #  cache_write_tokens   :integer
 #  duration_msecs       :integer
+#  estimated_cost       :decimal(20, 10)
 #  feature_context      :jsonb
 #  feature_name         :string(255)
 #  language_model       :string(255)
 #  raw_request_payload  :string
 #  raw_response_payload :string
+#  request_attempts     :jsonb
 #  request_tokens       :integer
 #  response_status      :integer
 #  response_tokens      :integer

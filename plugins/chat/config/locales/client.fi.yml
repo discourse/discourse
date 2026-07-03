@@ -241,8 +241,6 @@ fi:
         title: "Työpöytälaitteen chat-ilmoitusääni"
       sounds:
         none: "Ei mitään"
-        bell: "Kello"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Liitä tiedosto"

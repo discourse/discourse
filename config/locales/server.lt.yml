@@ -359,6 +359,13 @@ lt:
       trust_level_2: "pasitikėjimo_lygis_2"
       trust_level_3: "pasitikėjimo_lygis_3"
       trust_level_4: "pasitikėjimo_lygis_4"
+    default_full_names:
+      everyone: "Visi"
+      admins: "Administratoriai"
+      moderators: "Moderatoriai"
+      staff: "Personalas"
+      anonymous_users: "Anoniminiai vartotojai"
+      logged_in_users: "Prisijungę vartotojai"
     request_membership_pm:
       title: "Narystės prašymas @%{group_name}"
     request_accepted_pm:
@@ -924,6 +931,7 @@ lt:
         level: "Patikimumo lygis"
         count: "Nariai"
         share: "Dalintis"
+        signups: "Registracijos"
       levels:
         "0": "Naujas"
         "1": "Pagrindinis"

@@ -618,6 +618,13 @@ es:
       trust_level_2: "nivel_de_confianza_2"
       trust_level_3: "nivel_de_confianza_3"
       trust_level_4: "nivel_de_confianza_4"
+    default_full_names:
+      everyone: "Todos"
+      admins: "Administradores"
+      moderators: "Moderadores"
+      staff: "Personal"
+      anonymous_users: "Usuarios anónimos"
+      logged_in_users: "Usuarios conectados"
     default_descriptions:
       everyone: "Grupo automático que incluye a todos los miembros"
       staff: "Grupo automático que incluye administradores y moderadores"
@@ -1284,6 +1291,7 @@ es:
         level: "Nivel de confianza"
         count: "Miembros"
         share: "Compartir"
+        signups: "Inscripciones"
       levels:
         "0": "Nuevo"
         "1": "Básico"
@@ -2459,11 +2467,10 @@ es:
     reviewable_ui_refresh: "Grupos que pueden usar la nueva interfaz de usuario experimental en la cola de revisión."
     content_localization_use_default_locale_when_unsupported: "Ofrece contenido traducido en la configuración regional por defecto del sitio a los usuarios cuyo idioma preferido no figure en «content localization supported locales»."
     content_localization_allow_author_localization: "Permitir que los autores actualicen la traducción de sus propios temas y publicaciones a través del menú de publicaciones."
-    fake_upcoming_change: "Este es un próximo cambio ficticio que se realizará con fines de prueba. No es necesario traducir esta cadena."
     floating_dismiss_topics_on_mobile: "Muestra un botón flotante «Descartar...» en el móvil para la lista de temas para facilitar el acceso y liberar espacio en la parte superior de la lista de temas"
     enable_simplified_category_creation: "Permite un flujo de creación de categorías simplificado, con menos opciones y una interfaz más limpia."
-    modernize_foundation_theme: "Este cambio introduce modificaciones de diseño en el tema Fundación de Discourse."
     reporting_improvements: "Mejoras en la navegación, el diseño y la usabilidad de los informes de administración de Discourse."
+    modernize_foundation_theme: "Este cambio introduce modificaciones de diseño en el tema Fundación de Discourse."
     errors:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."
       invalid_datetime: "Formato de fecha y hora no válido. Asegúrate de que has introducido una fecha y hora válidas."

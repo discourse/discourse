@@ -408,6 +408,13 @@ ko:
       trust_level_2: "회원등급 2"
       trust_level_3: "회원등급 3"
       trust_level_4: "회원등급 4"
+    default_full_names:
+      everyone: "모두"
+      admins: "관리자"
+      moderators: "관리자"
+      staff: "스태프"
+      anonymous_users: "익명 사용자"
+      logged_in_users: "로그인 한 사용자"
     request_membership_pm:
       title: "@%{group_name}에 멤버십 요청"
     request_accepted_pm:
@@ -930,6 +937,7 @@ ko:
         level: "신뢰 레벨"
         count: "회원"
         share: "공유하기"
+        signups: "가입하기"
       levels:
         "0": "신규"
         "1": "초보회원"

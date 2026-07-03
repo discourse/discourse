@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .uc-modernize-foundation-theme {
   --d-button-default-bg-color: var(--secondary);
   --d-button-default-border: 1px solid var(--primary-300);
@@ -26,6 +28,7 @@
       .topic-map__likes-trigger,
       .topic-map__users-trigger,
       .topic-map__links-trigger,
+      .user,
       .notifications-tracking-btn,
       .user-menu-tab,
       .--with-description,
@@ -61,28 +64,6 @@
     ) {
       width: var(--d-control-height);
     }
-  }
-
-  .login-fullpage .input-group label.alt-placeholder,
-  .login-fullpage .input-group .user-field.text label.control-label,
-  .login-fullpage .input-group .user-field.dropdown label.control-label,
-  .login-fullpage .input-group .user-field.multiselect label.control-label,
-  .signup-fullpage .input-group label.alt-placeholder,
-  .signup-fullpage .input-group .user-field.text label.control-label,
-  .signup-fullpage .input-group .user-field.dropdown label.control-label,
-  .signup-fullpage .input-group .user-field.multiselect label.control-label,
-  .invites-show .input-group label.alt-placeholder,
-  .invites-show .input-group .user-field.text label.control-label,
-  .invites-show .input-group .user-field.dropdown label.control-label,
-  .invites-show .input-group .user-field.multiselect label.control-label,
-  .password-reset-page .input-group label.alt-placeholder,
-  .password-reset-page .input-group .user-field.text label.control-label,
-  .password-reset-page .input-group .user-field.dropdown label.control-label,
-  .password-reset-page
-    .input-group
-    .user-field.multiselect
-    label.control-label {
-    top: 8px;
   }
 
   .form-kit__control-password-wrapper {
@@ -161,6 +142,70 @@
     &:hover {
       border-bottom: none;
       border-right: none;
+    }
+  }
+
+  .login-fullpage,
+  .signup-fullpage,
+  .invites-show,
+  .password-reset-page {
+    .input-group {
+      label.alt-placeholder,
+      .user-field.text label.control-label {
+        top: 8px;
+      }
+
+      .user-field.dropdown label.control-label,
+      .user-field.multiselect label.control-label,
+      .user-field.date label.control-label {
+        top: -8px;
+      }
+    }
+  }
+
+  .invite-page,
+  .signup-fullpage {
+    .user-fields .input-group {
+      .user-field.text,
+      .user-field.textarea {
+        &:not(.value-entered, :focus-within)
+          label.alt-placeholder.control-label {
+          top: 8px;
+        }
+      }
+    }
+  }
+
+  @include viewport.until(md) {
+    .login-form,
+    #login-form,
+    .invite-form {
+      .input-group {
+        input {
+          height: var(--d-control-height);
+        }
+
+        label.alt-placeholder,
+        .user-field.text label.control-label,
+        .user-field.textarea label.control-label {
+          top: 7px;
+        }
+
+        input:focus + label,
+        input.value-entered + label.alt-placeholder,
+        div.user-field:not(.dropdown)
+          .controls
+          input:focus
+          + label.alt-placeholder.control-label,
+        div.user-field.value-entered:not(.dropdown)
+          .controls
+          label.alt-placeholder.control-label,
+        .user-field.dropdown label.control-label,
+        .user-field.multiselect label.control-label,
+        .user-field.date label.control-label {
+          top: -9px;
+        }
+      }
     }
   }
 }

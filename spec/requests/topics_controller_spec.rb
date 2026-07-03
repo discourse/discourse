@@ -6872,6 +6872,16 @@ RSpec.describe TopicsController do
         end
       end
 
+      it "does not disclose an existing user from an email invite" do
+        pm = Fabricate(:private_message_topic, user: user)
+
+        post "/t/#{pm.id}/invite.json", params: { email: user_2.email }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["failed"]).to eq("FAILED")
+        expect(pm.reload.topic_allowed_users.pluck(:user_id)).not_to include(user_2.id)
+      end
+
       context "when user does not have permission to invite to the topic" do
         fab!(:topic) { pm }
 
@@ -7083,6 +7093,19 @@ RSpec.describe TopicsController do
         expect(body).to have_tag(:script, with: { "data-discourse-entrypoint" => "discourse" })
         expect(body).to have_tag(:meta, with: { name: "fragment" })
       end
+
+      it "renders the excerpt in the meta description decoded exactly once and tag-free" do
+        topic.update!(
+          excerpt:
+            %(Tom &amp; Jerry&#39;s <span class="hashtag-icon-placeholder"></span>tale&hellip; "><script>alert(1)</script>),
+        )
+
+        get topic.relative_url
+
+        expect(response.body).not_to include("<script>alert(1)</script>")
+        meta = Nokogiri::HTML5.parse(response.body).at("meta[name='description']")
+        expect(meta["content"]).to eq(%(Tom & Jerry's tale… ">alert(1)))
+      end
     end
 
     context "when a crawler" do
@@ -7159,6 +7182,16 @@ RSpec.describe TopicsController do
 
         expect(response.headers["Last-Modified"]).to eq(page3_time.httpdate)
         expect(body).to include('<link rel="prev" href="' + topic.relative_url + "?page=2")
+      end
+
+      it "escapes the excerpt exactly once in the schema.org text meta" do
+        topic.update!(excerpt: %(Tom &amp; Jerry&hellip; "><script>alert(1)</script>))
+
+        get topic.relative_url + "?page=2", env: { "HTTP_USER_AGENT" => bot_user_agent }
+
+        expect(response.body).not_to include("<script>alert(1)</script>")
+        meta = Nokogiri::HTML5.parse(response.body).at("meta[itemprop='text']")
+        expect(meta["content"]).to eq(%(Tom & Jerry… ">alert(1)))
       end
 
       it "only renders one post for non-canonical post-specific URLs" do

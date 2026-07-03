@@ -60,7 +60,7 @@ Create an account on [GitHub.com](https://github.com) and then create a new repo
 
 ### (Optional) create a topic on Discourse as a home to discuss your colors
 
-Ideally you would create a topic in the #plugin:theme category with some screenshots of your color scheme. You will use this as your `about_url`
+Ideally you would create a topic in the #customization:theme category with some screenshots of your color scheme. You will use this as your `about_url`
 
 ### Fill in the missing information in your about.json file
 

@@ -526,6 +526,27 @@ RSpec.describe GroupsController do
       )
     end
 
+    it "renders a single-escaped, tag-free meta description from the bio" do
+      group.update!(bio_raw: "Tom & Jerry [blog](https://evil.example) win")
+
+      get "/groups/#{group.name}.html"
+
+      expect(response.body).to have_tag(
+        :meta,
+        with: {
+          name: "description",
+          content: "Tom & Jerry blog win",
+        },
+      )
+      expect(response.body).to have_tag(
+        :meta,
+        with: {
+          property: "og:description",
+          content: "Tom & Jerry blog win",
+        },
+      )
+    end
+
     describe "when accessing by name" do
       include_examples "group show behavior", "/groups", :name
 
@@ -846,6 +867,31 @@ RSpec.describe GroupsController do
       get "/groups/#{group.name}/members.json", params: { limit: 1 }
 
       expect(response.status).to eq(403)
+    end
+
+    it "hides activity timestamps for hidden profiles" do
+      SiteSetting.allow_users_to_hide_profile = true
+
+      hidden_user = Fabricate(:user, last_seen_at: 1.hour.ago, last_posted_at: 2.hours.ago)
+      hidden_user.user_option.update!(hide_profile: true)
+      visible_user = Fabricate(:user, last_seen_at: 3.hours.ago, last_posted_at: 4.hours.ago)
+      viewer = Fabricate(:user, trust_level: TrustLevel[2])
+      group.add(hidden_user)
+      group.add(visible_user)
+
+      sign_in(viewer)
+      get "/groups/#{group.name}/members.json"
+
+      expect(response.status).to eq(200)
+
+      members = response.parsed_body["members"]
+      hidden_member = members.find { |member| member["id"] == hidden_user.id }
+      visible_member = members.find { |member| member["id"] == visible_user.id }
+
+      expect(hidden_member).to be_present
+      expect(visible_member).to be_present
+      expect(hidden_member).not_to include("last_seen_at", "last_posted_at")
+      expect(visible_member).to include("last_seen_at", "last_posted_at")
     end
 
     it "ensures that membership can be paginated" do

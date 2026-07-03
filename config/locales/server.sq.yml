@@ -195,6 +195,11 @@ sq:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Të gjithë"
+      admins: "Administratorët"
+      moderators: "Moderatorë"
+      staff: "Stafi"
   education:
     until_posts:
       one: "%{count} postim"
@@ -475,6 +480,7 @@ sq:
       labels:
         count: "Anëtarë"
         share: "Shpërndaje"
+        signups: "Regjistrimet"
       levels:
         "0": "I Ri"
         "1": "Anëtar i Thjeshtë"

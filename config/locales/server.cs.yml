@@ -704,6 +704,13 @@ cs:
       trust_level_2: "uroven_duvery_2"
       trust_level_3: "uroven_duvery_3"
       trust_level_4: "uroven_duvery_4"
+    default_full_names:
+      everyone: "Všichni"
+      admins: "Administrátoři"
+      moderators: "Moderátoři"
+      staff: "Redakce"
+      anonymous_users: "Anonymní uživatelé"
+      logged_in_users: "Přihlášení uživatelé"
     default_descriptions:
       everyone: "Automatická skupina zahrnující všechny členy"
       staff: "Automatická skupina včetně administrátorů a moderátorů"
@@ -1415,6 +1422,7 @@ cs:
         level: "Úroveň důvěry"
         count: "Členové"
         share: "Sdílet"
+        signups: "Registrace"
       levels:
         "0": "Nový"
         "1": "Základní"

@@ -41,7 +41,6 @@ RSpec.describe "Anonymous public chat channels" do
     expect(channel_page).to have_no_composer
     expect(channel_page).to have_no_search_button
     expect(channel_page).to have_no_star_button
-    expect(channel_page).to have_no_browse_all_link
 
     channel_page.join_channel
 

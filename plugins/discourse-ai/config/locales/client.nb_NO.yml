@@ -96,6 +96,12 @@ nb_NO:
         save: "Lagre"
         enabled: "Aktivert?"
         delete: "Slett"
+        thinking_effort_options:
+          none: "Ingen"
+          low: "Lav"
+          medium: "Middels"
+          high: "Høy"
+          max: "Maksimum"
         response_format:
           open_modal: "Rediger"
         filters:

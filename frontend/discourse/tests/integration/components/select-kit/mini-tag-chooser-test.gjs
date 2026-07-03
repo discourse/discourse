@@ -1,9 +1,8 @@
 import { hash } from "@ember/helper";
-import { click, render, triggerKeyEvent } from "@ember/test-helpers";
+import { click, findAll, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
@@ -44,12 +43,12 @@ module(
       await this.subject.expand();
       await this.subject.fillInFilter("mon");
       assert.deepEqual(
-        [...queryAll(".select-kit-row")].map((el) => el.textContent.trim()),
+        findAll(".select-kit-row").map((el) => el.textContent.trim()),
         ["monkey x1", "gazelle x2", "dog x3", "cat x4"]
       );
       await this.subject.fillInFilter("key");
       assert.deepEqual(
-        [...queryAll(".select-kit-row")].map((el) => el.textContent.trim()),
+        findAll(".select-kit-row").map((el) => el.textContent.trim()),
         ["monkey x1", "gazelle x2", "dog x3", "cat x4"]
       );
       await this.subject.selectRowByName("monkey");
@@ -192,7 +191,7 @@ module(
 
       await this.subject.expand();
       assert.deepEqual(
-        [...queryAll(".selected-content .selected-choice")].map((el) =>
+        findAll(".selected-content .selected-choice").map((el) =>
           el.textContent.trim()
         ),
         ["bar"]

@@ -154,7 +154,8 @@ Migrations::Tooling::Schema.ignored do
          :browser_pageview_country_daily_rollups,
          :browser_pageview_referrer_daily_rollups
 
-  tables :admin_notices,
+  tables :access_control_lists,
+         :admin_notices,
          :api_key_scopes,
          :api_keys,
          :application_requests,
@@ -167,6 +168,7 @@ Migrations::Tooling::Schema.ignored do
          :bookmarks,
          :browser_pageview_event_scores,
          :browser_pageview_events,
+         :browser_pageview_session_engagements,
          :custom_emojis,
          :developers,
          :directory_columns,
@@ -208,6 +210,7 @@ Migrations::Tooling::Schema.ignored do
          :sidebar_sections,
          :sidebar_urls,
          :site_setting_groups,
+         :site_setting_localizations,
          :sitemaps,
          :skipped_email_logs,
          :stylesheet_cache,

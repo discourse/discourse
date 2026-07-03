@@ -248,7 +248,7 @@ class Category < ActiveRecord::Base
                 :subcategory_count
 
   # Allows us to skip creating the category definition topic in tests.
-  attr_accessor :skip_category_definition
+  attr_accessor :skip_category_definition, :skip_publish
 
   enum :style_type, { square: 0, icon: 1, emoji: 2 }
 
@@ -605,9 +605,17 @@ class Category < ActiveRecord::Base
 
     @@cache_text ||= LruRedux::ThreadSafeCache.new(1000)
     @@cache_text.getset(description) do
-      text = Nokogiri::HTML5.fragment(description).text.strip
-      ERB::Util.html_escape(text).html_safe
+      ERB::Util.html_escape(plain_text_description.to_s).html_safe
     end
+  end
+
+  def plain_text_description
+    return nil unless description
+
+    @@cache_plain_text ||= LruRedux::ThreadSafeCache.new(1000)
+    @@cache_plain_text
+      .getset(description) { Nokogiri::HTML5.fragment(description).text.strip }
+      .presence
   end
 
   def description_excerpt
@@ -665,6 +673,8 @@ class Category < ActiveRecord::Base
   end
 
   def publish_category
+    return if skip_publish
+
     if read_restricted
       group_ids = groups.pluck(:id)
 

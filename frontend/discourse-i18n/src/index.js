@@ -306,19 +306,23 @@ export class I18n {
     let translation = this.findTranslation(scope, options);
 
     if (!this.noFallbacks) {
-      if (!translation && this.fallbackLocale) {
+      // An empty string is a valid translation, so only fall back when the
+      // translation is genuinely missing (`null`/`undefined`). Using a falsy
+      // check here would treat an intentionally-blank value as missing and
+      // surface the raw key when no fallback locale provides the value.
+      if (translation == null && this.fallbackLocale) {
         options.locale = this.fallbackLocale;
         translation = this.findTranslation(scope, options);
       }
 
       options.ignoreMissing = false;
 
-      if (!translation && this.currentLocale() !== this.defaultLocale) {
+      if (translation == null && this.currentLocale() !== this.defaultLocale) {
         options.locale = this.defaultLocale;
         translation = this.findTranslation(scope, options);
       }
 
-      if (!translation && this.currentLocale() !== "en") {
+      if (translation == null && this.currentLocale() !== "en") {
         options.locale = "en";
         translation = this.findTranslation(scope, options);
       }

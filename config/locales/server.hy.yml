@@ -317,6 +317,12 @@ hy:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Բոլորը"
+      moderators: "Մոդերատորներ"
+      staff: "Անձնակազմ"
+      anonymous_users: "Անանուն օգտատերեր"
+      logged_in_users: "Մուտքագրված օգտատերեր"
     request_membership_pm:
       title: "@%{group_name}-ի անդամակցության հարցում"
   education:
@@ -779,6 +785,7 @@ hy:
       labels:
         count: "Անդամներ"
         share: "Կիսվել"
+        signups: "Գրանցումներ"
       levels:
         "0": "Նոր"
         "1": "Հիմնական"

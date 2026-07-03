@@ -131,6 +131,7 @@ Discourse::Application.routes.draw do
           delete "delete-others-with-same-ip" => "users#delete_other_accounts_with_same_ip"
           get "total-others-with-same-ip" => "users#total_other_accounts_with_same_ip"
           put "approve-bulk" => "users#approve_bulk"
+          put "suspend-bulk" => "users#suspend_bulk"
           delete "destroy-bulk" => "users#destroy_bulk"
         end
         delete "penalty_history", constraints: AdminConstraint.new
@@ -450,6 +451,7 @@ Discourse::Application.routes.draw do
         get "trust-levels" => "site_settings#index"
         get "group-permissions" => "site_settings#index"
         get "/logo" => "logo#index"
+        get "/logo/og-image-preview" => "logo#og_image_preview"
         get "/fonts" => "fonts#index"
         get "/welcome-banner/themes-with-setting" => "welcome_banner#themes_with_setting"
         get "/welcome-banner" => "welcome_banner#index"
@@ -471,7 +473,11 @@ Discourse::Application.routes.draw do
         end
 
         resources :about, constraints: AdminConstraint.new, only: %i[index] do
-          collection { put "/" => "about#update" }
+          collection do
+            put "/" => "about#update"
+            get "localizations" => "about#localizations"
+            put "localizations" => "about#update_localizations"
+          end
         end
 
         resources :customize,

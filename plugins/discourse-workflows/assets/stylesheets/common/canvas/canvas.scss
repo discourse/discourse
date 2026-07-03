@@ -97,15 +97,28 @@
   &__rete-container {
     width: 100%;
     height: 100%;
-    cursor: grab;
+    cursor: default;
 
-    &:active {
+    &.is-selecting {
+      cursor: crosshair;
+    }
+
+    &.is-dragging {
       cursor: grabbing;
     }
 
     * {
       transition: none !important;
     }
+  }
+
+  &__selection-box {
+    position: absolute;
+    z-index: calc(var(--z-canvas-elements) + 3);
+    pointer-events: none;
+    border: 1px solid var(--tertiary);
+    background: rgb(var(--tertiary-rgb), 0.14);
+    border-radius: 2px;
   }
 
   &__controls {
@@ -333,7 +346,10 @@
 
   &.is-selected &__icon-block {
     border-color: var(--tertiary);
-    box-shadow: 0 0 0 1px var(--tertiary);
+    background: color-mix(in srgb, var(--tertiary) 12%, var(--secondary));
+    box-shadow:
+      0 0 0 2px var(--secondary),
+      0 0 0 5px var(--tertiary);
   }
 
   @media (prefers-reduced-motion: no-preference) {

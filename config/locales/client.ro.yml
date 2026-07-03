@@ -20,6 +20,10 @@ ro:
         status: "Stare"
         hidden: "ascuns"
         failed: "eșuată"
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Elimină"
     number:
       format:
         separator: "."
@@ -407,6 +411,9 @@ ro:
     age: "Vârsta"
     joined: "Înregistrat"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Mod avansat"
+      simple_mode: "Mod simplu"
     show_more: "arată mai mult"
     show_help: "Opțiuni"
     links: "Legături"
@@ -4001,6 +4008,9 @@ ro:
             email: "E-mail"
             manifest_icon:
               help_text: "Dimensiunea recomandată este de 512 x 512 pixeli."
+            og_image_preview:
+              generate: "Generare"
+              topic_id_label: "ID subiect"
         fonts:
           title: "Fonturi"
           header_description: "Configurează fonturile utilizate pe întregul tău site, inclusiv fontul de bază, fontul pentru titlu și dimensiunea implicită a textului"
@@ -4228,7 +4238,7 @@ ro:
         no_check_performed: "Nu s-au căutat actualizări. Verifică dacă sidekiq este pornit."
         stale_data: "Nu s-au căutat actualizări în ultimul timp. Verifică dacă că sidekiq este pornit."
         installed_version: "Instalată"
-        latest_version: "Ultima"
+        github: "GitHub"
         dismiss_notice: "Ignoră"
         new_features:
           title: "Ce este nou?"
@@ -5245,6 +5255,12 @@ ro:
         show_emails: "Arată emailuri"
         hide_emails: "Ascunde emailuri"
         bulk_actions:
+          select_all: "Selectează tot"
+          clear_all: "Șterge tot"
+          suspend:
+            confirmation_modal:
+              close: "Închide"
+              confirm: "Suspendă"
           delete:
             confirmation_modal:
               close: "Închide sondajul"
@@ -5256,6 +5272,8 @@ ro:
           staff: "Membrii echipei"
           suspended: "Suspendați"
           staged: "Pus în scenă"
+        activation_filter:
+          all: "Toți utilizatorii"
         approved: "Aprobați?"
         titles:
           active: "Utilizatori activi"

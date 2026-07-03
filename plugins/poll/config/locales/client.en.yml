@@ -4,9 +4,15 @@ en:
       site_settings:
         categories:
           poll: "Discourse Poll"
+      logs:
+        staff_actions:
+          actions:
+            poll_closed: "Poll closed"
+            poll_opened: "Poll opened"
   js:
     poll:
       title: "Poll"
+      closed_by: "Closed by %{username}"
       dynamic:
         enabled_hint: "Options can be added or removed."
       voters:

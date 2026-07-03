@@ -141,6 +141,8 @@ class DiscoursePluginRegistry
 
   define_filtered_register :custom_filter_mappings
 
+  define_filtered_register :acl_target_classes
+
   define_filtered_register :reviewable_types do |singleton|
     singleton.define_singleton_method("reviewable_types_lookup") do
       public_send(:_raw_reviewable_types)

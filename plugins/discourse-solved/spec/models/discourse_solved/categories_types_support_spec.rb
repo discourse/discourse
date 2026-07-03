@@ -157,6 +157,28 @@ RSpec.describe DiscourseSolved::Categories::Types::Support do
         )
       end
     end
+
+    context "when the Horizon theme is the site's default theme" do
+      before { SiteSetting.default_theme_id = Theme.horizon_theme.id }
+
+      it "omits the empty box on unsolved toggle from the category custom fields" do
+        keys = described_class.configuration_schema[:category_custom_fields].keys
+        expect(keys).not_to include(DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD)
+      end
+
+      it "still passes schema validation" do
+        expect { described_class.validate_schema! }.not_to raise_error
+      end
+    end
+
+    context "when the Horizon theme is not the site's default theme" do
+      before { SiteSetting.default_theme_id = Theme.foundation_theme.id }
+
+      it "declares the empty box on unsolved toggle as a category custom field" do
+        keys = described_class.configuration_schema[:category_custom_fields].keys
+        expect(keys).to include(DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD)
+      end
+    end
   end
 
   describe ".unconfigure_category" do

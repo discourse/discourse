@@ -608,6 +608,13 @@ fi:
       trust_level_2: "luottamustaso_2"
       trust_level_3: "luottamustaso_3"
       trust_level_4: "luottamustaso_4"
+    default_full_names:
+      everyone: "Kaikki"
+      admins: "Ylläpitäjät"
+      moderators: "Valvojat"
+      staff: "Henkilökunta"
+      anonymous_users: "Anonyymit käyttäjät"
+      logged_in_users: "Kirjautuneet käyttäjät"
     default_descriptions:
       everyone: "Automaattinen ryhmä, joka sisältää kaikki jäsenet"
       staff: "Automaattinen ryhmä, joka sisältää ylläpitäjät ja valvojat"
@@ -1251,6 +1258,7 @@ fi:
         level: "Luottamustaso"
         count: "Jäsenet"
         share: "Jaa"
+        signups: "Rekisteröitymiset"
       levels:
         "0": "Uudet"
         "1": "Haastaja"

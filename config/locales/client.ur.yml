@@ -32,6 +32,10 @@ ur:
         no_visible_children_hint: "یہ کنٹینر بلاک ظاہر نہیں کیا گیا کیونکہ اس کے ذیلی حصے دکھائی نہیں دے رہے۔"
         condition_failed_hint: "یہ بلاک ظاہر نہیں کیا گیا کیونکہ اس کی شرائط پوری نہیں ہوئیں۔"
         head_hidden_tail_hint: "یہ بلاک ظاہرنہیں کیا گیا کیونکہ `head` کنٹینر میں پہلے دوسرا بلاک ظاہر کیا گیا تھا۔"
+    access_control:
+      manage:
+        access_permission_editor: "ترمیم کنندہ"
+        access_permission_remove: "خارج کریں"
     carousel:
       go_to_slide: "سلائیڈ %{index}پر جائیں"
       previous: "گزشتہ سلائیڈ"
@@ -439,6 +443,9 @@ ur:
     age: "عمر "
     joined: "شمولیت اختیار کر لی"
     admin_title: "منتظم"
+    advanced_mode_toggle:
+      advanced_mode: "اَیڈوانس مَوڈ"
+      simple_mode: "سادہ مَوڈ"
     show_more: "مزید دکھائیں"
     show_help: "اختیارات"
     links: "رابطے"
@@ -3813,39 +3820,6 @@ ur:
       read_more: "مزید پڑھنا چاہتے ہیں؟ <a href='%{categoryLink}'>تمام زمروں کو براؤز کریں</a> یا <a href='%{latestLink}'>تازہ ترین موضوعات دیکھیں</a>۔"
       unread_indicator: "کسی رکن نے ابھی تک اِس موضوع کا آخری دھاگہ نہیں پڑھا۔"
       participant_groups: "شرکاء گروپس"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {وہاں <a href="{basePath}/unread"># غیر پڑھا</a>}
-              other {وہاں <a href="{basePath}/unread"># غیر پڑھے</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { اور <a href="{basePath}/new"># نیا</a> موضوع باقی ہے،}
-              other { اور <a href="{basePath}/new"># نئے</a> موضوعات باقی ہیں،}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {وہاں <a href="{basePath}/unread"># غیر پڑھا</a> موضوع باقی ہے،}
-              other {وہاں <a href="{basePath}/unread"># بغیر پڑھے</a> موضوعات باقی ہیں،}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {وہاں <a href="{basePath}/new"># نیا</a> موضوع باقی ہے،}
-              other {وہاں <a href="{basePath}/new"># نئے</a> موضوعات باقی ہیں،}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { یا دیگر موضوعات {categoryLink} میں براؤز کریں}
-          false { یا <a href="{basePath}/latest">تازہ ترین موضوعات دیکھیں</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} جواب، پہلے دھاگہ پر جائیں"
         other: "%{count} جوابات،، پہلے دھاگہ پر جائیں"
@@ -5857,6 +5831,9 @@ ur:
             opengraph_image:
               title: "اوپن گراف تصویر"
               description: "پہلے سے طے شدہ اوپن گراف تصویر، اس وقت استعمال کی جاتی ہے جب صفحہ پر کوئی دوسری موزوں تصویر نہ ہو۔ اگر خالی چھوڑ دیا جائے تو large_icon استعمال کیا جائے گا۔"
+            og_image_preview:
+              generate: "تخلیق کریں"
+              topic_id_label: "ٹاپک ID"
             x_summary_large_image:
               title: "X خلاصہ بڑی تصویر"
               description: "X کارڈ 'خلاصہ بڑی تصویر'۔ اگر خالی چھوڑ دیا جائے تو، باقاعدہ کارڈ میٹا ڈیٹا OpenGraph_image کا استعمال کرتے ہوئے تیار کیا جاتا ہے، یہاں تک کہ یہ .svg بھی نہ ہو۔"
@@ -6141,7 +6118,7 @@ ur:
         stale_data: "اَپ ڈیٹس کے لئے حال ہی میں چیک نہیں کیا گیا۔ اِس بات کو یقینی بنائیں کہ sidekiq چل رہا ہے۔"
         version_check_pending: "ایسا لگتا ہے کہ آپ نے حال ہی میں اپ ڈیٹ کیا ہے۔ لاجواب!"
         installed_version: "انسٹال کیا ہوا"
-        latest_version: "تازہ ترین"
+        github: "گٹ ہب"
         problems_found: "آپ کی موجودہ سائٹ ترتیبات کے مطابق کچھ مشورے"
         dismiss_notice: "نظر انداز کریں"
         new_features:
@@ -6188,6 +6165,7 @@ ur:
         not_found_error: معذرت، یہ رپورٹ موجود نہیں
         custom_date_range: حسبِ ضرورت تاریخ کی حد
         loading: "ڈیش بورڈ کو ترتیب دیا جا رہا ہے…"
+        stable: "مستحکم"
         sections:
           highlights:
             title: "نمایاں نکات"
@@ -6228,12 +6206,6 @@ ur:
                 dropping:
                   one: "-%{count} گرا"
                   other: "-%{count} گرا"
-              moves_in_aria:
-                one: "%{count} رکن آگے بڑھا"
-                other: "%{count} ارکان آگے بڑھے"
-              moves_out_aria:
-                one: "%{count} رکن نیچے گئے"
-                other: "%{count} ارکان نیچے گئے"
               stable_aria: "کوئی حرکت نہیں"
             headline:
               engaged_but_shrinking:
@@ -6243,6 +6215,7 @@ ur:
                 title: "نئے ارکان شامل ہو رہے ہیں، لیکن وہ ٹھہر نہیں رہے۔"
               metrics:
                 new_signups: "نئے جڑنے والے"
+                daily_engaged_users: "روزانہ کی شراکت"
           search:
             title: "تلاش کریں"
             count_headline:
@@ -6849,6 +6822,8 @@ ur:
             order: "ترتیب لگائیں"
             initial_members: "مزید اراکین"
             show_description: "بشمول تفصیل"
+          locale_selector:
+            title: "زبان"
           optional: "(اختیاری)"
           update: "اپ ڈیٹ"
           toasts:
@@ -7687,8 +7662,12 @@ ur:
         status: "حیثیت"
         show_emails: "ای میلیں دکھائیں"
         bulk_actions:
-          admin_cant_be_deleted: "اس صارف کو حذف نہیں کیا جا سکتا کیونکہ وہ ایک منتظم ہیں۔"
-          too_many_or_old_posts: "اس صارف کو حذف نہیں کیا جا سکتا کیونکہ اس کے بہت زیادہ دھاگے ہیں یا اس کی ایک بہت پرانا دھاگہ ہے۔"
+          select_all: "سبھی منتخب کریں"
+          clear_all: "سبھی ہٹا دیں"
+          suspend:
+            confirmation_modal:
+              close: "بند کریں"
+              confirm: "معطل کریں"
           delete:
             label: "حذف اراکین…"
             confirmation_modal:
@@ -7701,6 +7680,9 @@ ur:
           suspended: "معطل کردہ"
           silenced: "خاموش"
           staged: "عارضی"
+        activation_filter:
+          all: "تمام اراکین"
+          activated: "فعال"
         approved: "منظورشدہ؟"
         titles:
           active: "فعال اراکین"

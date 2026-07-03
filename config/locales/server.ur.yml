@@ -464,6 +464,13 @@ ur:
       trust_level_2: "فعالیت_کا_درجہ_2"
       trust_level_3: "فعالیت_کا_درجہ_3"
       trust_level_4: "فعالیت_کا_درجہ_4"
+    default_full_names:
+      everyone: "ہر ایک"
+      admins: "منتظمین"
+      moderators: "نگران"
+      staff: "عملہ"
+      anonymous_users: "گمنام صارفین"
+      logged_in_users: "لاگڈ اِن صارفین"
     default_descriptions:
       staff: "منتظمین اور نگرانوں پر مشتمل خودکار گروپ"
       admins: "تمام اراکین اور سرگرمی کے ڈیٹا تک رسائی کے ساتھ اس سائٹ کی تنظیم اور برقرار رکھنے کے لیے ذمہ دار"
@@ -1045,14 +1052,12 @@ ur:
         staff: "عملہ"
     trust_level_pipeline:
       title: "فعالیت کے درجات کا کھاتہ"
-      description: "منتخب مدت میں اراکین کی مختلف فعالیت کے درجوں کے درمیان نقل و حرکت۔ یہ ہر فعالیت کے درجہ پر موجود اراکین کی تعداد، کل رکنیت میں ان کا حصہ، اور اس مدت کے دوران ہر فعالیت کے درجہ میں شامل یا خارج ہونے والے اراکین کی تعداد کو شمار کرتا ہے۔"
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
         level: "فعالیت کا درجہ"
         count: "ممبران"
         share: "اشتراک"
-        moves_in: "شامل ہوئے"
-        moves_out: "نکلے"
+        signups: "سائن اپس"
       levels:
         "0": "نوارد"
         "1": "آشنا"

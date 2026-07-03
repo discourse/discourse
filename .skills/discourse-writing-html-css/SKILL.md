@@ -1,6 +1,6 @@
 ---
 name: discourse-writing-html-css
-description: Write HTML and CSS/SCSS for Discourse core, plugins, themes, and theme components. Use when authoring or modifying templates (.gjs/.hbs), stylesheets (.scss), component markup, or class names. Covers Discourse's BEM-with-standalone-modifiers naming, the CSS custom-property color palette (theming + dark mode), template/HTML conventions, and where stylesheets live.
+description: Write and repair HTML/CSS/SCSS for Discourse core, plugins, themes, and theme components. Use when authoring or modifying templates (.gjs/.hbs), stylesheets (.scss), component markup, class names, responsive layout, FormKit/select-kit styling, or CSS regressions. Covers Discourse's BEM-with-standalone-modifiers naming, the CSS custom-property color palette (theming + dark mode), template/HTML conventions, CSS repair patterns, and where stylesheets live.
 ---
 
 # Writing HTML & CSS for Discourse
@@ -32,7 +32,10 @@ and its `.scss`.
 - [references/layout-and-responsive.md](references/layout-and-responsive.md) — intrinsic layout
   and the `lib/viewport` breakpoint API.
 - [references/css-authoring.md](references/css-authoring.md) — native-CSS-vs-SASS swaps, local
-  custom properties (incl. theme interaction), shared mixins.
+  custom properties (incl. theme interaction), shared mixins, file organization, and buttons.
+- [references/css-repair.md](references/css-repair.md) — repairing existing CSS: stale selector
+  deletion, selector scoping, overflow fixes, FormKit/token migration, mobile/desktop cleanup,
+  and regression verification.
 - [references/accessibility.md](references/accessibility.md) — screen-reader-only text, live-region
   announcements, contrast & forced-colors detail (the short a11y rules stay inline below).
 
@@ -223,6 +226,92 @@ Full swap list + rule-of-thumb: [references/css-authoring.md](references/css-aut
   for truncation, `d-animation` (bakes in reduced-motion), `unselectable`. Details and the
   legacy ones to skip: [references/css-authoring.md](references/css-authoring.md).
 
+## Repairing existing CSS
+
+When modifying existing Discourse CSS, prefer **removing or narrowing** over adding another
+override. Most CSS regressions come from stale selectors, broad shared rules, old mobile/desktop
+splits, or component architecture changing underneath a stylesheet.
+
+Before writing new CSS, check where the selector is used and whether it is still rendered:
+
+```sh
+rg "<class-or-selector>" app/assets/stylesheets plugins themes
+git log --oneline --since='2026-01-01' -- '*.scss' '*.css' --grep='fix|scope|selector|overflow|mobile|formkit|token|foundation|remove'
+git show --stat --patch <suspect-commit> -- '*.scss' '*.css'
+```
+
+### Preferred repair moves
+
+- **Scope broad selectors down.** Do not fix leakage by adding `!important` or deeper descendant
+  chains. If `.name`, `.num`, `.btn`, `.d-icon`, `.select-kit`, `td`, or `th` leaks, target the
+  real component/state: `.selected-name .name`, `.topic-list-data.num`,
+  `.sidebar-filter__clear`.
+
+- **Delete stale CSS and imports.** If a component/class was removed or replaced, remove its
+  stylesheet/imports rather than keeping compatibility ghosts. Check with `rg` before assuming a
+  selector still matters.
+
+- **Move device-specific rules into `common/` with viewport mixins.** New and repaired styles
+  should live in one responsive stylesheet using `@include viewport.from(...)` /
+  `@include viewport.until(...)`, not split `desktop/` and `mobile/` copies.
+
+- **Fix overflow with containment primitives.** Try `min-width: 0`, `minmax(0, 1fr)`,
+  `max-width: 100%`, `max-height: 100%`, `overflow: hidden`, `flex-wrap: wrap`,
+  `table-layout: fixed`, and `@include ellipsis` before adding magic widths.
+
+- **Put scroll on the owning container, not `html`/`body`.** Especially on iOS, body scrolling
+  fixes usually create flicker or broken fixed layouts. Identify the route/modal/panel that
+  should scroll and give that container the height/overflow.
+
+- **Use FormKit/select-kit APIs and tokens instead of global internal overrides.** Prefer
+  FormKit field/container modifiers and `--form-kit-*` variables. Avoid broad rules like
+  `.form-kit__container-content { width: 100%; }` outside FormKit itself.
+
+- **Avoid global DOM inference.** Be suspicious of `body:has(...)`, `html { overflow-y: scroll; }`,
+  `li:last-child` for dynamic lists, and component-only variables placed in `:root`. If the app
+  knows the state, render a class/state/modifier.
+
+- **Audit shared foundation changes.** Changes to `.btn`, `.select-kit`, `.d-icon`,
+  `.topic-list-data`, category/tag badges, inputs, or foundation variables affect plugins and
+  themes. Check chat, reactions, solved, topic voting, Data Explorer, admin, Horizon, mobile,
+  and RTL where relevant.
+
+### Red flags
+
+Stop and re-check if your patch adds:
+
+```scss
+!important
+body:has(...)
+html { overflow-y: scroll; }
+:root { --one-component-var: ... }
+width: 340px;
+min-width: 300px;
+left: ...; right: ...; // without RTL thought
+li:last-child
+.name { ... }
+.num { ... }
+.btn { ... }
+```
+
+These are not banned, but they are radioactive enough to need a clear reason.
+
+### Verification for CSS repair PRs
+
+Check the affected surface in:
+
+- desktop and mobile viewports
+- light and dark palettes
+- Horizon if header/sidebar/foundation/theme variables are touched
+- RTL if physical positioning, icons, scroll fades, or nav is touched
+- iOS Safari / iOS-like behavior for scroll/chat/composer fixes
+- FormKit/select-kit contexts when forms or choosers are touched
+- plugin surfaces sharing common foundation classes
+- stale imports after deleting CSS
+
+For visual UX changes, include before/after screenshots. Deep-dive repair patterns and examples:
+[references/css-repair.md](references/css-repair.md).
+
 ## HTML / template conventions
 
 Discourse templates are **`.gjs`** (Glimmer components with inline `<template>`) or `.hbs`.
@@ -271,12 +360,14 @@ Discourse templates are **`.gjs`** (Glimmer components with inline `<template>`)
     element with ARIA. And don't add `<section>`/`<nav>` purely as styling hooks where they
     carry no role; a `<div>` is honest there.
   - Prefer existing `<DButton>` and other shared components — they get semantics and a11y right.
-- **`<DButton>` style variants — only when it should look like a button.** Use the shared
-  variant via `@class` (`btn-default`, `btn-primary`, `btn-danger`, `btn-flat`/`btn-transparent`,
-  `btn-small`) rather than restyling from scratch. Don't apply them to non-button-looking
-  controls (you'll override more than you saved), and don't fight a `<DButton>` into a shape it
-  resists — a plain semantic `<button class="my-thing">` is cleaner there. Variant when
-  button-shaped, naked button when not.
+- **Buttons: `<button>` for actions, `<a>` for navigation — then one standalone variant.** Choose
+  the element by behavior (anything that changes the URL is a link), not looks. A button-looking
+  control needs `.btn` **plus exactly one** mutually-exclusive variant (`btn-default`,
+  `btn-primary`, `btn-danger`, `btn-flat`/`btn-transparent`); `<DButton>` adds `.btn` for you, so
+  pass the variant via `@class`. **Only controls that look *and* function like a standard button
+  get these classes** — a `<button>` inside a dropdown, menu, tab, or list row is styled by its
+  own component and must not get a `.btn-*` variant. Full guidance:
+  [references/css-authoring.md](references/css-authoring.md).
 - **Use FormKit for forms — don't roll your own.** Build forms with the `<Form>` component
   (`import Form from "discourse/components/form"`), which yields field/row/submit pieces
   (`<form.Field>`, `<form.Row>`, `<form.Submit>`) and handles layout, validation, state, and the
@@ -305,12 +396,16 @@ Discourse templates are **`.gjs`** (Glimmer components with inline `<template>`)
   default font size — if the right heading looks wrong-sized, style it in CSS
   (`font-size: var(--font-up-1)`). An `<h1>` styled smaller is fine; an `<h3>` chosen because
   you wanted smaller text is not.
-- **Avoid "div-itis" — no wrapper without a job.** Pick the right element (`<span>` inline,
-  `<div>` for a block/structural container, a semantic element where one fits), and add one only
-  when it earns its place: its own `max-width`, a positioning context, a scroll area, or a real
-  semantic region. A stray wrapper between a flex/grid parent and its children breaks layout — the
-  items stop being direct children, so `gap`/`flex`/`grid-template` no longer reach them. No
-  style, role, or layout reason → delete it.
+- **Avoid "div-itis" — if you can't name what a wrapper does, drop it.** The test for every
+  wrapping element: state its layout or semantic job in a few words (its own `max-width`, a
+  positioning context, a scroll area, a flex/grid container, a real semantic region). If you
+  can't, delete it and let the child stand on its own. A lone `<button>` wrapped in a `<div>`, or
+  two or three nested `<div>`s that just pass content straight through, are the usual offenders —
+  the markup carries weight it doesn't earn. Pick the right element too (`<span>` inline, `<div>`
+  for a block/structural container, a semantic element where one fits). Beyond clutter, a stray
+  wrapper between a flex/grid parent and its children **breaks layout** — the items stop being
+  direct children, so `gap`/`flex`/`grid-template` no longer reach them. No style, role, or layout
+  reason → delete it.
 - **Components clean up after themselves — don't render empty containers.** If a container's
   contents are conditional, put the container inside the condition so it isn't emitted when
   empty — an empty-but-present element still counts as a flex/grid item and `gap` slot, leaving

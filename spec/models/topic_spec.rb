@@ -2814,6 +2814,63 @@ RSpec.describe Topic do
     end
   end
 
+  describe "#regenerate_og_image" do
+    fab!(:topic)
+
+    before { SiteSetting.generate_topic_og_image = true }
+
+    it "clears generated OG images when the topic becomes ineligible" do
+      old_upload = Fabricate(:upload)
+      private_category = Fabricate(:private_category, group: Fabricate(:group))
+      topic.update_column(:og_image_upload_id, old_upload.id)
+      UploadReference.ensure_exist!(upload_ids: [old_upload.id], target: topic)
+
+      topic.update!(category: private_category)
+
+      expect(topic.reload.og_image_upload_id).to be_nil
+      expect(UploadReference.exists?(upload_id: old_upload.id, target: topic)).to eq(false)
+    end
+
+    it "enqueues regeneration after each ten replies" do
+      topic.update_columns(og_image_upload_id: Fabricate(:upload).id, posts_count: 10)
+
+      expect { Topic.next_post_number(topic.id, post: true, reply: true) }.to change {
+        Jobs::GenerateTopicOgImage.jobs.size
+      }.by(1)
+
+      expect { Topic.next_post_number(topic.id, post: true, reply: true) }.not_to change {
+        Jobs::GenerateTopicOgImage.jobs.size
+      }
+
+      topic.update_column(:posts_count, 20)
+
+      expect { Topic.next_post_number(topic.id, post: true, reply: true) }.to change {
+        Jobs::GenerateTopicOgImage.jobs.size
+      }.by(1)
+    end
+
+    it "enqueues regeneration after each ten likes" do
+      post = Fabricate(:post, topic: topic)
+      topic.update_columns(og_image_upload_id: Fabricate(:upload).id, like_count: 9)
+
+      post.update_column(:like_count, 10)
+
+      expect { topic.update_action_counts }.to change { Jobs::GenerateTopicOgImage.jobs.size }.by(1)
+
+      post.update_column(:like_count, 11)
+
+      expect { topic.reload.update_action_counts }.not_to change {
+        Jobs::GenerateTopicOgImage.jobs.size
+      }
+
+      post.update_column(:like_count, 20)
+
+      expect { topic.reload.update_action_counts }.to change {
+        Jobs::GenerateTopicOgImage.jobs.size
+      }.by(1)
+    end
+  end
+
   describe "trash!" do
     fab!(:topic)
 
@@ -3167,6 +3224,27 @@ RSpec.describe Topic do
 
       expect(topic.save).to be_truthy
       expect(topic.featured_link).to eq("https://github.com/discourse/discourse")
+    end
+
+    it "normalizes unsafe characters in the featured link before saving" do
+      topic.featured_link = 'https://example.com/?"onclick="alert(1)"'
+
+      expect(topic.save).to be_truthy
+      expect(topic.featured_link).to eq("https://example.com/?%22onclick=%22alert(1)%22")
+    end
+
+    it "preserves an already percent-encoded featured link without double-encoding" do
+      topic.featured_link = "https://en.wikipedia.org/wiki/C%2B%2B?q=a%20b"
+
+      expect(topic.save).to be_truthy
+      expect(topic.featured_link).to eq("https://en.wikipedia.org/wiki/C%2B%2B?q=a%20b")
+    end
+
+    it "rejects a featured link that cannot be normalized instead of storing it raw" do
+      topic.featured_link = 'https://evil.com/?"onclick="alert(1)"&pad=' + ("a" * 2000)
+
+      expect(topic).not_to be_valid
+      expect(topic.errors[:featured_link]).to be_present
     end
 
     context "when category restricts present" do

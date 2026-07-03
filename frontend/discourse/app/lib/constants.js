@@ -55,8 +55,6 @@ export const GROUP_VISIBILITY_LEVELS = {
   owners: 4,
 };
 
-export const MAX_AUTO_MEMBERSHIP_DOMAINS_LOOKUP = 10;
-
 export const MAX_NOTIFICATIONS_LIMIT_PARAMS = 60;
 
 export const TOPIC_VISIBILITY_REASONS = {

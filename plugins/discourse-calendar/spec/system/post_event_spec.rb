@@ -593,4 +593,19 @@ describe "Post event" do
       expect(ics_content).to include("FREQ=WEEKLY")
     end
   end
+
+  context "when editing an event without an explicit name" do
+    it "shows the topic title as the event name placeholder" do
+      title = "Nameless meetup"
+      raw = "[event start='2222-02-22 14:22']\n[/event]"
+      post = PostCreator.create!(admin, title:, raw:)
+
+      visit(post.topic.url)
+      post_event_page.edit
+
+      expect(page).to have_css(
+        ".post-event-builder-modal .composer-event__name-input[placeholder='#{title}']",
+      )
+    end
+  end
 end

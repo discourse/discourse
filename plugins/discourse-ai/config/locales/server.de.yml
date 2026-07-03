@@ -891,7 +891,6 @@ de:
       limit_exceeded_admin: "Du hast dein KI-Guthabenlimit erreicht. Bitte versuche es erneut nach %{reset_time}."
     errors:
       quota_exceeded: "Du hast das Kontingent für dieses Modell überschritten. Bitte versuche es erneut in %{relative_time}."
-      quota_required: "Du musst die maximale Anzahl an Token oder Verwendungen für dieses Modell angeben"
       no_query_specified: Der Abfrageparameter ist erforderlich, bitte gib ihn an.
       no_user_for_agent: Der angegebene Agent hat keinen Benutzer, der mit ihm verbunden ist.
       no_user_specified: Der Benutzername oder der Parameter user_unique_id ist erforderlich. Bitte gib ihn an.

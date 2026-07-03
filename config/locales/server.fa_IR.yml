@@ -591,6 +591,13 @@ fa_IR:
       trust_level_2: "سطح اعتماد 2"
       trust_level_3: "سطح اعتماد 3"
       trust_level_4: "سطح اعتماد 4"
+    default_full_names:
+      everyone: "همه"
+      admins: "مدیران ارشد"
+      moderators: "ناظران"
+      staff: "همکاران"
+      anonymous_users: "کاربران ناشناس"
+      logged_in_users: "کاربران وارد شده"
     default_descriptions:
       everyone: "گروه خودکار شامل همه اعضا"
       staff: "گروه خودکار شامل مدیران و ناظرها"
@@ -1146,6 +1153,7 @@ fa_IR:
         level: "سطح اعتماد"
         count: "اعضاء"
         share: "اشتراک‌گذاری"
+        signups: "ثبت‌نام‌ها"
       levels:
         "0": "جدید"
         "1": "پایه‌ای"

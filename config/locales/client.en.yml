@@ -48,6 +48,16 @@ en:
         no_visible_children_hint: "This container block is not rendered because none of its children are visible."
         condition_failed_hint: "This block is not rendered because its conditions failed."
         head_hidden_tail_hint: "This block is not rendered because another block was rendered first in the `head` container."
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_editor_description: "Can create and edit content for this entity"
+        access_permission_viewer: "Viewer"
+        access_permission_viewer_description: "Can view content for this entity"
+        access_permission_remove: "Remove"
+        access_permission_remove_description: "Remove permission for this group"
+        add_group: "Add group"
+        mandatory_acl_tooltip: "This permission is mandatory for this entity and cannot be removed"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -124,6 +134,7 @@ en:
         x_minutes:
           one: "%{count}m"
           other: "%{count}m"
+        x_minutes_seconds: "%{minutes}m %{seconds}s"
         about_x_hours:
           one: "%{count}h"
           other: "%{count}h"
@@ -2932,7 +2943,7 @@ en:
       use_different_email: "Use a different email address"
       use_password_instead: "Log in with your password instead"
       email_me_code: "Email me a one-time login code"
-      signup_title: "Join this community"
+      signup_title: "Create your account"
       signup_instructions: "Enter your email address to join this community. We'll send you a code to confirm it and you'll be on your way!"
       user_fields_title: "Almost done"
       user_fields_instructions: "Just a few more details to finish creating your account."
@@ -4998,7 +5009,8 @@ en:
           other: "Are you sure you want to merge these %{count} posts?"
 
       revisions:
-        diff_too_complex: "The diff is too complex to display. Please try viewing individual smaller edits."
+        diff_too_complex: "This edit changed too much of the post at once, so it can't be shown."
+        diff_hidden: "Some of this post's edit history has been hidden, so this edit can't be shown."
         locale:
           no_locale_set: "No language set"
           locale_removed: "Language removed"
@@ -6465,6 +6477,7 @@ en:
         title: "List of available reports"
         sidebar_title: "Reports"
         back: "Back to all reports"
+        back_to_dashboard: "Back to dashboard"
         group_engagement: "Engagement"
         group_traffic: "Traffic"
         group_members: "Members"
@@ -6689,9 +6702,25 @@ en:
               title: "Digest logo"
               description: "The alternate logo image used at the top of your site's email summary. If left blank, the image from the `logo` setting will be used."
               help_text: "Use a wide rectangle image. Don't use an SVG image."
+            og_image_source:
+              title: "OpenGraph image source"
+              description: "Choose how OpenGraph preview images are provided for topics that don't have their own image."
+              uploaded: "Use an uploaded image"
+              generated: "Generate an image per topic"
             opengraph_image:
               title: "OpenGraph image"
               description: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used."
+            generate_topic_og_image:
+              title: "Generate topic OG images"
+              description: "Automatically generate OpenGraph preview images for topics that don't have an image. Uses topic title, category, and site colors."
+            og_image_preview:
+              title: "Generated OG image preview"
+              description: "Preview of automatically generated OpenGraph images for topics without images. Enter a topic ID to test."
+              generate: "Generate"
+              topic_id_label: "Topic ID"
+              topic_id_placeholder: "e.g. 123"
+              placeholder: "Enter a topic ID and click Generate to preview."
+              error: "Could not generate preview. Check the topic ID and try again."
             x_summary_large_image:
               title: "X summary large image"
               description: "X card 'summary large image'. If left blank, regular card metadata is generated using the OpenGraph_image, as long as that is not also a .svg."
@@ -7169,12 +7198,17 @@ en:
                 dropping:
                   one: "-%{count} dropping"
                   other: "-%{count} dropping"
-              moves_in_aria:
-                one: "%{count} member moved up"
-                other: "%{count} members moved up"
-              moves_out_aria:
-                one: "%{count} member moved down"
-                other: "%{count} members moved down"
+              signups:
+                one: "+ %{formattedCount} signup"
+                other: "+ %{formattedCount} signups"
+              signups_title: "Number of new signups arriving at this trust level"
+              count_title: "Number of total members at this trust level"
+              arrivals_aria:
+                one: "%{count} member got promoted to this trust level"
+                other: "%{count} members got promoted to this trust level"
+              demotions_in_aria:
+                one: "%{count} member got demoted to this trust level"
+                other: "%{count} members got demoted to this trust level"
               stable_aria: "no movement"
             headline:
               healthy_growth:
@@ -7326,6 +7360,17 @@ en:
             logged_in_share:
               label: "Logged-in share"
               tooltip: "The share of pageviews from logged-in members."
+            direct_traffic:
+              label: "Direct traffic"
+              tooltip: "The share of pageviews that came directly to your community, such as by typing your URL or using a browser bookmark."
+            bounce_rate:
+              label: "Bounce rate"
+              tooltip: "The share of sessions with a single pageview and less than 10 seconds of engaged time."
+            average_session_duration:
+              label: "Avg. session duration"
+              tooltip: "The average amount of time visitors spent in your community for the selected period."
+            session_metrics:
+              empty_tooltip: "Shown once visits are recorded for this period."
           top_countries:
             title: "Top countries"
             empty: "No country data for this period."
@@ -7447,6 +7492,10 @@ en:
             effects: Effects
             trust_levels_none: "None"
             automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
+            automatic_membership_email_domains_instructions: "Enter each domain on its own, without the @ symbol, for example discourse.org."
+            automatic_membership_email_domains_invalid:
+              one: "%{domains} isn't a valid domain. Enter a bare domain, for example discourse.org."
+              other: "These aren't valid domains: %{domains}. Enter each as a bare domain, for example discourse.org."
             automatic_membership_user_count:
               one: "%{count} user has the new email domains and will be added to the group."
               other: "%{count} users have the new email domains and will be added to the group."
@@ -7887,6 +7936,9 @@ en:
             initial_members: "Expanded members"
             initial_members_description: "Number of group members to display before adding a View more button."
             show_description: "Include description"
+          locale_selector:
+            title: "Language"
+            description: "Only translatable About page fields are shown."
           optional: "(optional)"
           update: "Update"
           toasts:
@@ -8804,6 +8856,7 @@ en:
             discourse_id_regenerate_credentials: "regenerate Discourse ID credentials"
             configure_category_type: "configure category type"
             unconfigure_category_type: "unconfigure category type"
+            change_access_control_list_permissions: "change access control list permissions"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -9013,13 +9066,33 @@ en:
         show_emails: "Show emails"
         hide_emails: "Hide emails"
         silence_reason: "Silence reason"
+        suspend_reason: "Suspend reason"
         bulk_actions:
           title: "Bulk actions"
-          admin_cant_be_deleted: "This user can't be deleted because they're an admin"
-          too_many_or_old_posts: "This user can't be deleted they have too many posts or a very old post"
+          select_all: "Select all"
+          clear_all: "Clear all"
+          staff_cant_be_actioned: "This user can't be deleted or suspended because they're a staff member"
+          no_users_can_be_deleted: "None of the selected users can be deleted."
+          no_users_can_be_suspended: "None of the selected users can be suspended."
           too_many_selected_users:
-            one: "You've reached the %{count} user limit for bulk deletion"
-            other: "You've reached the %{count} users limit for bulk deletion"
+            one: "You've reached the %{count} user limit for bulk actions"
+            other: "You've reached the %{count} users limit for bulk actions"
+          suspend:
+            label: "Suspend users…"
+            confirmation_modal:
+              prompt_text:
+                one: "You're about to suspend %{count} user. Set a duration and reason below:"
+                other: "You're about to suspend %{count} users. Set a duration and reason below:"
+              close: "Close"
+              confirm: "Suspend"
+              title:
+                one: "Suspend %{count} user"
+                other: "Suspend %{count} users"
+              bulk_suspend_starting: "Starting bulk suspend…"
+              user_suspend_succeeded: "[%{position}/%{total}] Successfully suspended @%{username}"
+              user_suspend_failed: "[%{position}/%{total}] Failed to suspend @%{username} - %{error}"
+              bulk_suspend_finished: "Bulk suspend operation completed."
+              failed_to_suspend_users: "The following users failed to be suspended:"
           delete:
             label: "Delete users…"
             confirmation_modal:
@@ -9047,6 +9120,11 @@ en:
           suspended: "Suspended"
           silenced: "Silenced"
           staged: "Staged"
+        activation_filter:
+          label: "Activation status"
+          all: "All users"
+          activated: "Activated"
+          not_activated: "Not activated"
         approved: "Approved?"
         titles:
           active: "Active users"
@@ -9287,10 +9365,12 @@ en:
           other: "Can't delete all posts because the user has more than %{count} posts. (delete_all_posts_max)"
         delete_confirm_title: "Are you sure you want to delete this user? This is permanent!"
         delete_confirm: "It is generally preferable to anonymize users rather than deleting them, to avoid removing content from existing discussions."
-        delete_and_block: "Delete and block user"
-        delete_and_block_description: "Delete the user and block their email and IP address."
+        delete_and_block: "Delete and block email and IP address"
+        delete_and_block_description: "Delete the user and block their email address and IP address."
+        delete_and_block_email: "Delete and block email"
+        delete_and_block_email_description: "Delete the user and block their email address, but allow their IP address to be reused."
         delete_dont_block: "Delete user"
-        delete_dont_block_description: "Delete the user without blocking."
+        delete_dont_block_description: "Delete the user without blocking their email address or IP address."
         deleting_user: "Deleting user…"
         deleted: "The user was deleted."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."

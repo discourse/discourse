@@ -47,6 +47,17 @@ html.rtl {
   transition-property: bottom, padding-bottom;
 }
 
+.peek-mode-active {
+  .chat-drawer-outlet-container {
+    z-index: z("composer", "dropdown") + 1;
+  }
+
+  .fk-d-menu[data-identifier="chat-message-reaction-users"],
+  .fk-d-menu[data-identifier="chat-composer-dropdown__menu"] {
+    z-index: z("composer", "dropdown") + 2;
+  }
+}
+
 .chat-drawer {
   pointer-events: auto;
   align-self: flex-end;

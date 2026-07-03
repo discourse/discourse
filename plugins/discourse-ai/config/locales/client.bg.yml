@@ -96,6 +96,12 @@ bg:
         save: "Запази"
         enabled: "Да е включен?"
         delete: "Изтрий"
+        thinking_effort_options:
+          none: "Без"
+          low: "Ниска"
+          medium: "Среден"
+          high: "Висок"
+          max: "Максимално"
         response_format:
           open_modal: "Редактирай"
           modal:

@@ -30,7 +30,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
   let(:llm_responses) { [function_call, response] }
 
   describe "#reply" do
-    it "sets top_p and temperature params" do
+    it "sets top_p, temperature, and thinking_effort params" do
       SiteSetting.ai_llm_temperature_top_p_enabled = true
       DiscourseAi::Completions::Endpoints::Fake.delays = []
       DiscourseAi::Completions::Endpoints::Fake.last_call = nil
@@ -43,6 +43,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
         name: "TestAgent",
         top_p: 0.5,
         temperature: 0.4,
+        thinking_effort: "high",
         system_prompt: "test",
         description: "test",
         allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
@@ -56,8 +57,11 @@ RSpec.describe DiscourseAi::Agents::Bot do
       ) { |_partial, _cancel, _placeholder| }
 
       last_call = DiscourseAi::Completions::Endpoints::Fake.last_call
-      expect(last_call[:model_params][:top_p]).to eq(0.5)
-      expect(last_call[:model_params][:temperature]).to eq(0.4)
+      expect(last_call[:model_params]).to include(
+        top_p: 0.5,
+        temperature: 0.4,
+        thinking_effort: "high",
+      )
     end
 
     it "requests Gemini thought summaries when thinking is shown" do

@@ -88,6 +88,8 @@ be:
         user: Карыстальнік
         save: "Захаваць"
         delete: "Выдаліць"
+        thinking_effort_options:
+          none: "Няма"
         response_format:
           open_modal: "Рэдагаваць"
         filters:

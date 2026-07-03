@@ -2,6 +2,8 @@
 
 module DiscoursePostEvent
   class EventParser
+    HTTP_URL_REGEXP = URI::DEFAULT_PARSER.make_regexp(%w[http https])
+
     VALID_OPTIONS = [
       :start,
       :end,
@@ -18,6 +20,7 @@ module DiscoursePostEvent
       :minimal,
       :closed,
       :"chat-enabled",
+      :livestream,
       :"max-attendees",
       :"all-day",
       :image,
@@ -79,13 +82,19 @@ module DiscoursePostEvent
     end
 
     def self.linkify_description(text, post: nil)
-      escaped = ERB::Util.html_escape(text)
-      html =
-        escaped
-          .gsub(URI::DEFAULT_PARSER.make_regexp(%w[http https])) do |url|
-            "<a href=\"#{url}\">#{url}</a>"
-          end
-          .gsub(/\r\n?|\n/, "<br>")
+      text = text.to_s
+
+      html = +""
+      cursor = 0
+      text.scan(HTTP_URL_REGEXP) do
+        match = Regexp.last_match
+        html << ERB::Util.html_escape(text[cursor...match.begin(0)])
+        escaped_url = ERB::Util.html_escape(match[0])
+        html << "<a href=\"#{escaped_url}\">#{escaped_url}</a>"
+        cursor = match.end(0)
+      end
+      html << ERB::Util.html_escape(text[cursor..])
+      html.gsub!(/\r\n?|\n/, "<br>")
 
       doc = Nokogiri::HTML5.fragment(html)
       add_nofollow = post.nil? || post.add_nofollow?

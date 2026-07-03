@@ -93,6 +93,11 @@ lv:
         save: "Saglabāt"
         enabled: "Ieslēgts?"
         delete: "Dzēst"
+        thinking_effort_options:
+          none: "Nav"
+          low: "Zems"
+          medium: "Vidējs"
+          high: "Augsta"
         response_format:
           open_modal: "Labot"
         filters:

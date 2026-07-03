@@ -37,6 +37,10 @@ de:
         no_visible_children_hint: "Dieser Containerblock wird nicht gerendert, da keines seiner untergeordneten Elemente sichtbar ist."
         condition_failed_hint: "Dieser Block wird nicht gerendert, da seine Bedingungen nicht erfüllt sind."
         head_hidden_tail_hint: "Dieser Block wird nicht gerendert, weil ein anderer Block im `head`-Container zuerst gerendert wurde."
+    access_control:
+      manage:
+        access_permission_editor: "Bearbeiter"
+        access_permission_remove: "Entfernen"
     carousel:
       go_to_slide: "Gehe zu Folie %{index}"
       previous: "Vorherige Folie"
@@ -428,6 +432,9 @@ de:
     age: "Alter"
     joined: "Beigetreten"
     admin_title: "Administration"
+    advanced_mode_toggle:
+      advanced_mode: "Erweiterter Modus"
+      simple_mode: "Einfacher Modus"
     show_more: "mehr anzeigen"
     show_help: "Optionen"
     links: "Links"
@@ -3111,6 +3118,7 @@ de:
         toggle_whisper:
           label: Flüstermodus umschalten
         create_topic:
+          label: Erstelle ein neues Thema
           desc: Erstelle ein neues Thema
         create_personal_message:
           desc: "Erstelle eine neue persönliche Nachricht"
@@ -3788,39 +3796,6 @@ de:
       read_more: "Willst du mehr lesen? <a href='%{categoryLink}'>Durchstöbere alle Kategorien</a> oder <a href='%{latestLink}'>sieh dir die aktuellen Themen an</a>."
       unread_indicator: "Kein Mitglied hat den letzten Beitrag dieses Themas bisher gelesen."
       participant_groups: "Teilnehmergruppen"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {<a href="{basePath}/unread"># ungelesenes</a> Thema}
-              other {<a href="{basePath}/unread"># ungelesene</a> Themen}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { und <a href="{basePath}/new"># neues</a> Thema verbleibend.}
-              other { und <a href="{basePath}/new"># neue</a> Themen verbleibend.}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {<a href="{basePath}/unread"># ungelesenes</a> Thema verbleibend.}
-              other {<a href="{basePath}/unread"># ungelesene</a> Themen verbleibend.}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {<a href="{basePath}/new"># neues</a> Thema verbleibend.}
-              other {<a href="{basePath}/new"># neue</a> Themen verbleibend.}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { Oder durchstöbere andere Themen in {categoryLink}}
-          false { Oder <a href="{basePath}/latest">sieh dir die aktuellen Themen an</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} Antwort, zum ersten Beitrag springen"
         other: "%{count} Antworten, zum ersten Beitrag springen"
@@ -5174,7 +5149,6 @@ de:
       synonyms: "Synonyme"
       synonyms_inline: "Diese Synonyme werden durch %{base_tag_name} ersetzt:"
       save: "Name und Beschreibung des Schlagwortes speichern"
-      restricted_to: "Beschränkt auf"
       no_synonyms: "Dieses Schlagwort hat keine Synonyme."
       edit_synonyms: "Synonyme bearbeiten"
       add_synonyms_label: "Synonyme hinzufügen:"
@@ -5972,6 +5946,9 @@ de:
             opengraph_image:
               title: "OpenGraph-Bild"
               description: "Standard-Opengraph-Bild, das verwendet wird, wenn die Seite kein anderes geeignetes Bild hat. Wenn es leer gelassen wird, wird large_icon verwendet."
+            og_image_preview:
+              generate: "Erzeugen"
+              topic_id_label: "Themen-ID"
             x_summary_large_image:
               title: "X Zusammenfassung großes Bild"
               description: "X-Karte „Zusammenfassung großes Bild“. Wenn diese Option leer gelassen wird, werden die regulären Metadaten der Karte aus OpenGraph_image generiert, sofern es sich nicht ebenfalls um eine .svg handelt."
@@ -6300,7 +6277,7 @@ de:
         stale_data: "Es wurde schon länger nicht nach Updates gesucht. Bitte stelle sicher, dass sidekiq läuft."
         version_check_pending: "Sieht so aus, als hättest du vor Kurzem aktualisiert. Großartig!"
         installed_version: "Installiert"
-        latest_version: "Neueste"
+        github: "GitHub"
         problems_found: "Ein paar Ratschläge basierend auf deinen aktuellen Website-Einstellungen"
         dismiss_notice: "Ignorieren"
         new_features:
@@ -6921,6 +6898,8 @@ de:
             initial_members: "Direkt sichtbare Mitglieder"
             initial_members_description: "Anzahl der Gruppenmitglieder, die angezeigt werden sollen, bevor eine Schaltfläche „Mehr anzeigen“ hinzugefügt wird."
             show_description: "Beschreibung einfügen"
+          locale_selector:
+            title: "Sprache"
           optional: "(optional)"
           update: "Aktualisieren"
           toasts:
@@ -8024,11 +8003,12 @@ de:
         silence_reason: "Grund der Stummschaltung"
         bulk_actions:
           title: "Massenaktionen"
-          admin_cant_be_deleted: "Dieser Benutzer kann nicht gelöscht werden, weil er ein Administrator ist"
-          too_many_or_old_posts: "Dieser Benutzer kann nicht gelöscht werden, da er zu viele Beiträge oder einen sehr alten Beitrag hat"
-          too_many_selected_users:
-            one: "Du hast das Limit von %{count} Benutzer für die Massenlöschung erreicht"
-            other: "Du hast das Limit von %{count} Benutzern für die Massenlöschung erreicht"
+          select_all: "Alle auswählen"
+          clear_all: "Alle löschen"
+          suspend:
+            confirmation_modal:
+              close: "Schließen"
+              confirm: "Sperren"
           delete:
             label: "Benutzer löschen …"
             confirmation_modal:
@@ -8056,6 +8036,9 @@ de:
           suspended: "Gesperrt"
           silenced: "Stummgeschaltet"
           staged: "Vorbereitet"
+        activation_filter:
+          all: "Alle Benutzer"
+          activated: "Aktiviert"
         approved: "Genehmigt?"
         titles:
           active: "Aktive Benutzer"

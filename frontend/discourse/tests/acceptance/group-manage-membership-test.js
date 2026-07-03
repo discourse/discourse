@@ -8,6 +8,7 @@ import {
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
+import { i18n } from "discourse-i18n";
 
 acceptance("Managing Group Membership", function (needs) {
   let savedGroup;
@@ -30,6 +31,15 @@ acceptance("Managing Group Membership", function (needs) {
     server.put("/groups/57", (request) => {
       savedGroup = helper.parsePostData(request.requestBody).group;
       return helper.response({ success: "OK" });
+    });
+
+    server.put("/admin/groups/automatic_membership_count.json", (request) => {
+      const domains = (
+        helper.parsePostData(request.requestBody)
+          .automatic_membership_email_domains || ""
+      ).split("|");
+      const invalid_domains = domains.filter((domain) => domain.includes("@"));
+      return helper.response({ user_count: 0, invalid_domains });
     });
   });
 
@@ -98,6 +108,33 @@ acceptance("Managing Group Membership", function (needs) {
     await emailDomains.selectRowByValue("foo.com");
 
     assert.strictEqual(emailDomains.header().value(), "foo.com");
+  });
+
+  test("warns and blocks the save when a domain includes '@'", async function (assert) {
+    updateCurrentUser({ can_create_group: true });
+
+    await visit("/g/alternative-group/manage/membership");
+
+    const emailDomains = selectKit(
+      ".group-form-automatic-membership-automatic"
+    );
+    await emailDomains.expand();
+    await emailDomains.fillInFilter("@harness.io");
+    await emailDomains.selectRowByValue("@harness.io");
+
+    await click(".group-manage-save");
+
+    assert
+      .dom(".dialog-body")
+      .hasText(
+        i18n(
+          "admin.groups.manage.membership.automatic_membership_email_domains_invalid",
+          { count: 1, domains: "@harness.io" }
+        ),
+        "shows the invalid-domain warning"
+      );
+
+    assert.strictEqual(savedGroup, null, "does not save the group");
   });
 
   test("the join method constrains the group's visibility options", async function (assert) {
@@ -274,6 +311,59 @@ acceptance("Managing Group Membership", function (needs) {
       .exists("displays group public exit input");
   });
 });
+
+acceptance(
+  "Managing Group Membership - too many automatic membership domains",
+  function (needs) {
+    let savedGroup;
+
+    needs.user();
+    needs.pretender((server, helper) => {
+      server.put("/admin/groups/automatic_membership_count.json", () =>
+        helper.response({ user_count: null, invalid_domains: [] })
+      );
+
+      server.put("/groups/57", (request) => {
+        savedGroup = helper.parsePostData(request.requestBody).group;
+        return helper.response({ success: "OK" });
+      });
+    });
+
+    needs.hooks.beforeEach(() => (savedGroup = null));
+
+    test("confirms with a generic message when there are too many domains to count", async function (assert) {
+      updateCurrentUser({ can_create_group: true });
+
+      await visit("/g/alternative-group/manage/membership");
+
+      const emailDomains = selectKit(
+        ".group-form-automatic-membership-automatic"
+      );
+      await emailDomains.expand();
+      await emailDomains.fillInFilter("example.com");
+      await emailDomains.selectRowByValue("example.com");
+
+      await click(".group-manage-save");
+
+      assert
+        .dom(".dialog-body")
+        .hasText(
+          i18n(
+            "admin.groups.manage.membership.automatic_membership_user_unknown_count"
+          ),
+          "shows the generic unknown-count confirmation"
+        );
+
+      await click(".dialog-footer .btn-primary");
+
+      assert.notStrictEqual(
+        savedGroup,
+        null,
+        "saves the group after confirming"
+      );
+    });
+  }
+);
 
 acceptance(
   "Managing Group Membership - non-admin owner of a private group",

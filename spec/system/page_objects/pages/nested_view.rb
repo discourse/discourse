@@ -140,6 +140,15 @@ module PageObjects
         has_no_css?("[data-post-number='#{post.post_number}'] .nested-post__expand-replies")
       end
 
+      def has_load_more_children_for?(post)
+        has_css?(
+          wrapper_selector(
+            post,
+            "> .nested-post__main > .nested-post-children .nested-post-children__load-more",
+          ),
+        )
+      end
+
       def has_no_show_replies_button_for?(post)
         has_no_css?("[data-post-number='#{post.post_number}'] .post-action-menu__show-replies")
       end
@@ -367,6 +376,16 @@ module PageObjects
 
       def click_replies_toggle(post)
         find("[data-post-number='#{post.post_number}'] .nested-post__expand-replies").click
+        self
+      end
+
+      def click_load_more_children(post)
+        find(
+          wrapper_selector(
+            post,
+            "> .nested-post__main > .nested-post-children .nested-post-children__load-more",
+          ),
+        ).click
         self
       end
 

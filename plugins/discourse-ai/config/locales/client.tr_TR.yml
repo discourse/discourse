@@ -617,6 +617,12 @@ tr_TR:
         temperature_help: "LLM için kullanılacak sıcaklık. Yaratıcılığı artırmak için artırın (model varsayılanını kullanmak için boş bırakın, genellikle 0,0 ila 2,0 arasında bir değer)"
         top_p: "Üst P"
         top_p_help: "LLM için kullanılacak en yüksek P, rastgeleliği artırmak için artırın (model varsayılanını kullanmak için boş bırakın, genellikle 0,0 ila 1,0 arasında bir değer)"
+        thinking_effort_options:
+          none: "Hiçbiri"
+          low: "Düşük"
+          medium: "Orta"
+          high: "Yüksek"
+          max: "En fazla"
         priority: "Öncelik"
         priority_help: "Öncelikli ajanlar, ajan listesinin en üstünde kullanıcılara gösterilir. Birden fazla ajanın önceliği varsa, bunlar alfabetik sıraya göre sıralanır."
         tool_options: "Araç seçenekleri"
@@ -870,9 +876,7 @@ tr_TR:
             custom: "Özel..."
           hours: "saat"
           max_tokens_help: "Bu gruptaki her kullanıcının belirtilen süre içinde kullanabileceği maksimum token (kelime ve karakter) sayısı. Token'lar, YZ modelleri tarafından metni işlemek için kullanılan birimlerdir; kabaca 1 token = 4 karakter veya bir kelimenin 3/4'ü."
-          max_tokens_required: "Maks. kullanımlar ayarlanmamışsa ayarlanmalıdır"
           max_usages_help: "Bu gruptaki her kullanıcının belirtilen süre içinde yapay zekâ modelini kullanabileceği maksimum sayı. Bu kota, grup genelinde paylaşılmaz, bireysel kullanıcı başına izlenir."
-          max_usages_required: "Maks. token'lar ayarlanmamışsa ayarlanmalıdır"
         credit_allocation:
           credits_remaining: "%{total} kredinin %{remaining}'ı kaldı (%%{percentage}%)"
           soft_limit_warning: "Bu modelde bugün %{percentage}% oranında AI kredisi kalmıştır."

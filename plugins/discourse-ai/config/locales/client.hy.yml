@@ -90,6 +90,12 @@ hy:
         save: "Պահպանել"
         enabled: "Միացվա՞ծ է:"
         delete: "Ջնջել"
+        thinking_effort_options:
+          none: "Ոչ մի"
+          low: "Բարձր"
+          medium: "Միջին"
+          high: "Ցածր"
+          max: "Առավելագույնը"
         response_format:
           open_modal: "Խմբագրել"
           modal:

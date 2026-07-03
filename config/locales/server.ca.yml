@@ -335,6 +335,13 @@ ca:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Tothom"
+      admins: "Administradors"
+      moderators: "Moderadors"
+      staff: "Equip responsable"
+      anonymous_users: "Usuaris anònims"
+      logged_in_users: "Usuaris que han iniciat la sessió"
     request_membership_pm:
       title: "Sol·licitud d'afiliació a @%{group_name}"
   education:

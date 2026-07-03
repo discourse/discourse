@@ -69,7 +69,7 @@ module ::DiscourseCalendar
     def self.handle_topic_chat_channel_creation(topic)
       return if topic.category.blank?
       return if DiscourseCalendar::Livestream::TopicChatChannel.exists?(topic_id: topic.id)
-      return if topic.tags.blank? || topic.tags.none? { |tag| tag.name == "livestream" }
+      return unless topic.first_post&.event&.livestream?
 
       channel =
         Chat::Channel.create!(
@@ -174,7 +174,8 @@ after_initialize do
   require_relative "jobs/regular/discourse_post_event/bulk_invite"
   require_relative "jobs/regular/discourse_post_event/bump_topic"
   require_relative "jobs/regular/discourse_post_event/send_reminder"
-  require_relative "jobs/regular/livestream/recalculate_user_channel_memberships"
+  require_relative "jobs/regular/discourse_post_event/warm_livestream_onebox"
+  require_relative "lib/discourse_post_event/email_renderer"
   require_relative "lib/discourse_post_event/engine"
   require_relative "lib/discourse_post_event/event_finder"
   require_relative "lib/discourse_post_event/event_parser"
@@ -182,6 +183,7 @@ after_initialize do
   require_relative "lib/discourse_post_event/export_csv_controller_extension"
   require_relative "lib/discourse_post_event/export_csv_file_extension"
   require_relative "lib/discourse_post_event/post_extension"
+  require_relative "lib/discourse_post_event/topic_extension"
   require_relative "lib/discourse_post_event/rrule_generator"
   require_relative "lib/discourse_post_event/rrule_configurator"
   require_relative "lib/discourse_post_event/web_hook_extension"
@@ -222,6 +224,7 @@ after_initialize do
     Jobs::ExportCsvFile.prepend(DiscoursePostEvent::ExportPostEventCsvReportExtension)
     Post.prepend(DiscoursePostEvent::PostExtension)
     ::WebHook.prepend(DiscoursePostEvent::WebHookExtension)
+    Topic.prepend(DiscoursePostEvent::TopicExtension)
     Topic.prepend(DiscourseCalendar::Livestream::TopicExtension)
     Chat::Channel.prepend(DiscourseCalendar::Livestream::ChatChannelExtension)
   end
@@ -649,73 +652,12 @@ after_initialize do
       fragment
         .css(".discourse-post-event")
         .each do |event_node|
-          tz = event_node["data-timezone"] || "UTC"
-          starts_at = event_node["data-start"]
-          ends_at = event_node["data-end"]
-
-          formatted_start =
-            begin
-              DateTime.parse(starts_at).strftime("%B %-d, %Y %-I:%M %p")
-            rescue StandardError
-              starts_at
-            end
-          dates = "#{formatted_start} (#{tz})"
-
-          if ends_at
-            formatted_end =
-              begin
-                DateTime.parse(ends_at).strftime("%B %-d, %Y %-I:%M %p")
-              rescue StandardError
-                ends_at
-              end
-            dates = "#{dates} → #{formatted_end} (#{tz})"
-          end
-
-          event_name = event_node["data-name"] || post.topic.title
-          location = event_node["data-location"]
-          url = event_node["data-url"]
-
-          event = DiscoursePostEvent::Event.includes(:image_upload).find_by(id: post.id)
-          image_url = UrlHelper.absolute(event.image_upload.url) if event&.image_upload_id
-
-          rows = +""
-
-          rows << <<~HTML if image_url.present?
-            <tr>
-              <td style="padding: 0;">
-                <img src="#{CGI.escape_html(image_url)}" style="width: 100%; max-height: 400px; object-fit: cover; display: block;" />
-              </td>
-            </tr>
-          HTML
-
-          rows << <<~HTML
-            <tr>
-              <td style="padding: 12px;">
-                <a href="#{Discourse.base_url}#{post.url}" style="font-weight: bold; font-size: 1.1em;">#{CGI.escape_html(event_name)}</a>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding: 0 12px 12px; color: #666;">#{CGI.escape_html(dates)}</td>
-            </tr>
-          HTML
-
-          rows << <<~HTML if location.present?
-              <tr>
-                <td style="padding: 0 12px 12px; color: #666;">#{CGI.escape_html(location)}</td>
-              </tr>
-            HTML
-
-          rows << <<~HTML if url.present?
-              <tr>
-                <td style="padding: 0 12px 12px;"><a href="#{CGI.escape_html(url)}">#{CGI.escape_html(url)}</a></td>
-              </tr>
-            HTML
-
-          event_node.replace <<~HTML
-            <table cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #dedede; margin-bottom: 10px; width: 100%;">
-              #{rows}
-            </table>
-          HTML
+          event_node.replace(DiscoursePostEvent::EmailRenderer.render(event_node, post))
+        rescue => e
+          Discourse.warn_exception(
+            e,
+            message: "Failed to render event in email for post #{post&.id}",
+          )
         end
     end
   end
@@ -855,32 +797,19 @@ after_initialize do
   add_to_serializer(
     :topic_view,
     :chat_channel_id,
-    include_condition: -> { SiteSetting.livestream_enabled },
-  ) do
-    return nil if object.topic.topic_chat_channel.blank?
-    object.topic.topic_chat_channel.chat_channel_id
-  end
+    include_condition: -> do
+      object.topic.first_post&.event&.livestream? && object.topic.topic_chat_channel.present?
+    end,
+  ) { object.topic.topic_chat_channel.chat_channel_id }
 
-  on(:post_edited) do |post, _, _|
-    if SiteSetting.livestream_enabled
-      DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
-    end
-  end
-  on(:topic_created) do |topic, _, _|
-    if SiteSetting.livestream_enabled
-      DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(topic)
-    end
-  end
+  add_to_serializer(:topic_view, :has_livestream) { object.topic.first_post&.event&.livestream? }
+
   on(:chat_channel_trashed) do |channel, user|
-    if SiteSetting.livestream_enabled
-      # If the chat channel is deleted, delete the related TopicChatChannel record
-      DiscourseCalendar::Livestream::TopicChatChannel.where(chat_channel_id: channel.id).destroy_all
-    end
+    # If the chat channel is deleted, delete the related TopicChatChannel record
+    DiscourseCalendar::Livestream::TopicChatChannel.where(chat_channel_id: channel.id).destroy_all
   end
 
   on(:discourse_calendar_post_event_invitee_status_changed) do |invitee|
-    next if !SiteSetting.livestream_enabled
-
     topic = invitee.event.post.topic
     topic_chat_channel = topic.topic_chat_channel
 
@@ -890,21 +819,17 @@ after_initialize do
     channel = topic_chat_channel.chat_channel
     manager = Chat::ChannelMembershipManager.new(channel)
 
-    user_allowed_in_chat = user.in_any_groups?(SiteSetting.livestream_chat_allowed_groups_map)
-
+    # Attendance is the chat gate: anyone going is auto-followed into the
+    # livestream channel, anyone else is unfollowed.
     membership =
       if invitee.status == DiscoursePostEvent::Invitee.statuses[:going]
-        user_allowed_in_chat ? manager.follow(user) : manager.unfollow(user)
+        manager.follow(user)
       else
         manager.unfollow(user)
       end
 
-    DiscourseCalendar::Livestream.publish_livestream_chat_status(membership, user: user)
-  end
-
-  on(:site_setting_changed) do |name, old_val, new_val|
-    if name == :livestream_chat_allowed_groups && SiteSetting.livestream_enabled
-      Jobs::LivestreamRecalculateUserChannelMemberships.new.execute
+    if membership
+      DiscourseCalendar::Livestream.publish_livestream_chat_status(membership, user: user)
     end
   end
 end

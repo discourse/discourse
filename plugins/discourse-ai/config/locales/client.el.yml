@@ -118,6 +118,7 @@ el:
         search:
           name: "Αναζήτηση"
         admin_dashboard:
+          highlights: "Σημαντικά σημεία"
           setting_groups:
             settings: "Βασικές ρυθμίσεις"
         ai_helper:
@@ -194,6 +195,12 @@ el:
           clear_all: "Εκκαθάριση όλων"
         allowed_groups: "Επιτρεπόμενες ομάδες"
         delete: "Διαγραφή"
+        thinking_effort_options:
+          none: "Κανένα"
+          low: "Χαμηλή"
+          medium: "Μεσαία"
+          high: "Υψηλή"
+          max: "Μέγιστο"
         response_format:
           open_modal: "Επεξεργασία"
           modal:

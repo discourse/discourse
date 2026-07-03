@@ -29,12 +29,7 @@ function overrideChat(api, container) {
   const chatService = container.lookup("service:chat");
   const appEvents = container.lookup("service:appEvents");
 
-  if (
-    !siteSettings.livestream_enabled ||
-    !currentUser ||
-    !siteSettings.chat_enabled ||
-    !chatService.userCanChat
-  ) {
+  if (!currentUser || !siteSettings.chat_enabled || !chatService?.userCanChat) {
     return;
   }
 

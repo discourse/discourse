@@ -32,6 +32,25 @@ RSpec.describe ApplicationHelper do
       expect(tags).to include('name="discourse-track-view-session-id"')
       expect(tags).to include('name="discourse-beacon-pageview-enabled"')
     end
+
+    it "includes the engagement tracking meta tag when pageview events are persisted" do
+      SiteSetting.persist_browser_pageview_events = true
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-engagement-tracking-enabled"')
+    end
+
+    it "omits the engagement tracking meta tag in a trigger-only config so the browser does not send /srv/se beacons the server rejects" do
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.persist_browser_pageview_events = false
+      SiteSetting.trigger_browser_pageview_events = true
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-beacon-pageview-enabled"')
+      expect(tags).not_to include('name="discourse-engagement-tracking-enabled"')
+    end
   end
 
   describe "preload_script" do
@@ -582,6 +601,16 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "crawlable_meta_data" do
+    it "escapes the description exactly once" do
+      result =
+        helper.crawlable_meta_data(description: %(Tom & O'Reilly "><script>alert(1)</script>))
+
+      expect(result).to include(
+        %(<meta property="og:description" content="Tom &amp; O&#39;Reilly &quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;" />),
+      )
+      expect(result).not_to include("<script>")
+    end
+
     it "Supports ASCII URLs with odd chars" do
       result =
         helper.crawlable_meta_data(

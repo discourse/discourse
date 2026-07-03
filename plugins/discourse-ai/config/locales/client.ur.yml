@@ -77,6 +77,8 @@ ur:
           reset: "رِی سَیٹ"
         search:
           name: "تلاش کریں"
+        admin_dashboard:
+          highlights: "نمایاں نکات"
         ai_helper:
           setting_groups:
             automation: "آٹومیشن"
@@ -137,6 +139,12 @@ ur:
           select_all: "سبھی منتخب کریں"
           clear_all: "سبھی ہٹا دیں"
         delete: "حذف کریں"
+        thinking_effort_options:
+          none: "کوئی نہیں"
+          low: "کم"
+          medium: "درمیانی"
+          high: "زیادہ"
+          max: "زیادہ سے زیادہ"
         response_format:
           open_modal: "ترمیم کریں"
           modal:

@@ -40,6 +40,7 @@ export function isHex(input) {
  * @param {Object} @suffixArgs - Arguments to pass to the suffix component
  */
 export default class SectionLink extends Component {
+  @service capabilities;
   @service currentUser;
 
   @tracked hovering = false;
@@ -140,9 +141,13 @@ export default class SectionLink extends Component {
     }
   }
 
+  get shouldRenderHoverAction() {
+    return this.args.hoverValue && !this.capabilities.touch;
+  }
+
   @action
   hoveringSectionLink() {
-    if (this.hoverActionActive) {
+    if (this.capabilities.touch || this.hoverActionActive) {
       return;
     }
     this.hovering = true;
@@ -150,7 +155,7 @@ export default class SectionLink extends Component {
 
   @action
   stopHoveringSectionLink() {
-    if (this.hoverActionActive) {
+    if (this.capabilities.touch || this.hoverActionActive) {
       return;
     }
     this.hovering = false;
@@ -247,7 +252,7 @@ export default class SectionLink extends Component {
             {{/if}}
 
             {{! eslint-disable ember/template-no-nested-interactive }}
-            {{#if @hoverValue}}
+            {{#if this.shouldRenderHoverAction}}
               <span class="sidebar-section-link-hover">
                 <button
                   {{on "click" this.runHoverAction}}
@@ -314,7 +319,7 @@ export default class SectionLink extends Component {
               </span>
             {{/if}}
 
-            {{#if @hoverValue}}
+            {{#if this.shouldRenderHoverAction}}
               <span class="sidebar-section-link-hover">
                 <button
                   {{on "click" this.runHoverAction}}

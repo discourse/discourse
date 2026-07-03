@@ -891,7 +891,6 @@ tr_TR:
       limit_exceeded_admin: "AI kredi limitinize ulaştınız. Lütfen %{reset_time} sonra tekrar deneyin."
     errors:
       quota_exceeded: "Bu model için kotayı aştınız. Lütfen %{relative_time} içinde tekrar deneyin."
-      quota_required: "Bu model için maksimum token veya kullanımları belirtmelisiniz"
       no_query_specified: Sorgu parametresi gerekli, lütfen belirtin.
       no_user_for_agent: Belirtilen ajanın ilişkili bir kullanıcısı yok.
       no_user_specified: Kullanıcı adı veya user_unique_id parametresi gerekli, lütfen belirtin.

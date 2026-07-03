@@ -80,6 +80,7 @@ class ProblemCheck
     ProblemCheck::GroupEmailCredentials,
     ProblemCheck::HostNames,
     ProblemCheck::ImageMagick,
+    ProblemCheck::MissingAwsSnsTopicArn,
     ProblemCheck::MissingMailgunApiKey,
     ProblemCheck::OutOfDateThemes,
     ProblemCheck::PollPop3Timeout,

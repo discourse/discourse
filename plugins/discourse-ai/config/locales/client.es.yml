@@ -614,6 +614,12 @@ es:
         temperature_help: "Temperatura que se utilizará para el LLM. Aumentar para aumentar la creatividad (dejar vacío para utilizar el valor por defecto del modelo, generalmente un valor de 0,0 a 2,0)"
         top_p: "Top P"
         top_p_help: "Top P que se utilizará para el LLM. Aumentar para aumentar la aleatoriedad (dejar vacío para utilizar el modelo por defecto, generalmente un valor de 0,0 a 1,0)"
+        thinking_effort_options:
+          none: "Ninguna"
+          low: "Baja"
+          medium: "Medio"
+          high: "Alto"
+          max: "Máximo"
         priority: "Prioridad"
         priority_help: "Los agentes prioritarios se muestran a los usuarios en la parte superior de la lista de agentes. Si varios agentes tienen prioridad, se ordenarán alfabéticamente."
         tool_options: "Opciones de herramientas"
@@ -867,9 +873,7 @@ es:
             custom: "Personalizado..."
           hours: "horas"
           max_tokens_help: "Número máximo de tokens (palabras y caracteres) que cada usuario de este grupo puede utilizar dentro de la duración especificada. Los tokens son las unidades que utilizan los modelos de IA para procesar texto: aproximadamente 1 token = 4 caracteres o 3/4 de una palabra."
-          max_tokens_required: "Debe configurarse si no se establece el número máximo de usos"
           max_usages_help: "Número máximo de veces que cada usuario de este grupo puede utilizar el modelo de IA dentro de la duración especificada. Esta cuota se controla por usuario individual, no se comparte con todo el grupo."
-          max_usages_required: "Debe configurarse si no se establece el número máximo de tokens"
         credit_allocation:
           credits_remaining: "%{remaining} de %{total} créditos restantes (%{percentage}%)"
           soft_limit_warning: "A este modelo le quedan %{percentage}% de créditos de IA hoy"

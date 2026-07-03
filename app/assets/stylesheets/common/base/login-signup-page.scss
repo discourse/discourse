@@ -263,7 +263,8 @@ body.signup-page {
 
     .user-field.text label.control-label,
     .user-field.dropdown label.control-label,
-    .user-field.multiselect label.control-label {
+    .user-field.multiselect label.control-label,
+    .user-field.date label.control-label {
       top: -8px;
       left: calc(1em - 0.25em);
       background-color: var(--secondary);
@@ -304,16 +305,6 @@ body.signup-page {
       .more-info,
       .instructions {
         opacity: 1;
-      }
-    }
-
-    .user-field.date {
-      .alt-placeholder {
-        display: none;
-      }
-
-      input:focus + .alt-placeholder {
-        display: block;
       }
     }
 
@@ -395,7 +386,8 @@ body.signup-page {
         }
 
         .user-field.dropdown label.control-label,
-        .user-field.multiselect label.control-label {
+        .user-field.multiselect label.control-label,
+        .user-field.date label.control-label {
           top: -10px;
         }
       }

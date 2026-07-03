@@ -1,7 +1,13 @@
 const PAUSED_SHORTCUTS = ["-", "="];
 
 function isInputElement(target) {
-  return target.tagName === "INPUT" || target.tagName === "TEXTAREA";
+  return (
+    target.tagName === "INPUT" ||
+    target.tagName === "TEXTAREA" ||
+    target.tagName === "SELECT" ||
+    target.isContentEditable ||
+    target.closest?.("[contenteditable='true']")
+  );
 }
 
 export function setupCanvasKeyboard(
@@ -24,8 +30,14 @@ export function setupCanvasKeyboard(
       e.preventDefault();
       actions.onRedo?.();
     },
-    "meta::c": () => actions.onCopy?.(),
-    "meta::v": () => actions.onPaste?.(),
+    "meta::c": (e) => {
+      e.preventDefault();
+      actions.onCopy?.();
+    },
+    "meta::x": (e) => {
+      e.preventDefault();
+      actions.onCut?.();
+    },
     "::delete": () => actions.onDelete?.(),
     "::backspace": () => actions.onDelete?.(),
     "::escape": () => actions.onEscape?.(),
@@ -52,11 +64,43 @@ export function setupCanvasKeyboard(
     binding?.(event);
   };
 
+  const pasteHandler = (event) => {
+    if (isInputElement(event.target)) {
+      return;
+    }
+
+    actions.onPaste?.(event);
+  };
+
+  const copyHandler = (event) => {
+    if (isInputElement(event.target)) {
+      return;
+    }
+
+    event.preventDefault();
+    actions.onCopy?.();
+  };
+
+  const cutHandler = (event) => {
+    if (isInputElement(event.target)) {
+      return;
+    }
+
+    event.preventDefault();
+    actions.onCut?.();
+  };
+
   canvasElement.addEventListener("keydown", handler);
+  canvasElement.addEventListener("paste", pasteHandler);
+  canvasElement.addEventListener("copy", copyHandler);
+  canvasElement.addEventListener("cut", cutHandler);
 
   return {
     teardown() {
       canvasElement.removeEventListener("keydown", handler);
+      canvasElement.removeEventListener("paste", pasteHandler);
+      canvasElement.removeEventListener("copy", copyHandler);
+      canvasElement.removeEventListener("cut", cutHandler);
       try {
         keyboardShortcutsService.unpause(PAUSED_SHORTCUTS);
       } catch {

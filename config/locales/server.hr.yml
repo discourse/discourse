@@ -428,6 +428,12 @@ hr:
       trust_level_2: "razina_povjerenja_2"
       trust_level_3: "razina_povjerenja_3"
       trust_level_4: "razina_povjerenja_4"
+    default_full_names:
+      everyone: "Svi"
+      admins: "Admini"
+      moderators: "Moderatori"
+      staff: "Osoblje"
+      logged_in_users: "Prijavljeni korisnici"
     default_descriptions:
       admins: "Odgovorni za konfiguriranje i održavanje ove stranice, s pristupom svim podacima o članovima i aktivnostima"
       moderators: "Odgovorni za odgovaranje na oznake, moderiranje rasprava i pomoć članovima s njihovim računima"
@@ -941,6 +947,7 @@ hr:
       labels:
         count: "Članovi"
         share: "Podijeli"
+        signups: "Učlanjenja"
       levels:
         "0": "Novo"
         "1": "Osnovno"
