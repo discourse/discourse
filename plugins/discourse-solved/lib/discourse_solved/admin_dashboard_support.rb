@@ -199,6 +199,7 @@ module DiscourseSolved
                   AND p.post_number > 1
                   AND p.post_type = :post_type
                   AND p.deleted_at IS NULL
+                  AND p.user_id <> t.user_id
               ) AS has_reply
             FROM topics t
             LEFT JOIN discourse_solved_solved_topics st ON st.topic_id = t.id
