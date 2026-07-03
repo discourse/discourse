@@ -137,6 +137,10 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolver.resolve_all([{ id: 9, raw: "plain body" }])).to eq({ 9 => "plain body" })
     end
 
+    it "passes a post with a nil raw through as nil" do
+      expect(resolver.resolve_all([{ id: 9, raw: nil }])).to eq({ 9 => nil })
+    end
+
     it "issues no linkage queries when no post in the batch has a token" do
       allow(intermediate_db).to receive(:query).and_call_original
 
@@ -397,6 +401,17 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       )
     end
 
+    it "strips and records every orphan token in a body" do
+      first = placeholder.mint(:quote)
+      second = placeholder.mint(:link)
+
+      resolved = resolver.resolve_all([{ id: 100, raw: "a #{first} b #{second} c" }])
+
+      expect(resolved[100]).to eq("a  b  c")
+      expect(Migrations::Placeholder).not_to be_include(resolved[100])
+      expect(resolver.orphan_sink.map(&:placeholder)).to contain_exactly(first, second)
+    end
+
     it "strips an orphan while still resolving a real embed in the same body" do
       upload = placeholder.mint(:upload)
       orphan = placeholder.mint(:link)
@@ -445,6 +460,262 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       resolver.resolve_all([{ id: 555, raw: "x #{orphan} y" }])
 
       expect(resolver.orphan_sink.first).to have_attributes(post_id: 555, post_url: nil)
+    end
+  end
+
+  describe "rendering links" do
+    it "rewrites a post-target link to the mapped post URL" do
+      link = placeholder.mint(:link)
+      Migrations::Database::IntermediateDB::PostLink.create(
+        post_id: 1,
+        placeholder: link,
+        url: "https://old.example.com/x",
+        text: "See",
+        target_post_id: 200,
+      )
+      maps = FakePlaceholderMaps.new(post: { 200 => { topic_id: 42, post_number: 3 } })
+      resolver = described_class.new(intermediate_db, maps)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
+
+      expect(resolved[1]).to eq("x [See](https://dest.example.com/t/42/3) y")
+    end
+
+    it "keeps the source URL when the post target is unmapped" do
+      link = placeholder.mint(:link)
+      Migrations::Database::IntermediateDB::PostLink.create(
+        post_id: 1,
+        placeholder: link,
+        url: "https://old.example.com/x",
+        text: "See",
+        target_post_id: 200,
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
+
+      expect(resolved[1]).to eq("x [See](https://old.example.com/x) y")
+    end
+
+    it "keeps the source URL when the mapped post has no post number" do
+      link = placeholder.mint(:link)
+      Migrations::Database::IntermediateDB::PostLink.create(
+        post_id: 1,
+        placeholder: link,
+        url: "https://old.example.com/x",
+        text: "See",
+        target_post_id: 200,
+      )
+      maps = FakePlaceholderMaps.new(post: { 200 => { topic_id: 42 } })
+      resolver = described_class.new(intermediate_db, maps)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
+
+      expect(resolved[1]).to eq("x [See](https://old.example.com/x) y")
+    end
+
+    it "renders a bare URL when the link has no text" do
+      link = placeholder.mint(:link)
+      Migrations::Database::IntermediateDB::PostLink.create(
+        post_id: 1,
+        placeholder: link,
+        url: "https://old.example.com/x",
+        target_topic_id: 300,
+      )
+      maps = FakePlaceholderMaps.new(topic_id: { 300 => 99 })
+      resolver = described_class.new(intermediate_db, maps)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
+
+      expect(resolved[1]).to eq("x https://dest.example.com/t/99 y")
+    end
+  end
+
+  describe "rendering mentions" do
+    it "renders a group mention using the mapped group name" do
+      mention = placeholder.mint(:mention)
+      Migrations::Database::IntermediateDB::PostMention.create(
+        post_id: 1,
+        placeholder: mention,
+        mention_type: "group",
+        target_id: 50,
+        name: "stale-group",
+      )
+      maps = FakePlaceholderMaps.new(group_name: { 50 => "staff" })
+      resolver = described_class.new(intermediate_db, maps)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "hi #{mention}!" }])
+
+      expect(resolved[1]).to eq("hi  @staff !")
+    end
+
+    it "falls back to the recorded name for an unmapped group mention" do
+      mention = placeholder.mint(:mention)
+      Migrations::Database::IntermediateDB::PostMention.create(
+        post_id: 1,
+        placeholder: mention,
+        mention_type: "group",
+        target_id: 51,
+        name: "team-name",
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "hi #{mention}!" }])
+
+      expect(resolved[1]).to eq("hi  @team-name !")
+    end
+
+    it "falls back to the recorded name for an unmapped user mention" do
+      mention = placeholder.mint(:mention)
+      Migrations::Database::IntermediateDB::PostMention.create(
+        post_id: 1,
+        placeholder: mention,
+        mention_type: "user",
+        target_id: 7,
+        name: "ghost",
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "hi #{mention}!" }])
+
+      expect(resolved[1]).to eq("hi  @ghost !")
+    end
+
+    it "drops a mention that resolves to a blank name" do
+      mention = placeholder.mint(:mention)
+      Migrations::Database::IntermediateDB::PostMention.create(
+        post_id: 1,
+        placeholder: mention,
+        mention_type: "user",
+        target_id: 7,
+        name: "",
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "a#{mention}b" }])
+
+      expect(resolved[1]).to eq("ab")
+    end
+  end
+
+  describe "rendering entity-backed embeds" do
+    it "renders a poll using the mapped poll markdown" do
+      poll = placeholder.mint(:poll)
+      Migrations::Database::IntermediateDB::PostPoll.create(
+        post_id: 1,
+        placeholder: poll,
+        poll_id: 7,
+      )
+      maps = FakePlaceholderMaps.new(poll_markdown: { 7 => "[poll]body[/poll]" })
+      resolver = described_class.new(intermediate_db, maps)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "before #{poll} after" }])
+
+      expect(resolved[1]).to eq("before [poll]body[/poll] after")
+    end
+
+    it "renders an event using the mapped event markdown" do
+      event = placeholder.mint(:event)
+      Migrations::Database::IntermediateDB::PostEvent.create(
+        post_id: 1,
+        placeholder: event,
+        event_id: 9,
+      )
+      maps = FakePlaceholderMaps.new(event_markdown: { 9 => "[event]x[/event]" })
+      resolver = described_class.new(intermediate_db, maps)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "before #{event} after" }])
+
+      expect(resolved[1]).to eq("before [event]x[/event] after")
+    end
+  end
+
+  describe "rendering quotes" do
+    it "renders a quote from the recorded name alone when there is no username" do
+      quote = placeholder.mint(:quote)
+      Migrations::Database::IntermediateDB::PostQuote.create(
+        post_id: 1,
+        placeholder: quote,
+        quoted_name: "Solo Name",
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{quote} y" }])
+
+      expect(resolved[1]).to eq('x [quote="Solo Name"] y')
+    end
+
+    it "ignores a blank recorded username, keeping only the name" do
+      quote = placeholder.mint(:quote)
+      Migrations::Database::IntermediateDB::PostQuote.create(
+        post_id: 1,
+        placeholder: quote,
+        quoted_username: "",
+        quoted_name: "Solo",
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{quote} y" }])
+
+      expect(resolved[1]).to eq('x [quote="Solo"] y')
+    end
+
+    it "ignores a blank recorded name, keeping only the username" do
+      quote = placeholder.mint(:quote)
+      Migrations::Database::IntermediateDB::PostQuote.create(
+        post_id: 1,
+        placeholder: quote,
+        quoted_username: "ghost",
+        quoted_name: "",
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{quote} y" }])
+
+      expect(resolved[1]).to eq('x [quote="ghost"] y')
+    end
+
+    it "adds only the post reference when the quote has no author" do
+      quote = placeholder.mint(:quote)
+      Migrations::Database::IntermediateDB::PostQuote.create(
+        post_id: 1,
+        placeholder: quote,
+        quoted_username: "ghost",
+        quoted_post_id: 200,
+      )
+      maps = FakePlaceholderMaps.new(post: { 200 => { topic_id: 42, post_number: 3 } })
+      resolver = described_class.new(intermediate_db, maps)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{quote} y" }])
+
+      expect(resolved[1]).to eq('x [quote="ghost, post:3, topic:42"] y')
+    end
+  end
+
+  describe "post URL reporting" do
+    let(:maps) { FakePlaceholderMaps.new(post: { 100 => { topic_id: 42, post_number: 3 } }) }
+
+    it "leaves the post URL nil when the mapped post has no post number" do
+      upload = placeholder.mint(:upload)
+      Migrations::Database::IntermediateDB::PostUpload.create(
+        post_id: 100,
+        placeholder: upload,
+        upload_id: "sha1",
+      )
+      maps = FakePlaceholderMaps.new(post: { 100 => { topic_id: 42 } })
+      resolver = described_class.new(intermediate_db, maps)
+
+      resolver.resolve_all([{ id: 100, raw: "x #{upload} y" }])
+
+      expect(resolver.unresolved_sink.first.post_url).to be_nil
+    end
+
+    it "leaves the post URL nil when the mapped post has no topic id" do
+      upload = placeholder.mint(:upload)
+      Migrations::Database::IntermediateDB::PostUpload.create(
+        post_id: 100,
+        placeholder: upload,
+        upload_id: "sha1",
+      )
+      maps = FakePlaceholderMaps.new(post: { 100 => { post_number: 3 } })
+      resolver = described_class.new(intermediate_db, maps)
+
+      resolver.resolve_all([{ id: 100, raw: "x #{upload} y" }])
+
+      expect(resolver.unresolved_sink.first.post_url).to be_nil
     end
   end
 end
