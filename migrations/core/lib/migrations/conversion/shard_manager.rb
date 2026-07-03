@@ -23,8 +23,9 @@ module Migrations
       #   empty template
       def initialize(canonical_path:, migrations_path:)
         @dir = File.join(File.dirname(canonical_path), "shards")
-        FileUtils.mkdir_p(@dir)
 
+        # No mkdir_p needed here: building the template opens a database inside
+        # @dir, and that already creates the directory.
         @template_path = File.join(@dir, "template.db")
         Database.delete_database(@template_path)
         Database.migrate(@template_path, migrations_path:)

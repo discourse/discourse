@@ -51,4 +51,55 @@ RSpec.describe Migrations::Conversion::ShardManager do
   ensure
     manager&.cleanup
   end
+
+  it "places the template and numbered shards in a 'shards' dir next to the canonical db" do
+    manager = build_manager
+    shards_dir = File.join(File.dirname(@canonical), "shards")
+
+    expect(File).to exist(File.join(shards_dir, "template.db"))
+
+    shard = manager.create_shard
+    expect(File.dirname(shard)).to eq(shards_dir)
+    expect(File.basename(shard)).to eq("shard-1.db") # counter starts at 0, first shard is 1
+  ensure
+    manager&.cleanup
+  end
+
+  it "rebuilds the template from scratch, ignoring a stale one left behind" do
+    shards_dir = File.join(File.dirname(@canonical), "shards")
+    FileUtils.mkdir_p(shards_dir)
+    File.write(File.join(shards_dir, "template.db"), "not a valid sqlite database")
+
+    manager = build_manager
+    db = Extralite::Database.new(manager.create_shard)
+    tables =
+      db.query_array(
+        "SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%'",
+      ).flatten
+
+    expect(tables).to include("widgets")
+  ensure
+    db&.close
+    manager&.cleanup
+  end
+
+  it "discards a shard, removing its file" do
+    manager = build_manager
+    shard = manager.create_shard
+    expect(File).to exist(shard)
+
+    manager.discard(shard)
+    expect(File).not_to exist(shard)
+  ensure
+    manager&.cleanup
+  end
+
+  it "cleanup removes the whole shards directory" do
+    manager = build_manager
+    shards_dir = File.join(File.dirname(@canonical), "shards")
+    expect(File).to exist(shards_dir)
+
+    manager.cleanup
+    expect(File).not_to exist(shards_dir)
+  end
 end
