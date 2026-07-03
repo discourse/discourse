@@ -31,8 +31,8 @@ module Migrations
           def initialize
             @entries = []
             @plugin_entries = []
-            @entry_names = {}
-            @plugin_entry_names = {}
+            @entry_names = Set.new
+            @plugin_entry_names = Set.new
           end
 
           def table(name, reason = nil)
@@ -49,11 +49,11 @@ module Migrations
             end
 
             normalized_name = Helpers.normalize_plugin_name(name)
-            if @plugin_entry_names.key?(normalized_name)
+            if @plugin_entry_names.include?(normalized_name)
               raise ConfigError, "Ignored plugin :#{normalized_name} is already declared."
             end
 
-            @plugin_entry_names[normalized_name] = true
+            @plugin_entry_names << normalized_name
             @plugin_entries << IgnoredPluginEntry.new(name: normalized_name, reason:)
           end
 
@@ -65,11 +65,11 @@ module Migrations
 
           def add_table_entry(name, reason)
             normalized_name = name.to_s
-            if @entry_names.key?(normalized_name)
+            if @entry_names.include?(normalized_name)
               raise ConfigError, "Ignored table :#{normalized_name} is already declared."
             end
 
-            @entry_names[normalized_name] = true
+            @entry_names << normalized_name
             @entries << IgnoredEntry.new(name: normalized_name, reason:)
           end
         end
