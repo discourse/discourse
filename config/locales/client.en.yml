@@ -7459,10 +7459,7 @@ en:
             effects: Effects
             trust_levels_none: "None"
             automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
-            automatic_membership_email_domains_instructions: "Enter each domain on its own, without the @ symbol, for example discourse.org."
-            automatic_membership_email_domains_invalid:
-              one: "%{domains} isn't a valid domain. Enter a bare domain, for example discourse.org."
-              other: "These aren't valid domains: %{domains}. Enter each as a bare domain, for example discourse.org."
+            automatic_membership_email_domains_instructions: "Enter each domain on its own, for example discourse.org."
             automatic_membership_user_count:
               one: "%{count} user has the new email domains and will be added to the group."
               other: "%{count} users have the new email domains and will be added to the group."

@@ -33,14 +33,9 @@ acceptance("Managing Group Membership", function (needs) {
       return helper.response({ success: "OK" });
     });
 
-    server.put("/admin/groups/automatic_membership_count.json", (request) => {
-      const domains = (
-        helper.parsePostData(request.requestBody)
-          .automatic_membership_email_domains || ""
-      ).split("|");
-      const invalid_domains = domains.filter((domain) => domain.includes("@"));
-      return helper.response({ user_count: 0, invalid_domains });
-    });
+    server.put("/admin/groups/automatic_membership_count.json", () =>
+      helper.response({ user_count: 0 })
+    );
   });
 
   needs.hooks.beforeEach(() => (savedGroup = null));
@@ -110,7 +105,7 @@ acceptance("Managing Group Membership", function (needs) {
     assert.strictEqual(emailDomains.header().value(), "foo.com");
   });
 
-  test("warns and blocks the save when a domain includes '@'", async function (assert) {
+  test("saves silently when a domain includes '@' (the server normalizes it)", async function (assert) {
     updateCurrentUser({ can_create_group: true });
 
     await visit("/g/alternative-group/manage/membership");
@@ -126,15 +121,8 @@ acceptance("Managing Group Membership", function (needs) {
 
     assert
       .dom(".dialog-body")
-      .hasText(
-        i18n(
-          "admin.groups.manage.membership.automatic_membership_email_domains_invalid",
-          { count: 1, domains: "@harness.io" }
-        ),
-        "shows the invalid-domain warning"
-      );
-
-    assert.strictEqual(savedGroup, null, "does not save the group");
+      .doesNotExist("does not warn about the leading @");
+    assert.notStrictEqual(savedGroup, null, "saves the group");
   });
 
   test("the join method constrains the group's visibility options", async function (assert) {
@@ -320,7 +308,7 @@ acceptance(
     needs.user();
     needs.pretender((server, helper) => {
       server.put("/admin/groups/automatic_membership_count.json", () =>
-        helper.response({ user_count: null, invalid_domains: [] })
+        helper.response({ user_count: null })
       );
 
       server.put("/groups/57", (request) => {
