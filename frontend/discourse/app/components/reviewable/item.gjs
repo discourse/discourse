@@ -366,7 +366,7 @@ export default class ReviewableItem extends Component {
 
   @bind
   _updateClaimedBy(data) {
-    if (data.topic_id !== this.reviewable.topic.id) {
+    if (data.topic_id !== this.topicId) {
       return;
     }
 
