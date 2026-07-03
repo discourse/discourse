@@ -457,8 +457,7 @@ after_initialize do
 
   add_to_class(:list_controller, :group_topics_assigned) do
     group = Group.find_by("name = ?", params[:groupname])
-    guardian.ensure_can_see_group!(group)
-    guardian.ensure_can_see_group_members!(group)
+    guardian.ensure_can_see_group_and_members!(group)
 
     raise Discourse::NotFound unless group
     raise Discourse::InvalidAccess unless guardian.can_assign_globally?

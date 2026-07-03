@@ -301,6 +301,10 @@ class Guardian
     true
   end
 
+  def can_see_group_and_members?(group)
+    can_see_group?(group) && can_see_group_members?(group)
+  end
+
   def can_see_groups?(groups)
     return false if groups.blank?
     if is_admin? || groups.all? { |g| g.visibility_level == Group.visibility_levels[:public] }

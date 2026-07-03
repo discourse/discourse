@@ -140,7 +140,7 @@ module Jobs
       invitees.filter do |i|
         group = groups.find { |g| g.name === i[:identifier] }
 
-        !group || (@guardian.can_see_group?(group) && @guardian.can_see_group_members?(group))
+        !group || @guardian.can_see_group_and_members?(group)
       end
     end
   end
