@@ -184,25 +184,13 @@ export default class AdminReports extends Component {
   }
 
   @bind
-  filterReportsByGroup(reports, availableReports) {
-    const selectedGroupKey = this.selectedGroupKey(availableReports);
-
-    if (selectedGroupKey === "all") {
-      return reports;
-    }
-
-    const group = this.groupReports(this.filterReports(availableReports)).find(
-      (reportGroup) => reportGroup.key === selectedGroupKey
-    );
-
-    return group?.reports
-      ? reports.filter((report) => group.reports.includes(report))
-      : reports;
+  updateGroupFilter(groupKey) {
+    this.args.onGroupChange?.(groupKey);
   }
 
   @bind
-  updateGroupFilter(groupKey) {
-    this.args.onGroupChange?.(groupKey);
+  resetGroupFilter() {
+    this.args.onGroupChange?.("all");
   }
 
   <template>
@@ -212,18 +200,14 @@ export default class AdminReports extends Component {
           @array={{this.filterReports reports}}
           @searchableProps={{array "title" "description"}}
           @dropdownOptions={{this.groupDropdownOptions reports}}
-          @defaultDropdownValue={{this.selectedGroupKey reports}}
+          @dropdownValue={{this.selectedGroupKey reports}}
           @inputPlaceholder={{i18n "admin.filter_reports"}}
           @noResultsMessage={{i18n "admin.filter_reports_no_results"}}
           @onClientDropdownFilterChange={{this.updateGroupFilter}}
+          @onResetFilters={{this.resetGroupFilter}}
         >
           <:content as |filteredReports|>
-            {{#each
-              (this.groupReports
-                (this.filterReportsByGroup filteredReports reports)
-              )
-              as |group|
-            }}
+            {{#each (this.groupReports filteredReports) as |group|}}
               <section class="admin-reports-group">
                 <h2 class="admin-reports-group__title">{{group.name}}</h2>
                 <AdminSectionLandingWrapper class="admin-reports-list">

@@ -29,6 +29,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
  * @param {String} [inputPlaceholder] - Placeholder text for search input
  * @param {String|Object} [defaultDropdownValue="all"] - Default dropdown value(s). For single dropdown: "all",
  *                                                       for multiple: { dropdown1: "all", dropdown2: "all" }
+ * @param {String|Object} [dropdownValue] - Current dropdown value(s), defaults to defaultDropdownValue
  * @param {String} [noResultsMessage] - Message shown when no results found
  * @param {Boolean} [loading] - Whether data is loading (hides reset button during loading)
  * @param {Number} [minItemsForFilter] - Minimum items before showing filters (default: always show)
@@ -54,7 +55,7 @@ export default class AdminFilterControls extends Component {
 
     if (this.hasMultipleDropdowns) {
       Object.keys(this.dropdownOptions).forEach((key) => {
-        this.dropdownFilters[key] = this.defaultValue(key);
+        this.dropdownFilters[key] = this.dropdownValueFor(key);
       });
     }
   }
@@ -95,6 +96,10 @@ export default class AdminFilterControls extends Component {
 
   get defaultDropdownValue() {
     return this.args.defaultDropdownValue || "all";
+  }
+
+  get dropdownValue() {
+    return this.args.dropdownValue || this.defaultDropdownValue;
   }
 
   get showFilters() {
@@ -185,14 +190,20 @@ export default class AdminFilterControls extends Component {
     return defaults[key] || "all";
   }
 
+  dropdownValueFor(key) {
+    const values =
+      typeof this.dropdownValue === "object" ? this.dropdownValue : {};
+    return values[key] || this.defaultValue(key);
+  }
+
   @action
   setupComponent() {
     if (this.hasMultipleDropdowns) {
       Object.keys(this.dropdownOptions).forEach((key) => {
-        this.dropdownFilters[key] = this.defaultValue(key);
+        this.dropdownFilters[key] = this.dropdownValueFor(key);
       });
     } else {
-      this.dropdownFilter = this.defaultDropdownValue;
+      this.dropdownFilter = this.dropdownValue;
     }
   }
 
@@ -253,6 +264,7 @@ export default class AdminFilterControls extends Component {
         }}
         {{didInsert this.setupComponent}}
         {{didUpdate this.setupComponent @defaultDropdownValue}}
+        {{didUpdate this.setupComponent @dropdownValue}}
       >
         <div class="admin-filter-controls__inputs">
           <DFilterInput
