@@ -1,7 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat, fn, hash } from "@ember/helper";
+import { array, concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -367,67 +367,33 @@ export default class BlockToolbar extends Component {
   }
 
   /**
-   * A string that changes whenever the bar's rendered content changes width:
-   * the handle's name / ordinal, the URL-edit and inline-format sub-modes, and
-   * the identity / disabled / active / icon of every action. The `d-fit`
-   * modifier reads this so it re-measures on a content change; a plain resize
-   * is caught by the coordinator's observer instead.
-   *
-   * @returns {string}
-   */
-  get fitFingerprint() {
-    const parts = [
-      this.args.displayName,
-      this.args.displayChip,
-      this.isUrlFieldEditing ? "url" : "",
-      this.showInlineFormat ? "fmt" : "",
-    ];
-    for (const item of this.actionItems) {
-      parts.push(
-        `${item.id}:${item.disabled ? 1 : 0}:${item.active ? 1 : 0}:${item.icon ?? ""}`
-      );
-    }
-    return parts.join("|");
-  }
-
-  /**
-   * The fit coordinator's READ step for this badge. Reads the natural widths of
-   * the bar's parts from the toolbar element. The leading group (handle + any
+   * The bar's fit decision, run in the fit coordinator's shared read phase
+   * (reads only — nothing is written). Reads the natural widths of the bar's
+   * parts from the toolbar element: the leading group (handle + any
    * always-inline format buttons) and BOTH the collapsible action row and the
    * hamburger are always in the DOM — the off-tier one sits absolutely
    * positioned at `max-content`, so every `offsetWidth` reports its true
    * intrinsic width regardless of the current tier. No styles are toggled to
-   * measure.
+   * measure. The width-to-tier mapping itself lives in the pure `computeTier`.
    *
+   * @param {number} avail - The chrome's available content width.
    * @param {HTMLElement} toolbarEl - The bar root (the element `d-fit` is on).
-   * @returns {{ naturalFull: number, naturalCompact: number }} The bar's natural
-   *   width with the actions inline vs. folded into the hamburger.
+   * @returns {"full"|"narrow"|"narrower"}
    */
   @action
-  measureFit(toolbarEl) {
+  computeFit(avail, toolbarEl) {
     const widthOf = (selector) =>
       toolbarEl.querySelector(selector)?.offsetWidth ?? 0;
 
     const leading =
       widthOf(".wireframe-block-toolbar__handle") +
       widthOf(".wireframe-block-toolbar__format");
-    const actions = widthOf(".wireframe-block-toolbar__actions");
-    const more = widthOf(".wireframe-block-toolbar__more");
 
-    return { naturalFull: leading + actions, naturalCompact: leading + more };
-  }
-
-  /**
-   * The fit coordinator's pure DECIDE step: maps the chrome's available width
-   * plus the measured natural widths to a fit tier.
-   *
-   * @param {number} avail - The chrome's available content width.
-   * @param {{ naturalFull: number, naturalCompact: number }} data
-   * @returns {"full"|"narrow"|"narrower"}
-   */
-  @action
-  decideFit(avail, data) {
-    return computeTier(avail, data.naturalFull, data.naturalCompact);
+    return computeTier(
+      avail,
+      leading + widthOf(".wireframe-block-toolbar__actions"),
+      leading + widthOf(".wireframe-block-toolbar__more")
+    );
   }
 
   @action
@@ -575,12 +541,17 @@ export default class BlockToolbar extends Component {
       class="wireframe-block-toolbar"
       role="toolbar"
       {{dFit
+        this.computeFit
         observedEl=@chromeEl
-        measure=this.measureFit
-        decide=this.decideFit
-        apply=(hash attribute="data-wf-toolbar-fit")
+        attribute="data-wf-toolbar-fit"
         active=this.fitActive
-        fingerprint=this.fitFingerprint
+        remeasureOn=(array
+          this.actionItems
+          @displayName
+          @displayChip
+          this.isUrlFieldEditing
+          this.showInlineFormat
+        )
       }}
     >
       {{! Handle region — always present so block identity stays

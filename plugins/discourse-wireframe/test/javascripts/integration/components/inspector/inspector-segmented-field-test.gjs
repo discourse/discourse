@@ -1,4 +1,4 @@
-import { click, render, settled } from "@ember/test-helpers";
+import { click, render, waitUntil } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import InspectorSegmentedField from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/fields/inspector-segmented-field";
@@ -83,59 +83,78 @@ module("Integration | Wireframe | InspectorSegmentedField", function (hooks) {
     assert.deepEqual(captured, ["b"]);
   });
 
-  // Six icon options: enough that the control fits at a wide rail but folds
-  // once the rail is dragged to its narrowest, which is what these tests flex.
+  // Six icon options wrapped at extreme widths: no styling can fit six
+  // segments in 40px, and any styling fits them in 5000px, so the fold
+  // decisions below are deterministic even without the plugin stylesheet.
   const SIX_ITEMS = ["a", "b", "c", "d", "e", "f"].map((value) => ({
     value,
     label: value.toUpperCase(),
     icon: "wf-align-left",
   }));
 
-  test("folds to a dropdown when the inspector rail is narrow", async function (assert) {
-    this.owner.lookup("service:wireframe-rail").setRightRailWidth(240);
+  test("folds to a dropdown when the field is narrow", async function (assert) {
     const items = SIX_ITEMS;
     await render(
       <template>
-        <InspectorSegmentedField @items={{items}} @value="a" />
+        <div style="width: 40px">
+          <InspectorSegmentedField @items={{items}} @value="a" />
+        </div>
       </template>
     );
 
     assert
+      .dom(".d-fit-swap")
+      .hasAttribute("data-fit", "collapsed", "a narrow field folds");
+    assert
       .dom(".wireframe-segmented-field__dropdown")
-      .exists("a narrow rail folds the six-option control to a dropdown");
-    assert.dom(".d-segmented-control").doesNotExist();
+      .exists("the dropdown is the active rendition");
+    assert
+      .dom(".d-fit-swap__pane.--full")
+      .hasStyle(
+        { visibility: "hidden" },
+        "the segmented row stays mounted but hidden for measurement"
+      );
   });
 
-  test("keeps segments when the inspector rail is wide", async function (assert) {
-    this.owner.lookup("service:wireframe-rail").setRightRailWidth(500);
+  test("keeps segments when the field is wide", async function (assert) {
     const items = SIX_ITEMS;
     await render(
       <template>
-        <InspectorSegmentedField @items={{items}} @value="a" />
+        <div style="width: 5000px">
+          <InspectorSegmentedField @items={{items}} @value="a" />
+        </div>
       </template>
     );
 
-    assert.dom(".d-segmented-control").exists("a wide rail keeps segments");
+    assert.dom(".d-fit-swap").hasAttribute("data-fit", "full");
+    assert.dom(".d-segmented-control").exists("a wide field keeps segments");
     assert.dom(".wireframe-segmented-field__dropdown").doesNotExist();
   });
 
-  test("re-widening the rail unfolds the control back to segments", async function (assert) {
-    const rail = this.owner.lookup("service:wireframe-rail");
-    rail.setRightRailWidth(240);
+  test("re-widening the field unfolds the control back to segments", async function (assert) {
     const items = SIX_ITEMS;
     await render(
       <template>
-        <InspectorSegmentedField @items={{items}} @value="a" />
+        <div class="test-fit-wrap" style="width: 40px">
+          <InspectorSegmentedField @items={{items}} @value="a" />
+        </div>
       </template>
     );
     assert
       .dom(".wireframe-segmented-field__dropdown")
       .exists("folded while narrow");
 
-    rail.setRightRailWidth(500);
-    await settled();
+    // A post-render width change reaches the fit pass through the
+    // ResizeObserver, which fires outside the runloop (settled() does not
+    // await it) — poll for the swapped state instead.
+    document.querySelector(".test-fit-wrap").style.width = "5000px";
+    await waitUntil(
+      () => document.querySelector(".d-fit-swap")?.dataset.fit === "full"
+    );
+
     assert
       .dom(".d-segmented-control")
-      .exists("widening the rail restores the segmented control");
+      .exists("widening the field restores the segmented control");
+    assert.dom(".wireframe-segmented-field__dropdown").doesNotExist();
   });
 });

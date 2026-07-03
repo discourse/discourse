@@ -1,22 +1,14 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import DSegmentedControl from "discourse/components/d-segmented-control";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DFitSwap from "discourse/ui-kit/d-fit-swap";
 
 // The most options a segmented row is allowed to show regardless of width. Even
 // with room, past this many segments the row is too busy to scan, so we always
 // fall back to a dropdown.
 const SEGMENT_MAX = 6;
-
-// Rough width, in pixels, one icon segment needs to stay tappable and legible,
-// plus the fixed chrome (panel + form padding) around the control. The fold
-// decision compares the inspector rail's width to `count * MIN_SEGMENT_PX +
-// PANEL_INSET`. Tuned so the default six-icon controls stay segments at the
-// default rail width and fold only once the rail is dragged narrower.
-const MIN_SEGMENT_PX = 36;
-const PANEL_INSET = 48;
 
 /**
  * The inspector's one enum picker. Renders a single-select choice as a segmented
@@ -24,12 +16,10 @@ const PANEL_INSET = 48;
  * a mixed set like "Auto" + alignment arrows reads naturally) — and folds to a
  * dropdown when the row would be cramped.
  *
- * Because the inspector rail is resizable, the fold is driven by the rail's
- * width: drag the rail narrow and the segments fold to a dropdown; widen it and
- * they return. The width comes from the `wireframe-rail` service (the source of
- * truth that also drives the rail's CSS), so the decision is a pure, reactive
- * getter — no per-field measurement, flicker, or resize loop. `SEGMENT_MAX`
- * remains a hard cap independent of width.
+ * The fold is width-driven through the core `DFitSwap` component: the segmented
+ * row collapses to the dropdown whenever its natural width no longer fits the
+ * field (drag the inspector rail narrow and it folds; widen it and the segments
+ * return). `SEGMENT_MAX` remains a hard cap independent of width.
  *
  * Both `DSegmentedControl` and `ComboBox` carry their own keyboard / screen-reader
  * behavior; folding only swaps which one renders.
@@ -45,8 +35,6 @@ const PANEL_INSET = 48;
  * label and tooltip.
  */
 export default class InspectorSegmentedField extends Component {
-  @service wireframeRail;
-
   get currentValue() {
     return this.args.custom ? this.args.custom.value : this.args.value;
   }
@@ -74,19 +62,13 @@ export default class InspectorSegmentedField extends Component {
   }
 
   /**
-   * Fold to the dropdown when there are too many options for a row, or when the
-   * inspector rail is too narrow to fit `count` segments comfortably.
+   * `true` when there are too many options for a segmented row no matter how
+   * wide the field is; width-driven folding is handled by `DFitSwap` instead.
    *
    * @returns {boolean}
    */
-  get useDropdown() {
-    const count = this.items.length;
-    if (count > SEGMENT_MAX) {
-      return true;
-    }
-    return (
-      this.wireframeRail.rightRailWidth < count * MIN_SEGMENT_PX + PANEL_INSET
-    );
+  get exceedsSegmentMax() {
+    return this.items.length > SEGMENT_MAX;
   }
 
   /**
@@ -113,7 +95,7 @@ export default class InspectorSegmentedField extends Component {
   }
 
   <template>
-    {{#if this.useDropdown}}
+    {{#if this.exceedsSegmentMax}}
       <ComboBox
         class="wireframe-segmented-field__dropdown"
         @content={{this.items}}
@@ -123,13 +105,27 @@ export default class InspectorSegmentedField extends Component {
         @onChange={{this.commit}}
       />
     {{else}}
-      <DSegmentedControl
-        class="wireframe-segmented-field"
-        @items={{this.segmentItems}}
-        @value={{this.currentValue}}
-        @name={{this.name}}
-        @onSelect={{this.commit}}
-      />
+      <DFitSwap @remeasureOn={{this.items}}>
+        <:full>
+          <DSegmentedControl
+            class="wireframe-segmented-field"
+            @items={{this.segmentItems}}
+            @value={{this.currentValue}}
+            @name={{this.name}}
+            @onSelect={{this.commit}}
+          />
+        </:full>
+        <:collapsed>
+          <ComboBox
+            class="wireframe-segmented-field__dropdown"
+            @content={{this.items}}
+            @value={{this.currentValue}}
+            @nameProperty="label"
+            @valueProperty="value"
+            @onChange={{this.commit}}
+          />
+        </:collapsed>
+      </DFitSwap>
     {{/if}}
   </template>
 }

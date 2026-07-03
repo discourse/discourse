@@ -263,6 +263,10 @@ Its own phase because it's more than a relocation — the error copy needs real 
   **keeping the native `<select>`s inside**. Dirty/unsaved Save signal (touches
   `.wireframe-btn-save` — see `editor-shell-toolbar-test.gjs`). Responsive overflow
   reuses the Phase-5 general fit service (so its config must be designed first).
+  *(API revised post-Phase-5: the fit primitive is now core `d-fit` — one
+  `compute(availWidth, element, observedEl)` function + `attribute`/`onChange`
+  write strategies + `remeasureOn` — plus the high-level `DFitSwap` two-block
+  component for full/collapsed swaps. Design the topbar overflow against those.)*
 - The warnings button is gone (moved to the Issues panel in Phase 2b). The topbar's
   `OutletJumpSelect` is likely absorbed by the document anchor — decide at phase
   start (Open decision).
@@ -290,6 +294,11 @@ Its own phase because it's more than a relocation — the error copy needs real 
   afterRender read-all-then-write-all). Add an invariant test (K targets → one
   measure pass, zero interleaved writes). The rename moves
   `unit/services/wireframe-toolbar-fit-test.js` (import + module name) with it.
+  *(SHIPPED, then revised: the extraction landed as core `fit-coordinator` +
+  `d-fit` modifier, and a follow-up simplified the API to one
+  `compute(availWidth, element, observedEl)` function + `attribute`/`onChange`
+  write strategies + `remeasureOn` reactivity, and added the `DFitSwap`
+  two-block ui-kit component — the inspector segmented field folds through it.)*
 - Drive panel-width-adaptive inspector controls off this service; add a clear
   selected-block ↔ canvas indicator.
 
@@ -297,8 +306,10 @@ Its own phase because it's more than a relocation — the error copy needs real 
 - Restyle the block toolbar + `.wireframe-block-toolbar*` SCSS
   (`wireframe-chrome.scss:695-977`) into the shared language. **Hard "do-not-break"
   list:** never `display:none` the idle bar (keep `opacity`, preserves the drag
-  source); keep the four fit-measured class names (or update the service same
-  phase); add roving tabindex to satisfy `role="toolbar"` (`:535`) OR drop the
+  source); keep the four fit-measured class names (or update the toolbar's
+  `computeFit` in `block-toolbar.gjs` the same phase — the fit primitive is now
+  core `d-fit`, and the measured selectors live in that consumer function);
+  add roving tabindex to satisfy `role="toolbar"` (`:535`) OR drop the
   role — and don't fight the inline-format `@preventFocus` selection retention.
 - Unify resize handles (`DResizeHandles`), grid track/cell handles, drop-zones,
   ghost/preview overlays, and `block-breadcrumb.gjs` on `--wf-accent` + shared

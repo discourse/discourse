@@ -562,7 +562,7 @@ body.wireframe-active {
     overflow: hidden; /* clip the handle's bg into the rounded corners */
 
     /* Cap the bar to the block width so a wide selected bar can't spill past a
-       narrow block; the `toolbar-fit` service folds the actions into the
+       narrow block; the `d-fit`-driven tiers fold the actions into the
        hamburger before it would clip. The bar is `position: absolute` (out of
        flow) and MUST carry no margin — otherwise its size could feed back into
        the chrome width the fit observer watches. */
@@ -686,8 +686,8 @@ body.wireframe-active {
 
     /* Collapsible structural-action row. Carries `width: max-content` so its
        `offsetWidth` reports the true intrinsic width whether it's in flow (full
-       tier) or parked off-tier (narrow / narrower) — the fit service reads it
-       without ever toggling a style. */
+       tier) or parked off-tier (narrow / narrower) — the toolbar's fit compute
+       reads it without ever toggling a style. */
 
     &__actions {
       display: inline-flex;
@@ -731,8 +731,8 @@ body.wireframe-active {
     }
   }
 
-  /* Toolbar fit tiers, keyed off the attribute the `wireframe-toolbar-fit`
-     service writes on the chrome. The off-tier element is absolutely positioned
+  /* Toolbar fit tiers, keyed off the attribute the toolbar's `d-fit` wiring
+     writes on the chrome. The off-tier element is absolutely positioned
      + `visibility: hidden`: out of flow (so it can't widen the bar or force a
      line break) and out of the a11y tree / tab order, yet still measurable at
      `width: max-content`. Swapping tiers is therefore a single, flicker-free
@@ -1379,6 +1379,13 @@ body.wireframe-active {
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
+
+    /* Reserve the scrollbar's track even while it's hidden. Width-folding
+       controls inside the panel can change the content height right at the
+       scrollbar threshold; with classic (non-overlay) scrollbars the track
+       appearing/disappearing would change the available width and re-fold
+       them in a loop. */
+    scrollbar-gutter: stable;
     padding: 0.75rem 1rem;
   }
 

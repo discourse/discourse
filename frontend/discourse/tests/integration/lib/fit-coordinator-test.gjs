@@ -31,22 +31,26 @@ module("Integration | Library | fit-coordinator", function (hooks) {
         registerFit({
           key: el,
           observedEl: el,
-          measure: () => {
+          compute: () => {
             log.push("read");
-            return { i };
+            return `tier-${i}`;
           },
-          decide: (_avail, data) => `tier-${data.i}`,
-          apply: { callback: (tier) => log.push(`write:${tier}`) },
+          onChange: (tier) => log.push(`write:${tier}`),
         })
       )
     );
     await settled();
 
-    assert.strictEqual(
-      log.filter((e) => e === "read").length,
-      3,
-      "each target is measured once"
-    );
+    // Reads come in whole read-all batches of three, one per measure trigger.
+    // Observing an element makes the ResizeObserver deliver an initial
+    // notification, so besides the registration-triggered pass a second,
+    // identical pass can run — hence a multiple of three rather than exactly
+    // three. That second pass re-reads but writes nothing (the decisions are
+    // unchanged and writes are diffed), which is what keeps the write count and
+    // the no-interleaving guarantee below exact.
+    const reads = log.filter((e) => e === "read").length;
+    assert.strictEqual(reads % 3, 0, "targets are measured in whole batches");
+    assert.true(reads >= 3, "every target is measured at least once");
     assert.strictEqual(
       log.filter((e) => e.startsWith("write")).length,
       3,
@@ -73,9 +77,8 @@ module("Integration | Library | fit-coordinator", function (hooks) {
       registerFit({
         key: el,
         observedEl: el,
-        measure: () => ({}),
-        decide: () => "same",
-        apply: { callback: (tier) => writes.push(tier) },
+        compute: () => "same",
+        onChange: (tier) => writes.push(tier),
       })
     );
     await settled();
@@ -103,9 +106,8 @@ module("Integration | Library | fit-coordinator", function (hooks) {
       registerFit({
         key: el,
         observedEl: el,
-        measure: () => ({}),
-        decide: () => tier,
-        apply: { attribute: "data-fit" },
+        compute: () => tier,
+        attribute: "data-fit",
       })
     );
     await settled();
@@ -124,6 +126,33 @@ module("Integration | Library | fit-coordinator", function (hooks) {
       .doesNotHaveAttribute("data-fit", "unregister clears the attribute");
   });
 
+  test("registering with both or neither write strategy throws", async function (assert) {
+    await render(
+      <template>
+        <div class="fit-t"></div>
+      </template>
+    );
+    const el = document.querySelector(".fit-t");
+
+    assert.throws(
+      () => registerFit({ key: el, observedEl: el, compute: () => "x" }),
+      /exactly one/,
+      "neither strategy throws"
+    );
+    assert.throws(
+      () =>
+        registerFit({
+          key: el,
+          observedEl: el,
+          compute: () => "x",
+          attribute: "data-fit",
+          onChange: () => {},
+        }),
+      /exactly one/,
+      "both strategies throw"
+    );
+  });
+
   test("resetFitCoordinator drops all registrations", async function (assert) {
     await render(
       <template>
@@ -137,9 +166,8 @@ module("Integration | Library | fit-coordinator", function (hooks) {
       registerFit({
         key: el,
         observedEl: el,
-        measure: () => ({}),
-        decide: () => "x",
-        apply: { callback: () => writes.push("x") },
+        compute: () => "x",
+        onChange: () => writes.push("x"),
       })
     );
     await settled();

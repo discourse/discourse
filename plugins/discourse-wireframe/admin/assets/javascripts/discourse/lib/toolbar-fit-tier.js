@@ -10,8 +10,9 @@ export const EPSILON = 1;
 
 /**
  * The fit tier for a block badge, chosen purely from measured widths. Exported
- * as a pure function so the decision can be unit-tested without a DOM, and used
- * as the `decide` policy the badge hands to the shared fit coordinator.
+ * as a pure function so the decision can be unit-tested without a DOM, and
+ * called from the `compute` function the badge hands to the shared fit
+ * coordinator.
  *
  *   - `full`     — the whole inline bar fits, so every action stays inline.
  *   - `narrow`   — the full bar doesn't fit, but the identity handle plus the

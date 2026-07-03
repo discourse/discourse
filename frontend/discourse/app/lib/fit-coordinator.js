@@ -1,4 +1,5 @@
 // @ts-check
+import { assert } from "@ember/debug";
 import { schedule } from "@ember/runloop";
 
 /**
@@ -8,20 +9,20 @@ import { schedule } from "@ember/runloop";
  * A "fit" consumer is anything that must react to how much width an element has:
  * an action bar that folds its buttons into an overflow menu as it narrows, a
  * control that swaps a wide layout for a compact one, a responsive strip that
- * changes how many items it shows. Each consumer registers a target with three
- * pure-ish pieces of behavior:
+ * changes how many items it shows. Each consumer registers a target with a
+ * single decision function and one write strategy:
  *
- *   - `measure(observedEl)` — READS whatever it needs (sub-element widths, an
- *     item count, …) and returns opaque data. It MUST NOT write to the DOM: it
- *     runs inside the shared read phase, and a write here would force a reflow
- *     mid-batch and defeat the batching.
- *   - `decide(availWidth, data)` — a PURE function mapping the available width
- *     plus the measured data to a decision (typically a short string from a
- *     closed set, e.g. `"full" | "compact"`).
- *   - `apply` — how a CHANGED decision is written: either an attribute name the
- *     coordinator sets on the target element (so a stylesheet can key off it) or
- *     a callback the coordinator invokes with the new decision (so JS/reactive
- *     state can switch on it).
+ *   - `compute(availWidth, observedEl)` — READS whatever it needs (sub-element
+ *     widths, an item count, …) and returns the decision, typically a short
+ *     string from a closed set (e.g. `"full" | "compact"`). It runs inside the
+ *     SHARED read phase: it MUST NOT write to the DOM (no attribute, class, or
+ *     style changes) — a write here forces a reflow mid-batch and defeats the
+ *     batching for every registered target, not just this one.
+ *   - `attribute` OR `onChange` — how a CHANGED decision is written: either an
+ *     attribute name the coordinator sets on the observed element (so a
+ *     stylesheet can key off it) or a callback the coordinator invokes with the
+ *     new decision (so JS/reactive state can switch on it). Exactly one must be
+ *     provided.
  *
  * Why one coordinator instead of an observer per consumer: a single
  * `ResizeObserver` over N targets lets every width change in a runloop coalesce
@@ -36,35 +37,56 @@ import { schedule } from "@ember/runloop";
  * This module holds a single lazily-built observer for the whole app. It has no
  * per-app teardown of its own (its lifetime is the page); tests reset it through
  * {@link resetFitCoordinator} so state never leaks across test boundaries.
+ *
+ * @example
+ * const dispose = registerFit({
+ *   key: el,
+ *   observedEl: el,
+ *   compute: (availWidth, observedEl) =>
+ *     availWidth >= observedEl.querySelector(".labels").offsetWidth
+ *       ? "full"
+ *       : "compact",
+ *   attribute: "data-fit", // a stylesheet keys off [data-fit="compact"]
+ * });
+ * // …later, after a content change that doesn't resize the observed box:
+ * refreshFit(el);
+ * // …on teardown:
+ * dispose();
  */
 
-/** @typedef {"attribute"} FitApplyAttributeKind */
+/**
+ * @typedef {{ attribute: string } | { onChange: (decision: any) => void }} FitStrategy
+ *   How a changed decision is written: set `attribute` to the decision on the
+ *   observed element (cleared on unregister), or invoke `onChange` with it.
+ */
 
 /**
  * @typedef {object} FitTarget
- * @property {any} key - Stable identity for the registration (usually the target
- *   element). Re-registering the same key replaces the descriptor and re-measures.
+ * @property {any} key - Stable identity for the registration. Re-registering
+ *   the same key replaces the descriptor and re-measures; when the observed
+ *   element is unchanged, the last decision is preserved for diffing.
  * @property {HTMLElement} observedEl - Element whose width the observer watches
- *   and whose `clientWidth` is passed to `decide` as the available width. Its
+ *   and whose `clientWidth` is passed to `compute` as the available width. Its
  *   width should be independent of the applied decision (otherwise the
  *   apply→resize→measure cycle can oscillate).
- * @property {(observedEl: HTMLElement) => any} measure - Read phase; returns data
- *   for `decide`. Must not write to the DOM.
- * @property {(availWidth: number, data: any) => any} decide - Pure decision.
- * @property {{ attribute: string, targetEl?: HTMLElement } | { callback: (decision: any) => void }} apply
- *   - How a changed decision is written. With `attribute`, the coordinator sets
- *   that attribute on `targetEl` (defaulting to `observedEl`). With `callback`,
- *   the coordinator invokes it with the new decision.
+ * @property {(availWidth: number, observedEl: HTMLElement) => any} compute -
+ *   The decision function; runs in the shared read phase and MUST NOT write to
+ *   the DOM.
+ * @property {string} [attribute] - Write strategy A: the coordinator sets this
+ *   attribute to each changed decision on `observedEl`, and removes it on
+ *   unregister. Mutually exclusive with `onChange` — provide exactly one.
+ * @property {(decision: any) => void} [onChange] - Write strategy B: invoked
+ *   with each changed decision. Mutually exclusive with `attribute`.
  * @property {(a: any, b: any) => boolean} [equals] - Optional equality used to
- *   diff the previous and next decision; defaults to `Object.is`.
+ *   diff the previous and next decision; defaults to `Object.is`. Prefer
+ *   primitive decisions so the default suffices.
  */
 
 /**
  * @typedef {object} FitRecord
  * @property {HTMLElement} observedEl
- * @property {(observedEl: HTMLElement) => any} measure
- * @property {(availWidth: number, data: any) => any} decide
- * @property {FitTarget["apply"]} apply
+ * @property {(availWidth: number, observedEl: HTMLElement) => any} compute
+ * @property {FitStrategy} strategy
  * @property {(a: any, b: any) => boolean} equals
  * @property {any} last - The last applied decision, or the `UNSET` sentinel
  *   before the first apply (so the first decision always applies).
@@ -72,8 +94,8 @@ import { schedule } from "@ember/runloop";
 
 /**
  * Sentinel for "no decision applied yet". A dedicated object (never a value a
- * `decide` could return) so the first measure always writes, even when the first
- * decision equals some natural default.
+ * `compute` could return) so the first measure always writes, even when the
+ * first decision equals some natural default.
  */
 const UNSET = Symbol("fit-unset");
 
@@ -86,38 +108,76 @@ let onWindowResize = null;
 /** @type {Map<any, FitRecord>} Registered targets, keyed by their `key`. */
 const registry = new Map();
 
+/**
+ * How many registrations currently observe each element. Observation is shared:
+ * the element is observed on the first registration and unobserved only when
+ * the last one goes away, so registrations that share an observed element can't
+ * silently disable each other.
+ *
+ * @type {Map<HTMLElement, number>}
+ */
+const observedCounts = new Map();
+
 /** Whether a measure pass is already queued for the next `afterRender`. */
 let measureScheduled = false;
 
 /**
+ * A pending animation-frame handle for an observer-triggered measure, or `null`.
+ * Observer reactions are deferred by one frame (see {@link ensureObserver}), and
+ * this coalesces a burst of observer callbacks into a single deferred measure.
+ *
+ * @type {number | null}
+ */
+let observerFrame = null;
+
+/**
  * Registers a target for fit coordination and computes its initial decision.
  * Idempotent by `key`: re-registering replaces the descriptor and re-measures.
+ * When the observed element changed, the old element is released (and an
+ * attribute-strategy attribute cleared from it) before the new one is tracked.
  *
  * @param {FitTarget} target
  * @returns {() => void} A dispose function that unregisters this target
  *   (idempotent). It also clears an attribute-strategy target's attribute.
  */
 export function registerFit(target) {
-  const { key, observedEl, measure, decide, apply, equals } = target;
+  const { key, observedEl, compute, attribute, onChange, equals } = target;
   if (key == null || !observedEl) {
     return () => {};
   }
 
+  assert(
+    "registerFit: provide exactly one of `attribute` or `onChange`",
+    (attribute != null) !== (onChange != null)
+  );
+
   // Preserve the last applied decision across a re-registration of the same key
-  // so a modifier that re-registers on every run (its normal re-measure path)
-  // doesn't reset the diff and force a redundant apply.
+  // so a consumer that re-registers on every re-run (its normal re-measure
+  // path) doesn't reset the diff and force a redundant apply. A changed
+  // observed element starts clean instead: the old element is released and
+  // un-stamped, and the sentinel guarantees the new element gets a first write.
   const existing = registry.get(key);
+  const sameElement = existing?.observedEl === observedEl;
+  if (existing && !sameElement) {
+    releaseObservedElement(existing);
+  }
+
+  const strategy =
+    attribute != null
+      ? { attribute }
+      : { onChange: /** @type {(decision: any) => void} */ (onChange) };
   registry.set(key, {
     observedEl,
-    measure,
-    decide,
-    apply,
+    compute,
+    strategy,
     equals: equals ?? Object.is,
-    last: existing ? existing.last : UNSET,
+    last: existing && sameElement ? existing.last : UNSET,
   });
 
   ensureObserver();
-  observer?.observe(observedEl);
+  if (!sameElement) {
+    trackObservedElement(observedEl);
+  }
   scheduleMeasure();
 
   return () => unregisterFit(key);
@@ -137,8 +197,7 @@ export function refreshFit(key) {
 }
 
 /**
- * Stops tracking a target. Idempotent: a second call is a no-op, and
- * `unobserve` on an already-unobserved element is harmless. For an
+ * Stops tracking a target. Idempotent: a second call is a no-op. For an
  * attribute-strategy target, its attribute is removed so a later re-selection
  * starts clean.
  *
@@ -150,12 +209,7 @@ export function unregisterFit(key) {
     return;
   }
   registry.delete(key);
-  observer?.unobserve(record.observedEl);
-
-  const { apply } = record;
-  if ("attribute" in apply) {
-    (apply.targetEl ?? record.observedEl).removeAttribute(apply.attribute);
-  }
+  releaseObservedElement(record);
 }
 
 /**
@@ -171,8 +225,50 @@ export function resetFitCoordinator() {
     window.removeEventListener("resize", onWindowResize);
     onWindowResize = null;
   }
+  if (observerFrame != null) {
+    cancelAnimationFrame(observerFrame);
+    observerFrame = null;
+  }
   registry.clear();
+  observedCounts.clear();
   measureScheduled = false;
+}
+
+/**
+ * Starts observing a record's element, sharing the observation with any other
+ * registration already watching it (refcounted).
+ *
+ * @param {HTMLElement} el
+ */
+function trackObservedElement(el) {
+  const count = observedCounts.get(el) ?? 0;
+  if (count === 0) {
+    observer?.observe(el);
+  }
+  observedCounts.set(el, count + 1);
+}
+
+/**
+ * Releases a record's observed element: drops one observation refcount
+ * (unobserving only when no other registration still watches the element) and
+ * clears an attribute-strategy attribute from it.
+ *
+ * @param {FitRecord} record
+ */
+function releaseObservedElement(record) {
+  const { observedEl, strategy } = record;
+
+  const count = observedCounts.get(observedEl) ?? 0;
+  if (count <= 1) {
+    observedCounts.delete(observedEl);
+    observer?.unobserve(observedEl);
+  } else {
+    observedCounts.set(observedEl, count - 1);
+  }
+
+  if ("attribute" in strategy) {
+    observedEl.removeAttribute(strategy.attribute);
+  }
 }
 
 /**
@@ -185,9 +281,33 @@ function ensureObserver() {
   if (observer) {
     return;
   }
-  observer = new ResizeObserver(() => scheduleMeasure());
+  // React one animation frame after the observer fires rather than inside its
+  // callback. A measure pass can change an observed element's size — a consumer
+  // whose rendered content depends on the decision resizes when it swaps — and
+  // mutating an observed element from within the observer's own delivery cycle
+  // makes the browser end that cycle with pending notifications ("ResizeObserver
+  // loop completed with undelivered notifications"). Deferring to the next frame
+  // moves the mutation out of the delivery cycle, so the observer only ever sees
+  // a settled size. The window-resize fallback is not inside a delivery cycle,
+  // so it can schedule directly.
+  observer = new ResizeObserver(scheduleMeasureFromObserver);
   onWindowResize = () => scheduleMeasure();
   window.addEventListener("resize", onWindowResize);
+}
+
+/**
+ * Defers an observer-triggered measure to the next animation frame, coalescing a
+ * burst of observer callbacks into one. See {@link ensureObserver} for why the
+ * observer must not measure inside its own callback.
+ */
+function scheduleMeasureFromObserver() {
+  if (observerFrame != null) {
+    return;
+  }
+  observerFrame = requestAnimationFrame(() => {
+    observerFrame = null;
+    scheduleMeasure();
+  });
 }
 
 /**
@@ -204,9 +324,9 @@ function scheduleMeasure() {
 
 /**
  * Measures every registered target and applies its decision. Strictly read-all
- * then write-all: all measurement/decisions happen first (one layout flush for
- * the batch), then all applies — so a write never forces a reflow before the
- * next target's read. Writes are diffed so an unchanged decision touches nothing.
+ * then write-all: all decisions are computed first (one layout flush for the
+ * batch), then all applies — so a write never forces a reflow before the next
+ * target's read. Writes are diffed so an unchanged decision touches nothing.
  */
 function measureAll() {
   measureScheduled = false;
@@ -218,8 +338,10 @@ function measureAll() {
     if (!record.observedEl.isConnected) {
       continue;
     }
-    const data = record.measure(record.observedEl);
-    const decision = record.decide(record.observedEl.clientWidth, data);
+    const decision = record.compute(
+      record.observedEl.clientWidth,
+      record.observedEl
+    );
     decisions.push([record, decision]);
   }
 
@@ -235,16 +357,16 @@ function measureAll() {
 
 /**
  * Applies a decision through the record's configured strategy: set the attribute
- * on the target element, or invoke the callback.
+ * on the observed element, or invoke the callback.
  *
  * @param {FitRecord} record
  * @param {any} decision
  */
 function applyDecision(record, decision) {
-  const { apply, observedEl } = record;
-  if ("attribute" in apply) {
-    (apply.targetEl ?? observedEl).setAttribute(apply.attribute, decision);
+  const { strategy, observedEl } = record;
+  if ("attribute" in strategy) {
+    observedEl.setAttribute(strategy.attribute, decision);
   } else {
-    apply.callback(decision);
+    strategy.onChange(decision);
   }
 }
