@@ -1822,6 +1822,26 @@ RSpec.describe PostsController do
         expect(Post.last.topic.tags).to contain_exactly(tag)
       end
 
+      it "rejects tag arrays exceeding the configured per-topic limit" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.max_tags_per_topic = 5
+        tags = 25.times.map { |index| Fabricate(:tag, name: "tag-#{index}") }
+
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 tags: tags.map { |tag| { id: tag.id, name: tag.name } },
+               }
+        end.not_to change { Post.count }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("tags.too_many_tags_for_topic", count: 5),
+        )
+      end
+
       context "with content localization enabled" do
         fab!(:japanese_user) { Fabricate(:user, locale: "ja", refresh_auto_groups: true) }
         fab!(:localized_tag) { Fabricate(:tag, name: "strategy", locale: "en") }
