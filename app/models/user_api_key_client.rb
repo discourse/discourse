@@ -11,8 +11,7 @@ class UserApiKeyClient < ActiveRecord::Base
     Set.new(scopes.map(&:name))
   end
 
-  def self.invalid_auth_redirect?(auth_redirect, client: nil)
-    return false if client&.auth_redirect == auth_redirect
+  def self.invalid_auth_redirect?(auth_redirect)
     SiteSetting
       .allowed_user_api_auth_redirects
       .split("|")

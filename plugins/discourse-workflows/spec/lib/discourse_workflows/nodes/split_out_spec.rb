@@ -164,13 +164,6 @@ RSpec.describe DiscourseWorkflows::Nodes::SplitOut::V1 do
 
       expect(result.first["json"]).to eq("items" => 1)
     end
-
-    it "can disable dot notation for literal field names" do
-      input = [{ "json" => { "data.items" => [1] } }]
-      result = execute(input, "field" => "data.items", "disable_dot_notation" => true)
-
-      expect(result.first["json"]).to eq("data.items" => 1)
-    end
   end
 
   describe "multiple fields" do

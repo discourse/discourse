@@ -20,12 +20,14 @@ zh_CN:
     patreon_verbose_log: '启用 Patreon 有效负载的详细日志记录'
     patreon_donation_prompt_enabled: "启用捐助提示？"
     patreon_donation_prompt_show_after_topics: "在 n 个话题后显示捐助提示"
+    patreon_api_version: "Patreon API 版本。版本 1 已弃用 – 请在 Patreon 上创建一个新的 OAuth 客户端并切换到版本 2。"
     patreon_donation_prompt_campaign_url: "捐助提示活动 URL"
     errors:
       patreon_creator_username_not_set: "在启用 Patreon 登录之前，您需要设置 Patreon 创作者 Discourse 用户名设置。"
   dashboard:
     problem:
       access_token_invalid: "Patreon 创作者的访问和刷新令牌值不正确。您必须将新令牌从 <a href='https://www.patreon.com/platform/documentation/clients'>Patreon 网站</a>复制粘贴到<a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon'>站点设置</a>。"
+      patreon_api_v1_deprecated: "您目前使用的是 Patreon API v1，该版本已弃用。请<a href='https://www.patreon.com/portal/registration/register-clients'>在 Patreon 上创建一个新的 v2 OAuth 客户端</a>，更新您的凭据，并在<a href='%{base_path}/admin/site_settings/category/all_results?filter=patreon_api_version'>站点</a>中切换到 API v2。"
   patreon:
     error:
       invalid_response: "Patreon API 的响应无效"

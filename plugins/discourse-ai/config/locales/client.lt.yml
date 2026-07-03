@@ -171,6 +171,9 @@ lt:
             model_settings: "Modelio nustatymai"
             related_topics: "Susijusios temos"
             semantic_search: "Semantinė paieška"
+        admin_dashboard:
+          setting_groups:
+            settings: "Pagrindiniai nustatymai"
         discord:
           setting_groups:
             settings: "Pagrindiniai nustatymai"
@@ -291,6 +294,11 @@ lt:
         delete: "Pašalinti"
         temperature: "Temperatūra"
         top_p: "Viršutinė P"
+        thinking_effort_options:
+          none: "Nieko"
+          low: "Žemas"
+          medium: "Vidutinis"
+          high: "Aukštas"
         response_format:
           open_modal: "Redaguoti"
           modal:

@@ -1,10 +1,20 @@
-import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
+import { click, currentURL, fillIn, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import KeyValueStore from "discourse/lib/key-value-store";
+import {
+  acceptance,
+  publishToMessageBus,
+} from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("New Query", function (needs) {
   needs.user();
   needs.settings({ data_explorer_enabled: true });
+
+  const dataExplorerStore = new KeyValueStore("discourse_data_explorer_");
+
+  needs.hooks.afterEach(() => {
+    dataExplorerStore.remove("hide_schema");
+  });
 
   needs.pretender((server, helper) => {
     server.get("/admin/plugins/discourse-data-explorer.json", () => {
@@ -98,6 +108,12 @@ acceptance("New Query", function (needs) {
       .dom(".query-new__manual-form .editor-panel .ace-wrapper")
       .exists("SQL editor renders alongside the schema sidebar");
 
+    await click(".query-new__manual-form .schema__toggle.--collapse");
+
+    assert
+      .dom(".query-new__manual-form .schema-search__input")
+      .doesNotExist("schema sidebar can be hidden");
+
     await fillIn(".query-new__manual-form [data-name='name'] input", "foo");
     await fillIn(
       ".query-new__manual-form [data-name='description'] textarea",
@@ -108,6 +124,191 @@ acceptance("New Query", function (needs) {
     assert.strictEqual(
       currentURL(),
       "/admin/plugins/discourse-data-explorer/queries/-15"
+    );
+
+    assert
+      .dom(".query-editor.no-schema .schema__toggle.--expand")
+      .exists("schema hidden state persists across Data Explorer pages");
+  });
+
+  test("starts with the schema hidden when the preference is stored", async function (assert) {
+    dataExplorerStore.set({ key: "hide_schema", value: "true" });
+
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+
+    assert
+      .dom(".query-new__manual-form .query-editor.no-schema")
+      .exists("stored hidden state is applied");
+    assert
+      .dom(".query-new__manual-form .schema-search__input")
+      .doesNotExist("schema search is hidden");
+    assert
+      .dom(".query-new__manual-form .schema__toggle.--expand")
+      .exists("schema can still be shown again");
+  });
+});
+
+acceptance("New Query - AI", function (needs) {
+  needs.user();
+  needs.settings({
+    data_explorer_enabled: true,
+    data_explorer_ai_queries_enabled: true,
+  });
+
+  const GENERATION_ID = "test-generation";
+
+  needs.pretender((server, helper) => {
+    server.get("/admin/plugins/discourse-data-explorer.json", () => {
+      return helper.response({
+        id: "discourse-data-explorer",
+        name: "discourse-data-explorer",
+        enabled: true,
+        has_settings: true,
+        humanized_name: "Data Explorer",
+        is_discourse_owned: true,
+        admin_route: {
+          label: "explorer.title",
+          location: "discourse-data-explorer",
+          use_new_show_route: true,
+        },
+      });
+    });
+
+    server.get("/admin/plugins/discourse-data-explorer/groups.json", () =>
+      helper.response([])
+    );
+    server.get("/admin/plugins/discourse-data-explorer/schema.json", () =>
+      helper.response({ topics: [] })
+    );
+    server.get("/admin/plugins/discourse-data-explorer/queries", () =>
+      helper.response({ queries: [] })
+    );
+
+    server.post(
+      "/admin/plugins/discourse-data-explorer/queries/generate.json",
+      () =>
+        helper.response({ generation_id: GENERATION_ID, status: "generating" })
+    );
+
+    server.post(
+      "/admin/plugins/discourse-data-explorer/queries/preview.json",
+      () =>
+        helper.response({
+          success: true,
+          errors: [],
+          colrender: [],
+          result_count: 1,
+          columns: ["my_value"],
+          rows: [[23]],
+          duration: 1.2,
+          default_limit: 1000,
+        })
+    );
+
+    server.post("/admin/plugins/discourse-data-explorer/queries", () =>
+      helper.response({
+        query: {
+          id: -15,
+          sql: "SELECT 23 AS my_value",
+          name: "Generated",
+          description: "",
+          param_info: [],
+          group_ids: [],
+          hidden: false,
+          user_id: -1,
+        },
+      })
+    );
+
+    server.get("/admin/plugins/discourse-data-explorer/queries/-15", () =>
+      helper.response({
+        query: {
+          id: -15,
+          sql: "SELECT 23 AS my_value",
+          name: "Generated",
+          description: "",
+          param_info: [],
+          group_ids: [],
+          hidden: false,
+          user_id: -1,
+        },
+      })
+    );
+
+    server.post("/admin/plugins/discourse-data-explorer/queries/-15/run", () =>
+      helper.response({
+        success: true,
+        errors: [],
+        colrender: [],
+        result_count: 1,
+        columns: ["my_value"],
+        rows: [[23]],
+        duration: 1.2,
+        default_limit: 1000,
+      })
+    );
+  });
+
+  async function generate(prompt) {
+    await visit("/admin/plugins/discourse-data-explorer/queries/new");
+    await fillIn(".query-new__ai-textarea", prompt);
+    await click(".query-new__generate-btn");
+    await publishToMessageBus(
+      `/discourse-data-explorer/queries/ai-generation/${GENERATION_ID}`,
+      {
+        generation_id: GENERATION_ID,
+        status: "complete",
+        sql: "SELECT 23 AS my_value",
+        name: "Generated",
+        description: "",
+      }
+    );
+    await settled();
+  }
+
+  test("save query is the primary action and the result is shown first", async function (assert) {
+    await generate("show me a value");
+
+    assert
+      .dom(".query-new__save-btn.btn-primary")
+      .exists("the save query button gets the primary treatment");
+    assert
+      .dom(".query-new__run-btn")
+      .exists("a run button is available before saving");
+    assert
+      .dom(".query-results-modes")
+      .exists("a chart/table/sql segmented control is shown");
+    assert
+      .dom(".query-new__result-bar .query-new__result-about")
+      .hasText(
+        /result/,
+        "the result count sits on the same line as the toggle"
+      );
+    assert
+      .dom(".query-new__preview .query-results-table-wrapper")
+      .exists("the result is run and shown first, not the SQL");
+
+    await click(".query-results-modes input[value='sql']");
+
+    assert
+      .dom(".query-new__sql-editor .ace-wrapper")
+      .exists("the SQL is available behind its own tab");
+  });
+
+  test("saving transitions to the edit page and runs the query", async function (assert) {
+    await generate("show me a value");
+
+    await click(".query-new__save-btn");
+
+    assert.true(
+      currentURL().startsWith(
+        "/admin/plugins/discourse-data-explorer/queries/-15"
+      ),
+      "transitions to the saved query"
+    );
+    assert.true(
+      currentURL().includes("run=true"),
+      "carries the auto-run flag so the query runs immediately"
     );
   });
 });

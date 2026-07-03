@@ -7,6 +7,7 @@
     height: auto;
     resize: none;
     max-width: 100%;
+    padding: var(--expanding-text-area-padding, 0.5em 0.65em);
     min-height: var(--expanding-text-area-min-height, auto);
     max-height: var(--expanding-text-area-max-height, none);
   }
@@ -26,7 +27,7 @@
       visibility: hidden;
       grid-area: 1 / 1;
       box-sizing: border-box;
-      padding: 0.5em 0.65em;
+      padding: var(--expanding-text-area-padding, 0.5em 0.65em);
       border: 1px solid transparent;
       font: inherit;
       min-height: var(--expanding-text-area-min-height, auto);

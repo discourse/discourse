@@ -68,10 +68,11 @@ export default class DSwipeModifier extends Modifier {
     }
   ) {
     if (enabled === false || this.site.desktopView) {
-      this.enabled = enabled;
+      this.enabled = false;
       return;
     }
 
+    this.enabled = true;
     this.lockBody = lockBody ?? true;
     this.element = element;
     this.onDidSwipeCallback = onDidSwipe;
@@ -89,16 +90,23 @@ export default class DSwipeModifier extends Modifier {
   }
 
   /**
-   * Handler for swipe start event.
+   * Handler for swipe start event. The callback can cancel the gesture by
+   * calling `preventDefault()` on the event, in which case the body is not
+   * locked and no further swipe events are fired for this gesture.
    * @param {Event} event - The swipe start event.
    */
   @bind
   onDidStartSwipe(event) {
-    if (this.lockBody) {
-      lock(this.element);
+    this.onDidStartSwipeCallback?.(event.detail, event);
+
+    if (event.defaultPrevented) {
+      return;
     }
 
-    this.onDidStartSwipeCallback?.(event.detail, event);
+    if (this.lockBody) {
+      lock(this.element);
+      this.bodyLocked = true;
+    }
   }
 
   /**
@@ -107,10 +115,7 @@ export default class DSwipeModifier extends Modifier {
    */
   @bind
   onDidEndSwipe(event) {
-    if (this.lockBody) {
-      unlock(this.element);
-    }
-
+    this.#unlockBody();
     this.onDidEndSwipeCallback?.(event.detail);
   }
 
@@ -129,10 +134,7 @@ export default class DSwipeModifier extends Modifier {
    */
   @bind
   onDidCancelSwipe(event) {
-    if (this.lockBody) {
-      unlock(this.element);
-    }
-
+    this.#unlockBody();
     this.onDidCancelSwipeCallback?.(event.detail);
   }
 
@@ -158,9 +160,13 @@ export default class DSwipeModifier extends Modifier {
     this.element.removeEventListener("swipe", this.onDidSwipe);
     this.element.removeEventListener("scroll", this.onScroll);
     this._swipeEvents.removeTouchListeners();
+    this.#unlockBody();
+  }
 
-    if (this.lockBody) {
+  #unlockBody() {
+    if (this.bodyLocked) {
       unlock(this.element);
+      this.bodyLocked = false;
     }
   }
 }

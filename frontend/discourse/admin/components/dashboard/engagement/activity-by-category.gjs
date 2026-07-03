@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
@@ -8,8 +9,11 @@ import { trustHTML } from "@ember/template";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { number } from "discourse/lib/formatter";
+import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
 import { eq } from "discourse/truth-helpers";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class ActivityByCategory extends Component {
@@ -19,6 +23,14 @@ export default class ActivityByCategory extends Component {
   @tracked sortBy = "share";
   @tracked sortDir = "desc";
 
+  constructor() {
+    super(...arguments);
+
+    this.selectedCategories = (this.args.activity?.rows ?? [])
+      .map((row) => Category.findById(row.category_id))
+      .filter(Boolean);
+  }
+
   get activity() {
     return this.overrideActivity ?? this.args.activity;
   }
@@ -27,6 +39,7 @@ export default class ActivityByCategory extends Component {
     const rows = this.activity?.rows ?? [];
     const decorated = rows.map((row) => ({
       ...row,
+      category: Category.findById(row.category_id),
       topicsFormatted: I18n.toNumber(row.topics, { precision: 0 }),
       postsFormatted: I18n.toNumber(row.posts, { precision: 0 }),
       pageViewsFormatted: number(row.page_views),
@@ -45,10 +58,6 @@ export default class ActivityByCategory extends Component {
 
   get hasData() {
     return (this.activity?.rows ?? []).length > 0;
-  }
-
-  get shareSortIndicator() {
-    return this.sortDir === "desc" ? "↓" : "↑";
   }
 
   #safeHex(color) {
@@ -71,11 +80,11 @@ export default class ActivityByCategory extends Component {
   }
 
   @action
-  toggleShareSort() {
-    if (this.sortBy === "share") {
+  updateSort(field) {
+    if (this.sortBy === field) {
       this.sortDir = this.sortDir === "desc" ? "asc" : "desc";
     } else {
-      this.sortBy = "share";
+      this.sortBy = field;
       this.sortDir = "desc";
     }
   }
@@ -113,104 +122,181 @@ export default class ActivityByCategory extends Component {
       class="db-activity"
       {{didUpdate this.onPeriodChange @startDate @endDate}}
     >
-      <div class="db-activity__header">
+      <div class="db-section__row-block-header">
         <LinkTo
           @route="adminReports.show"
           @model="activity_by_category"
-          class="db-section__row-block-title"
+          class="db-section__row-block-title --label"
         >
           {{i18n
             "admin.dashboard.sections.engagement.activity_by_category.title"
           }}
         </LinkTo>
+
         <CategorySelector
           @categories={{this.selectedCategories}}
           @onChange={{this.onCategoriesChange}}
         />
       </div>
 
-      <p class="db-activity__description">
-        {{i18n
-          "admin.dashboard.sections.engagement.activity_by_category.description"
-        }}
-      </p>
-
       {{#if this.hasData}}
-        <table class="db-activity-table">
-          <thead>
-            <tr>
-              <th class="db-activity-table__col-category">
-                {{i18n
-                  "admin.dashboard.sections.engagement.activity_by_category.category"
-                }}
-              </th>
-              <th class="db-activity-table__col-number">
-                {{i18n
-                  "admin.dashboard.sections.engagement.activity_by_category.topics"
-                }}
-              </th>
-              <th class="db-activity-table__col-number">
-                {{i18n
-                  "admin.dashboard.sections.engagement.activity_by_category.posts"
-                }}
-              </th>
-              <th class="db-activity-table__col-number">
-                {{i18n
-                  "admin.dashboard.sections.engagement.activity_by_category.page_views"
-                }}
-              </th>
-              <th class="db-activity-table__col-number">
-                <button
-                  type="button"
-                  class="db-activity-table__sort-button"
-                  {{on "click" this.toggleShareSort}}
-                >
-                  {{i18n
-                    "admin.dashboard.sections.engagement.activity_by_category.share"
-                  }}
-                  {{#if (eq this.sortBy "share")}}
-                    <span aria-hidden="true">{{this.shareSortIndicator}}</span>
-                  {{/if}}
-                </button>
-              </th>
-              <th class="db-activity-table__col-number">
-                {{i18n
-                  "admin.dashboard.sections.engagement.activity_by_category.vs_prior"
-                }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each this.rows as |row|}}
+        <div class="db-activity__table-scroll-container">
+          <table class="db-activity-table">
+            <thead>
               <tr>
-                <td class="db-activity-table__cell-category">
-                  <span
-                    class="db-activity-table__swatch"
-                    style={{row.swatchStyle}}
-                    aria-hidden="true"
-                  ></span>
-                  {{row.name}}
-                </td>
-                <td
-                  class="db-activity-table__cell-number"
-                >{{row.topicsFormatted}}</td>
-                <td
-                  class="db-activity-table__cell-number"
-                >{{row.postsFormatted}}</td>
-                <td
-                  class="db-activity-table__cell-number"
-                >{{row.pageViewsFormatted}}</td>
-                <td
-                  class="db-activity-table__cell-number"
-                >{{row.share_formatted}}</td>
-                <td
-                  class="db-activity-table__cell-number db-delta
-                    {{row.changeClass}}"
-                >{{row.share_change_formatted}}</td>
+                <th class="db-activity-table__col-category">
+                  {{i18n
+                    "admin.dashboard.sections.engagement.activity_by_category.category"
+                  }}
+                </th>
+                <th
+                  class="db-activity-table__col-number"
+                  aria-sort={{if
+                    (eq this.sortBy "topics")
+                    (if (eq this.sortDir "asc") "ascending" "descending")
+                    "none"
+                  }}
+                >
+                  <button
+                    type="button"
+                    class="db-activity-table__sort-button"
+                    {{on "click" (fn this.updateSort "topics")}}
+                  >
+                    {{i18n
+                      "admin.dashboard.sections.engagement.activity_by_category.topics"
+                    }}
+                    {{dIcon
+                      (if (eq this.sortDir "asc") "chevron-up" "chevron-down")
+                      class=(if (eq this.sortBy "topics") "" "is-hidden")
+                    }}
+                  </button>
+                </th>
+                <th
+                  class="db-activity-table__col-number"
+                  aria-sort={{if
+                    (eq this.sortBy "posts")
+                    (if (eq this.sortDir "asc") "ascending" "descending")
+                    "none"
+                  }}
+                >
+                  <button
+                    type="button"
+                    class="db-activity-table__sort-button"
+                    {{on "click" (fn this.updateSort "posts")}}
+                  >
+                    {{i18n
+                      "admin.dashboard.sections.engagement.activity_by_category.posts"
+                    }}
+                    {{dIcon
+                      (if (eq this.sortDir "asc") "chevron-up" "chevron-down")
+                      class=(if (eq this.sortBy "posts") "" "is-hidden")
+                    }}
+                  </button>
+                </th>
+                <th
+                  class="db-activity-table__col-number"
+                  aria-sort={{if
+                    (eq this.sortBy "page_views")
+                    (if (eq this.sortDir "asc") "ascending" "descending")
+                    "none"
+                  }}
+                >
+                  <button
+                    type="button"
+                    class="db-activity-table__sort-button"
+                    {{on "click" (fn this.updateSort "page_views")}}
+                  >
+                    {{i18n
+                      "admin.dashboard.sections.engagement.activity_by_category.page_views"
+                    }}
+                    {{dIcon
+                      (if (eq this.sortDir "asc") "chevron-up" "chevron-down")
+                      class=(if (eq this.sortBy "page_views") "" "is-hidden")
+                    }}
+                  </button>
+                </th>
+                <th
+                  class="db-activity-table__col-number"
+                  aria-sort={{if
+                    (eq this.sortBy "share")
+                    (if (eq this.sortDir "asc") "ascending" "descending")
+                    "none"
+                  }}
+                >
+                  <button
+                    type="button"
+                    class="db-activity-table__sort-button"
+                    {{on "click" (fn this.updateSort "share")}}
+                  >
+                    {{i18n
+                      "admin.dashboard.sections.engagement.activity_by_category.share"
+                    }}
+                    {{dIcon
+                      (if (eq this.sortDir "asc") "chevron-up" "chevron-down")
+                      class=(if (eq this.sortBy "share") "" "is-hidden")
+                    }}
+                  </button>
+                </th>
+                <th
+                  class="db-activity-table__col-number"
+                  aria-sort={{if
+                    (eq this.sortBy "share_change")
+                    (if (eq this.sortDir "asc") "ascending" "descending")
+                    "none"
+                  }}
+                >
+                  <button
+                    type="button"
+                    class="db-activity-table__sort-button"
+                    {{on "click" (fn this.updateSort "share_change")}}
+                  >
+                    {{i18n
+                      "admin.dashboard.sections.engagement.activity_by_category.vs_prior"
+                    }}
+                    {{dIcon
+                      (if (eq this.sortDir "asc") "chevron-up" "chevron-down")
+                      class=(if (eq this.sortBy "share_change") "" "is-hidden")
+                    }}
+                  </button>
+                </th>
               </tr>
-            {{/each}}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {{#each this.rows as |row|}}
+                <tr>
+                  <td class="db-activity-table__cell-category">
+                    {{#if row.category}}
+                      {{dCategoryBadge row.category}}
+                    {{else}}
+                      <span
+                        class="db-activity-table__swatch"
+                        style={{row.swatchStyle}}
+                        aria-hidden="true"
+                      ></span>
+                      {{row.name}}
+                    {{/if}}
+                  </td>
+                  <td
+                    class="db-activity-table__cell-number"
+                  >{{row.topicsFormatted}}</td>
+                  <td
+                    class="db-activity-table__cell-number"
+                  >{{row.postsFormatted}}</td>
+                  <td
+                    class="db-activity-table__cell-number"
+                  >{{row.pageViewsFormatted}}</td>
+                  <td
+                    class="db-activity-table__cell-number"
+                  >{{row.share_formatted}}</td>
+                  <td
+                    class="db-activity-table__cell-number db-delta
+                      {{row.changeClass}}"
+                  >{{row.share_change_formatted}}</td>
+                </tr>
+              {{/each}}
+            </tbody>
+          </table>
+        </div>
       {{else}}
         <p class="db-activity__empty">
           {{i18n

@@ -1,7 +1,7 @@
-import { click, render } from "@ember/test-helpers";
+import { click, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { fakeTime, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import DTimeShortcutPicker from "discourse/ui-kit/d-time-shortcut-picker";
 import { i18n } from "discourse-i18n";
 
@@ -41,10 +41,8 @@ module("Integration | ui-kit | DTimeShortcutPicker", function (hooks) {
       i18n("time_shortcut.none"),
     ];
 
-    const options = Array.from(
-      queryAll("div.tap-tile-grid div.tap-tile-title").map((_, div) =>
-        div.innerText.trim()
-      )
+    const options = findAll("div.tap-tile-grid div.tap-tile-title").map((div) =>
+      div.innerText.trim()
     );
 
     assert.deepEqual(options, expected);

@@ -22,9 +22,18 @@ bs_BA:
           yes: "Da"
           no: "Ne"
       delete: "Delete"
+      chart:
+        form:
+          label: "Tip chart grafikona"
+          bar: "Bar dijagram"
       query_groups: "Grupa"
       query_description: "Opis"
       reset_params: "Resetovati"
       search_placeholder: "Pretraga..."
     group:
       reports: "Izvještaji"
+    discourse_workflows:
+      sql:
+        param_value: "Value"
+        output:
+          results: "Rezultati"

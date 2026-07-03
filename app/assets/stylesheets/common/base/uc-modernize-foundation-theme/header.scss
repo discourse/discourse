@@ -16,7 +16,9 @@
   }
 
   .extra-info-wrapper .title-wrapper {
-    font-size: var(--font-down-1);
+    @include viewport.from(sm) {
+      font-size: var(--font-down-1);
+    }
   }
 
   .header-sidebar-toggle button,
@@ -31,7 +33,9 @@
   }
 
   .header-sidebar-toggle button .d-icon,
-  .d-header-icons .header-dropdown-toggle:not(.user-menu-panel) .d-icon {
+  .d-header-icons
+    .header-dropdown-toggle:not(.user-menu-panel, .language-switcher)
+    .d-icon {
     font-size: var(--font-up-3);
   }
 

@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { isBlank, isEmpty } from "@ember/utils";
 import withEventValue from "discourse/helpers/with-event-value";
 import { debounce } from "discourse/lib/decorators";
+import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -126,27 +127,52 @@ export default class ExplorerSchema extends Component {
     this.updateFilter(value);
   }
 
-  <template>
-    <div class="schema">
-      <div class="schema-search">
-        {{dIcon "magnifying-glass" class="schema-search__icon"}}
-        <input
-          type="text"
-          class="schema-search__input"
-          placeholder={{i18n "explorer.schema.search_tables"}}
-          {{on "input" (withEventValue this.filterChanged)}}
-        />
-      </div>
+  @action
+  collapseSchema() {
+    this.args.updateHideSchema(true);
+  }
 
-      <div class="schema-container">
-        <DConditionalLoadingSpinner @condition={{this.loading}}>
-          <ul>
-            {{#each this.filteredTables as |table|}}
-              <OneTable @table={{table}} />
-            {{/each}}
-          </ul>
-        </DConditionalLoadingSpinner>
+  @action
+  expandSchema() {
+    this.args.updateHideSchema(false);
+  }
+
+  <template>
+    {{#if @hideSchema}}
+      <DButton
+        @action={{this.expandSchema}}
+        @icon="chevron-left"
+        @ariaLabel="explorer.schema.show"
+        class="schema__toggle --expand no-text unhide"
+      />
+    {{else}}
+      <div class="schema">
+        <div class="schema-search">
+          {{dIcon "magnifying-glass" class="schema-search__icon"}}
+          <input
+            type="text"
+            class="schema-search__input"
+            placeholder={{i18n "explorer.schema.search_tables"}}
+            {{on "input" (withEventValue this.filterChanged)}}
+          />
+          <DButton
+            @action={{this.collapseSchema}}
+            @icon="chevron-right"
+            @ariaLabel="explorer.schema.hide"
+            class="schema__toggle --collapse no-text"
+          />
+        </div>
+
+        <div class="schema-container">
+          <DConditionalLoadingSpinner @condition={{this.loading}}>
+            <ul>
+              {{#each this.filteredTables as |table|}}
+                <OneTable @table={{table}} />
+              {{/each}}
+            </ul>
+          </DConditionalLoadingSpinner>
+        </div>
       </div>
-    </div>
+    {{/if}}
   </template>
 }

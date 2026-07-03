@@ -59,6 +59,7 @@ class LocaleFileValidator
   EXEMPTED_DOUBLE_CURLY_BRACKET_KEYS = %w[
     js.discourse_automation.scriptables.auto_responder.fields.word_answer_list.description
     discourse_automation.scriptables.email_on_flagged_post.default_template
+    js.discourse_ai.discourse_workflows.ai_agent.upload_ids_placeholder
   ]
 
   def initialize(filename)
@@ -111,9 +112,9 @@ class LocaleFileValidator
 
       @errors[:invalid_relative_image_sources] << key if value.match?(%r{src\s*=\s*["']/[^/]}i)
 
-      if value.match?(/{{.+?}}/) && !key.end_with?("_MF") &&
-           !EXEMPTED_DOUBLE_CURLY_BRACKET_KEYS.include?(key)
-        @errors[:invalid_interpolation_key_format] << key
+      if value.match?(/{{(?!setting:).+?}}/)
+        exempt = key.end_with?("_MF") || EXEMPTED_DOUBLE_CURLY_BRACKET_KEYS.include?(key)
+        @errors[:invalid_interpolation_key_format] << key unless exempt
       end
 
       BANNED_PHRASES.keys.each do |banned|

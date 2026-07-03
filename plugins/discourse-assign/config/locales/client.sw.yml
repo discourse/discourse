@@ -67,3 +67,11 @@ sw:
     edit_assignments_modal:
       topic: "Mada"
       post: "Ujumbe"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "Kukabidhi"
+      assign_topic:
+        operations:
+          assign: "Kabidhi"
+          unassign: "Haijakabithiwa"
+        topic_id: "Utambulisho wa Mada"

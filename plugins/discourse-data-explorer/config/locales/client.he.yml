@@ -50,6 +50,12 @@ he:
       run: "הרצה"
       undo: "התעלמות מהשינויים"
       delete: "מחיקה"
+      chart:
+        form:
+          label: "סוג תרשים"
+          bar: "עמודות"
+        tooltip:
+          total: "סה״כ: %{count}"
       others_dirty: "בשאילתה נערכו שינויים שטרם נשמרו ועשויים ללכת לאיבוד עקב ניווט למקום אחר."
       run_time: "השאילתה הושלמה תוך %{value} מילישניות."
       result_count:
@@ -86,6 +92,16 @@ he:
           descriptions:
             data_explorer:
               run_queries: "הרצת שאילתות של סייר נתונים. ניתן להגביל את מפתח ה־API לסדרה של שאילתות על ידי ציון מזהה שאילתה."
+    discourse_workflows:
+      nodes:
+        "action:sql": "דפדפן נתונים"
+      sql:
+        query_id: "שאילתה"
+        add_param: "הוספת משתנה"
+        param_value: "ערך"
+        output:
+          results: "תוצאות"
+          no_results: "אין תוצאות"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

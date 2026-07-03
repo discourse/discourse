@@ -346,7 +346,6 @@ sl:
       models:
         invitee:
           status:
-            unknown: "Neodločen"
             going: "Pridem"
             interested: "Mogoče pridem"
         event:
@@ -364,6 +363,8 @@ sl:
               description: "Na zasebni dogodek se lahko prijavijo samo povabljenci."
       composer:
         name_placeholder: "Ime dogodka"
+        event_title_placeholder: "Ime dogodka"
+        create_event_button: "Ustvari dogodek"
         reminder:
           units:
             minutes:
@@ -381,6 +382,9 @@ sl:
               two: "dneva"
               few: "dnevi"
               other: "dni"
+      composer_actions:
+        create_event:
+          label: "Ustvari dogodek"
       builder_modal:
         custom_fields:
           label: "Polja po meri"
@@ -414,11 +418,6 @@ sl:
             last: "zadnji"
         attendance:
           none: "Brez"
-        url:
-          label: "URL"
-          placeholder: "Neobvezno"
-        location:
-          label: "Lokacija"
         description:
           label: "Opis"
         name:

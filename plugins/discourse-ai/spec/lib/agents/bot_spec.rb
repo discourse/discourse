@@ -30,7 +30,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
   let(:llm_responses) { [function_call, response] }
 
   describe "#reply" do
-    it "sets top_p and temperature params" do
+    it "sets top_p, temperature, and thinking_effort params" do
       SiteSetting.ai_llm_temperature_top_p_enabled = true
       DiscourseAi::Completions::Endpoints::Fake.delays = []
       DiscourseAi::Completions::Endpoints::Fake.last_call = nil
@@ -43,6 +43,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
         name: "TestAgent",
         top_p: 0.5,
         temperature: 0.4,
+        thinking_effort: "high",
         system_prompt: "test",
         description: "test",
         allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
@@ -56,8 +57,55 @@ RSpec.describe DiscourseAi::Agents::Bot do
       ) { |_partial, _cancel, _placeholder| }
 
       last_call = DiscourseAi::Completions::Endpoints::Fake.last_call
-      expect(last_call[:model_params][:top_p]).to eq(0.5)
-      expect(last_call[:model_params][:temperature]).to eq(0.4)
+      expect(last_call[:model_params]).to include(
+        top_p: 0.5,
+        temperature: 0.4,
+        thinking_effort: "high",
+      )
+    end
+
+    it "requests Gemini thought summaries when thinking is shown" do
+      gemini = Fabricate(:gemini_model)
+      captured_kwargs = []
+      bot = described_class.as(bot_user, agent: DiscourseAi::Agents::General.new, model: gemini)
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          messages: [{ type: :user, content: "test" }],
+          skip_show_thinking: false,
+        )
+
+      allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+        :generate,
+      ) do |_, *_args, **kwargs|
+        captured_kwargs << kwargs
+        "Answer"
+      end
+
+      bot.reply(context) { |_partial| }
+
+      expect(captured_kwargs.first[:extra_model_params]).to include(include_thought_summaries: true)
+    end
+
+    it "does not request Gemini thought summaries when thinking is hidden" do
+      gemini = Fabricate(:gemini_model)
+      captured_kwargs = []
+      bot = described_class.as(bot_user, agent: DiscourseAi::Agents::General.new, model: gemini)
+      context =
+        DiscourseAi::Agents::BotContext.new(
+          messages: [{ type: :user, content: "test" }],
+          skip_show_thinking: true,
+        )
+
+      allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+        :generate,
+      ) do |_, *_args, **kwargs|
+        captured_kwargs << kwargs
+        "Answer"
+      end
+
+      bot.reply(context) { |_partial| }
+
+      expect(captured_kwargs.first[:extra_model_params]).to be_nil
     end
 
     context "when using function chaining" do
@@ -209,6 +257,56 @@ RSpec.describe DiscourseAi::Agents::Bot do
 
         # +1 for the final text-only call after budget/turn exhaustion
         expect(call_count).to eq(described_class::MAX_COMPLETIONS + 1)
+      end
+
+      it "defaults the turn budget to half the context window when agentic without max_turn_tokens" do
+        # The editor lets an agentic agent be saved without a max_turn_tokens
+        # budget ("Leave empty for default limits"). This previously crashed
+        # with "comparison of Integer with nil failed". Instead the agent stays
+        # agentic and the budget defaults to half the LLM context window.
+        agentic_no_budget_agent =
+          Fabricate(
+            :ai_agent,
+            execution_mode: "agentic",
+            max_turn_tokens: nil,
+            compression_threshold: 80,
+            tools: [["ListCategories", nil, false]],
+          )
+
+        klass = agentic_no_budget_agent.class_instance
+
+        # gpt_4 has max_prompt_tokens 131_072, so the default budget is 65_536.
+        expect(DiscourseAi::Agents::Bot.default_max_turn_tokens(bot.send(:llm))).to eq(65_536)
+
+        tool_call =
+          DiscourseAi::Completions::ToolCall.new(id: "call_1", name: "categories", parameters: {})
+
+        responses = [tool_call, "Final answer"]
+        call_count = 0
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
+          agent_bot = described_class.as(bot_user, agent: klass.new)
+          context =
+            DiscourseAi::Agents::BotContext.new(messages: [{ type: :user, content: "test" }])
+
+          allow_any_instance_of(DiscourseAi::Completions::Llm).to receive(
+            :generate,
+          ).and_wrap_original do |original, *args, **kwargs, &blk|
+            call_count += 1
+            result = original.call(*args, **kwargs, &blk)
+            # 70_000 tokens per call exceeds the 65_536 default budget after the
+            # first call, so the loop stops on the token budget (not the legacy
+            # MAX_COMPLETIONS limit).
+            if (tracker = kwargs[:execution_context]&.token_usage_tracker)
+              tracker.add_effective(request: 40_000, response: 30_000)
+            end
+            result
+          end
+
+          agent_bot.reply(context) { |_partial| }
+        end
+
+        expect(call_count).to eq(2)
       end
 
       it "forces a final text-only call with budget hint when budget exhausted after tool execution" do

@@ -294,8 +294,6 @@ fr:
         title: "Son de notification de discussion sur ordinateur"
       sounds:
         none: "Aucun"
-        bell: "Cloche"
-        ding: "Ding"
       title: "discussion"
       title_capitalized: "Discussion"
       upload: "Joindre un fichier"
@@ -372,7 +370,6 @@ fr:
         input_placeholder: Ajouter un nom
         slug_description: Un identifiant de canal est utilisé dans l'URL au lieu du nom du canal
         name: Nom du canal
-        slug: Identifiant de canal (facultatif)
       channel_edit_description_modal:
         title: Modifier la description
         input_placeholder: Ajouter une description
@@ -429,9 +426,8 @@ fr:
             one: 'Les utilisateurs de %{group} et de %{count} autre groupe auront accès à ce canal selon les <a href="%{settingLink}" target="_blank">paramètres de sécurité</a>'
             other: 'Les utilisateurs de %{group} et de %{count} autres groupes auront accès à ce canal selon les <a href="%{settingLink}" target="_blank">paramètres de sécurité</a>'
         create: "Créer un canal"
-        description: "Description (facultative)"
+        description: "Description"
         name: "Nom du canal"
-        slug: "Identifiant de canal (facultatif)"
         title: "Nouveau canal"
         type: "Type"
         types:
@@ -749,3 +745,14 @@ fr:
       panels:
         chat:
           label: "Discussion"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Envoyer un message de chat"
+      chat_message_created:
+        channel_id: "Canal"
+      send_chat_message:
+        channel_id: "Canal"
+        message: "Message"
+      chat_approval:
+        message: "Message"
+        channel_id: "Canal"

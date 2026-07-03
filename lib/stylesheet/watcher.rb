@@ -102,19 +102,21 @@ module Stylesheet
       MessageBus.publish "/file-change", message
     end
 
-    def plugin_assets_refresh(plugin_name, target)
+    def plugin_assets_refresh(plugin_name)
       Stylesheet::Manager.clear_plugin_cache!(plugin_name)
+
+      # A changed file can't be mapped back to a single target (it may be a
+      # shared partial), so refresh every target the plugin defines.
       targets = []
-      if target.present?
-        if DiscoursePluginRegistry.stylesheets_exists?(plugin_name, target.to_sym)
-          targets.push("#{plugin_name}_#{target}")
+      targets << plugin_name if DiscoursePluginRegistry.stylesheets_exists?(plugin_name)
+      DiscoursePluginRegistry::STYLESHEET_TARGETS.each do |target|
+        if DiscoursePluginRegistry.stylesheets_exists?(plugin_name, target)
+          targets << "#{plugin_name}_#{target}"
         end
-      else
-        targets.push(plugin_name)
       end
-      message =
-        targets.map! { |name| Stylesheet::Manager.new.stylesheet_data(name.to_sym) }.flatten!
-      MessageBus.publish "/file-change", message
+
+      message = targets.flat_map { |name| Stylesheet::Manager.new.stylesheet_data(name.to_sym) }
+      MessageBus.publish "/file-change", message if message.present?
     end
 
     def worker_loop
@@ -123,7 +125,7 @@ module Stylesheet
       @queue.pop while @queue.length > 0
 
       if path[:plugin_name]
-        plugin_assets_refresh(path[:plugin_name], path[:target])
+        plugin_assets_refresh(path[:plugin_name])
       else
         core_assets_refresh(path[:target])
       end

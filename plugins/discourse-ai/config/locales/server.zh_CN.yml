@@ -36,8 +36,11 @@ zh_CN:
         title: 使用 AI 对帖子进行分类
         description: "使用大语言模型对帖子进行分类"
         flagged_post: |
-          <div>模型的回答：</div>
-          <p>%{llm_response}</p>
+          %{score_reason}
+          %{response}
+        flagged_post_response: |
+          <p>模型响应： %{llm_response}</p>
+        flagged_post_score_reason: |
           <b>由 <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> 规则触发。</b>
         notify_author_pm:
           subject: "您的帖子已暂时移除供审核"
@@ -55,6 +58,7 @@ zh_CN:
         description: "使用 AI 自动为话题添加标签"
   site_settings:
     discourse_ai_enabled: "启用 Discourse AI 插件。"
+    enable_ai_bot_starred_conversations: "允许用户为 AI 机器人对话添加星标，并在“星标”侧边栏部分显示。"
     ai_default_llm_model: "用于所有 AI 功能的默认 LLM 模型"
     ai_artifact_security: "AI 工件系统会生成包含可运行代码的 iframe。严格模式将强制额外点击才能运行代码。宽松模式则立即运行代码。混合模式允许用户提供 data-ai-artifact-autorun 来立即显示。禁用模式则会禁用工件系统。"
     ai_toxicity_enabled: "启用毒性模块。"
@@ -73,6 +77,12 @@ zh_CN:
     ai_sentiment_enabled: "启用情绪模块。"
     ai_sentiment_inference_service_api_endpoint: "为情绪模块运行 API 的 URL"
     ai_sentiment_inference_service_api_key: "情绪 API 的 API 密钥"
+    ai_sentiment_model_configs: "用于推理的分类模型端点。情感分析将帖子分类为正面、中性或负面。情绪分析根据支持的情绪标签对帖子进行分类。"
+    ai_sentiment_models: "用于推理的分类模型端点。情感分析将帖子分类为正面、中性或负面。情绪分析根据支持的情绪标签对帖子进行分类。"
+    ai_sentiment_sentiment_classification_strategy: "情感分类后端。"
+    ai_sentiment_sentiment_agent: "当情感后端为代理时，用于情感分类的代理。"
+    ai_sentiment_emotion_classification_strategy: "情绪分类后端。"
+    ai_sentiment_emotion_agent: "当情感后端是代理时，用于情感分类的代理。"
     ai_nsfw_detection_enabled: "启用 NSFW 模块。"
     ai_nsfw_inference_service_api_endpoint: "为 NSFW 模块运行 API 的 URL"
     ai_nsfw_inference_service_api_key: "NSFW API 的 API 密钥"
@@ -122,6 +132,7 @@ zh_CN:
     ai_bot_add_to_header: "在标题中显示按钮以使用 AI 机器人开始 PM"
     ai_bot_add_to_community_section: "在边栏社区版块中显示一个链接，以使用 AI 机器人开始 PM"
     ai_bot_github_access_token: "搭配使用 GitHub AI 工具所需的 GitHub 访问令牌（搜索支持需要）"
+    ai_bot_enable_docked_composer: "为 AI 机器人对话启用停靠式聊天风格编辑器，而不是标准的浮动编辑器。"
     ai_discover_enabled: "启用发现搜索功能"
     ai_discover_agent: "用于发现搜索功能的智能体"
     ai_google_custom_search_api_key: "Google 自定义搜索 API 的 API 密钥，请参阅：https://developers.google.com/custom-search"
@@ -133,6 +144,7 @@ zh_CN:
     ai_discord_search_agent: "用于 Discord 搜索的智能体。"
     ai_discord_allowed_guilds: "允许机器人搜索的 Discord 公会（服务器）"
     ai_translation_enabled: "启用 AI 翻译功能"
+    ai_translation_excluded_categories: "这些类别中的内容将不会被翻译。留空则可翻译所有类别的内容，包括私有类别。"
     ai_translation_personal_messages: "控制哪些个人消息需要翻译。'none' 表示禁用个人消息翻译。'group' 仅翻译群组个人消息。'all' 翻译所有个人消息。"
     ai_translation_include_bot_content: "启用后，机器人（用户 ID 小于 0）编写的内容也将发送进行翻译。"
     ai_translation_max_post_length: "要翻译的帖子的最大字符数。超过此长度的帖子将不会被翻译。"
@@ -475,6 +487,12 @@ zh_CN:
         chat_thread_titler:
           name: "聊天消息串标题工具"
           description: "支持自动生成聊天消息串标题的默认智能体"
+        sentiment_classifier:
+          name: "情感分类器"
+          description: "默认代理支持情感分类"
+        emotion_classifier:
+          name: "情绪分类器"
+          description: "默认代理支持情绪分类"
       topic_not_found: "总结不可用，找不到话题！"
       summarizing: "正在总结话题"
       searching: "搜索：'%{query}'"
@@ -686,6 +704,7 @@ zh_CN:
         already_flagged: "该帖子已被标记待审核。"
         flagged: "帖子已被标记待审核。"
         reason: "AI 机器人标记了此帖子。\n\n原因：%{reason}"
+        score_reason: "AI 机器人标记了此帖子。"
       close_topic:
         errors:
           not_found: "找不到话题。"
@@ -796,6 +815,10 @@ zh_CN:
           conflict: "此审核队列条目已被其他人更新。请重试。"
           action_failed: "无法执行操作"
         success: "已成功对审核队列条目 %{reviewable_id} 执行 '%{action}'。"
+      add_reviewable_note:
+        errors:
+          not_allowed: "您无权访问审核队列"
+          not_found: "找不到审核队列条目"
     reviewables:
       ai_tool_action:
         title: "AI 工具操作"
@@ -833,6 +856,7 @@ zh_CN:
         disable_modules_first: "您必须先禁用这些模块：%{settings}"
         set_llm_first: "首先设置%{setting}"
         model_unreachable: "我们无法从此模型获得回答。请先检查您的设置。"
+        empty_response: "模型返回了空响应。"
         invalid_seeded_model: "您无法在此模型中使用此功能"
         invalid_agent_response_format: "所选智能体必须具有包含名为“spam”的布尔字段的响应格式。"
         must_select_model: "必须先选择一个 LLM"
@@ -876,7 +900,6 @@ zh_CN:
       limit_exceeded_admin: "您已达到 AI 点数上限。请在 %{reset_time} 后重试。"
     errors:
       quota_exceeded: "您已超出此模型的配额。请在 %{relative_time}后再试。"
-      quota_required: "必须为此模型指定最大词元数或使用次数"
       no_query_specified: 查询参数为必选项，请指定。
       no_user_for_agent: 指定的智能体没有关联的用户。
       agent_not_found: "指定的智能体不存在。请检查 agent_name 或 agent_id 参数（旧版：agent_name 或 agent_id）。"

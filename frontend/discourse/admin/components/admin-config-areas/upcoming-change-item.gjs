@@ -11,6 +11,7 @@ import { capitalize } from "@ember/string";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
 import UpcomingChangeBadges from "discourse/admin/components/admin-config-areas/upcoming-change-badges";
+import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
 import GroupSelector from "discourse/components/group-selector";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
@@ -260,15 +261,15 @@ export default class UpcomingChangeItem extends Component {
     const isEnabled = newValue !== "no_one";
 
     try {
-      await this.toggleChange(isEnabled, newValue);
-
       if (newValue === this.staffGroupName) {
         this.groupsChanged(this.staffGroupName);
-      } else if (newValue === "everyone" || newValue === "no_one") {
+        await this.saveGroups({ silenceToast: true });
+        await this.toggleChange(isEnabled, newValue);
+      } else {
+        await this.toggleChange(isEnabled, newValue);
         this.groupsChanged("");
+        await this.saveGroups({ silenceToast: true });
       }
-
-      await this.saveGroups({ silenceToast: true });
 
       this.args.enabledForChanged?.(this.args.change.setting, newValue);
     } catch (error) {
@@ -303,8 +304,11 @@ export default class UpcomingChangeItem extends Component {
         </div>
 
         {{#if @change.description}}
-          <div class="d-table__overview-about upcoming-change__description">
-            {{@change.description}}
+          <div
+            class="d-table__overview-about upcoming-change__description"
+            {{linkifySettingLinks @change.description}}
+          >
+            {{trustHTML @change.description}}
 
             <div
               class="upcoming-change__description-details"

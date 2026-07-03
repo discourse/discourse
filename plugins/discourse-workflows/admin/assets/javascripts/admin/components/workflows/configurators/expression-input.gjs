@@ -5,18 +5,18 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import discourseLater from "discourse/lib/later";
-import buildWorkflowExtension from "../../../lib/workflows/codemirror-extension";
 import {
   ancestorOutputNodes,
   inputConnectionsForNode,
   inputIndexForConnection,
   inputSummaryForNode,
-  nodeItemJsonPath,
+  nodeOutputJsonPath,
   outputIndexForConnection,
   previousNodeForConnection,
   schemaFieldsForNodeInput,
   schemaFieldsForNodeOutput,
 } from "../../../lib/workflows/data-schema";
+import buildExpressionExtensions from "../../../lib/workflows/expression-extensions";
 import ExpressionPreview from "../variable/expression-preview";
 import VariableInput from "../variable/input";
 
@@ -69,17 +69,23 @@ export default class ExpressionInput extends Component {
       ? inputIndexForConnection(previousConnection)
       : 0;
     const currentInputSummary = node
-      ? inputSummaryForNode(runData, node.name, currentInputIndex)
+      ? inputSummaryForNode(runData, node.name, currentInputIndex, {
+          node,
+          sourceNode: previousNode,
+          outputIndex: previousConnection
+            ? outputIndexForConnection(previousConnection)
+            : 0,
+        })
       : null;
     let inputFields = [];
     if (currentInputSummary) {
       inputFields = schemaFieldsForNodeInput(runData, node.name, {
         inputIndex: currentInputIndex,
-        prefix: itemPrefix,
-      });
-    } else if (previousNode) {
-      inputFields = schemaFieldsForNodeOutput(runData, previousNode.name, {
-        outputIndex: outputIndexForConnection(previousConnection),
+        node,
+        sourceNode: previousNode,
+        outputIndex: previousConnection
+          ? outputIndexForConnection(previousConnection)
+          : 0,
         prefix: itemPrefix,
       });
     }
@@ -88,12 +94,16 @@ export default class ExpressionInput extends Component {
           node: ancestor.node,
           fields: schemaFieldsForNodeOutput(runData, ancestor.node.name, {
             outputIndex: ancestor.outputIndex,
-            prefix: nodeItemJsonPath(ancestor.node.name),
+            node: ancestor.node,
+            prefix: nodeOutputJsonPath(runData, ancestor.node.name, {
+              outputIndex: ancestor.outputIndex,
+              node: ancestor.node,
+            }),
           }),
         }))
       : [];
 
-    return buildWorkflowExtension(cmParams, {
+    return buildExpressionExtensions(cmParams, {
       inputFields,
       ancestorNodes,
       siteSettings: this.siteSettings,

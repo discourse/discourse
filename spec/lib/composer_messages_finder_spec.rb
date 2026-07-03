@@ -40,26 +40,6 @@ RSpec.describe ComposerMessagesFinder do
         user.expects(:topic_count).returns(2)
         expect(finder.check_education_message).to be_blank
       end
-
-      it "returns no message when the user has already been shown composer education" do
-        UserHistory.create!(
-          action: UserHistory.actions[:notified_about_composer_education],
-          target_user_id: user.id,
-        )
-
-        user.expects(:post_count).never
-        user.expects(:topic_count).never
-        expect(finder.check_education_message).to be_blank
-      end
-
-      it "records that composer education was shown" do
-        user.expects(:post_count).returns(8)
-        user.expects(:topic_count).returns(1)
-
-        finder.check_education_message
-
-        expect(UserHistory.exists_for_user?(user, :notified_about_composer_education)).to eq(true)
-      end
     end
 
     context "with private message" do

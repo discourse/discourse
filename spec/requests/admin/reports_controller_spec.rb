@@ -26,16 +26,6 @@ RSpec.describe Admin::ReportsController do
           *Report::ADMIN_ONLY_REPORTS,
         )
       end
-
-      it "includes suspicious logins when IP viewing is disabled" do
-        SiteSetting.moderators_view_ips = false
-
-        get "/admin/reports.json"
-
-        expect(response.parsed_body["reports"].map { |r| r["type"] }).to include(
-          "suspicious_logins",
-        )
-      end
     end
 
     before { sign_in(admin) }
@@ -545,6 +535,34 @@ RSpec.describe Admin::ReportsController do
       it "does allow running the page_view_legacy_total_reqs report" do
         get "/admin/reports/page_view_legacy_total_reqs.json"
         expect(response.status).to eq(200)
+      end
+    end
+
+    context "with browser pageview reports" do
+      it "lets an admin run them only when persist_browser_pageview_events is enabled" do
+        sign_in(admin)
+
+        SiteSetting.persist_browser_pageview_events = false
+        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+          get "/admin/reports/#{report_type}.json"
+          expect(response.status).to eq(404)
+        end
+
+        SiteSetting.persist_browser_pageview_events = true
+        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+          get "/admin/reports/#{report_type}.json"
+          expect(response.status).to eq(200)
+        end
+      end
+
+      it "denies a moderator even when persist_browser_pageview_events is enabled" do
+        SiteSetting.persist_browser_pageview_events = true
+        sign_in(moderator)
+
+        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+          get "/admin/reports/#{report_type}.json"
+          expect(response.status).to eq(404)
+        end
       end
     end
   end

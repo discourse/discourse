@@ -45,7 +45,7 @@ const Content = <template>
     {{dIcon @icon}}
   {{else if @emojis}}
     {{#each @emojis as |emojiName|}}
-      {{dEmoji emojiName skipEmojiTitle=(not @emojiTitle)}}
+      {{dEmoji emojiName skipEmojiTitle=(not @emojiTitle) title=@emojiTitle}}
     {{/each}}
   {{/if}}
   {{@text}}

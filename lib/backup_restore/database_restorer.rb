@@ -176,6 +176,7 @@ module BackupRestore
               "SKIP_OPTIMIZE_ICONS" => "1",
               "DISABLE_TRANSLATION_OVERRIDES" => "1",
               "SKIP_SEED_FU" => "1",
+              "SKIP_STRUCTURE_SQL" => "1",
             },
             "rake",
             "db:migrate",

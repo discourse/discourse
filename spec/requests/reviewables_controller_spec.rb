@@ -384,6 +384,49 @@ RSpec.describe ReviewablesController do
         expect(json["reviewables"].size).to eq(1)
       end
 
+      it "doesn't cause N+1 queries when flagged posts have localizations" do
+        SiteSetting.content_localization_enabled = true
+        admin.update!(locale: "ja")
+        reviewables =
+          2.times.map do
+            post = Fabricate(:post, raw: "Original post", locale: "en")
+            Fabricate(
+              :post_localization,
+              post: post,
+              cooked: "<p>Translated post</p>",
+              locale: "ja",
+            )
+
+            Fabricate(
+              :reviewable_flagged_post,
+              target: post,
+              target_created_by: post.user,
+              topic: post.topic,
+            )
+          end
+
+        I18n.with_locale(:ja) do
+          queries =
+            track_sql_queries do
+              get "/review.json"
+              expect(response.status).to eq(200)
+            end
+
+          post_localization_queries =
+            queries.select { |query| query.match?(/FROM "?post_localizations"?/) }
+
+          expect(post_localization_queries.size).to eq(1)
+          expect(
+            response.parsed_body["reviewables"].map { |reviewable| reviewable["id"] },
+          ).to include(*reviewables.map(&:id))
+          expect(
+            response.parsed_body["reviewables"]
+              .select { |reviewable| reviewables.map(&:id).include?(reviewable["id"]) }
+              .map { |reviewable| reviewable["cooked"] },
+          ).to all(eq("<p>Translated post</p>"))
+        end
+      end
+
       context "with reviewable notes" do
         fab!(:moderator)
         fab!(:reviewable)
@@ -588,6 +631,28 @@ RSpec.describe ReviewablesController do
     describe "#perform" do
       fab!(:reviewable)
       before { sign_in(Fabricate(:moderator)) }
+
+      it "includes the statuses of the other reviewables resolved by the action in the response" do
+        sign_in(Fabricate(:admin))
+        spammer = Fabricate(:user, refresh_auto_groups: true)
+        flagger = Fabricate(:user, refresh_auto_groups: true)
+        acted_flag = PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
+        queued_post =
+          Fabricate(
+            :reviewable_queued_post,
+            created_by: Discourse.system_user,
+            target_created_by: spammer,
+          )
+
+        put "/review/#{acted_flag.id}/perform/delete_user_block.json?version=#{acted_flag.version}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("reviewable_perform_result", "reviewable_updates")).to eq(
+          queued_post.id.to_s => {
+            "status" => Reviewable.statuses[:rejected],
+          },
+        )
+      end
 
       it "returns 404 when the reviewable does not exist" do
         put "/review/12345/perform/approve_user.json?version=0"

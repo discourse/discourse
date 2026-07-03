@@ -9,6 +9,7 @@ ru:
     events:
       name: "События"
       title: "события"
+      description: "Здесь участники могут находить и обсуждать предстоящие события в общем календаре."
   user_api_key:
     scopes:
       "discourse-calendar:events_calendar": "Читать ленту событий календаря"
@@ -44,7 +45,7 @@ ru:
     map_events_to_color: "Назначать цвет каждому тегу или категории."
     map_events_title: "Перезаписывает «События» в заголовке боковой панели «Предстоящие события» для каждой категории."
     calendar_enabled: "Включить плагин discourse-calendar. Это добавит поддержку тега [calendar][/calendar] в первой публикации темы."
-    discourse_post_event_enabled: "Включает функции мероприятий. Примечание: также необходимо, чтобы был включен параметр `calendar enabled`."
+    discourse_post_event_enabled: "Включает функции событий. Примечание: также необходимо включить {{setting:calendar_enabled}}."
     displayed_invitees_limit: "Ограничивать количество приглашений, отображаемых в мероприятии ."
     display_post_event_date_on_topic_title: "Отображать дату мероприятия после названия темы."
     use_local_event_date: "Использовать локальную дату после заголовка темы вместо прошедшего времени."
@@ -70,14 +71,30 @@ ru:
     event_participation_buttons: "Список кнопок участия в мероприятиях, которые могут использовать пользователи."
     sidebar_show_upcoming_events: "Показывать ссылку на предстоящие мероприятия на боковой панели в разделе «Еще»."
     calendar_first_day_of_week: "Установите первый день недели для отображения календаря. Возможные варианты: суббота, воскресенье или понедельник."
-    enable_events_category_type_setup: "Включает параметр типа категории «События» при настройке создания категории. Обратите внимание, что для вступления изменений в силу необходимо включить параметр «Включить упрощенное создание категорий»."
+    enable_events_category_type_setup: "Включает опцию типа категории «События» при настройке создания категории."
+    livestream_enable_modal_chat_on_mobile: "Отображение чата прямой трансляции в модальном окне на мобильных устройствах."
   discourse_calendar:
     category_type:
       default_calendar_view:
+        label: "Стандартный вид календаря"
         day: "Дата"
         week: "За неделю"
         month: "За месяц"
         year: "За год"
+      display_weekends:
+        label: "Отображать выходные дни"
+      discourse_post_event_allowed_on_groups:
+        label: "Группы, которые могут создавать мероприятия"
+      use_local_event_date:
+        label: "формат даты события"
+        local: "Дата по местному времени (например, 20 апреля)"
+        relative: "Относительное время (например, через 2 дня)"
+      sort_categories_by_event_start_date_enabled:
+        label: "Сортировка по темам"
+        event_date: "Дата события"
+        latest_post: "Последние публикации"
+      sidebar_show_upcoming_events:
+        label: 'Отобразить ссылку «Предстоящие события» в навигационном меню'
     calendar_subscriptions:
       all_events_feed_name: "%{site_title} - Все события"
       my_events_feed_name: "%{site_title} - Мои события"

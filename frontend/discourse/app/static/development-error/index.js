@@ -1,4 +1,5 @@
 import "./styles.css";
+import getURL from "discourse/lib/get-url";
 
 let dialogContent;
 
@@ -12,7 +13,7 @@ function setupErrorDialog() {
   heading.append(title);
 
   const tomster = document.createElement("img");
-  tomster.src = "images/fishy-tomster.webp";
+  tomster.src = getURL("/images/fishy-tomster.webp");
   heading.append(tomster);
 
   dialog.append(heading);

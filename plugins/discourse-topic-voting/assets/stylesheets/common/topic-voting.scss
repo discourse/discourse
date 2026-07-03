@@ -75,7 +75,8 @@
 }
 
 // grid layout for voting in topic title
-#topic-title:has(.voting) {
+#topic-title:has(.voting),
+.nested-view__header:has(.voting) {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 0 var(--topic-body-width-padding);

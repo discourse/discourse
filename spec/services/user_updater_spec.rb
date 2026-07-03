@@ -346,6 +346,7 @@ RSpec.describe UserUpdater do
     context "when sso overrides bio" do
       it "does not change bio" do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
         SiteSetting.discourse_connect_overrides_bio = true
 
@@ -361,6 +362,7 @@ RSpec.describe UserUpdater do
     context "when sso overrides location" do
       it "does not change location" do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
         SiteSetting.discourse_connect_overrides_location = true
 
@@ -376,6 +378,7 @@ RSpec.describe UserUpdater do
     context "when sso overrides website" do
       it "does not change website" do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
         SiteSetting.discourse_connect_overrides_website = true
 

@@ -248,7 +248,7 @@ pt_BR:
           gists: "Resumos breves da lista de tópicos"
           setting_groups:
             settings: "Configurações básicas"
-            gists: "Gists"
+            gists: "Resumos"
             backfill: "Backfill"
         search:
           name: "Pesquisar"
@@ -264,6 +264,9 @@ pt_BR:
             model_settings: "Configurações de modelo"
             related_topics: "Tópicos relacionados"
             semantic_search: "Pesquisa semântica"
+        admin_dashboard:
+          setting_groups:
+            settings: "Configurações básicas"
         discord:
           name: "Integração com o Discourse"
           description: "Adiciona a possibilidade de pesquisar nos canais do Discord"
@@ -504,6 +507,12 @@ pt_BR:
         temperature_help: "A Temperatura a ser usada para o LLM. Aumente para incrementar a criatividade (deixe vazio para usar o padrão do modelo, que geralmente é um valor que varia entre 0,0 e 2,0)"
         top_p: "P Máximo"
         top_p_help: "O P Máximo a ser usado para o LLM, aumente para incrementar o fator aleatório (deixe vazio para usar o padrão do modelo, que geralmente é um valor que varia entre 0.0 e 1.0)"
+        thinking_effort_options:
+          none: "Nenhum"
+          low: "Baixo(a)"
+          medium: "Médio(a)"
+          high: "Alto(a)"
+          max: "Máx"
         priority: "Prioridade"
         tool_options: "Opções de ferramenta"
         rag_conversation_chunks: "Pesquisar pedaços de conversa"
@@ -677,9 +686,7 @@ pt_BR:
             custom: "Personalizado..."
           hours: "horas"
           max_tokens_help: "Quantidade máxima de tokens (palavras e caracteres) que podem ser usados por cada usuário(a) neste grupo durante o período especificado. Tokens são unidades usadas para modelos de IA processarem texto: 1 token equivale a aproximadamente 4 caracteres ou 3/4 de uma palavra."
-          max_tokens_required: "Deve ser definida se o máximo de usos não estiver definido"
           max_usages_help: "A quantidade máxima de vezes que cada usuário(a) neste grupo pode usar o modelo de IA durante o período especificado. Essa cota é rastreada para cada usuário(a) individual e não é compartilhada no grupo."
-          max_usages_required: "Deve ser definido se o máximo de tokens não estiver definido"
         credit_allocation:
           credits_remaining: "%{remaining} de %{total} créditos restantes (%{percentage}%)"
           soft_limit_warning: "Este modelo tem %{percentage}% de créditos de IA restantes hoje"
@@ -780,7 +787,6 @@ pt_BR:
         title: "Sugerir alterações com IA"
         description: "Escolha uma das opções abaixo, e a IA vai sugerir uma nova versão do texto."
         selection_hint: "Dica: antes de abrir o ajudante, você pode selecionar uma parte do texto para reescrever apenas ela."
-        suggest: "Sugestão com IA"
         suggest_errors:
           too_many_tags:
             one: "Você pode ter até %{count} etiqueta"

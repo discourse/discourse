@@ -8,12 +8,17 @@ ru:
   dashboard:
     problem:
       hcaptcha_configuration: "Возникла проблема с конфигурацией ключей `site_key` или `secret_key для hCaptcha"
+      recaptcha_configuration: "Возникла проблема с конфигурацией `site_key` или `secret_key` вашей ReCaptcha."
   admin:
     site_settings:
       categories:
         discourse_hcaptcha: "Плагин hCaptcha"
   site_settings:
-    discourse_hcaptcha_enabled: "Включает плагин hCaptcha. Требуется аккаунт <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>."
+    discourse_captcha_enabled: "Включите проверку капчи при регистрации новых пользователей. Для этого необходимо настроить либо hCaptcha, либо reCaptcha, как указано ниже."
+    discourse_captcha_provider: "Выберите поставщика капчи. Для этого вам потребуется иметь учетную запись выбранного поставщика."
     hcaptcha_site_key: "Ключ сайта hCaptcha из вашего аккаунта <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
     hcaptcha_secret_key: "Секретный ключ hCaptcha из вашего аккаунта <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>"
-  h_captcha_verification_failed: "Ошибка проверки hCaptcha"
+    recaptcha_site_key: "Ключ сайта ReCaptcha из вашей учетной записи <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>"
+    recaptcha_secret_key: "Секретный ключ ReCaptcha из вашей учетной записи <a target='blank' href='https://www.google.com/recaptcha'>ReCaptcha</a>"
+  captcha_verification_failed: "Проверка капчи не удалась"
+  captcha_not_configured: "Функция Captcha включена, но настроена неправильно. Пожалуйста, свяжитесь с администратором сайта."

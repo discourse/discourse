@@ -113,6 +113,12 @@ da:
           clear_all: "Ryd alle"
         allowed_groups: "Tilladte grupper"
         delete: "Slet"
+        thinking_effort_options:
+          none: "Ingen"
+          low: "Lav"
+          medium: "Medium"
+          high: "Høj"
+          max: "Maks"
         response_format:
           open_modal: "Rediger"
           modal:

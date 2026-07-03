@@ -4,6 +4,7 @@ import {
   render,
   settled,
   triggerKeyEvent,
+  waitUntil,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import SearchMenu, {
@@ -70,7 +71,20 @@ module("Integration | Component | SearchMenu", function (hooks) {
 
     await triggerKeyEvent("#icon-search-input", "keydown", "Escape");
 
-    assert.dom(".menu-panel").doesNotExist("Menu panel is gone");
+    // Wait for the panel to actually be removed.
+    const menuClosed = await waitUntil(
+      () => !document.querySelector(".menu-panel")
+    ).catch(() => false);
+
+    // If it didn't close, print out focus state in the failure message.
+    let closeDebug = "";
+    if (!menuClosed) {
+      const panelCount = document.querySelectorAll(".menu-panel").length;
+      const { activeElement } = document;
+      closeDebug = ` (activeElement=${activeElement?.id || activeElement?.nodeName}, hasFocus=${document.hasFocus()}, panelCount=${panelCount})`;
+    }
+
+    assert.dom(".menu-panel").doesNotExist(`Menu panel is closed${closeDebug}`);
 
     await click("#icon-search-input");
     await click("#icon-search-input");

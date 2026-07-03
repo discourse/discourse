@@ -182,6 +182,10 @@ id:
     scriptables:
       send_chat_message:
         title: Kirim pesan obrolan
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Terima"
+      default_deny_label: "Menolak"
   reviewable_score_types:
     needs_review:
       title: "Perlu Reviu"

@@ -41,3 +41,11 @@ ro:
       search_placeholder: "Caută..."
     group:
       reports: "Rapoarte"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Explorator de date"
+      sql:
+        param_value: "Valoare"
+        output:
+          results: "Rezultate"
+          no_results: "Fără rezultate"

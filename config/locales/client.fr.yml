@@ -6,12 +6,26 @@
 
 fr:
   js:
+    user_api_key:
+      authorize: "Autoriser"
+      deny: "Annuler"
+      copied: "Copié !"
+      otp_description: 'Voulez-vous autoriser « %{application_name} » à accéder à ce site ?'
+      no_trust_level: "Nous sommes désolés, vous n'avez pas le niveau de confiance requis pour accéder à l'API utilisateur"
+      generic_error: "Nous sommes désolés, nous n'avons pu générer de clés pour l'API utilisateur. Cette fonctionnalité a peut-être été désactivée par l'administrateur"
+      device:
+        code: "Code"
+        continue: "Continuer"
     blocks:
       ghost:
         status: "Statut"
         in_location: "dans"
         hidden: "masqué"
         failed: "échec"
+    access_control:
+      manage:
+        access_permission_editor: "Éditeur"
+        access_permission_remove: "Supprimer"
     number:
       format:
         separator: ","
@@ -375,6 +389,9 @@ fr:
     age: "Âge"
     joined: "Inscrit(e)"
     admin_title: "Administration"
+    advanced_mode_toggle:
+      advanced_mode: "Mode avancé"
+      simple_mode: "Mode simple"
     show_more: "afficher plus"
     show_help: "Options"
     links: "Liens"
@@ -420,7 +437,7 @@ fr:
       pm_title: "Messages suggérés"
     admin_onboarding_banner:
       select_theme:
-        enabled: "Activé"
+        enabled: "Sélectionné"
       start_posting:
         back: "Retour"
     about:
@@ -1088,7 +1105,8 @@ fr:
             from_alias_hint: "Alias à utiliser comme adresse d'expédition lors de l'envoi d'e-mails SMTP de groupe. Veuillez noter que cela peut ne pas être pris en charge par tous les prestataires de messagerie, nous vous invitons à consulter la documentation de votre prestataire."
         membership:
           title: Adhésion
-          access: Accès
+          join_method:
+            invite: "Sur invitation uniquement"
         categories:
           title: Catégories
           long_title: "Notifications par défaut de la catégorie"
@@ -1121,7 +1139,6 @@ fr:
         title: "Permissions"
         none: "Aucune catégorie n'est associée à ce groupe."
         description: "Les membres de ce groupe peuvent accéder à ces catégories"
-      public_admission: "Autoriser les utilisateurs à rejoindre le groupe librement (nécessite que le groupe soit visible)"
       public_exit: "Autoriser les utilisateurs à quitter librement le groupe"
       empty:
         posts: "Aucune publication n'a été envoyée par les membres de ce groupe"
@@ -1137,7 +1154,6 @@ fr:
       request: "Demander à rejoindre"
       message: "Message"
       confirm_leave: "Voulez-vous vraiment quitter ce groupe ?"
-      allow_membership_requests: "Autoriser les utilisateurs à envoyer des demandes d'adhésion aux propriétaires du groupe (nécessite que le groupe soit visible publiquement)"
       membership_request_template: "Modèle personnalisé à afficher lors de l'envoi d'une demande d'adhésion par un utilisateur"
       membership_request:
         submit: "Soumettre la demande"
@@ -1550,6 +1566,9 @@ fr:
       undo_revoke_access: "Annuler la révocation d'accès"
       api_approved: "Approuvé :"
       api_last_used_at: "Dernière utilisation :"
+      api_expires_at: "Expire le:"
+      api_expired_at: "Expiré:"
+      api_expires_never: "jamais"
       theme: "Thème"
       save_to_change_theme: 'Le thème sera mis à jour après un clic sur « %{save_text} »'
       home: "Page d'accueil par défaut"
@@ -2454,6 +2473,12 @@ fr:
       confirm_title: Continuer vers %{site_name}
       logging_in_as: Connexion en tant que %{email}
       confirm_button: Complétez la connexion
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Continuer"
+      verify_button: "Continuer"
+      account_ready_continue: "Continuer"
+      username_label: "Nom d'utilisateur"
     login:
       header_title: "Ravi de vous revoir"
       title: "Se connecter"
@@ -2763,7 +2788,7 @@ fr:
       users_placeholder: "Ajouter des utilisateurs ou des groupes"
       title_placeholder: "Pouvez-vous résumer le sujet en une courte phrase ?"
       title_or_link_placeholder: "Saisissez un titre ou copiez un lien ici"
-      edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
+      edit_reason_placeholder: "Pourquoi modifiez-vous le tableau ?"
       topic_featured_link_placeholder: "Saisissez le lien à afficher avec le titre."
       remove_featured_link: "Retirer le lien du sujet."
       reply_placeholder: "Saisissez votre message ici. Pour le mettre en forme, utilisez du Markdown, du BBCode ou du HTML. Glissez-déposez ou collez des images."
@@ -2819,6 +2844,7 @@ fr:
         attribute_value: "Valeur"
         apply: "Appliquer"
       help: "Aide à l'édition Markdown"
+      edit_reason: "Pourquoi modifiez-vous le tableau ?"
       exit_fullscreen_prompt: "Appuyez sur <kbd>ÉCHAP</kbd> pour quitter le mode plein écran"
       modal_ok: "OK"
       cant_send_pm: "Nous sommes désolés, vous ne pouvez pas envoyer de message à l'utilisateur %{username}."
@@ -2848,24 +2874,24 @@ fr:
           desc: Créer un nouveau message avec les mêmes destinataires
         reply_to_topic:
           label: Répondre au sujet
+          trigger: Sujet
           desc: Répondre au sujet, pas à un message spécifique
+        reply_to_message:
+          trigger: Message
         toggle_whisper:
           label: Activer/désactiver le murmure
-          desc: Les murmures ne sont visibles que par les responsables
         create_topic:
-          label: "Nouveau sujet"
           desc: Créer un nouveau sujet
         create_personal_message:
-          label: "Nouveau message direct"
           desc: "Créer un nouveau message direct"
         shared_draft:
           label: "Brouillon partagé"
           desc: "Créer un brouillon de sujet qui ne sera visible que par les utilisateurs autorisés"
         toggle_topic_bump:
-          label: "Activer/désactiver l'actualisation du sujet"
           desc: "Répondre sans changer la date de dernière réponse"
         toggle_unlisted:
           label: Activer/désactiver l'état non répertorié
+        unknown_user: "Utilisateur"
       reload: "Recharger"
       ignore: "Ignorer"
       image_alt_text:
@@ -3231,6 +3257,15 @@ fr:
         also_dismiss_topics: "Arrêter de suivre ces sujets pour qu'ils ne soient plus jamais marqués comme non lus"
         dismiss_new_topics: "Ignorer les nouveaux sujets"
         dismiss_new_replies: "Ignorer les nouvelles réponses"
+        dismiss_new_topics_with_selected:
+          one: "Marquer comme lus (%{count})"
+          other: "Marquer comme lus (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Marquer comme lus (%{count})"
+          other: "Marquer comme lus (%{count})"
+        dismiss_all_with_selected:
+          one: "Marquer comme lus (%{count})"
+          other: "Marquer comme lus (%{count})"
         dismiss_new: "Marquer comme vu(s)"
         dismiss_new_modal:
           title: "Ignorer les nouveaux"
@@ -3279,7 +3314,7 @@ fr:
         education:
           topic_tracking_preferences: 'Vous pouvez consulter et modifier vos paramètres de suivi des nouveaux sujets dans <a href="%{basePath}/my/preferences/tracking">vos préférences</a>.'
           unread: "Rien n'a été oublié... impressionnant !"
-          new_new: "Rien de nouveau pour le moment... revenez bientôt !"
+          unified_new: "Rien de nouveau pour le moment... revenez bientôt !"
           new: "Rien de nouveau pour le moment... revenez bientôt !"
     topic_bulk_actions:
       dismiss:
@@ -3330,6 +3365,9 @@ fr:
       deleted_post_placeholder: "[supprimés]"
       ignored_post_placeholder: "[ignoré]"
       pinned_reply: "Épinglé"
+    share_target:
+      new_topic: "Nouveau sujet"
+      new_message: "Nouveau message direct"
     topic:
       filter_to:
         one: "%{count} message dans le sujet"
@@ -3382,39 +3420,6 @@ fr:
       read_more: "Vous voulez en savoir plus ? <a href='%{categoryLink}'>Parcourez toutes les catégories</a> ou <a href='%{latestLink}'>affichez les derniers sujets</a>."
       unread_indicator: "Aucun membre n'a encore lu le dernier message de ce sujet."
       participant_groups: "Groupes de participants"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Il y a <a href="{basePath}/unread"># message non lu</a>}
-              other {Il y a <a href="{basePath}/unread"># messages non lus</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { et il reste <a href="{basePath}/new"># nouveau</a> sujet,}
-              other { et il reste <a href="{basePath}/new"># nouveaux</a> sujets,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Il reste <a href="{basePath}/unread"># sujet</a> non lu,}
-              other {Il reste <a href="{basePath}/unread"># sujets</a> non lus,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Il reste <a href="{basePath}/new"># nouveau</a> sujet,}
-              other {Il reste <a href="{basePath}/new"># nouveaux</a> sujets,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { ou parcourez d'autres sujets dans {categoryLink}}
-          false { ou <a href="{basePath}/latest">consultez les derniers sujets</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} réponse. Passer à la première publication"
         other: "%{count} réponses. Passer à la première publication"
@@ -4455,7 +4460,7 @@ fr:
         new_replies_tooltip: "Nouvelles réponses"
         replies: "Réponses"
         replies_with_count: "Réponses (%{count})"
-      new_new:
+      unified_new:
         help: "sujets créés ou auxquels on a répondu au cours des derniers jours"
       posted:
         title: "Mes publications"
@@ -5048,7 +5053,7 @@ fr:
           title: "Modifier le tableau"
           cancel: "annuler"
           create: "Enregistrer"
-          reason: "pourquoi modifiez-vous le tableau ?"
+          reason: "Pourquoi modifiez-vous le tableau ?"
           trigger_reason: "Ajouter la raison de la modification"
         default_edit_reason: "Modifier avec l'éditeur de tableaux"
       default_header:
@@ -5324,6 +5329,9 @@ fr:
             opengraph_image:
               title: "Image OpenGraph"
               description: "Image OpenGraph par défaut, utilisée lorsque la page ne contient aucune autre image appropriée. Si ce champ est laissé vide, l'icône large_icon sera utilisée."
+            og_image_preview:
+              generate: "Générer"
+              topic_id_label: "ID du sujet"
             x_summary_large_image:
               title: "Résumé X « summary large image »"
               description: "Carte X « summary large image ». Si ce champ est laissé vide, les métadonnées de carte normales sont générées à partir d'OpenGraph_image, à condition qu'il ne s'agisse pas non plus d'un fichier .svg."
@@ -5602,7 +5610,7 @@ fr:
         stale_data: "Une vérification de mises à jour n'a pas été effectuée récemment. Vérifiez que sidekiq est en cours d'exécution."
         version_check_pending: "Il semble que vous avez effectué une mise à jour récemment. Fantastique !"
         installed_version: "Installée"
-        latest_version: "Dernière"
+        github: "GitHub"
         problems_found: "Quelques conseils d'après vos paramètres actuels"
         dismiss_notice: "Ignorer"
         new_features:
@@ -5669,6 +5677,11 @@ fr:
                 "2": "Membre"
                 "3": "Normal"
                 "4": "Meneur"
+          search:
+            title: "Recherche"
+            table:
+              searches: "Recherches"
+              status: "Statut"
         reports_section:
           no_data: "Aucune donnée à afficher"
           modal:
@@ -5762,7 +5775,6 @@ fr:
             incoming_email: "Adresse e-mail entrante personnalisée"
             incoming_email_placeholder: "saisissez une adresse e-mail"
             incoming_email_tooltip: "Vous pouvez séparer plusieurs adresses e-mail avec le caractère « | »."
-            visibility: Visibilité
             visibility_levels:
               title: "Qui peut voir ce groupe ?"
               public: "Tout le monde"
@@ -6187,9 +6199,10 @@ fr:
           your_organization: "Votre organisation"
           your_organization_description: "Nous utiliserons ces informations dans les Conditions d'utilisation et l'Avis de confidentialité pour indiquer qui exploite le site et sous quelle juridiction."
           company_name: "Nom"
-          company_name_placeholder: "Organisation Acme"
           company_name_warning: |
             Si ce champ est laissé vide, aucune condition d'utilisation ni aucun avis de confidentialité ne seront fournis.
+          company_url: "Site Web"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Droit applicable"
           governing_law_placeholder: "Province, État ou pays"
           governing_law_help: |
@@ -6206,6 +6219,8 @@ fr:
             initial_members: "Liste étendue des membres"
             initial_members_description: "Nombre de membres du groupe à afficher avant d'ajouter un bouton Afficher plus."
             show_description: "Inclure une description"
+          locale_selector:
+            title: "Langue "
           optional: "(facultatif)"
           update: "Mettre à jour"
           toasts:
@@ -7258,11 +7273,12 @@ fr:
         silence_reason: "Raison de la mise en sourdine"
         bulk_actions:
           title: "Actions groupées"
-          admin_cant_be_deleted: "Cet utilisateur ne peut pas être supprimé, car il est administrateur"
-          too_many_or_old_posts: "Cet utilisateur ne peut pas être supprimé, car il a trop de publications ou une publication très ancienne"
-          too_many_selected_users:
-            one: "Vous avez atteint la limite de %{count} utilisateur pour la suppression groupée"
-            other: "Vous avez atteint la limite de %{count} utilisateurs pour la suppression groupée"
+          select_all: "Tout sélectionner"
+          clear_all: "Tout effacer"
+          suspend:
+            confirmation_modal:
+              close: "Fermer"
+              confirm: "Suspendre"
           delete:
             label: "Supprimer les utilisateurs…"
             confirmation_modal:
@@ -7290,6 +7306,9 @@ fr:
           suspended: "Suspendus"
           silenced: "En sourdine"
           staged: "Distants"
+        activation_filter:
+          all: "Tous les utilisateurs"
+          activated: "Activé"
         approved: "Approuvé ?"
         titles:
           active: "Utilisateurs actifs"

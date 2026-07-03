@@ -1,9 +1,12 @@
 /* eslint-disable ember/no-jquery */
+import { cancel } from "@ember/runloop";
 import $ from "jquery";
 import * as AvatarUtils from "discourse/lib/avatar-utils";
 import deprecated from "discourse/lib/deprecated";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
+import discourseLater from "discourse/lib/later";
+import { processSelectionFragment } from "discourse/lib/selection/preserve-list-structure";
 import { parseAsync } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
 import { capabilities } from "discourse/services/capabilities";
@@ -113,7 +116,50 @@ export function extractDomainFromUrl(url) {
   return url.split(":")[0];
 }
 
-export function selectedText() {
+// Whether everything before `node` in its parent is insignificant whitespace,
+// i.e. `node` is effectively the first thing in its parent. (Cooked HTML has
+// whitespace text nodes between blocks, so a strict firstChild check fails.)
+function isFirstMeaningfulChild(node) {
+  for (let sibling = node.previousSibling; sibling; ) {
+    if (sibling.nodeType !== Node.TEXT_NODE || sibling.textContent.trim()) {
+      return false;
+    }
+    sibling = sibling.previousSibling;
+  }
+  return true;
+}
+
+// A triple-click (and similar) leaves the selection's end at the very start of
+// the following block (endOffset 0). cloneContents() would then materialize
+// that block as an empty husk (e.g. <blockquote><p></p></blockquote>) that
+// serializes to stray markdown like a lone "> ". Pull the end back past the
+// husk — to the topmost ancestor it starts — so it is never cloned.
+// Returns the original range when there's nothing to trim.
+function rangeWithoutTrailingHusk(range) {
+  if (range.endOffset !== 0) {
+    return range;
+  }
+
+  const common = range.commonAncestorContainer;
+  let boundary = range.endContainer;
+  while (
+    boundary !== common &&
+    boundary.parentNode !== common &&
+    isFirstMeaningfulChild(boundary)
+  ) {
+    boundary = boundary.parentNode;
+  }
+
+  if (boundary === common || !boundary.parentNode) {
+    return range;
+  }
+
+  const trimmed = range.cloneRange();
+  trimmed.setEndBefore(boundary);
+  return trimmed;
+}
+
+export function selectedHTML() {
   const selection = window.getSelection();
   if (selection.isCollapsed) {
     return "";
@@ -146,7 +192,11 @@ export function selectedText() {
       // Treat it as though the entire onebox was quoted.
       div.append(oneboxTest.dataset.oneboxSrc);
     } else {
-      div.append(range.cloneContents());
+      const effectiveRange = rangeWithoutTrailingHusk(range);
+      const fragmentContainer = document.createElement("div");
+      fragmentContainer.append(effectiveRange.cloneContents());
+      processSelectionFragment(fragmentContainer, effectiveRange);
+      div.append(...fragmentContainer.childNodes);
     }
   }
 
@@ -166,7 +216,16 @@ export function selectedText() {
       }
     });
 
-  return toMarkdown(div.outerHTML);
+  return div.outerHTML;
+}
+
+export async function selectedText() {
+  const html = selectedHTML();
+  if (!html) {
+    return "";
+  }
+
+  return await toMarkdown(html);
 }
 
 export function selectedNode() {
@@ -762,18 +821,35 @@ export function getElement(node) {
 }
 
 export function isPrimaryTab() {
-  return new Promise((resolve) => {
-    if (capabilities.supportsServiceWorker) {
-      navigator.serviceWorker.addEventListener("message", (event) => {
-        resolve(event.data.primaryTab);
-      });
+  if (!capabilities.supportsServiceWorker) {
+    return Promise.resolve(true);
+  }
 
-      navigator.serviceWorker.ready.then((registration) => {
-        registration.active.postMessage({ action: "primaryTab" });
-      });
-    } else {
-      resolve(true);
-    }
+  return new Promise((resolve) => {
+    let timer;
+
+    const finish = (isPrimary) => {
+      cancel(timer);
+      navigator.serviceWorker.removeEventListener("message", onMessage);
+      resolve(isPrimary);
+    };
+
+    const onMessage = (event) => {
+      // the service worker also posts unrelated messages on this channel
+      if (typeof event.data?.primaryTab === "boolean") {
+        finish(event.data.primaryTab);
+      }
+    };
+
+    navigator.serviceWorker.addEventListener("message", onMessage);
+
+    // if the service worker never answers (no active registration), assume
+    // primary rather than hanging forever and silently dropping the action
+    timer = discourseLater(() => finish(true), 1000);
+
+    navigator.serviceWorker.ready.then((registration) => {
+      registration.active?.postMessage({ action: "primaryTab" });
+    });
   });
 }
 

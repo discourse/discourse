@@ -455,7 +455,7 @@ describe "Post event" do
     find(".group-selector").click
     find(".d-multi-select__search-input").send_keys(group.name)
     find(".d-multi-select__result", text: group.name).click
-    find(".d-modal .custom-field-input").fill_in(with: "custom value")
+    form.field("customFields.custom").fill_in("custom value")
     form.field("recurrence").select("every_day")
     find(".d-modal .recurrence-until .date-picker").fill_in(with: "#{1.year.from_now.year}-12-30")
     find(".d-modal .btn-primary").click
@@ -464,12 +464,12 @@ describe "Post event" do
     expect(page).to have_css(".discourse-post-event")
 
     post_event_page.edit
-    find(".d-modal .d-modal__footer .advanced-settings").click
+    find(".d-modal .d-modal__footer .advanced-mode-btn").click
 
     form = PageObjects::Components::FormKit.new(".d-modal form")
     expect(form.field("eventType")).to have_value("private")
     expect(find(".group-selector .d-multi-select-trigger__selection")).to have_text(group.name)
-    expect(find(".d-modal .custom-field-input").value).to eq("custom value")
+    expect(form.field("customFields.custom")).to have_value("custom value")
     expect(page).to have_selector(".d-modal .recurrence-until .date-picker") do |input|
       input.value == "#{1.year.from_now.year}-12-30"
     end
@@ -499,6 +499,75 @@ describe "Post event" do
 
       expect(bulk_invite_modal_page).to be_closed
     end
+
+    it "keeps a single row when removing the last invitee" do
+      visit(post.topic.url)
+
+      post_event_page.open_bulk_invite_modal
+      bulk_invite_modal_page
+        .set_invitee_at_row(invitable_user_1.username, "going", 1)
+        .add_invitee
+        .set_invitee_at_row(invitable_user_2.username, "not_going", 2)
+        .remove_invitee_row(2)
+        .remove_invitee_row(1)
+
+      # the collection never collapses, an empty row is always available
+      expect(bulk_invite_modal_page).to have_invitee_rows(1)
+    end
+
+    it "closes the modal and shows a toast after a CSV bulk invite" do
+      visit(post.topic.url)
+
+      post_event_page.open_bulk_invite_modal
+      bulk_invite_modal_page.upload_csv(
+        "#{Rails.root.join("plugins/discourse-calendar/spec/fixtures/csv/bulk_invite.csv")}",
+      )
+      PageObjects::Components::Dialog.new.click_yes
+
+      expect(bulk_invite_modal_page).to be_closed
+      expect(PageObjects::Components::Toasts.new).to have_success(
+        I18n.t("js.discourse_post_event.bulk_invite_modal.success"),
+      )
+    end
+  end
+
+  context "when inviting a user or group" do
+    let!(:post) do
+      PostCreator.create(
+        admin,
+        title: "My test meetup event",
+        raw: "[event name='cool-event' status='public' start='2222-02-22 00:00' ]\n[/event]",
+      )
+    end
+
+    fab!(:invitable_user, :user)
+
+    it "notifies the invited user and closes the modal" do
+      visit(post.topic.url)
+
+      post_event_page.open_invite_user_or_group_modal
+
+      chooser =
+        PageObjects::Components::SelectKit.new(
+          ".post-event-invite-user-or-group .email-group-user-chooser",
+        )
+      chooser.expand
+      chooser.search(invitable_user.username)
+      chooser.select_row_by_value(invitable_user.username)
+      chooser.collapse
+
+      find(".post-event-invite-user-or-group .d-modal__footer .btn-primary").click
+
+      expect(page).to have_no_css(".post-event-invite-user-or-group")
+      expect(PageObjects::Components::Toasts.new).to have_success(
+        I18n.t("js.discourse_post_event.invite_user_or_group.success"),
+      )
+      expect(
+        invitable_user.notifications.where(
+          notification_type: Notification.types[:event_invitation],
+        ),
+      ).to be_present
+    end
   end
 
   context "with add to calendar from more menu" do
@@ -522,6 +591,21 @@ describe "Post event" do
 
       expect(ics_content).to include("RRULE:")
       expect(ics_content).to include("FREQ=WEEKLY")
+    end
+  end
+
+  context "when editing an event without an explicit name" do
+    it "shows the topic title as the event name placeholder" do
+      title = "Nameless meetup"
+      raw = "[event start='2222-02-22 14:22']\n[/event]"
+      post = PostCreator.create!(admin, title:, raw:)
+
+      visit(post.topic.url)
+      post_event_page.edit
+
+      expect(page).to have_css(
+        ".post-event-builder-modal .composer-event__name-input[placeholder='#{title}']",
+      )
     end
   end
 end

@@ -189,10 +189,15 @@ export default class TextareaTextManipulation {
       }
 
       if (match) {
-        this._insertAt(match.index, match.index + match[0].length, newVal);
+        this._insertAt(
+          match.index,
+          match.index + match[0].length,
+          newVal,
+          opts
+        );
       }
     } else {
-      this._insertAt(needleStart, needleStart + oldVal.length, newVal);
+      this._insertAt(needleStart, needleStart + oldVal.length, newVal, opts);
     }
 
     if (
@@ -376,8 +381,8 @@ export default class TextareaTextManipulation {
     this.blurAndFocus();
   }
 
-  _insertAt(start, end, text) {
-    insertAtTextarea(this.textarea, start, end, text);
+  _insertAt(start, end, text, opts = {}) {
+    insertAtTextarea(this.textarea, start, end, text, opts);
   }
 
   extractTable(text) {
@@ -423,7 +428,7 @@ export default class TextareaTextManipulation {
   }
 
   @bind
-  paste(e) {
+  async paste(e) {
     const isComposer = this.textarea === e.target;
 
     if (!isComposer && !isTesting()) {
@@ -498,7 +503,9 @@ export default class TextareaTextManipulation {
     }
 
     if (canPasteHtml && !handled) {
-      let markdown = toMarkdown(html);
+      e.preventDefault();
+
+      let markdown = await toMarkdown(html);
 
       if (!plainText || plainText.length < markdown.length) {
         if (isInlinePasting) {
@@ -515,6 +522,11 @@ export default class TextareaTextManipulation {
             : this.insertText(markdown);
           handled = true;
         }
+      } else if (plainText && isComposer) {
+        this.eventPrefix
+          ? this.appEvents.trigger(`${this.eventPrefix}:insert-text`, plainText)
+          : this.insertText(plainText);
+        handled = true;
       }
     }
 
@@ -622,7 +634,7 @@ export default class TextareaTextManipulation {
 
     if (shouldAutocomplete) {
       let autocompletePrefix = `${indentationLevel}${newPrefix}`;
-      let autocompletePostfix = text.substring(offset);
+      let autocompletePostfix;
       const autocompletePrefixLength = autocompletePrefix.length;
       let scrollPosition;
 
@@ -1008,7 +1020,19 @@ export default class TextareaTextManipulation {
   }
 }
 
-function insertAtTextarea(textarea, start, end, text) {
+function insertAtTextarea(
+  textarea,
+  start,
+  end,
+  text,
+  { skipFocus = false } = {}
+) {
+  if (skipFocus && document.activeElement !== textarea) {
+    textarea.setRangeText(text, start, end, "preserve");
+    textarea.dispatchEvent(new InputEvent("input", { bubbles: true }));
+    return;
+  }
+
   textarea.setSelectionRange(start, end);
   textarea.focus();
   if (start !== end && text === "") {

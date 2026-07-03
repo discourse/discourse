@@ -38,6 +38,11 @@ module(
         `<aside class="quote" data-username="user123" data-post="123" data-topic="456" data-full="false" data-display-name="Last, First"><div class="title">Last, First:</div><blockquote><p>Comma name.</p></blockquote></aside>`,
         `[quote="Last, First, post:123, topic:456, username:user123"]\nComma name.\n\n[/quote]\n\n`,
       ],
+      "quote with full:true": [
+        `[quote="User, post:1, topic:2, full:true"]\nFull quote.\n\n[/quote]`,
+        `<aside class="quote" data-username="User" data-post="1" data-topic="2" data-full="true"><div class="title">User:</div><blockquote><p>Full quote.</p></blockquote></aside>`,
+        `[quote="User, post:1, topic:2, full:true"]\nFull quote.\n\n[/quote]\n\n`,
+      ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {
         this.siteSettings.rich_editor = true;

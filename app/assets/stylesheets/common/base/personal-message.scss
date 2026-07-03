@@ -1,12 +1,14 @@
 @use "lib/viewport";
 
 .archetype-private_message {
-  --pm-padding: 1.25em;
+  --pm-padding: var(--space-5);
+  --pm-content-width: calc(
+    var(--topic-body-width) + var(--topic-body-width-padding) * 2 +
+      var(--pm-padding)
+  );
 
   .topic-post {
-    @include viewport.from(sm) {
-      margin-bottom: 0.5em;
-    }
+    margin-bottom: var(--space-4);
 
     @include viewport.until(sm) {
       article {
@@ -15,7 +17,58 @@
     }
 
     &:last-child {
-      margin-bottom: 1.5em;
+      margin-bottom: var(--space-6);
+    }
+  }
+
+  .small-action {
+    margin-bottom: var(--space-4);
+
+    @include viewport.until(sm) {
+      border-radius: var(--d-border-radius);
+      border: 1px solid var(--content-border-color);
+    }
+
+    .topic-avatar {
+      border-top: none;
+      padding-top: 1.1em;
+
+      @include viewport.until(sm) {
+        display: none;
+      }
+
+      .d-icon {
+        margin-right: -0.25em;
+        background: var(--secondary);
+      }
+    }
+
+    .small-action-desc {
+      margin-left: calc(var(--pm-padding) * -1);
+      padding-left: var(--space-8);
+      border-radius: var(--d-border-radius);
+      width: var(--pm-content-width);
+
+      @include viewport.until(sm) {
+        border: 0;
+      }
+
+      @include viewport.from(sm) {
+        border: 1px solid var(--content-border-color);
+      }
+    }
+
+    .small-action-buttons {
+      margin-right: var(--space-4);
+    }
+
+    &.topic-post-visited {
+      max-width: var(--pm-content-width);
+
+      @include viewport.from(sm) {
+        margin-left: 1.6em;
+        margin-bottom: var(--space-6);
+      }
     }
   }
 
@@ -27,17 +80,22 @@
 
     @include viewport.until(sm) {
       margin-left: 0;
-      padding: 1.5em 1em 0;
+      padding: var(--space-6) var(--space-4) 0;
     }
   }
 
+  .topic-timer-info,
   .topic-avatar,
   .topic-body {
     border: none;
   }
 
-  @include viewport.until(sm) {
-    .topic-avatar {
+  .topic-avatar {
+    .avatar {
+      background: var(--secondary);
+    }
+
+    @include viewport.until(sm) {
       margin-bottom: -1em; // intentional overlap
     }
   }
@@ -51,7 +109,7 @@
 
     .cooked {
       box-sizing: border-box;
-      margin-top: 0.25em;
+      margin-top: var(--space-1);
       padding-right: calc(var(--topic-body-width-padding) * 2);
 
       @include viewport.until(sm) {
@@ -62,7 +120,7 @@
   }
 
   .post-menu-area {
-    margin: 0.5em 0 var(--topic-body-width-padding);
+    margin: var(--space-2) 0 var(--topic-body-width-padding);
 
     @include viewport.from(sm) {
       padding-right: var(--topic-body-width-padding);
@@ -79,8 +137,8 @@
     border-radius: var(--d-border-radius);
     background-color: var(--tertiary-very-low);
     border-color: var(--tertiary-very-low);
-    margin-bottom: 1em;
-    padding: var(--pm-padding) 1em;
+    margin-bottom: var(--space-4);
+    padding: var(--pm-padding) var(--space-4);
     width: 100%;
     max-width: calc(
       var(--topic-body-width) + var(--topic-body-width-padding) * 2 +
@@ -89,7 +147,7 @@
 
     @include viewport.from(sm) {
       margin-left: 1.65em;
-      padding-inline: 2em;
+      padding-inline: var(--space-8);
     }
 
     &.old {
@@ -102,39 +160,22 @@
   }
 
   .topic-map {
-    border: none;
-    padding-block: var(--pm-padding);
+    margin-top: var(--space-2);
+    padding: var(--space-3) var(--space-3) var(--space-3) var(--space-8);
     display: grid;
     grid-template-areas: "contents additional" "pm-map pm-map";
     grid-template-columns: 1fr auto;
     border-radius: var(--d-border-radius);
+    border: 1px solid var(--content-border-color);
+    max-width: calc(
+      var(--topic-body-width) + (var(--topic-body-width-padding) * 2) + 1.3em
+    );
 
     @include viewport.from(sm) {
-      padding-left: calc(
-        48px - var(--pm-padding)
-      ); // 48px is the width of the avatar
-    }
-
-    section {
-      border: none;
-      background: var(--primary-very-low);
-      padding-inline: var(--pm-padding);
-
-      &:first-of-type {
-        border-radius: var(--d-border-radius) var(--d-border-radius) 0 0;
-      }
-
-      &:last-of-type {
-        border-radius: 0 0 var(--d-border-radius) var(--d-border-radius);
-      }
+      margin-left: calc(var(--pm-padding) + var(--space-1));
     }
 
     .map {
-      padding-top: var(--pm-padding);
-    }
-
-    &__contents,
-    &__additional-contents {
       padding-top: var(--pm-padding);
     }
 
@@ -148,18 +189,17 @@
 
     &__private-message-map {
       grid-area: pm-map;
-      padding: 0.5em var(--pm-padding) var(--pm-padding);
+      padding: var(--space-2) var(--pm-padding) 0 0;
     }
 
     .participants {
-      margin-bottom: 1.5em;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       gap: var(--space-2);
 
       & + .controls {
-        margin-top: 0.5em;
+        margin-top: var(--space-2);
       }
 
       &.hide-names .user {
@@ -173,9 +213,7 @@
         @include ellipsis;
         display: flex;
         align-items: center;
-        background: var(--primary-low);
         border-radius: var(--d-border-radius);
-        padding-left: 0.65em;
 
         .user-link,
         .group-link {
@@ -189,21 +227,22 @@
           }
         }
 
+        .group-link {
+          .d-icon {
+            margin-left: var(--space-2);
+          }
+        }
+
         .avatar,
         .d-icon-users {
-          margin-left: 0.25em;
-          margin-right: 0.25em;
+          margin-left: var(--space-1);
+          margin-right: var(--space-1);
         }
 
         .username,
         .group-name {
-          margin-right: 0.25em;
-          padding-block: 0.25em;
-        }
-
-        .username:last-child,
-        .group-link:last-child {
-          margin-right: 0.65em;
+          margin-right: var(--space-1);
+          padding-block: var(--space-1);
         }
 
         &:last-child {
@@ -216,7 +255,6 @@
           align-items: center;
           justify-content: center;
           align-self: stretch;
-          padding: 0 0.5em;
           box-sizing: border-box;
           border-radius: 0;
         }
@@ -330,6 +368,12 @@
       .topic-body .regular.contents {
         border-color: var(--danger-low-mid);
       }
+    }
+  }
+
+  @include viewport.from(sm) {
+    #topic-footer-buttons {
+      padding-left: var(--space-6);
     }
   }
 }

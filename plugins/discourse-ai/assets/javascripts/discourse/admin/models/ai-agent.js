@@ -14,6 +14,7 @@ const CREATE_ATTRIBUTES = [
   "priority",
   "top_p",
   "temperature",
+  "thinking_effort",
   "user_id",
   "default_llm_id",
   "force_default_llm",
@@ -63,6 +64,7 @@ const SYSTEM_ATTRIBUTES = [
   "rag_conversation_chunks",
   "rag_llm_model_id",
   "show_thinking",
+  "thinking_effort",
   "allow_personal_messages",
   "allow_topic_mentions",
   "allow_chat_channel_mentions",
@@ -167,6 +169,7 @@ export default class AiAgent extends RestModel {
     attrs.mcp_server_ids = attrs.mcp_server_ids || [];
     attrs.mcp_server_tool_names = attrs.mcp_server_tool_names || {};
     attrs.forced_tool_count = this.forced_tool_count || -1;
+    attrs.thinking_effort = attrs.thinking_effort || "default";
     attrs.response_format = attrs.response_format || [];
     attrs.examples = attrs.examples || [];
     // FormKit uses Immer proxies which cause issues when passed to upload handlers.

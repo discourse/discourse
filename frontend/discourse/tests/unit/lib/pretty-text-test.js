@@ -9,6 +9,7 @@ import QUnit, { module, test } from "qunit";
 import { deepMerge } from "discourse/lib/object";
 import DiscourseMarkdownIt from "discourse-markdown-it";
 import { extractDataAttribute } from "discourse-markdown-it/engine";
+import { QUOTATION_MARKS } from "discourse-markdown-it/features/bbcode-block";
 
 const rawOpts = {
   siteSettings: {
@@ -966,6 +967,29 @@ eviltrout</p>
       '<p><a href="https://discourse.org/path" data-bbcode="true"><span class="bbcode-b">discourse.org/path</span></a></p>',
       "paths are correctly handled"
     );
+
+    assert.cooked(
+      `[url='http://example.com/path?a=1']single quoted[/url]`,
+      '<p><a href="http://example.com/path?a=1" data-bbcode="true">single quoted</a></p>',
+      "single-quoted attributes are parsed correctly"
+    );
+
+    assert.cooked(
+      `[url='http://example.com/"test"']url with double quotes[/url]`,
+      '<p><a href="http://example.com/&quot;test&quot;" data-bbcode="true">url with double quotes</a></p>',
+      "single-quoted attributes can contain double quotes"
+    );
+
+    QUOTATION_MARKS.forEach((pair, index) => {
+      const [open, close] = pair;
+
+      // Test that each delimiter can wrap a URL
+      assert.cooked(
+        `[url=${open}http://example.com/test${close}]test[/url]`,
+        `<p><a href="http://example.com/test" data-bbcode="true">test</a></p>`,
+        `delimiter ${index} (${open}${close}) parses correctly`
+      );
+    });
   });
 
   test("images", function (assert) {

@@ -330,12 +330,18 @@ ca:
       admins: "administradors"
       moderators: "moderadors"
       staff: "equip responsable"
-      anonymous: "anònim"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Tothom"
+      admins: "Administradors"
+      moderators: "Moderadors"
+      staff: "Equip responsable"
+      anonymous_users: "Usuaris anònims"
+      logged_in_users: "Usuaris que han iniciat la sessió"
     request_membership_pm:
       title: "Sol·licitud d'afiliació a @%{group_name}"
   education:
@@ -740,6 +746,9 @@ ca:
       read: "Llegeix-ho tot"
       write: "Escriu-ho tot"
       one_time_password: "Creeu un testimoni d'inici de sessió d'un sol ús"
+    device:
+      code: "Codi"
+      continue: "Continua"
     invalid_public_key: "Ho sentim, la clau pública no és vàlida."
     invalid_auth_redirect: "Ho sentim, aquest amfitrió auth_redirect no està permès."
     invalid_token: "Falta el testimoni, no és vàlid o ha caducat."
@@ -1183,7 +1192,6 @@ ca:
     delete_removed_posts_after: "Les publicacions eliminades per l'autor se suprimiran automàticament al cap de (n) hores. Si es posa 0, se suprimiran immediatament."
     responsive_post_image_sizes: "Redimensiona les imatges de previsualització lightbox per a permetre pantalles de PPP (DPI) elevats de les següents relacions de píxels. Elimineu tots els valors per a inhabilitar les imatges responsives."
     fixed_category_positions: "Si és activat, podreu arranjar les categories en un ordre fix. Si no és activat, les categories es llisten segons l'ordre d'activitat."
-    fixed_category_positions_on_create: "Si és activat, l'ordenació de categories es mantindrà en el diàleg de creació de temes (necessita fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Afegeix l''atribut rel="nofollow" a tots els continguts enviats per usuaris, excepte per als enllaços interns (incloent-hi dominis primaris). Si ho canvieu, haureu de regenerar totes les publicacions amb: "rake posts:rebake"'
     exclude_rel_nofollow_domains: "Llista de dominis on no s'hauria d'afegir 'nofollow' als enllaços. example.com permetrà automàticament també sub.exemple.com. Com a mínim, hauríeu d'afegir el domini d'aquest lloc web per a ajudar els rastrejadors web a trobar-ne tot el contingut. Si altres parts del vostre lloc web són en altres dominis, afegiu-los-hi també."
     post_excerpt_maxlength: "Longitud màxima en caràcters d'un resum/extracte de publicació."
@@ -1193,11 +1201,6 @@ ca:
     allowed_inline_onebox_domains: "Llista de dominis que es mostraran en miniatura 'onebox' si s'enllacen sense títol"
     logo: "La imatge del logotip a la part superior esquerra del vostre lloc web. Utilitzeu una imatge rectangular ampla amb una alçada de 120 i una relació d'aspecte superior a 3: 1. Si es deixa en blanc, es mostrarà el text del títol del lloc web."
     logo_small: "Imatge petita del logotip a la part superior esquerra del lloc web, que es veu quan es fa un desplaçament cap avall. Utilitzeu una imatge quadrada de 120 × 120. Si es deixa en blanc, es mostrarà un glif d'estar per casa."
-    digest_logo: "La imatge de logotip alternativa que s'utilitza a la part superior del resum de correu del vostre lloc web. Utilitzeu una imatge de rectangle ampli. No utilitzeu una imatge SVG. Si es deixa en blanc, s'utilitzarà la imatge del paràmetre de configuració de `logo`."
-    large_icon: "Imatge utilitzada com a base per a altres icones de metadades. Idealment hauria de ser superior a 512 x 512. Si es deixa en blanc, s'utilitzarà logo_small."
-    manifest_icon: "Imatge utilitzada com a imatge de logo/splash en Android. Es redimensionarà automàticament a 512 × 512. Si es deixa en blanc, s'utilitzarà large_icon."
-    favicon: "Icona per al vostre lloc web (favicon). Vegeu <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://ca.wikipedia.org/wiki/Icona_de_web</a>. Per a treballar correctament sobre un CDN, ha de ser PNG. Es redimensionarà a 32x32. Si es deixa en blanc, s'utilitzarà large_icon."
-    opengraph_image: "Imatge predeterminada opengraph, utilitzada quan la pàgina no té cap altra imatge adequada. Si es deixa en blanc, s'utilitzarà large_icon."
     notification_email: "Adreça de correu en el \"de:\" emprada en enviar tots els correus essencials de sistema. El domini especificat aquí ha de tenir registres SPF, DKIM i PTR inversos, configurats correctament perquè arribi el correu."
     detailed_404: "Proporciona més detalls als usuaris sobre per què no poden accedir a un tema concret. Nota: això és menys segur perquè els usuaris sabran si un URL enllaça amb un tema vàlid."
     force_https: "Força el lloc web a fer servir només HTTPS. ATENCIÓ: NO ho activeu fins que no verifiqueu que l'HTTPS és totalment configurat i funciona a tot arreu. ¿Heu comprovat també la xarxa CDN, totes les connexions socials, i qualsevol logo o dependència externa per a assegurar-vos que tots són compatibles amb HTTPS?"
@@ -1234,7 +1237,6 @@ ca:
     blocked_ip_blocks: "Una llista de blocs d'IP privades que no han de ser rastrejats mai per Discourse"
     allowed_internal_hosts: "Llista d'amfitrions interns que Discourse pot rastrejar de manera segura per a onebox i altres finalitats."
     allowed_crawler_user_agents: "Agents d'usuari dels rastrejadors web als quals es permet accedir al lloc web. ATENCIÓ! ESTABLIR AIXÒ IMPEDIRÀ ACTUAR A TOTS ELS RASTREJADORS NO LLISTATS AQUÍ!"
-    slow_down_crawler_rate: "Si s'especifica slow_down_crawler_user_agents, aquesta ràtio s'aplicarà a tots els rastrejadors (nombre de segons de retard entre les sol·licituds)."
     invalidate_inactive_admin_email_after_days: "Els comptes d'administrador que no hagin visitat el lloc web en aquest nombre de dies hauran de tornar a validar la seva adreça de correu abans d'iniciar la sessió. 0 per a desactivar-ho."
     share_links: "Determina quins elements apareixen en el diàleg de compartir i en qui ordre."
     site_contact_username: "Nom d'usuari vàlid de l'equip responsable des del qual s'envien tots els missatges automàtics. Si es deixa buit, es farà servir el compte per defecte del sistema."
@@ -1250,7 +1252,6 @@ ca:
     email_token_valid_hours: "Els testimonis (tokens) de contrasenya oblidada i activació de compte són vàlids durant (n) hores."
     log_out_strict: "Quan es tanca la sessió, tanca TOTES les sessions de l'usuari en tots els dispositius"
     version_checks: "Fes ping al Discourse Hub per a actualitzacions de versions i per a mostrar missatges de versió nova en el tauler <a href='%{base_path}/admin' target='_blank'>/admin</a>."
-    new_version_emails: "Envia un correu a contact_email address quan hi hagi una nova versió del Discourse disponible."
     invite_expiry_days: "Quant de temps és vàlida la clau d'invitació a un usuari, en dies"
     invite_only: "Tots els usuaris nous han de ser convidats explícitament per usuaris de confiança o per l'equip responsable. El registre públic és desactivat."
     login_required: "Exigeix l'autenticació per a llegir el contingut del lloc web. Impedeix l'accés anònim."
@@ -1268,10 +1269,8 @@ ca:
     google_oauth2_client_secret: "Client secret de la vostra aplicació Google."
     google_oauth2_prompt: "Llista opcional delimitada per espais de valors de cadena que especifiquen si el servidor d'autoritzacions sol·licita a l'usuari la reautenticació i el consentiment. Consulteu <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> per als valors possibles."
     google_oauth2_hd: "Un domini de Google Apps opcional al qual es limitarà l'accés. Consulteu <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> per a obtenir més detalls."
-    enable_twitter_logins: "Activa l'autenticació de Twitter, requereix twitter_consumer_key i twitter_consumer_secret. Consulteu <a href='https://meta.discourse.org/t/13395' target='_blank'>Configuració de l'inici de sessió de Twitter (i incrustacions riques) per a Discourse</a>."
     twitter_consumer_key: "Clau del consumidor per a l'autenticació de Twitter, registrada en <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Secret del consumidor per a l'autenticació de Twitter, registrat en <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_facebook_logins: "Activa l'autenticació de Facebook. Requereix facebook_app_id i facebook_app_secret. Vegeu <a href='https://meta.discourse.org/t/13394' target='_blank'>Configuració de l'inici de sessió Facebook per a Discourse</a> ."
     facebook_app_secret: "Secret d'aplicació per a l'autenticació de Facebook, registrada en <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_discord_logins: "S'ha de permetre als usuaris autenticar-se mitjançant Discord?"
     discord_client_id: 'Identificador de client Discord (si us en cal un, visiteu <a href="https://discordapp.com/developers/applications/me">el portal de desenvolupadors Discord</a>)'
@@ -1313,7 +1312,6 @@ ca:
     purge_deleted_uploads_grace_period_days: "Període de gràcia (en dies) abans que s'esborri un fitxer carregat suprimit."
     purge_unactivated_users_grace_period_days: "Període de gràcia (en dies) abans de suprimir un usuari que no hagi activat el seu compte. Estableix a 0 per a no purgar mai els usuaris no activats."
     enable_s3_uploads: "Emmagatzema els fitxers carregats en un servei Amazon S3. IMPORTANT: Calen credencials vàlides S3 (tant l'id de clau d'accés com la clau secreta d'accés)."
-    s3_use_iam_profile: 'Utilitza un <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">perfil d''instància AWS EC2</a> per a concedir accés al bucket S3. NOTA: per a habilitar-ho cal que Discourse s''executi en una instància EC2 configurada adequadament, i això sobreescriu les configuracions "s3 access key id" and "s3 secret access key". '
     s3_upload_bucket: "El nom del dipòsit Amazon S3 on es carregaran els fitxers. ATENCIÓ: ha de ser en minúscula, sense comes, ni guions."
     s3_access_key_id: "L'identificador de la clau d'accés d'Amazon S3 que es farà servir per a carregar imatges, fitxers adjunts i còpies de seguretat."
     s3_secret_access_key: "La clau d'accés secret d'Amazon S3 que es farà servir per a carregar imatges, fitxers adjunts i còpies de seguretat."
@@ -1441,8 +1439,6 @@ ca:
     pop3_polling_password: "Contrasenya del compte POP3 per a la consulta de correu."
     pop3_polling_delete_from_server: "Suprimeix els correus electrònics del servidor. NOTA: Si ho desactiveu, haureu de buidar manualment la vostra bústia de correu."
     log_mail_processing_failures: "Registra tots els errors de processament de correu electrònic en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_prefix: "L'[etiqueta] utilitzada en l'assumpte dels correus. Per defecte serà 'títol'."
-    email_site_title: "El títol del lloc web usat com a remitent de correus des del lloc web. Per defecte serà 'títol' si no es configura. Si el vostre 'títol' conté caràcters no permesos en correus electrònics, feu servir aquesta opció. "
     find_related_post_with_key: "Utilitza només la \"tecla de resposta\" per a trobar la publicació a què s'ha respost. ADVERTÈNCIA: desactivar-ho permet la suplantació d'usuaris basant-se en l'adreça de correu."
     minimum_topics_similar: "Quants temes han d'existir abans que apareguin temes semblants quan es redacten temes nous."
     relative_date_duration: "Nombre de dies després de publicar en què les dates de publicació es mostraran relatives (7d) en comptes d'absolutes (20 febrer)."
@@ -1484,7 +1480,6 @@ ca:
     header_dropdown_category_count: "Quantes categories es poden mostrar en el menú desplegable de la capçalera."
     permalink_normalizations: "Aplica la següent expressió regular abans de cercar enllaços permanents coincidents. Per exemple: /(topic.*)\\?.*/\\1 eliminarà les cadenes de consulta de les rutes dels temes. El format és regex+string; utilitzeu \\1 \\2...  per a accedir a captures."
     global_notice: "Mostra un bàner d'avís global d'EMERGÈNCIA URGENT, no descartable, a tots els visitants. Canvieu a blanc per a amagar-lo. (Es permet HTML.)"
-    disable_system_edit_notifications: "Inhabilita les notificacions d'edició per l'usuari del sistema quan 'download_remote_images_to_local' és actiu."
     automatically_unpin_topics: "Desafixa temes automàticament quan l'usuari arribi al capdavall."
     read_time_word_count: "Recompte de paraules per minut per a calcular el temps estimat de lectura."
     topic_page_title_includes_category: "L'<a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>etiqueta del títol</a>  de la pàgina del tema inclou el nom de la categoria."
@@ -1596,6 +1591,10 @@ ca:
     results_page: "Resultats de la cerca per a '%{term}'"
     audio: "[àudio]"
     video: "[vídeo]"
+  posts_filter:
+    description:
+      order_latest: "Publicacions més recents"
+      order_latest_topic: "Temes més recents"
   discourse_connect:
     login_error: "Error d'inici de sessió"
     not_found: "No s'ha trobat el vostre compte. Contacteu amb l'administrador del lloc web."
@@ -2740,10 +2739,6 @@ ca:
       invalid:
         one: "No es pot fer servir l'etiqueta que heu seleccionat"
         other: "No es pot fer servir cap de les etiquetes que heu seleccionat"
-      in_this_category: '"%{tag_name}" no es pot utilitzar en aquesta categoria'
-      restricted_to:
-        one: '"%{tag_name}" està restringit a la categoria "%{category_names}"'
-        other: '"%{tag_name}" és restringit a les següents categories: %{category_names}'
   rss_by_tag: "Temes etiquetats amb %{tag}"
   finish_installation:
     congratulations: "Enhorabona, heu instal·lat Discourse!"
@@ -2777,6 +2772,8 @@ ca:
   search_logs:
     graph_title: "Recompte de cerques"
   onebox:
+    google_meet:
+      meeting_code: "Codi:"
     github:
       closed: "tancat"
       status_date:

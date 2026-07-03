@@ -66,6 +66,15 @@ module PageObjects
         Tooltips.new("site-traffic-logged-in-share-tooltip").present?(text: text)
       end
 
+      def hover_direct_traffic_tooltip
+        find("[data-trigger][data-identifier='site-traffic-direct-traffic-tooltip']").hover
+        self
+      end
+
+      def has_direct_traffic_tooltip?(text)
+        Tooltips.new("site-traffic-direct-traffic-tooltip").present?(text: text)
+      end
+
       def has_no_top_countries_card?
         has_no_top_card?("Top countries")
       end
@@ -108,7 +117,56 @@ module PageObjects
         has_empty_state_in?("Top referrers", "No referrer data for this period.")
       end
 
+      def click_top_referrers_drilldown
+        within_top_card("Top referrers") { find("h3.db-section__row-block-title a").click }
+      end
+
+      def click_top_countries_drilldown
+        within_top_card("Top countries") { find("h3.db-section__row-block-title a").click }
+      end
+
+      def has_top_referrers_drilldown?
+        within_top_card("Top referrers") { has_css?("h3.db-section__row-block-title a") }
+      end
+
+      def has_top_countries_drilldown?
+        within_top_card("Top countries") { has_css?("h3.db-section__row-block-title a") }
+      end
+
+      def has_bounce_rate?(value)
+        has_kpi_value?("bounce_rate", value)
+      end
+
+      def has_no_bounce_rate?
+        has_no_kpi?("bounce_rate")
+      end
+
+      def has_average_session_duration?(value)
+        has_kpi_value?("average_session_duration", value)
+      end
+
+      def has_no_average_session_duration?
+        has_no_kpi?("average_session_duration")
+      end
+
+      def hover_bounce_rate_tooltip
+        find("[data-test-kpi='bounce_rate'] [data-trigger]").hover
+        self
+      end
+
+      def has_session_metric_tooltip?(text)
+        Tooltips.new("site-traffic-bounce-rate-tooltip").present?(text: text)
+      end
+
       private
+
+      def has_kpi_value?(key, value)
+        has_css?("[data-test-kpi='#{key}'] .db-section__metric-number", exact_text: value)
+      end
+
+      def has_no_kpi?(key)
+        has_no_css?("[data-test-kpi='#{key}']")
+      end
 
       def has_no_top_card?(title)
         has_no_css?(".db-section__row-block", text: title)

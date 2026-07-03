@@ -433,6 +433,7 @@ export default class MoveToTopic extends Component {
                         selectedPosts=@model.selectedPosts
                         updateTags=this.updateTags
                         tags=this.tags
+                        categoryId=this.categoryId
                       }}
                     />
                   </div>

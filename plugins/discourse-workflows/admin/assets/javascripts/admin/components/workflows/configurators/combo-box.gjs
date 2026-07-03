@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import DButton from "discourse/ui-kit/d-button";
+import { i18n } from "discourse-i18n";
 import {
   fieldType,
   formatOptionValue,
@@ -32,17 +32,17 @@ function optionName(option, nameProperty) {
   return option[nameProperty] ?? option.name ?? option.label;
 }
 
+function hasValue(value) {
+  return value !== null && value !== undefined && value !== "";
+}
+
+function usesFieldValue(model) {
+  return model?.source === "field_value";
+}
+
 export default class ComboBoxField extends Component {
   @service router;
   @service workflowsNodeTypes;
-
-  @tracked _remoteOptions = [];
-  _remoteOptionsRequestKey = null;
-
-  constructor(owner, args) {
-    super(owner, args);
-    this.ensureRemoteOptions();
-  }
 
   get methodName() {
     return this.args.schema?.type_options?.load_options_method;
@@ -65,8 +65,21 @@ export default class ComboBoxField extends Component {
     );
   }
 
+  get hasLoadOptionsDependencies() {
+    const dependencies =
+      this.args.schema?.type_options?.load_options_depends_on;
+
+    return Array.isArray(dependencies)
+      ? dependencies.length > 0
+      : Boolean(dependencies);
+  }
+
   get usesRemoteOptions() {
-    return Boolean(this.methodName && this.identifier && !this.localOptions);
+    return Boolean(
+      this.methodName &&
+      this.identifier &&
+      (!this.localOptions || this.hasLoadOptionsDependencies)
+    );
   }
 
   get metadataOptions() {
@@ -76,8 +89,7 @@ export default class ComboBoxField extends Component {
     if (this.localOptions) {
       return this.localOptions;
     }
-    this.ensureRemoteOptions();
-    return this._remoteOptions;
+    return [];
   }
 
   get controlOptions() {
@@ -89,6 +101,21 @@ export default class ComboBoxField extends Component {
       this.controlOptions.none ||
       propertySelectNoneKey(this.args.nodeDefinition, this.args.fieldName)
     );
+  }
+
+  get translatedNone() {
+    const labelField = this.controlOptions.none_label_field;
+    const labelKey = this.controlOptions.none_label_i18n_key;
+
+    if (!labelField || !labelKey) {
+      return null;
+    }
+
+    const value =
+      (this.args.nodeParameters || this.args.configuration || {})[labelField] ||
+      null;
+
+    return value ? i18n(labelKey, { value }) : null;
   }
 
   get filterable() {
@@ -126,7 +153,9 @@ export default class ComboBoxField extends Component {
       return [];
     }
 
-    return Array.isArray(models) ? models : [models];
+    return (Array.isArray(models) ? models : [models]).map((model) =>
+      usesFieldValue(model) ? this.args.field.value : model
+    );
   }
 
   get actionIcon() {
@@ -135,6 +164,19 @@ export default class ComboBoxField extends Component {
 
   get actionLabel() {
     return this.controlOptions.action_label;
+  }
+
+  get actionRequiresValue() {
+    const models = this.controlOptions.action_route_models;
+
+    return (Array.isArray(models) ? models : [models]).some(usesFieldValue);
+  }
+
+  get showActionButton() {
+    return (
+      this.actionRoute &&
+      (!this.actionRequiresValue || hasValue(this.args.field.value))
+    );
   }
 
   get options() {
@@ -179,49 +221,10 @@ export default class ComboBoxField extends Component {
     return this.args.session?.nodeParameterOptionsContext(context) || context;
   }
 
-  remoteOptionsRequestKey(filter = null) {
-    return JSON.stringify({
-      methodName: this.methodName,
-      identifier: this.identifier,
-      typeVersion: this.typeVersion,
-      context: this.remoteOptionsContext(filter),
-    });
-  }
-
-  ensureRemoteOptions(filter = null) {
-    if (!this.usesRemoteOptions) {
-      return;
-    }
-
-    const requestKey = this.remoteOptionsRequestKey(filter);
-    if (this._remoteOptionsRequestKey === requestKey) {
-      return;
-    }
-
-    this._remoteOptionsRequestKey = requestKey;
-    this.workflowsNodeTypes
-      .loadNodeParameterOptions(
-        this.identifier,
-        this.methodName,
-        this.typeVersion,
-        this.remoteOptionsContext(filter)
-      )
-      .then((options) => {
-        if (this._remoteOptionsRequestKey === requestKey) {
-          this._remoteOptions = options;
-        }
-      });
-  }
-
   @action
   async loadRemoteOptions(filter = null) {
     if (!this.usesRemoteOptions) {
       return null;
-    }
-
-    // Mutating _remoteOptions here loops via the ComboBox didReceiveAttrs hook.
-    if (!filter) {
-      return this.formatOptions(this._remoteOptions);
     }
 
     const options = await this.workflowsNodeTypes.loadNodeParameterOptions(
@@ -235,20 +238,22 @@ export default class ComboBoxField extends Component {
   }
 
   @action
-  handleChange(value) {
+  handleChange(value, selectedItem = null) {
     this.args.field.set(value);
 
-    const selectedOption = this.options.find(
-      (option) => String(option.id) === String(value)
-    );
+    const selectedOption =
+      selectedItem ||
+      this.options.find((option) => String(option.id) === String(value)) ||
+      null;
 
     for (const [fieldName, propertyName] of Object.entries(
       this.setFromOption
     )) {
-      this.args.formApi?.set(
-        fieldName,
-        selectedOption?.original?.[propertyName] || ""
-      );
+      const selectedOptionValue =
+        selectedOption?.original?.[propertyName] ??
+        selectedOption?.[propertyName] ??
+        "";
+      this.args.formApi?.set(fieldName, selectedOptionValue);
     }
 
     const schema = this.args.nodeDefinition?.properties || {};
@@ -266,18 +271,23 @@ export default class ComboBoxField extends Component {
 
   @action
   performAction() {
+    if (!this.showActionButton) {
+      return;
+    }
+
     this.router.transitionTo(this.actionRoute, ...this.actionRouteModels);
   }
 
   <template>
     <ExpressionWrapper
       @field={{@field}}
+      @schema={{@schema}}
       @supportsExpression={{@supportsExpression}}
       @placeholder={{@placeholder}}
       @dynamicValueHint={{@dynamicValueHint}}
       @session={{@session}}
     >
-      {{#if this.actionRoute}}
+      {{#if this.showActionButton}}
         <div class="workflows-property-engine__select-with-action">
           <DynamicOptionsComboBox
             @content={{this.options}}
@@ -289,6 +299,7 @@ export default class ComboBoxField extends Component {
             @options={{hash
               filterable=this.filterable
               none=this.none
+              translatedNone=this.translatedNone
               castInteger=this.castInteger
             }}
           />
@@ -310,6 +321,7 @@ export default class ComboBoxField extends Component {
           @options={{hash
             filterable=this.filterable
             none=this.none
+            translatedNone=this.translatedNone
             castInteger=this.castInteger
           }}
         />

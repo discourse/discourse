@@ -115,10 +115,6 @@ id:
             last: "terakhir"
         attendance:
           none: "Tidak ada"
-        url:
-          placeholder: "Opsional"
-        location:
-          label: "Lokasi"
         description:
           label: "Deskripsi"
         event_type:

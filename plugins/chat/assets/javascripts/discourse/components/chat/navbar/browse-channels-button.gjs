@@ -6,11 +6,14 @@ import { i18n } from "discourse-i18n";
 
 export default class ChatNavbarBrowseChannelsButton extends Component {
   @service router;
+  @service currentUser;
 
   browseChannelsLabel = i18n("chat.channels_list_popup.browse");
 
   get showBrowseChannelsButton() {
-    return this.router.currentRoute.name === "chat.channels";
+    return (
+      this.currentUser && this.router.currentRoute.name === "chat.channels"
+    );
   }
 
   <template>

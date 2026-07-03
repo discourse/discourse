@@ -1,4 +1,3 @@
-/* eslint-disable ember/no-side-effects, ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
@@ -25,59 +24,212 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import { normalizeAiUsageTimeSeriesData } from "discourse/plugins/discourse-ai/discourse/lib/ai-usage-time-series";
 import AiCreditBar from "./ai-credit-bar";
+
+const DATE_FORMAT = "YYYY-MM-DD";
+const DEFAULT_PERIOD = "month";
+const CUSTOM_PERIOD = "custom";
+const PRESET_PERIODS = ["day", "week", DEFAULT_PERIOD];
 
 export default class AiUsage extends Component {
   @service currentUser;
+  @service router;
 
   @tracked startDate = moment().subtract(30, "days").toDate();
   @tracked endDate = new Date();
-  @tracked data = this.args.model;
+  @tracked data;
   @tracked selectedFeature;
   @tracked selectedModel;
-  @tracked selectedPeriod = "month";
+  @tracked selectedPeriod = DEFAULT_PERIOD;
   @tracked isCustomDateActive = false;
   @tracked loadingData = true;
+  @tracked filterOptionsData;
 
   constructor() {
     super(...arguments);
+    this.data = this.args.model;
+    this.initializeFilters(this.args.queryParams);
     this.fetchData();
+    if (this.selectedFeature || this.selectedModel) {
+      this.fetchFilterOptions();
+    }
+  }
+
+  initializeFilters(queryParams = {}) {
+    const hasCustomDateParams = queryParams.start_date || queryParams.end_date;
+
+    if (
+      queryParams.period === CUSTOM_PERIOD ||
+      (!this.isPresetPeriod(queryParams.period) && hasCustomDateParams)
+    ) {
+      this.selectedPeriod = CUSTOM_PERIOD;
+      this.isCustomDateActive = true;
+      this.startDate =
+        this.parseDateParam(queryParams.start_date) || this.startDate;
+      this.endDate = this.parseDateParam(queryParams.end_date) || this.endDate;
+    } else if (this.isPresetPeriod(queryParams.period)) {
+      this.selectedPeriod = queryParams.period;
+      this.isCustomDateActive = false;
+      this.setPeriodDates(queryParams.period);
+    } else {
+      this.selectedPeriod = DEFAULT_PERIOD;
+      this.isCustomDateActive = false;
+      this.setPeriodDates(DEFAULT_PERIOD);
+    }
+
+    this.selectedFeature = queryParams.feature || undefined;
+    this.selectedModel = queryParams.model
+      ? String(queryParams.model)
+      : undefined;
+  }
+
+  isPresetPeriod(period) {
+    return PRESET_PERIODS.includes(period);
+  }
+
+  parseDateParam(date) {
+    if (!date) {
+      return null;
+    }
+
+    const parsedDate = moment(date, DATE_FORMAT, true);
+    if (parsedDate.isValid()) {
+      return parsedDate.toDate();
+    }
+
+    const parsedDateTime = moment(date);
+    return parsedDateTime.isValid() ? parsedDateTime.toDate() : null;
+  }
+
+  formatDateParam(date) {
+    return date ? moment(date).format(DATE_FORMAT) : null;
+  }
+
+  formatRequestDate(date) {
+    return moment(date).format();
+  }
+
+  get requestStartDate() {
+    return this.selectedPeriod === CUSTOM_PERIOD
+      ? this.formatDateParam(this.startDate)
+      : this.formatRequestDate(this.startDate);
+  }
+
+  get requestEndDate() {
+    return this.selectedPeriod === CUSTOM_PERIOD
+      ? this.formatDateParam(this.endDate)
+      : this.formatRequestDate(this.endDate);
+  }
+
+  get baseReportParams() {
+    return {
+      start_date: this.requestStartDate,
+      end_date: this.requestEndDate,
+      timezone: this.currentUser?.user_option?.timezone || moment.tz.guess(),
+    };
+  }
+
+  get reportParams() {
+    return {
+      ...this.baseReportParams,
+      feature: this.selectedFeature || undefined,
+      model: this.selectedModel || undefined,
+    };
   }
 
   @action
   async fetchData() {
+    const requestId = (this._dataRequestId = (this._dataRequestId || 0) + 1);
     const response = await ajax(
       "/admin/plugins/discourse-ai/ai-usage-report.json",
-      {
-        data: {
-          start_date: moment(this.startDate).format("YYYY-MM-DD"),
-          end_date: moment(this.endDate).format("YYYY-MM-DD"),
-          timezone:
-            this.currentUser?.user_option?.timezone || moment.tz.guess(),
-          feature: this.selectedFeature,
-          model: this.selectedModel,
-        },
-      }
+      { data: this.reportParams }
     );
 
+    if (
+      requestId !== this._dataRequestId ||
+      this.isDestroying ||
+      this.isDestroyed
+    ) {
+      return;
+    }
+
     this.data = response;
+    if (!this.selectedFeature && !this.selectedModel) {
+      this.filterOptionsData = response;
+    }
     this.loadingData = false;
+  }
+
+  async fetchFilterOptions() {
+    const requestId = (this._filterOptionsRequestId =
+      (this._filterOptionsRequestId || 0) + 1);
+    const response = await ajax(
+      "/admin/plugins/discourse-ai/ai-usage-report.json",
+      { data: this.baseReportParams }
+    );
+
+    if (
+      requestId !== this._filterOptionsRequestId ||
+      this.isDestroying ||
+      this.isDestroyed
+    ) {
+      return;
+    }
+
+    this.filterOptionsData = response;
+  }
+
+  get filterQueryParams() {
+    const queryParams = {
+      period:
+        this.selectedPeriod === DEFAULT_PERIOD ? null : this.selectedPeriod,
+      start_date: null,
+      end_date: null,
+      feature: this.selectedFeature || null,
+      model: this.selectedModel || null,
+    };
+
+    if (this.selectedPeriod === CUSTOM_PERIOD) {
+      queryParams.period = CUSTOM_PERIOD;
+      queryParams.start_date = this.formatDateParam(this.startDate);
+      queryParams.end_date = this.formatDateParam(this.endDate);
+    }
+
+    return queryParams;
+  }
+
+  updateQueryParams() {
+    this.router.transitionTo(this.router.currentRouteName, {
+      queryParams: this.filterQueryParams,
+    });
   }
 
   @action
   async onFilterChange() {
+    this.updateQueryParams();
     await this.fetchData();
+  }
+
+  async onDateRangeFilterChange() {
+    this.updateQueryParams();
+
+    if (this.selectedFeature || this.selectedModel) {
+      await Promise.all([this.fetchData(), this.fetchFilterOptions()]);
+    } else {
+      await this.fetchData();
+    }
   }
 
   @action
   onFeatureChanged(value) {
-    this.selectedFeature = value;
+    this.selectedFeature = value || undefined;
     this.onFilterChange();
   }
 
   @action
   onModelChanged(value) {
-    this.selectedModel = value;
+    this.selectedModel = value ? String(value) : undefined;
     this.onFilterChange();
   }
 
@@ -110,51 +262,11 @@ export default class AiUsage extends Component {
   }
 
   normalizeTimeSeriesData(data) {
-    if (!data?.length) {
-      return [];
-    }
-
-    const startDate = moment(this.startDate);
-    const endDate = moment(this.endDate);
-    const normalized = [];
-    let interval;
-    let format;
-
-    if (this.data.period === "hour") {
-      interval = "hour";
-      format = "YYYY-MM-DD HH:00:00";
-    } else if (this.data.period === "day") {
-      interval = "day";
-      format = "YYYY-MM-DD";
-    } else {
-      interval = "month";
-      format = "YYYY-MM";
-    }
-    const dataMap = new Map(
-      data.map((d) => [moment(d.period).format(format), d])
+    return normalizeAiUsageTimeSeriesData(
+      data,
+      this.data.period,
+      this.data.summary?.date_range
     );
-
-    for (
-      let currentMoment = moment(startDate);
-      currentMoment.isSameOrBefore(endDate);
-      currentMoment.add(1, interval)
-    ) {
-      const dateKey = currentMoment.format(format);
-      const existingData = dataMap.get(dateKey);
-
-      normalized.push(
-        existingData || {
-          period: currentMoment.format(),
-          total_tokens: 0,
-          total_cache_read_tokens: 0,
-          total_cache_write_tokens: 0,
-          total_request_tokens: 0,
-          total_response_tokens: 0,
-        }
-      );
-    }
-
-    return normalized;
   }
 
   get metrics() {
@@ -288,11 +400,7 @@ export default class AiUsage extends Component {
       } else if (costType === "mixed") {
         totalSpending += this.getCostOnlySpending(f.feature_name);
       } else {
-        totalSpending +=
-          (f.input_spending || 0) +
-          (f.cache_read_spending || 0) +
-          (f.cache_write_spending || 0) +
-          (f.output_spending || 0);
+        totalSpending += this.spendingValue(f);
       }
     });
 
@@ -309,12 +417,7 @@ export default class AiUsage extends Component {
       usage_count: models.reduce((sum, m) => sum + (m.usage_count || 0), 0),
       total_tokens: models.reduce((sum, m) => sum + (m.total_tokens || 0), 0),
       total_spending: models.reduce(
-        (sum, m) =>
-          sum +
-          (m.input_spending || 0) +
-          (m.cache_read_spending || 0) +
-          (m.cache_write_spending || 0) +
-          (m.output_spending || 0),
+        (sum, model) => sum + this.spendingValue(model),
         0
       ),
     };
@@ -326,15 +429,20 @@ export default class AiUsage extends Component {
       usage_count: users.reduce((sum, u) => sum + (u.usage_count || 0), 0),
       total_tokens: users.reduce((sum, u) => sum + (u.total_tokens || 0), 0),
       total_spending: users.reduce(
-        (sum, u) =>
-          sum +
-          (u.input_spending || 0) +
-          (u.cache_read_spending || 0) +
-          (u.cache_write_spending || 0) +
-          (u.output_spending || 0),
+        (sum, user) => sum + this.spendingValue(user),
         0
       ),
     };
+  }
+
+  spendingValue(row) {
+    return (
+      row.total_spending ??
+      (row.input_spending || 0) +
+        (row.cache_read_spending || 0) +
+        (row.cache_write_spending || 0) +
+        (row.output_spending || 0)
+    );
   }
 
   @bind
@@ -379,12 +487,7 @@ export default class AiUsage extends Component {
   getCostOnlySpending(featureName) {
     const costModels = this.getCostModelsForFeature(featureName);
     return costModels.reduce(
-      (sum, m) =>
-        sum +
-        (m.input_spending || 0) +
-        (m.cache_read_spending || 0) +
-        (m.cache_write_spending || 0) +
-        (m.output_spending || 0),
+      (sum, model) => sum + this.spendingValue(model),
       0
     );
   }
@@ -400,35 +503,22 @@ export default class AiUsage extends Component {
   }
 
   get availableFeatures() {
-    if (this._cachedFeatures) {
-      return this._cachedFeatures;
-    }
+    const features =
+      this.filterOptionsData?.features || this.data?.features || [];
 
-    const features = this.data?.features;
-    if (features?.length) {
-      this._cachedFeatures = features.map((f) => ({
-        id: f.feature_name,
-        name: f.feature_name,
-      }));
-    }
-
-    return this._cachedFeatures || [];
+    return features.map((feature) => ({
+      id: feature.feature_name,
+      name: feature.feature_name,
+    }));
   }
 
   get availableModels() {
-    if (this._cachedModels) {
-      return this._cachedModels;
-    }
+    const models = this.filterOptionsData?.models || this.data?.models || [];
 
-    const models = this.data?.models;
-    if (models?.length) {
-      this._cachedModels = models.map((m) => ({
-        id: m.id,
-        name: m.llm,
-      }));
-    }
-
-    return this._cachedModels || [];
+    return models.map((model) => ({
+      id: String(model.id),
+      name: model.llm,
+    }));
   }
 
   get periodOptions() {
@@ -452,7 +542,7 @@ export default class AiUsage extends Component {
         this.startDate = now.clone().subtract(7, "days").toDate();
         this.endDate = now.toDate();
         break;
-      case "month":
+      case DEFAULT_PERIOD:
         this.startDate = now.clone().subtract(30, "days").toDate();
         this.endDate = now.toDate();
         break;
@@ -461,29 +551,23 @@ export default class AiUsage extends Component {
 
   @action
   onPeriodSelect(period) {
-    this._cachedFeatures = null;
-    this._cachedModels = null;
     this.selectedPeriod = period;
     this.isCustomDateActive = false;
     this.setPeriodDates(period);
-    this.fetchData();
+    this.onDateRangeFilterChange();
   }
 
   @action
   onCustomDateClick() {
     this.isCustomDateActive = !this.isCustomDateActive;
-    if (this.isCustomDateActive) {
-      this.selectedPeriod = null;
-    }
-  }
 
-  @action
-  onDateChange() {
-    this._cachedFeatures = null;
-    this._cachedModels = null;
-    this.isCustomDateActive = true;
-    this.selectedPeriod = null;
-    this.fetchData();
+    if (this.isCustomDateActive) {
+      this.selectedPeriod = CUSTOM_PERIOD;
+    } else {
+      this.selectedPeriod = DEFAULT_PERIOD;
+      this.setPeriodDates(DEFAULT_PERIOD);
+      this.onDateRangeFilterChange();
+    }
   }
 
   @action
@@ -494,11 +578,11 @@ export default class AiUsage extends Component {
 
   @action
   onRefreshDateRange() {
-    this._cachedFeatures = null;
-    this._cachedModels = null;
-    this.startDate = this._startDate;
-    this.endDate = this._endDate;
-    this.fetchData();
+    this.isCustomDateActive = true;
+    this.selectedPeriod = CUSTOM_PERIOD;
+    this.startDate = this._startDate || this.startDate;
+    this.endDate = this._endDate || this.endDate;
+    this.onDateRangeFilterChange();
     this._startDate = null;
     this._endDate = null;
   }
@@ -516,13 +600,15 @@ export default class AiUsage extends Component {
     inputSpending,
     cacheReadSpending,
     cacheWriteSpending,
-    outputSpending
+    outputSpending,
+    estimatedSpending
   ) {
     const total =
+      estimatedSpending ??
       (inputSpending || 0) +
-      (cacheReadSpending || 0) +
-      (cacheWriteSpending || 0) +
-      (outputSpending || 0);
+        (cacheReadSpending || 0) +
+        (cacheWriteSpending || 0) +
+        (outputSpending || 0);
     return `$${total.toFixed(2)}`;
   }
 
@@ -684,6 +770,7 @@ export default class AiUsage extends Component {
                                 feature.cache_read_spending
                                 feature.cache_write_spending
                                 feature.output_spending
+                                feature.total_spending
                               }}
                             {{else}}
                               <span class="ai-usage__mixed-cost">
@@ -810,6 +897,7 @@ export default class AiUsage extends Component {
                                                       model.cache_read_spending
                                                       model.cache_write_spending
                                                       model.output_spending
+                                                      model.total_spending
                                                     }}</td>
                                                 </tr>
                                               {{/each}}
@@ -916,6 +1004,7 @@ export default class AiUsage extends Component {
                               model.cache_read_spending
                               model.cache_write_spending
                               model.output_spending
+                              model.total_spending
                             }}
                           </td>
                         </tr>
@@ -1002,6 +1091,7 @@ export default class AiUsage extends Component {
                                 user.cache_read_spending
                                 user.cache_write_spending
                                 user.output_spending
+                                user.total_spending
                               }}
                             </td>
                           </tr>
@@ -1068,6 +1158,7 @@ export default class AiUsage extends Component {
                                   user.cache_read_spending
                                   user.cache_write_spending
                                   user.output_spending
+                                  user.total_spending
                                 }}
                               </td>
                             </tr>

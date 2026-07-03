@@ -229,6 +229,7 @@ el:
       search: "Αναζήτηση..."
       group_availability: "Διαθεσιμότητα %{group}"
     discourse_post_event:
+      new_event: "Νέα εκδήλωση"
       notifications:
         before_event_reminder: "Μια εκδήλωση πρόκειται να ξεκινήσει"
         after_event_reminder: "Μια εκδήλωση έχει λήξει"
@@ -293,6 +294,7 @@ el:
       upcoming_events_list:
         title: "Προσεχείς εκδηλώσεις"
         empty: "Δεν υπάρχουν προσεχείς εκδηλώσεις"
+        all_day: "Όλη μέρα"
         error: "Αποτυχία ανάκτησης εκδηλώσεων"
         try_again: "Δοκιμάστε ξανά"
         view_all: "Προβολή όλων"
@@ -310,7 +312,6 @@ el:
           this_and_following: "Αυτή η εκδήλωση και όλες οι επόμενες εκδηλώσεις"
           leave_event: "Αποχώρηση από την εκδήλωση"
           status:
-            unknown: "Δεν ενδιαφέρεται"
             going: "Θα παραστεί"
             not_going: "Δεν θα παραστεί"
             interested: "Ενδιαφέρεται"
@@ -342,8 +343,17 @@ el:
               description: "Σε μια ιδιωτική εκδήλωση μπορούν να συμμετάσχουν μόνο προσκεκλημένοι χρήστες."
       composer:
         name_placeholder: "Όνομα εκδήλωσης"
+        end_date_placeholder: "Ημερομηνία λήξης"
         location_placeholder: "Προσθέστε τοποθεσία ή URL"
+        max_attendees_placeholder: "Απεριόριστοι συμμετέχοντες"
+        max_attendees_display:
+          one: "Μέγιστο %{count} συμμετέχων"
+          other: "Μέγιστο %{count} συμμετέχοντες"
+        no_rsvps_label: "Δεν καταγράφεται η παρουσία"
         description_placeholder: "Προσθήκη περιγραφής εκδήλωσης"
+        event_title_placeholder: "Όνομα εκδήλωσης"
+        create_event_button: "Δημιουργία εκδήλωσης"
+        all_day: "Όλη μέρα"
         reminder:
           units:
             minutes:
@@ -358,6 +368,15 @@ el:
             weeks:
               one: "εβδομάδα"
               other: "εβδομάδες"
+          before: "%{unit} πριν"
+          after: "%{unit} μετά"
+          notification_title: "Ειδοποίηση συμμετεχόντων"
+          remove: "Αφαίρεση υπενθύμισης"
+      composer_actions:
+        create_event:
+          label: "Δημιουργία εκδήλωσης"
+        create_topic:
+          label: "Δημιουργία θέματος"
       builder_modal:
         custom_fields:
           label: "Προσαρμοσμένα πεδία"
@@ -366,7 +385,6 @@ el:
         create_event_title: "Δημιουργία Εκδήλωσης"
         update_event_title: "Επεξεργασία Εκδήλωσης"
         advanced_settings_title: "Προηγμένες ρυθμίσεις"
-        advanced_settings: "Προηγμένες ρυθμίσεις"
         confirm_delete: "Σίγουρα θέλετε να διαγράψετε αυτήν την εκδήλωση;"
         confirm_close: "Σίγουρα θέλετε να κλείσετε αυτήν την εκδήλωση;"
         confirm_open: "Σίγουρα θέλετε να ανοίξετε αυτήν την εκδήλωση;"
@@ -382,10 +400,15 @@ el:
           remove_timezone: Χωρίς ζώνη ώρας (UTC)
         starts_at:
           label: "Ημερομηνία έναρξης"
+        ends_at:
+          label: "Ημερομηνία λήξης"
         all_day:
           label: "Ολοήμερη εκδήλωση"
+          description: "Μια ολοήμερη εκδήλωση δεν θα έχει συγκεκριμένες ώρες, μόνο ημερομηνία. Η εκδήλωση θα διαρκέσει από την αρχή έως το τέλος της ημέρας."
         reminders:
           label: "Υπενθυμίσεις"
+          types:
+            notification: "Ειδοποίηση συμμετεχόντων"
           units:
             minutes: "λεπτά"
             hours: "ώρες"
@@ -394,26 +417,35 @@ el:
           periods:
             before: "πριν"
             after: "μετά"
+        recurrence_until:
+          label: "Μέχρι (συμπεριλαμβανομένης αυτής της ημερομηνίας)"
         recurrence:
           label: "Επανάληψη"
           none: "Χωρίς επανάληψη"
           every_day: "Κάθε μέρα"
           every_weekday: "Κάθε εργάσιμη ημέρα"
+          every_week: "Κάθε %{weekday}"
+          every_two_weeks: "Κάθε δεύτερη %{weekday}"
+          every_four_weeks: "Κάθε 4 εβδομάδες την %{weekday}"
+          every_month: "Την %{ordinal} %{weekday} κάθε μήνα"
           ordinals:
+            first: "πρώτη"
+            second: "δεύτερη"
+            third: "τρίτη"
+            fourth: "τέταρτη"
             last: "τελευταία"
         max_attendees:
           label: "Μέγιστος αριθμός συμμετεχόντων"
           placeholder: "Χωρίς όριο"
         attendance:
+          label: "Πόσα μέλη μπορούν να δηλώσουν συμμετοχή σε αυτήν την εκδήλωση;"
+          unlimited: "Απεριόριστο"
+          up_to: "Μέχρι και..."
           none: "Κανένα"
         allow_chat:
           label: "Ενσωμάτωση συνομιλίας"
           checkbox_label: "Δημιουργία και διαχείριση συγκεκριμένου καναλιού συνομιλίας για την εκδήλωση"
-        url:
-          label: "URL"
-          placeholder: "Προαιρετικό"
         location:
-          label: "Τοποθεσία"
           placeholder: "Προσθέστε μια τοποθεσία, έναν σύνδεσμο ή κάτι άλλο."
         description:
           label: "Περιγραφή"
@@ -424,9 +456,15 @@ el:
         invitees:
           label: "Προσκεκλημένες ομάδες"
         event_type:
+          label: "Τύπος παρουσίας"
           public:
             title: "Δημόσια"
+            description: "Οποιοσδήποτε μπορεί να παραστεί."
+          private:
+            title: "Μόνο κατόπιν πρόσκλησης"
+            description: "Μόνο μέλη επιλεγμένων ομάδων μπορούν να παρευρεθούν."
         delete_confirmation_message: "Διαγραφή αυτής της εκδήλωσης;"
       invite_user_or_group:
         title: "Ειδοποίηση χρήστη/ών ή ομάδας/ών"
         invite: "Αποστολή"
+        success: "Η πρόσκληση στάλθηκε"

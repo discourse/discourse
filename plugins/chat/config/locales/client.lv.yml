@@ -79,6 +79,7 @@ lv:
         title: Jauns ziņa
         prefix: "Kam:"
       create_channel:
+        description: "Apraksts"
         type: "Tips"
         types:
           category: "Sadaļa"
@@ -162,3 +163,8 @@ lv:
           fields:
             message:
               label: Ziņa
+    discourse_workflows:
+      send_chat_message:
+        message: "Ziņa"
+      chat_approval:
+        message: "Ziņa"

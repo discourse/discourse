@@ -165,6 +165,15 @@ describe DiscoursePostEvent::EventParser do
         'See <a href="https://example.com">https://example.com</a>',
       )
     end
+
+    it "does not leak markup out of the generated href when a url is followed by html" do
+      result = parser.linkify_description('http://example.com/"><script>alert(1)</script>')
+
+      doc = Nokogiri::HTML5.fragment(result)
+      expect(doc.css("script")).to be_empty
+      expect(doc.at_css("a")["href"]).to eq("http://example.com/")
+      expect(result).not_to include("<script>")
+    end
   end
 
   context "with custom fields" do
@@ -189,6 +198,28 @@ describe DiscoursePostEvent::EventParser do
 
       events = parser.extract_events(post_event)
       expect(events[0][:baz]).to eq(nil)
+    end
+  end
+
+  context "with mixed-case custom fields" do
+    before do
+      SiteSetting.discourse_post_event_allowed_custom_fields =
+        "field_aa|fieldbb|field_CC|fieldDD|my.field"
+    end
+
+    it "parses fields regardless of case or separators" do
+      post_event = build_post user, <<~TXT
+        [event start="2020" fieldAa="1" fieldbb="2" fieldCc="3" fielddd="4" myField="5"]
+        [/event]
+      TXT
+
+      event = parser.extract_events(post_event)[0]
+
+      expect(event[:field_aa]).to eq("1")
+      expect(event[:fieldbb]).to eq("2")
+      expect(event[:field_CC]).to eq("3")
+      expect(event[:fieldDD]).to eq("4")
+      expect(event[:"my.field"]).to eq("5")
     end
   end
 end

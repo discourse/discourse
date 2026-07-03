@@ -294,8 +294,6 @@ it:
         title: "Suono di notifica della chat desktop"
       sounds:
         none: "Nessuno"
-        bell: "Campanello"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Allega un file"
@@ -372,7 +370,6 @@ it:
         input_placeholder: Aggiungi un nome
         slug_description: Lo slug del canale viene utilizzato nell'URL al posto del nome del canale
         name: Nome del canale
-        slug: Slug canale (opzionale)
       channel_edit_description_modal:
         title: Modifica descrizione
         input_placeholder: Aggiungi una descrizione
@@ -429,9 +426,8 @@ it:
             one: 'Gli utenti in %{group} e %{count} altro gruppo avranno accesso a questo canale in base alle <a href=%{settingLink} target="_blank">impostazioni di sicurezza</a>'
             other: 'Gli utenti in %{group} e altri %{count} gruppi avranno accesso a questo canale in base alle <a href=%{settingLink} target="_blank">impostazioni di sicurezza</a>'
         create: "Crea canale"
-        description: "Descrizione (facoltativa)"
+        description: "Descrizione"
         name: "Nome del canale"
-        slug: "Slug canale (opzionale)"
         title: "Nuovo canale"
         type: "Tipo"
         types:
@@ -749,3 +745,14 @@ it:
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Invia messaggio di chat"
+      chat_message_created:
+        channel_id: "Canale"
+      send_chat_message:
+        channel_id: "Canale"
+        message: "Messaggio"
+      chat_approval:
+        message: "Messaggio"
+        channel_id: "Canale"

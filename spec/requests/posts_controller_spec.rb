@@ -2642,6 +2642,136 @@ RSpec.describe PostsController do
       expect(response.status).to eq(400)
     end
 
+    context "when the id is passed as an array" do
+      fab!(:accessible_post) { Fabricate(:post, user: moderator) }
+      fab!(:inaccessible_post, :private_message_post)
+      fab!(:inaccessible_revision) do
+        Fabricate(
+          :post_revision,
+          post: inaccessible_post,
+          number: 2,
+          modifications: {
+            "raw" => ["previous private body", "current private body"],
+          },
+        )
+      end
+
+      before { sign_in(moderator) }
+
+      it "does not return a revision the user cannot see on another post" do
+        expect(accessible_post.id).to be < inaccessible_post.id
+        expect(moderator.guardian.can_see?(inaccessible_post)).to eq(false)
+
+        previous_raw = inaccessible_revision.modifications["raw"][0]
+
+        get "/posts/#{accessible_post.id}/revisions/2.json",
+            params: {
+              id: [accessible_post.id, inaccessible_post.id],
+            }
+
+        expect(response.status).to eq(404)
+        expect(response.body).not_to include(previous_raw)
+      end
+    end
+
+    context "when a visible revision is adjacent to a hidden revision" do
+      fab!(:post_owner, :user)
+      fab!(:post_with_following_hidden_revision) do
+        Fabricate(:post, user: post_owner, raw: "Initial public version")
+      end
+      fab!(:post_with_previous_hidden_revision) do
+        Fabricate(:post, user: post_owner, raw: "Initial public version")
+      end
+
+      before do
+        SiteSetting.edit_history_visible_to_public = true
+        SiteSetting.editing_grace_period = 0
+      end
+
+      it "does not disclose a following hidden revision to non-staff" do
+        post_with_following_hidden_revision.revise(post_owner, raw: "Visible version")
+        post_with_following_hidden_revision.revise(post_owner, raw: "Following hidden secret")
+        hidden_revision = post_with_following_hidden_revision.revisions.find_by(number: 3)
+        hidden_revision.hide!
+
+        get "/posts/#{post_with_following_hidden_revision.id}/revisions/2.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["current_hidden"]).to eq(true)
+        expect(response.parsed_body["body_changes"]).to eq(nil)
+        expect(response.body).not_to include(hidden_revision.modifications["raw"].last)
+      end
+
+      it "does not disclose a previous hidden revision to non-staff" do
+        post_with_previous_hidden_revision.revise(post_owner, raw: "Previous hidden secret")
+        hidden_revision = post_with_previous_hidden_revision.revisions.find_by(number: 2)
+        hidden_revision.hide!
+        post_with_previous_hidden_revision.revise(post_owner, raw: "Visible version")
+
+        get "/posts/#{post_with_previous_hidden_revision.id}/revisions/3.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["previous_hidden"]).to eq(true)
+        expect(response.parsed_body["body_changes"]).to eq(nil)
+        expect(response.body).not_to include(hidden_revision.modifications["raw"].last)
+      end
+
+      it "does not disclose metadata changes from a previous hidden revision to non-staff" do
+        topic = Fabricate(:topic, user: post_owner)
+        op = Fabricate(:post, topic: topic, user: post_owner, post_number: 1)
+        hidden_parent = Fabricate(:post, topic: topic, user: post_owner, post_number: 2)
+        visible_parent = Fabricate(:post, topic: topic, user: post_owner, post_number: 3)
+        post =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: post_owner,
+            post_number: 4,
+            raw: "Initial public version",
+            reply_to_post_number: op.post_number,
+            locale: "en",
+            wiki: false,
+            post_type: Post.types[:regular],
+          )
+
+        post.revise(
+          post_owner,
+          {
+            raw: "Hidden metadata version",
+            reply_to_post_number: hidden_parent.post_number,
+            wiki: true,
+            post_type: Post.types[:whisper],
+            locale: "ja",
+          },
+          skip_validations: true,
+        )
+        hidden_revision = post.revisions.find_by(number: 2)
+        hidden_revision.hide!
+        post.revise(
+          post_owner,
+          {
+            raw: "Visible metadata version",
+            reply_to_post_number: visible_parent.post_number,
+            wiki: false,
+            post_type: Post.types[:regular],
+            locale: "fr",
+          },
+          skip_validations: true,
+        )
+
+        get "/posts/#{post.id}/revisions/3.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["previous_hidden"]).to eq(true)
+        expect(response.parsed_body["body_changes"]).to eq(nil)
+        expect(response.parsed_body).not_to have_key("reply_to_post_number_changes")
+        expect(response.parsed_body).not_to have_key("wiki_changes")
+        expect(response.parsed_body).not_to have_key("post_type_changes")
+        expect(response.parsed_body).not_to have_key("locale_changes")
+        expect(response.body).not_to include(hidden_revision.modifications["raw"].last)
+      end
+    end
+
     context "when diff generation exceeds the comparison budget" do
       let(:diff_error) do
         ONPDiff::DiffLimitExceeded.new(
@@ -3134,6 +3264,39 @@ RSpec.describe PostsController do
 
         expect(response.status).to eq(200)
         expect(post.reload.reply_to_post_number).to eq(earlier_post.post_number)
+      end
+    end
+
+    context "when the id is passed as an array" do
+      fab!(:accessible_post) { Fabricate(:post, user: moderator) }
+      fab!(:inaccessible_post, :private_message_post)
+      fab!(:inaccessible_revision) do
+        Fabricate(
+          :post_revision,
+          post: inaccessible_post,
+          number: 2,
+          modifications: {
+            "raw" => ["previous private body", "current private body"],
+          },
+        )
+      end
+
+      before { sign_in(moderator) }
+
+      it "does not revert using a revision the user cannot see on another post" do
+        expect(accessible_post.id).to be < inaccessible_post.id
+        expect(moderator.guardian.can_see?(inaccessible_post)).to eq(false)
+
+        previous_raw = inaccessible_revision.modifications["raw"][0]
+
+        put "/posts/#{accessible_post.id}/revisions/2/revert.json",
+            params: {
+              id: [accessible_post.id, inaccessible_post.id],
+            }
+
+        expect(response.status).to eq(404)
+        expect(response.body).not_to include(previous_raw)
+        expect(accessible_post.reload.raw).not_to include(previous_raw)
       end
     end
   end

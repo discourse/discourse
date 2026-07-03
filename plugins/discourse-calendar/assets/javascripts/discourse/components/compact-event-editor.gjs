@@ -6,7 +6,9 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import lazyHash from "discourse/helpers/lazy-hash";
 import DButton from "discourse/ui-kit/d-button";
 import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
@@ -16,6 +18,7 @@ import { i18n } from "discourse-i18n";
 import PostEventBuilder from "discourse/plugins/discourse-calendar/discourse/components/modal/post-event-builder";
 import {
   defaultEventState,
+  isLivestreamUrl,
   reconcileDefaultReminder,
 } from "discourse/plugins/discourse-calendar/discourse/lib/raw-event-helper";
 import DiscoursePostEventEvent from "discourse/plugins/discourse-calendar/discourse/models/discourse-post-event-event";
@@ -25,6 +28,7 @@ export default class CompactEventEditor extends Component {
   @service composer;
   @service currentUser;
   @service modal;
+  @service siteSettings;
 
   @tracked name;
   @tracked location;
@@ -40,6 +44,7 @@ export default class CompactEventEditor extends Component {
   @tracked recurrenceUntil;
   @tracked showLocalTime;
   @tracked chatEnabled;
+  @tracked livestream;
   @tracked minimal;
   @tracked url;
   @tracked image;
@@ -78,6 +83,7 @@ export default class CompactEventEditor extends Component {
     this.recurrenceUntil = s.recurrenceUntil;
     this.showLocalTime = s.showLocalTime;
     this.chatEnabled = s.chatEnabled;
+    this.livestream = s.livestream;
     this.minimal = s.minimal;
     this.url = s.url;
     this.image = s.image;
@@ -107,6 +113,7 @@ export default class CompactEventEditor extends Component {
       recurrenceUntil: this.recurrenceUntil,
       showLocalTime: this.showLocalTime,
       chatEnabled: this.chatEnabled,
+      livestream: this.livestream,
       minimal: this.minimal,
       url: this.url,
       image: this.image,
@@ -197,6 +204,10 @@ export default class CompactEventEditor extends Component {
     return this.args.urlTester?.(this.location) ?? false;
   }
 
+  get isLivestreamUrl() {
+    return this.hasLocation && isLivestreamUrl(this.location);
+  }
+
   get locationIcon() {
     return this.isLocationUrl ? "link" : "location-pin";
   }
@@ -222,6 +233,7 @@ export default class CompactEventEditor extends Component {
 
   get eventNamePlaceholder() {
     return (
+      this.args.namePlaceholder ||
       this.composer?.get("model.title") ||
       i18n("discourse_post_event.composer.name_placeholder")
     );
@@ -297,6 +309,22 @@ export default class CompactEventEditor extends Component {
   onLocationInput(event) {
     const value = event.target.value;
     this.location = value === "" ? null : value;
+    if (!this.isLivestreamUrl) {
+      this.livestream = false;
+    }
+    this.#emitChange();
+  }
+
+  get livestreamDisabled() {
+    return !this.siteSettings.chat_enabled;
+  }
+
+  @action
+  toggleLivestream() {
+    if (this.livestreamDisabled) {
+      return;
+    }
+    this.livestream = !this.livestream;
     this.#emitChange();
   }
 
@@ -568,6 +596,7 @@ export default class CompactEventEditor extends Component {
       max_attendees: this.maxAttendees,
       show_local_time: this.showLocalTime,
       chat_enabled: this.chatEnabled,
+      livestream: this.livestream,
       minimal: this.minimal,
       all_day: this.allDay,
       reminders: this.reminders,
@@ -600,6 +629,7 @@ export default class CompactEventEditor extends Component {
           this.maxAttendees = updatedEvent.maxAttendees ?? null;
           this.showLocalTime = !!updatedEvent.showLocalTime;
           this.chatEnabled = !!updatedEvent.chatEnabled;
+          this.livestream = !!updatedEvent.livestream;
           this.minimal = !!updatedEvent.minimal;
           this.allDay = !!updatedEvent.allDay;
           this.reminders = updatedEvent.reminders || [];
@@ -785,6 +815,38 @@ export default class CompactEventEditor extends Component {
       </div>
     </section>
 
+    {{#if this.isLivestreamUrl}}
+      <section class="composer-event__livestream">
+        {{#if this.livestreamDisabled}}
+          <DTooltip
+            @placement="top-start"
+            class="composer-event__livestream-toggle"
+          >
+            <:trigger>
+              <DToggleSwitch
+                class="composer-event__livestream-switch"
+                @state={{this.livestream}}
+                @label="discourse_post_event.composer.livestream"
+                disabled
+              />
+            </:trigger>
+            <:content>
+              {{i18n "discourse_post_event.composer.livestream_chat_disabled"}}
+            </:content>
+          </DTooltip>
+        {{else}}
+          <div class="composer-event__livestream-toggle">
+            <DToggleSwitch
+              class="composer-event__livestream-switch"
+              @state={{this.livestream}}
+              @label="discourse_post_event.composer.livestream"
+              {{on "click" this.toggleLivestream}}
+            />
+          </div>
+        {{/if}}
+      </section>
+    {{/if}}
+
     <section class="composer-event__attendees">
       {{dIcon "users"}}
       <input
@@ -851,5 +913,10 @@ export default class CompactEventEditor extends Component {
         {{on "focus" this.handleTextInputFocus}}
       />
     </section>
+
+    <PluginOutlet
+      @name="discourse-post-event-composer-editor"
+      @outletArgs={{lazyHash editor=this}}
+    />
   </template>
 }

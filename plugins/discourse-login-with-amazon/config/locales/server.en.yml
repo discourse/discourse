@@ -1,6 +1,6 @@
 en:
   site_settings:
-    enable_login_with_amazon: "Enable Login with Amazon authentication, requires `login with amazon client id` and `login with amazon client secret`."
+    enable_login_with_amazon: "Enable Login with Amazon authentication, requires {{setting:login_with_amazon_client_id}} and {{setting:login_with_amazon_client_secret}}."
     login_with_amazon_client_id: "Login with Amazon client ID"
     login_with_amazon_client_secret: "Login with Amazon client secret"
     login_with_amazon_scope: "Login with Amazon OAuth2 scopes (space separated)"

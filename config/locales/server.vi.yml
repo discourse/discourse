@@ -389,12 +389,18 @@ vi:
       admins: "quản trị"
       moderators: "điều hành"
       staff: "nhân viên"
-      anonymous: "ẩn danh"
       trust_level_0: "trust_level_0"
       trust_level_1: "trust_level_1"
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Mọi người"
+      admins: "Quản trị"
+      moderators: "Điều hành viên"
+      staff: "Nhân viên"
+      anonymous_users: "Người dùng ẩn danh"
+      logged_in_users: "Người dùng đã đăng nhập"
   education:
     until_posts:
       other: "%{count} tút"
@@ -725,6 +731,9 @@ vi:
       message_bus: "Cập nhật trực tiếp"
       one_time_password: "Tạo mã token đăng nhập một lần"
       bookmarks_calendar: "Đọc lời nhắc đánh dấu"
+    device:
+      code: "Mã"
+      continue: "Tiếp tục"
   reports:
     default:
       labels:
@@ -799,6 +808,7 @@ vi:
       labels:
         count: "Thành viên kênh"
         share: "Chia sẻ"
+        signups: "Thành viên mới"
       levels:
         "0": "Chủ đề mới"
         "1": "Cơ Bản"
@@ -1065,9 +1075,6 @@ vi:
         other: "Email đã tạo %{count} lỗi trong 24 giờ qua, xem <a href='%{base_path}/logs' target='_blank'>nhật ký</a> để biết thêm chi tiết."
       poll_pop3_timeout: "Không thể kết nối với POP3 server, sẽ không nhận được email gửi đến. Bạn hãy kiểm tra <a href='%{base_path}/admin/site_settings/category/email'>thiết lập POP3</a> và nhà cung cấp dịch vụ."
       poll_pop3_auth_error: "Không thể kết nối với POP3 server do lỗi chứng thực. Bạn hãy kiểm tra <a href='%{base_path}/admin/site_settings/category/email'>thiết lập POP3</a>."
-    reports_section:
-      providers:
-        core_report: "Tiêu chuẩn"
   site_settings:
     disabled: "khóa"
     censored_words: "Từ sẽ tự động thay thế bằng &#9632;&#9632;&#9632;&#9632;"
@@ -1094,7 +1101,6 @@ vi:
     delete_removed_posts_after: "Tút đã được xóa bởi tác giả sẽ được tự động xóa sau (n) giờ. Nếu cài là 0, bài viết sẽ được xóa ngay lập tức."
     notify_users_after_responses_deleted_on_flagged_post: "Khi một tút bị báo cáo và sau đó bị xóa, tất cả thành viên đã phản hồi tút và đã xóa phản hồi của họ sẽ được thông báo."
     fixed_category_positions: "Nếu được bật, bạn sẽ có thể sắp xếp chuyên mục theo một thứ tự cố định. Nếu không bật, chuyên mục sẽ được sắp xếp theo thứ tử hoạt động."
-    fixed_category_positions_on_create: "Nếu chọn, sắp xếp chuyên mục sẽ được thực hiện trong cửa sổ tạo chủ đề (yêu cầu fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Thêm rel=''nofollow'' cho tất cả các nội dung mà người dùng gửi, ngoại trừ các liên kết nội bộ (của tên miền chính). Nếu thay đổi, bạn phải thực hiện lại cho tất cả các tút với: "rake posts:rebake"'
     post_excerpt_maxlength: "Chiều dài tối đa của đoạn trích / tóm tắt chủ đề."
     post_onebox_maxlength: "Số ký tự tối đa của một bài onebox Discourse."
@@ -1104,7 +1110,6 @@ vi:
     summary_score_threshold: "Số điểm tối thiểu yêu cầu cho một tút bao gồm 'Tóm tắt chủ đề này'"
     summary_percent_filter: "Khi người dùng nhấn 'Tóm tắt chủ đề này', hiển thị phí trên % của tút"
     summary_max_results: "Số lượng tút tối đa được trả về bởi 'Tóm tắt Chủ đề này'"
-    enable_personal_messages: "KHÔNG ĐƯỢC PHÉP, hãy sử dụng cài đặt 'nhóm hỗ trợ tin nhắn cá nhân' để thay thế. Cho phép người dùng cấp độ tin cậy 1 (có thể định cấu hình thông qua độ tin cậy tối thiểu để gửi tin nhắn) tạo tin nhắn và trả lời tin nhắn. Lưu ý rằng nhân viên luôn có thể gửi tin nhắn bất kể điều gì."
     enable_system_message_replies: "Cho phép người dùng trả lời tin nhắn hệ thống, ngay cả khi tin nhắn cá nhân bị tắt"
     long_polling_base_url: "URL chính sử dụng cho vòng gọi dài (khi một CDN phục vụ nội dung động, hãy chắc chắn để thiết lập này là vòng gọi gốc), vd: http://origin.site.com"
     polling_interval: "When not long polling, how often should logged on clients poll in milliseconds"
@@ -1143,14 +1148,11 @@ vi:
     whispers_allowed_groups: "Cho phép giao tiếp riêng tư trong các chủ đề cho các thành viên của các nhóm được chỉ định."
     normalize_emails: "Kiểm tra xem email chuẩn hóa có phải là duy nhất không. Email được chuẩn hóa sẽ xóa tất cả các dấu chấm khỏi tên người dùng và mọi thứ nằm giữa ký hiệu + và @."
     log_out_strict: "Khi đăng xuất, đăng xuất TẤT CẢ session cho tất cả thiế bị"
-    new_version_emails: "Gửi email đến địa chỉ contact_email khi có phiên bản Discourse mới."
     invite_expiry_days: "Key mời người dùng có giới hạn bao lâu? tính theo ngày"
     login_required: "Yêu cầu chứng thực để đọc nội dung trên trang web, không cho phép người dùng nặc danh truy cập."
     allowed_unicode_username_characters: "Biểu thức chính quy chỉ cho phép một số ký tự Unicode trong tên người dùng. Các chữ cái và số ASCII sẽ luôn được phép và không cần đưa vào danh sách cho phép"
     reserved_usernames: "Tên người dùng không được phép đăng ký. Ký hiệu ký tự đại diện * có thể được sử dụng để khớp với bất kỳ ký tự không hoặc nhiều lần."
     block_common_passwords: "Không cho phép mật khẩu trong danh sách 10.000 mật khẩu phổ biến."
-    auth_skip_create_confirm: Khi đăng ký qua xác thực bên ngoài, hãy bỏ qua cửa sổ bật lên tạo tài khoản. Sử dụng tốt nhất cùng với auth_overrides_email, auth_overrides_username và auth_overrides_name.
-    auth_immediately: "Tự động chuyển hướng đến hệ thống đăng nhập bên ngoài mà không cần sự tương tác của người dùng. Điều này chỉ có hiệu lực khi login_required là đúng và chỉ có một phương thức xác thực bên ngoài"
     discourse_connect_provider_secrets: "Danh sách các cặp bí mật miền đang sử dụng DiscourseConnect. Đảm bảo bí mật DiscourseConnect có 10 ký tự trở lên. Ký hiệu đại diện * có thể được sử dụng để khớp với bất kỳ miền nào hoặc chỉ một phần của miền đó (ví dụ: *.example.com)."
     discourse_connect_overrides_bio: "Ghi đè tiểu sử người dùng trong hồ sơ người dùng và ngăn người dùng thay đổi nó"
     discourse_connect_overrides_groups: "Đồng bộ hóa tất cả tư cách thành viên nhóm thủ công với các nhóm được chỉ định trong thuộc tính nhóm (CẢNH BÁO: nếu bạn không chỉ định nhóm, tất cả tư cách thành viên nhóm thủ công sẽ bị xóa đối với người dùng)"
@@ -1169,13 +1171,10 @@ vi:
     google_oauth2_prompt: "Danh sách các giá trị chuỗi được phân tách bằng dấu cách tùy chọn chỉ định liệu máy chủ ủy quyền có nhắc người dùng xác thực lại và đồng ý hay không. Xem <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> để biết các giá trị có thể có."
     google_oauth2_hd_groups_service_account_admin_email: "Địa chỉ email thuộc tài khoản quản trị viên Google Workspace. Sẽ được sử dụng với thông tin đăng nhập tài khoản dịch vụ để tìm nạp thông tin nhóm."
     google_oauth2_hd_groups_service_account_json: "Thông tin chính được định dạng JSON cho Tài khoản dịch vụ. Sẽ được sử dụng để tìm nạp thông tin nhóm."
-    enable_twitter_logins: "Bật xác thực Twitter, yêu cầu twitter_consumer_key và twitter_consumer_secret. Xem <a href='https://meta.discourse.org/t/13395' target='_blank'>Định cấu hình đăng nhập Twitter (và nhúng) cho Discourse</a>."
     twitter_consumer_key: "Khóa người dùng để xác thực Twitter, đã đăng ký tại <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Bí mật người dùng để xác thực Twitter, được đăng ký tại <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_facebook_logins: "Bật xác thực Facebook, yêu cầu facebook_app_id và facebook_app_secret. Xem <a href='https://meta.discourse.org/t/13394' target='_blank'>Định cấu hình đăng nhập Facebook cho Facebook</a>."
     facebook_app_id: "Id ứng dụng để xác thực và chia sẻ Facebook, đã đăng ký tại <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "Ứng dụng bí mật để xác thực Facebook, đã đăng ký tại <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
-    enable_github_logins: "Bật xác thực GitHub, yêu cầu github_client_id và github_client_secret. Xem <a href='https://meta.discourse.org/t/13745' target='_blank'>Định cấu hình đăng nhập GitHub cho Discourse</a>."
     github_client_id: "Id ứng dụng khách để xác thực GitHub, đã đăng ký tại <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Bí mật ứng dụng khách để xác thực GitHub, đã đăng ký tại <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     s3_backup_bucket: "Địa chỉ tách biệt lưu trữ backup. LƯU Ý: đây phải là địa chỉ được giành riêng."
@@ -1208,7 +1207,6 @@ vi:
     purge_deleted_uploads_grace_period_days: "Thời gian gia hạn (theo ngày) trước khi upload cần xóa được xóa."
     purge_unactivated_users_grace_period_days: "Thời gian gia hạn (tính bằng ngày) trước khi người dùng chưa kích hoạt tài khoản của họ bị xóa. Đặt thành 0 để không bao giờ xóa những người dùng chưa kích hoạt."
     enable_s3_uploads: "Đặt thư mục upload trên Amazon S3. QUAN TRỌNG: yêu cầu chứng thực S3 (cả ID khóa truy cập & khóa bảo mật)."
-    s3_use_iam_profile: 'Sử dụng cấu hình phiên bản AWS EC2 <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html"></a> để cấp quyền truy cập vào bộ chứa S3. LƯU Ý: bật tính năng này yêu cầu Discourse phải chạy trong phiên bản EC2 được định cấu hình phù hợp và ghi đè cài đặt "id khóa truy cập s3" và "khóa truy cập bí mật s3".'
     s3_upload_bucket: "Tên Amazon S3 để lưu trữ các file sẽ được upload. CHÚ Ý: phải là chữ thường, không cách và không gạch dưới."
     s3_cdn_url: "CDN URL được sử dụng cho tất cả các tài nguyên S3 (vd: https://cdn.somewhere.com). CHÚ Ý: sau khi thay đổi thiết lập này bạn phải tạo lại các bài viết cũ."
     avatar_sizes: "Danh sách những kích thước hình đại diện tự động khởi tạo."
@@ -1238,7 +1236,6 @@ vi:
     tl3_requires_likes_given: "Số like tối thiểu phải thực hiện trong (tl3) ngày để được thăng lên độ tin cậy 3."
     tl3_requires_likes_received: "Số like tối thiểu nhận được trong (tl3) ngày để được thăng lên độ tin cậy 3."
     tl3_links_no_follow: "Không loại bỏ rel=nofollow khỏi các liên kết trong bài viết của thành viên có độ tin cậy 3."
-    min_trust_to_send_messages: "KHÔNG ĐƯỢC PHÉP, hãy sử dụng cài đặt 'nhóm hỗ trợ tin nhắn cá nhân' để thay thế. Độ tin cậy tối thiểu cần thiết để tạo tin nhắn cá nhân mới."
     newuser_max_links: "Bao nhiêu liên kết tài khoản mới có thể thêm vào bài viết."
     newuser_max_attachments: "Bao nhiêu đính kèm tài khoản mới có thể thêm vào bài viết"
     newuser_max_mentions_per_post: "Số tối đa thông báo @name mà thành viên mới có thể sử dụng trong bài viết."
@@ -1297,8 +1294,6 @@ vi:
     pop3_polling_username: "Tên truy cập của tài khoản POP3 để poll email."
     pop3_polling_password: "Mật khẩu của tài khoản POP3 để poll email."
     pop3_polling_delete_from_server: "Xóa email khỏi máy chủ. LƯU Ý: Nếu bạn tắt tính năng này, bạn nên dọn dẹp hộp thư đến của mình theo cách thủ công"
-    email_prefix: "Nhãn [label] sử dụng trong tiêu đề email, mặc định được đặt là 'title'."
-    email_site_title: "Tên website được sử dụng là tên người gửi email, mặc định là 'title' nếu không thiết lập. Nếu 'title' có chứa ký tự không được phép trong chuỗi người gửi email, sử dụng thiết lập này."
     minimum_topics_similar: "Có bao nhiêu chủ đề cần phải có trước các chủ đề tương tự được giới thiệu khi soạn thảo chủ đề mới."
     relative_date_duration: "Số ngày sau khi đăng tút nơi ngày của bài viết sẽ được hiển thị tương đối (7d) thay vì tuyệt đối (20 Feb)."
     delete_user_max_post_age: "Không cho phép xóa thành viên khi bài viết đầu tiên của họ cũ hơn (x) ngày."
@@ -1323,9 +1318,7 @@ vi:
     dominating_topic_minimum_percent: "Số phần trăm bài viết mà một thành viên có thể gửi trong một chủ đề trước khi được nhắc nhở về hành vi muốn tạo ưu thế trong chủ đề."
     suppress_uncategorized_badge: "Không hiển thị huy hiệu cho các chủ đề chưa phân loại trong danh sách chủ đề"
     permalink_normalizations: "Áp dụng regex sau trước khi khớp với permalink, ví dụ: /(topic.*)\\?.*/\\1 sẽ loại bỏ các chuỗi truy vấn từ đường dẫn chủ đề. Định dạng regex+string với \\1 ... để giữ truy cập"
-    disable_system_edit_notifications: "Vô hiệu hoá thông báo chỉnh sửa bởi người dùng hệ thống khi 'download_remote_images_to_local' đang hoạt động."
     notification_consolidation_threshold: "Số lượt thích hoặc thông báo yêu cầu tư cách thành viên nhận được trước khi các thông báo được tổng hợp thành một. Đặt thành 0 để tắt."
-    likes_notification_consolidation_window_mins: "Khoảng thời gian tính bằng phút mà các thông báo đã thích được tổng hợp thành một thông báo sau khi đạt đến ngưỡng. Ngưỡng có thể được định cấu hình thông qua `SiteSetting.notification_consolidation_threshold`."
     automatically_unpin_topics: "Tự động bỏ ghim chủ đề khi người dùng xuống cuối trang."
     read_time_word_count: "Đếm số từ mỗi phút để ước lượng thời gian đọc."
     enable_names: "Hiển thị tên đầy đủ của thành viên trên trang hồ sơ, thẻ thành viên, và email. Tắt để ẩn tên đầy đủ ở khắp mọi nơi."
@@ -1333,7 +1326,6 @@ vi:
     show_time_gap_days: "Nếu hai bài viết được thực hiện cách nhau nhiều ngày, hiển thị thời gian cách nhau đó trong chủ đề."
     short_progress_text_threshold: "Sau khi số lượng tút của một chủ đề vượt qua giới hạn này, thanh tiến trình sẽ chỉ hiện số thứ tự của tút hiện tại. Nếu bạn thay đổi chiều rộng của thanh tiến trình, bạn có thể cần thay đổi giá trị này."
     embed_unlisted: "Các chủ đề được nhúng sẽ không được hiển thị công khai cho đến khi có thành viên trả lời."
-    import_embed_unlisted: "Các chủ đề nhập được nhúng sẽ không hiển thị cho đến khi một thành viên trả lời (kể cả khi tùy chọn `nhúng không công khai` trên trang web không được chọn)."
     embed_post_limit: "Số lượng tối đa bài viết được nhúng."
     embed_username_required: "Tên tài khoản để tạo chủ đề là bắt buộc."
     slug_generation_method: "Chọn phương thức tạo slug. 'encoded' sẽ tạo ra phần trăm chuỗi mã hóa. 'none' sẽ tắt slug."
@@ -1359,7 +1351,6 @@ vi:
     default_categories_tracking: "Hiển thị danh sách chuyên mục đang theo dõi theo mặc định."
     default_categories_muted: "Hiển thị danh sách chuyên mục đang im lặng theo mặc định."
     default_categories_watching_first_post: "Danh sách các chuyên mục mà tút đầu tiên trong mỗi chủ đề mới sẽ được giám sát theo mặc định."
-    default_categories_normal: "Danh sách các chuyên mục không bị phớt lờ theo mặc định. Hữu ích khi cài đặt trang web `mute_all_categories_by_default` được bật."
     default_tags_watching: "Danh sách các thẻ được giám sát theo mặc định."
     default_tags_tracking: "Danh sách các thẻ được theo dõi theo mặc định."
     default_tags_watching_first_post: "Danh sách các thẻ mà tút đầu tiên trong mỗi chủ đề mới sẽ được giám sát theo mặc định."
@@ -1401,6 +1392,10 @@ vi:
       topic: "Kết quả"
       user: "Thành viên"
     results_page: "Search results for '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "Tút mới nhất"
+      order_latest_topic: "Chủ đề mới nhất"
   filter:
     description:
       status: "Lọc chủ đề theo trạng thái của chúng"
@@ -1866,6 +1861,7 @@ vi:
     Để hủy đăng ký nhận các email này, [bấm vào đây] (%{unsubscribe_url}).
   subject_re: "Re:"
   subject_pm: "[PM]"
+  email_from_group: "%{group_name}"
   user_notifications:
     previous_discussion: "Các trả lời trước"
     reached_limit:
@@ -2431,6 +2427,8 @@ vi:
   onebox:
     discourse:
       user_joined_community: "Tham gia %{date}"
+    google_meet:
+      meeting_code: "Mã:"
     github:
       closed: "đã "
       status_date:

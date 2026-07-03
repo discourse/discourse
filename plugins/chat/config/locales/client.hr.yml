@@ -212,6 +212,7 @@ hr:
             one: 'Korisnici u %{group} i %{count} drugoj grupi će imati pristup ovom kanalu u skladu sa <a href="%{settingLink}" target="_blank">sigurnosnim postavkama</a>'
             few: 'Korisnici u %{group} i %{count} druge grupe će imati pristup ovom kanalu u skladu sa <a href="%{settingLink}" target="_blank">sigurnosnim postavkama</a>'
             other: 'Korisnici u %{group} i %{count} drugih grupa će imati pristup ovom kanalu u skladu sa <a href="%{settingLink}" target="_blank">sigurnosnim postavkama</a>'
+        description: "Opis"
         name: "Naziv kanala"
         type: "Tip"
         types:
@@ -356,3 +357,12 @@ hr:
       panels:
         chat:
           label: "Čavrljanje"
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Kanal"
+      send_chat_message:
+        channel_id: "Kanal"
+        message: "Poruka"
+      chat_approval:
+        message: "Poruka"
+        channel_id: "Kanal"

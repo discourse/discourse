@@ -6,11 +6,25 @@
 
 ko:
   js:
+    user_api_key:
+      authorize: "인증하기"
+      deny: "취소"
+      copied: "복사되었습니다!"
+      otp_description: '&quot;%{application_name}&quot;가이 사이트에 액세스하도록 허용 하시겠습니까?'
+      no_trust_level: "죄송합니다. 사용자 API에 액세스하는 데 필요한 회원 레벨이 아닙니다."
+      generic_error: "죄송합니다. 사용자 API 키를 발급할 수 없습니다. 운영진이 이 기능을 해제한 것 같습니다."
+      device:
+        code: "코드"
+        continue: "계속하기"
     blocks:
       ghost:
         status: "상태"
         hidden: "숨김"
         failed: "실패"
+    access_control:
+      manage:
+        access_permission_editor: "에디터"
+        access_permission_remove: "제거"
     number:
       format:
         separator: "."
@@ -244,6 +258,9 @@ ko:
     age: "나이"
     joined: "가입일"
     admin_title: "관리자"
+    advanced_mode_toggle:
+      advanced_mode: "고급 모드"
+      simple_mode: "단순 모드"
     show_more: "자세히 보기"
     show_help: "옵션"
     links: "링크"
@@ -284,8 +301,6 @@ ko:
       pill: "추천"
       pm_title: "제안된 메시지"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "활성화"
       start_posting:
         back: "뒤로"
     about:
@@ -814,7 +829,6 @@ ko:
             from_alias: "보내는 사람 별칭"
         membership:
           title: 멤버십
-          access: 액세스
         categories:
           title: 카테고리
           long_title: "카테고리 기본 알림"
@@ -847,7 +861,6 @@ ko:
         title: "권한"
         none: "이 그룹과 관련된 카테고리가 없습니다."
         description: "이 그룹의 회원은 이 카테고리에 액세스할 수 있습니다."
-      public_admission: "사용자가 그룹에 자유롭게 가입하도록 허용(공개 그룹이어야 함)"
       public_exit: "사용자가 자유롭게 그룹에서 탈퇴하도록 허용"
       empty:
         posts: "이 그룹에는 아직 회원들이 글을 작성하지 않았습니다"
@@ -863,7 +876,6 @@ ko:
       request: "요청"
       message: "메시지"
       confirm_leave: "이 그룹을 탈퇴할까요?"
-      allow_membership_requests: "사용자가 그룹 소유자에게 멤버십 요청을 보내도록 허용(공개 그룹이어야 함)"
       membership_request_template: "멤버십 요청을 보낼 때 사용자에게 표시할 사용자 지정 템플릿"
       membership_request:
         submit: "요청 제출"
@@ -1235,6 +1247,9 @@ ko:
       undo_revoke_access: "액세스 취소 실행 취소"
       api_approved: "승인됨:"
       api_last_used_at: "마지막 사용:"
+      api_expires_at: "만료:"
+      api_expired_at: "만료됨:"
+      api_expires_never: "알림 받지 않음"
       theme: "테마"
       save_to_change_theme: '''%{save_text}''을 클릭하면 테마가 업데이트됩니다'
       home: "기본 홈페이지"
@@ -1871,6 +1886,12 @@ ko:
       confirm_title: '%{site_name}에서 계속하기'
       logging_in_as: '%{email} 이메일로 로그인'
       confirm_button: 로그인 완료
+    code_login:
+      email_label: "이메일"
+      continue_button: "계속하기"
+      verify_button: "계속하기"
+      account_ready_continue: "계속하기"
+      username_label: "아이디"
     login:
       header_title: "환영합니다"
       title: "로그인"
@@ -2070,7 +2091,7 @@ ko:
       users_placeholder: "사용자 또는 그룹 추가"
       title_placeholder: "토론 주제를 한 문장으로 적으세요"
       title_or_link_placeholder: "여기에 제목을 입력하거나 링크를 붙여 넣으세요"
-      edit_reason_placeholder: "편집 이유"
+      edit_reason_placeholder: "왜 편집 중입니까?"
       topic_featured_link_placeholder: "제목과 함께 표시된 링크를 입력하세요."
       remove_featured_link: "글에서 링크를 제거하십시오."
       reply_placeholder: "여기에 입력하세요. 포맷은 Markdown, BBCode 또는 HTML을 지원합니다. 이미지를 드래그하거나 붙여 넣을 수 있습니다."
@@ -2108,6 +2129,7 @@ ko:
         attribute_value: "값"
         apply: "적용"
       help: "Markdown 편집 도움말"
+      edit_reason: "왜 편집 중입니까?"
       exit_fullscreen_prompt: "전체 화면에서 나가려면 <kbd>ESC</kbd>를 누르세요."
       modal_ok: "확인"
       cant_send_pm: "%{username} 님에게 메시지를 보낼 수 없습니다."
@@ -2133,22 +2155,22 @@ ko:
           desc: 동일한 수신자에게 새 메시지를 작성합니다
         reply_to_topic:
           label: 댓글 쓰기
+          trigger: 글
           desc: 특정 댓글이 아닌 본 글에 댓글 작성
+        reply_to_message:
+          trigger: 메시지 보내기
         toggle_whisper:
           label: 귓속말 토글
-          desc: 귓속말은 운영진만 볼 수 있습니다
         create_topic:
-          label: "새 글"
           desc: 새글 쓰기
         create_personal_message:
-          label: "새 메시지"
           desc: "새 개인 메시지 쓰기"
         shared_draft:
           label: "공유 초안"
           desc: "허용된 사용자만 볼 수 있는 글 초안 작성"
         toggle_topic_bump:
-          label: "글 끌어 올리기 전환"
           desc: "최신 댓글 날짜를 변경하지 않고 댓글을 답니다"
+        unknown_user: "사용자"
       reload: "리로드"
       ignore: "무시"
       image_alt_text:
@@ -2480,6 +2502,9 @@ ko:
       deleted_post_placeholder: "[삭제됨]"
       ignored_post_placeholder: "[무시됨]"
       pinned_reply: "핀 지정됨"
+    share_target:
+      new_topic: "새 글"
+      new_message: "새 메시지"
     topic:
       filter_to:
         other: "이 글의 댓글 %{count}개"
@@ -3833,6 +3858,9 @@ ko:
               description: "설치 프롬프트 페이지에서 인스턴스 기능을 보여주는 스크린 샷입니다. 모든 이미지는 로컬 업로드여야 하며 크기가 동일해야 합니다."
             opengraph_image:
               description: "페이지에 다른 적합한 이미지가 없을 때 사용되는 기본 오픈 그래프 이미지. 비워두면 large_icon이 사용됩니다."
+            og_image_preview:
+              generate: "API 키 생성"
+              topic_id_label: "글 ID"
         fonts:
           title: "글꼴"
           form:
@@ -3952,7 +3980,7 @@ ko:
         no_check_performed: "업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하세요."
         stale_data: "최근 업데이트 확인이 수행되지 않았습니다. sidekiq가 실행 중인지 확인하세요."
         installed_version: "설치됨"
-        latest_version: "최신"
+        github: "GitHub"
         problems_found: "현재 사이트 설정에 따른 몇 가지 권고 사항"
         dismiss_notice: "무시"
         new_features:
@@ -4013,6 +4041,11 @@ ko:
                 "2": "회원"
                 "3": "일반"
                 "4": "지도자"
+          search:
+            title: "검색"
+            table:
+              searches: "검색"
+              status: "상태"
         reports_section:
           no_data: "표시할 정보가 없습니다"
           modal:
@@ -4086,7 +4119,6 @@ ko:
             incoming_email: "사용자 지정 수신 이메일 주소"
             incoming_email_placeholder: "이메일 주소 입력"
             incoming_email_tooltip: "| 문자로 여러 이메일 주소를 구분할 수 있습니다."
-            visibility: 공개 옵션
             visibility_levels:
               title: "누가 이 그룹을 볼 수 있나요?"
               public: "모두"
@@ -4312,8 +4344,12 @@ ko:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           your_organization: "조직"
           company_name: "그룹명"
+          company_url: "웹 사이트"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "그룹"
+          locale_selector:
+            title: "언어"
           optional: "(선택 사항)"
           update: "업데이트"
           saved: "저장되었습니다!"
@@ -4995,6 +5031,10 @@ ko:
         active: "활성화됨"
         status: "상태"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "닫기"
+              confirm: "차단됨"
           delete:
             confirmation_modal:
               close: "닫기"
@@ -5007,6 +5047,9 @@ ko:
           suspended: "정지됨"
           silenced: "차단됨"
           staged: "스테이징됨"
+        activation_filter:
+          all: "모든 사용자"
+          activated: "활성화됨"
         approved: "승인되었나요?"
         titles:
           pending: "검토 대기 중인 사용자"

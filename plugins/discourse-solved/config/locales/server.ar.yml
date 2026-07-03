@@ -20,8 +20,6 @@ ar:
         description: "إغلاق الموضوع تلقائيًا بعد مرور هذا العدد من الساعات بمجرد تحديده كحل. اجعل القيمة 0 لتعطيل الخاصية."
       notify_on_staff_accept_solved:
         label: "إخطار منشئ الموضوع عندما يحدد فريق العمل حلاً"
-      empty_box_on_unsolved:
-        label: "عرض مربع اختيار فارغ بجانب الموضوعات غير المحلولة في قائمة الموضوعات"
       solved_topics_auto_close_duration:
         label: "الإغلاق التلقائي للموضوعات المحلولة"
         description: "إغلاق الموضوعات المحلولة تلقائيًا بعد هذه المدة من آخر رد. اجعل القيمة 0 لتعطيل الخاصية."
@@ -41,7 +39,6 @@ ar:
     solved_add_schema_markup: "إضافة علامات مخطط Qapage إلى HTML"
     enable_solved_tags: "الوسوم التي ستسمح للمستخدمين بتحديد الحلول"
     prioritize_solved_topics_in_search: "منح الأولوية للموضوعات التي تم حلها في نتائج البحث."
-    enable_support_category_type_setup: "تفعيل خيار نوع الفئة \"الدعم\" أثناء إعداد إنشاء الفئات. ملاحظة: يجب تفعيل خيار \"تمكين الإنشاء المبسّط للفئات\" حتى يسري هذا الإعداد."
     show_who_marked_solved: "عرض الشخص الذي وضع علامة \"تم الحل\" على الموضوع. يظهر ذلك في أول منشور بالموضوع، وعلى منشور الإجابة في تلميح الأدوات."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"

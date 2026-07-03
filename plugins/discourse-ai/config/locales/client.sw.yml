@@ -84,6 +84,9 @@ sw:
         save: "Hifadhi"
         enabled: "Imeruhusiwa?"
         delete: "Futa"
+        thinking_effort_options:
+          none: "Hakuna"
+          max: "Kiwango cha juu"
         response_format:
           open_modal: "Hariri"
         filters:

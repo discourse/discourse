@@ -143,9 +143,6 @@ export default class FullCalendar extends Component {
           });
         }
       },
-      dateClick: async (info) => {
-        await this.args.onDateClick?.(info);
-      },
       eventClick: async ({ el, event, jsEvent }) => {
         const { postNumber, postUrl, postEvent } = event.extendedProps;
 
@@ -179,8 +176,8 @@ export default class FullCalendar extends Component {
       },
       allDayContent: () =>
         i18n("discourse_post_event.upcoming_events_list.all_day"),
-      select: (info) => {
-        this.args.onDateClick?.(info);
+      select: async (info) => {
+        await this.args.onDateClick?.(info);
       },
     });
 

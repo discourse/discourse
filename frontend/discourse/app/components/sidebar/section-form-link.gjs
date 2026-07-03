@@ -105,7 +105,7 @@ export default class SectionFormLink extends Component {
           @value={{@link.icon}}
           @onChange={{fn (mut @link.icon)}}
           @showCaret={{true}}
-          @btnClass={{@link.iconCssClass}}
+          @btnClass={{dConcatClass "btn-default" @link.iconCssClass}}
           aria-label={{i18n "sidebar.sections.custom.links.icon.label"}}
         />
 

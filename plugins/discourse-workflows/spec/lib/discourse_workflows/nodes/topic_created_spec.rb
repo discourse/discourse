@@ -4,7 +4,15 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicCreated::V1 do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:first_post) { create_post(user: user, raw: "First post") }
   fab!(:topic) { first_post.topic }
+  fab!(:subcategory) { Fabricate(:category, parent_category: topic.category) }
+  fab!(:subcategory_topic) { Fabricate(:topic, category: subcategory, user: user) }
   fab!(:tag) { Fabricate(:tag, name: "test-tag") }
+  fab!(:group_inbox, :group)
+  fab!(:other_group, :group)
+  fab!(:group_pm_topic) do
+    Fabricate(:group_private_message_topic, user: user, recipient_group: group_inbox)
+  end
+  fab!(:direct_pm_topic) { Fabricate(:private_message_topic, user: user) }
 
   before do
     SiteSetting.tagging_enabled = true
@@ -54,5 +62,105 @@ RSpec.describe DiscourseWorkflows::Nodes::TopicCreated::V1 do
 
       expect(output[:topic][:assigned_to_user][:username]).to eq(assignee.username)
     end
+  end
+
+  describe "#matches?" do
+    it "matches topics in subcategories by default" do
+      expect(
+        described_class.new(subcategory_topic).matches?(
+          trigger_context("category_id" => topic.category_id.to_s),
+        ),
+      ).to eq(true)
+    end
+
+    it "does not match topics in subcategories when subcategories are excluded" do
+      expect(
+        described_class.new(subcategory_topic).matches?(
+          trigger_context(
+            "category_id" => topic.category_id.to_s,
+            "include_subcategories" => false,
+          ),
+        ),
+      ).to eq(false)
+    end
+
+    it "matches topics in the selected category when subcategories are excluded" do
+      expect(
+        described_class.new(topic).matches?(
+          trigger_context(
+            "category_id" => topic.category_id.to_s,
+            "include_subcategories" => false,
+          ),
+        ),
+      ).to eq(true)
+    end
+
+    it "matches only topics when topic type is blank" do
+      expect(described_class.new(topic).matches?(trigger_context({}))).to eq(true)
+      expect(described_class.new(group_pm_topic).matches?(trigger_context({}))).to eq(false)
+    end
+
+    it "matches topics and personal messages when topic type is all" do
+      expect(described_class.new(topic).matches?(trigger_context("topic_type" => "all"))).to eq(
+        true,
+      )
+      expect(
+        described_class.new(group_pm_topic).matches?(trigger_context("topic_type" => "all")),
+      ).to eq(true)
+    end
+
+    it "matches only topics when topic type is topics" do
+      expect(described_class.new(topic).matches?(trigger_context("topic_type" => "topics"))).to eq(
+        true,
+      )
+      expect(
+        described_class.new(group_pm_topic).matches?(trigger_context("topic_type" => "topics")),
+      ).to eq(false)
+    end
+
+    it "matches only personal messages when topic type is personal messages" do
+      expect(
+        described_class.new(group_pm_topic).matches?(
+          trigger_context("topic_type" => "personal_messages"),
+        ),
+      ).to eq(true)
+      expect(
+        described_class.new(topic).matches?(trigger_context("topic_type" => "personal_messages")),
+      ).to eq(false)
+    end
+
+    it "matches personal messages in the configured group inbox" do
+      expect(
+        described_class.new(group_pm_topic).matches?(
+          trigger_context(
+            "topic_type" => "personal_messages",
+            "group_inbox_id" => group_inbox.id.to_s,
+          ),
+        ),
+      ).to eq(true)
+    end
+
+    it "does not match personal messages outside the configured group inbox" do
+      expect(
+        described_class.new(group_pm_topic).matches?(
+          trigger_context(
+            "topic_type" => "personal_messages",
+            "group_inbox_id" => other_group.id.to_s,
+          ),
+        ),
+      ).to eq(false)
+      expect(
+        described_class.new(direct_pm_topic).matches?(
+          trigger_context(
+            "topic_type" => "personal_messages",
+            "group_inbox_id" => group_inbox.id.to_s,
+          ),
+        ),
+      ).to eq(false)
+    end
+  end
+
+  def trigger_context(parameters)
+    DiscourseWorkflows::TriggerNodeContext.new({ "parameters" => parameters })
   end
 end

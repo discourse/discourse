@@ -18,7 +18,7 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
     ],
   };
 
-  test("renders the stacked bar segments and legend rows", async function (assert) {
+  test("renders a bar row with label, fill and share for each bucket", async function (assert) {
     await render(
       <template>
         <WhosPosting
@@ -29,18 +29,14 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
       </template>
     );
 
-    assert.dom(".db-whos-posting__bar").exists();
-    assert.dom(".db-whos-posting__segment").exists({ count: 3 });
-    assert.dom(".db-whos-posting__legend-item").exists({ count: 3 });
+    assert.dom(".db-whos-posting__bars").exists();
+    assert.dom(".db-whos-posting__bar-row").exists({ count: 3 });
+    assert.dom(".db-whos-posting__bar-fill").exists({ count: 3 });
     assert
-      .dom(
-        ".db-whos-posting__legend-item:nth-child(1) .db-whos-posting__legend-label"
-      )
+      .dom(".db-whos-posting__bar-row:nth-child(1) .db-whos-posting__bar-label")
       .hasText("New members");
     assert
-      .dom(
-        ".db-whos-posting__legend-item:nth-child(2) .db-whos-posting__legend-share"
-      )
+      .dom(".db-whos-posting__bar-row:nth-child(2) .db-whos-posting__bar-share")
       .hasText("51%");
   });
 
@@ -71,12 +67,11 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
       </template>
     );
 
-    assert.dom(".db-whos-posting__bar").doesNotExist();
-    assert.dom(".db-whos-posting__legend").doesNotExist();
+    assert.dom(".db-whos-posting__bars").doesNotExist();
     assert.dom(".db-whos-posting__empty").exists();
   });
 
-  test("omits the bar segment for a bucket with zero share", async function (assert) {
+  test("renders a zero-share bucket with a 0% share", async function (assert) {
     const noStaff = {
       total: 85,
       rows: [
@@ -96,7 +91,9 @@ module("Integration | Component | Dashboard | WhosPosting", function (hooks) {
       </template>
     );
 
-    assert.dom(".db-whos-posting__segment").exists({ count: 2 });
-    assert.dom(".db-whos-posting__legend-item").exists({ count: 3 });
+    assert.dom(".db-whos-posting__bar-row").exists({ count: 3 });
+    assert
+      .dom(".db-whos-posting__bar-row:nth-child(3) .db-whos-posting__bar-share")
+      .hasText("0%");
   });
 });

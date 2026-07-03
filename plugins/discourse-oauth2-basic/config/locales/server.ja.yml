@@ -27,7 +27,6 @@ ja:
     oauth2_json_email_verified_path: "OAuth2 ユーザー JSON 内のユーザーのメールアドレス確認ステータスへのパス。例: user.email.verified。この設定を有効にするには、oauth2_email_verified を無効にする必要があります"
     oauth2_json_avatar_path: "OAuth2 ユーザー JSON 内のユーザーのアバターへのパス。例: user.avatar_url"
     oauth2_email_verified: "OAuth2 サイトがメールアドレスを確認した場合はこれをオンにする"
-    oauth2_overrides_email: "ログインのたびに、Discourse メールアドレスをリモートメールアドレスでオーバーライドする。 `auth_overrides_email` 設定と同様に機能しますが、OAuth2 ログインに特化しています。"
     oauth2_send_auth_header: "クライアントの資格情報を HTTP 認証ヘッダーで送信する"
     oauth2_send_auth_body: "クライアントの資格情報をリクエスト本文で送信する"
     oauth2_debug_auth: "ログに詳細なデバッグ情報を含める"

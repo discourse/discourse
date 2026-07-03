@@ -16,20 +16,7 @@ export default class AiPostHelperTrigger extends Component {
 
   @tracked postHighlighted = false;
   currentMenu = this.menu.getByIdentifier("post-text-selection-toolbar");
-
-  // capture the state at the moment the toolbar is rendered
-  // so we ensure change of state (selection change for example)
-  // is not impacting the menu data
-  menuData = {
-    ...this.args.outletArgs.data,
-    quoteState: {
-      buffer: this.args.outletArgs.data.quoteState.buffer,
-      opts: this.args.outletArgs.data.quoteState.opts,
-      postId: this.args.outletArgs.data.quoteState.postId,
-    },
-    post: this.args.outletArgs.post,
-    selectedRange: selectedRange(),
-  };
+  menuData = null;
 
   highlightSelectedText() {
     const postId = this.args.outletArgs.data.quoteState.postId;
@@ -113,7 +100,25 @@ export default class AiPostHelperTrigger extends Component {
 
   @action
   async showAiPostHelperMenu() {
+    // Capture selection state synchronously, BEFORE any await. Closing the
+    // toolbar can trigger a selectionchange that clears quoteState — kicking
+    // off markdown() now freezes the HTML inside the inflight promise so a
+    // concurrent clear() can't wipe our data.
+    const sourceQuoteState = this.args.outletArgs.data.quoteState;
+    const markdownPromise = sourceQuoteState.markdown();
+    const postId = sourceQuoteState.postId;
+    const range = selectedRange();
+
     await this.currentMenu.close();
+
+    const { markdown, opts } = await markdownPromise;
+
+    this.menuData = {
+      ...this.args.outletArgs.data,
+      quoteState: { buffer: markdown, opts, postId },
+      post: this.args.outletArgs.post,
+      selectedRange: range,
+    };
 
     await this.menu.show(this.currentMenu.trigger, {
       identifier: "ai-post-helper-menu",

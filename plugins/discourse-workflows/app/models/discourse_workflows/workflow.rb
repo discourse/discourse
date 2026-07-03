@@ -29,6 +29,14 @@ module DiscourseWorkflows
              class_name: "DiscourseWorkflows::WorkflowPublishHistory",
              foreign_key: "workflow_id",
              dependent: :delete_all
+    has_many :ai_authoring_sessions,
+             class_name: "DiscourseWorkflows::AiAuthoringSession",
+             foreign_key: "workflow_id",
+             dependent: :delete_all
+    has_many :workflow_call_runs,
+             class_name: "DiscourseWorkflows::WorkflowCallRun",
+             foreign_key: "target_workflow_id",
+             dependent: :delete_all
 
     belongs_to :created_by, class_name: "User", foreign_key: "created_by_id"
     belongs_to :updated_by, class_name: "User", foreign_key: "updated_by_id", optional: true
@@ -176,6 +184,10 @@ module DiscourseWorkflows
 
     def published?
       active_version_id.present?
+    end
+
+    def callable_as_subworkflow?
+      published? && Nodes::WorkflowCallTrigger::V1.find_in(active_version&.nodes).present?
     end
 
     def has_unpublished_changes?

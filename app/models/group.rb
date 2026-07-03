@@ -62,6 +62,7 @@ class Group < ActiveRecord::Base
 
   before_destroy :cache_group_users_for_destroyed_event, prepend: true
   after_destroy :expire_cache
+  after_destroy :clear_acls
   after_save :destroy_deletions
   after_save :update_primary_group
   after_save :update_title
@@ -88,6 +89,11 @@ class Group < ActiveRecord::Base
     SvgSprite.expire_cache
   end
 
+  # TODO (martin) Also do this for User when following up access_control_list
+  def clear_acls
+    Jobs.enqueue(:cleanup_acls_for_deleted, group_id: id)
+  end
+
   validate :name_format_validator
   validates :name, presence: true
   validate :automatic_membership_email_domains_validator
@@ -104,7 +110,7 @@ class Group < ActiveRecord::Base
     admins: 1,
     moderators: 2,
     staff: 3,
-    anonymous: 4,
+    anonymous_users: 4,
     logged_in_users: 5,
     trust_level_0: 10,
     trust_level_1: 11,
@@ -157,7 +163,7 @@ class Group < ActiveRecord::Base
       (
         AUTO_GROUPS.values -
           [
-            Group::AUTO_GROUPS[:anonymous],
+            Group::AUTO_GROUPS[:anonymous_users],
             Group::AUTO_GROUPS[:logged_in_users],
             Group::AUTO_GROUPS[:everyone],
           ]
@@ -182,7 +188,7 @@ class Group < ActiveRecord::Base
             groups =
               groups.where(
                 "groups.id NOT IN (:ids)",
-                ids: [Group::AUTO_GROUPS[:anonymous], Group::AUTO_GROUPS[:logged_in_users]],
+                ids: [Group::AUTO_GROUPS[:anonymous_users], Group::AUTO_GROUPS[:logged_in_users]],
               )
           end
 
@@ -246,7 +252,7 @@ class Group < ActiveRecord::Base
             groups =
               groups.where(
                 "groups.id NOT IN (:ids)",
-                ids: [Group::AUTO_GROUPS[:anonymous], Group::AUTO_GROUPS[:logged_in_users]],
+                ids: [Group::AUTO_GROUPS[:anonymous_users], Group::AUTO_GROUPS[:logged_in_users]],
               )
           end
 
@@ -384,6 +390,17 @@ class Group < ActiveRecord::Base
     else
       self.bio_cooked = nil
     end
+  end
+
+  def bio_summary
+    PrettyText.excerpt(
+      bio_cooked,
+      300,
+      strip_links: true,
+      strip_images: true,
+      text_entities: true,
+      plain_hashtags: true,
+    ).presence
   end
 
   def record_email_setting_changes!(user)
@@ -549,11 +566,14 @@ class Group < ActiveRecord::Base
       group.name = default_name
     end
 
-    # the everyone, anonymous, and logged_in_users groups are special — they
+    group.full_name =
+      I18n.t("groups.default_full_names.#{name}", locale: SiteSetting.default_locale)
+
+    # the everyone, anonymous_users, and logged_in_users groups are special — they
     # represent implicit populations (unauthenticated visitors, or all logged-in
     # users) that cannot be enumerated via group_users rows.
     case name
-    when :everyone, :anonymous, :logged_in_users
+    when :everyone, :anonymous_users, :logged_in_users
       group.visibility_level = Group.visibility_levels[:staff]
       group.save!
       return group

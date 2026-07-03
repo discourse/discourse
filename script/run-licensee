@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+root = File.expand_path("..", __dir__)
+config = File.join(root, ".licensee.json")
+
+recursive_opts = %w[-r --parallel --filter=!./plugins/*]
+
+begin
+  system(
+    "pnpm",
+    *recursive_opts,
+    "exec",
+    "ln",
+    "-sf",
+    config,
+    ".licensee.json",
+    chdir: root,
+    exception: true,
+  )
+
+  ok =
+    system(
+      "pnpm",
+      *recursive_opts,
+      "--include-workspace-root",
+      "exec",
+      "licensee",
+      "--errors-only",
+      chdir: root,
+    )
+
+  exit(ok ? 0 : 1)
+ensure
+  system("pnpm", *recursive_opts, "--no-bail", "exec", "rm", "-f", ".licensee.json", chdir: root)
+end

@@ -9,11 +9,9 @@ RSpec.describe ThemeJavascriptCompiler do
       compiler.append_tree({ "connectors/blah-2.hbs" => "{{var}}" })
       compiler.append_tree({ "javascripts/connectors/blah-3.hbs" => "{{var}}" })
 
-      expect(compiler.content.to_s).to include("compatModules[\"templates/connectors/blah-1\"]")
-      expect(compiler.content.to_s).to include("compatModules[\"templates/connectors/blah-2\"]")
-      expect(compiler.content.to_s).to include(
-        "compatModules[\"javascripts/templates/connectors/blah-3\"]",
-      )
+      expect(compiler.content.to_s).to include("\"templates/connectors/blah-1\":")
+      expect(compiler.content.to_s).to include("\"templates/connectors/blah-2\":")
+      expect(compiler.content.to_s).to include("\"javascripts/templates/connectors/blah-3\":")
     end
   end
 
@@ -27,7 +25,7 @@ RSpec.describe ThemeJavascriptCompiler do
           "connectors/outlet/blah-1.js" => "export default class MyComponent {};",
         },
       )
-      expect(compiler.content.to_s).to include('compatModules["connectors/outlet/blah-1"]').once
+      expect(compiler.content.to_s).to include('"connectors/outlet/blah-1":').once
       expect(compiler.content.to_s).to include("templates/connectors/outlet/blah-1")
       expect(compiler.content.to_s).not_to include("setComponentTemplate")
       expect(compiler.content.to_s).to include("createTemplateFactory")
@@ -44,7 +42,7 @@ RSpec.describe ThemeJavascriptCompiler do
           "templates/connectors/outlet/blah-1.js" => "export default {};",
         },
       )
-      expect(compiler.content.to_s).to include('compatModules["connectors/outlet/blah-1"]').once
+      expect(compiler.content.to_s).to include('"connectors/outlet/blah-1":').once
       expect(compiler.content.to_s).to include("templates/connectors/outlet/blah-1")
       expect(compiler.content.to_s).not_to include("setComponentTemplate")
       expect(compiler.content.to_s).to include("createTemplateFactory")
@@ -61,7 +59,7 @@ RSpec.describe ThemeJavascriptCompiler do
           "connectors/outlet/blah-1.js" => "export default {};",
         },
       )
-      expect(compiler.content.to_s).to include('compatModules["connectors/outlet/blah-1"]').once
+      expect(compiler.content.to_s).to include('"connectors/outlet/blah-1":').once
       expect(compiler.content.to_s).to include("templates/connectors/outlet/blah-1")
       expect(compiler.content.to_s).not_to include("setComponentTemplate")
       expect(compiler.content.to_s).to include("createTemplateFactory")
@@ -78,9 +76,7 @@ RSpec.describe ThemeJavascriptCompiler do
           "discourse/connectors/outlet/blah-1.js" => "export default {};",
         },
       )
-      expect(compiler.content.to_s).to include(
-        'compatModules["discourse/connectors/outlet/blah-1"]',
-      ).once
+      expect(compiler.content.to_s).to include('"discourse/connectors/outlet/blah-1":').once
       expect(compiler.content.to_s).to include("discourse/templates/connectors/outlet/blah-1")
       expect(compiler.content.to_s).not_to include("setComponentTemplate")
       expect(JSON.parse(compiler.source_map)["sources"]).to include(
@@ -117,10 +113,8 @@ RSpec.describe ThemeJavascriptCompiler do
           "discourse/templates/components/mycomponent.hbs" => "{{my-component-template}}",
         },
       )
-      expect(compiler.content).to include('compatModules["discourse/components/mycomponent"]')
-      expect(compiler.content).to include(
-        'compatModules["discourse/templates/components/mycomponent"]',
-      )
+      expect(compiler.content).to include('"discourse/components/mycomponent":')
+      expect(compiler.content).to include('"discourse/templates/components/mycomponent":')
     end
 
     it "handles colocated components" do
@@ -172,7 +166,7 @@ RSpec.describe ThemeJavascriptCompiler do
   end
 
   describe "terser compilation" do
-    let(:compiler) { ThemeJavascriptCompiler.new(1, "marks", {}, minify: true) }
+    let(:compiler) { ThemeJavascriptCompiler.new(1, "marks", minify: true) }
 
     it "applies terser and provides sourcemaps" do
       sources = {
@@ -237,7 +231,7 @@ RSpec.describe ThemeJavascriptCompiler do
         }
       JS
 
-      expect(compiler.content).to include("compatModules[\"discourse/components/my-component\"]")
+      expect(compiler.content).to include("\"discourse/components/my-component\":")
       expect(compiler.content).to include('value = "foo";')
       expect(compiler.content).to include("setComponentTemplate")
       expect(compiler.content).to include("createTemplateFactory")

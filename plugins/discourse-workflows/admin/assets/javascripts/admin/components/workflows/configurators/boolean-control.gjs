@@ -28,6 +28,20 @@ const MODE_ITEMS = [
   },
 ];
 
+function valueForModeToggle(value) {
+  if (value === null || value === undefined) {
+    return "";
+  }
+
+  return String(value);
+}
+
+function booleanValueForPlainMode(value) {
+  const plainValue = value.startsWith("=") ? value.slice(1) : value;
+
+  return ["true", "1"].includes(plainValue.trim().toLowerCase());
+}
+
 export default class BooleanControl extends Component {
   @tracked expressionMode = this.#initialExpressionMode();
 
@@ -76,16 +90,14 @@ export default class BooleanControl extends Component {
     }
 
     this.expressionMode = wantsDynamic;
-    const currentValue = field.value || "";
+    const currentValue = valueForModeToggle(field.value);
 
     if (wantsDynamic) {
       field.set(
         currentValue.startsWith("=") ? currentValue : `=${currentValue}`
       );
     } else {
-      field.set(
-        currentValue.startsWith("=") ? currentValue.slice(1) : currentValue
-      );
+      field.set(booleanValueForPlainMode(currentValue));
     }
   }
 
@@ -95,6 +107,7 @@ export default class BooleanControl extends Component {
         @name={{@fieldName}}
         @title={{this.label}}
         @showTitle={{true}}
+        @showOptional={{@showOptional}}
         @type="custom"
         @format={{this.format}}
         @onSet={{@onSet}}
@@ -104,6 +117,7 @@ export default class BooleanControl extends Component {
           <ExpressionWrapper
             @expressionMode={{true}}
             @field={{field}}
+            @schema={{@schema}}
             @placeholder={{this.placeholder}}
             @supportsExpression={{this.supportsExpression}}
             @dynamicValueHint={{@dynamicValueHint}}
@@ -120,6 +134,7 @@ export default class BooleanControl extends Component {
         @tooltip={{this.tooltip}}
         @type="toggle"
         @format={{this.format}}
+        @showOptional={{@showOptional}}
         @validation={{this.validation}}
         as |field|
       >

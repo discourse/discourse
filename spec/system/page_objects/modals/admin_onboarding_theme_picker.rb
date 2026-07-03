@@ -16,11 +16,12 @@ module PageObjects
       end
 
       def first_selectable_theme_name
-        find("#{CARD_SELECTOR}:not(.--active) #{NAME_SELECTOR}", match: :first).text
+        find("#{CARD_SELECTOR}:not(.--selected) #{NAME_SELECTOR}", match: :first).text
       end
 
       def select_theme(name)
-        find(CARD_SELECTOR, text: name).find(".btn-primary").click
+        find(CARD_SELECTOR, text: name).click
+        find(".theme-picker-modal__footer .btn-primary").click
       end
 
       def select_first_selectable_theme

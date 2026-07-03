@@ -26,14 +26,15 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(identifiers).to include(
           "trigger:topic_closed",
           "action:topic_tags",
-          "action:create_post",
+          "action:post",
           "action:topic",
           "condition:if",
         )
+        expect(identifiers).not_to include("action:create_post")
       end
 
       it "includes expected schema fields for each node type" do
-        node_type = result[:node_types].find { |nt| nt[:identifier] == "action:create_post" }
+        node_type = result[:node_types].find { |nt| nt[:identifier] == "action:post" }
         expect(node_type).to include(
           :displayName,
           :name,
@@ -45,18 +46,31 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
           :credentials,
           :webhooks,
         )
-        expect(node_type[:name]).to eq("action:create_post")
+        expect(node_type[:name]).to eq("action:post")
         expect(node_type[:kind]).to eq("action")
-        expect(node_type[:properties].keys).to contain_exactly(
-          :topic_id,
+        expect(node_type[:properties].keys).to include(
+          :operation,
           :raw,
+          :topic_id,
+          :post_id,
           :reply_to_post_number,
+          :whisper,
           :author_username,
+          :editor_username,
+          :include_raw,
+          :include_cooked,
+          :body_character_limit,
+          :query,
+        )
+        expect(node_type.dig(:properties, :operation, :default)).to eq("create")
+        expect(node_type.dig(:properties, :limit)).to include(default: 30, min: 1, max: 800)
+        expect(node_type[:operations].map { |operation| operation[:value] }).to eq(
+          %w[create edit get list],
         )
       end
 
       it "returns UI hints for schema-driven configurators" do
-        node_type = result[:node_types].find { |nt| nt[:identifier] == "action:create_post" }
+        node_type = result[:node_types].find { |nt| nt[:identifier] == "action:post" }
 
         expect(node_type.dig(:properties, :raw, :ui)).to eq(control: :textarea)
       end
@@ -78,13 +92,13 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(webhook.dig(:properties, :url_preview, :ui, :control)).to eq(:url_preview)
       end
 
-      it "declares load options methods for dynamic combo box fields" do
+      it "sideloads options metadata for dynamic combo box fields" do
         award_badge = result[:node_types].find { |nt| nt[:identifier] == "action:badge" }
 
         expect(award_badge.dig(:properties, :badge_id, :type_options)).to include(
           load_options_method: "badges",
         )
-        expect(award_badge).not_to have_key(:metadata)
+        expect(award_badge.dig(:metadata, "badges")).to include(id: badge.id, name: badge.name)
       end
 
       it "includes branching for condition nodes" do
@@ -93,10 +107,10 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       end
 
       it "serializes ui palette group for action nodes" do
-        create_post = result[:node_types].find { |nt| nt[:identifier] == "action:create_post" }
+        post = result[:node_types].find { |nt| nt[:identifier] == "action:post" }
         form = result[:node_types].find { |nt| nt[:identifier] == "action:form" }
 
-        expect(create_post.dig(:ui, :palette_group, :id)).to eq("discourse_actions")
+        expect(post.dig(:ui, :palette_group, :id)).to eq("discourse_actions")
         expect(form.dig(:ui, :palette_group, :id)).to eq("human_review")
       end
 
@@ -198,11 +212,11 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(http_request[:credentials]).to contain_exactly(
           a_hash_including(
             name: "auth",
-            credential_types: %w[basic_auth bearer_token],
+            credential_types: %w[basic_auth bearer_token header_auth],
             required: false,
             display_options: {
               show: {
-                authentication: %w[basic_auth bearer_token],
+                authentication: %w[basic_auth bearer_token header_auth],
               },
             },
           ),

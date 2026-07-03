@@ -184,7 +184,6 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
       put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
           params: {
             workflow: {
-              name: workflow.name,
               published: true,
             },
           }
@@ -201,7 +200,6 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
       put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
           params: {
             workflow: {
-              name: workflow.name,
               published: false,
             },
           }
@@ -218,7 +216,6 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
       put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
           params: {
             workflow: {
-              name: workflow.name,
               error_workflow_id: error_wf.id,
             },
           }
@@ -234,7 +231,6 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
       put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
           params: {
             workflow: {
-              name: workflow.name,
               error_workflow_id: workflow.id,
             },
           }
@@ -251,7 +247,6 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
       put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
           params: {
             workflow: {
-              name: workflow.name,
               error_workflow_id: nil,
             },
           }
@@ -287,17 +282,58 @@ RSpec.describe DiscourseWorkflows::WorkflowsController do
       expect(workflow.reload.error_workflow_id).to eq(error_wf.id)
     end
 
-    it "returns 400 when name is missing" do
+    it "updates graph data without changing the name when name is omitted" do
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin, name: "Original")
+
+      put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
+          params: {
+            workflow: {
+              nodes: [{ id: "t1", type: "trigger:manual", name: "Manual" }],
+              connections: {
+              },
+            },
+          }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["workflow"]).to include("name" => "Original")
+      expect(workflow.reload.nodes.first["name"]).to eq("Manual")
+    end
+
+    it "returns 400 when name is blank" do
       workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
 
       put "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json",
           params: {
             workflow: {
-              nodes: [],
+              name: "",
             },
           }
 
       expect(response).to have_http_status(:bad_request)
+    end
+
+    it "returns referenced workflows when the workflow is called by another workflow" do
+      workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+      caller_graph =
+        build_workflow_graph do |workflow_graph|
+          workflow_graph.node "trigger-1", "trigger:manual"
+          workflow_graph.node "call-1",
+                              "action:workflow_call",
+                              configuration: {
+                                "workflow_id" => workflow.id,
+                              }
+        end
+      caller =
+        Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **caller_graph)
+
+      delete "/admin/plugins/discourse-workflows/workflows/#{workflow.id}.json"
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body).to include(
+        "type" => "workflow_called_by_other_workflows",
+        "referencing_workflows" => [include("id" => caller.id, "name" => caller.name)],
+      )
+      expect(DiscourseWorkflows::Workflow.exists?(workflow.id)).to be(true)
     end
 
     it "returns 404 when workflow does not exist" do

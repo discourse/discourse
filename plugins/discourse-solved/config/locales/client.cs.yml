@@ -62,6 +62,8 @@ cs:
       confirm_solved_removal_title: "Řešení bude odstraněno"
       confirm_solved_removal_confirm: "Potvrdit"
       confirm_solved_removal_cancel: "Zrušit"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Byla vaše otázka zodpovězena?
         description: "Pomozte ostatním tím, že zvýrazníte odpověď použitím tlačítka Řešení pod správnou odpovědí."

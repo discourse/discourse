@@ -1,5 +1,15 @@
 import { tracked } from "@glimmer/tracking";
 import { ajax } from "discourse/lib/ajax";
+import {
+  inputForRun,
+  latestRunWithInput,
+  latestRunWithOutput,
+  outputForRun,
+} from "./data-schema";
+import {
+  normalizeSourceOutputIndex,
+  normalizeTargetInputIndex,
+} from "./graph-constants";
 
 function compactObject(object) {
   return Object.fromEntries(
@@ -14,52 +24,6 @@ function normalizeNodeForLoadOptions(node, identifier, typeVersion) {
     type: node?.type || identifier,
     typeVersion: node?.typeVersion || typeVersion,
   });
-}
-
-function portIndexFromKey(value) {
-  value = value?.toString();
-  if (!value || value === "main" || value === "true" || value === "done") {
-    return 0;
-  }
-
-  const inputMatch = value.match(/^input_(\d+)$/);
-  if (inputMatch) {
-    return parseInt(inputMatch[1], 10) - 1;
-  }
-
-  if (value === "false" || value === "loop") {
-    return 1;
-  }
-
-  return parseInt(value, 10) || 0;
-}
-
-function sourceOutputIndexForConnection(connection) {
-  return (
-    connection.sourceOutputIndex ?? portIndexFromKey(connection.sourceOutput)
-  );
-}
-
-function targetInputIndexForConnection(connection) {
-  return (
-    connection.targetInputIndex ?? portIndexFromKey(connection.targetInput)
-  );
-}
-
-function latestPortItems(runs, portKey, portIndex) {
-  const run = [...(runs || [])]
-    .reverse()
-    .find(
-      (candidate) =>
-        candidate.status === "success" &&
-        (candidate[portKey] || []).some(
-          (port) => port.index === portIndex && Array.isArray(port.items)
-        )
-    );
-  const port = (run?.[portKey] || []).find(
-    (candidate) => candidate.index === portIndex
-  );
-  return port?.items;
 }
 
 export default class WorkflowEditorSession {
@@ -129,16 +93,18 @@ export default class WorkflowEditorSession {
     );
     const resolvedInputs = incomingConnections
       .map((connection) => {
-        const inputIndex = targetInputIndexForConnection(connection);
-        const outputIndex = sourceOutputIndexForConnection(connection);
+        const inputIndex = normalizeTargetInputIndex(connection);
+        const outputIndex = normalizeSourceOutputIndex(connection);
         const sourceNode = this.nodeForClientId(connection.sourceClientId);
-        const currentInput = this.inputItemsForNode(node, inputIndex);
+        const currentInput = this.inputItemsForNode(node, inputIndex, {
+          sourceNode,
+          outputIndex,
+        });
 
         return {
           sourceNodeId: connection.sourceClientId,
           inputIndex,
-          items:
-            currentInput ?? this.outputItemsForNode(sourceNode, outputIndex),
+          items: currentInput,
         };
       })
       .filter((input) => input.items !== undefined);
@@ -149,8 +115,7 @@ export default class WorkflowEditorSession {
     if (Object.keys(sourceNodeOutputs).length === 0) {
       return {
         available: false,
-        reason:
-          "No upstream execution preview output is available for this node",
+        reason: "No input execution preview is available for this node",
       };
     }
 
@@ -290,13 +255,24 @@ export default class WorkflowEditorSession {
       }
     }
 
-    const runs = this.lastExecutionRunData?.[node?.name];
-    return latestPortItems(runs, "outputs", outputIndex);
+    const run = latestRunWithOutput(this.lastExecutionRunData, node?.name, {
+      node,
+    });
+    return outputForRun(run, outputIndex)?.items;
   }
 
-  inputItemsForNode(node, inputIndex = 0) {
-    const runs = this.lastExecutionRunData?.[node?.name];
-    return latestPortItems(runs, "inputs", inputIndex);
+  inputItemsForNode(
+    node,
+    inputIndex = 0,
+    { sourceNode, outputIndex = 0 } = {}
+  ) {
+    const run = latestRunWithInput(this.lastExecutionRunData, node?.name, {
+      inputIndex,
+      node,
+      sourceNode,
+      outputIndex,
+    });
+    return inputForRun(run, inputIndex, { sourceNode, outputIndex })?.items;
   }
 
   nodeForClientId(clientId) {

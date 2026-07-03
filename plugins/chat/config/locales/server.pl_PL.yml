@@ -9,6 +9,7 @@ pl_PL:
     chat_separate_sidebar_mode: "Pokaż oddzielne tryby paska bocznego dla forum i czatu."
     chat_enabled: "Włącz czat."
     chat_pinned_messages: "Włącz przypinanie wiadomości na kanałach czatu."
+    enable_new_chat_reactions_popup: "Włącz przeprojektowane wyskakujące okienko reakcji na wiadomościach czatu, pokazujące, kto zareagował, z nieskończonym przewijaniem i natywną obsługą urządzeń mobilnych."
     enable_public_channels: "Włącz kanały publiczne na podstawie kategorii."
     chat_allowed_groups: "Użytkownicy w tych grupach mogą czatować. Pamiętaj, że administratorzy i moderatorzy zawsze mają dostęp do czatu."
     chat_channel_retention_days: "Wiadomości czatu w zwykłych kanałach będą przechowywane przez tyle dni. Ustaw '0', aby zachować wiadomości na zawsze."
@@ -33,7 +34,7 @@ pl_PL:
     chat_editing_grace_period_max_diff_low_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 0 i 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maksymalna liczba zmian znaków dozwolona w okresie karencji edycji czatu, jeśli zmieniono więcej, wyświetl znacznik (edytowany) w wiadomości czatu (poziom zaufania 2 i wyższy)."
     chat_preferred_index: "Preferowana zakładka podczas ładowania /chat."
-    allow_chat_in_anonymous_mode: "Włącz to ustawienie, aby umożliwić użytkownikom, którzy przeglądają twoją stronę anonimowo, korzystanie z czatu. To ustawienie wymaga włączenia ustawienia `allow anonymous mode`."
+    allow_chat_in_anonymous_mode: "Włącz to ustawienie, aby umożliwić użytkownikom anonimowo przeglądającym Twoją witrynę korzystanie z czatu. To ustawienie wymaga włączenia ustawienia {{setting:allow_anonymous_mode}}."
     chat_search_enabled: "Włącz to ustawienie, aby umożliwić użytkownikom przeszukiwanie wiadomości na czacie."
     errors:
       chat_default_channel: "Domyślny kanał czatu musi być kanałem publicznym."
@@ -267,6 +268,20 @@ pl_PL:
     scriptables:
       send_chat_message:
         title: Wyślij wiadomość na czacie
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Zatwierdź"
+      default_deny_label: "Odrzuć"
+    errors:
+      send_chat_message:
+        invalid_params: "Nieprawidłowe parametry: %{errors}"
+        channel_not_found: "Nie znaleziono kanału: %{channel_id}"
+        failed: "Nie udało się wysłać wiadomości czatu."
+      chat_approval:
+        channel_not_found: "Nie udało się wysłać wiadomości na czacie: kanał %{channel_id} nie został znaleziony."
+        invalid_params: "Nie udało się wysłać wiadomości na czacie: %{errors}"
+        failed: "Nie udało się wysłać wiadomości na czacie: %{steps}"
+        timeout_must_be_positive: "Liczba minut limitu czasu musi być większa niż 0."
   reviewable_score_types:
     needs_review:
       title: "Wymaga przeglądu"

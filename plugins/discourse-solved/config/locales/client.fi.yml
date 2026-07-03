@@ -47,6 +47,8 @@ fi:
       move_post_cancel: "Peruuta"
       confirm_solved_removal_confirm: "Vahvista"
       confirm_solved_removal_cancel: "Peruuta"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Onko kysymykseesi vastattu?
         description: "Korosta vastaus ja auta muita käyttämällä oikean vastauksen alla olevaa ratkaisupainiketta."

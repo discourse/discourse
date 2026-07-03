@@ -41,7 +41,7 @@ export default class UserBadge extends EmberObject {
     });
 
     // Create UserBadge object(s).
-    let userBadges = [];
+    let userBadges;
     if ("user_badge" in json) {
       userBadges = [json.user_badge];
     } else {

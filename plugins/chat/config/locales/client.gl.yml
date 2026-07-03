@@ -80,6 +80,7 @@ gl:
         title: Nova mensaxe
         prefix: "A:"
       create_channel:
+        description: "Descrición"
         type: "Tipo"
         types:
           category: "Categoría"
@@ -170,3 +171,12 @@ gl:
           fields:
             message:
               label: Mensaxe
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Canle"
+      send_chat_message:
+        channel_id: "Canle"
+        message: "Mensaxe"
+      chat_approval:
+        message: "Mensaxe"
+        channel_id: "Canle"

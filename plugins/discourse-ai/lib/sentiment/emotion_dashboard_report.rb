@@ -5,7 +5,7 @@ module DiscourseAi
     class EmotionDashboardReport
       def self.register!(plugin)
         Emotions::LIST.each do |emotion|
-          plugin.add_report("emotion_#{emotion}") do |report|
+          plugin.add_report("emotion_#{emotion}", exclude_from_dashboard: true) do |report|
             query_results = DiscourseAi::Sentiment::EmotionDashboardReport.fetch_data(report)
             report.data = query_results.map { |row| { x: row.day, y: row.send(emotion) } }
             if report.facets.include?(:prev_period) && query_results.length > 30

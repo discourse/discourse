@@ -29,6 +29,8 @@ hr:
       move_post_cancel: "Odustani"
       confirm_solved_removal_confirm: "Potvrdi"
       confirm_solved_removal_cancel: "Odustani"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Je li odgovoreno na vaše pitanje?
         description: "Označite odgovor i pomozite drugima pomoću gumba za rješenje ispod točnog odgovora."

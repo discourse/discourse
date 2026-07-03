@@ -22,7 +22,7 @@ describe "Anonymous user reacting to a post" do
 
       login_page.fill(username: user.username, password: "supersecurepassword").click_login
 
-      expect(page).to have_current_path(topic.url)
+      expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
       expect(post.reload.like_count).to eq(1)
     end
   end

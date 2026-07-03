@@ -12,6 +12,7 @@ el:
           poll: "Ψηφοφορία Discourse"
   js:
     poll:
+      title: "Ψηφοφορία"
       dynamic:
         enabled_hint: "Οι επιλογές μπορούν να προστεθούν ή να αφαιρεθούν."
       voters:
@@ -159,5 +160,3 @@ el:
           add: Προσθήκη επιλογής
         automatic_close:
           label: Αυτόματο κλείσιμο ψηφοφορίας
-        show_advanced: "Εμφάνιση Προχωρημένων Επιλογών"
-        hide_advanced: "Απόκρυψη Προχωρημένων Επιλογών"

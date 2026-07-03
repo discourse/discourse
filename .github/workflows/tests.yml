@@ -54,6 +54,7 @@ jobs:
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 20
       MINIO_RUNNER_LOG_LEVEL: WARN
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
+      CAPYBARA_PLAYWRIGHT_SOFT_RESET: ${{ matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'chat') && '1' }}
       CHEAP_SOURCE_MAPS: "1"
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
@@ -113,7 +114,7 @@ jobs:
             echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
           fi
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
@@ -193,7 +194,7 @@ jobs:
           fi
 
       - name: Fetch turbo_rspec_runtime.log cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         id: test-runtime-cache
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         with:

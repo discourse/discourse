@@ -27,6 +27,7 @@ export default function makeEngine(
   setupHoister(engine);
   setupImageAndPlayableMediaRenderer(engine);
   setupAttachments(engine);
+  setupLiteralizeUploadLabels(engine);
   setupBlockBBCode(engine);
   setupInlineBBCode(engine);
   setupTextPostProcessRuler(engine);
@@ -327,6 +328,88 @@ function renderAttachment(tokens, idx, options, env, slf) {
 
 function setupAttachments(engine) {
   engine.renderer.rules.link_open = renderAttachment;
+}
+
+// Rebuilds a label's source text from the parsed inline tokens, treating
+// emphasis/strikethrough delimiters as literal characters (using each token's
+// `markup` field). Used to reverse inline parsing on labels we want to keep
+// verbatim.
+const EMPHASIS_MARKUP = /^[_*~]+$/;
+function reconstructLiteralLabel(tokens) {
+  let result = "";
+  for (const token of tokens) {
+    if (token.type === "text" || token.type === "text_special") {
+      result += token.content;
+    } else if (token.type === "code_inline") {
+      const markup = token.markup || "`";
+      result += `${markup}${token.content}${markup}`;
+    } else if (token.type.endsWith("_open") || token.type.endsWith("_close")) {
+      // `markup` is only reliable as source text for emphasis/strong/strike
+      // delimiters. Other open/close tokens (linkify, autolink) store a
+      // descriptor like "linkify" — skip those.
+      const markup = token.markup || "";
+      if (EMPHASIS_MARKUP.test(markup)) {
+        result += markup;
+      }
+    } else if (token.type === "softbreak" || token.type === "hardbreak") {
+      result += " ";
+    } else if (token.children) {
+      result += reconstructLiteralLabel(token.children);
+    }
+  }
+  return result;
+}
+
+// Discourse generates upload markdown like `![name|100x100](upload://hash)`
+// and `[name|attachment](upload://hash)`. By default markdown-it runs inline
+// parsing on the label, which italicizes filenames containing `_`, strips
+// them from the alt attribute, and can hide the `|attachment` marker behind
+// formatting tokens.
+//
+// This core ruler walks the parsed tokens, finds links/images whose URL is
+// an `upload://` short URL, and collapses their children back to a single
+// literal text token. Emphasis and other inline formatting are preserved as
+// literal characters so the rendered output matches the original filename.
+function literalizeUploadLabels(state) {
+  for (const block of state.tokens) {
+    const children = block.children;
+    if (!children) {
+      continue;
+    }
+
+    for (let i = 0; i < children.length; i++) {
+      const token = children[i];
+
+      if (token.type === "image") {
+        if (token.attrGet("src")?.startsWith("upload://")) {
+          const literal = reconstructLiteralLabel(token.children);
+          const text = new state.Token("text", "", 0);
+          text.content = literal;
+          token.children = [text];
+          token.content = literal;
+        }
+      } else if (
+        token.type === "link_open" &&
+        token.attrGet("href")?.startsWith("upload://")
+      ) {
+        // Markdown can't nest links, so the first `link_close` is ours.
+        let j = i + 1;
+        while (j < children.length && children[j].type !== "link_close") {
+          j++;
+        }
+        if (j > i + 1) {
+          const literal = reconstructLiteralLabel(children.slice(i + 1, j));
+          const text = new state.Token("text", "", 0);
+          text.content = literal;
+          children.splice(i + 1, j - i - 1, text);
+        }
+      }
+    }
+  }
+}
+
+function setupLiteralizeUploadLabels(engine) {
+  engine.core.ruler.push("literalize_upload_labels", literalizeUploadLabels);
 }
 
 // TODO we may just use a proper ruler from markdown it... this is a basic proxy

@@ -54,10 +54,6 @@ be:
             after: "пасля"
         attendance:
           none: "Няма"
-        url:
-          label: "URL спасылка"
-        location:
-          label: "размяшчэнне"
         description:
           label: "Апісанне"
         event_type:

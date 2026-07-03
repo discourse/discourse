@@ -136,13 +136,13 @@ module PageObjects
       end
 
       def has_who_liked_on_post?(post, count: nil)
-        return has_css?(".post-users-popup .post-users-popup__item", count: count) if count
+        return has_css?(".users-popup .users-popup__item", count: count) if count
 
-        has_css?(".post-users-popup")
+        has_css?(".users-popup")
       end
 
       def has_no_who_liked_on_post?(post)
-        has_no_css?(".post-users-popup")
+        has_no_css?(".users-popup")
       end
 
       def has_who_read_on_post?(post, count: nil)

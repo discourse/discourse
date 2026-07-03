@@ -21,12 +21,19 @@ zh_CN:
       notify_on_staff_accept_solved:
         label: "当管理人员标记解决方案时通知话题创建者"
       empty_box_on_unsolved:
-        label: "在未解决的话题列表旁边显示一个空复选框"
+        label: "在话题列表中显示未解决的话题状态"
       solved_topics_auto_close_duration:
         label: "自动关闭已解决话题"
         description: "自上次回复起，经过此时长后自动关闭已解决的话题。设置为 0 可禁用此功能。"
+      enable_shared_issues:
+        label: "启用共享问题"
+        description: "在此类别中，为未解决的主题添加一个按钮，成员可以使用该按钮表明他们遇到了同样的问题，并选择接收有关解决方案的通知。"
+      shared_issue_label:
+        label: "共享问题标签"
+        description: "共享问题按钮上显示的标签。"
   site_settings:
     solved_enabled: "启用“已解决”插件，允许用户为话题选择解决方案"
+    solved_allow_multiple_solutions: "允许每个主题接受多种解决方案。"
     allow_solved_on_all_topics: "允许用户选择所有话题的解决方案（未选中时，可以按类别或标签启用解决方案）"
     allow_solved_in_groups: "允许在这些群组的群组消息中标记解决方案。"
     accept_all_solutions_trust_level: "在任何话题中接受解决方案所需的最小信任级别（即使不是 OP）"
@@ -41,7 +48,8 @@ zh_CN:
     solved_add_schema_markup: "将 QAPage 架构标记添加到 HTML。"
     enable_solved_tags: "允许用户选择解决方案的标签。"
     prioritize_solved_topics_in_search: "在搜索结果中优先显示已解决的话题。"
-    enable_support_category_type_setup: "在创建类别时启用“支持”类别类型选项。注意：必须先启用 'enable simplified category creation' 功能，此设置才会生效。"
+    enable_support_category_type_setup: "在创建类别设置期间启用“支持”类别类型选项。"
+    enable_solved_shared_issues: "在支持类别中未解决的主题中添加“我也是”按钮，让成员表明他们遇到了同样的问题，并选择接收有关该主题解决方案的通知。"
     show_who_marked_solved: "显示谁将该话题标记为已解决。它会在该话题的第一个帖子以及工具提示中的回答帖子中显示。"
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"

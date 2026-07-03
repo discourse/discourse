@@ -345,7 +345,6 @@ da:
       models:
         invitee:
           status:
-            unknown: "Ikke interesseret"
             going: "Deltager"
             interested: "Interesseret"
         event:
@@ -363,6 +362,8 @@ da:
               description: "En privat begivenhed kan kun tilmeldes af inviterede brugere."
       composer:
         name_placeholder: "Navn på begivenhed"
+        event_title_placeholder: "Navn på begivenhed"
+        create_event_button: "Opret begivenhed"
         reminder:
           units:
             minutes:
@@ -374,6 +375,9 @@ da:
             days:
               one: "dag"
               other: "dage"
+      composer_actions:
+        create_event:
+          label: "Opret begivenhed"
       builder_modal:
         custom_fields:
           label: "Brugerdefinerede Felter"
@@ -407,11 +411,6 @@ da:
             last: "sidste"
         attendance:
           none: "Ingen"
-        url:
-          label: "URL"
-          placeholder: "Valgfri"
-        location:
-          label: "Sted"
         description:
           label: "Beskrivelse"
         name:
@@ -425,3 +424,4 @@ da:
       invite_user_or_group:
         title: "Underret bruger(e) eller gruppe(r)"
         invite: "Send"
+        success: "Invitation sendt"

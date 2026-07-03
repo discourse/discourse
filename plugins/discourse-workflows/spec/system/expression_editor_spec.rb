@@ -13,7 +13,7 @@ RSpec.describe "Workflow Expression Editor" do
     editor_page.click_empty_state_add_node
     editor_page.select_node_type("trigger:topic_created")
     editor_page.click_add_node
-    editor_page.select_node_type("action:create_post")
+    editor_page.select_node_type("action:post", operation: "create")
     editor_page.double_click_node(1)
   end
 

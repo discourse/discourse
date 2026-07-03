@@ -202,6 +202,10 @@ sv:
     scriptables:
       send_chat_message:
         title: Skicka chattmeddelande
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Godkänn"
+      default_deny_label: "Neka"
   reviewable_score_types:
     needs_review:
       title: "Behöver granskning"

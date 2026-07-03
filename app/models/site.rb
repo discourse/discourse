@@ -53,6 +53,47 @@ class Site
     UserField.includes(:user_field_options).order(:position).all
   end
 
+  def access_control
+    self.class.access_control
+  end
+
+  def self.access_control
+    target_classes =
+      (
+        AclTarget.target_classes +
+          DiscoursePluginRegistry.acl_target_classes.filter_map do |target_class|
+            if target_class.is_a?(String)
+              target_class = target_class.safe_constantize
+              if target_class.nil?
+                Rails.logger.warn(
+                  "[ACL] Unknown target class in plugin registry for site (#{target_class}) maybe the plugin is gone, the class has been renamed, or the class does not include AclTarget",
+                )
+              end
+              target_class
+            else
+              target_class
+            end
+          end
+      ).compact.uniq
+
+    {
+      mandatory_acl:
+        target_classes.each_with_object({}) do |target_class, mandatory_acl|
+          next if !target_class.respond_to?(:has_mandatory_acl?)
+          next if !target_class.has_mandatory_acl?
+
+          mandatory_acl[target_class.acl_target_key] = target_class.mandatory_acl
+        end,
+      banned_acl:
+        target_classes.each_with_object({}) do |target_class, banned_acl|
+          next if !target_class.respond_to?(:has_banned_acl?)
+          next if !target_class.has_banned_acl?
+
+          banned_acl[target_class.acl_target_key] = target_class.banned_acl
+        end,
+    }
+  end
+
   def self.categories_cache_key
     "site_categories_#{I18n.locale}_#{Discourse.git_version}"
   end
@@ -176,9 +217,12 @@ class Site
 
   def groups
     query =
-      Group.visible_groups(@guardian.user, "groups.name ASC", include_everyone: true).includes(
-        :flair_upload,
-      )
+      Group.visible_groups(
+        @guardian.user,
+        "groups.name ASC",
+        include_everyone: !SiteSetting.granular_anonymous_and_logged_in_groups_permissions,
+        include_pseudogroups: SiteSetting.granular_anonymous_and_logged_in_groups_permissions,
+      ).includes(:flair_upload)
     query = DiscoursePluginRegistry.apply_modifier(:site_groups_query, query, self)
 
     query
@@ -219,6 +263,7 @@ class Site
           full_name_visible_in_signup:,
           tos_url: Discourse.tos_url,
           privacy_policy_url: Discourse.privacy_policy_url,
+          upcoming_changes_with_css: UpcomingChanges.including_css,
         }.to_json
       )
     end

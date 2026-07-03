@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ThemeCardPreview from "discourse/components/theme-card-preview";
 import { ajax } from "discourse/lib/ajax";
@@ -13,42 +13,35 @@ import {
   HORIZON_THEME_ID,
   setLocalTheme,
 } from "discourse/lib/theme-selector";
+import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DModal from "discourse/ui-kit/d-modal";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
-import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 const ALLOWED_THEME_IDS = [FOUNDATION_THEME_ID, HORIZON_THEME_ID];
 
 const ThemeCard = <template>
-  <div class="theme-picker-modal__card {{if @theme.default '--active'}}">
-    {{#if @theme.default}}
+  <div
+    class="theme-picker-modal__card {{if @isSelected '--selected'}}"
+    {{on "click" (fn @onSelect @theme)}}
+    role="button"
+  >
+    {{#if @isSelected}}
       <span class="theme-picker-modal__enabled-badge">
         {{dIcon "check"}}
         {{i18n "admin_onboarding_banner.select_theme.enabled"}}
       </span>
     {{/if}}
-    <ThemeCardPreview @theme={{@theme}}>
-      <:footer>
-        <DButton
-          @action={{fn @onSelect @theme}}
-          @translatedLabel={{i18n
-            "admin_onboarding_banner.select_theme.use_theme"
-          }}
-          class="btn-primary"
-        />
-      </:footer>
-    </ThemeCardPreview>
+    <ThemeCardPreview @theme={{@theme}} />
   </div>
 </template>;
 
 export default class ThemePickerModal extends Component {
-  @service toasts;
-
   @tracked themes = [];
   @tracked loading = true;
   @tracked saving = false;
+  @tracked selectedTheme = null;
 
   constructor() {
     super(...arguments);
@@ -61,6 +54,7 @@ export default class ThemePickerModal extends Component {
       this.themes = result.themes.filter((theme) =>
         ALLOWED_THEME_IDS.includes(theme.id)
       );
+      this.selectedTheme = this.themes.find((t) => t.default) || null;
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -68,56 +62,82 @@ export default class ThemePickerModal extends Component {
     }
   }
 
+  get applyDisabled() {
+    return !this.selectedTheme || this.saving;
+  }
+
   @action
-  async selectTheme(theme) {
-    if (this.saving) {
+  selectTheme(theme) {
+    this.selectedTheme = theme;
+  }
+
+  @action
+  async applyTheme() {
+    if (this.applyDisabled) {
+      return;
+    }
+
+    if (this.selectedTheme.default) {
+      await this.args.model?.onThemeSelected?.();
+      this.args.closeModal();
       return;
     }
 
     this.saving = true;
 
     try {
-      await ajax(`/admin/themes/${theme.id}.json`, {
+      await ajax(`/admin/themes/${this.selectedTheme.id}.json`, {
         type: "PUT",
         data: { theme: { default: true } },
       });
 
       setLocalTheme([], 0);
 
-      this.toasts.success({
-        data: {
-          message: i18n("admin_onboarding_banner.select_theme.theme_set", {
-            theme: theme.name,
-          }),
-        },
-      });
-
       await this.args.model?.onThemeSelected?.();
-      this.args.closeModal();
       window.location.reload();
     } catch (error) {
-      popupAjaxError(error);
-    } finally {
       this.saving = false;
+      popupAjaxError(error);
     }
   }
 
   <template>
     <DModal
-      class="theme-picker-modal"
+      class="theme-picker-modal --large"
       @title={{i18n "admin_onboarding_banner.select_theme.modal_title"}}
       @closeModal={{@closeModal}}
     >
       <:body>
         {{#if this.loading}}
           <div class="theme-picker-modal__loading">
-            {{dLoadingSpinner}}
+            <div class="spinner"></div>
           </div>
         {{else}}
           <div class="theme-picker-modal__themes">
             {{#each this.themes as |theme|}}
-              <ThemeCard @theme={{theme}} @onSelect={{this.selectTheme}} />
+              <ThemeCard
+                @theme={{theme}}
+                @isSelected={{if
+                  this.selectedTheme
+                  (eq this.selectedTheme.id theme.id)
+                  false
+                }}
+                @onSelect={{this.selectTheme}}
+              />
             {{/each}}
+          </div>
+          <div class="theme-picker-modal__footer">
+            <DButton
+              @action={{this.applyTheme}}
+              @translatedLabel={{if
+                this.saving
+                (i18n "admin_onboarding_banner.select_theme.applying_theme")
+                (i18n "admin_onboarding_banner.select_theme.use_theme")
+              }}
+              @disabled={{this.applyDisabled}}
+              @isLoading={{this.saving}}
+              class="btn-primary"
+            />
           </div>
           <PluginOutlet @name="theme-picker-modal-below-themes">
             <p class="theme-picker-modal__browse-all">

@@ -538,6 +538,45 @@ describe DiscourseDataExplorer::QueryController do
       end
     end
 
+    describe "#preview" do
+      it "runs unsaved SQL and returns the result" do
+        post "/admin/plugins/discourse-data-explorer/queries/preview.json",
+             params: {
+               sql: "SELECT 23 AS my_value",
+             }
+
+        expect(response.status).to eq(200)
+        expect(response_json["success"]).to eq(true)
+        expect(response_json["columns"]).to eq(["my_value"])
+        expect(response_json["rows"]).to eq([[23]])
+      end
+
+      it "does not persist a query" do
+        expect {
+          post "/admin/plugins/discourse-data-explorer/queries/preview.json",
+               params: {
+                 sql: "SELECT 23 AS my_value",
+               }
+        }.not_to change { DiscourseDataExplorer::Query.count }
+      end
+
+      it "returns a 422 with errors for invalid SQL" do
+        post "/admin/plugins/discourse-data-explorer/queries/preview.json",
+             params: {
+               sql: "SELECT * FROM table_that_does_not_exist",
+             }
+
+        expect(response.status).to eq(422)
+        expect(response_json["success"]).to eq(false)
+        expect(response_json["errors"]).not_to be_empty
+      end
+
+      it "requires the sql parameter" do
+        post "/admin/plugins/discourse-data-explorer/queries/preview.json"
+        expect(response.status).to eq(400)
+      end
+    end
+
     describe "result caching" do
       def run_query(id, params = {})
         params = Hash[params.map { |a| [a[0], a[1].to_s] }]
@@ -730,6 +769,14 @@ describe DiscourseDataExplorer::QueryController do
     it "cannot access admin endpoints" do
       query = make_query("SELECT 1 as value")
       post "/admin/plugins/discourse-data-explorer/queries/#{query.id}/run.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "cannot preview unsaved SQL" do
+      post "/admin/plugins/discourse-data-explorer/queries/preview.json",
+           params: {
+             sql: "SELECT 1 as value",
+           }
       expect(response.status).to eq(403)
     end
 
@@ -934,6 +981,47 @@ describe DiscourseDataExplorer::QueryController do
         get "/data-explorer/queries/#{query.id}/run.json"
         expect(response.status).to eq(404)
       end
+    end
+  end
+
+  describe "#group_reports_show SQL visibility" do
+    fab!(:user)
+    fab!(:moderator)
+    fab!(:admin)
+    fab!(:group) { Fabricate(:group, users: [user]) }
+
+    it "omits SQL from group report details for group members" do
+      sign_in(user)
+      query = make_query("SELECT 1977 as leaked_value", {}, [group.id.to_s])
+
+      get "/g/#{group.name}/reports/#{query.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response_json["query"]).not_to have_key("sql")
+      expect(response.body).not_to include(query.sql)
+    end
+
+    it "omits SQL from group report details for moderators" do
+      group.add(moderator)
+      sign_in(moderator)
+      query = make_query("SELECT 1984 as leaked_value", {}, [group.id.to_s])
+
+      get "/g/#{group.name}/reports/#{query.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response_json["query"]).not_to have_key("sql")
+      expect(response.body).not_to include(query.sql)
+    end
+
+    it "includes SQL in group report details for admins" do
+      sign_in(admin)
+      query = make_query("SELECT 1978 as admin_visible_value", {}, [group.id.to_s])
+
+      get "/g/#{group.name}/reports/#{query.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response_json["query"]["sql"]).to eq(query.sql)
+      expect(response.body).to include(query.sql)
     end
   end
 

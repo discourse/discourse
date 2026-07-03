@@ -40,7 +40,6 @@ he:
     map_events_to_color: "הקצאת צבע לכל תגית או קטגוריה."
     map_events_title: "דריסת ‚אירועים’ בכותרת סרגל הצד ה‚אירועים הקרובים’ לפי קטגוריה."
     calendar_enabled: "נא להפעיל את התוסף discourse-calendar. כך תתווסף תמיכה בתגית ‎[calendar][/calendar] בפוסט ראשון בנושא."
-    discourse_post_event_enabled: "הפעלת יכולות האירועים. לתשומת ליבך: דורש גם את הפעלת `לוח שנה פעיל`."
     displayed_invitees_limit: "מגביל את מספר המוזמנים שמוצגים לאירוע."
     display_post_event_date_on_topic_title: "מציג את תאריך האירוע אחרי כותרת הנושא."
     use_local_event_date: "להשתמש בתאריך המקומי אחרי כותרת הנושא במקום בזמן יחסי."

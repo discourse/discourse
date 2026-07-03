@@ -102,7 +102,7 @@ RSpec.describe "User chat preferences" do
   describe "chat sound" do
     include_examples "select and save" do
       let(:field_name) { "chat_sound" }
-      let(:val) { "bell" }
+      let(:val) { "classic" }
     end
   end
 

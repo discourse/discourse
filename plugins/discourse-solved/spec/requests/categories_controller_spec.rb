@@ -4,9 +4,25 @@ RSpec.describe CategoriesController do
   fab!(:category)
   fab!(:admin)
 
-  before do
-    sign_in(admin)
-    SiteSetting.enable_support_category_type_setup = true
+  before { sign_in(admin) }
+
+  describe "#create" do
+    it "can enable the support type alongside another type while creating a category" do
+      post "/categories.json",
+           params: {
+             name: "Multi Type",
+             category_type: "discussion",
+             category_types: %w[discussion support],
+           }
+
+      expect(response.status).to eq(200)
+      cat_json = response.parsed_body["category"]
+      expect(cat_json["category_types"].keys).to include("support", "discussion")
+
+      category = Category.find(cat_json["id"])
+      expect(category.category_types.keys).to include(:support, :discussion)
+      expect(category.enable_accepted_answers?).to eq(true)
+    end
   end
 
   describe "#update" do

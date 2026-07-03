@@ -43,7 +43,6 @@ de:
         description_hint: "Beschreibe in einfachen Worten, was du möchtest. Wir erstellen dann die SQL-Anweisung, den Namen und die Beschreibung für dich."
         description_placeholder: "z. B. Zeig mir die Registrierungen im Zeitverlauf"
         generate: "Erzeugen"
-        regenerate: "Neu generieren"
         generating: "Abfrage wird mit KI generiert …"
         generation_timeout: "Eine Zeitüberschreitung ist bei der Generierung der KI-Abfrage aufgetreten. Du kannst die SQL-Abfrage manuell eingeben."
         generation_error: "Beim Erstellen der Abfrage ist etwas schiefgelaufen."
@@ -79,6 +78,10 @@ de:
       delete: "Löschen"
       recover: "Anfrage wiederherstellen"
       sql_label: "SQL"
+      chart:
+        form:
+          label: "Diagrammtyp"
+          bar: "Balken"
       others_dirty: "Eine Anfrage hat nicht gespeicherte Änderungen, die verloren gehen, wenn du woanders hin navigierst."
       run_time: "Anfrage in %{value} ms abgeschlossen."
       cached_result_notice: "Zeigt zwischengespeicherte Ergebnisse von %{relative_time}."
@@ -115,6 +118,17 @@ de:
           descriptions:
             data_explorer:
               run_queries: "Daten-Explorer-Anfragen ausführen. Schränke den API-Schlüssel auf eine Reihe von Anfragen ein, indem du Anfrage-IDs angibst."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Daten-Explorer"
+      sql:
+        queries: "Anfragen"
+        query_id: "Anfrage"
+        add_param: "Parameter hinzufügen"
+        param_value: "Wert"
+        output:
+          results: "Ergebnisse"
+          no_results: "Keine Ergebnisse"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

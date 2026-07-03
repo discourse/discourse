@@ -7,7 +7,7 @@ import AiCancelStreamingButton from "../components/post-menu/ai-cancel-streaming
 import AiDebugButton from "../components/post-menu/ai-debug-button";
 import AiRetryStreamingButton from "../components/post-menu/ai-retry-streaming-button";
 import AiShareButton from "../components/post-menu/ai-share-button";
-import { isGPTBot, showShareConversationModal } from "../lib/ai-bot-helper";
+import { isGPTBot } from "../lib/ai-bot-helper";
 import {
   cleanupStreamingData,
   streamPostText,
@@ -264,26 +264,20 @@ function initializeShareButton(api) {
   );
 }
 
-function initializeShareTopicButton(api) {
-  const modal = api.container.lookup("service:modal");
-  const currentUser = api.container.lookup("service:current-user");
+function initializeFooterButtonsVisibility(api) {
+  const siteSettings = api.container.lookup("service:site-settings");
 
-  api.registerTopicFooterButton({
-    id: "share-ai-conversation",
-    icon: "share-nodes",
-    label: "discourse_ai.ai_bot.share_ai_conversation.name",
-    title: "discourse_ai.ai_bot.share_ai_conversation.title",
-    action() {
-      showShareConversationModal(modal, this.topic.id);
-    },
-    classNames: ["share-ai-conversation-button"],
-    dependentKeys: ["topic.ai_agent_name"],
-    displayed() {
-      return (
-        currentUser?.can_share_ai_bot_conversations && this.topic.ai_agent_name
-      );
-    },
-  });
+  api.registerValueTransformer(
+    "topic-show-footer-buttons",
+    ({ value, context: { topic } }) => {
+      // On AI bot PMs the docked composer replaces the topic footer, so its
+      // buttons (reply, admin wrench, etc.) are redundant — skip rendering it.
+      if (siteSettings.ai_bot_enable_docked_composer && topic?.is_bot_pm) {
+        return false;
+      }
+      return value;
+    }
+  );
 }
 
 export default {
@@ -301,7 +295,7 @@ export default {
         initializeAgentDecorator(api);
         initializeDebugButton(api, container);
         initializeShareButton(api, container);
-        initializeShareTopicButton(api, container);
+        initializeFooterButtonsVisibility(api);
         initializeRetryButton(api);
       });
     }

@@ -40,9 +40,6 @@ module DiscourseWorkflows
       upstream_connections = upstream_connections_for(node_id)
       primary_upstream_connection = upstream_connections.first
       current_input = current_node_input(node_runs, primary_upstream_connection)
-      if upstream_connections.present?
-        context["__input_sources"] = input_sources_for_connections(upstream_connections)
-      end
 
       workflow.nodes.each do |node|
         next if node["name"].blank?
@@ -60,13 +57,6 @@ module DiscourseWorkflows
         end
 
         context[node["name"]] = items
-
-        if current_input.blank? &&
-             primary_upstream_connection&.source_node_id.to_s == node["id"].to_s
-          context["$json"] = first_json
-          context["__input_item"] = items.first || { "json" => {} }
-          context["__input_items"] = items
-        end
       end
 
       overlay_current_input(context, current_input) if current_input
@@ -87,13 +77,34 @@ module DiscourseWorkflows
       return if current_node.nil? || current_node["name"].blank?
 
       run = Array(node_runs[current_node["name"]]).last
-      return unless run
+      return input_from_connected_source(node_runs, primary_upstream_connection) unless run
 
       input_index = (primary_upstream_connection&.target_input_index || 0).to_i
+      return unless input_source_matches_connection?(run, input_index, primary_upstream_connection)
+
       items = run.dig("inputs", input_index)
       return unless items
 
       { "items" => Array(items), "input_sources" => Array(run["input_sources"]) }
+    end
+
+    def input_from_connected_source(node_runs, connection)
+      return unless connection
+
+      source_node = workflow_snapshot.source_node(connection)
+      return if source_node.blank? || source_node.name.blank?
+
+      run = Array(node_runs[source_node.name]).last
+      return unless run
+
+      output_index = connection.source_output_index.to_i
+      items = run.dig("outputs", output_index)
+      return unless items
+
+      {
+        "items" => Array(items),
+        "input_sources" => [{ "node_name" => source_node.name, "output_index" => output_index }],
+      }
     end
 
     def overlay_current_input(context, current_input)
@@ -115,15 +126,6 @@ module DiscourseWorkflows
       workflow_snapshot.connections_to(target_node)
     end
 
-    def input_sources_for_connections(connections)
-      connections.map do |connection|
-        {
-          "node_name" => workflow_snapshot.source_node(connection)&.name,
-          "output_index" => connection.source_output_index.to_i,
-        }
-      end
-    end
-
     def workflow_snapshot
       @workflow_snapshot ||=
         DiscourseWorkflows::WorkflowSnapshot.new(
@@ -135,16 +137,55 @@ module DiscourseWorkflows
 
     def node_runs_for_expression(run_data)
       run_data.each_with_object({}) do |(node_name, runs), result|
-        result[node_name] = Array(runs).filter_map do |run|
-          next unless run["status"] == "success"
+        node = workflow_node_by_name[node_name.to_s]
+        next unless node
 
-          {
-            "inputs" => ports_to_item_groups(run["inputs"]),
-            "outputs" => ports_to_item_groups(run["outputs"]),
-            "input_sources" => input_sources(run["inputs"]),
-          }
-        end
+        matching_runs =
+          Array(runs).filter_map do |run|
+            next unless run["status"] == "success"
+            next unless run_matches_node?(run, node)
+
+            {
+              "node_id" => run["node_id"],
+              "node_type" => run["node_type"],
+              "inputs" => ports_to_item_groups(run["inputs"]),
+              "outputs" => ports_to_item_groups(run["outputs"]),
+              "input_sources" => input_sources(run["inputs"]),
+            }
+          end
+        result[node_name] = matching_runs if matching_runs.present?
       end
+    end
+
+    def workflow_node_by_name
+      @workflow_node_by_name ||=
+        workflow
+          .nodes
+          .each_with_object({}) do |node, by_name|
+            name = node["name"].to_s
+            next if name.blank?
+
+            by_name[name] = by_name.key?(name) ? nil : node
+          end
+          .compact
+    end
+
+    def run_matches_node?(run, node)
+      return false if run["node_id"].present? && run["node_id"].to_s != node["id"].to_s
+      return false if run["node_type"].present? && run["node_type"].to_s != node["type"].to_s
+
+      true
+    end
+
+    def input_source_matches_connection?(run, input_index, connection)
+      return false unless connection
+
+      source = Array(run["input_sources"])[input_index]
+      source_node = workflow_snapshot.source_node(connection)
+      return false if source.blank? || source_node.blank?
+
+      source["node_name"].to_s == source_node.name.to_s &&
+        source["output_index"].to_i == connection.source_output_index.to_i
     end
 
     def ports_to_item_groups(ports)

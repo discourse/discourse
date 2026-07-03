@@ -21,11 +21,15 @@ DiscourseWorkflows::Engine.routes.draw do
             execution_id: /\d+/,
           }
       get "/workflows/:id/settings" => "admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/versions" => "admin#index", :constraints => { id: /\d+/ }
     end
 
     scope format: :json do
       get "/workflows" => "workflows#index"
       post "/workflows" => "workflows#create"
+      post "/workflows/ai/author" => "ai_authoring#create"
+      post "/workflows/:workflow_id/ai/author" => "ai_authoring#create"
+      post "/workflows/:workflow_id/ai/apply" => "ai_authoring#apply"
       get "/workflows/:id" => "workflows#show"
       put "/workflows/:id" => "workflows#update"
       post "/workflows/:id/discard-draft" => "workflows#discard_draft"
@@ -36,12 +40,18 @@ DiscourseWorkflows::Engine.routes.draw do
                "webhook_test_listeners#destroy"
       delete "/workflows/:id" => "workflows#destroy"
       get "/node-types" => "node_types#index"
+      get "/filter-options/posts" => "filter_options#posts"
       post "/dynamic-node-parameters/options" => "dynamic_node_parameters#options"
       get "/templates" => "templates#index"
       get "/templates/:id" => "templates#show"
       post "/executions" => "executions#create"
       get "/executions" => "executions#index"
       get "/workflows/:workflow_id/executions" => "executions#index"
+      get "/workflows/:workflow_id/versions" => "workflow_versions#index"
+      post "/workflows/:workflow_id/versions/:version_id/restore" => "workflow_versions#restore",
+           :constraints => {
+             version_id: /[0-9a-f-]{36}/,
+           }
       delete "/executions" => "executions#destroy"
       get "/executions/:id" => "executions#show"
       get "/stats" => "stats#index"
@@ -74,6 +84,7 @@ DiscourseWorkflows::Engine.routes.draw do
 
   scope "/discourse-workflows", defaults: { format: :json } do
     post "/trigger-topic-admin-button" => "topic_admin_button#create"
+    post "/modal-responses" => "modal_responses#create"
   end
 
   scope "/workflows", defaults: { format: :json } do

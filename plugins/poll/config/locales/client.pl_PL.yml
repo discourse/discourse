@@ -10,8 +10,15 @@ pl_PL:
       site_settings:
         categories:
           poll: "Ankieta Discourse"
+      logs:
+        staff_actions:
+          actions:
+            poll_closed: "Głosowanie zakończone"
+            poll_opened: "Głosowanie rozpoczęte"
   js:
     poll:
+      title: "Ankieta"
+      closed_by: "Zamknięto przez %{username}"
       dynamic:
         enabled_hint: "Można dodawać i usuwać opcje."
       voters:
@@ -175,5 +182,3 @@ pl_PL:
           add: Dodaj opcję
         automatic_close:
           label: Automatycznie zamknij ankietę
-        show_advanced: "Pokaż opcje zaawansowane"
-        hide_advanced: "Ukryj opcje zaawansowane"

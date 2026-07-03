@@ -1,5 +1,8 @@
 import { trustHTML } from "@ember/template";
+import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
 
 <template>
-  <div class="desc">{{trustHTML @description}}</div>
+  <div class="desc" {{linkifySettingLinks @description}}>{{trustHTML
+      @description
+    }}</div>
 </template>

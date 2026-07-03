@@ -178,11 +178,12 @@ module(
         .dom("span.poster-icon.test-smile > a")
         .exists()
         .hasAttribute("href", "/u/eviltrout");
+
       assert
-        .dom("span.poster-icon.test-smile > a > .emoji[alt='heart']")
+        .dom("span.poster-icon.test-smile > a > .emoji[title='test emojis']")
         .exists();
       assert
-        .dom("span.poster-icon.test-smile > a > .emoji[alt='smile']")
+        .dom("span.poster-icon.test-smile > a > .emoji[title='test emojis']")
         .exists();
     });
 

@@ -189,8 +189,6 @@ fa_IR:
         title: "صدای آگاه‌سازی گفتگوی دسکتاپ"
       sounds:
         none: "هیچ کدام"
-        bell: "زنگ"
-        ding: "دینگ"
       title: "گفتگو"
       title_capitalized: "گفتگو"
       upload: "پیوست کردن یک پرونده"
@@ -260,7 +258,7 @@ fa_IR:
           label: "انتخاب دسته‌بندی"
           none: "یکی را انتخاب کنید..."
         create: "ایجاد کانال"
-        description: "توضیحات «اختیاری»"
+        description: "توضیح"
         name: "نام کانال"
         title: "کانال جدید"
         type: "نوع"
@@ -435,3 +433,12 @@ fa_IR:
       panels:
         chat:
           label: "گفتگو"
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "کانال"
+      send_chat_message:
+        channel_id: "کانال"
+        message: "پیام"
+      chat_approval:
+        message: "پیام"
+        channel_id: "کانال"

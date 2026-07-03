@@ -4,12 +4,12 @@ The schema DSL defines the structure of a database used during migrations. It ma
 tables to a schema, letting you control which columns to include, rename columns, override types,
 add synthetic columns, and define enums.
 
-Config files live in `migrations/config/schema/<database>/` (e.g. `intermediate_db`).
+Config files live in `migrations/tooling/config/schema/<database>/` (e.g. `intermediate_db`).
 
 ## File layout
 
 ```
-migrations/config/schema/intermediate_db/
+migrations/tooling/config/schema/intermediate_db/
   config.rb          # Output paths and namespaces
   conventions.rb     # Global column conventions (renames, type overrides)
   ignored.rb         # Tables and plugins to exclude
@@ -27,14 +27,28 @@ migrations/config/schema/intermediate_db/
 | Command                                | Description                                                |
 |----------------------------------------|------------------------------------------------------------|
 | `schema add TABLE`                     | Create a config file for a new table                       |
-| `schema validate`                      | Validate config against the database                       |
 | `schema diff`                          | Show differences between config and database               |
 | `schema generate`                      | Generate SQL schema, Ruby models, and enum files           |
 | `schema list`                          | List configured tables and enums, plus ignored table count |
 | `schema ignore TABLE [--reason "..."]` | Add a table to `ignored.rb`                                |
+| `schema unignore TABLE`                | Remove a table from `ignored.rb`                           |
 | `schema refresh-plugins`               | Regenerate the plugin manifest                             |
 
 All commands accept `--db NAME` (default: `intermediate_db`).
+
+To check everything at once, use `disco check`: it verifies that the database
+has no pending migrations, that the config is valid and in sync with the
+database, that the committed generated files match what generation produces
+(without touching the working tree), that the reference converter covers every
+column, and that no converter writes columns or models that don't exist in the
+schema. It
+exits non-zero on the first failing check — CI runs exactly this command, so a
+clean local run means a green CI check. `disco check schema` and
+`disco check coverage` run the respective subsets.
+
+To see which columns a single converter writes (with per-model `N/M` coverage),
+use `disco check coverage --inspect <converter>`. This is a read-only report for
+debugging coverage gaps; it never changes the exit status.
 
 ## Table configuration
 
@@ -367,10 +381,10 @@ Migrations::Database::Schema.configure do
   output do
     schema_file "db/intermediate_db_schema/100-base-schema.sql"
 
-    models_directory "lib/database/intermediate_db"
+    models_directory "lib/migrations/database/intermediate_db"
     models_namespace "Migrations::Database::IntermediateDB"
 
-    enums_directory "lib/database/intermediate_db/enums"
+    enums_directory "lib/migrations/database/intermediate_db/enums"
     enums_namespace "Migrations::Database::IntermediateDB::Enums"
   end
 end
@@ -380,6 +394,6 @@ end
 
 1. **Add** a new table: `schema add users`
 2. **Edit** the generated file in `tables/users.rb`
-3. **Validate** your config: `schema validate`
-4. **Check differences**: `schema diff`
-5. **Generate** the schema, models, and enums: `schema generate`
+3. **Check differences**: `schema diff`
+4. **Generate** the schema, models, and enums: `schema generate`
+5. **Verify** everything is consistent and committed: `disco check`

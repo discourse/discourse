@@ -32,10 +32,13 @@ el:
     overall_sentiment:
       yaxis: "Ημερομηνία"
   discourse_ai:
+    unknown_model: "Άγνωστο μοντέλο AI"
     tools:
       presets:
         image_generation_custom:
           name: "Προσαρμοσμένο"
+      secret_runtime:
+        unknown_error: "Δεν είναι δυνατή η επίλυση των ζητούμενων διαπιστευτηρίων."
     spam_detection:
       flag_reason: "Αναφέρθηκε ως ανεπιθύμητο από <a href='%{url}'>Discourse AI</a>"
     ai_bot:
@@ -45,14 +48,19 @@ el:
           description: "Ενισχύει τη λειτουργία μετάφρασης μεταφράζοντας αναρτήσεις που περιέχουν Discourse Markdown"
       tool_summary:
         flag_post: "Αναφορά ανάρτησης"
+        unlist_topic: "Κατάργηση καταχώρισης θέματος"
         edit_post: "Επεξεργασία ανάρτησης"
+        assign: "Ανάθεση θέματος"
         search: "Αναζήτηση"
         time: "Ώρα"
         summarize: "Συνοψίστε"
       tool_help:
+        unlist_topic: "Καταχώριση ή κατάργηση καταχώρισης θέματος"
         delete_topic: "Διαγραφή θέματος"
       tool_description:
         web_browser: "Γίνεται ανάγνωση <a href='%{url}'>%{url}</a>"
+        unlist_topic: "Κατάργηση καταχώρισης θέματος %{topic_id} (μη καταχωρισμένο: %{unlisted})"
+        time: "Η ώρα στο %{timezone} είναι %{time}"
       discoveries:
         continue_conversation:
           raw: "Στην αναζήτησή μου για %{query}, μου δείξατε τις ακόλουθες πληροφορίες:\n\n%{context}\n\nΑς συνεχίσουμε τη συζήτηση."
@@ -62,6 +70,9 @@ el:
       unlist_topic:
         errors:
           not_found: "Το θέμα δε βρέθηκε."
+          not_allowed: "Δεν επιτρέπεται να καταχωρήσετε ή να καταργήσετε την καταχώριση αυτού του θέματος."
+          no_reason: "Απαιτείται λόγος για να καταχωρηθεί ή να καταργηθεί η καταχώριση ενός θέματος."
+        success: "Το θέμα ενημερώθηκε με επιτυχία."
       delete_topic:
         errors:
           not_found: "Το θέμα δε βρέθηκε."
@@ -84,6 +95,10 @@ el:
       assign:
         errors:
           not_found: "Το θέμα δε βρέθηκε."
+      mark_as_solved:
+        errors:
+          action_failed: "Αποτυχία ενημέρωσης της κατάστασης επίλυσης."
+        success: "Η κατάσταση επίλυσης ενημερώθηκε με επιτυχία."
     reviewables:
       ai_tool_action:
         approve:

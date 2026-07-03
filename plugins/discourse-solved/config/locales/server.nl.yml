@@ -20,8 +20,6 @@ nl:
         description: "Sluit een topic automatisch na zoveel uur als het gemarkeerd is als opgelost. Stel in op 0 om uit te schakelen."
       notify_on_staff_accept_solved:
         label: "Topiceigenaar informeren als medewerker een oplossing markeert"
-      empty_box_on_unsolved:
-        label: "Een leeg selectievakje weergeven naast onopgeloste topics in de topiclijst"
       solved_topics_auto_close_duration:
         label: "Automatisch opgeloste topics sluiten"
         description: "Sluit opgeloste topics automatisch na deze tijdsduur vanaf het laatste antwoord. Stel in op 0 om uit te schakelen."
@@ -41,7 +39,6 @@ nl:
     solved_add_schema_markup: "Voeg QAPage-schemaopmaak toe aan HTML."
     enable_solved_tags: "Tags waarbij gebruikers oplossingen kunnen selecteren."
     prioritize_solved_topics_in_search: "Geef prioriteit aan opgeloste topics in zoekresultaten."
-    enable_support_category_type_setup: "Schakelt de optie Type Ondersteuningscategorie in tijdens het instellen van categorieën. 'Vereenvoudigd categorieën maken inschakelen' moet zijn ingeschakeld om dit effect te laten hebben."
     show_who_marked_solved: "Geef weer wie het topic als opgelost heeft gemarkeerd. Dit wordt aangegeven in het eerste bericht van het topic en in het antwoordbericht in een tooltip."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"

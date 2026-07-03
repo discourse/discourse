@@ -9,6 +9,9 @@ el:
     data_explorer:
       admin_dashboard_card:
         no_results: "Δεν υπάρχουν αποτελέσματα"
+      manage_reports_hint:
+        title: "Δημιουργία ερωτήματος στο Data Explorer"
+        description: "Γράψτε ένα προσαρμοσμένο ερώτημα SQL για να εμφανίσετε οτιδήποτε συγκεκριμένο για την κοινότητά σας."
     explorer:
       default_query: "Προεπιλογή"
       mode:
@@ -19,6 +22,7 @@ el:
       create: "Δημιουργία"
       description_placeholder: "Εισάγετε εδώ μια περιγραφή"
       ai:
+        regenerate_placeholder: "π.χ. Ενημέρωσε το ερώτημα ώστε να περιορίζεται στα 50 αποτελέσματα"
         generate: "Δημιουργία"
         optional: "προαιρετικό"
       import:
@@ -40,6 +44,12 @@ el:
       run_options: "Περισσότερες επιλογές εκτέλεσης"
       view:
         label: "Προβολή αποτελεσμάτων"
+      chart:
+        form:
+          label: "Τύπος γραφήματος"
+          bar: "Μπάρες"
+        tooltip:
+          total: "Σύνολο: %{count}"
       chart_empty:
         view_as_table: "Προβολή ως πίνακα"
       export_as:
@@ -58,3 +68,24 @@ el:
       search_placeholder: "Αναζήτηση..."
     group:
       reports: "Αναφορές"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Data Explorer"
+      sql:
+        operation: "Λειτουργία"
+        operation_description: "Πώς να εκτελέσετε το ερώτημα"
+        queries: "Ερωτήματα"
+        raw: "Ακατέργαστη SQL"
+        query_id: "Ερώτημα"
+        query_id_description: "Επιλέξτε ένα αποθηκευμένο ερώτημα για εκτέλεση"
+        query_params: "Παράμετροι ερωτήματος"
+        query_params_description: "Συμπληρώστε τις παραμέτρους για το επιλεγμένο ερώτημα"
+        query: "Ερώτημα SQL"
+        params: "Παράμετροι ερωτήματος"
+        params_description: "Οι παράμετροι μπορούν να χρησιμοποιηθούν ως :my_param στο ερώτημα SQL."
+        add_param: "Προσθήκη παραμέτρου"
+        param_name: "Παράμ"
+        param_value: "Τιμή"
+        output:
+          results: "Αποτελέσματα"
+          no_results: "Δεν υπάρχουν αποτελέσματα"

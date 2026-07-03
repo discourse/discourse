@@ -402,7 +402,6 @@ he:
           no_users: "לא נמצאו משתמשים"
           leave_event: "עזיבת האירוע"
           status:
-            unknown: "לא מעניין"
             going: "אשתתף"
             interested: "מעניין"
             going_count:
@@ -441,6 +440,8 @@ he:
               description: "לאירוע פרטי יכולים להצטרף רק משתמשים שהוזמנו."
       composer:
         name_placeholder: "שם האירוע"
+        event_title_placeholder: "שם האירוע"
+        create_event_button: "יצירת אירוע"
         reminder:
           units:
             minutes:
@@ -463,6 +464,9 @@ he:
               two: "שבועות"
               many: "שבועות"
               other: "שבועות"
+      composer_actions:
+        create_event:
+          label: "יצירת אירוע"
       builder_modal:
         custom_fields:
           label: "שדות משלך"
@@ -471,7 +475,6 @@ he:
         create_event_title: "יצירת אירוע"
         update_event_title: "עריכת אירוע"
         advanced_settings_title: "הגדרות מתקדמות"
-        advanced_settings: "הגדרות מתקדמות"
         confirm_delete: "למחוק את האירוע הזה?"
         confirm_close: "לסגור את האירוע הזה?"
         confirm_open: "לפתוח את האירוע הזה?"
@@ -510,11 +513,7 @@ he:
         allow_chat:
           label: "שילוב צ׳אט"
           checkbox_label: "יצירה וניהול של ערוץ צ׳אט ייעודי לאירוע"
-        url:
-          label: "כתובת"
-          placeholder: "רשות"
         location:
-          label: "מיקום"
           placeholder: "הוספת מיקום, קישור או משהו."
         description:
           label: "תיאור"
@@ -530,3 +529,4 @@ he:
       invite_user_or_group:
         title: "להודיע למשתמשים או לקבוצות"
         invite: "שליחה"
+        success: "נשלחה הזמנה"

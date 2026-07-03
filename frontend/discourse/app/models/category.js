@@ -248,7 +248,7 @@ export default class Category extends RestModel {
     if (this.slugEncoded()) {
       parts = parts.map((urlPart) => decodeURI(urlPart));
     }
-    let category = null;
+    let category;
 
     if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
       const id = parseInt(parts.pop(), 10);
@@ -862,7 +862,10 @@ export default class Category extends RestModel {
     };
 
     if (!id && this.categoryTypes) {
-      props.category_type = Object.keys(this.categoryTypes)[0];
+      const primaryType = Object.keys(this.categoryTypes)[0];
+      if (this.category_types?.includes(primaryType)) {
+        props.category_type = primaryType;
+      }
     }
 
     return props;

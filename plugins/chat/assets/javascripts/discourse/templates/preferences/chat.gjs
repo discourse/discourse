@@ -26,7 +26,10 @@ import {
   HEADER_INDICATOR_PREFERENCE_NEVER,
   HEADER_INDICATOR_PREFERENCE_ONLY_MENTIONS,
 } from "discourse/plugins/chat/discourse/lib/chat-constants";
-import { CHAT_SOUNDS } from "discourse/plugins/chat/discourse/services/chat-audio-manager";
+import {
+  CHAT_SOUNDS,
+  normalizeChatSoundName,
+} from "discourse/plugins/chat/discourse/services/chat-audio-manager";
 
 export default class Chat extends Component {
   @service chatAudioManager;
@@ -118,7 +121,9 @@ export default class Chat extends Component {
       chat_quick_reactions_custom: emojis,
       only_chat_push_notifications: userOption.only_chat_push_notifications,
       ignore_channel_wide_mention: userOption.ignore_channel_wide_mention,
-      chat_sound: userOption.chat_sound,
+      chat_announce_new_messages: userOption.chat_announce_new_messages,
+      chat_new_message_sound: userOption.chat_new_message_sound,
+      chat_sound: normalizeChatSoundName(userOption.chat_sound),
       chat_header_indicator_preference:
         userOption.chat_header_indicator_preference,
       chat_separate_sidebar_mode: userOption.chat_separate_sidebar_mode,
@@ -136,7 +141,7 @@ export default class Chat extends Component {
   @action
   handleChatSoundSet(sound, { set, name }) {
     if (sound) {
-      this.chatAudioManager?.play(sound);
+      this.chatAudioManager?.play(sound, { throttle: false });
     }
     set(name, sound == null ? null : sound);
   }
@@ -303,6 +308,26 @@ export default class Chat extends Component {
               </radioGroup.Radio>
             {{/each}}
           </field.Control>
+        </form.Field>
+      </form.Section>
+      <form.Section @title={{i18n "chat.accessibility_title"}}>
+        <form.Field
+          @title={{i18n "chat.announce_new_messages.title"}}
+          @name="chat_announce_new_messages"
+          @format="large"
+          @type="checkbox"
+          as |field|
+        >
+          <field.Control @value={{field.value}} />
+        </form.Field>
+        <form.Field
+          @title={{i18n "chat.new_message_sound.title"}}
+          @name="chat_new_message_sound"
+          @format="large"
+          @type="checkbox"
+          as |field|
+        >
+          <field.Control @value={{field.value}} />
         </form.Field>
       </form.Section>
       <div class="save-controls">

@@ -99,6 +99,10 @@ export default class FilterNavigationMenu extends Component {
     return this.selectedIndex === -1;
   }
 
+  get placeholder() {
+    return this.args.placeholder || i18n("filter.placeholder");
+  }
+
   @action
   storeInputElement(element) {
     this.inputElement = element;
@@ -354,7 +358,7 @@ export default class FilterNavigationMenu extends Component {
         type="text"
         id="topic-query-filter-input"
         autocomplete="off"
-        placeholder={{i18n "filter.placeholder"}}
+        placeholder={{this.placeholder}}
         {{didUpdate this.syncFromInitialValue @initialInputValue}}
       />
 

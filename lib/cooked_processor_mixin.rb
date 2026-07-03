@@ -36,6 +36,7 @@ module CookedProcessorMixin
             invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
             user_id: @model&.user_id,
             category_id: @category_id,
+            locale: @opts[:locale],
           )
 
         @has_oneboxes = true if onebox.present?

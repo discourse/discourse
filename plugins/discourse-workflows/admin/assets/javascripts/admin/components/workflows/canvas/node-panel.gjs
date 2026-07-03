@@ -6,7 +6,7 @@ import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
-import { i18n } from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 import { nodeTypePresenter } from "../../../lib/workflows/node-types";
 
 const NodeTypeItem = <template>
@@ -62,6 +62,18 @@ function presenterFor(nodeType) {
   return nodeType ? nodeTypePresenter(nodeType) : null;
 }
 
+export function sortNodeTypesByLabel(nodeTypes) {
+  return [...(nodeTypes || [])].sort((left, right) =>
+    nodeTypePresenter(left).label.localeCompare(
+      nodeTypePresenter(right).label,
+      I18n.currentBcp47Locale,
+      {
+        sensitivity: "base",
+      }
+    )
+  );
+}
+
 export default class NodePanel extends Component {
   @tracked selectedCategory = null;
   @tracked selectedOperationNodeType = null;
@@ -71,8 +83,10 @@ export default class NodePanel extends Component {
   }
 
   get availableNodeTypes() {
-    return (this.args.nodeTypes || []).filter(
-      (nodeType) => nodeType.available !== false
+    return sortNodeTypesByLabel(
+      (this.args.nodeTypes || []).filter(
+        (nodeType) => nodeType.available !== false
+      )
     );
   }
 

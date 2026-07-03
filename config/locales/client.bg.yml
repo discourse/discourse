@@ -6,12 +6,22 @@
 
 bg:
   js:
+    user_api_key:
+      deny: "Отмени"
+      copied: "Копирано!"
+      device:
+        code: "Код"
+        continue: "Напред"
     blocks:
       ghost:
         status: "Статус"
         in_location: "в"
         hidden: "скрит"
         failed: "провалени"
+    access_control:
+      manage:
+        access_permission_editor: "Редактор"
+        access_permission_remove: "Премахване"
     number:
       format:
         separator: "."
@@ -289,8 +299,6 @@ bg:
     suggested_topics:
       pm_title: "Предложени съобщения"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Да е включен"
       start_posting:
         back: "Назад"
     about:
@@ -787,7 +795,6 @@ bg:
             from_alias_hint: "Псевдоним, който да се използва като адрес от при изпращане на групови SMTP имейли. Имайте предвид, че това може да не се поддържа от всички доставчици на поща. Моля, консултирайте се с документацията на вашия доставчик на поща."
         membership:
           title: Членство
-          access: Достъп
         categories:
           title: Категории
           long_title: "Известия по подразбиране за категория"
@@ -820,7 +827,6 @@ bg:
         title: "Позволения "
         none: "Няма категории, свързани с тази група."
         description: "Членовете на тази група имат достъп до тези категории"
-      public_admission: "Разрешено е на потребителите да се присъединяват към групата свободно (Изисква се публично видима група)"
       public_exit: "Разрешено е на потребителите да напуската групата свободно"
       empty:
         posts: "Няма публикации от членове на тази група"
@@ -836,7 +842,6 @@ bg:
       request: "Заявка"
       message: "Съобщение"
       confirm_leave: "Наистина ли искате да напуснете тази група?"
-      allow_membership_requests: "Позволете на потребителите да изпращат заявки за членство до собствениците на групи (изисква публично видима група)"
       membership_request_template: "Персонализиран шаблон за показване на потребителите при изпращане на заявка за членство"
       membership_request:
         submit: "Изпрати заявка"
@@ -1218,6 +1223,9 @@ bg:
       undo_revoke_access: "Отмяна прекратяване на достъпа"
       api_approved: "Одобрени:"
       api_last_used_at: "Последно използван на:"
+      api_expires_at: "Изтича:"
+      api_expired_at: "Изтекъл срок:"
+      api_expires_never: "никога"
       theme: "Тема"
       save_to_change_theme: 'Темата ще бъде актуализирана, след като кликнете върху "%{save_text}“'
       home: "Начална страница по подразбиране"
@@ -1881,6 +1889,12 @@ bg:
       confirm_title: Продължете към %{site_name}
       logging_in_as: Влизане като %{email}
       confirm_button: Завършете влизането
+    code_login:
+      email_label: "Имейл"
+      continue_button: "Напред"
+      verify_button: "Напред"
+      account_ready_continue: "Напред"
+      username_label: "Потребителско име"
     login:
       header_title: "Добре дошли отново"
       title: "Вход"
@@ -2094,7 +2108,7 @@ bg:
       discard: "Отхвърляне"
       title_placeholder: "За какво става дума в дискусията с едно изречение?"
       title_or_link_placeholder: "Напишете заглавие или поставете линк тук"
-      edit_reason_placeholder: "защо редактирате ?"
+      edit_reason_placeholder: "Защо редактирате ?"
       topic_featured_link_placeholder: "Въведете връзка, показана със заглавие."
       remove_featured_link: "Премахнете връзката от темата."
       reply_placeholder: "Пиши тук. Използвай Markdown, BBCode, или HTML за форматиране. Издърпайте или поставете изображенията."
@@ -2130,6 +2144,7 @@ bg:
         attribute_value: "Стойност"
         apply: "Приложи"
       help: "Помощ с Markdown"
+      edit_reason: "Защо редактирате ?"
       modal_ok: "Ок"
       cant_send_pm: "Съжеляваме, но неможете да изпращате съобщения до %{username}."
       yourself_confirm:
@@ -2154,13 +2169,15 @@ bg:
           desc: Създайте ново съобщение, започващо със същите получатели
         reply_to_topic:
           label: Отговорете на тема
+          trigger: Тема
           desc: Отговорете на темата, а не на конкретен пост
+        reply_to_message:
+          trigger: Съобщение
         toggle_whisper:
           label: Превключете шепот
-          desc: Шепотът се вижда само от служителите
         create_personal_message:
-          label: "Ново съобщение"
           desc: "Създайте ново лично съобщение"
+        unknown_user: "Потребител"
       ignore: "Игнорирай"
       image: "изображение"
     notifications:
@@ -2418,6 +2435,8 @@ bg:
       deleted_post_placeholder: "[изтрита]"
       ignored_post_placeholder: "[игнориран]"
       pinned_reply: "Закована"
+    share_target:
+      new_message: "Ново съобщение"
     topic:
       create: "Нова тема"
       open_draft: "Довърши ревизия"
@@ -3420,7 +3439,7 @@ bg:
         modal:
           cancel: "прекрати"
           create: "Запази "
-          reason: "защо редактирате ?"
+          reason: "Защо редактирате ?"
       spreadsheet:
         show: "Покажи"
         about: "Относно"
@@ -3493,6 +3512,9 @@ bg:
           form:
             mobile: "Мобилен"
             email: "Имейл "
+            og_image_preview:
+              generate: "Генраирай"
+              topic_id_label: "Тема ID "
         fonts:
           backfill_modal:
             modal_yes: "Да"
@@ -3578,7 +3600,7 @@ bg:
         no_check_performed: "Не е направена проверка за нова версия. Убедете се, че sidekiq работи."
         stale_data: "Скоро не е правена проверка за нова версия. Убедете се, че sidekiq работи."
         installed_version: "Инсталирани"
-        latest_version: "Последни"
+        github: "GitHub"
         dismiss_notice: "Игнорирай"
         new_features:
           learn_more: "Научете повече..."
@@ -3616,6 +3638,11 @@ bg:
                 "2": "Член"
                 "3": "Редовен"
                 "4": "лидер "
+          search:
+            title: "Търсене"
+            table:
+              searches: "Търсения"
+              status: "Статус"
         reports_section:
           modal:
             enabled_heading: "Да е включен"
@@ -3661,7 +3688,6 @@ bg:
             email: Имейл
             incoming_email: "Персонален входящ мейл адрес"
             incoming_email_placeholder: "напиши мейл адрес"
-            visibility: Видимост
             visibility_levels:
               public: "Всички"
           membership:
@@ -3755,6 +3781,7 @@ bg:
       config_areas:
         about:
           company_name: "Име"
+          company_url: "Уебсайт"
           extra_groups:
             groups: "Групи"
           optional: "(по избор)"
@@ -4214,6 +4241,10 @@ bg:
         id_not_found: "Съжаляваме, това потребителско име не съществува при нас. "
         status: "Статус"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Затвори"
+              confirm: "Отстрани "
           delete:
             confirmation_modal:
               close: "Затвори"

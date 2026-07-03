@@ -42,7 +42,7 @@ export default class AiLlmsListEditor extends Component {
     // handle both flavors
 
     // in the case of model
-    let key = "";
+    let key;
     if (typeof llm.id === "number") {
       key = `${llm.provider}-${llm.name}`;
     } else {

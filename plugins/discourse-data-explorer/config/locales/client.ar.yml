@@ -43,7 +43,6 @@ ar:
         description_hint: "صف ما تريد بلغة بسيطة، وسيتم إنشاء استعلام SQL والاسم والوصف تلقائيًا."
         description_placeholder: "مثال: عرض عمليات التسجيل عبر الزمن"
         generate: "إنشاء"
-        regenerate: "إعادة الإنشاء"
         generating: "جاري إنشاء الاستعلام باستخدام الذكاء الاصطناعي…"
         generation_timeout: "انتهت مهلة إنشاء الاستعلام بالذكاء الاصطناعي. يمكنك كتابة SQL يدويًا."
         generation_error: "حدث خطأ أثناء إنشاء الاستعلام."
@@ -79,6 +78,9 @@ ar:
       delete: "حذف"
       recover: "إلغاء حذف الاستعلام"
       sql_label: "SQL"
+      chart:
+        form:
+          bar: "شريط"
       others_dirty: "يحتوي الاستعلام على تغييرات غير محفوظة سيتم فقدها إذا انتقلت بعيدًا."
       run_time: "اكتمل الاستعلام في %{value} مللي ثانية."
       cached_result_notice: "عرض النتائج المخزنة مؤقتًا منذ %{relative_time}"
@@ -123,6 +125,17 @@ ar:
           descriptions:
             data_explorer:
               run_queries: "تشغيل استعلامات مستكشف البيانات. يمكنك تقييد مفتاح واجهة برمجة التطبيقات (API) إلى مجموعة من الاستعلامات عن طريق تحديد معرِّفات الاستعلامات."
+    discourse_workflows:
+      nodes:
+        "action:sql": "مستكشف البيانات"
+      sql:
+        queries: "الاستعلامات"
+        query_id: "استعلام"
+        add_param: "إضافة معلمة"
+        param_value: "القيمة"
+        output:
+          results: "النتائج"
+          no_results: "لا توجد نتائج"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

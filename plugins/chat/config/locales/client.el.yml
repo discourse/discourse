@@ -228,12 +228,13 @@ el:
         other: "Έχετε %{count} αδιάβαστες συζητήσεις"
       scroll_to_bottom: "Κύλιση προς τα κάτω"
       scroll_to_new_messages: "Δείτε νέα μηνύματα"
+      new_messages:
+        one: "%{count} νέο μήνυμα"
+        other: "%{count} νέα μηνύματα"
       sound:
         title: "Ήχος ειδοποίησης συνομιλίας για υπολογιστές"
       sounds:
         none: "Κανένα"
-        bell: "Καμπάνα"
-        ding: "Κουδούνι"
       title: "συνομιλία"
       title_capitalized: "Συνομιλία"
       upload: "Επισύναψη αρχείου"
@@ -311,7 +312,6 @@ el:
         title: Επεξεργασία καναλιού
         input_placeholder: Προσθέστε ένα όνομα
         name: Όνομα καναλιού
-        emoji: Emoji καναλιού (προαιρετικό)
         reset_emoji: Επαναφορά emoji
       channel_edit_description_modal:
         title: Επεξεργασία περιγραφής
@@ -367,7 +367,7 @@ el:
             one: 'Οι χρήστες της ομάδας %{group} και %{count} άλλης ομάδας θα έχουν πρόσβαση σε αυτό το κανάλι σύμφωνα με τις <a href="%{settingLink}" target="_blank">ρυθμίσεις ασφαλείας</a>'
             other: 'Οι χρήστες της ομάδας %{group} και %{count} άλλων ομάδων θα έχουν πρόσβαση σε αυτό το κανάλι σύμφωνα με τις <a href="%{settingLink}" target="_blank">ρυθμίσεις ασφαλείας</a>'
         create: "Δημιουργία καναλιού"
-        description: "Περιγραφή (προαιρετικό)"
+        description: "Περιγραφή"
         name: "Όνομα καναλιού"
         title: "Νέο κανάλι"
         type: "Τύπος"
@@ -375,7 +375,6 @@ el:
           category: "Κατηγορία"
           topic: "Θέμα"
         emoji:
-          label: "Emoji καναλιού (προαιρετικό)"
           reset: "Επαναφορά emoji"
       reviewable:
         type: "Μήνυμα συνομιλίας"
@@ -650,3 +649,16 @@ el:
       panels:
         chat:
           label: "Συνομιλία"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Αποστολή μηνύματος συνομιλίας"
+        "action:chat_approval": "Έγκριση συνομιλίας"
+        "trigger:chat_message_created": "Δημιουργήθηκε μήνυμα συνομιλίας"
+      chat_message_created:
+        channel_id: "Κανάλι"
+      send_chat_message:
+        channel_id: "Κανάλι"
+        message: "Μήνυμα"
+      chat_approval:
+        message: "Μήνυμα"
+        channel_id: "Κανάλι"

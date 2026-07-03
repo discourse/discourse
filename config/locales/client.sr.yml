@@ -6,12 +6,22 @@
 
 sr:
   js:
+    user_api_key:
+      deny: "Odustani"
+      write_scope_warning: "Zahtevan je pun pristup za pisanje — ova aplikacija će moći da objavljuje, uređuje i briše sadržaj. Nastavite samo ako joj potpuno verujete."
+      copied: "Kopirano!"
+      device:
+        continue: "Nastavi"
     blocks:
       ghost:
         status: "Status"
         in_location: "u"
         hidden: "sakriveno"
         failed: "neuspešno"
+    access_control:
+      manage:
+        access_permission_editor: "Urednik"
+        access_permission_remove: "Ukloni"
     number:
       format:
         separator: ","
@@ -357,9 +367,6 @@ sr:
         description: "Izaberite početnu temu za svoju zajednicu"
         action: "Izaberi temu"
         modal_title: "Izaberite temu"
-        use_theme: "Koristi ovu temu"
-        enabled: "Omogućeno"
-        theme_set: "%{theme} je sada vaša podrazumevana tema"
         browse_all: "Upravljanje temama"
         show_light_screenshot: "Prikaži svetli snimak ekrana"
         show_dark_screenshot: "Prikaži tamni snimak ekrana"
@@ -1294,6 +1301,7 @@ sr:
       muted_users: "Utišano"
       tracked_topics_link: "Prikaži"
       api_approved: "Potvrđenji:"
+      api_expires_never: "nikada"
       staff_counters:
         suspensions:
           one: '<span class="%{className}">%{count}</span> suspenzija'
@@ -1715,6 +1723,12 @@ sr:
       login_link: "Preskoči lozinku; pošalji mi link za prijavu"
       complete_username_not_found: "Nema naloga koji odgovara korisničkom imenu <b>%{username}</b>"
       complete_email_not_found: "Nema naloga koji odgovara <b>%{email}</b>"
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Nastavi"
+      verify_button: "Nastavi"
+      account_ready_continue: "Nastavi"
+      username_label: "Korisničko Ime"
     login:
       header_title: "Dobro došli nazad"
       title: "Prijava"
@@ -1723,8 +1737,6 @@ sr:
       show_password: "Pokaži"
       hide_password: "Sakrij"
       hide_password_title: "Sakrij lozinku"
-      security_key_or_passkey_description: "Kada pripremite svoj bezbednosni ključ, passkey ili kompatibilni mobilni uređaj, pritisnite dugme ispod."
-      security_key_or_passkey_authenticate: "Autentifikuj se pomoću bezbednosnog ključa ili passkey-a"
       caps_lock_warning: "Caps Lock vam je uključen"
       error: "Nepoznata greška"
       rate_limit: "Molimo sačekajte pre nego pokušate opet da se prijavite."
@@ -1808,7 +1820,7 @@ sr:
       create_topic: "Kreiraj temu"
       discard: "Odbaci"
       title_placeholder: "O čemu je ova diskusija u jednoj kratkoj rečenici?"
-      edit_reason_placeholder: "zašto izmenjujete?"
+      edit_reason_placeholder: "Zašto izmenjujete?"
       reply_placeholder: "Kucaj ovde. Koristi Markdown, BBCode ili HTML za formatiranje teksta. Prevuci ili nalepi slike"
       reply_placeholder_choose_category: "Odaberi kategoriju pre nego ovde pišeš"
       view_new_post: "Pogledajte svoju novu poruku."
@@ -1835,6 +1847,7 @@ sr:
         attribute_value: "Vriednost"
         apply: "Primeni"
       help: "Markdown pomoć pri izmenama"
+      edit_reason: "Zašto izmenjujete?"
       modal_ok: "U redu"
       yourself_confirm:
         title: "Da li ste zaboravili da dodate primaoce?"
@@ -1846,6 +1859,12 @@ sr:
         reply_as_new_topic:
           desc: Kreiraj novu temu povezanu na ovu temu
           confirm: Imate novi nacrt teme sačuvan, koji će biti obrisan ako stvorite povezanu temu.
+        reply_to_topic:
+          trigger: Tema
+        reply_to_message:
+          trigger: Privatna poruka
+        edit_post: "Uređivanje objave"
+        unknown_user: "Korisnik"
       image: "slika"
     notifications:
       none: "Nemoguće je učitati notifikacije ovog trenutka."
@@ -2753,7 +2772,7 @@ sr:
         modal:
           cancel: "otkaži"
           create: "Sačuvaj"
-          reason: "zašto izmenjujete?"
+          reason: "Zašto izmenjujete?"
       spreadsheet:
         show: "Pokaži"
         about: "O nama"
@@ -2823,6 +2842,9 @@ sr:
         logo:
           form:
             email: "Email"
+            og_image_preview:
+              generate: "Generiši"
+              topic_id_label: "ID Teme"
         fonts:
           backfill_modal:
             modal_yes: "Da"
@@ -2902,7 +2924,6 @@ sr:
         no_check_performed: "Nije učinjena provera za nadogradnju. Proverite radi li pomoćnik."
         stale_data: "Nije dugo učinjena provera za nadogradnju. Proverite radi li pomoćnik."
         installed_version: "Instalirano"
-        latest_version: "Poslednje"
         dismiss_notice: "Ignoriši"
         new_features:
           learn_more: "Saznaj više..."
@@ -2917,6 +2938,7 @@ sr:
         general_tab: "Opšti"
         security_tab: "Sigurnost"
         loading: "Učitavanje kontrolne table..."
+        stable: "stabilan"
         sections:
           highlights:
             title: "Istaknuto"
@@ -2962,15 +2984,6 @@ sr:
                   one: "-%{count} pad"
                   few: "-%{count} pada"
                   other: "-%{count} padova"
-                stable: "stabilan"
-              moves_in_aria:
-                one: "%{count} član se pomerio gore"
-                few: "%{count} člana su se pomerila gore"
-                other: "%{count} članova se pomerilo gore"
-              moves_out_aria:
-                one: "%{count} član se pomerio dole"
-                few: "%{count} člana su se pomerila dole"
-                other: "%{count} članova se pomerilo dole"
               stable_aria: "bez pokreta"
             headline:
               healthy_growth:
@@ -2991,6 +3004,14 @@ sr:
               no_signal:
                 title: "Još uvek nema dovoljno aktivnosti za sumiranje angažovanja."
                 summary: "Izaberite duži opseg datuma ili se vratite kada vaša zajednica bude imala više aktivnosti."
+              metrics:
+                new_signups: "Nove registracije"
+                dau_mau: "DAU / MAU lepljivost"
+                daily_engaged_users: "Dnevno angažovano"
+          search:
+            title: "Pretraži"
+            table:
+              status: "Status"
         reports_section:
           modal:
             enabled_heading: "Omogućeno"
@@ -3010,16 +3031,12 @@ sr:
           kpi:
             new_signups:
               label: "Nove registracije"
-              tooltip: "Nalozi kreirani u ovom periodu, uključujući neaktivirane i pripremne naloge."
             dau_mau:
               label: "DAU / MAU lepljivost"
-              tooltip: 'Udeo mesečno aktivnih korisnika koji su se vratili u zajednicu u poslednjem danu. Ovo pokazuje koliko je vaša zajednica "aktivna" na osnovu toga koliko se često ljudi vraćaju.'
             new_contributors:
               label: "Novi saradnici"
-              tooltip: "Broj članova koji su objavili svoju prvu objavu u ovom periodu."
             daily_engaged_users:
               label: "Dnevno angažovano"
-              tooltip: "Broj članova koji su lajkovali ili objavili u zajednici u poslednjem danu."
           comparison:
             last_7_days: "u odnosu na poslednjih 7 dana"
             last_30_days: "u odnosu na poslednjih 30 dana"
@@ -3183,6 +3200,7 @@ sr:
       config_areas:
         about:
           company_name: "Ime foruma"
+          company_url: "Website"
           extra_groups:
             groups: "Grupe"
           optional: "(opciono)"
@@ -3510,6 +3528,10 @@ sr:
         id_not_found: "Žao nam je, taj korisnički ID ne postoji u našem sistemu."
         active: "Aktivirano"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Zatvori"
+              confirm: "Suspenduj"
           delete:
             confirmation_modal:
               close: "Zatvori"
@@ -3519,6 +3541,8 @@ sr:
           active: "Aktivno"
           staff: "Osoblje"
           suspended: "Suspendovani"
+        activation_filter:
+          activated: "Aktivirano"
         approved: "Potvrđenji?"
         titles:
           pending: "Korisnici koji čekaju reviziju"
@@ -3598,9 +3622,6 @@ sr:
           one: "Ne možete obrisati sve objave jer korisnik ima više od %{count} poruka. (delete_all_posts_max)"
           few: "Ne možete obrisati sve objave jer korisnik ima više od %{count} poruka. (delete_all_posts_max)"
           other: "Ne možete obrisati sve objave jer korisnik ima više od %{count} poruka. (delete_all_posts_max)"
-        delete_and_block: "Obriši i blokiraj korisnika"
-        delete_and_block_description: "Obrišite korisnika i blokirajte njihovu email i IP adresu."
-        delete_dont_block_description: "Obrišite korisnika bez blokiranja."
         deleted: "Korisnik je obrisan."
         delete_failed: "Dogodila se greška pri brisanju korisnika. Proverite da li ste obrisali sve njegove poruke pre nego što ponovo pokušate brisati."
         send_activation_email: "Pošalji Aktivacijski Email"

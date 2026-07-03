@@ -12,6 +12,7 @@ es:
           poll: "Encuesta de Discourse"
   js:
     poll:
+      title: "Encuesta"
       dynamic:
         enabled_hint: "Se pueden añadir o eliminar opciones."
       voters:
@@ -159,5 +160,3 @@ es:
           add: Añadir opción
         automatic_close:
           label: Cerrar encuesta automáticamente
-        show_advanced: "Mostrar opciones avanzadas"
-        hide_advanced: "Ocultar opciones avanzadas"

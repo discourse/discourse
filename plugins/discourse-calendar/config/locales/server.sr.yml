@@ -12,6 +12,7 @@ sr:
   discourse_calendar:
     category_type:
       default_calendar_view:
+        day: "Dan"
         week: "Nedelja"
         month: "Mesec"
         year: "Godina"

@@ -20,10 +20,17 @@ nl:
         reaction_group:
           one: "%{reaction}: %{count} gebruiker"
           other: "%{reaction}: %{count} gebruikers"
+      reaction:
+        forbidden: "Je kunt niet reageren op dit bericht of je reactie op dit bericht wijzigen."
       picker:
         react_with: "Reageer op dit bericht met: %{reaction}"
         cant_remove_reaction: "Je kunt je reactie niet meer verwijderen"
         remove_reaction: "Deze %{reaction} reactie verwijderen"
+      users_popup:
+        all: "Alles"
+        title:
+          one: "%{count} reactie"
+          other: "%{count} reacties"
       counter:
         aria_label:
           one: "%{count} reactie"

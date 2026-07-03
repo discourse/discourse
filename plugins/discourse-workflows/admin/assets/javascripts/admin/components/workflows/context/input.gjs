@@ -10,7 +10,7 @@ import {
   inputFieldPrefixForConnection,
   inputIndexForConnection,
   inputSummaryForNode,
-  nodeItemJsonPath,
+  nodeOutputJsonPath,
   outputIndexForConnection,
   outputSummaryForNode,
   previousNodeForConnection,
@@ -153,32 +153,34 @@ export default class InputContext extends Component {
         const recordedInputSummary = inputSummaryForNode(
           this.runData,
           this.args.node.name,
-          inputIndex
+          inputIndex,
+          {
+            node: this.args.node,
+            sourceNode: previousNode,
+            outputIndex,
+          }
         );
-        const summary =
-          recordedInputSummary ||
-          outputSummaryForNode(this.runData, previousNode.name, outputIndex);
-        const fields = recordedInputSummary
-          ? schemaFieldsForNodeInput(this.runData, this.args.node.name, {
-              inputIndex,
-              prefix: inputFieldPrefixForConnection(connection, previousNode, {
-                primaryConnection: this.primaryInputConnection,
-              }),
-            })
-          : schemaFieldsForNodeOutput(this.runData, previousNode.name, {
-              outputIndex,
-              prefix: inputFieldPrefixForConnection(connection, previousNode, {
-                primaryConnection: this.primaryInputConnection,
-              }),
-            });
+        const fields = schemaFieldsForNodeInput(
+          this.runData,
+          this.args.node.name,
+          {
+            inputIndex,
+            node: this.args.node,
+            sourceNode: previousNode,
+            outputIndex,
+            prefix: inputFieldPrefixForConnection(connection, previousNode, {
+              primaryConnection: this.primaryInputConnection,
+            }),
+          }
+        );
 
         return {
           node: previousNode,
           inputIndex,
           fields: processFields(fields, this.args.node, this.graph),
-          itemCountLabel: this.itemCountLabel(summary),
+          itemCountLabel: this.itemCountLabel(recordedInputSummary),
           inputLabel: this.inputConnectionLabel(inputIndex),
-          emptyMessage: this.emptyMessage(summary),
+          emptyMessage: this.emptyMessage(recordedInputSummary),
         };
       })
       .filter(Boolean);
@@ -215,7 +217,11 @@ export default class InputContext extends Component {
           ancestor.node.name,
           {
             outputIndex: ancestor.outputIndex,
-            prefix: nodeItemJsonPath(ancestor.node.name),
+            node: ancestor.node,
+            prefix: nodeOutputJsonPath(this.runData, ancestor.node.name, {
+              outputIndex: ancestor.outputIndex,
+              node: ancestor.node,
+            }),
           }
         );
         return {
@@ -228,7 +234,8 @@ export default class InputContext extends Component {
             outputSummaryForNode(
               this.runData,
               ancestor.node.name,
-              ancestor.outputIndex
+              ancestor.outputIndex,
+              { node: ancestor.node }
             )
           ),
         };

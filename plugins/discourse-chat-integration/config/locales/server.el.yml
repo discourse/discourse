@@ -24,5 +24,11 @@ el:
             added_and_removed: "Προστέθηκε %{added} και αφαιρέθηκε %{removed}"
             added: "Προστέθηκε %{added}"
             removed: "Αφαιρέθηκε %{removed}"
+      matrix:
+        formatted_message: |
+          Ο/Η <b>%{user}</b> δημοσίευσε στο <b><a href='%{post_url}'>%{title}</a></b>
+          <blockquote>
+          %{excerpt}
+          </blockquote>
       google:
         author: "από @%{username}"

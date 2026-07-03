@@ -36,6 +36,8 @@ ar:
       topic_search_placeholder: "البحث في الموضوعات بالعنوان أو محتوى المنشور"
       sidebar_name_filter_placeholder: "الاسم/اسم المستخدم"
       assigned: "تم تعيينك"
+      group_no_assignments_title: "لا توجد مهام"
+      group_no_assignments_body: "لا توجد حاليًا مهام نشطة لهذه المجموعة."
       group_everyone: "الجميع"
       assigned_to: "معيَّنة إلى"
       assigned_topic_to: "تم تعيين الموضوع إلى المستخدم <a href='%{path}'>%{username}</a>"
@@ -214,3 +216,13 @@ ar:
       title: "تعديل المهام المعيَّنة"
       topic: "الموضوع"
       post: "المنشور"
+    discourse_workflows:
+      nodes:
+        "action:assign_topic": "تعيين موضوع"
+        "trigger:assigned": "تم تعيينك"
+      assign_topic:
+        operations:
+          assign: "تعيين"
+          unassign: "إلغاء التعيين"
+        topic_id: "معرِّف الموضوع"
+        assignee: "المعيَّن"

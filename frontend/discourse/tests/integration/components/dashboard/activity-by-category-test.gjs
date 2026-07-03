@@ -2,6 +2,7 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ActivityByCategory from "discourse/admin/components/dashboard/engagement/activity-by-category";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import selectKit from "discourse/tests/helpers/select-kit-helper";
 
 module(
   "Integration | Component | Dashboard | ActivityByCategory",
@@ -148,6 +149,40 @@ module(
       );
 
       assert.dom(".category-selector").exists();
+    });
+
+    test("prefills the selector with the categories shown by default", async function (assert) {
+      await render(
+        <template>
+          <ActivityByCategory
+            @activity={{activity}}
+            @startDate={{start}}
+            @endDate={{end}}
+          />
+        </template>
+      );
+
+      assert.strictEqual(
+        selectKit(".category-selector").header().value(),
+        "1,2,3"
+      );
+    });
+
+    test("renders a category badge for each row instead of a bare swatch", async function (assert) {
+      await render(
+        <template>
+          <ActivityByCategory
+            @activity={{activity}}
+            @startDate={{start}}
+            @endDate={{end}}
+          />
+        </template>
+      );
+
+      assert
+        .dom(".db-activity-table__cell-category .badge-category")
+        .exists({ count: 3 });
+      assert.dom(".db-activity-table__swatch").doesNotExist();
     });
   }
 );

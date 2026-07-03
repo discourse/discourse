@@ -33,3 +33,8 @@ be:
     edit_assignments_modal:
       topic: "Тэма"
       post: "пост"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "Прызначаны"
+      assign_topic:
+        topic_id: "Ідэнтыфікатар тэмы"

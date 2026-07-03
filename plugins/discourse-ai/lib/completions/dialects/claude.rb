@@ -54,11 +54,24 @@ module DiscourseAi
           tools = nil
           tools = tools_dialect.translated_tools if native_tool_support?
 
+          tools = (tools || []).concat(native_tools) if native_tools.present?
+
           ClaudePrompt.new(system_prompt.presence, interleving_messages, tools, tool_choice)
         end
 
+        def native_tools
+          tools = []
+          if prompt.native_tool?(DiscourseAi::Completions::NativeTools::WEB_SEARCH)
+            tools << { type: "web_search_20250305", name: "web_search" }
+          end
+          if prompt.native_tool?(DiscourseAi::Completions::NativeTools::WEB_FETCH)
+            tools << { type: "web_fetch_20260209", name: "web_fetch", allowed_callers: %w[direct] }
+          end
+          tools
+        end
+
         def max_prompt_tokens
-          llm_model.max_prompt_tokens
+          max_prompt_tokens_with_reserved_output
         end
 
         def native_tool_support?
@@ -86,9 +99,25 @@ module DiscourseAi
         end
 
         def model_msg(msg)
-          content_array = []
-
           anthropic = anthropic_reasoning(msg)
+          if (content_blocks = anthropic&.dig(:content_blocks)).present?
+            content_blocks = content_blocks.deep_dup
+            if msg[:thinking] && anthropic[:signature] &&
+                 !content_blocks.any? { |block| content_block_type(block) == "thinking" }
+              content_blocks.unshift(
+                { type: "thinking", thinking: msg[:thinking], signature: anthropic[:signature] },
+              )
+            end
+            if anthropic[:redacted_signature] &&
+                 !content_blocks.any? { |block| content_block_type(block) == "redacted_thinking" }
+              content_blocks.unshift(
+                { type: "redacted_thinking", data: anthropic[:redacted_signature] },
+              )
+            end
+            return { role: "assistant", content: content_blocks }
+          end
+
+          content_array = []
 
           if anthropic.present?
             if msg[:thinking] && anthropic[:signature]
@@ -116,6 +145,10 @@ module DiscourseAi
             )
 
           { role: "assistant", content: no_array_if_only_text(content_array) }
+        end
+
+        def content_block_type(block)
+          block[:type] || block["type"]
         end
 
         def anthropic_reasoning(message)

@@ -27,6 +27,13 @@ export const CLOSE_INITIATED_BY_MODAL_SHOW = "initiatedByModalShow";
 export const CLOSE_INITIATED_BY_SWIPE_DOWN = "initiatedBySwipeDown";
 
 const SWIPE_VELOCITY_THRESHOLD = 0.4;
+const SWIPE_CLOSE_DISTANCE_RATIO = 0.25;
+const SWIPE_SETTLE_EASING = "cubic-bezier(0.32, 0.72, 0, 1)";
+
+// progressive resistance when the modal is dragged past its resting position
+function dampenedOverdrag(distance) {
+  return Math.max(0, 8 * (Math.log(distance + 1) - 2));
+}
 
 export default class DModal extends Component {
   @service appEvents;
@@ -146,14 +153,26 @@ export default class DModal extends Component {
   }
 
   @action
+  handleSwipeStart(swipeState, event) {
+    if (this.#shouldDeferSwipeToContent(swipeState)) {
+      event.preventDefault();
+    }
+  }
+
+  @action
   async handleSwipe(swipeEvent) {
     if (this.animating) {
       return;
     }
 
-    if (swipeEvent.deltaY >= 0) {
-      return await this.#animateWrapperPosition(swipeEvent.deltaY);
-    }
+    // applied instantly so the modal tracks the finger 1:1; easing only
+    // happens when the gesture ends
+    const position =
+      swipeEvent.deltaY >= 0
+        ? swipeEvent.deltaY
+        : -dampenedOverdrag(-swipeEvent.deltaY);
+
+    await this.#animateWrapperPosition(position, 0);
   }
 
   @action
@@ -164,14 +183,18 @@ export default class DModal extends Component {
       return;
     }
 
+    const closeDistance =
+      this.modalContainer.clientHeight * SWIPE_CLOSE_DISTANCE_RATIO;
+
     if (
       swipeEvent.goingUp() ||
-      swipeEvent.velocityY < SWIPE_VELOCITY_THRESHOLD
+      swipeEvent.deltaY <= 0 ||
+      (swipeEvent.velocityY < SWIPE_VELOCITY_THRESHOLD &&
+        swipeEvent.deltaY < closeDistance)
     ) {
-      return await this.#animateWrapperPosition(0);
+      return await this.#animateWrapperPosition(0, getMaxAnimationTimeMs());
     }
 
-    this.modalContainer.style.transform = `translateY(${swipeEvent.deltaY}px)`;
     this.closeModal(CLOSE_INITIATED_BY_SWIPE_DOWN);
   }
 
@@ -212,6 +235,8 @@ export default class DModal extends Component {
 
       if (this.site.desktopView) {
         await this.#animatePopOff();
+      } else if (initiatedBy === CLOSE_INITIATED_BY_SWIPE_DOWN) {
+        await this.#animateSwipeDismiss();
       } else {
         const backdrop = this.wrapperElement.nextElementSibling;
         this.modalContainer.classList.add("is-exiting");
@@ -234,12 +259,13 @@ export default class DModal extends Component {
     }
 
     // Prevent keyboard events from leaking to elements behind the modal.
-    // Allow events when focus is inside a float-kit portal (menu/tooltip)
-    // opened from this modal, since those render outside the modal DOM.
+    // Allow events when focus is inside another modal stacked above this one,
+    // or inside a float-kit portal (menu/tooltip) opened from this modal,
+    // since those render outside the modal DOM.
     if (
       !this.wrapperElement.contains(document.activeElement) &&
       !document.activeElement?.closest(
-        ".fk-d-menu, .fk-d-menu-modal, .fk-d-tooltip"
+        ".d-modal, .fk-d-menu, .fk-d-menu-modal, .fk-d-tooltip"
       )
     ) {
       event.stopPropagation();
@@ -276,6 +302,40 @@ export default class DModal extends Component {
     return dElement(tagName);
   }
 
+  // lets inner content consume the gesture instead of dragging the modal:
+  // horizontal swipes, and vertical swipes started within scrollable content
+  // that can still scroll in the gesture's direction
+  #shouldDeferSwipeToContent(swipeState) {
+    if (swipeState.direction === "left" || swipeState.direction === "right") {
+      return true;
+    }
+
+    let element = swipeState.originalEvent?.target;
+
+    while (element && element !== this.modalContainer) {
+      if (element.scrollHeight > element.clientHeight) {
+        const { overflowY } = window.getComputedStyle(element);
+
+        if (overflowY === "auto" || overflowY === "scroll") {
+          if (swipeState.direction === "down" && element.scrollTop > 0) {
+            return true;
+          }
+
+          if (
+            swipeState.direction === "up" &&
+            element.scrollTop + element.clientHeight < element.scrollHeight
+          ) {
+            return true;
+          }
+        }
+      }
+
+      element = element.parentElement;
+    }
+
+    return false;
+  }
+
   #animateBackdropOpacity(position) {
     const backdrop = this.wrapperElement.nextElementSibling;
 
@@ -292,7 +352,7 @@ export default class DModal extends Component {
     );
   }
 
-  async #animateWrapperPosition(position) {
+  async #animateWrapperPosition(position, duration) {
     this.#animateBackdropOpacity(position);
 
     await waitForPromise(
@@ -300,9 +360,33 @@ export default class DModal extends Component {
         [{ transform: `translateY(${position}px)` }],
         {
           fill: "forwards",
-          duration: getMaxAnimationTimeMs(),
+          duration,
+          easing: SWIPE_SETTLE_EASING,
         }
       ).finished
+    );
+  }
+
+  // dismisses from the current dragged position; the `is-exiting` CSS
+  // animation can't be used here as it animates from translateY(0) and is
+  // overridden by the drag's fill-forwards animations anyway
+  async #animateSwipeDismiss() {
+    const duration = getMaxAnimationTimeMs();
+    const backdrop = this.wrapperElement.nextElementSibling;
+
+    if (backdrop) {
+      waitForPromise(
+        backdrop.animate([{ opacity: 0 }], { fill: "forwards", duration })
+          .finished
+      );
+    }
+
+    await waitForPromise(
+      this.modalContainer.animate([{ transform: "translateY(100%)" }], {
+        fill: "forwards",
+        duration,
+        easing: SWIPE_SETTLE_EASING,
+      }).finished
     );
   }
 
@@ -349,7 +433,16 @@ export default class DModal extends Component {
         {{willDestroy this.cleanupModal}}
         {{dTrapTab preventScroll=false autofocus=this.autofocus}}
       >
-        <div class="d-modal__container" {{this.registerModalContainer}}>
+        <div
+          class="d-modal__container"
+          {{this.registerModalContainer}}
+          {{dSwipe
+            onDidStartSwipe=this.handleSwipeStart
+            onDidSwipe=this.handleSwipe
+            onDidEndSwipe=this.handleSwipeEnded
+            enabled=this.dismissable
+          }}
+        >
           {{yield to="aboveHeader"}}
 
           {{#if
@@ -371,11 +464,6 @@ export default class DModal extends Component {
                   "--has-primary-action"
                 )
                 @headerClass
-              }}
-              {{dSwipe
-                onDidSwipe=this.handleSwipe
-                onDidEndSwipe=this.handleSwipeEnded
-                enabled=this.dismissable
               }}
             >
               {{yield to="headerAboveTitle"}}

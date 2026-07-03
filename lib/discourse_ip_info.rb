@@ -6,6 +6,8 @@ require "resolv"
 class DiscourseIpInfo
   include Singleton
 
+  HOSTNAME_LOOKUP_TIMEOUT_SECONDS = 1
+
   def initialize
     open_db(DiscourseIpInfo.path)
   end
@@ -141,13 +143,14 @@ class DiscourseIpInfo
       end
     end
 
-    # this can block for quite a while
-    # only use it explicitly when needed
     if resolve_hostname
       begin
-        result = Resolv::DNS.new.getname(ip)
+        dns = Resolv::DNS.new
+        dns.timeouts = HOSTNAME_LOOKUP_TIMEOUT_SECONDS
+
+        result = dns.getname(ip)
         ret[:hostname] = result&.to_s
-      rescue Resolv::ResolvError
+      rescue Resolv::ResolvError, Timeout::Error
       end
     end
 

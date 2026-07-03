@@ -602,7 +602,6 @@ sk:
       removed: "odstránené"
     errors:
       quota_exceeded: "Prekročili ste kvótu pre tento model. Skúste to prosím znova na stránke %{relative_time}."
-      quota_required: "Pre tento model je potrebné zadať maximálny počet tokenov alebo použití"
       no_query_specified: Parameter dopytu je povinný, prosím, zadajte ho.
       no_user_specified: Používateľské meno alebo parameter user_unique_id je povinný, prosím, zadajte ho.
       user_not_found: Zadaný používateľ neexistuje. Skontrolujte parameter používateľské meno.

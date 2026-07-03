@@ -10,14 +10,12 @@ module PageObjects
 
       def download_and_extract
         original_save_path = Capybara.save_path
-        Capybara.save_path = Downloads::FOLDER
+        Capybara.save_path = Downloads::FOLDER.join("_unused")
 
-        zip_name = find("a.attachment").text
-        zip_path = File.join(Downloads::FOLDER, zip_name)
-        @downloaded_files << zip_path
-
-        page.driver.with_playwright_page { |pw_page| pw_page.expect_download { click_link ".zip" } }
-        Downloads.wait_for(zip_path)
+        zip_path =
+          page.driver.with_playwright_page do |pw_page|
+            pw_page.expect_download { click_link ".zip" }.path
+          end
 
         csv_path = unzip(zip_path).first
         @downloaded_files << csv_path

@@ -50,7 +50,7 @@ pl_PL:
         regenerate_placeholder: "np. zaktualizuj zapytanie, aby ograniczyć je do 50 wyników"
         prompt_label: "Monit"
         generate: "Generuj"
-        regenerate: "Wygeneruj ponownie"
+        regenerate: "Monit aktualizacji"
         generating: "Generowanie zapytań za pomocą AI..."
         generation_timeout: "Przekroczono limit czasu generowania zapytania AI. Możesz wpisać kod SQL ręcznie."
         generation_error: "Wystąpił błąd podczas generowania zapytania."
@@ -73,6 +73,8 @@ pl_PL:
         title: "Schemat bazy danych"
         filter: "Wyszukiwanie..."
         search_tables: "Przeszukaj tabele"
+        hide: "Ukryj schemat"
+        show: "Pokaż schemat"
         sensitive: "Zawartość tej kolumny może zawierać szczególnie wrażliwe lub prywatne dane. Prosimy o zachowanie ostrożności przy używaniu tych danych."
       types:
         bool:
@@ -91,6 +93,15 @@ pl_PL:
       run_options: "Więcej opcji uruchamiania"
       view:
         label: "Widok wyników"
+      chart:
+        form:
+          label: "Typ wykresu"
+          line: "Liniowy"
+          bar: "Słupkowy"
+          stacked: "Skumulowany"
+          dual_axis: "Dwuosiowy"
+        tooltip:
+          total: "Razem: %{count}"
       chart_empty:
         no_rows: "Brak wierszy do wykresu."
         no_numeric: "To zapytanie nie zawiera żadnych kolumn liczbowych do wykresu."
@@ -143,6 +154,32 @@ pl_PL:
           descriptions:
             data_explorer:
               run_queries: "Uruchamiaj zapytania eksploratora danych. Ogranicz klucz API do zestawu zapytań, określając identyfikatory zapytań."
+    discourse_workflows:
+      node_unavailable:
+        requires_data_explorer: "Wymaga włączenia wtyczki Eksplorator danych"
+      nodes:
+        "action:sql": "Eksplorator danych"
+      node_descriptions:
+        "action:sql": "Uruchom zapytanie SQL tylko do odczytu w bazie danych"
+      sql:
+        operation: "Działanie"
+        operation_description: "Jak uruchomić zapytanie"
+        queries: "Zapytania"
+        raw: "Surowy SQL"
+        query_id: "Zapytanie"
+        query_id_description: "Wybierz zapisane zapytanie do uruchomienia"
+        query_params: "Parametry zapytania"
+        query_params_description: "Wypełnij parametry dla wybranego zapytania"
+        query: "Zapytanie SQL"
+        query_description: "Napisz zapytanie SQL tylko do odczytu. Zadeklaruj parametry za pomocą składni Eksploratora danych i zmapuj ich wartości poniżej."
+        params: "Parametry zapytania"
+        params_description: "Parametry można używać jako :my_param w zapytaniu SQL."
+        add_param: "Dodaj parametr"
+        param_name: "Parametr"
+        param_value: "Wartość"
+        output:
+          results: "Wyniki"
+          no_results: "Brak wyników"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

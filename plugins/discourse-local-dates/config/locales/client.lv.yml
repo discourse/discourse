@@ -17,8 +17,6 @@ lv:
       create:
         form:
           insert: Ievietot
-          advanced_mode: Uzlabots režīms
-          simple_mode: Vienkāršs režīms
           format_description: "Formāts, ko izmanto, lai lietotājam parādītu datumu. Izmantojiet Z, lai parādītu nobīdi, un zz laika joslas nosaukumam."
           timezones_title: Parādāmās laika joslas
           timezones_description: Laika joslas tiks izmantotas, lai priekšskatījumā un rezervē parādītu datumus.

@@ -6,10 +6,8 @@
 
 it:
   js:
-    discourse_hCaptcha:
-      missing_token: "Completa la sfida hCaptcha."
+    discourse_captcha:
       placeholder: segnaposto
-      contact_system_administrator: "Si è verificato un problema con hCaptcha, se il problema persiste contatta un amministratore di sistema"
   admin_js:
     admin:
       site_settings:

@@ -24,7 +24,7 @@ en:
     oauth2_json_groups_path: "Path in the OAuth2 User JSON to an array of group names the user belongs to. Leave blank to disable group syncing."
     oauth2_user_field_mappings: "Map paths in the OAuth2 User JSON onto Discourse user fields. Each entry pairs a JSON path with the numeric ID of a Discourse user field."
     oauth2_email_verified: "Check this if the OAuth2 site has verified the email"
-    oauth2_overrides_email: "Override the Discourse email with the remote email on every login. Works the same as the `auth_overrides_email` setting, but is specific to OAuth2 logins."
+    oauth2_overrides_email: "Override the Discourse email with the remote email on every login. Works the same as the {{setting:auth_overrides_email}} setting, but is specific to OAuth2 logins."
     oauth2_send_auth_header: "Send client credentials in an HTTP Authorization header"
     oauth2_send_auth_body: "Send client credentials in the request body"
     oauth2_debug_auth: "Include rich debugging information in your logs"

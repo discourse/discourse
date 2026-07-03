@@ -86,11 +86,6 @@ ug:
           every_day: "ھەر كۈنى"
         attendance:
           none: "يوق"
-        url:
-          label: "تور ئادرېسى"
-          placeholder: "تاللاشچان"
-        location:
-          label: "ئورنى"
         description:
           label: "چۈشەندۈرۈش"
         event_type:
@@ -98,3 +93,4 @@ ug:
             title: "ئاممىۋى"
       invite_user_or_group:
         invite: "يوللا"
+        success: "تەكلىپ يوللاندى"

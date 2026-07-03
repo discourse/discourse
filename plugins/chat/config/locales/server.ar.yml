@@ -33,7 +33,6 @@ ar:
     chat_editing_grace_period_max_diff_low_trust: "الحد الأقصى لعدد تغييرات الأحرف المسموح بها خلال فترة السماح بالتعديل في الدردشة، وعرض علامة (تم التعديل) بجانب رسالة الدردشة إذا تم تغيير المزيد (مستوى الثقة 0 و1)."
     chat_editing_grace_period_max_diff_high_trust: "الحد الأقصى لعدد تغييرات الأحرف المسموح بها خلال فترة السماح بالتعديل في الدردشة، وعرض علامة (تم التعديل) بجانب رسالة الدردشة إذا تم تغيير المزيد (مستوى الثقة 2 وأعلى)."
     chat_preferred_index: "علامة التبويب المفضَّلة عند تحميل /chat."
-    allow_chat_in_anonymous_mode: "فعّل هذا الإعداد للسماح للمستخدمين الذين يتصفحون موقعك بشكل مجهول باستخدام الدردشة. يتطلب هذا الإعداد تفعيل خيار \"السماح بالوضع المجهول\"."
     chat_search_enabled: "فعّل هذا الإعداد للسماح للمستخدمين بالبحث في رسائل الدردشة."
     errors:
       chat_default_channel: "يجب أن تكون قناة الدردشة الافتراضية قناةً عامة."
@@ -293,6 +292,10 @@ ar:
     scriptables:
       send_chat_message:
         title: إرسال رسالة دردشة
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "الموافقة"
+      default_deny_label: "رفض"
   reviewable_score_types:
     needs_review:
       title: "بحاجة إلى المراجعة"

@@ -4,8 +4,8 @@ module PageObjects
   module Pages
     module DiscourseCalendar
       class UpcomingEvents < PageObjects::Pages::Base
-        def visit
-          super("/upcoming-events")
+        def visit(prefix = "")
+          super("#{prefix}/upcoming-events")
         end
 
         def next

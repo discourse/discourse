@@ -35,7 +35,7 @@ describe "Reactions | Post reaction user list" do
     reactions_list.click_counter
 
     expect(popup).to be_open
-    find(".post-users-popup .post-users-popup__name[data-user-card=#{user_2.username}]").click
+    find(".users-popup .users-popup__name[data-user-card=#{user_2.username}]").click
 
     expect(page).to have_css(".user-card.user-card-#{user_2.username}")
   end
@@ -50,10 +50,10 @@ describe "Reactions | Post reaction user list" do
     reactions_list.click_counter
 
     expect(page).to have_css(
-      ".post-users-popup__name[data-user-card=#{user_2.username}]",
+      ".users-popup__name[data-user-card=#{user_2.username}]",
       text: user_2.name,
     )
-    expect(page).to have_css(".post-users-popup__username", text: "@#{user_2.username}")
+    expect(page).to have_css(".users-popup__username", text: "@#{user_2.username}")
   end
 
   it "shows the user's username as primary when prioritize_username_in_ux is true" do
@@ -66,61 +66,10 @@ describe "Reactions | Post reaction user list" do
     reactions_list.click_counter
 
     expect(page).to have_css(
-      ".post-users-popup__name[data-user-card=#{user_2.username}]",
+      ".users-popup__name[data-user-card=#{user_2.username}]",
       text: user_2.username,
     )
-    expect(page).to have_no_css(".post-users-popup__username")
-  end
-
-  it "opens the users popup pre-filtered when clicking a specific reaction emoji" do
-    sign_in(current_user)
-    visit(post.url)
-    expect(reactions_list).to have_reaction("heart")
-
-    reactions_list.click_reaction("clap")
-
-    expect(popup).to be_open
-    expect(popup).to have_active_filter("clap")
-    expect(popup).to have_no_active_filter("heart")
-    expect(popup).to have_user(user_3.username)
-    expect(popup).to have_no_user(user_2.username)
-  end
-
-  it "opens the users popup with no filter when clicking the counter number" do
-    sign_in(current_user)
-    visit(post.url)
-    expect(reactions_list).to have_reaction("heart")
-
-    reactions_list.click_counter_number
-
-    expect(popup).to be_open
-    expect(popup).to have_active_filter("all")
-  end
-
-  it "switches the active filter without reopening the menu when another emoji is clicked" do
-    sign_in(current_user)
-    visit(post.url)
-    expect(reactions_list).to have_reaction("heart")
-
-    reactions_list.click_reaction("heart")
-    expect(popup).to have_active_filter("heart")
-
-    reactions_list.click_reaction("clap")
-    expect(popup).to have_active_filter("clap")
-    expect(popup).to have_no_active_filter("heart")
-  end
-
-  it "switches to the all filter without reopening the menu when the counter number is clicked" do
-    sign_in(current_user)
-    visit(post.url)
-    expect(reactions_list).to have_reaction("heart")
-
-    reactions_list.click_reaction("heart")
-    expect(popup).to have_active_filter("heart")
-
-    reactions_list.click_counter_number
-    expect(popup).to have_active_filter("all")
-    expect(popup).to have_no_active_filter("heart")
+    expect(page).to have_no_css(".users-popup__username")
   end
 
   it "filters the users popup by reaction" do
@@ -128,7 +77,7 @@ describe "Reactions | Post reaction user list" do
     visit(post.url)
     expect(reactions_list).to have_reaction("heart")
 
-    reactions_list.click_counter_number
+    reactions_list.click_counter
     expect(popup).to be_open
 
     expect(popup).to have_user(user_2.username)

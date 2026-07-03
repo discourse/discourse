@@ -39,8 +39,11 @@ pl_PL:
         title: Oceniaj posty za pomocą sztucznej inteligencji
         description: "Oceniaj posty przy użyciu dużego modelu językowego"
         flagged_post: |
-          <div>Odpowiedź modelu:</div>
-          <p>%{llm_response}</p>
+          %{score_reason}
+          %{response}
+        flagged_post_response: |
+          <p>Odpowiedź modelu: %{llm_response}</p>
+        flagged_post_score_reason: |
           <b>Wyzwalane przez regułę <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
           subject: "Twój post został tymczasowo usunięty w celu sprawdzenia"
@@ -118,6 +121,8 @@ pl_PL:
     ai_embeddings_semantic_related_age_penalty: "Zastosuj wykładniczą karę wiekową do tematów w wynikach wyszukiwania semantycznego. 0,0 = brak kary, 0,3 = delikatne nastawienie do ostatnio aktywnych treści, 1,0+ = silne nastawienie do niedawno aktywnych treści."
     ai_embeddings_semantic_related_age_time_scale: "Skala czasowa w dniach obliczania kary wiekowej. Tematy nieaktywne przez wiele dni otrzymują ~ 50% kary z karą = 1,0. Użyj 365 dla skali rocznej, 90 dla skali kwartalnej."
     ai_embeddings_per_post_enabled: Generuj osadzenia dla każdego wpisu
+    ai_admin_dashboard_enabled: "Włącz funkcje AI w panelu administracyjnym."
+    ai_admin_dashboard_highlights_agent: "Agent wyjaśniający istotne zmiany w społeczności w panelu administracyjnym."
     ai_summarization_enabled: "Włącz funkcję podsumowania"
     ai_summarization_agent: "Agent do wykorzystania w funkcji podsumowania"
     ai_pm_summarization_allowed_groups: "Grupy mogą tworzyć i przeglądać podsumowania w wiadomościach prywatnych."
@@ -265,6 +270,12 @@ pl_PL:
       change_description: "Zmień opis"
       copied: "Skopiowano do schowka"
     unknown_model: "Nieznany model AI"
+    discourse_workflows:
+      ai_agent:
+        errors:
+          locked_default_llm_missing: "Agent „%{agent}” jest zablokowany na swoim domyślnym LLM, ale nie skonfigurowano żadnego prawidłowego domyślnego LLM"
+          llm_not_found: "Nie znaleziono modelu LLM o identyfikatorze %{llm_model_id}"
+          no_llm_configured: "Nie skonfigurowano LLM dla agenta „%{agent}”. Wybierz model LLM lub skonfiguruj domyślny LLM agenta/lokacji."
     tools:
       custom_name: "%{name} (niestandardowe)"
       presets:
@@ -385,6 +396,11 @@ pl_PL:
         cannot_delete_system_agent: "Nie można usunąć agentów systemowych, zamiast tego należy je wyłączyć"
         cannot_edit_system_agent: "Można zmienić tylko nazwy agentów systemowych, nie można edytować narzędzi ani komunikatów systemowych, zamiast tego należy je wyłączyć i utworzyć kopię"
         cannot_have_duplicate_tools: "Nie można mieć duplikatów narzędzi"
+        native_tool_requires_forced_llm: "Narzędzia natywne dostawcy wymagają domyślnego LLM z włączoną opcją „Wymuś domyślny LLM”"
+        native_tool_unsupported_by_llm: "Wybrany domyślny program LLM nie obsługuje żadnego z włączonych narzędzi natywnych dostawcy"
+        admin_dashboard_highlights:
+          name: "Najważniejsze informacje na temat panelu administracyjnego"
+          description: "Wyświetla krótki odczyt wyświetlany na górze panelu administracyjnego, wyjaśniając, co się zmieniło i na co należy zwrócić uwagę w tym okresie"
         github_helper:
           name: "Pomocnik GitHub"
           description: "Bot AI specjalizujący się w pomocy w zadaniach i pytaniach związanych z GitHubem"
@@ -461,7 +477,7 @@ pl_PL:
           name: "Tłumacz"
           description: "Domyślny agent obsługujący funkcję tłumacza pomocnika"
         image_captioner:
-          name: "Podpisy pod obrazkami"
+          name: "Podpisy pod obrazami"
           description: "Domyślny agent obsługujący funkcję podpisu obrazu pomocnika"
         locale_detector:
           name: "Detektor ustawień regionalnych"
@@ -552,6 +568,13 @@ pl_PL:
           flag_type:
             name: "Typ flagi"
             description: "Kontroluje, czy wpis jest sprawdzany, ukrywany, usuwany lub traktowany jako spam."
+      native_tools:
+        web_search:
+          name: "Wyszukiwanie w sieci (natywne)"
+          help: "Umożliwia modelowi przeszukiwanie sieci przy użyciu wbudowanej wyszukiwarki dostawcy, gdy agent jest zmuszony do korzystania z obsługiwanego LLM."
+        web_fetch:
+          name: "Pobieranie z sieci (natywne)"
+          help: "Umożliwia modelowi otwieranie i odczytywanie stron internetowych przy użyciu wbudowanego dostępu do sieci dostawcy, gdy agent jest wymuszony przez obsługiwany protokół LLM."
       tool_summary:
         read_artifact: "Przeczytaj artefakt sieciowy"
         search_uploaded_documents: "Wyszukaj przesłane dokumenty"
@@ -578,6 +601,7 @@ pl_PL:
         grant_badge: "Przyznaj odznakę"
         list_reviewables: "Kolejka do przeglądu listy"
         perform_reviewable_action: "Działanie kolejki przeglądu"
+        add_reviewable_note: "Dodaj notatkę do kolejki przeglądu"
         assign: "Przypisz temat"
         mark_as_solved: "Oznacz jako rozwiązany"
         search: "Szukaj"
@@ -623,6 +647,7 @@ pl_PL:
         grant_badge: "Przyznaj użytkownikowi odznakę"
         list_reviewables: "Wyświetl listę oczekujących na przegląd elementów w kolejce z opcjonalnym filtrowaniem"
         perform_reviewable_action: "Wykonaj działanie w kolejce przeglądu"
+        add_reviewable_note: "Dodaj notatkę do elementu w kolejce przeglądu"
         assign: "Przypisz lub usuń przypisanie tematu użytkownikowi lub grupie"
         mark_as_solved: "Oznacz lub odznacz wpis jako zaakceptowane rozwiązanie"
         search: "Przeszukaj wszystkie publiczne tematy na forum"
@@ -670,6 +695,7 @@ pl_PL:
         grant_badge: "Przyznanie odznaki „%{badge_name}” użytkownikowi %{username}"
         list_reviewables: "Wyświetlanie listy elementów kolejki przeglądu (typ: %{type})"
         perform_reviewable_action: "Wykonywanie %{action} na %{reviewable_id} do przejrzenia"
+        add_reviewable_note: "Dodawanie notatki do %{reviewable_id} do przeglądu"
         assign: "Przypisanie tematu %{topic_id} (przypisano: %{assigned})"
         mark_as_solved: "Oznaczanie wpisu %{post_id} jako rozwiązany (rozwiązany: %{solved})"
         read: "Czytanie: <a href='%{url}'>%{title}</a>"
@@ -734,6 +760,7 @@ pl_PL:
         already_flagged: "Wpis został już oflagowany do sprawdzenia."
         flagged: "Wpis oflagowany do sprawdzenia."
         reason: "Bot AI oflagował ten wpis.\n\nPowód: %{reason}"
+        score_reason: "Bot AI oznaczył ten wpis."
       close_topic:
         errors:
           not_found: "Temat nie został znaleziony."
@@ -847,6 +874,13 @@ pl_PL:
           conflict: "Ten element kolejki przeglądu został zaktualizowany przez kogoś innego. Spróbuj ponownie."
           action_failed: "Nie udało się wykonać działania"
         success: "Pomyślnie wykonano działanie „%{action}” na elemencie kolejki przeglądu %{reviewable_id}"
+      add_reviewable_note:
+        errors:
+          not_allowed: "Nie masz dostępu do kolejki przeglądu"
+          not_found: "Nie znaleziono elementu kolejki przeglądu"
+          no_note: "Aby dodać notatkę do elementu kolejki przeglądu, wymagana jest notatka"
+          failed: "Nie udało się dodać notatki"
+        success: "Pomyślnie dodano notatkę do elementu kolejki przeglądu %{reviewable_id}"
     reviewables:
       ai_tool_action:
         title: "Działanie narzędzia AI"
@@ -881,6 +915,9 @@ pl_PL:
           positive: "Pozytywne"
           negative: "Negatywne"
           neutral: "Neutralne"
+    discord:
+      configuration:
+        agent_user_required: "Aby można było włączyć tryb agenta Discord, agent wyszukiwania Discord musi mieć skojarzonego użytkownika."
     llm:
       configuration:
         create_llm: "Przed włączeniem tej funkcji należy skonfigurować LLM"
@@ -937,7 +974,7 @@ pl_PL:
       limit_exceeded_admin: "Osiągnięto limit kredytu AI. Spróbuj ponownie po %{reset_time}."
     errors:
       quota_exceeded: "Przekroczyłeś limit dla tego modelu. Spróbuj ponownie za %{relative_time}."
-      quota_required: "Musisz określić maksymalną liczbę tokenów lub użyć dla tego modelu"
+      quota_required: "Musisz określić maksymalną liczbę tokenów, zastosowań lub koszt dla tego modelu"
       no_query_specified: Parametr zapytania jest wymagany, podaj go.
       no_user_for_agent: Określony agent nie ma powiązanego użytkownika.
       agent_not_found: "Podany agent nie istnieje. Sprawdź parametry agent_name lub agent_id (starsze: persona_name lub persona_id)."

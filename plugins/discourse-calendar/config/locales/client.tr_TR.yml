@@ -412,7 +412,6 @@ tr_TR:
           no_users: "Kullanıcı bulunamadı"
           leave_event: "Etkinlikten ayrıl"
           status:
-            unknown: "İlgilenmiyorum"
             going: "Gidiyorum"
             interested: "İlgileniyorum"
             going_count:
@@ -445,6 +444,8 @@ tr_TR:
         name_placeholder: "Etkinlik adı"
         location_placeholder: "Konum veya URL ekle"
         description_placeholder: "Etkinlik açıklaması ekle"
+        event_title_placeholder: "Etkinlik adı"
+        create_event_button: "Etkinlik oluştur"
         reminder:
           units:
             minutes:
@@ -459,6 +460,9 @@ tr_TR:
             weeks:
               one: "hafta"
               other: "hafta"
+      composer_actions:
+        create_event:
+          label: "Etkinlik oluştur"
       builder_modal:
         custom_fields:
           label: "Özel Alanlar"
@@ -467,7 +471,6 @@ tr_TR:
         create_event_title: "Etkinlik oluşturun"
         update_event_title: "Etkinliği düzenleyin"
         advanced_settings_title: "Gelişmiş ayarlar"
-        advanced_settings: "Gelişmiş ayarlar"
         confirm_delete: "Bu etkinliği silmek istediğinizden emin misiniz?"
         confirm_close: "Bu etkinliği kapatmak istediğinizden emin misiniz?"
         confirm_open: "Bu etkinliği açmak istediğinizden emin misiniz?"
@@ -510,11 +513,7 @@ tr_TR:
         allow_chat:
           label: "Sohbet entegrasyonu"
           checkbox_label: "Etkinliğe özel sohbet kanalı oluşturun ve yönetin"
-        url:
-          label: "URL"
-          placeholder: "İsteğe bağlı"
         location:
-          label: "Konum"
           placeholder: "Konum, bağlantı veya başka bir şey ekleyin."
         description:
           label: "Açıklama"
@@ -533,3 +532,4 @@ tr_TR:
       invite_user_or_group:
         title: "Kullanıcıları veya grupları bilgilendir"
         invite: "Gönder"
+        success: "Davet gönderildi"

@@ -356,8 +356,6 @@
     padding: 0.65em 0.25em;
   }
 
-  .admin-report .main,
-  //temp fix for reporting upcoming changes
   .admin-report .chart__body {
     border: 1px solid var(--content-border-color);
 
@@ -366,15 +364,12 @@
     }
   }
 
-  // temp fix for reporting upcoming changes
   .alert {
-    .uc-reporting-improvements & {
-      margin-bottom: 0;
-    }
+    margin-bottom: 0;
   }
 
   .admin-report:not(:last-child) {
-    .main {
+    .chart__body {
       border-bottom: 0;
     }
 
@@ -403,7 +398,7 @@
     }
   }
 
-  .admin-report .main .report-alert {
+  .admin-report .chart__body .report-alert {
     display: flex;
     flex-direction: row;
     padding: 0.5em 0.25em;
@@ -646,15 +641,32 @@
       white-space: nowrap;
     }
 
+    .commits-ahead {
+      font-size: var(--font-down-2-rem);
+      font-weight: normal;
+      color: var(--primary-medium);
+      cursor: help;
+    }
+
     h4 {
       font-size: var(--font-down-2);
       margin-bottom: 0.5em;
     }
 
-    .sha-link {
-      display: inline-flex;
-      font-size: var(--font-down-2);
-      font-weight: normal;
+    .version-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-4);
+      margin-top: var(--space-1);
+
+      a {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-1);
+        font-size: var(--font-down-3);
+        font-weight: normal;
+        white-space: nowrap;
+      }
     }
   }
 
@@ -685,7 +697,7 @@
     display: none;
   }
 
-  .fa {
+  .face .fa {
     font-size: var(--font-up-4);
   }
 

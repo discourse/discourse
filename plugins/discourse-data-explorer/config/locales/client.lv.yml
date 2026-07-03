@@ -24,7 +24,13 @@ lv:
           yes: "Jā"
           no: "Nē"
       delete: "Dzēst"
+      chart:
+        form:
+          bar: "Josla"
       query_groups: "Grupas"
       query_description: "Apraksts"
       reset_params: "Atlikt"
       search_placeholder: "Meklēt..."
+    discourse_workflows:
+      sql:
+        param_value: "Vērtība"

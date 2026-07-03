@@ -264,7 +264,7 @@ export default class GlimmerSiteHeader extends Component {
       panel.classList.add(viewMode);
 
       if (this._animate) {
-        let animationFinished = null;
+        let animationFinished;
         let finalPosition = PANEL_WIDTH;
         this._swipeMenuOrigin = "right";
         if (

@@ -6,11 +6,20 @@
 
 lv:
   js:
+    user_api_key:
+      deny: "Atcelt"
+      copied: "Nokopēts!"
+      device:
+        code: "Kods"
+        continue: "Turpināt"
     blocks:
       ghost:
         status: "Statuss"
         hidden: "paslēpts"
         failed: "neizdevies"
+    access_control:
+      manage:
+        access_permission_remove: "Atcelt"
     number:
       format:
         separator: ","
@@ -221,6 +230,9 @@ lv:
     age: "Vecums"
     joined: "Pievienojās"
     admin_title: "Administrators"
+    advanced_mode_toggle:
+      advanced_mode: "Uzlabots režīms"
+      simple_mode: "Vienkāršs režīms"
     show_more: "parādīt vairāk"
     show_help: "Opcijas"
     links: "Saites"
@@ -263,8 +275,6 @@ lv:
     suggested_topics:
       pm_title: "Ieteiktās ziņas"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Ieslēgts"
       start_posting:
         back: "Atpakaļ"
     about:
@@ -656,7 +666,6 @@ lv:
             allow_unknown_sender_topic_replies_hint: "Ļauj nezināmiem sūtītājiem atbildēt uz grupas tēmām. Ja tas nav iespējots, atbildes no e -pasta adresēm, kas vēl nav uzaicinātas uz šo tēmu, izveidos jaunu tēmu."
         membership:
           title: Piederība
-          access: Piekļuve
         categories:
           title: Sadaļas
           long_title: "Kategorijas noklusējuma paziņojumi"
@@ -682,7 +691,6 @@ lv:
           to: "Kam"
       permissions:
         title: "Atļaujas / Pieejas"
-      public_admission: "Atļaut lietotājiem brīvi pievienoties grupai (šai grupai jābūt publiski redzamai)"
       public_exit: "Ļaut lietotājiem brīvi pamest grupu"
       empty:
         posts: "Grupas dalībnieki nav veikuši nevienu ierakstu"
@@ -697,7 +705,6 @@ lv:
       request: "Pieprasījums"
       message: "Ziņa"
       confirm_leave: "Vai tiešām vēlaties pamest šo grupu?"
-      allow_membership_requests: "Ļaut lietotājiem sūtīt dalības pieprasījumus grupas īpašniekiem (nepieciešama publiski redzama grupa)"
       membership_request_template: "Pielāgota veidne, kas jāparāda lietotājiem, nosūtot dalības pieprasījumu"
       membership_request:
         submit: "Iesniegt pieprasījumu"
@@ -1036,6 +1043,8 @@ lv:
       undo_revoke_access: "Atcelt piekļuves liegšanu"
       api_approved: "Apstiprināts:"
       api_last_used_at: "Pēdējoreiz izmantots:"
+      api_expires_at: "Derīguma termiņš beidzas:"
+      api_expires_never: "nekad"
       theme: "Tēma"
       save_to_change_theme: 'Tēma tiks atjaunināta pēc noklikšķināšanas uz "%{save_text}"'
       home: "Noklusējuma sākumlapa"
@@ -1556,6 +1565,12 @@ lv:
       confirm_title: Turpināt %{site_name}
       logging_in_as: Piesakoties kā %{email}
       confirm_button: Pabeigt pieteikšanos
+    code_login:
+      email_label: "E-pasts"
+      continue_button: "Turpināt"
+      verify_button: "Turpināt"
+      account_ready_continue: "Turpināt"
+      username_label: "Lietotājvārds"
     login:
       header_title: "Laipni lūdzam"
       title: "Ienākt"
@@ -1689,7 +1704,7 @@ lv:
       discard: "Izmest"
       title_placeholder: "Aprakstiet šis diskusijas saturu īsā teikumā!"
       title_or_link_placeholder: "Ierakstiet nosaukumu vai ievietojiet šeit saiti"
-      edit_reason_placeholder: "kāpēc jūs rediģējat?"
+      edit_reason_placeholder: "Kāpēc jūs rediģējat?"
       topic_featured_link_placeholder: "Ievadiet saiti, kas redzama virsrakstā."
       reply_placeholder: "Rakstiet šeit. Izmantojiet Markdown, BBCode, vai HTML formatēšanai. Velciet vai ielīmējiet bildes."
       view_new_post: "Apskatīt jūsu jauno ierakstu."
@@ -1717,6 +1732,7 @@ lv:
         attribute_value: "Vērtība"
         apply: "Pielietot"
       help: "Palīdzība ar formatēšanu, izmantojot Markdown"
+      edit_reason: "Kāpēc jūs rediģējat?"
       modal_ok: "Labi"
       cant_send_pm: "Atvainojiet, jūs nevarat sūtīt ziņu %{username}."
       yourself_confirm:
@@ -1726,6 +1742,11 @@ lv:
       composer_actions:
         reply: Atbilde
         edit: Labot
+        reply_to_topic:
+          trigger: Tēmas
+        reply_to_message:
+          trigger: Ziņa
+        unknown_user: "Lietotājs"
       ignore: "Ignorēt"
       image: "attēls"
     notifications:
@@ -1882,6 +1903,18 @@ lv:
         dismiss_button: "Nerādīt..."
         dismiss_tooltip: "Nerādīt tikai jaunos ierakstus vai pārtraukt sekot tēmām"
         also_dismiss_topics: "Pārtraukt sekot šīm tēmām, lai tās man vairs nekad nerādītos kā neizlasītas"
+        dismiss_new_topics_with_selected:
+          zero: "Noraidīt (%{count})"
+          one: "Noraidīt (%{count})"
+          other: "Noraidīt (%{count})"
+        dismiss_new_replies_with_selected:
+          zero: "Noraidīt (%{count})"
+          one: "Noraidīt (%{count})"
+          other: "Noraidīt (%{count})"
+        dismiss_all_with_selected:
+          zero: "Noraidīt (%{count})"
+          one: "Noraidīt (%{count})"
+          other: "Noraidīt (%{count})"
         dismiss_new: "Nerādīt jaunus"
         toggle: "darbības ar vairākām tēmām"
         actions: "Darbības ar vairumu"
@@ -2829,7 +2862,7 @@ lv:
         modal:
           cancel: "atcelt"
           create: "Saglabāt"
-          reason: "kāpēc jūs rediģējat?"
+          reason: "Kāpēc jūs rediģējat?"
       spreadsheet:
         show: "Parādīt"
         about: "Par"
@@ -2902,6 +2935,9 @@ lv:
           form:
             mobile: "Mobilais"
             email: "E-pasts"
+            og_image_preview:
+              generate: "Radīt"
+              topic_id_label: "Tēmas ID"
         fonts:
           backfill_modal:
             modal_yes: "Jā"
@@ -2993,7 +3029,7 @@ lv:
         no_check_performed: "Nav veikta atjauninājumu pārbaude. Pārliecinieties, ka sidekiq darbojas."
         stale_data: "Pēdējā laikā nav veikta atjauninājumu pārbaude. Pārliecinieties, ka sidekiq darbojas."
         installed_version: "Uzinstalēts"
-        latest_version: "Pēdējais"
+        github: "GitHub"
         dismiss_notice: "Ignorēt"
         new_features:
           learn_more: "Uzzināt vairāk..."
@@ -3031,6 +3067,10 @@ lv:
                 "0": "Jauns"
                 "2": "Biedrs"
                 "3": "Regulārs"
+          search:
+            title: "Meklēt"
+            table:
+              status: "Statuss"
         reports_section:
           modal:
             enabled_heading: "Ieslēgts"
@@ -3195,6 +3235,7 @@ lv:
       config_areas:
         about:
           company_name: "Vārds"
+          company_url: "Vietne"
           extra_groups:
             groups: "Grupas"
           optional: "(pēc izvēles)"
@@ -3596,6 +3637,10 @@ lv:
         id_not_found: "Piedod, šāds lietotāja ID neeksistē mūsu sistēmā."
         status: "Statuss"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Aizvērt"
+              confirm: "Apturēt"
           delete:
             confirmation_modal:
               close: "Aizvērt"

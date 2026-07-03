@@ -43,7 +43,6 @@ tr_TR:
         description_hint: "Ne istediğinizi basit bir dille açıklayın. SQL sorgusunu, adı ve açıklamayı sizin için biz oluşturacağız."
         description_placeholder: "Örneğin: Zaman içindeki kayıtları göster"
         generate: "Oluştur"
-        regenerate: "Yeniden oluştur"
         generating: "AI ile sorgu oluşturuluyor..."
         generation_timeout: "AI sorgu oluşturma işlemi zaman aşımına uğradı. SQL sorgusunu manuel olarak yazabilirsiniz."
         generation_error: "Sorgu oluşturulurken bir hata oluştu."
@@ -79,6 +78,10 @@ tr_TR:
       delete: "Sil"
       recover: "Sorguyu silme işlemini geri al"
       sql_label: "SQL"
+      chart:
+        form:
+          label: "Grafik tipi"
+          bar: "Çubuk"
       others_dirty: "Sorgu üzerinde yaptığınız değişiklikleri kaydetmezseniz bağlantınızın kopması durumunda yapılan değişiklikler kaybolur."
       run_time: "Sorgu %{value} ms'de tamamlandı."
       cached_result_notice: "%{relative_time} tarihinden itibaren önbelleğe alınmış sonuçlar gösteriliyor."
@@ -115,6 +118,17 @@ tr_TR:
           descriptions:
             data_explorer:
               run_queries: "Veri Gezgini sorgularını çalıştırın. Sorgu kimliklerini belirterek API anahtarını bir sorgu kümesiyle sınırlandırın."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Veri Gezgini"
+      sql:
+        queries: "Sorgular"
+        query_id: "Sorgu"
+        add_param: "Parametre ekle"
+        param_value: "Değer"
+        output:
+          results: "Sonuçlar"
+          no_results: "Sonuç yok"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

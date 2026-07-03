@@ -17,6 +17,8 @@ ug:
       move_post_cancel: "ۋاز كەچ"
       confirm_solved_removal_confirm: "جەزملە"
       confirm_solved_removal_cancel: "ۋاز كەچ"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
     topic_statuses:
       solved:
         help: "بۇ تېمىنىڭ ھەل قىلىش چارىسى بار"

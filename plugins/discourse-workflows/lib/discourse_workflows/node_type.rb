@@ -37,6 +37,10 @@ module DiscourseWorkflows
       registered_nodes.select(&:waits_for_resume?).map(&:identifier)
     end
 
+    def self.find_in(nodes)
+      Array(nodes).find { |node| node["type"] == identifier }
+    end
+
     def self.description(value = nil)
       if value
         @description = DESCRIPTION_DEFAULTS.deep_merge(value.deep_symbolize_keys).freeze
@@ -147,6 +151,12 @@ module DiscourseWorkflows
         .filter_map { |name| name.strip.presence }
     end
 
+    def self.trust_level_options
+      TrustLevel.levels.map do |name, level|
+        { value: level.to_s, label_key: "trust_levels.names.#{name}" }
+      end
+    end
+
     def initialize(**)
     end
 
@@ -184,8 +194,40 @@ module DiscourseWorkflows
       Item.wrap(data, paired_item:)
     end
 
-    def serialize_record(record, serializer, scope: Discourse.system_user.guardian, root: false)
-      MultiJson.load(serializer.new(record, scope:, root:).to_json).deep_symbolize_keys
+    def serialize_record(
+      record,
+      serializer,
+      scope: Discourse.system_user.guardian,
+      root: false,
+      **opts
+    )
+      MultiJson.load(serializer.new(record, scope:, root:, **opts).to_json).deep_symbolize_keys
+    end
+
+    def serialize_post(
+      post,
+      guardian: Discourse.system_user.guardian,
+      include_raw: true,
+      include_cooked: false
+    )
+      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_post(
+        post,
+        guardian: guardian,
+        include_raw: include_raw,
+        include_cooked: include_cooked,
+      )
+    end
+
+    def serialize_topic(topic, guardian: Discourse.system_user.guardian, custom_field_names: [])
+      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_topic(
+        topic,
+        guardian: guardian,
+        custom_field_names: custom_field_names,
+      )
+    end
+
+    def serialize_user(user, guardian: Discourse.system_user.guardian)
+      DiscourseWorkflows::Executor::NodeExecutionContext.serialize_user(user, guardian: guardian)
     end
 
     def with_paired_item(item, paired_item)

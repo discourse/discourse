@@ -1,4 +1,4 @@
-import { click, currentURL, visit } from "@ember/test-helpers";
+import { click, currentURL, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { TOP_SITE_CATEGORIES_TO_SHOW } from "discourse/components/sidebar/common/categories-section";
 import { NotificationLevels } from "discourse/lib/notification-levels";
@@ -9,7 +9,6 @@ import discoveryFixture from "discourse/tests/fixtures/discovery-fixtures";
 import {
   acceptance,
   publishToMessageBus,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -152,15 +151,14 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
       .dom(".sidebar-section[data-section-name='categories']")
       .exists("categories section is shown");
 
-    const categorySectionLinks = queryAll(
-      ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id]"
-    );
-
-    assert.strictEqual(
-      categorySectionLinks.length,
-      TOP_SITE_CATEGORIES_TO_SHOW,
-      "the right number of category section links are shown"
-    );
+    assert
+      .dom(
+        ".sidebar-section[data-section-name='categories'] .sidebar-section-link-wrapper[data-category-id]"
+      )
+      .exists(
+        { count: TOP_SITE_CATEGORIES_TO_SHOW },
+        "the right number of category section links are shown"
+      );
 
     const topCategories = Site.current().categoriesByCount.splice(
       0,
@@ -245,11 +243,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit("/");
 
-    const categorySectionLinks = queryAll(
+    const categorySectionLinks = findAll(
       ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
     );
 
-    const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
+    const categoryNames = categorySectionLinks.map((categorySectionLink) =>
       categorySectionLink.textContent.trim()
     );
 
@@ -317,11 +315,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit("/");
 
-    const categorySectionLinks = queryAll(
+    const categorySectionLinks = findAll(
       ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
     );
 
-    const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
+    const categoryNames = categorySectionLinks.map((categorySectionLink) =>
       categorySectionLink.textContent.trim()
     );
 
@@ -389,11 +387,11 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
 
     await visit("/");
 
-    const categorySectionLinks = queryAll(
+    const categorySectionLinks = findAll(
       ".sidebar-section[data-section-name='categories'] .sidebar-section-link:not(.sidebar-section-link[data-link-name='all-categories'])"
     );
 
-    const categoryNames = [...categorySectionLinks].map((categorySectionLink) =>
+    const categoryNames = categorySectionLinks.map((categorySectionLink) =>
       categorySectionLink.textContent.trim()
     );
 
@@ -1064,7 +1062,7 @@ acceptance(
       navigation_menu: "sidebar",
     });
 
-    needs.user({ new_new_view_enabled: true });
+    needs.user({ unified_new_enabled: true });
 
     test("count shown next to category link when sidebar_show_count_of_new_items is true", async function (assert) {
       const categories = Site.current().categories;

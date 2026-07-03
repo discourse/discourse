@@ -6,10 +6,8 @@
 
 nl:
   js:
-    discourse_hCaptcha:
-      missing_token: "Voltooi de hCaptcha-uitdaging."
+    discourse_captcha:
       placeholder: tijdelijke aanduiding
-      contact_system_administrator: "Er is een probleem opgetreden met hCaptcha. Als dit probleem zich blijft voordoen, neem dan contact op met een systeembeheerder."
   admin_js:
     admin:
       site_settings:

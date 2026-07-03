@@ -150,21 +150,15 @@ RSpec.describe "Managing LLM configurations" do
     it "prefills the quotas form" do
       visit "/admin/plugins/discourse-ai/ai-llms/#{llm_model_1.id}/edit"
 
-      expect(page).to have_selector(
-        ".ai-llm-quotas__table .ai-llm-quotas__cell",
-        text: group_1.name,
-      )
+      expect(page).to have_selector(".ai-llm-quotas__item", text: group_1.name)
     end
 
     it "can remove a quota" do
       visit "/admin/plugins/discourse-ai/ai-llms/#{llm_model_1.id}/edit"
 
-      find(".ai-llm-quotas__delete-btn:nth-child(1)").click
+      find(".ai-llm-quotas__delete-btn").click
 
-      expect(page).to have_no_selector(
-        ".ai-llm-quotas__table .ai-llm-quotas__cell",
-        text: group_1.name,
-      )
+      expect(page).to have_no_selector(".ai-llm-quotas__item", text: group_1.name)
     end
 
     it "can add a quota" do
@@ -177,10 +171,7 @@ RSpec.describe "Managing LLM configurations" do
       form.field("max_tokens").fill_in(2000)
       form.submit
 
-      expect(page).to have_selector(
-        ".ai-llm-quotas__table .ai-llm-quotas__cell",
-        text: Group.find(1).name,
-      )
+      expect(page).to have_selector(".ai-llm-quotas__item", text: Group.find(1).name)
     end
   end
 

@@ -6,12 +6,23 @@
 
 sq:
   js:
+    user_api_key:
+      authorize: "Autorizo"
+      deny: "Anulo"
+      copied: "Kopjuar!"
+      device:
+        code: "Kodi"
+        continue: "Vazhdoni"
     blocks:
       ghost:
         status: "Status"
         in_location: "në"
         hidden: "fshehur"
         failed: "dështoi"
+    access_control:
+      manage:
+        access_permission_editor: "Redaktor"
+        access_permission_remove: "Hiq"
     number:
       format:
         separator: "."
@@ -302,8 +313,6 @@ sq:
       pill: "Sugjeruar"
       pm_title: "Mesazhet e sugjeruara"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Aktivizuar"
       start_posting:
         back: "Kthehu mbrapa"
     about:
@@ -899,7 +908,6 @@ sq:
             from_alias_hint: "Alias për t'u përdorur si adresë nga kur dërgoni email SMTP në grup. Vini re se kjo mund të mos mbështetet nga të gjithë ofruesit e postës, ju lutemi konsultohuni me dokumentacionin e ofruesit tuaj të postës."
         membership:
           title: Anëtarësimi
-          access: Lejimi
         categories:
           title: Kategoritë
           long_title: "Njoftimet e paracaktuara të kategorisë"
@@ -932,7 +940,6 @@ sq:
         title: "Të drejtat"
         none: "Nuk ka kategori të lidhura me këtë grup."
         description: "Anëtarët e këtij grupi mund t'i qasen këtyre kategorive"
-      public_admission: "Lejo që përdoruesit të bashkohen lirisht ne grupin (Kërkon grupin e dukshëm publik)"
       public_exit: "Lejo përdoruesit të largohen nga grupi lirshëm"
       empty:
         posts: "Nuk ka postime nga anëtarët e këtij grupi"
@@ -948,7 +955,6 @@ sq:
       request: "Kërkesë"
       message: "Mesazh"
       confirm_leave: "A jeni të sigurt që dëshironi të largoheni nga ky grup?"
-      allow_membership_requests: "Lejoni përdoruesit të dërgojnë kërkesa për anëtarësim tek pronarët e grupit (Kërkon grup të dukshëm"
       membership_request_template: "Modeli i personalizuar për t'u shfaqur përdoruesve kur dërgoni një kërkesë për anëtarësim"
       membership_request:
         submit: "Paraqisni Kërkesën"
@@ -1350,6 +1356,9 @@ sq:
       undo_revoke_access: "Anullo heqjen e aksesit"
       api_approved: "Aprovuar më:"
       api_last_used_at: "Përdorur për herë të fundit në:"
+      api_expires_at: "Skadon:"
+      api_expired_at: "Skaduar:"
+      api_expires_never: "asnjëherë"
       theme: "Tema"
       save_to_change_theme: 'Tema do të përditësohet pasi të klikoni "%{save_text}"'
       home: "Faqja kryesore e parazgjedhur"
@@ -2232,6 +2241,12 @@ sq:
       confirm_title: Vazhdo tek %{site_name}
       logging_in_as: Identifikohuni si %{email}
       confirm_button: Përfundoni hyrjen
+    code_login:
+      email_label: "Email"
+      continue_button: "Vazhdoni"
+      verify_button: "Vazhdoni"
+      account_ready_continue: "Vazhdoni"
+      username_label: "Emri i përdoruesit"
     login:
       header_title: "Mirë se vini përsëri"
       title: "Identifikohu"
@@ -2488,7 +2503,7 @@ sq:
       users_placeholder: "Shtoni përdorues ose grupe"
       title_placeholder: "Në një fjali të shkurtër shpjegoni për çfarë bën fjalë tema"
       title_or_link_placeholder: "Shkruani titullin ose ngjitni lidhjen këtu. "
-      edit_reason_placeholder: "pse jeni duke e redaktuar?"
+      edit_reason_placeholder: "Pse jeni duke e redaktuar?"
       topic_featured_link_placeholder: "Shkruani lidhjen e treguar me titullin."
       remove_featured_link: "Hiqni lidhjen nga tema."
       reply_placeholder: "Shkruani këtu. Mund të përdorni Markdown, BBCode, ose kod HTML për formatimin. Tërhiqni (drag and drop) ose kopjoni dhe ngjisni imazhet. "
@@ -2523,6 +2538,7 @@ sq:
         attribute_value: "Vlera"
         apply: "Apliko"
       help: "Ndihmë mbi Markdown"
+      edit_reason: "Pse jeni duke e redaktuar?"
       exit_fullscreen_prompt: "Shtypni <kbd>ESC</kbd> për të dalë nga ekrani i plotë"
       modal_ok: "OK"
       cant_send_pm: "Na vjen keq, nuk mund t'i dërgoni mesazh privat anëtarit %{username}."
@@ -2552,18 +2568,20 @@ sq:
           desc: Krijo mesazh të ri duke filluar me të njëjtët marrës
         reply_to_topic:
           label: Përgjigju temës
+          trigger: Topic
           desc: Përgjigju temës, jo ndonjë postimi specifik
+        reply_to_message:
+          trigger: Mesazh
         toggle_whisper:
           label: Ndërroni pëshpëritjen
-          desc: Pashërritjet janë të dukshme vetëm për anëtarët e stafit
         create_topic:
           desc: Krijoni një temë të re
         shared_draft:
           label: "Drafti i përbashkët"
           desc: "Hartoni një temë që do të jetë e dukshme vetëm për përdoruesit e lejuar"
         toggle_topic_bump:
-          label: "Ndryshoni përplasjen e temës"
           desc: "Përgjigjuni pa ndryshuar datën e fundit të përgjigjes"
+        unknown_user: "User"
       reload: "Ringarkoni"
       ignore: "Injoroni"
       image_alt_text:
@@ -2914,6 +2932,15 @@ sq:
         also_dismiss_topics: "Mos i gjurmo më këto tema që të mos afishohen më si të palexuara për mua"
         dismiss_new_topics: "Hiqni temat e reja"
         dismiss_new_replies: "Hiqni përgjigjet e reja"
+        dismiss_new_topics_with_selected:
+          one: "Hiq (%{count})"
+          other: "Hiq (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Hiq (%{count})"
+          other: "Hiq (%{count})"
+        dismiss_all_with_selected:
+          one: "Hiq (%{count})"
+          other: "Hiq (%{count})"
         dismiss_new: "Hiqni të Rejat"
         dismiss_new_modal:
           title: "Hiqni të Rejat"
@@ -3932,7 +3959,7 @@ sq:
         modal:
           cancel: "anulo"
           create: "Ruaj"
-          reason: "pse jeni duke e redaktuar?"
+          reason: "Pse jeni duke e redaktuar?"
       spreadsheet:
         show: "Shfaq"
         about: "Rreth"
@@ -4005,6 +4032,9 @@ sq:
           form:
             mobile: "Mobile"
             email: "Email"
+            og_image_preview:
+              generate: "Gjenero"
+              topic_id_label: "ID e temës"
         fonts:
           backfill_modal:
             modal_yes: "Po"
@@ -4098,7 +4128,7 @@ sq:
         no_check_performed: "Verifikimi i updejteve nuk është kryer. Sigurohuni që sidekiq punon. "
         stale_data: "Verifikimi i updejteve nuk është kryer këto kohët e fundit. Sigurohuni që sidekiq punon. "
         installed_version: "Instaluar"
-        latest_version: "Të fundit"
+        github: "Github"
         dismiss_notice: "Injoroni"
         new_features:
           learn_more: "Mëso më shumë..."
@@ -4135,6 +4165,10 @@ sq:
                 "2": "Anëtar"
                 "3": "I zakonshëm"
                 "4": "Udhëheqës"
+          search:
+            title: "Kërko"
+            table:
+              status: "Status"
         reports_section:
           modal:
             enabled_heading: "Aktivizuar"
@@ -4271,6 +4305,7 @@ sq:
         about:
           your_organization: "Organizata juaj"
           company_name: "Emri"
+          company_url: "Faqja e internetit"
           extra_groups:
             groups: "Grupet"
           saved: "u ruajt!"
@@ -4660,6 +4695,10 @@ sq:
         not_found: "Na vjen keq, por ky emër nuk u gjet në sistem."
         id_not_found: "Na vjen keq, por ky emër nuk ekziston në sistem."
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Mbyll"
+              confirm: "Pezullo"
           delete:
             confirmation_modal:
               close: "Mbyll"

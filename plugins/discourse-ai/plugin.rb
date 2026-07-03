@@ -32,6 +32,7 @@ register_asset "stylesheets/modules/summarization/desktop/ai-summary.scss", :des
 
 register_asset "stylesheets/modules/summarization/common/ai-gists.scss"
 
+register_asset "stylesheets/modules/admin-dashboard/common/admin-dashboard-highlight.scss"
 register_asset "stylesheets/modules/ai-bot/common/bot-replies.scss"
 register_asset "stylesheets/modules/ai-bot/common/ai-agent.scss"
 register_asset "stylesheets/modules/ai-bot/common/ai-discobot-discoveries.scss"
@@ -135,6 +136,30 @@ after_initialize do
     ModelAccuracy.adjust_model_accuracy(new_status, reviewable)
     if DiscourseAi::AiModeration::SpamScanner.enabled?
       DiscourseAi::AiModeration::SpamMetric.update(new_status, reviewable)
+    end
+  end
+
+  # when an account is removed, clear the user's own logs and the logs tied to
+  # the content being deleted with the account. the content callback runs before
+  # discourse reassigns/soft-deletes the user's posts, so ownership is still intact.
+  on(:user_destroyed) { |user| DiscourseAi::AiApiAuditLogCleaner.delete_for_user(user.id) }
+
+  register_user_destroyer_on_content_deletion_callback(
+    Proc.new { |user| DiscourseAi::AiApiAuditLogCleaner.delete_for_user_content(user) },
+  )
+
+  # outside account deletion, only purge logs once the content is permanently
+  # gone; a soft-deleted (trashed) post or topic is still recoverable, so its
+  # audit log must remain
+  on(:post_destroyed) do |post|
+    if !Post.with_deleted.exists?(post.id)
+      DiscourseAi::AiApiAuditLogCleaner.delete_for_post(post.id)
+    end
+  end
+
+  on(:topic_destroyed) do |topic|
+    if !Topic.with_deleted.exists?(topic.id)
+      DiscourseAi::AiApiAuditLogCleaner.delete_for_topic(topic.id)
     end
   end
 

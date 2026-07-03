@@ -580,15 +580,14 @@ class PostsController < ApplicationController
   def revert
     raise Discourse::NotFound unless guardian.is_staff?
 
-    post_id = params[:id] || params[:post_id]
     revision = params[:revision].to_i
     raise Discourse::InvalidParameters.new(:revision) if revision < 2
 
-    post_revision = PostRevision.find_by(post_id: post_id, number: revision)
-    raise Discourse::NotFound unless post_revision
-
     post = find_post_from_params
     raise Discourse::NotFound if post.blank?
+
+    post_revision = PostRevision.find_by(post_id: post.id, number: revision)
+    raise Discourse::NotFound unless post_revision
 
     post_revision.post = post
     guardian.ensure_can_see!(post_revision)
@@ -808,29 +807,30 @@ class PostsController < ApplicationController
   end
 
   def find_post_revision_from_params
-    post_id = params[:id] || params[:post_id]
     revision = params[:revision].to_i
     raise Discourse::InvalidParameters.new(:revision) if revision < 2
 
-    post_revision = PostRevision.find_by(post_id: post_id, number: revision)
+    post = find_post_from_params
+
+    post_revision = PostRevision.find_by(post_id: post.id, number: revision)
     raise Discourse::NotFound unless post_revision
 
-    post_revision.post = find_post_from_params
+    post_revision.post = post
     guardian.ensure_can_see!(post_revision)
 
     post_revision
   end
 
   def find_latest_post_revision_from_params
-    post_id = params[:id] || params[:post_id]
+    post = find_post_from_params
 
-    finder = PostRevision.where(post_id: post_id).order(:number)
+    finder = PostRevision.where(post_id: post.id).order(:number)
     finder = finder.where(hidden: false) unless guardian.is_staff?
     post_revision = finder.last
 
     raise Discourse::NotFound unless post_revision
 
-    post_revision.post = find_post_from_params
+    post_revision.post = post
     guardian.ensure_can_see!(post_revision)
 
     post_revision

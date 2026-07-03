@@ -1,6 +1,46 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseIpInfo do
+  describe ".get" do
+    let(:ip) { "81.2.69.142" }
+    let(:expected_ip_info) do
+      {
+        city: "London",
+        country: "United Kingdom",
+        country_code: "GB",
+        geoname_ids: [6_255_148, 2_635_167, 2_643_743, 6_269_131],
+        location: "London, England, United Kingdom",
+        region: "England",
+        latitude: 51.5142,
+        longitude: -0.0931,
+      }
+    end
+
+    before { described_class.open_db(Rails.root.join("spec/fixtures/mmdb").to_s) }
+
+    it "returns IP info without hostname when reverse DNS is interrupted" do
+      Resolv::DNS.any_instance.stubs(:getname).with(ip).raises(Timeout::Error)
+
+      result = described_class.get(ip, resolve_hostname: true)
+
+      expect(result).to eq(expected_ip_info)
+    end
+
+    it "sets a timeout for reverse DNS" do
+      resolver = Resolv::DNS.new
+      resolver
+        .expects(:timeouts=)
+        .with { |timeouts| Array(timeouts).present? && Array(timeouts).sum <= 5 }
+      resolver.stubs(:getname).with(ip).raises(Resolv::ResolvError)
+
+      Resolv::DNS.stubs(:new).returns(resolver)
+
+      result = described_class.get(ip, resolve_hostname: true)
+
+      expect(result).to eq(expected_ip_info)
+    end
+  end
+
   describe ".mmdb_download" do
     before { Discourse::Utils.stubs(:execute_command) }
 

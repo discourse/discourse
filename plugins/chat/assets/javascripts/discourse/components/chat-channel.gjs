@@ -49,6 +49,7 @@ export default class ChatChannel extends Component {
   @service capabilities;
   @service chatApi;
   @service chatChannelsManager;
+  @service chatNewMessageAnnouncer;
   @service chatDraftsManager;
   @service chatStateManager;
   @service chatChannelScrollPositions;
@@ -66,7 +67,7 @@ export default class ChatChannel extends Component {
 
   paneState = new ChatPaneState(getOwner(this), {
     contextKey: this.pendingContextKey,
-    onUserPresent: this.debouncedUpdateLastReadMessage,
+    onUserPresent: this.maybeDebouncedUpdateLastReadMessage,
   });
 
   _mentionWarningsSeen = {};
@@ -116,7 +117,7 @@ export default class ChatChannel extends Component {
   @action
   didResizePane() {
     this.debounceFillPaneAttempt();
-    this.debouncedUpdateLastReadMessage();
+    this.maybeDebouncedUpdateLastReadMessage();
     DatesSeparatorsPositioner.apply(this.scroller);
 
     this.paneState.updatePendingContentFromScrollerPosition({
@@ -186,11 +187,24 @@ export default class ChatChannel extends Component {
 
   @bind
   onNewMessage(message) {
+    const isOwnMessage = message.user.id === this.currentUser.id;
+
+    if (!isOwnMessage) {
+      this.chatNewMessageAnnouncer.notify(message, {
+        visible: this.paneState.isDocumentVisible,
+        active: this.paneState.isActiveReader,
+      });
+    }
+
     this.paneState.handleIncomingMessage({
       scroller: this.scroller,
-      shouldAutoScroll: this.paneState.userIsPresent && this.atBottom,
+      shouldAutoScroll: this.paneState.shouldAutoScrollIncomingMessage({
+        isAtLiveEdge: this.paneState.isAtLiveEdge,
+        isOwnMessage,
+      }),
       addMessage: () => this.messagesManager.addMessages([message]),
-      onAutoAdd: () => this.debouncedUpdateLastReadMessage(),
+      onAutoAdd: () => this.maybeDebouncedUpdateLastReadMessage(),
+      isOwnMessage,
     });
   }
 
@@ -226,7 +240,7 @@ export default class ChatChannel extends Component {
     }
 
     this.debounceFillPaneAttempt();
-    this.debouncedUpdateLastReadMessage();
+    this.maybeDebouncedUpdateLastReadMessage();
   }
 
   async fetchMoreMessages({ direction }, opts = {}) {
@@ -261,7 +275,7 @@ export default class ChatChannel extends Component {
   async scrollToBottom() {
     this._ignoreNextScroll = true;
     await scrollListToBottom(this.scroller);
-    if (this.paneState.userIsPresent) {
+    if (this.paneState.shouldMarkRead()) {
       this.debouncedUpdateLastReadMessage();
     }
     this.paneState.clearPendingMessages();
@@ -327,12 +341,20 @@ export default class ChatChannel extends Component {
   processMessages(channel, result) {
     const messages = [];
     let foundFirstNew = false;
-    channel.newestMessage = null;
+
+    // Only compute the newest message marker on a full load.
+    // In an already loaded list we need to preserve the "last visit" line.
+    const hasNewest = this.messagesManager.messages.some(
+      (m) => m.id === channel.newestMessage?.id
+    );
+    if (!hasNewest) {
+      channel.newestMessage = null;
+    }
 
     result?.messages?.forEach((messageData, index) => {
       messageData.firstOfResults = index === 0;
 
-      if (this.currentUser.ignored_users) {
+      if (this.currentUser?.ignored_users) {
         // If a message has been hidden it is because the current user is ignoring
         // the user who sent it, so we want to unconditionally hide it, even if
         // we are going directly to the target
@@ -353,6 +375,7 @@ export default class ChatChannel extends Component {
       // newest has to be in after fetch callback as we don't want to make it
       // dynamic or it will make the pane jump around, it will disappear on reload
       if (
+        !hasNewest &&
         !foundFirstNew &&
         messageData.id > this.currentUserMembership?.lastReadMessageId
       ) {
@@ -408,6 +431,13 @@ export default class ChatChannel extends Component {
   }
 
   @bind
+  maybeDebouncedUpdateLastReadMessage() {
+    if (this.paneState.shouldMarkRead()) {
+      this.debouncedUpdateLastReadMessage();
+    }
+  }
+
+  @bind
   debouncedUpdateLastReadMessage() {
     this._debouncedUpdateLastReadMessageHandler = discourseDebounce(
       this,
@@ -417,7 +447,7 @@ export default class ChatChannel extends Component {
   }
 
   updateLastReadMessage() {
-    if (!this.paneState.userIsPresent) {
+    if (!this.paneState.shouldMarkRead()) {
       return;
     }
 
@@ -437,6 +467,15 @@ export default class ChatChannel extends Component {
       return;
     }
 
+    // Clear unread counts optimistically when the latest message is in view.
+    if (
+      !this.messagesLoader.canLoadMoreFuture &&
+      firstMessage.id === this.messagesManager.findLastMessage()?.id
+    ) {
+      this.args.channel.tracking.unreadCount = 0;
+      this.args.channel.tracking.mentionCount = 0;
+    }
+
     const lastReadId =
       this.args.channel.currentUserMembership?.lastReadMessageId;
     if (lastReadId >= firstMessage.id) {
@@ -454,11 +493,11 @@ export default class ChatChannel extends Component {
   }
 
   @action
-  scrollToLatestMessage() {
+  async scrollToLatestMessage() {
     if (this.messagesLoader.canLoadMoreFuture) {
-      this.fetchMessages();
+      await this.fetchMessages();
     } else if (this.messagesManager.messages.length > 0) {
-      this.scrollToBottom();
+      await this.scrollToBottom();
     }
   }
 
@@ -477,7 +516,7 @@ export default class ChatChannel extends Component {
         state,
       });
       this.isScrolling = true;
-      this.debouncedUpdateLastReadMessage();
+      this.maybeDebouncedUpdateLastReadMessage();
 
       if (
         state.atTop ||
@@ -496,8 +535,11 @@ export default class ChatChannel extends Component {
   onScrollEnd(state) {
     this.isScrolling = false;
     this.atBottom = state.atBottom;
+    this.paneState.updateLiveEdgeFromScrollState(state);
 
     if (state.atBottom) {
+      // Visible but unfocused panes can passively live-follow. Clear their
+      // pending affordance at the bottom while keeping hidden/away panes pending.
       if (this.paneState.userIsPresent) {
         this.paneState.clearPendingMessages();
       }

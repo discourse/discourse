@@ -230,7 +230,11 @@ sl:
       admins: "administratorji"
       moderators: "moderatorji"
       staff: "osebje"
-      anonymous: "anonimni"
+    default_full_names:
+      everyone: "Vsi"
+      admins: "Administratorji"
+      moderators: "Moderatorji"
+      staff: "Osebje"
   education:
     until_posts:
       one: "%{count} prispevek"
@@ -574,6 +578,9 @@ sl:
       confirm_title: Nadaljujte na %{site_name}
       logging_in_as: Prijava kot %{username}
       confirm_button: Zaključi prijavo
+    device:
+      code: "Koda"
+      continue: "Nadaljuj"
   flags:
     errors:
       already_handled: "Prijava je bila že obdelana"
@@ -623,6 +630,7 @@ sl:
       labels:
         count: "Člani"
         share: "Deli"
+        signups: "Registracije"
       levels:
         "0": "Novi"
         "1": "Osnovni uporabnik"
@@ -738,12 +746,7 @@ sl:
     disabled: "onemogočeno"
     allow_uncategorized_topics: "Dovoli ustvarjanje tem brez kategorije. OPOZORILO: Če obstajajo nerazvrščene teme, jih morate ponovno razvrstiti, preden izklopite to nastavitev."
     download_remote_images_to_local: "Pretvorite oddaljene (povezane) slike v lokalne slike tako, da jih prenesete; To ohranja vsebino, tudi če bodo slike v prihodnosti odstranjene z oddaljenega spletnega mesta."
-    block_hotlinked_media: "Uporabnikom preprečite, da bi v svoje objave vključevali oddaljene (povezane) medijske vsebine. Oddaljene vsebine, ki niso prenesene z uporabo nastavitve 'download_remote_images_to_local', bodo zamenjane z nadomestno povezavo."
-    block_hotlinked_media_exceptions: "Seznam naslovov URL domen, za katere ne velja nastavitev block_hotlinked_media. Naslove vpišite vključno s protokolom (npr. https://example.com)."
-    x_summary_large_image: "Velika slika povzetka za kartico Twitter (imeti mora vsaj 280 pik v širino in vsaj 150 pik v višino, ne sme biti .svg). Če ostane prazno se metapodatki kartice ustvarijo z uporabo opengraph_image, razen če tudi ta ni .svg"
     send_welcome_message: "Pošlji sporočilo z dobrodošlico in kratkimi uvodnimi navodili vsem novim uporabnikom."
-    auth_skip_create_confirm: Pri prijavi s pomočjo zunanjega overjanja preskočite pojavno okno za ustvarjanje računa. Priporočena uporaba skupaj z auth_overrides_email, auth_overrides_username in auth_overrides_name.
-    auth_immediately: "Samodejno preusmeri na zunanji sistem za prijavo brez interakcije uporabnika. To začne veljati šele, ko je login_required vklopljen in ko obstaja samo en način zunanje overitve"
     enable_discourse_connect: "Omogoči vpis s pomočjo DiscourseConnect (prej »Discourse SSO«) (OPOZORILO: E-POŠTNI NASLOVI UPORABNIKOV *MORAJO* BITI OVERJENI PRI ZUNANJEM PONUDNIKU!)"
     avatar_sizes: "Seznam samodejno ustvarjenih velikosti avatarjev."
     use_site_small_logo_as_system_avatar: "Uporabi mali logotip spletnega mesta za avatar sistemskega uporabnika. Deluje le, če je logotip na voljo."
@@ -759,6 +762,9 @@ sl:
       topic: "Rezultati"
       user: "Uporabniki"
     results_page: "Zadetki iskanja za '%{term}'"
+  posts_filter:
+    description:
+      order_latest_topic: "Zadnje teme"
   original_poster: "Originalni avtor"
   most_recent_poster: "Zadnji odgovarja"
   frequent_poster: "Pogosto odgovarja"
@@ -1938,12 +1944,6 @@ sl:
     submit_button: "Pošlji e-sporočilo"
   tags:
     title: "Oznake"
-    forbidden:
-      restricted_to:
-        one: '"%{tag_name}" oznaka je omejena za kategorijo "%{category_names}"'
-        two: '"%{tag_name}" oznaka je omejena samo za naslednji kategoriji: %{category_names}'
-        few: '"%{tag_name}" oznaka je omejena samo za naslednje kategorije: %{category_names}'
-        other: '"%{tag_name}" oznaka je omejena samo za naslednje kategorije: %{category_names}'
   finish_installation:
     register:
       button: "Registracija"
@@ -1968,6 +1968,8 @@ sl:
               private:
                 label: "Zasebni"
   onebox:
+    google_meet:
+      meeting_code: "Koda:"
     github:
       closed: "zaprto"
       status_date:

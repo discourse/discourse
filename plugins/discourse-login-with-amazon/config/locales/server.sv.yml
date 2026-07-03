@@ -6,7 +6,6 @@
 
 sv:
   site_settings:
-    enable_login_with_amazon: "Aktivera inloggning genom Amazon-autentisering, kräver `login with amazon client id` och `login with amazon client secret`."
     login_with_amazon_client_id: "Logga in med Amazons klient-ID"
     login_with_amazon_client_secret: "Logga in med Amazons klienthemlighet"
     login_with_amazon_scope: "Logga in med Amazon OAuth2 scopes (mellanslag separerat)"

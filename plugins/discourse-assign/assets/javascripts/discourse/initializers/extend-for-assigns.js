@@ -24,6 +24,7 @@ import { extendTopicModel } from "../models/topic";
 const DEPENDENT_KEYS = [
   "topic.assigned_to_user",
   "topic.assigned_to_group",
+  "topic.can_assign",
   "currentUser.can_assign",
   "topic.assigned_to_user.username",
   "topic.assigned_to_user.name",
@@ -38,6 +39,10 @@ function defaultTitle(topic) {
   } else {
     return i18n("discourse_assign.assign.help");
   }
+}
+
+function canAssignTopic(context) {
+  return context.topic?.can_assign ?? context.currentUser?.can_assign;
 }
 
 function registerTopicFooterButtons(api) {
@@ -63,7 +68,7 @@ function registerTopicFooterButtons(api) {
       return i18n("discourse_assign.assign.title");
     },
     async action() {
-      if (!this.currentUser?.can_assign) {
+      if (!canAssignTopic(this)) {
         return;
       }
 
@@ -90,7 +95,7 @@ function registerTopicFooterButtons(api) {
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
       return (
-        this.currentUser?.can_assign &&
+        canAssignTopic(this) &&
         !this.topic.isAssigned() &&
         !this.topic.hasAssignedPosts()
       );
@@ -126,13 +131,13 @@ function registerTopicFooterButtons(api) {
       }
     },
     dropdown() {
-      return this.currentUser?.can_assign && this.topic.isAssigned();
+      return canAssignTopic(this) && this.topic.isAssigned();
     },
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
       // only display the button in the mobile view
-      return this.currentUser?.can_assign && this.site.mobileView;
+      return canAssignTopic(this) && this.site.mobileView;
     },
   });
 
@@ -155,7 +160,7 @@ function registerTopicFooterButtons(api) {
       );
     },
     action() {
-      if (!this.currentUser?.can_assign) {
+      if (!canAssignTopic(this)) {
         return;
       }
 
@@ -166,16 +171,14 @@ function registerTopicFooterButtons(api) {
       taskActions.unassign(this.topic.id);
     },
     dropdown() {
-      return this.currentUser?.can_assign && this.topic.isAssigned();
+      return canAssignTopic(this) && this.topic.isAssigned();
     },
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
       // only display the button in the mobile view
       return (
-        this.currentUser?.can_assign &&
-        this.site.mobileView &&
-        this.topic.isAssigned()
+        canAssignTopic(this) && this.site.mobileView && this.topic.isAssigned()
       );
     },
   });
@@ -199,7 +202,7 @@ function registerTopicFooterButtons(api) {
       );
     },
     async action() {
-      if (!this.currentUser?.can_assign) {
+      if (!canAssignTopic(this)) {
         return;
       }
 
@@ -211,7 +214,7 @@ function registerTopicFooterButtons(api) {
       await taskActions.reassignUserToTopic(this.currentUser, this.topic);
     },
     dropdown() {
-      return this.currentUser?.can_assign && this.topic.isAssigned();
+      return canAssignTopic(this) && this.topic.isAssigned();
     },
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
@@ -219,7 +222,7 @@ function registerTopicFooterButtons(api) {
       return (
         // only display the button in the mobile view
         this.site.mobileView &&
-        this.currentUser?.can_assign &&
+        canAssignTopic(this) &&
         this.topic.isAssigned() &&
         this.topic.assigned_to_user?.username !== this.currentUser.username
       );
@@ -245,7 +248,7 @@ function registerTopicFooterButtons(api) {
       );
     },
     async action() {
-      if (!this.currentUser?.can_assign) {
+      if (!canAssignTopic(this)) {
         return;
       }
 
@@ -257,13 +260,13 @@ function registerTopicFooterButtons(api) {
       });
     },
     dropdown() {
-      return this.currentUser?.can_assign && this.topic.isAssigned();
+      return canAssignTopic(this) && this.topic.isAssigned();
     },
     classNames: ["assign"],
     dependentKeys: DEPENDENT_KEYS,
     displayed() {
       // only display the button in the mobile view
-      return this.currentUser?.can_assign && this.site.mobileView;
+      return canAssignTopic(this) && this.site.mobileView;
     },
   });
 }
@@ -271,8 +274,9 @@ function registerTopicFooterButtons(api) {
 function initialize(api) {
   const siteSettings = api.container.lookup("service:site-settings");
   const currentUser = api.getCurrentUser();
+  const canAssignGlobally = currentUser?.can_assign_globally;
 
-  if (siteSettings.assigns_public || currentUser?.can_assign) {
+  if (siteSettings.assigns_public || canAssignGlobally) {
     api.addNavigationBarItem({
       name: "unassigned",
       customFilter: (category) => {
@@ -295,14 +299,14 @@ function initialize(api) {
       },
       before: "top",
     });
+  }
 
-    if (api.getCurrentUser()?.can_assign) {
-      customizePostMenu(api);
-    }
+  if (currentUser?.can_assign) {
+    customizePostMenu(api);
   }
 
   api.addAdvancedSearchOptions(
-    api.getCurrentUser()?.can_assign
+    canAssignGlobally
       ? {
           inOptionsForUsers: [
             {
@@ -541,7 +545,8 @@ function customizePost(api, siteSettings) {
     "assigned_to_user",
     "assigned_to_user_id",
     "assignment_note",
-    "assignment_status"
+    "assignment_status",
+    "can_assign"
   );
 
   api.modifyClass(
@@ -651,7 +656,7 @@ export default {
 
     withPluginApi((api) => {
       const currentUser = container.lookup("service:current-user");
-      if (currentUser?.can_assign) {
+      if (currentUser?.can_assign_globally) {
         api.modifyClass(
           "component:search-advanced-options",
           (Superclass) =>
@@ -705,7 +710,7 @@ export default {
         id: "assign-topics",
         label: "topics.bulk.assign",
         icon: "user-plus",
-        class: "btn-default assign-topics",
+        class: "assign-topics",
         description: "topics.bulk.assign_description",
         confirmButtonTranslationKey: "topics.bulk.confirm_assign_topics",
         action({ setComponent }) {
@@ -718,7 +723,7 @@ export default {
         id: "unassign-topics",
         label: "topics.bulk.unassign",
         icon: "user-xmark",
-        class: "btn-default unassign-topics",
+        class: "unassign-topics",
         description: "topics.bulk.unassign_description",
         confirmButtonTranslationKey: "topics.bulk.confirm_unassign_topics",
         action({ performAndRefresh }) {

@@ -400,7 +400,6 @@ ja:
           no_users: "ユーザーが見つかりません"
           leave_event: "イベントから退出"
           status:
-            unknown: "興味なし"
             going: "出席"
             interested: "興味あり"
             going_count:
@@ -429,6 +428,8 @@ ja:
         name_placeholder: "イベント名"
         location_placeholder: "場所または URL を追加"
         description_placeholder: "イベントの説明を追加"
+        event_title_placeholder: "イベント名"
+        create_event_button: "イベントを作成"
         reminder:
           units:
             minutes:
@@ -439,6 +440,9 @@ ja:
               other: "日"
             weeks:
               other: "週間"
+      composer_actions:
+        create_event:
+          label: "イベントを作成"
       builder_modal:
         custom_fields:
           label: "カスタムフィールド"
@@ -447,7 +451,6 @@ ja:
         create_event_title: "イベントを作成"
         update_event_title: "イベントを編集"
         advanced_settings_title: "高度な設定"
-        advanced_settings: "高度な設定"
         confirm_delete: "このイベントを削除してもよろしいですか？"
         confirm_close: "このイベントを終了してもよろしいですか？"
         confirm_open: "このイベント開いてもよろしいですか？"
@@ -488,11 +491,7 @@ ja:
         allow_chat:
           label: "チャットの統合"
           checkbox_label: "イベント専用のチャットチャンネルを作成して管理する"
-        url:
-          label: "URL"
-          placeholder: "オプション"
         location:
-          label: "場所"
           placeholder: "場所、リンクなどを追加します。"
         description:
           label: "説明"

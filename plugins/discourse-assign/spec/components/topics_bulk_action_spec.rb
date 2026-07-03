@@ -91,5 +91,31 @@ describe TopicsBulkAction do
 
       expect(assigned_topics).to contain_exactly(post.topic, post1.topic, post2.topic)
     end
+
+    it "category scoped users only unassign topics in allowed categories" do
+      SiteSetting.assign_allowed_on_groups = ""
+      allowed_category = Fabricate(:category)
+      other_category = Fabricate(:category)
+      post.topic.update!(category: allowed_category)
+      post1.topic.update!(category: other_category)
+      allow_group_to_assign_in_category(allowed_category, assign_allowed_group)
+      Fabricate(
+        :topic_assignment,
+        target: post.topic,
+        assigned_to: user,
+        assigned_by_user: Discourse.system_user,
+      )
+      Fabricate(
+        :topic_assignment,
+        target: post1.topic,
+        assigned_to: user,
+        assigned_by_user: Discourse.system_user,
+      )
+
+      TopicsBulkAction.new(user, [post.topic.id, post1.topic.id], type: "unassign").perform!
+
+      expect(post.topic.reload.assignment).to be_blank
+      expect(post1.topic.reload.assignment).to be_present
+    end
   end
 end

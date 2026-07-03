@@ -28,6 +28,7 @@ RSpec.describe "Nested context view" do
 
   before do
     SiteSetting.nested_replies_enabled = true
+    Fabricate(:nested_topic, topic: topic)
     sign_in(user)
   end
 
@@ -42,18 +43,32 @@ RSpec.describe "Nested context view" do
       expect(nested_view).to have_post(chain_posts[2])
     end
 
-    it "shows 'View full thread' link but not 'View parent context'" do
+    it "shows the desktop context banner with full-topic navigation" do
       nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
 
+      expect(nested_view).to have_context_banner
       expect(nested_view).to have_view_full_thread_link
       expect(nested_view).to have_no_view_parent_context_link
+
+      nested_view.click_view_full_thread
+
+      expect(nested_view).to have_nested_view
+      expect(nested_view).to have_no_context_view
+      expect(nested_view).to have_root_post(chain_posts[0])
     end
 
-    it "does not show 'View parent context' for a direct reply to the OP" do
-      nested_view.visit_nested_context(topic, post_number: chain_posts[0].post_number)
+    it "keeps the desktop context banner out of the mobile stacked-root view", mobile: true do
+      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
 
-      expect(nested_view).to have_view_full_thread_link
-      expect(nested_view).to have_no_view_parent_context_link
+      expect(nested_view).to have_context_view
+      expect(nested_view).to have_mobile_focus
+      expect(nested_view).to have_no_context_banner
+    end
+
+    it "marks direct post URLs as context routes" do
+      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
+
+      expect(nested_view).to have_context_view
     end
 
     it "highlights the target post" do
@@ -74,14 +89,19 @@ RSpec.describe "Nested context view" do
       expect(nested_view).to have_no_post(chain_posts[2])
     end
 
-    it "shows 'View parent context' link" do
+    it "keeps the target as the branch root" do
       nested_view.visit_nested_context(topic, post_number: chain_posts[3].post_number, context: 0)
 
-      expect(nested_view).to have_view_parent_context_link
+      expect(nested_view).to have_no_post(chain_posts[0])
+      expect(nested_view).to have_post_at_depth(chain_posts[3], depth: 0)
     end
 
-    it "clicking 'View parent context' shows full ancestor chain" do
+    it "offers parent-context navigation" do
       nested_view.visit_nested_context(topic, post_number: chain_posts[3].post_number, context: 0)
+
+      expect(nested_view).to have_context_banner
+      expect(nested_view).to have_view_parent_context_link
+
       nested_view.click_view_parent_context
 
       expect(nested_view).to have_context_view
@@ -89,34 +109,6 @@ RSpec.describe "Nested context view" do
       expect(nested_view).to have_post(chain_posts[1])
       expect(nested_view).to have_post(chain_posts[2])
       expect(nested_view).to have_post(chain_posts[3])
-    end
-  end
-
-  describe "navigation" do
-    it "clicking 'View full thread' returns to root view" do
-      nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
-      nested_view.click_view_full_thread
-
-      expect(nested_view).to have_nested_view
-      expect(nested_view).to have_no_css(".nested-context-view")
-    end
-
-    it "full navigation flow: context=0 → parent context → full thread" do
-      nested_view.visit_nested_context(topic, post_number: chain_posts[3].post_number, context: 0)
-
-      expect(nested_view).to have_no_post(chain_posts[0])
-      expect(nested_view).to have_post_at_depth(chain_posts[3], depth: 0)
-
-      nested_view.click_view_parent_context
-
-      expect(nested_view).to have_post(chain_posts[0])
-      expect(nested_view).to have_post(chain_posts[3])
-
-      nested_view.click_view_full_thread
-
-      expect(nested_view).to have_nested_view
-      expect(nested_view).to have_no_css(".nested-context-view")
-      expect(nested_view).to have_root_post(chain_posts[0])
     end
   end
 
@@ -150,32 +142,17 @@ RSpec.describe "Nested context view" do
       expect(nested_view).to have_no_post(deep_chain[1])
     end
 
-    it "shows 'View parent context' when ancestors are truncated" do
+    it "marks truncated contexts as targeted nested views" do
       nested_view.visit_nested_context(topic, post_number: deep_chain[12].post_number)
-
-      expect(nested_view).to have_view_parent_context_link
-    end
-
-    it "clicking 'View parent context' shifts window up to topmost ancestor" do
-      nested_view.visit_nested_context(topic, post_number: deep_chain[12].post_number)
-      nested_view.click_view_parent_context
 
       expect(nested_view).to have_context_view
-      expect(nested_view).to have_post(deep_chain[2])
-      expect(nested_view).to have_no_post(deep_chain[12])
     end
 
-    it "navigating up from context=0 shows windowed ancestors" do
+    it "context=0 starts at the target even when ancestors would be truncated" do
       nested_view.visit_nested_context(topic, post_number: deep_chain[12].post_number, context: 0)
 
       expect(nested_view).to have_post_at_depth(deep_chain[12], depth: 0)
       expect(nested_view).to have_no_post(deep_chain[11])
-
-      nested_view.click_view_parent_context
-
-      expect(nested_view).to have_post(deep_chain[12])
-      expect(nested_view).to have_post(deep_chain[3])
-      expect(nested_view).to have_view_parent_context_link
     end
   end
 
@@ -198,13 +175,15 @@ RSpec.describe "Nested context view" do
   end
 
   describe "in-route navigation between context views" do
+    before { SiteSetting.nested_replies_max_depth = 10 }
+
     # Navigating context A → context B in-app (without a full page reload)
     # keeps the same controller/component mounted. When the two chains
     # share a root ancestor, the chain root <NestedPost> would be reused
     # by Glimmer (same post.id key) and its <NestedPostChildren> only
     # reads @preloadedChildren in its constructor — so without a forced
     # rebuild, the inner cascade keeps rendering the *previous* target's
-    # chain. routes/nested.js stamps a per-fetch _renderKey on the chain
+    # chain. The topic route stamps a per-fetch _renderKey on the chain
     # to force a full recreation; these specs guard that.
     it "rebuilds the chain so the new target is visible" do
       nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
@@ -213,7 +192,7 @@ RSpec.describe "Nested context view" do
       nested_view.route_to_nested_context(topic, post_number: chain_posts[4].post_number)
 
       expect(page).to have_current_path(
-        %r{/n/#{Regexp.escape(topic.slug)}/#{topic.id}/#{chain_posts[4].post_number}\b},
+        %r{/t/#{Regexp.escape(topic.slug)}/#{topic.id}/#{chain_posts[4].post_number}\b},
       )
       expect(nested_view).to have_post(chain_posts[4])
       expect(nested_view).to have_post(chain_posts[3])
@@ -230,18 +209,17 @@ RSpec.describe "Nested context view" do
     end
 
     # Notifications produce /t/slug/id/N URLs; topic/from-params.js
-    # detects is_nested_view and redirects to /n/.../N. When N is the
-    # post we're already viewing, the redirect is a no-op transition —
-    # we still need the URL to stay on /n/ (not leak to /t/) and the
-    # target to re-highlight via the nested:scroll-to-target appEvent.
-    it "keeps the URL on /n/ and re-highlights when /t/ is routed to the post we're already on" do
+    # detects is_nested_view and keeps the topic route mounted while loading
+    # the nested context payload. When N is the post we're already viewing,
+    # the target should re-highlight without leaving /t/.
+    it "keeps the URL on /t/ and re-highlights when /t/ is routed to the post we're already on" do
       nested_view.visit_nested_context(topic, post_number: chain_posts[2].post_number)
       expect(nested_view).to have_highlighted_post(chain_posts[2])
 
       nested_view.route_to_topic_post(topic, post_number: chain_posts[2].post_number)
 
       expect(page).to have_current_path(
-        %r{/n/#{Regexp.escape(topic.slug)}/#{topic.id}/#{chain_posts[2].post_number}\b},
+        %r{/t/#{Regexp.escape(topic.slug)}/#{topic.id}/#{chain_posts[2].post_number}\b},
       )
       expect(nested_view).to have_highlighted_post(chain_posts[2])
     end
@@ -270,7 +248,7 @@ RSpec.describe "Nested context view" do
       composer.submit
       expect(composer).to be_closed
 
-      expect(page).to have_current_path(%r{/n/})
+      expect(page).to have_current_path(%r{/t/})
     end
   end
 end

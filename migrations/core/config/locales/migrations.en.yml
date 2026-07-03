@@ -1,0 +1,24 @@
+en:
+  progressbar:
+    counting: "counting…"
+    eta: "ETA"
+    failed: "failed"
+    interrupted: "interrupted"
+    interrupted_at: "interrupted at %{percent}%"
+    processed: "processed"
+    skips:
+      one: "%{number} skip"
+      other: "%{number} skips"
+    warnings:
+      one: "%{number} warning"
+      other: "%{number} warnings"
+    errors:
+      one: "%{number} error"
+      other: "%{number} errors"
+
+  cli:
+    aborted: "Aborted"
+
+  converter:
+    default_step_title: "Converting %{type}"
+    max_progress_calculation: "Calculating items took %{duration}"

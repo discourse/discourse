@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import DButton from "discourse/ui-kit/d-button";
@@ -11,10 +10,27 @@ import {
 } from "../../../lib/workflows/property-engine";
 import Field from "./field";
 
-export default class AssignmentCollection extends Component {
-  @tracked
-  itemCount = (this.args.formApi?.get(this.assignmentsPath) || []).length;
+const ASSIGNMENT_TYPE_LABEL_KEY_PREFIX =
+  "discourse_workflows.property_engine.assignment_types";
 
+const DEFAULT_ASSIGNMENT_TYPES = [
+  "string",
+  "number",
+  "boolean",
+  "array",
+  "object",
+];
+
+function normalizeAssignmentType(type) {
+  const option = typeof type === "object" ? { ...type } : { value: type };
+
+  return {
+    label_key: `${ASSIGNMENT_TYPE_LABEL_KEY_PREFIX}.${option.value}`,
+    ...option,
+  };
+}
+
+export default class AssignmentCollection extends Component {
   get assignmentsPath() {
     return `${this.args.fieldName}.assignments`;
   }
@@ -38,15 +54,9 @@ export default class AssignmentCollection extends Component {
     return this.args.schema.type_options || {};
   }
 
-  get assignment_types() {
-    return (
-      this.type_options.assignment_types || [
-        "string",
-        "number",
-        "boolean",
-        "array",
-        "object",
-      ]
+  get assignmentTypes() {
+    return (this.type_options.assignment_types || DEFAULT_ASSIGNMENT_TYPES).map(
+      normalizeAssignmentType
     );
   }
 
@@ -63,13 +73,9 @@ export default class AssignmentCollection extends Component {
       type: "options",
       required: true,
       default: "string",
-      options: this.assignment_types,
+      options: this.assignmentTypes,
       no_data_expression: true,
     };
-  }
-
-  get showEmptyState() {
-    return this.itemCount === 0;
   }
 
   @action
@@ -88,21 +94,13 @@ export default class AssignmentCollection extends Component {
       this.assignmentsPath,
       this.emptyAssignment()
     );
-    this.itemCount++;
     this.args.onChange?.();
   }
 
   @action
   removeAssignment(removeFn, index) {
     removeFn(index);
-    this.itemCount--;
     this.args.onChange?.();
-  }
-
-  @action
-  clearAssignments() {
-    this.args.formApi.set(this.assignmentsPath, []);
-    this.itemCount = 0;
   }
 
   @action
@@ -137,13 +135,19 @@ export default class AssignmentCollection extends Component {
         as |collection index item|
       >
         <div class="workflows-property-engine__collection-row">
-          <div class="workflows-property-engine__collection-delete">
-            <DButton
-              @action={{fn this.removeAssignment collection.remove index}}
-              @icon="trash-can"
-              class="btn-transparent btn-small btn-danger"
-            />
-          </div>
+          <DButton
+            @action={{fn this.removeAssignment collection.remove index}}
+            @icon="xmark"
+            class="workflows-property-engine__collection-delete"
+            @translatedAriaLabel={{i18n
+              "discourse_workflows.property_engine.remove_assignment"
+              name=item.name
+            }}
+            @translatedTitle={{i18n
+              "discourse_workflows.property_engine.remove_assignment"
+              name=item.name
+            }}
+          />
 
           <collection.Object
             class="workflows-property-engine__collection-fields"
@@ -216,19 +220,8 @@ export default class AssignmentCollection extends Component {
           @translatedLabel={{i18n
             "discourse_workflows.property_engine.add_field"
           }}
-          class="btn-default"
+          class="btn-default workflows-property-engine__add-attrs-btn"
         />
-
-        {{#unless this.showEmptyState}}
-          <DButton
-            @action={{this.clearAssignments}}
-            @icon="xmark"
-            @translatedLabel={{i18n
-              "discourse_workflows.property_engine.clear_fields"
-            }}
-            class="btn-flat"
-          />
-        {{/unless}}
       </div>
     </@form.Section>
   </template>

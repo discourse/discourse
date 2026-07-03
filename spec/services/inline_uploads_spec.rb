@@ -613,7 +613,17 @@ RSpec.describe InlineUploads do
         [test3|attachment](#{upload.short_url})
         [test3|attachment](#{upload2.short_url})[test3|attachment](#{upload3.short_url})
 
-        [This is some \\_test\\_ here|attachment](#{upload3.short_url})
+        [This is some _test_ here|attachment](#{upload3.short_url})
+        MD
+      end
+
+      it "strips structural markdown characters from attachment labels so the link can't break" do
+        md = <<~MD
+        <a class="attachment" href="#{upload.url}">a]b|c_d</a>
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        [abc_d|attachment](#{upload.short_url})
         MD
       end
 
@@ -762,7 +772,7 @@ RSpec.describe InlineUploads do
             image_upload
           end
 
-        expect(raw).to eq("look at this:\n![image\\]1](#{image_upload.short_url})")
+        expect(raw).to eq("look at this:\n![image1](#{image_upload.short_url})")
       end
     end
   end

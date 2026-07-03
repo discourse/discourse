@@ -6,6 +6,21 @@
 
 tr_TR:
   js:
+    user_api_key:
+      title: '"%{application_name}" için yetkilendirme'
+      authorize: "Yetkilendir"
+      deny: "İptal et"
+      logged_in_as: "olarak oturum açıldı"
+      permissions_header: 'Bu, "%{application_name}"in şunları yapmasına olanak tanıyacaktır:'
+      redirect_warning: "Yetkilendirme sizi şu adrese yönlendirecektir:"
+      copied: "Kopyalandı!"
+      otp_description: '"%{application_name}" uygulamasının bu siteye erişmesine izin vermek ister misiniz?'
+      no_trust_level: "Üzgünüz, kullanıcı API'sine erişmek için gerekli güven seviyesine sahip değilsiniz"
+      generic_error: "Üzgünüz, kullanıcı API anahtarları veremiyoruz, bu özellik site yöneticisi tarafından devre dışı bırakılmış olabilir"
+      device:
+        code: "Kod"
+        continue: "Devam et"
+        authorize_title: '"%{application_name}" için yetkilendirme'
     blocks:
       ghost:
         status: "Durum"
@@ -22,6 +37,10 @@ tr_TR:
         no_visible_children_hint: "Bu konteyner bloğu, hiçbir alt öğesi görünür olmadığı için görüntülenmez."
         condition_failed_hint: "Bu blok, koşulları karşılanmadığı için görüntülenmez."
         head_hidden_tail_hint: "Bu blok, `head` konteynerinde başka bir blok önce işlendiği için işlenmez."
+    access_control:
+      manage:
+        access_permission_editor: "Düzenleyici"
+        access_permission_remove: "Kaldır"
     carousel:
       go_to_slide: "%{index} numaralı slayta git"
       previous: "Önceki slayt"
@@ -161,7 +180,10 @@ tr_TR:
     date_range_picker:
       apply: "Uygula"
       start_date: "Başlangıç tarihi"
+      end_date: "Bitiş tarihi"
+      date_placeholder: "yyyy/aa/gg"
       presets:
+        label: "Tarih aralığı ön ayarları"
         last_7_days: "Son 7 gün"
         last_30_days: "Son 30 gün"
         last_3_months: "Son 3 ay"
@@ -339,6 +361,9 @@ tr_TR:
       search_placeholder: "Ara"
     impersonation:
       notice: "%{username} kimliğine bürünüyorsunuz."
+      time_left:
+        one: "(%{count} dakika kaldı)"
+        other: "(%{count} dakika kaldı)"
       stop: "Kişiyi taklit etmeyi bırak"
     themes:
       default_description: "Varsayılan"
@@ -367,6 +392,11 @@ tr_TR:
         visual_overlay: "Görsel katman"
         ghost_blocks: "Hayalet bloklar"
         condition_debugging: "Durum hata ayıklama"
+      plugin_outlet_debug:
+        find_on_github: "GitHub'da bul"
+        wrapper: "(sarmalayıcı)"
+        outlet_args: "Çıkış argümanları"
+        no_outlet_args: "Bu çıkışa herhangi bir çıkış argümanı aktarılmadı"
       toggle_safe_mode: "Güvenli modu aç/kapat"
       toggle_verbose_localization: "Ayrıntılı yerelleştirmeyi aç/kapat"
       disable_dev_tools: "Geliştirici araçlarını devre dışı bırak"
@@ -414,6 +444,9 @@ tr_TR:
     age: "Yaş"
     joined: "Katılma Tarihi"
     admin_title: "Yönetici"
+    advanced_mode_toggle:
+      advanced_mode: "Gelişmiş mod"
+      simple_mode: "Basit mod"
     show_more: "daha fazla göster"
     show_help: "Seçenekler"
     links: "Bağlantılar"
@@ -461,7 +494,7 @@ tr_TR:
       launch_in_easy_steps: "%{step_count} kolay adımda başlatın"
       congrats_onboarding_complete: "Onboarding sürecini tamamladığınız için tebrikler!"
       select_theme:
-        enabled: "Etkin mi"
+        enabled: "Seçili"
       invite_collaborators:
         title: "İş Ortaklarını Davet Et"
         description: "İlk üyeler, topluluğunuzu hayata geçirmeye yardımcı olur"
@@ -1226,7 +1259,8 @@ tr_TR:
             from_alias_hint: "Grup SMTP e-postaları gönderirken gönderici adresi olarak kullanılacak takma ad. Bunun tüm posta sağlayıcıları tarafından desteklenmeyebileceğini unutmayın, lütfen posta sağlayıcınızın belgelerini inceleyin."
         membership:
           title: Üyelik
-          access: Erişim
+          join_method:
+            invite: "Sadece davetliler"
         categories:
           title: Kategoriler
           long_title: "Kategori varsayılan bildirimleri"
@@ -1259,7 +1293,6 @@ tr_TR:
         title: "İzinler"
         none: "Bu grupla ilişkilendirilmiş kategori yok."
         description: "Bu grubun üyeleri bu kategorilere erişebilir"
-      public_admission: "Kullanıcıların gruba özgürce olarak katılmalarına izin ver (Grubun herkese açık olması gerekiyor)"
       public_exit: "Kullanıcıların gruptan özgürce ayrılmalarına izin ver"
       empty:
         posts: "Bu grubun üyeleri henüz gönderi paylaşmamış"
@@ -1275,7 +1308,6 @@ tr_TR:
       request: "Talep"
       message: "Mesaj"
       confirm_leave: "Bu gruptan ayrılmak istediğinizden emin misiniz?"
-      allow_membership_requests: "Kullanıcıların grup sahiplerine üyelik talepleri göndermesine izin ver (Genel olarak görünür grup gerektirir)"
       membership_request_template: "Üyelik talebi gönderirken kullanıcılara gösterilen özel şablon"
       membership_request:
         submit: "Talep gönder"
@@ -1626,7 +1658,6 @@ tr_TR:
       enable_smart_lists: "Bestecide yazarken akıllı listeleri etkinleştirin"
       enable_defer: "Konuları okunmadı olarak işaretlemeyi etkinleştir"
       enable_markdown_monospace_font: "Bestecinin Markdown modunda monospace yazı tipini kullanın"
-      show_original_content: "Çevrilmiş içerik yerine orijinal içeriği göster. Konu içinde de bu ayar değiştirilebilir."
       experimental_sidebar:
         enable: "Kenar çubuğunu etkinleştir"
         options: "Seçenekler"
@@ -1703,6 +1734,9 @@ tr_TR:
       undo_revoke_access: "Erişim İptalini Geri Al"
       api_approved: "Onaylandı:"
       api_last_used_at: "Son kullanım zamanı:"
+      api_expires_at: "Bitiş tarihi:"
+      api_expired_at: "Süresi doldu:"
+      api_expires_never: "asla"
       api_show_permissions:
         one: "Verilen izinler (%{count})"
         other: "Verilen izinler (%{count})"
@@ -2639,6 +2673,12 @@ tr_TR:
       confirm_title: '%{site_name} adresine devam edin'
       logging_in_as: '%{email} olarak giriş yapılıyor'
       confirm_button: Giriş yapmayı bitir
+    code_login:
+      email_label: "E-posta"
+      continue_button: "Devam et"
+      verify_button: "Devam et"
+      account_ready_continue: "Devam et"
+      username_label: "Kullanıcı Adı"
     login:
       header_title: "Tekrar hoş geldiniz"
       title: "Giriş Yap"
@@ -2882,6 +2922,10 @@ tr_TR:
       publish: "Paylaşılan Taslağı Yayınla"
       confirm_publish: "Bu taslağı yayınlamak istediğinizden emin misiniz?"
       publishing: "Konu Yayınlanıyor…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Meta veri"
     composer:
       autocomplete:
         username_missing: "Seçili otomatik tamamlama sonucunda kullanıcı adı eksik."
@@ -2983,7 +3027,7 @@ tr_TR:
       users_placeholder: "Kullanıcı veya grup ekleyin"
       title_placeholder: "Tek cümleyle açıklamak gerekirse bu tartışmanın konusu nedir?"
       title_or_link_placeholder: "Buraya başlık yazın veya bir bağlantı yapıştırın"
-      edit_reason_placeholder: "neden düzenleme yapıyorsunuz?"
+      edit_reason_placeholder: "Neden düzenleme yapıyorsunuz?"
       topic_featured_link_placeholder: "Başlıkla gösterilen bağlantıyı girin."
       remove_featured_link: "Konudan bağlantıyı kaldır."
       reply_placeholder: "Buraya yazın. Biçimlendirmek için Markdown, BBCode veya HTML kullanabilirsiniz. Resimleri sürükleyebilir veya yapıştırabilirsiniz."
@@ -3053,7 +3097,7 @@ tr_TR:
       collapse: "Besteci panelini küçült"
       open: "Besteci panelini aç"
       abandon: "Besteciyi kapat ve taslağı sil"
-      edit_reason: "Düzenleme nedeninizi girin"
+      edit_reason: "Neden düzenleme yapıyorsunuz?"
       enter_fullscreen: "Tam ekran besteci moduna gir"
       exit_fullscreen: "Tam ekran besteci modundan çık"
       exit_fullscreen_prompt: "Tam ekrandan çıkmak için <kbd>ESC</kbd> tuşuna basın"
@@ -3088,25 +3132,26 @@ tr_TR:
           desc: Aynı alıcılarla başlayan yeni mesaj oluştur
         reply_to_topic:
           label: Konuyu yanıtla
+          trigger: Konu
           desc: Belirli bir gönderiye değil, konuya yanıt verin
+        reply_to_message:
+          trigger: Mesaj
         toggle_whisper:
           label: Fısıltıyı Aç/Kapat
-          desc: Fısıltılar yalnızca personel tarafından görülebilir
         create_topic:
-          label: "Yeni konu"
           desc: Yeni bir konu oluşturun
         create_personal_message:
-          label: "Yeni İleti"
           desc: "Kişisel bir ileti oluştur"
         shared_draft:
           label: "Paylaşılan Taslak"
           desc: "Yalnızca izin verilen kullanıcılar tarafından görülebilecek bir konu taslağı oluşturun"
         toggle_topic_bump:
-          label: "Konu üste sıçratmayı aç/kapat"
           desc: "En son yanıt tarihini değiştirmeden yanıtla"
         toggle_unlisted:
           label: Listeden kaldırılanı aç/kapat
           desc: "Listelenmemiş konulara yalnızca doğrudan bağlantı ile erişilebilir."
+        edit_post: "Gönderi düzenleniyor"
+        unknown_user: "Kullanıcı"
       reload: "Yeniden Yükle"
       ignore: "Yok say"
       image_alt_text:
@@ -3614,7 +3659,7 @@ tr_TR:
         education:
           topic_tracking_preferences: 'Yeni konu izleme ayarlarınızı <a href="%{basePath}/my/preferences/tracking">tercihlerinizden</a> görüntüleyebilir ve değiştirebilirsiniz.'
           unread: "Okunmamış bir şey kalmadı... Etkileyici!"
-          new_new: "Şu anda yeni bir şey yok... Kısa süre sonra tekrar kontrol edin!"
+          unified_new: "Şu anda yeni bir şey yok... Kısa süre sonra tekrar kontrol edin!"
           new: "Şu anda yeni bir şey yok... Kısa süre sonra tekrar kontrol edin!"
           generic: "Burada görecek bir şey yok... yakında tekrar kontrol edin!"
     topic_bulk_actions:
@@ -3718,6 +3763,9 @@ tr_TR:
         banner: "Bu konudan tek bir başlığı görüntülüyorsunuz."
         view_full_topic: "Konunun tamamını görüntüle"
         view_parent_context: "Üst bağlamı görüntüle"
+    share_target:
+      new_topic: "Yeni konu"
+      new_message: "Yeni İleti"
     topic:
       filter_to:
         one: "Konuda %{count} gönderi"
@@ -3771,39 +3819,6 @@ tr_TR:
       read_more: "Daha fazla okumak ister misiniz? <a href='%{categoryLink}'>Tüm kategorilere göz atın</a> veya <a href='%{latestLink}'>en son konuları görüntüleyin</a>."
       unread_indicator: "Bu konunun son gönderisini henüz hiçbir üye okumadı."
       participant_groups: "Katılımcı grupları"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one { <a href="{basePath}/unread"># okunmamış</a>}
-              other { <a href="{basePath}/unread"># okunmamış</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { ve <a href="{basePath}/new"># yeni</a> konu kaldı}
-              other { ve <a href="{basePath}/new"># yeni</a> konu kaldı}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one { <a href="{basePath}/unread"># okunmamış</a> konu kaldı}
-              other { <a href="{basePath}/unread"># okunmamış</a> konu kaldı}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { <a href="{basePath}/new"># yeni</a> konu kaldı}
-              other { <a href="{basePath}/new"># yeni</a> konu kaldı}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { veya diğer konulara göz atın {categoryLink}}
-          false { veya <a href="{basePath}/latest">en son konuları görüntüleyin</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} yanıt, ilk gönderiye atla"
         other: "%{count} yanıt, ilk gönderiye atla"
@@ -4562,7 +4577,6 @@ tr_TR:
         site_settings: "Site ayarları"
       choose_type:
         title: "Kategori türünü seçin"
-        requires_plugin: "Eklenti gerektirir"
       create_category: "Kategori oluştur"
       save: "Kategoriyi kaydet"
       unsaved_changes: "Kaydedilmemiş değişiklikleriniz var"
@@ -4960,7 +4974,7 @@ tr_TR:
         new_replies_tooltip: "Yeni yanıtlar"
         replies: "Yanıtlar"
         replies_with_count: "Yanıtlar (%{count})"
-      new_new:
+      unified_new:
         help: "son birkaç gün içinde oluşturulan veya yanıtlanan konular"
       posted:
         title: "Gönderilerim"
@@ -5158,7 +5172,6 @@ tr_TR:
       synonyms: "Eş Anlamlılar"
       synonyms_inline: "Bu eşanlamlılar %{base_tag_name} ile değiştirilecektir:"
       save: "Etiketin adını ve açıklamasını kaydedin"
-      restricted_to: "Sınırlı"
       no_synonyms: "Bu etiketin eşanlamlısı yoktur."
       edit_synonyms: "Eş Anlamlıları Düzenle"
       add_synonyms_label: "Eş anlamlı ekleyin:"
@@ -5600,7 +5613,7 @@ tr_TR:
           title: "Tabloyu düzenle"
           cancel: "iptal et"
           create: "Kaydet"
-          reason: "neden düzenleme yapıyorsunuz?"
+          reason: "Neden düzenleme yapıyorsunuz?"
           trigger_reason: "Düzenleme nedeni ekleyin"
         default_edit_reason: "Tablo Düzenleyiciyle Tabloyu güncelle"
       default_header:
@@ -5713,12 +5726,6 @@ tr_TR:
             bookmarks: "Yer imi eklediğiniz %{category} kategorisindeki etiketsiz konular"
             default: "%{category} kategorisindeki etiketsiz %{filter} konuları"
         categories: "Tüm kategoriler"
-    content_localization:
-      toggle_localized:
-        translated: "Sayfa makine tarafından çevrilmiştir. Orijinali görüntülemek için tıklayın."
-        not_translated: "Sayfa çevrilmedi. Çevirmek için tıklayın."
-        translations_enabled: "Çeviriler etkinleştirildi"
-        translations_disabled: "Çeviriler devre dışı bırakıldı"
     language_switcher:
       title: "Site dilini değiştir"
   admin_js:
@@ -5962,6 +5969,9 @@ tr_TR:
             opengraph_image:
               title: "OpenGraph görüntüsü"
               description: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır."
+            og_image_preview:
+              generate: "Oluştur"
+              topic_id_label: "Konu kimliği"
             x_summary_large_image:
               title: "X özeti büyük görüntü"
               description: "X kartı \"özet büyük görüntü\". Boş bırakılırsa aynı zamanda bir .svg olmadığı sürece OpenGraph_image kullanılarak normal kart meta verileri oluşturulur."
@@ -6290,7 +6300,7 @@ tr_TR:
         stale_data: "Son zamanlarda güncelleme kontrolü yapılmadı. Sidekiq'in çalıştığından emin olun."
         version_check_pending: "Yakın zamanda güncellemişsiniz gibi görünüyor. Harika!"
         installed_version: "Yüklendi"
-        latest_version: "En son"
+        github: "Github"
         problems_found: "Mevcut site ayarlarınıza dayalı bazı tavsiyeler"
         dismiss_notice: "Yok say"
         new_features:
@@ -6338,6 +6348,7 @@ tr_TR:
         too_many_requests: Bu eylemi birçok kez gerçekleştirdiniz. Tekrar denemeden önce lütfen bekleyin.
         not_found_error: Üzgünüz, bu rapor mevcut değil
         custom_date_range: Özel tarih aralığı
+        stable: "stabil"
         sections:
           reports:
             title: "Rapor"
@@ -6360,8 +6371,11 @@ tr_TR:
                 "2": "Üye"
                 "3": "Normal"
                 "4": "Lider"
-              trend:
-                stable: "stabil"
+          search:
+            title: "Ara"
+            table:
+              searches: "Aramalar"
+              status: "Durum"
         reports_section:
           no_data: "Gösterilecek veri yok"
           modal:
@@ -6459,7 +6473,6 @@ tr_TR:
             incoming_email: "Özel gelen e-posta adresi"
             incoming_email_placeholder: "e-posta adresi gir"
             incoming_email_tooltip: "Birden fazla e-posta adresini | karakteri ile ayırabilirsiniz."
-            visibility: Görünürlük
             visibility_levels:
               title: "Bu grubu kimler görebilir?"
               public: "Herkes"
@@ -6888,9 +6901,10 @@ tr_TR:
           your_organization: "Organizasyonunuz"
           your_organization_description: "Bu bilgileri, siteyi kimin işlettiğini ve hangi yargı yetkisi kapsamında işlettiğini göstermek için Hizmet Koşulları ve Gizlilik Bildiriminde kullanırız."
           company_name: "Ad"
-          company_name_placeholder: "Acme Organizasyonu"
           company_name_warning: |
             Boş bırakılırsa Hizmet Şartları veya Gizlilik Bildirimine ilişkin ortak metin sağlanmaz
+          company_url: "Web sitesi"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Geçerli kanun"
           governing_law_placeholder: "İl, Eyalet veya Ülke"
           governing_law_help: |
@@ -6907,6 +6921,8 @@ tr_TR:
             initial_members: "Genişletilmiş üyeler"
             initial_members_description: "Daha fazlasını görüntüle düğmesi eklenmeden önce gösterilecek grup üyesi sayısı."
             show_description: "Açıklamayı dâhil et"
+          locale_selector:
+            title: "Dil"
           optional: "(isteğe bağlı)"
           update: "Güncelle"
           toasts:
@@ -8010,11 +8026,12 @@ tr_TR:
         silence_reason: "Susturulma sebebi"
         bulk_actions:
           title: "Toplu eylemler"
-          admin_cant_be_deleted: "Bu kullanıcı, yönetici olduğu için silinemez"
-          too_many_or_old_posts: "Bu kullanıcı silinemez, çok fazla sayıda gönderisi veya çok eski bir gönderisi var"
-          too_many_selected_users:
-            one: "Toplu silme için %{count} kullanıcı limitine ulaştınız"
-            other: "Toplu silme için %{count} kullanıcı limitine ulaştınız"
+          select_all: "Tümünü seç"
+          clear_all: "Tümünü temizle"
+          suspend:
+            confirmation_modal:
+              close: "Bitir"
+              confirm: "Askıya al"
           delete:
             label: "Kullanıcı sil…"
             confirmation_modal:
@@ -8042,6 +8059,9 @@ tr_TR:
           suspended: "Askıya Alındı"
           silenced: "Susturuldu"
           staged: "Aşamalı"
+        activation_filter:
+          all: "Tüm kullanıcılar"
+          activated: "Etkinleştirildi"
         approved: "Onaylanmış mı?"
         titles:
           active: "Aktif kullanıcılar"

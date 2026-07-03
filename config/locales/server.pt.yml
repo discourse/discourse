@@ -388,12 +388,16 @@ pt:
       admins: "administradores"
       moderators: "moderadores"
       staff: "pessoal"
-      anonymous: "anónimo"
       trust_level_0: "nivel_de_confianca_0"
       trust_level_1: "nivel_de_confianca_1"
       trust_level_2: "nivel_de_confianca_2"
       trust_level_3: "nivel_de_confianca_3"
       trust_level_4: "nivel_de_confianca_4"
+    default_full_names:
+      everyone: "Todos"
+      admins: "Administradores"
+      moderators: "Moderadores"
+      staff: "Pessoal"
     request_membership_pm:
       title: "Pedido de Adesão para @%{group_name}"
   education:
@@ -720,6 +724,9 @@ pt:
       session_info: "Ler info da sessão de utilizador"
       read: "Ler todos"
       write: "Escrever todos"
+    device:
+      code: "Código"
+      continue: "Continuar"
   reports:
     default:
       labels:
@@ -775,6 +782,7 @@ pt:
       labels:
         count: "Membros"
         share: "Partilhar"
+        signups: "Registos"
       levels:
         "0": "Novo"
         "1": "Básico"
@@ -1017,9 +1025,6 @@ pt:
         other: "A consulta automática de emails gerou %{count} erros nas últimas 24 horas. Consulte em <a href='%{base_path}/logs' target='_blank'>os registos</a> para mais detalhes."
       poll_pop3_timeout: "A tentativa de ligação ao servidor POP3 está a ultrapassar o tempo máximo. O email da caixa de entrada não pôde ser obtido. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a> e fornecedor de serviço internet."
       poll_pop3_auth_error: "A tentativa de ligação ao servidor POP3 está a falhar por motivos de erro de autenticação. Por favor verifique a sua <a href='%{base_path}/admin/site_settings/category/email'>configuração de POP3</a>."
-    reports_section:
-      providers:
-        core_report: "Padrão"
   site_settings:
     disabled: "desativado"
     censored_words: "Palavras que serão automaticamente substituídas por &#9632;&#9632;&#9632;&#9632;"
@@ -1046,7 +1051,6 @@ pt:
     edit_history_visible_to_public: "Permitir que todos vejam versões anteriores de uma mensagem editada. Quando desativado, apenas membros do pessoal podem ver."
     delete_removed_posts_after: "Mensagens removidas pelo autor serão automaticamente eliminadas após um período de (n) horas. Se estiver definido a 0, as mensagens serão eliminadas imediatamente."
     fixed_category_positions: "Se estiver marcado, irá conseguir organizar as categorias por uma ordem fixa. Se não estiver marcado, as categorias são listadas por ordem de actividade."
-    fixed_category_positions_on_create: "Se marcado, a ordenação de categorias irá ser mantida no diálogo de criação do tópico (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: 'Adicionar a etiqueta rel nofollow em todos os conteúdos submetidos pelo utilizador, excepto para hiperligações internas (incluindo domínios pai). Se mudar isto, terá que atualizar todas as suas mensagens com: "rake posts:rebake"'
     post_excerpt_maxlength: "Tamanho máximo do excerto/sumário de uma mensagem."
     show_pinned_excerpt_mobile: "Mostrar excerto em publicações afixadas na vista móvel."
@@ -1088,7 +1092,6 @@ pt:
     blocked_email_domains: "Uma lista de domínios de correio eletrónico com os quais os utilizadores não estão autorizados a registar contas. Os subdomínios são tratados automaticamente para os domínios especificados. Os símbolos de substituição * e ? não são suportados. Exemplo: mailinator.com"
     allowed_email_domains: "Uma lista de domínios de correio eletrónico com os quais os utilizadores DEVEM registar as contas. Os subdomínios são tratados automaticamente para os domínios especificados. Os símbolos de substituição * e ? não são suportados. AVISO: os utilizadores com domínios de correio eletrónico diferentes dos listados não serão permitidos!"
     log_out_strict: "Ao terminar sessão, saia de TODAS as sessões do utilizador em todos dispositivos"
-    new_version_emails: "Enviar um email para o endereço 'contact_email' quando uma nova versão do Discourse estiver disponível."
     invite_expiry_days: "Durante quantos dias as chaves de convite são válidas."
     login_required: "Requerer autenticação para ler conteúdo neste sítio, não permitir acesso anónimo."
     block_common_passwords: "Não permitir palavras-passe que estejam nas 10,000 palavras-passe mais comuns."
@@ -1222,8 +1225,6 @@ pt:
     pop3_polling_openssl_verify: "Verificar o certificado de TLS do server. (Por defeito: activado)"
     pop3_polling_username: "O nome de utilizador para a conta POP3 para obter e-mail."
     pop3_polling_password: "A palavra-passe para a conta POP3 obter e-mail."
-    email_prefix: "A [etiqueta] usada no assunto dos emails. Se não estiver configurada, será 'Título' por defeito."
-    email_site_title: "Título do sítio usado como remetente de emails. Se não for configurado, será 'título' por defeito. Se o seu 'título' contém caracteres que não são permitidos na string do remetente de email, utilize esta configuração."
     minimum_topics_similar: "Quantos tópicos precisam de existir antes de serem apresentados tópicos semelhantes ao compor novos tópicos."
     relative_date_duration: "Número de dias após uma publicação durante o qual as datas das mensagens serão mostradas como relativas(7d) em vez de absolutas(20 Fev)."
     delete_user_max_post_age: "Não permitir eliminação de utilizadores cuja primeira mensagem é mais antiga que (x) dias."
@@ -1247,7 +1248,6 @@ pt:
     dominating_topic_minimum_percent: "Que percentagem de mensagens um utilizador tem que fazer num tópico antes de ser relembrado sobre dominar demasiado um tópico."
     suppress_uncategorized_badge: "Não mostrar distintivos para tópicos sem categoria nas listagens de tópicos."
     permalink_normalizations: "Aplicar a seguinte expressão regular antes de igualar ligações permanentes, por exemplo: /(topic.*)\\?.*/\\1 irá remover rotas de tópico. O formato é regex+string utilize \\1 etc. para aceder a capturas"
-    disable_system_edit_notifications: "Desativa as notificações de edição pelo utilizador do sistema quando 'download_remote_images_to_local' está ativo."
     automatically_unpin_topics: "Desafixar tópicos automaticamente quando um utilizador chega ao final."
     read_time_word_count: "Contagem de palavras por minuto para calcular tempo estimado de leitura."
     enable_names: "Mostrar o nome completo do utilizador no seu perfil, cartão de utilizador, e emails. Desativar para esconder o nome completo em todos os locais."
@@ -1320,6 +1320,10 @@ pt:
       topic: "Resultados"
       user: "Utilizadores"
     results_page: "Resultados da pesquisa por '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "Últimas mensagens"
+      order_latest_topic: "Tópicos recentes"
   filter:
     description:
       in: "Filtrar tópicos nas listas pessoais"
@@ -2094,6 +2098,8 @@ pt:
               private:
                 label: "Privado"
   onebox:
+    google_meet:
+      meeting_code: "Código:"
     github:
       closed: "fechado"
       status_date:

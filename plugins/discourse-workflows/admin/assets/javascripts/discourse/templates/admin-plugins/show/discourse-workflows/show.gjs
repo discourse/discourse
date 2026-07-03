@@ -62,6 +62,10 @@ class WorkflowShowPage extends Component {
             @route="adminPlugins.show.discourse-workflows.show.settings"
             @label="discourse_workflows.tabs.settings"
           />
+          <DNavItem
+            @route="adminPlugins.show.discourse-workflows.show.versions"
+            @label="discourse_workflows.tabs.versions"
+          />
         </DHorizontalOverflowNav>
 
       </div>

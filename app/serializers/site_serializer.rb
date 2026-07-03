@@ -53,6 +53,8 @@ class SiteSerializer < ApplicationSerializer
     :full_name_visible_in_signup,
     :admin_config_login_routes,
     :email_configured,
+    :upcoming_changes_with_css,
+    :access_control,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -130,6 +132,7 @@ class SiteSerializer < ApplicationSerializer
         .select(
           :id,
           :name,
+          :full_name,
           :flair_icon,
           :flair_upload_id,
           :flair_bg_color,
@@ -140,6 +143,7 @@ class SiteSerializer < ApplicationSerializer
           {
             id: g.id,
             name: g.name,
+            full_name: g.full_name.presence || g.name,
             flair_url: g.flair_url,
             flair_bg_color: g.flair_bg_color,
             flair_color: g.flair_color,
@@ -446,6 +450,10 @@ class SiteSerializer < ApplicationSerializer
 
   def full_name_visible_in_signup
     Site.full_name_visible_in_signup
+  end
+
+  def upcoming_changes_with_css
+    UpcomingChanges.including_css
   end
 
   private

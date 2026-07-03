@@ -4,7 +4,7 @@ short_title: Quick reference
 id: quick-reference
 ---
 
-As themes grow more powerful, there's more to remember about how they work. We have loads of detailed documentation under [#howto / #themes](https://meta.discourse.org/tags/c/howto/themes), but if you just need something to jog your memory, this guide may help.
+As themes grow more powerful, there's more to remember about how they work. We have loads of detailed documentation under [#theme-guides](https://meta.discourse.org/tag/theme-guides), but if you just need something to jog your memory, this guide may help.
 
 ### General Resources
 

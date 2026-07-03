@@ -14,20 +14,11 @@ class NestedTopicsController < ApplicationController
   after_action :allow_embed_mode, only: %i[show context]
 
   # GET /n/:slug/:topic_id (HTML + JSON)
-  # HTML: preloads initial data into the Ember shell (crawlers redirect to flat view)
+  # HTML: redirects browser requests to the canonical topic route.
   # JSON page 0: includes topic metadata, OP post, sort, and message_bus_last_id
   # JSON page 1+: returns only roots for pagination
   def show
-    if spa_boot_request?
-      if use_crawler_layout?
-        redirect_to "/t/#{params[:slug]}/#{params[:topic_id]}", status: :moved_permanently
-        return
-      end
-
-      store_preloaded("nested_topic_#{@topic.id}", MultiJson.dump(list_roots_response(page: 0)))
-      render "default/empty"
-      return
-    end
+    return redirect_to topic_route_url, status: topic_route_redirect_status if spa_boot_request?
 
     page = params[:page].to_i.clamp(0, 1000)
     render json: list_roots_response(page: page)
@@ -53,21 +44,13 @@ class NestedTopicsController < ApplicationController
   end
 
   # GET /n/:slug/:topic_id/:post_number (HTML + JSON)
-  # HTML: preloads context data into the Ember shell (crawlers redirect to flat view)
+  # HTML: redirects browser requests to the canonical topic route.
   # JSON param: context (integer) -- controls ancestor depth.
   #   nil/absent = windowed ancestor chain capped at max_depth (deep-links, notifications)
   #   0 = no ancestors, target at depth 0 ("Continue this thread")
   def context
     if spa_boot_request?
-      if use_crawler_layout?
-        redirect_to "/t/#{params[:slug]}/#{params[:topic_id]}/#{params[:post_number]}",
-                    status: :moved_permanently
-        return
-      end
-
-      store_preloaded("nested_topic_#{@topic.id}", MultiJson.dump(show_context_response))
-      render "default/empty"
-      return
+      return(redirect_to topic_route_url(params[:post_number]), status: topic_route_redirect_status)
     end
 
     render json: show_context_response
@@ -145,6 +128,8 @@ class NestedTopicsController < ApplicationController
 
   private
 
+  TOPIC_ROUTE_QUERY_PARAMS = %w[sort collapse_replies context embed_mode class_name].freeze
+
   def list_roots_response(page:)
     result = nil
     NestedTopic::ListRoots.call(
@@ -181,6 +166,21 @@ class NestedTopicsController < ApplicationController
       on_failure { raise Discourse::NotFound }
     end
     result
+  end
+
+  def topic_route_redirect_status
+    use_crawler_layout? ? :moved_permanently : :found
+  end
+
+  def topic_route_url(post_number = nil)
+    url = +"/t/#{@topic.slug}/#{@topic.id}"
+    post_number = post_number.to_i
+    url << "/#{post_number}" if post_number > 0
+
+    query = request.query_parameters.slice(*TOPIC_ROUTE_QUERY_PARAMS)
+    query.delete("class_name") unless query["embed_mode"] == "true"
+    url << "?#{query.to_query}" if query.present?
+    url
   end
 
   def ensure_nested_replies_enabled

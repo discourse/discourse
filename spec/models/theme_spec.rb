@@ -316,12 +316,9 @@ RSpec.describe Theme do
       )
       theme.save!
 
+      expect(theme.cached_settings).to include(name: "bob")
+
       javascript_cache = theme.reload.javascript_cache
-      expect(javascript_cache.content).to include <<~JS
-        registerSettings(#{theme.id}, {
-          "name": "bob"
-        });
-      JS
       expect(javascript_cache.content).to include("alert(settings.name)")
       expect(javascript_cache.content).to include("let a = () => {}")
 
@@ -329,11 +326,30 @@ RSpec.describe Theme do
       setting.value = "bill"
       theme.save!
 
-      expect(theme.reload.javascript_cache.content).to include <<~JS
-        registerSettings(#{theme.id}, {
-          "name": "bill"
-        });
-      JS
+      expect(theme.reload.cached_settings).to include(name: "bill")
+    end
+
+    it "records the plugins a theme statically imports from" do
+      theme.set_field(target: :extra_js, name: "discourse/initializers/my-init.js", value: <<~JS)
+          import Thing from "discourse/plugins/some-plugin/lib/thing";
+          export default { name: "test", initialize() { Thing(); } };
+        JS
+      theme.save!
+
+      expect(theme.reload.javascript_cache.external_plugin_imports).to eq(["some-plugin"])
+    end
+
+    it "exposes baked extra_js as javascript cache info" do
+      theme.set_field(target: :extra_js, name: "discourse/initializers/my-init.js", value: <<~JS)
+          import Thing from "discourse/plugins/some-plugin/lib/thing";
+          export default { name: "test", initialize() { Thing(); } };
+        JS
+      theme.save!
+
+      cache = theme.reload.javascript_cache
+      expect(Theme.js_asset_info(theme.id)).to eq(
+        [{ url: cache.url, theme_id: theme.id, external_plugin_imports: ["some-plugin"] }],
+      )
     end
 
     it "is empty when the settings are invalid" do
@@ -723,13 +739,13 @@ RSpec.describe Theme do
       child.save!
 
       first_common_value = Theme.lookup_field(child.id, :desktop, "header")
-      first_extra_js_value = Theme.lookup_field(child.id, :extra_js, nil)
+      first_extra_js_value = Theme.js_asset_info(child.id)
 
       Theme
         .stubs(:compiler_version)
         .returns("SOME_NEW_HASH") do
           second_common_value = Theme.lookup_field(child.id, :desktop, "header")
-          second_extra_js_value = Theme.lookup_field(child.id, :extra_js, nil)
+          second_extra_js_value = Theme.js_asset_info(child.id)
 
           new_common_compiler_version =
             ThemeField.find_by(theme_id: child.id, name: "header").compiler_version
@@ -1025,11 +1041,11 @@ RSpec.describe Theme do
       )
     end
 
-    it "updates the theme's javascript cache after running migration" do
+    it "updates the theme settings after running migration" do
       theme.set_field(target: :extra_js, name: "test.js.es6", value: "const hello = 'world';")
       theme.save!
 
-      expect(theme.javascript_cache.content).to include('"list_setting": "aa,bb"')
+      expect(theme.settings[:list_setting].value).to eq("aa,bb")
 
       settings_field.update!(value: <<~YAML)
         integer_setting: 1
@@ -1052,7 +1068,6 @@ RSpec.describe Theme do
 
       expect(setting_record.data_type).to eq(ThemeSetting.types[:list])
       expect(setting_record.value).to eq("zz|aa")
-      expect(theme.javascript_cache.content).to include('"list_setting": "zz|aa"')
     end
 
     it "allows changing a setting's type" do

@@ -162,6 +162,31 @@ RSpec.describe AdminUserIndexQuery do
     end
   end
 
+  describe "sorting by a penalty reason" do
+    fab!(:user_a) { Fabricate(:user, suspended_till: 1.year.from_now, suspended_at: Time.zone.now) }
+    fab!(:user_z) { Fabricate(:user, suspended_till: 1.year.from_now, suspended_at: Time.zone.now) }
+
+    before do
+      UserHistory.create!(
+        action: UserHistory.actions[:suspend_user],
+        target_user_id: user_a.id,
+        acting_user_id: Discourse.system_user.id,
+        details: "aaa reason",
+      )
+      UserHistory.create!(
+        action: UserHistory.actions[:suspend_user],
+        target_user_id: user_z.id,
+        acting_user_id: Discourse.system_user.id,
+        details: "zzz reason",
+      )
+    end
+
+    it "orders by the suspend reason (joining only when sorting by it)" do
+      query = ::AdminUserIndexQuery.new(query: "suspended", order: "suspend_reason", asc: "true")
+      expect(real_users(query).map(&:id)).to eq([user_a.id, user_z.id])
+    end
+  end
+
   describe "with a staged user" do
     fab!(:user) { Fabricate(:user, staged: true) }
     fab!(:user2) { Fabricate(:user, staged: false) }
@@ -169,6 +194,26 @@ RSpec.describe AdminUserIndexQuery do
     it "finds the staged user" do
       query = ::AdminUserIndexQuery.new(query: "staged")
       expect(real_users(query)).to eq([user])
+    end
+  end
+
+  describe "with the activation filter" do
+    fab!(:activated_user) { Fabricate(:user, active: true) }
+    fab!(:not_activated_user) { Fabricate(:user, active: false) }
+
+    it "finds only not activated users" do
+      query = ::AdminUserIndexQuery.new(query: "new", activation: "not_activated")
+      expect(real_users(query)).to contain_exactly(not_activated_user)
+    end
+
+    it "finds only activated users" do
+      query = ::AdminUserIndexQuery.new(query: "new", activation: "activated")
+      expect(real_users(query)).to contain_exactly(activated_user)
+    end
+
+    it "finds all users when no activation filter is provided" do
+      query = ::AdminUserIndexQuery.new(query: "new")
+      expect(real_users(query)).to contain_exactly(activated_user, not_activated_user)
     end
   end
 

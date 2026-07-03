@@ -33,6 +33,23 @@ module DiscourseAi
             id: "anthropic",
             models: [
               model(
+                name: "claude-opus-4-8",
+                tokens: 1_000_000,
+                display_name: "Claude Opus 4.8",
+                max_output_tokens: 128_000,
+                input_cost: 5.0,
+                cached_input_cost: 0.50,
+                cache_write_cost: 6.25,
+                output_cost: 25.0,
+                vision_enabled: true,
+                # Opus 4.7+ rejects the classic thinking.type=enabled request
+                # and requires thinking.type=adaptive instead.
+                provider_params: {
+                  enable_reasoning: true,
+                  adaptive_thinking: true,
+                },
+              ),
+              model(
                 name: "claude-opus-4-7",
                 tokens: 1_000_000,
                 display_name: "Claude Opus 4.7",
@@ -42,6 +59,26 @@ module DiscourseAi
                 cache_write_cost: 6.25,
                 output_cost: 25.0,
                 vision_enabled: true,
+                provider_params: {
+                  enable_reasoning: true,
+                  adaptive_thinking: true,
+                },
+              ),
+              model(
+                name: "claude-sonnet-5",
+                tokens: 1_000_000,
+                display_name: "Claude Sonnet 5",
+                max_output_tokens: 64_000,
+                input_cost: 3.0,
+                cached_input_cost: 0.30,
+                cache_write_cost: 3.75,
+                output_cost: 15.0,
+                vision_enabled: true,
+                # Sonnet 5 also requires adaptive thinking, same as Opus 4.7+.
+                provider_params: {
+                  enable_reasoning: true,
+                  adaptive_thinking: true,
+                },
               ),
               model(
                 name: "claude-sonnet-4-6",
@@ -227,7 +264,8 @@ module DiscourseAi
           cache_write_cost: nil,
           output_cost: nil,
           vision_enabled: false,
-          endpoint: nil
+          endpoint: nil,
+          provider_params: nil
         )
           result = { name: name, tokens: tokens, display_name: display_name }
           result[:max_output_tokens] = max_output_tokens if max_output_tokens
@@ -237,6 +275,7 @@ module DiscourseAi
           result[:output_cost] = output_cost if output_cost
           result[:vision_enabled] = vision_enabled if vision_enabled
           result[:endpoint] = endpoint if endpoint
+          result[:provider_params] = provider_params if provider_params
           result
         end
       end

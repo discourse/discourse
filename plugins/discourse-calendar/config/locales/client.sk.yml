@@ -397,7 +397,6 @@ sk:
           no_users: "Nenašli sa žiadni používatelia"
           leave_event: "Opustiť udalosť"
           status:
-            unknown: "Nemám záujem"
             going: "Idem"
             interested: "Záujem"
             going_count:
@@ -435,6 +434,8 @@ sk:
               description: "K súkromnej udalosti sa môžu pripojiť len pozvaní používatelia."
       composer:
         name_placeholder: "Názov udalosti"
+        event_title_placeholder: "Názov udalosti"
+        create_event_button: "Vytvoriť udalosť"
         reminder:
           units:
             minutes:
@@ -457,6 +458,9 @@ sk:
               few: "týždne"
               many: "týždne"
               other: "týždne"
+      composer_actions:
+        create_event:
+          label: "Vytvoriť udalosť"
       builder_modal:
         custom_fields:
           label: "Vlastné polia"
@@ -499,11 +503,7 @@ sk:
         allow_chat:
           label: "Integrácia chatu"
           checkbox_label: "Vytvorenie a správa kanála chatu pre konkrétnu udalosť"
-        url:
-          label: "URL"
-          placeholder: "Voliteľné"
         location:
-          label: "Poloha"
           placeholder: "Pridajte miesto, odkaz alebo niečo podobné."
         description:
           label: "Popis"
@@ -519,3 +519,4 @@ sk:
       invite_user_or_group:
         title: "Upozorniť používateľa (používateľov) alebo skupinu (skupiny)"
         invite: "Odoslať"
+        success: "Pozvánka bola odoslaná"

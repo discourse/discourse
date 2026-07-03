@@ -1,14 +1,14 @@
 # frozen_string_literal: true
 
 class AssetProcessor
-  BASE_COMPILER_VERSION = 108
+  BASE_COMPILER_VERSION = 112
 
   PROCESSOR_DIR = "tmp/asset-processor"
   LOCK_FILE = "#{PROCESSOR_DIR}/build.lock"
 
   CACHE_DEPENDENCY_GLOBS = %w[
     node_modules/.pnpm/lock.yaml
-    frontend/asset-processor/**/*.js
+    frontend/asset-processor/**/*.{js,mjs}
     frontend/discourse/lib/babel-transform-module-renames.js
     frontend/discourse/config/targets.js
   ]
@@ -55,7 +55,7 @@ class AssetProcessor
   end
 
   def self.build_asset_processor
-    Discourse::Utils.execute_command("pnpm", "-C=frontend/asset-processor", "node", "build.js")
+    Discourse::Utils.execute_command("pnpm", "-C=frontend/asset-processor", "node", "build.mjs")
   end
 
   def self.inputs_digest

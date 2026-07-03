@@ -21,7 +21,7 @@ RSpec.describe "Admin AI features configuration" do
   end
 
   it "lists all persona backed AI features separated by enabled/not enabled" do
-    all_modules = DiscourseAi::Configuration::Module.all
+    all_modules = DiscourseAi::Configuration::Module.all.select(&:visible?)
     configured_count = all_modules.count(&:enabled?)
     ai_features_page.visit
     ai_features_page.toggle_enabled
@@ -74,7 +74,7 @@ RSpec.describe "Admin AI features configuration" do
     expect(page).to have_css(".ai-feature-editor")
 
     field = form.field("ai_bot_allowed_groups")
-    expect(field.component).to have_css(".list-setting")
+    expect(field.component).to have_css(".group-chooser")
     expect(field.component).to have_content(group_1.name)
     expect(field.component).to have_content(group_2.name)
   end

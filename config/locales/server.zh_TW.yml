@@ -308,12 +308,17 @@ zh_TW:
       admins: "管理員"
       moderators: "板主"
       staff: "工作人員"
-      anonymous: "匿名"
       trust_level_0: "信任等級 0"
       trust_level_1: "信任等級 1"
       trust_level_2: "信任等級 2"
       trust_level_3: "信任等級 3"
       trust_level_4: "信任等級 4"
+    default_full_names:
+      everyone: "所有使用者"
+      moderators: "板主"
+      staff: "管理員"
+      anonymous_users: "匿名的使用者"
+      logged_in_users: "登入的使用者"
     request_membership_pm:
       title: "@%{group_name} 的群組會員要求"
   education:
@@ -672,6 +677,9 @@ zh_TW:
       read: "讀取所有"
       write: "寫入所有"
       one_time_password: "建立一鍵登入"
+    device:
+      code: "代碼"
+      continue: "繼續"
     invalid_public_key: "很抱歉，公鑰無效"
     invalid_auth_redirect: "很抱歉，這個轉向不被允許"
     invalid_token: "遺失或過期的Token"
@@ -761,6 +769,7 @@ zh_TW:
         level: "信任等級"
         count: "成員"
         share: "分享"
+        signups: "註冊"
       levels:
         "0": "新使用者"
         "1": "初級使用者"
@@ -1083,9 +1092,6 @@ zh_TW:
       poll_pop3_auth_error: "至 POP3 伺服器的連接驗證失敗。請檢查<a href='%{base_path}/admin/site_settings/category/email'>POP3 設置</a>。"
       force_https: "伺服器設置使用SSL，但<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>並未在伺服器設置中啟用。"
       google_analytics_version: "您的 Discourse 目前正在使用 Google Analytics 3，將在 2023 年 7 月後失去支援。 <a href='https://meta.discourse.org/t/260498'>立即升級到 Google Analytics 4</a> 以繼續接收有關您網站性能的寶貴見解和分析。"
-    reports_section:
-      providers:
-        core_report: "標準"
   site_settings:
     disabled: "停用"
     censored_words: "將被自動替換為 &#9632;&#9632;&#9632;&#9632;"
@@ -1118,7 +1124,6 @@ zh_TW:
     delete_removed_posts_after: "貼文被作者刪除，將在 (n) 小時後被自動刪除。如果設置為 0，貼文將被立即刪除。"
     responsive_post_image_sizes: "調整燈箱預覽圖片的大小，此操作將允許像素高的 DPI 螢幕顯示。刪除所有值以禁用響應式圖片"
     fixed_category_positions: "若勾選，你將能調整並固定分類的順序。若不勾選，分類將會依照活躍程度來排序。"
-    fixed_category_positions_on_create: "如果選擇了，目錄排序將會在話題創建對話框中被包含(要求固定目錄位置選項)"
     add_rel_nofollow_to_user_content: '添加 rel nofollow 屬性到所有的使用者內容，除了內部鏈接（包括父域名）。如果你更改了這個，你必須重新調制所有貼文，而該命令為：“rake posts:rebake”'
     exclude_rel_nofollow_domains: "網域列表不可加入 nofollow 連結。例如：填 example.com 也將會自動允許子網域 sub.example.com。您最少需填寫域名來讓爬蟲獲得所有內容。如果你的網站也包含其他域名，請增加這些域名。"
     post_excerpt_maxlength: "貼文摘要的最大文字長度"
@@ -1128,11 +1133,6 @@ zh_TW:
     allowed_inline_onebox_domains: "如果連結未包含 title，會被展開成連結預覽的網域白名單。"
     logo: "網站左上角的Logo圖片，圖片高為120、寬高比大於3：1的寬矩形比例。 如果沒有設定 Logo，將顯示網站標題。"
     logo_small: "當你滾動頁面往下滑時，可看見在網站左上角的 Logo圖片，Logo 應為正方形 120x120尺寸。若無設定Logo，將顯示主頁圖片。"
-    digest_logo: "在發送電子郵件摘要的最上方，會出現備用Logo，請使用長方形圖像，不要使用副檔名為SVG圖。 如果沒有設定，將使用 Logo圖片。"
-    large_icon: "用作其他Metadata Icon的基礎圖示。 理想情況下應大於512 x 512。如果留空，將使用logo_small來顯示。"
-    manifest_icon: "在Android上用作Logo或啟動顯示畫面的圖片。 將自動調整為512×512。如果留空，將使用large_icon。"
-    favicon: "您網頁的圖示（favicon），請參閱<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>。 要在CDN上正常工作，favicon 副檔名必須為 .png，圖示將調整為32x32。如果留空，將使用large_icon。"
-    opengraph_image: "預設opengraph image，在頁面沒有其他合適圖像時使用。 如果留空，將使用large_icon。"
     notification_email: "這個表格：被用於發送所有重要系統郵件的郵箱地址。指定的域名必須正確設置 SPF、DKIM 和反向 PTR 記錄以發送郵件。"
     force_https: "強制使用 https。警告：開啟前必須確認 HTTPS 已經配置並能夠正常使用！你檢查了 CDN、第三方登錄和站外的 logo / 依賴是否支持 HTTPS 了嗎？"
     summary_score_threshold: "將一個貼文包含在“概括主題”中所需的最少分數"
@@ -1165,7 +1165,6 @@ zh_TW:
     blocked_ip_blocks: "Discourse 將不會使用爬蟲爬私人IP黑名單清單。"
     allowed_internal_hosts: "Discourse 可以安全抓取以用於 Onebox 與其他用途的內部主機列表"
     allowed_crawler_user_agents: "使用者代理（User Agents）的網路爬蟲（Web Crawlers）將允許存取網站。警告！設置此將取消未列出的所有網路爬蟲者（Web Crawlers）"
-    slow_down_crawler_rate: "如果指定了slow_down_crawler_user_agents，則此速率將適用於所有抓取工具（請求之間的延遲秒數）"
     invalidate_inactive_admin_email_after_days: "在這幾天沒有訪問網站的管理員帳戶，在登入前需要重新驗證該管理員帳戶的電子郵件。設定為0禁用。"
     share_links: "決定在分享對話方塊裡顯示哪些項目、以什麼順序顯示。"
     site_contact_username: "以一個有效的工作成員帳號來發送所有自動化消息。如果保留空白，則會使用預設的系統帳號。"
@@ -1181,7 +1180,6 @@ zh_TW:
     email_token_valid_hours: "\"忘記密碼\" / \"重啟帳號\" token 有效的小時數 (n)"
     log_out_strict: "登出時，登出使用者所有設備上的所有連線階段"
     version_checks: "當 Discourse 有推新的版本需要更新時，顯示在 <a href='%{base_path}/admin' target='_blank'>/admin/</a>Dashboard 上以提示管理員"
-    new_version_emails: "當新版本發佈時，將會發送一封新的 EMail 至 contact_email 設定的位址"
     invite_expiry_days: "多少天以內使用者的邀請碼是有效的"
     invite_only: "開放註冊功能已停用，需要註冊的使用者必須由其他使用者或有權限的工作人員邀請。"
     login_required: "需要登入才能進入網站，不允許匿名操作"
@@ -1199,10 +1197,8 @@ zh_TW:
     google_oauth2_client_secret: "你的 Google 應用程式的客戶端 secret"
     google_oauth2_prompt: "選項以空格字串分隔，指定授權服務器是否提示用戶進行重新認證和同意。 有關更多資訊，請參閱Google開發者手冊OpenIDConnect<a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a>。"
     google_oauth2_hd: "登入將受限於的Google Apps Hosted。更多資訊，請參閱Google開發者手冊：<a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>。"
-    enable_twitter_logins: "啟用Twitter身份驗證，需要twitter_consumer_key和twitter_consumer_secret。 請參閱<a href='https://meta.discourse.org/t/13395' target='_blank'>使用Discourse設置Twitter登入（和其他豐富功能）</a>。"
     twitter_consumer_key: "Twitter身份驗證的使用者密鑰，在<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>上取得"
     twitter_consumer_secret: "Twitter身份驗證的密鑰，在<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>上取得"
-    enable_facebook_logins: "啟用 Facebook 身份驗證，需要facebook_app_id和facebook_app_secret。 請參閱設定<a href='https://meta.discourse.org/t/13394' target='_blank'>在Discourse 設定 Facebook登錄</a>。"
     facebook_app_secret: "Facebook身份驗證需要App 鑰匙（App Secret），在<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>上取得"
     enable_backups: "允許管理員建立備份"
     s3_backup_bucket: "遠端備份 bucket ，注意：請確定是私有的 bucket"
@@ -1242,7 +1238,6 @@ zh_TW:
     purge_deleted_uploads_grace_period_days: "徹底刪除孤立的上傳檔案的寬限期（單位：天）"
     purge_unactivated_users_grace_period_days: "刪除未啟用其帳戶的使用者之前的寬限期（以天為單位）。 設置為0：表示永遠不會清除未啟用的使用者。"
     enable_s3_uploads: "上傳至 Amazon S3 存儲的地址。重要：需要有效的 S3 驗證資料（包括 access key id & secret access key）。"
-    s3_use_iam_profile: '使用AWS EC2實例配置文件授予對 S3 bucket的訪問權限。 注意：啟用此功能需要Discourse在EC2實例中運行，並覆寫“S3 Access key ID”和“S3 Secret Access Key”的設定。'
     s3_upload_bucket: "Amazon S3 保存上傳檔案的 bucket 名稱。警告：必須為小寫，不包含句點 (.) 與底線 (_)。"
     s3_access_key_id: "上傳至 Amazon S3 的 access key，將用於上傳圖片、附件或備份。"
     s3_secret_access_key: "上傳至 Amazon S3 的 secret access key，將用於上傳圖片"
@@ -1362,8 +1357,6 @@ zh_TW:
     pop3_polling_password: "POP3 帳戶用來輪詢電子郵件的密碼。"
     pop3_polling_delete_from_server: "從Server端刪除電子郵件。注意：如果禁用此功能，則需要手動清理收件匣。"
     log_mail_processing_failures: "將所有電子郵件處理失敗記錄到<a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_prefix: "EMail主題中使用的 [ 標籤 ]，留空將預設使用 'title'"
-    email_site_title: "郵件發送人站點標題。如果沒有設置，預設為“title”。如果標題包含了任何不允許的字元，使用這個設置。"
     find_related_post_with_key: "只使用「回覆按鈕」尋找回覆貼文。 警告：禁用此功能，允許使用者基於電子郵件地址進行模擬。"
     minimum_topics_similar: "在編寫新主題時，需要有多少相似主題存在？"
     relative_date_duration: "發表多少天內將顯示相對時間（7天）而非絶對時間（2月20日）。"
@@ -1403,7 +1396,6 @@ zh_TW:
     header_dropdown_category_count: "在下拉式功能表中可以顯示多少類別"
     permalink_normalizations: "在匹配永久連結之前應用如下正則表達式，例如：/(topic.*)\\?.*/\\1 將去掉所有主題路徑的參數字元串。格式為使用正則表達式+使用 \\1 等字元串來訪問捕獲內容"
     global_notice: "向所有訪客顯示緊急的、不可駁回的全版面橫幅通知，設定留空將會隱藏它（允許使用HTML）。"
-    disable_system_edit_notifications: "當 'download_remote_images_to_local' 啟用時禁用系統編輯提醒。"
     automatically_unpin_topics: "當使用者到達底部時自動解除主題置頂。"
     read_time_word_count: "一分鐘閲讀的詞的數量，用於估計閲讀時間。"
     auto_handle_queued_age: "等待多天後系統將自動處理等待審核的記錄，投訴將被忽略。尚未審核的討論話題及使用者將被拒絕。設定為0，可禁用此功能。"
@@ -1448,7 +1440,6 @@ zh_TW:
     default_categories_tracking: "分類列表預設追蹤。"
     default_categories_muted: "分類列表預設不顯示。"
     default_categories_watching_first_post: "預設監看這些分類中每個新主題的第一貼"
-    default_categories_normal: "類別沒有預設靜音的清單，當`預設所有類別靜音`網站設定啟用時很有用。"
     retain_web_hook_events_period_days: "保留Web hook事件記錄的天數。"
     retry_web_hook_events: "自動重試失敗的Web hook事件，最大重試為4次。 重試之間的時間間隔為1、5、25及125分鐘"
     allow_user_api_key_scopes: "使用者API授權範圍列表"
@@ -1508,6 +1499,10 @@ zh_TW:
       topic: "結果"
       user: "使用者"
     results_page: "「%{term}」的搜尋結果"
+  posts_filter:
+    description:
+      order_latest: " 最近貼文"
+      order_latest_topic: "最新討論話題"
   discourse_connect:
     login_error: "登入錯誤"
     not_found: "無法找到你的帳號。請聯絡網站管理人員。"
@@ -2776,10 +2771,6 @@ zh_TW:
     minimum_required_tags:
       other: "您必須至少選擇%{count}個標籤"
     upload_row_too_long: "CSV檔案每一行應該有一個標籤，可選，標籤後面可以是逗號，然後是標籤群組名稱。"
-    forbidden:
-      in_this_category: '「%{tag_name}」不能被使用在這個分類'
-      restricted_to:
-        other: '「%{tag_name}」只能被「%{category_name}」類別使用。'
   rss_by_tag: "主題標籤 %{tag}"
   finish_installation:
     congratulations: "祝賀，你已經安裝好了 Discourse！"
@@ -2821,6 +2812,8 @@ zh_TW:
   search_logs:
     graph_title: "搜尋計數"
   onebox:
+    google_meet:
+      meeting_code: "代碼:"
     github:
       opened: "已打開"
       closed: "不公開"

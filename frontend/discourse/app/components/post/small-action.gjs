@@ -204,14 +204,14 @@ export default class PostSmallAction extends Component {
             <div class="small-action-buttons">
               {{#if @post.canRecover}}
                 <DButton
-                  class="btn-flat small-action-recover"
+                  class="btn-flat btn-small small-action-recover"
                   @icon="arrow-rotate-left"
                   @action={{@recoverPost}}
                   @title="post.controls.undelete"
                 />
               {{else if @post.can_edit}}
                 <DButton
-                  class="btn-flat small-action-edit"
+                  class="btn-flat btn-small small-action-edit"
                   @icon="pencil"
                   @action={{@editPost}}
                   @title="post.controls.edit"
@@ -219,7 +219,7 @@ export default class PostSmallAction extends Component {
               {{/if}}
               {{#if @post.canDelete}}
                 <DButton
-                  class="btn-flat btn-danger small-action-delete"
+                  class="btn-flat btn-small btn-danger small-action-delete"
                   @icon="trash-can"
                   @action={{@deletePost}}
                   @title="post.controls.delete"

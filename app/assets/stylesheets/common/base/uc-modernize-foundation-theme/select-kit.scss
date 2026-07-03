@@ -37,7 +37,8 @@
   .select-kit.combo-box.category-drop .caret-icon,
   .select-kit.combo-box.tag-drop .tag-drop-header,
   .select-kit.combo-box.tag-drop .selected-name,
-  .select-kit.combo-box.tag-drop .caret-icon {
+  .select-kit.combo-box.tag-drop .caret-icon,
+  .select-kit.combo-box.solved-status-filter .selected-name {
     color: var(--primary);
   }
 

@@ -34,16 +34,21 @@ RSpec.describe User do
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
     end
 
-    it "never returns true for the 'anonymous' auto group — logged-in users are not anonymous" do
+    it "never returns true for the 'anonymous_users' auto group — logged-in users are not anonymous" do
       GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
       Discourse.system_user.reload
-      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
-      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(false)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(
+        false,
+      )
     end
 
-    it "returns true for the 'anonymous' auto group for anonymous users" do
+    it "returns true for the 'anonymous_users' auto group for anonymous users" do
       expect(
-        Guardian.new.instance_variable_get(:@user).in_any_groups?([Group::AUTO_GROUPS[:anonymous]]),
+        Guardian
+          .new
+          .instance_variable_get(:@user)
+          .in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]]),
       ).to eq(true)
     end
 
@@ -66,11 +71,13 @@ RSpec.describe User do
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:logged_in_users]])).to eq(true)
     end
 
-    it "never returns true for the 'anonymous' auto group — logged-in users are not anonymous" do
+    it "never returns true for the 'anonymous_users' auto group — logged-in users are not anonymous" do
       GroupUser.where(user_id: Discourse::SYSTEM_USER_ID).delete_all
       Discourse.system_user.reload
-      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
-      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous]])).to eq(false)
+      expect(user.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(false)
+      expect(Discourse.system_user.in_any_groups?([Group::AUTO_GROUPS[:anonymous_users]])).to eq(
+        false,
+      )
     end
 
     context "with granular_anonymous_and_logged_in_groups_permissions enabled" do
@@ -3620,6 +3627,19 @@ RSpec.describe User do
       expect(admin.whisperer?).to eq(false)
     end
 
+    context "when primary_group_id is set without matching group membership" do
+      fab!(:user)
+
+      before do
+        SiteSetting.whispers_allowed_groups = group.id.to_s
+        user.update_column(:primary_group_id, group.id)
+      end
+
+      it "does not grant whisper access" do
+        expect(user).not_to be_a_whisperer
+      end
+    end
+
     it "returns true for user belonging to whisperers groups" do
       whisperer = Fabricate(:user)
       user = Fabricate(:user)
@@ -4235,6 +4255,41 @@ RSpec.describe User do
           SiteSetting.humanized_name(:enable_upload_debug_mode),
         )
         expect(change_stat[:description]).to eq(SiteSetting.description(:enable_upload_debug_mode))
+      end
+    end
+  end
+
+  describe "acl permissions" do
+    fab!(:acl_user) { Fabricate(:user, refresh_auto_groups: true) }
+    fab!(:acl_group) { Fabricate(:group).tap { |group| group.add(acl_user) } }
+    fab!(:viewable_category, :category)
+    fab!(:editable_category, :category)
+    fab!(:view_acl) do
+      Fabricate(
+        :access_control_list_with_groups,
+        target: viewable_category,
+        permission: "view",
+        groups: [acl_group],
+      )
+    end
+    fab!(:edit_acl) do
+      Fabricate(
+        :access_control_list_with_groups,
+        target: editable_category,
+        permission: "edit",
+        groups: [acl_group],
+      )
+    end
+
+    before do
+      Category.stubs(:has_mandatory_acl?).returns(true)
+      Category.stubs(:acl_is_mandatory?).returns(true)
+    end
+
+    describe "#permission_acl" do
+      it "builds an Acl::User from the acls matching the user and memoizes it" do
+        expect(acl_user.permission_acl).to be_a(Acl::User)
+        expect(acl_user.permission_acl).to equal(acl_user.permission_acl)
       end
     end
   end

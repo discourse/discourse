@@ -141,7 +141,10 @@ export default <template>
                                   }}</span>
                               {{/if}}
                             </div>
-                            <div class="query-desc">{{query.description}}</div>
+                            <div
+                              class="query-desc"
+                              title={{query.description}}
+                            >{{query.description}}</div>
                           </LinkTo>
                         </td>
                         <td class="d-table__cell --detail query-created-by">
@@ -200,7 +203,7 @@ export default <template>
                               {{on "click" @controller.scrollTop}}
                               @route="adminPlugins.show.explorer.edit"
                               @model={{query.id}}
-                              class="btn btn-default btn-small"
+                              class="btn btn-text btn-default btn-small"
                             >
                               {{i18n "edit"}}
                             </LinkTo>

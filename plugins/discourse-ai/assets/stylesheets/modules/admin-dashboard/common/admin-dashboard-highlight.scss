@@ -1,0 +1,41 @@
+.ai-admin-dashboard-highlight {
+  margin-bottom: 1em;
+  max-width: 54em;
+
+  &__text {
+    margin: 0;
+    font-size: var(--font-up-1);
+    line-height: var(--line-height-large);
+    color: var(--primary-high);
+    overflow-wrap: anywhere;
+  }
+
+  &__loading {
+    height: 1.5em;
+    max-width: 40em;
+    border-radius: var(--d-border-radius);
+    background: linear-gradient(
+      90deg,
+      var(--primary-low) 25%,
+      var(--primary-very-low) 50%,
+      var(--primary-low) 75%
+    );
+    background-size: 200% 100%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    &__loading {
+      animation: ai-admin-dashboard-highlight-shimmer 1.4s ease infinite;
+    }
+  }
+}
+
+@keyframes ai-admin-dashboard-highlight-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}

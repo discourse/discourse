@@ -384,6 +384,12 @@ fi:
         temperature_help: "LLM:lle käytettävä lämpötila. Lisää luovuutta kasvattamalla arvoa (jätä tyhjäksi, jos haluat käyttää mallin oletusta, yleensä arvo välillä 0,0–2,0)"
         top_p: "Top-p"
         top_p_help: "LLM:lle käytettävä top-p, lisää satunnaisuutta kasvattamalla arvoa (jätä tyhjäksi, jos haluat käyttää mallin oletusta, yleensä arvo välillä 0,0–1,0)"
+        thinking_effort_options:
+          none: "Ei valittu"
+          low: "Matala"
+          medium: "Keskitaso"
+          high: "Korkea"
+          max: "Enint."
         priority: "Prioriteetti"
         tool_options: "Työkaluasetukset"
         rag_conversation_chunks: "Hakukeskustelulohkot"
@@ -537,9 +543,7 @@ fi:
             custom: "Mukautettu..."
           hours: "tuntia"
           max_tokens_help: "Saneiden (sanojen ja merkkien) enimmäismäärä, jonka kukin tämän ryhmän käyttäjä voi käyttää määritetyn keston aikana. Saneet ovat yksiköitä, joita tekoälymallit käyttävät tekstin käsittelyyn – noin 1 merkki = 4 merkkiä tai 3/4 sanasta."
-          max_tokens_required: "Täytyy asettaa, jos enimmäiskäyttöä ei ole asetettu"
           max_usages_help: "Enimmäismäärä kertoja, jonka kukin tämän ryhmän käyttäjä voi käyttää tekoälymallia määritetyn ajan kuluessa. Tätä kiintiötä seurataan yksittäistä käyttäjää kohti, eikä sitä jaeta ryhmän kesken."
-          max_usages_required: "Täytyy asettaa, jos enimmäissaneita ei ole asetettu"
         usage:
           ai_bot: "Tekoälybotti"
           ai_helper: "Apuri (%{agent})"
@@ -620,7 +624,6 @@ fi:
         title: "Ehdota muutoksia tekoälyn avulla"
         description: "Valitse yksi seuraavista vaihtoehdoista, niin tekoäly ehdottaa sinulle uutta versiota tekstistä."
         selection_hint: "Vihje: voit myös valita osan tekstistä ennen apuohjelman avaamista kirjoittaaksesi vain sen uudelleen."
-        suggest: "Ehdota tekoälyllä"
         suggest_errors:
           too_many_tags:
             one: "Sinulla voi olla enintään %{count} tunniste"

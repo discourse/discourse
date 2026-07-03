@@ -17,6 +17,7 @@ export default class AiTagSuggestion extends Component {
         @mode="suggest_tags"
         @updateAction={{@outletArgs.updateTags}}
         @currentValue={{@outletArgs.tags}}
+        @categoryId={{@outletArgs.categoryId}}
       />
     {{/if}}
   </template>

@@ -900,6 +900,74 @@ RSpec.describe CookedPostProcessor do
         end
       end
 
+      context "with topic og image generation" do
+        fab!(:post) { Fabricate(:post, user: user_with_auto_groups, raw: "no image in this post") }
+
+        it "enqueues the generator job when the first post has no image and setting is on" do
+          SiteSetting.generate_topic_og_image = true
+          expect { CookedPostProcessor.new(post).post_process }.to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }.by(1)
+        end
+
+        it "does not enqueue when the setting is off" do
+          SiteSetting.generate_topic_og_image = false
+          expect { CookedPostProcessor.new(post).post_process }.not_to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }
+        end
+
+        it "does not enqueue when the topic already has a generated OG image" do
+          SiteSetting.generate_topic_og_image = true
+          post.topic.update_column(:og_image_upload_id, Fabricate(:upload).id)
+          expect { CookedPostProcessor.new(post).post_process }.not_to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }
+        end
+
+        it "does not enqueue for non-first posts" do
+          SiteSetting.generate_topic_og_image = true
+          reply =
+            Fabricate(:post, user: user_with_auto_groups, topic: post.topic, raw: "no image reply")
+          expect { CookedPostProcessor.new(reply).post_process }.not_to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }
+        end
+
+        it "does not enqueue for personal messages" do
+          SiteSetting.generate_topic_og_image = true
+          pm_post = Fabricate(:private_message_post, user: user_with_auto_groups)
+          expect { CookedPostProcessor.new(pm_post).post_process }.not_to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }
+        end
+
+        it "does not enqueue for topics in a read-restricted category" do
+          SiteSetting.generate_topic_og_image = true
+          private_category = Fabricate(:private_category, group: Fabricate(:group))
+          post.topic.update!(category: private_category)
+          expect { CookedPostProcessor.new(post).post_process }.not_to change {
+            Jobs::GenerateTopicOgImage.jobs.size
+          }
+        end
+
+        it "clears the generated OG image when the first post has an image" do
+          SiteSetting.generate_topic_og_image = true
+          FastImage.stubs(:size)
+          old_upload = Fabricate(:upload)
+          image_post = Fabricate(:post_with_uploaded_image, user: user_with_auto_groups)
+          image_post.topic.update_column(:og_image_upload_id, old_upload.id)
+          UploadReference.ensure_exist!(upload_ids: [old_upload.id], target: image_post.topic)
+
+          CookedPostProcessor.new(image_post).post_process
+
+          expect(image_post.topic.reload.og_image_upload_id).to be_nil
+          expect(UploadReference.exists?(upload_id: old_upload.id, target: image_post.topic)).to eq(
+            false,
+          )
+        end
+      end
+
       it "prioritizes data-thumbnail images" do
         upload1 = Fabricate(:image_upload, width: 1750, height: 2000)
         upload2 = Fabricate(:image_upload, width: 1750, height: 2000)
@@ -1208,6 +1276,7 @@ RSpec.describe CookedPostProcessor do
           invalidate_oneboxes: true,
           user_id: nil,
           category_id: post.topic.category_id,
+          locale: nil,
         )
         .returns("<div>GANGNAM STYLE</div>")
 
@@ -1445,6 +1514,7 @@ RSpec.describe CookedPostProcessor do
           invalidate_oneboxes: true,
           user_id: nil,
           category_id: post.topic.category_id,
+          locale: nil,
         )
         .returns(
           '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="noopener nofollow ugc">GANGNAM STYLE</a></aside>',
@@ -1476,6 +1546,7 @@ RSpec.describe CookedPostProcessor do
           invalidate_oneboxes: true,
           user_id: nil,
           category_id: post.topic.category_id,
+          locale: nil,
         )
         .returns(
           '<aside class="onebox"><a href="https://www.youtube.com/watch?v=9bZkp7q19f0" rel="noopener nofollow ugc">GANGNAM STYLE</a></aside>',
@@ -1503,6 +1574,7 @@ RSpec.describe CookedPostProcessor do
           invalidate_oneboxes: true,
           user_id: nil,
           category_id: post.topic.category_id,
+          locale: nil,
         )
         .returns(
           "<aside class='onebox'><div class='scale-images'><img src='/img.jpg' width='400' height='500'/></div></div>",
@@ -1523,6 +1595,7 @@ RSpec.describe CookedPostProcessor do
           invalidate_oneboxes: true,
           user_id: nil,
           category_id: post.topic.category_id,
+          locale: nil,
         )
         .returns(
           "<aside class='onebox'><div class='scale-images'><a href='https://example.com'><img src='/img.jpg' width='400' height='500'/></a></div></div>",

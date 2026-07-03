@@ -31,40 +31,10 @@ module DiscourseAi
         @prioritized_group_ids = prioritized_group_ids
 
         @posts =
-          Post
-            .where("posts.created_at >= ?", @start_date)
-            .joins(topic: :category)
-            .includes(:topic, :user)
-            .where("topics.visible")
-            .where("posts.created_at < ?", @start_date + @duration)
-            .where("posts.post_type = ?", Post.types[:regular])
-            .where("posts.hidden_at IS NULL")
-            .where("topics.deleted_at IS NULL")
-            .where("topics.archetype = ?", Archetype.default)
-        @posts = @posts.where("categories.read_restricted = ?", false) if !@allow_secure_categories
-        @posts = @posts.where("categories.id IN (?)", @category_ids) if @category_ids.present?
-        @posts =
-          @posts.where(
-            "categories.id NOT IN (:ids) AND
-            (parent_category_id NOT IN (:ids) OR parent_category_id IS NULL)",
-            ids: exclude_category_ids,
-          ) if exclude_category_ids.present?
-
-        if exclude_tags.present?
-          exclude_tag_ids = Tag.where_name(exclude_tags).select(:id)
-          @posts =
-            @posts.where.not(
-              topics: {
-                id: TopicTag.where(tag_id: exclude_tag_ids).select(:topic_id),
-              },
-            )
-        end
-
-        if @tags.present?
-          tag_ids = Tag.where_name(@tags).select(:id)
-          topic_ids_with_tags = TopicTag.where(tag_id: tag_ids).select(:topic_id)
-          @posts = @posts.where(topic_id: topic_ids_with_tags)
-        end
+          build_posts_relation(
+            exclude_category_ids: exclude_category_ids,
+            exclude_tags: exclude_tags,
+          )
 
         if defined?(DiscourseSolved)
           @solutions =
@@ -81,6 +51,35 @@ module DiscourseAi
         else
           @solutions = {}
         end
+      end
+
+      def build_posts_relation(exclude_category_ids:, exclude_tags:)
+        scope =
+          Post
+            .where("posts.created_at >= ?", @start_date)
+            .joins(topic: :category)
+            .includes(:topic, :user)
+            .where("topics.visible")
+            .where("posts.created_at < ?", @start_date + @duration)
+            .where("posts.post_type = ?", Post.types[:regular])
+            .where("posts.hidden_at IS NULL")
+            .where("topics.deleted_at IS NULL")
+
+        filter_query =
+          posts_filter_query(exclude_category_ids: exclude_category_ids, exclude_tags: exclude_tags)
+        guardian = @allow_secure_categories ? Discourse.system_user.guardian : Guardian.new
+        PostsFilter.new(guardian: guardian, scope: scope).filter_from_query_string(filter_query)
+      end
+
+      def posts_filter_query(exclude_category_ids:, exclude_tags:)
+        parts = []
+        parts << "category:#{Array(@category_ids).join(",")}" if @category_ids.present?
+        parts << "tag:#{Array(@tags).join(",")}" if @tags.present?
+        if exclude_category_ids.present?
+          parts << "exclude_category:#{Array(exclude_category_ids).join(",")}"
+        end
+        parts << "exclude_tag:#{Array(exclude_tags).join(",")}" if exclude_tags.present?
+        parts.join(" ")
       end
 
       def format_topic(topic)

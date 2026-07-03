@@ -15,13 +15,18 @@ ar:
       title: استطلاع الرأي RSS
     admin:
       rss_polling:
-        feed: إعدادات الموجز
-        discourse: إعدادات Discourse
         author: المؤلف
         feed_url: عنوان URL
         discourse_category: الفئة
         discourse_tags: الوسوم
-        feed_category_filter: عامل تصفية الفئة
-        documentation: المستندات الخاصة بتكوين عملية الاستطلاع الدوري لموجز RSS
-        destroy_feed:
-          confirm: "هل أنت متأكد أنك تريد حذف هذا الموجز؟"
+        feeds:
+          edit: تعديل
+          delete: حذف
+          save: حفظ
+          confirm_delete: "هل أنت متأكد أنك تريد حذف هذا الموجز؟"
+        test:
+          title: معاينة
+          dismiss: تجاهل
+        status:
+          enabled: مفعَّلة
+          disabled: متوقفة

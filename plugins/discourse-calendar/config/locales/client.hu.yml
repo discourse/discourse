@@ -401,7 +401,6 @@ hu:
           no_users: "Nem található felhasználó"
           leave_event: "Kilépés az eseményről"
           status:
-            unknown: "Nem érdekli"
             going: "Megy"
             interested: "Érdeklődik"
             going_count:
@@ -434,6 +433,8 @@ hu:
         name_placeholder: "Esemény neve"
         location_placeholder: "Helyszín vagy URL hozzáadása"
         description_placeholder: "Esemény leírásának hozzáadása"
+        event_title_placeholder: "Esemény neve"
+        create_event_button: "Esemény létrehozása"
         reminder:
           units:
             minutes:
@@ -448,6 +449,9 @@ hu:
             weeks:
               one: "hét"
               other: "hetek"
+      composer_actions:
+        create_event:
+          label: "Esemény létrehozása"
       builder_modal:
         custom_fields:
           label: "Egyéni mezők"
@@ -456,7 +460,6 @@ hu:
         create_event_title: "Esemény létrehozása"
         update_event_title: "Esemény szerkesztése"
         advanced_settings_title: "Speciális beállítások"
-        advanced_settings: "Speciális beállítások"
         confirm_delete: "Biztos, hogy törli ezt az eseményt?"
         confirm_close: "Biztos, hogy lezárja ezt az eseményt?"
         confirm_open: "Biztosan meg szeretnéd nyitni ezt az eseményt?"
@@ -495,11 +498,7 @@ hu:
         allow_chat:
           label: "Csevegés integráció"
           checkbox_label: "Eseményspecifikus csevegőcsatorna létrehozása és kezelése"
-        url:
-          label: "Webcím"
-          placeholder: "Nem kötelező"
         location:
-          label: "Hely"
           placeholder: "Adj hozzá egy helyszínt, linket vagy valami hasonlót."
         description:
           label: "Leírás"
@@ -516,3 +515,4 @@ hu:
       invite_user_or_group:
         title: "Felhasználók vagy csoportok értesítése"
         invite: "Küldés"
+        success: "Meghívó elküldve"

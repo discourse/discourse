@@ -27,7 +27,7 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       Fabricate(:discourse_workflows_workflow, created_by: admin, published: true, **graph)
     end
 
-    it "creates an execution" do
+    it "returns a pending execution" do
       post "/admin/plugins/discourse-workflows/executions.json",
            params: {
              workflow_id: published_workflow.id,
@@ -35,6 +35,15 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
            }
 
       expect(response).to have_http_status(:created)
+      execution = DiscourseWorkflows::Execution.find(response.parsed_body.dig("execution", "id"))
+      expect(response.parsed_body["execution"]).to include(
+        "id" => execution.id,
+        "workflow_id" => published_workflow.id,
+      )
+      expect(execution.status).to eq("pending")
+
+      job_args = Jobs::DiscourseWorkflows::ExecuteManualWorkflow.jobs.last["args"].first
+      expect(job_args).to include("execution_id" => execution.id, "user_id" => admin.id)
     end
 
     it "returns 404 when trigger node does not exist" do
@@ -44,21 +53,6 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
              trigger_node_id: "nonexistent",
            }
       expect(response).to have_http_status(:not_found)
-    end
-
-    it "forwards the current user id in service params" do
-      DiscourseWorkflows::Workflow::ManualExecute
-        .expects(:call)
-        .with { |kwargs| kwargs.dig(:params, :user_id) == admin.id }
-        .returns(Service::Base::Context.build)
-
-      post "/admin/plugins/discourse-workflows/executions.json",
-           params: {
-             workflow_id: published_workflow.id,
-             trigger_node_id: "trigger-1",
-           }
-
-      expect(response).to have_http_status(:no_content)
     end
   end
 
@@ -177,6 +171,50 @@ RSpec.describe DiscourseWorkflows::ExecutionsController do
       expect(json["execution"]["id"]).to eq(execution.id)
       expect(json["execution"]["workflow_name"]).to eq(workflow.name)
       expect(json["execution"]["steps"].length).to eq(1)
+    end
+
+    it "returns caller workflow data for child executions" do
+      target_workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
+      child_execution =
+        Fabricate(:discourse_workflows_completed_execution, workflow: target_workflow)
+      Fabricate(:discourse_workflows_execution_data_with_steps, execution: child_execution)
+
+      execution.execution_data.update!(
+        workflow_data: {
+          "name" => "Parent workflow",
+          "nodes" => [
+            { "id" => "call-1", "name" => "Call child workflow", "type" => "action:workflow_call" },
+          ],
+          "connections" => {
+          },
+        },
+      )
+      DiscourseWorkflows::WorkflowCallRun.create!(
+        parent_execution: execution,
+        parent_node_id: "call-1",
+        parent_resume_token: SecureRandom.hex(16),
+        target_workflow: target_workflow,
+        target_workflow_version_id: target_workflow.version_id,
+        child_execution: child_execution,
+        user: admin,
+        trigger_data: {
+        },
+        status: :success,
+      )
+
+      get "/admin/plugins/discourse-workflows/executions/#{child_execution.id}.json"
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body.dig("execution", "workflow_call_caller")).to include(
+        "workflow_id" => workflow.id,
+        "workflow_name" => "Parent workflow",
+        "execution_id" => execution.id,
+        "execution_url" =>
+          DiscourseWorkflows::Execution.admin_execution_url(workflow.id, execution.id),
+        "node_id" => "call-1",
+        "node_name" => "Call child workflow",
+        "node_type" => "action:workflow_call",
+      )
     end
 
     it "returns the stored snapshot workflow name" do

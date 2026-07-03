@@ -1139,6 +1139,27 @@ RSpec.describe ListController do
             },
           )
         end
+
+        it "escapes the description exactly once instead of double-escaping entities" do
+          amazing_category.update!(description: "<p>Tom &amp; Jerry&rsquo;s adventures</p>")
+
+          get "/c/#{amazing_category.slug}/#{amazing_category.id}"
+
+          expect(response.body).to have_tag(
+            :meta,
+            with: {
+              name: "description",
+              content: "Tom & Jerry’s adventures",
+            },
+          )
+          expect(response.body).to have_tag(
+            :meta,
+            with: {
+              property: "og:description",
+              content: "Tom & Jerry’s adventures",
+            },
+          )
+        end
       end
 
       context "for category latest view" do
@@ -1936,7 +1957,7 @@ RSpec.describe ListController do
       response.parsed_body["topic_list"]["topics"].map { |topics| topics["id"] }
     end
 
-    context "when the user is part of the `experimental_new_new_view_groups` site setting group" do
+    context "when unified new is enabled for the user" do
       fab!(:category)
       fab!(:tag)
 
@@ -1961,8 +1982,7 @@ RSpec.describe ListController do
       before do
         TopicUser.update_last_read(user, topic.id, 1, 1, 1)
 
-        SiteSetting.experimental_new_new_view_groups = group.name
-        group.add(user)
+        SiteSetting.enable_unified_new = true
 
         sign_in(user)
       end

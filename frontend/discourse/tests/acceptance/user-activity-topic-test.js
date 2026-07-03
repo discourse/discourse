@@ -1,8 +1,8 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, find, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { i18n } from "discourse-i18n";
 import userFixtures from "../fixtures/user-fixtures";
-import { acceptance, queryAll } from "../helpers/qunit-helpers";
+import { acceptance } from "../helpers/qunit-helpers";
 
 acceptance("User Activity / Topics - bulk actions", function (needs) {
   const currentUser = "eviltrout";
@@ -24,8 +24,8 @@ acceptance("User Activity / Topics - bulk actions", function (needs) {
     await visit(`/u/${currentUser}/activity/topics`);
 
     await click("button.bulk-select");
-    await click(queryAll("input.bulk-select")[0]);
-    await click(queryAll("input.bulk-select")[1]);
+    await click(find("input.bulk-select"));
+    await click(findAll("input.bulk-select")[1]);
     await click(".bulk-select-topics-dropdown-trigger");
     await click(".dropdown-menu__item .close-topics");
 

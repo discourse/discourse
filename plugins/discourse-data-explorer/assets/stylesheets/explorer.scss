@@ -145,6 +145,7 @@ table.group-reports {
     --width: 345px;
     flex-shrink: 0;
     flex-grow: 0;
+    position: relative;
     width: var(--width);
 
     @include viewport.until(sm) {
@@ -201,6 +202,10 @@ table.group-reports {
             box-shadow: none;
           }
         }
+      }
+
+      .schema__toggle {
+        flex: 0 0 auto;
       }
 
       .schema-table-name {
@@ -292,6 +297,23 @@ table.group-reports {
     }
   }
 
+  &.no-schema {
+    .editor-panel {
+      flex-basis: 100%;
+    }
+
+    .right-panel {
+      width: 0;
+    }
+
+    .schema__toggle.--expand {
+      position: absolute;
+      inset-block-start: var(--space-2);
+      inset-inline-start: -2.75em;
+      z-index: 1;
+    }
+  }
+
   .grippie {
     cursor: nwse-resize;
     padding-bottom: var(--space-2);
@@ -338,6 +360,7 @@ table.group-reports {
 
   &:not(.editing) .desc {
     margin: 10px 0;
+    white-space: pre-wrap;
   }
 
   .groups {
@@ -464,22 +487,10 @@ table.group-reports {
     background-color: var(--danger-low);
   }
 
-  .invalid .ac-wrap {
-    background-color: var(--danger-low);
-  }
-
   .param {
     display: flex;
     align-items: center;
     flex: 0;
-
-    .ac-wrap {
-      display: inline-block;
-
-      input {
-        width: 100px !important; // override an inline style
-      }
-    }
 
     input,
     .select-kit {
@@ -596,23 +607,43 @@ table.group-reports {
   }
 
   .query-new__sql-editor {
-    height: 200px;
-    border: 1px solid var(--primary-low-mid);
-    border-radius: var(--d-border-radius);
+    margin-bottom: 1.5em;
 
-    .ace-wrapper {
-      position: relative;
-      height: 100%;
+    .ace-wrapper,
+    .ace-wrapper > .loading-container {
       width: 100%;
     }
 
-    .ace_editor {
-      position: absolute;
-      left: 0;
-      right: 0;
-      top: 0;
-      bottom: 0;
+    // the grippie lets the editor grow; give it a sensible starting height
+    .ace {
+      min-height: 200px;
+      width: 100%;
     }
+  }
+
+  .query-new__result-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 0.75em;
+  }
+
+  .query-new__result-about {
+    margin-right: auto;
+    color: var(--primary-medium);
+  }
+
+  // the count is shown in the result bar instead, on the same line as the toggle
+  .query-new__preview .result-meta {
+    display: none;
+  }
+
+  .query-new__fields {
+    margin-top: 1.5em;
+  }
+
+  .query-new__preview {
+    margin-top: 0.5em;
   }
 
   .query-new__field-label {
@@ -740,6 +771,11 @@ table.group-reports {
     margin-bottom: 1rem;
     animation: fadein 2s;
 
+    .query-results-chart__form {
+      max-width: 100%;
+      margin-bottom: 0.75rem;
+    }
+
     canvas {
       height: clamp(200px, 50vh, 350px) !important;
     }
@@ -797,7 +833,9 @@ table.group-reports {
 
   .query-results-table-wrapper {
     overflow: auto;
-    max-height: 350px;
+
+    // cap a long table at the chart height so the actions below stay reachable
+    max-height: clamp(200px, 50vh, 350px);
 
     &.--expanded {
       max-height: none;
@@ -892,6 +930,9 @@ table.group-reports {
     .query-desc {
       color: var(--primary-high);
       max-width: 20vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
 
       @include viewport.until(md) {
         max-width: 90vw;
@@ -925,12 +966,6 @@ table.group-reports {
 
   .query-row:hover {
     background-color: inherit;
-  }
-
-  tr a {
-    color: inherit;
-    cursor: pointer;
-    display: inline-block;
   }
 
   .no-search-results {

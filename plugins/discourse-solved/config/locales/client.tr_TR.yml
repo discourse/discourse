@@ -28,7 +28,6 @@ tr_TR:
       allow_accepted_answers: "Konu sahibinin ve personelin bir yanıtı çözüm olarak işaretlemesine izin verin"
       solved_topics_auto_close_hours: "Konu çözüldü olarak işaretlendiğinde, son yanıttan (n) saat sonra otomatik olarak kapatılsın."
       notify_on_staff_accept_solved: "Personel bir çözümü işaretlediğinde konu açan kişiye bildirim gönder"
-      empty_box_on_unsolved: "Konu listesinde çözülmemiş konuların yanında boş bir onay kutusu göster"
       accept_answer: "Bu yanıtın sorunu çözüp çözmediğini seçin"
       accepted_description: "Bu, bu konu için kabul edilen çözümdür"
       has_no_accepted_answer: "Bu konunun çözümü yok"
@@ -62,6 +61,8 @@ tr_TR:
       confirm_solved_removal: "Bu değişiklik, bu konu için çözümleri devre dışı bırakacak ve kabul edilen çözümü kaldıracaktır."
       confirm_solved_removal_confirm: "Onayla"
       confirm_solved_removal_cancel: "İptal et"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Sorunuz yanıtlandı mı?
         description: "Yanıtı vurgulayın ve doğru cevabın altındaki çözüm düğmesini kullanarak başkalarına yardımcı olun."

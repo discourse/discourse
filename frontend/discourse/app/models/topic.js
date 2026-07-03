@@ -651,14 +651,11 @@ export default class Topic extends RestModel {
     return `${getURL("/t/")}${slug}/${this.id}`;
   }
 
-  @computed("id", "slug", "is_nested_view", "_forcedFlat")
+  @computed("id", "slug")
   get url() {
     let slug = this.slug || "";
     if (slug.trim().length === 0) {
       slug = "topic";
-    }
-    if (this.is_nested_view && !this._forcedFlat) {
-      return `${getURL("/n/")}${slug}/${this.id}`;
     }
     return `${getURL("/t/")}${slug}/${this.id}`;
   }
@@ -688,9 +685,9 @@ export default class Topic extends RestModel {
     return this.unread_posts || this.new_posts;
   }
 
-  @computed("last_read_post_number", "url", "is_nested_view", "_forcedFlat")
+  @computed("last_read_post_number", "url", "is_nested_view")
   get lastReadUrl() {
-    if (this.is_nested_view && !this._forcedFlat) {
+    if (this.is_nested_view) {
       return this.url;
     }
     return this.urlForPostNumber(this.last_read_post_number);
@@ -700,11 +697,10 @@ export default class Topic extends RestModel {
     "last_read_post_number",
     "highest_post_number",
     "url",
-    "is_nested_view",
-    "_forcedFlat"
+    "is_nested_view"
   )
   get lastUnreadUrl() {
-    if (this.is_nested_view && !this._forcedFlat) {
+    if (this.is_nested_view) {
       return this.url;
     }
 
@@ -736,9 +732,9 @@ export default class Topic extends RestModel {
     return this.urlForPostNumber(postNumber);
   }
 
-  @computed("highest_post_number", "url", "is_nested_view", "_forcedFlat")
+  @computed("highest_post_number", "url", "is_nested_view")
   get lastPostUrl() {
-    if (this.is_nested_view && !this._forcedFlat) {
+    if (this.is_nested_view) {
       return this.url;
     }
     return this.urlForPostNumber(this.highest_post_number);

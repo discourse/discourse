@@ -403,7 +403,6 @@ cs:
           no_users: "Nebyli nalezeni žádní uživatelé"
           leave_event: "Opustit událost"
           status:
-            unknown: "Nemám zájem"
             going: "Zúčastním se"
             interested: "Mám zájem"
             going_count:
@@ -444,6 +443,8 @@ cs:
         name_placeholder: "Název události"
         location_placeholder: "Přidat polohu nebo adresu URL"
         description_placeholder: "Přidat popis události"
+        event_title_placeholder: "Název události"
+        create_event_button: "Vytvořit událost"
         reminder:
           units:
             minutes:
@@ -466,6 +467,9 @@ cs:
               few: "týdny"
               many: "týdny"
               other: "týdny"
+      composer_actions:
+        create_event:
+          label: "Vytvořit událost"
       builder_modal:
         custom_fields:
           label: "Vlastní pole"
@@ -474,7 +478,6 @@ cs:
         create_event_title: "Vytvořit událost"
         update_event_title: "Upravit událost"
         advanced_settings_title: "Pokročilá nastavení"
-        advanced_settings: "Pokročilá nastavení"
         confirm_delete: "Určitě chcete tuto událost smazat?"
         confirm_close: "Opravdu chcete uzavřít tuto událost?"
         confirm_open: "Opravdu chcete otevřít tuto událost?"
@@ -513,11 +516,7 @@ cs:
         allow_chat:
           label: "Integrace chatu"
           checkbox_label: "Vytvoří a spravuje speciální kanál chatu pro tuto událost"
-        url:
-          label: "URL"
-          placeholder: "Volitelné"
         location:
-          label: "Poloha"
           placeholder: "Přidejte místo, odkaz, atp."
         description:
           label: "Popis"
@@ -534,3 +533,4 @@ cs:
       invite_user_or_group:
         title: "Oznámit uživatelům nebo skupinám"
         invite: "Odeslat"
+        success: "Pozvánka odeslána"

@@ -257,6 +257,9 @@ ja:
             model_settings: "モデル設定"
             related_topics: "関連トピック"
             semantic_search: "セマンティック検索"
+        admin_dashboard:
+          setting_groups:
+            settings: "基本設定"
         discord:
           name: "Discord 統合"
           description: "Discord チャンネルを検索する機能を追加します"
@@ -490,6 +493,12 @@ ja:
         temperature_help: "LLM に使用する Temperature。値を増やすと創造性が増加します (モデルのデフォルトを使用する場合は空白にします。一般に 0.0～2.0 の値です)"
         top_p: "Top P"
         top_p_help: "LLM に使用する Top P。値を増やすとランダム性が増加します (モデルのデフォルトを使用する場合は空白にします。一般に 0.0～1.0 の値です)"
+        thinking_effort_options:
+          none: "なし"
+          low: "低"
+          medium: "普通"
+          high: "高"
+          max: "最大"
         priority: "優先度"
         tool_options: "ツールのオプション"
         rag_conversation_chunks: "会話チャンクを検索"
@@ -643,9 +652,7 @@ ja:
             custom: "カスタム..."
           hours: "時間"
           max_tokens_help: "このグループの各ユーザーが指定された期間内に使用できるトークン（単語と文字）の最大数。トークンは、AI モデルがテキストを処理するときに使用する単位です。およそ 1 トークン = 4 文字または 1 単語の 3/4 です。"
-          max_tokens_required: "最大使用量が設定されていない場合は設定する必要があります"
           max_usages_help: "このグループの各ユーザーが指定された期間内に AI モデルを使用できる最大回数。この使用量制限はグループ全体で共有されるのではなく、ユーザーごとに追跡されます。"
-          max_usages_required: "最大トークンが設定されていない場合は設定する必要があります"
         credit_allocation:
           credits_remaining: "クレジット残り %{remaining} / %{total} (%{percentage}%)"
           soft_limit_warning: "このモデルの今日の AI クレジット残量は %{percentage}% です"
@@ -739,7 +746,6 @@ ja:
         title: "AI を使用して変更を提案"
         description: "以下のいずれかのオプションを選択すると、AI が新しいバージョンのテキストを提案します。"
         selection_hint: "ヒント: ヘルパーを開く前にテキストの一部を選択すると、その部分のみを書き換えることもできます。"
-        suggest: "AI で提案"
         suggest_errors:
           too_many_tags:
             other: "最大 %{count} 個のタグのみを使用できます"

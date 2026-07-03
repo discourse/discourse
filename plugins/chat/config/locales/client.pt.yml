@@ -109,7 +109,6 @@ pt:
         title: "Som de notificação de Chat na área de trabalho"
       sounds:
         none: "Nenhuma"
-        bell: "Sino"
       channel_status:
         archive_failed_no_topic: "O canal de arquivo falhou. %{completed}/%{total} mensagens foram arquivadas, o tópico de destino não foi criado. Clica Tentar de novo para tentar completar o arquivo."
         closed: "Fechado"
@@ -141,12 +140,11 @@ pt:
         filter: "Filtrar"
       channel_edit_name_slug_modal:
         input_placeholder: Adicionar um nome
-        slug: Slug do canal (opcional)
       direct_message_creator:
         title: Nova Mensagem
         prefix: "Para:"
       create_channel:
-        slug: "Slug do canal (opcional)"
+        description: "Descrição"
         title: "Novo canal"
         type: "Tipo"
         types:
@@ -250,3 +248,12 @@ pt:
       start_new_dm:
         text: Iniciar novo DM
         title: Criar uma conversação pessoal
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Canal"
+      send_chat_message:
+        channel_id: "Canal"
+        message: "Mensagem"
+      chat_approval:
+        message: "Mensagem"
+        channel_id: "Canal"

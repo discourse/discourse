@@ -260,6 +260,26 @@ describe "Admin upcoming changes" do
       item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
       expect(item.enabled_for).to eq("staff")
     end
+
+    it "enables the change for staff when everyone is excluded" do
+      mock_with_allow(%i[staff specific_groups])
+      SiteSetting.enable_upload_debug_mode = false
+
+      upcoming_changes_page.visit
+      item = upcoming_changes_page.change_item(:enable_upload_debug_mode)
+      item.select_enabled_for("staff")
+
+      expect(upcoming_changes_page).to have_enabled_for_success_toast(
+        "staff",
+        translation_args: {
+          staffGroupName: I18n.t("groups.default_names.staff").titleize,
+        },
+      )
+      expect(item).to be_enabled
+      expect(SiteSettingGroup.find_by(name: "enable_upload_debug_mode").group_ids).to include(
+        Group::AUTO_GROUPS[:staff].to_s,
+      )
+    end
   end
 
   it "can filter by name, description, plugin, status, impact type, or enabled/disabled" do

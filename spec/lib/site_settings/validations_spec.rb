@@ -167,6 +167,7 @@ RSpec.describe SiteSettings::Validations do
         end
         before do
           SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+          SiteSetting.discourse_connect_secret = "x" * 10
           SiteSetting.enable_discourse_connect = true
         end
 
@@ -248,46 +249,34 @@ RSpec.describe SiteSettings::Validations do
     end
 
     describe "#validate_secure_uploads" do
-      let(:error_message) { I18n.t("errors.site_settings.secure_uploads_requirements") }
+      it "allows enabling with ACLs and access control tags disabled" do
+        SiteSetting.enable_s3_uploads = true
+        SiteSetting.s3_use_acls = false
+        SiteSetting.s3_enable_access_control_tags = false
 
-      context "when the new secure uploads value is true" do
-        context "if site setting for enable_s3_uploads is enabled" do
-          before { SiteSetting.enable_s3_uploads = true }
+        expect { validations.validate_secure_uploads("t") }.not_to raise_error
+      end
 
-          it "should be ok" do
-            expect { validations.validate_secure_uploads("t") }.not_to raise_error
-          end
-        end
+      it "raises when S3 uploads are disabled" do
+        SiteSetting.enable_s3_uploads = false
 
-        context "if site setting for enable_s3_uploads is not enabled" do
-          before { SiteSetting.enable_s3_uploads = false }
+        expect { validations.validate_secure_uploads("t") }.to raise_error(
+          Discourse::InvalidParameters,
+          "S3 uploads must be enabled before enabling secure uploads.",
+        )
+      end
 
-          it "is not ok" do
-            expect { validations.validate_secure_uploads("t") }.to raise_error(
-              Discourse::InvalidParameters,
-              error_message,
-            )
-          end
+      it "allows enabling when S3 uploads are enabled globally" do
+        SiteSetting.enable_s3_uploads = false
+        GlobalSetting.stubs(:use_s3?).returns(true)
 
-          context "if global s3 setting is enabled" do
-            before { GlobalSetting.stubs(:use_s3?).returns(true) }
+        expect { validations.validate_secure_uploads("t") }.not_to raise_error
+      end
 
-            it "should be ok" do
-              expect { validations.validate_secure_uploads("t") }.not_to raise_error
-            end
-          end
-        end
+      it "allows disabling when S3 uploads are disabled" do
+        SiteSetting.enable_s3_uploads = false
 
-        context "if site setting for s3_use_acls is not enabled" do
-          before { SiteSetting.s3_use_acls = false }
-
-          it "is not ok" do
-            expect { validations.validate_secure_uploads("t") }.to raise_error(
-              Discourse::InvalidParameters,
-              error_message,
-            )
-          end
-        end
+        expect { validations.validate_secure_uploads("f") }.not_to raise_error
       end
     end
 

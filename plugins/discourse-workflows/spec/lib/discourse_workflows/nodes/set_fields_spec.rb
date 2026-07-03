@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
+  it "does not expose optional options" do
+    expect(described_class.property_schema).not_to have_key(:options)
+  end
+
   describe "#execute" do
     let(:item) { { "json" => { "topic_id" => "42", "username" => "alice" } } }
 
@@ -129,29 +133,6 @@ RSpec.describe DiscourseWorkflows::Nodes::SetFields::V1 do
       result = execute_node(configuration: config, item: item)
 
       expect(result).to eq({ "profile" => { "name" => "Alice" } })
-    end
-
-    it "can disable dot notation from optional options" do
-      config = { "include_other_fields" => false, "options" => { "dot_notation" => false } }.merge(
-        assignments(assignment("profile.name", "Alice")),
-      )
-
-      result = execute_node(configuration: config, item: item)
-
-      expect(result).to eq({ "profile.name" => "Alice" })
-    end
-
-    it "keeps raw values when conversion errors are ignored" do
-      config = {
-        "include_other_fields" => false,
-        "options" => {
-          "ignore_conversion_errors" => true,
-        },
-      }.merge(assignments(assignment("score", "abc", "float")))
-
-      result = execute_node(configuration: config, item: item)
-
-      expect(result).to eq({ "score" => "abc" })
     end
 
     it "includes only selected input fields" do

@@ -1,0 +1,175 @@
+@use "lib/viewport";
+
+@keyframes code-login-form-step-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.code-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  // No waving-hand icon here, so drop the welcome header's icon grid.
+  .login-welcome-header {
+    display: block;
+
+    // Keep a trailing emoji/short word from orphaning onto its own line.
+    .login-title {
+      text-wrap: pretty;
+    }
+  }
+
+  &__email-step {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+
+  &__code-step,
+  &__second-factor-step,
+  &__user-fields-step,
+  &__complete-step {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1em;
+
+    // Ease each step in so advancing through the flow doesn't snap abruptly.
+    @media (prefers-reduced-motion: no-preference) {
+      animation: code-login-form-step-in 0.25s ease;
+    }
+  }
+
+  &__user-fields-step {
+    .user-fields {
+      align-self: stretch;
+      margin-top: 0.5em;
+    }
+  }
+
+  &__new-account {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: stretch;
+    gap: 1em;
+    padding: 1em 0;
+  }
+
+  &__avatar {
+    position: relative;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    line-height: 0;
+
+    .avatar {
+      display: block;
+    }
+  }
+
+  &__avatar-edit {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    background: var(--tertiary);
+    color: var(--secondary);
+
+    .d-icon {
+      margin: 0;
+    }
+  }
+
+  &__username-field {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    gap: 0.25em;
+  }
+
+  &__new-account-username {
+    width: 100%;
+    margin: 0;
+  }
+
+  &__continue-to-site {
+    align-self: stretch;
+  }
+
+  &__title {
+    margin: 0;
+  }
+
+  &__instructions {
+    margin: 0;
+    color: var(--primary-high);
+  }
+
+  &__error {
+    color: var(--danger);
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  &__notice {
+    margin: 0;
+    color: var(--success);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+
+  &__email-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5em;
+  }
+}
+
+// Keep the disclaimer from hugging the continue button it follows.
+.code-login-form + .signup-page-cta__disclaimer {
+  margin-top: 1.5em;
+}
+
+// Scoped to the passwordless signup flow so login and regular signup are untouched.
+@include viewport.until(md) {
+  .signup-page .signup-body.passwordless-signup {
+    padding: 1.5rem;
+
+    // Drop the heading's own padding so it lines up with the form below it.
+    .login-welcome-header {
+      padding: 0;
+      margin-bottom: 1rem;
+    }
+
+    .code-login-form__email-actions {
+      align-self: stretch;
+    }
+
+    .code-login-form__continue,
+    .code-login-form__verify {
+      width: 100%;
+    }
+  }
+}

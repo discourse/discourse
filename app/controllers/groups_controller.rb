@@ -121,8 +121,7 @@ class GroupsController < ApplicationController
       format.html do
         @title = group.full_name.present? ? group.full_name.capitalize : group.name
         @full_title = "#{@title} - #{SiteSetting.title}"
-        @description_meta =
-          group.bio_cooked.present? ? PrettyText.excerpt(group.bio_cooked, 300) : @title
+        @description_meta = group.bio_summary || @title
         render :show
       end
 
@@ -472,7 +471,7 @@ class GroupsController < ApplicationController
       RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
     end
 
-    group = Group.find(params[:id])
+    group = find_group_for_show
     raise Discourse::NotFound unless group
     raise Discourse::InvalidAccess unless group.public_admission
 

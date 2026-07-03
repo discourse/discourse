@@ -11,22 +11,26 @@ export default class ChatSubscriptionsManager extends Service {
   @service appEvents;
   @service chat;
   @service dialog;
+  @service messageBus;
   @service router;
 
   _channelSubscriptions = new Set();
 
-  startChannelSubscription(channel) {
+  startChannelSubscription(channel, { readOnly = false } = {}) {
     if (
-      channel.currentUserMembership.muted ||
+      (!readOnly && channel.currentUserMembership?.muted) ||
       this._channelSubscriptions.has(channel.id)
     ) {
       return;
     }
 
     this._channelSubscriptions.add(channel.id);
-    this._startChannelMentionsSubscription(channel);
 
-    if (!channel.isDirectMessageChannel) {
+    if (this.currentUser && !readOnly) {
+      this._startChannelMentionsSubscription(channel);
+    }
+
+    if (this.currentUser && !readOnly && !channel.isDirectMessageChannel) {
       this._startKickFromChannelSubscription(channel);
     }
 
@@ -79,7 +83,7 @@ export default class ChatSubscriptionsManager extends Service {
   }
 
   _startChannelArchiveStatusSubscription(lastId) {
-    if (this.currentUser.admin) {
+    if (this.currentUser?.admin) {
       this.messageBus.subscribe(
         "/chat/channel-archive-status",
         this._onChannelArchiveStatusUpdate,
@@ -89,7 +93,7 @@ export default class ChatSubscriptionsManager extends Service {
   }
 
   _stopChannelArchiveStatusSubscription() {
-    if (this.currentUser.admin) {
+    if (this.currentUser?.admin) {
       this.messageBus.unsubscribe(
         "/chat/channel-archive-status",
         this._onChannelArchiveStatusUpdate
@@ -188,6 +192,11 @@ export default class ChatSubscriptionsManager extends Service {
   _onNewChannelMessage(busData) {
     this.chatChannelsManager.find(busData.channel_id).then((channel) => {
       channel.lastMessage = busData.message;
+
+      if (!this.currentUser) {
+        return;
+      }
+
       const user = busData.message.user;
       if (user.id === this.currentUser.id) {
         // User sent message, update tracking state to no unread
@@ -231,10 +240,16 @@ export default class ChatSubscriptionsManager extends Service {
         return;
       }
 
+      channel.lastMessage = busData.message;
+
       channel.threadsManager
         .find(busData.channel_id, busData.thread_id)
         .then((thread) => {
           thread.lastMessageId = busData.message.id;
+
+          if (!this.currentUser) {
+            return;
+          }
 
           if (busData.message.user.id === this.currentUser.id) {
             // Thread should no longer be considered unread.
@@ -438,6 +453,14 @@ export default class ChatSubscriptionsManager extends Service {
       // we need to refresh here to have correct last message ids
       channel.meta = data.channel.meta;
       channel.currentUserMembership = data.channel.current_user_membership;
+
+      if (!this.currentUser) {
+        if (channel.isCategoryChannel) {
+          this.startChannelSubscription(channel, { readOnly: true });
+        }
+
+        return;
+      }
 
       if (
         channel.isDirectMessageChannel &&

@@ -269,9 +269,11 @@ end
 #  auto_track_topics_after_msecs                  :integer
 #  automatically_unpin_topics                     :boolean          default(TRUE), not null
 #  bookmark_auto_delete_preference                :integer          default(3), not null
+#  chat_announce_new_messages                     :boolean          default(TRUE), not null
 #  chat_email_frequency                           :integer          default("when_away"), not null
 #  chat_enabled                                   :boolean          default(TRUE), not null
 #  chat_header_indicator_preference               :integer          default("all_new"), not null
+#  chat_new_message_sound                         :boolean          default(FALSE), not null
 #  chat_quick_reaction_type                       :integer          default("frequent"), not null
 #  chat_quick_reactions_custom                    :string
 #  chat_send_shortcut                             :integer          default("enter"), not null

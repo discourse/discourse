@@ -142,11 +142,15 @@ sr:
       admins: "admini"
       moderators: "moderatori"
       staff: "osoblje"
-      anonymous: "anonimno"
       logged_in_users: "prijavljeni_korisnici"
+    default_full_names:
+      everyone: "Svi"
+      admins: "Admini"
+      moderators: "Moderatori"
+      staff: "Osoblje"
     default_descriptions:
       staff: "Automatska grupa koja uključuje administratore i moderatore"
-      anonymous: "Automatska pseudogrupa koja predstavlja neautentifikovane posetioce"
+      anonymous_users: "Automatska pseudogrupa koja predstavlja neautentifikovane posetioce"
       logged_in_users: "Automatska pseudogrupa koja uključuje svakog prijavljenog korisnika"
       admins: "Odgovoran je za konfigurisanje i održavanje ovog sajta, sa pristupom svim podacima o članovima i aktivnostima"
       moderators: "Odgovoran je za odgovaranje na zastavice, moderiranje diskusija i pomaganje članovima sa njihovim nalozima"
@@ -296,6 +300,8 @@ sr:
     read: "pročitano"
     write_scope_warning: "Zahtevan je pun pristup za pisanje — ova aplikacija će moći da objavljuje, uređuje i briše sadržaj. Nastavite samo ako joj potpuno verujete."
     copied: "Kopirano!"
+    device:
+      continue: "Nastavi"
   reports:
     default:
       labels:
@@ -338,14 +344,12 @@ sr:
         staff: "Osoblje"
     trust_level_pipeline:
       title: "Pipeline nivoa poverenja"
-      description: "Kretanje članova između nivoa poverenja za izabrani period. Broji trenutne članove na svakom nivou poverenja, njihov udeo u ukupnom članstvu i broj članova koji su tokom perioda prešli u ili iz svakog nivoa poverenja."
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
         level: "Nivo poverenja"
         count: "Članovi"
         share: "Podeli"
-        moves_in: "Ulazi"
-        moves_out: "Izlazi"
+        signups: "Registracija"
       levels:
         "0": "Novo"
         "1": "Osnovno"
@@ -474,7 +478,6 @@ sr:
     maximum_session_age: "Korisnik će ostati ulogovan n časova od prethodnog logovanja"
     use_admin_ip_allowlist: "Administratori mogu da se prijave samo ako se nalaze na IP adresi definisanoj u <a href='%{base_path}/admin/logs/screened_ip_addresses'>listi proverenih IP adresa</a>."
     send_welcome_message: "Pošalji svim novim korisnicima poruku dobrodošlice sa kratkim uputstvom za početnike."
-    auth_skip_create_confirm: Kada se prijavljujete putem spoljne autorizacije, preskočite popup prozor za kreiranje računa. Najbolje se upotrebljava uz auth_overrides_email, auth_overrides_username i auth_overrides_name.
     allow_passkeys_for_2fa: "Dozvoli korisnicima da koriste passkey za dvofaktorsku autentifikaciju prilikom potvrđivanja osetljive akcije."
     google_oauth2_hd_groups: 'Preuzmi Google grupe korisnika sa hostovanog domena prilikom autentifikacije. Preuzete Google grupe mogu se koristiti za dodelu automatskog članstva u Discourse grupama (vidi podešavanja grupa). Za više informacija, pogledajte <a target="_blank" href="https://meta.discourse.org/t/226850">ovu Meta temu</a>.'
     enable_direct_s3_uploads: 'Omogućava direktno višedelno otpremanje na Amazon S3, pogledajte <a target="_blank" href="https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469">ovu Meta temu</a> za više detalja.'
@@ -506,25 +509,23 @@ sr:
     read_time_word_count: "Broj reči po minutu za računanje procenjenog vremena čitanja"
     display_name_on_posts: "Prikaži puno ime korisnika na njihovim porukama kao dodatak na @korisnicko_ime"
     show_time_gap_days: "Ako su dve poruke poslate sa ovoliko dana razmaka, prikaži vremensku razliku u temi."
-    embed_full_app_signin_flow: "Kada je omogućen pun režim aplikacije, presreti akcije koje zahtevaju prijavu unutar iframe-a pomoću vođenog toka koji otvara karticu za prijavu na najvišem nivou koja se automatski zatvara po uspehu. Ovo omogućite samo kada je ugradnja na istom sajt-domenu kao i stranica domaćina (npr. `forum.example.com` na `blog.example.com`) ili kada je `same site cookies` podešeno na `None` — u suprotnom iframe neće dobiti kolačić sesije nakon prijave."
     embed_username_required: "Korisničko ime je obavezno za kreiranje teme."
     enable_gifs: "Dodaje dugme za lako pretraživanje i ubacivanje GIF-ova u objave."
     auto_close_messages_post_count: "Maksimalan broj dozvoljenih poruka pre nego se tema automatski zatvori (0 da se isključi)"
-    auto_close_topics_create_linked_topic: "Kreirajte novu povezanu temu kada je tema automatski zatvorena na temelju postavke 'automatsko zatvaranje tema za postove'"
     default_email_mailing_list_mode: "Podrazumevano šalji email za svaku novu poruku"
     default_email_previous_replies: "Podrazumevano uključi prethodne odgovore u email poruku"
     default_other_external_links_in_new_tab: "Podrazumevano otvori spoljne veze u novoj kartici "
-    admin_dashboard_sections: "Odeljci prikazani na redizajniranoj administratorskoj kontrolnoj tabli, po redosledu prikazivanja. Upravlja se preko menija \"Konfiguriši\" na kontrolnoj tabli."
     enable_new_defaults_for_trust_level_3_requirements: "Ažurirali smo podrazumevane zahteve za TL3 kako bi bili razumniji za članove velikih, aktivnih zajednica. Ako ste prethodno poništili ova podešavanja, ova predstojeća promena neće imati efekta."
     enable_horizon_high_context_topic_cards: "Prikaži bogatije kartice tema u Horizon temi, uključujući izvode tema, oznake i informacije iz dodataka."
-    granular_anonymous_and_logged_in_groups_permissions: "Unosi promene u dozvole podešavanja sajta zasnovane na grupama tako da se 'everyone' tretira kao 'svi prijavljeni korisnici', i omogućava nove pseudogrupe 'anonymous' i 'logged_in_users' kako bi administratori mogli eksplicitno da ciljaju anonimne posetioce i prijavljene korisnike."
-    dashboard_improvements: "Poboljšanja navigacije, dizajna i upotrebljivosti administratorske kontrolne table Discourse-a."
   search:
     within_post: "#%{post_number} od %{username}"
     types:
       category: "Kategorije"
       topic: "Rezultati"
       user: "Korisnici"
+  posts_filter:
+    description:
+      order_latest_topic: "Poslednje teme"
   publish_page:
     slug_errors:
       invalid: "sadrži nevažeće karaktere."
@@ -668,8 +669,6 @@ sr:
     groups:
       errors:
         empty_permissions: "Grupa oznaka mora imati najmanje jedno ovlašćenje."
-    forbidden:
-      not_allowed: '"%{tag_name}" se ne može koristiti'
   wizard:
     step:
       setup:

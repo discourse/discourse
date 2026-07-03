@@ -215,16 +215,9 @@ RSpec.describe ThemeField do
     expect(js_field.value_baked).to eq("baked")
 
     # All together
-    expect(theme.javascript_cache.content).to include(
-      'compatModules["discourse/templates/discovery"]',
-    )
-    expect(theme.javascript_cache.content).to include(
-      'compatModules["discourse/controllers/discovery"]',
-    )
-    expect(theme.javascript_cache.content).to include(
-      'compatModules["discourse/controllers/discovery-2"]',
-    )
-    expect(theme.javascript_cache.content).to include("registerSettings(")
+    expect(theme.javascript_cache.content).to include('"discourse/templates/discovery":')
+    expect(theme.javascript_cache.content).to include('"discourse/controllers/discovery":')
+    expect(theme.javascript_cache.content).to include('"discourse/controllers/discovery-2":')
     expect(theme.javascript_cache.content).to include(
       "[THEME #{theme.id}] Unsupported file type: discourse/controllers/discovery.blah",
     )
@@ -241,9 +234,8 @@ RSpec.describe ThemeField do
       "theme-#{theme.id}/discourse/templates/discovery.hbs",
       "theme-#{theme.id}/virtual:entrypoint:main",
       "theme-#{theme.id}/virtual:theme",
-      "theme-#{theme.id}/virtual:init-settings",
     )
-    expect(map["sourcesContent"].length).to eq(6)
+    expect(map["sourcesContent"].length).to eq(5)
   end
 
   def create_upload_theme_field!(name)
@@ -280,26 +272,6 @@ RSpec.describe ThemeField do
   end
 
   let(:key) { "themes.settings_errors" }
-
-  it "forces re-transpilation of theme JS when settings YAML changes" do
-    theme.set_field(target: :settings, name: "yaml", value: "setting: 5")
-    theme.set_field(
-      target: :extra_js,
-      name: "discourse/initializers/my-initializer.js",
-      value: "console.log(settings.setting);",
-    )
-    theme.save!
-
-    old_js_cache_content = theme.reload.javascript_cache.content
-    expect(old_js_cache_content).to include('"setting": 5')
-
-    theme.set_field(target: :settings, name: "yaml", value: "setting: 66")
-    theme.save!
-
-    new_js_cache_content = theme.reload.javascript_cache.content
-    expect(new_js_cache_content).to include('"setting": 66')
-    expect(new_js_cache_content).not_to include('"setting": 5')
-  end
 
   it "generates errors for bad YAML" do
     yaml = "invalid_setting 5"
@@ -746,17 +718,15 @@ RSpec.describe ThemeField do
 
       expected_local_js_cache_url = js_field.javascript_cache.local_url
       expect(expected_local_js_cache_url).to start_with("/theme-javascripts/")
-      expect(theme.reload.javascript_cache.content).to include(<<~JS)
-        registerSettings(#{theme.id}, {
-          "hello": "world",
-          "theme_uploads": {
-            "test_js": "#{js_field.upload.url}"
-          },
-          "theme_uploads_local": {
-            "test_js": "#{js_field.javascript_cache.local_url}"
-          }
-        });
-      JS
+      expect(theme.reload.cached_settings).to include(
+        :hello => "world",
+        "theme_uploads" => {
+          "test_js" => js_field.upload.url,
+        },
+        "theme_uploads_local" => {
+          "test_js" => js_field.javascript_cache.local_url,
+        },
+      )
 
       # this is important, we do not want local_js_urls to leak into scss
       expect(theme.scss_variables).to include("$hello: unquote(\"world\");")

@@ -620,6 +620,16 @@ RSpec.describe PostSerializer do
         expect(serialize_user_status).to be_nil
       end
 
+      it "doesn't include status for a public topic author with a hidden profile" do
+        SiteSetting.allow_users_to_hide_profile = true
+        user.user_option.update!(hide_profile: true)
+
+        json = described_class.new(post, scope: Guardian.new, root: false).as_json
+
+        expect(json).not_to have_key(:user_status)
+        expect(json.to_json).not_to include(user_status.description)
+      end
+
       it "respects guardian's can_see_user_status?" do
         user.update!(silenced_till: 1.year.from_now)
         scope = Guardian.new(Fabricate(:user))
@@ -1018,6 +1028,74 @@ RSpec.describe PostSerializer do
       other_user = Fabricate(:user)
       json = PostSerializer.new(author_post, scope: Guardian.new(other_user), root: false).as_json
       expect(json.key?(:post_localizations_count)).to eq(false)
+    end
+  end
+
+  describe "#localized_oneboxes" do
+    fab!(:reader) { Fabricate(:user, locale: "ja") }
+    fab!(:source_topic, :topic)
+    fab!(:source_post) do
+      Fabricate(:post, topic: source_topic, post_number: 1, locale: "ja", raw: "見てください")
+    end
+    fab!(:linked_topic) { Fabricate(:topic, title: "Sun Tzu's strategies", locale: "en") }
+    fab!(:linked_post) do
+      Fabricate(:post, topic: linked_topic, post_number: 1, locale: "en", raw: "Subdue the enemy.")
+    end
+
+    before do
+      SiteSetting.content_localization_enabled = true
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      Fabricate(:post_localization, post: linked_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+      TopicLink.create!(
+        topic: source_topic,
+        post: source_post,
+        user: source_post.user,
+        url: linked_post.url,
+        domain: Discourse.current_hostname,
+        internal: true,
+        quote: true,
+        reflection: false,
+        link_topic_id: linked_topic.id,
+        link_post_id: linked_post.id,
+      )
+    end
+
+    def json_for(viewer, scope: nil)
+      I18n.with_locale(:ja) do
+        serializer =
+          PostSerializer.new(source_post, scope: scope || Guardian.new(viewer), root: false)
+        serializer.topic_view = TopicView.new(source_topic.id, viewer)
+        serializer.as_json
+      end
+    end
+
+    it "includes the localized title and preview for the reader" do
+      entry = json_for(reader)[:localized_oneboxes].first
+      expect(entry[:title]).to eq("孫子の兵法")
+      expect(entry[:excerpt]).to include("戦わずして勝つ")
+    end
+
+    it "is omitted when the reader chose to see original content" do
+      reader.user_option.update!(show_original_content: true)
+      expect(json_for(reader).key?(:localized_oneboxes)).to eq(false)
+    end
+
+    it "is omitted for an anonymous reader with the show-original cookie" do
+      env = create_request_env.merge("HTTP_COOKIE" => ContentLocalization::SHOW_ORIGINAL_COOKIE)
+      anon_scope = Guardian.new(nil, ActionDispatch::Request.new(env))
+
+      expect(json_for(nil, scope: anon_scope).key?(:localized_oneboxes)).to eq(false)
+    end
+
+    it "is included for an anonymous reader without the show-original cookie" do
+      anon_scope = Guardian.new(nil, ActionDispatch::Request.new(create_request_env))
+
+      expect(json_for(nil, scope: anon_scope)[:localized_oneboxes].first[:title]).to eq("孫子の兵法")
+    end
+
+    it "is omitted when content localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+      expect(json_for(reader).key?(:localized_oneboxes)).to eq(false)
     end
   end
 end

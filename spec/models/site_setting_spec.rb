@@ -80,6 +80,20 @@ RSpec.describe SiteSetting do
     end
   end
 
+  describe "custom_homepage_crawler_route" do
+    it "allows public top menu routes" do
+      SiteSetting.custom_homepage_crawler_route = "categories"
+
+      expect(SiteSetting.custom_homepage_crawler_route).to eq("categories")
+    end
+
+    it "does not allow authenticated-only routes" do
+      expect { SiteSetting.custom_homepage_crawler_route = "bookmarks" }.to raise_error(
+        Discourse::InvalidParameters,
+      )
+    end
+  end
+
   describe "min_redirected_to_top_period" do
     context "when has_enough_top_topics" do
       before do
@@ -187,7 +201,7 @@ RSpec.describe SiteSetting do
     end
 
     it "includes only settings for the specified category" do
-      expect(SiteSetting.all_settings(filter_categories: ["required"]).count).to eq(12)
+      expect(SiteSetting.all_settings(filter_categories: ["required"]).count).to eq(13)
     end
   end
 

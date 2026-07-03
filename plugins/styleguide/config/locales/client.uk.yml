@@ -95,10 +95,13 @@ uk:
           title: "Більше тем"
         post_menu:
           title: "Меню повідомлення"
+        docked_composer:
+          title: "Закріплений редактор"
         modal:
           title: "Модальний"
           header: "Модальний заголовок"
           footer: "Модальний нижній колонтитул"
+          open: "Відкрити модальне вікно"
         user_about:
           title: "Вікно «Про користувача»"
         header_icons:

@@ -29,6 +29,8 @@ nl:
       default_query_notice: "Dit is een standaardquery, de SQL kan niet worden bewerkt. Maak een nieuwe query om de SQL te bewerken."
       queries: "Query's"
       query_created: "Query gemaakt!"
+      mode:
+        ai: "Genereren met AI"
       or: "of"
       admins_only: "De gegevensverkenner is alleen beschikbaar voor beheerders."
       allow_groups: "Groepen hebben toegang tot deze query"
@@ -41,7 +43,6 @@ nl:
         description_hint: "Beschrijf in eenvoudige taal wat je wilt. Wij genereren de SQL-query, de naam en de beschrijving voor jou."
         description_placeholder: "bijvoorbeeld Toon me aanmeldingen in de loop van de tijd"
         generate: "Genereren"
-        regenerate: "Opnieuw genereren"
         generating: "Query genereren met AI..."
         generation_timeout: "Time-out AI-querygeneratie. Je kunt de SQL handmatig schrijven."
         generation_error: "Er is iets misgegaan bij het genereren van de query."
@@ -76,6 +77,11 @@ nl:
       undo: "Wijzigingen negeren"
       delete: "Verwijderen"
       recover: "Query verwijderen ongedaan maken"
+      sql_label: "SQL"
+      chart:
+        form:
+          label: "Diagramtype"
+          bar: "Staaf"
       others_dirty: "Een query heeft niet-opgeslagen wijzigingen die verloren gaan als je de pagina verlaat."
       run_time: "Query voltooid in %{value} ms."
       cached_result_notice: "Gecachete resultaten van %{relative_time} worden weergegeven."
@@ -112,6 +118,17 @@ nl:
           descriptions:
             data_explorer:
               run_queries: "Voer Gegevensverkenner-query's uit. Beperk de API-sleutel tot een reeks query's door query-ID's op te geven."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Gegevensverkenner"
+      sql:
+        queries: "Query's"
+        query_id: "Query"
+        add_param: "Parameter toevoegen"
+        param_value: "Waarde"
+        output:
+          results: "Resultaten"
+          no_results: "Geen resultaten"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

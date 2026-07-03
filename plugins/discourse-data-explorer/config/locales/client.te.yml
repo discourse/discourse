@@ -29,3 +29,9 @@ te:
       reset_params: "రీసెట్ చేయండి"
     group:
       reports: "నివేదికలు"
+    discourse_workflows:
+      sql:
+        param_value: "విలువ"
+        output:
+          results: "ఫలితాలు"
+          no_results: "ఫలితాలు లేవు"

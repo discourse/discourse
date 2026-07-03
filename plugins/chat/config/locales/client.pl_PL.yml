@@ -331,12 +331,20 @@ pl_PL:
         other: "Masz %{count} nieprzeczytanych dyskusji"
       scroll_to_bottom: "Przewiń na dół"
       scroll_to_new_messages: "Zobacz nowe wiadomości"
+      new_messages:
+        one: "%{count} nowa wiadomość"
+        few: "%{count} nowe wiadomości"
+        many: "%{count} nowych wiadomości"
+        other: "%{count} nowych wiadomości"
       sound:
         title: "Dźwięk powiadomienia czatu na pulpicie"
       sounds:
         none: "Brak"
-        bell: "Dzwonek"
-        ding: "Ding"
+        classic: "Klasyczny i czysty"
+        soft: "Miękka marimba"
+        retro: "Retro 8-bitowy"
+        bubble: "Zabawna bańka"
+        ethereal: "Eteryczne szkło"
       title: "czat"
       title_capitalized: "Czat"
       upload: "Dołącz plik"
@@ -419,8 +427,8 @@ pl_PL:
         input_placeholder: Dodaj nazwę
         slug_description: Slug kanału jest używany w adresie URL zamiast nazwy kanału
         name: Nazwa kanału
-        slug: Slug kanału (opcjonalnie)
-        emoji: Emoji kanału (opcjonalnie)
+        slug: Slug kanału
+        emoji: Emoji kanału
         reset_emoji: Zresetuj emoji
       channel_edit_description_modal:
         title: Edytuj opis
@@ -492,16 +500,16 @@ pl_PL:
             many: 'Użytkownicy w %{group} i %{count} innych grupach będą mieli dostęp do tego kanału zgodnie z <a href="%{settingLink}" target="_blank">ustawieniami zabezpieczeń</a>'
             other: 'Użytkownicy w %{group} i %{count} innych grupach będą mieli dostęp do tego kanału zgodnie z <a href="%{settingLink}" target="_blank">ustawieniami zabezpieczeń</a>'
         create: "Utwórz kanał"
-        description: "Opis (opcjonalnie)"
+        description: "Opis"
         name: "Nazwa kanału"
-        slug: "Slug kanału (opcjonalnie)"
+        slug: "Slug kanału"
         title: "Nowy kanał"
         type: "Typ"
         types:
           category: "Kategoria"
           topic: "Temat"
         emoji:
-          label: "Emoji kanału (opcjonalnie)"
+          label: "Emoji kanału"
           reset: "Zresetuj emoji"
       reviewable:
         type: "Wiadomość na czacie"
@@ -517,6 +525,12 @@ pl_PL:
           other: "<span>Ty, %{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
         single_user: "<span>%{username} zareagował za pomocą </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} i %{username} zareagowali za pomocą </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} reakcja"
+            few: "%{count} reakcje"
+            many: "%{count} reakcji"
+            other: "%{count} reakcje"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
           few: "<span>%{commaSeparatedUsernames} i %{count} inni zareagowali za pomocą </span>:%{emoji}:"
@@ -849,3 +863,34 @@ pl_PL:
       panels:
         chat:
           label: "Czat"
+    discourse_workflows:
+      node_unavailable:
+        requires_chat: "Wymaga włączenia wtyczki czatu"
+      nodes:
+        "action:send_chat_message": "Wyślij wiadomość czatu"
+        "action:chat_approval": "Zatwierdzenie czatu"
+        "trigger:chat_message_created": "Utworzona wiadomość czatu"
+      node_descriptions:
+        "action:send_chat_message": "Wyślij wiadomość do kanału czatu"
+        "action:chat_approval": "Wyślij prośbę o zatwierdzenie na kanał czatu i czekaj na odpowiedź"
+        "trigger:chat_message_created": "Wyzwala się, gdy zostanie utworzona nowa wiadomość czatu"
+      chat_message_created:
+        channel_id: "Kanał"
+        channel_id_description: "Pozostaw puste, aby włączyć czat dla wszystkich kanałów."
+      send_chat_message:
+        channel_id: "Kanał"
+        message: "Wiadomość"
+      chat_approval:
+        message: "Wiadomość"
+        approve_label: "Zatwierdź etykietę przycisku"
+        approve_label_description: "Jeśli pole pozostanie puste, domyślnie zostanie wybrane „Zatwierdź”."
+        deny_label: "Etykieta przycisku odmowy"
+        deny_label_description: "Jeśli pole pozostanie puste, domyślnie zostanie wybrane „Odmów”."
+        channel_id: "Kanał"
+        channel_id_description: "Kanał czatu, na który należy wysłać wiadomość z zatwierdzeniem."
+        timeout_minutes: "Limit czasu (minuty)"
+        timeout_minutes_description: "Pozostaw puste, aby nie przekroczyć limitu czasu."
+        timeout_action: "Po upływie limitu czasu"
+        timeout_action_description: "Co się stanie, gdy upłynie limit czasu zatwierdzenia?"
+        timeout_action_deny: "Wznów jako odrzucony"
+        timeout_action_fail: "Niepowodzenie przepływu pracy"

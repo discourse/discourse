@@ -99,7 +99,7 @@ export default class OutputContext extends Component {
     const schema = outputSchemaForNode(
       this.args.session?.lastExecutionRunData || {},
       currentNode.name,
-      { pinnedItems: this.pinnedItems }
+      { pinnedItems: this.pinnedItems, node: currentNode }
     );
 
     return {

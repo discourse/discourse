@@ -25,3 +25,6 @@ th:
       query_description: "รายละเอียด"
       query_user: "สร้างโดย"
       search_placeholder: "ค้นหา..."
+    discourse_workflows:
+      sql:
+        param_value: "ค่า"

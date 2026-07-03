@@ -62,6 +62,10 @@
           width: 100% !important; // !important overrides hard-coded mobile width of 68px
         }
       }
+
+      label a {
+        margin: 0;
+      }
     }
 
     .setting-override-warning {

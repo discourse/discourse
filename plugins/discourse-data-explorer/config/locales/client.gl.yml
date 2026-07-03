@@ -24,6 +24,10 @@ gl:
           yes: "Si"
           no: "Non"
       delete: "Eliminar"
+      chart:
+        form:
+          label: "Tipo de gráfica"
+          bar: "Barra"
       query_groups: "Grupos"
       query_description: "Descrición"
       query_user: "Creado por"
@@ -31,3 +35,8 @@ gl:
       search_placeholder: "Buscar..."
     group:
       reports: "Informes"
+    discourse_workflows:
+      sql:
+        param_value: "Valor"
+        output:
+          results: "Resultados"

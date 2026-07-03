@@ -90,14 +90,6 @@ module DiscourseWorkflows
                 },
               },
             },
-            options: {
-              type: :collection,
-              required: false,
-              options: [
-                { name: "dot_notation", type: :boolean, default: true },
-                { name: "ignore_conversion_errors", type: :boolean, default: false },
-              ],
-            },
           },
         )
 
@@ -124,8 +116,7 @@ module DiscourseWorkflows
 
         def process(exec_ctx, item, item_index, config)
           item_json = item.fetch("json") { {} }
-          options = exec_ctx.get_node_parameter("options", item_index, default: {})
-          result = included_fields(item_json, config, options)
+          result = included_fields(item_json, config)
 
           if config["mode"] == "raw"
             result.merge(parse_json_fields(config))
@@ -133,21 +124,19 @@ module DiscourseWorkflows
             apply_assignments(
               result,
               exec_ctx.get_node_parameter("assignments.assignments", item_index, default: []),
-              options,
             )
           end
         end
 
-        def included_fields(item_json, config, options)
+        def included_fields(item_json, config)
           return {} unless config.fetch("include_other_fields", true)
 
-          dot_notation = dot_notation?(options)
           fields =
             case config.fetch("include") { "all" }
             when "selected"
-              selected_fields(item_json, config["include_fields"], dot_notation)
+              selected_fields(item_json, config["include_fields"])
             when "except"
-              except_fields(item_json, config["exclude_fields"], dot_notation)
+              except_fields(item_json, config["exclude_fields"])
             else
               item_json.deep_dup
             end
@@ -171,34 +160,31 @@ module DiscourseWorkflows
           raise_node_error!("Invalid JSON", description: e.message)
         end
 
-        def apply_assignments(result, assignments, options)
-          dot_notation = dot_notation?(options)
-          ignore_errors = options.fetch("ignore_conversion_errors", false)
-
+        def apply_assignments(result, assignments)
           assignments.each do |field|
             key = field["name"].to_s
             next if key.blank?
 
-            value = cast_value(field["value"], field.fetch("type") { "string" }, ignore_errors)
-            set_field(result, key, value, dot_notation)
+            value = cast_value(field["value"], field.fetch("type") { "string" })
+            set_field(result, key, value)
           end
 
           result
         end
 
-        def selected_fields(item_json, field_list, dot_notation)
+        def selected_fields(item_json, field_list)
           split_fields(field_list).each_with_object({}) do |field, result|
-            value = get_field(item_json, field, dot_notation)
+            value = get_field(item_json, field)
             next if value.nil?
 
-            output_field = dot_notation && field.include?(".") ? field.split(".").last : field
-            set_field(result, output_field, value, dot_notation)
+            output_field = field.include?(".") ? field.split(".").last : field
+            set_field(result, output_field, value)
           end
         end
 
-        def except_fields(item_json, field_list, dot_notation)
+        def except_fields(item_json, field_list)
           result = item_json.deep_dup
-          split_fields(field_list).each { |field| unset_field(result, field, dot_notation) }
+          split_fields(field_list).each { |field| unset_field(result, field) }
           result
         end
 
@@ -206,19 +192,13 @@ module DiscourseWorkflows
           field_list.to_s.split(",").map(&:strip).reject(&:blank?)
         end
 
-        def dot_notation?(options)
-          options.fetch("dot_notation", true)
-        end
-
-        def cast_value(value, type, ignore_errors)
-          cast_value!(value, type, ignore_errors)
+        def cast_value(value, type)
+          cast_value!(value, type)
         rescue JSON::ParserError, ArgumentError => e
-          return value if ignore_errors
-
           raise_node_error!("Invalid field value", description: e.message)
         end
 
-        def cast_value!(value, type, ignore_errors)
+        def cast_value!(value, type)
           case type
           when "integer"
             Integer(value)
@@ -231,27 +211,26 @@ module DiscourseWorkflows
 
             %w[true 1].include?(value.to_s.downcase)
           when "array"
-            cast_json_value(value, Array, ignore_errors)
+            cast_json_value(value, Array)
           when "object"
-            cast_json_value(value, Hash, ignore_errors)
+            cast_json_value(value, Hash)
           else
             value.to_s
           end
         end
 
-        def cast_json_value(value, expected_class, ignore_errors)
+        def cast_json_value(value, expected_class)
           return value if value.is_a?(expected_class)
 
           parsed = JSON.parse(value.to_s)
           return parsed if parsed.is_a?(expected_class)
-          return value if ignore_errors
 
           expected_type = expected_class == Array ? "array" : "object"
           raise_node_error!("Invalid field value", description: "Expected #{expected_type}")
         end
 
-        def set_field(result, field, value, dot_notation)
-          unless dot_notation && field.include?(".")
+        def set_field(result, field, value)
+          if field.exclude?(".")
             result[field] = value
             return
           end
@@ -266,14 +245,14 @@ module DiscourseWorkflows
           target[leaf] = value
         end
 
-        def get_field(hash, field, dot_notation)
-          return hash[field] unless dot_notation && field.include?(".")
+        def get_field(hash, field)
+          return hash[field] if field.exclude?(".")
 
           field.split(".").reduce(hash) { |value, key| value.is_a?(Hash) ? value[key] : nil }
         end
 
-        def unset_field(hash, field, dot_notation)
-          unless dot_notation && field.include?(".")
+        def unset_field(hash, field)
+          if field.exclude?(".")
             hash.delete(field)
             return
           end

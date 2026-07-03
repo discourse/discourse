@@ -327,7 +327,7 @@ RSpec.describe Notification do
           }.to_json,
         )
 
-      expect(notification.url).to eq("/n/#{topic.slug}/#{topic.id}?sort=new&collapse_replies=true")
+      expect(notification.url).to eq("/t/#{topic.slug}/#{topic.id}?sort=new&collapse_replies=true")
     end
 
     it "returns the bucket parent's context with sort=new&collapse_replies=true for a consolidated per-post-bucket notification" do
@@ -346,11 +346,11 @@ RSpec.describe Notification do
         )
 
       expect(notification.url).to eq(
-        "/n/#{topic.slug}/#{topic.id}/4?sort=new&collapse_replies=true",
+        "/t/#{topic.slug}/#{topic.id}/4?sort=new&collapse_replies=true",
       )
     end
 
-    it "uses the legacy specific-post URL for a singular nested-bucket notification" do
+    it "uses the canonical specific-post URL for a singular nested-bucket notification" do
       notification =
         Fabricate(
           :notification,

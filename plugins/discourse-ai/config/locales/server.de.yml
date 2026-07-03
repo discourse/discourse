@@ -36,10 +36,6 @@ de:
       llm_triage:
         title: Beiträge mithilfe von KI sortieren
         description: "Beiträge mithilfe eines großen Sprachmodells sortieren"
-        flagged_post: |
-          <div>Antwort des Modells:</div>
-          <p>%{llm_response}</p>
-          <b>Ausgelöst durch die Regel <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a>.</b>
         notify_author_pm:
           subject: "Dein Beitrag wurde vorübergehend zur Überprüfung entfernt"
           body: |
@@ -557,7 +553,7 @@ de:
         set_slow_mode: "Langsamen Modus aktivieren"
         move_posts: "Beiträge verschieben"
         grant_badge: "Abzeichen verleihen"
-        list_reviewables: "Liste der Warteschlange zur Überprüfung"
+        list_reviewables: "Warteschlange zur Überprüfung auflisten"
         perform_reviewable_action: "Aktion der Warteschlange zur Überprüfung"
         assign: "Thema zuordnen"
         mark_as_solved: "Als gelöst markieren"
@@ -602,7 +598,7 @@ de:
         set_slow_mode: "Den langsamen Modus für ein Thema aktivieren oder deaktivieren"
         move_posts: "Beiträge in ein neues oder vorhandenes Thema verschieben"
         grant_badge: "Einem Benutzer ein Abzeichen verleihen"
-        list_reviewables: "Ausstehende Listeneinträge der Warteschlange zur Überprüfung mit optionaler Filterung"
+        list_reviewables: "Ausstehende Einträge der Warteschlange zur Überprüfung mit optionaler Filterung auflisten"
         perform_reviewable_action: "Eine Aktion für einen Eintrag in der Warteschlange zur Überprüfung ausführen"
         assign: "Einem Benutzer oder einer Gruppe ein Thema zuweisen oder die Zuweisung aufheben"
         mark_as_solved: "Einen Beitrag als akzeptierte Lösung markieren oder die Markierung aufheben"
@@ -808,6 +804,10 @@ de:
           conflict: "Dieser Eintrag in der Warteschlange zur Überprüfung wurde von einer anderen Person aktualisiert. Bitte versuche es erneut."
           action_failed: "Die Aktion konnte nicht ausgeführt werden"
         success: "Die Ausführung von '%{action}' für den Eintrag %{reviewable_id} in der Warteschlange zur Überprüfung war erfolgreich."
+      add_reviewable_note:
+        errors:
+          not_allowed: "Du darfst auf die Warteschlange zur Überprüfung nicht zugreifen"
+          not_found: "Eintrag der Warteschlange nicht gefunden"
     reviewables:
       ai_tool_action:
         title: "KI-Tool Aktion"
@@ -891,7 +891,6 @@ de:
       limit_exceeded_admin: "Du hast dein KI-Guthabenlimit erreicht. Bitte versuche es erneut nach %{reset_time}."
     errors:
       quota_exceeded: "Du hast das Kontingent für dieses Modell überschritten. Bitte versuche es erneut in %{relative_time}."
-      quota_required: "Du musst die maximale Anzahl an Token oder Verwendungen für dieses Modell angeben"
       no_query_specified: Der Abfrageparameter ist erforderlich, bitte gib ihn an.
       no_user_for_agent: Der angegebene Agent hat keinen Benutzer, der mit ihm verbunden ist.
       no_user_specified: Der Benutzername oder der Parameter user_unique_id ist erforderlich. Bitte gib ihn an.

@@ -1,8 +1,10 @@
+@use "lib/viewport";
+
 .peek-mode-toggle {
   display: none;
 }
 
-@media screen and (width >= 1300px) {
+@include viewport.from(xl) {
   html:not(.fullscreen-composer) {
     .peek-mode-toggle svg {
       transform: scaleX(-1);

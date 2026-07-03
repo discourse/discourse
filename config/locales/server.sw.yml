@@ -224,12 +224,16 @@ sw:
       admins: "viongozi"
       moderators: "wasimamizi"
       staff: "wasaidizi"
-      anonymous: "asiyejulikana"
       trust_level_0: "kiwango_cha_uaminifu_0"
       trust_level_1: "kiwango_cha_uaminifu_1"
       trust_level_2: "kiwango_cha_uaminifu_2"
       trust_level_3: "kiwango_cha_uaminifu_3"
       trust_level_4: "kiwango_cha_uaminifu_4"
+    default_full_names:
+      everyone: "Kila Mtu"
+      admins: "Viongozi"
+      moderators: "Wasimamizi"
+      staff: "Wasaidizi"
     request_membership_pm:
       title: "Ombi la Uanachama wa @%{group_name}"
   education:
@@ -509,6 +513,9 @@ sw:
       session_info: "Soma taarifa za kipindi cha mtumiaji"
       read: "Soma zote"
       write: "Andika zote"
+    device:
+      code: "Kodi"
+      continue: "Endelea"
   reports:
     default:
       labels:
@@ -829,7 +836,6 @@ sw:
     topics_per_period_in_top_summary: "Namba ya mada za juu zitakazo onyeshwa kama chaguo-msingi la muhtasari wa mada za juu."
     topics_per_period_in_top_page: "Idadi ya mada za juu zitakazo onyeshwa kwenye upande wa 'Onyesha Zaidi' mada za juu."
     email_token_valid_hours: "Nimesahau nywila / tokens za kuanzisha akaunti zina kibali cha masaa (n)"
-    new_version_emails: "Tuma barua pepe kwa barua pepe_mawasiliano toleo jipya la Discourse likitolewa."
     invite_expiry_days: "Funguo za mualiko ni sahihi, kwa siku ngapi"
     password_unique_characters: "Idadi ya chini ya herufi pekee nywila inahitaji."
     block_common_passwords: "Usiruhusu nywila amabazo zipo kati ya nywila 10,000 zinazotumika mara kwa mara."
@@ -954,6 +960,10 @@ sw:
       topic: "Majibu"
       user: "Watumiaji"
     results_page: "Majibu ya utafiti ya '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "Machapisho Mapya"
+      order_latest_topic: "Mada za hivi karibuni"
   discourse_connect:
     login_error: "Hitilafu Wakati wa Kuingia."
     not_found: "Akaunti yako haijapatikana. Tafadhali wasiliana na msimamizi wa tovuti."
@@ -1989,6 +1999,8 @@ sw:
   search_logs:
     graph_title: "Idadi ya Utafiti"
   onebox:
+    google_meet:
+      meeting_code: "Kodi:"
     github:
       closed: "imefungwa"
       status_date:

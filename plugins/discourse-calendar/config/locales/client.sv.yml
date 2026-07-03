@@ -360,7 +360,6 @@ sv:
       models:
         invitee:
           status:
-            unknown: "Inte intresserad"
             going: "Kommer"
             interested: "Intresserad"
         event:
@@ -378,6 +377,8 @@ sv:
               description: "Endast inbjudna användare kan besöka ett privat evenemang."
       composer:
         name_placeholder: "Evenemangsnamn"
+        event_title_placeholder: "Evenemangsnamn"
+        create_event_button: "Skapa händelse"
         reminder:
           units:
             minutes:
@@ -389,6 +390,9 @@ sv:
             days:
               one: "dag"
               other: "dagar"
+      composer_actions:
+        create_event:
+          label: "Skapa händelse"
       builder_modal:
         custom_fields:
           label: "Anpassade fält"
@@ -423,11 +427,6 @@ sv:
             last: "senaste"
         attendance:
           none: "Ingen"
-        url:
-          label: "URL"
-          placeholder: "Valfritt"
-        location:
-          label: "Plats"
         description:
           label: "Beskrivning"
         name:
@@ -441,3 +440,4 @@ sv:
       invite_user_or_group:
         title: "Meddela användare eller grupp(er)"
         invite: "Skicka"
+        success: "Inbjudan skickad"

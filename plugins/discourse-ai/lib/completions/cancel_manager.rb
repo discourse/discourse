@@ -9,6 +9,7 @@ module DiscourseAi
 
       def initialize
         @cancelled = false
+        @cancel_event = Concurrent::Event.new
         @callbacks = Concurrent::Array.new
         @mutex = Mutex.new
         @monitor_thread = nil
@@ -79,12 +80,17 @@ module DiscourseAi
         @callbacks << cb
       end
 
+      def wait_for_cancel(timeout)
+        @cancel_event.wait(timeout)
+      end
+
       def remove_callback(cb)
         @callbacks.delete(cb)
       end
 
       def cancel!
         @cancelled = true
+        @cancel_event.set
         monitor_thread = @monitor_thread
         if monitor_thread && monitor_thread != Thread.current
           monitor_thread.wakeup

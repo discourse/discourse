@@ -29,6 +29,9 @@ vi:
       save: "Lưu thay đổi"
       undo: "Hủy bỏ các thay đổi"
       delete: "Xóa"
+      chart:
+        form:
+          bar: "Cột"
       result_count:
         other: "%{count} kết quả."
       query_groups: "Nhóm"
@@ -40,3 +43,10 @@ vi:
       no_search_results: "Rất tiếc, chúng tôi không thể tìm thấy kết quả nào phù hợp với văn bản của bạn."
     group:
       reports: "Báo cáo"
+    discourse_workflows:
+      sql:
+        query_id: "Truy vấn"
+        param_value: "Giá trị"
+        output:
+          results: "Kết quả"
+          no_results: "Không có kết quả"

@@ -11,6 +11,11 @@ module DiscourseCalendar
       dates_count = count_dates(@post)
       calendar_type = @first_post.custom_fields[DiscourseCalendar::CALENDAR_CUSTOM_FIELD]
 
+      if @post.whisper? && dates_count > 0
+        @post.errors.add(:base, I18n.t("discourse_calendar.whisper_not_allowed"))
+        return false
+      end
+
       if calendar_type == "dynamic" && dates_count > 2
         @post.errors.add(:base, I18n.t("discourse_calendar.more_than_two_dates"))
         return false

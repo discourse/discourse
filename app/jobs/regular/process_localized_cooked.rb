@@ -13,6 +13,14 @@ module Jobs
         post = post_localization.post
         return if post.blank? || post.topic.blank?
 
+        # On rebake the stored cooked already holds rendered onebox cards, so
+        # re-cook from raw first to restore the a.onebox links the processor
+        # re-renders (now in the reader's locale). No content is re-translated.
+        if args[:recook]
+          recooked = post.post_analyzer.cook(post_localization.raw, post.cooking_options || {})
+          post_localization.update_column(:cooked, recooked) if recooked.present?
+        end
+
         processor = LocalizedCookedPostProcessor.new(post_localization, post, {})
         processor.post_process
         cooked = processor.html.strip

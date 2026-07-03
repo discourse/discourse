@@ -82,7 +82,7 @@ module("Unit | Notification Types | replied", function (hooks) {
     );
     assert.strictEqual(
       director.linkHref,
-      "/n/test-topic/100?sort=new&collapse_replies=true"
+      "/t/test-topic/100?sort=new&collapse_replies=true"
     );
   });
 
@@ -97,7 +97,7 @@ module("Unit | Notification Types | replied", function (hooks) {
     );
     assert.strictEqual(
       director.linkHref,
-      "/n/test-topic/100/4?sort=new&collapse_replies=true"
+      "/t/test-topic/100/4?sort=new&collapse_replies=true"
     );
   });
 

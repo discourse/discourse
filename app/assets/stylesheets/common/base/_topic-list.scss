@@ -326,7 +326,7 @@
     padding-right: var(--space-1);
   }
 
-  .num {
+  .topic-list-data.num {
     text-align: center;
     font-size: var(--d-topic-list-data-font-size);
 
@@ -338,7 +338,10 @@
       font-weight: 700;
       color: inherit;
       display: inline-block;
-      padding: 15px 5px;
+
+      @include viewport.from(sm) {
+        padding: var(--space-3) var(--space);
+      }
     }
   }
 
@@ -680,7 +683,7 @@
   padding: 0 var(--nav-horizontal-padding);
 
   @include viewport.until(sm) {
-    border-bottom: 0.15em solid var(--primary-low);
+    border-bottom: 1px solid var(--primary-low);
     width: 100%;
     display: flex;
     justify-content: center;
@@ -706,8 +709,8 @@
 
       @include viewport.until(sm) {
         &::after {
-          height: 0.15em;
-          bottom: -0.15em;
+          height: 1px;
+          bottom: -1px;
         }
       }
     }
@@ -761,7 +764,7 @@
     &-body {
       border-width: 1px;
 
-      body:has(.topic-replies-toggle-wrapper) & {
+      .topic-replies-toggle-wrapper ~ .topic-list & {
         border-width: 0;
       }
     }

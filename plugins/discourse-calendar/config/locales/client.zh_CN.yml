@@ -33,6 +33,11 @@ zh_CN:
             topic_id:
               label: 话题 ID
     discourse_calendar:
+      livestream:
+        chat:
+          going: "点击“前往”"
+          join_channel_header: "🌟 加入我们吧！🌟"
+          join_channel_message: "确认出席即可解锁活动聊天室。参与讨论，分享您的喜悦，并与其他参会者交流互动！"
       invite_user_notification: "%{username} 邀请您加入：%{description}"
       preferences:
         all_events: "Discourse 日历 - 所有事件"
@@ -333,6 +338,7 @@ zh_CN:
       search: "搜索…"
       group_availability: "%{group} 可用性"
     discourse_post_event:
+      new_event: "新活动"
       notifications:
         before_event_reminder: "活动即将开始"
         after_event_reminder: "活动已结束"
@@ -396,6 +402,7 @@ zh_CN:
       upcoming_events_list:
         title: "近期活动"
         empty: "无近期活动"
+        all_day: "全天"
         error: "无法检索活动"
         try_again: "重试"
         view_all: "查看全部"
@@ -413,7 +420,6 @@ zh_CN:
           this_and_following: "本次活动及所有后续活动"
           leave_event: "离开活动"
           status:
-            unknown: "不感兴趣"
             going: "参加"
             not_going: "不参加"
             interested: "感兴趣"
@@ -441,8 +447,17 @@ zh_CN:
               description: "只有受邀用户可以加入不公开活动。"
       composer:
         name_placeholder: "活动名称"
+        end_date_placeholder: "结束日期"
         location_placeholder: "添加位置或网址"
+        max_attendees_placeholder: "参与人数不限"
+        max_attendees_display:
+          other: "最多 %{count} 位与会者"
+        no_rsvps_label: "不收集出席人数"
         description_placeholder: "添加活动描述"
+        event_title_placeholder: "活动名称"
+        create_event_button: "创建活动"
+        action_title: "创建新活动"
+        all_day: "全天"
         reminder:
           units:
             minutes:
@@ -453,6 +468,18 @@ zh_CN:
               other: "天"
             weeks:
               other: "周"
+          before: "%{unit} 之前"
+          after: "%{unit} 之后"
+          notification_title: "通知与会者"
+          bump_topic_title: "自动顶帖话题"
+          remove: "移除提醒"
+      composer_actions:
+        create_event:
+          label: "创建活动"
+          desc: "在此类别中创建新活动"
+        create_topic:
+          label: "创建话题"
+          desc: "创建一个常规话题，而不是活动"
       builder_modal:
         custom_fields:
           label: "自定义字段"
@@ -461,7 +488,6 @@ zh_CN:
         create_event_title: "创建活动"
         update_event_title: "编辑活动"
         advanced_settings_title: "高级设置"
-        advanced_settings: "高级设置"
         confirm_delete: "确定要删除此活动吗？"
         confirm_close: "确定要关闭此活动吗？"
         confirm_open: "确定要开放此活动吗？"
@@ -477,10 +503,16 @@ zh_CN:
           remove_timezone: 无时区 (UTC)
         starts_at:
           label: "开始日期"
+        ends_at:
+          label: "结束日期"
         all_day:
           label: "全天事件"
+          description: "全天活动没有具体时间，只有日期。活动将从当天开始一直持续到结束。"
         reminders:
           label: "提醒"
+          types:
+            bump_topic: "自动顶帖话题"
+            notification: "通知与会者"
           units:
             minutes: "分钟"
             hours: "小时"
@@ -489,26 +521,34 @@ zh_CN:
           periods:
             before: "提前"
             after: "推后"
+        recurrence_until:
+          label: "直至（包含此日期）"
         recurrence:
           label: "重复"
           none: "不重复"
           every_day: "每天"
           every_weekday: "每个工作日"
+          every_two_weeks: "每隔一个 %{weekday}"
+          every_four_weeks: "每 4 周在 %{weekday}"
+          every_month: "每个月的 %{ordinal} %{weekday}"
           ordinals:
+            first: "第一的"
+            second: "第二"
+            third: "第三"
+            fourth: "第四"
             last: "最近"
         max_attendees:
           label: "最多参与者"
           placeholder: "无限制"
         attendance:
+          label: "本次活动最多可容纳多少位会员？"
+          unlimited: "无限"
+          up_to: "最多……"
           none: "无"
         allow_chat:
           label: "聊天集成"
           checkbox_label: "创建和管理活动特定的聊天频道"
-        url:
-          label: "URL"
-          placeholder: "可选"
         location:
-          label: "地点"
           placeholder: "添加地点、链接或其他内容。"
         description:
           label: "描述"
@@ -519,11 +559,17 @@ zh_CN:
         invitees:
           label: "受邀群组"
         event_type:
+          label: "出席类型"
           public:
             title: "公开"
+            description: "任何人都可以参加。"
+          private:
+            title: "仅限邀请"
+            description: "只有指定团体的成员才能参加。"
         delete_confirmation_message: "删除此活动？"
         image:
           label: "活动图片"
       invite_user_or_group:
         title: "通知用户或群组"
         invite: "发送"
+        success: "邀请已发送"

@@ -13,7 +13,5 @@ pt_BR:
       categories:
         discourse_hcaptcha: "Plugin hCaptcha"
   site_settings:
-    discourse_hcaptcha_enabled: "Ative o plugin hCaptcha. Requer uma conta <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a>."
     hcaptcha_site_key: "Chave do site do hCaptcha da sua <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> conta"
     hcaptcha_secret_key: "Chave secreta do hCaptcha da sua <a target='blank' href='https://hcaptcha.com'>hcaptcha.com</a> conta"
-  h_captcha_verification_failed: "Falha na verificação hCaptcha"

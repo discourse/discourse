@@ -50,6 +50,9 @@ tr_TR:
             delete_ai_secret: "Yapay zeka anahtarını güncelle"
             update_ai_spam_settings: "YZ spam ayarlarını güncelle"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_agent": "Yapay Zeka Ajanı"
     discourse_automation:
       scriptables:
         llm_report:
@@ -226,6 +229,9 @@ tr_TR:
               description: "Sistem kullanıcısı tarafından oluşturulan gönderilerin etiketlenmesine izin ver."
     discourse_ai:
       title: "YZ"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Ajan"
       default_llm:
         title: "Varsayılan LLM modeli"
         description: "Tüm AI özellikleri için kullanılacak varsayılan LLM modeli. Bu, özellik yapılandırmasında veya ajanda herhangi bir LLM belirtilmediğinde kullanılır. Varsayılan bir LLM belirtilmezse, en son oluşturulan LLM kullanılır."
@@ -293,6 +299,9 @@ tr_TR:
             model_settings: "Model Ayarları"
             related_topics: "İlgili Konular"
             semantic_search: "Anlamsal Arama"
+        admin_dashboard:
+          setting_groups:
+            settings: "Temel Ayarlar"
         discord:
           name: "Discord entegrasyonu"
           description: "Discord kanallarında arama yapma özelliğini ekler"
@@ -608,6 +617,12 @@ tr_TR:
         temperature_help: "LLM için kullanılacak sıcaklık. Yaratıcılığı artırmak için artırın (model varsayılanını kullanmak için boş bırakın, genellikle 0,0 ila 2,0 arasında bir değer)"
         top_p: "Üst P"
         top_p_help: "LLM için kullanılacak en yüksek P, rastgeleliği artırmak için artırın (model varsayılanını kullanmak için boş bırakın, genellikle 0,0 ila 1,0 arasında bir değer)"
+        thinking_effort_options:
+          none: "Hiçbiri"
+          low: "Düşük"
+          medium: "Orta"
+          high: "Yüksek"
+          max: "En fazla"
         priority: "Öncelik"
         priority_help: "Öncelikli ajanlar, ajan listesinin en üstünde kullanıcılara gösterilir. Birden fazla ajanın önceliği varsa, bunlar alfabetik sıraya göre sıralanır."
         tool_options: "Araç seçenekleri"
@@ -861,9 +876,7 @@ tr_TR:
             custom: "Özel..."
           hours: "saat"
           max_tokens_help: "Bu gruptaki her kullanıcının belirtilen süre içinde kullanabileceği maksimum token (kelime ve karakter) sayısı. Token'lar, YZ modelleri tarafından metni işlemek için kullanılan birimlerdir; kabaca 1 token = 4 karakter veya bir kelimenin 3/4'ü."
-          max_tokens_required: "Maks. kullanımlar ayarlanmamışsa ayarlanmalıdır"
           max_usages_help: "Bu gruptaki her kullanıcının belirtilen süre içinde yapay zekâ modelini kullanabileceği maksimum sayı. Bu kota, grup genelinde paylaşılmaz, bireysel kullanıcı başına izlenir."
-          max_usages_required: "Maks. token'lar ayarlanmamışsa ayarlanmalıdır"
         credit_allocation:
           credits_remaining: "%{total} kredinin %{remaining}'ı kaldı (%%{percentage}%)"
           soft_limit_warning: "Bu modelde bugün %{percentage}% oranında AI kredisi kalmıştır."
@@ -971,7 +984,6 @@ tr_TR:
         title: "YZ kullanarak değişiklik önerin"
         description: "Aşağıdaki seçeneklerden birini belirleyin ve YZ size metnin yeni bir versiyonunu önersin."
         selection_hint: "İpucu: Ayrıca, yalnızca onu yeniden yazmak için yardımcıyı açmadan önce metnin bir bölümünü de seçebilirsiniz."
-        suggest: "YZ ile öner"
         suggest_errors:
           too_many_tags:
             one: "En fazla sadece %{count} etikete sahip olabilirsiniz"

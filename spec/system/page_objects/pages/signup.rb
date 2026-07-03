@@ -133,6 +133,10 @@ module PageObjects
       def click_social_button(provider)
         click(".btn-social.#{provider}")
       end
+
+      def has_flash_message?(text)
+        has_css?(".alert", text: text)
+      end
     end
   end
 end

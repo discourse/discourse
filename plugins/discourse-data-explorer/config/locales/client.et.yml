@@ -37,3 +37,8 @@ et:
       query_description: "Kirjeldus"
       reset_params: "Nulli"
       search_placeholder: "Otsi..."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Andmete eksportija"
+      sql:
+        param_value: "Väärtus"

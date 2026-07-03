@@ -198,7 +198,7 @@ module PrettyText
       context = v8
 
       custom_emoji = {}
-      Emoji.custom.map { |e| custom_emoji[e.name] = e.url }
+      Emoji.custom.map { |e| custom_emoji[e.name] = e.cdn_url }
 
       allowed_iframes =
         DiscoursePluginRegistry.apply_modifier(
@@ -291,11 +291,21 @@ module PrettyText
       JS
   end
 
+  def self.sanitize(html, opts = {})
+    protect { v8.eval(<<~JS) }
+        (() => {
+          const AllowLister = require("pretty-text/allow-lister").default;
+          const sanitize = require("pretty-text/sanitizer").sanitize;
+          return sanitize(#{html.to_s.inspect}, new AllowLister(#{opts.to_json}));
+        })()
+      JS
+  end
+
   def self.unescape_emoji(title)
     return title unless SiteSetting.enable_emoji? && title
 
     set = SiteSetting.emoji_set.inspect
-    custom = Emoji.custom.map { |e| [e.name, e.url] }.to_h.to_json
+    custom = Emoji.custom.map { |e| [e.name, e.cdn_url] }.to_h.to_json
 
     protect { v8.eval(<<~JS) }
         __paths = #{paths_json};

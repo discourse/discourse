@@ -137,6 +137,15 @@ import { waitForPromise } from "@ember/test-waiters";
 
 /** @type {RichEditorExtension[]} */
 const registeredExtensions = [];
+let defaultExtensionsRegistered = false;
+
+export function markDefaultExtensionsRegistered() {
+  defaultExtensionsRegistered = true;
+}
+
+export function areDefaultExtensionsRegistered() {
+  return defaultExtensionsRegistered;
+}
 
 /**
  * Registers an extension for the rich editor
@@ -152,15 +161,19 @@ export function registerRichEditorExtension(extension) {
 export async function clearRichEditorExtensions() {
   // Import it first - a lazy import later would re-register the defaults.
   const module = await waitForPromise(
-    import("discourse/static/prosemirror/extensions/register-default")
+    import(
+      /* dynamicChunkName: "prosemirror-extensions" */ "discourse/static/prosemirror/extensions/register-default"
+    )
   );
   registeredExtensions.length = 0;
+  defaultExtensionsRegistered = false;
   return module;
 }
 
 export async function resetRichEditorExtensions() {
   const { default: extensions } = await clearRichEditorExtensions();
   extensions.forEach(registerRichEditorExtension);
+  markDefaultExtensionsRegistered();
 }
 
 /**

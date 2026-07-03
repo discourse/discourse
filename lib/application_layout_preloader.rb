@@ -138,7 +138,12 @@ class ApplicationLayoutPreloader
     id = @theme_id
     return "{}" if id.blank?
     ids = Theme.transform_ids(id)
-    Theme.where(id: ids).pluck(:id, :name).to_h.to_json
+    Theme
+      .where(id: ids)
+      .each_with_object({}) do |theme, hash|
+        hash[theme.id] = { name: theme.name, settings: theme.cached_settings }
+      end
+      .to_json
   end
 
   # Per-theme metadata for the active stack, keyed by theme id. The block-layout

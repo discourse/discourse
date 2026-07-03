@@ -1425,6 +1425,27 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "group settings" do
+    fab!(:group)
+
+    it "stores a valid group id as a string" do
+      settings.setting(:test_group_setting, "", type: :group)
+      settings.test_group_setting = group.id.to_s
+      expect(settings.test_group_setting).to eq(group.id.to_s)
+    end
+
+    it "rejects a value that does not match an existing group" do
+      settings.setting(:test_group_setting, "", type: :group)
+      expect { settings.test_group_setting = "-9999" }.to raise_error(Discourse::InvalidParameters)
+    end
+
+    it "allows a blank value" do
+      settings.setting(:test_group_setting, "", type: :group)
+      settings.test_group_setting = ""
+      expect(settings.test_group_setting).to eq("")
+    end
+  end
+
   describe "requires_confirmation settings" do
     it "returns 'simple' for settings that require confirmation with 'simple' type" do
       expect(
@@ -1432,6 +1453,14 @@ RSpec.describe SiteSettingExtension do
           :requires_confirmation
         ],
       ).to eq("simple")
+    end
+
+    it "returns 'simple_on_disable' for settings that require confirmation with 'simple_on_disable' type" do
+      expect(
+        SiteSetting.all_settings.find { |s| s[:setting] == :content_security_policy }[
+          :requires_confirmation
+        ],
+      ).to eq("simple_on_disable")
     end
 
     it "returns nil for settings that do not require confirmation" do
@@ -1750,6 +1779,11 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.ga_universal_auto_link_domains_map).to eq(%w[test.com xy.com])
     end
 
+    it "handles splitting locale list settings" do
+      SiteSetting.content_localization_supported_locales = "ja|pt_BR"
+      expect(SiteSetting.content_localization_supported_locales_map).to eq(%w[ja pt_BR])
+    end
+
     it "handles splitting list settings with no type" do
       SiteSetting.post_menu = "read|like"
       expect(SiteSetting.post_menu_map).to eq(%w[read like])
@@ -1778,43 +1812,6 @@ RSpec.describe SiteSettingExtension do
       expect(SiteSetting.ga_universal_auto_link_domains_map).to eq([])
       expect(SiteSetting.pm_tags_allowed_for_groups_map).to eq([])
       expect(SiteSetting.exclude_rel_nofollow_domains_map).to eq([])
-    end
-
-    describe "granular_anonymous_and_logged_in_groups_permissions read-time swap" do
-      let(:everyone_id) { Group::AUTO_GROUPS[:everyone] }
-      let(:logged_in_id) { Group::AUTO_GROUPS[:logged_in_users] }
-
-      it "returns the stored ids unchanged when the upcoming change is disabled" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
-        SiteSetting.experimental_new_new_view_groups = "#{everyone_id}|11"
-        expect(SiteSetting.experimental_new_new_view_groups_map).to eq([everyone_id, 11])
-      end
-
-      it "swaps 0 for logged_in_users when the upcoming change is enabled" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
-        SiteSetting.experimental_new_new_view_groups = "#{everyone_id}|11"
-        expect(SiteSetting.experimental_new_new_view_groups_map).to eq([logged_in_id, 11])
-      end
-
-      it "dedups when logged_in_users is already stored alongside everyone" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
-        SiteSetting.experimental_new_new_view_groups = "#{everyone_id}|#{logged_in_id}|1"
-        expect(SiteSetting.experimental_new_new_view_groups_map).to eq([logged_in_id, 1])
-      end
-
-      it "leaves the stored database value untouched" do
-        SiteSetting.experimental_new_new_view_groups = "#{everyone_id}|11"
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
-        SiteSetting.experimental_new_new_view_groups_map # trigger getter
-
-        expect(SiteSetting.experimental_new_new_view_groups).to eq("#{everyone_id}|11")
-      end
-
-      it "does not affect category_list settings" do
-        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = true
-        SiteSetting.digest_suppress_categories = "#{everyone_id}|4"
-        expect(SiteSetting.digest_suppress_categories_map).to eq([everyone_id, 4])
-      end
     end
   end
 
@@ -1863,6 +1860,78 @@ RSpec.describe SiteSettingExtension do
 
     it "handles mixed case in setting names" do
       expect(SiteSetting.humanized_name(:opengraph_image)).to eq("OpenGraph image")
+    end
+  end
+
+  describe "linkify" do
+    it "returns an html_safe anchor with the humanized name as the label and the setting's area/category as data attributes" do
+      result = SiteSettings::LabelFormatter.linkify(:enable_linkedin_oidc_logins)
+      expect(result).to eq(
+        '<a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=enable_linkedin_oidc_logins" data-setting-name="enable_linkedin_oidc_logins" data-setting-area="authenticators" data-setting-category="login">Enable LinkedIn OIDC logins</a>',
+      )
+      expect(result).to be_html_safe
+    end
+
+    it "accepts a string and omits the area attribute when the setting has none" do
+      expect(SiteSettings::LabelFormatter.linkify("opengraph_image")).to eq(
+        '<a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=opengraph_image" data-setting-name="opengraph_image" data-setting-category="branding">OpenGraph image</a>',
+      )
+    end
+
+    it "omits the metadata attributes for an unknown setting" do
+      expect(SiteSettings::LabelFormatter.linkify(:not_a_real_setting)).to eq(
+        '<a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=not_a_real_setting" data-setting-name="not_a_real_setting">Not a real setting</a>',
+      )
+    end
+
+    it "honors the configured base path" do
+      Discourse.stubs(:base_path).returns("/forum")
+      expect(SiteSettings::LabelFormatter.linkify(:title)).to eq(
+        '<a class="site-setting-link" href="/forum/admin/site_settings/category/all_results?filter=title" data-setting-name="title" data-setting-area="about" data-setting-category="required">Title</a>',
+      )
+    end
+  end
+
+  describe "expand_setting_links" do
+    it "expands {{setting:foo}} markers into linkified HTML" do
+      expanded =
+        SiteSettings::LabelFormatter.expand_setting_links(
+          "Configure {{setting:title}} before enabling.",
+        )
+      expect(expanded).to eq(
+        'Configure <a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=title" data-setting-name="title" data-setting-area="about" data-setting-category="required">Title</a> before enabling.',
+      )
+      expect(expanded).to be_html_safe
+    end
+
+    it "expands multiple markers in the same string" do
+      expanded =
+        SiteSettings::LabelFormatter.expand_setting_links(
+          "Use {{setting:title}} and {{setting:logo}}.",
+        )
+      expect(expanded).to include('data-setting-name="title"')
+      expect(expanded).to include(">Title</a>")
+      expect(expanded).to include('data-setting-name="logo"')
+      expect(expanded).to include(">Logo</a>")
+    end
+
+    it "returns input unchanged when no markers are present" do
+      expect(SiteSettings::LabelFormatter.expand_setting_links("nothing to expand")).to eq(
+        "nothing to expand",
+      )
+    end
+
+    it "handles blank input safely" do
+      expect(SiteSettings::LabelFormatter.expand_setting_links("")).to eq("")
+      expect(SiteSettings::LabelFormatter.expand_setting_links(nil)).to be_nil
+    end
+  end
+
+  describe "description" do
+    it "expands {{setting:foo}} markers in the translated description" do
+      expect(SiteSetting.description(:logo_dark)).to eq(
+        'Dark scheme alternative for the <a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=logo" data-setting-name="logo" data-setting-category="branding">Logo</a> site setting.',
+      )
     end
   end
 

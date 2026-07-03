@@ -1,9 +1,12 @@
-import { camelize } from "@ember/string";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { buildBBCodeAttrs } from "discourse/lib/text";
 import EventNodeView from "../components/event-node-view";
 import { buildEventPreview } from "../lib/event-preview";
-import { buildEventSkeleton } from "../lib/raw-event-helper";
+import {
+  buildEventSkeleton,
+  camelCase,
+  getCustomFieldNames,
+} from "../lib/raw-event-helper";
 
 export const EVENT_ATTRIBUTES = {
   name: { default: null },
@@ -21,12 +24,13 @@ export const EVENT_ATTRIBUTES = {
   recurrence: { default: null },
   recurrenceUntil: { default: null },
   chatEnabled: { default: null },
+  livestream: { default: null },
   allDay: { default: null },
   image: { default: null },
 };
 
-/** @type {RichEditorExtension} */
-const extension = {
+/** @returns {RichEditorExtension} */
+const buildExtension = (siteSettings) => ({
   nodeViews: {
     event: {
       component: EventNodeView,
@@ -35,7 +39,13 @@ const extension = {
 
   nodeSpec: {
     event: {
-      attrs: EVENT_ATTRIBUTES,
+      get attrs() {
+        const attrs = { ...EVENT_ATTRIBUTES };
+        getCustomFieldNames(siteSettings).forEach((field) => {
+          attrs[camelCase(field)] = { default: null };
+        });
+        return attrs;
+      },
       group: "block",
       content: "block*",
       defining: true,
@@ -79,7 +89,7 @@ const extension = {
           const attrs = Object.fromEntries(
             token.attrs
               .filter(([key]) => key.startsWith("data-"))
-              .map(([key, value]) => [camelize(key.slice(5)), value])
+              .map(([key, value]) => [camelCase(key.slice(5)), value])
           );
 
           state.openNode(state.schema.nodes.event, attrs);
@@ -117,12 +127,13 @@ const extension = {
         : null;
     },
   }),
-};
+});
 
 export default {
   initialize() {
     withPluginApi((api) => {
-      api.registerRichEditorExtension(extension);
+      const siteSettings = api.container.lookup("service:site-settings");
+      api.registerRichEditorExtension(buildExtension(siteSettings));
     });
   },
 };

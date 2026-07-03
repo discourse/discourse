@@ -3,8 +3,8 @@
 module DiscourseWorkflows
   class JsSandbox
     EVAL_TIMEOUT_MS = 100
-    MAX_INJECTED_JSON_BYTES = 1.megabyte
-    MAX_MEMORY_BYTES = 10.megabytes
+    MAX_INJECTED_JSON_BYTES = 5.megabytes
+    MAX_MEMORY_BYTES = 50.megabytes
     MARSHAL_STACK_DEPTH = 20
 
     attr_reader :js_context, :log

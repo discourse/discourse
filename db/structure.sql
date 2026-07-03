@@ -163,6 +163,42 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: access_control_lists; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.access_control_lists (
+    id bigint NOT NULL,
+    target_type character varying(255) NOT NULL,
+    target_id bigint NOT NULL,
+    owner character varying(100) NOT NULL,
+    permission character varying(100) NOT NULL,
+    allowed_user_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
+    allowed_group_ids bigint[] DEFAULT '{}'::bigint[] NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: access_control_lists_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.access_control_lists_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: access_control_lists_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.access_control_lists_id_seq OWNED BY public.access_control_lists.id;
+
+
+--
 -- Name: ad_plugin_house_ads; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -295,6 +331,39 @@ ALTER SEQUENCE public.admin_dashboard_reports_id_seq OWNED BY public.admin_dashb
 
 
 --
+-- Name: admin_dashboard_sections; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.admin_dashboard_sections (
+    id bigint NOT NULL,
+    section_id character varying NOT NULL,
+    "position" integer NOT NULL,
+    visible boolean DEFAULT true NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: admin_dashboard_sections_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.admin_dashboard_sections_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: admin_dashboard_sections_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.admin_dashboard_sections_id_seq OWNED BY public.admin_dashboard_sections.id;
+
+
+--
 -- Name: admin_notices; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -402,7 +471,8 @@ CREATE TABLE public.ai_agents (
     max_turn_tokens integer,
     compression_threshold integer,
     execution_mode character varying DEFAULT 'default'::character varying NOT NULL,
-    require_approval boolean DEFAULT false NOT NULL
+    require_approval boolean DEFAULT false NOT NULL,
+    thinking_effort character varying
 );
 
 
@@ -448,7 +518,9 @@ CREATE TABLE public.ai_api_audit_logs (
     cache_write_tokens integer,
     cache_read_tokens integer,
     llm_id bigint,
-    response_status integer
+    response_status integer,
+    request_attempts jsonb,
+    estimated_cost numeric(20,10)
 );
 
 
@@ -490,7 +562,8 @@ CREATE TABLE public.ai_api_request_stats (
     usage_count integer DEFAULT 1 NOT NULL,
     rolled_up boolean DEFAULT false NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    estimated_cost numeric(20,10)
 );
 
 
@@ -715,7 +788,8 @@ CREATE TABLE public.ai_mcp_servers (
     oauth_registration_endpoint character varying(1000),
     oauth_authorization_params jsonb DEFAULT '{}'::jsonb NOT NULL,
     oauth_token_params jsonb DEFAULT '{}'::jsonb NOT NULL,
-    oauth_require_refresh_token boolean DEFAULT false NOT NULL
+    oauth_require_refresh_token boolean DEFAULT false NOT NULL,
+    oauth_token_endpoint_auth_methods_supported jsonb DEFAULT '[]'::jsonb NOT NULL
 );
 
 
@@ -1639,6 +1713,7 @@ CREATE TABLE public.topics (
     external_id character varying,
     visibility_reason_id integer,
     locale character varying(20),
+    og_image_upload_id bigint,
     CONSTRAINT has_category_id CHECK (((category_id IS NOT NULL) OR ((archetype)::text <> 'regular'::text))),
     CONSTRAINT pm_has_no_category CHECK (((category_id IS NULL) OR ((archetype)::text <> 'private_message'::text)))
 );
@@ -1917,7 +1992,9 @@ CREATE TABLE public.browser_pageview_events (
     created_at timestamp without time zone NOT NULL,
     asn integer,
     score integer,
-    normalized_referrer character varying(2000)
+    normalized_referrer character varying(2000),
+    normalized_referrer_version smallint,
+    source smallint DEFAULT 1 NOT NULL
 );
 
 
@@ -1970,6 +2047,78 @@ CREATE SEQUENCE public.browser_pageview_referrer_daily_rollups_id_seq
 --
 
 ALTER SEQUENCE public.browser_pageview_referrer_daily_rollups_id_seq OWNED BY public.browser_pageview_referrer_daily_rollups.id;
+
+
+--
+-- Name: browser_pageview_session_engagement_daily_rollups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_session_engagement_daily_rollups (
+    id bigint NOT NULL,
+    date date NOT NULL,
+    logged_in boolean NOT NULL,
+    sessions bigint NOT NULL,
+    bounced bigint NOT NULL,
+    engaged_seconds_total bigint NOT NULL
+);
+
+
+--
+-- Name: browser_pageview_session_engagement_daily_rollups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.browser_pageview_session_engagement_daily_rollups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: browser_pageview_session_engagement_daily_rollups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.browser_pageview_session_engagement_daily_rollups_id_seq OWNED BY public.browser_pageview_session_engagement_daily_rollups.id;
+
+
+--
+-- Name: browser_pageview_session_engagements; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_session_engagements (
+    id bigint NOT NULL,
+    session_id character varying(32) NOT NULL,
+    mouse_move_events integer DEFAULT 0 NOT NULL,
+    click_events integer DEFAULT 0 NOT NULL,
+    key_events integer DEFAULT 0 NOT NULL,
+    scroll_events integer DEFAULT 0 NOT NULL,
+    touch_events integer DEFAULT 0 NOT NULL,
+    back_forward_events integer DEFAULT 0 NOT NULL,
+    engaged_seconds integer DEFAULT 0 NOT NULL,
+    time_to_first_interaction_ms integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: browser_pageview_session_engagements_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.browser_pageview_session_engagements_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: browser_pageview_session_engagements_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.browser_pageview_session_engagements_id_seq OWNED BY public.browser_pageview_session_engagements.id;
 
 
 --
@@ -3887,7 +4036,8 @@ CREATE TABLE public.discourse_post_event_events (
     description character varying(1000),
     max_attendees integer,
     all_day boolean DEFAULT false NOT NULL,
-    image_upload_id bigint
+    image_upload_id bigint,
+    livestream boolean DEFAULT false NOT NULL
 );
 
 
@@ -4013,6 +4163,44 @@ ALTER SEQUENCE public.discourse_reactions_reactions_id_seq OWNED BY public.disco
 
 
 --
+-- Name: discourse_rss_polling_poll_attempts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_rss_polling_poll_attempts (
+    id bigint NOT NULL,
+    rss_feed_id bigint NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    imported_count integer DEFAULT 0 NOT NULL,
+    updated_count integer DEFAULT 0 NOT NULL,
+    skipped_count integer DEFAULT 0 NOT NULL,
+    failed_count integer DEFAULT 0 NOT NULL,
+    error text,
+    items jsonb DEFAULT '[]'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_rss_polling_poll_attempts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_rss_polling_poll_attempts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_rss_polling_poll_attempts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_rss_polling_poll_attempts_id_seq OWNED BY public.discourse_rss_polling_poll_attempts.id;
+
+
+--
 -- Name: discourse_rss_polling_rss_feeds; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4025,7 +4213,8 @@ CREATE TABLE public.discourse_rss_polling_rss_feeds (
     tags character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    user_id bigint
+    user_id bigint,
+    enabled boolean DEFAULT true NOT NULL
 );
 
 
@@ -4277,6 +4466,47 @@ ALTER SEQUENCE public.discourse_templates_usage_count_id_seq OWNED BY public.dis
 
 
 --
+-- Name: discourse_workflows_ai_authoring_sessions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_ai_authoring_sessions (
+    id bigint NOT NULL,
+    workflow_id bigint,
+    user_id integer NOT NULL,
+    status character varying(40) DEFAULT 'drafting'::character varying NOT NULL,
+    messages jsonb DEFAULT '[]'::jsonb NOT NULL,
+    latest_request text,
+    latest_response jsonb DEFAULT '{}'::jsonb NOT NULL,
+    proposed_patch jsonb DEFAULT '{}'::jsonb NOT NULL,
+    base_workflow_version_id character varying(36),
+    base_graph_digest character varying(64),
+    risk_level character varying(20),
+    applied_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_ai_authoring_sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_ai_authoring_sessions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_ai_authoring_sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_ai_authoring_sessions_id_seq OWNED BY public.discourse_workflows_ai_authoring_sessions.id;
+
+
+--
 -- Name: discourse_workflows_credentials; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4471,6 +4701,46 @@ CREATE SEQUENCE public.discourse_workflows_webhooks_id_seq
 --
 
 ALTER SEQUENCE public.discourse_workflows_webhooks_id_seq OWNED BY public.discourse_workflows_webhooks.id;
+
+
+--
+-- Name: discourse_workflows_workflow_call_runs; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_workflow_call_runs (
+    id bigint NOT NULL,
+    parent_execution_id bigint NOT NULL,
+    parent_node_id character varying(100) NOT NULL,
+    parent_resume_token character varying(64) NOT NULL,
+    child_execution_id bigint,
+    target_workflow_id bigint NOT NULL,
+    target_workflow_version_id character varying(36) NOT NULL,
+    user_id bigint,
+    trigger_data jsonb DEFAULT '{}'::jsonb NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    error text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_workflow_call_runs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_workflow_call_runs_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_workflow_call_runs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_workflow_call_runs_id_seq OWNED BY public.discourse_workflows_workflow_call_runs.id;
 
 
 --
@@ -4772,6 +5042,41 @@ CREATE SEQUENCE public.email_change_requests_id_seq
 --
 
 ALTER SEQUENCE public.email_change_requests_id_seq OWNED BY public.email_change_requests.id;
+
+
+--
+-- Name: email_login_codes; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.email_login_codes (
+    id bigint NOT NULL,
+    email character varying NOT NULL,
+    code_hash character varying NOT NULL,
+    attempts integer DEFAULT 0 NOT NULL,
+    expires_at timestamp(6) without time zone NOT NULL,
+    consumed_at timestamp(6) without time zone,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: email_login_codes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.email_login_codes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: email_login_codes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.email_login_codes_id_seq OWNED BY public.email_login_codes.id;
 
 
 --
@@ -6089,6 +6394,7 @@ CREATE TABLE public.javascript_caches (
     theme_id bigint,
     source_map text,
     name character varying,
+    external_plugin_imports character varying[] DEFAULT '{}'::character varying[] NOT NULL,
     CONSTRAINT enforce_theme_or_theme_field CHECK ((((theme_id IS NOT NULL) AND (theme_field_id IS NULL)) OR ((theme_id IS NULL) AND (theme_field_id IS NOT NULL))))
 );
 
@@ -6143,6 +6449,38 @@ CREATE SEQUENCE public.linked_topics_id_seq
 --
 
 ALTER SEQUENCE public.linked_topics_id_seq OWNED BY public.linked_topics.id;
+
+
+--
+-- Name: livestream_topic_chat_channels; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.livestream_topic_chat_channels (
+    id bigint NOT NULL,
+    topic_id bigint NOT NULL,
+    chat_channel_id bigint NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: livestream_topic_chat_channels_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.livestream_topic_chat_channels_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: livestream_topic_chat_channels_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.livestream_topic_chat_channels_id_seq OWNED BY public.livestream_topic_chat_channels.id;
 
 
 --
@@ -6306,7 +6644,10 @@ CREATE TABLE public.llm_quota_usages (
     started_at timestamp(6) without time zone NOT NULL,
     reset_at timestamp(6) without time zone NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    cost_used numeric(20,10) DEFAULT 0.0 NOT NULL,
+    cache_read_tokens_used integer DEFAULT 0 NOT NULL,
+    cache_write_tokens_used integer DEFAULT 0 NOT NULL
 );
 
 
@@ -6341,7 +6682,8 @@ CREATE TABLE public.llm_quotas (
     max_usages integer,
     duration_seconds integer NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    max_cost numeric(20,10)
 );
 
 
@@ -6929,7 +7271,9 @@ CREATE TABLE public.polls (
     chart_type integer DEFAULT 0 NOT NULL,
     groups character varying,
     title character varying,
-    dynamic boolean DEFAULT false NOT NULL
+    dynamic boolean DEFAULT false NOT NULL,
+    closed_by_id integer,
+    closed_at timestamp(6) without time zone
 );
 
 
@@ -7775,7 +8119,9 @@ CREATE TABLE public.remote_themes (
     authors character varying,
     theme_version character varying,
     minimum_discourse_version character varying,
-    maximum_discourse_version character varying
+    maximum_discourse_version character varying,
+    local_compat_ref character varying,
+    remote_compat_ref character varying
 );
 
 
@@ -8524,6 +8870,41 @@ CREATE SEQUENCE public.site_setting_groups_id_seq
 --
 
 ALTER SEQUENCE public.site_setting_groups_id_seq OWNED BY public.site_setting_groups.id;
+
+
+--
+-- Name: site_setting_localizations; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.site_setting_localizations (
+    id bigint NOT NULL,
+    setting_name character varying NOT NULL,
+    locale character varying(20) NOT NULL,
+    value text NOT NULL,
+    cooked text,
+    localizer_user_id integer,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: site_setting_localizations_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.site_setting_localizations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: site_setting_localizations_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.site_setting_localizations_id_seq OWNED BY public.site_setting_localizations.id;
 
 
 --
@@ -10316,7 +10697,8 @@ CREATE TABLE public.user_api_keys (
     revoked_at timestamp without time zone,
     last_used_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     key_hash character varying NOT NULL,
-    user_api_key_client_id bigint
+    user_api_key_client_id bigint,
+    expires_at timestamp(6) without time zone
 );
 
 
@@ -11089,7 +11471,9 @@ CREATE TABLE public.user_options (
     discourse_rewind_enabled boolean DEFAULT true NOT NULL,
     notify_on_solved boolean DEFAULT true NOT NULL,
     show_original_content boolean DEFAULT false NOT NULL,
-    enable_upcoming_change_available_notifications boolean DEFAULT true NOT NULL
+    enable_upcoming_change_available_notifications boolean DEFAULT true NOT NULL,
+    chat_announce_new_messages boolean DEFAULT true NOT NULL,
+    chat_new_message_sound boolean DEFAULT false NOT NULL
 );
 
 
@@ -11848,6 +12232,13 @@ ALTER SEQUENCE public.wireframe_block_layout_drafts_id_seq OWNED BY public.wiref
 
 
 --
+-- Name: access_control_lists id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.access_control_lists ALTER COLUMN id SET DEFAULT nextval('public.access_control_lists_id_seq'::regclass);
+
+
+--
 -- Name: ad_plugin_house_ads id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -11866,6 +12257,13 @@ ALTER TABLE ONLY public.ad_plugin_impressions ALTER COLUMN id SET DEFAULT nextva
 --
 
 ALTER TABLE ONLY public.admin_dashboard_reports ALTER COLUMN id SET DEFAULT nextval('public.admin_dashboard_reports_id_seq'::regclass);
+
+
+--
+-- Name: admin_dashboard_sections id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_dashboard_sections ALTER COLUMN id SET DEFAULT nextval('public.admin_dashboard_sections_id_seq'::regclass);
 
 
 --
@@ -12111,6 +12509,20 @@ ALTER TABLE ONLY public.browser_pageview_events ALTER COLUMN id SET DEFAULT next
 --
 
 ALTER TABLE ONLY public.browser_pageview_referrer_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_referrer_daily_rollups_id_seq'::regclass);
+
+
+--
+-- Name: browser_pageview_session_engagement_daily_rollups id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_session_engagement_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_session_engagement_daily_rollups_id_seq'::regclass);
+
+
+--
+-- Name: browser_pageview_session_engagements id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_session_engagements ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_session_engagements_id_seq'::regclass);
 
 
 --
@@ -12520,6 +12932,13 @@ ALTER TABLE ONLY public.discourse_reactions_reactions ALTER COLUMN id SET DEFAUL
 
 
 --
+-- Name: discourse_rss_polling_poll_attempts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_rss_polling_poll_attempts ALTER COLUMN id SET DEFAULT nextval('public.discourse_rss_polling_poll_attempts_id_seq'::regclass);
+
+
+--
 -- Name: discourse_rss_polling_rss_feeds id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -12576,6 +12995,13 @@ ALTER TABLE ONLY public.discourse_templates_usage_count ALTER COLUMN id SET DEFA
 
 
 --
+-- Name: discourse_workflows_ai_authoring_sessions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_ai_authoring_sessions ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_ai_authoring_sessions_id_seq'::regclass);
+
+
+--
 -- Name: discourse_workflows_credentials id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -12608,6 +13034,13 @@ ALTER TABLE ONLY public.discourse_workflows_variables ALTER COLUMN id SET DEFAUL
 --
 
 ALTER TABLE ONLY public.discourse_workflows_webhooks ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_webhooks_id_seq'::regclass);
+
+
+--
+-- Name: discourse_workflows_workflow_call_runs id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflow_call_runs ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_workflow_call_runs_id_seq'::regclass);
 
 
 --
@@ -12664,6 +13097,13 @@ ALTER TABLE ONLY public.drafts ALTER COLUMN id SET DEFAULT nextval('public.draft
 --
 
 ALTER TABLE ONLY public.email_change_requests ALTER COLUMN id SET DEFAULT nextval('public.email_change_requests_id_seq'::regclass);
+
+
+--
+-- Name: email_login_codes id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_login_codes ALTER COLUMN id SET DEFAULT nextval('public.email_login_codes_id_seq'::regclass);
 
 
 --
@@ -12916,6 +13356,13 @@ ALTER TABLE ONLY public.javascript_caches ALTER COLUMN id SET DEFAULT nextval('p
 --
 
 ALTER TABLE ONLY public.linked_topics ALTER COLUMN id SET DEFAULT nextval('public.linked_topics_id_seq'::regclass);
+
+
+--
+-- Name: livestream_topic_chat_channels id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.livestream_topic_chat_channels ALTER COLUMN id SET DEFAULT nextval('public.livestream_topic_chat_channels_id_seq'::regclass);
 
 
 --
@@ -13371,6 +13818,13 @@ ALTER TABLE ONLY public.single_sign_on_records ALTER COLUMN id SET DEFAULT nextv
 --
 
 ALTER TABLE ONLY public.site_setting_groups ALTER COLUMN id SET DEFAULT nextval('public.site_setting_groups_id_seq'::regclass);
+
+
+--
+-- Name: site_setting_localizations id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.site_setting_localizations ALTER COLUMN id SET DEFAULT nextval('public.site_setting_localizations_id_seq'::regclass);
 
 
 --
@@ -13976,6 +14430,14 @@ ALTER TABLE ONLY public.wireframe_block_layout_drafts ALTER COLUMN id SET DEFAUL
 
 
 --
+-- Name: access_control_lists access_control_lists_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.access_control_lists
+    ADD CONSTRAINT access_control_lists_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: ad_plugin_house_ads ad_plugin_house_ads_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -13997,6 +14459,14 @@ ALTER TABLE ONLY public.ad_plugin_impressions
 
 ALTER TABLE ONLY public.admin_dashboard_reports
     ADD CONSTRAINT admin_dashboard_reports_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: admin_dashboard_sections admin_dashboard_sections_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.admin_dashboard_sections
+    ADD CONSTRAINT admin_dashboard_sections_pkey PRIMARY KEY (id);
 
 
 --
@@ -14285,6 +14755,22 @@ ALTER TABLE ONLY public.browser_pageview_events
 
 ALTER TABLE ONLY public.browser_pageview_referrer_daily_rollups
     ADD CONSTRAINT browser_pageview_referrer_daily_rollups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_session_engagement_daily_rollups browser_pageview_session_engagement_daily_rollups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_session_engagement_daily_rollups
+    ADD CONSTRAINT browser_pageview_session_engagement_daily_rollups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: browser_pageview_session_engagements browser_pageview_session_engagements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_session_engagements
+    ADD CONSTRAINT browser_pageview_session_engagements_pkey PRIMARY KEY (id);
 
 
 --
@@ -14768,6 +15254,14 @@ ALTER TABLE ONLY public.discourse_reactions_reactions
 
 
 --
+-- Name: discourse_rss_polling_poll_attempts discourse_rss_polling_poll_attempts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_rss_polling_poll_attempts
+    ADD CONSTRAINT discourse_rss_polling_poll_attempts_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: discourse_rss_polling_rss_feeds discourse_rss_polling_rss_feeds_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -14832,6 +15326,14 @@ ALTER TABLE ONLY public.discourse_templates_usage_count
 
 
 --
+-- Name: discourse_workflows_ai_authoring_sessions discourse_workflows_ai_authoring_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_ai_authoring_sessions
+    ADD CONSTRAINT discourse_workflows_ai_authoring_sessions_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: discourse_workflows_credentials discourse_workflows_credentials_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -14869,6 +15371,14 @@ ALTER TABLE ONLY public.discourse_workflows_variables
 
 ALTER TABLE ONLY public.discourse_workflows_webhooks
     ADD CONSTRAINT discourse_workflows_webhooks_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_workflows_workflow_call_runs discourse_workflows_workflow_call_runs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_workflow_call_runs
+    ADD CONSTRAINT discourse_workflows_workflow_call_runs_pkey PRIMARY KEY (id);
 
 
 --
@@ -14941,6 +15451,14 @@ ALTER TABLE ONLY public.drafts
 
 ALTER TABLE ONLY public.email_change_requests
     ADD CONSTRAINT email_change_requests_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: email_login_codes email_login_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.email_login_codes
+    ADD CONSTRAINT email_login_codes_pkey PRIMARY KEY (id);
 
 
 --
@@ -15229,6 +15747,14 @@ ALTER TABLE ONLY public.javascript_caches
 
 ALTER TABLE ONLY public.linked_topics
     ADD CONSTRAINT linked_topics_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: livestream_topic_chat_channels livestream_topic_chat_channels_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.livestream_topic_chat_channels
+    ADD CONSTRAINT livestream_topic_chat_channels_pkey PRIMARY KEY (id);
 
 
 --
@@ -15765,6 +16291,14 @@ ALTER TABLE ONLY public.single_sign_on_records
 
 ALTER TABLE ONLY public.site_setting_groups
     ADD CONSTRAINT site_setting_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: site_setting_localizations site_setting_localizations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.site_setting_localizations
+    ADD CONSTRAINT site_setting_localizations_pkey PRIMARY KEY (id);
 
 
 --
@@ -16558,6 +17092,20 @@ CREATE UNIQUE INDEX discourse_post_event_invitees_post_id_user_id_idx ON public.
 
 
 --
+-- Name: idx_access_control_lists_allowed_group_ids; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_access_control_lists_allowed_group_ids ON public.access_control_lists USING gin (allowed_group_ids);
+
+
+--
+-- Name: idx_access_control_lists_allowed_user_ids; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_access_control_lists_allowed_user_ids ON public.access_control_lists USING gin (allowed_user_ids);
+
+
+--
 -- Name: idx_ai_bot_conversation_stars_topic_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -16614,6 +17162,13 @@ CREATE INDEX idx_bpe_ip_ua_created_at ON public.browser_pageview_events USING bt
 
 
 --
+-- Name: idx_bpe_normalized_referrer_version; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_bpe_normalized_referrer_version ON public.browser_pageview_events USING btree (normalized_referrer_version) WHERE (referrer IS NOT NULL);
+
+
+--
 -- Name: idx_bpe_session_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -16625,6 +17180,13 @@ CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING 
 --
 
 CREATE UNIQUE INDEX idx_bprd_rollups_date_referrer_unique ON public.browser_pageview_referrer_daily_rollups USING btree (date, normalized_referrer) NULLS NOT DISTINCT;
+
+
+--
+-- Name: idx_bpse_rollups_date_logged_in_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_bpse_rollups_date_logged_in_unique ON public.browser_pageview_session_engagement_daily_rollups USING btree (date, logged_in);
 
 
 --
@@ -16716,6 +17278,41 @@ CREATE UNIQUE INDEX idx_discourse_automation_user_global_notices ON public.disco
 --
 
 CREATE UNIQUE INDEX idx_discourse_calendar_post_event_dates_event_id_starts_at_uniq ON public.discourse_calendar_post_event_dates USING btree (event_id, starts_at);
+
+
+--
+-- Name: idx_dwf_ai_sessions_on_status_updated_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_ai_sessions_on_status_updated_at ON public.discourse_workflows_ai_authoring_sessions USING btree (status, updated_at);
+
+
+--
+-- Name: idx_dwf_ai_sessions_on_user_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_ai_sessions_on_user_id ON public.discourse_workflows_ai_authoring_sessions USING btree (user_id);
+
+
+--
+-- Name: idx_dwf_ai_sessions_on_workflow_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_ai_sessions_on_workflow_id ON public.discourse_workflows_ai_authoring_sessions USING btree (workflow_id);
+
+
+--
+-- Name: idx_dwf_call_runs_on_child_execution_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_call_runs_on_child_execution_id ON public.discourse_workflows_workflow_call_runs USING btree (child_execution_id) WHERE (child_execution_id IS NOT NULL);
+
+
+--
+-- Name: idx_dwf_call_runs_on_parent_execution_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_dwf_call_runs_on_parent_execution_id ON public.discourse_workflows_workflow_call_runs USING btree (parent_execution_id);
 
 
 --
@@ -17006,6 +17603,13 @@ CREATE UNIQUE INDEX idx_on_target_id_target_type_summary_type_3355609fbb ON publ
 
 
 --
+-- Name: idx_on_target_type_target_id_permission_f472902150; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_on_target_type_target_id_permission_f472902150 ON public.access_control_lists USING btree (target_type, target_id, permission);
+
+
+--
 -- Name: idx_post_voting_comment_custom_fields; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17038,6 +17642,13 @@ CREATE INDEX idx_posts_user_id_deleted_at ON public.posts USING btree (user_id) 
 --
 
 CREATE INDEX idx_reviewables_score_desc_created_at_desc ON public.reviewables USING btree (score DESC, created_at DESC);
+
+
+--
+-- Name: idx_rss_polling_poll_attempts_on_feed_created_id_desc; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_rss_polling_poll_attempts_on_feed_created_id_desc ON public.discourse_rss_polling_poll_attempts USING btree (rss_feed_id, created_at DESC, id DESC);
 
 
 --
@@ -17360,6 +17971,13 @@ CREATE INDEX index_admin_dashboard_reports_on_position ON public.admin_dashboard
 --
 
 CREATE UNIQUE INDEX index_admin_dashboard_reports_on_source_and_identifier ON public.admin_dashboard_reports USING btree (source, identifier);
+
+
+--
+-- Name: index_admin_dashboard_sections_on_section_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_admin_dashboard_sections_on_section_id ON public.admin_dashboard_sections USING btree (section_id);
 
 
 --
@@ -17801,6 +18419,20 @@ CREATE INDEX index_browser_pageview_events_on_topic_id ON public.browser_pagevie
 --
 
 CREATE INDEX index_browser_pageview_events_on_user_id ON public.browser_pageview_events USING btree (user_id);
+
+
+--
+-- Name: index_browser_pageview_session_engagements_on_created_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_browser_pageview_session_engagements_on_created_at ON public.browser_pageview_session_engagements USING brin (created_at);
+
+
+--
+-- Name: index_browser_pageview_session_engagements_on_session_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_browser_pageview_session_engagements_on_session_id ON public.browser_pageview_session_engagements USING btree (session_id);
 
 
 --
@@ -18518,6 +19150,20 @@ CREATE INDEX index_email_change_requests_on_user_id ON public.email_change_reque
 
 
 --
+-- Name: index_email_login_codes_on_expires_at; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_email_login_codes_on_expires_at ON public.email_login_codes USING btree (expires_at);
+
+
+--
+-- Name: index_email_login_codes_on_lower_email; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_email_login_codes_on_lower_email ON public.email_login_codes USING btree (lower((email)::text));
+
+
+--
 -- Name: index_email_logs_on_bounce_key; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -18634,6 +19280,13 @@ CREATE UNIQUE INDEX index_external_upload_stubs_on_key ON public.external_upload
 --
 
 CREATE INDEX index_external_upload_stubs_on_status ON public.external_upload_stubs USING btree (status);
+
+
+--
+-- Name: index_flags_on_name_key; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_flags_on_name_key ON public.flags USING btree (name_key);
 
 
 --
@@ -20163,6 +20816,20 @@ CREATE UNIQUE INDEX index_site_setting_groups_on_name ON public.site_setting_gro
 
 
 --
+-- Name: index_site_setting_localizations_on_locale; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_site_setting_localizations_on_locale ON public.site_setting_localizations USING btree (locale);
+
+
+--
+-- Name: index_site_setting_localizations_on_setting_name_and_locale; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_site_setting_localizations_on_setting_name_and_locale ON public.site_setting_localizations USING btree (setting_name, locale);
+
+
+--
 -- Name: index_site_settings_on_name; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -20915,7 +21582,7 @@ CREATE INDEX index_user_actions_on_acting_user_id ON public.user_actions USING b
 -- Name: index_user_actions_on_action_type_and_created_at; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX index_user_actions_on_action_type_and_created_at ON public.user_actions USING btree (action_type, created_at);
+CREATE INDEX index_user_actions_on_action_type_and_created_at ON public.user_actions USING btree (action_type, created_at, user_id);
 
 
 --
@@ -21640,6 +22307,13 @@ CREATE UNIQUE INDEX unique_index_categories_on_slug ON public.categories USING b
 
 
 --
+-- Name: unique_livestream_topic_chat_channels; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX unique_livestream_topic_chat_channels ON public.livestream_topic_chat_channels USING btree (topic_id, chat_channel_id);
+
+
+--
 -- Name: unique_post_links; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -21921,14 +22595,54 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260702102111'),
+('20260701073045'),
+('20260630034050'),
+('20260629233141'),
+('20260629081606'),
+('20260629022603'),
+('20260626055145'),
+('20260624140945'),
 ('20260624050813'),
+('20260623201925'),
+('20260623090824'),
+('20260623052745'),
+('20260622201006'),
+('20260622201005'),
 ('20260622153521'),
+('20260622140747'),
 ('20260619214923'),
+('20260619085855'),
+('20260617180115'),
+('20260617104005'),
+('20260617053237'),
+('20260616114637'),
+('20260615084100'),
+('20260615082047'),
+('20260612092612'),
+('20260612064730'),
+('20260611102547'),
+('20260610205840'),
+('20260610075829'),
+('20260610064425'),
+('20260609050938'),
+('20260608104742'),
+('20260607161322'),
+('20260604052235'),
+('20260603115312'),
+('20260603115200'),
+('20260603013342'),
+('20260602104726'),
+('20260601063855'),
+('20260601043020'),
+('20260528074731'),
+('20260528074719'),
 ('20260525105009'),
 ('20260525105006'),
 ('20260522043337'),
 ('20260520090937'),
 ('20260518104900'),
+('20260518072818'),
 ('20260518054805'),
 ('20260514055648'),
 ('20260514043815'),
@@ -21952,12 +22666,15 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260428072232'),
 ('20260424004343'),
 ('20260422144944'),
+('20260422135650'),
 ('20260422130653'),
 ('20260422102523'),
 ('20260422062938'),
+('20260422000000'),
 ('20260421061908'),
 ('20260420014648'),
 ('20260415082426'),
+('20260409225129'),
 ('20260408214007'),
 ('20260408165014'),
 ('20260407093145'),

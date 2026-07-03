@@ -99,7 +99,7 @@
 
     .composer-event__month {
       text-align: center;
-      color: red;
+      color: var(--primary);
       font-size: var(--font-down-2);
       font-weight: 400;
       text-transform: uppercase;
@@ -128,7 +128,8 @@
   .composer-event__dates,
   .composer-event__location,
   .composer-event__attendees,
-  .composer-event__reminder {
+  .composer-event__reminder,
+  .composer-event__livestream {
     position: relative;
     display: grid;
     grid-template-columns: 3em 1fr;
@@ -202,6 +203,7 @@
     }
   }
 
+  .composer-event__livestream-toggle,
   .composer-event__all-day-toggle {
     display: flex;
     margin-bottom: var(--space-1);
@@ -210,6 +212,17 @@
     @include viewport.from(sm) {
       padding-left: 0.5em;
     }
+  }
+
+  .composer-event__livestream-toggle {
+    grid-column-start: 2;
+    justify-self: start;
+  }
+
+  .d-toggle-switch:has(.composer-event__livestream-switch:disabled) {
+    cursor: not-allowed;
+    opacity: 0.5;
+    pointer-events: none;
   }
 
   .composer-event__date-row {

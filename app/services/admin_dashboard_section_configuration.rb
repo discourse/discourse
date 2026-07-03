@@ -1,31 +1,53 @@
 # frozen_string_literal: true
 
 class AdminDashboardSectionConfiguration
-  KNOWN_SECTIONS = %w[highlights reports traffic engagement].freeze
-
-  def self.visible_section_ids
-    raw = SiteSetting.admin_dashboard_sections.to_s
-    return [] if raw.empty?
-
-    ids = raw.split("|").map(&:strip).uniq.select { |id| KNOWN_SECTIONS.include?(id) }
-    ids.empty? ? KNOWN_SECTIONS.dup : ids
-  end
+  KNOWN_SECTIONS = %w[highlights reports traffic engagement search].freeze
 
   def self.sections
-    visible = visible_section_ids
-    hidden = KNOWN_SECTIONS - visible
-    visible.map { |id| { id: id, visible: true } } + hidden.map { |id| { id: id, visible: false } }
+    AdminDashboardSection
+      .where(section_id: KNOWN_SECTIONS)
+      .order(:position)
+      .pluck(:section_id, :visible)
+      .map { |id, visible| { id:, visible: } }
+  end
+
+  def self.visible_section_ids
+    sections.select { |s| s[:visible] }.map { |s| s[:id] }
   end
 
   def self.update(input_sections, actor:)
-    visible_ids =
+    sanitized =
       Array(input_sections)
-        .select { |s| ActiveModel::Type::Boolean.new.cast(s[:visible] || s["visible"]) }
-        .map { |s| (s[:id] || s["id"]).to_s }
-        .uniq
-        .select { |id| KNOWN_SECTIONS.include?(id) }
+        .filter_map do |s|
+          attrs = (s.respond_to?(:to_unsafe_h) ? s.to_unsafe_h : s.to_h).symbolize_keys
+          id = attrs[:id].to_s
+          next if KNOWN_SECTIONS.exclude?(id)
+          { id:, visible: ActiveModel::Type::Boolean.new.cast(attrs[:visible]) }
+        end
+        .uniq { |s| s[:id] }
 
-    SiteSetting.set_and_log("admin_dashboard_sections", visible_ids.join("|"), actor)
+    present_ids = sanitized.map { |s| s[:id] }
+    missing = sections.reject { |s| present_ids.include?(s[:id]) }
+    ordered = sanitized + missing
+
+    now = Time.zone.now
+    rows =
+      ordered.each_with_index.map do |section, index|
+        {
+          section_id: section[:id],
+          position: index,
+          visible: section[:visible],
+          created_at: now,
+          updated_at: now,
+        }
+      end
+    AdminDashboardSection.upsert_all(rows, unique_by: :section_id)
+
+    StaffActionLogger.new(actor).log_custom(
+      "update_dashboard_sections",
+      layout: ordered.map { |s| "#{s[:id]}:#{s[:visible] ? "visible" : "hidden"}" }.join(", "),
+    )
+
     sections
   end
 end

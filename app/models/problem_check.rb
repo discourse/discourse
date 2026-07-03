@@ -67,17 +67,20 @@ class ProblemCheck
   #
   CORE_PROBLEM_CHECKS = [
     ProblemCheck::BadFaviconUrl,
+    ProblemCheck::ContentSecurityPolicyDisabled,
     ProblemCheck::EmailSendingFailures,
     ProblemCheck::EmailPollingErroredRecently,
     ProblemCheck::FacebookConfig,
     ProblemCheck::FailingEmails,
     ProblemCheck::ForceHttps,
     ProblemCheck::GithubConfig,
+    ProblemCheck::GithubOneboxBackoff,
     ProblemCheck::GoogleAnalyticsVersion,
     ProblemCheck::GoogleOauth2Config,
     ProblemCheck::GroupEmailCredentials,
     ProblemCheck::HostNames,
     ProblemCheck::ImageMagick,
+    ProblemCheck::MissingAwsSnsTopicArn,
     ProblemCheck::MissingMailgunApiKey,
     ProblemCheck::OutOfDateThemes,
     ProblemCheck::PollPop3Timeout,
@@ -216,12 +219,14 @@ class ProblemCheck
     target_identifier = target.kind_of?(ActiveRecord::Base) ? target.id : target
 
     Problem.new(
-      I18n.t(
-        override_key || translation_key,
-        base_path: Discourse.base_path,
-        **override_data.merge(
-          target.present? ? translation_data(target) : translation_data,
-        ).symbolize_keys,
+      SiteSettings::LabelFormatter.expand_setting_links(
+        I18n.t(
+          override_key || translation_key,
+          base_path: Discourse.base_path,
+          **override_data.merge(
+            target.present? ? translation_data(target) : translation_data,
+          ).symbolize_keys,
+        ),
       ),
       priority: config.priority,
       identifier:,

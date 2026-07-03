@@ -12,7 +12,7 @@ import Category from "discourse/models/category";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import I18n, { i18n } from "discourse-i18n";
-import { chartability, looksLikeDate } from "../lib/chart-helpers";
+import { chartability, defaultView, looksLikeDate } from "../lib/chart-helpers";
 import DataExplorerChart from "./data-explorer-chart";
 import QueryChartEmptyState from "./query-chart-empty-state";
 import QueryResultDownloadButtons from "./query-result-download-buttons";
@@ -47,26 +47,32 @@ const VIEW_COMPONENTS = {
   tag_group: TagGroupViewComponent,
 };
 
+const CHART_FORMS = ["line", "bar", "stacked", "dual-axis"];
+
 export default class QueryResult extends Component {
   @service site;
 
   @tracked internalView;
+  @tracked internalChartForm;
   @tracked tableExpanded = false;
   @tracked hasOverflow = false;
 
   constructor() {
     super(...arguments);
-    if (this.args.view) {
-      return;
-    }
     const queryId = this.args.query?.id;
-    const stored = queryId ? store.get(`view_${queryId}`) : null;
-    if (stored === "chart" || stored === "table") {
-      this.internalView = stored;
-    } else {
-      this.internalView = chartability(this.args.content).chartable
-        ? "chart"
-        : "table";
+
+    if (!this.args.view) {
+      const stored = queryId ? store.get(`view_${queryId}`) : null;
+      if (stored === "chart" || stored === "table") {
+        this.internalView = stored;
+      } else {
+        this.internalView = defaultView(this.args.content);
+      }
+    }
+
+    const storedChartForm = queryId ? store.get(`chart_form_${queryId}`) : null;
+    if (CHART_FORMS.includes(storedChartForm)) {
+      this.internalChartForm = storedChartForm;
     }
   }
 
@@ -92,16 +98,21 @@ export default class QueryResult extends Component {
     this.setView("table");
   }
 
+  @action
+  setChartForm(value) {
+    this.internalChartForm = value;
+    const queryId = this.args.query?.id;
+    if (queryId) {
+      store.set({ key: `chart_form_${queryId}`, value });
+    }
+  }
+
   get showExpandButton() {
     return this.hasOverflow && !this.tableExpanded;
   }
 
   @action
   checkOverflow(element) {
-    if (!this.chartVisible) {
-      this.tableExpanded = true;
-      return;
-    }
     this.hasOverflow = element.scrollHeight > element.clientHeight;
   }
 
@@ -154,6 +165,29 @@ export default class QueryResult extends Component {
     ];
   }
 
+  get chartFormItems() {
+    const items = [
+      { value: "line", label: i18n("explorer.chart.form.line") },
+      { value: "bar", label: i18n("explorer.chart.form.bar") },
+    ];
+
+    if (this.isMultiSeries) {
+      items.push({
+        value: "stacked",
+        label: i18n("explorer.chart.form.stacked"),
+      });
+    }
+
+    if (this.canUseDualAxis) {
+      items.push({
+        value: "dual-axis",
+        label: i18n("explorer.chart.form.dual_axis"),
+      });
+    }
+
+    return items;
+  }
+
   get colRender() {
     return this.args.content.colrender || {};
   }
@@ -178,19 +212,42 @@ export default class QueryResult extends Component {
     return this.numericColumnIndices.length > 1;
   }
 
+  get canUseDualAxis() {
+    return this.hasDates && this.numericColumnIndices.length === 2;
+  }
+
   get hasDates() {
     return this.rows?.length > 0 && looksLikeDate(String(this.rows[0][0]));
   }
 
-  get chartType() {
-    if (this.isMultiSeries) {
-      return "bar";
+  get defaultChartForm() {
+    if (this.hasDates) {
+      return "line";
     }
-    return this.hasDates ? "line" : "bar";
+    return "bar";
+  }
+
+  get availableChartForms() {
+    return this.chartFormItems.map((item) => item.value);
+  }
+
+  get chartForm() {
+    if (this.availableChartForms.includes(this.internalChartForm)) {
+      return this.internalChartForm;
+    }
+    return this.defaultChartForm;
+  }
+
+  get chartType() {
+    return ["line", "dual-axis"].includes(this.chartForm) ? "line" : "bar";
   }
 
   get isStacked() {
-    return this.isMultiSeries && this.hasDates;
+    return this.chartForm === "stacked";
+  }
+
+  get usesDualAxis() {
+    return this.chartForm === "dual-axis";
   }
 
   get chartDatasets() {
@@ -409,11 +466,22 @@ export default class QueryResult extends Component {
 
         {{#if this.chartVisible}}
           <div class="query-results-chart">
+            <DSegmentedControl
+              @name="query-result-chart-form"
+              @value={{this.chartForm}}
+              @items={{this.chartFormItems}}
+              @onSelect={{this.setChartForm}}
+              @translatedLabel={{i18n "explorer.chart.form.label"}}
+              @size="small"
+              class="query-results-chart__form"
+            />
+
             <DataExplorerChart
               @labels={{this.chartLabels}}
               @datasets={{this.chartDatasets}}
               @chartType={{this.chartType}}
               @stacked={{this.isStacked}}
+              @dualAxis={{this.usesDualAxis}}
             />
             {{#if this.ignoredColumnNames.length}}
               <p class="query-results-chart__footnote">

@@ -16,16 +16,23 @@ uk:
           description: "Генерує SQL-запити для Data Explorer з природної мови"
       tool_help:
         run_sql: "Запускає SQL-запит і повертає результати"
+        submit_query: "Надсилає остаточний згенерований запит"
       tool_summary:
         run_sql: "Виконання SQL-запиту"
+        submit_query: "Надсилання створеного запиту"
       tool_description:
         run_sql: "Виконав SQL-запит"
+        submit_query: "Надіслано сформований запит %{name}"
   discourse_data_explorer:
     ai:
       error_agent_not_configured: "ШІ-агент не налаштований. Будь ласка, перевірте налаштування функцій ШІ."
       error_no_sql_returned: "ШІ не повернув правильний SQL-запит. Будь ласка, спробуйте ще раз або напишіть запит вручну."
     errors:
       tool_not_allowed: "Ви не маєте права використовувати цей інструмент"
+    discourse_workflows:
+      sql_action:
+        no_query_selected: "Запит не обрано."
+        no_sql_provided: "SQL-запит не надано."
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:

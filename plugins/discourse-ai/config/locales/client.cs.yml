@@ -126,6 +126,12 @@ cs:
           select_all: "Vybrat vše"
           clear_all: "Zrušit vše"
         delete: "Smazat"
+        thinking_effort_options:
+          none: "Žádný"
+          low: "Nízká"
+          medium: "Střední"
+          high: "Vysoká"
+          max: "Max"
         response_format:
           open_modal: "Upravit"
           modal:
@@ -226,7 +232,6 @@ cs:
         title: "Navrhněte změny pomocí AI"
         description: "Vyberte jednu z níže uvedených možností a umělá inteligence vám navrhne novou verzi textu."
         selection_hint: "Tip: Před otevřením pomocníka můžete také vybrat část textu a přepsat pouze tuto část."
-        suggest: "Navrhnout s AI"
         suggest_errors:
           too_many_tags:
             one: "Můžete mít max. %{count} štítek"

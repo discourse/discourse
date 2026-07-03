@@ -321,7 +321,7 @@ module("Unit | Utility | uploads", function (hooks) {
     );
     assert.strictEqual(
       testUploadMarkdown("[foo|bar].png"),
-      "![\\[foo\\|bar\\]|100x200](/uploads/123/abcdef.ext)"
+      "![foobar|100x200](/uploads/123/abcdef.ext)"
     );
     assert.strictEqual(
       testUploadMarkdown("file name with space.png"),
@@ -342,7 +342,12 @@ module("Unit | Utility | uploads", function (hooks) {
 
     assert.strictEqual(
       testUploadMarkdown("_test_file_.txt", { short_url }),
-      `[\\_test\\_file\\_.txt|attachment](${short_url}) (42 Bytes)`
+      `[_test_file_.txt|attachment](${short_url}) (42 Bytes)`
+    );
+
+    assert.strictEqual(
+      testUploadMarkdown("[foo|bar].txt", { short_url }),
+      `[foobar.txt|attachment](${short_url}) (42 Bytes)`
     );
   });
 

@@ -1,10 +1,17 @@
 @use "lib/viewport";
 
 .d-date-range-picker {
+  --d-date-range-picker-nav-size: var(--space-10);
   display: grid;
   grid-template-columns: max-content 1fr;
   background: var(--secondary);
   min-width: 0;
+  box-sizing: border-box;
+
+  @include viewport.from(sm) {
+    width: 40rem;
+    max-width: 100vw;
+  }
 
   @include viewport.until(sm) {
     grid-template-columns: 1fr;
@@ -16,11 +23,10 @@
     flex-direction: column;
     padding: var(--space-2) 0;
     border-right: 1px solid var(--primary-low);
-    min-width: 8.75rem;
+    min-width: min-content;
 
     @include viewport.until(sm) {
       flex-direction: row;
-      flex-wrap: nowrap;
       gap: var(--space-1);
       padding: var(--space-2) var(--space-4);
       border-right: none;
@@ -43,7 +49,6 @@
   }
 
   &__preset {
-    width: 100%;
     text-align: left;
     background: transparent;
     border: 0;
@@ -59,12 +64,10 @@
 
     &.is-active {
       background: var(--tertiary-low);
-      color: var(--tertiary);
-      font-weight: 500;
+      font-weight: 700;
     }
 
     @include viewport.until(sm) {
-      width: auto;
       flex-shrink: 0;
       border: 1px solid var(--primary-low);
       border-radius: var(--space-1);
@@ -75,23 +78,20 @@
   &__body {
     display: flex;
     flex-direction: column;
-    padding: var(--space-3);
+    padding: var(--space-2);
     min-width: 0;
   }
 
-  &__calendar {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--space-2);
-  }
-
   &__nav {
-    background: transparent;
-    border: 0;
-    padding: var(--space-2);
-    cursor: pointer;
-    color: var(--primary-medium);
-    border-radius: var(--space-1);
+    width: var(--d-date-range-picker-nav-size);
+
+    &.--prev {
+      grid-column: 1;
+    }
+
+    &.--next {
+      grid-column: 3;
+    }
 
     &:hover {
       background: var(--primary-low);
@@ -101,10 +101,8 @@
 
   &__months {
     display: flex;
-    gap: var(--space-8);
-    flex: 1;
+    gap: var(--space-4);
     min-width: 0;
-    align-items: stretch;
 
     @include viewport.until(sm) {
       gap: 0;
@@ -117,15 +115,25 @@
   }
 
   &__month-header {
-    text-align: center;
+    display: grid;
+    grid-template-columns:
+      var(--d-date-range-picker-nav-size)
+      1fr
+      var(--d-date-range-picker-nav-size);
+    align-items: center;
+    min-height: var(--d-date-range-picker-nav-size);
     font-weight: 500;
-    padding: var(--space-1) 0 var(--space-2);
+    padding-bottom: var(--space-2);
+  }
+
+  &__month-title {
+    grid-column: 2;
+    text-align: center;
   }
 
   &__weekdays {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 2px;
     color: var(--primary-medium);
     font-size: var(--font-down-2);
     text-align: center;
@@ -135,24 +143,26 @@
   &__grid {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: var(--space-1);
   }
 
   &__week {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
-    gap: 2px;
   }
 
   &__day {
     background: transparent;
     border: 0;
-    padding: var(--space-1) 0;
-    cursor: pointer;
+    padding: 0;
     border-radius: var(--space-1);
-    font: inherit;
     color: var(--primary);
     aspect-ratio: 1;
+    font-size: var(--font-down-2-rem);
+
+    @include viewport.until(sm) {
+      font-size: var(--font-down-1-rem);
+    }
 
     &:hover:not(.--disabled) {
       background: var(--tertiary-low);
@@ -161,23 +171,15 @@
     &.--disabled {
       color: var(--primary-low-mid);
       cursor: not-allowed;
-      background: transparent;
     }
 
     &.--in-range {
       background: var(--tertiary-very-low, var(--tertiary-low));
-      border-radius: 0;
     }
 
-    &.--hover-preview {
-      background: repeating-linear-gradient(
-        45deg,
-        var(--tertiary-very-low, var(--tertiary-low)),
-        var(--tertiary-very-low, var(--tertiary-low)) 4px,
-        var(--secondary) 4px,
-        var(--secondary) 8px
-      );
-      border-radius: 0;
+    &.--hover-preview,
+    &.--hover-end {
+      background: var(--tertiary-low);
     }
 
     &.--start,
@@ -189,6 +191,28 @@
       &:hover {
         background: var(--tertiary-hover, var(--tertiary));
       }
+    }
+
+    // range cells form a continuous strip, rounded only where the strip ends:
+    // at a cap, a row edge, or a month edge;
+    // :where keeps this reset below the corner rules' specificity
+    &:where(.--in-range, .--hover-preview, .--hover-end, .--start, .--end) {
+      border-radius: 0;
+    }
+
+    &.--start,
+    &.--month-start,
+    &:first-child {
+      border-start-start-radius: var(--space-1);
+      border-end-start-radius: var(--space-1);
+    }
+
+    &.--end,
+    &.--hover-end,
+    &.--month-end,
+    &:last-child {
+      border-start-end-radius: var(--space-1);
+      border-end-end-radius: var(--space-1);
     }
 
     &:focus-visible {

@@ -416,7 +416,6 @@ ar:
           no_users: "لم يتم العثور على المستخدمين"
           leave_event: "مغادرة الحدث"
           status:
-            unknown: "غير مهتم"
             going: "ذاهب"
             interested: "مهتم"
             going_count:
@@ -465,6 +464,8 @@ ar:
         name_placeholder: "اسم الحدث"
         location_placeholder: "أضف الموقع أو عنوان URL"
         description_placeholder: "أضف وصفًا للحدث"
+        event_title_placeholder: "اسم الحدث"
+        create_event_button: "إنشاء حدث"
         reminder:
           units:
             minutes:
@@ -495,6 +496,11 @@ ar:
               few: "أسابيع"
               many: "أسابيع"
               other: "أسابيع"
+      composer_actions:
+        create_event:
+          label: "إنشاء حدث"
+        create_topic:
+          label: "أنشئ موضوع"
       builder_modal:
         custom_fields:
           label: "الحقول المخصَّصة"
@@ -503,7 +509,6 @@ ar:
         create_event_title: "إنشاء حدث"
         update_event_title: "تعديل الحدث"
         advanced_settings_title: "الإعدادات المتقدمة"
-        advanced_settings: "الإعدادات المتقدمة"
         confirm_delete: "هل تريد بالتأكيد حذف هذا الحدث؟"
         confirm_close: "هل تريد بالتأكيد إغلاق هذا الحدث؟"
         confirm_open: "هل تريد بالتأكيد فتح هذا الحدث؟"
@@ -546,11 +551,7 @@ ar:
         allow_chat:
           label: "تكامل الدردشة"
           checkbox_label: "إنشاء قناة دردشة خاصة بحدث معين وإدارتها"
-        url:
-          label: "عنوان URL"
-          placeholder: "اختياري"
         location:
-          label: "الموقع الجغرافي"
           placeholder: "أضف موقعًا أو رابطًا أو أي شيء آخر."
         description:
           label: "الوصف"
@@ -569,3 +570,4 @@ ar:
       invite_user_or_group:
         title: "إرسال إشعار إلى المستخدمين أو المجموعات"
         invite: "إرسال"
+        success: "تم إرسال الدعوة"

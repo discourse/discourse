@@ -20,8 +20,6 @@ es:
         description: "Cierra automáticamente el tema después de este número de horas una vez marcado como resuelto. Establece en 0 para desactivarlo."
       notify_on_staff_accept_solved:
         label: "Notificar al creador del tema cuando el personal marque una solución"
-      empty_box_on_unsolved:
-        label: "Mostrar una casilla de verificación vacía junto a los temas sin resolver en la lista de temas"
       solved_topics_auto_close_duration:
         label: "Cierre automático de temas resueltos"
         description: "Cierra automáticamente los temas resueltos transcurrido este tiempo desde la última respuesta. Establece en 0 para desactivar."
@@ -41,7 +39,6 @@ es:
     solved_add_schema_markup: "Añade el marcado del esquema de QAPage al HTML."
     enable_solved_tags: "Etiquetas que permitirán a los usuarios seleccionar soluciones."
     prioritize_solved_topics_in_search: "Prioriza los temas resueltos en los resultados de búsqueda."
-    enable_support_category_type_setup: "Activa la opción Apoyar tipo de categoría durante la configuración de la creación de categorías. Ten en cuenta que debe estar activada la opción «enable simplified category creation» para que esto tenga efecto."
     show_who_marked_solved: "Mostrar quién ha marcado el tema como resuelto. Esto se indica en la primera publicación del tema y en la publicación de respuesta en una descripción emergente."
     keywords:
       accept_all_solutions_allowed_groups: "accept_all_solutions_trust_level"

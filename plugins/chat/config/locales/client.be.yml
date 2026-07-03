@@ -69,6 +69,7 @@ be:
         title: новае паведамленне
         prefix: "да:"
       create_channel:
+        description: "Апісанне"
         type: "тып"
         types:
           category: "катэгорыя"
@@ -134,3 +135,8 @@ be:
           fields:
             message:
               label: Паказаць выдаленыя паведамленні...
+    discourse_workflows:
+      send_chat_message:
+        message: "Паведамленне"
+      chat_approval:
+        message: "Паведамленне"

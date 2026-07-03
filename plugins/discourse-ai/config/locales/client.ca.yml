@@ -94,6 +94,12 @@ ca:
         save: "Desa"
         enabled: "Activat?"
         delete: "Suprimeix"
+        thinking_effort_options:
+          none: "Cap"
+          low: "Baixa"
+          medium: "Mitjana"
+          high: "Alta"
+          max: "Màxim"
         response_format:
           open_modal: "Edita"
           modal:

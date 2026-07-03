@@ -6,11 +6,25 @@
 
 ca:
   js:
+    user_api_key:
+      authorize: "Autoritza"
+      deny: "Cancel·la"
+      copied: "Copiat!"
+      otp_description: 'Voleu permetre que "%{application_name}" accedeixi a aquest lloc web?'
+      no_trust_level: "No teniu el nivell de confiança necessari per a accedir a l'API d'usuari."
+      generic_error: "No hem pogut emetre les claus API d'usuari. Aquesta característica pot haver estat desactivada per l'administració del lloc web."
+      device:
+        code: "Codi"
+        continue: "Continua"
     blocks:
       ghost:
         status: "Estat"
         hidden: "amagat"
         failed: "fallits"
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Elimina"
     number:
       format:
         separator: "."
@@ -261,6 +275,9 @@ ca:
     age: "Edat"
     joined: "Registrat"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Mode avançat"
+      simple_mode: "Mode simple"
     show_more: "mostra'n més"
     show_help: "Opcions"
     links: "Enllaços"
@@ -301,8 +318,6 @@ ca:
     suggested_topics:
       pm_title: "Missatges recomanats"
     admin_onboarding_banner:
-      select_theme:
-        enabled: "Activat"
       start_posting:
         back: "Enrere"
     about:
@@ -746,7 +761,6 @@ ca:
             title: "Configuració"
         membership:
           title: Membres
-          access: Accés
         categories:
           title: Categories
         tags:
@@ -763,7 +777,6 @@ ca:
           to: "A"
       permissions:
         title: "Permisos"
-      public_admission: "Permet als usuaris d'unir-se al grup lliurement (cal que el grup sigui visible públicament)"
       public_exit: "Permet que els usuaris abandonin el grup lliurement"
       empty:
         posts: "No hi ha publicacions de membres d'aquest grup"
@@ -778,7 +791,6 @@ ca:
       leave: "Abandona"
       request: "Sol·licita"
       message: "Missatge"
-      allow_membership_requests: "Permet als usuaris d'enviar sol·licituds d'afiliació als propietaris del grup (requereix un grup visible públicament)"
       membership_request_template: "Plantilla personalitzada que es mostra als usuaris quan envien una sol·licitud d'afiliació"
       membership_request:
         submit: "Envia sol·licitud"
@@ -1069,6 +1081,7 @@ ca:
       undo_revoke_access: "Desfés revocar l'accés"
       api_approved: "Aprovat:"
       api_last_used_at: "Utilitzat per darrera vegada:"
+      api_expires_never: "mai"
       theme: "Aparença"
       home: "Pàgina d'inici per defecte"
       staged: "Fictici"
@@ -1555,6 +1568,12 @@ ca:
       confirm_title: Continua a %{site_name}
       logging_in_as: Iniciant sessió com a %{email}
       confirm_button: Acaba l'inici de sessió
+    code_login:
+      email_label: "Correu electrònic"
+      continue_button: "Continua"
+      verify_button: "Continua"
+      account_ready_continue: "Continua"
+      username_label: "Nom d'usuari "
     login:
       title: "Inicia la sessió"
       username: "Usuari"
@@ -1707,7 +1726,7 @@ ca:
       discard: "Descarta"
       title_placeholder: "De què tracta aquesta discussió (en una frase curta)?"
       title_or_link_placeholder: "Escriviu aquí el títol o enganxeu-hi un enllaç"
-      edit_reason_placeholder: "per què ho editeu?"
+      edit_reason_placeholder: "Per què ho editeu?"
       topic_featured_link_placeholder: "Introduïu un enllaç mostrat amb títol."
       remove_featured_link: "Elimina l'enllaç del tema."
       reply_placeholder: "Escriviu aquí. Feu servir Markdown, BBCode o HTML per a donar format. Arrossegueu o enganxeu imatges."
@@ -1740,6 +1759,7 @@ ca:
         attribute_value: "Valor"
         apply: "Aplica"
       help: "Ajuda d'edició Markdown"
+      edit_reason: "Per què ho editeu?"
       modal_ok: "D'acord"
       cant_send_pm: "No podeu enviar cap missatge a %{username}."
       yourself_confirm:
@@ -1757,18 +1777,19 @@ ca:
           desc: Crea un tema nou enllaçat a aquest tema
         reply_to_topic:
           label: Respon al tema
+          trigger: Tema
           desc: Respon al tema, no a cap publicació específica
+        reply_to_message:
+          trigger: Missatge
         toggle_whisper:
           label: Commuta xiuxiueig
-          desc: Els xiuxiuejos sols són visibles a membres de l'equip responsable
         create_personal_message:
-          label: "Missatge nou"
           desc: "Crea un missatge personal nou "
         shared_draft:
           label: "Esborrany compartit"
         toggle_topic_bump:
-          label: "Commuta l'elevació del tema"
           desc: "Respon sense canviar la data més recent de resposta"
+        unknown_user: "Usuari"
       ignore: "Ignora"
       image: "imatge"
     notifications:
@@ -2008,6 +2029,8 @@ ca:
       deleted_post_placeholder: "[suprimit]"
       ignored_post_placeholder: "[ignorat]"
       pinned_reply: "Afixat"
+    share_target:
+      new_message: "Missatge nou"
     topic:
       filter_to:
         one: "%{count} publicació en el tema"
@@ -3044,7 +3067,7 @@ ca:
         modal:
           cancel: "cancel·la"
           create: "Desa"
-          reason: "per què ho editeu?"
+          reason: "Per què ho editeu?"
       spreadsheet:
         show: "Mostra"
         about: "Quant a"
@@ -3129,6 +3152,9 @@ ca:
           form:
             mobile: "Mòbil"
             email: "Correu electrònic"
+            og_image_preview:
+              generate: "Genera"
+              topic_id_label: "ID de tema"
         fonts:
           backfill_modal:
             modal_yes: "Sí"
@@ -3233,7 +3259,7 @@ ca:
         no_check_performed: "No s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."
         stale_data: "Darrerament no s'ha executat la comprovació d'actualitzacions. Assegureu-vos que funciona Sidekiq."
         installed_version: "Instal·lat"
-        latest_version: "Més recents"
+        github: "GitHub"
         problems_found: "Uns quants consells basats en la configuració actual del lloc web."
         dismiss_notice: "Ignora"
         new_features:
@@ -3295,6 +3321,11 @@ ca:
                 "2": "Membre"
                 "3": "Habitual"
                 "4": "Líder"
+          search:
+            title: "Cerca"
+            table:
+              searches: "Cerques"
+              status: "Estat"
         reports_section:
           modal:
             enabled_heading: "Activat"
@@ -3361,7 +3392,6 @@ ca:
             email: Correu electrònic
             incoming_email: "Adreça de correu entrant personalitzada:"
             incoming_email_placeholder: "introduïu una adreça de correu electrònic"
-            visibility: Visibilitat
             visibility_levels:
               title: "Qui pot veure aquest grup?"
               public: "Tothom"
@@ -3527,6 +3557,8 @@ ca:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nom"
+          company_url: "Lloc web"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grups"
           optional: "(opcional)"
@@ -4115,6 +4147,10 @@ ca:
         active: "Activat"
         status: "Estat"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Tanca"
+              confirm: "Suspèn"
           delete:
             confirmation_modal:
               close: "Tanca"
@@ -4126,6 +4162,8 @@ ca:
           suspended: "Suspesos"
           silenced: "Silenciat"
           staged: "Fictici"
+        activation_filter:
+          activated: "Activat"
         approved: "Aprovat?"
         titles:
           pending: "Usuaris pendents de revisar"

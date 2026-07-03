@@ -24,7 +24,7 @@ RSpec.describe "Nested replies topic admin toggle" do
     topic_page.click_admin_menu_button
     find(".topic-admin-nested-replies").click
 
-    expect(page).to have_current_path(%r{/n/#{topic.slug}/#{topic.id}})
+    expect(page).to have_current_path(%r{/t/#{topic.slug}/#{topic.id}})
     expect(nested_view).to have_nested_view
 
     topic.reload

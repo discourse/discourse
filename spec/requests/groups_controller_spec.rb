@@ -384,7 +384,7 @@ RSpec.describe GroupsController do
               Group::AUTO_GROUP_IDS.keys -
                 [
                   Group::AUTO_GROUPS[:everyone],
-                  Group::AUTO_GROUPS[:anonymous],
+                  Group::AUTO_GROUPS[:anonymous_users],
                   Group::AUTO_GROUPS[:logged_in_users],
                 ],
             )
@@ -498,7 +498,7 @@ RSpec.describe GroupsController do
 
           groups = Group::AUTO_GROUPS.keys
           groups.delete(:everyone)
-          groups.delete(:anonymous)
+          groups.delete(:anonymous_users)
           groups.delete(:logged_in_users)
           groups.push(group.name)
 
@@ -522,6 +522,27 @@ RSpec.describe GroupsController do
         with: {
           property: "og:description",
           content: "testing group bio",
+        },
+      )
+    end
+
+    it "renders a single-escaped, tag-free meta description from the bio" do
+      group.update!(bio_raw: "Tom & Jerry [blog](https://evil.example) win")
+
+      get "/groups/#{group.name}.html"
+
+      expect(response.body).to have_tag(
+        :meta,
+        with: {
+          name: "description",
+          content: "Tom & Jerry blog win",
+        },
+      )
+      expect(response.body).to have_tag(
+        :meta,
+        with: {
+          property: "og:description",
+          content: "Tom & Jerry blog win",
         },
       )
     end
@@ -846,6 +867,31 @@ RSpec.describe GroupsController do
       get "/groups/#{group.name}/members.json", params: { limit: 1 }
 
       expect(response.status).to eq(403)
+    end
+
+    it "hides activity timestamps for hidden profiles" do
+      SiteSetting.allow_users_to_hide_profile = true
+
+      hidden_user = Fabricate(:user, last_seen_at: 1.hour.ago, last_posted_at: 2.hours.ago)
+      hidden_user.user_option.update!(hide_profile: true)
+      visible_user = Fabricate(:user, last_seen_at: 3.hours.ago, last_posted_at: 4.hours.ago)
+      viewer = Fabricate(:user, trust_level: TrustLevel[2])
+      group.add(hidden_user)
+      group.add(visible_user)
+
+      sign_in(viewer)
+      get "/groups/#{group.name}/members.json"
+
+      expect(response.status).to eq(200)
+
+      members = response.parsed_body["members"]
+      hidden_member = members.find { |member| member["id"] == hidden_user.id }
+      visible_member = members.find { |member| member["id"] == visible_user.id }
+
+      expect(hidden_member).to be_present
+      expect(visible_member).to be_present
+      expect(hidden_member).not_to include("last_seen_at", "last_posted_at")
+      expect(visible_member).to include("last_seen_at", "last_posted_at")
     end
 
     it "ensures that membership can be paginated" do
@@ -2065,6 +2111,7 @@ RSpec.describe GroupsController do
 
       it "adds known users by email when DiscourseConnect is enabled" do
         SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
         SiteSetting.enable_discourse_connect = true
 
         expect do
@@ -2284,6 +2331,27 @@ RSpec.describe GroupsController do
         }.by(1)
 
         expect(response.status).to eq(204)
+      end
+
+      it "should not allow a user to join a public group they cannot see" do
+        hidden_group =
+          Fabricate(
+            :public_group,
+            visibility_level: Group.visibility_levels[:owners],
+            grant_trust_level: TrustLevel[4],
+          )
+        hidden_group.add_owner(admin)
+        user.update!(trust_level: TrustLevel[0])
+        sign_in(user)
+
+        expect(user.guardian.can_see_group?(hidden_group)).to eq(false)
+
+        put "/groups/#{hidden_group.id}/join.json"
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["error_type"]).to eq("not_found")
+        expect(GroupUser.exists?(group_id: hidden_group.id, user_id: user.id)).to eq(false)
+        expect(user.reload.trust_level).to eq(TrustLevel[0])
       end
 
       it "should not allow a user to join a nonpublic group" do
@@ -2882,7 +2950,7 @@ RSpec.describe GroupsController do
         expected_ids = Group::AUTO_GROUPS.map { |name, id| id }
         expected_ids.delete(Group::AUTO_GROUPS[:everyone])
         expected_ids.delete(Group::AUTO_GROUPS[:logged_in_users])
-        expected_ids.delete(Group::AUTO_GROUPS[:anonymous])
+        expected_ids.delete(Group::AUTO_GROUPS[:anonymous_users])
         expected_ids << group.id
 
         expect(groups.map { |group| group["id"] }).to contain_exactly(*expected_ids)
@@ -2949,7 +3017,7 @@ RSpec.describe GroupsController do
             automatic_ids -
               [
                 Group::AUTO_GROUPS[:everyone],
-                Group::AUTO_GROUPS[:anonymous],
+                Group::AUTO_GROUPS[:anonymous_users],
                 Group::AUTO_GROUPS[:logged_in_users],
               ]
           ),
@@ -2965,7 +3033,10 @@ RSpec.describe GroupsController do
         expect(groups.map { |group| group["id"] }).to contain_exactly(
           group.id,
           hidden_group.id,
-          *(automatic_ids - [Group::AUTO_GROUPS[:anonymous], Group::AUTO_GROUPS[:logged_in_users]]),
+          *(
+            automatic_ids -
+              [Group::AUTO_GROUPS[:anonymous_users], Group::AUTO_GROUPS[:logged_in_users]]
+          ),
         )
 
         get "/groups/search.json?include_pseudogroups=true"

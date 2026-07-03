@@ -41,6 +41,10 @@ sl:
           null_: "Null"
       run: "Zaženi"
       delete: "Izbriši"
+      chart:
+        form:
+          label: "Vrsta grafikona"
+          bar: "Stolpični"
       others_dirty: "Poizvedba ima neshranjene spremembe, ki se bodo izgubile, če boste šli drugam."
       run_time: "Poizvedba končana v %{value} ms."
       result_count:
@@ -61,3 +65,11 @@ sl:
       no_search_results: "Oprostite, nismo našli nobenega zadetka, ki bi ustrezal vaši poizvedbi."
     group:
       reports: "Poročila"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Raziskovalec podatkov"
+      sql:
+        query_id: "Poizvedba"
+        param_value: "Stanje"
+        output:
+          results: "Rezultati"

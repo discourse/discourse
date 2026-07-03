@@ -50,6 +50,13 @@ zh_CN:
             delete_ai_secret: "删除 AI 秘密"
             update_ai_spam_settings: "更新 AI 垃圾信息设置"
   js:
+    discourse_workflows:
+      node_unavailable:
+        requires_ai: "需要启用 AI 插件"
+      nodes:
+        "action:ai_agent": "AI 智能体"
+      node_descriptions:
+        "action:ai_agent": "运行人工智能代理来处理数据或生成内容"
     discourse_automation:
       scriptables:
         llm_report:
@@ -226,6 +233,13 @@ zh_CN:
               description: "允许为系统用户创建的帖子添加标签。"
     discourse_ai:
       title: "AI"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "智能体"
+          prompt: "Prompt"
+          select_agent: "选择智能体..."
+      bot_chats:
+        tab_label: "机器人聊天"
       default_llm:
         title: "默认 LLM 模型"
         description: "所有 AI 智能体使用的默认 LLM 模型。如果功能配置或智能体中未指定 LLM，将使用此模型。如果未指定默认 LLM，将使用最后创建的 LLM。"
@@ -261,6 +275,7 @@ zh_CN:
             integrations: "集成"
         nav:
           enabled: "已启用"
+          not_enabled: "未启用"
         filters:
           all: "所有"
           text: "搜索功能、智能体、LLM 或群组…"
@@ -290,6 +305,10 @@ zh_CN:
             model_settings: "模型设置"
             related_topics: "相关话题"
             semantic_search: "语义搜索"
+        admin_dashboard:
+          highlights: "高亮显示"
+          setting_groups:
+            settings: "基本设置"
         discord:
           name: "Discord 集成"
           description: "增加了搜索 Discord 频道的功能"
@@ -364,6 +383,8 @@ zh_CN:
         description: "自动将论坛上的所有内容翻译成用户的首选语言"
         supported_locales: "支持的语言"
         supported_locales_description: "此站点设置还允许访客为帖子翻译做贡献。"
+        excluded_categories: "排除类别"
+        excluded_categories_description: "这些类别中的内容将不会被翻译。留空则可翻译所有类别的内容，包括私有类别。"
         admin_actions:
           translation_settings: "翻译设置"
           localization_settings: "本地化设置"
@@ -526,6 +547,9 @@ zh_CN:
         max_turn_tokens_help: "单次机器人回复期间所有 LLM 调用消耗的最大总 token 数（输入 + 输出）。设置后，将固定的补全/工具限值替换为 token 预算，从而实现更智能的行为。留空则使用默认限值。"
         compression_threshold: "压缩阈值"
         compression_threshold_help: "上下文使用百分比（20-99%），超过该百分比时自动压缩开始生效。数值越低，压缩触发越早，从而保留更多空间。"
+        vision_enabled: 包含图片上传功能
+        vision_enabled_help: 如果启用，当所选模型支持图像输入时，此代理可以包含帖子和聊天中的图像。
+        vision_max_pixels: 最大图像尺寸
         vision_max_pixel_sizes:
           low: 低品质 - 最便宜 (256x256)
           medium: 中等品质 (512x512)
@@ -586,6 +610,7 @@ zh_CN:
         confirm_delete: "确定要删除此智能体吗？"
         new: "新建智能体"
         no_agents: "您尚未创建任何智能体。"
+        manage_agents: "管理智能体"
         title: "智能体"
         short_title: "智能体"
         delete: "删除"
@@ -593,6 +618,12 @@ zh_CN:
         temperature_help: "用于 LLM 的 Temperature。增大该值可以提升创造力（留空将使用模型默认值，通常为 0.0 到 2.0 之间的值）"
         top_p: "Top P"
         top_p_help: "用于 LLM 的 Top P，增大该值可以提升随机性（留空将使用模型默认值，通常为 0.0 到 1.0 之间的值）"
+        thinking_effort_options:
+          none: "无"
+          low: "低"
+          medium: "中"
+          high: "高"
+          max: "最大"
         priority: "优先级"
         priority_help: "优先级较高的智能体会显示在智能体列表的顶部。如果有多个智能体的优先级相同，则会按字母顺序排列。"
         tool_options: "工具选项"
@@ -814,6 +845,9 @@ zh_CN:
         max_output_tokens: "最大输出词元数"
         url: "托管模型的服务的 URL"
         api_key: "托管模型的服务的 API 密钥"
+        vision_enabled: "支持图像输入"
+        allowed_attachment_types: "允许的文档附件"
+        attachment_types_placeholder: "选择或输入文件扩展名（例如，pdf、txt、csv、docx、xlsx）"
         ai_bot_user: "AI 机器人用户"
         cost_input: "输入成本"
         cost_cached_input: "缓存输入成本"
@@ -842,9 +876,7 @@ zh_CN:
             custom: "自定义…"
           hours: "小时"
           max_tokens_help: "此群组中每个用户在指定时长内可以使用的最大词元（单词和字符）数。词元是 AI 模型处理文本时使用的单位，1 个词元约等于 4 个字符或 3/4 个单词。"
-          max_tokens_required: "如果未设置最大使用量，则必须设置"
           max_usages_help: "此群组中每个用户在指定时长内可以使用 AI 模型的最大次数。此配额按个别用户进行跟踪，不在整个群组中共享。"
-          max_usages_required: "如果未设置最大词元数，则必须设置"
         credit_allocation:
           credits_remaining: "剩余 %{remaining}/%{total} 点数 (%{percentage}%)"
           soft_limit_warning: "此模型今天剩余 %{percentage}% 的 AI 点数"
@@ -868,9 +900,15 @@ zh_CN:
           anthropic-claude-haiku-4-5: "快速、经济高效"
           google-gemini-3-1-pro: "Google 最智能的模型"
           google-gemini-3-flash: "快速且经济实惠，并具备多模态推理能力"
+          open_ai-gpt-5-5: "OpenAI 功能最强大的模型，具备扩展上下文信息"
           open_ai-gpt-5-4: "OpenAI 的旗舰模型，非常适合跨领域解决问题"
           open_ai-gpt-5-4-nano: "最快、最具成本效益的 GPT-5 模型"
           open_router-moonshotai-kimi-k2-6: "Moonshot 具有视觉能力的多模态模型"
+          open_router-deepseek-deepseek-v4-flash: "DeepSeek 最新高性能模型，具备 100 万上下文信息"
+          open_router-minimax-minimax-m2-7: "MiniMax 的大上下文模型"
+          open_router-x-ai-grok-4-1-fast: "xAI 的快速多模态模型具有非常大的上下文信息"
+          open_router-z-ai-glm-5-1: "Z-AI的推理模型"
+          open_router-qwen-qwen3-6-plus: "Qwen 的多模态模型及其 1M 上下文"
         preseeded_model_description: "利用 %{model} 的预配置开源模型"
         configured:
           title: "配置的 LLM"
@@ -889,11 +927,15 @@ zh_CN:
           success: "成功！"
           invalid_config: "首先修复配置中的以下错误："
           failure: "尝试联系模型时返回此错误：%{error}"
+          failure_non_streaming: "非流式请求失败： %{error}"
+          failure_streaming: "流式请求失败： %{error}"
         hints:
           max_prompt_tokens: "模型在单个请求中可以处理的最大词元数"
           max_output_tokens: "模型在单个请求中可以生成的最大词元数"
           display_name: "用于在您的站点界面上引用此模型的名称。"
           name: "我们将其包含在 API 调用中以指定我们将使用哪个模型"
+          vision_enabled: "该模型/提供商是否能够接收和理解图像。"
+          allowed_attachment_types: "选择可以转换或转发的文档附件类型。留空则禁止文档附件。图片单独控制。"
           cost_input: "此模型每 100 万个词元的输入成本"
           cost_cached_input: "此模型每 100 万个词元的缓存输入成本（从提示缓存读取时）"
           cost_cache_write: "此模型每 100 万个词元的缓存写入成本（从提示缓存写入时）"
@@ -951,7 +993,9 @@ zh_CN:
         title: "使用 AI 提出更改建议"
         description: "选择以下选项之一，AI 将向您推荐新版本的文本。"
         selection_hint: "提示：您也可以在打开助手之前选择文本的一部分来仅重写该文本。"
-        suggest: "通过 AI 提出建议"
+        suggest: "显示 AI 建议"
+        choose: "帮我选一个"
+        suggestions: "建议"
         suggest_errors:
           too_many_tags:
             other: "您最多只能有 %{count} 个标签"
@@ -1103,7 +1147,7 @@ zh_CN:
           this_turn: "此回合："
           whole_conversation: "对话："
           tokens_summary: "%{request_tokens} 输入 → %{response_tokens} 输出"
-          cache_both: "（缓存读取 %{read} ，%{write} 写入）"
+          cache_both: "（缓存读取 %{read} ，%{write} 缓存写入）"
           cache_read_only: "（缓存 %{read} 读取）"
           cache_write_only: "（缓存 %{write} 写入）"
           request: "请求"
@@ -1154,6 +1198,9 @@ zh_CN:
             other: "消息必须为 %{count} 个字符或更长"
           messages_sidebar_title: "对话"
           starred: "收藏"
+          star_conversation: "标记对话"
+          unstar_conversation: "取消标记对话"
+          open_conversation_menu: "打开对话菜单"
           today: "今天"
           last_7_days: "过去 7 天"
           last_30_days: "过去 30 天"

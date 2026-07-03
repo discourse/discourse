@@ -2,6 +2,9 @@
 #  A class that handles interaction between a plugin and the Discourse App.
 #
 class DiscoursePluginRegistry
+  # Non-default plugin stylesheet targets, each rendered as its own <link> tag.
+  STYLESHEET_TARGETS = %i[desktop mobile admin]
+
   @@register_names = Set.new
 
   # Plugins often need to be able to register additional handlers, data, or
@@ -138,6 +141,8 @@ class DiscoursePluginRegistry
 
   define_filtered_register :custom_filter_mappings
 
+  define_filtered_register :acl_target_classes
+
   define_filtered_register :reviewable_types do |singleton|
     singleton.define_singleton_method("reviewable_types_lookup") do
       public_send(:_raw_reviewable_types)
@@ -217,16 +222,8 @@ class DiscoursePluginRegistry
   end
 
   def self.stylesheets_exists?(plugin_directory_name, target = nil)
-    case target
-    when :desktop
-      desktop_stylesheets[plugin_directory_name].present?
-    when :mobile
-      mobile_stylesheets[plugin_directory_name].present?
-    when :admin
-      admin_stylesheets[plugin_directory_name].present?
-    else
-      stylesheets[plugin_directory_name].present?
-    end
+    register = target.in?(STYLESHEET_TARGETS) ? "#{target}_stylesheets" : "stylesheets"
+    public_send(register)[plugin_directory_name].present?
   end
 
   def self.register_seed_data(key, value)

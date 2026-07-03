@@ -88,10 +88,27 @@ module PageObjects
         page.has_no_css?("#sidebar-section-content-starred-conversations")
       end
 
-      def toggle_star_for_conversation(topic)
+      def open_conversation_menu(topic)
         conversation_link(topic).hover
         conversation_link(topic).find(".sidebar-section-hover-button").click
+      end
+
+      def toggle_star_for_conversation(topic)
+        open_conversation_menu(topic)
         page.find(".ai-conversation-sidebar-link-menu__star-conversation").click
+      end
+
+      def share_conversation(topic)
+        open_conversation_menu(topic)
+        page.find(".ai-conversation-sidebar-link-menu__share-conversation").click
+      end
+
+      def has_share_conversation_menu_item?
+        page.has_css?(".ai-conversation-sidebar-link-menu__share-conversation")
+      end
+
+      def has_no_star_conversation_menu_item?
+        page.has_no_css?(".ai-conversation-sidebar-link-menu__star-conversation")
       end
 
       def has_no_sidebar_back_link?

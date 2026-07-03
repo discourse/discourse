@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative "../mixins/github_body"
-require_relative "../mixins/github_auth_header"
+require_relative "../mixins/github_api"
 
 module Onebox
   module Engine
@@ -10,7 +10,7 @@ module Onebox
       include LayoutSupport
       include JSON
       include Onebox::Mixins::GithubBody
-      include Onebox::Mixins::GithubAuthHeader
+      include Onebox::Mixins::GithubApi
 
       matches_domain("github.com", "www.github.com")
       always_https
@@ -24,16 +24,34 @@ module Onebox
       end
 
       def inline_data
-        return unless SiteSetting.github_pr_status_enabled
+        return if !github_token? && !SiteSetting.github_pr_status_enabled
 
-        pr_data = raw(github_auth_header(match[:org]))
-        status = fetch_pr_status(pr_data)&.dig(:status)
-        return unless status
+        if commit_sha = @url[%r{/commits?/(\h+)}, 1]
+          commit =
+            load_json(
+              "https://api.github.com/repos/#{match[:org]}/#{match[:repository]}/commits/#{commit_sha}",
+            )
+          message = commit["commit"]["message"].split("\n").first
+          return(
+            {
+              title:
+                "#{message} - #{match[:org]}/#{match[:repository]}@#{commit["sha"][0...7]} - GitHub",
+            }
+          )
+        end
 
-        title =
-          "#{pr_data["title"]} · Pull Request ##{match[:number]} · " \
-            "#{match[:org]}/#{match[:repository]}"
-        { title: title, css_class: "--gh-status-#{status}" }
+        pr_data = raw
+        result = {
+          title:
+            "#{pr_data["title"]} - Pull Request ##{match[:number]} - #{match[:org]}/#{match[:repository]} - GitHub",
+        }
+
+        if SiteSetting.github_pr_status_enabled
+          status = fetch_pr_status(pr_data)&.dig(:status)
+          result[:css_class] = "--gh-status-#{status}" if status
+        end
+
+        result
       rescue StandardError => e
         Rails.logger.warn("Inline GitHub PR onebox error for #{@url}: #{e.message}")
         nil
@@ -47,7 +65,7 @@ module Onebox
       end
 
       def data
-        result = raw(github_auth_header(match[:org])).clone
+        result = raw.clone
         result["link"] = link
 
         status_data = fetch_pr_status(result)
@@ -138,15 +156,6 @@ module Onebox
             "https://api.github.com/repos/#{match[:org]}/#{match[:repository]}/pulls/comments/#{review_match[1]}",
           )
         end
-      end
-
-      def load_json(url)
-        ::MultiJson.load(
-          URI.parse(url).open({ read_timeout: timeout }.merge(github_auth_header(match[:org]))),
-        )
-      rescue OpenURI::HTTPError => e
-        Rails.logger.warn("GitHub API error: #{e.io.status[0]} fetching #{url}")
-        raise
       end
 
       def fetch_pr_status(pr_data)

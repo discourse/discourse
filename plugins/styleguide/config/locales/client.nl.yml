@@ -95,6 +95,8 @@ nl:
           title: "Meer topics"
         post_menu:
           title: "Berichtmenu"
+        docked_composer:
+          title: "Gedockte editor"
         modal:
           title: "Modaal"
           header: "Modaaltitel"

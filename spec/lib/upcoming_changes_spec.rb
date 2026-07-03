@@ -295,6 +295,24 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  describe ".next_status" do
+    it "returns the next automatically promoted status", :aggregate_failures do
+      expect(described_class.next_status(:experimental)).to eq(:alpha)
+      expect(described_class.next_status(:alpha)).to eq(:beta)
+      expect(described_class.next_status(:beta)).to eq(:stable)
+      expect(described_class.next_status("beta")).to eq(:stable)
+    end
+
+    it "returns nil for statuses outside automatic promotion", :aggregate_failures do
+      expect(described_class.next_status(:conceptual)).to be_nil
+      expect(described_class.next_status(:stable)).to be_nil
+      expect(described_class.next_status(:permanent)).to be_nil
+      expect(described_class.next_status(:never)).to be_nil
+      expect(described_class.next_status(:unknown)).to be_nil
+      expect(described_class.next_status(nil)).to be_nil
+    end
+  end
+
   describe ".history_for" do
     fab!(:admin)
 
@@ -477,6 +495,69 @@ RSpec.describe UpcomingChanges do
 
         expect(described_class.enabled?(setting_name)).to eq(true)
       end
+    end
+  end
+
+  describe ".settings_hidden_while_enabled" do
+    # `enable_upload_debug_mode` stands in for the change; the two real settings
+    # below stand in for the legacy settings it would hide.
+    let(:hidden_setting_names) { %i[allow_uncategorized_topics suppress_uncategorized_badge] }
+
+    before do
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :experimental,
+            impact_type: "other",
+            impact_role: "developers",
+            hide_settings: hidden_setting_names,
+          },
+        },
+      )
+    end
+
+    after do
+      SiteSetting.remove_override!(setting_name)
+      UpcomingChanges.clear_caches!
+    end
+
+    it "returns nothing when the change is not enabled" do
+      SiteSetting.remove_override!(setting_name)
+
+      expect(described_class.settings_hidden_while_enabled).to be_empty
+    end
+
+    it "returns the declared settings when the change is enabled" do
+      SiteSetting.enable_upload_debug_mode = true
+
+      expect(described_class.settings_hidden_while_enabled).to contain_exactly(
+        *hidden_setting_names,
+      )
+    end
+
+    it "ignores changes that do not declare hide_settings" do
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :experimental,
+            impact_type: "other",
+            impact_role: "developers",
+          },
+        },
+      )
+      SiteSetting.enable_upload_debug_mode = true
+
+      expect(described_class.settings_hidden_while_enabled).to be_empty
+    end
+
+    it "feeds SiteSetting.hidden_settings so the settings are hidden while enabled" do
+      expect(SiteSetting.hidden_settings).not_to include(*hidden_setting_names)
+
+      SiteSetting.enable_upload_debug_mode = true
+
+      expect(SiteSetting.hidden_settings).to include(*hidden_setting_names)
     end
   end
 

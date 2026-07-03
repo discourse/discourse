@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Pricing Table" do
+RSpec.describe "Pricing Table", allow_network: ["js.stripe.com"] do
   fab!(:admin)
   fab!(:product) { Fabricate(:product, external_id: "prod_OiK") }
   let(:dialog) { PageObjects::Components::Dialog.new }

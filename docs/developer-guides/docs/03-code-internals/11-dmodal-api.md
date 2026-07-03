@@ -107,4 +107,49 @@ const result = await this.modal.show(MyModal);
 
 ## More customizability!
 
-`<DModal>` has a number of named blocks and arguments. Check out [the interactive styleguide](https://meta.discourse.org/styleguide/organisms/modal) for arguments, and [the d-modal template implementation](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/components/d-modal.gjs) for named blocks.
+`<DModal>` has a number of named blocks and arguments.
+
+### Arguments
+
+| Arg                          | Purpose                                                                                                       |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `@closeModal`                | Required for dismiss UI to appear at all.                                                                     |
+| `@title`                     | Renders `<h1 id="discourse-modal-title">`; wires `aria-labelledby`.                                           |
+| `@subtitle`                  | Small text below the title.                                                                                   |
+| `@flash` / `@flashType`      | Inline alert at top of modal (`DFlashMessage`).                                                               |
+| `@hideHeader`, `@hideFooter` | Hide whole regions.                                                                                           |
+| `@headerClass`, `@bodyClass` | Extra class on header/body wrappers.                                                                          |
+| `@dismissable`               | Default true when `@closeModal` set. Disables Esc / backdrop click / X.                                       |
+| `@autofocus`                 | Default true. Auto-focuses first focusable element via `dTrapTab`.                                            |
+| `@submitOnEnter`             | Default true. Enter clicks `.d-modal__footer .btn-primary` unless focus is in a form / textarea / select-kit. |
+| `@beforeClose`               | `async ({ initiatedBy }) => boolean`. Return `false` to cancel close (e.g. dirty-form confirm).               |
+| `@hidden`                    | Pauses keyboard handling; used when a nested modal is on top.                                                 |
+| `@tagName`                   | `"div"` (default) or `"form"`. Use `"form"` for forms so native submit works.                                 |
+
+### Blocks
+
+| Block                  | Position                                   | When to use                                                                                                                                                      |
+| ---------------------- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| default / `:body`      | Main content area                          | Default area                                                                                                                                                     |
+| `:aboveHeader`         | Very top, before header                    | Rarely needed; for content that must sit above the title bar (e.g. a banner).                                                                                    |
+| `:headerAboveTitle`    | Inside header, before title                | Present but unused. Rarely needed.                                                                                                                               |
+| `:belowModalTitle`     | Inside `.d-modal__title`, after the `<h1>` | Excellent position for supplementary meta info.                                                                                                                  |
+| `:headerBelowTitle`    | Inside header, after title block           | Tabs, sub-nav, or search input that's part of the header.                                                                                                        |
+| `:headerPrimaryAction` | Right side of header on **mobile only**    | Replaces the X close button with a primary action (e.g. "Save"). Also auto-renders a "Cancel" button on the left and adds `.--has-primary-action` to the header. |
+| `:belowHeader`         | Between header and body                    | Persistent sub-header content (e.g.searchar) that's outside the scrollable body, so sticky display.                                                              |
+| `:aboveFooter`         | Between body and footer                    | Suppressed when `@hideFooter` is set. Use for content tied to the footer but outside it. Also rare.                                                              |
+| `:footer`              | Bottom action bar                          | Primary + secondary buttons. The first `.btn-primary` here is what Enter triggers.                                                                               |
+| `:belowFooter`         | After the footer                           | Rarely needed; ignores `@hideFooter`. Useful for status text outside the bordered footer area.                                                                   |
+
+Sources: [the interactive styleguide](https://meta.discourse.org/styleguide/organisms/modal) for arguments, and [the d-modal template implementation](https://github.com/discourse/discourse/blob/main/frontend/discourse/app/ui-kit/d-modal.gjs) for named blocks.
+
+### CSS
+
+Use the `.d-modal` classes as an achor to override core, and avoid the legacy `.modal selector.
+
+4 modifiers available:
+
+- .`--large` sets **max** **width** to 800px (desktop-only)
+- .`--max` sets **max** **width** to 90vw (desktop-only)
+- .`has-search` sets **fixed** **height** (80vh): intended for modals with search/filter system to avoid height change based on result length (desktop-only)
+- `.--stacked` sets footer buttons to stacking (mobile-only)

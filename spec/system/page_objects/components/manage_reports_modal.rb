@@ -62,6 +62,39 @@ module PageObjects
         self
       end
 
+      def has_disabled_move_up?(identifier)
+        has_css?(
+          "#{MODAL} #{ROW}[data-identifier='#{identifier}'] button.manage-reports__arrow[disabled] .d-icon-arrow-up",
+        )
+      end
+
+      def has_disabled_move_down?(identifier)
+        has_css?(
+          "#{MODAL} #{ROW}[data-identifier='#{identifier}'] button.manage-reports__arrow[disabled] .d-icon-arrow-down",
+        )
+      end
+
+      def has_enabled_move_up?(identifier)
+        has_css?(
+          "#{MODAL} #{ROW}[data-identifier='#{identifier}'] button.manage-reports__arrow:not([disabled]) .d-icon-arrow-up",
+        )
+      end
+
+      def has_enabled_move_down?(identifier)
+        has_css?(
+          "#{MODAL} #{ROW}[data-identifier='#{identifier}'] button.manage-reports__arrow:not([disabled]) .d-icon-arrow-down",
+        )
+      end
+
+      def has_drag_controls?
+        has_css?("#{MODAL} .manage-reports__list.--reorderable")
+      end
+
+      def has_no_drag_controls?
+        has_css?("#{MODAL} .manage-reports__list") &&
+          has_no_css?("#{MODAL} .manage-reports__list.--reorderable")
+      end
+
       def has_counter?(count, max)
         has_css?(
           "#{MODAL} .manage-reports__counter",

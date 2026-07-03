@@ -387,6 +387,12 @@ sk:
         temperature_help: "Teplota, ktorá sa má použiť pre LLM. Zvýšte pre zvýšenie kreativity (nechajte prázdne pre použitie predvolenej hodnoty modelu, zvyčajne hodnoty od 0,0 do 2,0)"
         top_p: "Top P"
         top_p_help: "Top P použiť pre LLM, zvýšiť pre zvýšenie náhodnosti (nechať prázdne pre použitie predvoleného modelu, zvyčajne hodnota od 0,0 do 1,0)"
+        thinking_effort_options:
+          none: "Žiadny"
+          low: "Nízka"
+          medium: "Stredná"
+          high: "Vysoká"
+          max: "Max"
         priority: "Priorita"
         tool_options: "Možnosti nástroja"
         rag_conversation_chunks: "Vyhľadávanie v častiach konverzácie"
@@ -541,9 +547,7 @@ sk:
             custom: "Vlastné..."
           hours: "hodiny"
           max_tokens_help: "Maximálny počet tokenov (slov a znakov), ktoré môže každý používateľ v tejto skupine použiť v rámci zadaného trvania. Tokeny sú jednotky, ktoré modely umelej inteligencie používajú na spracovanie textu – približne 1 token = 4 znaky alebo 3/4 slova."
-          max_tokens_required: "Musí byť nastavené, ak nie je nastavený maximálny počet použití"
           max_usages_help: "Maximálny počet použití modelu AI pre každého používateľa v tejto skupine v rámci zadaného trvania. Táto kvóta sa sleduje pre jednotlivých používateľov a nezdieľa sa v rámci skupiny."
-          max_usages_required: "Musí byť nastavené, ak nie je nastavený maximálny počet tokenov"
         usage:
           ai_bot: "AI bot"
           ai_helper_image_caption: "Popis obrázka"
@@ -625,7 +629,6 @@ sk:
         title: "Navrhovanie zmien pomocou AI"
         description: "Vyberte jednu z nasledujúcich možností a AI vám navrhne novú verziu textu."
         selection_hint: "Tip: Pred otvorením pomocníka môžete tiež vybrať časť textu a prepísať iba túto časť."
-        suggest: "Navrhnúť s AI"
         suggest_errors:
           too_many_tags:
             one: "Môžete mať iba %{count} štítok"

@@ -49,6 +49,48 @@ module("Integration | Component | QueryResult", function (hooks) {
     assert.dom("table tbody tr:nth-child(2) td:nth-child(2)").hasText("20");
   });
 
+  test("renders JSON columns as escaped text with a viewer action", async function (assert) {
+    const content = {
+      colrender: { 1: "json" },
+      result_count: 1,
+      columns: ["name", "response_format"],
+      rows: [["classifier", '[{"key":"<img src=x onerror=alert(1)>"}]']],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert
+      .dom("table tbody tr:nth-child(1) td:nth-child(2) .result-json-value")
+      .hasText(
+        '[{"key":"<img src=x onerror=alert(1)>"}]',
+        "renders JSON as readable text without HTML entities"
+      );
+    assert
+      .dom("table tbody tr:nth-child(1) td:nth-child(2) img")
+      .doesNotExist("does not render HTML from JSON values");
+    assert
+      .dom("table tbody tr:nth-child(1) td:nth-child(2) .result-json-button")
+      .exists("renders a JSON viewer action");
+  });
+
+  test("renders plain text without double-escaping HTML entities", async function (assert) {
+    const content = {
+      colrender: [],
+      result_count: 1,
+      columns: ["value"],
+      rows: [['{"key":"<script>alert(1)</script>"}']],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert
+      .dom("table tbody tr:nth-child(1) td:nth-child(1)")
+      .hasText('{"key":"<script>alert(1)</script>"}', "renders readable text");
+    assert
+      .dom("table tbody tr:nth-child(1) td:nth-child(1) script")
+      .doesNotExist("does not render HTML from text values");
+  });
+
   test("renders badge names in query results", async function (assert) {
     const content = {
       colrender: { 0: "badge" },
@@ -228,6 +270,129 @@ module("Integration | Component | QueryResult | Chart", function (hooks) {
     assert.dom("canvas").exists();
   });
 
+  test("defaults to the table when charting would drop columns", async function (assert) {
+    const content = {
+      colrender: [],
+      result_count: 2,
+      columns: ["user", "reason", "count"],
+      rows: [
+        ["user1", "spam", 10],
+        ["user2", "off-topic", 5],
+      ],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert
+      .dom("table")
+      .exists("table is the default when some columns can't be charted");
+    assert.dom("canvas").doesNotExist("chart is not shown by default");
+
+    await click(".query-results-modes input[value='chart']");
+    assert.dom("canvas").exists("chart is still available via the toggle");
+  });
+
+  test("defaults to the table for large categorical result sets", async function (assert) {
+    const rows = Array.from({ length: 200 }, (_, i) => [`item-${i + 1}`, i]);
+    const content = {
+      colrender: [],
+      result_count: rows.length,
+      columns: ["name", "count"],
+      rows,
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert
+      .dom("table")
+      .exists("table is the default for a large categorical result set");
+    assert.dom("canvas").doesNotExist("chart is not shown by default");
+
+    await click(".query-results-modes input[value='chart']");
+
+    assert.dom("canvas").exists("chart remains available via the toggle");
+  });
+
+  test("defaults to the chart for large date-based result sets", async function (assert) {
+    const rows = Array.from({ length: 200 }, (_, i) => [
+      new Date(Date.UTC(2024, 0, i + 1)).toISOString().slice(0, 10),
+      i,
+    ]);
+    const content = {
+      colrender: [],
+      result_count: rows.length,
+      columns: ["date", "count"],
+      rows,
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert.dom("canvas").exists("time series remain chart-first by default");
+  });
+
+  test("defaults to the table for sparse multi-series result sets", async function (assert) {
+    const content = {
+      colrender: [],
+      result_count: 6,
+      columns: ["name", "unassignable", "stale", "super_stale"],
+      rows: [
+        ["JVM", 4, "", 19],
+        ["CFamily", "", "", ""],
+        ["DataMachineLearning", "", "", ""],
+        ["DotNET", 2, "", 3],
+        ["TaintAnalysis", 4, 1, 4],
+        ["Web", "", "", ""],
+      ],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert
+      .dom("table")
+      .exists("table is the default for sparse multi-series data");
+    assert.dom("canvas").doesNotExist("chart is not shown by default");
+
+    await click(".query-results-modes input[value='chart']");
+
+    assert.dom("canvas").exists("chart remains available via the toggle");
+  });
+
+  test("defaults to the table for wide date-based multi-series result sets", async function (assert) {
+    const numericColumns = Array.from(
+      { length: 10 },
+      (_metric, index) => `metric_${index + 1}`
+    );
+    const rows = Array.from({ length: 12 }, (_row, rowIndex) => [
+      new Date(Date.UTC(2024, rowIndex, 1)).toISOString().slice(0, 10),
+      ...numericColumns.map(
+        (_column, columnIndex) => rowIndex + columnIndex + 1
+      ),
+    ]);
+    const content = {
+      colrender: [],
+      result_count: rows.length,
+      columns: ["date", ...numericColumns],
+      rows,
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert
+      .dom("table")
+      .exists("table is the default for too many time-series metrics");
+    assert.dom("canvas").doesNotExist("chart is not shown by default");
+
+    await click(".query-results-modes input[value='chart']");
+
+    assert.dom("canvas").exists("chart remains available via the toggle");
+    assert
+      .dom(".query-results-chart__form input[value='stacked']")
+      .exists("stacked chart remains available");
+    assert
+      .dom(".query-results-chart__form input[value='dual-axis']")
+      .doesNotExist("dual-axis is not offered for more than two metrics");
+  });
+
   test("doesn't render a chart when all non-label columns are relation types", async function (assert) {
     const content = {
       colrender: { 1: "user", 2: "badge" },
@@ -293,6 +458,214 @@ module("Integration | Component | QueryResult | Chart", function (hooks) {
     assert.dom("canvas").exists("renders a chart canvas for multi-series");
   });
 
+  test("uses sensible chart form defaults for common result shapes", async function (assert) {
+    const cases = [
+      {
+        description: "text, number",
+        columns: ["name", "count"],
+        rows: [
+          ["alpha", 10],
+          ["beta", 20],
+        ],
+        selected: "bar",
+        available: ["line", "bar"],
+        unavailable: ["stacked", "dual-axis"],
+      },
+      {
+        description: "date, number",
+        columns: ["date", "count"],
+        rows: [
+          ["2024-01-01", 10],
+          ["2024-01-02", 20],
+        ],
+        selected: "line",
+        available: ["line", "bar"],
+        unavailable: ["stacked", "dual-axis"],
+      },
+      {
+        description: "month day, number",
+        columns: ["date", "count"],
+        rows: [
+          ["Jan 01", 10],
+          ["Jan 02", 20],
+        ],
+        selected: "line",
+        available: ["line", "bar"],
+        unavailable: ["stacked", "dual-axis"],
+      },
+      {
+        description: "month year, number",
+        columns: ["date", "count"],
+        rows: [
+          ["Jan 24", 10],
+          ["Feb 24", 20],
+        ],
+        selected: "line",
+        available: ["line", "bar"],
+        unavailable: ["stacked", "dual-axis"],
+      },
+      {
+        description: "text, number, number",
+        columns: ["name", "likes", "posts"],
+        rows: [
+          ["alpha", 10, 5],
+          ["beta", 20, 15],
+        ],
+        selected: "bar",
+        available: ["line", "bar", "stacked"],
+        unavailable: ["dual-axis"],
+      },
+      {
+        description: "date, number, number",
+        columns: ["date", "likes", "posts"],
+        rows: [
+          ["2024-01-01", 10, 5],
+          ["2024-01-02", 20, 15],
+        ],
+        selected: "line",
+        available: ["line", "bar", "stacked", "dual-axis"],
+        unavailable: [],
+      },
+      {
+        description: "date, number, number, number",
+        columns: ["date", "likes", "posts", "topics"],
+        rows: [
+          ["2024-01-01", 10, 5, 1],
+          ["2024-01-02", 20, 15, 2],
+        ],
+        selected: "line",
+        available: ["line", "bar", "stacked"],
+        unavailable: ["dual-axis"],
+      },
+      {
+        description: "date, text, number",
+        columns: ["date", "note", "count"],
+        rows: [
+          ["2024-01-01", "alpha", 10],
+          ["2024-01-02", "beta", 20],
+        ],
+        selected: "line",
+        available: ["line", "bar"],
+        unavailable: ["stacked", "dual-axis"],
+      },
+      {
+        description: "text, date, number",
+        columns: ["name", "date", "count"],
+        rows: [
+          ["alpha", "2024-01-01", 10],
+          ["beta", "2024-01-02", 20],
+        ],
+        selected: "bar",
+        available: ["line", "bar"],
+        unavailable: ["stacked", "dual-axis"],
+      },
+    ];
+
+    for (const testCase of cases) {
+      this.set("content", {
+        colrender: [],
+        result_count: testCase.rows.length,
+        columns: testCase.columns,
+        rows: testCase.rows,
+      });
+
+      await render(
+        <template>
+          <QueryResult @content={{this.content}} @view="chart" />
+        </template>
+      );
+
+      assert
+        .dom(`.query-results-chart__form input[value='${testCase.selected}']`)
+        .isChecked(`${testCase.description} defaults to ${testCase.selected}`);
+
+      for (const chartForm of testCase.available) {
+        assert
+          .dom(`.query-results-chart__form input[value='${chartForm}']`)
+          .exists(`${testCase.description} offers ${chartForm}`);
+      }
+
+      for (const chartForm of testCase.unavailable) {
+        assert
+          .dom(`.query-results-chart__form input[value='${chartForm}']`)
+          .doesNotExist(`${testCase.description} does not offer ${chartForm}`);
+      }
+    }
+  });
+
+  test("allows the chart form to be changed for date-based multi-series data", async function (assert) {
+    const content = {
+      colrender: [],
+      result_count: 2,
+      columns: ["date", "likes", "posts"],
+      rows: [
+        ["2024-01-01", 10, 5],
+        ["2024-01-02", 20, 15],
+      ],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert
+      .dom(".query-results-chart__form input[value='line']")
+      .isChecked("date-based multi-series data defaults to a line chart");
+    assert
+      .dom(".query-results-chart__form input[value='dual-axis']")
+      .exists("two-metric time series can use a dual-axis line chart");
+
+    await click(".query-results-chart__form input[value='stacked']");
+
+    assert
+      .dom(".query-results-chart__form input[value='stacked']")
+      .isChecked("the user can switch to stacked bars");
+    assert.dom("canvas").exists("the chart remains visible");
+  });
+
+  test("does not offer a dual-axis chart for non-date multi-series data", async function (assert) {
+    const content = {
+      colrender: [],
+      result_count: 2,
+      columns: ["user", "likes", "posts"],
+      rows: [
+        ["user1", 10, 5],
+        ["user2", 20, 15],
+      ],
+    };
+
+    await render(<template><QueryResult @content={{content}} /></template>);
+
+    assert
+      .dom(".query-results-chart__form input[value='dual-axis']")
+      .doesNotExist("dual-axis is only offered for date-based data");
+  });
+
+  test("persists the selected chart form per query", async function (assert) {
+    const query = { id: 43 };
+    const content = {
+      colrender: [],
+      result_count: 2,
+      columns: ["date", "likes", "posts"],
+      rows: [
+        ["2024-01-01", 10, 5],
+        ["2024-01-02", 20, 15],
+      ],
+    };
+
+    await render(
+      <template><QueryResult @content={{content}} @query={{query}} /></template>
+    );
+
+    await click(".query-results-chart__form input[value='dual-axis']");
+
+    await render(
+      <template><QueryResult @content={{content}} @query={{query}} /></template>
+    );
+
+    assert
+      .dom(".query-results-chart__form input[value='dual-axis']")
+      .isChecked("chart form is restored from localStorage");
+  });
+
   test("charts numeric columns and ignores text columns alongside them", async function (assert) {
     const content = {
       colrender: [],
@@ -312,6 +685,40 @@ module("Integration | Component | QueryResult | Chart", function (hooks) {
     assert
       .dom(".query-results-chart__footnote")
       .exists("shows a footnote listing ignored columns");
+  });
+
+  test("caps a long table and reveals it with the expand button", async function (assert) {
+    const rows = Array.from({ length: 100 }, (_, i) => [`user${i}`, i]);
+    const content = {
+      colrender: [],
+      result_count: rows.length,
+      columns: ["user_name", "like_count"],
+      rows,
+    };
+
+    await render(
+      <template>
+        <div class="query-results">
+          <QueryResult @content={{content}} @view="table" />
+        </div>
+      </template>
+    );
+
+    assert
+      .dom(".query-results-table-wrapper")
+      .doesNotHaveClass("--expanded", "the long table is capped by default");
+    assert
+      .dom(".query-results-expand-btn")
+      .exists("an expand button is offered for the overflowing table");
+
+    await click(".query-results-expand-btn");
+
+    assert
+      .dom(".query-results-table-wrapper.--expanded")
+      .exists("clicking expand removes the height cap");
+    assert
+      .dom(".query-results-expand-btn")
+      .doesNotExist("the expand button is gone once expanded");
   });
 
   test("chart/table toggle switches the view (XOR)", async function (assert) {

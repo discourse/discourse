@@ -1,5 +1,34 @@
 en:
   js:
+    user_api_key:
+      title: 'Authorize "%{application_name}"'
+      authorize: "Authorize"
+      deny: "Cancel"
+      logged_in_as: "Logged in as"
+      permissions_header: 'This will allow "%{application_name}" to:'
+      redirect_warning: "Authorizing will redirect you to"
+      expiry_notice: 'This key for "%{application_name}" will expire on %{expires_at}.'
+      write_scope_warning: "Full write access requested — this application will be able to post, edit, and delete content. Proceed only if you fully trust it."
+      copy_key: "Copy key"
+      copied: "Copied!"
+      otp_description: 'Would you like to allow "%{application_name}" to access this site?'
+      no_trust_level: "Sorry, you do not have the required trust level to access the user API"
+      generic_error: "Sorry, we are unable to issue user API keys, this feature may be disabled by the site admin"
+      device:
+        title: "Authorize an application"
+        enter_code: "Enter the code displayed in your application."
+        code: "Code"
+        enter_full_code: "Enter the complete code to authorize this application."
+        continue: "Continue"
+        invalid_code: "Sorry, that code is invalid. Check the code and try again."
+        expired_code: "Sorry, that code has expired or has already been used. Request a new code from the application and try again."
+        authorize_title: 'Authorize "%{application_name}"'
+        expiry_notice: "Expires: %{expires_at}"
+        no_expiry_warning: "This key will not expire automatically. Only authorize this if you fully trust the application."
+        unregistered_app_warning: "This application is not registered or verified by this site. Only continue if you fully trust the source of the code."
+        complete: "Authorization complete"
+        denied: "Authorization denied"
+        return_to_cli: "You can now return to your terminal or application."
     blocks:
       ghost:
         # Section titles
@@ -276,6 +305,16 @@ en:
           period: "Period"
           order: "Rank by"
           empty: "No contributors yet."
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_editor_description: "Can create and edit content for this entity"
+        access_permission_viewer: "Viewer"
+        access_permission_viewer_description: "Can view content for this entity"
+        access_permission_remove: "Remove"
+        access_permission_remove_description: "Remove permission for this group"
+        add_group: "Add group"
+        mandatory_acl_tooltip: "This permission is mandatory for this entity and cannot be removed"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
@@ -352,6 +391,7 @@ en:
         x_minutes:
           one: "%{count}m"
           other: "%{count}m"
+        x_minutes_seconds: "%{minutes}m %{seconds}s"
         about_x_hours:
           one: "%{count}h"
           other: "%{count}h"
@@ -725,6 +765,9 @@ en:
     age: "Age"
     joined: "Joined"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Advanced mode"
+      simple_mode: "Simple mode"
     show_more: "show more"
     show_help: "Options"
     links: "Links"
@@ -779,9 +822,9 @@ en:
         description: "Choose a starting theme for your community"
         action: "Select theme"
         modal_title: "Choose a theme"
-        use_theme: "Use this theme"
-        enabled: "Enabled"
-        theme_set: "%{theme} is now your default theme"
+        use_theme: "Use selected theme"
+        enabled: "Selected"
+        applying_theme: "Applying theme..."
         browse_all: "Manage themes"
         show_light_screenshot: "Show light screenshot"
         show_dark_screenshot: "Show dark screenshot"
@@ -1600,7 +1643,12 @@ en:
             from_alias_hint: "Alias to use as the from address when sending group SMTP emails. Note this may not be supported by all mail providers, please consult your mail provider's documentation."
         membership:
           title: Membership
-          access: Access
+          visibility_and_access: "Access & visibility"
+          join_method_title: "How can users join?"
+          join_method:
+            free: "Anyone can join freely"
+            request: "Anyone can request to join"
+            invite: "Invite only"
         categories:
           title: Categories
           long_title: "Category default notifications"
@@ -1633,7 +1681,6 @@ en:
         title: "Permissions"
         none: "There are no categories associated with this group."
         description: "Members of this group can access these categories"
-      public_admission: "Allow users to join the group freely (Requires publicly visible group)"
       public_exit: "Allow users to leave the group freely"
       empty:
         posts: "There are no posts by members of this group"
@@ -1649,7 +1696,6 @@ en:
       request: "Request"
       message: "Message"
       confirm_leave: "Are you sure you want to leave this group?"
-      allow_membership_requests: "Allow users to send membership requests to group owners (Requires publicly visible group)"
       membership_request_template: "Custom template to display to users when sending a membership request"
       membership_request:
         submit: "Submit Request"
@@ -2020,7 +2066,7 @@ en:
       enable_smart_lists: "Enable smart lists when writing in the composer"
       enable_defer: "Enable mark topics as unread"
       enable_markdown_monospace_font: "Use monospace font in composer's Markdown mode"
-      show_original_content: "Show original content instead of translated content. Can also be toggled within topics."
+      show_original_content: "Show original content instead of translated content."
       experimental_sidebar:
         enable: "Enable sidebar"
         options: "Options"
@@ -2098,6 +2144,9 @@ en:
       undo_revoke_access: "Undo Revoke Access"
       api_approved: "Approved:"
       api_last_used_at: "Last used at:"
+      api_expires_at: "Expires:"
+      api_expired_at: "Expired:"
+      api_expires_never: "never"
       api_show_permissions:
         one: "Permissions granted (%{count})"
         other: "Permissions granted (%{count})"
@@ -3139,6 +3188,31 @@ en:
       logging_in_as: Logging in as %{email}
       confirm_button: Finish Login
 
+    code_login:
+      email_label: "Email"
+      continue_button: "Continue"
+      check_your_email: "Check your email"
+      code_instructions: "We sent a 6-digit code to <b>%{email}</b>. Enter it below to continue."
+      verify_button: "Continue"
+      resend: "Resend code"
+      resend_countdown: "Resend code (%{count}s)"
+      code_resent: "We sent a new code."
+      use_different_email: "Use a different email address"
+      use_password_instead: "Log in with your password instead"
+      email_me_code: "Email me a one-time login code"
+      signup_title: "Create your account"
+      signup_instructions: "Enter your email address to join this community. We'll send you a code to confirm it and you'll be on your way!"
+      user_fields_title: "Almost done"
+      user_fields_instructions: "Just a few more details to finish creating your account."
+      account_ready_title: "Your account is ready! 🎉"
+      account_ready_edit: "Pick your username and avatar"
+      account_ready_continue: "Continue"
+      username_label: "Username"
+      username_placeholder: "Choose a username"
+      change_avatar: "Change avatar"
+      username_taken: "That username is taken. Try another."
+      username_unavailable: "That username isn't available. Try %{suggestion}."
+
     login:
       header_title: "Welcome back"
       title: "Log In"
@@ -3155,10 +3229,11 @@ en:
       second_factor_backup_description: "Please enter one of your backup codes:"
       second_factor: "Log in using Authenticator app"
       security_key_description: "When you have your physical security key or compatible mobile device prepared press the Authenticate with Security Key button below."
-      security_key_or_passkey_description: "When you have your security key, passkey, or compatible mobile device prepared press the button below."
       security_key_alternative: "Try another way"
       security_key_authenticate: "Authenticate with Security Key"
-      security_key_or_passkey_authenticate: "Authenticate with security key or passkey"
+      passkey_2fa_description: "Verify your identity with your passkey."
+      use_passkey: "Use passkey"
+      use_security_key: "Use security key"
       security_key_not_allowed_error: "The security key authentication process either timed out or was cancelled."
       security_key_no_matching_credential_error: "No matching credentials could be found in the provided security key."
       security_key_support_missing_error: "Your current device or browser does not support the use of security keys. Please use a different method."
@@ -3235,6 +3310,7 @@ en:
         totp: "Use an authenticator app instead"
         backup_code: "Use a backup code instead"
         security_key: "Use a security key instead"
+        passkey: "Use a passkey instead"
       no_login_methods:
         title: "No login methods"
         description: "No login methods are configured. Administrators can visit <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> to reconfigure the site."
@@ -3400,6 +3476,86 @@ en:
       confirm_publish: "Are you sure you want to publish this draft?"
       publishing: "Publishing Topic…"
 
+    gifs:
+      modal_title: "Search GIFs"
+      composer_title: "Insert GIF"
+      no_results: "Enter a keyword above to search for GIFs."
+      browse_categories: "Browse by category"
+      bad_api_key: "Klipy API key is missing or invalid. Please check the gifs API key setting."
+      error_rate_limit: "We have reached the GIF API rate limits. Please wait a moment and try again."
+      error_search_too_long: "Please shorten your search query to under 50 characters and try again."
+
+    codemirror:
+      expression:
+        sections:
+          recommended: "Recommended"
+          properties: "Properties"
+          methods: "Methods"
+          metadata: "Metadata"
+          globals: "Globals"
+        methods:
+          string:
+            length: "The number of characters in the string."
+            includes: "Returns true if the string contains the substring."
+            startsWith: "Returns true if the string starts with the given characters."
+            endsWith: "Returns true if the string ends with the given characters."
+            split: "Splits the string into an array of substrings."
+            replaceAll: "Replaces all occurrences of a search string."
+            replace: "Replaces the first occurrence of a search string."
+            trim: "Removes whitespace from both ends of the string."
+            trimStart: "Removes whitespace from the beginning of the string."
+            trimEnd: "Removes whitespace from the end of the string."
+            toLowerCase: "Converts the string to lowercase."
+            toUpperCase: "Converts the string to uppercase."
+            slice: "Extracts a section of the string."
+            substring: "Returns the part of the string between two indices."
+            indexOf: "Returns the index of the first occurrence, or -1 if not found."
+            match: "Matches the string against a regular expression."
+            concat: "Concatenates one or more strings."
+          number:
+            toFixed: "Formats the number with a fixed number of decimal places."
+            toString: "Returns a string representation of the number."
+            toPrecision: "Formats the number to a specified precision."
+            toLocaleString: "Returns a locale-sensitive string representation."
+          boolean:
+            toString: "Converts true to 'true' and false to 'false'."
+          array:
+            length: "The number of elements in the array."
+            map: "Creates a new array with the results of calling a function on every element."
+            filter: "Creates a new array with elements that pass the test."
+            find: "Returns the first element that satisfies the testing function."
+            includes: "Returns true if the array contains the specified value."
+            join: "Joins all elements into a string."
+            slice: "Returns a shallow copy of a portion of the array."
+            sort: "Sorts the elements of the array in place."
+            reverse: "Reverses the order of elements."
+            reduce: "Reduces the array to a single value."
+            indexOf: "Returns the first index of the value, or -1 if not found."
+            concat: "Merges arrays and/or values into a new array."
+          date:
+            toISOString: "Returns the date as an ISO 8601 string."
+            toLocaleDateString: "Returns a locale-sensitive date string."
+            getTime: "Returns milliseconds since Unix epoch."
+            getFullYear: "Returns the four-digit year."
+            getMonth: "Returns the month (0-11)."
+            getDate: "Returns the day of the month (1-31)."
+            getHours: "Returns the hour (0-23)."
+            getMinutes: "Returns the minutes (0-59)."
+            toLocaleString: "Returns a locale-sensitive date and time string."
+        globals:
+          Math: "Mathematical constants and functions (Math.round, Math.random, etc.)"
+          JSON: "JSON parsing and serialization (JSON.parse, JSON.stringify)."
+          Object: "Object utilities (Object.keys, Object.values, Object.entries)."
+          Array: "Array utilities (Array.isArray, Array.from)."
+          String: "String constructor and utilities."
+          Number: "Number utilities (Number.isInteger, Number.parseFloat)."
+          Date: "Date constructor. Use new Date() to create dates."
+          parseInt: "Parses a string and returns an integer."
+          parseFloat: "Parses a string and returns a floating-point number."
+          encodeURIComponent: "Encodes a URI component by replacing special characters."
+          decodeURIComponent: "Decodes an encoded URI component."
+          isNaN: "Returns true if the value is NaN."
+          isFinite: "Returns true if the value is a finite number."
     composer:
       autocomplete:
         username_missing: "Selected autocomplete result is missing username."
@@ -3509,7 +3665,7 @@ en:
       users_placeholder: "Add users or groups"
       title_placeholder: "What is this discussion about in one brief sentence?"
       title_or_link_placeholder: "Type title, or paste a link here"
-      edit_reason_placeholder: "why are you editing?"
+      edit_reason_placeholder: "Why are you editing?"
       topic_featured_link_placeholder: "Enter link shown with title."
       remove_featured_link: "Remove link from topic."
       reply_placeholder: "Type here. Use Markdown, BBCode, or HTML to format. Drag or paste images."
@@ -3580,7 +3736,10 @@ en:
       collapse: "Minimize the composer panel"
       open: "Open the composer panel"
       abandon: "Close composer and discard draft"
-      edit_reason: "Add your reason for editing"
+      edit_reason: "Why are you editing?"
+      whisper_indicator:
+        public: "Visible"
+        whispering: "Whispering"
       enter_fullscreen: "Enter fullscreen composer"
       exit_fullscreen: "Exit fullscreen composer"
       exit_fullscreen_prompt: "Press <kbd>ESC</kbd> to exit full screen"
@@ -3617,25 +3776,34 @@ en:
           desc: Create new message starting with same recipients
         reply_to_topic:
           label: Reply to topic
+          trigger: Topic
           desc: Reply to the topic, not any specific post
+        reply_to_message:
+          label: Reply to message
+          trigger: Message
+          desc: Reply to the message, not any specific post
         toggle_whisper:
           label: Toggle whisper
-          desc: Whispers are only visible to staff members
+          desc: Whispers are only visible to allowed groups
         create_topic:
-          label: "New topic"
+          label: Create topic
           desc: Create a new topic
         create_personal_message:
-          label: "New message"
+          label: Create message
           desc: "Create a new personal message"
         shared_draft:
           label: "Shared Draft"
           desc: "Draft a topic that will only be visible to allowed users"
         toggle_topic_bump:
-          label: "Toggle topic bump"
+          label: "Do not bump"
           desc: "Reply without changing latest reply date"
+        create_unlisted_topic: "Unlisted topic"
         toggle_unlisted:
           label: Toggle unlisted
           desc: "Unlisted topics are only accessible by direct link"
+        edit_post: "Editing post"
+        no_actions_available: "No actions available"
+        unknown_user: "User"
 
       reload: "Reload"
       ignore: "Ignore"
@@ -4174,6 +4342,9 @@ en:
         error_topic_count:
           one: "%{count} topic"
           other: "%{count} topics"
+        tag_not_allowed_in_category:
+          one: "%{tags} isn't allowed in the %{category} category."
+          other: "These tags aren't allowed in the %{category} category: %{tags}."
 
       none:
         unread: "You have no unread topics."
@@ -4190,7 +4361,7 @@ en:
         education:
           topic_tracking_preferences: 'You can view and change your new topic tracking settings in <a href="%{basePath}/my/preferences/tracking">your preferences</a>.'
           unread: "Nothing left unread... impressive!"
-          new_new: "Nothing new at the moment... check back soon!"
+          unified_new: "Nothing new at the moment... check back soon!"
           new: "Nothing new at the moment... check back soon!"
           generic: "Nothing to see here...check back soon!"
 
@@ -4311,6 +4482,13 @@ en:
         banner: "You are viewing a single thread from this topic."
         view_full_topic: "View full topic"
         view_parent_context: "View parent context"
+    share_target:
+      title: "Shared content"
+      description: "What would you like to do with the shared content?"
+      new_topic: "New topic"
+      new_message: "New message"
+      add_to_reply: "Add to a reply"
+      added_to_reply: "Saved. The content will be added the next time you open a reply."
     topic:
       filter_to:
         one: "%{count} post in topic"
@@ -4377,25 +4555,25 @@ en:
           true {
             { UNREAD, plural,
                  =0 {}
-                one {There is <a href="{basePath}/unread"># unread</a>}
-              other {There are <a href="{basePath}/unread"># unread</a>}
+                one {There is <a href="{unreadUrl}"># unread</a>}
+              other {There are <a href="{unreadUrl}"># unread</a>}
             }
             { NEW, plural,
                  =0 {}
-                one { and <a href="{basePath}/new"># new</a> topic remaining,}
-              other { and <a href="{basePath}/new"># new</a> topics remaining,}
+                one { and <a href="{newUrl}"># new</a> topic remaining,}
+              other { and <a href="{newUrl}"># new</a> topics remaining,}
             }
           }
           false {
             { UNREAD, plural,
                  =0 {}
-                one {There is <a href="{basePath}/unread"># unread</a> topic remaining,}
-              other {There are <a href="{basePath}/unread"># unread</a> topics remaining,}
+                one {There is <a href="{unreadUrl}"># unread</a> topic remaining,}
+              other {There are <a href="{unreadUrl}"># unread</a> topics remaining,}
             }
             { NEW, plural,
                  =0 {}
-                one {There is <a href="{basePath}/new"># new</a> topic remaining,}
-              other {There are <a href="{basePath}/new"># new</a> topics remaining,}
+                one {There is <a href="{newUrl}"># new</a> topic remaining,}
+              other {There are <a href="{newUrl}"># new</a> topics remaining,}
             }
           }
           other {}
@@ -5088,7 +5266,8 @@ en:
           other: "Are you sure you want to merge these %{count} posts?"
 
       revisions:
-        diff_too_complex: "The diff is too complex to display. Please try viewing individual smaller edits."
+        diff_too_complex: "This edit changed too much of the post at once, so it can't be shown."
+        diff_hidden: "Some of this post's edit history has been hidden, so this edit can't be shown."
         locale:
           no_locale_set: "No language set"
           locale_removed: "Language removed"
@@ -5170,6 +5349,12 @@ en:
 
       original_language: "This post was originally written in %{language}"
       original_language_and_outdated: "This post was originally written in %{language}. Translation may be outdated"
+      # This is a loose key to be used beside the post-info post-language icon
+      originally_written_in: "Originally in %{language}"
+      click_to_show_original: "Click to show original"
+      tap_to_show_original: "Tap here to show original"
+      click_to_show_translation: "Click to show translation"
+      tap_to_show_translation: "Tap here to show translation"
       ai_translation_disclaimer: "AI-generated translations may be inaccurate."
 
     category:
@@ -5218,6 +5403,11 @@ en:
         tag_group: "Tag group"
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete category"
+      danger_zone:
+        title: "Danger zone"
+        delete_title: "Delete this category"
+        delete_description: "Once deleted, this category and its settings cannot be recovered. Topics in it will need to be reassigned beforehand."
+        delete_title_forbidden: "Can't delete this category"
       create: "New category"
       create_with_type: "New %{typeName} category"
       create_long: "Create a new category"
@@ -5228,7 +5418,9 @@ en:
         site_settings: "Site settings"
       choose_type:
         title: "Choose category type"
-        requires_plugin: "Requires plugin"
+        requires_plugin: "Requires %{plugin_name} plugin"
+        unavailable: "Unavailable"
+        ask_admin_to_enable_plugin: "Ask an admin to enable the %{plugin_name} plugin"
       create_category: "Create category"
       save: "Save category"
       unsaved_changes: "You have unsaved changes"
@@ -5305,6 +5497,7 @@ en:
         toggle_reply: "Toggle Reply permission"
         toggle_full: "Toggle Create permission"
         inherited: 'This permission is inherited from "%{everyone_group}"'
+        remove_all: "Remove all"
       special_warning: "This is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       uncategorized_security_warning: "This category is special. It is intended as holding area for topics that have no category; it cannot have security settings."
       uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behavior and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customize / Text Content</a>.'
@@ -5651,7 +5844,7 @@ en:
         new_replies_tooltip: "New replies"
         replies: "Replies"
         replies_with_count: "Replies (%{count})"
-      new_new:
+      unified_new:
         help: "topics created or replied to in the last few days"
       posted:
         title: "My posts"
@@ -5927,7 +6120,6 @@ en:
       category_restrictions:
         one: "It can only be used in the %{categories} category."
         other: "It can only be used in these categories: %{categories}."
-      restricted_to: "Restricted to"
       no_synonyms: "This tag has no synonyms."
       edit_synonyms: "Edit Synonyms"
       add_synonyms_label: "Add synonyms:"
@@ -5961,6 +6153,7 @@ en:
         slug: "Slug"
         name_placeholder: "Tag name"
         slug_placeholder: "Tag slug (optional, auto-generated from name)"
+        invalid_slug: "Use lowercase letters, numbers, and single hyphens between words."
         saved: "Tag settings saved"
         no_synonyms: "No synonyms defined for this tag."
         add_synonym_placeholder: "Search for tags to add as synonyms..."
@@ -6393,7 +6586,7 @@ en:
           title: "Edit Table"
           cancel: "cancel"
           create: "Save"
-          reason: "why are you editing?"
+          reason: "Why are you editing?"
           trigger_reason: "Add reason for edit"
         default_edit_reason: "Update Table with Table Editor"
       default_header:
@@ -6514,12 +6707,6 @@ en:
             default: "%{filter} topics in %{category} without tags"
 
         categories: "All categories"
-    content_localization:
-      toggle_localized:
-        translated: "Page is machine-translated. Click to view original."
-        not_translated: "Page is not translated. Click to translate."
-        translations_enabled: "Translations enabled"
-        translations_disabled: "Translations disabled"
     language_switcher:
       title: "Change site language"
 
@@ -6547,6 +6734,7 @@ en:
         title: "List of available reports"
         sidebar_title: "Reports"
         back: "Back to all reports"
+        back_to_dashboard: "Back to dashboard"
         group_engagement: "Engagement"
         group_traffic: "Traffic"
         group_members: "Members"
@@ -6771,9 +6959,25 @@ en:
               title: "Digest logo"
               description: "The alternate logo image used at the top of your site's email summary. If left blank, the image from the `logo` setting will be used."
               help_text: "Use a wide rectangle image. Don't use an SVG image."
+            og_image_source:
+              title: "OpenGraph image source"
+              description: "Choose how OpenGraph preview images are provided for topics that don't have their own image."
+              uploaded: "Use an uploaded image"
+              generated: "Generate an image per topic"
             opengraph_image:
               title: "OpenGraph image"
               description: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used."
+            generate_topic_og_image:
+              title: "Generate topic OG images"
+              description: "Automatically generate OpenGraph preview images for topics that don't have an image. Uses topic title, category, and site colors."
+            og_image_preview:
+              title: "Generated OG image preview"
+              description: "Preview of automatically generated OpenGraph images for topics without images. Enter a topic ID to test."
+              generate: "Generate"
+              topic_id_label: "Topic ID"
+              topic_id_placeholder: "e.g. 123"
+              placeholder: "Enter a topic ID and click Generate to preview."
+              error: "Could not generate preview. Check the topic ID and try again."
             x_summary_large_image:
               title: "X summary large image"
               description: "X card 'summary large image'. If left blank, regular card metadata is generated using the OpenGraph_image, as long as that is not also a .svg."
@@ -6863,6 +7067,9 @@ en:
         notifications:
           title: "Notifications"
           header_description: "Configure how notifications are managed and delivered for users, including email preferences, push notifications, mention limits, and notification consolidation"
+        gifs:
+          title: "GIFs"
+          header_description: "Configure the GIF picker that lets users search and insert GIFs into posts and chat messages. Site texts for the modal can be customized in customize/site_texts."
         onebox:
           title: "Onebox"
           header_description: "Configure how onebox previews are generated and displayed for your site"
@@ -7100,6 +7307,9 @@ en:
         discourse_last_updated: "Discourse updated:"
         version: "Version"
         up_to_date: "You're up to date!"
+        up_to_date_newer_commits:
+          one: "You're on the most recent release, but %{count} new change is available."
+          other: "You're on the most recent release, but %{count} new changes are available."
         critical_available: "A critical update is available."
         updates_available: "Updates are available."
         please_update: "Please update!"
@@ -7107,9 +7317,19 @@ en:
         stale_data: "A check for updates has not been performed lately. Ensure Sidekiq is running."
         version_check_pending: "Looks like you updated recently. Fantastic!"
         installed_version: "Installed"
-        latest_version: "Latest"
+        latest_version: "Available"
+        github: "GitHub"
+        commit_on_github: "View commit %{sha} on GitHub"
+        changelog: "Changelog"
+        commits_ahead:
+          one: "Running %{count} additional change since the start of this release series"
+          other: "Running %{count} additional changes since the start of this release series"
         problems_found: "Some advice based on your current site settings"
         dismiss_notice: "Ignore"
+        site_advice:
+          title:
+            one: "%{count} issue requires your attention based on your site configuration"
+            other: "%{count} issues require your attention based on your site configuration"
         new_features:
           title: "What's new?"
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
@@ -7157,6 +7377,7 @@ en:
         not_found_error: Sorry, this report doesn’t exist
         custom_date_range: Custom date range
         loading: "Loading dashboard…"
+        stable: "stable"
 
         sections:
           highlights:
@@ -7201,13 +7422,17 @@ en:
                 dropping:
                   one: "-%{count} dropping"
                   other: "-%{count} dropping"
-                stable: "stable"
-              moves_in_aria:
-                one: "%{count} member moved up"
-                other: "%{count} members moved up"
-              moves_out_aria:
-                one: "%{count} member moved down"
-                other: "%{count} members moved down"
+              signups:
+                one: "+ %{formattedCount} signup"
+                other: "+ %{formattedCount} signups"
+              signups_title: "Number of new signups arriving at this trust level"
+              count_title: "Number of total members at this trust level"
+              arrivals_aria:
+                one: "%{count} member got promoted to this trust level"
+                other: "%{count} members got promoted to this trust level"
+              demotions_in_aria:
+                one: "%{count} member got demoted to this trust level"
+                other: "%{count} members got demoted to this trust level"
               stable_aria: "no movement"
             headline:
               healthy_growth:
@@ -7228,7 +7453,58 @@ en:
               no_signal:
                 title: "Not enough activity yet to summarise engagement."
                 summary: "Pick a longer date range or come back once your community has more activity."
-
+              metrics:
+                new_signups: "New sign-ups"
+                dau_mau: "DAU / MAU stickiness"
+                daily_engaged_users: "Daily engaged"
+          search:
+            title: "Search"
+            fetch_error: "Couldn't load search data. Try refreshing the page."
+            logging_disabled: 'Search logging is disabled, so no search data is being collected. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to start collecting it.'
+            logging_disabled_moderator: "Search logging is disabled, so no search data is being collected. Ask an admin to enable log search queries to start collecting it."
+            count_headline:
+              last_7_days:
+                one: "Members ran %{formatted_count} on-site search in the last 7 days"
+                other: "Members ran %{formatted_count} on-site searches in the last 7 days"
+              last_30_days:
+                one: "Members ran %{formatted_count} on-site search in the last 30 days"
+                other: "Members ran %{formatted_count} on-site searches in the last 30 days"
+              last_3_months:
+                one: "Members ran %{formatted_count} on-site search in the last 3 months"
+                other: "Members ran %{formatted_count} on-site searches in the last 3 months"
+              selected_period:
+                one: "Members ran %{formatted_count} on-site search in the selected period"
+                other: "Members ran %{formatted_count} on-site searches in the selected period"
+            headline:
+              no_signal_title: "Not enough search activity to summarise yet."
+              no_signal: "Pick a longer date range or come back once members have searched more."
+              content_gaps: "More than 10% of member searches ended without a click this period. Review the content gaps below to see what's missing."
+              rate_climbing: "The no-result rate is climbing compared with the previous period. Keep an eye on the content gaps below."
+              shrinking: "Search volume is down compared with the previous period, while most searches still lead to content."
+              healthy: "Members keep finding what they search for, and search volume is steady or growing."
+            kpi:
+              total_searches:
+                label: "Total searches"
+                tooltip: "The number of searches performed by members in your community."
+              no_result_rate:
+                label: "No-result rate"
+                tooltip: "The percentage of searches where members didn't click any result (0% CTR). This indicates that members may be searching for content your community doesn't have."
+            table:
+              term: "Search term"
+              searches: "Searches"
+              status: "Status"
+            trending:
+              title: "Trending searches"
+              tooltip: "The most popular search terms among members."
+              empty: "No searches in this period."
+            content_gaps:
+              title: "Content gaps"
+              empty: "No content gaps in this period."
+              badge:
+                no_match: "No match"
+                no_match_tooltip: "Search terms with a 0% click-through rate (CTR)."
+                poor_match: "Poor match"
+                poor_match_tooltip: "Search terms with a click-through rate (CTR) between 1-20%."
         reports_section:
           description: "Pin standard reports or Data Explorer queries to track what matters to your community."
           add: "Add report"
@@ -7245,6 +7521,7 @@ en:
             disable: "Disable %{title}"
             move_up: "Move %{title} up"
             move_down: "Move %{title} down"
+            footer_note: "These changes will apply for all users."
 
         configure:
           button: "Configure"
@@ -7262,16 +7539,16 @@ en:
           kpi:
             new_signups:
               label: "New sign-ups"
-              tooltip: "Accounts created in this period, including unactivated and staged accounts."
+              tooltip: "Accounts created, including unactivated and staged accounts."
             dau_mau:
               label: "DAU / MAU stickiness"
-              tooltip: 'The share of monthly active users who returned to the community in the last day. This shows how "sticky" your community is based on how often people come back.'
+              tooltip: 'The share of monthly active users who returned to the community. This shows how "sticky" your community is based on how often people come back.'
             new_contributors:
               label: "New contributors"
-              tooltip: "The number of members who made their first post in this period."
+              tooltip: "The number of members who made their first post."
             daily_engaged_users:
               label: "Daily engaged"
-              tooltip: "The number of members who liked or posted in the community in the last day."
+              tooltip: "The average number of members who liked or posted in the community each day."
           comparison:
             last_7_days: "vs last 7 days"
             last_30_days: "vs last 30 days"
@@ -7307,6 +7584,17 @@ en:
             logged_in_share:
               label: "Logged-in share"
               tooltip: "The share of pageviews from logged-in members."
+            direct_traffic:
+              label: "Direct traffic"
+              tooltip: "The share of pageviews that came directly to your community, such as by typing your URL or using a browser bookmark."
+            bounce_rate:
+              label: "Bounce rate"
+              tooltip: "The share of sessions with a single pageview and less than 10 seconds of engaged time."
+            average_session_duration:
+              label: "Avg. session duration"
+              tooltip: "The average amount of time visitors spent in your community for the selected period."
+            session_metrics:
+              empty_tooltip: "Shown once visits are recorded for this period."
           top_countries:
             title: "Top countries"
             empty: "No country data for this period."
@@ -7408,7 +7696,6 @@ en:
             incoming_email: "Custom incoming email address"
             incoming_email_placeholder: "enter email address"
             incoming_email_tooltip: "You can separate multiple email addresses with the | character."
-            visibility: Visibility
             visibility_levels:
               title: "Who can see this group?"
               public: "Everyone"
@@ -7429,6 +7716,10 @@ en:
             effects: Effects
             trust_levels_none: "None"
             automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
+            automatic_membership_email_domains_instructions: "Enter each domain on its own, without the @ symbol, for example discourse.org."
+            automatic_membership_email_domains_invalid:
+              one: "%{domains} isn't a valid domain. Enter a bare domain, for example discourse.org."
+              other: "These aren't valid domains: %{domains}. Enter each as a bare domain, for example discourse.org."
             automatic_membership_user_count:
               one: "%{count} user has the new email domains and will be added to the group."
               other: "%{count} users have the new email domains and will be added to the group."
@@ -7588,6 +7879,7 @@ en:
             invites:
               create: Send email invites or generate invite links.
             badges:
+              list: Get a list of badges.
               create: Create a new badge.
               show: Obtain information about a badge.
               update: Update a badge.
@@ -7847,9 +8139,11 @@ en:
           your_organization: "Your organization"
           your_organization_description: "We'll use this information in the Terms of Service and Privacy Notice to show who operates the site and under which jurisdiction."
           company_name: "Name"
-          company_name_placeholder: "Acme Organization"
+          company_name_placeholder: "ExampleCo"
           company_name_warning: |
             If left blank, no boilerplate Terms of Service or Privacy Notice will be provided.
+          company_url: "Website"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Governing law"
           governing_law_placeholder: "Province, State, or Country"
           governing_law_help: |
@@ -7866,6 +8160,9 @@ en:
             initial_members: "Expanded members"
             initial_members_description: "Number of group members to display before adding a View more button."
             show_description: "Include description"
+          locale_selector:
+            title: "Language"
+            description: "Only translatable About page fields are shown."
           optional: "(optional)"
           update: "Update"
           toasts:
@@ -8284,6 +8581,7 @@ en:
           finish_install: "Finish Theme Installation"
           last_attempt: "Installation process did not finish, last attempted:"
           remote_branch: "Branch name (optional)"
+          remote_branch_placeholder: "Choose a specific branch or keep empty"
           public_key: "Grant the following public key access to the repo:"
           install: "Install"
           installed: "Installed"
@@ -8316,6 +8614,7 @@ en:
           updating: "Updating…"
           update_success: "%{theme} Update complete"
           up_to_date: "Theme is up-to-date, last checked:"
+          up_to_date_branch: "Theme is up-to-date with %{branch}, last checked:"
           has_overwritten_history: "Current theme version no longer exists because the Git history has been overwritten by a force push."
           change_source:
             button: "Change source"
@@ -8339,6 +8638,9 @@ en:
           commits_behind:
             one: "Theme is %{count} commit behind!"
             other: "Theme is %{count} commits behind!"
+          commits_behind_branch:
+            one: "Theme is %{count} commit behind %{branch}"
+            other: "Theme is %{count} commits behind %{branch}"
           compare_commits: "(See new commits)"
           remote_theme_edits: "If you want to edit this theme, you must <a href='%{repoURL}' target='_blank'>submit a change on its repository</a>"
           repo_unreachable: "Couldn't contact the Git repository of this theme. Error message:"
@@ -8777,6 +9079,8 @@ en:
             change_site_setting_groups: "change site setting groups"
             discourse_id_regenerate_credentials: "regenerate Discourse ID credentials"
             configure_category_type: "configure category type"
+            unconfigure_category_type: "unconfigure category type"
+            change_access_control_list_permissions: "change access control list permissions"
         screened_emails:
           title: "Screened emails"
           description: "When someone tries to create a new account, the following email addresses will be checked and the registration will be blocked, or some other action performed."
@@ -8814,6 +9118,7 @@ en:
             header: "Header"
             full_page: "Full page"
             click_through_only: "All (click through only)"
+            logged_in_only: "Logged in only"
           header_search_results: "Header search results"
         logster:
           title: "Error logs"
@@ -8985,13 +9290,33 @@ en:
         show_emails: "Show emails"
         hide_emails: "Hide emails"
         silence_reason: "Silence reason"
+        suspend_reason: "Suspend reason"
         bulk_actions:
           title: "Bulk actions"
-          admin_cant_be_deleted: "This user can't be deleted because they're an admin"
-          too_many_or_old_posts: "This user can't be deleted they have too many posts or a very old post"
+          select_all: "Select all"
+          clear_all: "Clear all"
+          staff_cant_be_actioned: "This user can't be deleted or suspended because they're a staff member"
+          no_users_can_be_deleted: "None of the selected users can be deleted."
+          no_users_can_be_suspended: "None of the selected users can be suspended."
           too_many_selected_users:
-            one: "You've reached the %{count} user limit for bulk deletion"
-            other: "You've reached the %{count} users limit for bulk deletion"
+            one: "You've reached the %{count} user limit for bulk actions"
+            other: "You've reached the %{count} users limit for bulk actions"
+          suspend:
+            label: "Suspend users…"
+            confirmation_modal:
+              prompt_text:
+                one: "You're about to suspend %{count} user. Set a duration and reason below:"
+                other: "You're about to suspend %{count} users. Set a duration and reason below:"
+              close: "Close"
+              confirm: "Suspend"
+              title:
+                one: "Suspend %{count} user"
+                other: "Suspend %{count} users"
+              bulk_suspend_starting: "Starting bulk suspend…"
+              user_suspend_succeeded: "[%{position}/%{total}] Successfully suspended @%{username}"
+              user_suspend_failed: "[%{position}/%{total}] Failed to suspend @%{username} - %{error}"
+              bulk_suspend_finished: "Bulk suspend operation completed."
+              failed_to_suspend_users: "The following users failed to be suspended:"
           delete:
             label: "Delete users…"
             confirmation_modal:
@@ -9019,6 +9344,11 @@ en:
           suspended: "Suspended"
           silenced: "Silenced"
           staged: "Staged"
+        activation_filter:
+          label: "Activation status"
+          all: "All users"
+          activated: "Activated"
+          not_activated: "Not activated"
         approved: "Approved?"
         titles:
           active: "Active users"
@@ -9259,10 +9589,12 @@ en:
           other: "Can't delete all posts because the user has more than %{count} posts. (delete_all_posts_max)"
         delete_confirm_title: "Are you sure you want to delete this user? This is permanent!"
         delete_confirm: "It is generally preferable to anonymize users rather than deleting them, to avoid removing content from existing discussions."
-        delete_and_block: "Delete and block user"
-        delete_and_block_description: "Delete the user and block their email and IP address."
+        delete_and_block: "Delete and block email and IP address"
+        delete_and_block_description: "Delete the user and block their email address and IP address."
+        delete_and_block_email: "Delete and block email"
+        delete_and_block_email_description: "Delete the user and block their email address, but allow their IP address to be reused."
         delete_dont_block: "Delete user"
-        delete_dont_block_description: "Delete the user without blocking."
+        delete_dont_block_description: "Delete the user without blocking their email address or IP address."
         deleting_user: "Deleting user…"
         deleted: "The user was deleted."
         delete_failed: "There was an error deleting that user. Make sure all posts are deleted before trying to delete the user."
@@ -9404,6 +9736,7 @@ en:
           disabled: "Not shown on signup form"
         searchable:
           title: "Searchable"
+          tooltip: "When enabled, anyone can find members by this field's value and see it in search results, even if it's not shown on their profile or user card."
           enabled: "Searchable"
           disabled: "Not searchable"
 
@@ -9570,6 +9903,9 @@ en:
           can_permanently_delete:
             prompt: "Enabling this allows admins to permanently destroy posts, topics, and post revisions. Permanently deleted data cannot be recovered. This may also affect data integrity and break existing links."
             confirm: "I understand"
+          content_security_policy:
+            prompt: "Disabling the content security policy removes an important layer of protection against cross-site scripting (XSS) and other content injection attacks. This will leave your site vulnerable, and should only be done for debugging/testing purposes. Disabling CSP will never help to resolve CORS issues. Are you sure you want to proceed?"
+            confirm: "Yes, disable the content security policy"
         job_status:
           completed: "Update completed"
           enqueued: "Update in progress"

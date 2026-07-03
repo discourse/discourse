@@ -80,6 +80,7 @@ acceptance("user menu | assign_enabled setting is disabled", function (needs) {
 acceptance("user menu", function (needs) {
   needs.user({
     can_assign: true,
+    can_assign_globally: true,
     grouped_unread_notifications: {
       34: 173, // assigned notification type
     },

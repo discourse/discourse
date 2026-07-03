@@ -5,6 +5,7 @@ import { setPrefix } from "discourse/lib/get-url";
 import DiscourseURL, {
   getCanonicalUrl,
   getCategoryAndTagUrl,
+  isHttpUrl,
   prefixProtocol,
   userPath,
 } from "discourse/lib/url";
@@ -90,7 +91,7 @@ module("Unit | Utility | url", function (hooks) {
   test("isInternalTopic", function (assert) {
     sinon.stub(DiscourseURL, "origin").get(() => "https://eviltrout.com");
     assert.true(DiscourseURL.isInternalTopic("https://eviltrout.com/t/123"));
-    assert.true(DiscourseURL.isInternalTopic("https://eviltrout.com/n/123"));
+    assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/n/123"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/admin"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/u/test"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/tamales"));
@@ -105,7 +106,7 @@ module("Unit | Utility | url", function (hooks) {
     assert.true(
       DiscourseURL.isInternalTopic("https://eviltrout.com/forum/t/123")
     );
-    assert.true(
+    assert.false(
       DiscourseURL.isInternalTopic("https://eviltrout.com/forum/n/123")
     );
     assert.false(
@@ -223,6 +224,20 @@ module("Unit | Utility | url", function (hooks) {
     );
     assert.strictEqual(prefixProtocol("/my/preferences"), "/my/preferences");
     assert.strictEqual(prefixProtocol("#anchor-fragment"), "#anchor-fragment");
+  });
+
+  test("isHttpUrl", function (assert) {
+    assert.true(isHttpUrl("http://www.discourse.org"));
+    assert.true(isHttpUrl("https://www.discourse.org"));
+    assert.true(isHttpUrl("  https://www.discourse.org  "));
+
+    assert.false(isHttpUrl("ftp://www.discourse.org"));
+    assert.false(isHttpUrl("mailto:mr-beaver@aol.com"));
+    assert.false(isHttpUrl("www.discourse.org"));
+    assert.false(isHttpUrl("not a url"));
+    assert.false(isHttpUrl(""));
+    assert.false(isHttpUrl(null));
+    assert.false(isHttpUrl(undefined));
   });
 
   test("getCategoryAndTagUrl", function (assert) {

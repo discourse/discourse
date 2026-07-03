@@ -118,3 +118,11 @@ ur:
     edit_assignments_modal:
       topic: "موضوع"
       post: "پوسٹ"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "تفویض کردہ"
+      assign_topic:
+        operations:
+          assign: "تفویض"
+          unassign: "غیر اسائین کریں"
+        topic_id: "ٹاپک ID"

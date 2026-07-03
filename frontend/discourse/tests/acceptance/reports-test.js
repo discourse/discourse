@@ -34,7 +34,6 @@ acceptance("Reports", function (needs) {
 
 acceptance("Reports | Plugin groups sorted by display name", function (needs) {
   needs.user();
-  needs.settings({ reporting_improvements: true });
   needs.pretender((server, helper) => {
     server.get("/admin/reports", () => {
       return helper.response({

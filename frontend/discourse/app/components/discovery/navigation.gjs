@@ -10,9 +10,11 @@ import AccessibleDiscoveryHeading from "discourse/components/discovery/accessibl
 import ReorderCategories from "discourse/components/modal/reorder-categories";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
+import categoryColorVariable from "discourse/helpers/category-color-variable";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { calculateFilterMode } from "discourse/lib/filter-mode";
 import { TRACKED_QUERY_PARAM_VALUE } from "discourse/lib/topic-list-tracked-filter";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
 import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
@@ -23,6 +25,7 @@ export default class DiscoveryNavigation extends Component {
   @service currentUser;
   @service modal;
   @service router;
+  @service siteSettings;
 
   get filterMode() {
     return calculateFilterMode({
@@ -37,7 +40,21 @@ export default class DiscoveryNavigation extends Component {
   }
 
   get canCreateTopic() {
-    return this.currentUser?.can_create_topic;
+    let value = this.currentUser?.can_create_topic ?? false;
+
+    if (
+      value &&
+      this.siteSettings.hide_disabled_create_topic_button &&
+      this.args.createTopicDisabled
+    ) {
+      value = false;
+    }
+
+    return applyValueTransformer("can-create-topic-button", value, {
+      category: this.args.category,
+      tag: this.args.tag,
+      createTopicDisabled: this.args.createTopicDisabled,
+    });
   }
 
   get bodyClass() {
@@ -100,7 +117,10 @@ export default class DiscoveryNavigation extends Component {
         @outletArgs={{lazyHash category=@category tag=@tag}}
       />
 
-      <section class={{this.headingClasses}}>
+      <section
+        class={{this.headingClasses}}
+        style={{categoryColorVariable @category.color}}
+      >
         {{#if @category.uploaded_logo.url}}
           <CategoryLogo
             @category={{@category}}

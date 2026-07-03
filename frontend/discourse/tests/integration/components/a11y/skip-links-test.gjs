@@ -75,6 +75,7 @@ module("Integration | Component | A11y | SkipLinks", function (hooks) {
       "skip link is hidden with -75px offset before focus"
     );
 
+    skipLink.style.transition = "none";
     skipLink.focus();
 
     computedStyle = window.getComputedStyle(skipLink);

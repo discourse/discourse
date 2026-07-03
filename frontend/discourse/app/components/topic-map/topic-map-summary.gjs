@@ -98,7 +98,7 @@ export default class TopicMapSummary extends Component {
   }
 
   get loneStat() {
-    if (this.args.topic.has_summary) {
+    if (this.args.topic.has_summary || this.shouldShowReplyCount) {
       return false;
     }
     return [this.hasLikes, this.hasUsers, this.hasLinks].every((stat) => !stat);

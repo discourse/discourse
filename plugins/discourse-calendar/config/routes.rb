@@ -10,7 +10,6 @@ DiscoursePostEvent::Engine.routes.draw do
       }
   get "/discourse-post-event/events/:id" => "events#show"
   delete "/discourse-post-event/events/:id" => "events#destroy"
-  post "/discourse-post-event/events" => "events#create"
   post "/discourse-post-event/events/:id/csv-bulk-invite" => "events#csv_bulk_invite"
   post "/discourse-post-event/events/:id/bulk-invite" => "events#bulk_invite", :format => :json
   post "/discourse-post-event/events/:id/invite" => "events#invite"

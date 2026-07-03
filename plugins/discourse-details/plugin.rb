@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # name: discourse-details
-# about: HTML5.1 Details polyfill for Discourse
+# about: Adds collapsible `[details]` sections to posts
 # version: 0.4
 # authors: Régis Hanol
 # url: https://github.com/discourse/discourse/tree/main/plugins/discourse-details

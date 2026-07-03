@@ -166,10 +166,26 @@
           ]
         },
         "featured_topic": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "title": {
+              "type": "string"
+            },
+            "fancy_title": {
+              "type": "string"
+            },
+            "slug": {
+              "type": "string"
+            },
+            "posts_count": {
+              "type": "integer"
+            }
+          },
+          "required": ["id", "title", "fancy_title", "slug", "posts_count"]
         },
         "staged": {
           "type": "boolean"

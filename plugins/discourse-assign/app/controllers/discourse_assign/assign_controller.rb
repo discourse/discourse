@@ -7,12 +7,30 @@ module DiscourseAssign
     before_action :ensure_logged_in, :ensure_assign_allowed
 
     def suggestions
-      users = [current_user, *recent_assignees]
+      target = assignment_target_from_params
+      raise Discourse::InvalidAccess if target && !guardian.can_assign?(target)
+
+      users = [current_user, *recent_assignees(target)]
+      assign_allowed_groups =
+        if target
+          DiscourseAssign::AssignmentPermissions.assign_allowed_groups_for_target(
+            current_user,
+            target,
+          )
+        else
+          DiscourseAssign::AssignmentPermissions.assign_allowed_groups_for_user(current_user)
+        end
+      assignable_group_ids =
+        if target
+          DiscourseAssign::AssignmentPermissions.allowed_group_ids_for_target(current_user, target)
+        else
+          Group.assignable(current_user).pluck(:id)
+        end
+
       render json: {
-               assign_allowed_on_groups:
-                 Group.visible_groups(current_user).assign_allowed_groups.pluck(:name),
+               assign_allowed_on_groups: assign_allowed_groups.pluck(:name),
                assign_allowed_for_groups:
-                 Group.visible_groups(current_user).assignable(current_user).pluck(:name),
+                 Group.visible_groups(current_user).where(id: assignable_group_ids).pluck(:name),
                suggestions:
                  ActiveModel::ArraySerializer.new(
                    users,
@@ -29,6 +47,7 @@ module DiscourseAssign
       raise Discourse::NotFound if !Assignment.valid_type?(target_type)
       target = target_type.constantize.where(id: target_id).first
       raise Discourse::NotFound if target.blank? || !guardian.can_see?(target)
+      raise Discourse::InvalidAccess if !guardian.can_assign?(target)
 
       assigner = Assigner.new(target, current_user)
       assigner.unassign
@@ -56,6 +75,7 @@ module DiscourseAssign
         )
 
       raise Discourse::NotFound unless assign_to
+      guardian.ensure_can_see_group!(assign_to) if assign_to.is_a?(Group)
       raise Discourse::NotFound if !Assignment.valid_type?(target_type)
       target = target_type.constantize.where(id: target_id).first
       raise Discourse::NotFound if target.blank? || !guardian.can_see?(target)
@@ -129,7 +149,9 @@ module DiscourseAssign
 
       group = Group.find_by(name: params[:group_name])
 
+      guardian.ensure_can_see_group!(group)
       guardian.ensure_can_see_group_members!(group)
+      raise Discourse::InvalidAccess if !guardian.can_assign_globally?
 
       users_with_assignments_count =
         User
@@ -169,6 +191,8 @@ module DiscourseAssign
 
     def translate_failure(reason, assign_to)
       case reason
+      when :forbidden_assigner_not_allowed
+        { error: I18n.t("discourse_assign.forbidden_assigner_not_allowed") }
       when :already_assigned
         { error: I18n.t("discourse_assign.already_assigned", username: assign_to.username) }
       when :forbidden_assign_to
@@ -230,9 +254,17 @@ module DiscourseAssign
       raise Discourse::InvalidAccess.new unless current_user.can_assign?
     end
 
-    def recent_assignees
+    def recent_assignees(target)
+      allowed_user_ids =
+        if target
+          DiscourseAssign::AssignmentPermissions.allowed_user_ids_for_target(target)
+        else
+          DiscourseAssign::AssignmentPermissions.assignable_user_ids_for_user(current_user)
+        end
+
       User
         .where.not(id: current_user.id)
+        .where(id: allowed_user_ids)
         .joins(<<~SQL)
           JOIN(
             SELECT assigned_to_id user_id, MAX(created_at) last_assigned
@@ -250,9 +282,21 @@ module DiscourseAssign
           ) AS ucf on ucf.user_id = users.id
         SQL
         .where("ucf.name is NULL")
-        .assign_allowed
         .order("X.last_assigned DESC")
         .limit(5)
+    end
+
+    def assignment_target_from_params
+      return if params[:target_id].blank? && params[:target_type].blank?
+
+      target_id = params.require(:target_id)
+      target_type = params.require(:target_type)
+      raise Discourse::NotFound if !Assignment.valid_type?(target_type)
+
+      target = target_type.constantize.where(id: target_id).first
+      raise Discourse::NotFound if target.blank? || !guardian.can_see?(target)
+
+      target
     end
   end
 end

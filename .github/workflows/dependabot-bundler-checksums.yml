@@ -1,0 +1,46 @@
+name: Bundler checksums on Dependabot PRs
+
+on:
+  push:
+    branches:
+      - "dependabot/bundler/**/*"
+    paths:
+      - "Gemfile.lock"
+
+permissions:
+  contents: write
+
+jobs:
+  normalize:
+    name: Normalize
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'cdck-linux-8-core') || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
+
+    steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+          token: ${{ secrets.GH_PUSH_TOKEN }}
+
+      # Dependabot writes a newer `bundler` checksum than `BUNDLED WITH`; rewrite
+      # it with the image's bundler so the linting check passes. See
+      # https://github.com/ruby/rubygems/issues/9512
+      - name: Normalize Gemfile.lock
+        env:
+          BUNDLE_FROZEN: "false"
+          BUNDLE_DEPLOYMENT: "false"
+        run: |
+          bundle lock --add-checksums
+          bundle lock --normalize-platforms
+
+      - name: Git push
+        run: |
+          git config --global user.email "team@discourse.org"
+          git config --global user.name "discoursebot"
+          git add Gemfile.lock
+          git status
+          git commit -m "Normalize Gemfile.lock checksums [dependabot skip]" && git push || echo "done"

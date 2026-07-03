@@ -1,11 +1,11 @@
 @use "lib/viewport";
 
 :root {
-  --wizard-primary: #{$discourse-brand};
-  --wizard-primary-100: #{$discourse-brand-100};
-  --wizard-primary-300: #{$discourse-brand-300};
-  --wizard-primary-400: #{$discourse-brand-400};
-  --wizard-primary-800: #{$discourse-brand-800};
+  --wizard-primary: var(--tertiary);
+  --wizard-primary-100: var(--tertiary-low);
+  --wizard-primary-300: var(--tertiary-medium);
+  --wizard-primary-400: var(--tertiary-hover);
+  --wizard-primary-800: var(--tertiary-high);
   --wizard-bg-color: light-dark(#{$discourse-bg-light}, #{$discourse-bg-dark});
   --wizard-bg-color-2: light-dark(
     #{$discourse-brand-light},
@@ -100,6 +100,43 @@ body.wizard {
     );
     z-index: z("base");
     pointer-events: none;
+  }
+
+  // Clean takeover when the skeleton is the backdrop.
+  &:has(.site-skeleton) {
+    &::before {
+      display: none;
+    }
+
+    .d-header-wrap {
+      display: none;
+    }
+
+    // Full-viewport flex container so the card centers; scrolls if a step is tall.
+    #wizard-main {
+      position: fixed;
+      inset: 0;
+      justify-content: safe center;
+      padding: 1.5rem;
+      overflow: auto;
+    }
+
+    #wizard-main::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background: rgb(0 0 0 / 0.34);
+      pointer-events: none;
+    }
+
+    .wizard-container {
+      border: 1px solid light-dark(rgb(0, 0, 0, 0.08), var(--primary-low));
+      border-radius: 8px;
+      box-shadow:
+        0 34px 110px rgb(30, 36, 72, 0.34),
+        0 8px 24px rgb(30, 36, 72, 0.18);
+    }
   }
 }
 
@@ -352,7 +389,7 @@ body.wizard {
 
     &.--selected {
       .wizard-container__label {
-        background-color: light-dark(var(--wizard-primary-100), transparent);
+        background-color: var(--wizard-primary-100);
         border-color: var(--wizard-primary);
         border-width: 2px;
         margin: 0;

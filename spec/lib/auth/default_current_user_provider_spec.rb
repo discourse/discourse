@@ -655,6 +655,20 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       expect { provider("/", params).current_user }.to raise_error(Discourse::InvalidAccess)
     end
 
+    it "allows unexpired user API keys" do
+      api_key.update!(expires_at: 1.minute.from_now)
+      params = { "REQUEST_METHOD" => "GET", "HTTP_USER_API_KEY" => api_key.key }
+
+      expect(provider("/", params).current_user.id).to eq(user.id)
+    end
+
+    it "does not allow expired user API keys" do
+      api_key.update!(expires_at: 1.minute.ago)
+      params = { "REQUEST_METHOD" => "GET", "HTTP_USER_API_KEY" => api_key.key }
+
+      expect { provider("/", params).current_user }.to raise_error(Discourse::InvalidAccess)
+    end
+
     describe "when readonly mode is enabled due to postgres" do
       before { Discourse.enable_readonly_mode(Discourse::PG_READONLY_MODE_KEY) }
 

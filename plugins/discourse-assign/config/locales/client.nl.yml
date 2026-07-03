@@ -36,6 +36,8 @@ nl:
       topic_search_placeholder: "Zoek topics op titel of berichtinhoud"
       sidebar_name_filter_placeholder: "Naam/gebruikersnaam"
       assigned: "Toegewezen"
+      group_no_assignments_title: "Geen toewijzingen"
+      group_no_assignments_body: "Er zijn momenteel geen actieve toewijzingen voor deze groep."
       group_everyone: "Iedereen"
       assigned_to: "Toegewezen aan"
       assigned_topic_to: "Topic toegewezen aan <a href='%{path}'>%{username}</a>"
@@ -198,3 +200,13 @@ nl:
       title: "Toewijzingen bewerken"
       topic: "Topic"
       post: "Bericht"
+    discourse_workflows:
+      nodes:
+        "action:assign_topic": "Topic toewijzen"
+        "trigger:assigned": "Toegewezen"
+      assign_topic:
+        operations:
+          assign: "Toewijzen"
+          unassign: "Toewijzing opheffen"
+        topic_id: "Topic-ID"
+        assignee: "Toegewezen persoon"

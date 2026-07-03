@@ -22,6 +22,16 @@ module DiscourseAi
         prompt.push(type: :user, content: BUDGET_EXHAUSTED_HINT)
       end
 
+      # When an agentic agent has no explicit max_turn_tokens, default the turn
+      # budget to half of the LLM's context window (see the max_turn_tokens_help
+      # string). Returns nil when the LLM exposes no usable context window, in
+      # which case callers fall back to the fixed completion/tool limits.
+      def self.default_max_turn_tokens(llm)
+        max_prompt_tokens = llm&.max_prompt_tokens.to_i
+        return if max_prompt_tokens <= 0
+        max_prompt_tokens / 2
+      end
+
       def self.as(bot_user, agent: DiscourseAi::Agents::General.new, model: nil)
         new(bot_user, agent, model)
       end
@@ -81,6 +91,7 @@ module DiscourseAi
         llm_kwargs[:user] = user
         llm_kwargs[:temperature] = agent.temperature if agent.temperature
         llm_kwargs[:top_p] = agent.top_p if agent.top_p
+        llm_kwargs[:thinking_effort] = agent.thinking_effort if agent.thinking_effort.present?
 
         if !context.bypass_response_format && agent.response_format.present?
           llm_kwargs[:response_format] = build_json_schema(agent.response_format)
@@ -89,8 +100,17 @@ module DiscourseAi
         needs_newlines = false
         tools_ran = 0
 
-        use_token_budget = agent.class.execution_mode == "agentic"
         token_budget = agent.class.max_turn_tokens
+        use_token_budget = agent.class.execution_mode == "agentic"
+
+        if use_token_budget && token_budget.blank?
+          # max_turn_tokens is optional; default the turn budget to half of the
+          # LLM context window. If the LLM exposes no context window, fall back
+          # to the fixed completion/tool limits rather than crashing on a nil
+          # budget comparison.
+          token_budget = self.class.default_max_turn_tokens(current_llm)
+          use_token_budget = token_budget.present?
+        end
 
         # In token budget mode, compression manages context size instead of
         # the dialect's destructive trim_messages. Disabling trim prevents
@@ -102,6 +122,7 @@ module DiscourseAi
           execution_context.token_usage_tracker ||= DiscourseAi::Completions::TokenUsageTracker.new
         end
         llm_kwargs[:execution_context] = execution_context if execution_context
+        enable_gemini_thought_summaries!(llm_kwargs, current_llm, context)
         token_usage_tracker = execution_context&.token_usage_tracker
 
         final_answer_requested = false
@@ -263,6 +284,15 @@ module DiscourseAi
 
       private
 
+      def enable_gemini_thought_summaries!(llm_kwargs, current_llm, context)
+        return if current_llm.llm_model.provider != "google"
+        return if context.skip_show_thinking != false
+
+        extra_model_params = (llm_kwargs[:extra_model_params] || {}).dup
+        extra_model_params[:include_thought_summaries] = true
+        llm_kwargs[:extra_model_params] = extra_model_params
+      end
+
       def embed_thinking(raw_context)
         embedded_thinking = []
         thinking_bundle = nil
@@ -270,7 +300,10 @@ module DiscourseAi
         raw_context.each do |context|
           if context.is_a?(DiscourseAi::Completions::Thinking)
             thinking_bundle ||= { message: nil, provider_info: {} }
-            thinking_bundle[:message] = context.message if context.message.present?
+            thinking_bundle[:message] = merge_thinking_message(
+              thinking_bundle[:message],
+              context.message,
+            )
             thinking_bundle[
               :provider_info
             ] = DiscourseAi::Completions::Thinking.merge_provider_info(
@@ -296,6 +329,13 @@ module DiscourseAi
         end
 
         embedded_thinking
+      end
+
+      def merge_thinking_message(existing, incoming)
+        return existing if incoming.blank?
+        return incoming if existing.blank?
+
+        "#{existing}\n\n#{incoming}"
       end
 
       def tool_requires_approval?(tool)
@@ -362,7 +402,7 @@ module DiscourseAi
           provider_payload = {}
 
           current_thinking.each do |thinking|
-            thinking_message = thinking.message if thinking.message.present?
+            thinking_message = merge_thinking_message(thinking_message, thinking.message)
             provider_payload =
               DiscourseAi::Completions::Thinking.merge_provider_info(
                 provider_payload,

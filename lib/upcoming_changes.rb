@@ -26,6 +26,12 @@ module UpcomingChanges
     def self.should_display_enable_horizon_high_context_topic_cards?
       Themes::Action::HorizonHighContextTopicCardsToggled.should_display_upcoming_change?
     end
+
+    # Sites already running the discourse-gifs theme component will have their
+    # configuration migrated separately so they don't need to opt in via the upcoming change.
+    def self.should_display_enable_gifs?
+      !DiscourseGifs.component_installed?
+    end
   end
 
   def self.user_enabled_reasons
@@ -65,6 +71,16 @@ module UpcomingChanges
 
   def self.previous_status(status)
     statuses.keys.select { |key| statuses[key] < statuses[status.to_sym] }.last || :conceptual
+  end
+
+  def self.next_status(status)
+    status = status&.to_sym
+    status_value = statuses[status]
+
+    return if status_value.nil?
+    return if status_value < statuses[:experimental] || status_value >= statuses[:stable]
+
+    statuses.keys.find { |key| statuses[key] > status_value }
   end
 
   def self.image_exists?(change_setting_name)
@@ -440,5 +456,34 @@ module UpcomingChanges
   # This is done via depends_on and depends_behavior: hidden in site_settings.yml.
   def self.find_dependents_for_change(change_setting_name)
     settings_provider.type_supervisor.dependencies.dependents(change_setting_name.to_s)
+  end
+
+  def self.including_css
+    settings_provider.upcoming_change_site_settings.filter_map do |upcoming_change|
+      upcoming_change if settings_provider.upcoming_change_metadata[upcoming_change][:body_class]
+    end
+  end
+
+  # Site settings to hide from admins because an upcoming change that declares
+  # `hide_settings:` (in its site_settings.yml metadata) is currently enabled.
+  # Legacy settings a change replaces stop making sense once the change is in
+  # effect, so they are hidden while it is enabled.
+  #
+  # Consulted by SiteSettings::HiddenProvider#all, which runs on every
+  # hidden_settings read. It is computed live rather than toggled at opt-in time
+  # so it tracks both opt-in paths (manual and auto-promotion) and is
+  # multisite-safe: the hidden set is process-global, but enabled? resolves
+  # per-site, so we never hide a setting for sites that haven't opted in.
+  #
+  # `enabled?` is only called for the (usually zero) changes that declare
+  # `hide_settings`, so the common case is a cheap metadata scan with no DB hit.
+  def self.settings_hidden_while_enabled
+    metadata = settings_provider.upcoming_change_metadata
+    return [] if metadata.empty?
+
+    metadata.each_with_object([]) do |(change_name, change_metadata), hidden|
+      next if change_metadata[:hide_settings].blank?
+      hidden.concat(change_metadata[:hide_settings]) if enabled?(change_name)
+    end
   end
 end

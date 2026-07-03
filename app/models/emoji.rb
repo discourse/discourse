@@ -15,6 +15,14 @@ class Emoji
 
   attr_accessor :name, :url, :tonable, :group, :created_by
 
+  # The cached `url` is the raw upload/asset URL. CDN conversion is applied
+  # lazily here (and in EmojiSerializer) so that changing the S3/asset CDN
+  # settings takes effect without having to rebuild the emoji cache.
+  def cdn_url
+    return nil if url.blank?
+    Discourse.store.cdn_url(url)
+  end
+
   def self.global_emoji_cache
     @global_emoji_cache ||= DistributedCache.new("global_emoji_cache", namespace: false)
   end
@@ -259,7 +267,6 @@ class Emoji
 
   def self.load_custom
     result = []
-
     if !GlobalSetting.skip_db?
       CustomEmoji
         .includes(:upload)
@@ -403,21 +410,21 @@ class Emoji
       match = Regexp.last_match
       code = match[1]
 
-      result << ERB::Util.html_escape(str[last_index...match.begin(0)])
+      result << ERB::Util.html_escape_once(str[last_index...match.begin(0)])
 
       result << if code && Emoji.custom?(code)
         emoji = Emoji[code]
-        emoji_img_tag(emoji.url, code)
+        emoji_img_tag(emoji.cdn_url, code)
       elsif code && Emoji.exists?(code)
         emoji_img_tag(Emoji.url_for(code), code)
       else
-        ERB::Util.html_escape(match[0])
+        ERB::Util.html_escape_once(match[0])
       end
 
       last_index = match.end(0)
     end
 
-    result << ERB::Util.html_escape(str[last_index..])
+    result << ERB::Util.html_escape_once(str[last_index..])
     result
   end
 

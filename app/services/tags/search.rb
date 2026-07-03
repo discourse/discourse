@@ -129,7 +129,7 @@ class Tags::Search
 
     candidate_tags =
       visible_tags(guardian)
-        .where("position(LOWER(?) IN LOWER(tags.name)) <> 0", params.term)
+        .where("tags.name ~* ?", "\\m#{Regexp.escape(params.term)}")
         .where.not(id: skip_ids)
         .limit(SiteSetting.max_tag_search_results)
         .to_a
@@ -196,7 +196,28 @@ class Tags::Search
           .where(one_per_topic: true, tag_group_memberships: { tag_id: tag.id })
           .where(id: TagGroupMembership.where(tag_id: selected_ids).select(:tag_group_id))
           .first
-      return I18n.t("tags.forbidden.one_tag_per_topic_group", tag_group_name: group.name) if group
+
+      if group
+        conflicting_tag_names =
+          visible_tags(guardian)
+            .where(id: selected_ids)
+            .joins(:tag_group_memberships)
+            .where(tag_group_memberships: { tag_group_id: group.id })
+            .order(:name)
+            .pluck(:name)
+
+        if conflicting_tag_names.present?
+          return(
+            I18n.t(
+              "tags.forbidden.one_tag_per_topic_group",
+              tag_group_name: group.name,
+              tag_names: conflicting_tag_names.join(", "),
+            )
+          )
+        end
+
+        return I18n.t("tags.forbidden.one_tag_per_topic_group_without_names")
+      end
     end
 
     if params.filterForInput
@@ -207,6 +228,7 @@ class Tags::Search
           .where.not(parent_tag_id: [nil, *selected_ids])
           .includes(:parent_tag)
           .first
+
       if group&.parent_tag && tag_visible?(group.parent_tag_id, guardian)
         return(
           I18n.t(

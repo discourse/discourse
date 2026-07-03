@@ -132,6 +132,12 @@ export default class LocalLoginForm extends Component {
   }
 
   @action
+  showCodeLogin(event) {
+    event?.preventDefault();
+    this.args.onShowCodeLogin();
+  }
+
+  @action
   handleForgotPassword(event) {
     event?.preventDefault();
 
@@ -192,15 +198,26 @@ export default class LocalLoginForm extends Component {
             {{i18n "login.email_placeholder"}}
           </label>
           {{#if @canLoginLocalWithEmail}}
-            <a
-              href
-              class={{if @loginName "" "no-login-filled"}}
-              tabindex="3"
-              id="email-login-link"
-              {{on "click" this.emailLogin}}
-            >
-              {{i18n "email_login.login_link"}}
-            </a>
+            {{#if @onShowCodeLogin}}
+              <a
+                href
+                tabindex="3"
+                id="one-time-code-link"
+                {{on "click" this.showCodeLogin}}
+              >
+                {{i18n "code_login.email_me_code"}}
+              </a>
+            {{else}}
+              <a
+                href
+                class={{if @loginName "" "no-login-filled"}}
+                tabindex="3"
+                id="email-login-link"
+                {{on "click" this.emailLogin}}
+              >
+                {{i18n "email_login.login_link"}}
+              </a>
+            {{/if}}
           {{/if}}
         </div>
         <div class="input-group">

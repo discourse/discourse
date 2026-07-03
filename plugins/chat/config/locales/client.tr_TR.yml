@@ -313,12 +313,13 @@ tr_TR:
         other: "%{count} okunmamış tartışmanız var"
       scroll_to_bottom: "En alta kaydır"
       scroll_to_new_messages: "Yeni mesajlara bak"
+      new_messages:
+        one: "%{count} yeni mesaj"
+        other: "%{count} yeni mesaj"
       sound:
         title: "Masaüstü sohbet bildirim sesi"
       sounds:
         none: "Hiçbiri"
-        bell: "Zil"
-        ding: "Ding"
       title: "sohbet"
       title_capitalized: "Sohbet"
       upload: "Dosya ekle"
@@ -399,8 +400,6 @@ tr_TR:
         input_placeholder: Ad ekleyin
         slug_description: URL'de kanal adı yerine kanal slug'ı kullanılmış
         name: Kanal adı
-        slug: Kanal slug'ı (isteğe bağlı)
-        emoji: Kanal emojisi (isteğe bağlı)
         reset_emoji: Emojiyi sıfırla
       channel_edit_description_modal:
         title: Açıklamayı düzenle
@@ -458,16 +457,14 @@ tr_TR:
             one: '%{group} ve %{count} grupta daha bulunan kullanıcılar, <a href="%{settingLink}" target="_blank">güvenlik ayarları</a> uyarınca bu kanala erişebilecek'
             other: '%{group} ve %{count} grupta daha bulunan kullanıcılar, <a href="%{settingLink}" target="_blank">güvenlik ayarları</a> uyarınca bu kanala erişebilecek'
         create: "Kanal oluştur"
-        description: "Açıklama (isteğe bağlı)"
+        description: "Açıklama"
         name: "Kanal adı"
-        slug: "Kanal slug'ı (isteğe bağlı)"
         title: "Yeni kanal"
         type: "Tür"
         types:
           category: "Kategori"
           topic: "Konu"
         emoji:
-          label: "Kanal emojisi (isteğe bağlı)"
           reset: "Emojiyi sıfırla"
       reviewable:
         type: "Sohbet mesajı"
@@ -481,6 +478,10 @@ tr_TR:
           other: "<span>Siz, %{commaSeparatedUsernames} ve %{count} kişi daha şu şekilde tepki verdiniz: </span>:%{emoji}:"
         single_user: "<span>%{username} şu şekilde tepki verdi</span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} ve %{username} şu şekilde tepki verdi</span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} yorum"
+            other: "%{count} yorum"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} ve %{count} kişi daha şu şekilde tepki verdi: </span>:%{emoji}:"
           other: "<span>%{commaSeparatedUsernames} ve %{count} kişi daha şu şekilde tepki verdi: </span>:%{emoji}:"
@@ -791,3 +792,15 @@ tr_TR:
       panels:
         chat:
           label: "Sohbet"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Sohbet mesajı gönder"
+        "trigger:chat_message_created": "Sohbet mesajı oluşturuldu"
+      chat_message_created:
+        channel_id: "Kanal"
+      send_chat_message:
+        channel_id: "Kanal"
+        message: "Mesaj"
+      chat_approval:
+        message: "Mesaj"
+        channel_id: "Kanal"

@@ -6,8 +6,10 @@ import {
   inputFieldPrefixForConnection,
   inputForRun,
   inputSummaryForNode,
-  nodeItemJsonPath,
+  nodeOutputFirstJsonPath,
   nodeOutputItemJsonPath,
+  nodeOutputJsonPath,
+  nodeOutputLinkedItemJsonPath,
   outputForRun,
   outputSchemaForNode,
   outputSummaryForNode,
@@ -135,6 +137,33 @@ module("Unit | lib | discourse-workflows | data-schema", function () {
     });
   });
 
+  test("schemaFieldsForNodeOutput ignores runs for another node with the same name", function (assert) {
+    const runData = {
+      Log: [
+        {
+          node_id: "old-log",
+          node_type: "action:log",
+          status: "success",
+          outputs: [
+            { index: 0, items: [{ json: { stale: true } }], item_count: 1 },
+          ],
+        },
+      ],
+    };
+    const node = { id: "new-log", name: "Log", type: "action:log" };
+
+    assert.deepEqual(
+      schemaFieldsForNodeOutput(runData, "Log", { node }),
+      [],
+      "does not expose output from a different node id"
+    );
+    assert.strictEqual(
+      outputSummaryForNode(runData, "Log", 0, { node }),
+      null,
+      "does not expose summary from a different node id"
+    );
+  });
+
   test("outputForRun keeps output indexes positional", function (assert) {
     const run = {
       outputs: [{ index: 0, items: [{ json: { primary: true } }] }],
@@ -202,10 +231,179 @@ module("Unit | lib | discourse-workflows | data-schema", function () {
     assert.strictEqual(inputForRun(runData["Node 1"][0], 0), null);
   });
 
-  test("nodeItemJsonPath escapes node names for expressions", function (assert) {
+  test("schemaFieldsForNodeInput ignores recorded inputs from another source", function (assert) {
+    const currentNode = { id: "log", name: "Log", type: "action:log" };
+    const sourceNode = {
+      id: "post-moved",
+      name: "Post moved",
+      type: "trigger:post_moved",
+    };
+    const runData = {
+      Log: [
+        {
+          node_id: "log",
+          node_type: "action:log",
+          status: "success",
+          inputs: [
+            {
+              index: 0,
+              items: [{ json: { reviewable: { id: 1 } } }],
+              item_count: 1,
+              source: { node_name: "Approved reviewable", output_index: 0 },
+            },
+          ],
+        },
+      ],
+      "Post moved": [
+        {
+          node_id: "post-moved",
+          node_type: "trigger:post_moved",
+          status: "success",
+          outputs: [
+            { index: 0, items: [{ json: { post: { id: 1 } } }], item_count: 1 },
+          ],
+        },
+      ],
+    };
+
+    assert.deepEqual(
+      schemaFieldsForNodeInput(runData, "Log", {
+        node: currentNode,
+        sourceNode,
+        outputIndex: 0,
+      }),
+      [],
+      "does not expose input fields from a stale source"
+    );
     assert.strictEqual(
-      nodeItemJsonPath('Fetch "quoted" \\ data'),
+      inputSummaryForNode(runData, "Log", 0, {
+        node: currentNode,
+        sourceNode,
+        outputIndex: 0,
+      }),
+      null,
+      "does not expose input summary from a stale source"
+    );
+  });
+
+  test("schemaFieldsForNodeInput previews connected upstream output before the current node succeeds", function (assert) {
+    const currentNode = {
+      id: "post",
+      name: "Post",
+      type: "action:post",
+    };
+    const sourceNode = {
+      id: "template",
+      name: "Template",
+      type: "action:template",
+    };
+    const runData = {
+      Template: [
+        {
+          node_id: "template",
+          node_type: "action:template",
+          status: "success",
+          outputs: [
+            {
+              index: 0,
+              items: [{ json: { template: "Rendered body" } }],
+              item_count: 1,
+            },
+          ],
+        },
+      ],
+      Post: [
+        {
+          node_id: "post",
+          node_type: "action:post",
+          status: "skipped",
+          inputs: [
+            {
+              index: 0,
+              items: [{ json: { template: "Rendered body" } }],
+              item_count: 1,
+              source: null,
+            },
+          ],
+        },
+      ],
+    };
+
+    assert.deepEqual(
+      schemaFieldsForNodeInput(runData, "Post", {
+        node: currentNode,
+        sourceNode,
+        outputIndex: 0,
+      }).map((field) => field.key),
+      ["template"]
+    );
+    assert.deepEqual(
+      inputSummaryForNode(runData, "Create post", 0, {
+        node: currentNode,
+        sourceNode,
+        outputIndex: 0,
+      }),
+      {
+        inputIndex: 0,
+        itemCount: 1,
+        truncated: false,
+      }
+    );
+  });
+
+  test("nodeOutputFirstJsonPath escapes node names and output indexes for expressions", function (assert) {
+    assert.strictEqual(
+      nodeOutputFirstJsonPath('Fetch "quoted" \\ data', { outputIndex: 1 }),
+      '$("Fetch \\"quoted\\" \\\\ data").first(1).json'
+    );
+    assert.strictEqual(
+      nodeOutputFirstJsonPath("Fetch data"),
+      '$("Fetch data").first().json'
+    );
+  });
+
+  test("nodeOutputLinkedItemJsonPath escapes node names for expressions", function (assert) {
+    assert.strictEqual(
+      nodeOutputLinkedItemJsonPath('Fetch "quoted" \\ data'),
       '$("Fetch \\"quoted\\" \\\\ data").item.json'
+    );
+  });
+
+  test("nodeOutputJsonPath uses the simplest safe output expression", function (assert) {
+    const runData = {
+      Aggregate: [
+        {
+          status: "success",
+          outputs: [
+            {
+              index: 0,
+              items: [{ json: { markdown: "summary" } }],
+              item_count: 1,
+            },
+          ],
+        },
+      ],
+      "Per item": [
+        {
+          status: "success",
+          outputs: [
+            {
+              index: 0,
+              items: [{ json: { name: "Ada" } }, { json: { name: "Grace" } }],
+              item_count: 2,
+            },
+          ],
+        },
+      ],
+    };
+
+    assert.strictEqual(
+      nodeOutputJsonPath(runData, "Aggregate"),
+      '$("Aggregate").first().json'
+    );
+    assert.strictEqual(
+      nodeOutputJsonPath(runData, "Per item"),
+      '$("Per item").item.json'
     );
   });
 

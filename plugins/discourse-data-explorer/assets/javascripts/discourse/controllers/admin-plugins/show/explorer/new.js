@@ -4,8 +4,13 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { i18n } from "discourse-i18n";
+import KeyValueStore from "discourse/lib/key-value-store";
+import I18n, { i18n } from "discourse-i18n";
 import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
+import { defaultView } from "discourse/plugins/discourse-data-explorer/discourse/lib/chart-helpers";
+
+const dataExplorerStore = new KeyValueStore("discourse_data_explorer_");
+const HIDE_SCHEMA_KEY = "hide_schema";
 
 export default class AdminPluginsExplorerNew extends Controller {
   @service store;
@@ -23,10 +28,58 @@ export default class AdminPluginsExplorerNew extends Controller {
   @tracked generatedDescription = "";
   @tracked mode = "ai";
   @tracked schema = null;
+  @tracked hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
   @tracked manualSql = "SELECT 1";
+  @tracked previewLoading = false;
+  @tracked previewResults = null;
+  @tracked showPreview = false;
+  @tracked view = "sql";
 
   manualFormData = { name: "", description: "" };
   _teardownAiGeneration = null;
+
+  get previewDisabled() {
+    return (
+      this.aiGenerating || this.previewLoading || !this.generatedSql.trim()
+    );
+  }
+
+  get viewItems() {
+    return [
+      { value: "chart", icon: "signal" },
+      { value: "table", icon: "table" },
+      { value: "sql", icon: "code" },
+    ];
+  }
+
+  get previewSucceeded() {
+    return this.showPreview && this.previewResults?.success;
+  }
+
+  get previewResultCount() {
+    if (!this.previewSucceeded) {
+      return null;
+    }
+    const count = this.previewResults.result_count;
+    if (count === this.previewResults.default_limit) {
+      return i18n("explorer.max_result_count", { count });
+    }
+    return i18n("explorer.result_count", { count });
+  }
+
+  get previewDuration() {
+    if (!this.previewSucceeded) {
+      return null;
+    }
+    return i18n("explorer.run_time", {
+      value: I18n.toNumber(this.previewResults.duration, { precision: 1 }),
+    });
+  }
+
+  @action
+  setView(value) {
+    this.view = value;
+  }
 
   get aiQueriesEnabled() {
     return this.siteSettings.data_explorer_ai_queries_enabled;
@@ -48,6 +101,12 @@ export default class AdminPluginsExplorerNew extends Controller {
   @action
   updateManualSql(value) {
     this.manualSql = value;
+  }
+
+  @action
+  updateHideSchema(value) {
+    this.hideSchema = value;
+    dataExplorerStore.set({ key: HIDE_SCHEMA_KEY, value: value.toString() });
   }
 
   @action
@@ -83,6 +142,8 @@ export default class AdminPluginsExplorerNew extends Controller {
 
     this._teardownAi();
     this.aiGenerating = true;
+    this.showPreview = false;
+    this.previewResults = null;
 
     try {
       const response = await ajax(
@@ -105,6 +166,9 @@ export default class AdminPluginsExplorerNew extends Controller {
           this.generatedDescription = data.description;
           this.hasGenerated = true;
           this.aiGenerating = false;
+          // prioritise the result: run straight away so the data is what the
+          // user sees, with the SQL one tab away
+          this.runPreview();
         },
         onError: (data) => {
           this.aiGenerating = false;
@@ -128,6 +192,43 @@ export default class AdminPluginsExplorerNew extends Controller {
   }
 
   @action
+  async runPreview() {
+    if (this.previewDisabled) {
+      return;
+    }
+
+    this.previewLoading = true;
+    this.showPreview = false;
+
+    try {
+      const result = await ajax(
+        "/admin/plugins/discourse-data-explorer/queries/preview.json",
+        {
+          type: "POST",
+          data: {
+            sql: this.generatedSql,
+            name: this.generatedName || undefined,
+          },
+        }
+      );
+      this.previewResults = result;
+      this.showPreview = true;
+      if (result.success && this.view === "sql") {
+        this.view = defaultView(result);
+      }
+    } catch (error) {
+      if (error.jqXHR?.status === 422 && error.jqXHR.responseJSON) {
+        this.previewResults = error.jqXHR.responseJSON;
+        this.showPreview = true;
+      } else {
+        popupAjaxError(error);
+      }
+    } finally {
+      this.previewLoading = false;
+    }
+  }
+
+  @action
   async saveQuery() {
     try {
       this.loading = true;
@@ -141,9 +242,12 @@ export default class AdminPluginsExplorerNew extends Controller {
       this.toasts.success({
         data: { message: i18n("explorer.query_created") },
       });
+      // Run the query straight away — there's nothing new to do on the edit
+      // page first, so save and show the results in one step.
       this.router.transitionTo(
         "adminPlugins.show.explorer.edit",
-        result.target.id
+        result.target.id,
+        { queryParams: { run: true } }
       );
     } catch (error) {
       popupAjaxError(error);
@@ -187,8 +291,13 @@ export default class AdminPluginsExplorerNew extends Controller {
     this.generatedDescription = "";
     this.mode = "ai";
     this.schema = null;
+    this.hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
     this.manualSql = "SELECT 1";
     this.loading = false;
     this.manualFormData = { name: "", description: "" };
+    this.previewLoading = false;
+    this.previewResults = null;
+    this.showPreview = false;
+    this.view = "sql";
   }
 }

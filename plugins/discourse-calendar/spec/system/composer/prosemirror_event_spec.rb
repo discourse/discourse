@@ -257,5 +257,45 @@ describe "Composer - ProseMirror - Event Editor" do
 
       expect(rich).to have_css(".composer-event__more-dropdown")
     end
+
+    it "persists allowed custom fields edited through the event builder to markdown" do
+      SiteSetting.discourse_post_event_allowed_custom_fields = "fancy_field"
+
+      open_composer
+      composer.toggle_rich_editor
+      composer.fill_content(
+        "[event start=\"2025-03-21 15:41\" status=\"public\" timezone=\"Europe/Paris\"]\n[/event]",
+      )
+      composer.toggle_rich_editor
+
+      rich.find(".composer-event__more-dropdown button").click
+
+      form = PageObjects::Components::FormKit.new(".post-event-builder-modal form")
+      form.field("customFields.fancy_field").fill_in("hello world")
+      find(".post-event-builder-modal .d-modal__footer .btn-primary").click
+      expect(page).to have_no_css(".post-event-builder-modal")
+
+      composer.toggle_rich_editor
+      expect(find(".d-editor-input").value).to include("fancyField=\"hello world\"")
+    end
+  end
+
+  describe "focus" do
+    it "keeps the topic title focused on the first click after editing the event node" do
+      open_composer
+      composer.toggle_rich_editor
+      composer.fill_content(
+        "[event start=\"2025-03-21 15:41\" status=\"public\" timezone=\"Europe/Paris\"]\n[/event]",
+      )
+      composer.toggle_rich_editor
+
+      rich.find(".composer-event__name-input").fill_in(with: "My offsite")
+
+      find("#reply-title").click
+
+      title_focused =
+        page.evaluate_script("document.activeElement === document.querySelector('#reply-title')")
+      expect(title_focused).to eq(true)
+    end
   end
 end

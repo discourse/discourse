@@ -152,11 +152,14 @@ class Theme < ActiveRecord::Base
 
     any_non_css_fields_changed =
       changed_fields.any? { |f| !(f.basic_scss_field? || f.extra_scss_field?) }
+    any_extra_js_fields_changed = changed_fields.any?(&:extra_js_field?)
 
-    changed_fields.each(&:save!)
+    changed_fields.each { |f| f.marked_for_destruction? ? f.destroy : f.save! }
     changed_fields.clear
 
     theme_modifier_set.save!
+
+    theme_fields.reload
 
     theme_fields.select(&:basic_html_field?).each(&:invalidate_baked!) if saved_change_to_name?
 
@@ -170,7 +173,7 @@ class Theme < ActiveRecord::Base
     settings_field&.ensure_baked! # Other fields require setting to be **baked**
     theme_fields.each(&:ensure_baked!)
 
-    update_javascript_cache!
+    update_javascript_cache! if any_extra_js_fields_changed
 
     remove_from_cache!
     ColorScheme.hex_cache.clear
@@ -215,11 +218,15 @@ class Theme < ActiveRecord::Base
   def update_javascript_cache!
     all_extra_js = load_all_extra_js
     if all_extra_js.present?
-      js_compiler = ThemeJavascriptCompiler.new(id, name, build_settings_hash)
+      js_compiler = ThemeJavascriptCompiler.new(id, name)
       js_compiler.append_tree(all_extra_js)
 
       javascript_cache || build_javascript_cache
-      javascript_cache.update!(content: js_compiler.content, source_map: js_compiler.source_map)
+      javascript_cache.update!(
+        content: js_compiler.content,
+        source_map: js_compiler.source_map,
+        external_plugin_imports: js_compiler.external_plugin_imports,
+      )
     else
       javascript_cache&.destroy!
     end
@@ -476,6 +483,35 @@ class Theme < ActiveRecord::Base
     resolved.html_safe
   end
 
+  # An array of `{ url:, theme_id:, external_plugin_imports: }` hashes describing
+  # the theme's baked `extra_js` javascript caches.
+  def self.js_asset_info(theme_id, skip_transformation: false)
+    return [] if theme_id.blank?
+
+    theme_ids = !skip_transformation ? transform_ids(theme_id) : [theme_id]
+
+    get_set_cache("#{theme_ids.join(",")}:extra_js:#{Theme.compiler_version}") do
+      require_rebake =
+        ThemeField
+          .where(theme_id: theme_ids, target_id: targets[:extra_js])
+          .where.not(compiler_version: compiler_version)
+
+      ActiveRecord::Base.transaction do
+        require_rebake.each(&:ensure_baked!)
+        Theme.where(id: require_rebake.map(&:theme_id)).each(&:update_javascript_cache!)
+      end
+
+      JavascriptCache
+        .where(theme_id: theme_ids)
+        .index_by(&:theme_id)
+        .values_at(*theme_ids)
+        .compact
+        .map do |c|
+          { url: c.url, theme_id: c.theme_id, external_plugin_imports: c.external_plugin_imports }
+        end
+    end
+  end
+
   def self.lookup_modifier(theme_ids, modifier_name)
     theme_ids = [theme_ids] unless theme_ids.is_a?(Array)
 
@@ -567,30 +603,6 @@ class Theme < ActiveRecord::Base
     target = :desktop if target == :desktop_theme
 
     case target
-    when :extra_js
-      get_set_cache("#{theme_ids.join(",")}:extra_js:#{Theme.compiler_version}") do
-        require_rebake =
-          ThemeField
-            .where(theme_id: theme_ids, target_id: targets[:extra_js])
-            .where.not(compiler_version: compiler_version)
-
-        ActiveRecord::Base.transaction do
-          require_rebake.each { |tf| tf.ensure_baked! }
-
-          Theme.where(id: require_rebake.map(&:theme_id)).each(&:update_javascript_cache!)
-        end
-
-        caches =
-          JavascriptCache
-            .where(theme_id: theme_ids)
-            .index_by(&:theme_id)
-            .values_at(*theme_ids)
-            .compact
-
-        caches.map { |c| <<~HTML.html_safe }.join("\n")
-          <link rel="modulepreload" href="#{c.url}" data-theme-id="#{c.theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}" />
-        HTML
-      end
     when :translations
       theme_field_values(theme_ids, :translations, I18n.fallbacks[name])
         .to_a
@@ -646,7 +658,7 @@ class Theme < ActiveRecord::Base
 
   # def foundation_theme
   # def horizon_theme
-  CORE_THEMES.each { |name, id| define_singleton_method("#{name}_theme") { Theme.find(id) } }
+  CORE_THEMES.each { |name, id| define_singleton_method("#{name}_theme") { Theme.find_by(id: id) } }
   def resolve_baked_field(target, name)
     list_baked_fields(target, name).map { |f| f.value_baked || f.value }.join("\n")
   end
@@ -699,7 +711,8 @@ class Theme < ActiveRecord::Base
 
     if field
       if value.blank? && !upload_id
-        field.destroy
+        field.mark_for_destruction
+        changed_fields << field
       else
         if field.value != value || field.upload_id != upload_id
           field.value = value
@@ -1037,7 +1050,6 @@ class Theme < ActiveRecord::Base
       end
 
       reload
-      update_javascript_cache!
     end
 
     if start_transaction
@@ -1083,7 +1095,7 @@ class Theme < ActiveRecord::Base
         theme_fields.where(target_id: Theme.targets[:migrations]).order(name: :asc),
       )
 
-    compiler = ThemeJavascriptCompiler.new(id, name, cached_default_settings, minify: false)
+    compiler = ThemeJavascriptCompiler.new(id, name, minify: false)
     compiler.append_tree(load_all_extra_js)
     compiler.append_tree(migrations_tree)
     compiler.append_tree(tests_tree)

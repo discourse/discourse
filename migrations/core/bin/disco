@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../../Gemfile", __dir__)
+
+require "bundler"
+Bundler.setup(:default, :migrations)
+
+require "colored2"
+
+require "migrations-core"
+require "migrations-tooling"
+require "migrations-converters"
+require "migrations-importer"
+
+Migrations.enable_i18n
+Migrations.apply_global_config
+
+# Each gem registers its top-level commands into Migrations::CLI::Registry.
+require "migrations/tooling/register"
+require "migrations/converters/register"
+require "migrations/importer/register"
+
+if defined?(RubyVM::YJIT)
+  RubyVM::YJIT.enable
+else
+  warn "WARNING: Performance degraded: RubyVM::YJIT is not available".yellow
+end
+
+# rubocop:disable Discourse/NoChdir
+Dir.chdir(Migrations.host_app_root) do
+  Migrations::CLI::ExceptionHandler.handle_and_exit { Migrations::CLI::Bootstrap.run(ARGV) }
+end
+# rubocop:enable Discourse/NoChdir

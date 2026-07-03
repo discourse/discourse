@@ -1,10 +1,10 @@
-/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
 import { computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { observes } from "@ember-decorators/object";
-import $ from "jquery";
 import List from "discourse/components/topic-list/list";
+import domUtils from "discourse/lib/dom-utils";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 
@@ -69,21 +69,16 @@ export default class BasicTopicList extends Component {
       return;
     }
 
-    let target = $(e.target);
-    if (target.closest(".posts-map").length) {
-      const topicId = target.closest("tr").attr("data-topic-id");
+    let target = e.target;
+    if (target.closest(".posts-map")) {
+      const topicId = target.closest("tr")?.getAttribute("data-topic-id");
       if (topicId) {
-        if (target.prop("tagName") !== "A") {
-          let targetLinks = target.find("a");
-          if (targetLinks.length) {
-            target = targetLinks;
+        if (target.tagName !== "A") {
+          const link = target.querySelector("a") || target.closest("a");
+          if (link) {
+            target = link;
           } else {
-            targetLinks = target.closest("a");
-            if (targetLinks.length) {
-              target = targetLinks;
-            } else {
-              return false;
-            }
+            return false;
           }
         }
 
@@ -92,7 +87,7 @@ export default class BasicTopicList extends Component {
         );
         this.appEvents.trigger("topic-entrance:show", {
           topic,
-          position: target.offset(),
+          position: domUtils.offset(target),
         });
       }
       return false;

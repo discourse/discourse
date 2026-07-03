@@ -44,6 +44,9 @@ ur:
       save: "تبدیلیاں محفوظ کریں"
       run: "چلائیں"
       delete: "مٹائیں"
+      chart:
+        form:
+          bar: "بار"
       others_dirty: "ایک ڈیٹا کمانڈ کی غیرمحفوظ کردہ تبدیلیاں موجود ہیں جو آپ کے یہاں سے جانے کے بعد کھو جائیں گی۔"
       result_count:
         one: "%{count} نتیجہ۔"
@@ -56,6 +59,15 @@ ur:
       query_user: "نے بنایا"
       reset_params: "رِی سَیٹ"
       search_placeholder: "تلاش کریں..."
-      no_search_results: "معذرت، ہمیں آپ کے متن سے ملتے ہوے کوئی نتائج نہ مل سکے۔"
+      no_search_results: "معذرت، ہمیں آپ کے متن سے ملتے ہوے کوئی نتائج نہیں ملے۔"
     group:
       reports: "رپورٹیں"
+    discourse_workflows:
+      nodes:
+        "action:sql": "ڈیٹا ایکسپلورر"
+      sql:
+        query_id: "ڈیٹا کمانڈ"
+        param_value: "وَیلِیو"
+        output:
+          results: "نتائج"
+          no_results: "کوئی نتائج نہیں"

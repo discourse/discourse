@@ -107,6 +107,7 @@ export function addComposerSaveErrorCallback(callback) {
 export default class ComposerService extends Service {
   @service appEvents;
   @service capabilities;
+  @service composerActionState;
   @service currentUser;
   @service dialog;
   @service keyValueStore;
@@ -224,6 +225,14 @@ export default class ComposerService extends Service {
   @computed("model.creatingTopic", "isStaffUser")
   get canUnlistTopic() {
     return this.model?.creatingTopic && this.isStaffUser;
+  }
+
+  @computed("model.action", "isStaffUser", "currentUser.trust_level")
+  get canToggleNoBump() {
+    return (
+      this.model?.action === Composer.REPLY &&
+      (this.isStaffUser || this.currentUser?.trust_level === 4)
+    );
   }
 
   @computed("replyingToWhisper", "model.whisper")
@@ -427,11 +436,6 @@ export default class ComposerService extends Service {
     return this.model?.editingPost && !this.model?.topic?.canEditTags;
   }
 
-  @computed("canWhisper", "replyingToWhisper")
-  get showWhisperToggle() {
-    return this.canWhisper && !this.replyingToWhisper;
-  }
-
   @computed("model.post")
   get replyingToWhisper() {
     return (
@@ -507,6 +511,14 @@ export default class ComposerService extends Service {
   @computed("whisperer", "model.action")
   get canWhisper() {
     return this.whisperer && this.model?.action === Composer.REPLY;
+  }
+
+  @computed("canWhisper", "model.post.post_type", "site.post_types.whisper")
+  get canToggleWhisper() {
+    return (
+      this.canWhisper &&
+      this.model?.post?.post_type !== this.site.post_types?.whisper
+    );
   }
 
   _setupPopupMenuOption(option) {
@@ -1350,7 +1362,7 @@ export default class ComposerService extends Service {
           buttons: [
             {
               label: i18n("composer.cancel"),
-              class: "btn-flat btn-text btn-reply-where__cancel",
+              class: "btn-default btn-text btn-reply-where__cancel",
             },
           ],
           class: "reply-where-modal",
@@ -1422,6 +1434,7 @@ export default class ComposerService extends Service {
         if (result.responseJson.route_to) {
           // TODO: await this:
           this.destroyDraft();
+          this.composerActionState.clear();
           if (result.responseJson.message) {
             return this.dialog.alert({
               message: result.responseJson.message,
@@ -1681,6 +1694,8 @@ export default class ComposerService extends Service {
 
     tags = await this.filterTags(tags);
 
+    this.composerActionState.clear();
+
     return this.open({
       prioritizedCategoryId: categoryId,
       topicCategoryId: categoryId,
@@ -1699,6 +1714,9 @@ export default class ComposerService extends Service {
   @action
   async openNewMessage({ title, body, recipients, hasGroups, tags }) {
     tags = await this.filterTags(tags);
+
+    this.composerActionState.clear();
+
     return this.open({
       action: Composer.PRIVATE_MESSAGE,
       recipients,
@@ -2069,6 +2087,8 @@ export default class ComposerService extends Service {
 
     // This is a temporary solution to reset the saved form template state while we don't store drafts
     this.set("formTemplateInitialValues", undefined);
+
+    this.composerActionState.clear();
   }
 
   @computed("model.action")

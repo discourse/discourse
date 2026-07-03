@@ -15,13 +15,18 @@ uk:
       title: Опитування RSS
     admin:
       rss_polling:
-        feed: Налаштування стрічки
-        discourse: Налаштування дискурсу
         author: Автор
         feed_url: Посилання
         discourse_category: Категорія
         discourse_tags: Теґи
-        feed_category_filter: Фільтр категорії
-        documentation: Документація щодо конфігурації RSS-опитування
-        destroy_feed:
-          confirm: "Ви впевнені, що хочете видалити цю стрічку?"
+        feeds:
+          edit: Редагувати
+          delete: Видалити
+          save: Зберегти
+          confirm_delete: "Ви впевнені, що хочете видалити цю стрічку?"
+        test:
+          title: Попередній перегляд
+          dismiss: Відкласти
+        status:
+          enabled: Включено
+          disabled: Вимкнено

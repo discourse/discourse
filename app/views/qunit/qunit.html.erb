@@ -11,7 +11,6 @@
       <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
       <%= preload_script_url ExtraLocalesController.url("admin"), type_module: true %>
       <%= preload_script_url ExtraLocalesController.url("wizard"), type_module: true %>
-      <%= preload_script_url "/bootstrap/site-settings-for-tests.js", type_module: true %>
       <%= theme_translations_lookup %>
 
       <script nonce="<%= csp_nonce_placeholder %>">
@@ -19,7 +18,7 @@
       </script>
 
       <%= tag.iframe srcdoc: tag.script(
-        src: script_asset_path(EmberCli.script_chunks["qunit-live-reload"].first),
+        src: script_asset_path(EmberAssets.script_chunks["qunit-live-reload"].first),
         nonce: csp_nonce_placeholder,
         type: "module",
       ), style: "display: none;" %>
@@ -37,6 +36,7 @@
 
       <%= theme_lookup("head_tag") %>
       <%= theme_tests %>
+      <%= fake_preload_data %>
 
       <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
       <meta property="og:title" content="">
@@ -81,9 +81,8 @@
       <discourse-assets-icons></discourse-assets-icons>
 
       <script nonce="<%= csp_nonce_placeholder %>">
-        window.EmberENV = {
-          _DEFAULT_ASYNC_OBSERVERS: true,
-        };
+        window.EmberENV ??= {};
+        window.EmberENV._DEFAULT_ASYNC_OBSERVERS = true;
       </script>
 
       <%= preload_script "test-entrypoint", type_module: true %>

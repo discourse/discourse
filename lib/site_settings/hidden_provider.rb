@@ -18,6 +18,15 @@ class SiteSettings::HiddenProvider
   end
 
   def all
-    DiscoursePluginRegistry.apply_modifier(:hidden_site_settings, @hidden_settings)
+    hidden = @hidden_settings
+
+    # Settings hidden because an upcoming change that replaces them is enabled.
+    # Unioned before the modifier so plugins can still explicitly un-hide a
+    # setting via the :hidden_site_settings modifier. Skipped entirely when no
+    # change opts in, to avoid allocating a new Set on every read.
+    upcoming_change_hidden = UpcomingChanges.settings_hidden_while_enabled
+    hidden = hidden | upcoming_change_hidden if upcoming_change_hidden.present?
+
+    DiscoursePluginRegistry.apply_modifier(:hidden_site_settings, hidden)
   end
 end

@@ -16,6 +16,44 @@ RSpec.describe AiAgent do
 
   before { enable_current_plugin }
 
+  it "exposes system agent thinking effort on class instances" do
+    agent_record =
+      AiAgent.find(DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::Creative])
+    agent_record.update!(thinking_effort: "max")
+
+    agent = agent_record.class_instance.new
+
+    expect(agent.thinking_effort).to eq("max")
+  end
+
+  it "declares a default thinking effort for reasoning-enabled system agents" do
+    {
+      DiscourseAi::Agents::Creative => "low",
+      DiscourseAi::Agents::General => "low",
+      DiscourseAi::Agents::DiscourseHelper => "low",
+      DiscourseAi::Agents::SqlHelper => "medium",
+      DiscourseAi::Agents::ForumResearcher => "high",
+    }.each do |klass, effort|
+      expect(klass.new.thinking_effort).to eq(effort),
+      "expected #{klass} to default to #{effort.inspect} thinking effort, got #{klass.new.thinking_effort.inspect}"
+    end
+  end
+
+  it "seeds the default thinking effort on deploy without clobbering admin choices" do
+    creative_id = DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::Creative]
+    general_id = DiscourseAi::Agents::Agent.system_agents[DiscourseAi::Agents::General]
+
+    # an agent that was never configured, and one an admin has customized
+    AiAgent.where(id: creative_id).update_all(thinking_effort: nil)
+    AiAgent.where(id: general_id).update_all(thinking_effort: "high")
+
+    # load (not require_relative) so the seeding script actually re-executes here
+    load Rails.root.join("plugins/discourse-ai/db/fixtures/agents/603_ai_agents.rb") # rubocop:disable Discourse/Plugins/UseRequireRelative
+
+    expect(AiAgent.find(creative_id).thinking_effort).to eq("low") # seeded default
+    expect(AiAgent.find(general_id).thinking_effort).to eq("high") # admin choice preserved
+  end
+
   it "validates context settings" do
     expect(basic_agent.valid?).to eq(true)
 
@@ -72,6 +110,35 @@ RSpec.describe AiAgent do
     ]
     expect(basic_agent.valid?).to eq(false)
     expect(basic_agent.errors[:tools]).to eq(["Can not have duplicate tools"])
+  end
+
+  describe "provider-native tools" do
+    fab!(:gemini_model)
+    fab!(:openai_chat_model) do
+      Fabricate(:llm_model, url: "https://api.openai.com/v1/chat/completions")
+    end
+
+    it "requires a forced default LLM that supports the native tool" do
+      basic_agent.tools = ["native-web_search"]
+
+      # no forced default LLM
+      expect(basic_agent.valid?).to eq(false)
+      expect(basic_agent.errors[:tools]).to include(
+        I18n.t("discourse_ai.ai_bot.agents.native_tool_requires_forced_llm"),
+      )
+
+      # forced LLM whose provider does not support web search (chat completions)
+      basic_agent.default_llm = openai_chat_model
+      basic_agent.force_default_llm = true
+      expect(basic_agent.valid?).to eq(false)
+      expect(basic_agent.errors[:tools]).to include(
+        I18n.t("discourse_ai.ai_bot.agents.native_tool_unsupported_by_llm"),
+      )
+
+      # forced LLM that supports web search
+      basic_agent.default_llm = gemini_model
+      expect(basic_agent.valid?).to eq(true)
+    end
   end
 
   it "allows creation of user" do
