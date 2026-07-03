@@ -96,7 +96,7 @@ module Migrations
             end
 
             expected_type = enum.datatype == :integer ? Integer : String
-            invalid_values = enum.values.reject { |_, value| value.is_a?(expected_type) }
+            invalid_values = enum.values.reject { |_, value| value.instance_of?(expected_type) }
             if invalid_values.any?
               @errors << "Enum '#{enum.name}' has values that do not match datatype '#{enum.datatype}'"
             end
