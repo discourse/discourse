@@ -2476,6 +2476,7 @@ pt:
       email_label: "E-mail"
       continue_button: "Continuar"
       verify_button: "Continuar"
+      signup_title: "Crie sua conta"
       account_ready_continue: "Continuar"
       username_label: "Nome de Utilizador"
     login:

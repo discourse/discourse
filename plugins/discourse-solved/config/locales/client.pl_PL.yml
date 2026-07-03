@@ -74,6 +74,8 @@ pl_PL:
         label_with_count: "%{label} (%{count})"
         title: "Ja również mam ten problem"
         author_title: "Rozpocząłeś ten temat"
+        closed_title: "Ten temat jest zamknięty"
+        archived_title: "Ten temat został zarchiwizowany"
       no_answer:
         title: Czy odpowiedź na twoje pytanie została udzielona?
         description: "Podświetl odpowiedź i pomóż innym, korzystając z przycisku rozwiązania pod prawidłową odpowiedzią."

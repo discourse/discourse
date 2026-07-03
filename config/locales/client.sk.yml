@@ -2619,6 +2619,7 @@ sk:
       email_label: "Email"
       continue_button: "Pokračovať"
       verify_button: "Pokračovať"
+      signup_title: "Vytvorte si účet"
       account_ready_continue: "Pokračovať"
       username_label: "Používateľské meno"
     login:

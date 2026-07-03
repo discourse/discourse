@@ -985,9 +985,6 @@ de:
         description: "Wähle eine der folgenden Optionen und die KI schlägt dir eine neue Version des Textes vor."
         selection_hint: "Tipp: Du kannst auch einen Teil des Textes auswählen, bevor du den Assistenten öffnest, um nur diesen Teil neu zu schreiben."
         suggest_errors:
-          too_many_tags:
-            one: "Du kannst höchstens %{count} Schlagwort haben."
-            other: "Du kannst höchstens %{count} Schlagwörter haben."
           no_suggestions: "Keine Vorschläge verfügbar"
         missing_content: "Bitte gib einige Inhalte ein, um Vorschläge zu generieren."
         context_menu:

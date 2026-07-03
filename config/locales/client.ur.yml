@@ -2680,6 +2680,7 @@ ur:
       email_label: "ای میل"
       continue_button: "جاری رکھیں"
       verify_button: "جاری رکھیں"
+      signup_title: "اپنا اکاؤنٹ بنائیں"
       account_ready_continue: "جاری رکھیں"
       username_label: "اسمِ صارف"
     login:

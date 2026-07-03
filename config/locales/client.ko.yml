@@ -1890,6 +1890,7 @@ ko:
       email_label: "이메일"
       continue_button: "계속하기"
       verify_button: "계속하기"
+      signup_title: "계정 만들기"
       account_ready_continue: "계속하기"
       username_label: "아이디"
     login:

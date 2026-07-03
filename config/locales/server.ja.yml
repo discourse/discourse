@@ -2317,7 +2317,6 @@ ja:
     gravatar_base_url: "Gravatar プロバイダーの API にアクセスするための URL を指定します。この設定は、メールアドレスをアバター画像が保存されている Gravatar URL に変換するために重要です。"
     share_quote_buttons: "引用の共有ウィジェットに表示される項目と表示順を決定する。"
     share_quote_visibility: "引用の共有ボタンをいつ表示するかを決定する: 表示しない、匿名ユーザーのみ、またはすべてのユーザー。 "
-    create_revision_on_bulk_topic_moves: "トピックが新しいカテゴリに一括して移動されたときに、最初の投稿のリビジョンを作成する。"
     allow_changing_staged_user_tracking: "ステージングユーザーのカテゴリとタグの通知設定を管理者ユーザーが変更することを許可する。"
     use_email_for_username_and_name_suggestions: "ユーザー名と名前の提案にメールアドレスの最初の部分を使用する。警告: 悪意のあるアクターがメンバーのメールアドレスを検出しやすくなります (多数のユーザーが「gmail.com」などの一般的なメールプロバイダーを使用しているため)。"
     suggest_weekends_in_date_pickers: "日付ピッカーの候補に週末 (土曜日と日曜日) を含めます (月曜日から金曜日の平日にのみ Discourse を使用する場合は、これを無効にします)。"

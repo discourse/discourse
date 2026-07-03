@@ -2654,6 +2654,7 @@ el:
       email_label: "Διεύθυνση Email"
       continue_button: "Συνεχίστε"
       verify_button: "Συνεχίστε"
+      signup_title: "Δημιουργήστε τον λογαριασμό σας"
       account_ready_continue: "Συνεχίστε"
       username_label: "Όνομα χρήστη"
     login:

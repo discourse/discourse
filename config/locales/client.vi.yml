@@ -2417,6 +2417,7 @@ vi:
       email_label: "Email"
       continue_button: "Tiếp tục"
       verify_button: "Tiếp tục"
+      signup_title: "Tạo tài khoản của bạn"
       account_ready_continue: "Tiếp tục"
       username_label: "Tên người dùng"
     login:

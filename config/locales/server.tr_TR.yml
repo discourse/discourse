@@ -260,7 +260,6 @@ tr_TR:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    diff_too_complex: "Fark çok karmaşık olduğundan güvenli bir şekilde hesaplanamıyor. Lütfen daha küçük düzenlemeler yapmayı deneyin."
     messages:
       invalid_locale: "%{invalid_locale} geçerli bir yerel ayar değil"
       too_long_validation:
@@ -2440,7 +2439,6 @@ tr_TR:
     gravatar_base_url: "Gravatar sağlayıcısının API'sine erişmek için URL'yi belirtin. Bu ayar, e-posta adreslerini avatar görüntülerinin depolandığı Gravatar URL'lerine dönüştürmek için kritik öneme sahiptir."
     share_quote_buttons: "Alıntı paylaşımı widget'ında hangi ögelerin ve hangi sırayla görüneceğini belirleyin."
     share_quote_visibility: "Alıntı paylaşma düğmelerinin ne zaman gösterileceğini belirleyin: Asla, yalnızca anonim kullanıcılara veya tüm kullanıcılara. "
-    create_revision_on_bulk_topic_moves: "Konular toplu olarak yeni bir kategoriye taşındığında ilk gönderiler için revizyon oluşturun."
     allow_changing_staged_user_tracking: "Aşamalı bir kullanıcının kategori ve etiket bildirim tercihlerinin bir yönetici kullanıcı tarafından değiştirilmesine izin verin."
     use_email_for_username_and_name_suggestions: "Kullanıcı ismi ve isim önerileri için e-posta adreslerinin ilk kısmını kullanın. Uyarı: Bu ayar, kötü niyetli kişilerin üyelerinizin e-posta adresini keşfetmesini kolaylaştırabilir (çünkü birçok kişi `gmail.com` gibi yaygın e-posta sağlayıcılarını kullanır)."
     use_name_for_username_suggestions: "SSO ve OAuth kayıt süreçleri sırasında kullanıcı adı önerirken kullanıcının tam adını kullanın."

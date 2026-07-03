@@ -261,6 +261,10 @@ es:
         header: "Encabezado del chat"
         composer: "Compositor del chat"
         channels_list: "Lista de canales de chat"
+      screen_reader:
+        new_messages:
+          one: "%{count} mensaje nuevo"
+          other: "%{count} mensajes nuevos"
       no_direct_message_channels: "¡No te has unido a ningún mensaje directo todavía!"
       no_direct_message_channels_cta: "Inicia una conversación"
       no_public_channels: "¡No te has unido a ningún canal todavía!"
