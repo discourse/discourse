@@ -1,7 +1,6 @@
-/* eslint-disable ember/no-jquery */
 import { cancel } from "@ember/runloop";
-import $ from "jquery";
 import * as AvatarUtils from "discourse/lib/avatar-utils";
+import { caretCoordinates } from "discourse/lib/caret-position";
 import deprecated from "discourse/lib/deprecated";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
@@ -674,8 +673,7 @@ export function mergeSortedLists(list1, list2, comparator) {
 }
 
 export function getCaretPosition(element, options) {
-  const jqueryElement = $(element);
-  const position = jqueryElement.caretPosition(options);
+  const position = caretCoordinates(element, options);
 
   // Get the position of the textarea on the page
   const textareaRect = element.getBoundingClientRect();

@@ -6,6 +6,7 @@ import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";
+import { caretCoordinates } from "discourse/lib/caret-position";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import escapeRegExp from "discourse/lib/escape-regexp";
@@ -1068,8 +1069,7 @@ export class TextareaAutocompleteHandler {
   }
 
   getCaretCoords(start) {
-    // @ts-ignore
-    return this.$textarea.caretPosition({ pos: start + 1 });
+    return caretCoordinates(this.textarea, { pos: start + 1 });
   }
 
   async inCodeBlock() {
