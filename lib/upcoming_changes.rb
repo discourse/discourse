@@ -147,7 +147,7 @@ module UpcomingChanges
   end
 
   def self.exists?(change_setting_name)
-    change_metadata(change_setting_name.to_sym).present?
+    settings_provider.upcoming_change_metadata.key?(change_setting_name.to_sym)
   end
 
   # We dynamically determine if an upcoming change is enabled
