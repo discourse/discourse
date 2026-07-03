@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Assign | Bookmark assignment badges" do
+RSpec.describe "Assign | Viewing assignments in the bookmark list" do
   fab!(:admin)
   fab!(:assignee) { Fabricate(:user, username: "assigneduser") }
 
