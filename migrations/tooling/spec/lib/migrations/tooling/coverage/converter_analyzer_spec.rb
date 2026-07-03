@@ -43,6 +43,26 @@ RSpec.describe Migrations::Tooling::Coverage::ConverterAnalyzer do
       expect(result.unknown_models["RemovedModel"].first).to end_with("steps/old.rb:1")
     end
 
+    it "reports call site locations relative to the working directory" do
+      write_source("steps/old.rb", "IntermediateDB::RemovedModel.create(foo: 1)")
+
+      result =
+        Dir.chdir(@converter_path) { described_class.new(@converter_path).analyze }
+
+      expect(result.unknown_models["RemovedModel"]).to eq(["steps/old.rb:1"])
+    end
+
+    it "keeps the source path as-is when it can't be made relative to the pwd" do
+      write_source("steps/old.rb", "IntermediateDB::RemovedModel.create(foo: 1)")
+
+      # A relative converter path yields relative source paths, which can't be
+      # relativized against the absolute pwd, so `display_path` falls back to the
+      # unchanged path.
+      result = Dir.chdir(@converter_path) { described_class.new(".").analyze }
+
+      expect(result.unknown_models["RemovedModel"]).to eq(["./steps/old.rb:1"])
+    end
+
     it "returns an empty result when no .create calls are present" do
       write_source("steps/noop.rb", "puts 'nothing here'")
 
