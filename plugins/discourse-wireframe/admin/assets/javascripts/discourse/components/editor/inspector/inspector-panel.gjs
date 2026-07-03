@@ -20,6 +20,8 @@ import InspectorOutletSection from "discourse/plugins/discourse-wireframe/discou
 import InspectorRawJson from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-raw-json";
 /** @type {import("../palette/block-thumbnail.gjs").default} */
 import BlockThumbnail from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/block-thumbnail";
+/** @type {import("../palette/outlet-thumbnail.gjs").default} */
+import OutletThumbnail from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/outlet-thumbnail";
 
 /**
  * Inspector for the selected block. Organises content into a tab strip
@@ -116,6 +118,17 @@ export default class InspectorPanel extends Component {
     return (
       this.metadata?.displayName ?? this.metadata?.shortName ?? this.data?.name
     );
+  }
+
+  /**
+   * Whether the header should render a thumbnail preview. True for an outlet
+   * root (which shows its own designed thumbnail regardless of the layout
+   * block's metadata) and for any selection that carries block metadata.
+   *
+   * @returns {boolean}
+   */
+  get showPreview() {
+    return this.isOutletRoot || this.metadata != null;
   }
 
   /**
@@ -315,13 +328,20 @@ export default class InspectorPanel extends Component {
       </div>
     {{else if this.hasSelection}}
       <div class="wireframe-inspector__header">
-        {{#if this.metadata}}
+        {{#if this.showPreview}}
           <div class="wireframe-inspector__preview">
-            <BlockThumbnail
-              class="wireframe-inspector__thumbnail"
-              @thumbnail={{this.metadata.thumbnail}}
-              @icon={{or this.metadata.icon "cube"}}
-            />
+            {{#if this.isOutletRoot}}
+              {{! An outlet is a page region, not a block, so it gets its own
+                  designed thumbnail rather than the implicit root layout
+                  block's icon placeholder. }}
+              <OutletThumbnail class="wireframe-inspector__thumbnail" />
+            {{else}}
+              <BlockThumbnail
+                class="wireframe-inspector__thumbnail"
+                @thumbnail={{this.metadata.thumbnail}}
+                @icon={{or this.metadata.icon "cube"}}
+              />
+            {{/if}}
           </div>
         {{/if}}
         <span class="wireframe-inspector__block-name">

@@ -166,6 +166,33 @@ module(
         );
     });
 
+    test("an outlet root shows the outlet thumbnail, not the layout block's placeholder", async function (assert) {
+      // The outlet root IS the implicit root layout block, so its selection
+      // metadata is the layout block's — carrying the layout icon and no
+      // thumbnail. The header must present the outlet's own designed thumbnail
+      // instead of falling through to the layout block's icon placeholder.
+      stubWireframe(this.owner, {
+        name: "layout",
+        isOutletRoot: true,
+        outletName: "homepage-blocks",
+        metadata: { icon: "table-cells" },
+        args: { mode: "stack" },
+        argsSnapshot: { mode: "stack" },
+        parentChildArgsSchema: null,
+      });
+
+      await render(<template><InspectorPanel /></template>);
+
+      assert
+        .dom(".wireframe-inspector__thumbnail.wireframe-outlet-thumbnail")
+        .exists("the header renders the designed outlet thumbnail");
+      assert
+        .dom(".wireframe-inspector__header .d-icon-table-cells")
+        .doesNotExist(
+          "the layout block's icon never surfaces for an outlet root"
+        );
+    });
+
     test("a registered block shows its friendly display name", async function (assert) {
       stubWireframe(this.owner, {
         name: "wf:heading",
@@ -188,6 +215,11 @@ module(
           "Heading",
           "the header prefers the block's friendly displayName over the raw name"
         );
+      // A normal block keeps the generic BlockThumbnail path — the outlet
+      // thumbnail branch must not leak into non-outlet selections.
+      assert
+        .dom(".wireframe-inspector__thumbnail.wireframe-outlet-thumbnail")
+        .doesNotExist("a normal block never renders the outlet thumbnail");
     });
 
     test("an unregistered block falls back to its raw name", async function (assert) {
