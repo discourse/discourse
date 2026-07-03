@@ -6,11 +6,11 @@ class Admin::Config::CategoryManagementController < Admin::AdminController
 
   def categories
     type_id = params[:type].presence || "discussion"
-    type = Categories::TypeRegistry.get(type_id)
+    type = Categories::TypeRegistry.get(type_id) if type_id != "all"
 
-    raise Discourse::NotFound if type.blank?
+    raise Discourse::NotFound if type_id != "all" && type.blank?
 
-    categories = categories_for_type(type).includes(:parent_category)
+    categories = categories_for_type(type_id, type).includes(:parent_category)
     categories = filter_categories(categories, params[:filter]) if params[:filter].present?
     categories = filter_by_visibility(categories, params[:visibility]) if params[
       :visibility
@@ -33,14 +33,25 @@ class Admin::Config::CategoryManagementController < Admin::AdminController
 
   private
 
-  def categories_for_type(type)
+  def categories_for_type(type_id, type)
     categories = Category.secured(guardian)
 
-    if type.type_id == :discussion
+    if type_id == "all"
       categories
+    elsif type.type_id == :discussion
+      categories.where.not(id: non_discussion_category_ids)
     else
       categories.where(id: type.find_matches.select(:id))
     end
+  end
+
+  def non_discussion_category_ids
+    Categories::TypeRegistry
+      .all
+      .values
+      .reject { |type| type.type_id == :discussion }
+      .flat_map { |type| type.find_matches.pluck(:id) }
+      .uniq
   end
 
   def filter_categories(categories, filter)
@@ -84,6 +95,7 @@ class Admin::Config::CategoryManagementController < Admin::AdminController
     {
       id: category.id,
       badge_chain: badge_chain(category),
+      category_types: category_types(category),
       description_text: category.description_text,
       read_restricted: category.read_restricted,
       topic_count: category.topic_count,
@@ -122,5 +134,13 @@ class Admin::Config::CategoryManagementController < Admin::AdminController
       read_restricted: category.read_restricted,
       parent_category_id: category.parent_category_id,
     }
+  end
+
+  def category_types(category)
+    Categories::TypeRegistry
+      .all
+      .values
+      .select { |type| type.category_matches?(category) }
+      .map { |type| { id: type.type_id, name: type.metadata(guardian:)[:name] } }
   end
 end

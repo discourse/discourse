@@ -74,6 +74,10 @@ export default class AdminCategoryManagementList extends Component {
     );
   }
 
+  get showCategoryTypeBadges() {
+    return this.args.typeId === "all";
+  }
+
   @action
   typeChanged() {
     this.categories = [];
@@ -208,6 +212,18 @@ export default class AdminCategoryManagementList extends Component {
               @rootMargin="0px 0px 250px 0px"
             >
               <table class="d-table admin-category-management-list__table">
+                <colgroup>
+                  <col
+                    class="admin-category-management-list__overview-column"
+                  />
+                  <col
+                    class="admin-category-management-list__visibility-column"
+                  />
+                  <col class="admin-category-management-list__topics-column" />
+                  <col
+                    class="admin-category-management-list__controls-column"
+                  />
+                </colgroup>
                 <thead class="d-table__header">
                   <tr class="d-table__row">
                     <th class="d-table__header-cell">{{i18n
@@ -250,6 +266,23 @@ export default class AdminCategoryManagementList extends Component {
                         >
                           {{this.truncatedDescription category}}
                         </div>
+
+                        {{#if this.showCategoryTypeBadges}}
+                          <div
+                            class="d-table__badges admin-category-management-list__type-badges"
+                          >
+                            {{#each category.category_types as |categoryType|}}
+                              <span
+                                class="d-table-badge admin-category-management-list__type-badge"
+                                data-category-type={{categoryType.id}}
+                              >
+                                <span class="d-table-badge__content">
+                                  {{categoryType.name}}
+                                </span>
+                              </span>
+                            {{/each}}
+                          </div>
+                        {{/if}}
                       </td>
                       <td class="d-table__cell --detail">
                         <div class="d-table__mobile-label">

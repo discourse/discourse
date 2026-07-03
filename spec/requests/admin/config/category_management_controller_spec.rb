@@ -43,9 +43,10 @@ RSpec.describe Admin::Config::CategoryManagementController do
       )
     end
 
-    it "returns categories matching the requested category type" do
-      typed_category = Fabricate(:category, name: "Typed category", slug: "typed-category")
-      Fabricate(:category, name: "Other category", slug: "other-category")
+    it "returns all, discussion-only, and typed categories" do
+      typed_category = Fabricate(:category, name: "Virtual all typed", slug: "virtual-all-typed")
+      discussion_category =
+        Fabricate(:category, name: "Virtual all discussion", slug: "virtual-all-discussion")
 
       fake_type =
         Class.new(Categories::Types::Base) do
@@ -74,6 +75,34 @@ RSpec.describe Admin::Config::CategoryManagementController do
       expect(
         response.parsed_body["categories"].map { |category| category["id"] },
       ).to contain_exactly(typed_category.id)
+
+      get "/admin/config/category-management/categories.json",
+          params: {
+            type: "all",
+            filter: "Virtual all",
+          }
+
+      expect(
+        response.parsed_body["categories"].map { |category| category["id"] },
+      ).to contain_exactly(discussion_category.id, typed_category.id)
+      expect(
+        response.parsed_body["categories"].find { |category| category["id"] == typed_category.id }[
+          "category_types"
+        ],
+      ).to contain_exactly(
+        a_hash_including("id" => "discussion", "name" => "Discussion"),
+        a_hash_including("id" => "test_admin_type", "name" => "Test Admin Type"),
+      )
+
+      get "/admin/config/category-management/categories.json",
+          params: {
+            type: "discussion",
+            filter: "Virtual all",
+          }
+
+      expect(
+        response.parsed_body["categories"].map { |category| category["id"] },
+      ).to contain_exactly(discussion_category.id)
     end
 
     it "filters categories by hashtag reference" do

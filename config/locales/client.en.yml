@@ -6914,9 +6914,12 @@ en:
           tabs:
             settings: "Settings"
           types:
+            all:
+              title: "All categories"
+              description: "All categories across every configured category type."
             discussion:
               title: "Discussion"
-              description: "Standard categories for general conversation and community updates."
+              description: "Standard categories that are not assigned to another category type."
             events:
               title: "Events"
               description: "Categories configured for calendar and event workflows."

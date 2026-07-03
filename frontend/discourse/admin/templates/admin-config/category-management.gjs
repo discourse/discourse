@@ -25,6 +25,11 @@ export default <template>
       />
       <DNavItem
         @route="adminConfig.categoryManagement.type"
+        @routeParam="all"
+        @label="admin.config.category_management.types.all.title"
+      />
+      <DNavItem
+        @route="adminConfig.categoryManagement.type"
         @routeParam="discussion"
         @label="admin.config.category_management.types.discussion.title"
       />

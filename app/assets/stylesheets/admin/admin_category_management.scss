@@ -1,5 +1,41 @@
+@use "lib/viewport";
+
+.admin-category-management-list__table {
+  @include viewport.from(md) {
+    table-layout: fixed;
+  }
+}
+
+.admin-category-management-list__overview-column {
+  @include viewport.from(md) {
+    width: 70%;
+  }
+}
+
+.admin-category-management-list__visibility-column {
+  @include viewport.from(md) {
+    width: 12%;
+  }
+}
+
+.admin-category-management-list__topics-column {
+  @include viewport.from(md) {
+    width: 6%;
+  }
+}
+
+.admin-category-management-list__controls-column {
+  @include viewport.from(md) {
+    width: 12%;
+  }
+}
+
 .admin-category-management-list__visibility {
   display: inline-flex;
   align-items: center;
   gap: 0.25em;
+}
+
+.admin-category-management-list__type-badges {
+  margin-top: var(--space-1);
 }
