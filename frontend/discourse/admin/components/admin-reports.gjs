@@ -188,11 +188,6 @@ export default class AdminReports extends Component {
     this.args.onGroupChange?.(groupKey);
   }
 
-  @bind
-  resetGroupFilter() {
-    this.args.onGroupChange?.("all");
-  }
-
   <template>
     <DAsyncContent @asyncData={{this.loadReports}}>
       <:content as |reports|>
@@ -203,8 +198,7 @@ export default class AdminReports extends Component {
           @dropdownValue={{this.selectedGroupKey reports}}
           @inputPlaceholder={{i18n "admin.filter_reports"}}
           @noResultsMessage={{i18n "admin.filter_reports_no_results"}}
-          @onClientDropdownFilterChange={{this.updateGroupFilter}}
-          @onResetFilters={{this.resetGroupFilter}}
+          @onDropdownChange={{this.updateGroupFilter}}
         >
           <:content as |filteredReports|>
             {{#each (this.groupReports filteredReports) as |group|}}

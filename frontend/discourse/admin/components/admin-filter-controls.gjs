@@ -36,7 +36,7 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
  * @param {Function} [onTextFilterChange] - Callback for text changes (enables server-side mode)
  * @param {Function} [onDropdownFilterChange] - Callback for dropdown changes (enables server-side mode).
  *                                              For multiple dropdowns: receives (key, value)
- * @param {Function} [onClientDropdownFilterChange] - Callback for client-side dropdown changes
+ * @param {Function} [onDropdownChange] - Callback for dropdown selection changes
  * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
  * @param {String} [initialTextFilter] - Initial value to seed the text filter input on mount
  */
@@ -219,11 +219,11 @@ export default class AdminFilterControls extends Component {
     if (this.hasMultipleDropdowns) {
       this.dropdownFilters[keyOrValue] = value;
       this.args.onDropdownFilterChange?.(keyOrValue, value);
-      this.args.onClientDropdownFilterChange?.(keyOrValue, value);
+      this.args.onDropdownChange?.(keyOrValue, value);
     } else {
       this.dropdownFilter = keyOrValue;
       this.args.onDropdownFilterChange?.(keyOrValue);
-      this.args.onClientDropdownFilterChange?.(keyOrValue);
+      this.args.onDropdownChange?.(keyOrValue);
     }
   }
 
@@ -233,10 +233,13 @@ export default class AdminFilterControls extends Component {
 
     if (this.hasMultipleDropdowns) {
       Object.keys(this.dropdownFilters).forEach((key) => {
-        this.dropdownFilters[key] = this.defaultValue(key);
+        const defaultValue = this.defaultValue(key);
+        this.dropdownFilters[key] = defaultValue;
+        this.args.onDropdownChange?.(key, defaultValue);
       });
     } else {
       this.dropdownFilter = this.defaultDropdownValue;
+      this.args.onDropdownChange?.(this.defaultDropdownValue);
     }
 
     if (this.args.onResetFilters) {
