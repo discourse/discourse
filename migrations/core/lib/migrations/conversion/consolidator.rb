@@ -53,7 +53,9 @@ module Migrations
       end
 
       def merge(shard_path)
-        @fork_mutex.synchronize { @connection.merge_database(shard_path, tables: mergeable_tables) }
+        @fork_mutex.synchronize do
+          @connection.merge_database(shard_path, tables: mergeable_tables, dedupe_tables:)
+        end
       rescue StandardError => e
         @errors << e
       ensure
@@ -64,6 +66,16 @@ module Migrations
       # shard, so they're left out of the merge.
       def mergeable_tables
         @mergeable_tables ||= @connection.tables - %w[config schema_migrations]
+      end
+
+      # The mergeable tables whose model opts into `INSERT OR IGNORE`; the rest
+      # raise on a duplicate. Derived from the models, so adding a table needs no
+      # change here (see `IntermediateDB.conflict_strategy_for`).
+      def dedupe_tables
+        @dedupe_tables ||=
+          mergeable_tables.select do |table|
+            Database::IntermediateDB.conflict_strategy_for(table) == :ignore
+          end
       end
     end
   end

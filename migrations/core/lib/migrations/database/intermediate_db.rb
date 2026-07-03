@@ -23,6 +23,18 @@ module Migrations
         @db.insert(sql, parameters)
       end
 
+      # How the shard merge should handle a duplicate row in `table`: `:ignore`
+      # for a model that inserts with `INSERT OR IGNORE`, else `:raise` — so a
+      # genuine duplicate is an error, not a silently dropped row. Read from the
+      # model, so a new table needs no change here.
+      def self.conflict_strategy_for(table)
+        module_name = table.to_s.singularize.camelize
+        return :raise unless const_defined?(module_name, false)
+
+        model = const_get(module_name, false)
+        model.respond_to?(:conflict_strategy) ? model.conflict_strategy : :raise
+      end
+
       def self.close
         @db.close if @db
       end

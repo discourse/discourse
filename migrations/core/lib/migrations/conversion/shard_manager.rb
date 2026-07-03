@@ -13,10 +13,9 @@ module Migrations
     # them.
     #
     # The template is a fresh, empty database migrated from the same schema as the
-    # run DB — not a copy of the run DB. That keeps a shard cheap to copy, and —
-    # importantly — means a run against an existing IntermediateDB doesn't drag the
-    # existing rows into every shard; the merge just adds each shard's new rows
-    # with `INSERT OR IGNORE`.
+    # run DB — not a copy of the run DB. That keeps a shard cheap to copy, and
+    # means a run against an existing IntermediateDB doesn't drag the existing rows
+    # into every shard; the merge just adds each shard's new rows.
     class ShardManager
       # @param canonical_path [String] the run's IntermediateDB; the shards and
       #   their template are placed next to it
