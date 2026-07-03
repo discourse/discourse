@@ -906,6 +906,14 @@ class TopicsController < ApplicationController
         :id,
       )
 
+    if Email.is_valid?(username_or_email)
+      if !guardian.can_invite_via_email?(topic)
+        return render(json: failed_json, status: :unprocessable_entity)
+      end
+
+      return render(json: success_json) if User.find_by_email(username_or_email)
+    end
+
     begin
       if topic.invite(current_user, username_or_email, group_ids, params[:custom_message])
         if user = User.find_by_username_or_email(username_or_email)
