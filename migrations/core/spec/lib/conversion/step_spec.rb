@@ -5,6 +5,39 @@ RSpec.describe Migrations::Conversion::Step do
     Class.new(described_class, &block)
   end
 
+  describe ".title" do
+    # A real step is a named class nested in a converter module, so the default
+    # title humanizes the demodulized, lowercased class name.
+    before do
+      Object.const_set(
+        "TitleFixtureModule",
+        Module.new { const_set("TopicUsers", Class.new(Migrations::Conversion::Step)) },
+      )
+    end
+
+    after { Object.send(:remove_const, "TitleFixtureModule") }
+
+    let(:step_class) { TitleFixtureModule::TopicUsers }
+
+    it "defaults to a humanized, lowercased step name" do
+      expect(step_class.title).to eq("Converting topic users")
+    end
+
+    it "uses an empty type for an anonymous step class" do
+      expect(define_step.title).to eq("Converting ")
+    end
+
+    it "falls back to the default when the title is blank" do
+      step_class.title("")
+      expect(step_class.title).to eq("Converting topic users")
+    end
+
+    it "returns a set title and keeps it for later reads" do
+      expect(step_class.title("Custom title")).to eq("Custom title")
+      expect(step_class.title).to eq("Custom title")
+    end
+  end
+
   describe ".source" do
     it "defines methods on the source role only" do
       step_class =
@@ -368,7 +401,26 @@ RSpec.describe Migrations::Conversion::Step do
     end
   end
 
+  describe "role class constants" do
+    it "names the role classes `Source` and `Processor` on the step" do
+      step_class = define_step
+      source_class = step_class.source_class
+      processor_class = step_class.processor_class
+
+      expect(step_class.const_get(:Source, false)).to be(source_class)
+      expect(step_class.const_get(:Processor, false)).to be(processor_class)
+    end
+  end
+
   describe "#initialize" do
+    it "builds the source with empty args when constructed without any" do
+      step_class = define_step { source { attr_accessor :source_db } }
+      step = step_class.new
+
+      expect(step.source.settings).to be_nil
+      expect(step.source.source_db).to be_nil
+    end
+
     it "routes args to the role that declares a matching setter" do
       step_class = define_step { source { attr_accessor :source_db } }
 
@@ -403,7 +455,7 @@ RSpec.describe Migrations::Conversion::Step do
 
   describe "#create_processor" do
     it "creates a new processor with its own tracker on every call" do
-      step = define_step.new
+      step = define_step.new(settings: { a: 1 })
 
       processor1 = step.create_processor
       processor2 = step.create_processor
@@ -411,6 +463,7 @@ RSpec.describe Migrations::Conversion::Step do
       expect(processor1).not_to be(processor2)
       expect(processor1.tracker).to be_a(Migrations::Conversion::StepTracker)
       expect(processor1.tracker).not_to be(processor2.tracker)
+      expect(processor1.settings).to eq({ a: 1 }) # passes the step's args through
     end
   end
 
