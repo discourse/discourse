@@ -46,6 +46,39 @@ describe AdminDashboardSectionLoader do
     end
   end
 
+  describe "plugin sections" do
+    it "routes a registered plugin section id to its loader block" do
+      loader = ->(start_date:, end_date:, current_user:) do
+        { value: "support", user: current_user.id }
+      end
+      DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(
+        [{ id: "support", enabled: -> { true }, loader: loader }],
+      )
+
+      expect(
+        described_class.build(
+          section_ids: ["support"],
+          current_user: admin,
+          start_date: "2026-05-01",
+          end_date: "2026-05-07",
+        ),
+      ).to eq([{ id: "support", data: { value: "support", user: admin.id } }])
+    end
+
+    it "returns nil data for an unknown section id" do
+      DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns([])
+
+      expect(
+        described_class.build(
+          section_ids: ["frobnitz"],
+          current_user: admin,
+          start_date: "2026-05-01",
+          end_date: "2026-05-07",
+        ),
+      ).to eq([{ id: "frobnitz", data: nil }])
+    end
+  end
+
   describe ".pool_size" do
     it "caps at the DB connection pool, reserving one for the request thread" do
       ActiveRecord::Base.connection_pool.stubs(:size).returns(3)
