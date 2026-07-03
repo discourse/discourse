@@ -45,4 +45,24 @@ describe AdminDashboardSectionLoader do
       )
     end
   end
+
+  describe ".pool_size" do
+    it "caps at the DB connection pool, reserving one for the request thread" do
+      ActiveRecord::Base.connection_pool.stubs(:size).returns(3)
+      expect(described_class.pool_size).to eq(2)
+    end
+
+    it "uses the desired count when the pool has room to spare" do
+      ActiveRecord::Base.connection_pool.stubs(:size).returns(100)
+      desired =
+        AdminDashboardSectionConfiguration::KNOWN_SECTIONS.size +
+          DiscoursePluginRegistry.admin_dashboard_sections.size
+      expect(described_class.pool_size).to eq(desired)
+    end
+
+    it "never drops below one" do
+      ActiveRecord::Base.connection_pool.stubs(:size).returns(1)
+      expect(described_class.pool_size).to eq(1)
+    end
+  end
 end

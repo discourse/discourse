@@ -11,8 +11,12 @@ class AdminDashboardSectionLoader
   end
 
   def self.pool_size
-    AdminDashboardSectionConfiguration::KNOWN_SECTIONS.size +
-      DiscoursePluginRegistry.admin_dashboard_sections.size
+    desired =
+      AdminDashboardSectionConfiguration::KNOWN_SECTIONS.size +
+        DiscoursePluginRegistry.admin_dashboard_sections.size
+
+    available = [ActiveRecord::Base.connection_pool.size - 1, 1].max
+    [desired, available].min
   end
 
   def self.thread_pool
