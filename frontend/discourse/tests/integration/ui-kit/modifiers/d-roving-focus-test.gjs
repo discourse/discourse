@@ -199,6 +199,62 @@ module("Integration | ui-kit | Modifier | dRovingFocus", function (hooks) {
     assert.dom(".d").isFocused("disabled and hidden items are skipped");
   });
 
+  test("focus mode: skips visibility:hidden items", async function (assert) {
+    // `visibility: hidden` still participates in layout (so the offsetParent /
+    // client-rects check passes) but cannot take focus — it must be skipped just
+    // like `display: none`.
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus orientation="horizontal" itemSelector="[role=option]"}}
+        >
+          <button class="a" role="option">A</button>
+          <button class="b" role="option" style="visibility: hidden;">B</button>
+          <button class="c" role="option">C</button>
+        </div>
+      </template>
+    );
+
+    await focus(".a");
+    await triggerKeyEvent(".a", "keydown", "ArrowRight");
+    assert.dom(".c").isFocused("a visibility:hidden item is skipped");
+  });
+
+  test("focus mode: keys from an embedded editable are left alone", async function (assert) {
+    // An item may embed a text field; its caret and selection keys — including
+    // Home/End — must win over roving navigation. The modifier ignores keydowns
+    // that originate from an editable target so the field behaves natively.
+    await render(
+      <template>
+        <div
+          role="listbox"
+          {{dRovingFocus orientation="horizontal" itemSelector="[role=option]"}}
+        >
+          <button class="a" role="option">A</button>
+          <span class="b" role="option">
+            {{! Intentionally embeds a text field in an item to exercise the
+              editable-target guard. }}
+            {{! eslint-disable-next-line ember/template-no-nested-interactive }}
+            <input class="b-input" type="text" />
+          </span>
+          <button class="c" role="option">C</button>
+        </div>
+      </template>
+    );
+
+    await focus(".b-input");
+    await triggerKeyEvent(".b-input", "keydown", "ArrowRight");
+    assert
+      .dom(".b-input")
+      .isFocused("ArrowRight from an embedded input does not navigate");
+
+    await triggerKeyEvent(".b-input", "keydown", "Home");
+    assert
+      .dom(".b-input")
+      .isFocused("Home from an embedded input does not jump to the first item");
+  });
+
   test("Enter and Space activate; other keys do not", async function (assert) {
     let activated = [];
     const onActivate = (el) => activated.push(el.className);

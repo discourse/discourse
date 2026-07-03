@@ -118,6 +118,16 @@ export default class DRovingFocusModifier extends Modifier {
 
   @bind
   handleKeydown(event) {
+    // In focus mode the listener sits on the items' container, so a keydown can
+    // bubble up from an editable descendant (a text field embedded inside an
+    // item). Let that surface keep its own caret and selection keys — including
+    // Home/End — rather than hijacking them for navigation. Active mode is
+    // exempt: there the listener is bound to a text input on purpose (that is
+    // the mode's whole premise), so this guard would disable it.
+    if (this.#mode === "focus" && this.#isEditableTarget(event.target)) {
+      return;
+    }
+
     const items = this.#items();
     if (!items.length) {
       return;
@@ -214,6 +224,27 @@ export default class DRovingFocusModifier extends Modifier {
   }
 
   /**
+   * Whether the event target is a text-editing surface whose own caret and
+   * selection keys must take precedence over roving navigation — a native form
+   * control (`INPUT`/`TEXTAREA`/`SELECT`) or any `contenteditable` host.
+   *
+   * @param {EventTarget|null} target
+   * @returns {boolean}
+   */
+  #isEditableTarget(target) {
+    if (!(target instanceof HTMLElement)) {
+      return false;
+    }
+    const tag = target.tagName;
+    return (
+      tag === "INPUT" ||
+      tag === "TEXTAREA" ||
+      tag === "SELECT" ||
+      target.isContentEditable
+    );
+  }
+
+  /**
    * Whether an item can be a navigation target — visible and not disabled. Ported
    * from the focusable predicate in `d-tab-to-sibling`, returning real booleans.
    *
@@ -228,6 +259,13 @@ export default class DRovingFocusModifier extends Modifier {
     // client-rects check keeps fixed-position items usable while still rejecting
     // hidden ones.
     if (!el.offsetParent && el.getClientRects().length === 0) {
+      return false;
+    }
+    // `visibility: hidden` still participates in layout, so the checks above
+    // pass, yet the element cannot take focus — a `focus()` on it is a no-op and
+    // would leave the cursor stranded. Checked last because it is the only check
+    // that forces a style resolution.
+    if (getComputedStyle(el).visibility !== "visible") {
       return false;
     }
     return true;

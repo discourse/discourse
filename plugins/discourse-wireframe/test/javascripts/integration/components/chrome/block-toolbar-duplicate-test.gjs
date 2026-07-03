@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { click, render, settled } from "@ember/test-helpers";
+import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
 import Heading from "discourse/blocks/builtin/heading";
@@ -10,13 +10,14 @@ import { setupBlockLayoutDraftsStub } from "../../../helpers/stub-block-layout-d
 import { engineOf, queryOf } from "../../../helpers/wireframe-peers";
 
 const OUTLET = "homepage-blocks";
+const DUPLICATE = `.wireframe-block-toolbar__btn:has(.d-icon-copy)`;
 
 function outletChildren(editor) {
   return queryOf(editor).readResolvedLayout(OUTLET)?.[0]?.children ?? [];
 }
 
 module(
-  "Integration | discourse-wireframe | Component | block-toolbar duplicate ×N",
+  "Integration | discourse-wireframe | Component | block-toolbar duplicate",
   function (hooks) {
     setupRenderingTest(hooks);
     setupBlockLayoutDraftsStub(hooks);
@@ -44,33 +45,9 @@ module(
       this.editor.exit();
     });
 
-    test("renders the Duplicate split-button and its count menu", async function (assert) {
-      await render(
-        <template>
-          <BlockToolbar
-            @blockKey={{this.blockKey}}
-            @outletName={{OUTLET}}
-            @displayName="Heading"
-            @isSelected={{true}}
-          />
-        </template>
-      );
-
-      assert
-        .dom(".wireframe-block-toolbar__duplicate")
-        .exists("the duplicate split-button renders");
-      assert
-        .dom(".wireframe-duplicate-count-trigger")
-        .exists("the count-menu chevron trigger renders");
-    });
-
-    test("picking a preset count duplicates the block that many times", async function (assert) {
-      // Render the toolbar inside a block-chrome wrapper, as it is in
-      // production. The editor's document-level mouseup handler deselects the
-      // block when a click lands outside the editor's "allowed scope" (block
-      // chrome, the shell, an open menu); without this wrapper the trigger sits
-      // outside that scope, so clicking it would deselect and the menu would
-      // never open.
+    test("the Duplicate button clones the block once", async function (assert) {
+      // Wrap in a block-chrome so the editor's document mouseup handler treats
+      // the click as in-scope and doesn't deselect before the action runs.
       await render(
         <template>
           <div class="wireframe-block-chrome">
@@ -84,23 +61,15 @@ module(
         </template>
       );
 
-      await click(".wireframe-duplicate-count-trigger");
-      // The "× 3" preset is the third item in the dropdown.
-      const presets = document.querySelectorAll(
-        ".wireframe-duplicate-count-content .dropdown-menu__item .btn"
-      );
-      await click(presets[1]); // ×3
+      assert.dom(DUPLICATE).exists("the Duplicate button renders");
 
+      await click(DUPLICATE);
       assert.strictEqual(
         outletChildren(this.editor).length,
-        4,
-        "the original heading plus three clones"
+        2,
+        "the original heading plus one clone"
       );
-      await settled();
-      assert.true(
-        engineOf(this.editor).canUndo,
-        "the ×N duplicate is undoable"
-      );
+      assert.true(engineOf(this.editor).canUndo, "the duplicate is undoable");
     });
   }
 );

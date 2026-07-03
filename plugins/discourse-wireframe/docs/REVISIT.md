@@ -149,4 +149,28 @@ until that lands.
 
 ## Other items (add here as they come up)
 
-_None yet._
+### Editor chrome revamp — deferred from Phase 6 (the final phase)
+
+Phase 6 tokenized the on-canvas chrome and gave the two `role="toolbar"` surfaces
+(block toolbar, activity bar) a roving tabindex. These were intentionally left
+out and can be picked up later:
+
+- **Floating "+" inserter** on the canvas — a hover/selection affordance to
+  insert a block beside the current one without the palette. Deliberately not
+  built (kept the existing reveal model).
+- **On-canvas grid-cell arrow-nav** — arrow-key movement between grid cells
+  while a grid is selected.
+- **Keyboard resize for the span / track handles** — the resize handles are
+  pointer-only; no keyboard equivalent yet.
+- **Inspector rich-text toolbar semantics** — the inspector's inline-format
+  controls aren't yet a roving toolbar like the canvas one.
+- **Keyboard focus landing after a structural mutation** (move and delete) — when
+  a reorder disables the just-used arrow at a list edge, or a delete removes the
+  focused block, DOM focus drops to `<body>`. Restoring it needs a focus
+  coordinator that survives the chrome re-render (an instance-local restore
+  doesn't hold because the affected node is replaced / the toolbar can re-mount).
+  Move and delete share this; do them together.
+- **Alt+F10-style toolbar entry during a live ProseMirror session** — while an
+  inline text session is open, the format buttons stay mouse/shortcut-only (Tab
+  ends the session). `Mod-b` / `Mod-i` / `Mod-k` are the keyboard parity; a way
+  to jump into the toolbar mid-session is not built.

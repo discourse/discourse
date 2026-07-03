@@ -26,6 +26,7 @@ module DiscourseWireframe
       # warning per missing glyph. (Lucide `wf-` icons are handled separately via
       # the manifest — see the module comment above.)
       EXTRA = %w[
+        arrow-turn-up
         arrows-left-right
         arrows-up-down
         border-none

@@ -74,7 +74,7 @@ export default class Toolbar extends Component {
           onDragEnd=this.didEndDrag
         }}
       >
-        {{dIcon "grip-lines"}}
+        {{dIcon "grip-vertical"}}
       </button>
       <PluginOutletDebugButton />
       <BlockDebugButton />

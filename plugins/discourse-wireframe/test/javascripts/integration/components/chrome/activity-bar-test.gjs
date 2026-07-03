@@ -1,4 +1,4 @@
-import { click, render } from "@ember/test-helpers";
+import { click, focus, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ActivityBar from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/activity-bar";
@@ -15,6 +15,30 @@ module(
         .dom(".wireframe-activity-bar[role='toolbar']")
         .hasAttribute("aria-orientation", "vertical");
       assert.dom(".wireframe-activity-bar__entry").exists({ count: 3 });
+    });
+
+    test("arrow keys rove vertically across entries and the collapse chevron", async function (assert) {
+      await render(<template><ActivityBar /></template>);
+
+      const entry = (n) =>
+        `.wireframe-activity-bar__entry-wrap:nth-child(${n}) .wireframe-activity-bar__entry`;
+      const collapse = ".wireframe-activity-bar__collapse";
+
+      // One tab stop across the whole strip: the first entry, then -1 elsewhere.
+      assert.dom(entry(1)).hasAttribute("tabindex", "0");
+      assert.dom(entry(2)).hasAttribute("tabindex", "-1");
+      assert.dom(collapse).hasAttribute("tabindex", "-1");
+
+      await focus(entry(1));
+      await triggerKeyEvent(entry(1), "keydown", "ArrowDown");
+      assert.dom(entry(2)).isFocused("ArrowDown moves to the next entry");
+      assert
+        .dom(entry(2))
+        .hasAttribute("tabindex", "0", "the tab stop follows");
+
+      // End jumps to the last item in the rove — the bottom collapse chevron.
+      await triggerKeyEvent(entry(2), "keydown", "End");
+      assert.dom(collapse).isFocused("End reaches the collapse chevron");
     });
 
     test("aria-pressed marks the open panel; collapsing clears it", async function (assert) {

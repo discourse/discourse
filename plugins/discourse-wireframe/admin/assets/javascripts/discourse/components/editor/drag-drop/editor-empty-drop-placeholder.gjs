@@ -3,7 +3,6 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import EditorBlockPickerMenu from "discourse/plugins/discourse-wireframe/discourse/components/editor/palette/editor-block-picker-menu";
@@ -19,16 +18,14 @@ import EditorBlockPickerMenu from "discourse/plugins/discourse-wireframe/discour
  * (`@service menu`) anchored to the button, hosting the shared
  * `EditorBlockPickerMenu` with the palette + pick callback.
  *
- * Responsive degradation: the root sets a `wireframe-empty` CSS
- * container so SCSS can collapse the visible hint text below ~12rem.
- * A sibling `__tooltip-host` element is `display: none` while the
- * hint is visible and `inset: 0` (covering the button) when the hint
- * is hidden — a FloatKit tooltip registered on that host only triggers
- * in the narrow case, so the hint never appears twice at once.
+ * Responsive degradation: the root sets a `wireframe-empty` CSS container so
+ * SCSS collapses the visible hint text below ~12rem, leaving just the centered
+ * `+`. The button carries an `aria-label` with the same hint, so it stays named
+ * for assistive tech in the icon-only state.
  *
  * Args:
- *   - `@hint` (string) — pre-translated message. Visible label when
- *     there's room; tooltip content when there isn't.
+ *   - `@hint` (string) — pre-translated message. Shown as the visible label
+ *     when there's room, and always the button's accessible name.
  *   - `@palette` (Array<{name, displayName, icon, ...}>) — the shared
  *     `buildBlockPalette` rows, already filtered to user-pickable blocks.
  *   - `@targetOutletName` (string) — the outlet the drop target lives in.
@@ -44,7 +41,6 @@ import EditorBlockPickerMenu from "discourse/plugins/discourse-wireframe/discour
  */
 export default class EditorEmptyDropPlaceholder extends Component {
   @service menu;
-  @service tooltip;
 
   /* Captured on insert via didInsert. The button is also the FloatKit
      menu anchor — `menu.show()` positions the popover relative to it. */
@@ -54,28 +50,9 @@ export default class EditorEmptyDropPlaceholder extends Component {
      so `handlePick` can close the popover after firing `@onPick`. */
   #menuInstance = null;
 
-  /* FloatKit tooltip instance returned by `tooltip.register()`. Held so
-     the destroy hook can release the listeners when the placeholder
-     unmounts. Listeners are attached on the `__tooltip-host` child, not
-     the button — that's how the narrow-only behaviour stays CSS-driven. */
-  #tooltipInstance = null;
-
   @action
   captureButton(element) {
     this.#buttonEl = element;
-  }
-
-  @action
-  registerTooltip(element) {
-    this.#tooltipInstance = this.tooltip.register(element, {
-      content: this.args.hint,
-    });
-  }
-
-  @action
-  cleanupTooltip() {
-    this.#tooltipInstance?.destroy?.();
-    this.#tooltipInstance = null;
   }
 
   @action
@@ -115,6 +92,7 @@ export default class EditorEmptyDropPlaceholder extends Component {
     <button
       type="button"
       class="wireframe-empty-drop-placeholder"
+      aria-label={{@hint}}
       {{didInsert this.captureButton}}
       {{on "click" this.openPicker}}
     >
@@ -122,12 +100,6 @@ export default class EditorEmptyDropPlaceholder extends Component {
         {{dIcon "plus"}}
       </span>
       <span class="wireframe-empty-drop-placeholder__hint">{{@hint}}</span>
-      <span
-        class="wireframe-empty-drop-placeholder__tooltip-host"
-        aria-hidden="true"
-        {{didInsert this.registerTooltip}}
-        {{willDestroy this.cleanupTooltip}}
-      ></span>
     </button>
   </template>
 }

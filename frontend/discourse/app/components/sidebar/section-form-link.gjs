@@ -96,7 +96,7 @@ export default class SectionFormLink extends Component {
     >
       {{#if this.site.desktopView}}
         <div class="draggable" data-link-name={{@link.name}}>
-          {{dIcon "grip-lines"}}
+          {{dIcon "grip-vertical"}}
         </div>
       {{/if}}
 

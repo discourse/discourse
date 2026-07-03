@@ -610,6 +610,28 @@ export default class WireframeSelectionService extends Service {
   }
 
   /**
+   * Selects the parent of the currently-selected block: the enclosing container
+   * block, or the outlet itself when the block sits directly in the outlet root.
+   * A one-click step up the tree that mirrors the breadcrumb. No-op when nothing
+   * is selected or the selection has no ancestor above it (the outlet root).
+   */
+  selectParent() {
+    // Ancestry is [outlet, ...ancestors, selectedBlock]; the parent is the entry
+    // immediately before the selected block. Fewer than two entries means the
+    // selection is already the top of its outlet, so there's nowhere to go up.
+    const ancestry = this.selectedBlockAncestry;
+    if (ancestry.length < 2) {
+      return;
+    }
+    const parent = ancestry[ancestry.length - 2];
+    if (parent.isOutlet) {
+      this.selectOutlet(parent.outletName);
+      return;
+    }
+    this.selectBlock({ key: parent.key, name: parent.blockName });
+  }
+
+  /**
    * Re-resolves the given block key against the current layout and rebinds
    * `selectedBlockKey` / `selectedBlockData`. If the key no longer exists,
    * clears the selection. Used after structural undo / redo to follow the

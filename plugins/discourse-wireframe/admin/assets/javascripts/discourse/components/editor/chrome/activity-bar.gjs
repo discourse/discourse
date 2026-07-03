@@ -6,6 +6,7 @@ import { modifier } from "ember-modifier";
 import { isTesting } from "discourse/lib/environment";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dRovingFocus from "discourse/ui-kit/modifiers/d-roving-focus";
 import { i18n } from "discourse-i18n";
 /** @type {import("./activity-entry-tooltip.gjs").default} */
 import ActivityEntryTooltip from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/activity-entry-tooltip";
@@ -115,6 +116,13 @@ export default class ActivityBar extends Component {
       role="toolbar"
       aria-orientation="vertical"
       aria-label={{i18n "wireframe.chrome.activity_bar_label"}}
+      {{! One vertical rove over the panel entries and the bottom collapse
+        chevron: the whole strip is a single tab stop, Up/Down move between its
+        buttons, Enter/Space activate. }}
+      {{dRovingFocus
+        orientation="vertical"
+        itemSelector=".wireframe-activity-bar__entry, .wireframe-activity-bar__collapse"
+      }}
     >
       {{#each this.entries key="tab" as |entry|}}
         {{! Wraps the button so the count badge can position against it.

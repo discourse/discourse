@@ -109,6 +109,15 @@ body.wireframe-active {
       background: rgb(var(--wf-accent-rgb), var(--wireframe-bg-opacity));
     }
 
+    /* The chrome is itself keyboard-focusable (`role="button" tabindex="0"`) but
+       has carried no focus indicator. An inset ring reads as focus without being
+       mistaken for the selection outline (which sits on the edge, offset 0). */
+
+    &:focus-visible {
+      outline: 2px solid var(--wf-focus-ring);
+      outline-offset: -2px;
+    }
+
     /* Composite part — a code-defined inner block, not a free reorderable
        entry. */
 
@@ -238,19 +247,23 @@ body.wireframe-active {
     z-index: 1000;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--wf-gap-tight);
     padding: var(--wireframe-badge-padding);
     background: var(--danger);
-    color: white;
+
+    /* `--secondary` is core's readable text color on a `--danger` fill and
+       flips with the scheme, unlike a literal white (same-file precedent: the
+       activity-bar count badge). No text-shadow — it renders dark-on-dark in
+       dark schemes. */
+    color: var(--secondary);
     font-size: var(--wireframe-badge-font-size);
     font-weight: bold;
-    border-radius: 0 0 0 4px;
-    text-shadow: var(--wireframe-shadow);
+    border-radius: 0 0 0 var(--wf-radius);
     pointer-events: auto;
     cursor: help;
 
     .d-icon {
-      color: white !important;
+      color: var(--secondary) !important;
       font-size: var(--wireframe-badge-font-size) !important;
       width: var(--wireframe-badge-font-size) !important;
       filter: drop-shadow(var(--wireframe-shadow));
@@ -459,13 +472,18 @@ body.wireframe-active {
       cursor: pointer;
       color: var(--danger);
       background: rgb(var(--danger-rgb), 0.1);
+
+      &:focus-visible {
+        outline: 2px solid var(--wf-focus-ring);
+        outline-offset: -2px;
+      }
     }
 
     &__content {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
+      gap: var(--wf-gap);
       padding: 1rem;
       text-align: center;
       pointer-events: none;
@@ -493,14 +511,14 @@ body.wireframe-active {
 
     &__progress-track {
       height: 6px;
-      border-radius: 3px;
+      border-radius: var(--wf-radius);
       background: var(--primary-low);
       overflow: hidden;
     }
 
     &__progress-bar {
       height: 100%;
-      border-radius: 3px;
+      border-radius: var(--wf-radius);
       background: var(--tertiary);
       transition: width 80ms linear;
     }
@@ -556,7 +574,7 @@ body.wireframe-active {
     align-items: stretch;
     background: var(--secondary);
     border: 1px solid var(--primary-low);
-    border-radius: 4px 4px 0 0;
+    border-radius: var(--wf-radius) var(--wf-radius) 0 0;
     box-shadow: var(--shadow-card);
     pointer-events: none;
     overflow: hidden; /* clip the handle's bg into the rounded corners */
@@ -572,7 +590,7 @@ body.wireframe-active {
     &__handle {
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: var(--wf-gap-tight);
 
       /* Never shrink inside the width-capped bar — a shrunk handle wraps its
          name/ordinal and, worse, makes the fit measurement under-report; the
@@ -605,8 +623,8 @@ body.wireframe-active {
     &__ordinal {
       padding: 0 6px;
       border-radius: 999px;
-      background: rgb(0 0 0 / 0.25);
-      color: white;
+      background: var(--wf-chip-scrim);
+      color: var(--wf-on-accent);
       font-weight: normal;
       text-shadow: none;
       font-variant-numeric: tabular-nums;
@@ -617,6 +635,15 @@ body.wireframe-active {
       transition:
         background-color 120ms ease,
         color 120ms ease;
+
+      /* Core's `.btn-flat` zeroes the focus-visible outline, so these buttons
+         would show no keyboard focus. Roving navigation makes that focus the
+         only cue for which button is active — restore a ring. */
+
+      &:focus-visible {
+        outline: 2px solid var(--wf-focus-ring);
+        outline-offset: -2px;
+      }
 
       &.btn.btn-icon {
         min-width: 0;
@@ -651,23 +678,6 @@ body.wireframe-active {
             color: var(--danger);
           }
         }
-      }
-    }
-
-    &__duplicate {
-      display: inline-flex;
-      align-items: stretch;
-
-      .btn {
-        min-width: 0;
-        min-height: 0;
-        padding: var(--wireframe-badge-padding);
-        line-height: 1;
-      }
-
-      .d-icon {
-        font-size: var(--wireframe-badge-font-size) !important;
-        width: var(--wireframe-badge-font-size) !important;
       }
     }
 
@@ -811,8 +821,8 @@ body.wireframe-active {
 
       .wireframe-block-toolbar__status {
         padding: 0 6px;
-        background: rgb(0 0 0 / 0.25);
-        color: white;
+        background: var(--wf-chip-scrim);
+        color: var(--wf-on-accent);
         font-weight: normal;
         border-radius: 999px;
         text-shadow: none;
@@ -830,11 +840,6 @@ body.wireframe-active {
 }
 
 .wireframe-shell {
-  --wf-radius: var(--d-border-radius);
-  --wf-radius-lg: calc(var(--d-border-radius) * 1.5);
-  --wf-gap-tight: var(--space-1);
-  --wf-gap: var(--space-2);
-  --wf-gap-loose: var(--space-3);
   --wf-selection-color: var(--tertiary);
   --wf-hover-color: var(--primary-low-mid);
   --wf-overlay-tint: rgb(0 0 0 / 0.04);
@@ -1055,7 +1060,7 @@ body.wireframe-active {
       }
 
       &:focus-visible {
-        outline: 2px solid var(--wf-accent);
+        outline: 2px solid var(--wf-focus-ring);
         outline-offset: -2px;
       }
     }
@@ -1143,7 +1148,7 @@ body.wireframe-active {
     }
 
     &:focus-visible {
-      outline: 2px solid var(--wf-accent);
+      outline: 2px solid var(--wf-focus-ring);
       outline-offset: -2px;
     }
 
@@ -1177,7 +1182,7 @@ body.wireframe-active {
     }
 
     &:focus-visible {
-      outline: 2px solid var(--wf-accent);
+      outline: 2px solid var(--wf-focus-ring);
       outline-offset: -2px;
     }
   }
@@ -1201,13 +1206,13 @@ body.wireframe-active {
 
 .wireframe-breadcrumb {
   position: fixed;
-  left: var(--wf-left-rail, 368px);
-  right: var(--wf-right-rail, 300px);
+  left: var(--wf-left-rail);
+  right: var(--wf-right-rail);
   bottom: 0;
   z-index: 1050;
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: var(--wf-gap-tight);
   padding: 0.25rem 0.75rem;
   background: var(--secondary);
   border-top: 1px solid var(--primary-low);
@@ -1220,13 +1225,18 @@ body.wireframe-active {
     background: transparent;
     border: none;
     color: var(--primary-medium);
-    padding: 2px 4px;
+    padding: var(--space-half) var(--space-1);
     cursor: pointer;
-    border-radius: 3px;
+    border-radius: var(--wf-radius);
 
     &:hover {
       background: var(--primary-very-low);
       color: var(--primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--wf-focus-ring);
+      outline-offset: -2px;
     }
 
     &:last-child {
@@ -1241,7 +1251,9 @@ body.wireframe-active {
     align-items: center;
 
     .d-icon {
-      font-size: 0.65rem;
+      /* Compounds with the breadcrumb's own `--font-down-1` to land near the
+         original 0.65rem while tracking the type scale. */
+      font-size: var(--font-down-2);
     }
   }
 }
@@ -1461,7 +1473,7 @@ body.wireframe-active {
   }
 
   &:focus-visible {
-    outline: 2px solid var(--wf-accent);
+    outline: 2px solid var(--wf-focus-ring);
     outline-offset: 1px;
   }
 
@@ -1571,6 +1583,25 @@ body.wireframe-active {
   padding-left: var(--wf-left-rail);
   padding-right: var(--wf-right-rail);
   box-sizing: border-box;
+
+  /* Shared shape + spacing scale for every editor chrome surface. This block is
+     an ancestor of the fixed shell, the on-canvas block chrome, and the
+     breadcrumb, so all three inherit one source and their radii / gaps can't
+     drift. Kept off `:root` so the scale exists only while the editor is
+     active. */
+  --wf-radius: var(--d-border-radius);
+  --wf-radius-lg: calc(var(--d-border-radius) * 1.5);
+  --wf-gap-tight: var(--space-1);
+  --wf-gap: var(--space-2);
+  --wf-gap-loose: var(--space-3);
+
+  /* Translucent dark wash behind an accent chip so its light text stays legible
+     over a variable block backdrop. */
+  --wf-chip-scrim: rgb(0 0 0 / 0.25);
+
+  /* Focus-ring color for all editor chrome. Indirection over `--wf-accent` so
+     the ring can be strengthened in one place if contrast review requires it. */
+  --wf-focus-ring: var(--wf-accent);
 
   &.wireframe-active--left-collapsed {
     --wf-left-panel: 0px;
@@ -2274,7 +2305,7 @@ body.wireframe-active {
        chrome: idle slots are invisible, outline + tint appear only on
        hover (innermost slot only) or when selected. `outline` (vs
        `border`) keeps everything layout-shift-free. */
-    border-radius: 3px;
+    border-radius: var(--wf-radius);
     padding: var(--wireframe-container-padding);
     pointer-events: auto;
     transition:
@@ -2382,7 +2413,7 @@ body.wireframe-active
   align-items: center;
   justify-content: center;
   border: 1px dashed var(--wireframe-block-color);
-  border-radius: 3px;
+  border-radius: var(--wf-radius);
   background: rgb(var(--wf-accent-rgb), 0.04);
   min-height: 40px;
   transition:
@@ -2452,37 +2483,6 @@ body.wireframe-active
   }
 }
 
-.wireframe-duplicate-count-content {
-  .dropdown-menu {
-    min-width: 9rem;
-  }
-
-  .dropdown-menu__item > .btn {
-    width: 100%;
-    justify-content: flex-start;
-    font-variant-numeric: tabular-nums;
-  }
-
-  .wireframe-block-toolbar__duplicate-custom {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    padding: 0.25rem 0.5rem;
-
-    input[type="number"] {
-      width: 3.5rem;
-      min-height: 0;
-      margin: 0;
-      padding: 0.25rem 0.4rem;
-    }
-
-    .btn {
-      flex: 1 1 auto;
-      justify-content: center;
-    }
-  }
-}
-
 [data-identifier="wireframe-block-picker"] {
   .wireframe-block-picker {
     display: flex;
@@ -2538,7 +2538,7 @@ body.wireframe-active
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: var(--wf-gap);
   width: 100%;
   min-height: 4rem;
   margin: 0.25rem;
@@ -2557,6 +2557,11 @@ body.wireframe-active
     color: var(--wireframe-block-color);
   }
 
+  &:focus-visible {
+    outline: 2px solid var(--wf-focus-ring);
+    outline-offset: -2px;
+  }
+
   &__icon {
     display: inline-flex;
     align-items: center;
@@ -2564,10 +2569,6 @@ body.wireframe-active
     .d-icon {
       font-size: 1.25rem;
     }
-  }
-
-  &__tooltip-host {
-    display: none;
   }
 
   .wireframe-grid-cell > & {
@@ -2578,15 +2579,11 @@ body.wireframe-active
   }
 }
 
+/* Below ~12rem the hint text would crowd the cell, so collapse to just the
+   centered `+`. The button keeps its `aria-label`, so it stays named. */
 @container wireframe-empty (max-width: 12rem) {
   .wireframe-empty-drop-placeholder__hint {
     display: none;
-  }
-
-  .wireframe-empty-drop-placeholder__tooltip-host {
-    display: block;
-    position: absolute;
-    inset: 0;
   }
 }
 
@@ -2919,7 +2916,7 @@ body.wireframe-active
   pointer-events: none;
   border: 1px dashed var(--wireframe-block-hover-color);
   background: rgb(var(--wf-accent-rgb), 0.2);
-  border-radius: 3px;
+  border-radius: var(--wf-radius);
   opacity: 0;
   z-index: 3;
   transition:
@@ -2977,7 +2974,7 @@ body.wireframe-active
   position: absolute;
   pointer-events: none;
   z-index: 4;
-  border-radius: 3px;
+  border-radius: var(--wf-radius);
   opacity: 0;
   transition:
     top 120ms ease,
@@ -4605,7 +4602,7 @@ body.wireframe-active {
   left: 0;
   pointer-events: none;
   z-index: z("modal", "content");
-  border-radius: 4px;
+  border-radius: var(--wf-radius);
   border: 2px solid var(--tertiary);
   background: rgb(var(--tertiary-rgb), 0.18);
 
@@ -4629,7 +4626,7 @@ body.wireframe-active {
     font-size: var(--font-down-2);
     font-weight: 600;
     padding: 2px 8px;
-    border-radius: 4px 4px 4px 0;
+    border-radius: var(--wf-radius) var(--wf-radius) var(--wf-radius) 0;
     max-width: 320px;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -4846,6 +4843,11 @@ body.wireframe-active {
   .fk-d-menu,
   .fk-d-tooltip {
     z-index: 1500;
+
+    /* The default `--shadow-dropdown` (a 12px-blur, 0.25-alpha drop) reads heavy
+       over the dark editor canvas. Soften it here; overriding the token cascades
+       to the inner content that consumes it via `box-shadow: var(...)`. */
+    --shadow-dropdown: 0 2px 8px rgb(0 0 0 / 0.15);
   }
 
   .select-kit-body {
@@ -4875,7 +4877,7 @@ body.wireframe-active
 .wf-inplace-link-popover {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--wf-gap-tight);
 }
 
 .wf-inplace-link-popover__chip {
@@ -4900,7 +4902,7 @@ body.wireframe-active
   height: 24px;
   padding: 0 6px;
   border: 1px solid var(--primary-low);
-  border-radius: 3px;
+  border-radius: var(--wf-radius);
   font-size: var(--font-down-1);
   color: var(--primary);
   background: var(--secondary);
@@ -5094,7 +5096,7 @@ body.wireframe-active
   height: 24px;
   padding: 0 6px;
   border: 1px solid var(--primary-low);
-  border-radius: 3px;
+  border-radius: var(--wf-radius);
   font-size: var(--font-down-1);
   color: var(--primary);
   background: var(--secondary);

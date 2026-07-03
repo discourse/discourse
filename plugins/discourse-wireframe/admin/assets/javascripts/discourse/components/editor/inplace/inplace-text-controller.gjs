@@ -195,6 +195,13 @@ export default class InplaceTextController extends Component {
         ...(variant.allowsMarks && {
           "Mod-b": pm.toggleMark(schema.marks.strong),
           "Mod-i": pm.toggleMark(schema.marks.em),
+          // The link mark has no toggle command — it opens the toolbar's URL
+          // slot. `enterLinkMode` no-ops on an empty selection, so consuming the
+          // key is harmless when there's nothing to link.
+          "Mod-k": () => {
+            this.enterLinkMode();
+            return true;
+          },
         }),
         Escape: () => {
           this.wireframeInplaceText.stop({ commit: true });
