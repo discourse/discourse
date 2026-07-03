@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
+  # Generation writes files to the configured output paths. Run every example
+  # from a throwaway working directory so a stray relative path can never drop a
+  # generated file into the repo -- e.g. under mutation, where a dropped
+  # directory prefix would otherwise scribble `user.rb` into the gem root.
+  around { |example| Dir.mktmpdir { |cwd| Dir.chdir(cwd) { example.run } } }
+
   after { Migrations::Tooling::Schema.reset! }
 
   def make_table(name, model_mode: nil, conflict_strategy: :raise)
