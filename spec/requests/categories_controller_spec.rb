@@ -83,6 +83,39 @@ RSpec.describe CategoriesController do
       expect(subcategories_for_category).to eq(nil)
     end
 
+    it "excludes private subcategory counts for anonymous users", :aggregate_failures do
+      private_subcategory = Fabricate(:category, user: admin, parent_category: category)
+      private_subcategory.set_permissions(admins: :full)
+      private_subcategory.save!
+      Fabricate.times(7, :topic, category: private_subcategory)
+      Category.update_stats
+
+      get "/categories.json"
+
+      expect(response).to have_http_status(:ok)
+
+      category_list = response.parsed_body["category_list"]
+      category_response =
+        category_list["categories"].find { |category_json| category_json["id"] == category.id }
+
+      expect(category_response["subcategory_ids"]).not_to include(private_subcategory.id)
+      expect(
+        category_response.slice(
+          "topics_all_time",
+          "topics_year",
+          "topics_month",
+          "topics_week",
+          "topics_day",
+        ),
+      ).to eq(
+        "topics_all_time" => 0,
+        "topics_year" => 0,
+        "topics_month" => 0,
+        "topics_week" => 0,
+        "topics_day" => 0,
+      )
+    end
+
     it "returns the right subcategory response with permission" do
       subcategory = Fabricate(:category, user: admin, parent_category: category)
 
