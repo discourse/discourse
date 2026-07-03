@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class TopicsController < ApplicationController
+  include TagParamLimit
+
   requires_login only: %i[
                    timings
                    destroy_timings
@@ -376,7 +378,7 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
 
     guardian.ensure_can_edit!(topic)
-    return if reject_oversized_tag_params!(:tags, :original_tags)
+    return if reject_too_many_tags!(:tags, :original_tags)
 
     original_title = params[:original_title]
     if original_title.present? && original_title != topic.title
@@ -500,7 +502,7 @@ class TopicsController < ApplicationController
   def update_tags
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_edit_tags!(topic)
-    return if reject_oversized_tag_params!(:tags)
+    return if reject_too_many_tags!(:tags)
 
     return render_topic_with_tags(topic) if !params.has_key?(:tags)
 
@@ -1308,27 +1310,6 @@ class TopicsController < ApplicationController
       .visible_tags(guardian)
       .map { |tag| { id: tag.id, name: tag.name, slug: tag.slug_for_url } }
     render_json_dump(payload)
-  end
-
-  def reject_oversized_tag_params!(*param_names)
-    param_names.each do |param_name|
-      next if !params.has_key?(param_name)
-      next if tag_param_size(params[param_name]) <= SiteSetting.max_tags_per_topic
-
-      render_json_error(
-        I18n.t("tags.too_many_tags_for_topic", count: SiteSetting.max_tags_per_topic),
-      )
-      return true
-    end
-
-    false
-  end
-
-  def tag_param_size(tags)
-    return tags.length if tags.is_a?(Array)
-    return tags.keys.length if tags.is_a?(ActionController::Parameters)
-
-    0
   end
 
   def normalized_tag_params(tags)
