@@ -125,6 +125,90 @@ RSpec.describe Migrations::Database::Connection do
     end
   end
 
+  describe "#merge_database" do
+    def create_schema(db)
+      db.execute(<<~SQL)
+        CREATE TABLE topic_tags (topic_id INTEGER, tag_id INTEGER, PRIMARY KEY (topic_id, tag_id))
+      SQL
+      db.execute("CREATE TABLE uploads (id TEXT PRIMARY KEY, filename TEXT)")
+    end
+
+    # Yields a run-DB `connection` and a closed shard database at `source_path`,
+    # both carrying the same schema. The block seeds each and runs the merge.
+    def with_merge_dbs
+      Dir.mktmpdir do |dir|
+        source_path = File.join(dir, "source.db")
+        connection = described_class.new(path: File.join(dir, "main.db"))
+        create_schema(connection.db)
+
+        source = described_class.open_database(path: source_path)
+        create_schema(source)
+
+        yield connection, source, source_path
+      ensure
+        connection&.close
+      end
+    end
+
+    it "merges non-colliding rows from every listed table" do
+      with_merge_dbs do |connection, source, source_path|
+        connection.db.execute("INSERT INTO topic_tags VALUES (1, 10)")
+        source.execute("INSERT INTO topic_tags VALUES (2, 20)")
+        source.execute("INSERT INTO uploads VALUES ('a', 'a.png')")
+        source.close
+
+        connection.merge_database(source_path, tables: %w[topic_tags uploads])
+
+        expect(connection.db.query("SELECT topic_id, tag_id FROM topic_tags")).to contain_exactly(
+          { topic_id: 1, tag_id: 10 },
+          { topic_id: 2, tag_id: 20 },
+        )
+        expect(connection.db.query_splat("SELECT id FROM uploads")).to contain_exactly("a")
+      end
+    end
+
+    it "dedups an `OR IGNORE` table across shards, keeping the first writer's row" do
+      with_merge_dbs do |connection, source, source_path|
+        connection.db.execute("INSERT INTO uploads VALUES ('x', 'first.png')")
+        source.execute("INSERT INTO uploads VALUES ('x', 'second.png')")
+        source.close
+
+        connection.merge_database(source_path, tables: %w[uploads], or_ignore_tables: %w[uploads])
+
+        expect(connection.db.query("SELECT id, filename FROM uploads")).to contain_exactly(
+          { id: "x", filename: "first.png" },
+        )
+      end
+    end
+
+    it "raises, naming the table, when a plain table has a cross-shard duplicate" do
+      with_merge_dbs do |connection, source, source_path|
+        connection.db.execute("INSERT INTO topic_tags VALUES (1, 10)")
+        source.execute("INSERT INTO topic_tags VALUES (1, 10)")
+        source.close
+
+        expect { connection.merge_database(source_path, tables: %w[topic_tags]) }.to raise_error(
+          /topic_tags/,
+        )
+      end
+    end
+
+    it "detaches the merge source even when a merge raises, so the next merge works" do
+      with_merge_dbs do |connection, source, source_path|
+        connection.db.execute("INSERT INTO topic_tags VALUES (1, 10)")
+        source.execute("INSERT INTO topic_tags VALUES (1, 10)")
+        source.close
+
+        expect { connection.merge_database(source_path, tables: %w[topic_tags]) }.to raise_error(
+          /topic_tags/,
+        )
+
+        # A leaked `merge_source` attachment would make this second merge raise.
+        expect { connection.merge_database(source_path, tables: %w[uploads]) }.not_to raise_error
+      end
+    end
+  end
+
   context "when `Migrations::ForkManager.fork` is used" do
     it "temporarily closes the connection while a process fork is created" do
       create_connection do |connection|

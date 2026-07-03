@@ -57,6 +57,32 @@ RSpec.describe Migrations::Database::IntermediateDB do
     end
   end
 
+  describe ".conflict_strategy_for" do
+    it "returns `:ignore` for a table whose model declares it" do
+      expect(described_class.conflict_strategy_for("uploads")).to eq(:ignore)
+    end
+
+    it "returns `:raise` for a table whose model does not declare a strategy" do
+      expect(described_class.conflict_strategy_for("topic_tags")).to eq(:raise)
+    end
+
+    it "returns `:raise` for a table without a model" do
+      expect(described_class.conflict_strategy_for("schema_migrations")).to eq(:raise)
+    end
+
+    it "reads the strategy from the model, so a new `OR IGNORE` model flips it" do
+      model =
+        Module.new do
+          def self.conflict_strategy
+            :ignore
+          end
+        end
+      stub_const("#{described_class}::Widget", model)
+
+      expect(described_class.conflict_strategy_for("widgets")).to eq(:ignore)
+    end
+  end
+
   describe ".with_connection" do
     let(:previous_connection) { create_connection_double }
     let(:temporary_connection) { create_connection_double }

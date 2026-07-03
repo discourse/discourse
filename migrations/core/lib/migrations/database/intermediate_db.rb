@@ -23,6 +23,20 @@ module Migrations
         @db.insert(sql, parameters)
       end
 
+      # The conflict strategy a table's model declares for its inserts, so the
+      # shard merge can mirror it (see `Conversion::Consolidator`). A model that
+      # inserts with `INSERT OR IGNORE` declares `:ignore`; everything else falls
+      # back to `:raise`, keeping the single-writer contract where a genuine
+      # duplicate row is an error rather than a silently dropped row. Derived from
+      # the model itself, so a new `OR IGNORE` table needs no change here.
+      def self.conflict_strategy_for(table)
+        module_name = table.to_s.singularize.camelize
+        return :raise unless const_defined?(module_name, false)
+
+        model = const_get(module_name, false)
+        model.respond_to?(:conflict_strategy) ? model.conflict_strategy : :raise
+      end
+
       def self.close
         @db.close if @db
       end

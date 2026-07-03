@@ -87,13 +87,24 @@ module Migrations
       end
 
       # `ATTACH` can't run inside a transaction, so commit any open batch first.
-      def merge_database(other_path, tables:)
+      #
+      # Each table merges with the conflict clause its model declares (the caller
+      # derives `or_ignore_tables`): a plain, raising `INSERT` by default, so a
+      # genuine duplicate row surfaces as an error instead of being dropped, and
+      # `INSERT OR IGNORE` only for the tables whose rows are deliberately
+      # first-writer-wins (e.g. `uploads`).
+      def merge_database(other_path, tables:, or_ignore_tables: [])
         commit_transaction
         @db.execute("ATTACH DATABASE ? AS merge_source", other_path)
         begin
           tables.each do |table|
             quoted = quote_identifier(table)
-            @db.execute("INSERT OR IGNORE INTO main.#{quoted} SELECT * FROM merge_source.#{quoted}")
+            conflict_clause = or_ignore_tables.include?(table) ? "OR IGNORE " : ""
+            @db.execute(
+              "INSERT #{conflict_clause}INTO main.#{quoted} SELECT * FROM merge_source.#{quoted}",
+            )
+          rescue Extralite::Error => e
+            raise "Failed to merge table #{table.inspect}: #{e.message}"
           end
         ensure
           @db.execute("DETACH DATABASE merge_source")

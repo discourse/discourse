@@ -53,7 +53,9 @@ module Migrations
       end
 
       def merge(shard_path)
-        @fork_mutex.synchronize { @connection.merge_database(shard_path, tables: mergeable_tables) }
+        @fork_mutex.synchronize do
+          @connection.merge_database(shard_path, tables: mergeable_tables, or_ignore_tables:)
+        end
       rescue StandardError => e
         @errors << e
       ensure
@@ -64,6 +66,18 @@ module Migrations
       # shard, so they're left out of the merge.
       def mergeable_tables
         @mergeable_tables ||= @connection.tables - %w[config schema_migrations]
+      end
+
+      # The mergeable tables whose model inserts with `INSERT OR IGNORE`, so their
+      # merge dedups the same way. Every other table merges with a raising
+      # `INSERT`, so a cross-step/cross-shard duplicate row fails the run instead
+      # of being silently dropped. Read from the models, so adding an `OR IGNORE`
+      # table (or a plain one) picks the right clause without touching this code.
+      def or_ignore_tables
+        @or_ignore_tables ||=
+          mergeable_tables.select do |table|
+            Database::IntermediateDB.conflict_strategy_for(table) == :ignore
+          end
       end
     end
   end

@@ -20,6 +20,15 @@ module Migrations
         SQL
         private_constant :SQL
 
+        # `uploads` rows are content-identical for a given `id` (a hash of the
+        # file's path/url/data), and several steps legitimately reference the same
+        # file, so a duplicate `id` is expected rather than an error. Both the
+        # insert (`SQL` above) and the shard merge take first-writer-wins via
+        # `INSERT OR IGNORE` — see `IntermediateDB.conflict_strategy_for`.
+        def self.conflict_strategy
+          :ignore
+        end
+
         def self.create_for_file(
           path:,
           filename: nil,
