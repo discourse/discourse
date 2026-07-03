@@ -4,9 +4,6 @@ import { service } from "@ember/service";
 export default class AdminReportsController extends Controller {
   @service router;
 
-  queryParams = ["group"];
-  group = null;
-
   get showHeader() {
     return this.router.currentRouteName === "adminReports.index";
   }

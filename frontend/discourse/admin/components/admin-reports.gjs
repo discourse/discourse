@@ -67,7 +67,6 @@ const REPORT_GROUPS = {
 };
 
 export default class AdminReports extends Component {
-  @service router;
   @service siteSettings;
 
   @bind
@@ -89,7 +88,7 @@ export default class AdminReports extends Component {
   }
 
   get requestedGroupKey() {
-    return this.router.currentRoute?.queryParams?.group || "all";
+    return this.args.group || "all";
   }
 
   @bind
@@ -205,9 +204,7 @@ export default class AdminReports extends Component {
 
   @bind
   updateGroupFilter(groupKey) {
-    this.router.transitionTo({
-      queryParams: { group: groupKey === "all" ? null : groupKey },
-    });
+    this.args.onGroupChange?.(groupKey);
   }
 
   <template>
