@@ -248,11 +248,14 @@ class DiscourseURL extends EmberObject {
       }
     }
 
-    const shouldRefresh = applyValueTransformer(
+    let shouldRefresh =
+      Session.currentProp("requiresRefresh") && !this.isComposerOpen;
+    shouldRefresh = applyValueTransformer(
       "full-page-refresh-on-navigation",
-      Session.currentProp("requiresRefresh") && !this.isComposerOpen,
+      shouldRefresh,
       { url: path }
     );
+
     if (shouldRefresh) {
       return this.redirectTo(path);
     }
