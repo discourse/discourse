@@ -148,4 +148,10 @@ after_initialize do
 
     DiscourseWorkflows::PluginEnableHandler.handle!
   end
+
+  register_stat("total", stat_type: :workflows) { DiscourseWorkflows::Statistics.total }
+  register_stat("created", stat_type: :workflows) { DiscourseWorkflows::Statistics.created }
+  register_stat("edited", stat_type: :workflows) { DiscourseWorkflows::Statistics.edited }
+  register_stat("executed", stat_type: :workflows) { DiscourseWorkflows::Statistics.executed }
+  register_stat("executions", stat_type: :workflows) { DiscourseWorkflows::Statistics.executions }
 end
