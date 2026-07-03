@@ -186,6 +186,26 @@ RSpec.describe GroupsController do
       )
     end
 
+    it "does not expose member counts for groups with hidden members" do
+      hidden_members_group =
+        Fabricate(
+          :group,
+          members_visibility_level: Group.visibility_levels[:owners],
+          users: [Fabricate(:user)],
+        )
+
+      get "/groups.json"
+
+      expect(response.status).to eq(200)
+
+      group_json =
+        response.parsed_body["groups"].find { |group| group["id"] == hidden_members_group.id }
+
+      expect(group_json).to be_present
+      expect(group_json["can_see_members"]).to eq(false)
+      expect(group_json).not_to have_key("user_count")
+    end
+
     context "when viewing groups of another user" do
       describe "when an invalid username is given" do
         it "should return the right response" do
