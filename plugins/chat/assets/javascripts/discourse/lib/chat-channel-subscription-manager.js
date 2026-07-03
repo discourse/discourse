@@ -296,9 +296,8 @@ export default class ChatChannelSubscriptionManager {
     this.#syncPinnedMessagesCount(data, alreadyApplied, -1);
   }
 
-  // Assigning the server's count is idempotent, unlike incrementing — safe
-  // against replayed/duplicate events. The delta path is a fallback for older
-  // events (no count) still in the bus backlog.
+  // assign the authoritative count (idempotent under replayed/duplicate
+  // events); delta path is only a fallback for older events without a count
   #syncPinnedMessagesCount(data, alreadyApplied, delta) {
     if (data.pinned_message_count !== undefined) {
       this.channel.pinnedMessagesCount = data.pinned_message_count;

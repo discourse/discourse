@@ -18,15 +18,10 @@ import {
   resetPinsDismissal,
 } from "discourse/plugins/chat/discourse/lib/chat-pinned-bar-dismissal";
 
-// Max bars shown at once; beyond this the strip scrolls the active bar centred.
 const INDICATOR_WINDOW = 4;
-
-// Indicator geometry (px). Sizes are whole-pixel, computed here rather than
-// divided in CSS, to avoid sub-pixel drift between bars.
-const INDICATOR_HEIGHT = 30;
-const SEGMENT_GAP = 2;
-// Edge fade so bars dissolve as they scroll past the highlight.
-const INDICATOR_FADE = 8;
+const INDICATOR_HEIGHT = 30; // px
+const SEGMENT_GAP = 2; // px
+const INDICATOR_FADE = 8; // px
 
 export default class ChatPinnedMessageBar extends Component {
   @service chatApi;
@@ -49,8 +44,6 @@ export default class ChatPinnedMessageBar extends Component {
   });
   #loadSequence = 0;
 
-  // Managers always see the bar; everyone else stays dismissed until a newer
-  // pin arrives (see lib/chat-pinned-bar-dismissal).
   get dismissed() {
     if (this.args.channel.canManagePins) {
       return false;
@@ -69,8 +62,7 @@ export default class ChatPinnedMessageBar extends Component {
     );
   }
 
-  // Lives on the channel so it survives re-renders; clamped so a stale index
-  // (e.g. after the viewed pin is unpinned) never resolves to an undefined pin.
+  // clamped so a stale index (e.g. after an unpin) never resolves to no pin
   get currentIndex() {
     const stored = this.args.channel.pinnedBarIndex ?? 0;
     return Math.min(stored, this.pins.length - 1);
@@ -88,8 +80,7 @@ export default class ChatPinnedMessageBar extends Component {
     return this.pins.length > 1;
   }
 
-  // First visible bar. Keeps the active bar centred so the bars visibly scroll
-  // past it — parking the highlight at an edge would hide the motion.
+  // centred so the bars visibly scroll past the active one (an edge would hide it)
   get indicatorTop() {
     const total = this.pins.length;
     if (total <= INDICATOR_WINDOW) {
@@ -99,21 +90,18 @@ export default class ChatPinnedMessageBar extends Component {
     return Math.max(0, Math.min(top, total - INDICATOR_WINDOW));
   }
 
-  // Bars actually shown: the window, or fewer when there aren't enough pins.
   get visibleSegments() {
     return Math.min(this.pins.length, INDICATOR_WINDOW);
   }
 
   get indicatorStyle() {
     const visible = this.visibleSegments;
-    // even whole-pixel bars that fill the height, with gaps only between;
     // floor (not round) so the strip never exceeds INDICATOR_HEIGHT
     const segment = Math.floor(
       (INDICATOR_HEIGHT - SEGMENT_GAP * (visible - 1)) / visible
     );
     const height = segment * visible + SEGMENT_GAP * (visible - 1);
     const top = this.indicatorTop;
-    // fade whichever edge has more pins beyond it, so the scroll reads
     const fadeTop = top > 0 ? INDICATOR_FADE : 0;
     const fadeBottom = top < this.pins.length - visible ? INDICATOR_FADE : 0;
     return trustHTML(
@@ -128,8 +116,6 @@ export default class ChatPinnedMessageBar extends Component {
     );
   }
 
-  // Single pin: swap the see-all button for an inline dismiss (X). Managers
-  // keep see-all; they never dismiss.
   get showInlineDismiss() {
     return !this.hasMultiplePins && !this.args.channel.canManagePins;
   }
@@ -138,8 +124,6 @@ export default class ChatPinnedMessageBar extends Component {
     return this.router.currentRoute?.name === "chat.channel.pins";
   }
 
-  // toggle: the see-all button opens the pins panel, or closes it (by routing
-  // back to the channel) when it is already open
   get seeAllRoute() {
     return this.pinsPanelOpen ? "chat.channel" : "chat.channel.pins";
   }
@@ -169,7 +153,6 @@ export default class ChatPinnedMessageBar extends Component {
         this.loadPins();
         break;
       case "edit":
-        // keep a pinned message's preview in sync when it gets edited
         this.#updatePinnedMessage(busData.chat_message);
         break;
     }
@@ -203,9 +186,8 @@ export default class ChatPinnedMessageBar extends Component {
     }
   }
 
-  // A newer pin voids the dismissal, so drop the stored record once one lands.
-  // Keeps the navbar re-show button (which keys off the record) from lingering
-  // while the bar is already back.
+  // a newer pin voids the dismissal — drop the record so the navbar re-show
+  // button doesn't linger while the bar is already back
   #reconcileDismissal() {
     const dismissedAbove = pinsDismissedAboveId(this.args.channel);
     if (dismissedAbove != null && newestPinId(this.pins) > dismissedAbove) {
@@ -222,7 +204,6 @@ export default class ChatPinnedMessageBar extends Component {
 
     this.args.onJumpToMessage?.(pin.message.id);
 
-    // walk to the next pin so repeated taps cycle through all of them
     if (this.hasMultiplePins) {
       this.currentIndex = (this.currentIndex + 1) % this.pins.length;
     }
@@ -263,7 +244,6 @@ export default class ChatPinnedMessageBar extends Component {
                       data-pin-id={{pin.id}}
                     ></span>
                   {{/each}}
-                  {{! a single bright bar that slides to the active pin }}
                   <span class="chat-pinned-bar__indicator-thumb"></span>
                 </span>
               </span>

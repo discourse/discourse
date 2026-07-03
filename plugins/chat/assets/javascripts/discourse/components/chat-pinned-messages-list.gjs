@@ -80,8 +80,7 @@ export default class ChatPinnedMessagesList extends Component {
   #lastViewedPinsAtSnapshot =
     this.args.channel.currentUserMembership?.lastViewedPinsAt;
 
-  // Managers don't get the toggle — "Dismiss pinned messages" would read as
-  // unpinning for everyone; they manage pins via the message actions.
+  // not managers — "Dismiss pinned messages" would read as unpinning for all
   get canToggleDismissal() {
     return this.pinnedMessages.length > 0 && !this.args.channel.canManagePins;
   }

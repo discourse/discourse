@@ -13,8 +13,7 @@
     top: 2rem;
   }
 
-  // when the sticky pinned-message bar is actually visible (not dismissed or
-  // still loading), float notices below it instead of on top of it
+  // float notices below the pinned bar only while it's actually visible
   .chat-channel:has(.chat-pinned-bar:not(.--dismissed, .--loading)) & {
     top: var(--chat-pinned-bar-height);
   }

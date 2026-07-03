@@ -40,8 +40,6 @@
   }
 
   &__indicator {
-    // vertical strip of equal bars, one per pin; the component sizes them and
-    // scrolls the strip past a centred highlight when there are more than fit
     align-self: center;
     flex-shrink: 0;
     width: 3px;
@@ -94,8 +92,6 @@
     height: var(--chat-pinned-bar-seg, 6px);
     background: var(--tertiary);
     border-radius: 3px;
-
-    // slide to the active bar — one slot (bar + gap) per index
     transform: translateY(
       calc(
         var(--chat-pinned-bar-active, 0) *
@@ -147,7 +143,6 @@
   }
 
   &__see-all {
-    // the panel is open — the button now closes it
     &.--active .d-icon {
       color: var(--tertiary);
     }
