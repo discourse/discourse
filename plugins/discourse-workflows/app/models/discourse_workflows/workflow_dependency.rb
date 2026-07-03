@@ -4,9 +4,7 @@ module DiscourseWorkflows
   class WorkflowDependency < ActiveRecord::Base
     self.table_name = "discourse_workflows_workflow_dependencies"
 
-    TOPIC_ADMIN_BUTTON_CACHE_KEY = "topic_admin_buttons"
-    ACTIVE_NODE_TYPES_KEY = "active_node_types"
-    USER_MODAL_CACHE_KEY = "has_user_modals"
+    DEPENDENCY_INDEX_CACHE_KEY = "dependency_index"
 
     belongs_to :workflow, class_name: "DiscourseWorkflows::Workflow"
     belongs_to :workflow_version,
@@ -37,30 +35,32 @@ module DiscourseWorkflows
     end
 
     def self.cached_topic_admin_buttons
-      cache.defer_get_set(TOPIC_ADMIN_BUTTON_CACHE_KEY) do
-        Workflow::Action::FindPublishedTriggers
-          .call(trigger_type: "trigger:topic_admin_button")
-          .map do |published_trigger|
-            {
-              trigger_node_id: published_trigger.trigger_node_id,
-              workflow_id: published_trigger.workflow_id,
-              label: NodeData.parameters(published_trigger.trigger_node)["label"],
-              icon: NodeData.parameters(published_trigger.trigger_node)["icon"],
-            }
-          end
+      cached_published_triggers("trigger:topic_admin_button").map do |published_trigger|
+        {
+          trigger_node_id: published_trigger.trigger_node_id,
+          workflow_id: published_trigger.workflow_id,
+          label: NodeData.parameters(published_trigger.trigger_node)["label"],
+          icon: NodeData.parameters(published_trigger.trigger_node)["icon"],
+        }
       end
     end
 
     def self.active_node_types
-      cache.defer_get_set(ACTIVE_NODE_TYPES_KEY) do
-        of_type("node_type").on_active_version.distinct.pluck(:dependency_key).to_set
+      cached_dependency_index[:active_node_types].to_set
+    end
+
+    def self.cached_published_triggers(trigger_type)
+      Array(
+        cached_dependency_index[:published_triggers_by_type][trigger_type],
+      ).map do |published_trigger|
+        DiscourseWorkflows::CachedPublishedTrigger.from_hash(published_trigger)
       end
     end
 
     def self.cached_user_modals?
-      cache.defer_get_set(USER_MODAL_CACHE_KEY) do
-        workflows_referencing("node_type", DiscourseWorkflows::Nodes::Modal::V1.identifier).exists?
-      end
+      cached_dependency_index[:referenced_node_types].include?(
+        DiscourseWorkflows::Nodes::Modal::V1.identifier,
+      )
     end
 
     def self.workflows_referencing(type, key)
@@ -72,6 +72,71 @@ module DiscourseWorkflows
             "discourse_workflows_workflows.active_version_id)",
         )
         .select(:workflow_id)
+    end
+
+    def self.cached_dependency_index
+      cache.defer_get_set(DEPENDENCY_INDEX_CACHE_KEY) do
+        rows = active_node_type_rows
+        versions_by_id =
+          WorkflowVersion.where(
+            version_id: rows.map { |row| row[:workflow_version_id] }.uniq,
+          ).index_by(&:version_id)
+
+        {
+          active_node_types: rows.map { |row| row[:node_type] }.uniq,
+          referenced_node_types: referenced_node_types,
+          published_triggers_by_type: published_triggers_by_type(rows, versions_by_id),
+        }
+      end
+    end
+
+    def self.active_node_type_rows
+      of_type("node_type")
+        .on_active_version
+        .pluck(:dependency_key, :workflow_id, :workflow_version_id, :node_id)
+        .map do |node_type, workflow_id, workflow_version_id, node_id|
+          {
+            node_type: node_type,
+            workflow_id: workflow_id,
+            workflow_version_id: workflow_version_id,
+            node_id: node_id,
+          }
+        end
+    end
+
+    def self.referenced_node_types
+      of_type("node_type")
+        .joins(:workflow)
+        .where(
+          "discourse_workflows_workflow_dependencies.workflow_version_id IN " \
+            "(discourse_workflows_workflows.version_id, " \
+            "discourse_workflows_workflows.active_version_id)",
+        )
+        .distinct
+        .pluck(:dependency_key)
+    end
+
+    def self.published_triggers_by_type(rows, versions_by_id)
+      rows.each_with_object({}) do |row, published_triggers|
+        node_type = row[:node_type]
+        next if !node_type.start_with?("trigger:")
+
+        trigger_node =
+          versions_by_id[row[:workflow_version_id]]&.nodes&.find do |candidate|
+            candidate["id"] == row[:node_id].to_s
+          end
+        next unless trigger_node&.dig("type") == node_type
+
+        cached_trigger =
+          DiscourseWorkflows::CachedPublishedTrigger.new(
+            workflow_id: row[:workflow_id],
+            workflow_version_id: row[:workflow_version_id],
+            trigger_node: trigger_node.deep_dup,
+          )
+
+        published_triggers[node_type] ||= []
+        published_triggers[node_type] << cached_trigger.to_h
+      end
     end
   end
 end
