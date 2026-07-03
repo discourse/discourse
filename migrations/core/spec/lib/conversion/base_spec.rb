@@ -56,7 +56,9 @@ RSpec.describe Migrations::Conversion::Base do
     # closed, while keeping the real (plain) reporter.
     def stub_reporter
       reporter = nil
-      allow(Migrations::Reporting::Factory).to receive(:build).and_wrap_original do |original, **kwargs|
+      allow(Migrations::Reporting::Factory).to receive(
+        :build,
+      ).and_wrap_original do |original, **kwargs|
         reporter = original.call(**kwargs)
         allow(reporter).to receive(:close).and_call_original
         reporter
@@ -123,10 +125,11 @@ RSpec.describe Migrations::Conversion::Base do
       steps = []
       converter.define_singleton_method(:setup) { steps << :setup }
       allow(converter).to receive(:create_database) { steps << :create_database }
-      expect(converter).to receive(:puts).with("Initializing...") { steps << :puts }
+      allow(converter).to receive(:puts).with("Initializing...") { steps << :puts }
 
       converter.run
 
+      expect(converter).to have_received(:puts).with("Initializing...")
       expect(steps).to eq(%i[puts setup create_database])
     end
 
@@ -146,7 +149,9 @@ RSpec.describe Migrations::Conversion::Base do
       allow(scheduler).to receive(:run).and_raise(SignalException.new("INT"))
       allow(STDERR).to receive(:puts)
 
-      expect { converter.run }.to raise_error(SystemExit) { |error| expect(error.status).to eq(130) }
+      expect { converter.run }.to raise_error(SystemExit) { |error|
+        expect(error.status).to eq(130)
+      }
 
       expect(STDERR).to have_received(:puts).with("\n#{I18n.t("cli.aborted")}")
     end
@@ -227,7 +232,7 @@ RSpec.describe Migrations::Conversion::Base do
       step = converter.send(:create_step, step_class)
 
       expect(step).to be_an_instance_of(step_class)
-      expect(step.received_args).to eq(settings: settings, step_marker: step_class)
+      expect(step.received_args).to eq(settings:, step_marker: step_class)
     end
   end
 
