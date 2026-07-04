@@ -124,7 +124,7 @@ module Migrations
 
               (plugin_data["columns"] || {}).each do |table, cols|
                 @column_to_plugin[table] ||= {}
-                cols.each { |col| @column_to_plugin[table][col] = plugin_name }
+                cols.each { |col| @column_to_plugin.fetch(table)[col] = plugin_name }
               end
             end
           end

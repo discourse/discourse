@@ -129,14 +129,16 @@ module Migrations
           end
 
           def diff_schema(snapshot_before, snapshot_after)
-            new_tables = snapshot_after[:tables] - snapshot_before[:tables]
+            new_tables = snapshot_after.fetch(:tables) - snapshot_before.fetch(:tables)
 
             new_columns = {}
-            snapshot_after[:columns].each do |table, cols|
-              next if new_tables.include?(table)
-              added = cols - snapshot_before[:columns].fetch(table, Set.new)
-              new_columns[table] = added.sort if added.any?
-            end
+            snapshot_after
+              .fetch(:columns)
+              .each do |table, cols|
+                next if new_tables.include?(table)
+                added = cols - snapshot_before.fetch(:columns).fetch(table, Set.new)
+                new_columns[table] = added.sort if added.any?
+              end
 
             return if new_tables.empty? && new_columns.empty?
 

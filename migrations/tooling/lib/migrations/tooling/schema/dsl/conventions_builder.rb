@@ -43,7 +43,7 @@ module Migrations
           end
 
           def columns_matching(pattern, &block)
-            pattern = Regexp.new(pattern) unless pattern.is_a?(Regexp)
+            pattern = Regexp.new(pattern)
             builder = ConventionEntryBuilder.new(pattern:)
             builder.instance_eval(&block)
             @conventions << builder.build

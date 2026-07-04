@@ -63,7 +63,7 @@ module Migrations
       def find_max_suffixes(*names_lower_collections)
         suffixes_by_base = extract_suffixes(names_lower_collections)
 
-        suffixes_by_base.transform_values! do |suffixes|
+        suffixes_by_base.transform_values do |suffixes|
           suffixes.sort!
 
           range_end = suffixes.last
@@ -95,7 +95,7 @@ module Migrations
         names_lower_collections.each do |names_lower|
           names_lower.each do |name|
             base_name, suffix = name.match(/\A(.+?)_(\d+)\z/)&.captures
-            suffixes_by_base[base_name] << suffix.to_i if base_name
+            suffixes_by_base[base_name] << Integer(suffix) if base_name
           end
         end
 

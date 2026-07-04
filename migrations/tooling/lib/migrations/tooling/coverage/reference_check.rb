@@ -175,9 +175,9 @@ module Migrations
 
             unknown_columns
               .keys
-              .sort_by { |model_name| expected[model_name].table_name }
+              .sort_by { |model_name| expected.fetch(model_name).table_name }
               .each do |model_name|
-                puts "  #{expected[model_name].table_name}: #{unknown_columns[model_name].join(", ")}"
+                puts "  #{expected.fetch(model_name).table_name}: #{unknown_columns.fetch(model_name).join(", ")}"
               end
 
             puts
@@ -188,7 +188,7 @@ module Migrations
             puts
 
             unknown_models.keys.sort.each do |model_name|
-              puts "  #{model_name} (#{unknown_models[model_name].join(", ")})"
+              puts "  #{model_name} (#{unknown_models.fetch(model_name).join(", ")})"
             end
 
             puts
@@ -203,11 +203,11 @@ module Migrations
           column_count = 0
           missing
             .keys
-            .sort_by { |model_name| expected[model_name].table_name }
+            .sort_by { |model_name| expected.fetch(model_name).table_name }
             .each do |model_name|
-              columns = missing[model_name].sort
+              columns = missing.fetch(model_name).sort
               column_count += columns.size
-              puts "  #{expected[model_name].table_name}: #{columns.join(", ")}"
+              puts "  #{expected.fetch(model_name).table_name}: #{columns.join(", ")}"
             end
 
           puts
@@ -221,7 +221,7 @@ module Migrations
         def ensure_reference_present!(converters)
           return if converters.include?(REFERENCE_CONVERTER)
 
-          raise Error, <<~MSG.strip
+          raise Error, <<~MSG.rstrip
             Reference converter '#{REFERENCE_CONVERTER}' was not found among the discovered converters: #{converters.join(", ")}.
             The coverage check cannot run without it.
           MSG
