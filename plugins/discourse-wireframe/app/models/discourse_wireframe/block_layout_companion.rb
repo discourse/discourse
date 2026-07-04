@@ -47,10 +47,10 @@ end
 # Table name: wireframe_block_layout_companions
 #
 #  id                 :bigint           not null, primary key
-#  component_theme_id :integer          not null
-#  parent_theme_id    :integer          not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
+#  component_theme_id :integer          not null
+#  parent_theme_id    :integer          not null
 #
 # Indexes
 #

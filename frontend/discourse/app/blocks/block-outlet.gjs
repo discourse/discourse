@@ -504,6 +504,9 @@ function resolveDecoratorClassNames(metadata, args) {
  * @param {string} [debugContext.key] - Stable unique key for this block
  * @param {string} [debugContext.outletName] - The outlet name for wrapper class generation
  * @param {Array<import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult>} [debugContext.processedChildren] - Pre-processed children
+ * @param {{current: Array<Object>}} [debugContext.childrenHolder] - Tracked holder
+ *   whose `current` key exposes the freshly processed children to a cached
+ *   container instance without re-currying it.
  * @returns {import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult}
  *   An object containing the curried block component, any containerArgs
  *   provided in the block entry, and a stable unique key for list rendering.
@@ -623,6 +626,10 @@ function createChildBlock(entry, owner, debugContext = {}) {
     Component: wrappedComponent,
     containerArgs,
     key: debugContext.key,
+    // The block's registered name, so a parent container can identify a child
+    // by kind (e.g. a grid layout dropping `layout-merged-cell` on the live
+    // path) without reaching into the curried component.
+    blockName: blockMeta?.blockName,
     /**
      * Returns a ghost version of this child with a custom failure reason.
      *
@@ -655,6 +662,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
           Component: ghostResult.Component,
           containerArgs,
           key: `${debugContext.key}:ghost`,
+          blockName: blockMeta?.blockName,
           isGhost: true,
           asGhost: () => ghostChild,
         };

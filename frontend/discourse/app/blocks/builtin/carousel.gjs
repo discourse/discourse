@@ -31,7 +31,10 @@ const MAX_DOTS = 10;
  * child machinery.
  */
 @block("carousel", {
-  thumbnail: () => import("discourse/blocks/thumbnails/carousel"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/carousel.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/carousel")
+    ),
   container: true,
   displayName: "Carousel",
   icon: "images",
@@ -74,9 +77,13 @@ export default class Carousel extends Component {
    * element, and entry, and their modifier doesn't even re-run.
    */
   registerSlide = modifier((element, [key]) => {
-    this.#slides.set(key, element);
+    // The modifier's positional args are typed `unknown`; the slide key is the
+    // entry's stable string key. The registered element is always an
+    // `HTMLElement` (a slide's root), which the measurement getters rely on.
+    const slideKey = /** @type {string} */ (key);
+    this.#slides.set(slideKey, /** @type {HTMLElement} */ (element));
     return () => {
-      this.#slides.delete(key);
+      this.#slides.delete(slideKey);
     };
   });
 

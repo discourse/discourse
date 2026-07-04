@@ -3,6 +3,7 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { block } from "discourse/blocks";
+/** @type {import("discourse/lib/blocks/-internals/category-card.gjs")} */
 import CategoryCard from "discourse/lib/blocks/-internals/category-card";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
@@ -15,7 +16,10 @@ import { i18n } from "discourse-i18n";
  * `Category.findById`; unresolvable IDs are dropped silently.
  */
 @block("featured-categories", {
-  thumbnail: () => import("discourse/blocks/thumbnails/featured-categories"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/featured-categories.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/featured-categories")
+    ),
   displayName: "Featured categories",
   icon: "folder-tree",
   category: "Discourse data",
@@ -62,7 +66,9 @@ export default class FeaturedCategories extends Component {
    * silently dropped. `@cached` so re-renders during inline editing
    * don't repeat the `findById` lookups.
    *
-   * @returns {Array<import("discourse/models/category").default>}
+   * @returns {Array<import("discourse/models/category").default & { description_excerpt?: string }>}
+   *   Category instances, including the server-provided `description_excerpt`
+   *   (a truncated description not declared on the base model type).
    */
   @cached
   get featuredCategories() {

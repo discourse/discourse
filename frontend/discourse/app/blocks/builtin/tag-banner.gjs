@@ -18,7 +18,10 @@ import { i18n } from "discourse-i18n";
  * lazily from the `tag-info` endpoint.
  */
 @block("tag-banner", {
-  thumbnail: () => import("discourse/blocks/thumbnails/tag-banner"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/tag-banner.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/tag-banner")
+    ),
   displayName: "Tag banner",
   icon: "tag",
   category: "Discourse data",

@@ -5,7 +5,10 @@ import { block } from "discourse/blocks";
 import { i18n } from "discourse-i18n";
 
 @block("spacer", {
-  thumbnail: () => import("discourse/blocks/thumbnails/spacer"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/spacer.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/spacer")
+    ),
   displayName: "Spacer",
   icon: "arrows-up-down",
   category: "Layout",

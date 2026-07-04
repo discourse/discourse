@@ -12,7 +12,10 @@ import { i18n } from "discourse-i18n";
  * `{ value, label, icon, href }` objects) reflowed into equal columns.
  */
 @block("stats", {
-  thumbnail: () => import("discourse/blocks/thumbnails/stats"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/stats.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/stats")
+    ),
   displayName: "Stats",
   icon: "chart-column",
   category: "Content",

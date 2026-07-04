@@ -11,7 +11,10 @@ import { i18n } from "discourse-i18n";
  * native controls.
  */
 @block("video", {
-  thumbnail: () => import("discourse/blocks/thumbnails/video"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/video.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/video")
+    ),
   displayName: "Video",
   icon: "video",
   category: "Content",

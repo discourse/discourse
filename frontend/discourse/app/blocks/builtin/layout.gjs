@@ -55,7 +55,10 @@ const VALID_ALIGN_CONTENT = [
  *     than a deliberately-placed layout.
  */
 @block("layout", {
-  thumbnail: () => import("discourse/blocks/thumbnails/layout"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/layout.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/layout")
+    ),
   container: true,
   displayName: "Layout",
   icon: "table-cells-large",

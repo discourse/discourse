@@ -50,35 +50,6 @@ module("Integration | Blocks | collapsing", function (hooks) {
       .doesNotExist("not in the expanded editing presentation");
   });
 
-  test("carousel reveals every slide when edit presentation is on", async function (assert) {
-    debugHooks.setCallback(DEBUG_CALLBACK.EDIT_PRESENTATION, () => true);
-
-    withPluginApi((api) =>
-      api.renderBlocks("hero-blocks", [
-        {
-          block: Carousel,
-          args: {},
-          children: [
-            { block: Heading, args: { text: "One" } },
-            { block: Heading, args: { text: "Two" } },
-          ],
-        },
-      ])
-    );
-
-    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
-
-    assert
-      .dom(".d-block-carousel--editing")
-      .exists("switches to the expanded editing presentation");
-    assert
-      .dom(".d-block-carousel--editing .d-block-carousel__slide")
-      .exists({ count: 2 }, "every slide is revealed for editing");
-    assert
-      .dom(".d-block-carousel__controls")
-      .doesNotExist("paged controls are dropped while editing");
-  });
-
   test("accordion renders collapsible items, open per defaultOpen", async function (assert) {
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [

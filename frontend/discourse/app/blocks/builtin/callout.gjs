@@ -2,6 +2,7 @@
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
 import { ICON_NAME_PATTERN } from "discourse/lib/blocks";
+/** @type {import("discourse/lib/blocks/-internals/rich-text-renderer.gjs")} */
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -9,7 +10,10 @@ import { i18n } from "discourse-i18n";
 const VALID_TONES = ["info", "success", "warning", "danger"];
 
 @block("callout", {
-  thumbnail: () => import("discourse/blocks/thumbnails/callout"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/callout.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/callout")
+    ),
   displayName: "Callout",
   icon: "circle-info",
   category: "Content",

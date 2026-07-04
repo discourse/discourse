@@ -37,7 +37,7 @@ export default class WireframeDraftsService extends Service {
     if (this.#companionCache.has(themeId)) {
       return this.#companionCache.get(themeId);
     }
-    let companionId = null;
+    let companionId;
     try {
       const response = await ajax(COMPANION_URL, {
         type: "GET",

@@ -23,7 +23,10 @@ import { i18n } from "discourse-i18n";
  * cell, place a container (a `group`, say) there.
  */
 @block("table", {
-  thumbnail: () => import("discourse/blocks/thumbnails/table"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/table.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/table")
+    ),
   container: true,
   // Marks this container as positionable on a 2D grid, so editing tooling can
   // offer the same cell-placement affordances it offers any grid container.

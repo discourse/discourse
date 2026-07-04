@@ -1,12 +1,14 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
+/** @type {import("discourse/components/basic-topic-list.gjs")} */
 import BasicTopicList from "discourse/components/basic-topic-list";
 import { URL_PATTERN } from "discourse/lib/blocks";
 import {
   fetchTopicList,
   VALID_TOPIC_LIST_FILTERS,
 } from "discourse/lib/blocks/-internals/fetch-topic-list";
+/** @type {import("discourse/ui-kit/d-button.gjs")} */
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
@@ -20,7 +22,10 @@ import { i18n } from "discourse-i18n";
  * cases.
  */
 @block("recent-topics", {
-  thumbnail: () => import("discourse/blocks/thumbnails/recent-topics"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/recent-topics.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/recent-topics")
+    ),
   displayName: "Topic list",
   icon: "list",
   category: "Discourse data",

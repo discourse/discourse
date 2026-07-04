@@ -5,8 +5,10 @@ import { service } from "@ember/service";
 import { block } from "discourse/blocks";
 import { ICON_NAME_PATTERN } from "discourse/lib/blocks";
 import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
+/** @type {import("discourse/lib/blocks/-internals/rich-text-renderer.gjs")} */
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
 import Category from "discourse/models/category";
+/** @type {import("discourse/ui-kit/d-button.gjs")} */
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -21,7 +23,10 @@ const VALID_VARIANTS = ["primary", "default", "danger"];
  * editing must not open the composer over the author's canvas.
  */
 @block("new-topic-button", {
-  thumbnail: () => import("discourse/blocks/thumbnails/new-topic-button"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/new-topic-button.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/new-topic-button")
+    ),
   displayName: "New topic button",
   icon: "plus",
   category: "Navigation",

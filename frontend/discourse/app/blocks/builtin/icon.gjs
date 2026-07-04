@@ -18,7 +18,10 @@ const VALID_SIZES = ["sm", "md", "lg", "xl"];
  * this one stands on its own.
  */
 @block("icon", {
-  thumbnail: () => import("discourse/blocks/thumbnails/icon"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/icon.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/icon")
+    ),
   displayName: "Icon",
   icon: "star",
   category: "Content",

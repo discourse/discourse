@@ -17,6 +17,7 @@ import { synthesizePartEntries } from "discourse/lib/blocks/-internals/composite
 import {
   buildContainerPath,
   createGhostBlock,
+  debugHooks,
   handleOptionalMissingBlock,
   handleUnknownBlock,
 } from "discourse/lib/blocks/-internals/debug-hooks";
@@ -51,11 +52,15 @@ import { shallowArgsEqual } from "discourse/lib/blocks/-internals/utils";
  *    baked into the curry and the debug payload. A moved entry keeps its stable
  *    key (hence its cache slot), so the hierarchy guard forces a fresh curry,
  *    and a fresh debug payload, when an entry changes parent.
+ * 5. The debug-overlay toggle state (`debugWrapKey`) is unchanged. The debug
+ *    callback wraps the block with an overlay component only while a toggle is
+ *    on, so flipping one must re-curry (re-run the callback) rather than reuse
+ *    the previously wrapped/unwrapped result. Constant in production.
  *
  * Children are deliberately excluded from the match: a container reflects child
  * changes through its tracked holder, not by re-currying.
  *
- * @param {Map<string, {ComponentClass: typeof import("@glimmer/component").default, args: Object, containerArgs?: Object, displayHierarchy?: string, containerPath?: string, holder?: {current: Array<Object>}, result: Object}>} cache - The component cache keyed by stable block keys.
+ * @param {Map<string, {ComponentClass: typeof import("@glimmer/component").default, args: Object, containerArgs?: Object, displayHierarchy?: string, containerPath?: string, debugWrapKey?: string, holder?: {current: Array<Object>}, result: Object}>} cache - The component cache keyed by stable block keys.
  * @param {Object} entry - The block entry with __stableKey and optional children.
  * @param {typeof import("@glimmer/component").default} resolvedBlock - The resolved block component class.
  * @param {Object} debugContext - Debug context for visual overlay and hierarchy tracking.
@@ -82,13 +87,23 @@ function getOrCreateBlockComponent(
   const { key, displayHierarchy, containerPath } = debugContext;
   const cachedEntry = cache.get(key);
 
+  // The debug callback (run inside `createChildBlockFn`) wraps a block with a
+  // visual-overlay / ghost component whose presence depends on the current
+  // debug toggles. That wrapping isn't reflected in the args or hierarchy, so
+  // fold the toggle state into the cache key: flipping a debug overlay must
+  // re-curry the block (re-running the debug callback) rather than reuse the
+  // previously wrapped/unwrapped result. In production both flags are a stable
+  // `false`, so ordinary caching and container-instance survival are unchanged.
+  const debugWrapKey = `${debugHooks.isVisualOverlayEnabled}:${debugHooks.isGhostBlocksEnabled}`;
+
   if (
     cachedEntry &&
     cachedEntry.ComponentClass === resolvedBlock &&
     shallowArgsEqual(cachedEntry.args, entry.args) &&
     cachedEntry.containerArgs === entry.containerArgs &&
     cachedEntry.displayHierarchy === displayHierarchy &&
-    cachedEntry.containerPath === containerPath
+    cachedEntry.containerPath === containerPath &&
+    cachedEntry.debugWrapKey === debugWrapKey
   ) {
     // Refresh the children a cached container's curry reads from. Do NOT rebuild
     // the wrapper or re-run the debug callback here — instance survival depends
@@ -121,6 +136,7 @@ function getOrCreateBlockComponent(
     containerArgs: entry.containerArgs,
     displayHierarchy,
     containerPath,
+    debugWrapKey,
     holder,
     result,
   });
@@ -152,6 +168,10 @@ function getOrCreateBlockComponent(
  * @property {import("ember-curry-component").CurriedComponent} Component - Curried component ready to render.
  * @property {Object} [containerArgs] - Values for parent container's childArgs schema.
  * @property {string} key - Stable unique key for list rendering.
+ * @property {string} [blockName] - The child block's registered name, so a
+ *   parent container can identify a child by kind (e.g. filter out
+ *   `layout-merged-cell` on the live path) without inspecting the curried
+ *   component.
  * @property {boolean} [isGhost] - True if this is a ghost block (debug mode only).
  * @property {(reason: string) => ChildBlockResult|null} [asGhost] - Returns a ghost version of this child with the given reason.
  *   For regular children, creates a new ghost component (or null if debug mode is disabled).

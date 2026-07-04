@@ -189,7 +189,7 @@ const BlockComponentManager = new Proxy(
  * Schema for block argument validation.
  *
  * @typedef {Object} ArgSchema
- * @property {"string"|"number"|"boolean"|"array"|"object"|"any"} type - The argument type (required)
+ * @property {"string"|"number"|"boolean"|"array"|"object"|"richInline"|"image"|"any"} type - The argument type (required). Must be one of `VALID_ARG_TYPES` (see validation/args.js); `"richInline"` holds an inline rich-text value and `"image"` holds an uploaded-image reference.
  * @property {boolean} [required=false] - Whether the argument is required
  * @property {*} [default] - Default value for the argument
  * @property {"string"|"number"|"boolean"|"object"} [itemType] - Item type for array arguments
@@ -205,6 +205,24 @@ const BlockComponentManager = new Proxy(
  *   itemType "object", the schema for each item's fields. Each element is
  *   validated against it, with errors reported at indexed paths (e.g.
  *   "items[2].url"). A consumer can render it as a repeated set of fields.
+ * @property {Object.<string, ArgSchema>} [properties] - For an `"object"` arg,
+ *   the schema for each of the object's fields, keyed by field name. Each field
+ *   value is validated against its own schema, with errors reported at nested
+ *   paths (e.g. "position.properties.x"). This is the object-valued analogue of
+ *   `itemSchema` for arrays.
+ * @property {Function|string} [instanceOf] - For an `"object"` arg, constrains
+ *   the value to instances of a class (a constructor) or of a named model
+ *   (a `"model:*"` string).
+ * @property {string} [instanceOfName] - A human-readable name for `instanceOf`,
+ *   used in validation error messages.
+ * @property {boolean} [allowDark] - For an `"image"` arg, whether a separate
+ *   dark-scheme image variant is allowed.
+ * @property {boolean} [allowResize] - For an `"image"` arg, whether the image
+ *   may be resized.
+ * @property {number|"auto"} [aspectRatio] - For an `"image"` arg, a positive
+ *   finite aspect ratio, or `"auto"`.
+ * @property {"cover"|"contain"|"fill"} [defaultFit] - For an `"image"` arg, the
+ *   default `object-fit` used when the image is sized by its container.
  * @property {UIHints} [ui] - Optional metadata describing how this arg should
  *   be presented for editing. Pure metadata — has no runtime effect on the
  *   block itself.
@@ -230,6 +248,10 @@ const BlockComponentManager = new Proxy(
  *   "Appearance"). Args without a group land under "General".
  * @property {boolean} [hidden] - When true, the arg is omitted from the
  *   edit form but kept in the schema (useful for computed args).
+ * @property {Object.<string, string>} [optionIcons] - For a control that
+ *   presents a fixed set of enum options (e.g. a radio group), an optional map
+ *   pairing each enum value (key) with an icon ID (value), e.g.
+ *   `{ left: "align-left", center: "align-center" }`. Purely presentational.
  * @property {{arg: string, equals?: *, notEmpty?: boolean}} [conditional] -
  *   Show this field only when another arg satisfies the predicate. At least
  *   one of `equals` or `notEmpty` must be set.

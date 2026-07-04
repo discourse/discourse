@@ -7,7 +7,9 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
+/** @type {import("discourse/components/category-logo.gjs")} */
 import CategoryLogo from "discourse/components/category-logo";
+/** @type {import("discourse/lib/blocks/-internals/category-card.gjs")} */
 import CategoryCard from "discourse/lib/blocks/-internals/category-card";
 import Category from "discourse/models/category";
 import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
@@ -26,7 +28,10 @@ import { i18n } from "discourse-i18n";
  * outlet (`main-outlet-blocks`) and stay invisible elsewhere.
  */
 @block("category-banner", {
-  thumbnail: () => import("discourse/blocks/thumbnails/category-banner"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/category-banner.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/category-banner")
+    ),
   displayName: "Category banner",
   icon: "folder",
   category: "Discourse data",

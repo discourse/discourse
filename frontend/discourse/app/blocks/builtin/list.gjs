@@ -10,7 +10,10 @@ import { i18n } from "discourse-i18n";
  * separate `list` blocks for nesting.
  */
 @block("list", {
-  thumbnail: () => import("discourse/blocks/thumbnails/list"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/list.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/list")
+    ),
   displayName: "List",
   icon: "list",
   category: "Content",

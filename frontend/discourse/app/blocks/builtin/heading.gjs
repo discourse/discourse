@@ -3,7 +3,9 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { block } from "discourse/blocks";
 import { ICON_NAME_PATTERN } from "discourse/lib/blocks";
+/** @type {import("discourse/lib/blocks/-internals/rich-text-renderer.gjs")} */
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
+/** @type {import("discourse/ui-kit/helpers/d-element.gjs")} */
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -12,7 +14,10 @@ const VALID_LEVELS = [1, 2, 3, 4, 5, 6];
 const VALID_ALIGNMENTS = ["left", "center", "right"];
 
 @block("heading", {
-  thumbnail: () => import("discourse/blocks/thumbnails/heading"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/heading.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/heading")
+    ),
   displayName: "Heading",
   icon: "heading",
   category: "Content",

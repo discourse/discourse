@@ -1,7 +1,9 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
+/** @type {import("discourse/lib/blocks/-internals/rich-text-renderer.gjs")} */
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
+/** @type {import("discourse/ui-kit/d-light-dark-img.gjs")} */
 import DLightDarkImg from "discourse/ui-kit/d-light-dark-img";
 import { i18n } from "discourse-i18n";
 
@@ -11,7 +13,10 @@ import { i18n } from "discourse-i18n";
  * in place on the canvas.
  */
 @block("quote", {
-  thumbnail: () => import("discourse/blocks/thumbnails/quote"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/quote.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/quote")
+    ),
   displayName: "Quote",
   icon: "quote-left",
   category: "Content",

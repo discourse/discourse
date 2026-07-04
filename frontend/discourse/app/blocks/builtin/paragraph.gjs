@@ -1,13 +1,17 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
+/** @type {import("discourse/lib/blocks/-internals/rich-text-renderer.gjs")} */
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
 import { i18n } from "discourse-i18n";
 
 const VALID_ALIGNMENTS = ["left", "center", "right"];
 
 @block("paragraph", {
-  thumbnail: () => import("discourse/blocks/thumbnails/paragraph"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/paragraph.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/paragraph")
+    ),
   displayName: "Paragraph",
   icon: "paragraph",
   category: "Content",

@@ -57,7 +57,10 @@ import { i18n } from "discourse-i18n";
 @block("head", {
   container: true,
   description: "Renders only the first child whose conditions pass",
-  thumbnail: () => import("discourse/blocks/thumbnails/head"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/head.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/head")
+    ),
 })
 export default class HeadBlock extends Component {
   @service blocks;

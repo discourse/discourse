@@ -9,7 +9,10 @@ import { block } from "discourse/blocks";
  * later refinement; for now sections open independently.)
  */
 @block("accordion", {
-  thumbnail: () => import("discourse/blocks/thumbnails/accordion"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/accordion.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/accordion")
+    ),
   container: true,
   displayName: "Accordion",
   icon: "bars",

@@ -104,7 +104,10 @@ export default class DragAndDropService extends Service {
           return;
         }
         this.setCurrentDrag({
-          type: source.data.type,
+          // `source.data` is PDND's `Record<string, unknown>`; our own
+          // `dDragAndDropSource` always stamps `type` as a string, and
+          // `canMonitor` above only admits sources whose `type` is set.
+          type: /** @type {string} */ (source.data.type),
           data: source.data,
           element: source.element,
         });

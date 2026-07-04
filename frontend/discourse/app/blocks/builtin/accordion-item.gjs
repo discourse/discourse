@@ -14,7 +14,10 @@ import { i18n } from "discourse-i18n";
  * edit its content in place rather than having to expand it first.
  */
 @block("accordion-item", {
-  thumbnail: () => import("discourse/blocks/thumbnails/accordion-item"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/accordion-item.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/accordion-item")
+    ),
   container: true,
   displayName: "Accordion item",
   icon: "chevron-down",

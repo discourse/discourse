@@ -14,7 +14,10 @@ import { i18n } from "discourse-i18n";
  * stays a pure renderer.
  */
 @block("featured-tags", {
-  thumbnail: () => import("discourse/blocks/thumbnails/featured-tags"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/featured-tags.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/featured-tags")
+    ),
   displayName: "Featured tags",
   icon: "tag",
   category: "Discourse data",

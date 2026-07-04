@@ -364,6 +364,8 @@ export function collectEntryFailures(entry, blockClass, { owner } = {}) {
     // rather than letting it break the edit.
     if (err instanceof BlockError) {
       collector.push({
+        message: err.message,
+        path: "",
         details: err.details ?? { code: ERROR_CODES.INVALID_BLOCK },
       });
     } else {

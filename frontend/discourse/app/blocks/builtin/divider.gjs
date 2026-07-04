@@ -8,7 +8,10 @@ import { i18n } from "discourse-i18n";
 const VALID_STYLES = ["solid", "dashed", "dotted"];
 
 @block("divider", {
-  thumbnail: () => import("discourse/blocks/thumbnails/divider"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/divider.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/divider")
+    ),
   displayName: "Divider",
   icon: "minus",
   category: "Layout",

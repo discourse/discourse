@@ -20,7 +20,10 @@ import { i18n } from "discourse-i18n";
  * view/activity columns, use the `recent-topics` block instead.
  */
 @block("featured-topics", {
-  thumbnail: () => import("discourse/blocks/thumbnails/featured-topics"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/featured-topics.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/featured-topics")
+    ),
   displayName: "Topic highlights",
   icon: "fire",
   category: "Discourse data",

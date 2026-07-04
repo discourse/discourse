@@ -2,6 +2,7 @@
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks";
 import { URL_PATTERN } from "discourse/lib/blocks";
+/** @type {import("discourse/ui-kit/d-light-dark-img.gjs")} */
 import DLightDarkImg from "discourse/ui-kit/d-light-dark-img";
 import { i18n } from "discourse-i18n";
 
@@ -35,7 +36,10 @@ function darkVariantWithLightFrame(image) {
 }
 
 @block("image", {
-  thumbnail: () => import("discourse/blocks/thumbnails/image"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/image.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/image")
+    ),
   displayName: "Image",
   icon: "image",
   category: "Content",

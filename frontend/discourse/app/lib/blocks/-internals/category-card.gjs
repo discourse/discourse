@@ -85,7 +85,7 @@ export default class CategoryCard extends Component {
           {{#if @category.icon}}
             {{dIcon @category.icon}}
           {{else if @category.emoji}}
-            {{trustHTML (dReplaceEmoji (this.formatEmoji @category.emoji))}}
+            {{dReplaceEmoji (this.formatEmoji @category.emoji)}}
           {{else}}
             <span
               class="d-block-category-card__logo-square"
@@ -110,7 +110,7 @@ export default class CategoryCard extends Component {
           {{#if @category.icon}}
             {{dIcon @category.icon}}
           {{else if @category.emoji}}
-            {{trustHTML (dReplaceEmoji (this.formatEmoji @category.emoji))}}
+            {{dReplaceEmoji (this.formatEmoji @category.emoji)}}
           {{else}}
             <span
               class="d-block-category-card__logo-square"

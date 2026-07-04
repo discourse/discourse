@@ -2,6 +2,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { blockArgRenderers } from "discourse/lib/blocks/-internals/arg-renderers";
+/** @type {import("./minimal-rich-text-renderer.gjs")} */
 import MinimalRichTextRenderer from "./minimal-rich-text-renderer";
 
 /**
@@ -11,20 +12,11 @@ import MinimalRichTextRenderer from "./minimal-rich-text-renderer";
  * (see `registerBlockArgRenderer`), e.g. by tooling that drives in-session
  * editing.
  *
- * Yields a hash so the block author chooses the wrapper element:
- *
- * ```gjs
- * <RichTextRenderer
- *   @arg="title"
- *   @schema="heading"
- *   @value={{@title}}
- *   @placeholder="Welcome"
- *   as |R|>
- *   <h3 class="d-block-cta-banner__title" aria-hidden={{R.isEmpty}}>
- *     <R.Content />
- *   </h3>
- * </RichTextRenderer>
- * ```
+ * Yields a hash so the block author chooses the wrapper element: invoke the
+ * component with the arg name, a schema variant, the stored value and a
+ * placeholder, and receive a block param exposing Content and isEmpty. The
+ * author wraps the yielded Content in whatever element they want (e.g. an h3),
+ * wiring isEmpty to aria-hidden and, optionally, to an empty BEM modifier.
  *
  * Yielded shape:
  *   - `R.Content`  — curried inner-content component, sourced from the

@@ -12,7 +12,7 @@ module PageObjects
     class WireframeEditor < PageObjects::Pages::Base
       GRID_SELECTOR = ".d-block-layout--grid"
       EMPTY_CELL_SELECTOR = ".wireframe-grid-cell"
-      PALETTE_ENTRY_SELECTOR = ".wireframe-palette-entry"
+      PALETTE_ENTRY_SELECTOR = ".wireframe-block-tile"
 
       def enter
         find(".wireframe-pill").click

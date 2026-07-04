@@ -16,7 +16,10 @@ const VALID_LAYOUTS = ["vertical", "horizontal"];
  * blocks.
  */
 @block("link-list", {
-  thumbnail: () => import("discourse/blocks/thumbnails/link-list"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/link-list.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/link-list")
+    ),
   displayName: "Link list",
   icon: "link",
   category: "Content",

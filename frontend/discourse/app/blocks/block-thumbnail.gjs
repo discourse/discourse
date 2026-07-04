@@ -2,8 +2,11 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import isComponent from "discourse/lib/is-component";
+/** @type {import("discourse/ui-kit/d-async-content.gjs")} */
 import DAsyncContent from "discourse/ui-kit/d-async-content";
+/** @type {import("discourse/ui-kit/d-light-dark-img.gjs")} */
 import DLightDarkImg from "discourse/ui-kit/d-light-dark-img";
+/** @type {import("discourse/ui-kit/d-skeleton.gjs")} */
 import DSkeleton from "discourse/ui-kit/d-skeleton";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
@@ -14,9 +17,14 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
  * likes) and otherwise renders the block's own icon. The consumer's
  * `...attributes` (e.g. a sizing class) are forwarded to whichever wins.
  *
- * @param {Function} [fallback] - A component rendered instead of the bare icon.
- * @param {string} icon - The block's icon ID, passed to the fallback and used
- *   for the bare-icon default.
+ * `@fallback` is an optional component rendered instead of the bare icon;
+ * `@icon` is the block's icon ID, passed to the fallback and used for the
+ * bare-icon default.
+ *
+ * @type {import("@ember/component/template-only").TOC<{
+ *   Args: { fallback?: import("@glint/template").ComponentLike<{ Args: { icon: string }, Element: HTMLElement }>, icon: string },
+ *   Element: HTMLElement,
+ * }>}
  */
 const ThumbnailPlaceholder = <template>
   {{#if @fallback}}
@@ -52,11 +60,17 @@ const ThumbnailPlaceholder = <template>
  * The consumer's `...attributes` (which typically size the thumbnail box) are
  * forwarded to whichever element ends up rendering.
  *
- * @param {(string|{light: string, dark?: string}|Function|Object)} [thumbnail]
- *   The block's declared thumbnail (see above). Absent/`null` → placeholder.
- * @param {string} icon - The block's icon ID, used by the placeholder.
- * @param {Function} [fallback] - A component rendered for the placeholder
- *   (nothing-declared or load-error) instead of the bare icon.
+ * `@thumbnail` is the block's declared thumbnail (a URL string, a `{ light, dark }`
+ * pair, a component, or a lazy loader — see above); absent/`null` renders the
+ * placeholder. `@icon` is the block's icon ID (used by the placeholder), and
+ * `@fallback` is an optional component rendered for the placeholder instead of
+ * the bare icon. `@thumbnail` is intentionally typed loosely: it is a
+ * runtime-discriminated polymorphic value that the getters below narrow.
+ *
+ * @extends {Component<{
+ *   Args: { thumbnail?: any, icon: string, fallback?: import("@glint/template").ComponentLike<{ Args: { icon: string }, Element: HTMLElement }> },
+ *   Element: HTMLElement,
+ * }>}
  */
 export default class BlockThumbnail extends Component {
   @service blocks;

@@ -1,9 +1,10 @@
+// @ts-check
 import Component from "@glimmer/component";
 import { trustHTML } from "@ember/template";
 
 const DEFAULT_COUNT = 1;
 
-/*
+/**
  * Reusable loading placeholder. Renders one or more shimmer items shaped by
  * `@variant` (a text line, a rectangle, or a circle) and sized to reserve the
  * space the real content will occupy, so revealing the content doesn't shift
@@ -13,6 +14,21 @@ const DEFAULT_COUNT = 1;
  * paints under `prefers-reduced-motion: no-preference`. The items therefore
  * keep a static fill underneath (from the scss) so the placeholder still reads
  * when the animation is suppressed (reduced motion, or `@animated={{false}}`).
+ *
+ * The consumer's `...attributes` are forwarded to the wrapper element.
+ *
+ * @extends {Component<{
+ *   Args: {
+ *     count?: number,
+ *     variant?: string,
+ *     animated?: boolean,
+ *     width?: string,
+ *     height?: string,
+ *     radius?: string,
+ *     size?: string,
+ *   },
+ *   Element: HTMLDivElement,
+ * }>}
  */
 export default class DSkeleton extends Component {
   /**

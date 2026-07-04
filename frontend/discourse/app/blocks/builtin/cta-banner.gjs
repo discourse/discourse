@@ -4,9 +4,11 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { block } from "discourse/blocks";
 import { ICON_NAME_PATTERN, URL_PATTERN } from "discourse/lib/blocks";
+/** @type {import("discourse/lib/blocks/-internals/rich-text-renderer.gjs")} */
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
 import cookie from "discourse/lib/cookie";
 import getURL from "discourse/lib/get-url";
+/** @type {import("discourse/ui-kit/d-button.gjs")} */
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -22,7 +24,10 @@ const COOKIE_PREFIX = "discourse-cta-dismissed";
  * the block conditions system — the block itself just renders.
  */
 @block("cta-banner", {
-  thumbnail: () => import("discourse/blocks/thumbnails/cta-banner"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/cta-banner.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/cta-banner")
+    ),
   displayName: "CTA banner",
   icon: "bullhorn",
   category: "Content",
@@ -205,6 +210,7 @@ export default class CtaBanner extends Component {
                 class="btn btn-primary"
                 @href={{@linkHref}}
                 @translatedLabel={{@linkLabel}}
+                {{! @glint-expect-error: DButton renders an anchor when a link href is set, so the anchor-only target attribute is valid at runtime }}
                 target={{if @external "_blank"}}
                 rel={{if @external "noopener"}}
                 data-block-arg="linkHref"

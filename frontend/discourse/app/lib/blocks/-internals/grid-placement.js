@@ -114,7 +114,8 @@ export function gridDimensions(declared, children) {
  * a reflow), the rendered track list always has exactly one entry per
  * column. Non-finite / non-positive entries fall back to `1`.
  *
- * @param {Array<number>} [fractions]
+ * @param {Array<number>|undefined} fractions - The stored column fractions, or
+ *   undefined/short/overlong; each missing or invalid entry falls back to `1`.
  * @param {number} count - The grid's effective column count.
  * @returns {number[]} Exactly `count` positive fraction values.
  */

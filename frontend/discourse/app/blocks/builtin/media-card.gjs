@@ -7,6 +7,7 @@ import {
   ICON_NAME_PATTERN,
   URL_PATTERN,
 } from "discourse/lib/blocks";
+/** @type {import("discourse/lib/blocks/-internals/rich-text-renderer.gjs")} */
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -22,7 +23,10 @@ import { i18n } from "discourse-i18n";
  * theme-specific placeholder content into a fresh insert.
  */
 @block("media-card", {
-  thumbnail: () => import("discourse/blocks/thumbnails/media-card"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/media-card.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/media-card")
+    ),
   displayName: "Media card",
   icon: "photo-film",
   category: "Content",

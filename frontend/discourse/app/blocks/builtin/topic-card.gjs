@@ -18,7 +18,10 @@ import { i18n } from "discourse-i18n";
  * arrives as `@data` and the block stays a pure renderer.
  */
 @block("topic-card", {
-  thumbnail: () => import("discourse/blocks/thumbnails/topic-card"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/topic-card.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/topic-card")
+    ),
   displayName: "Topic card",
   icon: "book",
   category: "Discourse data",

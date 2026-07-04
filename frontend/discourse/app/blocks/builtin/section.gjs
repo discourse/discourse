@@ -21,7 +21,10 @@ const VALID_CONTENT_WIDTHS = ["contained", "wide", "full"];
  * accessible name.
  */
 @block("section", {
-  thumbnail: () => import("discourse/blocks/thumbnails/section"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/section.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/section")
+    ),
   container: true,
   displayName: "Section",
   icon: "image",

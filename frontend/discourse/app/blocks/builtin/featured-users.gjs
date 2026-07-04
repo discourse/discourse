@@ -6,7 +6,9 @@ import {
   VALID_USER_ORDERS,
   VALID_USER_PERIODS,
 } from "discourse/lib/blocks/-internals/fetch-users";
+/** @type {import("discourse/ui-kit/d-user-avatar.gjs")} */
 import DUserAvatar from "discourse/ui-kit/d-user-avatar";
+/** @type {import("discourse/ui-kit/d-user-link.gjs")} */
 import DUserLink from "discourse/ui-kit/d-user-link";
 import { i18n } from "discourse-i18n";
 
@@ -17,7 +19,10 @@ import { i18n } from "discourse-i18n";
  * `.user` drives the avatar and link.
  */
 @block("featured-users", {
-  thumbnail: () => import("discourse/blocks/thumbnails/featured-users"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/featured-users.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/featured-users")
+    ),
   displayName: "Top contributors",
   icon: "users",
   category: "Discourse data",

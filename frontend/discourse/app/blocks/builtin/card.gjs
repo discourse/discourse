@@ -7,6 +7,7 @@ import {
   ICON_NAME_PATTERN,
   URL_PATTERN,
 } from "discourse/lib/blocks";
+/** @type {import("discourse/lib/blocks/-internals/rich-text-renderer.gjs")} */
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
@@ -27,7 +28,10 @@ const VALID_VARIANTS = ["vertical", "horizontal"];
  * content; the editor reveals each field for inline editing.
  */
 @block("card", {
-  thumbnail: () => import("discourse/blocks/thumbnails/card"),
+  thumbnail:
+    /** @type {() => Promise<typeof import("discourse/blocks/thumbnails/card.gjs")>} */ (
+      () => import("discourse/blocks/thumbnails/card")
+    ),
   displayName: "Card",
   icon: "id-card",
   category: "Content",
