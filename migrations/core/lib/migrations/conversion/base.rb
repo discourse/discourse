@@ -71,7 +71,7 @@ module Migrations
       private
 
       def create_database
-        db_path = File.expand_path(settings[:intermediate_db][:path], Migrations.root_path)
+        db_path = File.expand_path(settings.fetch(:intermediate_db)[:path], Migrations.root_path)
         Database.migrate(db_path, migrations_path: Database::INTERMEDIATE_DB_SCHEMA_PATH)
 
         @shard_manager =
