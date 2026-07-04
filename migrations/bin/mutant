@@ -28,6 +28,18 @@ run_gem() {
   shift
   echo "==> mutant: $(basename "$dir")"
   ( cd "$dir" && BUNDLE_GEMFILE="$dir/Gemfile" bundle exec mutant run --usage opensource "$@" )
+  local rc=$?
+
+  # Mutation testing runs deliberately-broken code. A mutant that drops a path
+  # prefix (e.g. in ShardManager) makes a database write land relative to the
+  # gem root instead of its intended temp dir. mutant has to run from the gem
+  # dir (it discovers specs relative to the cwd), so those writes can't be
+  # redirected from here -- clean them up afterwards so a run never leaves stray
+  # SQLite files or shard dirs behind. Only untracked artifacts match; nothing
+  # tracked is named this way.
+  rm -f "$dir"/*.db "$dir"/*.db-shm "$dir"/*.db-wal
+  rm -rf "$dir"/shards
+  return "$rc"
 }
 
 status=0

@@ -14,7 +14,3 @@
 
 # mutant's per-gem incremental coverage cache
 /*/.mutant/
-
-# Runtime SQLite databases / shard dirs a spec or mutant run can drop into a gem root
-/*/*.db
-/*/shards/
