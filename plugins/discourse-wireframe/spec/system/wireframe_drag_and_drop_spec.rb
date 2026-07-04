@@ -46,14 +46,16 @@ describe "Wireframe editor drag and drop" do
     visit("/latest")
     editor.enter
 
-    # Seed grid: A @ col 1, B @ col 2, col 3 empty. Dropping a fresh block onto
-    # the occupied cell B resolves to the gap that follows it, so the heading
-    # lands in col 3 while A and B keep their places. The point isn't the exact
-    # cell — it's that a drop onto an occupied region still inserts a real block
-    # instead of vanishing (the regression's symptom).
-    editor.palette_entry("heading").drag_to(editor.block("wf-grid-cell-b"), delay: 0.4)
+    # Seed grid: A @ col 1, B @ col 2. Dropping a fresh block on the trailing
+    # (insert-after) edge of the occupied cell B inserts it next to B rather than
+    # replacing it. The point isn't the exact target cell (that math is covered
+    # by the JS gesture test, and the grid renders as a collapsed single-column
+    # stack here anyway) — it's that a drop onto an occupied region still inserts
+    # a real block instead of vanishing (the regression's symptom), and A and B
+    # keep their places.
+    editor.drag_palette_block("heading", onto: editor.block("wf-grid-cell-b"), at: :trailing)
 
-    expect(editor).to have_block_in_cell("d-block-heading", column: 3, row: 1)
+    expect(editor).to have_block_in_grid("d-block-heading")
     expect(editor).to have_block_in_cell("wf-grid-cell-a", column: 1, row: 1)
     expect(editor).to have_block_in_cell("wf-grid-cell-b", column: 2, row: 1)
   end
@@ -62,7 +64,7 @@ describe "Wireframe editor drag and drop" do
     visit("/latest")
     editor.enter
 
-    editor.palette_entry("heading").drag_to(editor.empty_cell(column: 3, row: 1), delay: 0.4)
+    editor.drag_palette_block("heading", onto: editor.empty_cell(column: 3, row: 1))
 
     expect(editor).to have_block_in_cell("d-block-heading", column: 3, row: 1)
   end
