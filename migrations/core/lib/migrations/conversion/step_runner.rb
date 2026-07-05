@@ -39,7 +39,9 @@ module Migrations
 
       def run
         source = @step.source
-        connection = Database::Connection.new(path: @shard_path)
+        # A shard is single-writer, thrown away on failure, and read only once (in
+        # full) at merge, so it skips WAL entirely.
+        connection = Database::Connection.new(path: @shard_path, journal_mode: "off")
 
         begin
           # Point IntermediateDB at this worker's shard for the block.

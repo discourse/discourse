@@ -33,7 +33,7 @@ RSpec.describe Migrations::Reporting::Tui do
       it "renders the percent, total count, elapsed, and rate" do
         row = screen.content_rows.first
         expect(row).to include("Categories")
-        expect(row).to include("47%") # 2000 / 4281
+        expect(row).to include("46%") # 2000 / 4281, floored
         expect(row).to include("4,281") # the total, not the running current
         expect(row).not_to include("2,000") # current is conveyed by the percent
         expect(row).to include("0:06") # elapsed
@@ -77,6 +77,18 @@ RSpec.describe Migrations::Reporting::Tui do
         expect(rows.first).to include("4,281")
         expect(rows.first).not_to include("/") # the count is not repeated as current/max
         expect(rows.first).not_to include("%") # no lingering percent
+      end
+
+      it "does not read 100% until the very last item — floors, never rounds up" do
+        renderer.apply([:progress, "Categories", 4280, 0, 0, 0]) # 4280/4281 = 99.98%
+        at(8.0)
+        renderer.repaint
+        expect(screen.content_rows.first).to include(" 99%")
+        expect(screen.content_rows.first).not_to include("100%")
+
+        renderer.apply([:progress, "Categories", 4281, 0, 0, 0]) # done
+        renderer.repaint
+        expect(screen.content_rows.first).to include("100%")
       end
     end
 

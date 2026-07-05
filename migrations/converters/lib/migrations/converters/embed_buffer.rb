@@ -65,6 +65,20 @@ module Migrations
         record(@uploads, :upload, upload_id:)
       end
 
+      # Empties the recorded embeds (in place, keeping the collections) so one buffer
+      # can be reused for the next post instead of allocating a fresh one — and its
+      # placeholder along with it — per post. The placeholder is kept: its running
+      # sequence is what keeps tokens unique across the posts that share the buffer.
+      def clear
+        @quotes.clear
+        @links.clear
+        @mentions.clear
+        @polls.clear
+        @events.clear
+        @uploads.clear
+        self
+      end
+
       # Inserts each recorded embed into its linkage table. Call once per post, after
       # the post row is written.
       def write_for(post_id)
