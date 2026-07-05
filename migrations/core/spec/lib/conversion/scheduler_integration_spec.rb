@@ -173,6 +173,7 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
 
     step_classes = [TempIntegrationSteps::Topics]
     reporter = Migrations::Reporting::Factory.build(titles: step_classes.map(&:title))
+    allow(Migrations::Conversion::ChunkQueue).to receive(:filled).and_call_original
 
     Migrations::Conversion::StepScheduler.new(
       step_classes:,
@@ -186,14 +187,17 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
 
     Migrations::Database::IntermediateDB.close
 
+    # 3 forks (budget − 1), each over-partitioned into CHUNKS_PER_FORK chunks.
+    chunks = 3 * Migrations::Conversion::StepCoordinator::CHUNKS_PER_FORK
+    expect(Migrations::Conversion::ChunkQueue).to have_received(:filled).with(chunks)
     expect(rows("topics")).to eq((0..59).to_a)
   ensure
     Object.send(:remove_const, "TempIntegrationSteps")
   end
 
-  # The coordinator sizes the fork count from the boundaries, not the budget:
-  # `worker_count = [boundaries.size, 1].max`. These two cases exercise the
-  # collapse to a single worker.
+  # The coordinator caps the fork count at the number of chunks, so a source with
+  # fewer chunks than forks runs on fewer workers. These two cases exercise the
+  # collapse to a single worker and to none.
   it "collapses to one worker when a partitioned source yields fewer chunks than forks" do
     Object.const_set(
       "TempIntegrationSteps",
