@@ -191,9 +191,9 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
     Object.send(:remove_const, "TempIntegrationSteps")
   end
 
-  # The coordinator sizes the fork count from the boundaries, not the budget:
-  # `worker_count = [boundaries.size, 1].max`. These two cases exercise the
-  # collapse to a single worker.
+  # The coordinator caps the fork count at the number of chunks, so a source with
+  # fewer chunks than forks runs on fewer workers. These two cases exercise the
+  # collapse to a single worker and to none.
   it "collapses to one worker when a partitioned source yields fewer chunks than forks" do
     Object.const_set(
       "TempIntegrationSteps",
