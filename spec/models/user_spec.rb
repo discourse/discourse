@@ -26,7 +26,9 @@ RSpec.describe User do
   describe ".in_any_groups?" do
     fab!(:group)
 
-    it "returns true if any of the group IDs are the 'everyone' auto group" do
+    it "returns true if any of the group IDs are the 'everyone' auto group with legacy group permissions" do
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+
       expect(user.in_any_groups?([group.id, Group::AUTO_GROUPS[:everyone]])).to eq(true)
     end
 

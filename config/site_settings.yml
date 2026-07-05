@@ -648,7 +648,7 @@ basic:
     default: "disabled"
     area: "interface"
   promote_upcoming_changes_on_status:
-    default: "stable"
+    default: "beta"
     type: enum
     choices:
       - experimental
