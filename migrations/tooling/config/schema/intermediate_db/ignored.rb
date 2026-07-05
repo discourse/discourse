@@ -74,7 +74,6 @@ Migrations::Tooling::Schema.ignored do
          :post_search_data,
          :post_stats,
          :post_timings,
-         :posts,
          :quoted_posts,
          :shared_drafts
 

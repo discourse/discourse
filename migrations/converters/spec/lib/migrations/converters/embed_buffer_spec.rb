@@ -199,4 +199,25 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
       expect(rows("post_quotes")).to be_empty
     end
   end
+
+  describe "#clear" do
+    it "empties every collection so the buffer can be reused" do
+      buffer.upload(upload_id: "a")
+      buffer.mention(name: "bob")
+
+      buffer.clear
+
+      expect(buffer).to be_empty
+      expect(buffer.uploads).to be_empty
+      expect(buffer.mentions).to be_empty
+    end
+
+    it "keeps minting unique tokens after a clear (the sequence does not reset)" do
+      first = buffer.upload(upload_id: "a")
+      buffer.clear
+      second = buffer.upload(upload_id: "b")
+
+      expect(second).not_to eq(first)
+    end
+  end
 end
