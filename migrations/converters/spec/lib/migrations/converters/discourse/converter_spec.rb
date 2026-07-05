@@ -20,5 +20,34 @@ RSpec.describe Migrations::Converters::Discourse::Converter do
         { host: "localhost" },
       ).twice
     end
+
+    context "for the Posts step" do
+      let(:source_db) { instance_double(Migrations::Converters::Adapter::Postgres) }
+
+      before do
+        allow(Migrations::Converters::Adapter::Postgres).to receive(:new).and_return(source_db)
+      end
+
+      it "loads the source group names and here_mention setting for mention classification" do
+        allow(source_db).to receive(:query).and_return([{ name: "staff" }, { name: "moderators" }])
+        allow(source_db).to receive(:query_value).and_return("everyone")
+
+        args = described_class.new({}).step_args(Migrations::Converters::Discourse::Posts)
+
+        expect(args[:source_db]).to be(source_db)
+        expect(args[:group_names]).to eq(%w[staff moderators])
+        expect(args[:here_mention]).to eq("everyone")
+      end
+
+      it "falls back to the default here_mention when the source has no such setting" do
+        allow(source_db).to receive(:query).and_return([])
+        allow(source_db).to receive(:query_value).and_return(nil)
+
+        args = described_class.new({}).step_args(Migrations::Converters::Discourse::Posts)
+
+        expect(args[:group_names]).to eq([])
+        expect(args[:here_mention]).to eq("here")
+      end
+    end
   end
 end
