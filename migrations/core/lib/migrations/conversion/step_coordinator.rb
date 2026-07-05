@@ -139,6 +139,8 @@ module Migrations
         return run_single_worker(shards) if boundaries.empty?
 
         worker_count = [boundaries.size, @fork_count].min
+        # Fewer chunks than forks: hand the forks we won't use back to the budget.
+        @scheduler.release_forks(@step_class, @fork_count - worker_count)
         @step_handle.report_concurrency(worker_count)
 
         queue = ChunkQueue.filled(boundaries.size)
@@ -156,12 +158,7 @@ module Migrations
 
         begin
           @step_handle.with_progress(max_progress: total) do |progress|
-            # Drop the live fork count as each worker finishes.
-            drain(
-              readers,
-              progress,
-              on_worker_done: ->(running) { @step_handle.report_concurrency(running) },
-            )
+            drain(readers, progress, on_worker_done: method(:worker_finished))
           end
         ensure
           readers.each(&:close)
@@ -265,6 +262,14 @@ module Migrations
             )
           end
         end
+      end
+
+      # Runs when a worker finishes: drop the live fork count and give its fork back
+      # to the scheduler, so another step can use the free core while the slower
+      # workers keep going.
+      def worker_finished(still_running)
+        @step_handle.report_concurrency(still_running)
+        @scheduler.release_forks(@step_class, 1)
       end
 
       def read_max_progress(reader)
