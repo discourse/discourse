@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseDataExplorer
-  module JsonapiRb
+  module JsonApiKit
     # Monkeypatch for jsonapi-serializer 2.2.0 (feature-dead — a stable patch target).
     #
     # Bug: SerializationCore.get_included_records builds each *nested* resource's

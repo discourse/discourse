@@ -8,14 +8,14 @@
 # (a new attribute/filter/sort/relationship) pass silently.
 #
 # To intentionally break the contract (i.e. a new major API version), regenerate with:
-#   FORCE_SCHEMA=true bin/rspec plugins/discourse-data-explorer/spec/integration/jsonapi_rb_contract_spec.rb
-describe "Data Explorer thin-layers JSON:API contract" do
+#   FORCE_SCHEMA=true bin/rspec plugins/discourse-data-explorer/spec/integration/json_api_kit_contract_spec.rb
+describe "Data Explorer JSON:API Kit contract" do
   let(:contract_path) do
-    Rails.root.join("plugins/discourse-data-explorer/jsonapi_rb_contract.json")
+    Rails.root.join("plugins/discourse-data-explorer/json_api_kit_contract.json")
   end
 
   let(:current) do
-    { "queries" => DiscourseDataExplorer::JsonapiRb::QueriesController.jsonapi_contract }
+    { "queries" => DiscourseDataExplorer::JsonApiKit::QueriesController.jsonapi_contract }
   end
 
   def breaking_changes(old, new)

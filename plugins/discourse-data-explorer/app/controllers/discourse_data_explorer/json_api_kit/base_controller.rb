@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseDataExplorer
-  module JsonapiRb
+  module JsonApiKit
     # JSON:API Kit — base controller + declarative query-surface DSL.
     #
     # This is the "own a small framework" piece from the API-modernization exploration
@@ -77,7 +77,7 @@ module DiscourseDataExplorer
 
       # Machine-readable contract descriptor derived from the DSL config + serializer.
       # The backwards-compat guard (spec/integration/
-      # jsonapi_rb_contract_spec.rb) diffs it against a committed baseline and fails on
+      # json_api_kit_contract_spec.rb) diffs it against a committed baseline and fails on
       # backwards-incompatible changes (removed attribute/filter/sort/relationship,
       # changed type/default_sort/relationship-kind, lowered page cap). String keys/values
       # so it round-trips cleanly through the committed JSON.

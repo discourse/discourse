@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseDataExplorer
-  module JsonapiRb
+  module JsonApiKit
     # The User resource. Minimal — exercises the relationship machinery for the
     # nested `user.groups` include.
     class UserSerializer

@@ -34,13 +34,13 @@ require_relative "lib/discourse_data_explorer/engine"
 
 # JSON:API Kit: jsonapi-serializer is the rendering layer. The Kit depends only
 # on jsonapi-serializer + pagy; include/fields/pagination/deserialization are
-# handled by JsonapiRb::BaseController. See docs/api-modernization-exploration.md.
+# handled by JsonApiKit::BaseController. See docs/api-modernization-exploration.md.
 require "jsonapi/serializer"
 # Patch jsonapi-serializer's nested-include linkage bug (lazy_load_data + nested leaf drops
 # the leaf's linkage). Small, owned, on a frozen gem. See the patch file + Part 9.
-require_relative "lib/discourse_data_explorer/jsonapi_rb/lazy_nested_linkage_patch"
+require_relative "lib/discourse_data_explorer/json_api_kit/lazy_nested_linkage_patch"
 FastJsonapi::SerializationCore::ClassMethods.prepend(
-  DiscourseDataExplorer::JsonapiRb::LazyNestedLinkagePatch,
+  DiscourseDataExplorer::JsonApiKit::LazyNestedLinkagePatch,
 )
 
 after_initialize do
