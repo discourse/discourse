@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseDataExplorer
-  module JsonapiRb
+  module JsonApiKit
     class GroupSerializer
       include JSONAPI::Serializer
       set_type :groups

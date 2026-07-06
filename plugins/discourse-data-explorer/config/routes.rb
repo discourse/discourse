@@ -31,13 +31,13 @@ Discourse::Application.routes.draw do
 
   # JSON:API Kit spike — read-only, public-shaped JSON:API.
   # See docs/api-modernization-exploration.md (Part 9).
-  scope "/data-explorer/jsonapi-rb", defaults: { format: :json } do
-    get "queries" => "discourse_data_explorer/jsonapi_rb/queries#index"
-    get "queries/:id" => "discourse_data_explorer/jsonapi_rb/queries#show",
+  scope "/data-explorer/api", defaults: { format: :json } do
+    get "queries" => "discourse_data_explorer/json_api_kit/queries#index"
+    get "queries/:id" => "discourse_data_explorer/json_api_kit/queries#show",
         :constraints => {
           id: /\d+/,
         }
-    post "queries" => "discourse_data_explorer/jsonapi_rb/queries#create"
+    post "queries" => "discourse_data_explorer/json_api_kit/queries#create"
   end
 
   mount DiscourseDataExplorer::Engine, at: "/admin/plugins/discourse-data-explorer"

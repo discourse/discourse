@@ -9,7 +9,7 @@ tooling on 2026-06-17.
 `graphiti`/`graphiti-rails`/`pagy`/`jsonapi.rb` entries in the root `Gemfile`, and a
 `Group.has_many :query_groups` association patch in `plugin.rb` (Graphiti `groups`
 sideload). Two endpoints are built for an apples-to-apples comparison: a Graphiti one
-(`/data-explorer/api/v1`) and a JSON:API Kit one (the home-grown "thin-layers" approach; `/data-explorer/jsonapi-rb`).
+(`/data-explorer/api/v1`) and a JSON:API Kit one (the home-grown "thin-layers" approach; `/data-explorer/api`).
 
 ## Why this document exists
 
@@ -1140,7 +1140,7 @@ the recommendation.
 
 ## Part 9 — JSON:API Kit spike & corrected comparison
 
-Built the JSON:API Kit endpoint (`/data-explorer/jsonapi-rb`) to **full feature
+Built the JSON:API Kit endpoint (`/data-explorer/api`) to **full feature
 parity** with the Graphiti `QueryResource` example, for an honest apples-to-apples comparison:
 reads, `user`/`groups` relationships, `include` + sparse fieldsets, `filter[search]`, sorts
 (incl. a `username` join), `default_sort`, keyset cursor (pagy), stats meta, admin-only
@@ -1296,7 +1296,7 @@ points the same way as everything else: the Kit is *not* a performance compromis
 
 The biggest knock on the Kit was "you hand-roll the query surface per endpoint." So we
 built the reusable piece: `BaseController` + a declarative `jsonapi do … end` DSL
-(`app/controllers/discourse_data_explorer/jsonapi_rb/base_controller.rb`). A resource now
+(`app/controllers/discourse_data_explorer/json_api_kit/base_controller.rb`). A resource now
 declares its `serializer`, `base_scope`, `filter`s, `sort`s (incl. join sorts), `default_sort`,
 `includes`, `preload`, `stat`s and `page` caps; the base implements the mechanics once —
 strict-param → 400 (filter **and** sort **and** include), filtering, sorting, keyset/offset
@@ -1327,7 +1327,7 @@ was Graphiti's main remaining edge.
 | Project liveness | ✅ framework alive | ✅ deps now just **jsonapi-serializer + pagy** (jsonapi.rb dropped); pagy alive, jsonapi-serializer feature-dead but fork-on-demand (mild) |
 | Compound-doc perf (+includes) | slower (−42% vs the Kit) | **faster** |
 | Bare-request perf (flat) | slower (−23% vs the Kit) | **faster** (conditional linkage **built**, #2) |
-| Contract/drift guard | ✅ SchemaDiff | ✅ **built** — `jsonapi_rb_contract.json` + spec (backwards-incompat detection, live-fire verified) |
+| Contract/drift guard | ✅ SchemaDiff | ✅ **built** — `json_api_kit_contract.json` + spec (backwards-incompat detection, live-fire verified) |
 | Lock-in | high | low (own the glue) |
 | Footguns | writable-default data-loss; `graphiti-rails` rake `Object` pollution | Ransack-breaks-core (avoided by dropping Ransack) |
 | Core-safety | needs the `Object`-pollution scrub initializer | clean once Ransack removed |
@@ -1340,7 +1340,7 @@ fork-on-demand (frozen spec, ~500 LOC, MIT); **(4) ✅** absorbed the jsonapi.rb
 (include/fields/pagination/deserialization) into `BaseController` — **jsonapi.rb dropped entirely**;
 deps are now just **jsonapi-serializer + pagy**; **(5) ✅** richer error documents — validation
 errors carry `source.pointer` (`/data/attributes/<field>`); **contract guard ✅** —
-`jsonapi_rb_contract.json` + spec (the SchemaDiff analogue, live-fire verified). The Kit
+`json_api_kit_contract.json` + spec (the SchemaDiff analogue, live-fire verified). The Kit
 now has **full feature parity with the Graphiti example**, on ~250 owned LOC depending on two
 live-or-forkable libraries.
 
@@ -1348,7 +1348,7 @@ live-or-forkable libraries.
 
 To check that the features Graphiti has but we hadn't built wouldn't bite later, we built the
 biggest one — **deep nested includes** (`include=user.groups`) — end-to-end (request spec
-`spec/requests/discourse_data_explorer/jsonapi_rb/queries_controller_spec.rb`).
+`spec/requests/discourse_data_explorer/json_api_kit/queries_controller_spec.rb`).
 
 - **The hard part is free.** jsonapi-serializer does the recursive compound-document assembly +
   cross-tree dedup itself (verified in source). The DSL adds only small glue: a nested **preload

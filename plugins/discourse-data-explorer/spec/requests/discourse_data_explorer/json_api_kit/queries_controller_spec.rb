@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseDataExplorer::JsonapiRb::QueriesController do
+RSpec.describe DiscourseDataExplorer::JsonApiKit::QueriesController do
   fab!(:admin)
   fab!(:author, :user)
   fab!(:group1, :group)
@@ -10,7 +10,7 @@ RSpec.describe DiscourseDataExplorer::JsonapiRb::QueriesController do
   before { SiteSetting.data_explorer_enabled = true }
 
   def get_index(params)
-    get "/data-explorer/jsonapi-rb/queries",
+    get "/data-explorer/api/queries",
         params: params,
         headers: {
           "Accept" => "application/vnd.api+json",

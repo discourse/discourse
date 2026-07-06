@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseDataExplorer
-  module JsonapiRb
+  module JsonApiKit
     # JSON:API Kit endpoint for Query, built on the declarative DSL in
     # BaseController (docs/api-modernization-exploration.md, Part 9). The read query
     # surface is just a config block; only the write (create) carries bespoke logic,

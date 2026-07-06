@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseDataExplorer
-  module JsonapiRb
+  module JsonApiKit
     # The Query resource: type, attributes, and user/groups relationships. id is
     # stringified automatically; datetimes render in TimeWithZone's native format.
     class QuerySerializer
