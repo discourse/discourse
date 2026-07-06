@@ -1,0 +1,15 @@
+# Mutation-testing config for the converters gem. See tooling/.mutant.yml for the
+# rationale; only pure, non-`:rails` subjects with isolated specs are listed here.
+#
+# Most of this gem is converters that read a source database and write the
+# intermediate DB -- DB/IO-bound, not mutant targets. EmbedBuffer is the pure
+# piece: it rewrites post bodies into placeholder tokens in memory (the
+# import-time counterpart is the importer's PlaceholderResolver), so its specs
+# run under the isolated suite.
+integration:
+  name: rspec
+requires:
+  - migrations-converters
+matcher:
+  subjects:
+    - "Migrations::Converters::EmbedBuffer"
