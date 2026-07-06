@@ -101,11 +101,11 @@ class ThemeSettingsSerializer < ApplicationSerializer
   end
 
   def resolve_group_membership
-    object.resolve_group_membership? if object.respond_to?(:resolve_group_membership?)
+    object.resolve_group_membership?
   end
 
   def include_resolve_group_membership?
-    object.type == ThemeSetting.types[:list]
+    object.type == ThemeSetting.types[:list] && object.list_type == "group"
   end
 
   private

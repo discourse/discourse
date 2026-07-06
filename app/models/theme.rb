@@ -17,6 +17,7 @@ class Theme < ActiveRecord::Base
     user_selectable
     updated_at
   ]
+  PRIVATE_CACHED_SETTING_KEYS = %w[theme_uploads theme_uploads_local theme_setting_type_info]
 
   class SettingsMigrationError < StandardError
   end
@@ -805,21 +806,25 @@ class Theme < ActiveRecord::Base
       theme_uploads_local = build_local_theme_uploads_hash
       settings_hash["theme_uploads_local"] = theme_uploads_local if theme_uploads_local.present?
 
+      settings_hash["theme_setting_type_info"] = build_theme_setting_type_info_hash if settings.any?
+
       settings_hash
     end
   end
 
   def build_settings_hash
-    hash = {}
-    settings.each { |name, setting| hash[name] = setting.value }
+    settings_hash = {}
+    settings.each { |name, setting| settings_hash[name] = setting.value }
 
     theme_uploads = build_theme_uploads_hash
-    hash["theme_uploads"] = theme_uploads if theme_uploads.present?
+    settings_hash["theme_uploads"] = theme_uploads if theme_uploads.present?
 
     theme_uploads_local = build_local_theme_uploads_hash
-    hash["theme_uploads_local"] = theme_uploads_local if theme_uploads_local.present?
+    settings_hash["theme_uploads_local"] = theme_uploads_local if theme_uploads_local.present?
 
-    hash
+    settings_hash["theme_setting_type_info"] = build_theme_setting_type_info_hash if settings.any?
+
+    settings_hash
   end
 
   def build_theme_uploads_hash
@@ -842,19 +847,23 @@ class Theme < ActiveRecord::Base
     hash
   end
 
+  def build_theme_setting_type_info_hash
+    settings.each_with_object({}) do |(name, setting), hash|
+      hash[name] = { type: setting.type_name.to_s }.merge(
+        setting.opts.compact.except(:description, :max, :min),
+      )
+    end
+  end
+
   def resolve_group_settings_for_user(settings_hash, guardian)
     resolved_hash = settings_hash.dup
 
-    settings.each do |name, setting|
-      next unless setting.type == ThemeSetting.types[:list]
-      unless setting.respond_to?(:resolve_group_membership?) && setting.resolve_group_membership?
-        next
-      end
-
-      # Parse group IDs from the cached value
-      group_ids = settings_hash[name].to_s.split("|").map(&:to_i).reject(&:zero?)
+    (cached_settings["theme_setting_type_info"] || []).each do |name, info|
+      next unless info[:type] == "list"
+      next unless info[:resolve_group_membership]
 
       # Replace group list with user_in_ prefixed boolean (prevents leaking group IDs)
+      group_ids = settings_hash[name].to_s.split("|").map(&:to_i)
       resolved_hash.delete(name)
       resolved_hash[:"user_in_#{name}"] = guardian.in_any_groups?(group_ids)
     end
@@ -1000,7 +1009,7 @@ class Theme < ActiveRecord::Base
     end
 
     settings_hash&.each do |name, value|
-      next if name == "theme_uploads" || name == "theme_uploads_local"
+      next if Theme::PRIVATE_CACHED_SETTING_KEYS.include?(name)
       contents << to_scss_variable(name, value)
     end
 
