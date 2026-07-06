@@ -79,7 +79,7 @@ module Migrations
       # @return [Array<String>] every token created, in order (used to assert they
       #   all reached the raw).
       def placeholders
-        descriptors.map { |descriptor| descriptor[:placeholder] }
+        descriptors.map { |descriptor| descriptor.fetch(:placeholder) }
       end
 
       # @return [Boolean] whether the post had no embeds.

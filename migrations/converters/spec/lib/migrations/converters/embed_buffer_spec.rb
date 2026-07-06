@@ -57,7 +57,8 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
     it "rejects an unknown mention type so a typo fails loud" do
       expect { buffer.mention(mention_type: "Group") }.to raise_error(
         ArgumentError,
-        /Unknown mention type/,
+        "Unknown mention type \"Group\"; expected nil or one of " +
+          Migrations::MentionType::TYPES.join(", "),
       )
     end
 
@@ -81,6 +82,19 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
 
     it "returns the minted token so the Markdown converter can splice it into the raw" do
       expect(buffer.quote(quoted_user_id: 1)).to eq(buffer.quotes.last[:placeholder])
+    end
+
+    it "labels each recorder's token with its own embed kind" do
+      tokens = {
+        "quote" => buffer.quote(quoted_user_id: 1),
+        "link" => buffer.link(url: "https://example.com"),
+        "mention" => buffer.mention(mention_type: "user"),
+        "poll" => buffer.poll(poll_id: 1),
+        "event" => buffer.event(event_id: 1),
+        "upload" => buffer.upload(upload_id: "x"),
+      }
+
+      tokens.each { |kind, token| expect(Migrations::Placeholder.kind(token)).to eq(kind) }
     end
   end
 
@@ -176,17 +190,61 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
     end
 
     it "inserts each recorded embed into its linkage table under the post_id" do
-      quote = buffer.quote(quoted_user_id: 5)
-      mention = buffer.mention(mention_type: "user", target_id: 7)
+      quote =
+        buffer.quote(
+          quoted_post_id: 1,
+          quoted_user_id: 5,
+          quoted_username: "bob",
+          quoted_name: "Bob B",
+        )
+      link =
+        buffer.link(
+          url: "https://example.com",
+          text: "here",
+          target_topic_id: 9,
+          target_post_id: 10,
+        )
+      mention = buffer.mention(mention_type: "user", target_id: 7, name: "bob")
+      poll = buffer.poll(poll_id: 3)
+      event = buffer.event(event_id: 4)
       upload = buffer.upload(upload_id: "sha1")
 
       buffer.write_for(42)
 
       expect(rows("post_quotes")).to contain_exactly(
-        hash_including(post_id: 42, placeholder: quote, quoted_user_id: 5),
+        hash_including(
+          post_id: 42,
+          placeholder: quote,
+          quoted_post_id: 1,
+          quoted_user_id: 5,
+          quoted_username: "bob",
+          quoted_name: "Bob B",
+        ),
+      )
+      expect(rows("post_links")).to contain_exactly(
+        hash_including(
+          post_id: 42,
+          placeholder: link,
+          url: "https://example.com",
+          text: "here",
+          target_topic_id: 9,
+          target_post_id: 10,
+        ),
       )
       expect(rows("post_mentions")).to contain_exactly(
-        hash_including(post_id: 42, placeholder: mention, mention_type: "user", target_id: 7),
+        hash_including(
+          post_id: 42,
+          placeholder: mention,
+          mention_type: "user",
+          target_id: 7,
+          name: "bob",
+        ),
+      )
+      expect(rows("post_polls")).to contain_exactly(
+        hash_including(post_id: 42, placeholder: poll, poll_id: 3),
+      )
+      expect(rows("post_events")).to contain_exactly(
+        hash_including(post_id: 42, placeholder: event, event_id: 4),
       )
       expect(rows("post_uploads")).to contain_exactly(
         hash_including(post_id: 42, placeholder: upload, upload_id: "sha1"),
