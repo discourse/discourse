@@ -29,19 +29,8 @@ Discourse::Application.routes.draw do
         format: /(json|csv)/,
       }
 
-  # JSON:API modernization spike (Graphiti) — read-only, public-shaped.
-  # See docs/api-modernization-exploration.md.
-  scope "/data-explorer/api/v1", defaults: { format: :jsonapi } do
-    get "queries" => "discourse_data_explorer/api/v1/queries#index"
-    get "queries/:id" => "discourse_data_explorer/api/v1/queries#show",
-        :constraints => {
-          id: /\d+/,
-        }
-    post "queries" => "discourse_data_explorer/api/v1/queries#create"
-  end
-
-  # Thin-layers alternative (jsonapi.rb) being compared against the Graphiti
-  # endpoint above. See docs/api-modernization-exploration.md (Part 9).
+  # JSON:API Kit spike — read-only, public-shaped JSON:API.
+  # See docs/api-modernization-exploration.md (Part 9).
   scope "/data-explorer/jsonapi-rb", defaults: { format: :json } do
     get "queries" => "discourse_data_explorer/jsonapi_rb/queries#index"
     get "queries/:id" => "discourse_data_explorer/jsonapi_rb/queries#show",

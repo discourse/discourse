@@ -5,11 +5,11 @@ module DiscourseDataExplorer
     # JSON:API Kit — base controller + declarative query-surface DSL.
     #
     # This is the "own a small framework" piece from the API-modernization exploration
-    # (docs/api-modernization-exploration.md, Part 9, punch-list #1). It gives the
-    # JSON:API Kit Graphiti-like ergonomics — a resource declares its filters,
-    # sorts, includes, base scope, stats and pagination, and this base implements the
-    # mechanics once (strict params → 400, filtering, sorting incl. joins, keyset/offset
-    # pagination, sparse fieldsets, stats meta, Guardian scoping, JSON:API rendering).
+    # (docs/api-modernization-exploration.md, Part 9, punch-list #1). A resource declares
+    # its filters, sorts, includes, base scope, stats and pagination, and this base
+    # implements the mechanics once (strict params → 400, filtering, sorting incl. joins,
+    # keyset/offset pagination, sparse fieldsets, stats meta, Guardian scoping, JSON:API
+    # rendering).
     #
     # No Ransack (it breaks core — see Part 9); filtering/sorting are plain AR blocks we
     # own. Reads are generic (index/show); writes stay per-controller (Service::Base).
@@ -75,8 +75,8 @@ module DiscourseDataExplorer
         _jsonapi_config.instance_eval(&block)
       end
 
-      # Machine-readable contract descriptor — the JSON:API Kit's analogue of Graphiti's
-      # generated schema. The backwards-compat guard (spec/integration/
+      # Machine-readable contract descriptor derived from the DSL config + serializer.
+      # The backwards-compat guard (spec/integration/
       # jsonapi_rb_contract_spec.rb) diffs it against a committed baseline and fails on
       # backwards-incompatible changes (removed attribute/filter/sort/relationship,
       # changed type/default_sort/relationship-kind, lowered page cap). String keys/values
@@ -147,7 +147,7 @@ module DiscourseDataExplorer
         scope
       end
 
-      # JSON:API: an unsupported filter/sort/include MUST 400 (Graphiti does this natively).
+      # JSON:API: an unsupported filter/sort/include MUST 400.
       def reject_unknown_query_params!
         bad = (params[:filter]&.keys || []).map(&:to_s) - cfg.filters.keys
         bad +=
@@ -254,7 +254,7 @@ module DiscourseDataExplorer
         parsed
       end
 
-      # Request-driven, matching Graphiti's `stats[total]=count` → meta.stats.total.count.
+      # Request-driven: `stats[total]=count` → meta.stats.total.count.
       def stats_meta(total)
         return {} unless cfg.stats.key?("total") && params.dig(:stats, :total) == "count"
         { stats: { total: { count: total } } }

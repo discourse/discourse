@@ -32,26 +32,9 @@ end
 
 require_relative "lib/discourse_data_explorer/engine"
 
-# Render datetimes in TimeWithZone's native format rather than running Graphiti's
-# :datetime read-coercer, which does `time.to_datetime.iso8601` — and since AR
-# hands it a TimeWithZone, `to_datetime` triggers a Rational/tzinfo allocation
-# storm (the single biggest serialization cost). This is scoped to :datetime ONLY,
-# so every other type keeps its normal read coercion — unlike a global
-# `typecast_reads = false`, which also changes integer_id-attribute / decimal /
-# custom-coerced output (verified against Graphiti's own suite: only datetime
-# serialization specs differ). Must run BEFORE resources load: serializer attribute
-# procs capture the read coercer at class-definition time, so this lives at plugin
-# top-level (pre-eager-load), not in after_initialize.
-# Trade-off: datetimes emit TimeWithZone's format (ms precision + "Z") instead of
-# DateTime#iso8601 ("+00:00", no fractional). See docs/api-modernization-exploration.md.
-if defined?(Graphiti)
-  Graphiti::Types[:datetime] = Graphiti::Types[:datetime].merge(read: ->(value) { value })
-end
-
-# JSON:API Kit: jsonapi-serializer for rendering. The jsonapi.rb gem was
-# dropped entirely (its Ransack-based filtering breaks core, and its other mixins —
-# include/fields/pagination/deserialization — were small enough to absorb into
-# JsonapiRb::BaseController). The Kit now depends only on jsonapi-serializer + pagy.
+# JSON:API Kit: jsonapi-serializer is the rendering layer. The Kit depends only
+# on jsonapi-serializer + pagy; include/fields/pagination/deserialization are
+# handled by JsonapiRb::BaseController. See docs/api-modernization-exploration.md.
 require "jsonapi/serializer"
 # Patch jsonapi-serializer's nested-include linkage bug (lazy_load_data + nested leaf drops
 # the leaf's linkage). Small, owned, on a frozen gem. See the patch file + Part 9.
@@ -61,12 +44,6 @@ FastJsonapi::SerializationCore::ClassMethods.prepend(
 )
 
 after_initialize do
-  # PERF-TEMP (benchmarking only): Graphiti concurrency is a process-wide, memoized
-  # switch. Toggle it per-boot (GRAPHITI_CONCURRENCY=off) to measure both regimes
-  # against the JSON:API Kit endpoint. Runs before the first request → before the
-  # executor memoizes. Remove after the perf comparison (Part 9).
-  Graphiti.config.concurrency = false if defined?(Graphiti) && ENV["GRAPHITI_CONCURRENCY"] == "off"
-
   GlobalSetting.add_default(:max_data_explorer_api_reqs_per_10_seconds, 2)
 
   # Available options:
@@ -80,31 +57,6 @@ after_initialize do
     register_discourse_workflows_node do
       require_relative "lib/discourse_data_explorer/workflows/sql_action/v1"
       DiscourseDataExplorer::Workflows::SqlAction::V1
-    end
-  end
-
-  # JSON:API modernization spike (Graphiti): the many_to_many sideload on
-  # QueryResource matches groups back to queries via group.query_groups.
-  reloadable_patch do
-    Group.has_many :query_groups, class_name: "DiscourseDataExplorer::QueryGroup"
-
-    # Hash-indexed many_to_many sideload assignment (O(children × through +
-    # parents) instead of stock O(parents × children × through)). See
-    # lib/discourse_data_explorer/graphiti_patches/many_to_many_performant_assign.rb.
-    if defined?(Graphiti)
-      Graphiti::Sideload::ManyToMany.prepend(
-        DiscourseDataExplorer::GraphitiPatches::ManyToManyPerformantAssign,
-      )
-
-      # Memoize jsonapi-serializable's per-exposure ivar names (avoids a String
-      # allocation per key/object/record). Behavior-identical; ~16% fewer
-      # serialization allocations. See the patch file for details.
-      JSONAPI::Serializable::Resource.prepend(
-        DiscourseDataExplorer::GraphitiPatches::CachedExposureIvars::ResourceInit,
-      )
-      JSONAPI::Serializable::Relationship.prepend(
-        DiscourseDataExplorer::GraphitiPatches::CachedExposureIvars::RelationshipInit,
-      )
     end
   end
 
