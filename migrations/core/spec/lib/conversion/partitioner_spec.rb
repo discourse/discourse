@@ -122,8 +122,7 @@ RSpec.describe Migrations::Conversion::Partitioner do
         end
         .new
 
-    result =
-      described_class.new(adapter, key: %i[a b], from: "things", base: "x > 0").boundaries(2)
+    result = described_class.new(adapter, key: %i[a b], from: "things", base: "x > 0").boundaries(2)
 
     expect(result).to eq([10, 20])
     expect(scanned).to eq([%i[a b], "things", "x > 0", 2])

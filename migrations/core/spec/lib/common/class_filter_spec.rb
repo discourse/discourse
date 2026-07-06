@@ -124,11 +124,7 @@ RSpec.describe Migrations::ClassFilter do
       parent = test_class(name: "Steps::WithSkipped", dependencies: [skipped, kept])
 
       result =
-        described_class.filter(
-          [skipped, kept, parent],
-          only: ["with_skipped"],
-          skip: ["skipped"],
-        )
+        described_class.filter([skipped, kept, parent], only: ["with_skipped"], skip: ["skipped"])
 
       expect(result).to contain_exactly(kept, parent)
     end
