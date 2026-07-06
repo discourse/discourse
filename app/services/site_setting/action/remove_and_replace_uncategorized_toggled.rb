@@ -8,9 +8,11 @@
 # in place by repointing `uncategorized_category_id` to -1 (the category's
 # "special" behavior is derived entirely from that setting), then disallows
 # uncategorized topics. No category is created and no topics are moved. If the
-# composer defaulted to the special Uncategorized category (explicitly or
-# because no default was set), the now-normal category is pinned as the
-# `default_composer_category` so the composer keeps pre-selecting it.
+# composer had no explicit default (so it fell back to the special
+# Uncategorized category), the now-normal category is pinned as the
+# `default_composer_category` so the composer keeps pre-selecting it. An
+# explicit default already pointing at that category needs no change — the id
+# simply becomes a normal category.
 #
 # The site's prior state is snapshotted onto the change's UpcomingChangeEvent
 # so that opt-out can either restore the special category or do nothing.
@@ -45,8 +47,7 @@ class SiteSetting::Action::RemoveAndReplaceUncategorizedToggled < Service::Actio
         uncategorized_category_id: former_uncategorized_id,
       )
 
-      if SiteSetting.default_composer_category.blank? ||
-           SiteSetting.default_composer_category == former_uncategorized_id.to_s
+      if SiteSetting.default_composer_category.blank?
         SiteSetting.set_and_log(:default_composer_category, former_uncategorized_id.to_s)
       end
 
