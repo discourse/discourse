@@ -82,6 +82,18 @@ RSpec.describe Migrations::TopologicalSorter do
       end
     end
 
+    context "with a node depending on multiple classes" do
+      it "sorts the node only after all of its dependencies" do
+        base1 = test_class(name: "Base1")
+        base2 = test_class(name: "Base2")
+        dependent = test_class(name: "Dependent", dependencies: [base1, base2])
+
+        result = described_class.sort([dependent, base1, base2])
+
+        expect(sorted_names(result)).to eq(%w[Base1 Base2 Dependent])
+      end
+    end
+
     context "with chain dependencies" do
       it "sorts classes in correct order" do
         class3 = test_class(name: "Class3")
@@ -102,6 +114,22 @@ RSpec.describe Migrations::TopologicalSorter do
         expect { described_class.sort([class1]) }.to raise_error(
           Migrations::TopologicalSorterError,
           "Node 'Class1' has dependencies not in class list: External",
+        )
+      end
+
+      it "lists every missing dependency by name in the error message" do
+        external1 = test_class(name: "External1")
+        external2 = test_class(name: "External2")
+        class1 = test_class(name: "Class1", dependencies: [external1, external2])
+
+        # Force #to_s to differ from #name so the message is proven to use #name.
+        [external1, external2, class1].each do |klass|
+          klass.define_singleton_method(:to_s) { "<anonymous>" }
+        end
+
+        expect { described_class.sort([class1]) }.to raise_error(
+          Migrations::TopologicalSorterError,
+          "Node 'Class1' has dependencies not in class list: External1, External2",
         )
       end
     end
@@ -133,6 +161,19 @@ RSpec.describe Migrations::TopologicalSorter do
     context "with nil dependencies" do
       it "treats as no dependencies" do
         class1 = test_class(name: "Class1", dependencies: nil)
+
+        result = described_class.sort([class1])
+
+        expect(sorted_names(result)).to eq(["Class1"])
+      end
+
+      it "treats a node whose dependencies method returns nil as having no dependencies" do
+        class1 =
+          Class.new do
+            define_singleton_method(:name) { "Class1" }
+            define_singleton_method(:to_s) { "Class1" }
+            define_singleton_method(:dependencies) { nil }
+          end
 
         result = described_class.sort([class1])
 

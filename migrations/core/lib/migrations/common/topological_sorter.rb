@@ -29,7 +29,7 @@ module Migrations
         new_ready = []
         @dependency_graph[node].each do |child|
           in_degree[child] -= 1
-          new_ready << child if in_degree[child] == 0
+          new_ready << child if in_degree.fetch(child) == 0
         end
 
         sort_queue!(new_ready)
@@ -50,8 +50,6 @@ module Migrations
         if (deps = extract_dependencies(node))
           deps.each { |dep| graph[dep] << node }
         end
-
-        graph[node] ||= []
       end
 
       graph
