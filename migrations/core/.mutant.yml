@@ -1,23 +1,20 @@
 # Mutation-testing config for the core gem. See tooling/.mutant.yml for the
 # rationale; only non-`:rails` subjects with isolated specs are listed here.
 #
-# Core is the conversion runtime. The step-orchestration layer added with the
-# concurrent-steps work has a lot of logic that runs under the gem's isolated
-# (non-`:rails`) suite -- not just the pure decision helpers (dependency
-# ordering, worker budgeting, partition math, progress counters) but also the
-# step base class and the runner/consolidator/shard/setup pieces, whose specs
-# stub the forking, so mutant can actually reach them.
+# Almost the whole gem turns out to be reachable: the step-orchestration layer
+# (its specs stub the forking), the pure helpers (topological sort, class filter,
+# placeholder/set-store models), the SQLite-backed Database layer (Extralite is
+# embedded, so specs open real temp DBs with no external service), the reporters,
+# and even the CLI framework and ForkManager -- none of these hit the mutation
+# timeout.
 #
-# Plus the gem's other pure helpers with isolated specs: the topological step
-# sorter, the class filter, the placeholder token model and the set store.
-#
-# Left out on purpose:
-#   * StepScheduler / ChunkQueue -- StepScheduler spins up real worker threads and
-#     ChunkQueue blocks on a pipe read, so mutations to that concurrency/IO logic
-#     deadlock into the mutation timeout (noisy, flaky). They'd need their pure
-#     decisions split from the thread/pipe plumbing to be useful targets.
-#   * StepCoordinator, Step::Processor, Step::Source -- no isolated specs (they
-#     drive the actual fork/process orchestration).
+# Left out on purpose (mutations there deadlock into the timeout):
+#   * StepScheduler -- spins up real worker threads.
+#   * ChunkQueue -- blocks on a pipe read.
+#   * Reporting::Tui -- its spec spawns a real pty.
+# Each would need its pure logic split from the thread/pipe/terminal plumbing to
+# be a useful target. Also out: StepCoordinator, Step::Processor, Step::Source
+# (no isolated specs -- they drive the actual fork/process orchestration).
 integration:
   name: rspec
 requires:
@@ -29,6 +26,20 @@ matcher:
     - "Migrations::ClassFilter"
     - "Migrations::Placeholder"
     - "Migrations::SetStore"
+    - "Migrations::SetStore::SimpleSet"
+    - "Migrations::SetStore::KeyValueSet"
+    - "Migrations::SetStore::TwoKeySet"
+    - "Migrations::SetStore::ThreeKeySet"
+    - "Migrations::ForkManager"
+    - "Migrations::Database"
+    - "Migrations::Database::Connection"
+    - "Migrations::Database::Migrator"
+    - "Migrations::Database::IntermediateDB"
+    - "Migrations::Database::PreparedStatementCache"
+    - "Migrations::Reporting::Factory"
+    - "Migrations::Reporting::Plain"
+    - "Migrations::CLI::Command"
+    - "Migrations::CLI::Bootstrap"
     - "Migrations::Conversion::Base"
     - "Migrations::Conversion::Step"
     - "Migrations::Conversion::StepRunner"
