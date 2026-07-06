@@ -1067,8 +1067,6 @@ pt:
     anon_polling_interval: "Com que frequência os clientes anónimos podem sondar o servidor em milisegundos"
     background_polling_interval: "Com que frequência deverão os clientes solicitar o servidor, em milissegundos (quando a janela está em plano de fundo)"
     cooldown_minutes_after_hiding_posts: "Número de minutos que o utilizador deve esperar antes de poder editar uma mensagem oculta devido a sinalizações por parte da comunidade"
-    max_topics_in_first_day: "O número máximo de tópicos que o utilizador pode criar no período de 24 horas após criar a sua primeira publicação"
-    max_replies_in_first_day: "O número máximo de respostas que um utilizador pode criar no período de 24 horas após criar a sua primeira publicação"
     tl2_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc2 (membro) ao multiplicar por este número"
     tl3_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc3 (habitual) ao multiplicar por este número"
     tl4_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc4 (líder) ao multiplicar por este número"

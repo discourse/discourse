@@ -1524,8 +1524,6 @@ sv:
     silence_new_user_sensitivity: "Sannolikheten för att en ny användare kommer att tystas baserat på skräppost-flaggor"
     auto_close_topic_sensitivity: "Sannolikheten för att ett flaggat ämne stängs automatiskt"
     cooldown_minutes_after_hiding_posts: "Antal minuter en användare måste vänta innan de kan redigera ett inlägg som dolts på grund av flaggningar från forumets användare"
-    max_topics_in_first_day: "Högsta antal ämnen en användare får skapa under de första 24 timmarna efter att ha skapat sitt första inlägg"
-    max_replies_in_first_day: "Högsta antal svar en användare får skapa under de första 24 timmarna efter att ha skapat sitt första inlägg"
     tl2_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 2 (medlem) genom att multiplicera med det här numret"
     tl3_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 3 (regelbundna) genom att multiplicera med det här numret"
     tl4_additional_likes_per_day_multiplier: "Höj gränsen för antal gillningar per dag för användare med förtroendenivå 4 (ledare) genom att multiplicera med det här numret"

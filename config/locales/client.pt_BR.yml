@@ -5174,8 +5174,6 @@ pt_BR:
       no_read_topics_body: "Quando começar a ler as discussões, uma lista será exibida aqui. Para começar a ler, procure tópicos do seu interesse em <a href='%{topUrl}'>Melhores</a> ou <a href='%{categoriesUrl}'>Categorias</a>, ou pesquise por palavra-chave %{searchIcon}"
     no_group_messages_title: "Nenhuma mensagem de grupo encontrada"
     topic_entrance:
-      sr_jump_top_button: "Ir para primeira postagem - %{date}"
-      sr_jump_bottom_button: "Saltar para a última postagem - %{date}"
       jump_top_button_title: "Ir para a primeira postagem"
       jump_bottom_button_title: "Ir para a última postagem"
     fullscreen_table:

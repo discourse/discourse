@@ -1780,8 +1780,6 @@ hu:
     silence_new_user_sensitivity: "Annak a valószínűsége, hogy egy új felhasználó el lesz némítva spam jelzések alapján"
     auto_close_topic_sensitivity: "Annak a valószínűsége, hogy egy megjelölt téma automatikusan zárolva lesz"
     cooldown_minutes_after_hiding_posts: "Percek száma, amennyit egy felhasználónak várnia kell, mielőtt szerkeszthetne egy olyan bejegyzést, amely a közösségi jelzések miatt lett elrejtve"
-    max_topics_in_first_day: "A témák maximális száma, amelyet egy felhasználó létrehozhat az első bejegyzése utáni 24 órás időszakban"
-    max_replies_in_first_day: "A válaszok maximális száma, amelyet egy felhasználó létrehozhat az első bejegyzése utáni 24 órás időszakban"
     tl2_additional_likes_per_day_multiplier: "Növelje a napi kedvelések határértékét a tl2 (tag) szintű felhasználók számára ennek a számnak a szorzásával"
     tl3_additional_likes_per_day_multiplier: "Növelje a napi kedvelések határértékét a tl3 (törzstag) szintű felhasználók számára ennek a számnak a szorzásával"
     tl4_additional_likes_per_day_multiplier: "Növelje a napi kedvelések határértékét a tl4 (vezető) szintű felhasználók számára ennek a számnak a szorzásával"

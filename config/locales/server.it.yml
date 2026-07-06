@@ -1742,8 +1742,6 @@ it:
     silence_new_user_sensitivity: "La probabilità che un nuovo utente venga silenziato in base a segnalazioni di spam"
     auto_close_topic_sensitivity: "La probabilità che un argomento segnalato venga automaticamente chiuso"
     cooldown_minutes_after_hiding_posts: "Quanti minuti l'utente deve attendere prima di poter modificare un messaggio che è stato nascosto a causa di segnalazioni"
-    max_topics_in_first_day: "Numero massimo di argomenti che un utente può creare nel periodo di 24 ore successivo alla creazione del suo primo messaggio"
-    max_replies_in_first_day: "Numero massimo di risposte che un utente può creare nel periodo di 24 ore successivo alla creazione del suo primo messaggio"
     tl2_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di attendibilità 2 (Assiduo), moltiplicando per questo numero"
     tl3_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di attendibilità 3 (Esperto) moltiplicando per questo numero"
     tl4_additional_likes_per_day_multiplier: "Aumenta il limite di \"Mi piace\" al giorno ammessi per gli utenti con livello di attendibilità 4 (Veterano), moltiplicando per questo numero"

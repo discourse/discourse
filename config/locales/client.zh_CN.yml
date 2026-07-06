@@ -13,15 +13,28 @@ zh_CN:
       logged_in_as: "登录身份"
       permissions_header: '这将允许“%{application_name}”：'
       redirect_warning: "授权会将您重定向到"
+      expiry_notice: '此密钥 “%{application_name}” 将于 %{expires_at} 过期。'
       write_scope_warning: "请求完全写入权限 — 此应用程序将能够发布、编辑和删除内容。只有在你完全信任的情况下才能继续。"
+      copy_key: "复制密钥"
       copied: "已复制！"
       otp_description: '要允许“%{application_name}”访问此网站吗？'
       no_trust_level: "抱歉，您没有访问用户 API 所需的信任级别"
       generic_error: "抱歉，我们无法发布用户 API 密钥，此功能可能被网站管理员禁用"
       device:
+        title: "授权应用程序"
+        enter_code: "输入应用程序中显示的代码。"
         code: "代码"
+        enter_full_code: "请输入完整代码以授权此应用程序。"
         continue: "继续"
+        invalid_code: "抱歉，该代码无效。请检查代码并重试。"
+        expired_code: "抱歉，该代码已过期或已被使用。请在应用程序中申请新代码，然后重试。"
         authorize_title: '授权“%{application_name}”'
+        expiry_notice: "过期时间： %{expires_at}"
+        no_expiry_warning: "该密钥不会自动过期。请仅在完全信任该应用程序的情况下才对其进行授权。"
+        unregistered_app_warning: "此应用程序未经本网站注册或验证。请仅在您完全信任代码来源的情况下继续。"
+        complete: "授权完成"
+        denied: "授权被拒绝"
+        return_to_cli: "您现在可以返回终端或应用程序了。"
     blocks:
       ghost:
         status: "状态"
@@ -41,7 +54,13 @@ zh_CN:
     access_control:
       manage:
         access_permission_editor: "编辑者"
+        access_permission_editor_description: "可以创建和编辑此对象中的内容"
+        access_permission_viewer: "查看器"
+        access_permission_viewer_description: "可以查看此对象中的内容"
         access_permission_remove: "移除"
+        access_permission_remove_description: "移除该群组的权限"
+        add_group: "添加群组"
+        mandatory_acl_tooltip: "此权限对该对象而言是强制性的，无法移除。"
     carousel:
       go_to_slide: "转到幻灯片 %{index}"
       previous: "上一张幻灯片"
@@ -1205,7 +1224,11 @@ zh_CN:
             from_alias_hint: "发送群组 SMTP 电子邮件时用作发件人地址的别名。请注意，并非所有邮件提供商都支持此功能，请查阅您的邮件提供商的文档。"
         membership:
           title: 成员资格
+          visibility_and_access: "访问 & 可见性"
+          join_method_title: "用户如何加入？"
           join_method:
+            free: "任何人都可以自由加入"
+            request: "任何人都可以申请加入"
             invite: "仅限邀请"
         categories:
           title: 类别
@@ -1600,6 +1623,7 @@ zh_CN:
       enable_smart_lists: "在编辑器中编写时启用智能列表"
       enable_defer: "启用将话题标记为未读"
       enable_markdown_monospace_font: "在输入框的 Markdown 模式下使用等宽字体"
+      show_original_content: "显示原文内容，而非翻译内容。"
       experimental_sidebar:
         enable: "启用边栏"
         options: "选项"
@@ -2558,10 +2582,27 @@ zh_CN:
     code_login:
       email_label: "电子邮件"
       continue_button: "继续"
+      check_your_email: "请查看您的电子邮件"
+      code_instructions: "我们已向 <b>%{email}</b>发送了6位数的验证码。请在下方输入验证码以继续。"
       verify_button: "继续"
+      resend: "重新发送代码"
+      resend_countdown: "重新发送代码（%{count}s）"
+      code_resent: "我们发送了一个新的验证码。"
+      use_different_email: "请使用另一个电子邮箱地址"
+      use_password_instead: "改用密码登录"
+      email_me_code: "通过电子邮件向我发送一次性登录码"
       signup_title: "创建您的帐户"
+      signup_instructions: "输入你的邮箱地址加入这个社区。我们会发送一封包含验证码的邮件，验证完成后就能开始啦！"
+      user_fields_title: "快完成了"
+      user_fields_instructions: "只需再填写一些信息，即可完成账户注册。"
+      account_ready_title: "您的账户已准备就绪！🎉"
+      account_ready_edit: "选择您的用户名和头像"
       account_ready_continue: "继续"
       username_label: "用户名"
+      username_placeholder: "选择一个用户名"
+      change_avatar: "更改头像"
+      username_taken: "该用户名已被占用，请换一个。"
+      username_unavailable: "该用户名不可用。试试 %{suggestion}。"
     login:
       header_title: "欢迎回来"
       title: "登录"
@@ -5252,8 +5293,6 @@ zh_CN:
       no_read_topics_body: "开始阅读讨论后，您会在此处看到一个列表。要开始阅读，请在<a href='%{topUrl}'>热门</a>或<a href='%{categoriesUrl}'>类别</a>中或者通过关键字搜索 %{searchIcon}，查找您感兴趣的话题"
     no_group_messages_title: "未找到群组消息"
     topic_entrance:
-      sr_jump_top_button: "跳到第一个帖子 - %{date}"
-      sr_jump_bottom_button: "跳到最后一个帖子 - %{date}"
       jump_top_button_title: "跳到第一个帖子"
       jump_bottom_button_title: "跳到最后一个帖子"
     fullscreen_table:

@@ -1896,8 +1896,6 @@ sk:
     silence_new_user_sensitivity: "Pravdepodobnosť, že nový používateľ bude umlčaný na základe príznakov spamu"
     auto_close_topic_sensitivity: "Pravdepodobnosť, že sa označená téma automaticky uzavrie"
     cooldown_minutes_after_hiding_posts: "Počet minút koľko musí používateľ počkať pred tým než môže upraviť príspevok skytý pomocou komunitných značiek"
-    max_topics_in_first_day: "Maximálny počet tém, ktoré môže používateľ vytvoriť počas 24 hodín po vytvorení prvého príspevku"
-    max_replies_in_first_day: "Maximálny počet odpovedí, ktoré môže používateľ vytvoriť v priebehu 24 hodín od vytvorenia prvého príspevku"
     tl2_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 2 (člen) vynásobením týmto číslom"
     tl3_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 3 (bežný) vynásobením týmto číslom"
     tl4_additional_likes_per_day_multiplier: "Zvýšiť počet páči sa mi na deň pre úroveň dôvery 4 (vedúci) vynásobením týmto číslom"

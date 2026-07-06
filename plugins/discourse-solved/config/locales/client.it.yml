@@ -15,6 +15,19 @@ it:
           kpi:
             accepted_solutions:
               label: "Soluzioni accettate"
+        sections:
+          support:
+            title: "Sostienici"
+            filter:
+              all_categories: "Tutte le categorie"
+            answerers:
+              staff: "Staff"
+              member: "Membri"
+              basic: "Base"
+            response_time:
+              buckets:
+                lt_1h: "< 1 ora"
+                gt_24h: "> 24 ore"
   js:
     notifications:
       alt:

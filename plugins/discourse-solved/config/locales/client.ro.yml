@@ -12,6 +12,18 @@ ro:
           kpi:
             accepted_solutions:
               label: "Soluții acceptate"
+        sections:
+          support:
+            filter:
+              all_categories: "Toate categoriile"
+            answerers:
+              staff: "Echipa"
+              member: "Membri"
+              basic: "De bază"
+            response_time:
+              buckets:
+                lt_1h: "< o oră"
+                gt_24h: "> 24 ore"
   js:
     notifications:
       alt:
