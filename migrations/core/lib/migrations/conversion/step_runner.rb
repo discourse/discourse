@@ -21,16 +21,20 @@ module Migrations
       #   the progress channel ({PipeProgressSink} in a fork, {InlineProgressSink} inline)
       # @param chunk [Array(Object, Object), nil] the `[lower, upper]` key range to read
       #   (upper nil = open-ended), or nil to read the whole source
-      def initialize(step:, shard_path:, reporter:, chunk: nil)
+      # @param claim_chunk [#call, nil] for work stealing: call it to get the next
+      #   `[lower, upper]` to read, or nil when none are left. When given, the worker
+      #   keeps claiming chunks into its one shard and the parent owns the total.
+      #   Replaces `chunk`.
+      def initialize(step:, shard_path:, reporter:, chunk: nil, claim_chunk: nil)
         @step = step
         @shard_path = shard_path
         @reporter = reporter
         @chunk = chunk
+        @claim_chunk = claim_chunk
       end
 
       def run
         source = @step.source
-        source.chunk = @chunk
         connection = Database::Connection.new(path: @shard_path)
 
         begin
@@ -43,8 +47,7 @@ module Migrations
             processor = @step.create_processor
             SetupGuard.run(processor)
 
-            @reporter.report_max_progress(source.max_progress)
-            process_items(source, processor)
+            @claim_chunk ? run_claimed_chunks(source, processor) : run_chunk(source, processor)
           end
         ensure
           connection.close
@@ -53,6 +56,22 @@ module Migrations
       end
 
       private
+
+      # One slice, or the whole source: the worker reports its own total.
+      def run_chunk(source, processor)
+        source.chunk = @chunk
+        @reporter.report_max_progress(source.max_progress)
+        process_items(source, processor)
+      end
+
+      # Work stealing: claim chunks until the bag is empty, all into one shard. The
+      # parent knows the total, so we don't report it here.
+      def run_claimed_chunks(source, processor)
+        while (chunk = @claim_chunk.call)
+          source.chunk = chunk
+          process_items(source, processor)
+        end
+      end
 
       def process_items(source, processor)
         tracker = processor.tracker
