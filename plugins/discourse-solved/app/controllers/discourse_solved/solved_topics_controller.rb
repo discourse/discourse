@@ -33,6 +33,17 @@ class DiscourseSolved::SolvedTopicsController < ::ApplicationController
         )
 
     posts = posts.where(topics: { visible: true }) unless include_unlisted_topics
+    posts = guardian.filter_hidden_posts(posts)
+
+    unless guardian.is_admin?
+      current_user_id = current_user&.id || -1
+      posts =
+        posts.where(
+          "posts.user_id = :current_user_id OR posts.post_type IN (:visible_post_types)",
+          current_user_id:,
+          visible_post_types: Topic.visible_post_types(current_user),
+        )
+    end
 
     posts =
       posts
@@ -40,6 +51,8 @@ class DiscourseSolved::SolvedTopicsController < ::ApplicationController
         .order("discourse_solved_solved_topics.created_at DESC")
         .offset(offset)
         .limit(limit)
+
+    posts = posts.select { |post| guardian.can_see_post?(post) }
 
     render_serialized(posts, DiscourseSolved::SolvedPostSerializer, root: "user_solved_posts")
   end
