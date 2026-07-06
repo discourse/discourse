@@ -4,7 +4,8 @@ module PageObjects
   module Pages
     # Drives the wireframe editor for system tests: entering edit mode and
     # locating the live-rendered grid, its cells, and the palette so a real
-    # browser drag (`drag_to`) can be performed and its result asserted.
+    # native drag (`drag_palette_block`) can be performed and its result
+    # asserted.
     #
     # Selectors mirror the editor's actual DOM contracts (see the JS
     # `editor-dom-contract` module) so this page object breaks loudly if those
@@ -48,100 +49,37 @@ module PageObjects
         find("#{PALETTE_ENTRY_SELECTOR}[data-block-name='#{block_name}']")
       end
 
-      # Drags a palette block onto a target element (a grid cell or an existing
-      # block). Capybara's `drag_to` only simulates pointer events
-      # (mousedown/move/up), which never initiates the native HTML5
-      # drag-and-drop that PDND (`@atlaskit/pragmatic-drag-and-drop`, wiring the
-      # editor's drag sources and grid drop target) listens for. So dispatch the
-      # native drag sequence directly: `dragstart` on the tile, then
-      # `dragenter`/`dragover` and `drop` over the target, sharing one
-      # `DataTransfer` and carrying real cursor coordinates (the grid resolves
-      # the drop cell from `clientX`/`clientY`). The `requestAnimationFrame` gaps
-      # let PDND's frame-batched drop-target updates run between phases, mirroring
-      # a real drag closely enough for its monitors to fire.
+      def block_selector(name)
+        ".#{name}"
+      end
+
+      def empty_cell_selector(column:, row:)
+        "#{EMPTY_CELL_SELECTOR}[data-col='#{column}'][data-row='#{row}']"
+      end
+
+      # Drags a palette block onto a target (a grid cell or an existing block,
+      # given as a CSS selector). Thin wireframe-specific sugar over the shared
+      # `SystemHelpers#drag_and_drop` native-drag helper — Capybara's `drag_to`
+      # can't drive the PDND-backed core drag modifiers (it fires `dragstart`
+      # and then stalls), which is why we go through the shared helper.
+      #
       # `at:` picks where inside the target the drop lands, which the grid turns
-      # into a drop zone: `:center` drops in the middle (fills an empty cell, or
-      # a no-op on an occupied one), `:trailing` drops near the far edge (the
-      # "insert after" zone that cascades a new block into the following gap).
-      # The editor's grid renders as a collapsed single-column stack here, so the
-      # meaningful axis is vertical — `:trailing` drops near the bottom edge.
-      DROP_Y_FRACTION = { center: 0.5, trailing: 0.85 }.freeze
-
+      # into a drop zone. The editor grid renders as a collapsed single-column
+      # stack here, so the meaningful axis is vertical: `:center` drops in the
+      # middle (fills an empty cell, or a no-op swap onto an occupied one) and
+      # `:trailing` drops near the bottom edge (the "insert after" zone).
       def drag_palette_block(block_name, onto:, at: :center)
-        source = palette_entry(block_name)
-        y_fraction = DROP_Y_FRACTION.fetch(at)
+        source = "#{PALETTE_ENTRY_SELECTOR}[data-block-name='#{block_name}']"
 
-        # Phase 1 — start the drag on the tile. The shared DataTransfer lives on
-        # `window` so it carries across the separate scripts (native dnd reuses
-        # one DataTransfer for the whole gesture).
-        page.execute_script(<<~JS, source)
-          const source = arguments[0];
-          window.__wfDragDataTransfer = new DataTransfer();
-          const rect = source.getBoundingClientRect();
-          source.dispatchEvent(
-            new DragEvent("dragstart", {
-              bubbles: true,
-              cancelable: true,
-              dataTransfer: window.__wfDragDataTransfer,
-              clientX: rect.left + rect.width / 2,
-              clientY: rect.top + rect.height / 2,
-            })
-          );
-        JS
+        target_position = nil
+        if at == :trailing
+          # Drop near the bottom edge so the collapsed stack resolves an "insert
+          # after" rather than a swap/no-op onto the occupied cell's centre.
+          box = page.driver.with_playwright_page { |pw| pw.query_selector(onto).bounding_box }
+          target_position = { x: box["width"] / 2.0, y: box["height"] * 0.85 }
+        end
 
-        # The `sleep` gaps yield to the browser between phases so PDND's
-        # frame-batched drop-target bookkeeping runs — the grid publishes its
-        # drop descriptor on dragover before the drop dispatches it.
-        sleep 0.3
-
-        # Phase 2 — move over the target so the grid resolves the drop cell from
-        # the cursor coordinates and publishes its descriptor.
-        page.execute_script(<<~JS, onto, y_fraction)
-          const [target, yFraction] = arguments;
-          const rect = target.getBoundingClientRect();
-          const clientX = rect.left + rect.width / 2;
-          const clientY = rect.top + rect.height * yFraction;
-          for (const type of ["dragenter", "dragover"]) {
-            target.dispatchEvent(
-              new DragEvent(type, {
-                bubbles: true,
-                cancelable: true,
-                dataTransfer: window.__wfDragDataTransfer,
-                clientX,
-                clientY,
-              })
-            );
-          }
-        JS
-
-        sleep 0.3
-
-        # Phase 3 — drop, then end the drag.
-        page.execute_script(<<~JS, onto, source, y_fraction)
-          const [target, source, yFraction] = arguments;
-          const rect = target.getBoundingClientRect();
-          const clientX = rect.left + rect.width / 2;
-          const clientY = rect.top + rect.height * yFraction;
-          target.dispatchEvent(
-            new DragEvent("drop", {
-              bubbles: true,
-              cancelable: true,
-              dataTransfer: window.__wfDragDataTransfer,
-              clientX,
-              clientY,
-            })
-          );
-          source.dispatchEvent(
-            new DragEvent("dragend", {
-              bubbles: true,
-              cancelable: true,
-              dataTransfer: window.__wfDragDataTransfer,
-              clientX,
-              clientY,
-            })
-          );
-          delete window.__wfDragDataTransfer;
-        JS
+        drag_and_drop(source: source, target: onto, target_position: target_position)
       end
 
       def has_block_in_cell?(block_class, column:, row:)

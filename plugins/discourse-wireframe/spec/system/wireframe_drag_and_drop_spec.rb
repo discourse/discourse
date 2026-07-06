@@ -2,18 +2,17 @@
 
 # Real-browser (Playwright) coverage for the wireframe editor's drag-and-drop.
 # This is the faithful end-to-end layer: it loads the live-rendered grid, opens
-# the editor, and performs an actual pointer drag — the only layer that would
-# have caught the `.wf-layout--grid` → `.d-block-layout--grid` regression in a
-# real browser. A broken render→editor class contract means the overlay never
-# mounts, so the grid drop target never registers and every drag below silently
-# does nothing.
+# the editor, and performs a genuine native HTML5 drag (via the shared
+# `SystemHelpers#drag_and_drop`) — the only layer that would have caught the
+# `.wf-layout--grid` → `.d-block-layout--grid` regression in a real browser. A
+# broken render→editor class contract means the overlay never mounts, so the
+# grid drop target never registers and every drag below silently does nothing.
 #
-# `drag_to` drops at the target element's centre, so the precise "between A and
-# B" seam isn't reachable here — that between-insert math is covered
-# deterministically by the JS gesture test
-# (`stack-drag-gesture-test.gjs`). This layer proves the coarser, higher-value
-# fact: in a real browser the overlay mounts and a palette block actually lands
-# in a grid cell.
+# The drop lands at (or offset within) the target's box, so the precise "between
+# A and B" seam isn't reachable here — that between-insert math is covered
+# deterministically by the JS gesture test (`stack-drag-gesture-test.gjs`). This
+# layer proves the coarser, higher-value fact: in a real browser the overlay
+# mounts and a palette block actually lands in a grid cell.
 describe "Wireframe editor drag and drop" do
   fab!(:admin)
 
@@ -53,7 +52,11 @@ describe "Wireframe editor drag and drop" do
     # stack here anyway) — it's that a drop onto an occupied region still inserts
     # a real block instead of vanishing (the regression's symptom), and A and B
     # keep their places.
-    editor.drag_palette_block("heading", onto: editor.block("wf-grid-cell-b"), at: :trailing)
+    editor.drag_palette_block(
+      "heading",
+      onto: editor.block_selector("wf-grid-cell-b"),
+      at: :trailing,
+    )
 
     expect(editor).to have_block_in_grid("d-block-heading")
     expect(editor).to have_block_in_cell("wf-grid-cell-a", column: 1, row: 1)
@@ -64,7 +67,7 @@ describe "Wireframe editor drag and drop" do
     visit("/latest")
     editor.enter
 
-    editor.drag_palette_block("heading", onto: editor.empty_cell(column: 3, row: 1))
+    editor.drag_palette_block("heading", onto: editor.empty_cell_selector(column: 3, row: 1))
 
     expect(editor).to have_block_in_cell("d-block-heading", column: 3, row: 1)
   end

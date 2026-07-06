@@ -252,6 +252,12 @@ export function registerDragAndDropTarget(element, getArgsRef) {
  * Nested targets: only the deepest accepted target receives the
  * lifecycle callbacks, so an ancestor decorated with this modifier
  * doesn't double-handle a drop the child already claimed.
+ *
+ * Testing: in JS integration tests use `simulateDrag` from
+ * `discourse/tests/helpers/ui-kit/drag-and-drop-helper`; in Ruby system
+ * tests use `SystemHelpers#drag_and_drop` (a real native drag via
+ * Playwright) rather than Capybara's `drag_to`, whose synthetic mouse
+ * events can silently stall mid-drag.
  */
 export default modifier((element, _positional, args) =>
   // Pass `args` through to the closure WITHOUT reading any property of

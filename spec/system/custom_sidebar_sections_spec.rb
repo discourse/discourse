@@ -270,9 +270,10 @@ describe "Custom sidebar sections" do
 
     sidebar.edit_custom_section("My section")
 
-    tags_link = find(".draggable[data-link-name='Sidebar Tags']")
-    latest_link = find(".draggable[data-link-name='Sidebar Latest']")
-    tags_link.drag_to(latest_link, delay: 0.4)
+    drag_and_drop(
+      source: ".draggable[data-link-name='Sidebar Tags']",
+      target: ".draggable[data-link-name='Sidebar Latest']",
+    )
     section_modal.save
     expect(section_modal).to be_closed
 

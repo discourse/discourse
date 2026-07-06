@@ -178,6 +178,12 @@ export function registerDragAndDropSource(element, getArgsRef) {
  * Adds the `is-dragging` class to the source element while a drag is
  * active so consumers can style it via
  * `app/assets/stylesheets/common/foundation/draggable.scss`.
+ *
+ * Testing: in JS integration tests use `simulateDrag` from
+ * `discourse/tests/helpers/ui-kit/drag-and-drop-helper`; in Ruby system
+ * tests use `SystemHelpers#drag_and_drop` (a real native drag via
+ * Playwright) rather than Capybara's `drag_to`, whose synthetic mouse
+ * events can silently stall mid-drag.
  */
 export default class DDragAndDropSourceModifier extends Modifier {
   #cleanup = null;

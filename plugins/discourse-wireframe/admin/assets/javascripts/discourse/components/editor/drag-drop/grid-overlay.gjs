@@ -1258,12 +1258,21 @@ export default class GridOverlay extends Component {
    * resolves to `column 1` and `#trackStart(col=3, widths)` returns
    * NaN.
    *
-   * Instead we hit-test by DOM element. `elementFromPoint` finds the
-   * visible slot chrome or empty-cell placeholder under the cursor;
-   * its `data-wf-block-key` / `data-col` / `data-row` map back to
-   * logical coordinates; cursor Y within the element's bounding rect
-   * resolves a 3-zone hit test (up / center / down — left and right
-   * don't have meaningful semantics in a vertical stack).
+   * Instead we hit-test by DOM element: the topmost element under the
+   * cursor that lives inside this grid is the slot chrome or empty-cell
+   * placeholder we're over; its `data-wf-block-key` / `data-col` /
+   * `data-row` map back to logical coordinates, and cursor Y within the
+   * element's bounding rect resolves a 3-zone hit test (up / center /
+   * down — left and right don't have meaningful semantics in a vertical
+   * stack).
+   *
+   * We walk `elementsFromPoint` (the full front-to-back stack) rather
+   * than taking the single topmost `elementFromPoint`, because a
+   * top-layer overlay can sit over the drop point during a drag — most
+   * notably PDND's `data-pdnd-honey-pot` element (a `popover` in the
+   * browser's top layer, positioned at the pointer) — and it isn't part
+   * of the grid. Taking the first entry that the grid contains sees
+   * through such overlays to the real cell underneath.
    *
    * Output is exactly the same descriptor shape as the track-math
    * path — `#publishUnified` / `#buildDispatch` and
@@ -1271,8 +1280,12 @@ export default class GridOverlay extends Component {
    * it the same way.
    */
   #descriptorFromCursorCollapsed(input, source, sourceKey) {
-    const el = document.elementFromPoint(input.clientX, input.clientY);
-    if (!el || !this.gridElement.contains(el)) {
+    // Topmost element under the cursor that belongs to this grid, skipping any
+    // top-layer overlay (e.g. PDND's honey-pot popover) that isn't part of it.
+    const el = document
+      .elementsFromPoint(input.clientX, input.clientY)
+      .find((node) => this.gridElement.contains(node));
+    if (!el) {
       return null;
     }
 
