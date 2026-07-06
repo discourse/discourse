@@ -3,8 +3,11 @@
 module Migrations
   module Converters
     module Discourse
-      class TopicUsers < Conversion::ProgressStep
-        source { reads_table "topic_users", where: "user_id > 0" }
+      class TopicUsers < Conversion::Step
+        source do
+          reads_table "topic_users", where: "user_id > 0"
+          partition_by :topic_id
+        end
 
         processor do
           def process(item)

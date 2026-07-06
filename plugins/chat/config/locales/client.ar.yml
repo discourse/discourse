@@ -293,6 +293,14 @@ ar:
         header: "رأس الدردشة"
         composer: "أداة إنشاء الدردشة"
         channels_list: "قائمة قنوات الدردشة"
+      screen_reader:
+        new_messages:
+          zero: "%{count} رسائل جديدة"
+          one: "رسالة جديدة %{count}"
+          two: "رسالتان جديدتان %{count}"
+          few: "%{count} رسائل جديدة"
+          many: "%{count} رسالة جديدة"
+          other: "%{count} رسائل جديدة"
       no_direct_message_channels: "لم تنضم إلى أي رسائل مباشرة بعد‎!"
       no_direct_message_channels_cta: "بدء محادثة"
       no_public_channels: "لم تنضم إلى أي قنوات بعد‎!"

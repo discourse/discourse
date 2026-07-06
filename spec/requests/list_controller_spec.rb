@@ -338,7 +338,7 @@ RSpec.describe ListController do
       before { topic.update!(category: subcategory) }
 
       it "returns categories and parent categories if true" do
-        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}"
 
         get "/latest.json"
 
@@ -1136,6 +1136,27 @@ RSpec.describe ListController do
             with: {
               name: "twitter:description",
               content: "This is bold and italic text",
+            },
+          )
+        end
+
+        it "escapes the description exactly once instead of double-escaping entities" do
+          amazing_category.update!(description: "<p>Tom &amp; Jerry&rsquo;s adventures</p>")
+
+          get "/c/#{amazing_category.slug}/#{amazing_category.id}"
+
+          expect(response.body).to have_tag(
+            :meta,
+            with: {
+              name: "description",
+              content: "Tom & Jerry’s adventures",
+            },
+          )
+          expect(response.body).to have_tag(
+            :meta,
+            with: {
+              property: "og:description",
+              content: "Tom & Jerry’s adventures",
             },
           )
         end

@@ -974,6 +974,7 @@ da:
         level: "Tillidsniveau"
         count: "Brugere"
         share: "Del"
+        signups: "Tilmeldinger"
       levels:
         "0": "Nye"
         "1": "Basis"

@@ -6,6 +6,7 @@ import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";
+import { caretCoordinates } from "discourse/lib/caret-position";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import escapeRegExp from "discourse/lib/escape-regexp";
@@ -189,10 +190,15 @@ export default class TextareaTextManipulation {
       }
 
       if (match) {
-        this._insertAt(match.index, match.index + match[0].length, newVal);
+        this._insertAt(
+          match.index,
+          match.index + match[0].length,
+          newVal,
+          opts
+        );
       }
     } else {
-      this._insertAt(needleStart, needleStart + oldVal.length, newVal);
+      this._insertAt(needleStart, needleStart + oldVal.length, newVal, opts);
     }
 
     if (
@@ -376,8 +382,8 @@ export default class TextareaTextManipulation {
     this.blurAndFocus();
   }
 
-  _insertAt(start, end, text) {
-    insertAtTextarea(this.textarea, start, end, text);
+  _insertAt(start, end, text, opts = {}) {
+    insertAtTextarea(this.textarea, start, end, text, opts);
   }
 
   extractTable(text) {
@@ -1015,7 +1021,19 @@ export default class TextareaTextManipulation {
   }
 }
 
-function insertAtTextarea(textarea, start, end, text) {
+function insertAtTextarea(
+  textarea,
+  start,
+  end,
+  text,
+  { skipFocus = false } = {}
+) {
+  if (skipFocus && document.activeElement !== textarea) {
+    textarea.setRangeText(text, start, end, "preserve");
+    textarea.dispatchEvent(new InputEvent("input", { bubbles: true }));
+    return;
+  }
+
   textarea.setSelectionRange(start, end);
   textarea.focus();
   if (start !== end && text === "") {
@@ -1051,8 +1069,7 @@ export class TextareaAutocompleteHandler {
   }
 
   getCaretCoords(start) {
-    // @ts-ignore
-    return this.$textarea.caretPosition({ pos: start + 1 });
+    return caretCoordinates(this.textarea, { pos: start + 1 });
   }
 
   async inCodeBlock() {

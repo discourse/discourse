@@ -3,7 +3,7 @@
 module Migrations
   # Class-level dependency metadata for migration steps. Meant to be `extend`ed
   # by a step base class (`Migrations::Importer::Step`,
-  # `Migrations::Conversion::StepBase`); subclasses inherit the macros, and the
+  # `Migrations::Conversion::Step`); subclasses inherit the macros, and the
   # resulting `dependencies` and `priority` are queryable without instantiating
   # a step. `Migrations::TopologicalSorter` consumes both to order steps.
   #

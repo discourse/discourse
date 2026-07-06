@@ -21,6 +21,7 @@ import {
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
+import { registeredComposerActions } from "discourse/select-kit/components/composer-actions";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -30,6 +31,10 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dAutoFocus from "discourse/ui-kit/modifiers/d-auto-focus";
 import { i18n } from "discourse-i18n";
+
+// Tracks registered composer actions whose `condition` has already thrown, so
+// we only log the error once per action instead of on every render.
+const warnedConditionIds = new Set();
 
 export default class ComposerActions extends Component {
   @service composer;
@@ -134,6 +139,7 @@ export default class ComposerActions extends Component {
       get(this.composerModel, "whisper");
       get(this.composerModel, "noBump");
       get(this.composerModel, "unlistTopic");
+      get(this.composerModel, "creatingEvent");
     }
 
     let iconName;
@@ -232,7 +238,10 @@ export default class ComposerActions extends Component {
       this.composerModel
     );
 
-    const composerActionItems = composerActionItemBuilder.build();
+    const composerActionItems = [
+      ...composerActionItemBuilder.build(),
+      ...this._registeredActionItems(),
+    ];
 
     return applyValueTransformer(
       "composer-actions-content",
@@ -244,6 +253,38 @@ export default class ComposerActions extends Component {
         composerModel: this.composerModel,
       }
     );
+  }
+
+  _registeredActionItems() {
+    return registeredComposerActions()
+      .filter((opts) => {
+        if (!opts.condition) {
+          return true;
+        }
+
+        // A misbehaving plugin condition must not take down the whole actions
+        // dropdown, so we hide that action and warn once, matching the legacy
+        // composer-actions component's behaviour.
+        try {
+          return !!opts.condition(this);
+        } catch (e) {
+          if (!warnedConditionIds.has(opts.id)) {
+            warnedConditionIds.add(opts.id);
+            // eslint-disable-next-line no-console
+            console.error(
+              `composer-actions: condition for "${opts.id}" threw`,
+              e
+            );
+          }
+          return false;
+        }
+      })
+      .map((opts) => ({
+        id: opts.id,
+        name: i18n(opts.label),
+        description: opts.description ? i18n(opts.description) : undefined,
+        icon: opts.icon,
+      }));
   }
 
   get hasToggles() {
@@ -365,6 +406,14 @@ export default class ComposerActions extends Component {
     );
 
     this.composerActionState.remember({ topic: this.topic, post: this.post });
+
+    const registeredAction = registeredComposerActions().find(
+      (registeredComposerAction) => registeredComposerAction.id === actionId
+    );
+    if (registeredAction) {
+      registeredAction.action(this.composerModel, this);
+      return;
+    }
 
     const handled = await this.composerActionState.selectAction(actionId, {
       options,

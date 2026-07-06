@@ -24,7 +24,7 @@ describe "Composer - Create event action" do
     expect(composer).to have_value(
       %r{\A\[event start="[^"]+" end="[^"]+" status="public" timezone="[^"]+" reminders="[^"]+"\]\n\[/event\]\z},
     )
-    expect(composer.button_label.text).to eq(
+    expect(composer.button_label).to have_text(
       I18n.t("js.discourse_post_event.composer.create_event_button"),
     )
     expect(page).to have_css(
@@ -50,7 +50,7 @@ describe "Composer - Create event action" do
     visit("/new-topic?category_id=#{regular_category.id}")
 
     expect(composer).to have_value("")
-    expect(composer.button_label.text).to eq(I18n.t("js.composer.create_topic"))
+    expect(composer.button_label).to have_text(I18n.t("js.composer.create_topic"))
   end
 
   it "lets the user switch back to a regular topic via the dropdown" do
@@ -60,10 +60,10 @@ describe "Composer - Create event action" do
       I18n.t("js.discourse_post_event.composer.create_event_button"),
     )
 
-    composer.open_composer_actions
-    composer.select_action(I18n.t("js.discourse_post_event.composer_actions.create_topic.label"))
+    composer.open_composer_actions_new
+    composer.select_action_by_id("create_regular_topic")
 
-    expect(composer.button_label.text).to eq(I18n.t("js.composer.create_topic"))
+    expect(composer.button_label).to have_text(I18n.t("js.composer.create_topic"))
     expect(composer).to have_value("")
   end
 end

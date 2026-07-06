@@ -937,6 +937,7 @@ ko:
         level: "신뢰 레벨"
         count: "회원"
         share: "공유하기"
+        signups: "가입하기"
       levels:
         "0": "신규"
         "1": "초보회원"
@@ -1767,7 +1768,6 @@ ko:
     dashboard_general_tab_activity_metrics: "일반 탭에서 활동 메트릭으로 표시할 리포트를 선택합니다."
     share_quote_buttons: "인용 공유 위젯에 표시되는 항목과 순서를 결정합니다."
     share_quote_visibility: "인용 공유 버튼을 언제 표시할지 결정합니다. 표시 안 함, 익명 사용자만, 모든 사용자 중 선택합니다. "
-    create_revision_on_bulk_topic_moves: "주제가 일괄 새 카테고리로 이동되면 첫 게시물에 대한 수정 버전을 생성합니다."
     errors:
       invalid_css_color: "유효하지 않은 색상입니다. 색상 이름 또는 16진수 값을 입력하세요."
       invalid_email: "유효하지 않은 이메일 주소입니다."

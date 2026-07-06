@@ -15,12 +15,15 @@ pl_PL:
           name: "Generator zapytań Eksploratora danych"
           description: "Generuje zapytania SQL dla Eksploratora danych z języka naturalnego"
       tool_help:
+        find_queries: "Znajduje istniejące zapytania Eksploratora danych, które mogą być przydatnymi przykładami"
         run_sql: "Uruchamia zapytanie SQL i zwraca wyniki"
         submit_query: "Przesyła ostatecznie wygenerowane zapytanie"
       tool_summary:
+        find_queries: "Znajdowanie przykładowych zapytań"
         run_sql: "Uruchamianie zapytania SQL"
         submit_query: "Wysyłanie wygenerowanego zapytania"
       tool_description:
+        find_queries: "Znaleziono przykładowe zapytania dla %{search}"
         run_sql: "Uruchomiono zapytanie SQL"
         submit_query: "Wysłano wygenerowane zapytanie %{name}"
   discourse_data_explorer:

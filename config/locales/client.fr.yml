@@ -2477,6 +2477,7 @@ fr:
       email_label: "E-mail"
       continue_button: "Continuer"
       verify_button: "Continuer"
+      signup_title: "Créer votre compte"
       account_ready_continue: "Continuer"
       username_label: "Nom d'utilisateur"
     login:

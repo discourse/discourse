@@ -630,6 +630,7 @@ sl:
       labels:
         count: "Člani"
         share: "Deli"
+        signups: "Registracije"
       levels:
         "0": "Novi"
         "1": "Osnovni uporabnik"

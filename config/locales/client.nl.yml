@@ -2664,6 +2664,7 @@ nl:
       email_label: "E-mailadres"
       continue_button: "Doorgaan"
       verify_button: "Doorgaan"
+      signup_title: "Maak je account"
       account_ready_continue: "Doorgaan"
       username_label: "Gebruikersnaam"
     login:
@@ -4420,7 +4421,6 @@ nl:
           one: "Weet je zeker dat je deze berichten wilt samenvoegen?"
           other: "Weet je zeker dat je deze %{count} berichten wilt samenvoegen?"
       revisions:
-        diff_too_complex: "De diff is te complex om weer te geven. Probeer individuele, kleinere bewerkingen weer te geven."
         locale:
           no_locale_set: "Geen taal ingesteld"
           locale_removed: "Taal verwijderd"

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "htmlentities"
+
 class ExcerptParser < Nokogiri::XML::SAX::Document
   attr_reader :excerpt
 
@@ -42,6 +44,11 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
       options[:keep_onebox_body]
     excerpt = CGI.unescapeHTML(excerpt) if options[:text_entities] == true
     excerpt
+  end
+
+  def self.to_plain_text(excerpt)
+    @html_entities ||= HTMLEntities.new
+    @html_entities.decode(excerpt.to_s.gsub(/<[^>]*>/, "")).presence
   end
 
   def escape_attribute(v)

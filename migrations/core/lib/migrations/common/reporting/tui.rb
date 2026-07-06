@@ -8,10 +8,10 @@ module Migrations
     # terminal history.
     #
     # The code that reports progress never draws anything itself. This class is a
-    # thread-safe front end: each call only adds an event to a queue. A separate
-    # thread reads the queue, updates the model, and redraws at a fixed rate. That
-    # is what lets one thread report progress while another one started the step,
-    # without the output getting mixed up.
+    # thread-safe front end: callers only hand off events. A separate thread
+    # applies them, updates the model, and redraws at a fixed rate. That lets one
+    # thread report progress while another started the step, without the output
+    # getting mixed up.
     #
     # The drawing itself is in {Renderer}. It runs on one thread only and has no
     # side effects apart from its output and clock (both can be injected), so it
@@ -20,6 +20,8 @@ module Migrations
       def initialize(fps: 10, output: $stdout, titles: [])
         super()
         @queue = Thread::Queue.new
+        @progress = {}
+        @progress_mutex = Mutex.new
         @renderer = Renderer.new(output:, titles:)
         @frame = 1.0 / fps
         @closed = false
@@ -43,12 +45,32 @@ module Migrations
         enqueue([:progress_begin, id, max_progress])
       end
 
+      def report_concurrency(id, count)
+        enqueue([:concurrency, id, count])
+      end
+
       def report_progress(id, current, skip_count, warning_count, error_count)
-        enqueue([:progress, id, current, skip_count, warning_count, error_count])
+        # Progress is coalesced, not queued: one event per row across many steps
+        # would keep the queue full and starve the repaint. Keep the latest only.
+        @progress_mutex.synchronize do
+          @progress[id] = [current, skip_count, warning_count, error_count]
+        end
       end
 
       def report_finish(id, outcome)
         enqueue([:finish, id, outcome])
+      end
+
+      def report_finalizing_begin
+        enqueue([:finalizing_begin])
+      end
+
+      def report_finalizing_end
+        enqueue([:finalizing_end])
+      end
+
+      def report_summary(runtime:, total:, failed:, skipped:)
+        enqueue([:summary, runtime, total, failed, skipped])
       end
 
       def close
@@ -94,10 +116,21 @@ module Migrations
         loop do
           frame_started_at = monotonic
           break if drain_until_close
+          apply_coalesced_progress
           @renderer.consume_resize
           @renderer.repaint
           sleep_rest_of_frame(frame_started_at)
         end
+      end
+
+      def apply_coalesced_progress
+        snapshot = @progress_mutex.synchronize { @progress.dup }
+        snapshot.each { |id, values| @renderer.apply([:progress, id, *values]) }
+      end
+
+      def flush_progress(id)
+        values = @progress_mutex.synchronize { @progress.delete(id) }
+        @renderer.apply([:progress, id, *values]) if values
       end
 
       # Sleeps for whatever is left of this frame's time, so repaints happen at a
@@ -108,9 +141,13 @@ module Migrations
       end
 
       def drain_until_close
-        until @queue.empty?
+        # Drain only what's already queued; events arriving while we drain wait
+        # for the next frame, so a burst can't keep the loop here and starve the
+        # repaint.
+        @queue.size.times do
           event = @queue.pop(true)
           return true if event[0] == :close
+          flush_progress(event[1]) if event[0] == :finish
           @renderer.apply(event)
         end
         false

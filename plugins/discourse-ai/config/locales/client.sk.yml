@@ -387,6 +387,12 @@ sk:
         temperature_help: "Teplota, ktorá sa má použiť pre LLM. Zvýšte pre zvýšenie kreativity (nechajte prázdne pre použitie predvolenej hodnoty modelu, zvyčajne hodnoty od 0,0 do 2,0)"
         top_p: "Top P"
         top_p_help: "Top P použiť pre LLM, zvýšiť pre zvýšenie náhodnosti (nechať prázdne pre použitie predvoleného modelu, zvyčajne hodnota od 0,0 do 1,0)"
+        thinking_effort_options:
+          none: "Žiadny"
+          low: "Nízka"
+          medium: "Stredná"
+          high: "Vysoká"
+          max: "Max"
         priority: "Priorita"
         tool_options: "Možnosti nástroja"
         rag_conversation_chunks: "Vyhľadávanie v častiach konverzácie"
@@ -624,11 +630,6 @@ sk:
         description: "Vyberte jednu z nasledujúcich možností a AI vám navrhne novú verziu textu."
         selection_hint: "Tip: Pred otvorením pomocníka môžete tiež vybrať časť textu a prepísať iba túto časť."
         suggest_errors:
-          too_many_tags:
-            one: "Môžete mať iba %{count} štítok"
-            few: "Môžete mať maximálne %{count} štítkov"
-            many: "Môžete mať maximálne %{count} štítkov"
-            other: "Môžete mať maximálne %{count} štítky"
           no_suggestions: "Nie sú k dispozícii žiadne návrhy"
         missing_content: "Zadajte nejaký obsah na generovanie návrhov."
         context_menu:

@@ -175,6 +175,7 @@ after_initialize do
   require_relative "jobs/regular/discourse_post_event/bump_topic"
   require_relative "jobs/regular/discourse_post_event/send_reminder"
   require_relative "jobs/regular/discourse_post_event/warm_livestream_onebox"
+  require_relative "lib/discourse_post_event/email_renderer"
   require_relative "lib/discourse_post_event/engine"
   require_relative "lib/discourse_post_event/event_finder"
   require_relative "lib/discourse_post_event/event_parser"
@@ -182,6 +183,7 @@ after_initialize do
   require_relative "lib/discourse_post_event/export_csv_controller_extension"
   require_relative "lib/discourse_post_event/export_csv_file_extension"
   require_relative "lib/discourse_post_event/post_extension"
+  require_relative "lib/discourse_post_event/topic_extension"
   require_relative "lib/discourse_post_event/rrule_generator"
   require_relative "lib/discourse_post_event/rrule_configurator"
   require_relative "lib/discourse_post_event/web_hook_extension"
@@ -222,6 +224,7 @@ after_initialize do
     Jobs::ExportCsvFile.prepend(DiscoursePostEvent::ExportPostEventCsvReportExtension)
     Post.prepend(DiscoursePostEvent::PostExtension)
     ::WebHook.prepend(DiscoursePostEvent::WebHookExtension)
+    Topic.prepend(DiscoursePostEvent::TopicExtension)
     Topic.prepend(DiscourseCalendar::Livestream::TopicExtension)
     Chat::Channel.prepend(DiscourseCalendar::Livestream::ChatChannelExtension)
   end
@@ -649,73 +652,12 @@ after_initialize do
       fragment
         .css(".discourse-post-event")
         .each do |event_node|
-          tz = event_node["data-timezone"] || "UTC"
-          starts_at = event_node["data-start"]
-          ends_at = event_node["data-end"]
-
-          formatted_start =
-            begin
-              DateTime.parse(starts_at).strftime("%B %-d, %Y %-I:%M %p")
-            rescue StandardError
-              starts_at
-            end
-          dates = "#{formatted_start} (#{tz})"
-
-          if ends_at
-            formatted_end =
-              begin
-                DateTime.parse(ends_at).strftime("%B %-d, %Y %-I:%M %p")
-              rescue StandardError
-                ends_at
-              end
-            dates = "#{dates} → #{formatted_end} (#{tz})"
-          end
-
-          event_name = event_node["data-name"] || post.topic.title
-          location = event_node["data-location"]
-          url = event_node["data-url"]
-
-          event = DiscoursePostEvent::Event.includes(:image_upload).find_by(id: post.id)
-          image_url = UrlHelper.absolute(event.image_upload.url) if event&.image_upload_id
-
-          rows = +""
-
-          rows << <<~HTML if image_url.present?
-            <tr>
-              <td style="padding: 0;">
-                <img src="#{CGI.escape_html(image_url)}" style="width: 100%; max-height: 400px; object-fit: cover; display: block;" />
-              </td>
-            </tr>
-          HTML
-
-          rows << <<~HTML
-            <tr>
-              <td style="padding: 12px;">
-                <a href="#{Discourse.base_url}#{post.url}" style="font-weight: bold; font-size: 1.1em;">#{CGI.escape_html(event_name)}</a>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding: 0 12px 12px; color: #666;">#{CGI.escape_html(dates)}</td>
-            </tr>
-          HTML
-
-          rows << <<~HTML if location.present?
-              <tr>
-                <td style="padding: 0 12px 12px; color: #666;">#{CGI.escape_html(location)}</td>
-              </tr>
-            HTML
-
-          rows << <<~HTML if url.present?
-              <tr>
-                <td style="padding: 0 12px 12px;"><a href="#{CGI.escape_html(url)}">#{CGI.escape_html(url)}</a></td>
-              </tr>
-            HTML
-
-          event_node.replace <<~HTML
-            <table cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #dedede; margin-bottom: 10px; width: 100%;">
-              #{rows}
-            </table>
-          HTML
+          event_node.replace(DiscoursePostEvent::EmailRenderer.render(event_node, post))
+        rescue => e
+          Discourse.warn_exception(
+            e,
+            message: "Failed to render event in email for post #{post&.id}",
+          )
         end
     end
   end

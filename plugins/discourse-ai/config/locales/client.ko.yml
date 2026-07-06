@@ -115,6 +115,12 @@ ko:
         enabled: "활성화?"
         allowed_groups: "허용 된 그룹"
         delete: "삭제"
+        thinking_effort_options:
+          none: "없음"
+          low: "낮음"
+          medium: "중간"
+          high: "높음"
+          max: "최대"
         response_format:
           open_modal: "편집"
           modal:

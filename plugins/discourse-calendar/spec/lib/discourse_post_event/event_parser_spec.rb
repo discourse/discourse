@@ -165,6 +165,15 @@ describe DiscoursePostEvent::EventParser do
         'See <a href="https://example.com">https://example.com</a>',
       )
     end
+
+    it "does not leak markup out of the generated href when a url is followed by html" do
+      result = parser.linkify_description('http://example.com/"><script>alert(1)</script>')
+
+      doc = Nokogiri::HTML5.fragment(result)
+      expect(doc.css("script")).to be_empty
+      expect(doc.at_css("a")["href"]).to eq("http://example.com/")
+      expect(result).not_to include("<script>")
+    end
   end
 
   context "with custom fields" do

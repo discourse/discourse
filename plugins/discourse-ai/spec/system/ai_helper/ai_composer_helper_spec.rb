@@ -303,43 +303,114 @@ RSpec.describe "AI Composer helper" do
     end
   end
 
-  context "when suggesting the tags with AI tag suggester" do
+  context "when suggesting a category inline when editing a topic" do
+    let(:edit_category_chooser) do
+      PageObjects::Components::SelectKit.new(".edit-category__wrapper .category-chooser")
+    end
+
     before do
       SiteSetting.ai_embeddings_selected_model = embedding_definition.id
       SiteSetting.ai_embeddings_enabled = true
+      stub_request(:post, embedding_definition.url).to_return(
+        status: 200,
+        body: JSON.dump([[0.0038493] * embedding_definition.dimensions]),
+      )
     end
 
-    it "does not suggest tags that already exist" do
+    it "applies the best suggestion and closes the dropdown" do
+      response = [
+        {
+          id: category_2.id,
+          name: category_2.name,
+          slug: category_2.slug,
+          color: category_2.color,
+          topicCount: 1,
+          score: 1.0,
+        },
+      ]
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:categories).returns(response)
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+
+      edit_category_chooser.expand
+      edit_category_chooser.select_row_by_value("ai-category-suggest")
+
+      expect(edit_category_chooser).to have_selected_name(category_2.name)
+      expect(page).to have_no_css(".edit-category__wrapper .category-chooser.is-expanded")
+    end
+
+    it "does not offer a suggestion when embeddings are disabled" do
+      SiteSetting.ai_embeddings_enabled = false
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+
+      edit_category_chooser.expand
+
+      expect(page).to have_no_css(
+        ".edit-category__wrapper .category-chooser .select-kit-row[data-value='ai-category-suggest']",
+      )
+    end
+  end
+
+  context "when suggesting tags inline when editing a topic" do
+    let(:edit_tag_chooser) do
+      PageObjects::Components::SelectKit.new(".edit-tags__wrapper .mini-tag-chooser")
+    end
+
+    before do
+      SiteSetting.ai_embeddings_selected_model = embedding_definition.id
+      SiteSetting.ai_embeddings_enabled = true
+      stub_request(:post, embedding_definition.url).to_return(
+        status: 200,
+        body: JSON.dump([[0.0038493] * embedding_definition.dimensions]),
+      )
+    end
+
+    it "does not suggest tags that are already on the topic" do
       response =
-        Tag
-          .take(7)
-          .map { |t| { id: t.id, name: t.name, score: rand(0.0...45.0) } }
-          .sort_by { |h| h[:score] }
+        [cloud, feedback, review, video, music].map { |t| { id: t.id, name: t.name, count: 1 } }
       DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
 
       topic_page.visit_topic(topic)
       page.find(".edit-topic", visible: false).click
-      page.find(".ai-tag-suggester-trigger").click
-      tag1_css = ".ai-suggestions-menu button[data-name='#{video.name}']"
-      tag2_css = ".ai-suggestions-menu button[data-name='#{music.name}']"
 
-      expect(page).to have_no_css(tag1_css)
-      expect(page).to have_no_css(tag2_css)
+      edit_tag_chooser.expand
+      edit_tag_chooser.select_row_by_value("ai-tag-suggest")
+
+      expect(edit_tag_chooser).to have_option_name(cloud.name)
+      expect(edit_tag_chooser).to have_no_option_name(video.name)
+      expect(edit_tag_chooser).to have_no_option_name(music.name)
     end
 
-    it "shows filtered suggestions when topic already has tags" do
-      response =
-        [cloud, feedback, review, video, music].map { |t| { id: t.id, name: t.name, score: 1.0 } }
+    it "applies a suggested tag and stops offering it once added" do
+      response = [cloud, feedback].map { |t| { id: t.id, name: t.name, count: 1 } }
       DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
 
       topic_page.visit_topic(topic)
       page.find(".edit-topic", visible: false).click
-      page.find(".ai-tag-suggester-trigger").click
 
-      wait_for { ai_suggestion_dropdown.has_dropdown? }
+      edit_tag_chooser.expand
+      edit_tag_chooser.select_row_by_value("ai-tag-suggest")
+      edit_tag_chooser.select_row_by_name(cloud.name)
 
-      expect(page).to have_no_css(".ai-suggestions-menu button[data-name='#{video.name}']")
-      expect(page).to have_no_css(".ai-suggestions-menu button[data-name='#{music.name}']")
+      expect(edit_tag_chooser).to have_selected_choice_name(cloud.name)
+      expect(edit_tag_chooser).to have_no_option_name(cloud.name)
+      expect(edit_tag_chooser).to have_option_name(feedback.name)
+    end
+
+    it "does not offer a suggestion when embeddings are disabled" do
+      SiteSetting.ai_embeddings_enabled = false
+
+      topic_page.visit_topic(topic)
+      page.find(".edit-topic", visible: false).click
+
+      edit_tag_chooser.expand
+
+      expect(page).to have_no_css(
+        ".edit-tags__wrapper .mini-tag-chooser .select-kit-row[data-value='ai-tag-suggest']",
+      )
     end
   end
 

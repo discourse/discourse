@@ -49,17 +49,7 @@ export default class PollComponent extends Component {
   @tracked preloadedVoters = this.defaultPreloadedVoters();
   @tracked voterListExpanded = false;
 
-  @tracked vote = this.args.post.polls_votes?.[this.args.poll.name] || [];
-  @tracked hasSavedVote = this.vote.length > 0;
-
-  @tracked
-  showResults =
-    !(this.poll.results === ON_CLOSE && !this.closed) &&
-    !(this.staffOnly && !this.isStaff) &&
-    (this.hasSavedVote ||
-      (this.topicArchived && !this.staffOnly) ||
-      (this.closed && !this.staffOnly));
-
+  @tracked hasSavedVote = this.savedVote.length > 0;
   @tracked showTally = false;
 
   registerPollButtons = (element) => {
@@ -79,7 +69,6 @@ export default class PollComponent extends Component {
 
     return userGroups && pollGroups.some((g) => userGroups.includes(g));
   };
-
   areRanksValid = (arr) => {
     let ranks = new Set(); // Using a Set to keep track of unique ranks
     let hasNonZeroDuplicate = false;
@@ -100,6 +89,9 @@ export default class PollComponent extends Component {
 
     return !hasNonZeroDuplicate && !allZeros;
   };
+  @tracked _vote = this.initialVote();
+
+  @tracked _showResults = this.initialShowResults();
 
   _toggleOption = (option, rank = 0) => {
     if (this.isMultiple) {
@@ -133,6 +125,67 @@ export default class PollComponent extends Component {
 
     this.vote = [...this.vote];
   };
+
+  get showResults() {
+    return this._showResults;
+  }
+
+  set showResults(value) {
+    this._showResults = value;
+    this.poll.showResultsToggle = value;
+  }
+
+  get resultsVisibilityAllowed() {
+    return (
+      !(this.poll.results === ON_CLOSE && !this.closed) &&
+      !(this.staffOnly && !this.isStaff)
+    );
+  }
+
+  get resultsToggleAllowed() {
+    return !this.hideResultsDisabled && this.resultsVisibilityAllowed;
+  }
+
+  initialShowResults() {
+    if (
+      this.poll.showResultsToggle !== undefined &&
+      this.resultsToggleAllowed
+    ) {
+      return this.poll.showResultsToggle;
+    }
+
+    return (
+      this.resultsVisibilityAllowed &&
+      (this.hasSavedVote || this.hideResultsDisabled)
+    );
+  }
+
+  get vote() {
+    return this._vote;
+  }
+
+  set vote(value) {
+    this._vote = value;
+    this.poll.inProgressVote = value;
+  }
+
+  initialVote() {
+    if (this.poll.inProgressVote !== undefined) {
+      return this.copyVote(this.poll.inProgressVote);
+    }
+
+    return this.savedVote;
+  }
+
+  get savedVote() {
+    return this.copyVote(this.args.post.polls_votes?.[this.poll.name] || []);
+  }
+
+  copyVote(votes) {
+    return this.isRankedChoice
+      ? votes.map((vote) => ({ ...vote }))
+      : [...votes];
+  }
 
   get poll() {
     return this.args.poll;
@@ -236,7 +289,8 @@ export default class PollComponent extends Component {
       if (!this.args.post.polls_votes) {
         this.args.post.polls_votes = trackedObject();
       }
-      this.args.post.polls_votes[this.poll.name] = this.vote;
+      this.args.post.polls_votes[this.poll.name] = this.copyVote(this.vote);
+      this.poll.inProgressVote = undefined;
       Object.assign(this.poll, poll);
 
       this.appEvents.trigger("poll:voted", poll, this.post, this.vote);
@@ -612,6 +666,7 @@ export default class PollComponent extends Component {
         if (this.args.post.polls_votes) {
           delete this.args.post.polls_votes[this.poll.name];
         }
+        this.poll.inProgressVote = undefined;
         this.appEvents.trigger("poll:voted", poll, this.post, this.vote);
         this.showResults = false;
       })

@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class GroupUsers < Conversion::ProgressStep
+      class GroupUsers < Conversion::Step
         source do
           # Skip the automatic Trust Level groups.
           reads_table "group_users", where: "group_id NOT IN (10, 11, 12, 13, 14) AND user_id > 0"

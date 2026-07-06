@@ -26,6 +26,26 @@ module Migrations
         StepHandle.new(self, id)
       end
 
+      # Shows a transient "finishing up" status while the block runs, then clears
+      # it. Used for the tail of a run where every step is done but background work
+      # (merging shards) is still finishing, so the display doesn't just sit at
+      # 100%. Returns the block's value.
+      def finalizing
+        report_finalizing_begin
+        yield
+      ensure
+        report_finalizing_end
+      end
+
+      # Prints the end-of-run summary line: the total runtime and how many steps
+      # ran (with any that failed or were skipped).
+      # @param runtime [Float] the run's wall-clock seconds
+      # @param total [Integer] how many steps the run had
+      # @param failed [Integer] how many failed
+      # @param skipped [Integer] how many were skipped because a dependency failed
+      def report_summary(runtime:, total:, failed:, skipped:)
+      end
+
       # The run is over and nothing else will be reported. Free anything held
       # here. Called once per run, also when the run fails.
       def close
@@ -47,6 +67,10 @@ module Migrations
         raise NotImplementedError
       end
 
+      def report_concurrency(_id, _count)
+        raise NotImplementedError
+      end
+
       def report_progress(_id, _current, _skip_count, _warning_count, _error_count)
         raise NotImplementedError
       end
@@ -54,6 +78,13 @@ module Migrations
       # `outcome` is `:done`, `:interrupted`, or `:failed`.
       def report_finish(_id, _outcome)
         raise NotImplementedError
+      end
+
+      # Show and clear the transient "finishing up" status; `finalizing` wraps them.
+      def report_finalizing_begin
+      end
+
+      def report_finalizing_end
       end
 
       # A handle for one step. It holds the step's id, so everything it reports
@@ -68,11 +99,19 @@ module Migrations
           @reporter.report_notice(@id, message)
         end
 
+        def report_concurrency(count)
+          @reporter.report_concurrency(@id, count)
+        end
+
+        def begin_progress(max_progress:)
+          @reporter.report_progress_begin(@id, max_progress)
+          Progress.new(@reporter, @id)
+        end
+
         # Yields a {Progress}. You may call its `update` from any thread. Pass
         # `max_progress: nil` when the total is not known.
         def with_progress(max_progress:)
-          @reporter.report_progress_begin(@id, max_progress)
-          yield Progress.new(@reporter, @id)
+          yield begin_progress(max_progress:)
         end
 
         # Ends the step. It runs from an `ensure`, so `$!` (the exception in

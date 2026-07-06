@@ -142,6 +142,11 @@ id:
         delete: "Hapus"
         temperature: "Temperatur"
         top_p: "Top P"
+        thinking_effort_options:
+          none: "Tidak ada"
+          low: "Rendah"
+          medium: "Sedang"
+          high: "Tinggi"
         response_format:
           open_modal: "Ubah"
         filters:

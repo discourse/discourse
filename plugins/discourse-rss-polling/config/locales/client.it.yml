@@ -15,13 +15,18 @@ it:
       title: Polling RSS
     admin:
       rss_polling:
-        feed: Impostazioni feed
-        discourse: Impostazioni di Discourse
         author: Autore
         feed_url: URL
         discourse_category: Categoria
         discourse_tags: Etichette
-        feed_category_filter: Filtro categoria
-        documentation: Documentazione sulla configurazione del polling RSS
-        destroy_feed:
-          confirm: "Vuoi davvero eliminare questo feed?"
+        feeds:
+          edit: Modifica
+          delete: Elimina
+          save: Salva
+          confirm_delete: "Vuoi davvero eliminare questo feed?"
+        test:
+          title: Anteprima
+          dismiss: Ignora
+        status:
+          enabled: Abilitato
+          disabled: Disabilitati

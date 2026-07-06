@@ -2158,6 +2158,7 @@ da:
       email_label: "E-mail"
       continue_button: "Fortsæt"
       verify_button: "Fortsæt"
+      signup_title: "Opret din konto"
       account_ready_continue: "Fortsæt"
       username_label: "Brugernavn"
     login:

@@ -96,6 +96,12 @@ sr:
         enabled: "Omgućeno"
         allowed_groups: "Dozvoljene grupe"
         delete: "Obriši"
+        thinking_effort_options:
+          none: "Ništa"
+          low: "Manji"
+          medium: "Srednje"
+          high: "Visoko"
+          max: "Maksimalno"
         response_format:
           open_modal: "Izmeni"
         filters:

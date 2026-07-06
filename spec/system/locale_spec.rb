@@ -122,6 +122,10 @@ RSpec.describe "Locale choice" do
         value: "{ count, plural, one {返信 # 件、} other {返信 # 件、} }",
       )
       overriden_translation_zh_tw.update_columns(value: "{ count, plural, ")
+
+      # update_columns skips the model layer, so burst the bundle digest cache
+      # like TranslationOverride.upsert! would have.
+      ExtraLocalesController.clear_cache!
     end
 
     it "works for english" do

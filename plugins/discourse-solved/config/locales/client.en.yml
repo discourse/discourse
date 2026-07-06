@@ -64,6 +64,8 @@ en:
         label_with_count: "%{label} (%{count})"
         title: "I am also experiencing this issue"
         author_title: "You started this topic"
+        closed_title: "This topic is closed"
+        archived_title: "This topic is archived"
 
       no_answer:
         title: Has your question been answered?

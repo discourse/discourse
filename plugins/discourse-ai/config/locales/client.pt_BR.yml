@@ -507,6 +507,12 @@ pt_BR:
         temperature_help: "A Temperatura a ser usada para o LLM. Aumente para incrementar a criatividade (deixe vazio para usar o padrão do modelo, que geralmente é um valor que varia entre 0,0 e 2,0)"
         top_p: "P Máximo"
         top_p_help: "O P Máximo a ser usado para o LLM, aumente para incrementar o fator aleatório (deixe vazio para usar o padrão do modelo, que geralmente é um valor que varia entre 0.0 e 1.0)"
+        thinking_effort_options:
+          none: "Nenhum"
+          low: "Baixo(a)"
+          medium: "Médio(a)"
+          high: "Alto(a)"
+          max: "Máx"
         priority: "Prioridade"
         tool_options: "Opções de ferramenta"
         rag_conversation_chunks: "Pesquisar pedaços de conversa"
@@ -782,9 +788,6 @@ pt_BR:
         description: "Escolha uma das opções abaixo, e a IA vai sugerir uma nova versão do texto."
         selection_hint: "Dica: antes de abrir o ajudante, você pode selecionar uma parte do texto para reescrever apenas ela."
         suggest_errors:
-          too_many_tags:
-            one: "Você pode ter até %{count} etiqueta"
-            other: "Você pode ter até %{count} etiquetas"
           no_suggestions: "Sem sugestões disponíveis"
         missing_content: "Insira conteúdo para gerar sugestões."
         context_menu:

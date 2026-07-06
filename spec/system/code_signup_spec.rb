@@ -59,6 +59,34 @@ describe "Sign up via email code" do
     expect(user.user_password).to be_nil
   end
 
+  it "shows a single heading that is replaced as the flow advances" do
+    visit("/signup")
+
+    expect(page).to have_css(".code-login-form__email-step")
+    expect(page).to have_css(".login-welcome-header", count: 1)
+    expect(page).to have_css(".login-title", text: I18n.t("js.code_login.signup_title"))
+    expect(page).to have_no_css(".login-subheader")
+    expect(page).to have_no_css(".code-login-form__title")
+    expect(page).to have_css(
+      ".code-login-form__instructions",
+      text: I18n.t("js.code_login.signup_instructions"),
+    )
+
+    submit_email("new.person@example.com")
+
+    expect(page).to have_css(".code-login-form__code-step")
+    expect(page).to have_css(".login-welcome-header", count: 1)
+    expect(page).to have_css(".login-title", text: I18n.t("js.code_login.check_your_email"))
+    expect(page).to have_no_css(".code-login-form__title")
+
+    fill_code(latest_emailed_code("new.person@example.com"))
+
+    expect(page).to have_css(".code-login-form__complete-step")
+    expect(page).to have_css(".login-welcome-header", count: 1)
+    expect(page).to have_css(".login-title", text: I18n.t("js.code_login.account_ready_title"))
+    expect(page).to have_no_css(".code-login-form__title")
+  end
+
   it "blocks continuing while the picked username is taken" do
     Fabricate(:user, username: "takenname")
 

@@ -99,4 +99,41 @@ module("Integration | Component | CodeLoginForm", function (hooks) {
     assert.dom(".code-login-form__email-step").exists();
     assert.form().field("email").hasValue("user@example.com");
   });
+
+  test("signup context shows a single step-aware heading that is replaced, not stacked", async function (assert) {
+    stubCodeRequest();
+
+    await render(<template><CodeLoginForm @context="signup" /></template>);
+
+    assert.dom(".login-welcome-header").exists({ count: 1 });
+    assert.dom(".login-title").hasText(i18n("code_login.signup_title"));
+    assert.dom(".login-subheader").doesNotExist();
+    assert.dom(".code-login-form__title").doesNotExist();
+    assert
+      .dom(".code-login-form__instructions")
+      .hasText(i18n("code_login.signup_instructions"));
+
+    await fillIn(
+      ".code-login-form__email-step .form-kit__control-input",
+      "user@example.com"
+    );
+    await formKit().submit();
+
+    assert.dom(".code-login-form__code-step").exists();
+    assert.dom(".login-welcome-header").exists({ count: 1 });
+    assert.dom(".login-title").hasText(i18n("code_login.check_your_email"));
+    assert.dom(".login-subheader").includesText("user@example.com");
+    assert.dom(".code-login-form__title").doesNotExist();
+  });
+
+  test("login context keeps the inline step heading and adds no page header", async function (assert) {
+    stubCodeRequest();
+
+    await goToCodeStep();
+
+    assert.dom(".login-welcome-header").doesNotExist();
+    assert
+      .dom(".code-login-form__title")
+      .hasText(i18n("code_login.check_your_email"));
+  });
 });

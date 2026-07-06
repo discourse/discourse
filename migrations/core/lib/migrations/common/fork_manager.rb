@@ -1,78 +1,104 @@
 # frozen_string_literal: true
 
 module Migrations
+  # The fork hooks for a run. `before_fork` and `after_fork_parent` run around a
+  # fork, so a connection can close before it and reopen after. `after_fork_child`
+  # runs in the new child, e.g. to drop a connection it inherited.
+  #
+  # Steps add and remove hooks from several threads at once, so a mutex guards the
+  # hook lists. A fork copies the child hooks under that mutex, so the child always
+  # runs a consistent list.
   module ForkManager
     @before_fork_hooks = []
     @after_fork_parent_hooks = []
     @after_fork_child_hooks = []
     @execute_parent_forks = true
+    @mutex = Mutex.new
 
     class << self
       def with_batched_forks
         @execute_parent_forks = false
-        run_before_fork_hooks
+        @mutex.synchronize { run_before_fork_hooks }
 
-        yield
-
-        run_after_fork_parent_hooks
-        @execute_parent_forks = true
+        # Always run the after-fork hooks and reset the flag, even if forking
+        # raises (e.g. `Errno::EAGAIN`/`ENOMEM` under fork pressure). Otherwise the
+        # before-fork hooks' effects — a locked writer mutex, a closed run
+        # connection — would never be undone and the run would hang instead of
+        # failing the step.
+        begin
+          yield
+        ensure
+          @mutex.synchronize { run_after_fork_parent_hooks }
+          @execute_parent_forks = true
+        end
       end
 
       def before_fork(&block)
-        if block
-          @before_fork_hooks << block
-          block
-        end
+        return unless block
+        @mutex.synchronize { @before_fork_hooks << block }
+        block
       end
 
       def remove_before_fork(block)
-        @before_fork_hooks.delete(block)
+        @mutex.synchronize { @before_fork_hooks.delete(block) }
       end
 
       def after_fork_parent(&block)
-        if block
-          @after_fork_parent_hooks << block
-          block
-        end
+        return unless block
+        @mutex.synchronize { @after_fork_parent_hooks << block }
+        block
       end
 
       def remove_after_fork_parent(block)
-        @after_fork_parent_hooks.delete(block)
+        @mutex.synchronize { @after_fork_parent_hooks.delete(block) }
       end
 
       def after_fork_child(&block)
-        if block
-          @after_fork_child_hooks << block
-          block
-        end
+        return unless block
+        @mutex.synchronize { @after_fork_child_hooks << block }
+        block
       end
 
       def remove_after_fork_child(block)
-        @after_fork_child_hooks.delete(block)
+        @mutex.synchronize { @after_fork_child_hooks.delete(block) }
       end
 
       def fork
-        run_before_fork_hooks if @execute_parent_forks
+        # Snapshot the child hooks under the lock for a consistent list, but fork
+        # outside it so the child can't inherit the mutex held.
+        child_hooks =
+          if @execute_parent_forks
+            @mutex.synchronize do
+              run_before_fork_hooks
+              @after_fork_child_hooks.dup
+            end
+          else
+            @mutex.synchronize { @after_fork_child_hooks.dup }
+          end
 
         pid =
           Process.fork do
-            run_after_fork_child_hooks
+            child_hooks.each(&:call)
             yield
           end
 
-        run_after_fork_parent_hooks if @execute_parent_forks
+        @mutex.synchronize { run_after_fork_parent_hooks } if @execute_parent_forks
 
         pid
       end
 
       def hook_count
-        @before_fork_hooks.size + @after_fork_parent_hooks.size + @after_fork_child_hooks.size
+        @mutex.synchronize do
+          @before_fork_hooks.size + @after_fork_parent_hooks.size + @after_fork_child_hooks.size
+        end
       end
 
       def clear!
-        @before_fork_hooks.clear
-        @after_fork_parent_hooks.clear
-        @after_fork_child_hooks.clear
+        @mutex.synchronize do
+          @before_fork_hooks.clear
+          @after_fork_parent_hooks.clear
+          @after_fork_child_hooks.clear
+        end
       end
 
       private
@@ -83,10 +109,6 @@ module Migrations
 
       def run_after_fork_parent_hooks
         @after_fork_parent_hooks.each(&:call)
-      end
-
-      def run_after_fork_child_hooks
-        @after_fork_child_hooks.each(&:call)
       end
     end
   end

@@ -2208,6 +2208,7 @@ lt:
       email_label: "Epaštas"
       continue_button: "Tęsti"
       verify_button: "Tęsti"
+      signup_title: "Sukurti naują paskyrą"
       account_ready_continue: "Tęsti"
       username_label: "Naudotojo vardas"
     login:

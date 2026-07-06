@@ -15,13 +15,18 @@ fr:
       title: Sondage RSS
     admin:
       rss_polling:
-        feed: Paramètres du flux
-        discourse: Paramètres Discourse
         author: Auteur
         feed_url: URL
         discourse_category: Catégorie
         discourse_tags: Étiquettes
-        feed_category_filter: Filtre de catégorie
-        documentation: Documentation de configuration du sondage RSS
-        destroy_feed:
-          confirm: "Voulez-vous vraiment supprimer ce flux ?"
+        feeds:
+          edit: Modifier
+          delete: Supprimer
+          save: Enregistrer
+          confirm_delete: "Voulez-vous vraiment supprimer ce flux ?"
+        test:
+          title: Aperçu
+          dismiss: Rejeter
+        status:
+          enabled: Activé
+          disabled: Désactivée

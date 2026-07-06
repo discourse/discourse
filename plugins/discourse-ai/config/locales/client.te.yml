@@ -89,6 +89,11 @@ te:
         save: "సేవ్ చేయండి"
         enabled: "ప్రారంభించబడిందా?"
         delete: "తొలగించండి"
+        thinking_effort_options:
+          none: "ఏదీ లేదు"
+          low: "తక్కువ"
+          medium: "మధ్యస్థం"
+          high: "అధిక"
         response_format:
           open_modal: "సవరించండి"
           modal:

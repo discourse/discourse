@@ -32,7 +32,7 @@ RSpec.describe UserActionsController do
       end
 
       it "returns categories when lazy load categories is enabled" do
-        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}"
         user_actions
         expect(response.status).to eq(200)
         category_ids = response.parsed_body["categories"].map { |category| category["id"] }

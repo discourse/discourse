@@ -96,6 +96,12 @@ zh_TW:
         mcp_tools_modal:
           clear_all: "清除全部"
         delete: "刪除"
+        thinking_effort_options:
+          none: "無"
+          low: "低"
+          medium: "中間的"
+          high: "高"
+          max: "最大"
         response_format:
           open_modal: "編輯"
           modal:

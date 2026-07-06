@@ -222,6 +222,20 @@ RSpec.describe DiscourseWorkflows::EventListener do
     expect(enqueued_trigger_node_ids).not_to include("first-post-only")
   end
 
+  it "enqueues user search workflows with the query" do
+    create_published_workflow("user-search-trigger", "trigger:user_search")
+
+    Search.execute("workflow query", guardian: Guardian.new(user), search_type: :header)
+
+    job = Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last
+    expect(job["args"].first).to include(
+      "trigger_node_id" => "user-search-trigger",
+      "trigger_data" => {
+        "query" => "workflow query",
+      },
+    )
+  end
+
   it "does not query the dependencies table when no live workflow uses the fired trigger type" do
     create_published_workflow("closed-trigger", "trigger:topic_closed")
     DiscourseWorkflows::WorkflowDependency.active_node_types # warm the cache
@@ -235,6 +249,30 @@ RSpec.describe DiscourseWorkflows::EventListener do
       queries.select { |sql| sql.include?("discourse_workflows_workflow_dependencies") }
     expect(dependency_queries).to be_empty
     expect(enqueued_trigger_node_ids).to be_empty
+  end
+
+  it "does not query workflow tables for a cached user search trigger" do
+    create_published_workflow("user-search-trigger", "trigger:user_search")
+    DiscourseWorkflows::WorkflowDependency.active_node_types
+    DiscourseWorkflows::WorkflowDependency.cached_published_triggers("trigger:user_search")
+
+    queries =
+      track_sql_queries do
+        Search.execute("workflow query", guardian: Guardian.new(user), search_type: :header)
+      end
+
+    workflow_queries =
+      queries.select do |sql|
+        sql.match?(
+          /
+            discourse_workflows_workflow_dependencies|
+            discourse_workflows_workflow_versions|
+            discourse_workflows_workflows
+          /x,
+        )
+      end
+    expect(workflow_queries).to be_empty
+    expect(enqueued_trigger_node_ids).to contain_exactly("user-search-trigger")
   end
 
   def create_published_workflow(trigger_node_id, trigger_type, configuration: {})

@@ -85,7 +85,7 @@ class TopicConverter
   private
 
   def revise_opts
-    { bypass_bump: @silent, skip_revision: @silent, silent: @silent }
+    { bypass_bump: @silent, silent: @silent, hidden: true }
   end
 
   def posters

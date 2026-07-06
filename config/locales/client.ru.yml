@@ -2915,6 +2915,7 @@ ru:
       email_label: "Эл. почта"
       continue_button: "Продолжить"
       verify_button: "Продолжить"
+      signup_title: "Создать аккаунт"
       account_ready_continue: "Продолжить"
       username_label: "Псевдоним"
     login:
@@ -4753,7 +4754,6 @@ ru:
           many: "Действительно объединить %{count} сообщений?"
           other: "Действительно объединить %{count} сообщения?"
       revisions:
-        diff_too_complex: "Различия слишком сложны для отображения. Пожалуйста, попробуйте просмотреть отдельные, более мелкие изменения."
         locale:
           no_locale_set: "Язык не установлен"
           locale_removed: "Язык удален"
