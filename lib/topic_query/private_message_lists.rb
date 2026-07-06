@@ -245,7 +245,18 @@ class TopicQuery
         return ids
       end
 
-      @group_with_messages_ids[user.id] = user.groups.where(has_messages: true).pluck(:id)
+      group_ids = user.groups.where(has_messages: true)
+
+      group_ids =
+        if user.admin? || user.in_any_groups?(SiteSetting.personal_message_enabled_groups_map)
+          group_ids.pluck(:id)
+        elsif user.moderator?
+          group_ids.where(id: Group::AUTO_GROUPS[:moderators]).pluck(:id)
+        else
+          []
+        end
+
+      @group_with_messages_ids[user.id] = group_ids
     end
 
     private
