@@ -51,10 +51,9 @@ module Migrations
 
       def migrate_from_path(migration_path, performed_migrations)
         file_pattern = File.join(migration_path, "*.sql")
-        root_path = @migrations_path || Migrations.root_path
 
         Dir[file_pattern].sort.each do |path|
-          relative_path = Pathname(path).relative_path_from(root_path).to_s
+          relative_path = Pathname(path).relative_path_from(migration_path).to_s
 
           if performed_migrations.exclude?(relative_path)
             sql = File.read(path)
