@@ -2,8 +2,8 @@
 
 module DiscourseDataExplorer
   module JsonapiRb
-    # jsonapi-serializer (JSON:API Kit). Minimal — exercises the
-    # relationship machinery, parity with the Graphiti UserResource.
+    # The User resource. Minimal — exercises the relationship machinery for the
+    # nested `user.groups` include.
     class UserSerializer
       include JSONAPI::Serializer
       set_type :users

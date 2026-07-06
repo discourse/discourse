@@ -316,12 +316,8 @@ gem "ttfunk", require: false
 gem "afm", require: false
 gem "pdf-reader", require: false
 
-# for discourse-data-explorer (JSON:API modernization spike)
-gem "graphiti", "1.10.2"
-gem "graphiti-rails"
+# for discourse-data-explorer (JSON:API Kit spike)
 gem "pagy", "~> 43.0"
-# JSON:API Kit — the home-grown alternative being compared against Graphiti (same spike). Only the
-# jsonapi-serializer renderer is used; the jsonapi.rb gem was dropped (its Ransack
-# filtering breaks core; its other mixins were absorbed into the plugin). require: false
-# — required explicitly in plugin.rb to control load order. See Part 9.
+# jsonapi-serializer is the Kit's rendering layer. require: false — required
+# explicitly in plugin.rb to control load order. See Part 9.
 gem "jsonapi-serializer", require: false

@@ -3,9 +3,9 @@
 module DiscourseDataExplorer
   module JsonapiRb
     # JSON:API Kit endpoint for Query, built on the declarative DSL in
-    # BaseController (docs/api-modernization-exploration.md, Part 9). Compare the size
-    # of this file to the Graphiti QueryResource — the read query surface is now just a
-    # config block; only the write (create) carries bespoke logic, via Service::Base.
+    # BaseController (docs/api-modernization-exploration.md, Part 9). The read query
+    # surface is just a config block; only the write (create) carries bespoke logic,
+    # via Service::Base.
     class QueriesController < BaseController
       jsonapi do
         serializer QuerySerializer
@@ -16,7 +16,7 @@ module DiscourseDataExplorer
         stat :total, :count
         page max: 100, default: 20
 
-        # Row-level authorization — same rules as the Graphiti QueryResource#base_scope.
+        # Row-level authorization: admins see all; others see only queries in their groups.
         base_scope do
           scope = Query.where("data_explorer_queries.id > 0").where(hidden: false)
           next scope if guardian.is_admin?
@@ -25,8 +25,7 @@ module DiscourseDataExplorer
           scope.where(id: QueryGroup.where(group_id: current_user.group_ids).select(:query_id))
         end
 
-        # Hand-rolled (Ransack is unusable in Discourse — see Part 9). Matches Graphiti's
-        # `filter :search` over name/description.
+        # Hand-rolled search over name/description (Ransack is unusable in Discourse — see Part 9).
         filter :search do |scope, value|
           pattern = "%#{ActiveRecord::Base.sanitize_sql_like(value.to_s.downcase)}%"
           scope.where(

@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-# Contract guard for the thin-layers JSON:API endpoint — the analogue of the Graphiti
-# SchemaDiff guard (api_schema_spec.rb). See docs/api-modernization-exploration.md, Part 9.
+# Contract guard for the JSON:API Kit endpoint. See docs/api-modernization-exploration.md, Part 9.
 #
 # Derives a contract descriptor from each controller's DSL config + jsonapi-serializer
 # serializer (BaseController.jsonapi_contract) and diffs it against the committed baseline.
