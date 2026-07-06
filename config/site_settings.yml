@@ -480,6 +480,7 @@ basic:
     allow_any: false
     refresh: true
     disallowed_groups: "4"
+    mandatory_values: "1|2" # auto groups admins & moderators
     area: "group_permissions"
   push_notifications_prompt:
     default: true
