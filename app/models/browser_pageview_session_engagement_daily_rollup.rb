@@ -2,8 +2,7 @@
 
 class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
   BOUNCE_ENGAGED_SECONDS_THRESHOLD = 10
-  MIN_SESSION_AGE = 10.minutes
-  private_constant :BOUNCE_ENGAGED_SECONDS_THRESHOLD, :MIN_SESSION_AGE
+  private_constant :BOUNCE_ENGAGED_SECONDS_THRESHOLD
 
   def self.aggregate(start_date:, end_date:)
     start_date = start_date.to_date
@@ -63,7 +62,7 @@ class BrowserPageviewSessionEngagementDailyRollup < ActiveRecord::Base
       SQL
         start_date:,
         end_date:,
-        session_started_before: MIN_SESSION_AGE.ago,
+        session_started_before: BrowserPageviewSessionEngagement::BEACON_SETTLE_PERIOD.ago,
         bounce_threshold: BOUNCE_ENGAGED_SECONDS_THRESHOLD,
       )
     end
