@@ -258,6 +258,8 @@ module Chat
     end
 
     def can_edit_chat?(message)
+      return false if !can_preview_chat_channel?(message.chat_channel)
+
       (message.user_id == @user.id && !@user.silenced?) || is_admin?
     end
 
