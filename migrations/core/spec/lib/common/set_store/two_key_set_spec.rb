@@ -35,6 +35,11 @@ describe Migrations::SetStore::TwoKeySet do
       expect(set.include?("key1", "key2", 1)).to be false
     end
 
+    it "returns false for a value missing from an existing set" do
+      set.add("key1", "key2", 1)
+      expect(set.include?("key1", "key2", 2)).to be false
+    end
+
     it "returns false for non-existent first key" do
       set.add("key1", "key2", 1)
       expect(set.include?("key3", "key2", 1)).to be false
@@ -71,6 +76,23 @@ describe Migrations::SetStore::TwoKeySet do
       expect(set.include?(nil, "key2", 1)).to be true
       expect(set.include?(nil, "key3", 2)).to be true
       expect(set.include?("key1", nil, 3)).to be true
+    end
+
+    it "keeps values in the right subkey when a shared key interleaves nil subkeys" do
+      set.bulk_add([["k", "a", 1], ["k", nil, 2], ["k", "b", 3], ["k", "c", 4], ["k", nil, 5]])
+
+      expect(set.include?("k", "a", 1)).to be true
+      expect(set.include?("k", nil, 2)).to be true
+      expect(set.include?("k", "b", 3)).to be true
+      expect(set.include?("k", "c", 4)).to be true
+      expect(set.include?("k", nil, 5)).to be true
+    end
+
+    it "starts a fresh bucket when a nil first key follows another key" do
+      set.bulk_add([["a", "x", 1], [nil, "y", 2]])
+
+      expect(set.include?("a", "x", 1)).to be true
+      expect(set.include?(nil, "y", 2)).to be true
     end
 
     it "returns nil" do

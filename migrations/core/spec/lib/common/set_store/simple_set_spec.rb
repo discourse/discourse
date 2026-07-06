@@ -65,4 +65,16 @@ describe Migrations::SetStore::SimpleSet do
       expect(set.empty?).to be false
     end
   end
+
+  describe "#each" do
+    it "returns an enumerator over the values in the set" do
+      set.add(1)
+      set.add(2)
+
+      enumerator = set.each
+
+      expect(enumerator).to be_a(Enumerator)
+      expect(enumerator.to_a).to contain_exactly(1, 2)
+    end
+  end
 end

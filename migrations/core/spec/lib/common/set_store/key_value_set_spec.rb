@@ -40,6 +40,11 @@ describe Migrations::SetStore::KeyValueSet do
       expect(set.include?("key2", 1)).to be false
     end
 
+    it "returns false when the key exists but the value is missing" do
+      set.add("key1", 1)
+      expect(set.include?("key1", 2)).to be false
+    end
+
     it "doesn't create entries for missing keys" do
       expect(set.empty?).to be true
       set.include?("missing_key", 1)
@@ -59,6 +64,23 @@ describe Migrations::SetStore::KeyValueSet do
       expect(set.include?(nil, 1)).to be true
       expect(set.include?(nil, 2)).to be true
       expect(set.include?("key1", 3)).to be true
+    end
+
+    it "starts a new set when a nil key follows another key" do
+      set.bulk_add([["key1", 1], [nil, 2]])
+      expect(set.include?("key1", 1)).to be true
+      expect(set.include?(nil, 2)).to be true
+      expect(set.include?("key1", 2)).to be false
+    end
+
+    it "groups consecutive keys that compare equal" do
+      # The key run is detected with `==`, so 1 and 1.0 (equal but stored in
+      # different hash buckets) are treated as the same run and merged under the
+      # first key instead of opening a separate 1.0 bucket.
+      set.bulk_add([[1, "a"], [1.0, "b"]])
+      expect(set.include?(1, "a")).to be true
+      expect(set.include?(1, "b")).to be true
+      expect(set.include?(1.0, "b")).to be false
     end
 
     it "returns nil" do
