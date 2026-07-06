@@ -37,6 +37,49 @@ RSpec.describe Migrations::Conversion::Partitioner do
     expect(partitioner(adapter, :id).boundaries(2)).to eq(%w[a c])
   end
 
+  it "rounds the sample stride up, not down" do
+    # ceil(9 / 4.0) = 3, so every 3rd key -> [0, 3, 6]. Integer division, floor or
+    # round would stride by 2 and pick a different set of boundaries.
+    adapter = build_adapter(total: 9, keys: (0..8).to_a)
+    expect(partitioner(adapter, :id).boundaries(4)).to eq([0, 3, 6])
+  end
+
+  it "gives one boundary per row when there are fewer rows than chunks" do
+    # 3 rows into 5 requested chunks: the stride clamps to 1, so every row is a
+    # boundary and we just hand back fewer chunks than asked.
+    adapter = build_adapter(total: 3, keys: [5, 10, 15])
+    expect(partitioner(adapter, :id).boundaries(5)).to eq([5, 10, 15])
+  end
+
+  it "passes the table, key and base filter through to the source's count and scan" do
+    counted = nil
+    scanned = nil
+    adapter =
+      Class
+        .new do
+          define_method(:count_all) do |from, where:|
+            counted = [from, where]
+            3
+          end
+          define_method(:chunk_filter) { |*| "" }
+          define_method(:each_partition_key) do |key, from, base, &block|
+            scanned = [key, from, base]
+            [1, 2, 3].each(&block)
+          end
+        end
+        .new
+
+    described_class.new(
+      adapter,
+      key: %i[a b],
+      from: "posts",
+      base: "deleted_at IS NULL",
+    ).boundaries(2)
+
+    expect(counted).to eq(["posts", "deleted_at IS NULL"])
+    expect(scanned).to eq([%i[a b], "posts", "deleted_at IS NULL"])
+  end
+
   it "samples a composite key without asking for numeric bounds" do
     adapter = build_adapter(total: 4, keys: [[1, 10], [1, 20], [2, 5], [3, 7]])
     expect(partitioner(adapter, %i[topic_id user_id]).boundaries(2)).to eq([[1, 10], [2, 5]])
@@ -46,21 +89,44 @@ RSpec.describe Migrations::Conversion::Partitioner do
     expect(partitioner(build_adapter(total: 0), :id).boundaries(4)).to eq([])
   end
 
+  it "does not stream the key when the source is empty" do
+    # The zero-count short-circuit exists to skip the scan entirely, so prove it
+    # by blowing up if the scan is ever reached for a source that counts zero rows.
+    adapter =
+      Class
+        .new do
+          define_method(:count_all) { |_from, where:| 0 }
+          define_method(:chunk_filter) { |*| "" }
+          define_method(:each_partition_key) { |*| raise "should not scan an empty source" }
+        end
+        .new
+
+    expect(partitioner(adapter, :id).boundaries(4)).to eq([])
+  end
+
   it "prefers the adapter's fast scan path when it offers one" do
     # A valid PartitionSource with `boundaries_by_scan` but no `each_partition_key`,
     # so the test fails (NoMethodError) unless the partitioner takes the fast path.
+    # It also records what it got, to prove the key, table, base and count are
+    # forwarded unchanged.
+    scanned = nil
     adapter =
       Class
         .new do
           define_method(:count_all) { |*, **| 0 }
           define_method(:chunk_filter) { |*| "" }
-          define_method(:boundaries_by_scan) do |_key, _from, _base, count|
+          define_method(:boundaries_by_scan) do |key, from, base, count|
+            scanned = [key, from, base, count]
             [10, 20, 30].first(count)
           end
         end
         .new
 
-    expect(partitioner(adapter, %i[a b]).boundaries(2)).to eq([10, 20])
+    result =
+      described_class.new(adapter, key: %i[a b], from: "things", base: "x > 0").boundaries(2)
+
+    expect(result).to eq([10, 20])
+    expect(scanned).to eq([%i[a b], "things", "x > 0", 2])
   end
 
   it "raises when there is no source to compute boundaries from" do
