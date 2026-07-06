@@ -339,6 +339,7 @@ module DiscourseAi
       end
 
       def tool_requires_approval?(tool)
+        return true if tool.class.always_requires_approval?
         tool.class.requires_approval? && @agent.class.require_approval
       end
 
@@ -370,9 +371,19 @@ module DiscourseAi
           force_review: true,
         )
 
-        placeholder =
-          build_placeholder(tool.summary, I18n.t("discourse_ai.ai_bot.tool_pending_approval"))
-        update_blk.call(placeholder, nil, :thinking)
+        # :custom_raw lands in the persisted reply as visible content —
+        # a :thinking emission would be dropped (or collapsed into the
+        # thinking details block) depending on the agent's show_thinking
+        approval_card =
+          "<div class='ai-tool-approval' data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>"
+
+        approval_content =
+          build_placeholder(
+            tool.summary,
+            I18n.t("discourse_ai.ai_bot.tool_pending_approval"),
+            custom_raw: approval_card,
+          )
+        update_blk.call(approval_content, nil, :custom_raw)
 
         { status: "pending_approval", message: I18n.t("discourse_ai.ai_bot.tool_pending_approval") }
       end

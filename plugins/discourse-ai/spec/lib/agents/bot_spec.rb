@@ -777,5 +777,44 @@ RSpec.describe DiscourseAi::Agents::Bot do
       expect(topic.reload.closed).to eq(true)
       expect(ReviewableAiToolAction.count).to eq(0)
     end
+
+    it "creates a reviewable even when require_approval is false, for a tool that always requires approval" do
+      toggle_enabled_bots(bots: [fake])
+      Group.refresh_automatic_groups!
+
+      always_approval_tool_class =
+        Class.new(DiscourseAi::Agents::Tools::CloseTopic) do
+          def self.always_requires_approval?
+            true
+          end
+        end
+
+      AiAgent.create!(
+        name: "NoApprovalAgent2",
+        system_prompt: "test",
+        description: "test",
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        require_approval: false,
+      )
+
+      agent_class = DiscourseAi::Agents::Agent.find_by(user: admin, name: "NoApprovalAgent2")
+      test_bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(fake.name)
+      bot = described_class.as(test_bot_user, agent: agent_class.new)
+
+      tool =
+        always_approval_tool_class.new(
+          { topic_id: topic.id, closed: true, reason: "Off-topic" },
+          bot_user: test_bot_user,
+          llm: bot.llm,
+        )
+
+      context = DiscourseAi::Agents::BotContext.new(messages: [])
+
+      result = bot.send(:invoke_tool, tool, context) { |*args| }
+
+      expect(result[:status]).to eq("pending_approval")
+      expect(topic.reload.closed).to eq(false)
+      expect(ReviewableAiToolAction.count).to eq(1)
+    end
   end
 end

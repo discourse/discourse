@@ -23,6 +23,13 @@ DiscourseAi::Engine.routes.draw do
     post "interactions" => "bot#interactions"
   end
 
+  scope path: "/ai-tool-actions", defaults: { format: :json } do
+    put "/:reviewable_id/revert" => "ai_tool_actions#revert",
+        :constraints => {
+          reviewable_id: /\d+/,
+        }
+  end
+
   scope module: :ai_bot, path: "/ai-bot", defaults: { format: :json } do
     get "bot-username" => "bot#show_bot_username"
     get "post/:post_id/show-debug-info" => "bot#show_debug_info"

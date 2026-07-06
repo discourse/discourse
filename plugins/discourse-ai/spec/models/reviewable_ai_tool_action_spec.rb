@@ -88,6 +88,36 @@ RSpec.describe ReviewableAiToolAction do
       expect(actions.has?(:approve)).to eq(false)
       expect(actions.has?(:reject)).to eq(false)
     end
+
+    it "returns no actions for a user who cannot see the review queue" do
+      tool_action = create_tool_action
+      reviewable = create_reviewable(tool_action)
+      regular_user = Fabricate(:user)
+
+      actions = Reviewable::Actions.new(reviewable, Guardian.new(regular_user), {})
+      reviewable.build_actions(actions, Guardian.new(regular_user), {})
+
+      expect(actions.has?(:approve)).to eq(false)
+      expect(actions.has?(:reject)).to eq(false)
+    end
+
+    it "returns actions for a category group moderator scoped to the reviewable's category" do
+      category = Fabricate(:category)
+      post = Fabricate(:post, topic: Fabricate(:topic, category: category))
+      tool_action = create_tool_action(post_id: post.id)
+      reviewable = create_reviewable(tool_action)
+
+      SiteSetting.enable_category_group_moderation = true
+      group = Fabricate(:group)
+      Fabricate(:category_moderation_group, category:, group:)
+      group_moderator = Fabricate(:user, groups: [group])
+
+      actions = Reviewable::Actions.new(reviewable, Guardian.new(group_moderator), {})
+      reviewable.build_actions(actions, Guardian.new(group_moderator), {})
+
+      expect(actions.has?(:approve)).to eq(true)
+      expect(actions.has?(:reject)).to eq(true)
+    end
   end
 
   describe "#perform_approve" do
@@ -127,6 +157,145 @@ RSpec.describe ReviewableAiToolAction do
       expect(result.success?).to eq(true)
       expect(result.transition_to).to eq(:approved)
     end
+
+    it "raises error when performed_by is a bot account" do
+      tool_action = create_tool_action
+      reviewable = create_reviewable(tool_action)
+
+      expect { reviewable.perform(bot_user, :approve) }.to raise_error(Discourse::InvalidAccess)
+      expect(topic.reload.closed).to eq(false)
+    end
+
+    it "attributes the action to the approving moderator for tools that opt into attribute_to_approver?" do
+      target_user = Fabricate(:user)
+      tool_action =
+        create_tool_action(
+          tool_name: "suspend_user",
+          params: {
+            username: target_user.username,
+            duration_days: 7,
+            reason: "Spam",
+          },
+        )
+      reviewable = create_reviewable(tool_action)
+
+      result = reviewable.perform(admin, :approve)
+
+      expect(result.success?).to eq(true)
+      expect(target_user.reload.suspended?).to eq(true)
+
+      suspend_history = UserHistory.where(action: UserHistory.actions[:suspend_user]).last
+      expect(suspend_history.acting_user_id).to eq(admin.id)
+      expect(suspend_history.target_user_id).to eq(target_user.id)
+      expect(suspend_history.reviewable_id).to eq(reviewable.id)
+    end
+
+    it "attributes a silence_user approval to the approving moderator" do
+      target_user = Fabricate(:user)
+      tool_action =
+        create_tool_action(
+          tool_name: "silence_user",
+          params: {
+            username: target_user.username,
+            duration_days: 7,
+            reason: "Spam",
+          },
+        )
+      reviewable = create_reviewable(tool_action)
+
+      result = reviewable.perform(admin, :approve)
+
+      expect(result.success?).to eq(true)
+      expect(target_user.reload.silenced?).to eq(true)
+
+      silence_history = UserHistory.where(action: UserHistory.actions[:silence_user]).last
+      expect(silence_history.acting_user_id).to eq(admin.id)
+      expect(silence_history.target_user_id).to eq(target_user.id)
+      expect(silence_history.reviewable_id).to eq(reviewable.id)
+    end
+  end
+
+  describe "#revert!" do
+    fab!(:moderator)
+
+    def approved_suspend_reviewable(target_user)
+      tool_action =
+        create_tool_action(
+          tool_name: "suspend_user",
+          params: {
+            username: target_user.username,
+            duration_days: 7,
+            reason: "Spam",
+          },
+        )
+      reviewable = create_reviewable(tool_action)
+      reviewable.perform(admin, :approve)
+      reviewable
+    end
+
+    it "reverts an approved suspend and attributes the unsuspend to the reverting moderator" do
+      target_user = Fabricate(:user)
+      reviewable = approved_suspend_reviewable(target_user)
+      expect(target_user.reload.suspended?).to eq(true)
+
+      result = reviewable.revert!(moderator)
+
+      expect(result[:status]).to eq("success")
+      expect(target_user.reload.suspended?).to eq(false)
+      expect(reviewable.reload.reverted?).to eq(true)
+
+      unsuspend = UserHistory.where(action: UserHistory.actions[:unsuspend_user]).last
+      expect(unsuspend.acting_user_id).to eq(moderator.id)
+      expect(unsuspend.target_user_id).to eq(target_user.id)
+    end
+
+    it "raises when reverting a second time" do
+      target_user = Fabricate(:user)
+      reviewable = approved_suspend_reviewable(target_user)
+      reviewable.revert!(moderator)
+
+      expect { reviewable.revert!(moderator) }.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "raises when the reviewable is not approved" do
+      tool_action =
+        create_tool_action(
+          tool_name: "suspend_user",
+          params: {
+            username: Fabricate(:user).username,
+            duration_days: 7,
+            reason: "Spam",
+          },
+        )
+      reviewable = create_reviewable(tool_action)
+
+      expect { reviewable.revert!(moderator) }.to raise_error(Discourse::InvalidAccess)
+    end
+
+    it "raises when the reverting user is a bot" do
+      target_user = Fabricate(:user)
+      reviewable = approved_suspend_reviewable(target_user)
+
+      expect { reviewable.revert!(bot_user) }.to raise_error(Discourse::InvalidAccess)
+      expect(target_user.reload.suspended?).to eq(true)
+    end
+
+    it "raises when the reverting user cannot see the review queue" do
+      target_user = Fabricate(:user)
+      reviewable = approved_suspend_reviewable(target_user)
+      regular_user = Fabricate(:user)
+
+      expect { reviewable.revert!(regular_user) }.to raise_error(Discourse::InvalidAccess)
+      expect(target_user.reload.suspended?).to eq(true)
+    end
+
+    it "raises when the underlying tool is not revertible" do
+      tool_action = create_tool_action(tool_name: "grant_badge")
+      reviewable = create_reviewable(tool_action)
+      reviewable.update!(status: Reviewable.statuses[:approved])
+
+      expect { reviewable.revert!(moderator) }.to raise_error(Discourse::InvalidAccess)
+    end
   end
 
   describe "#perform_reject" do
@@ -139,6 +308,13 @@ RSpec.describe ReviewableAiToolAction do
       expect(result.success?).to eq(true)
       expect(result.transition_to).to eq(:rejected)
       expect(topic.reload.closed).to eq(false)
+    end
+
+    it "raises error when performed_by is a bot account" do
+      tool_action = create_tool_action
+      reviewable = create_reviewable(tool_action)
+
+      expect { reviewable.perform(bot_user, :reject) }.to raise_error(Discourse::InvalidAccess)
     end
   end
 end

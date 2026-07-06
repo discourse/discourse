@@ -19,6 +19,7 @@ class ReviewableAiToolAction < Reviewable
 
   def build_actions(actions, guardian, args)
     return actions if !pending?
+    return actions if !Reviewable.viewable_by(guardian.user).exists?(id: id)
 
     approve =
       actions.add_bundle(
@@ -40,6 +41,90 @@ class ReviewableAiToolAction < Reviewable
   end
 
   def perform_approve(performed_by, args)
+    ensure_performed_by_is_a_real_person!(performed_by)
+
+    tool, tool_class, context = build_tool!
+    context.user = performed_by if tool_class.attribute_to_approver?
+
+    # Suppress automation re-triggers caused by the tool's side effects
+    # (e.g. edit_tags → topic_tags_changed → automation fires again → loop).
+    if defined?(DiscourseAutomation)
+      DiscourseAutomation.suppress_triggers { tool.invoke }
+    else
+      tool.invoke
+    end
+
+    create_result(:success, :approved)
+  end
+
+  def perform_reject(performed_by, args)
+    ensure_performed_by_is_a_real_person!(performed_by)
+
+    create_result(:success, :rejected)
+  end
+
+  def reverted?
+    payload.present? && payload["reverted_at"].present?
+  end
+
+  def revertible_tool?
+    tool_class =
+      DiscourseAi::Agents::Agent.all_available_tools.find { |t| t.name == target&.tool_name }
+    !!tool_class&.revertible?
+  end
+
+  # Undoes a previously-approved action. Called from AiToolActionsController,
+  # outside the reviewable perform framework, so it returns the tool's result
+  # hash rather than a PerformResult. Raises Discourse::InvalidAccess when the
+  # reverting user isn't allowed or the action can't be reverted.
+  def revert!(performed_by)
+    ensure_performed_by_is_a_real_person!(performed_by)
+
+    raise Discourse::InvalidAccess.new if !Reviewable.viewable_by(performed_by).exists?(id: id)
+
+    if !approved?
+      raise Discourse::InvalidAccess.new(
+              I18n.t("discourse_ai.reviewables.ai_tool_action.not_approved"),
+            )
+    end
+
+    if reverted?
+      raise Discourse::InvalidAccess.new(
+              I18n.t("discourse_ai.reviewables.ai_tool_action.already_reverted"),
+            )
+    end
+
+    tool, tool_class, context = build_tool!
+    if !tool_class.revertible?
+      raise Discourse::InvalidAccess.new(
+              I18n.t("discourse_ai.reviewables.ai_tool_action.not_revertible"),
+            )
+    end
+    # a revert is always human-initiated, so attribute it to the reverter
+    context.user = performed_by
+
+    result =
+      if defined?(DiscourseAutomation)
+        DiscourseAutomation.suppress_triggers { tool.revert }
+      else
+        tool.revert
+      end
+
+    if result[:status] == "success"
+      self.payload ||= {}
+      payload["reverted_at"] = Time.zone.now.iso8601
+      payload["reverted_by_id"] = performed_by.id
+      save!
+    end
+
+    result
+  end
+
+  private
+
+  # Rebuilds the tool from the persisted action. Returns [tool, tool_class,
+  # context]; the caller sets context.user for audit attribution as needed.
+  def build_tool!
     tool_action = target
     if tool_action.blank?
       raise Discourse::InvalidAccess.new(
@@ -66,30 +151,27 @@ class ReviewableAiToolAction < Reviewable
             )
     end
 
+    context = DiscourseAi::Agents::BotContext.new(messages: [])
+    context.reviewable_id = id
+
     tool =
       tool_class.new(
         tool_action.tool_parameters.symbolize_keys,
         bot_user: bot_user,
         llm: nil,
-        context: DiscourseAi::Agents::BotContext.new(messages: []),
+        context: context,
       )
 
-    # Suppress automation re-triggers caused by the tool's side effects
-    # (e.g. edit_tags → topic_tags_changed → automation fires again → loop).
-    if defined?(DiscourseAutomation)
-      DiscourseAutomation.suppress_triggers { tool.invoke }
-    else
-      tool.invoke
+    [tool, tool_class, context]
+  end
+
+  def ensure_performed_by_is_a_real_person!(performed_by)
+    if performed_by.blank? || performed_by.bot?
+      raise Discourse::InvalidAccess.new(
+              I18n.t("discourse_ai.reviewables.ai_tool_action.performer_not_human"),
+            )
     end
-
-    create_result(:success, :approved)
   end
-
-  def perform_reject(performed_by, args)
-    create_result(:success, :rejected)
-  end
-
-  private
 
   def build_action(actions, id, icon:, bundle: nil)
     actions.add(id, bundle: bundle) do |action|
