@@ -64,5 +64,77 @@ RSpec.describe Migrations::ClassFilter do
 
       expect(result).to eq([base, middle, top])
     end
+
+    it "raises for unknown names given via skip" do
+      expect { described_class.filter(classes, skip: ["missing"]) }.to raise_error(
+        Migrations::ClassFilter::UnknownClassNamesError,
+        "Unknown class names: missing",
+      )
+    end
+
+    it "reports an unknown name once when it is given in both skip and only" do
+      expect {
+        described_class.filter(classes, only: ["missing"], skip: ["missing"])
+      }.to raise_error(
+        Migrations::ClassFilter::UnknownClassNamesError,
+        "Unknown class names: missing",
+      )
+    end
+
+    it "ignores a class whose dependencies are nil" do
+      no_deps =
+        Class.new do
+          define_singleton_method(:name) { "Steps::NoDeps" }
+          define_singleton_method(:dependencies) { nil }
+        end
+
+      expect(described_class.filter([no_deps], only: ["no_deps"])).to eq([no_deps])
+    end
+
+    it "ignores dependencies that are not part of the class list" do
+      external = test_class(name: "Steps::External")
+      parent = test_class(name: "Steps::Parent", dependencies: [external])
+
+      expect(described_class.filter([parent], only: ["parent"])).to eq([parent])
+    end
+
+    it "terminates when dependencies form a cycle" do
+      first = test_class(name: "Steps::First")
+      second = test_class(name: "Steps::Second", dependencies: [first])
+      first.define_singleton_method(:dependencies) { [second] }
+
+      result = described_class.filter([first, second], only: ["first"])
+
+      expect(result).to contain_exactly(first, second)
+    end
+
+    it "keeps scanning dependencies after one is already included" do
+      shared = test_class(name: "Steps::Shared")
+      extra = test_class(name: "Steps::Extra")
+      parent = test_class(name: "Steps::WithShared", dependencies: [shared, extra])
+
+      result = described_class.filter([shared, extra, parent], only: %w[with_shared shared])
+
+      expect(result).to contain_exactly(shared, extra, parent)
+    end
+
+    it "keeps scanning dependencies after skipping one" do
+      skipped = test_class(name: "Steps::Skipped")
+      kept = test_class(name: "Steps::Kept")
+      parent = test_class(name: "Steps::WithSkipped", dependencies: [skipped, kept])
+
+      result =
+        described_class.filter(
+          [skipped, kept, parent],
+          only: ["with_skipped"],
+          skip: ["skipped"],
+        )
+
+      expect(result).to contain_exactly(kept, parent)
+    end
+
+    it "applies default filters when instantiated without skip or only" do
+      expect(described_class.new(classes).filter).to eq(classes)
+    end
   end
 end
