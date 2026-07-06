@@ -36,6 +36,12 @@ RSpec.describe Migrations::Conversion::StepScheduler do
     def finish!
       @finish << true
     end
+
+    # Simulate `count` of this step's workers finishing early, handing their forks
+    # back to the scheduler while `run` is still blocked (the step isn't done yet).
+    def release!(count = 1)
+      @scheduler.release_forks(@step_class, count)
+    end
   end
 
   # Builds named step classes in a throwaway namespace so `depends_on` (which
@@ -173,6 +179,49 @@ RSpec.describe Migrations::Conversion::StepScheduler do
     by_name["Big"].finish!
     by_name["Y"].finish!
 
+    runner.join
+  end
+
+  it "returns a partitioned step's freed forks to waiting steps as its workers finish" do
+    big, x, y, z = define_steps(:Big, :X, :Y, :Z, partitionable: %i[Big])
+    scheduler, by_name = build_scheduler([big, x, y, z], budget: 4)
+
+    runner = run_in_background(scheduler)
+
+    # Big takes 3 forks, X fills the 4th; Y and Z have no forks yet.
+    expect([events.pop, events.pop].sort).to eq(%w[Big X])
+    expect(events).to be_empty
+
+    # Two of Big's workers finish early: their forks come back and Y and Z start
+    # on them while Big's last worker keeps running.
+    by_name["Big"].release!(2)
+    expect([events.pop, events.pop].sort).to eq(%w[Y Z])
+
+    [by_name["X"], by_name["Y"], by_name["Z"], by_name["Big"]].each(&:finish!)
+    runner.join
+  end
+
+  it "makes a waiting partitioned step gather the budget instead of nibbling it to single-fork steps" do
+    a, big, c, d, e = define_steps(:A, :Big, :C, :D, :E, partitionable: %i[Big])
+    big.depends_on(:a) # so single-fork steps are already running when Big becomes ready
+    scheduler, by_name = build_scheduler([a, big, c, d, e], budget: 3)
+
+    runner = run_in_background(scheduler)
+
+    # A, C, D fill the budget; Big waits on A, E waits for a fork.
+    expect([events.pop, events.pop, events.pop].sort).to eq(%w[A C D])
+    expect(events).to be_empty
+
+    # A finishes: one fork is free, but Big (partitioned, now ready) needs two, so
+    # E is held back rather than nibbling the fork away from Big.
+    by_name["A"].finish!
+    expect(events).to be_empty
+
+    # A second fork frees; now Big can gather its two and starts ahead of E.
+    by_name["C"].finish!
+    expect(events.pop).to eq("Big")
+
+    [by_name["D"], by_name["Big"], by_name["E"]].each(&:finish!)
     runner.join
   end
 
