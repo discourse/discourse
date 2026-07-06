@@ -1952,7 +1952,8 @@ CREATE TABLE public.browser_pageview_event_scores (
     velocity_score smallint DEFAULT 0 NOT NULL,
     churn_score smallint DEFAULT 0 NOT NULL,
     rapid_nav_score smallint DEFAULT 0 NOT NULL,
-    referrer_score smallint DEFAULT 0 NOT NULL
+    referrer_score smallint DEFAULT 0 NOT NULL,
+    engagement_score smallint DEFAULT 0 NOT NULL
 );
 
 
@@ -22470,6 +22471,7 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260707013407'),
+('20260706050124'),
 ('20260702102111'),
 ('20260701073045'),
 ('20260630034050'),
