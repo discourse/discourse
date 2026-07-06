@@ -63,7 +63,10 @@ module Migrations
       end
 
       def report_progress_begin(id, max_progress)
-        @mutex.synchronize { @steps[id].total = max_progress if @steps[id] }
+        @mutex.synchronize do
+          step = @steps[id]
+          step.total = max_progress if step
+        end
       end
 
       def report_concurrency(_id, _count)
