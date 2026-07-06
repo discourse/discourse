@@ -60,6 +60,46 @@ jobs:
           # schema. Runs without Rails or a source database.
           migrations/bin/disco check coverage
 
+  mutation:
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    name: Mutation coverage
+    runs-on: ${{ (github.repository_owner == 'discourse' && 'cdck-linux-8-core') || 'ubuntu-latest' }}
+    container: discourse/discourse_test:release
+    timeout-minutes: 20
+
+    steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
+      - uses: actions/checkout@v7
+        with:
+          # mutant diffs against the base to find changed subjects, so it needs
+          # history back to the branch point, not a shallow clone.
+          fetch-depth: 0
+
+      - name: Determine the base to diff against
+        id: base
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git fetch --no-tags origin "${{ github.base_ref }}"
+            echo "ref=origin/${{ github.base_ref }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "ref=${{ github.event.before }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Mutation testing (changed subjects only)
+        # Diff-gated: `--since` mutates only the subjects a change touches, so this
+        # fails when a change adds an unkilled mutation without demanding the whole
+        # codebase already be at 100%. Each gem opts in via its own `.mutant.yml`;
+        # bin/mutant layers mutant onto the gem's bundle via a throwaway gemfile,
+        # so nothing mutant-related lives in the gems' Gemfiles. A change that
+        # touches no listed subject mutates nothing and passes.
+        run: |
+          for gem in core tooling converters importer; do
+            echo "== migrations-$gem =="
+            migrations/bin/mutant "$gem" --since "${{ steps.base.outputs.ref }}"
+          done
+
   tests:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
     name: Tests
