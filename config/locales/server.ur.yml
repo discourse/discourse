@@ -239,7 +239,7 @@ ur:
         one: "معذرت، ہم اس ویب صفحہ کوپیش کرنے سے قاصر تھے، کیونکہ درج ذیل oEmbed/OpenGraph ٹیگ نہیں مل سکا: %{missing_attributes}"
         other: "معذرت، ہم اس ویب صفحہ کو پیش کرنے سے قاصر تھے، کیونکہ درج ذیل oEmbed/OpenGraph ٹیگز نہیں مل سکے: %{missing_attributes}"
   word_connector:
-    comma: ", "
+    comma: "، "
   invite:
     expired: "آپ کے دعوتی ٹوکن کی میعاد ختم ہو گئی ہے۔ براہ کرم <a href='%{base_url}/about'>عملے سے رابطہ کریں</a>۔"
     not_found: "آپ کا دعوتی ٹوکن غلط ہے۔ براہ کرم <a href='%{base_url}/about'>سٹاف سے رابطہ کریں</a>۔"
