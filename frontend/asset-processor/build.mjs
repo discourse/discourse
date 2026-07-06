@@ -5,6 +5,7 @@ const local = (p) => fileURLToPath(import.meta.resolve(p));
 
 const bundle = await rolldown({
   input: local("./transpiler.js"),
+  tsconfig: false,
   platform: "browser",
   moduleTypes: { ".wasm": "binary" },
   transform: {

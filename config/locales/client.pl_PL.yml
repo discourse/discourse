@@ -127,6 +127,7 @@ pl_PL:
           few: "%{count}m"
           many: "%{count}m"
           other: "%{count}m"
+        x_minutes_seconds: "%{minutes}m %{seconds}s"
         about_x_hours:
           one: "%{count}h"
           few: "%{count}h"
@@ -3010,7 +3011,7 @@ pl_PL:
       use_different_email: "Użyj innego adresu e-mail"
       use_password_instead: "Zamiast tego zaloguj się za pomocą hasła"
       email_me_code: "Wyślij mi na e-mail jednorazowy kod logowania"
-      signup_title: "Dołącz do tej społeczności"
+      signup_title: "Utwórz swoje konto"
       signup_instructions: "Podaj swój adres e-mail, aby dołączyć do tej społeczności. Wyślemy Ci kod potwierdzający i gotowe!"
       user_fields_title: "Prawie gotowe"
       user_fields_instructions: "Jeszcze tylko kilka szczegółów, aby zakończyć tworzenie konta."
@@ -5205,7 +5206,8 @@ pl_PL:
           many: "Czy na pewno chcesz połączyć te %{count} postów?"
           other: "Czy na pewno chcesz połączyć te %{count} postów?"
       revisions:
-        diff_too_complex: "Różnica jest zbyt złożona, aby ją wyświetlić. Spróbuj wyświetlić pojedyncze, mniejsze zmiany."
+        diff_too_complex: "Ta edycja zmieniła zbyt dużą część wpisu na raz, więc nie można jej wyświetlić."
+        diff_hidden: "Część historii edycji tego wpisu została ukryta, dlatego tej edycji nie można wyświetlić."
         locale:
           no_locale_set: "Nie ustawiono języka"
           locale_removed: "Język usunięty"
@@ -6280,8 +6282,6 @@ pl_PL:
       no_read_topics_body: "Gdy zaczniesz czytać dyskusje, zobaczysz tutaj listę. Aby rozpocząć czytanie, poszukaj tematów, które Cię interesują w <a href='%{topUrl}'>popularnych</a> lub <a href='%{categoriesUrl}'>kategoriach</a> lub wyszukaj według słowa kluczowego %{searchIcon}"
     no_group_messages_title: "Nie znaleziono wiadomości grupowych"
     topic_entrance:
-      sr_jump_top_button: "Przejdź do pierwszego postu - %{date}"
-      sr_jump_bottom_button: "Przejdź do ostatniego postu - %{date}"
       jump_top_button_title: "Przejdź do pierwszego posta"
       jump_bottom_button_title: "Przejdź do ostatniego posta"
     fullscreen_table:
@@ -7570,6 +7570,14 @@ pl_PL:
             direct_traffic:
               label: "Ruch bezpośredni"
               tooltip: "Udział wyświetleń stron pochodzących bezpośrednio z Twojej społeczności, np. po wpisaniu adresu URL lub użyciu zakładki przeglądarki."
+            bounce_rate:
+              label: "Współczynnik odrzuceń"
+              tooltip: "Udział sesji z pojedynczą odsłoną strony i czasem zaangażowania krótszym niż 10 sekund."
+            average_session_duration:
+              label: "Średni czas trwania sesji"
+              tooltip: "Średni czas, jaki odwiedzający spędzili w Twojej społeczności w wybranym okresie."
+            session_metrics:
+              empty_tooltip: "Wyświetlane po zarejestrowaniu wizyt w tym okresie."
           top_countries:
             title: "Najpopularniejsze kraje"
             empty: "Brak danych krajowych dla tego okresu."
@@ -7695,6 +7703,7 @@ pl_PL:
             effects: Efekty
             trust_levels_none: "Brak"
             automatic_membership_email_domains: "Użytkownicy rejestrujący się przy pomocy adresu z tej listy zostaną automatycznie przypisani do tej grupy."
+            automatic_membership_email_domains_instructions: "Wpisz każdą domenę osobno, na przykład discourse.org."
             automatic_membership_user_count:
               one: "%{count} użytkownik ma nowe domeny e-mail i zostanie dodany do grupy."
               few: "%{count} użytkowników ma nowe domeny e-mail i zostaną dodani do grupy."

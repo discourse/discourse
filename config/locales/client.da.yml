@@ -2158,6 +2158,7 @@ da:
       email_label: "E-mail"
       continue_button: "Fortsæt"
       verify_button: "Fortsæt"
+      signup_title: "Opret din konto"
       account_ready_continue: "Fortsæt"
       username_label: "Brugernavn"
     login:
@@ -4113,8 +4114,6 @@ da:
       no_read_topics_title: "Du har ikke læst nogen emner endnu"
     no_group_messages_title: "Ingen gruppemeddelelser fundet"
     topic_entrance:
-      sr_jump_top_button: "Gå til første indlæg - %{date}"
-      sr_jump_bottom_button: "Gå til sidste indlæg - %{date}"
       jump_top_button_title: "Hop til det første indlæg"
       jump_bottom_button_title: "Hop til det sidste indlæg"
     fullscreen_table:

@@ -4463,6 +4463,11 @@ en:
       all_replies: "All replies"
       category_settings:
         default_nested_view: "Use nested view as default for topics in this category"
+        convert_existing: "Convert existing topics"
+        convert_existing_description: "Existing topics in this category will not use nested replies until you convert them. Run this once to switch them to nested view."
+        convert_existing_confirm: "Convert all existing topics in this category to nested replies?"
+        convert_existing_complete: "Existing topics have been converted to nested replies."
+        save_first: "Save this category setting before converting existing topics."
       no_replies: "No replies yet."
       deleted_post_placeholder: "[deleted]"
       ignored_post_placeholder: "[ignored]"
@@ -6328,8 +6333,6 @@ en:
     no_group_messages_title: "No group messages found"
 
     topic_entrance:
-      sr_jump_top_button: "Jump to the first post - %{date}"
-      sr_jump_bottom_button: "Jump to the last post - %{date}"
       jump_top_button_title: "Jump to the first post"
       jump_bottom_button_title: "Jump to the last post"
     fullscreen_table:
@@ -7716,10 +7719,7 @@ en:
             effects: Effects
             trust_levels_none: "None"
             automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
-            automatic_membership_email_domains_instructions: "Enter each domain on its own, without the @ symbol, for example discourse.org."
-            automatic_membership_email_domains_invalid:
-              one: "%{domains} isn't a valid domain. Enter a bare domain, for example discourse.org."
-              other: "These aren't valid domains: %{domains}. Enter each as a bare domain, for example discourse.org."
+            automatic_membership_email_domains_instructions: "Enter each domain on its own, for example discourse.org."
             automatic_membership_user_count:
               one: "%{count} user has the new email domains and will be added to the group."
               other: "%{count} users have the new email domains and will be added to the group."

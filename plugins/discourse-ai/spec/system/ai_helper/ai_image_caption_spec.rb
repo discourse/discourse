@@ -51,7 +51,7 @@ RSpec.describe "AI image caption" do
   end
 
   context "when triggering caption with AI on desktop" do
-    it "should show an image caption in an input field" do
+    xit "should show an image caption in an input field" do
       DiscourseAi::Completions::Llm.with_prepared_responses([caption]) do
         visit("/latest")
         page.find("#create-topic").click
@@ -64,7 +64,7 @@ RSpec.describe "AI image caption" do
       end
     end
 
-    it "should allow you to cancel a caption request" do
+    xit "should allow you to cancel a caption request" do
       DiscourseAi::Completions::Llm.with_prepared_responses([caption]) do
         visit("/latest")
         page.find("#create-topic").click

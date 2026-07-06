@@ -7,8 +7,8 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
 
   before { SiteSetting.nested_replies_enabled = true }
 
-  def execute
-    described_class.new.execute(nil)
+  def execute(args = nil)
+    described_class.new.execute(args)
   end
 
   it "does nothing when feature is disabled" do
@@ -188,5 +188,39 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     freeze_time 1.hour.from_now
     execute
     expect(NestedViewPostStat.find_by(post_id: op.id).updated_at).to eq_time(initial_updated_at)
+  end
+
+  it "limits backfill to the requested category" do
+    category = Fabricate(:category)
+    other_category = Fabricate(:category)
+    category_topic = Fabricate(:topic, category: category)
+    other_topic = Fabricate(:topic, category: other_category)
+    Fabricate(:nested_topic, topic: category_topic)
+    Fabricate(:nested_topic, topic: other_topic)
+    category_op = Fabricate(:post, topic: category_topic, post_number: 1)
+    other_op = Fabricate(:post, topic: other_topic, post_number: 1)
+    Fabricate(:post, topic: category_topic, reply_to_post_number: 1)
+    Fabricate(:post, topic: other_topic, reply_to_post_number: 1)
+
+    NestedViewPostStat.delete_all
+    execute(category_id: category.id)
+
+    expect(NestedViewPostStat.exists?(post_id: category_op.id)).to eq(true)
+    expect(NestedViewPostStat.exists?(post_id: other_op.id)).to eq(false)
+  end
+
+  it "respects the configured batch size" do
+    other_topic = Fabricate(:topic)
+    Fabricate(:nested_topic, topic: other_topic)
+    other_op = Fabricate(:post, topic: other_topic, post_number: 1)
+    Fabricate(:post, topic: other_topic, reply_to_post_number: 1)
+    Fabricate(:post, topic: topic, reply_to_post_number: 1)
+    SiteSetting.nested_replies_backfill_batch_size = 1
+
+    NestedViewPostStat.delete_all
+    execute
+
+    expect(NestedViewPostStat.exists?(post_id: other_op.id)).to eq(true)
+    expect(NestedViewPostStat.exists?(post_id: op.id)).to eq(false)
   end
 end

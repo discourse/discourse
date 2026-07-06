@@ -625,9 +625,6 @@ fi:
         description: "Valitse yksi seuraavista vaihtoehdoista, niin tekoäly ehdottaa sinulle uutta versiota tekstistä."
         selection_hint: "Vihje: voit myös valita osan tekstistä ennen apuohjelman avaamista kirjoittaaksesi vain sen uudelleen."
         suggest_errors:
-          too_many_tags:
-            one: "Sinulla voi olla enintään %{count} tunniste"
-            other: "Sinulla voi olla enintään %{count} tunnistetta"
           no_suggestions: "Ei ehdotuksia saatavilla"
         missing_content: "Anna sisältöä ehdotusten luomiseksi."
         context_menu:

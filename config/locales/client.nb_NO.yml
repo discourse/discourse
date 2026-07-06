@@ -2174,6 +2174,7 @@ nb_NO:
       email_label: "E-post"
       continue_button: "Fortsett"
       verify_button: "Fortsett"
+      signup_title: "Opprett konto"
       account_ready_continue: "Fortsett"
       username_label: "Brukernavn"
     login:

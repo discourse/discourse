@@ -1,6 +1,7 @@
 /* eslint-disable ember/no-jquery */
 import $ from "jquery";
 import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
+import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
 import {
   _clearLayoutLayer,
   _renderBlocks,
@@ -2998,6 +2999,43 @@ class _PluginApi {
    */
   registerAdminDashboardReportRenderer(source, componentClass) {
     registerAdminDashboardReportRenderer(source, componentClass);
+  }
+
+  /**
+   * Registers a component to render a whole section in the redesigned admin
+   * dashboard (gated by the `dashboard_improvements` upcoming change). Pair it
+   * with the server-side `register_admin_dashboard_section`: the `id` here must
+   * match the one registered there, and the loader block registered there
+   * produces the `@data` this component receives.
+   *
+   * The component is rendered once for each visible section with a matching id.
+   * The render site also stamps a `--<id>` class and a `data-section-id="<id>"`
+   * attribute on it, so forward `...attributes` onto your root element (wrapping
+   * the shared `<DashboardSection>` component does this for you).
+   *
+   * The component receives these args:
+   * - `@data` {Object} — the section payload: the hash returned by the
+   *   server-side loader block passed to `register_admin_dashboard_section`.
+   * - `@startDate` {Date} — start of the selected dashboard period.
+   * - `@endDate` {Date} — end of the selected dashboard period.
+   * - `@fetchError` {boolean} — true when the dashboard sections request failed.
+   * - `@period` {string} — the selected period preset (e.g. "monthly"), or
+   *   "custom" for a custom range.
+   * - `@loading` {boolean} — true while the dashboard is (re)loading sections.
+   *   Provided for convenience; a section that refetches on its own (as Solved's
+   *   "support" section does) may track its own loading state instead.
+   *
+   * ```
+   * import MySection from "discourse/plugins/my-plugin/admin/components/dashboard/my-section";
+   *
+   * api.registerAdminDashboardSection("my_section", MySection);
+   * ```
+   *
+   * @param {string} id - The section id, matching the server-side registration.
+   * @param {Component} componentClass - A Glimmer component for the section.
+   */
+  registerAdminDashboardSection(id, componentClass) {
+    registerAdminDashboardSection(id, componentClass);
   }
 
   /**

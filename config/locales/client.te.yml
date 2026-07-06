@@ -1994,6 +1994,7 @@ te:
       email_label: "ఈమెయిల్"
       continue_button: "కొనసాగించండి"
       verify_button: "కొనసాగించండి"
+      signup_title: "మీ ఖాతాను సృష్టించండి"
       account_ready_continue: "కొనసాగించండి"
       username_label: "సభ్యనామం"
     login:

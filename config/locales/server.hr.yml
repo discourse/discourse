@@ -1265,8 +1265,6 @@ hr:
     silence_new_user_sensitivity: "Vjerojatnost da će novi korisnik biti ušutkan na temelju oznaka neželjene pošte"
     auto_close_topic_sensitivity: "Vjerojatnost da će označena tema biti automatski zatvorena"
     cooldown_minutes_after_hiding_posts: "Broj minuta koje korisnik mora čekati prije nego što može urediti post skriven putem označavanja zajednice"
-    max_topics_in_first_day: "Maksimalan broj tema koje korisnik smije kreirati u razdoblju od 24 sata nakon što je napravio svoju prvu objavu"
-    max_replies_in_first_day: "Maksimalan broj odgovora koje korisnik smije stvoriti u razdoblju od 24 sata nakon što je napravio svoju prvu objavu"
     tl2_additional_likes_per_day_multiplier: "Povećajte ograničenje lajkova po danu za tl2 (član) množenjem s ovim brojem"
     tl3_additional_likes_per_day_multiplier: "Povećajte ograničenje lajkova po danu za tl3 (regular) množenjem s ovim brojem"
     tl4_additional_likes_per_day_multiplier: "Povećajte ograničenje lajkova po danu za tl4 (voditelj) množenjem s ovim brojem"
@@ -1501,7 +1499,6 @@ hr:
     dashboard_general_tab_activity_metrics: "Odaberite izvješća koja će se prikazivati kao metrika aktivnosti na kartici općenito."
     share_quote_buttons: "Odredite koje se stavke pojavljuju u widgetu za dijeljenje ponuda i kojim redoslijedom."
     share_quote_visibility: "Odredite kada prikazati gumbe za dijeljenje ponuda: nikada, samo anonimnim korisnicima ili svim korisnicima. "
-    create_revision_on_bulk_topic_moves: "Napravite reviziju za prve postove kada se teme skupno premještaju u novu kategoriju."
     allow_changing_staged_user_tracking: "Dopustite korisniku administratoru da promijeni postavke obavijesti o kategorijama i oznakama postupnog korisnika."
     suggest_weekends_in_date_pickers: "Uključite vikende (subota i nedjelja) u prijedloge za odabir datuma (onemogućite ovo ako Discourse koristite samo radnim danima, od ponedjeljka do petka)."
     errors:

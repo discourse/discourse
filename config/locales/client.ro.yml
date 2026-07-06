@@ -2066,6 +2066,7 @@ ro:
       email_label: "E-mail"
       continue_button: "Continuă"
       verify_button: "Continuă"
+      signup_title: "Creează-ți contul"
       account_ready_continue: "Continuă"
       username_label: "Nume utilizator"
     login:

@@ -626,9 +626,6 @@ fr:
         description: "Choisissez l'une des options ci-dessous et l'IA vous proposera une nouvelle version du texte."
         selection_hint: "Conseil : vous pouvez également sélectionner une partie du texte avant d'ouvrir l'assistant pour ne réécrire que cette partie."
         suggest_errors:
-          too_many_tags:
-            one: "Vous ne pouvez avoir qu'un maximum de %{count} étiquette"
-            other: "Vous ne pouvez avoir qu'un maximum de %{count} étiquettes"
           no_suggestions: "Aucune suggestion disponible"
         missing_content: "Veuillez saisir du contenu pour générer des suggestions."
         context_menu:

@@ -1217,8 +1217,6 @@ ca:
     silence_new_user_sensitivity: "La probabilitat que un nou usuari sigui silenciat a partir de banderes de brossa"
     auto_close_topic_sensitivity: "La probabilitat que un tema marcat amb bandera es tanqui automàticament"
     cooldown_minutes_after_hiding_posts: "Nombre de minuts que un usuari ha d'esperar abans d'editar una publicació amagada per les banderes de la comunitat"
-    max_topics_in_first_day: "Nombre màxim de temes que un usuari pot crear en les 24 hores després de crear la seva primera publicació"
-    max_replies_in_first_day: "Nombre màxim de respostes que un usuari pot crear en les 24 hores després de crear la seva primera publicació."
     tl2_additional_likes_per_day_multiplier: "Augmenta el límit de 'M'agrada' per dia per al nivell de confiança 2 (membre) multiplicant per aquesta xifra"
     tl3_additional_likes_per_day_multiplier: "Augmenta la quantitat de 'M'agrada' per dia per al nivell de confiança 3 (habitual) multiplicant per aquesta xifra"
     tl4_additional_likes_per_day_multiplier: "Augmenta el límit de 'M'agrada' per dia per al nivell de confiança 4 (líder) multiplicant per aquesta xifra"

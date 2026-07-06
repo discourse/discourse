@@ -498,6 +498,63 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  # Models the self-hoster upgrade that lowers the default
+  # promote_upcoming_changes_on_status from :stable to :beta. A beta change
+  # that previously sat below the promotion threshold now meets it, so we must
+  # be sure the transition only auto-promotes changes the admin never touched
+  # and never overrides an admin's explicit opt-in/opt-out. The opt-out case is
+  # the critical one: the stored value equals the YAML default (false), and it
+  # only survives because setting_modified_from_default? treats upcoming change
+  # settings as modified whenever a DB row exists (see SiteSettingExtension#refresh!).
+  describe "lowering promote_upcoming_changes_on_status from :stable to :beta" do
+    before do
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :beta,
+            impact_type: "other",
+            impact_role: "developers",
+          },
+        },
+      )
+      SiteSetting.promote_upcoming_changes_on_status = :stable
+      UpcomingChanges.clear_caches!
+    end
+
+    after do
+      SiteSetting.remove_override!(setting_name)
+      SiteSetting.promote_upcoming_changes_on_status = :stable
+      UpcomingChanges.clear_caches!
+    end
+
+    it "auto-promotes a change the admin never touched" do
+      expect(described_class.enabled?(setting_name)).to eq(false)
+
+      SiteSetting.promote_upcoming_changes_on_status = :beta
+
+      expect(described_class.enabled?(setting_name)).to eq(true)
+    end
+
+    it "keeps a change the admin explicitly opted out of disabled" do
+      SiteSetting.enable_upload_debug_mode = false
+      expect(described_class.enabled?(setting_name)).to eq(false)
+
+      SiteSetting.promote_upcoming_changes_on_status = :beta
+
+      expect(described_class.enabled?(setting_name)).to eq(false)
+    end
+
+    it "keeps a change the admin explicitly opted into enabled" do
+      SiteSetting.enable_upload_debug_mode = true
+      expect(described_class.enabled?(setting_name)).to eq(true)
+
+      SiteSetting.promote_upcoming_changes_on_status = :beta
+
+      expect(described_class.enabled?(setting_name)).to eq(true)
+    end
+  end
+
   describe ".settings_hidden_while_enabled" do
     # `enable_upload_debug_mode` stands in for the change; the two real settings
     # below stand in for the legacy settings it would hide.

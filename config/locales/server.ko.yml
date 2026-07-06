@@ -1346,8 +1346,6 @@ ko:
     silence_new_user_sensitivity: "스팸 신고로 인해 새 사용자가 차단될 가능성"
     auto_close_topic_sensitivity: "신고된 글이 자동으로 잠금 처리될 가능성"
     cooldown_minutes_after_hiding_posts: "커뮤니티 신고로 인해 숨겨진 주제를 사용자가 편집할 수 있기 전까지 대기해야 하는 시간(분)"
-    max_topics_in_first_day: "첫 게시물 생성 후 24시간 사용자가 생성할 수 있는 최대 주제 수"
-    max_replies_in_first_day: "첫 게시물 생성 후 24시간 사용자가 생성할 수 있는 최대 댓글 수"
     tl2_additional_likes_per_day_multiplier: "tl2(회원)의 일일 좋아요 한도를 올릴 배수"
     tl3_additional_likes_per_day_multiplier: "tl3(정회원)의 일일 좋아요 한도를 올릴 배수"
     tl4_additional_likes_per_day_multiplier: "tl4(리더)의 일일 좋아요 한도를 올릴 배수"
@@ -1768,7 +1766,6 @@ ko:
     dashboard_general_tab_activity_metrics: "일반 탭에서 활동 메트릭으로 표시할 리포트를 선택합니다."
     share_quote_buttons: "인용 공유 위젯에 표시되는 항목과 순서를 결정합니다."
     share_quote_visibility: "인용 공유 버튼을 언제 표시할지 결정합니다. 표시 안 함, 익명 사용자만, 모든 사용자 중 선택합니다. "
-    create_revision_on_bulk_topic_moves: "주제가 일괄 새 카테고리로 이동되면 첫 게시물에 대한 수정 버전을 생성합니다."
     errors:
       invalid_css_color: "유효하지 않은 색상입니다. 색상 이름 또는 16진수 값을 입력하세요."
       invalid_email: "유효하지 않은 이메일 주소입니다."

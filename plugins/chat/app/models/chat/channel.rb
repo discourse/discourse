@@ -43,6 +43,7 @@ module Chat
     validates :chatable_type, length: { maximum: 100 }
     validates :type, length: { maximum: 100 }
     validates :slug, length: { maximum: 100 }
+    validates :emoji, length: { maximum: 100 }
     validate :ensure_slug_ok, if: :slug_changed?
     before_validation :generate_auto_slug
 

@@ -2209,6 +2209,41 @@ RSpec.describe TopicsController do
         expect(topic.archetype).to eq(Archetype.default)
       end
 
+      it "does not allow a regular user to convert a private message to a public topic" do
+        private_message = Fabricate(:private_message_topic, user: user, recipient: user_2)
+        Fabricate(:post, topic: private_message, user: user)
+        victim_reply = Fabricate(:post, topic: private_message, user: user_2, raw: "private reply")
+
+        sign_in(post_author2)
+        get "/t/#{private_message.slug}/#{private_message.id}.json"
+        blocked_status = response.status
+        expect(blocked_status).to be_in([403, 404])
+        expect(response.body).not_to include(victim_reply.raw)
+
+        sign_in(user)
+        put "/t/#{private_message.slug}/#{private_message.id}.json",
+            params: {
+              archetype: Archetype.default,
+              category_id: category.id,
+            }
+        update_status = response.status
+        update_body = response.parsed_body
+
+        sign_in(post_author2)
+        get "/t/#{private_message.slug}/#{private_message.id}.json"
+
+        aggregate_failures do
+          expect(update_status).to eq(422)
+          expect(update_body["errors"]).to include(
+            I18n.t("activerecord.errors.models.topic.attributes.base.unable_to_update"),
+          )
+          expect(private_message.reload).to be_private_message
+          expect(private_message.category_id).to be_nil
+          expect(response.status).to eq(blocked_status)
+          expect(response.body).not_to include(victim_reply.raw)
+        end
+      end
+
       describe "without permission" do
         it "raises an exception when the user doesn't have permission to update the topic" do
           topic.update!(archived: true)
@@ -4502,7 +4537,7 @@ RSpec.describe TopicsController do
     end
 
     it "returns a list of categories when `lazy_load_categories_group` site setting is enabled for the current user" do
-      SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+      SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}"
 
       topic_post_2 = Fabricate(:post, topic: topic)
       topic_post_3 = Fabricate(:post, topic: topic)

@@ -1087,11 +1087,6 @@ pl_PL:
         choose: "Wybierz za mnie"
         suggestions: "Sugestie"
         suggest_errors:
-          too_many_tags:
-            one: "Możesz mieć maksymalnie %{count} znacznik"
-            few: "Możesz mieć maksymalnie %{count} znaczniki"
-            many: "Możesz mieć maksymalnie %{count} znaczników"
-            other: "Możesz mieć maksymalnie %{count} znaczników"
           no_suggestions: "Brak dostępnych sugestii"
         missing_content: "Wprowadź treść, aby wygenerować sugestie."
         context_menu:

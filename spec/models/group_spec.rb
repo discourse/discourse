@@ -174,13 +174,19 @@ RSpec.describe Group do
     end
 
     it "is invalid for poorly formatted domains" do
-      group.automatic_membership_email_domains = "wikipedia.org|*@example.com"
+      group.automatic_membership_email_domains = "wikipedia.org|not a domain"
       expect(group.valid?).to eq false
     end
 
     it "is valid for proper domains" do
       group.automatic_membership_email_domains = "discourse.org|wikipedia.org"
       expect(group.valid?).to eq true
+    end
+
+    it "normalizes domains that include an @ or surrounding whitespace" do
+      group.automatic_membership_email_domains = " @discourse.org | jane@wikipedia.org "
+      expect(group.valid?).to eq true
+      expect(group.automatic_membership_email_domains).to eq("discourse.org|wikipedia.org")
     end
 
     it "is invalid for too many domains" do
@@ -243,6 +249,36 @@ RSpec.describe Group do
 
         expect(group.valid?).to eq(true)
       end
+    end
+  end
+
+  describe ".get_valid_email_domains" do
+    it "normalizes URLs, emails, ports, case, and surrounding whitespace to bare domains" do
+      expect(Group.get_valid_email_domains("HTTPS://Discourse.ORG/path")).to eq(["discourse.org"])
+      expect(Group.get_valid_email_domains("@discourse.org")).to eq(["discourse.org"])
+      expect(Group.get_valid_email_domains("jane@discourse.org")).to eq(["discourse.org"])
+      expect(Group.get_valid_email_domains("a@b@discourse.org")).to eq(["discourse.org"])
+      expect(Group.get_valid_email_domains("  discourse.org  ")).to eq(["discourse.org"])
+      expect(Group.get_valid_email_domains("discourse.org:8080")).to eq(["discourse.org"])
+    end
+
+    it "collapses entries that normalize to the same domain, ignoring case" do
+      expect(Group.get_valid_email_domains("sales@acme.io|support@acme.io")).to eq(["acme.io"])
+      expect(Group.get_valid_email_domains("Acme.io|acme.io")).to eq(["acme.io"])
+    end
+
+    it "skips blank entries left by stray pipes or a bare @" do
+      invalid = []
+      valid = Group.get_valid_email_domains("acme.io||jane@") { |d| invalid << d }
+      expect(valid).to eq(["acme.io"])
+      expect(invalid).to be_empty
+    end
+
+    it "yields the normalized value for genuinely invalid domains" do
+      invalid = []
+      valid = Group.get_valid_email_domains("@discourse.org|not a domain") { |d| invalid << d }
+      expect(valid).to eq(["discourse.org"])
+      expect(invalid).to eq(["not a domain"])
     end
   end
 

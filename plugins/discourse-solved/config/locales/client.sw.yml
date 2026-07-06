@@ -12,6 +12,14 @@ sw:
           kpi:
             accepted_solutions:
               label: "Majibu yaliyokubaliwa"
+        sections:
+          support:
+            filter:
+              all_categories: "Kategoria Zote"
+            answerers:
+              staff: "Wasaidizi"
+              member: "Wanachama"
+              basic: "Kawaida"
   js:
     notifications:
       alt:

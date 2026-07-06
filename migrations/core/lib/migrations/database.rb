@@ -2,8 +2,9 @@
 
 require "date"
 require "extralite"
+require "fileutils"
 require "ipaddr"
-require "oj"
+require "json"
 
 module Migrations
   module Database
@@ -15,8 +16,15 @@ module Migrations
       Migrator.new(db_path).migrate(migrations_path)
     end
 
-    def self.reset!(db_path)
-      Migrator.new(db_path).reset!
+    # A WAL-mode database is three files: the main file plus its `-wal` and `-shm`
+    # sidecars.
+    def self.database_files(db_path)
+      [db_path, "#{db_path}-wal", "#{db_path}-shm"]
+    end
+
+    # Deletes the database and its sidecar files; no error if any are missing.
+    def self.delete_database(db_path)
+      FileUtils.rm_f(database_files(db_path))
     end
 
     def self.connect(path)
@@ -74,7 +82,7 @@ module Migrations
 
     def self.to_json(value)
       return nil if value.nil?
-      Oj.dump(value, mode: :compat)
+      JSON.generate(value)
     end
 
     def self.to_date(text)

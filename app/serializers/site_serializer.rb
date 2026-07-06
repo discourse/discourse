@@ -54,6 +54,7 @@ class SiteSerializer < ApplicationSerializer
     :admin_config_login_routes,
     :email_configured,
     :upcoming_changes_with_css,
+    :permanent_upcoming_change_names,
     :access_control,
   )
 
@@ -454,6 +455,14 @@ class SiteSerializer < ApplicationSerializer
 
   def upcoming_changes_with_css
     UpcomingChanges.including_css
+  end
+
+  def permanent_upcoming_change_names
+    UpcomingChanges.permanent_upcoming_change_names
+  end
+
+  def include_permanent_upcoming_change_names?
+    scope.is_staff?
   end
 
   private

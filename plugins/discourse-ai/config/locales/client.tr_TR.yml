@@ -985,9 +985,6 @@ tr_TR:
         description: "Aşağıdaki seçeneklerden birini belirleyin ve YZ size metnin yeni bir versiyonunu önersin."
         selection_hint: "İpucu: Ayrıca, yalnızca onu yeniden yazmak için yardımcıyı açmadan önce metnin bir bölümünü de seçebilirsiniz."
         suggest_errors:
-          too_many_tags:
-            one: "En fazla sadece %{count} etikete sahip olabilirsiniz"
-            other: "En fazla sadece %{count} etikete sahip olabilirsiniz"
           no_suggestions: "Mevcut öneri yok"
         missing_content: "Lütfen öneri oluşturmak için birkaç içerik girin."
         context_menu:

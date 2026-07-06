@@ -747,8 +747,6 @@ ja:
         description: "以下のいずれかのオプションを選択すると、AI が新しいバージョンのテキストを提案します。"
         selection_hint: "ヒント: ヘルパーを開く前にテキストの一部を選択すると、その部分のみを書き換えることもできます。"
         suggest_errors:
-          too_many_tags:
-            other: "最大 %{count} 個のタグのみを使用できます"
           no_suggestions: "提案はありません"
         missing_content: "提案を生成するにはコンテンツを入力してください。"
         context_menu:

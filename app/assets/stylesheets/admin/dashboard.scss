@@ -798,6 +798,11 @@
   display: flex;
   align-items: flex-start;
   border-bottom: 1px solid var(--content-border-color);
+  transition: background-color 0.5s ease;
+
+  &.--highlighted {
+    background-color: var(--highlight-low);
+  }
 
   &:not(:first-child) {
     margin-top: var(--space-4);

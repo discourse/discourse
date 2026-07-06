@@ -2915,6 +2915,7 @@ ru:
       email_label: "Эл. почта"
       continue_button: "Продолжить"
       verify_button: "Продолжить"
+      signup_title: "Создать аккаунт"
       account_ready_continue: "Продолжить"
       username_label: "Псевдоним"
     login:
@@ -4753,7 +4754,6 @@ ru:
           many: "Действительно объединить %{count} сообщений?"
           other: "Действительно объединить %{count} сообщения?"
       revisions:
-        diff_too_complex: "Различия слишком сложны для отображения. Пожалуйста, попробуйте просмотреть отдельные, более мелкие изменения."
         locale:
           no_locale_set: "Язык не установлен"
           locale_removed: "Язык удален"
@@ -5717,8 +5717,6 @@ ru:
       no_read_topics_body: "Когда вы начнете читать обсуждения, список читаемых тем появится здесь. Чтобы начать читать, поищите интересующие вас темы в разделе <a href='%{topUrl}'>Обсуждаемые</a>, в других <a href='%{categoriesUrl}'>категориях</a> форума либо выполните поиск по ключевому слову %{searchIcon}."
     no_group_messages_title: "Групповые сообщения не найдены"
     topic_entrance:
-      sr_jump_top_button: "Перейти к первой публикации — %{date}"
-      sr_jump_bottom_button: "Перейти к последней публикации — %{date}"
       jump_top_button_title: "Перейти к первой публикации"
       jump_bottom_button_title: "Перейти к последней публикации"
     fullscreen_table:

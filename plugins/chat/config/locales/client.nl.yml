@@ -261,6 +261,10 @@ nl:
         header: "Chatkop"
         composer: "Chateditor"
         channels_list: "Chatkanalenlijst"
+      screen_reader:
+        new_messages:
+          one: "%{count} nieuw bericht"
+          other: "%{count} nieuw berichten"
       no_direct_message_channels: "Je neemt nog niet deel aan directe berichten!"
       no_direct_message_channels_cta: "Gesprek starten"
       no_public_channels: "Je neemt nog niet deel aan kanalen!"

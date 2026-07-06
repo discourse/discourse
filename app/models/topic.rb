@@ -2293,7 +2293,7 @@ class Topic < ActiveRecord::Base
   end
 
   def limit_first_day_topics_per_day
-    apply_per_day_rate_limit_for("first-day-topics", :max_topics_in_first_day)
+    RateLimiter.new(user, "first-day-topics-per-day", user.first_day_topics_limit, 1.day.to_i)
   end
 
   def apply_per_day_rate_limit_for(key, method_name)

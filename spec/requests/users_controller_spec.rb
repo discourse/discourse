@@ -906,18 +906,26 @@ RSpec.describe UsersController do
         end
       end
 
-      context "when signup params include group assignments" do
+      context "when signup params include protected profile attributes" do
         fab!(:whisperers_group, :group)
 
         let(:created_user) { User.find(response.parsed_body["user_id"]) }
 
         before { SiteSetting.whispers_allowed_groups = whisperers_group.id.to_s }
 
-        it "ignores primary_group_id and flair_group_id on unauthenticated signup" do
-          post_user(primary_group_id: whisperers_group.id, flair_group_id: whisperers_group.id)
+        it "ignores protected profile attributes on unauthenticated signup" do
+          post_user(
+            title: "Moderator",
+            primary_group_id: whisperers_group.id,
+            flair_group_id: whisperers_group.id,
+          )
 
           expect(response).to have_http_status(:ok)
-          expect(created_user).to have_attributes(primary_group_id: nil, flair_group_id: nil)
+          expect(created_user).to have_attributes(
+            title: nil,
+            primary_group_id: nil,
+            flair_group_id: nil,
+          )
           expect(created_user).not_to be_a_whisperer
         end
       end
@@ -5946,6 +5954,46 @@ RSpec.describe UsersController do
                 term: user.username,
               }
 
+          expect(users_found).to be_empty
+        end
+
+        it "does not let an anon user enumerate members of a group it cannot see" do
+          hidden =
+            Fabricate(
+              :group,
+              visibility_level: Group.visibility_levels[:logged_on_users],
+              members_visibility_level: Group.visibility_levels[:public],
+            )
+          hidden.add(user)
+
+          get "/u/search/users.json", params: { group: hidden.name, term: user.username }
+
+          expect(response.status).to eq(403)
+        end
+
+        it "lets a signed-in user filter by a non-public group they can see" do
+          sign_in(user)
+          group =
+            Fabricate(
+              :group,
+              visibility_level: Group.visibility_levels[:logged_on_users],
+              members_visibility_level: Group.visibility_levels[:public],
+            )
+          member = Fabricate(:user, username: "visiblemember")
+          group.add(member)
+
+          get "/u/search/users.json", params: { group: group.name, term: "visiblemember" }
+
+          expect(response.status).to eq(200)
+          expect(users_found).to include("visiblemember")
+        end
+
+        it "returns no results rather than erroring for a group that does not exist" do
+          sign_in(user)
+
+          get "/u/search/users.json", params: { group: "does_not_exist", term: user.username }
+
+          expect(response.status).to eq(200)
           expect(users_found).to be_empty
         end
 
