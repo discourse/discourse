@@ -13,6 +13,9 @@ class CategorySetting < ActiveRecord::Base
        { no_one: 0, everyone: 1, everyone_except: 2, no_one_except: 3 },
        prefix: true
 
+  after_save :clear_nested_replies_conversion_completed,
+             if: :saved_change_to_nested_replies_default?
+
   def require_topic_approval=(value)
     self.topic_posting_review_mode =
       ActiveModel::Type::Boolean.new.cast(value) ? :everyone : :no_one
@@ -43,6 +46,12 @@ class CategorySetting < ActiveRecord::Base
               greater_than_or_equal_to: 0,
               allow_nil: true,
             }
+
+  private
+
+  def clear_nested_replies_conversion_completed
+    category.clear_nested_replies_conversion_completed! unless nested_replies_default?
+  end
 end
 
 # == Schema Information

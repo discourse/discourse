@@ -1691,6 +1691,51 @@ RSpec.describe CategoriesController do
     end
   end
 
+  describe "#convert_nested_replies" do
+    let!(:topic) { Fabricate(:topic, category: category) }
+
+    let(:url) { "/categories/#{category.id}/convert_nested_replies.json" }
+
+    before do
+      SiteSetting.nested_replies_enabled = true
+      category.category_setting.update!(nested_replies_default: true)
+    end
+
+    it "requires the user to be logged in" do
+      post url
+
+      expect(response.status).to eq(403)
+    end
+
+    it "converts topics in the category to nested replies" do
+      sign_in(admin)
+
+      expect { post url }.to change { NestedTopic.where(topic: topic).count }.from(0).to(1)
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["converted_topic_count"]).to eq(1)
+      expect(response.parsed_body["nested_replies_conversion_completed"]).to eq(true)
+      expect(category.reload.nested_replies_conversion_completed?).to eq(true)
+    end
+
+    it "does not allow users who cannot edit the category" do
+      sign_in(user)
+
+      post url
+
+      expect(response.status).to eq(403)
+      expect(NestedTopic.where(topic: topic).exists?).to eq(false)
+    end
+
+    it "returns not found for a missing category" do
+      sign_in(admin)
+
+      post "/categories/0/convert_nested_replies.json"
+
+      expect(response.status).to eq(404)
+    end
+  end
+
   describe "#visible_groups" do
     fab!(:public_group) do
       Fabricate(:group, visibility_level: Group.visibility_levels[:public], name: "aaa")
