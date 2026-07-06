@@ -662,8 +662,7 @@ class Guardian
   end
 
   def can_lazy_load_categories?
-    SiteSetting.lazy_load_categories_groups_map.include?(Group::AUTO_GROUPS[:everyone]) ||
-      @user.in_any_groups?(SiteSetting.lazy_load_categories_groups_map)
+    in_any_groups?(SiteSetting.lazy_load_categories_groups_map)
   end
 
   def is_me?(other)
