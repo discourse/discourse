@@ -2587,6 +2587,44 @@ body.wireframe-active
   }
 }
 
+/* Covers an unconfigured block as a click target that selects it (opening the
+   inspector) so the user can fill in the missing arg. */
+
+.wireframe-empty-arg-prompt {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--wf-gap);
+  padding: 1rem;
+  border: 0;
+  background: rgb(0 0 0 / 0.02);
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background 80ms ease-out,
+    color 80ms ease-out;
+
+  &:hover {
+    background: rgb(var(--wf-accent-rgb), 0.08);
+    color: var(--wireframe-block-color);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--wf-focus-ring);
+    outline-offset: -2px;
+  }
+
+  &__icon .d-icon {
+    font-size: 1.5rem;
+  }
+}
+
 /* Editor-only empty-cell placeholders use a separate class
    (`.wireframe-grid-cell`) and need their own copy of the
    per-cell collapse override — the universal block in

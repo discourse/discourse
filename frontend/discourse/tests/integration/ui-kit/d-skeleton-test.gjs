@@ -43,20 +43,97 @@ module("Integration | UI Kit | d-skeleton", function (hooks) {
     assert.dom(".d-skeleton__item").hasClass("d-skeleton__item--text");
   });
 
-  test("dimensions apply via inline style", async function (assert) {
+  test("dimensions apply via inline custom properties", async function (assert) {
     await render(
       <template>
         <DSkeleton @variant="rect" @width="50%" @height="4em" @radius="1em" />
       </template>
     );
 
-    // Match the inline style attribute rather than computed style, which would
+    // Match the inline style attribute, not computed style, which would
     // resolve relative units (%/em) to pixels.
-    assert.dom(".d-skeleton__item").hasAttribute("style", /width:\s*50%/);
-    assert.dom(".d-skeleton__item").hasAttribute("style", /height:\s*4em/);
     assert
       .dom(".d-skeleton__item")
-      .hasAttribute("style", /border-radius:\s*1em/);
+      .hasAttribute("style", /--d-skeleton-item-width:\s*50%/);
+    assert
+      .dom(".d-skeleton__item")
+      .hasAttribute("style", /--d-skeleton-item-height:\s*4em/);
+    assert
+      .dom(".d-skeleton__item")
+      .hasAttribute("style", /--d-skeleton-radius:\s*1em/);
+  });
+
+  test("@lastLineWidth tapers only the final line of a multi-line block", async function (assert) {
+    await render(
+      <template>
+        <DSkeleton
+          @variant="text"
+          @count={{3}}
+          @width="100%"
+          @lastLineWidth="55%"
+        />
+      </template>
+    );
+
+    const items = [...document.querySelectorAll(".d-skeleton__item")];
+    assert.strictEqual(items.length, 3, "renders one item per line");
+    assert
+      .dom(items[0])
+      .hasAttribute("style", /--d-skeleton-item-width:\s*100%/);
+    assert
+      .dom(items[1])
+      .hasAttribute("style", /--d-skeleton-item-width:\s*100%/);
+    assert
+      .dom(items[2])
+      .hasAttribute(
+        "style",
+        /--d-skeleton-item-width:\s*55%/,
+        "the last line is shorter"
+      );
+  });
+
+  test("@lastLineWidth is ignored for a single item", async function (assert) {
+    await render(
+      <template>
+        <DSkeleton @variant="text" @width="100%" @lastLineWidth="55%" />
+      </template>
+    );
+
+    assert
+      .dom(".d-skeleton__item")
+      .hasAttribute(
+        "style",
+        /--d-skeleton-item-width:\s*100%/,
+        "a lone line keeps the full width"
+      );
+  });
+
+  test("stamps the variant on the wrapper for variant-specific styling", async function (assert) {
+    await render(<template><DSkeleton @variant="text" /></template>);
+    assert
+      .dom(".d-skeleton")
+      .hasClass(
+        "d-skeleton--text",
+        "the wrapper carries the variant so the scss can set its line rhythm"
+      );
+  });
+
+  test("marks a stacked skeleton multiline, a lone one not", async function (assert) {
+    await render(<template><DSkeleton @count={{3}} /></template>);
+    assert
+      .dom(".d-skeleton")
+      .hasClass(
+        "d-skeleton--multiline",
+        "stacked items are multiline so text lines drop to ink height"
+      );
+
+    await render(<template><DSkeleton /></template>);
+    assert
+      .dom(".d-skeleton")
+      .doesNotHaveClass(
+        "d-skeleton--multiline",
+        "a lone bar matches its element's full line box"
+      );
   });
 
   test("@size is a square shorthand", async function (assert) {
@@ -64,8 +141,12 @@ module("Integration | UI Kit | d-skeleton", function (hooks) {
       <template><DSkeleton @variant="circle" @size="3em" /></template>
     );
 
-    assert.dom(".d-skeleton__item").hasAttribute("style", /width:\s*3em/);
-    assert.dom(".d-skeleton__item").hasAttribute("style", /height:\s*3em/);
+    assert
+      .dom(".d-skeleton__item")
+      .hasAttribute("style", /--d-skeleton-item-width:\s*3em/);
+    assert
+      .dom(".d-skeleton__item")
+      .hasAttribute("style", /--d-skeleton-item-height:\s*3em/);
   });
 
   test("forwards attributes to the root element", async function (assert) {

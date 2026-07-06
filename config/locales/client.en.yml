@@ -154,7 +154,10 @@ en:
           image_help: "Overrides the topic's own image."
           show_excerpt: "Show excerpt"
           show_excerpt_help: "Shows a short excerpt when the card has no image."
-          empty: "Choose a topic to feature."
+          hide_when_unavailable: "Hide when unavailable"
+          hide_when_unavailable_help: "Renders nothing when the topic can't be loaded."
+          empty_prompt: "Choose a topic to feature."
+          unavailable: "This topic isn't available."
         media_card:
           avatar_url: "Avatar"
           name: "Name"

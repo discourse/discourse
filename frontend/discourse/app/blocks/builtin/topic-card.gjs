@@ -5,6 +5,8 @@ import { trustHTML } from "@ember/template";
 import { block } from "discourse/blocks";
 import { fetchTopicCard } from "discourse/lib/blocks/-internals/fetch-topic-card";
 import { and, not, or } from "discourse/truth-helpers";
+/** @type {import("discourse/ui-kit/d-skeleton.gjs")} */
+import DSkeleton from "discourse/ui-kit/d-skeleton";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -35,6 +37,7 @@ import { i18n } from "discourse-i18n";
         control: "topic-select",
         label: i18n("blocks.builtin.topic_card.topic_id"),
         helpText: i18n("blocks.builtin.topic_card.topic_id_help"),
+        emptyPrompt: i18n("blocks.builtin.topic_card.empty_prompt"),
       },
     },
     image: {
@@ -57,11 +60,19 @@ import { i18n } from "discourse-i18n";
         helpText: i18n("blocks.builtin.topic_card.show_excerpt_help"),
       },
     },
+    hideWhenUnavailable: {
+      type: "boolean",
+      default: false,
+      ui: {
+        control: "toggle",
+        label: i18n("blocks.builtin.topic_card.hide_when_unavailable"),
+        helpText: i18n("blocks.builtin.topic_card.hide_when_unavailable_help"),
+      },
+    },
   },
   data: {
     request: (args) => ({ kind: "topic-card", topicId: args.topicId }),
     resolve: (descriptor) => fetchTopicCard({ topicId: descriptor.topicId }),
-    skeleton: () => ({ variant: "rect", count: 1 }),
   },
 })
 export default class TopicCard extends Component {
@@ -102,11 +113,36 @@ export default class TopicCard extends Component {
             ></a>
           {{/let}}
         </:content>
-        <:empty>
-          <div class="d-block-topic-card__empty" data-block-arg="image">
-            {{i18n "blocks.builtin.topic_card.empty"}}
+        <:loading>
+          <div
+            class="d-block-topic-card__details d-block-topic-card__skeleton"
+            aria-hidden="true"
+          >
+            <DSkeleton
+              class="d-block-topic-card__skeleton-category"
+              @variant="text"
+              @width="8ch"
+            />
+            <h3 class="d-block-topic-card__title">
+              <DSkeleton @variant="text" @width="22ch" />
+            </h3>
+            {{#if (and @showExcerpt (not @image.url))}}
+              <DSkeleton @variant="text" @count={{3}} @lastLineWidth="18ch" />
+            {{/if}}
           </div>
+        </:loading>
+        <:empty>
+          {{! Intentionally bare — any prompt to configure this block is painted
+              by external tooling, never on the render path. }}
+          <div class="d-block-topic-card__empty"></div>
         </:empty>
+        <:error>
+          {{#unless @hideWhenUnavailable}}
+            <div class="d-block-topic-card__unavailable">
+              {{i18n "blocks.builtin.topic_card.unavailable"}}
+            </div>
+          {{/unless}}
+        </:error>
       </@Data>
     </div>
   </template>

@@ -244,6 +244,9 @@ const BlockComponentManager = new Proxy(
  *   title-cased form of the arg name.
  * @property {string} [placeholder] - Placeholder text for text-style controls.
  * @property {string} [helpText] - Help text shown beneath the control.
+ * @property {string} [emptyPrompt] - A call to action shown by external tooling
+ *   when this arg is unset (e.g. "Choose a topic to feature."). Advisory only;
+ *   never rendered by the block itself.
  * @property {string} [group] - Edit-form section name (e.g. "Content",
  *   "Appearance"). Args without a group land under "General".
  * @property {boolean} [hidden] - When true, the arg is omitted from the

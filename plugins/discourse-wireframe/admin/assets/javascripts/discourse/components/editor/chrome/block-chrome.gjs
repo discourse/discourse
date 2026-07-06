@@ -22,6 +22,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dDragAndDropExternalTarget from "discourse/ui-kit/modifiers/d-drag-and-drop-external-target";
 import { i18n } from "discourse-i18n";
 import BlockToolbar from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/block-toolbar";
+import EmptyArgPrompt from "discourse/plugins/discourse-wireframe/discourse/components/editor/chrome/empty-arg-prompt";
 import EditorEmptyDropPlaceholder from "discourse/plugins/discourse-wireframe/discourse/components/editor/drag-drop/editor-empty-drop-placeholder";
 import GridOverlay from "discourse/plugins/discourse-wireframe/discourse/components/editor/drag-drop/grid-overlay";
 import ImageArgOverlay from "discourse/plugins/discourse-wireframe/discourse/components/editor/image/image-arg-overlay";
@@ -36,6 +37,7 @@ import {
   GRID_LAYOUT_SELECTOR,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/editor-dom-contract";
 import { imageArgEntries } from "discourse/plugins/discourse-wireframe/discourse/lib/empty-image-upload";
+import { emptyPromptArgEntries } from "discourse/plugins/discourse-wireframe/discourse/lib/empty-prompt-args";
 import {
   EXTERNAL_IMAGE_DROP_SOURCE,
   firstImageFile,
@@ -730,6 +732,23 @@ export default class BlockChrome extends Component {
       ...e,
       key: `${e.name}:${e.isEmpty}`,
     }));
+  }
+
+  /**
+   * The args declaring a `ui.emptyPrompt` that are currently unset — the block
+   * is unconfigured on the arg that identifies it, so the editor paints a "fill
+   * me in" prompt over the block. Reads live args the same way `imageArgEntries`
+   * does, gated on the layout signal so a fill / clear re-evaluates.
+   *
+   * @returns {Array<{name: string, def: Object, prompt: string}>}
+   */
+  get emptyPromptArgEntries() {
+    // eslint-disable-next-line no-unused-vars
+    const _v = this.wireframeLayoutSignal.version;
+    const entry = this.wireframeLayoutQuery.findEntryAndOutletSync(
+      this.args.blockKey
+    )?.entry;
+    return emptyPromptArgEntries(this.metadata?.args, entry?.args);
   }
 
   /**
@@ -2040,6 +2059,14 @@ export default class BlockChrome extends Component {
               @isEmpty={{imageArg.isEmpty}}
               @getChromeEl={{this.getChromeEl}}
               @pendingFile={{this.pendingBackgroundFile}}
+            />
+          {{/each}}
+
+          {{#each this.emptyPromptArgEntries key="name" as |emptyArg|}}
+            <EmptyArgPrompt
+              @prompt={{emptyArg.prompt}}
+              @icon={{this.metadata.icon}}
+              @onActivate={{this.selectSelf}}
             />
           {{/each}}
 

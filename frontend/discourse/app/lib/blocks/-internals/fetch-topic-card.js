@@ -39,23 +39,22 @@ function extractExcerpt(cooked, maxLength = EXCERPT_MAX_LENGTH) {
  *
  * @param {Object} options
  * @param {number} options.topicId - The id of the topic to resolve.
- * @returns {Promise<Object|null>} The card data, or `null` when the topic id is
- *   missing or the fetch fails.
+ * @returns {Promise<Object|null>} The card data, or `null` when no `topicId` is
+ *   configured.
+ * @throws When a configured topic can't be resolved (fetch failure, or the
+ *   fetch returns no valid topic).
  */
 export async function fetchTopicCard({ topicId }) {
   if (!topicId) {
     return null;
   }
 
-  let topic;
-  try {
-    topic = await Topic.find(topicId, {});
-  } catch {
-    return null;
-  }
+  // Don't catch: a configured topic that can't load is an error (the error
+  // slot), not an empty card.
+  const topic = await Topic.find(topicId, {});
 
   if (!topic?.id) {
-    return null;
+    throw new Error(`No topic found for id ${topicId}`);
   }
 
   const firstPost = topic.post_stream?.posts?.[0];
