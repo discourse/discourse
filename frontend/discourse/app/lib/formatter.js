@@ -72,7 +72,7 @@ export function updateRelativeAge(elems) {
 }
 
 export function autoUpdatingRelativeAge(date, options) {
-  if (!date) {
+  if (!date || isNaN(date.getTime())) {
     return "";
   }
   if (+date === +new Date(0)) {
