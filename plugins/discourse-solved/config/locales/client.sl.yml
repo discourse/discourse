@@ -12,6 +12,17 @@ sl:
           kpi:
             accepted_solutions:
               label: "Sprejete rešitve"
+        sections:
+          support:
+            filter:
+              all_categories: "Vse kategorije"
+            answerers:
+              staff: "Osebje"
+              member: "Člani"
+              basic: "Osnovni uporabnik"
+            response_time:
+              buckets:
+                lt_1h: "< 1 ura"
   js:
     notifications:
       alt:

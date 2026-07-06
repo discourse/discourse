@@ -6286,8 +6286,6 @@ uk:
       no_read_topics_body: "Коли ви почнете читати обговорення, ви побачите тут список тем. Щоб почати читати, шукайте теми, які вас зацікавлять в <a href='%{topUrl}'>Топ</a> або у <a href='%{categoriesUrl}'>Розділах</a> або шукайте за ключовим словом %{searchIcon}"
     no_group_messages_title: "Групових повідомлень не знайдено"
     topic_entrance:
-      sr_jump_top_button: "Перейти до першого допису - %{date}"
-      sr_jump_bottom_button: "Перейти до останнього допису - %{date}"
       jump_top_button_title: "Перейти до першого допису"
       jump_bottom_button_title: "Перейти до останнього допису"
     fullscreen_table:

@@ -1793,8 +1793,6 @@ es:
     silence_new_user_sensitivity: "La probabilidad de que un usuario nuevo sea silenciado basándose en denuncias de spam"
     auto_close_topic_sensitivity: "La probabilidad de que un tema denunciado se cierre automáticamente"
     cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar para poder editar una publicación oculta debido a denuncias de la comunidad"
-    max_topics_in_first_day: "El número máximo de temas que un usuario puede crear durante las 24 horas posteriores a su primera publicación"
-    max_replies_in_first_day: "El número máximo de respuestas que un usuario puede crear durante las 24 horas posteriores a su primera publicación"
     tl2_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 2 (miembros) multiplicándolo por este número"
     tl3_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 3 (habitual) multiplicándolo por este número"
     tl4_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 4 (líder) multiplicándolo por este número"

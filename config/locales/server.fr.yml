@@ -1748,8 +1748,6 @@ fr:
     silence_new_user_sensitivity: "La probabilité qu'un nouvel utilisateur soit mis en sourdine en fonction des signalements de contenu indésirable"
     auto_close_topic_sensitivity: "La probabilité qu'un sujet signalé soit automatiquement fermé"
     cooldown_minutes_after_hiding_posts: "Nombre de minutes qu'un utilisateur doit attendre avant de pouvoir modifier un message masqué suite à un signalement de la communauté"
-    max_topics_in_first_day: "Le nombre maximal de sujets qu'un utilisateur est autorisé à créer dans la période de 24 h après avoir créé son premier message"
-    max_replies_in_first_day: "Le nombre maximal de réponses qu'un utilisateur est autorisé à créer dans la période de 24 h après avoir créé son premier message"
     tl2_additional_likes_per_day_multiplier: "Augmenter la limite quotidienne de « J'aime » pour les utilisateurs de niveau 2 (membres) en la multipliant par ce nombre"
     tl3_additional_likes_per_day_multiplier: "Augmenter la limite quotidienne de « J'aime » pour les utilisateurs de niveau 3 (habitués) en la multipliant par ce nombre"
     tl4_additional_likes_per_day_multiplier: "Augmenter la limite quotidienne de « J'aime » pour les utilisateurs de niveau 4 (meneurs) en la multipliant par ce nombre"

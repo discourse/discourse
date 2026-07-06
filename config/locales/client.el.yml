@@ -5362,8 +5362,6 @@ el:
       no_read_topics_title: "Δεν έχεις διαβάσει κανένα θέμα ακόμη"
     no_group_messages_title: "Δε βρέθηκαν ομαδικά μηνύματα"
     topic_entrance:
-      sr_jump_top_button: "Μετάβαση στην πρώτη ανάρτηση - %{date}"
-      sr_jump_bottom_button: "Μετάβαση στην τελευταία ανάρτηση - %{date}"
       jump_top_button_title: "Μετάβαση στην πρώτη ανάρτηση"
       jump_bottom_button_title: "Μετάβαση στην τελευταία ανάρτηση"
     fullscreen_table:

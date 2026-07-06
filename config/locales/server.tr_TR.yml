@@ -1799,8 +1799,6 @@ tr_TR:
     silence_new_user_sensitivity: "Yeni bir kullanıcının istenmeyen içerik bayraklarına göre susturulma olasılığı"
     auto_close_topic_sensitivity: "Bayrak eklenen bir konunun otomatik olarak kapatılma olasılığı"
     cooldown_minutes_after_hiding_posts: "Bir kullanıcının topluluğun bayrak eklemesi ile gizlenmen bir gönderiyi düzenleyebilmesi için beklemesi gereken dakika sayısı"
-    max_topics_in_first_day: "Bir kullanıcının ilk gönderisini oluşturduktan sonraki 24 saatlik süre içinde oluşturmasına izin verilen maksimum konu sayısı"
-    max_replies_in_first_day: "Bir kullanıcının ilk gönderisini oluşturduktan sonraki 24 saatlik süre içinde oluşturmasına izin verilen maksimum yanıt sayısı"
     tl2_additional_likes_per_day_multiplier: "Bu sayı ile çarparak gs2 (üye) için günlük beğeni sınırını artırın"
     tl3_additional_likes_per_day_multiplier: "Bu sayı ile çarparak gs3 (normal) için günlük beğeni sınırını artırın"
     tl4_additional_likes_per_day_multiplier: "Bu sayı ile çarparak gs4 (lider) için günlük beğeni sınırını artırın"
