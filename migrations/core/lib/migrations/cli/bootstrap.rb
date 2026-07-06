@@ -50,9 +50,8 @@ module Migrations
 
       # Walks the nested `command` chain to the deepest selected sub-command.
       def self.deepest_command(command)
-        node = command
-        node = node.command while node.respond_to?(:command) && node.command
-        node
+        return command unless command.respond_to?(:command) && command.command
+        deepest_command(command.command)
       end
 
       def self.build_top_command_class
