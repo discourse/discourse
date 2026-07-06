@@ -51,7 +51,53 @@ RSpec.describe Migrations::Database do
     end
   end
 
+  describe ".schema_path" do
+    it "returns the intermediate DB schema path" do
+      expect(described_class.schema_path("intermediate_db")).to eq(
+        Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
+      )
+    end
+
+    it "returns the mappings DB schema path" do
+      expect(described_class.schema_path("mappings_db")).to eq(
+        Migrations::Database::MAPPINGS_DB_SCHEMA_PATH,
+      )
+    end
+
+    it "returns the uploads DB schema path" do
+      expect(described_class.schema_path("uploads_db")).to eq(
+        Migrations::Database::UPLOADS_DB_SCHEMA_PATH,
+      )
+    end
+
+    it "raises for an unknown type, naming it" do
+      expect { described_class.schema_path("bogus_db") }.to raise_error("Unknown type: bogus_db")
+    end
+  end
+
   describe ".connect" do
+    it "returns an open connection when no block is given" do
+      Dir.mktmpdir do |storage_path|
+        db_path = File.join(storage_path, "test.db")
+
+        connection = described_class.connect(db_path)
+
+        expect(connection).to be_a(Migrations::Database::Connection)
+        expect(connection.path).to eq(db_path)
+        expect(connection.db).not_to be_closed
+      ensure
+        connection&.close
+      end
+    end
+
+    it "returns nil when a block is given, ignoring the block's own value" do
+      Dir.mktmpdir do |storage_path|
+        db_path = File.join(storage_path, "test.db")
+
+        expect(described_class.connect(db_path) { |_connection| :block_result }).to be_nil
+      end
+    end
+
     it "yields a new connection and closes it after the block" do
       Dir.mktmpdir do |storage_path|
         db_path = File.join(storage_path, "test.db")
@@ -93,6 +139,13 @@ RSpec.describe Migrations::Database do
       expect(described_class.format_datetime(datetime)).to eq("2023-10-05T17:30:00Z")
     end
 
+    it "converts the value to UTC and formats it as an ISO 8601 string" do
+      datetime = DateTime.new(2023, 10, 5, 17, 30, 0, "+02:00")
+      result = described_class.format_datetime(datetime)
+      expect(result).to be_a(String)
+      expect(result).to eq("2023-10-05T15:30:00Z")
+    end
+
     it "returns nil for nil input" do
       expect(described_class.format_datetime(nil)).to be_nil
     end
@@ -102,6 +155,11 @@ RSpec.describe Migrations::Database do
     it "formats a Date object to ISO 8601 string" do
       date = Date.new(2023, 10, 5)
       expect(described_class.format_date(date)).to eq("2023-10-05")
+    end
+
+    it "drops the time component of a DateTime" do
+      datetime = DateTime.new(2023, 10, 5, 17, 30, 0)
+      expect(described_class.format_date(datetime)).to eq("2023-10-05")
     end
 
     it "returns nil for nil input" do
@@ -124,8 +182,10 @@ RSpec.describe Migrations::Database do
   end
 
   describe ".format_ip_address" do
-    it "formats a valid IPv4 address" do
-      expect(described_class.format_ip_address("192.168.1.1")).to eq("192.168.1.1")
+    it "formats a valid IPv4 address as a string" do
+      result = described_class.format_ip_address("192.168.1.1")
+      expect(result).to be_a(String)
+      expect(result).to eq("192.168.1.1")
     end
 
     it "formats a valid IPv6 address" do
@@ -142,8 +202,10 @@ RSpec.describe Migrations::Database do
       expect(described_class.format_ip_address(nil)).to be_nil
     end
 
-    it "formats an IPv4 `IPAddr`" do
-      expect(described_class.format_ip_address(IPAddr.new("192.168.1.1"))).to eq("192.168.1.1")
+    it "formats an IPv4 `IPAddr` as a string" do
+      result = described_class.format_ip_address(IPAddr.new("192.168.1.1"))
+      expect(result).to be_a(String)
+      expect(result).to eq("192.168.1.1")
     end
 
     it "formats an IPv6 `IPAddr`" do
@@ -154,12 +216,18 @@ RSpec.describe Migrations::Database do
   end
 
   describe ".to_blob" do
-    it "converts a string to a `Extralite::Blob`" do
-      expect(described_class.to_blob("Hello, 世界!")).to be_a(Extralite::Blob)
+    it "converts a string to a `Extralite::Blob` preserving its bytes" do
+      blob = described_class.to_blob("Hello, 世界!")
+      expect(blob).to be_a(Extralite::Blob)
+      expect(blob.to_s).to eq("Hello, 世界!")
     end
 
     it "returns nil for nil input" do
       expect(described_class.to_blob(nil)).to be_nil
+    end
+
+    it "returns nil for a blank string" do
+      expect(described_class.to_blob("")).to be_nil
     end
   end
 
@@ -178,6 +246,64 @@ RSpec.describe Migrations::Database do
 
     it "returns nil for nil input" do
       expect(described_class.to_json(nil)).to be_nil
+    end
+  end
+
+  describe ".to_date" do
+    it "parses a date string into a `Date`" do
+      expect(described_class.to_date("2023-10-05")).to eq(Date.new(2023, 10, 5))
+    end
+
+    it "parses loosely formatted date strings" do
+      expect(described_class.to_date("2023/10/05")).to eq(Date.new(2023, 10, 5))
+    end
+
+    it "returns nil for nil input" do
+      expect(described_class.to_date(nil)).to be_nil
+    end
+
+    it "returns nil for a blank string" do
+      expect(described_class.to_date("")).to be_nil
+    end
+  end
+
+  describe ".to_datetime" do
+    it "parses a datetime string into a `DateTime`" do
+      expect(described_class.to_datetime("2023-10-05T17:30:00+00:00")).to eq(
+        DateTime.new(2023, 10, 5, 17, 30, 0),
+      )
+    end
+
+    it "parses loosely formatted datetime strings" do
+      expect(described_class.to_datetime("2023-10-05 17:30:00")).to eq(
+        DateTime.new(2023, 10, 5, 17, 30, 0),
+      )
+    end
+
+    it "returns nil for nil input" do
+      expect(described_class.to_datetime(nil)).to be_nil
+    end
+
+    it "returns nil for a blank string" do
+      expect(described_class.to_datetime("")).to be_nil
+    end
+  end
+
+  describe ".to_boolean" do
+    it "returns true when the value is 1" do
+      expect(described_class.to_boolean(1)).to be(true)
+    end
+
+    it "returns false when the value is 0" do
+      expect(described_class.to_boolean(0)).to be(false)
+    end
+
+    it "returns false for any other integer" do
+      expect(described_class.to_boolean(2)).to be(false)
+    end
+
+    it "returns false for nil" do
+      expect(described_class.to_boolean(nil)).to be(false)
     end
   end
 end

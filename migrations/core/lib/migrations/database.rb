@@ -66,6 +66,9 @@ module Migrations
     end
 
     def self.format_ip_address(value)
+      # Fast-path for blank/NULL values. The `rescue` below would also turn them
+      # into `nil` (blank input makes `IPAddr.new` raise), but going through the
+      # exception is much slower, and NULL IP columns are common.
       return nil if value.blank?
       # `PG::BasicTypeMapForResults` decodes `inet` columns into `IPAddr`
       # objects, which `IPAddr.new` rejects
@@ -86,11 +89,11 @@ module Migrations
     end
 
     def self.to_date(text)
-      text.present? ? Date.parse(text) : nil
+      Date.parse(text) if text.present?
     end
 
     def self.to_datetime(text)
-      text.present? ? DateTime.parse(text) : nil
+      DateTime.parse(text) if text.present?
     end
 
     def self.to_boolean(value)
