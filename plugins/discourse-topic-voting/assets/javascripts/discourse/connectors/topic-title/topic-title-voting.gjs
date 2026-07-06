@@ -1,7 +1,7 @@
 import { and, or } from "discourse/truth-helpers";
 import VoteBox from "../../components/vote-box";
 
-<template>
+export default <template>
   {{#let @outletArgs.model as |topic|}}
     {{#if
       (and

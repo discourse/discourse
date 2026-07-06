@@ -4,7 +4,7 @@ import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-ti
   discourseImport: "optional",
 };
 
-<template>
+export default <template>
   {{#if (and @event.channel ChannelTitle)}}
     <section class="event__section event-chat-channel">
       <span></span>

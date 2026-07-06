@@ -6641,8 +6641,8 @@ packages:
   pretender@3.4.7:
     resolution: {integrity: sha512-jkPAvt1BfRi0RKamweJdEcnjkeu7Es8yix3bJ+KgBC5VpG/Ln4JE3hYN6vJym4qprm8Xo5adhWpm3HCoft1dOw==}
 
-  prettier-plugin-ember-template-tag@2.1.3:
-    resolution: {integrity: sha512-FfAvkU+fqDC3Zs8+qGhBHYuwq1DED+UTPMH33QXxivZxRekkItBNXfi1Y+YkIbhCnu6UeTE2aYdbQSLlkOC2bA==}
+  prettier-plugin-ember-template-tag@2.1.7:
+    resolution: {integrity: sha512-NQS/a03LCefDbOJ1o0NeN+4VdfZRJt6NBp6/5yLMXTQ2TNT4fkcbhfXkvcgl7lN9nmssm6GweX51G/CAEvtazg==}
     engines: {node: 18.* || >= 20}
     peerDependencies:
       prettier: '>= 3.0.0'
@@ -9337,7 +9337,7 @@ snapshots:
       eslint-plugin-sort-class-members: 1.22.1(eslint@10.6.0(jiti@2.6.1))
       globals: 17.7.0
       prettier: 3.8.1
-      prettier-plugin-ember-template-tag: 2.1.3(prettier@3.8.1)
+      prettier-plugin-ember-template-tag: 2.1.7(prettier@3.8.1)
       stylelint: 17.5.0(typescript@5.9.3)
       stylelint-config-standard: 40.0.0(stylelint@17.5.0(typescript@5.9.3))
       stylelint-config-standard-scss: 17.0.0(postcss@8.5.15)(stylelint@17.5.0(typescript@5.9.3))
@@ -15138,7 +15138,7 @@ snapshots:
       fake-xml-http-request: 2.1.2
       route-recognizer: 0.3.4
 
-  prettier-plugin-ember-template-tag@2.1.3(prettier@3.8.1):
+  prettier-plugin-ember-template-tag@2.1.7(prettier@3.8.1):
     dependencies:
       '@babel/traverse': 7.29.7
       content-tag: 4.2.0

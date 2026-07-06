@@ -1,7 +1,7 @@
 import ReviewablePost from "discourse/components/reviewable/post";
 import { i18n } from "discourse-i18n";
 
-<template>
+export default <template>
   <ReviewablePost
     @reviewable={{@reviewable}}
     @userLabel={{i18n "review.flagged_user"}}
