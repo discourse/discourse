@@ -8,5 +8,4 @@ group :test do
   gem "rspec"
   gem "rspec-multi-mock"
   gem "mocha"
-  gem "mutant-rspec"
 end

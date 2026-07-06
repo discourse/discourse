@@ -5,15 +5,25 @@
 #
 # Each gem that opts in ships a `.mutant.yml` listing its pure, non-`:rails`
 # subjects (mutant runs the gem's own spec suite, which excludes `:rails`
-# examples, so only isolated subjects can be killed). This wrapper runs mutant
-# inside each such gem's own bundle.
+# examples, so only isolated subjects can be killed).
 #
 #   bin/mutant                 # all gems with a .mutant.yml
 #   bin/mutant tooling         # just one gem
 #   bin/mutant tooling --since main   # only subjects touched on this branch
 #
 # Anything after the gem name is passed straight through to `mutant run`.
-set -euo pipefail
+#
+# mutant is deliberately NOT a dependency in any gem's Gemfile -- it's a testing
+# tool, not something the gems ship with. Instead we run each gem's real bundle
+# with mutant layered on top via a throwaway side gemfile (`eval_gemfile` reuses
+# the gem's Gemfile, then adds mutant-rspec), installed and removed per run. So a
+# clean checkout can run this with nothing extra committed. In CI, install the
+# gem's own bundle once, then just call this script.
+#
+# No `-u`: this `cd`s around, and an environment `cd`/prompt hook that references
+# an unset variable would abort the run under `set -u`. Our own variables are all
+# assigned, so `-e` and `pipefail` are enough.
+set -eo pipefail
 
 migrations_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
@@ -27,8 +37,25 @@ run_gem() {
   local dir="$1"
   shift
   echo "==> mutant: $(basename "$dir")"
-  ( cd "$dir" && BUNDLE_GEMFILE="$dir/Gemfile" bundle exec mutant run --usage opensource "$@" )
-  local rc=$?
+
+  # Throwaway gemfile that reuses the gem's real Gemfile (and thus its gemspec,
+  # deps and lock) and adds mutant on top, so mutant never touches the committed
+  # Gemfile. It has to live in the gem dir for `eval_gemfile`/`gemspec` to resolve.
+  local gemfile="$dir/.mutant.gemfile"
+  cat > "$gemfile" <<'RUBY'
+# frozen_string_literal: true
+eval_gemfile File.expand_path("Gemfile", __dir__)
+gem "mutant-rspec"
+RUBY
+
+  local rc=0
+  (
+    cd "$dir" &&
+      BUNDLE_GEMFILE="$gemfile" bundle install --quiet &&
+      BUNDLE_GEMFILE="$gemfile" bundle exec mutant run --usage opensource "$@"
+  ) || rc=$?
+
+  rm -f "$gemfile" "$gemfile.lock"
 
   # Mutation testing runs deliberately-broken code. A mutant that drops a path
   # prefix (e.g. in ShardManager) makes a database write land relative to the
