@@ -47,6 +47,17 @@ RSpec.describe DiscourseChatIntegration::Rule do
     expect(loadedRule.filter).to eq("watch")
   end
 
+  it "should save and load exclude_category_ids successfully" do
+    rule =
+      DiscourseChatIntegration::Rule.create!(
+        channel: channel,
+        exclude_category_ids: [category.id.to_s],
+      )
+
+    loaded_rule = DiscourseChatIntegration::Rule.find(rule.id)
+    expect(loaded_rule.exclude_category_ids).to contain_exactly(category.id)
+  end
+
   describe "general operations" do
     before do
       rule =
@@ -228,6 +239,39 @@ RSpec.describe DiscourseChatIntegration::Rule do
       rule.filter = ""
       expect(rule.valid?).to eq(false)
       rule.filter = "somerandomstring"
+      expect(rule.valid?).to eq(false)
+    end
+
+    it "validates exclude_category_ids correctly" do
+      rule.category_id = nil
+      expect(rule.valid?).to eq(true)
+
+      rule.exclude_category_ids = []
+      expect(rule.exclude_category_ids).to eq(nil)
+      expect(rule.valid?).to eq(true)
+
+      rule.exclude_category_ids = [category.id]
+      expect(rule.valid?).to eq(true)
+
+      rule.exclude_category_ids = [category.id, -99]
+      expect(rule.valid?).to eq(false)
+    end
+
+    it "doesn't allow exclude_category_ids when a category is specified" do
+      rule.exclude_category_ids = [category.id]
+      expect(rule.valid?).to eq(false)
+
+      rule.category_id = nil
+      expect(rule.valid?).to eq(true)
+    end
+
+    it "doesn't allow exclude_category_ids for group rules" do
+      rule.category_id = nil
+      rule.type = "group_message"
+      rule.group_id = group.id
+      expect(rule.valid?).to eq(true)
+
+      rule.exclude_category_ids = [category.id]
       expect(rule.valid?).to eq(false)
     end
 

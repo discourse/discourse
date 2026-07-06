@@ -5,7 +5,9 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import Category from "discourse/models/category";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import CategorySelector from "discourse/select-kit/components/category-selector";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import DModal from "discourse/ui-kit/d-modal";
@@ -21,9 +23,26 @@ export default class EditRule extends Component {
   @tracked category_id = this.args.model.rule.category_id || null;
   @tracked group_id = this.args.model.rule.group_id || null;
   @tracked tags = this.args.model.rule.tags || [];
+  @tracked excludedCategories = [];
+
+  constructor() {
+    super(...arguments);
+    this.loadExcludedCategories();
+  }
 
   get isNormalType() {
     return this.type === "normal";
+  }
+
+  get showExcludedCategories() {
+    return this.isNormalType && !this.category_id;
+  }
+
+  async loadExcludedCategories() {
+    const ids = this.args.model.rule.exclude_category_ids || [];
+    this.excludedCategories = ids.length
+      ? await Category.asyncFindByIds(ids)
+      : [];
   }
 
   get title() {
@@ -53,6 +72,11 @@ export default class EditRule extends Component {
   }
 
   @action
+  onExcludedCategoriesChange(categories) {
+    this.excludedCategories = categories || [];
+  }
+
+  @action
   onTagsChange(tags) {
     this.tags = tags;
   }
@@ -64,6 +88,9 @@ export default class EditRule extends Component {
       type: this.type,
       filter: this.filter,
       category_id: this.type === "normal" ? this.category_id : null,
+      exclude_category_ids: this.showExcludedCategories
+        ? this.excludedCategories.map((category) => category.id)
+        : [],
       group_id: this.type !== "normal" ? this.group_id : null,
       tags: this.tags.map((tag) => getTagName(tag)),
     });
@@ -172,6 +199,27 @@ export default class EditRule extends Component {
                 />
               </field.Control>
             </form.Field>
+
+            {{#if this.showExcludedCategories}}
+              <form.Field
+                @type="custom"
+                @name="exclude_category_ids"
+                @title={{i18n
+                  "chat_integration.edit_rule_modal.exclude_categories"
+                }}
+                @description={{i18n
+                  "chat_integration.edit_rule_modal.instructions.exclude_categories"
+                }}
+                as |field|
+              >
+                <field.Control>
+                  <CategorySelector
+                    @categories={{this.excludedCategories}}
+                    @onChange={{this.onExcludedCategoriesChange}}
+                  />
+                </field.Control>
+              </form.Field>
+            {{/if}}
           {{else}}
             <form.Field
               @type="custom"

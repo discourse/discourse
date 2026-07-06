@@ -57,6 +57,14 @@ module DiscourseChatIntegration
 
       matching_rules = matching_rules.select { |rule| rule.filter != "tag_added" } # ignore tag_added rules, now uses Automation
 
+      # Discard rules which explicitly exclude the topic's category
+      if topic.category_id
+        matching_rules =
+          matching_rules.select do |rule|
+            rule.exclude_category_ids.nil? || !rule.exclude_category_ids.include?(topic.category_id)
+          end
+      end
+
       # If tagging is enabled, thow away rules that don't apply to this topic
       if SiteSetting.tagging_enabled
         topic_tags = topic.tags.present? ? topic.tags.pluck(:name) : []
