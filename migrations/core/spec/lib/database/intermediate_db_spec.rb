@@ -70,6 +70,17 @@ RSpec.describe Migrations::Database::IntermediateDB do
       expect(described_class.conflict_strategy_for("schema_migrations")).to eq(:raise)
     end
 
+    it "accepts a symbol table name" do
+      expect(described_class.conflict_strategy_for(:uploads)).to eq(:ignore)
+    end
+
+    it "ignores top-level constants that are not defined on the module itself" do
+      # `strings` camelizes to `String`, a top-level constant. The lookup must
+      # stay scoped to this module (no inherited constants), so it counts as
+      # having no model and raises on a duplicate.
+      expect(described_class.conflict_strategy_for("strings")).to eq(:raise)
+    end
+
     it "reads the strategy from the model, so a new `OR IGNORE` model flips it" do
       model =
         Module.new do
