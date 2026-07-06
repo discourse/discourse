@@ -4516,7 +4516,7 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "beta"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403635"
   rename_faq_to_guidelines:
