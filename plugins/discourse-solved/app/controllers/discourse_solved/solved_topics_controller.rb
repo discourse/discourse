@@ -36,7 +36,7 @@ class DiscourseSolved::SolvedTopicsController < ::ApplicationController
     posts = guardian.filter_hidden_posts(posts)
 
     unless guardian.is_admin?
-      current_user_id = current_user&.id || -1
+      current_user_id = current_user&.id || Discourse.system_user.id
       posts =
         posts.where(
           "posts.user_id = :current_user_id OR posts.post_type IN (:visible_post_types)",
