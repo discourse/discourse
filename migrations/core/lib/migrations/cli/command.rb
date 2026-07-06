@@ -25,7 +25,7 @@ module Migrations
       end
 
       def self.requires_rails?
-        return true if @requires_rails == true
+        return true if @requires_rails
         superclass.respond_to?(:requires_rails?) && superclass.requires_rails?
       end
 
@@ -40,7 +40,7 @@ module Migrations
         # commands rely on it being emptied), so we must mutate it rather than
         # pass a copy.
         input.replace(hoist_options(input))
-        super(input)
+        super
       end
 
       private
@@ -52,7 +52,7 @@ module Migrations
       def require_positional!(value, name, hint: nil)
         return value unless value.nil?
 
-        message = +"Missing required argument: <#{name}>"
+        message = "Missing required argument: <#{name}>"
         message << "\n#{hint}" if hint
         raise MissingPositionalError, message
       end
@@ -64,9 +64,7 @@ module Migrations
         takes_value = {}
         options.each do |option|
           option.flags.each do |flag|
-            [flag.prefix, *Array(flag.alternatives)].each do |prefix|
-              takes_value[prefix] = !flag.boolean?
-            end
+            [flag.prefix, *flag.alternatives].each { |prefix| takes_value[prefix] = !flag.boolean? }
           end
         end
 
@@ -75,15 +73,15 @@ module Migrations
         index = 0
 
         while index < input.size
-          token = input[index]
+          token = input.fetch(index)
 
           if token == "--"
             positionals.concat(input[index..])
             break
           elsif takes_value.key?(token)
             flags << token
-            if takes_value[token] && index + 1 < input.size
-              flags << input[index + 1]
+            if takes_value.fetch(token) && index + 1 < input.size
+              flags << input.fetch(index + 1)
               index += 1
             end
           else
