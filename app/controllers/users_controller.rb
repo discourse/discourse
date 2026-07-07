@@ -682,6 +682,15 @@ class UsersController < ApplicationController
       return fail_with("login.password_too_long")
     end
 
+    if params[:username].length > UsernameValidator::MAX_CHARS * 3
+      message =
+        User.new.errors.full_message(
+          :username,
+          I18n.t("user.username.long", count: SiteSetting.max_username_length),
+        )
+      return render json: { success: false, message: message }
+    end
+
     return fail_with("login.email_too_long") if params[:email].length > 254 + 1 + 253
 
     if SiteSetting.require_invite_code &&

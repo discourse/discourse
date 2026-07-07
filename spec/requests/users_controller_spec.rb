@@ -1646,6 +1646,19 @@ RSpec.describe UsersController do
       include_examples "failed signup"
     end
 
+    context "when username is too long" do
+      let(:oversized_username) { "a" * 50_000 }
+
+      it "rejects signup without reflecting the username", :aggregate_failures do
+        expect { post_user(username: oversized_username) }.not_to change { User.count }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(response.body.bytesize).to be < 1_000
+        expect(response.body).not_to include(oversized_username)
+      end
+    end
+
     context "when password param is missing" do
       let(:create_params) { { name: @user.name, username: @user.username, email: @user.email } }
       include_examples "failed signup"
