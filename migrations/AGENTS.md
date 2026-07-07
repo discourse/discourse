@@ -7,6 +7,16 @@ and the install / test / lint workflow.
 This file is reserved for **agent-specific** guidance that does not belong in the
 README (conventions, gotchas, do/don't notes for automated contributors).
 
+## Skills
+
+Load the matching skill before starting on:
+
+- a new converter → `.skills/migrations-converter-authoring`
+- conversion steps → `.skills/migrations-converter-step-authoring`
+- IntermediateDB schema changes or anything under the generated files →
+  `.skills/migrations-schema-dsl`
+- specs for any of the four gems → `.skills/migrations-rspec`
+
 ## Gotchas
 
 - **Samovar reserves `name` on commands.** `Nested#parse` instantiates a
