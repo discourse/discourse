@@ -191,12 +191,12 @@ RSpec.describe Site do
     context "with lazy loaded categories enabled" do
       fab!(:user)
 
-      before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
+      before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:logged_in_users]}" }
 
-      it "does not return any categories for anonymous users" do
+      it "returns all categories for anonymous users" do
         site = Site.new(Guardian.new)
 
-        expect(site.categories).to eq([])
+        expect(site.categories.map { |c| c[:id] }).to include(category.id)
       end
 
       it "returns only sidebar categories and their ancestors" do

@@ -1554,17 +1554,15 @@ describe PostRevisor do
           end
 
           context "with hidden tags" do
+            fab!(:super_tag) { Fabricate(:tag, name: "super") }
+            fab!(:stuff_tag) { Fabricate(:tag, name: "stuff") }
             let(:bumped_at) { 1.day.ago }
 
             before do
               topic.update!(bumped_at: bumped_at)
               create_hidden_tags(%w[important secret])
               topic = post.topic
-              topic.tags = [
-                Fabricate(:tag, name: "super"),
-                Tag.where(name: "important").first,
-                Fabricate(:tag, name: "stuff"),
-              ]
+              topic.tags = [super_tag, Tag.where(name: "important").first, stuff_tag]
             end
 
             it "creates a hidden revision" do
@@ -1596,6 +1594,27 @@ describe PostRevisor do
               expect(post.version).to eq(1)
               expect(post.public_version).to eq(1)
               expect(post.revisions.count).to eq(0)
+            end
+
+            it "creates a separate revision when a different user changes hidden tags instead of folding into the first author's revision" do
+              admin_a = Fabricate(:admin)
+              admin_b = Fabricate(:admin)
+              original_tags = topic.tags.map(&:name)
+
+              PostRevisor.new(post.reload).revise!(
+                admin_a,
+                raw: post.raw,
+                tags: original_tags + ["secret"],
+              )
+              post.reload
+              expect(post.version).to eq(2)
+              expect(post.revisions.last.user_id).to eq(admin_a.id)
+
+              PostRevisor.new(post.reload).revise!(admin_b, raw: post.raw, tags: original_tags)
+              post.reload
+              expect(post.version).to eq(3)
+              expect(post.revisions.count).to eq(2)
+              expect(post.revisions.last.user_id).to eq(admin_b.id)
             end
 
             it "increments public_version when hidden tag added with other visible changes" do

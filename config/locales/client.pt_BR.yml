@@ -2644,6 +2644,7 @@ pt_BR:
       email_label: "E-mail"
       continue_button: "Continuar"
       verify_button: "Continuar"
+      signup_title: "Criar sua conta"
       account_ready_continue: "Continuar"
       username_label: "Nome de usuário(a)"
     login:
@@ -4274,7 +4275,6 @@ pt_BR:
           one: "Tem certeza de que deseja mesclar estas postagens?"
           other: "Tem certeza de que deseja mesclar estas %{count} postagens?"
       revisions:
-        diff_too_complex: "O diff é muito complexo para exibir. Por favor, tente visualizar edições menores individualmente."
         locale:
           no_locale_set: "Nenhum idioma definido"
           locale_removed: "Idioma removido"

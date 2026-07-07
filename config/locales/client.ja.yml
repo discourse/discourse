@@ -2425,6 +2425,7 @@ ja:
       email_label: "メールアドレス"
       continue_button: "続行"
       verify_button: "続行"
+      signup_title: "アカウントの作成"
       account_ready_continue: "続行"
       username_label: "ユーザー名"
     login:

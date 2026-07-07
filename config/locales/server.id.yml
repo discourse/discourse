@@ -958,6 +958,7 @@ id:
       labels:
         level: "Trust level"
         count: "Anggota"
+        signups: "Pendaftaran"
       levels:
         "0": "Baru"
         "2": "Anggota"

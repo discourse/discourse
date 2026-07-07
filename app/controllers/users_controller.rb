@@ -700,7 +700,7 @@ class UsersController < ApplicationController
       if current_user&.admin? && is_api?
         user_params.except(:timezone)
       else
-        user_params.except(:timezone, :primary_group_id, :flair_group_id)
+        user_params.except(:timezone, :title, :primary_group_id, :flair_group_id)
       end
 
     user = User.where(staged: true).with_email(new_user_params[:email].strip.downcase).first

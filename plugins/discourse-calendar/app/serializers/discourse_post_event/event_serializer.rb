@@ -5,7 +5,6 @@ module DiscoursePostEvent
     attributes :can_act_on_discourse_post_event
     attributes :can_update_attendance
     attributes :creator
-    attributes :custom_fields
     attributes :is_closed
     attributes :is_expired
     attributes :is_ongoing

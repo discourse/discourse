@@ -221,6 +221,14 @@ RSpec.describe Emoji do
       )
     end
 
+    it "doesn't double-escape text that already contains HTML entities" do
+      replaced_str = described_class.codes_to_img("Sam&rsquo;s :tada: A &amp; B")
+
+      expect(replaced_str).to eq(
+        %(Sam&rsquo;s <img src="/images/emoji/twitter/tada.png?v=#{Emoji::EMOJI_VERSION}" title="tada" class="emoji" alt="tada" loading="lazy" width="20" height="20"> A &amp; B),
+      )
+    end
+
     it "escapes generated image attribute values" do
       Plugin::CustomEmoji.register("xssxx", %q|" onerror="alert('xss')|)
 

@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class UserFieldValues < Conversion::ProgressStep
+      class UserFieldValues < Conversion::Step
         USER_FIELD_PREFIX = "user_field_"
 
         # `USER_FIELD_PREFIX` as a `LIKE` pattern: the `_` characters are literal

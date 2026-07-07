@@ -2665,6 +2665,7 @@ de:
       email_label: "E-Mail"
       continue_button: "Weiter"
       verify_button: "Weiter"
+      signup_title: "Erstelle dein Konto"
       account_ready_continue: "Weiter"
       username_label: "Benutzername"
     login:
@@ -4422,7 +4423,6 @@ de:
           one: "Möchtest du diese Beiträge wirklich zusammenführen?"
           other: "Möchtest du diese %{count} Beiträge wirklich zusammenführen?"
       revisions:
-        diff_too_complex: "Die Unterschiede sind zu komplex, um sie anzuzeigen. Bitte versuche einzelne, kleinere Änderungen anzusehen."
         locale:
           no_locale_set: "Keine Sprache eingestellt"
           locale_removed: "Sprache entfernt"

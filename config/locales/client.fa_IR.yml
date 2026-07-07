@@ -2326,6 +2326,7 @@ fa_IR:
       email_label: "ایمیل"
       continue_button: "ادامه"
       verify_button: "ادامه"
+      signup_title: "ثبت نام"
       account_ready_continue: "ادامه"
       username_label: "نام‌کاربری"
     login:

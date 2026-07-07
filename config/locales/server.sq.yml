@@ -480,6 +480,7 @@ sq:
       labels:
         count: "Anëtarë"
         share: "Shpërndaje"
+        signups: "Regjistrimet"
       levels:
         "0": "I Ri"
         "1": "Anëtar i Thjeshtë"

@@ -113,6 +113,12 @@ hu:
           select_all: "Összes kiválasztása"
           clear_all: "Összes törlése"
         delete: "Törlés"
+        thinking_effort_options:
+          none: "Egyik sem"
+          low: "Alacsony"
+          medium: "Közepes"
+          high: "Magas"
+          max: "Max"
         response_format:
           open_modal: "Szerkesztés"
           modal:

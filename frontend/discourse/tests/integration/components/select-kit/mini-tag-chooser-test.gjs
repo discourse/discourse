@@ -56,6 +56,37 @@ module(
       assert.strictEqual(this.subject.header().name(), "foo,bar,monkey");
     });
 
+    test("navigating results with arrow keys after filtering", async function (assert) {
+      await render(
+        <template><MiniTagChooser @options={{hash allowAny=true}} /></template>
+      );
+
+      await this.subject.expand();
+      await this.subject.fillInFilter("mon");
+
+      assert.strictEqual(
+        this.subject.highlightedRow().name(),
+        "mon",
+        "the create-tag row is highlighted after filtering"
+      );
+
+      await this.subject.keyboard("down");
+
+      assert.strictEqual(
+        this.subject.highlightedRow().name(),
+        "monkey",
+        "a single down arrow press highlights the next row"
+      );
+
+      await this.subject.keyboard("up");
+
+      assert.strictEqual(
+        this.subject.highlightedRow().name(),
+        "mon",
+        "a single up arrow press highlights the previous row"
+      );
+    });
+
     test("max_tags_per_topic", async function (assert) {
       this.set("value", [
         { id: "foo", name: "foo", slug: "foo" },

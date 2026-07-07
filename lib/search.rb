@@ -374,6 +374,8 @@ class Search
 
     Search.preload(@results, self)
 
+    trigger_user_search_event(readonly_mode)
+
     @results
   end
 
@@ -1651,6 +1653,15 @@ class Search
   def log_query?(readonly_mode)
     SiteSetting.log_search_queries? && @opts[:search_type].present? && !readonly_mode &&
       @opts[:type_filter] != "exclude_topics"
+  end
+
+  def trigger_user_search_event(readonly_mode)
+    return if @clean_term.blank?
+    return if @opts[:search_type].blank?
+    return if readonly_mode
+    return if @opts[:type_filter] == "exclude_topics"
+
+    DiscourseEvent.trigger(:user_search, @clean_term, continue_on_error: true)
   end
 
   def filter_short_terms(term_string)

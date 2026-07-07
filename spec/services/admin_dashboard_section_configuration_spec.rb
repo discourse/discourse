@@ -163,4 +163,40 @@ describe AdminDashboardSectionConfiguration do
       expect(result.first).to eq({ id: "engagement", visible: true })
     end
   end
+
+  describe "plugin sections" do
+    def stub_plugin_sections(sections)
+      DiscoursePluginRegistry.stubs(:admin_dashboard_sections).returns(sections)
+    end
+
+    it "includes an enabled plugin section, visible by default" do
+      stub_plugin_sections([{ id: "support", enabled: -> { true }, loader: -> {} }])
+
+      expect(described_class.all_known_section_ids).to include("support")
+      expect(described_class.sections).to include({ id: "support", visible: true })
+      expect(described_class.visible_section_ids).to include("support")
+    end
+
+    it "hides a plugin section whose enabled proc returns false" do
+      stub_plugin_sections([{ id: "support", enabled: -> { false }, loader: -> {} }])
+
+      expect(described_class.all_known_section_ids).not_to include("support")
+      expect(described_class.sections.map { |s| s[:id] }).not_to include("support")
+      expect(described_class.visible_section_ids).not_to include("support")
+    end
+
+    it "includes a plugin section that has no enabled proc" do
+      stub_plugin_sections([{ id: "support", enabled: nil, loader: -> {} }])
+
+      expect(described_class.all_known_section_ids).to include("support")
+    end
+
+    it "drops a disabled plugin section id passed to update" do
+      stub_plugin_sections([{ id: "support", enabled: -> { false }, loader: -> {} }])
+
+      described_class.update([{ id: "support", visible: true }], actor: admin)
+
+      expect(described_class.sections.map { |s| s[:id] }).not_to include("support")
+    end
+  end
 end

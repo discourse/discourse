@@ -3,12 +3,29 @@
 class AdminDashboardSectionConfiguration
   KNOWN_SECTIONS = %w[highlights reports traffic engagement search].freeze
 
+  def self.available_plugin_section_ids
+    DiscoursePluginRegistry
+      .admin_dashboard_sections
+      .select { |s| !s[:enabled].respond_to?(:call) || s[:enabled].call }
+      .map { |s| s[:id] }
+  end
+
+  def self.all_known_section_ids
+    KNOWN_SECTIONS + available_plugin_section_ids
+  end
+
   def self.sections
-    AdminDashboardSection
-      .where(section_id: KNOWN_SECTIONS)
-      .order(:position)
-      .pluck(:section_id, :visible)
-      .map { |id, visible| { id:, visible: } }
+    known = all_known_section_ids
+
+    persisted =
+      AdminDashboardSection
+        .where(section_id: known)
+        .order(:position)
+        .pluck(:section_id, :visible)
+        .map { |id, visible| { id:, visible: } }
+    not_persisted = (known - persisted.map { |s| s[:id] }).map { |id| { id:, visible: true } }
+
+    persisted + not_persisted
   end
 
   def self.visible_section_ids
@@ -21,7 +38,7 @@ class AdminDashboardSectionConfiguration
         .filter_map do |s|
           attrs = (s.respond_to?(:to_unsafe_h) ? s.to_unsafe_h : s.to_h).symbolize_keys
           id = attrs[:id].to_s
-          next if KNOWN_SECTIONS.exclude?(id)
+          next if all_known_section_ids.exclude?(id)
           { id:, visible: ActiveModel::Type::Boolean.new.cast(attrs[:visible]) }
         end
         .uniq { |s| s[:id] }

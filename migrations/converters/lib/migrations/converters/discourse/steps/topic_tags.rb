@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class TopicTags < Conversion::ProgressStep
+      class TopicTags < Conversion::Step
         source { reads_table "topic_tags" }
 
         processor do

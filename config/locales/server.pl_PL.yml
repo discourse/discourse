@@ -300,7 +300,7 @@ pl_PL:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>:%{message}"
-    diff_too_complex: "Różnica jest zbyt złożona, aby obliczyć ją bezpiecznie. Spróbuj wprowadzić mniejsze zmiany."
+    diff_too_complex: "Zbyt wiele zmian, aby je wszystkie wyświetlić."
     messages:
       invalid_locale: "%{invalid_locale} to nieprawidłowe ustawienia regionalne"
       too_long_validation:
@@ -1496,14 +1496,15 @@ pl_PL:
         staff: "Zespół"
     trust_level_pipeline:
       title: "Potok poziomu zaufania"
-      description: "Ruch członków między poziomami zaufania w wybranym okresie. Zlicza członków znajdujących się obecnie na każdym poziomie zaufania, ich udział w całkowitej liczbie członków oraz liczbę członków, którzy przeszli na lub z każdego poziomu zaufania w danym okresie."
+      description: "Przemieszczanie się członków między poziomami zaufania w wybranym okresie. Podaje liczbę członków znajdujących się obecnie na każdym poziomie zaufania, ich udział w ogólnej liczbie członków, liczbę osób, które w tym okresie awansowały lub spadły na dany poziom zaufania, a także liczbę nowych rejestracji."
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
         level: "Poziom zaufania"
         count: "Członkowie"
         share: "Udostępnij"
-        moves_in: "Wprowadza się"
-        moves_out: "Wyprowadza się"
+        promoted_in: "Awansowany w"
+        demoted_in: "Zdegradowany w"
+        signups: "Rejestracje"
       levels:
         "0": "Nowy"
         "1": "Podstawowy"
@@ -2760,7 +2761,6 @@ pl_PL:
     gravatar_login_url: "Adres URL odnoszący się do {{setting:gravatar_base_url}}, który zapewnia użytkownikowi dane logowania do usługi Gravatar."
     share_quote_buttons: "Określ, które elementy pojawiają się w widżecie udostępniania cytatów i w jakiej kolejności."
     share_quote_visibility: "Określ, kiedy wyświetlać przyciski udostępniania cytatów: nigdy, tylko anonimowym użytkownikom lub wszystkim użytkownikom. "
-    create_revision_on_bulk_topic_moves: "Utwórz rewizję dla pierwszych postów, gdy tematy zostaną przeniesione do nowej kategorii zbiorczo."
     allow_changing_staged_user_tracking: "Zezwalaj na zmianę preferencji powiadomień o kategoriach i tagach użytkownika etapowego przez administratora."
     use_email_for_username_and_name_suggestions: "Użyj pierwszej części adresów e-mail do sugestii nazw użytkowników i nazw. Ostrzeżenie: Może to ułatwić złośliwym użytkownikom odkrycie adresów e-mail twoich członków (ponieważ wiele osób korzysta z popularnych dostawców poczty, takich jak `gmail.com`)."
     use_name_for_username_suggestions: "Podczas sugerowania nazw użytkowników podczas rejestracji SSO i OAuth należy używać imienia i nazwiska użytkownika."
@@ -2812,11 +2812,11 @@ pl_PL:
     nested_replies_max_depth: "Maksymalna głębokość wizualnego zagnieżdżenia dla odpowiedzi w wątkach. Wpisy o większej głębokości wyświetlają link „Kontynuuj ten wątek”."
     nested_replies_backfill_batch_size: "Liczba tematów, dla których należy uzupełnić statystyki zagnieżdżonych odpowiedzi na każde zaplanowane uruchomienie."
     nested_replies_cap_nesting_depth: "Ogranicz zagnieżdżanie odpowiedzi do maksymalnej głębokości wizualnej. Po włączeniu tej opcji odpowiedzi na najgłębszym poziomie będą ponownie traktowane jako równorzędne, a nie podrzędne."
-    fake_upcoming_change: "Jest to fałszywa nadchodząca zmiana do celów testowych. Nie musisz tłumaczyć tego ciągu znaków."
     enable_new_defaults_for_trust_level_3_requirements: "Zaktualizowaliśmy domyślne wymagania TL3, aby były bardziej rozsądne dla członków dużych, aktywnych społeczności. Jeśli wcześniej nadpisano te ustawienia, ta nadchodząca zmiana nie będzie miała żadnego wpływu."
     floating_dismiss_topics_on_mobile: "Wyświetla na urządzeniu mobilnym pływający przycisk „Odrzuć...” dla listy tematów, aby ułatwić dostęp i zwolnić miejsce u góry listy tematów"
     rename_faq_to_guidelines: "Ta zmiana zmienia nazwę strony FAQ na Wytyczne. Strona FAQ będzie nadal dostępna pod adresem /faq. Ustawienie {{setting:faq_url}} działa jak poprzednio."
     enable_simplified_category_creation: "Umożliwia uproszczony proces tworzenia kategorii z mniejszą liczbą opcji i bardziej przejrzystym interfejsem."
+    reporting_improvements: "Ulepszenia nawigacji, projektu i użyteczności raportów administracyjnych Discourse."
     modernize_foundation_theme: "Zmiana ta wprowadza modyfikacje projektowe do motywu Foundation w Discourse."
     enable_horizon_high_context_topic_cards: "Wyświetla bogatsze karty tematyczne w motywie Horizon, obejmujące fragmenty tematów, tagi i rozszerzone informacje o wtyczce."
     granular_anonymous_and_logged_in_groups_permissions: "Wprowadza uprawnienia witryn oparte na grupach, które traktują „wszystkich” jako „wszystkich zalogowanych użytkowników” oraz włącza nowe pseudogrupy „anonimowi_użytkownicy” i „zalogowani_użytkownicy”, dzięki czemu administratorzy mogą wyraźnie określać mianem anonimowych odwiedzających i uwierzytelnionych użytkowników."

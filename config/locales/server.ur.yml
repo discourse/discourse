@@ -1052,14 +1052,12 @@ ur:
         staff: "عملہ"
     trust_level_pipeline:
       title: "فعالیت کے درجات کا کھاتہ"
-      description: "منتخب مدت میں اراکین کی مختلف فعالیت کے درجوں کے درمیان نقل و حرکت۔ یہ ہر فعالیت کے درجہ پر موجود اراکین کی تعداد، کل رکنیت میں ان کا حصہ، اور اس مدت کے دوران ہر فعالیت کے درجہ میں شامل یا خارج ہونے والے اراکین کی تعداد کو شمار کرتا ہے۔"
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
         level: "فعالیت کا درجہ"
         count: "ممبران"
         share: "اشتراک"
-        moves_in: "شامل ہوئے"
-        moves_out: "نکلے"
+        signups: "سائن اپس"
       levels:
         "0": "نوارد"
         "1": "آشنا"

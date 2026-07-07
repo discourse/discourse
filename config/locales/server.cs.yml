@@ -1422,6 +1422,7 @@ cs:
         level: "Úroveň důvěry"
         count: "Členové"
         share: "Sdílet"
+        signups: "Registrace"
       levels:
         "0": "Nový"
         "1": "Základní"

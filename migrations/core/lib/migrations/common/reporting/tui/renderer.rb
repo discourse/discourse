@@ -26,8 +26,9 @@ module Migrations
         # Columns of a live row. ETA is left-aligned (it has its own "ETA " label);
         # the rest are right-aligned. A bold percent takes the place of a progress
         # bar: it lines up in columns, works for several steps at once, and avoids
-        # block characters that don't look the same on every terminal.
-        COLUMNS = %i[percent count elapsed eta rate].freeze
+        # block characters that don't look the same on every terminal. Concurrency
+        # sits last so it can't shift the columns the collapsed (finished) rows share.
+        COLUMNS = %i[percent count elapsed eta rate concurrency].freeze
         LEFT_ALIGNED = %i[eta].freeze
 
         Step =
@@ -44,6 +45,7 @@ module Migrations
             :rate,
             :rate_sampled_at,
             :rate_sampled_current,
+            :concurrency,
             keyword_init: true,
           )
 
@@ -61,6 +63,7 @@ module Migrations
           @live_count = 0
           @last_live = nil
           @resize_pending = false
+          @finalizing = false
           @frame_buffer = +"" # reused on each repaint instead of making a new one
           # Reserve the column widths up front: a finished row scrolls into the
           # history and can't be realigned, so every column has to start at the
@@ -76,6 +79,7 @@ module Migrations
             elapsed: TIME_WIDTH,
             eta: 0,
             rate: 0,
+            concurrency: 0,
           }
         end
 
@@ -149,7 +153,12 @@ module Migrations
               rate: nil,
               rate_sampled_at: nil,
               rate_sampled_current: 0,
+              concurrency: 1,
             )
+          when :concurrency
+            _, id, count = event
+            step = @steps[id]
+            step.concurrency = count if step
           when :progress_begin
             _, id, max_progress = event
             step = @steps[id]
@@ -178,6 +187,13 @@ module Migrations
             step.finished_at = now
             step.state = outcome # :done, :interrupted, or :failed
             @pending_permanent << collapsed_line(step)
+          when :finalizing_begin
+            @finalizing = true
+          when :finalizing_end
+            @finalizing = false
+          when :summary
+            _, runtime, total, failed, skipped = event
+            @pending_permanent << summary_line(runtime, total, failed, skipped)
           end
         end
 
@@ -193,6 +209,7 @@ module Migrations
           permanent = @pending_permanent
           @pending_permanent = []
           live = final ? [] : format_live(running_steps)
+          live += [finalizing_line] if @finalizing && !final
 
           return if permanent.empty? && live.empty? && @live_count == 0
           return if !final && permanent.empty? && live == @last_live
@@ -293,6 +310,7 @@ module Migrations
             elapsed: "",
             eta: "",
             rate: "",
+            concurrency: concurrency_cell(step.concurrency),
             annot: "",
           }
 
@@ -366,6 +384,36 @@ module Migrations
           line << outcome_note(step)
           line << annotations(step)
           line
+        end
+
+        # The transient live line shown while the run finishes background work
+        # (merging shards) after every step is done. The spinner animates it.
+        def finalizing_line
+          "#{spinner} #{Ansi::DIM}#{I18n.t("progressbar.finishing_up")}#{Ansi::RESET}"
+        end
+
+        # The permanent end-of-run line: a Σ, the total runtime in the elapsed
+        # column (so it lines up under the per-step durations), and the step tally.
+        def summary_line(runtime, total, failed, skipped)
+          columns = [
+            Ansi.pad("", @column_widths[:percent]),
+            Ansi.pad("", @column_widths[:count]),
+            Ansi.pad(format_duration(runtime), @column_widths[:elapsed], :right),
+          ].join("  ")
+          line = +"#{Ansi::BOLD}Σ#{Ansi::RESET} #{title_field(I18n.t("progressbar.total"))}  "
+          line << columns << summary_tally(total, failed, skipped)
+          line
+        end
+
+        def summary_tally(total, failed, skipped)
+          note = +"  #{I18n.t("progressbar.steps", count: total, number: total)}"
+          if failed > 0
+            note << "  #{Ansi::RED}#{I18n.t("progressbar.steps_failed", number: failed)}#{Ansi::RESET}"
+          end
+          if skipped > 0
+            note << "  #{Ansi::YELLOW}#{I18n.t("progressbar.steps_skipped", number: skipped)}#{Ansi::RESET}"
+          end
+          note
         end
 
         def status_glyph(step)
@@ -456,6 +504,14 @@ module Migrations
 
         def spinner
           SPINNER[(now * SPINNER_RATE).to_i % SPINNER.size]
+        end
+
+        def concurrency_cell(count)
+          return "" if count <= 1
+
+          label = "#{count}×"
+          return label unless @color
+          "#{Ansi::MAGENTA}#{label}#{Ansi::RESET}"
         end
 
         def terminal_columns

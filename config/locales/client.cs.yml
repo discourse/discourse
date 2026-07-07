@@ -2826,6 +2826,7 @@ cs:
       email_label: "Email"
       continue_button: "Pokračovat"
       verify_button: "Pokračovat"
+      signup_title: "Vytvořte si účet"
       account_ready_continue: "Pokračovat"
       username_label: "Uživatelské jméno"
     login:

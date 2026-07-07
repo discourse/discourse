@@ -134,6 +134,7 @@ en:
         x_minutes:
           one: "%{count}m"
           other: "%{count}m"
+        x_minutes_seconds: "%{minutes}m %{seconds}s"
         about_x_hours:
           one: "%{count}h"
           other: "%{count}h"
@@ -2942,7 +2943,7 @@ en:
       use_different_email: "Use a different email address"
       use_password_instead: "Log in with your password instead"
       email_me_code: "Email me a one-time login code"
-      signup_title: "Join this community"
+      signup_title: "Create your account"
       signup_instructions: "Enter your email address to join this community. We'll send you a code to confirm it and you'll be on your way!"
       user_fields_title: "Almost done"
       user_fields_instructions: "Just a few more details to finish creating your account."
@@ -5008,7 +5009,8 @@ en:
           other: "Are you sure you want to merge these %{count} posts?"
 
       revisions:
-        diff_too_complex: "The diff is too complex to display. Please try viewing individual smaller edits."
+        diff_too_complex: "This edit changed too much of the post at once, so it can't be shown."
+        diff_hidden: "Some of this post's edit history has been hidden, so this edit can't be shown."
         locale:
           no_locale_set: "No language set"
           locale_removed: "Language removed"
@@ -6069,8 +6071,6 @@ en:
     no_group_messages_title: "No group messages found"
 
     topic_entrance:
-      sr_jump_top_button: "Jump to the first post - %{date}"
-      sr_jump_bottom_button: "Jump to the last post - %{date}"
       jump_top_button_title: "Jump to the first post"
       jump_bottom_button_title: "Jump to the last post"
     fullscreen_table:
@@ -7163,12 +7163,17 @@ en:
                 dropping:
                   one: "-%{count} dropping"
                   other: "-%{count} dropping"
-              moves_in_aria:
-                one: "%{count} member moved up"
-                other: "%{count} members moved up"
-              moves_out_aria:
-                one: "%{count} member moved down"
-                other: "%{count} members moved down"
+              signups:
+                one: "+ %{formattedCount} signup"
+                other: "+ %{formattedCount} signups"
+              signups_title: "Number of new signups arriving at this trust level"
+              count_title: "Number of total members at this trust level"
+              arrivals_aria:
+                one: "%{count} member got promoted to this trust level"
+                other: "%{count} members got promoted to this trust level"
+              demotions_in_aria:
+                one: "%{count} member got demoted to this trust level"
+                other: "%{count} members got demoted to this trust level"
               stable_aria: "no movement"
             headline:
               healthy_growth:
@@ -7323,6 +7328,14 @@ en:
             direct_traffic:
               label: "Direct traffic"
               tooltip: "The share of pageviews that came directly to your community, such as by typing your URL or using a browser bookmark."
+            bounce_rate:
+              label: "Bounce rate"
+              tooltip: "The share of sessions with a single pageview and less than 10 seconds of engaged time."
+            average_session_duration:
+              label: "Avg. session duration"
+              tooltip: "The average amount of time visitors spent in your community for the selected period."
+            session_metrics:
+              empty_tooltip: "Shown once visits are recorded for this period."
           top_countries:
             title: "Top countries"
             empty: "No country data for this period."
@@ -7444,6 +7457,7 @@ en:
             effects: Effects
             trust_levels_none: "None"
             automatic_membership_email_domains: "Users who register with an email domain that exactly matches one in this list will be automatically added to this group:"
+            automatic_membership_email_domains_instructions: "Enter each domain on its own, for example discourse.org."
             automatic_membership_user_count:
               one: "%{count} user has the new email domains and will be added to the group."
               other: "%{count} users have the new email domains and will be added to the group."

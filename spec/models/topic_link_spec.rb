@@ -81,6 +81,19 @@ RSpec.describe TopicLink do
       expect(post.topic.topic_links.count).to eq(0)
     end
 
+    it "can exclude links with silent=true combined with other query params" do
+      url = topic.url
+
+      ["#{url}?u=someuser&silent=true", "#{url}?silent=true&u=someuser"].each do |link_url|
+        post = Fabricate(:post, user:, raw: "[silent link](#{link_url})")
+
+        TopicLink.extract_from(post)
+
+        expect(topic.topic_links.count).to eq(0)
+        expect(post.topic.topic_links.count).to eq(0)
+      end
+    end
+
     it "extracts onebox" do
       other_topic = Fabricate(:topic, user: user)
       Fabricate(:post, topic: other_topic, user: user, raw: "some content for the first post")

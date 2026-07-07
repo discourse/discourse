@@ -261,6 +261,10 @@ tr_TR:
         header: "Sohbet başlığı"
         composer: "Sohbet oluşturucu"
         channels_list: "Sohbet kanalları listesi"
+      screen_reader:
+        new_messages:
+          one: "%{count} yeni mesaj"
+          other: "%{count} yeni mesaj"
       no_direct_message_channels: "Henüz herhangi bir doğrudan mesaja katılmadınız!"
       no_direct_message_channels_cta: "Konuşma başlat"
       no_public_channels: "Henüz hiçbir kanala katılmadınız!"

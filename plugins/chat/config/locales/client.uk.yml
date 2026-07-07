@@ -289,6 +289,12 @@ uk:
         header: "Заголовок чату"
         composer: "Редактор чату"
         channels_list: "Список каналів чату"
+      screen_reader:
+        new_messages:
+          one: "%{count} нове повідомлення"
+          few: "%{count} нових повідомлення"
+          many: "%{count} нових повідомлень"
+          other: "%{count} нових повідомлень"
       no_direct_message_channels: "Ви ще не приєдналися до жодної особистої переписки!"
       no_direct_message_channels_cta: "Розпочати розмову"
       no_public_channels: "Ви ще не приєдналися до жодного каналу!"

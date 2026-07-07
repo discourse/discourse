@@ -493,6 +493,12 @@ ja:
         temperature_help: "LLM に使用する Temperature。値を増やすと創造性が増加します (モデルのデフォルトを使用する場合は空白にします。一般に 0.0～2.0 の値です)"
         top_p: "Top P"
         top_p_help: "LLM に使用する Top P。値を増やすとランダム性が増加します (モデルのデフォルトを使用する場合は空白にします。一般に 0.0～1.0 の値です)"
+        thinking_effort_options:
+          none: "なし"
+          low: "低"
+          medium: "普通"
+          high: "高"
+          max: "最大"
         priority: "優先度"
         tool_options: "ツールのオプション"
         rag_conversation_chunks: "会話チャンクを検索"
@@ -741,8 +747,6 @@ ja:
         description: "以下のいずれかのオプションを選択すると、AI が新しいバージョンのテキストを提案します。"
         selection_hint: "ヒント: ヘルパーを開く前にテキストの一部を選択すると、その部分のみを書き換えることもできます。"
         suggest_errors:
-          too_many_tags:
-            other: "最大 %{count} 個のタグのみを使用できます"
           no_suggestions: "提案はありません"
         missing_content: "提案を生成するにはコンテンツを入力してください。"
         context_menu:

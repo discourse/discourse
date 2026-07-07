@@ -161,7 +161,7 @@
 
   .topic-map {
     margin-top: var(--space-2);
-    padding: var(--space-3) var(--space-3) var(--space-3) var(--space-8);
+    padding: var(--space-3);
     display: grid;
     grid-template-areas: "contents additional" "pm-map pm-map";
     grid-template-columns: 1fr auto;
@@ -172,6 +172,7 @@
     );
 
     @include viewport.from(sm) {
+      padding-left: var(--space-8);
       margin-left: calc(var(--pm-padding) + var(--space-1));
     }
 

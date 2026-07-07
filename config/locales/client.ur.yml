@@ -2680,6 +2680,7 @@ ur:
       email_label: "ای میل"
       continue_button: "جاری رکھیں"
       verify_button: "جاری رکھیں"
+      signup_title: "اپنا اکاؤنٹ بنائیں"
       account_ready_continue: "جاری رکھیں"
       username_label: "اسمِ صارف"
     login:
@@ -6206,12 +6207,6 @@ ur:
                 dropping:
                   one: "-%{count} گرا"
                   other: "-%{count} گرا"
-              moves_in_aria:
-                one: "%{count} رکن آگے بڑھا"
-                other: "%{count} ارکان آگے بڑھے"
-              moves_out_aria:
-                one: "%{count} رکن نیچے گئے"
-                other: "%{count} ارکان نیچے گئے"
               stable_aria: "کوئی حرکت نہیں"
             headline:
               engaged_but_shrinking:

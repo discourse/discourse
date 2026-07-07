@@ -3,9 +3,9 @@
 RSpec.describe TopicQuery::PrivateMessageLists do
   fab!(:admin)
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
-  fab!(:user_2, :user)
-  fab!(:user_3, :user)
-  fab!(:user_4, :user)
+  fab!(:user_2) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user_3) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:user_4) { Fabricate(:user, refresh_auto_groups: true) }
 
   fab!(:group) do
     Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap { |g| g.add(user_2) }

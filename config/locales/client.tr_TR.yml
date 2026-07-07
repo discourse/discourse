@@ -2677,6 +2677,7 @@ tr_TR:
       email_label: "E-posta"
       continue_button: "Devam et"
       verify_button: "Devam et"
+      signup_title: "Hesabınızı oluşturun"
       account_ready_continue: "Devam et"
       username_label: "Kullanıcı Adı"
     login:
@@ -4445,7 +4446,6 @@ tr_TR:
           one: "Bu gönderileri birleştirmek istediğinizden emin misiniz?"
           other: "Bu %{count} gönderiyi birleştirmek istediğinizden emin misiniz?"
       revisions:
-        diff_too_complex: "Fark görüntülenemeyecek kadar karmaşık. Lütfen daha küçük düzenlemeleri tek tek görüntülemeyi deneyin."
         locale:
           no_locale_set: "Dil ayarlanmadı"
           locale_removed: "Dil kaldırıldı"

@@ -2635,6 +2635,7 @@ hu:
       email_label: "E-mail:"
       continue_button: "Folytatás"
       verify_button: "Folytatás"
+      signup_title: "Regisztráció"
       account_ready_continue: "Folytatás"
       username_label: "Felhasználónév"
     login:
@@ -4261,7 +4262,6 @@ hu:
           one: "Biztos, hogy egyesíti ezeket a bejegyzéseket?"
           other: "Biztos, hogy egyesíti ezt a(z) %{count} bejegyzést?"
       revisions:
-        diff_too_complex: "A különbségek túl összetettek a megjelenítéshez. Kérjük, próbálja meg az egyes kisebb szerkesztéseket külön-külön megtekinteni."
         locale:
           no_locale_set: "Nincs beállítva nyelv"
           locale_removed: "Nyelv eltávolítva"

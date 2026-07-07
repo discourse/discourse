@@ -1521,6 +1521,27 @@ RSpec.describe PostsController do
           expect(user).not_to be_silenced
         end
 
+        it "does not silence when the post cannot be queued" do
+          topic = Fabricate(:topic)
+          user.change_trust_level!(TrustLevel[0])
+
+          post "/posts.json",
+               params: {
+                 raw:
+                   "this is the test content\n\n<img src='https://example.com/first.png'>\n\n<img src='https://example.com/second.png'>",
+                 topic_id: topic.id,
+                 composer_open_duration_msecs: 204,
+                 typing_duration_msecs: 100,
+               }
+
+          expect(response).not_to be_successful
+          expect(response.parsed_body["errors"]).to be_present
+          expect(ReviewableQueuedPost.find_by(target_created_by: user)).to be_blank
+
+          user.reload
+          expect(user).not_to be_silenced
+        end
+
         it "doesn't enqueue posts when user first creates a topic" do
           topic = Fabricate(:post, user: user).topic
 
@@ -1820,6 +1841,26 @@ RSpec.describe PostsController do
 
         expect(response.status).to eq(200)
         expect(Post.last.topic.tags).to contain_exactly(tag)
+      end
+
+      it "rejects tag arrays exceeding the configured per-topic limit" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.max_tags_per_topic = 5
+        tags = 25.times.map { |index| Fabricate(:tag, name: "tag-#{index}") }
+
+        expect do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 title: "this is the test title for the topic",
+                 tags: tags.map { |tag| { id: tag.id, name: tag.name } },
+               }
+        end.not_to change { Post.count }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(
+          I18n.t("tags.too_many_tags_for_topic", count: 5),
+        )
       end
 
       context "with content localization enabled" do

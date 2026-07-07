@@ -81,6 +81,11 @@ th:
         save: "บันทึก"
         enabled: "เปิดใช้"
         delete: "ลบ"
+        thinking_effort_options:
+          none: "ไม่มี"
+          low: "ต่ำ"
+          medium: "ปานกลาง"
+          high: "สูง"
         response_format:
           open_modal: "แก้ไข"
       rag:

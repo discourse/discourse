@@ -9,21 +9,42 @@ module Jobs
     def execute(_args)
       return if !SiteSetting.persist_browser_pageview_events
 
-      aggregate
-      backfill
+      aggregate_pageviews
+      aggregate_engagement
+      backfill_referrers
     end
 
     private
 
-    def aggregate
-      start_date, end_date = aggregation_window
+    def aggregate_pageviews
+      start_date, end_date = pageview_aggregation_window
       return if start_date.nil?
 
       BrowserPageviewCountryDailyRollup.aggregate(start_date: start_date, end_date: end_date)
       BrowserPageviewReferrerDailyRollup.aggregate(start_date: start_date, end_date: end_date)
     end
 
-    def aggregation_window
+    def aggregate_engagement
+      start_date, end_date = engagement_aggregation_window
+      return if start_date.nil?
+
+      BrowserPageviewSessionEngagementDailyRollup.aggregate(
+        start_date: start_date,
+        end_date: end_date,
+      )
+    end
+
+    def engagement_aggregation_window
+      end_date = Time.zone.today
+      start_date =
+        BrowserPageviewSessionEngagementDailyRollup.where("date < ?", end_date).maximum(:date) ||
+          BrowserPageviewSessionEngagement.minimum(:created_at)&.to_date
+      return nil, nil if start_date.nil?
+
+      [start_date, end_date]
+    end
+
+    def pageview_aggregation_window
       end_date = Time.zone.today
 
       if BrowserPageviewCountryDailyRollup.none? && BrowserPageviewReferrerDailyRollup.none?
@@ -38,7 +59,7 @@ module Jobs
       end
     end
 
-    def backfill
+    def backfill_referrers
       rows = next_batch
       return if rows.empty?
 

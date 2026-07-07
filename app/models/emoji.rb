@@ -410,7 +410,7 @@ class Emoji
       match = Regexp.last_match
       code = match[1]
 
-      result << ERB::Util.html_escape(str[last_index...match.begin(0)])
+      result << ERB::Util.html_escape_once(str[last_index...match.begin(0)])
 
       result << if code && Emoji.custom?(code)
         emoji = Emoji[code]
@@ -418,13 +418,13 @@ class Emoji
       elsif code && Emoji.exists?(code)
         emoji_img_tag(Emoji.url_for(code), code)
       else
-        ERB::Util.html_escape(match[0])
+        ERB::Util.html_escape_once(match[0])
       end
 
       last_index = match.end(0)
     end
 
-    result << ERB::Util.html_escape(str[last_index..])
+    result << ERB::Util.html_escape_once(str[last_index..])
     result
   end
 

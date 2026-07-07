@@ -906,18 +906,26 @@ RSpec.describe UsersController do
         end
       end
 
-      context "when signup params include group assignments" do
+      context "when signup params include protected profile attributes" do
         fab!(:whisperers_group, :group)
 
         let(:created_user) { User.find(response.parsed_body["user_id"]) }
 
         before { SiteSetting.whispers_allowed_groups = whisperers_group.id.to_s }
 
-        it "ignores primary_group_id and flair_group_id on unauthenticated signup" do
-          post_user(primary_group_id: whisperers_group.id, flair_group_id: whisperers_group.id)
+        it "ignores protected profile attributes on unauthenticated signup" do
+          post_user(
+            title: "Moderator",
+            primary_group_id: whisperers_group.id,
+            flair_group_id: whisperers_group.id,
+          )
 
           expect(response).to have_http_status(:ok)
-          expect(created_user).to have_attributes(primary_group_id: nil, flair_group_id: nil)
+          expect(created_user).to have_attributes(
+            title: nil,
+            primary_group_id: nil,
+            flair_group_id: nil,
+          )
           expect(created_user).not_to be_a_whisperer
         end
       end
@@ -2362,6 +2370,36 @@ RSpec.describe UsersController do
       invites = response.parsed_body["invites"]
       expect(invites.size).to eq(1)
       expect(invites[0]["user"]).to be_present
+    end
+
+    it "hides last seen timestamps for hidden profiles" do
+      SiteSetting.allow_users_to_hide_profile = true
+
+      inviter = Fabricate(:user, trust_level: TrustLevel[2])
+      hidden_invitee = Fabricate(:user, last_seen_at: 1.hour.ago)
+      hidden_invitee.user_option.update!(hide_profile: true)
+      visible_invitee = Fabricate(:user, last_seen_at: 2.hours.ago)
+
+      [hidden_invitee, visible_invitee].each do |redeemed_user|
+        invite = Fabricate(:invite, invited_by: inviter)
+        Fabricate(:invited_user, invite: invite, user: redeemed_user)
+      end
+
+      sign_in(inviter)
+      get "/u/#{inviter.username}/invited.json"
+
+      expect(response.status).to eq(200)
+
+      invited_users = response.parsed_body["invites"].map { |invite| invite["user"] }
+      hidden_user_record =
+        invited_users.find { |invited_user| invited_user["id"] == hidden_invitee.id }
+      visible_user_record =
+        invited_users.find { |invited_user| invited_user["id"] == visible_invitee.id }
+
+      expect(hidden_user_record).to be_present
+      expect(visible_user_record).to be_present
+      expect(hidden_user_record).not_to include("last_seen_at")
+      expect(visible_user_record).to include("last_seen_at")
     end
 
     it "doesn't filter by email if another regular user" do
@@ -5916,6 +5954,46 @@ RSpec.describe UsersController do
                 term: user.username,
               }
 
+          expect(users_found).to be_empty
+        end
+
+        it "does not let an anon user enumerate members of a group it cannot see" do
+          hidden =
+            Fabricate(
+              :group,
+              visibility_level: Group.visibility_levels[:logged_on_users],
+              members_visibility_level: Group.visibility_levels[:public],
+            )
+          hidden.add(user)
+
+          get "/u/search/users.json", params: { group: hidden.name, term: user.username }
+
+          expect(response.status).to eq(403)
+        end
+
+        it "lets a signed-in user filter by a non-public group they can see" do
+          sign_in(user)
+          group =
+            Fabricate(
+              :group,
+              visibility_level: Group.visibility_levels[:logged_on_users],
+              members_visibility_level: Group.visibility_levels[:public],
+            )
+          member = Fabricate(:user, username: "visiblemember")
+          group.add(member)
+
+          get "/u/search/users.json", params: { group: group.name, term: "visiblemember" }
+
+          expect(response.status).to eq(200)
+          expect(users_found).to include("visiblemember")
+        end
+
+        it "returns no results rather than erroring for a group that does not exist" do
+          sign_in(user)
+
+          get "/u/search/users.json", params: { group: "does_not_exist", term: user.username }
+
+          expect(response.status).to eq(200)
           expect(users_found).to be_empty
         end
 

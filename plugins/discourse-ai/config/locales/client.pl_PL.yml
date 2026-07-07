@@ -675,6 +675,17 @@ pl_PL:
         temperature_help: "Temperatura używana w LLM. Zwiększ, aby zwiększyć kreatywność (pozostaw puste, aby użyć domyślnej wartości modelu, zazwyczaj od 0,0 do 2,0)."
         top_p: "Top P"
         top_p_help: "Top P do użycia w LLM, zwiększ, aby zwiększyć losowość (pozostaw puste, aby użyć domyślnego modelu, zazwyczaj wartość od 0,0 do 1,0)."
+        thinking_effort: "Wysiłek umysłowy"
+        thinking_effort_help: "Ile modele zdolne do rozumowania powinny myśleć przed udzieleniem odpowiedzi? Wyższe wartości mogą usprawnić trudne zadania, ale mogą zwiększyć opóźnienia i koszty. Dostawcy nieobsługiwani ignorują to ustawienie."
+        thinking_effort_options:
+          default: "Model domyślny"
+          none: "Brak"
+          minimal: "Minimalny"
+          low: "Niski"
+          medium: "Średni"
+          high: "Wysoki"
+          xhigh: "Bardzo wysoki"
+          max: "Maksymalny"
         priority: "Priorytet"
         priority_help: "Priorytetowe agenty są wyświetlane użytkownikom na górze listy agentów. Jeśli wiele agentów ma priorytet, zostaną one posortowane alfabetycznie."
         tool_options: "Opcje narzędzi"
@@ -1076,11 +1087,6 @@ pl_PL:
         choose: "Wybierz za mnie"
         suggestions: "Sugestie"
         suggest_errors:
-          too_many_tags:
-            one: "Możesz mieć maksymalnie %{count} znacznik"
-            few: "Możesz mieć maksymalnie %{count} znaczniki"
-            many: "Możesz mieć maksymalnie %{count} znaczników"
-            other: "Możesz mieć maksymalnie %{count} znaczników"
           no_suggestions: "Brak dostępnych sugestii"
         missing_content: "Wprowadź treść, aby wygenerować sugestie."
         context_menu:

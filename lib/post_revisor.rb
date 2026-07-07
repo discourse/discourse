@@ -275,6 +275,7 @@ class PostRevisor
   # @option opts [Boolean] :skip_revision Do not create a new PostRevision record
   # @option opts [Boolean] :skip_staff_log Skip creating an entry in the staff action log
   # @option opts [Boolean] :silent Don't send notifications to user
+  # @option opts [Boolean] :hidden Force the created revision to be hidden from non-staff users
   # @return [Boolean] Returns true if the revision was successful, false otherwise
   def revise!(editor, fields, opts = {})
     @editor = editor
@@ -443,9 +444,10 @@ class PostRevisor
     # topic-only changes (without post content changes) should always create a new version
     # since the grace period concept doesn't apply to metadata changes like tags
     if topic_changed? && !post_changed?
-      # Allow hidden tag-only changes to update a previous hidden revision
-      # so that reverting hidden tag changes collapses the revisions
-      if only_hidden_tags_changed? &&
+      # Allow the same user to collapse a hidden tag-only change into their
+      # previous hidden revision (e.g. reverting); a different user's change must
+      # still create its own revision so authorship is not folded into theirs.
+      if only_hidden_tags_changed? && !edited_by_another_user? &&
            PostRevision.where(post_id: @post.id, number: @post.version).pick(:hidden)
         return false
       end
@@ -536,7 +538,7 @@ class PostRevisor
     @version_changed = true
     @post.version += 1
 
-    @hidden_revision = only_hidden_tags_changed?
+    @hidden_revision = @opts[:hidden] == true || only_hidden_tags_changed?
     @post.public_version += 1 unless @hidden_revision
 
     @post.last_version_at = @revised_at

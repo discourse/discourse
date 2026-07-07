@@ -69,6 +69,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "flag-custom-placeholder",
   "flag-description",
   "flag-formatted-name",
+  "full-page-refresh-on-navigation",
   "hamburger-dropdown-click-outside-exceptions",
   "header-notifications-avatar-size",
   "home-logo-href",

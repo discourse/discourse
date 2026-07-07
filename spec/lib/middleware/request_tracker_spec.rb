@@ -1961,10 +1961,7 @@ RSpec.describe Middleware::RequestTracker do
   end
 
   describe "session engagement tracking via /srv/se" do
-    before do
-      SiteSetting.dashboard_improvements = true
-      SiteSetting.persist_browser_pageview_events = true
-    end
+    before { SiteSetting.persist_browser_pageview_events = true }
 
     def engagement_env(body_hash, extra = {})
       env(
@@ -2119,12 +2116,16 @@ RSpec.describe Middleware::RequestTracker do
       }.not_to change { BrowserPageviewSessionEngagement.count }
     end
 
-    it "does not intercept the request when dashboard_improvements is disabled" do
-      SiteSetting.dashboard_improvements = false
+    it "does not intercept the request when persist_browser_pageview_events is disabled" do
+      SiteSetting.persist_browser_pageview_events = false
+      SiteSetting.trigger_browser_pageview_events = true
+      SiteSetting.dashboard_improvements = true
       middleware = Middleware::RequestTracker.new(lambda { |_env| [200, {}, ["OK"]] })
 
-      status, = middleware.call(engagement_env(payload, same_origin))
-      expect(status).to eq(200)
+      expect {
+        status, = middleware.call(engagement_env(payload, same_origin))
+        expect(status).to eq(200)
+      }.not_to change { BrowserPageviewSessionEngagement.count }
     end
   end
 end

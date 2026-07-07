@@ -111,7 +111,42 @@ class AdminDashboardSiteTraffic
     direct_traffic = direct_traffic_value
     kpis[:direct_traffic] = { value: direct_traffic } if !direct_traffic.nil?
 
+    if SiteSetting.persist_browser_pageview_events
+      kpis[:bounce_rate] = { value: bounce_rate_value }
+      kpis[:average_session_duration_seconds] = { value: average_session_duration_value }
+    end
+
     kpis
+  end
+
+  def bounce_rate_value
+    sessions = session_engagement_totals[:sessions]
+    return nil if sessions.zero?
+
+    ((session_engagement_totals[:bounced].to_f / sessions) * 100).round
+  end
+
+  def average_session_duration_value
+    sessions = session_engagement_totals[:sessions]
+    return nil if sessions.zero?
+
+    (session_engagement_totals[:engaged_seconds_total].to_f / sessions).round
+  end
+
+  def session_engagement_totals
+    @session_engagement_totals ||=
+      DB
+        .query_hash(<<~SQL, start_date: start_date.to_date, end_date: end_date.to_date)
+          SELECT
+            COALESCE(SUM(sessions), 0)::bigint AS sessions,
+            COALESCE(SUM(bounced), 0)::bigint AS bounced,
+            COALESCE(SUM(engaged_seconds_total), 0)::bigint AS engaged_seconds_total
+          FROM browser_pageview_session_engagement_daily_rollups
+          WHERE date >= :start_date
+            AND date <= :end_date
+        SQL
+        .first
+        .symbolize_keys
   end
 
   def browser_pageviews_kpi(totals, prior_rows)

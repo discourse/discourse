@@ -237,6 +237,91 @@ RSpec.describe Migrations::Reporting::Tui do
       end
     end
 
+    describe "the concurrency indicator" do
+      let(:count_indicator) { /\d+×/ }
+
+      def running_step(title, concurrency)
+        renderer.apply([:start, title, title])
+        renderer.apply([:progress_begin, title, 1000])
+        renderer.apply([:concurrency, title, concurrency]) if concurrency
+        renderer.apply([:progress, title, 500, 0, 0, 0])
+      end
+
+      it "renders the fork count, e.g. 4×, for a step using more than one fork" do
+        running_step("Posts", 4)
+        renderer.repaint
+        expect(screen.content_rows.first).to include("4×")
+      end
+
+      it "shows nothing in the column for a single-fork step" do
+        running_step("Posts", 1)
+        renderer.repaint
+        expect(screen.content_rows.first).not_to match(count_indicator)
+      end
+
+      it "shows nothing when the step never reports a count" do
+        running_step("Posts", nil)
+        renderer.repaint
+        expect(screen.content_rows.first).not_to match(count_indicator)
+      end
+
+      it "updates the count live when it's re-reported" do
+        running_step("Posts", 8)
+        renderer.repaint
+        expect(screen.content_rows.first).to include("8×")
+
+        renderer.apply([:concurrency, "Posts", 2])
+        renderer.repaint
+        row = screen.content_rows.first
+        expect(row).to include("2×")
+        expect(row).not_to include("8×")
+      end
+
+      it "colors the count when color is on" do
+        running_step("Posts", 8)
+        renderer.repaint
+        expect(io.string).to include("#{Migrations::Reporting::Tui::Ansi::MAGENTA}8×")
+      end
+
+      it "does not affect the count column shared with finished rows" do
+        renderer.apply([:start, "Done", "Done"])
+        renderer.apply([:progress_begin, "Done", 1_000_000])
+        renderer.apply([:progress, "Done", 1_000_000, 0, 0, 0])
+        renderer.apply([:finish, "Done", :done])
+        running_step("Busy", 8)
+        renderer.repaint
+
+        rows = screen.content_rows
+        done = rows.find { |r| r.include?("Done") }
+        busy = rows.find { |r| r.include?("Busy") }
+        # the count sits after the shared columns, so the totals still line up
+        expect(busy.index("1,000") + "1,000".length).to eq(
+          done.index("1,000,000") + "1,000,000".length,
+        )
+      end
+
+      describe "without color" do
+        around do |example|
+          original = ENV["NO_COLOR"]
+          ENV["NO_COLOR"] = "1"
+          example.run
+          original.nil? ? ENV.delete("NO_COLOR") : ENV["NO_COLOR"] = original
+        end
+
+        it "renders the count as plain text, with no color codes" do
+          no_color = described_class.new(output: io, width: 120, clock: -> { time[0] })
+          no_color.apply([:start, "Posts", "Posts"])
+          no_color.apply([:progress_begin, "Posts", 1000])
+          no_color.apply([:concurrency, "Posts", 8])
+          no_color.apply([:progress, "Posts", 500, 0, 0, 0])
+          no_color.repaint
+
+          expect(screen.content_rows.first).to include("8×")
+          expect(io.string).not_to include(Migrations::Reporting::Tui::Ansi::MAGENTA)
+        end
+      end
+    end
+
     describe "notices" do
       it "renders a permanent line prefixed with the step title" do
         renderer.apply([:start, "Posts", "Posts"])
@@ -395,6 +480,47 @@ RSpec.describe Migrations::Reporting::Tui do
           end
       end
     end
+
+    describe "the finishing-up status and run summary" do
+      it "shows a transient finishing-up line while draining, replaced by the summary" do
+        renderer.apply([:finalizing_begin])
+        renderer.repaint
+        expect(screen.content_rows).to include(a_string_matching(/Finishing up/))
+
+        # the real flow ends `finalizing` and prints the summary in the same frame
+        renderer.apply([:finalizing_end])
+        renderer.apply([:summary, 5.0, 3, 0, 0])
+        renderer.repaint
+        expect(screen.content_rows).not_to include(a_string_matching(/Finishing up/))
+        expect(screen.content_rows).to include(a_string_matching(/Total.*3 steps/))
+      end
+
+      it "prints a summary with the runtime under the step-duration column" do
+        renderer.apply([:start, "Users", "Users"])
+        renderer.apply([:progress_begin, "Users", 1000])
+        renderer.apply([:progress, "Users", 1000, 0, 0, 0])
+        at(3.0)
+        renderer.apply([:finish, "Users", :done])
+        renderer.apply([:summary, 138.0, 24, 0, 0])
+        renderer.repaint
+
+        summary = screen.content_rows.find { |r| r.include?("Total") }
+        step = screen.content_rows.find { |r| r.include?("Users") }
+        expect(summary).to include("24 steps")
+        expect(summary).to include("2:18") # 138 seconds runtime
+        # the runtime lines up under the per-step durations
+        expect(summary.index(/\d+:\d\d/)).to eq(step.index(/\d+:\d\d/))
+      end
+
+      it "notes failed and skipped steps in the summary" do
+        renderer.apply([:summary, 60.0, 24, 2, 1])
+        renderer.repaint
+
+        row = screen.content_rows.find { |r| r.include?("Total") }
+        expect(row).to include("2 failed")
+        expect(row).to include("1 skipped")
+      end
+    end
   end
 
   # Facade-level behaviour exercises the real queue + render thread. Each test
@@ -424,6 +550,23 @@ RSpec.describe Migrations::Reporting::Tui do
       row = final_screen.content_rows.find { |r| r.start_with?("✓ Users") }
       expect(row).to include("800")
       expect(row).to include("800 warnings")
+    end
+
+    it "coalesces progress instead of queuing one event per update" do
+      step = reporter.start_step("Users")
+      queue = reporter.instance_variable_get(:@queue)
+
+      step.with_progress(max_progress: 10_000) do |progress|
+        10_000.times { progress.update(increment_by: 1) }
+        # the 10k updates collapse into one coalesced slot, so the queue never
+        # fills and the render thread keeps repainting
+        expect(queue.size).to be < 50
+      end
+      step.finish
+      reporter.close
+
+      row = final_screen.content_rows.find { |r| r.start_with?("✓ Users") }
+      expect(row).to include("10,000")
     end
 
     it "renders an interrupted line when finish runs during a SignalException" do

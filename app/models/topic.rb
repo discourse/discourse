@@ -1980,6 +1980,10 @@ class Topic < ActiveRecord::Base
     ApplicationLayoutPreloader.banner_json_cache.clear if archetype == "banner"
   end
 
+  def plain_text_excerpt
+    ExcerptParser.to_plain_text(excerpt)
+  end
+
   def pm_with_non_human_user?
     sql = <<~SQL
     SELECT 1 FROM topics
@@ -2289,7 +2293,7 @@ class Topic < ActiveRecord::Base
   end
 
   def limit_first_day_topics_per_day
-    apply_per_day_rate_limit_for("first-day-topics", :max_topics_in_first_day)
+    RateLimiter.new(user, "first-day-topics-per-day", user.first_day_topics_limit, 1.day.to_i)
   end
 
   def apply_per_day_rate_limit_for(key, method_name)

@@ -782,6 +782,7 @@ pt:
       labels:
         count: "Membros"
         share: "Partilhar"
+        signups: "Registos"
       levels:
         "0": "Novo"
         "1": "Básico"
@@ -1290,7 +1291,6 @@ pt:
     max_tags_in_filter_list: "Número máximo de etiquetas a mostrar no filtro de etiquetas. Serão mostradas as etiquetas mais utilizadas."
     tags_sort_alphabetically: "Mostrar etiquetas por ordem alfabética. São, por omissão, ordenadas por popularidade."
     suppress_overlapping_tags_in_list: "Se as etiquetas coincidirem exactamente com palavras nos títulos dos tópicos, não mostrar as etiquetas"
-    create_revision_on_bulk_topic_moves: "Criar revisão para os primeiros posts quando os tópicos são movidos em massa para uma nova categoria."
     show_preview_for_form_templates: "Ativar a pré-visualização para a funcionalidade de modelos de formulário"
     errors:
       invalid_email: "Endereço de email inválido."
