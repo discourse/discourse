@@ -539,7 +539,7 @@ class GroupsController < ApplicationController
   end
 
   def mentionable
-    group = find_group(:name, ensure_can_see: false)
+    group = find_group(:name)
 
     if group
       render json: { mentionable: Group.mentionable(current_user).where(id: group.id).present? }
@@ -549,7 +549,7 @@ class GroupsController < ApplicationController
   end
 
   def messageable
-    group = find_group(:name, ensure_can_see: false)
+    group = find_group(:name)
 
     if group
       render json: { messageable: guardian.can_send_private_message?(group) }
