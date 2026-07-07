@@ -162,7 +162,7 @@
     "rolldown": "1.1.2",
     "sinon": "^22.0.0",
     "testem": "^3.20.1",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "util": "^0.12.5",
     "xss": "^1.0.15"
   },
