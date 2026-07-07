@@ -22,6 +22,8 @@ module Migrations
       private_constant :CLOSE_TIMEOUT
 
       def initialize(fps: 10, output: $stdout, titles: [])
+        raise ArgumentError, "fps must be greater than 0" if fps <= 0
+
         super()
         @queue = Thread::Queue.new
         @progress = {}

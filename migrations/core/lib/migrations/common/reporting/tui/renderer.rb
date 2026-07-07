@@ -53,8 +53,9 @@ module Migrations
           @output = output
           @forced_width = width
           @clock = clock || -> { Process.clock_gettime(Process::CLOCK_MONOTONIC) }
-          @terminal_columns = width || terminal_columns
-          @color = !ENV.key?("NO_COLOR")
+          @terminal_columns = terminal_columns
+          # NO_COLOR disables color only when set to a non-empty value.
+          @color = ENV["NO_COLOR"].to_s.empty?
           # Translated once here, not every frame.
           @counting_label = I18n.t("progressbar.counting")
           @eta_label = I18n.t("progressbar.eta")
@@ -383,7 +384,7 @@ module Migrations
           count = step.state == :done ? (step.total || step.current) : step.current
 
           line = +"#{status_glyph(step)} #{title_field(step.title)}  "
-          line << collapsed_columns(format_count(count), duration)
+          line << padded_columns(format_count(count), duration, dim: true)
           line << outcome_note(step)
           line << annotations(step)
           line
@@ -398,11 +399,7 @@ module Migrations
         # The permanent end-of-run line: a Σ, the total runtime in the elapsed
         # column (so it lines up under the per-step durations), and the step tally.
         def summary_line(runtime, total, failed, skipped)
-          columns = [
-            Ansi.pad("", @column_widths[:percent]),
-            Ansi.pad("", @column_widths[:count]),
-            Ansi.pad(format_duration(runtime), @column_widths[:elapsed], :right),
-          ].join("  ")
+          columns = padded_columns("", runtime, dim: false)
           line = +"#{Ansi::BOLD}Σ#{Ansi::RESET} #{title_field(I18n.t("progressbar.total"))}  "
           line << columns << summary_tally(total, failed, skipped)
           line
@@ -446,14 +443,17 @@ module Migrations
           end
         end
 
-        # The percent, count, and time columns for a finished row. It uses the same
-        # widths as the live rows, so every count and duration lines up down the
-        # whole display. The percent is blank here.
-        def collapsed_columns(count, duration)
+        # The blank-percent, count, and time triple shared by the finished rows
+        # and the run summary. It uses the same widths as the live rows, so every
+        # count and duration lines up down the whole display. The percent is
+        # always blank here; a finished row dims its duration, the summary doesn't.
+        def padded_columns(count, duration, dim:)
+          time = Ansi.pad(format_duration(duration), @column_widths[:elapsed], :right)
+          time = "#{Ansi::DIM}#{time}#{Ansi::RESET}" if dim
           [
             Ansi.pad("", @column_widths[:percent]),
             Ansi.pad(count, @column_widths[:count], :right),
-            "#{Ansi::DIM}#{Ansi.pad(format_duration(duration), @column_widths[:elapsed], :right)}#{Ansi::RESET}",
+            time,
           ].join("  ")
         end
 
@@ -464,7 +464,8 @@ module Migrations
         # account for, fusing rows and stranding stale ones. Split it so each
         # source line is its own permanent line: the first keeps the title
         # prefix, the rest are indented so a backtrace-style message reads as one
-        # block.
+        # block. The title is deliberately not padded to the table's title column
+        # (unlike the step rows): a notice is prose, not a table row.
         def notice_lines(title, message)
           lines = message.to_s.split("\n").map(&:rstrip).reject(&:empty?)
           lines = [""] if lines.empty?
@@ -526,9 +527,8 @@ module Migrations
         def concurrency_cell(count)
           return "" if count <= 1
 
-          label = "#{count}×"
-          return label unless @color
-          "#{Ansi::MAGENTA}#{label}#{Ansi::RESET}"
+          # `emit` strips the SGR when color is off, like every other cell.
+          "#{Ansi::MAGENTA}#{count}×#{Ansi::RESET}"
         end
 
         def terminal_columns
