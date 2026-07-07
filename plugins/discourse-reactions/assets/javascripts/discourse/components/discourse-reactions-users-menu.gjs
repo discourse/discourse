@@ -134,7 +134,7 @@ export default class DiscourseReactionsUsersMenu extends Component {
                 data-reaction-filter={{reaction.id}}
                 {{on "click" (fn this.selectFilter reaction.id)}}
               >
-                {{dEmoji reaction.id skipTitle=true}}
+                {{dEmoji reaction.id}}
                 <span>{{reaction.count}}</span>
               </button>
             {{/each}}
@@ -144,7 +144,7 @@ export default class DiscourseReactionsUsersMenu extends Component {
 
       <:reaction as |user|>
         {{#if user.reaction}}
-          {{dEmoji user.reaction skipTitle=true class="users-popup__reaction"}}
+          {{dEmoji user.reaction class="users-popup__reaction"}}
         {{else}}
           {{dIcon "d-liked" class="users-popup__reaction"}}
         {{/if}}

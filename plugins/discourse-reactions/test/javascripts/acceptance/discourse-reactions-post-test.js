@@ -62,6 +62,20 @@ acceptance("Post", function (needs) {
       );
   });
 
+  test("Reaction emoji shows its name in the title on hover", async function (assert) {
+    await visit("/t/topic_with_reactions_and_likes/374");
+
+    assert
+      .dom(
+        "#post_1 .discourse-reactions-list .discourse-reactions-list-emoji img.emoji[alt='laughing']"
+      )
+      .hasAttribute(
+        "title",
+        "laughing",
+        "sets the emoji name as the title attribute"
+      );
+  });
+
   test("Current user has no reaction on post and can toggle", async function (assert) {
     await visit("/t/topic_with_reactions_and_likes/374");
 
