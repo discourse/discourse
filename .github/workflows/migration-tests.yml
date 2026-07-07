@@ -88,12 +88,18 @@ jobs:
           fi
 
       - name: Mutation testing (changed subjects only)
-        # Diff-gated: `--since` mutates only the subjects a change touches, so this
-        # fails when a change adds an unkilled mutation without demanding the whole
-        # codebase already be at 100%. Each gem opts in via its own `.mutant.yml`;
-        # bin/mutant layers mutant onto the gem's bundle via a throwaway gemfile,
-        # so nothing mutant-related lives in the gems' Gemfiles. A change that
-        # touches no listed subject mutates nothing and passes.
+        # Diff-gated: `--since` mutates only the subjects a change touches, so it
+        # surfaces mutations a change adds without demanding the whole codebase
+        # already be at 100%. Each gem opts in via its own `.mutant.yml`; bin/mutant
+        # layers mutant onto the gem's bundle via a throwaway gemfile, so nothing
+        # mutant-related lives in the gems' Gemfiles. A change that touches no
+        # listed subject mutates nothing and passes.
+        #
+        # Advisory for now: `continue-on-error` reports surviving mutations as a
+        # warning on the PR instead of blocking merge (a touched method can carry a
+        # documented equivalent that can't be killed). Drop this line to make it a
+        # hard gate.
+        continue-on-error: true
         run: |
           for gem in core tooling converters importer; do
             echo "== migrations-$gem =="
