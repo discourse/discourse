@@ -89,4 +89,28 @@ RSpec.describe DiscourseAi::Agents::Tools::SuspendUser do
     expect(result[:status]).to eq("error")
     expect(user.reload.suspended?).to eq(false)
   end
+
+  it "returns an error and does not suspend when duration_days exceeds the maximum" do
+    result =
+      tool(
+        username: user.username,
+        duration_days: described_class::MAX_DURATION_DAYS + 1,
+        reason: "Test",
+      ).invoke
+
+    expect(result[:status]).to eq("error")
+    expect(user.reload.suspended?).to eq(false)
+  end
+
+  it "suspends at the maximum allowed duration" do
+    result =
+      tool(
+        username: user.username,
+        duration_days: described_class::MAX_DURATION_DAYS,
+        reason: "Permanent ban",
+      ).invoke
+
+    expect(result[:status]).to eq("success")
+    expect(user.reload.suspended?).to eq(true)
+  end
 end

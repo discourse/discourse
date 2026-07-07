@@ -11,8 +11,8 @@ function initializeAiToolApproval(api) {
       // The card markup is globally allow-listed, so a regular user could
       // embed it in their own post. Only mount the actionable card inside
       // bot-authored posts (bot/system users have a non-positive id); anyone
-      // else's `div.ai-tool-approval` stays inert. Server authz on
-      // /review and the revert endpoint remains the real gate.
+      // else's `div.ai-tool-approval` stays inert. Server-side authz on the
+      // /review load and perform endpoints remains the real gate.
       const post = helper.getModel?.();
       if (!post || post.user_id > 0) {
         return;

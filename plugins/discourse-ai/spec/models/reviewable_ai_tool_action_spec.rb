@@ -148,14 +148,34 @@ RSpec.describe ReviewableAiToolAction do
       expect { reviewable.perform(admin, :approve) }.to raise_error(Discourse::InvalidAccess)
     end
 
-    it "approves even when tool returns an error result (e.g. stale target)" do
+    it "raises and stays pending when the tool returns an error result (e.g. stale target)" do
       tool_action = create_tool_action(params: { topic_id: -999, closed: true, reason: "test" })
       reviewable = create_reviewable(tool_action)
 
-      result = reviewable.perform(admin, :approve)
+      expect { reviewable.perform(admin, :approve) }.to raise_error(Discourse::InvalidAccess)
+      expect(reviewable.reload).to be_pending
+    end
 
-      expect(result.success?).to eq(true)
-      expect(result.transition_to).to eq(:approved)
+    it "raises and stays pending when the approver lacks permission at replay time" do
+      target_user = Fabricate(:user)
+      tool_action =
+        create_tool_action(
+          tool_name: "suspend_user",
+          params: {
+            username: target_user.username,
+            duration_days: 7,
+            reason: "Spam",
+          },
+        )
+      reviewable = create_reviewable(tool_action)
+      moderator = Fabricate(:moderator)
+
+      # A plain moderator cannot suspend an admin, so the replayed tool fails.
+      target_user.update!(admin: true)
+
+      expect { reviewable.perform(moderator, :approve) }.to raise_error(Discourse::InvalidAccess)
+      expect(reviewable.reload).to be_pending
+      expect(target_user.reload.suspended?).to eq(false)
     end
 
     it "raises error when performed_by is a bot account" do

@@ -775,7 +775,7 @@ en:
           not_found: "User not found."
           not_allowed: "You are not allowed to suspend this user."
           no_reason: "A reason is required to suspend a user."
-          invalid_duration: "Duration must be a positive number of days."
+          invalid_duration: "Duration must be a positive whole number of days, up to %{max}."
           failed: "Failed to suspend user."
         success: "User %{username} has been suspended."
 
@@ -784,7 +784,7 @@ en:
           not_found: "User not found."
           not_allowed: "You are not allowed to silence this user."
           no_reason: "A reason is required to silence a user."
-          invalid_duration: "Duration must be a positive number of days."
+          invalid_duration: "Duration must be a positive whole number of days, up to %{max}."
           failed: "Failed to silence user."
         success: "User %{username} has been silenced."
 
@@ -927,6 +927,7 @@ en:
         bot_user_missing: "The bot user no longer exists."
         performer_not_human: "This action must be approved or rejected by a real person, not a bot."
         execution_error: "Tool execution failed: %{error}"
+        execution_error_unknown: "an unexpected error occurred"
 
     summarization:
       configuration_hint:

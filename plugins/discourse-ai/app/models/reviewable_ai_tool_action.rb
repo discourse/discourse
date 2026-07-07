@@ -48,11 +48,14 @@ class ReviewableAiToolAction < Reviewable
 
     # Suppress automation re-triggers caused by the tool's side effects
     # (e.g. edit_tags → topic_tags_changed → automation fires again → loop).
-    if defined?(DiscourseAutomation)
-      DiscourseAutomation.suppress_triggers { tool.invoke }
-    else
-      tool.invoke
-    end
+    result =
+      if defined?(DiscourseAutomation)
+        DiscourseAutomation.suppress_triggers { tool.invoke }
+      else
+        tool.invoke
+      end
+
+    ensure_tool_succeeded!(result)
 
     create_result(:success, :approved)
   end
@@ -114,6 +117,28 @@ class ReviewableAiToolAction < Reviewable
               I18n.t("discourse_ai.reviewables.ai_tool_action.performer_not_human"),
             )
     end
+  end
+
+  # The replayed tool reports precondition/service failures as an error hash
+  # (e.g. the approver lost permission, or the target was already actioned
+  # between enqueue and approval). Surface the reason to the moderator and let
+  # the surrounding transaction roll back so the reviewable stays pending,
+  # instead of recording a phantom approval for an action that never ran.
+  def ensure_tool_succeeded!(result)
+    return unless result.is_a?(Hash) && result[:status].to_s == "error"
+
+    error =
+      result[:error].to_s.presence ||
+        I18n.t("discourse_ai.reviewables.ai_tool_action.execution_error_unknown")
+
+    raise Discourse::InvalidAccess.new(
+            "ai_tool_action_execution_error",
+            nil,
+            custom_message: "discourse_ai.reviewables.ai_tool_action.execution_error",
+            custom_message_params: {
+              error: error,
+            },
+          )
   end
 
   def build_action(actions, id, icon:, bundle: nil)

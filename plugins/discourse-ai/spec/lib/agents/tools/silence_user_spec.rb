@@ -85,4 +85,28 @@ RSpec.describe DiscourseAi::Agents::Tools::SilenceUser do
     expect(result[:status]).to eq("error")
     expect(user.reload.silenced?).to eq(false)
   end
+
+  it "returns an error and does not silence when duration_days exceeds the maximum" do
+    result =
+      tool(
+        username: user.username,
+        duration_days: described_class::MAX_DURATION_DAYS + 1,
+        reason: "Test",
+      ).invoke
+
+    expect(result[:status]).to eq("error")
+    expect(user.reload.silenced?).to eq(false)
+  end
+
+  it "silences at the maximum allowed duration" do
+    result =
+      tool(
+        username: user.username,
+        duration_days: described_class::MAX_DURATION_DAYS,
+        reason: "Permanent silence",
+      ).invoke
+
+    expect(result[:status]).to eq("success")
+    expect(user.reload.silenced?).to eq(true)
+  end
 end

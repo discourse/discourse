@@ -4,6 +4,10 @@ module DiscourseAi
   module Agents
     module Tools
       class SilenceUser < Tool
+        # ~100 years — an effectively permanent silence, while keeping
+        # `duration_days.days.from_now` inside a representable time range.
+        MAX_DURATION_DAYS = 36_500
+
         def self.signature
           {
             name: name,
@@ -69,9 +73,14 @@ module DiscourseAi
           end
 
           duration_days = Integer(parameters[:duration_days], exception: false)
-          if duration_days.nil? || duration_days <= 0
+          if duration_days.nil? || duration_days <= 0 || duration_days > MAX_DURATION_DAYS
             return(
-              error_response(I18n.t("discourse_ai.ai_bot.silence_user.errors.invalid_duration"))
+              error_response(
+                I18n.t(
+                  "discourse_ai.ai_bot.silence_user.errors.invalid_duration",
+                  max: MAX_DURATION_DAYS,
+                ),
+              )
             )
           end
 
