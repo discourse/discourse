@@ -209,15 +209,20 @@ module Migrations
         end
       end
 
+      # Reap every worker before raising, so a crash in one doesn't leave the
+      # others as zombies for the rest of the long-lived run. A single error then
+      # names all the failed statuses, not just the first.
       def await(pids)
+        failed = []
         pids.each do |pid|
           _, status = Process.waitpid2(pid)
-          next if status.success?
-
-          raise WorkerCrashedError,
-                "A worker for #{@step_class.title} exited unexpectedly (#{status}). " \
-                  "Check the error output above for the cause."
+          failed << status unless status.success?
         end
+        return if failed.empty?
+
+        raise WorkerCrashedError,
+              "A worker for #{@step_class.title} exited unexpectedly " \
+                "(#{failed.join("; ")}). Check the error output above for the cause."
       end
 
       # Reads the workers' progress from their pipes into `progress` until they all

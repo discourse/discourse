@@ -72,19 +72,37 @@ module Migrations
         Process.warmup
         @consolidator = Consolidator.new(@shard_manager, @writer, @fork_mutex)
 
-        @mutex.synchronize do
-          loop do
-            schedule
-            break if all_finished?
-            @condition.wait(@mutex)
+        begin
+          @mutex.synchronize do
+            loop do
+              schedule
+              break if all_finished?
+              @condition.wait(@mutex)
+            end
+          end
+        ensure
+          # The wait loop can raise (Ctrl-C lands in `@condition.wait`) while the
+          # coordinator threads and the consolidator still run; join and drain
+          # them before `Base#run`'s ensure tears down the IntermediateDB and
+          # shards under them. Ctrl-C reaches the forked children too (same
+          # process group), so the join is quick; under --no-fork the inline step
+          # finishes first — accepted, killing a thread mid-write is worse.
+          begin
+            @threads.each(&:join)
+            # Every step is done, but the background merges may still be catching
+            # up. Show a "finishing up" status until they drain, so the display
+            # doesn't sit silently at 100%.
+            @merge_errors = @reporter.finalizing { @consolidator.drain }
+          rescue StandardError => e
+            # An ensure that raises replaces the in-flight exception. If we are
+            # here because the wait loop raised — typically the operator's Ctrl-C
+            # landing in `@condition.wait` — a teardown failure must not swallow
+            # it. Record it for the end-of-run summary and let the original
+            # exception win the raise.
+            @merge_errors << e
           end
         end
 
-        @threads.each(&:join)
-        # Every step is done, but the background merges may still be catching up.
-        # Show a "finishing up" status until they drain, so the display doesn't sit
-        # silently at 100%.
-        @merge_errors = @reporter.finalizing { @consolidator.drain }
         report_summary(monotonic_time - started_at)
         raise_summary_if_unsuccessful
       end
@@ -160,7 +178,10 @@ module Migrations
           outcome = :failed
           begin
             outcome = coordinator.run
-          rescue SignalException
+          rescue SignalException => e
+            # Record it, or the end-of-run ConvertError renders this step with an
+            # empty error class and message.
+            record_failure(step_class, e)
             outcome = :failed
           rescue StandardError => e
             # Must be recorded even if `run` should have handled it, or the step
