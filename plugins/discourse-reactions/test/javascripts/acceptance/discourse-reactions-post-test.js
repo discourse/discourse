@@ -66,9 +66,7 @@ acceptance("Post", function (needs) {
     await visit("/t/topic_with_reactions_and_likes/374");
 
     assert
-      .dom(
-        "#post_1 .discourse-reactions-list .discourse-reactions-list-emoji img.emoji[alt='laughing']"
-      )
+      .dom("#post_1 .discourse-reactions-list-emoji img[alt='laughing']")
       .hasAttribute(
         "title",
         "laughing",
