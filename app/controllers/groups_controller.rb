@@ -695,11 +695,10 @@ class GroupsController < ApplicationController
       (params[:include_everyone] == "true" || params[:include_pseudogroups] == "true") &&
         !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
     include_pseudogroups = params[:include_pseudogroups] == "true"
-    order = ["name"]
     groups =
       Group.visible_groups(
         current_user,
-        order,
+        ["name"],
         include_everyone: include_everyone,
         include_pseudogroups: include_pseudogroups,
       ).includes(:flair_upload)
