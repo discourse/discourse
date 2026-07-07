@@ -108,14 +108,11 @@ module Migrations
         worker_count.times { shards << @shard_manager.create_shard }
 
         pids = readers = nil
-        # No pipe writer FD may exist outside this mutex. The scheduler starts
-        # coordinators concurrently, so if a sibling step forks while our writer
-        # ends are open, its children inherit them and hold our pipes open: `drain`
-        # then never sees EOF and the step stays "running" until those foreign
-        # children exit. The chunk queue is pipe-based too, so a leaked writer
-        # there keeps `claim` from ever returning nil. Creating the pipes and
-        # chunk queue, forking, and closing the parent-side writers all under the
-        # one mutex keeps every writer FD invisible to a concurrent fork.
+        # No pipe writer FD may exist outside this mutex: coordinators fork
+        # concurrently, and a child forked by a sibling step inherits any open
+        # writer end and holds the pipe open — `drain` then never sees EOF (and a
+        # leaked chunk-queue writer keeps `claim` from ever returning nil) until
+        # that foreign child exits.
         @fork_mutex.synchronize do
           chunk_queue = ChunkQueue.filled(boundaries.size) unless boundaries.empty?
           pipes = Array.new(worker_count) { IO.pipe }
@@ -210,8 +207,7 @@ module Migrations
       end
 
       # Reap every worker before raising, so a crash in one doesn't leave the
-      # others as zombies for the rest of the long-lived run. A single error then
-      # names all the failed statuses, not just the first.
+      # others as zombies for the rest of the long-lived run.
       def await(pids)
         failed = []
         pids.each do |pid|
