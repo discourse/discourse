@@ -1,5 +1,6 @@
 import { cancel } from "@ember/runloop";
 import Service, { service } from "@ember/service";
+import { isAutomationDetected } from "discourse/lib/automation-detection";
 import getURL from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
 import {
@@ -58,6 +59,10 @@ export default class HumanActivityTracker extends Service {
   }
 
   start() {
+    if (isAutomationDetected()) {
+      return;
+    }
+
     this.#sessionId = document.querySelector(
       "meta[name=discourse-track-view-session-id]"
     )?.content;
