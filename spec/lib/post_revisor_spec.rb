@@ -1991,11 +1991,13 @@ describe PostRevisor do
             )
           }.to change { post.topic.reload.bumped_at }
         ensure
-          DiscoursePluginRegistry.unregister_modifier(
-            plugin_instance,
-            :should_bump_topic,
-            &inspecting_modifier
-          ) if defined?(inspecting_modifier)
+          if defined?(inspecting_modifier)
+            DiscoursePluginRegistry.unregister_modifier(
+              plugin_instance,
+              :should_bump_topic,
+              &inspecting_modifier
+            )
+          end
           plugin_instance.register_modifier(:should_bump_topic, &modifier_block)
         end
 
