@@ -476,6 +476,8 @@ class Middleware::RequestTracker
     rate_limiter = self.class.rate_limiters_stack.active_rate_limiter(request, cookie)
     return nil if rate_limiter.nil?
     rate_limit_key = rate_limiter.rate_limit_key
+    # Allow rate limiters to return nil to skip rate limiting entirely
+    return nil if rate_limit_key.nil?
     error_code_identifier = rate_limiter.error_code_identifier
     global = rate_limiter.rate_limit_globally?
 

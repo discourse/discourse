@@ -1791,6 +1791,38 @@ RSpec.describe Middleware::RequestTracker do
         Error code: crawlers_60_secs_limit.
         MSG
       end
+
+      it "can return nil key to skip rate limiting entirely" do
+        global_setting :max_reqs_per_ip_per_minute, 1
+
+        plugin = Plugin::Instance.new
+
+        # Rate limiter that returns nil to skip rate limiting
+        plugin.add_request_rate_limiter(
+          identifier: :health_check,
+          key: ->(_request) { nil },
+          activate_when: ->(request) { request.path == "/srv/status" },
+        )
+
+        env1 = env("PATH_INFO" => "/srv/status")
+
+        app = lambda { |_| [200, {}, ["OK"]] }
+
+        # First request should succeed
+        middleware = Middleware::RequestTracker.new(app)
+        status, = middleware.call(env1)
+        expect(status).to eq(200)
+
+        # Second request should also succeed (not rate limited despite limit of 1)
+        middleware = Middleware::RequestTracker.new(app)
+        status, = middleware.call(env1)
+        expect(status).to eq(200)
+
+        # Third request should also succeed
+        middleware = Middleware::RequestTracker.new(app)
+        status, = middleware.call(env1)
+        expect(status).to eq(200)
+      end
     end
   end
 
