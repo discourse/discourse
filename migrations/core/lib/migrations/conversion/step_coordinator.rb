@@ -103,18 +103,34 @@ module Migrations
         @scheduler.release_forks(@step_class, @fork_count - worker_count)
         @step_handle.report_concurrency(worker_count) if worker_count > 1
 
-        chunk_queue = ChunkQueue.filled(boundaries.size) unless boundaries.empty?
-        pipes = Array.new(worker_count) { IO.pipe }
+        # Shards are just file copies; they hold no open descriptor, so creating
+        # them outside the fork mutex is safe.
         worker_count.times { shards << @shard_manager.create_shard }
 
-        pids =
-          fork_workers(worker_count) do |index|
-            run_in_fork(pipes, index, shards[index], boundaries, chunk_queue)
+        pids = readers = nil
+        # No pipe writer FD may exist outside this mutex. The scheduler starts
+        # coordinators concurrently, so if a sibling step forks while our writer
+        # ends are open, its children inherit them and hold our pipes open: `drain`
+        # then never sees EOF and the step stays "running" until those foreign
+        # children exit. The chunk queue is pipe-based too, so a leaked writer
+        # there keeps `claim` from ever returning nil. Creating the pipes and
+        # chunk queue, forking, and closing the parent-side writers all under the
+        # one mutex keeps every writer FD invisible to a concurrent fork.
+        @fork_mutex.synchronize do
+          chunk_queue = ChunkQueue.filled(boundaries.size) unless boundaries.empty?
+          pipes = Array.new(worker_count) { IO.pipe }
+          ForkManager.with_batched_forks do
+            pids =
+              worker_count.times.map do |index|
+                ForkManager.fork do
+                  run_in_fork(pipes, index, shards[index], boundaries, chunk_queue)
+                end
+              end
           end
-
-        chunk_queue&.close # only the workers claim from it now
-        pipes.each { |(_reader, writer)| writer.close }
-        readers = pipes.map(&:first)
+          chunk_queue&.close # only the workers claim from it now
+          pipes.each { |(_reader, writer)| writer.close }
+          readers = pipes.map(&:first)
+        end
 
         begin
           @step_handle.with_progress(max_progress: total) do |progress|
@@ -156,16 +172,6 @@ module Migrations
         ensure
           step.source.cleanup
         end
-      end
-
-      def fork_workers(count)
-        pids = nil
-        @fork_mutex.synchronize do
-          ForkManager.with_batched_forks do
-            pids = count.times.map { |index| ForkManager.fork { yield index } }
-          end
-        end
-        pids
       end
 
       def chunk_for(boundaries, index)
