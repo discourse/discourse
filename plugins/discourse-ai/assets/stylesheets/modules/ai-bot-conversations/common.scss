@@ -95,17 +95,11 @@ body.has-ai-conversations-sidebar {
 
   #topic-title {
     display: flex;
-    justify-content: center;
 
     .title-wrapper {
       width: 100%;
       max-width: 960px;
     }
-  }
-
-  .small-action,
-  .onscreen-post .row {
-    justify-content: center;
   }
 
   #topic-footer-buttons {
@@ -122,7 +116,7 @@ body.has-ai-conversations-sidebar {
     display: none;
   }
 
-  @include viewport.until(sm) {
+  @include viewport.until(lg) {
     #topic-progress-wrapper,
     .topic-navigation.with-topic-progress {
       display: none;
@@ -406,11 +400,6 @@ body.has-ai-conversations-sidebar {
   }
 
   .topic-map {
-    box-sizing: border-box;
-    width: 100%;
-    margin: 0 auto;
-    padding-block: 0.5em;
-
     .topic-map__views-trigger,
     .topic-map__likes-trigger,
     .summarization-button,
@@ -423,19 +412,6 @@ body.has-ai-conversations-sidebar {
     // conversation page — the docked composer sits where it would render.
     &.--bottom {
       display: none;
-    }
-
-    section {
-      background: transparent;
-      border-block: 1px solid var(--primary-low);
-    }
-
-    &__contents {
-      padding: 0.5em 1.25em;
-
-      @include viewport.from(sm) {
-        padding: 0.5em 0.5em 0.5em 1.9em;
-      }
     }
 
     &__stats {
