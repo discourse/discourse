@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import GifsResultList from "discourse/components/gifs/result-list";
 import { addUniqueValuesToArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
+import getURL from "discourse/lib/get-url";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import DModal from "discourse/ui-kit/d-modal";
 import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
@@ -333,6 +334,14 @@ export default class GifsModal extends Component {
           <div class="gifs-modal__no-results">{{i18n "gifs.no_results"}}</div>
         {{/if}}
       </:body>
+
+      <:footer>
+        <img
+          class="gifs-modal__branding"
+          src={{getURL "/images/klipy-logo.png"}}
+          alt="Powered by Klipy"
+        />
+      </:footer>
     </DModal>
   </template>
 }
