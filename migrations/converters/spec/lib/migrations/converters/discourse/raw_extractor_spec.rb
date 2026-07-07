@@ -2,6 +2,7 @@
 
 RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   MentionType = Migrations::Database::IntermediateDB::Enums::MentionType
+  HashtagType = Migrations::Database::IntermediateDB::Enums::HashtagType
 
   subject(:extractor) { described_class.new }
 
@@ -232,6 +233,78 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
           ["here", MentionType::HERE],
         ],
       )
+    end
+  end
+
+  describe "hashtags" do
+    it "defers a bare hashtag, recording the name and leaving the type for import" do
+      result = extract("see #announcements please")
+
+      expect(buffer.hashtags.size).to eq(1)
+      hashtag = buffer.hashtags.first
+      expect(hashtag).to include(name: "announcements", hashtag_type: nil, target_id: nil)
+      expect(result).to eq("see #{hashtag[:placeholder]} please")
+    end
+
+    it "keeps a category's parent:child separator in the name" do
+      extract("in #support:billing here")
+
+      expect(buffer.hashtags.first).to include(name: "support:billing", hashtag_type: nil)
+    end
+
+    it "records a forced ::tag suffix as the tag type, dropping the suffix from the name" do
+      extract("tagged #release::tag today")
+
+      expect(buffer.hashtags.first).to include(name: "release", hashtag_type: HashtagType::TAG)
+    end
+
+    it "records a forced ::category suffix case-insensitively" do
+      extract("filed #Support::CATEGORY now")
+
+      expect(buffer.hashtags.first).to include(name: "Support", hashtag_type: HashtagType::CATEGORY)
+    end
+
+    it "defers a hashtag right after an opening paren" do
+      result = extract("(#news)")
+
+      expect(buffer.hashtags.first[:name]).to eq("news")
+      expect(result).to eq("(#{buffer.hashtags.first[:placeholder]})")
+    end
+
+    it "does not treat a markdown heading as a hashtag" do
+      raw = "# Heading\n\nbody"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.hashtags).to be_empty
+    end
+
+    it "does not treat a mid-word # as a hashtag" do
+      raw = "issue no#42 was closed"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.hashtags).to be_empty
+    end
+
+    it "leaves an unknown ::channel-style suffix as literal text" do
+      raw = "chat in #general::channel today"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.hashtags).to be_empty
+    end
+
+    it "does not extract a hashtag inside a fenced code block" do
+      raw = <<~MD
+        real #announcements
+
+        ```
+        not a #hashtag here
+        ```
+      MD
+
+      result = extract(raw)
+
+      expect(buffer.hashtags.map { |h| h[:name] }).to eq(%w[announcements])
+      expect(result).to include("not a #hashtag here")
     end
   end
 

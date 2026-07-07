@@ -19,14 +19,17 @@ module Migrations
     # resolver does no database work while substituting and stays easy to test. It
     # must respond to:
     #
-    #   * `user(original_id)`            => `{ username:, name: }` or `nil`
-    #   * `group_name(original_id)`      => `String` or `nil`
-    #   * `post(original_id)`            => `{ topic_id:, post_number: }` or `nil`
-    #   * `topic_id(original_id)`        => discourse topic id or `nil`
-    #   * `upload_markdown(original_id)` => upload Markdown or `nil`
-    #   * `poll_markdown(original_id)`   => poll Markdown or `nil`
-    #   * `event_markdown(original_id)`  => event Markdown or `nil`
-    #   * `base_url`                     => the destination site's base URL
+    #   * `user(original_id)`               => `{ username:, name: }` or `nil`
+    #   * `group_name(original_id)`         => `String` or `nil`
+    #   * `post(original_id)`               => `{ topic_id:, post_number: }` or `nil`
+    #   * `topic_id(original_id)`           => discourse topic id or `nil`
+    #   * `upload_markdown(original_id)`    => upload Markdown or `nil`
+    #   * `poll_markdown(original_id)`      => poll Markdown or `nil`
+    #   * `event_markdown(original_id)`     => event Markdown or `nil`
+    #   * `category_slug_path(original_id)` => the destination category's slug path,
+    #                                          `"slug"` or `"parent:child"`, or `nil`
+    #   * `tag_name(original_id)`           => the destination tag's name or `nil`
+    #   * `base_url`                        => the destination site's base URL
     #
     # ## Reporting
     #
@@ -53,6 +56,7 @@ module Migrations
         quote: "embed_quotes",
         link: "embed_links",
         mention: "embed_mentions",
+        hashtag: "embed_hashtags",
         poll: "embed_polls",
         event: "embed_events",
         upload: "embed_uploads",
@@ -172,6 +176,7 @@ module Migrations
 
         resolve_quote_coordinates(rows_by_kind[:quote])
         resolve_names(rows_by_kind[:quote], rows_by_kind[:mention])
+        resolve_hashtags(rows_by_kind[:hashtag])
       end
 
       # Turns the source coordinates (topic id + post number) a quote carries into
@@ -224,6 +229,52 @@ module Migrations
         end
       end
 
+      # Resolves each hashtag's name to a source category or tag original_id and
+      # pins its type. A row the source forced with `::tag`/`::category` is resolved
+      # against that type only; an untyped row tries a category first, then a tag,
+      # the way Discourse cooks a bare `#slug`. On a miss nothing is mutated:
+      # `target_id` stays nil and a forced `hashtag_type` survives, so rendering can
+      # rebuild the source text faithfully.
+      def resolve_hashtags(hashtag_rows)
+        hashtag_rows.each do |row|
+          next if row[:target_id] || row[:name].blank?
+
+          resolved =
+            case row[:hashtag_type]
+            when Enums::HashtagType::CATEGORY
+              category_id_for(row[:name])&.then { |id| [id, Enums::HashtagType::CATEGORY] }
+            when Enums::HashtagType::TAG
+              tag_id_for(row[:name])&.then { |id| [id, Enums::HashtagType::TAG] }
+            else
+              resolve_untyped_hashtag(row[:name])
+            end
+          next unless resolved
+
+          row[:target_id], row[:hashtag_type] = resolved
+        end
+      end
+
+      # A bare `#name` is a category first, a tag second — the order Discourse falls
+      # back through when the source didn't pin the type.
+      def resolve_untyped_hashtag(name)
+        if (id = category_id_for(name))
+          [id, Enums::HashtagType::CATEGORY]
+        elsif (id = tag_id_for(name))
+          [id, Enums::HashtagType::TAG]
+        end
+      end
+
+      def category_id_for(name)
+        key = normalize(name)
+        # A `parent:child` name resolves against the full slug path; a bare slug
+        # resolves against the leaf, preferring a top-level category.
+        key.include?(":") ? category_maps[:by_path][key] : category_maps[:by_slug][key]
+      end
+
+      def tag_id_for(name)
+        tag_id_by_name[normalize(name)]
+      end
+
       # The source's name -> original_id maps. They can be large (a full-site users
       # map is one entry per user), so each is built at most once per resolver and
       # only when a batch actually needs it.
@@ -241,6 +292,65 @@ module Migrations
         map
       end
 
+      # Two lazily-built category lookups, keyed by normalized slug:
+      #   * `by_path` — the full slug path (`"slug"` or `"parent:child"`) => original_id.
+      #   * `by_slug` — the leaf slug => original_id, top-level category preferred.
+      def category_maps
+        @category_maps ||= build_category_maps
+      end
+
+      def build_category_maps
+        slug_of = {}
+        parent_of = {}
+        order = []
+
+        # SQLite sorts NULLs first, so top-level categories come before children;
+        # with `||=` below that gives a bare slug shared by both a top-level and a
+        # child category to the top-level one, the way Discourse resolves it.
+        sql = <<~SQL
+          SELECT original_id, slug, parent_category_id
+          FROM categories
+          ORDER BY parent_category_id, original_id
+        SQL
+        @intermediate_db.query(sql) do |row|
+          id = row[:original_id]
+          slug_of[id] = normalize(row[:slug])
+          parent_of[id] = row[:parent_category_id]
+          order << id
+        end
+
+        by_path = {}
+        by_slug = {}
+        order.each do |id|
+          slug = slug_of[id]
+          parent_slug = (parent_id = parent_of[id]) && slug_of[parent_id]
+          path = parent_slug ? "#{parent_slug}:#{slug}" : slug
+
+          by_path[path] ||= id
+          by_slug[slug] ||= id
+        end
+
+        { by_path:, by_slug: }
+      end
+
+      # Tag name => canonical original_id, with synonyms folded onto their target so
+      # `#oldname` and `#newname` resolve to the same tag.
+      def tag_id_by_name
+        @tag_id_by_name ||=
+          begin
+            canonical = {}
+            @intermediate_db.query(
+              "SELECT synonym_tag_id, target_tag_id FROM tag_synonyms",
+            ) { |row| canonical[row[:synonym_tag_id]] = row[:target_tag_id] }
+
+            map = {}
+            @intermediate_db.query("SELECT original_id, name FROM tags") do |row|
+              map[normalize(row[:name])] = canonical[row[:original_id]] || row[:original_id]
+            end
+            map
+          end
+      end
+
       def normalize(name)
         Migrations::NameNormalizer.normalize(name)
       end
@@ -253,6 +363,8 @@ module Migrations
           render_link(row)
         when :mention
           render_mention(row)
+        when :hashtag
+          render_hashtag(row)
         when :poll, :event, :upload
           render_entity(kind, row)
         end
@@ -343,6 +455,44 @@ module Migrations
           end
 
         name.present? ? " @#{name} " : ""
+      end
+
+      # A resolved category renders as `#<slug path>`, honoring any rename or merge
+      # the destination applied. A resolved tag renders as `#<name>::tag` always: a
+      # bare `#name` resolves category-first at import, so a destination category
+      # sharing the slug would otherwise hijack an unsuffixed tag. A map miss or an
+      # unresolved row rebuilds the source text, so the original `#name` survives.
+      # No unresolved report — the source value is the fallback, as with mentions.
+      def render_hashtag(row)
+        if row[:target_id]
+          case row[:hashtag_type]
+          when Enums::HashtagType::CATEGORY
+            path = @maps.category_slug_path(row[:target_id])
+            return "##{path}" if path
+          when Enums::HashtagType::TAG
+            name = @maps.tag_name(row[:target_id])
+            return "##{name}::tag" if name
+          end
+        end
+
+        rebuild_hashtag(row)
+      end
+
+      # Rebuilds the source `#name`, re-adding the `::tag`/`::category` suffix the
+      # `hashtag_type` implies (present only when the source forced it or the import
+      # resolved a type it then couldn't render).
+      def rebuild_hashtag(row)
+        suffix =
+          case row[:hashtag_type]
+          when Enums::HashtagType::CATEGORY
+            "::category"
+          when Enums::HashtagType::TAG
+            "::tag"
+          else
+            ""
+          end
+
+        "##{row[:name]}#{suffix}"
       end
 
       def topic_url(topic_id)

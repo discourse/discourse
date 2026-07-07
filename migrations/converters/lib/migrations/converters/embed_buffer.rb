@@ -24,7 +24,7 @@ module Migrations
       IntermediateDB = Migrations::Database::IntermediateDB
       private_constant :IntermediateDB
 
-      attr_reader :quotes, :links, :mentions, :polls, :events, :uploads
+      attr_reader :quotes, :links, :mentions, :hashtags, :polls, :events, :uploads
 
       # @param owner_type [Integer] the owning record's kind, an
       #   `IntermediateDB::Enums::EmbedOwner` value (e.g. `EmbedOwner::POST`).
@@ -36,6 +36,7 @@ module Migrations
         @quotes = []
         @links = []
         @mentions = []
+        @hashtags = []
         @polls = []
         @events = []
         @uploads = []
@@ -76,6 +77,17 @@ module Migrations
         record(@mentions, :mention, mention_type:, target_id:, name:)
       end
 
+      # `hashtag_type` is set only when the source forced it with a `::tag`/
+      # `::category` suffix; otherwise it stays nil and the importer classifies the
+      # name. `target_id` is always nil here — the category/tag is named, not
+      # identified, and the importer resolves it.
+      #
+      # @raise [ArgumentError] if `hashtag_type` is not nil or a known type.
+      def hashtag(hashtag_type: nil, target_id: nil, name: nil)
+        validate_hashtag_type!(hashtag_type)
+        record(@hashtags, :hashtag, hashtag_type:, target_id:, name:)
+      end
+
       def poll(poll_id: nil)
         record(@polls, :poll, poll_id:)
       end
@@ -100,6 +112,7 @@ module Migrations
         @quotes.clear
         @links.clear
         @mentions.clear
+        @hashtags.clear
         @polls.clear
         @events.clear
         @uploads.clear
@@ -113,6 +126,7 @@ module Migrations
         @quotes.each { |row| IntermediateDB::EmbedQuote.create(owner_type:, owner_id:, **row) }
         @links.each { |row| IntermediateDB::EmbedLink.create(owner_type:, owner_id:, **row) }
         @mentions.each { |row| IntermediateDB::EmbedMention.create(owner_type:, owner_id:, **row) }
+        @hashtags.each { |row| IntermediateDB::EmbedHashtag.create(owner_type:, owner_id:, **row) }
         @polls.each { |row| IntermediateDB::EmbedPoll.create(owner_type:, owner_id:, **row) }
         @events.each { |row| IntermediateDB::EmbedEvent.create(owner_type:, owner_id:, **row) }
         @uploads.each { |row| IntermediateDB::EmbedUpload.create(owner_type:, owner_id:, **row) }
@@ -132,7 +146,7 @@ module Migrations
       private
 
       def descriptors
-        @quotes + @links + @mentions + @polls + @events + @uploads
+        @quotes + @links + @mentions + @hashtags + @polls + @events + @uploads
       end
 
       def record(collection, kind, **fields)
@@ -146,6 +160,13 @@ module Migrations
 
         valid = IntermediateDB::Enums::MentionType.values.join(", ")
         raise ArgumentError, "Unknown mention type #{type.inspect}; expected nil or one of #{valid}"
+      end
+
+      def validate_hashtag_type!(type)
+        return if type.nil? || IntermediateDB::Enums::HashtagType.valid?(type)
+
+        valid = IntermediateDB::Enums::HashtagType.values.join(", ")
+        raise ArgumentError, "Unknown hashtag type #{type.inspect}; expected nil or one of #{valid}"
       end
     end
   end

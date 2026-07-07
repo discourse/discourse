@@ -137,6 +137,18 @@ CREATE TABLE embed_events
 
 CREATE INDEX idx_embed_events_owner_type_owner_id ON embed_events (owner_type, owner_id);
 
+CREATE TABLE embed_hashtags
+(
+    hashtag_type ENUM_INTEGER,
+    name         TEXT         NOT NULL,
+    owner_id     NUMERIC      NOT NULL,
+    owner_type   ENUM_INTEGER NOT NULL,
+    placeholder  TEXT         NOT NULL,
+    target_id    NUMERIC
+);
+
+CREATE INDEX idx_embed_hashtags_owner_type_owner_id ON embed_hashtags (owner_type, owner_id);
+
 CREATE TABLE embed_links
 (
     owner_id    NUMERIC      NOT NULL,

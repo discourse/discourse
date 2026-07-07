@@ -14,16 +14,26 @@ module Migrations
       # record the embed on the sink and return the placeholder token the scanner
       # splices into the output.
       #
-      # We detect uploads, quote attributions and mentions. Polls and events are
-      # self-contained (no id remapping needed), so they're left in `raw` verbatim.
+      # We detect uploads, quote attributions, mentions and hashtags. Polls and
+      # events are self-contained (no id remapping needed), so they're left in `raw`
+      # verbatim.
       class RawExtractor
         Detectors = MarkdownScanner::Detectors
+
+        HashtagType = Migrations::Database::IntermediateDB::Enums::HashtagType
+        private_constant :HashtagType
+
+        # The forced type carried on a hashtag node (`:category` / `:tag`, from a
+        # `::category` / `::tag` suffix) mapped to its stored enum value.
+        FORCED_HASHTAG_TYPES = { category: HashtagType::CATEGORY, tag: HashtagType::TAG }.freeze
+        private_constant :FORCED_HASHTAG_TYPES
 
         DETECTORS = [
           Detectors::Upload,
           Detectors::UploadUrl,
           Detectors::Quote,
           Detectors::Mention,
+          Detectors::Hashtag,
         ].freeze
         private_constant :DETECTORS
 
@@ -46,7 +56,7 @@ module Migrations
         end
 
         # @param raw [String, nil] the source post body (Discourse Markdown).
-        # @param on_embed [#upload, #quote, #mention] the embed sink.
+        # @param on_embed [#upload, #quote, #mention, #hashtag] the embed sink.
         # @param topic_id [Integer, nil] the source topic id of the containing post,
         #   used to complete a quote attribution that names a `post:` but no `topic:`
         #   (Discourse omits `topic:` when a post quotes another in the same topic).
@@ -70,6 +80,8 @@ module Migrations
             sink.upload(upload_id: node.sha1, original_markdown: node.original_markdown)
           when Markbridge::AST::Mention
             sink.mention(mention_type: @mention_resolver.call(node.name), name: node.name)
+          when MarkdownScanner::HashtagReference
+            sink.hashtag(hashtag_type: FORCED_HASHTAG_TYPES[node.forced_type], name: node.name)
           when MarkdownScanner::QuoteAttribution
             defer_quote(node, sink)
           end
