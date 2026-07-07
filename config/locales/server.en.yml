@@ -2301,7 +2301,6 @@ en:
     composer_media_optimization_image_resize_width_target: "Images with widths larger than {{setting:composer_media_optimization_image_resize_dimensions_threshold}} will be resized to this width. Must be >= than {{setting:composer_media_optimization_image_resize_dimensions_threshold}}."
     composer_media_optimization_image_encode_quality: "JPG encode quality used in the re-encode process."
     composer_media_optimization_image_convert_enabled: "Enables client-side conversion of JXL, HEIC, and animated GIF images before upload. JXL and HEIC are converted to JPEG, animated GIFs larger than the threshold are converted to animated WEBP."
-    composer_media_optimization_image_wasm_decode_enabled: "Decode JPEG and PNG images in WASM inside the Web Worker instead of using browser canvas APIs. Avoids iOS canvas pixel limits and createImageBitmap flakiness, at the cost of a larger worker bundle."
     composer_media_optimization_gif_conversion_threshold: "Minimum GIF file size in bytes to trigger client-side conversion to animated WEBP."
 
     video_conversion_enabled: "Enable video conversion for uploaded video files. This allows videos to be converted to web-compatible formats."

@@ -2639,10 +2639,6 @@ files:
       learn_more_url: "https://meta.discourse.org/t/-/402705"
       allow_enabled_for:
         - everyone
-  composer_media_optimization_image_wasm_decode_enabled:
-    default: false
-    hidden: true
-    client: true
   composer_media_optimization_gif_conversion_threshold:
     default: 512000
     hidden: true
