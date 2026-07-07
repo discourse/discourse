@@ -88,8 +88,7 @@ module Migrations
         begin
           if @render_thread.join(CLOSE_TIMEOUT).nil?
             # The render thread is wedged (e.g. blocked in `write` on a stopped
-            # tty). `close` runs inside the run's `ensure`, so it must not hang on
-            # it: kill it, warn, and best-effort restore the cursor ourselves.
+            # tty). `close` runs inside the run's `ensure`, so it must not hang.
             @render_thread.kill
             warn("TUI reporter did not stop in time and was killed.")
             show_cursor_best_effort
@@ -176,11 +175,9 @@ module Migrations
       end
 
       # Take the whole map and leave a fresh one behind, so a progress report
-      # that arrives after its step's `:finish` was drained (a worker race) can't
-      # linger: `flush_progress` deletes the finished id before this swap each
-      # frame, and anything re-created after that is dropped on the next swap
-      # instead of being re-applied as a no-op forever. It also avoids re-applying
-      # unchanged tuples every frame.
+      # racing its step's `:finish` can't linger and be re-applied as a no-op on
+      # every frame for the rest of the run. A finishing step still sees its last
+      # value: the drain (and its `flush_progress`) runs before this swap.
       def apply_coalesced_progress
         snapshot =
           @progress_mutex.synchronize do

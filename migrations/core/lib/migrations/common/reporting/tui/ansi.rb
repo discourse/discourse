@@ -57,7 +57,6 @@ module Migrations
             out << token
             used += w
           end
-          # Close any color we kept; skip it when the truncated text carried none.
           out << RESET if emitted_sgr
           out
         end

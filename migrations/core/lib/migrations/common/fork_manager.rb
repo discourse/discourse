@@ -9,12 +9,9 @@ module Migrations
   # hook lists. A fork copies the child hooks under that mutex, so the child always
   # runs a consistent list.
   module ForkManager
-    # `with_batched_forks` and the `fork` calls inside its block run on the same
-    # thread, so whether the parent-side hooks run per-fork or once for the whole
-    # batch is a thread-local flag. Keeping it off the module avoids a hidden
-    # contract: several coordinator threads batch their forks at once, and a
-    # process-global flag would be safe only as long as they held a shared mutex
-    # around the whole call.
+    # Batching is thread-local: several coordinator threads batch their forks at
+    # once, and a process-global flag would be safe only as long as every caller
+    # held a shared mutex around the whole call.
     BATCHED_FORKS_KEY = :migrations_fork_manager_batched_forks
     private_constant :BATCHED_FORKS_KEY
 
@@ -82,8 +79,7 @@ module Migrations
       end
 
       def fork
-        # In a batch the parent-side hooks run once around the whole batch (see
-        # `with_batched_forks`), so a single fork only runs them when it's on its own.
+        # In a batch the parent-side hooks already ran around the whole batch.
         execute_parent = !Thread.current[BATCHED_FORKS_KEY]
 
         # Snapshot the child hooks under the lock for a consistent list, but fork

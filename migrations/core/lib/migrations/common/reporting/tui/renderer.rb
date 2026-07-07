@@ -457,22 +457,19 @@ module Migrations
           ].join("  ")
         end
 
-        # A notice becomes one or more permanent lines. A message may carry
-        # newlines (exception messages built by `failure_notice` often do); an
-        # embedded "\n" has zero display width, so it would slip through
-        # `fit_to_width` and move the cursor a row the live-region math doesn't
-        # account for, fusing rows and stranding stale ones. Split it so each
-        # source line is its own permanent line: the first keeps the title
-        # prefix, the rest are indented so a backtrace-style message reads as one
-        # block. The title is deliberately not padded to the table's title column
-        # (unlike the step rows): a notice is prose, not a table row.
+        # A notice becomes one permanent line per line of its message. Messages
+        # can carry newlines (exception messages often do), and an embedded "\n"
+        # has zero display width — it would slip through `fit_to_width` and move
+        # the cursor a row the live-region math doesn't account for. The title is
+        # deliberately not padded to the table's title column (unlike the step
+        # rows): a notice is prose, not a table row.
         def notice_lines(title, message)
           lines = message.to_s.split("\n").map(&:rstrip).reject(&:empty?)
           lines = [""] if lines.empty?
           prefix = title ? "#{title}  " : ""
 
           lines.each_with_index.map do |text, index|
-            head = index == 0 ? prefix : "  " # continuation lines just indent
+            head = index == 0 ? prefix : "  "
             "#{head}#{Ansi::DIM}#{text}#{Ansi::RESET}"
           end
         end
@@ -527,7 +524,6 @@ module Migrations
         def concurrency_cell(count)
           return "" if count <= 1
 
-          # `emit` strips the SGR when color is off, like every other cell.
           "#{Ansi::MAGENTA}#{count}×#{Ansi::RESET}"
         end
 
