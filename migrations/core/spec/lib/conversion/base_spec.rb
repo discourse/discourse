@@ -249,7 +249,7 @@ RSpec.describe Migrations::Conversion::Base do
           const_set("Users", Class.new(Migrations::Conversion::Step))
           const_set("SomeHelper", Class.new)
           # A non-class constant: `steps` must skip it before comparing it with
-          # `Step`, otherwise `constant < Step` blows up.
+          # `Step`, otherwise `constant < Step` raises.
           const_set("VERSION", "1.0")
         end,
       )

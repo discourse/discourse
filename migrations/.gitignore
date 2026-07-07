@@ -15,7 +15,7 @@
 # mutant's per-gem incremental coverage cache
 /*/.mutant/
 
-# throwaway side gemfile bin/mutant writes to run mutant without touching the
+# temporary side gemfile bin/mutant writes to run mutant without touching the
 # gem's real Gemfile (normally removed after each run)
 /*/.mutant.gemfile
 /*/.mutant.gemfile.lock

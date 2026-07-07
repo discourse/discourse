@@ -76,11 +76,9 @@ module Migrations
         total = @source_db.count_all(@from, where: @base)
         return [] if total.zero?
 
-        # `total` is >= 1 here, so `ceil` already gives >= 1; the `max` only guards
-        # against a 0 stride (and a `% 0`) if that ever stops holding. The `size <
-        # count` cap is the matching belt-and-suspenders: with an exact count the
-        # stride never picks more than `count` values, but it keeps us from handing
-        # back an extra chunk if the count and the scan ever disagree.
+        # total is at least 1 here, so sample_every is at least 1; the max is only
+        # there to avoid a division by zero. boundaries.size < count below keeps us
+        # from returning more than count values.
         sample_every = [(total.to_f / count).ceil, 1].max
         boundaries = []
         index = 0

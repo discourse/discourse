@@ -146,8 +146,8 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
 
   # Each recorder feeds one linkage table; its descriptor must carry every column
   # that table expects (minus `post_id`, which `write_for` adds). This is what
-  # guards against schema drift, since these tables are written through the shared
-  # buffer and so are held out of the per-converter coverage gate.
+  # catches schema drift, since these tables are written through the shared buffer
+  # and so are left out of the per-converter coverage check.
   describe "linkage column coverage" do
     idb = Migrations::Database::IntermediateDB
 

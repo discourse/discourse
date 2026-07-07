@@ -2,9 +2,9 @@
 
 RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
   # Generation writes files to the configured output paths. Run every example
-  # from a throwaway working directory so a stray relative path can never drop a
-  # generated file into the repo -- e.g. under mutation, where a dropped
-  # directory prefix would otherwise scribble `user.rb` into the gem root.
+  # from a temporary working directory so a stray relative path can't write a
+  # generated file into the repo -- for example under mutation, where a dropped
+  # directory prefix would write `user.rb` into the repo root.
   around { |example| Dir.mktmpdir { |cwd| Dir.chdir(cwd) { example.run } } }
 
   after { Migrations::Tooling::Schema.reset! }
@@ -173,7 +173,7 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
       Dir.mktmpdir do |tmpdir|
         Migrations::Tooling::Schema.configure do
           output do
-            # Nested, non-existent directory so the `mkdir_p` is load-bearing.
+            # Nested, non-existent directory, so the code has to create it.
             schema_file "db/schema.sql"
             models_directory "models"
             models_namespace "Test::Models"
@@ -539,8 +539,8 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
     end
 
     it "returns nil when only an end marker is present" do
-      # Guards against dereferencing a missing start comment while looking for
-      # the end marker.
+      # There is no start marker here, so the code must not fail while looking
+      # for it.
       content = "module M\n  # -- end custom code --\nend\n"
       expect(extract(content)).to be_nil
     end

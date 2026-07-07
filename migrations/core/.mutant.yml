@@ -12,7 +12,7 @@
 #   * StepScheduler -- spins up real worker threads.
 #   * ChunkQueue -- blocks on a pipe read.
 #   * Reporting::Tui -- its spec spawns a real pty.
-# Each would need its pure logic split from the thread/pipe/terminal plumbing to
+# Each would need its pure logic split from the thread/pipe/terminal code to
 # be a useful target. Also out: StepCoordinator, Step::Processor, Step::Source
 # (no isolated specs -- they drive the actual fork/process orchestration).
 integration:

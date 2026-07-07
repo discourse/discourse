@@ -15,7 +15,7 @@
 #
 # mutant is deliberately NOT a dependency in any gem's Gemfile -- it's a testing
 # tool, not something the gems ship with. Instead we run each gem's real bundle
-# with mutant layered on top via a throwaway side gemfile (`eval_gemfile` reuses
+# with mutant layered on top via a temporary side gemfile (`eval_gemfile` reuses
 # the gem's Gemfile, then adds mutant-rspec), installed and removed per run. So a
 # clean checkout can run this with nothing extra committed. In CI, install the
 # gem's own bundle once, then just call this script.
@@ -38,7 +38,7 @@ run_gem() {
   shift
   echo "==> mutant: $(basename "$dir")"
 
-  # Throwaway gemfile that reuses the gem's real Gemfile (and thus its gemspec,
+  # Temporary gemfile that reuses the gem's real Gemfile (and thus its gemspec,
   # deps and lock) and adds mutant on top, so mutant never touches the committed
   # Gemfile. It has to live in the gem dir for `eval_gemfile`/`gemspec` to resolve.
   local gemfile="$dir/.mutant.gemfile"

@@ -35,10 +35,10 @@ RSpec.describe Migrations::Conversion::StepRunner do
     end
   end
 
-  # A step whose behaviour is driven entirely by its items: each item may set the
-  # progress its processing reports (`progress:`), raise a given number of
-  # warnings (`warnings:`) and blow up (`raise: true`) so the runner logs an
-  # error for it. Lets a test dial in the exact per-item stats it needs.
+  # A step whose behaviour comes entirely from its items: each item can set the
+  # progress its processing reports (`progress:`), log a given number of warnings
+  # (`warnings:`) and raise (`raise: true`) so the runner records an error for it.
+  # This lets a test set the exact per-item stats it needs.
   let(:scripted_step_class) do
     Class.new(Migrations::Conversion::Step) do
       source do

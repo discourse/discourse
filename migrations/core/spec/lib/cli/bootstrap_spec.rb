@@ -207,7 +207,7 @@ RSpec.describe Migrations::CLI::Bootstrap do
       Migrations::CLI::Registry.register(name: "bare", command_class: bare)
 
       # `Samovar::Command` has no `requires_rails?`; the guard must skip it
-      # rather than blow up with a `NoMethodError`.
+      # instead of calling it and raising `NoMethodError`.
       expect { described_class.run(%w[bare]) }.not_to raise_error
       expect(Migrations).not_to have_received(:load_rails_environment)
     end
@@ -233,7 +233,7 @@ RSpec.describe Migrations::CLI::Bootstrap do
       # A missing required option raises `Samovar::MissingValueError`, which is
       # a `Samovar::Error` but not an `InvalidInputError` and has no `#token`.
       # The guard must keep it out of the help-request path (which would call
-      # `e.token` and blow up) and print it as a red error instead.
+      # `e.token` and raise) and print it as a red error instead.
       result = run_capturing(%w[needsopt])
 
       expect(result[:status]).to eq(1)

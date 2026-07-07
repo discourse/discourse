@@ -205,7 +205,7 @@ RSpec.describe Migrations::Tooling::Coverage::ReferenceCheck do
 
   it "ignores a written model the schema doesn't know when collecting unknown columns" do
     # `Ghost` is written but absent from the schema; the unknown-column pass must
-    # skip it (unknown *models* are reported separately) rather than blow up.
+    # skip it (unknown *models* are reported separately) instead of raising.
     stub_coverage(
       { "discourse" => analysis(written: { "User" => [:id], "Ghost" => [:x] }) },
       schema: {

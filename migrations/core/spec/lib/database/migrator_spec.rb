@@ -121,8 +121,8 @@ RSpec.describe Migrations::Database::Migrator do
         File.write(first, "CREATE TABLE items (id INTEGER);")
         File.write(second, "INSERT INTO items (id) VALUES (1);")
 
-        # Hand back the files in the wrong order: the inserting migration must
-        # only run after the table exists, so the migrator has to sort them.
+        # Return the files in the wrong order: the inserting migration must only
+        # run after the table exists, so the migrator has to sort them.
         allow(Dir).to receive(:[]).and_call_original
         allow(Dir).to receive(:[]).with(File.join(migrations_path, "*.sql")).and_return(
           [second, first],

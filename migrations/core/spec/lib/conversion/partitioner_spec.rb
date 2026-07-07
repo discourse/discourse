@@ -38,15 +38,15 @@ RSpec.describe Migrations::Conversion::Partitioner do
   end
 
   it "rounds the sample stride up, not down" do
-    # ceil(9 / 4.0) = 3, so every 3rd key -> [0, 3, 6]. Integer division, floor or
-    # round would stride by 2 and pick a different set of boundaries.
+    # ceil(9 / 4.0) = 3, so it picks every 3rd key -> [0, 3, 6]. Integer division
+    # or floor would give 2 and pick a different set of boundaries.
     adapter = build_adapter(total: 9, keys: (0..8).to_a)
     expect(partitioner(adapter, :id).boundaries(4)).to eq([0, 3, 6])
   end
 
   it "gives one boundary per row when there are fewer rows than chunks" do
-    # 3 rows into 5 requested chunks: the stride clamps to 1, so every row is a
-    # boundary and we just hand back fewer chunks than asked.
+    # 3 rows into 5 requested chunks: sample_every is 1, so every row becomes a
+    # boundary and we return fewer chunks than asked.
     adapter = build_adapter(total: 3, keys: [5, 10, 15])
     expect(partitioner(adapter, :id).boundaries(5)).to eq([5, 10, 15])
   end
@@ -90,8 +90,8 @@ RSpec.describe Migrations::Conversion::Partitioner do
   end
 
   it "does not stream the key when the source is empty" do
-    # The zero-count short-circuit exists to skip the scan entirely, so prove it
-    # by blowing up if the scan is ever reached for a source that counts zero rows.
+    # When the source counts zero rows it must not scan the keys at all. The
+    # adapter below raises if the scan is reached, so the test fails if it is.
     adapter =
       Class
         .new do
