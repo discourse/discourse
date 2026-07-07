@@ -202,6 +202,28 @@ describe PostVoting::CommentReviewQueue do
         expect(pm_topic.title).to eq("A post voting comment requires staff attention")
       end
 
+      it "gives category moderation groups access to the companion PM" do
+        SiteSetting.enable_category_group_moderation = true
+
+        category = Fabricate(:category)
+        group = Fabricate(:group)
+        group.update!(messageable_level: Group::ALIAS_LEVELS[:nobody])
+        topic.update!(category: category)
+        Fabricate(:category_moderation_group, category: category, group: group)
+
+        queue.flag_comment(
+          comment,
+          guardian,
+          ReviewableScore.types[:notify_moderators],
+          comment: flag_comment,
+        )
+
+        pm_topic =
+          Topic.includes(:posts).find_by(user: guardian.user, archetype: Archetype.private_message)
+
+        expect(pm_topic.allowed_groups).to contain_exactly(Group[:moderators], group)
+      end
+
       it "creates a reviewable" do
         queue.flag_comment(comment, guardian, ReviewableScore.types[:notify_moderators])
 
