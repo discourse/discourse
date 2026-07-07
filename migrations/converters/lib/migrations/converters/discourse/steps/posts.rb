@@ -65,7 +65,7 @@ module Migrations
 
           def process(item)
             @embeds.clear
-            raw = @extractor.extract(item[:raw], on_embed: @embeds)
+            raw = @extractor.extract(item[:raw], on_embed: @embeds, topic_id: item[:topic_id])
 
             IntermediateDB::Post.create(
               original_id: item[:id],

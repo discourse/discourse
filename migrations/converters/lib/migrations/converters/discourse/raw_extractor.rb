@@ -41,11 +41,15 @@ module Migrations
 
         # @param raw [String, nil] the source post body (Discourse Markdown).
         # @param on_embed [#upload, #quote, #mention] the embed sink.
+        # @param topic_id [Integer, nil] the source topic id of the containing post,
+        #   used to complete a quote attribution that names a `post:` but no `topic:`
+        #   (Discourse omits `topic:` when a post quotes another in the same topic).
         # @return [String, nil] the body with embeds replaced by placeholder tokens.
-        def extract(raw, on_embed:)
+        def extract(raw, on_embed:, topic_id: nil)
           return raw if raw.nil?
 
           @sink = on_embed
+          @topic_id = topic_id
           @scanner.scan(raw)
         end
 
@@ -59,8 +63,23 @@ module Migrations
           when Markbridge::AST::Mention
             sink.mention(mention_type: @mention_resolver.call(node.name), name: node.name)
           when MarkdownScanner::QuoteAttribution
-            sink.quote(quoted_username: node.username, quoted_post_id: node.post)
+            defer_quote(node, sink)
           end
+        end
+
+        # The Discourse converter never knows the quoted post's source `original_id`,
+        # so it records the source coordinates (topic id + post number) instead and
+        # lets the importer resolve them. A quote with a `post:` but no `topic:`
+        # points into its own topic. A quote with neither is username-only.
+        def defer_quote(node, sink)
+          post_number = node.post_number
+          topic_id = post_number ? (node.topic_id || @topic_id) : nil
+
+          sink.quote(
+            quoted_username: node.username,
+            quoted_topic_id: topic_id,
+            quoted_post_number: post_number,
+          )
         end
       end
     end
