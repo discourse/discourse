@@ -76,14 +76,14 @@ module Migrations
         total = @source_db.count_all(@from, where: @base)
         return [] if total.zero?
 
-        # total is at least 1 here, so sample_every is at least 1; the max is only
-        # there to avoid a division by zero. boundaries.size < count below keeps us
-        # from returning more than count values.
-        sample_every = [(total.to_f / count).ceil, 1].max
+        # total is at least 1 here (guarded above), so sample_every is at least 1
+        # and the modulo below can't divide by zero. Rounding the stride up also
+        # keeps every-Nth sampling to at most `count` boundaries on its own.
+        sample_every = (total.to_f / count).ceil
         boundaries = []
         index = 0
         @source_db.each_partition_key(@key, @from, @base) do |value|
-          boundaries << value if (index % sample_every).zero? && boundaries.size < count
+          boundaries << value if (index % sample_every).zero?
           index += 1
         end
         boundaries

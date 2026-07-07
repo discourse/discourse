@@ -97,7 +97,7 @@ module Migrations
           next unless step
 
           count = outcome == :done ? step.total || step.current : step.current
-          line = +"#{finish_glyph(outcome)} #{step.title}"
+          line = "#{finish_glyph(outcome)} #{step.title}"
           line << " #{format_count(count)}" if count > 0
           line << " (#{format_duration(monotonic - step.started_at)})"
           line << " — #{I18n.t("progressbar.#{outcome}")}" unless outcome == :done
