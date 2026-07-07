@@ -671,5 +671,35 @@ RSpec.describe Migrations::Reporting::Tui do
       expect { reporter.close }.not_to raise_error
       expect(io.string).to end_with(Migrations::Reporting::Tui::Ansi::SHOW_CURSOR)
     end
+
+    it "does not raise, and warns, when the render thread's output breaks" do
+      broken = Object.new
+      def broken.write(*)
+        raise Errno::EPIPE
+      end
+
+      def broken.flush
+      end
+
+      reporter = described_class.new(fps: 60, output: broken)
+      reporter.start_step("Users").finish
+
+      expect { reporter.close }.to output(/TUI reporter crashed/).to_stderr
+    end
+
+    it "drops a coalesced progress report that lands after its step finished" do
+      reporter = described_class.new(fps: 60, output: io)
+      reporter.start_step("Users").finish
+      reporter.close # drains the finish and joins the render thread
+
+      # A worker races the finish and reports progress for the now-finished step.
+      reporter.report_progress(1, 50, 0, 0, 0)
+      expect(reporter.instance_variable_get(:@progress)).not_to be_empty
+
+      # The next frame swaps the map out, so the stale entry can't linger and be
+      # re-applied as a no-op on every frame for the rest of the run.
+      reporter.send(:apply_coalesced_progress)
+      expect(reporter.instance_variable_get(:@progress)).to be_empty
+    end
   end
 end
