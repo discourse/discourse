@@ -346,6 +346,8 @@ class PostRevisor
     @silent = @opts[:silent] if @opts.has_key?(:silent)
     @topic_changes.silent = @silent
 
+    @previous_last_editor_id = @post.last_editor_id
+
     old_raw = @post.raw
 
     Post.transaction do
@@ -368,6 +370,8 @@ class PostRevisor
 
     # bail out if the post or topic failed to save
     return false if !successfully_saved_post_and_topic
+
+    bump_topic if @version_changed
 
     # Lock the post by default if the appropriate setting is true
     if SiteSetting.staff_edit_locks_post? && !@post.wiki? && @fields.has_key?("raw") &&
@@ -546,8 +550,7 @@ class PostRevisor
     @post.last_version_at = @revised_at
 
     revise
-    perform_edit
-    bump_topic
+    perform_edit if successfully_saved_post_and_topic
   end
 
   def revise
@@ -693,10 +696,14 @@ class PostRevisor
   def create_revision
     modifications = post_changes.merge(topic_diff)
 
-    modifications["raw"][0] = cached_original_raw || modifications["raw"][0] if modifications["raw"]
+    if use_cached_original_for_created_revision?
+      if modifications["raw"]
+        modifications["raw"][0] = cached_original_raw || modifications["raw"][0]
+      end
 
-    if modifications["cooked"]
-      modifications["cooked"][0] = cached_original_cooked || modifications["cooked"][0]
+      if modifications["cooked"]
+        modifications["cooked"][0] = cached_original_cooked || modifications["cooked"][0]
+      end
     end
 
     @post_revision =
@@ -709,6 +716,11 @@ class PostRevisor
       )
     @post_revision.silent = @silent
     @post_revision.save!
+  end
+
+  def use_cached_original_for_created_revision?
+    @previous_last_editor_id == @editor.id &&
+      !PostRevision.exists?(post_id: @post.id, number: @post.version - 1)
   end
 
   def update_revision
