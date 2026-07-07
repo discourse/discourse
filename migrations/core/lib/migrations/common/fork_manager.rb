@@ -9,15 +9,23 @@ module Migrations
   # hook lists. A fork copies the child hooks under that mutex, so the child always
   # runs a consistent list.
   module ForkManager
+    # `with_batched_forks` and the `fork` calls inside its block run on the same
+    # thread, so whether the parent-side hooks run per-fork or once for the whole
+    # batch is a thread-local flag. Keeping it off the module avoids a hidden
+    # contract: several coordinator threads batch their forks at once, and a
+    # process-global flag would be safe only as long as they held a shared mutex
+    # around the whole call.
+    BATCHED_FORKS_KEY = :migrations_fork_manager_batched_forks
+
     @before_fork_hooks = []
     @after_fork_parent_hooks = []
     @after_fork_child_hooks = []
-    @execute_parent_forks = true
     @mutex = Mutex.new
 
     class << self
       def with_batched_forks
-        @execute_parent_forks = false
+        previous = Thread.current[BATCHED_FORKS_KEY]
+        Thread.current[BATCHED_FORKS_KEY] = true
         @mutex.synchronize { run_before_fork_hooks }
 
         # Always run the after-fork hooks and reset the flag, even if forking
@@ -29,7 +37,7 @@ module Migrations
           yield
         ensure
           @mutex.synchronize { run_after_fork_parent_hooks }
-          @execute_parent_forks = true
+          Thread.current[BATCHED_FORKS_KEY] = previous
         end
       end
 
@@ -64,10 +72,14 @@ module Migrations
       end
 
       def fork
+        # In a batch the parent-side hooks run once around the whole batch (see
+        # `with_batched_forks`), so a single fork only runs them when it's on its own.
+        execute_parent = !Thread.current[BATCHED_FORKS_KEY]
+
         # Snapshot the child hooks under the lock for a consistent list, but fork
         # outside it so the child can't inherit the mutex held.
         child_hooks =
-          if @execute_parent_forks
+          if execute_parent
             @mutex.synchronize do
               run_before_fork_hooks
               @after_fork_child_hooks.dup
@@ -82,7 +94,7 @@ module Migrations
             yield
           end
 
-        @mutex.synchronize { run_after_fork_parent_hooks } if @execute_parent_forks
+        @mutex.synchronize { run_after_fork_parent_hooks } if execute_parent
 
         pid
       end
