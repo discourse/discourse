@@ -11,6 +11,7 @@ import {
   isReversedFlexLayout,
 } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/reversed-flex";
 import { resolveLinearDrop } from "discourse/plugins/discourse-wireframe/discourse/lib/linear-drop";
+import { resolveWrappingFlowDrop } from "discourse/plugins/discourse-wireframe/discourse/lib/wrapping-flow-drop";
 
 const ACCEPTED_KINDS = ["wf-block", "wf-palette-block"];
 
@@ -184,7 +185,7 @@ export default class ContainerDropTargetModifier extends Modifier {
  *   (`null` for the outlet boundary).
  * @param {string} options.outletName - The outlet the container lives in.
  * @param {string} options.mode - The container drop mode (`"stack"`,
- *   `"row"`, or `"cell"`).
+ *   `"row"`, `"tiles"`, or `"cell"`).
  * @returns {{
  *   resolveContainer: () => HTMLElement,
  *   shouldDeferToParent: (input: Object) => boolean,
@@ -200,7 +201,10 @@ export function createContainerDropResolver({
   mode,
 }) {
   const isCell = mode === "cell";
-  const axis = mode === "row" ? "x" : "y";
+  // Row and tiles are horizontal flows (x); stack and cell are vertical (y).
+  // A horizontal flow may wrap onto multiple lines, so its descriptor uses the
+  // wrap-aware resolver (see `computeDescriptor`).
+  const axis = mode === "row" || mode === "tiles" ? "x" : "y";
 
   // Find the container element where block-chrome-wrappers are
   // direct siblings — that's the geometry `computeDescriptor`
@@ -380,18 +384,28 @@ export function computeDescriptor({
         : null;
     })
     .filter(Boolean);
-  const cursor = axis === "x" ? input.clientX : input.clientY;
-
-  // Project each child onto the active axis so the pure resolver can
-  // decide the landing without re-reading the DOM.
-  const segments = children.map((child) => {
-    const rect = child.wrapper.getBoundingClientRect();
-    return axis === "x"
-      ? { near: rect.left, far: rect.right }
-      : { near: rect.top, far: rect.bottom };
-  });
-
-  const result = resolveLinearDrop(segments, cursor);
+  // A horizontal flow (row / tiles) may wrap onto multiple visual lines, so it
+  // uses the wrap-aware resolver — which groups the children into lines, picks
+  // the line under the cursor, and delegates within the line to
+  // `resolveLinearDrop`. When the container isn't wrapped it collapses to a
+  // single line, i.e. exactly the 1-D result. A vertical flow (stack / cell)
+  // never wraps, so it stays on the plain 1-D resolver.
+  let result;
+  if (axis === "x") {
+    const rects = children.map((child) =>
+      child.wrapper.getBoundingClientRect()
+    );
+    result = resolveWrappingFlowDrop(rects, {
+      x: input.clientX,
+      y: input.clientY,
+    });
+  } else {
+    const segments = children.map((child) => {
+      const rect = child.wrapper.getBoundingClientRect();
+      return { near: rect.top, far: rect.bottom };
+    });
+    result = resolveLinearDrop(segments, input.clientY);
+  }
 
   // A container may frame its children with a noun (e.g. "slide"), stamped on
   // the drop container, so the drop message names positions in those terms
@@ -414,6 +428,9 @@ export function computeDescriptor({
       emptyRect:
         children.length === 0 ? emptyContainerRect(chromeElement) : null,
       axis,
+      // Present only for a wrapped horizontal flow: paints the boundary tick
+      // within the target line rather than across the whole container.
+      indicator: result.indicator ?? null,
       before,
       after,
       containerKey,
@@ -549,6 +566,7 @@ function buildBoundaryDescriptor({
   container,
   emptyRect = null,
   axis,
+  indicator = null,
   before,
   after,
   containerKey,
@@ -595,6 +613,7 @@ function buildBoundaryDescriptor({
     axis,
     containerRect,
     emptyRect,
+    indicator,
     before,
     after,
   });
@@ -646,7 +665,14 @@ function buildBoundaryDescriptor({
  * the (otherwise easy-to-miss) landing is unmistakable — over `emptyRect`
  * (the visible empty-state area) when one is supplied, else the container.
  */
-function boundaryGeometry({ axis, containerRect, emptyRect, before, after }) {
+function boundaryGeometry({
+  axis,
+  containerRect,
+  emptyRect,
+  indicator,
+  before,
+  after,
+}) {
   if (!before && !after) {
     const rect = emptyRect ?? containerRect;
     return {
@@ -658,6 +684,19 @@ function boundaryGeometry({ axis, containerRect, emptyRect, before, after }) {
   }
 
   const LINE = 4;
+
+  // A wrapped horizontal flow supplies its own tick geometry: a vertical line
+  // confined to the target line's vertical extent (rather than the whole
+  // container), centred on the resolved in-line boundary.
+  if (indicator) {
+    return {
+      top: indicator.top,
+      left: indicator.x - LINE / 2,
+      width: LINE,
+      height: indicator.bottom - indicator.top,
+    };
+  }
+
   const center = boundaryCenter(axis, before, after);
   if (axis === "y") {
     return {

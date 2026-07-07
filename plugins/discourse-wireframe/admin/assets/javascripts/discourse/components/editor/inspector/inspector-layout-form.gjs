@@ -1,6 +1,7 @@
 // @ts-check
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
+import { warn } from "@ember/debug";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -10,7 +11,6 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import Form from "discourse/components/form";
 import DMenu from "discourse/float-kit/components/d-menu";
-import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -26,22 +26,25 @@ import {
 import { buildValidationRule } from "discourse/plugins/discourse-wireframe/discourse/lib/layout/schema-to-fields";
 
 /**
- * Custom inspector form for the `wf:layout` block. The generic
- * FormKit form would show a bag of fields (mode, columns,
- * gap, ...) where most aren't relevant for the current mode. This
- * form swaps in mode-specific controls and uses richer affordances
- * (segmented selectors, a template dropdown, sliders) instead of bare
- * inputs.
+ * Presentation for each layout mode: its i18n label suffix and picker icon.
+ * The set of modes the picker offers is NOT taken from here — it comes from
+ * the block's live `mode` enum (see `modeItems`), so this map only supplies
+ * the icon and label a given mode should render with. A mode present in the
+ * enum but missing here is a drift bug the `modeItems` guard surfaces.
  *
- * Live updates flow through `wireframe.updateSelectedArg`, same
- * channel the generic form uses — the canvas reflects changes
- * without remounting the form.
+ * Exported so a unit test can assert it covers every value of core's `mode`
+ * enum, keeping the two from drifting apart.
  */
-const MODES = [
-  { id: "stack", labelKey: "mode_stack", icon: "arrow-down" },
-  { id: "row", labelKey: "mode_row", icon: "arrow-right" },
-  { id: "grid", labelKey: "mode_grid", icon: "table-cells-large" },
-];
+export const MODE_PRESENTATION = {
+  stack: { labelKey: "mode_stack", icon: "wf-arrow-down" },
+  row: { labelKey: "mode_row", icon: "wf-arrow-right" },
+  grid: { labelKey: "mode_grid", icon: "wf-layout-dashboard" },
+  tiles: { labelKey: "mode_tiles", icon: "wf-grid-3x2" },
+};
+
+// Units offered for the tiles `minItemWidth` control. The block schema
+// declares none, so the caller supplies them to `InspectorDimensionField`.
+const MIN_ITEM_WIDTH_UNITS = ["rem", "px"];
 
 // Auto-collapse options for grid / row layouts. Each value maps to a
 // `wf-layout--collapse-{id}` modifier class consumed by the
@@ -136,6 +139,18 @@ const GAP_MIN = 0;
 const GAP_MAX = 4;
 const GAP_STEP = 0.25;
 
+/**
+ * Custom inspector form for the `wf:layout` block. The generic
+ * FormKit form would show a bag of fields (mode, columns,
+ * gap, ...) where most aren't relevant for the current mode. This
+ * form swaps in mode-specific controls and uses richer affordances
+ * (segmented selectors, a template dropdown, sliders) instead of bare
+ * inputs.
+ *
+ * Live updates flow through `wireframe.updateSelectedArg`, same
+ * channel the generic form uses — the canvas reflects changes
+ * without remounting the form.
+ */
 export default class InspectorLayoutForm extends Component {
   @service wireframeInspectorArgs;
   @service wireframeGridTemplate;
@@ -320,6 +335,11 @@ export default class InspectorLayoutForm extends Component {
     return this.mode === "grid";
   }
 
+  /** @returns {boolean} `true` only in tiles mode (auto-fit reflow grid). */
+  get isTiles() {
+    return this.mode === "tiles";
+  }
+
   /**
    * Effective column / row counts — the larger of the declared args and
    * what the grid's children occupy, read from the service so the fields
@@ -349,6 +369,17 @@ export default class InspectorLayoutForm extends Component {
   /** @returns {boolean} `true` only in row mode (where wrap is meaningful). */
   get isRow() {
     return this.mode === "row";
+  }
+
+  /**
+   * Whether to show the auto-collapse control. Only row and grid consume the
+   * responsive-collapse classes; stack is already single-column and tiles
+   * reflows on its own via `minmax(minItemWidth, 1fr)`, so neither needs it.
+   *
+   * @returns {boolean}
+   */
+  get showAutoCollapse() {
+    return this.isRow || this.isGrid;
   }
 
   get columnTemplate() {
@@ -390,10 +421,29 @@ export default class InspectorLayoutForm extends Component {
    * @returns {Array<{value: string, label: string, icon: string}>}
    */
   get modeItems() {
-    return MODES.map((mode) => {
-      const label = i18n(`wireframe.inspector.layout.${mode.labelKey}`);
-      return { value: mode.id, label, title: label, icon: mode.icon };
-    });
+    // Drive the picker off the block's live `mode` enum so it always offers
+    // exactly the modes core declares — never a stale hardcoded subset. Fall
+    // back to the presentation map's own keys only when metadata is absent
+    // (e.g. an unregistered block), so the picker is never empty.
+    const ids = this.#schema.mode?.enum ?? Object.keys(MODE_PRESENTATION);
+    return ids
+      .map((id) => {
+        const presentation = MODE_PRESENTATION[id];
+        if (!presentation) {
+          // The enum gained a mode this plugin has no icon/label for. Skip it
+          // rather than render a broken segment; the warn (dev-only) and the
+          // drift-guard test flag the missing entry.
+          warn(`No presentation for layout mode "${id}"`, {
+            id: "discourse-wireframe.layout-mode-presentation",
+          });
+          return null;
+        }
+        const label = i18n(
+          `wireframe.inspector.layout.${presentation.labelKey}`
+        );
+        return { value: id, label, title: label, icon: presentation.icon };
+      })
+      .filter(Boolean);
   }
 
   /** @returns {Array<{value: string, label: string}>} */
@@ -725,10 +775,10 @@ export default class InspectorLayoutForm extends Component {
         </form.Field>
 
         {{! Auto-collapse surfaces the responsive collapse behaviour and lets
-          authors tune the threshold per layout. Hidden in stack mode (already
-          column-oriented). Service-live so the dynamic help text below reads the
-          current value. }}
-        {{#unless (eq this.mode "stack")}}
+          authors tune the threshold per layout. Shown only for row and grid:
+          stack is already column-oriented and tiles reflows on its own.
+          Service-live so the dynamic help text below reads the current value. }}
+        {{#if this.showAutoCollapse}}
           <form.Field
             @name="autoCollapse"
             @title={{i18n "wireframe.inspector.layout.auto_collapse_label"}}
@@ -748,7 +798,27 @@ export default class InspectorLayoutForm extends Component {
             {{dIcon "circle-info"}}
             <span>{{i18n this.autoCollapseHelpKey}}</span>
           </p>
-        {{/unless}}
+        {{/if}}
+
+        {{! Tiles-only: the minimum width each child gets before the auto-fit
+          grid wraps to another column. Draft-bound like gap; onFieldSet mirrors
+          it to the editor service. The label reuses core's block-schema key. }}
+        {{#if this.isTiles}}
+          <form.Field
+            @name="minItemWidth"
+            @title={{i18n "blocks.builtin.layout.min_item_width"}}
+            @type="custom"
+            @onSet={{this.onFieldSet}}
+            as |f|
+          >
+            <f.Control>
+              <InspectorDimensionField
+                @custom={{f}}
+                @units={{MIN_ITEM_WIDTH_UNITS}}
+              />
+            </f.Control>
+          </form.Field>
+        {{/if}}
 
         {{#if this.isGrid}}
           {{! Source picker: a bespoke widget (Free toggle plus a preset menu),
@@ -893,21 +963,25 @@ export default class InspectorLayoutForm extends Component {
           </f.Control>
         </form.Field>
 
-        <form.Field
-          @name="justifyContent"
-          @title={{i18n "wireframe.inspector.layout.justify_content_legend"}}
-          @type="custom"
-          @onSet={{this.onFieldSet}}
-          as |f|
-        >
-          <f.Control>
-            <InspectorSegmentedField
-              @items={{this.justifyContentItems}}
-              @custom={{f}}
-              @name="wireframe-layout-justify-content"
-            />
-          </f.Control>
-        </form.Field>
+        {{! Justify-content applies to stack, row, and grid. Tiles ignores it
+          (its columns are auto-fit), so hide it there. }}
+        {{#unless this.isTiles}}
+          <form.Field
+            @name="justifyContent"
+            @title={{i18n "wireframe.inspector.layout.justify_content_legend"}}
+            @type="custom"
+            @onSet={{this.onFieldSet}}
+            as |f|
+          >
+            <f.Control>
+              <InspectorSegmentedField
+                @items={{this.justifyContentItems}}
+                @custom={{f}}
+                @name="wireframe-layout-justify-content"
+              />
+            </f.Control>
+          </form.Field>
+        {{/unless}}
 
         {{#if this.isFlex}}
           <form.Field

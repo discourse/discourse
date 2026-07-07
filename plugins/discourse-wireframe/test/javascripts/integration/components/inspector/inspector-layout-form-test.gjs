@@ -1,8 +1,16 @@
 import Service from "@ember/service";
-import { click, render } from "@ember/test-helpers";
+import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
+import Layout from "discourse/blocks/builtin/layout";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import InspectorLayoutForm from "discourse/plugins/discourse-wireframe/discourse/components/editor/inspector/inspector-layout-form";
+
+// The form derives its mode picker and field defaults from the block's real
+// schema, so the stub hands it core's actual `layout` metadata rather than an
+// empty stand-in — that keeps the picker in step with core's mode enum.
+const LAYOUT_METADATA = getBlockMetadata(Layout);
+const MODE_ENUM = LAYOUT_METADATA.args.mode.enum;
 
 // Minimal stand-in: the layout form reads the selected block's args and a few
 // grid helpers off the service, and writes through `updateSelectedArg`. The
@@ -26,14 +34,14 @@ class StubWireframeService extends Service {
   }
 
   // The Form seeds its draft from `argsSnapshot`; the canvas-facing `args`
-  // mirror it here. `metadata.args` is the (empty) schema the form reads for
-  // labels, defaults, and validation rules.
+  // mirror it here. `metadata` is core's real `layout` schema, which the form
+  // reads for the mode enum, arg defaults, labels, and validation rules.
   get selectedBlockData() {
     return {
       key: "layout:test",
       args: this.#args,
       argsSnapshot: this.#args,
-      metadata: { args: {} },
+      metadata: LAYOUT_METADATA,
     };
   }
 
@@ -126,6 +134,52 @@ module(
       assert
         .dom("input[name='wireframe-layout-wrap']")
         .doesNotExist("no wrap control in grid mode");
+    });
+
+    test("mode picker offers one segment per core mode enum value", async function (assert) {
+      stubWireframe(this.owner, { mode: "stack" });
+      await render(<template><InspectorLayoutForm /></template>);
+
+      assert
+        .dom("input[name='wireframe-layout-mode']")
+        .exists(
+          { count: MODE_ENUM.length },
+          "the picker derives its segments from the block's mode enum"
+        );
+    });
+
+    test("tiles mode: min-item-width, but no justify-content or auto-collapse", async function (assert) {
+      stubWireframe(this.owner, { mode: "tiles" });
+      await render(<template><InspectorLayoutForm /></template>);
+
+      // The min-item-width control is the only dimension field with a unit
+      // selector (gap is unitless), so the unit `<select>` identifies it.
+      assert
+        .dom(".wireframe-dimension-field__unit")
+        .exists("min-item-width renders with its rem/px unit selector");
+      assert
+        .dom(".wireframe-layout-form")
+        .includesText("Min item width", "the field carries its label");
+      assert
+        .dom("input[name='wireframe-layout-justify-content']")
+        .doesNotExist("justify-content is hidden in tiles (auto-fit columns)");
+      assert
+        .dom("input[name='wireframe-layout-auto-collapse']")
+        .doesNotExist("auto-collapse is hidden in tiles (reflows on its own)");
+    });
+
+    test("editing min-item-width writes the arg through the service", async function (assert) {
+      stubWireframe(this.owner, { mode: "tiles", minItemWidth: "16rem" });
+      await render(<template><InspectorLayoutForm /></template>);
+
+      // The number input commits on `change`, which `fillIn` fires after
+      // setting the value; the field reserializes it under its rem unit.
+      await fillIn(".wireframe-dimension-field__number", "20");
+
+      const service = this.owner.lookup("service:wireframe-workspace");
+      assert.deepEqual(service.updateSelectedArgCalls, [
+        { name: "minItemWidth", value: "20rem" },
+      ]);
     });
 
     test("toggling reverse writes the arg through the service", async function (assert) {

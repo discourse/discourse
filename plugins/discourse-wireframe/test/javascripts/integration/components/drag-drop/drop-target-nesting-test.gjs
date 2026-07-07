@@ -249,6 +249,89 @@ module(
     });
 
     /*
+     * WRAPPED horizontal flow (tiles / row-with-wrap): three fixed-width tiles
+     * in a narrow flex-wrap container fall onto two visual lines. A drop
+     * physically over the line-2 tile must target a LINE-2 boundary, not collapse
+     * onto the same x-band in line 1 (the 1-D resolver's bug).
+     *   ┌───────────┐
+     *   │  A     B  │  line 1
+     *   │  C        │  line 2  ← drop here → insert before C, not up in line 1
+     *   └───────────┘
+     */
+    test("wrapped flow: a drop over line 2 targets a line-2 boundary", async function (assert) {
+      await render(
+        <template>
+          {{! Width fits two 100px tiles per line, forcing the third to wrap. }}
+          <div
+            id="container"
+            style="position: fixed; top: 0; left: 0; width: 220px; display: flex; flex-wrap: wrap;"
+          >
+            <div
+              class="wireframe-block-chrome-wrapper"
+              style="width: 100px; height: 60px;"
+            >
+              <div
+                class="wireframe-block-chrome"
+                data-wf-block-key="A"
+                data-wf-block-name="paragraph"
+              ></div>
+            </div>
+            <div
+              class="wireframe-block-chrome-wrapper"
+              style="width: 100px; height: 60px;"
+            >
+              <div
+                class="wireframe-block-chrome"
+                data-wf-block-key="B"
+                data-wf-block-name="paragraph"
+              ></div>
+            </div>
+            <div
+              class="wireframe-block-chrome-wrapper"
+              style="width: 100px; height: 60px;"
+            >
+              <div
+                class="wireframe-block-chrome"
+                data-wf-block-key="C"
+                data-wf-block-name="paragraph"
+              ></div>
+            </div>
+          </div>
+        </template>
+      );
+      const wireframe = stubWireframe();
+      const container = document.querySelector("#container");
+      const aWrap = container.children[0].getBoundingClientRect();
+      const cWrap = container.children[2].getBoundingClientRect();
+
+      // Sanity: C really did wrap below A (otherwise the test proves nothing).
+      assert.true(cWrap.top >= aWrap.bottom, "C wrapped onto a second line");
+
+      const descriptor = computeDescriptor({
+        layoutQuery: wireframe.layoutQuery,
+        dropAuthority: wireframe.dropAuthority,
+        container,
+        // First third of C, vertically centred on line 2.
+        input: cursorAt(cWrap, "x", 0.1),
+        containerKey: "tiles",
+        outletName: "test-outlet",
+        axis: "x",
+        source: PALETTE,
+      });
+
+      assert.strictEqual(
+        descriptor.dispatch.args.targetKey,
+        "C",
+        "targets the line-2 tile, not the line-1 x-band"
+      );
+      assert.strictEqual(descriptor.dispatch.args.position, "before");
+      assert.true(
+        descriptor.geometry.top >= aWrap.bottom - 1,
+        "the drop indicator is confined to line 2"
+      );
+    });
+
+    /*
      * stack → grid : a grid (a container) sits in a stack. Hovering the grid
      * child's MIDDLE third means "drop INTO the grid", not at a seam.
      *   ┌─────────────┐

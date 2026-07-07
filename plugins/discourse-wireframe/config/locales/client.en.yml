@@ -174,6 +174,7 @@ en:
           mode_stack: "Stack"
           mode_row: "Row"
           mode_grid: "Grid"
+          mode_tiles: "Tiles"
           auto_collapse_label: "Auto-collapse"
           auto_collapse_never: "Never"
           auto_collapse_compact: "Compact"

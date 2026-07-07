@@ -400,7 +400,7 @@ export default class BlockChrome extends Component {
    * container blocks we default to `"stack"` since their children
    * stack vertically.
    *
-   * @returns {"stack"|"row"|"cell"|"grid"|"grid-cell-leaf"|null}
+   * @returns {"stack"|"row"|"tiles"|"cell"|"grid"|"grid-cell-leaf"|null}
    */
   get containerDropMode() {
     if (this.isEmptyCell) {
@@ -424,6 +424,9 @@ export default class BlockChrome extends Component {
     const mode = entry?.args?.mode ?? this.args.blockArgs?.mode ?? "stack";
     if (mode === "row") {
       return "row";
+    }
+    if (mode === "tiles") {
+      return "tiles";
     }
     if (mode === "grid" || mode === "free-grid") {
       return "grid";
@@ -986,9 +989,10 @@ export default class BlockChrome extends Component {
   /**
    * The axis along which the block's siblings are arranged, so the toolbar
    * shows the matching reorder arrows: "horizontal" for a tabs / carousel
-   * parent and a `layout` in row mode, "vertical" otherwise (a grid keeps
-   * vertical arrows this round). Distinct from `parentLayoutAxis`, which drives
-   * drop-zone CSS for `layout` containers only.
+   * parent and a `layout` in row or tiles mode (both horizontal flows),
+   * "vertical" otherwise (a grid keeps vertical arrows this round). Distinct
+   * from `parentLayoutAxis`, which drives drop-zone CSS for `layout` containers
+   * only.
    *
    * @returns {"horizontal"|"vertical"}
    */
@@ -998,7 +1002,10 @@ export default class BlockChrome extends Component {
     if (name === "tabs" || name === "carousel") {
       return "horizontal";
     }
-    if (name === "layout" && (ctx.parent.args?.mode ?? "stack") === "row") {
+    if (
+      name === "layout" &&
+      ["row", "tiles"].includes(ctx.parent.args?.mode ?? "stack")
+    ) {
       return "horizontal";
     }
     return "vertical";
@@ -1653,7 +1660,9 @@ export default class BlockChrome extends Component {
    */
   get #isImageDropSlot() {
     const mode = this.containerDropMode;
-    return mode === "stack" || mode === "row" || mode === "cell";
+    return (
+      mode === "stack" || mode === "row" || mode === "tiles" || mode === "cell"
+    );
   }
 
   /**

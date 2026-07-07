@@ -38,6 +38,13 @@ align-center
 align-right
 wrap-text
 
+# Layout mode picker: stack / row / grid / tiles. Grid uses a structured
+# region glyph (deliberate placement); tiles uses a uniform-cell grid.
+arrow-down
+arrow-right
+layout-dashboard
+grid-3x2
+
 # View drawer: simulation status + reset glyphs.
 rotate-ccw
 info
