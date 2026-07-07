@@ -524,6 +524,25 @@ RSpec.describe Migrations::Reporting::Tui do
       end
     end
 
+    describe "NO_COLOR set to an empty string" do
+      around do |example|
+        original = ENV["NO_COLOR"]
+        ENV["NO_COLOR"] = ""
+        example.run
+        original.nil? ? ENV.delete("NO_COLOR") : ENV["NO_COLOR"] = original
+      end
+
+      it "still emits color, since NO_COLOR only disables it when non-empty" do
+        renderer = described_class.new(output: io, width: 120, clock: -> { time[0] })
+        renderer.apply([:start, "Users", "Users"])
+        renderer.apply([:progress_begin, "Users", 100])
+        renderer.apply([:progress, "Users", 40, 0, 0, 0])
+        renderer.repaint
+
+        expect(io.string).to match(/\e\[[0-9;]*m/)
+      end
+    end
+
     describe "the no-line-reaches-width invariant" do
       it "keeps every rendered line strictly narrower than the terminal" do
         narrow = described_class.new(output: io, width: 40, clock: -> { time[0] })
