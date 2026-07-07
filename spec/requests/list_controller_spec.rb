@@ -8,7 +8,7 @@ RSpec.describe ListController do
 
   before do
     admin # to skip welcome wizard at home page `/`
-    SiteSetting.top_menu = "latest|new|unread|categories"
+    SiteSetting.top_menu = "latest|new|categories"
   end
 
   describe "#index" do
