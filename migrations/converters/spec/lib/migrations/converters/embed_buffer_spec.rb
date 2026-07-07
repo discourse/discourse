@@ -92,9 +92,11 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
     end
 
     it "records an upload descriptor keyed for IntermediateDB::EmbedUpload" do
-      token = buffer.upload(upload_id: "abc123")
+      token = buffer.upload(upload_id: "abc123", original_markdown: "![x](/uploads/x.png)")
 
-      expect(buffer.uploads).to contain_exactly({ placeholder: token, upload_id: "abc123" })
+      expect(buffer.uploads).to contain_exactly(
+        { placeholder: token, upload_id: "abc123", original_markdown: "![x](/uploads/x.png)" },
+      )
     end
 
     it "returns the minted token so the Markdown converter can splice it into the raw" do

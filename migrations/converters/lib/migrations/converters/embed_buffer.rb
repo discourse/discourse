@@ -84,8 +84,12 @@ module Migrations
         record(@events, :event, event_id:)
       end
 
-      def upload(upload_id: nil)
-        record(@uploads, :upload, upload_id:)
+      # `original_markdown` is the verbatim source snippet for an upload referenced
+      # by a full URL, so the importer can put it back when the sha1 maps to no
+      # Discourse upload. It stays nil for a short `upload://` reference, which has
+      # no meaningful fallback.
+      def upload(upload_id: nil, original_markdown: nil)
+        record(@uploads, :upload, upload_id:, original_markdown:)
       end
 
       # Empties the recorded embeds (in place, keeping the collections) so one buffer

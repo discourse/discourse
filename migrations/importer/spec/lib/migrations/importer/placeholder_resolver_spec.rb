@@ -335,6 +335,43 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     end
   end
 
+  describe "full-URL upload fallback" do
+    it "puts the verbatim markdown back and still reports when the sha1 is unmapped" do
+      upload = placeholder.mint(:upload)
+      snippet = "![x](/uploads/default/original/2X/a/ab/#{"a" * 40}.png)"
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
+        placeholder: upload,
+        upload_id: "sha1",
+        original_markdown: snippet,
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "see #{upload} here" }])
+
+      expect(resolved[1]).to eq("see #{snippet} here")
+      expect(resolver.unresolved_sink.map(&:entity_id)).to eq(["sha1"])
+    end
+
+    it "prefers the mapped upload markdown over the verbatim snippet" do
+      upload = placeholder.mint(:upload)
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
+        placeholder: upload,
+        upload_id: "sha1",
+        original_markdown: "![x](/uploads/default/original/2X/a/ab/old.png)",
+      )
+      maps = FakePlaceholderMaps.new(upload_markdown: { "sha1" => "![x](upload://sha1.png)" })
+      resolver = described_class.new(intermediate_db, maps, owner_type: EmbedOwner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{upload} y" }])
+
+      expect(resolved[1]).to eq("x ![x](upload://sha1.png) y")
+      expect(resolver.unresolved_sink).to be_empty
+    end
+  end
+
   describe "#unresolved_sink" do
     let(:maps) { FakePlaceholderMaps.new(post: { 100 => { topic_id: 42, post_number: 3 } }) }
 

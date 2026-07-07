@@ -273,13 +273,19 @@ module Migrations
 
         return markdown if markdown.present?
 
+        # Always report: the report is the only signal this entity needs attention.
         @unresolved_sink << UnresolvedEmbed.new(
           kind:,
           entity_id:,
           owner_id: row[:owner_id],
           owner_url: owner_url_for(row[:owner_id]),
         )
-        ""
+
+        # An upload referenced by a full URL carries the verbatim source snippet;
+        # put it back rather than dropping it, so a hotlink to another forum's upload
+        # (which maps to nothing here) survives. Polls, events and `upload://`
+        # uploads have no fallback and drop out.
+        kind == :upload ? row[:original_markdown].to_s : ""
       end
 
       # Builds the opening `[quote="…"]` tag only; the quoted text and `[/quote]` are

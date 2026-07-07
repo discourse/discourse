@@ -39,6 +39,104 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(buffer.uploads.first[:upload_id]).to eq("Zm9vYmFy")
     end
+
+    it "records no original_markdown for an upload:// reference" do
+      extract("![alt](upload://abc123.png)")
+
+      expect(buffer.uploads.first[:original_markdown]).to be_nil
+    end
+  end
+
+  describe "full-URL uploads" do
+    let(:sha1) { "0123456789abcdef0123456789abcdef01234567" }
+
+    it "defers an image referenced by a root-relative upload URL" do
+      url = "/uploads/default/original/2X/a/ab/#{sha1}.png"
+      result = extract("before ![pic](#{url}) after")
+
+      upload = buffer.uploads.first
+      expect(upload[:upload_id]).to eq(sha1)
+      expect(upload[:original_markdown]).to eq("![pic](#{url})")
+      expect(result).to eq("before #{upload[:placeholder]} after")
+    end
+
+    it "defers a markdown link to an absolute upload URL" do
+      url = "https://forum.example.com/uploads/default/original/2X/a/ab/#{sha1}.pdf"
+      extract("[report](#{url})")
+
+      expect(buffer.uploads.first).to include(
+        upload_id: sha1,
+        original_markdown: "[report](#{url})",
+      )
+    end
+
+    it "defers a bare, whitespace-delimited upload URL" do
+      url = "https://cdn.example.com/uploads/default/original/1X/#{sha1}.png"
+      result = extract("see #{url} thanks")
+
+      upload = buffer.uploads.first
+      expect(upload).to include(upload_id: sha1, original_markdown: url)
+      expect(result).to eq("see #{upload[:placeholder]} thanks")
+    end
+
+    it "reads the sha1 from an optimized image variant" do
+      url = "/uploads/default/optimized/2X/a/ab/#{sha1}_2_690x388.png"
+      extract("![x](#{url})")
+
+      expect(buffer.uploads.first[:upload_id]).to eq(sha1)
+    end
+
+    it "recognizes a secure-uploads URL" do
+      url = "/secure-uploads/original/2X/a/ab/#{sha1}.png"
+      extract("![x](#{url})")
+
+      expect(buffer.uploads.first[:upload_id]).to eq(sha1)
+    end
+
+    it "recognizes a protocol-relative upload URL" do
+      url = "//cdn.example.com/uploads/default/original/2X/a/ab/#{sha1}.png"
+      extract("![x](#{url})")
+
+      expect(buffer.uploads.first[:upload_id]).to eq(sha1)
+    end
+
+    it "keeps a bare URL's trailing sentence punctuation out of the match" do
+      url = "/uploads/default/original/2X/a/ab/#{sha1}.png"
+      result = extract("look at #{url}.")
+
+      expect(buffer.uploads.first[:original_markdown]).to eq(url)
+      expect(result).to eq("look at #{buffer.uploads.first[:placeholder]}.")
+    end
+
+    it "ignores a non-upload URL" do
+      raw = "![photo](https://example.com/images/photo.png) and https://example.com/page"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "ignores an uploads URL whose basename is not a 40-hex sha1" do
+      raw = "![x](/uploads/default/original/2X/a/ab/deadbeef.png)"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.uploads).to be_empty
+    end
+
+    it "does not extract a full-URL upload inside a fenced code block" do
+      url = "/uploads/default/original/2X/a/ab/#{sha1}.png"
+      raw = <<~MD
+        real ![pic](#{url})
+
+        ```
+        code ![pic](#{url}) and bare #{url}
+        ```
+      MD
+
+      result = extract(raw)
+
+      expect(buffer.uploads.size).to eq(1)
+      expect(result).to include("code ![pic](#{url}) and bare #{url}")
+    end
   end
 
   describe "quotes" do

@@ -19,7 +19,12 @@ module Migrations
       class RawExtractor
         Detectors = MarkdownScanner::Detectors
 
-        DETECTORS = [Detectors::Upload, Detectors::Quote, Detectors::Mention].freeze
+        DETECTORS = [
+          Detectors::Upload,
+          Detectors::UploadUrl,
+          Detectors::Quote,
+          Detectors::Mention,
+        ].freeze
         private_constant :DETECTORS
 
         # @param mention_resolver [#call] maps a mention name to its `mention_type`
@@ -60,6 +65,8 @@ module Migrations
           case node
           when Markbridge::AST::Upload
             sink.upload(upload_id: node.sha1)
+          when MarkdownScanner::UploadUrlReference
+            sink.upload(upload_id: node.sha1, original_markdown: node.original_markdown)
           when Markbridge::AST::Mention
             sink.mention(mention_type: @mention_resolver.call(node.name), name: node.name)
           when MarkdownScanner::QuoteAttribution
