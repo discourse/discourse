@@ -228,11 +228,41 @@ describe OpenIDConnectAuthenticator do
       expect(result[:client_key]).to be_a(OpenSSL::PKey::RSA)
     end
 
-    it "returns empty hash and logs error for invalid PEM" do
+    it "raises OpenSSL error for invalid PEM" do
       SiteSetting.openid_connect_mtls_client_cert = "not-a-cert"
       SiteSetting.openid_connect_mtls_client_key = "not-a-key"
       Rails.logger.expects(:error).with(includes("Failed to parse mTLS"))
-      expect(authenticator.mtls_ssl_options).to eq({})
+      expect { authenticator.mtls_ssl_options }.to raise_error(OpenSSL::OpenSSLError)
+    end
+
+    it "decrypts a key with a passcode when the setting is provided" do
+      key = OpenSSL::PKey::RSA.new(2048)
+      encrypted_key = key.export(OpenSSL::Cipher.new("aes-256-cbc"), "hunter2")
+      cert = OpenSSL::X509::Certificate.new
+      cert.subject = OpenSSL::X509::Name.parse("/CN=test")
+      cert.issuer = cert.subject
+      cert.not_before = Time.now
+      cert.not_after = Time.now + 365 * 86_400
+      cert.public_key = key.public_key
+      cert.sign(key, OpenSSL::Digest.new("SHA256"))
+
+      SiteSetting.openid_connect_mtls_client_cert = cert.to_pem
+      SiteSetting.openid_connect_mtls_client_key = encrypted_key
+      SiteSetting.openid_connect_mtls_client_key_passcode = "hunter2"
+
+      result = authenticator.mtls_ssl_options
+      expect(result[:client_key]).to be_a(OpenSSL::PKey::RSA)
+    end
+
+    it "raises OpenSSL error when the passcode is wrong" do
+      key = OpenSSL::PKey::RSA.new(2048)
+      encrypted_key = key.export(OpenSSL::Cipher.new("aes-256-cbc"), "correct-passcode")
+
+      SiteSetting.openid_connect_mtls_client_key = encrypted_key
+      SiteSetting.openid_connect_mtls_client_key_passcode = "wrong-passcode"
+      SiteSetting.openid_connect_mtls_client_cert = "dummy-cert"
+      Rails.logger.expects(:error).with(includes("Failed to parse mTLS"))
+      expect { authenticator.mtls_ssl_options }.to raise_error(OpenSSL::OpenSSLError)
     end
   end
 

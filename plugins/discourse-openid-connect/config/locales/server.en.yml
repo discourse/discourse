@@ -19,8 +19,10 @@ en:
     openid_connect_user_field_mappings: "Map OIDC claims onto Discourse user fields. Each entry pairs an OIDC claim name with the numeric ID of a Discourse user field."
     openid_connect_match_by_email: "Use email address to match OpenID Connect authentications to existing Discourse user accounts."
     openid_connect_use_pkce: "Enable Proof Key for Code Exchange (PKCE) for OpenID Connect authentication."
-    openid_connect_mtls_client_cert: "X.509 client certificate for TLS client authentication (mTLS) with the OIDC provider"
-    openid_connect_mtls_client_key: "X.509 private key for the TLS client certificate (mTLS)"
+    openid_connect_mtls_client_cert: "X.509 client certificate for mTLS client authentication with the OIDC provider"
+    openid_connect_mtls_client_key: "X.509 private key for the mTLS client certificate"
+    openid_connect_mtls_client_key_passcode: "Passphrase for the mTLS private key (optional)"
   login:
     omniauth_error:
       openid_connect_discovery_error: Unable to fetch configuration from identity provider. Please try again.
+      openid_connect_mtls_error: There is a problem with the mTLS client certificate configuration. Please contact an administrator.

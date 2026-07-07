@@ -81,3 +81,7 @@ discourse_openid_connect:
     textarea: true
     secret: true
     area: "oidc"
+  openid_connect_mtls_client_key_passcode:
+    default: ""
+    secret: true
+    area: "oidc"

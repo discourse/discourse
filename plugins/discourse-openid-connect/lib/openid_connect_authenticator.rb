@@ -211,13 +211,15 @@ class OpenIDConnectAuthenticator < Auth::ManagedAuthenticator
     key_pem = SiteSetting.openid_connect_mtls_client_key
     return {} if cert_pem.blank? || key_pem.blank?
 
+    key_passcode = SiteSetting.openid_connect_mtls_client_key_passcode.presence
+
     {
       client_cert: OpenSSL::X509::Certificate.new(cert_pem),
-      client_key: OpenSSL::PKey.read(key_pem),
+      client_key: OpenSSL::PKey.read(key_pem, key_passcode),
     }
   rescue OpenSSL::OpenSSLError => e
     oidc_log("Failed to parse mTLS certificate or key: #{e.message}", error: true)
-    {}
+    raise
   end
 
   def request_timeout_seconds
