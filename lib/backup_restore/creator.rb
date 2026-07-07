@@ -398,6 +398,10 @@ module BackupRestore
     end
 
     def create_hardlink(source_filename, upload_data, target_filename)
+      if File.expand_path(source_filename) == File.expand_path(target_filename)
+        return source_filename
+      end
+
       FileUtils.mkdir_p(File.dirname(target_filename))
       FileUtils.ln(source_filename, target_filename)
       increment_and_log_progress(:hardlinked)
