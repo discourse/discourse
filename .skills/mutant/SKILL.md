@@ -1,241 +1,58 @@
 ---
 name: mutant
-description: Run mutant, read mutation reports, fix alive mutations, and verify coverage. Use when running mutation testing or responding to alive mutations.
-compatibility: Unified agent skills CLI
-metadata:
-  author: dkubb
-  version: "2026-03-v22"
-triggers:
-  - "mutation testing"
-  - "mutant"
-  - "alive mutation"
-  - "mutation coverage"
+description: How to run mutation testing on the migration gems and act on a surviving mutation — add a test, adopt the simpler code, or accept it as equivalent. Use when running mutant or reviewing its output.
 ---
 
-# Mutant
+# Mutation testing (mutant)
 
-## When to Activate
+Mutant changes the code one small step at a time (`>=` → `>`, `fetch` → `[]`, a
+dropped guard) and runs the covering tests. A failing test **kills** the
+mutation; if all tests pass it is **alive** — that behaviour is not tested. We use
+it as an audit to find weak specs, not as a gate to 100%.
 
-- The user asks to run mutation testing.
-- The user has alive mutations to fix.
-- The user asks to verify mutation coverage.
+How to run it, what is in scope, and the gotchas:
+[references/migrations-tooling.md](references/migrations-tooling.md).
 
-## When Not to Use
-
-- The task does not involve mutation testing.
-
-## Inputs
-
-- Alive mutation output to act on.
-
-## Outputs (Fixed Order)
-
-1. Mutation results (alive count, coverage percentage).
-2. Action for each alive mutation.
-
-## Reading Output
-
-An alive mutation looks like:
+## Reading the output
 
 ```text
-evil:YourClass#method:YourClass#method:lib/your_class.rb:42:abc12
-@@ -1,3 +1,3 @@
- def method
--  @value >= threshold
-+  @value > threshold
- end
+evil:Migrations::Conversion::Partitioner#dense?:.../partitioner.rb:78:4499a
+@@ -1,7 +1,7 @@
+ def dense?(min, max)
+-  (max - min + 1) <= rows * DENSE_RANGE_FACTOR
++  (max + 1) <= rows * DENSE_RANGE_FACTOR
 ```
 
-- `evil` means no test killed this mutation.
-- The diff shows original (minus) and mutated (plus) code.
+`-` is the real code, `+` the mutation no test caught. Mutant prints one survivor
+per method, then `(N more...)` — fix it and rerun to see the next. A mutation can
+also **time out** (mutated code that blocks or loops forever); that counts as
+not-killed and no assertion can kill it, so treat it as equivalent.
 
-## Reporting Format
+## For each survivor, pick one
 
-Lead with the verdict (BLUF — bottom line up front):
+1. **Add a test** — the usual case. It must pass on the real code and fail on the
+   mutation. Common gaps: only one side of a boolean tested; a one-element
+   collection hiding `next` vs `break`; a stub that ignores its arguments; two
+   fixtures returning the same value; a default argument every test passes.
 
-**If unkillable:**
+2. **Adopt the simpler code** — when the mutation is correct for every input.
+   Mutant only rewrites toward less power, so taking its form removes the
+   survivor: `hash[key]` → `fetch` (key always present), `to_i` → `Integer(x)`
+   (digits), `method` → `public_method` (public method), `transform_values!` →
+   `transform_values` (receiver not reused), dropping a guard that can't be false.
+   Don't weaken behaviour to reach 100%: keep `is_a?(Class)` / `is_a?(Array)`
+   (any class / array, not the exact one), `[n, 1].max` clamps, getter/setter
+   idioms. And don't just rewrite syntax to hide a mutation without a test.
 
-> **Unkillable.** Both forms are equivalent because \[reason\].
-> Add to ignore list.
+3. **Accept it as equivalent** — you can't kill it and the mutant's form isn't a
+   correct rewrite. Note it and move on. Don't add an ignore entry or contort a
+   test just to reach 100%.
 
-**If killable:**
+## House rules
 
-> **Killable.**
->
-> **Option A — add test:**
->
-> ```diff
-> (test diff)
-> ```
->
-> **Option B — simplify code:**
->
-> ```diff
-> (source diff)
-> ```
-
-Always present both options together so the user can choose. Include
-evidence: if you cannot think of a test that would kill the mutation,
-say so — that is valuable signal toward unkillable.
-
-## Fixing Alive Mutations
-
-For each alive mutation, read the diff, then read the source and
-existing tests. Ask: "is the mutated code acceptable?" Then choose:
-
-1. **Add a test** when the mutated code is wrong but the tests do
-   not prove it. The test must pass with the original code and fail
-   with the mutated code. Common reasons a test is missing:
-
-   - Only one value of a boolean/flag is tested (add the other).
-   - A collection has one element, so `next` and `break` behave the
-     same (add a test with multiple elements).
-   - Two objects return the same value in test data, hiding which one
-     the code actually uses (add test data where they differ).
-   - A method has a default parameter value, and all tests pass the
-     argument explicitly, leaving the default path uncovered (add a
-     test that omits the argument).
-
-2. **Simplify the code** when the mutated code is correct for all
-   valid inputs. Apply the mutation's change directly to the source
-   code — do not restructure or rewrite, just accept the mutated
-   form.
-
-### How Simplification Works
-
-Mutant encodes the **principle of least power**: use the most
-constrained primitive that satisfies the requirement. When Ruby
-offers multiple methods that overlap in behavior but differ in
-power, mutant replaces the more powerful one with the less powerful
-one. If the tests still pass, you did not need the extra power —
-accept the simpler form. If a test fails, the test proves you
-needed the more powerful primitive.
-
-Before accepting a simplification, verify the mutation preserves
-behavior across the method's full input domain and all call sites.
-
-### Simplification Trap: Syntax Rewriting
-
-Do not rewrite code to eliminate a mutation axis without first
-ensuring the expression has test coverage. Changing syntax (e.g.
-replacing `&method(:name)` with `{ |x| name(x) }`) may make the
-mutation disappear, but it does not prove the code is correct — it
-just hides the gap. The correct sequence is:
-
-1. Add test coverage for the expression (e.g. a meta spec or
-   integration test that exercises the code path).
-2. Apply the simplification that mutant suggests (e.g. `method` →
-   `public_method`).
-3. Verify 100% mutation coverage on the subject.
-
-If a simplification removes a mutation axis, the underlying
-expression must still be reachable by tests. Every code path that
-mutant can mutate must have at least one test that exercises it.
-
-### When a Mutation Is Equivalent
-
-When the original and mutated code produce the same result for all
-inputs, the mutation is **equivalent**. Equivalent does NOT mean
-unkillable. Ask: does the mutated form use a more constrained
-primitive? If yes, it IS the simplification — apply it to the
-source. Examples: `method` → `public_method` (restricts to public
-API), `kind_of?` → `instance_of?` (restricts to exact class).
-
-A mutation is only **unkillable** when you cannot add a test AND
-you cannot apply the mutation to the source (e.g. both forms call
-through to the same underlying method with no way to prefer either).
-
-When unkillable:
-
-1. Add the subject to the ignore list with an inline comment
-   explaining why it is unkillable.
-2. Do not commit code or test changes for this subject.
-3. Report: which mutation survived, why it is equivalent, and what
-   you tried before concluding it is unkillable.
-
-Every ignored subject must have a comment. No uncommented entries.
-
-## Usage
-
-1. Run mutant:
-
-   ```sh
-   bundle exec mutant run --fail-fast
-   ```
-
-   When the subject is already known, scope the run to avoid
-   testing unrelated subjects:
-
-   ```sh
-   bundle exec mutant run --fail-fast 'Foo::Bar#baz'
-   ```
-
-   If the command succeeds, coverage is 100% — done.
-   If it fails, find the `evil:` line in the output — it has the
-   subject name, file path, and line number. The diff block
-   immediately after shows the original and mutated code.
-
-2. Read the source file and existing test file for the subject.
-
-3. Decide: add test or simplify code. Make the change. Do not change
-   both code and tests in the same commit — if both need changing,
-   commit the test first, then simplify the code in a second commit.
-
-4. Re-run mutant (repeat step 1) until 100%. If the same mutation
-   survives after 2 attempts, evaluate whether it is unkillable (see
-   "When a Mutation Is Equivalent" above).
-
-5. Run the project test suite.
-
-6. Commit the change. Follow the project's commit message
-   conventions, defaulting to conventional commits if none are
-   present. The commit body must explain why the change was made
-   with enough detail for effective code review — which mutation
-   survived, why the test kills it or why the simplification is
-   correct.
-
-### Prepare Legacy Project
-
-When adding mutant to a project that has no ignore list yet,
-run mutant once to find all alive subjects, then seed the ignore
-list so the burn-down process can start from a passing baseline:
-
-```sh
-bundle exec mutant run 2>&1 \
-  | sed -n 's/^evil:\([A-Za-z][A-Za-z0-9_:]*[#.][^:]*\):.*/\1/p' \
-  | LC_ALL=C sort -u \
-  || true
-```
-
-The `sed` pattern extracts the subject expression (e.g.
-`Axiom::Foo#bar`) from each `evil:` line, handling `::` in
-namespaced constants. The evil line format is:
-
-```text
-evil:SUBJECT:SOURCE_LOC:FILE:LINENO:ID
-```
-
-Add each subject to the `ignore` list in the mutant config with an
-inline comment (e.g. `# legacy baseline`) and commit as a baseline. Then remove one subject at a time from
-the ignore list and follow the Usage instructions above to kill
-its alive mutations. Commit each subject's fix with the ignore
-list removal included.
-
-## Checklist
-
-- Each alive mutation has a clear action: add test or simplify code.
-- New tests fail against the mutated code, not just pass against the
-  original.
-- The project test suite passes after each change.
-- Each commit touches one subject only.
-- Report what you did and why so the user can review your decisions:
-
-  - Research before asking. If a question depends on information you
-    can gather first, gather it — then ask an informed question
-    instead of a speculative one.
-
-  - If unkillable, say so up front. Do not bury the verdict in
-    analysis the reader cannot act on.
-
-  - If killable, present the options clearly: add a test (Option A)
-    or simplify the code (Option B). See "Reporting Format" above.
+- Prefer adding a test over changing source; keep source changes within the house
+  style (no `module_function` or endless methods, `> 0` / `< 0` over `.positive?`
+  / `.negative?`).
+- One subject per commit; a test change separate from a source change; `MT:`
+  prefix; the body says which mutation was killed and how.
+- Run the gem's spec suite after a change.
