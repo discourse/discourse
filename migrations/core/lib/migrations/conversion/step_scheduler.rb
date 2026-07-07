@@ -72,19 +72,29 @@ module Migrations
         Process.warmup
         @consolidator = Consolidator.new(@shard_manager, @writer, @fork_mutex)
 
-        @mutex.synchronize do
-          loop do
-            schedule
-            break if all_finished?
-            @condition.wait(@mutex)
+        begin
+          @mutex.synchronize do
+            loop do
+              schedule
+              break if all_finished?
+              @condition.wait(@mutex)
+            end
           end
+        ensure
+          # If the wait loop raises (e.g. Ctrl-C in `@condition.wait`), the
+          # coordinator threads and the consolidator are still running. Join and
+          # drain them before `Base#run`'s ensure tears down the IntermediateDB
+          # and shard directories out from under them. Under fork mode Ctrl-C
+          # reaches the children (same process group), so the join is quick; under
+          # --no-fork the inline step finishes first, which we accept — killing a
+          # thread mid-write is worse.
+          @threads.each(&:join)
+          # Every step is done, but the background merges may still be catching
+          # up. Show a "finishing up" status until they drain, so the display
+          # doesn't sit silently at 100%.
+          @merge_errors = @reporter.finalizing { @consolidator.drain }
         end
 
-        @threads.each(&:join)
-        # Every step is done, but the background merges may still be catching up.
-        # Show a "finishing up" status until they drain, so the display doesn't sit
-        # silently at 100%.
-        @merge_errors = @reporter.finalizing { @consolidator.drain }
         report_summary(monotonic_time - started_at)
         raise_summary_if_unsuccessful
       end
@@ -160,7 +170,10 @@ module Migrations
           outcome = :failed
           begin
             outcome = coordinator.run
-          rescue SignalException
+          rescue SignalException => e
+            # Record it, or the end-of-run ConvertError renders this step with an
+            # empty error class and message.
+            record_failure(step_class, e)
             outcome = :failed
           rescue StandardError => e
             # Must be recorded even if `run` should have handled it, or the step

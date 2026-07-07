@@ -8,12 +8,20 @@ RSpec.describe Migrations::Conversion::StepScheduler do
   class FakeCoordinator
     attr_reader :step_class
 
-    def initialize(step_class, scheduler, events:, outcome: :done, raise_in_run: false)
+    def initialize(
+      step_class,
+      scheduler,
+      events:,
+      outcome: :done,
+      raise_in_run: false,
+      raise_signal: false
+    )
       @step_class = step_class
       @scheduler = scheduler
       @events = events
       @outcome = outcome
       @raise_in_run = raise_in_run
+      @raise_signal = raise_signal
       @finish = Queue.new
     end
 
@@ -21,6 +29,7 @@ RSpec.describe Migrations::Conversion::StepScheduler do
       @events << @step_class.name.demodulize
       @finish.pop
 
+      raise Interrupt if @raise_signal
       raise "unhandled error in #{@step_class.name.demodulize}" if @raise_in_run
 
       if @outcome == :failed
@@ -94,6 +103,7 @@ RSpec.describe Migrations::Conversion::StepScheduler do
             events:,
             outcome: options.fetch(:outcome, :done),
             raise_in_run: options.fetch(:raise_in_run, false),
+            raise_signal: options.fetch(:raise_signal, false),
           )
         [step_class, coordinator]
       end
@@ -257,6 +267,21 @@ RSpec.describe Migrations::Conversion::StepScheduler do
       expect(error.message).to match(/skipped/)
     end
     expect(events).to be_empty
+  end
+
+  it "records a failure when a coordinator is interrupted by a signal" do
+    a, b = define_steps(:A, :B)
+    scheduler, by_name = build_scheduler([a, b], config: { a => { raise_signal: true } })
+
+    runner = run_in_background(scheduler)
+
+    expect([events.pop, events.pop].sort).to eq(%w[A B])
+    by_name["A"].finish!
+    by_name["B"].finish!
+
+    # The signal path must record the error, so the summary names it instead of
+    # rendering the step with an empty error class and message.
+    expect { runner.join }.to raise_error(Migrations::Conversion::ConvertError, /Interrupt/)
   end
 
   it "still finishes when a coordinator raises instead of reporting back" do
