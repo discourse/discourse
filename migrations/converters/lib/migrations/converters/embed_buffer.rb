@@ -2,7 +2,11 @@
 
 module Migrations
   module Converters
-    # Collects the embeds found while a post body is converted to Markdown.
+    # Collects the embeds found while an owner's body is converted to Markdown.
+    #
+    # The owner is any markdown-bearing record — a post body today, a user bio,
+    # group/category/badge descriptions later. Its kind is fixed at construction
+    # (`owner_type`), so one buffer serves one kind of owner.
     #
     # For each embed it can't finish yet (a quote, link, mention, poll, event or
     # upload), the Markdown converter calls the matching recorder here. We can't
@@ -10,9 +14,9 @@ module Migrations
     # import time. So the buffer mints a token, stores a descriptor that carries it,
     # and returns the token to put into the raw in place of the embed.
     #
-    # After the body is converted, the Posts step writes the post and then calls
-    # `write_for(post_id)`, which inserts every recorded embed into its linkage
-    # table. A descriptor's keys match the table columns (minus `post_id`).
+    # After the body is converted, the owning step writes the owner and then calls
+    # `write_for(owner_id)`, which inserts every recorded embed into its linkage
+    # table. A descriptor's keys match the table columns (minus `owner_type`/`owner_id`).
     #
     # Recording embeds is pure (no database, no maps), so building a buffer is safe
     # on the converter's worker threads. `write_for` is the only part that writes.
@@ -22,9 +26,12 @@ module Migrations
 
       attr_reader :quotes, :links, :mentions, :polls, :events, :uploads
 
+      # @param owner_type [Integer] the owning record's kind, an
+      #   `IntermediateDB::Enums::EmbedOwner` value (e.g. `EmbedOwner::POST`).
       # @param placeholder [Migrations::Placeholder] the token source; by default a
       #   fresh one (with its own nonce) per buffer.
-      def initialize(placeholder: Migrations::Placeholder.new)
+      def initialize(owner_type:, placeholder: Migrations::Placeholder.new)
+        @owner_type = owner_type
         @placeholder = placeholder
         @quotes = []
         @links = []
@@ -43,8 +50,8 @@ module Migrations
         record(@quotes, :quote, quoted_post_id:, quoted_user_id:, quoted_username:, quoted_name:)
       end
 
-      def link(url: nil, text: nil, target_topic_id: nil, target_post_id: nil)
-        record(@links, :link, url:, text:, target_topic_id:, target_post_id:)
+      def link(url: nil, text: nil, target_type: nil, target_id: nil)
+        record(@links, :link, url:, text:, target_type:, target_id:)
       end
 
       # @raise [ArgumentError] if `mention_type` is not nil or a known type.
@@ -66,9 +73,9 @@ module Migrations
       end
 
       # Empties the recorded embeds (in place, keeping the collections) so one buffer
-      # can be reused for the next post instead of allocating a fresh one — and its
-      # placeholder along with it — per post. The placeholder is kept: its running
-      # sequence is what keeps tokens unique across the posts that share the buffer.
+      # can be reused for the next owner instead of allocating a fresh one — and its
+      # placeholder along with it — per owner. The placeholder is kept: its running
+      # sequence is what keeps tokens unique across the owners that share the buffer.
       def clear
         @quotes.clear
         @links.clear
@@ -79,15 +86,16 @@ module Migrations
         self
       end
 
-      # Inserts each recorded embed into its linkage table. Call once per post, after
-      # the post row is written.
-      def write_for(post_id)
-        @quotes.each { |row| IntermediateDB::PostQuote.create(post_id:, **row) }
-        @links.each { |row| IntermediateDB::PostLink.create(post_id:, **row) }
-        @mentions.each { |row| IntermediateDB::PostMention.create(post_id:, **row) }
-        @polls.each { |row| IntermediateDB::PostPoll.create(post_id:, **row) }
-        @events.each { |row| IntermediateDB::PostEvent.create(post_id:, **row) }
-        @uploads.each { |row| IntermediateDB::PostUpload.create(post_id:, **row) }
+      # Inserts each recorded embed into its linkage table. Call once per owner, after
+      # the owner row is written.
+      def write_for(owner_id)
+        owner_type = @owner_type
+        @quotes.each { |row| IntermediateDB::EmbedQuote.create(owner_type:, owner_id:, **row) }
+        @links.each { |row| IntermediateDB::EmbedLink.create(owner_type:, owner_id:, **row) }
+        @mentions.each { |row| IntermediateDB::EmbedMention.create(owner_type:, owner_id:, **row) }
+        @polls.each { |row| IntermediateDB::EmbedPoll.create(owner_type:, owner_id:, **row) }
+        @events.each { |row| IntermediateDB::EmbedEvent.create(owner_type:, owner_id:, **row) }
+        @uploads.each { |row| IntermediateDB::EmbedUpload.create(owner_type:, owner_id:, **row) }
       end
 
       # @return [Array<String>] every token created, in order (used to assert they

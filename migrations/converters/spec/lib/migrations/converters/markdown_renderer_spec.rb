@@ -20,7 +20,11 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
   describe "#to_markdown deferring embeds into an EmbedBuffer" do
     subject(:renderer) { described_class.new(format: :bbcode) }
 
-    let(:buffer) { Migrations::Converters::EmbedBuffer.new }
+    let(:buffer) do
+      Migrations::Converters::EmbedBuffer.new(
+        owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
+      )
+    end
 
     it "defers an attributed quote, recording the linkage and preserving the body" do
       raw =
@@ -87,7 +91,11 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
   describe ".embed_handlers extraction" do
     # Upload and Mention nodes don't arise from BBCode, so exercise their
     # extraction lambdas directly against the real AST nodes.
-    let(:sink) { Migrations::Converters::EmbedBuffer.new }
+    let(:sink) do
+      Migrations::Converters::EmbedBuffer.new(
+        owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
+      )
+    end
 
     it "maps an Upload node's sha1 to upload_id" do
       _node_class, extract = described_class.embed_handlers.fetch(:upload)

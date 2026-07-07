@@ -3,7 +3,11 @@
 RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   subject(:extractor) { described_class.new }
 
-  let(:buffer) { Migrations::Converters::EmbedBuffer.new }
+  let(:buffer) do
+    Migrations::Converters::EmbedBuffer.new(
+      owner_type: Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST,
+    )
+  end
 
   def extract(raw)
     extractor.extract(raw, on_embed: buffer)

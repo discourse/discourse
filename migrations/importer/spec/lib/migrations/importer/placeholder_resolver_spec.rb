@@ -20,11 +20,15 @@ class FakePlaceholderMaps
 end
 
 RSpec.describe Migrations::Importer::PlaceholderResolver do
-  subject(:resolver) { described_class.new(intermediate_db, maps) }
+  subject(:resolver) { described_class.new(intermediate_db, maps, owner_type:) }
+
+  EmbedOwner = Migrations::Database::IntermediateDB::Enums::EmbedOwner
+  LinkTarget = Migrations::Database::IntermediateDB::Enums::LinkTarget
 
   let(:placeholder) { Migrations::Placeholder.new(nonce: "n") }
   let(:intermediate_db) { @intermediate_db }
   let(:maps) { FakePlaceholderMaps.new }
+  let(:owner_type) { EmbedOwner::POST }
 
   around do |example|
     Dir.mktmpdir do |dir|
@@ -48,28 +52,33 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       mention = placeholder.mint(:mention)
       upload = placeholder.mint(:upload)
 
-      Migrations::Database::IntermediateDB::PostQuote.create(
-        post_id: 100,
+      Migrations::Database::IntermediateDB::EmbedQuote.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 100,
         placeholder: quote,
         quoted_post_id: 200,
         quoted_user_id: 5,
       )
-      Migrations::Database::IntermediateDB::PostLink.create(
-        post_id: 100,
+      Migrations::Database::IntermediateDB::EmbedLink.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 100,
         placeholder: link,
         url: "https://old.example.com/x",
         text: "See",
-        target_topic_id: 300,
+        target_type: LinkTarget::TOPIC,
+        target_id: 300,
       )
-      Migrations::Database::IntermediateDB::PostMention.create(
-        post_id: 100,
+      Migrations::Database::IntermediateDB::EmbedMention.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 100,
         placeholder: mention,
         mention_type: "user",
         target_id: 7,
         name: "stale-name",
       )
-      Migrations::Database::IntermediateDB::PostUpload.create(
-        post_id: 100,
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 100,
         placeholder: upload,
         upload_id: "sha1",
       )
@@ -99,7 +108,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
             "sha1" => "![pic](upload://sha1.png)",
           },
         )
-      resolver = described_class.new(intermediate_db, maps)
+      resolver = described_class.new(intermediate_db, maps, owner_type: EmbedOwner::POST)
 
       raw = "Q #{quote} L #{link} M #{mention} U #{upload} end"
 
@@ -112,17 +121,19 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(Migrations::Placeholder).not_to be_include(resolved[100])
     end
 
-    it "resolves a batch of posts, loading linkage rows once" do
+    it "resolves a batch of owners, loading linkage rows once" do
       first = placeholder.mint(:mention)
       second = placeholder.mint(:mention)
 
-      Migrations::Database::IntermediateDB::PostMention.create(
-        post_id: 1,
+      Migrations::Database::IntermediateDB::EmbedMention.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
         placeholder: first,
         mention_type: "all",
       )
-      Migrations::Database::IntermediateDB::PostMention.create(
-        post_id: 2,
+      Migrations::Database::IntermediateDB::EmbedMention.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 2,
         placeholder: second,
         mention_type: "here",
       )
@@ -133,11 +144,27 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolved).to eq({ 1 => "a  @all  b", 2 => "c  @here  d" })
     end
 
+    it "only loads linkage rows of its own owner_type" do
+      token = placeholder.mint(:mention)
+      Migrations::Database::IntermediateDB::EmbedMention.create(
+        owner_type: EmbedOwner::USER,
+        owner_id: 1,
+        placeholder: token,
+        mention_type: "all",
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "a #{token} b" }])
+
+      # The row belongs to a user, not a post, so the token is an orphan here.
+      expect(resolved[1]).to eq("a  b")
+      expect(resolver.orphan_sink.map(&:placeholder)).to eq([token])
+    end
+
     it "leaves a body untouched when it has no linkage rows" do
       expect(resolver.resolve_all([{ id: 9, raw: "plain body" }])).to eq({ 9 => "plain body" })
     end
 
-    it "issues no linkage queries when no post in the batch has a token" do
+    it "issues no linkage queries when no owner in the batch has a token" do
       allow(intermediate_db).to receive(:query).and_call_original
 
       resolved = resolver.resolve_all([{ id: 1, raw: "plain" }, { id: 2, raw: "also plain" }])
@@ -146,10 +173,11 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolved).to eq({ 1 => "plain", 2 => "also plain" })
     end
 
-    it "loads only the posts that carry a token" do
+    it "loads only the owners that carry a token" do
       token = placeholder.mint(:mention)
-      Migrations::Database::IntermediateDB::PostMention.create(
-        post_id: 2,
+      Migrations::Database::IntermediateDB::EmbedMention.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 2,
         placeholder: token,
         mention_type: "all",
       )
@@ -160,15 +188,69 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     end
   end
 
+  describe "link target dispatch" do
+    it "rewrites a topic target through the topic map" do
+      link = placeholder.mint(:link)
+      Migrations::Database::IntermediateDB::EmbedLink.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
+        placeholder: link,
+        url: "https://old.example.com/x",
+        target_type: LinkTarget::TOPIC,
+        target_id: 300,
+      )
+      maps = FakePlaceholderMaps.new(topic_id: { 300 => 99 })
+      resolver = described_class.new(intermediate_db, maps, owner_type: EmbedOwner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
+
+      expect(resolved[1]).to eq("x https://dest.example.com/t/99 y")
+    end
+
+    it "rewrites a post target through the post map" do
+      link = placeholder.mint(:link)
+      Migrations::Database::IntermediateDB::EmbedLink.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
+        placeholder: link,
+        url: "https://old.example.com/x",
+        target_type: LinkTarget::POST,
+        target_id: 200,
+      )
+      maps = FakePlaceholderMaps.new(post: { 200 => { topic_id: 42, post_number: 3 } })
+      resolver = described_class.new(intermediate_db, maps, owner_type: EmbedOwner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
+
+      expect(resolved[1]).to eq("x https://dest.example.com/t/42/3 y")
+    end
+
+    it "keeps the source URL for a link without a target" do
+      link = placeholder.mint(:link)
+      Migrations::Database::IntermediateDB::EmbedLink.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
+        placeholder: link,
+        url: "https://elsewhere.example.com/page",
+      )
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
+
+      expect(resolved[1]).to eq("x https://elsewhere.example.com/page y")
+    end
+  end
+
   describe "rendering fallbacks" do
     it "keeps the source URL when the link target is unmapped" do
       link = placeholder.mint(:link)
-      Migrations::Database::IntermediateDB::PostLink.create(
-        post_id: 1,
+      Migrations::Database::IntermediateDB::EmbedLink.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
         placeholder: link,
         url: "https://old.example.com/x",
         text: "See",
-        target_topic_id: 300,
+        target_type: LinkTarget::TOPIC,
+        target_id: 300,
       )
 
       resolved = resolver.resolve_all([{ id: 1, raw: "x #{link} y" }])
@@ -178,8 +260,9 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
     it "falls back to the recorded username when the user is unmapped" do
       quote = placeholder.mint(:quote)
-      Migrations::Database::IntermediateDB::PostQuote.create(
-        post_id: 1,
+      Migrations::Database::IntermediateDB::EmbedQuote.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
         placeholder: quote,
         quoted_user_id: 5,
         quoted_username: "ghost",
@@ -192,8 +275,9 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
     it "falls back to the recorded name when the user is unmapped" do
       quote = placeholder.mint(:quote)
-      Migrations::Database::IntermediateDB::PostQuote.create(
-        post_id: 1,
+      Migrations::Database::IntermediateDB::EmbedQuote.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
         placeholder: quote,
         quoted_user_id: 5,
         quoted_username: "ghost",
@@ -207,7 +291,11 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
     it "renders a bare [quote] when nothing identifies the quoted author" do
       quote = placeholder.mint(:quote)
-      Migrations::Database::IntermediateDB::PostQuote.create(post_id: 1, placeholder: quote)
+      Migrations::Database::IntermediateDB::EmbedQuote.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
+        placeholder: quote,
+      )
 
       resolved = resolver.resolve_all([{ id: 1, raw: "x #{quote} y" }])
 
@@ -216,8 +304,9 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
     it "drops an entity-backed embed whose markdown is unavailable" do
       poll = placeholder.mint(:poll)
-      Migrations::Database::IntermediateDB::PostPoll.create(
-        post_id: 1,
+      Migrations::Database::IntermediateDB::EmbedPoll.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
         placeholder: poll,
         poll_id: 3,
       )
@@ -230,8 +319,9 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
     it "keeps backslashes and digits in replacement content verbatim" do
       link = placeholder.mint(:link)
-      Migrations::Database::IntermediateDB::PostLink.create(
-        post_id: 1,
+      Migrations::Database::IntermediateDB::EmbedLink.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
         placeholder: link,
         url: 'https://old.example.com/a\1b',
         text: 'C:\temp\readme',
@@ -248,22 +338,25 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
   describe "#unresolved_sink" do
     let(:maps) { FakePlaceholderMaps.new(post: { 100 => { topic_id: 42, post_number: 3 } }) }
 
-    it "records each entity-backed embed the maps can't resolve, with the post URL" do
+    it "records each entity-backed embed the maps can't resolve, with the owner URL" do
       upload = placeholder.mint(:upload)
       poll = placeholder.mint(:poll)
       event = placeholder.mint(:event)
-      Migrations::Database::IntermediateDB::PostUpload.create(
-        post_id: 100,
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 100,
         placeholder: upload,
         upload_id: "sha1",
       )
-      Migrations::Database::IntermediateDB::PostPoll.create(
-        post_id: 100,
+      Migrations::Database::IntermediateDB::EmbedPoll.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 100,
         placeholder: poll,
         poll_id: 7,
       )
-      Migrations::Database::IntermediateDB::PostEvent.create(
-        post_id: 100,
+      Migrations::Database::IntermediateDB::EmbedEvent.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 100,
         placeholder: event,
         event_id: 9,
       )
@@ -274,33 +367,34 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         described_class::UnresolvedEmbed.new(
           kind: :upload,
           entity_id: "sha1",
-          post_id: 100,
-          post_url: "https://dest.example.com/t/42/3",
+          owner_id: 100,
+          owner_url: "https://dest.example.com/t/42/3",
         ),
         described_class::UnresolvedEmbed.new(
           kind: :poll,
           entity_id: 7,
-          post_id: 100,
-          post_url: "https://dest.example.com/t/42/3",
+          owner_id: 100,
+          owner_url: "https://dest.example.com/t/42/3",
         ),
         described_class::UnresolvedEmbed.new(
           kind: :event,
           entity_id: 9,
-          post_id: 100,
-          post_url: "https://dest.example.com/t/42/3",
+          owner_id: 100,
+          owner_url: "https://dest.example.com/t/42/3",
         ),
       )
     end
 
     it "does not record entity-backed embeds that resolve" do
       upload = placeholder.mint(:upload)
-      Migrations::Database::IntermediateDB::PostUpload.create(
-        post_id: 100,
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 100,
         placeholder: upload,
         upload_id: "sha1",
       )
       maps = FakePlaceholderMaps.new(upload_markdown: { "sha1" => "![x](upload://sha1.png)" })
-      resolver = described_class.new(intermediate_db, maps)
+      resolver = described_class.new(intermediate_db, maps, owner_type: EmbedOwner::POST)
 
       resolver.resolve_all([{ id: 100, raw: "x #{upload} y" }])
 
@@ -310,13 +404,15 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     it "does not record quotes, links or mentions (they fall back to source values)" do
       link = placeholder.mint(:link)
       mention = placeholder.mint(:mention)
-      Migrations::Database::IntermediateDB::PostLink.create(
-        post_id: 100,
+      Migrations::Database::IntermediateDB::EmbedLink.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 100,
         placeholder: link,
         url: "https://old.example.com/x",
       )
-      Migrations::Database::IntermediateDB::PostMention.create(
-        post_id: 100,
+      Migrations::Database::IntermediateDB::EmbedMention.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 100,
         placeholder: mention,
         mention_type: "user",
         name: "ghost",
@@ -327,29 +423,32 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolver.unresolved_sink).to be_empty
     end
 
-    it "leaves the post URL nil when the containing post is unmapped" do
+    it "leaves the owner URL nil when the containing post is unmapped" do
       upload = placeholder.mint(:upload)
-      Migrations::Database::IntermediateDB::PostUpload.create(
-        post_id: 555,
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 555,
         placeholder: upload,
         upload_id: "sha1",
       )
 
       resolver.resolve_all([{ id: 555, raw: "x #{upload} y" }])
 
-      expect(resolver.unresolved_sink.first.post_url).to be_nil
+      expect(resolver.unresolved_sink.first.owner_url).to be_nil
     end
 
     it "accumulates across resolve_all calls for the run" do
       first = placeholder.mint(:upload)
       second = placeholder.mint(:upload)
-      Migrations::Database::IntermediateDB::PostUpload.create(
-        post_id: 100,
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 100,
         placeholder: first,
         upload_id: "a",
       )
-      Migrations::Database::IntermediateDB::PostUpload.create(
-        post_id: 100,
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 100,
         placeholder: second,
         upload_id: "b",
       )
@@ -362,10 +461,17 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
     it "writes to an injected sink instead of buffering in memory" do
       sink = []
-      resolver = described_class.new(intermediate_db, maps, unresolved_sink: sink)
+      resolver =
+        described_class.new(
+          intermediate_db,
+          maps,
+          owner_type: EmbedOwner::POST,
+          unresolved_sink: sink,
+        )
       upload = placeholder.mint(:upload)
-      Migrations::Database::IntermediateDB::PostUpload.create(
-        post_id: 100,
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 100,
         placeholder: upload,
         upload_id: "sha1",
       )
@@ -380,7 +486,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
   describe "#orphan_sink" do
     let(:maps) { FakePlaceholderMaps.new(post: { 100 => { topic_id: 42, post_number: 3 } }) }
 
-    it "strips a token with no linkage row and records it with the post URL" do
+    it "strips a token with no linkage row and records it with the owner URL" do
       orphan = placeholder.mint(:quote)
 
       resolved = resolver.resolve_all([{ id: 100, raw: "before #{orphan} after" }])
@@ -390,8 +496,8 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolver.orphan_sink).to contain_exactly(
         described_class::OrphanPlaceholder.new(
           kind: "quote",
-          post_id: 100,
-          post_url: "https://dest.example.com/t/42/3",
+          owner_id: 100,
+          owner_url: "https://dest.example.com/t/42/3",
           placeholder: orphan,
         ),
       )
@@ -400,8 +506,9 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     it "strips an orphan while still resolving a real embed in the same body" do
       upload = placeholder.mint(:upload)
       orphan = placeholder.mint(:link)
-      Migrations::Database::IntermediateDB::PostUpload.create(
-        post_id: 100,
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 100,
         placeholder: upload,
         upload_id: "sha1",
       )
@@ -417,7 +524,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
             "sha1" => "![x](upload://sha1.png)",
           },
         )
-      resolver = described_class.new(intermediate_db, maps)
+      resolver = described_class.new(intermediate_db, maps, owner_type: EmbedOwner::POST)
 
       resolved = resolver.resolve_all([{ id: 100, raw: "#{upload} and #{orphan}" }])
 
@@ -428,8 +535,9 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
     it "records nothing when every token has a linkage row" do
       upload = placeholder.mint(:upload)
-      Migrations::Database::IntermediateDB::PostUpload.create(
-        post_id: 100,
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 100,
         placeholder: upload,
         upload_id: "sha1",
       )
@@ -439,12 +547,77 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       expect(resolver.orphan_sink).to be_empty
     end
 
-    it "leaves the post URL nil when the containing post is unmapped" do
+    it "leaves the owner URL nil when the containing post is unmapped" do
       orphan = placeholder.mint(:quote)
 
       resolver.resolve_all([{ id: 555, raw: "x #{orphan} y" }])
 
-      expect(resolver.orphan_sink.first).to have_attributes(post_id: 555, post_url: nil)
+      expect(resolver.orphan_sink.first).to have_attributes(owner_id: 555, owner_url: nil)
+    end
+  end
+
+  describe "a USER-owned batch" do
+    let(:owner_type) { EmbedOwner::USER }
+    let(:maps) { FakePlaceholderMaps.new(user: { 7 => { username: "alice", name: "Alice A" } }) }
+
+    it "resolves embeds recorded against a user's markdown" do
+      upload = placeholder.mint(:upload)
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: EmbedOwner::USER,
+        owner_id: 7,
+        placeholder: upload,
+        upload_id: "sha1",
+      )
+      maps = FakePlaceholderMaps.new(upload_markdown: { "sha1" => "![x](upload://sha1.png)" })
+      resolver = described_class.new(intermediate_db, maps, owner_type: EmbedOwner::USER)
+
+      resolved = resolver.resolve_all([{ id: 7, raw: "bio #{upload} end" }])
+
+      expect(resolved[7]).to eq("bio ![x](upload://sha1.png) end")
+    end
+
+    it "reports the user's profile URL for an unresolved embed" do
+      upload = placeholder.mint(:upload)
+      Migrations::Database::IntermediateDB::EmbedUpload.create(
+        owner_type: EmbedOwner::USER,
+        owner_id: 7,
+        placeholder: upload,
+        upload_id: "sha1",
+      )
+
+      resolver.resolve_all([{ id: 7, raw: "bio #{upload} end" }])
+
+      expect(resolver.unresolved_sink).to contain_exactly(
+        described_class::UnresolvedEmbed.new(
+          kind: :upload,
+          entity_id: "sha1",
+          owner_id: 7,
+          owner_url: "https://dest.example.com/u/alice",
+        ),
+      )
+    end
+
+    it "reports the user's profile URL for an orphan token" do
+      orphan = placeholder.mint(:quote)
+
+      resolver.resolve_all([{ id: 7, raw: "bio #{orphan} end" }])
+
+      expect(resolver.orphan_sink).to contain_exactly(
+        described_class::OrphanPlaceholder.new(
+          kind: "quote",
+          owner_id: 7,
+          owner_url: "https://dest.example.com/u/alice",
+          placeholder: orphan,
+        ),
+      )
+    end
+
+    it "leaves the owner URL nil when the user is unmapped" do
+      orphan = placeholder.mint(:quote)
+
+      resolver.resolve_all([{ id: 99, raw: "bio #{orphan} end" }])
+
+      expect(resolver.orphan_sink.first).to have_attributes(owner_id: 99, owner_url: nil)
     end
   end
 end

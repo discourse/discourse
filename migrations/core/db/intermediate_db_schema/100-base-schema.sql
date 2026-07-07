@@ -117,6 +117,74 @@ CREATE TABLE category_users
 );
 
 
+CREATE TABLE embed_events
+(
+    event_id    NUMERIC,
+    owner_id    NUMERIC      NOT NULL,
+    owner_type  ENUM_INTEGER NOT NULL,
+    placeholder TEXT         NOT NULL
+);
+
+CREATE INDEX idx_embed_events_owner_type_owner_id ON embed_events (owner_type, owner_id);
+
+CREATE TABLE embed_links
+(
+    owner_id    NUMERIC      NOT NULL,
+    owner_type  ENUM_INTEGER NOT NULL,
+    placeholder TEXT         NOT NULL,
+    target_id   NUMERIC,
+    target_type ENUM_INTEGER,
+    text        TEXT,
+    url         TEXT
+);
+
+CREATE INDEX idx_embed_links_owner_type_owner_id ON embed_links (owner_type, owner_id);
+
+CREATE TABLE embed_mentions
+(
+    mention_type TEXT,
+    name         TEXT,
+    owner_id     NUMERIC      NOT NULL,
+    owner_type   ENUM_INTEGER NOT NULL,
+    placeholder  TEXT         NOT NULL,
+    target_id    NUMERIC
+);
+
+CREATE INDEX idx_embed_mentions_owner_type_owner_id ON embed_mentions (owner_type, owner_id);
+
+CREATE TABLE embed_polls
+(
+    owner_id    NUMERIC      NOT NULL,
+    owner_type  ENUM_INTEGER NOT NULL,
+    placeholder TEXT         NOT NULL,
+    poll_id     NUMERIC
+);
+
+CREATE INDEX idx_embed_polls_owner_type_owner_id ON embed_polls (owner_type, owner_id);
+
+CREATE TABLE embed_quotes
+(
+    owner_id        NUMERIC      NOT NULL,
+    owner_type      ENUM_INTEGER NOT NULL,
+    placeholder     TEXT         NOT NULL,
+    quoted_name     TEXT,
+    quoted_post_id  NUMERIC,
+    quoted_user_id  NUMERIC,
+    quoted_username TEXT
+);
+
+CREATE INDEX idx_embed_quotes_owner_type_owner_id ON embed_quotes (owner_type, owner_id);
+
+CREATE TABLE embed_uploads
+(
+    owner_id    NUMERIC      NOT NULL,
+    owner_type  ENUM_INTEGER NOT NULL,
+    placeholder TEXT         NOT NULL,
+    upload_id   TEXT
+);
+
+CREATE INDEX idx_embed_uploads_owner_type_owner_id ON embed_uploads (owner_type, owner_id);
+
 CREATE TABLE group_users
 (
     group_id           NUMERIC  NOT NULL,
@@ -183,68 +251,6 @@ CREATE TABLE permalink_normalizations
     normalization TEXT NOT NULL PRIMARY KEY
 );
 
-
-CREATE TABLE post_events
-(
-    event_id    NUMERIC,
-    placeholder TEXT    NOT NULL,
-    post_id     NUMERIC NOT NULL
-);
-
-CREATE INDEX idx_post_events_post_id ON post_events (post_id);
-
-CREATE TABLE post_links
-(
-    placeholder     TEXT    NOT NULL,
-    post_id         NUMERIC NOT NULL,
-    target_post_id  NUMERIC,
-    target_topic_id NUMERIC,
-    text            TEXT,
-    url             TEXT
-);
-
-CREATE INDEX idx_post_links_post_id ON post_links (post_id);
-
-CREATE TABLE post_mentions
-(
-    mention_type TEXT,
-    name         TEXT,
-    placeholder  TEXT    NOT NULL,
-    post_id      NUMERIC NOT NULL,
-    target_id    NUMERIC
-);
-
-CREATE INDEX idx_post_mentions_post_id ON post_mentions (post_id);
-
-CREATE TABLE post_polls
-(
-    placeholder TEXT    NOT NULL,
-    poll_id     NUMERIC,
-    post_id     NUMERIC NOT NULL
-);
-
-CREATE INDEX idx_post_polls_post_id ON post_polls (post_id);
-
-CREATE TABLE post_quotes
-(
-    placeholder     TEXT    NOT NULL,
-    post_id         NUMERIC NOT NULL,
-    quoted_name     TEXT,
-    quoted_post_id  NUMERIC,
-    quoted_user_id  NUMERIC,
-    quoted_username TEXT
-);
-
-CREATE INDEX idx_post_quotes_post_id ON post_quotes (post_id);
-
-CREATE TABLE post_uploads
-(
-    placeholder TEXT    NOT NULL,
-    post_id     NUMERIC NOT NULL,
-    upload_id   TEXT
-);
-
-CREATE INDEX idx_post_uploads_post_id ON post_uploads (post_id);
 
 CREATE TABLE posts
 (

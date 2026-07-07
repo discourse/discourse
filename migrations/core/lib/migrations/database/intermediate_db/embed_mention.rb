@@ -7,37 +7,50 @@
 module Migrations
   module Database
     module IntermediateDB
-      module PostMention
+      module EmbedMention
         SQL = <<~SQL
-          INSERT INTO post_mentions (
+          INSERT INTO embed_mentions (
             mention_type,
             name,
+            owner_id,
+            owner_type,
             placeholder,
-            post_id,
             target_id
           )
           VALUES (
-            ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
 
-        # Creates a new `post_mentions` record in the IntermediateDB.
+        # Creates a new `embed_mentions` record in the IntermediateDB.
         #
         # @param mention_type   [String, nil]
         # @param name           [String, nil]
+        # @param owner_id       [Integer, String]
+        # @param owner_type     [Integer]
+        #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
         # @param placeholder    [String]
-        # @param post_id        [Integer, String]
         # @param target_id      [Integer, String, nil]
         #
         # @return [void]
-        def self.create(mention_type: nil, name: nil, placeholder:, post_id:, target_id: nil)
+        #
+        # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
+        def self.create(
+          mention_type: nil,
+          name: nil,
+          owner_id:,
+          owner_type:,
+          placeholder:,
+          target_id: nil
+        )
           Migrations::Database::IntermediateDB.insert(
             SQL,
             mention_type,
             name,
+            owner_id,
+            owner_type,
             placeholder,
-            post_id,
             target_id,
           )
         end
