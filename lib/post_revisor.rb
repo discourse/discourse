@@ -362,6 +362,8 @@ class PostRevisor
 
       revise_topic
       advance_draft_sequence if !opts[:keep_existing_draft]
+
+      raise ActiveRecord::Rollback if !successfully_saved_post_and_topic
     end
 
     # bail out if the post or topic failed to save
