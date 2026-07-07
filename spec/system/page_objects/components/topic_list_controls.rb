@@ -25,6 +25,10 @@ module PageObjects
         has_css?(".nav-item_unread", exact_text: text)
       end
 
+      def has_no_unread?
+        has_no_css?(".nav-item_unread:not(.hidden)")
+      end
+
       def dismiss_unread(untrack: false)
         click_button("dismiss-topics-top")
         find(".dismiss-read-modal__stop-tracking").click if untrack

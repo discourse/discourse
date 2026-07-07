@@ -352,6 +352,85 @@ RSpec.describe TopicTrackingState do
     end
   end
 
+  describe ".publish_unread_correction" do
+    let(:other_user) { Fabricate(:user) }
+
+    before { Fabricate(:topic_user_tracking, topic: topic, user: other_user) }
+
+    it "publishes the topic's current highest_post_number to tracking users" do
+      Fabricate(:post, topic: topic)
+      Fabricate(:post, topic: topic)
+      Topic.reset_highest(topic.id)
+      topic.posts.last.trash!
+      Topic.reset_highest(topic.id)
+      topic.reload
+
+      message =
+        MessageBus
+          .track_publish("/unread") { TopicTrackingState.publish_unread_correction(topic) }
+          .first
+
+      data = message.data
+
+      expect(message.user_ids).to include(other_user.id)
+      expect(data["topic_id"]).to eq(topic.id)
+      expect(data["message_type"]).to eq(described_class::UNREAD_MESSAGE_TYPE)
+      expect(data["payload"]["highest_post_number"]).to eq(topic.highest_post_number)
+      expect(data["payload"]["category_id"]).to eq(topic.category_id)
+      expect(data["payload"]["archetype"]).to eq(Archetype.default)
+    end
+
+    it "includes tags as objects with id when tagging is enabled" do
+      SiteSetting.tagging_enabled = true
+      tag = Fabricate(:tag)
+      topic.tags = [tag]
+      topic.save!
+
+      message =
+        MessageBus
+          .track_publish("/unread") { TopicTrackingState.publish_unread_correction(topic) }
+          .first
+
+      expect(message.data["payload"]["tags"]).to contain_exactly({ "id" => tag.id })
+    end
+
+    it "does not publish for private message topics" do
+      messages =
+        MessageBus.track_publish do
+          TopicTrackingState.publish_unread_correction(private_message_topic)
+        end
+
+      expect(messages).to eq([])
+    end
+
+    it "does not publish when there are no tracking users" do
+      TopicUser.where(topic: topic).destroy_all
+
+      messages =
+        MessageBus.track_publish("/unread") { TopicTrackingState.publish_unread_correction(topic) }
+
+      expect(messages).to eq([])
+    end
+
+    it "only publishes to users with access in restricted categories" do
+      group = Fabricate(:group)
+      category = Fabricate(:private_category, group: group)
+      topic.update!(category: category)
+
+      messages =
+        MessageBus.track_publish("/unread") { TopicTrackingState.publish_unread_correction(topic) }
+      expect(messages).to eq([])
+
+      group.add(other_user)
+
+      message =
+        MessageBus
+          .track_publish("/unread") { TopicTrackingState.publish_unread_correction(topic) }
+          .first
+      expect(message.user_ids).to contain_exactly(other_user.id)
+    end
+  end
+
   describe "#publish_muted" do
     let(:user) { Fabricate(:user, last_seen_at: Date.today, refresh_auto_groups: true) }
     let(:post) { create_post(user: user) }

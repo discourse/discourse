@@ -83,6 +83,14 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
         tags: null,
         notification_level: NotificationLevels.TRACKING,
       },
+      {
+        topic_id: 7,
+        deleted: true,
+        last_read_post_number: 1,
+        highest_post_number: 7,
+        category_id: 7,
+        notification_level: NotificationLevels.TRACKING,
+      },
     ]);
 
     let randomUnread = 0;
@@ -412,14 +420,37 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       {
         topic_id: 111,
         deleted: false,
+        last_read_post_number: null,
+        notification_level: NotificationLevels.TRACKING,
+        category_id: 1,
+        created_in_new_period: true,
       },
     ]);
+    trackingState.trackIncoming("all");
+    trackingState.notifyIncoming({
+      topic_id: 111,
+      message_type: "new_topic",
+      payload: { category_id: 1 },
+    });
+
+    assert.strictEqual(trackingState.countNew({ categoryId: 1 }), 1);
+    assert.strictEqual(trackingState.incomingCount, 1);
 
     await publishToMessageBus("/delete", { topic_id: 111 });
 
     assert.true(
       trackingState.findState(111).deleted,
       "marks the topic as deleted"
+    );
+    assert.strictEqual(
+      trackingState.countNew({ categoryId: 1 }),
+      0,
+      "removes the deleted topic from the new count"
+    );
+    assert.strictEqual(
+      trackingState.incomingCount,
+      0,
+      "removes the deleted topic from incoming"
     );
     assert.strictEqual(
       trackingState.messageCount,
@@ -678,6 +709,34 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     assert.strictEqual(trackingState.countNew({ categoryId: 1 }), 3);
     assert.strictEqual(trackingState.countNew({ categoryId: 2 }), 2);
     assert.strictEqual(trackingState.countNew({ categoryId: 3 }), 1);
+
+    trackingState.states.set("t116", {
+      deleted: true,
+      last_read_post_number: null,
+      id: 116,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: 1,
+      created_in_new_period: true,
+    });
+    trackingState.states.set("t117", {
+      deleted: true,
+      last_read_post_number: 1,
+      highest_post_number: 2,
+      id: 117,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: 1,
+    });
+    trackingState.states.set("t118", {
+      last_read_post_number: 1,
+      highest_post_number: 2,
+      id: 118,
+      notification_level: NotificationLevels.TRACKING,
+      category_id: 1,
+    });
+
+    assert.strictEqual(trackingState.countNew({ categoryId: 1 }), 3);
+    assert.strictEqual(trackingState.countUnread({ categoryId: 1 }), 1);
+    assert.strictEqual(trackingState.countNewAndUnread({ categoryId: 1 }), 4);
 
     trackingState.states.set("t115", {
       last_read_post_number: null,
