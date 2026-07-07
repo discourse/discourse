@@ -2,7 +2,7 @@
 !/spec/support/fixtures/**/*.sql
 
 /config/upload.yml
-/lib/converters/**/settings.local.yml
+/converters/lib/migrations/converters/**/settings.local.yml
 
 # converters within this directory should be ignored
 /private/

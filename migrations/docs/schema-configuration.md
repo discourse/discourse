@@ -57,7 +57,7 @@ Each table has its own file in `tables/`. The basic structure:
 ```ruby
 # frozen_string_literal: true
 
-Migrations::Database::Schema.table :users do
+Migrations::Tooling::Schema.table :users do
   include_all
 end
 ```
@@ -71,7 +71,7 @@ Every source-backed table must specify a column inclusion strategy. There are fo
 Include every column from the source table. Simplest starting point.
 
 ```ruby
-Migrations::Database::Schema.table :users do
+Migrations::Tooling::Schema.table :users do
   include_all
 end
 ```
@@ -83,7 +83,7 @@ validator requires every database column to be accounted for, so new columns are
 excluded.
 
 ```ruby
-Migrations::Database::Schema.table :users do
+Migrations::Tooling::Schema.table :users do
   include :id, :username, :email, :created_at
   ignore :admin, :moderator, reason: "Not needed"
 end
@@ -95,7 +95,7 @@ Include columns that are globally ignored (via conventions) or auto-ignored (via
 `include` will produce a validation error for such columns; use `include!` to explicitly override.
 
 ```ruby
-Migrations::Database::Schema.table :users do
+Migrations::Tooling::Schema.table :users do
   include :id, :username
   include! :updated_at # override global ignore from conventions
 end
@@ -107,7 +107,7 @@ Exclude specific columns; all others are included (implies `include_all`). You s
 reason.
 
 ```ruby
-Migrations::Database::Schema.table :topics do
+Migrations::Tooling::Schema.table :topics do
   ignore :bumped_at, :excerpt, :fancy_title, reason: "Calculated columns"
 end
 ```
@@ -117,7 +117,7 @@ end
 Use `column` to set options on an included source column:
 
 ```ruby
-Migrations::Database::Schema.table :users do
+Migrations::Tooling::Schema.table :users do
   include_all
 
   column :username, required: true
@@ -148,7 +148,7 @@ end
 Use `add_column` for columns that don't exist in the source table:
 
 ```ruby
-Migrations::Database::Schema.table :uploads do
+Migrations::Tooling::Schema.table :uploads do
   synthetic!
 
   add_column :id, :text
@@ -167,7 +167,7 @@ Options:
 Override the primary key when it differs from the source:
 
 ```ruby
-Migrations::Database::Schema.table :user_field_values do
+Migrations::Tooling::Schema.table :user_field_values do
   copy_structure_from :user_custom_fields
   primary_key :user_id, :field_id, :value
 end
@@ -183,7 +183,7 @@ Use a different database table as the column source. The resolver reads the actu
 from the specified table — it does not copy another table's DSL configuration.
 
 ```ruby
-Migrations::Database::Schema.table :user_field_values do
+Migrations::Tooling::Schema.table :user_field_values do
   copy_structure_from :user_custom_fields
   # columns are read from user_custom_fields in the database
 end
@@ -194,7 +194,7 @@ end
 The table has no source table. Only `add_column` is allowed.
 
 ```ruby
-Migrations::Database::Schema.table :uploads do
+Migrations::Tooling::Schema.table :uploads do
   synthetic!
 
   add_column :id, :text
@@ -243,7 +243,7 @@ schema.
 Auto-ignore columns from all non-ignored plugins:
 
 ```ruby
-Migrations::Database::Schema.table :users do
+Migrations::Tooling::Schema.table :users do
   include_all
   ignore_plugin_columns!
 end
@@ -252,7 +252,7 @@ end
 Auto-ignore columns from specific plugins only:
 
 ```ruby
-Migrations::Database::Schema.table :users do
+Migrations::Tooling::Schema.table :users do
   include_all
   ignore_plugin_columns! :polls, :discourse_ai
 end
@@ -294,7 +294,7 @@ model :manual
 Global column conventions apply across all tables. Defined in `conventions.rb`:
 
 ```ruby
-Migrations::Database::Schema.conventions do
+Migrations::Tooling::Schema.conventions do
   # Exact column name match
   column :id do
     rename_to :original_id
@@ -330,7 +330,7 @@ either all integers or all strings.
 Integer enum:
 
 ```ruby
-Migrations::Database::Schema.enum :visibility do
+Migrations::Tooling::Schema.enum :visibility do
   value :public, 0
   value :private, 1
   value :restricted, 2
@@ -340,7 +340,7 @@ end
 String enum:
 
 ```ruby
-Migrations::Database::Schema.enum :color do
+Migrations::Tooling::Schema.enum :color do
   value :red, "red"
   value :green, "green"
   value :blue, "blue"
@@ -350,7 +350,7 @@ end
 From a Ruby constant (must return a Hash or Array):
 
 ```ruby
-Migrations::Database::Schema.enum :upload_type do
+Migrations::Tooling::Schema.enum :upload_type do
   source { ::UploadCreator::TYPES_TO_CROP }
 end
 ```
@@ -360,7 +360,7 @@ end
 Tables and plugins to exclude entirely. Defined in `ignored.rb`:
 
 ```ruby
-Migrations::Database::Schema.ignored do
+Migrations::Tooling::Schema.ignored do
   # Ignore all tables and columns from a plugin
   plugin :chat, "Not migrated yet"
 
@@ -377,7 +377,7 @@ Controls where `schema generate` writes the SQL schema file, Ruby models, and en
 in `config.rb`:
 
 ```ruby
-Migrations::Database::Schema.configure do
+Migrations::Tooling::Schema.configure do
   output do
     schema_file "db/intermediate_db_schema/100-base-schema.sql"
 
