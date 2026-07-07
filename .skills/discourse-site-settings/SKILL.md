@@ -41,7 +41,17 @@ remove settings, use `discourse-migration`.
 - State the default or safest interpretation when ambiguity is likely.
 - Mention privacy/security boundaries that always apply.
 - If a setting only matters when another setting has a certain value, say so in the description.
+- When referencing another site setting, use the `{{setting:setting_name}}` token instead of writing
+  the raw setting name or hardcoding the translated label. This lets the admin UI render the
+  referenced setting consistently and avoids copy drifting when labels change.
 - Keep option names consistent with enum values and admin labels.
+
+## Dependent Settings
+
+- Add a validator when one setting only works if another setting is enabled, configured, or has a
+  compatible value.
+- Keep dependency enforcement server-side; admin descriptions are not enough.
+- Test both the valid and invalid combinations.
 
 ## Setting Types
 
@@ -129,13 +139,6 @@ Implementation notes:
 - Keep enum values short, lowercase, and underscore-separated.
 - When changing values before merge, update all tests and cache keys. After merge, treat value
   changes as migrations/compatibility work.
-
-### Dependent Settings
-
-- Add a validator when one setting only works if another setting is enabled, configured, or has a
-  compatible value.
-- Keep dependency enforcement server-side; admin descriptions are not enough.
-- Test both the valid and invalid combinations.
 
 ## Review Checklist
 
