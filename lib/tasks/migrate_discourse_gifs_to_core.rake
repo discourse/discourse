@@ -275,7 +275,7 @@ module DiscourseGifsMigration
           Discourse.system_user,
           "Migrated from #{DiscourseGifs::COMPONENT_NAME} theme component",
         )
-        success("enable_gifs: true (auto-enabled per task argument)")
+        success("enable_gifs: true (auto-enabled after migration)")
         migrated += 1
       rescue StandardError => e
         errors << e
@@ -339,9 +339,9 @@ module DiscourseGifsMigration
 end
 
 desc "Migrate #{DiscourseGifs::COMPONENT_NAME} theme component settings to core site settings. " \
-       "Set ENABLE_GIFS=1 to also flip enable_gifs to true after migration."
+       "enable_gifs is flipped to true after migration by default; set ENABLE_GIFS=0 to skip that."
 task "themes:discourse_gifs:migrate" => :environment do
-  enable_gifs = %w[true yes 1].include?(ENV["ENABLE_GIFS"].to_s.strip.downcase)
+  enable_gifs = !%w[false no 0].include?(ENV["ENABLE_GIFS"].to_s.strip.downcase)
 
   DiscourseGifsMigration.migrate_all(enable_gifs: enable_gifs)
 end
