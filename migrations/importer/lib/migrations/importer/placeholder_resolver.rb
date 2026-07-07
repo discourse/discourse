@@ -2,11 +2,12 @@
 
 module Migrations
   module Importer
-    # The import-time counterpart of `EmbedBuffer`. It swaps the tokens left in
-    # `post.raw` back to real Markdown, now that the `original_id -> discourse_id`
-    # maps exist.
+    # The import-time counterpart of `EmbedBuffer`. It swaps the tokens left in an
+    # owner's markdown back to real Markdown, now that the `original_id ->
+    # discourse_id` maps exist. One resolver instance serves one owner kind
+    # (`owner_type`); the owner is a post today, a user bio etc. later.
     #
-    # It loads every linkage row for a batch of posts once (one query per kind),
+    # It loads every linkage row for a batch of owners once (one query per kind),
     # then rewrites the bodies in memory. No SQL runs while substituting.
     #
     # ## The `maps` object
@@ -32,28 +33,31 @@ module Migrations
     #
     # A token with no linkage row at all is an orphan — the token and its row were
     # not written together upstream. It is stripped (so no U+E000 character reaches
-    # the post) and sent to {#orphan_sink}. The unresolved reporting can't see this
-    # case, because there is no row behind it.
+    # the owner's markdown) and sent to {#orphan_sink}. The unresolved reporting
+    # can't see this case, because there is no row behind it.
     class PlaceholderResolver
       # An embed whose entity the maps couldn't resolve. Its token becomes an empty
-      # string, so this record is the only trace left. `post_url` is the post's URL,
-      # or `nil` if the post is not mapped.
-      UnresolvedEmbed = Data.define(:kind, :entity_id, :post_id, :post_url)
+      # string, so this record is the only trace left. `owner_url` is the owning
+      # record's URL, or `nil` if it is not mapped.
+      UnresolvedEmbed = Data.define(:kind, :entity_id, :owner_id, :owner_url)
 
       # A token with no linkage row. `kind` is parsed from the token, so a report can
       # name what went missing. It matters most for quotes: stripping the opening-tag
       # token leaves the `[/quote]` behind (see #render_quote).
-      OrphanPlaceholder = Data.define(:kind, :post_id, :post_url, :placeholder)
+      OrphanPlaceholder = Data.define(:kind, :owner_id, :owner_url, :placeholder)
 
       TABLES = {
-        quote: "post_quotes",
-        link: "post_links",
-        mention: "post_mentions",
-        poll: "post_polls",
-        event: "post_events",
-        upload: "post_uploads",
+        quote: "embed_quotes",
+        link: "embed_links",
+        mention: "embed_mentions",
+        poll: "embed_polls",
+        event: "embed_events",
+        upload: "embed_uploads",
       }.freeze
       private_constant :TABLES
+
+      Enums = Migrations::Database::IntermediateDB::Enums
+      private_constant :Enums
 
       # Where unresolved embeds and orphan tokens go. Each is the sink passed to the
       # constructor — anything that responds to `<<`. By default an Array you can read
@@ -62,31 +66,34 @@ module Migrations
       # per embed in memory.
       attr_reader :unresolved_sink, :orphan_sink
 
+      # @param owner_type [Integer] the owner kind this resolver serves, an
+      #   `Enums::EmbedOwner` value (e.g. `EmbedOwner::POST`).
       # @param maps see the class description for the methods it must answer.
       # @param unresolved_sink [#<<] collects {UnresolvedEmbed}s.
       # @param orphan_sink [#<<] collects {OrphanPlaceholder}s.
-      def initialize(intermediate_db, maps, unresolved_sink: [], orphan_sink: [])
+      def initialize(intermediate_db, maps, owner_type:, unresolved_sink: [], orphan_sink: [])
         @intermediate_db = intermediate_db
         @maps = maps
+        @owner_type = owner_type
         @unresolved_sink = unresolved_sink
         @orphan_sink = orphan_sink
       end
 
-      # @param posts [Array<Hash>] each with `:id` (the source post original_id) and `:raw`.
-      # @return [Hash{Object => String}] source post id => resolved raw.
-      def resolve_all(posts)
-        # A post with no token in its raw has no embeds (the token and the row are
-        # written together), so there's nothing to load for it. Most posts are
+      # @param items [Array<Hash>] each with `:id` (the owner's original_id) and `:raw`.
+      # @return [Hash{Object => String}] owner original_id => resolved raw.
+      def resolve_all(items)
+        # An owner with no token in its raw has no embeds (the token and the row are
+        # written together), so there's nothing to load for it. Most bodies are
         # plain text, so this skips the linkage queries for the bulk of a batch.
         # `String#include?` of the one-char delimiter is a `memchr`, far cheaper
-        # than probing six indexes per post.
+        # than probing six indexes per owner.
         with_embeds =
-          posts.select { |post| post[:raw]&.include?(Migrations::Placeholder::DELIMITER) }
-        linkages = load_linkages(with_embeds.map { |post| post[:id] })
+          items.select { |item| item[:raw]&.include?(Migrations::Placeholder::DELIMITER) }
+        linkages = load_linkages(with_embeds.map { |item| item[:id] })
 
-        posts.each_with_object({}) do |post, result|
-          body = substitute(post[:raw], linkages[post[:id]])
-          result[post[:id]] = strip_orphans(body, post[:id])
+        items.each_with_object({}) do |item, result|
+          body = substitute(item[:raw], linkages[item[:id]])
+          result[item[:id]] = strip_orphans(body, item[:id])
         end
       end
 
@@ -115,17 +122,17 @@ module Migrations
 
       # Strips and records any token still here after substitution — it had no
       # linkage row. Usually there's none, so this is just one cheap check.
-      def strip_orphans(body, source_post_id)
+      def strip_orphans(body, owner_id)
         return body unless body && Migrations::Placeholder.include?(body)
 
-        post_url = post_url_for(source_post_id)
+        owner_url = owner_url_for(owner_id)
         Migrations::Placeholder
           .scan(body)
           .each do |token|
             @orphan_sink << OrphanPlaceholder.new(
               kind: Migrations::Placeholder.kind(token),
-              post_id: source_post_id,
-              post_url:,
+              owner_id:,
+              owner_url:,
               placeholder: token,
             )
           end
@@ -133,16 +140,18 @@ module Migrations
         body.gsub(Migrations::Placeholder::PATTERN, "")
       end
 
-      # One query per kind, grouped by post id. The only place that reads the database.
-      def load_linkages(post_ids)
+      # One query per kind, grouped by owner id. The only place that reads the database.
+      def load_linkages(owner_ids)
         buckets = Hash.new { |hash, key| hash[key] = [] }
-        return buckets if post_ids.empty?
+        return buckets if owner_ids.empty?
 
-        bind_params = (["?"] * post_ids.size).join(", ")
+        bind_params = (["?"] * owner_ids.size).join(", ")
 
         TABLES.each do |kind, table|
-          sql = "SELECT * FROM #{table} WHERE post_id IN (#{bind_params})"
-          @intermediate_db.query(sql, *post_ids) { |row| buckets[row[:post_id]] << [kind, row] }
+          sql = "SELECT * FROM #{table} WHERE owner_type = ? AND owner_id IN (#{bind_params})"
+          @intermediate_db.query(sql, @owner_type, *owner_ids) do |row|
+            buckets[row[:owner_id]] << [kind, row]
+          end
         end
 
         buckets
@@ -179,8 +188,8 @@ module Migrations
         @unresolved_sink << UnresolvedEmbed.new(
           kind:,
           entity_id:,
-          post_id: row[:post_id],
-          post_url: post_url_for(row[:post_id]),
+          owner_id: row[:owner_id],
+          owner_url: owner_url_for(row[:owner_id]),
         )
         ""
       end
@@ -211,10 +220,12 @@ module Migrations
 
       def render_link(row)
         url =
-          if row[:target_topic_id]
-            (topic_id = @maps.topic_id(row[:target_topic_id])) ? topic_url(topic_id) : row[:url]
-          elsif row[:target_post_id] && (post = @maps.post(row[:target_post_id]))
-            post[:topic_id] && post[:post_number] ? post_url(post) : row[:url]
+          case row[:target_type]
+          when Enums::LinkTarget::TOPIC
+            (topic_id = @maps.topic_id(row[:target_id])) ? topic_url(topic_id) : row[:url]
+          when Enums::LinkTarget::POST
+            post = @maps.post(row[:target_id])
+            post && post[:topic_id] && post[:post_number] ? post_url(post) : row[:url]
           else
             row[:url]
           end
@@ -246,11 +257,17 @@ module Migrations
         "#{@maps.base_url}/t/#{post[:topic_id]}/#{post[:post_number]}"
       end
 
-      # The URL of the post a token sits in, for reporting. `nil` if the post is not
-      # mapped (it normally is by the time we substitute).
-      def post_url_for(source_post_id)
-        post = @maps.post(source_post_id)
-        post && post[:topic_id] && post[:post_number] ? post_url(post) : nil
+      # The URL of the record a token sits in, for reporting. `nil` if that record
+      # is not mapped (it normally is by the time we substitute).
+      def owner_url_for(owner_id)
+        case @owner_type
+        when Enums::EmbedOwner::POST
+          post = @maps.post(owner_id)
+          post && post[:topic_id] && post[:post_number] ? post_url(post) : nil
+        when Enums::EmbedOwner::USER
+          username = @maps.user(owner_id)&.fetch(:username, nil)
+          username ? "#{@maps.base_url}/u/#{username}" : nil
+        end
       end
     end
   end

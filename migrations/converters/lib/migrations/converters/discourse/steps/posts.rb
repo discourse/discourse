@@ -60,7 +60,7 @@ module Migrations
             # One buffer, reused (cleared) per post — a fresh one would allocate a
             # new placeholder (a random nonce) for every post, most of which record
             # nothing.
-            @embeds = EmbedBuffer.new
+            @embeds = EmbedBuffer.new(owner_type: Enums::EmbedOwner::POST)
           end
 
           def process(item)

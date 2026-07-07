@@ -19,7 +19,7 @@ module Migrations
     # forums whose post bodies are in one of the formats above.
     #
     # @example deferring uploads and quotes into an EmbedBuffer
-    #   buffer = EmbedBuffer.new
+    #   buffer = EmbedBuffer.new(owner_type: Enums::EmbedOwner::POST)
     #   raw = MarkdownRenderer.new(format: :bbcode).to_markdown(item[:body], on_embed: buffer)
     #   # `raw` now carries placeholder tokens; `buffer.uploads` / `buffer.quotes`
     #   # hold the typed linkage descriptors.

@@ -4,7 +4,7 @@ module Migrations
   module Converters
     module Discourse
       # Classifies an `@name` mention into the `mention_type` stored on
-      # `post_mentions`: `"here"`, `"all"`, `"group"` or `"user"`.
+      # `embed_mentions`: `"here"`, `"all"`, `"group"` or `"user"`.
       #
       #   * `@here` is recognized by the source's `here_mention` site setting — its
       #     name is configurable, so we don't hard-code `"here"`.
