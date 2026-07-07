@@ -295,8 +295,8 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await fillIn(".filter-input", "first");
     assert
-      .dom(".admin-filter-controls > .admin-filter-controls__reset")
-      .exists("shows reset button after filter controls");
+      .dom(".admin-filter-controls__inputs .admin-filter-controls__reset")
+      .exists("shows reset button");
   });
 
   test("respects minItemsForFilter parameter", async function (assert) {
