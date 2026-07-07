@@ -26,19 +26,36 @@ module Jobs
         <<~SQL,
           SELECT t.id
           FROM topics t
-          INNER JOIN nested_topics nt ON nt.topic_id = t.id
+          LEFT JOIN nested_topics nt ON nt.topic_id = t.id
           INNER JOIN posts op ON op.topic_id = t.id AND op.post_number = 1
           LEFT JOIN nested_view_post_stats s ON s.post_id = op.id
           WHERE t.deleted_at IS NULL
             AND t.archetype = :archetype
+            AND (:nested_replies_default OR nt.topic_id IS NOT NULL)
             #{category_filter}
-            AND s.post_id IS NULL
+            AND (
+              s.post_id IS NULL
+              OR EXISTS (
+                SELECT 1
+                FROM posts child
+                INNER JOIN posts parent
+                  ON parent.topic_id = child.topic_id
+                 AND parent.post_number = child.reply_to_post_number
+                LEFT JOIN nested_view_post_stats parent_stats
+                  ON parent_stats.post_id = parent.id
+                WHERE child.topic_id = t.id
+                  AND child.reply_to_post_number IS NOT NULL
+                  AND child.post_number > 1
+                  AND parent_stats.post_id IS NULL
+              )
+            )
           ORDER BY t.id DESC
           LIMIT :batch_size
         SQL
         archetype: Archetype.default,
         batch_size: SiteSetting.nested_replies_backfill_batch_size,
         category_id: category_id,
+        nested_replies_default: SiteSetting.nested_replies_default,
       )
     end
 
