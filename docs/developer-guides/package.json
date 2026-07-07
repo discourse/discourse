@@ -6,7 +6,7 @@
     "lint:fix": "prettier --write '**/*.{md,json,mjs,yml}'"
   },
   "devDependencies": {
-    "@discourse/lint-configs": "^3.1.2",
+    "@discourse/lint-configs": "^3.1.3",
     "prettier": "3.8.1"
   }
 }
