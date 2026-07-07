@@ -8,13 +8,16 @@
 # and even the CLI framework and ForkManager -- none of these hit the mutation
 # timeout.
 #
-# Left out on purpose (mutations there deadlock into the timeout):
-#   * StepScheduler -- spins up real worker threads.
-#   * ChunkQueue -- blocks on a pipe read.
-#   * Reporting::Tui -- its spec spawns a real pty.
-# Each would need its pure logic split from the thread/pipe/terminal code to
-# be a useful target. Also out: StepCoordinator, Step::Processor, Step::Source
-# (no isolated specs -- they drive the actual fork/process orchestration).
+# Left out on purpose -- their specs are slow enough per run that mutation
+# testing is either slow or hides real survivors:
+#   * StepScheduler -- its spec spawns real worker threads, so each mutation runs
+#     for a second or more. A short mutation timeout would count those as
+#     timeout-kills and hide real survivors; a long one is slow.
+#   * Reporting::Tui -- its spec spawns a real pty per run.
+# (A mutation that hangs still counts as killed, so a timeout is not a coverage
+# problem, only a runtime cost. ChunkQueue's pipe reads hang quickly and it has
+# real coverage to gain, so it is included.) Also out: StepCoordinator,
+# Step::Processor, Step::Source -- no isolated specs.
 integration:
   name: rspec
 requires:
@@ -44,6 +47,7 @@ matcher:
     - "Migrations::Conversion::Step"
     - "Migrations::Conversion::StepRunner"
     - "Migrations::Conversion::StepTracker"
+    - "Migrations::Conversion::ChunkQueue"
     - "Migrations::Conversion::Consolidator"
     - "Migrations::Conversion::ShardManager"
     - "Migrations::Conversion::SetupGuard"

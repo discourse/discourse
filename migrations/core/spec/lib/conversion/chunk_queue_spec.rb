@@ -18,6 +18,33 @@ RSpec.describe Migrations::Conversion::ChunkQueue do
     expect { described_class.filled(1_000_000) }.to raise_error(ArgumentError, /pipe buffer/)
   end
 
+  it "accepts the largest count that still fits and rejects one past it" do
+    max = Migrations::Conversion::ChunkQueue::MAX_BYTES / Migrations::Conversion::ChunkQueue::WIDTH
+    expect { described_class.filled(max) }.not_to raise_error
+    expect { described_class.filled(max + 1) }.to raise_error(
+      ArgumentError,
+      "ChunkQueue can't hold #{max + 1} chunks in the pipe buffer",
+    )
+  end
+
+  it "closes both ends of the pipe when it rejects an oversized bag" do
+    max = Migrations::Conversion::ChunkQueue::MAX_BYTES / Migrations::Conversion::ChunkQueue::WIDTH
+    reader = instance_double(IO, close: nil)
+    writer = instance_double(IO, close: nil)
+    allow(IO).to receive(:pipe).and_return([reader, writer])
+
+    expect { described_class.filled(max + 1) }.to raise_error(ArgumentError)
+
+    expect(reader).to have_received(:close)
+    expect(writer).to have_received(:close)
+  end
+
+  it "closes the reader" do
+    queue = described_class.filled(3)
+    queue.close
+    expect { queue.claim }.to raise_error(IOError)
+  end
+
   it "splits the indices across forked workers with no gaps or duplicates" do
     count = 500
     workers = 6
