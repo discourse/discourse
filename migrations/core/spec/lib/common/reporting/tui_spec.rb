@@ -337,6 +337,36 @@ RSpec.describe Migrations::Reporting::Tui do
         renderer.repaint
         expect(screen.content_rows).to include("Run starting")
       end
+
+      it "splits a multi-line notice so it can't fuse with or strand the live rows" do
+        renderer.apply([:start, "Posts", "Posts"])
+        renderer.apply([:progress_begin, "Posts", 1000])
+        renderer.apply([:start, "Tags", "Tags"])
+        renderer.apply([:progress_begin, "Tags", 200])
+        at(1.0)
+        renderer.apply([:progress, "Posts", 100, 0, 0, 0])
+        renderer.apply([:progress, "Tags", 20, 0, 0, 0])
+        renderer.repaint
+
+        renderer.apply([:notice, "Posts", "RuntimeError: boom\n  from a.rb:1\n  from b.rb:2"])
+        at(2.0)
+        renderer.apply([:progress, "Posts", 300, 0, 0, 0])
+        renderer.repaint
+        at(3.0)
+        renderer.apply([:progress, "Posts", 500, 0, 0, 0])
+        renderer.repaint
+
+        rows = screen.content_rows
+        # Each notice line landed as its own permanent row.
+        expect(rows).to include(a_string_matching(/RuntimeError: boom/))
+        expect(rows).to include(a_string_matching(/from a\.rb:1/))
+        expect(rows).to include(a_string_matching(/from b\.rb:2/))
+        # No permanent notice text is fused onto a live row's percent.
+        expect(rows).to(be_none { |r| r.include?("from ") && r.match?(/%/) })
+        # The two live rows appear exactly once each — nothing stranded above.
+        expect(rows.count { |r| r.match?(/Posts.*%/) }).to eq(1)
+        expect(rows.count { |r| r.match?(/Tags.*%/) }).to eq(1)
+      end
     end
 
     describe "count and time column alignment" do

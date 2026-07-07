@@ -179,7 +179,7 @@ module Migrations
           when :notice
             _, id, message = event
             step = @steps[id]
-            @pending_permanent << notice_line(step && step.title, message)
+            notice_lines(step && step.title, message).each { |line| @pending_permanent << line }
           when :finish
             _, id, outcome = event
             step = @steps.delete(id) # no longer needed; its line is permanent now
@@ -457,9 +457,23 @@ module Migrations
           ].join("  ")
         end
 
-        def notice_line(title, message)
+        # A notice becomes one or more permanent lines. A message may carry
+        # newlines (exception messages built by `failure_notice` often do); an
+        # embedded "\n" has zero display width, so it would slip through
+        # `fit_to_width` and move the cursor a row the live-region math doesn't
+        # account for, fusing rows and stranding stale ones. Split it so each
+        # source line is its own permanent line: the first keeps the title
+        # prefix, the rest are indented so a backtrace-style message reads as one
+        # block.
+        def notice_lines(title, message)
+          lines = message.to_s.split("\n").map(&:rstrip).reject(&:empty?)
+          lines = [""] if lines.empty?
           prefix = title ? "#{title}  " : ""
-          "#{prefix}#{Ansi::DIM}#{message}#{Ansi::RESET}"
+
+          lines.each_with_index.map do |text, index|
+            head = index == 0 ? prefix : "  " # continuation lines just indent
+            "#{head}#{Ansi::DIM}#{text}#{Ansi::RESET}"
+          end
         end
 
         # The skip, warning, and error labels, shown only when the count is above
