@@ -29,10 +29,27 @@ class DiscourseSolved::SolvedTopicsController < ::ApplicationController
           "topics.category_id IS NULL OR NOT categories.read_restricted OR topics.category_id IN (:secure_category_ids)",
           secure_category_ids: guardian.secure_category_ids,
         )
+
+    posts = guardian.filter_hidden_posts(posts)
+
+    unless guardian.is_admin?
+      current_user_id = current_user&.id || Discourse.system_user.id
+      posts =
+        posts.where(
+          "posts.user_id = :current_user_id OR posts.post_type IN (:visible_post_types)",
+          current_user_id:,
+          visible_post_types: Topic.visible_post_types(current_user),
+        )
+    end
+
+    posts =
+      posts
         .includes(:user, topic: %i[category tags])
         .order("discourse_solved_solved_topics.created_at DESC")
         .offset(offset)
         .limit(limit)
+
+    posts = posts.select { |post| guardian.can_see_post?(post) }
 
     render_serialized(posts, DiscourseSolved::SolvedPostSerializer, root: "user_solved_posts")
   end
