@@ -4,6 +4,7 @@ import { fn, get, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { schedule } from "@ember/runloop";
 import { isTesting } from "discourse/lib/environment";
 import { resettableTracked } from "discourse/lib/tracked-tools";
@@ -28,12 +29,14 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
  * @param {String} [inputPlaceholder] - Placeholder text for search input
  * @param {String|Object} [defaultDropdownValue="all"] - Default dropdown value(s). For single dropdown: "all",
  *                                                       for multiple: { dropdown1: "all", dropdown2: "all" }
+ * @param {String|Object} [dropdownValue] - Current dropdown value(s), defaults to defaultDropdownValue
  * @param {String} [noResultsMessage] - Message shown when no results found
  * @param {Boolean} [loading] - Whether data is loading (hides reset button during loading)
  * @param {Number} [minItemsForFilter] - Minimum items before showing filters (default: always show)
  * @param {Function} [onTextFilterChange] - Callback for text changes (enables server-side mode)
  * @param {Function} [onDropdownFilterChange] - Callback for dropdown changes (enables server-side mode).
  *                                              For multiple dropdowns: receives (key, value)
+ * @param {Function} [onDropdownChange] - Callback for dropdown selection changes
  * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
  * @param {String} [initialTextFilter] - Initial value to seed the text filter input on mount
  */
@@ -52,7 +55,7 @@ export default class AdminFilterControls extends Component {
 
     if (this.hasMultipleDropdowns) {
       Object.keys(this.dropdownOptions).forEach((key) => {
-        this.dropdownFilters[key] = this.defaultValue(key);
+        this.dropdownFilters[key] = this.dropdownValueFor(key);
       });
     }
   }
@@ -93,6 +96,10 @@ export default class AdminFilterControls extends Component {
 
   get defaultDropdownValue() {
     return this.args.defaultDropdownValue || "all";
+  }
+
+  get dropdownValue() {
+    return this.args.dropdownValue || this.defaultDropdownValue;
   }
 
   get showFilters() {
@@ -183,14 +190,20 @@ export default class AdminFilterControls extends Component {
     return defaults[key] || "all";
   }
 
+  dropdownValueFor(key) {
+    const values =
+      typeof this.dropdownValue === "object" ? this.dropdownValue : {};
+    return values[key] || this.defaultValue(key);
+  }
+
   @action
   setupComponent() {
     if (this.hasMultipleDropdowns) {
       Object.keys(this.dropdownOptions).forEach((key) => {
-        this.dropdownFilters[key] = this.defaultValue(key);
+        this.dropdownFilters[key] = this.dropdownValueFor(key);
       });
     } else {
-      this.dropdownFilter = this.defaultDropdownValue;
+      this.dropdownFilter = this.dropdownValue;
     }
   }
 
@@ -206,9 +219,11 @@ export default class AdminFilterControls extends Component {
     if (this.hasMultipleDropdowns) {
       this.dropdownFilters[keyOrValue] = value;
       this.args.onDropdownFilterChange?.(keyOrValue, value);
+      this.args.onDropdownChange?.(keyOrValue, value);
     } else {
       this.dropdownFilter = keyOrValue;
       this.args.onDropdownFilterChange?.(keyOrValue);
+      this.args.onDropdownChange?.(keyOrValue);
     }
   }
 
@@ -218,10 +233,13 @@ export default class AdminFilterControls extends Component {
 
     if (this.hasMultipleDropdowns) {
       Object.keys(this.dropdownFilters).forEach((key) => {
-        this.dropdownFilters[key] = this.defaultValue(key);
+        const defaultValue = this.defaultValue(key);
+        this.dropdownFilters[key] = defaultValue;
+        this.args.onDropdownChange?.(key, defaultValue);
       });
     } else {
       this.dropdownFilter = this.defaultDropdownValue;
+      this.args.onDropdownChange?.(this.defaultDropdownValue);
     }
 
     if (this.args.onResetFilters) {
@@ -248,6 +266,8 @@ export default class AdminFilterControls extends Component {
           (if this.hasMultipleDropdowns "--multiple-dropdowns")
         }}
         {{didInsert this.setupComponent}}
+        {{didUpdate this.setupComponent @defaultDropdownValue}}
+        {{didUpdate this.setupComponent @dropdownValue}}
       >
         <div class="admin-filter-controls__inputs">
           <DFilterInput
@@ -257,15 +277,6 @@ export default class AdminFilterControls extends Component {
             class="admin-filter-controls__input"
             @icons={{hash left="magnifying-glass"}}
           />
-
-          {{#if (and this.hasActiveFilters (not @loading))}}
-            <DButton
-              @icon="arrow-rotate-left"
-              @label="reset_filter"
-              @action={{this.resetFilters}}
-              class="btn-default admin-filter-controls__reset"
-            />
-          {{/if}}
 
           {{#if this.hasMultipleDropdowns}}
             <DButton
@@ -312,6 +323,15 @@ export default class AdminFilterControls extends Component {
               </DSelect>
             {{/if}}
           </div>
+        {{/if}}
+
+        {{#if (and this.hasActiveFilters (not @loading))}}
+          <DButton
+            @icon="arrow-rotate-left"
+            @label="reset_filter"
+            @action={{this.resetFilters}}
+            class="btn-default admin-filter-controls__reset"
+          />
         {{/if}}
 
         {{yield to="actions"}}

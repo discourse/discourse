@@ -16,6 +16,19 @@ ru:
             accepted_solutions:
               label: "Решённые вопросы"
               tooltip: "Количество тем, в которых был опубликован пост, отмеченный как решение."
+        sections:
+          support:
+            title: "Поддержать"
+            filter:
+              all_categories: "Все категории"
+            answerers:
+              staff: "Персонал"
+              member: "Участники"
+              basic: "Обычный пользователь"
+            response_time:
+              buckets:
+                lt_1h: "< 1 час"
+                gt_24h: "> 24 часа"
   js:
     notifications:
       alt:

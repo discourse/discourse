@@ -3688,7 +3688,6 @@ hy:
       no_topics_title_others: "%{username} -ը դեռ ոչ մի թեմա չի սկսել"
       no_read_topics_title: "Դուք դեռ ոչ մի թեմա չեք կարդացել"
     topic_entrance:
-      sr_jump_top_button: "Անցնել առաջին գրառմանը - %{date}"
       jump_top_button_title: "Անցնել առաջին գրառմանը"
     sidebar:
       unread_count:

@@ -530,6 +530,30 @@ RSpec.describe Chat::Api::ChannelsController do
       end
     end
 
+    context "when user provides an emoji that is too long" do
+      fab!(:user, :admin)
+      fab!(:channel, :category_channel)
+
+      before { sign_in(user) }
+
+      it "rejects the update" do
+        long_emoji = "a" * 2800
+        expected_error = "Emoji #{I18n.t("errors.messages.too_long", count: 100)}"
+
+        put "/chat/api/channels/#{channel.id}",
+            params: {
+              channel: {
+                emoji: long_emoji,
+              },
+            },
+            as: :json
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to contain_exactly(expected_error)
+        expect(channel.reload.emoji).to be_nil
+      end
+    end
+
     context "when user provided an empty name" do
       fab!(:user, :admin)
       fab!(:channel) do

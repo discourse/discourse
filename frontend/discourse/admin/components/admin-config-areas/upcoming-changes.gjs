@@ -54,11 +54,6 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
           value: "stable",
           filterFn: (change) => change.upcoming_change.status === "stable",
         },
-        {
-          label: i18n("admin.upcoming_changes.filter.status_permanent"),
-          value: "permanent",
-          filterFn: (change) => change.upcoming_change.status === "permanent",
-        },
       ],
       type: [
         {

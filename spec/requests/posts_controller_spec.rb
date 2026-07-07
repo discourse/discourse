@@ -696,6 +696,48 @@ RSpec.describe PostsController do
         expect(post.raw).to eq("edited body")
       end
 
+      it "rolls back post changes when a first-post title edit is invalid" do
+        Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "blockedword")
+
+        first_post = create_post(user:, title: "Original topic title", raw: "Original topic body")
+        original_title = first_post.topic.title
+        original_raw = first_post.raw
+
+        put "/posts/#{first_post.id}.json",
+            params: {
+              title: "A blockedword topic title",
+              post: {
+                raw: "Body from failed title edit",
+                edit_reason: "moderator edit",
+              },
+            }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"].join).to include("blockedword")
+        expect(first_post.reload.raw).to eq(original_raw)
+        expect(first_post.version).to eq(1)
+        expect(PostRevision.where(post_id: first_post.id).pluck(:number)).to eq([])
+
+        put "/posts/#{first_post.id}.json",
+            params: {
+              title: original_title,
+              post: {
+                raw: "Body from valid title edit",
+                edit_reason: "moderator edit",
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(first_post.reload.raw).to eq("Body from valid title edit")
+        expect(first_post.version).to eq(2)
+        expect(PostRevision.where(post_id: first_post.id).pluck(:number)).to eq([2])
+
+        get "/posts/#{first_post.id}/revisions/2.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["current_revision"]).to eq(2)
+      end
+
       it "won't update bump date if post is a whisper" do
         created_at = freeze_time 1.day.ago
         post = Fabricate(:post, post_type: Post.types[:whisper], user: user)
@@ -2681,6 +2723,52 @@ RSpec.describe PostsController do
     it "throws an exception when revision is < 2" do
       get "/posts/#{post.id}/revisions/1.json"
       expect(response.status).to eq(400)
+    end
+
+    it "attributes coalesced grace-period edits to the correct editor" do
+      SiteSetting.edit_history_visible_to_public = true
+      SiteSetting.editing_grace_period = 1.minute
+      SiteSetting.editing_grace_period_max_diff = 1000
+
+      edited_post = Fabricate(:post, raw: "Original version")
+      first_editor = Fabricate(:user)
+      second_editor = Fabricate(:user)
+      first_body = "First editor first version"
+      coalesced_body = "First editor coalesced version"
+      second_body = "Second editor version"
+
+      PostRevisor.new(edited_post).revise!(
+        first_editor,
+        { raw: first_body },
+        revised_at: edited_post.updated_at + 2.minutes,
+      )
+      edited_post.reload
+      PostRevisor.new(edited_post).revise!(
+        first_editor,
+        { raw: coalesced_body },
+        revised_at: edited_post.last_version_at + 1.second,
+      )
+      edited_post.reload
+      PostRevisor.new(edited_post).revise!(
+        second_editor,
+        { raw: second_body },
+        revised_at: edited_post.last_version_at + 2.seconds,
+      )
+      edited_post.reload
+
+      get "/posts/#{edited_post.id}/revisions/2.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["username"]).to eq(first_editor.username_lower)
+      expect(response.parsed_body.dig("body_changes", "side_by_side_markdown")).to eq(
+        DiscourseDiff.new("Original version", coalesced_body).side_by_side_markdown,
+      )
+
+      get "/posts/#{edited_post.id}/revisions/3.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["username"]).to eq(second_editor.username_lower)
+      expect(response.parsed_body.dig("body_changes", "side_by_side_markdown")).to eq(
+        DiscourseDiff.new(coalesced_body, second_body).side_by_side_markdown,
+      )
     end
 
     context "when the id is passed as an array" do

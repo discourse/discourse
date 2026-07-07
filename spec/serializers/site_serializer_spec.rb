@@ -640,7 +640,7 @@ RSpec.describe SiteSerializer do
           :groups
         ]
 
-      expect(serialized_groups.find { |g| g["name"] == "everyone" }["automatic"]).to eq(true)
+      expect(serialized_groups.find { |g| g["name"] == "trust_level_1" }["automatic"]).to eq(true)
       expect(serialized_groups.find { |g| g["name"] == group.name }["automatic"]).to eq(false)
     end
   end

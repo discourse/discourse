@@ -1250,6 +1250,25 @@ class Plugin::Instance
     )
   end
 
+  # Registers a whole section in the redesigned admin dashboard (gated by the
+  # dashboard_improvements upcoming change). The matching client-side section
+  # component must be registered via the JS `api.registerAdminDashboardSection`.
+  #
+  # @param id [String] unique section id. Matched against the persisted
+  #   configuration and the client-side component registry.
+  # @param enabled [Proc] optional gate evaluated when assembling the dashboard.
+  #   Return false to omit the section (and hide it from the configure menu)
+  #   without disabling the plugin entirely — e.g. only when relevant data
+  #   exists.
+  # @yield [start_date:, end_date:, current_user:] block returning the section's
+  #   data hash, run inside the dashboard's parallel section loader.
+  def register_admin_dashboard_section(id:, enabled: nil, &loader)
+    DiscoursePluginRegistry.register_admin_dashboard_section(
+      { id: id.to_s, enabled: enabled, loader: loader },
+      self,
+    )
+  end
+
   ##
   # Used to register data sources for HashtagAutocompleteService to look
   # up results based on a #hashtag string.

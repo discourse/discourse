@@ -12,12 +12,9 @@ import {
 } from "discourse/lib/blocks/-internals/patterns";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import devToolsState from "../state";
-/** @type {import("./block-info.gjs").default} */
 import BlockInfo from "./block-info";
 import { blockDebugLogger } from "./debug-logger";
-/** @type {import("./ghost-block.gjs").default} */
 import GhostBlock from "./ghost-block";
-/** @type {import("./outlet-info.gjs").default} */
 import OutletInfo from "./outlet-info";
 
 /**

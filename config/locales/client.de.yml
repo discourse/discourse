@@ -5340,8 +5340,6 @@ de:
       no_read_topics_body: "Sobald du mit dem Lesen von Diskussionen beginnst, siehst du hier eine Liste. Zum Lesen suche in <a href='%{topUrl}'>Top</a> oder <a href='%{categoriesUrl}'>Kategorien</a> nach Themen, die dich interessieren, oder suche nach einem Schlüsselwort %{searchIcon}"
     no_group_messages_title: "Keine Gruppennachrichten gefunden"
     topic_entrance:
-      sr_jump_top_button: "Zum ersten Beitrag springen – %{date}"
-      sr_jump_bottom_button: "Zum letzten Beitrag springen – %{date}"
       jump_top_button_title: "Zum ersten Beitrag springen"
       jump_bottom_button_title: "Zum letzten Beitrag springen"
     fullscreen_table:

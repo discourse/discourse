@@ -158,8 +158,8 @@
   }
 
   &__bar-track {
-    height: 10px;
-    border-radius: 4px;
+    height: $db-bar-height;
+    border-radius: 1em;
     background: var(--primary-low);
   }
 
@@ -264,8 +264,8 @@
   }
 
   &__bar {
-    height: 10px;
-    border-radius: 4px;
+    height: $db-bar-height;
+    border-radius: 5px;
     flex: 0 0 auto;
     background: var(--success);
 

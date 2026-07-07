@@ -72,7 +72,7 @@ task "themes:export_theme_bundle", %i[theme output] => :environment do |task, ar
     current = theme.cached_settings
     defaults = theme.cached_default_settings
     current.each do |name, value|
-      next if name == "theme_uploads" || name == "theme_uploads_local"
+      next if Theme::PRIVATE_CACHED_SETTING_KEYS.include?(name)
       parent_settings[name] = value if value != defaults[name]
     end
 
@@ -98,7 +98,7 @@ task "themes:export_theme_bundle", %i[theme output] => :environment do |task, ar
       comp_current = comp.cached_settings
       comp_defaults = comp.cached_default_settings
       comp_current.each do |name, value|
-        next if name == "theme_uploads" || name == "theme_uploads_local"
+        next if Theme::PRIVATE_CACHED_SETTING_KEYS.include?(name)
         comp_settings[name] = value if value != comp_defaults[name]
       end
 

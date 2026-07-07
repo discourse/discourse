@@ -8,7 +8,6 @@ import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { or } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-/** @type {import("discourse/ui-kit/helpers/d-element.gjs").default} */
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";

@@ -1748,8 +1748,6 @@ fi:
     silence_new_user_sensitivity: "Todennäköisyys sille, että roskapostiliputukset hiljentävät uuden käyttäjän"
     auto_close_topic_sensitivity: "Todennäköisyys sille, että liputettu ketju automaattisesti suljetaan"
     cooldown_minutes_after_hiding_posts: "Kuinka monta minuuttia käyttäjän tulee odottaa ennen kuin voi muokata viestiään, jonka yhteisö on liputtanut piiloon."
-    max_topics_in_first_day: "Kuinka monta ketjua käyttäjä voi aloittaa ensimmäistä viestiään seuraavien 24 tunnin aikana"
-    max_replies_in_first_day: "Kuinka monta vastausta käyttäjä voi kirjoittaa ensimmäistä viestiään seuraavien 24 tunnin aikana"
     tl2_additional_likes_per_day_multiplier: "Nosta tykkäysten päivittäistä rajaa tasolla lt2 (konkari) kertomalla tällä luvulla"
     tl3_additional_likes_per_day_multiplier: "Nosta tykkäysten päivittäistä rajaa tasolla lt3 (mestari) kertomalla tällä luvulla"
     tl4_additional_likes_per_day_multiplier: "Nosta tykkäysten päivittäistä rajaa tasolla lt4 (johtaja) kertomalla tällä luvulla"

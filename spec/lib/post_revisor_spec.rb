@@ -1954,7 +1954,73 @@ describe PostRevisor do
               { raw: "updated body" },
               revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
             )
-          }.to change { post.topic.bumped_at }
+          }.to change { post.topic.reload.bumped_at }
+        end
+
+        it "bumps the persisted topic when editing raw and title" do
+          post.topic.update!(bumped_at: 1.day.ago)
+
+          expect {
+            post_revisor.revise!(
+              post.user,
+              { raw: "updated body", title: "This is an updated topic title" },
+              revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
+            )
+          }.to change { post.topic.reload.bumped_at }
+        end
+
+        it "keeps post changes available to the modifier before advancing the draft" do
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :should_bump_topic,
+            &modifier_block
+          )
+
+          inspecting_modifier =
+            Proc.new do |value, modifier_post, modifier_post_changes, modifier_topic_changes, editor|
+              modifier_post.is_first_post? && modifier_post_changes.any?
+            end
+
+          plugin_instance.register_modifier(:should_bump_topic, &inspecting_modifier)
+
+          expect {
+            post_revisor.revise!(
+              post.user,
+              { raw: "updated body", title: "Updated topic title" },
+              revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
+            )
+          }.to change { post.topic.reload.bumped_at }
+        ensure
+          if defined?(inspecting_modifier)
+            DiscoursePluginRegistry.unregister_modifier(
+              plugin_instance,
+              :should_bump_topic,
+              &inspecting_modifier
+            )
+          end
+          plugin_instance.register_modifier(:should_bump_topic, &modifier_block)
+        end
+
+        it "doesn't bump the topic when the title edit is invalid" do
+          original_raw = post.raw
+          post.topic.update!(bumped_at: 1.day.ago)
+
+          messages =
+            MessageBus.track_publish(TopicTrackingState::LATEST_MESSAGE_BUS_CHANNEL) do
+              expect {
+                result =
+                  post_revisor.revise!(
+                    post.user,
+                    { raw: "updated body", title: "New Title" },
+                    revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
+                  )
+                expect(result).to eq(false)
+              }.not_to change { post.topic.reload.bumped_at }
+            end
+
+          expect(messages).to be_empty
+          expect(post.reload.raw).to eq(original_raw)
+          expect(post.version).to eq(1)
         end
       end
     end

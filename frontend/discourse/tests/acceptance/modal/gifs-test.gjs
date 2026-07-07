@@ -52,6 +52,9 @@ acceptance("Modal - GIFs", function (needs) {
     await settled();
 
     assert.dom(".gifs-modal").exists("renders the modal");
+    assert
+      .dom(".gifs-modal__branding")
+      .exists("always shows the Klipy branding");
 
     const categoriesCall = fetchStub
       .getCalls()

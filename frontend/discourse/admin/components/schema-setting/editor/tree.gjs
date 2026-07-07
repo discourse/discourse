@@ -5,7 +5,7 @@ import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
-<template>
+export default <template>
   <ul class="schema-setting-editor__tree">
     {{#if @backButtonText}}
       <li

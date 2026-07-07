@@ -5168,8 +5168,6 @@ hu:
       no_read_topics_body: "Amint elkezd beszélgetéseket olvasni, itt egy listát fog látni. Az olvasás megkezdéséhez keresse meg az Önt érdeklő témákat a <a href='%{topUrl}'>Top</a> vagy a <a href='%{categoriesUrl}'>Kategóriák</a> között, vagy keressen kulcsszóval %{searchIcon}."
     no_group_messages_title: "Nem található csoportos üzenet"
     topic_entrance:
-      sr_jump_top_button: "Ugrás az első bejegyzéshez - %{date}"
-      sr_jump_bottom_button: "Ugrás az utolsó bejegyzésre - %{date}"
       jump_top_button_title: "Ugrás az első bejegyzésre"
       jump_bottom_button_title: "Ugrás az utolsó bejegyzéshez"
     fullscreen_table:

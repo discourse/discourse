@@ -5338,8 +5338,6 @@ nl:
       no_read_topics_body: "Wanneer je discussies gaat lezen, zie je hier een lijst. Om te beginnen met lezen, kun je zoeken naar interessante topics onder <a href='%{topUrl}'>Top</a> of <a href='%{categoriesUrl}'>Categorieën</a> of zoeken op trefwoorden %{searchIcon}"
     no_group_messages_title: "Geen groepsberichten gevonden"
     topic_entrance:
-      sr_jump_top_button: "Naar eerste bericht - %{date}"
-      sr_jump_bottom_button: "Naar laatste bericht - %{date}"
       jump_top_button_title: "Naar eerste bericht"
       jump_bottom_button_title: "Naar laatste bericht"
     fullscreen_table:

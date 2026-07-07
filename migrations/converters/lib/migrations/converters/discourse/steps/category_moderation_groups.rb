@@ -11,6 +11,7 @@ module Migrations
             IntermediateDB::CategoryModerationGroup.create(
               category_id: item[:category_id],
               group_id: item[:group_id],
+              created_at: item[:created_at],
             )
           end
         end

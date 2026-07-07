@@ -10,12 +10,15 @@ import DashboardSearch from "discourse/admin/components/dashboard/search";
 import DashboardSiteAdvice from "discourse/admin/components/dashboard/site-advice";
 import DashboardSkeleton from "discourse/admin/components/dashboard/skeleton";
 import DashboardTraffic from "discourse/admin/components/dashboard/traffic";
+import { lookupAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { eq } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
+
+const sectionComponentFor = (id) => lookupAdminDashboardSection(id);
 
 export default class RedesignedAdminDashboard extends Component {
   @service currentUser;
@@ -134,6 +137,21 @@ export default class RedesignedAdminDashboard extends Component {
               @startDate={{@loadedSections.startDate}}
               @endDate={{@loadedSections.endDate}}
             />
+          {{else}}
+            {{#let (sectionComponentFor section.id) as |PluginSection|}}
+              {{#if PluginSection}}
+                <PluginSection
+                  class={{concat "--" section.id}}
+                  data-section-id={{section.id}}
+                  @data={{section.data}}
+                  @period={{@loadedSections.period}}
+                  @loading={{@loadingSections}}
+                  @fetchError={{@sectionsFetchError}}
+                  @startDate={{@loadedSections.startDate}}
+                  @endDate={{@loadedSections.endDate}}
+                />
+              {{/if}}
+            {{/let}}
           {{/if}}
         {{/each}}
 

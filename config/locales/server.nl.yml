@@ -1799,8 +1799,6 @@ nl:
     silence_new_user_sensitivity: "De waarschijnlijkheid dat een nieuwe gebruiker wordt gedempt op basis van spammarkeringen"
     auto_close_topic_sensitivity: "De waarschijnlijkheid dat een gemarkeerd topic automatisch wordt gesloten"
     cooldown_minutes_after_hiding_posts: "Het aantal minuten dat een gebruiker moet wachten voordat deze een door communitymarkering verborgen bericht kan bewerken"
-    max_topics_in_first_day: "Het maximale aantal topics dat een gebruiker in de 24 uursperiode na het schrijven van een eerste bericht mag maken"
-    max_replies_in_first_day: "Het maximale aantal antwoorden dat een gebruiker in de 24 uursperiode na het schrijven van een eerste bericht mag maken"
     tl2_additional_likes_per_day_multiplier: "Limiet van likes per dag voor TL2 (lid) verhogen door met dit getal te vermenigvuldigen"
     tl3_additional_likes_per_day_multiplier: "Limiet van likes per dag voor TL3 (vaste gebruiker) verhogen door met dit getal te vermenigvuldigen"
     tl4_additional_likes_per_day_multiplier: "Limiet van likes per dag voor TL4 (leider) verhogen door met dit getal te vermenigvuldigen"

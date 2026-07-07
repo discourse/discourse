@@ -132,6 +132,27 @@ RSpec.describe GroupsController do
 
           expect(body["load_more_groups"]).to eq("/groups?order=user_count&page=1")
         end
+
+        it "does not sort by hidden member counts" do
+          hidden_members_group =
+            Fabricate(
+              :group,
+              name: "zzz_hidden_group",
+              members_visibility_level: Group.visibility_levels[:owners],
+              users: [Fabricate(:user), Fabricate(:user), Fabricate(:user)],
+            )
+
+          get "/groups.json", params: { order: "user_count" }
+
+          expect(response.status).to eq(200)
+
+          body = response.parsed_body
+          group_ids = body["groups"].map { |group| group["id"] }
+
+          expect(group_ids.index(hidden_members_group.id)).to be >
+            group_ids.index(group_with_2_users.id)
+          expect(body["load_more_groups"]).to eq("/groups?page=1")
+        end
       end
 
       context "with ascending order" do
@@ -184,6 +205,26 @@ RSpec.describe GroupsController do
       expect(body["extras"]["type_filters"].map(&:to_sym)).to eq(
         described_class::TYPE_FILTERS.keys - %i[my owner automatic non_automatic],
       )
+    end
+
+    it "does not expose member counts for groups with hidden members" do
+      hidden_members_group =
+        Fabricate(
+          :group,
+          members_visibility_level: Group.visibility_levels[:owners],
+          users: [Fabricate(:user)],
+        )
+
+      get "/groups.json"
+
+      expect(response.status).to eq(200)
+
+      group_json =
+        response.parsed_body["groups"].find { |group| group["id"] == hidden_members_group.id }
+
+      expect(group_json).to be_present
+      expect(group_json["can_see_members"]).to eq(false)
+      expect(group_json).not_to have_key("user_count")
     end
 
     context "when viewing groups of another user" do
@@ -1031,6 +1072,39 @@ RSpec.describe GroupsController do
     end
   end
 
+  describe "#mentionable and #messageable" do
+    it "returns not found for hidden and missing groups", :aggregate_failures do
+      user.change_trust_level!(1)
+      hidden_group =
+        Fabricate(
+          :group,
+          name: "hidden_support",
+          mentionable_level: Group::ALIAS_LEVELS[:everyone],
+          messageable_level: Group::ALIAS_LEVELS[:everyone],
+          visibility_level: Group.visibility_levels[:staff],
+        )
+      missing_group_name = "missing_support"
+
+      sign_in(user)
+
+      get "/g/#{hidden_group.name}/mentionable.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
+
+      get "/g/#{missing_group_name}/mentionable.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
+
+      get "/g/#{hidden_group.name}/messageable.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
+
+      get "/g/#{missing_group_name}/messageable.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
+    end
+  end
+
   describe "#mentionable" do
     it "should return the right response" do
       sign_in(user)
@@ -1048,7 +1122,7 @@ RSpec.describe GroupsController do
 
       group.update!(
         mentionable_level: Group::ALIAS_LEVELS[:everyone],
-        visibility_level: Group.visibility_levels[:staff],
+        visibility_level: Group.visibility_levels[:logged_on_users],
       )
 
       get "/groups/#{group.name}/mentionable.json"
@@ -1083,7 +1157,7 @@ RSpec.describe GroupsController do
 
       group.update!(
         messageable_level: Group::ALIAS_LEVELS[:everyone],
-        visibility_level: Group.visibility_levels[:staff],
+        visibility_level: Group.visibility_levels[:logged_on_users],
       )
 
       get "/groups/#{group.name}/messageable.json"
@@ -3023,6 +3097,7 @@ RSpec.describe GroupsController do
           ),
         )
 
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
         get "/groups/search.json?include_everyone=true"
 
         expect(response.status).to eq(200)
