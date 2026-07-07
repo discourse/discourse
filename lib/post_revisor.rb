@@ -350,6 +350,8 @@ class PostRevisor
 
     old_raw = @post.raw
 
+    @should_bump_topic = false
+
     Post.transaction do
       revise_post
 
@@ -362,12 +364,17 @@ class PostRevisor
       # false positive.
       plugin_callbacks
 
+      @should_bump_topic = @version_changed && successfully_saved_post_and_topic && should_bump?
       revise_topic
       advance_draft_sequence if !opts[:keep_existing_draft]
+
+      raise ActiveRecord::Rollback if !successfully_saved_post_and_topic
     end
 
     # bail out if the post or topic failed to save
     return false if !successfully_saved_post_and_topic
+
+    bump_topic if @should_bump_topic
 
     # Lock the post by default if the appropriate setting is true
     if SiteSetting.staff_edit_locks_post? && !@post.wiki? && @fields.has_key?("raw") &&
@@ -546,8 +553,7 @@ class PostRevisor
     @post.last_version_at = @revised_at
 
     revise
-    perform_edit
-    bump_topic
+    perform_edit if successfully_saved_post_and_topic
   end
 
   def revise
@@ -595,6 +601,7 @@ class PostRevisor
     previous_reply_to_post_number = @post.reply_to_post_number_was
 
     @post_successfully_saved = @post.save(validate: @validate_post)
+    @post_changes = @post.previous_changes.slice(*POST_TRACKED_FIELDS) if @post_successfully_saved
     @post.link_post_uploads
 
     if @post_successfully_saved
@@ -753,7 +760,7 @@ class PostRevisor
   end
 
   def post_changes
-    @post.previous_changes.slice(*POST_TRACKED_FIELDS)
+    @post_changes || @post.previous_changes.slice(*POST_TRACKED_FIELDS)
   end
 
   def topic_diff
@@ -770,7 +777,6 @@ class PostRevisor
   end
 
   def bump_topic
-    return if !should_bump?
     @topic.update_column(:bumped_at, Time.now)
     TopicTrackingState.publish_muted(@topic)
     TopicTrackingState.publish_unmuted(@topic)
