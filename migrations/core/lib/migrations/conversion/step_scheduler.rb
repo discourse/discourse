@@ -4,18 +4,12 @@ module Migrations
   module Conversion
     # Runs the conversion steps concurrently and follows their dependency graph.
     # Each running step gets its own {StepCoordinator} on its own thread, which
-    # forks one worker that reads the step's source and writes its shard. This
-    # class only decides what may start: up to `budget` steps run at once (the
-    # smaller of the fork budget and `--max-parallel-steps`), and a step starts
-    # only once its dependencies are done.
+    # forks one worker that reads the step's source and writes its shard.
     #
-    # We don't do slot accounting or full-pool exclusivity here. Every step is
-    # one fork, so "how many run at once" is the whole scheduling decision. When
-    # a heavy step is split across several forks, those count as several entries
-    # in the same budget.
+    # This class owns the threads, the mutex and the fork budget's live counters;
+    # every "what may start now" decision is delegated to {StepPlan}, which has no
+    # threading and is tested on its own.
     class StepScheduler
-      FINISHED_STATES = %i[done failed skipped].freeze
-
       # @param step_classes [Array<Class<Step>>] every step in the run, in any order
       # @param reporter [Reporting::Reporter] shared by all steps to report progress
       # @param step_factory [#call] builds a step from its class, `->(step_class) { step }`
@@ -36,35 +30,26 @@ module Migrations
         max_parallel_steps: nil,
         no_fork: false
       )
-        @step_classes = step_classes
         @reporter = reporter
         @step_factory = step_factory
         @shard_manager = shard_manager
         @writer = writer
         @no_fork = no_fork
 
-        @budget = [budget, max_parallel_steps].compact.min
-        @budget = 1 if @budget < 1
-        # Inline runs share one process and one IntermediateDB connection, so
-        # only one step may run at a time.
-        @budget = 1 if @no_fork
+        @plan = StepPlan.new(step_classes:, budget:, max_parallel_steps:, no_fork:)
 
         @mutex = Mutex.new
         @condition = ConditionVariable.new
         @fork_mutex = Mutex.new
 
-        @states = step_classes.to_h { |step_class| [step_class, :pending] }
-        @available_forks = @budget
-        # A running step_class => the forks it still holds. Goes down as workers
-        # finish (`release_forks`); the rest returns when the step ends
-        # (`step_finished`).
-        @reserved_forks = {}
         @threads = []
         @failures = {}
         @merge_errors = []
       end
 
-      attr_reader :budget
+      def budget
+        @plan.budget
+      end
 
       def run
         started_at = monotonic_time
@@ -74,8 +59,8 @@ module Migrations
 
         @mutex.synchronize do
           loop do
-            schedule
-            break if all_finished?
+            @plan.startable.each { |step_class, forks| spawn_coordinator(step_class, forks) }
+            break if @plan.finished?
             @condition.wait(@mutex)
           end
         end
@@ -106,50 +91,10 @@ module Migrations
       # @param step_class [Class<Step>] the running step whose worker just finished
       # @param count [Integer] how many forks came free (one per finished worker)
       def release_forks(step_class, count)
-        @mutex.synchronize do
-          # Never give back more than the step still holds; `step_finished` returns the rest.
-          freed = [count, @reserved_forks[step_class] || 0].min
-          next if freed <= 0
-
-          @reserved_forks[step_class] -= freed
-          @available_forks += freed
-          @condition.broadcast
-        end
+        @mutex.synchronize { @condition.broadcast if @plan.release_forks(step_class, count) > 0 }
       end
 
       private
-
-      def schedule
-        # A running partitioned step frees its forks one at a time. Another
-        # partitioned step can't start until it fully ends anyway (two don't fit at
-        # once), so those freed forks are only useful for single-fork steps for now.
-        partitioned_running =
-          @states.any? { |step_class, state| state == :running && step_class.partitionable? }
-
-        ready_steps.each do |step_class|
-          forks = forks_for(step_class)
-          if forks > @available_forks
-            # Let single-fork steps use a running partitioned step's freed forks
-            # instead of idling. With nothing partitioned running, stop instead, so
-            # a waiting partitioned step can gather the whole budget at once.
-            next if partitioned_running
-            break
-          end
-
-          @states[step_class] = :running
-          @available_forks -= forks
-          @reserved_forks[step_class] = forks
-          spawn_coordinator(step_class, forks)
-          partitioned_running ||= step_class.partitionable?
-        end
-      end
-
-      # A partitioned step takes all but one fork, leaving one free so single-fork
-      # steps can still trickle through and overlap it.
-      def forks_for(step_class)
-        return 1 unless step_class.partitionable?
-        [@budget - 1, 1].max
-      end
 
       def spawn_coordinator(step_class, fork_count)
         coordinator = build_coordinator(step_class, fork_count)
@@ -189,70 +134,13 @@ module Migrations
 
       def step_finished(step_class, outcome)
         @mutex.synchronize do
-          # Whatever the step didn't already hand back through `release_forks`.
-          @available_forks += @reserved_forks.delete(step_class) || 0
-          @states[step_class] = outcome
-          skip_dependents(step_class) if outcome == :failed
+          @plan.step_finished(step_class, outcome)
           @condition.broadcast
         end
       end
 
-      def skip_dependents(failed_step_class)
-        loop do
-          newly_skipped =
-            @step_classes.select do |step_class|
-              @states[step_class] == :pending &&
-                dependencies_of(step_class).any? do |dependency|
-                  %i[failed skipped].include?(@states[dependency])
-                end
-            end
-
-          break if newly_skipped.empty?
-          newly_skipped.each { |step_class| @states[step_class] = :skipped }
-        end
-      end
-
-      # The ready steps in admission order, so `schedule` tries the partitioned step
-      # first and only falls through to single-fork steps for the forks it can't use.
-      def ready_steps
-        @step_classes
-          .select { |step_class| ready?(step_class) }
-          .sort_by { |step_class| admission_key(step_class) }
-      end
-
-      def ready?(step_class)
-        @states[step_class] == :pending &&
-          dependencies_of(step_class).all? { |dependency| @states[dependency] == :done }
-      end
-
-      def dependencies_of(step_class)
-        step_class.dependencies & @step_classes
-      end
-
-      # Partitioned steps first (so they reach the front and gather their forks),
-      # then by priority (lower first, unset last), then by class name.
-      def admission_key(step_class)
-        priority = step_class.priority
-        [
-          step_class.partitionable? ? 0 : 1,
-          priority.nil? ? 1 : 0,
-          priority || 0,
-          step_class.name.to_s,
-        ]
-      end
-
-      def all_finished?
-        @states.each_value.all? { |state| FINISHED_STATES.include?(state) }
-      end
-
       def report_summary(runtime)
-        outcomes = @states.values
-        @reporter.report_summary(
-          runtime:,
-          total: outcomes.size,
-          failed: outcomes.count(:failed),
-          skipped: outcomes.count(:skipped),
-        )
+        @reporter.report_summary(runtime:, **@plan.outcome_counts)
       end
 
       def monotonic_time
@@ -260,8 +148,8 @@ module Migrations
       end
 
       def raise_summary_if_unsuccessful
-        failed = @states.select { |_, state| state == :failed }.keys
-        skipped = @states.select { |_, state| state == :skipped }.keys
+        failed = @plan.failed_steps
+        skipped = @plan.skipped_steps
         return if failed.empty? && skipped.empty? && @merge_errors.empty?
 
         raise ConvertError.new(

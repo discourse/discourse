@@ -12,7 +12,9 @@
 # testing is either slow or hides real survivors:
 #   * StepScheduler -- its spec spawns real worker threads, so each mutation runs
 #     for a second or more. A short mutation timeout would count those as
-#     timeout-kills and hide real survivors; a long one is slow.
+#     timeout-kills and hide real survivors; a long one is slow. Its scheduling
+#     decisions live in StepPlan (listed below), which has no threading and is
+#     mutation-tested directly; only the thin thread/mutex wrapper is left out.
 #   * Reporting::Tui -- its spec spawns a real pty per run.
 # (A mutation that hangs still counts as killed, so a timeout is not a coverage
 # problem, only a runtime cost. ChunkQueue's pipe reads hang quickly and it has
@@ -45,6 +47,7 @@ matcher:
     - "Migrations::CLI::Bootstrap"
     - "Migrations::Conversion::Base"
     - "Migrations::Conversion::Step"
+    - "Migrations::Conversion::StepPlan"
     - "Migrations::Conversion::StepRunner"
     - "Migrations::Conversion::StepTracker"
     - "Migrations::Conversion::ChunkQueue"
