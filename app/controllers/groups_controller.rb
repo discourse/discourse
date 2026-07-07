@@ -692,7 +692,8 @@ class GroupsController < ApplicationController
 
   def search
     include_everyone =
-      params[:include_everyone] == "true" || params[:include_pseudogroups] == "true"
+      (params[:include_everyone] == "true" || params[:include_pseudogroups] == "true") &&
+        !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
     include_pseudogroups = params[:include_pseudogroups] == "true"
     order = ["name"]
     groups =
