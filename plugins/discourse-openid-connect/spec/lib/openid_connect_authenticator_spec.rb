@@ -203,6 +203,39 @@ describe OpenIDConnectAuthenticator do
     end
   end
 
+  describe "mTLS support" do
+    it "returns empty hash when no mTLS settings are configured" do
+      SiteSetting.openid_connect_mtls_client_cert = ""
+      SiteSetting.openid_connect_mtls_client_key = ""
+      expect(authenticator.mtls_ssl_options).to eq({})
+    end
+
+    it "parses valid PEM certificate and key" do
+      key = OpenSSL::PKey::RSA.new(2048)
+      cert = OpenSSL::X509::Certificate.new
+      cert.subject = OpenSSL::X509::Name.parse("/CN=test")
+      cert.issuer = cert.subject
+      cert.not_before = Time.now
+      cert.not_after = Time.now + 365 * 86_400
+      cert.public_key = key.public_key
+      cert.sign(key, OpenSSL::Digest.new("SHA256"))
+
+      SiteSetting.openid_connect_mtls_client_cert = cert.to_pem
+      SiteSetting.openid_connect_mtls_client_key = key.to_pem
+
+      result = authenticator.mtls_ssl_options
+      expect(result[:client_cert]).to be_a(OpenSSL::X509::Certificate)
+      expect(result[:client_key]).to be_a(OpenSSL::PKey::RSA)
+    end
+
+    it "returns empty hash and logs error for invalid PEM" do
+      SiteSetting.openid_connect_mtls_client_cert = "not-a-cert"
+      SiteSetting.openid_connect_mtls_client_key = "not-a-key"
+      Rails.logger.expects(:error).with(includes("Failed to parse mTLS"))
+      expect(authenticator.mtls_ssl_options).to eq({})
+    end
+  end
+
   describe "discovery document fetching" do
     let(:document_url) do
       SiteSetting.openid_connect_discovery_document =
