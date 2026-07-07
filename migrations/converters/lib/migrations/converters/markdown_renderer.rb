@@ -45,6 +45,15 @@ module Migrations
       # explicitly with `defer:`.
       DEFAULT_DEFER = %i[upload quote mention].freeze
 
+      # Markbridge types a mention as `:user` or `:group`; map that to the
+      # `MentionType` enum stored on `embed_mentions`. It knows no `here`/`all`, so
+      # those don't arise on this path.
+      MENTION_TYPES = {
+        user: Migrations::Database::IntermediateDB::Enums::MentionType::USER,
+        group: Migrations::Database::IntermediateDB::Enums::MentionType::GROUP,
+      }.freeze
+      private_constant :MENTION_TYPES
+
       # Maps a friendly embed kind to the Markbridge AST node class it overrides
       # and the extraction that feeds the sink. Each lambda returns the placeholder
       # token (the `EmbedBuffer#<kind>` call returns it), which Markbridge then
@@ -75,7 +84,9 @@ module Migrations
           ],
           mention: [
             Markbridge::AST::Mention,
-            ->(sink, node, _iface) { sink.mention(mention_type: node.type.to_s, name: node.name) },
+            ->(sink, node, _iface) do
+              sink.mention(mention_type: MENTION_TYPES[node.type], name: node.name)
+            end,
           ],
           link: [
             Markbridge::AST::Url,

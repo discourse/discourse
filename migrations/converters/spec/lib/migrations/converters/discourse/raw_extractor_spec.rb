@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Converters::Discourse::RawExtractor do
+  MentionType = Migrations::Database::IntermediateDB::Enums::MentionType
+
   subject(:extractor) { described_class.new }
 
   let(:buffer) do
@@ -195,7 +197,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(buffer.mentions.size).to eq(1)
       mention = buffer.mentions.first
-      expect(mention).to include(mention_type: "user", name: "alice")
+      expect(mention).to include(mention_type: MentionType::USER, name: "alice")
       expect(result).to eq("hey #{mention[:placeholder]}, welcome")
     end
 
@@ -224,7 +226,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       extractor.extract("@gerhard @admins @here all there", on_embed: buffer)
 
       expect(buffer.mentions.map { |m| [m[:name], m[:mention_type]] }).to eq(
-        [%w[gerhard user], %w[admins group], %w[here here]],
+        [
+          ["gerhard", MentionType::USER],
+          ["admins", MentionType::GROUP],
+          ["here", MentionType::HERE],
+        ],
       )
     end
   end

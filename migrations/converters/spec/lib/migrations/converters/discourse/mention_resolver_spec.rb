@@ -1,25 +1,27 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Converters::Discourse::MentionResolver do
+  MentionType = Migrations::Database::IntermediateDB::Enums::MentionType
+
   it "classifies a plain name as a user mention" do
-    expect(described_class.new.call("gerhard")).to eq("user")
+    expect(described_class.new.call("gerhard")).to eq(MentionType::USER)
   end
 
   it "classifies @all as an all mention" do
-    expect(described_class.new.call("all")).to eq("all")
-    expect(described_class.new.call("All")).to eq("all")
+    expect(described_class.new.call("all")).to eq(MentionType::ALL)
+    expect(described_class.new.call("All")).to eq(MentionType::ALL)
   end
 
   describe "here mentions" do
     it "recognizes the default here_mention name" do
-      expect(described_class.new.call("here")).to eq("here")
+      expect(described_class.new.call("here")).to eq(MentionType::HERE)
     end
 
     it "honors a custom here_mention setting value" do
       resolver = described_class.new(here_mention: "staff")
 
-      expect(resolver.call("staff")).to eq("here")
-      expect(resolver.call("here")).to eq("user")
+      expect(resolver.call("staff")).to eq(MentionType::HERE)
+      expect(resolver.call("here")).to eq(MentionType::USER)
     end
   end
 
@@ -27,12 +29,12 @@ RSpec.describe Migrations::Converters::Discourse::MentionResolver do
     subject(:resolver) { described_class.new(group_names: %w[Admins Moderators]) }
 
     it "recognizes a source group name, case-insensitively" do
-      expect(resolver.call("admins")).to eq("group")
-      expect(resolver.call("Moderators")).to eq("group")
+      expect(resolver.call("admins")).to eq(MentionType::GROUP)
+      expect(resolver.call("Moderators")).to eq(MentionType::GROUP)
     end
 
     it "treats an unknown name as a user mention" do
-      expect(resolver.call("gerhard")).to eq("user")
+      expect(resolver.call("gerhard")).to eq(MentionType::USER)
     end
 
     # Same name, two Unicode forms: the group is stored decomposed (NFD), the
@@ -42,7 +44,7 @@ RSpec.describe Migrations::Converters::Discourse::MentionResolver do
       name = "Café"
       resolver = described_class.new(group_names: [name.unicode_normalize(:nfd)])
 
-      expect(resolver.call(name.unicode_normalize(:nfc))).to eq("group")
+      expect(resolver.call(name.unicode_normalize(:nfc))).to eq(MentionType::GROUP)
     end
   end
 end

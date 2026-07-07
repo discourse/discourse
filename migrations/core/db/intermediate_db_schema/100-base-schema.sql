@@ -142,7 +142,7 @@ CREATE INDEX idx_embed_links_owner_type_owner_id ON embed_links (owner_type, own
 
 CREATE TABLE embed_mentions
 (
-    mention_type TEXT,
+    mention_type ENUM_INTEGER,
     name         TEXT,
     owner_id     NUMERIC      NOT NULL,
     owner_type   ENUM_INTEGER NOT NULL,

@@ -3,6 +3,8 @@
 require "tmpdir"
 
 RSpec.describe Migrations::Converters::EmbedBuffer do
+  MentionType = Migrations::Database::IntermediateDB::Enums::MentionType
+
   subject(:buffer) { described_class.new(owner_type:) }
 
   let(:owner_type) { Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST }
@@ -59,15 +61,15 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
     end
 
     it "records a mention descriptor keyed for IntermediateDB::EmbedMention" do
-      token = buffer.mention(mention_type: "user", target_id: 7, name: "bob")
+      token = buffer.mention(mention_type: MentionType::USER, target_id: 7, name: "bob")
 
       expect(buffer.mentions).to contain_exactly(
-        { placeholder: token, mention_type: "user", target_id: 7, name: "bob" },
+        { placeholder: token, mention_type: MentionType::USER, target_id: 7, name: "bob" },
       )
     end
 
     it "accepts every known mention type, plus nil" do
-      types = [*Migrations::MentionType::TYPES, nil]
+      types = [*MentionType.values, nil]
 
       expect { types.each { |type| buffer.mention(mention_type: type) } }.not_to raise_error
     end
@@ -125,7 +127,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
       raw << " see "
       raw << buffer.link(url: "https://example.com", text: "x")
       raw << " hi "
-      raw << buffer.mention(mention_type: "user", target_id: 7, name: "bob")
+      raw << buffer.mention(mention_type: MentionType::USER, target_id: 7, name: "bob")
       raw << " poll "
       raw << buffer.poll(poll_id: 1)
       raw << " event "
@@ -198,7 +200,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
 
     it "inserts each recorded embed into its linkage table under the owner" do
       quote = buffer.quote(quoted_user_id: 5)
-      mention = buffer.mention(mention_type: "user", target_id: 7)
+      mention = buffer.mention(mention_type: MentionType::USER, target_id: 7)
       upload = buffer.upload(upload_id: "sha1")
 
       buffer.write_for(42)
@@ -211,7 +213,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
           owner_type:,
           owner_id: 42,
           placeholder: mention,
-          mention_type: "user",
+          mention_type: MentionType::USER,
           target_id: 7,
         ),
       )

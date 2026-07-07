@@ -28,8 +28,9 @@ module Migrations
         private_constant :DETECTORS
 
         # @param mention_resolver [#call] maps a mention name to its `mention_type`
-        #   (`"here"` / `"all"` / `"group"` / `"user"`). Defaults to a resolver with
-        #   no group knowledge (so only `@here` / `@all` are special-cased).
+        #   (a `MentionType` enum value for `here` / `all` / `group` / `user`).
+        #   Defaults to a resolver with no group knowledge (so only `@here` / `@all`
+        #   are special-cased).
         def initialize(mention_resolver: MentionResolver.new)
           @mention_resolver = mention_resolver
 
