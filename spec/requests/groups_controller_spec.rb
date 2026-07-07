@@ -3097,6 +3097,7 @@ RSpec.describe GroupsController do
           ),
         )
 
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
         get "/groups/search.json?include_everyone=true"
 
         expect(response.status).to eq(200)

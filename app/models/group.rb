@@ -190,6 +190,8 @@ class Group < ActiveRecord::Base
                 "groups.id NOT IN (:ids)",
                 ids: [Group::AUTO_GROUPS[:anonymous_users], Group::AUTO_GROUPS[:logged_in_users]],
               )
+          else
+            groups = groups.where("groups.id > 0") unless opts[:include_everyone]
           end
 
           if !user&.admin
@@ -254,6 +256,8 @@ class Group < ActiveRecord::Base
                 "groups.id NOT IN (:ids)",
                 ids: [Group::AUTO_GROUPS[:anonymous_users], Group::AUTO_GROUPS[:logged_in_users]],
               )
+          else
+            groups = groups.where("groups.id > 0") unless opts[:include_everyone]
           end
 
           if !user&.admin
@@ -569,12 +573,12 @@ class Group < ActiveRecord::Base
     group.full_name =
       I18n.t("groups.default_full_names.#{name}", locale: SiteSetting.default_locale)
 
-    # the everyone, anonymous_users, and logged_in_users groups are special — they
+    # the everyone, anonymous_users, and logged_in_users groups are special - they
     # represent implicit populations (unauthenticated visitors, or all logged-in
     # users) that cannot be enumerated via group_users rows.
     case name
     when :everyone, :anonymous_users, :logged_in_users
-      group.visibility_level = Group.visibility_levels[:staff]
+      group.visibility_level = Group.visibility_levels[:logged_on_users]
       group.save!
       return group
     when :moderators
