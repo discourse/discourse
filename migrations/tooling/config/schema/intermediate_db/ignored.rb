@@ -169,7 +169,6 @@ Migrations::Tooling::Schema.ignored do
          :browser_pageview_events,
          :browser_pageview_session_engagement_daily_rollups,
          :browser_pageview_session_engagements,
-         :custom_emojis,
          :developers,
          :directory_columns,
          :directory_items,

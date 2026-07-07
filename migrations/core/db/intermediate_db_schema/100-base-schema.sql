@@ -117,6 +117,16 @@ CREATE TABLE category_users
 );
 
 
+CREATE TABLE custom_emojis
+(
+    original_id NUMERIC  NOT NULL PRIMARY KEY,
+    created_at  DATETIME,
+    "group"     TEXT,
+    name        TEXT     NOT NULL,
+    upload_id   TEXT     NOT NULL
+);
+
+
 CREATE TABLE embed_events
 (
     event_id    NUMERIC,
