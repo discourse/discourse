@@ -103,7 +103,9 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
 
       token = extract.call(sink, node, nil)
 
-      expect(sink.uploads).to contain_exactly({ placeholder: token, upload_id: "abc123" })
+      expect(sink.uploads).to contain_exactly(
+        { placeholder: token, upload_id: "abc123", original_markdown: nil },
+      )
     end
 
     it "maps a Mention node's type and name" do

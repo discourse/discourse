@@ -179,10 +179,11 @@ CREATE INDEX idx_embed_quotes_owner_type_owner_id ON embed_quotes (owner_type, o
 
 CREATE TABLE embed_uploads
 (
-    owner_id    NUMERIC      NOT NULL,
-    owner_type  ENUM_INTEGER NOT NULL,
-    placeholder TEXT         NOT NULL,
-    upload_id   TEXT
+    original_markdown TEXT,
+    owner_id          NUMERIC      NOT NULL,
+    owner_type        ENUM_INTEGER NOT NULL,
+    placeholder       TEXT         NOT NULL,
+    upload_id         TEXT
 );
 
 CREATE INDEX idx_embed_uploads_owner_type_owner_id ON embed_uploads (owner_type, owner_id);

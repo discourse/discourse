@@ -10,31 +10,40 @@ module Migrations
       module EmbedUpload
         SQL = <<~SQL
           INSERT INTO embed_uploads (
+            original_markdown,
             owner_id,
             owner_type,
             placeholder,
             upload_id
           )
           VALUES (
-            ?, ?, ?, ?
+            ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
 
         # Creates a new `embed_uploads` record in the IntermediateDB.
         #
-        # @param owner_id      [Integer, String]
-        # @param owner_type    [Integer]
+        # @param original_markdown   [String, nil]
+        # @param owner_id            [Integer, String]
+        # @param owner_type          [Integer]
         #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
-        # @param placeholder   [String]
-        # @param upload_id     [String, nil]
+        # @param placeholder         [String]
+        # @param upload_id           [String, nil]
         #
         # @return [void]
         #
         # @see Migrations::Database::IntermediateDB::Enums::EmbedOwner
-        def self.create(owner_id:, owner_type:, placeholder:, upload_id: nil)
+        def self.create(
+          original_markdown: nil,
+          owner_id:,
+          owner_type:,
+          placeholder:,
+          upload_id: nil
+        )
           Migrations::Database::IntermediateDB.insert(
             SQL,
+            original_markdown,
             owner_id,
             owner_type,
             placeholder,
