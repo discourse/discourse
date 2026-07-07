@@ -32,6 +32,12 @@ module UpcomingChanges
     def self.should_display_enable_gifs?
       !DiscourseGifs.component_installed?
     end
+
+    # Only relevant on sites that currently allow uncategorized topics, and must
+    # stay visible after being enabled (which disables that setting).
+    def self.should_display_remove_and_replace_uncategorized?
+      SiteSetting::Action::RemoveAndReplaceUncategorizedToggled.should_display_upcoming_change?
+    end
   end
 
   def self.user_enabled_reasons

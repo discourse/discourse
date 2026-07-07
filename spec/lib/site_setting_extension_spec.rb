@@ -724,6 +724,7 @@ RSpec.describe SiteSettingExtension do
               },
             )
             settings.refresh!
+            allow(UpcomingChanges).to receive(:enabled?).and_return(false)
             allow(UpcomingChanges).to receive(:enabled?).with(:enable_cool_thing).and_return(true)
           end
 
@@ -745,6 +746,7 @@ RSpec.describe SiteSettingExtension do
               },
             )
             settings.refresh!
+            allow(UpcomingChanges).to receive(:enabled?).and_return(false)
             allow(UpcomingChanges).to receive(:enabled?).with(:enable_cool_thing).and_return(true)
           end
 

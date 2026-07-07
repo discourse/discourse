@@ -162,6 +162,29 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
         }.by(1)
       end
 
+      it "creates an automatically_promoted event recording the promotion" do
+        expect { result }.to change {
+          UpcomingChangeEvent.where(
+            event_type: :automatically_promoted,
+            upcoming_change_name: :enable_upload_debug_mode,
+          ).count
+        }.by(1)
+      end
+
+      it "does not create a duplicate automatically_promoted event when one already exists" do
+        UpcomingChangeEvent.create!(
+          event_type: :automatically_promoted,
+          upcoming_change_name: :enable_upload_debug_mode,
+        )
+
+        expect { result }.not_to change {
+          UpcomingChangeEvent.where(
+            event_type: :automatically_promoted,
+            upcoming_change_name: :enable_upload_debug_mode,
+          ).count
+        }
+      end
+
       it "triggers DiscourseEvent for the promoted setting" do
         expect(event[:params]).to eq([:enable_upload_debug_mode])
       end
