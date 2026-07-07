@@ -33,6 +33,10 @@ class ReviewableScoreSerializer < ApplicationSerializer
   has_one :reviewable_conversation, serializer: ReviewableConversationSerializer
   has_one :reviewed_by, serializer: BasicUserSerializer, root: "users"
 
+  def include_reviewable_conversation?
+    object.meta_topic.present? && scope&.can_see?(object.meta_topic)
+  end
+
   def agree_stats
     {
       agreed: user.user_stat.flags_agreed,
