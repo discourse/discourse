@@ -5,5 +5,6 @@ export default <template>
     @dataSourceName={{@item.identifier}}
     @preloadedData={{@payload}}
     @showHeader={{false}}
+    @bare={{true}}
   />
 </template>
