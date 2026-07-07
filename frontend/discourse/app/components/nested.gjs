@@ -812,6 +812,7 @@ export default class Nested extends Component {
           @grantBadge={{@grantBadge}}
           @lockPost={{@lockPost}}
           @recoverPost={{@recoverPost}}
+          @showFlags={{@showFlags}}
           @unlockPost={{@unlockPost}}
           @permanentlyDeletePost={{@permanentlyDeletePost}}
           @rebakePost={{@rebakePost}}
