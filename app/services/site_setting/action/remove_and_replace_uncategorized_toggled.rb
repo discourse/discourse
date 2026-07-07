@@ -78,6 +78,9 @@ class SiteSetting::Action::RemoveAndReplaceUncategorizedToggled < Service::Actio
     Site.clear_cache
   end
 
+  # Capture once: the first opt-in/promotion snapshot is the canonical
+  # pre-migration state. Later opt-ins intentionally reuse it (so their events
+  # keep event_data: nil), and opt-out always restores that original state.
   def capture_snapshot(snapshot)
     return if snapshot_event.present?
 

@@ -1357,7 +1357,6 @@ posting:
     default: false
     client: true
     hidden: true
-    area: "posts_and_topics"
     upcoming_change:
       status: "experimental"
       impact: "other,all_members"
