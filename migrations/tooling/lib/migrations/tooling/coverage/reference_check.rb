@@ -32,6 +32,7 @@ module Migrations
         # removal. The drift protection this check would otherwise give (a schema
         # column nothing writes) lives in EmbedBuffer's own spec instead.
         EMBED_BUFFER_TABLES = %w[
+          EmbedEmoji
           EmbedEvent
           EmbedHashtag
           EmbedLink

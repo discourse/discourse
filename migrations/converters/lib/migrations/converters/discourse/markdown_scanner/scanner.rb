@@ -26,10 +26,18 @@ module Migrations
 
           # @param detectors [Array<Detectors::Base>] detector instances in priority
           #   order.
+          # @param extra_triggers [Array<String>] trigger characters a caller's
+          #   detectors add on top of {TRIGGER_CHARS}. Kept optional so a detector
+          #   that's only wired in for some runs (the custom-emoji `:`) doesn't make
+          #   every post pay for its trigger.
+          # @param extra_gate [Regexp, nil] an extra presence-gate alternative OR'd
+          #   into {MAYBE_EMBED}, for the same reason.
           # @yieldparam node the detected AST node; the block returns its replacement.
-          def initialize(detectors:, &on_node)
+          def initialize(detectors:, extra_triggers: [], extra_gate: nil, &on_node)
             @detectors = detectors
             @on_node = on_node
+            @triggers = extra_triggers.empty? ? TRIGGER_CHARS : (TRIGGER_CHARS + extra_triggers)
+            @gate = extra_gate ? Regexp.union(MAYBE_EMBED, extra_gate) : MAYBE_EMBED
           end
 
           # @param input [String]
@@ -39,7 +47,7 @@ module Migrations
 
             # Most posts have no embed at all — skip the character walk (and every
             # allocation it makes) and hand the body back untouched.
-            return input unless input.match?(MAYBE_EMBED)
+            return input unless input.match?(@gate)
 
             @code_tracker = CodeBlockTracker.new
             @result = +""
@@ -81,7 +89,7 @@ module Migrations
                 next
               end
 
-              if TRIGGER_CHARS.include?(char)
+              if @triggers.include?(char)
                 match = detect_at_position
                 if match
                   handle_match(match)

@@ -24,7 +24,7 @@ module Migrations
       IntermediateDB = Migrations::Database::IntermediateDB
       private_constant :IntermediateDB
 
-      attr_reader :quotes, :links, :mentions, :hashtags, :polls, :events, :uploads
+      attr_reader :quotes, :links, :mentions, :hashtags, :emojis, :polls, :events, :uploads
 
       # @param owner_type [Integer] the owning record's kind, an
       #   `IntermediateDB::Enums::EmbedOwner` value (e.g. `EmbedOwner::POST`).
@@ -37,6 +37,7 @@ module Migrations
         @links = []
         @mentions = []
         @hashtags = []
+        @emojis = []
         @polls = []
         @events = []
         @uploads = []
@@ -88,6 +89,12 @@ module Migrations
         record(@hashtags, :hashtag, hashtag_type:, target_id:, name:)
       end
 
+      # Only the source's own custom emoji reach here; a standard shortcode stays
+      # plain text. `name` is the shortcode without the surrounding colons.
+      def emoji(name: nil)
+        record(@emojis, :emoji, name:)
+      end
+
       def poll(poll_id: nil)
         record(@polls, :poll, poll_id:)
       end
@@ -113,6 +120,7 @@ module Migrations
         @links.clear
         @mentions.clear
         @hashtags.clear
+        @emojis.clear
         @polls.clear
         @events.clear
         @uploads.clear
@@ -127,6 +135,7 @@ module Migrations
         @links.each { |row| IntermediateDB::EmbedLink.create(owner_type:, owner_id:, **row) }
         @mentions.each { |row| IntermediateDB::EmbedMention.create(owner_type:, owner_id:, **row) }
         @hashtags.each { |row| IntermediateDB::EmbedHashtag.create(owner_type:, owner_id:, **row) }
+        @emojis.each { |row| IntermediateDB::EmbedEmoji.create(owner_type:, owner_id:, **row) }
         @polls.each { |row| IntermediateDB::EmbedPoll.create(owner_type:, owner_id:, **row) }
         @events.each { |row| IntermediateDB::EmbedEvent.create(owner_type:, owner_id:, **row) }
         @uploads.each { |row| IntermediateDB::EmbedUpload.create(owner_type:, owner_id:, **row) }
@@ -146,7 +155,7 @@ module Migrations
       private
 
       def descriptors
-        @quotes + @links + @mentions + @hashtags + @polls + @events + @uploads
+        @quotes + @links + @mentions + @hashtags + @emojis + @polls + @events + @uploads
       end
 
       def record(collection, kind, **fields)

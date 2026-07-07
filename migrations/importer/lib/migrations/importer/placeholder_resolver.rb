@@ -29,6 +29,8 @@ module Migrations
     #   * `category_slug_path(original_id)` => the destination category's slug path,
     #                                          `"slug"` or `"parent:child"`, or `nil`
     #   * `tag_name(original_id)`           => the destination tag's name or `nil`
+    #   * `emoji_name(source_name)`         => the destination custom emoji name (a
+    #                                          conflict may rename it) or `nil`
     #   * `base_url`                        => the destination site's base URL
     #
     # ## Reporting
@@ -57,6 +59,7 @@ module Migrations
         link: "embed_links",
         mention: "embed_mentions",
         hashtag: "embed_hashtags",
+        emoji: "embed_emojis",
         poll: "embed_polls",
         event: "embed_events",
         upload: "embed_uploads",
@@ -365,6 +368,8 @@ module Migrations
           render_mention(row)
         when :hashtag
           render_hashtag(row)
+        when :emoji
+          render_emoji(row)
         when :poll, :event, :upload
           render_entity(kind, row)
         end
@@ -493,6 +498,15 @@ module Migrations
           end
 
         "##{row[:name]}#{suffix}"
+      end
+
+      # A custom emoji renders as `:<name>:`, remapped through the emoji-name map in
+      # case a conflict renamed it. A map miss puts the source name back verbatim; no
+      # unresolved report — the source value is the fallback, as with mentions and
+      # hashtags.
+      def render_emoji(row)
+        name = @maps.emoji_name(row[:name]) || row[:name]
+        ":#{name}:"
       end
 
       def topic_url(topic_id)

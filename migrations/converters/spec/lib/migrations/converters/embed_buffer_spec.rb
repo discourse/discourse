@@ -108,6 +108,12 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
       )
     end
 
+    it "records an emoji descriptor keyed for IntermediateDB::EmbedEmoji" do
+      token = buffer.emoji(name: "parrot")
+
+      expect(buffer.emojis).to contain_exactly({ placeholder: token, name: "parrot" })
+    end
+
     it "records a poll descriptor keyed for IntermediateDB::EmbedPoll" do
       token = buffer.poll(poll_id: 3)
 
@@ -157,6 +163,8 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
       raw << buffer.mention(mention_type: MentionType::USER, target_id: 7, name: "bob")
       raw << " tag "
       raw << buffer.hashtag(name: "support")
+      raw << " emoji "
+      raw << buffer.emoji(name: "parrot")
       raw << " poll "
       raw << buffer.poll(poll_id: 1)
       raw << " event "
@@ -194,6 +202,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
       link: [:links, idb::EmbedLink],
       mention: [:mentions, idb::EmbedMention],
       hashtag: [:hashtags, idb::EmbedHashtag],
+      emoji: [:emojis, idb::EmbedEmoji],
       poll: [:polls, idb::EmbedPoll],
       event: [:events, idb::EmbedEvent],
       upload: [:uploads, idb::EmbedUpload],
@@ -232,6 +241,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
       quote = buffer.quote(quoted_user_id: 5)
       mention = buffer.mention(mention_type: MentionType::USER, target_id: 7)
       hashtag = buffer.hashtag(name: "support:billing")
+      emoji = buffer.emoji(name: "parrot")
       upload = buffer.upload(upload_id: "sha1")
 
       buffer.write_for(42)
@@ -256,6 +266,9 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
           name: "support:billing",
           hashtag_type: nil,
         ),
+      )
+      expect(rows("embed_emojis")).to contain_exactly(
+        hash_including(owner_type:, owner_id: 42, placeholder: emoji, name: "parrot"),
       )
       expect(rows("embed_uploads")).to contain_exactly(
         hash_including(owner_type:, owner_id: 42, placeholder: upload, upload_id: "sha1"),

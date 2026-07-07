@@ -20,7 +20,8 @@ class FakePlaceholderMaps
     event_markdown
     category_slug_path
     tag_name
-  ].each { |name| define_method(name) { |original_id| (@lookups[name] || {})[original_id] } }
+    emoji_name
+  ].each { |name| define_method(name) { |key| (@lookups[name] || {})[key] } }
 
   def base_url
     @lookups.fetch(:base_url, "https://dest.example.com")
@@ -864,6 +865,39 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       resolved = resolver.resolve_all([{ id: 1, raw: "see #{hashtag}" }])
 
       expect(resolved[1]).to eq("see #support::category")
+      expect(resolver.unresolved_sink).to be_empty
+    end
+  end
+
+  describe "custom emoji" do
+    def create_emoji(placeholder_token, name)
+      Migrations::Database::IntermediateDB::EmbedEmoji.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
+        placeholder: placeholder_token,
+        name:,
+      )
+    end
+
+    it "renders a custom emoji, honoring an import-time rename" do
+      emoji = placeholder.mint(:emoji)
+      create_emoji(emoji, "parrot")
+      maps = FakePlaceholderMaps.new(emoji_name: { "parrot" => "party_parrot" })
+      resolver = described_class.new(intermediate_db, maps, owner_type: EmbedOwner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "nice #{emoji} work" }])
+
+      expect(resolved[1]).to eq("nice :party_parrot: work")
+    end
+
+    it "falls back to the source name when the emoji is unmapped, without a report" do
+      emoji = placeholder.mint(:emoji)
+      create_emoji(emoji, "parrot")
+      resolver = described_class.new(intermediate_db, maps, owner_type: EmbedOwner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "hi #{emoji}" }])
+
+      expect(resolved[1]).to eq("hi :parrot:")
       expect(resolver.unresolved_sink).to be_empty
     end
   end
