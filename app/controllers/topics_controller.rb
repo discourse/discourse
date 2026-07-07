@@ -1283,8 +1283,6 @@ class TopicsController < ApplicationController
     dismissed_topic_ids = []
     dismissed_post_topic_ids = []
 
-    # TODO (martin) dismiss_topics is what is sent from client when unified_new enabled
-    # and what is missing from specs
     if !current_user.unified_new_enabled? || params[:dismiss_topics]
       dismissed_topic_ids =
         TopicsBulkAction.new(current_user, topic_scope.pluck(:id), type: "dismiss_topics").perform!
