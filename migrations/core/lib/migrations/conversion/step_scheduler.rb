@@ -24,7 +24,9 @@ module Migrations
       #   merges shards into (held directly, so an inline step swapping the
       #   IntermediateDB connection can't divert a background merge)
       # @param budget [Integer] the most steps (forks) to run at once, usually cores - 1
-      # @param max_parallel_steps [Integer, nil] a lower cap from `--max-parallel-steps`
+      # @param max_parallel_steps [Integer, nil] a lower cap on the fork budget from
+      #   `--max-parallel-steps`; it caps concurrent worker forks, not steps (a
+      #   partitioned step consumes several)
       # @param no_fork [Boolean] run each step inline, one at a time (`--no-fork`)
       def initialize(
         step_classes:,
