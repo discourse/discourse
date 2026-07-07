@@ -364,9 +364,9 @@ class PostRevisor
       # false positive.
       plugin_callbacks
 
+      @should_bump_topic = @version_changed && successfully_saved_post_and_topic && should_bump?
       revise_topic
       advance_draft_sequence if !opts[:keep_existing_draft]
-      @should_bump_topic = @version_changed && successfully_saved_post_and_topic && should_bump?
 
       raise ActiveRecord::Rollback if !successfully_saved_post_and_topic
     end
@@ -601,6 +601,7 @@ class PostRevisor
     previous_reply_to_post_number = @post.reply_to_post_number_was
 
     @post_successfully_saved = @post.save(validate: @validate_post)
+    @post_changes = @post.previous_changes.slice(*POST_TRACKED_FIELDS) if @post_successfully_saved
     @post.link_post_uploads
 
     if @post_successfully_saved
@@ -759,7 +760,7 @@ class PostRevisor
   end
 
   def post_changes
-    @post.previous_changes.slice(*POST_TRACKED_FIELDS)
+    @post_changes || @post.previous_changes.slice(*POST_TRACKED_FIELDS)
   end
 
   def topic_diff

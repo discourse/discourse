@@ -1969,6 +1969,36 @@ describe PostRevisor do
           }.to change { post.topic.reload.bumped_at }
         end
 
+        it "keeps post changes available to the modifier before advancing the draft" do
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :should_bump_topic,
+            &modifier_block
+          )
+
+          inspecting_modifier =
+            Proc.new do |value, modifier_post, modifier_post_changes, modifier_topic_changes, editor|
+              modifier_post.is_first_post? && modifier_post_changes.any?
+            end
+
+          plugin_instance.register_modifier(:should_bump_topic, &inspecting_modifier)
+
+          expect {
+            post_revisor.revise!(
+              post.user,
+              { raw: "updated body", title: "Updated topic title" },
+              revised_at: post.updated_at + SiteSetting.editing_grace_period + 1.second,
+            )
+          }.to change { post.topic.reload.bumped_at }
+        ensure
+          DiscoursePluginRegistry.unregister_modifier(
+            plugin_instance,
+            :should_bump_topic,
+            &inspecting_modifier
+          ) if defined?(inspecting_modifier)
+          plugin_instance.register_modifier(:should_bump_topic, &modifier_block)
+        end
+
         it "doesn't bump the topic when the title edit is invalid" do
           original_raw = post.raw
           post.topic.update!(bumped_at: 1.day.ago)
