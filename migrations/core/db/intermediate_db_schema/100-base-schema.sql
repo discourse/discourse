@@ -164,13 +164,15 @@ CREATE INDEX idx_embed_polls_owner_type_owner_id ON embed_polls (owner_type, own
 
 CREATE TABLE embed_quotes
 (
-    owner_id        NUMERIC      NOT NULL,
-    owner_type      ENUM_INTEGER NOT NULL,
-    placeholder     TEXT         NOT NULL,
-    quoted_name     TEXT,
-    quoted_post_id  NUMERIC,
-    quoted_user_id  NUMERIC,
-    quoted_username TEXT
+    owner_id           NUMERIC      NOT NULL,
+    owner_type         ENUM_INTEGER NOT NULL,
+    placeholder        TEXT         NOT NULL,
+    quoted_name        TEXT,
+    quoted_post_id     NUMERIC,
+    quoted_post_number INTEGER,
+    quoted_topic_id    NUMERIC,
+    quoted_user_id     NUMERIC,
+    quoted_username    TEXT
 );
 
 CREATE INDEX idx_embed_quotes_owner_type_owner_id ON embed_quotes (owner_type, owner_id);

@@ -8,7 +8,10 @@ module Migrations
     # (`owner_type`); the owner is a post today, a user bio etc. later.
     #
     # It loads every linkage row for a batch of owners once (one query per kind),
-    # then rewrites the bodies in memory. No SQL runs while substituting.
+    # resolves the references the converter could only record by source coordinates
+    # or by name (a quoted post, a quoted user, a mentioned user or group), and then
+    # rewrites the bodies in memory. All of that runs in the load phase; no SQL runs
+    # while substituting.
     #
     # ## The `maps` object
     #
@@ -90,6 +93,7 @@ module Migrations
         with_embeds =
           items.select { |item| item[:raw]&.include?(Migrations::Placeholder::DELIMITER) }
         linkages = load_linkages(with_embeds.map { |item| item[:id] })
+        normalize_linkages(linkages)
 
         items.each_with_object({}) do |item, result|
           body = substitute(item[:raw], linkages[item[:id]])
@@ -155,6 +159,90 @@ module Migrations
         end
 
         buckets
+      end
+
+      # Fills in the ids that only become knowable once the whole IntermediateDB is
+      # loaded: a quoted post named by source coordinates, and a quoted user or
+      # mentioned user/group named by name. Runs once per batch in the load phase, so
+      # no query runs while substituting. Rows are mutated in place; from here on the
+      # render path treats them as if the converter had known the ids all along.
+      def normalize_linkages(linkages)
+        rows_by_kind = Hash.new { |hash, kind| hash[kind] = [] }
+        linkages.each_value { |pairs| pairs.each { |kind, row| rows_by_kind[kind] << row } }
+
+        resolve_quote_coordinates(rows_by_kind[:quote])
+        resolve_names(rows_by_kind[:quote], rows_by_kind[:mention])
+      end
+
+      # Turns the source coordinates (topic id + post number) a quote carries into
+      # the quoted post's source original_id, for the rows that have coordinates but
+      # no id. One query covers the batch: SQLite row values match the pairs against
+      # the `(topic_id, post_number)` index. Coordinates with no matching post leave
+      # `quoted_post_id` nil, so the username fallback still applies.
+      def resolve_quote_coordinates(quote_rows)
+        pending =
+          quote_rows.select do |row|
+            row[:quoted_post_id].nil? && row[:quoted_topic_id] && row[:quoted_post_number]
+          end
+        return if pending.empty?
+
+        coordinates = pending.map { |row| [row[:quoted_topic_id], row[:quoted_post_number]] }.uniq
+        values = (["(?, ?)"] * coordinates.size).join(", ")
+        sql = <<~SQL
+          SELECT original_id, topic_id, post_number
+          FROM posts
+          WHERE (topic_id, post_number) IN (VALUES #{values})
+        SQL
+
+        post_ids = {}
+        @intermediate_db.query(sql, *coordinates.flatten) do |row|
+          post_ids[[row[:topic_id], row[:post_number]]] = row[:original_id]
+        end
+
+        pending.each do |row|
+          row[:quoted_post_id] = post_ids[[row[:quoted_topic_id], row[:quoted_post_number]]]
+        end
+      end
+
+      # Fills a quoted user's id and a mention's target id from the recorded name,
+      # for rows that carry a name but no id. `here`/`all` mentions name no entity.
+      def resolve_names(quote_rows, mention_rows)
+        quote_rows.each do |row|
+          next if row[:quoted_user_id] || row[:quoted_username].blank?
+          row[:quoted_user_id] = user_id_by_name[normalize(row[:quoted_username])]
+        end
+
+        mention_rows.each do |row|
+          next if row[:target_id] || row[:name].blank?
+
+          case row[:mention_type]
+          when Migrations::MentionType::GROUP
+            row[:target_id] = group_id_by_name[normalize(row[:name])]
+          when Migrations::MentionType::USER, nil
+            row[:target_id] = user_id_by_name[normalize(row[:name])]
+          end
+        end
+      end
+
+      # The source's name -> original_id maps. They can be large (a full-site users
+      # map is one entry per user), so each is built at most once per resolver and
+      # only when a batch actually needs it.
+      def user_id_by_name
+        @user_id_by_name ||= build_name_map("SELECT original_id, username AS name FROM users")
+      end
+
+      def group_id_by_name
+        @group_id_by_name ||= build_name_map('SELECT original_id, name FROM "groups"')
+      end
+
+      def build_name_map(sql)
+        map = {}
+        @intermediate_db.query(sql) { |row| map[normalize(row[:name])] = row[:original_id] }
+        map
+      end
+
+      def normalize(name)
+        Migrations::NameNormalizer.normalize(name)
       end
 
       def render(kind, row)

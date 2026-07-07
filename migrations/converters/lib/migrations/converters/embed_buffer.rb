@@ -46,8 +46,24 @@ module Migrations
       # around them into the raw as plain text; none of that goes into the row.
       #
       # @return [String] the token for the opening tag.
-      def quote(quoted_post_id: nil, quoted_user_id: nil, quoted_username: nil, quoted_name: nil)
-        record(@quotes, :quote, quoted_post_id:, quoted_user_id:, quoted_username:, quoted_name:)
+      def quote(
+        quoted_post_id: nil,
+        quoted_topic_id: nil,
+        quoted_post_number: nil,
+        quoted_user_id: nil,
+        quoted_username: nil,
+        quoted_name: nil
+      )
+        record(
+          @quotes,
+          :quote,
+          quoted_post_id:,
+          quoted_topic_id:,
+          quoted_post_number:,
+          quoted_user_id:,
+          quoted_username:,
+          quoted_name:,
+        )
       end
 
       def link(url: nil, text: nil, target_type: nil, target_id: nil)

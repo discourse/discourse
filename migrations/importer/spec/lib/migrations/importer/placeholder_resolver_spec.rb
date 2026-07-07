@@ -556,6 +556,133 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
     end
   end
 
+  describe "resolving a quoted post by source coordinates" do
+    def create_quote(placeholder_token, **attrs)
+      Migrations::Database::IntermediateDB::EmbedQuote.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
+        placeholder: placeholder_token,
+        **attrs,
+      )
+    end
+
+    it "fills quoted_post_id from (topic_id, post_number) and feeds the maps flow" do
+      Migrations::Database::IntermediateDB::Post.create(
+        original_id: 200,
+        topic_id: 5,
+        post_number: 12,
+        raw: "quoted body",
+      )
+      quote = placeholder.mint(:quote)
+      create_quote(quote, quoted_topic_id: 5, quoted_post_number: 12, quoted_username: "bob")
+      maps = FakePlaceholderMaps.new(post: { 200 => { topic_id: 42, post_number: 3 } })
+      resolver = described_class.new(intermediate_db, maps, owner_type: EmbedOwner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{quote} y" }])
+
+      expect(resolved[1]).to eq('x [quote="bob, post:3, topic:42"] y')
+    end
+
+    it "falls back to the username when the coordinates match no post" do
+      quote = placeholder.mint(:quote)
+      create_quote(quote, quoted_topic_id: 5, quoted_post_number: 99, quoted_username: "bob")
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{quote} y" }])
+
+      expect(resolved[1]).to eq('x [quote="bob"] y')
+    end
+  end
+
+  describe "resolving recorded names to source original_ids" do
+    it "maps a quoted username to the user's original_id, honoring an import-time rename" do
+      Migrations::Database::IntermediateDB::User.create(
+        original_id: 5,
+        username: "bob",
+        created_at: Time.now,
+        trust_level: 0,
+      )
+      quote = placeholder.mint(:quote)
+      Migrations::Database::IntermediateDB::EmbedQuote.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
+        placeholder: quote,
+        quoted_username: "bob",
+      )
+      # The importer renamed user 5 to "robert"; resolving the recorded name to id 5
+      # lets the quote pick up the new username instead of the stale source one.
+      maps = FakePlaceholderMaps.new(user: { 5 => { username: "robert", name: nil } })
+      resolver = described_class.new(intermediate_db, maps, owner_type: EmbedOwner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "x #{quote} y" }])
+
+      expect(resolved[1]).to eq('x [quote="robert"] y')
+    end
+
+    it "maps a user mention name to the user's original_id, honoring an import-time rename" do
+      Migrations::Database::IntermediateDB::User.create(
+        original_id: 7,
+        username: "bob",
+        created_at: Time.now,
+        trust_level: 0,
+      )
+      mention = placeholder.mint(:mention)
+      Migrations::Database::IntermediateDB::EmbedMention.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
+        placeholder: mention,
+        mention_type: "user",
+        name: "bob",
+      )
+      maps = FakePlaceholderMaps.new(user: { 7 => { username: "robert", name: "Robert" } })
+      resolver = described_class.new(intermediate_db, maps, owner_type: EmbedOwner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "hey #{mention}!" }])
+
+      expect(resolved[1]).to eq("hey  @robert !")
+    end
+
+    it "maps a group mention name to the group's original_id" do
+      Migrations::Database::IntermediateDB::Group.create(original_id: 3, name: "admins")
+      mention = placeholder.mint(:mention)
+      Migrations::Database::IntermediateDB::EmbedMention.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
+        placeholder: mention,
+        mention_type: "group",
+        name: "admins",
+      )
+      maps = FakePlaceholderMaps.new(group_name: { 3 => "staff" })
+      resolver = described_class.new(intermediate_db, maps, owner_type: EmbedOwner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "cc #{mention} please" }])
+
+      expect(resolved[1]).to eq("cc  @staff  please")
+    end
+
+    it "matches a recorded name to a source username regardless of case and Unicode form" do
+      Migrations::Database::IntermediateDB::User.create(
+        original_id: 9,
+        username: "Café".unicode_normalize(:nfd),
+        created_at: Time.now,
+        trust_level: 0,
+      )
+      mention = placeholder.mint(:mention)
+      Migrations::Database::IntermediateDB::EmbedMention.create(
+        owner_type: EmbedOwner::POST,
+        owner_id: 1,
+        placeholder: mention,
+        mention_type: "user",
+        name: "CAFÉ".unicode_normalize(:nfc),
+      )
+      maps = FakePlaceholderMaps.new(user: { 9 => { username: "cafe", name: nil } })
+      resolver = described_class.new(intermediate_db, maps, owner_type: EmbedOwner::POST)
+
+      resolved = resolver.resolve_all([{ id: 1, raw: "ping #{mention}" }])
+
+      expect(resolved[1]).to eq("ping  @cafe ")
+    end
+  end
+
   describe "a USER-owned batch" do
     let(:owner_type) { EmbedOwner::USER }
     let(:maps) { FakePlaceholderMaps.new(user: { 7 => { username: "alice", name: "Alice A" } }) }

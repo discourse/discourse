@@ -17,13 +17,13 @@ module Migrations
               match = OPENING.match(input, pos)
               return nil unless match
 
-              username, post = parse_attribution(match[:attribution])
+              username, post_number, topic_id = parse_attribution(match[:attribution])
               return nil if username.nil?
 
               Match.new(
                 start_pos: pos,
                 end_pos: pos + match[0].length,
-                node: QuoteAttribution.new(username:, post:),
+                node: QuoteAttribution.new(username:, post_number:, topic_id:),
               )
             end
 
@@ -31,8 +31,11 @@ module Migrations
 
             # The username is the explicit `username:` value when present (Discourse
             # uses it when the display name differs), else the leading bare token.
+            # `post:`/`topic:` are the source's own post number and topic id; keep
+            # them as integers so the importer can look up the quoted post by them.
             def parse_attribution(string)
-              username = post = name = nil
+              username = name = nil
+              post_number = topic_id = nil
 
               string
                 .split(",")
@@ -40,9 +43,9 @@ module Migrations
                 .each_with_index do |part, index|
                   case part
                   when /\Apost:(\d+)\z/
-                    post = Regexp.last_match(1)
-                  when /\Atopic:\d+\z/
-                    next
+                    post_number = Regexp.last_match(1).to_i
+                  when /\Atopic:(\d+)\z/
+                    topic_id = Regexp.last_match(1).to_i
                   when /\Ausername:(.+)\z/
                     username = Regexp.last_match(1)
                   else
@@ -50,7 +53,7 @@ module Migrations
                   end
                 end
 
-              [username || name, post]
+              [username || name, post_number, topic_id]
             end
           end
         end

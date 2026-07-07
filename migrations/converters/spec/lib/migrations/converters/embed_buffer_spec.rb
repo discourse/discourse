@@ -18,6 +18,8 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
       token =
         buffer.quote(
           quoted_post_id: 1,
+          quoted_topic_id: 8,
+          quoted_post_number: 3,
           quoted_user_id: 2,
           quoted_username: "bob",
           quoted_name: "Bob B",
@@ -27,6 +29,8 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
         {
           placeholder: token,
           quoted_post_id: 1,
+          quoted_topic_id: 8,
+          quoted_post_number: 3,
           quoted_user_id: 2,
           quoted_username: "bob",
           quoted_name: "Bob B",

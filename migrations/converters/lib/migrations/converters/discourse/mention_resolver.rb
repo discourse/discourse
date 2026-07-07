@@ -37,9 +37,8 @@ module Migrations
 
         private
 
-        # Matches `User.normalize_username` in core.
         def normalize(name)
-          name.unicode_normalize.downcase
+          Migrations::NameNormalizer.normalize(name)
         end
       end
     end

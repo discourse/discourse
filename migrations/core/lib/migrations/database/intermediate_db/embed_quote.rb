@@ -15,25 +15,29 @@ module Migrations
             placeholder,
             quoted_name,
             quoted_post_id,
+            quoted_post_number,
+            quoted_topic_id,
             quoted_user_id,
             quoted_username
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
 
         # Creates a new `embed_quotes` record in the IntermediateDB.
         #
-        # @param owner_id          [Integer, String]
-        # @param owner_type        [Integer]
+        # @param owner_id             [Integer, String]
+        # @param owner_type           [Integer]
         #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
-        # @param placeholder       [String]
-        # @param quoted_name       [String, nil]
-        # @param quoted_post_id    [Integer, String, nil]
-        # @param quoted_user_id    [Integer, String, nil]
-        # @param quoted_username   [String, nil]
+        # @param placeholder          [String]
+        # @param quoted_name          [String, nil]
+        # @param quoted_post_id       [Integer, String, nil]
+        # @param quoted_post_number   [Integer, nil]
+        # @param quoted_topic_id      [Integer, String, nil]
+        # @param quoted_user_id       [Integer, String, nil]
+        # @param quoted_username      [String, nil]
         #
         # @return [void]
         #
@@ -44,6 +48,8 @@ module Migrations
           placeholder:,
           quoted_name: nil,
           quoted_post_id: nil,
+          quoted_post_number: nil,
+          quoted_topic_id: nil,
           quoted_user_id: nil,
           quoted_username: nil
         )
@@ -54,6 +60,8 @@ module Migrations
             placeholder,
             quoted_name,
             quoted_post_id,
+            quoted_post_number,
+            quoted_topic_id,
             quoted_user_id,
             quoted_username,
           )
