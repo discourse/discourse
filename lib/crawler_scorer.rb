@@ -169,8 +169,8 @@ class CrawlerScorer
       LEFT JOIN browser_pageview_session_engagements se
         ON se.session_id = e.session_id
         AND (
-          #{BrowserPageviewSessionEngagement::INTERACTION_COLUMNS.map { |column| "se.#{column}" }.join(" + ")}
-        ) > 0
+          #{BrowserPageviewSessionEngagement::INTERACTION_COLUMNS.map { |column| "se.#{column} > 0" }.join(" OR ")}
+        )
     ),
 
     totals AS (
