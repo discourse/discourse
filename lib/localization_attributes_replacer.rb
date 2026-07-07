@@ -4,7 +4,8 @@ module LocalizationAttributesReplacer
   def self.replace_category_attributes(category, crawl_locale)
     if loc = get_localization(category, crawl_locale)
       category.name = loc.name if loc.name.present?
-      category.description = loc.description if loc.description.present?
+      localized_description = loc.description_first_paragraph
+      category.description = localized_description if localized_description.present?
     end
 
     while category = category.parent_category
