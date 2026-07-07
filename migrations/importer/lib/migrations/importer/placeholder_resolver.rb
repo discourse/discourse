@@ -216,9 +216,9 @@ module Migrations
           next if row[:target_id] || row[:name].blank?
 
           case row[:mention_type]
-          when Migrations::MentionType::GROUP
+          when Enums::MentionType::GROUP
             row[:target_id] = group_id_by_name[normalize(row[:name])]
-          when Migrations::MentionType::USER, nil
+          when Enums::MentionType::USER, nil
             row[:target_id] = user_id_by_name[normalize(row[:name])]
           end
         end
@@ -330,11 +330,13 @@ module Migrations
       def render_mention(row)
         name =
           case row[:mention_type]
-          when Migrations::MentionType::HERE
-            Migrations::MentionType::HERE
-          when Migrations::MentionType::ALL
-            Migrations::MentionType::ALL
-          when Migrations::MentionType::GROUP
+          when Enums::MentionType::HERE
+            # The destination's `here_mention` name is configurable; rendering the
+            # literal "here" would be the place to honor it, a possible refinement.
+            "here"
+          when Enums::MentionType::ALL
+            "all"
+          when Enums::MentionType::GROUP
             @maps.group_name(row[:target_id]) || row[:name]
           else # USER, or an unspecified (nil) mention
             @maps.user(row[:target_id])&.fetch(:username, nil) || row[:name]

@@ -115,7 +115,12 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       token = extract.call(sink, node, nil)
 
       expect(sink.mentions).to contain_exactly(
-        { placeholder: token, mention_type: "user", target_id: nil, name: "gerhard" },
+        {
+          placeholder: token,
+          mention_type: Migrations::Database::IntermediateDB::Enums::MentionType::USER,
+          target_id: nil,
+          name: "gerhard",
+        },
       )
     end
   end

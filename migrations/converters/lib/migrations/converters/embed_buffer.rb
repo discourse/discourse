@@ -142,10 +142,10 @@ module Migrations
       end
 
       def validate_mention_type!(type)
-        return if type.nil? || Migrations::MentionType::TYPES.include?(type)
+        return if type.nil? || IntermediateDB::Enums::MentionType.valid?(type)
 
-        raise ArgumentError,
-              "Unknown mention type #{type.inspect}; expected nil or one of #{Migrations::MentionType::TYPES.join(", ")}"
+        valid = IntermediateDB::Enums::MentionType.values.join(", ")
+        raise ArgumentError, "Unknown mention type #{type.inspect}; expected nil or one of #{valid}"
       end
     end
   end

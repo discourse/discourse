@@ -4,7 +4,8 @@ module Migrations
   module Converters
     module Discourse
       # Classifies an `@name` mention into the `mention_type` stored on
-      # `embed_mentions`: `"here"`, `"all"`, `"group"` or `"user"`.
+      # `embed_mentions`: a `MentionType` enum value for `here`, `all`, `group` or
+      # `user`.
       #
       #   * `@here` is recognized by the source's `here_mention` site setting — its
       #     name is configurable, so we don't hard-code `"here"`.
@@ -16,6 +17,9 @@ module Migrations
       # a mention and a group/user name compare equal however the source encoded
       # them. The importer remaps the recorded name to a destination user or group.
       class MentionResolver
+        MentionType = Migrations::Database::IntermediateDB::Enums::MentionType
+        private_constant :MentionType
+
         # @param here_mention [String, nil] the source's `here_mention` setting value.
         # @param group_names [Enumerable<String>] the source's group names.
         def initialize(here_mention: "here", group_names: [])
@@ -24,12 +28,12 @@ module Migrations
         end
 
         # @param name [String] the mention name (without the leading `@`).
-        # @return [String] one of the {Migrations::MentionType} values.
+        # @return [Integer] a {MentionType} enum value.
         def call(name)
           normalized = normalize(name)
 
           return MentionType::HERE if @here_mention && normalized == @here_mention
-          return MentionType::ALL if normalized == MentionType::ALL
+          return MentionType::ALL if normalized == "all"
           return MentionType::GROUP if @group_names.include?(normalized)
 
           MentionType::USER

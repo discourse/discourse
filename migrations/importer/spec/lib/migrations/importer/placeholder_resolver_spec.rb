@@ -24,6 +24,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
   EmbedOwner = Migrations::Database::IntermediateDB::Enums::EmbedOwner
   LinkTarget = Migrations::Database::IntermediateDB::Enums::LinkTarget
+  MentionType = Migrations::Database::IntermediateDB::Enums::MentionType
 
   let(:placeholder) { Migrations::Placeholder.new(nonce: "n") }
   let(:intermediate_db) { @intermediate_db }
@@ -72,7 +73,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         owner_type: EmbedOwner::POST,
         owner_id: 100,
         placeholder: mention,
-        mention_type: "user",
+        mention_type: MentionType::USER,
         target_id: 7,
         name: "stale-name",
       )
@@ -129,13 +130,13 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         owner_type: EmbedOwner::POST,
         owner_id: 1,
         placeholder: first,
-        mention_type: "all",
+        mention_type: MentionType::ALL,
       )
       Migrations::Database::IntermediateDB::EmbedMention.create(
         owner_type: EmbedOwner::POST,
         owner_id: 2,
         placeholder: second,
-        mention_type: "here",
+        mention_type: MentionType::HERE,
       )
 
       resolved =
@@ -150,7 +151,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         owner_type: EmbedOwner::USER,
         owner_id: 1,
         placeholder: token,
-        mention_type: "all",
+        mention_type: MentionType::ALL,
       )
 
       resolved = resolver.resolve_all([{ id: 1, raw: "a #{token} b" }])
@@ -179,7 +180,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         owner_type: EmbedOwner::POST,
         owner_id: 2,
         placeholder: token,
-        mention_type: "all",
+        mention_type: MentionType::ALL,
       )
 
       resolved = resolver.resolve_all([{ id: 1, raw: "plain" }, { id: 2, raw: "hi #{token}" }])
@@ -451,7 +452,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         owner_type: EmbedOwner::POST,
         owner_id: 100,
         placeholder: mention,
-        mention_type: "user",
+        mention_type: MentionType::USER,
         name: "ghost",
       )
 
@@ -667,7 +668,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         owner_type: EmbedOwner::POST,
         owner_id: 1,
         placeholder: mention,
-        mention_type: "user",
+        mention_type: MentionType::USER,
         name: "bob",
       )
       maps = FakePlaceholderMaps.new(user: { 7 => { username: "robert", name: "Robert" } })
@@ -685,7 +686,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         owner_type: EmbedOwner::POST,
         owner_id: 1,
         placeholder: mention,
-        mention_type: "group",
+        mention_type: MentionType::GROUP,
         name: "admins",
       )
       maps = FakePlaceholderMaps.new(group_name: { 3 => "staff" })
@@ -708,7 +709,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
         owner_type: EmbedOwner::POST,
         owner_id: 1,
         placeholder: mention,
-        mention_type: "user",
+        mention_type: MentionType::USER,
         name: "CAFÉ".unicode_normalize(:nfc),
       )
       maps = FakePlaceholderMaps.new(user: { 9 => { username: "cafe", name: nil } })
