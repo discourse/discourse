@@ -257,6 +257,14 @@ module NestedReplies
         .count
     end
 
+    def tree_counts(posts)
+      reply_counts = direct_reply_counts(posts.map(&:post_number))
+      {
+        reply_counts: reply_counts,
+        descendant_counts: total_descendant_counts(posts, reply_counts: reply_counts),
+      }
+    end
+
     def total_descendant_counts(posts, reply_counts: nil)
       return {} if posts.empty?
 
