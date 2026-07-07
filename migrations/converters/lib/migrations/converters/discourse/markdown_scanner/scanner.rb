@@ -10,17 +10,18 @@ module Migrations
           # Per-position triggers: at one of these the loop asks the detectors to
           # match. `!` is here because an image is detected at its leading `!`; `h`
           # and `/` because a bare (unbracketed) upload URL starts with `http`, `//`
-          # or a root-relative `/…`.
-          TRIGGER_CHARS = Set.new(["@", "[", "!", "h", "/"]).freeze
+          # or a root-relative `/…`; `#` starts a hashtag.
+          TRIGGER_CHARS = Set.new(["@", "[", "!", "h", "/", "#"]).freeze
           private_constant :TRIGGER_CHARS
 
           # Presence gate for the fast path. Every construct we extract contains an
-          # `@` (mention), a `[` (quote, attachment, and an image's `![`), or the
-          # `uploads/` segment of a full-URL upload — so a body with none of those
-          # can't have one and skips the walk. `!` and the bare-URL triggers are
+          # `@` (mention), a `[` (quote, attachment, and an image's `![`), a `#`
+          # (hashtag), or the `uploads/` segment of a full-URL upload — so a body
+          # with none of those can't have one and skips the walk. `#` earns its place
+          # because it's rare in plain prose. `!` and the bare-URL triggers are
           # deliberately not gates on their own: they're common characters, and each
           # extractable construct they start also carries one of these signals.
-          MAYBE_EMBED = %r{[@\[]|uploads/}
+          MAYBE_EMBED = %r{[@\[#]|uploads/}
           private_constant :MAYBE_EMBED
 
           # @param detectors [Array<Detectors::Base>] detector instances in priority

@@ -4,6 +4,7 @@ require "tmpdir"
 
 RSpec.describe Migrations::Converters::EmbedBuffer do
   MentionType = Migrations::Database::IntermediateDB::Enums::MentionType
+  HashtagType = Migrations::Database::IntermediateDB::Enums::HashtagType
 
   subject(:buffer) { described_class.new(owner_type:) }
 
@@ -81,6 +82,32 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
       )
     end
 
+    it "records a hashtag descriptor keyed for IntermediateDB::EmbedHashtag" do
+      token = buffer.hashtag(hashtag_type: HashtagType::CATEGORY, target_id: nil, name: "support")
+
+      expect(buffer.hashtags).to contain_exactly(
+        {
+          placeholder: token,
+          hashtag_type: HashtagType::CATEGORY,
+          target_id: nil,
+          name: "support",
+        },
+      )
+    end
+
+    it "accepts every known hashtag type, plus nil" do
+      types = [*HashtagType.values, nil]
+
+      expect { types.each { |type| buffer.hashtag(hashtag_type: type) } }.not_to raise_error
+    end
+
+    it "rejects an unknown hashtag type so a typo fails loud" do
+      expect { buffer.hashtag(hashtag_type: "Tag") }.to raise_error(
+        ArgumentError,
+        /Unknown hashtag type/,
+      )
+    end
+
     it "records a poll descriptor keyed for IntermediateDB::EmbedPoll" do
       token = buffer.poll(poll_id: 3)
 
@@ -128,6 +155,8 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
       raw << buffer.link(url: "https://example.com", text: "x")
       raw << " hi "
       raw << buffer.mention(mention_type: MentionType::USER, target_id: 7, name: "bob")
+      raw << " tag "
+      raw << buffer.hashtag(name: "support")
       raw << " poll "
       raw << buffer.poll(poll_id: 1)
       raw << " event "
@@ -164,6 +193,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
       quote: [:quotes, idb::EmbedQuote],
       link: [:links, idb::EmbedLink],
       mention: [:mentions, idb::EmbedMention],
+      hashtag: [:hashtags, idb::EmbedHashtag],
       poll: [:polls, idb::EmbedPoll],
       event: [:events, idb::EmbedEvent],
       upload: [:uploads, idb::EmbedUpload],
@@ -201,6 +231,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
     it "inserts each recorded embed into its linkage table under the owner" do
       quote = buffer.quote(quoted_user_id: 5)
       mention = buffer.mention(mention_type: MentionType::USER, target_id: 7)
+      hashtag = buffer.hashtag(name: "support:billing")
       upload = buffer.upload(upload_id: "sha1")
 
       buffer.write_for(42)
@@ -215,6 +246,15 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
           placeholder: mention,
           mention_type: MentionType::USER,
           target_id: 7,
+        ),
+      )
+      expect(rows("embed_hashtags")).to contain_exactly(
+        hash_including(
+          owner_type:,
+          owner_id: 42,
+          placeholder: hashtag,
+          name: "support:billing",
+          hashtag_type: nil,
         ),
       )
       expect(rows("embed_uploads")).to contain_exactly(
