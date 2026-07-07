@@ -141,6 +141,10 @@ export default class SiteSettingComponent extends Component {
     return `site-settings/${this.typeClass}`;
   }
 
+  get siteSettingComponent() {
+    return getOwner(this).resolveRegistration("component:site-setting");
+  }
+
   get overridden() {
     return !this.#valuesEqual(this.setting.default, this.buffered.get("value"));
   }
@@ -273,6 +277,14 @@ export default class SiteSettingComponent extends Component {
     return this.args.setting;
   }
 
+  get inlineDependentSettings() {
+    if (this.args.inline) {
+      return [];
+    }
+
+    return this.adminSiteSettingStore.inlineDependentSettings(this.setting);
+  }
+
   get settingName() {
     return this.setting.label || this.setting.humanized_name;
   }
@@ -376,12 +388,7 @@ export default class SiteSettingComponent extends Component {
     if (this.setting.depends_behavior !== "hidden") {
       return false;
     }
-    return (
-      this.setting.depends_on?.some((name) => {
-        const parent = this.adminSiteSettingStore.get(name);
-        return parent && !isSettingValueTrue(parent.buffered.get("value"));
-      }) ?? false
-    );
+    return !this.adminSiteSettingStore.dependenciesSatisfied(this.setting);
   }
 
   get canUpdate() {
@@ -520,7 +527,8 @@ export default class SiteSettingComponent extends Component {
         {{this.typeClass}}
         {{if this.overridden 'overridden'}}
         {{if this.isDisabled 'disabled'}}
-        {{if this.isDisabledByDependency 'disabled-by-dependency'}}"
+        {{if this.isDisabledByDependency 'disabled-by-dependency'}}
+        {{if @inline 'inline-dependent-setting'}}"
       ...attributes
     >
       <div class="setting-label">
@@ -584,6 +592,16 @@ export default class SiteSettingComponent extends Component {
           {{#if this.displayDescription}}
             <Description @description={{this.setting.description}} />
             <JobStatus @status={{this.status}} @progress={{this.progress}} />
+          {{/if}}
+          {{#if this.inlineDependentSettings.length}}
+            <div class="inline-dependent-settings">
+              {{#each this.inlineDependentSettings as |dependentSetting|}}
+                <this.siteSettingComponent
+                  @setting={{dependentSetting}}
+                  @inline={{true}}
+                />
+              {{/each}}
+            </div>
           {{/if}}
           <PluginOutlet
             @name="site-setting-after-description"

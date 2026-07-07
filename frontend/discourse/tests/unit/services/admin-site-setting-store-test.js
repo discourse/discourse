@@ -64,6 +64,78 @@ module("Unit | Service | admin-site-setting-store", function (hooks) {
         "case + whitespace"
       );
     });
+
+    test("hidden value-dependent settings are visible only when the parent has a matching value", function (assert) {
+      const parent = build({ setting: "category_scope", value: "public" });
+      const child = build({
+        setting: "highlight_categories",
+        depends_on: ["category_scope"],
+        depends_on_values: {
+          category_scope: ["include", "exclude"],
+        },
+        depends_behavior: "hidden",
+      });
+      this.store.register([parent, child]);
+
+      assert.false(this.store.isVisible(child));
+
+      parent.buffered.set("value", "include");
+      assert.true(this.store.isVisible(child));
+
+      parent.buffered.set("value", "public");
+      assert.false(
+        this.store.isVisible(child),
+        "the dependent setting is hidden again when the parent value no longer matches"
+      );
+    });
+
+    test("inline dependent settings are hidden from the top-level list unless directly filtered", function (assert) {
+      const child = build({
+        setting: "highlight_categories",
+        depends_on: ["category_scope"],
+        depends_on_values: {
+          category_scope: ["include"],
+        },
+        depends_behavior: "hidden",
+        dependent_setting_display: "inline",
+      });
+      this.store.register([
+        build({ setting: "category_scope", value: "include" }),
+        child,
+      ]);
+
+      assert.false(this.store.isVisible(child));
+      assert.true(this.store.isVisible(child, "highlight_categories"));
+    });
+  });
+
+  module("inlineDependentSettings", function () {
+    test("returns matching inline dependents for a setting", function (assert) {
+      const parent = build({ setting: "category_scope", value: "public" });
+      const child = build({
+        setting: "highlight_categories",
+        depends_on: ["category_scope"],
+        depends_on_values: {
+          category_scope: ["include"],
+        },
+        depends_behavior: "hidden",
+        dependent_setting_display: "inline",
+      });
+      const separateChild = build({
+        setting: "separate_categories",
+        depends_on: ["category_scope"],
+        depends_on_values: {
+          category_scope: ["include"],
+        },
+        depends_behavior: "hidden",
+      });
+      this.store.register([parent, child, separateChild]);
+
+      assert.deepEqual(this.store.inlineDependentSettings(parent), []);
+
+      parent.buffered.set("value", "include");
+      assert.deepEqual(this.store.inlineDependentSettings(parent), [child]);
+    });
   });
 
   module("register", function () {
@@ -127,6 +199,24 @@ module("Unit | Service | admin-site-setting-store", function (hooks) {
         oneOff,
       ]);
       assert.false(this.store.isRevealed(oneOff));
+    });
+
+    test("value-dependent settings are not latched as revealed", function (assert) {
+      const parent = build({ setting: "scope", value: "include" });
+      const child = build({
+        setting: "categories",
+        depends_on: ["scope"],
+        depends_on_values: {
+          scope: ["include"],
+        },
+        depends_behavior: "hidden",
+      });
+      this.store.register([parent, child]);
+
+      assert.true(this.store.isRevealed(child));
+
+      parent.buffered.set("value", "public");
+      assert.false(this.store.isRevealed(child));
     });
   });
 

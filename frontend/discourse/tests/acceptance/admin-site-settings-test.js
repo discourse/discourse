@@ -137,6 +137,60 @@ acceptance("Admin - Site Settings", function (needs) {
     assert.dom(".row.setting").exists({ count: 0 });
   });
 
+  test("renders inline dependent site settings under their parent setting", async function (assert) {
+    pretender.get("/admin/site_settings", () => {
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        JSON.stringify({
+          site_settings: [
+            {
+              setting: "highlight_scope",
+              humanized_name: "Highlight scope",
+              description: "Choose a scope.",
+              default: "public",
+              value: "include",
+              category: "required",
+              preview: null,
+              secret: false,
+              type: "string",
+            },
+            {
+              setting: "highlight_categories",
+              humanized_name: "Highlight categories",
+              description: "Choose categories.",
+              default: "",
+              value: "",
+              category: "required",
+              preview: null,
+              secret: false,
+              type: "string",
+              depends_on: ["highlight_scope"],
+              depends_on_values: {
+                highlight_scope: ["include", "exclude"],
+              },
+              depends_behavior: "hidden",
+              dependent_setting_display: "inline",
+            },
+          ],
+        }),
+      ];
+    });
+
+    await visit("/admin/site_settings");
+
+    assert
+      .dom(
+        '[data-setting="highlight_scope"] [data-setting="highlight_categories"]'
+      )
+      .exists("dependent setting is rendered inside its parent setting");
+    assert
+      .dom('section.settings > [data-setting="highlight_categories"]')
+      .doesNotExist(
+        "dependent setting is not rendered as a separate top-level row"
+      );
+  });
+
   test("category name is preserved", async function (assert) {
     await visit("/admin/site_settings/category/basic?filter=menu");
     assert.strictEqual(
