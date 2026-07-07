@@ -87,7 +87,10 @@ class NestedTopic::ListRoots
 
     preloader.prepare(posts)
     context[:reply_counts] = loader.direct_reply_counts(posts.map(&:post_number))
-    context[:descendant_counts] = loader.total_descendant_counts(posts.map(&:id))
+    context[:descendant_counts] = loader.total_descendant_counts(
+      posts,
+      reply_counts: context[:reply_counts],
+    )
   end
 
   def serialize_roots(
