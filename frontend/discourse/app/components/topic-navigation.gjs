@@ -83,11 +83,17 @@ export default class TopicNavigation extends Component {
       swipeEvents.removeTouchListeners();
     };
   });
+  #heightQuery = null;
 
   constructor() {
     super(...arguments);
     this.setupAppEvents();
     this.updateComposerHeight();
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.#heightQuery?.teardown();
   }
 
   setupAppEvents() {
@@ -138,15 +144,20 @@ export default class TopicNavigation extends Component {
 
   @cached
   get heightQuery() {
-    if (!this.composer.isPreviewVisible) {
-      return null;
-    }
+    const threshold = this.composer.isPreviewVisible
+      ? MIN_HEIGHT_TIMELINE + this.composerHeight + headerOffset()
+      : null;
 
-    const threshold =
-      MIN_HEIGHT_TIMELINE + this.composerHeight + headerOffset();
-    const query = new TrackedMediaQuery(`(min-height: ${threshold}px)`);
-    registerDestructor(this, () => query.teardown());
-    return query;
+    return this.#buildHeightQuery(threshold);
+  }
+
+  #buildHeightQuery(threshold) {
+    this.#heightQuery?.teardown();
+    this.#heightQuery =
+      threshold === null
+        ? null
+        : new TrackedMediaQuery(`(min-height: ${threshold}px)`);
+    return this.#heightQuery;
   }
 
   @bind
