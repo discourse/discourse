@@ -225,7 +225,10 @@ module Migrations
             out << "\r\n" if index < live.size - 1
           end
 
-          leftover = [@live_count - live.size, 0].max
+          # The permanent lines printed this frame already overwrote that many
+          # rows of the old live region, so only the rows past both the new live
+          # lines and those permanents are still stale and need erasing.
+          leftover = [@live_count - permanent.size - live.size, 0].max
           if leftover > 0
             leftover.times { out << "\r\n" << Ansi::ERASE_LINE }
             out << Ansi.cursor_up(leftover) unless final

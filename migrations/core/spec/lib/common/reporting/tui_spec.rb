@@ -417,6 +417,46 @@ RSpec.describe Migrations::Reporting::Tui do
       end
     end
 
+    describe "repaint leftover accounting" do
+      def two_live_steps
+        renderer.apply([:start, "Posts", "Posts"])
+        renderer.apply([:progress_begin, "Posts", 1000])
+        renderer.apply([:start, "Tags", "Tags"])
+        renderer.apply([:progress_begin, "Tags", 200])
+        at(2.0)
+        renderer.apply([:progress, "Posts", 400, 0, 0, 0])
+        renderer.apply([:progress, "Tags", 50, 0, 0, 0])
+      end
+
+      it "emits no extra newlines when a frame both prints permanents and shrinks the live region" do
+        two_live_steps
+        renderer.repaint
+
+        mark = io.string.length
+        renderer.apply([:finish, "Posts", :done])
+        renderer.apply([:finish, "Tags", :done])
+        renderer.repaint
+
+        frame = io.string[mark..]
+        # Two permanent lines replace the two live rows: only their two newlines,
+        # not extra leftover erase pairs for a region that didn't actually shrink.
+        expect(frame.scan("\r\n").size).to eq(2)
+      end
+
+      it "leaves no stray blank rows below the interrupted lines on finalize" do
+        two_live_steps
+        renderer.repaint
+        renderer.finalize
+
+        rows = screen.rows
+        interrupted = rows.select { |r| r.include?("interrupted") }
+        expect(interrupted.size).to eq(2)
+        # Only the cursor's resting line sits below them, not a blank per shrunk row.
+        expect(rows[(rows.index(interrupted.last) + 1)..].reject(&:empty?)).to be_empty
+        expect(rows.count(&:empty?)).to eq(1)
+      end
+    end
+
     describe "out-of-order updates" do
       it "ignores progress for a step that already finished" do
         renderer.apply([:start, "Users", "Users"])
