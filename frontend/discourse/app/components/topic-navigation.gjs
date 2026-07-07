@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
+import { cached, tracked } from "@glimmer/tracking";
 import {
   isDestroyed,
   isDestroying,
@@ -54,18 +54,15 @@ export default class TopicNavigation extends Component {
   @service modal;
   @service site;
 
-  @tracked heightQuery = null;
-  heightThreshold = null;
+  @tracked composerHeight = 0;
+
   info = new TopicNavigationInfo(
     () => this.args.topic.posts_count,
     () => this.renderTimeline
   );
-
   widthQuery = this.setupWidthQuery();
-
   movingElement = null;
   pxClosed = 0;
-
   setupSwipe = modifierFn((element) => {
     if (!this.site.mobileView) {
       return;
@@ -90,7 +87,7 @@ export default class TopicNavigation extends Component {
   constructor() {
     super(...arguments);
     this.setupAppEvents();
-    this.rebuildHeightQuery();
+    this.updateComposerHeight();
   }
 
   setupAppEvents() {
@@ -99,10 +96,7 @@ export default class TopicNavigation extends Component {
       .on("topic:jump-to-post", this.collapseFullscreen)
       .on("topic:keyboard-trigger", this.keyboardTrigger)
       .on("topic:toggle-progress-expansion", this.toggleProgressExpansion)
-      .on("composer:opened", this.rebuildHeightQuery)
-      .on("composer:resize-ended", this.rebuildHeightQuery)
-      .on("composer:closed", this.rebuildHeightQuery)
-      .on("composer:preview-toggled", this.rebuildHeightQuery);
+      .on("composer:resized", this.updateComposerHeight);
 
     registerDestructor(this, () => {
       this.appEvents
@@ -110,12 +104,7 @@ export default class TopicNavigation extends Component {
         .off("topic:jump-to-post", this.collapseFullscreen)
         .off("topic:keyboard-trigger", this.keyboardTrigger)
         .off("topic:toggle-progress-expansion", this.toggleProgressExpansion)
-        .off("composer:opened", this.rebuildHeightQuery)
-        .off("composer:resize-ended", this.rebuildHeightQuery)
-        .off("composer:closed", this.rebuildHeightQuery)
-        .off("composer:preview-toggled", this.rebuildHeightQuery);
-
-      this.heightQuery?.teardown();
+        .off("composer:resized", this.updateComposerHeight);
     });
   }
 
@@ -147,28 +136,23 @@ export default class TopicNavigation extends Component {
     return true;
   }
 
-  // The height threshold depends on the (untracked, user-resizable) composer and
-  // header heights, so it can't be a static media query. We recompute it from
-  // the composer events and cache the matching `TrackedMediaQuery`, rebuilding
-  // only when the threshold actually changes.
-  @bind
-  rebuildHeightQuery() {
-    const threshold = this.composer.isPreviewVisible
-      ? MIN_HEIGHT_TIMELINE +
-        (document.querySelector("#reply-control")?.offsetHeight || 0) +
-        headerOffset()
-      : null;
-
-    if (threshold === this.heightThreshold) {
-      return;
+  @cached
+  get heightQuery() {
+    if (!this.composer.isPreviewVisible) {
+      return null;
     }
 
-    this.heightThreshold = threshold;
-    this.heightQuery?.teardown();
-    this.heightQuery =
-      threshold === null
-        ? null
-        : new TrackedMediaQuery(`(min-height: ${threshold}px)`);
+    const threshold =
+      MIN_HEIGHT_TIMELINE + this.composerHeight + headerOffset();
+    const query = new TrackedMediaQuery(`(min-height: ${threshold}px)`);
+    registerDestructor(this, () => query.teardown());
+    return query;
+  }
+
+  @bind
+  updateComposerHeight() {
+    this.composerHeight =
+      document.querySelector("#reply-control")?.offsetHeight || 0;
   }
 
   @bind
