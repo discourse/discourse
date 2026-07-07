@@ -769,11 +769,7 @@ en:
           not_allowed: "You are not allowed to close or open this topic."
           no_reason: "A reason is required to close or open a topic."
         success: "Topic updated successfully."
-        reverted: "The topic status change has been reverted."
 
-      tool_revert:
-        errors:
-          failed: "Failed to revert this action."
       suspend_user:
         errors:
           not_found: "User not found."
@@ -782,7 +778,6 @@ en:
           invalid_duration: "Duration must be a positive number of days."
           failed: "Failed to suspend user."
         success: "User %{username} has been suspended."
-        reverted: "Suspension of %{username} has been reverted."
 
       silence_user:
         errors:
@@ -792,7 +787,6 @@ en:
           invalid_duration: "Duration must be a positive number of days."
           failed: "Failed to silence user."
         success: "User %{username} has been silenced."
-        reverted: "Silence of %{username} has been reverted."
 
       unlist_topic:
         errors:
@@ -932,9 +926,6 @@ en:
         tool_not_found: "Tool '%{tool_name}' is no longer available."
         bot_user_missing: "The bot user no longer exists."
         performer_not_human: "This action must be approved or rejected by a real person, not a bot."
-        not_approved: "Only an approved action can be reverted."
-        already_reverted: "This action has already been reverted."
-        not_revertible: "This action cannot be reverted."
         execution_error: "Tool execution failed: %{error}"
 
     summarization:

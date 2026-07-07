@@ -40,19 +40,12 @@ export default class AiToolApproval extends Component {
   }
 
   get statusLabel() {
-    if (this.reviewable?.reverted) {
-      return i18n("discourse_ai.ai_tool_approval.reverted");
-    }
     if (this.reviewable?.status === STATUSES.approved) {
       return i18n("discourse_ai.ai_tool_approval.approved");
     }
     if (this.reviewable?.status === STATUSES.rejected) {
       return i18n("discourse_ai.ai_tool_approval.rejected");
     }
-  }
-
-  get canRevert() {
-    return this.isStaff && this.reviewable?.revertible;
   }
 
   get toolParameters() {
@@ -76,31 +69,6 @@ export default class AiToolApproval extends Component {
   @action
   toggleExpanded() {
     this.expanded = !this.expanded;
-  }
-
-  @action
-  async revert() {
-    if (this.performing) {
-      return;
-    }
-
-    this.performing = true;
-
-    try {
-      await ajax(
-        `/discourse-ai/ai-tool-actions/${this.args.reviewableId}/revert`,
-        { type: "PUT" }
-      );
-      this.reviewable = {
-        ...this.reviewable,
-        reverted: true,
-        revertible: false,
-      };
-    } catch (error) {
-      popupAjaxError(error);
-    } finally {
-      this.performing = false;
-    }
   }
 
   @action
@@ -200,18 +168,6 @@ export default class AiToolApproval extends Component {
               <span class="ai-tool-approval__value">{{param.value}}</span>
             {{/each}}
           </div>
-
-          {{#if this.canRevert}}
-            <div class="ai-tool-approval__actions">
-              <DButton
-                class="btn-default"
-                @icon="arrow-rotate-left"
-                @label="discourse_ai.ai_tool_approval.revert"
-                @isLoading={{this.performing}}
-                @action={{this.revert}}
-              />
-            </div>
-          {{/if}}
         {{/if}}
 
         {{#if this.isPending}}

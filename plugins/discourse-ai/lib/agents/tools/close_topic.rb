@@ -45,26 +45,6 @@ module DiscourseAi
           true
         end
 
-        def self.revertible?
-          true
-        end
-
-        def revert
-          topic = Topic.find_by(id: parameters[:topic_id])
-          if !topic
-            return error_response(I18n.t("discourse_ai.ai_bot.close_topic.errors.not_found"))
-          end
-
-          if !guardian.can_close_topic?(topic)
-            return error_response(I18n.t("discourse_ai.ai_bot.close_topic.errors.not_allowed"))
-          end
-
-          # undo whatever the approved action did: re-open if it closed, re-close if it opened
-          TopicStatusUpdater.new(topic, guardian.user).update!("closed", !parameters[:closed])
-
-          { status: "success", message: I18n.t("discourse_ai.ai_bot.close_topic.reverted") }
-        end
-
         def invoke
           topic = Topic.find_by(id: parameters[:topic_id])
           if !topic

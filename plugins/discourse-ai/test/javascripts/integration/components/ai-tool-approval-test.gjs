@@ -57,19 +57,11 @@ module("Integration | Component | AiToolApproval", function (hooks) {
       .includesText("Spam", "expands to reveal the approved action's reason");
   });
 
-  test("staff can expand an approved revertible action and revert it", async function (assert) {
+  test("an approved action collapses to an expandable status with no revert action", async function (assert) {
     updateCurrentUser({ moderator: true, admin: false });
 
-    const approved = {
-      ...reviewable,
-      status: 1,
-      revertible: true,
-      reverted: false,
-    };
+    const approved = { ...reviewable, status: 1 };
     pretender.get("/review/42", () => response({ reviewable: approved }));
-    pretender.put("/discourse-ai/ai-tool-actions/42/revert", () =>
-      response({ success: "OK" })
-    );
 
     await render(<template><AiToolApproval @reviewableId="42" /></template>);
 
@@ -80,14 +72,11 @@ module("Integration | Component | AiToolApproval", function (hooks) {
     await click(".ai-tool-approval__toggle");
 
     assert
-      .dom(".ai-tool-approval__actions .btn")
-      .exists("reveals a revert button when expanded");
-
-    await click(".ai-tool-approval__actions .btn");
-
+      .dom(".ai-tool-approval__summary")
+      .includesText("Spam", "expands to reveal what was approved");
     assert
-      .dom(".ai-tool-approval__toggle")
-      .hasText("Reverted", "reflects the reverted state after reverting");
+      .dom(".ai-tool-approval__actions")
+      .doesNotExist("offers no revert action");
   });
 
   test("non-staff sees a pending message without action buttons", async function (assert) {

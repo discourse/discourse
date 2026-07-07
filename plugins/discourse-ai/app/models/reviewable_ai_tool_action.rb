@@ -63,63 +63,6 @@ class ReviewableAiToolAction < Reviewable
     create_result(:success, :rejected)
   end
 
-  def reverted?
-    payload.present? && payload["reverted_at"].present?
-  end
-
-  def revertible_tool?
-    tool_class =
-      DiscourseAi::Agents::Agent.all_available_tools.find { |t| t.name == target&.tool_name }
-    !!tool_class&.revertible?
-  end
-
-  # Undoes a previously-approved action. Called from AiToolActionsController,
-  # outside the reviewable perform framework, so it returns the tool's result
-  # hash rather than a PerformResult. Raises Discourse::InvalidAccess when the
-  # reverting user isn't allowed or the action can't be reverted.
-  def revert!(performed_by)
-    ensure_performed_by_is_a_real_person!(performed_by)
-
-    raise Discourse::InvalidAccess.new if !Reviewable.viewable_by(performed_by).exists?(id: id)
-
-    if !approved?
-      raise Discourse::InvalidAccess.new(
-              I18n.t("discourse_ai.reviewables.ai_tool_action.not_approved"),
-            )
-    end
-
-    if reverted?
-      raise Discourse::InvalidAccess.new(
-              I18n.t("discourse_ai.reviewables.ai_tool_action.already_reverted"),
-            )
-    end
-
-    tool, tool_class, context = build_tool!
-    if !tool_class.revertible?
-      raise Discourse::InvalidAccess.new(
-              I18n.t("discourse_ai.reviewables.ai_tool_action.not_revertible"),
-            )
-    end
-    # a revert is always human-initiated, so attribute it to the reverter
-    context.user = performed_by
-
-    result =
-      if defined?(DiscourseAutomation)
-        DiscourseAutomation.suppress_triggers { tool.revert }
-      else
-        tool.revert
-      end
-
-    if result[:status] == "success"
-      self.payload ||= {}
-      payload["reverted_at"] = Time.zone.now.iso8601
-      payload["reverted_by_id"] = performed_by.id
-      save!
-    end
-
-    result
-  end
-
   private
 
   # Rebuilds the tool from the persisted action. Returns [tool, tool_class,

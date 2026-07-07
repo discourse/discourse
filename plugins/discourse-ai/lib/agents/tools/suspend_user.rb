@@ -46,36 +46,12 @@ module DiscourseAi
           true
         end
 
-        def self.always_requires_approval?
+        def self.mandatory_approval?
           true
         end
 
         def self.attribute_to_approver?
           true
-        end
-
-        def self.revertible?
-          true
-        end
-
-        def revert
-          user = User.find_by_username(parameters[:username])
-          if !user
-            return error_response(I18n.t("discourse_ai.ai_bot.suspend_user.errors.not_found"))
-          end
-
-          if !guardian.can_unsuspend?(user)
-            return error_response(I18n.t("discourse_ai.ai_bot.suspend_user.errors.not_allowed"))
-          end
-
-          user.update!(suspended_till: nil, suspended_at: nil)
-          StaffActionLogger.new(guardian.user).log_user_unsuspend(user)
-          DiscourseEvent.trigger(:user_unsuspended, user: user)
-
-          {
-            status: "success",
-            message: I18n.t("discourse_ai.ai_bot.suspend_user.reverted", username: user.username),
-          }
         end
 
         def invoke

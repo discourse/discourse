@@ -49,7 +49,7 @@ module DiscourseAi
 
           # When true, this tool always queues for moderator approval,
           # regardless of the agent's own require_approval setting.
-          def always_requires_approval?
+          def mandatory_approval?
             false
           end
 
@@ -58,12 +58,6 @@ module DiscourseAi
           # downstream audit logs (StaffActionLogger, UserHistory) credit
           # the real approver instead of the bot account.
           def attribute_to_approver?
-            false
-          end
-
-          # When true, an approved action can be undone from the approval
-          # card via ReviewableAiToolAction#revert! → the tool's #revert.
-          def revertible?
             false
           end
 
@@ -108,13 +102,6 @@ module DiscourseAi
 
         def name
           self.class.name
-        end
-
-        # Undo a previously-approved action. Only called for tools whose
-        # class returns revertible? => true. Same contract as #invoke:
-        # returns a { status:, message: } / { status: "error", error: } hash.
-        def revert
-          raise NotImplemented
         end
 
         def summary

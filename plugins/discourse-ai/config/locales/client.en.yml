@@ -260,8 +260,6 @@ en:
         reject: "Reject"
         approved: "Approved"
         rejected: "Rejected"
-        reverted: "Reverted"
-        revert: "Revert"
         awaiting_staff: "Awaiting staff approval"
 
       default_llm:
