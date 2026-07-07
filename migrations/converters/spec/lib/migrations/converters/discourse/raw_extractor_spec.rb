@@ -308,6 +308,69 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
   end
 
+  describe "custom emoji" do
+    subject(:extractor) { described_class.new(custom_emoji_names: %w[parrot +1]) }
+
+    it "defers a shortcode that names a source custom emoji" do
+      result = extract("nice :parrot: work")
+
+      expect(buffer.emojis.size).to eq(1)
+      emoji = buffer.emojis.first
+      expect(emoji[:name]).to eq("parrot")
+      expect(result).to eq("nice #{emoji[:placeholder]} work")
+    end
+
+    it "leaves a standard emoji shortcode as plain text" do
+      raw = "hello :smile: there"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.emojis).to be_empty
+    end
+
+    it "does not treat a clock time as an emoji" do
+      raw = "meet at 10:30:45 sharp"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.emojis).to be_empty
+    end
+
+    it "does not treat a shortcode glued to a word as an emoji" do
+      raw = "path:parrot: here"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.emojis).to be_empty
+    end
+
+    it "defers a shortcode right after an opening paren" do
+      extract("(:parrot:)")
+
+      expect(buffer.emojis.first[:name]).to eq("parrot")
+    end
+
+    it "does not extract a custom emoji inside a fenced code block" do
+      raw = <<~MD
+        real :parrot:
+
+        ```
+        code :parrot: here
+        ```
+      MD
+
+      result = extract(raw)
+
+      expect(buffer.emojis.size).to eq(1)
+      expect(result).to include("code :parrot: here")
+    end
+
+    it "skips emoji detection entirely when the source has no custom emoji" do
+      plain_extractor = described_class.new
+      raw = "a :parrot: and :smile:"
+
+      expect(plain_extractor.extract(raw, on_embed: buffer)).to eq(raw)
+      expect(buffer.emojis).to be_empty
+    end
+  end
+
   # The whole reason to wrap Markbridge's scanner: things that only look like
   # embeds inside code must be left alone.
   describe "code blocks" do

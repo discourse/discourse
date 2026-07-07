@@ -14,9 +14,9 @@ module Migrations
       # record the embed on the sink and return the placeholder token the scanner
       # splices into the output.
       #
-      # We detect uploads, quote attributions, mentions and hashtags. Polls and
-      # events are self-contained (no id remapping needed), so they're left in `raw`
-      # verbatim.
+      # We detect uploads, quote attributions, mentions, hashtags and custom emoji.
+      # Polls and events are self-contained (no id remapping needed), so they're left
+      # in `raw` verbatim.
       class RawExtractor
         Detectors = MarkdownScanner::Detectors
 
@@ -28,6 +28,9 @@ module Migrations
         FORCED_HASHTAG_TYPES = { category: HashtagType::CATEGORY, tag: HashtagType::TAG }.freeze
         private_constant :FORCED_HASHTAG_TYPES
 
+        # The stateless detectors, built fresh per extractor. The custom-emoji
+        # detector is not here: it's the one detector configured with state (the
+        # source's emoji names), and only when the caller supplies them.
         DETECTORS = [
           Detectors::Upload,
           Detectors::UploadUrl,
@@ -41,22 +44,36 @@ module Migrations
         #   (a `MentionType` enum value for `here` / `all` / `group` / `user`).
         #   Defaults to a resolver with no group knowledge (so only `@here` / `@all`
         #   are special-cased).
-        def initialize(mention_resolver: MentionResolver.new)
+        # @param custom_emoji_names [Enumerable<String>, nil] the source's custom
+        #   emoji names. When given (and non-empty) a `:name:` shortcode naming one
+        #   of them is extracted; standard shortcodes always stay plain text. Without
+        #   them the emoji detector — and its `:` trigger and gate — is left out, so
+        #   posts don't pay for it.
+        def initialize(mention_resolver: MentionResolver.new, custom_emoji_names: nil)
           @mention_resolver = mention_resolver
 
-          # The detectors are stateless and the scanner resets its state on each
-          # `scan`, so build them once and reuse them for every post instead of a
-          # fresh scanner, three detectors and a block per `extract`. The block reads
-          # `@sink` (set per call), so the one scanner serves whatever buffer we're
-          # filling.
+          detectors = DETECTORS.map(&:new)
+          extra_triggers = []
+          extra_gate = nil
+
+          if custom_emoji_names && !custom_emoji_names.empty?
+            detectors << Detectors::Emoji.new(names: custom_emoji_names)
+            extra_triggers = [Detectors::Emoji::TRIGGER]
+            extra_gate = Detectors::Emoji::GATE
+          end
+
+          # The detectors are stateless (the emoji one only reads a frozen name set)
+          # and the scanner resets its state on each `scan`, so build them once and
+          # reuse them for every post. The block reads `@sink` (set per call), so the
+          # one scanner serves whatever buffer we're filling.
           @scanner =
-            MarkdownScanner::Scanner.new(detectors: DETECTORS.map(&:new)) do |node|
+            MarkdownScanner::Scanner.new(detectors:, extra_triggers:, extra_gate:) do |node|
               defer(node, @sink)
             end
         end
 
         # @param raw [String, nil] the source post body (Discourse Markdown).
-        # @param on_embed [#upload, #quote, #mention, #hashtag] the embed sink.
+        # @param on_embed [#upload, #quote, #mention, #hashtag, #emoji] the embed sink.
         # @param topic_id [Integer, nil] the source topic id of the containing post,
         #   used to complete a quote attribution that names a `post:` but no `topic:`
         #   (Discourse omits `topic:` when a post quotes another in the same topic).
@@ -82,6 +99,8 @@ module Migrations
             sink.mention(mention_type: @mention_resolver.call(node.name), name: node.name)
           when MarkdownScanner::HashtagReference
             sink.hashtag(hashtag_type: FORCED_HASHTAG_TYPES[node.forced_type], name: node.name)
+          when MarkdownScanner::EmojiReference
+            sink.emoji(name: node.name)
           when MarkdownScanner::QuoteAttribution
             defer_quote(node, sink)
           end

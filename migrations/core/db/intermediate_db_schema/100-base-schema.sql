@@ -127,6 +127,16 @@ CREATE TABLE custom_emojis
 );
 
 
+CREATE TABLE embed_emojis
+(
+    name        TEXT         NOT NULL,
+    owner_id    NUMERIC      NOT NULL,
+    owner_type  ENUM_INTEGER NOT NULL,
+    placeholder TEXT         NOT NULL
+);
+
+CREATE INDEX idx_embed_emojis_owner_type_owner_id ON embed_emojis (owner_type, owner_id);
+
 CREATE TABLE embed_events
 (
     event_id    NUMERIC,

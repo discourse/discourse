@@ -48,6 +48,18 @@ RSpec.describe Migrations::Converters::Discourse::Converter do
         expect(args[:group_names]).to eq([])
         expect(args[:here_mention]).to eq("here")
       end
+
+      it "loads the source custom emoji names for emoji extraction" do
+        allow(source_db).to receive(:query).with("SELECT name FROM groups").and_return([])
+        allow(source_db).to receive(:query).with("SELECT name FROM custom_emojis").and_return(
+          [{ name: "parrot" }, { name: "+1" }],
+        )
+        allow(source_db).to receive(:query_value).and_return(nil)
+
+        args = described_class.new({}).step_args(Migrations::Converters::Discourse::Posts)
+
+        expect(args[:custom_emoji_names]).to eq(%w[parrot +1])
+      end
     end
   end
 end

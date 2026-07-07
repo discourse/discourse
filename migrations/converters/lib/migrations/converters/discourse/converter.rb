@@ -9,12 +9,18 @@ module Migrations
         def step_args(step_class)
           source_db = Adapter::Postgres.new(settings[:source_db])
 
-          # Only the Posts step classifies `@group`/`@here` mentions, so only it
-          # pays for the two metadata queries. They reuse the step's own adapter and
-          # hand back plain values, so no connection is shared across the steps.
+          # Only the Posts step classifies `@group`/`@here` mentions and extracts
+          # custom emoji, so only it pays for these metadata queries. They reuse the
+          # step's own adapter and hand back plain values, so no connection is shared
+          # across the steps.
           return { source_db: } unless step_class == Posts
 
-          { source_db:, group_names: group_names(source_db), here_mention: here_mention(source_db) }
+          {
+            source_db:,
+            group_names: group_names(source_db),
+            here_mention: here_mention(source_db),
+            custom_emoji_names: custom_emoji_names(source_db),
+          }
         end
 
         private
@@ -22,6 +28,12 @@ module Migrations
         # Source group names, so the Posts step can classify `@group` mentions.
         def group_names(source_db)
           source_db.query("SELECT name FROM groups").map { |row| row[:name] }
+        end
+
+        # Source custom emoji names, so the Posts step extracts only `:name:`
+        # shortcodes that name a real custom emoji (standard ones stay plain text).
+        def custom_emoji_names(source_db)
+          source_db.query("SELECT name FROM custom_emojis").map { |row| row[:name] }
         end
 
         # The source's `here_mention` setting value (the configurable name that
