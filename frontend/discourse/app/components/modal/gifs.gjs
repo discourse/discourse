@@ -339,7 +339,7 @@ export default class GifsModal extends Component {
         <img
           class="gifs-modal__branding"
           src={{getURL "/images/klipy-logo.png"}}
-          alt="Powered by Klipy"
+          alt={{i18n "gifs.powered_by"}}
         />
       </:footer>
     </DModal>
