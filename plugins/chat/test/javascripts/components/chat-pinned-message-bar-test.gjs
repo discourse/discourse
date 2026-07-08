@@ -136,12 +136,14 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
     assert
       .dom(".chat-pinned-bar__indicator-thumb")
       .exists({ count: 1 }, "a single bright bar marks the active pin");
+    // oldest-at-top layout: the newest pin (shown first) sits in the bottom
+    // slot, so its slot index is the last one (2 of 3)
     assert
       .dom(".chat-pinned-bar__indicator")
       .hasAttribute(
         "style",
-        /--chat-pinned-bar-active:\s*0/,
-        "starts on pin 0"
+        /--chat-pinned-bar-active:\s*2/,
+        "starts on the newest pin, in the bottom slot"
       );
 
     await click(".chat-pinned-bar__main");
@@ -151,7 +153,7 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       .hasAttribute(
         "style",
         /--chat-pinned-bar-active:\s*1/,
-        "the highlight follows the active pin"
+        "advancing to an older pin moves the highlight up a slot"
       );
   });
 
@@ -170,24 +172,30 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       </template>
     );
 
-    // every pin has a segment; the window is capped/scrolled via the track
+    // every pin has a segment; the window is capped/scrolled via the track.
+    // newest is shown first and sits at the bottom, so the window starts
+    // scrolled to the end: slot 7 centred => top = min(7 - 2, 8 - 4) = 4
     assert.dom(".chat-pinned-bar__indicator-segment").exists({ count: 8 });
-    assert
-      .dom(".chat-pinned-bar__indicator")
-      .hasAttribute("style", /indicator-top:\s*0/, "window starts at the top");
-
-    // advance past the visible window — it scrolls to keep the active in view
-    for (let i = 0; i < 6; i++) {
-      await click(".chat-pinned-bar__main");
-    }
-
-    // window of 4, active at index 6 => centred top = index - 2 = 4
     assert
       .dom(".chat-pinned-bar__indicator")
       .hasAttribute(
         "style",
         /indicator-top:\s*4/,
-        "rail scrolled to keep the active bar centred"
+        "window starts at the bottom"
+      );
+
+    // advance toward older pins — the window scrolls up
+    for (let i = 0; i < 6; i++) {
+      await click(".chat-pinned-bar__main");
+    }
+
+    // active pin index 6 => slot 8 - 1 - 6 = 1 => top clamps to 0
+    assert
+      .dom(".chat-pinned-bar__indicator")
+      .hasAttribute(
+        "style",
+        /indicator-top:\s*0/,
+        "rail scrolled toward the oldest pin"
       );
   });
 

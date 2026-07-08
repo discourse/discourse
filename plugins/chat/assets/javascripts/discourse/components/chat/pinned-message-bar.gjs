@@ -80,13 +80,19 @@ export default class ChatPinnedMessageBar extends Component {
     return this.pins.length > 1;
   }
 
+  // The strip is laid out oldest-at-top to mirror the chat timeline, but pins
+  // arrive newest-first — so the active pin's slot counts from the bottom.
+  get activeIndicatorSlot() {
+    return this.pins.length - 1 - this.currentIndex;
+  }
+
   // centred so the bars visibly scroll past the active one (an edge would hide it)
   get indicatorTop() {
     const total = this.pins.length;
     if (total <= INDICATOR_WINDOW) {
       return 0;
     }
-    const top = this.currentIndex - Math.floor(INDICATOR_WINDOW / 2);
+    const top = this.activeIndicatorSlot - Math.floor(INDICATOR_WINDOW / 2);
     return Math.max(0, Math.min(top, total - INDICATOR_WINDOW));
   }
 
@@ -109,8 +115,8 @@ export default class ChatPinnedMessageBar extends Component {
         `--chat-pinned-bar-gap: ${SEGMENT_GAP}px; ` +
         `--chat-pinned-bar-indicator-height: ${height}px; ` +
         `--chat-pinned-bar-indicator-top: ${top}; ` +
-        // thumb is inside the track (already offset by -top), so full-list index
-        `--chat-pinned-bar-active: ${this.currentIndex}; ` +
+        // full-list slot (already offset by -top inside the track)
+        `--chat-pinned-bar-active: ${this.activeIndicatorSlot}; ` +
         `--chat-pinned-bar-fade-top: ${fadeTop}px; ` +
         `--chat-pinned-bar-fade-bottom: ${fadeBottom}px`
     );
