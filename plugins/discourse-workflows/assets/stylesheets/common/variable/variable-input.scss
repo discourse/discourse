@@ -12,8 +12,10 @@
   .cm-editor {
     flex: 1 1 auto;
 
+    // Text cursor over the whole field, so the empty area reads as editable.
     .cm-scroller {
       flex: 1 1 auto;
+      cursor: text;
     }
   }
 

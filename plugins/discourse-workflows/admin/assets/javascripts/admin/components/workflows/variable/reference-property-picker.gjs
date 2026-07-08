@@ -24,6 +24,11 @@ export default class ReferencePropertyPicker extends Component {
     this.activeIndex = index >= 0 ? index : 0;
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.args.data?.onClose?.();
+  }
+
   get current() {
     return this.args.data?.current;
   }
