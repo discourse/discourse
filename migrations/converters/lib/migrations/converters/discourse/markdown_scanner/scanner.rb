@@ -19,12 +19,13 @@ module Migrations
         # on regex-match starts, single-character advances step over an ASCII trigger
         # (one byte), matches advance by their byte length, and the code tracker's
         # returns come from `byteindex`/ASCII scans. `byteindex` raises `IndexError` on
-        # an off-boundary offset, which is the built-in tripwire for a logic bug here.
+        # an off-boundary offset, so a logic bug here raises instead of producing a
+        # wrong result.
         class Scanner
-          # Presence gate for the fast path. Every construct we extract contains an
+          # Presence gate. Every construct we extract contains an
           # `@` (mention), a `[` (quote, attachment, and an image's `![`), a `#`
           # (hashtag), or the `uploads/` segment of a full-URL upload — so a body
-          # with none of those can't have one and skips the walk. `#` earns its place
+          # with none of those can't have one and skips the walk. `#` is included
           # because it's rare in plain prose. `!` and the bare-URL triggers are
           # deliberately not gates on their own: they're common characters, and each
           # extractable construct they start also carries one of these signals.
@@ -68,8 +69,8 @@ module Migrations
           def scan(input)
             input = input.to_s
 
-            # Most posts have no embed at all — skip the character walk (and every
-            # allocation it makes) and hand the body back untouched.
+            # Most posts have no embed at all — skip the walk (and every allocation
+            # it makes) and return the body untouched.
             return input unless input.match?(@gate)
 
             @code_tracker = CodeBlockTracker.new

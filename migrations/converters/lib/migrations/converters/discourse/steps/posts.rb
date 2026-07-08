@@ -5,19 +5,19 @@ module Migrations
     module Discourse
       class Posts < Conversion::Step
         # One log entry for the whole run: each worker tallies foreign-host links
-        # per host on the scan hot path, and the reducer (`combine_results`) merges
-        # the tallies into a single entry whose `details` carry the full host list,
-        # sorted by link count. Ordinary forums link thousands of other Discourse
-        # sites, so a long flat tail is normal and stays an INFO entry; the entry
-        # becomes a WARNING (and the step shows one warning) only when a host
-        # DOMINATES the list — a former domain absorbs years of absolute self-links,
-        # so it towers over the organic tail in a way sister sites don't.
+        # per host, and the reducer (`combine_results`) merges the tallies into a
+        # single entry with the full host list in `details`, sorted by link count.
+        # Posts link many other Discourse sites, so a long list of hosts with a few
+        # links each is normal and the entry stays INFO. It becomes a WARNING (and
+        # the step shows one warning) only when a single host holds a large share
+        # of the links — the typical sign of a former domain that is missing from
+        # the `source_site` settings.
         FOREIGN_LINK_LOG_MESSAGE = "Internal-looking links on unconfigured hosts"
 
-        # A host dominates when it holds this share of all foreign route-shaped
-        # links AND at least this many links (so a tiny forum's three links can't
-        # dominate anything). Tuned against meta.discourse.org as the known
-        # negative: its most-linked sister site holds ~15%.
+        # A host counts as dominant when it holds this share of all foreign
+        # route-shaped links AND at least this many links, so a small forum with a
+        # handful of links never triggers the warning. On a large forum without
+        # former domains, the most-linked foreign host stayed around 15%.
         DOMINANT_HOST_SHARE = 0.25
         DOMINANT_HOST_MINIMUM = 100
         private_constant :DOMINANT_HOST_SHARE, :DOMINANT_HOST_MINIMUM
@@ -102,10 +102,11 @@ module Migrations
                         :internal_link_hosts
 
           def setup
-            # Tally foreign-host links per host, no logging or tracker calls: this
-            # is the scan hot path, and a real forum has tens of thousands of these
-            # links. `result` hands the tally to the parent, where `combine_results`
-            # writes one WARNING per host.
+            # Tally foreign-host links per host, with no logging or tracker calls —
+            # this runs while posts are scanned, and a real forum has tens of
+            # thousands of these links. `result` sends the tally to the parent,
+            # where `combine_results` merges all workers' tallies into one log
+            # entry.
             @foreign_hosts = Hash.new(0)
 
             @extractor =
@@ -160,7 +161,7 @@ module Migrations
             @embeds.write_for(item[:id])
           end
 
-          # The worker's per-host link tally, handed to `combine_results` in the
+          # The worker's per-host link tally, sent to `combine_results` in the
           # parent. Nil when this worker saw no foreign-host links, so it sends
           # nothing.
           def result

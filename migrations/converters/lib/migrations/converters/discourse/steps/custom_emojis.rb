@@ -13,7 +13,7 @@ module Migrations
 
           def items
             # The source's `upload_id` is a numeric FK; IntermediateDB references an
-            # upload by its content hash, so hand the join's `sha1` over as the
+            # upload by its content hash, so the join's `sha1` becomes the
             # reference the importer resolves against.
             @source_db.query <<~SQL
               SELECT custom_emojis.id,

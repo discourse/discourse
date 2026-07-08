@@ -96,8 +96,8 @@ module Migrations
       end
 
       # The worker's one map/reduce message: the processor's accumulated result,
-      # sent to the parent over the same channel as progress. Nil hands back
-      # nothing.
+      # sent to the parent over the same channel as progress. For nil, nothing
+      # is sent.
       def report_result(processor)
         result = processor.result
         @reporter.report_result(result) unless result.nil?

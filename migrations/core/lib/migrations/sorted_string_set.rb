@@ -11,7 +11,7 @@ module Migrations
   # children's early GC cycles, and that write privatizes the copy-on-write page
   # the slot sits on. A `Set` of a million usernames is a million such slots
   # (names of 23 bytes or fewer are embedded, so their characters live in the
-  # slot too) — on the order of 80-110 MB that silently unshares per fork.
+  # slot too) — on the order of 80-110 MB that every fork ends up copying.
   #
   # Here the names are held as just two frozen Strings: all of them sorted and
   # concatenated into one buffer, plus their byte offsets packed into another.

@@ -4,9 +4,9 @@ module Migrations
   module Converters
     # Collects the embeds found while an owner's body is converted to Markdown.
     #
-    # The owner is any markdown-bearing record — a post body today, a user bio,
-    # group/category/badge descriptions later. Its kind is fixed at construction
-    # (`owner_type`), so one buffer serves one kind of owner.
+    # The owner is the record the markdown belongs to — a post today, a user bio
+    # or a group/category/badge description later. Its kind is fixed at
+    # construction (`owner_type`), so one buffer serves one kind of owner.
     #
     # For each embed it can't finish yet (a quote, link, mention, poll, event or
     # upload), the Markdown converter calls the matching recorder here. We can't

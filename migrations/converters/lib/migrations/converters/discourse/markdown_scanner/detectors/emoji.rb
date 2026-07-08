@@ -27,7 +27,7 @@ module Migrations
             PATTERN = /\G:(?<name>#{NAME}):/
             private_constant :PATTERN
 
-            # Presence gate the scanner ORs into its fast path: a bare `:` is far too
+            # Added to the scanner's presence gate: a bare `:` is far too
             # common to gate on, but the `:name:` shape is selective enough to keep
             # plain posts skipping the walk.
             GATE = /:#{NAME}:/

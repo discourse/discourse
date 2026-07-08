@@ -18,11 +18,10 @@ module Migrations
         I18n.t("progressbar.#{kind}", count:, number: format_count(count))
       end
 
-      # Formats a duration as M:SS, switching to H:MM:SS past an hour. A
-      # sub-second duration shows as "<1s": rounding it up to a pretend second
-      # overstates it, and showing milliseconds (tried) mixes units into the
-      # column, so scanning it means re-reading every row. "<1s" reads as
-      # "trivial" at a glance and needs no decoding.
+      # Formats a duration as M:SS, switching to H:MM:SS past an hour.
+      # Sub-second durations show as "<1s": rounding them up to "0:01" would
+      # overstate them, and actual milliseconds would mix units into the time
+      # column, which makes it hard to scan.
       def format_duration(seconds)
         return "<1s" if seconds < 1
 
