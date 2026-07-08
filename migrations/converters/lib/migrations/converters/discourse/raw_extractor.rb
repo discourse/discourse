@@ -44,10 +44,10 @@ module Migrations
         #   `all`, normalized). When given, only a mention naming one of them is
         #   deferred; anything else stays literal text. `nil` defers every `@word`
         #   that parses (the old syntactic behavior).
-        # @param hashtag_names [Enumerable<String>, nil] the source's category slug
-        #   paths and tag names (normalized). When given, only a hashtag naming one
-        #   of them is extracted; anything else stays literal text. `nil` defers
-        #   every hashtag that parses (the old syntactic behavior).
+        # @param hashtag_names [Migrations::SortedStringSet, nil] the source's
+        #   category slug paths and tag names (normalized). When given, only a
+        #   hashtag naming one of them is extracted; anything else stays literal
+        #   text. `nil` defers every hashtag that parses (the old syntactic behavior).
         # @param custom_emoji_names [Enumerable<String>, nil] the source's custom
         #   emoji names. When given (and non-empty) a `:name:` shortcode naming one
         #   of them is extracted; standard shortcodes always stay plain text. Without

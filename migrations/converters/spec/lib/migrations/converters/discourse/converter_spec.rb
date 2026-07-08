@@ -86,13 +86,14 @@ RSpec.describe Migrations::Converters::Discourse::Converter do
         )
 
         args = described_class.new({}).step_args(Migrations::Converters::Discourse::Posts)
+        gate = args[:hashtag_names]
 
-        expect(args[:hashtag_names]).to contain_exactly(
-          "support",
-          "billing",
-          "support:billing",
-          "release",
-        )
+        expect(gate).to be_a(Migrations::SortedStringSet)
+        expect(gate.size).to eq(4)
+        expect(gate.include?("support")).to be true
+        expect(gate.include?("billing")).to be true
+        expect(gate.include?("support:billing")).to be true
+        expect(gate.include?("release")).to be true
       end
 
       it "loads the source custom emoji names for emoji extraction" do
