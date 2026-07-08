@@ -272,9 +272,10 @@ export default function () {
           "categoryManagement",
           { path: "/category-management" },
           function () {
-            this.route("settings", {
+            this.route("index", {
               path: "/",
             });
+            this.route("settings");
             this.route("type", {
               path: "/:category_type_id",
             });

@@ -6919,6 +6919,7 @@ en:
           tabs:
             settings: "Settings"
           types:
+            unavailable: "The category type %{categoryType} is not available."
             all:
               title: "All categories"
               description: "All categories across every configured category type."
