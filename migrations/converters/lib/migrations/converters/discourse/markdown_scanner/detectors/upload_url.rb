@@ -47,8 +47,8 @@ module Migrations
             BARE = /\G#{URL}/
             private_constant :BARE
 
-            def detect(input, pos)
-              case input[pos]
+            def detect(input, pos, char)
+              case char
               when "!"
                 match_with(IMAGE, input, pos)
               when "["
@@ -64,7 +64,7 @@ module Migrations
             # whitespace. This also keeps it from firing on a URL sitting inside a
             # markdown link's `(…)`, which the link/image branches already handle.
             def detect_bare(input, pos)
-              return nil unless pos.zero? || input[pos - 1].match?(/\s/)
+              return nil unless whitespace_before?(input, pos)
               match_with(BARE, input, pos)
             end
 

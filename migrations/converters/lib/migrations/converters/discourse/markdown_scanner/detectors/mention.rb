@@ -26,8 +26,7 @@ module Migrations
               @names = names
             end
 
-            def detect(input, pos)
-              return nil unless input[pos] == "@"
+            def detect(input, pos, _char)
               return nil unless word_boundary?(input, pos)
 
               name = extract_word(input, pos + 1)

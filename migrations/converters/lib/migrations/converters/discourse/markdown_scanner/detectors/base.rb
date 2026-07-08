@@ -16,8 +16,12 @@ module Migrations
               self.class::TRIGGERS
             end
 
+            # `char` is `input[pos]`, already read by the scanner's walk — reading
+            # it again here would allocate a fresh one-character string per probe.
+            # The scanner dispatches by character, so it is always one of {#triggers}.
+            #
             # @return [Match, nil]
-            def detect(input, pos)
+            def detect(input, pos, char)
               raise NotImplementedError, "#{self.class} must implement #detect"
             end
 
@@ -38,10 +42,30 @@ module Migrations
             WORD_BOUNDARY = /[\p{Alnum}\p{M}_]/
             private_constant :WORD_BOUNDARY
 
+            # The look-backs below run for every probe at a trigger character, so
+            # they test the previous BYTE: `input[pos - 1]` would allocate a fresh
+            # one-character string each time. Only a multibyte previous character
+            # (a lead or continuation byte, 0x80+) needs the character-wise regex.
             def word_boundary?(input, pos)
               return true if pos.zero?
 
+              byte = input.getbyte(pos - 1)
+              return !(ascii_alnum_byte?(byte) || byte == 0x5f) if byte < 0x80 # 0x5f = `_`
+
               !input[pos - 1].match?(WORD_BOUNDARY)
+            end
+
+            # Matches `/\s/` exactly: space plus `\t\n\v\f\r` (0x09..0x0d).
+            def whitespace_before?(input, pos)
+              return true if pos.zero?
+
+              byte = input.getbyte(pos - 1)
+              byte == 0x20 || (byte >= 0x09 && byte <= 0x0d)
+            end
+
+            def ascii_alnum_byte?(byte)
+              (byte >= 0x30 && byte <= 0x39) || (byte >= 0x41 && byte <= 0x5a) ||
+                (byte >= 0x61 && byte <= 0x7a)
             end
 
             # Extract a word starting at position, or `""` when nothing there can
