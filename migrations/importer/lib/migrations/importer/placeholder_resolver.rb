@@ -459,7 +459,9 @@ module Migrations
             @maps.user(row[:target_id])&.fetch(:username, nil) || row[:name]
           end
 
-        name.present? ? " @#{name} " : ""
+        # The token spans exactly the original `@name`, so the surrounding text is
+        # already intact — rendering verbatim keeps the source spacing.
+        name.present? ? "@#{name}" : ""
       end
 
       # A resolved category renders as `#<slug path>`, honoring any rename or merge
