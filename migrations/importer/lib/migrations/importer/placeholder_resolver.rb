@@ -28,7 +28,12 @@ module Migrations
     #   * `event_markdown(original_id)`     => event Markdown or `nil`
     #   * `category_slug_path(original_id)` => the destination category's slug path,
     #                                          `"slug"` or `"parent:child"`, or `nil`
+    #   * `category_id(original_id)`        => the destination category id or `nil`
+    #                                          (an internal `/c/…` link needs the id,
+    #                                          not just the slug path)
     #   * `tag_name(original_id)`           => the destination tag's name or `nil`
+    #   * `badge(original_id)`              => `{ id:, slug: }` for the destination
+    #                                          badge, or `nil`
     #   * `emoji_name(source_name)`         => the destination custom emoji name (a
     #                                          conflict may rename it) or `nil`
     #   * `base_url`                        => the destination site's base URL
@@ -38,6 +43,10 @@ module Migrations
     # A missing lookup falls back to the source value. Uploads, polls and events
     # have no source value to fall back to: when the map can't resolve one, the
     # embed disappears. Each is sent to {#unresolved_sink}.
+    #
+    # An internal link that can't be resolved does have a fallback (its source URL),
+    # but it is still reported: a stale internal link points at the wrong record
+    # rather than failing loudly, so operators need the trail (see #render_link).
     #
     # A token with no linkage row at all is an orphan — the token and its row were
     # not written together upstream. It is stripped (so no U+E000 character reaches
@@ -180,13 +189,13 @@ module Migrations
         resolve_quote_coordinates(rows_by_kind[:quote])
         resolve_names(rows_by_kind[:quote], rows_by_kind[:mention])
         resolve_hashtags(rows_by_kind[:hashtag])
+        resolve_links(rows_by_kind[:link])
       end
 
       # Turns the source coordinates (topic id + post number) a quote carries into
       # the quoted post's source original_id, for the rows that have coordinates but
-      # no id. One query covers the batch: SQLite row values match the pairs against
-      # the `(topic_id, post_number)` index. Coordinates with no matching post leave
-      # `quoted_post_id` nil, so the username fallback still applies.
+      # no id. Coordinates with no matching post leave `quoted_post_id` nil, so the
+      # username fallback still applies.
       def resolve_quote_coordinates(quote_rows)
         pending =
           quote_rows.select do |row|
@@ -194,7 +203,26 @@ module Migrations
           end
         return if pending.empty?
 
-        coordinates = pending.map { |row| [row[:quoted_topic_id], row[:quoted_post_number]] }.uniq
+        post_ids =
+          post_ids_for_coordinates(
+            pending.map { |row| [row[:quoted_topic_id], row[:quoted_post_number]] },
+          )
+
+        pending.each do |row|
+          row[:quoted_post_id] = post_ids[[row[:quoted_topic_id], row[:quoted_post_number]]]
+        end
+      end
+
+      # Batch-resolves source `(topic_id, post_number)` coordinates to source post
+      # original_ids. Shared by the quote and internal-link passes — both carry a post
+      # by its source coordinates, and one query answers the whole batch: SQLite row
+      # values match the pairs against the `(topic_id, post_number)` index. A pair with
+      # no matching post is simply absent from the result, so each caller keeps its own
+      # fallback.
+      def post_ids_for_coordinates(coordinates)
+        coordinates = coordinates.uniq
+        return {} if coordinates.empty?
+
         values = (["(?, ?)"] * coordinates.size).join(", ")
         sql = <<~SQL
           SELECT original_id, topic_id, post_number
@@ -206,9 +234,60 @@ module Migrations
         @intermediate_db.query(sql, *coordinates.flatten) do |row|
           post_ids[[row[:topic_id], row[:post_number]]] = row[:original_id]
         end
+        post_ids
+      end
+
+      # Fills an internal link's `target_id` from what the URL carried but the
+      # converter couldn't resolve: a post addressed by coordinates, or an entity
+      # addressed by name. Both run in the load phase, so no query runs while
+      # substituting. On a miss nothing is mutated; render_link falls back to the
+      # source URL (and reports it).
+      def resolve_links(link_rows)
+        resolve_link_coordinates(link_rows)
+        resolve_link_names(link_rows)
+      end
+
+      # A `/t/slug/<topic>/<post>` link records the post by its source coordinates,
+      # exactly like a quote; resolve it through the same batch lookup.
+      def resolve_link_coordinates(link_rows)
+        pending =
+          link_rows.select do |row|
+            row[:target_id].nil? && row[:target_topic_id] && row[:target_post_number]
+          end
+        return if pending.empty?
+
+        post_ids =
+          post_ids_for_coordinates(
+            pending.map { |row| [row[:target_topic_id], row[:target_post_number]] },
+          )
 
         pending.each do |row|
-          row[:quoted_post_id] = post_ids[[row[:quoted_topic_id], row[:quoted_post_number]]]
+          row[:target_id] = post_ids[[row[:target_topic_id], row[:target_post_number]]]
+        end
+      end
+
+      # A link that named its target (a username, group/tag name, or category slug
+      # path) resolves against the same lazy maps the mention and hashtag passes use.
+      # A category name reuses `category_id_for`, so a `parent:child` path and a bare
+      # slug resolve the same way a hashtag does.
+      def resolve_link_names(link_rows)
+        link_rows.each do |row|
+          next if row[:target_id] || row[:target_name].blank?
+
+          row[:target_id] = target_id_by_name(row[:target_type], row[:target_name])
+        end
+      end
+
+      def target_id_by_name(target_type, name)
+        case target_type
+        when Enums::LinkTarget::USER
+          user_id_by_name[normalize(name)]
+        when Enums::LinkTarget::GROUP
+          group_id_by_name[normalize(name)]
+        when Enums::LinkTarget::TAG
+          tag_id_for(name)
+        when Enums::LinkTarget::CATEGORY
+          category_id_for(name)
         end
       end
 
@@ -429,19 +508,82 @@ module Migrations
         "[quote=\"#{parts.join(", ")}\"]"
       end
 
+      # An external link (no `target_type`) passes through as-is. An internal link is
+      # rebuilt through the resolved `target_id` and the destination maps, honoring any
+      # rename or renumber; whatever trailed the matched route (`target_suffix`) is
+      # reattached verbatim. A bare URL stays bare so oneboxes keep working; a link
+      # with text keeps its `[text](url)` shape.
+      #
+      # An internal link that can't be resolved (nil `target_id` after normalization,
+      # or a maps miss here) falls back to the source URL AND reports it. This diverges
+      # from the mention/hashtag no-report convention on purpose: on a merge into an
+      # existing site a stale `/t/slug/123` doesn't 404, it silently points at the
+      # WRONG topic, so operators need the audit trail.
       def render_link(row)
-        url =
-          case row[:target_type]
-          when Enums::LinkTarget::TOPIC
-            (topic_id = @maps.topic_id(row[:target_id])) ? topic_url(topic_id) : row[:url]
-          when Enums::LinkTarget::POST
-            post = @maps.post(row[:target_id])
-            post && post[:topic_id] && post[:post_number] ? post_url(post) : row[:url]
-          else
-            row[:url]
-          end
+        return render_link_markup(row, row[:url]) unless row[:target_type]
 
+        url = row[:target_id] && rebuild_internal_link(row)
+        return render_link_markup(row, url) if url
+
+        report_unresolved_link(row)
+        render_link_markup(row, row[:url])
+      end
+
+      def render_link_markup(row, url)
         row[:text] ? "[#{row[:text]}](#{url})" : url.to_s
+      end
+
+      # The destination URL for a resolved internal link, or nil on a maps miss (an
+      # entity the destination doesn't have). The suffix is appended by the caller's
+      # success path, so a miss can report cleanly.
+      def rebuild_internal_link(row)
+        base = internal_link_base(row)
+        base && "#{base}#{row[:target_suffix]}"
+      end
+
+      def internal_link_base(row)
+        target_id = row[:target_id]
+
+        case row[:target_type]
+        when Enums::LinkTarget::TOPIC
+          (topic_id = @maps.topic_id(target_id)) && topic_url(topic_id)
+        when Enums::LinkTarget::POST
+          post = @maps.post(target_id)
+          post && post[:topic_id] && post[:post_number] && post_url(post)
+        when Enums::LinkTarget::USER
+          (user = @maps.user(target_id)) && (username = user[:username]) &&
+            "#{@maps.base_url}/u/#{username}"
+        when Enums::LinkTarget::GROUP
+          (name = @maps.group_name(target_id)) && "#{@maps.base_url}/g/#{name}"
+        when Enums::LinkTarget::TAG
+          (name = @maps.tag_name(target_id)) && "#{@maps.base_url}/tag/#{name}"
+        when Enums::LinkTarget::CATEGORY
+          category_link_url(target_id)
+        when Enums::LinkTarget::BADGE
+          badge_link_url(target_id)
+        end
+      end
+
+      # `/c/<slug path>/<id>`, with the slug path's `:` separators turned back into
+      # `/`. Both the id and the path come from the destination category.
+      def category_link_url(target_id)
+        new_id = @maps.category_id(target_id)
+        path = @maps.category_slug_path(target_id)
+        new_id && path && "#{@maps.base_url}/c/#{path.tr(":", "/")}/#{new_id}"
+      end
+
+      def badge_link_url(target_id)
+        badge = @maps.badge(target_id)
+        badge && "#{@maps.base_url}/badges/#{badge[:id]}/#{badge[:slug]}"
+      end
+
+      def report_unresolved_link(row)
+        @unresolved_sink << UnresolvedEmbed.new(
+          kind: :link,
+          entity_id: row[:target_id] || row[:target_name],
+          owner_id: row[:owner_id],
+          owner_url: owner_url_for(row[:owner_id]),
+        )
       end
 
       def render_mention(row)
