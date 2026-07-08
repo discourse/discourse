@@ -7,7 +7,10 @@ module DiscourseDataExplorer
     class QuerySerializer
       include JSONAPI::Serializer
       set_type :queries
-      attributes :name, :description, :sql, :last_run_at, :created_at, :updated_at
+      attributes :name, :description, :last_run_at, :created_at, :updated_at
+      # Wire attribute renamed from `sql` (2026-06-15 breaking change); the DB column
+      # keeps its name — versioning is representation-only.
+      attribute :query, &:sql
       # Admin-only field. The guardian is passed in via the serializer's `params`
       # from the controller.
       attribute :hidden, if: proc { |_record, params| params && params[:guardian]&.is_admin? }

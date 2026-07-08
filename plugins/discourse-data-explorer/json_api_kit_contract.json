@@ -7,7 +7,7 @@
       "hidden",
       "last_run_at",
       "name",
-      "sql",
+      "query",
       "updated_at"
     ],
     "relationships": {

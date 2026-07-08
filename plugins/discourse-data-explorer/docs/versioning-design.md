@@ -30,12 +30,12 @@ Illustrative timeline:
 
 | Date | Event |
 |---|---|
-| `2026-08-01` | First public version of the API (v-day zero). |
-| `2026-09-30` | Breaking change ships: the `queries` resource's `sql` attribute is renamed `query`. |
+| `2026-05-01` | First public version of the API (v-day zero). |
+| `2026-06-15` | Breaking change ships: the `queries` resource's `sql` attribute is renamed `query`. |
 
 Two clients:
-- **Old client** — pinned `2026-08-20` (integrated mid-August). Snaps down to `2026-08-01`. Its gap to latest contains one change: the rename.
-- **New client** — pinned `2026-10-15`. Snaps down to `2026-09-30`. Empty gap → the pipeline is a no-op for it (fast path: skip the walk entirely).
+- **Old client** — pinned `2026-05-20` (integrated mid-May). Snaps down to `2026-05-01`. Its gap to latest contains one change: the rename.
+- **New client** — pinned `2026-07-01`. Snaps down to `2026-06-15`. Empty gap → the pipeline is a no-op for it (fast path: skip the walk entirely).
 
 ### The change as code (strawman)
 
@@ -44,7 +44,7 @@ module DiscourseDataExplorer
   module JsonApiKit
     module VersionChanges
       class RenameQueriesSqlToQuery < JsonApiKit::VersionChange
-        version "2026-09-30"
+        version "2026-06-15"
         description "The `sql` attribute of the queries resource is renamed to `query`."
 
         resource :queries do
@@ -70,10 +70,10 @@ The machinery only invokes `up`/`down` when the targeted structure exists (`data
 
 ### Trace A — response down (GET)
 
-**Old client:** `GET /data-explorer/api/queries` with `Discourse-Api-Version: 2026-08-20`.
+**Old client:** `GET /data-explorer/api/queries` with `Discourse-Api-Version: 2026-05-20`.
 
 ```
-resolve header → 2026-08-20 → snap → 2026-08-01 → gap = [RenameQueriesSqlToQuery]
+resolve header → 2026-05-20 → snap → 2026-05-01 → gap = [RenameQueriesSqlToQuery]
    ↓
 index action runs — filters/sort/pagination/Guardian — 100% version-free
    ↓
@@ -83,7 +83,7 @@ pipeline.down(document, gap):
   walks data[] and included[], dispatching each resource object by its type;
   type == "queries" → applies down → attributes.query renamed back to sql
    ↓
-render json: document          + echo header: Discourse-Api-Version: 2026-08-01
+render json: document          + echo header: Discourse-Api-Version: 2026-05-01
 ```
 
 Wire effect (abbreviated):
@@ -95,14 +95,14 @@ Wire effect (abbreviated):
   "attributes": {                                  "attributes": {
     "name": "Top referrers",                         "name": "Top referrers",
     "query": "SELECT ...",          ──────▶           "sql": "SELECT ...",
-    "last-run-at": "..." } } ] }                     "last-run-at": "..." } } ] }
+    "last_run_at": "..." } } ] }                     "last_run_at": "..." } } ] }
 ```
 
 Because dispatch is by `type`, the same rename applies wherever a `queries` resource appears — index, show, or sideloaded in `included` by some other endpoint — with zero per-endpoint wiring. **New client:** empty gap, document untouched, no walk performed.
 
 ### Trace B — query params up (sparse fieldsets)
 
-**Old client:** `GET /data-explorer/api/queries?fields[queries]=name,sql` (header `2026-08-20`).
+**Old client:** `GET /data-explorer/api/queries?fields[queries]=name,sql` (header `2026-05-20`).
 
 Without an up-rewrite, this fails *silently*: `jsonapi_fields` hands `["name", "sql"]` to the serializer, which knows no `sql` attribute → the field just doesn't match → response contains only `name`. No 400 (`reject_unknown_query_params!` checks filter/sort/include, not fields), no error — the client is quietly missing data it asked for. Then `down` has nothing to rename. Silent and wrong.
 
@@ -112,7 +112,7 @@ Ordering constraint this fixes in stone: **version-resolve + up runs before `rej
 
 ### Trace C — request up (POST create)
 
-**Old client:** `POST /data-explorer/api/queries` (header `2026-08-20`) with the *old* body:
+**Old client:** `POST /data-explorer/api/queries` (header `2026-05-20`) with the *old* body:
 
 ```jsonc
 { "data": { "type": "queries",
@@ -120,7 +120,7 @@ Ordering constraint this fixes in stone: **version-resolve + up runs before `rej
 ```
 
 ```
-resolve → snap 2026-08-01 → gap = [rename]
+resolve → snap 2026-05-01 → gap = [rename]
    ↓
 pipeline.up(params[:data], gap):     (oldest→newest — mirror order of down)
   data.type == "queries" → up → attributes.sql renamed to query
@@ -157,9 +157,9 @@ The contract fails in **latest terms**. Today's `render_validation_errors` build
 | Request header | Result |
 |---|---|
 | *(missing)* | `400` — body teaches: current version, how to send the header, docs link |
-| `2026-08-20` | `200`, resolved `2026-08-01` (snap down), echoed back |
-| `2026-10-15` | `200`, resolved `2026-09-30`, empty gap → zero-cost passthrough |
-| `2026-07-01` (before first version) | `400` — unknown version |
+| `2026-05-20` | `200`, resolved `2026-05-01` (snap down), echoed back |
+| `2026-07-01` | `200`, resolved `2026-06-15`, empty gap → zero-cost passthrough |
+| `2026-04-01` (before first version) | `400` — unknown version |
 | `2027-01-01` (future) | `400` — future dates would silently re-resolve later; a client bug |
 | `garbage` / `2026-13-45` | `400` — malformed |
 

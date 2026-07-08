@@ -11,14 +11,14 @@ module DiscourseDataExplorer
     params do
       attribute :name, :string
       attribute :description, :string
-      attribute :sql, :string
+      attribute :query, :string
       attribute :group_ids, :array, default: []
 
       validates :name, presence: true
 
       before_validation do
         self.description = description.presence
-        self.sql = DEFAULT_SQL if sql.blank?
+        self.query = DEFAULT_SQL if query.blank?
         self.group_ids = Array(group_ids).reject(&:blank?).map(&:to_i).uniq
       end
     end
@@ -50,7 +50,7 @@ module DiscourseDataExplorer
       Query.create(
         name: params.name,
         description: params.description,
-        sql: params.sql,
+        sql: params.query,
         user_id: guardian.user.id,
         last_run_at: Time.zone.now,
       )
