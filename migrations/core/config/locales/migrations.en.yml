@@ -29,6 +29,9 @@ en:
   converter:
     default_step_title: "Converting %{type}"
     max_progress_calculation: "Calculating items took %{duration}"
+    foreign_internal_links:
+      one: "%{number} internal-looking link points at a host that isn't configured as one of the site's own: %{hosts} — add it to source_site (base_url or former_domains) so it gets rewritten."
+      other: "%{number} internal-looking links point at hosts that aren't configured as the site's own: %{hosts} — add them to source_site (base_url or former_domains) so they get rewritten."
     errors:
       header: "The conversion finished with errors:"
       step_failed: "%{title} failed: %{error_class}: %{error_message}"

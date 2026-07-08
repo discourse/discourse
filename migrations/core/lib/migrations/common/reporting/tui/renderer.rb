@@ -194,6 +194,8 @@ module Migrations
           when :summary
             _, runtime, total, failed, skipped = event
             @pending_permanent << summary_line(runtime, total, failed, skipped)
+          when :summary_notice
+            @pending_permanent << event[1]
           end
         end
 

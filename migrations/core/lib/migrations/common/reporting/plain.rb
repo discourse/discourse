@@ -118,6 +118,10 @@ module Migrations
         end
       end
 
+      def report_summary_notice(message)
+        @mutex.synchronize { @output.puts(message) }
+      end
+
       def close
         # nothing to free — we write plain lines and keep nothing open
       end

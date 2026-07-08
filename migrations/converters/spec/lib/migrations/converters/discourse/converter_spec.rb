@@ -1,6 +1,74 @@
 # frozen_string_literal: true
 
+require "tmpdir"
+
 RSpec.describe Migrations::Converters::Discourse::Converter do
+  describe "#report_diagnostics" do
+    subject(:converter) { described_class.new({}) }
+
+    let(:reporter) { instance_double(Migrations::Reporting::Reporter) }
+
+    around do |example|
+      Dir.mktmpdir do |dir|
+        db_path = File.join(dir, "intermediate.db")
+        Migrations::Database.migrate(
+          db_path,
+          migrations_path: Migrations::Database::INTERMEDIATE_DB_SCHEMA_PATH,
+        )
+        @db = Migrations::Database.connect(db_path)
+        Migrations::Database::IntermediateDB.setup(@db)
+        example.run
+      ensure
+        Migrations::Database::IntermediateDB.setup(nil)
+      end
+    end
+
+    def log_foreign_host(host, count)
+      count.times do
+        Migrations::Database::IntermediateDB::LogEntry.create(
+          type: Migrations::Database::IntermediateDB::LogEntry::INFO,
+          message: Migrations::Converters::Discourse::Posts::FOREIGN_LINK_LOG_MESSAGE,
+          details: {
+            host:,
+          },
+        )
+      end
+    end
+
+    it "prints a per-host tally under the summary, most-seen host first" do
+      log_foreign_host("old-forum.example.com", 3)
+      log_foreign_host("other.host", 1)
+      allow(reporter).to receive(:report_summary_notice)
+
+      converter.report_diagnostics(@db, reporter)
+
+      expect(reporter).to have_received(:report_summary_notice) do |message|
+        expect(message).to start_with("⚠ ")
+        expect(message).to include("old-forum.example.com (3), other.host (1)")
+        expect(message).to include("source_site")
+        expect(message.index("old-forum.example.com")).to be < message.index("other.host")
+      end
+    end
+
+    it "counts 4 links across the two hosts" do
+      log_foreign_host("old-forum.example.com", 3)
+      log_foreign_host("other.host", 1)
+      allow(reporter).to receive(:report_summary_notice)
+
+      converter.report_diagnostics(@db, reporter)
+
+      expect(reporter).to have_received(:report_summary_notice).with(a_string_matching(/\b4\b/))
+    end
+
+    it "prints nothing when no foreign-host links were logged" do
+      allow(reporter).to receive(:report_summary_notice)
+
+      converter.report_diagnostics(@db, reporter)
+
+      expect(reporter).not_to have_received(:report_summary_notice)
+    end
+  end
+
   describe "#step_args" do
     it "builds a fresh source adapter per step so concurrent steps don't share a connection" do
       adapters = [

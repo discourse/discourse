@@ -532,6 +532,14 @@ RSpec.describe Migrations::Reporting::Tui do
         expect(row).to include("2 failed")
         expect(row).to include("1 skipped")
       end
+
+      it "prints a run-level summary notice as its own permanent line" do
+        renderer.apply([:summary, 5.0, 3, 0, 0])
+        renderer.apply([:summary_notice, "⚠ a heads-up about hosts"])
+        renderer.repaint
+
+        expect(screen.content_rows).to include(a_string_matching(/⚠ a heads-up about hosts/))
+      end
     end
   end
 
