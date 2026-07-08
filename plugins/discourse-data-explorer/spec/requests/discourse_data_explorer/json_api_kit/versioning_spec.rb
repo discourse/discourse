@@ -107,6 +107,8 @@ RSpec.describe "JSON:API Kit versioning" do
   end
 
   describe "Trace D — validation errors down" do
+    let(:too_long_sql) { "SELECT 1 -- #{"x" * 10_000}" }
+
     context "when the failing attribute is untouched by any rename" do
       before { post_query({ name: "", sql: "SELECT 2" }, version: "2026-05-20") }
 
@@ -114,6 +116,28 @@ RSpec.describe "JSON:API Kit versioning" do
         expect(response.status).to eq(422)
         expect(parsed_document["errors"].first.dig("source", "pointer")).to eq(
           "/data/attributes/name",
+        )
+      end
+    end
+
+    context "when an old client fails validation on the renamed attribute" do
+      before { post_query({ name: "Big", sql: too_long_sql }, version: "2026-05-20") }
+
+      it "rewrites the pointer to the name the client used" do
+        expect(response.status).to eq(422)
+        expect(parsed_document["errors"].first.dig("source", "pointer")).to eq(
+          "/data/attributes/sql",
+        )
+      end
+    end
+
+    context "when a current client fails validation on the renamed attribute" do
+      before { post_query({ name: "Big", query: too_long_sql }, version: "2026-07-01") }
+
+      it "keeps the latest pointer" do
+        expect(response.status).to eq(422)
+        expect(parsed_document["errors"].first.dig("source", "pointer")).to eq(
+          "/data/attributes/query",
         )
       end
     end

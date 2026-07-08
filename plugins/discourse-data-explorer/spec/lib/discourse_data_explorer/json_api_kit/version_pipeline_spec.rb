@@ -178,4 +178,53 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionPipeline do
       end
     end
   end
+
+  describe ".down_errors" do
+    subject(:downgraded) { described_class.down_errors(document, type: :things, changes: gap) }
+
+    context "when a pointer targets a renamed attribute" do
+      let(:document) { { errors: [{ status: "422", source: { pointer: "/data/attributes/c" } }] } }
+
+      it "rewrites the pointer through the whole chain" do
+        expect(downgraded[:errors].first.dig(:source, :pointer)).to eq("/data/attributes/a")
+      end
+    end
+
+    context "when a pointer targets an untouched attribute" do
+      let(:document) do
+        { errors: [{ status: "422", source: { pointer: "/data/attributes/name" } }] }
+      end
+
+      it "keeps the pointer" do
+        expect(downgraded[:errors].first.dig(:source, :pointer)).to eq("/data/attributes/name")
+      end
+    end
+
+    context "when an error has no source pointer" do
+      let(:document) { { errors: [{ status: "422", detail: "boom" }] } }
+
+      it "leaves the error intact" do
+        expect(downgraded[:errors].first).to eq(status: "422", detail: "boom")
+      end
+    end
+
+    context "when a pointer targets something other than an attribute" do
+      let(:document) do
+        { errors: [{ status: "422", source: { pointer: "/data/relationships/groups" } }] }
+      end
+
+      it "keeps the pointer" do
+        expect(downgraded[:errors].first.dig(:source, :pointer)).to eq("/data/relationships/groups")
+      end
+    end
+
+    context "with an empty gap" do
+      let(:gap) { [] }
+      let(:document) { { errors: [{ status: "422", source: { pointer: "/data/attributes/c" } }] } }
+
+      it "returns the document untouched" do
+        expect(downgraded[:errors].first.dig(:source, :pointer)).to eq("/data/attributes/c")
+      end
+    end
+  end
 end

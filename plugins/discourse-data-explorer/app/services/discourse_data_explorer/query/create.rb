@@ -15,6 +15,7 @@ module DiscourseDataExplorer
       attribute :group_ids, :array, default: []
 
       validates :name, presence: true
+      validates :query, length: { maximum: 10_000 }
 
       before_validation do
         self.description = description.presence

@@ -191,7 +191,21 @@ The contract fails in **latest terms**. Today's `render_validation_errors` build
 | 6 | Error pipeline (down) | pointer rewrites, with endpoint-type context | D |
 | 7 | `BaseController` seams | first before_action (resolve + up + echo); `render_resource` (down); `render_validation_errors` (error down); drop `only:` from `jsonapi_deserialize` | all |
 
-**Build order (small increments):** ① components 1–3 (pure Ruby, spec'd in isolation) — **done 2026-07-08** → ② response-down pipeline + controller seam (Traces A, E green — all reads benefit) — **done 2026-07-08** → ③ request-up (B, C) — **done 2026-07-08, Traces A–E all green** → ④ errors (D — the pass-through case is green; the pointer-rewrite case needs a validation on a renamed attribute to exist first).
+**Build order (small increments):** ① components 1–3 (pure Ruby, spec'd in isolation) — **done 2026-07-08** → ② response-down pipeline + controller seam (Traces A, E green — all reads benefit) — **done 2026-07-08** → ③ request-up (B, C) — **done 2026-07-08** → ④ errors (D) — **done 2026-07-08. ALL TRACES GREEN (acceptance spec 12/12).**
+
+**④ implementation notes:**
+- The pointer-rewrite case became real by adding a length cap on `query` to the `Query::Create` contract
+  (10k chars — defensible on its own merits for a SQL payload).
+- `VersionPipeline.down_errors(document, type:, changes:)` — error documents are typeless, so the endpoint's
+  primary type is supplied (from the DSL config's serializer `record_type`), then dispatch works like any
+  other transform. Pointer rewriting **reuses the synthetic-resource trick in the down direction**: parse
+  `/data/attributes/<name>`, run the type's down chain over a one-attribute synthetic resource, and the
+  resulting key is the old name. Same `VersionChange`, third surface, still zero extra declaration.
+- Only `source.pointer` is migrated (the machine contract). `detail` prose stays in latest terms — an old
+  client's error reads "Query is too long…" with pointer `/data/attributes/sql`. Documented compromise.
+- Errors whose pointer targets anything other than `/data/attributes/<name>` (relationships, document-level)
+  pass through untouched; a transform that *splits* an attribute (1 name → N keys) leaves the pointer as-is
+  rather than guessing.
 
 **③ implementation notes:**
 - `VersionPipeline.up` takes the same newest→oldest gap the registry produces and reverses it internally — call sites stay symmetric, no ordering footgun. Within one change, up runs document-then-resources (the exact inverse of down's resources-then-document).
@@ -214,7 +228,8 @@ The contract fails in **latest terms**. Today's `render_validation_errors` build
 
 ## 3. Open questions (discovered, deliberately parked)
 
-- **Error-pipeline context** — confirm "endpoint primary type" suffices, or whether error transforms want their own scope in the DSL.
+- ~~**Error-pipeline context**~~ — RESOLVED in ④: the endpoint's primary type (from the DSL config) suffices;
+  no dedicated error scope needed in the DSL. Revisit only if an error ever concerns a non-primary type.
 - **Declarative shorthand** (`renamed_attribute`, `renamed_type`) — a rename touches four surfaces (body-up, body-down, params-up, pointers-down); a declarative tier collapses them and is the only clean answer for type renames (document-global rewrites). Deferred until the second rename makes the duplication real.
 - **Contract-guard integration** — the schema guard should learn "breaking change detected → demand a `VersionChange` + version date" instead of just failing.
 - **`fields[]` strictness** — unknown fieldset entries silently no-op today (pre-existing, versioning makes it visible). Separate decision.
