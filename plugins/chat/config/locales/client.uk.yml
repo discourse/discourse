@@ -352,6 +352,11 @@ uk:
         title: "Звук сповіщення у чаті"
       sounds:
         none: "Немає"
+        classic: "Класичний та чистий"
+        soft: "М’яка маримба"
+        retro: "Ретро 8-біт"
+        bubble: "Грайлива бульбашка"
+        ethereal: "Ефірне скло"
       title: "чат"
       title_capitalized: "Чат"
       upload: "Прикріпити файл"
@@ -434,6 +439,8 @@ uk:
         input_placeholder: Додайте назву
         slug_description: Замість назви каналу в URL-адресі використовується slug каналу
         name: Назва каналу
+        slug: Назва каналу slug
+        emoji: Емодзі каналу
         reset_emoji: Скинути емодзі
       channel_edit_description_modal:
         title: Редагувати опис
@@ -523,12 +530,14 @@ uk:
         create: "Створити канал"
         description: "Опис"
         name: "Назва каналу"
+        slug: "Назва каналу slug"
         title: "Новий канал"
         type: "Тип"
         types:
           category: "Розділ"
           topic: "Тема"
         emoji:
+          label: "Емодзі каналу"
           reset: "Скинути емодзі"
       reviewable:
         type: "Повідомлення чату"
@@ -892,8 +901,10 @@ uk:
       node_descriptions:
         "action:send_chat_message": "Надішліть повідомлення в чат"
         "action:chat_approval": "Надіслати запит на схвалення до каналу чату та чекати на відповідь"
+        "trigger:chat_message_created": "Спрацьовує при створенні нового повідомлення в чаті"
       chat_message_created:
         channel_id: "Канал"
+        channel_id_description: "Залиште поле порожнім, щоб активувати для всіх каналів чату."
       send_chat_message:
         channel_id: "Канал"
         message: "Повідомлення"

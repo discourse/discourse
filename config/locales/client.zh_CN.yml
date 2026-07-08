@@ -2620,6 +2620,9 @@ zh_CN:
       security_key_description: "当您准备好实物安全密钥或兼容的移动设备后，请按下面的“使用安全密钥进行身份验证”按钮。"
       security_key_alternative: "尝试另一种方式"
       security_key_authenticate: "使用安全密钥进行身份验证"
+      passkey_2fa_description: "请使用您的通行密钥验证身份。"
+      use_passkey: "使用通行密钥"
+      use_security_key: "使用安全密钥"
       security_key_not_allowed_error: "安全密钥身份验证过程超时或被取消。"
       security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
       security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
@@ -2694,6 +2697,7 @@ zh_CN:
         totp: "改用身份验证器应用"
         backup_code: "改用备份代码"
         security_key: "改用安全密钥"
+        passkey: "改用通行密钥"
       no_login_methods:
         title: "没有登录方法"
         description: "未配置登录方法。管理员可访问 <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> 重新配置网站。"
@@ -2839,6 +2843,11 @@ zh_CN:
       publish: "发布共享草稿"
       confirm_publish: "确定要发布此草稿吗？"
       publishing: "正在发布话题…"
+    gifs:
+      modal_title: "搜索 GIF"
+      composer_title: "插入 GIF"
+      no_results: "在上方输入关键词搜索 GIF 动图。"
+      browse_categories: "按类别浏览"
     codemirror:
       expression:
         sections:
