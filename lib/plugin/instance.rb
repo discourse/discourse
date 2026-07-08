@@ -1478,8 +1478,6 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_search_handler(handler, self)
   end
 
-  # This is an experimental API and may be changed or removed in the future without deprecation.
-  #
   # Adds a custom rate limiter to the request rate limiters stack. Only one rate limiter is used per request and the
   # first rate limiter in the stack that is active is used. By default the rate limiters stack contains the following
   # rate limiters:
