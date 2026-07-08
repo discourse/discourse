@@ -119,8 +119,11 @@ export default class LivestreamZoomEntry extends Component {
   get shouldRender() {
     return (
       this.siteSettings.livestream_zoom_enabled &&
+      this.currentUser &&
       this.args.event.livestreamChatChannelId &&
-      this.currentUser
+      // TODO (martin) showzoom is for testing only, remove before merge
+      (this.args.event.currentlyWithinEventTimeframe ||
+        new URLSearchParams(window.location.search).get("showzoom"))
     );
   }
 

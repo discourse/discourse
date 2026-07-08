@@ -166,6 +166,14 @@ export default class DiscoursePostEventEvent {
     return this.imageUpload?.url;
   }
 
+  get currentlyWithinEventTimeframe() {
+    const now = moment();
+    const startsAt = moment(this.startsAt).add(30, "minutes");
+    const endsAt = moment(this.endsAt).add(10, "minutes");
+
+    return now.isBetween(startsAt, endsAt);
+  }
+
   updateFromEvent(event) {
     this.name = event.name;
     this.startsAt = event.startsAt;
