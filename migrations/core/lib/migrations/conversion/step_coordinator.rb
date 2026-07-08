@@ -116,9 +116,11 @@ module Migrations
         pipes.each { |(_reader, writer)| writer.close }
         readers = pipes.map(&:first)
 
+        results = []
         begin
           @step_handle.with_progress(max_progress: total) do |progress|
-            drain(readers, progress, on_worker_done: method(:worker_finished))
+            drain(readers, progress, results, on_worker_done: method(:worker_finished))
+            reduce_results(results, progress)
           end
         ensure
           readers.each(&:close)
@@ -133,11 +135,9 @@ module Migrations
 
         _boundaries, total = compute_plan
         @step_handle.with_progress(max_progress: total) do |progress|
-          StepRunner.new(
-            step: @step_factory.call(@step_class),
-            shard_path:,
-            reporter: InlineProgressSink.new(progress),
-          ).run
+          sink = InlineProgressSink.new(progress)
+          StepRunner.new(step: @step_factory.call(@step_class), shard_path:, reporter: sink).run
+          reduce_results([sink.result].compact, progress)
         end
       end
 
@@ -214,10 +214,11 @@ module Migrations
         end
       end
 
-      # Reads the workers' progress from their pipes into `progress` until they all
-      # close. `on_worker_done` runs each time one closes, with the number of
-      # workers still running.
-      def drain(readers, progress, on_worker_done: nil)
+      # Reads the workers' messages from their pipes until they all close: progress
+      # into `progress`, each worker's one result (if any) into `results`.
+      # `on_worker_done` runs each time a pipe closes, with the number of workers
+      # still running.
+      def drain(readers, progress, results, on_worker_done: nil)
         pending = readers.dup
 
         until pending.empty?
@@ -230,14 +231,40 @@ module Migrations
               next
             end
 
-            _, increment, warnings, errors = line.split
-            progress.update(
-              increment_by: increment.to_i,
-              warning_count: warnings.to_i,
-              error_count: errors.to_i,
-            )
+            consume(line, progress, results)
           end
         end
+      end
+
+      # Parses one pipe line by its leading tag (see {PipeProgressSink}): `p` is a
+      # progress batch, `r` a worker's JSON result.
+      def consume(line, progress, results)
+        tag, payload = line.split(" ", 2)
+
+        case tag
+        when "p"
+          increment, warnings, errors = payload.split
+          progress.update(
+            increment_by: increment.to_i,
+            warning_count: warnings.to_i,
+            error_count: errors.to_i,
+          )
+        when "r"
+          results << JSON.parse(payload)
+        end
+      end
+
+      # Once the workers are done, hand their collected results to the step's
+      # reducer (if it defines one) under the run DB's single-writer discipline, so
+      # any log entries it writes don't race a background merge. The step's live
+      # progress has already ended, so feed the warning count it returns back as one
+      # final progress update, lifting the step row's warning tally before it's
+      # marked finished.
+      def reduce_results(results, progress)
+        return unless @step_class.respond_to?(:combine_results)
+
+        warnings = @consolidator.with_writer { @step_class.combine_results(results) }.to_i
+        progress.update(increment_by: 0, warning_count: warnings) if warnings > 0
       end
 
       # Runs when a worker finishes: drop the live fork count and give its fork back

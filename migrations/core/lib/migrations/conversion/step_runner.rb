@@ -57,6 +57,8 @@ module Migrations
               source.chunk = chunk
               process_items(source, processor)
             end
+
+            report_result(processor)
           end
         ensure
           connection.close
@@ -91,6 +93,14 @@ module Migrations
 
         return if progress.zero? && warnings.zero? && errors.zero?
         @reporter.report_progress(progress:, warnings:, errors:)
+      end
+
+      # The worker's one map/reduce message: the processor's accumulated result,
+      # sent to the parent over the same channel as progress. Nil hands back
+      # nothing.
+      def report_result(processor)
+        result = processor.result
+        @reporter.report_result(result) unless result.nil?
       end
     end
   end

@@ -3,8 +3,10 @@
 module Migrations
   module Conversion
     # The worker's end of the progress channel. Writes one line per call down the
-    # pipe to the coordinator, which parses them (see
-    # {StepCoordinator#consume_progress}).
+    # pipe to the coordinator, which parses them (see {StepCoordinator#consume}).
+    # The leading tag tells the two message kinds apart: `p` for a progress batch,
+    # `r` for the worker's one result. A result is a single JSON line (no embedded
+    # newlines), so it survives `gets`.
     class PipeProgressSink
       def initialize(io)
         @io = io
@@ -12,6 +14,10 @@ module Migrations
 
       def report_progress(progress:, warnings:, errors:)
         @io.write("p #{progress} #{warnings} #{errors}\n")
+      end
+
+      def report_result(result)
+        @io.write("r #{JSON.generate(result)}\n")
       end
     end
   end

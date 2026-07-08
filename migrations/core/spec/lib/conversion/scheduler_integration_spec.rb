@@ -47,6 +47,49 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
     db.close if db
   end
 
+  def log_messages
+    db = Extralite::Database.new(@db_path)
+    db.query_splat("SELECT message FROM log_entries ORDER BY message")
+  ensure
+    db.close if db
+  end
+
+  # A reporter that keeps only the latest warning tally per step title, so a test
+  # can assert the reducer's warning count reached the reporter. Both live
+  # reporters route progress the same way, so recording the shared call is enough.
+  let(:recording_reporter_class) do
+    Class.new(Migrations::Reporting::Reporter) do
+      attr_reader :warnings_by_title
+
+      def initialize
+        super
+        @titles = {}
+        @warnings_by_title = {}
+        @lock = Mutex.new
+      end
+
+      def report_start(id, title)
+        @lock.synchronize { @titles[id] = title }
+      end
+
+      def report_progress(id, _current, _skip_count, warning_count, _error_count)
+        @lock.synchronize { @warnings_by_title[@titles[id]] = warning_count }
+      end
+
+      def report_notice(_id, _message)
+      end
+
+      def report_progress_begin(_id, _max_progress)
+      end
+
+      def report_concurrency(_id, _count)
+      end
+
+      def report_finish(_id, _outcome)
+      end
+    end
+  end
+
   it "writes every row from two steps running concurrently" do
     Object.const_set(
       "TempIntegrationSteps",
@@ -640,6 +683,297 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
     )
 
     expect { run_keyed_step }.to raise_error(Migrations::Conversion::ConvertError, /keyed/)
+  ensure
+    Object.send(:remove_const, "TempIntegrationSteps")
+  end
+
+  it "hands every worker's result to the step reducer and feeds its warning count back" do
+    Object.const_set(
+      "TempIntegrationSteps",
+      Module.new do
+        const_set(
+          "Topics",
+          Class.new(Migrations::Conversion::Step) do
+            title "Topics"
+
+            source do
+              partition_by :id, from: "topics"
+
+              def all
+                Array.new(60) { |index| { id: index } }
+              end
+
+              def partition_boundaries(count)
+                size = (all.size.to_f / count).ceil
+                (0...count).map { |i| i * size }
+              end
+
+              def items
+                return all unless chunk
+
+                lower, upper = chunk
+                all.select do |it|
+                  (lower.nil? || it[:id] >= lower) && (upper.nil? || it[:id] < upper)
+                end
+              end
+
+              def max_progress
+                items.size
+              end
+            end
+
+            processor do
+              def process(item)
+                @count = (@count || 0) + 1
+                Migrations::Database::IntermediateDB.insert(
+                  "INSERT INTO topics (id) VALUES (?)",
+                  item[:id],
+                )
+              end
+
+              def result
+                { "count" => @count } if @count
+              end
+            end
+
+            def self.combine_results(results)
+              total = results.sum { |result| result["count"] }
+              Migrations::Database::IntermediateDB::LogEntry.create(
+                type: Migrations::Database::IntermediateDB::LogEntry::WARNING,
+                message: "total=#{total}",
+              )
+              total
+            end
+          end,
+        )
+      end,
+    )
+
+    step_classes = [TempIntegrationSteps::Topics]
+    reporter = recording_reporter_class.new
+
+    Migrations::Conversion::StepScheduler.new(
+      step_classes:,
+      budget: 4,
+      reporter:,
+      step_factory: ->(step_class) { step_class.new },
+      shard_manager: @shard_manager,
+      writer: @writer,
+    ).run
+
+    Migrations::Database::IntermediateDB.close
+
+    # Every row is merged, and the workers' results sum to that count — so the
+    # reducer saw all of them, none dropped.
+    expect(rows("topics")).to eq((0..59).to_a)
+    expect(log_messages).to eq(["total=60"])
+    expect(reporter.warnings_by_title["Topics"]).to eq(60)
+  ensure
+    Object.send(:remove_const, "TempIntegrationSteps")
+  end
+
+  it "collects non-nil results and omits workers that returned nil" do
+    Object.const_set(
+      "TempIntegrationSteps",
+      Module.new do
+        # Its worker returns a result.
+        const_set(
+          "WithResult",
+          Class.new(Migrations::Conversion::Step) do
+            source do
+              def items
+                [{ id: 1 }]
+              end
+            end
+
+            processor do
+              def process(item)
+                Migrations::Database::IntermediateDB.insert(
+                  "INSERT INTO topics (id) VALUES (?)",
+                  item[:id],
+                )
+              end
+
+              def result
+                { "seen" => true }
+              end
+            end
+
+            def self.combine_results(results)
+              Migrations::Database::IntermediateDB::LogEntry.create(
+                type: Migrations::Database::IntermediateDB::LogEntry::INFO,
+                message: "with:#{results.size}",
+              )
+              0
+            end
+          end,
+        )
+        # Its worker returns nil (the default), so nothing lands in the array.
+        const_set(
+          "Empty",
+          Class.new(Migrations::Conversion::Step) do
+            source do
+              def items
+                [{ id: 2 }]
+              end
+            end
+
+            processor do
+              def process(item)
+                Migrations::Database::IntermediateDB.insert(
+                  "INSERT INTO users (id) VALUES (?)",
+                  item[:id],
+                )
+              end
+            end
+
+            def self.combine_results(results)
+              Migrations::Database::IntermediateDB::LogEntry.create(
+                type: Migrations::Database::IntermediateDB::LogEntry::INFO,
+                message: "empty:#{results.size}",
+              )
+              0
+            end
+          end,
+        )
+      end,
+    )
+
+    step_classes = [TempIntegrationSteps::WithResult, TempIntegrationSteps::Empty]
+    reporter = Migrations::Reporting::Factory.build(titles: step_classes.map(&:title))
+
+    Migrations::Conversion::StepScheduler.new(
+      step_classes:,
+      budget: 2,
+      reporter:,
+      step_factory: ->(step_class) { step_class.new },
+      shard_manager: @shard_manager,
+      writer: @writer,
+    ).run
+    reporter.close
+
+    Migrations::Database::IntermediateDB.close
+
+    expect(log_messages).to eq(%w[empty:0 with:1])
+  ensure
+    Object.send(:remove_const, "TempIntegrationSteps")
+  end
+
+  it "does nothing when the step defines no reducer, even if its worker returns a result" do
+    Object.const_set(
+      "TempIntegrationSteps",
+      Module.new do
+        const_set(
+          "Topics",
+          Class.new(Migrations::Conversion::Step) do
+            source do
+              def items
+                [{ id: 1 }, { id: 2 }]
+              end
+            end
+
+            processor do
+              def process(item)
+                Migrations::Database::IntermediateDB.insert(
+                  "INSERT INTO topics (id) VALUES (?)",
+                  item[:id],
+                )
+              end
+
+              def result
+                { "count" => 2 }
+              end
+            end
+          end,
+        )
+      end,
+    )
+
+    step_classes = [TempIntegrationSteps::Topics]
+    reporter = Migrations::Reporting::Factory.build(titles: step_classes.map(&:title))
+
+    Migrations::Conversion::StepScheduler.new(
+      step_classes:,
+      budget: 2,
+      reporter:,
+      step_factory: ->(step_class) { step_class.new },
+      shard_manager: @shard_manager,
+      writer: @writer,
+    ).run
+    reporter.close
+
+    Migrations::Database::IntermediateDB.close
+
+    # The result is collected and simply discarded: no reducer, no log entry.
+    expect(rows("topics")).to eq([1, 2])
+    expect(log_entry_count).to eq(0)
+  ensure
+    Object.send(:remove_const, "TempIntegrationSteps")
+  end
+
+  it "calls the reducer inline, without forking" do
+    Object.const_set(
+      "TempIntegrationSteps",
+      Module.new do
+        const_set(
+          "Topics",
+          Class.new(Migrations::Conversion::Step) do
+            title "Topics"
+
+            source do
+              def items
+                [{ id: 1 }, { id: 2 }, { id: 3 }]
+              end
+            end
+
+            processor do
+              def process(item)
+                @count = (@count || 0) + 1
+                Migrations::Database::IntermediateDB.insert(
+                  "INSERT INTO topics (id) VALUES (?)",
+                  item[:id],
+                )
+              end
+
+              def result
+                { "count" => @count } if @count
+              end
+            end
+
+            def self.combine_results(results)
+              total = results.sum { |result| result["count"] }
+              Migrations::Database::IntermediateDB::LogEntry.create(
+                type: Migrations::Database::IntermediateDB::LogEntry::WARNING,
+                message: "total=#{total}",
+              )
+              total
+            end
+          end,
+        )
+      end,
+    )
+
+    step_classes = [TempIntegrationSteps::Topics]
+    reporter = recording_reporter_class.new
+
+    allow(Migrations::ForkManager).to receive(:fork).and_call_original
+
+    Migrations::Conversion::StepScheduler.new(
+      step_classes:,
+      budget: 4,
+      reporter:,
+      step_factory: ->(step_class) { step_class.new },
+      shard_manager: @shard_manager,
+      writer: @writer,
+      no_fork: true,
+    ).run
+
+    Migrations::Database::IntermediateDB.close
+
+    expect(Migrations::ForkManager).not_to have_received(:fork)
+    expect(rows("topics")).to eq([1, 2, 3])
+    expect(log_messages).to eq(["total=3"])
+    expect(reporter.warnings_by_title["Topics"]).to eq(3)
   ensure
     Object.send(:remove_const, "TempIntegrationSteps")
   end
