@@ -6092,6 +6092,7 @@ he:
         title: "רשימת דיווחים זמינים"
         sidebar_title: "דוחות"
         back: "חזרה לכל הדוחות"
+        all_groups: "כל הקבוצות"
         group_engagement: "מעורבות"
         group_traffic: "תנועה"
         group_members: "חברים"

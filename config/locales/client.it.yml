@@ -5153,6 +5153,7 @@ it:
         title: "Elenco dei rapporti disponibili"
         sidebar_title: "Report"
         back: "Torna a tutti i report"
+        all_groups: "Tutti i gruppi"
         group_traffic: "Traffico"
         group_members: "Membri"
         group_other: "Altri"

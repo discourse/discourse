@@ -3285,6 +3285,7 @@ pl_PL:
     gifs:
       modal_title: "Wyszukaj GIF-y"
       composer_title: "Wstaw GIF"
+      powered_by: "Obsługiwane przez Klipy"
       no_results: "Wprowadź słowo kluczowe powyżej, aby wyszukać pliki GIF."
       browse_categories: "Przeglądaj według kategorii"
       bad_api_key: "Brak klucza API Klipy lub jest on nieprawidłowy. Sprawdź ustawienia klucza API dla plików GIF."
@@ -4366,6 +4367,11 @@ pl_PL:
       all_replies: "Wszystkie odpowiedzi"
       category_settings:
         default_nested_view: "Użyj widoku zagnieżdżonego jako domyślnego dla tematów w tej kategorii"
+        convert_existing: "Konwertuj istniejące tematy"
+        convert_existing_description: "Istniejące tematy w tej kategorii nie będą używać zagnieżdżonych odpowiedzi, dopóki ich nie przekonwertujesz. Uruchom to raz, aby przełączyć je na widok zagnieżdżony."
+        convert_existing_confirm: "Czy chcesz przekonwertować wszystkie istniejące tematy w tej kategorii na zagnieżdżone odpowiedzi?"
+        convert_existing_complete: "Istniejące tematy zostały przekonwertowane na zagnieżdżone odpowiedzi."
+        save_first: "Zapisz ustawienia tej kategorii przed konwersją istniejących tematów."
       no_replies: "Nie ma jeszcze odpowiedzi."
       deleted_post_placeholder: "[usunięty]"
       ignored_post_placeholder: "[zignorowano]"
@@ -6689,6 +6695,7 @@ pl_PL:
         sidebar_title: "Zgłoszenia"
         back: "Powrót do wszystkich raportów"
         back_to_dashboard: "Powrót do pulpitu nawigacyjnego"
+        all_groups: "Wszystkie grupy"
         group_engagement: "Zaangażowanie"
         group_traffic: "Ruch"
         group_members: "Członkowie"
