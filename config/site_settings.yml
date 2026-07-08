@@ -46,9 +46,13 @@
 #                            Omit the key to allow all four options (the default permissive
 #                            behavior).
 # depends_on            - One or more boolean settings that must be true for this setting to take effect.
+# depends_on_values     - Optional hash of depends_on setting names to values that make this setting take effect.
+#                         Use this when the parent setting is not boolean, for example an enum setting.
 # depends_behavior      - The behavior of the dependent setting. Only currently supported behaviour is "hidden"
-#                         to hide the setting if the dependent setting is false. If left blank, no special behavior
-#                         is applied and the setting is shown as normal.
+#                         to hide the setting if the dependent setting is false or does not match depends_on_values.
+#                         If left blank, no special behavior is applied and the setting is shown as normal.
+# dependent_setting_display - Optional display mode for hidden dependent settings. "inline" renders the setting
+#                         under its parent instead of as a separate row.
 #
 #
 #
