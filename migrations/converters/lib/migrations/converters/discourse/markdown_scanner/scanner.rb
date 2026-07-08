@@ -28,8 +28,8 @@ module Migrations
             @gate = extra_gate ? Regexp.union(MAYBE_EMBED, extra_gate) : MAYBE_EMBED
 
             # Detectors keyed by trigger character, preserving priority order. The
-            # walk visits every character of a gated body, so a position must only
-            # run the detectors that can match there — asking every detector at
+            # walk visits every position anything could react to, so a position must
+            # only run the detectors that can match there — asking every detector at
             # every trigger was a measurable share of a whole conversion.
             @dispatch = {}
             detectors.each do |detector|
@@ -37,6 +37,13 @@ module Migrations
             end
             @dispatch.each_value(&:freeze)
             @dispatch.freeze
+
+            # Everything the walk must stop at: the trigger characters, a backtick
+            # (possible inline-code delimiter) and the newline that re-arms the
+            # line-start code checks. Runs of anything else are skipped in one
+            # regex jump and appended as one slice.
+            chars = (@dispatch.keys + ["`", "\n"]).uniq
+            @interesting = Regexp.new("[#{chars.map { |char| Regexp.escape(char) }.join}]")
           end
 
           # @param input [String]
@@ -60,15 +67,38 @@ module Migrations
 
           private
 
+          # Inside code only a backtick (a possible inline-code closer) or a newline
+          # (which re-arms the line-start checks) can change anything.
+          CODE_INTERESTING = /[`\n]/
+          private_constant :CODE_INTERESTING
+
           def scan_input
-            while @pos < @input.length
+            length = @input.length
+
+            while @pos < length
               if @line_start
                 next if advance_code_boundary(:check_fenced_boundary)
                 next if advance_code_boundary(:check_indented_boundary)
               end
 
-              # Read the character once and reuse it — `String#[]` allocates a new
-              # one-character string each time, and this is the hot loop.
+              # Jump straight to the next position anything can react to; the run
+              # of plain characters before it is appended as one slice. Walking
+              # char-by-char instead costs a one-character string per position.
+              interesting = @code_tracker.in_code? ? CODE_INTERESTING : @interesting
+              index = @input.index(interesting, @pos)
+
+              unless index
+                @result << @input[@pos..]
+                @pos = length
+                break
+              end
+
+              if index > @pos
+                @result << @input[@pos...index]
+                @pos = index
+                @line_start = false
+              end
+
               char = @input[@pos]
 
               if char == "`"
@@ -81,15 +111,8 @@ module Migrations
                 end
               end
 
-              if @code_tracker.in_code?
-                @result << char
-                @line_start = char == "\n"
-                @pos += 1
-                next
-              end
-
-              if (candidates = @dispatch[char])
-                match = detect_at_position(candidates)
+              if !@code_tracker.in_code? && (candidates = @dispatch[char])
+                match = detect_at_position(candidates, char)
                 if match
                   handle_match(match)
                   next
@@ -112,9 +135,9 @@ module Migrations
             true
           end
 
-          def detect_at_position(candidates)
+          def detect_at_position(candidates, char)
             candidates.each do |detector|
-              match = detector.detect(@input, @pos)
+              match = detector.detect(@input, @pos, char)
               return match if match
             end
             nil

@@ -26,8 +26,8 @@ module Migrations
               (?:\s*\((?<size>[^)]+)\))?
             }xi
 
-            def detect(input, pos)
-              case input[pos]
+            def detect(input, pos, char)
+              case char
               when "!"
                 detect_image(input, pos)
               when "["

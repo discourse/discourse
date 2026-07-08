@@ -124,8 +124,8 @@ module Migrations
               @on_foreign_host = on_foreign_host
             end
 
-            def detect(input, pos)
-              case input[pos]
+            def detect(input, pos, char)
+              case char
               when "["
                 detect_link(input, pos)
               when "h", "/"
@@ -138,7 +138,7 @@ module Migrations
             # A markdown link, unless it's the `]` of an image `![…](…)`, whose `[`
             # sits right after the `!`.
             def detect_link(input, pos)
-              return nil if pos > 0 && input[pos - 1] == "!"
+              return nil if pos > 0 && input.getbyte(pos - 1) == 0x21 # `!`
 
               match = LINK.match(input, pos)
               return nil unless match
@@ -150,7 +150,7 @@ module Migrations
             # whitespace — which also keeps it from firing on the URL inside a markdown
             # link's `(…)`, already handled by the link branch.
             def detect_bare(input, pos)
-              return nil unless pos.zero? || input[pos - 1].match?(/\s/)
+              return nil unless whitespace_before?(input, pos)
 
               match = BARE.match(input, pos)
               return nil unless match

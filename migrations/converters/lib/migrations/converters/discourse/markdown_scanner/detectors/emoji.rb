@@ -37,8 +37,7 @@ module Migrations
               @names = names.to_set
             end
 
-            def detect(input, pos)
-              return nil unless input[pos] == ":"
+            def detect(input, pos, _char)
               return nil unless boundary_before?(input, pos)
 
               match = PATTERN.match(input, pos)
@@ -65,6 +64,11 @@ module Migrations
             def boundary_before?(input, pos)
               return true if pos.zero?
 
+              byte = input.getbyte(pos - 1)
+              return !ascii_alnum_byte?(byte) if byte < 0x80
+
+              # A multibyte previous character: `[[:alnum:]]` is Unicode-aware, so
+              # `é` glues a shortcode to a word the same way `e` does.
               !input[pos - 1].match?(/[[:alnum:]]/)
             end
           end

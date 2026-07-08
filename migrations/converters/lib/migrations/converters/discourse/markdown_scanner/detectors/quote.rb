@@ -13,9 +13,7 @@ module Migrations
 
             OPENING = /\G\[quote="(?<attribution>[^"\]]*)"\]/
 
-            def detect(input, pos)
-              return nil unless input[pos] == "["
-
+            def detect(input, pos, _char)
               match = OPENING.match(input, pos)
               return nil unless match
 

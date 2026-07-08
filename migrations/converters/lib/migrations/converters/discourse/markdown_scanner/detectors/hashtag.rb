@@ -49,8 +49,7 @@ module Migrations
               @names = names
             end
 
-            def detect(input, pos)
-              return nil unless input[pos] == "#"
+            def detect(input, pos, _char)
               return nil unless boundary_before?(input, pos)
 
               match = PATTERN.match(input, pos)
@@ -81,8 +80,7 @@ module Migrations
             def boundary_before?(input, pos)
               return true if pos.zero?
 
-              previous = input[pos - 1]
-              previous == "(" || previous.match?(/\s/)
+              input.getbyte(pos - 1) == 0x28 || whitespace_before?(input, pos) # 0x28 = `(`
             end
           end
         end
