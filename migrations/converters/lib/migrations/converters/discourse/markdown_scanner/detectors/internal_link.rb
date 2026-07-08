@@ -25,10 +25,15 @@ module Migrations
           # route reveals the target, and everything after the route (further path,
           # query string, fragment) becomes the suffix, reattached verbatim at render.
           class InternalLink < Base
+            # The route segments this detector understands, shared by the presence
+            # gate and the bare-URL pattern.
+            ROUTE_SEGMENT = "t|p|u|users|c|g|tags?|badges"
+            private_constant :ROUTE_SEGMENT
+
             # Route segments that make a body worth scanning. OR'd into the scanner's
             # presence gate so a body with none of them skips the walk. Always wired,
             # since relative detection is unconditional.
-            GATE = %r{/(?:t|p|u|users|c|g|tags?|badges)/}
+            GATE = %r{/(?:#{ROUTE_SEGMENT})/}
 
             # A URL body: no whitespace, and none of the characters that close a
             # markdown link or delimit a bare URL. The trailing `\w` on the bare form
@@ -40,7 +45,14 @@ module Migrations
             LINK = /\G\[(?<text>[^\]]*)\]\((?<url>#{URL_BODY}+)\)/
             private_constant :LINK
 
-            BARE = /\G(?<url>#{URL_BODY}*\w)/
+            # The bare form fires at every whitespace-preceded `h` and `/` the scanner
+            # walks past, so it must reject ordinary words inside the regex engine —
+            # an optional scheme+host, then a `/` and a route segment, before anything
+            # is captured. A permissive capture-everything pattern here (with the
+            # rejection left to `split_host`/`parse_route`) costs a MatchData and a
+            # string per h-word of every scanned post, which is measurable across a
+            # whole conversion.
+            BARE = %r{\G(?<url>(?:(?:https?:)?//[^/\s)"'<>]+)?/(?:#{ROUTE_SEGMENT})/#{URL_BODY}*\w)}
             private_constant :BARE
 
             # Splits a URL into its host (nil when relative) and the rest (path, query
