@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe Migrations::Converters::Discourse::RawExtractor do
-  MentionType = Migrations::Database::IntermediateDB::Enums::MentionType
-  HashtagType = Migrations::Database::IntermediateDB::Enums::HashtagType
-
   subject(:extractor) { described_class.new }
+
+  let(:link_target) { Migrations::Database::IntermediateDB::Enums::LinkTarget }
+  let(:hashtag_type) { Migrations::Database::IntermediateDB::Enums::HashtagType }
+  let(:mention_type) { Migrations::Database::IntermediateDB::Enums::MentionType }
 
   let(:buffer) do
     Migrations::Converters::EmbedBuffer.new(
@@ -198,7 +199,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(buffer.mentions.size).to eq(1)
       mention = buffer.mentions.first
-      expect(mention).to include(mention_type: MentionType::USER, name: "alice")
+      expect(mention).to include(mention_type: mention_type::USER, name: "alice")
       expect(result).to eq("hey #{mention[:placeholder]}, welcome")
     end
 
@@ -248,9 +249,9 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(buffer.mentions.map { |m| [m[:name], m[:mention_type]] }).to eq(
         [
-          ["gerhard", MentionType::USER],
-          ["admins", MentionType::GROUP],
-          ["here", MentionType::HERE],
+          ["gerhard", mention_type::USER],
+          ["admins", mention_type::GROUP],
+          ["here", mention_type::HERE],
         ],
       )
     end
@@ -339,13 +340,16 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "records a forced ::tag suffix as the tag type, dropping the suffix from the name" do
       extract("tagged #release::tag today")
 
-      expect(buffer.hashtags.first).to include(name: "release", hashtag_type: HashtagType::TAG)
+      expect(buffer.hashtags.first).to include(name: "release", hashtag_type: hashtag_type::TAG)
     end
 
     it "records a forced ::category suffix case-insensitively" do
       extract("filed #Support::CATEGORY now")
 
-      expect(buffer.hashtags.first).to include(name: "Support", hashtag_type: HashtagType::CATEGORY)
+      expect(buffer.hashtags.first).to include(
+        name: "Support",
+        hashtag_type: hashtag_type::CATEGORY,
+      )
     end
 
     it "defers a hashtag right after an opening paren" do
@@ -437,7 +441,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(buffer.hashtags.first).to include(
         name: "announcements",
-        hashtag_type: HashtagType::CATEGORY,
+        hashtag_type: hashtag_type::CATEGORY,
       )
     end
   end
@@ -521,8 +525,6 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   end
 
   describe "internal links" do
-    LinkTarget = Migrations::Database::IntermediateDB::Enums::LinkTarget
-
     subject(:extractor) { described_class.new(internal_link_hosts: Set["forum.example.com"]) }
 
     def link_for(raw)
@@ -577,7 +579,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(link).to include(
         url: "/t/some-slug/123",
         text: nil,
-        target_type: LinkTarget::TOPIC,
+        target_type: link_target::TOPIC,
         target_id: 123,
         target_suffix: nil,
       )
@@ -587,20 +589,20 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "defers the id-only topic form" do
       link, = link_for("/t/123")
 
-      expect(link).to include(target_type: LinkTarget::TOPIC, target_id: 123)
+      expect(link).to include(target_type: link_target::TOPIC, target_id: 123)
     end
 
     it "defers the slugless `/t/-/<id>` topic form" do
       link, = link_for("/t/-/77")
 
-      expect(link).to include(target_type: LinkTarget::TOPIC, target_id: 77)
+      expect(link).to include(target_type: link_target::TOPIC, target_id: 77)
     end
 
     it "defers a post link by coordinates, recording no target_id" do
       link, = link_for("/t/some-slug/123/4")
 
       expect(link).to include(
-        target_type: LinkTarget::POST,
+        target_type: link_target::POST,
         target_id: nil,
         target_topic_id: 123,
         target_post_number: 4,
@@ -611,7 +613,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       link, = link_for("/t/12/3")
 
       expect(link).to include(
-        target_type: LinkTarget::POST,
+        target_type: link_target::POST,
         target_topic_id: 12,
         target_post_number: 3,
       )
@@ -620,15 +622,18 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "defers a `/p/<id>` post link" do
       link, = link_for("/p/55")
 
-      expect(link).to include(target_type: LinkTarget::POST, target_id: 55, target_topic_id: nil)
+      expect(link).to include(target_type: link_target::POST, target_id: 55, target_topic_id: nil)
     end
 
     it "defers a user link by name, for both `/u/` and `/users/`" do
-      expect(link_for("/u/bob").first).to include(target_type: LinkTarget::USER, target_name: "bob")
+      expect(link_for("/u/bob").first).to include(
+        target_type: link_target::USER,
+        target_name: "bob",
+      )
 
       buffer.clear
       expect(link_for("/users/alice").first).to include(
-        target_type: LinkTarget::USER,
+        target_type: link_target::USER,
         target_name: "alice",
       )
     end
@@ -636,14 +641,14 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "defers a category link by id when the path ends in a number" do
       link, = link_for("/c/support/billing/6")
 
-      expect(link).to include(target_type: LinkTarget::CATEGORY, target_id: 6, target_name: nil)
+      expect(link).to include(target_type: link_target::CATEGORY, target_id: 6, target_name: nil)
     end
 
     it "defers a legacy category link by its parent:child slug path" do
       link, = link_for("/c/support/billing")
 
       expect(link).to include(
-        target_type: LinkTarget::CATEGORY,
+        target_type: link_target::CATEGORY,
         target_id: nil,
         target_name: "support:billing",
       )
@@ -651,13 +656,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
     it "defers a tag link for both `/tag/` and `/tags/`" do
       expect(link_for("/tag/release").first).to include(
-        target_type: LinkTarget::TAG,
+        target_type: link_target::TAG,
         target_name: "release",
       )
 
       buffer.clear
       expect(link_for("/tags/release").first).to include(
-        target_type: LinkTarget::TAG,
+        target_type: link_target::TAG,
         target_name: "release",
       )
     end
@@ -672,13 +677,13 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "defers a group link by name" do
       link, = link_for("/g/team")
 
-      expect(link).to include(target_type: LinkTarget::GROUP, target_name: "team")
+      expect(link).to include(target_type: link_target::GROUP, target_name: "team")
     end
 
     it "defers a badge link by id" do
       link, = link_for("/badges/9/great")
 
-      expect(link).to include(target_type: LinkTarget::BADGE, target_id: 9)
+      expect(link).to include(target_type: link_target::BADGE, target_id: 9)
     end
 
     it "recognizes an absolute link on a configured host" do
@@ -686,7 +691,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
 
       expect(link).to include(
         url: "https://forum.example.com/t/slug/99",
-        target_type: LinkTarget::TOPIC,
+        target_type: link_target::TOPIC,
         target_id: 99,
       )
     end
@@ -694,7 +699,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "recognizes a protocol-relative link on a configured host" do
       link, = link_for("//forum.example.com/t/slug/99")
 
-      expect(link).to include(target_type: LinkTarget::TOPIC, target_id: 99)
+      expect(link).to include(target_type: link_target::TOPIC, target_id: 99)
     end
 
     it "leaves an absolute link on a foreign host literal" do
@@ -707,7 +712,7 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     it "captures the link text of a markdown link" do
       link, result = link_for("[the topic](/t/slug/12)")
 
-      expect(link).to include(text: "the topic", target_type: LinkTarget::TOPIC, target_id: 12)
+      expect(link).to include(text: "the topic", target_type: link_target::TOPIC, target_id: 12)
       expect(result).to eq(link[:placeholder])
     end
 

@@ -2,6 +2,20 @@
 
 require "extralite"
 
+class RecordingReporter
+  attr_reader :progress, :warnings, :errors
+
+  def initialize
+    @progress = @warnings = @errors = 0
+  end
+
+  def report_progress(progress:, warnings:, errors:)
+    @progress += progress
+    @warnings += warnings
+    @errors += errors
+  end
+end
+
 RSpec.describe Migrations::Conversion::StepRunner do
   around do |example|
     Dir.mktmpdir do |dir|
@@ -16,20 +30,6 @@ RSpec.describe Migrations::Conversion::StepRunner do
       example.run
     ensure
       Migrations::Database::IntermediateDB.setup(nil)
-    end
-  end
-
-  class RecordingReporter
-    attr_reader :progress, :warnings, :errors
-
-    def initialize
-      @progress = @warnings = @errors = 0
-    end
-
-    def report_progress(progress:, warnings:, errors:)
-      @progress += progress
-      @warnings += warnings
-      @errors += errors
     end
   end
 

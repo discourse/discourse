@@ -9,7 +9,7 @@ require "tempfile"
 # catches rendering artifacts a unit test can't — the reconstructed screen comes
 # from AnsiScreen.
 RSpec.describe Migrations::Reporting::Tui do
-  DRIVER = TuiReporterDriver::PATH
+  let(:driver) { TuiReporterDriver::PATH }
 
   # Runs the driver to completion, returns [raw_output, status]. `actions` is a
   # list of [delay_seconds, :signal|:resize, arg] performed against the PTY.
@@ -17,7 +17,7 @@ RSpec.describe Migrations::Reporting::Tui do
     env = { "TUI_DRIVER_SCENARIO" => scenario, "TERM" => term }
     env["TUI_DRIVER_STTY_FILE"] = stty_file if stty_file
 
-    reader, _writer, pid = PTY.spawn(env, "bundle", "exec", "ruby", DRIVER)
+    reader, _writer, pid = PTY.spawn(env, "bundle", "exec", "ruby", driver)
     reader.winsize = [rows, cols]
 
     out = +"".b
@@ -53,7 +53,7 @@ RSpec.describe Migrations::Reporting::Tui do
   def run_piped(scenario:, term: "xterm-256color")
     Tempfile.create("tui-pipe") do |file|
       env = { "TUI_DRIVER_SCENARIO" => scenario, "TERM" => term }
-      pid = spawn(env, "bundle", "exec", "ruby", DRIVER, out: file.path, err: File::NULL)
+      pid = spawn(env, "bundle", "exec", "ruby", driver, out: file.path, err: File::NULL)
       _, status = Process.wait2(pid)
       [File.read(file.path), status]
     end

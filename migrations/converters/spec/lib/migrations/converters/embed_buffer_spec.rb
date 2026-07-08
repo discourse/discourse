@@ -3,10 +3,10 @@
 require "tmpdir"
 
 RSpec.describe Migrations::Converters::EmbedBuffer do
-  MentionType = Migrations::Database::IntermediateDB::Enums::MentionType
-  HashtagType = Migrations::Database::IntermediateDB::Enums::HashtagType
-
   subject(:buffer) { described_class.new(owner_type:) }
+
+  let(:hashtag_type) { Migrations::Database::IntermediateDB::Enums::HashtagType }
+  let(:mention_type) { Migrations::Database::IntermediateDB::Enums::MentionType }
 
   let(:owner_type) { Migrations::Database::IntermediateDB::Enums::EmbedOwner::POST }
 
@@ -66,15 +66,15 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
     end
 
     it "records a mention descriptor keyed for IntermediateDB::EmbedMention" do
-      token = buffer.mention(mention_type: MentionType::USER, target_id: 7, name: "bob")
+      token = buffer.mention(mention_type: mention_type::USER, target_id: 7, name: "bob")
 
       expect(buffer.mentions).to contain_exactly(
-        { placeholder: token, mention_type: MentionType::USER, target_id: 7, name: "bob" },
+        { placeholder: token, mention_type: mention_type::USER, target_id: 7, name: "bob" },
       )
     end
 
     it "accepts every known mention type, plus nil" do
-      types = [*MentionType.values, nil]
+      types = [*mention_type.values, nil]
 
       expect { types.each { |type| buffer.mention(mention_type: type) } }.not_to raise_error
     end
@@ -87,12 +87,12 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
     end
 
     it "records a hashtag descriptor keyed for IntermediateDB::EmbedHashtag" do
-      token = buffer.hashtag(hashtag_type: HashtagType::CATEGORY, target_id: nil, name: "support")
+      token = buffer.hashtag(hashtag_type: hashtag_type::CATEGORY, target_id: nil, name: "support")
 
       expect(buffer.hashtags).to contain_exactly(
         {
           placeholder: token,
-          hashtag_type: HashtagType::CATEGORY,
+          hashtag_type: hashtag_type::CATEGORY,
           target_id: nil,
           name: "support",
         },
@@ -100,7 +100,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
     end
 
     it "accepts every known hashtag type, plus nil" do
-      types = [*HashtagType.values, nil]
+      types = [*hashtag_type.values, nil]
 
       expect { types.each { |type| buffer.hashtag(hashtag_type: type) } }.not_to raise_error
     end
@@ -164,7 +164,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
       raw << " see "
       raw << buffer.link(url: "https://example.com", text: "x")
       raw << " hi "
-      raw << buffer.mention(mention_type: MentionType::USER, target_id: 7, name: "bob")
+      raw << buffer.mention(mention_type: mention_type::USER, target_id: 7, name: "bob")
       raw << " tag "
       raw << buffer.hashtag(name: "support")
       raw << " emoji "
@@ -243,7 +243,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
 
     it "inserts each recorded embed into its linkage table under the owner" do
       quote = buffer.quote(quoted_user_id: 5)
-      mention = buffer.mention(mention_type: MentionType::USER, target_id: 7)
+      mention = buffer.mention(mention_type: mention_type::USER, target_id: 7)
       hashtag = buffer.hashtag(name: "support:billing")
       emoji = buffer.emoji(name: "parrot")
       upload = buffer.upload(upload_id: "sha1")
@@ -258,7 +258,7 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
           owner_type:,
           owner_id: 42,
           placeholder: mention,
-          mention_type: MentionType::USER,
+          mention_type: mention_type::USER,
           target_id: 7,
         ),
       )
