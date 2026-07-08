@@ -2,12 +2,12 @@
 
 # name: discourse-workflows
 # about: Workflow automation system for Discourse
-# meta_topic_id: 402418
+# meta_topic_id: 406990
 # version: 0.1
 # authors: Discourse
 # url: https://github.com/discourse/discourse-workflows
 
-enabled_site_setting :discourse_workflows_enabled
+enabled_site_setting :enable_discourse_workflows
 
 module ::DiscourseWorkflows
   PLUGIN_NAME = "discourse-workflows"
@@ -129,7 +129,7 @@ after_initialize do
   end
 
   on(:site_setting_changed) do |name, old_value, new_value|
-    next if name != :discourse_workflows_enabled
+    next if name != :enable_discourse_workflows
     next unless new_value && !old_value
 
     DiscourseWorkflows::PluginEnableHandler.handle!

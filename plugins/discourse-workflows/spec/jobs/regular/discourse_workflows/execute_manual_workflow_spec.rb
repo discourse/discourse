@@ -37,7 +37,7 @@ RSpec.describe Jobs::DiscourseWorkflows::ExecuteManualWorkflow do
   end
 
   it "skips the execution when the plugin is disabled" do
-    SiteSetting.discourse_workflows_enabled = false
+    SiteSetting.enable_discourse_workflows = false
     workflow = Fabricate(:discourse_workflows_workflow, created_by: admin)
     execution = pending_execution(workflow: workflow)
 

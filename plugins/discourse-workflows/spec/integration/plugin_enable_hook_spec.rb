@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "discourse_workflows_enabled site setting hook" do
+describe "enable_discourse_workflows site setting hook" do
   fab!(:workflow) { Fabricate(:discourse_workflows_workflow, published: true) }
   fab!(:execution) do
     Fabricate(
@@ -12,29 +12,29 @@ describe "discourse_workflows_enabled site setting hook" do
   end
 
   it "reschedules waiting executions when the setting flips false to true" do
-    SiteSetting.discourse_workflows_enabled = false
+    SiteSetting.enable_discourse_workflows = false
 
     expect_enqueued_with(
       job: Jobs::DiscourseWorkflows::ResumeWaitingExecution,
       args: {
         execution_id: execution.id,
       },
-    ) { SiteSetting.discourse_workflows_enabled = true }
+    ) { SiteSetting.enable_discourse_workflows = true }
   end
 
   it "does not reschedule when the setting flips true to false" do
-    SiteSetting.discourse_workflows_enabled = true
+    SiteSetting.enable_discourse_workflows = true
 
     expect_not_enqueued_with(
       job: Jobs::DiscourseWorkflows::ResumeWaitingExecution,
       args: {
         execution_id: execution.id,
       },
-    ) { SiteSetting.discourse_workflows_enabled = false }
+    ) { SiteSetting.enable_discourse_workflows = false }
   end
 
   it "does not reschedule for unrelated setting changes" do
-    SiteSetting.discourse_workflows_enabled = true
+    SiteSetting.enable_discourse_workflows = true
 
     expect_not_enqueued_with(
       job: Jobs::DiscourseWorkflows::ResumeWaitingExecution,

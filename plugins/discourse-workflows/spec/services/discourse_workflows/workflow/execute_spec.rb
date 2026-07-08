@@ -23,7 +23,7 @@ RSpec.describe DiscourseWorkflows::Workflow::Execute do
     end
 
     context "when workflows are not enabled" do
-      before { SiteSetting.discourse_workflows_enabled = false }
+      before { SiteSetting.enable_discourse_workflows = false }
 
       it { is_expected.to fail_a_policy(:can_execute) }
     end

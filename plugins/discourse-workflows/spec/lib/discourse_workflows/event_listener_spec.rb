@@ -27,7 +27,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
   end
 
   it "does not enqueue when plugin is disabled" do
-    SiteSetting.discourse_workflows_enabled = false
+    SiteSetting.enable_discourse_workflows = false
 
     graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }
     workflow = Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
