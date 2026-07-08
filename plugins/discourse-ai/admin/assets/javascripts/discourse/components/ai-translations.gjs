@@ -11,6 +11,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import Category from "discourse/models/category";
 import CategorySelector from "discourse/select-kit/components/category-selector";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
@@ -48,24 +49,25 @@ export default class AiTranslations extends Component {
   @tracked isTogglingTranslation = false;
   @tracked creditStatus = null;
   @tracked creditCheckComplete = false;
-  @tracked excludedCategories = [];
-  @tracked
-  originalExcludedCategoryIds = this.args.model?.excluded_category_ids || [];
+  @tracked categoryScope = this.args.model?.category_scope || "public";
+  @tracked originalCategoryScope = this.args.model?.category_scope || "public";
+  @tracked categories = [];
+  @tracked originalCategoryIds = this.args.model?.category_ids || [];
   hourlyRate = this.args.model?.hourly_rate || 0;
 
   constructor() {
     super(...arguments);
     this._checkCredits();
-    this._loadExcludedCategories();
+    this._loadCategories();
     if (this.enabled) {
       this._loadProgress();
     }
   }
 
-  async _loadExcludedCategories() {
-    const ids = this.args.model?.excluded_category_ids || [];
+  async _loadCategories() {
+    const ids = this.args.model?.category_ids || [];
     if (ids.length) {
-      this.excludedCategories = await Category.asyncFindByIds(ids);
+      this.categories = await Category.asyncFindByIds(ids);
     }
   }
 
@@ -129,11 +131,33 @@ export default class AiTranslations extends Component {
   }
 
   get categoriesChanged() {
-    const current = [...this.excludedCategories.map((c) => c.id)]
+    const current = [...this.categories.map((category) => category.id)]
       .sort()
       .join("|");
-    const original = [...this.originalExcludedCategoryIds].sort().join("|");
-    return current !== original;
+    const original = [...this.originalCategoryIds].sort().join("|");
+    return (
+      this.categoryScope !== this.originalCategoryScope || current !== original
+    );
+  }
+
+  get categoryScopeOptions() {
+    return [
+      "all",
+      "public",
+      "include",
+      "include_strict",
+      "exclude",
+      "exclude_strict",
+    ].map((value) => ({
+      value,
+      name: i18n(`category_scope.${value}`),
+    }));
+  }
+
+  get showCategorySelector() {
+    return ["include", "include_strict", "exclude", "exclude_strict"].includes(
+      this.categoryScope
+    );
   }
 
   get isToggleDisabled() {
@@ -221,22 +245,31 @@ export default class AiTranslations extends Component {
   }
 
   @action
-  updateExcludedCategories(categories) {
-    this.excludedCategories = categories;
+  updateCategoryScope(scope) {
+    this.categoryScope = scope;
+  }
+
+  @action
+  updateCategories(categories) {
+    this.categories = categories;
   }
 
   @action
   async saveCategories() {
     this.isSavingCategories = true;
     try {
-      const ids = this.excludedCategories.map((c) => c.id);
-      await ajax("/admin/site_settings/ai_translation_excluded_categories", {
+      const ids = this.categories.map((category) => category.id);
+      await ajax("/admin/site_settings/bulk_update", {
         type: "PUT",
         data: {
-          ai_translation_excluded_categories: ids.join("|"),
+          settings: {
+            ai_translation_category_scope: { value: this.categoryScope },
+            ai_translation_categories: { value: ids.join("|") },
+          },
         },
       });
-      this.originalExcludedCategoryIds = ids;
+      this.originalCategoryScope = this.categoryScope;
+      this.originalCategoryIds = ids;
     } catch (e) {
       popupAjaxError(e);
     } finally {
@@ -246,14 +279,14 @@ export default class AiTranslations extends Component {
 
   @action
   async cancelCategories() {
-    this.excludedCategories = await Category.asyncFindByIds(
-      this.originalExcludedCategoryIds
-    );
+    this.categoryScope = this.originalCategoryScope;
+    this.categories = await Category.asyncFindByIds(this.originalCategoryIds);
   }
 
   @action
   resetCategories() {
-    this.excludedCategories = [];
+    this.categoryScope = "public";
+    this.categories = [];
   }
 
   @action
@@ -577,43 +610,83 @@ export default class AiTranslations extends Component {
             <div class="setting">
               <div class="setting-label">
                 <label>{{i18n
-                    "discourse_ai.translations.excluded_categories"
+                    "discourse_ai.translations.category_scope"
                   }}</label>
               </div>
               <div class="setting-value">
                 <div class="ai-translations__category-input-row">
-                  <CategorySelector
-                    @categories={{this.excludedCategories}}
-                    @onChange={{this.updateExcludedCategories}}
-                  />
-                  {{#if this.categoriesChanged}}
-                    <div class="setting-controls">
-                      <DButton
-                        @action={{this.saveCategories}}
-                        @icon="check"
-                        @isLoading={{this.isSavingCategories}}
-                        @ariaLabel="save"
-                        class="ok setting-controls__ok"
-                      />
-                      <DButton
-                        @action={{this.cancelCategories}}
-                        @icon="xmark"
-                        @isLoading={{this.isSavingCategories}}
-                        @ariaLabel="cancel"
-                        class="cancel setting-controls__cancel"
-                      />
-                    </div>
-                  {{else if this.excludedCategories.length}}
-                    <DButton
-                      @action={{this.resetCategories}}
-                      @icon="arrow-rotate-left"
-                      @label="admin.settings.reset"
-                      class="undo setting-controls__undo"
+                  <div class="ai-translations__category-scope-row">
+                    <ComboBox
+                      @value={{this.categoryScope}}
+                      @content={{this.categoryScopeOptions}}
+                      @onChange={{this.updateCategoryScope}}
+                      @valueProperty="value"
+                      @nameProperty="name"
                     />
+                    {{#unless this.showCategorySelector}}
+                      {{#if this.categoriesChanged}}
+                        <div class="setting-controls">
+                          <DButton
+                            @action={{this.saveCategories}}
+                            @icon="check"
+                            @isLoading={{this.isSavingCategories}}
+                            @ariaLabel="save"
+                            class="ok setting-controls__ok"
+                          />
+                          <DButton
+                            @action={{this.cancelCategories}}
+                            @icon="xmark"
+                            @isLoading={{this.isSavingCategories}}
+                            @ariaLabel="cancel"
+                            class="cancel setting-controls__cancel"
+                          />
+                        </div>
+                      {{else if this.categories.length}}
+                        <DButton
+                          @action={{this.resetCategories}}
+                          @icon="arrow-rotate-left"
+                          @label="admin.settings.reset"
+                          class="undo setting-controls__undo"
+                        />
+                      {{/if}}
+                    {{/unless}}
+                  </div>
+                  {{#if this.showCategorySelector}}
+                    <div class="ai-translations__category-selector-row">
+                      <CategorySelector
+                        @categories={{this.categories}}
+                        @onChange={{this.updateCategories}}
+                      />
+                      {{#if this.categoriesChanged}}
+                        <div class="setting-controls">
+                          <DButton
+                            @action={{this.saveCategories}}
+                            @icon="check"
+                            @isLoading={{this.isSavingCategories}}
+                            @ariaLabel="save"
+                            class="ok setting-controls__ok"
+                          />
+                          <DButton
+                            @action={{this.cancelCategories}}
+                            @icon="xmark"
+                            @isLoading={{this.isSavingCategories}}
+                            @ariaLabel="cancel"
+                            class="cancel setting-controls__cancel"
+                          />
+                        </div>
+                      {{else if this.categories.length}}
+                        <DButton
+                          @action={{this.resetCategories}}
+                          @icon="arrow-rotate-left"
+                          @label="admin.settings.reset"
+                          class="undo setting-controls__undo"
+                        />
+                      {{/if}}
+                    </div>
                   {{/if}}
                 </div>
                 <div class="desc">{{i18n
-                    "discourse_ai.translations.excluded_categories_description"
+                    "discourse_ai.translations.category_scope_description"
                   }}</div>
               </div>
             </div>
