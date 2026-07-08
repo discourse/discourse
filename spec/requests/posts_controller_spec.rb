@@ -3031,6 +3031,44 @@ RSpec.describe PostsController do
         expect(response.status).to eq(200)
       end
 
+      it "omits unseen reply target post numbers" do
+        SiteSetting.editing_grace_period = 0
+        SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff]
+
+        topic = Fabricate(:topic)
+        Fabricate(:post, topic: topic, post_number: 1)
+        visible_parent = Fabricate(:post, topic: topic, post_number: 2)
+        whisper = Fabricate(:post, topic: topic, post_number: 3, post_type: Post.types[:whisper])
+        revised_post =
+          Fabricate(
+            :post,
+            topic: topic,
+            post_number: 4,
+            reply_to_post_number: visible_parent.post_number,
+            reply_to_user_id: visible_parent.user_id,
+          )
+
+        sign_in(admin)
+        put "/posts/#{revised_post.id}.json",
+            params: {
+              post: {
+                raw: revised_post.raw,
+                reply_to_post_number: whisper.post_number,
+              },
+            }
+        expect(response.status).to eq(200)
+        delete "/session/#{admin.username}.json"
+
+        revision = revised_post.reload.revisions.last
+        get "/posts/#{revised_post.id}/revisions/#{revision.number}.json"
+
+        expect(response.status).to eq(200)
+        expect(
+          response.parsed_body["reply_to_post_number_changes"]["previous"]["post_number"],
+        ).to eq(visible_parent.post_number)
+        expect(response.parsed_body["reply_to_post_number_changes"]["current"]).to eq(nil)
+      end
+
       context "when names are disabled" do
         before { SiteSetting.enable_names = false }
 
