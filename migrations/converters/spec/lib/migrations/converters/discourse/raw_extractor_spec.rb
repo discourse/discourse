@@ -216,6 +216,26 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.mentions).to be_empty
     end
 
+    it "captures a username containing a dot" do
+      result = extract("hi @john.doe there")
+
+      expect(buffer.mentions.first[:name]).to eq("john.doe")
+      expect(result).to eq("hi #{buffer.mentions.first[:placeholder]} there")
+    end
+
+    it "keeps a trailing sentence period out of the name" do
+      result = extract("thanks @bob.")
+
+      expect(buffer.mentions.first[:name]).to eq("bob")
+      expect(result).to eq("thanks #{buffer.mentions.first[:placeholder]}.")
+    end
+
+    it "captures a username with a hyphen" do
+      extract("cc @some-user please")
+
+      expect(buffer.mentions.first[:name]).to eq("some-user")
+    end
+
     it "classifies mention types via the injected resolver" do
       resolver =
         Migrations::Converters::Discourse::MentionResolver.new(
