@@ -75,17 +75,26 @@ module Migrations
             SEG = %r{[^/?#]+}
             private_constant :SEG
 
+            # A record id. At most 18 digits: ids are stored as SQLite signed 64-bit
+            # integers (19 digits can overflow, and binding one raises), and no real
+            # record has one anyway — a longer digit run is a numeric topic *title*,
+            # like meta's `/t/77777777777777777789999/`, which Discourse itself
+            # doesn't resolve either. The routes' trailing lookaheads keep a longer
+            # run from matching partially, so such a URL just stays literal text.
+            ID = /\d{1,18}/
+            private_constant :ID
+
             # `/t/<id>` (topic) or `/t/<id>/<post_number>` (post by coordinates), the
             # id-only forms where the first `/t/` component is all digits.
-            TOPIC_NUMERIC = %r{\A/t/(?<id>\d+)(?:/(?<pn>\d+))?(?=[/?#]|\z)}
+            TOPIC_NUMERIC = %r{\A/t/(?<id>#{ID})(?:/(?<pn>#{ID}))?(?=[/?#]|\z)}
             private_constant :TOPIC_NUMERIC
 
             # `/t/<slug>/<id>` (topic) or `/t/<slug>/<id>/<post_number>` (post by
             # coordinates). The slug is `-` for the slugless `/t/-/<id>` form.
-            TOPIC_SLUG = %r{\A/t/#{SEG}/(?<id>\d+)(?:/(?<pn>\d+))?(?=[/?#]|\z)}
+            TOPIC_SLUG = %r{\A/t/#{SEG}/(?<id>#{ID})(?:/(?<pn>#{ID}))?(?=[/?#]|\z)}
             private_constant :TOPIC_SLUG
 
-            POST = %r{\A/p/(?<id>\d+)(?=[/?#]|\z)}
+            POST = %r{\A/p/(?<id>#{ID})(?=[/?#]|\z)}
             private_constant :POST
 
             USER = %r{\A/u(?:sers)?/(?<name>#{WORD})}
@@ -107,7 +116,7 @@ module Migrations
 
             # `/badges/<id>` or `/badges/<id>/<slug>`; the slug is regenerated at
             # import, so it's consumed by the route rather than kept as suffix.
-            BADGE = %r{\A/badges/(?<id>\d+)(?:/#{SEG})?(?=[/?#]|\z)}
+            BADGE = %r{\A/badges/(?<id>#{ID})(?:/#{SEG})?(?=[/?#]|\z)}
             private_constant :BADGE
 
             # @param hosts [Set<String>, #include?] the source's own hosts (base URL
@@ -250,7 +259,9 @@ module Migrations
               return nil unless match
 
               segments = match[:path].split("/")
-              if segments.last.match?(/\A\d+\z/)
+              # The id bound matches ID: a longer digit run can't be a real id, so
+              # it reads as a (numeric) slug and fails name resolution instead.
+              if segments.last.match?(/\A\d{1,18}\z/)
                 target(match, :category, target_id: segments.last.to_i)
               else
                 target(match, :category, target_name: segments.join(":"))
