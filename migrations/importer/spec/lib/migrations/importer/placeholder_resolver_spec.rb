@@ -127,7 +127,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       expect(resolved[100]).to eq(
         'Q [quote="Alice A, post:3, topic:42, username:alice"] ' \
-          "L [See](https://dest.example.com/t/99) M  @bob  U ![pic](upload://sha1.png) end",
+          "L [See](https://dest.example.com/t/99) M @bob U ![pic](upload://sha1.png) end",
       )
       expect(Migrations::Placeholder).not_to be_include(resolved[100])
     end
@@ -152,7 +152,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
       resolved =
         resolver.resolve_all([{ id: 1, raw: "a #{first} b" }, { id: 2, raw: "c #{second} d" }])
 
-      expect(resolved).to eq({ 1 => "a  @all  b", 2 => "c  @here  d" })
+      expect(resolved).to eq({ 1 => "a @all b", 2 => "c @here d" })
     end
 
     it "only loads linkage rows of its own owner_type" do
@@ -195,7 +195,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       resolved = resolver.resolve_all([{ id: 1, raw: "plain" }, { id: 2, raw: "hi #{token}" }])
 
-      expect(resolved).to eq({ 1 => "plain", 2 => "hi  @all " })
+      expect(resolved).to eq({ 1 => "plain", 2 => "hi @all" })
     end
   end
 
@@ -686,7 +686,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       resolved = resolver.resolve_all([{ id: 1, raw: "hey #{mention}!" }])
 
-      expect(resolved[1]).to eq("hey  @robert !")
+      expect(resolved[1]).to eq("hey @robert!")
     end
 
     it "maps a group mention name to the group's original_id" do
@@ -704,7 +704,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       resolved = resolver.resolve_all([{ id: 1, raw: "cc #{mention} please" }])
 
-      expect(resolved[1]).to eq("cc  @staff  please")
+      expect(resolved[1]).to eq("cc @staff please")
     end
 
     it "matches a recorded name to a source username regardless of case and Unicode form" do
@@ -727,7 +727,7 @@ RSpec.describe Migrations::Importer::PlaceholderResolver do
 
       resolved = resolver.resolve_all([{ id: 1, raw: "ping #{mention}" }])
 
-      expect(resolved[1]).to eq("ping  @cafe ")
+      expect(resolved[1]).to eq("ping @cafe")
     end
   end
 
