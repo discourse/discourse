@@ -39,11 +39,12 @@ module Migrations
               /\G\#(?<name>[\p{Alnum}\p{M}_-]+(?::[\p{Alnum}\p{M}_-]+)?)(?:::(?<type>tag|category))?(?![\p{Alnum}\p{M}_:-])/i
             private_constant :PATTERN
 
-            # @param names [Enumerable<String>, nil] the source's category slug paths
-            #   and tag names, already normalized. When given, a hashtag is deferred
-            #   only if its (normalized) name is in the set. `nil` means no gate.
+            # @param names [Migrations::SortedStringSet, nil] the source's category
+            #   slug paths and tag names, already normalized. When given, a hashtag is
+            #   deferred only if its (normalized) name is in the set. `nil` means no
+            #   gate.
             def initialize(names: nil)
-              @names = names&.to_set
+              @names = names
             end
 
             def detect(input, pos)
@@ -54,7 +55,7 @@ module Migrations
               return nil unless match
 
               name = match[:name]
-              return nil if @names && @names.exclude?(normalize(name))
+              return nil if @names && !@names.include?(normalize(name))
 
               Match.new(
                 start_pos: pos,

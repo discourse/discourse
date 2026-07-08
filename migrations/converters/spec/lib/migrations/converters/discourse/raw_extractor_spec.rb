@@ -393,7 +393,11 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
   end
 
   describe "hashtags with an existence gate" do
-    subject(:extractor) { described_class.new(hashtag_names: %w[announcements support:billing]) }
+    subject(:extractor) do
+      described_class.new(
+        hashtag_names: Migrations::SortedStringSet.new(%w[announcements support:billing]),
+      )
+    end
 
     it "defers a hashtag whose name is in the set" do
       result = extract("see #announcements please")

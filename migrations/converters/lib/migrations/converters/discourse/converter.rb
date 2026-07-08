@@ -68,7 +68,7 @@ module Migrations
         # normalizes them when it resolves a hashtag, so the Posts step defers only a
         # `#name` that names something real and the two sides agree on what matches.
         def hashtag_names(source_db)
-          names = Set.new
+          names = []
 
           source_db
             .query(<<~SQL)
@@ -83,7 +83,9 @@ module Migrations
 
           source_db.query("SELECT name FROM tags").each { |row| names << normalize(row[:name]) }
 
-          names
+          # Tags reach six figures on big sites, so the gate is a SortedStringSet for
+          # the same copy-on-write reason the mention gate is (and it dedupes here).
+          Migrations::SortedStringSet.new(names)
         end
 
         # Source custom emoji names, so the Posts step extracts only `:name:`
