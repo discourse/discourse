@@ -62,4 +62,16 @@ RSpec.describe "User notification preferences | Chat notifications" do
     expect(combo(".chat-header-indicator-preference").value).to eq("dm_and_mentions")
     expect(combo(".chat-sound").value).to eq("retro")
   end
+
+  it "can toggle and persist ignore channel-wide mentions" do
+    current_user.user_option.update!(ignore_channel_wide_mention: false)
+    visit_notifications
+
+    find(".pref-chat-ignore-channel-wide-mention input[type=checkbox]").click
+    save
+    visit_notifications
+
+    expect(page).to have_css(".pref-chat-ignore-channel-wide-mention input[type=checkbox]:checked")
+    expect(current_user.reload.user_option.ignore_channel_wide_mention).to eq(true)
+  end
 end

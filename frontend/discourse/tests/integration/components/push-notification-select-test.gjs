@@ -38,6 +38,9 @@ module("Integration | Component | push-notification-select", function (hooks) {
         push_notification_level: "all",
         chat_enabled: true,
       }),
+      save() {
+        return Promise.resolve();
+      },
     });
   });
 

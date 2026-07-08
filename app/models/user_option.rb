@@ -74,6 +74,13 @@ class UserOption < ActiveRecord::Base
   validates :email_messages_level, inclusion: { in: UserOption.email_level_types.values }
   validates :timezone, timezone: true
 
+  # Ignore out-of-enum values rather than letting the enum setter raise
+  # ArgumentError (which would surface as a 500 on the preferences update path).
+  def push_notification_level=(value)
+    return unless self.class.push_notification_levels.key?(value.to_s)
+    super
+  end
+
   def set_defaults
     self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode
     self.mailing_list_mode_frequency = SiteSetting.default_email_mailing_list_mode_frequency

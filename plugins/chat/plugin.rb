@@ -96,6 +96,17 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:chat_separate_sidebar_mode)
   UserUpdater::OPTION_ATTR.push(:chat_send_shortcut)
 
+  # When a user opts into chat-only push notifications, suppress every push that
+  # isn't a chat message/mention. Registered here (rather than in core) so it's
+  # only active while chat is enabled, and runs alongside core's other filters.
+  register_push_notification_filter do |user, payload|
+    if user.user_option.push_notification_level_chat_only? && user.user_option.chat_enabled
+      payload[:notification_type].in?(::Notification.types.values_at(:chat_mention, :chat_message))
+    else
+      true
+    end
+  end
+
   register_reviewable_type Chat::ReviewableMessage
 
   if respond_to?(:register_discourse_workflows_node)
