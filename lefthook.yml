@@ -31,15 +31,15 @@ pre-commit:
     prettier:
       glob: &prettier_glob
         - "app/assets/stylesheets/**/*.{css,scss}"
-        - "frontend/**/*.{js,gjs,scss,css,cjs,mjs}"
-        - "plugins/**/*.{js,gjs,scss,css,cjs,mjs}"
-        - "themes/**/*.{js,gjs,scss,css,cjs,mjs}"
+        - "frontend/**/*.{js,gjs,ts,gts,mts,cts,scss,css,cjs,mjs}"
+        - "plugins/**/*.{js,gjs,ts,gts,mts,cts,scss,css,cjs,mjs}"
+        - "themes/**/*.{js,gjs,ts,gts,mts,cts,scss,css,cjs,mjs}"
       run: pnpm pprettier --list-different {staged_files}
     eslint:
       glob: &eslint_glob
-        - "frontend/**/*.{js,gjs}"
-        - "plugins/**/*.{js,gjs}"
-        - "themes/**/*.{js,gjs}"
+        - "frontend/**/*.{js,gjs,ts,gts,mts,cts}"
+        - "plugins/**/*.{js,gjs,ts,gts,mts,cts}"
+        - "themes/**/*.{js,gjs,ts,gts,mts,cts}"
       run: pnpm eslint --max-warnings 0 {staged_files}
     yaml-syntax:
       glob: &yaml_glob "**/*.{yaml,yml}"

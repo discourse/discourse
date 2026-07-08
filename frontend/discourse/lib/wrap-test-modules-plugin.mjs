@@ -1,4 +1,4 @@
-const TEST_FILE_RE = /tests\/(?!helpers\/).*-test\.(?:gjs|js)$/;
+const TEST_FILE_RE = /tests\/(?!helpers\/).*-test\.(?:gjs|js|ts|gts)$/;
 
 export default function wrapTestModulesPlugin() {
   return {

@@ -30,7 +30,7 @@ export class I18n {
 
   pluralizationRules = Cardinals;
 
-  translate = (scope, options) => {
+  translate = (scope, options = {}) => {
     return this.verbose
       ? this._verboseTranslate(scope, options)
       : this._translate(scope, options);
