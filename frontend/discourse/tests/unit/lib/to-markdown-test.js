@@ -518,6 +518,14 @@ helloWorld();</code>consectetur.`;
     assert.strictEqual(await toMarkdown(html), markdown);
   });
 
+  test("restores clipboard non-breaking spaces around inline nodes", async function (assert) {
+    // The copied nbsp beside the emoji must become a regular space or it won't
+    // cook; an author-typed nbsp (in "to keep") is left alone.
+    const html = `<span style="color: rgb(0,0,0)">use the<span>&nbsp;</span></span><img class="emoji" title=":heart:" alt=":heart:" /><span style="color: rgb(0,0,0)"><span>&nbsp;</span>to&nbsp;keep</span>`;
+
+    assert.strictEqual(await toMarkdown(html), `use the :heart: to\u00a0keep`);
+  });
+
   test("converts image lightboxes to markdown", async function (assert) {
     let html = `
     <a class="lightbox" href="https://d11a6trkgmumsb.cloudfront.net/uploads/default/original/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba.jpeg" data-download-href="https://d11a6trkgmumsb.cloudfront.net/uploads/default/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba" title="sherlock3_sig.jpg" rel="nofollow noopener"><img src="https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_689x459.jpeg" alt="sherlock3_sig" width="689" height="459" class="d-lazyload" srcset="https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_689x459.jpeg, https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_1033x688.jpeg 1.5x, https://d11a6trkgmumsb.cloudfront.net/uploads/default/optimized/1X/8hkjhk7692f6afed3cb99d43ab2abd4e30aa8cba_2_1378x918.jpeg 2x"><div class="meta">
