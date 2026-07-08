@@ -105,6 +105,29 @@ RSpec.describe Migrations::Converters::Discourse::Converter do
 
         expect(args[:custom_emoji_names]).to eq(%w[parrot +1])
       end
+
+      it "derives the internal-link host set from the base URL and former domains" do
+        settings = {
+          source_site: {
+            base_url: "https://forum.example.com:8080/path",
+            former_domains: %w[http://old.example.com older.example.com],
+          },
+        }
+
+        args = described_class.new(settings).step_args(Migrations::Converters::Discourse::Posts)
+
+        expect(args[:internal_link_hosts]).to contain_exactly(
+          "forum.example.com",
+          "old.example.com",
+          "older.example.com",
+        )
+      end
+
+      it "leaves the internal-link host set empty when no source site is configured" do
+        args = described_class.new({}).step_args(Migrations::Converters::Discourse::Posts)
+
+        expect(args[:internal_link_hosts]).to be_empty
+      end
     end
   end
 end
