@@ -5661,6 +5661,7 @@ es:
         title: "Lista de informes disponibles"
         sidebar_title: "Informes"
         back: "Volver a todos los informes"
+        all_groups: "Todos los grupos"
         group_engagement: "Interacción"
         group_traffic: "Tráfico"
         group_members: "Miembros"

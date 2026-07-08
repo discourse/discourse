@@ -2034,6 +2034,7 @@ be:
           never: "ніколі"
       reports:
         sidebar_title: "Справаздачы"
+        all_groups: "Усе групы"
         group_traffic: "Трафік"
         group_members: "Члены"
         group_other: "Іншае"

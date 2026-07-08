@@ -5691,6 +5691,7 @@ ur:
         title: "دستیاب رپورٹوں کی فہرست"
         sidebar_title: "رپورٹیں"
         back: "تمام رپورٹس پر واپس"
+        all_groups: "تمام گروپس"
         group_traffic: "ٹریفک"
         group_members: "ممبران"
         group_other: "دیگر"

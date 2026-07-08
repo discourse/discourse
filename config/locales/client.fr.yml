@@ -5182,6 +5182,7 @@ fr:
         title: "Liste des rapports disponibles"
         sidebar_title: "Rapports"
         back: "Retour à tous les rapports"
+        all_groups: "Tous les groupes"
         group_traffic: "Trafic"
         group_members: "Membres"
         group_other: "Autre"

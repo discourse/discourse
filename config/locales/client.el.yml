@@ -5739,6 +5739,7 @@ el:
         title: "Λίστα διαθέσιμων αναφορών"
         sidebar_title: "Αναφορές"
         back: "Πίσω σε όλες τις αναφορές"
+        all_groups: "Όλες οι ομάδες"
         group_traffic: "Κίνηση"
         group_members: "Μέλη"
         group_content: "Περιεχόμενο & Υγεία"

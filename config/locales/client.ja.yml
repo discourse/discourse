@@ -5139,6 +5139,7 @@ ja:
         title: "使用可能なレポートのリスト"
         sidebar_title: "レポート"
         back: "すべてのレポートに戻る"
+        all_groups: "すべてのグループ"
         group_traffic: "トラフィック"
         group_members: "メンバー"
         group_other: "その他"

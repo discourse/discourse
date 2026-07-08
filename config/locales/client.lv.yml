@@ -2883,6 +2883,7 @@ lv:
           always: "vienmēr"
           never: "nekad"
       reports:
+        all_groups: "Visas grupas"
         group_traffic: "Datu plūsma"
         group_members: "Dalībnieki"
         group_other: "Citi"

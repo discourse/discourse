@@ -4342,6 +4342,7 @@ da:
         title: "Liste over tilgængelige rapporter"
         sidebar_title: "Rapporter"
         back: "Tilbage til alle rapporter"
+        all_groups: "Alle grupper"
         group_traffic: "Trafik"
         group_members: "Brugere"
         group_other: "Andre"
