@@ -163,6 +163,8 @@ class AiAgent < ActiveRecord::Base
 
   def bump_cache
     self.class.agent_cache.flush!
+    return if !DiscourseAi::AiHelper::Assistant.prompt_agent_ids.include?(id)
+    DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
   end
 
   def tools_can_not_be_duplicated
