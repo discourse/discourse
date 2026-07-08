@@ -1,6 +1,7 @@
-// must be an https link to livestream
-export function isLivestreamUrl(location) {
-  return /^https?:\/\//i.test(location ?? "");
+export function isLivestreamUrl(url) {
+  return /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be|twitch\.tv|zoom\.us|kick\.com|tiktok\.com|instagram\.com|facebook\.com)\//i.test(
+    url ?? ""
+  );
 }
 
 export function defaultReminderFor({ startsAt, endsAt, allDay } = {}) {

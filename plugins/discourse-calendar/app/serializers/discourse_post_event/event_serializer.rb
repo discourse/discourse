@@ -30,6 +30,7 @@ module DiscoursePostEvent
     attributes :chat_enabled
     attributes :livestream
     attributes :livestream_onebox
+    attributes :livestream_url
     # TODO (martin) We need to merge this and the event channel ID which
     # comes from chat_enabled on the event, we dont need 2 channels per event
     attributes :livestream_chat_channel_id
@@ -52,8 +53,17 @@ module DiscoursePostEvent
       livestream_enabled
     end
 
+    def include_livestream_url?
+      livestream_enabled
+    end
+
     def livestream_onebox
-      Oneboxer.cached_onebox(object.location).presence
+      cached_onebox = Oneboxer.cached_onebox(object.livestream_url).presence
+      if !cached_onebox
+        object.warm_livestream_onebox!(publish: false)
+        cached_onebox = Oneboxer.cached_onebox(object.livestream_url)
+      end
+      cached_onebox
     end
 
     def livestream_chat_channel_id

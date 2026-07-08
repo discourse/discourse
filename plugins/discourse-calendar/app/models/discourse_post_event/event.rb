@@ -528,6 +528,17 @@ module DiscoursePostEvent
       timezone || DEFAULT_TIMEZONE
     end
 
+    def livestream_url
+      location || url
+    end
+
+    def warm_livestream_onebox!(publish: false)
+      return if !livestream? || livestream_url.blank?
+      return if Oneboxer.cached_onebox(livestream_url).present?
+      Oneboxer.onebox(livestream_url)
+      post&.publish_change_to_clients!(:revised) if publish
+    end
+
     private
 
     def reset_invitees_topic_tracking

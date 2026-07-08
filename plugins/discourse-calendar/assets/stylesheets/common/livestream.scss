@@ -49,6 +49,32 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     margin: 0;
     color: var(--danger);
   }
+
+  &__frame {
+    &.--visible {
+      display: block;
+      padding-top: var(--space-4);
+      justify-content: center;
+    }
+
+    &.--joined {
+      justify-content: initial;
+      padding-top: 0;
+    }
+
+    // Get rid of the view mode buttons in zoom, they break the video stream
+    // when used
+    .zoom-MuiTabs-flexContainer[aria-label="view mode tabs"] {
+      display: none;
+    }
+
+    // Get rid of chat button in zoom, Discourse chat should be used,
+    // there is no way to hide this natively even if the webinar
+    // host has disabled chat
+    button.zoom-MuiButton-root[title="Chat"] {
+      display: none;
+    }
+  }
 }
 
 .discourse-calendar-livestream-zoom-page {
@@ -81,5 +107,39 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     right: 1rem;
     bottom: 4rem;
     z-index: 3;
+  }
+}
+
+body.chat-enabled.livestream-topic {
+  .chat-channel-preview-card {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .chat-channel__placeholder {
+      display: none;
+    }
+  }
+}
+
+.livestream-join-channel-message {
+  text-align: center;
+  margin-top: 1rem;
+
+  h2 {
+    margin-bottom: 0.5rem;
+  }
+}
+
+// Overrides zoom toasts, we do not want these showing as they are
+// un-dismissable and not helpful messages
+.notistack-SnackbarContainer {
+  display: none !important;
+}
+
+// Full page client view Zoom overrides
+#zmmtg-root {
+  #sdk-footer-sortable-list #chat {
+    display: none;
   }
 }

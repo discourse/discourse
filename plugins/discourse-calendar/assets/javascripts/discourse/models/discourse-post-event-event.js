@@ -42,6 +42,8 @@ export default class DiscoursePostEventEvent {
   @tracked chatEnabled;
   @tracked livestream;
   @tracked livestreamOnebox;
+  @tracked livestreamUrl;
+  @tracked livestreamChatChannelId;
   @tracked canUpdateAttendance;
   @tracked canActOnDiscoursePostEvent;
   @tracked shouldDisplayInvitees;
@@ -89,6 +91,7 @@ export default class DiscoursePostEventEvent {
     this.chatEnabled = args.chat_enabled;
     this.livestream = args.livestream;
     this.livestreamOnebox = args.livestream_onebox;
+    this.livestreamUrl = args.livestream_url;
     this.livestreamChatChannelId = args.livestream_chat_channel_id;
     this.maxAttendees = args.max_attendees;
     this.atCapacity = args.at_capacity;
@@ -184,6 +187,7 @@ export default class DiscoursePostEventEvent {
     this.chatEnabled = event.chatEnabled;
     this.livestream = event.livestream;
     this.livestreamOnebox = event.livestreamOnebox;
+    this.livestreamUrl = this.location || this.url;
     this.rrule = event.rrule;
     this.maxAttendees = event.maxAttendees;
     this.atCapacity = event.atCapacity;

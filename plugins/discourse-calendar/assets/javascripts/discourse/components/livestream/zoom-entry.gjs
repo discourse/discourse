@@ -3,9 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { isEmpty } from "@ember/utils";
 import { modifier } from "ember-modifier";
 import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import fetchZoomJoinPayload from "../../lib/fetch-zoom-join-payload";
 import { loadZoomMeetingSdkEmbedded } from "../../lib/load-zoom-meeting-sdk";
@@ -26,6 +28,11 @@ function serializeZoomError(error) {
     return { message: error };
   }
 
+  let knownError = false;
+  if (error.reason === "Meeting has not started") {
+    knownError = true;
+  }
+
   return {
     name: error.name,
     message: error.message,
@@ -34,6 +41,7 @@ function serializeZoomError(error) {
     errorCode: error.errorCode,
     status: error.status,
     stack: error.stack,
+    knownError,
     ...Object.fromEntries(
       Object.entries(error).filter(([, value]) => typeof value !== "function")
     ),
@@ -48,10 +56,13 @@ export default class LivestreamZoomEntry extends Component {
   @tracked errorMessage;
   @tracked isJoining = false;
   @tracked isJoined = false;
+  @tracked showZoomFrame = false;
   zoomAppRoot = null;
   zoomClient = null;
   zoomMutationObserver = null;
   zoomResizeObserver = null;
+  zoomLayoutFrame = null;
+  zoomVideoSyncFrame = null;
 
   registerZoomRoot = modifier((element) => {
     this.zoomAppRoot = element;
@@ -97,6 +108,8 @@ export default class LivestreamZoomEntry extends Component {
     this.zoomMutationObserver?.disconnect();
     this.zoomResizeObserver?.disconnect();
     this.zoomClient?.leaveMeeting?.();
+    cancelAnimationFrame(this.zoomLayoutFrame);
+    cancelAnimationFrame(this.zoomVideoSyncFrame);
   }
 
   get topic() {
@@ -106,7 +119,8 @@ export default class LivestreamZoomEntry extends Component {
   get shouldRender() {
     return (
       this.siteSettings.livestream_zoom_enabled &&
-      this.args.event.livestreamChatChannelId
+      this.args.event.livestreamChatChannelId &&
+      this.currentUser
     );
   }
 
@@ -118,12 +132,8 @@ export default class LivestreamZoomEntry extends Component {
     return getURL(`/t/${this.topic.slug}/${this.topic.id}/zoom`);
   }
 
-  get zoomUrl() {
-    return this.args.event.url || this.args.event.location;
-  }
-
   get showFallbackLink() {
-    return !!this.errorMessage || !this.currentUser;
+    return !isEmpty(this.errorMessage) || !this.currentUser;
   }
 
   get zoomViewSize() {
@@ -234,13 +244,6 @@ export default class LivestreamZoomEntry extends Component {
     );
   }
 
-  updateZoomDebug(data) {
-    window.__discourseCalendarZoomDebug = {
-      ...(window.__discourseCalendarZoomDebug || {}),
-      ...data,
-    };
-  }
-
   @action
   async joinZoom() {
     if (this.isJoining || this.isJoined) {
@@ -249,72 +252,81 @@ export default class LivestreamZoomEntry extends Component {
 
     this.errorMessage = null;
     this.isJoining = true;
+    this.showZoomFrame = true;
 
     try {
-      const payload = await fetchZoomJoinPayload(this.topic.id);
+      const zoomJoinPayload = await fetchZoomJoinPayload(this.topic.id);
       const ZoomMtgEmbedded = await loadZoomMeetingSdkEmbedded();
       this.zoomClient = ZoomMtgEmbedded.createClient();
-      this.updateZoomDebug({
-        phase: "init",
-        topicId: this.topic.id,
-        zoomUrl: this.zoomUrl,
-        viewSize: this.zoomViewSize,
-        viewport: {
-          width: window.innerWidth,
-          height: window.innerHeight,
-        },
-      });
 
-      await this.zoomClient.init({
-        zoomAppRoot: this.zoomAppRoot,
-        language: "en-US",
-        patchJsMedia: true,
-        leaveOnPageUnload: true,
-        customize: {
-          video: {
-            isResizable: false,
-            defaultViewType: DEFAULT_VIEW_TYPE,
-            viewSizes: {
-              default: this.zoomViewSize,
+      if (!this.zoomClientInitialized) {
+        await this.zoomClient.init({
+          zoomAppRoot: this.zoomAppRoot,
+          language: "en-US",
+          patchJsMedia: true,
+          leaveOnPageUnload: true,
+          customize: {
+            activeApps: {
+              popper: {
+                placement: "top",
+              },
             },
-            popper: {
-              disableDraggable: true,
+            video: {
+              isResizable: false,
+              defaultViewType: DEFAULT_VIEW_TYPE,
+              viewSizes: {
+                default: this.zoomViewSize,
+              },
+              popper: {
+                disableDraggable: true,
+              },
             },
           },
-        },
-      });
+        });
+
+        this.zoomClient.on("connection-change", (payload) => {
+          // Handles the livestream ending while the user is still on the page.
+          if (payload.state === "Closed") {
+            this.isJoined = false;
+            this.showZoomFrame = false;
+
+            // Deletes inline styles that Zoom applies which leaves a big empty box on the page
+            this.zoomAppRoot.removeAttribute("style");
+          }
+        });
+
+        this.zoomClientInitialized = true;
+      }
 
       await this.zoomClient.join({
-        signature: payload.signature,
-        sdkKey: payload.sdk_key,
-        meetingNumber: payload.meeting_number,
-        password: payload.password || "",
-        userName: payload.user_name,
-        userEmail: payload.user_email,
+        signature: zoomJoinPayload.signature,
+        sdkKey: zoomJoinPayload.sdk_key,
+        meetingNumber: zoomJoinPayload.meeting_number,
+        password: zoomJoinPayload.password || "",
+        userName: zoomJoinPayload.user_name,
+        userEmail: zoomJoinPayload.user_email,
       });
 
       this.isJoined = true;
-      this.updateZoomDebug({
-        phase: "joined",
-        joined: true,
-        viewSize: this.zoomViewSize,
-      });
-      window.requestAnimationFrame?.(() => this.syncZoomLayout());
     } catch (err) {
       const serializedError = serializeZoomError(err);
-
-      this.updateZoomDebug({
-        phase: "error",
-        error: serializedError,
-        viewSize: this.zoomViewSize,
-      });
-
       // eslint-disable-next-line no-console
       console.error("Error joining Zoom meeting", serializedError);
+
+      // No need to show the generic error message if we know that Zoom will
+      // show the correct message in certain  known cases.
+      if (serializedError.knownError) {
+        return;
+      }
+
       this.errorMessage = i18n("discourse_calendar.livestream.zoom.load_error");
     } finally {
-      window.requestAnimationFrame?.(() => this.syncZoomLayout());
-      window.requestAnimationFrame?.(() => this.syncVideoSize());
+      this.zoomLayoutFrame = window.requestAnimationFrame(() =>
+        this.syncZoomLayout()
+      );
+      this.zoomVideoSyncFrame = window.requestAnimationFrame(() =>
+        this.syncVideoSize()
+      );
       this.isJoining = false;
     }
   }
@@ -342,7 +354,7 @@ export default class LivestreamZoomEntry extends Component {
 
             {{#if this.showFallbackLink}}
               <DButton
-                @href={{this.zoomUrl}}
+                @href={{@event.livestreamUrl}}
                 @label="discourse_calendar.livestream.zoom.open_in_zoom"
                 @icon="up-right-from-square"
               />
@@ -350,7 +362,11 @@ export default class LivestreamZoomEntry extends Component {
           </div>
 
           <div
-            class="discourse-calendar-livestream-zoom-entry__frame"
+            class={{dConcatClass
+              "discourse-calendar-livestream-zoom-entry__frame"
+              (if this.showZoomFrame "--visible")
+              (if this.isJoined "--joined")
+            }}
             {{this.registerZoomRoot}}
           ></div>
         {{else}}

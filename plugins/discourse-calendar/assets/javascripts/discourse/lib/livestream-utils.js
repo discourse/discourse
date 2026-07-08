@@ -7,8 +7,8 @@ export function eventHasLivestream(event) {
 
   return (
     event.livestream &&
-    event.location &&
-    !isEmpty(event.livestream_onebox || event.livestreamOnebox)
+    !isEmpty(event.livestreamUrl) &&
+    !isEmpty(event.livestreamOnebox)
   );
 }
 
