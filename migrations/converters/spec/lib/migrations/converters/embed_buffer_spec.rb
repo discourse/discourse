@@ -57,6 +57,10 @@ RSpec.describe Migrations::Converters::EmbedBuffer do
           text: "here",
           target_type: Migrations::Database::IntermediateDB::Enums::LinkTarget::TOPIC,
           target_id: 9,
+          target_name: nil,
+          target_topic_id: nil,
+          target_post_number: nil,
+          target_suffix: nil,
         },
       )
     end

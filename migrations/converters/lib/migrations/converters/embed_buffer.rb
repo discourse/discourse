@@ -68,8 +68,28 @@ module Migrations
         )
       end
 
-      def link(url: nil, text: nil, target_type: nil, target_id: nil)
-        record(@links, :link, url:, text:, target_type:, target_id:)
+      def link(
+        url: nil,
+        text: nil,
+        target_type: nil,
+        target_id: nil,
+        target_name: nil,
+        target_topic_id: nil,
+        target_post_number: nil,
+        target_suffix: nil
+      )
+        record(
+          @links,
+          :link,
+          url:,
+          text:,
+          target_type:,
+          target_id:,
+          target_name:,
+          target_topic_id:,
+          target_post_number:,
+          target_suffix:,
+        )
       end
 
       # @raise [ArgumentError] if `mention_type` is not nil or a known type.

@@ -161,13 +161,17 @@ CREATE INDEX idx_embed_hashtags_owner_type_owner_id ON embed_hashtags (owner_typ
 
 CREATE TABLE embed_links
 (
-    owner_id    NUMERIC      NOT NULL,
-    owner_type  ENUM_INTEGER NOT NULL,
-    placeholder TEXT         NOT NULL,
-    target_id   NUMERIC,
-    target_type ENUM_INTEGER,
-    text        TEXT,
-    url         TEXT
+    owner_id           NUMERIC      NOT NULL,
+    owner_type         ENUM_INTEGER NOT NULL,
+    placeholder        TEXT         NOT NULL,
+    target_id          NUMERIC,
+    target_name        TEXT,
+    target_post_number INTEGER,
+    target_suffix      TEXT,
+    target_topic_id    NUMERIC,
+    target_type        ENUM_INTEGER,
+    text               TEXT,
+    url                TEXT
 );
 
 CREATE INDEX idx_embed_links_owner_type_owner_id ON embed_links (owner_type, owner_id);

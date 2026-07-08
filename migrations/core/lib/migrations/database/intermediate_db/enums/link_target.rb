@@ -13,6 +13,11 @@ module Migrations
 
           TOPIC = 1
           POST = 2
+          USER = 3
+          CATEGORY = 4
+          TAG = 5
+          GROUP = 6
+          BADGE = 7
         end
       end
     end
