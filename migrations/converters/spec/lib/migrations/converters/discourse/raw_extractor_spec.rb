@@ -520,6 +520,221 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
   end
 
+  describe "internal links" do
+    LinkTarget = Migrations::Database::IntermediateDB::Enums::LinkTarget
+
+    subject(:extractor) { described_class.new(internal_link_hosts: Set["forum.example.com"]) }
+
+    def link_for(raw)
+      result = extract(raw)
+      [buffer.links.first, result]
+    end
+
+    it "defers a topic link with a slug and id" do
+      link, result = link_for("see /t/some-slug/123 here")
+
+      expect(link).to include(
+        url: "/t/some-slug/123",
+        text: nil,
+        target_type: LinkTarget::TOPIC,
+        target_id: 123,
+        target_suffix: nil,
+      )
+      expect(result).to eq("see #{link[:placeholder]} here")
+    end
+
+    it "defers the id-only topic form" do
+      link, = link_for("/t/123")
+
+      expect(link).to include(target_type: LinkTarget::TOPIC, target_id: 123)
+    end
+
+    it "defers the slugless `/t/-/<id>` topic form" do
+      link, = link_for("/t/-/77")
+
+      expect(link).to include(target_type: LinkTarget::TOPIC, target_id: 77)
+    end
+
+    it "defers a post link by coordinates, recording no target_id" do
+      link, = link_for("/t/some-slug/123/4")
+
+      expect(link).to include(
+        target_type: LinkTarget::POST,
+        target_id: nil,
+        target_topic_id: 123,
+        target_post_number: 4,
+      )
+    end
+
+    it "defers the slugless post-coordinates form" do
+      link, = link_for("/t/12/3")
+
+      expect(link).to include(
+        target_type: LinkTarget::POST,
+        target_topic_id: 12,
+        target_post_number: 3,
+      )
+    end
+
+    it "defers a `/p/<id>` post link" do
+      link, = link_for("/p/55")
+
+      expect(link).to include(target_type: LinkTarget::POST, target_id: 55, target_topic_id: nil)
+    end
+
+    it "defers a user link by name, for both `/u/` and `/users/`" do
+      expect(link_for("/u/bob").first).to include(target_type: LinkTarget::USER, target_name: "bob")
+
+      buffer.clear
+      expect(link_for("/users/alice").first).to include(
+        target_type: LinkTarget::USER,
+        target_name: "alice",
+      )
+    end
+
+    it "defers a category link by id when the path ends in a number" do
+      link, = link_for("/c/support/billing/6")
+
+      expect(link).to include(target_type: LinkTarget::CATEGORY, target_id: 6, target_name: nil)
+    end
+
+    it "defers a legacy category link by its parent:child slug path" do
+      link, = link_for("/c/support/billing")
+
+      expect(link).to include(
+        target_type: LinkTarget::CATEGORY,
+        target_id: nil,
+        target_name: "support:billing",
+      )
+    end
+
+    it "defers a tag link for both `/tag/` and `/tags/`" do
+      expect(link_for("/tag/release").first).to include(
+        target_type: LinkTarget::TAG,
+        target_name: "release",
+      )
+
+      buffer.clear
+      expect(link_for("/tags/release").first).to include(
+        target_type: LinkTarget::TAG,
+        target_name: "release",
+      )
+    end
+
+    it "leaves the `/tags/c/...` intersection form undetected" do
+      raw = "browse /tags/c/food/wine here"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.links).to be_empty
+    end
+
+    it "defers a group link by name" do
+      link, = link_for("/g/team")
+
+      expect(link).to include(target_type: LinkTarget::GROUP, target_name: "team")
+    end
+
+    it "defers a badge link by id" do
+      link, = link_for("/badges/9/great")
+
+      expect(link).to include(target_type: LinkTarget::BADGE, target_id: 9)
+    end
+
+    it "recognizes an absolute link on a configured host" do
+      link, = link_for("read https://forum.example.com/t/slug/99 now")
+
+      expect(link).to include(
+        url: "https://forum.example.com/t/slug/99",
+        target_type: LinkTarget::TOPIC,
+        target_id: 99,
+      )
+    end
+
+    it "recognizes a protocol-relative link on a configured host" do
+      link, = link_for("//forum.example.com/t/slug/99")
+
+      expect(link).to include(target_type: LinkTarget::TOPIC, target_id: 99)
+    end
+
+    it "leaves an absolute link on a foreign host literal" do
+      raw = "elsewhere https://other.example.com/t/slug/99 done"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.links).to be_empty
+    end
+
+    it "captures the link text of a markdown link" do
+      link, result = link_for("[the topic](/t/slug/12)")
+
+      expect(link).to include(text: "the topic", target_type: LinkTarget::TOPIC, target_id: 12)
+      expect(result).to eq(link[:placeholder])
+    end
+
+    it "keeps a bare URL bare (no captured text)" do
+      link, = link_for("/t/slug/12")
+
+      expect(link[:text]).to be_nil
+    end
+
+    it "keeps trailing sentence punctuation out of a bare URL" do
+      link, result = link_for("go to /t/slug/12. Thanks")
+
+      expect(link[:url]).to eq("/t/slug/12")
+      expect(result).to eq("go to #{link[:placeholder]}. Thanks")
+    end
+
+    it "captures a trailing sub-path as the suffix" do
+      link, = link_for("/u/bob/summary")
+
+      expect(link).to include(target_name: "bob", target_suffix: "/summary")
+    end
+
+    it "captures a query string as the suffix" do
+      link, = link_for("/users/alice?u=x")
+
+      expect(link).to include(target_name: "alice", target_suffix: "?u=x")
+    end
+
+    it "captures a fragment as the suffix" do
+      link, = link_for("/t/slug/12#reply")
+
+      expect(link).to include(target_id: 12, target_suffix: "#reply")
+    end
+
+    it "does not treat an image of an internal URL as a link" do
+      raw = "![pic](/t/slug/1)"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.links).to be_empty
+    end
+
+    it "does not extract an internal link inside a fenced code block" do
+      raw = <<~MD
+        real /t/slug/12
+
+        ```
+        code /t/slug/99 here
+        ```
+      MD
+
+      result = extract(raw)
+
+      expect(buffer.links.map { |l| l[:target_id] }).to eq([12])
+      expect(result).to include("code /t/slug/99 here")
+    end
+
+    it "recognizes only relative links when no host set is given" do
+      plain_extractor = described_class.new
+
+      plain_extractor.extract(
+        "rel /t/slug/12 and abs https://forum.example.com/t/slug/99",
+        on_embed: buffer,
+      )
+
+      expect(buffer.links.map { |l| l[:url] }).to eq(["/t/slug/12"])
+    end
+  end
+
   # The whole reason to wrap Markbridge's scanner: things that only look like
   # embeds inside code must be left alone.
   describe "code blocks" do

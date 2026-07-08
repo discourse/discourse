@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "uri"
+
 module Migrations
   module Converters
     module Discourse
@@ -27,10 +29,36 @@ module Migrations
             mention_names: mention_names(source_db, group_names, here_mention),
             hashtag_names: hashtag_names(source_db),
             custom_emoji_names: custom_emoji_names(source_db),
+            internal_link_hosts:,
           }
         end
 
         private
+
+        # The source's own hosts, so the Posts step can tell an absolute internal link
+        # from an external one. Built from the `base_url` and any `former_domains`
+        # under the `source_site` setting (a site that moved carries links to both).
+        # Only the host is kept (scheme and port dropped), so `http://`, `https://`
+        # and protocol-relative links all match. No setting means an empty set, i.e.
+        # relative-only link detection.
+        def internal_link_hosts
+          site = settings[:source_site] || {}
+          urls = [site[:base_url], *Array(site[:former_domains])].compact
+
+          Set.new(urls.filter_map { |url| host_of(url) })
+        end
+
+        # Extracts the host from a configured base URL, tolerating a bare host, a
+        # scheme-less `//host`, a full URL, and a trailing path or port.
+        def host_of(url)
+          url = url.to_s.strip
+          return nil if url.empty?
+
+          url = "//#{url}" if url.exclude?("//")
+          URI.parse(url).host&.downcase
+        rescue URI::InvalidURIError
+          nil
+        end
 
         # Source group names, so the Posts step can classify `@group` mentions.
         def group_names(source_db)

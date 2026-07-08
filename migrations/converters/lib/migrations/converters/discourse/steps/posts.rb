@@ -53,7 +53,8 @@ module Migrations
                         :here_mention,
                         :mention_names,
                         :hashtag_names,
-                        :custom_emoji_names
+                        :custom_emoji_names,
+                        :internal_link_hosts
 
           def setup
             @extractor =
@@ -63,6 +64,7 @@ module Migrations
                 mention_names:,
                 hashtag_names:,
                 custom_emoji_names:,
+                internal_link_hosts: internal_link_hosts || Set.new,
               )
             # One buffer, reused (cleared) per post — a fresh one would allocate a
             # new placeholder (a random nonce) for every post, most of which record
