@@ -366,8 +366,8 @@ RSpec.describe Migrations::Reporting::Tui do
         big = rows.find { |r| r.include?("Big") }
         # the count is right-aligned, so the duration after it starts at the same
         # screen column in both rows
-        expect(small.index("<1s")).to eq(big.index("<1s"))
-        expect(small.index("<1s")).to be > big.index("Big")
+        expect(small =~ /\d+ms/).to eq(big =~ /\d+ms/)
+        expect(small =~ /\d+ms/).to be > big.index("Big")
       end
 
       it "reserves the title column so rows with different-length titles align" do

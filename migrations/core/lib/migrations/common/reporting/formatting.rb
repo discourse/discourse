@@ -19,10 +19,10 @@ module Migrations
       end
 
       # Formats a duration as M:SS, switching to H:MM:SS past an hour. A
-      # sub-second duration shows as "<1s" instead of rounding up and pretending
-      # it took a full second.
+      # sub-second duration shows as milliseconds — the measured value instead
+      # of rounding up and pretending it took a full second.
       def format_duration(seconds)
-        return "<1s" if seconds < 1
+        return format("%dms", (seconds * 1000).ceil) if seconds < 1
 
         whole = seconds.ceil
         if whole >= 3600
