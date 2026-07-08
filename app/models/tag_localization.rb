@@ -2,13 +2,22 @@
 
 class TagLocalization < ActiveRecord::Base
   include LocaleMatchable
+  include HasSanitizableFields
 
   belongs_to :tag
+
+  before_save :sanitize_description
 
   validates :locale, presence: true, length: { maximum: 20 }
   validates :name, presence: true
   validates :tag_id, uniqueness: { scope: :locale }
   validates :description, length: { maximum: 1000 }
+
+  private
+
+  def sanitize_description
+    self.description = sanitize_field(description) if description_changed?
+  end
 end
 
 # == Schema Information
