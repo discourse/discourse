@@ -11,6 +11,8 @@ module Migrations
           # `![alt|dims](upload://sha1.ext)` images and
           # `[file|attachment](upload://sha1.ext) (size)` attachments.
           class Upload < Base
+            TRIGGERS = ["!", "["].freeze
+
             # `\G` anchors each match at `pos` so we match in place rather than
             # slicing the tail of the input on every `!`/`[`.
             IMAGE_PATTERN =

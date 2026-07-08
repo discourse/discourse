@@ -7,13 +7,6 @@ module Migrations
         # Walks Discourse Markdown and replaces detected constructs (outside code)
         # with whatever the given block returns for each detected node.
         class Scanner
-          # Per-position triggers: at one of these the loop asks the detectors to
-          # match. `!` is here because an image is detected at its leading `!`; `h`
-          # and `/` because a bare (unbracketed) upload URL starts with `http`, `//`
-          # or a root-relative `/…`; `#` starts a hashtag.
-          TRIGGER_CHARS = Set.new(["@", "[", "!", "h", "/", "#"]).freeze
-          private_constant :TRIGGER_CHARS
-
           # Presence gate for the fast path. Every construct we extract contains an
           # `@` (mention), a `[` (quote, attachment, and an image's `![`), a `#`
           # (hashtag), or the `uploads/` segment of a full-URL upload — so a body
@@ -25,19 +18,25 @@ module Migrations
           private_constant :MAYBE_EMBED
 
           # @param detectors [Array<Detectors::Base>] detector instances in priority
-          #   order.
-          # @param extra_triggers [Array<String>] trigger characters a caller's
-          #   detectors add on top of {TRIGGER_CHARS}. Kept optional so a detector
-          #   that's only wired in for some runs (the custom-emoji `:`) doesn't make
-          #   every post pay for its trigger.
+          #   order; each declares the characters it can match at (`#triggers`).
           # @param extra_gate [Regexp, nil] an extra presence-gate alternative OR'd
-          #   into {MAYBE_EMBED}, for the same reason.
+          #   into {MAYBE_EMBED}, so a detector that's only wired in for some runs
+          #   (the custom-emoji `:name:` shape) doesn't widen every run's gate.
           # @yieldparam node the detected AST node; the block returns its replacement.
-          def initialize(detectors:, extra_triggers: [], extra_gate: nil, &on_node)
-            @detectors = detectors
+          def initialize(detectors:, extra_gate: nil, &on_node)
             @on_node = on_node
-            @triggers = extra_triggers.empty? ? TRIGGER_CHARS : (TRIGGER_CHARS + extra_triggers)
             @gate = extra_gate ? Regexp.union(MAYBE_EMBED, extra_gate) : MAYBE_EMBED
+
+            # Detectors keyed by trigger character, preserving priority order. The
+            # walk visits every character of a gated body, so a position must only
+            # run the detectors that can match there — asking every detector at
+            # every trigger was a measurable share of a whole conversion.
+            @dispatch = {}
+            detectors.each do |detector|
+              detector.triggers.each { |char| (@dispatch[char] ||= []) << detector }
+            end
+            @dispatch.each_value(&:freeze)
+            @dispatch.freeze
           end
 
           # @param input [String]
@@ -89,8 +88,8 @@ module Migrations
                 next
               end
 
-              if @triggers.include?(char)
-                match = detect_at_position
+              if (candidates = @dispatch[char])
+                match = detect_at_position(candidates)
                 if match
                   handle_match(match)
                   next
@@ -113,8 +112,8 @@ module Migrations
             true
           end
 
-          def detect_at_position
-            @detectors.each do |detector|
+          def detect_at_position(candidates)
+            candidates.each do |detector|
               match = detector.detect(@input, @pos)
               return match if match
             end

@@ -31,6 +31,8 @@ module Migrations
           #     `.` never gets swallowed and slugs (which Discourse generates without
           #     dots) still match.
           class Hashtag < Base
+            TRIGGERS = ["#"].freeze
+
             # `#` + name, an optional `::tag`/`::category` suffix (case-insensitive),
             # and a trailing guard: the match must not be followed by another name
             # character or `:`, so `#foo::channel` (an unknown, chat-style suffix) is

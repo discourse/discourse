@@ -17,6 +17,8 @@ module Migrations
           # Without a name set every `@word` that parses is deferred, so callers with
           # no source metadata keep the old syntactic behavior.
           class Mention < Base
+            TRIGGERS = ["@"].freeze
+
             # @param names [Migrations::SortedStringSet, nil] the source's mention
             #   names, already normalized. When given, a mention is deferred only if
             #   its (normalized) name is in the set. `nil` means no gate.

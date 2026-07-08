@@ -25,6 +25,8 @@ module Migrations
           # route reveals the target, and everything after the route (further path,
           # query string, fragment) becomes the suffix, reattached verbatim at render.
           class InternalLink < Base
+            TRIGGERS = ["[", "h", "/"].freeze
+
             # The route segments this detector understands, shared by the presence
             # gate and the bare-URL pattern.
             ROUTE_SEGMENT = "t|p|u|users|c|g|tags?|badges"

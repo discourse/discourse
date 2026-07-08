@@ -9,6 +9,8 @@ module Migrations
           # body and `[/quote]` stay in place, and any embeds inside the body are
           # still scanned. Returns nil for an unattributed `[quote]`.
           class Quote < Base
+            TRIGGERS = ["["].freeze
+
             OPENING = /\G\[quote="(?<attribution>[^"\]]*)"\]/
 
             def detect(input, pos)
