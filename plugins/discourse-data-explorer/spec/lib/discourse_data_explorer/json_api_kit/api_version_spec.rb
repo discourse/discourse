@@ -24,16 +24,20 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::ApiVersion do
   end
 
   describe "comparison" do
-    it "orders versions chronologically" do
-      versions = %w[2026-06-15 2026-05-01 2026-07-01].map { described_class.parse(it) }
+    context "with distinct dates" do
+      let(:versions) { %w[2026-06-15 2026-05-01 2026-07-01].map { described_class.parse(it) } }
 
-      expect(versions.sort.map(&:to_s)).to eq(%w[2026-05-01 2026-06-15 2026-07-01])
+      it "orders versions chronologically" do
+        expect(versions.sort.map(&:to_s)).to eq(%w[2026-05-01 2026-06-15 2026-07-01])
+      end
     end
 
-    it "treats two versions with the same date as the same hash key" do
-      versions = [described_class.parse("2026-05-01"), described_class.parse("2026-05-01")]
+    context "with the same date" do
+      let(:versions) { [described_class.parse("2026-05-01"), described_class.parse("2026-05-01")] }
 
-      expect(versions.uniq.size).to eq(1)
+      it "treats the versions as the same hash key" do
+        expect(versions.uniq.size).to eq(1)
+      end
     end
   end
 

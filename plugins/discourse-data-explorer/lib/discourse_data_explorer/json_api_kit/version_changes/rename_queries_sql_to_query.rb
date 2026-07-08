@@ -11,8 +11,16 @@ module DiscourseDataExplorer
         description "The `sql` attribute of the queries resource is renamed to `query`."
 
         resource :queries do
-          up { |resource| resource[:attributes][:query] = resource[:attributes].delete(:sql) }
-          down { |resource| resource[:attributes][:sql] = resource[:attributes].delete(:query) }
+          # Key-guarded: an unguarded delete-based rename would fabricate a nil
+          # attribute when the key is absent (e.g. excluded by a sparse fieldset).
+          up do |resource|
+            attributes = resource[:attributes]
+            attributes[:query] = attributes.delete(:sql) if attributes.key?(:sql)
+          end
+          down do |resource|
+            attributes = resource[:attributes]
+            attributes[:sql] = attributes.delete(:query) if attributes.key?(:query)
+          end
         end
       end
     end

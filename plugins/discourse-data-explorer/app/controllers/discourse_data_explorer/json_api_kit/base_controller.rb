@@ -18,12 +18,17 @@ module DiscourseDataExplorer
       # the jsonapi.rb gem's mixins) are absorbed below, so the Kit depends only on
       # jsonapi-serializer (rendering) + pagy (keyset). See the helpers in the private section.
 
+      API_VERSION_HEADER = "Discourse-Api-Version"
+
       requires_plugin DiscourseDataExplorer::PLUGIN_NAME
       skip_before_action :check_xhr,
                          :redirect_to_login_if_required,
                          :verify_authenticity_token,
                          raise: false
 
+      # Must run before anything reads params: the (mandatory) version header decides
+      # how the whole request is interpreted. See docs/versioning-design.md.
+      before_action :resolve_api_version
       before_action :reject_unknown_query_params!, only: :index
 
       # Per-resource declarative config, populated by the `jsonapi do … end` block.
@@ -121,6 +126,33 @@ module DiscourseDataExplorer
       private
 
       def cfg = self.class._jsonapi_config
+
+      # Mandatory version header (Stripe-style snap-down). Success: @api_version holds
+      # the resolved version, echoed back in the response. Failure: 400 whose body
+      # teaches the current version.
+      def resolve_api_version
+        @api_version = JsonApiKit.api_versions.resolve(request.headers[API_VERSION_HEADER])
+        response.headers[API_VERSION_HEADER] = @api_version.to_s
+      rescue VersionRegistry::MissingVersion
+        render_errors(
+          [
+            "The #{API_VERSION_HEADER} header is required (format: YYYY-MM-DD). " \
+              "The current version is #{JsonApiKit.api_versions.current_version}.",
+          ],
+          status: :bad_request,
+        )
+      rescue ApiVersion::Invalid, VersionRegistry::Error => error
+        render_errors(
+          ["#{error.message}. The current version is #{JsonApiKit.api_versions.current_version}."],
+          status: :bad_request,
+        )
+      end
+
+      # The chain of changes separating the caller's version from latest — empty for
+      # current clients, so the pipeline is a no-op on the hot path.
+      def api_version_gap
+        @api_version_gap ||= JsonApiKit.api_versions.gap_for(@api_version)
+      end
 
       def base_scope = instance_exec(&cfg.base_scope_block)
 
@@ -268,6 +300,7 @@ module DiscourseDataExplorer
 
         document = cfg.serializer_class.new(resource, options).serializable_hash
         prune_empty_relationships!(document)
+        VersionPipeline.down(document, api_version_gap)
         render json: document, status: status, content_type: "application/vnd.api+json"
       end
 

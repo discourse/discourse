@@ -36,6 +36,10 @@ require_relative "lib/discourse_data_explorer/engine"
 # on jsonapi-serializer + pagy; include/fields/pagination/deserialization are
 # handled by JsonApiKit::BaseController. See docs/api-modernization-exploration.md.
 require "jsonapi/serializer"
+# The Kit namespace (incl. the version registry accessor). Required explicitly:
+# the patch require below defines the JsonApiKit constant ahead of Zeitwerk, so
+# the namespace file would otherwise never autoload.
+require_relative "lib/discourse_data_explorer/json_api_kit"
 # Patch jsonapi-serializer's nested-include linkage bug (lazy_load_data + nested leaf drops
 # the leaf's linkage). Small, owned, on a frozen gem. See the patch file + Part 9.
 require_relative "lib/discourse_data_explorer/json_api_kit/lazy_nested_linkage_patch"

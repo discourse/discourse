@@ -14,6 +14,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::QueriesController do
         params: params,
         headers: {
           "Accept" => "application/vnd.api+json",
+          "Discourse-Api-Version" => "2026-07-01",
         }
     JSON.parse(response.body)
   end
