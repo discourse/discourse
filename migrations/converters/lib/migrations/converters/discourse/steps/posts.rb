@@ -4,11 +4,36 @@ module Migrations
   module Converters
     module Discourse
       class Posts < Conversion::Step
-        # Logged (INFO, so it doesn't count against the step's warning/error
-        # indicator) once per absolute, internal-looking link whose host isn't in
-        # the source_site allowlist, with the host in `details`. A fixed string, so
-        # the end-of-run summary can total the rows per host by grouping on it.
+        # One WARNING row per foreign host, not per link: each worker tallies links
+        # per host on the scan hot path, and the reducer (`combine_results`) sums the
+        # tallies and writes one entry per host, with the host and its total link
+        # count in `details`. The step's warning count is the number of distinct
+        # hosts, so the operator sees how many hosts to review rather than a count in
+        # the tens of thousands.
         FOREIGN_LINK_LOG_MESSAGE = "Absolute internal-looking link on an unconfigured host"
+
+        # Sums every worker's per-host link tally and writes one WARNING per host.
+        # Runs in the parent under the run DB's single-writer discipline (see
+        # {StepCoordinator#reduce_results}); `results` are the workers' `result`
+        # hashes, with string keys from crossing the process boundary as JSON.
+        # Returns the number of distinct hosts as the step's added warning count.
+        def self.combine_results(results)
+          totals = Hash.new(0)
+          results.each { |hosts| hosts.each { |host, count| totals[host] += count } }
+
+          totals.each do |host, count|
+            IntermediateDB::LogEntry.create(
+              type: IntermediateDB::LogEntry::WARNING,
+              message: FOREIGN_LINK_LOG_MESSAGE,
+              details: {
+                host:,
+                count:,
+              },
+            )
+          end
+
+          totals.size
+        end
 
         source do
           # Posts is the heaviest step, so split it across forks. Partition on the
@@ -63,6 +88,12 @@ module Migrations
                         :internal_link_hosts
 
           def setup
+            # Tally foreign-host links per host, no logging or tracker calls: this
+            # is the scan hot path, and a real forum has tens of thousands of these
+            # links. `result` hands the tally to the parent, where `combine_results`
+            # writes one WARNING per host.
+            @foreign_hosts = Hash.new(0)
+
             @extractor =
               RawExtractor.new(
                 mention_resolver:
@@ -71,12 +102,7 @@ module Migrations
                 hashtag_names:,
                 custom_emoji_names:,
                 internal_link_hosts: internal_link_hosts || Set.new,
-                # A warning per foreign-host link: the step's warning count is the
-                # operator's pointer to query these rows (grouped by details host)
-                # and decide whether a former domain is missing from `source_site`.
-                on_foreign_host: ->(host) do
-                  tracker.log_warning(FOREIGN_LINK_LOG_MESSAGE, details: { host: })
-                end,
+                on_foreign_host: ->(host) { @foreign_hosts[host] += 1 },
               )
             # One buffer, reused (cleared) per post — a fresh one would allocate a
             # new placeholder (a random nonce) for every post, most of which record
@@ -118,6 +144,13 @@ module Migrations
             # not here, so the per-converter coverage check holds them out (see
             # `ReferenceCheck::EMBED_BUFFER_TABLES`).
             @embeds.write_for(item[:id])
+          end
+
+          # The worker's per-host link tally, handed to `combine_results` in the
+          # parent. Nil when this worker saw no foreign-host links, so it sends
+          # nothing.
+          def result
+            @foreign_hosts unless @foreign_hosts.empty?
           end
 
           private

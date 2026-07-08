@@ -24,8 +24,8 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
     [].tap { |out| @db.query("SELECT * FROM #{table}") { |row| out << row } }
   end
 
-  def post_item(raw)
-    { id: 1, topic_id: 10, post_number: 1, raw:, created_at: Time.utc(2020, 1, 2, 3, 4, 5) }
+  def post_item(raw, id: 1)
+    { id:, topic_id: 10, post_number: id, raw:, created_at: Time.utc(2020, 1, 2, 3, 4, 5) }
   end
 
   describe "the foreign-host internal-link signal" do
@@ -34,28 +34,54 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
       processor.setup
     end
 
-    it "logs a warning entry per foreign-host self-link, with the host in details" do
-      processor.process(post_item("see https://old-forum.example.com/t/slug/99 here"))
+    it "tallies foreign-host links per host instead of logging on the scan path" do
+      processor.process(post_item("see https://old-forum.example.com/t/slug/99 here", id: 1))
+      processor.process(post_item("also https://old-forum.example.com/t/other/7 there", id: 2))
 
-      entries = rows("log_entries")
-      expect(entries.size).to eq(1)
-      expect(entries.first).to include(
-        type: Migrations::Database::IntermediateDB::LogEntry::WARNING,
-        message: described_class::FOREIGN_LINK_LOG_MESSAGE,
-      )
-      expect(entries.first[:details]).to include("old-forum.example.com")
-    end
-
-    it "counts each foreign-host link as a step warning, not an error" do
-      processor.tracker.reset_stats!
-      processor.process(post_item("read https://old-forum.example.com/t/slug/99 now"))
-
-      expect(processor.tracker.stats.warning_count).to eq(1)
+      # Nothing is written or counted during the scan; the tally rides back via
+      # `result` for the parent's reducer.
+      expect(rows("log_entries")).to be_empty
+      expect(processor.tracker.stats.warning_count).to eq(0)
       expect(processor.tracker.stats.error_count).to eq(0)
+      expect(processor.result).to eq({ "old-forum.example.com" => 2 })
     end
-    it "logs nothing for a link on a configured host" do
+
+    it "hands back nil when no foreign-host link was seen" do
       processor.process(post_item("read https://forum.example.com/t/slug/99 now"))
 
+      expect(rows("log_entries")).to be_empty
+      expect(processor.result).to be_nil
+    end
+  end
+
+  describe ".combine_results" do
+    it "sums each worker's per-host tally and writes one WARNING per host" do
+      count =
+        described_class.combine_results(
+          [
+            { "old-forum.example.com" => 3, "legacy.example.com" => 1 },
+            { "old-forum.example.com" => 2 },
+          ],
+        )
+
+      expect(count).to eq(2) # distinct hosts, the step's added warning count
+
+      entries = rows("log_entries")
+      expect(entries.size).to eq(2)
+      expect(entries).to all(
+        include(
+          type: Migrations::Database::IntermediateDB::LogEntry::WARNING,
+          message: described_class::FOREIGN_LINK_LOG_MESSAGE,
+        ),
+      )
+
+      by_host = entries.index_by { |entry| JSON.parse(entry[:details])["host"] }
+      expect(JSON.parse(by_host["old-forum.example.com"][:details])["count"]).to eq(5)
+      expect(JSON.parse(by_host["legacy.example.com"][:details])["count"]).to eq(1)
+    end
+
+    it "writes nothing and reports zero hosts for no results" do
+      expect(described_class.combine_results([])).to eq(0)
       expect(rows("log_entries")).to be_empty
     end
   end
