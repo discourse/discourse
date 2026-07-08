@@ -88,14 +88,12 @@ module Migrations
           detectors << Detectors::InternalLink.new(hosts: internal_link_hosts)
           detectors << Detectors::Mention.new(names: mention_names)
           detectors << Detectors::Hashtag.new(names: hashtag_names)
-          extra_triggers = []
           # The internal-link route segments always gate; the custom-emoji `:` gate is
           # OR'd in only when that detector is wired.
           extra_gates = [Detectors::InternalLink::GATE]
 
           if custom_emoji_names && !custom_emoji_names.empty?
             detectors << Detectors::Emoji.new(names: custom_emoji_names)
-            extra_triggers = [Detectors::Emoji::TRIGGER]
             extra_gates << Detectors::Emoji::GATE
           end
 
@@ -106,9 +104,7 @@ module Migrations
           # reuse them for every post. The block reads `@sink` (set per call), so the
           # one scanner serves whatever buffer we're filling.
           @scanner =
-            MarkdownScanner::Scanner.new(detectors:, extra_triggers:, extra_gate:) do |node|
-              defer(node, @sink)
-            end
+            MarkdownScanner::Scanner.new(detectors:, extra_gate:) { |node| defer(node, @sink) }
         end
 
         # @param raw [String, nil] the source post body (Discourse Markdown).

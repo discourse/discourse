@@ -7,6 +7,15 @@ module Migrations
         module Detectors
           # Base class for construct detectors.
           class Base
+            # The characters this detector can match at (each subclass's `TRIGGERS`).
+            # The scanner dispatches by character, so a position only runs the
+            # detectors that can match there.
+            #
+            # @return [Array<String>]
+            def triggers
+              self.class::TRIGGERS
+            end
+
             # @return [Match, nil]
             def detect(input, pos)
               raise NotImplementedError, "#{self.class} must implement #detect"

@@ -17,7 +17,7 @@ module Migrations
           # restricted to real emoji-name characters rather than "anything up to
           # the next colon".
           class Emoji < Base
-            TRIGGER = ":"
+            TRIGGERS = [":"].freeze
 
             # Emoji names are lowercase; `_`, `+` and `-` appear in a few (`:+1:`,
             # `:-1:`, `:t-rex:`).
@@ -38,7 +38,7 @@ module Migrations
             end
 
             def detect(input, pos)
-              return nil unless input[pos] == TRIGGER
+              return nil unless input[pos] == ":"
               return nil unless boundary_before?(input, pos)
 
               match = PATTERN.match(input, pos)

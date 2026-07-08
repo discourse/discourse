@@ -18,6 +18,8 @@ module Migrations
           # nothing at import and comes back verbatim (see `UploadUrlReference`), so
           # there's no risk in matching it here.
           class UploadUrl < Base
+            TRIGGERS = ["!", "[", "h", "/"].freeze
+
             # A full upload URL, from an optional scheme/host down to the sha1 at the
             # start of the basename. `[^/\s)"'<>]` is a path-segment character: not a
             # slash, whitespace, closing paren (a markdown link's terminator) or a
