@@ -32,38 +32,48 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionChange do
   end
 
   describe ".transform_for" do
-    it "runs the down transform on a resource hash" do
-      resource = { type: :things, attributes: { bar: "x" } }
+    context "with the down direction" do
+      let(:resource) { { type: :things, attributes: { bar: "x" } } }
 
-      change.transform_for(:down, type: "things").call(resource)
+      before { change.transform_for(:down, type: "things").call(resource) }
 
-      expect(resource[:attributes]).to eq(foo: "x")
+      it "runs the declared down transform" do
+        expect(resource[:attributes]).to eq(foo: "x")
+      end
     end
 
-    it "runs the up transform on a resource hash" do
-      resource = { type: :things, attributes: { foo: "x" } }
+    context "with the up direction" do
+      let(:resource) { { type: :things, attributes: { foo: "x" } } }
 
-      change.transform_for(:up, type: "things").call(resource)
+      before { change.transform_for(:up, type: "things").call(resource) }
 
-      expect(resource[:attributes]).to eq(bar: "x")
+      it "runs the declared up transform" do
+        expect(resource[:attributes]).to eq(bar: "x")
+      end
     end
 
-    it "returns nil for an untargeted type" do
-      expect(change.transform_for(:down, type: "users")).to be_nil
+    context "with an untargeted type" do
+      it "returns nil" do
+        expect(change.transform_for(:down, type: "users")).to be_nil
+      end
     end
   end
 
   describe ".document_transform" do
-    it "returns the declared direction" do
-      document = { data: [] }
+    context "with a declared direction" do
+      let(:document) { { data: [] } }
 
-      change.document_transform(:down).call(document)
+      before { change.document_transform(:down).call(document) }
 
-      expect(document[:meta]).to eq(legacy: true)
+      it "runs the declared transform" do
+        expect(document[:meta]).to eq(legacy: true)
+      end
     end
 
-    it "returns nil for an undeclared direction" do
-      expect(change.document_transform(:up)).to be_nil
+    context "with an undeclared direction" do
+      it "returns nil" do
+        expect(change.document_transform(:up)).to be_nil
+      end
     end
   end
 end

@@ -108,6 +108,13 @@ Without an up-rewrite, this fails *silently*: `jsonapi_fields` hands `["name", "
 
 With the pipeline: the **first** before_action resolves the version and up-migrates the request — including the query-param surface. `fields[queries]` is type-keyed, so the `queries` up-context rewrites `sql` → `query`. The serializer then emits `query`, and Trace A's down renames it back. The client gets exactly `name` + `sql`.
 
+**Gotcha found while building ② (TDD):** a naive delete-based rename transform *fabricates* the old
+attribute as `null` when the new one is absent — exactly what happens when a fieldset excluded it
+(`attributes[:sql] = attributes.delete(:query)` with no `query` present). Block transforms must be
+**key-guarded** (`if attributes.key?(:query)`); the machinery can't guard this generically because it
+can't know which keys a block touches. One more argument for the declarative tier (§3), which could be
+fieldset-aware centrally.
+
 Ordering constraint this fixes in stone: **version-resolve + up runs before `reject_unknown_query_params!` and before anything reads `params`.** (Had the renamed attribute been a declared sort/filter key, the same param rewrite applies; `queries` sorts are `name`/`last_run_at`/`username` today, so fieldsets are the realistic surface.)
 
 ### Trace C — request up (POST create)
@@ -184,7 +191,7 @@ The contract fails in **latest terms**. Today's `render_validation_errors` build
 | 6 | Error pipeline (down) | pointer rewrites, with endpoint-type context | D |
 | 7 | `BaseController` seams | first before_action (resolve + up + echo); `render_resource` (down); `render_validation_errors` (error down); drop `only:` from `jsonapi_deserialize` | all |
 
-**Build order (small increments):** ① components 1–3 (pure Ruby, spec'd in isolation) → ② response-down pipeline + controller seam (Traces A, E, F green — all reads benefit) → ③ request-up (B, C) → ④ errors (D).
+**Build order (small increments):** ① components 1–3 (pure Ruby, spec'd in isolation) — **done 2026-07-08** → ② response-down pipeline + controller seam (Traces A, E green — all reads benefit) — **done 2026-07-08** → ③ request-up (B, C) → ④ errors (D).
 
 ## 3. Open questions (discovered, deliberately parked)
 

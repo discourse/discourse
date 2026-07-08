@@ -13,32 +13,47 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionRegistry do
   end
 
   describe "#register" do
-    it "rejects a change without a version" do
-      change = Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) { description "..." }
+    context "when the change has no version" do
+      let(:change) do
+        Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) { description "..." }
+      end
 
-      expect { registry.register(change) }.to raise_error(ArgumentError, /version/)
+      it "rejects the change" do
+        expect { registry.register(change) }.to raise_error(ArgumentError, /version/)
+      end
     end
 
-    it "rejects a change without a description" do
-      change = Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) { version "2026-06-15" }
+    context "when the change has no description" do
+      let(:change) do
+        Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) { version "2026-06-15" }
+      end
 
-      expect { registry.register(change) }.to raise_error(ArgumentError, /description/)
+      it "rejects the change" do
+        expect { registry.register(change) }.to raise_error(ArgumentError, /description/)
+      end
     end
 
-    it "rejects a change predating the initial version" do
-      expect { registry.register(change_class("2026-04-01")) }.to raise_error(
-        ArgumentError,
-        /predates/,
-      )
+    context "when the change predates the initial version" do
+      it "rejects the change" do
+        expect { registry.register(change_class("2026-04-01")) }.to raise_error(
+          ArgumentError,
+          /predates/,
+        )
+      end
     end
   end
 
   describe "#versions" do
-    it "includes the initial version and each change's version, sorted" do
+    before do
       registry.register(change_class("2026-07-01"))
       registry.register(change_class("2026-06-15"))
+    end
 
+    it "includes the initial version and each change's version, sorted" do
       expect(registry.versions.map(&:to_s)).to eq(%w[2026-05-01 2026-06-15 2026-07-01])
+    end
+
+    it "exposes the newest version as the current one" do
       expect(registry.current_version.to_s).to eq("2026-07-01")
     end
   end
@@ -46,8 +61,11 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionRegistry do
   describe "#resolve" do
     before { registry.register(change_class("2026-06-15")) }
 
-    it "rejects a blank value" do
+    it "rejects nil" do
       expect { registry.resolve(nil, today:) }.to raise_error(described_class::MissingVersion)
+    end
+
+    it "rejects an empty string" do
       expect { registry.resolve("", today:) }.to raise_error(described_class::MissingVersion)
     end
 
@@ -83,20 +101,30 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionRegistry do
   end
 
   describe "#gap_for" do
-    it "returns the changes newer than the given version, newest first" do
-      older = registry.register(change_class("2026-06-15"))
-      newer = registry.register(change_class("2026-07-01"))
+    context "with changes on distinct dates" do
+      let!(:older) { registry.register(change_class("2026-06-15")) }
+      let!(:newer) { registry.register(change_class("2026-07-01")) }
 
-      expect(registry.gap_for(registry.initial_version)).to eq([newer, older])
-      expect(registry.gap_for(older.version)).to eq([newer])
-      expect(registry.gap_for(registry.current_version)).to be_empty
+      it "returns the changes newer than the given version, newest first" do
+        expect(registry.gap_for(registry.initial_version)).to eq([newer, older])
+      end
+
+      it "excludes changes at or before the given version" do
+        expect(registry.gap_for(older.version)).to eq([newer])
+      end
+
+      it "is empty at the current version" do
+        expect(registry.gap_for(registry.current_version)).to be_empty
+      end
     end
 
-    it "keeps registration order for changes sharing a date" do
-      first = registry.register(change_class("2026-06-15", "First."))
-      second = registry.register(change_class("2026-06-15", "Second."))
+    context "with changes sharing a date" do
+      let!(:first) { registry.register(change_class("2026-06-15", "First.")) }
+      let!(:second) { registry.register(change_class("2026-06-15", "Second.")) }
 
-      expect(registry.gap_for(registry.initial_version)).to eq([second, first])
+      it "keeps registration order within the date" do
+        expect(registry.gap_for(registry.initial_version)).to eq([second, first])
+      end
     end
   end
 end
