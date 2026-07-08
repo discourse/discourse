@@ -888,5 +888,44 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.mentions.map { |mention| mention[:name] }).to eq(%w[real])
       expect(result).to include("@josé", '[quote="x, post:1"]', "日本")
     end
+
+    # Multibyte text BEFORE a construct shifts every later byte offset away from
+    # its character offset, so any byte-indexed look-back reads the wrong byte.
+    # These bodies are shaped so that wrong byte is an alphanumeric — a boundary
+    # check that mixes up the two index kinds rejects the construct.
+    context "with multibyte text before the construct" do
+      it "still defers a mention" do
+        result = extract("héllo @alice hi")
+
+        expect(buffer.mentions.first[:name]).to eq("alice")
+        expect(result).to eq("héllo #{buffer.mentions.first[:placeholder]} hi")
+      end
+
+      it "still defers a hashtag" do
+        extract("höhe #support da")
+
+        expect(buffer.hashtags.first[:name]).to eq("support")
+      end
+
+      it "still defers a bare internal link" do
+        extract("Höhe /t/thema/9 an")
+
+        expect(buffer.links.first).to include(target_id: 9)
+      end
+
+      it "still defers a custom emoji" do
+        emoji_extractor = described_class.new(custom_emoji_names: %w[parrot])
+        emoji_extractor.extract("schön :parrot:", on_embed: buffer)
+
+        expect(buffer.emojis.first[:name]).to eq("parrot")
+      end
+
+      it "still keeps a glued mention literal" do
+        raw = "das naïve@alice bleibt"
+
+        expect(extract(raw)).to eq(raw)
+        expect(buffer.mentions).to be_empty
+      end
+    end
   end
 end

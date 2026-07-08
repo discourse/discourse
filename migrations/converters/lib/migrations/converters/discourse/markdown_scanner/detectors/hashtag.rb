@@ -80,7 +80,12 @@ module Migrations
             def boundary_before?(input, pos)
               return true if pos.zero?
 
-              input.getbyte(pos - 1) == 0x28 || whitespace_before?(input, pos) # 0x28 = `(`
+              if input.ascii_only?
+                input.getbyte(pos - 1) == 0x28 || whitespace_before?(input, pos) # 0x28 = `(`
+              else
+                previous = input[pos - 1]
+                previous == "(" || previous.match?(/\s/)
+              end
             end
           end
         end

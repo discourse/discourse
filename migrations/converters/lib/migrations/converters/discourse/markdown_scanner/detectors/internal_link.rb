@@ -138,7 +138,7 @@ module Migrations
             # A markdown link, unless it's the `]` of an image `![…](…)`, whose `[`
             # sits right after the `!`.
             def detect_link(input, pos)
-              return nil if pos > 0 && input.getbyte(pos - 1) == 0x21 # `!`
+              return nil if pos > 0 && bang_before?(input, pos)
 
               match = LINK.match(input, pos)
               return nil unless match

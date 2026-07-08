@@ -42,25 +42,43 @@ module Migrations
             WORD_BOUNDARY = /[\p{Alnum}\p{M}_]/
             private_constant :WORD_BOUNDARY
 
-            # The look-backs below run for every probe at a trigger character, so
-            # they test the previous BYTE: `input[pos - 1]` would allocate a fresh
-            # one-character string each time. Only a multibyte previous character
-            # (a lead or continuation byte, 0x80+) needs the character-wise regex.
+            # The look-backs below run for every probe at a trigger character, so on
+            # an all-ASCII body they test the previous BYTE: `input[pos - 1]` would
+            # allocate a fresh one-character string each time. `pos` is a CHARACTER
+            # index, so the byte shortcut is only valid while the two agree — i.e.
+            # while `input.ascii_only?` (an O(1) coderange check). One multibyte
+            # character anywhere shifts every later byte offset, so a mixed body
+            # takes the character-wise path.
             def word_boundary?(input, pos)
               return true if pos.zero?
 
-              byte = input.getbyte(pos - 1)
-              return !(ascii_alnum_byte?(byte) || byte == 0x5f) if byte < 0x80 # 0x5f = `_`
-
-              !input[pos - 1].match?(WORD_BOUNDARY)
+              if input.ascii_only?
+                byte = input.getbyte(pos - 1)
+                !(ascii_alnum_byte?(byte) || byte == 0x5f) # 0x5f = `_`
+              else
+                !input[pos - 1].match?(WORD_BOUNDARY)
+              end
             end
 
             # Matches `/\s/` exactly: space plus `\t\n\v\f\r` (0x09..0x0d).
             def whitespace_before?(input, pos)
               return true if pos.zero?
 
-              byte = input.getbyte(pos - 1)
-              byte == 0x20 || (byte >= 0x09 && byte <= 0x0d)
+              if input.ascii_only?
+                byte = input.getbyte(pos - 1)
+                byte == 0x20 || (byte >= 0x09 && byte <= 0x0d)
+              else
+                input[pos - 1].match?(/\s/)
+              end
+            end
+
+            # Preserves the byte/character distinction the same way (see above).
+            def bang_before?(input, pos)
+              if input.ascii_only?
+                input.getbyte(pos - 1) == 0x21 # `!`
+              else
+                input[pos - 1] == "!"
+              end
             end
 
             def ascii_alnum_byte?(byte)
