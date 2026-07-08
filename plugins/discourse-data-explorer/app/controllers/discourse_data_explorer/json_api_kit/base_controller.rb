@@ -364,7 +364,10 @@ module DiscourseDataExplorer
 
       # Validation errors → 422 with a JSON Pointer `source` per field (e.g.
       # `/data/attributes/name`), per the JSON:API error-object spec. Takes an
-      # ActiveModel::Errors (from a Service::Base contract or the model).
+      # ActiveModel::Errors (from a Service::Base contract or the model). Pointers
+      # are down-migrated to the caller's version (error documents are typeless,
+      # so the endpoint's primary type is supplied); `detail` prose stays in
+      # latest terms — the pointer is the machine contract, the prose is not.
       def render_validation_errors(model_errors)
         errors =
           model_errors.map do |error|
@@ -377,9 +380,13 @@ module DiscourseDataExplorer
               },
             }
           end
-        render json: {
-                 errors: errors,
-               },
+        document = { errors: errors }
+        VersionPipeline.down_errors(
+          document,
+          type: cfg.serializer_class.record_type,
+          changes: api_version_gap,
+        )
+        render json: document,
                status: :unprocessable_entity,
                content_type: "application/vnd.api+json"
       end

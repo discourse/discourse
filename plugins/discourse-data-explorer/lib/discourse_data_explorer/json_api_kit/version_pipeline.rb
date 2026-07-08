@@ -12,7 +12,14 @@ module DiscourseDataExplorer
     # the document then the resources — the exact inverse of `down`. A resource
     # transform only runs when `attributes` is a hash (request documents are
     # client input). See docs/versioning-design.md.
+    #
+    # Error documents are typeless, so `down_errors` takes the endpoint's primary
+    # resource type and rewrites `/data/attributes/<name>` pointers by running the
+    # type's down chain over a synthetic one-attribute resource — the same reuse
+    # as the sparse-fieldset rewrite, in the other direction.
     class VersionPipeline
+      ATTRIBUTE_POINTER = %r{\A/data/attributes/(?<name>[^/]+)\z}
+
       class << self
         def down(document, changes)
           return document if changes.blank?
@@ -20,6 +27,18 @@ module DiscourseDataExplorer
           changes.each do |change|
             transform_resources(document, change, :down)
             change.document_transform(:down)&.call(document)
+          end
+          document
+        end
+
+        def down_errors(document, type:, changes:)
+          return document if changes.blank?
+
+          Array(document[:errors]).each do |error|
+            next unless error.is_a?(Hash)
+            match = ATTRIBUTE_POINTER.match(error.dig(:source, :pointer).to_s) or next
+            downgraded_name = downgrade_attribute_name(match[:name], type, changes)
+            error[:source][:pointer] = "/data/attributes/#{downgraded_name}"
           end
           document
         end
@@ -35,6 +54,13 @@ module DiscourseDataExplorer
         end
 
         private
+
+        def downgrade_attribute_name(name, type, changes)
+          synthetic = { data: { type: type, attributes: { name.to_sym => nil } } }
+          down(synthetic, changes)
+          keys = synthetic[:data][:attributes].keys
+          keys.size == 1 ? keys.first : name
+        end
 
         def transform_resources(document, change, direction)
           resources(document).each do |resource|

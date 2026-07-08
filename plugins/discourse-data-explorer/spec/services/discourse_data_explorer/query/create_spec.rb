@@ -24,6 +24,12 @@ RSpec.describe DiscourseDataExplorer::Query::Create do
       it { is_expected.to fail_a_contract }
     end
 
+    context "when the query is too long" do
+      let(:sql) { "SELECT 1 -- #{"x" * 10_000}" }
+
+      it { is_expected.to fail_a_contract }
+    end
+
     context "when the acting user is not an admin" do
       fab!(:acting_user, :user)
 
