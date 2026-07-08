@@ -2,10 +2,12 @@
 
 class TagLocalization < ActiveRecord::Base
   include LocaleMatchable
+  include HasSanitizableFields
 
   belongs_to :tag
 
   before_validation :clean_name
+  before_save :sanitize_description
 
   validates :locale, presence: true, length: { maximum: 20 }
   validates :name, presence: true
@@ -16,6 +18,10 @@ class TagLocalization < ActiveRecord::Base
 
   def clean_name
     self.name = DiscourseTagging.clean_tag(name) if name.present?
+  end
+
+  def sanitize_description
+    self.description = sanitize_field(description) if description_changed?
   end
 end
 
