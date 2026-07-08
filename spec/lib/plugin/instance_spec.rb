@@ -1294,7 +1294,7 @@ TEXT
         )
       }.to raise_error(
         ArgumentError,
-        "0 is not a valid value. Must be one of RequestTracker::RateLimiters::User, RequestTracker::RateLimiters::IP",
+        "0 is not a valid value. Must be one of RequestTracker::RateLimiters::User, RequestTracker::RateLimiters::HealthCheck, RequestTracker::RateLimiters::IP",
       )
     end
 
@@ -1310,7 +1310,7 @@ TEXT
         )
       }.to raise_error(
         ArgumentError,
-        "0 is not a valid value. Must be one of RequestTracker::RateLimiters::User, RequestTracker::RateLimiters::IP",
+        "0 is not a valid value. Must be one of RequestTracker::RateLimiters::User, RequestTracker::RateLimiters::HealthCheck, RequestTracker::RateLimiters::IP",
       )
     end
 
@@ -1342,11 +1342,15 @@ TEXT
         RequestTracker::RateLimiters::User,
       )
 
-      expect(Middleware::RequestTracker.rate_limiters_stack[1].superclass).to eq(
+      expect(Middleware::RequestTracker.rate_limiters_stack[1]).to eq(
+        RequestTracker::RateLimiters::HealthCheck,
+      )
+
+      expect(Middleware::RequestTracker.rate_limiters_stack[2].superclass).to eq(
         RequestTracker::RateLimiters::Base,
       )
 
-      expect(Middleware::RequestTracker.rate_limiters_stack[2]).to eq(
+      expect(Middleware::RequestTracker.rate_limiters_stack[3]).to eq(
         RequestTracker::RateLimiters::IP,
       )
     end
@@ -1366,10 +1370,14 @@ TEXT
       )
 
       expect(Middleware::RequestTracker.rate_limiters_stack[1]).to eq(
+        RequestTracker::RateLimiters::HealthCheck,
+      )
+
+      expect(Middleware::RequestTracker.rate_limiters_stack[2]).to eq(
         RequestTracker::RateLimiters::IP,
       )
 
-      expect(Middleware::RequestTracker.rate_limiters_stack[2].superclass).to eq(
+      expect(Middleware::RequestTracker.rate_limiters_stack[3].superclass).to eq(
         RequestTracker::RateLimiters::Base,
       )
     end
