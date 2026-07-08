@@ -60,8 +60,6 @@ class GifsController < ApplicationController
   end
 
   def proxy_klipy_request(url, query)
-    # Excon only raises on unexpected statuses when `expects:` is set, so we omit
-    # it and forward whatever status Klipy returns to the client as-is.
     response =
       Excon.get(
         url,
@@ -80,8 +78,6 @@ class GifsController < ApplicationController
     head :bad_gateway
   end
 
-  # Defense-in-depth: the key is never intentionally returned to the client, but
-  # a Klipy error response could echo back the key we sent. Strip it just in case.
   def redact_api_key(body)
     api_key = SiteSetting.klipy_api_key
     return body if api_key.blank?
