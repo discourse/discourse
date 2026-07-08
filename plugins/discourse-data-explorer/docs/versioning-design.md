@@ -191,7 +191,26 @@ The contract fails in **latest terms**. Today's `render_validation_errors` build
 | 6 | Error pipeline (down) | pointer rewrites, with endpoint-type context | D |
 | 7 | `BaseController` seams | first before_action (resolve + up + echo); `render_resource` (down); `render_validation_errors` (error down); drop `only:` from `jsonapi_deserialize` | all |
 
-**Build order (small increments):** ① components 1–3 (pure Ruby, spec'd in isolation) — **done 2026-07-08** → ② response-down pipeline + controller seam (Traces A, E green — all reads benefit) — **done 2026-07-08** → ③ request-up (B, C) → ④ errors (D).
+**Build order (small increments):** ① components 1–3 (pure Ruby, spec'd in isolation) — **done 2026-07-08** → ② response-down pipeline + controller seam (Traces A, E green — all reads benefit) — **done 2026-07-08** → ③ request-up (B, C) — **done 2026-07-08, Traces A–E all green** → ④ errors (D — the pass-through case is green; the pointer-rewrite case needs a validation on a renamed attribute to exist first).
+
+**③ implementation notes:**
+- `VersionPipeline.up` takes the same newest→oldest gap the registry produces and reverses it internally — call sites stay symmetric, no ordering footgun. Within one change, up runs document-then-resources (the exact inverse of down's resources-then-document).
+- The resource walk only invokes a transform when `attributes` is a hash — request documents are hostile input (machinery guarantees shape; transforms stay clean).
+- **Fieldset rewrite without a params DSL:** `fields[TYPE]` values are attribute names, so the controller builds a *synthetic resource* from the names (`{type:, attributes: {name: nil, sql: nil}}`), runs the type's normal up-chain over it, and keeps the resulting keys. The same `VersionChange` covers body and fieldsets with zero extra declaration.
+- **Deferred from ③, direction now DECIDED (2026-07-08):** sort/filter-*key* renames. The synthetic-resource
+  trick is sound for `fields` because the spec defines fieldset values as the resource's *field names* — the
+  same namespace the transforms reshape. Sort keys are only *recommended* to match attributes (ours don't
+  always: `sort :username` is a join) and `filter` semantics are fully server-defined (`filter :search` isn't
+  an attribute) — so auto-applying attribute renames there would have encoded a guess.
+  **Decision (Graphiti-inspired):** make the relationship a *declaration* — the DSL will distinguish
+  **attribute-derived** sorts/filters (`sort :name` — renames follow the attribute automatically, same
+  soundness as fieldsets, with a `column:` escape hatch for when wire name ≠ DB column, e.g.
+  `sort :query, column: :sql`) from **virtual** ones (`sort :username do … end`, `filter :search` — their own
+  contract surface; renaming one takes an explicit `renamed_sort`/`renamed_filter` declarative keyword).
+  Unlike Graphiti we keep declarations **opt-in** (the spike hardening deliberately flipped Graphiti's
+  filterable/sortable-by-default OFF — default-on makes every attribute an unindexed-sort/LIKE-scan surface).
+  Build when a real rename touches a sort/filter; risk while parked is low — strict params give old clients a
+  loud 400, unlike the silent fieldset drop that forced ③ to handle `fields`.
 
 ## 3. Open questions (discovered, deliberately parked)
 
