@@ -113,8 +113,15 @@ module Migrations
             # @param hosts [Set<String>, #include?] the source's own hosts (base URL
             #   plus former domains), already downcased. An absolute URL is internal
             #   only when its host is one of these. Empty means relative-only.
-            def initialize(hosts: Set.new)
+            # @param on_foreign_host [#call, nil] called with the host (a String)
+            #   when an absolute URL is rejected for a foreign host but its path
+            #   still parses as an internal route — the "did the operator forget a
+            #   former domain?" signal. Nil skips the extra route parse of a foreign
+            #   host, so a run that doesn't want the signal pays nothing beyond the
+            #   cheap host rejection.
+            def initialize(hosts: Set.new, on_foreign_host: nil)
               @hosts = hosts
+              @on_foreign_host = on_foreign_host
             end
 
             def detect(input, pos)
@@ -154,7 +161,11 @@ module Migrations
             def build(input, pos, match, url:, text:)
               host, rest = split_host(url)
               return nil unless rest
-              return nil if host && !@hosts.include?(host)
+
+              if host && !@hosts.include?(host)
+                note_foreign_host(host, rest)
+                return nil
+              end
 
               target = parse_route(rest)
               return nil unless target
@@ -174,6 +185,16 @@ module Migrations
                 )
 
               Match.new(start_pos: pos, end_pos: pos + match[0].length, node:)
+            end
+
+            # A foreign host is rejected before routing (the cheap check). Only when
+            # a caller asked for the signal do we route-parse it, to tell an
+            # internal-looking self-link on an unconfigured host from an ordinary
+            # external link, and report the former.
+            def note_foreign_host(host, rest)
+              return unless @on_foreign_host
+
+              @on_foreign_host.call(host) if parse_route(rest)
             end
 
             # @return [Array(String, String), nil] `[host, rest]` for an internal URL

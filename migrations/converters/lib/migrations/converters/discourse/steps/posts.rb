@@ -4,6 +4,12 @@ module Migrations
   module Converters
     module Discourse
       class Posts < Conversion::Step
+        # Logged (INFO, so it doesn't count against the step's warning/error
+        # indicator) once per absolute, internal-looking link whose host isn't in
+        # the source_site allowlist, with the host in `details`. A fixed string, so
+        # the end-of-run summary can total the rows per host by grouping on it.
+        FOREIGN_LINK_LOG_MESSAGE = "Absolute internal-looking link on an unconfigured host"
+
         source do
           # Posts is the heaviest step, so split it across forks. Partition on the
           # composite `(topic_id, post_number)`, not the obvious `id`: that pair is
@@ -65,6 +71,11 @@ module Migrations
                 hashtag_names:,
                 custom_emoji_names:,
                 internal_link_hosts: internal_link_hosts || Set.new,
+                # INFO-typed, so a busy post full of foreign self-links doesn't light
+                # up the step's warning/error count; the summary aggregates the rows.
+                on_foreign_host: ->(host) do
+                  tracker.log_info(FOREIGN_LINK_LOG_MESSAGE, details: { host: })
+                end,
               )
             # One buffer, reused (cleared) per post — a fresh one would allocate a
             # new placeholder (a random nonce) for every post, most of which record

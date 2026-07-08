@@ -73,19 +73,24 @@ module Migrations
         #   (its base URL and any former domains), already downcased. An absolute link
         #   is treated as internal only when its host is one of these; relative links
         #   are always internal. Empty (the default) means relative-only detection.
+        # @param on_foreign_host [#call, nil] called with the host of an absolute,
+        #   internal-looking link whose host is not in `internal_link_hosts` — a hint
+        #   that a former domain may be missing from the source_site settings. Nil (the
+        #   default) skips the signal.
         def initialize(
           mention_resolver: MentionResolver.new,
           mention_names: nil,
           hashtag_names: nil,
           custom_emoji_names: nil,
-          internal_link_hosts: Set.new
+          internal_link_hosts: Set.new,
+          on_foreign_host: nil
         )
           @mention_resolver = mention_resolver
 
           detectors = DETECTORS.map(&:new)
           # After UploadUrl (index 1 of DETECTORS), so an upload URL still wins over a
           # bare internal link that happens to look like one.
-          detectors << Detectors::InternalLink.new(hosts: internal_link_hosts)
+          detectors << Detectors::InternalLink.new(hosts: internal_link_hosts, on_foreign_host:)
           detectors << Detectors::Mention.new(names: mention_names)
           detectors << Detectors::Hashtag.new(names: hashtag_names)
           # The internal-link route segments always gate; the custom-emoji `:` gate is
