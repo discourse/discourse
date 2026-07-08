@@ -256,6 +256,70 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
   end
 
+  describe "mentions with an existence gate" do
+    subject(:extractor) do
+      described_class.new(
+        mention_names:
+          Migrations::SortedStringSet.new(
+            %w[alice bob john.doe staff here all café_team].map do |name|
+              Migrations::NameNormalizer.normalize(name)
+            end,
+          ),
+      )
+    end
+
+    it "defers a mention whose username is in the set" do
+      result = extract("hey @alice there")
+
+      expect(buffer.mentions.first[:name]).to eq("alice")
+      expect(result).to eq("hey #{buffer.mentions.first[:placeholder]} there")
+    end
+
+    it "leaves an @word that names nothing on the source as literal text" do
+      raw = "meet at @3pm please"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.mentions).to be_empty
+    end
+
+    it "defers a group mention in the set" do
+      extract("cc @staff now")
+
+      expect(buffer.mentions.first[:name]).to eq("staff")
+    end
+
+    it "defers the here and all names in the set" do
+      extract("@here and @all please")
+
+      expect(buffer.mentions.map { |mention| mention[:name] }).to eq(%w[here all])
+    end
+
+    it "matches the set case-insensitively" do
+      extract("ping @Bob today")
+
+      expect(buffer.mentions.first[:name]).to eq("Bob")
+    end
+
+    it "matches a Unicode name in the set" do
+      extract("cc @café_team here")
+
+      expect(buffer.mentions.first[:name]).to eq("café_team")
+    end
+
+    it "defers a dotted username in the set" do
+      extract("hi @john.doe there")
+
+      expect(buffer.mentions.first[:name]).to eq("john.doe")
+    end
+
+    it "defers every parsed @word when no gate is given" do
+      ungated = described_class.new
+      ungated.extract("meet at @3pm please", on_embed: buffer)
+
+      expect(buffer.mentions.first[:name]).to eq("3pm")
+    end
+  end
+
   describe "hashtags" do
     it "defers a bare hashtag, recording the name and leaving the type for import" do
       result = extract("see #announcements please")
