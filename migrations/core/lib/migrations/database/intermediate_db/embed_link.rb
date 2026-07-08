@@ -14,27 +14,35 @@ module Migrations
             owner_type,
             placeholder,
             target_id,
+            target_name,
+            target_post_number,
+            target_suffix,
+            target_topic_id,
             target_type,
             text,
             url
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
 
         # Creates a new `embed_links` record in the IntermediateDB.
         #
-        # @param owner_id      [Integer, String]
-        # @param owner_type    [Integer]
+        # @param owner_id             [Integer, String]
+        # @param owner_type           [Integer]
         #   Any constant from EmbedOwner (e.g. EmbedOwner::POST)
-        # @param placeholder   [String]
-        # @param target_id     [Integer, String, nil]
-        # @param target_type   [Integer, nil]
+        # @param placeholder          [String]
+        # @param target_id            [Integer, String, nil]
+        # @param target_name          [String, nil]
+        # @param target_post_number   [Integer, nil]
+        # @param target_suffix        [String, nil]
+        # @param target_topic_id      [Integer, String, nil]
+        # @param target_type          [Integer, nil]
         #   Any constant from LinkTarget (e.g. LinkTarget::TOPIC)
-        # @param text          [String, nil]
-        # @param url           [String, nil]
+        # @param text                 [String, nil]
+        # @param url                  [String, nil]
         #
         # @return [void]
         #
@@ -45,6 +53,10 @@ module Migrations
           owner_type:,
           placeholder:,
           target_id: nil,
+          target_name: nil,
+          target_post_number: nil,
+          target_suffix: nil,
+          target_topic_id: nil,
           target_type: nil,
           text: nil,
           url: nil
@@ -55,6 +67,10 @@ module Migrations
             owner_type,
             placeholder,
             target_id,
+            target_name,
+            target_post_number,
+            target_suffix,
+            target_topic_id,
             target_type,
             text,
             url,
