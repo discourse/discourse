@@ -42,7 +42,7 @@ module DiscoursePostEvent
     has_one :image_upload, embed: :object, serializer: UploadSerializer
 
     def livestream_enabled
-      object.livestream? && object.location.present?
+      object.livestream? && object.livestream_url.present?
     end
 
     def include_livestream_onebox?

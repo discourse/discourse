@@ -168,7 +168,7 @@ export default class DiscoursePostEventEvent {
 
   get currentlyWithinEventTimeframe() {
     const now = moment();
-    const startsAt = moment(this.startsAt).add(30, "minutes");
+    const startsAt = moment(this.startsAt).subtract(30, "minutes");
     const endsAt = moment(this.endsAt).add(10, "minutes");
 
     return now.isBetween(startsAt, endsAt);

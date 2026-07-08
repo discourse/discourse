@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
+import { isEmpty } from "@ember/utils";
 import { optionalRequire } from "discourse/lib/utilities";
 import { eventHasLivestream } from "../../lib/livestream-utils";
 import LivestreamZoomEntry from "../livestream/zoom-entry";
@@ -54,6 +55,10 @@ export default class Livestream extends Component {
       : null;
   }
 
+  get hasLivestreamOnebox() {
+    return !isEmpty(this.args.event?.livestreamOnebox);
+  }
+
   get oneboxHtml() {
     return this.videoAttributes
       ? null
@@ -65,7 +70,7 @@ export default class Livestream extends Component {
       <section class="event__section event-livestream">
         {{#if this.isZoomLivestream}}
           <LivestreamZoomEntry @event={{@event}} />
-        {{else}}
+        {{else if this.hasLivestreamOnebox}}
           {{#if this.videoAttributes}}
             <this.lazyVideo @videoAttributes={{this.videoAttributes}} />
           {{else}}
