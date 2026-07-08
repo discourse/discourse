@@ -16,7 +16,7 @@
 - **One `VersionChange` = `up` + `down`** (AR-migration feel). No separate `migrate` method — because we transform the serializer's output *hash before JSON-encoding* (never re-parse JSON we just built), `down` already *is* the pure data transform, and the pipeline stays invocable outside a controller (webhooks/jobs) for free.
 - **Trust boundary:** machinery guarantees *shape* (the structure a transform targets exists), transforms don't validate, the Service::Base contract catches semantics — in latest terms, after up-migration.
 - **`jsonapi_deserialize` loses its `only:` allowlist.** The service contract's declared attributes already are the allowlist (verified: `Query::Create` builds records from contract attributes, never raw params); the `only:` list duplicated that knowledge in latest terms and would silently drop an old client's renamed attributes before `up` existed to save them.
-- Versioning subsystem stays **decoupled**: a self-contained unit (version type, registry, changes, walker) that `BaseController` calls at defined seams — so it survives the Kit's eventual post-experiment rewrite.
+- Versioning subsystem stays **decoupled**: a self-contained unit (version type, registry, changes, walker) that `BaseController` calls at defined seams. To be clear about expectations: everything here is spike code and will likely be redone (at least in part) when the Kit leaves the experiment phase — the decoupling buys a small rewrite blast radius, and the durable artifact is this design, not the code.
 
 ---
 
@@ -134,7 +134,7 @@ on_success → render_resource(query, status: :created)
 pipeline.down(...)  → the 201 body serves `sql` back to the old client (same as Trace A)
 ```
 
-Two things to notice: the create response flows through the same down pipeline as any read (one seam, `render_resource`), and the whole reason `up` must precede deserialization is visible — under the old `only:` allowlist (written in latest terms), the old client's `sql` would have been **silently dropped** before the service ever saw it.
+Two things to notice: the create response flows through the same down pipeline as any read (one seam, `render_resource`), and `up` runs **before** deserialization. With the `only:` allowlist gone this ordering is a choice, not a necessity (the flat hash would carry `sql` through) — we keep it because transforms speak the **wire shape**: symmetric with `down` (one `VersionChange`, one shape for both directions), self-routed by `data.type` (which deserialization strips), and decoupled from the deserializer's flattening conventions (`relationships.groups` → `group_ids` — a relationship rename or attribute→relationship shape change must be expressed on the wire format, not on its flattened residue). *(Historical footnote: under the old `only:` allowlist, up-first was mandatory — the old client's `sql` would have been silently dropped before the service saw it.)*
 
 ### Trace D — validation errors down
 
