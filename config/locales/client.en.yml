@@ -9540,6 +9540,9 @@ en:
         depends_on_notice:
           one: "This setting is only applied when %{dependencyLinks} is enabled."
           other: "This setting is only applied when %{dependencyLinks} are enabled."
+        depends_on_values_notice:
+          one: "This setting only applies when %{dependencyLinks} is set to a compatible value."
+          other: "This setting only applies when %{dependencyLinks} are set to compatible values."
         discard:
           one: "Discard change"
           other: "Discard changes"

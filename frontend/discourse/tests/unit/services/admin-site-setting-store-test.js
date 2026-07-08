@@ -89,7 +89,7 @@ module("Unit | Service | admin-site-setting-store", function (hooks) {
       );
     });
 
-    test("inline dependent settings are hidden from the top-level list unless directly filtered", function (assert) {
+    test("inline dependent settings are hidden from the top-level list", function (assert) {
       const child = build({
         setting: "highlight_categories",
         depends_on: ["category_scope"],
@@ -105,7 +105,7 @@ module("Unit | Service | admin-site-setting-store", function (hooks) {
       ]);
 
       assert.false(this.store.isVisible(child));
-      assert.true(this.store.isVisible(child, "highlight_categories"));
+      assert.false(this.store.isVisible(child, "highlight_categories"));
     });
   });
 

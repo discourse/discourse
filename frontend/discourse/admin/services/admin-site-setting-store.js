@@ -35,7 +35,7 @@ export default class AdminSiteSettingStore extends Service {
     const filter = normalize(activeFilter);
 
     if (this.#isInlineDependent(setting)) {
-      return filter !== "" && filter === normalize(setting.setting);
+      return false;
     }
 
     if (setting.depends_behavior !== "hidden") {

@@ -148,7 +148,7 @@ acceptance("Admin - Site Settings", function (needs) {
               setting: "highlight_scope",
               humanized_name: "Highlight scope",
               description: "Choose a scope.",
-              default: "public",
+              default: "include",
               value: "include",
               category: "required",
               preview: null,
@@ -159,13 +159,14 @@ acceptance("Admin - Site Settings", function (needs) {
               setting: "highlight_categories",
               humanized_name: "Highlight categories",
               description: "Choose categories.",
-              default: "",
+              default: "default",
               value: "",
               category: "required",
               preview: null,
               secret: false,
               type: "string",
               depends_on: ["highlight_scope"],
+              depends_on_humanized_names: ["Highlight scope"],
               depends_on_values: {
                 highlight_scope: ["include", "exclude"],
               },
@@ -189,6 +190,184 @@ acceptance("Admin - Site Settings", function (needs) {
       .doesNotExist(
         "dependent setting is not rendered as a separate top-level row"
       );
+    assert
+      .dom(
+        '[data-setting="highlight_scope"] [data-setting="highlight_categories"] .setting-controls'
+      )
+      .doesNotExist("dependent setting does not render its own controls");
+    assert
+      .dom('[data-setting="highlight_scope"] > .setting-controls__undo')
+      .exists("parent setting renders controls for an overridden dependent");
+
+    await click('[data-setting="highlight_scope"] > .setting-controls__undo');
+
+    assert
+      .dom('[data-setting="highlight_categories"] .input-setting-string')
+      .hasValue("default", "parent controls reset the dependent setting");
+    assert
+      .dom(".setting-depends-on-notice")
+      .includesText(
+        "This setting only applies when Highlight scope is set to a compatible value.",
+        "value-based dependencies do not use enabled copy"
+      );
+  });
+
+  test("filtering by an inline dependent site setting shows its parent setting", async function (assert) {
+    pretender.get("/admin/site_settings", () => {
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        JSON.stringify({
+          site_settings: [
+            {
+              setting: "highlight_scope",
+              humanized_name: "Highlight scope",
+              description: "Choose a scope.",
+              default: "include",
+              value: "include",
+              category: "required",
+              preview: null,
+              secret: false,
+              type: "string",
+            },
+            {
+              setting: "highlight_categories",
+              humanized_name: "Highlight categories",
+              description: "Choose categories.",
+              default: "",
+              value: "",
+              category: "required",
+              preview: null,
+              secret: false,
+              type: "string",
+              depends_on: ["highlight_scope"],
+              depends_on_humanized_names: ["Highlight scope"],
+              depends_on_values: {
+                highlight_scope: ["include", "exclude"],
+              },
+              depends_behavior: "hidden",
+              dependent_setting_display: "inline",
+            },
+          ],
+        }),
+      ];
+    });
+
+    await visit("/admin/site_settings?filter=highlight_categories");
+
+    assert
+      .dom('section.settings > [data-setting="highlight_scope"]')
+      .exists("the parent setting is rendered as the top-level row");
+    assert
+      .dom(
+        '[data-setting="highlight_scope"] [data-setting="highlight_categories"]'
+      )
+      .exists("the matched dependent setting is rendered inline");
+    assert
+      .dom('section.settings > [data-setting="highlight_categories"]')
+      .doesNotExist("the dependent setting is not rendered as its own row");
+  });
+
+  test("inline dependent site settings use their parent setting controls", async function (assert) {
+    const updatedSettings = [];
+
+    pretender.get("/admin/site_settings", () => {
+      return [
+        200,
+        { "Content-Type": "application/json" },
+        JSON.stringify({
+          site_settings: [
+            {
+              setting: "highlight_scope",
+              humanized_name: "Highlight scope",
+              description: "Choose a scope.",
+              default: "public",
+              value: "public",
+              category: "required",
+              preview: null,
+              secret: false,
+              type: "string",
+            },
+            {
+              setting: "highlight_categories",
+              humanized_name: "Highlight categories",
+              description: "Choose categories.",
+              default: "",
+              value: "",
+              category: "required",
+              preview: null,
+              secret: false,
+              type: "string",
+              depends_on: ["highlight_scope"],
+              depends_on_values: {
+                highlight_scope: ["include", "exclude"],
+              },
+              depends_behavior: "hidden",
+              dependent_setting_display: "inline",
+            },
+            {
+              setting: "unrelated_setting",
+              humanized_name: "Unrelated setting",
+              description: "Choose something else.",
+              default: "",
+              value: "",
+              category: "required",
+              preview: null,
+              secret: false,
+              type: "string",
+            },
+          ],
+        }),
+      ];
+    });
+    pretender.put("/admin/site_settings/bulk_update.json", (request) => {
+      updatedSettings.push("bulk_update");
+      const params = new URLSearchParams(request.requestBody);
+
+      assert.strictEqual(
+        params.get("settings[highlight_scope][value]"),
+        "include",
+        "saves the parent scope value"
+      );
+      assert.strictEqual(
+        params.get("settings[highlight_categories][value]"),
+        "selected categories",
+        "saves the inline dependent value"
+      );
+      assert.false(
+        params.has("settings[unrelated_setting][value]"),
+        "does not save unrelated dirty settings"
+      );
+
+      return [204, {}, ""];
+    });
+    pretender.put("/admin/site_settings/unrelated_setting", () => {
+      updatedSettings.push("unrelated_setting");
+      return [204, {}, ""];
+    });
+
+    await visit("/admin/site_settings");
+
+    await fillIn(
+      '[data-setting="highlight_scope"] .input-setting-string',
+      "include"
+    );
+    await fillIn(
+      '[data-setting="highlight_categories"] .input-setting-string',
+      "selected categories"
+    );
+    await fillIn(
+      '[data-setting="unrelated_setting"] .input-setting-string',
+      "do not save me"
+    );
+
+    await click('[data-setting="highlight_scope"] > .setting-controls .ok');
+
+    assert.deepEqual(
+      updatedSettings,
+      ["bulk_update"],
+      "only the inline group is saved"
+    );
   });
 
   test("category name is preserved", async function (assert) {
