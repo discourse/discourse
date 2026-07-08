@@ -27,8 +27,10 @@ module DiscourseDataExplorer
                          raise: false
 
       # Must run before anything reads params: the (mandatory) version header decides
-      # how the whole request is interpreted. See docs/versioning-design.md.
+      # how the whole request is interpreted, and an old client's input must be
+      # up-migrated before validation/deserialization see it. See docs/versioning-design.md.
       before_action :resolve_api_version
+      before_action :upgrade_request
       before_action :reject_unknown_query_params!, only: :index
 
       # Per-resource declarative config, populated by the `jsonapi do … end` block.
@@ -152,6 +154,39 @@ module DiscourseDataExplorer
       # current clients, so the pipeline is a no-op on the hot path.
       def api_version_gap
         @api_version_gap ||= JsonApiKit.api_versions.gap_for(@api_version)
+      end
+
+      # Request-up: migrate an old client's input to the latest shape before anything
+      # reads it — the body document and the type-keyed query-param surface.
+      def upgrade_request
+        return if api_version_gap.empty?
+
+        upgrade_request_document
+        upgrade_sparse_fieldsets
+      end
+
+      def upgrade_request_document
+        return unless params[:data].is_a?(ActionController::Parameters)
+
+        document = { data: params[:data].to_unsafe_h.deep_symbolize_keys }
+        VersionPipeline.up(document, api_version_gap)
+        params[:data] = document[:data]
+      end
+
+      # `fields[TYPE]` values are attribute names. Reuse each type's resource
+      # up-transforms by running the chain over a synthetic resource built from the
+      # names, then keeping the resulting keys — no separate params DSL needed.
+      def upgrade_sparse_fieldsets
+        return unless params[:fields].respond_to?(:each_pair)
+
+        upgraded =
+          params[:fields].to_unsafe_h.to_h do |type, list|
+            names = list.to_s.split(",").filter_map { it.strip.presence }
+            synthetic = { data: { type: type, attributes: names.to_h { [it.to_sym, nil] } } }
+            VersionPipeline.up(synthetic, api_version_gap)
+            [type, synthetic[:data][:attributes].keys.join(",")]
+          end
+        params[:fields] = upgraded
       end
 
       def base_scope = instance_exec(&cfg.base_scope_block)
