@@ -103,7 +103,7 @@ RSpec.describe Migrations::Reporting::Tui do
 
     expect(status.exitstatus).to eq(0)
     expect(out).not_to match(/\e\[/) # no cursor/color control sequences
-    expect(out).to match(/^✓ Categories [\d,]+ \((\d+ms|\d+:\d{2})\)$/)
+    expect(out).to match(/^✓ Categories [\d,]+ \((<1s|\d+:\d{2})\)$/)
     expect(out).to match(/Users \d+%/) # 10% progress log
   end
 
@@ -112,6 +112,6 @@ RSpec.describe Migrations::Reporting::Tui do
 
     expect(status.exitstatus).to eq(0)
     expect(out).not_to match(/\e\[/)
-    expect(out).to match(/✓ Categories [\d,]+ \((\d+ms|\d+:\d{2})\)/)
+    expect(out).to match(/✓ Categories [\d,]+ \((<1s|\d+:\d{2})\)/)
   end
 end
