@@ -110,7 +110,8 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
   }
 }
 
-body.chat-enabled.livestream-topic {
+body.chat-enabled.livestream-topic,
+body.chat-enabled.websdk-body {
   .chat-channel-preview-card {
     flex-direction: column;
     align-items: center;

@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import Service, { service } from "@ember/service";
 import optionalService from "discourse/lib/optional-service";
 
@@ -11,7 +12,6 @@ export default class EmbeddableChat extends Service {
   @optionalService chat;
 
   @tracked isMobileChatVisible = false;
-  @tracked topicController = null;
 
   get userCanChat() {
     return this.chat?.userCanChat ?? false;
@@ -59,6 +59,10 @@ export default class EmbeddableChat extends Service {
 
   get isMobileViewport() {
     return !this.capabilities.viewport.lg;
+  }
+
+  get topicController() {
+    return getOwner(this).lookup("controller:topic");
   }
 
   get topic() {

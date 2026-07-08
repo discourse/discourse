@@ -14,12 +14,10 @@ export default class MobileEmbeddableChatModal extends Component {
     }
   };
 
-  get isMobileViewport() {
-    return !this.capabilities.viewport.lg;
-  }
-
   get shouldRender() {
-    return this.embeddableChat.canRenderChatChannel(this.isMobileViewport);
+    return this.embeddableChat.canRenderChatChannel(
+      this.embeddableChat.isMobileViewport
+    );
   }
 
   <template>

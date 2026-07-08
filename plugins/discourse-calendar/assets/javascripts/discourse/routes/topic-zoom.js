@@ -21,9 +21,6 @@ export default class TopicZoomRoute extends DiscourseRoute {
 
   setupController(controller, model) {
     super.setupController(controller, model);
-
-    const topicController = this.controllerFor("topic");
-    topicController.set("model", model);
-    this.embeddableChat.topicController = topicController;
+    this.controllerFor("topic").set("model", model);
   }
 }
