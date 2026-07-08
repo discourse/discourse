@@ -63,12 +63,10 @@ module Migrations
             # emoji to be deferred.
             def boundary_before?(input, pos)
               return true if pos.zero?
+              return !ascii_alnum_byte?(input.getbyte(pos - 1)) if input.ascii_only?
 
-              byte = input.getbyte(pos - 1)
-              return !ascii_alnum_byte?(byte) if byte < 0x80
-
-              # A multibyte previous character: `[[:alnum:]]` is Unicode-aware, so
-              # `é` glues a shortcode to a word the same way `e` does.
+              # `[[:alnum:]]` is Unicode-aware, so `é` glues a shortcode to a word
+              # the same way `e` does.
               !input[pos - 1].match?(/[[:alnum:]]/)
             end
           end
