@@ -29,21 +29,31 @@ module Migrations
   class SortedStringSet
     # @param names [Enumerable<String>] the members; deduped and sorted here.
     def initialize(names)
-      sorted = names.to_a.uniq.sort
+      sorted = names.to_a.uniq
+      sorted.sort!
       @count = sorted.size
 
-      buffer = +""
-      offsets = [0]
+      # Both buffers are allocated at their final size up front: growing them by
+      # appending would leave the usual doubling slack — malloc capacity of
+      # roughly twice the content — retained for the structure's whole lifetime.
+      # The buffer must be UTF-8 (`String.new` defaults to binary): `entry` slices
+      # compare against UTF-8 queries, and equal bytes in incompatible encodings
+      # are not equal strings.
+      total = sorted.sum(&:bytesize)
+      buffer = String.new(capacity: total, encoding: Encoding::UTF_8)
+      offsets = String.new(capacity: (@count + 1) * 4, encoding: Encoding::BINARY)
+
       position = 0
+      offsets << [0].pack("V")
 
       sorted.each do |name|
         buffer << name
         position += name.bytesize
-        offsets << position
+        offsets << [position].pack("V")
       end
 
       @buffer = buffer.freeze
-      @offsets = offsets.pack("V*").freeze
+      @offsets = offsets.freeze
     end
 
     def include?(name)
