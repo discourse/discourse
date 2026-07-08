@@ -3,6 +3,7 @@ import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import DAccessControl from "discourse/ui-kit/d-access-control";
 import { i18n } from "discourse-i18n";
@@ -10,7 +11,15 @@ import { i18n } from "discourse-i18n";
 // A non-automatic group, plus the "logged_in_users" auto group (id: 5) which is one of
 // the groups that defaults to view-only access when added.
 const GROUPS = [
-  { id: 42, name: "team_a", full_name: "Team A", automatic: false },
+  {
+    id: 42,
+    name: "team_a",
+    full_name: "Team A",
+    automatic: false,
+    flair_url: "users",
+    flair_bg_color: "CC0000",
+    flair_color: "FFFFFF",
+  },
   {
     id: AUTO_GROUPS.logged_in_users.id,
     name: "logged_in_users",
@@ -42,7 +51,7 @@ function controlledState(initialAcl = []) {
 module("Integration | Component | DAccessControl", function (hooks) {
   setupRenderingTest(hooks);
 
-  test("adds a group with the default permission via the availableGroups ComboBox", async function (assert) {
+  test("adds a group with the default permission via the preloaded grantee chooser", async function (assert) {
     const state = controlledState();
 
     await render(
@@ -66,10 +75,10 @@ module("Integration | Component | DAccessControl", function (hooks) {
     await chooser.expand();
 
     assert
-      .dom(".d-access-control__chooser .select-kit-row[data-value='42']")
+      .dom(".d-access-control__chooser .select-kit-row[data-value='group:42']")
       .exists("availableGroups are listed in the chooser");
 
-    await chooser.selectRowByValue(42);
+    await chooser.selectRowByValue("group:42");
 
     assert.strictEqual(
       state.onChangeCalls.length,
@@ -85,6 +94,22 @@ module("Integration | Component | DAccessControl", function (hooks) {
       "Team A",
       "sets the display name from the chosen group"
     );
+    assert.strictEqual(added.name, "team_a", "keeps the group name for flair");
+    assert.strictEqual(
+      added.flair_url,
+      "users",
+      "keeps the flair URL for group flair rendering"
+    );
+    assert.strictEqual(
+      added.flair_bg_color,
+      "CC0000",
+      "keeps the flair background color for group flair rendering"
+    );
+    assert.strictEqual(
+      added.flair_color,
+      "FFFFFF",
+      "keeps the flair color for group flair rendering"
+    );
     assert.strictEqual(
       added.permission,
       "edit",
@@ -94,6 +119,9 @@ module("Integration | Component | DAccessControl", function (hooks) {
     assert
       .dom(".d-access-control__row .d-access-control__group-name")
       .hasText("Team A", "renders the newly added group row");
+    assert
+      .dom(".d-access-control__row .avatar-flair")
+      .hasAttribute("title", "team_a", "renders the selected group's flair");
   });
 
   test("a read-only default group is added with the view permission", async function (assert) {
@@ -114,13 +142,87 @@ module("Integration | Component | DAccessControl", function (hooks) {
     const chooser = selectKit(".d-access-control__chooser");
     await chooser.expand();
     await chooser.expand();
-    await chooser.selectRowByValue(AUTO_GROUPS.trust_level_0.id);
+    await chooser.selectRowByValue(`group:${AUTO_GROUPS.trust_level_0.id}`);
 
     const [added] = state.onChangeCalls[0];
     assert.strictEqual(
       added.permission,
       "view",
       "applies the default view permission for a read-only default group"
+    );
+    assert
+      .dom(".d-access-control__row .d-icon-user-group")
+      .exists("renders the generic group icon when the group has no flair");
+  });
+
+  test("searches grantees using the access control search endpoint", async function (assert) {
+    pretender.get("/access-control/grantees/search", (request) => {
+      assert.strictEqual(
+        request.queryParams.term,
+        "ada",
+        "passes the filter term to the search endpoint"
+      );
+
+      return response({
+        users: [
+          {
+            id: 7,
+            username: "ada",
+            name: "Ada Lovelace",
+            avatar_template: "/letter_avatar_proxy/v4/letter/a/{size}.png",
+          },
+        ],
+        groups: [],
+      });
+    });
+
+    const state = controlledState();
+
+    await render(
+      <template>
+        <DAccessControl
+          @groups={{GROUPS}}
+          @acl={{state.acl}}
+          @aclTarget="TestTarget"
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+
+    await click(".d-access-control__add");
+
+    const chooser = selectKit(".d-access-control__chooser");
+    await chooser.expand();
+    await chooser.fillInFilter("ada");
+    await chooser.selectRowByValue("user:7");
+
+    const [added] = state.onChangeCalls[0];
+    assert.strictEqual(added.id, 7, "adds the chosen user");
+    assert.strictEqual(added.type, "user", "marks the entry as a user");
+    assert.strictEqual(
+      added.display_name,
+      "Ada Lovelace",
+      "sets the display name from the chosen user"
+    );
+    assert.strictEqual(
+      added.username,
+      "ada",
+      "keeps the username for avatar rendering"
+    );
+    assert.strictEqual(
+      added.name,
+      "Ada Lovelace",
+      "keeps the name for avatar rendering"
+    );
+    assert.strictEqual(
+      added.avatar_template,
+      "/letter_avatar_proxy/v4/letter/a/{size}.png",
+      "keeps the avatar template for avatar rendering"
+    );
+    assert.strictEqual(
+      added.permission,
+      "edit",
+      "applies the default edit permission for a user"
     );
   });
 

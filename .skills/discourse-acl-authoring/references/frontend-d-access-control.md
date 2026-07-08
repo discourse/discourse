@@ -25,7 +25,7 @@ Basic usage:
 Arguments:
 
 - `@groups`: group records available for selection. Each group should have `id`, `name`, `full_name`, and `automatic`.
-- `@acl`: flattened ACL entries from the backend or form state. The backend can emit group and user entries, but this component currently edits group entries only.
+- `@acl`: flattened ACL entries from the backend or form state. The backend can emit group and user entries, and this component can add groups from the preloaded `@groups` list plus user/group search results from the ACL grantee search endpoint.
 - `@onChange`: called with the next flattened ACL array when the user adds/removes/changes a row.
 - `@aclTarget`: optional key used to load mandatory ACL entries from `site.access_control.mandatory_acl` and banned entries from `site.access_control.banned_acl`.
 - `@transformPermissionOptions`: optional callback to customize default permission labels/descriptions or add target-specific permissions.
@@ -89,10 +89,14 @@ Target-specific options added via `@transformPermissionOptions` can still be ban
 - The remove action remains available unless the row is mandatory.
 - Newly added regular groups default to `edit`.
 - Read-only default auto groups (`anonymous_users`, `everyone`, `trust_level_0`) default to `view`.
-- Already selected groups are removed from the add-group chooser.
+- Already selected grantees are removed from the add-group chooser's preloaded and remote results.
+- The add control uses `EmailGroupUserChooser` through a DAccessControl-specific wrapper. Preloaded group results preserve numeric group IDs in the ACL payload while displaying group names.
+- Typed add-control searches call `/access-control/grantees/search`, which returns `{ users: [...], groups: [...] }` scoped to the current user's visible users/groups.
+- User rows added from search keep `username`, `name`, and `avatar_template` on the ACL entry so the rendered row can pass them through `rowAsUser` to `dAvatar`.
+- Group rows added from preloaded or remote results keep `name`, `flair_url`, `flair_bg_color`, and `flair_color` on the ACL entry so the rendered row can pass them to `DAvatarFlair`; groups without `flair_url` render the generic `user-group` icon.
 - Row DOM metadata uses `data-row-type` and `data-row-id`; tests should not rely on the old `data-group-id` attribute.
 
-The component remains group-first. Backend ACL rows can include `type: :user` entries and lookup helpers understand them, but `DAccessControl` does not yet provide user picking or complete user ACL editing. Treat shared UI support for `allowed_user_ids` as the remaining gap.
+The component is still group-first for preloaded data and mandatory ACL injection. Backend ACL rows can include `type: :user` entries and lookup helpers understand them, but mandatory user ACL display still needs explicit UI support if a target defines user mandatory entries.
 
 ## FormKit Integration
 
