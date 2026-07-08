@@ -308,7 +308,9 @@ export default class AdminCategoryManagementList extends Component {
                             </div>
                           {{/if}}
                         </td>
-                        <td class="d-table__cell --detail">
+                        <td
+                          class="d-table__cell --detail admin-category-management-list__visibility-cell"
+                        >
                           <div class="d-table__mobile-label">
                             {{i18n
                               "admin.config.category_management.table.visibility"
@@ -330,7 +332,9 @@ export default class AdminCategoryManagementList extends Component {
                             {{/if}}
                           </span>
                         </td>
-                        <td class="d-table__cell --detail">
+                        <td
+                          class="d-table__cell --detail admin-category-management-list__topic-count"
+                        >
                           <div class="d-table__mobile-label">
                             {{i18n
                               "admin.config.category_management.table.topics"
@@ -344,7 +348,7 @@ export default class AdminCategoryManagementList extends Component {
                             <DButton
                               @href={{category.edit_url}}
                               @label="admin.config.category_management.open_settings"
-                              class="btn-default btn-small"
+                              class="btn-default btn-small admin-category-management-list__open-settings"
                             />
                           </div>
                         </td>
