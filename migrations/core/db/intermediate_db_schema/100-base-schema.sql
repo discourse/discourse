@@ -100,8 +100,9 @@ CREATE TABLE category_custom_fields
 
 CREATE TABLE category_moderation_groups
 (
-    category_id NUMERIC NOT NULL,
-    group_id    NUMERIC NOT NULL,
+    category_id NUMERIC  NOT NULL,
+    group_id    NUMERIC  NOT NULL,
+    created_at  DATETIME,
     PRIMARY KEY (category_id, group_id)
 );
 

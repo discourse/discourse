@@ -6524,8 +6524,6 @@ ar:
       no_read_topics_body: "بعد البدء في قراءة المناقشات، سترى قائمة هنا. لبدء القراءة، ابحث عن الموضوعات التي تهمك في <a href='%{topUrl}'>الأعلى</a> أو <a href='%{categoriesUrl}'>الفئات</a>، أو عن طريق البحث بالكلمة الرئيسية %{searchIcon}"
     no_group_messages_title: "لم يتم العثور على أي رسائل من المجموعة"
     topic_entrance:
-      sr_jump_top_button: "الانتقال إلى المنشور الأول - %{date}"
-      sr_jump_bottom_button: "الانتقال إلى المنشور الأخير - %{date}"
       jump_top_button_title: "الانتقال إلى المنشور الأول"
       jump_bottom_button_title: "الانتقال إلى المنشور الأخير"
     fullscreen_table:

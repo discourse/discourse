@@ -227,6 +227,7 @@ after_initialize do
   reloadable_patch do
     ExportCsvController.prepend(DiscoursePostEvent::ExportCsvControllerExtension)
     Jobs::ExportCsvFile.prepend(DiscoursePostEvent::ExportPostEventCsvReportExtension)
+    Guardian.prepend(DiscoursePostEvent::GuardianExtension)
     Post.prepend(DiscoursePostEvent::PostExtension)
     ::WebHook.prepend(DiscoursePostEvent::WebHookExtension)
     Topic.prepend(DiscoursePostEvent::TopicExtension)

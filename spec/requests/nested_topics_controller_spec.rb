@@ -1004,6 +1004,26 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(child_json["children"]).to eq([])
     end
 
+    it "uses live descendant counts when stat rows are missing" do
+      SiteSetting.nested_replies_cap_nesting_depth = true
+      SiteSetting.nested_replies_max_depth = 3
+      parent = Fabricate(:post, topic: topic, user: user, reply_to_post_number: root.post_number)
+      child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: parent.post_number)
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: child.post_number)
+      NestedViewPostStat.where(post_id: [parent.id, child.id]).delete_all
+      sign_in(user)
+
+      get children_url(topic, root.post_number, depth: 2)
+
+      json = response.parsed_body
+      parent_json = json["children"].find { |post_json| post_json["id"] == parent.id }
+      child_json = parent_json["children"].find { |post_json| post_json["id"] == child.id }
+      expect(parent_json["total_descendant_count"]).to eq(2)
+      expect(child_json["direct_reply_count"]).to eq(1)
+      expect(child_json["total_descendant_count"]).to eq(1)
+      expect(child_json["children"]).to eq([])
+    end
+
     it "paginates flattened descendants inside the CTE" do
       SiteSetting.nested_replies_cap_nesting_depth = true
       SiteSetting.nested_replies_max_depth = 2

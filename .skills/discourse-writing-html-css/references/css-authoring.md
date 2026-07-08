@@ -251,3 +251,27 @@ variant on top of it.
 keep, per "don't re-declare what a base class sets" above). Style them with their own component
 class instead. Rule of thumb: looks and behaves like a standard button → `.btn` + one variant;
 button behavior but styled like its container → its own class, **no** `.btn-*`.
+## Icons — render in the template, never inject from CSS
+
+Icons are **markup**, not styling. Render them with the `dIcon` helper in the template
+(`{{dIcon "chevron-left"}}` — see the HTML conventions in `SKILL.md`); CSS only positions, sizes,
+and colors the SVG that's already there. **Never conjure an icon from CSS** — it breaks theming,
+accessibility, and the shared sprite, and it's the kind of shenanigan that's invisible until it
+bites:
+
+```scss
+// BAD — Font Awesome unicode through a pseudo-element's `content`
+.card__expand::before {
+  font-family: "Font Awesome 6 Free";
+  content: "\f054";
+}
+
+// BAD — any icon glyph, image, or sprite smuggled in via `content` / background-image
+.card__expand::after { content: "▶"; }
+.card__expand { background-image: url("data:image/svg+xml,…"); }
+```
+
+```gjs
+{{! GOOD — the icon is real DOM from the registered sprite }}
+<span class="card__expand">{{dIcon "chevron-right"}}</span>
+```

@@ -17,7 +17,7 @@ import { i18n } from "discourse-i18n";
  *
  * @param {User} [user] - The user that created the reviewable item
  */
-<template>
+export default <template>
   <div class="created-by">
     {{#if @user}}
       <DUserLink @user={{@user}}>{{dAvatar @user imageSize="small"}}</DUserLink>

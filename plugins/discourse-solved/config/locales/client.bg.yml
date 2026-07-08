@@ -5,6 +5,21 @@
 # https://translate.discourse.org/
 
 bg:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            filter:
+              all_categories: "Всички категории"
+            answerers:
+              staff: "Персонал"
+              member: "Членове"
+              basic: "Основно "
+            response_time:
+              buckets:
+                lt_1h: "< 1 час"
+                gt_24h: "> 24 часа"
   js:
     notifications:
       alt:

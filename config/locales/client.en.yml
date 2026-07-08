@@ -3222,6 +3222,7 @@ en:
     gifs:
       modal_title: "Search GIFs"
       composer_title: "Insert GIF"
+      powered_by: "Powered by Klipy"
       no_results: "Enter a keyword above to search for GIFs."
       browse_categories: "Browse by category"
       bad_api_key: "Klipy API key is missing or invalid. Please check the gifs API key setting."
@@ -4206,6 +4207,11 @@ en:
       all_replies: "All replies"
       category_settings:
         default_nested_view: "Use nested view as default for topics in this category"
+        convert_existing: "Convert existing topics"
+        convert_existing_description: "Existing topics in this category will not use nested replies until you convert them. Run this once to switch them to nested view."
+        convert_existing_confirm: "Convert all existing topics in this category to nested replies?"
+        convert_existing_complete: "Existing topics have been converted to nested replies."
+        save_first: "Save this category setting before converting existing topics."
       no_replies: "No replies yet."
       deleted_post_placeholder: "[deleted]"
       ignored_post_placeholder: "[ignored]"
@@ -6476,6 +6482,7 @@ en:
         sidebar_title: "Reports"
         back: "Back to all reports"
         back_to_dashboard: "Back to dashboard"
+        all_groups: "All groups"
         group_engagement: "Engagement"
         group_traffic: "Traffic"
         group_members: "Members"

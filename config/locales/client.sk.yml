@@ -5165,8 +5165,6 @@ sk:
       no_read_topics_body: "Keď začnete čítať diskusie, zobrazí sa vám zoznam. Ak chcete začať čítať, vyhľadajte témy, ktoré vás zaujímajú <a href='%{topUrl}'>Najlepšie</a> alebo <a href='%{categoriesUrl}'>Kategórie</a> alebo hľadajte podľa kľúčového slova %{searchIcon}"
     no_group_messages_title: "Nenašli sa žiadne skupinové správy"
     topic_entrance:
-      sr_jump_top_button: "Prejsť na prvý príspevok - %{date}"
-      sr_jump_bottom_button: "Prejsť na posledný príspevok - %{date}"
       jump_top_button_title: "Prejsť na prvý príspevok"
       jump_bottom_button_title: "Prejsť na posledný príspevok"
     fullscreen_table:

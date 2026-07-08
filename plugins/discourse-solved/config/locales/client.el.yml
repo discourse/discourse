@@ -13,6 +13,18 @@ el:
             accepted_solutions:
               label: "Αποδεκτές λύσεις"
               tooltip: "Ο αριθμός των θεμάτων που είχαν μια ανάρτηση σημασμένη ως λύση."
+        sections:
+          support:
+            title: "Υποστήριξη"
+            filter:
+              all_categories: "Όλες οι κατηγορίες"
+            answerers:
+              staff: "Προσωπικό"
+              member: "Μέλη"
+              basic: "Αρχάριος"
+            response_time:
+              buckets:
+                lt_1h: "< 1 ώρα"
   js:
     notifications:
       alt:

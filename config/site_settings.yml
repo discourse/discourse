@@ -480,6 +480,7 @@ basic:
     allow_any: false
     refresh: true
     disallowed_groups: "4"
+    mandatory_values: "1|2" # auto groups admins & moderators
     area: "group_permissions"
   push_notifications_prompt:
     default: true
@@ -1380,6 +1381,19 @@ posting:
     default: false
     refresh: true
     area: "posts_and_topics"
+  remove_and_replace_uncategorized:
+    default: false
+    client: true
+    hidden: true
+    upcoming_change:
+      status: "experimental"
+      impact: "other,all_members"
+      allow_enabled_for:
+        - everyone
+      hide_settings:
+        - allow_uncategorized_topics
+        - suppress_uncategorized_badge
+      learn_more_url: "https://meta.discourse.org/t/-/406373"
   allow_duplicate_topic_titles:
     default: false
     area: "posts_and_topics"
@@ -2625,10 +2639,6 @@ files:
       learn_more_url: "https://meta.discourse.org/t/-/402705"
       allow_enabled_for:
         - everyone
-  composer_media_optimization_image_wasm_decode_enabled:
-    default: false
-    hidden: true
-    client: true
   composer_media_optimization_gif_conversion_threshold:
     default: 512000
     hidden: true
@@ -4540,7 +4550,7 @@ experimental:
     client: true
     refresh: true
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/404728"
   enable_rich_text_paste:

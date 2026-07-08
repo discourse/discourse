@@ -16,6 +16,78 @@ pl_PL:
             accepted_solutions:
               label: "Zaakceptowane rozwiązania"
               tooltip: "Liczba tematów, w których post został oznaczony jako rozwiązanie."
+        sections:
+          support:
+            title: "Wsparcie"
+            fetch_error: "Nie udało się załadować danych pomocniczych."
+            filter:
+              all_categories: "Wszystkie kategorie"
+            headline:
+              healthy:
+                title: "Społeczność rozwiązuje swoje problemy sama."
+              struggling:
+                title: "Na większość pytań nie ma odpowiedzi."
+              mixed:
+                title: "Wsparcie jest zróżnicowane."
+              no_data:
+                title: "Za mało jeszcze aktywności wsparcia"
+                summary: "W tym okresie nie ma jeszcze żadnych działań wspierających. Gdy pojawią się tematy, zobaczysz, jak Twoja społeczność sobie z nimi radzi."
+              resolution:
+                up: "Wskaźnik rozwiązywania wzrósł do %{rate}%."
+                down: "Wskaźnik rozwiązywania spadł do %{rate}%."
+                flat: "Wskaźnik rozwiązywania utrzymał się na poziomie %{rate}%."
+              answerers:
+                members: "Członkowie odpowiadają na %{share}% odpowiedzi."
+                staff: "Personel odpowiada na %{share}% odpowiedzi."
+              reply:
+                faster: "Czas pierwszej odpowiedzi skrócił się do %{time}, %{delta} szybciej niż w poprzednim okresie."
+                slower: "Czas pierwszej odpowiedzi spadł do %{time}, %{delta} wolniej niż w poprzednim okresie."
+                flat: "Czas pierwszej odpowiedzi wynosił %{time}."
+              unanswered:
+                one: "%{count} temat z tego okresu nadal nie ma żadnych odpowiedzi."
+                few: "%{count} tematy z tego okresu nadal nie ma żadnych odpowiedzi."
+                many: "%{count} tematów z tego okresu nadal nie ma żadnych odpowiedzi."
+                other: "%{count} tematów z tego okresu nadal nie ma żadnych odpowiedzi."
+            kpi:
+              resolution_rate:
+                label: "Współczynnik rozwiązywania"
+                tooltip: "Procent otwartych tematów pomocy technicznej, które zostały rozwiązane."
+              staff_involvement:
+                label: "Zaangażowanie personelu"
+                tooltip: "Procent otwartych tematów pomocy technicznej, w których pracownik udzielił pierwszej odpowiedzi."
+              avg_first_reply:
+                label: "Średnia pierwsza odpowiedź"
+                tooltip: "Średni czas między opublikowaniem tematu pomocy technicznej a otrzymaniem pierwszej odpowiedzi."
+            outcomes:
+              title: "Wyniki tematu"
+              resolved:
+                label: "Rozwiązano"
+                tooltip: "Liczba tematów oznaczonych jako rozwiązane."
+              in_progress:
+                label: "W toku"
+                tooltip: "Liczba tematów z co najmniej jedną odpowiedzią."
+              unanswered:
+                label: "Bez odpowiedzi"
+                tooltip: "Liczba tematów bez odpowiedzi."
+            answerers:
+              title: "Kto odpowiada?"
+              empty: "Brak odpowiedzi w tym okresie."
+              staff: "Zespół"
+              leader: "Liderzy"
+              regular: "Bywalcy"
+              member: "Członkowie"
+              basic: "Podstawowy"
+            response_time:
+              title: "Rozkład czasu odpowiedzi"
+              buckets:
+                lt_1h: "< 1 godzina"
+                "1_4h": "1–4 godziny"
+                "4_24h": "4–24 godziny"
+                gt_24h: "> 24 godziny"
+              trend:
+                faster: "%{duration} szybciej"
+                slower: "%{duration} wolniej"
+                tooltip: "Trend średniego czasu reakcji."
   js:
     notifications:
       alt:

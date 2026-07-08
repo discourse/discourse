@@ -130,6 +130,11 @@ class UpcomingChanges::NotifyPromotion
       upcoming_change_name: params.setting_name,
       acting_user: Discourse.system_user,
     )
+
+    UpcomingChangeEvent.find_or_create_by(
+      event_type: :automatically_promoted,
+      upcoming_change_name: params.setting_name,
+    ) { |event| event.acting_user = Discourse.system_user }
   end
 
   def trigger_discourse_event(params:)

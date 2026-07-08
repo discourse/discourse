@@ -6282,8 +6282,6 @@ pl_PL:
       no_read_topics_body: "Gdy zaczniesz czytać dyskusje, zobaczysz tutaj listę. Aby rozpocząć czytanie, poszukaj tematów, które Cię interesują w <a href='%{topUrl}'>popularnych</a> lub <a href='%{categoriesUrl}'>kategoriach</a> lub wyszukaj według słowa kluczowego %{searchIcon}"
     no_group_messages_title: "Nie znaleziono wiadomości grupowych"
     topic_entrance:
-      sr_jump_top_button: "Przejdź do pierwszego postu - %{date}"
-      sr_jump_bottom_button: "Przejdź do ostatniego postu - %{date}"
       jump_top_button_title: "Przejdź do pierwszego posta"
       jump_bottom_button_title: "Przejdź do ostatniego posta"
     fullscreen_table:
@@ -7705,12 +7703,7 @@ pl_PL:
             effects: Efekty
             trust_levels_none: "Brak"
             automatic_membership_email_domains: "Użytkownicy rejestrujący się przy pomocy adresu z tej listy zostaną automatycznie przypisani do tej grupy."
-            automatic_membership_email_domains_instructions: "Wpisz każdą domenę osobno, bez symbolu @, na przykład discourse.org."
-            automatic_membership_email_domains_invalid:
-              one: "%{domains} nie jest poprawną nazwą domeny. Wpisz samą nazwę domeny, na przykład discourse.org."
-              few: "To nie są prawidłowe domeny: %{domains}. Wpisz każdą z nich jako domenę podstawową, na przykład discourse.org."
-              many: "To nie są prawidłowe domeny: %{domains}. Wpisz każdą z nich jako domenę podstawową, na przykład discourse.org."
-              other: "To nie są prawidłowe domeny: %{domains}. Wpisz każdą z nich jako domenę podstawową, na przykład discourse.org."
+            automatic_membership_email_domains_instructions: "Wpisz każdą domenę osobno, na przykład discourse.org."
             automatic_membership_user_count:
               one: "%{count} użytkownik ma nowe domeny e-mail i zostanie dodany do grupy."
               few: "%{count} użytkowników ma nowe domeny e-mail i zostaną dodani do grupy."

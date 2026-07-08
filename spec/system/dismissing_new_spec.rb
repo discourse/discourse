@@ -8,15 +8,17 @@ RSpec.describe "Dismissing New" do
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:topic_view) { PageObjects::Components::TopicView.new }
 
-  describe "when a user has an unread post" do
+  before { SiteSetting.enable_unified_new = true }
+
+  describe "when a user has a new reply" do
     fab!(:topic) { Fabricate(:topic, user: user) }
     fab!(:post1) { create_post(user: user, topic: topic) }
     fab!(:post2) { create_post(topic: topic) }
 
-    it "should untrack topics across sessions after the user dismisses it" do
+    it "lets the user stop tracking replies across sessions" do
       sign_in(user)
 
-      visit("/unread")
+      visit("/new?subset=replies")
 
       using_session(:tab_1) do
         sign_in(user)
@@ -26,7 +28,7 @@ RSpec.describe "Dismissing New" do
         expect(topic_view).to have_tracking_status("tracking")
       end
 
-      topic_list_controls.dismiss_unread(untrack: true)
+      topic_list_controls.dismiss_new_and_stop_tracking
 
       using_session(:tab_1) do
         try_until_success(reason: "relies on MessageBus updates") do
@@ -35,7 +37,7 @@ RSpec.describe "Dismissing New" do
       end
     end
 
-    context "when dismissing new on a category's topic list" do
+    context "when viewing a category's topic list" do
       fab!(:category, :category_with_definition)
       fab!(:subcategory) { Fabricate(:category_with_definition, parent_category: category) }
       fab!(:category_topic) { Fabricate(:topic, category: category, user: user) }
@@ -45,16 +47,16 @@ RSpec.describe "Dismissing New" do
       fab!(:subcategory_post1) { create_post(user: user, topic: subcategory_topic) }
       fab!(:subcategory_post2) { create_post(topic: subcategory_topic) }
 
-      it "should dismiss unread posts for the category and its subcategories" do
+      it "lets the user dismiss replies for the category and subcategories" do
         sign_in(user)
 
-        visit("/c/#{category.id}/l/unread")
+        visit("/c/#{category.slug}/#{category.id}/l/new?subset=replies")
 
-        expect(topic_list_controls).to have_unread(count: 2)
+        expect(topic_list).to have_topics(count: 2)
 
-        topic_list_controls.dismiss_unread
+        topic_list_controls.dismiss_new
 
-        expect(topic_list_controls).to have_unread(count: 0)
+        expect(topic_list).to have_no_topics
       end
     end
   end
@@ -62,18 +64,18 @@ RSpec.describe "Dismissing New" do
   describe "when a user has a new topic" do
     fab!(:topic)
 
-    it "should remove the new topic across sessions after the user dismisses it" do
+    it "lets the user dismiss the new topic across sessions" do
       tab_1 = open_new_window(:tab)
       switch_to_window(tab_1)
       sign_in(user)
-      visit("/new")
+      visit("/new?subset=topics")
 
       expect(topic_list_controls).to have_new(count: 1)
 
       tab_2 = open_new_window(:tab)
       switch_to_window(tab_2)
       sign_in(user)
-      visit("/new")
+      visit("/new?subset=topics")
 
       expect(topic_list_controls).to have_new(count: 1)
 
@@ -87,14 +89,12 @@ RSpec.describe "Dismissing New" do
     end
   end
 
-  describe "when unified new is enabled" do
+  describe "when a user has new topics and replies" do
     fab!(:new_topic) { Fabricate(:topic, user: user) }
     fab!(:post1) { create_post(user: user) }
     fab!(:post2) { create_post(topic: post1.topic) }
 
-    before { SiteSetting.enable_unified_new = true }
-
-    it "should remove the new topic and post across sessions after the user dismisses it" do
+    it "lets the user dismiss topics and replies across sessions" do
       tab_1 = open_new_window(:tab)
       switch_to_window(tab_1)
       sign_in(user)

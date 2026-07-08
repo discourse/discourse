@@ -4784,8 +4784,6 @@ fi:
       no_read_topics_body: "Kun alat lukemaana keskusteluita, näet luettelon täällä. Aloita lukeminen etsimällä sinua kiinnostavia ketjuja <a href='%{topUrl}'>Suosituista</a> tai <a href='%{categoriesUrl}'>alueilta</a> tai hakemalla avainsanalla %{searchIcon}"
     no_group_messages_title: "Ryhmäviestejä ei löytynyt"
     topic_entrance:
-      sr_jump_top_button: "Siirry ensimmäiseen viestiin – %{date}"
-      sr_jump_bottom_button: "Siirry viimeiseen viestiin – %{date}"
       jump_top_button_title: "Siirry ensimmäiseen viestiin"
       jump_bottom_button_title: "Siirry viimeiseen viestiin"
     fullscreen_table:

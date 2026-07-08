@@ -15,6 +15,7 @@ import PostCookedHtml from "discourse/components/post/cooked-html";
 import PostLinks from "discourse/components/post/links";
 import PostMenu from "discourse/components/post/menu";
 import PostMetaData from "discourse/components/post/meta-data";
+import PostNotice from "discourse/components/post/notice";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -583,6 +584,10 @@ export default class NestedPost extends Component {
         (if this.effectiveCollapsed "nested-post--collapsed")
         (if @isPinned "nested-post--pinned")
         (if @post.isWhisper "nested-post--whisper")
+        (if
+          (or @post.isModeratorAction (and @post.isWarning @post.firstPost))
+          "post--moderator moderator"
+        )
         (if @post.hidden "nested-post--hidden post--hidden post-hidden")
         (if (or @post.deleted @post.user_deleted) "nested-post--deleted")
         (if this.cloakingData.active "nested-post--cloaked")
@@ -749,6 +754,9 @@ export default class NestedPost extends Component {
                     @name="post-article-content"
                     @outletArgs={{postOutletArgs}}
                   >
+                    {{#if (PostNotice.shouldRender @post this.siteSettings)}}
+                      <PostNotice @post={{@post}} />
+                    {{/if}}
                     <div class="nested-post__header">
                       <PluginOutlet
                         @name="post-metadata"
@@ -776,7 +784,7 @@ export default class NestedPost extends Component {
                           }}</span>
                       {{/if}}
                     </div>
-                    <div class="nested-post__content">
+                    <div class="nested-post__content regular">
                       <PluginOutlet
                         @name="post-content-cooked-html"
                         @outletArgs={{postOutletArgs}}

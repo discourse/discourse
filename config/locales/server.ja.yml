@@ -1693,8 +1693,6 @@ ja:
     silence_new_user_sensitivity: "新規ユーザーが迷惑通報に基づいて投稿禁止にされる確率"
     auto_close_topic_sensitivity: "通報されたトピックが自動的にクローズされる確率"
     cooldown_minutes_after_hiding_posts: "通報により非表示状態になった投稿をユーザーが編集可能になるまでの時間 (分)"
-    max_topics_in_first_day: "ユーザーが最初の投稿をしてから 24 時間以内に作成できるトピックの最大数"
-    max_replies_in_first_day: "ユーザーが最初の投稿をしてから 24 時間以内に作成できる返信の最大数"
     tl2_additional_likes_per_day_multiplier: "この数字を掛けると TL2 (メンバー) の 1 日あたりの「いいね！」の上限を増やします"
     tl3_additional_likes_per_day_multiplier: "この数字を掛けると TL3 (レギュラー) の 1 日あたりの「いいね！」の上限を増やします"
     tl4_additional_likes_per_day_multiplier: "この数字を掛けると TL4 (リーダー) の 1 日あたりの「いいね！」の上限を増やします"

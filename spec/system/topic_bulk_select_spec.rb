@@ -25,14 +25,16 @@ describe "Topic bulk select" do
     expect(topic_bulk_actions_modal).to be_open
   end
 
-  context "when dismissing unread topics" do
+  context "when dismissing new replies" do
     fab!(:topic) { Fabricate(:topic, user: admin) }
     fab!(:post1) { create_post(user: admin, topic: topic) }
     fab!(:post2) { create_post(topic: topic) }
 
+    before { SiteSetting.enable_unified_new = true }
+
     it "removes the topics from the list" do
       sign_in(admin)
-      visit("/unread")
+      visit("/new?subset=replies")
 
       topic_list_header.click_bulk_select_button
       expect(topic_list).to have_topic_checkbox(topic)
@@ -40,11 +42,9 @@ describe "Topic bulk select" do
       topic_list.click_topic_checkbox(topic)
 
       topic_list_header.click_bulk_select_topics_dropdown
-      topic_list_header.click_bulk_button("dismiss-unread")
+      topic_list_header.click_bulk_button("dismiss-new")
 
-      topic_bulk_actions_modal.click_dismiss_confirm
-
-      expect(page).to have_text(I18n.t("js.topics.none.education.unread"))
+      expect(topic_list).to have_no_topics
     end
 
     it "turns off bulk select after dismissing" do
@@ -53,15 +53,13 @@ describe "Topic bulk select" do
       create_post(topic: other_topic)
 
       sign_in(admin)
-      visit("/unread")
+      visit("/new?subset=replies")
 
       topic_list_header.click_bulk_select_button
       topic_list.click_topic_checkbox(topic)
 
       topic_list_header.click_bulk_select_topics_dropdown
-      topic_list_header.click_bulk_button("dismiss-unread")
-
-      topic_bulk_actions_modal.click_dismiss_confirm
+      topic_list_header.click_bulk_button("dismiss-new")
 
       expect(topic_list).to have_topic(other_topic)
       expect(topic_list).to have_no_topic_checkbox(other_topic)
@@ -73,6 +71,8 @@ describe "Topic bulk select" do
     fab!(:post1) { create_post(user:, topic:) }
 
     let(:topic_list_controls) { PageObjects::Components::TopicListControls.new }
+
+    before { SiteSetting.enable_unified_new = true }
 
     context "with the bulk actions dropdown" do
       it "removes the topics from the list" do
@@ -414,6 +414,8 @@ describe "Topic bulk select" do
     end
 
     it "works with keyboard shortcuts" do
+      SiteSetting.enable_unified_new = true
+
       sign_in(admin)
       visit("/latest")
 
@@ -428,14 +430,14 @@ describe "Topic bulk select" do
       send_keys("x") # toggle deselect
       expect(topic_list).to have_no_checkbox_selected_on_row(1)
 
-      # watch topic and add a reply so we have something in /unread
+      # watch topic and add a reply so we have something in /new?subset=replies
       topic = topics.first
       visit("/t/#{topic.slug}/#{topic.id}")
       topic_page.watch_topic
       expect(topic_page).to have_read_post(1)
       Fabricate(:post, topic: topic)
 
-      visit("/unread")
+      visit("/new?subset=replies")
       expect(topic_list).to have_topics
 
       send_keys([:shift, "b"])
@@ -443,8 +445,6 @@ describe "Topic bulk select" do
       send_keys("j")
       send_keys("x")
       send_keys([:shift, "d"])
-
-      click_button("dismiss-read-confirm")
 
       expect(topic_list).to have_no_topics
     end

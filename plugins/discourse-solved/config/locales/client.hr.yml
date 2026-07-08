@@ -5,6 +5,21 @@
 # https://translate.discourse.org/
 
 hr:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            filter:
+              all_categories: "Sve kategorije"
+            answerers:
+              staff: "Osoblje"
+              member: "Članovi"
+              basic: "Osnovno"
+            response_time:
+              buckets:
+                lt_1h: "< 1 sat"
+                gt_24h: "> 24 sata"
   js:
     notifications:
       alt:
