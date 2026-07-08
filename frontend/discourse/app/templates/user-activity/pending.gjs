@@ -12,14 +12,16 @@ export default <template>
       class="user-stream"
     >
       <:belowPostItem as |pending|>
-        <div class="reviewable-actions">
-          <DButton
-            @label="review.delete"
-            @icon="trash-can"
-            @action={{fn @controller.deletePending pending}}
-            class="btn-danger"
-          />
-        </div>
+        {{#if @controller.canDeletePending}}
+          <div class="reviewable-actions">
+            <DButton
+              @label="review.delete"
+              @icon="trash-can"
+              @action={{fn @controller.deletePending pending}}
+              class="btn-danger"
+            />
+          </div>
+        {{/if}}
       </:belowPostItem>
     </PostList>
   </ul>

@@ -1,4 +1,4 @@
-import Controller from "@ember/controller";
+import Controller, { inject as controller } from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { ajax } from "discourse/lib/ajax";
@@ -8,6 +8,11 @@ import { i18n } from "discourse-i18n";
 
 export default class UserActivityPendingController extends Controller {
   @service dialog;
+  @controller user;
+
+  get canDeletePending() {
+    return this.user.viewingSelf;
+  }
 
   @action
   deletePending(pending) {
