@@ -997,8 +997,6 @@ zh_CN:
         choose: "帮我选一个"
         suggestions: "建议"
         suggest_errors:
-          too_many_tags:
-            other: "您最多只能有 %{count} 个标签"
           no_suggestions: "没有可用建议"
         missing_content: "请输入一些内容以生成建议。"
         context_menu:

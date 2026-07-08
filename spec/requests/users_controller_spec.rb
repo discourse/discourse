@@ -906,18 +906,26 @@ RSpec.describe UsersController do
         end
       end
 
-      context "when signup params include group assignments" do
+      context "when signup params include protected profile attributes" do
         fab!(:whisperers_group, :group)
 
         let(:created_user) { User.find(response.parsed_body["user_id"]) }
 
         before { SiteSetting.whispers_allowed_groups = whisperers_group.id.to_s }
 
-        it "ignores primary_group_id and flair_group_id on unauthenticated signup" do
-          post_user(primary_group_id: whisperers_group.id, flair_group_id: whisperers_group.id)
+        it "ignores protected profile attributes on unauthenticated signup" do
+          post_user(
+            title: "Moderator",
+            primary_group_id: whisperers_group.id,
+            flair_group_id: whisperers_group.id,
+          )
 
           expect(response).to have_http_status(:ok)
-          expect(created_user).to have_attributes(primary_group_id: nil, flair_group_id: nil)
+          expect(created_user).to have_attributes(
+            title: nil,
+            primary_group_id: nil,
+            flair_group_id: nil,
+          )
           expect(created_user).not_to be_a_whisperer
         end
       end
@@ -1636,6 +1644,19 @@ RSpec.describe UsersController do
         }
       end
       include_examples "failed signup"
+    end
+
+    context "when username is too long" do
+      let(:oversized_username) { "a" * 50_000 }
+
+      it "rejects signup without reflecting the username", :aggregate_failures do
+        expect { post_user(username: oversized_username) }.not_to change { User.count }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq(false)
+        expect(response.body.bytesize).to be < 1_000
+        expect(response.body).not_to include(oversized_username)
+      end
     end
 
     context "when password param is missing" do
@@ -5559,6 +5580,34 @@ RSpec.describe UsersController do
         expect(response.status).to eq(200)
         json = response.parsed_body
         expect(json["users"].map { |u| u["username"] }).to match_array(users.map(&:username))
+      end
+
+      it "excludes users hidden by the regular user search scope" do
+        SiteSetting.must_approve_users = true
+
+        visible_user = Fabricate(:user, username: "vis_user", approved: true)
+        suspended_user =
+          Fabricate(:user, username: "susp_user", approved: true, suspended_till: 1.year.from_now)
+        inactive_user = Fabricate(:user, username: "inact_user", active: false, approved: true)
+        unapproved_user = Fabricate(:user, username: "unapp_user", approved: false)
+        staged_user = Fabricate(:user, username: "stage_user", approved: true, staged: true)
+
+        get "/u/search/users.json",
+            params: {
+              usernames: [
+                visible_user,
+                suspended_user,
+                inactive_user,
+                unapproved_user,
+                staged_user,
+              ].map(&:username).join(","),
+            }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["users"].map { |user| user["username"] }).to contain_exactly(
+          visible_user.username,
+        )
       end
 
       it "searches groups if include_groups = true" do

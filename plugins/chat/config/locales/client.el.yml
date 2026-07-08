@@ -179,6 +179,10 @@ el:
         header: "Κεφαλίδα συνομιλίας"
         composer: "Συνθέτης συνομιλίας"
         channels_list: "Λίστα καναλιών συνομιλίας"
+      screen_reader:
+        new_messages:
+          one: "%{count} νέο μήνυμα"
+          other: "%{count} νέα μηνύματα"
       no_direct_message_channels: "Δεν έχετε μπει σε κανένα άμεσο μήνυμα ακόμη!"
       no_direct_message_channels_cta: "Ξεκινήστε μια συνομιλία"
       no_public_channels: "Δεν έχετε μπει σε κανένα κανάλι ακόμη!"

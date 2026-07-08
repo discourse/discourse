@@ -26,6 +26,11 @@ RSpec.describe ContentSecurityPolicy do
       SiteSetting.force_https = true
       expect(parse(policy)["upgrade-insecure-requests"]).to eq([])
     end
+
+    it "is omitted from a report-only policy since browsers ignore it there" do
+      SiteSetting.force_https = true
+      expect(parse(policy(report_only: true))["upgrade-insecure-requests"]).to eq(nil)
+    end
   end
 
   describe "strict-dynamic script-src and worker-src" do
@@ -65,6 +70,22 @@ RSpec.describe ContentSecurityPolicy do
   describe "manifest-src" do
     it "is set to self" do
       expect(parse(policy)["manifest-src"]).to eq(["'self'"])
+    end
+  end
+
+  describe "report-uri" do
+    it "is not included when content_security_policy_report_uri is blank" do
+      SiteSetting.content_security_policy_report_uri = ""
+
+      expect(parse(policy)["report-uri"]).to eq(nil)
+      expect(parse(policy)["script-src"]).to_not include("'report-sample'")
+    end
+
+    it "points to the configured endpoint and enables report-sample when set" do
+      SiteSetting.content_security_policy_report_uri = "https://csp.example.com/report"
+
+      expect(parse(policy)["report-uri"]).to eq(["https://csp.example.com/report"])
+      expect(parse(policy)["script-src"]).to include("'report-sample'")
     end
   end
 
@@ -145,7 +166,7 @@ RSpec.describe ContentSecurityPolicy do
       .to_h
   end
 
-  def policy(theme_id = nil, path_info: "/")
-    ContentSecurityPolicy.policy(theme_id, path_info: path_info)
+  def policy(theme_id = nil, path_info: "/", report_only: false)
+    ContentSecurityPolicy.policy(theme_id, path_info: path_info, report_only: report_only)
   end
 end

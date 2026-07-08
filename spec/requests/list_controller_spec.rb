@@ -8,7 +8,7 @@ RSpec.describe ListController do
 
   before do
     admin # to skip welcome wizard at home page `/`
-    SiteSetting.top_menu = "latest|new|unread|categories"
+    SiteSetting.top_menu = "latest|new|categories"
   end
 
   describe "#index" do
@@ -338,7 +338,7 @@ RSpec.describe ListController do
       before { topic.update!(category: subcategory) }
 
       it "returns categories and parent categories if true" do
-        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}"
 
         get "/latest.json"
 
@@ -476,6 +476,28 @@ RSpec.describe ListController do
       get "/u/#{user.username}/messages/tags/#{tag.name}"
 
       expect(response.status).to eq(200)
+    end
+
+    it "returns only visible tagged private messages" do
+      SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
+      SiteSetting.pm_tags_allowed_for_groups = group.name
+      group.add(user)
+      group.update!(has_messages: true)
+      direct_message = Fabricate(:private_message_topic, user: admin, recipient: user)
+      group_message = Fabricate(:group_private_message_topic, user: admin, recipient_group: group)
+      Fabricate(:topic_tag, tag: tag, topic: direct_message)
+      Fabricate(:topic_tag, tag: tag, topic: group_message)
+
+      sign_in(user)
+      get "/topics/private-messages-group/#{user.username}/#{group.name}.json"
+
+      expect(response.status).to eq(404)
+
+      get "/topics/private-messages-tags/#{user.username}/#{tag.name}.json"
+
+      expect(response.status).to eq(200)
+      topic_ids = response.parsed_body["topic_list"]["topics"].map { |topic| topic["id"] }
+      expect(topic_ids).to contain_exactly(direct_message.id)
     end
   end
 

@@ -1893,6 +1893,7 @@ bg:
       email_label: "Имейл"
       continue_button: "Напред"
       verify_button: "Напред"
+      signup_title: "Създайте своя акаунт"
       account_ready_continue: "Напред"
       username_label: "Потребителско име"
     login:

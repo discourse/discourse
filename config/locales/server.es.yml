@@ -260,7 +260,6 @@ es:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    diff_too_complex: "La diferencia es demasiado compleja para calcularla de forma segura. Intenta hacer ediciones más pequeñas."
     messages:
       invalid_locale: "%{invalid_locale} no es un idioma local válido"
       too_long_validation:
@@ -1794,8 +1793,6 @@ es:
     silence_new_user_sensitivity: "La probabilidad de que un usuario nuevo sea silenciado basándose en denuncias de spam"
     auto_close_topic_sensitivity: "La probabilidad de que un tema denunciado se cierre automáticamente"
     cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar para poder editar una publicación oculta debido a denuncias de la comunidad"
-    max_topics_in_first_day: "El número máximo de temas que un usuario puede crear durante las 24 horas posteriores a su primera publicación"
-    max_replies_in_first_day: "El número máximo de respuestas que un usuario puede crear durante las 24 horas posteriores a su primera publicación"
     tl2_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 2 (miembros) multiplicándolo por este número"
     tl3_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 3 (habitual) multiplicándolo por este número"
     tl4_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 4 (líder) multiplicándolo por este número"
@@ -2430,7 +2427,6 @@ es:
     gravatar_base_url: "Especifica la URL para acceder a la API del proveedor de Gravatar. Este ajuste es fundamental para convertir las direcciones de correo electrónico en URL de Gravatar, donde se almacenan las imágenes de avatar."
     share_quote_buttons: "Determinar los elementos que aparecen en el widget de compartir cita y su orden."
     share_quote_visibility: "Cuándo mostrar los botones de compartir citas: nunca, a los usuarios anónimos solo o a todos los usuarios. "
-    create_revision_on_bulk_topic_moves: "Crear edición para las primeras publicaciones cuando los temas se mueven a una nueva categoría en masa."
     allow_changing_staged_user_tracking: "Permitir que los usuarios con permisos de administración cambien las preferencias de notificación de categorías y etiquetas de los usuarios temporales."
     use_email_for_username_and_name_suggestions: "Usa la primera parte de las direcciones de correo electrónico para sugerencias de nombre de usuario y nombre. Advertencia: Esto puede facilitar que los delincuentes descubran la dirección de correo electrónico completa de tus miembros (porque muchas personas usan servicios de correo electrónico comunes como «gmail.com»)."
     use_name_for_username_suggestions: "Utiliza el nombre completo del usuario al sugerir nombres de usuario durante los flujos de registro SSO y OAuth."

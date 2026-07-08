@@ -625,9 +625,6 @@ it:
         description: "Scegli una delle opzioni seguenti e l'IA ti suggerirà una nuova versione del testo."
         selection_hint: "Suggerimento: puoi anche selezionare una parte del testo prima di aprire l'assistente per riscrivere solo quel pezzo."
         suggest_errors:
-          too_many_tags:
-            one: "Puoi avere solo fino a %{count} etichetta"
-            other: "Puoi avere solo fino a %{count} etichette"
           no_suggestions: "Nessun suggerimento disponibile"
         missing_content: "Inserisci alcuni contenuti per generare suggerimenti."
         context_menu:

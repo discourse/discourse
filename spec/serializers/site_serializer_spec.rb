@@ -227,12 +227,12 @@ RSpec.describe SiteSerializer do
     fab!(:category)
     fab!(:sidebar) { Fabricate(:category_sidebar_section_link, linkable: category, user: user) }
 
-    before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
+    before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:logged_in_users]}" }
 
-    it "does not include any categories for anonymous users" do
+    it "includes categories for anonymous users" do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
-      expect(serialized[:categories]).to eq(nil)
+      expect(serialized[:categories].map { |category| category[:id] }).to include(category.id)
     end
 
     it "includes preloaded categories for logged in users" do
@@ -640,7 +640,7 @@ RSpec.describe SiteSerializer do
           :groups
         ]
 
-      expect(serialized_groups.find { |g| g["name"] == "everyone" }["automatic"]).to eq(true)
+      expect(serialized_groups.find { |g| g["name"] == "trust_level_1" }["automatic"]).to eq(true)
       expect(serialized_groups.find { |g| g["name"] == group.name }["automatic"]).to eq(false)
     end
   end

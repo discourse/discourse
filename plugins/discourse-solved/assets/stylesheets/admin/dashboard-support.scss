@@ -1,0 +1,176 @@
+// Styles for the Support section of the redesigned admin dashboard. Layout
+// primitives (.db-section__*, .db-delta, .db-pill, .db-whos-posting__*) are
+// owned by core; only Support-specific rules live here.
+
+$db-bar-height: var(--space-2);
+
+.db-support__filter {
+  .select-kit.combo-box {
+    max-width: 220px;
+  }
+}
+
+.db-support-outcomes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  container-type: inline-size;
+  container-name: db-support-outcomes;
+
+  &__bars {
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(120px, 1fr) 2.5rem;
+    gap: var(--space-2);
+
+    @container db-support-outcomes (width < 22rem) {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+  }
+
+  &__row {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: center;
+
+    @container db-support-outcomes (width < 22rem) {
+      grid-template-columns: 1fr auto;
+      gap: 0 var(--space-2);
+    }
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    min-width: 0;
+    color: var(--primary);
+    cursor: help;
+
+    @container db-support-outcomes (width < 22rem) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  &__track {
+    height: $db-bar-height;
+    border-radius: var(--d-border-radius-fixed);
+    background: var(--primary-low);
+  }
+
+  &__fill {
+    display: block;
+    height: 100%;
+    border-radius: var(--d-border-radius-fixed);
+
+    &.--resolved {
+      background: var(--success);
+    }
+
+    &.--in-progress {
+      background: var(--tertiary-medium);
+    }
+
+    &.--unanswered {
+      background: var(--danger);
+    }
+  }
+
+  &__share {
+    color: var(--primary-medium);
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+    line-height: 1;
+  }
+}
+
+// Reuse the who's-posting bar layout, recolouring fills per answerer group.
+.db-support-answerers {
+  &.db-section__row-block {
+    // overrule since there is no block next to this one
+    border-right: 0;
+  }
+
+  .db-whos-posting__bar-fill {
+    background: var(--tertiary-medium);
+
+    &.--staff {
+      background: var(--primary-medium);
+    }
+  }
+}
+
+.db-support-response {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  container-type: inline-size;
+  container-name: db-support-response;
+
+  &__bars {
+    display: grid;
+    grid-template-columns: minmax(0, auto) minmax(120px, 1fr) 2.5rem;
+    gap: var(--space-2);
+
+    @container db-support-response (width < 22rem) {
+      grid-template-columns: 1fr;
+      gap: var(--space-3);
+    }
+  }
+
+  &__row {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-columns: subgrid;
+    align-items: center;
+
+    @container db-support-response (width < 22rem) {
+      grid-template-columns: 1fr auto;
+      gap: 0 var(--space-2);
+    }
+  }
+
+  &__label {
+    @include ellipsis;
+
+    @container db-support-response (width < 22rem) {
+      grid-column: 1 / -1;
+    }
+  }
+
+  &__track {
+    height: $db-bar-height;
+    border-radius: var(--d-border-radius-fixed);
+    background: var(--primary-low);
+  }
+
+  &__fill {
+    display: block;
+    height: 100%;
+    border-radius: var(--d-border-radius-fixed);
+
+    &.--bucket-lt_1h {
+      background: var(--success);
+    }
+
+    &.--bucket-1_4h {
+      background: var(--success-medium, var(--success));
+    }
+
+    &.--bucket-4_24h {
+      background: var(--primary-medium);
+    }
+
+    &.--bucket-gt_24h {
+      background: var(--danger);
+    }
+  }
+
+  &__share {
+    color: var(--primary-medium);
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+    line-height: 1;
+  }
+}

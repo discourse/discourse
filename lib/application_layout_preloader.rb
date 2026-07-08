@@ -139,7 +139,9 @@ class ApplicationLayoutPreloader
     Theme
       .where(id: ids)
       .each_with_object({}) do |theme, hash|
-        hash[theme.id] = { name: theme.name, settings: theme.cached_settings }
+        settings = theme.cached_settings
+        settings = theme.resolve_group_settings_for_user(settings, @guardian)
+        hash[theme.id] = { name: theme.name, settings: settings.except("theme_setting_type_info") }
       end
       .to_json
   end

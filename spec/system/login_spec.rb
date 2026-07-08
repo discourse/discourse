@@ -179,7 +179,7 @@ shared_examples "login scenarios" do
     end
 
     it "does not leak category metadata if homepage is /categories" do
-      SiteSetting.top_menu = "categories|latest|new|unread|top"
+      SiteSetting.top_menu = "categories|latest|new|top"
       visit "/"
 
       expect(page).to have_css(".login-welcome")

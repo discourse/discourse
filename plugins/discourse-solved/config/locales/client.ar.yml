@@ -15,6 +15,19 @@ ar:
           kpi:
             accepted_solutions:
               label: "الحلول المقبولة"
+        sections:
+          support:
+            title: "الدعم"
+            filter:
+              all_categories: "كل الفئات"
+            answerers:
+              staff: "فريق العمل"
+              member: "الأعضاء"
+              basic: "أولي"
+            response_time:
+              buckets:
+                lt_1h: "< ساعة واحدة"
+                gt_24h: "> 24 ساعة"
   js:
     notifications:
       alt:

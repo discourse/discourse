@@ -87,6 +87,10 @@ export default class AdminReports extends Component {
     return reports.filter((report) => !hiddenReports.includes(report.type));
   }
 
+  get requestedGroupKey() {
+    return this.args.group || "all";
+  }
+
   @bind
   groupReports(reports) {
     if (!reports) {
@@ -152,14 +156,49 @@ export default class AdminReports extends Component {
     return groupedReports;
   }
 
+  @bind
+  groupDropdownOptions(reports) {
+    const groups = this.groupReports(this.filterReports(reports));
+
+    return [
+      {
+        value: "all",
+        label: i18n("admin.reports.all_groups"),
+        filterFn: () => true,
+      },
+      ...groups.map((group) => ({
+        value: group.key,
+        label: group.name,
+        filterFn: (report) => group.reports.includes(report),
+      })),
+    ];
+  }
+
+  @bind
+  selectedGroupKey(reports) {
+    const options = this.groupDropdownOptions(reports);
+
+    return options.some((option) => option.value === this.requestedGroupKey)
+      ? this.requestedGroupKey
+      : "all";
+  }
+
+  @bind
+  updateGroupFilter(groupKey) {
+    this.args.onGroupChange?.(groupKey);
+  }
+
   <template>
     <DAsyncContent @asyncData={{this.loadReports}}>
       <:content as |reports|>
         <AdminFilterControls
           @array={{this.filterReports reports}}
           @searchableProps={{array "title" "description"}}
+          @dropdownOptions={{this.groupDropdownOptions reports}}
+          @dropdownValue={{this.selectedGroupKey reports}}
           @inputPlaceholder={{i18n "admin.filter_reports"}}
           @noResultsMessage={{i18n "admin.filter_reports_no_results"}}
+          @onDropdownChange={{this.updateGroupFilter}}
         >
           <:content as |filteredReports|>
             {{#each (this.groupReports filteredReports) as |group|}}

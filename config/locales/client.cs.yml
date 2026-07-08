@@ -2826,6 +2826,7 @@ cs:
       email_label: "Email"
       continue_button: "Pokračovat"
       verify_button: "Pokračovat"
+      signup_title: "Vytvořte si účet"
       account_ready_continue: "Pokračovat"
       username_label: "Uživatelské jméno"
     login:
@@ -5569,8 +5570,6 @@ cs:
       no_read_topics_body: "Jakmile začnete číst diskuse, uvidíte zde seznam. Pro začátek čtení, hledejte témata, která vás zajímají v <a href='%{topUrl}'>Top</a> nebo <a href='%{categoriesUrl}'>Kategorie</a> nebo hledejte podle klíčového slova %{searchIcon}"
     no_group_messages_title: "Nenalezeny žádné skupinové zprávy"
     topic_entrance:
-      sr_jump_top_button: "Přejít na první příspěvek – %{date}"
-      sr_jump_bottom_button: "Přejít na poslední příspěvek – %{date}"
       jump_top_button_title: "Přejít na první příspěvek"
       jump_bottom_button_title: "Přeskočit na poslední příspěvek"
     fullscreen_table:

@@ -2864,6 +2864,7 @@ he:
       email_label: "דוא״ל"
       continue_button: "המשך"
       verify_button: "המשך"
+      signup_title: "יצירת חשבון משלך"
       account_ready_continue: "המשך"
       username_label: "שם משתמש"
     login:
@@ -5686,8 +5687,6 @@ he:
       no_read_topics_body: "עם תחילת קריאת הדיונים, תופיע כאן רשימה. כדי להתחיל לקרוא, כדאי לחפש נושאים שמעניינים אותך תחת <a href='%{topUrl}'>עליונים</a> או <a href='%{categoriesUrl}'>קטגוריות</a> או לחפש אחר מילת מפתח %{searchIcon}"
     no_group_messages_title: "לא נמצאו הודעות קבוצתיות"
     topic_entrance:
-      sr_jump_top_button: "דילוג לפוסט הראשון - %{date}"
-      sr_jump_bottom_button: "דילוג לפוסט האחרון - %{date}"
       jump_top_button_title: "קפיצה לפוסט הראשון"
       jump_bottom_button_title: "קפיצה לפוסט האחרון"
     fullscreen_table:

@@ -5,6 +5,16 @@
 # https://translate.discourse.org/
 
 th:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            filter:
+              all_categories: "หมวดหมู่ทั้งหมด"
+            answerers:
+              staff: "ทีมงาน"
+              member: "สมาชิก"
   js:
     notifications:
       alt:

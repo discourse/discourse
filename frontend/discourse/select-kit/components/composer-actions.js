@@ -34,6 +34,10 @@ export function registerComposerAction(opts) {
   _registeredActions.push(opts);
 }
 
+export function registeredComposerActions() {
+  return _registeredActions;
+}
+
 export function _clearRegisteredActions() {
   _registeredActions = [];
   _warnedConditionIds = new Set();

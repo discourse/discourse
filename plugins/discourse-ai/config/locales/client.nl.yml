@@ -985,9 +985,6 @@ nl:
         description: "Kies een van de onderstaande opties, dan zal de AI je een nieuwe versie van de tekst voorstellen."
         selection_hint: "Tip: je kunt ook een deel van de tekst selecteren voordat je de hulp opent om alleen dat deel te herschrijven."
         suggest_errors:
-          too_many_tags:
-            one: "Je kunt maximaal %{count} tag hebben"
-            other: "Je kunt maximaal %{count} tags hebben"
           no_suggestions: "Geen suggesties beschikbaar"
         missing_content: "Voer wat inhoud in om suggesties te genereren."
         context_menu:

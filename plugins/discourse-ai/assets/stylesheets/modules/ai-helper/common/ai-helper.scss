@@ -251,13 +251,6 @@
   }
 }
 
-.edit-title__wrapper {
-  &:has(.ai-title-suggester-trigger) {
-    display: flex;
-    gap: var(--space-1);
-  }
-}
-
 .edit-title__wrapper,
 .edit-category__wrapper,
 .edit-tags__wrapper {

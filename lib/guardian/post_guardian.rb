@@ -342,20 +342,19 @@ module PostGuardian
   end
 
   def can_see_all_hidden_posts?(category = nil)
-    hidden_post_visible_groups = SiteSetting.hidden_post_visible_groups_map
+    # TODO (martin) Remove this when granular_anonymous_and_logged_in_groups_permissions is
+    # permanent, as the check is covered inside guardian.in_any_groups? for anon
+    return false if anonymous? && !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
 
-    return true if hidden_post_visible_groups.include?(Group::AUTO_GROUPS[:everyone])
-    return false if anonymous?
-    return true if is_staff?
-    return true if is_category_group_moderator?(category)
-
-    @user.in_any_groups?(hidden_post_visible_groups)
+    in_any_groups?(SiteSetting.hidden_post_visible_groups_map) ||
+      is_category_group_moderator?(category)
   end
 
   def can_see_hidden_post?(post)
     return true if can_see_all_hidden_posts?
-    return false if anonymous?
-
+    # TODO (martin) Remove this when granular_anonymous_and_logged_in_groups_permissions is
+    # permanent, as the check is covered inside guardian.in_any_groups? for anon
+    return false if anonymous? && !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
     is_my_own?(post)
   end
 

@@ -16,6 +16,19 @@ zh_CN:
             accepted_solutions:
               label: "已被接受的解决方案"
               tooltip: "被标记为解决方案的帖子所构成的主题数量。"
+        sections:
+          support:
+            title: "支持"
+            filter:
+              all_categories: "所有类别"
+            answerers:
+              staff: "管理人员"
+              member: "成员"
+              basic: "基本用户"
+            response_time:
+              buckets:
+                lt_1h: "< 1 小时"
+                gt_24h: "> 24 小时"
   js:
     notifications:
       alt:

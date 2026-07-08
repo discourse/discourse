@@ -630,11 +630,6 @@ sk:
         description: "Vyberte jednu z nasledujúcich možností a AI vám navrhne novú verziu textu."
         selection_hint: "Tip: Pred otvorením pomocníka môžete tiež vybrať časť textu a prepísať iba túto časť."
         suggest_errors:
-          too_many_tags:
-            one: "Môžete mať iba %{count} štítok"
-            few: "Môžete mať maximálne %{count} štítkov"
-            many: "Môžete mať maximálne %{count} štítkov"
-            other: "Môžete mať maximálne %{count} štítky"
           no_suggestions: "Nie sú k dispozícii žiadne návrhy"
         missing_content: "Zadajte nejaký obsah na generovanie návrhov."
         context_menu:

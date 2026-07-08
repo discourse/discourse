@@ -2326,6 +2326,7 @@ fa_IR:
       email_label: "ایمیل"
       continue_button: "ادامه"
       verify_button: "ادامه"
+      signup_title: "ثبت نام"
       account_ready_continue: "ادامه"
       username_label: "نام‌کاربری"
     login:
@@ -4526,8 +4527,6 @@ fa_IR:
       no_read_topics_body: "پس از شروع به خواندن بحث‌ها، لیستی را در اینجا خواهید دید. برای شروع خواندن، به دنبال موضوعاتی بگردید که در <a href='%{topUrl}'>برترین‌ها</a> یا <a href='%{categoriesUrl}'>دسته‌بندی‌ها</a> برای شما جذابند، یا بر اساس کلمه کلیدی جستجو کنید %{searchIcon}"
     no_group_messages_title: "هیچ پیام گروهی یافت نشد"
     topic_entrance:
-      sr_jump_top_button: "پرش به اولین فرسته - %{date}"
-      sr_jump_bottom_button: "پرش به آخرین فرسته - %{date}"
       jump_top_button_title: "پرش به اولین فرسته"
       jump_bottom_button_title: "پرش به آخرین فرسته"
     fullscreen_table:

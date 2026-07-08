@@ -78,11 +78,7 @@ class Admin::GroupsController < Admin::StaffController
 
   def automatic_membership_count
     guardian.ensure_can_create_group!
-    invalid_domains = []
-    domains =
-      Group.get_valid_email_domains(params.require(:automatic_membership_email_domains)) do |domain|
-        invalid_domains << domain
-      end
+    domains = Group.get_valid_email_domains(params.require(:automatic_membership_email_domains))
     group_id = params[:id]
     user_count = 0
 
@@ -104,7 +100,7 @@ class Admin::GroupsController < Admin::StaffController
       end
     end
 
-    render json: { user_count:, invalid_domains: invalid_domains.uniq }
+    render json: { user_count: }
   end
 
   protected

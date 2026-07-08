@@ -15,6 +15,19 @@ uk:
           kpi:
             accepted_solutions:
               label: "Прийняті рішення"
+        sections:
+          support:
+            title: "Підтримка"
+            filter:
+              all_categories: "Всі розділи"
+            answerers:
+              staff: "Команда обслуговування"
+              member: "Учасники"
+              basic: "Базовий"
+            response_time:
+              buckets:
+                lt_1h: "< 1 година"
+                gt_24h: "> 24 години"
   js:
     notifications:
       alt:

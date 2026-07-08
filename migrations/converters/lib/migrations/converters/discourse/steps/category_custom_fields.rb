@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class CategoryCustomFields < Conversion::ProgressStep
+      class CategoryCustomFields < Conversion::Step
         source { reads_table "category_custom_fields" }
 
         processor do

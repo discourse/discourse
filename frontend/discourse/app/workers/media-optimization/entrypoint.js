@@ -1,42 +1,10 @@
 // Built by rolldown as a standalone chunk and started as a module worker via a
 // blob bootstrap (see the media-optimization-worker service), so it inherits the
 // host document CSP. The codecs are bundled straight into this chunk.
-import { convert, convertAnimated, optimize } from "./codecs.js";
+import { convert, convertAnimated } from "./codecs.js";
 
 self.onmessage = async function (e) {
   switch (e.data.type) {
-    case "compress":
-      try {
-        globalThis.debugMode = e.data.settings.debug_mode;
-
-        let optimized = await optimize(
-          e.data.file,
-          e.data.fileName,
-          e.data.width,
-          e.data.height,
-          e.data.originalFileSize,
-          e.data.settings
-        );
-        postMessage(
-          {
-            type: "file",
-            file: optimized,
-            fileName: e.data.fileName,
-            fileId: e.data.fileId,
-          },
-          [optimized]
-        );
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(error);
-        postMessage({
-          type: "error",
-          file: e.data.file,
-          fileName: e.data.fileName,
-          fileId: e.data.fileId,
-        });
-      }
-      break;
     case "convert":
       try {
         globalThis.debugMode = e.data.settings.debug_mode;
@@ -48,16 +16,24 @@ self.onmessage = async function (e) {
           e.data.originalFileSize,
           e.data.settings
         );
-        postMessage(
-          {
-            type: "file",
-            file: converted.data,
+        if (converted) {
+          postMessage(
+            {
+              type: "file",
+              file: converted.data,
+              fileName: e.data.fileName,
+              fileId: e.data.fileId,
+              outputType: converted.outputType,
+            },
+            [converted.data]
+          );
+        } else {
+          postMessage({
+            type: "skipped",
             fileName: e.data.fileName,
             fileId: e.data.fileId,
-            outputType: converted.outputType,
-          },
-          [converted.data]
-        );
+          });
+        }
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error);

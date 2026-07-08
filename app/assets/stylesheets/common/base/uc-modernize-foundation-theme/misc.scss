@@ -2,4 +2,9 @@
   .discourse-reactions-counter .reactions-counter {
     align-items: center;
   }
+
+  .d-combo-button.--has-menu .topic-dismiss-buttons__menu {
+    margin-left: -1px;
+    border-left-color: var(--primary-300);
+  }
 }

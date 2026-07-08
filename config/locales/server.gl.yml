@@ -1323,8 +1323,6 @@ gl:
     silence_new_user_sensitivity: "A probabilidade de que un usuario novo sexa silenciado por denuncias de mensaxes lixo"
     auto_close_topic_sensitivity: "A probabilidade de que un tema denunciado sexa pechado automaticamente"
     cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar para poder editar unha publicación oculta por mor das denuncias da comunidade"
-    max_topics_in_first_day: "Número máximo de temas que un usuario ten permiso para crear nas 24 horas seguintes á creación da súa primeira publicación"
-    max_replies_in_first_day: "Número máximo de respostas que un usuario ten permiso para crear nas 24 horas seguintes á creación da súa primeira publicación"
     tl2_additional_likes_per_day_multiplier: "Incrementar o número de gústame por día para usuarios con nivel de confianza 2 (membros) multiplicándoo por este número"
     tl3_additional_likes_per_day_multiplier: "Incrementar o límite de gústame por día para usuarios con nivel de confianza 3 (habituais) multiplicándoo por este número"
     tl4_additional_likes_per_day_multiplier: "Incrementar o número de gústame por día para usuarios con nivel de confianza 4 (líderes) multiplicándoo por este número"
@@ -1723,7 +1721,6 @@ gl:
     dashboard_general_tab_activity_metrics: "Escolla os informes que se amosarán como métricas de actividade na lapela xeral."
     share_quote_buttons: "Determinar que elementos aparecen no trebello de compartir cota e a súa orde."
     share_quote_visibility: "Determine cando amosar os botóns de compartir cota: nunca, só para usuarios anónimos ou para todos os usuarios. "
-    create_revision_on_bulk_topic_moves: "Crear revisión para as primeiras publicacións cando os temas se moven a unha nova categoría en masa."
     errors:
       invalid_email: "Enderezo electrónico non válido."
       invalid_username: "Non hai un usuario con este nome."

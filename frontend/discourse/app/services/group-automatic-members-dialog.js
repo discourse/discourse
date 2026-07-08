@@ -27,19 +27,6 @@ export default class GroupAutomaticMembersDialog extends Service {
         }
       );
 
-      if (result.invalid_domains?.length) {
-        this.dialog.alert(
-          i18n(
-            "admin.groups.manage.membership.automatic_membership_email_domains_invalid",
-            {
-              count: result.invalid_domains.length,
-              domains: result.invalid_domains.join(", "),
-            }
-          )
-        );
-        return false;
-      }
-
       const count = result.user_count;
 
       if (count === null) {

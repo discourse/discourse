@@ -11,15 +11,13 @@ module DiscourseWorkflows
 
       trigger_data = nil
 
-      DiscourseWorkflows::Workflow::Action::FindPublishedTriggers
-        .call(
-          trigger_type: trigger_class.identifier,
-          filter: ->(published_trigger) do
-            trigger.matches?(
-              DiscourseWorkflows::TriggerNodeContext.from_published_trigger(published_trigger),
-            )
-          end,
-        )
+      WorkflowDependency
+        .cached_published_triggers(trigger_class.identifier)
+        .select do |published_trigger|
+          trigger.matches?(
+            DiscourseWorkflows::TriggerNodeContext.from_published_trigger(published_trigger),
+          )
+        end
         .each do |published_trigger|
           DiscourseWorkflows::TriggerDispatcher.enqueue(
             published_trigger,

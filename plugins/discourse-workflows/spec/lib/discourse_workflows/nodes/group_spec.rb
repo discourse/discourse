@@ -264,16 +264,16 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
         )
       end
 
-      it "handles the everyone pseudogroup without group_users rows", :aggregate_failures do
-        everyone = Group.refresh_automatic_group!(:everyone)
-        GroupUser.where(group: everyone, user: member).delete_all
+      it "handles the logged_in_users pseudogroup without group_users rows", :aggregate_failures do
+        logged_in_users = Group.refresh_automatic_group!(:logged_in_users)
+        GroupUser.where(group: logged_in_users, user: member).delete_all
 
         output =
           execute_node_output(
             configuration: {
               "operation" => "check_membership",
               "username" => member.username,
-              "group_id" => everyone.id,
+              "group_id" => logged_in_users.id,
               "actor_username" => "system",
             },
           )
@@ -281,13 +281,13 @@ RSpec.describe DiscourseWorkflows::Nodes::Group::V1 do
         membership_data = output.first.first.dig("json", "group_membership")
 
         expect(membership_data).to include(
-          "group_id" => everyone.id,
-          "group_name" => everyone.name,
+          "group_id" => logged_in_users.id,
+          "group_name" => logged_in_users.name,
           "user_id" => member.id,
           "username" => member.username,
           "in_group" => true,
         )
-        expect(GroupUser.exists?(group: everyone, user: member)).to be(false)
+        expect(GroupUser.exists?(group: logged_in_users, user: member)).to be(false)
       end
 
       it "raises when the user cannot be found" do

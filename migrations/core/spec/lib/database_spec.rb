@@ -26,15 +26,27 @@ RSpec.describe Migrations::Database do
         expect(migrator_instance).to have_received(:migrate).with(migrations_path)
       end
     end
+  end
 
-    describe ".reset!" do
-      it "resets the database" do
-        allow(migrator_instance).to receive(:reset!)
+  describe ".database_files" do
+    it "lists the database file and its WAL/SHM sidecars" do
+      expect(described_class.database_files("path/to/db")).to eq(
+        %w[path/to/db path/to/db-wal path/to/db-shm],
+      )
+    end
+  end
 
-        described_class.reset!(db_path)
+  describe ".delete_database" do
+    it "removes the database and its sidecars, leaves other files, ignores missing ones" do
+      Dir.mktmpdir do |storage_path|
+        db_path = File.join(storage_path, "test.db")
+        FileUtils.touch(db_path)
+        FileUtils.touch("#{db_path}-wal")
+        # no -shm file: deletion must not raise on the missing one
+        FileUtils.touch(File.join(storage_path, "keep.txt"))
 
-        expect(Migrations::Database::Migrator).to have_received(:new).with(db_path)
-        expect(migrator_instance).to have_received(:reset!)
+        expect { described_class.delete_database(db_path) }.not_to raise_error
+        expect(Dir.children(storage_path)).to contain_exactly("keep.txt")
       end
     end
   end
@@ -161,7 +173,7 @@ RSpec.describe Migrations::Database do
           number: 123,
           date: DateTime.new(2023, 10, 5, 17, 30, 0),
         ),
-      ).to eq(%q|{"text":"foo","number":123,"date":"2023-10-05T17:30:00.000+00:00"}|)
+      ).to eq(%q|{"text":"foo","number":123,"date":"2023-10-05T17:30:00+00:00"}|)
     end
 
     it "returns nil for nil input" do

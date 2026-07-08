@@ -260,7 +260,6 @@ nl:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    diff_too_complex: "De diff is te complex om veilig te berekenen. Probeer kleinere bewerkingen."
     messages:
       invalid_locale: "%{invalid_locale} is geen geldige taal"
       too_long_validation:
@@ -1800,8 +1799,6 @@ nl:
     silence_new_user_sensitivity: "De waarschijnlijkheid dat een nieuwe gebruiker wordt gedempt op basis van spammarkeringen"
     auto_close_topic_sensitivity: "De waarschijnlijkheid dat een gemarkeerd topic automatisch wordt gesloten"
     cooldown_minutes_after_hiding_posts: "Het aantal minuten dat een gebruiker moet wachten voordat deze een door communitymarkering verborgen bericht kan bewerken"
-    max_topics_in_first_day: "Het maximale aantal topics dat een gebruiker in de 24 uursperiode na het schrijven van een eerste bericht mag maken"
-    max_replies_in_first_day: "Het maximale aantal antwoorden dat een gebruiker in de 24 uursperiode na het schrijven van een eerste bericht mag maken"
     tl2_additional_likes_per_day_multiplier: "Limiet van likes per dag voor TL2 (lid) verhogen door met dit getal te vermenigvuldigen"
     tl3_additional_likes_per_day_multiplier: "Limiet van likes per dag voor TL3 (vaste gebruiker) verhogen door met dit getal te vermenigvuldigen"
     tl4_additional_likes_per_day_multiplier: "Limiet van likes per dag voor TL4 (leider) verhogen door met dit getal te vermenigvuldigen"
@@ -2440,7 +2437,6 @@ nl:
     gravatar_base_url: "Geef de URL op voor toegang tot de API van de Gravatar-provider. Deze instelling is cruciaal voor het omzetten van e-mailadressen in Gravatar-URL's waar avatarafbeeldingen worden opgeslagen."
     share_quote_buttons: "Bepaal welke items worden weergegeven in de widget voor het delen van citaten en in welke volgorde."
     share_quote_visibility: "Bepaal wanneer de knoppen voor het delen van citaten moeten worden weergegeven: nooit, alleen voor anonieme gebruikers of voor alle gebruikers. "
-    create_revision_on_bulk_topic_moves: "Maak een revisie voor eerste berichten wanneer topics in bulk naar een nieuwe categorie worden verplaatst."
     allow_changing_staged_user_tracking: "Sta toe dat de meldingsvoorkeuren voor categorieën en tags van een gefaseerde gebruiker worden gewijzigd door een beheerder."
     use_email_for_username_and_name_suggestions: "Gebruik het eerste deel van e-mailadressen als suggestie voor namen en gebruikersnamen. Waarschuwing: dit kan het makkelijker maken voor kwaadwillenden om het e-mailadres van je leden te achterhalen (omdat veel mensen gebruik maken van veelgebruikte aanbieders als 'gmail.com')."
     use_name_for_username_suggestions: "Gebruik de volledige naam van een gebruiker bij het voorstellen van gebruikersnamen tijdens SSO- en OAuth-registratieflows."

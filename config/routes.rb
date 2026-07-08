@@ -1350,6 +1350,7 @@ Discourse::Application.routes.draw do
     get "/c", to: redirect(relative_url_root + "categories")
 
     resources :categories, only: %i[index create update destroy]
+    post "categories/:id/convert_nested_replies" => "categories#convert_nested_replies"
     post "categories/reorder" => "categories#reorder"
     get "categories/types" => "categories#types"
     get "categories/find" => "categories#find"
