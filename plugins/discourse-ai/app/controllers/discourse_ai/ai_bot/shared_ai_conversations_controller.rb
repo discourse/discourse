@@ -39,7 +39,9 @@ module DiscourseAi
 
       def show
         @shared_conversation = SharedAiConversation.find_by(share_key: params[:share_key])
-        raise Discourse::NotFound if @shared_conversation.blank?
+        if @shared_conversation.blank? || !@shared_conversation.publicly_visible?
+          raise Discourse::NotFound
+        end
 
         expires_in 1.minute, public: true
         response.headers["X-Robots-Tag"] = "noindex"
