@@ -30,6 +30,8 @@ export default class HumanActivityTracker extends Service {
 
   now = () => performance.now();
 
+  trustedEvent = (event) => event.isTrusted;
+
   transport = (body) => {
     navigator.sendBeacon?.(
       getURL(ENGAGEMENT_PATH),
@@ -135,11 +137,19 @@ export default class HumanActivityTracker extends Service {
   }
 
   #handleActivity(event) {
+    if (!this.trustedEvent(event)) {
+      return;
+    }
+
     this.#counts[EVENT_COUNTERS[event.type]]++;
     this.#markInteraction();
   }
 
   #handleMouseMove(event) {
+    if (!this.trustedEvent(event)) {
+      return;
+    }
+
     const position = { x: event.clientX, y: event.clientY };
 
     if (this.#lastPosition) {

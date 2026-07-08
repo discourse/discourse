@@ -47,6 +47,7 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
 
     this.tracker = this.owner.lookup("service:human-activity-tracker");
     this.tracker.now = () => this.clock.ms;
+    this.tracker.trustedEvent = () => true;
     this.tracker.transport = (body) => this.sent.push(body);
     this.tracker.scheduleFlush = (callback) => {
       this.flushTick = callback;
@@ -62,6 +63,24 @@ module("Unit | Service | human-activity-tracker", function (hooks) {
   });
 
   test("sends nothing when there was no interaction", function (assert) {
+    pagehide();
+
+    assert.strictEqual(this.sent.length, 0);
+  });
+
+  test("ignores untrusted synthetic events", async function (assert) {
+    this.tracker.trustedEvent = (event) => event.isTrusted;
+
+    await triggerEvent(document.body, "keydown");
+    await triggerEvent(document.body, "mousedown");
+    await triggerEvent(document.body, "mousemove", {
+      clientX: 10,
+      clientY: 10,
+    });
+    await triggerEvent(document.body, "mousemove", {
+      clientX: 20,
+      clientY: 20,
+    });
     pagehide();
 
     assert.strictEqual(this.sent.length, 0);
