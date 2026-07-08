@@ -703,6 +703,7 @@ nb_NO:
       labels:
         count: "Medlemmer"
         share: "Del"
+        signups: "Påmeldinger"
       levels:
         "0": "Ny"
         "1": "Basic"

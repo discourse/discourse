@@ -1,6 +1,6 @@
 import EmberObject from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
-import { click, render } from "@ember/test-helpers";
+import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
@@ -360,6 +360,317 @@ module("Component | Poll", function (hooks) {
       .hasText(i18n("poll.results.groups.title", { groups: "foo" }));
     assert.strictEqual(requests, 0);
     assert.dom(".chosen").doesNotExist();
+  });
+
+  test("keeps the voting view after the poll component is re-rendered", async function (assert) {
+    this.setProperties({
+      post: EmberObject.create({
+        id: 42,
+        topic: {
+          archived: false,
+        },
+        user_id: 29,
+        polls_votes: {
+          poll: ["1f972d1df351de3ce35a787c89faad29"],
+        },
+      }),
+      poll: trackedObject({
+        name: "poll",
+        type: "multiple",
+        status: "open",
+        results: "always",
+        min: 1,
+        max: 2,
+        options: [
+          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
+          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+        ],
+        voters: 1,
+        chart_type: "bar",
+      }),
+    });
+
+    await render(
+      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+    );
+
+    assert.dom("ul.results").exists("results are shown for the saved vote");
+    assert.dom(".poll-buttons .cast-votes").doesNotExist();
+
+    await click(".poll-buttons .toggle-results");
+
+    assert
+      .dom("ul.options")
+      .exists("clicking the button shows the voting view");
+    assert.dom(".poll-buttons .cast-votes").exists();
+
+    await render(
+      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+    );
+
+    assert
+      .dom("ul.options")
+      .exists("the voting view survives the component being re-rendered");
+    assert.dom("ul.results").doesNotExist();
+    assert.dom(".poll-buttons .cast-votes").exists();
+  });
+
+  test("keeps an uncommitted selection after the poll component is re-rendered", async function (assert) {
+    this.setProperties({
+      post: EmberObject.create({
+        id: 42,
+        topic: {
+          archived: false,
+        },
+        user_id: 29,
+      }),
+      poll: trackedObject({
+        name: "poll",
+        type: "multiple",
+        status: "open",
+        results: "always",
+        min: 1,
+        max: 2,
+        options: [
+          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
+          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+        ],
+        voters: 0,
+        chart_type: "bar",
+      }),
+    });
+
+    await render(
+      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+    );
+
+    await click(
+      "li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29'] button"
+    );
+    assert
+      .dom(
+        "li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29'] .d-icon-far-square-check"
+      )
+      .exists("the option is selected but not yet cast");
+
+    await render(
+      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+    );
+
+    assert
+      .dom(
+        "li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29'] .d-icon-far-square-check"
+      )
+      .exists("the uncommitted selection survives the re-render");
+    assert.dom(".poll-buttons .cast-votes").exists();
+  });
+
+  test("ignores a stale hidden-results toggle on a closed poll", async function (assert) {
+    this.setProperties({
+      post: EmberObject.create({
+        id: 42,
+        topic: {
+          archived: false,
+        },
+        user_id: 29,
+        polls_votes: {
+          poll: ["1f972d1df351de3ce35a787c89faad29"],
+        },
+      }),
+      poll: trackedObject({
+        name: "poll",
+        type: "multiple",
+        status: "closed",
+        results: "always",
+        min: 1,
+        max: 2,
+        showResultsToggle: false,
+        options: [
+          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
+          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+        ],
+        voters: 1,
+        chart_type: "bar",
+      }),
+    });
+
+    await render(
+      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+    );
+
+    assert
+      .dom("ul.results")
+      .exists("a closed poll shows results despite a stale hidden toggle");
+    assert.dom("ul.options").doesNotExist();
+  });
+
+  test("does not mutate the saved vote when toggling an uncast option", async function (assert) {
+    this.setProperties({
+      post: EmberObject.create({
+        id: 42,
+        topic: {
+          archived: false,
+        },
+        user_id: 29,
+        polls_votes: {
+          poll: ["1f972d1df351de3ce35a787c89faad29"],
+        },
+      }),
+      poll: trackedObject({
+        name: "poll",
+        type: "multiple",
+        status: "open",
+        results: "always",
+        min: 1,
+        max: 2,
+        showResultsToggle: false,
+        options: [
+          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 1 },
+          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+        ],
+        voters: 1,
+        chart_type: "bar",
+      }),
+    });
+
+    await render(
+      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+    );
+
+    await click(
+      "li[data-poll-option-id='d7ebc3a9beea2e680815a1e4f57d6db6'] button"
+    );
+
+    assert.deepEqual(
+      this.post.polls_votes.poll,
+      ["1f972d1df351de3ce35a787c89faad29"],
+      "toggling an uncast option leaves the saved vote array untouched"
+    );
+  });
+
+  test("keeps a ranked-choice selection after the poll component is re-rendered", async function (assert) {
+    this.setProperties({
+      post: EmberObject.create({
+        id: 42,
+        topic: {
+          archived: false,
+        },
+        user_id: 29,
+      }),
+      poll: trackedObject({
+        name: "poll",
+        type: "ranked_choice",
+        status: "open",
+        results: "always",
+        options: [
+          {
+            id: "1f972d1df351de3ce35a787c89faad29",
+            html: "this",
+            votes: 0,
+            rank: 0,
+          },
+          {
+            id: "d7ebc3a9beea2e680815a1e4f57d6db6",
+            html: "that",
+            votes: 0,
+            rank: 0,
+          },
+          {
+            id: "6c986ebcde3d5822a6e91a695c388094",
+            html: "other",
+            votes: 0,
+            rank: 0,
+          },
+        ],
+        voters: 0,
+        chart_type: "bar",
+      }),
+    });
+
+    await render(
+      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+    );
+
+    await click(
+      ".ranked-choice-poll-option[data-poll-option-id='1f972d1df351de3ce35a787c89faad29'] button"
+    );
+    await click(".dropdown-menu__item:nth-child(2) button");
+
+    assert
+      .dom(
+        ".ranked-choice-poll-option[data-poll-option-id='1f972d1df351de3ce35a787c89faad29'][data-poll-option-rank='1']"
+      )
+      .exists("the option is ranked first before re-render");
+
+    await render(
+      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+    );
+
+    assert
+      .dom(
+        ".ranked-choice-poll-option[data-poll-option-id='1f972d1df351de3ce35a787c89faad29'][data-poll-option-rank='1']"
+      )
+      .exists("the ranked-choice selection survives the re-render");
+  });
+
+  test("keeps an uncommitted selection across a server poll refresh and re-render", async function (assert) {
+    this.setProperties({
+      post: EmberObject.create({
+        id: 42,
+        topic: {
+          archived: false,
+        },
+        user_id: 29,
+      }),
+      poll: trackedObject({
+        name: "poll",
+        type: "multiple",
+        status: "open",
+        results: "always",
+        min: 1,
+        max: 2,
+        options: [
+          { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 0 },
+          { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 0 },
+        ],
+        voters: 0,
+        chart_type: "bar",
+      }),
+    });
+
+    await render(
+      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+    );
+
+    await click(
+      "li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29'] button"
+    );
+
+    Object.assign(this.poll, {
+      voters: 9,
+      options: [
+        { id: "1f972d1df351de3ce35a787c89faad29", html: "yes", votes: 4 },
+        { id: "d7ebc3a9beea2e680815a1e4f57d6db6", html: "no", votes: 5 },
+      ],
+    });
+    await settled();
+
+    await render(
+      <template><Poll @post={{this.post}} @poll={{this.poll}} /></template>
+    );
+
+    assert
+      .dom(
+        "li[data-poll-option-id='1f972d1df351de3ce35a787c89faad29'] .d-icon-far-square-check"
+      )
+      .exists(
+        "the uncommitted selection survives a server refresh plus re-render"
+      );
+    assert.strictEqual(
+      this.poll.inProgressVote.length,
+      1,
+      "the persisted in-progress vote is not clobbered by the server merge"
+    );
   });
 
   test("voting on a multiple poll with no min attribute", async function (assert) {

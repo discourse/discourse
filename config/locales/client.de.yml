@@ -2665,6 +2665,7 @@ de:
       email_label: "E-Mail"
       continue_button: "Weiter"
       verify_button: "Weiter"
+      signup_title: "Erstelle dein Konto"
       account_ready_continue: "Weiter"
       username_label: "Benutzername"
     login:
@@ -4422,7 +4423,6 @@ de:
           one: "Möchtest du diese Beiträge wirklich zusammenführen?"
           other: "Möchtest du diese %{count} Beiträge wirklich zusammenführen?"
       revisions:
-        diff_too_complex: "Die Unterschiede sind zu komplex, um sie anzuzeigen. Bitte versuche einzelne, kleinere Änderungen anzusehen."
         locale:
           no_locale_set: "Keine Sprache eingestellt"
           locale_removed: "Sprache entfernt"
@@ -5340,8 +5340,6 @@ de:
       no_read_topics_body: "Sobald du mit dem Lesen von Diskussionen beginnst, siehst du hier eine Liste. Zum Lesen suche in <a href='%{topUrl}'>Top</a> oder <a href='%{categoriesUrl}'>Kategorien</a> nach Themen, die dich interessieren, oder suche nach einem Schlüsselwort %{searchIcon}"
     no_group_messages_title: "Keine Gruppennachrichten gefunden"
     topic_entrance:
-      sr_jump_top_button: "Zum ersten Beitrag springen – %{date}"
-      sr_jump_bottom_button: "Zum letzten Beitrag springen – %{date}"
       jump_top_button_title: "Zum ersten Beitrag springen"
       jump_bottom_button_title: "Zum letzten Beitrag springen"
     fullscreen_table:
@@ -5724,6 +5722,7 @@ de:
         title: "Verfügbare Berichte"
         sidebar_title: "Berichte"
         back: "Zurück zu alle Berichte"
+        all_groups: "Alle Gruppen"
         group_engagement: "Aktivität & Wachstum"
         group_traffic: "Traffic"
         group_members: "Mitglieder"

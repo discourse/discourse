@@ -277,6 +277,33 @@ pl_PL:
         header: "Nagłówek czatu"
         composer: "Edytor czatu"
         channels_list: "Lista kanałów czatu"
+      screen_reader:
+        new_message: "%{username}: %{message}"
+        new_messages:
+          one: "%{count} nowa wiadomość"
+          few: "%{count} nowe wiadomości"
+          many: "%{count} nowych wiadomości"
+          other: "%{count} nowych wiadomości"
+        new_image:
+          one: "%{username} wysłał obraz"
+          few: "%{username} wysłał %{count} obrazy"
+          many: "%{username} wysłał %{count} obrazów"
+          other: "%{username} wysłał %{count} obrazów"
+        new_attachment:
+          one: "%{username} wysłał załącznik"
+          few: "%{username} wysłał %{count} załączniki"
+          many: "%{username} wysłał %{count} załączników"
+          other: "%{username} wysłał %{count} załączników"
+        new_message_with_image:
+          one: "%{username}: %{message} (z obrazkiem)"
+          few: "%{username}: %{message} (z %{count} obrazkami)"
+          many: "%{username}: %{message} (z %{count} obrazkami)"
+          other: "%{username}: %{message} (z %{count} obrazkami)"
+        new_message_with_attachment:
+          one: "%{username}: %{message} (z załącznikiem)"
+          few: "%{username}: %{message} (z %{count} załącznikami)"
+          many: "%{username}: %{message} (z %{count} załącznikami)"
+          other: "%{username}: %{message} (z %{count} załącznikami)"
       no_direct_message_channels: "Nie dołączyłeś jeszcze do żadnych bezpośrednich wiadomości!"
       no_direct_message_channels_cta: "Rozpocząć rozmowę"
       no_public_channels: "Nie dołączyłeś jeszcze do żadnego kanału!"
@@ -286,8 +313,13 @@ pl_PL:
       only_chat_push_notifications:
         title: "Wysyłaj tylko powiadomienia push czatu"
       personalization_title: "Personalizacja"
+      accessibility_title: "Dostępność"
       ignore_channel_wide_mention:
         title: "Ignoruj wzmianki dotyczące całego kanału"
+      announce_new_messages:
+        title: "Ogłaszaj nowe wiadomości czytnikom ekranu"
+      new_message_sound:
+        title: "Odtwarzaj dźwięki nowych wiadomości, gdy czat jest na pierwszym planie"
       show_thread_title_prompts:
         title: "Pokaż podpowiedzi tytułu wątku"
         description: "Wyświetlaj podpowiedzi o ustawienie tytułu dla nowych wątków."

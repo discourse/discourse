@@ -794,10 +794,12 @@ class Plugin::Instance
         Any hbs files under `assets/javascripts` will be automatically compiled and included."
       ERROR
 
-    raise <<~ERROR if file.start_with?("javascripts/") && file.end_with?(".js", ".js.es6")
+    if file.start_with?("javascripts/") && file.end_with?(".js", ".js.es6", ".ts", ".gts")
+      raise <<~ERROR
         [#{name}] Javascript files under `assets/javascripts` are automatically included in JS bundles.
         Manual register_asset calls should be removed. (attempted to add #{file})
       ERROR
+    end
 
     if opts && opts == :vendored_core_pretty_text
       full_path = DiscoursePluginRegistry.core_asset_for_name(file)
@@ -1250,6 +1252,25 @@ class Plugin::Instance
     )
   end
 
+  # Registers a whole section in the redesigned admin dashboard (gated by the
+  # dashboard_improvements upcoming change). The matching client-side section
+  # component must be registered via the JS `api.registerAdminDashboardSection`.
+  #
+  # @param id [String] unique section id. Matched against the persisted
+  #   configuration and the client-side component registry.
+  # @param enabled [Proc] optional gate evaluated when assembling the dashboard.
+  #   Return false to omit the section (and hide it from the configure menu)
+  #   without disabling the plugin entirely — e.g. only when relevant data
+  #   exists.
+  # @yield [start_date:, end_date:, current_user:] block returning the section's
+  #   data hash, run inside the dashboard's parallel section loader.
+  def register_admin_dashboard_section(id:, enabled: nil, &loader)
+    DiscoursePluginRegistry.register_admin_dashboard_section(
+      { id: id.to_s, enabled: enabled, loader: loader },
+      self,
+    )
+  end
+
   ##
   # Used to register data sources for HashtagAutocompleteService to look
   # up results based on a #hashtag string.
@@ -1459,8 +1480,6 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_search_handler(handler, self)
   end
 
-  # This is an experimental API and may be changed or removed in the future without deprecation.
-  #
   # Adds a custom rate limiter to the request rate limiters stack. Only one rate limiter is used per request and the
   # first rate limiter in the stack that is active is used. By default the rate limiters stack contains the following
   # rate limiters:

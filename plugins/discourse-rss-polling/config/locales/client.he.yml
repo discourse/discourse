@@ -15,13 +15,18 @@ he:
       title: משיכת RSS
     admin:
       rss_polling:
-        feed: הגדרות ערוץ
-        discourse: הגדרות Discourse
         author: מחבר/ת
         feed_url: כתובת
         discourse_category: קטגוריה
         discourse_tags: תגיות
-        feed_category_filter: מסנן קטגוריה
-        documentation: תיעוד הגדרות משיכת RSS
-        destroy_feed:
-          confirm: "למחוק את הערוץ הזה?"
+        feeds:
+          edit: עריכה
+          delete: מחיקה
+          save: שמירה
+          confirm_delete: "למחוק את הערוץ הזה?"
+        test:
+          title: תצוגה מקדימה
+          dismiss: התעלמות
+        status:
+          enabled: פעיל
+          disabled: כבוי

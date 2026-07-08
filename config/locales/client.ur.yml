@@ -2679,7 +2679,9 @@ ur:
     code_login:
       email_label: "ای میل"
       continue_button: "جاری رکھیں"
+      code_instructions: "ہم نے <b>%{email}</b> پر ایک 6 ہندسوں پر مشتمل کوڈ بھیجا ہے۔ جاری رکھنے کے لیے اسے نیچے درج کریں۔"
       verify_button: "جاری رکھیں"
+      signup_title: "اپنا اکاؤنٹ بنائیں"
       account_ready_continue: "جاری رکھیں"
       username_label: "اسمِ صارف"
     login:
@@ -3641,9 +3643,21 @@ ur:
           other: "پیش رفت: <strong>%{count}</strong> موضوعات"
         performing: "حجم آپریشنز ہو رہے ہیں، براہ کرم انتظار کریں۔۔۔"
         completed: "حجمی اختیارات کامیابی سے مکمل ہو گئے!"
+        completed_count:
+          one: "<b>%{count}</b> موضوع کو اپ ڈیٹ کردیا۔"
+          other: "<b>%{count}</b> موضوعات کو اپ ڈیٹ کردیا۔"
+        not_completed:
+          one: "<b>%{count}</b> موضوع کو اپ ڈیٹ نہیں کیا جا سکا:"
+          other: "<b>%{count}</b> موضوعات کو اپ ڈیٹ نہیں کیا جا سکا:"
+        skipped_count:
+          one: "<b>%{count}</b> موضوع پہلے ہی تازہ ترین ہے۔"
+          other: "<b>%{count}</b> موضوعات پہلے ہی تازہ ترین ہیں۔"
         error_topic_count:
           one: "%{count} موضوع"
           other: "%{count} موضوعات"
+        tag_not_allowed_in_category:
+          one: "%{tags} کی %{category} زمرے میں اجازت نہیں ہے۔"
+          other: "%{category} زمرے میں ان ٹیگز کی اجازت نہیں ہے: %{tags}"
       none:
         unread: "آپ کے پاس کوئی بغیر پڑھے موضوع موجود نہیں۔"
         unseen: "آپ کے لیے کوئی ان دیکھے موضوعات نہیں ہیں۔"
@@ -3695,6 +3709,8 @@ ur:
           remove_replacement: "متبادل ہٹائیں"
           from_placeholder: "تبدیل کرنے کے لئے ٹیگ"
           to_placeholder: "متبادل ٹیگ"
+          missing_from: "ایک ماخذ ٹیگ درکار ہے"
+          missing_to: "متبادل ٹیگ درکار ہے"
       delete_topics:
         name: "مٹائیں"
       update_category:
@@ -4675,6 +4691,7 @@ ur:
         title: "نموداری"
         public: "عوامی"
         group_restricted: "نجی"
+        more_options_hint: "مزید اجازتیں <a href>اعلی درجے کی ترتیبات</a> میں دستیاب ہیں۔"
       num_auto_bump_daily: "روزانہ خود کار طریقے سے بَمپ کرنے کیلئے کھلے موضوعات کی تعداد:"
       auto_bump_cooldown_days: "اسی موضوع کو دوبارہ آگے کرنے سے پہلے کم از کم دن:"
       navigate_to_first_post_after_read: "موضوعات پڑھنے کے بعد پہلے دھاگہ پر جائیں"
@@ -5303,8 +5320,6 @@ ur:
       no_read_topics_body: "ایک بار جب آپ بحثیں پڑھنا شروع کر دیں، تو آپ کو یہاں ایک فہرست نظر آئے گی۔ پڑھنا شروع کرنے کے لیے، ایسے موضوعات تلاش کریں جو آپ کی دلچسپی <a href='%{topUrl}'>ٹاپ</a> یا <a href='%{categoriesUrl}'>زمرہ جات</a> یا کلیدی لفظ %{searchIcon}کے ذریعے تلاش کریں۔"
     no_group_messages_title: "کوئی گروپ پیغامات نہیں ملے"
     topic_entrance:
-      sr_jump_top_button: "پہلی پوسٹ پر جائیں - %{date}"
-      sr_jump_bottom_button: "آخری پوسٹ پر جائیں - %{date}"
       jump_top_button_title: "پہلی پوسٹ پر جائیں"
       jump_bottom_button_title: "آخری پوسٹ پر جائیں"
     fullscreen_table:
@@ -5676,6 +5691,7 @@ ur:
         title: "دستیاب رپورٹوں کی فہرست"
         sidebar_title: "رپورٹیں"
         back: "تمام رپورٹس پر واپس"
+        all_groups: "تمام گروپس"
         group_traffic: "ٹریفک"
         group_members: "ممبران"
         group_other: "دیگر"
@@ -6206,12 +6222,6 @@ ur:
                 dropping:
                   one: "-%{count} گرا"
                   other: "-%{count} گرا"
-              moves_in_aria:
-                one: "%{count} رکن آگے بڑھا"
-                other: "%{count} ارکان آگے بڑھے"
-              moves_out_aria:
-                one: "%{count} رکن نیچے گئے"
-                other: "%{count} ارکان نیچے گئے"
               stable_aria: "کوئی حرکت نہیں"
             headline:
               engaged_but_shrinking:
@@ -6257,6 +6267,7 @@ ur:
                 poor_match: "ناقص مماثلت"
         reports_section:
           description: "اپنے فورم کے لیے اہم چیزوں پر نظر رکھنے کے لیے رپورٹس یا ڈیٹا ایکسپلورر کو پن کریں۔"
+          add: "رپورٹ شامل کریں"
           no_data: "دکھانے کے لیے کچھ نہیں"
           modal:
             title: "رپورٹس کا انتظام کریں"
@@ -7680,7 +7691,7 @@ ur:
               close: "بند کریں"
               confirm: "مٹائیں"
         nav:
-          new: "نیا"
+          new: "نئے"
           active: "فعال"
           staff: "عملہ"
           suspended: "معطل کردہ"

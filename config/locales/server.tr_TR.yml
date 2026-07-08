@@ -260,7 +260,6 @@ tr_TR:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    diff_too_complex: "Fark çok karmaşık olduğundan güvenli bir şekilde hesaplanamıyor. Lütfen daha küçük düzenlemeler yapmayı deneyin."
     messages:
       invalid_locale: "%{invalid_locale} geçerli bir yerel ayar değil"
       too_long_validation:
@@ -1296,6 +1295,7 @@ tr_TR:
         level: "Güven seviyesi"
         count: "Üyeler"
         share: "Paylaş"
+        signups: "Yeni kayıtlar"
       levels:
         "0": "Yeni"
         "1": "Temel"
@@ -1799,8 +1799,6 @@ tr_TR:
     silence_new_user_sensitivity: "Yeni bir kullanıcının istenmeyen içerik bayraklarına göre susturulma olasılığı"
     auto_close_topic_sensitivity: "Bayrak eklenen bir konunun otomatik olarak kapatılma olasılığı"
     cooldown_minutes_after_hiding_posts: "Bir kullanıcının topluluğun bayrak eklemesi ile gizlenmen bir gönderiyi düzenleyebilmesi için beklemesi gereken dakika sayısı"
-    max_topics_in_first_day: "Bir kullanıcının ilk gönderisini oluşturduktan sonraki 24 saatlik süre içinde oluşturmasına izin verilen maksimum konu sayısı"
-    max_replies_in_first_day: "Bir kullanıcının ilk gönderisini oluşturduktan sonraki 24 saatlik süre içinde oluşturmasına izin verilen maksimum yanıt sayısı"
     tl2_additional_likes_per_day_multiplier: "Bu sayı ile çarparak gs2 (üye) için günlük beğeni sınırını artırın"
     tl3_additional_likes_per_day_multiplier: "Bu sayı ile çarparak gs3 (normal) için günlük beğeni sınırını artırın"
     tl4_additional_likes_per_day_multiplier: "Bu sayı ile çarparak gs4 (lider) için günlük beğeni sınırını artırın"
@@ -2439,7 +2437,6 @@ tr_TR:
     gravatar_base_url: "Gravatar sağlayıcısının API'sine erişmek için URL'yi belirtin. Bu ayar, e-posta adreslerini avatar görüntülerinin depolandığı Gravatar URL'lerine dönüştürmek için kritik öneme sahiptir."
     share_quote_buttons: "Alıntı paylaşımı widget'ında hangi ögelerin ve hangi sırayla görüneceğini belirleyin."
     share_quote_visibility: "Alıntı paylaşma düğmelerinin ne zaman gösterileceğini belirleyin: Asla, yalnızca anonim kullanıcılara veya tüm kullanıcılara. "
-    create_revision_on_bulk_topic_moves: "Konular toplu olarak yeni bir kategoriye taşındığında ilk gönderiler için revizyon oluşturun."
     allow_changing_staged_user_tracking: "Aşamalı bir kullanıcının kategori ve etiket bildirim tercihlerinin bir yönetici kullanıcı tarafından değiştirilmesine izin verin."
     use_email_for_username_and_name_suggestions: "Kullanıcı ismi ve isim önerileri için e-posta adreslerinin ilk kısmını kullanın. Uyarı: Bu ayar, kötü niyetli kişilerin üyelerinizin e-posta adresini keşfetmesini kolaylaştırabilir (çünkü birçok kişi `gmail.com` gibi yaygın e-posta sağlayıcılarını kullanır)."
     use_name_for_username_suggestions: "SSO ve OAuth kayıt süreçleri sırasında kullanıcı adı önerirken kullanıcının tam adını kullanın."
@@ -2483,9 +2480,9 @@ tr_TR:
     nested_replies_max_depth: "İzleme dizisi içindeki yanıtlar için maksimum görüntüleme derinliği. Bu derinliği aşan gönderilerde \"Bu izleme dizisine devam et\" bağlantısı görüntülenir."
     nested_replies_backfill_batch_size: "Zamanlanmış her çalıştırma için iç içe geçmiş yanıt istatistiklerini doldurmak üzere kullanılacak konu sayısı."
     nested_replies_cap_nesting_depth: "Yanıtların iç içe geçmesini maksimum görsel derinlikte sınırla. Bu özellik etkinleştirildiğinde, en alt düzeydeki yanıtlar alt öğeler yerine eş düzey öğeler olarak yeniden sınıflandırılır."
-    fake_upcoming_change: "Bu, test amaçlı sahte bir değişikliktir. Bu dizeyi çevirmenize gerek yoktur."
     floating_dismiss_topics_on_mobile: "Daha kolay erişim ve konu listesinin üst kısmında yer açmak için mobil cihazlarda konu listesi üzerinde yüzen bir “Kapat...” düğmesi gösterir."
     enable_simplified_category_creation: "Daha az seçenek ve daha temiz bir arayüz ile basitleştirilmiş kategori oluşturma akışını etkinleştirir."
+    reporting_improvements: "Discourse'un yönetici raporlarının gezinme, tasarım ve kullanılabilirlik özelliklerinde iyileştirmeler."
     modernize_foundation_theme: "Bu değişiklik, Discourse'daki Foundation temasına tasarım değişiklikleri getiriyor."
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değeri girin."

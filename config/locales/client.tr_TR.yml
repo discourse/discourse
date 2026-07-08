@@ -2677,6 +2677,7 @@ tr_TR:
       email_label: "E-posta"
       continue_button: "Devam et"
       verify_button: "Devam et"
+      signup_title: "Hesabınızı oluşturun"
       account_ready_continue: "Devam et"
       username_label: "Kullanıcı Adı"
     login:
@@ -4445,7 +4446,6 @@ tr_TR:
           one: "Bu gönderileri birleştirmek istediğinizden emin misiniz?"
           other: "Bu %{count} gönderiyi birleştirmek istediğinizden emin misiniz?"
       revisions:
-        diff_too_complex: "Fark görüntülenemeyecek kadar karmaşık. Lütfen daha küçük düzenlemeleri tek tek görüntülemeyi deneyin."
         locale:
           no_locale_set: "Dil ayarlanmadı"
           locale_removed: "Dil kaldırıldı"
@@ -5363,8 +5363,6 @@ tr_TR:
       no_read_topics_body: "Tartışmaları okumaya başladığınızda, burada bir liste görürsünüz. Okumaya başlamak için <a href='%{topUrl}'>En İyi</a> veya <a href='%{categoriesUrl}'>Kategoriler</a>'de ilginizi çeken konuları arayın veya anahtar kelime %{searchIcon} ile arama yapın"
     no_group_messages_title: "Grup mesajı bulunamadı"
     topic_entrance:
-      sr_jump_top_button: "İlk gönderiye atla - %{date}"
-      sr_jump_bottom_button: "Son gönderiye atla - %{date}"
       jump_top_button_title: "İlk gönderiye atla"
       jump_bottom_button_title: "Son gönderiye atla"
     fullscreen_table:
@@ -5747,6 +5745,7 @@ tr_TR:
         title: "Mevcut raporlar listesi"
         sidebar_title: "Raporlar"
         back: "Tüm raporlara geri dön"
+        all_groups: "Tüm gruplar"
         group_engagement: "Taahhüt"
         group_traffic: "Trafik"
         group_members: "Üyeler"

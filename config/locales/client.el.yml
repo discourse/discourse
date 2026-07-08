@@ -2654,6 +2654,7 @@ el:
       email_label: "Διεύθυνση Email"
       continue_button: "Συνεχίστε"
       verify_button: "Συνεχίστε"
+      signup_title: "Δημιουργήστε τον λογαριασμό σας"
       account_ready_continue: "Συνεχίστε"
       username_label: "Όνομα χρήστη"
     login:
@@ -5361,8 +5362,6 @@ el:
       no_read_topics_title: "Δεν έχεις διαβάσει κανένα θέμα ακόμη"
     no_group_messages_title: "Δε βρέθηκαν ομαδικά μηνύματα"
     topic_entrance:
-      sr_jump_top_button: "Μετάβαση στην πρώτη ανάρτηση - %{date}"
-      sr_jump_bottom_button: "Μετάβαση στην τελευταία ανάρτηση - %{date}"
       jump_top_button_title: "Μετάβαση στην πρώτη ανάρτηση"
       jump_bottom_button_title: "Μετάβαση στην τελευταία ανάρτηση"
     fullscreen_table:
@@ -5740,6 +5739,7 @@ el:
         title: "Λίστα διαθέσιμων αναφορών"
         sidebar_title: "Αναφορές"
         back: "Πίσω σε όλες τις αναφορές"
+        all_groups: "Όλες οι ομάδες"
         group_traffic: "Κίνηση"
         group_members: "Μέλη"
         group_content: "Περιεχόμενο & Υγεία"
@@ -6281,12 +6281,6 @@ el:
                 dropping:
                   one: "-%{count} πτώση"
                   other: "-%{count} πτώσεις"
-              moves_in_aria:
-                one: "%{count} μέλος ανέβηκε"
-                other: "%{count} μέλη ανέβηκαν"
-              moves_out_aria:
-                one: "%{count} μέλος έπεσε"
-                other: "%{count} μέλη έπεσαν"
               stable_aria: "καμία αλλαγή"
             headline:
               metrics:
@@ -8089,10 +8083,7 @@ el:
           other: "Δεν γίνεται να σβήσεις όλες τις αναρτήσεις επειδή ο χρήστης έχει περισσότερες από %{count} αναρτήσεις. (Η ρύθμιση «delete_all_posts_max»)"
         delete_confirm_title: "Σίγουρα θέλετε να διαγράψετε αυτόν τον χρήστη; Αυτό είναι μόνιμο!"
         delete_confirm: "Γενικά, είναι προτιμότερο να ανωνυμοποιείτε τους χρήστες παρά να τους διαγράφετε, για να αποφευχθεί η αφαίρεση περιεχομένου από υπάρχουσες συζητήσεις."
-        delete_and_block: "Διαγραφή και αποκλεισμός χρήστη"
-        delete_and_block_description: "Διαγράψτε τον χρήστη και αποκλείστε τη διεύθυνση email και τη διεύθυνση IP του."
         delete_dont_block: "Διαγραφή χρήστη"
-        delete_dont_block_description: "Διαγράψτε τον χρήστη χωρίς να τον αποκλείσετε."
         deleting_user: "Γίνεται διαγραφή χρήστη…"
         deleted: "Ο χρήστης διαγράφτηκε."
         delete_failed: "Παρουσιάστηκε ένα σφάλμα κατά τη διαγραφή αυτού του χρήστη. Βεβαιώσου πρώτα πως έχουν σβηστεί όλες οι αναρτήσεις του."

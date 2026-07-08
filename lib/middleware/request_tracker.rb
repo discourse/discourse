@@ -692,8 +692,7 @@ class Middleware::RequestTracker
   end
 
   def self.is_engagement_tracking_request?(request)
-    UpcomingChanges.enabled?(:dashboard_improvements) &&
-      SiteSetting.persist_browser_pageview_events && request.post? &&
+    SiteSetting.persist_browser_pageview_events && request.post? &&
       request.path == Discourse.engagement_tracking_path
   end
 

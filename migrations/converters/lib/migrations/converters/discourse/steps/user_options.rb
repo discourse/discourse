@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class UserOptions < Conversion::ProgressStep
+      class UserOptions < Conversion::Step
         source { reads_table "user_options", where: "user_id > 0" }
 
         processor do

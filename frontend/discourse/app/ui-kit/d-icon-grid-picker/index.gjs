@@ -3,12 +3,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-/** @type {import("discourse/float-kit/components/d-menu.gjs").default} */
 import DMenu from "discourse/float-kit/components/d-menu";
 import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
-/** @type {import("discourse/ui-kit/d-button.gjs").default} */
 import DButton from "discourse/ui-kit/d-button";
-/** @type {import("discourse/ui-kit/d-icon-grid-picker/content.gjs").default} */
 import DIconGridPickerContent from "discourse/ui-kit/d-icon-grid-picker/content";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";

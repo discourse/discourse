@@ -2792,6 +2792,7 @@ sr:
           always: "uvek"
           never: "nikada"
       reports:
+        all_groups: "Sve grupe"
         group_members: "Članovi"
         group_other: "Ostalo"
         chart:
@@ -2984,14 +2985,6 @@ sr:
                   one: "-%{count} pad"
                   few: "-%{count} pada"
                   other: "-%{count} padova"
-              moves_in_aria:
-                one: "%{count} član se pomerio gore"
-                few: "%{count} člana su se pomerila gore"
-                other: "%{count} članova se pomerilo gore"
-              moves_out_aria:
-                one: "%{count} član se pomerio dole"
-                few: "%{count} člana su se pomerila dole"
-                other: "%{count} članova se pomerilo dole"
               stable_aria: "bez pokreta"
             headline:
               healthy_growth:
@@ -3630,9 +3623,6 @@ sr:
           one: "Ne možete obrisati sve objave jer korisnik ima više od %{count} poruka. (delete_all_posts_max)"
           few: "Ne možete obrisati sve objave jer korisnik ima više od %{count} poruka. (delete_all_posts_max)"
           other: "Ne možete obrisati sve objave jer korisnik ima više od %{count} poruka. (delete_all_posts_max)"
-        delete_and_block: "Obriši i blokiraj korisnika"
-        delete_and_block_description: "Obrišite korisnika i blokirajte njihovu email i IP adresu."
-        delete_dont_block_description: "Obrišite korisnika bez blokiranja."
         deleted: "Korisnik je obrisan."
         delete_failed: "Dogodila se greška pri brisanju korisnika. Proverite da li ste obrisali sve njegove poruke pre nego što ponovo pokušate brisati."
         send_activation_email: "Pošalji Aktivacijski Email"

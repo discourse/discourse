@@ -2066,6 +2066,7 @@ ro:
       email_label: "E-mail"
       continue_button: "Continuă"
       verify_button: "Continuă"
+      signup_title: "Creează-ți contul"
       account_ready_continue: "Continuă"
       username_label: "Nume utilizator"
     login:
@@ -3894,6 +3895,7 @@ ro:
           never: "niciodată"
       reports:
         sidebar_title: "Rapoarte"
+        all_groups: "Toate grupurile"
         group_traffic: "Trafic"
         group_members: "Membri"
         group_other: "Altele"

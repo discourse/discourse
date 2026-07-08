@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class TopicAllowedGroups < Conversion::ProgressStep
+      class TopicAllowedGroups < Conversion::Step
         source { reads_table "topic_allowed_groups" }
 
         processor do

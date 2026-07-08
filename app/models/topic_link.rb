@@ -339,7 +339,7 @@ class TopicLink < ActiveRecord::Base
     elsif route = Discourse.route_for(parsed.to_s[...TopicLink.max_url_length])
       # this is a special case for the silent flag
       # in internal links
-      return nil if url && (url.split("?")[1] == "silent=true")
+      return nil if parsed&.query&.split("&")&.include?("silent=true")
 
       internal = true
 

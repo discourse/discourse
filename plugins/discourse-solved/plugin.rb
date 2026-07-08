@@ -14,6 +14,7 @@ register_svg_icon "square-check"
 register_svg_icon "far-square"
 
 register_asset "stylesheets/solutions.scss"
+register_asset "stylesheets/admin/dashboard-support.scss", :admin
 
 module ::DiscourseSolved
   PLUGIN_NAME = "discourse-solved"
@@ -223,6 +224,17 @@ after_initialize do
         end
     end,
   )
+
+  register_admin_dashboard_section(
+    id: "support",
+    enabled: -> { DiscourseSolved::AdminDashboardSupport.available? },
+  ) do |start_date:, end_date:, current_user:|
+    DiscourseSolved::AdminDashboardSupport.build(
+      start_date: start_date,
+      end_date: end_date,
+      current_user: current_user,
+    )
+  end
 
   register_modifier(:search_rank_sort_priorities) do |priorities, _search|
     if SiteSetting.prioritize_solved_topics_in_search

@@ -769,6 +769,7 @@ zh_TW:
         level: "信任等級"
         count: "成員"
         share: "分享"
+        signups: "註冊"
       levels:
         "0": "新使用者"
         "1": "初級使用者"
@@ -1143,8 +1144,6 @@ zh_TW:
     anon_polling_interval: "匿名使用者使用者端輪詢時間間隔（單位 毫秒）"
     background_polling_interval: "客戶端輪詢的間隔，以毫秒計（當視窗在後台時）"
     cooldown_minutes_after_hiding_posts: "如果一個貼文因為標記而隱藏，使用者需要等待多少分鐘才能編輯該貼文"
-    max_topics_in_first_day: "新使用者在24小時內在發表第一帖後允許創建的主題數"
-    max_replies_in_first_day: "新使用者在24小時內在發表第一帖後允許創建的回覆數"
     tl2_additional_likes_per_day_multiplier: "增加信任等級2（成員）的贊限制，可提供一個乘數與原始值相乘"
     tl3_additional_likes_per_day_multiplier: "增加信任等級3（常規）的每日贊限制，將此設置項與原始值相乘"
     tl4_additional_likes_per_day_multiplier: "增加信任等級4（資深）的贊限制，可提供一個乘數與原始值相乘"

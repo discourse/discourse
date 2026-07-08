@@ -23,7 +23,6 @@ import PwaInstallBanner from "discourse/components/pwa-install-banner";
 import RenderGlimmerContainer from "discourse/components/render-glimmer-container";
 import SidebarWrapper from "discourse/components/sidebar-wrapper";
 import SoftwareUpdatePrompt from "discourse/components/software-update-prompt";
-import TopicEntrance from "discourse/components/topic-entrance";
 import WelcomeBanner from "discourse/components/welcome-banner";
 import DialogHolder from "discourse/dialog-holder/components/dialog-holder";
 import DMenus from "discourse/float-kit/components/d-menus";
@@ -176,7 +175,6 @@ export default <template>
 
     <ModalContainer />
     <DialogHolder />
-    <TopicEntrance />
     <ComposerContainer />
     <RenderGlimmerContainer />
 

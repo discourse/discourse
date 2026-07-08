@@ -106,7 +106,6 @@ export default class DiscourseReactionsListEmoji extends Component {
         {{#if @reaction.count}}
           {{dEmoji
             @reaction.id
-            skipTitle=true
             class=(if
               this.siteSettings.discourse_reactions_desaturated_reaction_panel
               "desaturated"

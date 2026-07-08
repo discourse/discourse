@@ -8,7 +8,7 @@ import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
 
-<template>
+export default <template>
   {{#if @channel}}
     <div
       class={{dConcatClass

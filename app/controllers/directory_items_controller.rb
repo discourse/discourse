@@ -21,8 +21,7 @@ class DirectoryItemsController < ApplicationController
     if params[:group]
       group = Group.find_by(name: params[:group])
       raise Discourse::InvalidParameters.new(:group) if group.blank?
-      guardian.ensure_can_see!(group)
-      guardian.ensure_can_see_group_members!(group)
+      guardian.ensure_can_see_group_and_members!(group)
 
       result = result.includes(user: :groups).where(users: { groups: { id: group.id } })
     else
@@ -155,7 +154,7 @@ class DirectoryItemsController < ApplicationController
   def set_groups_exclusion
     @exclude_group_names = params[:exclude_groups].split("|")
     groups = Group.where(name: @exclude_group_names)
-    groups = groups.select { |g| guardian.can_see?(g) && guardian.can_see_group_members?(g) }
+    groups = groups.select { |g| guardian.can_see_group_and_members?(g) }
     @exclude_group_ids = groups.map(&:id)
     @users_in_exclude_groups = GroupUser.where(group_id: @exclude_group_ids).pluck(:user_id)
   end

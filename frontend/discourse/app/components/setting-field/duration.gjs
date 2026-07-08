@@ -1,6 +1,6 @@
 import DRelativeTimePicker from "discourse/ui-kit/d-relative-time-picker";
 
-<template>
+export default <template>
   <DRelativeTimePicker
     @durationHours={{@field.value}}
     @durationOutputUnit="hours"

@@ -7,7 +7,7 @@ class Admin::DashboardController < Admin::StaffController
                 only: %i[available_reports update_reports_section update_configuration]
 
   def index
-    if UpcomingChanges.enabled_for_user?(:dashboard_improvements, current_user)
+    if dashboard_improvements?
       data = dashboard_sections_payload
     else
       data = AdminDashboardIndexData.fetch_cached_stats
@@ -155,6 +155,21 @@ class Admin::DashboardController < Admin::StaffController
 
   def mark_new_features_as_seen
     DiscourseUpdates.mark_new_features_as_seen(current_user.id)
+  end
+
+  def ensure_dashboard_improvements_enabled
+    raise Discourse::NotFound if !dashboard_improvements?
+  end
+
+  def dashboard_improvements?
+    dashboard_improvements_enabled =
+      UpcomingChanges.enabled_for_user?(:dashboard_improvements, current_user)
+
+    if params[:version] == "alt"
+      !dashboard_improvements_enabled
+    else
+      dashboard_improvements_enabled
+    end
   end
 
   def parse_reports_items_payload

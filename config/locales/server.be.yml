@@ -262,12 +262,12 @@ be:
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
     default_full_names:
-      everyone: "усе"
+      everyone: "Усе"
       admins: "Адміністратары"
       moderators: "Мадэратары"
       staff: "Персанал"
-      anonymous_users: "ананімныя карыстальнікі"
-      logged_in_users: "Запісаны карыстальнікаў"
+      anonymous_users: "Ананімныя карыстальнікі"
+      logged_in_users: "Карыстальнікі ў сістэме"
     request_membership_pm:
       title: "Заяўка на ўступ у @%{group_name}"
   education:
@@ -655,6 +655,7 @@ be:
       labels:
         count: "Члены"
         share: "Абагуліць"
+        signups: "Рэгістрацыі"
       levels:
         "0": "Новы"
         "1": "асноўнай"
@@ -988,8 +989,6 @@ be:
     anon_polling_interval: "Як часта павінны ананімныя кліенты апытання ў мілісекундах"
     background_polling_interval: "Як часта павінны кліенты апытання ў мілісекундах (калі акно ў фонавым рэжыме)"
     cooldown_minutes_after_hiding_posts: "Колькасць хвілін, карыстальнік павінен чакаць, перш чым яны змогуць змяніць паведамленне схаванага з дапамогай супольнасці, як маркіроўкі"
-    max_topics_in_first_day: "Максімальную колькасць тым карыстальнік дазволена стварыць у 24-гадзінны перыяд пасля стварэння свайго першага паста"
-    max_replies_in_first_day: "Максімальную колькасць адказаў карыстальніка дазволена стварыць у 24-гадзінны перыяд пасля стварэння свайго першага паста"
     tl2_additional_likes_per_day_multiplier: "Павелічэнне ліміту падобных у дзень для TL2 (сябра) шляхам множання гэтага ліку"
     tl3_additional_likes_per_day_multiplier: "Павелічэнне ліміту падобных у дзень для TL3 (рэгулярнага) шляхам множання гэтага ліку"
     tl4_additional_likes_per_day_multiplier: "Павелічэнне ліміту падобных у дзень для TL4 (лідэра) шляхам множання гэтага ліку"
@@ -1279,7 +1278,7 @@ be:
     results_page: "Вынікі пошуку для '%{term}'"
   posts_filter:
     description:
-      order_latest: "Апошнія паведамленні"
+      order_latest: "Апошнія допісы"
       order_latest_topic: "Апошнія тэмы"
   discourse_connect:
     login_error: "Памылка ўваходу"

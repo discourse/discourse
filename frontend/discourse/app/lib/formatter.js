@@ -72,7 +72,7 @@ export function updateRelativeAge(elems) {
 }
 
 export function autoUpdatingRelativeAge(date, options) {
-  if (!date) {
+  if (!date || isNaN(date.getTime())) {
     return "";
   }
   if (+date === +new Date(0)) {
@@ -208,6 +208,22 @@ export function duration(distance, ageOpts) {
 
 export function durationTiny(distance, ageOpts) {
   return duration(distance, { format: "tiny", ...ageOpts });
+}
+
+export function formatMinutesSeconds(seconds) {
+  const totalSeconds = Math.floor(seconds);
+
+  if (totalSeconds < 60) {
+    return i18n("dates.tiny.x_seconds", { count: totalSeconds });
+  }
+
+  const minutes = Math.floor(totalSeconds / 60);
+  const remainderSeconds = totalSeconds % 60;
+
+  return i18n("dates.tiny.x_minutes_seconds", {
+    minutes,
+    seconds: remainderSeconds,
+  });
 }
 
 function relativeAgeTiny(date, ageOpts) {

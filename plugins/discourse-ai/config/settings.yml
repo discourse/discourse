@@ -398,7 +398,7 @@ discourse_ai:
     client: true
     area: "ai-features/bot"
     upcoming_change:
-      status: "alpha"
+      status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403327"
   ai_discover_enabled:

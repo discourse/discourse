@@ -96,6 +96,12 @@ gl:
         enabled: "Activado?"
         allowed_groups: "Grupos permitidos"
         delete: "Eliminar"
+        thinking_effort_options:
+          none: "Ningunha"
+          low: "Baixa"
+          medium: "Media"
+          high: "Alta"
+          max: "Máx"
         response_format:
           open_modal: "Editar"
           modal:

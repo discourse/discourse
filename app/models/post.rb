@@ -210,12 +210,7 @@ class Post < ActiveRecord::Base
 
   def limit_posts_per_day
     if user && user.new_user_posting_on_first_day? && post_number && post_number > 1
-      RateLimiter.new(
-        user,
-        "first-day-replies-per-day",
-        SiteSetting.max_replies_in_first_day,
-        1.day.to_i,
-      )
+      RateLimiter.new(user, "first-day-replies-per-day", user.first_day_replies_limit, 1.day.to_i)
     end
   end
 

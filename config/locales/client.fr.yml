@@ -2477,6 +2477,7 @@ fr:
       email_label: "E-mail"
       continue_button: "Continuer"
       verify_button: "Continuer"
+      signup_title: "Créer votre compte"
       account_ready_continue: "Continuer"
       username_label: "Nom d'utilisateur"
     login:
@@ -4809,8 +4810,6 @@ fr:
       no_read_topics_body: "Une fois que vous aurez commencé à lire les discussions, vous verrez une liste ici. Pour commencer à lire, recherchez les sujets qui vous intéressent dans <a href='%{topUrl}'>Top</a> ou <a href='%{categoriesUrl}'>Catégories</a> ou recherchez par mot-clé %{searchIcon}"
     no_group_messages_title: "Aucun message de groupe trouvé"
     topic_entrance:
-      sr_jump_top_button: "Accéder à la première publication - %{date}"
-      sr_jump_bottom_button: "Accéder à la dernière publication - %{date}"
       jump_top_button_title: "Accéder à la première publication"
       jump_bottom_button_title: "Accéder à la dernière publication"
     fullscreen_table:
@@ -5183,6 +5182,7 @@ fr:
         title: "Liste des rapports disponibles"
         sidebar_title: "Rapports"
         back: "Retour à tous les rapports"
+        all_groups: "Tous les groupes"
         group_traffic: "Trafic"
         group_members: "Membres"
         group_other: "Autre"

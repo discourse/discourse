@@ -59,12 +59,6 @@
 
     <%= module_preloads_for "discourse", (staff? ? "admin/compat-modules" : nil) %>
 
-    <%- if staff? %>
-      <% EmberAssets.script_chunks["chunk.admin"]&.each do |script_name| %>
-        <link rel="preload" href="<%= script_asset_path(script_name) %>" as="script" nonce="<%= csp_nonce_placeholder %>" data-discourse-entrypoint="admin">
-      <% end %>
-    <%- end %>
-
     <%- unless customization_disabled? %>
       <%- theme_js_assets.each do |asset| %>
         <link rel="modulepreload" href="<%= asset[:url] %>" data-theme-id="<%= asset[:theme_id] %>" nonce="<%= csp_nonce_placeholder %>">

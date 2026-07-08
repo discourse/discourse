@@ -369,6 +369,25 @@ RSpec.describe Admin::DashboardController do
         expect(response.parsed_body["configuration"]).to be_present
       end
 
+      it "is returned with version=alt when the admin is not included" do
+        group = Fabricate(:group)
+        Fabricate(:site_setting_group, name: "dashboard_improvements", group_ids: group.id.to_s)
+
+        get "/admin/dashboard.json", params: { version: "alt" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["sections"]).to be_present
+        expect(response.parsed_body["configuration"]).to be_present
+      end
+
+      it "is omitted with version=alt when enabled for the admin" do
+        get "/admin/dashboard.json", params: { version: "alt" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["sections"]).to be_nil
+        expect(response.parsed_body["configuration"]).to be_nil
+      end
+
       it "falls back to default dates when date params are malformed" do
         get "/admin/dashboard.json", params: { start_date: "garbage", end_date: "also-garbage" }
 

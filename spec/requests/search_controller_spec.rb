@@ -525,7 +525,7 @@ RSpec.describe SearchController do
         end
       end
 
-      before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
+      before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}" }
 
       it "returns extra categories and parent categories" do
         get "/search.json", params: { q: "hello" }

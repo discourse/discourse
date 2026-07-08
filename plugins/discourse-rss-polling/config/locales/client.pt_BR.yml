@@ -15,13 +15,18 @@ pt_BR:
       title: Sondagem de RSS
     admin:
       rss_polling:
-        feed: Configurações do feed
-        discourse: Configurações do Discourse
         author: Autor(a)
         feed_url: URL
         discourse_category: Categoria
         discourse_tags: Etiquetas
-        feed_category_filter: Filtro de categoria
-        documentation: Documentação da configuração da sondagem de RSS
-        destroy_feed:
-          confirm: "Você tem certeza de que quer excluir este feed?"
+        feeds:
+          edit: Editar
+          delete: Excluir
+          save: Salvar
+          confirm_delete: "Você tem certeza de que quer excluir este feed?"
+        test:
+          title: Pré-visualizar
+          dismiss: Descartar
+        status:
+          enabled: Ativados
+          disabled: Desativados

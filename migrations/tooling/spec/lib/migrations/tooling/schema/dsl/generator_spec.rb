@@ -3,9 +3,10 @@
 RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
   after { Migrations::Tooling::Schema.reset! }
 
-  def make_table(name, model_mode: nil)
+  def make_table(name, model_mode: nil, conflict_strategy: :raise)
     Migrations::Tooling::Schema::TableDefinition.new(
       name:,
+      conflict_strategy:,
       columns: [
         Migrations::Tooling::Schema::ColumnDefinition.new(
           name: "id",
@@ -155,6 +156,37 @@ RSpec.describe Migrations::Tooling::Schema::DSL::Generator do
         described_class.new(Migrations::Tooling::Schema).generate
 
         expect(Dir[File.join(paths[:models], "*.rb")]).to be_empty
+      end
+    end
+
+    it "generates a plain `INSERT` and no conflict strategy for the default `:raise`" do
+      Dir.mktmpdir do |tmpdir|
+        paths = configure_output(tmpdir)
+        stub_validation_and_resolution(resolved_definition)
+
+        described_class.new(Migrations::Tooling::Schema).generate
+
+        model_content = File.read(File.join(paths[:models], "user.rb"))
+        expect(model_content).to include("INSERT INTO users")
+        expect(model_content).not_to include("INSERT OR IGNORE")
+        expect(model_content).not_to include("def self.conflict_strategy")
+      end
+    end
+
+    it "generates `INSERT OR IGNORE` and a conflict strategy for `:ignore`" do
+      Dir.mktmpdir do |tmpdir|
+        paths = configure_output(tmpdir)
+
+        table = make_table("users", conflict_strategy: :ignore)
+        definition = Migrations::Tooling::Schema::Definition.new(tables: [table], enums: [])
+        stub_validation_and_resolution(definition)
+
+        described_class.new(Migrations::Tooling::Schema).generate
+
+        model_content = File.read(File.join(paths[:models], "user.rb"))
+        expect(model_content).to include("INSERT OR IGNORE INTO users")
+        expect(model_content).to include("def self.conflict_strategy")
+        expect(model_content).to include(":ignore")
       end
     end
 

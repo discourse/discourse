@@ -260,7 +260,6 @@ hu:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    diff_too_complex: "A változtatások összehasonlítása túl összetett a biztonságos kiszámításhoz. Kérjük, próbálkozzon kisebb módosításokkal."
     messages:
       invalid_locale: "%{invalid_locale} nem érvényes nyelv"
       too_long_validation:
@@ -1280,6 +1279,7 @@ hu:
         level: "Bizalmi szint"
         count: "Tagok"
         share: "Megosztás"
+        signups: "Regisztrációk"
       levels:
         "0": "Új"
         "1": "Alapvető"
@@ -1780,8 +1780,6 @@ hu:
     silence_new_user_sensitivity: "Annak a valószínűsége, hogy egy új felhasználó el lesz némítva spam jelzések alapján"
     auto_close_topic_sensitivity: "Annak a valószínűsége, hogy egy megjelölt téma automatikusan zárolva lesz"
     cooldown_minutes_after_hiding_posts: "Percek száma, amennyit egy felhasználónak várnia kell, mielőtt szerkeszthetne egy olyan bejegyzést, amely a közösségi jelzések miatt lett elrejtve"
-    max_topics_in_first_day: "A témák maximális száma, amelyet egy felhasználó létrehozhat az első bejegyzése utáni 24 órás időszakban"
-    max_replies_in_first_day: "A válaszok maximális száma, amelyet egy felhasználó létrehozhat az első bejegyzése utáni 24 órás időszakban"
     tl2_additional_likes_per_day_multiplier: "Növelje a napi kedvelések határértékét a tl2 (tag) szintű felhasználók számára ennek a számnak a szorzásával"
     tl3_additional_likes_per_day_multiplier: "Növelje a napi kedvelések határértékét a tl3 (törzstag) szintű felhasználók számára ennek a számnak a szorzásával"
     tl4_additional_likes_per_day_multiplier: "Növelje a napi kedvelések határértékét a tl4 (vezető) szintű felhasználók számára ennek a számnak a szorzásával"
@@ -2412,7 +2410,6 @@ hu:
     gravatar_base_url: "Adja meg a Gravatar szolgáltató API-jának elérési URL-jét. Ez a beállítás kulcsfontosságú az e-mail címek Gravatar URL-é alakításához, ahol az avatar képek tárolva vannak."
     share_quote_buttons: "Határozza meg, hogy mely elemek jelenjenek meg az idézet megosztási widgetben, és milyen sorrendben."
     share_quote_visibility: "Határozza meg, mikor jelenjenek meg az idézet megosztási gombok: soha, csak névtelen felhasználóknak, vagy minden felhasználónak. "
-    create_revision_on_bulk_topic_moves: "Hozzon létre egy revíziót az első bejegyzésekhez, amikor a témákat tömegesen áthelyezik egy új kategóriába."
     allow_changing_staged_user_tracking: "Egy átmeneti felhasználó kategória- és címke értesítési beállításainak módosításának engedélyezése adminisztrátor által."
     use_email_for_username_and_name_suggestions: "Használja az e-mail címek első részét felhasználónév- és névjavaslatokhoz. Figyelmeztetés: Ez megkönnyítheti a rossz szereplők számára, hogy felfedezzék tagjaid e-mail-címét (mert sokan olyan általános e-mail-szolgáltatókat használnak, mint a \"gmail.com\")."
     suggest_weekends_in_date_pickers: "Tartalmazza a hétvégéket (szombat és vasárnap) a dátumválasztó javaslatai között (tiltsa le ezt, ha a Discourse-t csak hétköznap, hétfőtől péntekig használja)."
@@ -2446,9 +2443,9 @@ hu:
     reviewable_ui_refresh: "Csoportok, amelyek használhatják a kísérleti új felhasználói felületet a felülvizsgálati sorban."
     content_localization_use_default_locale_when_unsupported: "A webhely alapértelmezett területi beállításainak megfelelően lokalizált tartalmat jelenítsen meg azoknak a felhasználóknak, akiknek az előnyben részesített nyelve nem szerepel a „tartalom lokalizációjában támogatott területek” listában."
     content_localization_allow_author_localization: "Lehetővé teheti a szerzők számára saját témáik és bejegyzéseik lokalizációjának frissítését a bejegyzések menüjén keresztül."
-    fake_upcoming_change: "Ez egy hamis, közelgő változás tesztelési célokra. Nem kell lefordítani ezt a karakterláncot."
     floating_dismiss_topics_on_mobile: "Megjelenít egy lebegő „Elvetés...” gombot mobilon a témalistához a könnyebb hozzáférés és a témalista tetején lévő hely felszabadítása érdekében."
     enable_simplified_category_creation: "Leegyszerűsített kategória-létrehozási folyamatot tesz lehetővé kevesebb opcióval és letisztultabb felülettel."
+    reporting_improvements: "Navigációs, megjelenésbeli és használhatósági fejlesztések a Discourse adminisztrátori jelentéseihez."
     modernize_foundation_theme: "Ez a módosítás dizájnbeli változtatásokat vezet be a Discourse Foundation témájába."
     errors:
       invalid_css_color: "Érvénytelen szín. Adjon meg egy színnevet vagy hexaértéket."

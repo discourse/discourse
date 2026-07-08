@@ -36,7 +36,7 @@ module Migrations
       private
 
       def attach_mappings_db(db_path, reset)
-        Database.reset!(db_path) if reset
+        Database.delete_database(db_path) if reset
         migrate_and_attach(db_path, Database::MAPPINGS_DB_SCHEMA_PATH, "mapped")
       end
 

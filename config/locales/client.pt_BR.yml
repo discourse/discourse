@@ -2644,6 +2644,7 @@ pt_BR:
       email_label: "E-mail"
       continue_button: "Continuar"
       verify_button: "Continuar"
+      signup_title: "Criar sua conta"
       account_ready_continue: "Continuar"
       username_label: "Nome de usuário(a)"
     login:
@@ -4274,7 +4275,6 @@ pt_BR:
           one: "Tem certeza de que deseja mesclar estas postagens?"
           other: "Tem certeza de que deseja mesclar estas %{count} postagens?"
       revisions:
-        diff_too_complex: "O diff é muito complexo para exibir. Por favor, tente visualizar edições menores individualmente."
         locale:
           no_locale_set: "Nenhum idioma definido"
           locale_removed: "Idioma removido"
@@ -5174,8 +5174,6 @@ pt_BR:
       no_read_topics_body: "Quando começar a ler as discussões, uma lista será exibida aqui. Para começar a ler, procure tópicos do seu interesse em <a href='%{topUrl}'>Melhores</a> ou <a href='%{categoriesUrl}'>Categorias</a>, ou pesquise por palavra-chave %{searchIcon}"
     no_group_messages_title: "Nenhuma mensagem de grupo encontrada"
     topic_entrance:
-      sr_jump_top_button: "Ir para primeira postagem - %{date}"
-      sr_jump_bottom_button: "Saltar para a última postagem - %{date}"
       jump_top_button_title: "Ir para a primeira postagem"
       jump_bottom_button_title: "Ir para a última postagem"
     fullscreen_table:
@@ -5558,6 +5556,7 @@ pt_BR:
         title: "Lista de relatórios disponíveis"
         sidebar_title: "Relatórios"
         back: "Voltar para todos os relatórios"
+        all_groups: "Todos os grupos"
         group_engagement: "Engajamento"
         group_traffic: "Tráfego"
         group_members: "Membros"

@@ -238,6 +238,24 @@ RSpec.describe ComposerController do
       end
     end
 
+    context "with a group with hidden members" do
+      fab!(:hidden_members_group) do
+        Fabricate(
+          :group,
+          mentionable_level: Group::ALIAS_LEVELS[:everyone],
+          members_visibility_level: Group.visibility_levels[:owners],
+          users: [Fabricate(:user)],
+        )
+      end
+
+      it "does not return the member count" do
+        get "/composer/mentions.json", params: { names: [hidden_members_group.name] }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["groups"]).to eq(hidden_members_group.name => {})
+      end
+    end
+
     context "with invalid allowed_names parameter" do
       it "returns 400 when allowed_names is not an array" do
         get "/composer/mentions.json",

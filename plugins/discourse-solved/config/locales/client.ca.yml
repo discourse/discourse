@@ -12,6 +12,14 @@ ca:
           kpi:
             accepted_solutions:
               label: "Solucions acceptades"
+        sections:
+          support:
+            filter:
+              all_categories: "Totes les categories"
+            answerers:
+              staff: "Equip responsable"
+              member: "Membres"
+              basic: "Bàsic"
   js:
     notifications:
       alt:

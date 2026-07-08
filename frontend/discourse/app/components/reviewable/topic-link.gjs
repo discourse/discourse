@@ -25,7 +25,7 @@ import { i18n } from "discourse-i18n";
  *
  * @param {Reviewable} reviewable - The reviewable object containing topic information
  */
-<template>
+export default <template>
   <div class="reviewable-topic-link">
     {{#if @reviewable.topic}}
       <div class="reviewable-topic-link__title-wrapper">

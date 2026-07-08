@@ -1844,6 +1844,7 @@ sl:
       email_label: "E-naslov"
       continue_button: "Nadaljuj"
       verify_button: "Nadaljuj"
+      signup_title: "Ustvari svoj račun"
       account_ready_continue: "Nadaljuj"
       username_label: "Uporabniško ime"
     login:
@@ -3733,6 +3734,7 @@ sl:
       reports:
         title: "Seznam poročil"
         sidebar_title: "Poročila"
+        all_groups: "Vse skupine"
         group_traffic: "Promet"
         group_members: "Člani"
         group_other: "Drugo"

@@ -196,18 +196,23 @@ self.addEventListener('fetch', function (event) {
 });
 
 self.addEventListener('message', function(event) {
-  if (event.data?.action !== "primaryTab") {
+  if (event.data?.action !== "primaryTab" || !event.source) {
     return;
   }
 
   event.waitUntil(
-    self.clients.matchAll().then(function(clients) {
-      const activeClient = clients.find(client => client.focused) || clients.find(client => client.visibilityState === "visible");
+    // includeUncontrolled so first-visit and hard-reloaded tabs take part in
+    // the election instead of silently failing open client-side
+    self.clients.matchAll({ includeUncontrolled: true }).then(function(clients) {
+      const activeClient =
+        clients.find(client => client.focused) ||
+        clients.find(client => client.visibilityState === "visible");
 
-      clients.forEach(function(client) {
-        client.postMessage({
-          primaryTab: client.id === activeClient?.id
-        });
+      // when every tab is hidden (user is in another app or on another site),
+      // the requester acts as primary — unlike an elected hidden tab it is
+      // provably running, and simultaneous self-elections are deduped
+      event.source.postMessage({
+        primaryTab: activeClient ? event.source.id === activeClient.id : true
       });
     })
   );

@@ -32,6 +32,12 @@ module UpcomingChanges
     def self.should_display_enable_gifs?
       !DiscourseGifs.component_installed?
     end
+
+    # Only relevant on sites that currently allow uncategorized topics, and must
+    # stay visible after being enabled (which disables that setting).
+    def self.should_display_remove_and_replace_uncategorized?
+      SiteSetting::Action::RemoveAndReplaceUncategorizedToggled.should_display_upcoming_change?
+    end
   end
 
   def self.user_enabled_reasons
@@ -438,6 +444,13 @@ module UpcomingChanges
 
         result.upcoming_changes
       end
+  end
+
+  # The setting names of all permanent upcoming changes. Used on the frontend
+  # to decide whether a notification should link to the upcoming changes page
+  # or to the What's New page (where permanent changes are surfaced).
+  def self.permanent_upcoming_change_names
+    permanent_upcoming_changes.map { |uc| uc[:setting].to_s }
   end
 
   # No point in notifying admins on brand new sites, the upcoming change system

@@ -20,8 +20,6 @@ import { i18n } from "discourse-i18n";
 
 const VISIBLE_CAP = 10;
 
-const rendererFor = (source) => lookupAdminDashboardReportRenderer(source);
-
 export default class DashboardReports extends Component {
   @service currentUser;
   @service modal;
@@ -37,6 +35,13 @@ export default class DashboardReports extends Component {
 
   get items() {
     return this.args.data?.items ?? [];
+  }
+
+  get layoutItems() {
+    return this.items.map(({ source, identifier }) => ({
+      source,
+      identifier,
+    }));
   }
 
   get canEdit() {
@@ -69,10 +74,7 @@ export default class DashboardReports extends Component {
     this.loading = true;
     try {
       const payloads = await loadDashboardReports({
-        items: this.items.map(({ source, identifier }) => ({
-          source,
-          identifier,
-        })),
+        items: this.layoutItems,
         filters: this.filters,
       });
       this.cards = this.items.map((item) => ({
@@ -95,11 +97,9 @@ export default class DashboardReports extends Component {
 
   @action
   async removeReport(item) {
-    const nextItems = this.items
-      .filter(
-        (i) => !(i.source === item.source && i.identifier === item.identifier)
-      )
-      .map(({ source, identifier }) => ({ source, identifier }));
+    const nextItems = this.layoutItems.filter(
+      (i) => !(i.source === item.source && i.identifier === item.identifier)
+    );
 
     try {
       await ajax("/admin/dashboard/reports/layout", {
@@ -155,7 +155,10 @@ export default class DashboardReports extends Component {
                 {{#if card.payload.empty}}
                   <DashboardReportEmptyState />
                 {{else}}
-                  {{#let (rendererFor card.source) as |Renderer|}}
+                  {{#let
+                    (lookupAdminDashboardReportRenderer card.source)
+                    as |Renderer|
+                  }}
                     {{#if Renderer}}
                       <Renderer
                         @item={{card}}

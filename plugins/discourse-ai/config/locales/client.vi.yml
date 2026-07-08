@@ -103,6 +103,12 @@ vi:
           select_all: "Chọn hết"
           clear_all: "Xóa hết"
         delete: "Xóa"
+        thinking_effort_options:
+          none: "Không"
+          low: "Thấp"
+          medium: "Trung bình"
+          high: "Cao"
+          max: "Tối đa"
         response_format:
           open_modal: "Sửa"
           modal:

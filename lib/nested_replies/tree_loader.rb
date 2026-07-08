@@ -257,9 +257,88 @@ module NestedReplies
         .count
     end
 
-    def total_descendant_counts(post_ids)
-      return {} if post_ids.empty?
+    def tree_counts(posts)
+      reply_counts = direct_reply_counts(posts.map(&:post_number))
+      {
+        reply_counts: reply_counts,
+        descendant_counts: total_descendant_counts(posts, reply_counts: reply_counts),
+      }
+    end
 
+    def total_descendant_counts(posts, reply_counts: nil)
+      return {} if posts.empty?
+
+      post_records = posts.select { |post| post.respond_to?(:post_number) }
+      post_ids = posts.map { |post| post.respond_to?(:post_number) ? post.id : post }.compact.uniq
+
+      stat_counts = cached_total_descendant_counts(post_ids)
+
+      return stat_counts if post_records.empty?
+
+      reply_counts ||= {}
+      posts_needing_live_counts =
+        post_records.select do |post|
+          stat_counts[post.id].nil? ||
+            stat_counts[post.id].to_i < reply_counts[post.post_number].to_i
+        end
+
+      return stat_counts if posts_needing_live_counts.empty?
+
+      stat_counts.merge(
+        live_total_descendant_counts(posts_needing_live_counts),
+      ) { |_post_id, stat_count, live_count| [stat_count.to_i, live_count.to_i].max }
+    end
+
+    def live_total_descendant_counts(posts)
+      return {} if posts.empty?
+
+      post_ids_by_number = posts.index_by(&:post_number).transform_values(&:id)
+
+      rows =
+        DB.query(
+          <<~SQL,
+          WITH RECURSIVE descendants AS (
+            SELECT roots.post_number AS root_post_number,
+                   child.post_number,
+                   child.post_type,
+                   1 AS depth
+            FROM posts roots
+            JOIN posts child
+              ON child.topic_id = roots.topic_id
+             AND child.reply_to_post_number = roots.post_number
+            WHERE roots.topic_id = :topic_id
+              AND roots.id IN (:post_ids)
+              AND child.post_number > 1
+            UNION ALL
+            SELECT descendants.root_post_number,
+                   child.post_number,
+                   child.post_type,
+                   descendants.depth + 1
+            FROM descendants
+            JOIN posts child
+              ON child.topic_id = :topic_id
+             AND child.reply_to_post_number = descendants.post_number
+            WHERE child.post_number > 1
+              AND descendants.depth < :max_cte_depth
+          )
+          SELECT root_post_number, COUNT(*) AS total_descendant_count
+          FROM descendants
+          WHERE post_type IN (:post_types)
+          GROUP BY root_post_number
+        SQL
+          topic_id: topic.id,
+          post_ids: post_ids_by_number.values,
+          post_types: visible_post_types,
+          max_cte_depth: 500,
+        )
+
+      rows.each_with_object({}) do |row, counts|
+        post_id = post_ids_by_number[row.root_post_number.to_i]
+        counts[post_id] = row.total_descendant_count.to_i if post_id
+      end
+    end
+
+    def cached_total_descendant_counts(post_ids)
       if guardian.user&.whisperer?
         NestedViewPostStat
           .where(post_id: post_ids.uniq)

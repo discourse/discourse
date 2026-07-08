@@ -808,6 +808,7 @@ vi:
       labels:
         count: "Thành viên kênh"
         share: "Chia sẻ"
+        signups: "Thành viên mới"
       levels:
         "0": "Chủ đề mới"
         "1": "Cơ Bản"

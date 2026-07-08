@@ -46,6 +46,7 @@ export default class ChatThread extends Component {
   @service capabilities;
   @service chatApi;
   @service chatDraftsManager;
+  @service chatNewMessageAnnouncer;
   @service chatThreadComposer;
   @service chatThreadPane;
   @service dialog;
@@ -359,6 +360,13 @@ export default class ChatThread extends Component {
   @bind
   onNewMessage(message) {
     const isOwnMessage = message.user.id === this.currentUser.id;
+
+    if (!isOwnMessage) {
+      this.chatNewMessageAnnouncer.notify(message, {
+        visible: this.paneState.isDocumentVisible,
+        active: this.paneState.isActiveReader,
+      });
+    }
 
     this.paneState.handleIncomingMessage({
       scroller: this.scroller,

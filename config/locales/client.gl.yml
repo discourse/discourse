@@ -1665,6 +1665,7 @@ gl:
       email_label: "Enderezo de correo"
       continue_button: "Continuar"
       verify_button: "Continuar"
+      signup_title: "Crear unha conta nova"
       account_ready_continue: "Continuar"
       username_label: "Nome de usuario"
     login:
@@ -3408,6 +3409,7 @@ gl:
       reports:
         title: "Listaxe dos informes dispoñíbeis"
         sidebar_title: "Informes"
+        all_groups: "Todos os grupos"
         group_traffic: "Tráfico"
         group_members: "Membros"
         group_other: "Outro"

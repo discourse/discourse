@@ -1053,8 +1053,24 @@ class User < ActiveRecord::Base
   def new_user_posting_on_first_day?
     return false if staff?
     return false if trust_level >= TrustLevel[2]
-    return false if first_post_created_at.present? && first_post_created_at <= 24.hours.ago
+    return false if created_at <= 24.hours.ago
     true
+  end
+
+  def first_day_topics_limit
+    if trust_level == TrustLevel[1]
+      SiteSetting.tl1_max_topics_in_first_day
+    else
+      SiteSetting.max_topics_in_first_day
+    end
+  end
+
+  def first_day_replies_limit
+    if trust_level == TrustLevel[1]
+      SiteSetting.tl1_max_replies_in_first_day
+    else
+      SiteSetting.max_replies_in_first_day
+    end
   end
 
   def new_user?

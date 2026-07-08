@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import noop from "discourse/helpers/noop";
 import { and, or } from "discourse/truth-helpers";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -95,6 +97,14 @@ export default class ChatThreadHeader extends Component {
         class={{if this.openThreadTitleModal "clickable"}}
       />
       <navbar.Actions as |action|>
+        <PluginOutlet
+          @name="chat-thread-navbar-actions"
+          @outletArgs={{lazyHash
+            thread=@thread
+            channel=this.channel
+            context="full-page"
+          }}
+        />
         {{#if this.currentUser}}
           <action.ThreadTrackingDropdown @thread={{@thread}} />
           <action.ThreadSettingsButton @thread={{@thread}} />

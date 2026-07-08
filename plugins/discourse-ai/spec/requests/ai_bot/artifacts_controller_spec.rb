@@ -111,6 +111,13 @@ RSpec.describe DiscourseAi::AiBot::ArtifactsController do
         expect(response.status).to eq(200)
         expect(parse_srcdoc(response.body)).to include(artifact.html)
       end
+
+      it "returns 404 when the source topic has been trashed" do
+        topic.trash!
+
+        get "/discourse-ai/ai-bot/artifacts/#{artifact.id}"
+        expect(response.status).to eq(404)
+      end
     end
 
     it "sanitizes CSS to prevent style tag breakout" do

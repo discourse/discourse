@@ -147,6 +147,8 @@ en:
       string_value_not_valid_max:
         one: "Value must be at most %{count} character long."
         other: "Value must be at most %{count} characters long."
+      resolve_group_membership_requires_list: "resolve_group_membership can only be used with type: list"
+      resolve_group_membership_requires_group_list: "resolve_group_membership requires list_type: group"
       objects:
         humanize_required: "The property at JSON Pointer '%{property_json_pointer}' must be present."
         required: "must be present"
@@ -286,7 +288,7 @@ en:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    diff_too_complex: "The diff is too complex to compute safely. Please try smaller edits."
+    diff_too_complex: "There are too many changes to show."
     messages:
       invalid_locale: "%{invalid_locale} is not a valid locale"
       too_long_validation:
@@ -1439,14 +1441,15 @@ en:
         staff: "Staff"
     trust_level_pipeline:
       title: "Trust level pipeline"
-      description: "Member movement between trust levels for the selected period. Counts the members currently at each trust level, their share of the total membership, and the number of members who moved into or out of each trust level during the period."
+      description: "Member movement between trust levels for the selected period. Counts the members currently at each trust level, their share of the total membership, the number of members promoted or demoted into each trust level during the period, and new sign-ups."
       description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
       labels:
         level: "Trust level"
         count: "Members"
         share: "Share"
-        moves_in: "Moves in"
-        moves_out: "Moves out"
+        promoted_in: "Promoted in"
+        demoted_in: "Demoted in"
+        signups: "Sign-ups"
       levels:
         "0": "New"
         "1": "Basic"
@@ -1903,6 +1906,7 @@ en:
     category_search_priority_high_weight: "Weight applied to ranking for high category search priority."
     default_composer_category: "The category used to pre-populate the category dropdown when creating a new topic."
     allow_uncategorized_topics: "Allow topics to be created without a category. WARNING: If there are any uncategorized topics, you must recategorize them before turning this off."
+    remove_and_replace_uncategorized: "Replaces the special Uncategorized category with a standard category of the same name, and migrates all topics over to it."
     allow_duplicate_topic_titles: "Allow topics with identical, duplicate titles."
     allow_duplicate_topic_titles_category: "Allow topics with identical, duplicate titles if the category is different. {{setting:allow_duplicate_topic_titles}} must be disabled."
     unique_posts_mins: "How many minutes before a user can make a post with the same content again"
@@ -1999,8 +2003,10 @@ en:
 
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
 
-    max_topics_in_first_day: "The maximum number of topics a user is allowed to create in the 24 hour period after creating their first post"
-    max_replies_in_first_day: "The maximum number of replies a user is allowed to create in the 24 hour period after creating their first post"
+    max_topics_in_first_day: "The maximum number of topics a trust level 0 user is allowed to create in the 24 hour period after account creation"
+    max_replies_in_first_day: "The maximum number of replies a trust level 0 user is allowed to create in the 24 hour period after account creation"
+    tl1_max_topics_in_first_day: "The maximum number of topics a trust level 1 user is allowed to create in the 24 hour period after account creation"
+    tl1_max_replies_in_first_day: "The maximum number of replies a trust level 1 user is allowed to create in the 24 hour period after account creation"
 
     tl2_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl2 (member) by multiplying with this number"
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
@@ -2059,6 +2065,7 @@ en:
     llms_txt: "Upload a text file to be served at /llms.txt for LLM crawlers. See <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> for more information."
     content_security_policy: "Enable Content-Security-Policy (CSP). CSP is an additional layer of security that helps to prevent certain types of attacks, including Cross Site Scripting (XSS) and data injection. It should only be disabled temporarily for debugging/testing purposes."
     content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only (CSP)"
+    content_security_policy_report_uri: "Send CSP violation reports to this URL via the CSP <code>report-uri</code> directive. Leave blank to disable reporting."
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
     content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP). Other host sources are ignored as strict-dynamic is enabled."
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
@@ -2296,7 +2303,6 @@ en:
     composer_media_optimization_image_resize_width_target: "Images with widths larger than {{setting:composer_media_optimization_image_resize_dimensions_threshold}} will be resized to this width. Must be >= than {{setting:composer_media_optimization_image_resize_dimensions_threshold}}."
     composer_media_optimization_image_encode_quality: "JPG encode quality used in the re-encode process."
     composer_media_optimization_image_convert_enabled: "Enables client-side conversion of JXL, HEIC, and animated GIF images before upload. JXL and HEIC are converted to JPEG, animated GIFs larger than the threshold are converted to animated WEBP."
-    composer_media_optimization_image_wasm_decode_enabled: "Decode JPEG and PNG images in WASM inside the Web Worker instead of using browser canvas APIs. Avoids iOS canvas pixel limits and createImageBitmap flakiness, at the cost of a larger worker bundle."
     composer_media_optimization_gif_conversion_threshold: "Minimum GIF file size in bytes to trigger client-side conversion to animated WEBP."
 
     video_conversion_enabled: "Enable video conversion for uploaded video files. This allows videos to be converted to web-compatible formats."
@@ -2708,7 +2714,7 @@ en:
     enable_inline_emoji_translation: "Enables translation for inline emojis (without any space or punctuation before)"
     emoji_deny_list: "These emoji will not be available to use in menus or shortcodes."
     enable_gifs: "Adds a button to easily search and insert GIFs in posts."
-    klipy_api_key: "Klipy API key. Required to power GIF search. Note: this key is exposed to anyone viewing your site."
+    klipy_api_key: "Klipy API key. Required to power GIF search."
     klipy_file_detail: "Image format to use. WebP has smaller files that load quicker, while GIF provides compatibility with older browsers."
     klipy_content_filter: "Content safety level for GIF search results."
     klipy_country: "Two-letter country code for GIF search results."
@@ -2869,8 +2875,6 @@ en:
     share_quote_buttons: "Determine which items appear in the quote sharing widget, and in what order."
     share_quote_visibility: "Determine when to show quote sharing buttons: never, to anonymous users only or all users. "
 
-    create_revision_on_bulk_topic_moves: "Create revision for first posts when topics are moved into a new category in bulk."
-
     allow_changing_staged_user_tracking: "Allow a staged user's category and tag notification preferences to be changed by an admin user."
     use_email_for_username_and_name_suggestions: "Use the first part of email addresses for username and name suggestions. Warning: This can make it easier for bad actors to discover the email address of your members (because many people use common email providers like `gmail.com`)."
     use_name_for_username_suggestions: "Use a user's full name when suggesting usernames during SSO and OAuth signup flows."
@@ -2923,11 +2927,11 @@ en:
     nested_replies_max_depth: "Maximum visual nesting depth for threaded replies. Posts deeper than this show a 'Continue this thread' link."
     nested_replies_backfill_batch_size: "Number of topics to backfill nested reply stats for per scheduled run."
     nested_replies_cap_nesting_depth: "Cap reply nesting at the maximum visual depth. When enabled, replies to the deepest level are re-parented as siblings instead of children."
-    fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
     enable_new_defaults_for_trust_level_3_requirements: "We have updated the TL3 default requirements so they’re more reasonable for members of large, active communities. If you have previously overridden these settings, this upcoming change will have no effect."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
     rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The {{setting:faq_url}} setting works as before."
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
+    reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
     enable_horizon_high_context_topic_cards: "Shows richer topic cards in the Horizon theme, including topic excerpts, tags, and plugin extended information."
     granular_anonymous_and_logged_in_groups_permissions: "Makes group-based site setting permissions treat 'everyone' as 'all logged-in users', and enables the new 'anonymous_users' and 'logged_in_users' pseudogroups so admins can explicitly target anonymous visitors and authenticated users."
@@ -2965,6 +2969,7 @@ en:
       invalid_domain_hostname: "Must not include * or ? characters."
       invalid_allowed_iframes_url: "Iframe urls must start with http:// or https:// and have at least one more additional '/'"
       invalid_csp_script_src: "Value must be either 'unsafe-eval' or 'wasm-unsafe-eval', or in the form '<hash algorithm>-<base64 value>' where supported hash algorithms are sha256, sha384 or sha512. Ensure that your input is wrapped in single quotation marks."
+      invalid_csp_report_uri: "Value must be a single valid http:// or https:// URL and cannot contain spaces, semicolons or commas."
       pop3_polling_host_is_empty: "You must set a 'pop3 polling host' before enabling POP3 polling."
       pop3_polling_username_is_empty: "You must set a 'pop3 polling username' before enabling POP3 polling."
       pop3_polling_password_is_empty: "You must set a 'pop3 polling password' before enabling POP3 polling."

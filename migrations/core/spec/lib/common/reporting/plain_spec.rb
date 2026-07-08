@@ -106,4 +106,12 @@ RSpec.describe Migrations::Reporting::Plain do
 
     expect(lines).to include("    Users 100% (800/800)")
   end
+
+  it "prints a finishing-up line and a run summary" do
+    reporter.finalizing { nil }
+    reporter.report_summary(runtime: 138.0, total: 24, failed: 2, skipped: 1)
+
+    expect(lines).to include("Finishing up…")
+    expect(lines.last).to eq("Total: 24 steps, 2 failed, 1 skipped (2:18)")
+  end
 end

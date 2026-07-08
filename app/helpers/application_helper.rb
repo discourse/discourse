@@ -453,8 +453,7 @@ module ApplicationHelper
       tags << tag.meta(name: "discourse-beacon-pageview-enabled", content: "true")
     end
 
-    if UpcomingChanges.enabled?(:dashboard_improvements) &&
-         SiteSetting.persist_browser_pageview_events
+    if SiteSetting.persist_browser_pageview_events
       tags << tag.meta(name: "discourse-engagement-tracking-enabled", content: "true")
     end
     tags.html_safe

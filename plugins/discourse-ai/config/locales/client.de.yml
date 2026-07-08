@@ -617,6 +617,12 @@ de:
         temperature_help: "Temperatur, die für das LLM verwendet werden soll. Erhöhen, um die Kreativität zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, im Allgemeinen ein Wert zwischen 0,0 und 2,0)"
         top_p: "Top P"
         top_p_help: "Top P für das LLM. Erhöhen, um die Zufälligkeit zu steigern (leer lassen, um den Standardwert des Modells zu verwenden, in der Regel ein Wert zwischen 0,0 und 1,0)"
+        thinking_effort_options:
+          none: "Keine Auswahl"
+          low: "Niedrig"
+          medium: "Mittel"
+          high: "Hoch"
+          max: "Höchstwert"
         priority: "Priorität"
         priority_help: "Agenten mit Priorität werden den Benutzern am Anfang der Agenten-Liste angezeigt. Wenn mehrere Agenten Priorität haben, werden sie alphabetisch sortiert."
         tool_options: "Tool-Optionen"
@@ -979,9 +985,6 @@ de:
         description: "Wähle eine der folgenden Optionen und die KI schlägt dir eine neue Version des Textes vor."
         selection_hint: "Tipp: Du kannst auch einen Teil des Textes auswählen, bevor du den Assistenten öffnest, um nur diesen Teil neu zu schreiben."
         suggest_errors:
-          too_many_tags:
-            one: "Du kannst höchstens %{count} Schlagwort haben."
-            other: "Du kannst höchstens %{count} Schlagwörter haben."
           no_suggestions: "Keine Vorschläge verfügbar"
         missing_content: "Bitte gib einige Inhalte ein, um Vorschläge zu generieren."
         context_menu:

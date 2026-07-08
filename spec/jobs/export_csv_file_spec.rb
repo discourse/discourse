@@ -12,6 +12,43 @@ RSpec.describe Jobs::ExportCsvFile do
       )
     end
 
+    context "when re-validating permissions at execution time" do
+      it "exports the user list for an admin" do
+        expect do
+          Jobs::ExportCsvFile.new.execute(user_id: admin.id, entity: "user_list")
+        end.to change { Upload.count }.by(1)
+      ensure
+        admin.uploads.each(&:destroy!)
+      end
+
+      it "raises an error when the admin was demoted after enqueueing" do
+        admin.revoke_admin!
+
+        expect do
+          Jobs::ExportCsvFile.new.execute(user_id: admin.id, entity: "user_list")
+        end.to raise_error(Discourse::InvalidAccess)
+        expect(UserExport.where(user_id: admin.id)).to be_empty
+      end
+
+      it "raises an error when a regular user attempts a privileged export" do
+        user = Fabricate(:user)
+
+        expect do
+          Jobs::ExportCsvFile.new.execute(user_id: user.id, entity: "user_list")
+        end.to raise_error(Discourse::InvalidAccess)
+        expect(UserExport.where(user_id: user.id)).to be_empty
+      end
+
+      it "raises an error when a moderator attempts an admin-only export" do
+        moderator = Fabricate(:moderator)
+
+        expect do
+          Jobs::ExportCsvFile.new.execute(user_id: moderator.id, entity: "user_list")
+        end.to raise_error(Discourse::InvalidAccess)
+        expect(UserExport.where(user_id: moderator.id)).to be_empty
+      end
+    end
+
     it "works" do
       action_log
 
