@@ -59,41 +59,20 @@ module DiscourseAi
         end
 
         def invoke
-          validation_error = approval_precheck
-          return validation_error if validation_error
-
-          user = User.find_by_username(parameters[:username])
-
-          if !guardian.can_suspend?(user)
-            return error_response(I18n.t("discourse_ai.ai_bot.suspend_user.errors.not_allowed"))
+          if (error = validation_error)
+            return error
           end
-
-          result =
-            User::Suspend.call(
-              guardian: guardian,
-              params: {
-                user_id: user.id,
-                reason: reason,
-                suspend_until: duration_days.days.from_now,
-                message: parameters[:message],
-                reviewable_id: context.reviewable_id,
-              },
-            )
-
-          return error_response(suspend_error_message(result)) if result.failure?
-
-          {
-            status: "success",
-            message: I18n.t("discourse_ai.ai_bot.suspend_user.success", username: user.username),
-          }
+          perform_suspend
         end
 
-        # Validates the request without performing it, so a bad username,
-        # missing reason, or out-of-range duration is caught before the action
-        # is queued for approval (and again at approval-replay time). The
-        # approver's permission is intentionally not checked here — it is
-        # enforced against the approving moderator in #invoke.
-        def approval_precheck
+        # Returns an error response when the request cannot proceed, or nil
+        # when it is valid. Checked before the action is queued for approval
+        # (and again at approval-replay time), so a bad username, missing
+        # reason, or out-of-range duration never creates a review item that
+        # could only fail. The approver's permission is intentionally not
+        # checked here — it is enforced against the approving moderator in
+        # #invoke.
+        def validation_error
           if User.find_by_username(parameters[:username]).blank?
             return error_response(I18n.t("discourse_ai.ai_bot.suspend_user.errors.not_found"))
           end
@@ -121,6 +100,33 @@ module DiscourseAi
         end
 
         private
+
+        def perform_suspend
+          user = User.find_by_username(parameters[:username])
+
+          if !guardian.can_suspend?(user)
+            return error_response(I18n.t("discourse_ai.ai_bot.suspend_user.errors.not_allowed"))
+          end
+
+          result =
+            User::Suspend.call(
+              guardian: guardian,
+              params: {
+                user_id: user.id,
+                reason: reason,
+                suspend_until: duration_days.days.from_now,
+                message: parameters[:message],
+                reviewable_id: context.reviewable_id,
+              },
+            )
+
+          return error_response(suspend_error_message(result)) if result.failure?
+
+          {
+            status: "success",
+            message: I18n.t("discourse_ai.ai_bot.suspend_user.success", username: user.username),
+          }
+        end
 
         def duration_days
           Integer(parameters[:duration_days], exception: false)

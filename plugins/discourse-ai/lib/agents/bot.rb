@@ -450,8 +450,9 @@ module DiscourseAi
 
       def invoke_tool(tool, context, &update_blk)
         if tool_requires_approval?(tool)
-          precheck_error = tool.approval_precheck
-          return precheck_error if precheck_error.present?
+          if (error = tool.validation_error)
+            return error
+          end
           return enqueue_tool_for_approval(tool, context, &update_blk)
         end
 

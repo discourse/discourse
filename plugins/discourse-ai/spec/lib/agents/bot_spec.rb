@@ -817,7 +817,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       expect(ReviewableAiToolAction.count).to eq(1)
     end
 
-    it "does not create a reviewable when approval_precheck rejects the request" do
+    it "does not create a reviewable when the tool's args are invalid" do
       toggle_enabled_bots(bots: [fake])
       Group.refresh_automatic_groups!
 
@@ -827,7 +827,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
             true
           end
 
-          def approval_precheck
+          def validation_error
             error_response("nope")
           end
         end
