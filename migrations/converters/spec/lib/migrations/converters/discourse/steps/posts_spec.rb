@@ -55,32 +55,57 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
   end
 
   describe ".combine_results" do
-    it "sums each worker's per-host tally and writes one WARNING per host" do
+    def entry
+      entries = rows("log_entries")
+      expect(entries.size).to eq(1)
+      entries.first
+    end
+
+    def hosts_in(details)
+      JSON.parse(details)["hosts"].map { |row| [row["host"], row["count"]] }
+    end
+
+    it "merges the workers' tallies into one INFO entry, hosts sorted by count" do
       count =
         described_class.combine_results(
           [
             { "old-forum.example.com" => 3, "legacy.example.com" => 1 },
-            { "old-forum.example.com" => 2 },
+            { "old-forum.example.com" => 2, "another.example.com" => 4 },
           ],
         )
 
-      expect(count).to eq(2) # distinct hosts, the step's added warning count
-
-      entries = rows("log_entries")
-      expect(entries.size).to eq(2)
-      expect(entries).to all(
-        include(
-          type: Migrations::Database::IntermediateDB::LogEntry::WARNING,
-          message: described_class::FOREIGN_LINK_LOG_MESSAGE,
-        ),
+      expect(count).to eq(0) # no dominant host, nothing to warn about
+      expect(entry).to include(
+        type: Migrations::Database::IntermediateDB::LogEntry::INFO,
+        message: described_class::FOREIGN_LINK_LOG_MESSAGE,
       )
-
-      by_host = entries.index_by { |entry| JSON.parse(entry[:details])["host"] }
-      expect(JSON.parse(by_host["old-forum.example.com"][:details])["count"]).to eq(5)
-      expect(JSON.parse(by_host["legacy.example.com"][:details])["count"]).to eq(1)
+      expect(JSON.parse(entry[:details])["total"]).to eq(10)
+      expect(hosts_in(entry[:details])).to eq(
+        [["old-forum.example.com", 5], ["another.example.com", 4], ["legacy.example.com", 1]],
+      )
     end
 
-    it "writes nothing and reports zero hosts for no results" do
+    it "writes a WARNING and reports one warning when a host dominates the list" do
+      count =
+        described_class.combine_results(
+          [{ "old-forum.example.com" => 300 }, { "other.example.com" => 50, "misc.example" => 40 }],
+        )
+
+      expect(count).to eq(1)
+      expect(entry).to include(type: Migrations::Database::IntermediateDB::LogEntry::WARNING)
+      expect(hosts_in(entry[:details]).first).to eq(["old-forum.example.com", 300])
+    end
+
+    it "does not let a small forum's handful of links dominate" do
+      # 3 of 4 links is 75%, but far below the absolute minimum a former domain
+      # would accumulate.
+      count = described_class.combine_results([{ "old.example" => 3, "other.example" => 1 }])
+
+      expect(count).to eq(0)
+      expect(entry).to include(type: Migrations::Database::IntermediateDB::LogEntry::INFO)
+    end
+
+    it "writes nothing for no results" do
       expect(described_class.combine_results([])).to eq(0)
       expect(rows("log_entries")).to be_empty
     end

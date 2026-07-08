@@ -4,35 +4,49 @@ module Migrations
   module Converters
     module Discourse
       class Posts < Conversion::Step
-        # One WARNING row per foreign host, not per link: each worker tallies links
-        # per host on the scan hot path, and the reducer (`combine_results`) sums the
-        # tallies and writes one entry per host, with the host and its total link
-        # count in `details`. The step's warning count is the number of distinct
-        # hosts, so the operator sees how many hosts to review rather than a count in
-        # the tens of thousands.
-        FOREIGN_LINK_LOG_MESSAGE = "Absolute internal-looking link on an unconfigured host"
+        # One log entry for the whole run: each worker tallies foreign-host links
+        # per host on the scan hot path, and the reducer (`combine_results`) merges
+        # the tallies into a single entry whose `details` carry the full host list,
+        # sorted by link count. Ordinary forums link thousands of other Discourse
+        # sites, so a long flat tail is normal and stays an INFO entry; the entry
+        # becomes a WARNING (and the step shows one warning) only when a host
+        # DOMINATES the list — a former domain absorbs years of absolute self-links,
+        # so it towers over the organic tail in a way sister sites don't.
+        FOREIGN_LINK_LOG_MESSAGE = "Internal-looking links on unconfigured hosts"
 
-        # Sums every worker's per-host link tally and writes one WARNING per host.
+        # A host dominates when it holds this share of all foreign route-shaped
+        # links AND at least this many links (so a tiny forum's three links can't
+        # dominate anything). Tuned against meta.discourse.org as the known
+        # negative: its most-linked sister site holds ~15%.
+        DOMINANT_HOST_SHARE = 0.25
+        DOMINANT_HOST_MINIMUM = 100
+        private_constant :DOMINANT_HOST_SHARE, :DOMINANT_HOST_MINIMUM
+
+        # Merges every worker's per-host link tally and writes the one log entry.
         # Runs in the parent under the run DB's single-writer discipline (see
         # {StepCoordinator#reduce_results}); `results` are the workers' `result`
         # hashes, with string keys from crossing the process boundary as JSON.
-        # Returns the number of distinct hosts as the step's added warning count.
+        # Returns 1 (one warning) when a host dominates, else 0.
         def self.combine_results(results)
           totals = Hash.new(0)
           results.each { |hosts| hosts.each { |host, count| totals[host] += count } }
+          return 0 if totals.empty?
 
-          totals.each do |host, count|
-            IntermediateDB::LogEntry.create(
-              type: IntermediateDB::LogEntry::WARNING,
-              message: FOREIGN_LINK_LOG_MESSAGE,
-              details: {
-                host:,
-                count:,
-              },
-            )
-          end
+          total = totals.values.sum
+          hosts = totals.sort_by { |host, count| [-count, host] }
+          top_count = hosts.first[1]
+          dominant = top_count >= DOMINANT_HOST_MINIMUM && top_count >= total * DOMINANT_HOST_SHARE
 
-          totals.size
+          IntermediateDB::LogEntry.create(
+            type: dominant ? IntermediateDB::LogEntry::WARNING : IntermediateDB::LogEntry::INFO,
+            message: FOREIGN_LINK_LOG_MESSAGE,
+            details: {
+              total:,
+              hosts: hosts.map { |host, count| { host:, count: } },
+            },
+          )
+
+          dominant ? 1 : 0
         end
 
         source do
