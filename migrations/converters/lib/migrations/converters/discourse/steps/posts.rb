@@ -49,13 +49,14 @@ module Migrations
         end
 
         processor do
-          attr_accessor :group_names, :here_mention, :custom_emoji_names
+          attr_accessor :group_names, :here_mention, :hashtag_names, :custom_emoji_names
 
           def setup
             @extractor =
               RawExtractor.new(
                 mention_resolver:
                   MentionResolver.new(here_mention:, group_names: group_names || []),
+                hashtag_names:,
                 custom_emoji_names:,
               )
             # One buffer, reused (cleared) per post — a fresh one would allocate a

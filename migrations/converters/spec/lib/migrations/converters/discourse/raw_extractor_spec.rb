@@ -308,6 +308,52 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
     end
   end
 
+  describe "hashtags with an existence gate" do
+    subject(:extractor) { described_class.new(hashtag_names: %w[announcements support:billing]) }
+
+    it "defers a hashtag whose name is in the set" do
+      result = extract("see #announcements please")
+
+      expect(buffer.hashtags.first[:name]).to eq("announcements")
+      expect(result).to eq("see #{buffer.hashtags.first[:placeholder]} please")
+    end
+
+    it "leaves a hashtag that names nothing on the source as literal text" do
+      raw = "tracked in PR #123 and channel #general"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.hashtags).to be_empty
+    end
+
+    it "defers a parent:child category path in the set" do
+      extract("filed under #support:billing today")
+
+      expect(buffer.hashtags.first[:name]).to eq("support:billing")
+    end
+
+    it "matches the set case- and Unicode-insensitively" do
+      extract("see #Announcements please")
+
+      expect(buffer.hashtags.first[:name]).to eq("Announcements")
+    end
+
+    it "leaves a forced suffix on an unknown name as literal text" do
+      raw = "tagged #unknown::tag today"
+
+      expect(extract(raw)).to eq(raw)
+      expect(buffer.hashtags).to be_empty
+    end
+
+    it "gates a forced suffix on the name, deferring a known one" do
+      extract("in #announcements::category now")
+
+      expect(buffer.hashtags.first).to include(
+        name: "announcements",
+        hashtag_type: HashtagType::CATEGORY,
+      )
+    end
+  end
+
   describe "custom emoji" do
     subject(:extractor) { described_class.new(custom_emoji_names: %w[parrot +1]) }
 

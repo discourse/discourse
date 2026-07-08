@@ -26,10 +26,19 @@ RSpec.describe Migrations::Converters::Discourse::Converter do
 
       before do
         allow(Migrations::Converters::Adapter::Postgres).to receive(:new).and_return(source_db)
+        allow(source_db).to receive(:query).with("SELECT name FROM groups").and_return([])
+        allow(source_db).to receive(:query).with("SELECT name FROM custom_emojis").and_return([])
+        allow(source_db).to receive(:query).with("SELECT name FROM tags").and_return([])
+        allow(source_db).to receive(:query).with(a_string_including("FROM categories")).and_return(
+          [],
+        )
+        allow(source_db).to receive(:query_value).and_return(nil)
       end
 
       it "loads the source group names and here_mention setting for mention classification" do
-        allow(source_db).to receive(:query).and_return([{ name: "staff" }, { name: "moderators" }])
+        allow(source_db).to receive(:query).with("SELECT name FROM groups").and_return(
+          [{ name: "staff" }, { name: "moderators" }],
+        )
         allow(source_db).to receive(:query_value).and_return("everyone")
 
         args = described_class.new({}).step_args(Migrations::Converters::Discourse::Posts)
@@ -40,21 +49,34 @@ RSpec.describe Migrations::Converters::Discourse::Converter do
       end
 
       it "falls back to the default here_mention when the source has no such setting" do
-        allow(source_db).to receive(:query).and_return([])
-        allow(source_db).to receive(:query_value).and_return(nil)
-
         args = described_class.new({}).step_args(Migrations::Converters::Discourse::Posts)
 
         expect(args[:group_names]).to eq([])
         expect(args[:here_mention]).to eq("here")
       end
 
+      it "loads normalized category slug paths and tag names for the hashtag gate" do
+        allow(source_db).to receive(:query).with(a_string_including("FROM categories")).and_return(
+          [{ slug: "Support", parent_slug: nil }, { slug: "Billing", parent_slug: "Support" }],
+        )
+        allow(source_db).to receive(:query).with("SELECT name FROM tags").and_return(
+          [{ name: "Release" }],
+        )
+
+        args = described_class.new({}).step_args(Migrations::Converters::Discourse::Posts)
+
+        expect(args[:hashtag_names]).to contain_exactly(
+          "support",
+          "billing",
+          "support:billing",
+          "release",
+        )
+      end
+
       it "loads the source custom emoji names for emoji extraction" do
-        allow(source_db).to receive(:query).with("SELECT name FROM groups").and_return([])
         allow(source_db).to receive(:query).with("SELECT name FROM custom_emojis").and_return(
           [{ name: "parrot" }, { name: "+1" }],
         )
-        allow(source_db).to receive(:query_value).and_return(nil)
 
         args = described_class.new({}).step_args(Migrations::Converters::Discourse::Posts)
 

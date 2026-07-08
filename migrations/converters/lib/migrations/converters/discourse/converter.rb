@@ -19,6 +19,7 @@ module Migrations
             source_db:,
             group_names: group_names(source_db),
             here_mention: here_mention(source_db),
+            hashtag_names: hashtag_names(source_db),
             custom_emoji_names: custom_emoji_names(source_db),
           }
         end
@@ -28,6 +29,30 @@ module Migrations
         # Source group names, so the Posts step can classify `@group` mentions.
         def group_names(source_db)
           source_db.query("SELECT name FROM groups").map { |row| row[:name] }
+        end
+
+        # The names a hashtag can address on the source — every category slug, every
+        # `parent:child` category path, and every tag name (synonyms are tags too, so
+        # `SELECT name FROM tags` already covers them). Normalized like the importer
+        # normalizes them when it resolves a hashtag, so the Posts step defers only a
+        # `#name` that names something real and the two sides agree on what matches.
+        def hashtag_names(source_db)
+          names = Set.new
+
+          source_db
+            .query(<<~SQL)
+              SELECT c.slug AS slug, parent.slug AS parent_slug
+              FROM categories c
+                   LEFT JOIN categories parent ON parent.id = c.parent_category_id
+            SQL
+            .each do |row|
+              names << normalize(row[:slug])
+              names << normalize("#{row[:parent_slug]}:#{row[:slug]}") if row[:parent_slug]
+            end
+
+          source_db.query("SELECT name FROM tags").each { |row| names << normalize(row[:name]) }
+
+          names
         end
 
         # Source custom emoji names, so the Posts step extracts only `:name:`
@@ -42,6 +67,10 @@ module Migrations
         def here_mention(source_db)
           source_db.query_value("SELECT value FROM site_settings WHERE name = 'here_mention'") ||
             "here"
+        end
+
+        def normalize(name)
+          Migrations::NameNormalizer.normalize(name)
         end
       end
     end
