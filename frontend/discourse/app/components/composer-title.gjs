@@ -150,12 +150,6 @@ export default class ComposerTitle extends Component {
       return;
     }
 
-    if (!this.bodyIsDefault()) {
-      this.set("autoPosted", true);
-      this.set("composer.featuredLink", this.get("composer.title"));
-      return;
-    }
-
     // Try to onebox. If success, update post body and title.
     this.set("composer.loading", true);
 

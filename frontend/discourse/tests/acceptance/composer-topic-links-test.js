@@ -37,16 +37,16 @@ acceptance("Composer topic featured links", function (needs) {
 
     assert
       .dom(".title-input input")
-      .hasValue(
-        "http://www.example.com/has-title.html",
-        "title remains the pasted link"
-      );
+      .hasValue("An interesting article", "title is from the oneboxed article");
     assert
       .dom(".d-editor-input")
       .hasValue(
-        "this is the content of a new topic post",
-        "link is not appended to existing body content"
+        "this is the content of a new topic post\n\nhttp://www.example.com/has-title.html",
+        "link is appended to existing body content"
       );
+    assert
+      .dom(".d-editor-preview")
+      .includesHtml("onebox", "appended link previews as a onebox");
 
     const composer = this.owner.lookup("service:composer");
 
