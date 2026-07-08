@@ -27,7 +27,7 @@ module DiscoursePostEvent
     # prepend so it runs before `dependent: :delete_all` wipes the invitees
     before_destroy :reset_invitees_topic_tracking, prepend: true
     after_commit :create_livestream_chat_channel, on: %i[create update]
-    after_commit :warm_livestream_onebox, on: %i[create update]
+    after_commit :enqueue_warm_livestream_onebox, on: %i[create update]
     after_commit :destroy_topic_custom_field, on: %i[destroy]
     after_commit :create_or_update_event_date, on: %i[create update]
     after_save do
@@ -72,15 +72,21 @@ module DiscoursePostEvent
       DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
     end
 
-    # TODO (martin) For some reason the job here isn't enqueued sometimes?
-    # Which leads to a bad experience on the UI, since even reloading
-    # doesn't get the livestream onebox to show.
-    def warm_livestream_onebox
-      return if !livestream? || location.blank?
+    # Happens after the event record is saved to prepare the onebox
+    def enqueue_warm_livestream_onebox
+      return if !livestream? || livestream_url.blank?
       return if !saved_change_to_livestream? && !saved_change_to_location?
-      return if Oneboxer.cached_onebox(location).present?
+      return if Oneboxer.cached_onebox(livestream_url).present?
+      Jobs.enqueue(:warm_livestream_onebox, event_id: id, url: livestream_url)
+    end
 
-      Jobs.enqueue(:warm_livestream_onebox, event_id: id, url: location)
+    # Happens on demand in the serializer for post event in case
+    # the onebox is not warmed yet
+    def warm_livestream_onebox!(publish: false)
+      return if !livestream? || livestream_url.blank?
+      return if Oneboxer.cached_onebox(livestream_url).present?
+      Oneboxer.onebox(livestream_url)
+      post&.publish_change_to_clients!(:revised) if publish
     end
 
     def destroy_topic_custom_field
@@ -530,13 +536,6 @@ module DiscoursePostEvent
 
     def livestream_url
       location || url
-    end
-
-    def warm_livestream_onebox!(publish: false)
-      return if !livestream? || livestream_url.blank?
-      return if Oneboxer.cached_onebox(livestream_url).present?
-      Oneboxer.onebox(livestream_url)
-      post&.publish_change_to_clients!(:revised) if publish
     end
 
     private

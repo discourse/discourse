@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-# TODO (martin) In UI, when someone clicks Going to event, we need to load
-# in the Livestream component, like how we update the chat sidebar
 class DiscourseCalendar::Livestream::PrepareZoomJoin
-  ZOOM_PARTICIPANT_ROLE = 0
+  ZOOM_ROLE_PARTICIPANT = 0
 
   include Service::Base
 
@@ -66,7 +64,7 @@ class DiscourseCalendar::Livestream::PrepareZoomJoin
       sdkKey: SiteSetting.livestream_zoom_sdk_key,
       appKey: SiteSetting.livestream_zoom_sdk_key,
       mn: zoom_join_data[:meeting_number],
-      role: ZOOM_PARTICIPANT_ROLE,
+      role: ZOOM_ROLE_PARTICIPANT,
       iat: token_issue_timestamp,
       exp: expiration_timestamp,
       tokenExp: expiration_timestamp,
