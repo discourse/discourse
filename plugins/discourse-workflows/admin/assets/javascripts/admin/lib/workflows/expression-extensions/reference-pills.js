@@ -5,6 +5,10 @@ import { dragSource } from "./drag-source";
 import { parseReference, referenceLabel } from "./reference-label";
 import { propertyAccessor, referencePickerData } from "./reference-properties";
 
+// Delay before a selected pill's second click opens the dropdown, so a
+// double-click (which edits) isn't misread as two single clicks.
+const PILL_OPEN_DELAY = 250;
+
 function referenceState(scope, inner) {
   const resolved = walkScope(scope, inner);
   if (resolved === undefined) {
@@ -155,8 +159,8 @@ export function buildReferencePills(
       );
     }
 
-    destroy(dom) {
-      clearTimeout(dom.__openTimer);
+    destroy() {
+      clearTimeout(this.openTimer);
     }
 
     toDOM(view) {
@@ -176,10 +180,11 @@ export function buildReferencePills(
           return;
         }
         if (rangeIsSelected(view.state.selection.main, range)) {
-          clearTimeout(pill.__openTimer);
-          pill.__openTimer = setTimeout(() => {
-            openDropdown(view, range, pill);
-          }, 250);
+          clearTimeout(this.openTimer);
+          this.openTimer = setTimeout(
+            () => openDropdown(view, range, pill),
+            PILL_OPEN_DELAY
+          );
         } else {
           view.dispatch({ selection: { anchor: range.from, head: range.to } });
           view.focus();
@@ -188,7 +193,7 @@ export function buildReferencePills(
 
       pill.addEventListener("dblclick", (event) => {
         event.preventDefault();
-        clearTimeout(pill.__openTimer);
+        clearTimeout(this.openTimer);
         const range = expressionRangeAt(view, view.posAtDOM(pill));
         if (range) {
           enterEditMode(view, range);
