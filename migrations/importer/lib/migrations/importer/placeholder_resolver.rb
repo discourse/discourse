@@ -578,9 +578,11 @@ module Migrations
       end
 
       def report_unresolved_link(row)
+        # A coordinate-form post link has neither a target id nor a name; the
+        # original URL is the most useful identifier a report can carry for it.
         @unresolved_sink << UnresolvedEmbed.new(
           kind: :link,
-          entity_id: row[:target_id] || row[:target_name],
+          entity_id: row[:target_id] || row[:target_name] || row[:url],
           owner_id: row[:owner_id],
           owner_url: owner_url_for(row[:owner_id]),
         )
