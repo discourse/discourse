@@ -1,7 +1,6 @@
-// @ts-check
-
 import { splitBlock } from "prosemirror-commands";
 import { TextSelection } from "prosemirror-state";
+import type { RichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 
 function isInlineContainer(node) {
   return (
@@ -21,8 +20,7 @@ function findInlineContainerDepth($from) {
   return null;
 }
 
-/** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
-const extension = {
+const extension: RichEditorExtension = {
   keymap: () => ({
     Enter: (state, dispatch) => {
       const selection = state.selection;

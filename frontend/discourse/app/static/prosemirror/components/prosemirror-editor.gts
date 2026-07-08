@@ -1,4 +1,3 @@
-// @ts-check
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
@@ -23,7 +22,12 @@ import { EditorState } from "prosemirror-state";
 import * as ProsemirrorTransform from "prosemirror-transform";
 import * as ProsemirrorView from "prosemirror-view";
 import { EditorView } from "prosemirror-view";
-import { getExtensions } from "discourse/lib/composer/rich-editor-extensions";
+import {
+  getExtensions,
+  type PluginParams,
+  type RichEditorExtension,
+} from "discourse/lib/composer/rich-editor-extensions";
+import type { ToolbarBase } from "discourse/lib/composer/toolbar";
 import { bind } from "discourse/lib/decorators";
 import forceScrollingElementPosition from "discourse/modifiers/force-scrolling-element-position";
 import { focusOffScreen } from "discourse/modifiers/prevent-scroll-on-focus";
@@ -37,41 +41,50 @@ import { extractNodeViews, extractPlugins } from "../core/plugin";
 import { createSchema } from "../core/schema";
 import Serializer from "../core/serializer";
 import placeholder from "../extensions/placeholder";
+import type GlimmerNodeView from "../lib/glimmer-node-view";
 import * as utils from "../lib/plugin-utils";
 import TextManipulation from "../lib/text-manipulation";
 
 const AUTOCOMPLETE_KEY_DOWN_SUPPRESS = ["Enter", "Tab", "ArrowDown", "ArrowUp"];
 
-/**
- * @typedef ProsemirrorEditorArgs
- * @property {string} [value] The markdown content to be rendered in the editor
- * @property {string} [placeholder] The placeholder text to be displayed when the editor is empty
- * @property {boolean} [disabled] Whether the editor should be disabled
- * @property {Record<string, () => void>} [keymap] A mapping of keybindings to commands
- * @property {(value: { target: { value: string } }) => void} [change] A callback called when the editor content changes
- * @property {() => void} [focusIn] A callback called when the editor gains focus
- * @property {() => void} [focusOut] A callback called when the editor loses focus
- * @property {(textManipulation: TextManipulation) => undefined | (() => void)} [onSetup] A callback called when the editor is set up, may return a destructor
- * @property {number} [topicId] The ID of the topic being edited, if any
- * @property {number} [categoryId] The ID of the category of the topic being edited, if any
- * @property {string} [class] The class to be added to the ProseMirror contentEditable editor
- * @property {boolean} [includeDefault] If default node and mark spec/parse/serialize/inputRules definitions from ProseMirror should be included
- * @property {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension[]} [extensions] A list of extensions to be used with the editor INSTEAD of the ones registered through the API
- * @property {(toolbar: import("discourse/lib/composer/toolbar").ToolbarBase) => void} [replaceToolbar] A function that replaces the default toolbar in a container with a custom/temporary one
- * @property {() => void} [toggleRichEditor] A callback to toggle the rich editor on and off if in such a context
- */
+export interface ProsemirrorEditorArgs {
+  /** The markdown content to be rendered in the editor */
+  value?: string;
+  /** The placeholder text to be displayed when the editor is empty */
+  placeholder?: string;
+  /** Whether the editor should be disabled */
+  disabled?: boolean;
+  /** A mapping of keybindings to commands */
+  keymap?: Record<string, () => void>;
+  /** A callback called when the editor content changes */
+  change?: (value: { target: { value: string } }) => void;
+  /** A callback called when the editor gains focus */
+  focusIn?: () => void;
+  /** A callback called when the editor loses focus */
+  focusOut?: () => void;
+  /** A callback called when the editor is set up, may return a destructor */
+  onSetup?: (textManipulation: TextManipulation) => undefined | (() => void);
+  /** The ID of the topic being edited, if any */
+  topicId?: number;
+  /** The ID of the category of the topic being edited, if any */
+  categoryId?: number;
+  /** The class to be added to the ProseMirror contentEditable editor */
+  class?: string;
+  /** If default node and mark spec/parse/serialize/inputRules definitions from ProseMirror should be included */
+  includeDefault?: boolean;
+  /** A list of extensions to be used with the editor INSTEAD of the ones registered through the API */
+  extensions?: RichEditorExtension[];
+  /** A function that replaces the default toolbar in a container with a custom/temporary one */
+  replaceToolbar?: (toolbar: ToolbarBase) => void;
+  /** A callback to toggle the rich editor on and off if in such a context */
+  toggleRichEditor?: () => void;
+}
 
-/**
- * @typedef ProsemirrorEditorSignature
- * @property {ProsemirrorEditorArgs} Args
- */
+export interface ProsemirrorEditorSignature {
+  Args: ProsemirrorEditorArgs;
+}
 
-/** @typedef {import("../lib/glimmer-node-view").default} GlimmerNodeView */
-
-/**
- * @extends {Component<ProsemirrorEditorSignature>}
- */
-export default class ProsemirrorEditor extends Component {
+export default class ProsemirrorEditor extends Component<ProsemirrorEditorSignature> {
   @service session;
   @service dialog;
   @service menu;
@@ -85,15 +98,15 @@ export default class ProsemirrorEditor extends Component {
 
   schema = createSchema(this.extensions, this.args.includeDefault);
   view;
+  parser;
+  serializer;
+  textManipulation;
 
-  /** @type {Array<GlimmerNodeView>} */
-  glimmerNodeViews = trackedArray();
+  glimmerNodeViews = trackedArray<GlimmerNodeView>();
   #lastSerialized;
-  /** @type {undefined | (() => void)} */
-  #destructor;
+  #destructor: undefined | (() => void);
 
-  /** @type {import("discourse/lib/composer/rich-editor-extensions").PluginParams} */
-  get pluginParams() {
+  get pluginParams(): PluginParams {
     return {
       utils: {
         ...utils,

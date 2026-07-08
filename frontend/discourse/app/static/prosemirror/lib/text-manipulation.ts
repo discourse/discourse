@@ -1,18 +1,24 @@
-// @ts-check
 import { getOwner, setOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import { next } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
-// @ts-ignore — pretty-text has no type declarations
+// @ts-expect-error — pretty-text has no type declarations
 import { lookupCachedUploadUrl } from "pretty-text/upload-short-url";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
-import { Slice } from "prosemirror-model";
+import { Schema, Slice } from "prosemirror-model";
 import {
   liftListItem,
   sinkListItem,
   wrapInList,
 } from "prosemirror-schema-list";
 import { NodeSelection, Selection, TextSelection } from "prosemirror-state";
+import type { EditorView } from "prosemirror-view";
+import type {
+  AutocompleteHandler,
+  PlaceholderHandler,
+  TextManipulation,
+  ToolbarState,
+} from "discourse/lib/composer/text-manipulation";
 import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
 import dAutocomplete from "discourse/ui-kit/modifiers/d-autocomplete";
@@ -37,31 +43,20 @@ function isPlainTextFragment(fragment, schema) {
   });
 }
 
-/**
- * @typedef {import("discourse/lib/composer/text-manipulation").TextManipulation} TextManipulation
- * @typedef {import("discourse/lib/composer/text-manipulation").AutocompleteHandler} AutocompleteHandler
- * @typedef {import("discourse/lib/composer/text-manipulation").PlaceholderHandler} PlaceholderHandler
- * @typedef {import("discourse/lib/composer/text-manipulation").ToolbarState} ToolbarState
- */
-
-/** @implements {TextManipulation} */
-export default class ProsemirrorTextManipulation {
+export default class ProsemirrorTextManipulation implements TextManipulation {
   allowPreview = false;
 
-  /** @type {import("prosemirror-model").Schema} */
-  schema;
-  /** @type {import("prosemirror-view").EditorView} */
-  view;
-  /** @type {PlaceholderHandler} */
-  placeholder;
-  /** @type {AutocompleteHandler} */
-  autocompleteHandler;
-  /** @type {ToolbarState} */
-  state = trackedObject({});
+  schema: Schema;
+  view: EditorView;
+  placeholder: PlaceholderHandler;
+  autocompleteHandler: AutocompleteHandler;
+  state: ToolbarState = trackedObject({});
   convertFromMarkdown;
   convertToMarkdown;
   splitNonEmptyLines;
   buildListNode;
+  commands;
+  customState;
 
   constructor(
     owner,
@@ -340,12 +335,8 @@ export default class ProsemirrorTextManipulation {
     this.focus();
   }
 
-  /**
-   * Bridge method from pre-existing API to the new command system
-   *
-   * @returns {boolean} whether the command was applied
-   */
-  formatCode() {
+  // Bridge method from pre-existing API to the new command system
+  formatCode(): boolean {
     return this.commands.formatCode(this.view.state, this.view.dispatch);
   }
 
@@ -429,7 +420,16 @@ export default class ProsemirrorTextManipulation {
     this.focus();
   }
 
-  replaceText(oldValue, newValue, opts = {}) {
+  replaceText(
+    oldValue,
+    newValue,
+    opts: {
+      regex?: RegExp;
+      index?: number;
+      skipNewSelection?: boolean;
+      forceFocus?: boolean;
+    } = {}
+  ) {
     // Replacing Markdown text is not reliable and should eventually be deprecated
 
     const markdown = this.convertToMarkdown(this.view.state.doc);
@@ -481,11 +481,8 @@ export default class ProsemirrorTextManipulation {
     this.view.dom.dir = this.view.dom.dir === "rtl" ? "ltr" : "rtl";
   }
 
-  /**
-   * Wraps consecutive upload placeholders in grid tags.
-   * @param {string[]} consecutiveImages - Array of consecutive image filenames to wrap
-   */
-  autoGridImages(consecutiveImages) {
+  // Wraps consecutive upload placeholders in grid tags.
+  autoGridImages(consecutiveImages: string[]) {
     if (isEmpty(consecutiveImages)) {
       return;
     }
@@ -585,12 +582,9 @@ export default class ProsemirrorTextManipulation {
   }
 }
 
-/** @implements {AutocompleteHandler} */
-class ProsemirrorAutocompleteHandler {
-  /** @type {import("prosemirror-view").EditorView} */
-  view;
-  /** @type {import("prosemirror-model").Schema} */
-  schema;
+class ProsemirrorAutocompleteHandler implements AutocompleteHandler {
+  view: EditorView;
+  schema: Schema;
   convertFromMarkdown;
 
   constructor({ schema, view, convertFromMarkdown }) {
@@ -599,25 +593,16 @@ class ProsemirrorAutocompleteHandler {
     this.convertFromMarkdown = convertFromMarkdown;
   }
 
-  /**
-   * The textual value of the selected text block
-   * @returns {string}
-   */
-  getValue() {
+  // The textual value of the selected text block
+  getValue(): string {
     return (
       (this.view.state.selection.$head.nodeBefore?.textContent ?? "") +
         (this.view.state.selection.$head.nodeAfter?.textContent ?? "") || " "
     );
   }
 
-  /**
-   * Replaces the term between start-end in the currently selected text block
-   *
-   * @param {number} start
-   * @param {number} end
-   * @param {String} term
-   */
-  replaceTerm(start, end, term) {
+  // Replaces the term between start-end in the currently selected text block
+  replaceTerm(start: number, end: number, term: string) {
     const node = this.view.state.selection.$head.nodeBefore;
     const from = this.view.state.selection.from - node.nodeSize + start;
     const to = this.view.state.selection.from - node.nodeSize + end + 1;
@@ -634,12 +619,8 @@ class ProsemirrorAutocompleteHandler {
     this.view.dispatch(tr);
   }
 
-  /**
-   * Gets the textual caret position within the selected text block
-   *
-   * @returns {number}
-   */
-  getCaretPosition() {
+  // Gets the textual caret position within the selected text block
+  getCaretPosition(): number {
     const node = this.view.state.selection.$head.nodeBefore;
 
     if (!node?.isText) {
@@ -684,8 +665,7 @@ class ProsemirrorAutocompleteHandler {
   }
 }
 
-/** @implements {PlaceholderHandler} */
-class ProsemirrorPlaceholderHandler {
+class ProsemirrorPlaceholderHandler implements PlaceholderHandler {
   view;
   schema;
   convertFromMarkdown;

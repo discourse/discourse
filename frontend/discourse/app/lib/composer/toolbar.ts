@@ -1,32 +1,88 @@
-// @ts-check
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { translateModKey } from "discourse/lib/utilities";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
 import { i18n } from "discourse-i18n";
 
-/**
- * @typedef ToolbarButton
- * @property {string} id
- * @property {string} [group]
- * @property {string} [tabindex]
- * @property {string} [className]
- * @property {string} [label]
- * @property {string} [icon]
- * @property {string} [href]
- * @property {Function} action
- * @property {Function} [perform]
- * @property {Function} [sendAction]
- * @property {boolean} [trimLeading]
- * @property {boolean} [preventFocus]
- * @property {Function} condition
- * @property {boolean} [hideShortcutInTitle]
- * @property {string} title
- * @property {string} [shortcut]
- * @property {string} [ariaKeyshortcuts]
- * @property {boolean} [unshift]
- * @property {Function} [active]
- */
+interface ToolbarButton {
+  id: string;
+  group?: string;
+  tabindex?: string;
+  className?: string;
+  label?: string;
+  icon?: string;
+  href?: string;
+  action: (...args: unknown[]) => unknown;
+  perform?: (...args: unknown[]) => unknown;
+  sendAction?: (...args: unknown[]) => unknown;
+  trimLeading?: boolean;
+  preventFocus?: boolean;
+  condition: (...args: unknown[]) => unknown;
+  hideShortcutInTitle?: boolean;
+  title: string;
+  shortcut?: string;
+  ariaKeyshortcuts?: string;
+  unshift?: boolean;
+  active?: (...args: unknown[]) => unknown;
+}
+
+/** The event object passed to a button's `action`/`perform` callbacks. */
+interface ToolbarEvent {
+  applySurround: (...args: unknown[]) => unknown;
+  applyList: (...args: unknown[]) => unknown;
+  applyHeading: (...args: unknown[]) => unknown;
+  formatCode: (...args: unknown[]) => unknown;
+  toggleDirection: (...args: unknown[]) => unknown;
+}
+
+interface ToolbarPopupMenuOption {
+  action?: (...args: unknown[]) => unknown;
+  shortcut?: string;
+  ariaKeyshortcuts?: string;
+}
+
+interface ToolbarPopupMenu {
+  action?: (option: ToolbarPopupMenuOption) => unknown;
+  options?: () => ToolbarPopupMenuOption[] | undefined;
+}
+
+/** Accepted attributes for `addButton` (the raw input, before normalization). */
+export interface ToolbarButtonAttrs {
+  id?: string;
+  group?: string;
+  tabindex?: string;
+  className?: string;
+  label?: string;
+  icon?: string | ((...args: unknown[]) => unknown);
+  href?: string;
+  action?: (event: ToolbarEvent) => unknown;
+  perform?: (event: ToolbarEvent) => unknown;
+  trimLeading?: boolean;
+  popupMenu?: ToolbarPopupMenu;
+  preventFocus?: boolean;
+  condition?: (...args: unknown[]) => unknown;
+  sendAction?: (...args: unknown[]) => unknown;
+  /** Custom shortcut action */
+  shortcutAction?: (...args: unknown[]) => unknown;
+  /** Hide the shortcut hint in the button title */
+  hideShortcutInTitle?: boolean;
+  title?: string;
+  shortcut?: string;
+  unshift?: boolean;
+  disabled?: boolean;
+  /** Callback that receives the editor state and returns whether the button is active */
+  active?: (...args: unknown[]) => unknown;
+}
+
+type ToolbarButtonOrSeparator =
+  | ToolbarButton
+  | { type: string; condition: (...args: unknown[]) => unknown };
+
+interface ToolbarOpts {
+  siteSettings?: Record<string, unknown>;
+  capabilities?: Record<string, unknown>;
+  site?: Record<string, unknown>;
+}
 
 function getButtonLabel(labelKey, defaultLabel) {
   // use the Font Awesome icon if the label matches the default
@@ -36,7 +92,18 @@ function getButtonLabel(labelKey, defaultLabel) {
 const DEFAULT_GROUP = "main";
 
 export class ToolbarBase {
-  constructor(opts = {}) {
+  shortcuts: Record<string, ToolbarButton | ToolbarPopupMenuOption>;
+  context: {
+    newToolbarEvent?: (...args: unknown[]) => unknown;
+    appEvents?: { trigger: (...args: unknown[]) => unknown };
+    send?: (...args: unknown[]) => unknown;
+  };
+  groups: Array<{ group: string; buttons: ToolbarButtonOrSeparator[] }>;
+  siteSettings: Record<string, unknown>;
+  capabilities: Record<string, unknown>;
+  site: Record<string, unknown>;
+
+  constructor(opts: ToolbarOpts = {}) {
     this.shortcuts = {};
     this.context = {};
     this.groups = [{ group: DEFAULT_GROUP, buttons: [] }];
@@ -45,39 +112,15 @@ export class ToolbarBase {
     this.site = opts.site || {};
   }
 
-  /**
-   * @param {Object} buttonAttrs
-   * @param {string=} buttonAttrs.id
-   * @param {string=} buttonAttrs.group
-   * @param {string=} buttonAttrs.tabindex
-   * @param {string=} buttonAttrs.className
-   * @param {string=} buttonAttrs.label
-   * @param {string|Function} buttonAttrs.icon
-   * @param {string=} buttonAttrs.icon
-   * @param {string=} buttonAttrs.href
-   * @param {Function=} buttonAttrs.action
-   * @param {Function=} buttonAttrs.perform
-   * @param {boolean=} buttonAttrs.trimLeading
-   * @param {Object=} buttonAttrs.popupMenu
-   * @param {boolean=} buttonAttrs.preventFocus
-   * @param {Function=} buttonAttrs.condition
-   * @param {Function=} buttonAttrs.sendAction
-   * @param {Function=} buttonAttrs.shortcutAction custom shortcut action
-   * @param {boolean=} buttonAttrs.hideShortcutInTitle hide shortcut in title
-   * @param {string=} buttonAttrs.title
-   * @param {string=} buttonAttrs.shortcut
-   * @param {boolean=} buttonAttrs.unshift
-   * @param {boolean=} buttonAttrs.disabled
-   * @param {Function=} buttonAttrs.active callback function that receives state and returns boolean
-   */
-  addButton(buttonAttrs) {
+  addButton(buttonAttrs: ToolbarButtonAttrs) {
     const group = this.groups.find(
       (item) => item.group === (buttonAttrs.group || DEFAULT_GROUP)
     );
 
-    const createdButton = /** @type {ToolbarButton} */ (
-      Object.defineProperties({}, Object.getOwnPropertyDescriptors(buttonAttrs))
-    );
+    const createdButton = Object.defineProperties(
+      {},
+      Object.getOwnPropertyDescriptors(buttonAttrs)
+    ) as ToolbarButton;
 
     createdButton.preventFocus ??= true;
     createdButton.tabindex ??= "-1";

@@ -1,11 +1,7 @@
-// @ts-check
+import type { RichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
 
-/**
- * This extension is considered a "core" extension, it's autoloaded by ProsemirrorEditor
- *
- * @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension}
- */
-const extension = {
+// This extension is considered a "core" extension, it's autoloaded by ProsemirrorEditor
+const extension: RichEditorExtension = {
   plugins({
     pmState: { Plugin, PluginKey },
     pmView: { Decoration, DecorationSet },
