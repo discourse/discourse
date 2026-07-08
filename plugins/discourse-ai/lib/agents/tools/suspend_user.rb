@@ -59,29 +59,13 @@ module DiscourseAi
         end
 
         def invoke
+          validation_error = approval_precheck
+          return validation_error if validation_error
+
           user = User.find_by_username(parameters[:username])
-          if !user
-            return error_response(I18n.t("discourse_ai.ai_bot.suspend_user.errors.not_found"))
-          end
 
           if !guardian.can_suspend?(user)
             return error_response(I18n.t("discourse_ai.ai_bot.suspend_user.errors.not_allowed"))
-          end
-
-          if reason.blank?
-            return error_response(I18n.t("discourse_ai.ai_bot.suspend_user.errors.no_reason"))
-          end
-
-          duration_days = Integer(parameters[:duration_days], exception: false)
-          if duration_days.nil? || duration_days <= 0 || duration_days > MAX_DURATION_DAYS
-            return(
-              error_response(
-                I18n.t(
-                  "discourse_ai.ai_bot.suspend_user.errors.invalid_duration",
-                  max: MAX_DURATION_DAYS,
-                ),
-              )
-            )
           end
 
           result =
@@ -104,11 +88,48 @@ module DiscourseAi
           }
         end
 
+        # Validates the request without performing it, so a bad username,
+        # missing reason, or out-of-range duration is caught before the action
+        # is queued for approval (and again at approval-replay time). The
+        # approver's permission is intentionally not checked here — it is
+        # enforced against the approving moderator in #invoke.
+        def approval_precheck
+          if User.find_by_username(parameters[:username]).blank?
+            return error_response(I18n.t("discourse_ai.ai_bot.suspend_user.errors.not_found"))
+          end
+
+          if reason.blank?
+            return error_response(I18n.t("discourse_ai.ai_bot.suspend_user.errors.no_reason"))
+          end
+
+          if invalid_duration?
+            return(
+              error_response(
+                I18n.t(
+                  "discourse_ai.ai_bot.suspend_user.errors.invalid_duration",
+                  max: MAX_DURATION_DAYS,
+                ),
+              )
+            )
+          end
+
+          nil
+        end
+
         def description_args
           { username: parameters[:username], duration_days: parameters[:duration_days] }
         end
 
         private
+
+        def duration_days
+          Integer(parameters[:duration_days], exception: false)
+        end
+
+        def invalid_duration?
+          days = duration_days
+          days.nil? || days <= 0 || days > MAX_DURATION_DAYS
+        end
 
         def suspend_error_message(result)
           contract_result = result["result.contract.default"]

@@ -142,6 +142,15 @@ module DiscourseAi
           true
         end
 
+        # Runs before a tool that requires approval is queued for moderator
+        # review. Return an error hash (see #error_response) to reject the
+        # request up front — so a malformed or infeasible action (e.g. an
+        # unknown username) never creates a review item that could only ever
+        # fail on approval. Return nil to let the action be queued.
+        def approval_precheck
+          nil
+        end
+
         protected
 
         def fetch_default_branch(repo)

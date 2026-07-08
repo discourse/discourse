@@ -113,4 +113,34 @@ RSpec.describe DiscourseAi::Agents::Tools::SuspendUser do
     expect(result[:status]).to eq("success")
     expect(user.reload.suspended?).to eq(true)
   end
+
+  describe "#approval_precheck" do
+    it "rejects an unknown username without performing the action" do
+      result = tool(username: "nonexistent", duration_days: 7, reason: "Test").approval_precheck
+
+      expect(result[:status]).to eq("error")
+    end
+
+    it "rejects a blank reason and an out-of-range duration" do
+      expect(
+        tool(username: user.username, duration_days: 7, reason: " ").approval_precheck[:status],
+      ).to eq("error")
+      expect(
+        tool(
+          username: user.username,
+          duration_days: described_class::MAX_DURATION_DAYS + 1,
+          reason: "Test",
+        ).approval_precheck[
+          :status
+        ],
+      ).to eq("error")
+    end
+
+    it "returns nil for a valid request and does not suspend" do
+      result = tool(username: user.username, duration_days: 7, reason: "Test").approval_precheck
+
+      expect(result).to be_nil
+      expect(user.reload.suspended?).to eq(false)
+    end
+  end
 end
