@@ -11,7 +11,7 @@ RSpec.describe DiscourseDataExplorer::Query::Create do
     fab!(:acting_user, :admin)
     fab!(:group)
 
-    let(:params) { { name:, description:, sql:, group_ids: } }
+    let(:params) { { name:, description:, query: sql, group_ids: } }
     let(:dependencies) { { guardian: acting_user.guardian } }
     let(:name) { "My report" }
     let(:description) { "A useful report" }
@@ -65,7 +65,7 @@ RSpec.describe DiscourseDataExplorer::Query::Create do
         expect(query.groups).to contain_exactly(group)
       end
 
-      context "when the sql is blank" do
+      context "when the query is blank" do
         let(:sql) { "" }
 
         it "defaults the sql to SELECT 1" do

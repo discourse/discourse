@@ -229,20 +229,20 @@ module DiscourseDataExplorer
         scope.offset((number - 1) * page_size).limit(page_size)
       end
 
-      # Parse a JSON:API write document's `data` into a flat attributes hash, limited to
-      # `only`. to-one/to-many relationships become `<name>_id`/`<name>_ids`.
-      def jsonapi_deserialize(document, only:)
+      # Parse a JSON:API write document's `data` into a flat attributes hash.
+      # to-one/to-many relationships become `<name>_id`/`<name>_ids`. No allowlist:
+      # the Service::Base contract's declared attributes are the allowlist — services
+      # build records from contract attributes, never from this raw hash.
+      def jsonapi_deserialize(document)
         data =
           if document.respond_to?(:permit!)
             document.dup.require(:data).permit!.as_json
           else
             document.as_json["data"] || {}
           end
-        allowed = Array(only).map(&:to_s)
-        parsed = (data["attributes"] || {}).slice(*allowed)
+        parsed = data["attributes"] || {}
 
         (data["relationships"] || {}).each do |name, rel|
-          next if allowed.exclude?(name)
           rel_data = (rel || {})["data"]
           singular = name.singularize
           if rel_data.is_a?(Array)

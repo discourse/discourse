@@ -47,7 +47,7 @@ module DiscourseDataExplorer
 
       # Writes stay explicit and bespoke (Service::Base owns validation/policy/persistence).
       def create
-        attributes = jsonapi_deserialize(params, only: %i[name description sql group_ids])
+        attributes = jsonapi_deserialize(params)
         DiscourseDataExplorer::Query::Create.call(params: attributes, guardian:) do
           on_success { |query:| render_resource(query, status: :created) }
           on_failed_policy(:can_create_query) { raise Discourse::InvalidAccess }
