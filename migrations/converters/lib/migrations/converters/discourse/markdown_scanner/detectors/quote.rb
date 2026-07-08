@@ -42,9 +42,12 @@ module Migrations
                 .map(&:strip)
                 .each_with_index do |part, index|
                   case part
-                  when /\Apost:(\d+)\z/
+                  # At most 18 digits — a longer run overflows the signed 64-bit
+                  # integer SQLite stores ids in, and names no real record. The
+                  # attribution part is then ignored, like any unrecognized part.
+                  when /\Apost:(\d{1,18})\z/
                     post_number = Regexp.last_match(1).to_i
-                  when /\Atopic:(\d+)\z/
+                  when /\Atopic:(\d{1,18})\z/
                     topic_id = Regexp.last_match(1).to_i
                   when /\Ausername:(.+)\z/
                     username = Regexp.last_match(1)

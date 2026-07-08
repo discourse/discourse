@@ -530,6 +530,47 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       [buffer.links.first, result]
     end
 
+    # A digit run past 18 characters overflows the signed 64-bit integers ids are
+    # stored in — and names no real record: it's a numeric topic title, like the
+    # meta.discourse.org post about exactly that, which crashed the insert.
+    context "with a digit run too long to be an id" do
+      it "leaves a numeric-title topic URL as literal text" do
+        raw = "this one - https://forum.example.com/t/77777777777777777789999/ fails"
+
+        expect(extract(raw)).to eq(raw)
+        expect(buffer.links).to be_empty
+      end
+
+      it "leaves an oversized /p/ id as literal text" do
+        raw = "see /p/99999999999999999999999 there"
+
+        expect(extract(raw)).to eq(raw)
+        expect(buffer.links).to be_empty
+      end
+
+      it "reads an oversized trailing category segment as a slug, not an id" do
+        link, _result = link_for("in /c/77777777777777777789999 maybe")
+
+        expect(link).to include(target_id: nil, target_name: "77777777777777777789999")
+      end
+
+      it "still defers an 18-digit id" do
+        link, _result = link_for("see /t/123456789012345678 here")
+
+        expect(link).to include(target_id: 123_456_789_012_345_678)
+      end
+
+      it "degrades a quote with an oversized post: number to username-only" do
+        extract(%([quote="bob, post:99999999999999999999, topic:5"]x[/quote]))
+
+        expect(buffer.quotes.first).to include(
+          quoted_username: "bob",
+          quoted_post_number: nil,
+          quoted_topic_id: nil,
+        )
+      end
+    end
+
     it "defers a topic link with a slug and id" do
       link, result = link_for("see /t/some-slug/123 here")
 
