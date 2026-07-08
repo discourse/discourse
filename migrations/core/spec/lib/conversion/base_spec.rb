@@ -54,25 +54,6 @@ RSpec.describe Migrations::Conversion::Base do
       expect(scheduler_args[:reporter]).to be(reporter)
       expect(scheduler_args[:step_factory]).to respond_to(:call)
     end
-
-    it "runs a converter's report_diagnostics hook with the run DB and reporter" do
-      writer = instance_double(Migrations::Database::Connection)
-      allow(converter).to receive(:create_database) do
-        converter.instance_variable_set(:@writer, writer)
-      end
-      allow(Migrations::Conversion::StepScheduler).to receive(:new).and_return(
-        instance_double(Migrations::Conversion::StepScheduler, run: nil),
-      )
-      reporter = instance_double(Migrations::Reporting::Reporter, close: nil)
-      allow(Migrations::Reporting::Factory).to receive(:build).and_return(reporter)
-
-      received = []
-      converter.define_singleton_method(:report_diagnostics) { |db, rep| received << [db, rep] }
-
-      converter.run
-
-      expect(received).to eq([[writer, reporter]])
-    end
   end
 
   describe "#steps" do

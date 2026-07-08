@@ -114,11 +114,4 @@ RSpec.describe Migrations::Reporting::Plain do
     expect(lines).to include("Finishing up…")
     expect(lines.last).to eq("Total: 24 steps, 2 failed, 1 skipped (2:18)")
   end
-
-  it "prints a run-level summary notice as its own line" do
-    reporter.report_summary(runtime: 1.0, total: 1, failed: 0, skipped: 0)
-    reporter.report_summary_notice("⚠ a heads-up")
-
-    expect(lines.last).to eq("⚠ a heads-up")
-  end
 end

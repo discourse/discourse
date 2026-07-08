@@ -71,10 +71,11 @@ module Migrations
                 hashtag_names:,
                 custom_emoji_names:,
                 internal_link_hosts: internal_link_hosts || Set.new,
-                # INFO-typed, so a busy post full of foreign self-links doesn't light
-                # up the step's warning/error count; the summary aggregates the rows.
+                # A warning per foreign-host link: the step's warning count is the
+                # operator's pointer to query these rows (grouped by details host)
+                # and decide whether a former domain is missing from `source_site`.
                 on_foreign_host: ->(host) do
-                  tracker.log_info(FOREIGN_LINK_LOG_MESSAGE, details: { host: })
+                  tracker.log_warning(FOREIGN_LINK_LOG_MESSAGE, details: { host: })
                 end,
               )
             # One buffer, reused (cleared) per post — a fresh one would allocate a

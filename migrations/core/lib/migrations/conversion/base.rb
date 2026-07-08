@@ -38,12 +38,6 @@ module Migrations
         @aborted = true
         exit(130)
       ensure
-        # An optional converter hook (like `setup`), run while the run DB and reporter
-        # are still live, so a converter can query the log entries it wrote and print
-        # a hint under the summary. Skipped on an abort — the user asked to stop.
-        if @writer && @reporter && !@aborted && respond_to?(:report_diagnostics)
-          report_diagnostics(@writer, @reporter)
-        end
         Database::IntermediateDB.close
         @shard_manager&.cleanup
         # Restore the terminal (and flush the final frame) before printing the

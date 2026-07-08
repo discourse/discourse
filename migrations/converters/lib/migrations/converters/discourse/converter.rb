@@ -6,19 +6,6 @@ module Migrations
   module Converters
     module Discourse
       class Converter < Conversion::Base
-        include Reporting::Formatting
-
-        # Groups the foreign-host link entries the Posts step logged (see
-        # `Posts::FOREIGN_LINK_LOG_MESSAGE`) by host, most-seen first.
-        FOREIGN_LINK_SUMMARY_SQL = <<~SQL
-          SELECT json_extract(details, '$.host') AS host, COUNT(*) AS count
-          FROM log_entries
-          WHERE type = ? AND message = ?
-          GROUP BY host
-          ORDER BY count DESC, host
-        SQL
-        private_constant :FOREIGN_LINK_SUMMARY_SQL
-
         # Steps run concurrently and a Postgres connection can't be shared, so each
         # step gets its own adapter; the step's source closes it in its `cleanup`.
         def step_args(step_class)
@@ -46,42 +33,7 @@ module Migrations
           }
         end
 
-        # End-of-run hook (see `Conversion::Base#run`): surfaces the internal-looking
-        # links that pointed at hosts the source_site settings don't cover, so the
-        # operator can spot a former domain they forgot to configure.
-        # @param connection [Database::Connection] the run DB, log entries merged in
-        # @param reporter [Reporting::Reporter] prints the notice under the summary
-        def report_diagnostics(connection, reporter)
-          notice = foreign_link_notice(connection)
-          reporter.report_summary_notice(notice) if notice
-        end
-
         private
-
-        # The per-host tally as one summary line, or nil when nothing pointed at an
-        # unconfigured host. Counted even when no source_site is set (every absolute
-        # route-shaped link is "foreign" then), so the hint also nudges an operator
-        # who never configured `base_url` at all — hence the neutral wording.
-        def foreign_link_notice(connection)
-          rows =
-            connection.query(
-              FOREIGN_LINK_SUMMARY_SQL,
-              Database::IntermediateDB::LogEntry::INFO,
-              Posts::FOREIGN_LINK_LOG_MESSAGE,
-            )
-          return nil if rows.empty?
-
-          total = rows.sum { |row| row[:count] }
-          hosts = rows.map { |row| "#{row[:host]} (#{format_count(row[:count])})" }.join(", ")
-
-          "⚠ " +
-            I18n.t(
-              "converter.foreign_internal_links",
-              count: total,
-              number: format_count(total),
-              hosts:,
-            )
-        end
 
         # The source's own hosts, so the Posts step can tell an absolute internal link
         # from an external one. Built from the `base_url` and any `former_domains`

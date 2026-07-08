@@ -34,26 +34,25 @@ RSpec.describe Migrations::Converters::Discourse::Posts do
       processor.setup
     end
 
-    it "logs an INFO entry per foreign-host self-link, with the host in details" do
+    it "logs a warning entry per foreign-host self-link, with the host in details" do
       processor.process(post_item("see https://old-forum.example.com/t/slug/99 here"))
 
       entries = rows("log_entries")
       expect(entries.size).to eq(1)
       expect(entries.first).to include(
-        type: Migrations::Database::IntermediateDB::LogEntry::INFO,
+        type: Migrations::Database::IntermediateDB::LogEntry::WARNING,
         message: described_class::FOREIGN_LINK_LOG_MESSAGE,
       )
       expect(entries.first[:details]).to include("old-forum.example.com")
     end
 
-    it "does not inflate the step's warning or error counts" do
+    it "counts each foreign-host link as a step warning, not an error" do
       processor.tracker.reset_stats!
       processor.process(post_item("read https://old-forum.example.com/t/slug/99 now"))
 
-      expect(processor.tracker.stats.warning_count).to eq(0)
+      expect(processor.tracker.stats.warning_count).to eq(1)
       expect(processor.tracker.stats.error_count).to eq(0)
     end
-
     it "logs nothing for a link on a configured host" do
       processor.process(post_item("read https://forum.example.com/t/slug/99 now"))
 

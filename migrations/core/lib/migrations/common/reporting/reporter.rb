@@ -46,13 +46,6 @@ module Migrations
       def report_summary(runtime:, total:, failed:, skipped:)
       end
 
-      # Prints a run-level line under the summary, unattached to any step. Used for
-      # an end-of-run hint (e.g. links that pointed at an unconfigured host). The
-      # caller passes the whole formatted line.
-      # @param message [String] the line to print
-      def report_summary_notice(message)
-      end
-
       # The run is over and nothing else will be reported. Free anything held
       # here. Called once per run, also when the run fails.
       def close
