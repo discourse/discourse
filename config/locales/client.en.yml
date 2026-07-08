@@ -3102,7 +3102,7 @@ en:
       sidebar_footer: "Display in sidebar footer"
       header: "Display in header"
     category_scope:
-      all: "All categories"
+      all: "All public and private categories"
       public: "Public categories"
       include: "Include selected categories (with subcategories)"
       include_strict: "Include selected categories (without subcategories)"
