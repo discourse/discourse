@@ -10,6 +10,12 @@ module Migrations
           # resolved at import (its slug/name can change), so the node just carries
           # the name and any forced type.
           #
+          # When the caller supplies the source's category and tag names, only a
+          # hashtag whose name is one of them is deferred; anything else (`PR #123`,
+          # `channel #general`) stays literal text. Without a name set the detector
+          # defers every hashtag that parses, so callers with no source metadata
+          # keep the old syntactic behavior.
+          #
           # Compared with core's markdown-it hashtag rule
           # (`discourse-markdown-it/src/features/hashtag-autocomplete.js`) this is
           # deliberately stricter, to keep raw extraction from firing on text that
@@ -33,6 +39,13 @@ module Migrations
               /\G\#(?<name>[\p{Alnum}\p{M}_-]+(?::[\p{Alnum}\p{M}_-]+)?)(?:::(?<type>tag|category))?(?![\p{Alnum}\p{M}_:-])/i
             private_constant :PATTERN
 
+            # @param names [Enumerable<String>, nil] the source's category slug paths
+            #   and tag names, already normalized. When given, a hashtag is deferred
+            #   only if its (normalized) name is in the set. `nil` means no gate.
+            def initialize(names: nil)
+              @names = names&.to_set
+            end
+
             def detect(input, pos)
               return nil unless input[pos] == "#"
               return nil unless boundary_before?(input, pos)
@@ -40,18 +53,23 @@ module Migrations
               match = PATTERN.match(input, pos)
               return nil unless match
 
+              name = match[:name]
+              return nil if @names && @names.exclude?(normalize(name))
+
               Match.new(
                 start_pos: pos,
                 end_pos: pos + match[0].length,
-                node:
-                  HashtagReference.new(
-                    name: match[:name],
-                    forced_type: match[:type]&.downcase&.to_sym,
-                  ),
+                node: HashtagReference.new(name:, forced_type: match[:type]&.downcase&.to_sym),
               )
             end
 
             private
+
+            # Same normalization the importer applies when it resolves the name to a
+            # category or tag, so the gate and the resolution can't disagree.
+            def normalize(name)
+              Migrations::NameNormalizer.normalize(name)
+            end
 
             # A hashtag starts a new token: the `#` must open the input, or follow
             # whitespace or an opening paren. This drops markdown headings (`# x`,
