@@ -73,10 +73,6 @@ module Migrations
         enqueue([:summary, runtime, total, failed, skipped])
       end
 
-      def report_summary_notice(message)
-        enqueue([:summary_notice, message])
-      end
-
       def close
         return if @closed
         @closed = true
