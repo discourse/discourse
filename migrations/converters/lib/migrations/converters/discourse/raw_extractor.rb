@@ -28,21 +28,22 @@ module Migrations
         FORCED_HASHTAG_TYPES = { category: HashtagType::CATEGORY, tag: HashtagType::TAG }.freeze
         private_constant :FORCED_HASHTAG_TYPES
 
-        # The stateless detectors, built fresh per extractor. The hashtag and
-        # custom-emoji detectors are not here: they're the ones configured with
-        # state (the source's category/tag and emoji names), built below.
-        DETECTORS = [
-          Detectors::Upload,
-          Detectors::UploadUrl,
-          Detectors::Quote,
-          Detectors::Mention,
-        ].freeze
+        # The stateless detectors, built fresh per extractor. The mention, hashtag
+        # and custom-emoji detectors are not here: they're the ones configured with
+        # state (the source's mention names, category/tag names and emoji names),
+        # built below.
+        DETECTORS = [Detectors::Upload, Detectors::UploadUrl, Detectors::Quote].freeze
         private_constant :DETECTORS
 
         # @param mention_resolver [#call] maps a mention name to its `mention_type`
         #   (a `MentionType` enum value for `here` / `all` / `group` / `user`).
         #   Defaults to a resolver with no group knowledge (so only `@here` / `@all`
         #   are special-cased).
+        # @param mention_names [Migrations::SortedStringSet, nil] the source's
+        #   mention names (usernames, group names, the `here_mention` value and
+        #   `all`, normalized). When given, only a mention naming one of them is
+        #   deferred; anything else stays literal text. `nil` defers every `@word`
+        #   that parses (the old syntactic behavior).
         # @param hashtag_names [Enumerable<String>, nil] the source's category slug
         #   paths and tag names (normalized). When given, only a hashtag naming one
         #   of them is extracted; anything else stays literal text. `nil` defers
@@ -54,12 +55,14 @@ module Migrations
         #   posts don't pay for it.
         def initialize(
           mention_resolver: MentionResolver.new,
+          mention_names: nil,
           hashtag_names: nil,
           custom_emoji_names: nil
         )
           @mention_resolver = mention_resolver
 
           detectors = DETECTORS.map(&:new)
+          detectors << Detectors::Mention.new(names: mention_names)
           detectors << Detectors::Hashtag.new(names: hashtag_names)
           extra_triggers = []
           extra_gate = nil

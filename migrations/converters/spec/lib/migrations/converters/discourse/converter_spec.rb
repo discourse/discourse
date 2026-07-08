@@ -26,6 +26,7 @@ RSpec.describe Migrations::Converters::Discourse::Converter do
 
       before do
         allow(Migrations::Converters::Adapter::Postgres).to receive(:new).and_return(source_db)
+        allow(source_db).to receive(:query).with("SELECT username FROM users").and_return([])
         allow(source_db).to receive(:query).with("SELECT name FROM groups").and_return([])
         allow(source_db).to receive(:query).with("SELECT name FROM custom_emojis").and_return([])
         allow(source_db).to receive(:query).with("SELECT name FROM tags").and_return([])
@@ -53,6 +54,27 @@ RSpec.describe Migrations::Converters::Discourse::Converter do
 
         expect(args[:group_names]).to eq([])
         expect(args[:here_mention]).to eq("here")
+      end
+
+      it "builds the mention gate from usernames, group names, here_mention and all" do
+        allow(source_db).to receive(:query).with("SELECT username FROM users").and_return(
+          [{ username: "alice" }, { username: "Bob" }],
+        )
+        allow(source_db).to receive(:query).with("SELECT name FROM groups").and_return(
+          [{ name: "Staff" }],
+        )
+        allow(source_db).to receive(:query_value).and_return("everyone")
+
+        args = described_class.new({}).step_args(Migrations::Converters::Discourse::Posts)
+        gate = args[:mention_names]
+
+        expect(gate).to be_a(Migrations::SortedStringSet)
+        expect(gate.include?("alice")).to be true
+        expect(gate.include?("bob")).to be true
+        expect(gate.include?("staff")).to be true
+        expect(gate.include?("everyone")).to be true
+        expect(gate.include?("all")).to be true
+        expect(gate.include?("nobody")).to be false
       end
 
       it "loads normalized category slug paths and tag names for the hashtag gate" do

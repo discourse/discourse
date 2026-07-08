@@ -15,10 +15,16 @@ module Migrations
           # across the steps.
           return { source_db: } unless step_class == Posts
 
+          # Loaded once and reused: `mention_names` folds the group names and the
+          # `here_mention` value into its gate, so re-querying them would be waste.
+          group_names = group_names(source_db)
+          here_mention = here_mention(source_db)
+
           {
             source_db:,
-            group_names: group_names(source_db),
-            here_mention: here_mention(source_db),
+            group_names:,
+            here_mention:,
+            mention_names: mention_names(source_db, group_names, here_mention),
             hashtag_names: hashtag_names(source_db),
             custom_emoji_names: custom_emoji_names(source_db),
           }
@@ -29,6 +35,31 @@ module Migrations
         # Source group names, so the Posts step can classify `@group` mentions.
         def group_names(source_db)
           source_db.query("SELECT name FROM groups").map { |row| row[:name] }
+        end
+
+        # Every name that can legitimately follow `@`, so the Posts step defers only
+        # a mention that names something real and leaves the rest (`@3pm`) as plain
+        # text: every username, every group name, the source's `here_mention` value
+        # and the literal `all`. Without the last three, `@staff`, `@here` and `@all`
+        # would be dropped — the gate must never be usernames only. Normalized like
+        # the importer normalizes a mention when it resolves it, so the two sides
+        # agree on what matches.
+        #
+        # Usernames can reach seven figures, so they're streamed straight into the
+        # gate; the query is drained fully (every row consumed) so the connection is
+        # clean for the queries that follow.
+        def mention_names(source_db, group_names, here_mention)
+          names = []
+
+          source_db
+            .query("SELECT username FROM users")
+            .each { |row| names << normalize(row[:username]) }
+
+          group_names.each { |name| names << normalize(name) }
+          names << normalize(here_mention)
+          names << normalize("all")
+
+          Migrations::SortedStringSet.new(names)
         end
 
         # The names a hashtag can address on the source — every category slug, every
