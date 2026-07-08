@@ -86,7 +86,6 @@ after_initialize do
   UserUpdater::OPTION_ATTR.push(:chat_enabled)
   UserUpdater::OPTION_ATTR.push(:chat_quick_reaction_type)
   UserUpdater::OPTION_ATTR.push(:chat_quick_reactions_custom)
-  UserUpdater::OPTION_ATTR.push(:only_chat_push_notifications)
   UserUpdater::OPTION_ATTR.push(:chat_sound)
   UserUpdater::OPTION_ATTR.push(:ignore_channel_wide_mention)
   UserUpdater::OPTION_ATTR.push(:show_thread_title_prompts)
@@ -292,10 +291,6 @@ after_initialize do
     include_condition: -> { object.chat_sound.present? },
   ) { object.chat_sound }
 
-  add_to_serializer(:user_option, :only_chat_push_notifications) do
-    object.only_chat_push_notifications
-  end
-
   add_to_serializer(:user_option, :ignore_channel_wide_mention) do
     object.ignore_channel_wide_mention
   end
@@ -407,14 +402,6 @@ after_initialize do
       config.allowed_group_ids = chat_channel.allowed_group_ids
       config.allowed_user_ids = chat_channel.allowed_user_ids
       config.public = !chat_channel.read_restricted?
-    end
-  end
-
-  register_push_notification_filter do |user, payload|
-    if user.user_option.only_chat_push_notifications && user.user_option.chat_enabled
-      payload[:notification_type].in?(::Notification.types.values_at(:chat_mention, :chat_message))
-    else
-      true
     end
   end
 

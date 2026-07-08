@@ -1257,6 +1257,37 @@ RSpec.describe PostAlerter do
       end
     end
 
+    describe "push_notification_level" do
+      before { evil_trout.update!(last_seen_at: 10.minutes.ago) }
+
+      it "does not push non-chat notifications when set to chat_only" do
+        evil_trout.user_option.update!(push_notification_level: :chat_only)
+
+        expect { mention_post }.not_to change { Jobs::DeliverPushNotification.jobs.count }
+      end
+
+      it "still pushes chat notifications when set to chat_only" do
+        evil_trout.user_option.update!(push_notification_level: :chat_only)
+
+        payload = { notification_type: Notification.types[:chat_mention] }
+        expect { PostAlerter.push_notification(evil_trout, payload) }.to change {
+          Jobs::DeliverPushNotification.jobs.count
+        }.by(1)
+      end
+
+      it "pushes non-chat notifications when set to all" do
+        evil_trout.user_option.update!(push_notification_level: :all)
+
+        expect { mention_post }.to change { Jobs::DeliverPushNotification.jobs.count }.by(1)
+      end
+
+      it "does not filter when chat is disabled for the user" do
+        evil_trout.user_option.update!(push_notification_level: :chat_only, chat_enabled: false)
+
+        expect { mention_post }.to change { Jobs::DeliverPushNotification.jobs.count }.by(1)
+      end
+    end
+
     it "triggers the push notification event" do
       events = DiscourseEvent.track_events { mention_post }
 

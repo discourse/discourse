@@ -73,6 +73,13 @@ class PostAlerter
   def self.push_notification(user, payload)
     return if user.do_not_disturb?
 
+    if user.user_option.chat_enabled && user.user_option.push_notification_level_chat_only? &&
+         !payload[:notification_type].in?(
+           Notification.types.values_at(:chat_mention, :chat_message),
+         )
+      return
+    end
+
     # This DiscourseEvent needs to be independent of the push_notification_filters for some use cases.
     # If the subscriber of this event wants to filter usage by push_notification_filters as well,
     # implement same logic as below (`if DiscoursePluginRegistry.push_notification_filters.any?...`)

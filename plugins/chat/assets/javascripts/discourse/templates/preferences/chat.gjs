@@ -119,7 +119,6 @@ export default class Chat extends Component {
       chat_enabled: userOption.chat_enabled,
       chat_quick_reaction_type: userOption.chat_quick_reaction_type,
       chat_quick_reactions_custom: emojis,
-      only_chat_push_notifications: userOption.only_chat_push_notifications,
       ignore_channel_wide_mention: userOption.ignore_channel_wide_mention,
       chat_announce_new_messages: userOption.chat_announce_new_messages,
       chat_new_message_sound: userOption.chat_new_message_sound,
@@ -190,15 +189,6 @@ export default class Chat extends Component {
       </form.Field>
 
       <form.Section @title={{i18n "chat.chat_notifications_title"}}>
-        <form.Field
-          @title={{i18n "chat.only_chat_push_notifications.title"}}
-          @name="only_chat_push_notifications"
-          @format="large"
-          @type="checkbox"
-          as |field|
-        >
-          <field.Control @value={{field.value}} />
-        </form.Field>
         <form.Field
           @title={{i18n "chat.ignore_channel_wide_mention.title"}}
           @name="ignore_channel_wide_mention"

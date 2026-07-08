@@ -1741,6 +1741,11 @@ en:
       statistics: "Stats"
       desktop_notifications:
         label: "Live notifications"
+        push_level:
+          title: "Push notifications are…"
+          none: "Disabled"
+          all: "Enabled"
+          chat_only: "Enabled for chat only"
         not_supported: "Notifications are not supported on this browser. Sorry."
         perm_default: "Turn on notifications"
         perm_denied_btn: "Permission denied"

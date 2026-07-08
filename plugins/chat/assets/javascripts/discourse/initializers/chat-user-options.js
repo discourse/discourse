@@ -19,7 +19,6 @@ export default {
         api.addSaveableUserOption("chat_separate_sidebar_mode");
         api.addSaveableUserOption("chat_sound");
         api.addSaveableUserOption("ignore_channel_wide_mention");
-        api.addSaveableUserOption("only_chat_push_notifications");
         api.addSaveableUserOption("show_thread_title_prompts");
         // Email settings
         api.addSaveableUserOption("chat_email_frequency", { page: "emails" });
