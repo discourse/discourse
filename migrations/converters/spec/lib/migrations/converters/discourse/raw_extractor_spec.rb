@@ -347,6 +347,21 @@ RSpec.describe Migrations::Converters::Discourse::RawExtractor do
       expect(buffer.emojis.first[:name]).to eq("parrot")
     end
 
+    it "defers every shortcode of an adjacent chain" do
+      result = extract("well done :parrot::+1:")
+
+      expect(buffer.emojis.map { |emoji| emoji[:name] }).to eq(%w[parrot +1])
+      placeholders = buffer.emojis.map { |emoji| emoji[:placeholder] }
+      expect(result).to eq("well done #{placeholders.join}")
+    end
+
+    it "defers a custom emoji chained onto a standard one" do
+      result = extract("thanks :smile::parrot:")
+
+      expect(buffer.emojis.map { |emoji| emoji[:name] }).to eq(%w[parrot])
+      expect(result).to eq("thanks :smile:#{buffer.emojis.first[:placeholder]}")
+    end
+
     it "does not extract a custom emoji inside a fenced code block" do
       raw = <<~MD
         real :parrot:

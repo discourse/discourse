@@ -12,10 +12,10 @@ module Migrations
           #
           # This follows core's emoji rule (`discourse-markdown-it/src/features/
           # emoji.js`): the `:` must sit on a boundary — start of input, whitespace,
-          # or punctuation. We diverge in two small ways: a preceding `:` is not a
-          # boundary here (it would be the closing colon of an adjacent shortcode),
-          # and the name is restricted to real emoji-name characters rather than
-          # "anything up to the next colon".
+          # or punctuation, which includes the closing colon of an adjacent
+          # shortcode (`:smile::wink:`). We diverge in one small way: the name is
+          # restricted to real emoji-name characters rather than "anything up to
+          # the next colon".
           class Emoji < Base
             TRIGGER = ":"
 
@@ -57,13 +57,15 @@ module Migrations
             private
 
             # A shortcode opens on a boundary: the start, whitespace, or punctuation
-            # other than `:`. An alphanumeric before `:` means it's glued to a word,
-            # and a preceding `:` is the closing colon of the token before it — as in
-            # a `10:30:45` timestamp — so neither counts.
+            # — including the closing colon of an adjacent shortcode, so chains like
+            # `:smile::wink:` defer every link. Only an alphanumeric before the `:`
+            # disqualifies it (glued to a word, or the inside of a `10:30:45`
+            # timestamp); anything that slips past still has to name a source custom
+            # emoji to be deferred.
             def boundary_before?(input, pos)
               return true if pos.zero?
 
-              !input[pos - 1].match?(/[[:alnum:]:]/)
+              !input[pos - 1].match?(/[[:alnum:]]/)
             end
           end
         end
