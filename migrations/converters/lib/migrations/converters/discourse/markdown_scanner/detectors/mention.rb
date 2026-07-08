@@ -26,7 +26,7 @@ module Migrations
               @names = names
             end
 
-            def detect(input, pos, _char)
+            def detect(input, pos, _byte)
               return nil unless word_boundary?(input, pos)
 
               name = extract_word(input, pos + 1)
@@ -35,7 +35,7 @@ module Migrations
 
               Match.new(
                 start_pos: pos,
-                end_pos: pos + 1 + name.length,
+                end_pos: pos + 1 + name.bytesize, # +1 for the `@` (one byte)
                 node: Markbridge::AST::Mention.new(name:),
               )
             end

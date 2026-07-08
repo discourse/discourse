@@ -26,11 +26,11 @@ module Migrations
               (?:\s*\((?<size>[^)]+)\))?
             }xi
 
-            def detect(input, pos, char)
-              case char
-              when "!"
+            def detect(input, pos, byte)
+              case byte
+              when 0x21 # `!`
                 detect_image(input, pos)
-              when "["
+              when 0x5b # `[`
                 detect_attachment(input, pos)
               end
             end
@@ -38,7 +38,7 @@ module Migrations
             private
 
             def detect_image(input, pos)
-              match = IMAGE_PATTERN.match(input, pos)
+              match = match_at(IMAGE_PATTERN, input, pos)
               return nil unless match
 
               sha1, filename = parse_upload_url(match[:url])
@@ -54,11 +54,11 @@ module Migrations
                   raw: match[0],
                 )
 
-              Match.new(start_pos: pos, end_pos: pos + match[0].length, node:)
+              Match.new(start_pos: pos, end_pos: match.byteoffset(0).last, node:)
             end
 
             def detect_attachment(input, pos)
-              match = ATTACHMENT_PATTERN.match(input, pos)
+              match = match_at(ATTACHMENT_PATTERN, input, pos)
               return nil unless match
 
               sha1, = parse_upload_url(match[:url])
@@ -72,7 +72,7 @@ module Migrations
                   raw: match[0],
                 )
 
-              Match.new(start_pos: pos, end_pos: pos + match[0].length, node:)
+              Match.new(start_pos: pos, end_pos: match.byteoffset(0).last, node:)
             end
 
             # URL format: `sha1.ext` or just `sha1`. Returns `[sha1, filename-or-nil]`.

@@ -37,10 +37,10 @@ module Migrations
               @names = names.to_set
             end
 
-            def detect(input, pos, _char)
+            def detect(input, pos, _byte)
               return nil unless boundary_before?(input, pos)
 
-              match = PATTERN.match(input, pos)
+              match = match_at(PATTERN, input, pos)
               return nil unless match
 
               name = match[:name]
@@ -48,7 +48,7 @@ module Migrations
 
               Match.new(
                 start_pos: pos,
-                end_pos: pos + match[0].length,
+                end_pos: match.byteoffset(0).last,
                 node: EmojiReference.new(name:),
               )
             end
@@ -63,11 +63,14 @@ module Migrations
             # emoji to be deferred.
             def boundary_before?(input, pos)
               return true if pos.zero?
-              return !ascii_alnum_byte?(input.getbyte(pos - 1)) if input.ascii_only?
 
-              # `[[:alnum:]]` is Unicode-aware, so `é` glues a shortcode to a word
-              # the same way `e` does.
-              !input[pos - 1].match?(/[[:alnum:]]/)
+              byte = input.getbyte(pos - 1)
+              return !ascii_alnum_byte?(byte) if byte < 0x80
+
+              # The previous character is multibyte, and `[[:alnum:]]` is
+              # Unicode-aware, so `é` glues a shortcode to a word the same way `e`
+              # does — test the actual character.
+              !previous_char(input, pos).match?(/[[:alnum:]]/)
             end
           end
         end

@@ -6,6 +6,20 @@ module Migrations
       module MarkdownScanner
         # Walks Discourse Markdown and replaces detected constructs (outside code)
         # with whatever the given block returns for each detected node.
+        #
+        # The walk works entirely in BYTE offsets, not character indices. CRuby keeps
+        # no character-index cache, so on a string with any multibyte character
+        # `str[pos]`, `str.index(re, pos)` and `re.match(str, pos)` walk bytes from
+        # the start to locate character `pos` — O(pos) per call. Doing dozens of
+        # indexed calls per post that way made umlaut-heavy bodies scan ~2x slower
+        # than ASCII. Byte offsets make every positioning O(1) regardless of content,
+        # and make the byte-wise look-backs correct by construction.
+        #
+        # Every byte offset the walk touches lands on a character boundary: jumps land
+        # on regex-match starts, single-character advances step over an ASCII trigger
+        # (one byte), matches advance by their byte length, and the code tracker's
+        # returns come from `byteindex`/ASCII scans. `byteindex` raises `IndexError` on
+        # an off-boundary offset, which is the built-in tripwire for a logic bug here.
         class Scanner
           # Presence gate for the fast path. Every construct we extract contains an
           # `@` (mention), a `[` (quote, attachment, and an image's `![`), a `#`
@@ -27,13 +41,16 @@ module Migrations
             @on_node = on_node
             @gate = extra_gate ? Regexp.union(MAYBE_EMBED, extra_gate) : MAYBE_EMBED
 
-            # Detectors keyed by trigger character, preserving priority order. The
-            # walk visits every position anything could react to, so a position must
-            # only run the detectors that can match there — asking every detector at
-            # every trigger was a measurable share of a whole conversion.
+            # Detectors keyed by trigger BYTE (each trigger character's ordinal),
+            # preserving priority order. Keying by byte lets the walk read the current
+            # character as an Integer (`getbyte`) and dispatch without allocating a
+            # one-character string per stop. The walk visits every position anything
+            # could react to, so a position must only run the detectors that can match
+            # there — asking every detector at every trigger was a measurable share of
+            # a whole conversion.
             @dispatch = {}
             detectors.each do |detector|
-              detector.triggers.each { |char| (@dispatch[char] ||= []) << detector }
+              detector.triggers.each { |char| (@dispatch[char.ord] ||= []) << detector }
             end
             @dispatch.each_value(&:freeze)
             @dispatch.freeze
@@ -42,7 +59,7 @@ module Migrations
             # (possible inline-code delimiter) and the newline that re-arms the
             # line-start code checks. Runs of anything else are skipped in one
             # regex jump and appended as one slice.
-            chars = (@dispatch.keys + ["`", "\n"]).uniq
+            chars = (detectors.flat_map(&:triggers) + ["`", "\n"]).uniq
             @interesting = Regexp.new("[#{chars.map { |char| Regexp.escape(char) }.join}]")
           end
 
@@ -73,7 +90,7 @@ module Migrations
           private_constant :CODE_INTERESTING
 
           def scan_input
-            length = @input.length
+            length = @input.bytesize
 
             while @pos < length
               if @line_start
@@ -85,42 +102,45 @@ module Migrations
               # of plain characters before it is appended as one slice. Walking
               # char-by-char instead costs a one-character string per position.
               interesting = @code_tracker.in_code? ? CODE_INTERESTING : @interesting
-              index = @input.index(interesting, @pos)
+              index = @input.byteindex(interesting, @pos)
 
               unless index
-                @result << @input[@pos..]
+                @result << @input.byteslice(@pos..)
                 @pos = length
                 break
               end
 
               if index > @pos
-                @result << @input[@pos...index]
+                @result << @input.byteslice(@pos...index)
                 @pos = index
                 @line_start = false
               end
 
-              char = @input[@pos]
+              byte = @input.getbyte(@pos)
 
-              if char == "`"
+              if byte == 0x60 # 0x60 = backtick
                 new_pos = @code_tracker.check_inline_boundary(@input, @pos)
                 if new_pos
-                  @result << @input[@pos...new_pos]
+                  @result << @input.byteslice(@pos...new_pos)
                   @pos = new_pos
                   @line_start = false
                   next
                 end
               end
 
-              if !@code_tracker.in_code? && (candidates = @dispatch[char])
-                match = detect_at_position(candidates, char)
+              if !@code_tracker.in_code? && (candidates = @dispatch[byte])
+                match = detect_at_position(candidates, byte)
                 if match
                   handle_match(match)
                   next
                 end
               end
 
-              @result << char
-              @line_start = char == "\n"
+              # A failed trigger, backtick or newline. Every interesting byte is
+              # ASCII, so appending the byte as a codepoint reproduces the one
+              # character without allocating a slice for it.
+              @result << byte
+              @line_start = byte == 0x0a # 0x0a = newline
               @pos += 1
             end
           end
@@ -129,15 +149,15 @@ module Migrations
             new_pos = @code_tracker.public_send(method, @input, @pos, line_start: true)
             return false unless new_pos
 
-            @result << @input[@pos...new_pos]
+            @result << @input.byteslice(@pos...new_pos)
             @pos = new_pos
             @line_start = true
             true
           end
 
-          def detect_at_position(candidates, char)
+          def detect_at_position(candidates, byte)
             candidates.each do |detector|
-              match = detector.detect(@input, @pos, char)
+              match = detector.detect(@input, @pos, byte)
               return match if match
             end
             nil

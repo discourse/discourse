@@ -133,11 +133,12 @@ module Migrations
               @on_foreign_host = on_foreign_host
             end
 
-            def detect(input, pos, char)
-              case char
-              when "["
+            def detect(input, pos, byte)
+              case byte
+              when 0x5b # `[`
                 detect_link(input, pos)
-              when "h", "/"
+              when 0x68, 0x2f
+                # 0x68 = `h`, 0x2f = `/`
                 detect_bare(input, pos)
               end
             end
@@ -149,7 +150,7 @@ module Migrations
             def detect_link(input, pos)
               return nil if pos > 0 && bang_before?(input, pos)
 
-              match = LINK.match(input, pos)
+              match = match_at(LINK, input, pos)
               return nil unless match
 
               build(input, pos, match, url: match[:url], text: match[:text])
@@ -161,7 +162,7 @@ module Migrations
             def detect_bare(input, pos)
               return nil unless whitespace_before?(input, pos)
 
-              match = BARE.match(input, pos)
+              match = match_at(BARE, input, pos)
               return nil unless match
 
               build(input, pos, match, url: match[:url], text: nil)
@@ -179,6 +180,9 @@ module Migrations
               target = parse_route(rest)
               return nil unless target
 
+              # `rest` is the extracted URL's own string (character domain), so its
+              # suffix is a plain character slice — only the input-domain positions in
+              # the `Match` below are byte offsets.
               suffix = rest[target[:route_length]..]
 
               node =
@@ -193,7 +197,7 @@ module Migrations
                   target_suffix: suffix.empty? ? nil : suffix,
                 )
 
-              Match.new(start_pos: pos, end_pos: pos + match[0].length, node:)
+              Match.new(start_pos: pos, end_pos: match.byteoffset(0).last, node:)
             end
 
             # A foreign host is rejected before routing (the cheap check). Only when

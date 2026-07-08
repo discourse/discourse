@@ -16,16 +16,30 @@ module Migrations
               self.class::TRIGGERS
             end
 
-            # `char` is `input[pos]`, already read by the scanner's walk — reading
-            # it again here would allocate a fresh one-character string per probe.
-            # The scanner dispatches by character, so it is always one of {#triggers}.
+            # `pos` is a byte offset into `input` and `byte` is `input.getbyte(pos)`,
+            # already read by the scanner's walk. Dispatch is keyed by byte, so
+            # `byte` is always the ordinal of one of {#triggers}.
             #
             # @return [Match, nil]
-            def detect(input, pos, char)
+            def detect(input, pos, byte)
               raise NotImplementedError, "#{self.class} must implement #detect"
             end
 
             private
+
+            # Anchored match at a byte offset: every PATTERN here is `\G`-anchored, so
+            # `byteindex` matches AT `pos` or returns nil (no forward drift) — the
+            # byte-offset analogue of `PATTERN.match(input, pos)`, but positioned in
+            # O(1) no matter how many multibyte characters precede `pos`. The returned
+            # MatchData's `byteoffset`s are byte offsets into `input`.
+            #
+            # `byteindex` returns `0` for a match at the start of input, which is
+            # falsy, so the result is nil-checked rather than tested for truthiness.
+            def match_at(pattern, input, pos)
+              return nil if input.byteindex(pattern, pos).nil?
+
+              Regexp.last_match
+            end
 
             # A username the way core's `UsernameValidator` (and the markdown-it
             # mentions rule) reads it: it starts with a Unicode alphanumeric, mark or
@@ -42,43 +56,37 @@ module Migrations
             WORD_BOUNDARY = /[\p{Alnum}\p{M}_]/
             private_constant :WORD_BOUNDARY
 
-            # The look-backs below run for every probe at a trigger character, so on
-            # an all-ASCII body they test the previous BYTE: `input[pos - 1]` would
-            # allocate a fresh one-character string each time. `pos` is a CHARACTER
-            # index, so the byte shortcut is only valid while the two agree — i.e.
-            # while `input.ascii_only?` (an O(1) coderange check). One multibyte
-            # character anywhere shifts every later byte offset, so a mixed body
-            # takes the character-wise path.
+            # `pos` is a byte offset, so `getbyte(pos - 1)` is always the last byte of
+            # the previous character. An ASCII byte (< 0x80) is that whole character,
+            # tested directly. A byte >= 0x80 is the trailing byte of a multibyte
+            # character, and the boundary test is Unicode-aware (`WORD_BOUNDARY`
+            # matches marks and non-ASCII alphanumerics), so we recover the actual
+            # character with {#previous_char} and test it.
             def word_boundary?(input, pos)
               return true if pos.zero?
 
-              if input.ascii_only?
-                byte = input.getbyte(pos - 1)
+              byte = input.getbyte(pos - 1)
+              if byte < 0x80
                 !(ascii_alnum_byte?(byte) || byte == 0x5f) # 0x5f = `_`
               else
-                !input[pos - 1].match?(WORD_BOUNDARY)
+                !previous_char(input, pos).match?(WORD_BOUNDARY)
               end
             end
 
-            # Matches `/\s/` exactly: space plus `\t\n\v\f\r` (0x09..0x0d).
+            # Matches `/\s/` exactly: space plus `\t\n\v\f\r` (0x09..0x0d). These are
+            # pure ASCII, so a byte >= 0x80 (a multibyte character) is never
+            # whitespace and falls through to false — no character-wise fallback.
             def whitespace_before?(input, pos)
               return true if pos.zero?
 
-              if input.ascii_only?
-                byte = input.getbyte(pos - 1)
-                byte == 0x20 || (byte >= 0x09 && byte <= 0x0d)
-              else
-                input[pos - 1].match?(/\s/)
-              end
+              byte = input.getbyte(pos - 1)
+              byte == 0x20 || (byte >= 0x09 && byte <= 0x0d)
             end
 
-            # Preserves the byte/character distinction the same way (see above).
+            # Caller guarantees `pos > 0`. `!` is ASCII, so a multibyte previous
+            # character's trailing byte simply isn't 0x21.
             def bang_before?(input, pos)
-              if input.ascii_only?
-                input.getbyte(pos - 1) == 0x21 # `!`
-              else
-                input[pos - 1] == "!"
-              end
+              input.getbyte(pos - 1) == 0x21 # `!`
             end
 
             def ascii_alnum_byte?(byte)
@@ -86,11 +94,22 @@ module Migrations
                 (byte >= 0x61 && byte <= 0x7a)
             end
 
-            # Extract a word starting at position, or `""` when nothing there can
-            # open one (`WORD_PATTERN` needs a valid leading character). Caller must
-            # ensure pos is within bounds (`pos <= input.length`).
+            # The character ending just before `pos`, for the Unicode-aware
+            # look-backs. `pos` sits on a character boundary, so when the previous
+            # character is multibyte its bytes are the continuation bytes
+            # (`10xxxxxx`) right before `pos` plus their lead byte; walk back over
+            # them and byteslice that one character.
+            def previous_char(input, pos)
+              start = pos - 1
+              start -= 1 while (input.getbyte(start) & 0xC0) == 0x80
+              input.byteslice(start, pos - start)
+            end
+
+            # Extract a word starting at the byte offset, or `""` when nothing there
+            # can open one (`WORD_PATTERN` needs a valid leading character). Caller
+            # must ensure pos is within bounds (`pos <= input.bytesize`).
             def extract_word(input, pos)
-              WORD_PATTERN.match(input, pos)&.[](0) || ""
+              match_at(WORD_PATTERN, input, pos)&.[](0) || ""
             end
           end
         end

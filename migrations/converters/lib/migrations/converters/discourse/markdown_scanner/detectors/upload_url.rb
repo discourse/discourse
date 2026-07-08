@@ -47,13 +47,14 @@ module Migrations
             BARE = /\G#{URL}/
             private_constant :BARE
 
-            def detect(input, pos, char)
-              case char
-              when "!"
+            def detect(input, pos, byte)
+              case byte
+              when 0x21 # `!`
                 match_with(IMAGE, input, pos)
-              when "["
+              when 0x5b # `[`
                 match_with(LINK, input, pos)
-              when "h", "/"
+              when 0x68, 0x2f
+                # 0x68 = `h`, 0x2f = `/`
                 detect_bare(input, pos)
               end
             end
@@ -69,12 +70,12 @@ module Migrations
             end
 
             def match_with(pattern, input, pos)
-              match = pattern.match(input, pos)
+              match = match_at(pattern, input, pos)
               return nil unless match
 
               Match.new(
                 start_pos: pos,
-                end_pos: pos + match[0].length,
+                end_pos: match.byteoffset(0).last,
                 node: UploadUrlReference.new(sha1: match[:sha1], original_markdown: match[0]),
               )
             end

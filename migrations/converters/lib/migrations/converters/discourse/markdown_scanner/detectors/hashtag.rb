@@ -49,10 +49,10 @@ module Migrations
               @names = names
             end
 
-            def detect(input, pos, _char)
+            def detect(input, pos, _byte)
               return nil unless boundary_before?(input, pos)
 
-              match = PATTERN.match(input, pos)
+              match = match_at(PATTERN, input, pos)
               return nil unless match
 
               name = match[:name]
@@ -60,7 +60,7 @@ module Migrations
 
               Match.new(
                 start_pos: pos,
-                end_pos: pos + match[0].length,
+                end_pos: match.byteoffset(0).last,
                 node: HashtagReference.new(name:, forced_type: match[:type]&.downcase&.to_sym),
               )
             end
@@ -80,12 +80,10 @@ module Migrations
             def boundary_before?(input, pos)
               return true if pos.zero?
 
-              if input.ascii_only?
-                input.getbyte(pos - 1) == 0x28 || whitespace_before?(input, pos) # 0x28 = `(`
-              else
-                previous = input[pos - 1]
-                previous == "(" || previous.match?(/\s/)
-              end
+              # `(` and `\s` are pure ASCII, so a multibyte previous character is
+              # neither: `getbyte` won't equal 0x28 and `whitespace_before?` returns
+              # false — no character-wise fallback needed.
+              input.getbyte(pos - 1) == 0x28 || whitespace_before?(input, pos) # 0x28 = `(`
             end
           end
         end

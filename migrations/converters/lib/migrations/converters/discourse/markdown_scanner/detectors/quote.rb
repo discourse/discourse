@@ -13,8 +13,8 @@ module Migrations
 
             OPENING = /\G\[quote="(?<attribution>[^"\]]*)"\]/
 
-            def detect(input, pos, _char)
-              match = OPENING.match(input, pos)
+            def detect(input, pos, _byte)
+              match = match_at(OPENING, input, pos)
               return nil unless match
 
               username, post_number, topic_id = parse_attribution(match[:attribution])
@@ -22,7 +22,7 @@ module Migrations
 
               Match.new(
                 start_pos: pos,
-                end_pos: pos + match[0].length,
+                end_pos: match.byteoffset(0).last,
                 node: QuoteAttribution.new(username:, post_number:, topic_id:),
               )
             end
