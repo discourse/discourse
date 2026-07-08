@@ -1687,7 +1687,7 @@ posting:
       learn_more_url: "https://meta.discourse.org/t/-/404829"
   klipy_api_key:
     default: ""
-    client: true
+    secret: true
     area: "gifs"
   klipy_file_detail:
     default: "webp"

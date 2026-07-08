@@ -12,6 +12,21 @@ RSpec.describe ListController do
   end
 
   describe "#index" do
+    it "does not expose the Klipy API key in anonymous preloaded site settings" do
+      SiteSetting.klipy_api_key = "super-secret-klipy-key"
+
+      get "/latest"
+
+      expect(response.status).to eq(200)
+      expect(response.body).not_to include(SiteSetting.klipy_api_key)
+      expect(response.body).to have_tag("div#data-preloaded") do |element|
+        data_preloaded = JSON.parse(element.current_scope.attribute("data-preloaded").value)
+        site_settings = JSON.parse(data_preloaded["siteSettings"])
+
+        expect(site_settings).not_to have_key("klipy_api_key")
+      end
+    end
+
     context "when params are invalid" do
       it "should return a 400 response when `page` param is a string that represent a negative integer" do
         get "/latest?page=-1"
