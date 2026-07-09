@@ -2,9 +2,9 @@
 
 # Poll embeds. `poll_id` is the source `original_id` of a poll converted by its own
 # step (the `polls` table). The importer renders that poll into the owner's markdown
-# once it exists. `placeholder` holds the token spliced into the owner's markdown (a
-# post body today, a user bio etc. later); see `Migrations::Placeholder`.
-# `owner_type`/`owner_id` name that owning record.
+# once it exists. `placeholder` holds the token spliced into the owner's markdown;
+# see `Migrations::Placeholder`. `owner_type`/`owner_id` name that owning record —
+# in practice always a post, the only place Discourse renders a poll.
 Migrations::Tooling::Schema.table :embed_polls do
   synthetic!
 

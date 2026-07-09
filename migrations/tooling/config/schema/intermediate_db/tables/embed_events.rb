@@ -3,8 +3,8 @@
 # Event embeds. `event_id` is the source `original_id` of an event converted by its
 # own step (the `events` table). The importer renders that event into the owner's
 # markdown once it exists. `placeholder` holds the token spliced into the owner's
-# markdown (a post body today, a user bio etc. later); see `Migrations::Placeholder`.
-# `owner_type`/`owner_id` name that owning record.
+# markdown; see `Migrations::Placeholder`. `owner_type`/`owner_id` name that owning
+# record — in practice always a post, the only place Discourse renders an event.
 Migrations::Tooling::Schema.table :embed_events do
   synthetic!
 
