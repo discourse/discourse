@@ -1207,4 +1207,76 @@ RSpec.describe ApplicationHelper do
       end
     end
   end
+
+  describe "#shared_session_key" do
+    fab!(:user)
+
+    before { SiteSetting.long_polling_base_url = "https://mb.example.com/" }
+
+    context "when the request carries an auth token" do
+      let(:auth_token) { UserAuthToken.generate!(user_id: user.id) }
+
+      before do
+        helper.stubs(:current_user).returns(user)
+        helper.request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY] = auth_token
+      end
+
+      it "binds the stored value to the auth token" do
+        key = helper.shared_session_key
+        expect(
+          Discourse.redis.get(Auth::DefaultCurrentUserProvider.shared_session_redis_key(key)),
+        ).to eq(auth_token.id.to_s)
+      end
+    end
+
+    context "when the auth token does not belong to the current user" do
+      fab!(:other_user, :user)
+
+      before do
+        helper.stubs(:current_user).returns(user)
+        helper.request.env[
+          Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY
+        ] = UserAuthToken.generate!(user_id: other_user.id)
+      end
+
+      it "returns no shared session key" do
+        expect(helper.shared_session_key).to eq(nil)
+      end
+    end
+
+    context "when the auth token is impersonating the current user" do
+      fab!(:admin)
+
+      let(:auth_token) do
+        UserAuthToken
+          .generate!(user_id: admin.id)
+          .tap do |token|
+            token.update!(impersonated_user_id: user.id, impersonation_expires_at: 1.hour.from_now)
+          end
+      end
+
+      before do
+        helper.stubs(:current_user).returns(user)
+        helper.request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY] = auth_token
+      end
+
+      it "binds the stored value to the impersonating token" do
+        key = helper.shared_session_key
+        expect(
+          Discourse.redis.get(Auth::DefaultCurrentUserProvider.shared_session_redis_key(key)),
+        ).to eq(auth_token.id.to_s)
+      end
+    end
+
+    context "when the request carries no auth token" do
+      before do
+        helper.stubs(:current_user).returns(user)
+        helper.request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY] = nil
+      end
+
+      it "returns no shared session key" do
+        expect(helper.shared_session_key).to eq(nil)
+      end
+    end
+  end
 end

@@ -67,6 +67,20 @@ RSpec.describe UserAuthToken do
     end
   end
 
+  describe ".unexpired" do
+    it "returns only tokens within maximum_session_age" do
+      SiteSetting.maximum_session_age = 1
+
+      fresh = UserAuthToken.generate!(user_id: user.id)
+      fresh.update!(rotated_at: 30.minutes.ago)
+
+      stale = UserAuthToken.generate!(user_id: user.id)
+      stale.update!(rotated_at: 2.hours.ago)
+
+      expect(UserAuthToken.unexpired).to contain_exactly(fresh)
+    end
+  end
+
   describe ".cleanup!" do
     it "can remove old expired tokens" do
       freeze_time Time.zone.now
