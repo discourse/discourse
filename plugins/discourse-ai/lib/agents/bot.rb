@@ -339,7 +339,7 @@ module DiscourseAi
       end
 
       def tool_requires_approval?(tool)
-        tool.class.requires_approval? || @agent.class.require_approval
+        tool.class.requires_approval? && @agent.class.require_approval
       end
 
       def enqueue_tool_for_approval(tool, context, &update_blk)

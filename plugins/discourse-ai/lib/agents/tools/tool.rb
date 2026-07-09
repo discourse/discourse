@@ -43,8 +43,6 @@ module DiscourseAi
             false
           end
 
-          # When true, this tool always queues for moderator approval,
-          # regardless of the agent's own require_approval setting.
           def requires_approval?
             false
           end
