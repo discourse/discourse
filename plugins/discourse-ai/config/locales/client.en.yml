@@ -371,7 +371,6 @@ en:
           translate: "Translate"
           markdown_tables: "Generate Markdown table"
           custom_prompt: "Custom prompt"
-          image_caption: "Caption images"
           translator: "Translator"
           post_illustrator: "Post illustrator"
           chat_thread_titles: "Chat thread titles"
@@ -1121,11 +1120,6 @@ en:
           select: "Select"
           selected: "Selected"
           try_again: "Try Again"
-        image_caption:
-          button_label: "Caption with AI"
-          generating: "Generating caption..."
-          credits: "Captioned by AI"
-          save_caption: "Save"
         no_content_error: "Add content first to perform AI actions on it"
 
       errors:

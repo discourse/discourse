@@ -23,7 +23,6 @@ describe Jobs::PostImageDescriptionsBackfill do
     )
     SiteSetting.ai_post_image_descriptions_enabled = true
     SiteSetting.ai_helper_enabled = true
-    SiteSetting.ai_helper_enabled_features = "image_caption"
     post.update_column(:cooked, post.cook(post.raw, topic_id: post.topic_id))
     post.link_post_uploads
     post.update_column(:image_upload_id, upload.id)

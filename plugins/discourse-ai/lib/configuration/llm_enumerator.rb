@@ -47,8 +47,7 @@ module DiscourseAi
           end
         end
 
-        if SiteSetting.ai_helper_enabled_features.split("|").include?("image_caption") ||
-             SiteSetting.ai_post_image_descriptions_enabled
+        if SiteSetting.ai_post_image_descriptions_enabled
           image_caption_agent = AiAgent.find_by(id: SiteSetting.ai_helper_image_caption_agent)
 
           if image_caption_agent.present?
