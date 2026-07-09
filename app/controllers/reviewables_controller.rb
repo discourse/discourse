@@ -94,6 +94,9 @@ class ReviewablesController < ApplicationController
   end
 
   def user_menu_list
+    unless current_user.moderator?
+      return render_json_dump({ reviewables: [], reviewable_count: 0 }, rest_serializer: true)
+    end
     json = {
       reviewables:
         Reviewable.basic_serializers_for_list(
