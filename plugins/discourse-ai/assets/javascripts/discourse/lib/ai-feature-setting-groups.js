@@ -23,6 +23,10 @@ export const AI_FEATURE_SETTING_GROUPS = {
       settings: [
         "ai_helper_automatic_chat_thread_title",
         "ai_helper_automatic_chat_thread_title_delay",
+        "ai_post_image_descriptions_enabled",
+        "ai_post_image_descriptions_per_post_limit",
+        "ai_post_image_descriptions_backfill_hourly_rate",
+        "ai_post_image_descriptions_backfill_max_age_days",
       ],
     },
     {

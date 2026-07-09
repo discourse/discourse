@@ -187,6 +187,22 @@ discourse_ai:
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
     area: "ai-features/ai_helper"
+  ai_post_image_descriptions_enabled:
+    default: false
+    area: "ai-features/ai_helper"
+  ai_post_image_descriptions_per_post_limit:
+    default: 10
+    min: 1
+    area: "ai-features/ai_helper"
+  ai_post_image_descriptions_backfill_hourly_rate:
+    default: 0
+    min: 0
+    area: "ai-features/ai_helper"
+  ai_post_image_descriptions_backfill_max_age_days:
+    default: 30
+    min: 1
+    max: 10000
+    area: "ai-features/ai_helper"
   ai_helper_chat_thread_title_agent:
     default: "-35"
     type: enum

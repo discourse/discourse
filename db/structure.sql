@@ -845,6 +845,44 @@ ALTER SEQUENCE public.ai_moderation_settings_id_seq OWNED BY public.ai_moderatio
 
 
 --
+-- Name: ai_post_image_descriptions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.ai_post_image_descriptions (
+    id bigint NOT NULL,
+    post_id integer NOT NULL,
+    upload_id integer NOT NULL,
+    base62_sha1 character varying(27) NOT NULL,
+    locale character varying(20) NOT NULL,
+    description text,
+    attempts integer DEFAULT 0 NOT NULL,
+    last_attempted_at timestamp(6) without time zone,
+    last_error text,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: ai_post_image_descriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.ai_post_image_descriptions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: ai_post_image_descriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.ai_post_image_descriptions_id_seq OWNED BY public.ai_post_image_descriptions.id;
+
+
+--
 -- Name: ai_posts_embeddings; Type: TABLE; Schema: public; Owner: -
 --
 
