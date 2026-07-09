@@ -8,6 +8,10 @@
     width: 100%;
   }
 
+  &__chooser .select-kit-header {
+    font-weight: 400;
+  }
+
   &__rows {
     display: flex;
     flex-direction: column;
@@ -19,11 +23,16 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--space-2);
-    padding: var(--space-1) var(--space-2);
-    border-bottom: 1px solid var(--content-border-color);
+    padding: var(--space-2);
+    border-radius: var(--d-border-radius);
 
+    // border-bottom: 1px solid var(--content-border-color);
     &.--mandatory {
       color: var(--d-input-text-color--disabled);
+    }
+
+    &:hover {
+      background-color: var(--d-hover);
     }
   }
 
