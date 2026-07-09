@@ -26,7 +26,9 @@ module DiscourseDataExplorer
         end
 
         # Hand-rolled search over name/description (Ransack is unusable in Discourse — see Part 9).
-        filter :search do |scope, value|
+        # Renamed from `search` (2026-07-08 breaking change) — virtual key, so the rename
+        # is declared via `renamed_filter` in the version change.
+        filter :q do |scope, value|
           pattern = "%#{ActiveRecord::Base.sanitize_sql_like(value.to_s.downcase)}%"
           scope.where(
             "LOWER(data_explorer_queries.name) LIKE :q OR LOWER(data_explorer_queries.description) LIKE :q",
@@ -35,7 +37,9 @@ module DiscourseDataExplorer
         end
 
         sort :name
-        sort :last_run_at
+        # Derived from the `ran_at` attribute (renamed from `last_run_at`, 2026-07-08);
+        # the wire name moved with the attribute, the ORDER BY column did not.
+        sort :ran_at, column: :last_run_at
         # `username` lives on the associated user — a hand-rolled LEFT JOIN sort.
         sort :username do |scope, dir|
           direction = dir == :desc ? "DESC" : "ASC"

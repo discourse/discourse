@@ -5,9 +5,9 @@
       "created_at",
       "description",
       "hidden",
-      "last_run_at",
       "name",
       "query",
+      "ran_at",
       "updated_at"
     ],
     "relationships": {
@@ -15,11 +15,11 @@
       "groups": "has_many"
     },
     "filters": [
-      "search"
+      "q"
     ],
     "sorts": [
-      "last_run_at",
       "name",
+      "ran_at",
       "username"
     ],
     "default_sort": {

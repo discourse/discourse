@@ -14,7 +14,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::QueriesController do
         params: params,
         headers: {
           "Accept" => "application/vnd.api+json",
-          "Discourse-Api-Version" => "2026-07-01",
+          "Discourse-Api-Version" => "2026-07-08",
         }
     JSON.parse(response.body)
   end
@@ -34,7 +34,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::QueriesController do
     it "returns a compound document for a top-level include" do
       Fabricate(:query_group, query: query, group: group1)
 
-      doc = get_index(include: "user,groups", filter: { search: query.name })
+      doc = get_index(include: "user,groups", filter: { q: query.name })
       resource = doc["data"].find { |row| row["id"].to_i == query.id }
       included = doc["included"].group_by { |inc| inc["type"] }
 
@@ -50,7 +50,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::QueriesController do
       group1.add(author)
       group2.add(author)
 
-      doc = get_index(include: "user.groups", filter: { search: query.name })
+      doc = get_index(include: "user.groups", filter: { q: query.name })
       resource = doc["data"].find { |row| row["id"].to_i == query.id }
       user_resource =
         doc["included"].find { |inc| inc["type"] == "users" && inc["id"].to_i == author.id }

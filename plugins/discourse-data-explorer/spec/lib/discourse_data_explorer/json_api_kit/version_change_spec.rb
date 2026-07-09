@@ -190,6 +190,37 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionChange do
     end
   end
 
+  describe "declared sort and filter renames" do
+    subject(:change) do
+      Class.new(described_class) do
+        version "2026-07-01"
+        description "Renames the speed sort and the lookup filter of things."
+
+        resource :things do
+          renamed_sort from: :speed, to: :velocity
+          renamed_filter from: :lookup, to: :q
+        end
+      end
+    end
+
+    it "exposes the sort renames as a map" do
+      expect(change.sort_renames_for("things")).to eq(speed: :velocity)
+    end
+
+    it "exposes the filter renames as a map" do
+      expect(change.filter_renames_for("things")).to eq(lookup: :q)
+    end
+
+    it "exposes empty maps for an untargeted type" do
+      expect(change.sort_renames_for("users")).to eq({})
+      expect(change.filter_renames_for("users")).to eq({})
+    end
+
+    it "does not bleed into the attribute rename map" do
+      expect(change.field_renames_for("things")).to eq({})
+    end
+  end
+
   describe "declared renames combined with blocks" do
     subject(:change) do
       Class.new(described_class) do
