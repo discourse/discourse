@@ -8,9 +8,11 @@
 # `::tag`/`::category` suffix; it may hold one `:` as the `parent:child` separator.
 # `hashtag_type` is a `HashtagType` value (`category` or `tag`), or nil to mean
 # "classify at import". The converter sets it only when the source text forced it
-# with a `::tag`/`::category` suffix; otherwise the importer decides (categories
-# first, then tags) and fills it in. `target_id` holds the source `original_id` of
-# the resolved category or tag, nil until the importer resolves the name.
+# with a `::tag`/`::category` suffix. `target_id` is the source `original_id` of
+# the target category or tag; converters leave it nil because a hashtag names its
+# target instead of identifying it. The importer fills the nil fields (classifying
+# categories first, then tags) on its in-memory copy of the row while rendering;
+# it never writes them back to this table.
 #
 # `placeholder` holds the token spliced into the owner's markdown; `owner_type`/
 # `owner_id` name that owning record.
