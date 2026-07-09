@@ -5,6 +5,11 @@ DiscourseAi::Engine.routes.draw do
     get "status" => "ai_credits#status"
   end
 
+  scope path: "/post-image-descriptions", defaults: { format: :json } do
+    get ":post_id" => "post_image_descriptions#index"
+    put ":post_id/:base62_sha1" => "post_image_descriptions#update"
+  end
+
   scope module: :ai_helper, path: "/ai-helper", defaults: { format: :json } do
     post "suggest" => "assistant#suggest"
     post "suggest_title" => "assistant#suggest_title"

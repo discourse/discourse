@@ -4,7 +4,6 @@ module DiscourseAi
   module PostImageDescriptions
     DESCRIPTION_CLASS = "ai-image-description"
     DESCRIPTION_ID_PREFIX = "ai-image-description"
-    DESCRIPTION_ATTRIBUTE = "data-ai-description"
     ARIA_DESCRIPTION_ATTRIBUTE = "aria-description"
     LOOKUP_INDEX = "idx_ai_post_image_descriptions_lookup"
     REUSE_INDEX = "idx_ai_post_image_descriptions_reuse"
@@ -13,6 +12,7 @@ module DiscourseAi
     COOK_ENQUEUE_POST_MAX_AGE = 1.day
     BACKFILL_RUNS_PER_HOUR = 4
     SUPPORTED_EXTENSIONS = %w[jpg jpeg png gif webp].freeze
+    MAX_DESCRIPTION_LENGTH = 1_000
 
     module_function
 
@@ -65,7 +65,6 @@ module DiscourseAi
         next if description.blank?
 
         aria_description = aria_description(description, locale)
-        img[DESCRIPTION_ATTRIBUTE] = description
         img[ARIA_DESCRIPTION_ATTRIBUTE] = aria_description
 
         lightbox = img.ancestors("a.lightbox").first
@@ -174,6 +173,43 @@ module DiscourseAi
       return text if descriptions.blank?
 
       "#{text} #{descriptions.join(" ")}"
+    end
+
+    def editable_descriptions(post, locale)
+      return [] if !enabled?
+      return [] if !captionable_post?(post)
+
+      locale = locale.presence || original_locale(post)
+      base62_sha1s = current_base62_sha1s(post)
+      return [] if base62_sha1s.blank?
+
+      descriptions = descriptions_for(post.id, locale, base62_sha1s)
+
+      base62_sha1s.filter_map do |base62_sha1|
+        description = descriptions[base62_sha1]
+        next if description.blank?
+
+        { base62_sha1: base62_sha1, description: description }
+      end
+    end
+
+    def update_description(post, locale, base62_sha1, description)
+      return if !enabled?
+      return if !captionable_post?(post)
+      return if !current_base62_sha1s(post).include?(base62_sha1)
+
+      locale = locale.presence || original_locale(post)
+
+      image_description =
+        AiPostImageDescription.find_by(post_id: post.id, locale: locale, base62_sha1: base62_sha1)
+
+      return if image_description.blank? || image_description.description.blank?
+
+      image_description.update!(description: description, last_error: nil)
+      SearchIndexer.index(post, force: true)
+      refresh_cooked(post, locale)
+
+      image_description
     end
 
     def backfill_limit
@@ -338,6 +374,13 @@ module DiscourseAi
 
     def capped_base62_sha1s(base62_sha1s)
       base62_sha1s.first(SiteSetting.ai_post_image_descriptions_per_post_limit.to_i)
+    end
+
+    def current_base62_sha1s(post)
+      return [] if post.cooked.blank?
+
+      base62_sha1s = image_base62_sha1s(Nokogiri::HTML5.fragment(post.cooked), post_id: post.id)
+      capped_base62_sha1s(base62_sha1s)
     end
 
     def pending_base62_sha1s(post_id, locale, base62_sha1s)
@@ -598,11 +641,10 @@ module DiscourseAi
       doc.css("[aria-describedby]").each { |node| remove_ai_describedby(node) }
 
       doc
-        .css("img[#{DESCRIPTION_ATTRIBUTE}]")
+        .css("img[data-base62-sha1][#{ARIA_DESCRIPTION_ATTRIBUTE}]")
         .each do |img|
           lightbox = img.ancestors("a.lightbox").first
 
-          img.remove_attribute(DESCRIPTION_ATTRIBUTE)
           img.remove_attribute(ARIA_DESCRIPTION_ATTRIBUTE)
           lightbox.remove_attribute(ARIA_DESCRIPTION_ATTRIBUTE) if lightbox
         end

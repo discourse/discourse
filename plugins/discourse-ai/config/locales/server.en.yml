@@ -383,6 +383,12 @@ en:
         replace_dates: "Smart dates"
       image_caption:
         attribution: "Captioned by AI"
+    post_image_descriptions:
+      errors:
+        description_blank: "Description can't be blank."
+        description_too_long:
+          one: "Description must be %{count} character or fewer."
+          other: "Description must be %{count} characters or fewer."
 
     share_ai:
       read_more: "Read full transcript"

@@ -188,6 +188,7 @@ discourse_ai:
     area: "ai-features/ai_helper"
   ai_post_image_descriptions_enabled:
     default: false
+    client: true
     area: "ai-features/ai_helper"
   ai_post_image_descriptions_per_post_limit:
     default: 10

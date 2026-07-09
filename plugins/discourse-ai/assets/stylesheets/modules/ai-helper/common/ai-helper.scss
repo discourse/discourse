@@ -468,114 +468,19 @@
   }
 }
 
-// AI Image Caption Feature:
-.image-wrapper {
-  .button-wrapper {
-    .generate-caption {
-      background: var(--tertiary-low);
-      color: var(--tertiary);
-      box-shadow: var(--shadow-dropdown);
-      position: absolute;
-      white-space: nowrap;
-      top: -2rem;
-      left: 0.35rem;
-      padding: 0.33em 0.75em;
-      transition: all 0.25s ease;
+.ai-post-image-description-editor {
+  display: contents;
 
-      .discourse-no-touch & {
-        display: none;
-      }
-
-      .d-icon {
-        margin-right: 0.25rem;
-      }
-
-      &:active {
-        box-shadow: none;
-      }
-
-      &:hover,
-      &:focus {
-        background: var(--tertiary-400);
-        color: var(--tertiary-hover);
-        cursor: pointer;
-      }
-
-      &.disabled {
-        pointer-events: none;
-        cursor: not-allowed;
-        opacity: 0.7;
-      }
-    }
-  }
-
-  .discourse-no-touch & {
-    &:hover {
-      .button-wrapper .generate-caption {
-        display: block;
-      }
-    }
+  &__button.btn-transparent {
+    color: var(--tertiary);
+    min-height: 0;
+    padding: 0;
   }
 }
 
-.ai-caption-popup {
-  --ai-caption-popup-min-width: 20rem;
-  width: auto;
-  right: unset;
-  padding: 1em;
-  top: unset;
-  bottom: 0;
-
-  .loading-container {
-    min-width: var(--ai-caption-popup-min-width);
-  }
-
-  textarea {
-    box-sizing: border-box;
-    width: 100%;
-    max-width: 40dvw;
-    max-height: calc(100dvh - var(--header-offset) - 10em);
-    min-height: 3em;
-    height: 7em;
-    min-width: var(--ai-caption-popup-min-width);
-
-    @include viewport.until(md) {
-      width: 100%;
-      max-width: unset;
-      min-width: unset;
-    }
-  }
-
-  .actions {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-
-    .credits {
-      font-size: var(--font-down-1);
-      margin-left: auto;
-      color: var(--tertiary);
-
-      .desktop-view & {
-        // a little extra space for extra narrow desktop view
-        @media screen and (width <= 675px) {
-          span {
-            display: none;
-          }
-        }
-      }
-    }
-  }
-
-  .spinner {
-    border-color: var(--tertiary-600);
-    border-right-color: var(--tertiary);
-  }
-}
-
-.ai-image-caption-prompt-dialog {
-  .dialog-content {
-    max-width: 555px;
+.ai-post-image-description-editor-modal {
+  &__textarea {
+    min-height: 7em;
   }
 }
 

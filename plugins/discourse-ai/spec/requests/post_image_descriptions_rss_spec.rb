@@ -45,7 +45,6 @@ describe "AI post image descriptions in RSS" do
 
     expect(response.status).to eq(200)
     expect(response.body).not_to include(description)
-    expect(response.body).not_to include("data-ai-description")
     expect(response.body).not_to include("aria-description")
   end
 end

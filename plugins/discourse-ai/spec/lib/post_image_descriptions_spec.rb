@@ -77,7 +77,6 @@ describe DiscourseAi::PostImageDescriptions do
     expect(image["alt"]).to eq("user supplied")
     expect(lightbox["title"]).to eq("user supplied")
     expect(doc.at_css(".meta .filename").text).to eq("user supplied")
-    expect(image["data-ai-description"]).to eq(description)
     expect(image["aria-description"]).to include(description)
     expect(doc.at_css(".ai-image-description")).to be_blank
     expect(
@@ -95,7 +94,6 @@ describe DiscourseAi::PostImageDescriptions do
     email_doc = Nokogiri::HTML5.fragment(email_html)
 
     expect(email_html).not_to include(description)
-    expect(email_doc.at_css("[data-ai-description]")).to be_blank
     expect(email_doc.at_css("[aria-description]")).to be_blank
   end
 
@@ -274,7 +272,6 @@ describe DiscourseAi::PostImageDescriptions do
     doc = Nokogiri::HTML5.fragment(localization.reload.cooked)
     image = doc.at_css("img[data-base62-sha1='#{upload.base62_sha1}']")
 
-    expect(image["data-ai-description"]).to eq(description)
     expect(image["aria-description"]).to include(description)
     expect(doc.at_css(".ai-image-description")).to be_blank
   end
@@ -298,7 +295,6 @@ describe DiscourseAi::PostImageDescriptions do
     doc = Nokogiri::HTML5.fragment(localization.reload.cooked)
     image = doc.at_css("img[data-base62-sha1='#{upload.base62_sha1}']")
 
-    expect(image["data-ai-description"]).to eq(description)
     expect(image["aria-description"]).to include(description)
     expect(AiPostImageDescription.exists?(post_id: post.id, locale: "ja")).to eq(false)
   end
