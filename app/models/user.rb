@@ -867,8 +867,8 @@ class User < ActiveRecord::Base
 
   def publish_reviewable_counts(extra_data = nil)
     data = {
-      reviewable_count: reviewable_count,
-      unseen_reviewable_count: Reviewable.unseen_reviewable_count(self),
+      reviewable_count: moderator? ? reviewable_count : 0,
+      unseen_reviewable_count: moderator? ? Reviewable.unseen_reviewable_count(self) : 0,
     }
     data.merge!(extra_data) if extra_data.present?
     MessageBus.publish("/reviewable_counts/#{id}", data, user_ids: [id])
