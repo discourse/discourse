@@ -13,6 +13,7 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import { eq } from "discourse/truth-helpers";
 
 const ACCESS_CONTROL_GRANTEE_SEARCH_URL = "/access-control/grantees/search";
 const EDIT_PERMISSION = "edit";
@@ -135,8 +136,6 @@ class AccessControlGranteeChooser extends EmailGroupUserChooser {
 
 export default class DAccessControl extends Component {
   @service site;
-
-  @tracked addingGroup = false;
 
   constructor() {
     super(...arguments);
@@ -311,18 +310,8 @@ export default class DAccessControl extends Component {
   }
 
   @action
-  startAdding() {
-    this.addingGroup = true;
-  }
-
-  @action
   onGranteeChosen(_value, selectedGrantees) {
     const selectedGrantee = selectedGrantees?.[0];
-
-    if (!selectedGrantee) {
-      this.addingGroup = false;
-      return;
-    }
 
     const isReadOnlyDefaultGroup =
       selectedGrantee.aclType === "group" &&
@@ -357,7 +346,6 @@ export default class DAccessControl extends Component {
     const next = [...this.acl, newPermission];
 
     this.args.onChange(next);
-    this.addingGroup = false;
   }
 
   @action
@@ -414,6 +402,23 @@ export default class DAccessControl extends Component {
 
   <template>
     <div class="d-access-control">
+
+      <AccessControlGranteeChooser
+        class="d-access-control__chooser"
+        @value={{null}}
+        @onChange={{this.onGranteeChosen}}
+        @labelProperty="name"
+        @filterPlaceholder="access_control.manage.add_group"
+        @options={{hash
+          aclTarget=@aclTarget
+          customSearchOptions=(hash defaultSearchResults=this.availableGrantees)
+          excludedGrantees=this.selectedGranteeValues
+          filterable=true
+          includeGroups=true
+          maximum=1
+          none="access_control.manage.add_group"
+        }}
+      />
       {{#if this.rows.length}}
         <div class="d-access-control__rows">
           {{#each this.rows key="key" as |row|}}
@@ -421,11 +426,12 @@ export default class DAccessControl extends Component {
               class={{dConcatClass
                 "d-access-control__row"
                 (if row.mandatory "--mandatory")
+                (if (eq row.type "user") "--user" "--group")
               }}
               data-row-type={{row.type}}
               data-row-id={{row.id}}
             >
-              <span class="d-access-control__group-name">
+              <span class="d-access-control__item">
                 {{#if row.mandatory}}
                   <DTooltip
                     @content={{i18n
@@ -437,13 +443,17 @@ export default class DAccessControl extends Component {
                     </:trigger>
                   </DTooltip>
                 {{/if}}
-                {{#if (this.rowIsType row "user")}}
-                  {{dAvatar (this.rowAsUser row) imageSize="small"}}
-                {{/if}}
-                {{#if (this.rowIsType row "group")}}
-                  {{dIcon "user-group"}}
-                {{/if}}
-                {{row.display_name}}
+                <span class="d-access-control__item-icon">
+                  {{#if (this.rowIsType row "user")}}
+                    {{dAvatar (this.rowAsUser row) imageSize="small"}}
+                  {{/if}}
+                  {{#if (this.rowIsType row "group")}}
+                    {{dIcon "user-group"}}
+                  {{/if}}
+                </span>
+                <span class="d-access-control__item-name">
+                  {{row.display_name}}
+                </span>
               </span>
               <DropdownSelectBox
                 class="d-access-control__permission"
@@ -462,34 +472,6 @@ export default class DAccessControl extends Component {
             </div>
           {{/each}}
         </div>
-      {{/if}}
-
-      {{#if this.addingGroup}}
-        <AccessControlGranteeChooser
-          class="d-access-control__chooser"
-          @value={{null}}
-          @onChange={{this.onGranteeChosen}}
-          @labelProperty="name"
-          @options={{hash
-            aclTarget=@aclTarget
-            customSearchOptions=(hash
-              defaultSearchResults=this.availableGrantees
-            )
-            expandedOnInsert=true
-            excludedGrantees=this.selectedGranteeValues
-            filterable=true
-            includeGroups=true
-            maximum=1
-            none="access_control.manage.add_group"
-          }}
-        />
-      {{else}}
-        <DButton
-          class="d-access-control__add btn-default"
-          @icon="plus"
-          @label="access_control.manage.add_group"
-          @action={{this.startAdding}}
-        />
       {{/if}}
     </div>
   </template>

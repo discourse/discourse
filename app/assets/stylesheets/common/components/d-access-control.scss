@@ -1,4 +1,5 @@
 .d-access-control {
+  --d-access-control-prefix-width: var(--space-6);
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
@@ -36,7 +37,17 @@
     }
   }
 
-  &__group-name {
+  &__row.--group .d-access-control__item-icon {
+    border-radius: 999px;
+    background-color: var(--primary-100);
+    width: var(--d-access-control-prefix-width);
+    height: var(--d-access-control-prefix-width);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__item {
     flex: 1 1 auto;
     min-width: 0;
     overflow: hidden;
@@ -44,10 +55,7 @@
     white-space: nowrap;
     display: flex;
     align-items: center;
-
-    svg.d-icon {
-      margin-right: var(--space-1);
-    }
+    gap: var(--space-1);
   }
 
   &__permission {
