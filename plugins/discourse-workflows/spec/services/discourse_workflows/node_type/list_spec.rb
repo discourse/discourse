@@ -18,6 +18,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
 
     context "when everything's ok" do
       fab!(:badge) { Fabricate(:badge, name: "Helpful") }
+      fab!(:membership_group) { Fabricate(:group, name: "workflow_helpers") }
 
       it { is_expected.to run_successfully }
 
@@ -99,6 +100,24 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
           load_options_method: "badges",
         )
         expect(award_badge.dig(:metadata, "badges")).to include(id: badge.id, name: badge.name)
+      end
+
+      it "serializes the required group selector for group membership triggers" do
+        trigger =
+          result[:node_types].find { |nt| nt[:identifier] == "trigger:user_added_to_group" }
+
+        expect(trigger.dig(:properties, :group_id)).to include(
+          type: :integer,
+          required: true,
+          no_data_expression: true,
+          ui: {
+            control: :group_select,
+          },
+        )
+        expect(trigger.dig(:metadata, "groups")).to include(
+          id: membership_group.id,
+          name: membership_group.name,
+        )
       end
 
       it "includes branching for condition nodes" do

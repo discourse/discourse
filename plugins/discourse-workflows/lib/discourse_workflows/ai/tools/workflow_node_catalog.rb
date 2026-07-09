@@ -55,7 +55,7 @@ module DiscourseWorkflows
           ).merge("post" => "WebHookPostSerializer payload", "post.category_slug" => "string")
 
         USER_SCHEMA = {
-          "user" => "Basic safe user attributes for the post author",
+          "user" => "Basic safe user attributes",
           "user.id" => "integer",
           "user.username" => "string",
           "user.name" => "string|null",
@@ -90,6 +90,20 @@ module DiscourseWorkflows
           "group_membership.in_group" => "boolean",
         }.freeze
 
+        GROUP_SCHEMA = {
+          "group" => "Group involved in the membership event",
+          "group.id" => "integer",
+          "group.name" => "string",
+          "group.full_name" => "string|null",
+          "group.automatic" => "boolean",
+        }.freeze
+
+        GROUP_MEMBERSHIP_EVENT_SCHEMA = {
+          "membership" => "Group membership event metadata",
+          "membership.action" => "\"added\"|\"removed\"",
+          "membership.automatic" => "boolean|null",
+        }.freeze
+
         OUTPUT_SCHEMAS = {
           "trigger:manual" => {
           },
@@ -98,6 +112,10 @@ module DiscourseWorkflows
           "trigger:post_created" => POST_SCHEMA.merge(TOPIC_LIST_ITEM_SCHEMA).merge(USER_SCHEMA),
           "trigger:post_edited" => POST_SCHEMA.merge(TOPIC_LIST_ITEM_SCHEMA).merge(USER_SCHEMA),
           "trigger:topic_closed" => TOPIC_LIST_ITEM_SCHEMA,
+          "trigger:user_added_to_group" =>
+            USER_SCHEMA.merge(GROUP_SCHEMA).merge(GROUP_MEMBERSHIP_EVENT_SCHEMA),
+          "trigger:user_removed_from_group" =>
+            USER_SCHEMA.merge(GROUP_SCHEMA).merge(GROUP_MEMBERSHIP_EVENT_SCHEMA),
           "action:topic" => TOPIC_LIST_ITEM_SCHEMA.merge(WEBHOOK_POST_SCHEMA),
           "action:topic_tags" => {
             "topic_id" => "integer",
@@ -304,6 +322,8 @@ module DiscourseWorkflows
           "action:ai_agent" =>
             "ai agent bot llm classify summarize generate sentiment triage runner run as permissions uploads attachments",
           "action:group" => "group membership member belongs friend friends",
+          "trigger:user_added_to_group" => "joined added to group membership member",
+          "trigger:user_removed_from_group" => "left removed from group membership member",
           "action:user" =>
             "user profile bio title trust level lock groups fields lookup edit update",
         }.freeze
