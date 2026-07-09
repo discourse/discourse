@@ -36,6 +36,8 @@ class CategoriesController < ApplicationController
   MIN_CATEGORIES_TOPICS = 5
   MAX_CATEGORIES_TOPICS = 100
   MAX_CATEGORIES_LIMIT = 25
+  MAX_CATEGORY_SEARCH_TERM_LENGTH = 250
+  MAX_CATEGORY_SEARCH_WORDS = 25
 
   def redirect
     return if handle_permalink("/category/#{params[:path]}")
@@ -420,7 +422,7 @@ class CategoriesController < ApplicationController
   end
 
   def search
-    term = params[:term].to_s.strip
+    term = params[:term].to_s.strip[0, MAX_CATEGORY_SEARCH_TERM_LENGTH]
     parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
     include_uncategorized =
       (
@@ -463,7 +465,13 @@ class CategoriesController < ApplicationController
 
     categories = Category.secured(guardian)
 
-    if term.present? && words = term.split
+    if term.present?
+      words = []
+      term.scan(/\S+/) do |word|
+        words << word
+        break if words.size >= MAX_CATEGORY_SEARCH_WORDS
+      end
+
       words.each do |word|
         categories =
           categories.where(
