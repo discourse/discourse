@@ -134,4 +134,16 @@ after_initialize do
 
     DiscourseWorkflows::PluginEnableHandler.handle!
   end
+
+  # Automatic promotion of an upcoming change does not write the site setting,
+  # so :site_setting_changed never fires for it. See UpcomingChanges::NotifyPromotion.
+  on(:upcoming_change_enabled) do |name|
+    next if name != :enable_discourse_workflows
+
+    # A manual opt-in writes the setting before this event fires, so the
+    # :site_setting_changed hook above has already run.
+    next if SiteSetting.setting_modified_from_default?(:enable_discourse_workflows)
+
+    DiscourseWorkflows::PluginEnableHandler.handle!
+  end
 end
