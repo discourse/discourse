@@ -926,6 +926,7 @@ en:
         tool_not_found: "Tool '%{tool_name}' is no longer available."
         bot_user_missing: "The bot user no longer exists."
         performer_not_human: "This action must be approved or rejected by a real person, not a bot."
+        post_mismatch: "This approval card does not belong to this post."
         execution_error: "Tool execution failed: %{error}"
         execution_error_unknown: "an unexpected error occurred"
 

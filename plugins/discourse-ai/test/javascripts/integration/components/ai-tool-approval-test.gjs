@@ -30,11 +30,19 @@ module("Integration | Component | AiToolApproval", function (hooks) {
     updateCurrentUser({ moderator: true, admin: false });
 
     pretender.get("/review/42", () => response({ reviewable }));
-    pretender.put("/review/42/perform/approve", () =>
-      response({ reviewable_perform_result: { success: true } })
-    );
+    pretender.put("/review/42/perform/approve", (request) => {
+      assert.strictEqual(
+        request.requestBody,
+        "post_id=123&version=0",
+        "sends the rendered post id with the inline action"
+      );
 
-    await render(<template><AiToolApproval @reviewableId="42" /></template>);
+      return response({ reviewable_perform_result: { success: true } });
+    });
+
+    await render(
+      <template><AiToolApproval @postId="123" @reviewableId="42" /></template>
+    );
 
     assert.dom(".ai-tool-approval__value").exists("shows the tool's details");
     assert
@@ -63,7 +71,9 @@ module("Integration | Component | AiToolApproval", function (hooks) {
     const approved = { ...reviewable, status: 1 };
     pretender.get("/review/42", () => response({ reviewable: approved }));
 
-    await render(<template><AiToolApproval @reviewableId="42" /></template>);
+    await render(
+      <template><AiToolApproval @postId="123" @reviewableId="42" /></template>
+    );
 
     assert
       .dom(".ai-tool-approval__toggle")
@@ -84,7 +94,9 @@ module("Integration | Component | AiToolApproval", function (hooks) {
 
     pretender.get("/review/42", () => response({ reviewable }));
 
-    await render(<template><AiToolApproval @reviewableId="42" /></template>);
+    await render(
+      <template><AiToolApproval @postId="123" @reviewableId="42" /></template>
+    );
 
     assert
       .dom(".ai-tool-approval__actions")
@@ -99,7 +111,9 @@ module("Integration | Component | AiToolApproval", function (hooks) {
 
     pretender.get("/review/42", () => response(403, {}));
 
-    await render(<template><AiToolApproval @reviewableId="42" /></template>);
+    await render(
+      <template><AiToolApproval @postId="123" @reviewableId="42" /></template>
+    );
 
     assert
       .dom(".ai-tool-approval__status")

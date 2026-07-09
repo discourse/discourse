@@ -92,17 +92,20 @@ export default class AiToolApproval extends Component {
 
   @action
   async performAction(actionId) {
-    if (this.performing || !this.reviewable) {
+    if (this.performing || !this.reviewable || !this.args.postId) {
       return;
     }
 
     this.performing = true;
 
     try {
-      await ajax(
-        `/review/${this.args.reviewableId}/perform/${actionId}?version=${this.reviewable.version}`,
-        { type: "PUT" }
-      );
+      await ajax(`/review/${this.args.reviewableId}/perform/${actionId}`, {
+        type: "PUT",
+        data: {
+          post_id: this.args.postId,
+          version: this.reviewable.version,
+        },
+      });
       this.reviewable = {
         ...this.reviewable,
         status: actionId === "approve" ? STATUSES.approved : STATUSES.rejected,

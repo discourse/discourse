@@ -132,6 +132,20 @@ RSpec.describe ReviewableAiToolAction do
       expect(topic.reload.closed).to eq(true)
     end
 
+    it "rejects inline approval from a different post", :aggregate_failures do
+      post = Fabricate(:post, topic: topic)
+      other_post = Fabricate(:post)
+      tool_action = create_tool_action(post_id: post.id)
+      reviewable = create_reviewable(tool_action)
+
+      expect { reviewable.perform(admin, :approve, post_id: other_post.id) }.to raise_error(
+        Discourse::InvalidAccess,
+      )
+
+      expect(reviewable.reload).to be_pending
+      expect(topic.reload.closed).to eq(false)
+    end
+
     it "raises error when target is missing" do
       tool_action = create_tool_action
       reviewable = create_reviewable(tool_action)
@@ -245,6 +259,19 @@ RSpec.describe ReviewableAiToolAction do
       expect(result.success?).to eq(true)
       expect(result.transition_to).to eq(:rejected)
       expect(topic.reload.closed).to eq(false)
+    end
+
+    it "rejects inline rejection from a different post" do
+      post = Fabricate(:post, topic: topic)
+      other_post = Fabricate(:post)
+      tool_action = create_tool_action(post_id: post.id)
+      reviewable = create_reviewable(tool_action)
+
+      expect { reviewable.perform(admin, :reject, post_id: other_post.id) }.to raise_error(
+        Discourse::InvalidAccess,
+      )
+
+      expect(reviewable.reload).to be_pending
     end
 
     it "raises error when performed_by is a bot account" do

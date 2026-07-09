@@ -41,6 +41,7 @@ class ReviewableAiToolAction < Reviewable
   end
 
   def perform_approve(performed_by, args)
+    ensure_inline_post_matches_target!(args)
     ensure_performed_by_is_a_real_person!(performed_by)
 
     tool, tool_class, context = build_tool!
@@ -61,6 +62,7 @@ class ReviewableAiToolAction < Reviewable
   end
 
   def perform_reject(performed_by, args)
+    ensure_inline_post_matches_target!(args)
     ensure_performed_by_is_a_real_person!(performed_by)
 
     create_result(:success, :rejected)
@@ -109,6 +111,18 @@ class ReviewableAiToolAction < Reviewable
       )
 
     [tool, tool_class, context]
+  end
+
+  def ensure_inline_post_matches_target!(args)
+    inline_post_id = args[:post_id] || args["post_id"]
+    return if inline_post_id.blank?
+
+    expected_post_id = target&.post_id
+    if expected_post_id.blank? || inline_post_id.to_i != expected_post_id
+      raise Discourse::InvalidAccess.new(
+              I18n.t("discourse_ai.reviewables.ai_tool_action.post_mismatch"),
+            )
+    end
   end
 
   def ensure_performed_by_is_a_real_person!(performed_by)

@@ -14,7 +14,7 @@ function initializeAiToolApproval(api) {
       // else's `div.ai-tool-approval` stays inert. Server-side authz on the
       // /review load and perform endpoints remains the real gate.
       const post = helper.getModel?.();
-      if (!post || post.user_id > 0) {
+      if (!post?.id || post.user_id > 0) {
         return;
       }
 
@@ -27,7 +27,10 @@ function initializeAiToolApproval(api) {
           helper.renderGlimmer(
             cardElement,
             <template>
-              <AiToolApproval @reviewableId={{reviewableId}} />
+              <AiToolApproval
+                @postId={{post.id}}
+                @reviewableId={{reviewableId}}
+              />
             </template>
           );
         }
