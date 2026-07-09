@@ -49,7 +49,7 @@ RSpec.describe Jobs::RefreshUsersReviewableCounts do
       user_message = messages.find { |m| m.user_ids == [user.id] }
 
       expect(admin_message.channel).to eq("/reviewable_counts/#{admin.id}")
-      expect(admin_message.data).to eq(reviewable_count: 3, unseen_reviewable_count: 3)
+      expect(admin_message.data).to eq(reviewable_count: 3, unseen_reviewable_count: 0)
 
       expect(moderator_message.channel).to eq("/reviewable_counts/#{moderator.id}")
       expect(moderator_message.data).to eq(reviewable_count: 2, unseen_reviewable_count: 2)
