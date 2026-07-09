@@ -474,6 +474,9 @@ RSpec.describe ReviewablesController do
     end
 
     describe "#user_menu_list" do
+      fab!(:moderator) { Fabricate(:moderator) }
+      before { sign_in(moderator) }
+      
       it "renders each reviewable using its basic serializers" do
         reviewable_user = Fabricate(:reviewable_user, payload: { username: "someb0dy" })
         reviewable_flagged_post = Fabricate(:reviewable_flagged_post)
