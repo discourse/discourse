@@ -48,6 +48,21 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(raw).to include("[/quote]")
     end
 
+    it "drops an attribution number too large for an id column" do
+      # Meta really has a post titled like this; SQLite raises binding a bignum.
+      raw =
+        renderer.to_markdown(
+          '[quote="A, post:77777777777777777789999, topic:2"]q[/quote]',
+          on_embed: buffer,
+        )
+
+      descriptor = buffer.quotes.first
+      expect(descriptor[:quoted_post_number]).to be_nil
+      expect(descriptor[:quoted_topic_id]).to eq(2)
+      expect(descriptor[:quoted_username]).to eq("A")
+      expect(raw).to include(descriptor[:placeholder])
+    end
+
     it "renders an unattributed quote natively (nothing to remap)" do
       raw = renderer.to_markdown("[quote]just text[/quote]", on_embed: buffer)
 
@@ -68,6 +83,17 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(descriptor[:url]).to eq("https://example.com/t/5")
       expect(descriptor[:text]).to eq("here")
       expect(raw).to include(descriptor[:placeholder])
+    end
+
+    it "records a bare URL's text as nil so the importer re-emits it bare" do
+      renderer.to_markdown(
+        "see [url=https://example.com/t/5]https://example.com/t/5[/url]",
+        on_embed: buffer,
+        defer: %i[link],
+      )
+
+      expect(buffer.links.size).to eq(1)
+      expect(buffer.links.first[:text]).to be_nil
     end
 
     it "records a text-less link's text as nil, not an empty string" do
@@ -120,6 +146,24 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
 
       expect(sink.uploads).to contain_exactly(
         { placeholder: token, upload_id: "abc123", original_markdown: nil },
+      )
+    end
+
+    it "maps a Quote node's ids to quoted_post_id and quoted_user_id" do
+      # BBCode can't carry them (phpBB-style id attribution arrives via the
+      # TextFormatter parser), so exercise the lambda directly.
+      _node_class, extract = described_class.embed_handlers.fetch(:quote)
+      node = Markbridge::AST::Quote.new(username: "alice", post_id: 9001, user_id: 12)
+      interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
+      allow(interface).to receive(:with_parent).with(node).and_return(:child_context)
+      allow(interface).to receive(:render_children).with(node, context: :child_context).and_return(
+        "body",
+      )
+
+      extract.call(sink, node, interface)
+
+      expect(sink.quotes).to contain_exactly(
+        hash_including(quoted_post_id: 9001, quoted_user_id: 12, quoted_username: "alice"),
       )
     end
 

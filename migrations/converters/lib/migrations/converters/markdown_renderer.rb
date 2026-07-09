@@ -65,17 +65,7 @@ module Migrations
       # token (the `EmbedBuffer#<kind>` call returns it), which Markbridge then
       # emits as the node's rendered output.
       def self.embed_handlers
-        @embed_handlers ||= build_embed_handlers
-      end
-
-      def self.build_embed_handlers
-        # The stock QuoteTag renders a quote natively when its attribution carries
-        # nothing to remap. Markbridge has no fall-through to an overridden tag
-        # (the override replaces the library entry), so we delegate to our own
-        # instance — stateless, hence shared.
-        quote_tag = Markbridge::Renderers::Discourse::Tags::QuoteTag.new
-
-        {
+        @embed_handlers ||= {
           upload: [
             Markbridge::AST::Upload,
             ->(sink, node, _interface) { sink.upload(upload_id: node.sha1) },
@@ -89,17 +79,18 @@ module Migrations
               # nothing to remap, so it renders natively (preserving its
               # attribution exactly). The token stands in for the opening
               # `[quote="…"]`, which PlaceholderResolver#render_quote rebuilds.
-              next quote_tag.render(node, interface) unless node.post || node.topic || node.username
+              unless node.post_number || node.topic_id || node.post_id || node.user_id ||
+                       node.username
+                next interface.render_default(node)
+              end
 
-              # Markbridge parses the Discourse attribution format, where `post:`
-              # is a post number and `topic:` a topic id — source coordinates,
-              # not a post id. Its Quote node carries no user id, so
-              # `quoted_user_id` can't be filled on this path.
               token =
                 sink.quote(
+                  quoted_post_id: bounded_id(node.post_id),
+                  quoted_topic_id: bounded_id(node.topic_id),
+                  quoted_post_number: bounded_id(node.post_number),
+                  quoted_user_id: bounded_id(node.user_id),
                   quoted_username: node.username,
-                  quoted_topic_id: node.topic&.to_i,
-                  quoted_post_number: node.post&.to_i,
                 )
               content = interface.render_children(node, context: interface.with_parent(node))
               "\n\n#{token}\n#{content}\n[/quote]\n\n"
@@ -114,14 +105,25 @@ module Migrations
           link: [
             Markbridge::AST::Url,
             ->(sink, node, interface) do
-              # `presence`: an empty text must be recorded as nil (a bare URL),
-              # not "" — the importer would render "" as `[](url)`.
-              sink.link(url: node.href, text: interface.render_children(node).presence)
+              # A bare URL records no text, so the importer re-emits it bare and
+              # autolinking/oneboxing keep working; `presence` catches a blank
+              # label the same way (`[](url)` shows nothing).
+              text = node.bare? ? nil : interface.render_children(node).presence
+              sink.link(url: node.href, text:)
             end,
           ],
         }
       end
-      private_class_method :build_embed_handlers
+
+      # Markbridge attribution numbers are unbounded Integers, but the
+      # IntermediateDB stores ids as SQLite signed 64-bit integers (binding a
+      # bignum raises). A longer digit run is a numeric title or garbage, not a
+      # real id — drop it and let the remaining attribution carry the quote,
+      # mirroring the scanner's ID bound.
+      def self.bounded_id(value)
+        value if value && value < 10**18
+      end
+      private_class_method :bounded_id
 
       # @param format [Symbol] one of {FORMATS}.
       def initialize(format: :bbcode)
