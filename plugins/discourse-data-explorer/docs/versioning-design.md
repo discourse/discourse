@@ -48,16 +48,16 @@ module DiscourseDataExplorer
         description "The `sql` attribute of the queries resource is renamed to `query`."
 
         resource :queries do
-          # old client's input → latest shape (applied to request documents)
-          up { |resource| resource[:attributes][:query] = resource[:attributes].delete(:sql) }
-          # latest shape → old client's shape (applied to response documents)
-          down { |resource| resource[:attributes][:sql] = resource[:attributes].delete(:query) }
+          renamed_attribute from: :sql, to: :query
         end
       end
     end
   end
 end
 ```
+
+*(Originally written as hand-written `up`/`down` blocks; the declarative tier — see the section below —
+subsumed them: the machinery derives all four surfaces from the declared fact.)*
 
 **What else ships in that same commit** — the "latest" itself moves, and none of it knows versioning exists:
 - `QuerySerializer`: `attributes :sql` → `attribute :query { |q| q.sql }` (wire rename only — the DB column stays `sql`; renaming a column is an orthogonal data-migration concern, never versioning's business).
@@ -196,6 +196,53 @@ gracefully instead of crashing.**
   The declarative tier now has three motivations: four-surface duplication, type renames
   (document-global), and synthetic soundness for shape changes.
 
+**Superseded (2026-07-09, same day):** the declarative tier below was built; both synthetic paths and
+the rescue-fallback machinery are GONE, replaced by exact lookups over declared renames.
+
+### The declarative tier (built 2026-07-09)
+
+The core keyword — `renamed_attribute from:, to:, up:, down:` — states the **key-level fact as data**,
+with optional **pure value→value converters** for shape changes:
+
+```ruby
+resource :users do
+  renamed_attribute from: :username,
+                    to: :usernames,
+                    up: ->(username) { [username] },
+                    down: ->(usernames) { usernames.first }
+end
+```
+
+Both real changes are now declarations; the 17-example acceptance suite stayed green through the rewrite
+(the equivalence proof). Rules:
+
+1. **Key facts are data.** Body transforms are generated (key-guarded by the machinery — authors no
+   longer write `if attributes.key?` boilerplate); fieldsets and error pointers are **pure lookups**
+   over the declared maps. Converters never run outside a real document, so the nil-synthetic hazard
+   class is gone *by construction*, not by rescue.
+2. **Blocks remain the escape hatch** (non-attribute reshapes, `document` scope) and always operate on
+   the change's **latest vocabulary**: declared renames run first on up, last on down.
+3. **A change that alters key names must declare them** (decided with loic, option (b)): block-only
+   changes contribute no fieldset/pointer mapping — names pass through unchanged. The acceptance spec
+   is the enforcement (forgetting to declare fails Trace B/D/F-style examples).
+
+**Future keywords** (sketched; built when a real case lands):
+
+```ruby
+# Splits/merges — fieldsets map many→one automatically; the ambiguous pointer
+# (one→many) defaults to the FIRST entry of `from:`, overridable with `pointer:`.
+# NB: reordering `from:` would change wire behavior — the immutability rule
+# (shipped changes are never edited) is what makes the positional default safe.
+merged_attributes from: %i[first_name last_name],
+                  to: :full_name,
+                  up: ->(attributes) { attributes.values.compact.join(" ") },
+                  down: ->(full_name) { split_into_first_and_last(full_name) }
+
+# Type renames — document-global (resource objects, relationship identifiers,
+# fields[TYPE] keys), declared at class level, not inside `resource`:
+renamed_type from: :queries, to: :reports
+```
+
 ### Trace E — header mechanics
 
 | Request header | Result |
@@ -267,7 +314,8 @@ gracefully instead of crashing.**
 
 - ~~**Error-pipeline context**~~ — RESOLVED in ④: the endpoint's primary type (from the DSL config) suffices;
   no dedicated error scope needed in the DSL. Revisit only if an error ever concerns a non-primary type.
-- **Declarative shorthand** (`renamed_attribute`, `renamed_type`) — a rename touches four surfaces (body-up, body-down, params-up, pointers-down); a declarative tier collapses them and is the only clean answer for type renames (document-global rewrites). Deferred until the second rename makes the duplication real.
+- ~~**Declarative shorthand**~~ — RESOLVED: `renamed_attribute` BUILT 2026-07-09 (see "The declarative
+  tier"); `merged_attributes` / `renamed_type` sketched, built when a real case lands.
 - **Contract-guard integration** — the schema guard should learn "breaking change detected → demand a `VersionChange` + version date" instead of just failing.
 - **`fields[]` strictness** — unknown fieldset entries silently no-op today (pre-existing, versioning makes it visible). Separate decision.
 - **Plugins** — namespaced-key convention + who owns the timeline (shared vs per-plugin): scheduled for its own exploration (see topic 186394 discussion).

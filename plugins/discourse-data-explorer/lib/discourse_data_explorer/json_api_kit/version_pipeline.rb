@@ -14,9 +14,8 @@ module DiscourseDataExplorer
     # client input). See docs/versioning-design.md.
     #
     # Error documents are typeless, so `down_errors` takes the endpoint's primary
-    # resource type and rewrites `/data/attributes/<name>` pointers by running the
-    # type's down chain over a synthetic one-attribute resource — the same reuse
-    # as the sparse-fieldset rewrite, in the other direction.
+    # resource type. Pointer and fieldset rewrites are pure lookups over each
+    # change's DECLARED renames — no transform code runs outside a real document.
     class VersionPipeline
       ATTRIBUTE_POINTER = %r{\A/data/attributes/(?<name>[^/]+)\z}
 
@@ -31,18 +30,20 @@ module DiscourseDataExplorer
           document
         end
 
-        # `fields[TYPE]` values are attribute names: run the type's up chain over a
-        # synthetic resource built from the names and keep the resulting keys — the
-        # same reuse as the pointer rewrite, in the other direction. Same nil-value
-        # caveat and fallback as downgrade_attribute_name.
+        # `fields[TYPE]` values are attribute names: map them through each change's
+        # DECLARED renames, oldest→newest — a pure lookup, no transform code runs.
+        # Changes that only have hand-written blocks contribute no mapping (the
+        # rule: a change that alters key names must declare them).
         def up_fieldset(names, type:, changes:)
-          return names if changes.blank?
+          symbols = names.map(&:to_sym)
+          return symbols if changes.blank?
 
-          synthetic = { data: { type: type, attributes: names.to_h { [it.to_sym, nil] } } }
-          up(synthetic, changes)
-          synthetic[:data][:attributes].keys
-        rescue StandardError
-          names
+          changes
+            .reverse_each
+            .reduce(symbols) do |current, change|
+              renames = change.field_renames_for(type)
+              current.map { renames[it] || it }
+            end
         end
 
         def down_errors(document, type:, changes:)
@@ -69,19 +70,11 @@ module DiscourseDataExplorer
 
         private
 
-        # The synthetic resource carries nil values, so a transform that touches
-        # VALUES (a shape change) may raise even though it is correct for real
-        # documents — the serializer guarantees real values there, the synthetic
-        # breaks that guarantee. Fall back to the unchanged (latest) name: degraded
-        # for old clients on that one pointer, never a 500. The clean fix is the
-        # declarative tier (statically-declared key maps). See versioning-design.md §3.
+        # Inverse lookup over each change's declared renames, newest→oldest.
         def downgrade_attribute_name(name, type, changes)
-          synthetic = { data: { type: type, attributes: { name.to_sym => nil } } }
-          down(synthetic, changes)
-          keys = synthetic[:data][:attributes].keys
-          keys.size == 1 ? keys.first : name
-        rescue StandardError
-          name
+          changes.reduce(name.to_sym) do |current, change|
+            change.field_renames_for(type).key(current) || current
+          end
         end
 
         def transform_resources(document, change, direction)
