@@ -22,10 +22,6 @@ export default <template>
   </DPageHeader>
 
   <div class="admin-config-page__main-area">
-    <AdminConfigAreasUpcomingChanges
-      @upcomingChanges={{@controller.model}}
-      @changeNamesFilter={{@controller.changeNamesFilter}}
-      @onClearChangeNamesFilter={{@controller.clearChangeNamesFilter}}
-    />
+    <AdminConfigAreasUpcomingChanges @upcomingChanges={{@controller.model}} />
   </div>
 </template>

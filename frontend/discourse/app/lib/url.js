@@ -636,6 +636,44 @@ export function getEditCategoryUrl(category, subcategories, tab) {
   return getURL(url);
 }
 
+// These helpers operate on app-relative paths like `RouterService#currentURL`
+// ("/admin/badges?filter=x"), which the URL API cannot parse on its own.
+
+function splitPath(path) {
+  const hashIndex = path.indexOf("#");
+  const withoutHash = hashIndex === -1 ? path : path.slice(0, hashIndex);
+  const hash = hashIndex === -1 ? "" : path.slice(hashIndex);
+  const queryIndex = withoutHash.indexOf("?");
+
+  return {
+    pathname:
+      queryIndex === -1 ? withoutHash : withoutHash.slice(0, queryIndex),
+    query: queryIndex === -1 ? "" : withoutHash.slice(queryIndex + 1),
+    hash,
+  };
+}
+
+export function searchParamsFromPath(path) {
+  const { query } = splitPath(path || "");
+  return new URLSearchParams(query);
+}
+
+export function applyQueryParams(path, params) {
+  const { pathname, query, hash } = splitPath(path || "/");
+
+  const searchParams = new URLSearchParams(query);
+  for (const [name, value] of Object.entries(params)) {
+    if (value) {
+      searchParams.set(name, value);
+    } else {
+      searchParams.delete(name);
+    }
+  }
+
+  const queryString = searchParams.toString();
+  return pathname + (queryString ? `?${queryString}` : "") + hash;
+}
+
 export function getCanonicalUrl(absoluteUrl) {
   const canonicalUrl = new URL(absoluteUrl);
   canonicalUrl.pathname = canonicalUrl.pathname.replace(
