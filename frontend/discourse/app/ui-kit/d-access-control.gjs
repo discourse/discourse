@@ -22,6 +22,10 @@ const READ_ONLY_DEFAULT_AUTO_GROUPS = [
   AUTO_GROUPS.everyone.id,
   AUTO_GROUPS.trust_level_0.id,
 ];
+const ROW_TYPE_SORT_ORDER = {
+  group: 0,
+  user: 1,
+};
 const REMOVE_ACTION = {
   id: "remove",
   name: i18n("access_control.manage.access_permission_remove"),
@@ -53,6 +57,10 @@ function defaultPermissions() {
 
 function granteeValue(type, id) {
   return `${type}:${id}`;
+}
+
+function rowTypeSortOrder(type) {
+  return ROW_TYPE_SORT_ORDER[type] ?? 2;
 }
 
 function groupGranteeResult(group) {
@@ -286,7 +294,19 @@ export default class DAccessControl extends Component {
           return a.mandatory ? -1 : 1;
         }
 
-        return (a.display_name || "").localeCompare(b.display_name || "");
+        const nameSort = (a.display_name || "").localeCompare(
+          b.display_name || ""
+        );
+
+        if (a.mandatory && b.mandatory) {
+          return nameSort;
+        }
+
+        if (a.type !== b.type) {
+          return rowTypeSortOrder(a.type) - rowTypeSortOrder(b.type);
+        }
+
+        return nameSort;
       });
   }
 

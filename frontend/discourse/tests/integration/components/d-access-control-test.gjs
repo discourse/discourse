@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { click, render } from "@ember/test-helpers";
+import { click, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -535,6 +535,66 @@ module("Integration | Component | DAccessControl", function (hooks) {
         "is-disabled",
         "the mandatory row's permission select is disabled"
       );
+  });
+
+  test("sorts rows by mandatory status, type, and name", async function (assert) {
+    const state = controlledState([
+      {
+        type: "user",
+        id: 1,
+        permission: "edit",
+        display_name: "Zoe User",
+        mandatory: true,
+      },
+      {
+        type: "group",
+        id: 999,
+        permission: "view",
+        display_name: "Alpha Group",
+        mandatory: true,
+      },
+      {
+        type: "user",
+        id: 2,
+        permission: "edit",
+        display_name: "Aaron User",
+      },
+      {
+        type: "group",
+        id: 1001,
+        permission: "edit",
+        display_name: "Beta Group",
+      },
+      {
+        type: "group",
+        id: 1002,
+        permission: "view",
+        display_name: "Apple Group",
+      },
+    ]);
+
+    await render(
+      <template>
+        <DAccessControl
+          @groups={{GROUPS}}
+          @acl={{state.acl}}
+          @onChange={{state.onChange}}
+        />
+      </template>
+    );
+
+    assert.deepEqual(
+      findAll(".d-access-control__group-name").map((row) =>
+        row.textContent.trim()
+      ),
+      ["Alpha Group", "Zoe User", "Apple Group", "Beta Group", "Aaron User"],
+      "sorts mandatory rows by name, then groups by name, then users by name"
+    );
+    assert.deepEqual(
+      findAll(".d-access-control__row").map((row) => row.dataset.rowType),
+      ["group", "user", "group", "group", "user"],
+      "keeps regular groups before regular users"
+    );
   });
 
   test("injects mandatory acl rows for the target", async function (assert) {
