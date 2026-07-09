@@ -37,12 +37,18 @@ module Migrations
         text_formatter_xml: "markbridge/textformatter",
       }.freeze
 
-      # Embeds deferred unless the caller narrows or extends the set. These always
-      # need the import-time maps when present: uploads must be re-uploaded, quotes
-      # reference foreign post/topic/user ids, mentions reference a foreign
-      # username. `:link` is intentionally excluded by default — most URLs are
-      # external and render fine; a converter that rewrites internal links opts in
-      # explicitly with `defer:`.
+      # Embeds deferred unless the caller narrows or extends the set. These three
+      # can't be finalized at convert time: an upload must first exist on the
+      # destination, an attributed quote references a source post the import
+      # renumbers, and a mention names a user a merge may rename — only the
+      # import-time maps settle them.
+      #
+      # `:link` is excluded by default because this generic handler records only
+      # `url` and `text`; telling an internal link from an external one takes
+      # source-specific URL parsing. With a plain EmbedBuffer, deferring links just
+      # round-trips every link through the database unchanged. A converter that
+      # wants internal links rewritten opts in with `defer:` and supplies a sink
+      # whose `link` callback classifies the URL and records the target fields.
       DEFAULT_DEFER = %i[upload quote mention].freeze
 
       # Markbridge types a mention as `:user` or `:group`; map that to the
