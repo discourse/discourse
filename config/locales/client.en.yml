@@ -2882,7 +2882,7 @@ en:
     created: "Created"
     created_lowercase: "created"
     trust_level: "Trust Level"
-    search_hint: "username, email or IP address"
+    search_hint: "usernames or emails (comma or space separated), or an IP address"
 
     create_account:
       header_title: "Welcome!"
