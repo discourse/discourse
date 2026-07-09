@@ -12375,6 +12375,13 @@ ALTER TABLE ONLY public.ai_moderation_settings ALTER COLUMN id SET DEFAULT nextv
 
 
 --
+-- Name: ai_post_image_descriptions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_post_image_descriptions ALTER COLUMN id SET DEFAULT nextval('public.ai_post_image_descriptions_id_seq'::regclass);
+
+
+--
 -- Name: ai_secrets id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14586,6 +14593,14 @@ ALTER TABLE ONLY public.ai_mcp_servers
 
 ALTER TABLE ONLY public.ai_moderation_settings
     ADD CONSTRAINT ai_moderation_settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: ai_post_image_descriptions ai_post_image_descriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.ai_post_image_descriptions
+    ADD CONSTRAINT ai_post_image_descriptions_pkey PRIMARY KEY (id);
 
 
 --
@@ -17155,6 +17170,20 @@ CREATE INDEX idx_ai_bot_conversation_stars_user_created ON public.discourse_ai_a
 --
 
 CREATE UNIQUE INDEX idx_ai_bot_conversation_stars_user_topic ON public.discourse_ai_ai_bot_conversation_stars USING btree (user_id, topic_id);
+
+
+--
+-- Name: idx_ai_post_image_descriptions_lookup; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_ai_post_image_descriptions_lookup ON public.ai_post_image_descriptions USING btree (post_id, locale, base62_sha1);
+
+
+--
+-- Name: idx_ai_post_image_descriptions_reuse; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_ai_post_image_descriptions_reuse ON public.ai_post_image_descriptions USING btree (base62_sha1, locale);
 
 
 --
@@ -22622,9 +22651,11 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260713180615'),
 ('20260708095336'),
 ('20260708080308'),
+('20260708051450'),
 ('20260707184150'),
 ('20260707184146'),
 ('20260707013407'),
+('20260706151932'),
 ('20260703164430'),
 ('20260703163425'),
 ('20260702102111'),
