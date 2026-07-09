@@ -254,12 +254,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
       },
     )
 
-    described_class.handle(
-      DiscourseWorkflows::Nodes::UserAddedToGroup::V1,
-      user,
-      membership_group,
-      { automatic: true },
-    )
+    membership_group.add(user, automatic: true)
 
     expect(enqueued_trigger_node_ids).to include("matching-add-trigger")
     expect(enqueued_trigger_node_ids).not_to include("group-mismatch-add-trigger")
@@ -282,6 +277,8 @@ RSpec.describe DiscourseWorkflows::EventListener do
   end
 
   it "only enqueues user removed from group workflows matching the group" do
+    Fabricate(:group_user, user: user, group: membership_group)
+
     create_published_workflow(
       "matching-remove-trigger",
       "trigger:user_removed_from_group",
@@ -297,11 +294,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
       },
     )
 
-    described_class.handle(
-      DiscourseWorkflows::Nodes::UserRemovedFromGroup::V1,
-      user,
-      membership_group,
-    )
+    membership_group.remove(user)
 
     expect(enqueued_trigger_node_ids).to include("matching-remove-trigger")
     expect(enqueued_trigger_node_ids).not_to include("group-mismatch-remove-trigger")

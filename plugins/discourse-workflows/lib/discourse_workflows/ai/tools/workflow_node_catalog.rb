@@ -100,9 +100,22 @@ module DiscourseWorkflows
 
         GROUP_MEMBERSHIP_EVENT_SCHEMA = {
           "membership" => "Group membership event metadata",
-          "membership.action" => "\"added\"|\"removed\"",
           "membership.automatic" => "boolean|null",
         }.freeze
+
+        USER_ADDED_TO_GROUP_SCHEMA =
+          USER_SCHEMA
+            .merge(GROUP_SCHEMA)
+            .merge(GROUP_MEMBERSHIP_EVENT_SCHEMA)
+            .merge("membership.action" => "\"added\"")
+            .freeze
+
+        USER_REMOVED_FROM_GROUP_SCHEMA =
+          USER_SCHEMA
+            .merge(GROUP_SCHEMA)
+            .merge(GROUP_MEMBERSHIP_EVENT_SCHEMA)
+            .merge("membership.action" => "\"removed\"")
+            .freeze
 
         OUTPUT_SCHEMAS = {
           "trigger:manual" => {
@@ -112,10 +125,8 @@ module DiscourseWorkflows
           "trigger:post_created" => POST_SCHEMA.merge(TOPIC_LIST_ITEM_SCHEMA).merge(USER_SCHEMA),
           "trigger:post_edited" => POST_SCHEMA.merge(TOPIC_LIST_ITEM_SCHEMA).merge(USER_SCHEMA),
           "trigger:topic_closed" => TOPIC_LIST_ITEM_SCHEMA,
-          "trigger:user_added_to_group" =>
-            USER_SCHEMA.merge(GROUP_SCHEMA).merge(GROUP_MEMBERSHIP_EVENT_SCHEMA),
-          "trigger:user_removed_from_group" =>
-            USER_SCHEMA.merge(GROUP_SCHEMA).merge(GROUP_MEMBERSHIP_EVENT_SCHEMA),
+          "trigger:user_added_to_group" => USER_ADDED_TO_GROUP_SCHEMA,
+          "trigger:user_removed_from_group" => USER_REMOVED_FROM_GROUP_SCHEMA,
           "action:topic" => TOPIC_LIST_ITEM_SCHEMA.merge(WEBHOOK_POST_SCHEMA),
           "action:topic_tags" => {
             "topic_id" => "integer",

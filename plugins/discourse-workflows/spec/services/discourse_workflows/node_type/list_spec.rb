@@ -102,22 +102,23 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(award_badge.dig(:metadata, "badges")).to include(id: badge.id, name: badge.name)
       end
 
-      it "serializes the required group selector for group membership triggers" do
-        trigger =
-          result[:node_types].find { |nt| nt[:identifier] == "trigger:user_added_to_group" }
+      it "serializes the required group selector for group membership triggers", :aggregate_failures do
+        %w[trigger:user_added_to_group trigger:user_removed_from_group].each do |identifier|
+          trigger = result[:node_types].find { |node_type| node_type[:identifier] == identifier }
 
-        expect(trigger.dig(:properties, :group_id)).to include(
-          type: :integer,
-          required: true,
-          no_data_expression: true,
-          ui: {
-            control: :group_select,
-          },
-        )
-        expect(trigger.dig(:metadata, "groups")).to include(
-          id: membership_group.id,
-          name: membership_group.name,
-        )
+          expect(trigger.dig(:properties, :group_id)).to include(
+            type: :integer,
+            required: true,
+            no_data_expression: true,
+            ui: {
+              control: :group_select,
+            },
+          )
+          expect(trigger.dig(:metadata, "groups")).to include(
+            id: membership_group.id,
+            name: membership_group.name,
+          )
+        end
       end
 
       it "includes branching for condition nodes" do
