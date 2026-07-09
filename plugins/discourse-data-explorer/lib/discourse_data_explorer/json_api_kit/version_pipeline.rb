@@ -30,20 +30,28 @@ module DiscourseDataExplorer
           document
         end
 
-        # `fields[TYPE]` values are attribute names: map them through each change's
-        # DECLARED renames, oldest→newest — a pure lookup, no transform code runs.
-        # Changes that only have hand-written blocks contribute no mapping (the
-        # rule: a change that alters key names must declare them).
-        def up_fieldset(names, type:, changes:)
-          symbols = names.map(&:to_sym)
-          return symbols if changes.blank?
+        # Maps `fields[TYPE]` names through each change's DECLARED attribute
+        # renames, oldest→newest — a pure lookup, no transform code runs. Changes
+        # that only have hand-written blocks contribute no mapping (the rule: a
+        # change that alters key names must declare them).
+        def up_field_names(names, type:, changes:)
+          up_keys(names, changes, virtual: []) { |change| [change.field_renames_for(type), {}] }
+        end
 
-          changes
-            .reverse_each
-            .reduce(symbols) do |current, change|
-              renames = change.field_renames_for(type)
-              current.map { renames[it] || it }
-            end
+        # Sort/filter keys resolve per change as: explicit `renamed_sort`/
+        # `renamed_filter` map → virtual pin (a block-backed key is its own
+        # contract surface, never renamed by attribute changes) → attribute-rename
+        # map (derived keys follow their attribute).
+        def up_sort_keys(keys, type:, changes:, virtual: [])
+          up_keys(keys, changes, virtual:) do |change|
+            [change.field_renames_for(type), change.sort_renames_for(type)]
+          end
+        end
+
+        def up_filter_keys(keys, type:, changes:, virtual: [])
+          up_keys(keys, changes, virtual:) do |change|
+            [change.field_renames_for(type), change.filter_renames_for(type)]
+          end
         end
 
         def down_errors(document, type:, changes:)
@@ -69,6 +77,21 @@ module DiscourseDataExplorer
         end
 
         private
+
+        def up_keys(names, changes, virtual:)
+          symbols = names.map(&:to_sym)
+          return symbols if changes.blank?
+
+          pinned = virtual.map(&:to_sym)
+          changes
+            .reverse_each
+            .reduce(symbols) do |current, change|
+              attribute_map, explicit_map = yield(change)
+              current.map do |key|
+                explicit_map[key] || (pinned.include?(key) ? key : attribute_map[key] || key)
+              end
+            end
+        end
 
         # Inverse lookup over each change's declared renames, newest→oldest.
         def downgrade_attribute_name(name, type, changes)

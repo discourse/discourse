@@ -165,8 +165,8 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionPipeline do
     end
   end
 
-  describe ".up_fieldset" do
-    subject(:upgraded) { described_class.up_fieldset(names, type: :things, changes: gap) }
+  describe ".up_field_names" do
+    subject(:upgraded) { described_class.up_field_names(names, type: :things, changes: gap) }
 
     context "when fields name renamed attributes" do
       let(:names) { %w[name a] }
@@ -184,6 +184,9 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionPipeline do
         expect(upgraded).to eq(%i[name a])
       end
     end
+
+    # NB: virtual-key pinning lives in .up_sort_keys/.up_filter_keys — fieldsets
+    # only ever name attributes, so this method maps unconditionally.
 
     context "when a rename declares value converters (shape change)" do
       let(:shape_change) do
@@ -228,6 +231,90 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionPipeline do
 
       it "leaves the names unchanged without running any transform" do
         expect(upgraded).to eq(%i[parts])
+      end
+    end
+  end
+
+  describe ".up_sort_keys" do
+    let(:rename_speed_sort) do
+      Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
+        version "2026-07-01"
+        description "Renames the speed sort of things to velocity."
+
+        resource :things do
+          renamed_sort from: :speed, to: :velocity
+        end
+      end
+    end
+
+    context "when a virtual sort key was explicitly renamed" do
+      subject(:upgraded) do
+        described_class.up_sort_keys(
+          %w[speed],
+          type: :things,
+          changes: [rename_speed_sort],
+          virtual: %w[velocity],
+        )
+      end
+
+      it "maps the old key to the new one" do
+        expect(upgraded).to eq(%i[velocity])
+      end
+    end
+
+    context "when a derived sort key follows an attribute rename" do
+      subject(:upgraded) { described_class.up_sort_keys(%w[a], type: :things, changes: gap) }
+
+      it "maps the key through the attribute renames" do
+        expect(upgraded).to eq(%i[c])
+      end
+    end
+
+    context "when a virtual key collides with an attribute rename" do
+      subject(:upgraded) do
+        described_class.up_sort_keys(%w[a], type: :things, changes: gap, virtual: %w[a])
+      end
+
+      it "keeps the virtual key unchanged" do
+        expect(upgraded).to eq(%i[a])
+      end
+    end
+  end
+
+  describe ".up_filter_keys" do
+    let(:rename_lookup_filter) do
+      Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
+        version "2026-07-01"
+        description "Renames the lookup filter of things to q."
+
+        resource :things do
+          renamed_filter from: :lookup, to: :q
+        end
+      end
+    end
+
+    context "when a virtual filter key was explicitly renamed" do
+      subject(:upgraded) do
+        described_class.up_filter_keys(
+          %w[lookup],
+          type: :things,
+          changes: [rename_lookup_filter],
+          virtual: %w[q],
+        )
+      end
+
+      it "maps the old key to the new one" do
+        expect(upgraded).to eq(%i[q])
+      end
+    end
+
+    context "when a virtual key collides with an attribute rename" do
+      subject(:upgraded) do
+        described_class.up_filter_keys(%w[a], type: :things, changes: gap, virtual: %w[a])
+      end
+
+      it "keeps the virtual key unchanged" do
+        expect(upgraded).to eq(%i[a])
       end
     end
   end

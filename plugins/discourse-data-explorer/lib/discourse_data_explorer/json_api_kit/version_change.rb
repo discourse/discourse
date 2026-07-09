@@ -32,6 +32,8 @@ module DiscourseDataExplorer
       class ResourceChanges
         def initialize
           @renames = []
+          @sort_renames = {}
+          @filter_renames = {}
           @blocks = { up: [], down: [] }
         end
 
@@ -39,10 +41,17 @@ module DiscourseDataExplorer
           @renames << { from: from.to_sym, to: to.to_sym, up:, down: }
         end
 
+        # Virtual sort/filter keys are their own contract surface: attribute renames
+        # never touch them, so renaming one takes its own declaration.
+        def renamed_sort(from:, to:) = @sort_renames[from.to_sym] = to.to_sym
+        def renamed_filter(from:, to:) = @filter_renames[from.to_sym] = to.to_sym
+
         def up(&block) = @blocks[:up] << block
         def down(&block) = @blocks[:down] << block
 
         def field_renames = @renames.to_h { [it[:from], it[:to]] }
+
+        attr_reader :sort_renames, :filter_renames
 
         def transform(direction)
           @transforms ||= {}
@@ -109,6 +118,8 @@ module DiscourseDataExplorer
         def transform_for(direction, type:) = resource_transforms[type.to_s]&.transform(direction)
         def document_transform(direction) = @document_changes&.transform(direction)
         def field_renames_for(type) = resource_transforms[type.to_s]&.field_renames || {}
+        def sort_renames_for(type) = resource_transforms[type.to_s]&.sort_renames || {}
+        def filter_renames_for(type) = resource_transforms[type.to_s]&.filter_renames || {}
         def resource_types = resource_transforms.keys
 
         private

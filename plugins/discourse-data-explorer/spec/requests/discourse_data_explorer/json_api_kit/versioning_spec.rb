@@ -11,7 +11,7 @@ RSpec.describe "JSON:API Kit versioning" do
   fab!(:query) { Fabricate(:query, user: admin, hidden: false, sql: "SELECT 42 AS answer") }
 
   let(:initial_version) { "2026-05-01" }
-  let(:current_version) { "2026-07-01" }
+  let(:current_version) { "2026-07-08" }
   let(:parsed_document) { JSON.parse(response.body) }
   let(:parsed_attributes) { parsed_document["data"].first["attributes"] }
 
@@ -59,7 +59,7 @@ RSpec.describe "JSON:API Kit versioning" do
     end
 
     context "when the client is pinned after the rename" do
-      let(:headers) { { "Discourse-Api-Version" => "2026-07-01" } }
+      let(:headers) { { "Discourse-Api-Version" => "2026-07-08" } }
 
       before { get_queries(headers:) }
 
@@ -213,6 +213,86 @@ RSpec.describe "JSON:API Kit versioning" do
           included_user.dig("relationships", "groups", "data").map { it["id"].to_i },
         ).to include(group.id)
         expect(parsed_document["included"].map { it["type"] }).to include("groups")
+      end
+    end
+  end
+
+  describe "Trace G — sorts and filters across renames" do
+    fab!(:recent_query) do
+      Fabricate(:query, user: admin, name: "Recent run", last_run_at: Time.utc(2026, 7, 5))
+    end
+
+    fab!(:older_query) do
+      Fabricate(:query, user: admin, name: "Older run", last_run_at: Time.utc(2026, 6, 1))
+    end
+
+    let(:data_ids) { parsed_document["data"].map { it["id"].to_i } }
+
+    context "when an old client sorts by the renamed derived key" do
+      let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
+
+      before { get_queries(headers:, params: { sort: "-last_run_at" }) }
+
+      it "sorts on the underlying column and answers in the old shape" do
+        expect(response.status).to eq(200)
+        expect(data_ids.index(recent_query.id)).to be < data_ids.index(older_query.id)
+        expect(parsed_attributes).to have_key("last_run_at")
+        expect(parsed_attributes).not_to have_key("ran_at")
+      end
+    end
+
+    context "when a current client sorts by the latest derived key" do
+      let(:headers) { { "Discourse-Api-Version" => "2026-07-08" } }
+
+      before { get_queries(headers:, params: { sort: "-ran_at" }) }
+
+      it "sorts on the underlying column and answers in the latest shape" do
+        expect(response.status).to eq(200)
+        expect(data_ids.index(recent_query.id)).to be < data_ids.index(older_query.id)
+        expect(parsed_attributes).to have_key("ran_at")
+        expect(parsed_attributes).not_to have_key("last_run_at")
+      end
+    end
+
+    context "when an old client uses a virtual sort" do
+      let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
+
+      before { get_queries(headers:, params: { sort: "username" }) }
+
+      it "accepts the key unchanged" do
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "when an old client uses the renamed virtual filter" do
+      let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
+
+      before { get_queries(headers:, params: { filter: { search: "Older run" } }) }
+
+      it "maps the key and filters as before" do
+        expect(response.status).to eq(200)
+        expect(data_ids).to contain_exactly(older_query.id)
+      end
+    end
+
+    context "when a current client uses the latest filter key" do
+      let(:headers) { { "Discourse-Api-Version" => "2026-07-08" } }
+
+      before { get_queries(headers:, params: { filter: { q: "Older run" } }) }
+
+      it "filters with the latest key" do
+        expect(response.status).to eq(200)
+        expect(data_ids).to contain_exactly(older_query.id)
+      end
+    end
+
+    context "when an old client's fieldset names the renamed attribute" do
+      let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
+
+      before { get_queries(headers:, params: { fields: { queries: "name,last_run_at" } }) }
+
+      it "honors the old field name" do
+        expect(parsed_attributes.keys).to contain_exactly("name", "last_run_at")
       end
     end
   end

@@ -243,6 +243,46 @@ merged_attributes from: %i[first_name last_name],
 renamed_type from: :queries, to: :reports
 ```
 
+### Trace G — sorts and filters across renames (built 2026-07-09, all green)
+
+The parked sort/filter question is resolved by connecting the declared rename maps to the Kit DSL's
+**derived/virtual distinction** (decided 2026-07-08, now built):
+
+- `sort :name` / `sort :ran_at, column: :last_run_at` — **no block = attribute-derived**: orders by
+  `column:` (default: the key) and **follows the attribute through version renames automatically**
+  (same lookup as fieldsets, keyed to the endpoint's primary type).
+- `sort :username do … end` / `filter :search do … end` — **block = virtual**: its own contract surface,
+  passed to the rewrite as `except:` so it is never renamed by attribute changes, even on a name
+  collision (the "two separate contract decisions" rule, enforced by declaration rather than inference).
+
+Proven with a third real change — `RenameQueriesLastRunAtToRanAt` (`2026-07-08`), chosen because
+`last_run_at` *is* a derived sort: the wire attribute and the sort key move together
+(`sort :ran_at, column: :last_run_at` — the ORDER BY column stays), with **no extra declaration** in the
+`VersionChange` (one `renamed_attribute` covers body, fieldsets, pointers, *and* the sort key). End-to-end:
+an old client's `sort=-last_run_at` orders correctly and gets `last_run_at` back in attributes; a current
+client uses `sort=-ran_at`; virtual `sort=username` passes through untouched. The
+contract guard flagged **both** surfaces on shipping (`attribute removed: last_run_at`,
+`sort removed: last_run_at`) — derived sorts are contract-visible and move with their attribute.
+
+**Virtual renames (the filter half, built same session):** virtual keys never follow attribute renames —
+renaming one takes its own declaration, and the keywords now exist:
+
+```ruby
+resource :queries do
+  renamed_filter from: :search, to: :q    # renamed_sort works identically
+end
+```
+
+Proven with a fourth real change — `RenameQueriesSearchFilterToQ` (`2026-07-08`, deliberately the **same
+date** as the `ran_at` change: two changes sharing a release date, applied in registration order — a
+release-train day in miniature). The config's `filter :search do … end` became `filter :q`; the guard
+fired (`filter removed: search`); an old client's `filter[search]=…` is rewritten to `q` and filters
+correctly — without the rewrite it would 400, so the acceptance example is load-bearing. Per-change key
+resolution: **explicit `renamed_sort`/`renamed_filter` map → virtual pin → attribute-rename map**
+(`VersionPipeline.up_sort_keys`/`up_filter_keys`; fieldsets keep the plain attribute map).
+Derived *filters* remain deliberately not a concept (a separate query-surface decision). Follow-up
+hardening noted: a boot-time invariant that no-block sort names must be serializer attributes.
+
 ### Trace E — header mechanics
 
 | Request header | Result |
@@ -295,7 +335,7 @@ renamed_type from: :queries, to: :reports
 - `VersionPipeline.up` takes the same newest→oldest gap the registry produces and reverses it internally — call sites stay symmetric, no ordering footgun. Within one change, up runs document-then-resources (the exact inverse of down's resources-then-document).
 - The resource walk only invokes a transform when `attributes` is a hash — request documents are hostile input (machinery guarantees shape; transforms stay clean).
 - **Fieldset rewrite without a params DSL:** `fields[TYPE]` values are attribute names, so the controller builds a *synthetic resource* from the names (`{type:, attributes: {name: nil, sql: nil}}`), runs the type's normal up-chain over it, and keeps the resulting keys. The same `VersionChange` covers body and fieldsets with zero extra declaration.
-- **Deferred from ③, direction now DECIDED (2026-07-08):** sort/filter-*key* renames. The synthetic-resource
+- **Deferred from ③, DECIDED 2026-07-08, BUILT 2026-07-09 (see Trace G):** sort/filter-*key* renames. The synthetic-resource
   trick is sound for `fields` because the spec defines fieldset values as the resource's *field names* — the
   same namespace the transforms reshape. Sort keys are only *recommended* to match attributes (ours don't
   always: `sort :username` is a join) and `filter` semantics are fully server-defined (`filter :search` isn't

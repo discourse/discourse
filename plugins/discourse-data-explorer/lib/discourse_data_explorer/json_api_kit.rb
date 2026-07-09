@@ -16,6 +16,8 @@ module DiscourseDataExplorer
             .tap do |registry|
               registry.register(VersionChanges::RenameQueriesSqlToQuery)
               registry.register(VersionChanges::ChangeUsersUsernameToList)
+              registry.register(VersionChanges::RenameQueriesLastRunAtToRanAt)
+              registry.register(VersionChanges::RenameQueriesSearchFilterToQ)
             end
       end
     end

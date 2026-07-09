@@ -64,9 +64,15 @@ module DiscourseDataExplorer
         def includes(*names) = @allowed_includes = names.map(&:to_s)
         def stat(name, kind) = @stats[name.to_s] = kind
         # filter/sort take a block run in the controller instance (so they can read
-        # guardian/params/current_user); `sort` with no block orders by the column.
+        # guardian/params/current_user). A `sort` WITHOUT a block is ATTRIBUTE-DERIVED:
+        # it orders by `column:` (default: the key) and follows the attribute through
+        # version renames. A sort/filter WITH a block is VIRTUAL — its own contract
+        # surface, never renamed by attribute changes. See docs/versioning-design.md.
         def filter(name, &block) = @filters[name.to_s] = block
-        def sort(name, &block) = @sorts[name.to_s] = block
+        def sort(name, column: nil, &block) = @sorts[name.to_s] = { block:, column: }
+
+        def virtual_sort_keys = @sorts.filter_map { |name, entry| name if entry[:block] }
+        def virtual_filter_keys = @filters.keys
 
         def page(max: 100, default: 20)
           @max_page_size = max
@@ -157,12 +163,15 @@ module DiscourseDataExplorer
       end
 
       # Request-up: migrate an old client's input to the latest shape before anything
-      # reads it — the body document and the type-keyed query-param surface.
+      # reads it — the body document and the query-param surfaces (fieldsets by their
+      # own type; sort/filter keys by the endpoint's primary type, skipping virtual keys).
       def upgrade_request
         return if api_version_gap.empty?
 
         upgrade_request_document
         upgrade_sparse_fieldsets
+        upgrade_sort_keys
+        upgrade_filter_keys
       end
 
       def upgrade_request_document
@@ -179,10 +188,50 @@ module DiscourseDataExplorer
         upgraded =
           params[:fields].to_unsafe_h.to_h do |type, list|
             names = list.to_s.split(",").filter_map { it.strip.presence }
-            [type, VersionPipeline.up_fieldset(names, type:, changes: api_version_gap).join(",")]
+            [type, VersionPipeline.up_field_names(names, type:, changes: api_version_gap).join(",")]
           end
         params[:fields] = upgraded
       end
+
+      def upgrade_sort_keys
+        return if params[:sort].blank?
+
+        params[:sort] = params[:sort]
+          .to_s
+          .split(",")
+          .map do |field|
+            descending = field.start_with?("-")
+            key =
+              VersionPipeline.up_sort_keys(
+                [field.delete_prefix("-")],
+                type: primary_resource_type,
+                changes: api_version_gap,
+                virtual: cfg.virtual_sort_keys,
+              ).first
+            "#{"-" if descending}#{key}"
+          end
+          .join(",")
+      end
+
+      def upgrade_filter_keys
+        return unless params[:filter].respond_to?(:each_pair)
+
+        upgraded =
+          params[:filter].to_unsafe_h.to_h do |key, value|
+            [
+              VersionPipeline.up_filter_keys(
+                [key],
+                type: primary_resource_type,
+                changes: api_version_gap,
+                virtual: cfg.virtual_filter_keys,
+              ).first,
+              value,
+            ]
+          end
+        params[:filter] = upgraded
+      end
+
+      def primary_resource_type = cfg.serializer_class.record_type
 
       def base_scope = instance_exec(&cfg.base_scope_block)
 
@@ -203,8 +252,13 @@ module DiscourseDataExplorer
           .each do |field|
             dir = field.start_with?("-") ? :desc : :asc
             name = field.delete_prefix("-")
-            block = cfg.sorts[name]
-            scope = block ? instance_exec(scope, dir, &block) : scope.order(name => dir)
+            entry = cfg.sorts[name] || {}
+            scope =
+              if entry[:block]
+                instance_exec(scope, dir, &entry[:block])
+              else
+                scope.order(entry[:column] || name => dir)
+              end
           end
         scope
       end
@@ -376,11 +430,7 @@ module DiscourseDataExplorer
             }
           end
         document = { errors: errors }
-        VersionPipeline.down_errors(
-          document,
-          type: cfg.serializer_class.record_type,
-          changes: api_version_gap,
-        )
+        VersionPipeline.down_errors(document, type: primary_resource_type, changes: api_version_gap)
         render json: document,
                status: :unprocessable_entity,
                content_type: "application/vnd.api+json"
