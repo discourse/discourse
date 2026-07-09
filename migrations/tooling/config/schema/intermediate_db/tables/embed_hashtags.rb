@@ -7,12 +7,15 @@
 # `name` is the hashtag as written, without the leading `#` and without any
 # `::tag`/`::category` suffix; it may hold one `:` as the `parent:child` separator.
 # `hashtag_type` is a `HashtagType` value (`category` or `tag`), or nil to mean
-# "classify at import". The converter sets it only when the source text forced it
-# with a `::tag`/`::category` suffix. `target_id` is the source `original_id` of
-# the target category or tag; converters leave it nil because a hashtag names its
-# target instead of identifying it. The importer fills the nil fields (classifying
-# categories first, then tags) on its in-memory copy of the row while rendering;
-# it never writes them back to this table.
+# "classify at import". The converter sets it when the source text forced the type
+# with a `::tag`/`::category` suffix — or when it sets `target_id`, since an id
+# renders only through its type. `target_id` is the source `original_id` of the
+# target category or tag, for a converter that identifies the target instead of
+# just naming it; a filled id makes the importer skip name resolution. `name` is
+# required either way — it's the fallback text when the target can't be mapped at
+# import. The importer fills the nil fields (classifying categories first, then
+# tags) on its in-memory copy of the row while rendering; it never writes them
+# back to this table.
 #
 # `placeholder` holds the token spliced into the owner's markdown; `owner_type`/
 # `owner_id` name that owning record.

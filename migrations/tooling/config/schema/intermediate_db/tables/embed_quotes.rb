@@ -5,7 +5,9 @@
 # holds the token spliced into the owner's markdown (a post body today, a user bio
 # etc. later); see `Migrations::Placeholder`. `owner_type`/`owner_id` name that
 # owning record. `quoted_username` and `quoted_name` are the source's fallback
-# display, used when the quoted user can't be mapped to a Discourse user.
+# display, used when the quoted user can't be mapped to a Discourse user. The
+# username doubles as the lookup key: when `quoted_user_id` is nil, the importer
+# resolves it to the user's `original_id` (in memory, never written back).
 #
 # The quoted post is identified either by its source `original_id` (`quoted_post_id`,
 # filled by converters that know it) or by the source coordinates the attribution

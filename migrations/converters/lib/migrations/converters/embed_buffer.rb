@@ -60,7 +60,8 @@ module Migrations
       # @param quoted_user_id [Integer, String, nil] the quoted user's source
       #   `original_id`.
       # @param quoted_username [String, nil] the attribution's display fallback, used
-      #   when the quoted user can't be mapped to a Discourse user.
+      #   when the quoted user can't be mapped to a Discourse user; when
+      #   `quoted_user_id` is nil, the importer also resolves it to the user.
       # @param quoted_name [String, nil] like `quoted_username`, for sources that
       #   attribute quotes by full name.
       # @return [String] the token for the opening tag.
@@ -144,14 +145,18 @@ module Migrations
       end
 
       # @param hashtag_type [Integer, nil] an `IntermediateDB::Enums::HashtagType`
-      #   value (category or tag). Set only when the source forced it with a
-      #   `::tag`/`::category` suffix; otherwise nil, and the importer classifies
-      #   the name (categories first, then tags).
-      # @param target_id [Integer, String, nil] always nil here — the category/tag
-      #   is named, not identified, and the importer resolves it.
+      #   value (category or tag). Set it when the source forced the type with a
+      #   `::tag`/`::category` suffix or when `target_id` is given (an id renders
+      #   only through its type); otherwise nil, and the importer classifies the
+      #   name (categories first, then tags).
+      # @param target_id [Integer, String, nil] the source `original_id` of the
+      #   category or tag, for a converter that identifies the target instead of
+      #   just naming it; the importer then skips name resolution. Pin
+      #   `hashtag_type` along with it.
       # @param name [String, nil] the hashtag as written, without the leading `#`
       #   and any `::tag`/`::category` suffix; may hold one `:` as the
-      #   `parent:child` category separator.
+      #   `parent:child` category separator. Required even when `target_id` is
+      #   set — it's the fallback text when the target can't be mapped at import.
       # @raise [ArgumentError] if `hashtag_type` is neither nil nor a known type.
       def hashtag(hashtag_type: nil, target_id: nil, name: nil)
         validate_hashtag_type!(hashtag_type)
