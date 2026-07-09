@@ -134,10 +134,13 @@ module Migrations
       end
 
       # @param mention_type [Integer, nil] an `IntermediateDB::Enums::MentionType`
-      #   value (user, group, here or all).
+      #   value (user, group, here or all); nil for a mention the converter
+      #   couldn't classify, which the importer treats as a user mention.
       # @param target_id [Integer, String, nil] the mentioned user's or group's
-      #   source `original_id`; nil for `here`/`all`.
-      # @param name [String, nil] the mention as written, without the leading `@`.
+      #   source `original_id`; nil for `here`/`all`, or when only the name is
+      #   known — the importer then resolves `name` to it.
+      # @param name [String, nil] the mention as written, without the leading `@`;
+      #   the lookup key and the fallback text when the target can't be mapped.
       # @raise [ArgumentError] if `mention_type` is neither nil nor a known type.
       def mention(mention_type: nil, target_id: nil, name: nil)
         validate_mention_type!(mention_type)
