@@ -18,6 +18,7 @@ module DiscourseDataExplorer
               registry.register(VersionChanges::ChangeUsersUsernameToList)
               registry.register(VersionChanges::RenameQueriesLastRunAtToRanAt)
               registry.register(VersionChanges::RenameQueriesSearchFilterToQ)
+              registry.register(VersionChanges::RenameQueriesUsernameSortToUserUsername)
             end
       end
     end
