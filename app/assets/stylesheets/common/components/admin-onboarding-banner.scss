@@ -214,7 +214,7 @@
     }
 
     &.--selected {
-      // border-color: var(--tertiary);
+      border-color: var(--tertiary);
       box-shadow: 0 0 0 1px var(--tertiary);
     }
   }
