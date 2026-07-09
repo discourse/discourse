@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -8,12 +8,11 @@ import { ajax } from "discourse/lib/ajax";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
-import DButton from "discourse/ui-kit/d-button";
+import { eq } from "discourse/truth-helpers";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { eq } from "discourse/truth-helpers";
 
 const ACCESS_CONTROL_GRANTEE_SEARCH_URL = "/access-control/grantees/search";
 const EDIT_PERMISSION = "edit";
