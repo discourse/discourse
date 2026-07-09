@@ -4,11 +4,9 @@ RSpec.describe Migrations::Conversion::Partitioner do
   # A stand-in for the source DB adapter, returning canned answers for the
   # primitives the partitioner calls. It has no `boundaries_by_scan`, so its scan
   # path goes through the streaming fallback.
-  def build_adapter(min: nil, max: nil, estimate: 0, total: 0, keys: [])
+  def build_adapter(total: 0, keys: [])
     Class
       .new do
-        define_method(:partition_bounds) { |_key, _from, _base| [min, max] }
-        define_method(:estimated_row_count) { |_from| estimate }
         define_method(:count_all) { |_from, where:| total }
         define_method(:chunk_filter) { |*| "" }
         define_method(:each_partition_key) { |_key, _from, _base, &block| keys.each(&block) }
@@ -20,33 +18,22 @@ RSpec.describe Migrations::Conversion::Partitioner do
     described_class.new(adapter, key:, from: "things", base: nil)
   end
 
-  it "strides a dense numeric key evenly by value, without a scan" do
-    adapter = build_adapter(min: 0, max: 99, estimate: 100)
+  it "samples a dense numeric key by row count, the same as any other key" do
+    # No value striding: a numeric key is sampled from the sorted key too, so a
+    # foreign key with many rows per value still gets even chunks.
+    adapter = build_adapter(total: 100, keys: (0..99).to_a)
     expect(partitioner(adapter, :id).boundaries(4)).to eq([0, 25, 50, 75])
   end
 
-  it "samples the sorted key when a numeric key is too sparse for even chunks" do
-    # 4 rows scattered across a million-wide range: value-sized chunks would
-    # leave most forks empty, so it samples the actual ids instead
-    adapter =
-      build_adapter(
-        min: 0,
-        max: 1_000_000,
-        estimate: 4,
-        total: 4,
-        keys: [0, 10, 999_999, 1_000_000],
-      )
+  it "samples the sorted key for a sparse numeric key" do
+    # 4 rows scattered across a million-wide range: sampling the actual ids keeps
+    # the chunks even where value-sized ranges would leave most forks empty.
+    adapter = build_adapter(total: 4, keys: [0, 10, 999_999, 1_000_000])
     expect(partitioner(adapter, :id).boundaries(2)).to eq([0, 999_999])
   end
 
-  it "strides a numeric key when the row estimate is unavailable (unanalysed table)" do
-    # estimate 0 stands in for reltuples 0/-1: don't fall into the scan on a guess
-    adapter = build_adapter(min: 0, max: 99, estimate: 0)
-    expect(partitioner(adapter, :id).boundaries(4)).to eq([0, 25, 50, 75])
-  end
-
   it "samples the sorted key for a non-numeric key" do
-    adapter = build_adapter(min: "a", max: "d", total: 4, keys: %w[a b c d])
+    adapter = build_adapter(total: 4, keys: %w[a b c d])
     expect(partitioner(adapter, :id).boundaries(2)).to eq(%w[a c])
   end
 
@@ -56,7 +43,7 @@ RSpec.describe Migrations::Conversion::Partitioner do
   end
 
   it "is empty for an empty source" do
-    expect(partitioner(build_adapter(min: nil, max: nil), :id).boundaries(4)).to eq([])
+    expect(partitioner(build_adapter(total: 0), :id).boundaries(4)).to eq([])
   end
 
   it "prefers the adapter's fast scan path when it offers one" do
@@ -65,8 +52,6 @@ RSpec.describe Migrations::Conversion::Partitioner do
     adapter =
       Class
         .new do
-          define_method(:partition_bounds) { |*| [nil, nil] }
-          define_method(:estimated_row_count) { |*| 0 }
           define_method(:count_all) { |*, **| 0 }
           define_method(:chunk_filter) { |*| "" }
           define_method(:boundaries_by_scan) do |_key, _from, _base, count|
@@ -89,16 +74,16 @@ RSpec.describe Migrations::Conversion::Partitioner do
     adapter =
       Class
         .new do
-          def partition_bounds(*)
-            [0, 99]
+          def chunk_filter(*)
+            ""
           end
-          # no estimated_row_count / count_all / each_partition_key / boundaries_by_scan
+          # no count_all / each_partition_key / boundaries_by_scan
         end
         .new
 
     expect { partitioner(adapter, :id).boundaries(4) }.to raise_error(
       described_class::UnsupportedSourceError,
-      /estimated_row_count/,
+      /count_all/,
     )
   end
 end

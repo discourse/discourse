@@ -794,10 +794,12 @@ class Plugin::Instance
         Any hbs files under `assets/javascripts` will be automatically compiled and included."
       ERROR
 
-    raise <<~ERROR if file.start_with?("javascripts/") && file.end_with?(".js", ".js.es6")
+    if file.start_with?("javascripts/") && file.end_with?(".js", ".js.es6", ".ts", ".gts")
+      raise <<~ERROR
         [#{name}] Javascript files under `assets/javascripts` are automatically included in JS bundles.
         Manual register_asset calls should be removed. (attempted to add #{file})
       ERROR
+    end
 
     if opts && opts == :vendored_core_pretty_text
       full_path = DiscoursePluginRegistry.core_asset_for_name(file)
@@ -1478,8 +1480,6 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_search_handler(handler, self)
   end
 
-  # This is an experimental API and may be changed or removed in the future without deprecation.
-  #
   # Adds a custom rate limiter to the request rate limiters stack. Only one rate limiter is used per request and the
   # first rate limiter in the stack that is active is used. By default the rate limiters stack contains the following
   # rate limiters:

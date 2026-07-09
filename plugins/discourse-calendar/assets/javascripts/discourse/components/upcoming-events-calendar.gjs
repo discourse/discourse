@@ -3,6 +3,7 @@ import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import moment from "moment";
+import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 import { normalizeViewForRoute } from "../lib/calendar-view-helper";
 import formatEventForCalendar from "../lib/format-event-for-calendar";
@@ -35,7 +36,9 @@ export default class UpcomingEventsCalendar extends Component {
       currentUser: this.currentUser,
       siteSettings: this.siteSettings,
       info,
-      category: null,
+      category: this.args.categoryId
+        ? (Category.findById(this.args.categoryId) ?? null)
+        : null,
     });
   }
 
@@ -72,12 +75,22 @@ export default class UpcomingEventsCalendar extends Component {
 
   @action
   async loadEvents(info) {
-    const events = await this.discoursePostEventService.fetchEvents({
+    const params = {
       after: info.startStr,
       before: info.endStr,
       include_ongoing: true,
       attending_user: this.args.mine ? this.currentUser?.username : null,
-    });
+    };
+
+    if (this.args.categoryId) {
+      params.category_id = this.args.categoryId;
+    }
+
+    if (this.args.includeSubcategories !== undefined) {
+      params.include_subcategories = this.args.includeSubcategories;
+    }
+
+    const events = await this.discoursePostEventService.fetchEvents(params);
 
     const timezone = this.currentUser?.user_option?.timezone;
 
@@ -88,6 +101,14 @@ export default class UpcomingEventsCalendar extends Component {
         timezone
       )
     );
+  }
+
+  get refreshKey() {
+    return [
+      this.currentUser?.id,
+      this.args.categoryId,
+      this.args.includeSubcategories,
+    ].join("-");
   }
 
   get leftHeaderToolbar() {
@@ -125,6 +146,10 @@ export default class UpcomingEventsCalendar extends Component {
   @action
   async onDatesChange(info) {
     this.applyCustomButtonsState();
+
+    if (this.args.updateRouteOnDatesChange === false) {
+      return;
+    }
 
     const localDate = moment(info.view.currentStart)
       .clone()
@@ -172,7 +197,7 @@ export default class UpcomingEventsCalendar extends Component {
         @leftHeaderToolbar={{this.leftHeaderToolbar}}
         @centerHeaderToolbar={{this.centerHeaderToolbar}}
         @rightHeaderToolbar={{this.rightHeaderToolbar}}
-        @refreshKey={{this.currentUser?.id}}
+        @refreshKey={{this.refreshKey}}
       />
     </div>
   </template>

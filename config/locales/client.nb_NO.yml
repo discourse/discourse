@@ -4312,6 +4312,7 @@ nb_NO:
       reports:
         title: "Liste over tilgjengelige rapporter"
         sidebar_title: "Rapporter"
+        all_groups: "Alle grupper"
         group_traffic: "Trafikk"
         group_members: "Medlemmer"
         group_other: "Annet"

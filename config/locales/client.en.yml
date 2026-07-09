@@ -2882,7 +2882,7 @@ en:
     created: "Created"
     created_lowercase: "created"
     trust_level: "Trust Level"
-    search_hint: "username, email or IP address"
+    search_hint: "usernames or emails (comma or space separated), or an IP address"
 
     create_account:
       header_title: "Welcome!"
@@ -3101,6 +3101,13 @@ en:
       disabled: "Do not display"
       sidebar_footer: "Display in sidebar footer"
       header: "Display in header"
+    category_scope:
+      all: "All public and private categories"
+      public: "Public categories"
+      include: "Include selected categories (with subcategories)"
+      include_strict: "Include selected categories (without subcategories)"
+      exclude: "Exclude selected categories (with subcategories)"
+      exclude_strict: "Exclude selected categories (without subcategories)"
     welcome_banner_location:
       above_topic_content: "Above topic content"
       below_site_header: "Below site header"
@@ -3222,6 +3229,7 @@ en:
     gifs:
       modal_title: "Search GIFs"
       composer_title: "Insert GIF"
+      powered_by: "Powered by Klipy"
       no_results: "Enter a keyword above to search for GIFs."
       browse_categories: "Browse by category"
       bad_api_key: "Klipy API key is missing or invalid. Please check the gifs API key setting."
@@ -5174,7 +5182,7 @@ en:
       unsaved_changes: "You have unsaved changes"
       slug: "Category slug"
       parent: "Parent category"
-      slug_placeholder: "(Optional) dashed-words for url"
+      slug_placeholder: "Auto-generated if left blank"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
       errors:
@@ -6481,6 +6489,7 @@ en:
         sidebar_title: "Reports"
         back: "Back to all reports"
         back_to_dashboard: "Back to dashboard"
+        all_groups: "All groups"
         group_engagement: "Engagement"
         group_traffic: "Traffic"
         group_members: "Members"
@@ -9533,6 +9542,9 @@ en:
         depends_on_notice:
           one: "This setting is only applied when %{dependencyLinks} is enabled."
           other: "This setting is only applied when %{dependencyLinks} are enabled."
+        depends_on_values_notice:
+          one: "This setting only applies when %{dependencyLinks} is set to a compatible value."
+          other: "This setting only applies when %{dependencyLinks} are set to compatible values."
         discard:
           one: "Discard change"
           other: "Discard changes"

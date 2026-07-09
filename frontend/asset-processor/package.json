@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@babel/core": "^7.29.7",
+    "@babel/plugin-transform-typescript": "^7.29.7",
     "@babel/preset-env": "^7.29.2",
     "@babel/standalone": "^7.29.7",
     "@csstools/postcss-light-dark-function": "^3.0.1",

@@ -34,6 +34,9 @@ class AdminUserIndexQuery
 
   SAME_IP_ADDRESS_COLUMNS = { "last" => :ip_address, "registration" => :registration_ip_address }
 
+  FILTER_SPLIT_REGEX = /[,\s]+/
+  MAX_FILTER_TERMS = 100
+
   def find_users(limit = 100)
     page = params[:page].to_i - 1
     page = 0 if page < 0
@@ -113,17 +116,46 @@ class AdminUserIndexQuery
     end
 
     filter = params[:filter]
-    if filter.present?
-      filter = filter.strip
-      if ip = parse_ip(filter)
+    return if filter.blank?
+
+    terms = filter.split(FILTER_SPLIT_REGEX).reject(&:blank?)
+    return if terms.empty?
+    raise Discourse::InvalidParameters.new(:filter) if terms.size > MAX_FILTER_TERMS
+
+    if terms.size == 1
+      term = terms.first
+      if ip = parse_ip(term)
         return if params[:same_ip_user_id].present?
         return @query.none unless can_see_ip?
 
         @query.where("ip_address <<= :ip OR registration_ip_address <<= :ip", ip: ip.to_cidr_s)
       else
-        @query.filter_by_username_or_email(filter)
+        @query.filter_by_username_or_email(term)
       end
+    else
+      filter_by_multiple_terms(terms.map(&:downcase))
     end
+  end
+
+  # per-term semantics match the single-term search: substring match on
+  # username and primary email, exact match on any email (secondary
+  # included) for terms that look like emails
+  def filter_by_multiple_terms(terms)
+    patterns = terms.map { |term| "%#{term}%" }
+
+    sql = +<<~SQL
+      username_lower ILIKE ANY (ARRAY[:patterns])
+      OR lower(user_emails.email) ILIKE ANY (ARRAY[:patterns])
+    SQL
+    binds = { patterns: patterns }
+
+    exact_emails = terms.select { |term| term =~ /.+@.+/ }
+    if exact_emails.present?
+      sql << "OR users.id IN (SELECT user_id FROM user_emails WHERE lower(user_emails.email) IN (:exact_emails))"
+      binds[:exact_emails] = exact_emails
+    end
+
+    @query.joins(:primary_email).where(sql, binds)
   end
 
   def filter_by_ip

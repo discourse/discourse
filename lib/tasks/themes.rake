@@ -72,7 +72,7 @@ task "themes:export_theme_bundle", %i[theme output] => :environment do |task, ar
     current = theme.cached_settings
     defaults = theme.cached_default_settings
     current.each do |name, value|
-      next if name == "theme_uploads" || name == "theme_uploads_local"
+      next if Theme::PRIVATE_CACHED_SETTING_KEYS.include?(name)
       parent_settings[name] = value if value != defaults[name]
     end
 
@@ -98,7 +98,7 @@ task "themes:export_theme_bundle", %i[theme output] => :environment do |task, ar
       comp_current = comp.cached_settings
       comp_defaults = comp.cached_default_settings
       comp_current.each do |name, value|
-        next if name == "theme_uploads" || name == "theme_uploads_local"
+        next if Theme::PRIVATE_CACHED_SETTING_KEYS.include?(name)
         comp_settings[name] = value if value != comp_defaults[name]
       end
 
@@ -501,7 +501,7 @@ task "themes:qunit_all_official" => :environment do |task, args|
   ThemeMetadata::OFFICIAL_THEMES.each do |theme_name|
     path = Rails.root.join("tmp/themes/#{theme_name}").to_s
 
-    if Dir.glob("#{File.join(path, "test")}/**/*.{js,gjs}").any?
+    if Dir.glob("#{File.join(path, "test")}/**/*.{js,gjs,ts,gts}").any?
       theme = RemoteTheme.import_theme_from_directory(path)
       official_theme_ids_with_qunit_tests << theme.id
     else
@@ -514,7 +514,7 @@ task "themes:qunit_all_official" => :environment do |task, args|
   Theme::CORE_THEMES.each do |(theme_name, theme_id)|
     path = Rails.root.join("themes/#{theme_name}").to_s
 
-    if Dir.glob("#{File.join(path, "test")}/**/*.{js,gjs}").any?
+    if Dir.glob("#{File.join(path, "test")}/**/*.{js,gjs,ts,gts}").any?
       core_theme_ids_with_qunit_tests << theme_id
     else
       puts "Skipping #{theme_name} as no QUnit tests have been detected"

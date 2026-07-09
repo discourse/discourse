@@ -5975,6 +5975,7 @@ cs:
         title: "Seznam dostupných sestav"
         sidebar_title: "Sestavy"
         back: "Zpět na všechny sestavy"
+        all_groups: "Všechny skupiny"
         group_traffic: "Provoz"
         group_members: "Členové"
         group_other: "Ostatní"

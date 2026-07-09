@@ -535,6 +535,20 @@ en:
         invalid: "Invalid JavaScript"
         warning: "Missing function call"
         pending: "Not resolved yet"
+      reference_pill:
+        source:
+          input: "Input"
+          trigger: "Trigger"
+          item_index: "Item index"
+          variable: "Variable"
+          current_user: "Current user"
+          site_setting: "Site setting"
+          execution: "Execution"
+        filter_placeholder: "Filter properties…"
+        no_properties: "No properties to drill into"
+        no_matches: "No matches"
+        edit_as_code: "Edit code"
+        pick_property: "Pick a property"
       expression_docs:
         sections:
           previous_nodes: "Previous nodes"
@@ -542,7 +556,7 @@ en:
           input: "Current node input helpers. Use $input.item, $input.all(), $input.first(), $input.last(), or $input.params."
           item_index: "Index of the input item currently being processed."
           json: "JSON data of the current input item. Shorthand for $input.item.json."
-          trigger: "Alias for $json — the trigger node's output data."
+          trigger: "The trigger node's output data. Example: $trigger.topic.id"
           site_settings: "Access Discourse site settings. Example: $site_settings.title"
           current_user: "The user who triggered the workflow. Properties: id, username"
           workflow_vars: "Workflow variables defined in the admin panel."

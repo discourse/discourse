@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
@@ -11,7 +11,6 @@ import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import { BasePlugin } from "@uppy/core";
-import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
 import DEditorPreview from "discourse/components/d-editor-preview";
 import Wrapper from "discourse/components/form-template-field/wrapper";
@@ -109,8 +108,6 @@ export default class ComposerEditor extends Component {
   @tracked preview;
 
   composerEventPrefix = "composer";
-  shouldBuildScrollMap = true;
-  scrollMap = null;
 
   fileUploadElementId = "file-uploader";
 
@@ -388,172 +385,33 @@ export default class ComposerEditor extends Component {
     );
   }
 
-  _resetShouldBuildScrollMap() {
-    this.set("shouldBuildScrollMap", true);
-  }
-
-  @bind
-  _handleInputInteraction(event) {
-    const preview = this.element.querySelector(".d-editor-preview-wrapper");
-
-    if (!$(preview).is(":visible")) {
-      return;
-    }
-
-    preview.removeEventListener("scroll", this._handleInputOrPreviewScroll);
-    event.target.addEventListener("scroll", this._handleInputOrPreviewScroll);
-  }
-
-  @bind
-  _handleInputOrPreviewScroll(event) {
-    this._syncScroll(
-      this._syncEditorAndPreviewScroll,
-      $(event.target),
-      $(this.element.querySelector(".d-editor-preview-wrapper"))
-    );
-  }
-
-  @bind
-  _handlePreviewInteraction(event) {
-    this.element
-      .querySelector(".d-editor-input")
-      ?.removeEventListener("scroll", this._handleInputOrPreviewScroll);
-
-    event.target?.addEventListener("scroll", this._handleInputOrPreviewScroll);
-  }
-
-  _syncScroll($callback, $input, $preview) {
-    if (!this.scrollMap || this.shouldBuildScrollMap) {
-      this.set("scrollMap", this._buildScrollMap($input, $preview));
-      this.set("shouldBuildScrollMap", false);
-    }
-
-    throttle(this, $callback, $input, $preview, this.scrollMap, 20);
-  }
-
-  // Adapted from https://github.com/markdown-it/markdown-it.github.io
-  _buildScrollMap($input, $preview) {
-    let sourceLikeDiv = $("<div />")
-      .css({
-        position: "absolute",
-        height: "auto",
-        visibility: "hidden",
-        width: $input[0].clientWidth,
-        "font-size": $input.css("font-size"),
-        "font-family": $input.css("font-family"),
-        "line-height": $input.css("line-height"),
-        "white-space": $input.css("white-space"),
-      })
-      .appendTo("body");
-
-    const linesMap = [];
-    let numberOfLines = 0;
-
-    $input
-      .val()
-      .split("\n")
-      .forEach((text) => {
-        linesMap.push(numberOfLines);
-
-        if (text.length === 0) {
-          numberOfLines++;
-        } else {
-          sourceLikeDiv.text(text);
-
-          let height;
-          let lineHeight;
-          height = parseFloat(sourceLikeDiv.css("height"));
-          lineHeight = parseFloat(sourceLikeDiv.css("line-height"));
-          numberOfLines += Math.round(height / lineHeight);
-        }
-      });
-
-    linesMap.push(numberOfLines);
-    sourceLikeDiv.remove();
-
-    const previewOffsetTop = $preview.offset().top;
-    const offset =
-      $preview.scrollTop() -
-      previewOffsetTop -
-      ($input.offset().top - previewOffsetTop);
-    const nonEmptyList = [];
-    const scrollMap = [];
-    for (let i = 0; i < numberOfLines; i++) {
-      scrollMap.push(-1);
-    }
-
-    nonEmptyList.push(0);
-    scrollMap[0] = 0;
-
-    $preview.find(".preview-sync-line").each((_, element) => {
-      let $element = $(element);
-      let lineNumber = $element.data("line-number");
-      let linesToTop = linesMap[lineNumber];
-      if (linesToTop !== 0) {
-        nonEmptyList.push(linesToTop);
-      }
-      scrollMap[linesToTop] = Math.round($element.offset().top + offset);
-    });
-
-    nonEmptyList.push(numberOfLines);
-    scrollMap[numberOfLines] = $preview[0].scrollHeight;
-
-    let position = 0;
-
-    for (let i = 1; i < numberOfLines; i++) {
-      if (scrollMap[i] !== -1) {
-        position++;
-        continue;
-      }
-
-      let top = nonEmptyList[position];
-      let bottom = nonEmptyList[position + 1];
-
-      scrollMap[i] = (
-        (scrollMap[bottom] * (i - top) + scrollMap[top] * (bottom - i)) /
-        (bottom - top)
-      ).toFixed(2);
-    }
-
-    return scrollMap;
-  }
-
   @bind
   _throttledSyncEditorAndPreviewScroll(event) {
-    const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
-
-    throttle(
-      this,
-      this._syncEditorAndPreviewScroll,
-      $(event.target),
-      $preview,
-      20
-    );
+    const preview = this.element.querySelector(".d-editor-preview-wrapper");
+    throttle(this, this._syncEditorAndPreviewScroll, event.target, preview, 20);
   }
 
-  _syncEditorAndPreviewScroll($input, $preview) {
-    if (!$input) {
+  _syncEditorAndPreviewScroll(input, preview) {
+    if (!input || !preview) {
       return;
     }
 
-    if ($input.scrollTop() === 0) {
-      $preview.scrollTop(0);
+    if (input.scrollTop === 0) {
+      preview.scrollTop = 0;
       return;
     }
 
-    const inputHeight = $input[0].scrollHeight;
-    const previewHeight = $preview[0].scrollHeight;
+    const inputHeight = input.scrollHeight;
+    const previewHeight = preview.scrollHeight;
 
-    if ($input.height() + $input.scrollTop() + 100 > inputHeight) {
+    if (input.clientHeight + input.scrollTop + 100 > inputHeight) {
       // cheat, special case for bottom
-      $preview.scrollTop(previewHeight);
+      preview.scrollTop = previewHeight;
       return;
     }
 
-    const scrollPosition = $input.scrollTop();
     const factor = previewHeight / inputHeight;
-    const desired = scrollPosition * factor;
-    $preview.scrollTop(desired + 50);
+    preview.scrollTop = input.scrollTop * factor + 50;
   }
 
   _renderMentions(preview) {

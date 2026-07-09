@@ -12,8 +12,8 @@ PROJECT_ROOT = File.expand_path("..", __dir__)
 # live outside the core repo (e.g. plugins/*) where lefthook is not available.
 class ExternalLinter
   RUBY_EXTENSIONS = %w[rb rake thor].freeze
-  PRETTIER_EXTENSIONS = %w[css scss js gjs cjs mjs].freeze
-  ESLINT_EXTENSIONS = %w[js gjs].freeze
+  PRETTIER_EXTENSIONS = %w[css scss js gjs cjs mjs ts gts mts cts].freeze
+  ESLINT_EXTENSIONS = %w[js gjs ts gts mts cts].freeze
   STYLELINT_EXTENSIONS = %w[scss].freeze
 
   JS_EXTENSIONS = (PRETTIER_EXTENSIONS + ESLINT_EXTENSIONS + STYLELINT_EXTENSIONS).uniq.freeze
@@ -108,6 +108,19 @@ class LefthookLinter
   end
 
   EVERYTHING = ["ALL FILES"]
+
+  # In --staged mode we want to lint exactly what is in the index, so we use the
+  # pre-commit/fix-staged hooks (which read the staged blobs). Every other mode
+  # operates on what is currently on disk, so it routes to the lint-files/fix-files
+  # hooks: those are not named pre-commit/pre-push, so lefthook does not hide
+  # unstaged changes and the linters see the working-tree content.
+  def check_hook
+    @staged ? "pre-commit" : "lint-files"
+  end
+
+  def fix_hook
+    @staged ? "fix-staged" : "fix-files"
+  end
 
   def run
     files = determine_files
@@ -226,7 +239,7 @@ class LefthookLinter
     end
 
     # Check if file extension is lintable
-    lintable_extensions = %w[rb rake js gjs hbs scss css yml yaml thor]
+    lintable_extensions = %w[rb rake js gjs ts gts mts cts hbs scss css yml yaml thor]
     lintable_extensions.include?(ext)
   end
 
@@ -243,7 +256,7 @@ class LefthookLinter
     end
 
     core, external = partition_files(files)
-    run_lefthook_command("fix-staged", core) if core.any?
+    run_lefthook_command(fix_hook, core) if core.any?
     external.each do |root, fs|
       linter = ExternalLinter.new(root, fs, fix: true, verbose: @verbose)
       linter.run
@@ -264,7 +277,7 @@ class LefthookLinter
     end
 
     core, external = partition_files(files)
-    run_lefthook_command("pre-commit", core) if core.any?
+    run_lefthook_command(check_hook, core) if core.any?
     external.each do |root, fs|
       linter = ExternalLinter.new(root, fs, fix: false, verbose: @verbose)
       linter.run

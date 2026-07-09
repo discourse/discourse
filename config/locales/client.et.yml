@@ -2746,6 +2746,7 @@ et:
           always: "alati"
           never: "mitte kunagi"
       reports:
+        all_groups: "Kõik rühmad"
         group_traffic: "Liiklus"
         group_members: "Liikmed"
         group_other: "Muu"

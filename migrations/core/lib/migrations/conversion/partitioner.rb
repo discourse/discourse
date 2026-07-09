@@ -4,17 +4,17 @@ module Migrations
   module Conversion
     # Works out how to split a partitioned step's source into `count` chunks. All
     # the logic here is dialect-free; the dialect-specific SQL lives in the source
-    # DB adapter, which this calls through a few primitives:
+    # DB adapter, which this calls through a couple of primitives:
     #
-    #   partition_bounds(key, from, base)    -> [min, max]
-    #   estimated_row_count(from)            -> Integer (the planner's estimate)
     #   count_all(from, where:)              -> Integer (exact)
     #   each_partition_key(key, from, base)  -> yields each key value, sorted
     #
-    # A dense numeric key strides evenly by value, which is cheap. A sparse one
-    # (big gaps from deletes, or ids from a shared sequence), or any non-numeric or
-    # composite key, is sampled from the sorted key instead, so the chunks hold
-    # even row counts whatever the distribution.
+    # It always samples the sorted key, so the chunks hold about the same number of
+    # rows whatever the key is. Cutting a numeric key into equal ranges by value
+    # would be cheaper, but that only works with about one row per value. A foreign
+    # key like `topic_id`, where a busy topic has many rows and a quiet one few,
+    # would give very uneven chunks, so we don't do it; the scan is worth the even
+    # split.
     #
     # The sampling streams the whole key column here and picks every Nth value. An
     # adapter that can do better in SQL (e.g. Postgres with `NTILE`) may add an
@@ -23,18 +23,13 @@ module Migrations
     #   boundaries_by_scan(key, from, base, count) -> the chunk lower bounds
     #
     # When it's there we use it; otherwise we fall back to streaming, so a new
-    # adapter gets a working partitioner from the four primitives alone.
+    # adapter gets a working partitioner from the two primitives alone.
     class Partitioner
       # Raised when a step declares `partition_by` but its source can't compute
-      # boundaries — the adapter is missing partition primitives (or there is no
-      # source DB at all, e.g. a file source).
+      # boundaries: the adapter is missing partition primitives, or there is no
+      # source DB at all (e.g. a file source).
       class UnsupportedSourceError < StandardError
       end
-
-      # How much wider a numeric key's value range may run than its row count
-      # before even value-sized chunks stop holding even row counts. Past this, the
-      # gaps leave some chunks nearly empty, so we sample the sorted key instead.
-      DENSE_RANGE_FACTOR = 4
 
       # @param source_db [Object] the source DB adapter providing the primitives above
       # @param key [Symbol, String, Array<Symbol>] the partition key: one column, or
@@ -54,12 +49,6 @@ module Migrations
       # @raise [UnsupportedSourceError] if the source can't compute boundaries
       def boundaries(count)
         ensure_source_can_partition!
-        return scan_boundaries(count) if @key.is_a?(Array)
-
-        min, max = @source_db.partition_bounds(@key, @from, @base)
-        return [] if min.nil?
-        return numeric_boundaries(min, max, count) if min.is_a?(Numeric) && dense?(min, max)
-
         scan_boundaries(count)
       end
 
@@ -73,20 +62,6 @@ module Migrations
               "Can't partition `#{@from}`: its source doesn't implement the " \
                 "PartitionSource interface (missing #{missing.join(", ")}). " \
                 "Implement it, or remove `partition_by` from the step."
-      end
-
-      def dense?(min, max)
-        rows = @source_db.estimated_row_count(@from)
-        # No usable estimate (an adapter returns 0 or less when it can't estimate
-        # the row count): don't pay for a full key scan on a guess — default to the
-        # cheap value stride.
-        return true if rows <= 0
-        (max - min + 1) <= rows * DENSE_RANGE_FACTOR
-      end
-
-      def numeric_boundaries(min, max, count)
-        chunk_size = ((max - min + 1).to_f / count).ceil
-        Array.new(count) { |i| min + i * chunk_size }.uniq
       end
 
       def scan_boundaries(count)

@@ -3796,6 +3796,7 @@ ko:
       reports:
         title: "사용 가능한 리포트 목록"
         sidebar_title: "보고서"
+        all_groups: "모든 그룹"
         group_traffic: "트래픽"
         group_members: "회원"
         group_other: "기타"

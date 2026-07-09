@@ -38,6 +38,7 @@ class ThemeSettingsParser
     end
 
     opts[:list_type] = raw_opts[:list_type] if raw_opts[:list_type]
+    opts[:resolve_group_membership] = !!raw_opts[:resolve_group_membership]
 
     opts[:textarea] = !!raw_opts[:textarea]
     opts[:json_schema] = raw_opts[:json_schema]
