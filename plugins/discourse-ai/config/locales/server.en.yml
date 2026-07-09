@@ -103,7 +103,7 @@ en:
     ai_helper_automatic_chat_thread_title_delay: "Delay in minutes before the AI helper automatically sets the chat thread title."
     ai_helper_automatic_chat_thread_title: "Automatically set the chat thread titles based on thread contents."
     ai_helper_enabled_features: "Select the features to enable in the AI helper."
-    ai_post_image_descriptions_enabled: "Generate AI image descriptions for post images outside of post raw. Requires a vision-capable image caption agent."
+    ai_post_image_descriptions_enabled: "Enable AI image descriptions for post images. Generating missing descriptions requires a vision-capable image caption agent."
     ai_post_image_descriptions_per_post_limit: "Maximum number of post images to describe per post."
     ai_post_image_descriptions_backfill_hourly_rate: "Maximum number of posts per hour to backfill with AI-generated image descriptions. Set to 0 to disable backfill."
     ai_post_image_descriptions_backfill_max_age_days: "Maximum age in days of posts to backfill with AI-generated image descriptions."
