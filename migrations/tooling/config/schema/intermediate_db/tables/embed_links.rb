@@ -30,7 +30,9 @@
 # `embed_quotes`: post numbers are recomputed at import, so the importer resolves
 # them to a post rather than preserving them.
 # `target_suffix` is everything after the matched route (further path, query string,
-# fragment), reattached verbatim when the URL is rebuilt.
+# fragment), reattached verbatim when the URL is rebuilt: `/u/sam/summary` yields
+# target_name: "sam" plus target_suffix: "/summary", and `/t/a-topic/123?page=2`
+# yields target_id: 123 plus target_suffix: "?page=2".
 Migrations::Tooling::Schema.table :embed_links do
   synthetic!
 
