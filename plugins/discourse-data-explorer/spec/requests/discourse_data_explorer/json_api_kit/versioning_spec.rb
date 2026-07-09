@@ -254,12 +254,22 @@ RSpec.describe "JSON:API Kit versioning" do
       end
     end
 
-    context "when an old client uses a virtual sort" do
+    context "when an old client uses the renamed virtual sort" do
       let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
 
       before { get_queries(headers:, params: { sort: "username" }) }
 
-      it "accepts the key unchanged" do
+      it "maps the key and accepts the sort" do
+        expect(response.status).to eq(200)
+      end
+    end
+
+    context "when a current client uses the latest virtual sort key" do
+      let(:headers) { { "Discourse-Api-Version" => "2026-07-08" } }
+
+      before { get_queries(headers:, params: { sort: "-user.username" }) }
+
+      it "accepts the dotted key" do
         expect(response.status).to eq(200)
       end
     end

@@ -269,17 +269,29 @@ renaming one takes its own declaration, and the keywords now exist:
 
 ```ruby
 resource :queries do
-  renamed_filter from: :search, to: :q    # renamed_sort works identically
+  renamed_filter from: :search, to: :q
+  renamed_sort from: :username, to: :"user.username"
 end
 ```
 
-Proven with a fourth real change — `RenameQueriesSearchFilterToQ` (`2026-07-08`, deliberately the **same
-date** as the `ran_at` change: two changes sharing a release date, applied in registration order — a
-release-train day in miniature). The config's `filter :search do … end` became `filter :q`; the guard
-fired (`filter removed: search`); an old client's `filter[search]=…` is rewritten to `q` and filters
-correctly — without the rewrite it would 400, so the acceptance example is load-bearing. Per-change key
-resolution: **explicit `renamed_sort`/`renamed_filter` map → virtual pin → attribute-rename map**
-(`VersionPipeline.up_sort_keys`/`up_filter_keys`; fieldsets keep the plain attribute map).
+Proven with real changes #4 and #5, both dated `2026-07-08` alongside the `ran_at` change — **three
+changes sharing one release date**, applied in registration order (a release-train day in miniature):
+
+- `RenameQueriesSearchFilterToQ`: `filter :search do … end` became `filter :q`; the guard fired
+  (`filter removed: search`); an old client's `filter[search]=…` is rewritten to `q` and filters
+  correctly — without the rewrite it would 400, so the acceptance example is load-bearing.
+- `RenameQueriesUsernameSortToUserUsername`: the virtual join-sort adopted the JSON:API-recommended
+  dotted spelling for relationship-based sort fields (`user.username`, matching our `include` path
+  convention); guard fired (`sort removed: username`); old clients' `sort=username` rewrites through the
+  keyword. NB the dotted name is **labeling, not capability**: the supported sort set stays explicitly
+  declared per key (unsupported → 400, per spec) — no arbitrary relationship-path sorting is implied,
+  which would be client-driven JOINs (the default-on posture we rejected). Bonus property proven in
+  passing: cross-resource virtual sorts are structurally immune to related-type wire renames — this sort
+  survived the users `username`→`usernames` change untouched (virtual pin + it orders by the *column*).
+
+Per-change key resolution: **explicit `renamed_sort`/`renamed_filter` map → virtual pin →
+attribute-rename map** (`VersionPipeline.up_sort_keys`/`up_filter_keys`; fieldsets keep the plain
+attribute map).
 Derived *filters* remain deliberately not a concept (a separate query-surface decision). Follow-up
 hardening noted: a boot-time invariant that no-block sort names must be serializer attributes.
 

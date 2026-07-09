@@ -20,7 +20,7 @@
     "sorts": [
       "name",
       "ran_at",
-      "username"
+      "user.username"
     ],
     "default_sort": {
       "last_run_at": "desc"

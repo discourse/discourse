@@ -40,8 +40,11 @@ module DiscourseDataExplorer
         # Derived from the `ran_at` attribute (renamed from `last_run_at`, 2026-07-08);
         # the wire name moved with the attribute, the ORDER BY column did not.
         sort :ran_at, column: :last_run_at
-        # `username` lives on the associated user — a hand-rolled LEFT JOIN sort.
-        sort :username do |scope, dir|
+        # The associated user's username — a hand-rolled LEFT JOIN sort. Dotted per the
+        # JSON:API recommendation for relationship-based sort fields (and matching our
+        # include paths); renamed from `username` (2026-07-08 breaking change) — virtual
+        # key, so the rename is declared via `renamed_sort` in the version change.
+        sort "user.username" do |scope, dir|
           direction = dir == :desc ? "DESC" : "ASC"
           scope.joins("LEFT JOIN users ON users.id = data_explorer_queries.user_id").order(
             Arel.sql("users.username #{direction} NULLS LAST"),
