@@ -65,41 +65,63 @@ module Migrations
       # token (the `EmbedBuffer#<kind>` call returns it), which Markbridge then
       # emits as the node's rendered output.
       def self.embed_handlers
-        @embed_handlers ||= {
+        @embed_handlers ||= build_embed_handlers
+      end
+
+      def self.build_embed_handlers
+        # The stock QuoteTag renders a quote natively when its attribution carries
+        # nothing to remap. Markbridge has no fall-through to an overridden tag
+        # (the override replaces the library entry), so we delegate to our own
+        # instance — stateless, hence shared.
+        quote_tag = Markbridge::Renderers::Discourse::Tags::QuoteTag.new
+
+        {
           upload: [
             Markbridge::AST::Upload,
-            ->(sink, node, _iface) { sink.upload(upload_id: node.sha1) },
+            ->(sink, node, _interface) { sink.upload(upload_id: node.sha1) },
           ],
           quote: [
             Markbridge::AST::Quote,
-            ->(sink, node, iface) do
+            ->(sink, node, interface) do
               # Only the attribution carries the foreign post/topic/user reference
               # that needs remapping; the quoted body renders normally and the
               # closing tag stays in place. A quote with no such reference has
               # nothing to remap, so it renders natively (preserving its
               # attribution exactly). The token stands in for the opening
               # `[quote="…"]`, which PlaceholderResolver#render_quote rebuilds.
-              unless node.post || node.topic || node.username
-                next Markbridge::Renderers::Discourse::Tags::QuoteTag.new.render(node, iface)
-              end
+              next quote_tag.render(node, interface) unless node.post || node.topic || node.username
 
-              token = sink.quote(quoted_post_id: node.post, quoted_username: node.username)
-              content = iface.render_children(node, context: iface.with_parent(node))
+              # Markbridge parses the Discourse attribution format, where `post:`
+              # is a post number and `topic:` a topic id — source coordinates,
+              # not a post id. Its Quote node carries no user id, so
+              # `quoted_user_id` can't be filled on this path.
+              token =
+                sink.quote(
+                  quoted_username: node.username,
+                  quoted_topic_id: node.topic&.to_i,
+                  quoted_post_number: node.post&.to_i,
+                )
+              content = interface.render_children(node, context: interface.with_parent(node))
               "\n\n#{token}\n#{content}\n[/quote]\n\n"
             end,
           ],
           mention: [
             Markbridge::AST::Mention,
-            ->(sink, node, _iface) do
+            ->(sink, node, _interface) do
               sink.mention(mention_type: MENTION_TYPES[node.type], name: node.name)
             end,
           ],
           link: [
             Markbridge::AST::Url,
-            ->(sink, node, iface) { sink.link(url: node.href, text: iface.render_children(node)) },
+            ->(sink, node, interface) do
+              # `presence`: an empty text must be recorded as nil (a bare URL),
+              # not "" — the importer would render "" as `[](url)`.
+              sink.link(url: node.href, text: interface.render_children(node).presence)
+            end,
           ],
         }
       end
+      private_class_method :build_embed_handlers
 
       # @param format [Symbol] one of {FORMATS}.
       def initialize(format: :bbcode)
@@ -126,8 +148,8 @@ module Migrations
         tags =
           Array(defer).each_with_object({}) do |kind, mapping|
             node_class, extract = self.class.embed_handlers.fetch(kind)
-            mapping[node_class] = Markbridge::Renderers::Discourse::Tag.new do |node, iface|
-              extract.call(sink, node, iface)
+            mapping[node_class] = Markbridge::Renderers::Discourse::Tag.new do |node, interface|
+              extract.call(sink, node, interface)
             end
           end
 

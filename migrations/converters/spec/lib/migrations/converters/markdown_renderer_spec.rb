@@ -35,7 +35,11 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
 
       expect(buffer.quotes.size).to eq(1)
       descriptor = buffer.quotes.first
-      expect(descriptor[:quoted_post_id]).to eq("12")
+      # The Discourse attribution format carries coordinates: `post:` is a post
+      # number, `topic:` a topic id.
+      expect(descriptor[:quoted_post_id]).to be_nil
+      expect(descriptor[:quoted_topic_id]).to eq(34)
+      expect(descriptor[:quoted_post_number]).to eq(12)
       expect(descriptor[:quoted_username]).to eq("John")
 
       # The token stands in for the opening tag; the body and closer remain.
@@ -64,6 +68,17 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(descriptor[:url]).to eq("https://example.com/t/5")
       expect(descriptor[:text]).to eq("here")
       expect(raw).to include(descriptor[:placeholder])
+    end
+
+    it "records a text-less link's text as nil, not an empty string" do
+      renderer.to_markdown(
+        "see [url=https://example.com/t/5][/url]",
+        on_embed: buffer,
+        defer: %i[link],
+      )
+
+      expect(buffer.links.size).to eq(1)
+      expect(buffer.links.first[:text]).to be_nil
     end
 
     it "leaves links alone by default" do

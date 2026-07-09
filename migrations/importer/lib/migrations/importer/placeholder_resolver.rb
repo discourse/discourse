@@ -529,8 +529,11 @@ module Migrations
         render_link_markup(row, row[:url])
       end
 
+      # `presence`: a converter may have recorded an empty text; treat it as a
+      # bare URL rather than rendering `[](url)`.
       def render_link_markup(row, url)
-        row[:text] ? "[#{row[:text]}](#{url})" : url.to_s
+        text = row[:text].presence
+        text ? "[#{text}](#{url})" : url.to_s
       end
 
       # The destination URL for a resolved internal link, or nil on a maps miss (an
