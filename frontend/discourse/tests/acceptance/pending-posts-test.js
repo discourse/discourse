@@ -51,3 +51,15 @@ acceptance("Pending posts - existing pending posts", function (needs) {
     assert.dom(".user-stream-item").doesNotIncludeText("A queued topic");
   });
 });
+
+acceptance("Pending posts - another user's pending posts", function (needs) {
+  needs.user({ admin: true, username: "admin" });
+
+  test("Delete actions are hidden", async function (assert) {
+    await visit("/u/eviltrout/activity/pending");
+
+    assert.dom(".user-stream-item").exists({ count: 3 });
+    assert.dom(".user-stream-item .reviewable-actions").doesNotExist();
+    assert.dom(".user-stream-item .btn-danger").doesNotExist();
+  });
+});
