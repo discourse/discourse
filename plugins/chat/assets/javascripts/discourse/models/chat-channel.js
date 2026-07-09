@@ -73,10 +73,12 @@ export default class ChatChannel {
   @tracked draft;
   @tracked newestMessage;
   @tracked pinnedMessagesCount;
-  @tracked pinnedBarIndex = 0;
   // newest pin id the current user dismissed the bar above (per-device); the
   // bar reappears once a pin newer than this exists
   @tracked pinsDismissedAboveId;
+  // message id of the pin the user tapped in the bar; overrides the scroll
+  // anchoring until they scroll, then it's cleared and the bar re-anchors
+  @tracked activePinnedMessageId = null;
 
   threadsManager = new ChatThreadsManager(getOwnerWithFallback(this));
   messagesManager = new ChatMessagesManager(getOwnerWithFallback(this));

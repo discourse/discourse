@@ -131,6 +131,20 @@ RSpec.describe "Chat pinned messages" do
     expect(page).to have_css(".chat-pinned-bar__excerpt", text: "Second message")
   end
 
+  it "shows the visited pin in the sticky bar when clicking a pin in the panel" do
+    other_message = Fabricate(:chat_message, chat_channel: channel, message: "Second message")
+    Chat::PinnedMessage.create!(chat_message: message, chat_channel: channel, user: admin)
+    Chat::PinnedMessage.create!(chat_message: other_message, chat_channel: channel, user: admin)
+
+    chat_page.visit_channel(channel)
+    expect(page).to have_css(".chat-pinned-bar__excerpt", text: "Second message")
+
+    find(".chat-pinned-bar__see-all").click
+    find(".chat-pinned-message", text: "Important message").click
+
+    expect(page).to have_css(".chat-pinned-bar__excerpt", text: "Important message")
+  end
+
   it "removes a pinned message from the bar when it is deleted" do
     Chat::PinnedMessage.create!(chat_message: message, chat_channel: channel, user: admin)
 

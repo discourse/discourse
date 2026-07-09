@@ -62,6 +62,8 @@ export default class ChatChannel extends Component {
   @tracked atBottom = true;
   @tracked uploadDropZone;
   @tracked isScrolling = false;
+  // bottom-most visible message, so the pinned bar can anchor to the view
+  @tracked lastVisibleMessageId = null;
 
   scroller = null;
 
@@ -106,6 +108,9 @@ export default class ChatChannel extends Component {
   @action
   teardown() {
     document.removeEventListener("keydown", this._autoFocus);
+    // a pin-tap override shouldn't outlive the visit; cleared here (not in
+    // setup) so navigating from the pins panel can set it before the mount
+    this.args.channel.activePinnedMessageId = null;
     this.#cancelHandlers();
     this.paneState.teardown();
     this.subscriptionManager.teardown();
@@ -504,6 +509,11 @@ export default class ChatChannel extends Component {
         return;
       }
 
+      // a genuine scroll re-anchors the pinned bar and drops any tap override
+      // (onScroll state omits firstVisibleId, so compute it here)
+      this.lastVisibleMessageId = firstVisibleMessageId(this.scroller);
+      this.args.channel.activePinnedMessageId = null;
+
       DatesSeparatorsPositioner.apply(this.scroller);
       this.paneState.updatePendingContentFromScrollState({
         scroller: this.scroller,
@@ -531,6 +541,8 @@ export default class ChatChannel extends Component {
   onScrollEnd(state) {
     this.isScrolling = false;
     this.atBottom = state.atBottom;
+    this.lastVisibleMessageId =
+      state.firstVisibleId ?? this.lastVisibleMessageId;
     this.paneState.updateLiveEdgeFromScrollState(state);
 
     if (state.atBottom) {
@@ -766,6 +778,7 @@ export default class ChatChannel extends Component {
       <ChatPinnedMessageBar
         @channel={{@channel}}
         @onJumpToMessage={{this.jumpToPinnedMessage}}
+        @viewportBottomMessageId={{this.lastVisibleMessageId}}
       />
 
       <ChatMessagesScroller

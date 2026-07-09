@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { fn } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
@@ -89,6 +91,13 @@ export default class ChatPinnedMessagesList extends Component {
     return hasPinsDismissal(this.args.channel);
   }
 
+  // the sticky bar mirrors the pin being visited instead of re-anchoring
+  // (the jump's programmatic scroll wouldn't update it)
+  @action
+  visitPin(pin) {
+    this.args.channel.activePinnedMessageId = pin.message.id;
+  }
+
   @action
   dismissBar() {
     const channel = this.args.channel;
@@ -150,6 +159,7 @@ export default class ChatPinnedMessagesList extends Component {
             @route="chat.channel.near-message"
             @models={{this.routeModels pin}}
             class="chat-pinned-message"
+            {{on "click" (fn this.visitPin pin)}}
           >
             <ChatMessage
               @message={{this.decorateMessage pin}}

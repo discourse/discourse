@@ -12,7 +12,8 @@ module Chat
 
     validates :chat_message_id, uniqueness: true
 
-    scope :for_channel, ->(channel) { where(chat_channel: channel).order(created_at: :desc) }
+    # timeline order, so pin lists read like the channel itself
+    scope :for_channel, ->(channel) { where(chat_channel: channel).order(chat_message_id: :asc) }
   end
 end
 

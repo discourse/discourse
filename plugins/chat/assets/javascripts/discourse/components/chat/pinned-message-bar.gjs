@@ -62,28 +62,52 @@ export default class ChatPinnedMessageBar extends Component {
     );
   }
 
-  // clamped so a stale index (e.g. after an unpin) never resolves to no pin
-  get currentIndex() {
-    const stored = this.args.channel.pinnedBarIndex ?? 0;
-    return Math.min(stored, this.pins.length - 1);
+  // Ordered by position in the chat timeline (oldest message first = top), so
+  // the indicator is 1:1 with the chat regardless of when each was pinned.
+  get orderedPins() {
+    return [...this.pins].sort((a, b) => a.message.id - b.message.id);
   }
 
-  set currentIndex(value) {
-    this.args.channel.pinnedBarIndex = value;
-  }
-
+  // Scroll-anchored: the active pin governs the messages in view — the newest
+  // (by position) pin at or above the bottom of the viewport. Before the first
+  // scroll (null) it's the newest pin (the chat sits at the bottom); above
+  // every pin it's the oldest.
   get currentPin() {
-    return this.pins[this.currentIndex];
+    const pins = this.orderedPins;
+    if (pins.length === 0) {
+      return null;
+    }
+    // a tapped pin overrides the scroll anchor until the user scrolls (so it
+    // works even when the channel is too short to scroll on jump); chat-channel
+    // clears it on a genuine scroll
+    const tappedId = this.args.channel.activePinnedMessageId;
+    if (tappedId != null) {
+      const tapped = pins.find((pin) => pin.message.id === tappedId);
+      if (tapped) {
+        return tapped;
+      }
+    }
+    const bottomId = this.args.viewportBottomMessageId;
+    if (bottomId == null) {
+      return pins[pins.length - 1];
+    }
+    let active = pins[0];
+    for (const pin of pins) {
+      if (pin.message.id > bottomId) {
+        break;
+      }
+      active = pin;
+    }
+    return active;
+  }
+
+  // slot from the top === index in the oldest-first order
+  get currentIndex() {
+    return Math.max(0, this.orderedPins.indexOf(this.currentPin));
   }
 
   get hasMultiplePins() {
     return this.pins.length > 1;
-  }
-
-  // The strip is laid out oldest-at-top to mirror the chat timeline, but pins
-  // arrive newest-first — so the active pin's slot counts from the bottom.
-  get activeIndicatorSlot() {
-    return this.pins.length - 1 - this.currentIndex;
   }
 
   // centred so the bars visibly scroll past the active one (an edge would hide it)
@@ -92,7 +116,7 @@ export default class ChatPinnedMessageBar extends Component {
     if (total <= INDICATOR_WINDOW) {
       return 0;
     }
-    const top = this.activeIndicatorSlot - Math.floor(INDICATOR_WINDOW / 2);
+    const top = this.currentIndex - Math.floor(INDICATOR_WINDOW / 2);
     return Math.max(0, Math.min(top, total - INDICATOR_WINDOW));
   }
 
@@ -116,7 +140,7 @@ export default class ChatPinnedMessageBar extends Component {
         `--chat-pinned-bar-indicator-height: ${height}px; ` +
         `--chat-pinned-bar-indicator-top: ${top}; ` +
         // full-list slot (already offset by -top inside the track)
-        `--chat-pinned-bar-active: ${this.activeIndicatorSlot}; ` +
+        `--chat-pinned-bar-active: ${this.currentIndex}; ` +
         `--chat-pinned-bar-fade-top: ${fadeTop}px; ` +
         `--chat-pinned-bar-fade-bottom: ${fadeBottom}px`
     );
@@ -203,16 +227,17 @@ export default class ChatPinnedMessageBar extends Component {
 
   @action
   jumpToCurrentPin() {
-    const pin = this.currentPin;
-    if (!pin) {
+    // Telegram-style: jump to the pin shown now, then shift the bar to the next
+    // older pin (wrapping oldest -> newest) as a preview of the next tap.
+    const pins = this.orderedPins;
+    const current = this.currentPin;
+    if (!current) {
       return;
     }
-
-    this.args.onJumpToMessage?.(pin.message.id);
-
-    if (this.hasMultiplePins) {
-      this.currentIndex = (this.currentIndex + 1) % this.pins.length;
-    }
+    this.args.onJumpToMessage?.(current.message.id);
+    const index = pins.indexOf(current);
+    const next = index <= 0 ? pins[pins.length - 1] : pins[index - 1];
+    this.args.channel.activePinnedMessageId = next.message.id;
   }
 
   @action
@@ -244,7 +269,7 @@ export default class ChatPinnedMessageBar extends Component {
                 style={{this.indicatorStyle}}
               >
                 <span class="chat-pinned-bar__indicator-track">
-                  {{#each this.pins as |pin|}}
+                  {{#each this.orderedPins as |pin|}}
                     <span
                       class="chat-pinned-bar__indicator-segment"
                       data-pin-id={{pin.id}}

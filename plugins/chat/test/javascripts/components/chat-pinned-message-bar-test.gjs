@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
@@ -12,12 +13,15 @@ import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 function pinResponse(channel, count) {
   const pinned_messages = [];
   for (let i = 0; i < count; i++) {
+    // newest first (i=0), and message ids descend with i so the newest pin
+    // sits on the highest-id (bottom-most) message — matching the timeline
+    const messageId = 200 + (count - 1 - i);
     pinned_messages.push({
       id: 100 + i,
-      chat_message_id: 200 + i,
+      chat_message_id: messageId,
       pinned_at: moment().subtract(i, "minute").toISOString(),
       pinned_by: { id: 1, username: "alice" },
-      message: { id: 200 + i, excerpt: `Pinned excerpt ${i}`, message: "x" },
+      message: { id: messageId, excerpt: `Pinned excerpt ${i}`, message: "x" },
     });
   }
   return response({ pinned_messages, membership: null });
@@ -199,7 +203,7 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       );
   });
 
-  test("clicking jumps to the current pin and cycles to the next", async function (assert) {
+  test("tapping jumps to the shown pin and previews the next", async function (assert) {
     this.channel.pinnedMessagesCount = 2;
     pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
       pinResponse(this.channel, 2)
@@ -217,21 +221,59 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       </template>
     );
 
+    // opens on the newest pin (message 201)
     assert.dom(".chat-pinned-bar__excerpt").hasText("Pinned excerpt 0");
 
     await click(".chat-pinned-bar__main");
 
-    assert.strictEqual(jumpedTo, 200, "jumps to the most recent pin");
+    assert.strictEqual(jumpedTo, 201, "jumps to the pin that was shown");
     assert
       .dom(".chat-pinned-bar__excerpt")
-      .hasText("Pinned excerpt 1", "advances to the next pin");
+      .hasText("Pinned excerpt 1", "and previews the next older pin");
 
     await click(".chat-pinned-bar__main");
 
-    assert.strictEqual(jumpedTo, 201, "jumps to the second pin");
+    assert.strictEqual(jumpedTo, 200, "jumps to that previewed pin");
     assert
       .dom(".chat-pinned-bar__excerpt")
-      .hasText("Pinned excerpt 0", "wraps back to the first pin");
+      .hasText("Pinned excerpt 0", "and previews back to the newest (wraps)");
+  });
+
+  test("anchors the active pin to the scroll position", async function (assert) {
+    this.channel.pinnedMessagesCount = 3;
+    pretender.get(`/chat/api/channels/${this.channel.id}/pins`, () =>
+      pinResponse(this.channel, 3)
+    );
+    // message ids: 202 (excerpt 0, newest) / 201 (excerpt 1) / 200 (excerpt 2)
+    const view = new (class {
+      @tracked bottomId = null;
+    })();
+
+    await render(
+      <template>
+        <ChatPinnedMessageBar
+          @channel={{this.channel}}
+          @onJumpToMessage={{this.noop}}
+          @viewportBottomMessageId={{view.bottomId}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".chat-pinned-bar__excerpt")
+      .hasText("Pinned excerpt 0", "defaults to the newest pin");
+
+    view.bottomId = 201;
+    await settled();
+    assert
+      .dom(".chat-pinned-bar__excerpt")
+      .hasText("Pinned excerpt 1", "follows the pin governing the view");
+
+    view.bottomId = 100; // above every pin
+    await settled();
+    assert
+      .dom(".chat-pinned-bar__excerpt")
+      .hasText("Pinned excerpt 2", "falls back to the oldest pin");
   });
 
   test("links to the full pinned messages list via the see-all icon", async function (assert) {
