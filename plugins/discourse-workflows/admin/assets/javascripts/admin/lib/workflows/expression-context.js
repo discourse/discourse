@@ -26,7 +26,7 @@ export function resolveVariableId(variable, itemPrefix = "$json") {
 }
 
 // Matches paths like $('Node Name').rest or $("Node Name").rest
-const NODE_REF_RE = /^\$\((?:"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)')\)/;
+export const NODE_REF_RE = /^\$\((?:"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)')\)/;
 const METHOD_CALL_RE = /^([A-Za-z_$][\w$]*)\((.*)\)$/;
 const METHOD_WITH_SUFFIX_RE = /^([A-Za-z_$][\w$]*)\((.*?)\)(.*)$/;
 // A property followed by one or more subscripts, e.g. `items[0]` or `map["k"]`.
@@ -73,7 +73,12 @@ export function walkScope(scope, path) {
   return target;
 }
 
-function parseNodeReferenceName(nodeRef) {
+// Reverses the escaping in a single-quoted literal (\\ and \' only).
+function unescapeSingleQuoted(str) {
+  return str.replace(/\\([\\'])/g, "$1");
+}
+
+export function parseNodeReferenceName(nodeRef) {
   const doubleQuoted = nodeRef[1] !== undefined;
   const raw = doubleQuoted ? nodeRef[1] : nodeRef[2];
 
@@ -85,7 +90,7 @@ function parseNodeReferenceName(nodeRef) {
     }
   }
 
-  return raw.replace(/\\([\\'])/g, "$1");
+  return unescapeSingleQuoted(raw);
 }
 
 function resolvePathPart(target, part, scope) {
@@ -148,7 +153,7 @@ function resolveBracketKey(source, scope) {
   }
 
   if (key.startsWith("'")) {
-    return key.slice(1, -1).replace(/\\([\\'])/g, "$1");
+    return unescapeSingleQuoted(key.slice(1, -1));
   }
 
   return walkScope(scope, key);

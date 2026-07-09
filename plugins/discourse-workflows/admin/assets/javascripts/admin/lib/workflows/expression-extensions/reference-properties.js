@@ -82,7 +82,6 @@ function splitLastAccessor(expression) {
   return { parent, current: key };
 }
 
-// Object → drill (append the pick); leaf → switch siblings (replace last).
 export function referencePickerData(scope, expression) {
   const inner = (expression || "").trim();
   if (!inner) {
