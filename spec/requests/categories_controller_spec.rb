@@ -1998,6 +1998,30 @@ RSpec.describe CategoriesController do
 
         expect(response.parsed_body["categories"].map { |c| c["name"] }).to include("Editions")
       end
+
+      it "limits the number of term words used in SQL filters" do
+        long_term = 50.times.map { |index| "word#{index}" }.join(" ")
+
+        queries = track_sql_queries { post "/categories/search.json", params: { term: long_term } }
+
+        expect(response.status).to eq(200)
+
+        category_search_queries =
+          queries.select { |query| query.match?(/FROM "?categories"?/i) && query.match?(/ILIKE/i) }
+        ilike_counts = category_search_queries.map { |query| query.scan(/\bILIKE\b/i).size }
+
+        expect(ilike_counts).to be_present
+        expect(ilike_counts.max).to be <= 25
+      end
+
+      it "limits the term length used in SQL filters" do
+        long_term = "a" * 300
+
+        queries = track_sql_queries { post "/categories/search.json", params: { term: long_term } }
+
+        expect(response.status).to eq(200)
+        expect(queries.join("\n")).not_to include(long_term)
+      end
     end
 
     context "with parent_category_id" do
