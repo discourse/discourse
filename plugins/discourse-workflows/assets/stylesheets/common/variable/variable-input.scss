@@ -1,9 +1,21 @@
 .workflows-variable-input {
+  display: flex;
+  flex-direction: column;
   width: 100%;
   border: 1px solid var(--primary-low-mid);
   border-radius: var(--d-border-radius);
   background: var(--secondary);
   box-sizing: border-box;
+
+  // Editor and scroller fill the wrapper, so a taller field has no dead strip
+  // below the text where clicks and drops don't register.
+  .cm-editor {
+    flex: 1 1 auto;
+
+    .cm-scroller {
+      flex: 1 1 auto;
+    }
+  }
 
   .cm-editor .cm-content {
     min-height: 60px;
@@ -210,6 +222,109 @@
       border-radius: 2px;
     }
 
+    .cm-wf-reference-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25em;
+      max-width: 100%;
+      padding: 1px 0.5em;
+
+      // Inset shadow, not a border: a border would add to the pill's height.
+      box-shadow: inset 0 0 0 1px var(--tertiary-low-mid, var(--tertiary-low));
+      border-radius: 1em;
+      background: var(--tertiary-low);
+      color: var(--tertiary-hover);
+      font-size: var(--font-down-1);
+      line-height: 1.15;
+      white-space: nowrap;
+
+      // Middle, not baseline, so pills with/without a path line up.
+      vertical-align: middle;
+      margin-block: 1px;
+      cursor: grab;
+
+      &:hover {
+        background: color-mix(in srgb, var(--tertiary) 22%, transparent);
+      }
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      &.--selected {
+        background: color-mix(in srgb, var(--tertiary) 30%, transparent);
+        box-shadow: inset 0 0 0 1px var(--tertiary);
+      }
+
+      &.--incomplete {
+        outline: 1px dashed color-mix(in srgb, var(--tertiary) 55%, transparent);
+        outline-offset: -1px;
+      }
+
+      &.--invalid {
+        background: color-mix(in srgb, var(--danger) 12%, transparent);
+        box-shadow: inset 0 0 0 1px var(--danger);
+        color: var(--danger);
+
+        .cm-wf-reference-pill__icon,
+        .cm-wf-reference-pill__drill {
+          color: var(--danger);
+        }
+      }
+
+      &__icon {
+        display: inline-flex;
+        color: var(--tertiary);
+
+        .d-icon {
+          width: 0.85em;
+          height: 0.85em;
+        }
+      }
+
+      &__badge {
+        flex-shrink: 0;
+        max-width: 16ch;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: 600;
+      }
+
+      // Not monospace: the browser's monospace-size quirk made these pills
+      // taller than badge-only ones.
+      &__path {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &::before {
+          content: "›";
+          margin-inline-end: 0.3em;
+          opacity: 0.6;
+        }
+      }
+
+      &__drill {
+        display: inline-flex;
+        align-items: center;
+        padding: 0;
+        margin-inline-start: 0.1em;
+        border: none;
+        background: none;
+        color: var(--tertiary);
+        cursor: pointer;
+
+        .d-icon {
+          width: 0.7em;
+          height: 0.7em;
+        }
+
+        &:hover {
+          color: var(--tertiary-hover);
+        }
+      }
+    }
+
     // Drop cursor during variable drag
     .cm-dropCursor {
       position: absolute;
@@ -333,5 +448,134 @@
 
   &__plaintext {
     color: var(--primary);
+  }
+}
+
+// The picker opens over the node configurator modal, so it must sit above it.
+.fk-d-menu[data-identifier="workflows-reference-picker"] {
+  z-index: z("modal", "tooltip") !important;
+}
+
+.workflows-reference-picker {
+  display: flex;
+  flex-direction: column;
+  min-width: 240px;
+  max-width: 340px;
+  font-size: var(--font-down-1);
+
+  &__header {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  // Scoped under __header (two classes) to out-specify the global
+  // `input[type=text]` border/outline without !important.
+  &__header &__filter {
+    flex: 1 1 auto;
+    min-width: 0;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0.5em 0.75em;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    font-size: var(--font-down-1);
+
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+
+    &:focus-visible {
+      outline: 1px solid var(--tertiary);
+      outline-offset: -1px;
+    }
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0.25em 0;
+    max-height: 280px;
+    overflow-y: auto;
+    list-style: none;
+  }
+
+  &__option {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5em;
+    width: 100%;
+    padding: 0.3em 0.75em;
+    border: none;
+    background: none;
+    text-align: start;
+    cursor: pointer;
+
+    &:hover,
+    &:focus,
+    &.--active {
+      background: var(--tertiary-low);
+    }
+
+    &.--current .workflows-reference-picker__name {
+      font-weight: 700;
+      color: var(--tertiary);
+    }
+  }
+
+  &__name {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--d-font-family--monospace), monospace;
+  }
+
+  &__type {
+    flex: 0 0 auto;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+  }
+
+  &__empty {
+    padding: 0.5em 0.75em;
+    color: var(--primary-medium);
+    font-style: italic;
+  }
+
+  &__unavailable {
+    flex: 1 1 auto;
+    padding: 0.5em 0.75em;
+    color: var(--primary-medium);
+    font-style: italic;
+  }
+
+  &__edit {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    padding: 0 0.75em;
+    border: 0;
+    border-inline-start: 1px solid var(--primary-low);
+    background: none;
+    color: var(--primary-high);
+    white-space: nowrap;
+    cursor: pointer;
+
+    .d-icon {
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+    }
+
+    &:hover,
+    &:focus {
+      background: var(--tertiary-low);
+      color: var(--tertiary-hover);
+
+      .d-icon {
+        color: var(--tertiary-hover);
+      }
+    }
   }
 }

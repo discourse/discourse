@@ -6122,6 +6122,7 @@ ru:
         title: "Список доступных отчётов"
         sidebar_title: "Отчеты"
         back: "Назад ко всем отчетам"
+        all_groups: "Все группы"
         group_traffic: "Трафик"
         group_members: "Участники"
         group_moderation_and_security: "Модерация и безопасность"

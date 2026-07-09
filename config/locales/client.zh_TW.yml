@@ -4633,6 +4633,7 @@ zh_TW:
         title: "可見報告列表"
         sidebar_title: "報告"
         back: "返回到所有報告"
+        all_groups: "所有群組"
         group_traffic: "流量"
         group_members: "成員"
         group_other: "其他"

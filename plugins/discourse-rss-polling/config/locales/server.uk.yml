@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 uk:
+  site_settings:
+    rss_polling_update_tags: "Оновлювати теги теми під час її оновлення. Якщо вимкнути цю опцію, теги будуть завантажені спочатку, але подальші зміни тегів будуть неможливі."
   rss_polling:
     errors:
+      feed_url_must_be_http: "URL-адреса стрічки має починатися з http:// або https://."
       unknown_author_username: "Не знайдено користувачів з іменем '%{username}'."
+      required_tag_group: "Теми в \"%{category}\" вимагають щонайменше %{count} тег(ів) з групи \"%{tag_group}\" (%{tags}). Додайте один із цих тегів, щоб імпортовані елементи не відхилялися."

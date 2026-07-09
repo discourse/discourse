@@ -2,23 +2,32 @@
 
 module Migrations
   module Conversion
-    # Runs one step end to end on its own thread for the {StepScheduler}. It forks
-    # the step's workers — one for a normal step, several for a partitioned one (or
-    # none under `--no-fork`, where the single worker runs inline). Each worker
-    # builds the step itself, opens its own source, reads its slice of the rows,
-    # and writes them to its own shard.
+    # Runs one step on its own thread for the {StepScheduler}. It forks the step's
+    # workers: one for a normal step, several for a partitioned one (or none under
+    # `--no-fork`, where the single worker runs inline). Each worker builds the
+    # step, opens its own source, reads its rows, and writes them to its own shard.
     #
-    # The coordinator relays the workers' combined progress to the reporter. Once
-    # they all exit cleanly it hands the finished shards to the {Consolidator},
-    # which merges them into the run database on a background thread, so the step
-    # finishes without waiting for its own merge.
+    # A partitioned step is split into many more chunks than forks. The forks claim
+    # them from a shared {ChunkQueue} as they go idle, so a fork with cheap chunks
+    # keeps pulling more and the slow ones don't drag out the end. The parent knows
+    # the step's total up front, so the workers only report their progress.
     #
-    # The step is built inside each worker, not here, so its source connection is
-    # opened there. The parent never holds a source connection, and nothing but
-    # progress crosses the pipes.
+    # Once the workers all exit cleanly, the parent hands the shards to the
+    # {Consolidator}, which merges them into the run database on a background
+    # thread, so the step doesn't wait for its own merge.
+    #
+    # The parent opens a source only briefly, to work out the plan (the total row
+    # count, plus the chunk boundaries for a partitioned step), and closes it before
+    # forking. After that only the workers touch the source, and only progress
+    # crosses the pipes.
     class StepCoordinator
       class WorkerCrashedError < StandardError
       end
+
+      # How many chunks each fork gets for a partitioned step. More chunks means
+      # finer work stealing (a shorter tail) but a bit more overhead. Eight is a
+      # good balance.
+      CHUNKS_PER_FORK = 8
 
       attr_reader :step_class
 
@@ -57,7 +66,6 @@ module Migrations
       # @return [Symbol] the step's outcome, `:done` or `:failed`
       def run
         @step_handle = @reporter.start_step(@step_class.title)
-        @step_handle.report_concurrency(@fork_count)
         outcome = :done
         shards = []
         handed_off = false
@@ -89,28 +97,29 @@ module Migrations
       def run_workers(shards)
         return run_inline(shards) if @no_fork
 
-        boundaries = compute_boundaries
-        worker_count = boundaries.nil? ? 1 : [boundaries.size, 1].max
+        boundaries, total = compute_plan
+        worker_count = boundaries.empty? ? 1 : [boundaries.size, @fork_count].min
+        # Hand back any forks we won't use (fewer chunks than forks) right away.
+        @scheduler.release_forks(@step_class, @fork_count - worker_count)
+        @step_handle.report_concurrency(worker_count) if worker_count > 1
 
+        chunk_queue = ChunkQueue.filled(boundaries.size) unless boundaries.empty?
         pipes = Array.new(worker_count) { IO.pipe }
         worker_count.times { shards << @shard_manager.create_shard }
 
-        pids = nil
-        @fork_mutex.synchronize do
-          ForkManager.with_batched_forks do
-            pids =
-              worker_count.times.map do |index|
-                chunk = chunk_for(boundaries, index)
-                ForkManager.fork { run_in_fork(pipes, index, shards[index], chunk) }
-              end
+        pids =
+          fork_workers(worker_count) do |index|
+            run_in_fork(pipes, index, shards[index], boundaries, chunk_queue)
           end
-        end
 
+        chunk_queue&.close # only the workers claim from it now
         pipes.each { |(_reader, writer)| writer.close }
         readers = pipes.map(&:first)
 
         begin
-          consume_progress(readers)
+          @step_handle.with_progress(max_progress: total) do |progress|
+            drain(readers, progress, on_worker_done: method(:worker_finished))
+          end
         ensure
           readers.each(&:close)
         end
@@ -122,43 +131,76 @@ module Migrations
         shard_path = @shard_manager.create_shard
         shards << shard_path
 
-        StepRunner.new(
-          step: @step_factory.call(@step_class),
-          shard_path:,
-          reporter: InlineProgressSink.new(@step_handle),
-          chunk: nil,
-        ).run
+        _boundaries, total = compute_plan
+        @step_handle.with_progress(max_progress: total) do |progress|
+          StepRunner.new(
+            step: @step_factory.call(@step_class),
+            shard_path:,
+            reporter: InlineProgressSink.new(progress),
+          ).run
+        end
       end
 
-      def compute_boundaries
-        return nil if @fork_count == 1
-
+      # The chunk boundaries and the step's total row count, from one source opened
+      # only here. Boundaries are empty for an unpartitioned step (one worker reads
+      # the whole source). The workers don't know the total once they start claiming
+      # chunks, so the parent counts it up front (`max_progress` with no chunk set
+      # counts the whole source).
+      def compute_plan
         step = @step_factory.call(@step_class)
         begin
-          step.source.partition_boundaries(@fork_count)
+          source = step.source
+          boundaries =
+            @fork_count > 1 ? source.partition_boundaries(@fork_count * CHUNKS_PER_FORK) : []
+          [boundaries, source.max_progress]
         ensure
           step.source.cleanup
         end
       end
 
+      def fork_workers(count)
+        pids = nil
+        @fork_mutex.synchronize do
+          ForkManager.with_batched_forks do
+            pids = count.times.map { |index| ForkManager.fork { yield index } }
+          end
+        end
+        pids
+      end
+
       def chunk_for(boundaries, index)
-        return nil if boundaries.nil? || boundaries.empty?
         [boundaries[index], boundaries[index + 1]]
       end
 
-      def run_in_fork(pipes, mine, shard_path, chunk)
+      # A partitioned worker claims chunks off the shared queue; an unpartitioned one
+      # falls back to StepRunner's default (the whole source).
+      def run_in_fork(pipes, mine, shard_path, boundaries, chunk_queue)
+        close_other_pipes(pipes, mine)
+
+        read = chunk_queue ? { chunks: claim_chunks(chunk_queue, boundaries) } : {}
+        StepRunner.new(
+          step: @step_factory.call(@step_class),
+          shard_path:,
+          reporter: PipeProgressSink.new(pipes[mine][1]),
+          **read,
+        ).run
+      end
+
+      # A lazy stream of chunks pulled off the shared queue, one each time the worker
+      # asks for the next.
+      def claim_chunks(chunk_queue, boundaries)
+        Enumerator.new do |yielder|
+          while (index = chunk_queue.claim)
+            yielder << chunk_for(boundaries, index)
+          end
+        end
+      end
+
+      def close_other_pipes(pipes, mine)
         pipes.each_with_index do |(reader, writer), index|
           reader.close
           writer.close unless index == mine
         end
-
-        step = @step_factory.call(@step_class)
-        StepRunner.new(
-          step:,
-          shard_path:,
-          reporter: PipeProgressSink.new(pipes[mine][1]),
-          chunk:,
-        ).run
       end
 
       def await(pids)
@@ -172,19 +214,10 @@ module Migrations
         end
       end
 
-      def consume_progress(readers)
-        @step_handle.with_progress(max_progress: total_max_progress(readers)) do |progress|
-          drain_progress(readers, progress)
-        end
-      end
-
-      def total_max_progress(readers)
-        maxes = readers.map { |reader| read_max_progress(reader) }
-        return if maxes.any?(&:nil?)
-        maxes.sum
-      end
-
-      def drain_progress(readers, progress)
+      # Reads the workers' progress from their pipes into `progress` until they all
+      # close. `on_worker_done` runs each time one closes, with the number of
+      # workers still running.
+      def drain(readers, progress, on_worker_done: nil)
         pending = readers.dup
 
         until pending.empty?
@@ -193,6 +226,7 @@ module Migrations
             line = reader.gets
             if line.nil?
               pending.delete(reader)
+              on_worker_done&.call(pending.size)
               next
             end
 
@@ -206,12 +240,12 @@ module Migrations
         end
       end
 
-      def read_max_progress(reader)
-        line = reader.gets
-        return if line.nil?
-
-        value = line.split[1]
-        value&.to_i
+      # Runs when a worker finishes: drop the live fork count and give its fork back
+      # to the scheduler, so another step can use the free core while the slower
+      # workers keep going.
+      def worker_finished(still_running)
+        @step_handle.report_concurrency(still_running)
+        @scheduler.release_forks(@step_class, 1)
       end
 
       def failure_notice(error)

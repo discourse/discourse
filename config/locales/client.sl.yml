@@ -3734,6 +3734,7 @@ sl:
       reports:
         title: "Seznam poročil"
         sidebar_title: "Poročila"
+        all_groups: "Vse skupine"
         group_traffic: "Promet"
         group_members: "Člani"
         group_other: "Drugo"

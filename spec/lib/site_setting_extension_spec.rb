@@ -724,6 +724,7 @@ RSpec.describe SiteSettingExtension do
               },
             )
             settings.refresh!
+            allow(UpcomingChanges).to receive(:enabled?).and_return(false)
             allow(UpcomingChanges).to receive(:enabled?).with(:enable_cool_thing).and_return(true)
           end
 
@@ -745,6 +746,7 @@ RSpec.describe SiteSettingExtension do
               },
             )
             settings.refresh!
+            allow(UpcomingChanges).to receive(:enabled?).and_return(false)
             allow(UpcomingChanges).to receive(:enabled?).with(:enable_cool_thing).and_return(true)
           end
 
@@ -772,6 +774,31 @@ RSpec.describe SiteSettingExtension do
           setting = settings.all_settings.find { |s| s[:setting] == :cool_thing_image }
           expect(setting[:depends_on]).to eq([:enable_cool_thing])
           expect(setting[:depends_on_humanized_names]).to eq(["Enable cool thing"])
+        end
+      end
+
+      context "when the dependent setting declares depends_on_values" do
+        before do
+          settings.setting(:cool_thing_scope, "public")
+          settings.setting(
+            :cool_thing_categories,
+            "",
+            depends_on: [:cool_thing_scope],
+            depends_on_values: {
+              cool_thing_scope: %w[include exclude],
+            },
+            depends_behavior: :hidden,
+            dependent_setting_display: :inline,
+          )
+          settings.refresh!
+        end
+
+        it "serializes the values and display mode for the dependent setting" do
+          setting = settings.all_settings.find { |s| s[:setting] == :cool_thing_categories }
+
+          expect(setting[:depends_on]).to eq([:cool_thing_scope])
+          expect(setting[:depends_on_values]).to eq(cool_thing_scope: %w[include exclude])
+          expect(setting[:dependent_setting_display]).to eq("inline")
         end
       end
 

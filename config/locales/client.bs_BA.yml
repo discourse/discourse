@@ -3150,6 +3150,7 @@ bs_BA:
       reports:
         title: "Lista dostupnih izvještaja"
         sidebar_title: "Izvještaji"
+        all_groups: "Sve grupe"
         group_traffic: "Promet"
         group_members: "Članovi"
         group_other: "Other"

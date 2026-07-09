@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module NestedReplies
+  CONVERSION_COMPLETED_CUSTOM_FIELD = "nested_replies_conversion_completed"
 end
 
 require_relative "nested_replies/ancestor_walker"

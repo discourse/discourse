@@ -5720,6 +5720,7 @@ nl:
         title: "Lijst van beschikbare rapporten"
         sidebar_title: "Rapporten"
         back: "Terug naar alle rapporten"
+        all_groups: "Alle groepen"
         group_engagement: "Betrokkenheid"
         group_traffic: "Verkeer"
         group_members: "Leden"

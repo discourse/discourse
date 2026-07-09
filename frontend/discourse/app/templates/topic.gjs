@@ -375,7 +375,7 @@ export default <template>
               @jumpToDate={{@controller.jumpToDate}}
               @jumpToIndex={{@controller.jumpToIndex}}
               class="topic-navigation"
-              as |info|
+              as |info toggleProgressExpansion|
             >
               <PluginOutlet
                 @name="topic-navigation"
@@ -421,7 +421,7 @@ export default <template>
                 <TopicProgress
                   @prevEvent={{info.prevEvent}}
                   @topic={{@controller.model}}
-                  @expanded={{info.topicProgressExpanded}}
+                  @onExpandToggle={{toggleProgressExpansion}}
                   @jumpToPost={{@controller.jumpToPost}}
                 >
                   <PluginOutlet

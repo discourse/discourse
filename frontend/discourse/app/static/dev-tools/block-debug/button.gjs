@@ -2,10 +2,8 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-/** @type {import("discourse/float-kit/components/d-menu.gjs").default} */
 import DMenu from "discourse/float-kit/components/d-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-/** @type {import("discourse/ui-kit/helpers/d-element.gjs").default} */
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";

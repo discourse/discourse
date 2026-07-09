@@ -10,10 +10,6 @@ module Migrations
         @io = io
       end
 
-      def report_max_progress(value)
-        @io.write("m #{value}\n")
-      end
-
       def report_progress(progress:, warnings:, errors:)
         @io.write("p #{progress} #{warnings} #{errors}\n")
       end

@@ -2416,6 +2416,7 @@ sw:
           never: "kamwe"
       reports:
         title: "Orodha ya ripoti zilizopo"
+        all_groups: "Vikundi vyote"
         group_traffic: "Utembeleaji"
         group_members: "Wanachama"
         group_other: "Nyingine"

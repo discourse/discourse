@@ -11435,6 +11435,7 @@ CREATE TABLE public.user_options (
     color_scheme_id integer,
     default_calendar integer DEFAULT 0 NOT NULL,
     chat_enabled boolean DEFAULT true NOT NULL,
+    only_chat_push_notifications boolean,
     oldest_search_log_date timestamp without time zone,
     chat_sound character varying,
     dismissed_channel_retention_reminder boolean,
@@ -22469,9 +22470,9 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
-('20260707184153'),
 ('20260707184150'),
 ('20260707184146'),
+('20260707013407'),
 ('20260702102111'),
 ('20260701073045'),
 ('20260630034050'),

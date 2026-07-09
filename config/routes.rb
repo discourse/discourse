@@ -593,6 +593,8 @@ Discourse::Application.routes.draw do
     post "session/passkey/auth" => "session#passkey_login"
     get "session/scopes" => "session#scopes"
     get "composer/mentions" => "composer#mentions"
+    get "gifs/categories" => "gifs#categories"
+    get "gifs/search" => "gifs#search"
     get "composer_messages" => "composer_messages#index"
     get "composer_messages/user_not_seen_in_a_while" => "composer_messages#user_not_seen_in_a_while"
 
@@ -1347,6 +1349,7 @@ Discourse::Application.routes.draw do
     get "/c", to: redirect(relative_url_root + "categories")
 
     resources :categories, only: %i[index create update destroy]
+    post "categories/:id/convert_nested_replies" => "categories#convert_nested_replies"
     post "categories/reorder" => "categories#reorder"
     get "categories/types" => "categories#types"
     get "categories/find" => "categories#find"

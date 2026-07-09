@@ -1072,6 +1072,39 @@ RSpec.describe GroupsController do
     end
   end
 
+  describe "#mentionable and #messageable" do
+    it "returns not found for hidden and missing groups", :aggregate_failures do
+      user.change_trust_level!(1)
+      hidden_group =
+        Fabricate(
+          :group,
+          name: "hidden_support",
+          mentionable_level: Group::ALIAS_LEVELS[:everyone],
+          messageable_level: Group::ALIAS_LEVELS[:everyone],
+          visibility_level: Group.visibility_levels[:staff],
+        )
+      missing_group_name = "missing_support"
+
+      sign_in(user)
+
+      get "/g/#{hidden_group.name}/mentionable.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
+
+      get "/g/#{missing_group_name}/mentionable.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
+
+      get "/g/#{hidden_group.name}/messageable.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
+
+      get "/g/#{missing_group_name}/messageable.json"
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
+    end
+  end
+
   describe "#mentionable" do
     it "should return the right response" do
       sign_in(user)
@@ -1089,7 +1122,7 @@ RSpec.describe GroupsController do
 
       group.update!(
         mentionable_level: Group::ALIAS_LEVELS[:everyone],
-        visibility_level: Group.visibility_levels[:staff],
+        visibility_level: Group.visibility_levels[:logged_on_users],
       )
 
       get "/groups/#{group.name}/mentionable.json"
@@ -1124,7 +1157,7 @@ RSpec.describe GroupsController do
 
       group.update!(
         messageable_level: Group::ALIAS_LEVELS[:everyone],
-        visibility_level: Group.visibility_levels[:staff],
+        visibility_level: Group.visibility_levels[:logged_on_users],
       )
 
       get "/groups/#{group.name}/messageable.json"
@@ -3064,6 +3097,7 @@ RSpec.describe GroupsController do
           ),
         )
 
+        SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
         get "/groups/search.json?include_everyone=true"
 
         expect(response.status).to eq(200)

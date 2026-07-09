@@ -4317,6 +4317,7 @@ te:
       reports:
         title: "అందుబాటులో ఉన్న నివేదికల జాబితా"
         sidebar_title: "నివేదికలు"
+        all_groups: "అన్ని సమూహాలు"
         group_traffic: "ట్రాఫిక్"
         group_members: "సభ్యులు"
         group_other: "ఇతర"

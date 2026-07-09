@@ -3093,6 +3093,7 @@ ca:
       reports:
         title: "Llista de reports disponibles"
         sidebar_title: "Reports"
+        all_groups: "Tots els grups"
         group_traffic: "Tràfic"
         group_members: "Membres"
         group_other: "Altres"

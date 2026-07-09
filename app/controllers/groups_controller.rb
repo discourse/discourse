@@ -538,7 +538,7 @@ class GroupsController < ApplicationController
   end
 
   def mentionable
-    group = find_group(:name, ensure_can_see: false)
+    group = find_group(:name)
 
     if group
       render json: { mentionable: Group.mentionable(current_user).where(id: group.id).present? }
@@ -548,7 +548,7 @@ class GroupsController < ApplicationController
   end
 
   def messageable
-    group = find_group(:name, ensure_can_see: false)
+    group = find_group(:name)
 
     if group
       render json: { messageable: guardian.can_send_private_message?(group) }
@@ -692,13 +692,13 @@ class GroupsController < ApplicationController
 
   def search
     include_everyone =
-      params[:include_everyone] == "true" || params[:include_pseudogroups] == "true"
+      (params[:include_everyone] == "true" || params[:include_pseudogroups] == "true") &&
+        !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
     include_pseudogroups = params[:include_pseudogroups] == "true"
-    order = ["name"]
     groups =
       Group.visible_groups(
         current_user,
-        order,
+        ["name"],
         include_everyone: include_everyone,
         include_pseudogroups: include_pseudogroups,
       ).includes(:flair_upload)

@@ -4172,6 +4172,7 @@ lt:
       reports:
         title: "Galimų ataskaitų sąrašas"
         sidebar_title: "Pranešimai"
+        all_groups: "Visos grupės"
         group_traffic: "Srautas"
         group_members: "Nariai"
         group_other: "Kiti"

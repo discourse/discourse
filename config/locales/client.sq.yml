@@ -3979,6 +3979,7 @@ sq:
           always: "gjithmonë"
           never: "asnjëherë"
       reports:
+        all_groups: "Të gjitha grupet"
         group_traffic: "Trafik"
         group_members: "Anëtarë"
         group_other: "Të tjerë"
