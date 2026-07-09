@@ -186,7 +186,7 @@ module DiscourseDataExplorer
           id: -31,
           name: "Trust Level 3 Promotion Progress",
           description:
-            "Checks every trust level 3 promotion requirement for current trust level 2 users, mirroring the logic of the built-in promotion job. Each threshold is a parameter defaulting to the matching site setting's default. Set 'show_all_results' to false to only list users currently meeting every requirement.",
+            "Checks every trust level 3 promotion requirement for current trust level 2 users, mirroring the logic of the built-in promotion job, including promotion blockers (locked trust level, active or recent suspensions and silences). Each threshold is a parameter defaulting to the matching site setting's default. Set 'show_all_results' to false to only list users currently meeting every requirement.",
         },
         "silenced-users": {
           id: -32,
@@ -1090,7 +1090,8 @@ module DiscourseDataExplorer
       -- boolean :show_all_results = true
 
       WITH tl3_candidates AS (
-          SELECT id AS user_id FROM users
+          SELECT id AS user_id, manual_locked_trust_level, silenced_till, suspended_till
+          FROM users
           WHERE trust_level = 2
           AND last_seen_at >= CURRENT_DATE - (:tl_time_period || ' days')::interval
       ),
@@ -1115,7 +1116,7 @@ module DiscourseDataExplorer
           SELECT uv.user_id, COUNT(uv.user_id) AS days_visited
           FROM user_visits uv
           JOIN tl3_candidates c ON c.user_id = uv.user_id
-          WHERE visited_at > CURRENT_DATE - (:tl_time_period || ' days')::interval AND posts_read >= 0
+          WHERE visited_at > CURRENT_DATE - (:tl_time_period || ' days')::interval AND posts_read > 0
           GROUP BY uv.user_id
       ),
       num_topics_replied_to AS (
@@ -1198,9 +1199,34 @@ module DiscourseDataExplorer
               AND t.archetype = 'regular' AND ua.action_type = 2
           GROUP BY ua.user_id
       ),
+      penalty_counts AS (
+          -- silences/suspensions in the last 6 months (FORGIVENESS_PERIOD) block promotion,
+          -- but a staff-issued unsilence/unsuspend forgives them (a system-issued one does not)
+          SELECT
+              uh.target_user_id AS user_id,
+              SUM(
+                  CASE
+                      WHEN uh.action = 30 THEN 1 -- silence_user
+                      WHEN uh.action = 31 AND uh.acting_user_id <> -1 THEN -1 -- unsilence_user
+                      WHEN uh.action = 10 THEN 1 -- suspend_user
+                      WHEN uh.action = 11 AND uh.acting_user_id <> -1 THEN -1 -- unsuspend_user
+                      ELSE 0
+                  END
+              ) AS penalty_count
+          FROM user_histories uh
+          JOIN tl3_candidates c ON c.user_id = uh.target_user_id
+          WHERE uh.action IN (10, 11, 30, 31)
+              AND uh.created_at > NOW() - INTERVAL '6 months'
+          GROUP BY uh.target_user_id
+      ),
       candidate_results AS (
           SELECT
               c.user_id,
+              c.manual_locked_trust_level IS NULL AS trust_level_unlocked_criteria_met,
+              (c.suspended_till IS NULL OR c.suspended_till <= CURRENT_TIMESTAMP)
+                  AND (c.silenced_till IS NULL OR c.silenced_till <= CURRENT_TIMESTAMP) AS not_penalized_criteria_met,
+              COALESCE(pc.penalty_count, 0) AS penalty_count,
+              COALESCE(pc.penalty_count, 0) <= 0 AS penalty_history_criteria_met,
               COALESCE(days_visited, 0) AS days_visited,
               COALESCE(days_visited, 0) >= :tl_requires_days_visited AS visits_criteria_met,
               COALESCE(topic_reply_count, 0) AS topic_reply_count,
@@ -1236,6 +1262,7 @@ module DiscourseDataExplorer
           LEFT JOIN posts_read_all_time prat ON prat.user_id = c.user_id
           LEFT JOIN num_likes_given nlg ON nlg.user_id = c.user_id
           LEFT JOIN num_likes_received nlr ON nlr.user_id = c.user_id
+          LEFT JOIN penalty_counts pc ON pc.user_id = c.user_id
       )
       SELECT * FROM candidate_results
       WHERE CASE WHEN :show_all_results THEN true ELSE visits_criteria_met END
@@ -1250,6 +1277,9 @@ module DiscourseDataExplorer
           AND CASE WHEN :show_all_results THEN true ELSE likes_received_criteria_met END
           AND CASE WHEN :show_all_results THEN true ELSE likes_received_users_criteria_met END
           AND CASE WHEN :show_all_results THEN true ELSE likes_received_days_criteria_met END
+          AND CASE WHEN :show_all_results THEN true ELSE trust_level_unlocked_criteria_met END
+          AND CASE WHEN :show_all_results THEN true ELSE not_penalized_criteria_met END
+          AND CASE WHEN :show_all_results THEN true ELSE penalty_history_criteria_met END
       ORDER BY days_visited DESC
       SQL
 
@@ -1265,12 +1295,18 @@ module DiscourseDataExplorer
           COALESCE(staff.username, 'system') AS silenced_by,
           user_histories.created_at AS silenced_at
       FROM users silenced_users
-      LEFT JOIN user_histories
-          ON user_histories.target_user_id = silenced_users.id
-          AND user_histories.action = 30 -- silence_user
+      -- lateral join picks only the most recent silence record per user
+      LEFT JOIN LATERAL (
+          SELECT uh.*
+          FROM user_histories uh
+          WHERE uh.target_user_id = silenced_users.id
+              AND uh.action = 30 -- silence_user
+          ORDER BY uh.id DESC
+          LIMIT 1
+      ) user_histories ON true
       LEFT JOIN users staff
           ON staff.id = user_histories.acting_user_id
-      WHERE silenced_users.silenced_till IS NOT NULL
+      WHERE silenced_users.silenced_till > CURRENT_TIMESTAMP
           AND (:start_date IS NULL OR user_histories.created_at >= :start_date)
           AND (:end_date IS NULL OR user_histories.created_at <= :end_date)
           AND (
@@ -1421,12 +1457,18 @@ module DiscourseDataExplorer
           uh.created_at AS suspension_logged_at,
           uh.details
       FROM users u
-      LEFT JOIN user_histories uh
-          ON uh.target_user_id = u.id
-          AND uh.action = 10 -- suspend_user
+      -- lateral join picks only the most recent suspension record per user
+      LEFT JOIN LATERAL (
+          SELECT *
+          FROM user_histories
+          WHERE target_user_id = u.id
+              AND action = 10 -- suspend_user
+          ORDER BY id DESC
+          LIMIT 1
+      ) uh ON true
       LEFT JOIN users staff
           ON staff.id = uh.acting_user_id
-      WHERE u.suspended_till IS NOT NULL
+      WHERE u.suspended_till > CURRENT_TIMESTAMP
           AND (:start_date IS NULL OR uh.created_at >= :start_date)
           AND (:end_date IS NULL OR uh.created_at <= :end_date)
           AND (
