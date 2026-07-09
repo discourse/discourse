@@ -67,6 +67,14 @@
     color: var(--d-input-text-color--disabled);
   }
 
+  &__permission.btn-default {
+    border: none;
+
+    &:hover {
+      border: none;
+    }
+  }
+
   &__permission-menu-content {
     z-index: z("modal", "dropdown");
   }
