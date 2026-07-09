@@ -16,6 +16,31 @@ RSpec.describe AiAgent do
 
   before { enable_current_plugin }
 
+  it "clears AI helper prompt permissions after changes" do
+    agent = AiAgent.find(SiteSetting.ai_helper_proofreader_agent)
+    DiscourseAi::AiHelper::Assistant.prompt_cache[:value] = "cached prompts"
+
+    agent.update!(allowed_group_ids: [Group::AUTO_GROUPS[:staff]])
+
+    expect(DiscourseAi::AiHelper::Assistant.prompt_cache[:value]).to be_nil
+  end
+
+  it "keeps AI helper prompt permissions after unrelated changes" do
+    agent =
+      AiAgent.create!(
+        name: "unrelated agent",
+        description: "test",
+        system_prompt: "test",
+        tools: [],
+        allowed_group_ids: [],
+      )
+    DiscourseAi::AiHelper::Assistant.prompt_cache[:value] = "cached prompts"
+
+    agent.update!(allowed_group_ids: [Group::AUTO_GROUPS[:staff]])
+
+    expect(DiscourseAi::AiHelper::Assistant.prompt_cache[:value]).to eq("cached prompts")
+  end
+
   it "validates context settings" do
     expect(basic_agent.valid?).to eq(true)
 
