@@ -19,6 +19,11 @@ gem "railties", "~> 8.0.0"
 gem "propshaft"
 gem "json"
 
+# Spike: gradual typing for lib/admin_dashboard. Runtime component must be in
+# the default group so T::Sig/T::Struct are available wherever the typed code
+# loads.
+gem "sorbet-runtime"
+
 # this will eventually be added to rails,
 # allows us to precompile all our templates in the app server master
 gem "actionview_precompiler", require: false
@@ -168,6 +173,7 @@ group :development do
   gem "ruby-lsp", require: false
   gem "ruby-lsp-rails", require: false
   gem "ruby-lsp-rspec", require: false
+  gem "sorbet", require: false
 end
 
 if ENV["ALLOW_DEV_POPULATE"] == "1"

@@ -723,6 +723,12 @@ GEM
     snaky_hash (2.0.4)
       hashie (>= 0.1.0, < 6)
       version_gem (>= 1.1.8, < 3)
+    sorbet (0.6.13328)
+      sorbet-static (= 0.6.13328)
+    sorbet-runtime (0.6.13328)
+    sorbet-static (0.6.13328-aarch64-linux)
+    sorbet-static (0.6.13328-universal-darwin)
+    sorbet-static (0.6.13328-x86_64-linux)
     sqlite3 (2.9.5-aarch64-linux-gnu)
     sqlite3 (2.9.5-aarch64-linux-musl)
     sqlite3 (2.9.5-arm64-darwin)
@@ -958,6 +964,8 @@ DEPENDENCIES
   shoulda-matchers
   sidekiq (>= 7.3.10)
   simplecov
+  sorbet
+  sorbet-runtime
   sqlite3
   sshkey
   stackprof
@@ -1276,6 +1284,11 @@ CHECKSUMS
   simplecov_json_formatter (0.1.4) sha256=529418fbe8de1713ac2b2d612aa3daa56d316975d307244399fa4838c601b428
   simpleidn (0.2.3) sha256=08ce96f03fa1605286be22651ba0fc9c0b2d6272c9b27a260bc88be05b0d2c29
   snaky_hash (2.0.4) sha256=2b12758c57defa6796341a1620f84b1a23737421d8d7e2575d0550b53cc4fece
+  sorbet (0.6.13328) sha256=f3606f88efcc7a623e53d73810803a681db528f71439ece4b51784c77b15b186
+  sorbet-runtime (0.6.13328) sha256=f30118d2f3c1b6bad90a5f54393b764dfa144f38b827e8399e2407aa097da0c4
+  sorbet-static (0.6.13328-aarch64-linux) sha256=e47a69cc7abd00a215f89ca8cdc46990d0d1bd02ef128acc874833794290fd1d
+  sorbet-static (0.6.13328-universal-darwin) sha256=1875a746e364f8fd26274694a25d5ead5e62382997ad1476da8f92f9fd832066
+  sorbet-static (0.6.13328-x86_64-linux) sha256=1755356c8ebcebae9ed39f34202e26f0724443d6c65d2f95819a4d610a4ce1eb
   sqlite3 (2.9.5-aarch64-linux-gnu) sha256=78075b6337d3d182c6d2b4691049ed45cd220826160c9ea18946bf6a1de200dc
   sqlite3 (2.9.5-aarch64-linux-musl) sha256=18c801185deb4adc01ddb281e8f672a39e3d1729979ca91e39439cd3eac0402d
   sqlite3 (2.9.5-arm64-darwin) sha256=d0cf444a70fc9395d513cfbcc1e6719e224aa645314e3824cb0474c721425aa2

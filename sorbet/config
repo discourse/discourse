@@ -1,0 +1,3 @@
+lib/admin_dashboard
+app/controllers/admin/dashboard_controller.rb
+sorbet/rbi

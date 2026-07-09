@@ -1,6 +1,9 @@
 # frozen_string_literal: true
+# typed: true
 
 class Admin::DashboardController < Admin::StaffController
+  extend T::Sig
+
   BULK_REPORTS_FILTER_KEYS = %i[start_date end_date].freeze
 
   before_action :ensure_admin,
@@ -131,10 +134,12 @@ class Admin::DashboardController < Admin::StaffController
 
   private
 
+  sig { returns(T.untyped) }
   def serialized_problems
     serialize_data(AdminNotice.problem.order(:id), AdminNoticeSerializer)
   end
 
+  sig { returns(T::Hash[Symbol, T.untyped]) }
   def dashboard_sections_payload
     visible_ids = AdminDashboardSectionConfiguration.visible_section_ids
     data = {
@@ -153,14 +158,17 @@ class Admin::DashboardController < Admin::StaffController
     data
   end
 
+  sig { void }
   def mark_new_features_as_seen
     DiscourseUpdates.mark_new_features_as_seen(current_user.id)
   end
 
+  sig { void }
   def ensure_dashboard_improvements_enabled
     raise Discourse::NotFound if !dashboard_improvements?
   end
 
+  sig { returns(T::Boolean) }
   def dashboard_improvements?
     dashboard_improvements_enabled =
       UpcomingChanges.enabled_for_user?(:dashboard_improvements, current_user)
@@ -172,6 +180,10 @@ class Admin::DashboardController < Admin::StaffController
     end
   end
 
+  # Boundary between untyped ActionController params and the typed
+  # AdminDashboard::Reports classes: the sig runtime-checks that only
+  # String-valued {source:, identifier:} hashes flow onward.
+  sig { returns(T::Array[T::Hash[Symbol, String]]) }
   def parse_reports_items_payload
     raise Discourse::InvalidParameters.new(:items) if !params[:items].is_a?(Array)
     if params[:items].size > AdminDashboardReport::VISIBLE_CAP
