@@ -366,8 +366,14 @@ class CurrentUserSerializer < BasicUserSerializer
   def featured_topic
     BasicTopicSerializer.new(object.user_profile.featured_topic, scope: scope, root: false).as_json
   end
+  
+  def reviewable_count
+    return 0 unless object.moderator?
+    object.reviewable_count
+  end
 
   def unseen_reviewable_count
+    return 0 unless object.moderator?
     Reviewable.unseen_reviewable_count(object)
   end
 
