@@ -4479,6 +4479,54 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe "topic access errors with detailed_404 disabled" do
+    it "returns not found for inaccessible and nonexistent topics on secondary topic endpoints" do
+      SiteSetting.detailed_404 = false
+      sign_in(user)
+
+      private_message =
+        create_post(
+          user: admin,
+          archetype: Archetype.private_message,
+          target_usernames: [moderator.username],
+        ).topic
+      nonexistent_topic_id = Topic.maximum(:id) + 10_000
+      requests = {
+        "GET /t/:topic_id/wordpress.json" => ->(topic_id) do
+          get "/t/#{topic_id}/wordpress.json", params: { best: 1 }
+        end,
+        "GET /t/:topic_id/post_ids.json" => ->(topic_id) { get "/t/#{topic_id}/post_ids.json" },
+        "GET /t/:topic_id/posts.json" => ->(topic_id) { get "/t/#{topic_id}/posts.json" },
+        "PUT /t/:id/archive-message.json" => ->(topic_id) do
+          put "/t/#{topic_id}/archive-message.json"
+        end,
+        "PUT /t/:id/move-to-inbox.json" => ->(topic_id) { put "/t/#{topic_id}/move-to-inbox.json" },
+        "PUT /t/:id/publish.json" => ->(topic_id) do
+          put "/t/#{topic_id}/publish.json", params: { destination_category_id: category.id }
+        end,
+        "PUT /t/:topic_id/slow_mode.json" => ->(topic_id) do
+          put "/t/#{topic_id}/slow_mode.json", params: { seconds: "3600" }
+        end,
+        "POST /t/:topic_id/notifications.json" => ->(topic_id) do
+          post "/t/#{topic_id}/notifications.json",
+               params: {
+                 notification_level: NotificationLevels.topic_levels[:watching],
+               }
+        end,
+      }
+
+      requests.each do |description, perform_request|
+        perform_request.call(private_message.id)
+        expect(response.status).to eq(404), description
+        expect(response.parsed_body["error_type"]).to eq("not_found"), description
+
+        perform_request.call(nonexistent_topic_id)
+        expect(response.status).to eq(404), description
+        expect(response.parsed_body["error_type"]).to eq("not_found"), description
+      end
+    end
+  end
+
   describe "#post_ids" do
     fab!(:post) { Fabricate(:post, user: post_author1) }
     fab!(:topic) { post.topic }
@@ -7516,11 +7564,12 @@ RSpec.describe TopicsController do
       expect(body["group_name"]).to eq(group.name)
     end
 
-    it "rejects a user who is not a participant of the message" do
+    it "returns not found for a user who is not a participant of the message" do
       sign_in(user_2)
 
       put "/t/#{group_message.id}/archive-message.json"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
     end
   end
 
@@ -7537,11 +7586,12 @@ RSpec.describe TopicsController do
       ).topic
     end
 
-    it "rejects a user who is not a participant of the message" do
+    it "returns not found for a user who is not a participant of the message" do
       sign_in(user_2)
 
       put "/t/#{group_message.id}/move-to-inbox.json"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
     end
   end
 
@@ -7623,7 +7673,7 @@ RSpec.describe TopicsController do
       end
     end
 
-    it "does not allow a regular user to set notifications on a private message they cannot see" do
+    it "returns not found when a regular user sets notifications on a private message they cannot see" do
       sign_in(user)
 
       post "/t/#{pm.id}/notifications.json",
@@ -7631,11 +7681,12 @@ RSpec.describe TopicsController do
              notification_level: NotificationLevels.topic_levels[:watching],
            }
 
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
       expect(TopicUser.find_by(user: user, topic: pm)).to be_blank
     end
 
-    it "does not allow a regular user to set notifications on a topic in a restricted category" do
+    it "returns not found when a regular user sets notifications on a topic in a restricted category" do
       restricted_topic = Fabricate(:topic, category: staff_category)
       sign_in(user)
 
@@ -7644,7 +7695,8 @@ RSpec.describe TopicsController do
              notification_level: NotificationLevels.topic_levels[:watching],
            }
 
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
       expect(TopicUser.find_by(user: user, topic: restricted_topic)).to be_blank
     end
   end
