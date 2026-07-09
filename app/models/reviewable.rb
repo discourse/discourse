@@ -478,6 +478,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.unseen_reviewable_count(user)
+    return 0 unless user.moderator?
     unseen_list_for(user).count
   end
 
