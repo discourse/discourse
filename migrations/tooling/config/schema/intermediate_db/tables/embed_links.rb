@@ -25,6 +25,12 @@
 #   * group     `/g/moderators`             -> target_name: "moderators"
 #   * badge     `/badges/9/first-like`      -> target_id: 9
 #
+# The table shows what a Discourse source's URLs carry; the storage itself is less
+# strict. Any target type may be recorded by id — a converter that knows the
+# target's `original_id` can skip the name. The name form resolves only for user,
+# group, tag and category (a topic, post or badge has no name lookup), and
+# coordinates only for a post.
+#
 # A category slug path is stored with a `:` separator, matching the hashtag
 # resolution maps so the importer reuses them verbatim. Post coordinates mirror
 # `embed_quotes`: post numbers are recomputed at import, so the importer resolves
