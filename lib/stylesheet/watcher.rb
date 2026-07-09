@@ -4,6 +4,9 @@ require "listen"
 
 module Stylesheet
   class Watcher
+    CORE_TARGETS = %w[admin desktop mobile publish wizard wcag]
+    SPECIAL_CORE_TARGETS = %w[color_definitions]
+
     def self.watch(paths = nil)
       watcher = new(paths)
       watcher.start
@@ -60,24 +63,8 @@ module Stylesheet
 
           listener =
             Listen.to(*@paths, listener_opts) do |modified, added, _|
-              paths = [modified, added].flatten
-              paths.compact!
-              paths.map! do |long|
-                plugin_name = nil
-                plugins_paths.each do |plugin_path|
-                  if long.include?("#{plugin_path}/")
-                    plugin_name = File.basename(plugin_path)
-                    break
-                  end
-                end
-
-                target = nil
-                target_match =
-                  long.match(/admin|desktop|mobile|publish|wizard|wcag|color_definitions/)
-                target = target_match[0] if target_match&.length
-
-                { basename: File.basename(long), target: target, plugin_name: plugin_name }
-              end
+              paths = [modified, added].flatten.compact
+              paths.map! { |path| path_data(path, plugins_paths) }
 
               process_change(paths)
             end
@@ -87,6 +74,39 @@ module Stylesheet
         listener.start
         sleep
       end
+    end
+
+    def path_data(path, plugins_paths)
+      plugin_name = nil
+      expanded_path = File.expand_path(path)
+
+      plugins_paths.each do |plugin_path|
+        next if !expanded_path.start_with?("#{plugin_path}/")
+
+        plugin_name = File.basename(plugin_path)
+        break
+      end
+
+      target = plugin_name ? nil : core_target(path)
+
+      { basename: File.basename(path), target: target, plugin_name: plugin_name }
+    end
+
+    def core_target(path)
+      relative_path =
+        Pathname.new(File.expand_path(path)).relative_path_from(
+          Rails.root.join("app/assets/stylesheets"),
+        )
+      path_parts = relative_path.each_filename.to_a
+      target = path_parts[0...-1].find { |path_part| CORE_TARGETS.include?(path_part) }
+      basename_target = File.basename(path_parts.last, ".scss")
+
+      target ||
+        if path_parts.one? && (CORE_TARGETS + SPECIAL_CORE_TARGETS).include?(basename_target)
+          basename_target
+        end
+    rescue ArgumentError
+      nil
     end
 
     def core_assets_refresh(target)
