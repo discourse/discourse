@@ -47,6 +47,22 @@ module Migrations
       # converter writes the quoted text, the closing `[/quote]`, and the blank lines
       # around them into the raw as plain text; none of that goes into the row.
       #
+      # The quoted post is identified either by id or by coordinates, whichever the
+      # source gives — the importer resolves the coordinates to a post before
+      # rendering (post numbers are recomputed at import).
+      #
+      # @param quoted_post_id [Integer, String, nil] the quoted post's source
+      #   `original_id`, when the converter knows it.
+      # @param quoted_topic_id [Integer, String, nil] with `quoted_post_number`, the
+      #   source coordinates the attribution carries — the alternative to
+      #   `quoted_post_id`.
+      # @param quoted_post_number [Integer, nil] see `quoted_topic_id`.
+      # @param quoted_user_id [Integer, String, nil] the quoted user's source
+      #   `original_id`.
+      # @param quoted_username [String, nil] the attribution's display fallback, used
+      #   when the quoted user can't be mapped to a Discourse user.
+      # @param quoted_name [String, nil] like `quoted_username`, for sources that
+      #   attribute quotes by full name.
       # @return [String] the token for the opening tag.
       def quote(
         quoted_post_id: nil,
@@ -68,6 +84,30 @@ module Migrations
         )
       end
 
+      # The target is identified in one of three forms, and only one is set per
+      # call: by id (`target_id`), by name (`target_name`), or by coordinates
+      # (`target_topic_id` + `target_post_number`). All stay nil for an external
+      # link, which is just text carried through.
+      #
+      # @param url [String, nil] the full source URL; the fallback whenever the
+      #   target can't be resolved.
+      # @param text [String, nil] a markdown link's link text; nil for a bare URL,
+      #   which is re-emitted bare to keep oneboxes working.
+      # @param target_type [Integer, nil] the kind of Discourse entity the link
+      #   points at, an `IntermediateDB::Enums::LinkTarget` value (e.g.
+      #   `LinkTarget::TOPIC`); nil for an external link.
+      # @param target_id [Integer, String, nil] the target's source `original_id` —
+      #   for a topic, post, category or badge addressed by id in the URL.
+      # @param target_name [String, nil] the target's name — a username, group name,
+      #   tag name, or a category slug path written `parent:child` — when the URL
+      #   carries a name but no id.
+      # @param target_topic_id [Integer, String, nil] with `target_post_number`, the
+      #   source coordinates of a post addressed as `/t/slug/<topic_id>/<post_number>`;
+      #   post numbers are recomputed at import, so the importer resolves them.
+      # @param target_post_number [Integer, nil] see `target_topic_id`.
+      # @param target_suffix [String, nil] everything after the matched route
+      #   (further path, query string, fragment), reattached verbatim when the URL
+      #   is rebuilt.
       def link(
         url: nil,
         text: nil,
@@ -92,41 +132,60 @@ module Migrations
         )
       end
 
-      # @raise [ArgumentError] if `mention_type` is not nil or a known type.
+      # @param mention_type [Integer, nil] an `IntermediateDB::Enums::MentionType`
+      #   value (user, group, here or all).
+      # @param target_id [Integer, String, nil] the mentioned user's or group's
+      #   source `original_id`; nil for `here`/`all`.
+      # @param name [String, nil] the mention as written, without the leading `@`.
+      # @raise [ArgumentError] if `mention_type` is neither nil nor a known type.
       def mention(mention_type: nil, target_id: nil, name: nil)
         validate_mention_type!(mention_type)
         record(@mentions, :mention, mention_type:, target_id:, name:)
       end
 
-      # `hashtag_type` is set only when the source forced it with a `::tag`/
-      # `::category` suffix; otherwise it stays nil and the importer classifies the
-      # name. `target_id` is always nil here — the category/tag is named, not
-      # identified, and the importer resolves it.
-      #
-      # @raise [ArgumentError] if `hashtag_type` is not nil or a known type.
+      # @param hashtag_type [Integer, nil] an `IntermediateDB::Enums::HashtagType`
+      #   value (category or tag). Set only when the source forced it with a
+      #   `::tag`/`::category` suffix; otherwise nil, and the importer classifies
+      #   the name (categories first, then tags).
+      # @param target_id [Integer, String, nil] always nil here — the category/tag
+      #   is named, not identified, and the importer resolves it.
+      # @param name [String, nil] the hashtag as written, without the leading `#`
+      #   and any `::tag`/`::category` suffix; may hold one `:` as the
+      #   `parent:child` category separator.
+      # @raise [ArgumentError] if `hashtag_type` is neither nil nor a known type.
       def hashtag(hashtag_type: nil, target_id: nil, name: nil)
         validate_hashtag_type!(hashtag_type)
         record(@hashtags, :hashtag, hashtag_type:, target_id:, name:)
       end
 
       # Only the source's own custom emoji reach here; a standard shortcode stays
-      # plain text. `name` is the shortcode without the surrounding colons.
+      # plain text.
+      #
+      # @param name [String, nil] the shortcode without the surrounding colons.
       def emoji(name: nil)
         record(@emojis, :emoji, name:)
       end
 
+      # @param poll_id [Integer, String, nil] the poll's source `original_id` (a
+      #   `polls` row converted by its own step); the importer renders that poll
+      #   into the raw.
       def poll(poll_id: nil)
         record(@polls, :poll, poll_id:)
       end
 
+      # @param event_id [Integer, String, nil] the event's source `original_id` (an
+      #   `events` row converted by its own step); the importer renders that event
+      #   into the raw.
       def event(event_id: nil)
         record(@events, :event, event_id:)
       end
 
-      # `original_markdown` is the verbatim source snippet for an upload referenced
-      # by a full URL, so the importer can put it back when the sha1 maps to no
-      # Discourse upload. It stays nil for a short `upload://` reference, which has
-      # no meaningful fallback.
+      # @param upload_id [String, nil] the referenced `uploads` row's id — a content
+      #   hash, so text rather than numeric.
+      # @param original_markdown [String, nil] the verbatim source snippet for an
+      #   upload referenced by a full URL, so the importer can put it back when the
+      #   sha1 maps to no Discourse upload. Stays nil for a short `upload://`
+      #   reference, which has no meaningful fallback.
       def upload(upload_id: nil, original_markdown: nil)
         record(@uploads, :upload, upload_id:, original_markdown:)
       end
@@ -149,6 +208,9 @@ module Migrations
 
       # Inserts each recorded embed into its linkage table. Call once per owner, after
       # the owner row is written.
+      #
+      # @param owner_id [Integer, String] the owner's source `original_id`, matching
+      #   the id the owner row was written with.
       def write_for(owner_id)
         owner_type = @owner_type
         @quotes.each { |row| IntermediateDB::EmbedQuote.create(owner_type:, owner_id:, **row) }
