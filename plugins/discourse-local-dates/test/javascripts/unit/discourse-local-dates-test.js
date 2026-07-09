@@ -122,4 +122,95 @@ module("Unit | discourse-local-dates", function (hooks) {
       }
     );
   });
+
+  test("applyLocalDates renders a crafted data-format as literal text without injecting HTML", function (assert) {
+    const element = createElementFromHTML(
+      "<span " +
+        'data-date="2022-10-06" ' +
+        'data-time="17:21:00" ' +
+        'class="discourse-local-date" ' +
+        'data-timezone="Asia/Singapore" ' +
+        'data-format="[<img src=x class=xss-probe>]">' +
+        "</span>"
+    );
+
+    freezeTime(
+      { date: "2022-10-06T10:10:10", timezone: "Asia/Singapore" },
+      () => {
+        applyLocalDates([element], { discourse_local_dates_enabled: true });
+
+        assert.dom("img", element).doesNotExist();
+        assert
+          .dom(".relative-time", element)
+          .includesText("<img src=x class=xss-probe>");
+      }
+    );
+  });
+
+  test("applyLocalDates renders a crafted data-displayed-timezone as literal text without injecting HTML", function (assert) {
+    const element = createElementFromHTML(
+      "<span " +
+        'data-date="2022-10-06" ' +
+        'data-time="17:21:00" ' +
+        'class="discourse-local-date" ' +
+        'data-timezone="Asia/Singapore" ' +
+        'data-displayed-timezone="<img src=x class=xss-probe>">' +
+        "</span>"
+    );
+
+    freezeTime(
+      { date: "2022-10-06T10:10:10", timezone: "Asia/Singapore" },
+      () => {
+        applyLocalDates([element], { discourse_local_dates_enabled: true });
+
+        assert.dom("img", element).doesNotExist();
+        assert
+          .dom(".relative-time", element)
+          .includesText("<img src=x class=xss-probe>");
+      }
+    );
+  });
+
+  test("applyLocalDates renders a crafted data-timezone as literal text without injecting HTML", function (assert) {
+    const element = createElementFromHTML(
+      "<span " +
+        'data-date="2022-10-06" ' +
+        'class="discourse-local-date" ' +
+        'data-timezone="<img src=x class=xss-probe>">' +
+        "</span>"
+    );
+
+    freezeTime(
+      { date: "2022-10-06T10:10:10", timezone: "Asia/Singapore" },
+      () => {
+        applyLocalDates([element], { discourse_local_dates_enabled: true });
+
+        assert.dom("img", element).doesNotExist();
+        assert
+          .dom(".relative-time", element)
+          .includesText("<img src=x class=xss-probe>");
+      }
+    );
+  });
+
+  test("applyLocalDates preserves legitimate bracketed moment literals as text", function (assert) {
+    const element = createElementFromHTML(
+      "<span " +
+        'data-date="2022-10-06" ' +
+        'data-time="17:21:00" ' +
+        'class="discourse-local-date" ' +
+        'data-timezone="Asia/Singapore" ' +
+        'data-format="[at] LL">' +
+        "</span>"
+    );
+
+    freezeTime(
+      { date: "2022-10-06T10:10:10", timezone: "Asia/Singapore" },
+      () => {
+        applyLocalDates([element], { discourse_local_dates_enabled: true });
+
+        assert.dom(".relative-time", element).hasText("at October 6, 2022");
+      }
+    );
+  });
 });
