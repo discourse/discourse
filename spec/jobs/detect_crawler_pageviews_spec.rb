@@ -8,11 +8,15 @@ RSpec.describe Jobs::DetectCrawlerPageviews do
     described_class.new.execute({})
   end
 
-  it "scores the last hour of pageviews when enabled" do
+  it "scores an hour of pageviews ending at the beacon settle period when enabled" do
     SiteSetting.experimental_detect_crawler_pageviews = true
     freeze_time
 
-    CrawlerScorer.expects(:score!).with(window_start: 1.hour.ago, window_end: Time.now)
+    window_end = Time.now - described_class::WINDOW_DELAY
+    CrawlerScorer.expects(:score!).with(
+      window_start: window_end - described_class::LOOKBACK,
+      window_end: window_end,
+    )
 
     described_class.new.execute({})
   end

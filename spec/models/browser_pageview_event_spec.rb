@@ -37,7 +37,6 @@ RSpec.describe BrowserPageviewEvent do
         url: "https://discourse.example/t/topic/1",
         ip_address: "1.2.3.4",
         country_code: "AU",
-        asn: 12_345,
         referrer: "https://www.example.com/path?utm_source=x",
         user_agent: "Mozilla/5.0",
         session_id: "xxxxxxxxxxxx4xxxyxxxxxxxxxxxxxxx",
@@ -65,7 +64,6 @@ RSpec.describe BrowserPageviewEvent do
       event = described_class.last
       expect(event.url).to eq(payload[:url])
       expect(event.country_code).to eq("AU")
-      expect(event.asn).to eq(12_345)
       expect(event.normalized_referrer).to eq("example.com/path")
       expect(event.created_at).to eq_time(occurred_at)
       expect(event.source).to eq("beacon")

@@ -1977,41 +1977,6 @@ ALTER SEQUENCE public.browser_pageview_country_daily_rollups_id_seq OWNED BY pub
 
 
 --
--- Name: browser_pageview_event_scores; Type: TABLE; Schema: public; Owner: -
---
-
-CREATE TABLE public.browser_pageview_event_scores (
-    id bigint NOT NULL,
-    event_id bigint NOT NULL,
-    automation_ua_score smallint DEFAULT 0 NOT NULL,
-    known_asn_score smallint DEFAULT 0 NOT NULL,
-    velocity_score smallint DEFAULT 0 NOT NULL,
-    churn_score smallint DEFAULT 0 NOT NULL,
-    rapid_nav_score smallint DEFAULT 0 NOT NULL,
-    referrer_score smallint DEFAULT 0 NOT NULL
-);
-
-
---
--- Name: browser_pageview_event_scores_id_seq; Type: SEQUENCE; Schema: public; Owner: -
---
-
-CREATE SEQUENCE public.browser_pageview_event_scores_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
---
--- Name: browser_pageview_event_scores_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
---
-
-ALTER SEQUENCE public.browser_pageview_event_scores_id_seq OWNED BY public.browser_pageview_event_scores.id;
-
-
---
 -- Name: browser_pageview_events; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -2026,11 +1991,10 @@ CREATE TABLE public.browser_pageview_events (
     user_id integer,
     country_code character varying(2),
     created_at timestamp without time zone NOT NULL,
-    asn integer,
-    score integer,
     normalized_referrer character varying(2000),
     normalized_referrer_version smallint,
-    source smallint DEFAULT 1 NOT NULL
+    source smallint DEFAULT 1 NOT NULL,
+    crawler boolean DEFAULT false NOT NULL
 );
 
 
@@ -12529,13 +12493,6 @@ ALTER TABLE ONLY public.browser_pageview_country_daily_rollups ALTER COLUMN id S
 
 
 --
--- Name: browser_pageview_event_scores id; Type: DEFAULT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.browser_pageview_event_scores ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_event_scores_id_seq'::regclass);
-
-
---
 -- Name: browser_pageview_events id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14777,14 +14734,6 @@ ALTER TABLE ONLY public.bookmarks
 
 ALTER TABLE ONLY public.browser_pageview_country_daily_rollups
     ADD CONSTRAINT browser_pageview_country_daily_rollups_pkey PRIMARY KEY (id);
-
-
---
--- Name: browser_pageview_event_scores browser_pageview_event_scores_pkey; Type: CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.browser_pageview_event_scores
-    ADD CONSTRAINT browser_pageview_event_scores_pkey PRIMARY KEY (id);
 
 
 --
@@ -17215,24 +17164,10 @@ CREATE INDEX idx_bpe_created_at_normalized_referrer ON public.browser_pageview_e
 
 
 --
--- Name: idx_bpe_ip_ua_created_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_ip_ua_created_at ON public.browser_pageview_events USING btree (ip_address, user_agent, created_at);
-
-
---
 -- Name: idx_bpe_normalized_referrer_version; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX idx_bpe_normalized_referrer_version ON public.browser_pageview_events USING btree (normalized_referrer_version) WHERE (referrer IS NOT NULL);
-
-
---
--- Name: idx_bpe_session_created_at; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE INDEX idx_bpe_session_created_at ON public.browser_pageview_events USING btree (session_id, created_at);
 
 
 --
@@ -18451,13 +18386,6 @@ CREATE INDEX index_bookmarks_on_reminder_set_at ON public.bookmarks USING btree 
 --
 
 CREATE INDEX index_bookmarks_on_user_id ON public.bookmarks USING btree (user_id);
-
-
---
--- Name: index_browser_pageview_event_scores_on_event_id; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX index_browser_pageview_event_scores_on_event_id ON public.browser_pageview_event_scores USING btree (event_id);
 
 
 --
@@ -22649,6 +22577,8 @@ SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260713180615'),
+('20260709022156'),
+('20260709022153'),
 ('20260708095336'),
 ('20260708080308'),
 ('20260708051450'),

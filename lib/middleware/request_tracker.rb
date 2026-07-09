@@ -835,13 +835,11 @@ class Middleware::RequestTracker
   private_class_method :trigger_beacon_browser_pageview_event
 
   def self.build_browser_pageview_event_payload(data)
-    ip_info = DiscourseIpInfo.get(data[:request_remote_ip])
     {
       user_id: data[:current_user_id],
       url: data[:tracking_url],
       ip_address: data[:request_remote_ip],
-      country_code: ip_info[:country_code],
-      asn: ip_info[:asn],
+      country_code: DiscourseIpInfo.get(data[:request_remote_ip])[:country_code],
       user_agent: data[:user_agent],
       referrer: data[:tracking_referrer],
       session_id: data[:tracking_session_id],
