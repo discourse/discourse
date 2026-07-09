@@ -4,29 +4,83 @@ module DiscourseDataExplorer
   module JsonApiKit
     # One breaking API change, bound to the version (date) that introduced it.
     # Declarative and immutable — it describes a change that happened in the past
-    # and is never instantiated. Transforms are pure hash reshapes at the
-    # serialization seam: `up` migrates an old client's request document toward
-    # latest, `down` migrates a latest response document toward the old shape.
-    # See docs/versioning-design.md.
+    # and is never instantiated. See docs/versioning-design.md.
     #
-    #   class RenameFooToBar < JsonApiKit::VersionChange
+    # Key-level facts are DECLARED (`renamed_attribute`), so the machinery derives
+    # every surface from data: body transforms (generated, key-guarded), sparse
+    # fieldsets and error pointers (pure lookups — no value code ever runs outside
+    # a real document). Value reshaping rides the declaration as pure value→value
+    # converters, or hand-written `up`/`down` blocks for anything else. Rule: a
+    # change that alters key names must declare them — block-only changes get no
+    # fieldset/pointer mapping.
+    #
+    #   class ChangeThingsAddressToList < JsonApiKit::VersionChange
     #     version "2026-06-15"
-    #     description "The `foo` attribute of the things resource is renamed to `bar`."
+    #     description "The `address` attribute of things is replaced by `addresses`."
     #
     #     resource :things do
-    #       up { |resource| resource[:attributes][:bar] = resource[:attributes].delete(:foo) }
-    #       down { |resource| resource[:attributes][:foo] = resource[:attributes].delete(:bar) }
+    #       renamed_attribute from: :address,
+    #                         to: :addresses,
+    #                         up: ->(address) { [address] },
+    #                         down: ->(addresses) { addresses.first }
     #     end
     #   end
     class VersionChange
-      class TransformSet
+      # Collects one scope's declared renames and hand-written blocks, and composes
+      # them into one transform per direction. Blocks always operate on the
+      # change's LATEST vocabulary: renames run first on up, last on down.
+      class ResourceChanges
         def initialize
-          @transforms = {}
+          @renames = []
+          @blocks = { up: [], down: [] }
         end
 
-        def up(&block) = @transforms[:up] = block
-        def down(&block) = @transforms[:down] = block
-        def [](direction) = @transforms[direction]
+        def renamed_attribute(from:, to:, up: nil, down: nil)
+          @renames << { from: from.to_sym, to: to.to_sym, up:, down: }
+        end
+
+        def up(&block) = @blocks[:up] << block
+        def down(&block) = @blocks[:down] << block
+
+        def field_renames = @renames.to_h { [it[:from], it[:to]] }
+
+        def transform(direction)
+          @transforms ||= {}
+          @transforms.fetch(direction) { @transforms[direction] = build_transform(direction) }
+        end
+
+        private
+
+        def build_transform(direction)
+          blocks = @blocks[direction]
+          return if @renames.empty? && blocks.empty?
+
+          if direction == :up
+            ->(resource) do
+              apply_renames(resource, :up)
+              blocks.each { it.call(resource) }
+            end
+          else
+            ->(resource) do
+              blocks.each { it.call(resource) }
+              apply_renames(resource, :down)
+            end
+          end
+        end
+
+        def apply_renames(resource, direction)
+          attributes = resource[:attributes]
+          return unless attributes.is_a?(Hash)
+
+          @renames.each do |rename|
+            source, target =
+              direction == :up ? [rename[:from], rename[:to]] : [rename[:to], rename[:from]]
+            next unless attributes.key?(source)
+            value = attributes.delete(source)
+            converter = rename[direction]
+            attributes[target] = converter ? converter.call(value) : value
+          end
+        end
       end
 
       private_class_method :new
@@ -43,15 +97,18 @@ module DiscourseDataExplorer
         end
 
         def resource(type, &block)
-          resource_transforms[type.to_s] = TransformSet.new.tap { it.instance_eval(&block) }
+          changes = resource_transforms[type.to_s] ||= ResourceChanges.new
+          changes.instance_eval(&block)
         end
 
         def document(&block)
-          @document_transform_set = TransformSet.new.tap { it.instance_eval(&block) }
+          @document_changes ||= ResourceChanges.new
+          @document_changes.instance_eval(&block)
         end
 
-        def transform_for(direction, type:) = resource_transforms[type.to_s]&.[](direction)
-        def document_transform(direction) = @document_transform_set&.[](direction)
+        def transform_for(direction, type:) = resource_transforms[type.to_s]&.transform(direction)
+        def document_transform(direction) = @document_changes&.transform(direction)
+        def field_renames_for(type) = resource_transforms[type.to_s]&.field_renames || {}
         def resource_types = resource_transforms.keys
 
         private

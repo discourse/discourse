@@ -7,14 +7,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionPipeline do
       description "Renames a to b on things."
 
       resource :things do
-        up do |resource|
-          attributes = resource[:attributes]
-          attributes[:b] = attributes.delete(:a) if attributes.key?(:a)
-        end
-        down do |resource|
-          attributes = resource[:attributes]
-          attributes[:a] = attributes.delete(:b) if attributes.key?(:b)
-        end
+        renamed_attribute from: :a, to: :b
       end
     end
   end
@@ -25,14 +18,7 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionPipeline do
       description "Renames b to c on things."
 
       resource :things do
-        up do |resource|
-          attributes = resource[:attributes]
-          attributes[:c] = attributes.delete(:b) if attributes.key?(:b)
-        end
-        down do |resource|
-          attributes = resource[:attributes]
-          attributes[:b] = attributes.delete(:c) if attributes.key?(:c)
-        end
+        renamed_attribute from: :b, to: :c
       end
     end
   end
@@ -179,6 +165,73 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionPipeline do
     end
   end
 
+  describe ".up_fieldset" do
+    subject(:upgraded) { described_class.up_fieldset(names, type: :things, changes: gap) }
+
+    context "when fields name renamed attributes" do
+      let(:names) { %w[name a] }
+
+      it "maps the old names through the whole chain" do
+        expect(upgraded).to eq(%i[name c])
+      end
+    end
+
+    context "with an empty gap" do
+      let(:gap) { [] }
+      let(:names) { %w[name a] }
+
+      it "returns the names as given" do
+        expect(upgraded).to eq(%i[name a])
+      end
+    end
+
+    context "when a rename declares value converters (shape change)" do
+      let(:shape_change) do
+        Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
+          version "2026-07-01"
+          description "The thing becomes a list of things."
+
+          resource :things do
+            renamed_attribute from: :thing,
+                              to: :things,
+                              up: ->(thing) { [thing] },
+                              down: ->(things) { things.first }
+          end
+        end
+      end
+
+      let(:gap) { [shape_change] }
+      let(:names) { %w[thing] }
+
+      it "maps the name exactly without running the converters" do
+        expect(upgraded).to eq(%i[things])
+      end
+    end
+
+    context "when a change only has hand-written blocks" do
+      let(:block_only) do
+        Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
+          version "2026-07-01"
+          description "Merges the parts into a whole, without declaring it."
+
+          resource :things do
+            up do |resource|
+              attributes = resource[:attributes]
+              attributes[:whole] = attributes.delete(:parts).join(" ") if attributes.key?(:parts)
+            end
+          end
+        end
+      end
+
+      let(:gap) { [block_only] }
+      let(:names) { %w[parts] }
+
+      it "leaves the names unchanged without running any transform" do
+        expect(upgraded).to eq(%i[parts])
+      end
+    end
+  end
+
   describe ".down_errors" do
     subject(:downgraded) { described_class.down_errors(document, type: :things, changes: gap) }
 
@@ -227,11 +280,36 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionPipeline do
       end
     end
 
-    context "when the down transform manipulates values, not just keys" do
+    context "when the rename declares value converters (shape change)" do
       let(:shape_change) do
         Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
           version "2026-07-01"
-          description "Replaces the single thing with a list of things."
+          description "The thing becomes a list of things."
+
+          resource :things do
+            renamed_attribute from: :thing,
+                              to: :things,
+                              up: ->(thing) { [thing] },
+                              down: ->(things) { things.first }
+          end
+        end
+      end
+
+      let(:gap) { [shape_change] }
+      let(:document) do
+        { errors: [{ status: "422", source: { pointer: "/data/attributes/things" } }] }
+      end
+
+      it "rewrites the pointer exactly without running the converters" do
+        expect(downgraded[:errors].first.dig(:source, :pointer)).to eq("/data/attributes/thing")
+      end
+    end
+
+    context "when a change only has hand-written blocks" do
+      let(:block_only) do
+        Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
+          version "2026-07-01"
+          description "Replaces the single thing with a list, without declaring it."
 
           resource :things do
             down do |resource|
@@ -242,57 +320,13 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionPipeline do
         end
       end
 
-      let(:gap) { [shape_change] }
+      let(:gap) { [block_only] }
       let(:document) do
         { errors: [{ status: "422", source: { pointer: "/data/attributes/things" } }] }
       end
 
-      it "keeps the latest pointer instead of raising on the synthetic's nil value" do
+      it "keeps the latest pointer without running any transform" do
         expect(downgraded[:errors].first.dig(:source, :pointer)).to eq("/data/attributes/things")
-      end
-    end
-  end
-
-  describe ".up_fieldset" do
-    subject(:upgraded) { described_class.up_fieldset(names, type: :things, changes: gap) }
-
-    context "when fields name renamed attributes" do
-      let(:names) { %w[name a] }
-
-      it "maps the old names through the whole chain" do
-        expect(upgraded.map(&:to_s)).to eq(%w[name c])
-      end
-    end
-
-    context "with an empty gap" do
-      let(:gap) { [] }
-      let(:names) { %w[name a] }
-
-      it "returns the names untouched" do
-        expect(upgraded).to eq(%w[name a])
-      end
-    end
-
-    context "when the up transform manipulates values, not just keys" do
-      let(:merge_change) do
-        Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
-          version "2026-07-01"
-          description "Merges the parts into a whole."
-
-          resource :things do
-            up do |resource|
-              attributes = resource[:attributes]
-              attributes[:whole] = attributes.delete(:parts).join(" ") if attributes.key?(:parts)
-            end
-          end
-        end
-      end
-
-      let(:gap) { [merge_change] }
-      let(:names) { %w[parts] }
-
-      it "keeps the requested names instead of raising on the synthetic's nil value" do
-        expect(upgraded).to eq(%w[parts])
       end
     end
   end
