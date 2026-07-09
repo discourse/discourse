@@ -467,6 +467,7 @@ export default class DAccessControl extends Component {
                     <DTooltip
                       @content={{i18n
                         "access_control.manage.mandatory_acl_tooltip"
+                        name=row.display_name
                       }}
                     >
                       <:trigger>
