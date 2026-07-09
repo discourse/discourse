@@ -15,6 +15,8 @@ const DEFAULT_REMINDER = {
   unit: "minutes",
   period: "before",
 };
+const EARLY_ACCESS_MINUTES = 30;
+const GRACE_PERIOD_MINUTES = 10;
 
 export default class DiscoursePostEventEvent {
   static create(args = {}) {
@@ -168,10 +170,25 @@ export default class DiscoursePostEventEvent {
 
   get currentlyWithinEventTimeframe() {
     const now = moment();
-    const startsAt = moment(this.startsAt).subtract(30, "minutes");
-    const endsAt = moment(this.endsAt).add(10, "minutes");
+    const startsAt = moment(this.startsAt).subtract(
+      EARLY_ACCESS_MINUTES,
+      "minutes"
+    );
+    const endsAt = moment(this.endsAt).add(GRACE_PERIOD_MINUTES, "minutes");
 
     return now.isBetween(startsAt, endsAt);
+  }
+
+  // An event without an end time never falls past its timeframe, since
+  // `moment(undefined)` is "now" rather than an invalid date.
+  get pastEventTimeframe() {
+    if (!this.endsAt) {
+      return false;
+    }
+
+    return moment().isAfter(
+      moment(this.endsAt).add(GRACE_PERIOD_MINUTES, "minutes")
+    );
   }
 
   updateFromEvent(event) {

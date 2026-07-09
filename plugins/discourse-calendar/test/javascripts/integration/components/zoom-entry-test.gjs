@@ -72,6 +72,46 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       .doesNotExist("does not render the inline Zoom frame");
   });
 
+  test("disables the join button outside the event timeframe", async function (assert) {
+    stubCapabilities(getOwner(this), { lg: true });
+    this.event.currentlyWithinEventTimeframe = false;
+
+    await render(
+      <template><LivestreamZoomEntry @event={{this.event}} /></template>
+    );
+
+    assert.dom(JOIN_BUTTON_SELECTOR).isDisabled();
+    assert
+      .dom(WAITING_SELECTOR)
+      .hasText("You can join the webinar closer to the event start time");
+  });
+
+  test("disables the mobile join button outside the event timeframe", async function (assert) {
+    stubCapabilities(getOwner(this), { lg: false });
+    this.event.currentlyWithinEventTimeframe = false;
+
+    await render(
+      <template><LivestreamZoomEntry @event={{this.event}} /></template>
+    );
+
+    assert.dom(JOIN_BUTTON_SELECTOR).isDisabled();
+    assert
+      .dom(WAITING_SELECTOR)
+      .hasText("You can join the webinar closer to the event start time");
+  });
+
+  test("renders nothing once the event is past its grace period", async function (assert) {
+    stubCapabilities(getOwner(this), { lg: true });
+    this.event.currentlyWithinEventTimeframe = false;
+    this.event.pastEventTimeframe = true;
+
+    await render(
+      <template><LivestreamZoomEntry @event={{this.event}} /></template>
+    );
+
+    assert.dom(".discourse-calendar-livestream-zoom-entry").doesNotExist();
+  });
+
   module("when the meeting has not started", function (innerHooks) {
     let clock, performJoin;
 
@@ -107,7 +147,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       assert
         .dom(WAITING_SELECTOR)
         .hasText(
-          "The meeting hasn't started yet. Retrying join in 30 seconds…",
+          "The webinar hasn't started yet. Retrying join in 30 seconds...",
           "shows the initial countdown"
         );
       assert
@@ -122,7 +162,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       assert
         .dom(WAITING_SELECTOR)
         .hasText(
-          "The meeting hasn't started yet. Retrying join in 29 seconds…",
+          "The webinar hasn't started yet. Retrying join in 29 seconds...",
           "the countdown updates every second"
         );
 
@@ -133,7 +173,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       assert
         .dom(WAITING_SELECTOR)
         .hasText(
-          "The meeting hasn't started yet. Retrying join in 30 seconds…",
+          "The webinar hasn't started yet. Retrying join in 30 seconds...",
           "restarts the countdown after another failure"
         );
     });

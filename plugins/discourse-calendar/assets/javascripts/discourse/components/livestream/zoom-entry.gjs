@@ -131,9 +131,15 @@ export default class LivestreamZoomEntry extends Component {
       this.siteSettings.livestream_zoom_enabled &&
       this.currentUser &&
       this.args.event.livestreamChatChannelId &&
+      !this.args.event.pastEventTimeframe
+    );
+  }
+
+  get canJoinNow() {
+    return (
+      this.args.event.currentlyWithinEventTimeframe ||
       // TODO (martin) showzoom is for testing only, remove before merge
-      (this.args.event.currentlyWithinEventTimeframe ||
-        new URLSearchParams(window.location.search).get("showzoom"))
+      new URLSearchParams(window.location.search).get("showzoom")
     );
   }
 
@@ -154,7 +160,7 @@ export default class LivestreamZoomEntry extends Component {
   }
 
   get joinDisabled() {
-    return this.isJoining || this.isWaitingForStart;
+    return this.isJoining || this.isWaitingForStart || !this.canJoinNow;
   }
 
   get zoomViewSize() {
@@ -362,7 +368,12 @@ export default class LivestreamZoomEntry extends Component {
 
   @action
   async joinZoom() {
-    if (this.isJoining || this.isJoined || this.isWaitingForStart) {
+    if (
+      this.isJoining ||
+      this.isJoined ||
+      this.isWaitingForStart ||
+      !this.canJoinNow
+    ) {
       return;
     }
 
@@ -435,6 +446,12 @@ export default class LivestreamZoomEntry extends Component {
               />
             {{/unless}}
 
+            {{#unless this.canJoinNow}}
+              <p class="discourse-calendar-livestream-zoom-entry__waiting">
+                {{i18n "discourse_calendar.livestream.zoom.too_early"}}
+              </p>
+            {{/unless}}
+
             {{#if this.isWaitingForStart}}
               <p class="discourse-calendar-livestream-zoom-entry__waiting">
                 {{i18n
@@ -474,13 +491,22 @@ export default class LivestreamZoomEntry extends Component {
             {{this.registerZoomRoot}}
           ></div>
         {{else}}
-          <DButton
-            @route="topic-zoom"
-            @routeModels={{array this.topic.slug this.topic.id}}
-            @label="discourse_calendar.livestream.zoom.join"
-            @icon="video"
-            class="btn-primary"
-          />
+          <div class="discourse-calendar-livestream-zoom-entry__actions">
+            <DButton
+              @route="topic-zoom"
+              @routeModels={{array this.topic.slug this.topic.id}}
+              @label="discourse_calendar.livestream.zoom.join"
+              @icon="video"
+              class="btn-primary"
+              @disabled={{this.joinDisabled}}
+            />
+
+            {{#unless this.canJoinNow}}
+              <p class="discourse-calendar-livestream-zoom-entry__waiting">
+                {{i18n "discourse_calendar.livestream.zoom.too_early"}}
+              </p>
+            {{/unless}}
+          </div>
         {{/if}}
       </div>
     {{/if}}
