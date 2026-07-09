@@ -91,8 +91,7 @@ export default class ChatPinnedMessagesList extends Component {
     return hasPinsDismissal(this.args.channel);
   }
 
-  // the sticky bar mirrors the pin being visited instead of re-anchoring
-  // (the jump's programmatic scroll wouldn't update it)
+  // mirror the visited pin in the bar (the jump's scroll wouldn't update it)
   @action
   visitPin(pin) {
     this.args.channel.activePinnedMessageId = pin.message.id;

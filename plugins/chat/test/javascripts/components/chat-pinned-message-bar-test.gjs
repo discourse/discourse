@@ -27,7 +27,7 @@ function pinResponse(channel, count) {
   return response({ pinned_messages, membership: null });
 }
 
-// pins given newest-first by id (matching the server's created_at DESC, id DESC)
+// pins from the given ids (the bar orders by message id itself)
 function pinsResponse(ids) {
   return response({
     pinned_messages: ids.map((id, i) => ({
@@ -140,8 +140,7 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
     assert
       .dom(".chat-pinned-bar__indicator-thumb")
       .exists({ count: 1 }, "a single bright bar marks the active pin");
-    // oldest-at-top layout: the newest pin (shown first) sits in the bottom
-    // slot, so its slot index is the last one (2 of 3)
+    // oldest-first layout: the newest pin is active at the last index (2 of 3)
     assert
       .dom(".chat-pinned-bar__indicator")
       .hasAttribute(
@@ -176,9 +175,8 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       </template>
     );
 
-    // every pin has a segment; the window is capped/scrolled via the track.
-    // newest is shown first and sits at the bottom, so the window starts
-    // scrolled to the end: slot 7 centred => top = min(7 - 2, 8 - 4) = 4
+    // newest pin is active at index 7; the 4-wide window centres on it:
+    // top = min(7 - 2, 8 - 4) = 4 (scrolled to the bottom)
     assert.dom(".chat-pinned-bar__indicator-segment").exists({ count: 8 });
     assert
       .dom(".chat-pinned-bar__indicator")
@@ -193,7 +191,7 @@ module("Component | ChatPinnedMessageBar", function (hooks) {
       await click(".chat-pinned-bar__main");
     }
 
-    // active pin index 6 => slot 8 - 1 - 6 = 1 => top clamps to 0
+    // 6 taps back => active index 1 => top = 1 - 2 clamps to 0
     assert
       .dom(".chat-pinned-bar__indicator")
       .hasAttribute(

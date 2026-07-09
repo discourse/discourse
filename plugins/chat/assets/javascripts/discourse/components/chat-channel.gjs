@@ -108,8 +108,7 @@ export default class ChatChannel extends Component {
   @action
   teardown() {
     document.removeEventListener("keydown", this._autoFocus);
-    // a pin-tap override shouldn't outlive the visit; cleared here (not in
-    // setup) so navigating from the pins panel can set it before the mount
+    // cleared on teardown (not setup) so a pins-panel click can set it pre-mount
     this.args.channel.activePinnedMessageId = null;
     this.#cancelHandlers();
     this.paneState.teardown();
@@ -509,8 +508,7 @@ export default class ChatChannel extends Component {
         return;
       }
 
-      // a genuine scroll re-anchors the pinned bar and drops any tap override
-      // (onScroll state omits firstVisibleId, so compute it here)
+      // a genuine scroll re-anchors the bar and drops any tap override
       this.lastVisibleMessageId = firstVisibleMessageId(this.scroller);
       this.args.channel.activePinnedMessageId = null;
 

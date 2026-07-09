@@ -31,8 +31,6 @@ export default class ChatPinnedMessageBar extends Component {
 
   @tracked pins = [];
   subscribe = modifierFn((_element, [channelId]) => {
-    // Reload from committed pin/unpin events, not the optimistic
-    // pinnedMessagesCount (which changes before the server confirms).
     const key = `/chat/${channelId}`;
     this.messageBus.subscribe(
       key,
@@ -62,24 +60,17 @@ export default class ChatPinnedMessageBar extends Component {
     );
   }
 
-  // Ordered by position in the chat timeline (oldest message first = top), so
-  // the indicator is 1:1 with the chat regardless of when each was pinned.
   get orderedPins() {
     return [...this.pins].sort((a, b) => a.message.id - b.message.id);
   }
 
-  // Scroll-anchored: the active pin governs the messages in view — the newest
-  // (by position) pin at or above the bottom of the viewport. Before the first
-  // scroll (null) it's the newest pin (the chat sits at the bottom); above
-  // every pin it's the oldest.
+  // the newest pin at or above the viewport bottom — the one governing the view
   get currentPin() {
     const pins = this.orderedPins;
     if (pins.length === 0) {
       return null;
     }
-    // a tapped pin overrides the scroll anchor until the user scrolls (so it
-    // works even when the channel is too short to scroll on jump); chat-channel
-    // clears it on a genuine scroll
+    // a tapped pin overrides the anchor until chat-channel clears it on scroll
     const tappedId = this.args.channel.activePinnedMessageId;
     if (tappedId != null) {
       const tapped = pins.find((pin) => pin.message.id === tappedId);
@@ -101,7 +92,6 @@ export default class ChatPinnedMessageBar extends Component {
     return active;
   }
 
-  // slot from the top === index in the oldest-first order
   get currentIndex() {
     return Math.max(0, this.orderedPins.indexOf(this.currentPin));
   }
@@ -110,7 +100,6 @@ export default class ChatPinnedMessageBar extends Component {
     return this.pins.length > 1;
   }
 
-  // centred so the bars visibly scroll past the active one (an edge would hide it)
   get indicatorTop() {
     const total = this.pins.length;
     if (total <= INDICATOR_WINDOW) {
@@ -126,7 +115,6 @@ export default class ChatPinnedMessageBar extends Component {
 
   get indicatorStyle() {
     const visible = this.visibleSegments;
-    // floor (not round) so the strip never exceeds INDICATOR_HEIGHT
     const segment = Math.floor(
       (INDICATOR_HEIGHT - SEGMENT_GAP * (visible - 1)) / visible
     );
@@ -139,7 +127,6 @@ export default class ChatPinnedMessageBar extends Component {
         `--chat-pinned-bar-gap: ${SEGMENT_GAP}px; ` +
         `--chat-pinned-bar-indicator-height: ${height}px; ` +
         `--chat-pinned-bar-indicator-top: ${top}; ` +
-        // full-list slot (already offset by -top inside the track)
         `--chat-pinned-bar-active: ${this.currentIndex}; ` +
         `--chat-pinned-bar-fade-top: ${fadeTop}px; ` +
         `--chat-pinned-bar-fade-bottom: ${fadeBottom}px`
@@ -167,11 +154,10 @@ export default class ChatPinnedMessageBar extends Component {
   get currentExcerpt() {
     const message = this.currentPin?.message;
     if (message?.excerpt) {
-      // server-generated, already-escaped HTML; mark safe so entities
-      // (e.g. &hellip;, &amp;) and emoji render instead of being escaped again
+      // excerpt is server-escaped HTML — trust it so entities/emoji aren't re-escaped
       return trustHTML(message.excerpt);
     }
-    // raw text fallback for media-only messages, left unsafe so it gets escaped
+    // media-only fallback: leave untrusted so the template escapes it
     return message?.message ?? "";
   }
 
@@ -206,7 +192,6 @@ export default class ChatPinnedMessageBar extends Component {
     const sequence = ++this.#loadSequence;
     try {
       const pins = await this.chatApi.pinnedMessages(this.args.channel);
-      // ignore a slow response a newer load has already superseded
       if (sequence === this.#loadSequence) {
         this.pins = pins;
         this.#reconcileDismissal();
@@ -216,8 +201,6 @@ export default class ChatPinnedMessageBar extends Component {
     }
   }
 
-  // a newer pin voids the dismissal — drop the record so the navbar re-show
-  // button doesn't linger while the bar is already back
   #reconcileDismissal() {
     const dismissedAbove = pinsDismissedAboveId(this.args.channel);
     if (dismissedAbove != null && newestPinId(this.pins) > dismissedAbove) {
@@ -227,8 +210,7 @@ export default class ChatPinnedMessageBar extends Component {
 
   @action
   jumpToCurrentPin() {
-    // Telegram-style: jump to the pin shown now, then shift the bar to the next
-    // older pin (wrapping oldest -> newest) as a preview of the next tap.
+    // jump to the shown pin, then preview the next older one (wraps oldest -> newest)
     const pins = this.orderedPins;
     const current = this.currentPin;
     if (!current) {
