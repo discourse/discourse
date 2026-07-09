@@ -43,8 +43,12 @@ export function applyLocalDates(dates, siteSettings, timezone) {
     element.insertAdjacentHTML(
       "beforeend",
       `${iconHTML("earth-americas")}
-        <span class="relative-time">${localDateBuilder.formatted}</span>`
+        `
     );
+    const relativeTime = document.createElement("span");
+    relativeTime.classList.add("relative-time");
+    relativeTime.textContent = localDateBuilder.formatted;
+    element.appendChild(relativeTime);
     element.setAttribute("aria-label", localDateBuilder.textPreview);
 
     const classes = ["cooked-date"];
