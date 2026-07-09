@@ -2592,6 +2592,7 @@ hr:
       email_label: "Email"
       continue_button: "Nastavi"
       verify_button: "Nastavi"
+      signup_title: "Kreiraj svoj račun"
       account_ready_continue: "Nastavi"
       username_label: "Korisničko ime"
     login:
@@ -5036,8 +5037,6 @@ hr:
       no_read_topics_body: "Kada počnete čitati rasprave, ovdje ćete vidjeti popis. Da biste počeli čitati, potražite teme koje vas zanimaju u <a href='%{topUrl}'>Top</a> ili <a href='%{categoriesUrl}'>kategorije</a> ili pretražite po ključnoj riječi %{searchIcon}"
     no_group_messages_title: "Nisu pronađene grupne poruke"
     topic_entrance:
-      sr_jump_top_button: "Idite na prvu objavu - %{date}"
-      sr_jump_bottom_button: "Idite na zadnju objavu - %{date}"
       jump_top_button_title: "Skoči na prvi post"
       jump_bottom_button_title: "Skoči na zadnji post"
     fullscreen_table:
@@ -5421,6 +5420,7 @@ hr:
         title: "Popis dostupnih izvještaja"
         sidebar_title: "Izvještaji"
         back: "Povratak na sva izvješća"
+        all_groups: "Sve grupe"
         group_traffic: "Promet"
         group_members: "Članovi"
         group_other: "Ostalo"

@@ -38,6 +38,7 @@ module NestedReplies
       post.topic = @topic
       serializer = PostSerializer.new(post, scope: @guardian, root: false)
       serializer.topic_view = @topic_view
+      serializer.notice_created_by_users = post_notice_created_by_users if @guardian.is_staff?
       json = serializer.as_json
 
       json[:direct_reply_count] = reply_counts[post.post_number] || 0
@@ -86,6 +87,20 @@ module NestedReplies
     def topic_view_json
       @topic_view_json ||=
         TopicViewSerializer.new(@topic_view, scope: @guardian, root: false).as_json
+    end
+
+    def post_notice_created_by_users
+      @post_notice_created_by_users ||=
+        begin
+          user_ids =
+            (@topic_view.post_custom_fields || {})
+              .filter_map do |_, custom_fields|
+                custom_fields.dig(Post::NOTICE, "created_by_user_id")
+              end
+              .uniq
+
+          User.real.where(id: user_ids).to_a
+        end
     end
 
     # Filters mirror Guardian#can_see_post? so the boolean does not leak

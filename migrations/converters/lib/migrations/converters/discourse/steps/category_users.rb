@@ -3,7 +3,7 @@
 module Migrations
   module Converters
     module Discourse
-      class CategoryUsers < Conversion::ProgressStep
+      class CategoryUsers < Conversion::Step
         source { reads_table "category_users", where: "user_id > 0" }
 
         processor do

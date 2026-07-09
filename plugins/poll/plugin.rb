@@ -275,4 +275,9 @@ after_initialize do
     # Expected business-logic failures (poll closed, group-restricted, etc.)
     # — silently drop. Unexpected exceptions still bubble to AnonymousAction.consume.
   end
+
+  # Protect users who have cast poll votes from the inactive user cleanup job.
+  register_modifier(:clean_up_inactive_users_query) do |relation|
+    relation.where("NOT EXISTS (SELECT 1 FROM poll_votes WHERE poll_votes.user_id = users.id)")
+  end
 end

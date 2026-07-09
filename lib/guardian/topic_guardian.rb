@@ -321,6 +321,9 @@ module TopicGuardian
     if new_archetype == Archetype.banner || topic.archetype == Archetype.banner
       return can_banner_topic?(topic)
     end
+    if new_archetype == Archetype.private_message || topic.private_message?
+      return can_convert_topic?(topic)
+    end
     true
   end
 

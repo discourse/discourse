@@ -172,22 +172,14 @@ class TopicsBulkAction
   def change_category
     updatable_topics = topics.where.not(category_id: @operation[:category_id])
 
-    opts = {
-      bypass_bump: true,
-      validate_post: false,
-      bypass_rate_limiter: true,
-      silent: @operation[:silent],
-      skip_revision: !SiteSetting.create_revision_on_bulk_topic_moves,
-    }
-
     updatable_topics.each do |t|
-      if guardian.can_edit?(t)
-        changes = { category_id: @operation[:category_id] }
-        if t.first_post.revise(@user, changes, opts)
-          @changed_ids << t.id
-        else
-          t.errors.full_messages.each { |msg| @errors[msg] += 1 }
-        end
+      next unless guardian.can_edit?(t) && t.first_post
+
+      changes = { category_id: @operation[:category_id] }
+      if t.first_post.revise(@user, changes, bulk_revision_opts)
+        @changed_ids << t.id
+      else
+        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
       end
     end
   end
@@ -387,7 +379,7 @@ class TopicsBulkAction
     return false unless guardian.can_edit?(topic)
     return false unless topic.first_post
 
-    if topic.first_post.revise(@user, { tags: tag_names }, bulk_tag_opts)
+    if topic.first_post.revise(@user, { tags: tag_names }, bulk_revision_opts)
       @changed_ids << topic.id
       true
     else
@@ -429,13 +421,12 @@ class TopicsBulkAction
     end
   end
 
-  def bulk_tag_opts
-    {
+  def bulk_revision_opts
+    @bulk_revision_opts ||= {
       bypass_bump: true,
       validate_post: false,
       bypass_rate_limiter: true,
-      skip_revision: true,
-      silent: true,
+      silent: @operation.fetch(:silent, true),
     }
   end
 

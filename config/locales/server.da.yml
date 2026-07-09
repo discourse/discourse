@@ -974,6 +974,7 @@ da:
         level: "Tillidsniveau"
         count: "Brugere"
         share: "Del"
+        signups: "Tilmeldinger"
       levels:
         "0": "Nye"
         "1": "Basis"
@@ -1367,8 +1368,6 @@ da:
     hide_post_sensitivity: "Sandsynligheden for, at et anmeldt indlæg bliver skjult"
     auto_close_topic_sensitivity: "Sandsynligheden for at et anmeldt emne automatisk vil blive lukket"
     cooldown_minutes_after_hiding_posts: "Antal minutter en bruger må vente indtil de kan redigere et indlæg der er blevet skjult via fællesskabs-anmeldelse"
-    max_topics_in_first_day: "Det maksimale antal af emner en bruger må lave i en 24 timers periode efter at have skrevet det første indlæg"
-    max_replies_in_first_day: "Det maksimale antal af svar en bruger må foretage i 24 timers perioden efter at have skrevet deres første indlæg"
     tl2_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr dag for tl2 (medlemmer) ved at gange med dette tal"
     tl3_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr. dag for tl3 (regular) ved at gange med dette tal"
     tl4_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr. dag for tl4 (leader) ved at gange med dette tal"

@@ -2208,6 +2208,7 @@ lt:
       email_label: "Epaštas"
       continue_button: "Tęsti"
       verify_button: "Tęsti"
+      signup_title: "Sukurti naują paskyrą"
       account_ready_continue: "Tęsti"
       username_label: "Naudotojo vardas"
     login:
@@ -4171,6 +4172,7 @@ lt:
       reports:
         title: "Galimų ataskaitų sąrašas"
         sidebar_title: "Pranešimai"
+        all_groups: "Visos grupės"
         group_traffic: "Srautas"
         group_members: "Nariai"
         group_other: "Kiti"

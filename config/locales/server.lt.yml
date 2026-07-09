@@ -931,6 +931,7 @@ lt:
         level: "Patikimumo lygis"
         count: "Nariai"
         share: "Dalintis"
+        signups: "Registracijos"
       levels:
         "0": "Naujas"
         "1": "Pagrindinis"
@@ -1266,8 +1267,6 @@ lt:
     hide_post_sensitivity: "Tikimybė, kad pažymėtas įrašas bus paslėptas"
     silence_new_user_sensitivity: "Tikimybė, kad naujas vartotojas bus nutildytas remiantis šlamšto vėliavomis"
     cooldown_minutes_after_hiding_posts: "Minučių skaičius, kiek vartotojas turi laukti, kol galės redaguoti įrašą, paslėptą per bendruomenės žymėjimą"
-    max_topics_in_first_day: "Maksimalus temų skaičius, kurį vartotojas gali sukurti per 24 valandų laikotarpį po pirmojo įrašo sukūrimo"
-    max_replies_in_first_day: "Maksimalus atsakymų, kuriuos vartotojas gali sukurti per 24 valandų laikotarpį po pirmojo įrašo sukūrimo"
     tl2_additional_likes_per_day_multiplier: "Padidinkite tl2 (nario) paspaudimų \"patinka\" limitą per dieną, padaugindami iš šio skaičiaus"
     tl3_additional_likes_per_day_multiplier: "Padidinkite patinkančių paspaudimų limitą per dieną tl3 (įprastai) padaugindami iš šio skaičiaus"
     tl4_additional_likes_per_day_multiplier: "Padidinkite tl4 (lyderio) paspaudimų „patinka“ limitą per dieną, padaugindami iš šio skaičiaus"

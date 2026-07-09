@@ -2599,6 +2599,7 @@ ug:
       email_label: "ئېلخەت"
       continue_button: "داۋاملاشتۇر"
       verify_button: "داۋاملاشتۇر"
+      signup_title: "ھېساباتىڭىزنى قۇرايلى"
       account_ready_continue: "داۋاملاشتۇر"
       username_label: "ئىشلەتكۈچى ئاتى"
     login:
@@ -5040,8 +5041,6 @@ ug:
       no_read_topics_body: "سۆھبەتنى ئوقۇشنى باشلىغاندا، بۇ جايدا بىر تىزىمنى كۆرەلەيسىز. ئوقۇشنى باشلاشتا، <a href='%{topUrl}'>قىزغىن</a> ياكى <a href='%{categoriesUrl}'>سەھىپە</a> دىن ياكى ئاچقۇچلۇق سۆز %{searchIcon} ئارقىلىق قىزىقىدىغان تېمىنى ئىزدىسىڭىز بولىدۇ."
     no_group_messages_title: "ھېچقانداق گۇرۇپپا ئۇچۇرى تېپىلمىدى"
     topic_entrance:
-      sr_jump_top_button: "بىرىنچى يازمىغا ئاتلا - %{date}"
-      sr_jump_bottom_button: "ئاخىرقى يازمىغا ئاتلا - %{date}"
       jump_top_button_title: "بىرىنچى يازمىغا ئاتلا"
       jump_bottom_button_title: "ئاخىرقى يازمىغا ئاتلا"
     fullscreen_table:
@@ -5418,6 +5417,7 @@ ug:
         title: "مەۋجۇت دوكلات تىزىمى"
         sidebar_title: "دوكلات"
         back: "ھەممە دوكلاتقا قايت"
+        all_groups: "بارلىق گۇرۇپپىلار"
         group_traffic: "ئېقىم"
         group_members: "ئەزا"
         group_other: "باشقا"

@@ -125,7 +125,7 @@ RSpec.describe "Styleguide Smoke Test" do
   context "when the styleguide is enabled for everyone" do
     before do
       Capybara.reset_sessions!
-      SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      SiteSetting.styleguide_allowed_groups = Group::AUTO_GROUPS[:anonymous_users]
     end
 
     it "renders a page using HighlightedCode for anonymous users" do

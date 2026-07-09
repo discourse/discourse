@@ -108,8 +108,8 @@ export default class BulkTopicActions extends Component {
     const mergedTagCategoryErrors = {};
     const options = {};
 
-    if (this.model.allowSilent && !this.notifyUsers) {
-      operation.silent = true;
+    if (this.model.allowSilent) {
+      operation.silent = !this.notifyUsers;
     }
 
     if (this.isCloseAction && this.closeNote) {

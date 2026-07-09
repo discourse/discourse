@@ -23,6 +23,10 @@ module DiscourseAi
         prompt_cache.flush!
       end
 
+      def self.prompt_agent_ids
+        agents_prompt_map.keys.compact.uniq
+      end
+
       def initialize(helper_llm: nil, image_caption_llm: nil)
         @helper_llm = helper_llm
         @image_caption_llm = image_caption_llm
@@ -348,7 +352,7 @@ module DiscourseAi
         end
       end
 
-      def agents_prompt_map(include_image_caption: false)
+      def self.agents_prompt_map(include_image_caption: false)
         map = {
           SiteSetting.ai_helper_translator_agent.to_i => TRANSLATE,
           SiteSetting.ai_helper_title_suggestions_agent.to_i => GENERATE_TITLES,
@@ -366,6 +370,10 @@ module DiscourseAi
         end
 
         map
+      end
+
+      def agents_prompt_map(include_image_caption: false)
+        self.class.agents_prompt_map(include_image_caption:)
       end
 
       def all_prompts

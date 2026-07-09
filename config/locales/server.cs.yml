@@ -1422,6 +1422,7 @@ cs:
         level: "Úroveň důvěry"
         count: "Členové"
         share: "Sdílet"
+        signups: "Registrace"
       levels:
         "0": "Nový"
         "1": "Základní"
@@ -1918,8 +1919,6 @@ cs:
     silence_new_user_sensitivity: "Pravděpodobnost, že nový uživatel bude ztišen na základě nahlášení spamu."
     auto_close_topic_sensitivity: "Pravděpodobnost, že nahlášené téma bude automaticky uzavřeno"
     cooldown_minutes_after_hiding_posts: "Počet minut, které musí uživatel čekat, než bude moci upravit příspěvek skrytý prostřednictvím nahlášení komunitou"
-    max_topics_in_first_day: "Maximální počet témat, která může uživatel vytvořit během 24 hodin od vytvoření svého prvního příspěvku"
-    max_replies_in_first_day: "Maximální počet odpovědí, které může uživatel vytvořit během 24 hodin od vytvoření svého prvního příspěvku"
     tl2_additional_likes_per_day_multiplier: "Zvyšte denní limit Líbí se pro úroveň důvěry 2 (člen) vynásobením tohoto čísla"
     tl3_additional_likes_per_day_multiplier: "Zvyšte denní limit Líbí se pro úroveň důvěry 3 (stálý) vynásobením tohoto čísla"
     tl4_additional_likes_per_day_multiplier: "Zvyšte denní limit Líbí se pro úroveň důvěry 4 (leader) vynásobením tohoto čísla"

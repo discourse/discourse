@@ -2425,6 +2425,7 @@ ja:
       email_label: "メールアドレス"
       continue_button: "続行"
       verify_button: "続行"
+      signup_title: "アカウントの作成"
       account_ready_continue: "続行"
       username_label: "ユーザー名"
     login:
@@ -4769,8 +4770,6 @@ ja:
       no_read_topics_body: "ディスカッションを読み始めると、ここにリストが表示されます。読み始めるには、<a href='%{topUrl}'>トップ</a>または<a href='%{categoriesUrl}'>カテゴリ</a>で興味のあるトピックを探すか、キーワードで検索 %{searchIcon} してください。"
     no_group_messages_title: "グループメッセージが見つかりません"
     topic_entrance:
-      sr_jump_top_button: "最初の投稿にジャンプ - %{date}"
-      sr_jump_bottom_button: "最後の投稿にジャンプ - %{date}"
       jump_top_button_title: "最初の投稿に移動"
       jump_bottom_button_title: "最後の投稿に移動"
     fullscreen_table:
@@ -5140,6 +5139,7 @@ ja:
         title: "使用可能なレポートのリスト"
         sidebar_title: "レポート"
         back: "すべてのレポートに戻る"
+        all_groups: "すべてのグループ"
         group_traffic: "トラフィック"
         group_members: "メンバー"
         group_other: "その他"

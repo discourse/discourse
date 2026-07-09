@@ -12,6 +12,18 @@ nb_NO:
           kpi:
             accepted_solutions:
               label: "Godtatte løsninger"
+        sections:
+          support:
+            filter:
+              all_categories: "Alle kategorier"
+            answerers:
+              staff: "Stab"
+              member: "Medlemmer"
+              basic: "Basic"
+            response_time:
+              buckets:
+                lt_1h: "< 1 time"
+                gt_24h: "> 24 timer"
   js:
     notifications:
       alt:

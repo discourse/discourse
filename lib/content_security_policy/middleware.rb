@@ -29,6 +29,7 @@ class ContentSecurityPolicy
         theme_id,
         base_url: base_url,
         path_info: env["PATH_INFO"],
+        report_only: true,
       ) if SiteSetting.content_security_policy_report_only
 
       response

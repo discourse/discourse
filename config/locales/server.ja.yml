@@ -1194,6 +1194,7 @@ ja:
         level: "信頼レベル"
         count: "メンバー"
         share: "共有"
+        signups: "登録数"
       levels:
         "0": "新規"
         "1": "ベーシック"
@@ -1692,8 +1693,6 @@ ja:
     silence_new_user_sensitivity: "新規ユーザーが迷惑通報に基づいて投稿禁止にされる確率"
     auto_close_topic_sensitivity: "通報されたトピックが自動的にクローズされる確率"
     cooldown_minutes_after_hiding_posts: "通報により非表示状態になった投稿をユーザーが編集可能になるまでの時間 (分)"
-    max_topics_in_first_day: "ユーザーが最初の投稿をしてから 24 時間以内に作成できるトピックの最大数"
-    max_replies_in_first_day: "ユーザーが最初の投稿をしてから 24 時間以内に作成できる返信の最大数"
     tl2_additional_likes_per_day_multiplier: "この数字を掛けると TL2 (メンバー) の 1 日あたりの「いいね！」の上限を増やします"
     tl3_additional_likes_per_day_multiplier: "この数字を掛けると TL3 (レギュラー) の 1 日あたりの「いいね！」の上限を増やします"
     tl4_additional_likes_per_day_multiplier: "この数字を掛けると TL4 (リーダー) の 1 日あたりの「いいね！」の上限を増やします"
@@ -2316,7 +2315,6 @@ ja:
     gravatar_base_url: "Gravatar プロバイダーの API にアクセスするための URL を指定します。この設定は、メールアドレスをアバター画像が保存されている Gravatar URL に変換するために重要です。"
     share_quote_buttons: "引用の共有ウィジェットに表示される項目と表示順を決定する。"
     share_quote_visibility: "引用の共有ボタンをいつ表示するかを決定する: 表示しない、匿名ユーザーのみ、またはすべてのユーザー。 "
-    create_revision_on_bulk_topic_moves: "トピックが新しいカテゴリに一括して移動されたときに、最初の投稿のリビジョンを作成する。"
     allow_changing_staged_user_tracking: "ステージングユーザーのカテゴリとタグの通知設定を管理者ユーザーが変更することを許可する。"
     use_email_for_username_and_name_suggestions: "ユーザー名と名前の提案にメールアドレスの最初の部分を使用する。警告: 悪意のあるアクターがメンバーのメールアドレスを検出しやすくなります (多数のユーザーが「gmail.com」などの一般的なメールプロバイダーを使用しているため)。"
     suggest_weekends_in_date_pickers: "日付ピッカーの候補に週末 (土曜日と日曜日) を含めます (月曜日から金曜日の平日にのみ Discourse を使用する場合は、これを無効にします)。"
@@ -2347,7 +2345,6 @@ ja:
     reviewable_ui_refresh: "レビューキューで実験的な新しい UI を使用できるグループ。"
     content_localization_use_default_locale_when_unsupported: "優先言語が 'content localization supported locales' に含まれていないユーザーに、サイトのデフォルトのロケールでローカライズされたコンテンツを配信する。"
     content_localization_allow_author_localization: "作成者が投稿メニューから自分のトピックと投稿を更新することを許可する。"
-    fake_upcoming_change: "これは実際の次回の変更ではありません。テストを目的としているため、この文字列の翻訳は不要です。"
     floating_dismiss_topics_on_mobile: "モバイル版では、アクセスの簡易性とトピックリストの上部のスペースを空けるために「閉じる...」フローティングボタンを表示する"
     enable_simplified_category_creation: "より少ないオプションとクリーンなインターフェースによって、シンプルなカテゴリ作成フローを実現します。"
     errors:

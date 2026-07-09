@@ -126,6 +126,12 @@ cs:
           select_all: "Vybrat vše"
           clear_all: "Zrušit vše"
         delete: "Smazat"
+        thinking_effort_options:
+          none: "Žádný"
+          low: "Nízká"
+          medium: "Střední"
+          high: "Vysoká"
+          max: "Max"
         response_format:
           open_modal: "Upravit"
           modal:
@@ -227,11 +233,6 @@ cs:
         description: "Vyberte jednu z níže uvedených možností a umělá inteligence vám navrhne novou verzi textu."
         selection_hint: "Tip: Před otevřením pomocníka můžete také vybrat část textu a přepsat pouze tuto část."
         suggest_errors:
-          too_many_tags:
-            one: "Můžete mít max. %{count} štítek"
-            few: "Můžete mít max. %{count} štítky"
-            many: "Můžete mít max. %{count} štítků"
-            other: "Můžete mít max. %{count} štítků"
           no_suggestions: "Nejsou k dispozici žádné návrhy"
         missing_content: "Chcete-li generovat návrhy, zadejte nějaký obsah."
         context_menu:

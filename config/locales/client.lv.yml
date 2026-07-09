@@ -1569,6 +1569,7 @@ lv:
       email_label: "E-pasts"
       continue_button: "Turpināt"
       verify_button: "Turpināt"
+      signup_title: "izveido savu kontu"
       account_ready_continue: "Turpināt"
       username_label: "Lietotājvārds"
     login:
@@ -2882,6 +2883,7 @@ lv:
           always: "vienmēr"
           never: "nekad"
       reports:
+        all_groups: "Visas grupas"
         group_traffic: "Datu plūsma"
         group_members: "Dalībnieki"
         group_other: "Citi"

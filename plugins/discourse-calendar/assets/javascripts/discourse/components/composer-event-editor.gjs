@@ -98,6 +98,7 @@ export default class ComposerEventEditor extends Component {
     }
     this.appEvents.trigger("composer:replace-text", parsed.full, newBlock, {
       skipNewSelection: true,
+      skipFocus: true,
     });
   }
 

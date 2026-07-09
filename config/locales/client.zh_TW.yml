@@ -4343,8 +4343,6 @@ zh_TW:
       no_read_topics_body: "當您開始閱讀討論時，您會在這裡看到清單。若要開始閱讀，請在<a href='%{topUrl}'>熱門</a>或<a href='%{categoriesUrl}'>分類</a>中尋找您感興趣的主題，或依關鍵字搜尋 %{searchIcon}。"
     no_group_messages_title: "找不到群組訊息"
     topic_entrance:
-      sr_jump_top_button: "跳到第一篇貼文 - %{date}"
-      sr_jump_bottom_button: "跳到最後一篇貼文 - %{date}"
       jump_top_button_title: "跳到第一篇貼文"
       jump_bottom_button_title: "跳到最後一篇貼文"
     fullscreen_table:
@@ -4635,6 +4633,7 @@ zh_TW:
         title: "可見報告列表"
         sidebar_title: "報告"
         back: "返回到所有報告"
+        all_groups: "所有群組"
         group_traffic: "流量"
         group_members: "成員"
         group_other: "其他"

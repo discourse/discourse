@@ -174,13 +174,19 @@ RSpec.describe Group do
     end
 
     it "is invalid for poorly formatted domains" do
-      group.automatic_membership_email_domains = "wikipedia.org|*@example.com"
+      group.automatic_membership_email_domains = "wikipedia.org|not a domain"
       expect(group.valid?).to eq false
     end
 
     it "is valid for proper domains" do
       group.automatic_membership_email_domains = "discourse.org|wikipedia.org"
       expect(group.valid?).to eq true
+    end
+
+    it "normalizes domains that include an @ or surrounding whitespace" do
+      group.automatic_membership_email_domains = " @discourse.org | jane@wikipedia.org "
+      expect(group.valid?).to eq true
+      expect(group.automatic_membership_email_domains).to eq("discourse.org|wikipedia.org")
     end
 
     it "is invalid for too many domains" do
@@ -243,6 +249,36 @@ RSpec.describe Group do
 
         expect(group.valid?).to eq(true)
       end
+    end
+  end
+
+  describe ".get_valid_email_domains" do
+    it "normalizes URLs, emails, ports, case, and surrounding whitespace to bare domains" do
+      expect(Group.get_valid_email_domains("HTTPS://Discourse.ORG/path")).to eq(["discourse.org"])
+      expect(Group.get_valid_email_domains("@discourse.org")).to eq(["discourse.org"])
+      expect(Group.get_valid_email_domains("jane@discourse.org")).to eq(["discourse.org"])
+      expect(Group.get_valid_email_domains("a@b@discourse.org")).to eq(["discourse.org"])
+      expect(Group.get_valid_email_domains("  discourse.org  ")).to eq(["discourse.org"])
+      expect(Group.get_valid_email_domains("discourse.org:8080")).to eq(["discourse.org"])
+    end
+
+    it "collapses entries that normalize to the same domain, ignoring case" do
+      expect(Group.get_valid_email_domains("sales@acme.io|support@acme.io")).to eq(["acme.io"])
+      expect(Group.get_valid_email_domains("Acme.io|acme.io")).to eq(["acme.io"])
+    end
+
+    it "skips blank entries left by stray pipes or a bare @" do
+      invalid = []
+      valid = Group.get_valid_email_domains("acme.io||jane@") { |d| invalid << d }
+      expect(valid).to eq(["acme.io"])
+      expect(invalid).to be_empty
+    end
+
+    it "yields the normalized value for genuinely invalid domains" do
+      invalid = []
+      valid = Group.get_valid_email_domains("@discourse.org|not a domain") { |d| invalid << d }
+      expect(valid).to eq(["discourse.org"])
+      expect(invalid).to eq(["not a domain"])
     end
   end
 
@@ -413,20 +449,20 @@ RSpec.describe Group do
       end
     end
 
-    it "makes sure the everyone group is not visible except to staff" do
+    it "makes sure the everyone group is visible to logged in users" do
       g = Group.refresh_automatic_group!(:everyone)
-      expect(g.visibility_level).to eq(Group.visibility_levels[:staff])
+      expect(g.visibility_level).to eq(Group.visibility_levels[:logged_on_users])
     end
 
-    it "makes sure the anonymous_users and logged_in_users pseudogroups are hidden and have no members" do
+    it "makes sure pseudogroups are visible and have no members" do
       anon = Group.refresh_automatic_group!(:anonymous_users)
       expect(anon.id).to eq(Group::AUTO_GROUPS[:anonymous_users])
-      expect(anon.visibility_level).to eq(Group.visibility_levels[:staff])
+      expect(anon.visibility_level).to eq(Group.visibility_levels[:logged_on_users])
       expect(GroupUser.where(group_id: anon.id).count).to eq(0)
 
       logged_in = Group.refresh_automatic_group!(:logged_in_users)
       expect(logged_in.id).to eq(Group::AUTO_GROUPS[:logged_in_users])
-      expect(logged_in.visibility_level).to eq(Group.visibility_levels[:staff])
+      expect(logged_in.visibility_level).to eq(Group.visibility_levels[:logged_on_users])
       expect(GroupUser.where(group_id: logged_in.id).count).to eq(0)
     end
 
@@ -951,13 +987,7 @@ RSpec.describe Group do
       ).to eq(false)
     end
 
-    it "includes logged_in_users, anonymous_users and everyone groups when include_pseudogroups is true" do
-      expect(
-        Group
-          .visible_groups(admin, [], include_pseudogroups: true)
-          .where(id: Group::AUTO_GROUPS[:everyone])
-          .exists?,
-      ).to eq(true)
+    it "includes logged_in_users and anonymous_users groups when include_pseudogroups is true, and everyone when that is also requested" do
       expect(
         Group
           .visible_groups(admin, [], include_pseudogroups: true)
@@ -970,6 +1000,44 @@ RSpec.describe Group do
           .where(id: Group::AUTO_GROUPS[:logged_in_users])
           .exists?,
       ).to eq(true)
+      expect(
+        Group
+          .visible_groups(admin, [], include_pseudogroups: true)
+          .where(id: Group::AUTO_GROUPS[:everyone])
+          .exists?,
+      ).to eq(false)
+      expect(
+        Group
+          .visible_groups(admin, [], include_pseudogroups: true, include_everyone: true)
+          .where(id: Group::AUTO_GROUPS[:everyone])
+          .exists?,
+      ).to eq(true)
+    end
+
+    it "includes pseudogroups for regular users when requested" do
+      regular_user = Fabricate(:user)
+      Group.refresh_automatic_groups!(:everyone, :anonymous_users, :logged_in_users)
+
+      visible_group_ids =
+        Group.visible_groups(regular_user, [], include_pseudogroups: true).pluck(:id)
+
+      expect(visible_group_ids).to include(
+        Group::AUTO_GROUPS[:anonymous_users],
+        Group::AUTO_GROUPS[:logged_in_users],
+      )
+      expect(visible_group_ids).to_not include(Group::AUTO_GROUPS[:everyone])
+      expect(
+        Group
+          .visible_groups(nil, [], include_pseudogroups: true)
+          .where(
+            id: [
+              Group::AUTO_GROUPS[:everyone],
+              Group::AUTO_GROUPS[:anonymous_users],
+              Group::AUTO_GROUPS[:logged_in_users],
+            ],
+          )
+          .exists?,
+      ).to eq(false)
     end
 
     it "does not include logged_in_users, anonymous_users and everyone groups by default" do

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class TopicsController < ApplicationController
+  include TagParamLimit
   include EmbedModeHandler
 
   requires_login only: %i[
@@ -401,7 +402,7 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
 
     guardian.ensure_can_edit!(topic)
-    return if reject_oversized_tag_params!(:tags, :original_tags)
+    return if reject_too_many_tags!(:tags, :original_tags)
 
     original_title = params[:original_title]
     if original_title.present? && original_title != topic.title
@@ -527,7 +528,7 @@ class TopicsController < ApplicationController
   def update_tags
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_edit_tags!(topic)
-    return if reject_oversized_tag_params!(:tags)
+    return if reject_too_many_tags!(:tags)
 
     tags =
       if params[:tags].is_a?(ActionController::Parameters)
@@ -905,6 +906,14 @@ class TopicsController < ApplicationController
       Group.lookup_groups(group_ids: params[:group_ids], group_names: params[:group_names]).pluck(
         :id,
       )
+
+    if Email.is_valid?(username_or_email)
+      if !guardian.can_invite_via_email?(topic)
+        return render(json: failed_json, status: :unprocessable_entity)
+      end
+
+      return render(json: success_json) if User.find_by_email(username_or_email)
+    end
 
     begin
       if topic.invite(current_user, username_or_email, group_ids, params[:custom_message])
@@ -1362,27 +1371,6 @@ class TopicsController < ApplicationController
     render_json_dump(payload)
   end
 
-  def reject_oversized_tag_params!(*param_names)
-    param_names.each do |param_name|
-      next if !params.has_key?(param_name)
-      next if tag_param_size(params[param_name]) <= SiteSetting.max_tags_per_topic
-
-      render_json_error(
-        I18n.t("tags.too_many_tags_for_topic", count: SiteSetting.max_tags_per_topic),
-      )
-      return true
-    end
-
-    false
-  end
-
-  def tag_param_size(tags)
-    return tags.length if tags.is_a?(Array)
-    return tags.keys.length if tags.is_a?(ActionController::Parameters)
-
-    0
-  end
-
   def resolve_tag_names(topic)
     @resolved_tag_names ||=
       if params[:tags].present?
@@ -1562,7 +1550,7 @@ class TopicsController < ApplicationController
           helpers.localize_topic_view_content(@topic_view)
         end
         @breadcrumbs = helpers.categories_breadcrumb(@topic_view.topic) || []
-        @description_meta = @topic_view.topic.excerpt.presence || @topic_view.summary
+        @description_meta = @topic_view.topic.plain_text_excerpt || @topic_view.summary
         store_preloaded("topic_#{@topic_view.topic.id}", MultiJson.dump(topic_view_serializer))
         render :show
       end

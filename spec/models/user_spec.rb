@@ -26,7 +26,9 @@ RSpec.describe User do
   describe ".in_any_groups?" do
     fab!(:group)
 
-    it "returns true if any of the group IDs are the 'everyone' auto group" do
+    it "returns true if any of the group IDs are the 'everyone' auto group with legacy group permissions" do
+      SiteSetting.granular_anonymous_and_logged_in_groups_permissions = false
+
       expect(user.in_any_groups?([group.id, Group::AUTO_GROUPS[:everyone]])).to eq(true)
     end
 
@@ -1782,16 +1784,33 @@ RSpec.describe User do
       )
     end
 
-    it "is true for a user who posted less than 24 hours ago but was created over 1 day ago" do
-      u = create_test_user(created_at: 28.hours.ago)
-      u.user_stat.update!(first_post_created_at: 1.hour.ago)
-      expect(u.new_user_posting_on_first_day?).to eq(true)
+    it "is true for a TL1 user created less than 24 hours ago" do
+      expect(create_test_user(trust_level: TrustLevel[1]).new_user_posting_on_first_day?).to eq(
+        true,
+      )
     end
 
-    it "is false if first post was more than 24 hours ago" do
-      u = create_test_user(created_at: 28.hours.ago)
-      u.user_stat.update!(first_post_created_at: 25.hours.ago)
+    it "is false if account was created more than 24 hours ago" do
+      u = create_test_user(created_at: 25.hours.ago)
       expect(u.new_user_posting_on_first_day?).to eq(false)
+    end
+  end
+
+  describe "#first_day_topics_limit" do
+    it "returns the TL1 limit for TL1 users" do
+      SiteSetting.max_topics_in_first_day = 3
+      SiteSetting.tl1_max_topics_in_first_day = 6
+
+      expect(Fabricate(:user, trust_level: TrustLevel[1]).first_day_topics_limit).to eq(6)
+    end
+  end
+
+  describe "#first_day_replies_limit" do
+    it "returns the TL1 limit for TL1 users" do
+      SiteSetting.max_replies_in_first_day = 10
+      SiteSetting.tl1_max_replies_in_first_day = 30
+
+      expect(Fabricate(:user, trust_level: TrustLevel[1]).first_day_replies_limit).to eq(30)
     end
   end
 

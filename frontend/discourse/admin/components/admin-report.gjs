@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action } from "@ember/object";
+import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
@@ -30,6 +31,7 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { makeArray } from "discourse/lib/helpers";
 import ReportLoader from "discourse/lib/reports-loader";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const TABLE_OPTIONS = {
@@ -588,6 +590,30 @@ export default class AdminReport extends Component {
   }
 
   <template>
-    <AdminReportBody @report={{this}} @filters={{@filters}} />
+    {{#if @bare}}
+      {{! Renders only the report's visualization (chart/table/etc.) without
+      the surrounding report chrome — used by the dashboard report cards. }}
+      <div
+        class={{dConcatClass "admin-report" "--bare" this.reportClasses}}
+        {{didUpdate
+          this.fetchOrRender
+          @filters.startDate
+          @filters.endDate
+          this.preloadedData
+        }}
+      >
+        {{#if this.hasData}}
+          {{#if this.currentMode}}
+            {{component
+              this.modeComponent
+              model=this.model
+              options=this.options
+            }}
+          {{/if}}
+        {{/if}}
+      </div>
+    {{else}}
+      <AdminReportBody @report={{this}} @filters={{@filters}} />
+    {{/if}}
   </template>
 }

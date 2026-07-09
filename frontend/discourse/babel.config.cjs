@@ -70,6 +70,18 @@ module.exports = {
     ...macros.babelMacros,
   ],
 
+  overrides: [
+    {
+      test: /\.(gts|ts|mts|cts)$/,
+      plugins: [
+        [
+          require.resolve("@babel/plugin-transform-typescript"),
+          { allowDeclareFields: true },
+        ],
+      ],
+    },
+  ],
+
   generatorOpts: {
     compact: false,
   },

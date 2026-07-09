@@ -2025,6 +2025,7 @@ sv:
       email_label: "E-postadress"
       continue_button: "Fortsätt"
       verify_button: "Fortsätt"
+      signup_title: "Skapa ditt konto"
       account_ready_continue: "Fortsätt"
       username_label: "Användarnamn"
     login:
@@ -4358,6 +4359,7 @@ sv:
       reports:
         title: "Lista över tillgängliga rapporter"
         sidebar_title: "Rapporter"
+        all_groups: "Alla grupper"
         group_traffic: "Trafik"
         group_members: "Medlemmar"
         group_other: "Övrigt"

@@ -260,7 +260,6 @@ es:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    diff_too_complex: "La diferencia es demasiado compleja para calcularla de forma segura. Intenta hacer ediciones más pequeñas."
     messages:
       invalid_locale: "%{invalid_locale} no es un idioma local válido"
       too_long_validation:
@@ -1291,6 +1290,7 @@ es:
         level: "Nivel de confianza"
         count: "Miembros"
         share: "Compartir"
+        signups: "Inscripciones"
       levels:
         "0": "Nuevo"
         "1": "Básico"
@@ -1793,8 +1793,6 @@ es:
     silence_new_user_sensitivity: "La probabilidad de que un usuario nuevo sea silenciado basándose en denuncias de spam"
     auto_close_topic_sensitivity: "La probabilidad de que un tema denunciado se cierre automáticamente"
     cooldown_minutes_after_hiding_posts: "Número de minutos que un usuario debe esperar para poder editar una publicación oculta debido a denuncias de la comunidad"
-    max_topics_in_first_day: "El número máximo de temas que un usuario puede crear durante las 24 horas posteriores a su primera publicación"
-    max_replies_in_first_day: "El número máximo de respuestas que un usuario puede crear durante las 24 horas posteriores a su primera publicación"
     tl2_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 2 (miembros) multiplicándolo por este número"
     tl3_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 3 (habitual) multiplicándolo por este número"
     tl4_additional_likes_per_day_multiplier: "Incrementar el límite de me gusta por día para los usuarios con nivel de confianza 4 (líder) multiplicándolo por este número"
@@ -2429,7 +2427,6 @@ es:
     gravatar_base_url: "Especifica la URL para acceder a la API del proveedor de Gravatar. Este ajuste es fundamental para convertir las direcciones de correo electrónico en URL de Gravatar, donde se almacenan las imágenes de avatar."
     share_quote_buttons: "Determinar los elementos que aparecen en el widget de compartir cita y su orden."
     share_quote_visibility: "Cuándo mostrar los botones de compartir citas: nunca, a los usuarios anónimos solo o a todos los usuarios. "
-    create_revision_on_bulk_topic_moves: "Crear edición para las primeras publicaciones cuando los temas se mueven a una nueva categoría en masa."
     allow_changing_staged_user_tracking: "Permitir que los usuarios con permisos de administración cambien las preferencias de notificación de categorías y etiquetas de los usuarios temporales."
     use_email_for_username_and_name_suggestions: "Usa la primera parte de las direcciones de correo electrónico para sugerencias de nombre de usuario y nombre. Advertencia: Esto puede facilitar que los delincuentes descubran la dirección de correo electrónico completa de tus miembros (porque muchas personas usan servicios de correo electrónico comunes como «gmail.com»)."
     use_name_for_username_suggestions: "Utiliza el nombre completo del usuario al sugerir nombres de usuario durante los flujos de registro SSO y OAuth."
@@ -2466,9 +2463,9 @@ es:
     reviewable_ui_refresh: "Grupos que pueden usar la nueva interfaz de usuario experimental en la cola de revisión."
     content_localization_use_default_locale_when_unsupported: "Ofrece contenido traducido en la configuración regional por defecto del sitio a los usuarios cuyo idioma preferido no figure en «content localization supported locales»."
     content_localization_allow_author_localization: "Permitir que los autores actualicen la traducción de sus propios temas y publicaciones a través del menú de publicaciones."
-    fake_upcoming_change: "Este es un próximo cambio ficticio que se realizará con fines de prueba. No es necesario traducir esta cadena."
     floating_dismiss_topics_on_mobile: "Muestra un botón flotante «Descartar...» en el móvil para la lista de temas para facilitar el acceso y liberar espacio en la parte superior de la lista de temas"
     enable_simplified_category_creation: "Permite un flujo de creación de categorías simplificado, con menos opciones y una interfaz más limpia."
+    reporting_improvements: "Mejoras en la navegación, el diseño y la usabilidad de los informes de administración de Discourse."
     modernize_foundation_theme: "Este cambio introduce modificaciones de diseño en el tema Fundación de Discourse."
     errors:
       invalid_css_color: "Color no válido. Introduce el nombre de un color o su valor hexadecimal."

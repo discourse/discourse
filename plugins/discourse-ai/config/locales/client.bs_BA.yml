@@ -91,6 +91,12 @@ bs_BA:
         enabled: "Omogućen?"
         allowed_groups: "Dozvoljene grupe"
         delete: "Delete"
+        thinking_effort_options:
+          none: "Ništa"
+          low: "Nisko"
+          medium: "Srednije"
+          high: "Visoko"
+          max: "Maksimalno"
         response_format:
           open_modal: "Izmijeni"
           modal:

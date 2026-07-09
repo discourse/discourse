@@ -154,6 +154,14 @@ module SiteSettingExtension
     @requires_confirmation_settings ||= {}
   end
 
+  def dependency_values
+    @dependency_values ||= {}
+  end
+
+  def dependent_setting_display
+    @dependent_setting_display ||= {}
+  end
+
   # Valid upcoming change metadata looks like this
   # in site_settings.yml:
   #
@@ -519,6 +527,10 @@ module SiteSettingExtension
             opts_data[:depends_on] = depends_on
             opts_data[:depends_on_humanized_names] = depends_on.map { |dep| humanized_names(dep) }
             opts_data[:depends_behavior] = type_supervisor.dependencies.behaviors[s]
+            opts_data[:depends_on_values] = dependency_values[s] if dependency_values[s]
+            if display = dependent_setting_display[s]
+              opts_data[:dependent_setting_display] = display
+            end
           end
 
           if upcoming_change_default_override_metadata
@@ -1308,6 +1320,20 @@ module SiteSettingExtension
           opts[:requires_confirmation]
         end
       )
+
+      if opts[:depends_on_values]
+        dependency_values[name] = opts[:depends_on_values]
+          .transform_keys(&:to_sym)
+          .transform_values { |values| Array(values).map(&:to_s) }
+      else
+        dependency_values.delete(name)
+      end
+
+      if opts[:dependent_setting_display]
+        dependent_setting_display[name] = opts[:dependent_setting_display].to_s
+      else
+        dependent_setting_display.delete(name)
+      end
 
       if opts[:upcoming_change]
         upcoming_change_metadata[name] ||= {}

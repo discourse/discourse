@@ -5,6 +5,21 @@
 # https://translate.discourse.org/
 
 da:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            filter:
+              all_categories: "Alle kategorier"
+            answerers:
+              staff: "Personale"
+              member: "Brugere"
+              basic: "Basis"
+            response_time:
+              buckets:
+                lt_1h: "< 1 time"
+                gt_24h: "> 24 timer"
   js:
     notifications:
       alt:

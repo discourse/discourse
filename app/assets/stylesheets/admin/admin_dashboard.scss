@@ -1,4 +1,7 @@
 @use "lib/viewport";
+
+$db-bar-height: var(--space-2);
+
 @import "admin/dashboard/engagement";
 @import "admin/dashboard/highlights";
 @import "admin/dashboard/reports";
@@ -85,9 +88,11 @@
 }
 
 .db-delta {
-  &:not(table &) {
-    font-size: var(--font-down-2-rem);
-    font-weight: bold;
+  font-size: var(--font-down-2-rem);
+  font-weight: bold;
+
+  table & {
+    font-weight: normal;
   }
 
   &.--pos {
@@ -116,17 +121,18 @@
   border-radius: 6.25rem;
   padding: var(--space-half) var(--space-2);
   background: var(--primary-low);
-  color: var(--primary-medium);
   white-space: nowrap;
 
   &.--pos {
-    background: var(--success-low);
-    color: var(--primary);
+    background: var(--success);
+    border: 1px solid var(--success);
+    color: var(--secondary);
   }
 
   &.--neg {
-    background: var(--danger-low);
-    color: var(--primary);
+    background: var(--danger);
+    border: 1px solid var(--danger);
+    color: var(--secondary);
   }
 }
 
@@ -377,7 +383,10 @@
     }
 
     @include viewport.until(sm) {
-      border-bottom: 1px solid var(--content-border-color);
+      &:not(:last-child) {
+        border-right: 0;
+        border-bottom: 1px solid var(--content-border-color);
+      }
     }
   }
 

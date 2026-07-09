@@ -1,3 +1,4 @@
+import BabelTransformTypescript from "@babel/plugin-transform-typescript";
 import BabelPresetEnv from "@babel/preset-env";
 import { rollup } from "@rollup/browser";
 import { babel, getBabelOutputPlugin } from "@rollup/plugin-babel";
@@ -70,11 +71,17 @@ async function performRollup(modules, opts) {
         compact: false,
       }),
       babel({
-        extensions: [".js", ".gjs", ".hbs"],
+        extensions: [".js", ".gjs", ".ts", ".gts", ".hbs"],
         babelHelpers: "bundled",
         compact: false,
         // Support `import ... with { ... }` for cross-plugin imports
         parserOpts: { plugins: ["importAttributes"] },
+        overrides: [
+          {
+            test: /\.(gts|ts|mts|cts)$/,
+            plugins: [[BabelTransformTypescript, { allowDeclareFields: true }]],
+          },
+        ],
         plugins: [
           [DecoratorTransforms, { runEarly: true }],
           opts.themeId ? AddThemeGlobals : null,

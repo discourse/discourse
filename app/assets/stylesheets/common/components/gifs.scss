@@ -73,6 +73,15 @@
     font-weight: bold;
     text-align: center;
   }
+
+  .d-modal__footer {
+    display: flex;
+    flex-flow: row-reverse;
+  }
+
+  &__branding {
+    height: 30px;
+  }
 }
 
 .gifs-result {

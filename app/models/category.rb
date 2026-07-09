@@ -76,6 +76,22 @@ class Category < ActiveRecord::Base
   accepts_nested_attributes_for :category_setting, update_only: true
   accepts_nested_attributes_for :category_localizations, allow_destroy: true
 
+  def nested_replies_conversion_completed?
+    !!ActiveModel::Type::Boolean.new.cast(
+      custom_fields[NestedReplies::CONVERSION_COMPLETED_CUSTOM_FIELD],
+    )
+  end
+
+  def mark_nested_replies_conversion_completed!
+    custom_fields[NestedReplies::CONVERSION_COMPLETED_CUSTOM_FIELD] = true
+    save_custom_fields(true, run_validations: false)
+  end
+
+  def clear_nested_replies_conversion_completed!
+    custom_fields.delete(NestedReplies::CONVERSION_COMPLETED_CUSTOM_FIELD)
+    save_custom_fields(true, run_validations: false)
+  end
+
   validates :user_id, presence: true
 
   validates :name,
@@ -605,9 +621,17 @@ class Category < ActiveRecord::Base
 
     @@cache_text ||= LruRedux::ThreadSafeCache.new(1000)
     @@cache_text.getset(description) do
-      text = Nokogiri::HTML5.fragment(description).text.strip
-      ERB::Util.html_escape(text).html_safe
+      ERB::Util.html_escape(plain_text_description.to_s).html_safe
     end
+  end
+
+  def plain_text_description
+    return nil unless description
+
+    @@cache_plain_text ||= LruRedux::ThreadSafeCache.new(1000)
+    @@cache_plain_text
+      .getset(description) { Nokogiri::HTML5.fragment(description).text.strip }
+      .presence
   end
 
   def description_excerpt

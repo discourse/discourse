@@ -6,7 +6,9 @@ import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import lazyHash from "discourse/helpers/lazy-hash";
 import DButton from "discourse/ui-kit/d-button";
 import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
@@ -231,6 +233,7 @@ export default class CompactEventEditor extends Component {
 
   get eventNamePlaceholder() {
     return (
+      this.args.namePlaceholder ||
       this.composer?.get("model.title") ||
       i18n("discourse_post_event.composer.name_placeholder")
     );
@@ -910,5 +913,10 @@ export default class CompactEventEditor extends Component {
         {{on "focus" this.handleTextInputFocus}}
       />
     </section>
+
+    <PluginOutlet
+      @name="discourse-post-event-composer-editor"
+      @outletArgs={{lazyHash editor=this}}
+    />
   </template>
 }

@@ -4,14 +4,17 @@ import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import { ajax } from "discourse/lib/ajax";
 import { AUTO_GROUPS } from "discourse/lib/constants";
-import ComboBox from "discourse/select-kit/components/combo-box";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
+import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import DButton from "discourse/ui-kit/d-button";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+const ACCESS_CONTROL_GRANTEE_SEARCH_URL = "/access-control/grantees/search";
 const EDIT_PERMISSION = "edit";
 const READ_ONLY_PERMISSION = "view";
 const READ_ONLY_DEFAULT_AUTO_GROUPS = [
@@ -19,6 +22,10 @@ const READ_ONLY_DEFAULT_AUTO_GROUPS = [
   AUTO_GROUPS.everyone.id,
   AUTO_GROUPS.trust_level_0.id,
 ];
+const ROW_TYPE_SORT_ORDER = {
+  group: 0,
+  user: 1,
+};
 const REMOVE_ACTION = {
   id: "remove",
   name: i18n("access_control.manage.access_permission_remove"),
@@ -46,6 +53,84 @@ function defaultPermissions() {
       ),
     },
   ];
+}
+
+function granteeValue(type, id) {
+  return `${type}:${id}`;
+}
+
+function rowTypeSortOrder(type) {
+  return ROW_TYPE_SORT_ORDER[type] ?? 2;
+}
+
+function groupGranteeResult(group) {
+  return {
+    value: granteeValue("group", group.id),
+    id: group.name,
+    aclId: group.id,
+    aclType: "group",
+    name: group.full_name || group.name,
+    full_name: group.full_name,
+    automatic: group.automatic,
+    flair_url: group.flair_url,
+    flair_bg_color: group.flair_bg_color,
+    flair_color: group.flair_color,
+    isGroup: true,
+  };
+}
+
+class AccessControlGranteeChooser extends EmailGroupUserChooser {
+  valueProperty = "value";
+
+  search(filter = "") {
+    if (!filter) {
+      return Promise.resolve(
+        this.selectKit.options.customSearchOptions?.defaultSearchResults || []
+      );
+    }
+
+    return ajax(ACCESS_CONTROL_GRANTEE_SEARCH_URL, {
+      data: {
+        term: filter,
+        acl_target: this.selectKit.options.aclTarget,
+      },
+    })
+      .then((results) => this.normalizeGranteeResults(results))
+      .then((results) => this.excludeSelectedGrantees(results))
+      .catch(() => []);
+  }
+
+  normalizeGranteeResults(results) {
+    return [
+      ...(results?.groups || []).map(groupGranteeResult),
+      ...(results?.users || []).map((user) => this.userResult(user)),
+    ];
+  }
+
+  userResult(user) {
+    return {
+      value: granteeValue("user", user.id),
+      id: user.username,
+      aclId: user.id,
+      aclType: "user",
+      name: user.name,
+      username: user.username,
+      showUserStatus: this.showUserStatus,
+      status: user.status,
+      avatar_template: user.avatar_template,
+      isUser: true,
+    };
+  }
+
+  excludeSelectedGrantees(results) {
+    const excludedGrantees = this.selectKit.options.excludedGrantees || [];
+
+    if (!excludedGrantees.length) {
+      return results;
+    }
+
+    return results.filter((result) => !excludedGrantees.includes(result.value));
+  }
 }
 
 export default class DAccessControl extends Component {
@@ -96,6 +181,14 @@ export default class DAccessControl extends Component {
 
         return (a.full_name || a.name).localeCompare(b.full_name || b.name);
       });
+  }
+
+  get availableGrantees() {
+    return this.availableGroups.map(groupGranteeResult);
+  }
+
+  get selectedGranteeValues() {
+    return this.acl.map((entry) => granteeValue(entry.type, entry.id));
   }
 
   // TODO (martin) Handle user type ACLs here in next PR
@@ -160,7 +253,11 @@ export default class DAccessControl extends Component {
           acl.push({
             type: "group",
             id: entry.id,
+            name: group.name,
             display_name: group.full_name || group.name,
+            flair_url: group.flair_url,
+            flair_bg_color: group.flair_bg_color,
+            flair_color: group.flair_color,
             permission: entry.permission,
             metadata: {
               auto_group: group.automatic,
@@ -183,6 +280,12 @@ export default class DAccessControl extends Component {
         id: entry.id,
         permission: entry.permission,
         display_name: entry.display_name,
+        username: entry.username,
+        name: entry.name,
+        avatar_template: entry.avatar_template,
+        flair_url: entry.flair_url,
+        flair_bg_color: entry.flair_bg_color,
+        flair_color: entry.flair_color,
         type: entry.type,
         mandatory: entry.mandatory,
       }))
@@ -191,7 +294,19 @@ export default class DAccessControl extends Component {
           return a.mandatory ? -1 : 1;
         }
 
-        return (a.display_name || "").localeCompare(b.display_name || "");
+        const nameSort = (a.display_name || "").localeCompare(
+          b.display_name || ""
+        );
+
+        if (a.mandatory && b.mandatory) {
+          return nameSort;
+        }
+
+        if (a.type !== b.type) {
+          return rowTypeSortOrder(a.type) - rowTypeSortOrder(b.type);
+        }
+
+        return nameSort;
       });
   }
 
@@ -201,27 +316,43 @@ export default class DAccessControl extends Component {
   }
 
   @action
-  onGroupChosen(groupId) {
-    if (groupId == null) {
+  onGranteeChosen(_value, selectedGrantees) {
+    const selectedGrantee = selectedGrantees?.[0];
+
+    if (!selectedGrantee) {
       this.addingGroup = false;
       return;
     }
 
-    const selectedGroup = (this.args.groups || []).find(
-      (group) => group.id === groupId
-    );
+    const isReadOnlyDefaultGroup =
+      selectedGrantee.aclType === "group" &&
+      READ_ONLY_DEFAULT_AUTO_GROUPS.includes(selectedGrantee.aclId);
 
     const newPermission = {
-      id: selectedGroup.id,
-      display_name: selectedGroup.full_name || selectedGroup.name,
-      type: "group",
-      permission: READ_ONLY_DEFAULT_AUTO_GROUPS.includes(selectedGroup.id)
+      id: selectedGrantee.aclId,
+      display_name:
+        selectedGrantee.name || selectedGrantee.full_name || selectedGrantee.id,
+      type: selectedGrantee.aclType,
+      permission: isReadOnlyDefaultGroup
         ? READ_ONLY_PERMISSION
         : EDIT_PERMISSION,
-      metadata: {
-        auto_group: selectedGroup.automatic,
-      },
     };
+
+    if (selectedGrantee.aclType === "group") {
+      newPermission.name = selectedGrantee.id;
+      newPermission.flair_url = selectedGrantee.flair_url;
+      newPermission.flair_bg_color = selectedGrantee.flair_bg_color;
+      newPermission.flair_color = selectedGrantee.flair_color;
+      newPermission.metadata = {
+        auto_group: selectedGrantee.automatic,
+      };
+    }
+
+    if (selectedGrantee.aclType === "user") {
+      newPermission.username = selectedGrantee.username;
+      newPermission.name = selectedGrantee.name;
+      newPermission.avatar_template = selectedGrantee.avatar_template;
+    }
 
     const next = [...this.acl, newPermission];
 
@@ -265,6 +396,19 @@ export default class DAccessControl extends Component {
     });
   }
 
+  rowIsType(row, type) {
+    return row.type === type;
+  }
+
+  rowAsUser(row) {
+    return {
+      username: row.username,
+      id: row.id,
+      name: row.name || row.display_name,
+      avatar_template: row.avatar_template,
+    };
+  }
+
   // TODO (martin) How are we going to deal with users that have the Owner permission
   // here if we don't want to expose that in the UI?
 
@@ -281,7 +425,8 @@ export default class DAccessControl extends Component {
               data-row-type={{row.type}}
               data-row-id={{row.id}}
             >
-              <span class="d-access-control__group-name">{{#if row.mandatory}}
+              <span class="d-access-control__group-name">
+                {{#if row.mandatory}}
                   <DTooltip
                     @content={{i18n
                       "access_control.manage.mandatory_acl_tooltip"
@@ -291,6 +436,12 @@ export default class DAccessControl extends Component {
                       {{dIcon "lock"}}
                     </:trigger>
                   </DTooltip>
+                {{/if}}
+                {{#if (this.rowIsType row "user")}}
+                  {{dAvatar (this.rowAsUser row) imageSize="small"}}
+                {{/if}}
+                {{#if (this.rowIsType row "group")}}
+                  {{dIcon "user-group"}}
                 {{/if}}
                 {{row.display_name}}
               </span>
@@ -314,16 +465,22 @@ export default class DAccessControl extends Component {
       {{/if}}
 
       {{#if this.addingGroup}}
-        <ComboBox
+        <AccessControlGranteeChooser
           class="d-access-control__chooser"
           @value={{null}}
-          @content={{this.availableGroups}}
-          @onChange={{this.onGroupChosen}}
-          @labelProperty="full_name"
+          @onChange={{this.onGranteeChosen}}
+          @labelProperty="name"
           @options={{hash
-            none="access_control.manage.add_group"
+            aclTarget=@aclTarget
+            customSearchOptions=(hash
+              defaultSearchResults=this.availableGrantees
+            )
             expandedOnInsert=true
+            excludedGrantees=this.selectedGranteeValues
             filterable=true
+            includeGroups=true
+            maximum=1
+            none="access_control.manage.add_group"
           }}
         />
       {{else}}

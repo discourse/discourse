@@ -260,7 +260,6 @@ de:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    diff_too_complex: "Die Unterschiede sind zu komplex, um sicher berechnet zu werden. Bitte versuche es mit kleineren Änderungen."
     messages:
       invalid_locale: "%{invalid_locale} ist keine gültige Sprachvariante"
       too_long_validation:
@@ -1296,6 +1295,7 @@ de:
         level: "Vertrauensstufe"
         count: "Mitglieder"
         share: "Teilen"
+        signups: "Registrierungen"
       levels:
         "0": "Neue"
         "1": "Anwärter"
@@ -1799,8 +1799,6 @@ de:
     silence_new_user_sensitivity: "Die Wahrscheinlichkeit, mit der ein neuer Benutzer wegen der Spam-Meldungen stummgeschaltet wird"
     auto_close_topic_sensitivity: "Die Wahrscheinlichkeit, mit der ein gemeldetes Thema automatisch geschlossen wird"
     cooldown_minutes_after_hiding_posts: "Minuten, die ein Benutzer warten muss, bevor ein Beitrag bearbeitet werden kann, der wegen Meldungen anderer Benutzer versteckt wurde"
-    max_topics_in_first_day: "Maximale Anzahl an Themen, die ein Benutzer in den ersten 24 Stunden nach dem Schreiben seines ersten Beitrags erstellen kann."
-    max_replies_in_first_day: "Maximale Anzahl an Beiträgen, die ein Benutzer in den ersten 24 Stunden nach dem Schreiben seines ersten Beitrags erstellen kann."
     tl2_additional_likes_per_day_multiplier: "Erhöhe das Limit der „Gefällt mir“ pro Tag für Benutzer mit Vertrauensstufe 2 (Mitglied) durch Multiplikation mit dieser Zahl"
     tl3_additional_likes_per_day_multiplier: "Erhöhe das Limit der „Gefällt mir“ pro Tag für Benutzer mit Vertrauensstufe 3 (Stammgast) durch Multiplikation mit dieser Zahl"
     tl4_additional_likes_per_day_multiplier: "Erhöhe das Limit der „Gefällt mir“ pro Tag für Benutzer mit Vertrauensstufe 4 (Anführer) durch Multiplikation mit dieser Zahl"
@@ -2439,7 +2437,6 @@ de:
     gravatar_base_url: "Gib die URL für den Zugriff auf die API des Gravatar-Anbieters an. Diese Einstellung ist wichtig für die Umwandlung von E-Mail-Adressen in Gravatar-URLs, für die Avatar-Bilder hinterlegt werden."
     share_quote_buttons: "Lege fest, welche Elemente im Widget zum Teilen von Zitaten erscheinen und in welcher Reihenfolge."
     share_quote_visibility: "Bestimme, wann die Schaltflächen zum Teilen von Zitaten angezeigt werden sollen: nie, nur für anonyme Benutzer oder für alle Benutzer. "
-    create_revision_on_bulk_topic_moves: "Erstelle eine Überarbeitung für die ersten Beiträge, wenn Themen massenweise in eine neue Kategorie verschoben werden."
     allow_changing_staged_user_tracking: "Zulassen, dass die Kategorie- und Schlagwort-Benachrichtigungseinstellungen eines vorbereiteten Benutzers von einem Administratorbenutzer geändert werden."
     use_email_for_username_and_name_suggestions: "Verwende den ersten Teil von E-Mail-Adressen für Vorschläge für Benutzernamen und Namen. Achtung: Dies kann es böswilligen Akteuren erleichtern, die E-Mail-Adressen deiner Mitglieder herauszufinden (weil ein großer Teil geläufige Anbieter wie `gmail.com` nutzt)."
     use_name_for_username_suggestions: "Verwende den vollständigen Namen eines Benutzers, wenn bei SSO- und OAuth-Anmeldungen Benutzernamen vorgeschlagen werden."
@@ -2483,9 +2480,9 @@ de:
     nested_replies_max_depth: "Maximale visuelle Verschachtelungstiefe für Antworten in einem Thread. Bei Beiträgen, die tiefer liegen, wird ein Link „Diesen Thread fortsetzen“ angezeigt."
     nested_replies_backfill_batch_size: "Anzahl der Themen, für die pro geplantem Durchlauf die Statistiken zu verschachtelten Antworten rückwirkend nachgetragen werden sollen."
     nested_replies_cap_nesting_depth: "Begrenze die Verschachtelung von Antworten auf die maximale visuelle Tiefe. Wenn diese Option aktiviert ist, werden Antworten auf der tiefsten Ebene nicht mehr als untergeordnete Elemente, sondern als gleichrangige Elemente neu zugeordnet."
-    fake_upcoming_change: "Dies ist keine echte bevorstehende Änderung. Sie dient zu Testzwecken und muss nicht übersetzt werden."
     floating_dismiss_topics_on_mobile: "Zeigt auf dem Handy über der Themenliste eine schwebende „Verwerfen …“-Schaltfläche, um den Zugriff zu erleichtern und Platz im oberen Bereich der Themenliste freizugeben"
     enable_simplified_category_creation: "Ermöglicht eine vereinfachte Kategorienerstellung mit weniger Optionen und einer übersichtlicheren Oberfläche."
+    reporting_improvements: "Verbesserungen der Navigation, des Designs und der Benutzerfreundlichkeit für die Admin-Berichte in Discourse."
     modernize_foundation_theme: "Diese Änderung führt Design-Änderungen am Foundation-Theme in Discourse ein."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."

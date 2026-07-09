@@ -977,6 +977,12 @@
         "mandatory_acl",
         "banned_acl"
       ]
+    },
+    "permanent_upcoming_change_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
     }
   },
   "required": [

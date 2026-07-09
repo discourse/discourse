@@ -5,7 +5,7 @@ import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import DButton from "discourse/ui-kit/d-button";
 
-<template>
+export default <template>
   {{#if @showCategoryChooser}}
     <div class="edit-category__wrapper">
       <PluginOutlet

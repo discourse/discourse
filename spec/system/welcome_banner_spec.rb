@@ -91,8 +91,6 @@ describe "Welcome banner" do
       expect(banner).to be_visible
       visit "/new"
       expect(banner).to be_visible
-      visit "/unread"
-      expect(banner).to be_visible
       visit "/hot"
       expect(banner).to be_visible
       visit "/tags"

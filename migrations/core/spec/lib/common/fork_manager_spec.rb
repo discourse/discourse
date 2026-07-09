@@ -55,4 +55,16 @@ RSpec.describe Migrations::ForkManager do
       read_io.close
     end
   end
+
+  describe ".with_batched_forks" do
+    it "runs the after-fork parent hooks even when the block raises" do
+      ran = false
+      described_class.after_fork_parent { ran = true }
+
+      expect { described_class.with_batched_forks { raise "fork exploded" } }.to raise_error(
+        "fork exploded",
+      )
+      expect(ran).to be(true)
+    end
+  end
 end

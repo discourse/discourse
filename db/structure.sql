@@ -2050,6 +2050,39 @@ ALTER SEQUENCE public.browser_pageview_referrer_daily_rollups_id_seq OWNED BY pu
 
 
 --
+-- Name: browser_pageview_session_engagement_daily_rollups; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.browser_pageview_session_engagement_daily_rollups (
+    id bigint NOT NULL,
+    date date NOT NULL,
+    logged_in boolean NOT NULL,
+    sessions bigint NOT NULL,
+    bounced bigint NOT NULL,
+    engaged_seconds_total bigint NOT NULL
+);
+
+
+--
+-- Name: browser_pageview_session_engagement_daily_rollups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.browser_pageview_session_engagement_daily_rollups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: browser_pageview_session_engagement_daily_rollups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.browser_pageview_session_engagement_daily_rollups_id_seq OWNED BY public.browser_pageview_session_engagement_daily_rollups.id;
+
+
+--
 -- Name: browser_pageview_session_engagements; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4130,6 +4163,44 @@ ALTER SEQUENCE public.discourse_reactions_reactions_id_seq OWNED BY public.disco
 
 
 --
+-- Name: discourse_rss_polling_poll_attempts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_rss_polling_poll_attempts (
+    id bigint NOT NULL,
+    rss_feed_id bigint NOT NULL,
+    status integer DEFAULT 0 NOT NULL,
+    imported_count integer DEFAULT 0 NOT NULL,
+    updated_count integer DEFAULT 0 NOT NULL,
+    skipped_count integer DEFAULT 0 NOT NULL,
+    failed_count integer DEFAULT 0 NOT NULL,
+    error text,
+    items jsonb DEFAULT '[]'::jsonb NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: discourse_rss_polling_poll_attempts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_rss_polling_poll_attempts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_rss_polling_poll_attempts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_rss_polling_poll_attempts_id_seq OWNED BY public.discourse_rss_polling_poll_attempts.id;
+
+
+--
 -- Name: discourse_rss_polling_rss_feeds; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4142,7 +4213,8 @@ CREATE TABLE public.discourse_rss_polling_rss_feeds (
     tags character varying,
     created_at timestamp(6) without time zone NOT NULL,
     updated_at timestamp(6) without time zone NOT NULL,
-    user_id bigint
+    user_id bigint,
+    enabled boolean DEFAULT true NOT NULL
 );
 
 
@@ -11398,7 +11470,9 @@ CREATE TABLE public.user_options (
     discourse_rewind_enabled boolean DEFAULT true NOT NULL,
     notify_on_solved boolean DEFAULT true NOT NULL,
     show_original_content boolean DEFAULT false NOT NULL,
-    enable_upcoming_change_available_notifications boolean DEFAULT true NOT NULL
+    enable_upcoming_change_available_notifications boolean DEFAULT true NOT NULL,
+    chat_announce_new_messages boolean DEFAULT true NOT NULL,
+    chat_new_message_sound boolean DEFAULT false NOT NULL
 );
 
 
@@ -12370,6 +12444,13 @@ ALTER TABLE ONLY public.browser_pageview_referrer_daily_rollups ALTER COLUMN id 
 
 
 --
+-- Name: browser_pageview_session_engagement_daily_rollups id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_session_engagement_daily_rollups ALTER COLUMN id SET DEFAULT nextval('public.browser_pageview_session_engagement_daily_rollups_id_seq'::regclass);
+
+
+--
 -- Name: browser_pageview_session_engagements id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -12780,6 +12861,13 @@ ALTER TABLE ONLY public.discourse_reactions_reaction_users ALTER COLUMN id SET D
 --
 
 ALTER TABLE ONLY public.discourse_reactions_reactions ALTER COLUMN id SET DEFAULT nextval('public.discourse_reactions_reactions_id_seq'::regclass);
+
+
+--
+-- Name: discourse_rss_polling_poll_attempts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_rss_polling_poll_attempts ALTER COLUMN id SET DEFAULT nextval('public.discourse_rss_polling_poll_attempts_id_seq'::regclass);
 
 
 --
@@ -14588,6 +14676,14 @@ ALTER TABLE ONLY public.browser_pageview_referrer_daily_rollups
 
 
 --
+-- Name: browser_pageview_session_engagement_daily_rollups browser_pageview_session_engagement_daily_rollups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.browser_pageview_session_engagement_daily_rollups
+    ADD CONSTRAINT browser_pageview_session_engagement_daily_rollups_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: browser_pageview_session_engagements browser_pageview_session_engagements_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -15073,6 +15169,14 @@ ALTER TABLE ONLY public.discourse_reactions_reaction_users
 
 ALTER TABLE ONLY public.discourse_reactions_reactions
     ADD CONSTRAINT discourse_reactions_reactions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_rss_polling_poll_attempts discourse_rss_polling_poll_attempts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_rss_polling_poll_attempts
+    ADD CONSTRAINT discourse_rss_polling_poll_attempts_pkey PRIMARY KEY (id);
 
 
 --
@@ -16981,6 +17085,13 @@ CREATE UNIQUE INDEX idx_bprd_rollups_date_referrer_unique ON public.browser_page
 
 
 --
+-- Name: idx_bpse_rollups_date_logged_in_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_bpse_rollups_date_logged_in_unique ON public.browser_pageview_session_engagement_daily_rollups USING btree (date, logged_in);
+
+
+--
 -- Name: idx_category_posting_review_groups_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17433,6 +17544,13 @@ CREATE INDEX idx_posts_user_id_deleted_at ON public.posts USING btree (user_id) 
 --
 
 CREATE INDEX idx_reviewables_score_desc_created_at_desc ON public.reviewables USING btree (score DESC, created_at DESC);
+
+
+--
+-- Name: idx_rss_polling_poll_attempts_on_feed_created_id_desc; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX idx_rss_polling_poll_attempts_on_feed_created_id_desc ON public.discourse_rss_polling_poll_attempts USING btree (rss_feed_id, created_at DESC, id DESC);
 
 
 --
@@ -22351,17 +22469,22 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260707013407'),
+('20260702102111'),
+('20260701073045'),
 ('20260630034050'),
 ('20260629233141'),
 ('20260629081606'),
 ('20260629022603'),
 ('20260626055145'),
 ('20260624140945'),
+('20260623201925'),
 ('20260623090824'),
 ('20260623052745'),
 ('20260622201006'),
 ('20260622201005'),
 ('20260622140747'),
+('20260619085855'),
 ('20260617180115'),
 ('20260617104005'),
 ('20260617053237'),
@@ -22369,6 +22492,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260615084100'),
 ('20260615082047'),
 ('20260612092612'),
+('20260612064730'),
+('20260611102547'),
 ('20260610205840'),
 ('20260610075829'),
 ('20260610064425'),

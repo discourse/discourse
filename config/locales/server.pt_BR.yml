@@ -260,7 +260,6 @@ pt_BR:
   errors: &errors
     format: ! "%{attribute} %{message}"
     format_with_full_message: "<b>%{attribute}</b>: %{message}"
-    diff_too_complex: "O diff é muito complexo para ser computado com segurança. Por favor, tente fazer edições menores."
     messages:
       invalid_locale: "%{invalid_locale} não é uma localização válida"
       too_long_validation:
@@ -1277,6 +1276,7 @@ pt_BR:
         level: "Nível de confiança"
         count: "Membros"
         share: "Compartilhar"
+        signups: "Cadastros"
       levels:
         "0": "Nova"
         "1": "Básico"
@@ -1777,8 +1777,6 @@ pt_BR:
     silence_new_user_sensitivity: "A probabilidade de um(a) novo(a) usuário(a) ser silenciado(a) com base em sinalizadores de spam"
     auto_close_topic_sensitivity: "A probabilidade de um tópico sinalizado ser automaticamente fechado"
     cooldown_minutes_after_hiding_posts: "Quantidade de minutos que um(a) usuário(a) deve esperar antes de poder editar uma postagem oculta devido a sinalizadores da comunidade."
-    max_topics_in_first_day: "Quantidade máxima de tópicos que um(a) usuário(a) pode criar dentro de 24 horas após a criação de sua primeira postagem"
-    max_replies_in_first_day: "A quantidade máxima de respostas que um(a) usuário(a) tem permissão para criar dentro de 24 horas após a criação de sua primeira postagem. "
     tl2_additional_likes_per_day_multiplier: "Aumentar o limite de curtidas por dia para tl2 (membros) ao multiplicar por este número"
     tl3_additional_likes_per_day_multiplier: "Aumentar o limite de curtidas por dia para tl3 (regular) ao multiplicar por este número"
     tl4_additional_likes_per_day_multiplier: "Aumentar o limite de curtidas por dia para tl4 (líder) ao multiplicar por este número"
@@ -2409,7 +2407,6 @@ pt_BR:
     gravatar_base_url: "Especifique a URL para acessar a API do provedor do Gravatar. Esta configuração é fundamental para converter endereços de e-mail em URLs do Gravatar onde as imagens de avatares estão armazenadas."
     share_quote_buttons: "Determine quais e em que ordem os itens são exibidos na citação compartilhando widget."
     share_quote_visibility: "Determine quando exibir botões de compartilhamento de citações: nunca, apenas para usuários(as) anônimos(as) ou todos(as) os(as) usuários(as). "
-    create_revision_on_bulk_topic_moves: "Crie revisão para as primeiras postagens quando os tópicos forem movidos em massa para uma nova categoria."
     allow_changing_staged_user_tracking: "Permitir a alteração das preferências de notificação de etiquetas e categoria do(a) usuário(a) por parte de um(a) usuário(a) administrador(a)."
     use_email_for_username_and_name_suggestions: "Use a primeira parte dos endereços de e-mail para sugerir nomes e nomes de usuário(a). Aviso: isso pode facilitar que agentes inescrupulosos descubram o endereço de e-mail dos seus membros (já que muita gente usa provedores comuns de e-mail, como o \"gmail.com\")."
     suggest_weekends_in_date_pickers: "Inclua fins de semana (sábado e domingo) nas sugestões do seletor de datas (desative isso se você usar o Discourse apenas durante a semana, de segunda a sexta)."
@@ -2443,9 +2440,9 @@ pt_BR:
     reviewable_ui_refresh: "Grupos que podem usar a nova IU experimental na fila de revisão."
     content_localization_use_default_locale_when_unsupported: "Servir conteúdo traduzido no idioma padrão do site para usuários cujo idioma preferido não esteja listado em 'content localization supported locales'."
     content_localization_allow_author_localization: "Permitir que os autores atualizem a localização de seus próprios tópicos e postagens por meio do menu da postagem."
-    fake_upcoming_change: "Esta é uma alteração prevista fictícia para fins de teste. Não é necessário traduzir esta string."
     floating_dismiss_topics_on_mobile: "Exibe um botão flutuante \"Fechar...\" na lista de tópicos em dispositivos móveis para facilitar o acesso e liberar espaço na parte superior da lista."
     enable_simplified_category_creation: "Ativa um fluxo de criação de categorias simplificado, com menos opções e uma interface mais limpa."
+    reporting_improvements: "Melhorias na navegação, design e usabilidade dos relatórios administrativos do Discourse."
     modernize_foundation_theme: "Essa alteração introduz modificações de design ao tema Foundation no Discourse."
     errors:
       invalid_css_color: "Cor inválida. Digite o nome da cor ou valor hexadecimal."

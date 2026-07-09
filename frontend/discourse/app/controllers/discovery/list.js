@@ -79,14 +79,6 @@ export default class DiscoveryListController extends Controller {
     this.appEvents.off("tag-info:updated", this, this.onTagInfoUpdated);
   }
 
-  // NOTE: (martin) Please keep this in tact for now, will remove once we have
-  // some actual upcoming changes to use.
-  //
-  // TODO (martin) (upcoming-changes) Remove this once we have actual upcoming changes to use.
-  get showFakeUpcomingChange() {
-    return this.siteSettings.fake_upcoming_change;
-  }
-
   get canBulkSelect() {
     return (
       this.currentUser?.canManageTopic ||
