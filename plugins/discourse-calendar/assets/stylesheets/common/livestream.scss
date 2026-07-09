@@ -50,11 +50,22 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     color: var(--danger);
   }
 
+  &__waiting {
+    margin: 0;
+    color: var(--primary-medium);
+  }
+
   &__frame {
+    // Zoom sets `display` inline on this element when it mounts, which beats
+    // anything declared here. Only `justify-content` and `padding-top` apply.
+    //
+    // Until the meeting is joined the widget is a small dialog (spinner,
+    // "meeting has not started"), so it is centred. Once joined it fills the
+    // frame and must sit flush.
     &.--visible {
       display: block;
-      padding-top: var(--space-4);
       justify-content: center;
+      padding-top: var(--space-4);
     }
 
     &.--joined {

@@ -18,6 +18,9 @@ const MAX_VIDEO_WIDTH = 1440;
 const MIN_VIDEO_HEIGHT = 135;
 const MAX_VIDEO_HEIGHT = 810;
 const DEFAULT_VIEW_TYPE = "speaker";
+const MEETING_NOT_STARTED_ERROR_CODE = 3008;
+const RETRY_DELAY_SECONDS = 30;
+const MAX_RETRY_ATTEMPTS = 40;
 
 function serializeZoomError(error) {
   if (!error) {
@@ -28,10 +31,11 @@ function serializeZoomError(error) {
     return { message: error };
   }
 
-  let knownError = false;
-  if (error.reason === "Meeting has not started") {
-    knownError = true;
-  }
+  // The reason string is what the SDK returns today, the code is the stable
+  // identifier.
+  const meetingNotStarted =
+    error.reason === "Meeting has not started" ||
+    error.errorCode === MEETING_NOT_STARTED_ERROR_CODE;
 
   return {
     name: error.name,
@@ -41,7 +45,7 @@ function serializeZoomError(error) {
     errorCode: error.errorCode,
     status: error.status,
     stack: error.stack,
-    knownError,
+    meetingNotStarted,
     ...Object.fromEntries(
       Object.entries(error).filter(([, value]) => typeof value !== "function")
     ),
@@ -57,8 +61,13 @@ export default class LivestreamZoomEntry extends Component {
   @tracked isJoining = false;
   @tracked isJoined = false;
   @tracked showZoomFrame = false;
+  @tracked retryCountdown = null;
+  @tracked isRetryingNow = false;
+  retryAttempts = 0;
+  retryTimer = null;
   zoomAppRoot = null;
   zoomClient = null;
+  zoomClientInitialized = false;
   zoomMutationObserver = null;
   zoomResizeObserver = null;
   zoomLayoutFrame = null;
@@ -108,6 +117,7 @@ export default class LivestreamZoomEntry extends Component {
     this.zoomMutationObserver?.disconnect();
     this.zoomResizeObserver?.disconnect();
     this.zoomClient?.leaveMeeting?.();
+    clearInterval(this.retryTimer);
     cancelAnimationFrame(this.zoomLayoutFrame);
     cancelAnimationFrame(this.zoomVideoSyncFrame);
   }
@@ -137,6 +147,14 @@ export default class LivestreamZoomEntry extends Component {
 
   get showFallbackLink() {
     return !isEmpty(this.errorMessage) || !this.currentUser;
+  }
+
+  get isWaitingForStart() {
+    return this.retryCountdown !== null;
+  }
+
+  get joinDisabled() {
+    return this.isJoining || this.isWaitingForStart;
   }
 
   get zoomViewSize() {
@@ -247,9 +265,104 @@ export default class LivestreamZoomEntry extends Component {
     );
   }
 
+  async performJoin() {
+    const zoomJoinPayload = await fetchZoomJoinPayload(this.topic.id);
+
+    if (!this.zoomClientInitialized) {
+      const ZoomMtgEmbedded = await loadZoomMeetingSdkEmbedded();
+      this.zoomClient = ZoomMtgEmbedded.createClient();
+
+      await this.zoomClient.init({
+        zoomAppRoot: this.zoomAppRoot,
+        language: "en-US",
+        patchJsMedia: true,
+        leaveOnPageUnload: true,
+        customize: {
+          activeApps: {
+            popper: {
+              placement: "top",
+            },
+          },
+          video: {
+            isResizable: false,
+            defaultViewType: DEFAULT_VIEW_TYPE,
+            viewSizes: {
+              default: this.zoomViewSize,
+            },
+            popper: {
+              disableDraggable: true,
+            },
+          },
+        },
+      });
+
+      this.zoomClient.on("connection-change", (payload) => {
+        // Handles the livestream ending while the user is still on the page.
+        if (payload.state === "Closed") {
+          this.isJoined = false;
+          this.hideZoomFrame();
+        }
+      });
+
+      this.zoomClientInitialized = true;
+    }
+
+    await this.zoomClient.join({
+      signature: zoomJoinPayload.signature,
+      sdkKey: zoomJoinPayload.sdk_key,
+      meetingNumber: zoomJoinPayload.meeting_number,
+      password: zoomJoinPayload.password || "",
+      userName: zoomJoinPayload.user_name,
+      userEmail: zoomJoinPayload.user_email,
+    });
+  }
+
+  startRetryCountdown() {
+    clearInterval(this.retryTimer);
+    this.retryCountdown = RETRY_DELAY_SECONDS;
+
+    this.retryTimer = setInterval(() => {
+      if (this.retryCountdown > 1) {
+        this.retryCountdown -= 1;
+        return;
+      }
+
+      clearInterval(this.retryTimer);
+      this.retryTimer = null;
+      this.attemptRejoin();
+    }, 1000);
+  }
+
+  stopRetrying() {
+    clearInterval(this.retryTimer);
+    this.retryTimer = null;
+    this.retryCountdown = null;
+    this.isRetryingNow = false;
+    this.retryAttempts = 0;
+  }
+
+  hideZoomFrame() {
+    this.showZoomFrame = false;
+
+    // Deletes inline styles that Zoom applies which leaves a big empty box on the page
+    this.zoomAppRoot?.removeAttribute("style");
+  }
+
+  // The client is deliberately reused. `ZoomMtgEmbedded.destroyClient()` never
+  // unmounts the React root that `join()` mounted into `zoomAppRoot`, so a
+  // fresh client would call `createRoot()` on a container that already has one
+  // and render nothing. Joining again on the same client re-runs the join
+  // against the already-mounted widget.
+  async attemptRejoin() {
+    this.retryCountdown = null;
+    this.isRetryingNow = true;
+
+    await this.joinZoom();
+  }
+
   @action
   async joinZoom() {
-    if (this.isJoining || this.isJoined) {
+    if (this.isJoining || this.isJoined || this.isWaitingForStart) {
       return;
     }
 
@@ -258,79 +371,52 @@ export default class LivestreamZoomEntry extends Component {
     this.showZoomFrame = true;
 
     try {
-      const zoomJoinPayload = await fetchZoomJoinPayload(this.topic.id);
-      const ZoomMtgEmbedded = await loadZoomMeetingSdkEmbedded();
-      this.zoomClient = ZoomMtgEmbedded.createClient();
+      await this.performJoin();
 
-      if (!this.zoomClientInitialized) {
-        await this.zoomClient.init({
-          zoomAppRoot: this.zoomAppRoot,
-          language: "en-US",
-          patchJsMedia: true,
-          leaveOnPageUnload: true,
-          customize: {
-            activeApps: {
-              popper: {
-                placement: "top",
-              },
-            },
-            video: {
-              isResizable: false,
-              defaultViewType: DEFAULT_VIEW_TYPE,
-              viewSizes: {
-                default: this.zoomViewSize,
-              },
-              popper: {
-                disableDraggable: true,
-              },
-            },
-          },
-        });
-
-        this.zoomClient.on("connection-change", (payload) => {
-          // Handles the livestream ending while the user is still on the page.
-          if (payload.state === "Closed") {
-            this.isJoined = false;
-            this.showZoomFrame = false;
-
-            // Deletes inline styles that Zoom applies which leaves a big empty box on the page
-            this.zoomAppRoot.removeAttribute("style");
-          }
-        });
-
-        this.zoomClientInitialized = true;
+      if (this.isDestroying || this.isDestroyed) {
+        return;
       }
 
-      await this.zoomClient.join({
-        signature: zoomJoinPayload.signature,
-        sdkKey: zoomJoinPayload.sdk_key,
-        meetingNumber: zoomJoinPayload.meeting_number,
-        password: zoomJoinPayload.password || "",
-        userName: zoomJoinPayload.user_name,
-        userEmail: zoomJoinPayload.user_email,
-      });
-
       this.isJoined = true;
+      this.stopRetrying();
     } catch (err) {
       const serializedError = serializeZoomError(err);
       // eslint-disable-next-line no-console
       console.error("Error joining Zoom meeting", serializedError);
 
-      // No need to show the generic error message if we know that Zoom will
-      // show the correct message in certain  known cases.
-      if (serializedError.knownError) {
+      // The user navigated away while the join was in flight, so there is
+      // nothing left to retry into.
+      if (this.isDestroying || this.isDestroyed) {
         return;
       }
 
+      if (serializedError.meetingNotStarted) {
+        this.retryAttempts += 1;
+
+        if (this.retryAttempts <= MAX_RETRY_ATTEMPTS) {
+          // The frame stays up so Zoom's own "meeting has not started" panel
+          // remains visible alongside the countdown.
+          this.isRetryingNow = false;
+          this.startRetryCountdown();
+          return;
+        }
+
+        this.stopRetrying();
+      } else {
+        this.stopRetrying();
+      }
+
+      this.hideZoomFrame();
       this.errorMessage = i18n("discourse_calendar.livestream.zoom.load_error");
     } finally {
+      this.isJoining = false;
+
       this.zoomLayoutFrame = window.requestAnimationFrame(() =>
         this.syncZoomLayout()
       );
       this.zoomVideoSyncFrame = window.requestAnimationFrame(() =>
         this.syncVideoSize()
       );
-      this.isJoining = false;
     }
   }
 
@@ -345,9 +431,24 @@ export default class LivestreamZoomEntry extends Component {
                 @label="discourse_calendar.livestream.zoom.join"
                 @icon="video"
                 class="btn-primary"
-                @disabled={{this.isJoining}}
+                @disabled={{this.joinDisabled}}
               />
             {{/unless}}
+
+            {{#if this.isWaitingForStart}}
+              <p class="discourse-calendar-livestream-zoom-entry__waiting">
+                {{i18n
+                  "discourse_calendar.livestream.zoom.not_started_retrying"
+                  count=this.retryCountdown
+                }}
+              </p>
+            {{else if this.isRetryingNow}}
+              <p class="discourse-calendar-livestream-zoom-entry__waiting">
+                {{i18n
+                  "discourse_calendar.livestream.zoom.not_started_trying_again"
+                }}
+              </p>
+            {{/if}}
 
             {{#if this.errorMessage}}
               <p class="discourse-calendar-livestream-zoom-entry__error">
