@@ -13,7 +13,10 @@ module DiscourseDataExplorer
         @api_versions ||=
           VersionRegistry
             .new(initial_version: INITIAL_API_VERSION)
-            .tap { it.register(VersionChanges::RenameQueriesSqlToQuery) }
+            .tap do |registry|
+              registry.register(VersionChanges::RenameQueriesSqlToQuery)
+              registry.register(VersionChanges::ChangeUsersUsernameToList)
+            end
       end
     end
   end

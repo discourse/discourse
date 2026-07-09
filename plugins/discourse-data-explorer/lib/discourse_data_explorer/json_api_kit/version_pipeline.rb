@@ -31,6 +31,20 @@ module DiscourseDataExplorer
           document
         end
 
+        # `fields[TYPE]` values are attribute names: run the type's up chain over a
+        # synthetic resource built from the names and keep the resulting keys — the
+        # same reuse as the pointer rewrite, in the other direction. Same nil-value
+        # caveat and fallback as downgrade_attribute_name.
+        def up_fieldset(names, type:, changes:)
+          return names if changes.blank?
+
+          synthetic = { data: { type: type, attributes: names.to_h { [it.to_sym, nil] } } }
+          up(synthetic, changes)
+          synthetic[:data][:attributes].keys
+        rescue StandardError
+          names
+        end
+
         def down_errors(document, type:, changes:)
           return document if changes.blank?
 
@@ -55,11 +69,19 @@ module DiscourseDataExplorer
 
         private
 
+        # The synthetic resource carries nil values, so a transform that touches
+        # VALUES (a shape change) may raise even though it is correct for real
+        # documents — the serializer guarantees real values there, the synthetic
+        # breaks that guarantee. Fall back to the unchanged (latest) name: degraded
+        # for old clients on that one pointer, never a 500. The clean fix is the
+        # declarative tier (statically-declared key maps). See versioning-design.md §3.
         def downgrade_attribute_name(name, type, changes)
           synthetic = { data: { type: type, attributes: { name.to_sym => nil } } }
           down(synthetic, changes)
           keys = synthetic[:data][:attributes].keys
           keys.size == 1 ? keys.first : name
+        rescue StandardError
+          name
         end
 
         def transform_resources(document, change, direction)

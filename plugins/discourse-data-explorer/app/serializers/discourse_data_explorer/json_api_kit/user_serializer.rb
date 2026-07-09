@@ -7,7 +7,11 @@ module DiscourseDataExplorer
     class UserSerializer
       include JSONAPI::Serializer
       set_type :users
-      attribute :username
+      # Wire attribute replaced `username` (2026-07-01 breaking change): an array of
+      # the user's known usernames — currently just the one. Representation-only.
+      attribute :usernames do |user|
+        [user.username]
+      end
       # Enables the nested include `user.groups` (the author's own groups). lazy_load_data
       # so the linkage/association only loads when that path is requested.
       has_many :groups, serializer: GroupSerializer, lazy_load_data: true

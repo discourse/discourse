@@ -7,10 +7,11 @@
 # latest-client examples pass from day one: they pin the current contract.
 RSpec.describe "JSON:API Kit versioning" do
   fab!(:admin)
+  fab!(:group)
   fab!(:query) { Fabricate(:query, user: admin, hidden: false, sql: "SELECT 42 AS answer") }
 
   let(:initial_version) { "2026-05-01" }
-  let(:current_version) { "2026-06-15" }
+  let(:current_version) { "2026-07-01" }
   let(:parsed_document) { JSON.parse(response.body) }
   let(:parsed_attributes) { parsed_document["data"].first["attributes"] }
 
@@ -139,6 +140,79 @@ RSpec.describe "JSON:API Kit versioning" do
         expect(parsed_document["errors"].first.dig("source", "pointer")).to eq(
           "/data/attributes/query",
         )
+      end
+    end
+  end
+
+  describe "Trace F — nested types across a multi-change gap" do
+    let(:queries_attributes) { parsed_document["data"].first["attributes"] }
+
+    let(:included_user_attributes) do
+      parsed_document["included"].find { it["type"] == "users" }["attributes"]
+    end
+
+    context "when the client predates both changes" do
+      let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
+
+      before { get_queries(headers:, params: { include: "user" }) }
+
+      it "downgrades the primary and the included resource together" do
+        expect(queries_attributes["sql"]).to eq(query.sql)
+        expect(included_user_attributes["username"]).to eq(admin.username)
+        expect(included_user_attributes).not_to have_key("usernames")
+      end
+    end
+
+    context "when the client sits between the two changes" do
+      let(:headers) { { "Discourse-Api-Version" => "2026-06-20" } }
+
+      before { get_queries(headers:, params: { include: "user" }) }
+
+      it "applies only the changes in the gap" do
+        expect(queries_attributes["query"]).to eq(query.sql)
+        expect(included_user_attributes["username"]).to eq(admin.username)
+        expect(included_user_attributes).not_to have_key("usernames")
+      end
+    end
+
+    context "when the client is current" do
+      let(:headers) { { "Discourse-Api-Version" => "2026-07-01" } }
+
+      before { get_queries(headers:, params: { include: "user" }) }
+
+      it "serves the latest shape for the included resource" do
+        expect(included_user_attributes["usernames"]).to eq([admin.username])
+        expect(included_user_attributes).not_to have_key("username")
+      end
+    end
+
+    context "when an old client's fieldset targets the included type" do
+      let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
+
+      before { get_queries(headers:, params: { include: "user", fields: { users: "username" } }) }
+
+      it "honors the old field name with its real value" do
+        expect(included_user_attributes.keys).to contain_exactly("username")
+        expect(included_user_attributes["username"]).to eq(admin.username)
+      end
+    end
+
+    context "when an old client requests a deep nested include" do
+      let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
+
+      before do
+        group.add(admin)
+        get_queries(headers:, params: { include: "user.groups" })
+      end
+
+      it "keeps full linkage while downgrading the included user" do
+        included_user = parsed_document["included"].find { it["type"] == "users" }
+
+        expect(included_user["attributes"]["username"]).to eq(admin.username)
+        expect(
+          included_user.dig("relationships", "groups", "data").map { it["id"].to_i },
+        ).to include(group.id)
+        expect(parsed_document["included"].map { it["type"] }).to include("groups")
       end
     end
   end

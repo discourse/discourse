@@ -226,5 +226,74 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::VersionPipeline do
         expect(downgraded[:errors].first.dig(:source, :pointer)).to eq("/data/attributes/c")
       end
     end
+
+    context "when the down transform manipulates values, not just keys" do
+      let(:shape_change) do
+        Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
+          version "2026-07-01"
+          description "Replaces the single thing with a list of things."
+
+          resource :things do
+            down do |resource|
+              attributes = resource[:attributes]
+              attributes[:thing] = attributes.delete(:things).first if attributes.key?(:things)
+            end
+          end
+        end
+      end
+
+      let(:gap) { [shape_change] }
+      let(:document) do
+        { errors: [{ status: "422", source: { pointer: "/data/attributes/things" } }] }
+      end
+
+      it "keeps the latest pointer instead of raising on the synthetic's nil value" do
+        expect(downgraded[:errors].first.dig(:source, :pointer)).to eq("/data/attributes/things")
+      end
+    end
+  end
+
+  describe ".up_fieldset" do
+    subject(:upgraded) { described_class.up_fieldset(names, type: :things, changes: gap) }
+
+    context "when fields name renamed attributes" do
+      let(:names) { %w[name a] }
+
+      it "maps the old names through the whole chain" do
+        expect(upgraded.map(&:to_s)).to eq(%w[name c])
+      end
+    end
+
+    context "with an empty gap" do
+      let(:gap) { [] }
+      let(:names) { %w[name a] }
+
+      it "returns the names untouched" do
+        expect(upgraded).to eq(%w[name a])
+      end
+    end
+
+    context "when the up transform manipulates values, not just keys" do
+      let(:merge_change) do
+        Class.new(DiscourseDataExplorer::JsonApiKit::VersionChange) do
+          version "2026-07-01"
+          description "Merges the parts into a whole."
+
+          resource :things do
+            up do |resource|
+              attributes = resource[:attributes]
+              attributes[:whole] = attributes.delete(:parts).join(" ") if attributes.key?(:parts)
+            end
+          end
+        end
+      end
+
+      let(:gap) { [merge_change] }
+      let(:names) { %w[parts] }
+
+      it "keeps the requested names instead of raising on the synthetic's nil value" do
+        expect(upgraded).to eq(%w[parts])
+      end
+    end
   end
 end

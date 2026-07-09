@@ -159,6 +159,43 @@ The contract fails in **latest terms**. Today's `render_validation_errors` build
 
 **Design point the trace surfaces:** error documents are *typeless* — there's no `data.type` to dispatch on, so the walker's self-routing doesn't work here. The error down-pass needs context: the endpoint's primary resource type (which `BaseController` knows from its DSL config). That makes error migration the one context-dependent piece of the pipeline. *(Open micro-question: rewrite only `source.pointer` (the machine contract), or also the human `detail` prose? Lean: pointer only — `detail` is documentation, not contract.)*
 
+### Trace F — nested types across a multi-change gap (added 2026-07-09, all green)
+
+A second real change — `ChangeUsersUsernameToList` (`2026-07-01`): the **included** `users` type's
+`username` (string) becomes `usernames` (array), modeled on Cadwyn's `ChangeAddressToList`, with a
+deliberately lossy down (`.first`). Proven end-to-end on `GET /queries?include=user`:
+
+| Client pinned | `queries` attrs | included `users` attrs |
+|---|---|---|
+| `2026-05-20` (before both) | `sql` | `username` |
+| `2026-06-20` (between) | `query` | `username` — **per-change granularity** |
+| `2026-07-01` (current) | `query` | `usernames` |
+
+Also green: an old client's `fields[users]=username` on the included type, and the deep `user.groups`
+include keeping full linkage while downgrading the user. The "applies wherever the type appears" claim
+is now demonstrated, not asserted.
+
+### Stress-test findings — data-manipulating transforms vs the synthetic trick (2026-07-09)
+
+**Question (loic):** does the synthetic-resource trick (fieldsets-up, pointers-down) survive transforms
+that manipulate *values*, not just keys? **Answer: real documents yes, synthetics no — now degraded
+gracefully instead of crashing.**
+
+- **Real documents: fully works.** Shape changes ride the pipeline like renames — the trust boundary
+  holds because the serializer guarantees real values on the down path (the lossy `.first` is safe).
+- **Synthetics carry `nil` values, violating that same trust boundary.** Confirmed live: a correct,
+  key-guarded, value-touching down (`attributes.delete(:things).first`) raises `NoMethodError` on the
+  synthetic. Two hazard classes: (1) value-*touching* transforms with fixed key maps → crash on nil;
+  (2) value-*dependent* key maps (split/merge) → the synthetic can't drive the mapping at all.
+- **Machinery fix (spike):** both synthetic paths (`up_fieldset`, `downgrade_attribute_name` — now
+  co-located in `VersionPipeline`) rescue and fall back to the unchanged names. Degradation, confined
+  to fieldsets/pointers naming a shape-changed attribute: the old client sees the *latest* name (pointer)
+  or the field silently drops (fieldset). Never a 500.
+- **Implication:** this is the forcing argument for the **declarative tier** — statically-declared key
+  maps need no value code and no synthetics, making these two surfaces exact instead of best-effort.
+  The declarative tier now has three motivations: four-surface duplication, type renames
+  (document-global), and synthetic soundness for shape changes.
+
 ### Trace E — header mechanics
 
 | Request header | Result |

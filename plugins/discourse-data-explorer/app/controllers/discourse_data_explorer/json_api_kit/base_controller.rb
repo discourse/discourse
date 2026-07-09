@@ -173,18 +173,13 @@ module DiscourseDataExplorer
         params[:data] = document[:data]
       end
 
-      # `fields[TYPE]` values are attribute names. Reuse each type's resource
-      # up-transforms by running the chain over a synthetic resource built from the
-      # names, then keeping the resulting keys — no separate params DSL needed.
       def upgrade_sparse_fieldsets
         return unless params[:fields].respond_to?(:each_pair)
 
         upgraded =
           params[:fields].to_unsafe_h.to_h do |type, list|
             names = list.to_s.split(",").filter_map { it.strip.presence }
-            synthetic = { data: { type: type, attributes: names.to_h { [it.to_sym, nil] } } }
-            VersionPipeline.up(synthetic, api_version_gap)
-            [type, synthetic[:data][:attributes].keys.join(",")]
+            [type, VersionPipeline.up_fieldset(names, type:, changes: api_version_gap).join(",")]
           end
         params[:fields] = upgraded
       end
