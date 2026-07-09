@@ -4638,7 +4638,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/404528"
   admin_dashboard_reports_seeded:
