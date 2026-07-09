@@ -16,7 +16,8 @@
   &__rows {
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
+    border: 1px solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
   }
 
   &__row {
@@ -24,27 +25,12 @@
     align-items: center;
     justify-content: space-between;
     gap: var(--space-2);
-    padding: var(--space-2);
-    border-radius: var(--d-border-radius);
+    border-bottom: 1px solid var(--content-border-color);
+    padding: var(--space-1) var(--space-2);
 
-    // border-bottom: 1px solid var(--content-border-color);
-    &.--mandatory {
-      color: var(--d-input-text-color--disabled);
+    &:last-child {
+      border-bottom: none;
     }
-
-    &:hover {
-      background-color: var(--d-hover);
-    }
-  }
-
-  &__row.--group .d-access-control__item-icon {
-    border-radius: 999px;
-    background-color: var(--primary-100);
-    width: var(--d-access-control-prefix-width);
-    height: var(--d-access-control-prefix-width);
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   &__item {
@@ -58,19 +44,40 @@
     gap: var(--space-1);
   }
 
-  &__permission {
-    flex: 0 0 auto;
-    width: auto;
+  &__row.--group .d-access-control__item-icon {
+    border-radius: 999px;
+    background-color: var(--primary-100);
+    width: var(--d-access-control-prefix-width);
+    height: var(--d-access-control-prefix-width);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  &__permission-divider {
-    border-top: 1px solid var(--content-border-color);
+  &__row.--group .d-access-control__item-icon svg {
+    width: var(--space-3);
+    height: var(--space-3);
+  }
+
+  &__tooltip {
+    font-size: var(--font-down-3);
+    background: var(--primary-100);
+    padding: var(--space-half) var(--space-1);
+    border-radius: var(--d-border-radius);
+    color: var(--d-input-text-color--disabled);
+  }
+
   }
 
   &__permission-remove {
     .texts span {
       color: var(--danger) !important;
     }
+    font-weight: bold;
+    color: var(--primary);
+  }
+    white-space: normal;
+    text-align: start;
   }
 
   &__add {

@@ -3,12 +3,14 @@ import { cached } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { AUTO_GROUPS } from "discourse/lib/constants";
-import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -133,6 +135,20 @@ class AccessControlGranteeChooser extends EmailGroupUserChooser {
   }
 }
 
+const AccessControlPermissionTrigger = <template>
+  <button
+    type="button"
+    class="btn btn-default d-access-control__permission"
+    disabled={{@disabled}}
+    ...attributes
+  >
+    <span class="d-button-label">
+      {{@label}}
+    </span>
+    {{dIcon "angle-down"}}
+  </button>
+</template>;
+
 export default class DAccessControl extends Component {
   @service site;
 
@@ -158,14 +174,7 @@ export default class DAccessControl extends Component {
       this.args.transformPermissionOptions?.(defaultPermissions()) ||
       defaultPermissions();
 
-    return [
-      ...permissions.sort((a, b) => a.level - b.level),
-      {
-        ...REMOVE_ACTION,
-        classNames:
-          "d-access-control__permission-divider d-access-control__permission-remove",
-      },
-    ];
+    return [...permissions.sort((a, b) => a.level - b.level), REMOVE_ACTION];
   }
 
   get availableGroups() {
@@ -368,6 +377,12 @@ export default class DAccessControl extends Component {
   }
 
   @action
+  selectPermission(close, granteeType, granteeId, permission) {
+    close?.();
+    this.onPermissionChange(granteeType, granteeId, permission);
+  }
+
+  @action
   excludeBannedPermissions(permissions, grantee) {
     if (!this.bannedAcl.length) {
       return permissions;
@@ -394,6 +409,14 @@ export default class DAccessControl extends Component {
       name: row.name || row.display_name,
       avatar_template: row.avatar_template,
     };
+  }
+
+  @action
+  permissionLabel(permissionId) {
+    return (
+      this.permissionOptions.find((option) => option.id === permissionId)
+        ?.name || permissionId
+    );
   }
 
   // TODO (martin) How are we going to deal with users that have the Owner permission
@@ -424,24 +447,12 @@ export default class DAccessControl extends Component {
             <div
               class={{dConcatClass
                 "d-access-control__row"
-                (if row.mandatory "--mandatory")
                 (if (eq row.type "user") "--user" "--group")
               }}
               data-row-type={{row.type}}
               data-row-id={{row.id}}
             >
               <span class="d-access-control__item">
-                {{#if row.mandatory}}
-                  <DTooltip
-                    @content={{i18n
-                      "access_control.manage.mandatory_acl_tooltip"
-                    }}
-                  >
-                    <:trigger>
-                      {{dIcon "lock"}}
-                    </:trigger>
-                  </DTooltip>
-                {{/if}}
                 <span class="d-access-control__item-icon">
                   {{#if (this.rowIsType row "user")}}
                     {{dAvatar (this.rowAsUser row) imageSize="small"}}
@@ -452,22 +463,76 @@ export default class DAccessControl extends Component {
                 </span>
                 <span class="d-access-control__item-name">
                   {{row.display_name}}
+                  {{#if row.mandatory}}
+                    <DTooltip
+                      @content={{i18n
+                        "access_control.manage.mandatory_acl_tooltip"
+                      }}
+                    >
+                      <:trigger>
+                        <span class="d-access-control__tooltip">{{dIcon "lock"}}
+                          Automatic</span>
+                      </:trigger>
+                    </DTooltip>
+                  {{/if}}
                 </span>
               </span>
-              <DropdownSelectBox
-                class="d-access-control__permission"
-                @value={{row.permission}}
-                @content={{this.excludeBannedPermissions
-                  this.permissionOptions
-                  row
-                }}
-                @onChange={{fn this.onPermissionChange row.type row.id}}
-                @options={{hash
-                  showCaret=true
-                  showFullTitle=true
+              <DMenu
+                @identifier="d-access-control__permission-menu"
+                @modalForMobile={{true}}
+                @autofocus={{false}}
+                @triggerComponent={{component
+                  AccessControlPermissionTrigger
+                  label=(this.permissionLabel row.permission)
                   disabled=row.mandatory
                 }}
-              />
+                data-permission={{row.permission}}
+              >
+                <:content as |args|>
+                  <DDropdownMenu as |dropdown|>
+                    {{#each
+                      (this.excludeBannedPermissions this.permissionOptions row)
+                      key="id"
+                      as |option|
+                    }}
+                      {{#if (eq option.id "remove")}}
+                        <dropdown.divider />
+                      {{/if}}
+                      <dropdown.item>
+                        <DButton
+                          class={{dConcatClass
+                            "d-access-control__permission-option"
+                            "--with-description"
+                            (if (eq option.id "remove") "--remove")
+                            (if (eq option.id row.permission) "-selected")
+                          }}
+                          data-permission-id={{option.id}}
+                          @action={{fn
+                            this.selectPermission
+                            args.close
+                            row.type
+                            row.id
+                            option.id
+                          }}
+                        >
+                          <div class="d-access-control__permission-texts">
+                            <span class="d-access-control__permission-label">
+                              {{option.name}}
+                            </span>
+                            {{#if option.description}}
+                              <span
+                                class="d-access-control__permission-description"
+                              >
+                                {{option.description}}
+                              </span>
+                            {{/if}}
+                          </div>
+                        </DButton>
+                      </dropdown.item>
+                    {{/each}}
+                  </DDropdownMenu>
+                </:content>
+              </DMenu>
             </div>
           {{/each}}
         </div>
