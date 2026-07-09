@@ -18,23 +18,23 @@ function initializeAiToolApproval(api) {
         return;
       }
 
-      [...element.querySelectorAll("div.ai-tool-approval")].forEach(
-        (cardElement) => {
-          const reviewableId = cardElement.getAttribute(
-            "data-ai-tool-approval-reviewable-id"
-          );
+      [
+        ...element.querySelectorAll("div[data-ai-tool-approval-reviewable-id]"),
+      ].forEach((cardElement) => {
+        const reviewableId = cardElement.getAttribute(
+          "data-ai-tool-approval-reviewable-id"
+        );
 
-          helper.renderGlimmer(
-            cardElement,
-            <template>
-              <AiToolApproval
-                @postId={{post.id}}
-                @reviewableId={{reviewableId}}
-              />
-            </template>
-          );
-        }
-      );
+        helper.renderGlimmer(
+          cardElement,
+          <template>
+            <AiToolApproval
+              @postId={{post.id}}
+              @reviewableId={{reviewableId}}
+            />
+          </template>
+        );
+      });
     },
     {
       id: "ai-tool-approval",

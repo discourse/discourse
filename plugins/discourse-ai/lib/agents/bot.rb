@@ -373,9 +373,11 @@ module DiscourseAi
 
         # :custom_raw lands in the persisted reply as visible content —
         # a :thinking emission would be dropped (or collapsed into the
-        # thinking details block) depending on the agent's show_thinking
-        approval_card =
-          "<div class='ai-tool-approval' data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>"
+        # thinking details block) depending on the agent's show_thinking.
+        # This is an empty mount point (keyed by the reviewable id); the client
+        # decorator renders the AiToolApproval card component into it, so the
+        # `.ai-tool-approval` element exists only once, on the component itself.
+        approval_card = "<div data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>"
 
         approval_content =
           build_placeholder(
