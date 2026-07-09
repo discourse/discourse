@@ -666,7 +666,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def notify_users(result, guardian)
-    group_ids = Set.new([Group::AUTO_GROUPS[:staff]])
+    group_ids = Set.new([Group::AUTO_GROUPS[:moderators]])
 
     if SiteSetting.enable_category_group_moderation? && category
       group_ids.merge(category.moderating_group_ids)
