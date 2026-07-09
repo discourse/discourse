@@ -86,6 +86,8 @@ export const AI_FEATURE_SETTING_GROUPS = {
       settings: [
         "ai_admin_dashboard_enabled",
         "ai_admin_dashboard_highlights_agent",
+        "ai_admin_dashboard_highlights_category_scope",
+        "ai_admin_dashboard_highlights_categories",
       ],
     },
   ],

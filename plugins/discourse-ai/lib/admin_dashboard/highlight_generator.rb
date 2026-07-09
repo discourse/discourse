@@ -38,7 +38,20 @@ module DiscourseAi
       def cache_key
         db = RailsMultisite::ConnectionManagement.current_db
         agent_id = SiteSetting.ai_admin_dashboard_highlights_agent
-        "ai_admin_dashboard_highlight:v#{CACHE_VERSION}:#{db}:#{agent_id}:#{period}:#{start_date}:#{end_date}:#{I18n.locale}"
+        "ai_admin_dashboard_highlight:v#{CACHE_VERSION}:#{db}:#{agent_id}:#{categories_cache_key}:#{period}:#{start_date}:#{end_date}:#{I18n.locale}"
+      end
+
+      def categories_cache_key
+        category_ids =
+          SiteSetting
+            .ai_admin_dashboard_highlights_categories
+            .to_s
+            .split("|")
+            .filter_map { |category_id| category_id.presence&.to_i }
+            .sort
+            .join("|")
+
+        "#{SiteSetting.ai_admin_dashboard_highlights_category_scope}:#{category_ids}"
       end
 
       def generate_highlight

@@ -122,6 +122,8 @@ en:
 
     ai_admin_dashboard_enabled: "Enable AI features on the admin dashboard."
     ai_admin_dashboard_highlights_agent: "Agent that explains notable community shifts on the admin dashboard."
+    ai_admin_dashboard_highlights_category_scope: "Choose which categories AI highlights can use. Include and exclude options use {{setting:ai_admin_dashboard_highlights_categories}}. Personal messages are always excluded."
+    ai_admin_dashboard_highlights_categories: "Categories used when the AI highlights category scope is set to <strong>include</strong> or <strong>exclude</strong>."
     ai_summarization_enabled: "Enable the summarize feature"
     ai_summarization_agent: "Agent to use for summarize feature"
     ai_pm_summarization_allowed_groups: "Groups allowed to create and view summaries in PMs."
