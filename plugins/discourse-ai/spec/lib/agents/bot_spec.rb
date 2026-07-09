@@ -746,9 +746,16 @@ RSpec.describe DiscourseAi::Agents::Bot do
       expect(ReviewableAiToolAction.count).to eq(1)
     end
 
-    it "executes immediately when require_approval is false" do
+    it "executes immediately when neither the tool nor the agent requires approval" do
       toggle_enabled_bots(bots: [fake])
       Group.refresh_automatic_groups!
+
+      no_approval_tool_class =
+        Class.new(DiscourseAi::Agents::Tools::CloseTopic) do
+          def self.requires_approval?
+            false
+          end
+        end
 
       AiAgent.create!(
         name: "NoApprovalAgent",
@@ -763,7 +770,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       bot = described_class.as(test_bot_user, agent: agent_class.new)
 
       tool =
-        DiscourseAi::Agents::Tools::CloseTopic.new(
+        no_approval_tool_class.new(
           { topic_id: topic.id, closed: true, reason: "Off-topic" },
           bot_user: test_bot_user,
           llm: bot.llm,
@@ -778,16 +785,9 @@ RSpec.describe DiscourseAi::Agents::Bot do
       expect(ReviewableAiToolAction.count).to eq(0)
     end
 
-    it "creates a reviewable even when require_approval is false, for a tool with mandatory approval" do
+    it "creates a reviewable even when the agent's require_approval is false, for a tool that requires approval" do
       toggle_enabled_bots(bots: [fake])
       Group.refresh_automatic_groups!
-
-      mandatory_approval_tool_class =
-        Class.new(DiscourseAi::Agents::Tools::CloseTopic) do
-          def self.mandatory_approval?
-            true
-          end
-        end
 
       AiAgent.create!(
         name: "NoApprovalAgent2",
@@ -802,7 +802,7 @@ RSpec.describe DiscourseAi::Agents::Bot do
       bot = described_class.as(test_bot_user, agent: agent_class.new)
 
       tool =
-        mandatory_approval_tool_class.new(
+        DiscourseAi::Agents::Tools::CloseTopic.new(
           { topic_id: topic.id, closed: true, reason: "Off-topic" },
           bot_user: test_bot_user,
           llm: bot.llm,
@@ -823,10 +823,6 @@ RSpec.describe DiscourseAi::Agents::Bot do
 
       failing_precheck_tool_class =
         Class.new(DiscourseAi::Agents::Tools::CloseTopic) do
-          def self.mandatory_approval?
-            true
-          end
-
           def validation_error
             error_response("nope")
           end
