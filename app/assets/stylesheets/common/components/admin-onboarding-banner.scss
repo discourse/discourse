@@ -214,13 +214,17 @@
     }
 
     &.--selected {
-      border-color: var(--tertiary);
+      // border-color: var(--tertiary);
       box-shadow: 0 0 0 1px var(--tertiary);
     }
   }
 
   .theme-card-preview__image-wrapper {
-    height: 220px;
+    height: 250px;
+
+    @include viewport.from(md) {
+      height: 24vw; // adjusts with window width (like the modal itself)
+    }
   }
 
   .theme-card-preview__image {
