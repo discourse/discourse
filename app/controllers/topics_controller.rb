@@ -37,6 +37,18 @@ class TopicsController < ApplicationController
 
   before_action :consider_user_for_promotion, only: :show
 
+  around_action :hide_inaccessible_topic_when_detailed_404_disabled,
+                only: %i[
+                  archive_message
+                  move_to_inbox
+                  post_ids
+                  posts
+                  publish
+                  set_notifications
+                  set_slow_mode
+                  wordpress
+                ]
+
   skip_before_action :check_xhr, only: %i[show feed]
 
   def id_for_slug
@@ -692,6 +704,7 @@ class TopicsController < ApplicationController
 
   def toggle_archive_message(archive)
     topic = Topic.find(params[:id].to_i)
+    guardian.ensure_can_see!(topic)
 
     group_id = nil
 
@@ -913,6 +926,7 @@ class TopicsController < ApplicationController
       end
 
     topic = Topic.find(params[:topic_id].to_i)
+    guardian.ensure_can_see!(topic)
     TopicUser.change(user, topic.id, notification_level: params[:notification_level].to_i)
     render json: success_json
   end
@@ -1303,6 +1317,29 @@ class TopicsController < ApplicationController
   end
 
   private
+
+  def hide_inaccessible_topic_when_detailed_404_disabled
+    yield
+  rescue ActiveRecord::RecordNotFound
+    raise Discourse::NotFound
+  rescue Discourse::InvalidAccess => exception
+    raise exception if SiteSetting.detailed_404
+    raise exception if !requested_topic_hidden_from_user?(exception)
+
+    raise Discourse::NotFound
+  end
+
+  def requested_topic_hidden_from_user?(exception)
+    topic = exception.obj if exception.obj.is_a?(Topic)
+    topic ||= Topic.find_by(id: requested_topic_id)
+
+    topic.present? && !guardian.can_see?(topic)
+  end
+
+  def requested_topic_id
+    topic_id = params[:topic_id].presence || params[:id].presence
+    topic_id.to_s if topic_id.to_s.match?(/\A\d+\z/)
+  end
 
   def render_topic_with_tags(topic)
     payload = serialize_data(topic, BasicTopicSerializer)
