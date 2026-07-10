@@ -19,3 +19,4 @@ en:
       optimizer_upload_not_found: "could not find upload with sha1 %{sha1}"
       image_memory_limit: "Capping ImageMagick memory at %{mib} MiB per convert"
       interrupted: "Interrupted. The run is resumable — run the command again to continue."
+      inline_not_configured: "There are uploads to import, but no files database is configured and inline upload mode is not set up. Either run `disco upload` to build a files database, or add an `uploads:` section with `root_paths` under `config:` in importer.yml."
