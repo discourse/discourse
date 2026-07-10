@@ -8,10 +8,9 @@ root_paths:
 # Files that are downloaded from URLs are cached in this directory.
 download_cache_path: "/path/to/downloaded/files"
 
-# The number of threads to use for processing uploads is calculated as:
-#   thread_count = [number of cores] * [thread_count_factor]
-# The thread count will be doubled if uploads are stored on S3 because there's a higher latency.
-thread_count_factor: 1.5
+# The number of worker threads is chosen automatically and adjusted while the run
+# is going, based on how busy the CPU and memory are and whether throughput is
+# still climbing. There is no thread count to set here.
 
 # Delete uploads from the output database that are not found in the source database.
 delete_surplus_uploads: false

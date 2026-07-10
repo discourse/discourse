@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "etc"
-
 module Migrations
   module Importer
     module Uploads
@@ -10,8 +8,6 @@ module Migrations
         # {Pipeline}; a task only describes the work. Each task is a hook object
         # the pipeline drives (see {Pipeline} for the full interface).
         class Base
-          DEFAULT_THREAD_FACTOR = 1.5
-
           attr_reader :files_db, :intermediate_db, :settings, :discourse_store
           attr_writer :reporter
 
@@ -37,15 +33,12 @@ module Migrations
             nil
           end
 
-          # Same static formula as before the rework: cores, scaled by the
-          # configured factor, doubled for an external store (its uploads spend
-          # most of their time waiting on the network).
-          def worker_count
-            base = Etc.nprocessors
-            factor = settings.fetch(:thread_count_factor, DEFAULT_THREAD_FACTOR)
-            store_factor = discourse_store.external? ? 2 : 1
-
-            (base * factor * store_factor).to_i
+          # Whether uploads land on an external store (S3). The pipeline's worker
+          # bounds lean on this: an external store's uploads spend most of their
+          # time parked on network latency, so many more workers pay off than on a
+          # local, CPU-bound store.
+          def store_external?
+            discourse_store.external?
           end
 
           protected
