@@ -188,6 +188,34 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     end
   end
 
+  describe ".normalizer" do
+    it "textifies a mention inside a link so the label stays deferrable" do
+      node = Markbridge::AST::Url.new(href: "https://example.com")
+      node << Markbridge::AST::Text.new("hi ")
+      node << Markbridge::AST::Mention.new(name: "sam", type: :user)
+      document = Markbridge::AST::Document.new
+      document << node
+
+      described_class.normalizer.normalize(document)
+
+      # Textified and coalesced with the neighbouring text: one plain-text
+      # label, which the :link handler will accept for deferral.
+      expect(node.children.map(&:class)).to eq([Markbridge::AST::Text])
+      expect(node.children.first.text).to eq("hi @sam")
+    end
+
+    it "is what to_markdown converts through" do
+      allow(Markbridge).to receive(:convert).and_call_original
+
+      described_class.new(format: :bbcode).to_markdown("plain")
+
+      expect(Markbridge).to have_received(:convert).with(
+        "plain",
+        hash_including(normalize: described_class.normalizer),
+      )
+    end
+  end
+
   describe ".embed_handlers extraction" do
     # Upload and Mention nodes don't arise from BBCode, so exercise their
     # extraction lambdas directly against the real AST nodes.

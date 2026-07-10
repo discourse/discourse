@@ -184,6 +184,22 @@ module Migrations
         require FORMATS.fetch(@format)
       end
 
+      # The shared Discourse normalizer plus our one consumer rule: a mention
+      # inside a link label becomes plain text before rendering. Discourse
+      # doesn't cook mentions inside links, so nothing is lost — and as text the
+      # label stays deferrable, so the link keeps its import-time rewrite
+      # instead of falling back to native rendering. The trade: the name is
+      # frozen source text, not remapped through the user map (fine for what is
+      # label text either way). Built once; safe to share, the normalizer keeps
+      # no per-run state.
+      def self.normalizer
+        @normalizer ||=
+          Markbridge::Normalizer
+            .for(:discourse)
+            .rule(parent: Markbridge::AST::Url, child: Markbridge::AST::Mention, strategy: :textify)
+            .freeze
+      end
+
       # @param source [String] the source post body.
       # @param on_embed [#upload, #quote, #mention, #link, nil] the embed sink; when
       #   nil the embeds render natively.
@@ -192,7 +208,12 @@ module Migrations
       # @return [String] Discourse Markdown.
       def to_markdown(source, on_embed: nil, defer: DEFAULT_DEFER)
         renderer = on_embed ? deferring_renderer(on_embed, defer) : nil
-        Markbridge.convert(source, format: @format, renderer:).markdown
+        Markbridge.convert(
+          source,
+          format: @format,
+          renderer:,
+          normalize: self.class.normalizer,
+        ).markdown
       end
 
       private
