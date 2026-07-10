@@ -8,6 +8,20 @@ module Migrations
         # and avatars). Each worker rebakes against a throwaway post; only
         # {#write} records the results.
         class Optimizer < Base
+          OPTIMIZED_IMAGE_COLUMNS = %i[
+            id
+            created_at
+            etag
+            extension
+            filesize
+            height
+            sha1
+            upload_id
+            url
+            version
+            width
+          ].freeze
+
           def title
             "Creating optimized images"
           end
@@ -30,22 +44,25 @@ module Migrations
           end
 
           def produce(emit_work:, emit_result:)
+            # `upload_id` is the staging `uploads.id`; `source_id` is the original
+            # id from `upload_results`, which is what the post/avatar sets below are
+            # keyed on.
             sql = <<~SQL
-              SELECT id AS upload_id, upload ->> 'sha1' AS upload_sha1, markdown
-                FROM uploads
-               WHERE upload IS NOT NULL
-               ORDER BY rowid
+              SELECT u.id AS upload_id, u.sha1 AS upload_sha1, r.id AS source_id, r.markdown
+                FROM upload_results r
+                     JOIN uploads u ON u.id = r.upload_id
+               ORDER BY u.id
             SQL
 
-            uploads_db.query(sql) do |row|
+            files_db.query(sql) do |row|
               upload_id = row[:upload_id]
 
               if @optimized_upload_ids.include?(upload_id) || !row[:markdown].start_with?("![")
                 emit_result.call(skipped_status(upload_id))
-              elsif @post_upload_ids.include?(upload_id)
+              elsif @post_upload_ids.include?(row[:source_id])
                 row[:type] = "post"
                 emit_work.call(row)
-              elsif @avatar_upload_ids.include?(upload_id)
+              elsif @avatar_upload_ids.include?(row[:source_id])
                 row[:type] = "avatar"
                 emit_work.call(row)
               else
@@ -76,10 +93,9 @@ module Migrations
           def write(result)
             case result[:status]
             when :ok
-              uploads_db.insert(<<~SQL, insert_params(result))
-                INSERT INTO optimized_images (id, optimized_images)
-                VALUES (:id, :optimized_images)
-              SQL
+              result[:optimized_images].each do |attributes|
+                Database::FilesDB::OptimizedImage.create(**attributes)
+              end
               :ok
             when :skipped
               :skip
@@ -100,7 +116,7 @@ module Migrations
           end
 
           def load_optimized_upload_ids
-            load_existing_ids(uploads_db, "SELECT id FROM optimized_images")
+            load_existing_ids(files_db, "SELECT DISTINCT upload_id AS id FROM optimized_images")
           end
 
           def load_post_upload_ids
@@ -120,7 +136,7 @@ module Migrations
           end
 
           def load_max_count
-            uploads_db.query_value("SELECT COUNT(*) FROM uploads WHERE upload IS NOT NULL")
+            files_db.query_value("SELECT COUNT(*) FROM upload_results WHERE upload_id IS NOT NULL")
           end
 
           def attempt_optimization(row, post)
@@ -168,8 +184,8 @@ module Migrations
           def ok_status(row, images)
             {
               id: row[:upload_id],
-              optimized_images: images.to_json(only: OptimizedImage.column_names),
               status: :ok,
+              optimized_images: images.map { |image| optimized_image_attributes(image) },
             }
           end
 
@@ -181,8 +197,8 @@ module Migrations
             { id: upload_id, status: :skipped }
           end
 
-          def insert_params(result)
-            { id: result[:id], optimized_images: result[:optimized_images] }
+          def optimized_image_attributes(image)
+            image.attributes.symbolize_keys.slice(*OPTIMIZED_IMAGE_COLUMNS)
           end
 
           def retry_policy
