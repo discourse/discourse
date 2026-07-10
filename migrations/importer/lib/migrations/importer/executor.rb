@@ -41,6 +41,10 @@ module Migrations
       end
 
       def attach_files_db(db_path)
+        # An import can run without a files database (no uploads). The steps that
+        # read from it check whether it is attached and skip when it is not.
+        return if db_path.blank?
+
         migrate_and_attach(db_path, Database::FILES_DB_SCHEMA_PATH, "files")
       end
 
