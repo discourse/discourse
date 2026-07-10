@@ -24,29 +24,35 @@ RSpec.describe Migrations::Converters::Discourse::CustomEmojis do
     [].tap { |out| @db.query("SELECT * FROM #{table}") { |row| out << row } }
   end
 
-  it "stores the emoji, keyed by the upload's content-hash reference" do
+  before { processor.setup }
+
+  it "registers the emoji's upload and stores the returned reference" do
+    path = "/uploads/default/original/1X/parrot.png"
     processor.process(
       {
         id: 5,
         name: "parrot",
         group: "animals",
-        upload_id: "8f14e45fceea167a5a36dedd4bea2543",
+        url: path,
+        filename: "parrot.png",
+        origin: nil,
         created_at: Time.utc(2020, 1, 2, 3, 4, 5),
       },
     )
 
+    upload_id = Migrations::ID.hash(path)
+    expect(rows("uploads")).to contain_exactly(
+      hash_including(id: upload_id, path:, filename: "parrot.png", type: "custom_emoji"),
+    )
     expect(rows("custom_emojis")).to contain_exactly(
-      hash_including(
-        original_id: 5,
-        name: "parrot",
-        group: "animals",
-        upload_id: "8f14e45fceea167a5a36dedd4bea2543",
-      ),
+      hash_including(original_id: 5, name: "parrot", group: "animals", upload_id:),
     )
   end
 
   it "keeps a nil group for an ungrouped emoji" do
-    processor.process({ id: 6, name: "smile", group: nil, upload_id: "abc", created_at: nil })
+    processor.process(
+      { id: 6, name: "smile", group: nil, url: "/uploads/s.png", filename: "s.png", origin: nil },
+    )
 
     expect(rows("custom_emojis")).to contain_exactly(hash_including(original_id: 6, group: nil))
   end

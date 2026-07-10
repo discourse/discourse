@@ -12,15 +12,18 @@ module Migrations
           end
 
           def items
-            # The source's `upload_id` is a numeric FK; IntermediateDB references an
-            # upload by its content hash, so the join's `sha1` becomes the
-            # reference the importer resolves against.
+            # The join hands the upload's `url`/`filename`/`origin` to the
+            # processor, which registers the upload and stores the returned
+            # reference — the emoji image must be fetched like any other upload
+            # before the importer can create the emoji from it.
             @source_db.query <<~SQL
               SELECT custom_emojis.id,
                      custom_emojis.name,
                      custom_emojis."group",
                      custom_emojis.created_at,
-                     uploads.sha1 AS upload_id
+                     uploads.url,
+                     uploads.original_filename AS filename,
+                     uploads.origin
               FROM custom_emojis
                    JOIN uploads ON uploads.id = custom_emojis.upload_id
               ORDER BY custom_emojis.id
@@ -29,12 +32,16 @@ module Migrations
         end
 
         processor do
+          def setup
+            @upload_creator = UploadCreator.new(upload_type: "custom_emoji")
+          end
+
           def process(item)
             IntermediateDB::CustomEmoji.create(
               original_id: item[:id],
               name: item[:name],
               group: item[:group],
-              upload_id: item[:upload_id],
+              upload_id: @upload_creator.create_for(item),
               created_at: item[:created_at],
             )
           end
