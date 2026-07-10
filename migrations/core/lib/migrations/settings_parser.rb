@@ -38,7 +38,6 @@ module Migrations
     def validate!
       validate_required_keys
       validate_paths
-      validate_options
     end
 
     def validate_required_keys
@@ -63,18 +62,6 @@ module Migrations
 
       @options[:root_paths].each do |path|
         raise ValidationError, "Directory not readable: #{path}" unless File.readable?(path)
-      end
-    end
-
-    def validate_options
-      validate_thread_count_factor if @options[:thread_count_factor]
-    end
-
-    def validate_thread_count_factor
-      count = @options[:thread_count_factor]
-
-      unless count.is_a?(Numeric) && count.positive?
-        raise ValidationError, "Thread count factor must be numeric and positive"
       end
     end
   end

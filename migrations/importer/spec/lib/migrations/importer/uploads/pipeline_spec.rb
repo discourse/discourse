@@ -24,14 +24,19 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
   end
 
   class FakeStep
-    attr_reader :progress, :notices, :finished_outcome, :max_progress
+    attr_reader :progress, :notices, :finished_outcome, :max_progress, :concurrencies
 
     def initialize
       @notices = []
+      @concurrencies = []
     end
 
     def notice(message)
       @notices << message
+    end
+
+    def report_concurrency(count)
+      @concurrencies << count
     end
 
     def with_progress(max_progress:)
@@ -78,8 +83,10 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
       "Fake"
     end
 
-    def worker_count
-      @worker_count
+    attr_reader :worker_count
+
+    def store_external?
+      false
     end
 
     def max_count
@@ -122,11 +129,23 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
 
   let(:reporter) { FakeReporter.new }
 
+  # A fixed plan pinned to the task's worker_count keeps concurrency deterministic
+  # for the batching/lifecycle tests: the gate seeds and caps at that number.
+  def plan_for(count)
+    Migrations::Importer::Uploads::AdaptiveController::Plan.new(
+      seed: count,
+      floor: 1,
+      ceiling: count,
+    )
+  end
+
   def build_pipeline(task, **options)
     described_class.new(
       task:,
       reporter:,
       install_trap: false,
+      adaptive: false,
+      worker_plan: plan_for(task.worker_count),
       with_connection: ->(&block) { block.call },
       **options,
     )
@@ -210,6 +229,48 @@ RSpec.describe Migrations::Importer::Uploads::Pipeline do
     expect(update).to eq(3) # ids 0, 3, 6
     expect(errors).to eq(3) # ids 1, 4, 7
     expect(reporter.step.progress.total).to eq(9)
+  end
+
+  describe "under the adaptive controller" do
+    # A sampler that always says the box is idle with plenty of memory, so the
+    # controller is free to probe the target upward while the run is going.
+    class IdleSampler
+      Reading = Migrations::Importer::Uploads::ResourceSampler::Reading
+
+      def sample
+        Reading.new(cpu_busy: 0.1, memory_fraction: 0.9, memory_bytes: 32 * 1024**3)
+      end
+    end
+
+    it "processes every row while the controller tunes the gate, staying in bounds" do
+      ceiling = 6
+      plan =
+        Migrations::Importer::Uploads::AdaptiveController::Plan.new(seed: 2, floor: 2, ceiling:)
+      # A touch of work per item so the run outlives a few controller ticks.
+      slow = ->(row, _resource) { sleep(0.001) && row }
+      task = FakeTask.new(rows: rows(400), worker_count: 2, process: slow)
+
+      pipeline =
+        described_class.new(
+          task:,
+          reporter:,
+          install_trap: false,
+          adaptive: true,
+          worker_plan: plan,
+          sampler: IdleSampler.new,
+          with_connection: ->(&block) { block.call },
+          batch_size: 4,
+          controller_interval: 0.005, # tick often so the controller acts within the short run
+        )
+
+      pipeline.run
+
+      expect(task.written.map { |r| r[:id] }).to match_array((0...400).to_a)
+      expect(reporter.step.progress.total).to eq(400)
+      # Every reported target stayed within the plan's bounds.
+      expect(reporter.step.concurrencies).to all(be_between(1, ceiling))
+      expect(reporter.step.concurrencies.first).to eq(2) # seeded before the run
+    end
   end
 
   describe "interrupt handling" do

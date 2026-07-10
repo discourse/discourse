@@ -17,4 +17,5 @@ en:
       fixer_missing: "removed missing upload %{id}"
       fixer_error: "could not check upload %{id}: %{error}"
       optimizer_upload_not_found: "could not find upload with sha1 %{sha1}"
+      image_memory_limit: "Capping ImageMagick memory at %{mib} MiB per convert"
       interrupted: "Interrupted. The run is resumable — run the command again to continue."
