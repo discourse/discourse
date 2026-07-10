@@ -165,7 +165,10 @@ module Migrations
             return unless step && running?(step)
             step.total = max_progress
             step.state = :running
-            step.started_at = now # start timing the work, not the counting before it
+            # The step clock keeps running from :start — the planning/counting
+            # seconds belong to the step's elapsed and final duration (the plain
+            # reporter counts them too). Only the rate anchors reset here, so
+            # items/s and the ETA measure the work window, not the counting.
             step.rate_sampled_at = now
             step.rate_sampled_current = step.current
           when :progress

@@ -79,6 +79,19 @@ RSpec.describe Migrations::Reporting::Tui do
         expect(rows.first).not_to include("%") # no lingering percent
       end
 
+      it "includes the counting time before progress_begin in the step's duration" do
+        renderer.apply([:start, "Posts", "Posts"]) # the clock reads 6.0 here
+        at(11.0) # planning/counting takes 5s before the progress bar starts
+        renderer.apply([:progress_begin, "Posts", 100])
+        at(13.0)
+        renderer.apply([:progress, "Posts", 100, 0, 0, 0])
+        renderer.apply([:finish, "Posts", :done])
+        renderer.repaint
+
+        row = screen.content_rows.find { |r| r.include?("Posts") }
+        expect(row).to include("0:07") # 5s counting + 2s work, not just the 2s
+      end
+
       it "does not read 100% until the very last item — floors, never rounds up" do
         renderer.apply([:progress, "Categories", 4280, 0, 0, 0]) # 4280/4281 = 99.98%
         at(8.0)
