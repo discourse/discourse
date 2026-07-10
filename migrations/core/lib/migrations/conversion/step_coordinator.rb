@@ -19,7 +19,9 @@ module Migrations
     # The parent opens a source only briefly, to work out the plan (the total row
     # count, plus the chunk boundaries for a partitioned step), and closes it before
     # forking. After that only the workers touch the source, and only progress
-    # crosses the pipes.
+    # crosses the pipes. For a step that had to wait for forks, the scheduler
+    # computes the plan ahead of time ({StepScheduler#preplan}), overlapping the
+    # counting with the steps still holding the budget.
     class StepCoordinator
       class WorkerCrashedError < StandardError
       end
@@ -28,6 +30,26 @@ module Migrations
       # finer work stealing (a shorter tail) but a bit more overhead. Eight is a
       # good balance.
       CHUNKS_PER_FORK = 8
+
+      # The chunk boundaries and the step's total row count, from one source opened
+      # only here. Boundaries are empty for an unpartitioned step (one worker reads
+      # the whole source). The workers don't know the total once they start claiming
+      # chunks, so the parent counts it up front (`max_progress` with no chunk set
+      # counts the whole source). Runs on the coordinator's thread — or, for a
+      # fork-starved step, on the scheduler's planner thread while other steps run.
+      #
+      # @return [Array(Array, Integer)] `[boundaries, total]`
+      def self.compute_plan(step_class:, step_factory:, fork_count:)
+        step = step_factory.call(step_class)
+        begin
+          source = step.source
+          boundaries =
+            fork_count > 1 ? source.partition_boundaries(fork_count * CHUNKS_PER_FORK) : []
+          [boundaries, source.max_progress]
+        ensure
+          step.source.cleanup
+        end
+      end
 
       attr_reader :step_class
 
@@ -41,6 +63,10 @@ module Migrations
       # @param consolidator [Consolidator] merges the finished shards in the background
       # @param fork_count [Integer] how many workers to fork (1 for an unpartitioned step)
       # @param no_fork [Boolean] run the single worker inline instead of forking (`--no-fork`)
+      # @param plan [#value, nil] a precomputed `[boundaries, total]` plan the
+      #   scheduler started while the step waited for forks (a Thread; `value`
+      #   waits if the counting is still running and re-raises a planning failure
+      #   into the step's normal failure path). Nil computes the plan here.
       def initialize(
         step_class:,
         step_factory:,
@@ -50,7 +76,8 @@ module Migrations
         shard_manager:,
         consolidator:,
         fork_count: 1,
-        no_fork: false
+        no_fork: false,
+        plan: nil
       )
         @step_class = step_class
         @step_factory = step_factory
@@ -61,6 +88,7 @@ module Migrations
         @consolidator = consolidator
         @fork_count = fork_count
         @no_fork = no_fork
+        @plan = plan
       end
 
       # @return [Symbol] the step's outcome, `:done` or `:failed`
@@ -97,7 +125,7 @@ module Migrations
       def run_workers(shards)
         return run_inline(shards) if @no_fork
 
-        boundaries, total = compute_plan
+        boundaries, total = resolve_plan
         worker_count = boundaries.empty? ? 1 : [boundaries.size, @fork_count].min
         # Hand back any forks we won't use (fewer chunks than forks) right away.
         @scheduler.release_forks(@step_class, @fork_count - worker_count)
@@ -133,7 +161,7 @@ module Migrations
         shard_path = @shard_manager.create_shard
         shards << shard_path
 
-        _boundaries, total = compute_plan
+        _boundaries, total = resolve_plan
         @step_handle.with_progress(max_progress: total) do |progress|
           sink = InlineProgressSink.new(progress)
           StepRunner.new(step: @step_factory.call(@step_class), shard_path:, reporter: sink).run
@@ -141,21 +169,14 @@ module Migrations
         end
       end
 
-      # The chunk boundaries and the step's total row count, from one source opened
-      # only here. Boundaries are empty for an unpartitioned step (one worker reads
-      # the whole source). The workers don't know the total once they start claiming
-      # chunks, so the parent counts it up front (`max_progress` with no chunk set
-      # counts the whole source).
-      def compute_plan
-        step = @step_factory.call(@step_class)
-        begin
-          source = step.source
-          boundaries =
-            @fork_count > 1 ? source.partition_boundaries(@fork_count * CHUNKS_PER_FORK) : []
-          [boundaries, source.max_progress]
-        ensure
-          step.source.cleanup
-        end
+      def resolve_plan
+        return @plan.value if @plan
+
+        self.class.compute_plan(
+          step_class: @step_class,
+          step_factory: @step_factory,
+          fork_count: @fork_count,
+        )
       end
 
       def fork_workers(count)

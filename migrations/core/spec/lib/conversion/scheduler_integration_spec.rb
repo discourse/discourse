@@ -968,4 +968,164 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
   ensure
     Object.send(:remove_const, "TempIntegrationSteps")
   end
+
+  it "precomputes a fork-starved step's plan on a planner thread, exactly once" do
+    Object.const_set(
+      "TempIntegrationSteps",
+      Module.new do
+        const_set(
+          "First",
+          Class.new(Migrations::Conversion::Step) do
+            source do
+              def items
+                [{ id: 1 }]
+              end
+            end
+
+            processor do
+              def process(item)
+                Migrations::Database::IntermediateDB.insert(
+                  "INSERT INTO topics (id) VALUES (?)",
+                  item[:id],
+                )
+              end
+            end
+          end,
+        )
+        const_set(
+          "Second",
+          Class.new(Migrations::Conversion::Step) do
+            source do
+              def items
+                [{ id: 2 }]
+              end
+            end
+
+            processor do
+              def process(item)
+                Migrations::Database::IntermediateDB.insert(
+                  "INSERT INTO users (id) VALUES (?)",
+                  item[:id],
+                )
+              end
+            end
+          end,
+        )
+      end,
+    )
+
+    # Records the parent-side thread every step gets built on. Worker forks build
+    # their own copy in the child, so those don't land here.
+    factory_lock = Mutex.new
+    factory_threads = Hash.new { |hash, key| hash[key] = [] }
+    step_factory =
+      lambda do |step_class|
+        factory_lock.synchronize { factory_threads[step_class] << Thread.current.name }
+        step_class.new
+      end
+
+    step_classes = [TempIntegrationSteps::First, TempIntegrationSteps::Second]
+    reporter = Migrations::Reporting::Factory.build(titles: step_classes.map(&:title))
+
+    Migrations::Conversion::StepScheduler.new(
+      step_classes:,
+      budget: 1, # Second must wait for First's fork — the preplan window
+      reporter:,
+      step_factory:,
+      shard_manager: @shard_manager,
+      writer: @writer,
+    ).run
+    reporter.close
+
+    Migrations::Database::IntermediateDB.close
+
+    # The blocked step's plan was computed on the planner thread while First held
+    # the budget, and the coordinator used it instead of counting again.
+    expect(factory_threads[TempIntegrationSteps::Second]).to eq(["plan_Second"])
+    expect(factory_threads[TempIntegrationSteps::First]).to eq(["step_First"])
+    expect(rows("topics")).to eq([1])
+    expect(rows("users")).to eq([2])
+  ensure
+    Object.send(:remove_const, "TempIntegrationSteps")
+  end
+
+  it "fails a step through the normal path when its precomputed plan raises" do
+    Object.const_set(
+      "TempIntegrationSteps",
+      Module.new do
+        const_set(
+          "First",
+          Class.new(Migrations::Conversion::Step) do
+            source do
+              def items
+                [{ id: 1 }]
+              end
+            end
+
+            processor do
+              def process(item)
+                Migrations::Database::IntermediateDB.insert(
+                  "INSERT INTO topics (id) VALUES (?)",
+                  item[:id],
+                )
+              end
+            end
+          end,
+        )
+        const_set(
+          "Zebra",
+          Class.new(Migrations::Conversion::Step) do
+            source do
+              def items
+                [{ id: 2 }]
+              end
+            end
+
+            processor do
+              def process(item)
+              end
+            end
+          end,
+        )
+      end,
+    )
+
+    # The factory raises only on the planner thread, so the failure provably
+    # comes from the precomputed plan, not from a later inline computation.
+    step_factory =
+      lambda do |step_class|
+        if step_class == TempIntegrationSteps::Zebra &&
+             Thread.current.name.to_s.start_with?("plan_")
+          raise "planning exploded"
+        end
+        step_class.new
+      end
+
+    step_classes = [TempIntegrationSteps::First, TempIntegrationSteps::Zebra]
+    reporter = Migrations::Reporting::Factory.build(titles: step_classes.map(&:title))
+
+    run =
+      lambda do
+        Migrations::Conversion::StepScheduler.new(
+          step_classes:,
+          budget: 1,
+          reporter:,
+          step_factory:,
+          shard_manager: @shard_manager,
+          writer: @writer,
+        ).run
+      ensure
+        reporter&.close
+      end
+
+    expect { Timeout.timeout(30) { run.call } }.to raise_error(Migrations::Conversion::ConvertError)
+
+    Migrations::Database::IntermediateDB.close
+
+    # The healthy step is untouched by its neighbour's planning failure.
+    expect(rows("topics")).to eq([1])
+    expect(rows("users")).to eq([])
+  ensure
+    Object.send(:remove_const, "TempIntegrationSteps")
+  end
 end
