@@ -12,11 +12,9 @@ module DiscourseDataExplorer
         # Allowed includes, incl. the nested path `user.groups` (the author's groups) —
         # demonstrates deep nested includes; preloads are derived from these.
         includes :user, :groups, "user.groups"
-        # Keyset-only pagination needs a NULL-free total order; last_run_at is
-        # nullable (NULL rows become unreachable past page one), so the default
-        # is newest-created first. Recently-run ordering stays available via
-        # `sort=-ran_at`.
-        default_sort id: :desc
+        # Resolved through the `ran_at` sort declaration below — same column
+        # mapping and nulls-last keyset handling as an explicit `sort=-ran_at`.
+        default_sort ran_at: :desc
         stat :total, :count
         page max: 100, default: 20
 
@@ -42,8 +40,9 @@ module DiscourseDataExplorer
 
         sort :name
         # Derived from the `ran_at` attribute (renamed from `last_run_at`, 2026-07-08);
-        # the wire name moved with the attribute, the ORDER BY column did not.
-        sort :ran_at, column: :last_run_at
+        # the wire name moved with the attribute, the ORDER BY column did not. The
+        # column is nullable — nulls: :last keeps never-run queries reachable.
+        sort :ran_at, column: :last_run_at, nulls: :last
         # The associated user's username — a hand-rolled LEFT JOIN sort. Dotted per the
         # JSON:API recommendation for relationship-based sort fields (and matching our
         # include paths); renamed from `username` (2026-07-08 breaking change) — virtual

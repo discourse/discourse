@@ -131,6 +131,65 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::CursorPaginator do
     end
   end
 
+  context "with a nulls-last order over a nullable column" do
+    subject(:paginator) do
+      described_class.new(scope, order:, size: 2, after:, nulls_last: %i[last_run_at])
+    end
+
+    let(:order) { { last_run_at: :desc, id: :desc } }
+
+    let(:maker) { described_class.new(scope, order:, size: 2, nulls_last: %i[last_run_at]) }
+
+    before do
+      fifth_query.update!(last_run_at: Time.utc(2026, 7, 5))
+      fourth_query.update!(last_run_at: Time.utc(2026, 6, 1))
+      third_query.update!(last_run_at: Time.utc(2026, 5, 1))
+      # first_query and second_query keep a NULL last_run_at
+    end
+
+    context "when reading the first page" do
+      it "orders the dated rows first" do
+        expect(paginator.records).to eq([fifth_query, fourth_query])
+      end
+    end
+
+    context "when crossing into the NULL tail" do
+      let(:after) { maker.cursor_for(fourth_query) }
+
+      it "returns the last dated row followed by the newest NULL row" do
+        expect(paginator.records).to eq([third_query, second_query])
+      end
+    end
+
+    context "when paginating within the NULL tail" do
+      let(:after) { maker.cursor_for(second_query) }
+
+      it "keeps going instead of dead-ending" do
+        expect(paginator.records).to eq([first_query])
+      end
+
+      it "has no next page" do
+        expect(paginator.next_page_params).to be_nil
+      end
+    end
+
+    context "when walking back from the NULL tail" do
+      subject(:paginator) do
+        described_class.new(
+          scope,
+          order:,
+          size: 2,
+          before: maker.cursor_for(first_query),
+          nulls_last: %i[last_run_at],
+        )
+      end
+
+      it "returns the window immediately before the cursor" do
+        expect(paginator.records).to eq([third_query, second_query])
+      end
+    end
+  end
+
   context "with an invalid cursor" do
     let(:after) { "not-a-cursor!!" }
 

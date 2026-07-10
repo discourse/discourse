@@ -66,6 +66,22 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::QueriesController do
       expect(included_group_ids).to include(group1.id, group2.id)
     end
 
+    it "resolves a deep nested include with batched queries (no N+1)" do
+      4.times do
+        author = Fabricate(:user)
+        group1.add(author)
+        Fabricate(:query, user: author, hidden: false)
+      end
+
+      sql_queries = track_sql_queries { get_index(include: "user.groups", page: { size: 10 }) }
+      users_queries = sql_queries.grep(/FROM "users"/)
+
+      expect(response.status).to eq(200)
+      expect(users_queries.count { it.include?(" IN (") }).to eq(1)
+      expect(users_queries.length).to be <= 3
+      expect(sql_queries.count { it.match?(/FROM "groups"/) }).to be <= 2
+    end
+
     it "rejects an unsupported nested include path with a 400" do
       doc = get_index(include: "user.bogus")
 
@@ -168,6 +184,34 @@ RSpec.describe DiscourseDataExplorer::JsonApiKit::QueriesController do
 
       after = first_page["data"].last.dig("meta", "page", "cursor")
       second_page = get_page(page: { size: 2, after: }, sort: "name")
+      expect(second_page["data"].map { it["id"].to_i }).to eq([query.id])
+      expect(second_page["links"]["next"]).to be_nil
+    end
+
+    it "orders the default listing by recency, NULLs last, through the same plumbing" do
+      second_query.update!(last_run_at: Time.utc(2026, 7, 5))
+      third_query.update!(last_run_at: Time.utc(2026, 6, 1))
+      # `query` keeps a NULL last_run_at; recency order differs from id order
+
+      first_page = get_page(page: { size: 2 })
+      expect(first_page["data"].map { it["id"].to_i }).to eq([second_query.id, third_query.id])
+
+      after = first_page["data"].last.dig("meta", "page", "cursor")
+      second_page = get_page(page: { size: 2, after: })
+      expect(second_page["data"].map { it["id"].to_i }).to eq([query.id])
+      expect(second_page["links"]["next"]).to be_nil
+    end
+
+    it "paginates a nulls-last derived sort through NULL rows" do
+      third_query.update!(last_run_at: Time.utc(2026, 7, 5))
+      second_query.update!(last_run_at: Time.utc(2026, 6, 1))
+      # `query` keeps a NULL last_run_at
+
+      first_page = get_page(page: { size: 2 }, sort: "-ran_at")
+      expect(first_page["data"].map { it["id"].to_i }).to eq([third_query.id, second_query.id])
+
+      after = first_page["data"].last.dig("meta", "page", "cursor")
+      second_page = get_page(page: { size: 2, after: }, sort: "-ran_at")
       expect(second_page["data"].map { it["id"].to_i }).to eq([query.id])
       expect(second_page["links"]["next"]).to be_nil
     end

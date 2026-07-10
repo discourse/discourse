@@ -72,8 +72,12 @@ module DiscourseDataExplorer
         # it orders by `column:` (default: the key) and follows the attribute through
         # version renames. A sort/filter WITH a block is VIRTUAL — its own contract
         # surface, never renamed by attribute changes. See docs/versioning-design.md.
+        # `nulls: :last` marks a derived sort's column as nullable: the paginator
+        # keysets it through a NULL-grouping helper so NULL rows stay reachable.
         def filter(name, &block) = @filters[name.to_s] = block
-        def sort(name, column: nil, &block) = @sorts[name.to_s] = { block:, column: }
+        def sort(name, column: nil, nulls: nil, &block)
+          @sorts[name.to_s] = { block:, column:, nulls: }
+        end
 
         def virtual_sort_keys = @sorts.filter_map { |name, entry| name if entry[:block] }
         def virtual_filter_keys = @filters.keys
@@ -125,7 +129,7 @@ module DiscourseDataExplorer
       end
 
       def show
-        record = base_scope.includes(*included_preloads).find_by(id: params[:id])
+        record = base_scope.find_by(id: params[:id])
         return head(:not_found) if record.blank?
         render_resource(record)
       end
@@ -247,9 +251,20 @@ module DiscourseDataExplorer
       # sorts have no keyset columns — the profile's typed unsupported-sort. NB:
       # keyset columns must not hold NULLs (app-enforced for ours); NULLS-aware
       # expression keysets are future work.
+      # Requested sorts and `default_sort` resolve through the same sort-key
+      # vocabulary — one path for column mapping and nulls-last declarations.
       def cursor_order
-        fields = params[:sort].to_s.split(",")
-        virtual = fields.map { it.delete_prefix("-") }.find { cfg.sorts.dig(it, :block) }
+        entries =
+          if params[:sort].present?
+            params[:sort]
+              .to_s
+              .split(",")
+              .map { |field| [field.delete_prefix("-"), field.start_with?("-") ? :desc : :asc] }
+          else
+            (cfg.default_sort_value || {}).map { |key, direction| [key.to_s, direction.to_sym] }
+          end
+
+        virtual = entries.find { |name, _| cfg.sorts.dig(name, :block) }&.first
         if virtual
           render_profile_error(
             title: "Unsupported sort for cursor pagination.",
@@ -262,18 +277,16 @@ module DiscourseDataExplorer
           return
         end
 
+        nulls_last = []
         order =
-          if fields.any?
-            fields.to_h do |field|
-              direction = field.start_with?("-") ? :desc : :asc
-              name = field.delete_prefix("-")
-              [(cfg.sorts.dig(name, :column) || name).to_sym, direction]
-            end
-          else
-            (cfg.default_sort_value || {}).to_h { |column, dir| [column.to_sym, dir.to_sym] }
+          entries.to_h do |name, direction|
+            entry = cfg.sorts[name] || {}
+            column = (entry[:column] || name).to_sym
+            nulls_last << column if entry[:nulls] == :last
+            [column, direction]
           end
         order[:id] ||= order.values.first || :desc
-        order
+        [order, nulls_last]
       end
 
       # JSON:API: an unsupported filter/sort/include MUST 400. The page family is
@@ -297,26 +310,14 @@ module DiscourseDataExplorer
           params[:include].to_s.split(",").filter_map { it.strip.presence }.uniq
       end
 
-      # Preload exactly (and only) the relationships the client `include`d — nested paths
-      # included — as a single AR `includes(...)` argument. Paired with the serializer's
-      # lazy_load_data, a bare request loads no relationship data (no N+1). jsonapi-serializer
-      # does the recursive document assembly; we own only the matching preload + strictness.
-      # ["user", "user.groups", "groups"] → [{ user: [:groups] }, :groups].
-      def included_preloads
-        @included_preloads ||= to_ar_includes(preload_tree(requested_include_paths))
-      end
-
-      # Merge dotted paths into a nested tree: ["a.b","a.c","d"] → { a: { b: {}, c: {} }, d: {} }.
-      def preload_tree(paths)
-        paths.each_with_object({}) do |path, tree|
-          path.split(".").reduce(tree) { |node, segment| node[segment.to_sym] ||= {} }
-        end
-      end
-
-      # Tree → AR includes arg: { a: { b: {} }, d: {} } → [{ a: [:b] }, :d].
-      def to_ar_includes(tree)
-        tree.map { |key, subtree| subtree.empty? ? key : { key => to_ar_includes(subtree) } }
-      end
+      # NB: there is deliberately no explicit preloading of included relationships.
+      # Goldiloader (a Kit-assumed platform gem) batches association loads across
+      # each fetched window, so the serializer's traversal of `include`d paths is
+      # N+1-free — guarded by a query-count spec. Paired with lazy_load_data, a
+      # bare request still loads no relationship data at all. Without Goldiloader,
+      # explicit preloading would need to return (post-fetch, via
+      # ActiveRecord::Associations::Preloader — subquery-wrapped scopes drop
+      # `includes`).
 
       # ── Absorbed JSON:API request/response helpers ──
       # Formerly the jsonapi.rb gem's Fetching/Pagination/Deserialization mixins. Owned
@@ -352,7 +353,7 @@ module DiscourseDataExplorer
       # ── Cursor pagination (JSON:API cursor-pagination profile) ──
 
       def render_cursor_page
-        order = cursor_order
+        order, nulls_last = cursor_order
         return if performed?
 
         after = params.dig(:page, :after).presence
@@ -371,13 +372,12 @@ module DiscourseDataExplorer
 
         scope = apply_filters(base_scope)
         meta = params.dig(:stats, :total) == "count" ? stats_meta(scope.count) : {}
-        scope = scope.includes(*included_preloads) if included_preloads.any?
-        paginator = CursorPaginator.new(scope, order:, size:, after:, before:)
-        item_cursors =
-          paginator.records.to_h { |record| [record.id.to_s, paginator.cursor_for(record)] }
+        paginator = CursorPaginator.new(scope, order:, size:, after:, before:, nulls_last:)
+        records = paginator.records
+        item_cursors = records.to_h { |record| [record.id.to_s, paginator.cursor_for(record)] }
 
         render_resource(
-          paginator.records,
+          records,
           meta:,
           links: {
             prev: cursor_page_url(paginator.prev_page_params, size:),
