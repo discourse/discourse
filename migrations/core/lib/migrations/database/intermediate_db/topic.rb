@@ -106,7 +106,7 @@ module Migrations
             external_id,
             featured_link,
             locale,
-            og_image_upload_id,
+            Migrations::Database.to_blob(og_image_upload_id),
             Migrations::Database.format_datetime(pinned_at),
             Migrations::Database.format_boolean(pinned_globally),
             Migrations::Database.format_datetime(pinned_until),

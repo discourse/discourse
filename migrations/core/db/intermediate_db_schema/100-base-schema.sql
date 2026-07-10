@@ -24,7 +24,7 @@ CREATE TABLE badges
     enabled             BOOLEAN,
     existing_id         NUMERIC,
     icon                TEXT,
-    image_upload_id     TEXT,
+    image_upload_id     BLOB,
     listable            BOOLEAN,
     long_description    TEXT,
     multiple_grant      BOOLEAN,
@@ -81,10 +81,10 @@ CREATE TABLE categories
     topic_id                                  NUMERIC,
     topic_template                            TEXT,
     topic_title_placeholder                   TEXT,
-    uploaded_background_dark_id               TEXT,
-    uploaded_background_id                    TEXT,
-    uploaded_logo_dark_id                     TEXT,
-    uploaded_logo_id                          TEXT,
+    uploaded_background_dark_id               BLOB,
+    uploaded_background_id                    BLOB,
+    uploaded_logo_dark_id                     BLOB,
+    uploaded_logo_id                          BLOB,
     user_id                                   NUMERIC  NOT NULL
 );
 
@@ -141,7 +141,7 @@ CREATE TABLE "groups"
     flair_bg_color                     TEXT,
     flair_color                        TEXT,
     flair_icon                         TEXT,
-    flair_upload_id                    TEXT,
+    flair_upload_id                    BLOB,
     full_name                          TEXT,
     grant_trust_level                  INTEGER,
     incoming_email                     TEXT,
@@ -241,7 +241,7 @@ CREATE TABLE post_uploads
 (
     placeholder TEXT    NOT NULL,
     post_id     NUMERIC NOT NULL,
-    upload_id   TEXT
+    upload_id   BLOB
 );
 
 CREATE INDEX idx_post_uploads_post_id ON post_uploads (post_id);
@@ -370,7 +370,7 @@ CREATE TABLE topics
     external_id          NUMERIC,
     featured_link        TEXT,
     locale               TEXT,
-    og_image_upload_id   TEXT,
+    og_image_upload_id   BLOB,
     pinned_at            DATETIME,
     pinned_globally      BOOLEAN,
     pinned_until         DATETIME,
@@ -387,7 +387,7 @@ CREATE INDEX idx_topics_archetype ON topics (archetype);
 
 CREATE TABLE upload_sources
 (
-    id          TEXT         NOT NULL PRIMARY KEY,
+    id          BLOB         NOT NULL PRIMARY KEY,
     data        BLOB,
     description TEXT,
     filename    TEXT         NOT NULL,
@@ -565,7 +565,7 @@ CREATE TABLE users
     staged                    BOOLEAN,
     title                     TEXT,
     trust_level               INTEGER   NOT NULL,
-    uploaded_avatar_id        TEXT,
+    uploaded_avatar_id        BLOB,
     username                  TEXT      NOT NULL,
     views                     INTEGER
 );

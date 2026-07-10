@@ -7,7 +7,7 @@ Migrations::Tooling::Schema.table :upload_sources do
 
   primary_key :id
 
-  add_column :id, :text
+  add_column :id, :blob
   add_column :filename, :text, required: true
   add_column :path, :text
   add_column :data, :blob

@@ -208,10 +208,10 @@ module Migrations
             topic_id,
             topic_template,
             topic_title_placeholder,
-            uploaded_background_dark_id,
-            uploaded_background_id,
-            uploaded_logo_dark_id,
-            uploaded_logo_id,
+            Migrations::Database.to_blob(uploaded_background_dark_id),
+            Migrations::Database.to_blob(uploaded_background_id),
+            Migrations::Database.to_blob(uploaded_logo_dark_id),
+            Migrations::Database.to_blob(uploaded_logo_id),
             user_id,
           )
         end

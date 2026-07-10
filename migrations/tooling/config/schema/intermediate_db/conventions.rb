@@ -10,7 +10,7 @@ Migrations::Tooling::Schema.conventions do
     required false
   end
 
-  columns_matching(/.*upload.*_id$/) { type :text }
+  columns_matching(/.*upload.*_id$/) { type :blob }
   columns_matching(/.*_id$/) { type :numeric }
 
   # Globally ignored columns

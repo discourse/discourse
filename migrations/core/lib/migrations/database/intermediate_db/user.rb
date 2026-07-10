@@ -134,7 +134,7 @@ module Migrations
             Migrations::Database.format_boolean(staged),
             title,
             trust_level,
-            uploaded_avatar_id,
+            Migrations::Database.to_blob(uploaded_avatar_id),
             username,
             views,
           )

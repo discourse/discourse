@@ -5,15 +5,16 @@
 # the post body. `placeholder` holds the token put in `post.raw`; see
 # `Migrations::Placeholder`.
 #
-# NOTE: `upload_id` is `:text`, not `:numeric`. Upload `original_id`s in the
-# IntermediateDB are content hashes (see `uploads.id`, also `:text`). This matches
-# the global `.*upload.*_id$ => :text` convention, so the reference must be text too.
+# NOTE: `upload_id` is `:blob`, not `:numeric`. Upload `original_id`s in the
+# IntermediateDB are content hashes stored as 16-byte blobs (see `upload_sources.id`,
+# also `:blob`). This matches the global `.*upload.*_id$ => :blob` convention, so the
+# reference must be a blob too.
 Migrations::Tooling::Schema.table :post_uploads do
   synthetic!
 
   add_column :post_id, :numeric, required: true
   add_column :placeholder, :text, required: true
-  add_column :upload_id, :text
+  add_column :upload_id, :blob
 
   index :post_id
 end

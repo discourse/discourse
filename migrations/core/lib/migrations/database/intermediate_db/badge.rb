@@ -95,7 +95,7 @@ module Migrations
             Migrations::Database.format_boolean(enabled),
             existing_id,
             icon,
-            image_upload_id,
+            Migrations::Database.to_blob(image_upload_id),
             Migrations::Database.format_boolean(listable),
             long_description,
             Migrations::Database.format_boolean(multiple_grant),

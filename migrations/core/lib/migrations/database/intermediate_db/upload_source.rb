@@ -97,7 +97,7 @@ module Migrations
         )
           Migrations::Database::IntermediateDB.insert(
             SQL,
-            id,
+            Migrations::Database.to_blob(id),
             filename,
             path,
             data,

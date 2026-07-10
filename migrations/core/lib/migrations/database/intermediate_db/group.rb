@@ -114,7 +114,7 @@ module Migrations
             flair_bg_color,
             flair_color,
             flair_icon,
-            flair_upload_id,
+            Migrations::Database.to_blob(flair_upload_id),
             full_name,
             grant_trust_level,
             incoming_email,

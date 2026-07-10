@@ -28,7 +28,12 @@ module Migrations
         #
         # @return [void]
         def self.create(placeholder:, post_id:, upload_id: nil)
-          Migrations::Database::IntermediateDB.insert(SQL, placeholder, post_id, upload_id)
+          Migrations::Database::IntermediateDB.insert(
+            SQL,
+            placeholder,
+            post_id,
+            Migrations::Database.to_blob(upload_id),
+          )
         end
       end
     end
