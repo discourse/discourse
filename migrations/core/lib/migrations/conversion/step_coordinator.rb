@@ -252,15 +252,26 @@ module Migrations
 
       # Once the workers are done, hand their collected results to the step's
       # reducer (if it defines one) under the run DB's single-writer discipline, so
-      # any log entries it writes don't race a background merge. The step's live
-      # progress has already ended, so feed the warning count it returns back as one
-      # final progress update, lifting the step row's warning tally before it's
-      # marked finished.
+      # any log entries it writes don't race a background merge. The reducer logs
+      # through a StepTracker, so the step's tally can't miss what it logs — the
+      # counts come from the logging itself, not from a hand-maintained return
+      # value. The step's live progress has already ended, so the tracker's
+      # warning/error counts feed back as one final progress update, lifting the
+      # step row before it's marked finished.
       def reduce_results(results, progress)
         return unless @step_class.respond_to?(:combine_results)
 
-        warnings = @consolidator.with_writer { @step_class.combine_results(results) }.to_i
-        progress.update(increment_by: 0, warning_count: warnings) if warnings > 0
+        tracker = StepTracker.new
+        @consolidator.with_writer { @step_class.combine_results(results, tracker) }
+
+        stats = tracker.stats
+        return if stats.warning_count <= 0 && stats.error_count <= 0
+
+        progress.update(
+          increment_by: 0,
+          warning_count: stats.warning_count,
+          error_count: stats.error_count,
+        )
       end
 
       # Runs when a worker finishes: drop the live fork count and give its fork back

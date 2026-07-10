@@ -59,12 +59,13 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
   # reporters route progress the same way, so recording the shared call is enough.
   let(:recording_reporter_class) do
     Class.new(Migrations::Reporting::Reporter) do
-      attr_reader :warnings_by_title
+      attr_reader :warnings_by_title, :errors_by_title
 
       def initialize
         super
         @titles = {}
         @warnings_by_title = {}
+        @errors_by_title = {}
         @lock = Mutex.new
       end
 
@@ -72,8 +73,11 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
         @lock.synchronize { @titles[id] = title }
       end
 
-      def report_progress(id, _current, _skip_count, warning_count, _error_count)
-        @lock.synchronize { @warnings_by_title[@titles[id]] = warning_count }
+      def report_progress(id, _current, _skip_count, warning_count, error_count)
+        @lock.synchronize do
+          @warnings_by_title[@titles[id]] = warning_count
+          @errors_by_title[@titles[id]] = error_count
+        end
       end
 
       def report_notice(_id, _message)
@@ -736,13 +740,10 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
               end
             end
 
-            def self.combine_results(results)
+            def self.combine_results(results, tracker)
               total = results.sum { |result| result["count"] }
-              Migrations::Database::IntermediateDB::LogEntry.create(
-                type: Migrations::Database::IntermediateDB::LogEntry::WARNING,
-                message: "total=#{total}",
-              )
-              total
+              tracker.log_warning("total=#{total}")
+              tracker.log_error("reducer error")
             end
           end,
         )
@@ -764,10 +765,12 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
     Migrations::Database::IntermediateDB.close
 
     # Every row is merged, and the workers' results sum to that count — so the
-    # reducer saw all of them, none dropped.
+    # reducer saw all of them, none dropped. What the reducer logs through the
+    # tracker feeds the step's tallies, warnings and errors alike.
     expect(rows("topics")).to eq((0..59).to_a)
-    expect(log_messages).to eq(["total=60"])
-    expect(reporter.warnings_by_title["Topics"]).to eq(60)
+    expect(log_messages).to contain_exactly("total=60", "reducer error")
+    expect(reporter.warnings_by_title["Topics"]).to eq(1)
+    expect(reporter.errors_by_title["Topics"]).to eq(1)
   ensure
     Object.send(:remove_const, "TempIntegrationSteps")
   end
@@ -799,12 +802,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
               end
             end
 
-            def self.combine_results(results)
-              Migrations::Database::IntermediateDB::LogEntry.create(
-                type: Migrations::Database::IntermediateDB::LogEntry::INFO,
-                message: "with:#{results.size}",
-              )
-              0
+            def self.combine_results(results, tracker)
+              tracker.log_info("with:#{results.size}")
             end
           end,
         )
@@ -827,12 +826,8 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
               end
             end
 
-            def self.combine_results(results)
-              Migrations::Database::IntermediateDB::LogEntry.create(
-                type: Migrations::Database::IntermediateDB::LogEntry::INFO,
-                message: "empty:#{results.size}",
-              )
-              0
+            def self.combine_results(results, tracker)
+              tracker.log_info("empty:#{results.size}")
             end
           end,
         )
@@ -940,13 +935,9 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
               end
             end
 
-            def self.combine_results(results)
+            def self.combine_results(results, tracker)
               total = results.sum { |result| result["count"] }
-              Migrations::Database::IntermediateDB::LogEntry.create(
-                type: Migrations::Database::IntermediateDB::LogEntry::WARNING,
-                message: "total=#{total}",
-              )
-              total
+              tracker.log_warning("total=#{total}")
             end
           end,
         )
@@ -973,7 +964,7 @@ RSpec.describe Migrations::Conversion::StepScheduler, :integration do
     expect(Migrations::ForkManager).not_to have_received(:fork)
     expect(rows("topics")).to eq([1, 2, 3])
     expect(log_messages).to eq(["total=3"])
-    expect(reporter.warnings_by_title["Topics"]).to eq(3)
+    expect(reporter.warnings_by_title["Topics"]).to eq(1)
   ensure
     Object.send(:remove_const, "TempIntegrationSteps")
   end

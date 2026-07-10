@@ -23,8 +23,10 @@ module Migrations
 
         # Optional map/reduce hook. The worker calls this once, after its items are
         # exhausted, and hands the value back to the parent, where the step's
-        # `combine_results` receives an array of them (one per worker that returned
-        # non-nil). Return nil (the default) to hand back nothing.
+        # `combine_results(results, tracker)` receives an array of them (one per
+        # worker that returned non-nil) plus a StepTracker to log through —
+        # whatever it logs feeds the step's warning/error tallies. Return nil (the
+        # default) to hand back nothing.
         #
         # The value crosses a process boundary as JSON, so it must be
         # JSON-serializable and comes back with string keys — even inline, where the

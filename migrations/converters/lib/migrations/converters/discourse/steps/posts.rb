@@ -22,31 +22,28 @@ module Migrations
         DOMINANT_HOST_MINIMUM = 100
         private_constant :DOMINANT_HOST_SHARE, :DOMINANT_HOST_MINIMUM
 
-        # Merges every worker's per-host link tally and writes the one log entry.
-        # Runs in the parent under the run DB's single-writer discipline (see
-        # {StepCoordinator#reduce_results}); `results` are the workers' `result`
-        # hashes, with string keys from crossing the process boundary as JSON.
-        # Returns 1 (one warning) when a host dominates, else 0.
-        def self.combine_results(results)
+        # Merges every worker's per-host link tally and logs the one entry through
+        # `tracker`, which feeds the step's warning tally by itself (see
+        # {StepCoordinator#reduce_results}). Runs in the parent under the run DB's
+        # single-writer discipline; `results` are the workers' `result` hashes,
+        # with string keys from crossing the process boundary as JSON.
+        def self.combine_results(results, tracker)
           totals = Hash.new(0)
           results.each { |hosts| hosts.each { |host, count| totals[host] += count } }
-          return 0 if totals.empty?
+          return if totals.empty?
 
           total = totals.values.sum
           hosts = totals.sort_by { |host, count| [-count, host] }
           top_count = hosts.first[1]
           dominant = top_count >= DOMINANT_HOST_MINIMUM && top_count >= total * DOMINANT_HOST_SHARE
 
-          IntermediateDB::LogEntry.create(
-            type: dominant ? IntermediateDB::LogEntry::WARNING : IntermediateDB::LogEntry::INFO,
-            message: FOREIGN_LINK_LOG_MESSAGE,
-            details: {
-              total:,
-              hosts: hosts.map { |host, count| { host:, count: } },
-            },
-          )
+          details = { total:, hosts: hosts.map { |host, count| { host:, count: } } }
 
-          dominant ? 1 : 0
+          if dominant
+            tracker.log_warning(FOREIGN_LINK_LOG_MESSAGE, details:)
+          else
+            tracker.log_info(FOREIGN_LINK_LOG_MESSAGE, details:)
+          end
         end
 
         source do
