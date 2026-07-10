@@ -1,15 +1,21 @@
 # frozen_string_literal: true
 
-require "etc"
-
 module Migrations
   module Importer
     module Uploads
       # The threading engine shared by all three upload tasks. It owns one
-      # producer thread, a static pool of worker threads, one writer thread (the
-      # sole SQLite writer), the two queues between them, the progress reporting,
-      # and SIGINT handling. The tasks stay thin: they only say what to read, how
-      # to process one row, and how to write one result.
+      # producer thread, a pool of worker threads, one writer thread (the sole
+      # SQLite writer), the two queues between them, the progress reporting, and
+      # SIGINT handling. The tasks stay thin: they only say what to read, how to
+      # process one row, and how to write one result.
+      #
+      # The worker pool is spawned at full size (the plan's ceiling) once, but how
+      # many of them may run at a time is governed by a {WorkerGate} that an
+      # {AdaptiveController} tunes as it watches CPU, memory, and throughput — no
+      # static worker count, because the benchmarks showed the right number depends
+      # entirely on the store and the workload. A worker takes a gate permit around
+      # each item, so shrinking or growing the pool is just workers parking or
+      # waking at the next item boundary — no threads killed or respawned.
       #
       # Rows and results both travel in batches, never one at a time — a per-row
       # SizedQueue handoff costs 2-8x throughput here. The producer fills arrays of
@@ -22,7 +28,8 @@ module Migrations
       #   * `reporter=` — receives the step handle (for notices from `write`)
       #   * `before_run` / `after_run` — setup and teardown on the main thread
       #   * `max_count` — the progress total (known after `before_run`), or nil
-      #   * `worker_count` — how many worker threads to run
+      #   * `store_external?` — whether uploads land on an external store (S3),
+      #     which shapes the worker bounds
       #   * `produce(emit_work:, emit_result:)` — the producer body; calls
       #     `emit_work` for rows the workers should process and `emit_result` for
       #     results it already knows (e.g. rows skipped up front)
@@ -41,7 +48,10 @@ module Migrations
           batch_size: DEFAULT_BATCH_SIZE,
           work_queue_slots: DEFAULT_WORK_QUEUE_SLOTS,
           status_queue_slots: DEFAULT_STATUS_QUEUE_SLOTS,
-          worker_count: nil,
+          worker_plan: nil,
+          sampler: nil,
+          adaptive: true,
+          controller_interval: AdaptiveController::DEFAULT_INTERVAL,
           with_connection: nil,
           install_trap: true,
           on_double_interrupt: -> { exit!(1) }
@@ -51,12 +61,16 @@ module Migrations
           @batch_size = batch_size
           @work_queue = SizedQueue.new(work_queue_slots)
           @status_queue = SizedQueue.new(status_queue_slots)
-          @worker_count = worker_count
+          @worker_plan = worker_plan
+          @sampler = sampler
+          @adaptive = adaptive
+          @controller_interval = controller_interval
           @with_connection = with_connection || method(:default_with_connection)
           @install_trap = install_trap
           @on_double_interrupt = on_double_interrupt
 
           @interrupt_requested = false
+          @completed = 0
         end
 
         # @return [Boolean] whether the run stopped early because of Ctrl-C
@@ -70,9 +84,18 @@ module Migrations
 
           begin
             @task.before_run
+            @plan = @worker_plan || build_plan
+            @gate = WorkerGate.new(target: @plan.seed, max: @plan.ceiling)
+
             step.with_progress(max_progress: @task.max_count) do |progress|
               @progress = progress
-              with_trap { run_threads }
+              step.report_concurrency(@gate.target)
+              controller = start_controller(step)
+              begin
+                with_trap { run_threads }
+              ensure
+                controller&.stop
+              end
             end
             @task.after_run
           ensure
@@ -136,7 +159,7 @@ module Migrations
         end
 
         def start_workers
-          Array.new(worker_count) do |index|
+          Array.new(@gate.max) do |index|
             Thread.new do
               Thread.current.name = "uploads-worker-#{index}"
               work_loop
@@ -153,8 +176,17 @@ module Migrations
             batch.each do |row|
               break if @interrupt_requested
 
-              result = @with_connection.call { @task.process(row, resource) }
-              results << result if result
+              # Take the permit outside `with_connection`: a worker parked in
+              # `acquire` (because the gate shrank) must not pin an AR connection.
+              # The permit is held only around one item, so shrinking takes effect
+              # within one item's time.
+              @gate.acquire
+              begin
+                result = @with_connection.call { @task.process(row, resource) }
+                results << result if result
+              ensure
+                @gate.release
+              end
             end
 
             @status_queue << results unless results.empty?
@@ -193,11 +225,56 @@ module Migrations
               warning_count: warnings,
               error_count: errors,
             )
+
+            # Single writer thread, so a plain read on the other side (the
+            # controller) is safe — it only needs an approximate rate.
+            @completed += batch.size
           end
         end
 
-        def worker_count
-          @worker_count ||= @task.worker_count
+        # --- Adaptive worker sizing. The plan gives the seed and the hard bounds;
+        # the gate enforces the live target; the controller moves it. ---
+
+        def build_plan
+          AdaptiveController.plan(
+            usable_cpus: SystemInfo.usable_cpus,
+            store_external: @task.store_external?,
+            ar_pool_size: ActiveRecord::Base.connection_pool.size,
+            fd_limit: raise_file_limit!,
+          )
+        end
+
+        # More workers means more open files (tempfiles, store sockets, DB
+        # handles), so give the process all the descriptors the OS already allows
+        # by lifting the soft limit to the hard one. Best-effort: an unprivileged
+        # process can always raise its own soft limit up to the hard cap, but
+        # rescue anyway so a locked-down environment doesn't abort the run.
+        def raise_file_limit!
+          soft, hard = Process.getrlimit(Process::RLIMIT_NOFILE)
+          if soft < hard
+            Process.setrlimit(Process::RLIMIT_NOFILE, hard, hard)
+            soft = hard
+          end
+          soft
+        rescue Errno::EPERM, Errno::EINVAL
+          Process.getrlimit(Process::RLIMIT_NOFILE).first
+        end
+
+        def start_controller(step)
+          return nil unless @adaptive
+
+          controller =
+            AdaptiveController.new(
+              gate: @gate,
+              sampler: @sampler || ResourceSampler.new(usable_cpus: SystemInfo.usable_cpus),
+              step:,
+              ceiling: @plan.ceiling,
+              work_available: -> { !@work_queue.empty? },
+              completed_count: -> { @completed },
+              interval: @controller_interval,
+            )
+          controller.start
+          controller
         end
 
         def with_trap
