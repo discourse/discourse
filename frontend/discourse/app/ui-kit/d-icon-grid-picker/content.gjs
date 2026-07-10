@@ -292,7 +292,6 @@ export default class DIconGridPickerContent extends Component {
     >
       <div class="d-icon-grid-picker__filter-container">
         <DFilterInput
-          {{! @glint-expect-error: FilterInput lacks Element type declaration }}
           aria-label={{i18n "d_icon_grid_picker.search_placeholder"}}
           aria-controls="d-icon-grid-picker-listbox"
           placeholder={{i18n "d_icon_grid_picker.search_placeholder"}}

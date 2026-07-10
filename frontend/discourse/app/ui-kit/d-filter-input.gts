@@ -10,14 +10,34 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-export default class DFilterInput extends Component {
+interface DFilterInputSignature {
+  Args: {
+    value?: string;
+    filterAction?: (event: Event) => void;
+    onClearInput?: (event: Event) => void;
+    icons?: {
+      left?: string;
+      right?: string;
+    };
+    containerClass?: string;
+  };
+
+  // Root element type (enables ...attributes type checking)
+  Element: HTMLInputElement;
+
+  Blocks: {
+    default: [];
+  };
+}
+
+export default class DFilterInput extends Component<DFilterInputSignature> {
   @tracked isFocused = false;
 
-  registerInput = modifier((element) => {
-    this.input = element;
+  registerInput = modifier((element: HTMLInputElement) => {
+    this.#input = element;
   });
 
-  focusState = modifier((element) => {
+  focusState = modifier((element: HTMLInputElement) => {
     const focusInHandler = () => {
       this.isFocused = true;
     };
@@ -34,10 +54,12 @@ export default class DFilterInput extends Component {
     };
   });
 
+  #input?: HTMLInputElement;
+
   @action
-  onClearInput(event) {
-    this.args.onClearInput(event);
-    this.input?.focus();
+  onClearInput(event: Event) {
+    this.args.onClearInput?.(event);
+    this.#input?.focus();
   }
 
   <template>
