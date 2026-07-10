@@ -105,7 +105,7 @@ module UserGuardian
   end
 
   def can_check_sso_details?(user)
-    user && (is_admin? || (is_staff? && SiteSetting.moderators_view_sso_details))
+    user && (is_admin? || (is_moderator? && SiteSetting.moderators_view_sso_details))
   end
 
   def can_check_sso_email?(user)
