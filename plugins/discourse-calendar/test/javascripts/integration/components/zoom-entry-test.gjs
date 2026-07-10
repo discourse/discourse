@@ -1,5 +1,5 @@
 import { getOwner } from "@ember/owner";
-import { click, render, settled } from "@ember/test-helpers";
+import { clearRender, click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -15,8 +15,48 @@ const MEETING_NOT_STARTED = {
 
 const WAITING_SELECTOR = ".discourse-calendar-livestream-zoom-entry__waiting";
 const ERROR_SELECTOR = ".discourse-calendar-livestream-zoom-entry__error";
+const FRAME_SELECTOR = ".discourse-calendar-livestream-zoom-entry__frame";
 const JOIN_BUTTON_SELECTOR =
   ".discourse-calendar-livestream-zoom-entry .btn-primary";
+const LEAVE_BUTTON_SELECTOR = ".zoom-MuiButton-root";
+
+const COUNTDOWN_TEXT = `The webinar hasn't started yet. Retrying join in ${RETRY_DELAY_SECONDS} seconds...`;
+const ERROR_TEXT =
+  "You left the webinar or we are unable to load Zoom in this page.";
+
+// `joinZoom` guards against being called when the button is disabled, which a
+// test can never reach through a click. `syncZoomLayout` runs from the modifier
+// on insert, so stubbing it hands us the component instance before any join.
+function captureComponent() {
+  const captured = {};
+
+  sinon
+    .stub(LivestreamZoomEntry.prototype, "syncZoomLayout")
+    .callsFake(function () {
+      captured.component = this;
+    });
+
+  return captured;
+}
+
+function deferred() {
+  let resolve, reject;
+  const promise = new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+  return { promise, resolve, reject };
+}
+
+// Zoom renders its own leave button inside the app root, both on the
+// "meeting has not started" panel and on the joined toolbar. The component can
+// only tell them apart by its own `isJoined` state, so both look like this.
+// The inner span stands in for Zoom's icon, and makes sure we still match when
+// the click lands on a descendant rather than the button itself.
+function renderZoomLeaveButton() {
+  const frame = document.querySelector(FRAME_SELECTOR);
+  frame.innerHTML = `<button class="zoom-MuiButton-root" title="Leave"><span class="zoom-icon"></span></button>`;
+}
 
 module("Integration | Component | LivestreamZoomEntry", function (hooks) {
   setupRenderingTest(hooks);
@@ -59,7 +99,13 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
     );
 
     assert.dom(JOIN_BUTTON_SELECTOR).hasText("Join Zoom");
-    assert.dom(".discourse-calendar-livestream-zoom-entry__frame").exists();
+    assert.dom(FRAME_SELECTOR).exists();
+    assert
+      .dom(`${FRAME_SELECTOR}.--visible`)
+      .doesNotExist("the frame is hidden until the user joins");
+    assert
+      .dom(".discourse-calendar-livestream-zoom-entry a")
+      .doesNotExist("no fallback link before an error");
   });
 
   test("renders the mobile route link on mobile", async function (assert) {
@@ -71,7 +117,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
 
     assert.dom(JOIN_BUTTON_SELECTOR).hasText("Join Zoom");
     assert
-      .dom(".discourse-calendar-livestream-zoom-entry__frame")
+      .dom(FRAME_SELECTOR)
       .doesNotExist("does not render the inline Zoom frame");
   });
 
@@ -115,6 +161,186 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
     assert.dom(".discourse-calendar-livestream-zoom-entry").doesNotExist();
   });
 
+  test("renders nothing when Zoom livestreams are disabled", async function (assert) {
+    stubCapabilities(getOwner(this), { lg: true });
+    getOwner(this).lookup("service:site-settings").livestream_zoom_enabled =
+      false;
+
+    await render(
+      <template><LivestreamZoomEntry @event={{this.event}} /></template>
+    );
+
+    assert.dom(".discourse-calendar-livestream-zoom-entry").doesNotExist();
+  });
+
+  test("renders nothing without a livestream chat channel", async function (assert) {
+    stubCapabilities(getOwner(this), { lg: true });
+    this.event.livestreamChatChannelId = null;
+
+    await render(
+      <template><LivestreamZoomEntry @event={{this.event}} /></template>
+    );
+
+    assert.dom(".discourse-calendar-livestream-zoom-entry").doesNotExist();
+  });
+
+  test("renders nothing for anonymous users", async function (assert) {
+    stubCapabilities(getOwner(this), { lg: true });
+    getOwner(this).unregister("service:current-user");
+
+    await render(
+      <template><LivestreamZoomEntry @event={{this.event}} /></template>
+    );
+
+    assert.dom(".discourse-calendar-livestream-zoom-entry").doesNotExist();
+  });
+
+  module("when joining", function (innerHooks) {
+    let performJoin;
+
+    innerHooks.beforeEach(function () {
+      stubCapabilities(getOwner(this), { lg: true });
+      performJoin = sinon.stub(LivestreamZoomEntry.prototype, "performJoin");
+      sinon.stub(console, "error");
+    });
+
+    test("shows the Zoom frame and joins", async function (assert) {
+      performJoin.resolves();
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+
+      assert.true(performJoin.calledOnce);
+      assert.dom(`${FRAME_SELECTOR}.--visible.--joined`).exists();
+      assert.dom(JOIN_BUTTON_SELECTOR).doesNotExist("hides the join button");
+      assert.dom(ERROR_SELECTOR).doesNotExist();
+    });
+
+    test("ignores a second click while a join is in flight", async function (assert) {
+      const join = deferred();
+      performJoin.returns(join.promise);
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      // Not awaited: the join is deliberately left pending.
+      click(JOIN_BUTTON_SELECTOR);
+      await settled();
+
+      assert.dom(JOIN_BUTTON_SELECTOR).isDisabled("disabled while joining");
+
+      join.resolve();
+      await settled();
+
+      assert.true(performJoin.calledOnce, "only joined once");
+    });
+
+    test("does not join outside the event timeframe", async function (assert) {
+      performJoin.resolves();
+      this.event.currentlyWithinEventTimeframe = false;
+      const captured = captureComponent();
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      assert.dom(JOIN_BUTTON_SELECTOR).isDisabled();
+
+      await captured.component.joinZoom();
+
+      assert.false(performJoin.called, "the guard refuses the join");
+      assert.dom(`${FRAME_SELECTOR}.--visible`).doesNotExist();
+    });
+
+    test("shows an error and a fallback link when the join fails", async function (assert) {
+      performJoin.rejects(new Error("nope"));
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+
+      assert.dom(ERROR_SELECTOR).hasText(ERROR_TEXT);
+      assert
+        .dom(".discourse-calendar-livestream-zoom-entry a")
+        .hasText("Open in Zoom", "offers the fallback link");
+      assert.dom(`${FRAME_SELECTOR}.--visible`).doesNotExist();
+      assert.dom(JOIN_BUTTON_SELECTOR).isNotDisabled("can be retried");
+    });
+
+    test("clears a previous error once a later join succeeds", async function (assert) {
+      performJoin.rejects(new Error("nope"));
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+      assert.dom(ERROR_SELECTOR).exists();
+
+      performJoin.resolves();
+      await click(JOIN_BUTTON_SELECTOR);
+
+      assert.dom(ERROR_SELECTOR).doesNotExist("clears the error message");
+      assert
+        .dom(".discourse-calendar-livestream-zoom-entry a")
+        .doesNotExist("clears the fallback link");
+      assert.dom(`${FRAME_SELECTOR}.--joined`).exists();
+    });
+
+    test("leaving a joined meeting is left to Zoom's confirmation dialog", async function (assert) {
+      performJoin.resolves();
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+      renderZoomLeaveButton();
+
+      // Zoom's toolbar leave button only opens a confirmation popper. Tearing
+      // the frame down here would strand the user in an invisible meeting.
+      await click(LEAVE_BUTTON_SELECTOR);
+
+      assert.dom(`${FRAME_SELECTOR}.--joined`).exists("keeps the frame up");
+      assert.dom(JOIN_BUTTON_SELECTOR).doesNotExist("stays joined");
+    });
+
+    test("hides the frame when the meeting closes", async function (assert) {
+      let component;
+      performJoin.callsFake(function () {
+        component = this;
+        return Promise.resolve();
+      });
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+      document.querySelector(FRAME_SELECTOR).style.height = "600px";
+
+      // What the `connection-change` handler does when the host ends the
+      // meeting while the user is still on the page.
+      component.leaveZoom();
+      await settled();
+
+      assert.dom(`${FRAME_SELECTOR}.--visible`).doesNotExist("hides the frame");
+      assert.dom(`${FRAME_SELECTOR}.--joined`).doesNotExist();
+      assert.strictEqual(
+        document.querySelector(FRAME_SELECTOR).style.height,
+        "",
+        "strips the inline height Zoom left behind, which would otherwise leave an empty box"
+      );
+      assert.dom(JOIN_BUTTON_SELECTOR).isNotDisabled("can join again");
+    });
+  });
+
   module("when the meeting has not started", function (innerHooks) {
     let clock, performJoin;
 
@@ -149,15 +375,12 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       assert.dom(JOIN_BUTTON_SELECTOR).isDisabled();
       assert
         .dom(WAITING_SELECTOR)
-        .hasText(
-          `The webinar hasn't started yet. Retrying join in ${RETRY_DELAY_SECONDS} seconds...`,
-          "shows the initial countdown"
-        );
+        .hasText(COUNTDOWN_TEXT, "shows the initial countdown");
       assert
-        .dom(".discourse-calendar-livestream-zoom-entry__frame.--visible")
+        .dom(`${FRAME_SELECTOR}.--visible`)
         .exists("keeps the Zoom frame up while waiting");
       assert
-        .dom(".discourse-calendar-livestream-zoom-entry__frame.--joined")
+        .dom(`${FRAME_SELECTOR}.--joined`)
         .doesNotExist("but not in its joined layout");
 
       await tick(1);
@@ -178,9 +401,34 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       assert
         .dom(WAITING_SELECTOR)
         .hasText(
-          `The webinar hasn't started yet. Retrying join in ${RETRY_DELAY_SECONDS} seconds...`,
+          COUNTDOWN_TEXT,
           "restarts the countdown after another failure"
         );
+    });
+
+    test("reports that a retry is in flight", async function (assert) {
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+
+      const retry = deferred();
+      performJoin.returns(retry.promise);
+      await tick(RETRY_DELAY_SECONDS);
+
+      assert
+        .dom(WAITING_SELECTOR)
+        .hasText(
+          "Trying to join the webinar again now...",
+          "swaps the countdown for the in-flight message"
+        );
+
+      retry.resolve();
+      await settled();
+
+      assert.dom(WAITING_SELECTOR).doesNotExist();
+      assert.dom(`${FRAME_SELECTOR}.--joined`).exists();
     });
 
     test("joins when the meeting starts", async function (assert) {
@@ -196,7 +444,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       assert.dom(WAITING_SELECTOR).doesNotExist("clears the waiting message");
       assert.dom(JOIN_BUTTON_SELECTOR).doesNotExist("hides the join button");
       assert
-        .dom(".discourse-calendar-livestream-zoom-entry__frame.--joined")
+        .dom(`${FRAME_SELECTOR}.--joined`)
         .exists("shows the joined Zoom frame");
     });
 
@@ -212,9 +460,9 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
 
       assert.dom(WAITING_SELECTOR).doesNotExist("stops the countdown");
       assert.dom(JOIN_BUTTON_SELECTOR).isNotDisabled();
-      assert.dom(ERROR_SELECTOR).hasText("Unable to load Zoom in this page.");
+      assert.dom(ERROR_SELECTOR).hasText(ERROR_TEXT);
       assert
-        .dom(".discourse-calendar-livestream-zoom-entry__frame.--visible")
+        .dom(`${FRAME_SELECTOR}.--visible`)
         .doesNotExist("tears the Zoom frame down");
       assert
         .dom(".discourse-calendar-livestream-zoom-entry a")
@@ -236,7 +484,61 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
 
       assert.dom(WAITING_SELECTOR).doesNotExist("stops the countdown");
       assert.dom(JOIN_BUTTON_SELECTOR).isNotDisabled();
-      assert.dom(ERROR_SELECTOR).hasText("Unable to load Zoom in this page.");
+      assert.dom(ERROR_SELECTOR).hasText(ERROR_TEXT);
+    });
+
+    test("stops retrying when the user leaves Zoom's not-started panel", async function (assert) {
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+      renderZoomLeaveButton();
+
+      // Zoom fires no `connection-change` event from this panel, so the click
+      // itself is the only signal that the user wants out.
+      await click(LEAVE_BUTTON_SELECTOR);
+
+      assert.dom(WAITING_SELECTOR).doesNotExist("stops the countdown");
+      assert.dom(`${FRAME_SELECTOR}.--visible`).doesNotExist("hides the frame");
+      assert.dom(JOIN_BUTTON_SELECTOR).isNotDisabled("re-enables joining");
+
+      performJoin.resetHistory();
+      await tick(RETRY_DELAY_SECONDS * 2);
+
+      assert.false(performJoin.called, "does not retry after leaving");
+    });
+
+    test("can join again after leaving the not-started panel", async function (assert) {
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+      renderZoomLeaveButton();
+      await click(LEAVE_BUTTON_SELECTOR);
+
+      performJoin.resolves();
+      await click(JOIN_BUTTON_SELECTOR);
+
+      assert.dom(`${FRAME_SELECTOR}.--joined`).exists("joins on a fresh click");
+    });
+
+    test("stops retrying once the component is torn down", async function (assert) {
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+      await clearRender();
+
+      performJoin.resetHistory();
+      await tick(RETRY_DELAY_SECONDS * 2);
+
+      assert.false(
+        performJoin.called,
+        "the retry timer does not outlive the component"
+      );
     });
   });
 });

@@ -78,17 +78,18 @@ module DiscoursePostEvent
 
     # Happens after the event record is saved to prepare the onebox
     def enqueue_warm_livestream_onebox
-      return if !saved_change_to_livestream? && !saved_change_to_location?
+      return if !livestream? || livestream_url.blank?
+      return if !saved_change_to_livestream? && !saved_change_to_location? && !saved_change_to_url?
       return if has_cached_livestream_onebox?
       Jobs.enqueue(:warm_livestream_onebox, event_id: id, url: livestream_url)
     end
 
-    # Happens on demand in the serializer for post event in case
-    # the onebox is not warmed yet
-    def warm_livestream_onebox!(publish: false)
+    # Fetches the onebox and tells clients to re-render the post with it. Only
+    # ever called from the background job, never during a request.
+    def warm_livestream_onebox!
       return if has_cached_livestream_onebox?
       Oneboxer.onebox(livestream_url)
-      post&.publish_change_to_clients!(:revised) if publish
+      post&.publish_change_to_clients!(:revised)
     end
 
     def destroy_topic_custom_field
@@ -542,8 +543,8 @@ module DiscoursePostEvent
 
     def is_zoom_livestream?
       return false unless SiteSetting.livestream_zoom_enabled
-      return false unless livestream? && livestream_url.present?
-      UrlHelper.relaxed_parse(livestream_url)&.host&.downcase == "zoom.us"
+      return false unless livestream?
+      DiscourseCalendar::Livestream::ZoomUrlParser.zoom_url?(livestream_url)
     end
 
     private

@@ -528,4 +528,34 @@ module("Unit | Lib | raw-event-helper", function () {
     );
     assert.true(isLivestreamUrl("https://zoom.us/j/123456789"), "accepts Zoom");
   });
+
+  test("isLivestreamUrl accepts subdomains of livestreaming platforms", function (assert) {
+    assert.true(
+      isLivestreamUrl("https://us06web.zoom.us/j/123456789?pwd=secret"),
+      "accepts the vanity subdomain Zoom actually hands out"
+    );
+    assert.true(
+      isLivestreamUrl("https://gaming.youtube.com/watch?v=dQw4w9WgXcQ"),
+      "accepts a YouTube subdomain"
+    );
+    assert.true(
+      isLivestreamUrl("HTTPS://US06WEB.ZOOM.US/j/123456789"),
+      "is case-insensitive"
+    );
+  });
+
+  test("isLivestreamUrl rejects hosts that merely resemble a platform", function (assert) {
+    assert.false(
+      isLivestreamUrl("https://notzoom.us/j/123456789"),
+      "rejects a host ending in the platform name"
+    );
+    assert.false(
+      isLivestreamUrl("https://zoom.us.evil.com/j/123456789"),
+      "rejects a host starting with the platform name"
+    );
+    assert.false(
+      isLivestreamUrl("https://myyoutube.com/watch?v=1"),
+      "rejects a host prefixed with the platform name"
+    );
+  });
 });

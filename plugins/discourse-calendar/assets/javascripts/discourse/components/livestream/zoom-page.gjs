@@ -30,8 +30,12 @@ export default class LivestreamZoomPage extends Component {
     await this.loadZoom();
   });
 
+  get event() {
+    return this.args.topic?.postStream?.posts?.[0]?.event;
+  }
+
   get zoomUrl() {
-    return this.args.topic?.postStream?.posts?.[0]?.event?.url;
+    return this.event?.livestream_url;
   }
 
   get mobileLeaveUrl() {

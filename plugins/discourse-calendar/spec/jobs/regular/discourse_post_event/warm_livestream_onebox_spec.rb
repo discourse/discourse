@@ -47,6 +47,17 @@ describe Jobs::WarmLivestreamOnebox do
     expect(messages).to be_empty
   end
 
+  it "does not fetch the onebox again when it is already cached" do
+    event
+    Discourse.cache.write(
+      Oneboxer.onebox_cache_key(livestream_url),
+      { onebox: "<aside>cached</aside>" },
+    )
+    Oneboxer.expects(:onebox).never
+
+    described_class.new.execute(event_id: event.id, url: livestream_url)
+  end
+
   it "does not publish when the event cannot be found" do
     Oneboxer.stubs(:onebox).returns("<aside>cached</aside>")
 

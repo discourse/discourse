@@ -39,6 +39,72 @@ module("Unit | Model | DiscoursePostEventEvent", function () {
     );
   });
 
+  test("currentlyWithinEventTimeframe opens 30 minutes before the start", function (assert) {
+    const notYetOpen = DiscoursePostEventEvent.create({
+      id: 1,
+      starts_at: moment().add(45, "minutes").toISOString(),
+      ends_at: moment().add(2, "hours").toISOString(),
+    });
+    const earlyAccess = DiscoursePostEventEvent.create({
+      id: 2,
+      starts_at: moment().add(15, "minutes").toISOString(),
+      ends_at: moment().add(2, "hours").toISOString(),
+    });
+
+    assert.false(notYetOpen.currentlyWithinEventTimeframe, "45 minutes out");
+    assert.true(earlyAccess.currentlyWithinEventTimeframe, "15 minutes out");
+  });
+
+  test("currentlyWithinEventTimeframe closes 10 minutes after the end", function (assert) {
+    const inProgress = DiscoursePostEventEvent.create({
+      id: 1,
+      starts_at: moment().subtract(1, "hour").toISOString(),
+      ends_at: moment().add(1, "hour").toISOString(),
+    });
+    const withinGrace = DiscoursePostEventEvent.create({
+      id: 2,
+      starts_at: moment().subtract(2, "hours").toISOString(),
+      ends_at: moment().subtract(5, "minutes").toISOString(),
+    });
+    const pastGrace = DiscoursePostEventEvent.create({
+      id: 3,
+      starts_at: moment().subtract(2, "hours").toISOString(),
+      ends_at: moment().subtract(15, "minutes").toISOString(),
+    });
+
+    assert.true(inProgress.currentlyWithinEventTimeframe, "in progress");
+    assert.true(withinGrace.currentlyWithinEventTimeframe, "within grace");
+    assert.false(pastGrace.currentlyWithinEventTimeframe, "past grace");
+  });
+
+  test("updateFromEvent copies the livestream fields", function (assert) {
+    const event = DiscoursePostEventEvent.create({ id: 1 });
+    const updated = DiscoursePostEventEvent.create({
+      id: 1,
+      location: "https://us06web.zoom.us/j/123456789",
+      livestream: true,
+      livestream_chat_channel_id: 9,
+      is_zoom_livestream: true,
+    });
+
+    event.updateFromEvent(updated);
+
+    assert.true(event.livestream);
+    assert.strictEqual(
+      event.livestreamUrl,
+      "https://us06web.zoom.us/j/123456789"
+    );
+    assert.strictEqual(
+      event.livestreamChatChannelId,
+      9,
+      "keeps the chat channel the Zoom entry depends on"
+    );
+    assert.true(
+      event.isZoomLivestream,
+      "keeps the flag that decides whether the Zoom entry renders"
+    );
+  });
+
   test("updateFromEvent copies description fields", function (assert) {
     const event = DiscoursePostEventEvent.create({ id: 1 });
     const updated = DiscoursePostEventEvent.create({

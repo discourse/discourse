@@ -215,6 +215,8 @@ export default class DiscoursePostEventEvent {
     this.livestream = event.livestream;
     this.livestreamOnebox = event.livestreamOnebox;
     this.livestreamUrl = this.location || this.url;
+    this.livestreamChatChannelId = event.livestreamChatChannelId;
+    this.isZoomLivestream = event.isZoomLivestream;
     this.rrule = event.rrule;
     this.maxAttendees = event.maxAttendees;
     this.atCapacity = event.atCapacity;

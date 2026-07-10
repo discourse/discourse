@@ -62,13 +62,11 @@ module DiscoursePostEvent
       object.is_zoom_livestream?
     end
 
+    # Only ever reads the cache. Fetching here would put a blocking outbound
+    # request in the middle of serialization, once per event in a list. The
+    # `warm_livestream_onebox` job fills the cache and republishes the post.
     def livestream_onebox
-      cached_onebox = Oneboxer.cached_onebox(object.livestream_url).presence
-      if !cached_onebox
-        object.warm_livestream_onebox!(publish: false)
-        cached_onebox = Oneboxer.cached_onebox(object.livestream_url)
-      end
-      cached_onebox
+      Oneboxer.cached_onebox(object.livestream_url).presence
     end
 
     def livestream_chat_channel_id

@@ -10,7 +10,7 @@ module Jobs
 
       event = DiscoursePostEvent::Event.find_by(id: args[:event_id])
       return if event.blank? || event.livestream_url != url
-      event.warm_livestream_onebox!(publish: true)
+      event.warm_livestream_onebox!
     end
   end
 end

@@ -6,7 +6,6 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
-import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
@@ -182,12 +181,8 @@ export default class LivestreamZoomEntry extends Component {
     return this.capabilities.viewport.lg;
   }
 
-  get mobileZoomRoute() {
-    return getURL(`/t/${this.topic.slug}/${this.topic.id}/zoom`);
-  }
-
   get showFallbackLink() {
-    return !isEmpty(this.errorMessage) || !this.currentUser;
+    return !isEmpty(this.errorMessage);
   }
 
   get isWaitingForStart() {

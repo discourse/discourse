@@ -46,6 +46,17 @@ module DiscourseCalendar
           expect(response.parsed_body["signature"]).to be_present
         end
 
+        it "returns a signature the Zoom SDK can verify" do
+          get "/discourse-calendar/livestream/zoom/signature.json", params: { topic_id: topic.id }
+
+          claims =
+            JWT.decode(response.parsed_body["signature"], "sdk-secret", true, algorithm: "HS256")[0]
+
+          expect(claims["sdkKey"]).to eq("sdk-key")
+          expect(claims["mn"]).to eq("123456789")
+          expect(claims["role"]).to eq(0)
+        end
+
         it "rejects invalid params" do
           get "/discourse-calendar/livestream/zoom/signature.json"
 
@@ -129,6 +140,30 @@ module DiscourseCalendar
 
           expect(response.status).to eq(404)
         end
+
+        it "returns not found when the livestream URL is not served over HTTPS" do
+          event.update_columns(location: "http://zoom.us/j/123456789")
+
+          get "/discourse-calendar/livestream/zoom/signature.json", params: { topic_id: topic.id }
+
+          expect(response.status).to eq(404)
+        end
+      end
+    end
+
+    # The full-page mobile Zoom view is a client-side route rendered by the topic
+    # controller, so the server just needs to serve the topic at that path.
+    describe "the full-page Zoom route" do
+      it "serves the topic" do
+        get "/t/#{topic.slug}/#{topic.id}/zoom"
+
+        expect(response.status).to eq(200)
+      end
+
+      it "returns not found for an unknown topic" do
+        get "/t/#{topic.slug}/-1/zoom"
+
+        expect(response.status).to eq(404)
       end
     end
   end

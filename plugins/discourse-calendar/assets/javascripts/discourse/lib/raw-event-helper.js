@@ -1,7 +1,12 @@
+// `([\w-]+\.)*` allows any subdomain, since livestream hosts routinely use them
+// (us06web.zoom.us, www.youtube.com). It cannot match a host that merely ends in
+// one of these names, because each captured label must be followed by a dot:
+// "notzoom.us" and "zoom.us.evil.com" are both rejected.
+const LIVESTREAM_URL =
+  /^(https?:\/\/)?([\w-]+\.)*(youtube\.com|youtu\.be|twitch\.tv|zoom\.us|kick\.com|tiktok\.com|instagram\.com|facebook\.com)\//i;
+
 export function isLivestreamUrl(url) {
-  return /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be|twitch\.tv|zoom\.us|kick\.com|tiktok\.com|instagram\.com|facebook\.com)\//i.test(
-    url ?? ""
-  );
+  return LIVESTREAM_URL.test(url ?? "");
 }
 
 export function defaultReminderFor({ startsAt, endsAt, allDay } = {}) {
