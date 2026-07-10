@@ -168,6 +168,9 @@ en:
           invalid_children: "Block can't have these children."
           unregistered_block: "Block isn't registered."
           duplicate_id: "Another block already uses this id."
+          unknown_entry_key: "Unknown block key(s): %{keys}."
+          invalid_entry_type: "The \"%{key}\" value has the wrong type."
+          invalid_entry_id: "This block's id isn't valid. Use lowercase letters, numbers, and hyphens."
           invalid_block: "Block isn't valid."
         layout:
           mode_legend: "Mode"

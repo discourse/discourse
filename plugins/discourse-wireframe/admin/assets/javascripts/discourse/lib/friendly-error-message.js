@@ -121,6 +121,16 @@ export function friendlyErrorMessage(details) {
       return i18n("wireframe.inspector.errors.unregistered_block");
     case ERROR_CODES.DUPLICATE_ID:
       return i18n("wireframe.inspector.errors.duplicate_id");
+    case ERROR_CODES.UNKNOWN_ENTRY_KEY:
+      return i18n("wireframe.inspector.errors.unknown_entry_key", {
+        keys: formatFieldList(details.expected?.keys),
+      });
+    case ERROR_CODES.INVALID_ENTRY_TYPE:
+      return i18n("wireframe.inspector.errors.invalid_entry_type", {
+        key: details.expected?.key,
+      });
+    case ERROR_CODES.INVALID_ENTRY_ID:
+      return i18n("wireframe.inspector.errors.invalid_entry_id");
     case ERROR_CODES.INVALID_BLOCK:
       return i18n("wireframe.inspector.errors.invalid_block");
     default:

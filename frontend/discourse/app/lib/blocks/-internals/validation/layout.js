@@ -113,8 +113,14 @@ function validateOutletPermission(metadata, outletName, blockName, context) {
  * Validates container/children relationship.
  * Containers must have children, non-containers cannot have children.
  *
+ * A composite block (one that declares `parts`) is the exception: it is a
+ * container, but its children are synthesized from its parts at render time,
+ * so a valid instance carries no explicit `children`. Declared parts therefore
+ * satisfy the "must have children" requirement.
+ *
  * @param {Object} entry - The block entry.
  * @param {boolean} isContainer - Whether the block is a container.
+ * @param {boolean} hasParts - Whether the block declares composite `parts`.
  * @param {string} blockName - The block name for error messages.
  * @param {string} outletName - The outlet name for error messages.
  * @param {Object} context - Error context for raiseBlockError.
@@ -123,6 +129,7 @@ function validateOutletPermission(metadata, outletName, blockName, context) {
 function validateContainerChildren(
   entry,
   isContainer,
+  hasParts,
   blockName,
   outletName,
   context
@@ -143,7 +150,7 @@ function validateContainerChildren(
     return false;
   }
 
-  if (isContainer && !hasChildren) {
+  if (isContainer && !hasChildren && !hasParts) {
     raiseBlockError(
       `Block component ${blockName} in layout ${outletName} must have children`,
       {
@@ -488,10 +495,18 @@ export function validateEntryIdFormat(entry) {
   }
 
   if (!VALID_BLOCK_ID_PATTERN.test(entry.id)) {
+    // The structured `details` lets error consumers render a short,
+    // author-facing message instead of the raw developer string.
     throw new BlockError(
       `"id" value "${entry.id}" is invalid. ` +
         `IDs must start with a lowercase letter and contain only lowercase letters, numbers, and hyphens.`,
-      { path: "id" }
+      {
+        path: "id",
+        details: {
+          code: ERROR_CODES.INVALID_ENTRY_ID,
+          value: entry.id,
+        },
+      }
     );
   }
 }
@@ -673,6 +688,9 @@ export const VALID_ENTRY_KEYS = Object.freeze([
   "classNames", // CSS classes to add to wrapper
   "children", // Nested block entries
   "id", // Unique identifier for targeting and BEM styling
+  "overrides", // Per-part overrides for a composite block (one that declares
+  // `parts`): a flat map keyed by dot-delimited part-id paths, each value the
+  // part's own args. Read by the composite renderer; ignored on non-composites.
 ]);
 
 /**
@@ -692,6 +710,11 @@ const ENTRY_TYPE_RULES = {
     actual: (v) => (Array.isArray(v) ? "array" : typeof v),
   },
   containerArgs: {
+    validate: (v) => typeof v === "object" && !Array.isArray(v),
+    expected: "an object",
+    actual: (v) => (Array.isArray(v) ? "array" : typeof v),
+  },
+  overrides: {
     validate: (v) => typeof v === "object" && !Array.isArray(v),
     expected: "an object",
     actual: (v) => (Array.isArray(v) ? "array" : typeof v),
@@ -744,11 +767,19 @@ export function validateEntryKeys(entry) {
     );
 
     const keyWord = unknownKeys.length > 1 ? "keys" : "key";
-    // Throw BlockError directly - wrapValidationError will add context
+    // Throw BlockError directly - wrapValidationError will add context.
+    // The structured `details` lets error consumers render a short,
+    // author-facing message instead of the raw developer string.
     throw new BlockError(
       `Unknown entry ${keyWord}: ${suggestions.join(", ")}. ` +
         `Valid keys are: ${VALID_ENTRY_KEYS.join(", ")}.`,
-      { path: unknownKeys[0] }
+      {
+        path: unknownKeys[0],
+        details: {
+          code: ERROR_CODES.UNKNOWN_ENTRY_KEY,
+          expected: { keys: unknownKeys, validKeys: [...VALID_ENTRY_KEYS] },
+        },
+      }
     );
   }
 }
@@ -765,10 +796,18 @@ export function validateEntryTypes(entry) {
     const value = entry[field];
     if (value != null && !rule.validate(value)) {
       const actualType = rule.actual?.(value) ?? typeof value;
-      // Throw BlockError directly - wrapValidationError will add context
+      // Throw BlockError directly - wrapValidationError will add context.
+      // The structured `details` lets error consumers render a short,
+      // author-facing message instead of the raw developer string.
       throw new BlockError(
         `"${field}" must be ${rule.expected}, got ${actualType}.`,
-        { path: field }
+        {
+          path: field,
+          details: {
+            code: ERROR_CODES.INVALID_ENTRY_TYPE,
+            expected: { key: field, type: rule.expected, got: actualType },
+          },
+        }
       );
     }
   }
@@ -1187,10 +1226,12 @@ export async function validateEntry(
 
   // Validate container/children relationship
   const isContainer = blockMeta.isContainer;
+  const hasParts = blockMeta.parts != null;
   if (
     !validateContainerChildren(
       entry,
       isContainer,
+      hasParts,
       blockName,
       outletName,
       baseContext

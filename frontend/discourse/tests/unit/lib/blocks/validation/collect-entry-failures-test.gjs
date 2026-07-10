@@ -41,6 +41,21 @@ class RequiredAndConstrainedBlock extends Component {
   <template>x</template>
 }
 
+@block("wf-cef-part-leaf")
+class PartLeaf extends Component {
+  <template>x</template>
+}
+
+// A composite block: declares `parts` (so it is a container), but its children
+// are synthesized from those parts at render time — a valid instance carries no
+// explicit `children`.
+@block("wf-cef-composite", {
+  parts: [{ id: "leaf", block: PartLeaf }],
+})
+class CompositeBlock extends Component {
+  <template>x</template>
+}
+
 module("Unit | Lib | blocks/validation/collectEntryFailures", function (hooks) {
   setupTest(hooks);
 
@@ -127,6 +142,45 @@ module("Unit | Lib | blocks/validation/collectEntryFailures", function (hooks) {
     assert.true(
       codes.includes(ERROR_CODES.CONSTRAINT_VIOLATION),
       "the unmet constraint is stamped on the same pass"
+    );
+  });
+
+  test("a composite (parts) entry with no explicit children is not flagged", async function (assert) {
+    // A composite's children come from its `parts`, synthesized at render time,
+    // so a valid instance has no `children` key. The container/children check
+    // must treat the declared parts as satisfying the requirement rather than
+    // raising INVALID_CHILDREN ("must have children").
+    const entry = { block: CompositeBlock, overrides: { leaf: {} } };
+    const blocksService = getOwner(this).lookup("service:blocks");
+    const context = {
+      seenIds: new Map(),
+      permissive: true,
+      collect: true,
+      warnings: [],
+    };
+
+    await validateLayout(
+      [entry],
+      "homepage-blocks",
+      blocksService,
+      "",
+      null,
+      null,
+      null,
+      null,
+      0,
+      context
+    );
+
+    const codes = (entry.__failureDetails ?? []).map((d) => d.code);
+    assert.false(
+      codes.includes(ERROR_CODES.INVALID_CHILDREN),
+      "declared parts satisfy the children requirement"
+    );
+    assert.strictEqual(
+      entry.__failureDetails,
+      undefined,
+      "no soft failure is stamped for a valid composite"
     );
   });
 });
