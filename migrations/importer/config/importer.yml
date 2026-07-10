@@ -5,3 +5,19 @@ files_db: /shared/import/files.db
 config:
   # if false, allows reserved usernames only for admins
   always_allow_reserved_usernames: true
+
+  # Inline upload mode. Only used when no `files_db` is configured above, i.e.
+  # small migrations that skip the separate `disco upload` run. The uploads step
+  # then creates the uploads itself, straight into the live target site. When
+  # there are uploads to import and neither a files_db nor this section is set,
+  # the import stops with an error.
+  #uploads:
+  #  # Directories the source files live under (required for inline mode).
+  #  root_paths:
+  #    - /shared/import/uploads
+  #  # Optional rewrites applied to each source's relative path, tried after the
+  #  # verbatim path, as a list of [from, to] pairs.
+  #  #path_replacements:
+  #  #  - ["/old/prefix", "/new/prefix"]
+  #  # Where URL-backed sources are cached; defaults to a temp directory.
+  #  #download_cache_path: /shared/import/upload-cache
