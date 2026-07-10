@@ -36,16 +36,18 @@ class DirectoryItemsController < ApplicationController
           .where.not(users: { username: params[:exclude_usernames].split(",") })
     end
 
-    order = params[:order] || DirectoryColumn.automatic_column_names.first
+    default_order = DirectoryColumn.automatic_column_names.first
+    order = params[:order] || default_order
     dir = params[:asc] ? "ASC" : "DESC"
     active_directory_column_names = DirectoryColumn.active_column_names
     if active_directory_column_names.include?(order.to_sym)
       result = result.order("directory_items.#{order} #{dir}, directory_items.id")
-    elsif params[:order] === "username"
+    elsif order == "username"
       result = result.order("users.#{order} #{dir}, directory_items.id")
     else
       # Ordering by user field value
-      user_field = UserField.find_by(name: params[:order])
+      user_field_scope = guardian.is_staff? ? UserField.all : UserField.public_fields
+      user_field = user_field_scope.find_by(name: order)
       if user_field
         result =
           result
@@ -56,6 +58,8 @@ class DirectoryItemsController < ApplicationController
             .order(
               "user_custom_fields.name = 'user_field_#{user_field.id}' ASC, user_custom_fields.value #{dir}",
             )
+      else
+        result = result.order("directory_items.#{default_order} #{dir}, directory_items.id")
       end
     end
 
