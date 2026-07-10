@@ -38,6 +38,17 @@ module UpcomingChanges
     def self.should_display_remove_and_replace_uncategorized?
       SiteSetting::Action::RemoveAndReplaceUncategorizedToggled.should_display_upcoming_change?
     end
+
+    # Code login is a delivery variant of email login (see
+    # EnableLocalLoginsViaCodeValidator), so the change is only actionable when
+    # local logins via email are possible. Must stay visible once enabled so
+    # admins can still find and disable it.
+    def self.should_display_enable_local_logins_via_code?
+      return true if UpcomingChanges.enabled?(:enable_local_logins_via_code)
+
+      SiteSetting.enable_local_logins && SiteSetting.enable_local_logins_via_email &&
+        !SiteSetting.enable_discourse_connect
+    end
   end
 
   def self.user_enabled_reasons

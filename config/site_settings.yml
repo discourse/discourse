@@ -699,6 +699,12 @@ login:
     hidden: true
     validator: "EnableLocalLoginsViaCodeValidator"
     area: "login"
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/407068"
+      allow_enabled_for:
+        - everyone
   enable_passkeys:
     client: true
     default: true

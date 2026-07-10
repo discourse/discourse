@@ -7,7 +7,7 @@ module Jobs
     def execute(args)
       raise Discourse::InvalidParameters.new(:to_address) if args[:to_address].blank?
       raise Discourse::InvalidParameters.new(:code) if args[:code].blank?
-      return if !SiteSetting.enable_local_logins_via_code
+      return if !UpcomingChanges.enabled?(:enable_local_logins_via_code)
 
       message = EmailLoginCodeMailer.send_code(args[:to_address], args[:code])
       Email::Sender.new(message, :email_login_code).send
