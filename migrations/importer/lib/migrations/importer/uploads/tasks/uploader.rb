@@ -39,12 +39,14 @@ module Migrations
           end
 
           def initialize_existing_ids_tracking_sets
-            @output_existing_ids = load_existing_ids(uploads_db.db, Set.new)
-            @source_existing_ids = load_existing_ids(intermediate_db.db, Set.new)
+            @output_existing_ids =
+              load_existing_ids(uploads_db.db, "SELECT id FROM uploads", Set.new)
+            @source_existing_ids =
+              load_existing_ids(intermediate_db.db, "SELECT id FROM upload_sources", Set.new)
           end
 
-          def load_existing_ids(db, set)
-            db.query("SELECT id FROM uploads") { |row| set << row[:id] }
+          def load_existing_ids(db, sql, set)
+            db.query(sql) { |row| set << row[:id] }
 
             set
           end
@@ -98,7 +100,7 @@ module Migrations
           def enqueue_jobs
             intermediate_db
               .db
-              .query("SELECT * FROM uploads ORDER BY id") do |row|
+              .query("SELECT * FROM upload_sources ORDER BY id") do |row|
                 work_queue << row if @output_existing_ids.exclude?(row[:id])
               end
           end
