@@ -46,7 +46,7 @@ module Migrations
         rows_query <<~SQL, MappingType::USERS, MappingType::UPLOADS, Discourse::SYSTEM_USER_ID
           SELECT up.id, up.upload, COALESCE(mu.discourse_id, ?3) AS user_id
           FROM files.uploads up
-               JOIN uploads xup ON up.id = xup.id
+               JOIN upload_sources xup ON up.id = xup.id
                LEFT JOIN mapped.ids mu ON xup.user_id = mu.original_id AND mu.type = ?1
                LEFT JOIN mapped.ids mup ON up.id = mup.original_id AND mup.type = ?2
           WHERE up.upload IS NOT NULL

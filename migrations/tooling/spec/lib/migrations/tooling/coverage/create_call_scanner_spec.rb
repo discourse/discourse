@@ -55,8 +55,8 @@ RSpec.describe Migrations::Tooling::Coverage::CreateCallScanner do
       expect(scan(source).unknown_models).to eq("NotAModel" => %w[(spec):1 (spec):2])
     end
 
-    it "ignores methods other than create, such as Upload.create_for_url" do
-      result = scan("IntermediateDB::Upload.create_for_url(url: 'x')")
+    it "ignores methods other than create, such as UploadSource.create_for_url" do
+      result = scan("IntermediateDB::UploadSource.create_for_url(url: 'x')")
 
       expect(result.columns).to be_empty
       expect(result.unknown_models).to be_empty
