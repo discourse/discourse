@@ -19,6 +19,8 @@ class NestedTopic::Toggle
     only_if(:disabling) { step :disable_nested_view }
   end
 
+  only_if(:enabling) { step :refresh_hot_scores }
+
   private
 
   def fetch_topic(params:)
@@ -43,5 +45,9 @@ class NestedTopic::Toggle
 
   def disable_nested_view(topic:)
     topic.nested_topic&.destroy!
+  end
+
+  def refresh_hot_scores(topic:)
+    Jobs.enqueue(:recalculate_nested_hot_scores, topic_id: topic.id)
   end
 end

@@ -129,14 +129,6 @@ RSpec.describe BookmarkManager do
       tu = TopicUser.find_by(user: user)
       expect(tu.bookmarked).to eq(false)
     end
-
-    it "runs bookmarkable destroy callbacks" do
-      bookmark1.bookmarkable.update!(bookmark_count: 1)
-
-      manager.destroy_for_topic(topic)
-
-      expect(bookmark1.bookmarkable.reload.bookmark_count).to eq(0)
-    end
   end
 
   describe ".send_reminder_notification" do

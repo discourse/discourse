@@ -27,20 +27,16 @@ DiscourseEvent.on(:like_destroyed) do |post_action, _destroyer|
   NestedReplies::HotScoreCalculator.recalculate_for_post_if_nested(post_action.post_id)
 end
 
-DiscourseEvent.on(:post_bookmark_created) do |bookmark|
-  next unless SiteSetting.nested_replies_enabled
+%i[post_created post_recovered].each do |event|
+  DiscourseEvent.on(event) do |post, *_args|
+    next unless SiteSetting.nested_replies_enabled
 
-  NestedReplies::HotScoreCalculator.recalculate_for_post_if_nested(bookmark.bookmarkable_id)
+    NestedReplies::HotScoreCalculator.recalculate_for_post_if_nested(post.id)
+  end
 end
 
-DiscourseEvent.on(:post_bookmark_destroyed) do |bookmark|
+DiscourseEvent.on(:post_destroyed) do |post, *_args|
   next unless SiteSetting.nested_replies_enabled
 
-  NestedReplies::HotScoreCalculator.recalculate_for_post_if_nested(bookmark.bookmarkable_id)
-end
-
-DiscourseEvent.on(:incoming_link_created) do |incoming_link|
-  next unless SiteSetting.nested_replies_enabled
-
-  NestedReplies::HotScoreCalculator.recalculate_for_post_if_nested(incoming_link.post_id)
+  NestedReplies::HotScoreCalculator.recalculate_after_post_destroyed(post)
 end

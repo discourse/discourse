@@ -48,6 +48,12 @@ RSpec.describe NestedTopic::Toggle do
         expect { result }.to change { NestedTopic.where(topic: topic).count }.from(0).to(1)
       end
 
+      it "enqueues a hot score refresh" do
+        expect_enqueued_with(job: :recalculate_nested_hot_scores, args: { topic_id: topic.id }) do
+          result
+        end
+      end
+
       context "when nested topic already exists" do
         before { Fabricate(:nested_topic, topic: topic) }
 
@@ -68,6 +74,10 @@ RSpec.describe NestedTopic::Toggle do
 
       it "destroys the nested topic record" do
         expect { result }.to change { NestedTopic.where(topic: topic).count }.from(1).to(0)
+      end
+
+      it "does not enqueue a hot score refresh" do
+        expect_not_enqueued_with(job: :recalculate_nested_hot_scores) { result }
       end
     end
 

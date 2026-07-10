@@ -44,6 +44,18 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     expect(stat.total_descendant_count).to eq(2)
   end
 
+  it "stops at malformed reply cycles" do
+    root = Fabricate(:post, topic: topic, reply_to_post_number: 1)
+    child = Fabricate(:post, topic: topic, reply_to_post_number: root.post_number)
+    root.update_columns(reply_to_post_number: child.post_number)
+    NestedViewPostStat.delete_all
+
+    execute
+
+    expect(NestedViewPostStat.find_by(post: root).total_descendant_count).to eq(1)
+    expect(NestedViewPostStat.find_by(post: child).total_descendant_count).to eq(1)
+  end
+
   it "tracks whisper counts separately" do
     parent = Fabricate(:post, topic: topic, reply_to_post_number: 1)
     Fabricate(:post, topic: topic, reply_to_post_number: parent.post_number)
@@ -144,51 +156,80 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     expect(NestedViewPostStat.find_by(post_id: non_nested_op.id)).to be_nil
   end
 
-  it "processes topics without a record when nested replies are the default" do
+  it "backfills topics nested by the site-wide default" do
     SiteSetting.nested_replies_default = true
-    topic.nested_topic.destroy!
-    reply = Fabricate(:post, topic: topic, reply_to_post_number: 1)
-    Fabricate(:post, topic: topic, reply_to_post_number: reply.post_number)
-
+    default_nested_topic = Fabricate(:topic)
+    default_nested_op = Fabricate(:post, topic: default_nested_topic, post_number: 1)
+    Fabricate(:post, topic: default_nested_topic, reply_to_post_number: 1)
     NestedViewPostStat.delete_all
+
     execute
 
-    expect(NestedViewPostStat.find_by(post_id: reply.id).direct_reply_count).to eq(1)
+    expect(default_nested_topic.nested_topic).to be_nil
+    expect(NestedViewPostStat.find_by(post_id: default_nested_op.id).direct_reply_count).to eq(1)
   end
 
-  it "inserts a zero-count sentinel row for the OP of a topic with no replies" do
+  it "does not spend backfill work on a topic with no replies" do
     NestedViewPostStat.delete_all
 
     execute
 
-    stat = NestedViewPostStat.find_by(post_id: op.id)
-    expect(stat).to be_present
-    expect(stat.direct_reply_count).to eq(0)
-    expect(stat.total_descendant_count).to eq(0)
-    expect(stat.whisper_direct_reply_count).to eq(0)
-    expect(stat.whisper_total_descendant_count).to eq(0)
+    expect(NestedViewPostStat.find_by(post_id: op.id)).to be_nil
   end
 
-  it "does not re-pick reply-less topics on subsequent runs" do
+  it "continues to skip reply-less topics on subsequent runs" do
     NestedViewPostStat.delete_all
 
     execute
-    initial_updated_at = NestedViewPostStat.find_by(post_id: op.id).updated_at
-
     freeze_time 1.hour.from_now
     execute
-    expect(NestedViewPostStat.find_by(post_id: op.id).updated_at).to eq_time(initial_updated_at)
+
+    expect(NestedViewPostStat.find_by(post_id: op.id)).to be_nil
   end
 
-  it "lets a later reply increment the sentinel row via ON CONFLICT" do
+  it "backfills and marks a topic after its first reply arrives" do
     NestedViewPostStat.delete_all
     execute
 
     Fabricate(:post, topic: topic, reply_to_post_number: 1)
+    execute
 
     stat = NestedViewPostStat.find_by(post_id: op.id)
     expect(stat.direct_reply_count).to eq(1)
     expect(stat.total_descendant_count).to eq(1)
+    expect(stat.structural_backfilled_at).to be_present
+  end
+
+  it "processes the oldest missing topics first" do
+    SiteSetting.nested_replies_backfill_batch_size = 1
+    newer_topic = Fabricate(:topic)
+    Fabricate(:nested_topic, topic: newer_topic)
+    newer_op = Fabricate(:post, topic: newer_topic, post_number: 1)
+    Fabricate(:post, topic: newer_topic, reply_to_post_number: 1)
+    Fabricate(:post, topic: topic, reply_to_post_number: 1)
+    NestedViewPostStat.delete_all
+
+    execute
+
+    expect(NestedViewPostStat.find_by(post: op).structural_backfilled_at).to be_present
+    expect(NestedViewPostStat.find_by(post: newer_op)).to be_nil
+  end
+
+  it "repairs a partial OP row created by a live reply before backfill" do
+    SiteSetting.nested_replies_enabled = false
+    2.times { Fabricate(:post, topic: topic, reply_to_post_number: 1) }
+    SiteSetting.nested_replies_enabled = true
+    Fabricate(:post, topic: topic, reply_to_post_number: 1)
+
+    partial_stat = NestedViewPostStat.find_by!(post: op)
+    expect(partial_stat.total_descendant_count).to eq(1)
+    expect(partial_stat.structural_backfilled_at).to be_nil
+
+    execute
+
+    completed_stat = partial_stat.reload
+    expect(completed_stat.total_descendant_count).to eq(3)
+    expect(completed_stat.structural_backfilled_at).to be_present
   end
 
   it "only picks up topics with missing stats" do
@@ -213,6 +254,21 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     stat = NestedViewPostStat.find_by(post_id: parent.id)
     expect(stat.direct_reply_count).to eq(1)
     expect(stat.total_descendant_count).to eq(1)
+  end
+
+  it "reprocesses topics with undercounted parent stats" do
+    parent = Fabricate(:post, topic: topic, reply_to_post_number: 1)
+    2.times { Fabricate(:post, topic: topic, reply_to_post_number: parent.post_number) }
+    execute
+    NestedViewPostStat.where(post_id: parent.id).update_all(
+      direct_reply_count: 1,
+      total_descendant_count: 1,
+    )
+
+    execute
+
+    stat = NestedViewPostStat.find_by!(post: parent)
+    expect([stat.direct_reply_count, stat.total_descendant_count]).to eq([2, 2])
   end
 
   it "limits backfill to the requested category" do
@@ -245,7 +301,6 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     NestedViewPostStat.delete_all
     execute
 
-    expect(NestedViewPostStat.exists?(post_id: other_op.id)).to eq(true)
-    expect(NestedViewPostStat.exists?(post_id: op.id)).to eq(false)
+    expect(NestedViewPostStat.where(post_id: [op.id, other_op.id]).count).to eq(1)
   end
 end

@@ -85,7 +85,6 @@ class BookmarkManager
       topic_bookmarks.each do |bookmark|
         raise Discourse::InvalidAccess.new if !@guardian.can_delete?(bookmark)
         bookmark.destroy
-        bookmark.registered_bookmarkable.after_destroy(@guardian, bookmark, opts)
       end
 
       update_topic_user_bookmarked(topic, opts)

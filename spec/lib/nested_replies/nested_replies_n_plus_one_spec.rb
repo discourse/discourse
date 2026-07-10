@@ -16,6 +16,13 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
     end
   end
 
+  def nested_hot_score_queries(queries)
+    queries.count do |query|
+      query.include?("nested_view_post_stats") &&
+        (query.include?("hot_score") || query.include?("thread_hot_score"))
+    end
+  end
+
   describe "no re-parenting on create" do
     before do
       SiteSetting.nested_replies_cap_nesting_depth = true
@@ -213,6 +220,29 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
       parent_stat = NestedViewPostStat.find_by(post_id: chain.last.id)
       expect(parent_stat.direct_reply_count).to eq(1)
       expect(parent_stat.whisper_direct_reply_count).to eq(1)
+    end
+  end
+
+  describe "hot score calculation" do
+    it "uses constant queries regardless of chain depth" do
+      chain_3 = create_reply_chain(depth: 3)
+      queries_3 =
+        track_sql_queries do
+          NestedReplies::HotScoreCalculator.recalculate_for_post(chain_3.last.id)
+        end
+
+      topic2 = Fabricate(:topic, user: user)
+      Fabricate(:post, topic: topic2, user: user, post_number: 1)
+      chain_10 = create_reply_chain(depth: 10, in_topic: topic2)
+      queries_10 =
+        track_sql_queries do
+          NestedReplies::HotScoreCalculator.recalculate_for_post(chain_10.last.id)
+        end
+
+      hot_queries_3 = nested_hot_score_queries(queries_3)
+      hot_queries_10 = nested_hot_score_queries(queries_10)
+      expect(hot_queries_3).to be_positive
+      expect(hot_queries_3).to eq(hot_queries_10)
     end
   end
 

@@ -5,9 +5,8 @@ module HasNestedReplyStats
 
   included do
     after_create :nested_replies_increment_stats
-    after_create :nested_replies_recalculate_hot_score_for_siblings
     after_destroy :nested_replies_decrement_stats
-    after_destroy :nested_replies_recalculate_hot_score_for_siblings
+    after_commit :nested_replies_refresh_hot_score_after_visibility_change, on: :update
   end
 
   # Moves this post's subtree from `previous_reply_to_post_number` to its
@@ -75,15 +74,15 @@ module HasNestedReplyStats
           updated_at = NOW()
       SQL
 
-    NestedReplies::HotScoreCalculator.recalculate_for_sibling_group(
-      topic_id: topic_id,
-      reply_to_post_number: previous_reply_to_post_number,
-    )
-    NestedReplies::HotScoreCalculator.recalculate_siblings_for_post(self)
-    NestedReplies::HotScoreCalculator.recalculate_parents_for_post_numbers(
-      topic_id: topic_id,
-      post_numbers: [previous_reply_to_post_number, reply_to_post_number],
-    )
+    DB.after_commit do
+      post = Post.with_deleted.includes(topic: :nested_topic).find_by(id: id)
+      if post
+        NestedReplies::HotScoreCalculator.recalculate_after_reparent(
+          post,
+          previous_reply_to_post_number,
+        )
+      end
+    end
   end
 
   private
@@ -171,6 +170,13 @@ module HasNestedReplyStats
     [1 + (stat&.first || 0), is_whisper + (stat&.second || 0)]
   end
 
+  def nested_replies_refresh_hot_score_after_visibility_change
+    return unless SiteSetting.nested_replies_enabled
+    return unless previous_changes.key?("hidden") || previous_changes.key?("post_type")
+
+    NestedReplies::HotScoreCalculator.recalculate_after_visibility_change(self)
+  end
+
   def nested_replies_walk(start_post_number)
     return [] if start_post_number.blank?
     # Include deleted ancestors — they may still have stat rows from when they
@@ -179,17 +185,6 @@ module HasNestedReplyStats
       topic_id: topic_id,
       start_post_number: start_post_number,
       exclude_deleted: false,
-    )
-  end
-
-  def nested_replies_recalculate_hot_score_for_siblings
-    return unless SiteSetting.nested_replies_enabled
-    return if post_number == 1
-
-    NestedReplies::HotScoreCalculator.recalculate_siblings_for_post(self)
-    NestedReplies::HotScoreCalculator.recalculate_parents_for_post_numbers(
-      topic_id: topic_id,
-      post_numbers: [reply_to_post_number],
     )
   end
 end

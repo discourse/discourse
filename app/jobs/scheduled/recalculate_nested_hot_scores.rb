@@ -2,66 +2,56 @@
 
 module Jobs
   class RecalculateNestedHotScores < ::Jobs::Scheduled
-    # Hot scores are primarily maintained by event hooks on post create,
-    # destroy/reparent, and like/unlike. This job is only a safety net for
-    # missed events or score components that change outside those hooks.
-    every 1.day
+    every 5.minutes
 
-    def execute(_args)
+    cluster_concurrency 1
+
+    def execute(args)
       return unless SiteSetting.nested_replies_enabled
 
-      topic_ids = DB.query_single(<<~SQL, limit: SiteSetting.nested_replies_backfill_batch_size)
-            SELECT nt.topic_id
-            FROM nested_topics nt
-            WHERE EXISTS (
-              SELECT 1
-              FROM posts p
-              LEFT JOIN nested_view_post_stats s ON s.post_id = p.id
-              WHERE p.topic_id = nt.topic_id
-                AND p.post_number > 1
-                AND (
-                  s.post_id IS NULL OR
-                  s.hot_score_updated_at IS NULL OR
-                  (s.thread_hot_score <= 0 AND s.hot_score > 0) OR
-                  (s.relative_thread_hot_score <= 0 AND s.relative_hot_score > 0) OR
-                  (s.relative_hot_score <= 0 AND s.hot_score > 0) OR
-                  s.topic_id IS NULL OR
-                  s.reply_to_post_number IS DISTINCT FROM p.reply_to_post_number OR
-                  s.post_number IS DISTINCT FROM p.post_number OR
-                  s.hot_score_updated_at < NOW() - INTERVAL '7 days'
-                )
-            )
-            ORDER BY nt.updated_at DESC
-            LIMIT :limit
-          SQL
-      topic_ids.each { |topic_id| recalculate_topic(topic_id) }
+      if args&.dig(:topic_id)
+        NestedReplies::HotScoreCalculator.recalculate_topic(args[:topic_id])
+        return
+      end
+
+      stale_topic_ids.each do |topic_id|
+        NestedReplies::HotScoreCalculator.recalculate_topic(topic_id)
+      end
     end
 
     private
 
-    def recalculate_topic(topic_id)
-      parent_numbers =
-        Post
-          .with_deleted
-          .where(topic_id: topic_id)
-          .where("post_number > 1")
-          .distinct
-          .pluck(:reply_to_post_number)
-          .map do |reply_to_post_number|
-            if NestedReplies::HotScoreCalculator.root_sibling_group?(reply_to_post_number)
-              nil
-            else
-              reply_to_post_number
-            end
-          end
-          .uniq
-
-      parent_numbers.each do |reply_to_post_number|
-        NestedReplies::HotScoreCalculator.recalculate_for_sibling_group(
-          topic_id: topic_id,
-          reply_to_post_number: reply_to_post_number,
-        )
-      end
+    def stale_topic_ids
+      DB.query_single(
+        <<~SQL,
+          SELECT topics.id
+          FROM topics
+          JOIN posts original_post ON original_post.topic_id = topics.id
+            AND original_post.post_number = 1
+          LEFT JOIN nested_topics ON nested_topics.topic_id = topics.id
+          LEFT JOIN nested_view_post_stats stats ON stats.post_id = original_post.id
+          WHERE topics.deleted_at IS NULL
+            AND topics.archetype = 'regular'
+            AND (:nested_by_default OR nested_topics.topic_id IS NOT NULL)
+            AND stats.structural_backfilled_at IS NOT NULL
+            AND EXISTS (
+              SELECT 1
+              FROM posts replies
+              WHERE replies.topic_id = topics.id
+                AND replies.post_number > 1
+                AND replies.post_type IN (#{NestedReplies::HotScoreCalculator.public_post_types.join(", ")})
+            )
+            AND (
+              stats.hot_score_updated_at IS NULL OR
+              stats.hot_score_updated_at < NOW() - INTERVAL '7 days'
+            )
+          ORDER BY stats.hot_score_updated_at ASC NULLS FIRST,
+                   topics.bumped_at DESC
+          LIMIT :limit
+        SQL
+        nested_by_default: SiteSetting.nested_replies_default,
+        limit: SiteSetting.nested_replies_backfill_batch_size,
+      )
     end
   end
 end

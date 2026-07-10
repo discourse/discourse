@@ -13,7 +13,10 @@ module Jobs
       topic_ids = topic_ids_missing_stats(category_id: args[:category_id])
       return if topic_ids.empty?
 
-      topic_ids.each { |topic_id| backfill_topic(topic_id) }
+      topic_ids.each do |topic_id|
+        backfill_topic(topic_id)
+        ensure_op_stat_row(topic_id)
+      end
     end
 
     private
@@ -33,8 +36,15 @@ module Jobs
             AND t.archetype = :archetype
             AND (:nested_replies_default OR nt.topic_id IS NOT NULL)
             #{category_filter}
+            AND EXISTS (
+              SELECT 1
+              FROM posts reply
+              WHERE reply.topic_id = t.id
+                AND reply.post_number > 1
+            )
             AND (
               s.post_id IS NULL
+              OR s.structural_backfilled_at IS NULL
               OR EXISTS (
                 SELECT 1
                 FROM posts child
@@ -46,10 +56,12 @@ module Jobs
                 WHERE child.topic_id = t.id
                   AND child.reply_to_post_number IS NOT NULL
                   AND child.post_number > 1
-                  AND parent_stats.post_id IS NULL
+                GROUP BY parent.id, parent_stats.post_id, parent_stats.direct_reply_count
+                HAVING parent_stats.post_id IS NULL
+                  OR parent_stats.direct_reply_count < COUNT(*)
               )
             )
-          ORDER BY t.id DESC
+          ORDER BY t.id ASC
           LIMIT :batch_size
         SQL
         archetype: Archetype.default,
@@ -57,6 +69,24 @@ module Jobs
         category_id: category_id,
         nested_replies_default: SiteSetting.nested_replies_default,
       )
+    end
+
+    # The timestamp is a dedicated completion marker. OP row existence alone
+    # is insufficient because a live reply can create a partially populated
+    # counter row while older replies are still awaiting backfill.
+    def ensure_op_stat_row(topic_id)
+      DB.exec(<<~SQL, topic_id: topic_id)
+        INSERT INTO nested_view_post_stats
+          (post_id, direct_reply_count, whisper_direct_reply_count,
+           total_descendant_count, whisper_total_descendant_count,
+           structural_backfilled_at, created_at, updated_at)
+        SELECT p.id, 0, 0, 0, 0, NOW(), NOW(), NOW()
+        FROM posts p
+        WHERE p.topic_id = :topic_id AND p.post_number = 1
+        ON CONFLICT (post_id) DO UPDATE SET
+          structural_backfilled_at = EXCLUDED.structural_backfilled_at,
+          updated_at = NOW()
+      SQL
     end
 
     def backfill_topic(topic_id)
@@ -86,16 +116,19 @@ module Jobs
           SELECT e.reply_to_post_number AS ancestor_number,
                  1 AS descendant_count,
                  CASE WHEN e.post_type = :whisper_type THEN 1 ELSE 0 END AS whisper_descendant_count,
-                 1 AS depth
+                 1 AS depth,
+                 ARRAY[e.post_number, e.reply_to_post_number]::integer[] AS path
           FROM edges e
           UNION ALL
           SELECT p.reply_to_post_number,
                  a.descendant_count,
                  a.whisper_descendant_count,
-                 a.depth + 1
+                 a.depth + 1,
+                 a.path || p.reply_to_post_number
           FROM ancestor_walk a
           JOIN edges p ON p.post_number = a.ancestor_number
           WHERE a.depth < 500
+            AND NOT p.reply_to_post_number = ANY(a.path)
         ),
         descendant_agg AS (
           SELECT ancestor_number,

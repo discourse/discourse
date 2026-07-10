@@ -2,274 +2,379 @@
 
 module NestedReplies
   class HotScoreCalculator
-    ROOT_POST_NUMBER = 1
-    RELATIVE_HOT_SCORE_BASELINE = 1.0
+    HOT_SCORE_FLOOR = 0.0
+    LIKE_WEIGHT = 1.0
+    REPLY_WEIGHT = 2.0
+    TIME_SCALE_SECONDS = 48.hours.to_f
+    CHILD_PENALTY = 0.25
+    LOCK_VALIDITY_SECONDS = 5.minutes.to_i
 
-    BUCKETS = [
-      [10, 14.days],
-      [50, 7.days],
-      [250, 3.days],
-      [1000, 36.hours],
-      [Float::INFINITY, 12.hours],
-    ].freeze
-
-    ENGAGEMENT_WEIGHTS = {
-      reply_count: 5.0,
-      like_score: 15.0,
-      incoming_link_count: 5.0,
-      bookmark_count: 2.0,
-      reads: 0.2,
-    }.freeze
-
-    def self.engagement_score_sql(table_name)
-      ENGAGEMENT_WEIGHTS
-        .map { |column, weight| "COALESCE(#{table_name}.#{column}, 0) * #{weight}" }
-        .join(" + ")
+    def self.time_scale_seconds
+      TIME_SCALE_SECONDS
     end
 
-    def self.hot_score_sql(table_name, time_scale_sql)
-      "LN(1 + GREATEST(#{engagement_score_sql(table_name)}, 0)) + " \
-        "EXTRACT(EPOCH FROM #{table_name}.created_at) / #{time_scale_sql}"
+    def self.child_penalty
+      CHILD_PENALTY
     end
 
-    def self.relative_hot_score_min_spread
-      SiteSetting.nested_replies_relative_hot_score_min_spread.to_f
+    def self.public_post_types
+      [Post.types[:regular], Post.types[:moderator_action]]
     end
 
-    def self.relative_hot_score_floor
-      SiteSetting.nested_replies_relative_hot_score_floor.to_f
+    def self.public_post_sql(table_name)
+      <<~SQL.squish
+        #{table_name}.post_type IN (#{public_post_types.join(", ")})
+        AND #{table_name}.deleted_at IS NULL
+        AND NOT #{table_name}.hidden
+        AND NOT #{table_name}.user_deleted
+      SQL
     end
 
-    def self.hot_score_child_decay
-      SiteSetting.nested_replies_hot_score_child_decay.to_f
+    def self.hot_score_sql(table_name, reply_count_sql: "0")
+      engagement_sql =
+        "COALESCE(#{table_name}.like_score, 0) * #{LIKE_WEIGHT} + " \
+          "COALESCE(#{reply_count_sql}, 0) * #{REPLY_WEIGHT}"
+
+      <<~SQL.squish
+        CASE
+          WHEN #{public_post_sql(table_name)}
+          THEN LN(1 + GREATEST(#{engagement_sql}, 0)) +
+               EXTRACT(EPOCH FROM #{table_name}.created_at) / #{time_scale_seconds}
+          ELSE #{HOT_SCORE_FLOOR}
+        END
+      SQL
     end
 
-    def self.relative_hot_score_sql(score_sql:, median_sql:, spread_sql:)
-      min_spread = relative_hot_score_min_spread
-      floor = relative_hot_score_floor
-      spread = "GREATEST(COALESCE(NULLIF(#{spread_sql}, 0), #{min_spread}), #{min_spread})"
+    def self.score_for(post, direct_reply_count: 0)
+      return HOT_SCORE_FLOOR unless public_post?(post)
 
-      "GREATEST(#{floor}, #{RELATIVE_HOT_SCORE_BASELINE} + ((#{score_sql}) - (#{median_sql})) / #{spread})"
+      engagement = post.like_score.to_f * LIKE_WEIGHT + direct_reply_count.to_f * REPLY_WEIGHT
+      Math.log(1 + [engagement, 0.0].max) + post.created_at.to_f / time_scale_seconds
     end
 
-    def self.time_scale_seconds(sibling_count)
-      count = sibling_count.to_i
-      BUCKETS.find { |max_count, _| count <= max_count }.second.to_i
-    end
-
-    def self.root_sibling_group?(reply_to_post_number)
-      reply_to_post_number.nil? || reply_to_post_number == ROOT_POST_NUMBER
-    end
-
-    def self.sibling_group_where_sql(table_name, reply_to_post_number)
-      if root_sibling_group?(reply_to_post_number)
-        "(#{table_name}.reply_to_post_number IS NULL OR #{table_name}.reply_to_post_number = #{ROOT_POST_NUMBER})"
-      else
-        "#{table_name}.reply_to_post_number IS NOT DISTINCT FROM :reply_to_post_number"
-      end
+    def self.public_post?(post)
+      public_post_types.include?(post.post_type) && post.deleted_at.nil? && !post.hidden? &&
+        !post.user_deleted?
     end
 
     def self.recalculate_for_post_if_nested(post_id)
-      post = Post.where(id: post_id).where("post_number > 1").first
-      return if post.blank? || !post.topic&.nested_view?
+      post = Post.with_deleted.includes(topic: :nested_topic).find_by(id: post_id)
+      return if post.blank? || post.post_number == 1 || !public_post_types.include?(post.post_type)
+      return unless post.topic&.nested_view?
 
       recalculate_for_post(post.id)
     end
 
-    def self.recalculate_for_post(post_id)
-      topic_id, reply_to_post_number =
-        Post
-          .with_deleted
-          .where(id: post_id)
-          .where("post_number > 1")
-          .pick(:topic_id, :reply_to_post_number)
-      return if topic_id.blank?
+    def self.recalculate_after_post_destroyed(post)
+      return if post.blank? || post.post_number == 1 || !public_post_types.include?(post.post_type)
+      return unless post.topic&.nested_view?
 
-      recalculate_for_sibling_group(topic_id: topic_id, reply_to_post_number: reply_to_post_number)
+      with_topic_lock(post.topic_id) do
+        if Post.with_deleted.exists?(id: post.id)
+          recalculate_for_post_without_lock(post.id)
+        else
+          recalculate_for_post_number_without_lock(
+            topic_id: post.topic_id,
+            post_number: post.reply_to_post_number,
+          )
+        end
+      end
     end
 
-    def self.recalculate_siblings_for_post(post)
-      return if post.blank?
+    def self.recalculate_after_reparent(post, previous_reply_to_post_number)
+      return if post.blank? || post.post_number == 1
+      return unless post.topic&.nested_view?
 
-      recalculate_for_sibling_group(
-        topic_id: post.topic_id,
-        reply_to_post_number: post.reply_to_post_number,
+      with_topic_lock(post.topic_id) do
+        recalculate_for_post_without_lock(post.id)
+        recalculate_for_post_number_without_lock(
+          topic_id: post.topic_id,
+          post_number: previous_reply_to_post_number,
+        )
+      end
+    end
+
+    def self.recalculate_after_visibility_change(post)
+      return if post.blank? || post.post_number == 1
+      return unless post.topic&.nested_view?
+
+      recalculate_for_post(post.id)
+    end
+
+    def self.recalculate_for_post_number(topic_id:, post_number:)
+      return if post_number.blank? || post_number == 1
+
+      with_topic_lock(topic_id) do
+        recalculate_for_post_number_without_lock(topic_id: topic_id, post_number: post_number)
+      end
+    end
+
+    def self.recalculate_for_post(post_id)
+      return if post_id.blank?
+
+      topic_id = Post.with_deleted.where(id: post_id).pick(:topic_id)
+      return if topic_id.blank?
+
+      with_topic_lock(topic_id) { recalculate_for_post_without_lock(post_id) }
+    end
+
+    def self.recalculate_topic(topic_id)
+      return if topic_id.blank?
+
+      with_topic_lock(topic_id) do
+        NestedViewPostStat.transaction do
+          reset_topic_scores(topic_id)
+          propagate_topic_scores(topic_id)
+          mark_topic_recalculated(topic_id)
+        end
+      end
+    end
+
+    def self.with_topic_lock(topic_id, &block)
+      DB.after_commit do
+        DistributedMutex.synchronize(
+          "nested_hot_scores_topic_#{topic_id}",
+          validity: LOCK_VALIDITY_SECONDS,
+          &block
+        )
+      end
+    end
+
+    def self.recalculate_for_post_number_without_lock(topic_id:, post_number:)
+      return if post_number.blank? || post_number == 1
+
+      post_id = Post.with_deleted.where(topic_id: topic_id, post_number: post_number).pick(:id)
+      recalculate_for_post_without_lock(post_id) if post_id
+    end
+
+    def self.recalculate_for_post_without_lock(post_id)
+      path = score_path(post_id)
+      return if path.empty?
+
+      child_thread_hot_score = nil
+      child_branch_is_public = false
+      scores =
+        path.map do |post|
+          thread_hot_score = post.hot_score.to_f
+          branch_is_public = public_post_types.include?(post.post_type)
+          if branch_is_public
+            thread_hot_score = [
+              thread_hot_score,
+              post.other_child_thread_hot_score.to_f - child_penalty,
+            ].max if post.other_child_thread_hot_score
+            if child_thread_hot_score && child_branch_is_public
+              thread_hot_score = [thread_hot_score, child_thread_hot_score - child_penalty].max
+            end
+          end
+          child_thread_hot_score = thread_hot_score
+          child_branch_is_public = branch_is_public
+
+          [post.post_id, post.hot_score.to_f, thread_hot_score]
+        end
+
+      persist_scores(scores)
+    end
+
+    def self.score_path(post_id)
+      DB.query(<<~SQL, post_id: post_id)
+          WITH RECURSIVE path AS (
+            SELECT posts.id AS post_id,
+                   posts.topic_id,
+                   posts.post_number,
+                   posts.reply_to_post_number,
+                   posts.post_type,
+                   posts.deleted_at,
+                   posts.hidden,
+                   posts.user_deleted,
+                   posts.like_score,
+                   posts.created_at,
+                   NULL::integer AS path_child_post_number,
+                   0 AS depth,
+                   ARRAY[posts.post_number]::integer[] AS path
+            FROM posts
+            WHERE posts.id = :post_id
+              AND posts.post_number > 1
+
+            UNION ALL
+
+            SELECT parent.id,
+                   parent.topic_id,
+                   parent.post_number,
+                   parent.reply_to_post_number,
+                   parent.post_type,
+                   parent.deleted_at,
+                   parent.hidden,
+                   parent.user_deleted,
+                   parent.like_score,
+                   parent.created_at,
+                   path.post_number,
+                   path.depth + 1,
+                   path.path || parent.post_number
+            FROM path
+            JOIN posts parent ON parent.topic_id = path.topic_id
+              AND parent.post_number = path.reply_to_post_number
+            WHERE parent.post_number > 1
+              AND NOT parent.post_number = ANY(path.path)
+          )
+          SELECT path.post_id,
+                 path.depth,
+                 path.post_type,
+                 #{hot_score_sql("path", reply_count_sql: "public_replies.reply_count")} AS hot_score,
+                 other_children.thread_hot_score AS other_child_thread_hot_score
+          FROM path
+          LEFT JOIN LATERAL (
+            SELECT COUNT(*) AS reply_count
+            FROM posts replies
+            WHERE replies.topic_id = path.topic_id
+              AND replies.reply_to_post_number = path.post_number
+              AND replies.post_number > 1
+              AND #{public_post_sql("replies")}
+          ) public_replies ON TRUE
+          LEFT JOIN LATERAL (
+            SELECT MAX(child_stats.thread_hot_score) AS thread_hot_score
+            FROM posts children
+            JOIN nested_view_post_stats child_stats ON child_stats.post_id = children.id
+              AND child_stats.hot_score_updated_at IS NOT NULL
+            WHERE children.topic_id = path.topic_id
+              AND children.reply_to_post_number = path.post_number
+              AND children.post_number IS DISTINCT FROM path.path_child_post_number
+              AND children.post_number > 1
+              AND children.post_type IN (#{public_post_types.join(", ")})
+          ) other_children ON TRUE
+          ORDER BY path.depth ASC
+        SQL
+    end
+
+    def self.persist_scores(scores)
+      return if scores.empty?
+
+      post_ids, hot_scores, thread_hot_scores = scores.transpose
+      DB.exec(
+        <<~SQL,
+          INSERT INTO nested_view_post_stats (
+            post_id,
+            hot_score,
+            thread_hot_score,
+            hot_score_updated_at,
+            created_at,
+            updated_at
+          )
+          SELECT updates.post_id,
+                 updates.hot_score,
+                 updates.thread_hot_score,
+                 NOW(),
+                 NOW(),
+                 NOW()
+          FROM UNNEST(
+            ARRAY[:post_ids]::integer[],
+            ARRAY[:hot_scores]::double precision[],
+            ARRAY[:thread_hot_scores]::double precision[]
+          ) AS updates(post_id, hot_score, thread_hot_score)
+          ON CONFLICT (post_id) DO UPDATE SET
+            hot_score = EXCLUDED.hot_score,
+            thread_hot_score = EXCLUDED.thread_hot_score,
+            hot_score_updated_at = EXCLUDED.hot_score_updated_at,
+            updated_at = NOW()
+        SQL
+        post_ids: post_ids,
+        hot_scores: hot_scores,
+        thread_hot_scores: thread_hot_scores,
       )
     end
 
-    def self.recalculate_parents_for_post_numbers(topic_id:, post_numbers:)
-      post_numbers = Array(post_numbers).compact.uniq
-      return if post_numbers.empty?
-
-      Post
-        .with_deleted
-        .where(topic_id: topic_id, post_number: post_numbers)
-        .where("post_number > 1")
-        .pluck(:id)
-        .each { |post_id| recalculate_for_post(post_id) }
-    end
-
-    def self.recalculate_for_sibling_group(topic_id:, reply_to_post_number:)
-      sibling_count_where_sql = sibling_group_where_sql("posts", reply_to_post_number)
-      recalculation_where_sql = sibling_group_where_sql("p", reply_to_post_number)
-      sibling_count_scope = Post.with_deleted.where(topic_id: topic_id).where("post_number > 1")
-      sibling_count_scope =
-        if root_sibling_group?(reply_to_post_number)
-          sibling_count_scope.where(sibling_count_where_sql)
-        else
-          sibling_count_scope.where(
-            sibling_count_where_sql,
-            reply_to_post_number: reply_to_post_number,
+    def self.reset_topic_scores(topic_id)
+      DB.exec(<<~SQL, topic_id: topic_id)
+          WITH public_reply_counts AS (
+            SELECT replies.reply_to_post_number AS post_number,
+                   COUNT(*) AS reply_count
+            FROM posts replies
+            WHERE replies.topic_id = :topic_id
+              AND replies.reply_to_post_number IS NOT NULL
+              AND replies.post_number > 1
+              AND #{public_post_sql("replies")}
+            GROUP BY replies.reply_to_post_number
+          ), scored AS (
+            SELECT posts.id AS post_id,
+                   #{hot_score_sql("posts", reply_count_sql: "public_reply_counts.reply_count")} AS hot_score
+            FROM posts
+            LEFT JOIN public_reply_counts ON public_reply_counts.post_number = posts.post_number
+            WHERE posts.topic_id = :topic_id
+              AND posts.post_number > 1
           )
-        end
-      post_numbers = sibling_count_scope.pluck(:post_number)
-      return if post_numbers.empty?
-
-      time_scale_seconds = time_scale_seconds(post_numbers.size)
-
-      sql_params = { topic_id: topic_id, time_scale_seconds: time_scale_seconds }
-      unless root_sibling_group?(reply_to_post_number)
-        sql_params[:reply_to_post_number] = reply_to_post_number
-      end
-
-      relative_score_sql =
-        relative_hot_score_sql(
-          score_sql: "scored.hot_score",
-          median_sql: "distribution.median_hot_score",
-          spread_sql: "distribution.hot_score_spread",
-        )
-
-      DB.exec(<<~SQL, **sql_params)
-        WITH scored AS (
-          SELECT p.id,
-                 #{hot_score_sql("p", ":time_scale_seconds")} AS hot_score,
-                 p.topic_id,
-                 p.reply_to_post_number,
-                 p.post_number
-          FROM posts p
-          WHERE p.topic_id = :topic_id
-            AND #{recalculation_where_sql}
-            AND p.post_number > 1
-        ), distribution AS (
-          SELECT percentile_cont(0.5) WITHIN GROUP (ORDER BY scored.hot_score) AS median_hot_score,
-                 COALESCE(STDDEV_POP(scored.hot_score), 0) AS hot_score_spread
+          INSERT INTO nested_view_post_stats (
+            post_id,
+            hot_score,
+            thread_hot_score,
+            hot_score_updated_at,
+            created_at,
+            updated_at
+          )
+          SELECT scored.post_id,
+                 scored.hot_score,
+                 scored.hot_score,
+                 NOW(),
+                 NOW(),
+                 NOW()
           FROM scored
-        ), relative_scored AS (
-          SELECT scored.*,
-                 #{relative_score_sql} AS relative_hot_score
-          FROM scored
-          CROSS JOIN distribution
-        )
-        INSERT INTO nested_view_post_stats (
-          post_id,
-          hot_score,
-          thread_hot_score,
-          relative_hot_score,
-          relative_thread_hot_score,
-          hot_score_updated_at,
-          topic_id,
-          reply_to_post_number,
-          post_number,
-          created_at,
-          updated_at
-        )
-        SELECT relative_scored.id,
-               relative_scored.hot_score,
-               relative_scored.hot_score,
-               relative_scored.relative_hot_score,
-               relative_scored.relative_hot_score,
-               NOW(),
-               relative_scored.topic_id,
-               relative_scored.reply_to_post_number,
-               relative_scored.post_number,
-               NOW(),
-               NOW()
-        FROM relative_scored
-        ON CONFLICT (post_id) DO UPDATE SET
-          hot_score = EXCLUDED.hot_score,
-          thread_hot_score = EXCLUDED.thread_hot_score,
-          relative_hot_score = EXCLUDED.relative_hot_score,
-          relative_thread_hot_score = EXCLUDED.relative_thread_hot_score,
-          hot_score_updated_at = EXCLUDED.hot_score_updated_at,
-          topic_id = EXCLUDED.topic_id,
-          reply_to_post_number = EXCLUDED.reply_to_post_number,
-          post_number = EXCLUDED.post_number,
-          updated_at = NOW()
-      SQL
-
-      recalculate_thread_hot_scores_for_post_numbers(topic_id: topic_id, post_numbers: post_numbers)
+          ON CONFLICT (post_id) DO UPDATE SET
+            hot_score = EXCLUDED.hot_score,
+            thread_hot_score = EXCLUDED.thread_hot_score,
+            hot_score_updated_at = EXCLUDED.hot_score_updated_at,
+            updated_at = NOW()
+        SQL
     end
 
-    def self.recalculate_thread_hot_scores_for_post_numbers(topic_id:, post_numbers:)
-      post_numbers = Array(post_numbers).compact.uniq
-      return if post_numbers.empty?
+    def self.propagate_topic_scores(topic_id)
+      DB.exec(<<~SQL, topic_id: topic_id, child_penalty: child_penalty)
+          WITH RECURSIVE propagated AS (
+            SELECT posts.id AS post_id,
+                   posts.topic_id,
+                   posts.post_number,
+                   posts.reply_to_post_number,
+                   stats.hot_score AS candidate_score,
+                   ARRAY[posts.post_number]::integer[] AS path
+            FROM posts
+            JOIN nested_view_post_stats stats ON stats.post_id = posts.id
+            WHERE posts.topic_id = :topic_id
+              AND posts.post_number > 1
+              AND posts.post_type IN (#{public_post_types.join(", ")})
 
-      affected_posts = DB.query(<<~SQL, topic_id: topic_id, post_numbers: post_numbers)
-        WITH RECURSIVE affected AS (
-          SELECT p.id AS post_id,
-                 p.topic_id,
-                 p.post_number,
-                 p.reply_to_post_number,
-                 0 AS depth,
-                 ARRAY[p.post_number]::integer[] AS path
-          FROM posts p
-          WHERE p.topic_id = :topic_id
-            AND p.post_number = ANY(ARRAY[:post_numbers]::integer[])
-            AND p.post_number > 1
-          UNION ALL
-          SELECT parent.id AS post_id,
-                 parent.topic_id,
-                 parent.post_number,
-                 parent.reply_to_post_number,
-                 affected.depth + 1 AS depth,
-                 affected.path || parent.post_number
-          FROM affected
-          JOIN posts parent ON parent.topic_id = affected.topic_id
-            AND parent.post_number = affected.reply_to_post_number
-          WHERE parent.post_number > 1
-            AND NOT parent.post_number = ANY(affected.path)
-        )
-        SELECT post_id, MAX(depth) AS depth
-        FROM affected
-        GROUP BY post_id
-        ORDER BY depth ASC
-      SQL
+            UNION ALL
 
-      affected_posts
-        .group_by { |post| post.depth.to_i }
-        .sort_by { |depth, _| depth }
-        .each { |_, posts| recalculate_thread_hot_scores_for_posts(posts.map(&:post_id)) }
-    end
-
-    def self.recalculate_thread_hot_scores_for_posts(post_ids)
-      post_ids = Array(post_ids).compact.uniq
-      return if post_ids.empty?
-
-      DB.exec(<<~SQL, post_ids: post_ids, child_decay: hot_score_child_decay)
+            SELECT parent.id,
+                   parent.topic_id,
+                   parent.post_number,
+                   parent.reply_to_post_number,
+                   propagated.candidate_score - :child_penalty,
+                   propagated.path || parent.post_number
+            FROM propagated
+            JOIN posts parent ON parent.topic_id = propagated.topic_id
+              AND parent.post_number = propagated.reply_to_post_number
+            WHERE parent.post_number > 1
+              AND parent.post_type IN (#{public_post_types.join(", ")})
+              AND NOT parent.post_number = ANY(propagated.path)
+          ), thread_scores AS (
+            SELECT post_id, MAX(candidate_score) AS thread_hot_score
+            FROM propagated
+            GROUP BY post_id
+          )
           UPDATE nested_view_post_stats stats
-          SET thread_hot_score = child_scores.thread_hot_score,
-              relative_thread_hot_score = child_scores.relative_thread_hot_score,
+          SET thread_hot_score = GREATEST(stats.hot_score, thread_scores.thread_hot_score),
               updated_at = NOW()
-          FROM (
-            SELECT parent_stats.post_id,
-                   GREATEST(
-                     COALESCE(parent_stats.hot_score, 0),
-                     COALESCE(MAX(child_stats.thread_hot_score), 0) * :child_decay
-                   ) AS thread_hot_score,
-                   GREATEST(
-                     COALESCE(parent_stats.relative_hot_score, 0),
-                     COALESCE(MAX(child_stats.relative_thread_hot_score), 0) * :child_decay
-                   ) AS relative_thread_hot_score
-            FROM posts parent_posts
-            JOIN nested_view_post_stats parent_stats ON parent_stats.post_id = parent_posts.id
-            LEFT JOIN posts child_posts ON child_posts.topic_id = parent_posts.topic_id
-              AND child_posts.reply_to_post_number = parent_posts.post_number
-              AND child_posts.post_number > 1
-            LEFT JOIN nested_view_post_stats child_stats ON child_stats.post_id = child_posts.id
-            WHERE parent_posts.id = ANY(ARRAY[:post_ids]::integer[])
-            GROUP BY parent_stats.post_id, parent_stats.hot_score, parent_stats.relative_hot_score
-          ) child_scores
-          WHERE stats.post_id = child_scores.post_id
+          FROM thread_scores
+          WHERE stats.post_id = thread_scores.post_id
+        SQL
+    end
+
+    def self.mark_topic_recalculated(topic_id)
+      DB.exec(<<~SQL, topic_id: topic_id)
+          UPDATE nested_view_post_stats stats
+          SET hot_score_updated_at = NOW(),
+              updated_at = NOW()
+          FROM posts
+          WHERE posts.topic_id = :topic_id
+            AND posts.post_number = 1
+            AND stats.post_id = posts.id
         SQL
     end
   end

@@ -1994,23 +1994,6 @@ nested_replies:
     min: 1
     max: 10000
     hidden: true
-  nested_replies_hot_score_child_decay:
-    default: 0.85
-    type: float
-    min: 0
-    max: 1
-    hidden: true
-  nested_replies_relative_hot_score_min_spread:
-    default: 1.0
-    type: float
-    min: 0.0001
-    hidden: true
-  nested_replies_relative_hot_score_floor:
-    default: 0.0001
-    type: float
-    min: 0
-    max: 1
-    hidden: true
   nested_replies_hot_preload_post_budget:
     default: 60
     type: integer
@@ -2027,19 +2010,13 @@ nested_replies:
     default: 3
     type: integer
     min: 0
-    max: 50
+    max: 5
     hidden: true
-  nested_replies_hot_preload_min_relative_score:
-    default: 0.85
+  nested_replies_hot_preload_depth_penalty:
+    default: 0.25
     type: float
     min: 0
-    max: 1
-    hidden: true
-  nested_replies_hot_preload_depth_decay:
-    default: 0.85
-    type: float
-    min: 0
-    max: 1
+    max: 100
     hidden: true
 
 email:

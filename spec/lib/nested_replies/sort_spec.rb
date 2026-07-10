@@ -52,9 +52,14 @@ RSpec.describe NestedReplies::Sort do
 
   describe ".sql_order_expression" do
     it "orders hot by branch score, own score, then post number" do
+      fallback_score = NestedReplies::HotScoreCalculator.hot_score_sql("posts")
+
       expect(described_class.sql_order_expression("hot")).to eq(
-        "COALESCE(nested_view_post_stats.thread_hot_score, 0) DESC, " \
-          "COALESCE(nested_view_post_stats.hot_score, 0) DESC, posts.post_number ASC",
+        "CASE WHEN nested_view_post_stats.hot_score_updated_at IS NULL " \
+          "THEN #{fallback_score} ELSE nested_view_post_stats.thread_hot_score END DESC, " \
+          "CASE WHEN nested_view_post_stats.hot_score_updated_at IS NULL " \
+          "THEN #{fallback_score} ELSE nested_view_post_stats.hot_score END DESC, " \
+          "posts.post_number ASC",
       )
     end
 
