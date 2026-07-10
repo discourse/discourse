@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 require "pagy"
+# Pagy autoloads its classes lazily and Pagy::B64 is only defined by keyset.rb —
+# without this eager require, a bare `encode_cursor` call before anything touches
+# Pagy::Keyset raises NameError (bit us as a spec-order-dependent CI flake).
+require "pagy/classes/keyset/keyset"
 
 module DiscourseDataExplorer
   module JsonApiKit
