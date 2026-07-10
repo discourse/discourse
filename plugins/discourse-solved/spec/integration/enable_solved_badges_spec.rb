@@ -9,20 +9,10 @@ RSpec.describe "Enable Solved badges by default upcoming change" do
   end
 
   describe "seeding the Solved badges on a new site" do
-    it "enables the badges by default when the upcoming change is enabled" do
-      SiteSetting.enable_solved_badges = true
-
+    it "enables the badges by default" do
       reseed_solved_badges
 
       expect(Badge.where(name: badge_names).pluck(:enabled)).to all(eq(true))
-    end
-
-    it "leaves the badges disabled by default when the upcoming change is disabled" do
-      SiteSetting.enable_solved_badges = false
-
-      reseed_solved_badges
-
-      expect(Badge.where(name: badge_names).pluck(:enabled)).to all(eq(false))
     end
   end
 

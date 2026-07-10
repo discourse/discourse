@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-# When the "Enable Solved badges by default" upcoming change is active, newly
-# seeded sites get the Solved badges enabled out of the box. `default_enabled`
-# only applies to new badge records, so existing sites are left untouched.
-solved_badges_default_enabled = UpcomingChanges.enabled?(:enable_solved_badges)
-
 first_solution_query = <<~SQL
   SELECT post_id, user_id, created_at AS granted_at
   FROM (
@@ -28,7 +23,7 @@ Badge.seed(:name) do |badge|
   badge.query = first_solution_query
   badge.listable = true
   badge.target_posts = true
-  badge.default_enabled = solved_badges_default_enabled
+  badge.default_enabled = true
   badge.trigger = Badge::Trigger::PostRevision
   badge.auto_revoke = true
   badge.show_posts = true
@@ -63,7 +58,7 @@ end
     badge.listable = true
     badge.default_allow_title = true
     badge.target_posts = false
-    badge.default_enabled = solved_badges_default_enabled
+    badge.default_enabled = true
     badge.trigger = Badge::Trigger::PostRevision
     badge.auto_revoke = true
     badge.show_posts = false
