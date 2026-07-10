@@ -16,4 +16,5 @@ en:
       insert_failed: "failed to record upload %{id}: %{error}"
       fixer_missing: "removed missing upload %{id}"
       fixer_error: "could not check upload %{id}: %{error}"
+      optimizer_upload_not_found: "could not find upload with sha1 %{sha1}"
       interrupted: "Interrupted. The run is resumable — run the command again to continue."

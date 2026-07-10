@@ -31,6 +31,13 @@ site_settings:
   max_attachment_size_kb: 102_400
   max_image_size_kb: 102_400
 
+  # Largest image the importer will accept without downsizing (in megapixels).
+  max_image_megapixels: 150
+  # Set to true when importing into a site that has secure uploads enabled.
+  secure_uploads: false
+  # Set to true when the S3 bucket uses object ACLs and tags for access control.
+  s3_enable_access_control_tags: true
+
   enable_s3_uploads: true
   s3_upload_bucket: "your-bucket-name"
   s3_region: "your-region"
