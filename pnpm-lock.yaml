@@ -294,6 +294,9 @@ importers:
       '@lezer/lr':
         specifier: ^1.4.8
         version: 1.4.10
+      '@zoom/meetingsdk':
+        specifier: 6.2.0
+        version: 6.2.0(lodash@4.18.1)(react-dom@18.2.0(react@18.2.0))(react-redux@8.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.2.1))(react@18.2.0)(redux-thunk@2.4.2(redux@4.2.1))(redux@4.2.1)
       ace-builds:
         specifier: ^1.44.0
         version: 1.44.0
@@ -408,6 +411,21 @@ importers:
       prosemirror-view:
         specifier: ^1.41.8
         version: 1.41.8
+      react:
+        specifier: 18.2.0
+        version: 18.2.0
+      react-dom:
+        specifier: 18.2.0
+        version: 18.2.0(react@18.2.0)
+      react-redux:
+        specifier: 8.1.2
+        version: 8.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.2.1)
+      redux:
+        specifier: 4.2.1
+        version: 4.2.1
+      redux-thunk:
+        specifier: 2.4.2
+        version: 2.4.2(redux@4.2.1)
       rete:
         specifier: ^2.0.6
         version: 2.0.6
@@ -734,27 +752,9 @@ importers:
 
   plugins/discourse-calendar:
     dependencies:
-      '@zoom/meetingsdk':
-        specifier: 6.2.0
-        version: 6.2.0(lodash@4.18.1)(react-dom@18.2.0(react@18.2.0))(react-redux@8.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.2.1))(react@18.2.0)(redux-thunk@2.4.2(redux@4.2.1))(redux@4.2.1)
       discourse:
         specifier: npm:@discourse/types@*
         version: '@discourse/types@2026.6.0-06d03da3'
-      react:
-        specifier: 18.2.0
-        version: 18.2.0
-      react-dom:
-        specifier: 18.2.0
-        version: 18.2.0(react@18.2.0)
-      react-redux:
-        specifier: 8.1.2
-        version: 8.1.2(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(redux@4.2.1)
-      redux:
-        specifier: 4.2.1
-        version: 4.2.1
-      redux-thunk:
-        specifier: 2.4.2
-        version: 2.4.2(redux@4.2.1)
 
   plugins/discourse-chat-integration:
     dependencies:

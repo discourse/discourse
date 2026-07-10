@@ -6,11 +6,11 @@ import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { modifier } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
+import { loadZoomMeetingSdkEmbedded } from "discourse/lib/load-zoom-meeting-sdk";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import fetchZoomJoinPayload from "../../lib/fetch-zoom-join-payload";
-import { loadZoomMeetingSdkEmbedded } from "../../lib/load-zoom-meeting-sdk";
 
 const VIDEO_ASPECT_RATIO = 16 / 9;
 const MIN_VIDEO_WIDTH = 240;

@@ -4,10 +4,10 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import getURL from "discourse/lib/get-url";
+import { loadZoomMeetingSdk } from "discourse/lib/load-zoom-meeting-sdk";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import fetchZoomJoinPayload from "../../lib/fetch-zoom-join-payload";
-import { loadZoomMeetingSdk } from "../../lib/load-zoom-meeting-sdk";
 import MobileEmbeddableChatModal from "./modal/mobile-embeddable-chat-modal";
 
 export default class LivestreamZoomPage extends Component {

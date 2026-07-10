@@ -19,6 +19,7 @@ Discourse is large with long history. Understand context before changes.
 - Use BEM for CSS, see ./docs/developer-guides/docs/03-code-internals/25-css-guidelines-bem.md
 - Make display strings translatable (use placeholders, not split strings)
 - Use "Sentence case" for strings, not "Proper Case" or "lower case"
+- Plugins/themes can't import npm modules directly; add the dependency to core and expose a `frontend/discourse/app/lib/load-*.js` wrapper that does the `import()` (see `load-morphlex.js`).
 
 ### JSDoc
 - Do not add JSDoc to any new code you write.
