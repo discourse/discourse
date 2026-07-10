@@ -53,6 +53,7 @@ sw:
       modals:
         select_option: "Chagua chaguo moja..."
       translations:
+        category_scope: "Kategoria"
         stats:
           eta_hours:
             one: "saa %{count}"

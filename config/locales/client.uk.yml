@@ -2960,7 +2960,6 @@ uk:
     created: "Створено"
     created_lowercase: "створено"
     trust_level: "Рівень довіри"
-    search_hint: "імʼя користувача, email або IP-адреса"
     create_account:
       header_title: "Ласкаво просимо!"
       disclaimer: "Реєструючись, ви погоджуєтеся з <a href='%{privacy_link}' target='blank'>політикою конфіденційності</a> та <a href='%{tos_link}' target='blank'>умовами надання послуг</a>."
@@ -5369,7 +5368,6 @@ uk:
       unsaved_changes: "Є незбережені зміни"
       slug: "Посилання на розділ"
       parent: "Батьківська категорія"
-      slug_placeholder: "(Опція) дефіси в url"
       creation_error: Під час створення розділу сталася помилка.
       save_error: Під час збереження розділу сталася помилка.
       errors:

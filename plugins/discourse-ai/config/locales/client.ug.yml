@@ -74,6 +74,7 @@ ug:
         select_option: "تاللانما تاللىنىدۇ..."
       translations:
         title: "تەرجىمە"
+        category_scope: "سەھىپە"
         stats:
           eta_minutes:
             one: "%{count} مىنۇت"

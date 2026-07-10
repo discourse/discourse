@@ -248,6 +248,7 @@ fr:
         card: "Carte"
       translations:
         title: "Traductions"
+        category_scope: "Catégories"
         stats:
           eta_minutes:
             one: "%{count} minute"

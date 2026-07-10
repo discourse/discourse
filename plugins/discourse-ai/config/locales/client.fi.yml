@@ -248,6 +248,7 @@ fi:
         card: "Kortti"
       translations:
         title: "Käännökset"
+        category_scope: "Kategoriat"
         stats:
           eta_minutes:
             one: "%{count} minuutti"

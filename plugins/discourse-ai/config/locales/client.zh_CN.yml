@@ -383,8 +383,7 @@ zh_CN:
         description: "自动将论坛上的所有内容翻译成用户的首选语言"
         supported_locales: "支持的语言"
         supported_locales_description: "此站点设置还允许访客为帖子翻译做贡献。"
-        excluded_categories: "排除类别"
-        excluded_categories_description: "这些类别中的内容将不会被翻译。留空则可翻译所有类别的内容，包括私有类别。"
+        category_scope: "类别"
         admin_actions:
           translation_settings: "翻译设置"
           localization_settings: "本地化设置"

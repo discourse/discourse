@@ -57,6 +57,7 @@ lv:
       modals:
         select_option: "Izvēlieties opciju..."
       translations:
+        category_scope: "Sadaļas"
         stats:
           eta_hours:
             zero: "%{count} stundas"

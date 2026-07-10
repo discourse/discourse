@@ -58,6 +58,7 @@ bs_BA:
         select_option: "Odaberi opciju..."
       translations:
         title: "Prevodi"
+        category_scope: "Kategorije"
         stats:
           eta_hours:
             one: "%{count} sat"

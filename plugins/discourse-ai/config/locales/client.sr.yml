@@ -60,6 +60,7 @@ sr:
       modals:
         select_option: "Izaberi jednu od opcija..."
       translations:
+        category_scope: "Kategorije"
         stats:
           eta_hours:
             one: "%{count} сат"

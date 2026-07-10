@@ -2867,7 +2867,6 @@ ru:
     created: "Создано"
     created_lowercase: "создано"
     trust_level: "Уровень доверия"
-    search_hint: "имя пользователя, эл. почта или IP-адрес"
     create_account:
       header_title: "Добро пожаловать!"
       disclaimer: "Регистрируясь, вы соглашаетесь с <a href='%{privacy_link}' target='blank'>политикой конфиденциальности</a> и <a href='%{tos_link}' target='blank'> условиями предоставления услуг</a>."
@@ -4889,7 +4888,6 @@ ru:
       save: "Сохранить категорию"
       unsaved_changes: "У вас есть несохраненные изменения"
       parent: "Родительская категория"
-      slug_placeholder: "(Необязат.) Слова для URL, разделённые дефисами"
       creation_error: При создании новой категории возникла ошибка.
       save_error: При сохранении категории возникла ошибка.
       errors:

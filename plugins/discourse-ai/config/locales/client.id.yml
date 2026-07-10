@@ -106,6 +106,7 @@ id:
       modals:
         select_option: "Memilih sebuah pilihan..."
       translations:
+        category_scope: "Kategori"
         stats:
           eta_minutes:
             other: "%{count} menit"

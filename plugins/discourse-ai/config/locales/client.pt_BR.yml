@@ -337,6 +337,7 @@ pt_BR:
         description: "Traduzir automaticamente todo o conteúdo no seu fórum para a linguagem preferida do usuário"
         supported_locales: "Idiomas suportados"
         supported_locales_description: "Esta configuração do site também permite que os visitantes contribuam com traduções das postagens."
+        category_scope: "Categorias"
         admin_actions:
           translation_settings: "Configurações de tradução"
           localization_settings: "Configurações de localização"
