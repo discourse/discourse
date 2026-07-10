@@ -77,13 +77,142 @@ module Migrations
           ORDER BY u.id
         SQL
 
+        # A files DB means `disco upload` already created the uploads and this is
+        # a plain column copy (`super`). Without one — small migrations that skip
+        # the separate upload run — we upload the source files inline, straight
+        # into the live target site, instead of skipping.
         def execute
-          unless files_db_attached?
-            notice("No files database configured; skipping upload import")
-            return
+          if files_db_attached?
+            super
+          else
+            InlineImport.new(self).run
+          end
+        end
+
+        # Uploads the `upload_sources` that no upload run produced, using the same
+        # {Uploads::UploadCreationService} `disco upload` uses. It records where
+        # each file landed in the mappings DB: `mapped.ids` for id resolution and
+        # `mapped.upload_markdown` for the posts placeholder resolver (which reads
+        # `files.upload_results.markdown` when a files DB is attached, and this
+        # table otherwise).
+        class InlineImport
+          def initialize(step)
+            @step = step
+            @intermediate_db = step.intermediate_db
+            @reporter = step.reporter
+            @settings = step.config[:uploads] || {}
           end
 
-          super
+          def run
+            return if Uploads::InlineWorkList.pending_count(@intermediate_db) == 0
+            raise_unconfigured if @settings[:root_paths].blank?
+
+            # `clean_up_uploads` would sweep these freshly created uploads before
+            # the later post steps attach them. Everything else about uploads
+            # (extensions, size limits, S3 credentials) is already real on the live
+            # target site, so we leave it alone.
+            SiteSetting.clean_up_uploads = false
+
+            pipeline = Uploads::Pipeline.new(task: build_task, reporter: reuse_step_reporter)
+            pipeline.run
+
+            raise Interrupt if pipeline.interrupted?
+          end
+
+          private
+
+          def build_task
+            downloads_store = {}
+            work_list =
+              Uploads::InlineWorkList.rows(
+                @intermediate_db,
+                system_user_id: Discourse::SYSTEM_USER_ID,
+              )
+
+            service =
+              Uploads::UploadCreationService.new(
+                locator:
+                  Uploads::SourceFileLocator.new(
+                    root_paths: @settings[:root_paths],
+                    path_replacements: @settings[:path_replacements] || [],
+                  ),
+                downloader:
+                  Uploads::FileDownloader.new(
+                    cache_path: download_cache_path,
+                    filename_store: downloads_store,
+                  ),
+                discourse_store: Discourse.store,
+                retry_policy: Uploads::UploadCreationService.default_retry_policy,
+              )
+
+            Uploads::InlineImportTask.new(
+              work_list:,
+              intermediate_db: @intermediate_db,
+              upload_service: service,
+              downloads_store:,
+            )
+          end
+
+          def download_cache_path
+            path =
+              @settings[:download_cache_path] || File.join(Dir.tmpdir, "discourse-import-uploads")
+            FileUtils.mkdir_p(path)
+            path
+          end
+
+          # The pipeline drives its own step through a reporter, but here we are
+          # already inside the executor's uploads step. This hands the pipeline the
+          # existing step handle so its progress and notices land on that row; the
+          # executor still owns the final `finish`, so we swallow the pipeline's.
+          def reuse_step_reporter
+            ReuseStepReporter.new(@reporter)
+          end
+
+          def raise_unconfigured
+            raise I18n.t("importer.uploads.inline_not_configured")
+          end
+        end
+
+        # See {InlineImport#reuse_step_reporter}.
+        class ReuseStepReporter
+          def initialize(step_handle)
+            @step_handle = PipelineStepHandle.new(step_handle)
+          end
+
+          def start_step(_title)
+            @step_handle
+          end
+        end
+
+        class PipelineStepHandle
+          def initialize(step_handle)
+            @step_handle = step_handle
+          end
+
+          def notice(message)
+            @step_handle.notice(message)
+          end
+
+          def report_concurrency(count)
+            @step_handle.report_concurrency(count)
+          end
+
+          def with_progress(max_progress:, &block)
+            @step_handle.with_progress(max_progress:, &block)
+          end
+
+          # No-op: the executor finishes the step in its own `ensure`.
+          def finish(outcome: nil)
+          end
+        end
+
+        # Inline mode reaches these off the step; the files-DB copy path does not.
+        def intermediate_db
+          @intermediate_db
+        end
+
+        def config
+          @config
         end
 
         private

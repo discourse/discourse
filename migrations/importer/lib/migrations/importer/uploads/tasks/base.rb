@@ -8,6 +8,8 @@ module Migrations
         # {Pipeline}; a task only describes the work. Each task is a hook object
         # the pipeline drives (see {Pipeline} for the full interface).
         class Base
+          include StoreProbe
+
           attr_reader :files_db, :intermediate_db, :settings, :discourse_store
           attr_writer :reporter
 
@@ -49,20 +51,6 @@ module Migrations
             set = Set.new
             db.query(sql) { |row| set << row[:id] }
             set
-          end
-
-          def add_multisite_prefix(path)
-            return path if !Rails.configuration.multisite
-
-            File.join("uploads", RailsMultisite::ConnectionManagement.current_db, path)
-          end
-
-          def file_exists?(path)
-            if discourse_store.external?
-              discourse_store.object_from_path(path).exists?
-            else
-              File.exist?(File.join(discourse_store.public_dir, path))
-            end
           end
         end
       end
