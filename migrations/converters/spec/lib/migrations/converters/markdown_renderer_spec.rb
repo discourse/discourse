@@ -129,6 +129,20 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(raw).to include("https://example.com/pic.png")
     end
 
+    it "hoists an image nested inside formatting in the label" do
+      raw =
+        renderer.to_markdown(
+          "[url=https://example.com][b][img]https://example.com/pic.png[/img][/b][/url]",
+          on_embed: buffer,
+          defer: %i[link],
+        )
+
+      expect(buffer.links).to contain_exactly(hash_including(url: "https://example.com", text: nil))
+      expect(raw).to include("#{buffer.links.first[:placeholder]} ")
+      expect(raw).to include("https://example.com/pic.png")
+      expect(raw).not_to include("****")
+    end
+
     it "records a bare URL's text as nil so the importer re-emits it bare" do
       renderer.to_markdown(
         "see [url=https://example.com/t/5]https://example.com/t/5[/url]",
@@ -217,7 +231,7 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       code = Markbridge::AST::Code.new << Markbridge::AST::Text.new("x")
       node << code
       interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
-      allow(interface).to receive(:render_node).with(code).and_return("`x`")
+      allow(interface).to receive(:render_children).with(node).and_return("`x`")
 
       extract.call(sink, node, interface)
 
@@ -227,17 +241,49 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
     it "hoists an upload out of the label, after the link's token" do
       _node_class, extract = described_class.embed_handlers.fetch(:link)
       node = Markbridge::AST::Url.new(href: "https://example.com")
-      label = Markbridge::AST::Text.new("docs")
       upload = Markbridge::AST::Upload.new(sha1: "abc123", filename: "x.png")
-      node << label << upload
+      node << Markbridge::AST::Text.new("docs")
+      node << upload
       interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
-      allow(interface).to receive(:render_node).with(label).and_return("docs")
+      allow(interface).to receive(:render_children).with(node).and_return("docs")
       allow(interface).to receive(:render_node).with(upload).and_return("UPLOAD_TOKEN")
 
       result = extract.call(sink, node, interface)
 
       expect(sink.links).to contain_exactly(hash_including(text: "docs"))
       expect(result).to eq("#{sink.links.first[:placeholder]} UPLOAD_TOKEN")
+    end
+
+    it "hoists an upload nested inside formatting and prunes the emptied wrapper" do
+      _node_class, extract = described_class.embed_handlers.fetch(:link)
+      node = Markbridge::AST::Url.new(href: "https://example.com")
+      upload = Markbridge::AST::Upload.new(sha1: "abc123", filename: "x.png")
+      node << (Markbridge::AST::Bold.new << upload)
+      interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
+      allow(interface).to receive(:render_node).with(upload).and_return("UPLOAD_TOKEN")
+
+      result = extract.call(sink, node, interface)
+
+      # The bold held only the upload, so the label is empty after the hoist:
+      # the link is recorded bare, with no `****` husk left behind.
+      expect(sink.links).to contain_exactly(hash_including(text: nil))
+      expect(result).to eq("#{sink.links.first[:placeholder]} UPLOAD_TOKEN")
+    end
+
+    it "hoists an image even when the link itself renders natively" do
+      _node_class, extract = described_class.embed_handlers.fetch(:link)
+      node = Markbridge::AST::Url.new(href: "https://example.com")
+      image = Markbridge::AST::Image.new(src: "https://example.com/pic.png")
+      node << Markbridge::AST::Mention.new(name: "sam", type: :user)
+      node << image
+      interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
+      allow(interface).to receive(:render_default).with(node).and_return("NATIVE")
+      allow(interface).to receive(:render_node).with(image).and_return("IMAGE")
+
+      result = extract.call(sink, node, interface)
+
+      expect(sink.links).to be_empty
+      expect(result).to eq("NATIVE IMAGE")
     end
 
     it "falls back to native rendering for a label with multi-line code" do
