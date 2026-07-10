@@ -31,3 +31,4 @@ en:
       interrupted: "Interrupted. The run is resumable — run the command again to continue."
       s3_uploads_disabled: "WARNING: S3 upload settings are configured, but enable_s3_uploads is false. Files will be stored locally."
       s3_public_access_failed: "The S3 test upload could not be read without credentials (HTTP %{status}). Check the bucket's public access configuration, including s3_enable_access_control_tags."
+      inline_not_configured: "There are uploads to import, but no files database is configured and inline upload mode is not set up. Either run `disco upload` to build a files database, or add an `uploads:` section with `root_paths` to import.yml."
