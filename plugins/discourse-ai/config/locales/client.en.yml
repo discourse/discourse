@@ -250,6 +250,18 @@ en:
       bot_chats:
         tab_label: "Bot chats"
 
+      ai_tool_approval:
+        loading: "Loading..."
+        load_error: "Couldn't load this pending action."
+        agent: "Agent"
+        tool: "Action"
+        user: "User"
+        approve: "Approve"
+        reject: "Reject"
+        approved: "Approved"
+        rejected: "Rejected"
+        awaiting_staff: "Awaiting staff approval"
+
       default_llm:
         title: "Default LLM model"
         description: "The default LLM model to use for all AI features. This will be used if no LLM is specified in the feature configuration or agent. If no default LLM is specified, the last created LLM will be used."
