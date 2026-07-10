@@ -378,11 +378,12 @@ module DiscourseWorkflows
         @runtime_state.request_wait(waiting_until, kind: kind, payload: payload)
       end
 
-      def resume_action_id(action)
+      def resume_action_id(action, target_user_id: nil)
         DiscourseWorkflows::InteractiveResume.action_id(
           execution_id: execution_id,
           resume_token: @resume_token,
           action: action,
+          target_user_id: target_user_id,
         )
       end
 
