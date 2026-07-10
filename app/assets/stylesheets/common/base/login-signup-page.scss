@@ -607,9 +607,10 @@ body.signup-page {
   }
 }
 
-// Signup and invite page
+// Signup, invite, and code login pages (share the user-fields step)
 .invite-page,
-.signup-fullpage {
+.signup-fullpage,
+.login-fullpage {
   .password-confirmation {
     display: none;
   }
