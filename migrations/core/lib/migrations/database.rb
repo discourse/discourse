@@ -10,6 +10,7 @@ module Migrations
   module Database
     INTERMEDIATE_DB_SCHEMA_PATH = File.join(Migrations.root_path, "db", "intermediate_db_schema")
     MAPPINGS_DB_SCHEMA_PATH = File.join(Migrations.root_path, "db", "mappings_db_schema")
+    FILES_DB_SCHEMA_PATH = File.join(Migrations.root_path, "db", "files_db_schema")
     UPLOADS_DB_SCHEMA_PATH = File.join(Migrations.root_path, "db", "uploads_db_schema")
 
     def self.migrate(db_path, migrations_path:)
@@ -45,6 +46,8 @@ module Migrations
         INTERMEDIATE_DB_SCHEMA_PATH
       when "mappings_db"
         MAPPINGS_DB_SCHEMA_PATH
+      when "files_db"
+        FILES_DB_SCHEMA_PATH
       when "uploads_db"
         UPLOADS_DB_SCHEMA_PATH
       else
