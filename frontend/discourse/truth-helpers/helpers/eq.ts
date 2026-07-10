@@ -1,3 +1,1 @@
-export default function eq(left: unknown, right: unknown): boolean {
-  return left === right;
-}
+export { default } from "ember-truth-helpers/helpers/eq";

@@ -1,5 +1,16 @@
 import { expectTypeOf } from "expect-type";
-import { eq, gt, has, includes, not, notEq } from "discourse/truth-helpers";
+import {
+  eq,
+  gt,
+  has,
+  includes,
+  isArray,
+  isEmpty,
+  isEqual,
+  not,
+  notEq,
+  xor,
+} from "discourse/truth-helpers";
 
 // The comparison/membership helpers always return a plain `boolean`.
 expectTypeOf(not("x")).toEqualTypeOf<boolean>();
@@ -9,3 +20,7 @@ expectTypeOf(gt(2, 1)).toEqualTypeOf<boolean>();
 expectTypeOf(gt(2, 1, { forceNumber: true })).toEqualTypeOf<boolean>();
 expectTypeOf(has(new Set([1]), 1)).toEqualTypeOf<boolean>();
 expectTypeOf(includes([1, 2], 1)).toEqualTypeOf<boolean>();
+expectTypeOf(xor(true, false)).toEqualTypeOf<boolean>();
+expectTypeOf(isArray([1, 2])).toEqualTypeOf<boolean>();
+expectTypeOf(isEmpty("x")).toEqualTypeOf<boolean>();
+expectTypeOf(isEqual(1, 2)).toEqualTypeOf<boolean>();

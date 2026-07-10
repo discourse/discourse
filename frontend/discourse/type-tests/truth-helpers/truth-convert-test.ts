@@ -14,5 +14,8 @@ expectTypeOf<TruthConvert<{ isTruthy: false }>>().toEqualTypeOf<false>();
 // A wide `string` can't be resolved at compile time.
 expectTypeOf<TruthConvert<string>>().toEqualTypeOf<boolean>();
 
-// The runtime function always narrows to a plain `boolean`.
-expectTypeOf(truthConvert).toEqualTypeOf<(result: unknown) => boolean>();
+// The runtime function narrows literal inputs the same way as the type above.
+expectTypeOf(truthConvert(0)).toEqualTypeOf<false>();
+expectTypeOf(truthConvert(1)).toEqualTypeOf<true>();
+expectTypeOf(truthConvert("")).toEqualTypeOf<false>();
+expectTypeOf(truthConvert("x")).toEqualTypeOf<true>();

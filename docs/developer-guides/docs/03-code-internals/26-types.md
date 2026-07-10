@@ -14,25 +14,7 @@ Core, themes and plugins can be authored directly in TypeScript. Use a `.ts` ext
 
 ## Type tests
 
-When a module's _types_ carry meaning that a runtime test can't capture — a generic that must resolve to a precise type, an overload that must pick the right signature, a helper whose return depends on its arguments — assert those types at compile time with [`expect-type`](https://github.com/mmkal/expect-type). These assertions are checked by `pnpm lint:types` alongside everything else.
-
-Type tests live in a dedicated `type-tests/` directory (a sibling of `app/`, `tests/`, etc.), grouped by the feature under test, e.g. `frontend/discourse/type-tests/truth-helpers/`. This location matters:
-
-- The directory is added to the project's `tsconfig.json` `include`, so `ember-tsc` type-checks it.
-- It sits **outside** the `tests/` tree that the QUnit loader scans and outside any `compat-modules.js` glob, so the files are never pulled into the test or production bundle. Nothing imports them at runtime, and `expect-type` stays a dev dependency.
-
-A `.ts` file uses `expectTypeOf` for direct calls:
-
-```ts
-import { or } from "discourse/truth-helpers";
-import { expectTypeOf } from "expect-type";
-
-const maybeString = "x" as string | undefined;
-expectTypeOf(or(maybeString, "fallback")).toEqualTypeOf<string>();
-expectTypeOf(or(maybeString, "fallback")).not.toEqualTypeOf<boolean>();
-```
-
-For types that only surface through a `<template>`, add a `.gts` file that exercises the value in a template and feeds it into a typed arg — Glint then checks it. Negative cases (things that must _not_ type-check) use `{{! @glint-expect-error }}`, which is the one sanctioned use of a Glint directive: asserting that code fails to compile.
+Types whose meaning a runtime test can't capture (a generic's resolved type, an overload pick, a return type derived from arguments) can be asserted at compile time with [`expect-type`](https://github.com/mmkal/expect-type), in `.ts`/`.gts` files under `frontend/discourse/type-tests/` (e.g. `type-tests/truth-helpers/`). They are checked by `pnpm lint:types` but kept out of the test and production bundles.
 
 ## Usage
 

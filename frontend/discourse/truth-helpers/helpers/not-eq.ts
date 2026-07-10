@@ -1,3 +1,1 @@
-export default function notEq(left: unknown, right: unknown): boolean {
-  return left !== right;
-}
+export { default } from "ember-truth-helpers/helpers/not-eq";

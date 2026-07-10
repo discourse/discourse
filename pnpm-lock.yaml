@@ -577,6 +577,9 @@ importers:
       ember-template-imports:
         specifier: ^4.4.0
         version: 4.4.0
+      ember-truth-helpers:
+        specifier: ^5.0.0
+        version: 5.0.0
       expect-type:
         specifier: ^1.3.0
         version: 1.3.0
@@ -657,6 +660,10 @@ importers:
         version: 1.0.15
 
   frontend/discourse-types:
+    dependencies:
+      ember-truth-helpers:
+        specifier: ^5.0.0
+        version: 5.0.0
     devDependencies:
       '@types/node':
         specifier: ^25.3.3
@@ -4401,6 +4408,9 @@ packages:
   ember-tracked-storage-polyfill@1.0.1:
     resolution: {integrity: sha512-lr66R+1H9qMXIUXxwzpixS/qTwsMEpJXS5s2nOdvQP9U/JYuZT9MexpvLktSUQ1uWEhGQA8DDeeVh4R1CvLDFQ==}
     engines: {node: 12.* || >= 14}
+
+  ember-truth-helpers@5.0.0:
+    resolution: {integrity: sha512-PnQd6D6hvlNC3k6gBu0SC2cvfXX6wH6W0nToomIIoxqyrD5cllk0zBh/j/1H0KsczVCWeuF9PWj5xJgL4jQAGg==}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -12772,6 +12782,12 @@ snapshots:
   ember-tracked-storage-polyfill@1.0.1:
     dependencies:
       ember-cli-babel: 7.26.11
+    transitivePeerDependencies:
+      - supports-color
+
+  ember-truth-helpers@5.0.0:
+    dependencies:
+      '@embroider/addon-shim': 1.10.3
     transitivePeerDependencies:
       - supports-color
 
