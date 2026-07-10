@@ -43,16 +43,19 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     flex-wrap: wrap;
     gap: 0.75rem;
     align-items: center;
-  }
 
-  &__error {
-    margin: 0;
-    color: var(--danger);
+    p.discourse-calendar-livestream-zoom-entry__error {
+      margin: 0;
+      color: var(--danger);
+      margin-right: auto;
+    }
   }
 
   &__waiting {
     margin: 0;
     color: var(--primary-medium);
+    text-align: center;
+    width: 100%;
   }
 
   &__frame {

@@ -314,17 +314,25 @@ export default class DModal extends Component {
 
     while (element && element !== this.modalContainer) {
       if (element.scrollHeight > element.clientHeight) {
-        const { overflowY } = window.getComputedStyle(element);
+        const style = window.getComputedStyle(element);
 
-        if (overflowY === "auto" || overflowY === "scroll") {
-          if (swipeState.direction === "down" && element.scrollTop > 0) {
+        if (style.overflowY === "auto" || style.overflowY === "scroll") {
+          // column-reverse scrollers (e.g. chat messages) rest at scrollTop 0
+          // and go negative when scrolled back, so normalize scrollTop to a
+          // distance from the top edge before checking for remaining room
+          const maxScroll = element.scrollHeight - element.clientHeight;
+          const reversed =
+            style.display.includes("flex") &&
+            style.flexDirection === "column-reverse";
+          const distanceFromTop = reversed
+            ? maxScroll + element.scrollTop
+            : element.scrollTop;
+
+          if (swipeState.direction === "down" && distanceFromTop > 0) {
             return true;
           }
 
-          if (
-            swipeState.direction === "up" &&
-            element.scrollTop + element.clientHeight < element.scrollHeight
-          ) {
+          if (swipeState.direction === "up" && distanceFromTop < maxScroll) {
             return true;
           }
         }

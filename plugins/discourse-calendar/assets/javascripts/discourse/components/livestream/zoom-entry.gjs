@@ -540,6 +540,7 @@ export default class LivestreamZoomEntry extends Component {
 
             {{#if this.showFallbackLink}}
               <DButton
+                class="btn-default"
                 @href={{@event.livestreamUrl}}
                 @label="discourse_calendar.livestream.zoom.open_in_zoom"
                 @icon="up-right-from-square"
