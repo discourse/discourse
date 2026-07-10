@@ -236,21 +236,17 @@ module Migrations
         end
       end
 
-      # Parses one pipe line by its leading tag (see {PipeProgressSink}): `p` is a
-      # progress batch, `r` a worker's JSON result.
+      # Consumes one pipe line. {PipeProgressSink} owns the line format in both
+      # directions; this side only dispatches on what it parsed.
       def consume(line, progress, results)
-        tag, payload = line.split(" ", 2)
+        kind, *data = PipeProgressSink.parse(line)
 
-        case tag
-        when "p"
-          increment, warnings, errors = payload.split
-          progress.update(
-            increment_by: increment.to_i,
-            warning_count: warnings.to_i,
-            error_count: errors.to_i,
-          )
-        when "r"
-          results << JSON.parse(payload)
+        case kind
+        when :progress
+          increment, warnings, errors = data
+          progress.update(increment_by: increment, warning_count: warnings, error_count: errors)
+        when :result
+          results << data.first
         end
       end
 
