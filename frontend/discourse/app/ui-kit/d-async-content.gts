@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
-import { trustHTML } from "@ember/template";
+import { type TrustedHTML, trustHTML } from "@ember/template";
+import type { WithBoundArgs } from "@glint/template";
 import { TrackedAsyncData } from "ember-async-data";
 import { Promise as RsvpPromise } from "rsvp";
 import { extractErrorInfo, popupAjaxError } from "discourse/lib/ajax-error";
@@ -15,11 +16,58 @@ import DFlashMessage from "discourse/ui-kit/d-flash-message";
 const ERROR_MODES = ["flash", "popup"];
 const DEFAULT_ERROR_MODE = "flash";
 
-export default class DAsyncContent extends Component {
-  #debounce = false;
+type ErrorMode = "flash" | "popup";
+
+/**
+ * A function data source. It receives the `@context` value and returns either
+ * the resolved value directly (a client-only data source) or a promise for it.
+ */
+type AsyncDataFn<T> = (context: unknown) => T | Promise<T>;
+
+interface DAsyncContentSignature<T> {
+  Args: {
+    // Data source: a promise, an already-constructed `TrackedAsyncData`, or a
+    // function that produces the value (sync or async).
+    asyncData: Promise<T> | TrackedAsyncData<T> | AsyncDataFn<T>;
+
+    // An arbitrary value forwarded to the function form of `@asyncData`.
+    context?: unknown;
+
+    // Debounce the function form: `true` uses the default input delay, a number
+    // sets the delay in milliseconds.
+    debounce?: boolean | number;
+
+    // How a rejection is surfaced when no `error` block is provided. Cannot be
+    // combined with an `error` block.
+    errorMode?: ErrorMode;
+  };
+
+  Blocks: {
+    // Rendered while the data is pending (no default: a loading spinner).
+    loading: [];
+
+    // Rendered once resolved, yielding the resolved value.
+    content: [value: T];
+
+    // Rendered instead of `content` when the resolved value is falsy.
+    empty: [];
+
+    // Rendered on rejection, yielding the error and a component (pre-bound to
+    // the error) that renders the default inline error message.
+    error: [
+      error: Error,
+      retry: WithBoundArgs<typeof AsyncContentInlineError, "error">,
+    ];
+  };
+}
+
+export default class DAsyncContent<T> extends Component<
+  DAsyncContentSignature<T>
+> {
+  #debounce: boolean | number | undefined = false;
 
   @cached
-  get data() {
+  get data(): TrackedAsyncData<T> | undefined {
     const asyncData = this.args.asyncData;
     const context = this.args.context;
 
@@ -31,13 +79,13 @@ export default class DAsyncContent extends Component {
       return asyncData;
     }
 
-    let value;
+    let value: T | Promise<T> | Promise<void> | undefined;
 
     if (this.#isPromise(asyncData)) {
       value = asyncData;
     } else if (typeof asyncData === "function") {
       value = this.#debounce
-        ? new Promise((resolve, reject) => {
+        ? new Promise<T>((resolve, reject) => {
             discourseDebounce(
               this,
               this.#resolveAsyncData,
@@ -57,15 +105,25 @@ export default class DAsyncContent extends Component {
       );
     }
 
-    return new TrackedAsyncData(value);
+    // The branch analysis above is exhaustive for the supported `@asyncData`
+    // shapes, so `value` is always assigned; the cast drops the never-hit
+    // `Promise<void>`/`undefined` members and pins the resolved type to `T`.
+    return new TrackedAsyncData(value as T | Promise<T>);
   }
 
-  get errorMode() {
+  // The rejection reason. `TrackedAsyncData` types `error` as `unknown`; the
+  // rejected state carries the rejection reason, surfaced to the `:error` block
+  // and the inline error display as `Error` (matching what consumers expect).
+  get rejection(): Error {
+    return this.data?.error as Error;
+  }
+
+  get errorMode(): ErrorMode {
     return this.args.errorMode ?? DEFAULT_ERROR_MODE;
   }
 
   @bind
-  verifyParameters({ hasErrorBlock }) {
+  verifyParameters({ hasErrorBlock }: { hasErrorBlock: boolean }) {
     if (hasErrorBlock && this.args.errorMode) {
       throw `@errorMode cannot be used when a block named "error" is provided`;
     }
@@ -75,19 +133,27 @@ export default class DAsyncContent extends Component {
     }
   }
 
-  #isPromise(value) {
+  #isPromise(value: unknown): value is Promise<T> {
     return value instanceof Promise || value instanceof RsvpPromise;
   }
 
   // a stable reference to a function to use the `debounce` method
-  #resolveAsyncData(asyncData, context, resolve, reject) {
+  #resolveAsyncData(
+    asyncData: AsyncDataFn<T>,
+    context: unknown,
+    resolve?: (value: T | PromiseLike<T>) => void,
+    reject?: (reason?: unknown) => void
+  ): T | Promise<T> | Promise<void> {
     this.#debounce =
       this.args.debounce === true ? INPUT_DELAY : this.args.debounce;
 
     // when a resolve function is provided, we need to resolve the promise once asyncData is done
     // otherwise, we just call asyncData
+    //
+    // The debounced path only runs against async data sources, so the result is
+    // cast to `Promise<T>` to settle the outer promise via `.then`/`.catch`.
     return resolve
-      ? asyncData(context).then(resolve).catch(reject)
+      ? (asyncData(context) as Promise<T>).then(resolve).catch(reject)
       : asyncData(context);
   }
 
@@ -110,22 +176,32 @@ export default class DAsyncContent extends Component {
     {{else if this.data.isRejected}}
       {{#if (has-block "error")}}
         {{yield
-          this.data.error
-          (component AsyncContentInlineError error=this.data.error)
+          this.rejection
+          (component AsyncContentInlineError error=this.rejection)
           to="error"
         }}
       {{else if (eq this.errorMode "flash")}}
-        <AsyncContentInlineError @error={{this.data.error}} />
+        <AsyncContentInlineError @error={{this.rejection}} />
       {{else if (eq this.errorMode "popup")}}
-        {{popupAjaxError this.data.error}}
+        {{popupAjaxError this.rejection}}
       {{/if}}
     {{/if}}
   </template>
 }
 
-class AsyncContentInlineError extends Component {
-  get errorMessage() {
-    const errorInfo = extractErrorInfo(this.args.error);
+interface AsyncContentInlineErrorSignature {
+  Args: {
+    error: Error;
+  };
+}
+
+class AsyncContentInlineError extends Component<AsyncContentInlineErrorSignature> {
+  get errorMessage(): string | TrustedHTML {
+    // `extractErrorInfo` is authored in untyped `.js`; annotate the fields we
+    // read so the getter's return type stays precise rather than widening to `any`.
+    const errorInfo: { html: boolean; message: string } = extractErrorInfo(
+      this.args.error
+    );
     return errorInfo.html ? trustHTML(errorInfo.message) : errorInfo.message;
   }
 
