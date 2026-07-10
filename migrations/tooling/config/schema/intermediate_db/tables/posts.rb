@@ -17,10 +17,18 @@ Migrations::Tooling::Schema.table :posts do
   # Post numbers are recomputed at import time, so the source value is optional.
   column :post_number, required: false
 
+  # Every converted post is Markdown; the importer leaves `cook_method` at
+  # `regular`. A `raw_html`/`email` post bypasses markdown-it at cook time, so
+  # none of the markdown the placeholder resolver splices in — upload
+  # references, quote tags, hashtags, rebuilt links — would render inside one.
+  # Making this converter-settable means pairing it with an HTML rendering mode
+  # in the resolver (or a no-embeds rule for such posts); unlock it with that,
+  # not before.
+  ignore :cook_method, reason: "Fixed at regular until non-Markdown posts are a designed feature"
+
   ignore :baked_at,
          :baked_version,
          :bookmark_count,
-         :cook_method,
          :cooked,
          :edit_reason,
          :illegal_count,
