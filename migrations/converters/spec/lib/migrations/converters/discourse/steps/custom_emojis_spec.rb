@@ -33,9 +33,9 @@ RSpec.describe Migrations::Converters::Discourse::CustomEmojis do
         id: 5,
         name: "parrot",
         group: "animals",
-        url: path,
-        filename: "parrot.png",
-        origin: nil,
+        upload_url: path,
+        upload_filename: "parrot.png",
+        upload_origin: nil,
         created_at: Time.utc(2020, 1, 2, 3, 4, 5),
       },
     )
@@ -51,7 +51,14 @@ RSpec.describe Migrations::Converters::Discourse::CustomEmojis do
 
   it "keeps a nil group for an ungrouped emoji" do
     processor.process(
-      { id: 6, name: "smile", group: nil, url: "/uploads/s.png", filename: "s.png", origin: nil },
+      {
+        id: 6,
+        name: "smile",
+        group: nil,
+        upload_url: "/uploads/s.png",
+        upload_filename: "s.png",
+        upload_origin: nil,
+      },
     )
 
     expect(rows("custom_emojis")).to contain_exactly(hash_including(original_id: 6, group: nil))

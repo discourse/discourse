@@ -12,18 +12,19 @@ module Migrations
           end
 
           def items
-            # The join hands the upload's `url`/`filename`/`origin` to the
-            # processor, which registers the upload and stores the returned
-            # reference — the emoji image must be fetched like any other upload
-            # before the importer can create the emoji from it.
+            # The join hands the upload's columns to the processor (prefixed, so
+            # they can't collide with the emoji's own — `user_id` in particular),
+            # which registers the upload and stores the returned reference — the
+            # emoji image must be fetched like any other upload before the
+            # importer can create the emoji from it.
             @source_db.query <<~SQL
               SELECT custom_emojis.id,
                      custom_emojis.name,
                      custom_emojis."group",
                      custom_emojis.created_at,
-                     uploads.url,
-                     uploads.original_filename AS filename,
-                     uploads.origin
+                     uploads.url               AS upload_url,
+                     uploads.original_filename AS upload_filename,
+                     uploads.origin            AS upload_origin
               FROM custom_emojis
                    JOIN uploads ON uploads.id = custom_emojis.upload_id
               ORDER BY custom_emojis.id
@@ -33,7 +34,8 @@ module Migrations
 
         processor do
           def setup
-            @upload_creator = UploadCreator.new(upload_type: "custom_emoji")
+            @upload_creator =
+              UploadCreator.new(column_prefix: "upload", upload_type: "custom_emoji")
           end
 
           def process(item)
