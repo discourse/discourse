@@ -1,4 +1,8 @@
-export default function lt(left, right, { forceNumber = false } = {}) {
+export default function lt(
+  left: unknown,
+  right: unknown,
+  { forceNumber = false }: { forceNumber?: boolean } = {}
+): boolean {
   if (forceNumber) {
     if (typeof left !== "number") {
       left = Number(left);
@@ -7,5 +11,5 @@ export default function lt(left, right, { forceNumber = false } = {}) {
       right = Number(right);
     }
   }
-  return left < right;
+  return (left as number) < (right as number);
 }

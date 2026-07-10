@@ -577,6 +577,9 @@ importers:
       ember-template-imports:
         specifier: ^4.4.0
         version: 4.4.0
+      expect-type:
+        specifier: ^1.3.0
+        version: 1.3.0
       jquery:
         specifier: ^3.7.1
         version: 3.7.1

@@ -1,7 +1,7 @@
-import truthConvert from "../utils/truth-convert";
+import truthConvert, { type MaybeTruthy } from "../utils/truth-convert";
 
-export default function not(...args) {
-  for (let arg of args) {
+export default function not(...args: MaybeTruthy[]): boolean {
+  for (const arg of args) {
     if (truthConvert(arg) === true) {
       return false;
     }

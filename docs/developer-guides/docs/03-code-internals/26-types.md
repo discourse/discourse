@@ -12,6 +12,28 @@ Much of this will be automatically consumed by IDEs with TypeScript/JavaScript s
 
 Core, themes and plugins can be authored directly in TypeScript. Use a `.ts` extension for plain modules, or `.gts` for Glimmer components with a `<template>` tag. Type syntax is stripped at build time, so no separate compilation step is required. Linting (`@discourse/lint-configs`) and type-checking (`pnpm lint:types`) both understand these files.
 
+## Type tests
+
+When a module's _types_ carry meaning that a runtime test can't capture — a generic that must resolve to a precise type, an overload that must pick the right signature, a helper whose return depends on its arguments — assert those types at compile time with [`expect-type`](https://github.com/mmkal/expect-type). These assertions are checked by `pnpm lint:types` alongside everything else.
+
+Type tests live in a dedicated `type-tests/` directory (a sibling of `app/`, `tests/`, etc.), grouped by the feature under test, e.g. `frontend/discourse/type-tests/truth-helpers/`. This location matters:
+
+- The directory is added to the project's `tsconfig.json` `include`, so `ember-tsc` type-checks it.
+- It sits **outside** the `tests/` tree that the QUnit loader scans and outside any `compat-modules.js` glob, so the files are never pulled into the test or production bundle. Nothing imports them at runtime, and `expect-type` stays a dev dependency.
+
+A `.ts` file uses `expectTypeOf` for direct calls:
+
+```ts
+import { or } from "discourse/truth-helpers";
+import { expectTypeOf } from "expect-type";
+
+const maybeString = "x" as string | undefined;
+expectTypeOf(or(maybeString, "fallback")).toEqualTypeOf<string>();
+expectTypeOf(or(maybeString, "fallback")).not.toEqualTypeOf<boolean>();
+```
+
+For types that only surface through a `<template>`, add a `.gts` file that exercises the value in a template and feeds it into a typed arg — Glint then checks it. Negative cases (things that must _not_ type-check) use `{{! @glint-expect-error }}`, which is the one sanctioned use of a Glint directive: asserting that code fails to compile.
+
 ## Usage
 
 - **CLI**: Run `pnpm lint:types`
