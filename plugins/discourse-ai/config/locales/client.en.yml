@@ -411,8 +411,8 @@ en:
         description: "Automatically translate all content on your forum to the user's preferred language"
         supported_locales: "Supported languages"
         supported_locales_description: "This site setting also allows visitors to contribute post translations."
-        excluded_categories: "Excluded categories"
-        excluded_categories_description: "Content in these categories will not be translated. Leave empty to translate content in all categories, including private categories."
+        category_scope: "Categories"
+        category_scope_description: "Choose whether automatic translations use all categories, public categories, or selected categories."
         admin_actions:
           translation_settings: "Translation settings"
           localization_settings: "Localization settings"

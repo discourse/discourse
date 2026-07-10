@@ -39,7 +39,6 @@ export default class UpsertCategorySettings extends Component {
       @title={{i18n "category.slug"}}
       @format="max"
       @type="input"
-      @validation="required"
       as |field|
     >
       <field.Control

@@ -2792,6 +2792,7 @@ sr:
           always: "uvek"
           never: "nikada"
       reports:
+        all_groups: "Sve grupe"
         group_members: "Članovi"
         group_other: "Ostalo"
         chart:

@@ -1,153 +1,214 @@
-/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
-import Component from "@ember/component";
-import EmberObject from "@ember/object";
-import { next } from "@ember/runloop";
+import Component from "@glimmer/component";
+import { cached, tracked } from "@glimmer/tracking";
+import {
+  isDestroyed,
+  isDestroying,
+  registerDestructor,
+} from "@ember/destroyable";
+import { array } from "@ember/helper";
 import { service } from "@ember/service";
-import { classNameBindings } from "@ember-decorators/component";
-import { observes } from "@ember-decorators/object";
-import $ from "jquery";
-import discourseDebounce from "discourse/lib/debounce";
+import { modifier as modifierFn } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
 import EmbedMode from "discourse/lib/embed-mode";
 import discourseLater from "discourse/lib/later";
 import { headerOffset } from "discourse/lib/offset-calculator";
-import SwipeEvents from "discourse/lib/swipe-events";
+import SwipeEvents, {
+  getMaxAnimationTimeMs,
+  shouldCloseMenu,
+} from "discourse/lib/swipe-events";
+import TrackedMediaQuery from "discourse/lib/tracked-media-query";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import JumpToPost from "./modal/jump-to-post";
 
 const MIN_WIDTH_TIMELINE = 925;
 const MIN_HEIGHT_TIMELINE = 325;
 
-@classNameBindings(
-  "info.topicProgressExpanded:topic-progress-expanded",
-  "info.renderTimeline:with-timeline",
-  "info.withTopicProgress:with-topic-progress"
-)
-export default class TopicNavigation extends Component {
-  @service modal;
-  @service composer;
+// State shared with the yielded block (the timeline / progress bar). Derived
+// values read through injected fetchers rather than a back-reference to the
+// component, so tracking is preserved without coupling.
+class TopicNavigationInfo {
+  @tracked topicProgressExpanded = false;
+  @tracked prevEvent = null;
 
-  composerOpen = null;
-  info = EmberObject.create();
-  canRender = true;
-  _lastTopicId = null;
-  _swipeEvents = null;
-  _desktopListenersActive = false;
-  _mobileListenersActive = false;
+  #postCountFetcher;
+  #renderTimelineFetcher;
 
-  didUpdateAttrs() {
-    super.didUpdateAttrs(...arguments);
-    if (this._lastTopicId !== this.topic.id) {
-      this._lastTopicId = this.topic.id;
-      this.set("canRender", false);
-      next(() => {
-        this.set("canRender", true);
-        this._performCheckSize();
-      });
-    }
+  constructor(postCountFetcher, renderTimelineFetcher) {
+    this.#postCountFetcher = postCountFetcher;
+    this.#renderTimelineFetcher = renderTimelineFetcher;
   }
 
-  _performCheckSize() {
-    if (!this.element || this.isDestroying || this.isDestroyed) {
+  get renderTimeline() {
+    return this.#renderTimelineFetcher();
+  }
+
+  get withTopicProgress() {
+    return !this.renderTimeline && this.#postCountFetcher() > 1;
+  }
+}
+
+export default class TopicNavigation extends Component {
+  @service appEvents;
+  @service composer;
+  @service modal;
+  @service site;
+
+  @tracked composerHeight = 0;
+
+  info = new TopicNavigationInfo(
+    () => this.args.topic.posts_count,
+    () => this.renderTimeline
+  );
+  widthQuery = this.setupWidthQuery();
+  movingElement = null;
+  pxClosed = 0;
+  setupSwipe = modifierFn((element) => {
+    if (!this.site.mobileView) {
       return;
     }
 
+    const swipeEvents = new SwipeEvents(element);
+    swipeEvents.addTouchListeners();
+    element.addEventListener("swipestart", this.onSwipeStart);
+    element.addEventListener("swipeend", this.onSwipeEnd);
+    element.addEventListener("swipecancel", this.onSwipeCancel);
+    element.addEventListener("swipe", this.onSwipe);
+
+    return () => {
+      element.removeEventListener("swipestart", this.onSwipeStart);
+      element.removeEventListener("swipeend", this.onSwipeEnd);
+      element.removeEventListener("swipecancel", this.onSwipeCancel);
+      element.removeEventListener("swipe", this.onSwipe);
+      swipeEvents.removeTouchListeners();
+    };
+  });
+  #heightQuery = null;
+
+  constructor() {
+    super(...arguments);
+    this.setupAppEvents();
+    this.updateComposerHeight();
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.#heightQuery?.teardown();
+  }
+
+  setupAppEvents() {
+    this.appEvents
+      .on("topic:current-post-scrolled", this.topicScrolled)
+      .on("topic:jump-to-post", this.collapseFullscreen)
+      .on("topic:keyboard-trigger", this.keyboardTrigger)
+      .on("topic:toggle-progress-expansion", this.toggleProgressExpansion)
+      .on("composer:resized", this.updateComposerHeight);
+
+    registerDestructor(this, () => {
+      this.appEvents
+        .off("topic:current-post-scrolled", this.topicScrolled)
+        .off("topic:jump-to-post", this.collapseFullscreen)
+        .off("topic:keyboard-trigger", this.keyboardTrigger)
+        .off("topic:toggle-progress-expansion", this.toggleProgressExpansion)
+        .off("composer:resized", this.updateComposerHeight);
+    });
+  }
+
+  setupWidthQuery() {
+    const query = new TrackedMediaQuery(`(min-width: ${MIN_WIDTH_TIMELINE}px)`);
+    registerDestructor(this, () => query.teardown());
+    return query;
+  }
+
+  get renderTimeline() {
+    // Expanded == mobile fullscreen mode; always render.
     if (this.info.topicProgressExpanded) {
-      this.info.set("renderTimeline", true);
-    } else if (this.site.mobileView || EmbedMode.enabled) {
-      this.info.set("renderTimeline", false);
-    } else {
-      const composerHeight =
-        document.querySelector("#reply-control")?.offsetHeight || 0;
-      const verticalSpace =
-        window.innerHeight - composerHeight - headerOffset();
+      return true;
+    }
 
-      if (this.composer.isPreviewVisible) {
-        this.info.set(
-          "renderTimeline",
-          this.mediaQuery.matches && verticalSpace > MIN_HEIGHT_TIMELINE
-        );
-      } else {
-        this.info.set("renderTimeline", this.mediaQuery.matches);
+    if (this.site.mobileView || EmbedMode.enabled) {
+      return false;
+    }
+
+    if (!this.widthQuery.matches) {
+      return false;
+    }
+
+    // If composer is open, check we have enough vertical space.
+    if (this.composer.isPreviewVisible) {
+      return this.heightQuery?.matches ?? false;
+    }
+
+    return true;
+  }
+
+  @cached
+  get heightQuery() {
+    const threshold = this.composer.isPreviewVisible
+      ? MIN_HEIGHT_TIMELINE + this.composerHeight + headerOffset()
+      : null;
+
+    return this.#buildHeightQuery(threshold);
+  }
+
+  #buildHeightQuery(threshold) {
+    this.#heightQuery?.teardown();
+    this.#heightQuery =
+      threshold === null
+        ? null
+        : new TrackedMediaQuery(`(min-height: ${threshold}px)`);
+    return this.#heightQuery;
+  }
+
+  @bind
+  updateComposerHeight() {
+    this.composerHeight =
+      document.querySelector("#reply-control")?.offsetHeight || 0;
+  }
+
+  @bind
+  topicScrolled(event) {
+    this.info.prevEvent = event;
+  }
+
+  @bind
+  toggleProgressExpansion() {
+    this.info.topicProgressExpanded = !this.info.topicProgressExpanded;
+  }
+
+  @bind
+  closeOnClickOutside() {
+    if (this.info.topicProgressExpanded) {
+      this.collapseFullscreen();
+    }
+  }
+
+  @bind
+  collapseFullscreen(postId, delay = 500) {
+    if (!this.info.topicProgressExpanded) {
+      return;
+    }
+
+    document
+      .querySelectorAll(".timeline-fullscreen")
+      .forEach((el) => el.classList.remove("show"));
+
+    discourseLater(() => {
+      if (isDestroying(this) || isDestroyed(this)) {
+        return;
       }
-    }
-
-    this.info.set(
-      "withTopicProgress",
-      !this.info.renderTimeline && this.topic.posts_count > 1
-    );
+      this.info.topicProgressExpanded = false;
+    }, delay);
   }
 
   @bind
-  _checkSize() {
-    discourseDebounce(this, this._performCheckSize, 200, true);
-  }
-
-  // we need to store this so topic progress has something to init with
-  _topicScrolled(event) {
-    this.set("info.prevEvent", event);
-  }
-
-  @observes("info.topicProgressExpanded")
-  _expanded() {
-    if (this.get("info.topicProgressExpanded")) {
-      $(window).on("click.hide-fullscreen", (e) => {
-        let $target = $(e.target);
-        let $parents = $target.parents();
-        if (
-          !$target.is(".widget-button") &&
-          !$parents.is(".widget-button") &&
-          !$parents.is("#discourse-modal") &&
-          !$target.is("#discourse-modal") &&
-          ($target.is(".topic-timeline") ||
-            !$parents.is("#topic-progress-wrapper")) &&
-          !$parents.is(".timeline-open-jump-to-post-prompt-btn") &&
-          !$target.is(".timeline-open-jump-to-post-prompt-btn")
-        ) {
-          this._collapseFullscreen();
-        }
-      });
-    } else {
-      $(window).off("click.hide-fullscreen");
-    }
-    this._checkSize();
-  }
-
-  composerOpened() {
-    this.set("composerOpen", true);
-    this._checkSize();
-  }
-
-  composerClosed() {
-    this.set("composerOpen", false);
-    this._checkSize();
-  }
-
-  @bind
-  _toggleExpansion() {
-    this.info.toggleProperty("topicProgressExpanded");
-  }
-
-  _collapseFullscreen(postId, delay = 500) {
-    if (this.get("info.topicProgressExpanded")) {
-      $(".timeline-fullscreen").removeClass("show");
-      discourseLater(() => {
-        if (!this.element || this.isDestroying || this.isDestroyed) {
-          return;
-        }
-
-        this.set("info.topicProgressExpanded", false);
-        this._checkSize();
-      }, delay);
-    }
-  }
-
   keyboardTrigger(e) {
     if (e.type === "jump") {
       this.modal.show(JumpToPost, {
         model: {
-          topic: this.topic,
-          jumpToIndex: this.jumpToIndex,
-          jumpToDate: this.jumpToDate,
+          topic: this.args.topic,
+          jumpToIndex: this.args.jumpToIndex,
+          jumpToDate: this.args.jumpToDate,
         },
       });
     }
@@ -177,7 +238,7 @@ export default class TopicNavigation extends Component {
 
   @bind
   onSwipeCancel() {
-    let durationMs = this._swipeEvents.getMaxAnimationTimeMs();
+    const durationMs = getMaxAnimationTimeMs();
     const timelineContainer = document.querySelector(".timeline-container");
     timelineContainer.animate([{ transform: `translate3d(0, 0, 0)` }], {
       duration: durationMs,
@@ -193,22 +254,18 @@ export default class TopicNavigation extends Component {
     const maxOffset = timelineContainer.offsetHeight;
 
     let durationMs;
-    if (this._swipeEvents.shouldCloseMenu(e, "bottom")) {
+    if (shouldCloseMenu(e, "bottom")) {
       const distancePx = maxOffset - this.pxClosed;
-      durationMs = this._swipeEvents.getMaxAnimationTimeMs(
-        distancePx / Math.abs(e.velocityY)
-      );
+      durationMs = getMaxAnimationTimeMs(distancePx / Math.abs(e.velocityY));
       timelineContainer
         .animate([{ transform: `translate3d(0, ${maxOffset}px, 0)` }], {
           duration: durationMs,
           fill: "forwards",
         })
-        .finished.then(() => this._collapseFullscreen(null, 0));
+        .finished.then(() => this.collapseFullscreen(null, 0));
     } else {
       const distancePx = this.pxClosed;
-      durationMs = this._swipeEvents.getMaxAnimationTimeMs(
-        distancePx / Math.abs(e.velocityY)
-      );
+      durationMs = getMaxAnimationTimeMs(distancePx / Math.abs(e.velocityY));
       timelineContainer.animate([{ transform: `translate3d(0, 0, 0)` }], {
         duration: durationMs,
         fill: "forwards",
@@ -229,72 +286,21 @@ export default class TopicNavigation extends Component {
     );
   }
 
-  didInsertElement() {
-    super.didInsertElement(...arguments);
-
-    this._lastTopicId = this.topic.id;
-
-    this.appEvents
-      .on("topic:current-post-scrolled", this, this._topicScrolled)
-      .on("topic:jump-to-post", this, this._collapseFullscreen)
-      .on("topic:keyboard-trigger", this, this.keyboardTrigger)
-      .on("topic:toggle-progress-expansion", this, this._toggleExpansion);
-
-    if (this.site.desktopView) {
-      this._desktopListenersActive = true;
-      this.mediaQuery = matchMedia(`(min-width: ${MIN_WIDTH_TIMELINE}px)`);
-      this.mediaQuery.addEventListener("change", this._checkSize);
-      this.appEvents.on("composer:opened", this, this.composerOpened);
-      this.appEvents.on("composer:resize-ended", this, this.composerOpened);
-      this.appEvents.on("composer:closed", this, this.composerClosed);
-      this.appEvents.on("composer:preview-toggled", this._checkSize);
-      $("#reply-control").on("div-resized", this._checkSize);
-    }
-
-    this._checkSize();
-    this._swipeEvents = new SwipeEvents(this.element);
-    if (this.site.mobileView) {
-      this._mobileListenersActive = true;
-      this._swipeEvents.addTouchListeners();
-      this.element.addEventListener("swipestart", this.onSwipeStart);
-      this.element.addEventListener("swipeend", this.onSwipeEnd);
-      this.element.addEventListener("swipecancel", this.onSwipeCancel);
-      this.element.addEventListener("swipe", this.onSwipe);
-    }
-  }
-
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    this.appEvents
-      .off("topic:current-post-scrolled", this, this._topicScrolled)
-      .off("topic:jump-to-post", this, this._collapseFullscreen)
-      .off("topic:keyboard-trigger", this, this.keyboardTrigger)
-      .off("topic:toggle-progress-expansion", this, this._toggleExpansion);
-
-    $(window).off("click.hide-fullscreen");
-
-    if (this._desktopListenersActive) {
-      this.mediaQuery.removeEventListener("change", this._checkSize);
-      this.appEvents.off("composer:opened", this, this.composerOpened);
-      this.appEvents.off("composer:resize-ended", this, this.composerOpened);
-      this.appEvents.off("composer:closed", this, this.composerClosed);
-      this.appEvents.off("composer:preview-toggled", this._checkSize);
-      $("#reply-control").off("div-resized", this._checkSize);
-    }
-
-    if (this._mobileListenersActive) {
-      this.element.removeEventListener("swipestart", this.onSwipeStart);
-      this.element.removeEventListener("swipeend", this.onSwipeEnd);
-      this.element.removeEventListener("swipecancel", this.onSwipeCancel);
-      this.element.removeEventListener("swipe", this.onSwipe);
-      this._swipeEvents.removeTouchListeners();
-    }
-  }
-
   <template>
-    {{#if this.canRender}}
-      {{yield this.info}}
-    {{/if}}
+    <div
+      class={{dConcatClass
+        (if this.info.topicProgressExpanded "topic-progress-expanded")
+        (if this.info.renderTimeline "with-timeline")
+        (if this.info.withTopicProgress "with-topic-progress")
+      }}
+      ...attributes
+      {{this.setupSwipe}}
+      {{dCloseOnClickOutside this.closeOnClickOutside}}
+    >
+      {{! Fully rerender when topic changes (see 4f328089d6f). }}
+      {{#each (array @topic) key="id"}}
+        {{yield this.info this.toggleProgressExpansion}}
+      {{/each}}
+    </div>
   </template>
 }

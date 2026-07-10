@@ -98,7 +98,7 @@ export default class TopicProgress extends Component {
 
   click(e) {
     if (e.target.closest("#topic-progress")) {
-      this.toggleProperty("expanded");
+      this.onExpandToggle?.();
     }
   }
 

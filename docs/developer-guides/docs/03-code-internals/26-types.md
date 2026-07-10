@@ -8,6 +8,10 @@ Discourse ships type information for its JavaScript code. This can provide inlin
 
 Much of this will be automatically consumed by IDEs with TypeScript/JavaScript support. But for functionality in `.gjs` files, you'll need some specific configuration and/or IDE plugins.
 
+## Writing TypeScript
+
+Core, themes and plugins can be authored directly in TypeScript. Use a `.ts` extension for plain modules, or `.gts` for Glimmer components with a `<template>` tag. Type syntax is stripped at build time, so no separate compilation step is required. Linting (`@discourse/lint-configs`) and type-checking (`pnpm lint:types`) both understand these files.
+
 ## Usage
 
 - **CLI**: Run `pnpm lint:types`
@@ -43,24 +47,13 @@ Then run `pnpm install` and start the type watcher with `pnpm types:watch`.
 
 ## Enable checking for a file
 
-To enable type-checking for a specific file, add `/** @ts-check */` at the top. For some examples, search Discourse core for `@ts-check`.
+`.ts` and `.gts` files are always type-checked. For `.js` / `.gjs` files, type-checking is opt-in: add `/** @ts-check */` at the top. For some examples, search Discourse core for `@ts-check`.
 
 ## Limitations
 
-Discourse's build pipelines do not currently support `.ts` files. Types are built & checked using `.js` / `.gjs` files only.
-
-We do not provide any guarantees about the accuracy of the types - they're provided on a best-effort basis. PRs to improve the JSDoc-based documentation in core are welcome.
+We do not provide any guarantees about the accuracy of the types - they're provided on a best-effort basis. PRs to improve the type documentation in core are welcome.
 
 ## Known Issues
-
-- When importing one gjs file from another, CLI checks will report "Cannot find module". This happens due to a bug in `glint`, which requires the `.gjs` file extension to be added to the type import. The problem can be worked-around by adding a type import alongside the regular extensionless import.
-
-  ```js
-  /** @type {import("./slot.gjs").default} */
-  import Slot from "./slot";
-  ```
-
-  Upstream issue [here](https://github.com/typed-ember/glint/issues/1021).
 
 - Autocomplete inside `<template>` tags requires complete syntax. For example, if you start typing:
 

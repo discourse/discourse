@@ -79,6 +79,24 @@ RSpec.describe Admin::UsersController do
         expect(ids).not_to include(admin.id)
       end
 
+      it "filters by multiple usernames or emails at once" do
+        user_one = Fabricate(:user, username: "bulk_user_1")
+        user_two = Fabricate(:user, email: "bulk2@example.com")
+
+        get "/admin/users/list.json", params: { filter: "bulk_user_1,bulk2@example.com" }
+        expect(response.status).to eq(200)
+
+        ids = response.parsed_body.map { |u| u["id"] }
+        expect(ids).to contain_exactly(user_one.id, user_two.id)
+      end
+
+      it "returns a 400 when the filter has too many terms" do
+        filter = (0..AdminUserIndexQuery::MAX_FILTER_TERMS).map { |i| "u#{i}" }.join(",")
+
+        get "/admin/users/list.json", params: { filter: filter }
+        expect(response.status).to eq(400)
+      end
+
       context "when showing emails" do
         it "returns email for all the users" do
           get "/admin/users/list.json", params: { show_emails: "true" }

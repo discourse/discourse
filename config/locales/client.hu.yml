@@ -5550,6 +5550,7 @@ hu:
         title: "Aktív bejelentések listája"
         sidebar_title: "Jelentések"
         back: "Vissza az összes jelentéshez"
+        all_groups: "Összes csoport"
         group_engagement: "Elköteleződés"
         group_traffic: "Forgalom"
         group_members: "Tagok"
