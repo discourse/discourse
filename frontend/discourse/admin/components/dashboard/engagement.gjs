@@ -5,7 +5,7 @@ import WhosPosting from "discourse/admin/components/dashboard/engagement/whos-po
 import DashboardSection from "discourse/admin/components/dashboard/section";
 import { i18n } from "discourse-i18n";
 
-<template>
+export default <template>
   <DashboardSection
     @title={{i18n "admin.dashboard.sections.engagement.title"}}
     @startDate={{@startDate}}

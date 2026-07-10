@@ -92,7 +92,7 @@ module DiscourseWorkflows
 
         def execute(exec_ctx)
           target_user = resolve_target_user(exec_ctx)
-          buttons = build_buttons(exec_ctx)
+          buttons = build_buttons(exec_ctx, target_user)
 
           MessageBus.publish(
             self.class.user_channel(target_user.id),
@@ -132,7 +132,7 @@ module DiscourseWorkflows
           user
         end
 
-        def build_buttons(exec_ctx)
+        def build_buttons(exec_ctx, target_user)
           rows =
             DiscourseWorkflows::CollectionParameters.rows_from_value(
               exec_ctx.get_node_parameter("buttons", 0, default: []),
@@ -146,7 +146,7 @@ module DiscourseWorkflows
               "label" => row["label"].to_s.presence || value,
               "value" => value,
               "style" => normalize_style(row["style"]),
-              "action_id" => exec_ctx.resume_action_id(value),
+              "action_id" => exec_ctx.resume_action_id(value, target_user_id: target_user.id),
             }
           end
         end

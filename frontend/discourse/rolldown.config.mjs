@@ -73,6 +73,7 @@ export function buildConfig({ devMode } = {}) {
   }
 
   return {
+    tsconfig: false,
     resolve: {
       extensions,
     },

@@ -73,7 +73,35 @@ function hasTransparency(imageData) {
   return false;
 }
 
-async function maybeResize(imageData, width, height, settings) {
+function isAnimatedPng(fileBuffer) {
+  // APNGs declare an acTL chunk before the first IDAT; our PNG decoder only
+  // returns the first frame, so these must be detected up front and skipped.
+  const view = new DataView(fileBuffer);
+  let offset = 8; // PNG signature
+
+  while (offset + 8 <= view.byteLength) {
+    const length = view.getUint32(offset);
+    const type = String.fromCharCode(
+      view.getUint8(offset + 4),
+      view.getUint8(offset + 5),
+      view.getUint8(offset + 6),
+      view.getUint8(offset + 7)
+    );
+
+    if (type === "acTL") {
+      return true;
+    }
+    if (type === "IDAT" || type === "IEND") {
+      return false;
+    }
+
+    offset += 12 + length; // length + type + data + crc
+  }
+
+  return false;
+}
+
+async function maybeResize(imageData, width, height, settings, transparent) {
   if (width > settings.resize_threshold) {
     try {
       const targetDimensions = resizeWithAspect(
@@ -88,7 +116,9 @@ async function maybeResize(imageData, width, height, settings) {
         premultiply: settings.resize_pre_multiply,
         linearRGB: settings.resize_linear_rgb,
       });
-      if (resizeResult.data[3] !== 255) {
+      // An opaque source must stay opaque: a transparent top-left pixel after
+      // resizing indicates corruption. Transparent sources can't use this check.
+      if (!transparent && resizeResult.data[3] !== 255) {
         throw "Image corrupted during resize. Falling back to the original for encode";
       }
       logIfDebug(
@@ -104,58 +134,6 @@ async function maybeResize(imageData, width, height, settings) {
     logIfDebug(`Skipped resize, ${width} < ${settings.resize_threshold}`);
     return imageData;
   }
-}
-
-export async function optimize(
-  imageData,
-  fileName,
-  width,
-  height,
-  originalFileSize,
-  settings
-) {
-  const mozJpegOptions = buildMozJpegOptions(settings);
-
-  const initialSize = imageData.byteLength;
-  logIfDebug(
-    `Received imageData ${initialSize} bytes (raw uncompressed pixels) from original file size of ${originalFileSize} bytes (compressed) for ${fileName}`
-  );
-
-  const wrappedImageData = new ImageData(
-    new Uint8ClampedArray(imageData),
-    width,
-    height
-  );
-  const resized = await maybeResize(wrappedImageData, width, height, settings);
-  const finalWidth = resized.width;
-  const finalHeight = resized.height;
-
-  const result = await encodeJpeg(
-    resized instanceof ImageData
-      ? resized
-      : new ImageData(
-          new Uint8ClampedArray(resized.data),
-          finalWidth,
-          finalHeight
-        ),
-    mozJpegOptions
-  );
-
-  const finalSize = result.byteLength;
-  logIfDebug(
-    `Post-reencode size for ${fileName} is ${finalSize} bytes (compressed JPEG), original was ${originalFileSize} bytes`
-  );
-  const compressionFromOriginal = (originalFileSize / finalSize).toFixed(1);
-  const compressionFromRaw = (initialSize / finalSize).toFixed(1);
-  logIfDebug(
-    `Compressed ${compressionFromOriginal}x vs original file, ${compressionFromRaw}x vs raw pixels for ${fileName}`
-  );
-
-  if (finalSize < 20000) {
-    throw "Final size suspiciously small, discarding optimizations";
-  }
-
-  return result;
 }
 
 export async function convert(
@@ -175,6 +153,12 @@ export async function convert(
   } else if (/jpe?g$/i.test(fileType)) {
     imageData = await decodeJpeg(fileBuffer, { preserveOrientation: true });
   } else if (/png$/i.test(fileType)) {
+    if (isAnimatedPng(fileBuffer)) {
+      logIfDebug(
+        `${fileName} is an animated PNG, skipping conversion to keep the animation`
+      );
+      return null;
+    }
     imageData = await decodePng(fileBuffer);
   } else {
     throw `Unsupported file type for conversion: ${fileType}`;
@@ -190,7 +174,8 @@ export async function convert(
     imageData,
     imageData.width,
     imageData.height,
-    settings
+    settings,
+    transparent
   );
 
   if (transparent) {
@@ -204,6 +189,18 @@ export async function convert(
     logIfDebug(
       `Converted ${fileName} from ${originalFileSize} bytes to ${finalSize} bytes WEBP`
     );
+
+    if (finalSize < 20000) {
+      throw "Final size suspiciously small, discarding conversion";
+    }
+
+    if (finalSize >= originalFileSize) {
+      logIfDebug(
+        `WEBP (${finalSize} bytes) is not smaller than the original (${originalFileSize} bytes), skipping conversion`
+      );
+      return null;
+    }
+
     return { data: result, outputType: "image/webp" };
   }
 

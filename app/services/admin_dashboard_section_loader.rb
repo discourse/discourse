@@ -36,7 +36,9 @@ class AdminDashboardSectionLoader
 
     section_ids.each do |id|
       self.class.thread_pool.post do
-        results << { id: id, data: section_data(id, current_user) }
+        ActiveRecord::Base.with_connection(prevent_permanent_checkout: true) do
+          results << { id: id, data: section_data(id, current_user) }
+        end
       rescue StandardError => e
         results << { id: id, error: e }
       end

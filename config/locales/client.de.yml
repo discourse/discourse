@@ -5722,6 +5722,7 @@ de:
         title: "Verfügbare Berichte"
         sidebar_title: "Berichte"
         back: "Zurück zu alle Berichte"
+        all_groups: "Alle Gruppen"
         group_engagement: "Aktivität & Wachstum"
         group_traffic: "Traffic"
         group_members: "Mitglieder"

@@ -13,7 +13,7 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
-<template>
+export default <template>
   <div
     class={{dConcatClass "admin-report" @report.reportClasses}}
     {{didUpdate

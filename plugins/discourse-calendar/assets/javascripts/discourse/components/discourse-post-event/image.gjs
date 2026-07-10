@@ -9,7 +9,7 @@ const setupLightbox = modifier((element, _positional, { post }) => {
   return () => window.pswp?.close();
 });
 
-<template>
+export default <template>
   {{#if @imageUpload}}
     <section class="event__section event-image">
       {{#if @linkToPost}}

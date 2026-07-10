@@ -1,7 +1,7 @@
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 // Decorative, inert loading skeleton — content is placeholder bars, not text.
-<template>
+export default <template>
   <div class="site-skeleton" aria-hidden="true">
     <div class="site-skeleton__header">
       <div class="site-skeleton__brand">

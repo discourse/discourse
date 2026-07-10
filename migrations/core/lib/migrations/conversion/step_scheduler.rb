@@ -55,8 +55,9 @@ module Migrations
 
         @states = step_classes.to_h { |step_class| [step_class, :pending] }
         @available_forks = @budget
-        # A running step_class => the forks it reserved from the budget, returned
-        # to @available_forks when it finishes.
+        # A running step_class => the forks it still holds. Goes down as workers
+        # finish (`release_forks`); the rest returns when the step ends
+        # (`step_finished`).
         @reserved_forks = {}
         @threads = []
         @failures = {}
@@ -97,23 +98,49 @@ module Migrations
         @mutex.synchronize { @failures[step_class] = error }
       end
 
+      # Gives a step's forks back to the budget as its workers finish, not only
+      # when the whole step ends. A partitioned step's workers finish at very
+      # different times, so this frees their cores while the slow ones keep going,
+      # letting other steps fill the tail. The coordinator calls it once per
+      # finished worker.
+      # @param step_class [Class<Step>] the running step whose worker just finished
+      # @param count [Integer] how many forks came free (one per finished worker)
+      def release_forks(step_class, count)
+        @mutex.synchronize do
+          # Never give back more than the step still holds; `step_finished` returns the rest.
+          freed = [count, @reserved_forks[step_class] || 0].min
+          next if freed <= 0
+
+          @reserved_forks[step_class] -= freed
+          @available_forks += freed
+          @condition.broadcast
+        end
+      end
+
       private
 
       def schedule
-        loop do
-          step_class = next_ready_step
-          break unless step_class
+        # A running partitioned step frees its forks one at a time. Another
+        # partitioned step can't start until it fully ends anyway (two don't fit at
+        # once), so those freed forks are only useful for single-fork steps for now.
+        partitioned_running =
+          @states.any? { |step_class, state| state == :running && step_class.partitionable? }
 
+        ready_steps.each do |step_class|
           forks = forks_for(step_class)
-          # Stop (don't skip past) when the next step can't get its forks yet, so
-          # a partitioned step can gather the budget instead of single-fork steps
-          # nibbling it away.
-          break if forks > @available_forks
+          if forks > @available_forks
+            # Let single-fork steps use a running partitioned step's freed forks
+            # instead of idling. With nothing partitioned running, stop instead, so
+            # a waiting partitioned step can gather the whole budget at once.
+            next if partitioned_running
+            break
+          end
 
           @states[step_class] = :running
           @available_forks -= forks
           @reserved_forks[step_class] = forks
           spawn_coordinator(step_class, forks)
+          partitioned_running ||= step_class.partitionable?
         end
       end
 
@@ -162,7 +189,8 @@ module Migrations
 
       def step_finished(step_class, outcome)
         @mutex.synchronize do
-          @available_forks += @reserved_forks.delete(step_class)
+          # Whatever the step didn't already hand back through `release_forks`.
+          @available_forks += @reserved_forks.delete(step_class) || 0
           @states[step_class] = outcome
           skip_dependents(step_class) if outcome == :failed
           @condition.broadcast
@@ -184,9 +212,12 @@ module Migrations
         end
       end
 
-      def next_ready_step
-        ready = @step_classes.select { |step_class| ready?(step_class) }
-        ready.min_by { |step_class| admission_key(step_class) }
+      # The ready steps in admission order, so `schedule` tries the partitioned step
+      # first and only falls through to single-fork steps for the forks it can't use.
+      def ready_steps
+        @step_classes
+          .select { |step_class| ready?(step_class) }
+          .sort_by { |step_class| admission_key(step_class) }
       end
 
       def ready?(step_class)

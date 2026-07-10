@@ -1,6 +1,6 @@
 import ExpressionWrapper from "./expression-wrapper";
 
-<template>
+export default <template>
   <ExpressionWrapper
     @field={{@field}}
     @schema={{@schema}}

@@ -28,7 +28,6 @@ acceptance("Modal - GIFs", function (needs) {
   needs.user();
   needs.settings({
     enable_gifs: true,
-    klipy_api_key: "test-key",
     klipy_country: "US",
     klipy_locale: "en_US",
     klipy_content_filter: "high",
@@ -52,24 +51,27 @@ acceptance("Modal - GIFs", function (needs) {
     await settled();
 
     assert.dom(".gifs-modal").exists("renders the modal");
+    assert
+      .dom(".gifs-modal__branding")
+      .exists("always shows the Klipy branding");
 
     const categoriesCall = fetchStub
       .getCalls()
-      .find((c) => c.args[0].includes("/v2/categories"));
+      .find((call) => call.args[0].includes("/gifs/categories.json"));
     assert.notStrictEqual(
       categoriesCall,
       undefined,
-      "called the Klipy categories endpoint"
+      "called the GIF categories proxy"
     );
-    assert.true(
-      categoriesCall.args[0].includes("key=test-key"),
-      "passes api key in query"
+    assert.false(
+      categoriesCall.args[0].includes("key="),
+      "does not pass an API key in the query"
     );
   });
 
   test("search triggers a Klipy fetch with the query", async function (assert) {
     fetchStub.callsFake(async (url) => {
-      if (url.includes("/v2/categories")) {
+      if (url.includes("/gifs/categories.json")) {
         return categoriesResponse();
       }
       return searchResponse({ results: [gif("a hello gif")] });
@@ -84,14 +86,14 @@ acceptance("Modal - GIFs", function (needs) {
 
     const searchCall = fetchStub
       .getCalls()
-      .find((c) => c.args[0].includes("/v2/search"));
+      .find((call) => call.args[0].includes("/gifs/search.json"));
 
-    assert.notStrictEqual(
-      searchCall,
-      undefined,
-      "called the Klipy search endpoint"
-    );
+    assert.notStrictEqual(searchCall, undefined, "called the GIF search proxy");
     assert.true(searchCall.args[0].includes("q=hello"), "passes the query");
+    assert.false(
+      searchCall.args[0].includes("key="),
+      "does not pass an API key in the query"
+    );
     assert
       .dom(".gifs-modal .gifs-result")
       .exists({ count: 1 }, "renders the result returned by Klipy");
@@ -99,7 +101,7 @@ acceptance("Modal - GIFs", function (needs) {
 
   test("picking a result invokes customPickHandler with markup", async function (assert) {
     fetchStub.callsFake(async (url) => {
-      if (url.includes("/v2/categories")) {
+      if (url.includes("/gifs/categories.json")) {
         return categoriesResponse();
       }
       return searchResponse({
@@ -135,7 +137,7 @@ acceptance("Modal - GIFs", function (needs) {
 
   test("renders a no results state when Klipy returns nothing", async function (assert) {
     fetchStub.callsFake(async (url) => {
-      if (url.includes("/v2/categories")) {
+      if (url.includes("/gifs/categories.json")) {
         return categoriesResponse();
       }
       return searchResponse({ results: [], next: "" });

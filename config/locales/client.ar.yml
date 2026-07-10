@@ -6954,6 +6954,7 @@ ar:
         title: "قائمة التقارير المتاحة"
         sidebar_title: "التقارير"
         back: "العودة إلى جميع التقارير"
+        all_groups: "كل المجموعات"
         group_engagement: "التفاعل"
         group_traffic: "الزيارات"
         group_members: "الأعضاء"

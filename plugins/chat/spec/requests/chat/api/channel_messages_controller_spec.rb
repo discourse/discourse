@@ -279,6 +279,37 @@ RSpec.describe Chat::Api::ChannelMessagesController do
         end
       end
 
+      context "when the user no longer has access to a private category channel" do
+        fab!(:group)
+        fab!(:private_category) { Fabricate(:private_category, group:) }
+        fab!(:private_channel) { Fabricate(:chat_channel, chatable: private_category) }
+        fab!(:message) do
+          Fabricate(
+            :chat_message,
+            chat_channel: private_channel,
+            user: current_user,
+            message: "original message",
+          )
+        end
+
+        before do
+          group.add(current_user)
+          private_channel.add(current_user)
+          GroupUser.where(group:, user: current_user).destroy_all
+        end
+
+        it "does not update their own message" do
+          put "/chat/api/channels/#{private_channel.id}/messages/#{message.id}",
+              params: {
+                message: "edited message",
+              }
+
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.parsed_body["failed"]).to eq("FAILED")
+          expect(message.reload.message).to eq("original message")
+        end
+      end
+
       context "when message belongs to a different channel" do
         fab!(:other_channel, :category_channel)
         fab!(:other_message) { Fabricate(:chat_message, chat_channel: other_channel) }

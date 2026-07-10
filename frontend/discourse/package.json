@@ -50,8 +50,8 @@
     "@fullcalendar/moment-timezone": "^6.1.20",
     "@fullcalendar/timegrid": "^6.1.20",
     "@glimmer/syntax": "0.95.0",
-    "@glint/ember-tsc": "^1.2.3",
-    "@glint/template": "^1.7.7",
+    "@glint/ember-tsc": "^1.8.11",
+    "@glint/template": "^1.7.8",
     "@highlightjs/cdn-assets": "11.11.1",
     "@json-editor/json-editor": "2.15.2",
     "@lezer/common": "^1.5.2",
@@ -107,6 +107,7 @@
   "devDependencies": {
     "@babel/core": "^7.29.7",
     "@babel/plugin-transform-runtime": "^7.29.7",
+    "@babel/plugin-transform-typescript": "^7.29.7",
     "@babel/standalone": "^7.29.7",
     "@colors/colors": "^1.6.0",
     "@discourse/itsatrap": "^2.0.10",

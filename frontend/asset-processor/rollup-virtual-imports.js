@@ -1,4 +1,11 @@
-const SUPPORTED_FILE_EXTENSIONS = [".js", ".js.es6", ".hbs", ".gjs"];
+const SUPPORTED_FILE_EXTENSIONS = [
+  ".js",
+  ".js.es6",
+  ".hbs",
+  ".gjs",
+  ".ts",
+  ".gts",
+];
 
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
@@ -13,6 +20,11 @@ export default {
 
     let i = 1;
     for (const moduleFilename of moduleFilenames) {
+      // Type-only declaration files have no runtime module to export.
+      if (moduleFilename.endsWith(".d.ts")) {
+        continue;
+      }
+
       if (
         !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
       ) {

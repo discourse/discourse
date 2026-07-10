@@ -5561,6 +5561,7 @@ sk:
         title: "Zoznam dostupných prehľadov"
         sidebar_title: "Hlásenia"
         back: "Späť na všetky správy"
+        all_groups: "Všetky skupiny"
         group_traffic: "Vyťaženie"
         group_members: "Členovia"
         group_other: "Ostatné"

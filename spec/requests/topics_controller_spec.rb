@@ -4565,6 +4565,54 @@ RSpec.describe TopicsController do
     end
   end
 
+  describe "topic access errors with detailed_404 disabled" do
+    it "returns not found for inaccessible and nonexistent topics on secondary topic endpoints" do
+      SiteSetting.detailed_404 = false
+      sign_in(user)
+
+      private_message =
+        create_post(
+          user: admin,
+          archetype: Archetype.private_message,
+          target_usernames: [moderator.username],
+        ).topic
+      nonexistent_topic_id = Topic.maximum(:id) + 10_000
+      requests = {
+        "GET /t/:topic_id/wordpress.json" => ->(topic_id) do
+          get "/t/#{topic_id}/wordpress.json", params: { best: 1 }
+        end,
+        "GET /t/:topic_id/post_ids.json" => ->(topic_id) { get "/t/#{topic_id}/post_ids.json" },
+        "GET /t/:topic_id/posts.json" => ->(topic_id) { get "/t/#{topic_id}/posts.json" },
+        "PUT /t/:id/archive-message.json" => ->(topic_id) do
+          put "/t/#{topic_id}/archive-message.json"
+        end,
+        "PUT /t/:id/move-to-inbox.json" => ->(topic_id) { put "/t/#{topic_id}/move-to-inbox.json" },
+        "PUT /t/:id/publish.json" => ->(topic_id) do
+          put "/t/#{topic_id}/publish.json", params: { destination_category_id: category.id }
+        end,
+        "PUT /t/:topic_id/slow_mode.json" => ->(topic_id) do
+          put "/t/#{topic_id}/slow_mode.json", params: { seconds: "3600" }
+        end,
+        "POST /t/:topic_id/notifications.json" => ->(topic_id) do
+          post "/t/#{topic_id}/notifications.json",
+               params: {
+                 notification_level: NotificationLevels.topic_levels[:watching],
+               }
+        end,
+      }
+
+      requests.each do |description, perform_request|
+        perform_request.call(private_message.id)
+        expect(response.status).to eq(404), description
+        expect(response.parsed_body["error_type"]).to eq("not_found"), description
+
+        perform_request.call(nonexistent_topic_id)
+        expect(response.status).to eq(404), description
+        expect(response.parsed_body["error_type"]).to eq("not_found"), description
+      end
+    end
+  end
+
   describe "#post_ids" do
     fab!(:post) { Fabricate(:post, user: post_author1) }
     fab!(:topic) { post.topic }
@@ -5541,7 +5589,9 @@ RSpec.describe TopicsController do
           tracked_topic = create_post(category: tracked_category).topic
 
           create_post # This is a new post, but is not tracked so a record will not be created for it
-          expect do put "/topics/reset-new.json?tracked=true" end.to change {
+          expect do
+            put "/topics/reset-new.json?tracked=true", params: { dismiss_topics: true }
+          end.to change {
             DismissedTopicUser.where(user_id: user.id, topic_id: tracked_topic.id).count
           }.by(1)
         end
@@ -5557,7 +5607,7 @@ RSpec.describe TopicsController do
           it "creates dismissed topic user records if there are > 30 (default pagination) topics" do
             expect do
               stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
-                put "/topics/reset-new.json?tracked=true"
+                put "/topics/reset-new.json?tracked=true", params: { dismiss_topics: true }
               end
             end.to change {
               DismissedTopicUser.where(user_id: user.id, topic_id: @tracked_topic_ids).count
@@ -5571,6 +5621,7 @@ RSpec.describe TopicsController do
               stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 2) do
                 put "/topics/reset-new.json?tracked=true",
                     params: {
+                      dismiss_topics: true,
                       topic_ids: dismissing_topic_ids,
                     }
               end
@@ -5590,7 +5641,7 @@ RSpec.describe TopicsController do
             it "updates the user_stat new_since column and dismisses all the new topics" do
               old_new_since = user.user_stat.new_since
 
-              put "/topics/reset-new.json?tracked=false"
+              put "/topics/reset-new.json?tracked=false", params: { dismiss_topics: true }
               expect(DismissedTopicUser.where(user_id: user.id, topic_id: @topic_ids).count).to eq(
                 7,
               )
@@ -5603,9 +5654,9 @@ RSpec.describe TopicsController do
               DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.first)
               DismissedTopicUser.create(user_id: user.id, topic_id: dismiss_ids.second)
 
-              expect { put "/topics/reset-new.json?tracked=false" }.to change {
-                DismissedTopicUser.where(user_id: user.id).count
-              }.by(5)
+              expect do
+                put "/topics/reset-new.json?tracked=false", params: { dismiss_topics: true }
+              end.to change { DismissedTopicUser.where(user_id: user.id).count }.by(5)
             end
           end
         end
@@ -5622,7 +5673,7 @@ RSpec.describe TopicsController do
             topic_ids: [category_topic.id],
           )
 
-          put "/topics/reset-new.json?category_id=#{category.id}"
+          put "/topics/reset-new.json?category_id=#{category.id}", params: { dismiss_topics: true }
 
           expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq(
             [category_topic.id],
@@ -5635,7 +5686,10 @@ RSpec.describe TopicsController do
             topic_ids: [category_topic.id, subcategory_topic.id],
           )
 
-          put "/topics/reset-new.json?category_id=#{category.id}&include_subcategories=true"
+          put "/topics/reset-new.json?category_id=#{category.id}&include_subcategories=true",
+              params: {
+                dismiss_topics: true,
+              }
 
           expect(response.status).to eq(200)
 
@@ -5655,7 +5709,10 @@ RSpec.describe TopicsController do
             topic_ids: [category_topic.id, subcategory_topic.id, sub_subcategory_topic.id],
           )
 
-          put "/topics/reset-new.json?category_id=#{category.id}&include_subcategories=true"
+          put "/topics/reset-new.json?category_id=#{category.id}&include_subcategories=true",
+              params: {
+                dismiss_topics: true,
+              }
 
           expect(response.status).to eq(200)
 
@@ -5685,6 +5742,7 @@ RSpec.describe TopicsController do
               MessageBus.track_publish(TopicTrackingState.unread_channel_key(user.id)) do
                 put "/topics/reset-new.json",
                     params: {
+                      dismiss_topics: true,
                       category_id: category.id,
                       include_subcategories: true,
                     }
@@ -5712,6 +5770,7 @@ RSpec.describe TopicsController do
               MessageBus.track_publish(TopicTrackingState.unread_channel_key(user.id)) do
                 put "/topics/reset-new.json",
                     params: {
+                      dismiss_topics: true,
                       category_id: category.id,
                       include_subcategories: true,
                     }
@@ -5743,7 +5802,11 @@ RSpec.describe TopicsController do
           it "doesn't dismiss topics or publish topic IDs via MessageBus if the user can't access the category" do
             messages =
               MessageBus.track_publish do
-                put "/topics/reset-new.json", params: { category_id: private_category.id }
+                put "/topics/reset-new.json",
+                    params: {
+                      dismiss_topics: true,
+                      category_id: private_category.id,
+                    }
                 expect(response.status).to eq(200)
               end
 
@@ -5755,7 +5818,11 @@ RSpec.describe TopicsController do
             group.add(user)
             messages =
               MessageBus.track_publish do
-                put "/topics/reset-new.json", params: { category_id: private_category.id }
+                put "/topics/reset-new.json",
+                    params: {
+                      dismiss_topics: true,
+                      category_id: private_category.id,
+                    }
               end
             expect(response.status).to eq(200)
             expect(messages.size).to eq(1)
@@ -5778,7 +5845,7 @@ RSpec.describe TopicsController do
 
         it "dismisses topics for tag" do
           TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [tag_topic.id])
-          put "/topics/reset-new.json?tag_name=#{tag.name}"
+          put "/topics/reset-new.json?tag_name=#{tag.name}", params: { dismiss_topics: true }
           expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([tag_topic.id])
         end
 
@@ -5800,7 +5867,11 @@ RSpec.describe TopicsController do
             group.add(user)
             messages =
               MessageBus.track_publish do
-                put "/topics/reset-new.json", params: { tag_name: restricted_tag.name }
+                put "/topics/reset-new.json",
+                    params: {
+                      dismiss_topics: true,
+                      tag_name: restricted_tag.name,
+                    }
               end
             expect(messages.size).to eq(1)
             expect(messages[0].data["payload"]["topic_ids"]).to contain_exactly(
@@ -5814,7 +5885,11 @@ RSpec.describe TopicsController do
           it "ignores the tag param and dismisses all topics if the user can't see the tag" do
             messages =
               MessageBus.track_publish do
-                put "/topics/reset-new.json", params: { tag_name: restricted_tag.name }
+                put "/topics/reset-new.json",
+                    params: {
+                      dismiss_topics: true,
+                      tag_name: restricted_tag.name,
+                    }
               end
             expect(messages.size).to eq(1)
             expect(messages[0].data["payload"]["topic_ids"]).to contain_exactly(
@@ -5842,7 +5917,10 @@ RSpec.describe TopicsController do
             user.id,
             topic_ids: [tag_and_category_topic.id],
           )
-          put "/topics/reset-new.json?tag_name=#{tag.name}&category_id=#{category.id}"
+          put "/topics/reset-new.json?tag_name=#{tag.name}&category_id=#{category.id}",
+              params: {
+                dismiss_topics: true,
+              }
           expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq(
             [tag_and_category_topic.id],
           )
@@ -5859,7 +5937,8 @@ RSpec.describe TopicsController do
             .with(user.id, topic_ids: [topic2.id, topic3.id])
             .at_least_once
 
-          put "/topics/reset-new.json", **{ params: { topic_ids: [topic2.id, topic3.id] } }
+          put "/topics/reset-new.json",
+              **{ params: { dismiss_topics: true, topic_ids: [topic2.id, topic3.id] } }
           expect(response.status).to eq(200)
           user.reload
           expect(user.user_stat.new_since.to_date).not_to eq(old_date.to_date)
@@ -5883,7 +5962,11 @@ RSpec.describe TopicsController do
 
           messages =
             MessageBus.track_publish do
-              put "/topics/reset-new.json", params: { topic_ids: [topic2.id, topic3.id] }
+              put "/topics/reset-new.json",
+                  params: {
+                    dismiss_topics: true,
+                    topic_ids: [topic2.id, topic3.id],
+                  }
             end
           expect(messages.size).to eq(1)
           expect(messages[0].channel).to eq(TopicTrackingState.unread_channel_key(user.id))
@@ -5913,7 +5996,12 @@ RSpec.describe TopicsController do
             create_post # This is a new post, but is not tracked so a record will not be created for it
             expect do
               put "/topics/reset-new.json?tracked=true",
-                  **{ params: { topic_ids: [tracked_topic.id, topic2.id, topic3.id] } }
+                  **{
+                    params: {
+                      dismiss_topics: true,
+                      topic_ids: [tracked_topic.id, topic2.id, topic3.id],
+                    },
+                  }
             end.to change { DismissedTopicUser.where(user_id: user.id).count }.by(2)
             expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to match_array(
               [tracked_topic.id, topic2.id],
@@ -7674,11 +7762,12 @@ RSpec.describe TopicsController do
       expect(body["group_name"]).to eq(group.name)
     end
 
-    it "rejects a user who is not a participant of the message" do
+    it "returns not found for a user who is not a participant of the message" do
       sign_in(user_2)
 
       put "/t/#{group_message.id}/archive-message.json"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
     end
   end
 
@@ -7695,11 +7784,12 @@ RSpec.describe TopicsController do
       ).topic
     end
 
-    it "rejects a user who is not a participant of the message" do
+    it "returns not found for a user who is not a participant of the message" do
       sign_in(user_2)
 
       put "/t/#{group_message.id}/move-to-inbox.json"
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
     end
   end
 
@@ -7781,7 +7871,7 @@ RSpec.describe TopicsController do
       end
     end
 
-    it "does not allow a regular user to set notifications on a private message they cannot see" do
+    it "returns not found when a regular user sets notifications on a private message they cannot see" do
       sign_in(user)
 
       post "/t/#{pm.id}/notifications.json",
@@ -7789,11 +7879,12 @@ RSpec.describe TopicsController do
              notification_level: NotificationLevels.topic_levels[:watching],
            }
 
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
       expect(TopicUser.find_by(user: user, topic: pm)).to be_blank
     end
 
-    it "does not allow a regular user to set notifications on a topic in a restricted category" do
+    it "returns not found when a regular user sets notifications on a topic in a restricted category" do
       restricted_topic = Fabricate(:topic, category: staff_category)
       sign_in(user)
 
@@ -7802,7 +7893,8 @@ RSpec.describe TopicsController do
              notification_level: NotificationLevels.topic_levels[:watching],
            }
 
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
+      expect(response.parsed_body["error_type"]).to eq("not_found")
       expect(TopicUser.find_by(user: user, topic: restricted_topic)).to be_blank
     end
   end

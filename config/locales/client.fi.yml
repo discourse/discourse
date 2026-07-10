@@ -5156,6 +5156,7 @@ fi:
         title: "Saatavilla olevat raportit"
         sidebar_title: "Raportit"
         back: "Takaisin kaikkiin raportteihin"
+        all_groups: "Kaikki ryhmät"
         group_traffic: "Liikenne"
         group_members: "Jäsenet"
         group_other: "Muut"
