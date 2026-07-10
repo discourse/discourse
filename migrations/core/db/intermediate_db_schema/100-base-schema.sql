@@ -470,7 +470,7 @@ CREATE TABLE topics
 CREATE INDEX idx_topics_archetype ON topics (archetype);
 CREATE INDEX idx_topics_slug ON topics (slug);
 
-CREATE TABLE uploads
+CREATE TABLE upload_sources
 (
     id          TEXT         NOT NULL PRIMARY KEY,
     data        BLOB,
