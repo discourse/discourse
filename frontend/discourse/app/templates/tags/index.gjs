@@ -6,7 +6,7 @@ import TagList from "discourse/components/tag-list";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { not, or } from "discourse/truth-helpers";
-import DAsyncContent from "discourse/ui-kit/d-async-content.gjs";
+import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DButton from "discourse/ui-kit/d-button";
 import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
 import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
