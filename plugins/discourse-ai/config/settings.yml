@@ -525,11 +525,27 @@ discourse_ai:
     max: 100000
     client: false
     area: "ai-features/translation"
-  ai_translation_excluded_categories:
+  ai_translation_category_scope:
+    type: enum
+    default: "public"
+    enum: "CategoryScopeSiteSetting"
+    client: false
+    area: "ai-features/translation"
+  ai_translation_categories:
     type: category_list
     default: ""
     client: false
     area: "ai-features/translation"
+    depends_on:
+      - ai_translation_category_scope
+    depends_on_values:
+      ai_translation_category_scope:
+        - include
+        - include_strict
+        - exclude
+        - exclude_strict
+    depends_behavior: "hidden"
+    dependent_setting_display: "inline"
   ai_translation_personal_messages:
     type: enum
     default: "none"
