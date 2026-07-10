@@ -100,6 +100,7 @@ module Migrations
             when :skipped
               :skip
             else
+              reporter.notice(result[:error]) if result[:error]
               :error
             end
           end
@@ -120,19 +121,17 @@ module Migrations
           end
 
           def load_post_upload_ids
-            set = Set.new
-            intermediate_db.query(
-              "SELECT upload_ids FROM posts WHERE upload_ids IS NOT NULL",
-            ) { |row| JSON.parse(row[:upload_ids]).each { |id| set << id } }
-            set
+            load_existing_ids(
+              intermediate_db,
+              "SELECT DISTINCT upload_id AS id FROM post_uploads WHERE upload_id IS NOT NULL",
+            )
           end
 
           def load_avatar_upload_ids
-            set = Set.new
-            intermediate_db.query(
-              "SELECT avatar_upload_id FROM users WHERE avatar_upload_id IS NOT NULL",
-            ) { |row| set << row[:avatar_upload_id] }
-            set
+            load_existing_ids(
+              intermediate_db,
+              "SELECT uploaded_avatar_id AS id FROM users WHERE uploaded_avatar_id IS NOT NULL",
+            )
           end
 
           def load_max_count
@@ -141,7 +140,7 @@ module Migrations
 
           def attempt_optimization(row, post)
             upload = Upload.find_by(sha1: row[:upload_sha1])
-            return if upload.nil?
+            return upload_not_found_status(row) if upload.nil?
 
             images = create_optimized_images(row[:type], row[:markdown], upload, post)
             return if images.blank?
@@ -191,6 +190,17 @@ module Migrations
 
           def error_status(row)
             { id: row[:upload_id], status: :error }
+          end
+
+          # The staging row's sha1 has no matching Discourse `Upload` record, so
+          # there's nothing to optimize. Recorded as an error with a message
+          # rather than left to crash on a nil upload later on.
+          def upload_not_found_status(row)
+            {
+              id: row[:upload_id],
+              status: :error,
+              error: I18n.t("importer.uploads.optimizer_upload_not_found", sha1: row[:upload_sha1]),
+            }
           end
 
           def skipped_status(upload_id)
