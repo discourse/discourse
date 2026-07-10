@@ -46,6 +46,7 @@ export default class DiscoursePostEventEvent {
   @tracked livestreamOnebox;
   @tracked livestreamUrl;
   @tracked livestreamChatChannelId;
+  @tracked isZoomLivestream;
   @tracked canUpdateAttendance;
   @tracked canActOnDiscoursePostEvent;
   @tracked shouldDisplayInvitees;
@@ -95,6 +96,7 @@ export default class DiscoursePostEventEvent {
     this.livestreamOnebox = args.livestream_onebox;
     this.livestreamUrl = args.livestream_url;
     this.livestreamChatChannelId = args.livestream_chat_channel_id;
+    this.isZoomLivestream = args.is_zoom_livestream;
     this.maxAttendees = args.max_attendees;
     this.atCapacity = args.at_capacity;
     this.recurrence = args.recurrence;

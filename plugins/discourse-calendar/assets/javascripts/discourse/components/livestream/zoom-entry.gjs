@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { modifier } from "ember-modifier";
+import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -19,8 +20,8 @@ const MIN_VIDEO_HEIGHT = 135;
 const MAX_VIDEO_HEIGHT = 810;
 const DEFAULT_VIEW_TYPE = "speaker";
 const MEETING_NOT_STARTED_ERROR_CODE = 3008;
-const RETRY_DELAY_SECONDS = 30;
-const MAX_RETRY_ATTEMPTS = 40;
+export const RETRY_DELAY_SECONDS = 30;
+export const MAX_RETRY_ATTEMPTS = 40;
 
 function serializeZoomError(error) {
   if (!error) {
@@ -76,6 +77,10 @@ export default class LivestreamZoomEntry extends Component {
   registerZoomRoot = modifier((element) => {
     this.zoomAppRoot = element;
 
+    this.zoomAppRoot.addEventListener("click", this.onZoomLeaveButtonClick, {
+      capture: true,
+    });
+
     if (this.capabilities.viewport.lg && window.ResizeObserver) {
       this.zoomResizeObserver?.disconnect();
       this.zoomResizeObserver = new ResizeObserver(() => {
@@ -107,6 +112,11 @@ export default class LivestreamZoomEntry extends Component {
       this.zoomResizeObserver = null;
 
       if (this.zoomAppRoot === element) {
+        this.zoomAppRoot.removeEventListener(
+          "click",
+          this.onZoomLeaveButtonClick,
+          { capture: true }
+        );
         this.zoomAppRoot = null;
       }
     };
@@ -120,6 +130,31 @@ export default class LivestreamZoomEntry extends Component {
     clearInterval(this.retryTimer);
     cancelAnimationFrame(this.zoomLayoutFrame);
     cancelAnimationFrame(this.zoomVideoSyncFrame);
+  }
+
+  // Zoom's "meeting has not started" panel has its own leave button, and unlike
+  // every other leave path it fires no `connection-change` event: the SDK only
+  // reports `Closed` once it has a meeting id, which a join that failed before
+  // the host started never gets. Watching the click is the only signal.
+  @bind
+  onZoomLeaveButtonClick(event) {
+    // The joined toolbar's leave button carries the same title, but clicking it
+    // only opens Zoom's confirmation popper. Hiding the frame there would
+    // strand the user in a meeting they can no longer see or leave. That path
+    // reports `Closed` on its own once the user confirms.
+    if (this.isJoined) {
+      return;
+    }
+
+    // `title` is Zoom's translated `toolbar_leave` string, stable only because
+    // `performJoin` pins the widget to en-US. The button carries no other
+    // distinguishing attribute.
+    //
+    // This is flaky if the Zoom SDK changes, but it's unavoidable because they
+    // don't provide proper hooks for this.
+    if (event.target.closest("button.zoom-MuiButton-root")?.title === "Leave") {
+      this.leaveZoom();
+    }
   }
 
   get topic() {
@@ -305,8 +340,7 @@ export default class LivestreamZoomEntry extends Component {
       this.zoomClient.on("connection-change", (payload) => {
         // Handles the livestream ending while the user is still on the page.
         if (payload.state === "Closed") {
-          this.isJoined = false;
-          this.hideZoomFrame();
+          this.leaveZoom();
         }
       });
 
@@ -352,6 +386,12 @@ export default class LivestreamZoomEntry extends Component {
 
     // Deletes inline styles that Zoom applies which leaves a big empty box on the page
     this.zoomAppRoot?.removeAttribute("style");
+  }
+
+  leaveZoom() {
+    this.isJoined = false;
+    this.hideZoomFrame();
+    this.stopRetrying();
   }
 
   // The client is deliberately reused. `ZoomMtgEmbedded.destroyClient()` never
@@ -411,13 +451,9 @@ export default class LivestreamZoomEntry extends Component {
           this.startRetryCountdown();
           return;
         }
-
-        this.stopRetrying();
-      } else {
-        this.stopRetrying();
       }
 
-      this.hideZoomFrame();
+      this.leaveZoom();
       this.errorMessage = i18n("discourse_calendar.livestream.zoom.load_error");
     } finally {
       this.isJoining = false;

@@ -3,7 +3,10 @@ import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import LivestreamZoomEntry from "../../discourse/components/livestream/zoom-entry";
+import LivestreamZoomEntry, {
+  MAX_RETRY_ATTEMPTS,
+  RETRY_DELAY_SECONDS,
+} from "../../discourse/components/livestream/zoom-entry";
 
 const MEETING_NOT_STARTED = {
   errorCode: 3008,
@@ -147,7 +150,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       assert
         .dom(WAITING_SELECTOR)
         .hasText(
-          "The webinar hasn't started yet. Retrying join in 30 seconds...",
+          `The webinar hasn't started yet. Retrying join in ${RETRY_DELAY_SECONDS} seconds...`,
           "shows the initial countdown"
         );
       assert
@@ -162,18 +165,20 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       assert
         .dom(WAITING_SELECTOR)
         .hasText(
-          "The webinar hasn't started yet. Retrying join in 29 seconds...",
+          `The webinar hasn't started yet. Retrying join in ${
+            RETRY_DELAY_SECONDS - 1
+          } seconds...`,
           "the countdown updates every second"
         );
 
       performJoin.resetHistory();
-      await tick(29);
+      await tick(RETRY_DELAY_SECONDS - 1);
 
       assert.true(performJoin.calledOnce, "retries the join at zero");
       assert
         .dom(WAITING_SELECTOR)
         .hasText(
-          "The webinar hasn't started yet. Retrying join in 30 seconds...",
+          `The webinar hasn't started yet. Retrying join in ${RETRY_DELAY_SECONDS} seconds...`,
           "restarts the countdown after another failure"
         );
     });
@@ -186,7 +191,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       await click(JOIN_BUTTON_SELECTOR);
 
       performJoin.resolves();
-      await tick(30);
+      await tick(RETRY_DELAY_SECONDS);
 
       assert.dom(WAITING_SELECTOR).doesNotExist("clears the waiting message");
       assert.dom(JOIN_BUTTON_SELECTOR).doesNotExist("hides the join button");
@@ -203,7 +208,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       await click(JOIN_BUTTON_SELECTOR);
 
       performJoin.rejects(new Error("nope"));
-      await tick(30);
+      await tick(RETRY_DELAY_SECONDS);
 
       assert.dom(WAITING_SELECTOR).doesNotExist("stops the countdown");
       assert.dom(JOIN_BUTTON_SELECTOR).isNotDisabled();
@@ -223,9 +228,10 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
 
       await click(JOIN_BUTTON_SELECTOR);
 
-      // The initial click is attempt 1, so 40 further attempts exhaust the budget.
-      for (let i = 0; i < 40; i++) {
-        await tick(30);
+      // The initial click is attempt 1, so MAX_RETRY_ATTEMPTS further attempts
+      // exhaust the budget.
+      for (let i = 0; i < MAX_RETRY_ATTEMPTS; i++) {
+        await tick(RETRY_DELAY_SECONDS);
       }
 
       assert.dom(WAITING_SELECTOR).doesNotExist("stops the countdown");

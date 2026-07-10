@@ -21,7 +21,7 @@ export default class Livestream extends Component {
   get isZoomLivestream() {
     return (
       this.siteSettings.livestream_zoom_enabled &&
-      this.args.event?.livestreamUrl.includes("zoom.us")
+      this.args.event?.isZoomLivestream
     );
   }
 

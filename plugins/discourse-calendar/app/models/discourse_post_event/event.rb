@@ -72,19 +72,21 @@ module DiscoursePostEvent
       DiscourseCalendar::Livestream.handle_topic_chat_channel_creation(post.topic)
     end
 
+    def has_cached_livestream_onebox?
+      livestream? && livestream_url.present? && Oneboxer.cached_onebox(livestream_url).present?
+    end
+
     # Happens after the event record is saved to prepare the onebox
     def enqueue_warm_livestream_onebox
-      return if !livestream? || livestream_url.blank?
       return if !saved_change_to_livestream? && !saved_change_to_location?
-      return if Oneboxer.cached_onebox(livestream_url).present?
+      return if has_cached_livestream_onebox?
       Jobs.enqueue(:warm_livestream_onebox, event_id: id, url: livestream_url)
     end
 
     # Happens on demand in the serializer for post event in case
     # the onebox is not warmed yet
     def warm_livestream_onebox!(publish: false)
-      return if !livestream? || livestream_url.blank?
-      return if Oneboxer.cached_onebox(livestream_url).present?
+      return if has_cached_livestream_onebox?
       Oneboxer.onebox(livestream_url)
       post&.publish_change_to_clients!(:revised) if publish
     end
@@ -536,6 +538,12 @@ module DiscoursePostEvent
 
     def livestream_url
       location || url
+    end
+
+    def is_zoom_livestream?
+      return false unless SiteSetting.livestream_zoom_enabled
+      return false unless livestream? && livestream_url.present?
+      UrlHelper.relaxed_parse(livestream_url)&.host&.downcase == "zoom.us"
     end
 
     private

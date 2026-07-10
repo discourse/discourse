@@ -34,6 +34,7 @@ module DiscoursePostEvent
     # TODO (martin) We need to merge this and the event channel ID which
     # comes from chat_enabled on the event, we dont need 2 channels per event
     attributes :livestream_chat_channel_id
+    attributes :is_zoom_livestream
     attributes :channel
     attributes :rrule
     attributes :max_attendees
@@ -46,7 +47,7 @@ module DiscoursePostEvent
     end
 
     def include_livestream_onebox?
-      livestream_enabled
+      livestream_enabled && !object.is_zoom_livestream?
     end
 
     def include_livestream_chat_channel_id?
@@ -55,6 +56,10 @@ module DiscoursePostEvent
 
     def include_livestream_url?
       livestream_enabled
+    end
+
+    def is_zoom_livestream
+      object.is_zoom_livestream?
     end
 
     def livestream_onebox

@@ -241,6 +241,9 @@
               "null"
             ]
           },
+          "is_zoom_livestream": {
+            "type": "boolean"
+          },
           "max_attendees": {
             "type": [
               "integer",

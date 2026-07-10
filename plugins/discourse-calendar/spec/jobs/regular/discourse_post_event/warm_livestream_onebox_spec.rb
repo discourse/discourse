@@ -25,11 +25,34 @@ describe Jobs::WarmLivestreamOnebox do
   it "does not publish when the event URL has changed" do
     stale_url = "https://example.com/old-live"
     event
-    Oneboxer.expects(:onebox).with(stale_url).returns("<aside>cached</aside>")
+    Oneboxer.stubs(:onebox).returns("<aside>cached</aside>")
 
     messages =
       MessageBus.track_publish("/topic/#{post.topic_id}") do
         described_class.new.execute(event_id: event.id, url: stale_url)
+      end
+
+    expect(messages).to be_empty
+  end
+
+  it "does not publish when the URL is blank" do
+    event
+    Oneboxer.stubs(:onebox).returns("<aside>cached</aside>")
+
+    messages =
+      MessageBus.track_publish("/topic/#{post.topic_id}") do
+        described_class.new.execute(event_id: event.id, url: nil)
+      end
+
+    expect(messages).to be_empty
+  end
+
+  it "does not publish when the event cannot be found" do
+    Oneboxer.stubs(:onebox).returns("<aside>cached</aside>")
+
+    messages =
+      MessageBus.track_publish("/topic/#{post.topic_id}") do
+        described_class.new.execute(event_id: -1, url: livestream_url)
       end
 
     expect(messages).to be_empty

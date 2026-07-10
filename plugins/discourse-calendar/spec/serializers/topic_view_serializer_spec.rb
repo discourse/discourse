@@ -138,7 +138,7 @@ RSpec.describe TopicViewSerializer do
 
     before do
       SiteSetting.chat_enabled = true
-      # enqueue (don't run) the onebox-warming job so it doesn't make a real request
+      # Don't do onebox-warming job so it doesn't make a real request
       Jobs.run_later!
       first_post
     end
@@ -154,6 +154,7 @@ RSpec.describe TopicViewSerializer do
     end
 
     it "is included while the event is a livestream" do
+      Oneboxer.expects(:onebox).with("https://example.com/live").returns("")
       create_event(livestream: true)
 
       expect(topic.topic_chat_channel).to be_present
