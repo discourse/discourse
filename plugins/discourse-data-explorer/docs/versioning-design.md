@@ -400,13 +400,34 @@ The spec reference doc surfaced that the Kit's keyset pagination (invented `page
   The designed future path is PR #36065's pattern (SELECT the expression as a virtual column behind a
   subquery, keyset over it); until then, virtual sorts are explicitly not paginatable, and the versioning
   rename still runs first (an old client's error names the key in the latest vocabulary — spec'd).
-- **The nullable-keyset trap, demonstrated live:** with keyset-only pagination the default order became
-  `default_sort` (`last_run_at DESC`) — a nullable column, and NULL rows are unreachable past page one
-  (`last_run_at < NULL` matches nothing; caught by the failing walk spec). Rule recorded: **a nullable
-  default sort is an invalid configuration under keyset-only pagination** — queries' default is now
-  `id: :desc` (guard fired: `default_sort changed`), recently-run ordering stays available via
-  `sort=-ran_at` (itself nullable — app-enforced non-null; NULLS-aware expression keysets are the general
-  future fix).
+- **The nullable-keyset trap, demonstrated live — then solved by declaration (2026-07-10):** with
+  keyset-only pagination the default order became `default_sort` (`last_run_at DESC`) — a nullable
+  column, and NULL rows were unreachable past page one (`last_run_at < NULL` matches nothing; caught by
+  a failing walk spec). Fix, in the Kit idiom (declare the fact, machinery derives the rest):
+
+  ```ruby
+  sort :ran_at, column: :last_run_at, nulls: :last
+  ```
+
+  The paginator prepends a `<column>_is_null` CASE helper (0/1 — JSON-native, no cursor typecasting) to
+  the keyset and wraps the scope in a subquery aliased as the table (PR #36065's trick) so the helper is
+  orderable, predicable and readable. Two subtleties this surfaced, both spec'd: (1) **stock Pagy's
+  predicate equality (`=`) dead-ends on cursors minted from NULL-valued rows** — `NullSafeEngine` is a
+  verbatim copy of `compose_predicate` (43.6.0) with `IS NOT DISTINCT FROM` (upstream candidate);
+  (2) subquery wrapping drops `includes` — which prompted the question (loic) of whether the Kit needs
+  explicit preloading at all, given **Goldiloader**. Answered empirically: a query-count spec pins the
+  no-N+1 invariant (one batched `IN` load per association level on a deep `user.groups` include), and it
+  stayed green with every explicit preload removed — the Kit now carries **no preloading machinery**
+  (`included_preloads`/`preload_tree`/`Preloader` deleted, ~30 lines). Goldiloader is recorded as a
+  Kit-assumed platform gem; without it, post-fetch `Associations::Preloader` would need to return.
+  Proven end-to-end: `sort=-ran_at` walks
+  through never-run (NULL) queries in the request specs. **The default listing is recently-run-first
+  again**: `default_sort ran_at: :desc` resolves through the *sort-key vocabulary* — one resolution path
+  for requested sorts and the default (column mapping, nulls-last, virtual rejection), proving the
+  plumbing composes end to end (a bare listing cursor-walks through the NULL tail; spec'd with an order
+  that differs from id-order so it can't pass accidentally). The general *virtual-sort* DSL
+  (`expression:`/`joins:`) remains designed-not-built for the real implementation phase;
+  blocks-wrapped-in-subqueries are the sketched escape hatch for the weird cases.
 - `stats[total]=count` still works (one COUNT on request, merged into cursor-mode meta); `meta.page.total`
   (MAY) remains unemitted.
 
