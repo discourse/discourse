@@ -1,5 +1,5 @@
 source_db_path: "/path/to/your/db.sqlite3"
-output_db_path: "/path/to/your/uploads.sqlite3"
+output_db_path: "/path/to/your/files.sqlite3"
 
 root_paths:
   - "/path/to/your/files"

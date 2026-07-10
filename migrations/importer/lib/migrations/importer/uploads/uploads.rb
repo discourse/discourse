@@ -51,27 +51,21 @@ module Migrations
         end
 
         def setup_databases
-          run_uploads_db_migrations
+          run_files_db_migrations
 
-          {
-            uploads_db: create_database_connection(:uploads),
-            intermediate_db: create_database_connection(:intermediate),
-          }
+          files_db = Database.connect(settings[:output_db_path])
+          # The generated `FilesDB::*` models insert through this module-level
+          # connection; the tasks use the same object directly for their reads and
+          # deletes.
+          Database::FilesDB.setup(files_db)
+
+          { files_db:, intermediate_db: Database.connect(settings[:source_db_path]) }
         end
 
-        def create_database_connection(type)
-          path = type == :uploads ? settings[:output_db_path] : settings[:source_db_path]
-
-          # TODO: Using "raw" db connection here for now
-          #       Investigate using Migrations::Database::IntermediateDB.setup(db)
-          #       Should we have a Migrations::Database::UploadsDB.setup(db)?
-          Database.connect(path)
-        end
-
-        def run_uploads_db_migrations
+        def run_files_db_migrations
           Database.migrate(
             settings[:output_db_path],
-            migrations_path: Database::UPLOADS_DB_SCHEMA_PATH,
+            migrations_path: Database::FILES_DB_SCHEMA_PATH,
           )
         end
 
