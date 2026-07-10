@@ -68,9 +68,9 @@ module Migrations
       {
         "cli" => "CLI",
         "id" => "ID",
+        "files_db" => "FilesDB",
         "intermediate_db" => "IntermediateDB",
         "mappings_db" => "MappingsDB",
-        "uploads_db" => "UploadsDB",
       },
     )
   end
