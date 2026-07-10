@@ -8,3 +8,12 @@ en:
       group: "group"
       category: "Category"
       badge: "Badge"
+    uploads:
+      existing_summary: "found %{existing} existing, %{missing} missing"
+      deleting_surplus: "deleting %{count} surplus uploads"
+      surplus_found: "found %{count} surplus uploads (run with delete_surplus_uploads to remove them)"
+      upload_failed: "failed to create upload %{id}: %{error}"
+      insert_failed: "failed to record upload %{id}: %{error}"
+      fixer_missing: "removed missing upload %{id}"
+      fixer_error: "could not check upload %{id}: %{error}"
+      interrupted: "Interrupted. The run is resumable — run the command again to continue."
