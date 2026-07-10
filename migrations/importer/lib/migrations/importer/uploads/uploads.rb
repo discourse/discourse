@@ -80,6 +80,7 @@ module Migrations
           adjust_db_pool_size
           configure_image_memory_limits
           configure_site_settings
+          DiscoursePatches.apply!
         end
 
         # The worker pool opens one Discourse DB connection per thread, so the AR
