@@ -4390,6 +4390,15 @@ RSpec.describe UsersController do
         expect(response).to be_forbidden
       end
 
+      it "prevents moderators from checking sso email" do
+        SiteSetting.moderators_view_sso_details = true
+        sign_in(moderator)
+
+        get "/u/#{user1.username}/sso-email.json"
+
+        expect(response).to be_forbidden
+      end
+
       it "returns emails and associated_accounts when you're allowed to see them" do
         user1.single_sign_on_record =
           SingleSignOnRecord.create(
@@ -4420,6 +4429,15 @@ RSpec.describe UsersController do
       it "raises an error when you aren't allowed to check sso payload" do
         sign_in(Fabricate(:user))
         get "/u/#{user1.username}/sso-payload.json"
+        expect(response).to be_forbidden
+      end
+
+      it "prevents moderators from checking sso payload" do
+        SiteSetting.moderators_view_sso_details = true
+        sign_in(moderator)
+
+        get "/u/#{user1.username}/sso-payload.json"
+
         expect(response).to be_forbidden
       end
 

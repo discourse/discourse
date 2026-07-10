@@ -825,4 +825,51 @@ RSpec.describe UserGuardian do
       expect(Guardian.new(user).can_upload_external?).to eq(false)
     end
   end
+
+  describe "#can_check_sso_details?" do
+    it "is always true for admins" do
+      expect(Guardian.new(admin).can_check_sso_details?(user)).to eq(true)
+    end
+
+    it "is false for moderators by default" do
+      expect(Guardian.new(moderator).can_check_sso_details?(user)).to eq(false)
+    end
+
+    it "is true for moderators when moderators_view_sso_details is enabled" do
+      SiteSetting.moderators_view_sso_details = true
+      expect(Guardian.new(moderator).can_check_sso_details?(user)).to eq(true)
+    end
+
+    it "is false for regular users" do
+      expect(Guardian.new(user).can_check_sso_details?(user)).to eq(false)
+    end
+
+    it "is false for anonymous users" do
+      expect(Guardian.new.can_check_sso_details?(user)).to eq(false)
+    end
+  end
+
+  describe "#can_check_sso_email?" do
+    it "is true for admins" do
+      expect(Guardian.new(admin).can_check_sso_email?(user)).to eq(true)
+    end
+
+    it "is false for moderators when moderators_view_sso_details is enabled" do
+      SiteSetting.moderators_view_sso_details = true
+
+      expect(Guardian.new(moderator).can_check_sso_email?(user)).to eq(false)
+    end
+  end
+
+  describe "#can_check_sso_payload?" do
+    it "is true for admins" do
+      expect(Guardian.new(admin).can_check_sso_payload?(user)).to eq(true)
+    end
+
+    it "is false for moderators when moderators_view_sso_details is enabled" do
+      SiteSetting.moderators_view_sso_details = true
+
+      expect(Guardian.new(moderator).can_check_sso_payload?(user)).to eq(false)
+    end
+  end
 end

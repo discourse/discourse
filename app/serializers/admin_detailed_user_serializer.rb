@@ -154,7 +154,7 @@ class AdminDetailedUserSerializer < AdminUserSerializer
   end
 
   def include_external_ids?
-    scope.can_check_sso_details?(object)
+    scope.is_admin?
   end
 
   def external_ids
