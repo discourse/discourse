@@ -1,14 +1,18 @@
 # frozen_string_literal: true
 
-# Runs annotaterb in a TemporaryDb so the seed topics that
-# `annotate:ensure_all_indexes` creates don't leak into the persistent test DB.
+# Runs annotaterb in a TemporaryDb so the index setup performed by
+# `annotate:ensure_all_indexes` does not leak into the persistent test DB.
 def annotate_in_temp_db(load_plugins:, annotaterb_args: [])
-  env = { "RAILS_ENV" => "test", "LOAD_PLUGINS" => load_plugins }
+  env = {
+    "RAILS_ENV" => "test",
+    "LOAD_PLUGINS" => load_plugins,
+    "SKIP_OPTIMIZE_ICONS" => "1",
+    "SKIP_SEED_FU" => "1",
+  }
   db = TemporaryDb.new
   db.start
   db.with_env do
-    system(env, "bin/rails", "db:migrate", exception: true)
-    system(env, "bin/rails", "annotate:ensure_all_indexes", exception: true)
+    system(env, "bin/rails", "db:migrate", "annotate:ensure_all_indexes", exception: true)
     system(env, "bin/annotaterb", "models", "--force", *annotaterb_args, exception: true)
   end
 ensure
@@ -31,11 +35,25 @@ end
 
 desc "ensure the asynchronously-created post_search_data index is present"
 task "annotate:ensure_all_indexes" => :environment do |task, args|
-  # One of the indexes on post_search_data is created by a sidekiq job
-  # We need to do some acrobatics to create it on-demand
-  SeedData::Topics.with_default_locale.create
-  SiteSetting.search_enable_recent_regular_posts_offset_size = 1
-  Jobs::CreateRecentPostSearchIndexes.new.execute([])
+  recent_posts_size = SiteSetting.search_recent_posts_size
+  offset_size = SiteSetting.search_enable_recent_regular_posts_offset_size
+  offset_post_id = SiteSetting.search_recent_regular_posts_offset_post_id
+  inserted_synthetic_row = false
+
+  # One of the indexes on post_search_data is created by a sidekiq job.
+  # Add the minimum data needed to create it on demand.
+  begin
+    PostSearchData.insert_all!([{ post_id: 0, private_message: false }])
+    inserted_synthetic_row = true
+    SiteSetting.search_enable_recent_regular_posts_offset_size = 1
+    SiteSetting.search_recent_posts_size = 1
+    Jobs::CreateRecentPostSearchIndexes.new.execute([])
+  ensure
+    PostSearchData.where(post_id: 0).delete_all if inserted_synthetic_row
+    SiteSetting.search_enable_recent_regular_posts_offset_size = offset_size
+    SiteSetting.search_recent_posts_size = recent_posts_size
+    SiteSetting.search_recent_regular_posts_offset_post_id = offset_post_id
+  end
 end
 
 desc "regenerate core model annotations using a temporary database"

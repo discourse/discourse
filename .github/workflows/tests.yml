@@ -214,7 +214,7 @@ jobs:
             directories="$(script/list_bundled_plugins | xargs -I{} find {} -type d -path '*/app/models' -maxdepth 3)"
           fi
 
-          # annotate:clean runs the seed + annotaterb in a temporary postgres so it
+          # annotate:clean runs index setup + annotaterb in a temporary postgres so it
           # doesn't pollute the rspec test DB.
           MODEL_DIR="$(echo "${directories}" | tr '\n' ',')" bin/rake annotate:clean
 
