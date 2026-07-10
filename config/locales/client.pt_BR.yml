@@ -13,14 +13,19 @@ pt_BR:
       logged_in_as: "Logado(a) como"
       permissions_header: 'Isso permitirá que "%{application_name}":'
       redirect_warning: "A autorização redirecionará você para"
-      copied: "Copiou!"
+      copy_key: "Copiar chave"
+      copied: "Copiado!"
       otp_description: 'Você gostaria de permitir que "%{application_name}" acesse este site?'
       no_trust_level: "Desculpe, você não tem o nível de confiança necessário para acessar a API de usuário(a)."
       generic_error: "Desculpe, não foi possível emitir as chaves de API de usuário(a). Esse recurso pode ter sido desativado pelo(a) administrador(a) do site."
       device:
         code: "Código"
         continue: "Continuar"
+        invalid_code: "Desculpe, esse código é inválido. Verifique o código e tente novamente."
+        expired_code: "Desculpe, esse código expirou ou já foi usado. Solicite um novo código do aplicativo e tente novamente."
         authorize_title: 'Autorizar "%{application_name}"'
+        expiry_notice: "Expira em: %{expires_at}"
+        no_expiry_warning: "Esta chave não expirará automaticamente. Só autorize isso se você confiar totalmente no aplicativo."
     blocks:
       ghost:
         status: "Status"
@@ -479,7 +484,12 @@ pt_BR:
       launch_in_easy_steps: "Comece em %{step_count} passos fáceis"
       congrats_onboarding_complete: "Parabéns por concluir o processo de integração!"
       select_theme:
+        action: "Selecionar tema"
+        modal_title: "Escolha um tema"
+        use_theme: "Usar tema selecionado"
         enabled: "Selecionado(a)"
+        applying_theme: "Aplicando tema..."
+        browse_all: "Gerenciar temas"
       invite_collaborators:
         title: "Convidar colaboradores"
         description: "Os primeiros membros ajudam a dar vida à sua comunidade."
@@ -1534,6 +1544,7 @@ pt_BR:
         normal_option: "Normal"
         normal_option_title: "Você receberá uma notificação se este(a) usuário(a) responder, citar ou mencionar."
       notification_schedule:
+        title: "Agendamento de notificações"
         label: "Ativar agendamento de notificações personalizada"
         tip: "Fora desse horário, suas notificações serão pausadas."
         midnight: "Meia-noite"
@@ -1577,8 +1588,13 @@ pt_BR:
       notifications: "Notificações"
       statistics: "Estatísticas"
       desktop_notifications:
+        label: "Notificações ao vivo"
         not_supported: "Notificações não compatíveis com este navegador. Desculpe."
+        perm_default: "Ativar notificações"
+        perm_denied_btn: "Permissão negada"
         perm_denied_expl: "Você negou permissão para notificações. Permita as notificações nas configurações do seu navegador."
+        disable: "Desativar notificações"
+        enable: "Ativar notificações"
         each_browser_note: "Observação: é preciso alterar esta configuração em todos os navegadores que você usar. Todas as notificações serão desativadas se você pausar as notificações no menu do usuário, independentemente desta configuração."
         consent_prompt: "Você quer notificações em tempo real quando as pessoas responderem às suas postagens?"
       dismiss: "Descartar"
@@ -1634,6 +1650,7 @@ pt_BR:
       enable_smart_lists: "Ativar listas inteligentes ao escrever no compositor"
       enable_defer: "Ativar tópicos marcados como não lidos"
       enable_markdown_monospace_font: "Usar fonte monoespacial no modo Markdown do compositor"
+      show_original_content: "Exibir conteúdo original em vez de conteúdo traduzido."
       experimental_sidebar:
         enable: "Ativar barra lateral"
         options: "Opções"
@@ -1838,7 +1855,13 @@ pt_BR:
         upcoming_changes: "Alterações previstas"
         calendar_subscriptions: "Calendário"
       calendar_subscriptions:
-        regenerate: "Regenerar URLs"
+        description: "Gere URLs de assinatura para sincronizar com seu aplicativo de calendário favorito (Google Agenda, Calendário da Apple, Outlook etc.). Essas URLs são links privados para os eventos da sua conta (lembretes favoritos, eventos do calendário etc.). Você pode revogar ou renovar as URLs de assinatura geradas a qualquer momento."
+        generate: "Gerar URLs de assinatura"
+        regenerate: "Gerar novas URLs"
+        regenerate_confirm: "Isso invalidará os URLs de assinatura de calendário existentes. Quaisquer aplicativos de calendário que usem os URLs antigos deixarão de receber atualizações. Continuar?"
+        revoke: "Revogar assinatura"
+        bookmarks: "Lembretes de Favoritos"
+        bookmarks_description: "Seus favoritos com lembrete de data"
         copy: "Copiar URL"
         copied: "Copiou!"
         add_to_google: "Google Calendar"
@@ -2966,6 +2989,7 @@ pt_BR:
       title: "Ou aperte %{modifier}Enter"
       save_and_close: "Salvar e fechar"
       discard: "Descartar"
+      cancel_edit: "Cancelar edição"
       draft_saved: "Rascunho salvo!"
       users_placeholder: "Adicionar usuários(as) ou grupos"
       title_placeholder: "Em algumas palavras, sobre o que é esta discussão?"
