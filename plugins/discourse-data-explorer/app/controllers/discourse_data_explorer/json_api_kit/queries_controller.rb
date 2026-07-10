@@ -12,7 +12,11 @@ module DiscourseDataExplorer
         # Allowed includes, incl. the nested path `user.groups` (the author's groups) —
         # demonstrates deep nested includes; preloads are derived from these.
         includes :user, :groups, "user.groups"
-        default_sort last_run_at: :desc
+        # Keyset-only pagination needs a NULL-free total order; last_run_at is
+        # nullable (NULL rows become unreachable past page one), so the default
+        # is newest-created first. Recently-run ordering stays available via
+        # `sort=-ran_at`.
+        default_sort id: :desc
         stat :total, :count
         page max: 100, default: 20
 

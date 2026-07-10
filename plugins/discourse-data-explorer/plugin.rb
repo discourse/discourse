@@ -32,9 +32,9 @@ end
 
 require_relative "lib/discourse_data_explorer/engine"
 
-# JSON:API Kit: jsonapi-serializer is the rendering layer. The Kit depends only
-# on jsonapi-serializer + pagy; include/fields/pagination/deserialization are
-# handled by JsonApiKit::BaseController. See docs/api-modernization-exploration.md.
+# JSON:API Kit: jsonapi-serializer is the rendering layer and pagy the keyset
+# pagination engine; include/fields/pagination/deserialization are handled by
+# JsonApiKit::BaseController. See docs/api-modernization-exploration.md.
 require "jsonapi/serializer"
 # The Kit namespace (incl. the version registry accessor). Required explicitly:
 # the patch require below defines the JsonApiKit constant ahead of Zeitwerk, so

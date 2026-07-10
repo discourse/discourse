@@ -362,6 +362,54 @@ hardening noted: a boot-time invariant that no-block sort names must be serializ
   Build when a real rename touches a sort/filter; risk while parked is low — strict params give old clients a
   loud 400, unlike the silent fieldset drop that forced ③ to handle `fields`.
 
+## 2b. Related Kit conformance work — cursor-pagination profile alignment (2026-07-09)
+
+The spec reference doc surfaced that the Kit's keyset pagination (invented `page[cursor]` +
+`meta.page.next_cursor`, no links) did not match the registered
+[cursor-pagination profile](https://jsonapi.org/profiles/ethanresnick/cursor-pagination). Aligned:
+
+- **Params:** `page[size]` / `page[after]` / `page[before]` (range requests rejected with the profile's
+  typed error — the profile's explicit opt-out). Cursor mode is entered by cursor params or by requesting
+  the profile in the `Accept` header; `page[number]` remains the plain offset path.
+- **Links:** top-level `prev`/`next` always present (null when no such page — null-accuracy via one
+  look-ahead row + one EXISTS check); an empty window still links back/forward at its own cursor so
+  clients can always escape it.
+- **Item cursors:** each resource carries `meta.page.cursor` (the profile's deep-linking mechanism).
+- **Typed 400s:** `max-size-exceeded` (with `meta.page.maxSize`), `range-pagination-not-supported`,
+  `unsupported-sort`, and untyped invalid-parameter errors — all with the profile's `links.type` URI
+  (emitted as a single link per base-spec shape, not the profile example's array).
+- **Content negotiation:** cursor-mode responses (and typed errors) carry
+  `Content-Type: application/vnd.api+json;profile="…"` using the registry's canonical https form.
+- **Engine: `Pagy::Keyset`** (reassessed 2026-07-10 — an earlier hand-rolled id-only engine was replaced
+  after loic pointed at core PR #36065: future endpoints paginate *virtual resources* over composite,
+  mixed-direction keysets built from CASE-expression columns, exactly what Pagy's predicate composition —
+  union-of-intersections with a DB-optimizer hint, `tuple_comparison` fast path, adapter typecasting — was
+  built for and exactly the SQL the Kit should not own). `CursorPaginator` is now a thin adapter layering
+  the profile's needs on Pagy: reverse (`before`) windows via a direction-flipped keyset, null-accurate
+  prev/next (Pagy's native look-ahead + one probe query), and per-item cursors minted by mirroring Pagy's
+  own cutoff derivation (keyset values → JSON → B64 — item and page cursors are interchangeable). Cursors
+  are validated against the request's keyset (wrong-shape cursor → invalid-parameter 400).
+
+**Keyset-only (decided 2026-07-10, loic):** the new API ships with **no traditional offset pagination** —
+`page[number]` (or any unknown `page` member) → 400. Consequences, all built:
+
+- **Derived sorts now cursor-paginate** — the keyset is the requested derived sort(s) (or `default_sort`)
+  plus an `id` tiebreak, composed by Pagy. The earlier "sorts → typed error" limitation is gone for
+  derived keys (proven: a name-sorted cursor walk in the request specs).
+- **Virtual (block) sorts get the typed `unsupported-sort` error** — a bespoke JOIN has no keyset columns.
+  The designed future path is PR #36065's pattern (SELECT the expression as a virtual column behind a
+  subquery, keyset over it); until then, virtual sorts are explicitly not paginatable, and the versioning
+  rename still runs first (an old client's error names the key in the latest vocabulary — spec'd).
+- **The nullable-keyset trap, demonstrated live:** with keyset-only pagination the default order became
+  `default_sort` (`last_run_at DESC`) — a nullable column, and NULL rows are unreachable past page one
+  (`last_run_at < NULL` matches nothing; caught by the failing walk spec). Rule recorded: **a nullable
+  default sort is an invalid configuration under keyset-only pagination** — queries' default is now
+  `id: :desc` (guard fired: `default_sort changed`), recently-run ordering stays available via
+  `sort=-ran_at` (itself nullable — app-enforced non-null; NULLS-aware expression keysets are the general
+  future fix).
+- `stats[total]=count` still works (one COUNT on request, merged into cursor-mode meta); `meta.page.total`
+  (MAY) remains unemitted.
+
 ## 3. Open questions (discovered, deliberately parked)
 
 - ~~**Error-pipeline context**~~ — RESOLVED in ④: the endpoint's primary type (from the DSL config) suffices;

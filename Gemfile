@@ -317,7 +317,9 @@ gem "afm", require: false
 gem "pdf-reader", require: false
 
 # for discourse-data-explorer (JSON:API Kit spike)
-gem "pagy", "~> 43.0"
 # jsonapi-serializer is the Kit's rendering layer. require: false — required
 # explicitly in plugin.rb to control load order. See Part 9.
 gem "jsonapi-serializer", require: false
+# pagy powers the Kit's keyset pagination engine (composite/virtual-column keysets,
+# optimized predicates — see PR #36065 for the List/Topic use case).
+gem "pagy", "~> 43.0"

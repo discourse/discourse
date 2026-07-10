@@ -254,13 +254,17 @@ RSpec.describe "JSON:API Kit versioning" do
       end
     end
 
+    # Virtual (block) sorts cannot be keyset-paginated, and the API is keyset-only:
+    # they get the profile's typed unsupported-sort. The rename still runs first —
+    # the old client's error names the key in the LATEST vocabulary.
     context "when an old client uses the renamed virtual sort" do
       let(:headers) { { "Discourse-Api-Version" => "2026-05-20" } }
 
       before { get_queries(headers:, params: { sort: "username" }) }
 
-      it "maps the key and accepts the sort" do
-        expect(response.status).to eq(200)
+      it "maps the key before rejecting it as unsupported for keyset pagination" do
+        expect(response.status).to eq(400)
+        expect(parsed_document["errors"].first["detail"]).to include("user.username")
       end
     end
 
@@ -269,8 +273,11 @@ RSpec.describe "JSON:API Kit versioning" do
 
       before { get_queries(headers:, params: { sort: "-user.username" }) }
 
-      it "accepts the dotted key" do
-        expect(response.status).to eq(200)
+      it "rejects it as unsupported for keyset pagination" do
+        expect(response.status).to eq(400)
+        expect(parsed_document["errors"].first.dig("links", "type")).to eq(
+          "https://jsonapi.org/profiles/ethanresnick/cursor-pagination/unsupported-sort",
+        )
       end
     end
 
