@@ -23,7 +23,7 @@
       "user.username"
     ],
     "default_sort": {
-      "last_run_at": "desc"
+      "id": "desc"
     },
     "stats": {
       "total": "count"

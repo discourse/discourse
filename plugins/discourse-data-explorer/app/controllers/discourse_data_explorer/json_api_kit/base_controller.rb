@@ -7,18 +7,22 @@ module DiscourseDataExplorer
     # This is the "own a small framework" piece from the API-modernization exploration
     # (docs/api-modernization-exploration.md, Part 9, punch-list #1). A resource declares
     # its filters, sorts, includes, base scope, stats and pagination, and this base
-    # implements the mechanics once (strict params → 400, filtering, sorting incl. joins,
-    # keyset/offset pagination, sparse fieldsets, stats meta, Guardian scoping, JSON:API
-    # rendering).
+    # implements the mechanics once (strict params → 400, filtering, sorting, keyset
+    # pagination — the API's only pagination, per the cursor-pagination profile —
+    # sparse fieldsets, stats meta, Guardian scoping, JSON:API rendering).
     #
     # No Ransack (it breaks core — see Part 9); filtering/sorting are plain AR blocks we
     # own. Reads are generic (index/show); writes stay per-controller (Service::Base).
     class BaseController < ::ApplicationController
       # Self-contained: the include/fields/pagination/deserialization helpers (formerly
-      # the jsonapi.rb gem's mixins) are absorbed below, so the Kit depends only on
-      # jsonapi-serializer (rendering) + pagy (keyset). See the helpers in the private section.
+      # the jsonapi.rb gem's mixins) are absorbed below. The Kit's dependencies are
+      # jsonapi-serializer (rendering) and pagy (keyset pagination engine, via
+      # CursorPaginator). See the helpers in the private section.
 
       API_VERSION_HEADER = "Discourse-Api-Version"
+      # The registry's canonical (https, no trailing slash) form — profile URIs are
+      # compared as strings, so one form must be used consistently.
+      CURSOR_PAGINATION_PROFILE_URI = "https://jsonapi.org/profiles/ethanresnick/cursor-pagination"
 
       requires_plugin DiscourseDataExplorer::PLUGIN_NAME
       skip_before_action :check_xhr,
@@ -113,16 +117,11 @@ module DiscourseDataExplorer
         }
       end
 
+      # Listings are keyset-paginated, always — the API ships without traditional
+      # offset pagination (JSON:API cursor-pagination profile; deliberate decision,
+      # see docs/versioning-design.md §2b).
       def index
-        scope = apply_sort(apply_filters(base_scope))
-        scope = scope.includes(*included_preloads) if included_preloads.any?
-
-        if (cursor = params.dig(:page, :cursor)).present?
-          pagy = Pagy::Keyset.new(scope.reorder(id: :desc), page: cursor, limit: page_size)
-          render_resource(pagy.records, meta: { page: { next_cursor: pagy.next } })
-        else
-          render_resource(paginate_offset(scope), meta: stats_meta(@_jsonapi_original_size))
-        end
+        render_cursor_page
       end
 
       def show
@@ -243,32 +242,50 @@ module DiscourseDataExplorer
         scope
       end
 
-      def apply_sort(scope)
-        sort_param = params[:sort].to_s
-        return scope.order(cfg.default_sort_value || { id: :desc }) if sort_param.blank?
+      # The keyset for the request: the requested derived sorts (or the default
+      # sort), plus an `id` tiebreak to make the order total. Virtual (block)
+      # sorts have no keyset columns — the profile's typed unsupported-sort. NB:
+      # keyset columns must not hold NULLs (app-enforced for ours); NULLS-aware
+      # expression keysets are future work.
+      def cursor_order
+        fields = params[:sort].to_s.split(",")
+        virtual = fields.map { it.delete_prefix("-") }.find { cfg.sorts.dig(it, :block) }
+        if virtual
+          render_profile_error(
+            title: "Unsupported sort for cursor pagination.",
+            detail: "The `#{virtual}` sort cannot be used with cursor pagination.",
+            source: {
+              parameter: "sort",
+            },
+            error_type: "unsupported-sort",
+          )
+          return
+        end
 
-        sort_param
-          .split(",")
-          .each do |field|
-            dir = field.start_with?("-") ? :desc : :asc
-            name = field.delete_prefix("-")
-            entry = cfg.sorts[name] || {}
-            scope =
-              if entry[:block]
-                instance_exec(scope, dir, &entry[:block])
-              else
-                scope.order(entry[:column] || name => dir)
-              end
+        order =
+          if fields.any?
+            fields.to_h do |field|
+              direction = field.start_with?("-") ? :desc : :asc
+              name = field.delete_prefix("-")
+              [(cfg.sorts.dig(name, :column) || name).to_sym, direction]
+            end
+          else
+            (cfg.default_sort_value || {}).to_h { |column, dir| [column.to_sym, dir.to_sym] }
           end
-        scope
+        order[:id] ||= order.values.first || :desc
+        order
       end
 
-      # JSON:API: an unsupported filter/sort/include MUST 400.
+      # JSON:API: an unsupported filter/sort/include MUST 400. The page family is
+      # keyset-only — `page[number]` (or any other member) is unsupported.
       def reject_unknown_query_params!
         bad = (params[:filter]&.keys || []).map(&:to_s) - cfg.filters.keys
         bad +=
           params[:sort].to_s.split(",").map { it.delete_prefix("-") }.reject { cfg.sorts.key?(it) }
         bad += requested_include_paths - cfg.allowed_includes
+        if params[:page].respond_to?(:keys)
+          bad += (params[:page].keys.map(&:to_s) - %w[size after before]).map { "page[#{it}]" }
+        end
         return if bad.empty?
 
         render_errors(["Unknown query parameter(s): #{bad.uniq.join(", ")}"], status: :bad_request)
@@ -301,16 +318,10 @@ module DiscourseDataExplorer
         tree.map { |key, subtree| subtree.empty? ? key : { key => to_ar_includes(subtree) } }
       end
 
-      def page_size
-        size = params.dig(:page, :size).to_i
-        size = cfg.default_page_size if size <= 0
-        [size, cfg.max_page_size].min
-      end
-
       # ── Absorbed JSON:API request/response helpers ──
       # Formerly the jsonapi.rb gem's Fetching/Pagination/Deserialization mixins. Owned
       # here (small, stable) so jsonapi.rb is dropped entirely; deps are now just
-      # jsonapi-serializer + pagy.
+      # jsonapi-serializer.
 
       # The serializer's include option. jsonapi-serializer checks include membership
       # per level by *direct* match, so a nested path needs every prefix present, or the
@@ -338,11 +349,115 @@ module DiscourseDataExplorer
         extracted
       end
 
-      # Offset/limit pagination honoring the DSL's page caps; sets the total for stats.
-      def paginate_offset(scope)
-        @_jsonapi_original_size = scope.size
-        number = [1, params.dig(:page, :number).to_i].max
-        scope.offset((number - 1) * page_size).limit(page_size)
+      # ── Cursor pagination (JSON:API cursor-pagination profile) ──
+
+      def render_cursor_page
+        order = cursor_order
+        return if performed?
+
+        after = params.dig(:page, :after).presence
+        before = params.dig(:page, :before).presence
+        if after && before
+          return(
+            render_profile_error(
+              title: "Range pagination is not supported.",
+              error_type: "range-pagination-not-supported",
+            )
+          )
+        end
+
+        size = cursor_page_size
+        return if performed?
+
+        scope = apply_filters(base_scope)
+        meta = params.dig(:stats, :total) == "count" ? stats_meta(scope.count) : {}
+        scope = scope.includes(*included_preloads) if included_preloads.any?
+        paginator = CursorPaginator.new(scope, order:, size:, after:, before:)
+        item_cursors =
+          paginator.records.to_h { |record| [record.id.to_s, paginator.cursor_for(record)] }
+
+        render_resource(
+          paginator.records,
+          meta:,
+          links: {
+            prev: cursor_page_url(paginator.prev_page_params, size:),
+            next: cursor_page_url(paginator.next_page_params, size:),
+          },
+          item_meta: ->(resource) { { page: { cursor: item_cursors[resource[:id].to_s] } } },
+          content_type: cursor_profile_content_type,
+        )
+      rescue CursorPaginator::InvalidCursor
+        render_profile_error(
+          title: "Invalid pagination cursor.",
+          source: {
+            parameter: after ? "page[after]" : "page[before]",
+          },
+        )
+      end
+
+      # The profile is strict where the offset path clamps: non-positive/garbage
+      # sizes are invalid, oversized ones get the typed max-size error.
+      def cursor_page_size
+        raw = params.dig(:page, :size)
+        return cfg.default_page_size if raw.blank?
+
+        if !raw.to_s.match?(/\A[0-9]+\z/) || raw.to_i < 1
+          return(
+            render_profile_error(
+              title: "Invalid page size.",
+              detail: "page[size] must be a positive integer.",
+              source: {
+                parameter: "page[size]",
+              },
+            )
+          )
+        end
+
+        size = raw.to_i
+        if size > cfg.max_page_size
+          return(
+            render_profile_error(
+              title: "Page size requested is too large.",
+              detail: "You requested a size of #{size}, but #{cfg.max_page_size} is the maximum.",
+              source: {
+                parameter: "page[size]",
+              },
+              error_type: "max-size-exceeded",
+              meta: {
+                page: {
+                  maxSize: cfg.max_page_size,
+                },
+              },
+            )
+          )
+        end
+
+        size
+      end
+
+      def cursor_page_url(page_params, size:)
+        return if page_params.nil?
+
+        query = request.query_parameters.except("page")
+        query["page"] = page_params.transform_keys(&:to_s).merge("size" => size)
+        "#{request.path}?#{query.to_query}"
+      end
+
+      def render_profile_error(title:, detail: nil, source: nil, error_type: nil, meta: nil)
+        error = { status: "400", title: }
+        error[:detail] = detail if detail
+        error[:source] = source if source
+        error[:meta] = meta if meta
+        error[:links] = { type: "#{CURSOR_PAGINATION_PROFILE_URI}/#{error_type}" } if error_type
+        render json: {
+                 errors: [error],
+               },
+               status: :bad_request,
+               content_type: cursor_profile_content_type
+      end
+
+      def cursor_profile_content_type
+        "application/vnd.api+json;profile=\"#{CURSOR_PAGINATION_PROFILE_URI}\""
       end
 
       # Parse a JSON:API write document's `data` into a flat attributes hash.
@@ -376,7 +491,14 @@ module DiscourseDataExplorer
         { stats: { total: { count: total } } }
       end
 
-      def render_resource(resource, status: :ok, meta: {})
+      def render_resource(
+        resource,
+        status: :ok,
+        meta: {},
+        links: nil,
+        item_meta: nil,
+        content_type: nil
+      )
         options = { params: { guardian: } }
         options[:include] = jsonapi_include if params[:include].present?
         options[:fields] = jsonapi_fields if params[:fields].present?
@@ -384,8 +506,20 @@ module DiscourseDataExplorer
 
         document = cfg.serializer_class.new(resource, options).serializable_hash
         prune_empty_relationships!(document)
+        apply_item_meta!(document, item_meta) if item_meta
+        document[:links] = links if links
         VersionPipeline.down(document, api_version_gap)
-        render json: document, status: status, content_type: "application/vnd.api+json"
+        render json: document,
+               status: status,
+               content_type: content_type || "application/vnd.api+json"
+      end
+
+      def apply_item_meta!(document, item_meta)
+        data = document[:data]
+        (data.is_a?(Array) ? data : [data]).each do |resource|
+          next unless resource.is_a?(Hash)
+          resource[:meta] = (resource[:meta] || {}).merge(item_meta.call(resource))
+        end
       end
 
       # lazy_load_data leaves a non-included relationship as an empty `{}` object, which is
