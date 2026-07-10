@@ -66,9 +66,6 @@ module DiscourseAi
 
         aria_description = aria_description(description, locale)
         img[ARIA_DESCRIPTION_ATTRIBUTE] = aria_description
-
-        lightbox = img.ancestors("a.lightbox").first
-        lightbox[ARIA_DESCRIPTION_ATTRIBUTE] = aria_description if lightbox
       end
     end
 

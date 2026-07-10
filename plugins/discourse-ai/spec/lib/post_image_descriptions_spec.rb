@@ -78,6 +78,7 @@ describe DiscourseAi::PostImageDescriptions do
     expect(lightbox["title"]).to eq("user supplied")
     expect(doc.at_css(".meta .filename").text).to eq("user supplied")
     expect(image["aria-description"]).to include(description)
+    expect(lightbox["aria-description"]).to be_blank
     expect(doc.at_css(".ai-image-description")).to be_blank
     expect(
       ExcerptParser.to_plain_text(ExcerptParser.get_excerpt(processor.html, 200)),
