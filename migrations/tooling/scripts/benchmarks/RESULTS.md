@@ -71,6 +71,36 @@ Comparison:
         Time#iso8601:  1083922.8 i/s - 2.23x  slower
 ```
 
+## id_text_vs_blob.rb
+
+Compares storing the XXH3-128 content-hash ids as 24-char base64 TEXT (current
+format) vs 16-byte binary BLOB. Ran with `ruby 3.4.9 +YJIT [x86_64-linux]`,
+Extralite SQLite 3.53.3, on an i9-13900H (20 threads, 32 GB RAM), DB files on
+NVMe. Volumes: 5M source rows, 20M reference rows, 100k point lookups, 4-shard
+merge with 10% overlap.
+
+```
+metric                           TEXT           BLOB      delta
+source insert rows/s            74675          83442     +11.7%
+ref insert rows/s             1244109        1422542     +14.3%
+ref index build s               20.38          19.51      -4.3%
+lookups/s                      207467         301823     +45.5%
+join s                          22.73          21.33      -6.1%
+merge s                         21.44          19.43      -9.3%
+db file size                   1.7 GB         1.3 GB     -22.6%
+```
+
+BLOB wins across the board: ~23% smaller DB file, 12-14% faster inserts, 9%
+faster shard merges, 45% faster point lookups, 6% faster joins. Nothing gets
+slower. The gains come from key width (24 vs 16 bytes) in the PK b-tree and in
+every reference index, so they compound with the number of `*upload*_id`
+columns. Worth switching to `Digest::XXH3_128bits.digest`; the trade-off is
+that ids are no longer human-readable in query output and ad-hoc SQL needs
+`x'…'` literals or `hex(id)`.
+
+`dbstat` is not compiled into the bundled Extralite SQLite, so there is no
+per-table/per-index size breakdown.
+
 ## write.rb
 
 Compares writing lots of data into a single SQLite database.
