@@ -174,6 +174,14 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
       @noResultsMessage={{i18n
         "admin.upcoming_changes.filter.search_placeholder"
       }}
+      {{! `changeNamesFilter` is load-bearing: the setting-change warning
+      links in the locale files, the upcoming-change notifications, and admin
+      search all carry ?changeNamesFilter= — do not rename it to `filter`.
+      It also stays a registered query param (route/controller) because
+      in-app transitions drop unregistered params; @initialTextFilter carries
+      those inbound values while @textFilterQueryParam handles typing → URL }}
+      @initialTextFilter={{@changeNamesFilter}}
+      @onResetFilters={{@onClearChangeNamesFilter}}
       @textFilterQueryParam="changeNamesFilter"
       @dropdownFilterQueryParams={{hash
         status="status"

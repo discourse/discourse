@@ -6,6 +6,13 @@ import { i18n } from "discourse-i18n";
 export default class AdminConfigUpcomingChangesRoute extends DiscourseRoute {
   @service currentUser;
 
+  // registered so in-app links carrying the param keep working: an Ember
+  // transitionTo (notification clicks, admin search, the setting-change
+  // warning links) rebuilds the URL from registered query params only
+  queryParams = {
+    changeNamesFilter: { replace: true },
+  };
+
   titleToken() {
     return i18n("admin.config.upcoming_changes.title");
   }
