@@ -105,40 +105,25 @@ module Migrations
           link: [
             Markbridge::AST::Url,
             ->(sink, node, interface) do
-              # The label policy, in one place:
-              #   * plain text and simple inline formatting — the link defers
-              #     with that label.
-              #   * images, uploads, attachments — hoisted out of the label
-              #     (also from inside formatting; users nest them) and rendered
-              #     right after the link, whether it defers or not. Inside a
-              #     deferred label they would trap a token in the `text` column,
-              #     where the importer's single-pass substitution never looks
-              #     (false orphan, embed lost); inside a native label they'd
-              #     cook into a linked image. The handler itself is the hoister:
-              #     the string it returns replaces the whole node, so it emits
-              #     the link followed by the hoisted renderings — which keep
-              #     their own deferral path via render_node.
-              #   * anything else (mentions, nested links, blocks) — the link
-              #     renders natively; a nested deferrable embed then tokenizes
-              #     into the raw where the importer resolves it (a mention
-              #     degrades to remapped plain text, which is all Discourse
-              #     would cook inside a link anyway).
-              hoisted = hoist_from_label!(node)
+              # Markbridge's normalizer has already made the label legal —
+              # images, uploads, attachments and block content are hoisted out
+              # of links before rendering. What's left to decide is deferral:
+              # only a label of plain text or simple inline formatting may be
+              # recorded into the `text` column, because a deferrable embed
+              # nested in a deferred label would mint its token into that
+              # column, where the importer's single-pass substitution never
+              # looks (false orphan, embed lost). Everything else renders
+              # natively; a nested deferrable embed then tokenizes into the
+              # raw where the importer resolves it (a mention degrades to
+              # remapped plain text, which is all Discourse would cook inside
+              # a link anyway).
+              next interface.render_default(node) unless deferrable_label?(node)
 
-              base =
-                if deferrable_label?(node)
-                  # A bare URL records no text, so the importer re-emits it bare
-                  # and autolinking/oneboxing keep working; `presence` catches a
-                  # blank label the same way (`[](url)` shows nothing).
-                  text = node.bare? ? nil : interface.render_children(node).presence
-                  sink.link(url: node.href, text:)
-                else
-                  interface.render_default(node)
-                end
-
-              next base if hoisted.empty?
-
-              [base, *hoisted.map { |child| interface.render_node(child) }].join(" ")
+              # A bare URL records no text, so the importer re-emits it bare
+              # and autolinking/oneboxing keep working; `presence` catches a
+              # blank label the same way (`[](url)` shows nothing).
+              text = node.bare? ? nil : interface.render_children(node).presence
+              sink.link(url: node.href, text:)
             end,
           ],
         }
@@ -154,46 +139,11 @@ module Migrations
       end
       private_class_method :bounded_id
 
-      # Image-like nodes never stay in a link label; the :link handler hoists
-      # them out and renders them right after the link.
-      def self.hoisted_from_label?(node)
-        node.instance_of?(Markbridge::AST::Upload) || node.instance_of?(Markbridge::AST::Image) ||
-          node.instance_of?(Markbridge::AST::Attachment)
-      end
-      private_class_method :hoisted_from_label?
-
       def self.label_formatting?(node)
         node.instance_of?(Markbridge::AST::Bold) || node.instance_of?(Markbridge::AST::Italic) ||
           node.instance_of?(Markbridge::AST::Strikethrough)
       end
       private_class_method :label_formatting?
-
-      # Removes every image-like node from the label, descending into label
-      # formatting (but not into foreign subtrees like a nested quote, whose
-      # images belong where they are). Formatting the hoist leaves empty is
-      # pruned with it — a `**​**` husk helps nobody. Mutating the node is safe:
-      # the handler's return value replaces the node's rendering wholesale, so
-      # nothing else renders this subtree.
-      #
-      # @return [Array<Markbridge::AST::Node>] the removed nodes, document order.
-      def self.hoist_from_label!(node)
-        hoisted = []
-
-        node.children.delete_if do |child|
-          if hoisted_from_label?(child)
-            hoisted << child
-            true
-          elsif label_formatting?(child)
-            hoisted.concat(hoist_from_label!(child))
-            child.children.empty?
-          else
-            false
-          end
-        end
-
-        hoisted
-      end
-      private_class_method :hoist_from_label!
 
       # Whether a link label contains only plain text and the inline formatting
       # Discourse allows inside `[…](url)`. This is the single policy point for

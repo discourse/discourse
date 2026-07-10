@@ -4,6 +4,9 @@ source "https://rubygems.org"
 
 gem "migrations-core", path: "../core"
 
+# Until the AST normalizer (markbridge PR #67) is released:
+gem "markbridge", github: "discourse/markbridge", branch: "feature/ast-normalizer"
+
 gemspec
 
 group :test do
