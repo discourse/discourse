@@ -20,6 +20,7 @@ module Migrations
             hidden_reason_id,
             last_editor_id,
             like_count,
+            locale,
             locked_by_id,
             original_raw,
             post_number,
@@ -34,7 +35,7 @@ module Migrations
             wiki
           )
           VALUES (
-            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+            ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
           )
         SQL
         private_constant :SQL
@@ -52,6 +53,7 @@ module Migrations
         #   Any constant from PostHiddenReason (e.g. PostHiddenReason::FLAG_THRESHOLD_REACHED)
         # @param last_editor_id     [Integer, String, nil]
         # @param like_count         [Integer, nil]
+        # @param locale             [String, nil]
         # @param locked_by_id       [Integer, String, nil]
         # @param original_raw       [String, nil]
         # @param post_number        [Integer, nil]
@@ -81,6 +83,7 @@ module Migrations
           hidden_reason_id: nil,
           last_editor_id: nil,
           like_count: nil,
+          locale: nil,
           locked_by_id: nil,
           original_raw: nil,
           post_number: nil,
@@ -106,6 +109,7 @@ module Migrations
             hidden_reason_id,
             last_editor_id,
             like_count,
+            locale,
             locked_by_id,
             original_raw,
             post_number,

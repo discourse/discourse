@@ -37,7 +37,6 @@ Migrations::Tooling::Schema.table :posts do
          :incoming_link_count,
          :last_version_at,
          :like_score,
-         :locale,
          :notify_moderators_count,
          :notify_user_count,
          :off_topic_count,

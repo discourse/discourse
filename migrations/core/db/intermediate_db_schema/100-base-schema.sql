@@ -303,6 +303,7 @@ CREATE TABLE posts
     hidden_reason_id ENUM_INTEGER,
     last_editor_id   NUMERIC,
     like_count       INTEGER,
+    locale           TEXT,
     locked_by_id     NUMERIC,
     original_raw     TEXT,
     post_number      INTEGER,

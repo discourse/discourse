@@ -137,6 +137,7 @@ module Migrations
               hidden_reason_id: valid_enum(Enums::PostHiddenReason, item[:hidden_reason_id]),
               last_editor_id: item[:last_editor_id],
               like_count: item[:like_count],
+              locale: item[:locale],
               locked_by_id: item[:locked_by_id],
               original_raw: item[:raw],
               post_number: item[:post_number],
