@@ -105,23 +105,40 @@ module Migrations
           link: [
             Markbridge::AST::Url,
             ->(sink, node, interface) do
-              # Defer only a link whose label is plain text or simple inline
-              # formatting; everything richer renders natively. That is not just
-              # caution: a deferrable embed nested in a deferred link's label
-              # would mint its token into the `text` column, where the importer's
-              # single-pass substitution never looks — it would surface as a
-              # false orphan and vanish. Rendered natively, the label stays in
-              # the raw, nested tokens resolve normally, and the semantics come
-              # out right by themselves: an image in a link stays a clickable
-              # image, a mention degrades to remapped plain text (Discourse
-              # doesn't cook mentions inside links).
-              next interface.render_default(node) unless deferrable_label?(node)
+              # The label policy, in one place:
+              #   * plain text and simple inline formatting — the link defers
+              #     with that label.
+              #   * images, uploads, attachments — hoisted out of the label and
+              #     rendered right after the link. Inside a deferred label they
+              #     would trap a token in the `text` column, where the importer's
+              #     single-pass substitution never looks (false orphan, embed
+              #     lost); inside a native label they'd cook into a linked
+              #     image. The handler itself is the hoister: the string it
+              #     returns replaces the whole node, so it emits the link's
+              #     token followed by the hoisted renderings — which keep their
+              #     own deferral path via render_node.
+              #   * anything else (mentions, nested links, blocks) — the link
+              #     renders natively; a nested deferrable embed then tokenizes
+              #     into the raw where the importer resolves it (a mention
+              #     degrades to remapped plain text, which is all Discourse
+              #     would cook inside a link anyway).
+              hoisted, label_children = node.children.partition { |c| hoisted_from_label?(c) }
+              unless label_children.all? { |child| deferrable_label_node?(child) }
+                next interface.render_default(node)
+              end
 
               # A bare URL records no text, so the importer re-emits it bare and
               # autolinking/oneboxing keep working; `presence` catches a blank
               # label the same way (`[](url)` shows nothing).
-              text = node.bare? ? nil : interface.render_children(node).presence
-              sink.link(url: node.href, text:)
+              text =
+                unless node.bare?
+                  label_children.map { |child| interface.render_node(child) }.join.presence
+                end
+
+              token = sink.link(url: node.href, text:)
+              next token if hoisted.empty?
+
+              [token, *hoisted.map { |child| interface.render_node(child) }].join(" ")
             end,
           ],
         }
@@ -136,6 +153,14 @@ module Migrations
         value if value && value < 10**18
       end
       private_class_method :bounded_id
+
+      # Image-like nodes never stay in a link label; the :link handler hoists
+      # them out and renders them right after the link.
+      def self.hoisted_from_label?(node)
+        node.instance_of?(Markbridge::AST::Upload) || node.instance_of?(Markbridge::AST::Image) ||
+          node.instance_of?(Markbridge::AST::Attachment)
+      end
+      private_class_method :hoisted_from_label?
 
       # Whether a link label contains only plain text and the inline formatting
       # Discourse allows inside `[…](url)`. This is the single policy point for
@@ -153,13 +178,22 @@ module Migrations
         when Markbridge::AST::Bold, Markbridge::AST::Italic, Markbridge::AST::Strikethrough
           deferrable_label?(node)
         when Markbridge::AST::Code
-          # A language implies a fenced block; only bare inline code qualifies.
-          node.language.nil? && deferrable_label?(node)
+          # Inline code is a code without a language (a language implies a
+          # fenced block) and with a single line — multi-line code renders as
+          # a block even without one.
+          node.language.nil? && single_line_code?(node)
         else
           false
         end
       end
       private_class_method :deferrable_label_node?
+
+      def self.single_line_code?(node)
+        node.children.all? do |child|
+          child.instance_of?(Markbridge::AST::Text) && !child.text.include?("\n")
+        end
+      end
+      private_class_method :single_line_code?
 
       # @param format [Symbol] one of {FORMATS}.
       def initialize(format: :bbcode)

@@ -114,6 +114,21 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(raw).to include(buffer.quotes.first[:placeholder])
     end
 
+    it "hoists an image out of the label instead of linking it" do
+      raw =
+        renderer.to_markdown(
+          "[url=https://example.com][img]https://example.com/pic.png[/img][/url]",
+          on_embed: buffer,
+          defer: %i[link],
+        )
+
+      # The link is recorded label-less (a bare URL at import); the image
+      # follows the token instead of cooking into a clickable image.
+      expect(buffer.links).to contain_exactly(hash_including(url: "https://example.com", text: nil))
+      expect(raw).to include("#{buffer.links.first[:placeholder]} ")
+      expect(raw).to include("https://example.com/pic.png")
+    end
+
     it "records a bare URL's text as nil so the importer re-emits it bare" do
       renderer.to_markdown(
         "see [url=https://example.com/t/5]https://example.com/t/5[/url]",
@@ -194,6 +209,48 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(sink.quotes).to contain_exactly(
         hash_including(quoted_post_id: 9001, quoted_user_id: 12, quoted_username: "alice"),
       )
+    end
+
+    it "defers a link whose label is single-line inline code" do
+      _node_class, extract = described_class.embed_handlers.fetch(:link)
+      node = Markbridge::AST::Url.new(href: "https://example.com")
+      code = Markbridge::AST::Code.new << Markbridge::AST::Text.new("x")
+      node << code
+      interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
+      allow(interface).to receive(:render_node).with(code).and_return("`x`")
+
+      extract.call(sink, node, interface)
+
+      expect(sink.links).to contain_exactly(hash_including(text: "`x`"))
+    end
+
+    it "hoists an upload out of the label, after the link's token" do
+      _node_class, extract = described_class.embed_handlers.fetch(:link)
+      node = Markbridge::AST::Url.new(href: "https://example.com")
+      label = Markbridge::AST::Text.new("docs")
+      upload = Markbridge::AST::Upload.new(sha1: "abc123", filename: "x.png")
+      node << label << upload
+      interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
+      allow(interface).to receive(:render_node).with(label).and_return("docs")
+      allow(interface).to receive(:render_node).with(upload).and_return("UPLOAD_TOKEN")
+
+      result = extract.call(sink, node, interface)
+
+      expect(sink.links).to contain_exactly(hash_including(text: "docs"))
+      expect(result).to eq("#{sink.links.first[:placeholder]} UPLOAD_TOKEN")
+    end
+
+    it "falls back to native rendering for a label with multi-line code" do
+      _node_class, extract = described_class.embed_handlers.fetch(:link)
+      node = Markbridge::AST::Url.new(href: "https://example.com")
+      node << (Markbridge::AST::Code.new << Markbridge::AST::Text.new("a\nb"))
+      interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
+      allow(interface).to receive(:render_default).with(node).and_return("NATIVE")
+
+      result = extract.call(sink, node, interface)
+
+      expect(result).to eq("NATIVE")
+      expect(sink.links).to be_empty
     end
 
     it "falls back to native rendering for a label containing a mention" do
