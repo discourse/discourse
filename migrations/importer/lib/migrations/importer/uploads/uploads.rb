@@ -79,6 +79,7 @@ module Migrations
           configure_logging
           configure_image_memory_limits
           configure_site_settings
+          DiscoursePatches.apply!
         end
 
         def configure_logging
