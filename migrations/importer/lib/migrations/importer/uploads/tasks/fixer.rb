@@ -18,22 +18,37 @@ module Migrations
             @max_count ||= files_db.query_value("SELECT COUNT(*) FROM uploads")
           end
 
-          def produce(emit_work:, _emit_result:)
+          def before_run
+            # `discourse_store.external?` never changes during a run, so resolve it
+            # once instead of on every processed row.
+            @external_store = discourse_store.external?
+          end
+
+          # The pipeline also passes `emit_result:` (for rows a task resolves up
+          # front); the fixer resolves nothing early, so it is ignored. An
+          # underscore-prefixed keyword would NOT do that — it renames the required
+          # keyword and the pipeline's call raises ArgumentError.
+          def produce(emit_work:, **)
             files_db.query("SELECT id AS upload_id, url FROM uploads ORDER BY id DESC") do |row|
               emit_work.call(row)
             end
           end
 
           def build_worker_resource
-            OpenStruct.new(url: "")
+            OpenStruct.new(url: "", secure?: SiteSetting.secure_uploads, optimized_images: [])
           end
 
           def process(row, fake_upload)
             fake_upload.url = row[:url]
             path = add_multisite_prefix(discourse_store.get_path_for_upload(fake_upload))
 
-            status = file_exists?(path) ? :ok : :missing
-            { upload_id: row[:upload_id], status: }
+            return { upload_id: row[:upload_id], status: :missing } unless file_exists?(path)
+
+            # The file is still there. On an external store a fix_missing run
+            # doubles as a repair pass for the upload's ACL and access-control tags.
+            discourse_store.update_upload_access_control(fake_upload) if @external_store
+
+            { upload_id: row[:upload_id], status: :ok }
           rescue StandardError => e
             { upload_id: row[:upload_id], status: :error, error: e.message }
           end

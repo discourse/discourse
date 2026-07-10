@@ -28,6 +28,9 @@ module Migrations
           SiteSetting.authorized_extensions = @options[:authorized_extensions]
           SiteSetting.max_attachment_size_kb = @options[:max_attachment_size_kb]
           SiteSetting.max_image_size_kb = @options[:max_image_size_kb]
+          SiteSetting.max_image_megapixels = @options[:max_image_megapixels]
+          SiteSetting.secure_uploads = @options[:secure_uploads]
+          SiteSetting.s3_enable_access_control_tags = @options[:s3_enable_access_control_tags]
         end
 
         def configure_multisite
