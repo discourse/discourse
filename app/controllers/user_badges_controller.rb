@@ -3,6 +3,10 @@
 class UserBadgesController < ApplicationController
   MAX_BADGES = 96 # This was limited in PR#2360 to make it divisible by 8
 
+  # Upper bound on the recipients a single "featured" query can return, so a
+  # block on a public page can never ask the server for an unbounded list.
+  MAX_FEATURED_GRANTS = 50
+
   before_action :ensure_badges_enabled
   before_action :ensure_logged_in, only: %i[create destroy toggle_favorite]
 
@@ -49,6 +53,42 @@ class UserBadgesController < ApplicationController
       root: :user_badge_info,
       include_long_description: true,
       allowed_user_badge_topic_ids: guardian.can_see_topic_ids(topic_ids: user_badges_topic_ids),
+    )
+  end
+
+  # Lists the most recent recipients of a set of badges, newest grant first.
+  # Powers the "recently awarded badges" block: a curated `badge_ids` set, an
+  # optional `max_days` recency window, and a `limit` on how many recipients to
+  # return. Public (only gated on `enable_badges`), like `#index`.
+  def featured
+    params.permit %i[badge_ids max_days limit]
+
+    # Accept a pipe- or comma-separated id list (pipe matches how blocks store
+    # portable id lists), and drop anything that isn't a positive integer.
+    badge_ids = params[:badge_ids].to_s.split(/[|,]/).map(&:to_i).reject(&:zero?)
+    badge_ids = Badge.enabled.where(id: badge_ids).pluck(:id)
+
+    limit = fetch_int_from_params(:limit, default: 10).clamp(1, MAX_FEATURED_GRANTS)
+    max_days = fetch_int_from_params(:max_days, default: 0)
+
+    user_badges =
+      UserBadge
+        .where(badge_id: badge_ids)
+        .order("granted_at DESC, id DESC")
+        .limit(limit)
+        .includes(
+          :user,
+          :granted_by,
+          badge: :badge_type,
+          post: :topic,
+          user: %i[primary_group flair_group],
+        )
+    user_badges = user_badges.where("granted_at > ?", max_days.days.ago) if max_days > 0
+
+    render_serialized(
+      UserBadges.new(user_badges: user_badges),
+      UserBadgesSerializer,
+      root: :user_badge_info,
     )
   end
 

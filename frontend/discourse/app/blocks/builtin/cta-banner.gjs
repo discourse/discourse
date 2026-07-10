@@ -8,7 +8,7 @@ import { ICON_NAME_PATTERN, URL_PATTERN } from "discourse/lib/blocks";
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
 import cookie from "discourse/lib/cookie";
 import getURL from "discourse/lib/get-url";
-/** @type {import("discourse/ui-kit/d-button.gjs")} */
+/** @type {import("discourse/ui-kit/d-button.gts")} */
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";

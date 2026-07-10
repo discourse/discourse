@@ -8,7 +8,7 @@ import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 /** @type {import("discourse/lib/blocks/-internals/rich-text-renderer.gjs")} */
 import RichTextRenderer from "discourse/lib/blocks/-internals/rich-text-renderer";
 import Category from "discourse/models/category";
-/** @type {import("discourse/ui-kit/d-button.gjs")} */
+/** @type {import("discourse/ui-kit/d-button.gts")} */
 import DButton from "discourse/ui-kit/d-button";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";

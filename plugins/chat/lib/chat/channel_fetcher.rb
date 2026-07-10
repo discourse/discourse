@@ -198,6 +198,8 @@ module Chat
         channels = channels.where("chat_channels.slug IN (:slugs)", slugs: options[:slugs])
       end
 
+      channels = channels.where(id: options[:ids]) if options[:ids].present?
+
       if options.key?(:following) && guardian.user
         if options[:following]
           channels =

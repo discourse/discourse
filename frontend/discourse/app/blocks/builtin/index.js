@@ -43,6 +43,7 @@ export { default as Callout } from "./callout";
 export { default as CtaBanner } from "./cta-banner";
 export { default as CategoryBanner } from "./category-banner";
 export { default as FeaturedCategories } from "./featured-categories";
+export { default as FeaturedBadges } from "./featured-badges";
 export { default as RecentTopics } from "./recent-topics";
 export { default as FeaturedTopics } from "./featured-topics";
 export { default as TopicCard } from "./topic-card";

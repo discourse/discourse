@@ -1348,6 +1348,7 @@ Discourse::Application.routes.draw do
     resources :badges, only: [:index]
     get "/badges/:id(/:slug)" => "badges#show", :constraints => { format: /(json|html|rss)/ }
     resources :user_badges, only: %i[index create destroy] do
+      collection { get "featured" => "user_badges#featured", :constraints => { format: :json } }
       put "toggle_favorite" => "user_badges#toggle_favorite", :constraints => { format: :json }
     end
 

@@ -79,6 +79,81 @@ RSpec.describe UserBadgesController do
     end
   end
 
+  describe "#featured" do
+    fab!(:badge_one, :badge)
+    fab!(:badge_two, :badge)
+
+    it "lists recent recipients across the given badges, newest grant first" do
+      older = Fabricate(:user_badge, badge: badge_one, granted_at: 3.days.ago)
+      newer = Fabricate(:user_badge, badge: badge_two, granted_at: 1.hour.ago)
+
+      get "/user_badges/featured.json", params: { badge_ids: "#{badge_one.id}|#{badge_two.id}" }
+
+      expect(response.status).to eq(200)
+      ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+      expect(ids).to eq([newer.id, older.id])
+    end
+
+    it "excludes grants older than the max_days window" do
+      fresh = Fabricate(:user_badge, badge: badge_one, granted_at: 2.days.ago)
+      Fabricate(:user_badge, badge: badge_one, granted_at: 40.days.ago)
+
+      get "/user_badges/featured.json", params: { badge_ids: badge_one.id, max_days: 15 }
+
+      ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+      expect(ids).to eq([fresh.id])
+    end
+
+    it "honors the limit param" do
+      3.times { Fabricate(:user_badge, badge: badge_one) }
+
+      get "/user_badges/featured.json", params: { badge_ids: badge_one.id, limit: 2 }
+
+      expect(response.parsed_body["user_badge_info"]["user_badges"].length).to eq(2)
+    end
+
+    it "ignores disabled badges" do
+      enabled_grant = Fabricate(:user_badge, badge: badge_one)
+      disabled_badge = Fabricate(:badge, enabled: false)
+      Fabricate(:user_badge, badge: disabled_badge)
+
+      get "/user_badges/featured.json",
+          params: {
+            badge_ids: "#{badge_one.id}|#{disabled_badge.id}",
+          }
+
+      ids = response.parsed_body["user_badge_info"]["user_badges"].map { |ub| ub["id"] }
+      expect(ids).to eq([enabled_grant.id])
+    end
+
+    it "returns nothing when no badge ids are given" do
+      Fabricate(:user_badge, badge: badge_one)
+
+      get "/user_badges/featured.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["user_badge_info"]["user_badges"]).to eq([])
+    end
+
+    it "side-loads the granted users" do
+      user_badge = Fabricate(:user_badge, badge: badge_one)
+
+      get "/user_badges/featured.json", params: { badge_ids: badge_one.id }
+
+      expect(response.parsed_body["users"].map { |granted_user| granted_user["id"] }).to include(
+        user_badge.user_id,
+      )
+    end
+
+    it "fails when badges are disabled site-wide" do
+      SiteSetting.enable_badges = false
+
+      get "/user_badges/featured.json", params: { badge_ids: badge_one.id }
+
+      expect(response.status).to eq(404)
+    end
+  end
+
   describe "#show" do
     fab!(:post)
     fab!(:private_message_post)

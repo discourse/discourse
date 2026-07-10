@@ -124,6 +124,13 @@ en:
           description: "Show descriptions"
           all_categories_link: "Show \"all categories\" link"
           all_categories_label: "\"All categories\" label"
+        featured_badges:
+          title: "Title"
+          badges: "Badges"
+          badges_help: "Badge IDs separated by `|` (e.g. `24|10|45`)."
+          max_days: "Only grants from the last N days (0 for no limit)"
+          count: "Recipients to show"
+          empty: "No badges awarded yet."
         category_banner:
           show_logo: "Show logo"
           show_icon: "Show icon / emoji"

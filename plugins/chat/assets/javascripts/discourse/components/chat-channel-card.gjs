@@ -1,14 +1,22 @@
 import { concat, hash } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
 import { trustHTML } from "@ember/template";
-import { gt } from "discourse/truth-helpers";
+import { eq, gt } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
 
-export default <template>
+/**
+ * @type {import("@ember/component/template-only").TOC<{
+ *   Args: {
+ *     channel?: import("discourse/plugins/chat/discourse/models/chat-channel").default;
+ *     showMembershipButton?: boolean;
+ *   };
+ * }>}
+ */
+const ChatChannelCard = <template>
   {{#if @channel}}
     <div
       class={{dConcatClass
@@ -43,26 +51,31 @@ export default <template>
         </LinkTo>
       </div>
 
-      <div class="chat-channel-card__cta">
-        {{#if @channel.isFollowing}}
-          <ToggleChannelMembershipButton
-            @channel={{@channel}}
-            @options={{hash
-              leaveClass="btn-transparent --danger chat-channel-card__leave-btn"
-              labelType="short"
-            }}
-          />
+      {{! The join/leave CTA is shown by default; consumers can hide it by
+          setting showMembershipButton to false, e.g. a read-only channel
+          showcase. }}
+      {{#unless (eq @showMembershipButton false)}}
+        <div class="chat-channel-card__cta">
+          {{#if @channel.isFollowing}}
+            <ToggleChannelMembershipButton
+              @channel={{@channel}}
+              @options={{hash
+                leaveClass="btn-transparent --danger chat-channel-card__leave-btn"
+                labelType="short"
+              }}
+            />
 
-        {{else if @channel.isJoinable}}
-          <ToggleChannelMembershipButton
-            @channel={{@channel}}
-            @options={{hash
-              joinClass="btn-primary btn-small chat-channel-card__join-btn"
-              labelType="short"
-            }}
-          />
-        {{/if}}
-      </div>
+          {{else if @channel.isJoinable}}
+            <ToggleChannelMembershipButton
+              @channel={{@channel}}
+              @options={{hash
+                joinClass="btn-primary btn-small chat-channel-card__join-btn"
+                labelType="short"
+              }}
+            />
+          {{/if}}
+        </div>
+      {{/unless}}
 
       {{#if (gt @channel.membershipsCount 0)}}
         <LinkTo
@@ -84,4 +97,6 @@ export default <template>
       {{/if}}
     </div>
   {{/if}}
-</template>
+</template>;
+
+export default ChatChannelCard;

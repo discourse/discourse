@@ -8,7 +8,7 @@ import {
   fetchTopicList,
   VALID_TOPIC_LIST_FILTERS,
 } from "discourse/lib/blocks/-internals/fetch-topic-list";
-/** @type {import("discourse/ui-kit/d-button.gjs")} */
+/** @type {import("discourse/ui-kit/d-button.gts")} */
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
