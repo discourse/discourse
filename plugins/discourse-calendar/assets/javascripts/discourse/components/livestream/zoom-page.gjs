@@ -100,6 +100,11 @@ export default class LivestreamZoomPage extends Component {
     this.modal.show(MobileEmbeddableChatModal);
   }
 
+  @action
+  retryZoom() {
+    window.location.assign(this.retryZoomRoute);
+  }
+
   <template>
     <div class="discourse-calendar-livestream-zoom-page">
       {{#if this.errorMessage}}
@@ -114,7 +119,7 @@ export default class LivestreamZoomPage extends Component {
 
           {{#if this.returnedFromZoom}}
             <DButton
-              @href={{this.retryZoomRoute}}
+              @action={{this.retryZoom}}
               @label="discourse_calendar.livestream.zoom.join"
               @icon="video"
               class="btn-primary"

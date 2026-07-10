@@ -32,7 +32,7 @@ en:
           join: "Join Zoom"
           chat: "Chat"
           open_in_zoom: "Open in Zoom"
-          load_error: "Unable to load Zoom in this page."
+          load_error: "You left the webinar or we are unable to load Zoom in this page."
           too_early: "You can join the webinar closer to the event start time"
           not_started_retrying:
             one: "The webinar hasn't started yet. Retrying join in %{count} second..."
