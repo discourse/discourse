@@ -4,27 +4,116 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import type { AutoUpdateOptions } from "@floating-ui/dom";
+import { type ComponentLike } from "@glint/template";
 import curryComponent from "ember-curry-component";
 import { modifier } from "ember-modifier";
 import DFloatBody from "discourse/float-kit/components/d-float-body";
-import { MENU } from "discourse/float-kit/lib/constants";
+import {
+  type FloatCallback,
+  type FloatUiPlacement,
+  MENU,
+  type MenuOptions,
+  type VisibilityOptimizer,
+} from "discourse/float-kit/lib/constants";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import { isTesting } from "discourse/lib/environment";
+import type Site from "discourse/models/site";
 import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import DModal from "discourse/ui-kit/d-modal";
+import DModalUntyped from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
-export default class DMenu extends Component {
-  @service site;
+// TODO(devxp-typescript-pending): drop this cast once DModal is authored in .gts with a
+// real Signature, then import it directly. Untyped .gjs today gives it no arg/attr types.
+const DModal = DModalUntyped as unknown as ComponentLike<{
+  Element: HTMLElement;
+  Args: {
+    closeModal?: FloatCallback;
+    hideHeader?: boolean;
+    autofocus?: boolean;
+    inline?: boolean;
+  };
+  Blocks: { default: [] };
+}>;
 
-  menuInstance = new DMenuInstance(getOwner(this), {
+/** The object yielded to each of the menu's blocks and passed to a rendered component. */
+export interface DMenuComponentArgs<Data = unknown> {
+  close: FloatCallback;
+  show: FloatCallback;
+  data?: Data;
+}
+
+interface DMenuSignature<Data = unknown> {
+  Element: HTMLElement;
+  Args: {
+    /* Explicitly-read arguments (not part of the options bag). */
+    onKeydown?: (event: KeyboardEvent) => unknown;
+    triggerComponent?: ComponentLike;
+    icon?: string;
+    label?: string;
+    ariaLabel?: string;
+    title?: string;
+    disabled?: boolean;
+    isLoading?: boolean;
+
+    /* Every key of `MENU.options` (see `constants.ts` — the source of truth). */
+    animated?: boolean;
+    arrow?: boolean;
+    autofocus?: boolean;
+    beforeTrigger?: FloatCallback;
+    closeOnEscape?: boolean;
+    closeOnClickOutside?: boolean;
+    closeOnScroll?: boolean;
+    component?: ComponentLike<{ Args: { data?: Data; close?: FloatCallback } }>;
+    content?: string;
+    identifier?: string;
+    interactive?: boolean;
+    listeners?: boolean;
+    maxWidth?: number;
+    data?: Data;
+    offset?: number;
+    triggers?: string[];
+    untriggers?: string[];
+    placement?: FloatUiPlacement;
+    shiftBeforeVisibilityOptimizer?: boolean;
+    visibilityOptimizer?: VisibilityOptimizer;
+    fallbackPlacements?: readonly FloatUiPlacement[];
+    autoUpdate?: boolean | AutoUpdateOptions;
+    trapTab?: boolean;
+    onClose?: FloatCallback;
+    onShow?: FloatCallback;
+    onRegisterApi?: (instance: DMenuInstance) => void;
+    modalForMobile?: boolean;
+    inline?: boolean | null;
+    groupIdentifier?: string;
+    parentIdentifier?: string;
+    triggerClass?: string;
+    contentClass?: string;
+    class?: string;
+    matchTriggerMinWidth?: boolean;
+    matchTriggerWidth?: boolean;
+    portalOutletElement?: HTMLElement;
+  };
+  Blocks: {
+    default: [DMenuComponentArgs<Data>];
+    trigger: [DMenuComponentArgs<Data>];
+    content: [DMenuComponentArgs<Data>];
+  };
+}
+
+export default class DMenu<Data = unknown> extends Component<
+  DMenuSignature<Data>
+> {
+  @service declare site: Site;
+
+  menuInstance = new DMenuInstance(getOwner(this)!, {
     ...this.allowedProperties,
     autoUpdate: true,
     listeners: true,
-  });
+  } as Partial<MenuOptions>);
 
-  registerTrigger = modifier((domElement) => {
+  registerTrigger = modifier((domElement: HTMLElement) => {
     this.menuInstance.trigger = domElement;
     this.options.onRegisterApi?.(this.menuInstance);
 
@@ -33,87 +122,96 @@ export default class DMenu extends Component {
     };
   });
 
-  registerFloatBody = modifier((domElement) => {
-    this.body = domElement;
+  registerFloatBody = modifier((domElement: HTMLElement) => {
+    this.#body = domElement;
 
     return () => {
-      this.body = null;
+      this.#body = null;
     };
   });
 
+  #body: HTMLElement | null = null;
+
   @action
   teardownFloatBody() {
-    this.body = null;
+    this.#body = null;
   }
 
   @action
-  forwardTabToContent(event) {
+  forwardTabToContent(event: KeyboardEvent) {
     // need to call the parent handler to allow arrow key navigation to siblings in toolbar contexts
     const parentHandlerResult = this.args.onKeydown?.(event);
 
-    if (!this.body) {
+    if (!this.#body) {
       return parentHandlerResult;
     }
 
     if (event.key === "Tab") {
       event.preventDefault();
 
-      const firstFocusable = this.body.querySelector(
+      const firstFocusable = this.#body.querySelector<HTMLElement>(
         'button, a, input:not([type="hidden"]), select, textarea, [tabindex]:not([tabindex="-1"])'
       );
 
-      firstFocusable?.focus() || this.body.focus();
+      firstFocusable?.focus();
+      this.#body.focus();
+
       return true;
     }
 
     return parentHandlerResult;
   }
 
-  get options() {
-    return this.menuInstance?.options ?? {};
+  get options(): MenuOptions {
+    return this.menuInstance?.options ?? ({} as MenuOptions);
   }
 
-  get componentArgs() {
+  get componentArgs(): DMenuComponentArgs<Data> {
     return {
       close: this.menuInstance.close,
       show: this.menuInstance.show,
-      data: this.options.data,
+      data: this.options.data as Data,
     };
   }
 
   get triggerComponent() {
-    const instance = this;
+    const args = this.args;
     const baseArguments = {
       get icon() {
-        return instance.args.icon;
+        return args.icon;
       },
       get translatedLabel() {
-        return instance.args.label;
+        return args.label;
       },
       get translatedAriaLabel() {
-        return instance.args.ariaLabel;
+        return args.ariaLabel;
       },
       get translatedTitle() {
-        return instance.args.title;
+        return args.title;
       },
       get disabled() {
-        return instance.args.disabled;
+        return args.disabled;
       },
       get isLoading() {
-        return instance.args.isLoading;
+        return args.isLoading;
       },
     };
 
-    return (
-      this.args.triggerComponent ||
-      curryComponent(DButton, baseArguments, getOwner(this))
-    );
+    // `curryComponent` is untyped and the curried `DButton` honors the menu's
+    // `@componentArgs` + modifier + splattributes + default block at runtime without
+    // declaring them, so the result is cast to a permissive component type.
+    return (this.args.triggerComponent ||
+      curryComponent(DButton, baseArguments, getOwner(this))) as ComponentLike<{
+      Element: HTMLElement;
+      Args: { componentArgs?: DMenuComponentArgs<Data> };
+      Blocks: { default: [] };
+    }>;
   }
 
   get allowedProperties() {
-    const properties = {};
+    const properties: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(MENU.options)) {
-      properties[key] = this.args[key] ?? value;
+      properties[key] = (this.args as Record<string, unknown>)[key] ?? value;
     }
     return properties;
   }

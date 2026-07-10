@@ -1,12 +1,27 @@
+import type { TemplateOnlyComponent } from "@ember/component/template-only";
 import { concat, fn, hash } from "@ember/helper";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { trustHTML } from "@ember/template";
+import type {
+  FloatCallback,
+  ToastData,
+} from "discourse/float-kit/lib/constants";
 import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 
-const DDefaultToast = <template>
+interface DDefaultToastSignature {
+  Element: HTMLDivElement;
+  Args: {
+    data?: ToastData;
+    close?: FloatCallback;
+    showProgressBar?: boolean;
+    onRegisterProgressBar?: (element: HTMLElement) => void;
+  };
+}
+
+const DDefaultToast: TemplateOnlyComponent<DDefaultToastSignature> = <template>
   <div
     class={{dConcatClass
       "fk-d-default-toast"

@@ -1,39 +1,41 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
-import { setOwner } from "@ember/owner";
+import Owner, { setOwner } from "@ember/owner";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
-import { TOOLTIP } from "discourse/float-kit/lib/constants";
+import {
+  type FloatKitTrigger,
+  TOOLTIP,
+  type TooltipOptions,
+} from "discourse/float-kit/lib/constants";
 import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
+import type TooltipService from "discourse/float-kit/services/tooltip";
 
 export default class DTooltipInstance extends FloatKitInstance {
-  @service tooltip;
+  @service declare tooltip: TooltipService;
 
   /**
    * Indicates whether the tooltip is expanded or not.
-   * @property {boolean} expanded - Tracks the state of tooltip expansion, initially set to false.
    */
   @tracked expanded = false;
 
   /**
    * Specifies whether the trigger for opening/closing the tooltip is detached from the tooltip itself.
    * This is the case when a tooltip is trigger programmatically instead of through the <DTooltip /> component.
-   * @property {boolean} detachedTrigger - Tracks whether the trigger is detached, initially set to false.
    */
   @tracked detachedTrigger = false;
 
   /**
    * Configuration options for the DTooltipInstance.
-   * @property {Object} options - Options object that configures the tooltip behavior and display.
    */
-  @tracked options;
-  @tracked portalOutletOverrideElement;
+  @tracked options: TooltipOptions;
+  @tracked portalOutletOverrideElement?: HTMLElement | null;
 
-  @tracked _trigger;
+  @tracked _trigger: FloatKitTrigger;
 
-  constructor(owner, options = {}) {
-    super(...arguments);
+  constructor(owner: Owner, options: Partial<TooltipOptions> = {}) {
+    super();
 
     setOwner(this, owner);
     this.options = { ...TOOLTIP.options, ...options };
@@ -44,9 +46,10 @@ export default class DTooltipInstance extends FloatKitInstance {
     return this._trigger;
   }
 
-  set trigger(element) {
+  set trigger(element: FloatKitTrigger) {
     this._trigger = element;
-    this.id = element.id || guidFor(element);
+    this.id =
+      (element instanceof HTMLElement && element.id) || guidFor(element);
     this.setupListeners();
   }
 
@@ -60,7 +63,7 @@ export default class DTooltipInstance extends FloatKitInstance {
   @action
   async show() {
     await this.tooltip.show(this);
-    await super.show(...arguments);
+    await super.show();
   }
 
   @action
@@ -68,14 +71,14 @@ export default class DTooltipInstance extends FloatKitInstance {
     this.openedByDelayedHover = false;
     await this.tooltip.close(this);
 
-    await super.close(...arguments);
+    await super.close();
   }
 
   @action
-  async onPointerMove(event) {
+  async onPointerMove(event: PointerEvent) {
     if (
       this.expanded &&
-      this.trigger.contains(event.target) &&
+      this.triggerElement?.contains(event.target as Node) &&
       event.pointerType !== "touch"
     ) {
       return;
@@ -85,7 +88,7 @@ export default class DTooltipInstance extends FloatKitInstance {
   }
 
   @action
-  async onClick(event) {
+  async onClick(event: MouseEvent) {
     cancel(this.delayedHoverTimeout);
 
     if (this.openedByDelayedHover) {
@@ -101,20 +104,24 @@ export default class DTooltipInstance extends FloatKitInstance {
   }
 
   @action
-  async onPointerLeave(event) {
+  async onPointerLeave(event: PointerEvent) {
     if (this.untriggers.includes("hover")) {
       await this.onUntrigger(event);
     }
   }
 
   @action
-  async onTrigger() {
+  // the trigger event is relayed in from the base and shared actions but, unlike a
+  // menu, a tooltip does not stop its propagation, so the argument is unused here.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async onTrigger(_event?: Event) {
     await this.options.beforeTrigger?.(this);
     await this.show();
   }
 
   @action
-  async onUntrigger() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async onUntrigger(_event?: Event) {
     await this.close();
   }
 

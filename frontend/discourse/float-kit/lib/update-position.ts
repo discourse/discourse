@@ -1,29 +1,87 @@
 import {
   arrow,
   autoPlacement,
+  type AutoUpdateOptions,
+  type Boundary,
   computePosition,
+  type ComputePositionReturn,
   flip,
   hide,
   inline,
   limitShift,
+  type MiddlewareState,
   offset,
+  type Padding,
+  type Placement,
   shift,
   size,
+  type Strategy,
 } from "@floating-ui/dom";
 import {
   FLOAT_UI_PLACEMENTS,
+  type FloatKitTrigger,
+  type FloatUiPlacement,
   VISIBILITY_OPTIMIZERS,
+  type VisibilityOptimizer,
 } from "discourse/float-kit/lib/constants";
 import domFromString from "discourse/lib/dom-from-string";
 import { isTesting } from "discourse/lib/environment";
 import { iconHTML } from "discourse/lib/icon-library";
 import { headerOffset } from "discourse/lib/offset-calculator";
 
+/**
+ * The positioning-related subset of a float's options that `updatePosition` reads.
+ * Menu/tooltip instances pass their full options bag here; every field is optional
+ * because programmatic callers supply only the ones they need and the rest fall back
+ * to floating-ui defaults. `placement` additionally accepts the sentinel `"center"`,
+ * which centers the float over its trigger instead of anchoring to an edge.
+ */
+export interface PositioningOptions {
+  placement?: FloatUiPlacement | "center";
+  strategy?: Strategy;
+  autoUpdate?: boolean | AutoUpdateOptions;
+  offset?: number;
+  inline?: boolean | null;
+  arrow?: boolean;
+  hide?: boolean;
+  padding?: Padding;
+  boundary?: Boundary;
+  visibilityOptimizer?: VisibilityOptimizer;
+  shiftBeforeVisibilityOptimizer?: boolean;
+  allowedPlacements?: readonly FloatUiPlacement[];
+  fallbackPlacements?: readonly FloatUiPlacement[];
+  limitShift?: Parameters<typeof limitShift>[0];
+  crossAxisShift?: boolean;
+  matchTriggerWidth?: boolean;
+  matchTriggerMinWidth?: boolean;
+  constrainHeightToViewport?: boolean;
+  minHeight?: number;
+  computePosition?: (
+    content: HTMLElement,
+    result: ComputePositionReturn & { arrowElement?: HTMLElement }
+  ) => void;
+}
+
+interface DetectOverflowOptions {
+  padding: Padding;
+  boundary?: Boundary;
+}
+
+/** The state floating-ui hands to a `size` middleware's `apply` callback. */
+type SizeApplyState = MiddlewareState & {
+  availableWidth: number;
+  availableHeight: number;
+};
+
 const centerOffset = offset(({ rects }) => {
   return -rects.reference.height / 2 - rects.floating.height / 2;
 });
 
-export async function updatePosition(trigger, content, options) {
+export async function updatePosition(
+  trigger: FloatKitTrigger,
+  content: HTMLElement,
+  options: PositioningOptions
+): Promise<void> {
   const padding = getPadding(options);
   const detectOverflowOptions = buildDetectOverflowOptions(options, padding);
   const centered = isCenteredPlacement(options);
@@ -37,7 +95,9 @@ export async function updatePosition(trigger, content, options) {
   content.dataset.strategy = options.strategy || "absolute";
 
   const result = await computePosition(trigger, content, {
-    placement: centered ? "bottom" : options.placement,
+    // `options.placement` may be the `"center"` sentinel, but that path is handled
+    // by `centered` above, so anything reaching floating-ui is a real placement.
+    placement: (centered ? "bottom" : options.placement) as Placement,
     strategy: options.strategy || "absolute",
     middleware,
   });
@@ -52,7 +112,11 @@ export async function updatePosition(trigger, content, options) {
   }
 }
 
-function buildMiddleware(options, content, detectOverflowOptions) {
+function buildMiddleware(
+  options: PositioningOptions,
+  content: HTMLElement,
+  detectOverflowOptions: DetectOverflowOptions
+) {
   const middleware = [];
   const centered = isCenteredPlacement(options);
 
@@ -83,7 +147,7 @@ function buildMiddleware(options, content, detectOverflowOptions) {
     }
   }
 
-  let arrowElement;
+  let arrowElement: HTMLElement | undefined;
   if (options.arrow) {
     arrowElement = ensureArrowElement(content);
     middleware.push(arrow({ element: arrowElement }));
@@ -109,7 +173,11 @@ function buildMiddleware(options, content, detectOverflowOptions) {
   return { middleware, arrowElement };
 }
 
-function applyComputedPosition(content, result, arrowElement) {
+function applyComputedPosition(
+  content: HTMLElement,
+  result: ComputePositionReturn,
+  arrowElement: HTMLElement | undefined
+) {
   const { x, y, placement, middlewareData } = result;
 
   content.dataset.placement = placement;
@@ -131,7 +199,7 @@ function applyComputedPosition(content, result, arrowElement) {
   }
 }
 
-function getPadding(options) {
+function getPadding(options: PositioningOptions): Padding {
   return (
     options.padding ?? {
       top: headerOffset(),
@@ -142,29 +210,35 @@ function getPadding(options) {
   );
 }
 
-function buildDetectOverflowOptions(options, padding) {
+function buildDetectOverflowOptions(
+  options: PositioningOptions,
+  padding: Padding
+): DetectOverflowOptions {
   return {
     padding: isTesting() ? 0 : padding,
     boundary: options.boundary,
   };
 }
 
-function isCenteredPlacement(options) {
+function isCenteredPlacement(options: PositioningOptions): boolean {
   return options.placement === "center";
 }
 
-function ensureArrowElement(content) {
-  let arrowElement = content.querySelector(".arrow");
+function ensureArrowElement(content: HTMLElement): HTMLElement {
+  let arrowElement = content.querySelector<HTMLElement>(".arrow");
   if (!arrowElement) {
     arrowElement = domFromString(
       iconHTML("tippy-rounded-arrow", { class: "arrow" })
-    )[0];
+    )[0] as HTMLElement;
     content.appendChild(arrowElement);
   }
   return arrowElement;
 }
 
-function buildVisibilityOptimizerMiddleware(options, detectOverflowOptions) {
+function buildVisibilityOptimizerMiddleware(
+  options: PositioningOptions,
+  detectOverflowOptions: DetectOverflowOptions
+) {
   const visibilityOptimizer =
     options.visibilityOptimizer ?? VISIBILITY_OPTIMIZERS.FLIP;
 
@@ -174,19 +248,24 @@ function buildVisibilityOptimizerMiddleware(options, detectOverflowOptions) {
 
   if (visibilityOptimizer === VISIBILITY_OPTIMIZERS.AUTO_PLACEMENT) {
     return autoPlacement({
-      allowedPlacements: options.allowedPlacements ?? FLOAT_UI_PLACEMENTS,
+      allowedPlacements: (options.allowedPlacements ??
+        FLOAT_UI_PLACEMENTS) as Placement[],
       ...detectOverflowOptions,
     });
   }
 
   return flip({
-    fallbackPlacements: options.fallbackPlacements ?? FLOAT_UI_PLACEMENTS,
+    fallbackPlacements: (options.fallbackPlacements ??
+      FLOAT_UI_PLACEMENTS) as Placement[],
     ...detectOverflowOptions,
   });
 }
 
-function buildShiftMiddleware(options, detectOverflowOptions) {
-  let limiter;
+function buildShiftMiddleware(
+  options: PositioningOptions,
+  detectOverflowOptions: DetectOverflowOptions
+) {
+  let limiter: ReturnType<typeof limitShift> | undefined;
   if (options.limitShift) {
     limiter = limitShift(options.limitShift);
   }
@@ -200,11 +279,11 @@ function buildShiftMiddleware(options, detectOverflowOptions) {
   });
 }
 
-function buildMatchSizeMiddleware(options) {
+function buildMatchSizeMiddleware(options: PositioningOptions) {
   if (options.matchTriggerWidth || options.matchTriggerMinWidth) {
     return size({
-      apply({ rects, elements }) {
-        const styleProps = {};
+      apply({ rects, elements }: SizeApplyState) {
+        const styleProps: Record<string, string> = {};
         const widthValue = `${rects.reference.width}px`;
 
         if (options.matchTriggerWidth) {
@@ -223,15 +302,18 @@ function buildMatchSizeMiddleware(options) {
   return null;
 }
 
-function buildConstrainHeightMiddleware(options, detectOverflowOptions) {
+function buildConstrainHeightMiddleware(
+  options: PositioningOptions,
+  detectOverflowOptions: DetectOverflowOptions
+) {
   if (!options.constrainHeightToViewport) {
     return null;
   }
 
   return size({
-    apply({ availableHeight, elements }) {
+    apply({ availableHeight, elements }: SizeApplyState) {
       const max = Math.max(50, (availableHeight ?? 0) - 4);
-      const inner = elements.floating.querySelector(
+      const inner = elements.floating.querySelector<HTMLElement>(
         ".fk-d-menu__inner-content"
       );
 

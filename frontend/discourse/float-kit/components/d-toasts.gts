@@ -1,9 +1,10 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import DToast from "discourse/float-kit/components/d-toast";
+import type ToastsService from "discourse/float-kit/services/toasts";
 
 export default class DToasts extends Component {
-  @service toasts;
+  @service declare toasts: ToastsService;
 
   <template>
     <section class="fk-d-toasts">

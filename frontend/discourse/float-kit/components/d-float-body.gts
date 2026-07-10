@@ -3,6 +3,7 @@ import { fn, hash } from "@ember/helper";
 import { trustHTML } from "@ember/template";
 import { modifier as modifierFn } from "ember-modifier";
 import DFloatPortal from "discourse/float-kit/components/d-float-portal";
+import type FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 import { getScrollParent } from "discourse/float-kit/lib/get-scroll-parent";
 import FloatKitApplyFloatingUi from "discourse/float-kit/modifiers/apply-floating-ui";
 import FloatKitCloseOnEscape from "discourse/float-kit/modifiers/close-on-escape";
@@ -10,9 +11,24 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
 import dTrapTab from "discourse/ui-kit/modifiers/d-trap-tab";
 
-export default class DFloatBody extends Component {
+interface DFloatBodySignature {
+  Element: HTMLDivElement;
+  Args: {
+    instance: FloatKitInstance;
+    inline?: boolean | null;
+    mainClass?: string;
+    innerClass?: string;
+    role?: string;
+    trapTab?: boolean;
+    // some callers forward this even though the body reads `@instance.portalOutletElement`.
+    portalOutletElement?: HTMLElement | null;
+  };
+  Blocks: { default: [] };
+}
+
+export default class DFloatBody extends Component<DFloatBodySignature> {
   closeOnScroll = modifierFn(() => {
-    const firstScrollParent = getScrollParent(this.trigger);
+    const firstScrollParent = getScrollParent(this.trigger)!;
 
     const handler = () => {
       this.args.instance.close();
@@ -25,8 +41,8 @@ export default class DFloatBody extends Component {
     };
   });
 
-  trapInteractionPropagation = modifierFn((element) => {
-    const handler = (event) => {
+  trapInteractionPropagation = modifierFn((element: HTMLElement) => {
+    const handler = (event: Event) => {
       event.stopPropagation();
     };
 

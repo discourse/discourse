@@ -1,28 +1,51 @@
 import { registerDestructor } from "@ember/destroyable";
+import type Owner from "@ember/owner";
 import { cancel } from "@ember/runloop";
-import Modifier from "ember-modifier";
+import Modifier, { type ArgsFor } from "ember-modifier";
 import { bind } from "discourse/lib/decorators";
 import discourseLater from "discourse/lib/later";
 
 const CSS_TRANSITION_DELAY_MS = 300;
 const TRANSITION_CLASS = "-fade-out";
 
-export default class AutoCloseToast extends Modifier {
-  element;
-  close;
-  duration;
-  transitionLaterHandler;
-  closeLaterHandler;
-  progressBar;
-  progressAnimation;
-  enabled;
+interface AutoCloseToastSignature {
+  Element: HTMLElement;
+  Args: {
+    Named: {
+      close: () => void;
+      duration: number;
+      progressBar?: HTMLElement | null;
+      enabled?: boolean;
+    };
+  };
+}
 
-  constructor(owner, args) {
+export default class AutoCloseToast extends Modifier<AutoCloseToastSignature> {
+  declare element: HTMLElement;
+  declare close: () => void;
+  declare duration: number;
+  declare timeRemaining: number;
+  declare transitionLaterHandler: ReturnType<typeof discourseLater>;
+  declare closeLaterHandler: ReturnType<typeof discourseLater>;
+  declare progressBar: HTMLElement | null;
+  declare progressAnimation: Animation | null;
+  declare enabled: boolean;
+
+  constructor(owner: Owner, args: ArgsFor<AutoCloseToastSignature>) {
     super(owner, args);
     registerDestructor(this, (instance) => instance.cleanup());
   }
 
-  modify(element, _, { close, duration, progressBar, enabled }) {
+  modify(
+    element: HTMLElement,
+    _: [],
+    {
+      close,
+      duration,
+      progressBar,
+      enabled,
+    }: AutoCloseToastSignature["Args"]["Named"]
+  ) {
     if (enabled === false) {
       this.enabled = false;
       return;
@@ -32,7 +55,7 @@ export default class AutoCloseToast extends Modifier {
     this.close = close;
     this.duration = duration;
     this.timeRemaining = duration;
-    this.progressBar = progressBar;
+    this.progressBar = progressBar ?? null;
     this.element.addEventListener("touchstart", this.stopTimer, {
       passive: true,
       once: true,
@@ -74,7 +97,7 @@ export default class AutoCloseToast extends Modifier {
 
     if (this.progressAnimation) {
       this.progressAnimation.play();
-      this.progressBar.style.opacity = 1;
+      this.progressBar.style.opacity = "1";
       return;
     }
 
@@ -94,8 +117,11 @@ export default class AutoCloseToast extends Modifier {
     }
 
     this.progressAnimation.pause();
-    this.progressBar.style.opacity = 0.5;
-    this.timeRemaining = this.duration - this.progressAnimation.currentTime;
+    // `progressAnimation` only exists once `progressBar` was set, and `cleanup`
+    // pauses before clearing it, so the bar is always present here.
+    this.progressBar!.style.opacity = "0.5";
+    this.timeRemaining =
+      this.duration - (this.progressAnimation.currentTime as number);
   }
 
   cleanup() {

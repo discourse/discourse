@@ -1,17 +1,19 @@
 import { action } from "@ember/object";
-import { setOwner } from "@ember/owner";
+import Owner, { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { TOAST } from "discourse/float-kit/lib/constants";
+import { TOAST, type ToastOptions } from "discourse/float-kit/lib/constants";
+import type ToastsService from "discourse/float-kit/services/toasts";
+import type Site from "discourse/models/site";
 import dUniqueId from "discourse/ui-kit/helpers/d-unique-id";
 
 export default class DToastInstance {
-  @service site;
-  @service toasts;
+  @service declare site: Site;
+  @service declare toasts: ToastsService;
 
-  options = null;
+  options: ToastOptions;
   id = dUniqueId();
 
-  constructor(owner, options = {}) {
+  constructor(owner: Owner, options: Partial<ToastOptions> = {}) {
     setOwner(this, owner);
     this.options = { ...TOAST.options, ...options };
   }

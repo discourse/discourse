@@ -1,25 +1,52 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import type { ModifierLike } from "@glint/template";
+import type DToastInstance from "discourse/float-kit/lib/d-toast-instance";
 import autoCloseToast from "discourse/float-kit/modifiers/auto-close-toast";
 import deprecated from "discourse/lib/deprecated";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import { and } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
+import dSwipeUntyped from "discourse/ui-kit/modifiers/d-swipe";
 
 const VELOCITY_THRESHOLD = -1.2;
 
-export default class DToast extends Component {
-  @tracked progressBar;
+/** The swipe state the `d-swipe` modifier reports to its callbacks. */
+interface SwipeState {
+  element: HTMLElement;
+  deltaY: number;
+  velocityY: number;
+}
+
+// TODO(devxp-typescript-pending): drop this cast once d-swipe is authored in .ts with a
+// real Signature, then import it directly. Untyped .js today gives it no arg types.
+const dSwipe = dSwipeUntyped as unknown as ModifierLike<{
+  Element: HTMLElement;
+  Args: {
+    Named: {
+      onDidSwipe?: (state: SwipeState) => void;
+      onDidEndSwipe?: (state: SwipeState) => void;
+    };
+  };
+}>;
+
+interface DToastSignature {
+  Args: {
+    toast: DToastInstance;
+  };
+}
+
+export default class DToast extends Component<DToastSignature> {
+  @tracked progressBar?: HTMLElement;
 
   @action
-  registerProgressBar(element) {
+  registerProgressBar(element: HTMLElement) {
     this.progressBar = element;
   }
 
   @action
-  async didSwipe(state) {
+  async didSwipe(state: SwipeState) {
     if (state.deltaY >= 0) {
       this.#animateWrapperPosition(state.element, 0);
       return;
@@ -33,30 +60,12 @@ export default class DToast extends Component {
   }
 
   @action
-  async didEndSwipe(state) {
+  async didEndSwipe(state: SwipeState) {
     if (state.velocityY < VELOCITY_THRESHOLD) {
       await this.#close(state.element);
     } else {
       await this.#animateWrapperPosition(state.element, 0);
     }
-  }
-
-  async #close(element) {
-    await this.#closeWrapperAnimation(element);
-    this.args.toast.close();
-  }
-
-  async #closeWrapperAnimation(element) {
-    await element.animate([{ transform: "translateY(-150px)" }], {
-      fill: "forwards",
-      duration: getMaxAnimationTimeMs(),
-    }).finished;
-  }
-
-  async #animateWrapperPosition(element, position) {
-    await element.animate([{ transform: `translateY(${position}px)` }], {
-      fill: "forwards",
-    }).finished;
   }
 
   get duration() {
@@ -76,10 +85,27 @@ export default class DToast extends Component {
     }
   }
 
+  async #close(element: HTMLElement) {
+    await this.#closeWrapperAnimation(element);
+    this.args.toast.close();
+  }
+
+  async #closeWrapperAnimation(element: HTMLElement) {
+    await element.animate([{ transform: "translateY(-150px)" }], {
+      fill: "forwards",
+      duration: getMaxAnimationTimeMs(),
+    }).finished;
+  }
+
+  async #animateWrapperPosition(element: HTMLElement, position: number) {
+    await element.animate([{ transform: `translateY(${position}px)` }], {
+      fill: "forwards",
+    }).finished;
+  }
+
   <template>
     <output
       role={{if @toast.options.autoClose "status" "log"}}
-      key={{@toast.id}}
       class={{dConcatClass "fk-d-toast" @toast.options.class}}
       {{autoCloseToast
         close=@toast.close
