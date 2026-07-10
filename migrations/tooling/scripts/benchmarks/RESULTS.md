@@ -480,3 +480,61 @@ the INSERT-then-UPDATE url dance is deliberate crash-recovery, not waste. For
 production the takeaway is narrower still: the DB cost of an upload is its
 commits, not its SELECTs or AR overhead, and none of the statements are safely
 removable there.
+## Upload hot-path patches — before/after (`DiscoursePatches`)
+
+The upload-pipeline harness above (`upload_creator_profile.rb`,
+`upload_worker_scaling.rb`) profiled where a `create_for` spends its time and
+pointed at four migration-only short-circuits, now implemented in
+`Migrations::Importer::Uploads::DiscoursePatches`:
+
+1. `synchronous_commit=off` for the run (COMMIT no longer waits on a WAL fsync)
+2. `user_uploads` find-or-create → one `INSERT … ON CONFLICT DO NOTHING`
+3. the constant system uploader `User` memoized instead of reloaded per upload
+4. the `DistributedMutex` around `create_for` bypassed (single-writer import)
+
+Both scripts take `UPLOAD_BENCH_PATCHES=1` to apply the patches, so the numbers
+below are the same corpus run with the flag off then on.
+
+> Same shared dev box as the sections above (20 cores, `ruby 3.4.9 +YJIT`, local
+> Postgres over a unix socket with the stock `synchronous_commit=on`, local
+> `FileStore::LocalStore`, `RAILS_ENV=test`, `force_optimize` on). Single runs on
+> a shared box — read the shapes, not the last digit.
+
+### Per-`create_for` SQL profile (`upload_creator_profile.rb`, seed 9000)
+
+Per-upload SQL cost, patches off vs on:
+
+```
+type         queries/upload   redis rt   SQL ms/upload   % of create_for   create_for ms/upload
+attachment   12 -> 8          3 -> 0     19.2 -> 1.15    43.6% -> 4.7%      44.0 -> 24.5   (-44%)
+jpg          12 -> 8          3 -> 0     19.3 -> 1.45    13.0% -> 1.2%     148.6 -> 119.7  (cooking-bound, noisy)
+png          12 -> 8          3 -> 0     19.0 -> 0.93    11.4% -> 0.6%     (cooking-bound)
+```
+
+- The three `COMMIT`s per upload go from **5.9 ms each to ~0.05 ms each** — the
+  WAL fsync is gone, which is ~100% of the old SQL cost. The write transactions
+  also drop from **3 to 2**: collapsing the `user_uploads` find-or-create into a
+  single upsert removes a whole `BEGIN`/`COMMIT` pair on top of the `UserUpload
+  Load` SELECT.
+- The `User Load` (from `UploadValidator#user&.staff?`) and the `UserUpload Load`
+  are gone (4 statements/upload removed), and Redis round-trips go 3 -> 0.
+- For an **attachment** (no image cooking) this is the whole story: SQL falls from
+  44% of the call to under 5% and `create_for` wall time drops ~44%. For a
+  **JPEG/PNG** the ~18 ms of fsync it removes is small next to the ~120-320 ms of
+  ImageMagick/oxipng cooking (which this PR deliberately does not touch), so the
+  per-file wall barely moves — the win there is CPU/latency headroom, not wall.
+
+### End-to-end pipeline throughput (`upload_worker_scaling.rb`, 8 workers, batch 4)
+
+```
+workload       items   items/s off   items/s on   note
+attachments      64    29.8 - 36.9   34.6 - 39.7  writer/fsync-bound, ~+8-16%
+images           48    14.6 - 16.9   18.2 - 21.3  cooking-bound + noisy, still faster on
+```
+
+Patched is faster in every matched run. Attachments are the clean signal (their
+cost is the writer thread plus the per-upload commits); images vary a lot
+run-to-run because the wall is dominated by convert/oxipng, but freeing the
+Postgres commit latency the workers serialize on still lifts aggregate
+throughput. Read attachments as the honest headline (~10-15%); the per-`create_for`
+profile above is the controlled measurement.
