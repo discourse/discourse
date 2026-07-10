@@ -13,8 +13,25 @@ module Migrations
         end
 
         def perform!
-          tasks = build_task_pipeline
-          tasks.each { |task| task.run!(databases, settings) }
+          tasks = build_tasks
+          reporter = Reporting::Factory.build(titles: tasks.map(&:title))
+
+          interrupted = false
+          begin
+            tasks.each do |task|
+              pipeline = Pipeline.new(task:, reporter:)
+              pipeline.run
+              interrupted = pipeline.interrupted?
+              break if interrupted
+            end
+          ensure
+            reporter.close
+          end
+
+          # The reporter is closed and the terminal restored, so this lands
+          # cleanly below its output. The tasks resume from what already reached
+          # disk (they skip ids already recorded), so re-running continues.
+          puts "", I18n.t("importer.uploads.interrupted") if interrupted
         ensure
           cleanup_resources
         end
@@ -25,11 +42,11 @@ module Migrations
 
         private
 
-        def build_task_pipeline
+        def build_tasks
           [].tap do |tasks|
-            tasks << Tasks::Fixer if settings[:fix_missing]
-            tasks << Tasks::Uploader
-            tasks << Tasks::Optimizer if settings[:create_optimized_images]
+            tasks << Tasks::Fixer.new(databases, settings) if settings[:fix_missing]
+            tasks << Tasks::Uploader.new(databases, settings)
+            tasks << Tasks::Optimizer.new(databases, settings) if settings[:create_optimized_images]
           end
         end
 
