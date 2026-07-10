@@ -100,6 +100,14 @@ RSpec.describe BackupRestore::S3BackupStore do
     before { create_backups }
     after { remove_backups }
 
+    describe "#files" do
+      it "raises StorageError when the S3 listing fails instead of returning an empty list" do
+        @s3_client.stub_responses(:list_objects_v2, "AccessDenied")
+
+        expect { store.files }.to raise_error(BackupRestore::BackupStore::StorageError)
+      end
+    end
+
     describe "#delete_old" do
       it "doesn't delete files when cleanup is disabled" do
         SiteSetting.maximum_backups = 1
