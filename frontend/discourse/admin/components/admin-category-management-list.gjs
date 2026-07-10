@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import { service } from "@ember/service";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -38,6 +39,8 @@ const VISIBILITY_FILTER_OPTIONS = [
 ];
 
 export default class AdminCategoryManagementList extends Component {
+  @service capabilities;
+
   @tracked categories = [];
   @tracked loading = true;
   @tracked loadingMore = false;
@@ -247,16 +250,28 @@ export default class AdminCategoryManagementList extends Component {
                   </colgroup>
                   <thead class="d-table__header">
                     <tr class="d-table__row">
-                      <th class="d-table__header-cell">{{i18n
+                      <th
+                        class="d-table__header-cell admin-category-management-list__category-header"
+                      >
+                        {{i18n
                           "admin.config.category_management.table.category"
-                        }}</th>
-                      <th class="d-table__header-cell">{{i18n
+                        }}
+                      </th>
+                      <th
+                        class="d-table__header-cell admin-category-management-list__visibility-header"
+                      >
+                        {{i18n
                           "admin.config.category_management.table.visibility"
-                        }}</th>
-                      <th class="d-table__header-cell">{{i18n
-                          "admin.config.category_management.table.topics"
-                        }}</th>
-                      <th class="d-table__header-cell"></th>
+                        }}
+                      </th>
+                      <th
+                        class="d-table__header-cell admin-category-management-list__topics-header"
+                      >
+                        {{i18n "admin.config.category_management.table.topics"}}
+                      </th>
+                      <th
+                        class="d-table__header-cell admin-category-management-list__controls-header"
+                      ></th>
                     </tr>
                   </thead>
                   <tbody class="d-table__body">
@@ -268,13 +283,7 @@ export default class AdminCategoryManagementList extends Component {
                           <div
                             class="admin-category-management-list__category-badges"
                           >
-                            {{#each category.badge_chain as |badge index|}}
-                              {{#if index}}
-                                <span
-                                  class="admin-category-management-list__category-separator"
-                                  aria-hidden="true"
-                                >/</span>
-                              {{/if}}
+                            {{#each category.badge_chain as |badge|}}
                               {{dCategoryBadge
                                 badge
                                 (hash link=false hideParent=true)
@@ -343,11 +352,21 @@ export default class AdminCategoryManagementList extends Component {
 
                           {{category.topic_count}}
                         </td>
-                        <td class="d-table__cell --controls">
+                        <td
+                          class="d-table__cell --controls admin-category-management-list__controls-cell"
+                        >
                           <div class="d-table__cell-actions">
                             <DButton
                               @href={{category.edit_url}}
-                              @label="admin.config.category_management.open_settings"
+                              @icon={{unless
+                                this.capabilities.viewport.md
+                                "gear"
+                              }}
+                              @label={{if
+                                this.capabilities.viewport.md
+                                "admin.config.category_management.open_settings"
+                              }}
+                              @title="admin.config.category_management.open_settings"
                               class="btn-default btn-small admin-category-management-list__open-settings"
                             />
                           </div>
