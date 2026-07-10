@@ -105,6 +105,18 @@ module Migrations
           link: [
             Markbridge::AST::Url,
             ->(sink, node, interface) do
+              # Defer only a link whose label is plain text or simple inline
+              # formatting; everything richer renders natively. That is not just
+              # caution: a deferrable embed nested in a deferred link's label
+              # would mint its token into the `text` column, where the importer's
+              # single-pass substitution never looks — it would surface as a
+              # false orphan and vanish. Rendered natively, the label stays in
+              # the raw, nested tokens resolve normally, and the semantics come
+              # out right by themselves: an image in a link stays a clickable
+              # image, a mention degrades to remapped plain text (Discourse
+              # doesn't cook mentions inside links).
+              next interface.render_default(node) unless deferrable_label?(node)
+
               # A bare URL records no text, so the importer re-emits it bare and
               # autolinking/oneboxing keep working; `presence` catches a blank
               # label the same way (`[](url)` shows nothing).
@@ -124,6 +136,30 @@ module Migrations
         value if value && value < 10**18
       end
       private_class_method :bounded_id
+
+      # Whether a link label contains only plain text and the inline formatting
+      # Discourse allows inside `[…](url)`. This is the single policy point for
+      # what a *deferred* link may carry. Extend deliberately: a kind qualifies
+      # only if it renders inline (no blank lines) and is not deferrable itself.
+      def self.deferrable_label?(node)
+        node.children.all? { |child| deferrable_label_node?(child) }
+      end
+      private_class_method :deferrable_label?
+
+      def self.deferrable_label_node?(node)
+        case node
+        when Markbridge::AST::Text, Markbridge::AST::MarkdownText
+          true
+        when Markbridge::AST::Bold, Markbridge::AST::Italic, Markbridge::AST::Strikethrough
+          deferrable_label?(node)
+        when Markbridge::AST::Code
+          # A language implies a fenced block; only bare inline code qualifies.
+          node.language.nil? && deferrable_label?(node)
+        else
+          false
+        end
+      end
+      private_class_method :deferrable_label_node?
 
       # @param format [Symbol] one of {FORMATS}.
       def initialize(format: :bbcode)

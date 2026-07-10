@@ -85,6 +85,35 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(raw).to include(descriptor[:placeholder])
     end
 
+    it "defers a link whose label is simple inline formatting" do
+      raw =
+        renderer.to_markdown(
+          "see [url=https://example.com/t/5][b]here[/b][/url]",
+          on_embed: buffer,
+          defer: %i[link],
+        )
+
+      expect(buffer.links.size).to eq(1)
+      expect(buffer.links.first[:text]).to eq("**here**")
+      expect(raw).to include(buffer.links.first[:placeholder])
+    end
+
+    it "renders a link natively when its label carries a deferrable embed" do
+      # A quote inside a link label is pathological, but it proves the policy:
+      # the link is not recorded, while the nested embed still defers into the
+      # raw — inside the literal label — where the importer can resolve it.
+      raw =
+        renderer.to_markdown(
+          '[url=https://example.com][quote="A, post:1, topic:2"]q[/quote][/url]',
+          on_embed: buffer,
+          defer: %i[quote link],
+        )
+
+      expect(buffer.links).to be_empty
+      expect(buffer.quotes.size).to eq(1)
+      expect(raw).to include(buffer.quotes.first[:placeholder])
+    end
+
     it "records a bare URL's text as nil so the importer re-emits it bare" do
       renderer.to_markdown(
         "see [url=https://example.com/t/5]https://example.com/t/5[/url]",
@@ -165,6 +194,20 @@ RSpec.describe Migrations::Converters::MarkdownRenderer do
       expect(sink.quotes).to contain_exactly(
         hash_including(quoted_post_id: 9001, quoted_user_id: 12, quoted_username: "alice"),
       )
+    end
+
+    it "falls back to native rendering for a label containing a mention" do
+      _node_class, extract = described_class.embed_handlers.fetch(:link)
+      node = Markbridge::AST::Url.new(href: "https://example.com")
+      node << Markbridge::AST::Text.new("hi ")
+      node << Markbridge::AST::Mention.new(name: "sam", type: :user)
+      interface = instance_double(Markbridge::Renderers::Discourse::RenderingInterface)
+      allow(interface).to receive(:render_default).with(node).and_return("NATIVE")
+
+      result = extract.call(sink, node, interface)
+
+      expect(result).to eq("NATIVE")
+      expect(sink.links).to be_empty
     end
 
     it "maps a Mention node's type and name" do
