@@ -17,4 +17,8 @@ Migrations::Tooling::Schema.table :upload_results do
   add_column :status, :text, enum: :upload_result_status, required: true
   add_column :skip_reason, :text, enum: :upload_skip_reason
   add_column :skip_details, :text
+
+  # The import step's optimized_images join and the cleanup cascades probe by
+  # upload_id; without this SQLite falls back to per-statement automatic indexes.
+  index :upload_id, where: "upload_id IS NOT NULL"
 end

@@ -24,6 +24,7 @@ CREATE TABLE optimized_images
     width      INTEGER  NOT NULL
 );
 
+CREATE INDEX idx_optimized_images_upload_id ON optimized_images (upload_id);
 
 CREATE TABLE upload_results
 (
@@ -35,6 +36,7 @@ CREATE TABLE upload_results
     upload_id    INTEGER
 );
 
+CREATE INDEX idx_upload_results_upload_id ON upload_results (upload_id) WHERE upload_id IS NOT NULL;
 
 CREATE TABLE uploads
 (
