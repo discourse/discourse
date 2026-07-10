@@ -66,7 +66,7 @@ RSpec.describe Migrations::Conversion::Consolidator do
     stub_const("Migrations::Database::IntermediateDB::FakeThing", fake_model)
 
     allow(connection).to receive(:tables).and_return(
-      %w[uploads topics fake_things config schema_migrations],
+      %w[upload_sources topics fake_things config schema_migrations],
     )
 
     consolidator = described_class.new(shard_manager, connection, fork_mutex)
@@ -75,8 +75,8 @@ RSpec.describe Migrations::Conversion::Consolidator do
 
     expect(connection).to have_received(:merge_database).with(
       "a.db",
-      tables: %w[uploads topics fake_things],
-      dedupe_tables: %w[uploads fake_things],
+      tables: %w[upload_sources topics fake_things],
+      dedupe_tables: %w[upload_sources fake_things],
     )
   end
 end
