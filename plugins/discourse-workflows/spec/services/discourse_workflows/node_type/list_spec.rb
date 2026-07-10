@@ -102,7 +102,8 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         expect(award_badge.dig(:metadata, "badges")).to include(id: badge.id, name: badge.name)
       end
 
-      it "serializes the required group selector for group membership triggers", :aggregate_failures do
+      it "serializes the required group selector for group membership triggers",
+         :aggregate_failures do
         %w[trigger:user_added_to_group trigger:user_removed_from_group].each do |identifier|
           trigger = result[:node_types].find { |node_type| node_type[:identifier] == identifier }
 
