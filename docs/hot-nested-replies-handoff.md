@@ -15,10 +15,22 @@ The own score is:
 
 ```text
 engagement = like_score + 2 * public_direct_reply_count
-hot_score = ln(1 + engagement) + created_at_epoch / time_scale
+age = max(view_time - created_at, 0)
+freshness = 3 * 2 ^ (-age / 7 days)
+hot_score = ln(1 + engagement) + freshness
 ```
 
-The fixed time scale is 48 hours. This means one ordinary like offsets about 33 hours of age, one direct reply offsets about 53 hours, and 100 likes offset about nine days. The logarithm gives early engagement meaningful weight without letting large counts grow linearly forever. This is deliberately slower and more engagement-heavy than [Reddit's archived link-ranking formula](https://github.com/reddit-archive/reddit/blob/master/r2/r2/lib/db/_sorts.pyx) because forum topics live longer; it still needs validation against real topic distributions. Direct replies can also reflect controversy or reply farming, so their weight is a product choice rather than a neutral quality signal.
+Freshness is a bounded bonus rather than a permanent timestamp advantage. A brand-new reply gets
+at most three points, its bonus halves every seven days, and after eight half-lives it is below
+`0.012`. Once every reply in a dormant topic is old, engagement therefore determines the order.
+When an old topic receives a new reply, that reply gets a limited discovery boost without requiring
+the topic's lifetime to determine a special time scale. Three points are approximately the
+engagement score of 19 weighted actions, so freshness alone can never overpower an arbitrarily
+endorsed older discussion.
+
+The logarithm gives early engagement meaningful weight without letting large counts grow linearly
+forever. Direct replies can also reflect controversy or reply farming, so their weight is a product
+choice rather than a neutral quality signal.
 
 Thread heat propagates upward with an additive nesting penalty:
 
@@ -29,14 +41,17 @@ thread_hot_score = max(
 )
 ```
 
-The fixed child penalty is `0.25`, equivalent to 12 hours at the 48-hour time scale.
+The fixed child penalty is `0.25`. It slightly favors shallower paths while still allowing a strong
+descendant to pull a quiet ancestor branch upward.
 
-Two properties are intentional:
+Three properties are intentional:
 
-1. The time scale is fixed across an entire tree. Scores from different levels are therefore comparable.
-2. The nesting penalty is additive. Changing the timestamp epoch adds the same constant to every branch and cannot change the ranking.
+1. Freshness is relative to viewing time, so its influence disappears as the whole topic goes quiet.
+2. The freshness bonus is bounded, so a quiet new reply has a predictable maximum advantage.
+3. The nesting penalty is additive and every score in a rebuild uses the same database-time snapshot.
 
-These properties are required for descendant activity to bubble into ancestor ordering predictably. A multiplicative penalty must not be applied to a score containing an absolute timestamp.
+These properties allow descendant activity to bubble into ancestor ordering predictably without an
+absolute timestamp dominating old discussions forever.
 
 ## Ranking signals and visibility
 
@@ -76,7 +91,10 @@ nested_replies_hot_preload_children_per_parent: 3
 nested_replies_hot_preload_depth_penalty: 0.25
 ```
 
-The preload values are hidden site settings so real-topic evaluation can tune response selection without rewriting persisted scores. The 48-hour score scale and `0.25` propagation penalty are code constants. They must not become live settings without a formula version and coordinated full rebuild; mixing persisted scores from different time scales makes old and new rows incomparable.
+The preload values are hidden site settings so real-topic evaluation can tune response selection
+without rewriting persisted scores. The seven-day freshness half-life, three-point maximum bonus,
+and `0.25` propagation penalty are code constants. They must not become live settings without a
+formula version and coordinated full rebuild.
 
 ## Freshness and rollout
 
@@ -85,13 +103,23 @@ Production post creation is recalculated from the `post_created` event, after `P
 The scheduled job serves two purposes:
 
 - backfill missing scores in batches after rollout or after nesting is enabled;
-- refresh the oldest scores after seven days as a safety net for missed events or a coordinated formula update.
+- refresh active-topic scores after six hours so persisted freshness follows wall-clock time;
+- perform one final refresh after the newest reply passes eight freshness half-lives, after which
+  further decay is negligible.
 
 It orders by the oldest score timestamp, preventing newer topics from permanently starving older topics. It also includes existing topics covered only by the site-wide nested-view default. Explicitly enabling nesting enqueues an immediate topic refresh.
 
+Scores produced by the previous absolute-timestamp formula are far outside the bounded formula's
+range. Reads treat those legacy values as missing and use the current own-post fallback, while the
+scheduled job uses a per-topic formula-version custom field to rebuild every affected topic. This
+prevents a partially rebuilt site from mixing incomparable score generations without adding a
+schema column solely for rollout metadata.
+
 Topic refresh age is stored on the OP's existing stats row. Structural backfill completion has its own `structural_backfilled_at` marker; OP row existence is not treated as completion because a live reply can create a partial counter row. The hot-score job waits for that structural marker and only updates its hot-refresh timestamp. The structural backfill also covers site-wide-default nested topics. This ownership prevents hot rollout from skipping or starving direct and descendant counter backfills.
 
-Missing score rows fall back to an own recency score during reads, so an unbackfilled new reply does not sort below every persisted historical reply.
+Missing or legacy score rows fall back to the current own score during reads, so an unbackfilled new
+reply does not sort below every persisted historical reply. The fallback cannot reconstruct
+descendant heat, which arrives with the full-topic refresh.
 
 ### Development database compatibility
 
@@ -100,7 +128,11 @@ The final implementation consolidates its schema into migration `20260609150000`
 ## Known product behavior
 
 - Hot order is a snapshot for the current request. Existing nested-view live updates do not jump posts around while someone is reading.
+- Persisted freshness can lag wall-clock time by up to the six-hour active-topic refresh interval.
+  Mutations still refresh the changed path immediately.
 - Offset pagination can duplicate or skip items if engagement changes between pages, as with other mutable offset-sorted lists. Cursor or snapshot pagination would be a separate product change.
 - Smart pre-expansion runs when the selected sort is `hot`; `top`, `new`, and `old` retain their existing breadth-first preload behavior.
-- Missing-score fallback does not reconstruct descendant heat or visible direct-reply engagement. Explicitly enabling nesting queues a full topic refresh, so the first request can temporarily use recency-and-likes-only order.
+- Missing-score fallback does not reconstruct descendant heat or visible direct-reply engagement.
+  Explicitly enabling nesting queues a full topic refresh, so the first request can temporarily use
+  own-post engagement and freshness only.
 - Hot mutations serialize on a per-topic distributed lock. This closes a lost-update race, but unusually busy topics or a slow full refresh can add request latency; lock wait and hold time should be instrumented before broad rollout.

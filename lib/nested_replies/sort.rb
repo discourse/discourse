@@ -12,9 +12,10 @@ module NestedReplies
         "#{posts_table}.like_count DESC, #{posts_table}.post_number ASC"
       when "hot"
         fallback_score = NestedReplies::HotScoreCalculator.hot_score_sql(posts_table)
-        "CASE WHEN nested_view_post_stats.hot_score_updated_at IS NULL " \
+        stale_score = NestedReplies::HotScoreCalculator.persisted_score_stale_sql
+        "CASE WHEN #{stale_score} " \
           "THEN #{fallback_score} ELSE nested_view_post_stats.thread_hot_score END DESC, " \
-          "CASE WHEN nested_view_post_stats.hot_score_updated_at IS NULL " \
+          "CASE WHEN #{stale_score} " \
           "THEN #{fallback_score} ELSE nested_view_post_stats.hot_score END DESC, " \
           "#{posts_table}.post_number ASC"
       when "new"

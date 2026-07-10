@@ -12,38 +12,47 @@ RSpec.describe NestedReplies::HotScoreCalculator do
     fab!(:post) { Fabricate(:post, topic: topic) }
 
     it "combines likes and direct replies logarithmically" do
-      created_at = Time.zone.local(2026, 7, 8, 12)
+      now = Time.zone.local(2026, 7, 10, 12)
+      freeze_time(now)
+      created_at = 2.days.ago
       set_hot_score_inputs(post, created_at: created_at, like_score: 3)
 
       score = described_class.score_for(post, direct_reply_count: 2)
       expected_engagement = 3 * described_class::LIKE_WEIGHT + 2 * described_class::REPLY_WEIGHT
-      expected =
-        Math.log(1 + expected_engagement) + created_at.to_f / described_class.time_scale_seconds
+      expected_freshness =
+        described_class.freshness_max_bonus *
+          0.5**(2.days.to_f / described_class.freshness_half_life_seconds)
+      expected = Math.log(1 + expected_engagement) + expected_freshness
 
       expect(score).to be_within(0.0001).of(expected)
     end
 
-    it "advances one point per fixed time scale" do
-      older_created_at = Time.zone.local(2026, 7, 6, 12)
-      set_hot_score_inputs(post, created_at: older_created_at, like_score: 2)
-      older_score = described_class.score_for(post)
+    it "halves the freshness bonus each half-life", :aggregate_failures do
+      now = Time.zone.local(2026, 7, 10, 12)
+      freeze_time(now)
+      set_hot_score_inputs(post, created_at: now)
+      fresh_score = described_class.score_for(post)
 
-      set_hot_score_inputs(
-        post,
-        created_at: older_created_at + described_class.time_scale_seconds,
-        like_score: 2,
-      )
-      newer_score = described_class.score_for(post)
+      set_hot_score_inputs(post, created_at: now - described_class.freshness_half_life_seconds)
+      one_half_life_score = described_class.score_for(post)
 
-      expect(newer_score - older_score).to be_within(0.0001).of(1.0)
+      expect(fresh_score).to be_within(0.0001).of(described_class.freshness_max_bonus)
+      expect(one_half_life_score).to be_within(0.0001).of(described_class.freshness_max_bonus / 2)
     end
 
-    it "lets engagement overcome a modest age difference" do
+    it "lets engagement take over when a topic goes quiet", :aggregate_failures do
+      now = Time.zone.local(2026, 7, 10, 12)
+      freeze_time(now)
       newer_post = Fabricate(:post, topic: topic)
-      set_hot_score_inputs(post, created_at: 12.hours.ago, like_score: 10)
-      set_hot_score_inputs(newer_post, created_at: 1.hour.ago)
+      set_hot_score_inputs(post, created_at: 7.days.ago, like_score: 3)
+      set_hot_score_inputs(newer_post, created_at: now)
 
-      expect(described_class.score_for(post)).to be > described_class.score_for(newer_post)
+      expect(described_class.score_for(newer_post)).to be > described_class.score_for(post)
+
+      much_later = now + 70.days
+
+      expect(described_class.score_for(post, now: much_later)).to be >
+        described_class.score_for(newer_post, now: much_later)
     end
 
     it "assigns no heat to posts hidden from the public", :aggregate_failures do
@@ -301,8 +310,8 @@ RSpec.describe NestedReplies::HotScoreCalculator do
     it "raises and lowers branch scores with a like", :aggregate_failures do
       Fabricate(:nested_topic, topic: topic)
       child = Fabricate(:post, topic: topic, user: author, reply_to_post_number: post.post_number)
-      set_hot_score_inputs(post, created_at: 3.days.ago)
-      set_hot_score_inputs(child, created_at: 1.day.ago)
+      set_hot_score_inputs(post, created_at: 30.days.ago)
+      set_hot_score_inputs(child, created_at: 1.hour.ago)
       described_class.recalculate_topic(topic.id)
       original_child_score = NestedViewPostStat.find_by!(post: child).hot_score
       original_parent_score = NestedViewPostStat.find_by!(post: post).thread_hot_score

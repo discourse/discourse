@@ -265,11 +265,12 @@ module NestedReplies
 
     def hot_preload_rows(starting_posts, max_depth:, children_per_parent:)
       fallback_score = NestedReplies::HotScoreCalculator.hot_score_sql("posts")
+      stale_score = NestedReplies::HotScoreCalculator.persisted_score_stale_sql
       thread_hot_score =
-        "CASE WHEN nested_view_post_stats.hot_score_updated_at IS NULL " \
+        "CASE WHEN #{stale_score} " \
           "THEN #{fallback_score} ELSE nested_view_post_stats.thread_hot_score END"
       hot_score =
-        "CASE WHEN nested_view_post_stats.hot_score_updated_at IS NULL " \
+        "CASE WHEN #{stale_score} " \
           "THEN #{fallback_score} ELSE nested_view_post_stats.hot_score END"
 
       DB.query(
@@ -642,6 +643,8 @@ module NestedReplies
       NestedViewPostStat
         .where(post_id: posts.map(&:id).uniq)
         .where.not(hot_score_updated_at: nil)
+        .where(hot_score: ..NestedReplies::HotScoreCalculator::LEGACY_SCORE_THRESHOLD)
+        .where(thread_hot_score: ..NestedReplies::HotScoreCalculator::LEGACY_SCORE_THRESHOLD)
         .pluck(:post_id, :thread_hot_score, :hot_score)
         .to_h { |post_id, thread_hot_score, hot_score| [post_id, [thread_hot_score, hot_score]] }
     end

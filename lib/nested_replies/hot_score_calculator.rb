@@ -2,15 +2,35 @@
 
 module NestedReplies
   class HotScoreCalculator
+    FORMULA_VERSION = 2
+    FORMULA_VERSION_FIELD = "nested_replies_hot_score_formula_version"
     HOT_SCORE_FLOOR = 0.0
     LIKE_WEIGHT = 1.0
     REPLY_WEIGHT = 2.0
-    TIME_SCALE_SECONDS = 48.hours.to_f
+    FRESHNESS_MAX_BONUS = 3.0
+    FRESHNESS_HALF_LIFE_SECONDS = 7.days.to_f
+    FRESHNESS_REFRESH_INTERVAL_SECONDS = 6.hours.to_i
+    FRESHNESS_CUTOFF_HALF_LIVES = 8
+    # The absolute-timestamp formula produced scores around 10,000. The bounded formula cannot
+    # approach this threshold with integer like and reply counters.
+    LEGACY_SCORE_THRESHOLD = 100.0
     CHILD_PENALTY = 0.25
     LOCK_VALIDITY_SECONDS = 5.minutes.to_i
 
-    def self.time_scale_seconds
-      TIME_SCALE_SECONDS
+    def self.freshness_max_bonus
+      FRESHNESS_MAX_BONUS
+    end
+
+    def self.freshness_half_life_seconds
+      FRESHNESS_HALF_LIFE_SECONDS
+    end
+
+    def self.freshness_refresh_interval_seconds
+      FRESHNESS_REFRESH_INTERVAL_SECONDS
+    end
+
+    def self.freshness_window_seconds
+      FRESHNESS_HALF_LIFE_SECONDS * FRESHNESS_CUTOFF_HALF_LIVES
     end
 
     def self.child_penalty
@@ -34,22 +54,36 @@ module NestedReplies
       engagement_sql =
         "COALESCE(#{table_name}.like_score, 0) * #{LIKE_WEIGHT} + " \
           "COALESCE(#{reply_count_sql}, 0) * #{REPLY_WEIGHT}"
+      age_seconds_sql =
+        "GREATEST(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP - #{table_name}.created_at), 0)"
+      freshness_sql =
+        "#{freshness_max_bonus} * " \
+          "POWER(0.5, #{age_seconds_sql} / #{freshness_half_life_seconds})"
 
       <<~SQL.squish
         CASE
           WHEN #{public_post_sql(table_name)}
-          THEN LN(1 + GREATEST(#{engagement_sql}, 0)) +
-               EXTRACT(EPOCH FROM #{table_name}.created_at) / #{time_scale_seconds}
+          THEN LN(1 + GREATEST(#{engagement_sql}, 0)) + #{freshness_sql}
           ELSE #{HOT_SCORE_FLOOR}
         END
       SQL
     end
 
-    def self.score_for(post, direct_reply_count: 0)
+    def self.score_for(post, direct_reply_count: 0, now: Time.current)
       return HOT_SCORE_FLOOR unless public_post?(post)
 
       engagement = post.like_score.to_f * LIKE_WEIGHT + direct_reply_count.to_f * REPLY_WEIGHT
-      Math.log(1 + [engagement, 0.0].max) + post.created_at.to_f / time_scale_seconds
+      age_seconds = [now.to_f - post.created_at.to_f, 0.0].max
+      freshness = freshness_max_bonus * 0.5**(age_seconds / freshness_half_life_seconds)
+      Math.log(1 + [engagement, 0.0].max) + freshness
+    end
+
+    def self.persisted_score_stale_sql(stats_table = "nested_view_post_stats")
+      <<~SQL.squish
+        #{stats_table}.hot_score_updated_at IS NULL
+        OR #{stats_table}.hot_score > #{LEGACY_SCORE_THRESHOLD}
+        OR #{stats_table}.thread_hot_score > #{LEGACY_SCORE_THRESHOLD}
+      SQL
     end
 
     def self.public_post?(post)
@@ -235,6 +269,7 @@ module NestedReplies
             FROM posts children
             JOIN nested_view_post_stats child_stats ON child_stats.post_id = children.id
               AND child_stats.hot_score_updated_at IS NOT NULL
+              AND NOT (#{persisted_score_stale_sql("child_stats")})
             WHERE children.topic_id = path.topic_id
               AND children.reply_to_post_number = path.post_number
               AND children.post_number IS DISTINCT FROM path.path_child_post_number
@@ -376,6 +411,8 @@ module NestedReplies
             AND posts.post_number = 1
             AND stats.post_id = posts.id
         SQL
+
+      Topic.find_by(id: topic_id)&.upsert_custom_fields(FORMULA_VERSION_FIELD => FORMULA_VERSION)
     end
   end
 end

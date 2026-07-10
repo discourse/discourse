@@ -42,8 +42,27 @@ module Jobs
                 AND replies.post_type IN (#{NestedReplies::HotScoreCalculator.public_post_types.join(", ")})
             )
             AND (
-              stats.hot_score_updated_at IS NULL OR
-              stats.hot_score_updated_at < NOW() - INTERVAL '7 days'
+              stats.hot_score_updated_at IS NULL
+              OR NOT EXISTS (
+                SELECT 1
+                FROM topic_custom_fields formula_version
+                WHERE formula_version.topic_id = topics.id
+                  AND formula_version.name = :formula_version_field
+                  AND formula_version.value = :formula_version
+              )
+              OR (
+                COALESCE(topics.last_posted_at, topics.created_at) >=
+                  NOW() - :freshness_window * INTERVAL '1 second'
+                AND stats.hot_score_updated_at <
+                  NOW() - :refresh_interval * INTERVAL '1 second'
+              )
+              OR (
+                COALESCE(topics.last_posted_at, topics.created_at) <
+                  NOW() - :freshness_window * INTERVAL '1 second'
+                AND stats.hot_score_updated_at <
+                  COALESCE(topics.last_posted_at, topics.created_at) +
+                    :freshness_window * INTERVAL '1 second'
+              )
             )
           ORDER BY stats.hot_score_updated_at ASC NULLS FIRST,
                    topics.bumped_at DESC
@@ -51,6 +70,10 @@ module Jobs
         SQL
         nested_by_default: SiteSetting.nested_replies_default,
         limit: SiteSetting.nested_replies_backfill_batch_size,
+        formula_version_field: NestedReplies::HotScoreCalculator::FORMULA_VERSION_FIELD,
+        formula_version: NestedReplies::HotScoreCalculator::FORMULA_VERSION.to_s,
+        freshness_window: NestedReplies::HotScoreCalculator.freshness_window_seconds,
+        refresh_interval: NestedReplies::HotScoreCalculator.freshness_refresh_interval_seconds,
       )
     end
   end

@@ -406,6 +406,34 @@ RSpec.describe NestedTopicsController, type: :request do
       expect(root_ids).to eq([high.id, low.id])
     end
 
+    it "ignores scores from the previous formula" do
+      legacy_root =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: user,
+          reply_to_post_number: nil,
+          created_at: 30.days.ago,
+        )
+      recent_root =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: user,
+          reply_to_post_number: nil,
+          created_at: 1.hour.ago,
+        )
+      legacy_score = NestedReplies::HotScoreCalculator::LEGACY_SCORE_THRESHOLD + 1
+      set_nested_hot_scores(legacy_root, thread_hot_score: legacy_score)
+      NestedViewPostStat.where(post_id: recent_root.id).delete_all
+      sign_in(user)
+
+      get show_url(topic, sort: "hot")
+
+      root_ids = response.parsed_body["roots"].map { |root| root["id"] }
+      expect(root_ids.first).to eq(recent_root.id)
+    end
+
     it "sorts roots by hot descendant branch score" do
       branch_root = Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil)
       Fabricate(:post, topic: topic, user: user, reply_to_post_number: branch_root.post_number)
