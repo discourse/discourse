@@ -6,16 +6,47 @@ module Migrations
       module Tasks
         # Turns `upload_sources` rows into real Discourse uploads. The heavy
         # lifting (UploadCreator, downloads) runs on the pipeline's worker threads;
-        # only {#write} touches the uploads DB, on the single writer thread.
+        # only {#write} touches the files DB, on the single writer thread.
         class Uploader < Base
+          class DownloadFailedError < StandardError
+          end
+
+          class UploadSizeExceededError < DownloadFailedError
+          end
+
           MAX_FILE_SIZE = 1.gigabyte
           # Post-store check retries: create succeeded but the file isn't in the
           # store yet. Try once more, then give up.
           POST_STORE_RETRIES = 1
 
-          SKIP_FILE_NOT_FOUND = "file not found"
-          SKIP_TOO_MANY_RETRIES = "too many retries"
-          SKIP_ERROR = "error"
+          Status = Database::FilesDB::Enums::UploadResultStatus
+          SkipReason = Database::FilesDB::Enums::UploadSkipReason
+
+          # Columns the generated `FilesDB::Upload` model accepts. `upload.attributes`
+          # also carries user_id/access_control_post_id/retain_hours/updated_at,
+          # which the files DB schema drops, so we slice down to these.
+          UPLOAD_COLUMNS = %i[
+            id
+            animated
+            created_at
+            dominant_color
+            etag
+            extension
+            filesize
+            height
+            origin
+            original_filename
+            original_sha1
+            secure
+            security_last_changed_at
+            security_last_changed_reason
+            sha1
+            thumbnail_height
+            thumbnail_width
+            url
+            verification_status
+            width
+          ].freeze
 
           UploadMetadata = Struct.new(:original_filename, :origin_url, :description)
 
@@ -28,9 +59,12 @@ module Migrations
           end
 
           def before_run
-            delete_missing_uploads if settings[:delete_missing_uploads]
+            delete_reprocessable_uploads if settings[:delete_missing_uploads]
             load_tracking_sets
             handle_surplus_uploads if surplus_upload_ids.any?
+
+            @seen_upload_ids = load_existing_ids(files_db, "SELECT id FROM uploads")
+            @downloads = load_downloads
 
             @max_count = (@source_existing_ids - @output_existing_ids).size
             @source_existing_ids = nil
@@ -62,7 +96,7 @@ module Migrations
               path = data_file.path
             elsif row[:url].present?
               path, filename, download_record = download_file(url: row[:url], id: row[:id])
-              return nil if path.nil? # download failed; retried on the next run
+              return nil if path.nil? # nothing to download; not an error, drop the row
 
               metadata.original_filename = filename
               metadata.origin_url = row[:url]
@@ -72,9 +106,24 @@ module Migrations
             end
 
             create_upload_result(row, path, metadata, download_record)
+          rescue UploadSizeExceededError => e
+            error_result(
+              row,
+              skip_reason: SkipReason::UPLOAD_SIZE_EXCEEDED,
+              skip_details: e.message,
+              download: download_record,
+            )
+          rescue DownloadFailedError => e
+            error_result(
+              row,
+              skip_reason: SkipReason::DOWNLOAD_ERROR,
+              skip_details: e.message,
+              download: download_record,
+            )
           rescue StandardError => e
-            skip_reason = retry_policy.transient?(e) ? SKIP_TOO_MANY_RETRIES : SKIP_ERROR
-            error_result(row, skip_reason:, error: e.message, download: download_record)
+            skip_reason =
+              retry_policy.transient?(e) ? SkipReason::TOO_MANY_RETRIES : SkipReason::ERROR
+            error_result(row, skip_reason:, skip_details: e.message, download: download_record)
           ensure
             data_file&.close!
           end
@@ -82,19 +131,27 @@ module Migrations
           def write(result)
             record_download(result[:download]) if result[:download]
 
-            outcome = classify(result)
-            if outcome == :error
+            if result[:status] == Status::ERROR
               reporter.notice(
-                I18n.t("importer.uploads.upload_failed", id: result[:id], error: result[:error]),
+                I18n.t(
+                  "importer.uploads.upload_failed",
+                  id: result[:id],
+                  error: result[:skip_details],
+                ),
               )
             end
 
-            uploads_db.insert(<<~SQL, insert_params(result))
-              INSERT INTO uploads (id, upload, markdown, skip_reason)
-              VALUES (:id, :upload, :markdown, :skip_reason)
-            SQL
+            upload_id = write_upload(result[:upload])
+            Database::FilesDB::UploadResult.create(
+              id: result[:id],
+              status: result[:status],
+              skip_reason: result[:skip_reason],
+              skip_details: result[:skip_details],
+              markdown: result[:markdown],
+              upload_id:,
+            )
 
-            outcome
+            outcome_for(result[:status])
           rescue StandardError => e
             reporter.notice(
               I18n.t("importer.uploads.insert_failed", id: result[:id], error: e.message),
@@ -105,7 +162,7 @@ module Migrations
           private
 
           def load_tracking_sets
-            @output_existing_ids = load_existing_ids(uploads_db, "SELECT id FROM uploads")
+            @output_existing_ids = load_existing_ids(files_db, "SELECT id FROM upload_results")
             @source_existing_ids =
               load_existing_ids(intermediate_db, "SELECT id FROM upload_sources")
           end
@@ -122,11 +179,13 @@ module Migrations
 
               surplus_upload_ids.each_slice(Database::Connection::TRANSACTION_BATCH_SIZE) do |ids|
                 placeholders = (["?"] * ids.size).join(",")
-                uploads_db.execute(<<~SQL, ids)
-                  DELETE FROM uploads
+                files_db.execute(<<~SQL, ids)
+                  DELETE FROM upload_results
                   WHERE id IN (#{placeholders})
                 SQL
               end
+
+              delete_orphaned_files
 
               @output_existing_ids -= surplus_upload_ids
             else
@@ -138,8 +197,28 @@ module Migrations
             @surplus_upload_ids = nil
           end
 
-          def delete_missing_uploads
-            uploads_db.execute("DELETE FROM uploads WHERE upload IS NULL")
+          # Drops the results that never produced an upload so they get another try
+          # on the next run.
+          def delete_reprocessable_uploads
+            files_db.execute("DELETE FROM upload_results WHERE upload_id IS NULL")
+            delete_orphaned_files
+          end
+
+          # Removes `uploads` and `optimized_images` rows that no `upload_results`
+          # row points at anymore, so deleting results cascades to the real files.
+          def delete_orphaned_files
+            files_db.execute(<<~SQL)
+              DELETE FROM uploads
+              WHERE NOT EXISTS (
+                SELECT 1 FROM upload_results WHERE upload_results.upload_id = uploads.id
+              )
+            SQL
+            files_db.execute(<<~SQL)
+              DELETE FROM optimized_images
+              WHERE NOT EXISTS (
+                SELECT 1 FROM uploads WHERE uploads.id = optimized_images.upload_id
+              )
+            SQL
           end
 
           def build_metadata(row)
@@ -179,8 +258,8 @@ module Migrations
                 return(
                   error_result(
                     row,
-                    skip_reason: SKIP_ERROR,
-                    error: upload_error_message(upload),
+                    skip_reason: SkipReason::ERROR,
+                    skip_details: upload_error_message(upload),
                     download: download_record,
                   )
                 )
@@ -197,8 +276,8 @@ module Migrations
                 return(
                   error_result(
                     row,
-                    skip_reason: SKIP_TOO_MANY_RETRIES,
-                    error: "file missing from store after upload",
+                    skip_reason: SkipReason::TOO_MANY_RETRIES,
+                    skip_details: "file missing from store after upload",
                     download: download_record,
                   )
                 )
@@ -244,9 +323,11 @@ module Migrations
           def success_result(row, upload, metadata, download_record)
             {
               id: row[:id],
-              upload: upload.attributes.to_json,
-              markdown: UploadMarkdown.new(upload).to_markdown(display_name: metadata.description),
+              status: Status::OK,
               skip_reason: nil,
+              skip_details: nil,
+              markdown: UploadMarkdown.new(upload).to_markdown(display_name: metadata.description),
+              upload: upload_attributes(upload),
               download: download_record,
             }
           end
@@ -254,41 +335,61 @@ module Migrations
           def missing_result(row)
             {
               id: row[:id],
-              upload: nil,
+              status: Status::SKIPPED,
+              skip_reason: SkipReason::FILE_NOT_FOUND,
+              skip_details: nil,
               markdown: nil,
-              skip_reason: SKIP_FILE_NOT_FOUND,
-              skipped: true,
+              upload: nil,
+              download: nil,
             }
           end
 
-          def error_result(row, skip_reason:, error:, download:)
-            { id: row[:id], upload: nil, markdown: nil, skip_reason:, error:, download: }
+          def error_result(row, skip_reason:, skip_details:, download:)
+            {
+              id: row[:id],
+              status: Status::ERROR,
+              skip_reason:,
+              skip_details:,
+              markdown: nil,
+              upload: nil,
+              download:,
+            }
           end
 
-          def classify(result)
-            if result[:skipped]
-              :skip
-            elsif result[:error] || result[:upload].nil?
-              :error
-            else
+          def upload_attributes(upload)
+            upload.attributes.symbolize_keys.slice(*UPLOAD_COLUMNS)
+          end
+
+          def outcome_for(status)
+            case status
+            when Status::OK
               :ok
+            when Status::SKIPPED
+              :skip
+            else
+              :error
             end
           end
 
-          def insert_params(result)
-            {
-              id: result[:id],
-              upload: result[:upload],
-              markdown: result[:markdown],
-              skip_reason: result[:skip_reason],
-            }
+          # Several source rows can dedup onto one Discourse upload (same sha1), so
+          # the `uploads` row is written once and later results just reference its
+          # id. Only the writer thread mutates the set, so `add?` is race-free.
+          def write_upload(attributes)
+            return nil if attributes.nil?
+
+            upload_id = attributes[:id]
+            Database::FilesDB::Upload.create(**attributes) if @seen_upload_ids.add?(upload_id)
+            upload_id
           end
 
           def record_download(record)
-            uploads_db.insert(
-              "INSERT INTO downloads (id, original_filename) VALUES (?, ?)",
-              [record[:id], record[:original_filename]],
+            Database::FilesDB::Download.create(
+              id: record[:id],
+              original_filename: record[:original_filename],
             )
+            # Keep the in-memory cache current so a later row that hits the same
+            # download id finds it. Writer-thread only, matching the insert above.
+            @downloads[record[:id]] = record[:original_filename]
           end
 
           def retry_policy
@@ -307,9 +408,20 @@ module Migrations
             classes
           end
 
-          # --- Download cache. The file is written here on the worker; its DB
-          # record travels back on a result and is inserted by {#write}, so the
-          # writer thread stays the only one touching the connection. ---
+          # --- Download cache. The whole `downloads` table is read into a Hash in
+          # `before_run`, so the workers never touch the DB connection to look up a
+          # cached filename. A fresh download's record travels back on its result
+          # and is inserted (and added to the Hash) by {#write} on the writer
+          # thread. A download id is processed at most once per run, so no worker
+          # ever reads a key while the writer is adding it. ---
+
+          def load_downloads
+            hash = {}
+            files_db.query("SELECT id, original_filename FROM downloads") do |row|
+              hash[row[:id]] = row[:original_filename]
+            end
+            hash
+          end
 
           def download_file(url:, id:)
             path = download_cache_path(id)
@@ -318,31 +430,38 @@ module Migrations
               return path, filename, nil
             end
 
-            fd = FinalDestination.new(url)
             file = nil
             filename = nil
 
-            fd.get do |response, chunk, uri|
-              if file.nil?
-                check_response!(response, uri)
-                filename = extract_filename_from_response(response, uri)
-                file = File.open(path, "wb")
+            begin
+              fd = FinalDestination.new(url)
+
+              fd.get do |response, chunk, uri|
+                if file.nil?
+                  check_response!(response, uri)
+                  filename = extract_filename_from_response(response, uri)
+                  file = File.open(path, "wb")
+                end
+
+                file.write(chunk)
+
+                if file.size > MAX_FILE_SIZE
+                  File.unlink(path)
+                  raise UploadSizeExceededError,
+                        "Upload size #{file.size} bytes exceeds the limit of #{MAX_FILE_SIZE} bytes"
+                end
               end
 
-              file.write(chunk)
+              return nil, nil, nil if file.nil?
 
-              if file.size > MAX_FILE_SIZE
-                file.close
-                file.unlink
-                file = nil
-                throw :done
-              end
+              [path, filename, { id:, original_filename: filename }]
+            rescue UploadSizeExceededError
+              raise
+            rescue StandardError => e
+              raise DownloadFailedError, "Failed to download upload from #{url}: #{e.message}"
+            ensure
+              file&.close
             end
-
-            return nil if file.nil?
-
-            file.close
-            [path, filename, { id:, original_filename: filename }]
           end
 
           def download_cache_path(id)
@@ -351,16 +470,17 @@ module Migrations
           end
 
           def get_original_filename(id)
-            uploads_db.query_value("SELECT original_filename FROM downloads WHERE id = ?", id)
+            @downloads[id]
           end
 
           def check_response!(response, uri)
             return if uri.present?
 
-            code = response.code.to_i
-            raise "#{code} Error" if code >= 400
-
-            throw :done
+            if response.code.to_i >= 400
+              response.value
+            else
+              throw :done
+            end
           end
 
           def extract_filename_from_response(response, uri)

@@ -11,7 +11,7 @@ module Migrations
         @options = options
 
         attach_mappings_db(config[:mappings_db], options[:reset])
-        attach_uploads_db(config[:uploads_db])
+        attach_files_db(config[:files_db])
       end
 
       def start
@@ -40,8 +40,8 @@ module Migrations
         migrate_and_attach(db_path, Database::MAPPINGS_DB_SCHEMA_PATH, "mapped")
       end
 
-      def attach_uploads_db(db_path)
-        migrate_and_attach(db_path, Database::UPLOADS_DB_SCHEMA_PATH, "files")
+      def attach_files_db(db_path)
+        migrate_and_attach(db_path, Database::FILES_DB_SCHEMA_PATH, "files")
       end
 
       def migrate_and_attach(db_path, schema_path, alias_name)

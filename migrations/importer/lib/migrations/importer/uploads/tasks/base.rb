@@ -12,11 +12,11 @@ module Migrations
         class Base
           DEFAULT_THREAD_FACTOR = 1.5
 
-          attr_reader :uploads_db, :intermediate_db, :settings, :discourse_store
+          attr_reader :files_db, :intermediate_db, :settings, :discourse_store
           attr_writer :reporter
 
           def initialize(databases, settings)
-            @uploads_db = databases[:uploads_db]
+            @files_db = databases[:files_db]
             @intermediate_db = databases[:intermediate_db]
             @settings = settings
             @discourse_store = Discourse.store
@@ -30,7 +30,7 @@ module Migrations
           # Commit whatever the writer left in the open transaction, so an
           # interrupted run stays resumable from what already reached disk.
           def after_run
-            uploads_db.commit_transaction
+            files_db.commit_transaction
           end
 
           def build_worker_resource
