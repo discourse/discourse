@@ -72,12 +72,40 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
     );
   }
 
+  // Stands in for the real API service, mirroring the parts of `joinEvent` and
+  // `updateEventAttendance` the component depends on: both leave the event
+  // carrying a `watchingInvitee` with the new status.
+  function stubEventApi(owner) {
+    const api = {
+      joinEvent: sinon.fake(function (event, payload) {
+        event.watchingInvitee = { id: 5, status: payload.status };
+        return Promise.resolve(event.watchingInvitee);
+      }),
+      updateEventAttendance: sinon.fake(function (event, payload) {
+        event.watchingInvitee = { ...event.watchingInvitee, ...payload };
+        return Promise.resolve(event.watchingInvitee);
+      }),
+    };
+
+    owner.unregister("service:discourse-post-event-api");
+    owner.register("service:discourse-post-event-api", api, {
+      instantiate: false,
+    });
+
+    return api;
+  }
+
   hooks.beforeEach(function () {
     const siteSettings = getOwner(this).lookup("service:site-settings");
     siteSettings.livestream_zoom_enabled = true;
 
+    this.eventApi = stubEventApi(getOwner(this));
+
     this.event = {
+      id: 42,
       currentlyWithinEventTimeframe: true,
+      canUpdateAttendance: true,
+      watchingInvitee: null,
       livestreamChatChannelId: 9,
       post: {
         topic: {
@@ -193,6 +221,154 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
     );
 
     assert.dom(".discourse-calendar-livestream-zoom-entry").doesNotExist();
+  });
+
+  module("when marking attendance", function (innerHooks) {
+    let appEvents, performJoin;
+
+    innerHooks.beforeEach(function () {
+      stubCapabilities(getOwner(this), { lg: true });
+      performJoin = sinon.stub(LivestreamZoomEntry.prototype, "performJoin");
+      performJoin.resolves();
+      appEvents = sinon.stub(
+        getOwner(this).lookup("service:app-events"),
+        "trigger"
+      );
+      sinon.stub(console, "error");
+    });
+
+    test("marks a user who has not answered as going", async function (assert) {
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+
+      assert.strictEqual(this.eventApi.joinEvent.callCount, 1);
+      assert.deepEqual(this.eventApi.joinEvent.firstCall.args[1], {
+        status: "going",
+      });
+      assert.true(
+        appEvents.calledWith("calendar:create-invitee-status", {
+          status: "going",
+          postId: 42,
+        }),
+        "tells the rest of the page the RSVP changed"
+      );
+      assert.dom(`${FRAME_SELECTOR}.--joined`).exists("still joins Zoom");
+    });
+
+    test("marks an invitee with no status as going", async function (assert) {
+      this.event.watchingInvitee = { id: 5, status: null };
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+
+      assert.false(
+        this.eventApi.joinEvent.called,
+        "does not re-join the event"
+      );
+      assert.strictEqual(this.eventApi.updateEventAttendance.callCount, 1);
+      assert.deepEqual(this.eventApi.updateEventAttendance.firstCall.args[1], {
+        status: "going",
+      });
+      assert.true(
+        appEvents.calledWith("calendar:update-invitee-status", {
+          status: "going",
+          postId: 42,
+        })
+      );
+    });
+
+    test("leaves an existing answer alone", async function (assert) {
+      this.event.watchingInvitee = { id: 5, status: "not_going" };
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+
+      assert.false(this.eventApi.joinEvent.called);
+      assert.false(
+        this.eventApi.updateEventAttendance.called,
+        "an explicit 'not going' is not overwritten"
+      );
+      assert.dom(`${FRAME_SELECTOR}.--joined`).exists("still joins Zoom");
+    });
+
+    test("leaves an existing 'going' answer alone", async function (assert) {
+      this.event.watchingInvitee = { id: 5, status: "going", recurring: true };
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+
+      assert.false(
+        this.eventApi.updateEventAttendance.called,
+        "does not clobber a recurring RSVP"
+      );
+    });
+
+    test("does not RSVP when the user may not update attendance", async function (assert) {
+      this.event.canUpdateAttendance = false;
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+
+      assert.false(this.eventApi.joinEvent.called);
+      assert.dom(`${FRAME_SELECTOR}.--joined`).exists("still joins Zoom");
+    });
+
+    test("joins Zoom even when the RSVP fails", async function (assert) {
+      this.eventApi.joinEvent = sinon.fake.rejects(new Error("nope"));
+
+      await render(
+        <template><LivestreamZoomEntry @event={{this.event}} /></template>
+      );
+
+      await click(JOIN_BUTTON_SELECTOR);
+
+      assert.dom(`${FRAME_SELECTOR}.--joined`).exists("still joins Zoom");
+      assert.dom(ERROR_SELECTOR).doesNotExist("does not surface an error");
+    });
+
+    test("only RSVPs once when the join is retried", async function (assert) {
+      const clock = sinon.useFakeTimers({
+        toFake: ["setInterval", "clearInterval"],
+      });
+
+      try {
+        performJoin.rejects(MEETING_NOT_STARTED);
+
+        await render(
+          <template><LivestreamZoomEntry @event={{this.event}} /></template>
+        );
+
+        await click(JOIN_BUTTON_SELECTOR);
+
+        performJoin.resolves();
+        clock.tick(RETRY_DELAY_SECONDS * 1000);
+        await settled();
+
+        assert.dom(`${FRAME_SELECTOR}.--joined`).exists();
+        assert.strictEqual(
+          this.eventApi.joinEvent.callCount,
+          1,
+          "the retry sees the RSVP it already made"
+        );
+      } finally {
+        clock.restore();
+      }
+    });
   });
 
   module("when joining", function (innerHooks) {

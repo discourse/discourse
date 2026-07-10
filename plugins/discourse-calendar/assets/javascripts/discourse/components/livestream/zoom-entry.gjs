@@ -53,8 +53,10 @@ function serializeZoomError(error) {
 }
 
 export default class LivestreamZoomEntry extends Component {
+  @service appEvents;
   @service capabilities;
   @service currentUser;
+  @service discoursePostEventApi;
   @service siteSettings;
 
   @tracked errorMessage;
@@ -301,6 +303,29 @@ export default class LivestreamZoomEntry extends Component {
     );
   }
 
+  // Attendance is what follows a user into the livestream chat channel, so
+  // someone who joins the webinar without ever answering the RSVP would sit in
+  // front of a read-only chat. Anyone who has already made a choice, including
+  // an explicit "not going", keeps it.
+  async markAsGoing() {
+    const event = this.args.event;
+
+    if (!event.canUpdateAttendance || event.watchingInvitee?.status) {
+      return;
+    }
+
+    const payload = { status: "going" };
+    const appEventData = { status: payload.status, postId: event.id };
+
+    if (event.watchingInvitee) {
+      await this.discoursePostEventApi.updateEventAttendance(event, payload);
+      this.appEvents.trigger("calendar:update-invitee-status", appEventData);
+    } else {
+      await this.discoursePostEventApi.joinEvent(event, payload);
+      this.appEvents.trigger("calendar:create-invitee-status", appEventData);
+    }
+  }
+
   async performJoin() {
     const zoomJoinPayload = await fetchZoomJoinPayload(this.topic.id);
 
@@ -415,6 +440,15 @@ export default class LivestreamZoomEntry extends Component {
     this.errorMessage = null;
     this.isJoining = true;
     this.showZoomFrame = true;
+
+    try {
+      await this.markAsGoing();
+    } catch (err) {
+      // RSVPing is a convenience, not a precondition. A user who cannot be
+      // marked as going should still get to watch the webinar.
+      // eslint-disable-next-line no-console
+      console.error("Error marking the user as going", err);
+    }
 
     try {
       await this.performJoin();
