@@ -15,14 +15,13 @@ module Migrations
           end
 
           def max_count
-            @max_count ||=
-              uploads_db.query_value("SELECT COUNT(*) FROM uploads WHERE upload IS NOT NULL")
+            @max_count ||= files_db.query_value("SELECT COUNT(*) FROM uploads")
           end
 
           def produce(emit_work:, _emit_result:)
-            uploads_db.query(
-              "SELECT id, upload FROM uploads WHERE upload IS NOT NULL ORDER BY rowid DESC",
-            ) { |row| emit_work.call(row) }
+            files_db.query("SELECT id AS upload_id, url FROM uploads ORDER BY id DESC") do |row|
+              emit_work.call(row)
+            end
           end
 
           def build_worker_resource
@@ -30,14 +29,13 @@ module Migrations
           end
 
           def process(row, fake_upload)
-            upload = JSON.parse(row[:upload], symbolize_names: true)
-            fake_upload.url = upload[:url]
+            fake_upload.url = row[:url]
             path = add_multisite_prefix(discourse_store.get_path_for_upload(fake_upload))
 
             status = file_exists?(path) ? :ok : :missing
-            { id: row[:id], upload_id: upload[:id], status: }
+            { upload_id: row[:upload_id], status: }
           rescue StandardError => e
-            { id: row[:id], upload_id: upload&.dig(:id), status: :error, error: e.message }
+            { upload_id: row[:upload_id], status: :error, error: e.message }
           end
 
           def write(result)
@@ -45,16 +43,32 @@ module Migrations
             when :ok
               :ok
             when :missing
-              uploads_db.execute("DELETE FROM uploads WHERE id = ?", result[:id])
-              Upload.delete_by(id: result[:upload_id])
-              reporter.notice(I18n.t("importer.uploads.fixer_missing", id: result[:id]))
+              remove_missing_upload(result[:upload_id])
+              reporter.notice(I18n.t("importer.uploads.fixer_missing", id: result[:upload_id]))
               :warning
             else
               reporter.notice(
-                I18n.t("importer.uploads.fixer_error", id: result[:id], error: result[:error]),
+                I18n.t(
+                  "importer.uploads.fixer_error",
+                  id: result[:upload_id],
+                  error: result[:error],
+                ),
               )
               :error
             end
+          end
+
+          private
+
+          # Drops the upload everywhere it's recorded — the Discourse record, the
+          # staging row, its optimized images, and every result that points at it.
+          # With the result rows gone, the uploader's incremental skip no longer
+          # sees those source ids and recreates them on the next run.
+          def remove_missing_upload(upload_id)
+            Upload.delete_by(id: upload_id)
+            files_db.execute("DELETE FROM optimized_images WHERE upload_id = ?", upload_id)
+            files_db.execute("DELETE FROM uploads WHERE id = ?", upload_id)
+            files_db.execute("DELETE FROM upload_results WHERE upload_id = ?", upload_id)
           end
         end
       end
