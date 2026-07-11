@@ -1,5 +1,65 @@
-// @ts-check
+import type { ArgSchema, BlockConstraints } from "discourse/blocks/types";
 import { getByPath } from "discourse/lib/blocks";
+import type { DebugLoggerInterface } from "discourse/lib/blocks/-internals/debug-hooks";
+
+/**
+ * Declares how a condition handles the `source` parameter.
+ *
+ * - `"none"`: `source` parameter is disallowed.
+ * - `"outletArgs"`: `source` must be `@outletArgs.propertyPath`; the base
+ *   class resolves it via outlet args.
+ * - `"object"`: `source` is passed directly as an object (e.g., for settings).
+ */
+export type ConditionSourceType = "none" | "outletArgs" | "object";
+
+/**
+ * Custom validation function for a condition, run at registration time
+ * against the condition's resolved args. Returns an error message (or
+ * messages), or `null`/`undefined` when the args are valid.
+ */
+export type ConditionValidateFn = (
+  args: Record<string, unknown>
+) => string | string[] | null | undefined;
+
+/**
+ * Evaluation context passed to `evaluate()`, `resolveSource()`, and
+ * `getResolvedValueForLogging()`. Built by the block render pipeline (and,
+ * for nested route params, by the route condition itself).
+ */
+export interface ConditionContext {
+  /** Whether debug logging is enabled for this evaluation. */
+  debug?: boolean;
+
+  /** Outlet args passed to the block, used to resolve `@outletArgs.*` sources. */
+  outletArgs?: Record<string, unknown>;
+
+  /** Current nesting depth, used for debug log indentation. */
+  _depth?: number;
+
+  /** Logger interface for nested debug logging (used by the route condition
+   *  to log its OR/NOT/param sub-checks). */
+  logger?: DebugLoggerInterface | null;
+}
+
+/**
+ * Resolved-value info returned by `getResolvedValueForLogging()`, shown in
+ * the dev-tools debug overlay. Conditions that don't resolve a value (e.g.
+ * because `source` wasn't provided) return `undefined` instead.
+ */
+export interface ConditionResolvedValue {
+  /** Always `true` when a value was resolved. */
+  hasValue: true;
+
+  /** The resolved value, for conditions that resolve via `source`. */
+  value?: unknown;
+
+  /** An additional annotation, e.g. a "did you mean" note for an unknown setting. */
+  note?: string;
+
+  /** An alternate formatted payload, for conditions with non-`source`
+   *  resolution (e.g. the `outletArg` condition's `path`/`actual`/`configured` triple). */
+  formatted?: unknown;
+}
 
 /**
  * Base class for all block conditions.
@@ -35,8 +95,6 @@ import { getByPath } from "discourse/lib/blocks";
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
- *
- * @class BlockCondition
  *
  * @example
  * ```javascript
@@ -75,10 +133,8 @@ export class BlockCondition {
    *
    * This property is defined by the `@blockCondition` decorator and should not
    * be set directly. Pass the `type` option to the decorator instead.
-   *
-   * @type {string}
    */
-  static type;
+  declare static type: string;
 
   /**
    * Declares how this condition handles the `source` parameter.
@@ -89,10 +145,8 @@ export class BlockCondition {
    *
    * This property is defined by the `@blockCondition` decorator and should not
    * be set directly. Pass the `sourceType` option to the decorator instead.
-   *
-   * @type {"none" | "outletArgs" | "object"}
    */
-  static sourceType = "none";
+  static sourceType: ConditionSourceType = "none";
 
   /**
    * Arg schema definitions for this condition.
@@ -100,10 +154,8 @@ export class BlockCondition {
    * This property is defined by the `@blockCondition` decorator and should not
    * be overridden directly. The decorator creates a non-configurable getter
    * that returns a frozen object.
-   *
-   * @type {Object}
    */
-  static argsSchema;
+  declare static argsSchema: Readonly<Record<string, ArgSchema>>;
 
   /**
    * Cross-arg constraint definitions for this condition.
@@ -111,10 +163,8 @@ export class BlockCondition {
    * This property is defined by the `@blockCondition` decorator and should not
    * be overridden directly. The decorator creates a non-configurable getter
    * that returns a frozen object or undefined.
-   *
-   * @type {Object|undefined}
    */
-  static constraints;
+  declare static constraints: Readonly<BlockConstraints> | undefined;
 
   /**
    * Custom validation function for this condition.
@@ -122,10 +172,8 @@ export class BlockCondition {
    * This property is defined by the `@blockCondition` decorator and should not
    * be overridden directly. The decorator creates a non-configurable getter
    * that returns the validate function or undefined.
-   *
-   * @type {Function|undefined}
    */
-  static validateFn;
+  declare static validateFn: ConditionValidateFn | undefined;
 
   /**
    * Valid argument keys for this condition.
@@ -135,10 +183,8 @@ export class BlockCondition {
    *
    * The `source` key is automatically added by the decorator when
    * `sourceType !== "none"`.
-   *
-   * @type {readonly string[]}
    */
-  static validArgKeys;
+  declare static validArgKeys: readonly string[];
 
   /**
    * Resolves the `source` parameter value based on the condition's `sourceType`.
@@ -147,28 +193,32 @@ export class BlockCondition {
    *   and retrieves the corresponding value from `context.outletArgs`.
    * - `sourceType: "object"`: Returns the `source` value directly.
    *
-   * @param {Object} args - The condition arguments containing `source`.
-   * @param {Object} context - Evaluation context containing `outletArgs`.
-   * @param {Object} [context.outletArgs] - The outlet args passed to the block.
-   * @returns {*} The resolved value from outlet args, or undefined if not found.
+   * @param args - The condition arguments containing `source`.
+   * @param context - Evaluation context containing `outletArgs`.
+   * @returns The resolved value from outlet args, or undefined if not found.
    */
-  resolveSource(args, context) {
+  resolveSource(
+    args: Record<string, unknown>,
+    context?: ConditionContext
+  ): unknown {
     const { source } = args;
 
     if (!source) {
       return undefined;
     }
 
-    // @ts-ignore - Static property defined on subclasses
-    const sourceType = this.constructor.sourceType;
+    // Read via the constructor's statics, which the `@blockCondition`
+    // decorator sets on every concrete subclass (never on this base class).
+    const sourceType = (this.constructor as typeof BlockCondition).sourceType;
 
     if (sourceType === "object") {
       return source;
     }
 
     if (sourceType === "outletArgs") {
-      // Extract path after "@outletArgs."
-      const path = source.replace(/^@outletArgs\./, "");
+      // Extract path after "@outletArgs.". `source` is validated to be a
+      // string in this format at registration time.
+      const path = (source as string).replace(/^@outletArgs\./, "");
       return getByPath(context?.outletArgs, path);
     }
 
@@ -178,21 +228,22 @@ export class BlockCondition {
   /**
    * Default source value when `source` parameter is not provided.
    * Override in subclasses to provide a fallback (e.g., currentUser, siteSettings).
-   *
-   * @type {*}
    */
-  get defaultSource() {
+  get defaultSource(): unknown {
     return undefined;
   }
 
   /**
    * Resolves the source value, falling back to defaultSource when not provided.
    *
-   * @param {Object} args - The condition arguments.
-   * @param {Object} [context] - Evaluation context.
-   * @returns {*} The resolved source or defaultSource.
+   * @param args - The condition arguments.
+   * @param context - Evaluation context.
+   * @returns The resolved source or defaultSource.
    */
-  getSourceValue(args, context) {
+  getSourceValue(
+    args: Record<string, unknown>,
+    context?: ConditionContext
+  ): unknown {
     return args.source !== undefined
       ? this.resolveSource(args, context)
       : this.defaultSource;
@@ -206,15 +257,12 @@ export class BlockCondition {
    * multiple times during a single render cycle (e.g., when debug logging
    * is enabled), and should not have side effects.
    *
-   * @param {Object} args - The condition arguments from the layout entry.
-   * @param {Object} [context] - Evaluation context from the blocks service.
-   * @param {boolean} [context.debug] - Whether debug logging is enabled.
-   * @param {Object} [context.outletArgs] - Outlet args for source resolution.
-   * @param {number} [context._depth] - Current nesting depth for logging.
-   * @returns {boolean} True if condition passes, false otherwise.
+   * @param args - The condition arguments from the layout entry.
+   * @param context - Evaluation context from the blocks service.
+   * @returns True if condition passes, false otherwise.
    */
-  // eslint-disable-next-line no-unused-vars
-  evaluate(args, context) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  evaluate(args: Record<string, unknown>, context?: ConditionContext): boolean {
     throw new Error(`${this.constructor.name} must implement evaluate()`);
   }
 
@@ -226,12 +274,14 @@ export class BlockCondition {
    * For example, the `outletArg` condition uses a `path` parameter
    * to resolve values from outlet args.
    *
-   * @param {Object} args - The condition arguments from the layout entry.
-   * @param {Object} [context] - Evaluation context containing outletArgs.
-   * @returns {{ value: *, hasValue: true }|undefined} Object with resolved value,
-   *   or undefined if this condition doesn't resolve values.
+   * @param args - The condition arguments from the layout entry.
+   * @param context - Evaluation context containing outletArgs.
+   * @returns Object with resolved value, or undefined if this condition doesn't resolve values.
    */
-  getResolvedValueForLogging(args, context) {
+  getResolvedValueForLogging(
+    args: Record<string, unknown>,
+    context?: ConditionContext
+  ): ConditionResolvedValue | undefined {
     // Default implementation returns resolved source if present
     if (args.source !== undefined) {
       return { value: this.resolveSource(args, context), hasValue: true };
