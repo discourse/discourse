@@ -1,9 +1,16 @@
-// @ts-check
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { block } from "discourse/blocks";
+import type { ChildBlockResult } from "discourse/lib/blocks/-internals/types";
+import type Blocks from "discourse/services/blocks";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+
+interface HeadBlockSignature {
+  Args: {
+    children: ChildBlockResult[];
+  };
+}
 
 /**
  * A container block that renders only its first visible child.
@@ -23,7 +30,7 @@ import { i18n } from "discourse-i18n";
  * not display children 2+, we are responsible for:
  *
  * 1. Rendering ghosts for children that failed their own conditions
- *    (already ghost blocks in @children)
+ *    (already ghost blocks in `@children`)
  * 2. Converting children that passed conditions but aren't rendered
  *    (because another sibling was first) into ghosts with an explanation
  *
@@ -58,25 +65,31 @@ import { i18n } from "discourse-i18n";
   container: true,
   description: "Renders only the first child whose conditions pass",
 })
-export default class HeadBlock extends Component {
-  @service blocks;
+export default class HeadBlock extends Component<HeadBlockSignature> {
+  @service declare blocks: Blocks;
 
   /**
    * Children that passed their conditions and could be rendered.
-   *
-   * @returns {Array<import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult>}
    */
-  get renderableChildren() {
+  get renderableChildren(): ChildBlockResult[] {
     return this.args.children?.filter((c) => !c.isGhost) ?? [];
   }
 
   /**
    * The one child we actually render (first that passed conditions).
-   *
-   * @returns {import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult|undefined}
    */
-  get firstChild() {
+  get firstChild(): ChildBlockResult | undefined {
     return this.renderableChildren[0];
+  }
+
+  /**
+   * Converts a passed-over sibling into a ghost with the given reason,
+   * for the debug visual overlay. `asGhost` is always populated by the
+   * render pipeline; the optional chaining here only satisfies the type
+   * checker's static uncertainty about that invariant.
+   */
+  ghostify(child: ChildBlockResult, reason: string): ChildBlockResult | null {
+    return child.asGhost?.(reason) ?? null;
   }
 
   <template>
@@ -97,8 +110,8 @@ export default class HeadBlock extends Component {
         {{else}}
           {{! Passed conditions but hidden by priority - convert to ghost }}
           {{#let
-            (child.asGhost
-              (i18n "js.blocks.ghost_reasons.head_hidden_tail_hint")
+            (this.ghostify
+              child (i18n "js.blocks.ghost_reasons.head_hidden_tail_hint")
             )
             as |ghostChild|
           }}

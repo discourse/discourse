@@ -1,7 +1,48 @@
-// @ts-check
 import { service } from "@ember/service";
-import { BlockCondition } from "./condition";
+import type User from "discourse/models/user";
+import { BlockCondition, type ConditionContext } from "./condition";
 import { blockCondition } from "./decorator";
+
+/** Args accepted by the `user` condition. */
+interface UserConditionArgs {
+  /** Path to a user object in outlet args (e.g., `@outletArgs.user`). */
+  source?: string;
+
+  /** If true, passes for logged-in users (or if source matches currentUser). */
+  loggedIn?: boolean;
+
+  /** If true, passes only for admin users. */
+  admin?: boolean;
+
+  /** If true, passes only for moderators (includes admins). */
+  moderator?: boolean;
+
+  /** If true, passes only for staff members. */
+  staff?: boolean;
+
+  /** Minimum trust level required (0-4). */
+  minTrustLevel?: number;
+
+  /** Maximum trust level allowed (0-4). */
+  maxTrustLevel?: number;
+
+  /** User must be in at least one of these groups (OR logic). */
+  groups?: string[];
+}
+
+/**
+ * The minimal shape read from a resolved user object, whether it's the
+ * `currentUser` service or an arbitrary user-shaped value from outlet args
+ * (e.g. a topic's author).
+ */
+interface UserLike {
+  id?: number | string;
+  admin?: boolean;
+  moderator?: boolean;
+  staff?: boolean;
+  trust_level?: number;
+  groups?: Array<{ name?: string }>;
+}
 
 /**
  * A condition that evaluates based on user state.
@@ -16,9 +57,6 @@ import { blockCondition } from "./decorator";
  *
  * The only exception is the `groups` array itself, which uses OR logic internally
  * (user must be in at least ONE of the specified groups).
- *
- * @class BlockUserCondition
- * @extends BlockCondition
  *
  * ## Condition Configuration Properties
  *
@@ -36,32 +74,46 @@ import { blockCondition } from "./decorator";
  * | `groups`        | `string[]` | User must be in at least one of these groups (OR logic)               |
  *
  * @example
+ * ```
  * // Logged-in users only
  * { type: "user", loggedIn: true }
+ * ```
  *
  * @example
+ * ```
  * // Anonymous users only
  * { type: "user", loggedIn: false }
+ * ```
  *
  * @example
+ * ```
  * // Admin users only
  * { type: "user", admin: true }
+ * ```
  *
  * @example
+ * ```
  * // Trust level 2+ AND in specific groups
  * { type: "user", minTrustLevel: 2, groups: ["beta-testers", "power-users"] }
+ * ```
  *
  * @example
+ * ```
  * // Check a user from outlet args instead of currentUser
  * { type: "user", source: "@outletArgs.topicAuthor", admin: true }
+ * ```
  *
  * @example
+ * ```
  * // Check if source user IS the current logged-in user
  * { type: "user", source: "@outletArgs.post.user", loggedIn: true }
+ * ```
  *
  * @example
+ * ```
  * // Check if source user is NOT the current user (e.g., for "follow" button)
  * { type: "user", source: "@outletArgs.user", loggedIn: false }
+ * ```
  */
 @blockCondition({
   type: "user",
@@ -95,7 +147,7 @@ import { blockCondition } from "./decorator";
       minTrustLevel,
       maxTrustLevel,
       groups,
-    } = args;
+    } = args as UserConditionArgs;
 
     // Check for loggedIn: false with user-specific conditions
     if (loggedIn === false) {
@@ -132,26 +184,19 @@ import { blockCondition } from "./decorator";
   },
 })
 export default class BlockUserCondition extends BlockCondition {
-  @service currentUser;
+  @service declare currentUser: User | null;
 
   /**
    * Returns the currentUser service as the default source.
-   *
-   * @returns {Object|null} The currentUser service.
    */
-  get defaultSource() {
+  get defaultSource(): User | null {
     return this.currentUser;
   }
 
   /**
    * Evaluates whether the user condition passes.
-   *
-   * @param {Object} args - The condition arguments.
-   * @param {Object} [context] - Evaluation context.
-   * @param {Object} [context.outletArgs] - Outlet args for source resolution.
-   * @returns {boolean} True if the condition passes.
    */
-  evaluate(args, context) {
+  evaluate(args: Record<string, unknown>, context?: ConditionContext): boolean {
     const {
       loggedIn,
       admin,
@@ -160,9 +205,12 @@ export default class BlockUserCondition extends BlockCondition {
       minTrustLevel,
       maxTrustLevel,
       groups,
-    } = args;
+    } = args as UserConditionArgs;
 
-    const user = this.getSourceValue(args, context);
+    const user = this.getSourceValue(args, context) as
+      | UserLike
+      | null
+      | undefined;
 
     // Check login state or current user match (when source is provided)
     if (loggedIn !== undefined) {
@@ -248,12 +296,11 @@ export default class BlockUserCondition extends BlockCondition {
    * Checks if two user objects represent the same user by comparing their ids.
    * Used when `source` is provided with `loggedIn` to check if the source user
    * is the current logged-in user.
-   *
-   * @param {Object} user1 - First user object.
-   * @param {Object} user2 - Second user object.
-   * @returns {boolean} True if both users exist and have the same id.
    */
-  #isSameUser(user1, user2) {
+  #isSameUser(
+    user1: UserLike | null | undefined,
+    user2: UserLike | null | undefined
+  ): boolean {
     if (!user1 || !user2) {
       return false;
     }
@@ -267,12 +314,8 @@ export default class BlockUserCondition extends BlockCondition {
    * Checks if a user is a member of at least one of the specified groups.
    * This implements OR logic for group membership: if the user belongs to any of
    * the provided groups, the check passes.
-   *
-   * @param {Object} user - The user object to check.
-   * @param {Array<string>} groupNames - Array of group names to check membership against.
-   * @returns {boolean} True if the user is in at least one of the specified groups.
    */
-  #isInAnyGroup(user, groupNames) {
+  #isInAnyGroup(user: UserLike, groupNames: string[]): boolean {
     // Extract the names of all groups the user belongs to
     const userGroups = user.groups?.map((g) => g.name) || [];
     // Check if any of the required group names appear in the user's groups

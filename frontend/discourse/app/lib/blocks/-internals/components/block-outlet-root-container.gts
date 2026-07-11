@@ -1,4 +1,3 @@
-// @ts-check
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
@@ -10,12 +9,33 @@ import {
 } from "discourse/lib/blocks/-internals/css";
 import { withDebugGroup } from "discourse/lib/blocks/-internals/debug-hooks";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
-import { processBlockEntries } from "discourse/lib/blocks/-internals/entry-processing";
+import {
+  type CreateChildBlockFn,
+  type LeafCache,
+  processBlockEntries,
+} from "discourse/lib/blocks/-internals/entry-processing";
 import {
   FAILURE_TYPE,
   isOptionalMissing,
 } from "discourse/lib/blocks/-internals/patterns";
 import { tryResolveBlock } from "discourse/lib/blocks/-internals/registry/block";
+import type {
+  BlockEntry,
+  ChildBlockResult,
+} from "discourse/lib/blocks/-internals/types";
+import type Blocks from "discourse/services/blocks";
+
+interface BlockOutletRootContainerSignature {
+  Args: {
+    outletName: string;
+    outletArgs: Record<string, unknown>;
+    rawChildren: BlockEntry[];
+    showGhosts: boolean;
+    showVisualOverlay: boolean;
+    isLoggingEnabled: boolean;
+    createChildBlockFn: CreateChildBlockFn;
+  };
+}
 
 /**
  * Internal container component that processes and renders block children.
@@ -32,10 +52,10 @@ import { tryResolveBlock } from "discourse/lib/blocks/-internals/registry/block"
  * The component receives the authorization-dependent function `createChildBlockFn`
  * as a prop to maintain the authorization model in the main block-outlet module.
  *
- * @private
+ * Internal — not part of the block authoring API.
  */
-export default class BlockOutletRootContainer extends Component {
-  @service blocks;
+export default class BlockOutletRootContainer extends Component<BlockOutletRootContainerSignature> {
+  @service declare blocks: Blocks;
 
   /**
    * Cache for curried components, keyed by their stable block key.
@@ -47,19 +67,16 @@ export default class BlockOutletRootContainer extends Component {
    * - Keys use stable `__stableKey` values assigned once at registration time
    * - The same keys are reused on every render/navigation
    * - This cache instance is garbage collected when the owning component is destroyed
-   *
-   * @type {Map<string, {ComponentClass: typeof Component, args: Object, result: Object}>}
    */
-  #componentCache = new Map();
+  #componentCache: LeafCache = new Map();
 
   /**
    * The CSS-safe version of the outlet name, used as the class for the
    * outermost wrapper `<div>`.
    *
    * @see {@link outletClassName} for the naming convention.
-   * @returns {string} The CSS-safe outlet name (e.g., "hero-blocks").
    */
-  get safeOutletName() {
+  get safeOutletName(): string {
     return outletClassName(this.args.outletName);
   }
 
@@ -68,9 +85,8 @@ export default class BlockOutletRootContainer extends Component {
    * CSS container query context for child blocks.
    *
    * @see {@link outletContainerClassName} for the naming convention.
-   * @returns {string} The container class name (e.g., "hero-blocks__container").
    */
-  get containerClassName() {
+  get containerClassName(): string {
     return outletContainerClassName(this.args.outletName);
   }
 
@@ -79,9 +95,8 @@ export default class BlockOutletRootContainer extends Component {
    * block children.
    *
    * @see {@link outletLayoutClassName} for the naming convention.
-   * @returns {string} The layout class name (e.g., "hero-blocks__layout").
    */
-  get layoutClassName() {
+  get layoutClassName(): string {
     return outletLayoutClassName(this.args.outletName);
   }
 
@@ -92,11 +107,9 @@ export default class BlockOutletRootContainer extends Component {
    * services like `router` and `discovery` during condition evaluation here
    * (synchronously in a tracked getter), Ember establishes tracking
    * dependencies. Route changes trigger this getter to re-run.
-   *
-   * @returns {Array<import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult>}
    */
   @cached
-  get processedChildren() {
+  get processedChildren(): ChildBlockResult[] {
     const {
       rawChildren,
       showGhosts,
@@ -107,13 +120,15 @@ export default class BlockOutletRootContainer extends Component {
     } = this.args;
 
     // force tracking the value
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.args.showVisualOverlay;
 
     if (!rawChildren?.length) {
       return [];
     }
 
-    const owner = getOwner(this);
+    // A rendered component is always Ember-owned.
+    const owner = getOwner(this)!;
     const baseHierarchy = outletName;
 
     // Step 1: Evaluate conditions - THIS IS NOW TRACKED!
@@ -129,7 +144,6 @@ export default class BlockOutletRootContainer extends Component {
     );
 
     // Step 2: Create components from processed entries
-    // @ts-ignore - TS2322: ChildBlockResult type compatible with return type
     return processBlockEntries({
       entries: processedEntries,
       cache: this.#componentCache,
@@ -153,30 +167,22 @@ export default class BlockOutletRootContainer extends Component {
    *
    * Container blocks have an implicit condition: they must have at least
    * one visible child. This is evaluated bottom-up (children first).
-   *
-   * @param {Array<Object>} entries - Array of block entries to process.
-   * @param {Object} outletArgs - Outlet arguments for condition evaluation.
-   * @param {Object} blocksService - Blocks service for condition evaluation.
-   * @param {boolean} showGhosts - If true, keep all blocks for ghost rendering.
-   * @param {boolean} isLoggingEnabled - If true, log condition evaluation.
-   * @param {string} baseHierarchy - Base hierarchy path for logging.
-   * @returns {Array<Object>} Processed entries with visibility metadata.
    */
   #preprocessEntries(
-    entries,
-    outletArgs,
-    blocksService,
-    showGhosts,
-    isLoggingEnabled,
-    baseHierarchy
-  ) {
-    const result = [];
+    entries: BlockEntry[],
+    outletArgs: Record<string, unknown>,
+    blocksService: Blocks,
+    showGhosts: boolean,
+    isLoggingEnabled: boolean,
+    baseHierarchy: string
+  ): BlockEntry[] {
+    const result: BlockEntry[] = [];
 
     for (const entry of entries) {
       // Shallow clone to add visibility metadata without mutating the original
       // layout entry. The layout is immutable after registration, so we create
       // a copy to attach __visible and __failureReason properties.
-      const entryClone = { ...entry };
+      const entryClone: BlockEntry = { ...entry };
 
       // Resolve block reference
       const resolvedBlock = tryResolveBlock(entryClone.block);
@@ -190,10 +196,7 @@ export default class BlockOutletRootContainer extends Component {
         continue;
       }
 
-      const blockClass =
-        /** @type {import("discourse/lib/blocks/-internals/registry/block").BlockClass} */ (
-          resolvedBlock
-        );
+      const blockClass = resolvedBlock;
       const blockMeta = getBlockMetadata(blockClass);
       const blockName = blockMeta?.blockName || "unknown";
       const isContainer = blockMeta?.isContainer ?? false;
@@ -205,7 +208,7 @@ export default class BlockOutletRootContainer extends Component {
       const conditionsPassed = entryClone.conditions
         ? withDebugGroup(
             blockName,
-            entryClone.id,
+            entryClone.id ?? null,
             baseHierarchy,
             isLoggingEnabled,
             () =>
@@ -219,12 +222,13 @@ export default class BlockOutletRootContainer extends Component {
       // For containers: recursively process children first (bottom-up evaluation)
       // This determines which children are visible before we check if container has any
       let hasVisibleChildren = true; // Non-containers always "have" visible children
-      if (isContainer && entryClone.children?.length) {
+      const children = entryClone.children;
+      if (isContainer && children?.length) {
         // Recursively preprocess children - this computes their visibility.
         // Include the container's ID in the hierarchy for better debug identification.
         const containerSuffix = entryClone.id ? `(#${entryClone.id})` : "";
         const processedChildren = this.#preprocessEntries(
-          entryClone.children,
+          children,
           outletArgs,
           blocksService,
           showGhosts,

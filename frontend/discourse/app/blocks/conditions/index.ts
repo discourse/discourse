@@ -1,7 +1,13 @@
-// @ts-check
 // BlockCondition class and decorator
 export { BlockCondition } from "./condition";
+export type {
+  ConditionContext,
+  ConditionResolvedValue,
+  ConditionSourceType,
+  ConditionValidateFn,
+} from "./condition";
 export { blockCondition } from "./decorator";
+export type { BlockConditionConfig } from "./decorator";
 
 // Built-in condition classes
 // Registered by the freeze-block-registry initializer

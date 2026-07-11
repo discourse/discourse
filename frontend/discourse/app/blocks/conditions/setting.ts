@@ -1,8 +1,36 @@
-// @ts-check
 import { service } from "@ember/service";
 import { findClosestMatch } from "discourse/lib/string-similarity";
-import { BlockCondition } from "./condition";
+import {
+  BlockCondition,
+  type ConditionContext,
+  type ConditionResolvedValue,
+} from "./condition";
 import { blockCondition } from "./decorator";
+
+/** Args accepted by the `setting` condition. */
+interface SettingConditionArgs {
+  /** The setting key to check. */
+  name: string;
+
+  /** Custom settings object (e.g., theme settings), passed via `source`.
+   *  If not provided, `siteSettings` is used. */
+  source?: Record<string, unknown>;
+
+  /** If true, passes when setting is truthy; if false, passes when falsy. */
+  enabled?: boolean;
+
+  /** Passes when setting exactly equals this value. */
+  equals?: unknown;
+
+  /** For single-value settings: passes when setting value is in this array. */
+  includes?: unknown[];
+
+  /** For list settings: passes when the setting list contains this value. */
+  contains?: string;
+
+  /** For list settings: passes when setting list contains ANY of these. */
+  containsAny?: string[];
+}
 
 /**
  * A condition that evaluates based on site setting or custom settings object values.
@@ -29,41 +57,42 @@ import { blockCondition } from "./decorator";
  * access to the siteSettings service. Unknown settings will cause the condition to
  * return false rather than throw an error at registration time.
  *
- * @class BlockSettingCondition
- * @extends BlockCondition
- *
- * @param {string} name - The setting key to check (required).
- * @param {Object} [source] - Custom settings object (e.g., theme settings). If not provided, uses siteSettings.
- * @param {boolean} [enabled] - If true, passes when setting is truthy; if false, passes when falsy.
- * @param {*} [equals] - Passes when setting exactly equals this value.
- * @param {Array<*>} [includes] - For single-value settings: passes when setting value is in this array.
- * @param {string} [contains] - For list settings: passes when the setting list contains this value.
- * @param {Array<string>} [containsAny] - For list settings: passes when setting list contains ANY of these.
- *
  * @example
+ * ```
  * // Boolean setting check
  * { type: "setting", name: "enable_badges", enabled: true }
+ * ```
  *
  * @example
+ * ```
  * // Exact value match
  * { type: "setting", name: "desktop_category_page_style", equals: "categories_and_latest_topics" }
+ * ```
  *
  * @example
+ * ```
  * // Setting is one of several values
  * { type: "setting", name: "desktop_category_page_style", includes: ["categories_and_latest_topics", "categories_and_top_topics"] }
+ * ```
  *
  * @example
+ * ```
  * // List setting contains value
  * { type: "setting", name: "top_menu", contains: "hot" }
+ * ```
  *
  * @example
+ * ```
  * // List setting contains any of values
  * { type: "setting", name: "share_links", containsAny: ["twitter", "facebook"] }
+ * ```
  *
  * @example
+ * ```
  * // Theme setting check (pass settings object from "virtual:theme")
  * import { settings } from "virtual:theme";
  * { type: "setting", source: settings, name: "show_sidebar", enabled: true }
+ * ```
  */
 @blockCondition({
   type: "setting",
@@ -84,28 +113,29 @@ import { blockCondition } from "./decorator";
   // (since it requires service access to siteSettings)
 })
 export default class BlockSettingCondition extends BlockCondition {
-  @service siteSettings;
+  // The injected value is the dynamic, per-request settings object built by
+  // the `site-settings` service factory (see `discourse/services/site-settings`),
+  // not an instance of that module's exported class shim.
+  @service declare siteSettings: Record<string, unknown>;
 
   /**
    * Returns the siteSettings service as the default source.
-   *
-   * @returns {Object} The siteSettings service.
    */
-  get defaultSource() {
+  get defaultSource(): Record<string, unknown> {
     return this.siteSettings;
   }
 
   /**
    * Evaluates whether the setting condition passes.
-   *
-   * @param {Object} args - The condition arguments.
-   * @param {Object} [context] - Evaluation context.
-   * @returns {boolean} True if the condition passes.
    */
-  evaluate(args, context) {
-    const { name, enabled, equals, includes, contains, containsAny } = args;
+  evaluate(args: Record<string, unknown>, context?: ConditionContext): boolean {
+    const { name, enabled, equals, includes, contains, containsAny } =
+      args as unknown as SettingConditionArgs;
 
-    const settingsSource = this.getSourceValue(args, context);
+    const settingsSource = this.getSourceValue(args, context) as
+      | Record<string, unknown>
+      | null
+      | undefined;
 
     // Handle null/undefined settings source gracefully
     if (settingsSource == null) {
@@ -154,12 +184,8 @@ export default class BlockSettingCondition extends BlockCondition {
    * Values are converted to strings before comparison to handle cases where
    * `searchValue` might be a number but the setting stores string values
    * (e.g., checking for `123` in `"123|456"`).
-   *
-   * @param {string|Array} settingValue - The setting value (may be "a|b|c" or ["a", "b", "c"]).
-   * @param {string|number} searchValue - The value to search for.
-   * @returns {boolean} True if the setting contains the search value.
    */
-  #settingContains(settingValue, searchValue) {
+  #settingContains(settingValue: unknown, searchValue: string): boolean {
     if (Array.isArray(settingValue)) {
       // Convert all values to strings for consistent matching
       return settingValue.map(String).includes(String(searchValue));
@@ -177,15 +203,17 @@ export default class BlockSettingCondition extends BlockCondition {
   /**
    * Returns the resolved setting value for debug logging.
    * Includes a warning note with "did you mean" suggestion if the setting doesn't exist.
-   *
-   * @param {Object} args - The condition arguments.
-   * @param {Object} [context] - Evaluation context.
-   * @returns {{ value: *, hasValue: true, note?: string }}
    */
-  getResolvedValueForLogging(args, context) {
-    const { name } = args;
+  getResolvedValueForLogging(
+    args: Record<string, unknown>,
+    context?: ConditionContext
+  ): ConditionResolvedValue {
+    const { name } = args as unknown as SettingConditionArgs;
 
-    const settingsSource = this.getSourceValue(args, context);
+    const settingsSource = this.getSourceValue(args, context) as
+      | Record<string, unknown>
+      | null
+      | undefined;
 
     // Handle null/undefined settings source
     if (settingsSource == null) {

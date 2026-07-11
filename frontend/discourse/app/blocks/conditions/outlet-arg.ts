@@ -1,6 +1,9 @@
-// @ts-check
 import { getByPath, matchValue } from "discourse/lib/blocks";
-import { BlockCondition } from "./condition";
+import {
+  BlockCondition,
+  type ConditionContext,
+  type ConditionResolvedValue,
+} from "./condition";
 import { blockCondition } from "./decorator";
 
 /**
@@ -9,20 +12,25 @@ import { blockCondition } from "./decorator";
  */
 const MAX_PATH_LENGTH = 255;
 
+/** Args accepted by the `outlet-arg` condition. */
+interface OutletArgConditionArgs {
+  /** Dot-notation path to the property, e.g. `"topic.closed"`,
+   *  `"user.trust_level"`, `"category.id"`. */
+  path: string;
+
+  /** Value to match against (see matching rules below). */
+  value?: unknown;
+
+  /** If true, passes when the property exists (not undefined); if false,
+   *  passes when the property is undefined. */
+  exists?: boolean;
+}
+
 /**
  * A condition that evaluates based on outlet arg values.
  *
  * Checks properties passed via `@outletArgs` on the BlockOutlet. Supports
  * dot-notation paths for nested properties and flexible value matching.
- *
- * @class BlockOutletArgCondition
- * @extends BlockCondition
- *
- * @param {string} path - Dot-notation path to the property (required).
- *   E.g., `"topic.closed"`, `"user.trust_level"`, `"category.id"`.
- * @param {*} [value] - Value to match against (see matching rules below).
- * @param {boolean} [exists] - If true, passes when property exists (not undefined);
- *   if false, passes when property is undefined.
  *
  * ## Value Matching Rules
  *
@@ -35,32 +43,46 @@ const MAX_PATH_LENGTH = 255;
  * - **`{ any: [...] }`**: Passes if `actual` matches ANY spec in array (OR logic)
  *
  * @example
+ * ```
  * // Check if topic is closed
  * { type: "outlet-arg", path: "topic.closed", value: true }
+ * ```
  *
  * @example
+ * ```
  * // Check user trust level is 2 or higher
  * { type: "outlet-arg", path: "user.trust_level", value: [2, 3, 4] }
+ * ```
  *
  * @example
+ * ```
  * // Check category is one of several IDs
  * { type: "outlet-arg", path: "category.id", value: [1, 2, 3] }
+ * ```
  *
  * @example
+ * ```
  * // Check if topic property exists
  * { type: "outlet-arg", path: "topic", exists: true }
+ * ```
  *
  * @example
+ * ```
  * // Check topic is NOT closed
  * { type: "outlet-arg", path: "topic.closed", value: { not: true } }
+ * ```
  *
  * @example
+ * ```
  * // Check category slug matches pattern
  * { type: "outlet-arg", path: "category.slug", value: /^support/ }
+ * ```
  *
  * @example
+ * ```
  * // Check topic is closed OR archived (using any)
  * { type: "outlet-arg", path: "topic.closed", value: { any: [true, { not: false }] } }
+ * ```
  */
 @blockCondition({
   type: "outlet-arg",
@@ -73,7 +95,9 @@ const MAX_PATH_LENGTH = 255;
     exactlyOne: ["value", "exists"],
   },
   validate(args) {
-    const { path: argPath } = args;
+    // The `args` schema declares `path` as a required string, validated
+    // before this custom validator runs.
+    const { path: argPath } = args as unknown as OutletArgConditionArgs;
 
     // Check length first to prevent regex DoS with extremely long strings.
     if (argPath.length > MAX_PATH_LENGTH) {
@@ -97,13 +121,9 @@ const MAX_PATH_LENGTH = 255;
 export default class BlockOutletArgCondition extends BlockCondition {
   /**
    * Evaluates whether the outlet arg condition passes.
-   *
-   * @param {Object} args - The condition arguments.
-   * @param {Object} [context] - Evaluation context.
-   * @returns {boolean} True if the condition passes.
    */
-  evaluate(args, context) {
-    const { path, value, exists } = args;
+  evaluate(args: Record<string, unknown>, context?: ConditionContext): boolean {
+    const { path, value, exists } = args as unknown as OutletArgConditionArgs;
     const outletArgs = context?.outletArgs;
 
     // Get the value at the path
@@ -121,21 +141,12 @@ export default class BlockOutletArgCondition extends BlockCondition {
 
   /**
    * Returns the resolved value at the path for debug logging.
-   *
-   * @param {Object} args - The condition arguments containing `path`, `value`, `exists`.
-   * @param {Object} [context] - Evaluation context containing outletArgs.
-   * @returns {{
-   *   hasValue: true,
-   *   formatted: {
-   *     path: string,
-   *     actual: *,
-   *     configured: * | { exists: boolean }
-   *   }
-   * }} Object with formatted log data showing path, actual value, and configured expectation.
    */
-  // @ts-ignore - TS2416: Override returns formatted object instead of base class value structure
-  getResolvedValueForLogging(args, context) {
-    const { path, value, exists } = args;
+  getResolvedValueForLogging(
+    args: Record<string, unknown>,
+    context?: ConditionContext
+  ): ConditionResolvedValue {
+    const { path, value, exists } = args as unknown as OutletArgConditionArgs;
     return {
       hasValue: true,
       formatted: {
