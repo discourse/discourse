@@ -33,7 +33,7 @@ import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks";
  * **Rule of thumb:** If the outlet depends on ANY plugin being enabled, it MUST
  * be registered via `api.registerBlockOutlet()` in that plugin's code, not here.
  *
- * @constant {ReadonlyArray<string>} BLOCK_OUTLETS - An immutable array of core block outlet identifiers
+ * An immutable array of core block outlet identifiers.
  */
 // eslint-discourse keep-array-sorted
 export const BLOCK_OUTLETS = Object.freeze([

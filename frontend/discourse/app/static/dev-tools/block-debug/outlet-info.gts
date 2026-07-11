@@ -1,38 +1,58 @@
-// @ts-check
 import Component from "@glimmer/component";
 import { array, hash } from "@ember/helper";
-import DTooltip from "discourse/float-kit/components/d-tooltip";
+import { type ComponentLike } from "@glint/template";
+import DTooltipUntyped from "discourse/float-kit/components/d-tooltip";
 import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import ArgsTable from "../shared/args-table";
 
-/**
- * Component signature for OutletInfo.
- *
- * @typedef {Object} OutletInfoSignature
- * @property {Object} Args
- * @property {string} Args.outletName - The name of the block outlet.
- * @property {number} Args.blockCount - Number of blocks registered.
- * @property {Object} [Args.outletArgs] - Arguments passed to the outlet.
- * @property {Error} [Args.error] - Validation error if config failed.
- * @property {Object} Blocks
- * @property {[]} Blocks.default - Default block for rendering children.
- */
+// TODO(devxp-typescript-pending): drop once DTooltip is authored in .gts with
+// a real Signature, then import it directly. Untyped .gjs today → no
+// arg/block/attr types; this shape reflects only this component's own usage.
+const DTooltip = DTooltipUntyped as unknown as ComponentLike<{
+  Args: {
+    identifier: string;
+    interactive: boolean;
+    placement: string;
+    maxWidth: number;
+    triggers: { mobile: string[]; desktop: string[] };
+    untriggers: { mobile: string[]; desktop: string[] };
+  };
+  Blocks: {
+    trigger: [];
+    content: [];
+  };
+}>;
+
+interface OutletInfoSignature {
+  Args: {
+    /** The name of the block outlet. */
+    outletName: string;
+    /** Number of blocks registered. */
+    blockCount: number;
+    /** Arguments passed to the outlet. */
+    outletArgs?: Record<string, unknown>;
+    /** Validation error if config failed. */
+    error?: Error | null;
+  };
+  Blocks: {
+    /** Default block for rendering children. */
+    default: [];
+  };
+}
 
 /**
  * Debug overlay for BlockOutlet components.
  * Shows outlet name badge with a tooltip containing outlet info and GitHub search link.
- *
- * @extends {Component<OutletInfoSignature>}
  */
-export default class OutletInfo extends Component {
+export default class OutletInfo extends Component<OutletInfoSignature> {
   /**
    * Returns a human-readable label for the block count.
    *
-   * @returns {string} "1 block" for singular, "{n} blocks" for plural.
+   * @returns "1 block" for singular, "N blocks" for plural.
    */
-  get blockLabel() {
+  get blockLabel(): string {
     const count = this.args.blockCount;
     return count === 1 ? "1 block" : `${count} blocks`;
   }
@@ -41,9 +61,9 @@ export default class OutletInfo extends Component {
    * Cleans up the error message for display in the popup.
    * Removes the "[Blocks]" prefix while preserving formatted structure.
    *
-   * @returns {string} The cleaned error message.
+   * @returns The cleaned error message.
    */
-  get errorMessage() {
+  get errorMessage(): string {
     let message = this.args.error?.message ?? "Unknown validation error";
 
     // Remove "[Blocks]" prefix that's added for console logging
@@ -55,11 +75,13 @@ export default class OutletInfo extends Component {
   /**
    * Checks whether this outlet has any args passed to it.
    *
-   * @returns {boolean} True if outlet has at least one arg.
+   * @returns True if outlet has at least one arg.
    */
-  get hasOutletArgs() {
+  get hasOutletArgs(): boolean {
     const outletArgs = this.args.outletArgs;
-    const deprecatedArgs = outletArgs?.[DEPRECATED_ARGS_KEY];
+    const deprecatedArgs = outletArgs?.[DEPRECATED_ARGS_KEY] as
+      | Record<string, unknown>
+      | undefined;
 
     return (
       (outletArgs != null && Object.keys(outletArgs).length > 0) ||
