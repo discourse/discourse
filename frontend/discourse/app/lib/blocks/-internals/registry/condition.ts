@@ -1,5 +1,5 @@
-// @ts-check
 import { DEBUG } from "@glimmer/env";
+import type { BlockCondition } from "discourse/blocks/conditions";
 import { isDecoratedCondition } from "discourse/blocks/conditions/decorator";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import { isTesting } from "discourse/lib/environment";
@@ -21,52 +21,42 @@ import {
  * Unlike blocks which store component classes, conditions are stored as classes
  * and instantiated by the Blocks service when first needed. This allows the
  * service to set the owner for dependency injection.
- *
- * @type {Map<string, typeof import("discourse/blocks/conditions").BlockCondition>}
  */
-const conditionTypeRegistry = new Map();
+const conditionTypeRegistry = new Map<string, typeof BlockCondition>();
 
-/**
- * Whether the condition type registry is frozen (no new registrations allowed).
- */
+/** Whether the condition type registry is frozen (no new registrations allowed). */
 let conditionTypeRegistryFrozen = false;
 
 /**
  * Stores the initial frozen state for condition registry to allow correct reset after tests.
- * @type {boolean | null}
  */
-let testConditionRegistryFrozenState = null;
+let testConditionRegistryFrozenState: boolean | null = null;
 
 /*
  * Public Functions
  */
 
-/**
- * Returns whether the condition type registry is frozen.
- *
- * @returns {boolean}
- */
-export function isConditionTypeRegistryFrozen() {
+/** Returns whether the condition type registry is frozen. */
+export function isConditionTypeRegistryFrozen(): boolean {
   return conditionTypeRegistryFrozen;
 }
 
 /**
  * Checks if a condition type is registered.
  *
- * @param {string} type - The condition type name.
- * @returns {boolean}
+ * @param type - The condition type name.
  */
-export function hasConditionType(type) {
+export function hasConditionType(type: string): boolean {
   return conditionTypeRegistry.has(type);
 }
 
 /**
  * Returns all condition type entries as [type, ConditionClass] pairs.
  * Used by Blocks service for lazy initialization.
- *
- * @returns {Array<[string, typeof import("discourse/blocks/conditions").BlockCondition]>}
  */
-export function getAllConditionTypeEntries() {
+export function getAllConditionTypeEntries(): Array<
+  [string, typeof BlockCondition]
+> {
   return Array.from(conditionTypeRegistry.entries());
 }
 
@@ -80,7 +70,7 @@ export function getAllConditionTypeEntries() {
  *
  * @internal
  */
-export function _freezeConditionTypeRegistry() {
+export function _freezeConditionTypeRegistry(): void {
   conditionTypeRegistryFrozen = true;
 }
 
@@ -90,7 +80,7 @@ export function _freezeConditionTypeRegistry() {
  *
  * The condition class must be decorated with `@blockCondition`
  *
- * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass - The condition class to register.
+ * @param ConditionClass - The condition class to register.
  *
  * @example
  * ```javascript
@@ -108,7 +98,9 @@ export function _freezeConditionTypeRegistry() {
  *
  * @internal
  */
-export function _registerConditionType(ConditionClass) {
+export function _registerConditionType(
+  ConditionClass: typeof BlockCondition
+): void {
   if (
     !assertRegistryNotFrozen({
       frozen: conditionTypeRegistryFrozen,
@@ -159,8 +151,6 @@ export function _registerConditionType(ConditionClass) {
  *
  * USE ONLY FOR TESTING PURPOSES.
  *
- * @param {Function} callback - Function to execute with unfrozen registry.
- *
  * @example
  * ```javascript
  * withTestConditionRegistration(() => {
@@ -187,7 +177,7 @@ export const withTestConditionRegistration = createTestRegistrationWrapper({
  *
  * @internal Called by `resetBlockRegistryForTesting`, not meant for direct use.
  */
-export function _resetConditionRegistryState() {
+export function _resetConditionRegistryState(): void {
   // allows tree-shaking in production builds
   if (!DEBUG) {
     return;

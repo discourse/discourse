@@ -1,4 +1,3 @@
-// @ts-check
 /**
  * Outlet layout validation utilities.
  *
@@ -9,12 +8,14 @@
  * Terminology:
  * - **Block Entry**: An object in a layout that specifies how to use a block.
  * - **Outlet Layout**: An array of block entries defining which blocks appear in an outlet.
- *
- * @module discourse/lib/blocks/-internals/validation/layout
  */
-
 import { DEBUG } from "@glimmer/env";
 import { getOwner } from "@ember/owner";
+import type {
+  BlockMetadata,
+  ChildArgSchema,
+  LayoutEntry,
+} from "discourse/blocks/types";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import {
   BlockError,
@@ -36,10 +37,12 @@ import {
   getAllOutlets,
   isValidOutlet,
 } from "discourse/lib/blocks/-internals/registry/outlet";
+import type { BlockClass } from "discourse/lib/blocks/-internals/types";
 import {
   applyArgDefaults,
   buildErrorPath,
   createValidationContext,
+  type ValidationContext,
 } from "discourse/lib/blocks/-internals/utils";
 import { validateArgsAgainstSchema } from "discourse/lib/blocks/-internals/validation/args";
 import { validateBlockArgs } from "discourse/lib/blocks/-internals/validation/block-args";
@@ -48,24 +51,52 @@ import {
   validateConstraints,
 } from "discourse/lib/blocks/-internals/validation/constraints";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
+import type Blocks from "discourse/services/blocks";
+
+/**
+ * Widens a `LayoutEntry` to the generic record shape `ValidationContext`
+ * expects for error-message rendering. `LayoutEntry` has no index signature,
+ * so it isn't directly assignable to `Record<string, unknown>` even though
+ * every field it declares is a valid record entry — hence the two-step cast.
+ */
+function asContextEntry(
+  entry: LayoutEntry | null | undefined
+): Record<string, unknown> | null {
+  return entry ? (entry as unknown as Record<string, unknown>) : null;
+}
+
+/** Same widening as {@link asContextEntry}, for a full layout array. */
+function asContextLayout(
+  layout: LayoutEntry[] | null | undefined
+): Array<Record<string, unknown>> | null {
+  return layout ? (layout as unknown as Array<Record<string, unknown>>) : null;
+}
 
 /**
  * Wraps a validation function call with BlockError handling.
  * Catches errors with a `path` property and re-raises with full context.
  *
- * @param {Function} validationFn - The validation function to call.
- * @param {string} errorPrefix - Prefix for the error message.
- * @param {Object} context - Error context including outletName, blockName, path, etc.
+ * @param validationFn - The validation function to call.
+ * @param errorPrefix - Prefix for the error message.
+ * @param context - Error context including outletName, blockName, path, etc.
  */
-function wrapValidationError(validationFn, errorPrefix, context) {
+function wrapValidationError(
+  validationFn: () => void,
+  errorPrefix: string,
+  context: ValidationContext
+): void {
   try {
     validationFn();
-  } catch (error) {
+  } catch (error: unknown) {
+    // Errors raised by the schema/entry validators below are always
+    // `BlockError`-shaped (or a plain `Error` with a `path` property attached
+    // manually), never an arbitrary throw.
+    const err = error as Error & { path?: string };
     // Errors with path property need context enrichment
-    if (error.path) {
-      raiseBlockError(`${errorPrefix}: ${error.message}`, {
+    if (err.path) {
+      raiseBlockError(`${errorPrefix}: ${err.message}`, {
         ...context,
-        errorPath: buildErrorPath(context.path, error.path),
+        errorPath: buildErrorPath(context.path, err.path),
       });
     }
     throw error;
@@ -76,21 +107,29 @@ function wrapValidationError(validationFn, errorPrefix, context) {
  * Validates that a block is permitted in the specified outlet.
  * Checks allowedOutlets and deniedOutlets metadata if present.
  *
- * @param {Object} metadata - Block metadata with outlet restrictions.
- * @param {string} outletName - The outlet being validated.
- * @param {string} blockName - The block name for error messages.
- * @param {Object} context - Error context for raiseBlockError.
- * @returns {boolean} True if validation passed, false if error was raised.
+ * @param metadata - Block metadata with outlet restrictions.
+ * @param outletName - The outlet being validated.
+ * @param blockName - The block name for error messages.
+ * @param context - Error context for raiseBlockError.
+ * @returns True if validation passed, false if error was raised.
  */
-function validateOutletPermission(metadata, outletName, blockName, context) {
+function validateOutletPermission(
+  metadata: BlockMetadata | null | undefined,
+  outletName: string,
+  blockName: string,
+  context: ValidationContext
+): boolean {
   if (!metadata?.allowedOutlets && !metadata?.deniedOutlets) {
     return true;
   }
 
   const permission = isBlockPermittedInOutlet(
     outletName,
-    metadata.allowedOutlets,
-    metadata.deniedOutlets
+    // `BlockMetadata`'s outlet lists are `readonly` (the decorator freezes
+    // them); `isBlockPermittedInOutlet` only reads them, so it's safe to
+    // widen back to a mutable array here.
+    metadata.allowedOutlets as string[] | null,
+    metadata.deniedOutlets as string[] | null
   );
 
   if (!permission.permitted) {
@@ -107,21 +146,21 @@ function validateOutletPermission(metadata, outletName, blockName, context) {
  * Validates container/children relationship.
  * Containers must have children, non-containers cannot have children.
  *
- * @param {Object} entry - The block entry.
- * @param {boolean} isContainer - Whether the block is a container.
- * @param {string} blockName - The block name for error messages.
- * @param {string} outletName - The outlet name for error messages.
- * @param {Object} context - Error context for raiseBlockError.
- * @returns {boolean} True if validation passed, false if error was raised.
+ * @param entry - The block entry.
+ * @param isContainer - Whether the block is a container.
+ * @param blockName - The block name for error messages.
+ * @param outletName - The outlet name for error messages.
+ * @param context - Error context for raiseBlockError.
+ * @returns True if validation passed, false if error was raised.
  */
 function validateContainerChildren(
-  entry,
-  isContainer,
-  blockName,
-  outletName,
-  context
-) {
-  const hasChildren = entry.children?.length > 0;
+  entry: LayoutEntry,
+  isContainer: boolean,
+  blockName: string,
+  outletName: string,
+  context: ValidationContext
+): boolean {
+  const hasChildren = !!entry.children?.length;
 
   if (hasChildren && !isContainer) {
     raiseBlockError(
@@ -145,19 +184,19 @@ function validateContainerChildren(
  * Validates block constraints and custom validation functions.
  * Applies arg defaults before validation.
  *
- * @param {Object} metadata - Block metadata with constraints/validate.
- * @param {Object} resolvedBlock - The resolved block class.
- * @param {Object} entry - The block entry.
- * @param {string} blockName - The block name for error messages.
- * @param {Object} context - Error context for raiseBlockError.
+ * @param metadata - Block metadata with constraints/validate.
+ * @param resolvedBlock - The resolved block class.
+ * @param entry - The block entry.
+ * @param blockName - The block name for error messages.
+ * @param context - Error context for raiseBlockError.
  */
 function validateBlockConstraints(
-  metadata,
-  resolvedBlock,
-  entry,
-  blockName,
-  context
-) {
+  metadata: BlockMetadata | null | undefined,
+  resolvedBlock: BlockClass,
+  entry: LayoutEntry,
+  blockName: string,
+  context: ValidationContext
+): void {
   if (!metadata?.constraints && !metadata?.validate) {
     return;
   }
@@ -185,7 +224,7 @@ function validateBlockConstraints(
       metadata.validate,
       argsWithDefaults
     );
-    if (customErrors?.length > 0) {
+    if (customErrors && customErrors.length > 0) {
       const errorMessage =
         customErrors.length === 1
           ? customErrors[0]
@@ -202,17 +241,17 @@ function validateBlockConstraints(
  * Validates a child block's containerArgs against the parent container's childArgs schema.
  * Reuses the shared validateArgsAgainstSchema function for core validation logic.
  *
- * @param {Object} childEntry - The child block entry.
- * @param {Object} parentChildArgsSchema - The parent's childArgs schema.
- * @param {string} parentName - Parent block name for error messages.
- * @param {Object} context - Error context.
+ * @param childEntry - The child block entry.
+ * @param parentChildArgsSchema - The parent's childArgs schema.
+ * @param parentName - Parent block name for error messages.
+ * @param context - Error context.
  */
 function validateContainerArgs(
-  childEntry,
-  parentChildArgsSchema,
-  parentName,
-  context
-) {
+  childEntry: LayoutEntry,
+  parentChildArgsSchema: Record<string, ChildArgSchema>,
+  parentName: string | null,
+  context: ValidationContext
+): void {
   const providedArgs = childEntry.containerArgs || {};
 
   try {
@@ -221,13 +260,14 @@ function validateContainerArgs(
       parentChildArgsSchema,
       "containerArgs"
     );
-  } catch (error) {
+  } catch (error: unknown) {
     // Enhance error message with parent context
+    const err = error as BlockError;
     raiseBlockError(
-      `Child block at ${context.path} ${error.message} (required by parent "${parentName}").`,
+      `Child block at ${context.path} ${err.message} (required by parent "${parentName}").`,
       {
         ...context,
-        errorPath: buildErrorPath(context.path, error.path),
+        errorPath: buildErrorPath(context.path, err.path ?? ""),
       }
     );
   }
@@ -236,30 +276,30 @@ function validateContainerArgs(
 /**
  * Validates uniqueness constraints for containerArgs across all sibling children.
  *
- * @param {Array<Object>} childEntries - Array of child block entries.
- * @param {Object} childArgsSchema - The parent's childArgs schema.
- * @param {string} parentName - Parent block name for error messages.
- * @param {string} parentPath - Path to parent for error context.
- * @param {Object} context - Error context.
+ * @param childEntries - Array of child block entries.
+ * @param childArgsSchema - The parent's childArgs schema.
+ * @param parentName - Parent block name for error messages.
+ * @param parentPath - Path to parent for error context.
+ * @param context - Error context.
  */
 function validateContainerArgsUniqueness(
-  childEntries,
-  childArgsSchema,
-  parentName,
-  parentPath,
-  context
-) {
+  childEntries: LayoutEntry[],
+  childArgsSchema: Record<string, ChildArgSchema>,
+  parentName: string | null,
+  parentPath: string,
+  context: ValidationContext
+): void {
   // Find args with unique: true
   const uniqueArgs = Object.entries(childArgsSchema)
     .filter(([, schema]) => schema.unique)
     .map(([name]) => name);
 
   for (const argName of uniqueArgs) {
-    const seenValues = new Map(); // value -> index of first occurrence
+    const seenValues = new Map<unknown, number>(); // value -> index of first occurrence
 
     for (let i = 0; i < childEntries.length; i++) {
       const childEntry = childEntries[i];
-      const value = childEntry.containerArgs?.[argName];
+      const value = childEntry?.containerArgs?.[argName];
 
       // Skip undefined values (uniqueness only applies to provided values)
       if (value === undefined) {
@@ -290,10 +330,10 @@ function validateContainerArgsUniqueness(
  * IDs must start with a lowercase letter and contain only lowercase letters,
  * numbers, and hyphens (same format as block names).
  *
- * @param {Object} entry - The block entry.
- * @throws {BlockError} If the id format is invalid.
+ * @param entry - The block entry.
+ * @throws BlockError if the id format is invalid.
  */
-export function validateEntryIdFormat(entry) {
+export function validateEntryIdFormat(entry: LayoutEntry): void {
   if (!entry.id) {
     return;
   }
@@ -311,11 +351,15 @@ export function validateEntryIdFormat(entry) {
  * Validates that containerArgs is not provided when parent has no childArgs.
  * Follows the pattern: error in dev/test, warn in production.
  *
- * @param {Object} entry - The block entry.
- * @param {Object} parentChildArgsSchema - The parent's childArgs schema (null if none).
- * @param {Object} context - Error context.
+ * @param entry - The block entry.
+ * @param parentChildArgsSchema - The parent's childArgs schema (null if none).
+ * @param context - Error context.
  */
-function validateOrphanContainerArgs(entry, parentChildArgsSchema, context) {
+function validateOrphanContainerArgs(
+  entry: LayoutEntry,
+  parentChildArgsSchema: Record<string, ChildArgSchema> | null,
+  context: ValidationContext
+): void {
   if (entry.containerArgs && !parentChildArgsSchema) {
     const message =
       `Block at ${context.path} has "containerArgs" but parent container does not declare "childArgs". ` +
@@ -333,60 +377,81 @@ function validateOrphanContainerArgs(entry, parentChildArgsSchema, context) {
 /**
  * Validates block conditions and raises errors with proper context.
  *
- * @param {Object} blocksService - The blocks service with validate method.
- * @param {Object} entry - The block entry containing conditions.
- * @param {string} outletName - The outlet name for error messages.
- * @param {string} blockName - The block name for error messages.
- * @param {string} path - The path in the layout tree for error messages.
- * @param {Error | null} [callSiteError] - Error object capturing where renderBlocks() was called.
- * @param {Array<Object>} [rootLayout] - The root blocks array for error context display.
+ * @param blocksService - The blocks service with validate method.
+ * @param entry - The block entry containing conditions.
+ * @param outletName - The outlet name for error messages.
+ * @param blockName - The block name for error messages.
+ * @param path - The path in the layout tree for error messages.
+ * @param callSiteError - Error object capturing where renderBlocks() was called.
+ * @param rootLayout - The root blocks array for error context display.
  */
 function validateBlockConditions(
-  blocksService,
-  entry,
-  outletName,
-  blockName,
-  path,
-  callSiteError = null,
-  rootLayout = null
-) {
+  blocksService: Blocks | undefined,
+  entry: LayoutEntry,
+  outletName: string,
+  blockName: string,
+  path: string,
+  callSiteError: Error | null = null,
+  rootLayout: LayoutEntry[] | null = null
+): void {
   if (!entry.conditions || !blocksService) {
     return;
   }
 
   try {
     blocksService.validate(entry.conditions);
-  } catch (error) {
+  } catch (error: unknown) {
     // Build context for error message - include rootLayout for tree display
-    const context = {
+    const context: ValidationContext = {
       ...createValidationContext({
         outletName,
         blockName,
         path,
-        entry,
+        entry: asContextEntry(entry),
         callSiteError,
-        rootLayout,
+        rootLayout: asContextLayout(rootLayout),
       }),
       conditions: entry.conditions,
     };
 
     // If error has a path property, build the full errorPath and conditionsPath
     // error.path is relative to conditions (e.g., "params.categoryId")
-    if (error.path) {
+    const err = error as BlockError;
+    if (err.path) {
       context.errorPath = buildErrorPath(
         path,
-        buildErrorPath("conditions", error.path)
+        buildErrorPath("conditions", err.path)
       );
       // conditionsPath is relative to the conditions object (for formatter)
-      context.conditionsPath = error.path;
+      context.conditionsPath = err.path;
     }
 
     raiseBlockError(
-      `Invalid conditions for block "${blockName}" in outlet "${outletName}": ${error.message}`,
+      `Invalid conditions for block "${blockName}" in outlet "${outletName}": ${err.message}`,
       context
     );
   }
 }
+
+/** Context accepted by `resolveBlockForValidation`. */
+interface ResolveBlockForValidationContext {
+  /** Path to this entry in the block tree. */
+  path?: string;
+  /** The block entry object. */
+  entry?: LayoutEntry | null;
+  /** Error capturing call site location. */
+  callSiteError?: Error | null;
+  /** Root layout array for error display. */
+  rootLayout?: LayoutEntry[] | null;
+}
+
+/**
+ * Marker returned by `resolveBlockForValidation()` for an optional block
+ * reference (`name?`) that isn't registered, keyed by the `OPTIONAL_MISSING`
+ * symbol (distinct from the `registry/block.ts` `OptionalMissingMarker` shape,
+ * which is keyed by the plain `"optionalMissing"` property).
+ */
+type ResolveOptionalMissingMarker = { [OPTIONAL_MISSING]: true; name: string };
 
 /**
  * Resolves a block reference (string or class) to a BlockClass for validation.
@@ -406,22 +471,19 @@ function validateBlockConditions(
  * is returned instead of throwing an error. The calling code should check for this
  * marker and skip validation/rendering for the block.
  *
- * @param {string | Object} blockRef - Block name string (possibly with `?` suffix) or BlockClass.
- * @param {string} outletName - Outlet name for error messages.
- * @param {Object} [context] - Context for error messages.
- * @param {string} [context.path] - Path to this entry in the block tree.
- * @param {Object} [context.entry] - The block entry object.
- * @param {Error} [context.callSiteError] - Error capturing call site location.
- * @param {Array} [context.rootLayout] - Root layout array for error display.
- * @returns {Promise<Object | string | { [OPTIONAL_MISSING]: true, name: string }>}
- *   Resolved BlockClass, string name if deferred, or optional missing marker object.
- * @throws {Error} If required block is not registered.
+ * @param blockRef - Block name string (possibly with `?` suffix) or BlockClass.
+ * @param outletName - Outlet name for error messages.
+ * @param context - Context for error messages.
+ * @returns Resolved BlockClass, string name if deferred, or optional missing marker object.
+ * @throws Error if required block is not registered.
  */
 export async function resolveBlockForValidation(
-  blockRef,
-  outletName,
-  context = {}
-) {
+  blockRef: string | BlockClass,
+  outletName: string,
+  context: ResolveBlockForValidationContext = {}
+): Promise<
+  BlockClass | string | ResolveOptionalMissingMarker | null | undefined
+> {
   // Class reference - return as-is (classes always exist)
   if (typeof blockRef !== "string") {
     return blockRef;
@@ -442,10 +504,10 @@ export async function resolveBlockForValidation(
       createValidationContext({
         outletName,
         blockName: name,
-        path: context.path,
-        entry: context.entry,
+        path: context.path ?? "",
+        entry: asContextEntry(context.entry),
         callSiteError: context.callSiteError,
-        rootLayout: context.rootLayout,
+        rootLayout: asContextLayout(context.rootLayout),
       })
     );
     return null;
@@ -470,7 +532,7 @@ export async function resolveBlockForValidation(
  * Any key not in this list will trigger a validation error, helping catch
  * common typos like `condition` instead of `conditions`.
  */
-export const VALID_ENTRY_KEYS = Object.freeze([
+export const VALID_ENTRY_KEYS: readonly string[] = Object.freeze([
   "block", // Block class or name (required)
   "conditions", // Conditions for rendering
   "args", // Arguments to pass to the block
@@ -481,16 +543,24 @@ export const VALID_ENTRY_KEYS = Object.freeze([
 ]);
 
 /**
+ * A declarative type-validation rule for one block entry field, used by
+ * `ENTRY_TYPE_RULES`.
+ */
+interface EntryTypeRule {
+  /** Checks whether the field's value is valid. */
+  validate: (value: unknown) => boolean;
+  /** The expected type, for the error message. */
+  expected: string;
+  /** Describes the actual (invalid) value's type, for the error message.
+   *  Falls back to `typeof value` when omitted. */
+  actual?: (value: unknown) => string;
+}
+
+/**
  * Declarative type validation rules for block entry fields.
  * Each rule specifies how to validate a field's type and generate error messages.
- *
- * @type {Object<string, {
- *   validate: (value: any) => boolean,
- *   expected: string,
- *   actual?: (value: any) => string
- * }>}
  */
-const ENTRY_TYPE_RULES = {
+const ENTRY_TYPE_RULES: Record<string, EntryTypeRule> = {
   args: {
     validate: (v) => typeof v === "object" && !Array.isArray(v),
     expected: "an object",
@@ -534,10 +604,10 @@ const ENTRY_TYPE_RULES = {
  * Internal keys (starting with `__`) are skipped as they are added by the
  * system during preprocessing (e.g., `__visible`, `__failureReason`).
  *
- * @param {Object} entry - The block entry object.
- * @throws {BlockError} If unknown keys are found.
+ * @param entry - The block entry object.
+ * @throws BlockError if unknown keys are found.
  */
-export function validateEntryKeys(entry) {
+export function validateEntryKeys(entry: LayoutEntry): void {
   const unknownKeys = Object.keys(entry).filter(
     (key) => !key.startsWith("__") && !VALID_ENTRY_KEYS.includes(key)
   );
@@ -562,12 +632,15 @@ export function validateEntryKeys(entry) {
  * Validates the types of optional entry fields.
  * Iterates over ENTRY_TYPE_RULES to check each field's type.
  *
- * @param {Object} entry - The block entry object.
- * @throws {BlockError} If any field has an invalid type.
+ * @param entry - The block entry object.
+ * @throws BlockError if any field has an invalid type.
  */
-export function validateEntryTypes(entry) {
+export function validateEntryTypes(entry: LayoutEntry): void {
+  // `LayoutEntry` has no index signature, so reading it by a dynamic field
+  // name needs the two-step cast (see `asContextEntry` above).
+  const entryRecord = entry as unknown as Record<string, unknown>;
   for (const [field, rule] of Object.entries(ENTRY_TYPE_RULES)) {
-    const value = entry[field];
+    const value = entryRecord[field];
     if (value != null && !rule.validate(value)) {
       const actualType = rule.actual?.(value) ?? typeof value;
       // Throw BlockError directly - wrapValidationError will add context
@@ -583,10 +656,11 @@ export function validateEntryTypes(entry) {
  * Validation context passed through layout validation recursion.
  * Created at the root level and shared across all entries to enable
  * cross-cutting validation (e.g., ID uniqueness across the entire tree).
- *
- * @typedef {Object} LayoutValidationContext
- * @property {Map<string, {path: string}>} seenIds - Map of entry IDs to their paths for uniqueness validation.
  */
+export interface LayoutValidationContext {
+  /** Map of entry IDs to their paths for uniqueness validation. */
+  seenIds: Map<string, { path: string }>;
+}
 
 /**
  * Recursively validates an outlet layout (array of block entries).
@@ -596,31 +670,30 @@ export function validateEntryTypes(entry) {
  * - In dev/test: Eagerly resolves all factories for early error detection.
  * - In production: Defers factory resolution to render time.
  *
- * @param {Array<Object>} layout - The outlet layout (array of block entries) to validate.
- * @param {string} outletName - The outlet these blocks belong to.
- * @param {import("discourse/services/blocks").default} blocksService - Service for validating conditions.
- * @param {string} [parentPath=""] - JSON-path style parent location for error context.
- * @param {Error | null} [callSiteError] - Where renderBlocks() was called from.
- * @param {Array<Object>} [rootLayout] - The root layout array for error context display.
- * @param {Object|null} [parentChildArgsSchema=null] - The parent container's childArgs schema, if any.
- * @param {string|null} [parentBlockName=null] - The parent container's block name for error messages.
- * @param {number} [depth=0] - Current nesting depth for recursion limit checking.
- * @param {LayoutValidationContext} [context] - Validation context for cross-cutting concerns like ID uniqueness.
- * @returns {Promise<void>} Resolves when validation completes.
- * @throws {Error} If any block entry is invalid or nesting depth exceeds MAX_LAYOUT_DEPTH.
+ * @param layout - The outlet layout (array of block entries) to validate.
+ * @param outletName - The outlet these blocks belong to.
+ * @param blocksService - Service for validating conditions.
+ * @param parentPath - JSON-path style parent location for error context.
+ * @param callSiteError - Where renderBlocks() was called from.
+ * @param rootLayout - The root layout array for error context display.
+ * @param parentChildArgsSchema - The parent container's childArgs schema, if any.
+ * @param parentBlockName - The parent container's block name for error messages.
+ * @param depth - Current nesting depth for recursion limit checking.
+ * @param context - Validation context for cross-cutting concerns like ID uniqueness.
+ * @throws Error if any block entry is invalid or nesting depth exceeds MAX_LAYOUT_DEPTH.
  */
 export async function validateLayout(
-  layout,
-  outletName,
-  blocksService,
+  layout: LayoutEntry[],
+  outletName: string,
+  blocksService: Blocks | undefined,
   parentPath = "",
-  callSiteError = null,
-  rootLayout = null,
-  parentChildArgsSchema = null,
-  parentBlockName = null,
+  callSiteError: Error | null = null,
+  rootLayout: LayoutEntry[] | null = null,
+  parentChildArgsSchema: Record<string, ChildArgSchema> | null = null,
+  parentBlockName: string | null = null,
   depth = 0,
-  context = { seenIds: new Map() }
-) {
+  context: LayoutValidationContext = { seenIds: new Map() }
+): Promise<void> {
   // On first call, capture the root layout for error display
   const effectiveRootLayout = rootLayout ?? layout;
 
@@ -633,7 +706,7 @@ export async function validateLayout(
         outletName,
         path: parentPath,
         callSiteError,
-        rootLayout: effectiveRootLayout,
+        rootLayout: asContextLayout(effectiveRootLayout),
       })
     );
   }
@@ -649,7 +722,7 @@ export async function validateLayout(
         outletName,
         path: parentPath,
         callSiteError,
-        rootLayout: effectiveRootLayout,
+        rootLayout: asContextLayout(effectiveRootLayout),
       })
     );
   }
@@ -661,7 +734,7 @@ export async function validateLayout(
     // Check ID uniqueness across the entire layout using shared context
     if (entry.id) {
       if (context.seenIds.has(entry.id)) {
-        const first = context.seenIds.get(entry.id);
+        const first = context.seenIds.get(entry.id)!;
         raiseBlockError(
           `Duplicate block id "${entry.id}" in outlet "${outletName}". ` +
             `Found at ${first.path} and ${currentPath}. Block IDs must be unique per layout.`,
@@ -669,9 +742,9 @@ export async function validateLayout(
             ...createValidationContext({
               outletName,
               path: currentPath,
-              entry,
+              entry: asContextEntry(entry),
               callSiteError,
-              rootLayout: effectiveRootLayout,
+              rootLayout: asContextLayout(effectiveRootLayout),
             }),
             errorPath: `${currentPath}.id`,
           }
@@ -696,26 +769,25 @@ export async function validateLayout(
     // Recursively validate nested children
     if (entry.children) {
       // Get the block name for error messages when passing childArgs to children
-      let blockName = null;
+      let blockName: string | null = null;
       if (childArgsSchema) {
         // We need the block name for error messages - resolve it
         const resolved = await resolveBlockForValidation(
           entry.block,
           outletName,
-          createValidationContext({
-            outletName,
+          {
             path: currentPath,
             entry,
             callSiteError,
             rootLayout: effectiveRootLayout,
-          })
+          }
         );
         if (
           resolved &&
           typeof resolved !== "string" &&
-          !resolved[OPTIONAL_MISSING]
+          !(OPTIONAL_MISSING in resolved)
         ) {
-          blockName = getBlockMetadata(resolved)?.blockName;
+          blockName = getBlockMetadata(resolved)?.blockName ?? null;
         }
       }
 
@@ -742,7 +814,7 @@ export async function validateLayout(
  *
  * Performs comprehensive validation including:
  * - Outlet name is a valid registered outlet (core or custom)
- * - Block reference is valid (string name or @block-decorated class)
+ * - Block reference is valid (string name or `@block`-decorated class)
  * - Block is registered in the registry
  * - Container/children relationship is valid
  * - No reserved arg names are used
@@ -753,39 +825,34 @@ export async function validateLayout(
  * if a block reference is a string pointing to an unresolved factory, full
  * validation is deferred to render time.
  *
- * @param {Object} entry - The block entry object.
- * @param {typeof import("@glimmer/component").default | string} entry.block - Block class or name string.
- * @param {Object} [entry.args] - Args to pass to the block.
- * @param {Object} [entry.containerArgs] - Args required by parent container's childArgs schema.
- * @param {Array<Object>} [entry.children] - Nested block entries.
- * @param {Array<Object>|Object} [entry.conditions] - Conditions for rendering.
- * @param {string} outletName - The outlet this block belongs to.
- * @param {import("discourse/services/blocks").default} blocksService - Service for validating conditions.
- * @param {string} [path] - JSON-path style location in layout (e.g., "[3].children[0]").
- * @param {Error | null} [callSiteError] - Where renderBlocks() was called from.
- * @param {Array<Object>} [rootLayout] - The root layout array for error context display.
- * @param {Object|null} [parentChildArgsSchema=null] - The parent container's childArgs schema, if any.
- * @param {string|null} [parentBlockName=null] - The parent container's block name for error messages.
- * @returns {Promise<Object|null>} The block's childArgsSchema if it's a container with childArgs, otherwise null.
- * @throws {Error} If validation fails.
+ * @param entry - The block entry object.
+ * @param outletName - The outlet this block belongs to.
+ * @param blocksService - Service for validating conditions.
+ * @param path - JSON-path style location in layout (e.g., "[3].children[0]").
+ * @param callSiteError - Where renderBlocks() was called from.
+ * @param rootLayout - The root layout array for error context display.
+ * @param parentChildArgsSchema - The parent container's childArgs schema, if any.
+ * @param parentBlockName - The parent container's block name for error messages.
+ * @returns The block's childArgsSchema if it's a container with childArgs, otherwise null.
+ * @throws Error if validation fails.
  */
 export async function validateEntry(
-  entry,
-  outletName,
-  blocksService,
-  path,
-  callSiteError = null,
-  rootLayout = null,
-  parentChildArgsSchema = null,
-  parentBlockName = null
-) {
+  entry: LayoutEntry,
+  outletName: string,
+  blocksService: Blocks | undefined,
+  path: string,
+  callSiteError: Error | null = null,
+  rootLayout: LayoutEntry[] | null = null,
+  parentChildArgsSchema: Record<string, ChildArgSchema> | null = null,
+  parentBlockName: string | null = null
+): Promise<Record<string, ChildArgSchema> | null> {
   // Create context without blockName for early validation errors
   const earlyContext = createValidationContext({
     outletName,
     path,
-    entry,
+    entry: asContextEntry(entry),
     callSiteError,
-    rootLayout,
+    rootLayout: asContextLayout(rootLayout),
   });
 
   if (!isValidOutlet(outletName)) {
@@ -825,7 +892,7 @@ export async function validateEntry(
   const resolvedBlock = await resolveBlockForValidation(
     entry.block,
     outletName,
-    earlyContext
+    { path, entry, callSiteError, rootLayout }
   );
 
   // If resolution returned null (error was raised), exit early
@@ -833,8 +900,16 @@ export async function validateEntry(
     return null;
   }
 
-  // Optional block not registered - skip validation entirely
-  if (resolvedBlock?.[OPTIONAL_MISSING]) {
+  // Optional block not registered - skip validation entirely. `resolvedBlock`
+  // can still be `undefined` here (a previously-failed factory resolution,
+  // only reachable in DEBUG mode); the `!== undefined` guard falls through
+  // exactly like the original's `resolvedBlock?.[OPTIONAL_MISSING]`
+  // optional-chaining read, rather than throwing on the `in` operator.
+  if (
+    resolvedBlock !== undefined &&
+    typeof resolvedBlock !== "string" &&
+    OPTIONAL_MISSING in resolvedBlock
+  ) {
     return null;
   }
 
@@ -858,11 +933,15 @@ export async function validateEntry(
     return null;
   }
 
-  // Full validation with resolved class
-  const blockMeta = getBlockMetadata(resolvedBlock);
+  // Full validation with resolved class. `resolvedBlock` can still be
+  // `undefined` here for a block whose factory previously failed to resolve
+  // (only reachable in DEBUG mode); `getBlockMetadata()`'s underlying WeakMap
+  // lookup safely returns `null` for a non-object key at runtime regardless
+  // of this cast, so it doesn't change behavior.
+  const blockMeta = getBlockMetadata(resolvedBlock as BlockClass);
   if (!blockMeta) {
     raiseBlockError(
-      `Block "${resolvedBlock?.name || "unknown"}" at ${path} for outlet "${outletName}" is not a valid @block-decorated component.`,
+      `Block "${(resolvedBlock as { name?: string } | undefined)?.name || "unknown"}" at ${path} for outlet "${outletName}" is not a valid @block-decorated component.`,
       earlyContext
     );
     return null;
@@ -870,14 +949,20 @@ export async function validateEntry(
 
   const blockName = blockMeta.blockName;
 
+  // `blockMeta` is only non-null when `resolvedBlock` was an actual
+  // registered block class (the `undefined` edge case above always fails
+  // that lookup and returns earlier), so `resolvedBlock` is a real
+  // `BlockClass` from here on.
+  const resolvedBlockClass = resolvedBlock as BlockClass;
+
   // Build base context for all validation errors in this block
   const baseContext = createValidationContext({
     outletName,
     blockName,
     path,
-    entry,
+    entry: asContextEntry(entry),
     callSiteError,
-    rootLayout,
+    rootLayout: asContextLayout(rootLayout),
   });
 
   // Validate outlet permission (allowedOutlets/deniedOutlets)
@@ -905,7 +990,7 @@ export async function validateEntry(
   const errorPrefix = `Invalid block "${blockName}" at ${path} for outlet "${outletName}"`;
   const owner = blocksService ? getOwner(blocksService) : null;
   wrapValidationError(
-    () => validateBlockArgs(entry, resolvedBlock, { owner }),
+    () => validateBlockArgs(entry, resolvedBlockClass, { owner }),
     errorPrefix,
     baseContext
   );
@@ -913,7 +998,7 @@ export async function validateEntry(
   // Validate constraints and custom validation (after applying defaults)
   validateBlockConstraints(
     blockMeta,
-    resolvedBlock,
+    resolvedBlockClass,
     entry,
     blockName,
     baseContext

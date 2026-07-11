@@ -1,4 +1,3 @@
-// @ts-check
 import { DEBUG } from "@glimmer/env";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import {
@@ -15,37 +14,42 @@ import identifySource from "discourse/lib/source-identifier";
  *
  * Key: source identifier (e.g., "theme:Tactile Theme" or "plugin:chat")
  * Value: the namespace prefix used (e.g., "theme:tactile" or "chat")
- *
- * @type {Map<string, string|null>}
  */
-const sourceNamespaceMap = new Map();
+const sourceNamespaceMap = new Map<string, string | null>();
 
-/**
- * Override for source identifier in tests.
- * @type {string|null|undefined}
- */
-let testSourceIdentifier;
+/** Override for source identifier in tests. */
+let testSourceIdentifier: string | null | undefined;
 
 /*
  * Public Functions
  */
 
+/** Options for {@link assertRegistryNotFrozen}. */
+interface AssertRegistryNotFrozenOptions {
+  /** Whether the registry is frozen. */
+  frozen: boolean;
+
+  /** The API method name for the error message. */
+  apiMethod: string;
+
+  /** Type of entity (e.g., "Block", "Outlet", "Condition"). */
+  entityType: string;
+
+  /** Name of the entity being registered. */
+  entityName: string;
+}
+
 /**
  * Asserts that a registry is not frozen before registration.
  *
- * @param {Object} options - Validation options.
- * @param {boolean} options.frozen - Whether the registry is frozen.
- * @param {string} options.apiMethod - The API method name for the error message.
- * @param {string} options.entityType - Type of entity (e.g., "Block", "Outlet", "Condition").
- * @param {string} options.entityName - Name of the entity being registered.
- * @returns {boolean} True if not frozen, false if frozen (error was raised).
+ * @returns True if not frozen, false if frozen (error was raised).
  */
 export function assertRegistryNotFrozen({
   frozen,
   apiMethod,
   entityType,
   entityName,
-}) {
+}: AssertRegistryNotFrozenOptions): boolean {
   if (frozen) {
     raiseBlockError(
       `${apiMethod} was called after the ${entityType.toLowerCase()} registry was frozen. ` +
@@ -63,11 +67,11 @@ export function assertRegistryNotFrozen({
  * Checks both the pattern format and maximum length to prevent memory and
  * performance issues from extremely long names.
  *
- * @param {string} name - The name to validate.
- * @param {string} entityType - Type of entity for error messages (e.g., "Block", "Outlet").
- * @returns {boolean} True if valid, false if invalid (error was raised).
+ * @param name - The name to validate.
+ * @param entityType - Type of entity for error messages (e.g., "Block", "Outlet").
+ * @returns True if valid, false if invalid (error was raised).
  */
-export function validateNamePattern(name, entityType) {
+export function validateNamePattern(name: string, entityType: string): boolean {
   // Check length first to avoid regex issues with extremely long strings.
   if (name.length > MAX_BLOCK_NAME_LENGTH) {
     raiseBlockError(
@@ -92,17 +96,33 @@ export function validateNamePattern(name, entityType) {
 /**
  * Asserts that an entry is not already registered.
  *
- * @param {Map} registry - The registry to check.
- * @param {string} name - The name to check.
- * @param {string} entityType - Type of entity for error messages.
- * @returns {boolean} True if not duplicate, false if duplicate (error was raised).
+ * @param registry - The registry to check.
+ * @param name - The name to check.
+ * @param entityType - Type of entity for error messages.
+ * @returns True if not duplicate, false if duplicate (error was raised).
  */
-export function assertNotDuplicate(registry, name, entityType) {
+export function assertNotDuplicate<V>(
+  registry: Map<string, V>,
+  name: string,
+  entityType: string
+): boolean {
   if (registry.has(name)) {
     raiseBlockError(`${entityType} "${name}" is already registered.`);
     return false;
   }
   return true;
+}
+
+/** Options for {@link validateSourceNamespace}. */
+interface ValidateSourceNamespaceOptions {
+  /** The name being registered. */
+  name: string;
+
+  /** Type of entity for error messages. */
+  entityType: "block" | "outlet" | "condition";
+
+  /** Whether to enforce single namespace per source. Defaults to `true`. */
+  enforceConsistency?: boolean;
 }
 
 /**
@@ -113,17 +133,13 @@ export function assertNotDuplicate(registry, name, entityType) {
  * - Plugins must use `namespace:name` format
  * - Optionally enforces that each source uses a consistent namespace across all registrations
  *
- * @param {Object} options - Validation options.
- * @param {string} options.name - The name being registered.
- * @param {"block"|"outlet"|"condition"} options.entityType - Type of entity for error messages.
- * @param {boolean} [options.enforceConsistency=true] - Whether to enforce single namespace per source.
- * @returns {boolean} True if validation passes, false if it failed (error was raised).
+ * @returns True if validation passes, false if it failed (error was raised).
  */
 export function validateSourceNamespace({
   name,
   entityType,
   enforceConsistency = true,
-}) {
+}: ValidateSourceNamespaceOptions): boolean {
   const sourceId = getSourceIdentifier();
   if (!sourceId) {
     return true;
@@ -180,18 +196,30 @@ export function validateSourceNamespace({
   return true;
 }
 
+/** Options for {@link createTestRegistrationWrapper}. */
+interface TestRegistrationWrapperOptions {
+  /** Function to get frozen state. */
+  getFrozen: () => boolean;
+
+  /** Function to set frozen state. */
+  setFrozen: (value: boolean) => void;
+
+  /** Function to get saved test state. */
+  getSavedState: () => boolean | null;
+
+  /** Function to set saved test state. */
+  setSavedState: (value: boolean | null) => void;
+
+  /** Name for error message. */
+  name: string;
+}
+
 /**
  * Creates a test registration wrapper function for temporarily unfreezing a registry.
  *
  * USE ONLY FOR TESTING PURPOSES.
  *
- * @param {Object} options - Options object.
- * @param {() => boolean} options.getFrozen - Function to get frozen state.
- * @param {(value: boolean) => void} options.setFrozen - Function to set frozen state.
- * @param {() => boolean|null} options.getSavedState - Function to get saved test state.
- * @param {(value: boolean|null) => void} options.setSavedState - Function to set saved test state.
- * @param {string} options.name - Name for error message.
- * @returns {((callback: Function) => void)|undefined} The wrapper function.
+ * @returns The wrapper function, or `undefined` outside of `DEBUG` builds.
  */
 export function createTestRegistrationWrapper({
   getFrozen,
@@ -199,12 +227,14 @@ export function createTestRegistrationWrapper({
   getSavedState,
   setSavedState,
   name,
-}) {
+}: TestRegistrationWrapperOptions):
+  | ((callback: () => void) => void)
+  | undefined {
   // allows tree-shaking in production builds
   if (!DEBUG) {
     return; // this won't be called in production builds
   }
-  return function (callback) {
+  return function (callback: () => void): void {
     if (!isTesting()) {
       throw new Error(`Use \`${name}\` only in tests.`);
     }
@@ -217,7 +247,9 @@ export function createTestRegistrationWrapper({
     try {
       callback();
     } finally {
-      setFrozen(getSavedState());
+      // Invariant: the check above guarantees a saved (non-null) state by
+      // the time this runs.
+      setFrozen(getSavedState() as boolean);
     }
   };
 }
@@ -230,9 +262,9 @@ export function createTestRegistrationWrapper({
  * Gets a unique identifier for the current source from the call stack.
  * Returns null for core code (no theme or plugin detected).
  *
- * @returns {string|null} Source identifier like "theme:Tactile" or "plugin:chat"
+ * @returns Source identifier like "theme:Tactile" or "plugin:chat"
  */
-function getSourceIdentifier() {
+function getSourceIdentifier(): string | null {
   if (DEBUG && testSourceIdentifier !== undefined) {
     return testSourceIdentifier;
   }
@@ -253,15 +285,17 @@ function getSourceIdentifier() {
 /**
  * Extracts the namespace prefix from a block name.
  *
- * @param {string} blockName - The full block name.
- * @returns {string|null} The namespace prefix, or null for core blocks.
+ * @param blockName - The full block name.
+ * @returns The namespace prefix, or null for core blocks.
  *
  * @example
+ * ```
  * getNamespacePrefix("theme:tactile:banner") // => "theme:tactile"
  * getNamespacePrefix("chat:widget")          // => "chat"
  * getNamespacePrefix("group")                // => null (core)
+ * ```
  */
-function getNamespacePrefix(blockName) {
+function getNamespacePrefix(blockName: string): string | null {
   const parsed = parseBlockName(blockName);
   if (!parsed) {
     return null;
@@ -280,10 +314,12 @@ function getNamespacePrefix(blockName) {
  *
  * USE ONLY FOR TESTING PURPOSES.
  *
- * @param {string|null} sourceId - Source identifier to use, or null to clear.
+ * @param sourceId - Source identifier to use, or null to clear.
  * @internal Called by `setTestSourceIdentifier` in block-testing.js.
  */
-export function _setTestSourceIdentifierInternal(sourceId) {
+export function _setTestSourceIdentifierInternal(
+  sourceId: string | null
+): void {
   // allows tree-shaking in production builds
   if (!DEBUG) {
     return;
@@ -298,7 +334,7 @@ export function _setTestSourceIdentifierInternal(sourceId) {
  *
  * @internal Called by `resetBlockRegistryForTesting`, not meant for direct use.
  */
-export function _resetSourceNamespaceState() {
+export function _resetSourceNamespaceState(): void {
   // allows tree-shaking in production builds
   if (!DEBUG) {
     return;

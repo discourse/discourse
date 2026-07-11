@@ -1,6 +1,14 @@
-// @ts-check
 import picomatch from "picomatch";
 import { withoutPrefix } from "discourse/lib/get-url";
+
+/**
+ * Minimal call-shape typing for the untyped `picomatch` package (it ships no
+ * type declarations of its own).
+ */
+type PicomatchFactory = (
+  pattern: string,
+  options?: { dot?: boolean }
+) => (input: string) => boolean;
 
 /**
  * Normalizes a URL path for matching.
@@ -13,8 +21,8 @@ import { withoutPrefix } from "discourse/lib/get-url";
  * This ensures theme authors don't need to know about subfolder configurations
  * and can write patterns like `/c/**` that work universally.
  *
- * @param {string} url - The URL to normalize (typically `router.currentURL`).
- * @returns {string} The normalized path, ready for pattern matching.
+ * @param url - The URL to normalize (typically `router.currentURL`).
+ * @returns The normalized path, ready for pattern matching.
  *
  * @example
  * // Subfolder stripping
@@ -36,13 +44,13 @@ import { withoutPrefix } from "discourse/lib/get-url";
  * normalizePath("");                     // "/"
  * normalizePath(null);                   // "/"
  */
-export function normalizePath(url) {
+export function normalizePath(url: string | null | undefined): string {
   if (!url) {
     return "/";
   }
 
   // Strip subfolder prefix first (e.g., /forum -> "")
-  let path = withoutPrefix(url);
+  let path: string = withoutPrefix(url) as string;
 
   // Strip query string and hash fragment
   path = path.split("?")[0].split("#")[0];
@@ -65,39 +73,47 @@ export function normalizePath(url) {
  * - `[abc]` matches any character in the brackets
  * - `{a,b}` matches any of the comma-separated patterns
  *
- * @param {string} path - The normalized URL path to test.
- * @param {string} pattern - The glob pattern to match against.
- * @returns {boolean} True if the path matches the pattern.
+ * @param path - The normalized URL path to test.
+ * @param pattern - The glob pattern to match against.
+ * @returns True if the path matches the pattern.
  *
  * @example
+ * ```
  * // Single wildcard
  * matchUrlPattern("/c/general", "/c/*");      // true
  * matchUrlPattern("/c/general/sub", "/c/*");  // false
+ * ```
  *
  * @example
+ * ```
  * // Double wildcard
  * matchUrlPattern("/c/general/sub", "/c/**"); // true
+ * ```
  *
  * @example
+ * ```
  * // Brace expansion
  * matchUrlPattern("/latest", "/{latest,top}"); // true
+ * ```
  */
-export function matchUrlPattern(path, pattern) {
-  const isMatch = picomatch(pattern, { dot: true });
+export function matchUrlPattern(path: string, pattern: string): boolean {
+  const isMatch = (picomatch as PicomatchFactory)(pattern, { dot: true });
   return isMatch(path);
 }
 
 /**
  * Checks if any URL pattern in the array matches the given path.
  *
- * @param {string} path - The normalized URL path to test.
- * @param {string[]} patterns - Array of URL patterns.
- * @returns {boolean} True if any pattern matches the path.
+ * @param path - The normalized URL path to test.
+ * @param patterns - Array of URL patterns.
+ * @returns True if any pattern matches the path.
  *
  * @example
+ * ```
  * matchesAnyPattern("/c/general", ["/c/**", "/t/**"]); // true (matches /c/**)
  * matchesAnyPattern("/latest", ["/c/**", "/t/**"]);    // false
+ * ```
  */
-export function matchesAnyPattern(path, patterns) {
+export function matchesAnyPattern(path: string, patterns: string[]): boolean {
   return patterns.some((pattern) => matchUrlPattern(path, pattern));
 }

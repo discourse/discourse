@@ -1,4 +1,3 @@
-// @ts-check
 /**
  * Debug hooks for block dev-tools integration.
  *
@@ -9,12 +8,16 @@
  *
  * The debug hooks use TrackedMap for reactivity, enabling Ember's reactivity system
  * to trigger re-renders when callbacks are set/cleared.
- *
- * @module discourse/lib/blocks/-internals/debug-hooks
  */
-
+import type Component from "@glimmer/component";
+import type Owner from "@ember/owner";
 import { trackedMap } from "@ember/reactive/collections";
 import { FAILURE_TYPE } from "discourse/lib/blocks/-internals/patterns";
+import type {
+  BlockClass,
+  BlockEntry,
+  ChildBlockResult,
+} from "discourse/lib/blocks/-internals/types";
 
 /**
  * Callback key constants for the debug hooks registry.
@@ -39,6 +42,26 @@ export const DEBUG_CALLBACK = Object.freeze({
 });
 
 /**
+ * A debug callback registered by dev-tools. Callbacks vary in arity and
+ * return shape depending on which `DEBUG_CALLBACK` key they're registered
+ * under, so callers narrow the return value at the call site.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type DebugCallback = (...args: any[]) => unknown;
+
+/**
+ * The logger interface handed to conditions for logging, as returned by the
+ * LOGGER_INTERFACE callback.
+ */
+export interface DebugLoggerInterface {
+  logCondition: DebugCallback;
+  updateCombinatorResult: DebugCallback;
+  updateConditionResult: DebugCallback;
+  logParamGroup: DebugCallback;
+  logRouteState: DebugCallback;
+}
+
+/**
  * Singleton class that manages debug callback hooks for the block rendering system.
  * Uses TrackedMap for reactivity, so components accessing these values will re-render
  * when callbacks are set or cleared.
@@ -47,20 +70,19 @@ class DebugHooks {
   /**
    * Tracked callback registry for debug hooks.
    * Using TrackedMap enables reactivity when callbacks are set/cleared.
-   *
-   * @type {Map<string, Function|null>}
    */
-  #callbacks = trackedMap(
-    Object.values(DEBUG_CALLBACK).map((key) => [key, null])
-  );
+  #callbacks: Map<string, DebugCallback | null> = trackedMap<
+    string,
+    DebugCallback | null
+  >(Object.values(DEBUG_CALLBACK).map((key): [string, null] => [key, null]));
 
   /**
    * Gets a debug callback from the registry.
    *
-   * @param {string} key - The callback key (use DEBUG_CALLBACK constants).
-   * @returns {Function|null} The callback function, or null if not set.
+   * @param key - The callback key (use DEBUG_CALLBACK constants).
+   * @returns The callback function, or null/undefined if not set.
    */
-  getCallback(key) {
+  getCallback(key: string): DebugCallback | null | undefined {
     return this.#callbacks.get(key);
   }
 
@@ -68,11 +90,11 @@ class DebugHooks {
    * Sets a debug callback in the registry.
    * Used by dev-tools to register debug hooks.
    *
-   * @param {string} key - The callback key (use DEBUG_CALLBACK constants).
-   * @param {Function|null} value - The callback function, or null to clear.
-   * @throws {Error} If the key is not a valid callback key.
+   * @param key - The callback key (use DEBUG_CALLBACK constants).
+   * @param value - The callback function, or null to clear.
+   * @throws If the key is not a valid callback key.
    */
-  setCallback(key, value) {
+  setCallback(key: string, value: DebugCallback | null): void {
     if (!this.#callbacks.has(key)) {
       const validKeys = Object.values(DEBUG_CALLBACK).join(", ");
       throw new Error(
@@ -86,49 +108,64 @@ class DebugHooks {
    * Returns whether console logging is enabled.
    * Convenience getter that invokes the blockLogging callback.
    *
-   * @returns {boolean} True if logging is enabled.
+   * @returns True if logging is enabled.
    */
-  get isBlockLoggingEnabled() {
-    return this.#callbacks.get(DEBUG_CALLBACK.BLOCK_LOGGING)?.() ?? false;
+  get isBlockLoggingEnabled(): boolean {
+    return (
+      (this.#callbacks.get(DEBUG_CALLBACK.BLOCK_LOGGING)?.() as
+        | boolean
+        | undefined) ?? false
+    );
   }
 
   /**
    * Returns the outlet info component if outlet boundaries are enabled.
    * Invokes the OUTLET_INFO_COMPONENT callback which returns the component
-   * when enabled, or null when disabled.
+   * when enabled, or a nullish value when disabled.
    *
-   * @returns {typeof import("@glimmer/component").default|null} The outlet info component, or null.
+   * @returns The outlet info component, or null.
    */
-  get outletInfoComponent() {
-    return this.#callbacks.get(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT)?.();
+  get outletInfoComponent(): typeof Component | null | undefined {
+    return this.#callbacks.get(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT)?.() as
+      | typeof Component
+      | null
+      | undefined;
   }
 
   /**
    * Returns whether outlet boundaries should be shown.
    * Derived from whether the outlet info component is available.
    *
-   * @returns {boolean} True if boundaries should be shown.
+   * @returns True if boundaries should be shown.
    */
-  get isOutletBoundaryEnabled() {
+  get isOutletBoundaryEnabled(): boolean {
     return !!this.outletInfoComponent;
   }
 
   /**
    * Returns whether visual overlay is enabled.
    *
-   * @returns {boolean} True if visual overlay is enabled.
+   * @returns True if visual overlay is enabled.
    */
-  get isVisualOverlayEnabled() {
-    return this.#callbacks.get(DEBUG_CALLBACK.VISUAL_OVERLAY)?.() ?? false;
+  get isVisualOverlayEnabled(): boolean {
+    return (
+      (this.#callbacks.get(DEBUG_CALLBACK.VISUAL_OVERLAY)?.() as
+        | boolean
+        | undefined) ?? false
+    );
   }
 
   /**
    * Returns whether ghost blocks are enabled.
    *
-   * @returns {boolean} True if ghost blocks are enabled.
+   * @returns True if ghost blocks are enabled.
    */
-  get isGhostBlocksEnabled() {
-    return this.#callbacks.get(DEBUG_CALLBACK.GHOST_BLOCKS)?.() ?? false;
+  get isGhostBlocksEnabled(): boolean {
+    return (
+      (this.#callbacks.get(DEBUG_CALLBACK.GHOST_BLOCKS)?.() as
+        | boolean
+        | undefined) ?? false
+    );
   }
 
   /**
@@ -138,10 +175,15 @@ class DebugHooks {
    * The interface has methods: logCondition, updateCombinatorResult,
    * updateConditionResult, logParamGroup, logRouteState.
    *
-   * @returns {Object|null} The logger interface, or null if not available.
+   * @returns The logger interface, or null if not available.
    */
-  get loggerInterface() {
-    return this.#callbacks.get(DEBUG_CALLBACK.LOGGER_INTERFACE)?.() ?? null;
+  get loggerInterface(): DebugLoggerInterface | null {
+    return (
+      (this.#callbacks.get(DEBUG_CALLBACK.LOGGER_INTERFACE)?.() as
+        | DebugLoggerInterface
+        | null
+        | undefined) ?? null
+    );
   }
 }
 
@@ -152,20 +194,68 @@ class DebugHooks {
 export const debugHooks = new DebugHooks();
 
 /**
+ * Ghost component data produced by the BLOCK_DEBUG dev-tools callback, before
+ * the caller attaches a stable rendering `key`.
+ */
+export type DebugGhostData = Omit<ChildBlockResult, "key">;
+
+/**
+ * Data describing a block to ghost, passed to the BLOCK_DEBUG callback.
+ */
+export interface DebugGhostBlockData {
+  /** The block name. */
+  name: string;
+  /** The block's unique ID (if set). */
+  id?: string;
+  /** Block arguments. */
+  args?: Record<string, unknown>;
+  /** Container arguments. */
+  containerArgs?: Record<string, unknown>;
+  /** Block conditions. */
+  conditions?: BlockEntry["conditions"];
+  /** Type of failure (from FAILURE_TYPE). */
+  failureType?: string;
+  /** Custom failure reason message. */
+  failureReason?: string;
+  /** Ghost children for containers. */
+  children?: ChildBlockResult[] | null;
+}
+
+/**
+ * Context passed to the BLOCK_DEBUG callback alongside the ghost block data.
+ */
+export interface DebugGhostContext {
+  /** The outlet/hierarchy name for display. */
+  outletName: string;
+  /** Outlet arguments. */
+  outletArgs?: Record<string, unknown>;
+}
+
+/**
+ * Options for `handleOptionalMissingBlock()`.
+ */
+export interface HandleOptionalMissingBlockOptions {
+  /** The name of the missing block. */
+  blockName: string;
+  /** The block entry. */
+  entry: BlockEntry;
+  /** The hierarchy path for logging. */
+  hierarchy: string;
+  /** Whether debug logging is enabled. */
+  isLoggingEnabled: boolean;
+  /** Whether to show ghost components. */
+  showGhosts: boolean;
+  /** Stable unique key for this block. */
+  key: string;
+}
+
+/**
  * Handles an optional missing block by logging and optionally creating a ghost.
  *
  * When a block reference ends with `?` but the block is not registered, this
  * function handles the logging and ghost component creation.
  *
- * @param {Object} options - Options for handling the missing block.
- * @param {string} options.blockName - The name of the missing block.
- * @param {Object} options.entry - The block entry.
- * @param {string} options.hierarchy - The hierarchy path for logging.
- * @param {boolean} options.isLoggingEnabled - Whether debug logging is enabled.
- * @param {boolean} options.showGhosts - Whether to show ghost components.
- * @param {string} options.key - Stable unique key for this block.
- * @returns {import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult|null}
- *   Ghost component data with key if showGhosts is true, null otherwise.
+ * @returns Ghost component data with key if showGhosts is true, null otherwise.
  */
 export function handleOptionalMissingBlock({
   blockName,
@@ -174,7 +264,7 @@ export function handleOptionalMissingBlock({
   isLoggingEnabled,
   showGhosts,
   key,
-}) {
+}: HandleOptionalMissingBlockOptions): ChildBlockResult | null {
   // Log if debug logging is enabled
   if (isLoggingEnabled) {
     debugHooks.getCallback(DEBUG_CALLBACK.OPTIONAL_MISSING_LOG)?.(
@@ -213,18 +303,18 @@ export function handleOptionalMissingBlock({
  * If a block has an id, it replaces the index (since the id is unique):
  * - `baseHierarchy/group(#my-id)`
  *
- * @param {string} blockName - The block name.
- * @param {string|null} blockId - The block's unique id (if set).
- * @param {string} baseHierarchy - The base hierarchy path.
- * @param {Map<string, number>} containerCounts - Map tracking container counts.
- * @returns {string} The full container path.
+ * @param blockName - The block name.
+ * @param blockId - The block's unique id (if set).
+ * @param baseHierarchy - The base hierarchy path.
+ * @param containerCounts - Map tracking container counts.
+ * @returns The full container path.
  */
 export function buildContainerPath(
-  blockName,
-  blockId,
-  baseHierarchy,
-  containerCounts
-) {
+  blockName: string,
+  blockId: string | null | undefined,
+  baseHierarchy: string,
+  containerCounts: Map<string, number>
+): string {
   // Always increment the counter for consistent indexing of blocks without ids.
   const count = containerCounts.get(blockName) ?? 0;
   containerCounts.set(blockName, count + 1);
@@ -241,22 +331,15 @@ export function buildContainerPath(
  * Used by both `createGhostBlock` (entry-processing time) and `asGhost`
  * (render time) to avoid duplicating the callback invocation logic.
  *
- * @param {Object} blockData - Data describing the block to ghost.
- * @param {string} blockData.name - The block name.
- * @param {string} [blockData.id] - The block's unique ID (if set).
- * @param {Object} [blockData.args] - Block arguments.
- * @param {Object} [blockData.containerArgs] - Container arguments.
- * @param {Array} [blockData.conditions] - Block conditions.
- * @param {string} [blockData.failureType] - Type of failure (from FAILURE_TYPE).
- * @param {string} [blockData.failureReason] - Custom failure reason message.
- * @param {Array} [blockData.children] - Ghost children for containers.
- * @param {Object} context - Context for the ghost.
- * @param {string} context.outletName - The outlet/hierarchy name for display.
- * @param {Object} [context.outletArgs] - Outlet arguments.
- * @returns {Object|null} Ghost data with Component property, or null if callback
+ * @param blockData - Data describing the block to ghost.
+ * @param context - Context for the ghost.
+ * @returns Ghost data with Component property, or null if callback
  *   not set or didn't return a component.
  */
-export function createDebugGhost(blockData, context) {
+export function createDebugGhost(
+  blockData: DebugGhostBlockData,
+  context: DebugGhostContext
+): DebugGhostData | null {
   const ghostData = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)?.(
     {
       ...blockData,
@@ -264,9 +347,43 @@ export function createDebugGhost(blockData, context) {
       conditionsPassed: false,
     },
     context
-  );
+  ) as DebugGhostData | undefined;
 
-  return ghostData?.Component ? ghostData : null;
+  return ghostData && ghostData.Component ? ghostData : null;
+}
+
+/**
+ * A function that resolves a block reference (string name or class) to a
+ * block class, an optional-missing marker, or null when unresolved. Used
+ * here only as a value relayed to the GHOST_CHILDREN_CREATOR callback, not
+ * called directly by this module.
+ */
+export type ResolveBlockFn = (blockRef: string | BlockClass) => unknown;
+
+/**
+ * Options for `createGhostBlock()`.
+ */
+export interface CreateGhostBlockOptions {
+  /** The block name. */
+  blockName: string;
+  /** The block entry. */
+  entry: BlockEntry;
+  /** The hierarchy path for display. */
+  hierarchy: string;
+  /** Container path for child hierarchies. */
+  containerPath?: string;
+  /** Whether this block is a container. */
+  isContainer: boolean;
+  /** The application owner. */
+  owner: Owner;
+  /** Outlet arguments. */
+  outletArgs?: Record<string, unknown>;
+  /** Whether debug logging is enabled. */
+  isLoggingEnabled: boolean;
+  /** Function to resolve block references. */
+  resolveBlockFn: ResolveBlockFn;
+  /** Stable unique key for this block. */
+  key: string;
 }
 
 /**
@@ -275,19 +392,7 @@ export function createDebugGhost(blockData, context) {
  * Ghost components are shown in debug mode to visualize blocks that failed
  * their conditions or have no visible children.
  *
- * @param {Object} options - Options for creating the ghost.
- * @param {string} options.blockName - The block name.
- * @param {Object} options.entry - The block entry.
- * @param {string} options.hierarchy - The hierarchy path for display.
- * @param {string|undefined} options.containerPath - Container path for child hierarchies.
- * @param {boolean} options.isContainer - Whether this block is a container.
- * @param {import("@ember/owner").default} options.owner - The application owner.
- * @param {Object} options.outletArgs - Outlet arguments.
- * @param {boolean} options.isLoggingEnabled - Whether debug logging is enabled.
- * @param {Function} options.resolveBlockFn - Function to resolve block references.
- * @param {string} options.key - Stable unique key for this block.
- * @returns {import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult|null}
- *   Ghost component data with key if successful, null otherwise.
+ * @returns Ghost component data with key if successful, null otherwise.
  */
 export function createGhostBlock({
   blockName,
@@ -300,10 +405,10 @@ export function createGhostBlock({
   isLoggingEnabled,
   resolveBlockFn,
   key,
-}) {
+}: CreateGhostBlockOptions): ChildBlockResult | null {
   // For container blocks with children that failed due to no visible children,
   // recursively create ghost children so they appear nested in the debug overlay.
-  let ghostChildren = null;
+  let ghostChildren: ChildBlockResult[] | null | undefined = null;
   if (
     isContainer &&
     entry.children?.length &&
@@ -318,7 +423,7 @@ export function createGhostBlock({
       outletArgs,
       isLoggingEnabled,
       resolveBlockFn
-    );
+    ) as ChildBlockResult[] | undefined;
   }
 
   const ghostData = createDebugGhost(
@@ -342,20 +447,20 @@ export function createGhostBlock({
  * Executes a function within a debug console group.
  * Ensures START_GROUP and END_GROUP callbacks are always paired.
  *
- * @param {string} blockName - The block name for the group label.
- * @param {string|null} blockId - The block's unique ID (if set).
- * @param {string} hierarchy - The hierarchy path for context.
- * @param {boolean} isLoggingEnabled - Whether debug logging is active.
- * @param {() => boolean} fn - Function to execute that returns the condition result.
- * @returns {boolean} The result of the function execution.
+ * @param blockName - The block name for the group label.
+ * @param blockId - The block's unique ID (if set).
+ * @param hierarchy - The hierarchy path for context.
+ * @param isLoggingEnabled - Whether debug logging is active.
+ * @param fn - Function to execute that returns the condition result.
+ * @returns The result of the function execution.
  */
 export function withDebugGroup(
-  blockName,
-  blockId,
-  hierarchy,
-  isLoggingEnabled,
-  fn
-) {
+  blockName: string,
+  blockId: string | null,
+  hierarchy: string,
+  isLoggingEnabled: boolean,
+  fn: () => boolean
+): boolean {
   if (!isLoggingEnabled) {
     return fn();
   }

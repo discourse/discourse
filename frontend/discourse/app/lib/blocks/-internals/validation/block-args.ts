@@ -1,54 +1,55 @@
-// @ts-check
 /**
  * Block-specific arg validation.
  *
- * This module adapts the shared arg validation utilities from args.js
+ * This module adapts the shared arg validation utilities from args.ts
  * for use with blocks. Key differences from condition arg validation:
  * - Supports "default" values (conditions don't use defaults)
  * - Validates "required + default" contradiction
  * - Supports childArgs with "unique" property
- *
- * @module discourse/lib/blocks/-internals/validation/block-args
  */
-
+import type {
+  ArgSchema,
+  ChildArgSchema,
+  LayoutEntry,
+} from "discourse/blocks/types";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import {
   BlockError,
   raiseBlockError,
 } from "discourse/lib/blocks/-internals/error";
+import type { BlockClass } from "discourse/lib/blocks/-internals/types";
 import {
   VALID_ARG_SCHEMA_PROPERTIES,
   validateArgName,
   validateArgsAgainstSchema,
   validateArgSchemaEntry,
   validateArgValue,
+  type ValidateArgValueOptions,
 } from "discourse/lib/blocks/-internals/validation/args";
 
 /**
  * Valid properties for childArgs schema definitions.
  * Includes all standard arg properties plus "unique" for sibling uniqueness validation.
  */
-export const VALID_CHILD_ARG_SCHEMA_PROPERTIES = Object.freeze([
-  ...VALID_ARG_SCHEMA_PROPERTIES,
-  "unique",
-]);
+export const VALID_CHILD_ARG_SCHEMA_PROPERTIES: readonly string[] =
+  Object.freeze([...VALID_ARG_SCHEMA_PROPERTIES, "unique"]);
 
 /**
  * Validates block-specific default value rules:
  * - "required + default" is contradictory (an arg with a default is never missing)
  * - Default value must match the arg's type schema
  *
- * @param {Object} argDef - The argument definition.
- * @param {string} argName - The argument name.
- * @param {string} blockName - Block name for error messages.
- * @param {string} [argLabel="arg"] - Label for error messages (e.g., "childArgs arg").
+ * @param argDef - The argument definition.
+ * @param argName - The argument name.
+ * @param blockName - Block name for error messages.
+ * @param argLabel - Label for error messages (e.g., "childArgs arg").
  */
 function validateBlockDefaultValue(
-  argDef,
-  argName,
-  blockName,
+  argDef: ArgSchema,
+  argName: string,
+  blockName: string,
   argLabel = "arg"
-) {
+): void {
   // Check for required + default contradiction (value-based, not presence-based)
   // An arg with required: false + default is valid, so we check required === true
   if (argDef.required === true && argDef.default !== undefined) {
@@ -72,14 +73,17 @@ function validateBlockDefaultValue(
 }
 
 /**
- * Validates the arg schema definition passed to the @block decorator.
+ * Validates the arg schema definition passed to the `@block` decorator.
  * Enforces strict schema format - unknown properties are not allowed.
  *
- * @param {Object} argsSchema - The args schema object from decorator options.
- * @param {string} blockName - Block name for error messages.
- * @throws {Error} If schema is invalid.
+ * @param argsSchema - The args schema object from decorator options.
+ * @param blockName - Block name for error messages.
+ * @throws Error if schema is invalid.
  */
-export function validateArgsSchema(argsSchema, blockName) {
+export function validateArgsSchema(
+  argsSchema: Record<string, ArgSchema> | null | undefined,
+  blockName: string
+): void {
   if (!argsSchema || typeof argsSchema !== "object") {
     return;
   }
@@ -109,13 +113,16 @@ export function validateArgsSchema(argsSchema, blockName) {
  * Validates block arguments against the block's metadata arg schema.
  * Checks for required args and validates types.
  *
- * @param {Object} entry - The block entry.
- * @param {Object} blockClass - The resolved block class (must be a class, not a string reference).
- * @param {Object} [options={}] - Optional configuration.
- * @param {Object} [options.owner] - Ember owner for registry lookups (used for "model:*" instanceOf).
- * @throws {BlockError} If args are invalid.
+ * @param entry - The block entry.
+ * @param blockClass - The resolved block class (must be a class, not a string reference).
+ * @param options - Optional configuration.
+ * @throws BlockError if args are invalid.
  */
-export function validateBlockArgs(entry, blockClass, options = {}) {
+export function validateBlockArgs(
+  entry: Pick<LayoutEntry, "args">,
+  blockClass: BlockClass,
+  options: ValidateArgValueOptions = {}
+): void {
   const metadata = getBlockMetadata(blockClass);
   const providedArgs = entry.args || {};
   const hasProvidedArgs = Object.keys(providedArgs).length > 0;
@@ -140,15 +147,18 @@ export function validateBlockArgs(entry, blockClass, options = {}) {
 }
 
 /**
- * Validates the childArgs schema definition passed to the @block decorator.
+ * Validates the childArgs schema definition passed to the `@block` decorator.
  * Similar to validateArgsSchema but supports the additional "unique" property
  * for enforcing uniqueness across sibling children.
  *
- * @param {Object} childArgsSchema - The childArgs schema object from decorator options.
- * @param {string} blockName - Block name for error messages.
- * @throws {Error} If schema is invalid.
+ * @param childArgsSchema - The childArgs schema object from decorator options.
+ * @param blockName - Block name for error messages.
+ * @throws Error if schema is invalid.
  */
-export function validateChildArgsSchema(childArgsSchema, blockName) {
+export function validateChildArgsSchema(
+  childArgsSchema: Record<string, ChildArgSchema> | null | undefined,
+  blockName: string
+): void {
   if (!childArgsSchema || typeof childArgsSchema !== "object") {
     return;
   }
