@@ -1,9 +1,10 @@
 /**
  * Block Decorator Validation
  *
- * This module contains validation functions used by the @block decorator.
+ * This module contains validation functions used by the `@block` decorator.
  * These validations run at decoration time (not render time) for fail-fast behavior.
  */
+import type { BlockOptions } from "discourse/blocks/types";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import {
   detectPatternConflicts,
@@ -12,16 +13,15 @@ import {
 } from "discourse/lib/blocks/-internals/matching/outlet-matcher";
 import {
   parseBlockName,
+  type ParsedBlockName,
   VALID_NAMESPACED_BLOCK_PATTERN,
 } from "discourse/lib/blocks/-internals/patterns";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
- * Valid keys for the @block decorator options (block schema).
- *
- * @constant {ReadonlyArray<string>}
+ * Valid keys for the `@block` decorator options (block schema).
  */
-export const VALID_BLOCK_OPTIONS = Object.freeze([
+export const VALID_BLOCK_OPTIONS: readonly string[] = Object.freeze([
   "container",
   "classNames",
   "description",
@@ -34,13 +34,16 @@ export const VALID_BLOCK_OPTIONS = Object.freeze([
 ]);
 
 /**
- * Validates the options object passed to the @block decorator.
+ * Validates the options object passed to the `@block` decorator.
  * Checks for unknown keys and provides suggestions for typos.
  *
- * @param {string} name - The block name (for error messages).
- * @param {Object} options - The options object to validate.
+ * @param name - The block name (for error messages).
+ * @param options - The options object to validate.
  */
-export function validateBlockOptions(name, options) {
+export function validateBlockOptions(
+  name: string,
+  options: BlockOptions
+): void {
   if (options && typeof options === "object") {
     const unknownKeys = Object.keys(options).filter(
       (key) => !VALID_BLOCK_OPTIONS.includes(key)
@@ -61,10 +64,10 @@ export function validateBlockOptions(name, options) {
  * Validates and parses the block name.
  * Ensures the name follows the required format for core, plugin, or theme blocks.
  *
- * @param {string} name - The block name to validate.
- * @returns {import("discourse/lib/blocks/-internals/patterns").ParsedBlockName} Parsed name components.
+ * @param name - The block name to validate.
+ * @returns Parsed name components.
  */
-export function validateAndParseBlockName(name) {
+export function validateAndParseBlockName(name: string): ParsedBlockName {
   if (!VALID_NAMESPACED_BLOCK_PATTERN.test(name)) {
     raiseBlockError(
       `Block name "${name}" is invalid. ` +
@@ -86,15 +89,15 @@ export function validateAndParseBlockName(name) {
  * Validates outlet restriction patterns (allowedOutlets and deniedOutlets).
  * Checks for valid picomatch syntax and detects conflicts between patterns.
  *
- * @param {string} name - The block name (for error messages).
- * @param {string[]|null} allowedOutlets - Allowed outlet patterns.
- * @param {string[]|null} deniedOutlets - Denied outlet patterns.
+ * @param name - The block name (for error messages).
+ * @param allowedOutlets - Allowed outlet patterns.
+ * @param deniedOutlets - Denied outlet patterns.
  */
 export function validateOutletRestrictions(
-  name,
-  allowedOutlets,
-  deniedOutlets
-) {
+  name: string,
+  allowedOutlets: string[] | null | undefined,
+  deniedOutlets: string[] | null | undefined
+): void {
   // Validate outlet patterns are valid picomatch syntax (arrays of strings)
   validateOutletPatterns(allowedOutlets, name, "allowedOutlets");
   validateOutletPatterns(deniedOutlets, name, "deniedOutlets");
@@ -103,7 +106,7 @@ export function validateOutletRestrictions(
   // This prevents configurations where a block is both allowed AND denied
   // in the same outlet, which would be confusing and likely a mistake.
   const conflict = detectPatternConflicts(allowedOutlets, deniedOutlets);
-  if (conflict.conflict) {
+  if (conflict.conflict && conflict.details) {
     raiseBlockError(
       `Block "${name}": outlet "${conflict.details.outlet}" matches both ` +
         `allowedOutlets pattern "${conflict.details.allowed}" and ` +

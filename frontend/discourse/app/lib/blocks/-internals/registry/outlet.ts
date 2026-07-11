@@ -1,4 +1,3 @@
-// @ts-check
 import { DEBUG } from "@glimmer/env";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import { isTesting } from "discourse/lib/environment";
@@ -9,6 +8,15 @@ import {
   validateSourceNamespace,
 } from "./helpers";
 
+/** Metadata recorded for a custom block outlet. */
+interface CustomOutletMetadata {
+  /** The outlet name. */
+  name: string;
+
+  /** Human-readable description. */
+  description?: string;
+}
+
 /*
  * Registry State
  */
@@ -16,55 +24,49 @@ import {
 /**
  * Registry of custom block outlets registered by plugins and themes.
  * Maps outlet names to their metadata.
- *
- * @type {Map<string, { name: string, description?: string }>}
  */
-const customOutletRegistry = new Map();
+const customOutletRegistry = new Map<string, CustomOutletMetadata>();
 
-/**
- * Whether the outlet registry is frozen (no new registrations allowed).
- */
+/** Whether the outlet registry is frozen (no new registrations allowed). */
 let outletRegistryFrozen = false;
 
 /*
  * Public Functions
  */
 
-/**
- * Returns whether the outlet registry is frozen.
- *
- * @returns {boolean}
- */
-export function isOutletRegistryFrozen() {
+/** Returns whether the outlet registry is frozen. */
+export function isOutletRegistryFrozen(): boolean {
   return outletRegistryFrozen;
 }
 
 /**
  * Returns all valid outlet names (both core and custom).
  *
- * @returns {string[]} Array of all outlet names.
+ * @returns Array of all outlet names.
  */
-export function getAllOutlets() {
+export function getAllOutlets(): string[] {
   return [...BLOCK_OUTLETS, ...customOutletRegistry.keys()];
 }
 
 /**
  * Checks if an outlet name is valid (registered as core or custom).
  *
- * @param {string} name - The outlet name to check.
- * @returns {boolean} True if the outlet is registered.
+ * @param name - The outlet name to check.
+ * @returns True if the outlet is registered.
  */
-export function isValidOutlet(name) {
+export function isValidOutlet(name: string): boolean {
   return BLOCK_OUTLETS.includes(name) || customOutletRegistry.has(name);
 }
 
 /**
  * Gets metadata for a custom outlet.
  *
- * @param {string} name - The outlet name.
- * @returns {{ name: string, description?: string } | undefined} Outlet metadata or undefined.
+ * @param name - The outlet name.
+ * @returns Outlet metadata or undefined.
  */
-export function getCustomOutlet(name) {
+export function getCustomOutlet(
+  name: string
+): CustomOutletMetadata | undefined {
   return customOutletRegistry.get(name);
 }
 
@@ -78,8 +80,14 @@ export function getCustomOutlet(name) {
  *
  * @internal
  */
-export function _freezeOutletRegistry() {
+export function _freezeOutletRegistry(): void {
   outletRegistryFrozen = true;
+}
+
+/** Options for {@link _registerOutlet}. */
+interface RegisterOutletOptions {
+  /** Human-readable description. */
+  description?: string;
 }
 
 /**
@@ -90,13 +98,15 @@ export function _freezeOutletRegistry() {
  * - Plugin outlets: `namespace:outlet-name`
  * - Theme outlets: `theme:namespace:outlet-name`
  *
- * @param {string} outletName - The outlet name (must follow naming conventions).
- * @param {Object} [options] - Outlet options.
- * @param {string} [options.description] - Human-readable description.
+ * @param outletName - The outlet name (must follow naming conventions).
+ * @param options - Outlet options.
  *
  * @internal
  */
-export function _registerOutlet(outletName, options = {}) {
+export function _registerOutlet(
+  outletName: string,
+  options: RegisterOutletOptions = {}
+): void {
   if (
     !assertRegistryNotFrozen({
       frozen: outletRegistryFrozen,
@@ -153,7 +163,7 @@ export function _registerOutlet(outletName, options = {}) {
  *
  * @internal Called by `resetBlockRegistryForTesting`, not meant for direct use.
  */
-export function _resetOutletRegistryState() {
+export function _resetOutletRegistryState(): void {
   // allows tree-shaking in production builds
   if (!DEBUG) {
     return;

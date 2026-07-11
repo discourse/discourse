@@ -1,5 +1,32 @@
-// @ts-check
+import type { DebugLoggerInterface } from "discourse/lib/blocks/-internals/debug-hooks";
 import { findClosestMatch } from "discourse/lib/string-similarity";
+
+/**
+ * Evaluation context for `matchParams()`, carrying debug logging state through
+ * recursive AND/OR/NOT evaluation.
+ */
+export interface MatchParamsContext {
+  /** Enable debug logging. */
+  debug?: boolean;
+  /** Nesting depth for logging. */
+  _depth?: number;
+  /** Logger interface from dev-tools (optional). */
+  logger?: DebugLoggerInterface | null;
+}
+
+/**
+ * Options accepted by `matchParams()`.
+ */
+export interface MatchParamsOptions {
+  /** Current params from router. */
+  actualParams?: Record<string, unknown> | null;
+  /** Expected params spec. */
+  expectedParams?: unknown;
+  /** Debug context. */
+  context?: MatchParamsContext;
+  /** Label for debug output (e.g., "params", "queryParams"). */
+  label?: string;
+}
 
 /**
  * Evaluates a value matcher spec against an actual value.
@@ -13,12 +40,17 @@ import { findClosestMatch } from "discourse/lib/string-similarity";
  * - NOT: `{ not: value }` matches if actual does NOT match value
  * - ANY (OR): `{ any: [...] }` matches if actual matches any spec in array
  *
- * @param {Object} options - Options object.
- * @param {*} options.actual - The actual value to test.
- * @param {*} options.expected - The expected value spec (exact, array, regex, or AND/OR/NOT spec).
- * @returns {boolean} True if the actual value matches the expected spec.
+ * @param actual - The actual value to test.
+ * @param expected - The expected value spec (exact, array, regex, or AND/OR/NOT spec).
+ * @returns True if the actual value matches the expected spec.
  */
-export function matchValue({ actual, expected }) {
+export function matchValue({
+  actual,
+  expected,
+}: {
+  actual: unknown;
+  expected: unknown;
+}): boolean {
   // Handle arrays first (before checking for `any`/`not` properties)
   // because Ember prototype extensions add `any()` method to arrays
   if (Array.isArray(expected)) {
@@ -31,13 +63,18 @@ export function matchValue({ actual, expected }) {
   }
 
   // OR logic: { any: [...] }
-  if (expected?.any !== undefined) {
-    return expected.any.some((exp) => matchValue({ actual, expected: exp }));
+  if ((expected as { any?: unknown[] } | null | undefined)?.any !== undefined) {
+    return (expected as { any: unknown[] }).any.some((exp) =>
+      matchValue({ actual, expected: exp })
+    );
   }
 
   // NOT logic: { not: ... }
-  if (expected?.not !== undefined) {
-    return !matchValue({ actual, expected: expected.not });
+  if ((expected as { not?: unknown } | null | undefined)?.not !== undefined) {
+    return !matchValue({
+      actual,
+      expected: (expected as { not: unknown }).not,
+    });
   }
 
   // Simple value matching (leaf node)
@@ -49,10 +86,10 @@ export function matchValue({ actual, expected }) {
  * array (for AND matching). Simple value arrays contain only primitives (strings,
  * numbers, booleans, null, undefined) or RegExp objects.
  *
- * @param {Array} arr - The array to check.
- * @returns {boolean} True if all items are primitives or RegExp.
+ * @param arr - The array to check.
+ * @returns True if all items are primitives or RegExp.
  */
-function isSimpleValueArray(arr) {
+function isSimpleValueArray(arr: unknown[]): boolean {
   return arr.every(
     (item) =>
       typeof item !== "object" || item === null || item instanceof RegExp
@@ -66,11 +103,11 @@ function isSimpleValueArray(arr) {
  * testing. This means numeric values like `123` will match patterns like `/1/`
  * (because 123 is converted to "123").
  *
- * @param {*} actual - The actual value.
- * @param {*} expected - The expected value (primitive, array of primitives/RegExp, or RegExp).
- * @returns {boolean} True if matches.
+ * @param actual - The actual value.
+ * @param expected - The expected value (primitive, array of primitives/RegExp, or RegExp).
+ * @returns True if matches.
  */
-function matchSimpleValue(actual, expected) {
+function matchSimpleValue(actual: unknown, expected: unknown): boolean {
   // RegExp pattern - coerce actual to string for testing
   if (expected instanceof RegExp) {
     return expected.test(String(actual));
@@ -89,11 +126,11 @@ function matchSimpleValue(actual, expected) {
  * Checks if a failed match is due to a string/number type mismatch.
  * Used to provide helpful debug hints.
  *
- * @param {*} actual - The actual value.
- * @param {*} expected - The expected value.
- * @returns {boolean} True if the values would match with type coercion.
+ * @param actual - The actual value.
+ * @param expected - The expected value.
+ * @returns True if the values would match with type coercion.
  */
-export function isTypeMismatch(actual, expected) {
+export function isTypeMismatch(actual: unknown, expected: unknown): boolean {
   // Already matches - not a mismatch
   if (actual === expected) {
     return false;
@@ -113,8 +150,10 @@ export function isTypeMismatch(actual, expected) {
   }
 
   // Check { any: [...] } for type mismatches
-  if (expected?.any !== undefined) {
-    return expected.any.some((exp) => isTypeMismatch(actual, exp));
+  if ((expected as { any?: unknown[] } | null | undefined)?.any !== undefined) {
+    return (expected as { any: unknown[] }).any.some((exp) =>
+      isTypeMismatch(actual, exp)
+    );
   }
 
   return false;
@@ -131,22 +170,14 @@ export function isTypeMismatch(actual, expected) {
  *
  * Keys starting with backslash are escaped (e.g., `"\\any"` matches literal param `"any"`).
  *
- * @param {Object} options - Options object.
- * @param {Object} options.actualParams - Current params from router.
- * @param {Object|Array} options.expectedParams - Expected params spec.
- * @param {Object} [options.context] - Debug context.
- * @param {boolean} [options.context.debug] - Enable debug logging.
- * @param {number} [options.context._depth] - Nesting depth for logging.
- * @param {Object} [options.context.logger] - Logger interface from dev-tools (optional).
- * @param {string} [options.label] - Label for debug output (e.g., "params", "queryParams").
- * @returns {boolean} True if params match.
+ * @returns True if params match.
  */
 export function matchParams({
   actualParams,
   expectedParams,
   context = {},
   label = "params",
-}) {
+}: MatchParamsOptions): boolean {
   const isLoggingEnabled = context.debug ?? false;
   const depth = context._depth ?? 0;
   const logger = context.logger;
@@ -182,8 +213,8 @@ export function matchParams({
   }
 
   // OR logic: { any: [...] }
-  if (expectedParams.any !== undefined) {
-    const specs = expectedParams.any;
+  if ((expectedParams as { any?: unknown[] }).any !== undefined) {
+    const specs = (expectedParams as { any: unknown[] }).any;
 
     // Log combinator BEFORE children so it appears first in tree
     logger?.logCondition?.({
@@ -210,7 +241,7 @@ export function matchParams({
   }
 
   // NOT logic: { not: {...} }
-  if (expectedParams.not !== undefined) {
+  if ((expectedParams as { not?: unknown }).not !== undefined) {
     // Log combinator BEFORE children so it appears first in tree
     logger?.logCondition?.({
       type: "NOT",
@@ -222,7 +253,7 @@ export function matchParams({
 
     const innerResult = matchParams({
       actualParams,
-      expectedParams: expectedParams.not,
+      expectedParams: (expectedParams as { not: unknown }).not,
       context: { debug: isLoggingEnabled, _depth: depth + 1, logger },
       label,
     });
@@ -235,18 +266,24 @@ export function matchParams({
 
   // Plain object with keys = AND logic across all keys
   // Note: keys starting with \ are escaped (e.g., "\\any" matches literal param "any")
-  const keys = Object.keys(expectedParams);
+  const expectedParamsRecord = expectedParams as Record<string, unknown>;
+  const keys = Object.keys(expectedParamsRecord);
   if (keys.length === 0) {
     return true;
   }
 
   // Collect match results for debug logging
-  const matches = [];
+  const matches: Array<{
+    key: string;
+    expected: unknown;
+    actual: unknown;
+    result: boolean;
+  }> = [];
 
   for (const key of keys) {
     // Strip leading backslash for escaped keys (e.g., "\\any" -> "any")
     const actualKey = key.startsWith("\\") ? key.slice(1) : key;
-    const expected = expectedParams[key];
+    const expected = expectedParamsRecord[key];
     const actual = actualParams?.[actualKey];
     const result = matchValue({ actual, expected });
     matches.push({ key: actualKey, expected, actual, result });
@@ -269,7 +306,7 @@ export function matchParams({
  * Valid operator keys for param/queryParam specs.
  * These are the only keys with special meaning in param matching.
  */
-const VALID_OPERATOR_KEYS = Object.freeze(["any", "not"]);
+const VALID_OPERATOR_KEYS: readonly string[] = Object.freeze(["any", "not"]);
 
 /**
  * Validates a param spec for typos in operator keys.
@@ -277,11 +314,15 @@ const VALID_OPERATOR_KEYS = Object.freeze(["any", "not"]);
  * Recursively checks that any object key that looks like an operator typo
  * (e.g., "an" instead of "any", "nto" instead of "not") is flagged.
  *
- * @param {*} spec - The param spec to validate.
- * @param {string} path - Current path for error messages.
- * @param {Function} raiseError - Function to call with error message.
+ * @param spec - The param spec to validate.
+ * @param path - Current path for error messages.
+ * @param raiseError - Function to call with error message.
  */
-export function validateParamSpec(spec, path, raiseError) {
+export function validateParamSpec(
+  spec: unknown,
+  path: string,
+  raiseError: (message: string) => void
+): void {
   if (spec === null || spec === undefined) {
     return;
   }
@@ -300,7 +341,8 @@ export function validateParamSpec(spec, path, raiseError) {
   }
 
   // Objects: check keys for operator typos
-  const keys = Object.keys(spec);
+  const specRecord = spec as Record<string, unknown>;
+  const keys = Object.keys(specRecord);
 
   for (const key of keys) {
     // Check if this key looks like a typo of a valid operator
@@ -318,6 +360,6 @@ export function validateParamSpec(spec, path, raiseError) {
     }
 
     // Recursively validate the value
-    validateParamSpec(spec[key], `${path}.${key}`, raiseError);
+    validateParamSpec(specRecord[key], `${path}.${key}`, raiseError);
   }
 }

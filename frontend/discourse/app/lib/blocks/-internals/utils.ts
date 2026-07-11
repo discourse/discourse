@@ -1,39 +1,63 @@
-// @ts-check
 /**
  * Utility functions for the block system.
- *
- * @module discourse/lib/blocks/-internals/utils
  */
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
+import type { BlockClass } from "discourse/lib/blocks/-internals/types";
 
 /**
- * @typedef {Object} ValidationContext
- * @property {string} outletName - The name of the outlet being validated.
- * @property {string|null} [blockName=null] - The name of the block, if resolved.
- * @property {string} path - The hierarchical path to this entry (e.g., "layout[0].children[1]").
- * @property {Object|null} [entry=null] - The block entry object being validated.
- * @property {Error|null} [callSiteError=null] - Error captured at the call site for stack traces.
- * @property {Array|null} [rootLayout=null] - The root layout array for error display.
+ * Validation context passed through the layout validation pipeline for error
+ * reporting. Created via `createValidationContext()` to ensure consistent
+ * structure across all validation functions.
  *
- * The following properties are added by validation code after initial context creation:
- * @property {string} [errorPath] - Full path to the error (e.g., "layout[0].conditions.params.categoryId").
- * @property {string} [conditionsPath] - Path within conditions (e.g., "params.categoryId").
- * @property {Object} [conditions] - The conditions object for error display.
+ * The following properties are added by validation code after initial context
+ * creation: `errorPath` (full path to the error, e.g.
+ * "layout[0].conditions.params.categoryId"), `conditionsPath` (path within
+ * conditions, e.g. "params.categoryId"), and `conditions` (the conditions
+ * object for error display).
  */
+export interface ValidationContext {
+  /** The name of the outlet being validated. */
+  outletName: string;
+  /** The name of the block, if resolved. */
+  blockName?: string | null;
+  /** The hierarchical path to this entry (e.g., "layout[0].children[1]"). */
+  path: string;
+  /** The block entry object being validated. */
+  entry?: Record<string, unknown> | null;
+  /** Error captured at the call site for stack traces. */
+  callSiteError?: Error | null;
+  /** The root layout array for error display. */
+  rootLayout?: Array<Record<string, unknown>> | null;
+  /** Full path to the error (e.g., "layout[0].conditions.params.categoryId"). */
+  errorPath?: string;
+  /** Path within conditions (e.g., "params.categoryId"). */
+  conditionsPath?: string;
+  /** The conditions object for error display. */
+  conditions?: unknown;
+}
+
+/**
+ * Parameters accepted by `createValidationContext()`.
+ */
+export interface CreateValidationContextParams {
+  /** The name of the outlet being validated. */
+  outletName: string;
+  /** The name of the block, if resolved. */
+  blockName?: string | null;
+  /** The hierarchical path to this entry. */
+  path: string;
+  /** The block entry object being validated. */
+  entry?: Record<string, unknown> | null;
+  /** Error captured at the call site. */
+  callSiteError?: Error | null;
+  /** The root layout array for error display. */
+  rootLayout?: Array<Record<string, unknown>> | null;
+}
 
 /**
  * Creates a validation context object for error reporting.
  * Centralizes context creation to ensure consistent structure across
  * all validation functions.
- *
- * @param {Object} params - Context parameters.
- * @param {string} params.outletName - The name of the outlet being validated.
- * @param {string|null} [params.blockName=null] - The name of the block, if resolved.
- * @param {string} params.path - The hierarchical path to this entry.
- * @param {Object|null} [params.entry=null] - The block entry object being validated.
- * @param {Error|null} [params.callSiteError=null] - Error captured at the call site.
- * @param {Array|null} [params.rootLayout=null] - The root layout array for error display.
- * @returns {ValidationContext} A validation context object.
  */
 export function createValidationContext({
   outletName,
@@ -42,7 +66,7 @@ export function createValidationContext({
   entry = null,
   callSiteError = null,
   rootLayout = null,
-}) {
+}: CreateValidationContextParams): ValidationContext {
   return { outletName, blockName, path, entry, callSiteError, rootLayout };
 }
 
@@ -50,18 +74,20 @@ export function createValidationContext({
  * Builds a hierarchical error path by joining path segments.
  * Used to construct full paths for error messages (e.g., "layout[0].args.title").
  *
- * @param {string} basePath - The base path (e.g., "layout[0]").
- * @param {string} segment - The segment to append (e.g., "args.title").
- * @returns {string} Combined path with dot separator, or the non-empty path if one is missing.
+ * @param basePath - The base path (e.g., "layout[0]").
+ * @param segment - The segment to append (e.g., "args.title").
+ * @returns Combined path with dot separator, or the non-empty path if one is missing.
  *
  * @example
+ * ```
  * buildErrorPath("layout[0]", "args.title")
  * // => "layout[0].args.title"
  *
  * buildErrorPath("", "args")
  * // => "args"
+ * ```
  */
-export function buildErrorPath(basePath, segment) {
+export function buildErrorPath(basePath: string, segment: string): string {
   if (!basePath) {
     return segment;
   }
@@ -72,15 +98,23 @@ export function buildErrorPath(basePath, segment) {
 }
 
 /**
+ * The `default` metadata for a single block argument, as read from the
+ * `@block` decorator's args schema.
+ */
+export interface BlockArgSchemaEntry {
+  default?: unknown;
+}
+
+/**
  * Applies default values from block metadata to provided args.
  *
  * When a block is configured with args, this function merges the provided
  * args with default values from the block's metadata schema. Default values
  * are only applied when the arg is undefined in the provided args.
  *
- * @param {import("discourse/lib/blocks/-internals/registry/block").BlockClass} ComponentClass - The block component class.
- * @param {Object} providedArgs - The args provided in the layout entry.
- * @returns {Readonly<Object>} A new object with defaults applied for missing args.
+ * @param ComponentClass - The block component class.
+ * @param providedArgs - The args provided in the layout entry.
+ * @returns A new object with defaults applied for missing args.
  *
  * @example
  * ```javascript
@@ -89,10 +123,16 @@ export function buildErrorPath(basePath, segment) {
  * // => { title: "Custom", count: 0 }
  * ```
  */
-export function applyArgDefaults(ComponentClass, providedArgs) {
-  const schema = getBlockMetadata(ComponentClass)?.args;
+export function applyArgDefaults(
+  ComponentClass: BlockClass,
+  providedArgs: Record<string, unknown>
+): Readonly<Record<string, unknown>> {
+  const schema = getBlockMetadata(ComponentClass)?.args as
+    | Record<string, BlockArgSchemaEntry>
+    | null
+    | undefined;
 
-  const result = { ...providedArgs };
+  const result: Record<string, unknown> = { ...providedArgs };
 
   // apply default values
   if (schema) {
@@ -113,11 +153,14 @@ export function applyArgDefaults(ComponentClass, providedArgs) {
  * deep comparison of nested objects. Used to determine if cached curried
  * components can be reused.
  *
- * @param {Object|null|undefined} a - First args object.
- * @param {Object|null|undefined} b - Second args object.
- * @returns {boolean} True if the args are shallowly equal, false otherwise.
+ * @param a - First args object.
+ * @param b - Second args object.
+ * @returns True if the args are shallowly equal, false otherwise.
  */
-export function shallowArgsEqual(a, b) {
+export function shallowArgsEqual(
+  a: Record<string, unknown> | null | undefined,
+  b: Record<string, unknown> | null | undefined
+): boolean {
   if (a === b) {
     return true;
   }
@@ -139,31 +182,33 @@ export function shallowArgsEqual(a, b) {
  * dot-separated path string. It handles null/undefined values gracefully
  * at any level of the path.
  *
- * @param {Object} obj - The object to get the value from.
- * @param {string} path - Dot-notation path (e.g., "user.trust_level").
- * @returns {*} The value at the path, or undefined if not found or if any
- *              intermediate value is null/undefined.
+ * @param obj - The object to get the value from.
+ * @param path - Dot-notation path (e.g., "user.trust_level").
+ * @returns The value at the path, or undefined if not found or if any
+ *   intermediate value is null/undefined.
  *
  * @example
+ * ```
  * const user = { profile: { name: "Alice", settings: { theme: "dark" } } };
  * getByPath(user, "profile.name"); // "Alice"
  * getByPath(user, "profile.settings.theme"); // "dark"
  * getByPath(user, "profile.missing"); // undefined
  * getByPath(user, "profile.settings.missing.deep"); // undefined (safe)
+ * ```
  */
-export function getByPath(obj, path) {
+export function getByPath(obj: unknown, path: string): unknown {
   if (!obj || !path) {
     return undefined;
   }
 
   const parts = path.split(".");
-  let current = obj;
+  let current: unknown = obj;
 
   for (const part of parts) {
     if (current === null || current === undefined) {
       return undefined;
     }
-    current = current[part];
+    current = (current as Record<string, unknown>)[part];
   }
 
   return current;

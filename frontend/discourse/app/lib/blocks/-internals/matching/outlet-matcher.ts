@@ -1,9 +1,33 @@
-// @ts-check
 import { DEBUG } from "@glimmer/env";
 import picomatch from "picomatch";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import { getAllOutlets } from "discourse/lib/blocks/-internals/registry/outlet";
 import { isValidGlobPattern } from "discourse/lib/glob-utils";
+
+/**
+ * Minimal call-shape typing for the untyped `picomatch` package (it ships no
+ * type declarations of its own).
+ */
+type PicomatchFactory = (
+  pattern: string,
+  options?: { dot?: boolean }
+) => (input: string) => boolean;
+
+/**
+ * The result of `detectPatternConflicts()`.
+ */
+export interface PatternConflictResult {
+  conflict: boolean;
+  details?: { outlet: string; allowed: string; denied: string };
+}
+
+/**
+ * The result of `isBlockPermittedInOutlet()`.
+ */
+export interface OutletPermissionResult {
+  permitted: boolean;
+  reason?: string;
+}
 
 /**
  * Checks if a pattern targets a namespaced outlet.
@@ -13,16 +37,13 @@ import { isValidGlobPattern } from "discourse/lib/glob-utils";
  * These patterns bypass known-outlet validation since they reference outlets
  * that may not be in the core `BLOCK_OUTLETS` registry.
  *
- * @param {string} pattern - The pattern to check.
- * @returns {boolean} True if the pattern contains a namespace separator.
- *
  * @example
  * isNamespacedPattern("my-plugin:dashboard");      // true
  * isNamespacedPattern("my-theme:hero-section");    // true
  * isNamespacedPattern("sidebar-blocks");           // false
  * isNamespacedPattern("sidebar-*");                // false
  */
-export function isNamespacedPattern(pattern) {
+export function isNamespacedPattern(pattern: string): boolean {
   return pattern.includes(":");
 }
 
@@ -37,34 +58,44 @@ export function isNamespacedPattern(pattern) {
  * - `{a,b}` matches any of the comma-separated patterns
  * - `!(pattern)` negative match (matches anything except pattern)
  *
- * @param {string} outlet - The outlet name to test.
- * @param {string} pattern - The glob pattern to match against.
- * @returns {boolean} True if the outlet matches the pattern.
+ * @param outlet - The outlet name to test.
+ * @param pattern - The glob pattern to match against.
+ * @returns True if the outlet matches the pattern.
  *
  * @example
+ * ```
  * // Exact match
  * matchOutletPattern("sidebar-blocks", "sidebar-blocks");   // true
+ * ```
  *
  * @example
+ * ```
  * // Wildcard matching
  * matchOutletPattern("sidebar-left", "sidebar-*");          // true
  * matchOutletPattern("sidebar-left-top", "sidebar-*");      // true
+ * ```
  *
  * @example
+ * ```
  * // Brace expansion
  * matchOutletPattern("sidebar-blocks", "{sidebar,footer}-*"); // true
+ * ```
  *
  * @example
+ * ```
  * // Character class
  * matchOutletPattern("modal-1", "modal-[0-9]");             // true
+ * ```
  *
  * @example
+ * ```
  * // Negation
  * matchOutletPattern("sidebar-blocks", "!(*-debug)");       // true
+ * ```
  */
-export function matchOutletPattern(outlet, pattern) {
+export function matchOutletPattern(outlet: string, pattern: string): boolean {
   // Use dot: true to match dots in outlet names (e.g., namespaced outlets)
-  const isMatch = picomatch(pattern, { dot: true });
+  const isMatch = (picomatch as PicomatchFactory)(pattern, { dot: true });
   return isMatch(outlet);
 }
 
@@ -77,15 +108,19 @@ export function matchOutletPattern(outlet, pattern) {
  * 2. Each pattern in the array is a string
  * 3. Each pattern can be compiled by picomatch
  *
- * @param {*} patterns - The patterns to validate.
- * @param {string} blockName - Block name for error messages.
- * @param {string} propertyName - Property name ("allowedOutlets" or "deniedOutlets").
+ * @param patterns - The patterns to validate.
+ * @param blockName - Block name for error messages.
+ * @param propertyName - Property name ("allowedOutlets" or "deniedOutlets").
  *
  * @example
  * validateOutletPatterns(["sidebar-*", "homepage-blocks"], "my-block", "allowedOutlets");
  * validateOutletPatterns(null, "my-block", "allowedOutlets"); // null means no restrictions
  */
-export function validateOutletPatterns(patterns, blockName, propertyName) {
+export function validateOutletPatterns(
+  patterns: unknown,
+  blockName: string,
+  propertyName: string
+): void {
   // null/undefined means "no restrictions" - this is valid
   if (patterns == null) {
     return;
@@ -133,22 +168,28 @@ export function validateOutletPatterns(patterns, blockName, propertyName) {
  *    in patterns with concrete characters. This catches conflicts for outlets
  *    that don't exist yet (e.g., plugin-defined outlets).
  *
- * @param {string[]|null} allowedPatterns - Patterns for allowed outlets.
- * @param {string[]|null} deniedPatterns - Patterns for denied outlets.
- * @returns {{ conflict: boolean, details?: { outlet: string, allowed: string, denied: string } }}
- *   Returns conflict: true with details if a conflict is detected.
+ * @param allowedPatterns - Patterns for allowed outlets.
+ * @param deniedPatterns - Patterns for denied outlets.
+ * @returns Conflict: true with details if a conflict is detected.
  *
  * @example
+ * ```
  * // No conflict
  * detectPatternConflicts(["sidebar-*"], ["homepage-*"]);
  * // { conflict: false }
+ * ```
  *
  * @example
+ * ```
  * // Conflict detected
  * detectPatternConflicts(["*-blocks"], ["sidebar-*"]);
  * // { conflict: true, details: { outlet: "sidebar-blocks", allowed: "*-blocks", denied: "sidebar-*" } }
+ * ```
  */
-export function detectPatternConflicts(allowedPatterns, deniedPatterns) {
+export function detectPatternConflicts(
+  allowedPatterns: string[] | null | undefined,
+  deniedPatterns: string[] | null | undefined
+): PatternConflictResult {
   // Early exit: No conflict possible if either list is empty/null
   if (!allowedPatterns?.length || !deniedPatterns?.length) {
     return { conflict: false };
@@ -175,7 +216,7 @@ export function detectPatternConflicts(allowedPatterns, deniedPatterns) {
   // Strategy 2: Generate synthetic test strings from patterns
   // This catches conflicts for outlets that don't exist yet (e.g., plugin outlets).
   // We derive test strings by replacing glob wildcards with concrete characters.
-  const testStrings = new Set();
+  const testStrings = new Set<string>();
   [...allowedPatterns, ...deniedPatterns].forEach((pattern) => {
     // Replace all glob special chars with 'x' to get a literal string
     // e.g., "sidebar-*" -> "sidebar-x"
@@ -219,41 +260,48 @@ export function detectPatternConflicts(allowedPatterns, deniedPatterns) {
  * Denial takes precedence over allowance. An empty `allowedOutlets` array means
  * "no outlets allowed" (strict whitelist).
  *
- * @param {string} outlet - The outlet name to check.
- * @param {string[]|null} allowedPatterns - Patterns for allowed outlets.
- * @param {string[]|null} deniedPatterns - Patterns for denied outlets.
- * @returns {{ permitted: boolean, reason?: string }}
- *   Returns permitted: true if allowed, or permitted: false with a reason if denied.
+ * @param outlet - The outlet name to check.
+ * @param allowedPatterns - Patterns for allowed outlets.
+ * @param deniedPatterns - Patterns for denied outlets.
+ * @returns Permitted: true if allowed, or permitted: false with a reason if denied.
  *
  * @example
+ * ```
  * // No restrictions
  * isBlockPermittedInOutlet("sidebar-blocks", null, null);
  * // { permitted: true }
+ * ```
  *
  * @example
+ * ```
  * // Allowed by pattern
  * isBlockPermittedInOutlet("sidebar-blocks", ["sidebar-*"], null);
  * // { permitted: true }
+ * ```
  *
  * @example
+ * ```
  * // Denied by pattern
  * isBlockPermittedInOutlet("sidebar-blocks", null, ["sidebar-*"]);
  * // { permitted: false, reason: 'outlet "sidebar-blocks" matches deniedOutlets pattern "sidebar-*"' }
+ * ```
  *
  * @example
+ * ```
  * // Not in allowed list
  * isBlockPermittedInOutlet("homepage-blocks", ["sidebar-*"], null);
  * // { permitted: false, reason: 'outlet "homepage-blocks" does not match any allowedOutlets pattern' }
+ * ```
  */
 export function isBlockPermittedInOutlet(
-  outlet,
-  allowedPatterns,
-  deniedPatterns
-) {
+  outlet: string,
+  allowedPatterns: string[] | null | undefined,
+  deniedPatterns: string[] | null | undefined
+): OutletPermissionResult {
   // Check denied list first (explicit deny always wins)
   // This ensures that even if a pattern appears in both lists (shouldn't happen
   // due to conflict detection), denial takes precedence for safety.
-  if (deniedPatterns?.length > 0) {
+  if (deniedPatterns && deniedPatterns.length > 0) {
     const deniedMatch = deniedPatterns.find((p) =>
       matchOutletPattern(outlet, p)
     );
@@ -301,16 +349,20 @@ export function isBlockPermittedInOutlet(
  * Warnings are only printed in development builds (when DEBUG is true).
  * This prevents noise in production.
  *
- * @param {string[]|null} patterns - The patterns to check.
- * @param {string} blockName - Block name for warning messages.
- * @param {string} propertyName - Property name ("allowedOutlets" or "deniedOutlets").
+ * @param patterns - The patterns to check.
+ * @param blockName - Block name for warning messages.
+ * @param propertyName - Property name ("allowedOutlets" or "deniedOutlets").
  *
  * @example
  * // Warns about typo
  * warnUnknownOutletPatterns(["sidbar-*"], "my-block", "allowedOutlets");
  * // Console: [Blocks] Block "my-block": allowedOutlets pattern "sidbar-*" does not match any known outlet...
  */
-export function warnUnknownOutletPatterns(patterns, blockName, propertyName) {
+export function warnUnknownOutletPatterns(
+  patterns: string[] | null | undefined,
+  blockName: string,
+  propertyName: string
+): void {
   if (!patterns?.length) {
     return;
   }

@@ -1,26 +1,38 @@
-// @ts-check
+import type { BlockCondition } from "discourse/blocks/conditions";
 import {
   DEBUG_CALLBACK,
+  type DebugCallback,
   debugHooks,
+  type DebugLoggerInterface,
 } from "discourse/lib/blocks/-internals/debug-hooks";
+
+/**
+ * Evaluation context passed through `evaluateConditions()` and its
+ * combinator helpers.
+ */
+export interface ConditionEvaluationContext {
+  /** Enable debug logging for this evaluation. */
+  debug?: boolean;
+  /** Internal: nesting depth for logging. */
+  _depth?: number;
+  /** Outlet arguments passed to conditions. */
+  outletArgs?: Record<string, unknown>;
+}
 
 /**
  * Evaluates condition specs at render time.
  * Recursively evaluates nested conditions with AND/OR/NOT logic.
  *
- * @param {Object|Array<Object>} conditionSpec - Condition spec(s) to evaluate.
- * @param {Map<string, import("discourse/blocks/conditions").BlockCondition>} conditionTypes - Map of registered condition types.
- * @param {Object} [context] - Evaluation context.
- * @param {boolean} [context.debug] - Enable debug logging for this evaluation.
- * @param {number} [context._depth] - Internal: nesting depth for logging.
- * @param {Object} [context.outletArgs] - Outlet arguments passed to conditions.
- * @returns {boolean} True if conditions pass, false otherwise.
+ * @param conditionSpec - Condition spec(s) to evaluate.
+ * @param conditionTypes - Map of registered condition types.
+ * @param context - Evaluation context.
+ * @returns True if conditions pass, false otherwise.
  */
 export function evaluateConditions(
-  conditionSpec,
-  conditionTypes,
-  context = {}
-) {
+  conditionSpec: unknown,
+  conditionTypes: Map<string, BlockCondition>,
+  context: ConditionEvaluationContext = {}
+): boolean {
   const isLoggingEnabled = context.debug ?? false;
   const depth = context._depth ?? 0;
 
@@ -55,9 +67,9 @@ export function evaluateConditions(
   }
 
   // OR combinator (at least one must pass)
-  if (conditionSpec.any !== undefined) {
+  if ((conditionSpec as { any?: unknown[] }).any !== undefined) {
     return evaluateOrCombinator(
-      conditionSpec,
+      conditionSpec as { any: unknown[] },
       conditionTypes,
       context,
       isLoggingEnabled,
@@ -68,9 +80,9 @@ export function evaluateConditions(
   }
 
   // NOT combinator (must fail)
-  if (conditionSpec.not !== undefined) {
+  if ((conditionSpec as { not?: unknown }).not !== undefined) {
     return evaluateNotCombinator(
-      conditionSpec,
+      conditionSpec as { not: unknown },
       conditionTypes,
       context,
       isLoggingEnabled,
@@ -82,7 +94,7 @@ export function evaluateConditions(
 
   // Single condition with type
   return evaluateSingleCondition(
-    conditionSpec,
+    conditionSpec as { type?: string } & Record<string, unknown>,
     conditionTypes,
     context,
     isLoggingEnabled,
@@ -96,24 +108,24 @@ export function evaluateConditions(
 /**
  * Evaluates an array of conditions with AND logic (all must pass).
  *
- * @param {Array<Object>} conditionSpec - Array of condition specs.
- * @param {Map} conditionTypes - Map of registered condition types.
- * @param {Object} context - Evaluation context.
- * @param {boolean} isLoggingEnabled - Whether debug logging is enabled.
- * @param {number} depth - Current nesting depth.
- * @param {Function|null} conditionLog - Callback for logging conditions.
- * @param {Function|null} combinatorLog - Callback for logging combinator results.
- * @returns {boolean} True if all conditions pass.
+ * @param conditionSpec - Array of condition specs.
+ * @param conditionTypes - Map of registered condition types.
+ * @param context - Evaluation context.
+ * @param isLoggingEnabled - Whether debug logging is enabled.
+ * @param depth - Current nesting depth.
+ * @param conditionLog - Callback for logging conditions.
+ * @param combinatorLog - Callback for logging combinator results.
+ * @returns True if all conditions pass.
  */
 function evaluateAndCombinator(
-  conditionSpec,
-  conditionTypes,
-  context,
-  isLoggingEnabled,
-  depth,
-  conditionLog,
-  combinatorLog
-) {
+  conditionSpec: unknown[],
+  conditionTypes: Map<string, BlockCondition>,
+  context: ConditionEvaluationContext,
+  isLoggingEnabled: boolean,
+  depth: number,
+  conditionLog: DebugCallback | null | undefined,
+  combinatorLog: DebugCallback | null | undefined
+): boolean {
   // Empty array is vacuous truth - no conditions to fail
   if (conditionSpec.length === 0) {
     return true;
@@ -152,24 +164,24 @@ function evaluateAndCombinator(
 /**
  * Evaluates an OR combinator (at least one must pass).
  *
- * @param {Object} conditionSpec - Condition spec containing "any" array.
- * @param {Map} conditionTypes - Map of registered condition types.
- * @param {Object} context - Evaluation context.
- * @param {boolean} isLoggingEnabled - Whether debug logging is enabled.
- * @param {number} depth - Current nesting depth.
- * @param {Function|null} conditionLog - Callback for logging conditions.
- * @param {Function|null} combinatorLog - Callback for logging combinator results.
- * @returns {boolean} True if at least one condition passes.
+ * @param conditionSpec - Condition spec containing "any" array.
+ * @param conditionTypes - Map of registered condition types.
+ * @param context - Evaluation context.
+ * @param isLoggingEnabled - Whether debug logging is enabled.
+ * @param depth - Current nesting depth.
+ * @param conditionLog - Callback for logging conditions.
+ * @param combinatorLog - Callback for logging combinator results.
+ * @returns True if at least one condition passes.
  */
 function evaluateOrCombinator(
-  conditionSpec,
-  conditionTypes,
-  context,
-  isLoggingEnabled,
-  depth,
-  conditionLog,
-  combinatorLog
-) {
+  conditionSpec: { any: unknown[] },
+  conditionTypes: Map<string, BlockCondition>,
+  context: ConditionEvaluationContext,
+  isLoggingEnabled: boolean,
+  depth: number,
+  conditionLog: DebugCallback | null | undefined,
+  combinatorLog: DebugCallback | null | undefined
+): boolean {
   // Empty OR array means no conditions can pass
   if (conditionSpec.any.length === 0) {
     return false;
@@ -208,24 +220,24 @@ function evaluateOrCombinator(
 /**
  * Evaluates a NOT combinator (inner condition must fail).
  *
- * @param {Object} conditionSpec - Condition spec containing "not" condition.
- * @param {Map} conditionTypes - Map of registered condition types.
- * @param {Object} context - Evaluation context.
- * @param {boolean} isLoggingEnabled - Whether debug logging is enabled.
- * @param {number} depth - Current nesting depth.
- * @param {Function|null} conditionLog - Callback for logging conditions.
- * @param {Function|null} combinatorLog - Callback for logging combinator results.
- * @returns {boolean} True if inner condition fails.
+ * @param conditionSpec - Condition spec containing "not" condition.
+ * @param conditionTypes - Map of registered condition types.
+ * @param context - Evaluation context.
+ * @param isLoggingEnabled - Whether debug logging is enabled.
+ * @param depth - Current nesting depth.
+ * @param conditionLog - Callback for logging conditions.
+ * @param combinatorLog - Callback for logging combinator results.
+ * @returns True if inner condition fails.
  */
 function evaluateNotCombinator(
-  conditionSpec,
-  conditionTypes,
-  context,
-  isLoggingEnabled,
-  depth,
-  conditionLog,
-  combinatorLog
-) {
+  conditionSpec: { not: unknown },
+  conditionTypes: Map<string, BlockCondition>,
+  context: ConditionEvaluationContext,
+  isLoggingEnabled: boolean,
+  depth: number,
+  conditionLog: DebugCallback | null | undefined,
+  combinatorLog: DebugCallback | null | undefined
+): boolean {
   // Log combinator BEFORE children (result=null as placeholder)
   conditionLog?.({
     type: "NOT",
@@ -250,28 +262,28 @@ function evaluateNotCombinator(
 /**
  * Evaluates a single condition with a type property.
  *
- * @param {Object} conditionSpec - Single condition spec with type.
- * @param {Map} conditionTypes - Map of registered condition types.
- * @param {Object} context - Evaluation context.
- * @param {boolean} isLoggingEnabled - Whether debug logging is enabled.
- * @param {number} depth - Current nesting depth.
- * @param {Function|null} conditionLog - Callback for logging conditions.
- * @param {Function|null} conditionResultLog - Callback for logging condition results.
- * @param {Object|null} logger - Logger interface for conditions.
- * @returns {boolean} True if condition passes.
+ * @param conditionSpec - Single condition spec with type.
+ * @param conditionTypes - Map of registered condition types.
+ * @param context - Evaluation context.
+ * @param isLoggingEnabled - Whether debug logging is enabled.
+ * @param depth - Current nesting depth.
+ * @param conditionLog - Callback for logging conditions.
+ * @param conditionResultLog - Callback for logging condition results.
+ * @param logger - Logger interface for conditions.
+ * @returns True if condition passes.
  */
 function evaluateSingleCondition(
-  conditionSpec,
-  conditionTypes,
-  context,
-  isLoggingEnabled,
-  depth,
-  conditionLog,
-  conditionResultLog,
-  logger
-) {
+  conditionSpec: { type?: string } & Record<string, unknown>,
+  conditionTypes: Map<string, BlockCondition>,
+  context: ConditionEvaluationContext,
+  isLoggingEnabled: boolean,
+  depth: number,
+  conditionLog: DebugCallback | null | undefined,
+  conditionResultLog: DebugCallback | null | undefined,
+  logger: DebugLoggerInterface | null
+): boolean {
   const { type, ...args } = conditionSpec;
-  const conditionInstance = conditionTypes.get(type);
+  const conditionInstance = conditionTypes.get(type as string);
 
   if (!conditionInstance) {
     conditionLog?.({

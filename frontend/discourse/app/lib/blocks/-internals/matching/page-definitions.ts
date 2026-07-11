@@ -1,4 +1,3 @@
-// @ts-check
 import { findClosestMatch } from "discourse/lib/string-similarity";
 
 /**
@@ -6,15 +5,63 @@ import { findClosestMatch } from "discourse/lib/string-similarity";
  *
  * This is a pure data structure that defines the available page types
  * and their parameters. The evaluation logic is in route.js.
- *
- * @typedef {Object} ParamDefinition
- * @property {"string"|"number"} type - The expected type of the parameter.
- * @property {string} description - A description of the parameter.
- *
- * @typedef {Object} PageDefinition
- * @property {string} description - A description of the page type.
- * @property {Object<string, ParamDefinition>} params - The parameters for this page type.
  */
+
+/**
+ * Definition of a single parameter accepted by a page type.
+ */
+export interface ParamDefinition {
+  /** The expected type of the parameter. */
+  type: "string" | "number";
+  /** A description of the parameter. */
+  description: string;
+}
+
+/**
+ * Definition of a page type: its description and the parameters it exposes.
+ */
+export interface PageDefinition {
+  /** A description of the page type. */
+  description: string;
+  /** The parameters for this page type. */
+  params: Record<string, ParamDefinition>;
+}
+
+/**
+ * The router service shape used by `getPageContext()`/`getCurrentPageType()`
+ * to read the current route. Callers pass Ember's injected `router` service,
+ * which is untyped at the call sites today.
+ */
+export interface PageContextRouter {
+  currentRouteName?: string | null;
+  currentRoute?: { params?: Record<string, unknown> } | null;
+}
+
+/**
+ * The discovery service shape used by `getPageContext()`/`getCurrentPageType()`
+ * to read the current discovery route state. Callers pass Discourse's injected
+ * `discovery` service, which is untyped at the call sites today.
+ */
+export interface PageContextDiscovery {
+  category?: {
+    id?: number;
+    slug?: string;
+    parent_category_id?: number;
+  } | null;
+  tag?: { name?: string } | null;
+  custom?: boolean;
+  onDiscoveryRoute?: boolean;
+}
+
+/**
+ * Injected services needed to extract page context.
+ */
+export interface PageContextServices {
+  /** The Ember router service. */
+  router: PageContextRouter;
+  /** The Discourse discovery service. */
+  discovery: PageContextDiscovery;
+}
 
 /**
  * Definitions for all supported page types.
@@ -22,10 +69,8 @@ import { findClosestMatch } from "discourse/lib/string-similarity";
  * Each page type has:
  * - `description`: A human-readable description of what pages this matches.
  * - `params`: An object mapping parameter names to their definitions.
- *
- * @type {Object<string, PageDefinition>}
  */
-export const PAGE_DEFINITIONS = {
+export const PAGE_DEFINITIONS: Record<string, PageDefinition> = {
   /**
    * Category listing pages (/c/slug, /c/parent/child).
    * Matches when discovery.category is set.
@@ -166,28 +211,28 @@ export const PAGE_DEFINITIONS = {
 
 /**
  * Array of all valid page type names.
- *
- * @type {string[]}
  */
-export const VALID_PAGE_TYPES = Object.keys(PAGE_DEFINITIONS);
+export const VALID_PAGE_TYPES: string[] = Object.keys(PAGE_DEFINITIONS);
 
 /**
  * Checks if a page type is valid.
  *
- * @param {string} pageType - The page type to check.
- * @returns {boolean} True if the page type is valid.
+ * @param pageType - The page type to check.
+ * @returns True if the page type is valid.
  */
-export function isValidPageType(pageType) {
+export function isValidPageType(pageType: string): boolean {
   return pageType in PAGE_DEFINITIONS;
 }
 
 /**
  * Gets the parameter definitions for a page type.
  *
- * @param {string} pageType - The page type.
- * @returns {Object<string, ParamDefinition>|null} The parameter definitions, or null if invalid.
+ * @param pageType - The page type.
+ * @returns The parameter definitions, or null if invalid.
  */
-export function getParamsForPageType(pageType) {
+export function getParamsForPageType(
+  pageType: string
+): Record<string, ParamDefinition> | null {
   const definition = PAGE_DEFINITIONS[pageType];
   return definition ? definition.params : null;
 }
@@ -195,10 +240,10 @@ export function getParamsForPageType(pageType) {
 /**
  * Gets all valid parameter names for a page type.
  *
- * @param {string} pageType - The page type.
- * @returns {string[]} Array of valid parameter names.
+ * @param pageType - The page type.
+ * @returns Array of valid parameter names.
  */
-export function getValidParamNames(pageType) {
+export function getValidParamNames(pageType: string): string[] {
   const params = getParamsForPageType(pageType);
   return params ? Object.keys(params) : [];
 }
@@ -206,35 +251,39 @@ export function getValidParamNames(pageType) {
 /**
  * Suggests a page type for a potential typo using fuzzy matching.
  *
- * @param {string} typo - The potentially misspelled page type.
- * @returns {string|null} The suggested page type, or null if no good match found.
+ * @param typo - The potentially misspelled page type.
+ * @returns The suggested page type, or null if no good match found.
  */
-export function suggestPageType(typo) {
+export function suggestPageType(typo: string): string | null {
   return findClosestMatch(typo, VALID_PAGE_TYPES);
 }
 
 /**
  * Validates that all provided params are valid for ALL listed page types.
  *
- * @param {Object} params - The params object to validate.
- * @param {string[]} pages - The array of page types.
- * @returns {{valid: boolean, errors: string[]}} Validation result with any errors.
+ * @param params - The params object to validate.
+ * @param pages - The array of page types.
+ * @returns Validation result with any errors.
  */
-export function validateParamsAgainstPages(params, pages) {
-  const errors = [];
+export function validateParamsAgainstPages(
+  params: unknown,
+  pages: string[]
+): { valid: boolean; errors: string[] } {
+  const errors: string[] = [];
 
   if (!params || typeof params !== "object") {
     return { valid: true, errors: [] };
   }
 
-  const paramNames = Object.keys(params);
+  const paramsRecord = params as Record<string, unknown>;
+  const paramNames = Object.keys(paramsRecord);
   if (paramNames.length === 0) {
     return { valid: true, errors: [] };
   }
 
   for (const paramName of paramNames) {
-    const validFor = [];
-    const invalidFor = [];
+    const validFor: string[] = [];
+    const invalidFor: string[] = [];
 
     for (const pageType of pages) {
       const pageParams = getParamsForPageType(pageType);
@@ -273,12 +322,16 @@ export function validateParamsAgainstPages(params, pages) {
 /**
  * Validates the type of a parameter value against its definition.
  *
- * @param {string} paramName - The parameter name.
- * @param {*} value - The value to validate.
- * @param {string} pageType - The page type (for error messages).
- * @returns {{valid: boolean, error: string|null}} Validation result.
+ * @param paramName - The parameter name.
+ * @param value - The value to validate.
+ * @param pageType - The page type (for error messages).
+ * @returns Validation result.
  */
-export function validateParamType(paramName, value, pageType) {
+export function validateParamType(
+  paramName: string,
+  value: unknown,
+  pageType: string
+): { valid: boolean; error: string | null } {
   const params = getParamsForPageType(pageType);
   if (!params || !(paramName in params)) {
     return { valid: false, error: `Unknown parameter '${paramName}'` };
@@ -293,7 +346,7 @@ export function validateParamType(paramName, value, pageType) {
         valid: false,
         error:
           `Parameter '${paramName}' must be a number, got ${actualType} '${value}'.\n` +
-          `Hint: Use numeric value: { params: { ${paramName}: ${parseInt(value, 10) || 123} } }`,
+          `Hint: Use numeric value: { params: { ${paramName}: ${parseInt(String(value), 10) || 123} } }`,
       };
     }
   } else if (definition.type === "string") {
@@ -314,18 +367,21 @@ export function validateParamType(paramName, value, pageType) {
  * Returns an object with the current values for all parameters defined for
  * this page type, or null if the page type doesn't match the current route.
  *
- * @param {string} pageType - The page type (e.g., "CATEGORY_PAGES").
- * @param {Object} services - Injected services for context extraction.
- * @param {Object} services.router - The Ember router service.
- * @param {Object} services.discovery - The Discourse discovery service.
- * @returns {Object|null} The context object with param values, or null if page type doesn't match.
+ * @param pageType - The page type (e.g., "CATEGORY_PAGES").
+ * @param services - Injected services for context extraction.
+ * @returns The context object with param values, or null if page type doesn't match.
  *
  * @example
+ * ```
  * const context = getPageContext("CATEGORY_PAGES", { router, discovery });
  * // Returns { categoryId: 5, categorySlug: "general", parentCategoryId: null }
  * // or null if not on a category page
+ * ```
  */
-export function getPageContext(pageType, { router, discovery }) {
+export function getPageContext(
+  pageType: string,
+  { router, discovery }: PageContextServices
+): Record<string, unknown> | null {
   switch (pageType) {
     case "CATEGORY_PAGES": {
       const category = discovery.category;
@@ -387,7 +443,7 @@ export function getPageContext(pageType, { router, discovery }) {
       }
       const routeParams = router.currentRoute?.params || {};
       return {
-        id: routeParams.id ? parseInt(routeParams.id, 10) : undefined,
+        id: routeParams.id ? parseInt(String(routeParams.id), 10) : undefined,
         slug: routeParams.slug,
       };
     }
@@ -422,16 +478,19 @@ export function getPageContext(pageType, { router, discovery }) {
  * Iterates through all valid page types and returns the first one that matches
  * the current route. Useful for debugging to show what page the user is on.
  *
- * @param {Object} services - Injected services for context extraction.
- * @param {Object} services.router - The Ember router service.
- * @param {Object} services.discovery - The Discourse discovery service.
- * @returns {string|null} The current page type, or null if no match.
+ * @param services - Injected services for context extraction.
+ * @returns The current page type, or null if no match.
  *
  * @example
+ * ```
  * const pageType = getCurrentPageType({ router, discovery });
  * // Returns "CATEGORY_PAGES", "TOPIC_PAGES", etc., or null
+ * ```
  */
-export function getCurrentPageType({ router, discovery }) {
+export function getCurrentPageType({
+  router,
+  discovery,
+}: PageContextServices): string | null {
   for (const pageType of VALID_PAGE_TYPES) {
     if (getPageContext(pageType, { router, discovery }) !== null) {
       return pageType;

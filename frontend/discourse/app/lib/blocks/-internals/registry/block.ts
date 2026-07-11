@@ -1,12 +1,18 @@
-// @ts-check
 import { DEBUG } from "@glimmer/env";
 import { trackedMap } from "@ember/reactive/collections";
+import type { BlockMetadata } from "discourse/blocks/types";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import {
   OPTIONAL_MISSING,
+  type OptionalMissingMarker,
   parseBlockReference,
 } from "discourse/lib/blocks/-internals/patterns";
+import type {
+  BlockClass,
+  BlockFactory,
+  BlockRegistryEntry,
+} from "discourse/lib/blocks/-internals/types";
 import { isTesting } from "discourse/lib/environment";
 import {
   assertNotDuplicate,
@@ -16,48 +22,6 @@ import {
   validateSourceNamespace,
 } from "./helpers";
 
-/**
- * A block class decorated with `@block`.
- *
- * Block metadata is stored in an internal WeakMap and accessed via the
- * `getBlockMetadata()` function from the decorator module.
- *
- * @typedef {typeof import("@glimmer/component").default} BlockClass
- */
-
-/**
- * Metadata object containing block configuration set by the `@block` decorator.
- * Includes args schema, container settings, validation, and outlet restrictions.
- *
- * @typedef {{
- *   blockName: string,
- *   shortName: string,
- *   namespace: string|null,
- *   namespaceType: "core"|"plugin"|"theme",
- *   description: string,
- *   isContainer: boolean,
- *   decoratorClassNames: string|Array<string>|Function|null,
- *   args: Object|null,
- *   childArgs: Object|null,
- *   constraints: Object|null,
- *   validate: Function|null,
- *   allowedOutlets: ReadonlyArray<string>|null,
- *   deniedOutlets: ReadonlyArray<string>|null
- * }} BlockMetadata
- */
-
-/**
- * A factory function that returns a Promise resolving to a BlockClass or module with default export.
- *
- * @typedef {() => Promise<BlockClass | { default: BlockClass }>} BlockFactory
- */
-
-/**
- * Registry entry: either a resolved BlockClass or a factory function for lazy loading.
- *
- * @typedef {BlockClass | BlockFactory} BlockRegistryEntry
- */
-
 /*
  * Registry State
  */
@@ -65,10 +29,8 @@ import {
 /**
  * Registry of block components registered via `api.registerBlock()`.
  * Maps block names to their component classes or factory functions.
- *
- * @type {Map<string, BlockRegistryEntry>}
  */
-const blockRegistry = new Map();
+const blockRegistry = new Map<string, BlockRegistryEntry>();
 
 /**
  * Cache for resolved factory functions.
@@ -78,46 +40,27 @@ const blockRegistry = new Map();
  * automatically re-render when a factory they depend on finishes resolving.
  * The tracked map tracks per-key, so only components waiting on specific blocks
  * are invalidated.
- *
- * @type {Map<string, BlockClass>}
  */
-const resolvedFactoryCache = trackedMap();
+const resolvedFactoryCache = trackedMap<string, BlockClass>();
 
-/**
- * Tracks in-flight resolution promises to prevent duplicate concurrent attempts.
- *
- * @type {Map<string, Promise<BlockClass|undefined>>}
- */
-const pendingResolutions = new Map();
+/** Tracks in-flight resolution promises to prevent duplicate concurrent attempts. */
+const pendingResolutions = new Map<string, Promise<BlockClass | undefined>>();
 
-/**
- * Caches failed resolution attempts to prevent infinite retry loops.
- *
- * @type {Set<string>}
- */
-const failedResolutions = new Set();
+/** Caches failed resolution attempts to prevent infinite retry loops. */
+const failedResolutions = new Set<string>();
 
-/**
- * Whether the block registry is frozen (no new registrations allowed).
- */
+/** Whether the block registry is frozen (no new registrations allowed). */
 let registryFrozen = false;
 
-/**
- * Stores the initial frozen state to allow correct reset after tests.
- * @type {boolean | null}
- */
-let testRegistryFrozenState = null;
+/** Stores the initial frozen state to allow correct reset after tests. */
+let testRegistryFrozenState: boolean | null = null;
 
 /*
  * Public Functions
  */
 
-/**
- * Returns whether the block registry is frozen.
- *
- * @returns {boolean}
- */
-export function isBlockRegistryFrozen() {
+/** Returns whether the block registry is frozen. */
+export function isBlockRegistryFrozen(): boolean {
   return registryFrozen;
 }
 
@@ -127,24 +70,25 @@ export function isBlockRegistryFrozen() {
  * This is a synchronous check that does not resolve factory functions.
  * Use this to verify a block exists before attempting resolution.
  *
- * @param {string | BlockClass} nameOrClass - Block name string or BlockClass.
- * @returns {boolean} True if the block is registered.
+ * @param nameOrClass - Block name string or BlockClass.
+ * @returns True if the block is registered.
  */
-export function hasBlock(nameOrClass) {
+export function hasBlock(nameOrClass: string | BlockClass) {
   if (typeof nameOrClass === "string") {
     return blockRegistry.has(nameOrClass);
   }
-  const blockName = getBlockMetadata(nameOrClass)?.blockName;
+  const metadata: BlockMetadata | null = getBlockMetadata(nameOrClass);
+  const blockName = metadata?.blockName;
   return blockName && blockRegistry.has(blockName);
 }
 
 /**
  * Returns the registry entry for a block (class or factory).
  *
- * @param {string} name - The block name.
- * @returns {BlockRegistryEntry | undefined} The registry entry, or undefined if not found.
+ * @param name - The block name.
+ * @returns The registry entry, or undefined if not found.
  */
-export function getBlockEntry(name) {
+export function getBlockEntry(name: string): BlockRegistryEntry | undefined {
   return blockRegistry.get(name);
 }
 
@@ -152,19 +96,19 @@ export function getBlockEntry(name) {
  * Returns all block entries with their names as [name, entry] pairs.
  * Used by Blocks service for listing and introspection.
  *
- * @returns {Array<[string, BlockRegistryEntry]>} Array of [name, entry] pairs.
+ * @returns Array of [name, entry] pairs.
  */
-export function getAllBlockEntries() {
+export function getAllBlockEntries(): Array<[string, BlockRegistryEntry]> {
   return Array.from(blockRegistry.entries());
 }
 
 /**
  * Checks if a block is registered and fully resolved (not a pending factory).
  *
- * @param {string} name - The block name to check.
- * @returns {boolean} True if registered and resolved.
+ * @param name - The block name to check.
+ * @returns True if registered and resolved.
  */
-export function isBlockResolved(name) {
+export function isBlockResolved(name: string): boolean {
   if (!blockRegistry.has(name)) {
     return false;
   }
@@ -178,10 +122,12 @@ export function isBlockResolved(name) {
  * Factory functions are plain functions not registered in the block metadata WeakMap.
  * BlockClasses are tracked by the `@block` decorator.
  *
- * @param {BlockRegistryEntry} entry - The registry entry to check.
- * @returns {entry is BlockFactory} True if the entry is a factory function.
+ * @param entry - The registry entry to check.
+ * @returns True if the entry is a factory function.
  */
-export function isBlockFactory(entry) {
+export function isBlockFactory(
+  entry: BlockRegistryEntry | undefined
+): entry is BlockFactory {
   return typeof entry === "function" && !getBlockMetadata(entry);
 }
 
@@ -192,9 +138,9 @@ export function isBlockFactory(entry) {
  * - If given a string, looks up in registry and resolves factory if needed.
  * - Caches resolved factories to avoid re-resolving.
  *
- * @param {string | BlockClass} nameOrClass - Block name string or BlockClass.
- * @returns {Promise<BlockClass|undefined>} The resolved block class, or undefined if resolution previously failed.
- * @throws {Error} If block not registered or factory resolution fails on first attempt.
+ * @param nameOrClass - Block name string or BlockClass.
+ * @returns The resolved block class, or undefined if resolution previously failed.
+ * @throws If block not registered or factory resolution fails on first attempt.
  *
  * @example
  * ```javascript
@@ -202,7 +148,9 @@ export function isBlockFactory(entry) {
  * const BlockClass = await resolveBlock(HeroBanner); // Returns directly
  * ```
  */
-export async function resolveBlock(nameOrClass) {
+export async function resolveBlock(
+  nameOrClass: string | BlockClass
+): Promise<BlockClass | undefined> {
   if (typeof nameOrClass !== "string") {
     if (!getBlockMetadata(nameOrClass)) {
       raiseBlockError(
@@ -234,7 +182,8 @@ export async function resolveBlock(nameOrClass) {
     );
   }
 
-  const entry = blockRegistry.get(name);
+  // Guaranteed to be set by the `.has()` check above.
+  const entry = blockRegistry.get(name)!;
 
   if (!isBlockFactory(entry)) {
     return entry;
@@ -253,14 +202,15 @@ export async function resolveBlock(nameOrClass) {
  * and returns null. The calling component will automatically re-render when the
  * factory resolves.
  *
- * @param {string | BlockClass} blockRef - Block reference (string name or class).
- *   String names may include a trailing "?" to mark the block as optional.
- * @returns {BlockClass | { optionalMissing: symbol, name: string } | null}
- *   - The BlockClass if found and resolved
- *   - An object with `optionalMissing` marker if the block is optional and not registered
- *   - null if the block is not registered (non-optional) or is a factory awaiting resolution
+ * @param blockRef - Block reference (string name or class). String names may
+ *   include a trailing "?" to mark the block as optional.
+ * @returns The BlockClass if found and resolved; an optional-missing marker if
+ *   the block is optional and not registered; or `null` if the block is not
+ *   registered (non-optional) or is a factory awaiting resolution.
  */
-export function tryResolveBlock(blockRef) {
+export function tryResolveBlock(
+  blockRef: string | BlockClass
+): BlockClass | OptionalMissingMarker | null {
   if (typeof blockRef !== "string") {
     return blockRef;
   }
@@ -284,7 +234,8 @@ export function tryResolveBlock(blockRef) {
     return null;
   }
 
-  const entry = blockRegistry.get(blockName);
+  // Guaranteed to be set by the `.has()` check above.
+  const entry = blockRegistry.get(blockName)!;
 
   if (!isBlockFactory(entry)) {
     return entry;
@@ -292,7 +243,7 @@ export function tryResolveBlock(blockRef) {
 
   // Trigger async resolution. Returns null for this render cycle - the component
   // will re-render automatically when the factory resolves (tracked via TrackedMap).
-  resolveBlock(blockName).catch((error) => {
+  resolveBlock(blockName).catch((error: unknown) => {
     // TODO (blocks-api) Consider returning an error marker and rendering an error
     // placeholder component for admin visibility, rather than silently returning null.
     document.dispatchEvent(
@@ -315,7 +266,7 @@ export function tryResolveBlock(blockRef) {
  *
  * @internal
  */
-export function _freezeBlockRegistry() {
+export function _freezeBlockRegistry(): void {
   registryFrozen = true;
 }
 
@@ -327,8 +278,8 @@ export function _freezeBlockRegistry() {
  * (including `blockName`) is stored in an internal WeakMap and accessed
  * via `getBlockMetadata()`.
  *
- * @param {BlockClass} BlockClass - The block component class
- * @throws {Error} If called after registry is locked, or if block is invalid
+ * @param klass - The block component class
+ * @throws If called after registry is locked, or if block is invalid
  *
  * @example
  * ```javascript
@@ -345,15 +296,16 @@ export function _freezeBlockRegistry() {
  * };
  * ```
  */
-export function _registerBlock(BlockClass) {
-  const blockName = getBlockMetadata(BlockClass)?.blockName;
+export function _registerBlock(klass: BlockClass): void {
+  const metadata: BlockMetadata | null = getBlockMetadata(klass);
+  const blockName = metadata?.blockName;
 
   if (
     !assertRegistryNotFrozen({
       frozen: registryFrozen,
       apiMethod: "api.registerBlock()",
       entityType: "Block",
-      entityName: blockName || BlockClass?.name,
+      entityName: blockName || klass.name,
     })
   ) {
     return;
@@ -361,7 +313,7 @@ export function _registerBlock(BlockClass) {
 
   if (!blockName) {
     raiseBlockError(
-      `Block class "${BlockClass?.name}" must be decorated with @block to be registered.`
+      `Block class "${klass.name}" must be decorated with @block to be registered.`
     );
     return;
   }
@@ -378,7 +330,7 @@ export function _registerBlock(BlockClass) {
     return;
   }
 
-  blockRegistry.set(blockName, BlockClass);
+  blockRegistry.set(blockName, klass);
 }
 
 /**
@@ -387,9 +339,9 @@ export function _registerBlock(BlockClass) {
  * The factory will be called when the block is first needed. It must return
  * a Promise that resolves to a BlockClass (or a module with a default export).
  *
- * @param {string} name - The name to register the block under.
- * @param {BlockFactory} factory - Factory function returning Promise<BlockClass>.
- * @throws {Error} If registry is locked, name is invalid, or factory is not a function.
+ * @param name - The name to register the block under.
+ * @param factory - Factory function returning Promise<BlockClass>.
+ * @throws If registry is locked, name is invalid, or factory is not a function.
  *
  * @example
  * ```javascript
@@ -398,7 +350,10 @@ export function _registerBlock(BlockClass) {
  *
  * @internal
  */
-export function _registerBlockFactory(name, factory) {
+export function _registerBlockFactory(
+  name: string,
+  factory: BlockFactory
+): void {
   if (
     !assertRegistryNotFrozen({
       frozen: registryFrozen,
@@ -433,19 +388,33 @@ export function _registerBlockFactory(name, factory) {
 }
 
 /**
+ * Checks whether a resolved factory value is a module object (with a
+ * `.default` export) rather than the block class itself.
+ */
+function hasDefaultExport(
+  value: BlockClass | { default: BlockClass }
+): value is { default: BlockClass } {
+  return typeof value !== "function";
+}
+
+/**
  * Resolves a factory function and caches the result.
  *
- * @param {string} name - The block name.
- * @param {BlockFactory} factory - The factory function to resolve.
- * @returns {Promise<BlockClass>} The resolved block class.
- * @throws {BlockError} If the factory returns an invalid class or the resolved name doesn't match.
+ * @param name - The block name.
+ * @param factory - The factory function to resolve.
+ * @returns The resolved block class.
+ * @throws If the factory returns an invalid class or the resolved name doesn't match.
  */
-async function resolveFactory(name, factory) {
+async function resolveFactory(
+  name: string,
+  factory: BlockFactory
+): Promise<BlockClass | undefined> {
   try {
     const result = await factory();
-    // @ts-ignore - result may be a module with .default or direct BlockClass
-    const BlockClass = result?.default ?? result;
-    const resolvedBlockName = getBlockMetadata(BlockClass)?.blockName;
+    const resolvedClass: BlockClass = hasDefaultExport(result)
+      ? result.default
+      : result;
+    const resolvedBlockName = getBlockMetadata(resolvedClass)?.blockName;
 
     if (!resolvedBlockName) {
       raiseBlockError(
@@ -461,18 +430,23 @@ async function resolveFactory(name, factory) {
       );
     }
 
-    resolvedFactoryCache.set(name, BlockClass);
-    blockRegistry.set(name, BlockClass);
+    resolvedFactoryCache.set(name, resolvedClass);
+    blockRegistry.set(name, resolvedClass);
 
-    return BlockClass;
-  } catch (error) {
+    return resolvedClass;
+  } catch (error: unknown) {
     failedResolutions.add(name);
 
-    if (error.name === "BlockError") {
-      throw error;
+    // Thrown errors are always `Error`-like: either a rethrown `BlockError` or
+    // a factory/import failure. Cast to read `.name`/`.message` without
+    // widening the catch signature to `any`.
+    const err = error as Error;
+
+    if (err.name === "BlockError") {
+      throw err;
     }
     raiseBlockError(
-      `Failed to resolve block factory for "${name}": ${error.message}`
+      `Failed to resolve block factory for "${name}": ${err.message}`
     );
     return undefined;
   } finally {
@@ -488,8 +462,6 @@ async function resolveFactory(name, factory) {
  * Temporarily unfreezes the block registry for testing.
  *
  * USE ONLY FOR TESTING PURPOSES.
- *
- * @param {Function} callback - Function to execute with unfrozen registry.
  */
 export const withTestBlockRegistration = createTestRegistrationWrapper({
   getFrozen: () => registryFrozen,
@@ -510,7 +482,7 @@ export const withTestBlockRegistration = createTestRegistrationWrapper({
  *
  * @internal Called by `resetBlockRegistryForTesting`, not meant for direct use.
  */
-export function _resetBlockRegistryState() {
+export function _resetBlockRegistryState(): void {
   // allows tree-shaking in production builds
   if (!DEBUG) {
     return;
