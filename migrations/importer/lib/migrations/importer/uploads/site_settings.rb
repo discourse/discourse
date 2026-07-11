@@ -7,6 +7,14 @@ module Migrations
         class S3UploadsConfigurationError < StandardError
         end
 
+        # A migration has to accept whatever the old site accepted; a tighter
+        # limit here would only manufacture skipped files. These loosenings are
+        # applied unconditionally rather than being settings-file knobs.
+        AUTHORIZED_EXTENSIONS = "*"
+        MAX_ATTACHMENT_SIZE_KB = 102_400
+        MAX_IMAGE_SIZE_KB = 102_400
+        MAX_IMAGE_MEGAPIXELS = 150
+
         def initialize(options)
           @options = options
         end
@@ -25,10 +33,10 @@ module Migrations
 
         def configure_basic_uploads
           SiteSetting.clean_up_uploads = false
-          SiteSetting.authorized_extensions = @options[:authorized_extensions]
-          SiteSetting.max_attachment_size_kb = @options[:max_attachment_size_kb]
-          SiteSetting.max_image_size_kb = @options[:max_image_size_kb]
-          SiteSetting.max_image_megapixels = @options[:max_image_megapixels]
+          SiteSetting.authorized_extensions = AUTHORIZED_EXTENSIONS
+          SiteSetting.max_attachment_size_kb = MAX_ATTACHMENT_SIZE_KB
+          SiteSetting.max_image_size_kb = MAX_IMAGE_SIZE_KB
+          SiteSetting.max_image_megapixels = MAX_IMAGE_MEGAPIXELS
           SiteSetting.secure_uploads = @options[:secure_uploads]
           SiteSetting.s3_enable_access_control_tags = @options[:s3_enable_access_control_tags]
         end

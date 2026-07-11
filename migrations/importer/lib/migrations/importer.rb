@@ -11,9 +11,36 @@ module Migrations
     def self.execute(options)
       config_path = File.join(root_path, "config", "importer.yml")
       config = YAML.load_file(config_path, symbolize_names: true)
+      resolve_config_defaults(config)
 
       executor = Executor.new(config, options)
       executor.start
+    end
+
+    # Fills in the paths that live next to the IntermediateDB by default, the
+    # same way `disco upload` derives them.
+    #
+    # `files_db`: when it isn't set, default to `files.db` next to the
+    # IntermediateDB — the same place `disco upload` writes it — but only when
+    # that file actually exists. An absent files DB is the signal for inline
+    # upload mode (the uploads step creates uploads straight into the live
+    # site), so a derived-but-missing file stays absent and inline mode wins. An
+    # explicit `files_db` always attaches, creating the DB if needed.
+    #
+    # `download_cache_path` (inline mode only): default to a `downloads`
+    # directory next to the IntermediateDB when the uploads section omits it.
+    def self.resolve_config_defaults(config)
+      intermediate_db = config[:intermediate_db]
+
+      if config[:files_db].blank?
+        derived = CompanionPaths.files_db(intermediate_db)
+        config[:files_db] = derived if File.exist?(derived)
+      end
+
+      uploads = config.dig(:config, :uploads)
+      if uploads && uploads[:download_cache_path].blank?
+        uploads[:download_cache_path] = CompanionPaths.download_cache_path(intermediate_db)
+      end
     end
 
     def self.loader
