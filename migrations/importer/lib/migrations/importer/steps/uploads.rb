@@ -153,9 +153,10 @@ module Migrations
             )
           end
 
+          # Resolved up front (defaults to a `downloads` directory next to the
+          # IntermediateDB), so we only have to make sure it exists here.
           def download_cache_path
-            path =
-              @settings[:download_cache_path] || File.join(Dir.tmpdir, "discourse-import-uploads")
+            path = @settings[:download_cache_path]
             FileUtils.mkdir_p(path)
             path
           end

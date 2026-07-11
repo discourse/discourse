@@ -25,7 +25,8 @@ module Migrations
                  "Delete files.db before running so uploads are created from scratch. " \
                    "The download cache is kept, so URLs are not fetched again."
           option "--fix-missing",
-                 "Verify each upload's file exists on the store (and its S3 ACL), repairing the record."
+                 "Verify each upload's file exists on the store (and its S3 ACL); " \
+                   "broken records are deleted and re-uploaded in the same run."
           option "--optimize",
                  "Precompute optimized images. Not needed when a post-import rebake will regenerate them."
         end

@@ -9,23 +9,23 @@ RSpec.describe Migrations::SettingsParser do
   end
 
   def valid_options(**overrides)
-    {
-      intermediate_db: File.join(@dir, "intermediate.db"),
-      files_db: File.join(@dir, "files.db"),
-      root_paths: [@dir],
-    }.merge(overrides)
+    { intermediate_db: File.join(@dir, "intermediate.db"), root_paths: [@dir] }.merge(overrides)
   end
 
   describe "required keys" do
-    it "accepts the intermediate_db, files_db and root_paths keys" do
+    it "accepts the intermediate_db and root_paths keys" do
       expect { described_class.new(valid_options) }.not_to raise_error
     end
 
     it "reports every missing key by its new name" do
       expect { described_class.new({}) }.to raise_error(
         described_class::ValidationError,
-        "Missing required keys: intermediate_db, files_db, root_paths",
+        "Missing required keys: intermediate_db, root_paths",
       )
+    end
+
+    it "no longer requires files_db" do
+      expect { described_class.new(valid_options) }.not_to raise_error
     end
 
     it "rejects the old key names" do
@@ -33,8 +33,52 @@ RSpec.describe Migrations::SettingsParser do
 
       expect { described_class.new(options) }.to raise_error(
         described_class::ValidationError,
-        /Missing required keys: intermediate_db, files_db/,
+        /Missing required keys: intermediate_db/,
       )
+    end
+  end
+
+  describe "removed keys" do
+    it "points fix_missing at its flag" do
+      expect { described_class.new(valid_options(fix_missing: false)) }.to raise_error(
+        described_class::ValidationError,
+        "`fix_missing` has moved to the --fix-missing flag; remove it from the settings file.",
+      )
+    end
+
+    it "points create_optimized_images at its flag" do
+      expect { described_class.new(valid_options(create_optimized_images: false)) }.to raise_error(
+        described_class::ValidationError,
+        "`create_optimized_images` has moved to the --optimize flag; remove it from the settings file.",
+      )
+    end
+  end
+
+  describe "derived paths" do
+    it "defaults files_db to files.db next to the intermediate_db" do
+      settings = described_class.new(valid_options)
+
+      expect(settings[:files_db]).to eq(File.join(@dir, "files.db"))
+    end
+
+    it "defaults download_cache_path to a downloads directory next to the intermediate_db" do
+      settings = described_class.new(valid_options)
+
+      expect(settings[:download_cache_path]).to eq(File.join(@dir, "downloads"))
+    end
+
+    it "keeps an explicit files_db" do
+      explicit = File.join(@dir, "elsewhere.db")
+      settings = described_class.new(valid_options(files_db: explicit))
+
+      expect(settings[:files_db]).to eq(explicit)
+    end
+
+    it "keeps an explicit download_cache_path" do
+      explicit = File.join(@dir, "cache")
+      settings = described_class.new(valid_options(download_cache_path: explicit))
+
+      expect(settings[:download_cache_path]).to eq(explicit)
     end
   end
 
