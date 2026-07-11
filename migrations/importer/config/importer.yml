@@ -1,6 +1,12 @@
 intermediate_db: /shared/import/intermediate.db
 mappings_db: /shared/import/mappings.db
-files_db: /shared/import/files.db
+
+# The files database `disco upload` produced. Defaults to `files.db` next to the
+# intermediate_db above (the same place `disco upload` writes it), so a normal
+# run needs no path here. It's attached only when the file exists; if it's
+# missing, the import falls back to inline upload mode (see the `uploads:`
+# section below). Set an explicit path to attach a files DB from elsewhere.
+#files_db: /shared/import/files.db
 
 config:
   # if false, allows reserved usernames only for admins
@@ -19,5 +25,6 @@ config:
   #  # verbatim path, as a list of [from, to] pairs.
   #  #path_replacements:
   #  #  - ["/old/prefix", "/new/prefix"]
-  #  # Where URL-backed sources are cached; defaults to a temp directory.
+  #  # Where URL-backed sources are cached; defaults to a `downloads` directory
+  #  # next to the intermediate_db above.
   #  #download_cache_path: /shared/import/upload-cache
