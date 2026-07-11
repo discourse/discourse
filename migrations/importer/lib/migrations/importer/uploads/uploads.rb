@@ -53,20 +53,17 @@ module Migrations
         def setup_databases
           run_files_db_migrations
 
-          files_db = Database.connect(settings[:output_db_path])
+          files_db = Database.connect(settings[:files_db])
           # The generated `FilesDB::*` models insert through this module-level
           # connection; the tasks use the same object directly for their reads and
           # deletes.
           Database::FilesDB.setup(files_db)
 
-          { files_db:, intermediate_db: Database.connect(settings[:source_db_path]) }
+          { files_db:, intermediate_db: Database.connect(settings[:intermediate_db]) }
         end
 
         def run_files_db_migrations
-          Database.migrate(
-            settings[:output_db_path],
-            migrations_path: Database::FILES_DB_SCHEMA_PATH,
-          )
+          Database.migrate(settings[:files_db], migrations_path: Database::FILES_DB_SCHEMA_PATH)
         end
 
         # Cap a single ImageMagick convert so it can't be the one process that
@@ -76,9 +73,27 @@ module Migrations
         MAGICK_MEMORY_CAP = 2 * 1024**3 # 2 GB
 
         def configure_services
+          # Resize the pool first. Anything below that re-establishes the AR
+          # connection captures the pool size as it stands at that moment (it
+          # deep-dups the current config), so a resize afterwards would be
+          # thrown away. Keep this ahead of the rest of the service setup.
+          adjust_db_pool_size
           configure_logging
           configure_image_memory_limits
           configure_site_settings
+        end
+
+        # The worker pool opens one Discourse DB connection per thread, so the AR
+        # pool has to be wide enough to hand them all out. Grow it up to the
+        # server's `max_connections`; leave it alone if it is already that big.
+        def adjust_db_pool_size
+          max_db_connections = ::DB.query_single("SHOW max_connections").first.to_i
+          current_size = ActiveRecord::Base.connection_pool.size
+          return if current_size >= max_db_connections
+
+          db_config = ActiveRecord::Base.connection_db_config.configuration_hash.dup
+          db_config[:pool] = max_db_connections
+          ActiveRecord::Base.establish_connection(db_config)
         end
 
         def configure_logging
