@@ -2,7 +2,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import isComponent from "discourse/lib/is-component";
-/** @type {import("discourse/ui-kit/d-async-content.gjs")} */
+/** @type {import("discourse/ui-kit/d-async-content.gts")} */
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 /** @type {import("discourse/ui-kit/d-light-dark-img.gjs")} */
 import DLightDarkImg from "discourse/ui-kit/d-light-dark-img";

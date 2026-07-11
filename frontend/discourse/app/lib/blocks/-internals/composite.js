@@ -114,7 +114,7 @@ export function childOverridesFor(overrides, id) {
  * depth; consumers that build overrides should also refuse them upstream).
  *
  * @param {Object|undefined} overrideArgs - The part's own override args.
- * @param {true|string[]|null|undefined} lock - The part's lock declaration.
+ * @param {true|ReadonlyArray<string>|null|undefined} lock - The part's lock declaration.
  * @returns {Object|undefined} The allowed override args, or undefined when none apply.
  */
 export function applyLock(overrideArgs, lock) {
@@ -143,7 +143,7 @@ export function applyLock(overrideArgs, lock) {
  * schema defaults are layered underneath later by the render pipeline, exactly
  * as they are for an ordinary entry's `args`.
  *
- * @param {{args?: Object|null, lock?: true|string[]|null}} part - The part definition.
+ * @param {{args?: Object|null, lock?: true|ReadonlyArray<string>|null}} part - The part definition.
  * @param {Object|undefined} ownOverride - The instance override for this part's own args.
  * @returns {Object} The effective args for the synthesized child entry.
  */
@@ -169,7 +169,7 @@ export function resolvePartArgs(part, ownOverride) {
  * a render/prefetch walk.
  *
  * @param {Object} entry - The composite layout entry (persisted, or a synthesized parent part).
- * @param {{parts: ReadonlyArray<{id: string, block: string|Function, args?: Object|null, lock?: true|string[]|null}>}} metadata - The composite block's metadata.
+ * @param {{parts: ReadonlyArray<{id: string, block: string|Function, args?: Object|null, lock?: true|ReadonlyArray<string>|null}>}} metadata - The composite block's metadata.
  * @returns {Array<Object>} The synthesized child entries.
  */
 export function synthesizePartEntries(entry, metadata) {

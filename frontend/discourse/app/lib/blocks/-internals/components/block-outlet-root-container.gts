@@ -1,0 +1,298 @@
+import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
+import { getOwner } from "@ember/owner";
+import { service } from "@ember/service";
+import {
+  outletClassName,
+  outletContainerClassName,
+  outletLayoutClassName,
+} from "discourse/lib/blocks/-internals/css";
+import {
+  DEBUG_CALLBACK,
+  debugHooks,
+  withDebugGroup,
+} from "discourse/lib/blocks/-internals/debug-hooks";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
+import {
+  type CreateChildBlockFn,
+  type LeafCache,
+  processBlockEntries,
+} from "discourse/lib/blocks/-internals/entry-processing";
+import {
+  FAILURE_TYPE,
+  isOptionalMissing,
+} from "discourse/lib/blocks/-internals/patterns";
+import { tryResolveBlock } from "discourse/lib/blocks/-internals/registry/block";
+import type {
+  BlockEntry,
+  ChildBlockResult,
+} from "discourse/lib/blocks/-internals/types";
+import type Blocks from "discourse/services/blocks";
+
+interface BlockOutletRootContainerSignature {
+  Args: {
+    outletName: string;
+    outletArgs: Record<string, unknown>;
+    rawChildren: BlockEntry[];
+    showGhosts: boolean;
+    showVisualOverlay: boolean;
+    isLoggingEnabled: boolean;
+    createChildBlockFn: CreateChildBlockFn;
+  };
+}
+
+/**
+ * Internal container component that processes and renders block children.
+ *
+ * This component handles condition evaluation and component creation in a
+ * tracked getter context. By evaluating conditions synchronously in
+ * `processedChildren`, Ember's autotracking establishes dependencies on
+ * services like `router` and `discovery`. Route changes trigger re-evaluation.
+ *
+ * If condition evaluation happened in the async promise chain (as it did
+ * previously), service reads would not be tracked and route navigation
+ * would not trigger re-evaluation.
+ *
+ * The component receives the authorization-dependent function `createChildBlockFn`
+ * as a prop to maintain the authorization model in the main block-outlet module.
+ *
+ * Internal — not part of the block authoring API.
+ */
+export default class BlockOutletRootContainer extends Component<BlockOutletRootContainerSignature> {
+  @service declare blocks: Blocks;
+
+  /**
+   * Cache for curried components, keyed by their stable block key.
+   *
+   * This cache prevents unnecessary component recreation during navigation.
+   * Components are reused when their class and args haven't changed.
+   *
+   * Memory note: This cache is bounded, not unbounded:
+   * - Keys use stable `__stableKey` values assigned once at registration time
+   * - The same keys are reused on every render/navigation
+   * - This cache instance is garbage collected when the owning component is destroyed
+   */
+  #componentCache: LeafCache = new Map();
+
+  /**
+   * The CSS-safe version of the outlet name, used as the class for the
+   * outermost wrapper `<div>`.
+   *
+   * @see {@link outletClassName} for the naming convention.
+   */
+  get safeOutletName(): string {
+    return outletClassName(this.args.outletName);
+  }
+
+  /**
+   * The CSS class name for the container element that establishes the
+   * CSS container query context for child blocks.
+   *
+   * @see {@link outletContainerClassName} for the naming convention.
+   */
+  get containerClassName(): string {
+    return outletContainerClassName(this.args.outletName);
+  }
+
+  /**
+   * The CSS class name for the layout element that wraps the rendered
+   * block children.
+   *
+   * @see {@link outletLayoutClassName} for the naming convention.
+   */
+  get layoutClassName(): string {
+    return outletLayoutClassName(this.args.outletName);
+  }
+
+  /**
+   * Processes raw block entries and creates renderable child components.
+   *
+   * This getter is the key to reactive condition evaluation. By accessing
+   * services like `router` and `discovery` during condition evaluation here
+   * (synchronously in a tracked getter), Ember establishes tracking
+   * dependencies. Route changes trigger this getter to re-run.
+   */
+  @cached
+  get processedChildren(): ChildBlockResult[] {
+    const {
+      rawChildren,
+      showGhosts,
+      isLoggingEnabled,
+      outletName,
+      outletArgs,
+      createChildBlockFn,
+    } = this.args;
+
+    // force tracking the value
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    this.args.showVisualOverlay;
+
+    if (!rawChildren?.length) {
+      return [];
+    }
+
+    // A rendered component is always Ember-owned.
+    const owner = getOwner(this)!;
+    const baseHierarchy = outletName;
+
+    // Step 1: Evaluate conditions - THIS IS NOW TRACKED!
+    // When blocksService.evaluate() reads router.currentURL or discovery.category,
+    // Ember establishes a dependency. Route changes trigger re-evaluation.
+    const processedEntries = this.#preprocessEntries(
+      rawChildren,
+      outletArgs,
+      this.blocks,
+      showGhosts,
+      isLoggingEnabled,
+      baseHierarchy
+    );
+
+    // Step 2: Create components from processed entries
+    return processBlockEntries({
+      entries: processedEntries,
+      cache: this.#componentCache,
+      owner,
+      baseHierarchy,
+      outletName,
+      outletArgs,
+      showGhosts,
+      isLoggingEnabled,
+      createChildBlockFn,
+    });
+  }
+
+  /**
+   * Pre-processes block entries to compute visibility for all blocks.
+   *
+   * This method evaluates conditions for all blocks in the tree and adds
+   * visibility metadata to each entry:
+   * - `__visible`: Whether the block should be rendered
+   * - `__failureType`: The failure type constant (debug mode only)
+   *
+   * Container blocks have an implicit condition: they must have at least
+   * one visible child. This is evaluated bottom-up (children first).
+   */
+  #preprocessEntries(
+    entries: BlockEntry[],
+    outletArgs: Record<string, unknown>,
+    blocksService: Blocks,
+    showGhosts: boolean,
+    isLoggingEnabled: boolean,
+    baseHierarchy: string
+  ): BlockEntry[] {
+    const result: BlockEntry[] = [];
+
+    for (const entry of entries) {
+      // Shallow clone to add visibility metadata without mutating the original
+      // layout entry. The layout is immutable after registration, so we create
+      // a copy to attach __visible and __failureReason properties.
+      const entryClone: BlockEntry = { ...entry };
+
+      // Resolve block reference
+      const resolvedBlock = tryResolveBlock(entryClone.block);
+
+      // Skip unresolved blocks (optional missing or pending factory resolution)
+      if (!resolvedBlock || isOptionalMissing(resolvedBlock)) {
+        // Keep the entry for ghost handling in the main loop
+        if (showGhosts || isOptionalMissing(resolvedBlock)) {
+          result.push(entryClone);
+        }
+        continue;
+      }
+
+      const blockClass = resolvedBlock;
+      const blockMeta = getBlockMetadata(blockClass);
+      const blockName = blockMeta?.blockName || "unknown";
+      const isContainer = blockMeta?.isContainer ?? false;
+
+      // Evaluate this block's own conditions.
+      // The withDebugGroup wrapper ensures START_GROUP/END_GROUP are always paired.
+      // This is the key reactive line - blocksService.evaluate() reads from router/discovery
+      // services, and since we're in a tracked getter, Ember tracks these reads.
+      //
+      // Extra context fields can be injected via the EVAL_CONTEXT debug
+      // callback — external code uses it to thread a user / viewport
+      // simulation through condition evaluation without coupling the
+      // blocks service to that consumer. The callback is read inside the
+      // tracked getter, so any tracked state it returns triggers a
+      // re-render when it changes.
+      const extraContext = debugHooks.getCallback(
+        DEBUG_CALLBACK.EVAL_CONTEXT
+      )?.() as Record<string, unknown> | undefined;
+
+      const conditionsPassed = entryClone.conditions
+        ? withDebugGroup(
+            blockName,
+            entryClone.id ?? null,
+            baseHierarchy,
+            isLoggingEnabled,
+            () =>
+              blocksService.evaluate(entryClone.conditions, {
+                debug: isLoggingEnabled,
+                outletArgs,
+                ...(extraContext ?? {}),
+              })
+          )
+        : true;
+
+      // For containers: recursively process children first (bottom-up evaluation)
+      // This determines which children are visible before we check if container has any
+      let hasVisibleChildren = true; // Non-containers always "have" visible children
+      const children = entryClone.children;
+      if (isContainer && children?.length) {
+        // Recursively preprocess children - this computes their visibility.
+        // Include the container's ID in the hierarchy for better debug identification.
+        const containerSuffix = entryClone.id ? `(#${entryClone.id})` : "";
+        const processedChildren = this.#preprocessEntries(
+          children,
+          outletArgs,
+          blocksService,
+          showGhosts,
+          isLoggingEnabled,
+          `${baseHierarchy}/${blockName}${containerSuffix}`
+        );
+
+        hasVisibleChildren = processedChildren.some((child) => child.__visible);
+
+        // Update the cloned entry's children with the processed result
+        entryClone.children = processedChildren;
+      }
+
+      // Final visibility: own conditions must pass AND (not container OR has visible children)
+      // This implements the implicit "container must have visible children" condition
+      const visible = conditionsPassed && hasVisibleChildren;
+      entryClone.__visible = visible;
+
+      // In debug mode, record why the block is hidden for the ghost tooltip.
+      // We store the failure type (a constant) for internal logic comparisons.
+      // Display messages are generated at render time in ghost-block.gjs.
+      if (showGhosts && !visible) {
+        entryClone.__failureType = !conditionsPassed
+          ? FAILURE_TYPE.CONDITION_FAILED
+          : FAILURE_TYPE.NO_VISIBLE_CHILDREN;
+      }
+
+      // In production mode, filter out invisible blocks
+      // In debug mode, keep all blocks for ghost rendering
+      if (visible || showGhosts) {
+        result.push(entryClone);
+      }
+    }
+
+    return result;
+  }
+
+  <template>
+    {{#if this.processedChildren.length}}
+      <div class={{this.safeOutletName}}>
+        <div class={{this.containerClassName}}>
+          <div class={{this.layoutClassName}}>
+            {{#each this.processedChildren key="key" as |child|}}
+              <child.Component />
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    {{/if}}
+  </template>
+}

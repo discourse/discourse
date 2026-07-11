@@ -529,4 +529,79 @@ module("Integration | ui-kit | DAsyncContent", function (hooks) {
       );
     });
   });
+
+  module("synchronous sources and cancellation", function () {
+    test("a synchronous return renders content with no loading phase", async function (assert) {
+      const load = () => ["a", "b"];
+
+      await render(
+        <template>
+          <DAsyncContent @asyncData={{load}}>
+            <:loading><div class="the-loading"></div></:loading>
+            <:content as |rows|>
+              <div class="the-content">{{rows.length}}</div>
+            </:content>
+          </DAsyncContent>
+        </template>
+      );
+
+      assert
+        .dom(".the-loading")
+        .doesNotExist("a synchronous value never shows the loading state");
+      assert
+        .dom(".the-content")
+        .hasText("2", "the synchronous value renders immediately as content");
+    });
+
+    test("passes an AbortSignal and aborts the prior request when the context changes", async function (assert) {
+      const signals = [];
+
+      class Host extends Component {
+        @tracked term = "a";
+
+        // Records each call's signal so we can assert the superseded request is
+        // aborted. Resolves immediately so `settled` never blocks on a waiter.
+        load = (context, { signal }) => {
+          signals.push(signal);
+          return Promise.resolve([]);
+        };
+
+        @action
+        retype() {
+          this.term = "ab";
+        }
+
+        <template>
+          <button
+            class="retype"
+            type="button"
+            {{on "click" this.retype}}
+          >x</button>
+          <DAsyncContent @asyncData={{this.load}} @context={{this.term}}>
+            <:content as |v|>{{v.length}}</:content>
+          </DAsyncContent>
+        </template>
+      }
+
+      await render(<template><Host /></template>);
+      assert.strictEqual(
+        signals.length,
+        1,
+        "the async function receives a signal"
+      );
+      assert.false(signals[0].aborted, "the first request starts un-aborted");
+
+      await click(".retype");
+      assert.strictEqual(
+        signals.length,
+        2,
+        "a context change starts a new request"
+      );
+      assert.true(
+        signals[0].aborted,
+        "the superseded request's signal is aborted"
+      );
+      assert.false(signals[1].aborted, "the latest request stays active");
+    });
+  });
 });

@@ -9,7 +9,7 @@ import { modifier } from "ember-modifier";
 import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { eq } from "discourse/truth-helpers";
-/** @type {import("discourse/ui-kit/d-async-content.gjs")} */
+/** @type {import("discourse/ui-kit/d-async-content.gts")} */
 import DAsyncContent from "discourse/ui-kit/d-async-content";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -292,7 +292,6 @@ export default class DIconGridPickerContent extends Component {
     >
       <div class="d-icon-grid-picker__filter-container">
         <DFilterInput
-          {{! @glint-expect-error: FilterInput lacks Element type declaration }}
           aria-label={{i18n "d_icon_grid_picker.search_placeholder"}}
           aria-controls="d-icon-grid-picker-listbox"
           placeholder={{i18n "d_icon_grid_picker.search_placeholder"}}
