@@ -1,8 +1,8 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import DAG from "discourse/lib/dag";
+import DAG, { type DAGPosition } from "discourse/lib/dag";
 
-function resolveKeys(dag) {
+function resolveKeys(dag: DAG) {
   return dag.resolve().map((entry) => entry.key);
 }
 
@@ -208,7 +208,7 @@ module("Unit | Lib | DAG", function (hooks) {
   });
 
   test("returns the entries in the map", function (assert) {
-    const entries = [
+    const entries: Array<[string, string, DAGPosition]> = [
       ["key1", "value1", { after: "key2" }],
       ["key2", "value2", { before: "key3" }],
       ["key3", "value3", { before: "key1" }],
