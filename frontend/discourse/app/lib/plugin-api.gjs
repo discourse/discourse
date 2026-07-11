@@ -3477,7 +3477,7 @@ class _PluginApi {
    * in future releases without prior notice. Use with caution in production environments.
    *
    * @param {string} outletName - The block outlet identifier
-   * @param {Array<import("discourse/blocks/block-outlet").LayoutEntry>} blocks - Array of layout entries
+   * @param {Array<import("discourse/blocks/types").LayoutEntry>} blocks - Array of layout entries
    *
    * @example
    * ```javascript
@@ -3546,7 +3546,7 @@ class _PluginApi {
    * @experimental This API is under active development and may change or be removed
    * in future releases without prior notice. Use with caution in production environments.
    *
-   * @param {typeof import("@glimmer/component").default | string} blockOrName - Block class or name string for lazy loading.
+   * @param {string | import("discourse/lib/blocks/-internals/types").BlockClass} blockOrName - Block class or name string for lazy loading.
    * @param {Function} [factory] - Factory function returning Promise<BlockClass> (required when first arg is name).
    *
    * @example Direct class registration
