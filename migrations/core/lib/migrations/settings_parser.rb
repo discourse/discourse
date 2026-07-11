@@ -7,7 +7,7 @@ module Migrations
     class ValidationError < StandardError
     end
 
-    REQUIRED_KEYS = %i[source_db_path output_db_path root_paths]
+    REQUIRED_KEYS = %i[intermediate_db files_db root_paths]
 
     def initialize(options)
       @options = options
@@ -47,7 +47,7 @@ module Migrations
     end
 
     def validate_paths
-      %i[source_db_path output_db_path].each do |key|
+      %i[intermediate_db files_db].each do |key|
         path = @options[key]
 
         next unless path

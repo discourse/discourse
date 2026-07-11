@@ -1,5 +1,8 @@
-source_db_path: "/path/to/your/db.sqlite3"
-output_db_path: "/path/to/your/files.sqlite3"
+# The IntermediateDB the converter produced; its `upload_sources` are read from here.
+intermediate_db: "/path/to/your/db.sqlite3"
+# The files database the run writes its upload results to. Same file importer.yml
+# calls `files_db`.
+files_db: "/path/to/your/files.sqlite3"
 
 root_paths:
   - "/path/to/your/files"
@@ -12,17 +15,19 @@ download_cache_path: "/path/to/downloaded/files"
 # is going, based on how busy the CPU and memory are and whether throughput is
 # still climbing. There is no thread count to set here.
 
-# Delete uploads from the output database that are not found in the source database.
+# Delete uploads from files.db that are not found in the IntermediateDB.
 delete_surplus_uploads: false
 
-# Delete uploads from the output database that do not have a Discourse upload record.
+# Delete uploads from files.db that do not have a Discourse upload record.
 delete_missing_uploads: false
 
 # Check if files are missing in the upload store and update the database accordingly.
 # Set to false and re-run the script afterwards if you want to create new uploads for missing files.
+# OR-ed with the `--fix-missing` flag: `true` here can't be turned off from the CLI.
 fix_missing: false
 
 # Create optimized images for post uploads and avatars.
+# OR-ed with the `--optimize` flag: `true` here can't be turned off from the CLI.
 create_optimized_images: false
 
 site_settings:
