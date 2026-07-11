@@ -9,6 +9,12 @@ module Migrations
         class S3UploadsConfigurationError < StandardError
         end
 
+        # A migration has to accept whatever the old site accepted.
+        AUTHORIZED_EXTENSIONS = "*"
+        MAX_ATTACHMENT_SIZE_KB = 102_400
+        MAX_IMAGE_SIZE_KB = 102_400
+        MAX_IMAGE_MEGAPIXELS = 150
+
         def initialize(options)
           @options = options
         end
@@ -32,10 +38,10 @@ module Migrations
 
         def configure_basic_uploads
           SiteSetting.clean_up_uploads = false
-          SiteSetting.authorized_extensions = @options[:authorized_extensions]
-          SiteSetting.max_attachment_size_kb = @options[:max_attachment_size_kb]
-          SiteSetting.max_image_size_kb = @options[:max_image_size_kb]
-          SiteSetting.max_image_megapixels = @options[:max_image_megapixels]
+          SiteSetting.authorized_extensions = AUTHORIZED_EXTENSIONS
+          SiteSetting.max_attachment_size_kb = MAX_ATTACHMENT_SIZE_KB
+          SiteSetting.max_image_size_kb = MAX_IMAGE_SIZE_KB
+          SiteSetting.max_image_megapixels = MAX_IMAGE_MEGAPIXELS
           SiteSetting.secure_uploads = @options[:secure_uploads]
           SiteSetting.s3_enable_access_control_tags = @options[:s3_enable_access_control_tags]
         end
@@ -62,6 +68,9 @@ module Migrations
           SiteSetting.s3_upload_bucket = @options[:s3_upload_bucket]
           SiteSetting.s3_region = @options[:s3_region]
           SiteSetting.s3_cdn_url = @options[:s3_cdn_url]
+          # Blank means AWS. Assigned even when the file omits it, so an endpoint
+          # left on the target site can't quietly send the run somewhere else.
+          SiteSetting.s3_endpoint = @options[:s3_endpoint].to_s
           SiteSetting.enable_s3_uploads = true
 
           if SiteSetting.enable_s3_uploads != true

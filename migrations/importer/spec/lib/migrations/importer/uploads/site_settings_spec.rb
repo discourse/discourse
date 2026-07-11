@@ -5,10 +5,6 @@ RSpec.describe Migrations::Importer::Uploads::SiteSettings do
 
   let(:options) do
     {
-      authorized_extensions: "*",
-      max_attachment_size_kb: 102_400,
-      max_image_size_kb: 102_400,
-      max_image_megapixels: 150,
       secure_uploads: false,
       s3_enable_access_control_tags: true,
       enable_s3_uploads: true,
@@ -61,9 +57,12 @@ RSpec.describe Migrations::Importer::Uploads::SiteSettings do
     stub_const("UploadCreator", upload_creator_class)
   end
 
-  it "rejects an S3 configuration whose uploads cannot be read without credentials" do
-    response = Net::HTTPForbidden.new("1.1", "403", "Forbidden")
+  def stub_public_access(response)
     allow(Net::HTTP).to receive(:get_response).and_return(response)
+  end
+
+  it "rejects an S3 configuration whose uploads cannot be read without credentials" do
+    stub_public_access(Net::HTTPForbidden.new("1.1", "403", "Forbidden"))
 
     expect { configure }.to raise_error(
       described_class::S3UploadsConfigurationError,
@@ -73,8 +72,7 @@ RSpec.describe Migrations::Importer::Uploads::SiteSettings do
 
   it "does not require anonymous access when secure uploads are enabled" do
     options[:secure_uploads] = true
-    response = Net::HTTPForbidden.new("1.1", "403", "Forbidden")
-    allow(Net::HTTP).to receive(:get_response).and_return(response)
+    stub_public_access(Net::HTTPForbidden.new("1.1", "403", "Forbidden"))
 
     expect { configure }.not_to raise_error
   end
@@ -95,5 +93,28 @@ RSpec.describe Migrations::Importer::Uploads::SiteSettings do
     options[:enable_s3_uploads] = false
 
     expect { configure }.to output(/enable_s3_uploads is false/).to_stderr
+  end
+
+  describe "the S3 endpoint" do
+    before { stub_public_access(Net::HTTPOK.new("1.1", "200", "OK")) }
+
+    it "points the store at the configured endpoint" do
+      options[:s3_endpoint] = "http://minio.local:9000"
+      configure
+      expect(SiteSetting.s3_endpoint).to eq("http://minio.local:9000")
+    end
+
+    it "clears an endpoint the target site carries when the settings file has none" do
+      SiteSetting.s3_endpoint = "http://minio.local:9000"
+      configure
+      expect(SiteSetting.s3_endpoint).to eq("")
+    end
+
+    it "leaves the endpoint alone when the run doesn't use S3" do
+      SiteSetting.s3_endpoint = "http://minio.local:9000"
+      options[:enable_s3_uploads] = false
+      expect { configure }.to output.to_stderr
+      expect(SiteSetting.s3_endpoint).to eq("http://minio.local:9000")
+    end
   end
 end
