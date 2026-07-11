@@ -1,4 +1,3 @@
-// @ts-check
 /**
  * Public API for the Discourse Block system.
  *
@@ -6,15 +5,15 @@
  * can use when working with blocks. Internal implementation details are kept
  * in the `-internals/` directory and should not be imported directly.
  *
- * @module discourse/lib/blocks
- *
  * @example
+ * ```javascript
  * import {
  *   VALID_BLOCK_NAME_PATTERN,
  *   parseBlockName,
  *   VALID_ARG_TYPES,
  *   matchValue,
  * } from "discourse/lib/blocks";
+ * ```
  */
 
 /* Pattern Validation */
@@ -35,10 +34,12 @@ export { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/-internals/patter
  * - **Theme blocks**: `theme:theme-name:block-name`
  *
  * @example
+ * ```
  * // Valid patterns:
  * "group"                      // Core block
  * "chat:message-widget"        // Plugin block
  * "theme:tactile:hero-banner"  // Theme block
+ * ```
  */
 export { VALID_NAMESPACED_BLOCK_PATTERN } from "discourse/lib/blocks/-internals/patterns";
 
@@ -46,6 +47,7 @@ export { VALID_NAMESPACED_BLOCK_PATTERN } from "discourse/lib/blocks/-internals/
  * Parses a full block name into its components.
  *
  * @example
+ * ```
  * parseBlockName("group")
  * // => { type: "core", namespace: null, name: "group" }
  *
@@ -54,6 +56,7 @@ export { VALID_NAMESPACED_BLOCK_PATTERN } from "discourse/lib/blocks/-internals/
  *
  * parseBlockName("theme:tactile:hero-banner")
  * // => { type: "theme", namespace: "tactile", name: "hero-banner" }
+ * ```
  */
 export { parseBlockName } from "discourse/lib/blocks/-internals/patterns";
 
@@ -65,11 +68,13 @@ export { parseBlockName } from "discourse/lib/blocks/-internals/patterns";
  * instead of throwing an error.
  *
  * @example
+ * ```
  * parseBlockReference("chat:widget?")
  * // => { name: "chat:widget", optional: true }
  *
  * parseBlockReference("hero-banner")
  * // => { name: "hero-banner", optional: false }
+ * ```
  */
 export { parseBlockReference } from "discourse/lib/blocks/-internals/patterns";
 
@@ -114,10 +119,12 @@ export { VALID_PAGE_TYPES } from "discourse/lib/blocks/-internals/matching/page-
  * at any level of the path.
  *
  * @example
+ * ```
  * const user = { profile: { name: "Alice", settings: { theme: "dark" } } };
  * getByPath(user, "profile.name"); // "Alice"
  * getByPath(user, "profile.settings.theme"); // "dark"
  * getByPath(user, "profile.missing"); // undefined
+ * ```
  */
 export { getByPath } from "discourse/lib/blocks/-internals/utils";
 
@@ -134,9 +141,11 @@ export { getByPath } from "discourse/lib/blocks/-internals/utils";
  * - ANY (OR): `{ any: [...] }` matches if actual matches any spec in array
  *
  * @example
+ * ```
  * matchValue({ actual: 5, expected: 5 }) // true
  * matchValue({ actual: 5, expected: [3, 5, 7] }) // true (OR)
  * matchValue({ actual: "hello", expected: /^hel/ }) // true
  * matchValue({ actual: 5, expected: { not: 3 } }) // true
+ * ```
  */
 export { matchValue } from "discourse/lib/blocks/-internals/matching/value-matcher";
