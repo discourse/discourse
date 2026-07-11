@@ -1,8 +1,7 @@
 # The IntermediateDB the converter produced; its `upload_sources` are read from here.
 intermediate_db: "/shared/import/intermediate.db"
-
-# The files database this run writes its results to (the same file `import.yml`
-# calls `files_db`).
+# The files database the run writes its upload results to. Same file importer.yml
+# calls `files_db`.
 files_db: "/shared/import/files.db"
 
 root_paths:
@@ -23,9 +22,11 @@ delete_surplus_uploads: false
 delete_missing_uploads: false
 
 # Check for files missing from the upload store and recreate them during this run.
+# OR-ed with the `--fix-missing` flag: `true` here can't be turned off from the CLI.
 fix_missing: false
 
 # Create optimized images for post uploads and avatars.
+# OR-ed with the `--optimize` flag: `true` here can't be turned off from the CLI.
 create_optimized_images: false
 
 site_settings:
