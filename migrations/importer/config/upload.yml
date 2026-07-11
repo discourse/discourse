@@ -1,19 +1,25 @@
 # The IntermediateDB the converter produced; its `upload_sources` are read from here.
-intermediate_db: "/path/to/your/db.sqlite3"
-# The files database the run writes its upload results to. Same file importer.yml
-# calls `files_db`.
-files_db: "/path/to/your/files.sqlite3"
+intermediate_db: "/path/to/your/intermediate.db"
 
+# Directories the source files live under.
 root_paths:
   - "/path/to/your/files"
   - "/path/to/more/files"
 
-# Files that are downloaded from URLs are cached in this directory.
-download_cache_path: "/path/to/downloaded/files"
+# The files database the run writes its upload results to (the same file
+# `importer.yml` calls `files_db`). Defaults to `files.db` next to the
+# intermediate_db above.
+#files_db: "/path/to/your/files.db"
 
-# The number of worker threads is chosen automatically and adjusted while the run
-# is going, based on how busy the CPU and memory are and whether throughput is
-# still climbing. There is no thread count to set here.
+# Where files fetched from URLs are cached. Defaults to a `downloads` directory
+# next to the intermediate_db above.
+#download_cache_path: "/path/to/downloaded/files"
+
+# Sometimes a file can be found at one of several locations. List path
+# transformations to try; the first that resolves to an existing file wins.
+#path_replacements:
+#  - ["/foo/", "/bar/"]
+#  - ["/foo/", "/bar/baz/"]
 
 # Delete uploads from files.db that are not found in the IntermediateDB.
 delete_surplus_uploads: false
@@ -21,22 +27,9 @@ delete_surplus_uploads: false
 # Delete uploads from files.db that do not have a Discourse upload record.
 delete_missing_uploads: false
 
-# Check if files are missing in the upload store and update the database accordingly.
-# Set to false and re-run the script afterwards if you want to create new uploads for missing files.
-# OR-ed with the `--fix-missing` flag: `true` here can't be turned off from the CLI.
-fix_missing: false
-
-# Create optimized images for post uploads and avatars.
-# OR-ed with the `--optimize` flag: `true` here can't be turned off from the CLI.
-create_optimized_images: false
-
+# A staging import runs against sites whose stored settings can't be trusted, so
+# the upload store is configured explicitly here.
 site_settings:
-  authorized_extensions: "*"
-  max_attachment_size_kb: 102_400
-  max_image_size_kb: 102_400
-
-  # Largest image the importer will accept without downsizing (in megapixels).
-  max_image_megapixels: 150
   # Set to true when importing into a site that has secure uploads enabled.
   secure_uploads: false
   # Set to true when the S3 bucket uses object ACLs and tags for access control.
@@ -49,13 +42,6 @@ site_settings:
   s3_secret_access_key: "your-secret-access-key"
   s3_cdn_url: "https://your-cdn-url.com"
 
-  # Set this to true if the site is a multisite and configure the `multisite_db_name` accordingly
+  # Set this to true if the site is a multisite and configure `multisite_db_name` accordingly.
   multisite: false
   multisite_db_name: "default"
-
-# Sometimes a file can be found at one of many locations. Here's a list of transformations that can
-# be applied to the path to try and find the file. The first transformation that results in a file
-# being found will be used.
-path_replacements:
-#  - ["/foo/", "/bar"]
-#  - ["/foo/", "/bar/baz/"]
