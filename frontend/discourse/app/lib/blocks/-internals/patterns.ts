@@ -1,8 +1,5 @@
-// @ts-check
 /**
  * Pattern constants for block name validation.
- *
- * @module discourse/lib/blocks/-internals/patterns
  */
 
 /**
@@ -14,8 +11,6 @@
  *
  * A depth of 20 is generous for real-world use cases while protecting against
  * malicious or buggy configurations that could cause infinite recursion.
- *
- * @type {number}
  */
 export const MAX_LAYOUT_DEPTH = 20;
 
@@ -27,8 +22,6 @@ export const MAX_LAYOUT_DEPTH = 20;
  * protecting against malicious or buggy configurations.
  *
  * This applies to the full namespaced name (e.g., "theme:my-theme:my-block").
- *
- * @type {number}
  */
 export const MAX_BLOCK_NAME_LENGTH = 100;
 
@@ -39,8 +32,6 @@ export const MAX_BLOCK_NAME_LENGTH = 100;
  *
  * Used in layout validation and block registration to identify optional
  * blocks that aren't registered and should be skipped during validation and rendering.
- *
- * @type {symbol}
  */
 export const OPTIONAL_MISSING = Symbol("optional-missing");
 
@@ -65,13 +56,30 @@ export const FAILURE_TYPE = Object.freeze({
 });
 
 /**
+ * A resolved-block marker indicating an optional block reference (`name?`)
+ * that isn't registered. Returned by resolution functions such as
+ * `tryResolveBlock()` in place of a block class.
+ */
+export interface OptionalMissingMarker {
+  optionalMissing: typeof OPTIONAL_MISSING;
+  name: string;
+}
+
+/**
  * Checks if a resolved block is an optional missing block marker.
  *
- * @param {*} resolvedBlock - The result from tryResolveBlock.
- * @returns {boolean} True if the block is an optional missing marker.
+ * @param resolvedBlock - The result from tryResolveBlock.
+ * @returns True if the block is an optional missing marker.
  */
-export function isOptionalMissing(resolvedBlock) {
-  return resolvedBlock?.optionalMissing === OPTIONAL_MISSING;
+export function isOptionalMissing(
+  resolvedBlock: unknown
+): resolvedBlock is OptionalMissingMarker {
+  return (
+    typeof resolvedBlock === "object" &&
+    resolvedBlock !== null &&
+    "optionalMissing" in resolvedBlock &&
+    resolvedBlock.optionalMissing === OPTIONAL_MISSING
+  );
 }
 
 /**
@@ -102,6 +110,7 @@ export const VALID_BLOCK_ID_PATTERN = VALID_BLOCK_NAME_PATTERN;
  * numbers, and hyphens.
  *
  * @example
+ * ```
  * // Valid patterns:
  * "group"                      // Core block
  * "chat:message-widget"        // Plugin block
@@ -111,28 +120,28 @@ export const VALID_BLOCK_ID_PATTERN = VALID_BLOCK_NAME_PATTERN;
  * "Theme:Name:block"           // Uppercase not allowed
  * "theme:block"                // Theme requires namespace segment
  * "my_block"                   // Underscores not allowed
+ * ```
  */
 export const VALID_NAMESPACED_BLOCK_PATTERN =
   /^(?:theme:[a-z][a-z0-9-]*:[a-z][a-z0-9-]*|(?!theme:)[a-z][a-z0-9-]*:[a-z][a-z0-9-]*|[a-z][a-z0-9-]*)$/;
 
 /**
  * The parsed components of a block name.
- *
- * @typedef {{
- *   type: "core"|"plugin"|"theme",
- *   namespace: string|null,
- *   name: string
- * }} ParsedBlockName
  */
+export interface ParsedBlockName {
+  type: "core" | "plugin" | "theme";
+  namespace: string | null;
+  name: string;
+}
 
 /**
  * Parses a full block name into its components.
  *
- * @param {string} fullName - The full block name.
- * @returns {ParsedBlockName|null}
- *   An object with the parsed components, or `null` if the name is invalid.
+ * @param fullName - The full block name.
+ * @returns An object with the parsed components, or `null` if the name is invalid.
  *
  * @example
+ * ```
  * parseBlockName("group")
  * // => { type: "core", namespace: null, name: "group" }
  *
@@ -144,8 +153,9 @@ export const VALID_NAMESPACED_BLOCK_PATTERN =
  *
  * parseBlockName("Invalid_Name")
  * // => null
+ * ```
  */
-export function parseBlockName(fullName) {
+export function parseBlockName(fullName: string): ParsedBlockName | null {
   // Theme: theme:namespace:name
   const themeMatch = fullName.match(
     /^theme:([a-z][a-z0-9-]*):([a-z][a-z0-9-]*)$/
@@ -174,6 +184,14 @@ export function parseBlockName(fullName) {
 }
 
 /**
+ * The result of parsing a block reference string.
+ */
+export interface ParsedBlockReference<Name = string | object> {
+  name: Name;
+  optional: boolean;
+}
+
+/**
  * Parses a block reference string to extract the block name and optional flag.
  *
  * Block references can be marked as optional by appending a `?` suffix to the
@@ -185,20 +203,30 @@ export function parseBlockName(fullName) {
  * - Plugin: `"plugin:block"` or `"plugin:block?"`
  * - Theme: `"theme:namespace:block"` or `"theme:namespace:block?"`
  *
- * @param {string|Object} blockRef - The block reference. If a string, may have an
- *   optional `?` suffix. Non-string references (e.g., component classes) are
- *   returned as-is in the `name` property with `optional: false`.
- * @returns {{ name: string|Object, optional: boolean }} Parsed result with the clean
- *   block name (or original reference) and whether it's optional.
+ * @param blockRef - The block reference. If a string, may have an optional `?`
+ *   suffix. Non-string references (e.g., component classes) are returned as-is
+ *   in the `name` property with `optional: false`.
+ * @returns Parsed result with the clean block name (or original reference) and
+ *   whether it's optional.
  *
  * @example
+ * ```
  * parseBlockReference("chat:widget?")
  * // => { name: "chat:widget", optional: true }
  *
  * parseBlockReference("hero-banner")
  * // => { name: "hero-banner", optional: false }
+ * ```
  */
-export function parseBlockReference(blockRef) {
+export function parseBlockReference(
+  blockRef: string
+): ParsedBlockReference<string>;
+export function parseBlockReference<T extends object>(
+  blockRef: T
+): ParsedBlockReference<T>;
+export function parseBlockReference(
+  blockRef: string | object
+): ParsedBlockReference {
   if (typeof blockRef === "string" && blockRef.endsWith("?")) {
     return { name: blockRef.slice(0, -1), optional: true };
   }

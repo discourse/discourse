@@ -1,4 +1,3 @@
-// @ts-check
 /**
  * Cross-arg constraint validation for blocks.
  *
@@ -11,17 +10,19 @@
  * - allOrNone: Either all or none of the specified args must be provided
  * - atMostOne: At most one of the specified args may be provided (0 or 1)
  * - requires: If a dependent arg is provided, its required arg must also be provided
- *
- * @module discourse/lib/blocks/-internals/validation/constraints
  */
-
+import type {
+  ArgSchema,
+  BlockConstraints,
+  BlockValidateFn,
+} from "discourse/blocks/types";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
  * Valid constraint types for cross-arg validation.
  */
-export const VALID_CONSTRAINT_TYPES = Object.freeze([
+export const VALID_CONSTRAINT_TYPES: readonly string[] = Object.freeze([
   "atLeastOne",
   "exactlyOne",
   "allOrNone",
@@ -32,10 +33,10 @@ export const VALID_CONSTRAINT_TYPES = Object.freeze([
 /**
  * Formats an array of arg names as a quoted, comma-separated list.
  *
- * @param {string[]} argNames - Array of argument names.
- * @returns {string} Formatted string like `"a", "b", "c"`.
+ * @param argNames - Array of argument names.
+ * @returns Formatted string like `"a", "b", "c"`.
  */
-function formatArgList(argNames) {
+function formatArgList(argNames: string[]): string {
   return argNames.map((n) => `"${n}"`).join(", ");
 }
 
@@ -48,19 +49,23 @@ function formatArgList(argNames) {
  * - Incompatible constraints (exactlyOne + allOrNone, exactlyOne + atLeastOne)
  * - Vacuous constraints (constraints rendered always true/false by defaults)
  *
- * @param {Object} constraints - The constraints object from decorator options.
- * @param {Object} argsSchema - The args schema object from decorator options.
- * @param {string} blockName - Block name for error messages.
+ * @param constraints - The constraints object from decorator options.
+ * @param argsSchema - The args schema object from decorator options.
+ * @param blockName - Block name for error messages.
  */
-export function validateConstraintsSchema(constraints, argsSchema, blockName) {
+export function validateConstraintsSchema(
+  constraints: BlockConstraints | null | undefined,
+  argsSchema: Record<string, ArgSchema> | null | undefined,
+  blockName: string
+): void {
   if (!constraints || typeof constraints !== "object") {
     return;
   }
 
   const declaredArgs = argsSchema ? Object.keys(argsSchema) : [];
-  const constraintsByArgs = new Map();
+  const constraintsByArgs = new Map<string, string[]>();
 
-  for (const [constraintType, argNames] of Object.entries(constraints)) {
+  for (const [constraintType, argNamesValue] of Object.entries(constraints)) {
     // Check for unknown constraint types with fuzzy matching
     if (!VALID_CONSTRAINT_TYPES.includes(constraintType)) {
       const suggestion = formatWithSuggestion(
@@ -77,9 +82,9 @@ export function validateConstraintsSchema(constraints, argsSchema, blockName) {
     // Handle requires constraint (object format instead of array)
     if (constraintType === "requires") {
       if (
-        typeof argNames !== "object" ||
-        Array.isArray(argNames) ||
-        argNames == null
+        typeof argNamesValue !== "object" ||
+        Array.isArray(argNamesValue) ||
+        argNamesValue == null
       ) {
         raiseBlockError(
           `Block "${blockName}": constraint "requires" must be an object mapping dependent args to required args.`
@@ -87,7 +92,7 @@ export function validateConstraintsSchema(constraints, argsSchema, blockName) {
         continue;
       }
 
-      for (const [dependentArg, requiredArg] of Object.entries(argNames)) {
+      for (const [dependentArg, requiredArg] of Object.entries(argNamesValue)) {
         // Validate dependent arg exists
         if (!declaredArgs.includes(dependentArg)) {
           const suggestion = formatWithSuggestion(dependentArg, declaredArgs);
@@ -114,12 +119,17 @@ export function validateConstraintsSchema(constraints, argsSchema, blockName) {
     }
 
     // Constraint value must be an array
-    if (!Array.isArray(argNames)) {
+    if (!Array.isArray(argNamesValue)) {
       raiseBlockError(
         `Block "${blockName}": constraint "${constraintType}" must be an array of arg names.`
       );
       continue;
     }
+
+    // The schema authoring contract is an array of arg-name strings; the
+    // per-element check just below is defensive against non-TypeScript
+    // (plugin/theme) callers passing a malformed array at runtime.
+    const argNames = argNamesValue as string[];
 
     // Constraint array must have at least 2 elements
     if (argNames.length < 2) {
@@ -151,7 +161,8 @@ export function validateConstraintsSchema(constraints, argsSchema, blockName) {
     if (!constraintsByArgs.has(sortedArgs)) {
       constraintsByArgs.set(sortedArgs, []);
     }
-    constraintsByArgs.get(sortedArgs).push(constraintType);
+    // Guaranteed to be set by the `.has()`/`.set()` pair above.
+    constraintsByArgs.get(sortedArgs)!.push(constraintType);
 
     // Check for vacuous constraints (always true or always false due to defaults)
     if (argsSchema) {
@@ -170,17 +181,17 @@ export function validateConstraintsSchema(constraints, argsSchema, blockName) {
 /**
  * Checks if a constraint is vacuous (always true or always false) due to default values.
  *
- * @param {string} constraintType - The constraint type.
- * @param {string[]} argNames - The arg names in the constraint.
- * @param {Object} argsSchema - The args schema.
- * @param {string} blockName - Block name for error messages.
+ * @param constraintType - The constraint type.
+ * @param argNames - The arg names in the constraint.
+ * @param argsSchema - The args schema.
+ * @param blockName - Block name for error messages.
  */
 function checkVacuousConstraint(
-  constraintType,
-  argNames,
-  argsSchema,
-  blockName
-) {
+  constraintType: string,
+  argNames: string[],
+  argsSchema: Record<string, ArgSchema>,
+  blockName: string
+): void {
   const argsWithDefaults = argNames.filter(
     (name) => argsSchema[name]?.default !== undefined
   );
@@ -240,11 +251,15 @@ function checkVacuousConstraint(
 /**
  * Checks for incompatible constraint types on the same arg set.
  *
- * @param {string[]} constraintTypes - The constraint types applied to the same args.
- * @param {string} argSet - The sorted arg names (for error message).
- * @param {string} blockName - Block name for error messages.
+ * @param constraintTypes - The constraint types applied to the same args.
+ * @param argSet - The sorted arg names (for error message).
+ * @param blockName - Block name for error messages.
  */
-function checkIncompatibleConstraints(constraintTypes, argSet, blockName) {
+function checkIncompatibleConstraints(
+  constraintTypes: string[],
+  argSet: string,
+  blockName: string
+): void {
   const argList = argSet
     .split(",")
     .map((n) => `"${n}"`)
@@ -299,26 +314,39 @@ function checkIncompatibleConstraints(constraintTypes, argSet, blockName) {
  * Validates constraints against the provided args at runtime.
  * Called after defaults are applied.
  *
- * @param {Object} constraints - The constraints from block metadata.
- * @param {Object} args - The resolved args (with defaults applied).
- * @param {string} blockName - Block name for error messages.
- * @returns {string|null} Error message if validation fails, null otherwise.
+ * @param constraints - The constraints from block metadata.
+ * @param args - The resolved args (with defaults applied).
+ * @param blockName - Block name for error messages.
+ * @returns Error message if validation fails, null otherwise.
  */
-export function validateConstraints(constraints, args, blockName) {
+export function validateConstraints(
+  constraints: BlockConstraints | null | undefined,
+  args: Record<string, unknown>,
+  blockName: string
+): string | null {
   if (!constraints || typeof constraints !== "object") {
     return null;
   }
 
-  for (const [constraintType, argNames] of Object.entries(constraints)) {
-    let error = null;
+  for (const [constraintType, argNamesValue] of Object.entries(constraints)) {
+    let error: string | null = null;
 
     // Handle requires constraint (object format)
     if (constraintType === "requires") {
-      if (typeof argNames === "object" && !Array.isArray(argNames)) {
-        error = validateRequires(argNames, args, blockName);
+      if (
+        typeof argNamesValue === "object" &&
+        argNamesValue !== null &&
+        !Array.isArray(argNamesValue)
+      ) {
+        error = validateRequires(
+          argNamesValue as Record<string, string>,
+          args,
+          blockName
+        );
       }
-    } else if (Array.isArray(argNames)) {
+    } else if (Array.isArray(argNamesValue)) {
       // Handle array-based constraints
+      const argNames = argNamesValue as string[];
       switch (constraintType) {
         case "atLeastOne":
           error = validateAtLeastOne(argNames, args, blockName);
@@ -346,12 +374,16 @@ export function validateConstraints(constraints, args, blockName) {
 /**
  * Validates that at least one of the specified args is provided.
  *
- * @param {string[]} argNames - The arg names to check.
- * @param {Object} args - The resolved args.
- * @param {string} blockName - The block name for error messages.
- * @returns {string|null} Error message if validation fails, null otherwise.
+ * @param argNames - The arg names to check.
+ * @param args - The resolved args.
+ * @param blockName - The block name for error messages.
+ * @returns Error message if validation fails, null otherwise.
  */
-function validateAtLeastOne(argNames, args, blockName) {
+function validateAtLeastOne(
+  argNames: string[],
+  args: Record<string, unknown>,
+  blockName: string
+): string | null {
   const providedCount = argNames.filter(
     (name) => args[name] !== undefined
   ).length;
@@ -367,12 +399,16 @@ function validateAtLeastOne(argNames, args, blockName) {
 /**
  * Validates that exactly one of the specified args is provided.
  *
- * @param {string[]} argNames - The arg names to check.
- * @param {Object} args - The resolved args.
- * @param {string} blockName - The block name for error messages.
- * @returns {string|null} Error message if validation fails, null otherwise.
+ * @param argNames - The arg names to check.
+ * @param args - The resolved args.
+ * @param blockName - The block name for error messages.
+ * @returns Error message if validation fails, null otherwise.
  */
-function validateExactlyOne(argNames, args, blockName) {
+function validateExactlyOne(
+  argNames: string[],
+  args: Record<string, unknown>,
+  blockName: string
+): string | null {
   const providedArgs = argNames.filter((name) => args[name] !== undefined);
   const argList = formatArgList(argNames);
 
@@ -391,12 +427,16 @@ function validateExactlyOne(argNames, args, blockName) {
 /**
  * Validates that either all or none of the specified args are provided.
  *
- * @param {string[]} argNames - The arg names to check.
- * @param {Object} args - The resolved args.
- * @param {string} blockName - The block name for error messages.
- * @returns {string|null} Error message if validation fails, null otherwise.
+ * @param argNames - The arg names to check.
+ * @param args - The resolved args.
+ * @param blockName - The block name for error messages.
+ * @returns Error message if validation fails, null otherwise.
  */
-function validateAllOrNone(argNames, args, blockName) {
+function validateAllOrNone(
+  argNames: string[],
+  args: Record<string, unknown>,
+  blockName: string
+): string | null {
   const providedCount = argNames.filter(
     (name) => args[name] !== undefined
   ).length;
@@ -420,12 +460,16 @@ function validateAllOrNone(argNames, args, blockName) {
 /**
  * Validates that at most one of the specified args is provided (0 or 1).
  *
- * @param {string[]} argNames - The arg names to check.
- * @param {Object} args - The resolved args.
- * @param {string} blockName - The block name for error messages.
- * @returns {string|null} Error message if validation fails, null otherwise.
+ * @param argNames - The arg names to check.
+ * @param args - The resolved args.
+ * @param blockName - The block name for error messages.
+ * @returns Error message if validation fails, null otherwise.
  */
-function validateAtMostOne(argNames, args, blockName) {
+function validateAtMostOne(
+  argNames: string[],
+  args: Record<string, unknown>,
+  blockName: string
+): string | null {
   const providedArgs = argNames.filter((name) => args[name] !== undefined);
 
   if (providedArgs.length > 1) {
@@ -440,12 +484,16 @@ function validateAtMostOne(argNames, args, blockName) {
 /**
  * Validates that if a dependent arg is provided, its required arg must also be provided.
  *
- * @param {Object} requiresMap - Object mapping dependent args to required args.
- * @param {Object} args - The resolved args.
- * @param {string} blockName - The block name for error messages.
- * @returns {string|null} Error message if validation fails, null otherwise.
+ * @param requiresMap - Object mapping dependent args to required args.
+ * @param args - The resolved args.
+ * @param blockName - The block name for error messages.
+ * @returns Error message if validation fails, null otherwise.
  */
-function validateRequires(requiresMap, args, blockName) {
+function validateRequires(
+  requiresMap: Record<string, string>,
+  args: Record<string, unknown>,
+  blockName: string
+): string | null {
   for (const [dependentArg, requiredArg] of Object.entries(requiresMap)) {
     if (args[dependentArg] !== undefined && args[requiredArg] === undefined) {
       return `Block "${blockName}": "${dependentArg}" requires "${requiredArg}" to be specified.`;
@@ -457,11 +505,14 @@ function validateRequires(requiresMap, args, blockName) {
 /**
  * Runs a custom validation function if provided.
  *
- * @param {Function} validateFn - The custom validate function.
- * @param {Object} args - The resolved args (with defaults applied).
- * @returns {string[]|null} Array of error messages if validation fails, null otherwise.
+ * @param validateFn - The custom validate function.
+ * @param args - The resolved args (with defaults applied).
+ * @returns Array of error messages if validation fails, null otherwise.
  */
-export function runCustomValidation(validateFn, args) {
+export function runCustomValidation(
+  validateFn: BlockValidateFn | null | undefined,
+  args: Record<string, unknown>
+): string[] | null {
   if (typeof validateFn !== "function") {
     return null;
   }
@@ -478,8 +529,13 @@ export function runCustomValidation(validateFn, args) {
   }
 
   if (Array.isArray(result)) {
+    // `Array.isArray()` narrows to the (necessarily untyped) built-in `any[]`;
+    // re-declare it as `unknown[]` so nothing downstream carries an `any`.
+    const resultArray = result as unknown[];
     // Filter out non-string values and empty strings
-    const errors = result.filter((e) => typeof e === "string" && e.length > 0);
+    const errors = resultArray.filter(
+      (e): e is string => typeof e === "string" && e.length > 0
+    );
     return errors.length > 0 ? errors : null;
   }
 

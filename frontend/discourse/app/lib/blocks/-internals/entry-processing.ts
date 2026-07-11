@@ -1,4 +1,3 @@
-// @ts-check
 /**
  * Block Entry Processing
  *
@@ -6,12 +5,11 @@
  * renderable components. These functions iterate through pre-processed block
  * entries and transform them into curried Glimmer components.
  *
- * The functions use dependency injection for the authorization-dependent operation
- * `createChildBlockFn` to maintain the authorization model in the main block-outlet
- * module.
- *
- * @module discourse/lib/blocks/-internals/entry-processing
+ * The functions use dependency injection for the authorization-dependent
+ * operation `createChildBlockFn` to keep the authorization model in the main
+ * block-outlet module.
  */
+import type Owner from "@ember/owner";
 import {
   buildContainerPath,
   createGhostBlock,
@@ -20,42 +18,83 @@ import {
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { isOptionalMissing } from "discourse/lib/blocks/-internals/patterns";
 import { tryResolveBlock } from "discourse/lib/blocks/-internals/registry/block";
+import type {
+  BlockClass,
+  BlockEntry,
+  ChildBlockResult,
+} from "discourse/lib/blocks/-internals/types";
 import { shallowArgsEqual } from "discourse/lib/blocks/-internals/utils";
 
+/** Rendering context threaded through block processing for a single entry. */
+interface DebugContext {
+  /** Stable unique key for this block. */
+  key: string;
+
+  /** Where the block is rendered (used for tooltip display). */
+  displayHierarchy: string;
+
+  /** The outlet name, used for wrapper class generation. */
+  outletName: string;
+
+  /** The container's full path, used for children's hierarchy. */
+  containerPath?: string;
+
+  /** The block's conditions. */
+  conditions?: BlockEntry["conditions"];
+
+  /** Outlet arguments passed from the parent. */
+  outletArgs: Record<string, unknown>;
+
+  /** Pre-processed children for container blocks. */
+  processedChildren?: ChildBlockResult[];
+}
+
 /**
- * Gets or creates a curried component for a leaf block, using cache when possible.
+ * Creates a renderable child block. Injected from `block-outlet.gts` so the
+ * authorization-token logic stays in that module.
+ */
+export type CreateChildBlockFn = (
+  entry: BlockEntry,
+  owner: Owner,
+  debugContext: DebugContext
+) => ChildBlockResult;
+
+/** A cached leaf-block entry, keyed by the block's stable key. */
+interface LeafCacheEntry {
+  ComponentClass: BlockClass;
+  args?: Record<string, unknown>;
+  result: ChildBlockResult;
+}
+
+export type LeafCache = Map<string, LeafCacheEntry>;
+
+/**
+ * Gets or creates a curried component for a leaf block, using the cache when
+ * possible.
  *
  * Only leaf blocks (blocks without children) are cached. Container blocks are
  * always recreated because their children's visibility may change between
- * renders, and caching would result in stale children being displayed.
+ * renders, and caching would show stale children.
  *
- * Cache hit conditions:
- * 1. The component class must be the same reference
- * 2. The args object must be shallowly equal
+ * Cache hit conditions: the component class is the same reference, and the args
+ * object is shallowly equal.
  *
- * @param {Map<string, {ComponentClass: typeof import("@glimmer/component").default, args: Object, result: Object}>} cache - The component cache keyed by stable block keys.
- * @param {Object} entry - The block entry with __stableKey and optional children.
- * @param {typeof import("@glimmer/component").default} resolvedBlock - The resolved block component class.
- * @param {Object} debugContext - Debug context for visual overlay and hierarchy tracking.
- * @param {string} debugContext.key - Stable unique key for this block.
- * @param {string} debugContext.displayHierarchy - Where the block is rendered (for tooltip display).
- * @param {string} debugContext.outletName - The outlet name for wrapper class generation.
- * @param {string} [debugContext.containerPath] - Container's full path (for children's __hierarchy).
- * @param {Object} [debugContext.conditions] - The block's conditions.
- * @param {Object} debugContext.outletArgs - Outlet arguments passed from the parent.
- * @param {Array<Object>} [debugContext.processedChildren] - Pre-processed children for container blocks.
- * @param {import("@ember/owner").default} owner - The application owner for service lookup.
- * @param {Function} createChildBlockFn - Function to create child block components (injected from block-outlet.gjs).
- * @returns {ChildBlockResult} The cached or newly created component data with stable key for list rendering.
+ * @param cache - The component cache keyed by stable block keys.
+ * @param entry - The block entry with `__stableKey` and optional children.
+ * @param resolvedBlock - The resolved block component class.
+ * @param debugContext - Debug context for the visual overlay and hierarchy tracking.
+ * @param owner - The application owner for service lookup.
+ * @param createChildBlockFn - Creates child block components (injected from block-outlet).
+ * @returns The cached or newly created component data.
  */
 function getOrCreateLeafBlockComponent(
-  cache,
-  entry,
-  resolvedBlock,
-  debugContext,
-  owner,
-  createChildBlockFn
-) {
+  cache: LeafCache,
+  entry: BlockEntry,
+  resolvedBlock: BlockClass,
+  debugContext: DebugContext,
+  owner: Owner,
+  createChildBlockFn: CreateChildBlockFn
+): ChildBlockResult {
   const { key } = debugContext;
   const cachedEntry = cache.get(key);
   const hasChildren = entry.children?.length > 0;
@@ -71,14 +110,14 @@ function getOrCreateLeafBlockComponent(
     return cachedEntry.result;
   }
 
-  // Create new curried component
+  // Create new curried component.
   const result = createChildBlockFn(
     { ...entry, block: resolvedBlock },
     owner,
     debugContext
   );
 
-  // Cache leaf blocks for future reuse
+  // Cache leaf blocks for future reuse.
   if (!hasChildren) {
     cache.set(key, {
       ComponentClass: resolvedBlock,
@@ -90,46 +129,42 @@ function getOrCreateLeafBlockComponent(
   return result;
 }
 
+/** Options for {@link processBlockEntries}. */
+interface ProcessBlockEntriesOptions {
+  /** Pre-processed block entries with visibility metadata. */
+  entries: BlockEntry[];
+
+  /** Component cache keyed by stable block keys. */
+  cache: LeafCache;
+
+  /** Application owner for service lookup. */
+  owner: Owner;
+
+  /** Current hierarchy path (e.g. "homepage-blocks/section-1"). */
+  baseHierarchy: string;
+
+  /** The outlet name, used for CSS class generation. */
+  outletName: string;
+
+  /** Arguments passed from the outlet to blocks. */
+  outletArgs: Record<string, unknown>;
+
+  /** Whether to render ghost blocks for invisible entries. */
+  showGhosts: boolean;
+
+  /** Whether debug logging is active. */
+  isLoggingEnabled: boolean;
+
+  /** Creates child block components (injected from block-outlet). */
+  createChildBlockFn: CreateChildBlockFn;
+}
+
 /**
- * Processes block entries and creates renderable child components.
+ * Processes block entries and creates renderable child components, handling
+ * ghost blocks for debug mode and optional missing blocks.
  *
- * This function iterates through a list of pre-processed block entries and
- * transforms them into renderable components, handling ghost blocks for
- * debug mode and optional missing blocks.
- *
- * @typedef {Object} BlockEntry
- * @property {string|typeof import("@glimmer/component").default} block - Block reference (string name or class).
- * @property {Object} [args] - Arguments to pass to the block.
- * @property {Object} [containerArgs] - Values for parent container's childArgs schema.
- * @property {Array<BlockEntry>} [children] - Nested block entries for containers.
- * @property {Object|Array<Object>} [conditions] - Conditions that must pass for block to render.
- * @property {string} [classNames] - Additional CSS classes for the block wrapper.
- * @property {string} [id] - Unique identifier for BEM styling and targeting.
- * @property {boolean} __visible - Whether the block passed condition evaluation.
- * @property {number} __stableKey - Stable key assigned at registration time.
- * @property {string} [__failureType] - The failure type constant (debug mode only).
- * @property {string} [__failureReason] - Custom failure reason message (debug mode only).
- *
- * @typedef {Object} ChildBlockResult
- * @property {import("ember-curry-component").CurriedComponent} Component - Curried component ready to render.
- * @property {Object} [containerArgs] - Values for parent container's childArgs schema.
- * @property {string} key - Stable unique key for list rendering.
- * @property {boolean} [isGhost] - True if this is a ghost block (debug mode only).
- * @property {(reason: string) => ChildBlockResult|null} [asGhost] - Returns a ghost version of this child with the given reason.
- *   For regular children, creates a new ghost component (or null if debug mode is disabled).
- *   For ghost children, returns self (no-op).
- *
- * @param {Object} options - Rendering options.
- * @param {Array<BlockEntry>} options.entries - Pre-processed block entries with visibility metadata.
- * @param {Map<string, {ComponentClass: typeof import("@glimmer/component").default, args: Object, result: ChildBlockResult}>} options.cache - Component cache keyed by stable block keys.
- * @param {import("@ember/owner").default} options.owner - Application owner for service lookup.
- * @param {string} options.baseHierarchy - Current hierarchy path (e.g., "homepage-blocks/section-1").
- * @param {string} options.outletName - The outlet name for CSS class generation.
- * @param {Object} options.outletArgs - Arguments passed from the outlet to blocks.
- * @param {boolean} options.showGhosts - Whether to render ghost blocks for invisible entries.
- * @param {boolean} options.isLoggingEnabled - Whether debug logging is active.
- * @param {Function} options.createChildBlockFn - Function to create child block components (injected from block-outlet.gjs).
- * @returns {Array<ChildBlockResult>} Array of renderable child objects with Component and containerArgs.
+ * @param options - Rendering options.
+ * @returns Renderable child objects with their `Component` and `containerArgs`.
  */
 export function processBlockEntries({
   entries,
@@ -141,15 +176,14 @@ export function processBlockEntries({
   showGhosts,
   isLoggingEnabled,
   createChildBlockFn,
-}) {
-  const result = [];
-  const containerCounts = new Map();
+}: ProcessBlockEntriesOptions): ChildBlockResult[] {
+  const result: ChildBlockResult[] = [];
+  const containerCounts = new Map<string, number>();
 
   for (const entry of entries) {
-    // @ts-ignore - entry.block can be string or BlockClass
     const resolvedBlock = tryResolveBlock(entry.block);
 
-    // Handle optional missing block (block ref ended with `?` but not registered)
+    // Handle optional missing block (block ref ended with `?` but not registered).
     if (isOptionalMissing(resolvedBlock)) {
       const key = `optional-missing:${resolvedBlock.name}:${entry.__stableKey}`;
       const ghostData = handleOptionalMissingBlock({
@@ -167,39 +201,35 @@ export function processBlockEntries({
     }
 
     // Skip blocks that haven't resolved yet. Block factories may be resolving
-    // asynchronously (e.g., lazy-loaded plugins). The component will automatically
-    // re-render when the factory resolves (via TrackedMap reactivity).
+    // asynchronously (e.g. lazy-loaded plugins); the component re-renders
+    // automatically when the factory resolves (via TrackedMap reactivity).
     if (!resolvedBlock) {
       continue;
     }
 
-    const blockClass =
-      /** @type {import("discourse/lib/blocks/-internals/registry/block").BlockClass} */ (
-        resolvedBlock
-      );
+    const blockClass = resolvedBlock;
     const blockMeta = getBlockMetadata(blockClass);
     const blockName = blockMeta?.blockName || "unknown";
     const isContainer = blockMeta?.isContainer ?? false;
 
-    // Use the stable key assigned at registration time. This key survives
-    // shallow cloning and ensures DOM identity is maintained when blocks
-    // are hidden/shown by conditions.
+    // Use the stable key assigned at registration time. This key survives shallow
+    // cloning and keeps DOM identity when blocks are hidden/shown by conditions.
     const key = `${blockName}:${entry.__stableKey}`;
 
-    // For containers, build their full path for children's hierarchy.
-    // The id is included in the path for easier identification in debug tools.
+    // For containers, build their full path for children's hierarchy. The id is
+    // included in the path for easier identification in debug tools.
     const containerPath = isContainer
       ? buildContainerPath(blockName, entry.id, baseHierarchy, containerCounts)
       : undefined;
 
-    // For containers with children, recursively process children FIRST
-    // This creates the child components at the root level, so containers
-    // receive pre-processed children via @children arg instead of raw entries.
-    let processedChildren;
+    // For containers with children, recursively process children FIRST. This
+    // creates the child components at the root level, so containers receive
+    // pre-processed children via the `@children` arg instead of raw entries.
+    let processedChildren: ChildBlockResult[] | undefined;
     if (isContainer && entry.children?.length) {
       processedChildren = processBlockEntries({
         entries: entry.children,
-        cache, // Same root cache for all levels
+        cache, // Same root cache for all levels.
         owner,
         baseHierarchy: containerPath,
         outletName,
@@ -210,7 +240,7 @@ export function processBlockEntries({
       });
     }
 
-    // Render visible blocks
+    // Render visible blocks.
     if (entry.__visible) {
       result.push(
         getOrCreateLeafBlockComponent(
@@ -224,14 +254,14 @@ export function processBlockEntries({
             conditions: entry.conditions,
             outletArgs,
             key,
-            processedChildren, // Pass pre-processed children for containers
+            processedChildren, // Pass pre-processed children for containers.
           },
           owner,
           createChildBlockFn
         )
       );
     } else if (showGhosts) {
-      // Show ghost for invisible blocks in debug mode
+      // Show ghost for invisible blocks in debug mode.
       const ghostData = createGhostBlock({
         blockName,
         entry,

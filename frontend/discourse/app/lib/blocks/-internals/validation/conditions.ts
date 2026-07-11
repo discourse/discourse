@@ -1,4 +1,4 @@
-// @ts-check
+import type { BlockCondition } from "discourse/blocks/conditions";
 import { BlockError } from "discourse/lib/blocks/-internals/error";
 import { validateConditionArgValues } from "discourse/lib/blocks/-internals/validation/condition-args";
 import {
@@ -13,6 +13,14 @@ import { formatWithSuggestion } from "discourse/lib/string-similarity";
  */
 const OUTLET_ARGS_SOURCE_PATTERN = /^@outletArgs\.[\w.]+$/;
 
+/** The result of `validateConditionSource()`: error info, or `null` if valid. */
+export interface ConditionSourceError {
+  /** The error message. */
+  message: string;
+  /** The path to the invalid `source` parameter. */
+  path?: string;
+}
+
 /**
  * Validates the `source` parameter based on the condition's `sourceType`.
  *
@@ -20,11 +28,14 @@ const OUTLET_ARGS_SOURCE_PATTERN = /^@outletArgs\.[\w.]+$/;
  * - `sourceType: "outletArgs"`: Validates format is `@outletArgs.propertyPath`
  * - `sourceType: "object"`: Validates `source` is an object if provided
  *
- * @param {"none"|"outletArgs"|"object"} sourceType - The condition's source type.
- * @param {Object} args - The condition arguments from the layout entry.
- * @returns {{ message: string, path?: string } | null} Error info or null if valid.
+ * @param sourceType - The condition's source type.
+ * @param args - The condition arguments from the layout entry.
+ * @returns Error info or null if valid.
  */
-export function validateConditionSource(sourceType, args) {
+export function validateConditionSource(
+  sourceType: "none" | "outletArgs" | "object",
+  args: Record<string, unknown>
+): ConditionSourceError | null {
   const { source } = args;
 
   if (source === undefined) {
@@ -70,17 +81,26 @@ export function validateConditionSource(sourceType, args) {
  * Validates that all provided args are recognized by a condition.
  * Suggests corrections for typos using fuzzy string matching.
  *
- * @param {import("discourse/blocks/conditions").BlockCondition} instance - The condition instance.
- * @param {string} type - The condition type name.
- * @param {Object} args - The args provided to the condition.
- * @param {string} path - The path to this condition in the block tree.
- * @throws {BlockError} If an unrecognized arg key is found.
+ * @param instance - The condition instance.
+ * @param type - The condition type name.
+ * @param args - The args provided to the condition.
+ * @param path - The path to this condition in the block tree.
+ * @throws BlockError if an unrecognized arg key is found.
  */
-export function validateConditionArgKeys(instance, type, args, path) {
+export function validateConditionArgKeys(
+  instance: BlockCondition,
+  type: string,
+  args: Record<string, unknown>,
+  path: string
+): void {
+  // `instance.constructor` is typed as the generic `Function` by default; the
+  // `@blockCondition` decorator always defines `validArgKeys` (and the other
+  // statics read throughout this module) on every concrete `BlockCondition`
+  // subclass, so this cast reads it safely.
   // validArgKeys already includes "source" when sourceType !== "none"
   // (computed by the @blockCondition decorator)
-  // @ts-ignore - Static property defined on condition classes
-  const validKeys = instance.constructor.validArgKeys;
+  const validKeys = (instance.constructor as typeof BlockCondition)
+    .validArgKeys;
 
   for (const key of Object.keys(args)) {
     if (!validKeys.includes(key)) {
@@ -108,13 +128,17 @@ export function validateConditionArgKeys(instance, type, args, path) {
  * This is acceptable since condition keys come from theme/plugin layouts
  * where unusual characters are rare.
  *
- * @param {Object|Array<Object>} conditionSpec - Condition spec(s) to validate.
- * @param {Map<string, import("discourse/blocks/conditions").BlockCondition>} conditionTypes - Map of registered condition types.
- * @param {string} [path=""] - The path to this condition relative to conditions root
+ * @param conditionSpec - Condition spec(s) to validate.
+ * @param conditionTypes - Map of registered condition types.
+ * @param path - The path to this condition relative to conditions root
  *   (e.g., "", "[0]", "any[1]", "params.categoryId").
- * @throws {BlockError} If validation fails.
+ * @throws BlockError if validation fails.
  */
-export function validateConditions(conditionSpec, conditionTypes, path = "") {
+export function validateConditions(
+  conditionSpec: unknown,
+  conditionTypes: Map<string, BlockCondition>,
+  path = ""
+): void {
   if (!conditionSpec) {
     return;
   }
@@ -128,30 +152,46 @@ export function validateConditions(conditionSpec, conditionTypes, path = "") {
   }
 
   // OR combinator
-  if (conditionSpec.any !== undefined) {
-    validateAnyCombinator(conditionSpec, conditionTypes, path);
+  if ((conditionSpec as { any?: unknown[] }).any !== undefined) {
+    validateAnyCombinator(
+      conditionSpec as { any: unknown[] },
+      conditionTypes,
+      path
+    );
     return;
   }
 
   // NOT combinator
-  if (conditionSpec.not !== undefined) {
-    validateNotCombinator(conditionSpec, conditionTypes, path);
+  if ((conditionSpec as { not?: unknown }).not !== undefined) {
+    validateNotCombinator(
+      conditionSpec as { not: unknown },
+      conditionTypes,
+      path
+    );
     return;
   }
 
   // Single condition with type
-  validateSingleCondition(conditionSpec, conditionTypes, path);
+  validateSingleCondition(
+    conditionSpec as { type?: string } & Record<string, unknown>,
+    conditionTypes,
+    path
+  );
 }
 
 /**
  * Validates an "any" (OR) combinator.
  *
- * @param {Object} conditionSpec - The condition spec containing "any".
- * @param {Map<string, import("discourse/blocks/conditions").BlockCondition>} conditionTypes - Map of registered condition types.
- * @param {string} path - The path to this condition in the block tree.
- * @throws {BlockError} If validation fails.
+ * @param conditionSpec - The condition spec containing "any".
+ * @param conditionTypes - Map of registered condition types.
+ * @param path - The path to this condition in the block tree.
+ * @throws BlockError if validation fails.
  */
-function validateAnyCombinator(conditionSpec, conditionTypes, path) {
+function validateAnyCombinator(
+  conditionSpec: { any: unknown[] },
+  conditionTypes: Map<string, BlockCondition>,
+  path: string
+): void {
   // Validate no extra keys alongside "any"
   const extraKeys = Object.keys(conditionSpec).filter((k) => k !== "any");
   if (extraKeys.length > 0) {
@@ -180,12 +220,16 @@ function validateAnyCombinator(conditionSpec, conditionTypes, path) {
 /**
  * Validates a "not" (NOT) combinator.
  *
- * @param {Object} conditionSpec - The condition spec containing "not".
- * @param {Map<string, import("discourse/blocks/conditions").BlockCondition>} conditionTypes - Map of registered condition types.
- * @param {string} path - The path to this condition in the block tree.
- * @throws {BlockError} If validation fails.
+ * @param conditionSpec - The condition spec containing "not".
+ * @param conditionTypes - Map of registered condition types.
+ * @param path - The path to this condition in the block tree.
+ * @throws BlockError if validation fails.
  */
-function validateNotCombinator(conditionSpec, conditionTypes, path) {
+function validateNotCombinator(
+  conditionSpec: { not: unknown },
+  conditionTypes: Map<string, BlockCondition>,
+  path: string
+): void {
   // Validate no extra keys alongside "not"
   const extraKeys = Object.keys(conditionSpec).filter((k) => k !== "not");
   if (extraKeys.length > 0) {
@@ -219,12 +263,16 @@ function validateNotCombinator(conditionSpec, conditionTypes, path) {
  * 4. Validate source parameter (based on sourceType)
  * 5. Run custom validate function from decorator config
  *
- * @param {Object} conditionSpec - The condition spec with a type property.
- * @param {Map<string, import("discourse/blocks/conditions").BlockCondition>} conditionTypes - Map of registered condition types.
- * @param {string} path - The path to this condition in the block tree.
- * @throws {BlockError} If validation fails.
+ * @param conditionSpec - The condition spec with a type property.
+ * @param conditionTypes - Map of registered condition types.
+ * @param path - The path to this condition in the block tree.
+ * @throws BlockError if validation fails.
  */
-function validateSingleCondition(conditionSpec, conditionTypes, path) {
+function validateSingleCondition(
+  conditionSpec: { type?: string } & Record<string, unknown>,
+  conditionTypes: Map<string, BlockCondition>,
+  path: string
+): void {
   const { type, ...args } = conditionSpec;
 
   if (!type) {
@@ -245,12 +293,11 @@ function validateSingleCondition(conditionSpec, conditionTypes, path) {
     );
   }
 
-  // @ts-ignore - Static properties defined on condition classes
-  const argsSchema = conditionInstance.constructor.argsSchema;
-  // @ts-ignore - Static properties defined on condition classes
-  const constraints = conditionInstance.constructor.constraints;
-  // @ts-ignore - Static properties defined on condition classes
-  const validateFn = conditionInstance.constructor.validateFn;
+  // `conditionInstance.constructor` is typed as the generic `Function` by
+  // default; the `@blockCondition` decorator always defines these statics on
+  // every concrete `BlockCondition` subclass, so this cast reads them safely.
+  const ConditionClass = conditionInstance.constructor as typeof BlockCondition;
+  const { argsSchema, constraints, validateFn, sourceType } = ConditionClass;
 
   // 1. Validate unknown args (catches typos like "nam" instead of "name")
   // This is checked FIRST so typos produce helpful suggestions rather than
@@ -278,8 +325,6 @@ function validateSingleCondition(conditionSpec, conditionTypes, path) {
   }
 
   // 4. Validate source parameter (based on sourceType)
-  // @ts-ignore - Static property defined on condition classes
-  const sourceType = conditionInstance.constructor.sourceType;
   const sourceError = validateConditionSource(sourceType, args);
   if (sourceError) {
     throw new BlockError(sourceError.message, {
@@ -290,7 +335,7 @@ function validateSingleCondition(conditionSpec, conditionTypes, path) {
   // 5. Run custom validate function from decorator config
   if (validateFn) {
     const customErrors = runCustomValidation(validateFn, args);
-    if (customErrors?.length > 0) {
+    if (customErrors && customErrors.length > 0) {
       throw new BlockError(`Condition "${type}": ${customErrors.join("; ")}`, {
         path,
       });

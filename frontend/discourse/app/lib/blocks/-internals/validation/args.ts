@@ -1,16 +1,13 @@
-// @ts-check
 /**
  * Shared arg validation utilities.
  *
  * This module provides generic validation functions for argument schemas
  * used by both blocks and conditions. Entity-specific validation logic
  * lives in separate modules:
- * - block-args.js - block-specific validation
- * - condition-args.js - condition-specific validation
- *
- * @module discourse/lib/blocks/-internals/validation/args
+ * - block-args.ts - block-specific validation
+ * - condition-args.ts - condition-specific validation
  */
-
+import type { ArgSchema, ArgType } from "discourse/blocks/types";
 import {
   BlockError,
   raiseBlockError,
@@ -21,11 +18,40 @@ import RestModel from "discourse/models/rest";
 /**
  * A validation error result containing the error message and the path
  * to the argument that failed validation.
- *
- * @typedef {Object} ValidationError
- * @property {string} message - The formatted error message.
- * @property {string} path - The path to the invalid argument (e.g., "test.name").
  */
+export interface ValidationError {
+  /** The formatted error message. */
+  message: string;
+  /** The path to the invalid argument (e.g., "test.name"). */
+  path: string;
+}
+
+/**
+ * Error-message context shared by the arg-value validation functions below.
+ */
+export interface ArgErrorContext {
+  /** Optional entity name for context (e.g., block name). */
+  contextName?: string | null;
+  /** The entity type for the prefix (e.g., "Block", "Condition"). */
+  contextType?: string;
+}
+
+/**
+ * The minimal owner surface `validateArgValue` needs to resolve a `"model:*"`
+ * `instanceOf` reference to its registered class. Modeled as a narrow local
+ * shape rather than the full `@ember/owner` `Owner` — whose `factoryFor()` is
+ * generic over literal `"type:name"` strings — because the model name here is
+ * only known at runtime.
+ */
+interface ModelRegistryOwner {
+  factoryFor?: (fullName: string) => { class?: unknown } | undefined;
+}
+
+/** Options accepted by `validateArgValue` and `validateArgsAgainstSchema`. */
+export interface ValidateArgValueOptions extends ArgErrorContext {
+  /** Ember owner for registry lookups (used for `"model:*"` `instanceOf`). */
+  owner?: ModelRegistryOwner | null;
+}
 
 /**
  * Valid arg name pattern: must be a valid JavaScript identifier.
@@ -39,7 +65,7 @@ export const VALID_ARG_NAME_PATTERN = /^[a-zA-Z][a-zA-Z0-9_]*$/;
  * These are used internally by the block system and would conflict with
  * user-provided args. Names starting with underscore are also reserved.
  */
-export const RESERVED_ARG_NAMES = Object.freeze([
+export const RESERVED_ARG_NAMES: readonly string[] = Object.freeze([
   "args",
   "block",
   "classNames",
@@ -58,17 +84,17 @@ export const RESERVED_ARG_NAMES = Object.freeze([
  * Reserved names include explicit names in RESERVED_ARG_NAMES and
  * any name starting with underscore (private by convention).
  *
- * @param {string} argName - The argument name to check
- * @returns {boolean} True if the name is reserved
+ * @param argName - The argument name to check
+ * @returns True if the name is reserved
  */
-export function isReservedArgName(argName) {
+export function isReservedArgName(argName: string): boolean {
   return RESERVED_ARG_NAMES.includes(argName) || argName.startsWith("_");
 }
 
 /**
  * Valid arg types for schema definitions.
  */
-export const VALID_ARG_TYPES = Object.freeze([
+export const VALID_ARG_TYPES: readonly ArgType[] = Object.freeze([
   "string",
   "number",
   "boolean",
@@ -77,15 +103,22 @@ export const VALID_ARG_TYPES = Object.freeze([
   "any",
 ]);
 
+/** Valid item types for array args. */
+type ArgItemType = NonNullable<ArgSchema["itemType"]>;
+
 /**
  * Valid item types for array args.
  */
-export const VALID_ITEM_TYPES = Object.freeze(["string", "number", "boolean"]);
+export const VALID_ITEM_TYPES: readonly ArgItemType[] = Object.freeze([
+  "string",
+  "number",
+  "boolean",
+]);
 
 /**
  * Valid properties for arg schema definitions.
  */
-export const VALID_ARG_SCHEMA_PROPERTIES = Object.freeze([
+export const VALID_ARG_SCHEMA_PROPERTIES: readonly string[] = Object.freeze([
   "type",
   "required",
   "default",
@@ -104,6 +137,22 @@ export const VALID_ARG_SCHEMA_PROPERTIES = Object.freeze([
 ]);
 
 /**
+ * A schema property validation rule, describing which arg types the
+ * property is valid for and how to validate its value.
+ */
+interface SchemaPropertyRule {
+  /** Arg types that can use this property. */
+  allowedTypes: ArgType[];
+  /** Validates the property's value. Omitted when checked elsewhere (e.g. via
+   *  `formatWithSuggestion` or recursive schema validation). */
+  valueCheck?: (value: unknown) => boolean;
+  /** Error message if `valueCheck` fails. */
+  valueError?: string;
+  /** Text to append for type restriction errors (e.g., "string or array"). */
+  typeErrorSuffix: string;
+}
+
+/**
  * Schema property rules for declarative validation.
  * Each rule defines:
  * - allowedTypes: arg types that can use this property
@@ -111,7 +160,9 @@ export const VALID_ARG_SCHEMA_PROPERTIES = Object.freeze([
  * - valueError: error message if value check fails
  * - typeErrorSuffix: text to append for type restriction errors (e.g., "string or array")
  */
-export const SCHEMA_PROPERTY_RULES = Object.freeze({
+export const SCHEMA_PROPERTY_RULES: Readonly<
+  Record<string, SchemaPropertyRule>
+> = Object.freeze({
   min: {
     allowedTypes: ["number"],
     valueCheck: (v) => typeof v === "number",
@@ -132,13 +183,13 @@ export const SCHEMA_PROPERTY_RULES = Object.freeze({
   },
   minLength: {
     allowedTypes: ["string", "array"],
-    valueCheck: (v) => Number.isInteger(v) && v >= 0,
+    valueCheck: (v) => Number.isInteger(v) && (v as number) >= 0,
     valueError: "Must be a non-negative integer.",
     typeErrorSuffix: "string or array",
   },
   maxLength: {
     allowedTypes: ["string", "array"],
-    valueCheck: (v) => Number.isInteger(v) && v >= 0,
+    valueCheck: (v) => Number.isInteger(v) && (v as number) >= 0,
     valueError: "Must be a non-negative integer.",
     typeErrorSuffix: "string or array",
   },
@@ -175,17 +226,28 @@ export const SCHEMA_PROPERTY_RULES = Object.freeze({
   },
 });
 
+/** Options accepted by the schema-property validation helpers below. */
+interface EntityErrorOptions {
+  /** The entity name for error messages. */
+  entityName?: string | null;
+  /** The entity type for error messages. */
+  entityType?: string;
+}
+
 /**
  * Validates a schema property against its rule.
  *
- * @param {Object} argDef - The argument definition.
- * @param {string} argName - The argument name.
- * @param {string} prop - The property name.
- * @param {Object} [options] - Optional configuration.
- * @param {string} [options.entityName] - The entity name for error messages.
- * @param {string} [options.entityType="Block"] - The entity type for error messages.
+ * @param argDef - The argument definition.
+ * @param argName - The argument name.
+ * @param prop - The property name.
+ * @param options - Optional configuration.
  */
-export function validateSchemaProperty(argDef, argName, prop, options = {}) {
+export function validateSchemaProperty(
+  argDef: ArgSchema,
+  argName: string,
+  prop: keyof ArgSchema,
+  options: EntityErrorOptions = {}
+): void {
   const { entityName, entityType = "Block" } = options;
 
   const rule = SCHEMA_PROPERTY_RULES[prop];
@@ -212,21 +274,22 @@ export function validateSchemaProperty(argDef, argName, prop, options = {}) {
 /**
  * Validates that at most one of the specified schema properties is defined (mutually exclusive).
  *
- * @param {Object} argDef - The argument definition.
- * @param {string} argName - The argument name for error messages.
- * @param {string[]} properties - Array of property names that are mutually exclusive.
- * @param {Object} [options] - Optional configuration.
- * @param {string} [options.entityName] - The entity name for error messages.
- * @param {string} [options.entityType="Block"] - The entity type (e.g., "Block", "Condition").
- * @param {string} [options.argLabel="arg"] - Label for the argument (e.g., "arg", "childArgs arg").
- * @param {string} [options.reason] - Custom reason message.
+ * @param argDef - The argument definition.
+ * @param argName - The argument name for error messages.
+ * @param properties - Array of property names that are mutually exclusive.
+ * @param options - Optional configuration.
  */
 export function validateMutuallyExclusive(
-  argDef,
-  argName,
-  properties,
-  options = {}
-) {
+  argDef: ArgSchema,
+  argName: string,
+  properties: readonly (keyof ArgSchema)[],
+  options: EntityErrorOptions & {
+    /** Label for the argument (e.g., "arg", "childArgs arg"). */
+    argLabel?: string;
+    /** Custom reason message. */
+    reason?: string;
+  } = {}
+): void {
   const {
     entityName,
     entityType = "Block",
@@ -249,24 +312,25 @@ export function validateMutuallyExclusive(
   }
 }
 
+/** The names of `ArgSchema`'s numeric range-pair properties. */
+type NumericRangeProperty = "min" | "max" | "minLength" | "maxLength";
+
 /**
  * Validates a min/max range pair in the schema.
  *
- * @param {Object} argDef - The argument definition.
- * @param {string} argName - The argument name.
- * @param {string} minProp - The min property name.
- * @param {string} maxProp - The max property name.
- * @param {Object} [options] - Optional configuration.
- * @param {string} [options.entityName] - The entity name for error messages.
- * @param {string} [options.entityType="Block"] - The entity type for error messages.
+ * @param argDef - The argument definition.
+ * @param argName - The argument name.
+ * @param minProp - The min property name.
+ * @param maxProp - The max property name.
+ * @param options - Optional configuration.
  */
 export function validateRangePair(
-  argDef,
-  argName,
-  minProp,
-  maxProp,
-  options = {}
-) {
+  argDef: ArgSchema,
+  argName: string,
+  minProp: NumericRangeProperty,
+  maxProp: NumericRangeProperty,
+  options: EntityErrorOptions = {}
+): void {
   const { entityName, entityType = "Block" } = options;
 
   if (
@@ -280,17 +344,23 @@ export function validateRangePair(
   }
 }
 
+/** Options accepted by `validateEnumArray`. */
+interface ValidateEnumArrayOptions extends EntityErrorOptions {
+  /** The enum array value to validate. */
+  enumValue: unknown;
+  /** Property name ("enum" or "itemEnum"). */
+  propName: string;
+  /** Expected type for values, or undefined to skip type check. */
+  expectedType?: string;
+  /** The argument name for error messages. */
+  argName: string;
+}
+
 /**
  * Validates an enum-like array property (enum or itemEnum).
  * Checks that the value is a non-empty array and all items match the expected type.
  *
- * @param {Object} options - Validation options.
- * @param {*} options.enumValue - The enum array value to validate.
- * @param {string} options.propName - Property name ("enum" or "itemEnum").
- * @param {string|undefined} options.expectedType - Expected type for values, or undefined to skip type check.
- * @param {string} options.argName - The argument name for error messages.
- * @param {string} options.entityName - The entity name for error messages.
- * @param {string} options.entityType - The entity type.
+ * @param options - Validation options.
  */
 function validateEnumArray({
   enumValue,
@@ -299,7 +369,7 @@ function validateEnumArray({
   argName,
   entityName,
   entityType,
-}) {
+}: ValidateEnumArrayOptions): void {
   if (!Array.isArray(enumValue) || enumValue.length === 0) {
     raiseBlockError(
       `${entityType} "${entityName}": arg "${argName}" has invalid "${propName}" value. Must be an array with at least one element.`
@@ -327,18 +397,24 @@ function validateEnumArray({
  * - "default" validation - blocks validate default values, conditions reject the property entirely
  * - "required + default contradiction" - only relevant for blocks
  *
- * @param {Object} argDef - The argument definition.
- * @param {string} argName - The argument name.
- * @param {Object} [options] - Optional configuration.
- * @param {string} [options.entityName] - The entity name for error messages.
- * @param {string} [options.entityType="Block"] - The entity type for error messages.
+ * @param argDef - The argument definition.
+ * @param argName - The argument name.
+ * @param options - Optional configuration.
  */
-export function validateCommonSchemaProperties(argDef, argName, options = {}) {
+export function validateCommonSchemaProperties(
+  argDef: ArgSchema,
+  argName: string,
+  options: EntityErrorOptions = {}
+): void {
   const { entityName, entityType = "Block" } = options;
   const context = { entityName, entityType };
 
   // Validate schema properties using declarative rules (type restrictions + value checks)
-  for (const prop of Object.keys(SCHEMA_PROPERTY_RULES)) {
+  // `Object.keys()` widens to `string[]`; every key of `SCHEMA_PROPERTY_RULES`
+  // is a valid `ArgSchema` property name.
+  for (const prop of Object.keys(
+    SCHEMA_PROPERTY_RULES
+  ) as (keyof ArgSchema)[]) {
     validateSchemaProperty(argDef, argName, prop, context);
   }
 
@@ -471,17 +547,23 @@ export function validateCommonSchemaProperties(argDef, argName, options = {}) {
 
 /* Arg Schema Entry Validation Helpers */
 
+/** Options accepted by `validateArgName`. */
+interface ValidateArgNameOptions extends EntityErrorOptions {
+  /** Label for error messages (e.g., "childArgs arg"). */
+  argLabel?: string;
+}
+
 /**
  * Validates an argument name format.
  *
- * @param {string} argName - The argument name to validate.
- * @param {Object} [options] - Optional configuration.
- * @param {string} [options.entityName] - The entity name for error messages.
- * @param {string} [options.entityType="Block"] - The entity type for error messages.
- * @param {string} [options.argLabel="arg"] - Label for error messages (e.g., "childArgs arg").
- * @returns {boolean} True if valid, false if invalid (and error raised).
+ * @param argName - The argument name to validate.
+ * @param options - Optional configuration.
+ * @returns True if valid, false if invalid (and error raised).
  */
-export function validateArgName(argName, options = {}) {
+export function validateArgName(
+  argName: string,
+  options: ValidateArgNameOptions = {}
+): boolean {
   const { entityName, entityType = "Block", argLabel = "arg" } = options;
 
   if (!VALID_ARG_NAME_PATTERN.test(argName)) {
@@ -504,24 +586,34 @@ export function validateArgName(argName, options = {}) {
   return true;
 }
 
+/** Options accepted by `validateArgSchemaEntry`. */
+export interface ValidateArgSchemaEntryOptions extends EntityErrorOptions {
+  /** List of valid schema properties. */
+  validProperties: readonly string[];
+  /** Map of property names to their specific error messages. Properties in
+   *  this map trigger a "disallowed" error instead of "unknown". */
+  disallowedProperties?: Record<string, string>;
+  /** If true, allow type: "any" (for conditions only). */
+  allowAnyType?: boolean;
+  /** Label for error messages (e.g., "childArgs arg"). */
+  argLabel?: string;
+}
+
 /**
  * Validates a single arg schema entry (argDef).
  * Shared logic between block args, childArgs, and condition args validation.
  *
- * @param {Object} argDef - The argument definition.
- * @param {string} argName - The argument name.
- * @param {Object} options - Configuration options.
- * @param {string} [options.entityName] - The entity name for error messages.
- * @param {string} [options.entityType="Block"] - The entity type for error messages.
- * @param {readonly string[]} options.validProperties - List of valid schema properties.
- * @param {Object<string, string>} [options.disallowedProperties={}] - Map of property names to their
- *   specific error messages. Properties in this map trigger a "disallowed" error instead of "unknown".
- * @param {boolean} [options.allowAnyType=false] - If true, allow type: "any" (for conditions only).
- * @param {string} [options.argLabel="arg"] - Label for error messages (e.g., "childArgs arg").
- * @returns {boolean} True if validation should continue with caller-specific logic, false if
+ * @param argDef - The argument definition.
+ * @param argName - The argument name.
+ * @param options - Configuration options.
+ * @returns True if validation should continue with caller-specific logic, false if
  *   validation should stop (e.g., missing type, type: "any" with allowAnyType).
  */
-export function validateArgSchemaEntry(argDef, argName, options) {
+export function validateArgSchemaEntry(
+  argDef: ArgSchema,
+  argName: string,
+  options: ValidateArgSchemaEntryOptions
+): boolean {
   const {
     entityName,
     entityType = "Block",
@@ -549,7 +641,7 @@ export function validateArgSchemaEntry(argDef, argName, options) {
       disallowedPropNames.includes(p)
     );
     if (disallowed.length > 0) {
-      const prop = disallowed[0];
+      const prop = disallowed[0]!;
       raiseBlockError(
         `${entityType} "${entityName}": ${argLabel} "${argName}" has disallowed property "${prop}". ` +
           disallowedProperties[prop]
@@ -606,14 +698,16 @@ export function validateArgSchemaEntry(argDef, argName, options) {
  * - Schema validation (at decoration time): includes entity context
  * - Runtime validation (in renderBlocks): no context prefix
  *
- * @param {string} argName - The argument name (used as the path).
- * @param {string} message - The error message (without arg prefix).
- * @param {Object} [options] - Optional configuration.
- * @param {string|null} [options.contextName] - Optional entity name for context (e.g., block name).
- * @param {string} [options.contextType] - The entity type for the prefix (e.g., "Block", "Condition").
- * @returns {ValidationError} The validation error object with message and path.
+ * @param argName - The argument name (used as the path).
+ * @param message - The error message (without arg prefix).
+ * @param options - Optional configuration.
+ * @returns The validation error object with message and path.
  */
-function argValidationError(argName, message, options = {}) {
+function argValidationError(
+  argName: string,
+  message: string,
+  options: ArgErrorContext = {}
+): ValidationError {
   const { contextName, contextType } = options;
   const formattedMessage = contextName
     ? `${contextType} "${contextName}": arg "${argName}" ${message}`
@@ -624,16 +718,18 @@ function argValidationError(argName, message, options = {}) {
 /**
  * Validates a single argument value against its schema definition.
  *
- * @param {*} value - The argument value.
- * @param {Object} argSchema - The schema definition for this arg.
- * @param {string} argName - The argument name for error messages.
- * @param {Object} [options] - Optional configuration.
- * @param {string|null} [options.contextName] - Optional entity name for context.
- * @param {string} [options.contextType] - The entity type for error prefix (e.g., "Block", "Condition").
- * @param {Object} [options.owner] - Ember owner for registry lookups (used for "model:*" instanceOf).
- * @returns {ValidationError|null} Validation error if validation fails, null otherwise.
+ * @param value - The argument value.
+ * @param argSchema - The schema definition for this arg.
+ * @param argName - The argument name for error messages.
+ * @param options - Optional configuration.
+ * @returns Validation error if validation fails, null otherwise.
  */
-export function validateArgValue(value, argSchema, argName, options = {}) {
+export function validateArgValue(
+  value: unknown,
+  argSchema: ArgSchema,
+  argName: string,
+  options: ValidateArgValueOptions = {}
+): ValidationError | null {
   const { owner } = options;
 
   const {
@@ -686,7 +782,7 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
         );
       }
       if (enumValues !== undefined && !enumValues.includes(value)) {
-        const suggestion = formatWithSuggestion(value, enumValues);
+        const suggestion = formatWithSuggestion(value, enumValues as string[]);
         return argValidationError(
           argName,
           `must be one of: ${enumValues.map((v) => `"${v}"`).join(", ")}. Got ${suggestion}.`,
@@ -767,7 +863,7 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
       }
       if (itemType) {
         for (let i = 0; i < value.length; i++) {
-          const item = value[i];
+          const item: unknown = value[i];
           const itemError = validateArrayItemType(
             item,
             itemType,
@@ -782,7 +878,7 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
       }
       if (itemEnum !== undefined) {
         for (let i = 0; i < value.length; i++) {
-          const item = value[i];
+          const item: unknown = value[i];
           if (!itemEnum.includes(item)) {
             const suggestion = formatWithSuggestion(
               String(item),
@@ -853,7 +949,7 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
           const klass = owner?.factoryFor?.(`model:${modelType}`)?.class;
           if (klass && klass !== RestModel) {
             // Specific model class exists, use instanceof
-            if (!(value instanceof klass)) {
+            if (!(value instanceof (klass as abstract new () => object))) {
               return argValidationError(
                 argName,
                 `must be an instance of ${modelType} model.`,
@@ -861,10 +957,14 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
               );
             }
           } else {
-            // No specific class or RestModel fallback, check RestModel + __type
+            // No specific class or RestModel fallback, check RestModel + __type.
+            // `value instanceof RestModel` narrows `value` to `RestModel`,
+            // which (like `LayoutEntry`) has no index signature — the
+            // two-step cast reads its dynamic `__type` field regardless.
             if (
               !(value instanceof RestModel) ||
-              value["__type"] !== modelType
+              (value as unknown as Record<string, unknown>)["__type"] !==
+                modelType
             ) {
               return argValidationError(
                 argName,
@@ -881,7 +981,7 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
         for (const [propName, propDef] of Object.entries(
           argSchema.properties
         )) {
-          const propValue = value[propName];
+          const propValue = (value as Record<string, unknown>)[propName];
 
           // Check required properties
           if (propDef.required && propValue === undefined) {
@@ -917,22 +1017,20 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
 /**
  * Validates an array item against the specified item type.
  *
- * @param {*} item - The array item.
- * @param {string} itemType - The expected type ("string", "number", "boolean").
- * @param {string} argName - The argument name for error messages.
- * @param {number} index - The array index for error messages.
- * @param {Object} [options] - Optional configuration.
- * @param {string|null} [options.contextName] - Optional entity name for context.
- * @param {string} [options.contextType] - The entity type for error prefix (e.g., "Block", "Condition").
- * @returns {ValidationError|null} Validation error if validation fails, null otherwise.
+ * @param item - The array item.
+ * @param itemType - The expected type ("string", "number", "boolean").
+ * @param argName - The argument name for error messages.
+ * @param index - The array index for error messages.
+ * @param options - Optional configuration.
+ * @returns Validation error if validation fails, null otherwise.
  */
 export function validateArrayItemType(
-  item,
-  itemType,
-  argName,
-  index,
-  options = {}
-) {
+  item: unknown,
+  itemType: ArgItemType,
+  argName: string,
+  index: number,
+  options: ArgErrorContext = {}
+): ValidationError | null {
   const indexedArgName = `${argName}[${index}]`;
 
   switch (itemType) {
@@ -982,19 +1080,18 @@ export function validateArrayItemType(
  * The unknown args check is done FIRST so that typos like "nam" produce
  * "unknown arg 'nam' (did you mean 'name'?)" instead of "missing required arg 'name'".
  *
- * @param {Object} providedArgs - The arguments to validate.
- * @param {Object} schema - The schema to validate against.
- * @param {string} pathPrefix - Prefix for error paths (e.g., "args" or "containerArgs").
- * @param {Object} [options={}] - Optional configuration.
- * @param {Object} [options.owner] - Ember owner for registry lookups (used for "model:*" instanceOf).
- * @throws {BlockError} If validation fails.
+ * @param providedArgs - The arguments to validate.
+ * @param schema - The schema to validate against.
+ * @param pathPrefix - Prefix for error paths (e.g., "args" or "containerArgs").
+ * @param options - Optional configuration.
+ * @throws BlockError if validation fails.
  */
 export function validateArgsAgainstSchema(
-  providedArgs,
-  schema,
-  pathPrefix,
-  options = {}
-) {
+  providedArgs: Record<string, unknown>,
+  schema: Record<string, ArgSchema>,
+  pathPrefix: string,
+  options: ValidateArgValueOptions = {}
+): void {
   // 1. Check for unknown args FIRST (catches typos before missing required)
   const declaredArgs = Object.keys(schema);
   for (const argName of Object.keys(providedArgs)) {
