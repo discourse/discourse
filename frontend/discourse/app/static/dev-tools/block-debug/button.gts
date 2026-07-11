@@ -1,13 +1,32 @@
-// @ts-check
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DMenu from "discourse/float-kit/components/d-menu";
+import { type ComponentLike } from "@glint/template";
+import DMenuUntyped from "discourse/float-kit/components/d-menu";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import devToolsState from "../state";
+
+// TODO(devxp-typescript-pending): drop once DMenu is authored in .gts with a
+// real Signature, then import it directly. Untyped .gjs today → no
+// arg/block/attr types; this shape reflects only this component's own usage.
+// `triggerComponent` is `unknown` because it's fed the return of the
+// (also untyped) `dElement` helper.
+const DMenu = DMenuUntyped as unknown as ComponentLike<{
+  Args: {
+    identifier: string;
+    triggerClass?: string;
+    triggerComponent?: unknown;
+    modalForMobile: boolean;
+    title: string;
+  };
+  Blocks: {
+    trigger: [];
+    content: [];
+  };
+}>;
 
 /**
  * Block debug button with dropdown menu.
@@ -19,9 +38,9 @@ export default class BlockDebugButton extends Component {
    * Determines if any block debug feature is currently enabled.
    * Used to highlight the toolbar button when debugging is active.
    *
-   * @returns {boolean} True if any block debug mode is enabled.
+   * @returns True if any block debug mode is enabled.
    */
-  get isActive() {
+  get isActive(): boolean {
     return (
       devToolsState.blockDebug ||
       devToolsState.blockVisualOverlay ||
@@ -34,12 +53,12 @@ export default class BlockDebugButton extends Component {
    * Toggles outlet boundary indicators around block outlets.
    * When enabled, shows visual borders around each block outlet area.
    *
-   * @param {Event} event - The checkbox change event.
+   * @param event - The checkbox change event.
    */
   @action
-  toggleOutletBoundaries(event) {
-    devToolsState.blockOutletBoundaries = /** @type {HTMLInputElement} */ (
-      event.target
+  toggleOutletBoundaries(event: Event): void {
+    devToolsState.blockOutletBoundaries = (
+      event.target as HTMLInputElement
     ).checked;
   }
 
@@ -47,12 +66,12 @@ export default class BlockDebugButton extends Component {
    * Toggles visual overlay that displays block information on the page.
    * When enabled, shows badges and tooltips on rendered blocks.
    *
-   * @param {Event} event - The checkbox change event.
+   * @param event - The checkbox change event.
    */
   @action
-  toggleVisualOverlay(event) {
-    devToolsState.blockVisualOverlay = /** @type {HTMLInputElement} */ (
-      event.target
+  toggleVisualOverlay(event: Event): void {
+    devToolsState.blockVisualOverlay = (
+      event.target as HTMLInputElement
     ).checked;
   }
 
@@ -61,26 +80,22 @@ export default class BlockDebugButton extends Component {
    * When enabled, shows placeholder outlines for blocks that weren't rendered
    * (e.g., failed conditions, optional missing, no visible children).
    *
-   * @param {Event} event - The checkbox change event.
+   * @param event - The checkbox change event.
    */
   @action
-  toggleGhostBlocks(event) {
-    devToolsState.blockGhostBlocks = /** @type {HTMLInputElement} */ (
-      event.target
-    ).checked;
+  toggleGhostBlocks(event: Event): void {
+    devToolsState.blockGhostBlocks = (event.target as HTMLInputElement).checked;
   }
 
   /**
    * Toggles condition debugging for block condition evaluation.
    * When enabled, logs detailed information about each block's condition checks.
    *
-   * @param {Event} event - The checkbox change event.
+   * @param event - The checkbox change event.
    */
   @action
-  toggleConditionDebugging(event) {
-    devToolsState.blockDebug = /** @type {HTMLInputElement} */ (
-      event.target
-    ).checked;
+  toggleConditionDebugging(event: Event): void {
+    devToolsState.blockDebug = (event.target as HTMLInputElement).checked;
   }
 
   <template>

@@ -1,24 +1,47 @@
-// @ts-check
 import Component from "@glimmer/component";
-import { trustHTML } from "@ember/template";
+import { TrustedHTML, trustHTML } from "@ember/template";
+import type { BlockEntry } from "discourse/lib/blocks/-internals/types";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { formatValue } from "../lib/value-formatter";
 
 /**
- * Displays condition hierarchy with pass/fail indicators.
- *
- * @param {Object|Array} conditions - The conditions to display
- * @param {boolean} passed - Whether the conditions passed overall
+ * A single node in the hierarchical condition tree produced by
+ * `#formatCondition()`, ready for rendering by `ConditionNode`.
  */
-export default class ConditionsTree extends Component {
+interface FormattedConditionNode {
+  /** Condition type, or combinator (AND/OR/NOT). */
+  type: string;
+  /** Nesting depth for indentation. */
+  depth: number;
+  /** Nested nodes, for combinator nodes. */
+  children?: FormattedConditionNode[];
+  /** Remaining condition arguments, for leaf nodes. */
+  args?: Record<string, unknown> | null;
+  /** True for leaf (non-combinator) condition nodes. */
+  isLeaf?: boolean;
+}
+
+interface ConditionsTreeSignature {
+  Args: {
+    /** The conditions to display. */
+    conditions?: BlockEntry["conditions"];
+    /** Whether the conditions passed overall. */
+    passed: boolean;
+  };
+}
+
+/**
+ * Displays condition hierarchy with pass/fail indicators.
+ */
+export default class ConditionsTree extends Component<ConditionsTreeSignature> {
   /**
    * Transforms the raw conditions object/array into a hierarchical array of
    * formatted nodes for rendering. This is the entry point for the recursive
    * formatting. Each node may contain a `children` array for nested conditions.
    *
-   * @returns {Array<Object>} An array of condition nodes ready for rendering.
+   * @returns An array of condition nodes ready for rendering.
    */
-  get formattedConditions() {
+  get formattedConditions(): FormattedConditionNode[] {
     return this.#formatCondition(this.args.conditions, 0);
   }
 
@@ -31,16 +54,19 @@ export default class ConditionsTree extends Component {
    * - Object with `not`: NOT combinator, child is the negated condition.
    * - Object with `type`: Leaf condition node with optional arguments.
    *
-   * @param {Object|Array|null} condition - The condition to format.
-   * @param {number} depth - The nesting depth for indentation calculation.
-   * @returns {Array<Object>} An array of formatted condition nodes.
+   * @param condition - The condition to format.
+   * @param depth - The nesting depth for indentation calculation.
+   * @returns An array of formatted condition nodes.
    */
-  #formatCondition(condition, depth) {
+  #formatCondition(
+    condition: object | object[] | null | undefined,
+    depth: number
+  ): FormattedConditionNode[] {
     if (!condition) {
       return [];
     }
 
-    const items = [];
+    const items: FormattedConditionNode[] = [];
 
     // Array of conditions (AND logic) - all conditions must pass
     if (Array.isArray(condition)) {
@@ -53,29 +79,32 @@ export default class ConditionsTree extends Component {
     }
 
     // OR combinator - at least one condition must pass
-    if (condition.any !== undefined) {
+    const anySpec = (condition as { any?: object[] }).any;
+    if (anySpec !== undefined) {
       items.push({
         type: "OR",
         depth,
-        children: condition.any.flatMap((c) =>
-          this.#formatCondition(c, depth + 1)
-        ),
+        children: anySpec.flatMap((c) => this.#formatCondition(c, depth + 1)),
       });
       return items;
     }
 
     // NOT combinator - inverts the result of the nested condition
-    if (condition.not !== undefined) {
+    const notSpec = (condition as { not?: object }).not;
+    if (notSpec !== undefined) {
       items.push({
         type: "NOT",
         depth,
-        children: this.#formatCondition(condition.not, depth + 1),
+        children: this.#formatCondition(notSpec, depth + 1),
       });
       return items;
     }
 
     // Single condition with type (leaf node) - extract type and remaining args
-    const { type, ...args } = condition;
+    const { type, ...args } = condition as { type: string } & Record<
+      string,
+      unknown
+    >;
     items.push({
       type,
       args: Object.keys(args).length > 0 ? args : null,
@@ -100,19 +129,23 @@ export default class ConditionsTree extends Component {
   </template>
 }
 
+interface ConditionNodeSignature {
+  Args: {
+    /** The condition node data from `#formatCondition()`. */
+    item: FormattedConditionNode;
+    /** Whether the overall conditions passed. */
+    passed: boolean;
+  };
+}
+
 /**
  * Renders a single condition node in the tree.
  * Handles both combinator nodes (AND, OR, NOT) and leaf condition nodes.
- *
- * @param {Object} item - The condition node data from #formatCondition.
- * @param {boolean} passed - Whether the overall conditions passed.
  */
-class ConditionNode extends Component {
+class ConditionNode extends Component<ConditionNodeSignature> {
   /**
    * Formatting options for condition argument values.
    * Enables expanded arrays, symbols, and RegExp handling for readable output.
-   *
-   * @constant {Object}
    */
   static FORMAT_OPTIONS = {
     expandArrays: true,
@@ -124,9 +157,9 @@ class ConditionNode extends Component {
    * Calculates the CSS padding for indentation based on the node's depth.
    * Each level adds 12px of left padding.
    *
-   * @returns {ReturnType<typeof trustHTML>} CSS style string for padding, marked as safe for binding.
+   * @returns CSS style string for padding, marked as safe for binding.
    */
-  get indentStyle() {
+  get indentStyle(): TrustedHTML {
     return trustHTML(`padding-left: ${this.args.item.depth * 12}px`);
   }
 
@@ -134,9 +167,9 @@ class ConditionNode extends Component {
    * Checks if this node is a boolean combinator (AND, OR, NOT) rather than
    * a leaf condition. Combinators are styled differently in the UI.
    *
-   * @returns {boolean} True if this is a combinator node.
+   * @returns True if this is a combinator node.
    */
-  get isCombinator() {
+  get isCombinator(): boolean {
     return ["AND", "OR", "NOT"].includes(this.args.item.type);
   }
 
@@ -144,9 +177,9 @@ class ConditionNode extends Component {
    * Formats the condition's arguments as a comma-separated string for display.
    * Returns null if there are no arguments to display.
    *
-   * @returns {string|null} Formatted arguments string, or null if no arguments.
+   * @returns Formatted arguments string, or null if no arguments.
    */
-  get argsDisplay() {
+  get argsDisplay(): string | null {
     const args = this.args.item.args;
     if (!args) {
       return null;

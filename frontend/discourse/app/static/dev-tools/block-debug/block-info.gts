@@ -1,32 +1,66 @@
-// @ts-check
 import Component from "@glimmer/component";
 import { array, hash } from "@ember/helper";
-import DTooltip from "discourse/float-kit/components/d-tooltip";
+import { type ComponentLike } from "@glint/template";
+import DTooltipUntyped from "discourse/float-kit/components/d-tooltip";
+import type {
+  BlockComponent,
+  BlockEntry,
+} from "discourse/lib/blocks/-internals/types";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import ArgsTable from "../shared/args-table";
 import ConditionsTree from "./conditions-tree";
 
+// TODO(devxp-typescript-pending): drop once DTooltip is authored in .gts with
+// a real Signature, then import it directly. Untyped .gjs today → no
+// arg/block/attr types; this shape reflects only this component's own usage.
+const DTooltip = DTooltipUntyped as unknown as ComponentLike<{
+  Args: {
+    identifier: string;
+    interactive: boolean;
+    placement: string;
+    maxWidth: number;
+    triggers: { mobile: string[]; desktop: string[] };
+    untriggers: { mobile: string[]; desktop: string[] };
+  };
+  Blocks: {
+    trigger: [];
+    content: [];
+  };
+}>;
+
+interface BlockInfoSignature {
+  Args: {
+    /** The name of the block. */
+    blockName: string;
+    /** The block's unique ID (if set). */
+    blockId?: string;
+    /** The hierarchy path where the block is rendered. */
+    debugLocation: string;
+    /** Arguments passed to the block. */
+    blockArgs?: Record<string, unknown>;
+    /** Container arguments passed from parent container's childArgs. */
+    containerArgs?: Record<string, unknown>;
+    /** Conditions that were evaluated. */
+    conditions?: BlockEntry["conditions"];
+    /** Outlet arguments available to the block. */
+    outletArgs?: Record<string, unknown>;
+    /** The actual block component to render. */
+    WrappedComponent: BlockComponent;
+  };
+}
+
 /**
  * Visual overlay component for rendered blocks.
  * Wraps a block with debug information including name badge and tooltip.
- *
- * @param {string} blockName - The name of the block.
- * @param {string} [blockId] - The block's unique ID (if set).
- * @param {string} debugLocation - The hierarchy path where the block is rendered.
- * @param {Object} [blockArgs] - Arguments passed to the block.
- * @param {Object} [containerArgs] - Container arguments passed from parent container's childArgs.
- * @param {Object} [conditions] - Conditions that were evaluated.
- * @param {Object} [outletArgs] - Outlet arguments available to the block.
- * @param {Component} WrappedComponent - The actual block component to render.
  */
-export default class BlockInfo extends Component {
+export default class BlockInfo extends Component<BlockInfoSignature> {
   /**
    * Checks whether this block has any conditions configured.
    * Used to conditionally render the conditions section in the tooltip.
    *
-   * @returns {boolean} True if the block has conditions defined.
+   * @returns True if the block has conditions defined.
    */
-  get hasConditions() {
+  get hasConditions(): boolean {
     return this.args.conditions != null;
   }
 
@@ -34,9 +68,9 @@ export default class BlockInfo extends Component {
    * Checks whether this block has any arguments passed to it.
    * Used to conditionally render the arguments section in the tooltip.
    *
-   * @returns {boolean} True if the block has at least one argument.
+   * @returns True if the block has at least one argument.
    */
-  get hasArgs() {
+  get hasArgs(): boolean {
     return (
       this.args.blockArgs != null && Object.keys(this.args.blockArgs).length > 0
     );
@@ -46,9 +80,9 @@ export default class BlockInfo extends Component {
    * Checks whether this block has container args from a parent container.
    * Used to conditionally render the container args section in the tooltip.
    *
-   * @returns {boolean} True if the block has container args.
+   * @returns True if the block has container args.
    */
-  get hasContainerArgs() {
+  get hasContainerArgs(): boolean {
     return (
       this.args.containerArgs != null &&
       Object.keys(this.args.containerArgs).length > 0
@@ -59,9 +93,9 @@ export default class BlockInfo extends Component {
    * Checks whether this block has outlet args available.
    * Used to conditionally render the outlet args section in the tooltip.
    *
-   * @returns {boolean} True if outlet args are available.
+   * @returns True if outlet args are available.
    */
-  get hasOutletArgs() {
+  get hasOutletArgs(): boolean {
     return (
       this.args.outletArgs != null &&
       Object.keys(this.args.outletArgs).length > 0
@@ -73,9 +107,9 @@ export default class BlockInfo extends Component {
    * Used to show an "empty" message when there are no conditions, args,
    * container args, or outlet args.
    *
-   * @returns {boolean} True if there is nothing to display in the tooltip.
+   * @returns True if there is nothing to display in the tooltip.
    */
-  get isEmpty() {
+  get isEmpty(): boolean {
     return (
       !this.hasConditions &&
       !this.hasArgs &&
@@ -88,9 +122,9 @@ export default class BlockInfo extends Component {
    * Returns the display name for the block, including ID if set.
    * Format: "blockName" or "blockName(#id)".
    *
-   * @returns {string} The display name.
+   * @returns The display name.
    */
-  get displayName() {
+  get displayName(): string {
     if (this.args.blockId) {
       return `${this.args.blockName}(#${this.args.blockId})`;
     }

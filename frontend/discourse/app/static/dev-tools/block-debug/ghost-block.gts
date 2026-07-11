@@ -1,28 +1,57 @@
-// @ts-check
 import Component from "@glimmer/component";
 import { array, hash } from "@ember/helper";
-import DTooltip from "discourse/float-kit/components/d-tooltip";
+import { type ComponentLike } from "@glint/template";
+import DTooltipUntyped from "discourse/float-kit/components/d-tooltip";
 import { FAILURE_TYPE } from "discourse/lib/blocks/-internals/patterns";
+import type {
+  BlockComponent,
+  BlockEntry,
+} from "discourse/lib/blocks/-internals/types";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ArgsTable from "../shared/args-table";
 import ConditionsTree from "./conditions-tree";
 
-/**
- * Component signature for GhostBlock.
- *
- * @typedef {Object} GhostBlockSignature
- * @property {Object} Args
- * @property {string} Args.blockName - The name of the hidden block.
- * @property {string} [Args.blockId] - The block's unique ID (if set).
- * @property {string} Args.debugLocation - The hierarchy path where the block would render.
- * @property {Object} [Args.blockArgs] - Arguments that would have been passed to the block.
- * @property {Object} [Args.containerArgs] - Container arguments from parent container's childArgs.
- * @property {Object} [Args.conditions] - Conditions that failed evaluation.
- * @property {string} [Args.failureType] - The failure type constant (FAILURE_TYPE value).
- * @property {string} [Args.failureReason] - Optional custom display message (overrides type-based default).
- * @property {Array<{Component: import("@glint/template").ComponentLike}>} [Args.children] - Nested ghost children for containers.
- */
+// TODO(devxp-typescript-pending): drop once DTooltip is authored in .gts with
+// a real Signature, then import it directly. Untyped .gjs today → no
+// arg/block/attr types; this shape reflects only this component's own usage.
+const DTooltip = DTooltipUntyped as unknown as ComponentLike<{
+  Args: {
+    identifier: string;
+    interactive: boolean;
+    placement: string;
+    maxWidth: number;
+    triggers: { mobile: string[]; desktop: string[] };
+    untriggers: { mobile: string[]; desktop: string[] };
+  };
+  Blocks: {
+    trigger: [];
+    content: [];
+  };
+}>;
+
+interface GhostBlockSignature {
+  Args: {
+    /** The name of the hidden block. */
+    blockName: string;
+    /** The block's unique ID (if set). */
+    blockId?: string;
+    /** The hierarchy path where the block would render. */
+    debugLocation: string;
+    /** Arguments that would have been passed to the block. */
+    blockArgs?: Record<string, unknown>;
+    /** Container arguments from parent container's childArgs. */
+    containerArgs?: Record<string, unknown>;
+    /** Conditions that failed evaluation. */
+    conditions?: BlockEntry["conditions"];
+    /** The failure type constant (a `FAILURE_TYPE` value). */
+    failureType?: string;
+    /** Optional custom display message (overrides type-based default). */
+    failureReason?: string;
+    /** Nested ghost children for containers. */
+    children?: Array<{ Component: BlockComponent }> | null;
+  };
+}
 
 /**
  * Ghost placeholder for blocks that are hidden.
@@ -36,18 +65,16 @@ import ConditionsTree from "./conditions-tree";
  *
  * For container blocks hidden due to no visible children, nested ghost children
  * are rendered inside to show the full block tree structure.
- *
- * @extends {Component<GhostBlockSignature>}
  */
-export default class GhostBlock extends Component {
+export default class GhostBlock extends Component<GhostBlockSignature> {
   /**
    * Returns the appropriate hint message based on why the block is hidden.
    * If a custom `failureReason` is provided, it is displayed directly.
    * Otherwise, a default message is generated based on the `failureType`.
    *
-   * @returns {string} The hint message to display.
+   * @returns The hint message to display.
    */
-  get hintMessage() {
+  get hintMessage(): string {
     if (this.args.failureReason) {
       return this.args.failureReason;
     }
@@ -63,9 +90,9 @@ export default class GhostBlock extends Component {
   /**
    * Returns the section title for the status/conditions section.
    *
-   * @returns {string} Either "Status" or "Conditions".
+   * @returns Either "Status" or "Conditions".
    */
-  get sectionTitle() {
+  get sectionTitle(): string {
     if (
       this.args.failureType === FAILURE_TYPE.OPTIONAL_MISSING ||
       this.args.failureType === FAILURE_TYPE.NO_VISIBLE_CHILDREN ||
@@ -79,9 +106,9 @@ export default class GhostBlock extends Component {
   /**
    * Returns the status text shown in parentheses.
    *
-   * @returns {string} The status text (e.g., "not registered", "failed").
+   * @returns The status text (e.g., "not registered", "failed").
    */
-  get statusText() {
+  get statusText(): string {
     if (this.args.failureType === FAILURE_TYPE.OPTIONAL_MISSING) {
       return i18n("js.blocks.ghost.not_registered");
     }
@@ -99,9 +126,9 @@ export default class GhostBlock extends Component {
    * Only shown when conditions actually failed (not for optional missing,
    * no visible children, or custom reason).
    *
-   * @returns {boolean} True if conditions tree should be rendered.
+   * @returns True if conditions tree should be rendered.
    */
-  get showConditionsTree() {
+  get showConditionsTree(): boolean {
     return (
       this.args.failureType !== FAILURE_TYPE.OPTIONAL_MISSING &&
       this.args.failureType !== FAILURE_TYPE.NO_VISIBLE_CHILDREN &&
@@ -112,10 +139,10 @@ export default class GhostBlock extends Component {
   /**
    * Checks if an args object has any entries.
    *
-   * @param {Object} args - The arguments object to check.
-   * @returns {boolean} True if args is non-null and has at least one key.
+   * @param args - The arguments object to check.
+   * @returns True if args is non-null and has at least one key.
    */
-  hasArgs(args) {
+  hasArgs(args: Record<string, unknown> | undefined): boolean {
     return args != null && Object.keys(args).length > 0;
   }
 
@@ -123,9 +150,9 @@ export default class GhostBlock extends Component {
    * Returns the display name for the block, including ID if set.
    * Format: "blockName" or "blockName(#id)".
    *
-   * @returns {string} The display name.
+   * @returns The display name.
    */
-  get displayName() {
+  get displayName(): string {
     if (this.args.blockId) {
       return `${this.args.blockName}(#${this.args.blockId})`;
     }
