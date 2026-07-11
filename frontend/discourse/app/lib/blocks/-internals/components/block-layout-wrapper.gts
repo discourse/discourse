@@ -1,4 +1,3 @@
-// @ts-check
 /**
  * Block layout wrapper for blocks.
  *
@@ -6,51 +5,44 @@
  * (non-container) and container blocks. All blocks rendered through
  * `BlockOutlet` use these wrappers to ensure consistent BEM-style class
  * naming and layout structure.
- *
- * @module discourse/lib/blocks/-internals/components/block-layout-wrapper
  */
 import Component from "@glimmer/component";
+import type Owner from "@ember/owner";
 import curryComponent from "ember-curry-component";
 import cssIdentifier from "discourse/helpers/css-identifier";
+import type { BlockComponent } from "discourse/lib/blocks/-internals/types";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
-/**
- * @typedef {import("ember-curry-component").CurriedComponent} CurriedComponent
- */
+interface WrappedBlockLayoutArgs {
+  // The outlet name for class generation.
+  outletName: string;
+  // The block's full registered name.
+  name?: string;
+  // The block's namespace prefix.
+  namespace?: string | null;
+  // Whether this is a container block.
+  isContainer: boolean;
+  // Optional block ID for BEM modifiers and targeting.
+  id?: string;
+  // The curried block component to render.
+  Component: BlockComponent;
+  // Additional CSS classes from the layout entry.
+  classNames?: string;
+  // Extra CSS classes from the @block decorator.
+  decoratorClassNames?: string | null;
+}
 
-/**
- * @typedef {Object} WrappedBlockLayoutArgs
- * @property {string} outletName - The outlet name for class generation.
- * @property {string} name - The block's full registered name.
- * @property {string|null} namespace - The block's namespace prefix.
- * @property {boolean} isContainer - Whether this is a container block.
- * @property {string|null} [id] - Optional block ID for BEM modifiers and targeting.
- * @property {CurriedComponent} Component - The curried block component to render.
- * @property {string} [classNames] - Additional CSS classes from layout entry.
- * @property {string} [decoratorClassNames] - Extra CSS classes from the @block decorator.
- */
-
-/**
- * @typedef {Object} WrappedBlockLayoutSignature
- * @property {WrappedBlockLayoutArgs} Args
- */
+interface WrappedBlockLayoutSignature {
+  Args: WrappedBlockLayoutArgs;
+}
 
 /**
  * Wraps a block in a standard layout wrapper with BEM-style classes.
- *
- * @param {Object} blockData - Block rendering data.
- * @param {string} blockData.outletName - The outlet name for class generation.
- * @param {string} blockData.name - The block's full registered name.
- * @param {string} blockData.namespace - The block's namespace prefix.
- * @param {boolean} blockData.isContainer - Whether this is a container block.
- * @param {string|null} [blockData.id] - Optional block ID for BEM modifiers.
- * @param {CurriedComponent} blockData.Component - The curried block component.
- * @param {string} [blockData.classNames] - Additional CSS classes from layout entry.
- * @param {string} [blockData.decoratorClassNames] - Extra CSS classes from the @block decorator.
- * @param {import("@ember/owner").default} owner - The application owner for currying.
- * @returns {CurriedComponent} The wrapped component.
  */
-export function wrapBlockLayout(blockData, owner) {
+export function wrapBlockLayout(
+  blockData: WrappedBlockLayoutArgs,
+  owner: Owner
+): BlockComponent {
   return curryComponent(WrappedBlockLayout, blockData, owner);
 }
 
@@ -60,24 +52,20 @@ export function wrapBlockLayout(blockData, owner) {
  * All blocks (both containers and non-containers) receive:
  * - `{outletName}__block` or `{outletName}__block-container` - Outlet-scoped class for styling
  * - `{outletName}__block--{id}` or `{outletName}__block-container--{id}` - BEM modifier when `id` is provided
- * - Custom classes from `@decoratorClassNames` (from the @block decorator)
+ * - Custom classes from `@decoratorClassNames` (from the `@block` decorator)
  * - Custom classes from `@classNames` (from the layout entry)
  *
  * Block identity is available via data attributes:
  * - `data-block-name` - The block's full registered name
  * - `data-block-namespace` - The block's namespace (if present)
  * - `data-block-id` - The block's entry ID (if provided)
- *
- * @extends {Component<WrappedBlockLayoutSignature>}
  */
-class WrappedBlockLayout extends Component {
+class WrappedBlockLayout extends Component<WrappedBlockLayoutSignature> {
   /**
    * Generates the appropriate CSS class based on block type and optional ID.
    * When an ID is provided, adds a BEM modifier class (e.g., `outlet__block--my-id`).
-   *
-   * @returns {string[]} An array of CSS class names.
    */
-  get blockClassNames() {
+  get blockClassNames(): string[] {
     const safeOutlet = cssIdentifier(this.args.outletName);
     const baseClass = this.args.isContainer
       ? `${safeOutlet}__block-container`

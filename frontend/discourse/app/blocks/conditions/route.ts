@@ -1,4 +1,4 @@
-// @ts-check
+import type RouterService from "@ember/routing/router-service";
 import { service } from "@ember/service";
 import {
   getCurrentPageType,
@@ -18,8 +18,28 @@ import {
   validateParamSpec,
 } from "discourse/lib/blocks/-internals/matching/value-matcher";
 import { isValidGlobPattern } from "discourse/lib/glob-utils";
-import { BlockCondition } from "./condition";
+import type DiscoveryService from "discourse/services/discovery";
+import { BlockCondition, type ConditionContext } from "./condition";
 import { blockCondition } from "./decorator";
+
+/** Args accepted by the `route` condition. */
+interface RouteConditionArgs {
+  /** URL patterns to match (passes if ANY match). */
+  urls?: string[];
+
+  /** Page types to match (passes if ANY match). */
+  pages?: string[];
+
+  /** Page parameters to match (only valid with `pages`). A plain key/value
+   *  object, or `{ any: [...] }` / `{ not: ... }` combinator of the same. */
+  params?: unknown;
+
+  /** Query parameters to match. Note: queryParams alone is not sufficient -
+   *  the condition requires `urls` or `pages` to match first. This creates
+   *  implicit AND behavior between route and query params. A plain key/value
+   *  object, or `{ any: [...] }` / `{ not: ... }` combinator of the same. */
+  queryParams?: unknown;
+}
 
 /**
  * A condition that evaluates based on the current URL path, semantic page types,
@@ -47,39 +67,41 @@ import { blockCondition } from "./decorator";
  * normalizing URLs before matching. Theme authors don't need to know if
  * Discourse runs on `/forum` or root - patterns like `/c/**` work everywhere.
  *
- * @class BlockRouteCondition
- * @extends BlockCondition
- *
- * @param {string[]} [urls] - URL patterns to match (passes if ANY match).
- * @param {string[]} [pages] - Page types to match (passes if ANY match).
- * @param {Object} [params] - Page parameters to match (only valid with `pages`).
- * @param {Object} [queryParams] - Query parameters to match. Note: queryParams alone
- *   is not sufficient - the condition requires `urls` or `pages` to match first.
- *   This creates implicit AND behavior between route and query params.
- *
  * @example
+ * ```
  * // Match category pages using page type
  * { type: "route", pages: ["CATEGORY_PAGES"] }
+ * ```
  *
  * @example
+ * ```
  * // Match category pages using URL pattern
  * { type: "route", urls: ["/c/**"] }
+ * ```
  *
  * @example
+ * ```
  * // Match multiple page types (OR logic)
  * { type: "route", pages: ["CATEGORY_PAGES", "TAG_PAGES"] }
+ * ```
  *
  * @example
+ * ```
  * // Match specific category by ID
  * { type: "route", pages: ["CATEGORY_PAGES"], params: { categoryId: 5 } }
+ * ```
  *
  * @example
+ * ```
  * // Match with query params
  * { type: "route", urls: ["/latest"], queryParams: { filter: "solved" } }
+ * ```
  *
  * @example
+ * ```
  * // Exclude pages using NOT combinator
  * { not: { type: "route", pages: ["ADMIN_PAGES"] } }
+ * ```
  */
 @blockCondition({
   type: "route",
@@ -95,7 +117,7 @@ import { blockCondition } from "./decorator";
     atMostOne: ["params", "urls"],
   },
   validate(args) {
-    const { urls, pages, params, queryParams } = args;
+    const { urls, pages, params, queryParams } = args as RouteConditionArgs;
 
     // Validate urls
     if (urls?.length) {
@@ -123,8 +145,14 @@ import { blockCondition } from "./decorator";
 
     // Validate params
     if (params) {
-      // Handle any/not operators in params
-      const paramsError = validateParamsWithOperators(params, pages, "params");
+      // Handle any/not operators in params. The `requires: { params: "pages" }`
+      // constraint (validated before this custom validator runs) guarantees
+      // `pages` is present whenever `params` is.
+      const paramsError = validateParamsWithOperators(
+        params,
+        pages as string[],
+        "params"
+      );
       if (paramsError) {
         return paramsError;
       }
@@ -132,7 +160,7 @@ import { blockCondition } from "./decorator";
 
     // Validate queryParams for operator typos (e.g., "an" vs "any")
     if (queryParams) {
-      let queryParamsError = null;
+      let queryParamsError: string | null = null;
       validateParamSpec(queryParams, "queryParams", (msg) => {
         queryParamsError = msg;
       });
@@ -145,8 +173,8 @@ import { blockCondition } from "./decorator";
   },
 })
 export default class BlockRouteCondition extends BlockCondition {
-  @service router;
-  @service discovery;
+  @service declare router: RouterService;
+  @service declare discovery: DiscoveryService;
 
   /**
    * Returns the current URL path, normalized for matching.
@@ -154,10 +182,8 @@ export default class BlockRouteCondition extends BlockCondition {
    * Normalization strips the subfolder prefix, query strings, hash fragments,
    * and trailing slashes. This allows patterns to work consistently regardless
    * of Discourse's installation configuration.
-   *
-   * @returns {string} The normalized URL path.
    */
-  get currentPath() {
+  get currentPath(): string {
     return normalizePath(this.router.currentURL);
   }
 
@@ -174,27 +200,30 @@ export default class BlockRouteCondition extends BlockCondition {
    * will only pass if BOTH the route (via `urls` or `pages`) AND the queryParams
    * match. This is implicit AND behavior. To match only based on query parameters,
    * use `urls: ["**"]` to match all routes first.
-   *
-   * @param {Object} args - The condition arguments.
-   * @param {Object} [context={}] - Evaluation context (for debugging).
-   * @returns {boolean} True if the condition passes.
    */
-  evaluate(args, context = {}) {
-    const { urls, pages, params, queryParams } = args;
+  evaluate(
+    args: Record<string, unknown>,
+    context: ConditionContext = {}
+  ): boolean {
+    const { urls, pages, params, queryParams } = args as RouteConditionArgs;
     const currentPath = this.currentPath;
 
     // Debug context for nested logging
     const isDebugging = context.debug ?? false;
     const logger = context.logger;
     const childDepth = (context._depth ?? 0) + 1;
-    const debugContext = { debug: isDebugging, _depth: childDepth, logger };
+    const debugContext: ConditionContext = {
+      debug: isDebugging,
+      _depth: childDepth,
+      logger,
+    };
 
     // Get actual query params for matching
     const actualQueryParams = this.router.currentRoute?.queryParams;
 
     let routeMatched = false;
-    let matchedPageType = null;
-    let actualPageContext = null;
+    let matchedPageType: string | null = null;
+    let actualPageContext: Record<string, unknown> | null = null;
 
     // Check urls (passes if ANY match)
     if (urls?.length) {
@@ -261,7 +290,11 @@ export default class BlockRouteCondition extends BlockCondition {
       });
 
       // Call #matchPageParams with debug=true to log nested OR/NOT/param checks
-      const paramsContext = { debug: true, _depth: childDepth + 1, logger };
+      const paramsContext: ConditionContext = {
+        debug: true,
+        _depth: childDepth + 1,
+        logger,
+      };
       const paramsMatched = this.#matchPageParams(
         params,
         actualPageContext,
@@ -293,7 +326,7 @@ export default class BlockRouteCondition extends BlockCondition {
       }
 
       // Pass deeper context so OR/AND/NOT logs nest under the queryParams summary
-      const queryParamsContext = {
+      const queryParamsContext: ConditionContext = {
         ...debugContext,
         _depth: childDepth + 1,
       };
@@ -322,13 +355,12 @@ export default class BlockRouteCondition extends BlockCondition {
   /**
    * Matches page parameters against the current context.
    * Supports any/not operators for complex matching.
-   *
-   * @param {Object} params - The expected params from the condition.
-   * @param {Object} pageContext - The actual context values from the current page.
-   * @param {Object} debugContext - Debug context for logging.
-   * @returns {boolean} True if params match.
    */
-  #matchPageParams(params, pageContext, debugContext) {
+  #matchPageParams(
+    params: unknown,
+    pageContext: Record<string, unknown>,
+    debugContext: ConditionContext
+  ): boolean {
     // Recursive matching with operators:
     // - { any: [...] } - OR logic, passes if any spec matches
     // - { not: {...} } - Negation, passes if inner spec does NOT match
@@ -338,21 +370,20 @@ export default class BlockRouteCondition extends BlockCondition {
     const logger = debugContext.logger;
 
     // Handle any operator: { any: [{ categoryId: 1 }, { categoryId: 2 }] }
-    if (params.any !== undefined) {
-      const specs = params.any;
-
+    const anySpec = (params as { any?: unknown[] } | null)?.any;
+    if (anySpec !== undefined) {
       // Log combinator BEFORE children so it appears first in tree
       if (isLoggingEnabled) {
         logger?.logCondition?.({
           type: "OR",
-          args: `${specs.length} params specs`,
+          args: `${anySpec.length} params specs`,
           result: null,
           depth,
           conditionSpec: params,
         });
       }
 
-      const results = specs.map((spec) =>
+      const results = anySpec.map((spec) =>
         this.#matchPageParams(spec, pageContext, {
           debug: isLoggingEnabled,
           _depth: depth + 1,
@@ -369,7 +400,8 @@ export default class BlockRouteCondition extends BlockCondition {
     }
 
     // Handle not operator: { not: { categoryId: 3 } }
-    if (params.not !== undefined) {
+    const notSpec = (params as { not?: unknown } | null)?.not;
+    if (notSpec !== undefined) {
       // Log combinator BEFORE children so it appears first in tree
       if (isLoggingEnabled) {
         logger?.logCondition?.({
@@ -381,7 +413,7 @@ export default class BlockRouteCondition extends BlockCondition {
         });
       }
 
-      const innerResult = this.#matchPageParams(params.not, pageContext, {
+      const innerResult = this.#matchPageParams(notSpec, pageContext, {
         debug: isLoggingEnabled,
         _depth: depth + 1,
         logger,
@@ -397,8 +429,15 @@ export default class BlockRouteCondition extends BlockCondition {
 
     // Simple params object - all must match
     // Log individual param checks
-    const matches = [];
-    for (const [paramName, expectedValue] of Object.entries(params)) {
+    const matches: Array<{
+      key: string;
+      expected: unknown;
+      actual: unknown;
+      result: boolean;
+    }> = [];
+    for (const [paramName, expectedValue] of Object.entries(
+      params as Record<string, unknown>
+    )) {
       const actualValue = pageContext[paramName];
       const result = actualValue === expectedValue;
       matches.push({
@@ -427,22 +466,23 @@ export default class BlockRouteCondition extends BlockCondition {
   /**
    * Extracts param values from page context for the specified params.
    * Handles any/not operators by extracting from nested param objects.
-   *
-   * @param {Object} params - The expected params (keys to extract).
-   * @param {Object} pageContext - The page context containing actual values.
-   * @returns {Object} Object with only the requested param keys and their actual values.
    */
-  #extractParamValues(params, pageContext) {
+  #extractParamValues(
+    params: unknown,
+    pageContext: Record<string, unknown>
+  ): Record<string, unknown> {
     // Handle any/not operators - extract from first nested object for display
-    if (params.any !== undefined && params.any.length > 0) {
-      return this.#extractParamValues(params.any[0], pageContext);
+    const anySpec = (params as { any?: unknown[] } | null)?.any;
+    if (anySpec !== undefined && anySpec.length > 0) {
+      return this.#extractParamValues(anySpec[0], pageContext);
     }
-    if (params.not !== undefined) {
-      return this.#extractParamValues(params.not, pageContext);
+    const notSpec = (params as { not?: unknown } | null)?.not;
+    if (notSpec !== undefined) {
+      return this.#extractParamValues(notSpec, pageContext);
     }
 
-    const result = {};
-    for (const key of Object.keys(params)) {
+    const result: Record<string, unknown> = {};
+    for (const key of Object.keys(params as Record<string, unknown>)) {
       result[key] = pageContext[key];
     }
     return result;
@@ -453,20 +493,23 @@ export default class BlockRouteCondition extends BlockCondition {
  * Validates params with support for any/not operators.
  * This is a standalone function to keep decorator config clean.
  *
- * @param {Object} params - The params to validate.
- * @param {Array<string>} pages - The page types to validate against.
- * @param {string} [path="params"] - Path for error messages.
- * @returns {string|null} Error or null if valid.
+ * @param path - Path for error messages.
+ * @returns Error or null if valid.
  */
-function validateParamsWithOperators(params, pages, path = "params") {
+function validateParamsWithOperators(
+  params: unknown,
+  pages: string[],
+  path = "params"
+): string | null {
   // Handle any operator: { any: [{ categoryId: 1 }, { categoryId: 2 }] }
-  if (params.any !== undefined) {
-    if (!Array.isArray(params.any)) {
+  const anySpec = (params as { any?: unknown } | null)?.any;
+  if (anySpec !== undefined) {
+    if (!Array.isArray(anySpec)) {
       return `\`any\` in params must be an array of param objects.`;
     }
-    for (let i = 0; i < params.any.length; i++) {
+    for (let i = 0; i < anySpec.length; i++) {
       const nestedError = validateParamsWithOperators(
-        params.any[i],
+        anySpec[i],
         pages,
         `${path}.any[${i}]`
       );
@@ -478,8 +521,9 @@ function validateParamsWithOperators(params, pages, path = "params") {
   }
 
   // Handle not operator: { not: { categoryId: 3 } }
-  if (params.not !== undefined) {
-    return validateParamsWithOperators(params.not, pages, `${path}.not`);
+  const notSpec = (params as { not?: unknown } | null)?.not;
+  if (notSpec !== undefined) {
+    return validateParamsWithOperators(notSpec, pages, `${path}.not`);
   }
 
   // Simple params object - validate against page types
@@ -489,7 +533,9 @@ function validateParamsWithOperators(params, pages, path = "params") {
   }
 
   // Validate param types
-  for (const [paramName, value] of Object.entries(params)) {
+  for (const [paramName, value] of Object.entries(
+    params as Record<string, unknown>
+  )) {
     const pageType = pages.find((p) => {
       const pageParams = getParamsForPageType(p);
       return pageParams && paramName in pageParams;

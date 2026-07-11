@@ -1,66 +1,88 @@
-// @ts-check
 import { service } from "@ember/service";
 import { BlockCondition } from "./condition";
 import { blockCondition } from "./decorator";
 
+/** A viewport breakpoint name, matching the breakpoints defined in
+ *  `capabilities.viewport`. */
+type Breakpoint = "sm" | "md" | "lg" | "xl" | "2xl";
+
+/** Args accepted by the `viewport` condition. */
+interface ViewportConditionArgs {
+  /** Minimum breakpoint required (passes at this size and larger). */
+  min?: Breakpoint;
+
+  /** Maximum breakpoint allowed (passes at this size and smaller). */
+  max?: Breakpoint;
+
+  /** If true, passes only on touch devices; if false, only on non-touch. */
+  touch?: boolean;
+}
+
 /**
  * Available viewport breakpoint names.
  * Values match the breakpoints defined in capabilities.viewport.
- *
- * @constant {ReadonlyArray<string>}
  */
-const BREAKPOINTS = Object.freeze(["sm", "md", "lg", "xl", "2xl"]);
+const BREAKPOINTS: readonly Breakpoint[] = Object.freeze([
+  "sm",
+  "md",
+  "lg",
+  "xl",
+  "2xl",
+]);
 
 /**
  * A condition that evaluates based on viewport size and device capabilities.
  *
  * Uses the standard Discourse breakpoints from the capabilities service:
- * - sm: >= 40rem (640px)
- * - md: >= 48rem (768px)
- * - lg: >= 64rem (1024px)
- * - xl: >= 80rem (1280px)
- * - 2xl: >= 96rem (1536px)
+ * - sm: \>= 40rem (640px)
+ * - md: \>= 48rem (768px)
+ * - lg: \>= 64rem (1024px)
+ * - xl: \>= 80rem (1280px)
+ * - 2xl: \>= 96rem (1536px)
  *
  * **Note:** For simple show/hide based on viewport, CSS media queries are often
  * more performant. Use this condition when you need to completely remove components
  * from the DOM on certain viewports, or when the block content differs significantly
  * between viewports.
  *
- * @class BlockViewportCondition
- * @extends BlockCondition
- *
- * @param {string} [min] - Minimum breakpoint required (passes at this size and larger)
- * @param {string} [max] - Maximum breakpoint allowed (passes at this size and smaller)
- * @param {boolean} [touch] - If true, passes only on touch devices; if false, only on non-touch
- *
  * @example
+ * ```
  * // Large screens only (lg and up)
  * { type: "viewport", min: "lg" }
+ * ```
  *
  * @example
+ * ```
  * // Small screens only (below md)
  * { type: "viewport", max: "sm" }
+ * ```
  *
  * @example
+ * ```
  * // Medium to large screens only
  * { type: "viewport", min: "md", max: "xl" }
+ * ```
  *
  * @example
+ * ```
  * // Touch devices only
  * { type: "viewport", touch: true }
+ * ```
  */
 @blockCondition({
   type: "viewport",
   args: {
-    min: { type: "string", enum: BREAKPOINTS },
-    max: { type: "string", enum: BREAKPOINTS },
+    // `enum` widens to a mutable `unknown[]`; BREAKPOINTS stays a frozen,
+    // precisely-typed `readonly Breakpoint[]` for use elsewhere in this file.
+    min: { type: "string", enum: BREAKPOINTS as unknown[] },
+    max: { type: "string", enum: BREAKPOINTS as unknown[] },
     touch: { type: "boolean" },
   },
   constraints: {
     atLeastOne: ["min", "max", "touch"],
   },
   validate(args) {
-    const { min, max } = args;
+    const { min, max } = args as ViewportConditionArgs;
 
     // Check that min <= max when both are specified
     if (min && max) {
@@ -79,16 +101,14 @@ const BREAKPOINTS = Object.freeze(["sm", "md", "lg", "xl", "2xl"]);
   },
 })
 export default class BlockViewportCondition extends BlockCondition {
-  @service capabilities;
+  @service
+  declare capabilities: import("discourse/services/capabilities").Capabilities;
 
   /**
    * Evaluates whether the viewport condition passes.
-   *
-   * @param {Object} args - The condition arguments.
-   * @returns {boolean} True if the condition passes.
    */
-  evaluate(args) {
-    const { min, max, touch } = args;
+  evaluate(args: Record<string, unknown>): boolean {
+    const { min, max, touch } = args as ViewportConditionArgs;
 
     // Check touch capability
     if (touch !== undefined && touch !== this.capabilities.touch) {

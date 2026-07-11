@@ -1,4 +1,3 @@
-// @ts-check
 /**
  * BlockOutlet System
  *
@@ -13,16 +12,16 @@
 import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
+import type Owner from "@ember/owner";
 import curryComponent from "ember-curry-component";
-/** @type {import("discourse/lib/blocks/-internals/components/block-layout-wrapper.gjs")} */
+import type { BlockMetadata, LayoutEntry } from "discourse/blocks/types";
 import { wrapBlockLayout } from "discourse/lib/blocks/-internals/components/block-layout-wrapper";
-/** @type {import("discourse/lib/blocks/-internals/components/block-outlet-inline-error.gjs")} */
 import BlockOutletInlineError from "discourse/lib/blocks/-internals/components/block-outlet-inline-error";
-/** @type {import("discourse/lib/blocks/-internals/components/block-outlet-root-container.gjs")} */
 import BlockOutletRootContainer from "discourse/lib/blocks/-internals/components/block-outlet-root-container";
 import {
   createDebugGhost,
   DEBUG_CALLBACK,
+  type DebugGhostData,
   debugHooks,
 } from "discourse/lib/blocks/-internals/debug-hooks";
 import {
@@ -31,46 +30,40 @@ import {
   getBlockMetadata,
   registerRootBlock,
 } from "discourse/lib/blocks/-internals/decorator";
+import type { CreateChildBlockFn } from "discourse/lib/blocks/-internals/entry-processing";
 import {
   captureCallSite,
   raiseBlockError,
 } from "discourse/lib/blocks/-internals/error";
 import { isBlockRegistryFrozen } from "discourse/lib/blocks/-internals/registry/block";
+import type {
+  BlockClass,
+  BlockComponent,
+  BlockEntry,
+  ChildBlockResult,
+} from "discourse/lib/blocks/-internals/types";
 import { applyArgDefaults } from "discourse/lib/blocks/-internals/utils";
 import { validateLayout } from "discourse/lib/blocks/-internals/validation/layout";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
-/** @type {import("discourse/ui-kit/d-async-content.gts")} */
+import type Blocks from "discourse/services/blocks";
 import DAsyncContent from "discourse/ui-kit/d-async-content";
-
-/**
- * A block entry in a layout configuration.
- *
- * @typedef {Object} LayoutEntry
- * @property {typeof Component | string} block - The block component class (must use @block decorator) or a registered block name string.
- * @property {Object} [args] - Args to pass to the block component.
- * @property {string|string[]} [classNames] - Additional CSS classes for the block wrapper.
- * @property {Array<LayoutEntry>} [children] - Nested block entries (only for container blocks).
- * @property {Array<Object>|Object} [conditions] - Conditions that must pass for block to render.
- * @property {Object} [containerArgs] - Args passed from parent container's childArgs.
- */
 
 /**
  * Maps outlet names to their registered outlet layouts.
  * Each outlet can have exactly one layout registered.
  *
  * DO NOT EXPORT THIS MAP to prevent layouts bypassing the validation steps
- *
- * @type {Map<string, {validatedLayout: Promise<Array<Object>>}>}
  */
-const outletLayouts = new Map();
+const outletLayouts = new Map<
+  string,
+  { validatedLayout: Promise<BlockEntry[]> }
+>();
 
 /**
  * Counter for generating stable entry keys.
  * Incremented for each block entry when a layout is registered via `_renderBlocks()`.
- *
- * @type {number}
  */
 let nextEntryKey = 0;
 
@@ -83,16 +76,15 @@ let nextEntryKey = 0;
  *
  * Keys are assigned at registration time (in `_renderBlocks()`) rather than
  * render time, ensuring they survive the shallow cloning in `BlockOutletRootContainer#preprocessEntries`.
- *
- * @param {Array<Object>} entries - The block entries to process.
  */
-function assignStableKeys(entries) {
+function assignStableKeys(entries: BlockEntry[]): void {
   for (const entry of entries) {
     entry.__stableKey = nextEntryKey++;
 
     // Recursively assign keys to children
-    if (entry.children?.length) {
-      assignStableKeys(entry.children);
+    const children = entry.children;
+    if (children?.length) {
+      assignStableKeys(children);
     }
   }
 }
@@ -102,7 +94,7 @@ function assignStableKeys(entries) {
  *
  * USE ONLY FOR TESTING PURPOSES.
  */
-export function _resetOutletLayoutsForTesting() {
+export function _resetOutletLayoutsForTesting(): void {
   if (DEBUG) {
     outletLayouts.clear();
     nextEntryKey = 0;
@@ -114,10 +106,11 @@ export function _resetOutletLayoutsForTesting() {
  * Allows tests to access validation promises to verify error handling.
  *
  * USE ONLY FOR TESTING PURPOSES.
- *
- * @returns {Map<string, {validatedLayout: Promise<Array<Object>>}>} The outlet layouts map.
  */
-export function _getOutletLayouts() {
+export function _getOutletLayouts(): Map<
+  string,
+  { validatedLayout: Promise<BlockEntry[]> }
+> {
   if (DEBUG) {
     return outletLayouts;
   }
@@ -127,13 +120,12 @@ export function _getOutletLayouts() {
 /**
  * Resolves the decoratorClassNames value from block metadata.
  * Handles string, array, and function forms.
- *
- * @param {Object} metadata - The block metadata object.
- * @param {Object} args - The block's args (passed to function form).
- * @returns {string|null} The resolved class names string, or null if none.
  */
-function resolveDecoratorClassNames(metadata, args) {
-  const value = metadata.decoratorClassNames;
+function resolveDecoratorClassNames(
+  metadata: BlockMetadata | null,
+  args: Record<string, unknown>
+): string | null {
+  const value = metadata?.decoratorClassNames;
   if (value == null) {
     return null;
   }
@@ -151,35 +143,21 @@ function resolveDecoratorClassNames(metadata, args) {
  * Curries the component with all necessary args and wraps all blocks
  * in a layout wrapper for consistent styling.
  *
- * @param {Object} entry - The block entry
- * @param {import("discourse/lib/blocks/-internals/registry/block").BlockClass} entry.block - The block component class
- * @param {Object} [entry.args] - Args to pass to the block
- * @param {Object} [entry.containerArgs] - Container args for parent's childArgs schema
- * @param {string} [entry.classNames] - Additional CSS classes
- * @param {string} [entry.id] - Unique identifier for BEM styling and targeting
- * @param {import("@ember/owner").default} owner - The application owner
- * @param {Object} [debugContext] - Debug context for visual overlay
- * @param {string} [debugContext.displayHierarchy] - Where the block is rendered (for tooltip display)
- * @param {string} [debugContext.containerPath] - Container's full path (for children's __hierarchy)
- * @param {Object} [debugContext.conditions] - The block's conditions
- * @param {Object} [debugContext.outletArgs] - Outlet args for debug display
- * @param {string} [debugContext.key] - Stable unique key for this block
- * @param {string} [debugContext.outletName] - The outlet name for wrapper class generation
- * @param {Array<import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult>} [debugContext.processedChildren] - Pre-processed children
- * @returns {import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult}
- *   An object containing the curried block component, any containerArgs
- *   provided in the block entry, and a stable unique key for list rendering.
- *   The containerArgs are values required by the parent container's childArgs
- *   schema, accessible to the parent but not to the child block itself.
+ * An object containing the curried block component, any containerArgs
+ * provided in the block entry, and a stable unique key for list rendering.
+ * The containerArgs are values required by the parent container's childArgs
+ * schema, accessible to the parent but not to the child block itself.
  */
-function createChildBlock(entry, owner, debugContext = {}) {
-  const {
-    block: ComponentClass,
-    args = {},
-    containerArgs,
-    classNames,
-    id,
-  } = entry;
+const createChildBlock: CreateChildBlockFn = (entry, owner, debugContext) => {
+  const { block: rawBlock, args = {}, containerArgs, classNames, id } = entry;
+
+  // `entry.block` is `string | BlockClass` because a `BlockEntry` may
+  // reference a block by name before resolution; `createChildBlock` is only
+  // ever invoked (via `createChildBlockFn`) after `tryResolveBlock` has
+  // already resolved the reference to a class, so it is always a
+  // `BlockClass` here.
+  const ComponentClass = rawBlock as BlockClass;
+
   const blockMeta = getBlockMetadata(ComponentClass);
   const isContainer = blockMeta?.isContainer ?? false;
 
@@ -199,10 +177,14 @@ function createChildBlock(entry, owner, debugContext = {}) {
 
   // Curry the component with pre-bound args so it can be rendered
   // without knowing its configuration details
-  const curried = curryComponent(ComponentClass, blockArgs, owner);
+  const curried: BlockComponent = curryComponent(
+    ComponentClass,
+    blockArgs,
+    owner
+  );
 
   // All blocks are wrapped for consistent styling
-  let wrappedComponent = wrapBlockLayout(
+  let wrappedComponent: BlockComponent = wrapBlockLayout(
     {
       name: blockMeta?.blockName,
       namespace: blockMeta?.namespace,
@@ -236,31 +218,27 @@ function createChildBlock(entry, owner, debugContext = {}) {
         outletName: debugContext.displayHierarchy,
         outletArgs: debugContext.outletArgs,
       }
-    );
+    ) as DebugGhostData | null | undefined;
     if (debugResult?.Component) {
       wrappedComponent = debugResult.Component;
     }
   }
 
-  /** @type {import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult} */
-  const result = {
+  const result: ChildBlockResult = {
     Component: wrappedComponent,
     containerArgs,
     key: debugContext.key,
+
     /**
      * Returns a ghost version of this child with a custom failure reason.
      *
      * Used by container blocks (like head) that choose not to render some children
      * but want to show them as ghosts in debug mode with an explanation.
-     *
-     * @param {string} reason - The failure reason to display in the ghost overlay.
-     * @returns {import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult|null}
-     *   A ghost child block result, or null if debug mode is disabled.
      */
-    asGhost(reason) {
+    asGhost(reason: string): ChildBlockResult | null {
       const ghostResult = createDebugGhost(
         {
-          name: blockMeta?.blockName,
+          name: blockMeta?.blockName || "unknown",
           id,
           args: argsWithDefaults,
           containerArgs,
@@ -274,8 +252,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
       );
 
       if (ghostResult) {
-        /** @type {import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult} */
-        const ghostChild = {
+        const ghostChild: ChildBlockResult = {
           Component: ghostResult.Component,
           containerArgs,
           key: `${debugContext.key}:ghost`,
@@ -290,7 +267,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
   };
 
   return result;
-}
+};
 
 /**
  * Registers an outlet layout (array of block entries) for a named outlet.
@@ -302,13 +279,9 @@ function createChildBlock(entry, owner, debugContext = {}) {
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
  *
- * @param {string} outletName - The outlet identifier (must be in BLOCK_OUTLETS).
- * @param {Array<LayoutEntry>} layout - Array of block entries.
- * @param {Object} [owner] - The application owner for service lookup (passed from plugin API).
- * @param {Error|null} [callSiteError] - Pre-captured error for source-mapped stack traces.
+ * @param owner - The application owner for service lookup (passed from plugin API).
+ * @param callSiteError - Pre-captured error for source-mapped stack traces.
  *   When called via api.renderBlocks(), this is captured there to exclude the PluginApi wrapper.
- * @returns {Promise<Array<Object>>} Promise resolving to the validated layout array.
- * @throws {Error} If validation fails or outlet already has a layout.
  *
  * @example
  * ```js
@@ -332,7 +305,12 @@ function createChildBlock(entry, owner, debugContext = {}) {
  * ]);
  * ```
  */
-export function _renderBlocks(outletName, layout, owner, callSiteError = null) {
+export function _renderBlocks(
+  outletName: string,
+  layout: LayoutEntry[],
+  owner?: Owner,
+  callSiteError: Error | null = null
+): Promise<BlockEntry[]> {
   if (!callSiteError) {
     callSiteError = captureCallSite(_renderBlocks);
   }
@@ -358,10 +336,14 @@ export function _renderBlocks(outletName, layout, owner, callSiteError = null) {
     );
   }
 
-  const blocksService = owner?.lookup("service:blocks");
+  const blocksService = owner?.lookup("service:blocks") as Blocks | undefined;
 
-  // Assign stable keys to all entries
-  assignStableKeys(layout);
+  // `assignStableKeys` mutates each entry in place, tagging it with the
+  // internal `__stableKey` bookkeeping field the rest of the render pipeline
+  // relies on. This turns the author-facing `LayoutEntry[]` into the internal
+  // `BlockEntry[]` shape used from here on.
+  const trackedLayout = layout as unknown as BlockEntry[];
+  assignStableKeys(trackedLayout);
 
   // Validate layout asynchronously
   const validatedLayout = validateLayout(
@@ -370,7 +352,7 @@ export function _renderBlocks(outletName, layout, owner, callSiteError = null) {
     blocksService,
     "", // parentPath - empty so paths start with array index like [0]
     callSiteError // Error object for source-mapped call site
-  ).then(() => layout);
+  ).then(() => trackedLayout);
 
   // Store layout with validation promise for potential future use
   outletLayouts.set(outletName, { validatedLayout });
@@ -382,27 +364,39 @@ export function _renderBlocks(outletName, layout, owner, callSiteError = null) {
  * Checks if a layout has been registered for a given outlet.
  *
  * @internal This is an internal API. Use the `blocks` service's `hasLayout()` method instead.
- *
- * @param {string} outletName - The outlet identifier to check.
- * @returns {boolean} True if a layout is registered for this outlet.
  */
-export function _hasLayout(outletName) {
+export function _hasLayout(outletName: string): boolean {
   return outletLayouts.has(outletName);
 }
 
-/**
- * Component signature for BlockOutlet.
- *
- * @typedef {Object} BlockOutletSignature
- * @property {Object} Args
- * @property {string} Args.name - The outlet name (must be in BLOCK_OUTLETS registry).
- * @property {Object} [Args.outletArgs] - Arguments to pass to blocks rendered in this outlet.
- * @property {Object} [Args.deprecatedArgs] - Deprecated args with deprecation warnings.
- * @property {Object} Blocks
- * @property {[hasLayout: boolean]} Blocks.before - Yields hasLayout flag before content.
- * @property {[hasLayout: boolean]} Blocks.after - Yields hasLayout flag after content.
- * @property {[error: Error]} Blocks.error - Yields error when validation fails.
- */
+interface BlockOutletSignature {
+  Args: {
+    // The outlet name (must be in BLOCK_OUTLETS registry).
+    name: string;
+    // Arguments to pass to blocks rendered in this outlet.
+    outletArgs?: Record<string, unknown>;
+    // Deprecated args with deprecation warnings.
+    deprecatedArgs?: Record<string, unknown>;
+  };
+  Blocks: {
+    // Yields hasLayout flag before content.
+    before?: [hasLayout: boolean];
+    // Yields hasLayout flag after content.
+    after?: [hasLayout: boolean];
+    // Yields error when validation fails.
+    error?: [error: Error];
+  };
+}
+
+/** The signature `debugHooks.outletInfoComponent` renders with, when set. */
+interface OutletInfoSignature {
+  Args: {
+    outletName: string;
+    blockCount: number;
+    outletArgs: Record<string, unknown>;
+    error: Error | null;
+  };
+}
 
 /**
  * Root component for rendering registered blocks in a designated outlet.
@@ -419,8 +413,6 @@ export function _hasLayout(outletName) {
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
  *
- * @extends {Component<BlockOutletSignature>}
- *
  * @example
  * ```hbs
  * <BlockOutlet @name="homepage-blocks">
@@ -433,16 +425,14 @@ export function _hasLayout(outletName) {
  * ```
  */
 @block("block-outlet", { container: true })
-export default class BlockOutlet extends Component {
+export default class BlockOutlet extends Component<BlockOutletSignature> {
   /**
    * The outlet name, locked at construction time.
    * This prevents dynamic name changes which could cause inconsistent rendering.
-   *
-   * @type {string}
    */
-  #name;
+  #name: string;
 
-  constructor(owner, args) {
+  constructor(owner: Owner, args: BlockOutletSignature["Args"]) {
     super(owner, args);
 
     // Lock the name at construction to prevent dynamic changes
@@ -455,17 +445,25 @@ export default class BlockOutlet extends Component {
     }
   }
 
-  get validatedLayout() {
+  get validatedLayout(): Promise<BlockEntry[]> | undefined {
     return outletLayouts.get(this.#name)?.validatedLayout;
   }
 
   /**
    * Processes block entries and returns renderable components.
-   *
-   * @returns {Promise<{rawChildren: Array<Object>, showGhosts: boolean, showVisualOverlay: boolean, isLoggingEnabled: boolean}>|undefined}
    */
   @cached
-  get children() {
+  get children():
+    | Promise<
+        | {
+            rawChildren: BlockEntry[];
+            showGhosts: boolean;
+            showVisualOverlay: boolean;
+            isLoggingEnabled: boolean;
+          }
+        | undefined
+      >
+    | undefined {
     // We need to track the state outside the promise contexts to force the children to be rendered when
     // the user enables the debugging
     const showGhosts = debugHooks.isGhostBlocksEnabled;
@@ -493,7 +491,7 @@ export default class BlockOutlet extends Component {
 
         return { rawChildren, showGhosts, showVisualOverlay, isLoggingEnabled };
       })
-      .catch((error) => {
+      .catch((error: unknown) => {
         if (isTesting() || isRailsTesting()) {
           setTimeout(() => {
             throw error;
@@ -516,21 +514,26 @@ export default class BlockOutlet extends Component {
 
   /**
    * The locked outlet name, used for CSS class generation and config lookup.
-   *
-   * @returns {string}
    */
-  get outletName() {
+  get outletName(): string {
     return this.#name;
   }
 
   /**
    * The component to render for outlet boundary debug info.
    * Returns the OutletInfo component when debug mode is enabled, null otherwise.
-   *
-   * @returns {typeof Component<{outletName: string, blockCount: number, outletArgs: object, error: Error}>|null}
    */
-  get OutletInfoComponent() {
-    return debugHooks.outletInfoComponent;
+  get OutletInfoComponent():
+    | typeof Component<OutletInfoSignature>
+    | null
+    | undefined {
+    // `debugHooks.outletInfoComponent` is typed as a bare `typeof Component`
+    // (the debug-hooks module has no reason to know this specific consumer's
+    // signature); narrow it to the shape this component actually renders with.
+    return debugHooks.outletInfoComponent as
+      | typeof Component<OutletInfoSignature>
+      | null
+      | undefined;
   }
 
   /**
@@ -542,19 +545,19 @@ export default class BlockOutlet extends Component {
    *
    * Deprecated args trigger a deprecation warning when accessed, helping
    * migrate consumers away from renamed or removed outlet args.
-   *
-   * @returns {Object} Combined args object with lazy property getters
    */
   @cached
-  get outletArgsWithDeprecations() {
+  get outletArgsWithDeprecations(): Record<string, unknown> {
     if (!this.args.deprecatedArgs) {
       return this.args.outletArgs || {};
     }
+    // `buildArgsWithDeprecations` is authored in untyped `.js`; its actual
+    // runtime return is a plain object keyed by the combined arg names.
     return buildArgsWithDeprecations(
       this.args.outletArgs || {},
       this.args.deprecatedArgs,
       { outletName: this.#name }
-    );
+    ) as Record<string, unknown>;
   }
 
   <template>
@@ -582,27 +585,31 @@ export default class BlockOutlet extends Component {
         </:loading>
 
         <:content as |layout|>
-          {{#let
-            (component
-              BlockOutletRootContainer
-              outletName=this.outletName
-              outletArgs=this.outletArgsWithDeprecations
-              rawChildren=layout.rawChildren
-              showGhosts=layout.showGhosts
-              showVisualOverlay=layout.showVisualOverlay
-              isLoggingEnabled=layout.isLoggingEnabled
-              createChildBlockFn=createChildBlock
-            )
-            as |ChildrenContainer|
-          }}
-            {{#if OutletInfo}}
-              <OutletInfo @blockCount={{layout.rawChildren.length}}>
+          {{! layout is only undefined when no blocks passed validation, in
+              which case the :empty block below renders instead }}
+          {{#if layout}}
+            {{#let
+              (component
+                BlockOutletRootContainer
+                outletName=this.outletName
+                outletArgs=this.outletArgsWithDeprecations
+                rawChildren=layout.rawChildren
+                showGhosts=layout.showGhosts
+                showVisualOverlay=layout.showVisualOverlay
+                isLoggingEnabled=layout.isLoggingEnabled
+                createChildBlockFn=createChildBlock
+              )
+              as |ChildrenContainer|
+            }}
+              {{#if OutletInfo}}
+                <OutletInfo @blockCount={{layout.rawChildren.length}}>
+                  <ChildrenContainer />
+                </OutletInfo>
+              {{else}}
                 <ChildrenContainer />
-              </OutletInfo>
-            {{else}}
-              <ChildrenContainer />
-            {{/if}}
-          {{/let}}
+              {{/if}}
+            {{/let}}
+          {{/if}}
         </:content>
 
         <:error as |error|>

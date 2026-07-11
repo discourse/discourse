@@ -1,25 +1,32 @@
-// @ts-check
+import type { ArgSchema, BlockConstraints } from "discourse/blocks/types";
 import {
   MAX_BLOCK_NAME_LENGTH,
   parseBlockName,
+  type ParsedBlockName,
   VALID_NAMESPACED_BLOCK_PATTERN,
 } from "discourse/lib/blocks/-internals/patterns";
 import { validateConditionArgsSchema } from "discourse/lib/blocks/-internals/validation/condition-args";
 import { validateConstraintsSchema } from "discourse/lib/blocks/-internals/validation/constraints";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
-import { BlockCondition } from "./condition";
+import {
+  BlockCondition,
+  type ConditionSourceType,
+  type ConditionValidateFn,
+} from "./condition";
 
 /**
  * Valid sourceType values for the decorator config.
- * @constant {ReadonlyArray<string>}
  */
-const VALID_SOURCE_TYPES = Object.freeze(["none", "outletArgs", "object"]);
+const VALID_SOURCE_TYPES: readonly ConditionSourceType[] = Object.freeze([
+  "none",
+  "outletArgs",
+  "object",
+]);
 
 /**
  * Valid config keys for the decorator.
- * @constant {ReadonlyArray<string>}
  */
-const VALID_CONFIG_KEYS = Object.freeze([
+const VALID_CONFIG_KEYS: readonly string[] = Object.freeze([
   "type",
   "sourceType",
   "args",
@@ -31,20 +38,42 @@ const VALID_CONFIG_KEYS = Object.freeze([
  * WeakSet tracking decorated classes.
  * Private - only accessible via isDecoratedCondition().
  */
-const decoratedConditions = new WeakSet();
+const decoratedConditions = new WeakSet<object>();
 
 /**
- * Checks if a class was decorated with @blockCondition.
+ * Checks if a class was decorated with `@blockCondition`.
  * Used by the block registration system to reject non-decorated classes.
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
  *
- * @param {Function} ConditionClass - The class to check.
- * @returns {boolean} True if the class was decorated.
+ * @param ConditionClass - The class to check. Widened to `object` (rather than
+ *   a condition-class type) because this is also probed defensively before a
+ *   class is known to extend `BlockCondition`.
+ * @returns True if the class was decorated.
  */
-export function isDecoratedCondition(ConditionClass) {
+export function isDecoratedCondition(ConditionClass: object): boolean {
   return decoratedConditions.has(ConditionClass);
+}
+
+/** Configuration accepted by the `@blockCondition` decorator. */
+export interface BlockConditionConfig {
+  /** Unique condition type identifier. */
+  type: string;
+
+  /** How the `source` parameter is handled. Defaults to `"none"`. */
+  sourceType?: ConditionSourceType;
+
+  /** Arg schema definitions (type, required, min, max, pattern, etc.).
+   *  Use `{ type: "any" }` to allow any type. */
+  args?: Record<string, ArgSchema>;
+
+  /** Cross-arg constraints (atLeastOne, exactlyOne, allOrNone, atMostOne). */
+  constraints?: BlockConstraints;
+
+  /** Custom validation function called at registration time. Receives the
+   *  args object, returns an error string/array or null. */
+  validate?: ConditionValidateFn;
 }
 
 /**
@@ -57,17 +86,10 @@ export function isDecoratedCondition(ConditionClass) {
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
  *
- * @param {Object} config - Condition configuration.
- * @param {string} config.type - Unique condition type identifier.
- * @param {"none"|"outletArgs"|"object"} [config.sourceType="none"] - How source parameter is handled.
- * @param {Object} [config.args={}] - Arg schema definitions (type, required, min, max, pattern, etc.).
- *   Use `{ type: "any" }` to allow any type.
- * @param {Object} [config.constraints] - Cross-arg constraints (atLeastOne, exactlyOne, allOrNone, atMostOne).
- * @param {Function} [config.validate] - Custom validation function called at registration time.
- *   Receives args object, returns error string/array or null.
- * @throws {Error} If config is invalid or class doesn't extend BlockCondition.
+ * @throws Error If config is invalid or class doesn't extend BlockCondition.
  *
  * @example
+ * ```javascript
  * import { blockCondition, BlockCondition } from "discourse/blocks/conditions";
  *
  * @blockCondition({
@@ -90,8 +112,10 @@ export function isDecoratedCondition(ConditionClass) {
  *   @service currentUser;
  *   evaluate(args, context) { ... }
  * }
+ * ```
  *
  * @example
+ * ```javascript
  * // With constraints
  * @blockCondition({
  *   type: "setting",
@@ -106,8 +130,9 @@ export function isDecoratedCondition(ConditionClass) {
  *     atMostOne: ["enabled", "equals", "includes"],
  *   },
  * })
+ * ```
  */
-export function blockCondition(config) {
+export function blockCondition(config: BlockConditionConfig): ClassDecorator {
   const {
     type,
     sourceType = "none",
@@ -137,8 +162,10 @@ export function blockCondition(config) {
     );
   }
 
-  // Parse the type to extract namespace components
-  const parsed = parseBlockName(type);
+  // Parse the type to extract namespace components. `type` is regex-validated
+  // above, so `parseBlockName` is guaranteed to resolve one of its three
+  // namespace formats and never return null here.
+  const parsed = parseBlockName(type) as ParsedBlockName;
 
   // Validate sourceType is one of the allowed values
   if (!VALID_SOURCE_TYPES.includes(sourceType)) {
@@ -182,15 +209,17 @@ export function blockCondition(config) {
   }
 
   // Freeze schema and compute derived validArgKeys
-  const frozenSchema = Object.freeze({ ...argsSchema });
-  const frozenConstraints = constraints
+  const frozenSchema: Readonly<Record<string, ArgSchema>> = Object.freeze({
+    ...argsSchema,
+  });
+  const frozenConstraints: Readonly<BlockConstraints> | undefined = constraints
     ? Object.freeze({ ...constraints })
     : undefined;
-  const argKeys = Object.freeze(Object.keys(argsSchema));
-  const allKeys =
+  const argKeys: readonly string[] = Object.freeze(Object.keys(argsSchema));
+  const allKeys: readonly string[] =
     sourceType !== "none" ? Object.freeze([...argKeys, "source"]) : argKeys;
 
-  return function decorator(TargetClass) {
+  return (TargetClass) => {
     // Validate that the class extends BlockCondition
     if (!(TargetClass.prototype instanceof BlockCondition)) {
       throw new Error(
@@ -214,6 +243,9 @@ export function blockCondition(config) {
     // Track as decorated so Blocks service can verify
     decoratedConditions.add(TargetClass);
 
-    return TargetClass;
+    // A legacy class decorator that returns nothing keeps the class
+    // unchanged, which is exactly what this decorator wants — it records
+    // metadata and tracks the class as decorated as side effects rather than
+    // replacing the class, so there is no need to return the target.
   };
 }
