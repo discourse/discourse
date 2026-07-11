@@ -6,7 +6,8 @@ export default function wrapTestModulesPlugin() {
     transform: {
       filter: { id: TEST_FILE_RE },
       handler(code, id, { magicString }) {
-        const ast = this.parse(code);
+        const isTypeScript = id.endsWith(".ts") || id.endsWith(".gts");
+        const ast = this.parse(code, isTypeScript ? { lang: "ts" } : undefined);
 
         let lastImportEnd = 0;
         for (const node of ast.body) {
