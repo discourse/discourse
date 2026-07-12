@@ -35,6 +35,7 @@ export default class ExpressionInput extends Component {
   #focusOutTimer = null;
   #pickerDismiss = null;
   #pickerEditorElement = null;
+  #pickerTrigger = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -132,6 +133,14 @@ export default class ExpressionInput extends Component {
 
   @action
   openReferencePicker({ trigger, properties, current, onSelect, onEdit }) {
+    // Re-triggering on the same pill toggles the dropdown shut rather than
+    // closing and reopening it.
+    if (this.#pickerTrigger === trigger) {
+      this.#closeReferencePicker();
+      return;
+    }
+
+    this.#pickerTrigger = trigger;
     this.menu.show(trigger, {
       identifier: REFERENCE_PICKER_IDENTIFIER,
       component: ReferencePropertyPicker,
@@ -151,6 +160,15 @@ export default class ExpressionInput extends Component {
               onEdit();
             }
           : null,
+        // Fires however the menu closes (incl. float-kit's own outside-click),
+        // so our open-state can't go stale. Scoped to this trigger so a menu
+        // being replaced by another pill's doesn't clear the new one.
+        onClose: () => {
+          if (this.#pickerTrigger === trigger) {
+            this.#pickerTrigger = null;
+            this.#teardownPickerDismiss();
+          }
+        },
       },
     });
     this.#armPickerDismiss();
@@ -165,7 +183,19 @@ export default class ExpressionInput extends Component {
       return;
     }
     this.#pickerEditorElement = editor;
-    this.#pickerDismiss = () => this.#closeReferencePicker();
+    this.#pickerDismiss = (event) => {
+      // A pointerdown on the pill that owns the open dropdown is left to the
+      // pill's own click handler, which toggles it shut — closing here too
+      // would make it close and immediately reopen.
+      const openPill = this.#pickerTrigger?.closest?.(".cm-wf-reference-pill");
+      if (
+        openPill &&
+        event.target?.closest?.(".cm-wf-reference-pill") === openPill
+      ) {
+        return;
+      }
+      this.#closeReferencePicker();
+    };
     editor.addEventListener("pointerdown", this.#pickerDismiss, {
       capture: true,
     });
@@ -184,6 +214,7 @@ export default class ExpressionInput extends Component {
   }
 
   #closeReferencePicker() {
+    this.#pickerTrigger = null;
     this.menu.close(REFERENCE_PICKER_IDENTIFIER);
     this.#teardownPickerDismiss();
   }
