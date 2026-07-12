@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseRssPolling
-  class FeedSettingsController < Admin::AdminController
+  class FeedSettingsController < SuperAdmin::SuperAdminController
     requires_plugin "discourse-rss-polling"
 
     def show

@@ -14,18 +14,18 @@ describe ReadOnlyMixin do
 
     expect(controllers_with_readonly_actions).to contain_exactly(
       # All the /admin/backups actions that modify data
-      [Admin::BackupsController, :readonly],
-      [Admin::BackupsController, :create],
-      [Admin::BackupsController, :cancel],
-      [Admin::BackupsController, :restore],
-      [Admin::BackupsController, :rollback],
-      [Admin::BackupsController, :destroy],
-      [Admin::BackupsController, :email],
-      [Admin::BackupsController, :upload_backup_chunk],
-      [Admin::BackupsController, :create_multipart],
-      [Admin::BackupsController, :abort_multipart],
-      [Admin::BackupsController, :complete_multipart],
-      [Admin::BackupsController, :batch_presign_multipart_parts],
+      [SuperAdmin::BackupsController, :readonly],
+      [SuperAdmin::BackupsController, :create],
+      [SuperAdmin::BackupsController, :cancel],
+      [SuperAdmin::BackupsController, :restore],
+      [SuperAdmin::BackupsController, :rollback],
+      [SuperAdmin::BackupsController, :destroy],
+      [SuperAdmin::BackupsController, :email],
+      [SuperAdmin::BackupsController, :upload_backup_chunk],
+      [SuperAdmin::BackupsController, :create_multipart],
+      [SuperAdmin::BackupsController, :abort_multipart],
+      [SuperAdmin::BackupsController, :complete_multipart],
+      [SuperAdmin::BackupsController, :batch_presign_multipart_parts],
       # Search uses a POST request but doesn't modify any data
       [CategoriesController, :search],
       # Allows admins to log in (via email) when the site is in readonly mode (cf. https://meta.discourse.org/t/-/89605)

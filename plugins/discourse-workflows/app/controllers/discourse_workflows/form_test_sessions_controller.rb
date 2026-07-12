@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseWorkflows
-  class FormTestSessionsController < ::Admin::AdminController
+  class FormTestSessionsController < ::SuperAdmin::SuperAdminController
     requires_plugin DiscourseWorkflows::PLUGIN_NAME
 
     def create

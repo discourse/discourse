@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module DiscourseWorkflows
-  class WorkflowVersionsController < ::Admin::AdminController
+  class WorkflowVersionsController < ::SuperAdmin::SuperAdminController
     requires_plugin DiscourseWorkflows::PLUGIN_NAME
 
     def index

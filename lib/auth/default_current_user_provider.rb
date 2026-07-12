@@ -65,7 +65,7 @@ class Auth::DefaultCurrentUserProvider
       formats: :rss,
     ),
     RouteMatcher.new(methods: :get, actions: "users#bookmarks", formats: :ics),
-    RouteMatcher.new(methods: :post, actions: "admin/email#handle_mail", formats: nil),
+    RouteMatcher.new(methods: :post, actions: "super_admin/email#handle_mail", formats: nil),
   ]
 
   def self.find_v0_auth_cookie(request)

@@ -138,7 +138,7 @@ class ApiKeyScope < ActiveRecord::Base
             params: %i[username],
           },
           sync_sso: {
-            actions: %w[admin/users#sync_sso],
+            actions: %w[super_admin/users#sync_sso],
             params: %i[sso sig],
           },
           show: {
@@ -164,19 +164,19 @@ class ApiKeyScope < ActiveRecord::Base
             params: %i[username],
           },
           log_out: {
-            actions: %w[admin/users#log_out],
+            actions: %w[super_admin/users#log_out],
           },
           anonymize: {
-            actions: %w[admin/users#anonymize],
+            actions: %w[super_admin/users#anonymize],
           },
           suspend: {
-            actions: %w[admin/users#suspend],
+            actions: %w[super_admin/users#suspend],
           },
           delete: {
-            actions: %w[admin/users#destroy],
+            actions: %w[super_admin/users#destroy],
           },
           list: {
-            actions: %w[admin/users#index],
+            actions: %w[super_admin/users#index],
           },
         },
         user_status: {
@@ -189,7 +189,7 @@ class ApiKeyScope < ActiveRecord::Base
         },
         email: {
           receive_emails: {
-            actions: %w[admin/email#handle_mail admin/email#smtp_should_reject],
+            actions: %w[super_admin/email#handle_mail super_admin/email#smtp_should_reject],
           },
         },
         invites: {
@@ -199,19 +199,19 @@ class ApiKeyScope < ActiveRecord::Base
         },
         badges: {
           list: {
-            actions: %w[badges#index admin/badges#index],
+            actions: %w[badges#index super_admin/badges#index],
           },
           create: {
-            actions: %w[admin/badges#create],
+            actions: %w[super_admin/badges#create],
           },
           show: {
             actions: %w[badges#show],
           },
           update: {
-            actions: %w[admin/badges#update],
+            actions: %w[super_admin/badges#update],
           },
           delete: {
-            actions: %w[admin/badges#destroy],
+            actions: %w[super_admin/badges#destroy],
           },
           list_user_badges: {
             actions: %w[user_badges#username],
@@ -232,8 +232,8 @@ class ApiKeyScope < ActiveRecord::Base
           },
           administer_groups: {
             actions: %w[
-              admin/groups#create
-              admin/groups#destroy
+              super_admin/groups#create
+              super_admin/groups#destroy
               groups#show
               groups#update
               groups#index
@@ -258,7 +258,7 @@ class ApiKeyScope < ActiveRecord::Base
             actions: %w[topics#wordpress],
           },
           discourse_connect: {
-            actions: %w[admin/users#sync_sso admin/users#log_out admin/users#index users#show],
+            actions: %w[super_admin/users#sync_sso super_admin/users#log_out super_admin/users#index users#show],
           },
           utilities: {
             actions: %w[users#create groups#index],

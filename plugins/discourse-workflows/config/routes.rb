@@ -5,23 +5,23 @@ DiscourseWorkflows::Engine.routes.draw do
         as: "admin_discourse_workflows",
         constraints: AdminConstraint.new do
     scope format: false do
-      get "/" => "admin#index"
-      get "/variables" => "admin#index"
-      get "/executions" => "admin#index"
-      get "/templates" => "admin#index"
-      get "/data-tables" => "admin#index"
-      get "/data-tables/:id" => "admin#index", :constraints => { id: /\d+/ }
-      get "/credentials" => "admin#index"
-      get "/workflows/new" => "admin#index"
-      get "/workflows/:id" => "admin#index", :constraints => { id: /\d+/ }
-      get "/workflows/:id/executions" => "admin#index", :constraints => { id: /\d+/ }
-      get "/workflows/:id/executions/:execution_id" => "admin#index",
+      get "/" => "super_admin#index"
+      get "/variables" => "super_admin#index"
+      get "/executions" => "super_admin#index"
+      get "/templates" => "super_admin#index"
+      get "/data-tables" => "super_admin#index"
+      get "/data-tables/:id" => "super_admin#index", :constraints => { id: /\d+/ }
+      get "/credentials" => "super_admin#index"
+      get "/workflows/new" => "super_admin#index"
+      get "/workflows/:id" => "super_admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/executions" => "super_admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/executions/:execution_id" => "super_admin#index",
           :constraints => {
             id: /\d+/,
             execution_id: /\d+/,
           }
-      get "/workflows/:id/settings" => "admin#index", :constraints => { id: /\d+/ }
-      get "/workflows/:id/versions" => "admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/settings" => "super_admin#index", :constraints => { id: /\d+/ }
+      get "/workflows/:id/versions" => "super_admin#index", :constraints => { id: /\d+/ }
     end
 
     scope format: :json do
@@ -83,7 +83,7 @@ DiscourseWorkflows::Engine.routes.draw do
   end
 
   scope "/discourse-workflows", defaults: { format: :json } do
-    post "/trigger-topic-admin-button" => "topic_admin_button#create"
+    post "/trigger-topic-admin-button" => "topic_super_admin_button#create"
     post "/modal-responses" => "modal_responses#create"
   end
 

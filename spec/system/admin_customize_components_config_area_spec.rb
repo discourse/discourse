@@ -325,7 +325,7 @@ describe "Admin Customize Themes Config Area Page" do
     it "loads more components when scrolling to the bottom" do
       Fabricate.times(4, :theme, component: true)
 
-      stub_const(Admin::Config::CustomizeController, "PAGE_SIZE", 4) do
+      stub_const(SuperAdmin::Config::CustomizeController, "PAGE_SIZE", 4) do
         resize_window(height: 400) do
           config_area.visit
 

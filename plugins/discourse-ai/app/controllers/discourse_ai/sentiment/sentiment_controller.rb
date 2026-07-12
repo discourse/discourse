@@ -2,7 +2,7 @@
 
 module DiscourseAi
   module Sentiment
-    class SentimentController < ::Admin::StaffController
+    class SentimentController < ::SuperAdmin::StaffController
       include Constants
       requires_plugin PLUGIN_NAME
 

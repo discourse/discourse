@@ -67,7 +67,7 @@ Chat::Engine.routes.draw do
     delete "/channels/:channel_id/messages" => "channel_messages#bulk_destroy"
   end
 
-  namespace :admin, defaults: { format: :json, constraints: StaffConstraint.new } do
+  namespace :super_admin, path: "admin", as: "admin", defaults: { format: :json, constraints: StaffConstraint.new } do
     post "export/messages" => "export#export_messages"
   end
 

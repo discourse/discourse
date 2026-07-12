@@ -3,12 +3,12 @@ require_dependency "subscriptions_user_constraint"
 
 DiscourseSubscriptions::Engine.routes.draw do
   scope "admin" do
-    get "/" => "admin#index"
-    post "/refresh" => "admin#refresh_campaign"
-    post "/create-campaign" => "admin#create_campaign"
+    get "/" => "super_admin#index"
+    post "/refresh" => "super_admin#refresh_campaign"
+    post "/create-campaign" => "super_admin#create_campaign"
   end
 
-  namespace :admin, constraints: AdminConstraint.new do
+  namespace :super_admin, path: "admin", as: "admin", constraints: AdminConstraint.new do
     resources :plans
     resources :subscriptions, only: %i[index destroy]
     resources :products

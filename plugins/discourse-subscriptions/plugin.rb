@@ -31,24 +31,24 @@ extend_content_security_policy(script_src: %w[https://js.stripe.com/v3/ https://
 add_admin_route "discourse_subscriptions.admin_navigation", "discourse-subscriptions.products"
 
 Discourse::Application.routes.append do
-  get "/admin/plugins/discourse-subscriptions" => "admin/plugins#index",
+  get "/admin/plugins/discourse-subscriptions" => "super_admin/plugins#index",
       :constraints => AdminConstraint.new
-  get "/admin/plugins/discourse-subscriptions/products" => "admin/plugins#index",
+  get "/admin/plugins/discourse-subscriptions/products" => "super_admin/plugins#index",
       :constraints => AdminConstraint.new
-  get "/admin/plugins/discourse-subscriptions/products/:product_id" => "admin/plugins#index",
+  get "/admin/plugins/discourse-subscriptions/products/:product_id" => "super_admin/plugins#index",
       :constraints => AdminConstraint.new
-  get "/admin/plugins/discourse-subscriptions/products/:product_id/plans" => "admin/plugins#index",
+  get "/admin/plugins/discourse-subscriptions/products/:product_id/plans" => "super_admin/plugins#index",
       :constraints => AdminConstraint.new
   get "/admin/plugins/discourse-subscriptions/products/:product_id/plans/:plan_id" =>
-        "admin/plugins#index",
+        "super_admin/plugins#index",
       :constraints => AdminConstraint.new
-  get "/admin/plugins/discourse-subscriptions/subscriptions" => "admin/plugins#index",
+  get "/admin/plugins/discourse-subscriptions/subscriptions" => "super_admin/plugins#index",
       :constraints => AdminConstraint.new
-  get "/admin/plugins/discourse-subscriptions/plans" => "admin/plugins#index",
+  get "/admin/plugins/discourse-subscriptions/plans" => "super_admin/plugins#index",
       :constraints => AdminConstraint.new
-  get "/admin/plugins/discourse-subscriptions/plans/:plan_id" => "admin/plugins#index",
+  get "/admin/plugins/discourse-subscriptions/plans/:plan_id" => "super_admin/plugins#index",
       :constraints => AdminConstraint.new
-  get "/admin/plugins/discourse-subscriptions/coupons" => "admin/plugins#index",
+  get "/admin/plugins/discourse-subscriptions/coupons" => "super_admin/plugins#index",
       :constraints => AdminConstraint.new
   get "u/:username/billing" => "users#show", :constraints => { username: RouteFormat.username }
   get "u/:username/billing/:id" => "users#show", :constraints => { username: RouteFormat.username }

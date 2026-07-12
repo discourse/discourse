@@ -485,20 +485,20 @@ after_initialize do
   Discourse::Application.routes.append do
     mount ::Chat::Engine, at: "/chat"
 
-    get "/admin/plugins/chat/hooks" => "chat/admin/incoming_webhooks#index",
+    get "/admin/plugins/chat/hooks" => "chat/super_admin/incoming_webhooks#index",
         :constraints => StaffConstraint.new
-    post "/admin/plugins/chat/hooks" => "chat/admin/incoming_webhooks#create",
+    post "/admin/plugins/chat/hooks" => "chat/super_admin/incoming_webhooks#create",
          :constraints => StaffConstraint.new
     put "/admin/plugins/chat/hooks/:incoming_chat_webhook_id" =>
-          "chat/admin/incoming_webhooks#update",
+          "chat/super_admin/incoming_webhooks#update",
         :constraints => StaffConstraint.new
-    get "/admin/plugins/chat/hooks/new" => "chat/admin/incoming_webhooks#new",
+    get "/admin/plugins/chat/hooks/new" => "chat/super_admin/incoming_webhooks#new",
         :constraints => StaffConstraint.new
     get "/admin/plugins/chat/hooks/:incoming_chat_webhook_id/edit" =>
-          "chat/admin/incoming_webhooks#edit",
+          "chat/super_admin/incoming_webhooks#edit",
         :constraints => StaffConstraint.new
     delete "/admin/plugins/chat/hooks/:incoming_chat_webhook_id" =>
-             "chat/admin/incoming_webhooks#destroy",
+             "chat/super_admin/incoming_webhooks#destroy",
            :constraints => StaffConstraint.new
     get "u/:username/preferences/chat" => "users#preferences",
         :constraints => {

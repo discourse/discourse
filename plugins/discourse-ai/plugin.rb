@@ -191,18 +191,18 @@ after_initialize do
     end
   end
 
-  add_api_key_scope(:ai, { update_agents: { actions: %w[discourse_ai/admin/ai_agents#update] } })
+  add_api_key_scope(:ai, { update_agents: { actions: %w[discourse_ai/super_admin/ai_agents#update] } })
 
   add_api_key_scope(
     :ai,
     {
       manage_artifacts: {
         actions: %w[
-          discourse_ai/admin/ai_artifacts#index
-          discourse_ai/admin/ai_artifacts#show
-          discourse_ai/admin/ai_artifacts#create
-          discourse_ai/admin/ai_artifacts#update
-          discourse_ai/admin/ai_artifacts#destroy
+          discourse_ai/super_admin/ai_artifacts#index
+          discourse_ai/super_admin/ai_artifacts#show
+          discourse_ai/super_admin/ai_artifacts#create
+          discourse_ai/super_admin/ai_artifacts#update
+          discourse_ai/super_admin/ai_artifacts#destroy
         ],
       },
     },

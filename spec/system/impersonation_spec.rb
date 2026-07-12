@@ -28,7 +28,7 @@ describe "Impersonation" do
   end
 
   it "shows a helpful error when the user is not found" do
-    Admin::ImpersonateController.any_instance.stubs(:create).raises(Discourse::NotFound)
+    SuperAdmin::ImpersonateController.any_instance.stubs(:create).raises(Discourse::NotFound)
 
     visit("/admin/users/#{user.id}/#{user.username}")
 
@@ -39,7 +39,7 @@ describe "Impersonation" do
   end
 
   it "shows a helpful error when impersonation of that user is not allowed" do
-    Admin::ImpersonateController.any_instance.stubs(:create).raises(Discourse::InvalidAccess)
+    SuperAdmin::ImpersonateController.any_instance.stubs(:create).raises(Discourse::InvalidAccess)
 
     visit("/admin/users/#{user.id}/#{user.username}")
 
@@ -50,7 +50,7 @@ describe "Impersonation" do
   end
 
   it "shows a helpful error when there's an unexpected server error" do
-    Admin::ImpersonateController.any_instance.stubs(:create).raises(StandardError)
+    SuperAdmin::ImpersonateController.any_instance.stubs(:create).raises(StandardError)
 
     visit("/admin/users/#{user.id}/#{user.username}")
 

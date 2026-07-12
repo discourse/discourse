@@ -101,7 +101,7 @@ For a real example where the auth manager is used, please refer to:
 
 * The `lib/second_factor/actions` directory where all existing actions live.
 
-* `Admin::UsersController#grant_admin` controller action.
+* `SuperAdmin::UsersController#grant_admin` controller action.
 
 * `SessionController#sso_provider` controller action.
 

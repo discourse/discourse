@@ -1,0 +1,91 @@
+# frozen_string_literal: true
+
+module DiscourseSubscriptions
+  module SuperAdmin
+    class PlansController < ::SuperAdmin::SuperAdminController
+      include DiscourseSubscriptions::Stripe
+
+      requires_plugin PLUGIN_NAME
+
+      def index
+        plans = ::Stripe::Price.list(product_params, stripe_request_opts)
+
+        render_json_dump plans.data
+      rescue ::Stripe::InvalidRequestError => e
+        render_json_error e.message
+      end
+
+      def create
+        price_object = {
+          nickname: params[:nickname],
+          unit_amount: params[:amount],
+          product: params[:product],
+          currency: params[:currency],
+          active: params[:active],
+          metadata: {
+            group_name: params[:metadata][:group_name],
+            trial_period_days: params[:trial_period_days],
+          },
+        }
+
+        price_object[:recurring] = { interval: params[:interval] } if params[:type] == "recurring"
+
+        plan = ::Stripe::Price.create(price_object, stripe_request_opts)
+
+        render_json_dump plan
+      rescue ::Stripe::InvalidRequestError => e
+        render_json_error e.message
+      end
+
+      def show
+        plan = ::Stripe::Price.retrieve(params[:id], stripe_request_opts)
+
+        if plan[:metadata] && plan[:metadata][:trial_period_days]
+          trial_days = plan[:metadata][:trial_period_days]
+        elsif plan[:recurring] && plan[:recurring][:trial_period_days]
+          trial_days = plan[:recurring][:trial_period_days]
+        end
+
+        interval = nil
+        interval = plan[:recurring][:interval] if plan[:recurring] && plan[:recurring][:interval]
+
+        serialized =
+          plan.to_h.merge(
+            trial_period_days: trial_days,
+            currency: plan[:currency].upcase,
+            interval: interval,
+          )
+
+        render_json_dump serialized
+      rescue ::Stripe::InvalidRequestError => e
+        render_json_error e.message
+      end
+
+      def update
+        plan =
+          ::Stripe::Price.update(
+            params[:id],
+            {
+              nickname: params[:nickname],
+              active: params[:active],
+              metadata: {
+                group_name: params[:metadata][:group_name],
+                trial_period_days: params[:trial_period_days],
+              },
+            },
+            stripe_request_opts,
+          )
+
+        render_json_dump plan
+      rescue ::Stripe::InvalidRequestError => e
+        render_json_error e.message
+      end
+
+      private
+
+      def product_params
+        { product: params[:product_id] } if params[:product_id]
+      end
+    end
+  end
+end

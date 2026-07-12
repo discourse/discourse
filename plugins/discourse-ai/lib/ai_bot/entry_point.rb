@@ -282,7 +282,7 @@ module DiscourseAi
 
         plugin.add_api_key_scope(
           :ai,
-          { stream_completion: { actions: %w[discourse_ai/admin/ai_agents#stream_reply] } },
+          { stream_completion: { actions: %w[discourse_ai/super_admin/ai_agents#stream_reply] } },
         )
 
         plugin.on(:site_setting_changed) do |name, old_value, new_value|

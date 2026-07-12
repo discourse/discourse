@@ -14,19 +14,19 @@ DiscourseAutomation::Engine.routes.draw do
         as: "admin_discourse_automation",
         constraints: AdminConstraint.new do
     scope format: false do
-      get "/automation" => "admin#index"
-      get "/automation/new" => "admin#new"
-      get "/automation/:id" => "admin#edit"
+      get "/automation" => "super_admin#index"
+      get "/automation/new" => "super_admin#new"
+      get "/automation/:id" => "super_admin#edit"
     end
 
     scope format: :json do
-      get "/scriptables" => "admin_scriptables#index"
-      get "/triggerables" => "admin_triggerables#index"
-      get "/automations" => "admin_automations#index"
-      get "/automations/:id" => "admin_automations#show"
-      delete "/automations/:automation_id" => "admin_automations#destroy"
-      put "/automations/:id" => "admin_automations#update"
-      post "/automations" => "admin_automations#create"
+      get "/scriptables" => "super_admin_scriptables#index"
+      get "/triggerables" => "super_admin_triggerables#index"
+      get "/automations" => "super_admin_automations#index"
+      get "/automations/:id" => "super_admin_automations#show"
+      delete "/automations/:automation_id" => "super_admin_automations#destroy"
+      put "/automations/:id" => "super_admin_automations#update"
+      post "/automations" => "super_admin_automations#create"
     end
   end
 end

@@ -92,13 +92,13 @@ Discourse::Application.routes.draw do
     get "wizard/steps/:id" => "wizard#index"
     put "wizard/steps/:id" => "steps#update"
 
-    delete "admin/impersonate" => "admin/impersonate#destroy",
+    delete "admin/impersonate" => "super_admin/impersonate#destroy",
            :constraints => ImpersonatorConstraint.new
 
-    namespace :admin, constraints: StaffConstraint.new do
-      get "" => "admin#index"
+    namespace :super_admin, path: "admin", as: "admin", constraints: StaffConstraint.new do
+      get "" => "super_admin#index"
       get "search" => "search#index"
-      get "schema/:setting_name" => "admin#index"
+      get "schema/:setting_name" => "super_admin#index"
 
       get "plugins" => "plugins#index"
       get "plugins/:plugin_id" => "plugins#show"
@@ -510,7 +510,7 @@ Discourse::Application.routes.draw do
       end
 
       get "section/:section_id" => "section#show", :constraints => AdminConstraint.new
-      resources :admin_notices, only: %i[destroy], constraints: AdminConstraint.new
+      resources :admin_notices, only: %i[destroy], constraints: AdminConstraint.new, controller: "super_admin_notices"
       resources :problem_checks, only: %i[index], constraints: AdminConstraint.new do
         put "ignore" => "problem_checks#ignore"
         put "watch" => "problem_checks#watch"

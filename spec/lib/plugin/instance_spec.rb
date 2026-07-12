@@ -812,7 +812,7 @@ TEXT
     after { DiscoursePluginRegistry.reset! }
 
     it "adds a custom api key scope" do
-      actions = %w[admin/groups#create]
+      actions = %w[super_admin/groups#create]
       plugin_instance.add_api_key_scope(:groups, create: { actions: actions })
 
       expect(ApiKeyScope.scope_mappings.dig(:groups, :create, :actions)).to contain_exactly(

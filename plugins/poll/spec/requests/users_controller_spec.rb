@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe Admin::UsersController do
+RSpec.describe SuperAdmin::UsersController do
   let(:admin) { Fabricate(:admin) }
 
   before { sign_in(admin) }

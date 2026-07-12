@@ -87,11 +87,11 @@ end
 Discourse::Application.routes.draw do
   mount DiscourseAi::Engine, at: "discourse-ai"
 
-  get "admin/dashboard/sentiment" => "discourse_ai/admin/dashboard#sentiment",
+  get "admin/dashboard/sentiment" => "discourse_ai/super_admin/dashboard#sentiment",
       :constraints => StaffConstraint.new
 
   scope "/admin/plugins/discourse-ai", constraints: AdminConstraint.new do
-    get "/admin-dashboard-highlights" => "discourse_ai/admin/admin_dashboard_highlights#show",
+    get "/admin-dashboard-highlights" => "discourse_ai/super_admin/super_admin_dashboard_highlights#show",
         :format => :json
 
     get "/ai-personas", to: redirect("/admin/plugins/discourse-ai/ai-agents")
@@ -101,7 +101,7 @@ Discourse::Application.routes.draw do
     resources :ai_artifacts,
               only: %i[index show create update destroy],
               path: "ai-artifacts",
-              controller: "discourse_ai/admin/ai_artifacts",
+              controller: "discourse_ai/super_admin/ai_artifacts",
               defaults: {
                 format: :json,
               }
@@ -109,82 +109,82 @@ Discourse::Application.routes.draw do
     resources :ai_agents,
               only: %i[index new create edit update destroy],
               path: "ai-agents",
-              controller: "discourse_ai/admin/ai_agents"
+              controller: "discourse_ai/super_admin/ai_agents"
 
-    post "/ai-agents/stream-reply" => "discourse_ai/admin/ai_agents#stream_reply"
-    post "/ai-agents/:id/create-user", to: "discourse_ai/admin/ai_agents#create_user"
-    get "/ai-agents/:id/export", to: "discourse_ai/admin/ai_agents#export", format: :json
-    post "/ai-agents/import", to: "discourse_ai/admin/ai_agents#import"
-    put "/ai-agents/:id/files/remove", to: "discourse_ai/admin/ai_agents#remove_file"
-    get "/ai-agents/:id/files/status", to: "discourse_ai/admin/ai_agents#indexing_status_check"
+    post "/ai-agents/stream-reply" => "discourse_ai/super_admin/ai_agents#stream_reply"
+    post "/ai-agents/:id/create-user", to: "discourse_ai/super_admin/ai_agents#create_user"
+    get "/ai-agents/:id/export", to: "discourse_ai/super_admin/ai_agents#export", format: :json
+    post "/ai-agents/import", to: "discourse_ai/super_admin/ai_agents#import"
+    put "/ai-agents/:id/files/remove", to: "discourse_ai/super_admin/ai_agents#remove_file"
+    get "/ai-agents/:id/files/status", to: "discourse_ai/super_admin/ai_agents#indexing_status_check"
 
     resources(
       :ai_tools,
       only: %i[index new create edit update destroy],
       path: "ai-tools",
-      controller: "discourse_ai/admin/ai_tools",
+      controller: "discourse_ai/super_admin/ai_tools",
     )
 
-    post "/ai-tools/:id/test", to: "discourse_ai/admin/ai_tools#test"
-    get "/ai-tools/:id/export", to: "discourse_ai/admin/ai_tools#export", format: :json
-    post "/ai-tools/import", to: "discourse_ai/admin/ai_tools#import"
-    get "/ai-tools/mcp-servers/new", to: "discourse_ai/admin/ai_mcp_servers#new"
-    get "/ai-tools/mcp-servers/:id/edit", to: "discourse_ai/admin/ai_mcp_servers#edit"
+    post "/ai-tools/:id/test", to: "discourse_ai/super_admin/ai_tools#test"
+    get "/ai-tools/:id/export", to: "discourse_ai/super_admin/ai_tools#export", format: :json
+    post "/ai-tools/import", to: "discourse_ai/super_admin/ai_tools#import"
+    get "/ai-tools/mcp-servers/new", to: "discourse_ai/super_admin/ai_mcp_servers#new"
+    get "/ai-tools/mcp-servers/:id/edit", to: "discourse_ai/super_admin/ai_mcp_servers#edit"
 
     resources :ai_mcp_servers,
               only: %i[index new create edit update destroy],
               path: "ai-mcp-servers",
-              controller: "discourse_ai/admin/ai_mcp_servers"
-    post "/ai-mcp-servers/test", to: "discourse_ai/admin/ai_mcp_servers#test"
-    post "/ai-mcp-servers/:id/test", to: "discourse_ai/admin/ai_mcp_servers#test"
-    get "/ai-mcp-servers/:id/oauth/start", to: "discourse_ai/admin/ai_mcp_servers#oauth_start"
-    get "/ai-mcp-servers/oauth/callback", to: "discourse_ai/admin/ai_mcp_servers#oauth_callback"
+              controller: "discourse_ai/super_admin/ai_mcp_servers"
+    post "/ai-mcp-servers/test", to: "discourse_ai/super_admin/ai_mcp_servers#test"
+    post "/ai-mcp-servers/:id/test", to: "discourse_ai/super_admin/ai_mcp_servers#test"
+    get "/ai-mcp-servers/:id/oauth/start", to: "discourse_ai/super_admin/ai_mcp_servers#oauth_start"
+    get "/ai-mcp-servers/oauth/callback", to: "discourse_ai/super_admin/ai_mcp_servers#oauth_callback"
     delete "/ai-mcp-servers/:id/oauth/disconnect",
-           to: "discourse_ai/admin/ai_mcp_servers#oauth_disconnect"
+           to: "discourse_ai/super_admin/ai_mcp_servers#oauth_disconnect"
 
     post "/rag-document-fragments/files/upload",
-         to: "discourse_ai/admin/rag_document_fragments#upload_file"
+         to: "discourse_ai/super_admin/rag_document_fragments#upload_file"
     get "/rag-document-fragments/files/status",
-        to: "discourse_ai/admin/rag_document_fragments#indexing_status_check"
+        to: "discourse_ai/super_admin/rag_document_fragments#indexing_status_check"
 
-    get "/ai-usage", to: "discourse_ai/admin/ai_usage#show"
-    get "/ai-usage-report", to: "discourse_ai/admin/ai_usage#report"
-    get "/ai-spam", to: "discourse_ai/admin/ai_spam#show"
-    put "/ai-spam", to: "discourse_ai/admin/ai_spam#update"
-    post "/ai-spam/test", to: "discourse_ai/admin/ai_spam#test"
-    post "/ai-spam/fix-errors", to: "discourse_ai/admin/ai_spam#fix_errors"
+    get "/ai-usage", to: "discourse_ai/super_admin/ai_usage#show"
+    get "/ai-usage-report", to: "discourse_ai/super_admin/ai_usage#report"
+    get "/ai-spam", to: "discourse_ai/super_admin/ai_spam#show"
+    put "/ai-spam", to: "discourse_ai/super_admin/ai_spam#update"
+    post "/ai-spam/test", to: "discourse_ai/super_admin/ai_spam#test"
+    post "/ai-spam/fix-errors", to: "discourse_ai/super_admin/ai_spam#fix_errors"
 
-    get "/ai-translations", to: "discourse_ai/admin/ai_translations#show"
-    get "/ai-translations/progress", to: "discourse_ai/admin/ai_translations#progress"
-    post "/ai-theme-translations", to: "discourse_ai/admin/ai_theme_translations#create"
+    get "/ai-translations", to: "discourse_ai/super_admin/ai_translations#show"
+    get "/ai-translations/progress", to: "discourse_ai/super_admin/ai_translations#progress"
+    post "/ai-theme-translations", to: "discourse_ai/super_admin/ai_theme_translations#create"
 
     resources :ai_llms,
               only: %i[index new create edit update destroy],
               path: "ai-llms",
-              controller: "discourse_ai/admin/ai_llms" do
+              controller: "discourse_ai/super_admin/ai_llms" do
       collection { post :test }
     end
 
     resources :ai_llm_quotas,
-              controller: "discourse_ai/admin/ai_llm_quotas",
+              controller: "discourse_ai/super_admin/ai_llm_quotas",
               path: "quotas",
               only: %i[index create update destroy]
 
     resources :ai_embeddings,
               only: %i[index new create edit update destroy],
               path: "ai-embeddings",
-              controller: "discourse_ai/admin/ai_embeddings" do
+              controller: "discourse_ai/super_admin/ai_embeddings" do
       collection { post :test }
     end
 
     resources :ai_features,
               only: %i[index edit],
               path: "ai-features",
-              controller: "discourse_ai/admin/ai_features"
+              controller: "discourse_ai/super_admin/ai_features"
 
     resources :ai_secrets,
               only: %i[index show new create edit update destroy],
               path: "ai-secrets",
-              controller: "discourse_ai/admin/ai_secrets"
+              controller: "discourse_ai/super_admin/ai_secrets"
   end
 end

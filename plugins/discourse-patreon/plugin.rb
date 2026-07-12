@@ -31,7 +31,7 @@ after_initialize do
   require_relative "lib/api_version/v1"
   require_relative "lib/api_version/v2"
   require_relative "lib/api"
-  require_relative "app/controllers/patreon/patreon_admin_controller"
+  require_relative "app/controllers/patreon/patreon_super_admin_controller"
   require_relative "app/controllers/patreon/patreon_webhook_controller"
   require_relative "app/jobs/regular/sync_patron_groups"
   require_relative "app/jobs/scheduled/patreon_sync_patrons_to_groups"
@@ -49,7 +49,7 @@ after_initialize do
   add_admin_route "patreon.title", "patreon"
 
   Discourse::Application.routes.append do
-    get "/admin/plugins/patreon" => "admin/plugins#index", :constraints => AdminConstraint.new
+    get "/admin/plugins/patreon" => "super_admin/plugins#index", :constraints => AdminConstraint.new
     get "/admin/plugins/patreon/list" => "patreon/patreon_admin#list",
         :constraints => AdminConstraint.new
     get "/u/:username/patreon_email" => "patreon/patreon_admin#email",
