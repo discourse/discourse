@@ -1350,7 +1350,6 @@ et:
     created: "Loodud"
     created_lowercase: "loodud"
     trust_level: "Usaldustase"
-    search_hint: "kasutajanimi, meil või IP-aadress"
     create_account:
       header_title: "Tere tulemast!"
       title: "Liitu"
@@ -2224,7 +2223,6 @@ et:
         delete: "Kustuta"
       topic_featured_link_allowed: "Luba selles kategoorias esiletõstetud linke "
       create_long: "Loo uus kategooria"
-      slug_placeholder: "(Valikulised) sidekriipsuga-sõnad url-i jaoks"
       creation_error: Kategooria loomisel tekkis viga.
       save_error: Kategooria salvestamisel tekkis viga.
       validations:

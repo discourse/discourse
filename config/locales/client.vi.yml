@@ -2369,7 +2369,6 @@ vi:
     created: "Tạo bởi"
     created_lowercase: "Đã tạo"
     trust_level: "Độ tin cậy"
-    search_hint: "username, email or IP address"
     create_account:
       header_title: "Chào mừng!"
       disclaimer: "Đăng ký nghĩa là bạn đồng ý với <a href='%{privacy_link}' target='blank'>chính sách bảo mật</a> và <a href='%{tos_link}' target='blank'>điều khoản dịch vụ</a>."
@@ -4047,7 +4046,6 @@ vi:
       unsaved_changes: "Bạn có những thay đổi chưa được lưu"
       slug: "Đường dẫn chuyên mục"
       parent: "Chuyên mục chính"
-      slug_placeholder: "(Tùy chọn) các từ sử dụng trong url"
       creation_error: Có lỗi xảy ra khi tạo chuyên mục
       save_error: Có lỗi xảy ra khi lưu chuyên mục
       errors:

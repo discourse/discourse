@@ -68,6 +68,7 @@ hu:
         table: "Táblázat"
       translations:
         title: "Fordítások"
+        category_scope: "Kategóriák"
         stats:
           eta_minutes:
             one: "%{count} perc"

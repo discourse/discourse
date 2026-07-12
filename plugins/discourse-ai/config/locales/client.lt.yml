@@ -221,6 +221,7 @@ lt:
         card: "Kortelė"
       translations:
         title: "Vertimai"
+        category_scope: "Kategorijos"
         stats:
           eta_minutes:
             one: "%{count} minutė"

@@ -2023,7 +2023,6 @@ ro:
     created: "Creat"
     created_lowercase: "creat"
     trust_level: "Nivel de încredere"
-    search_hint: "nume de utilizator, e-mail sau adresă IP"
     create_account:
       header_title: "Bun venit!"
       disclaimer: "Prin înregistrare, ești de acord cu politica de confidențialitate <a href='%{privacy_link}' target='blank'></a> și <a href='%{tos_link}' target='blank'>termenii de utilizare</a>."
@@ -3188,7 +3187,6 @@ ro:
       type_settings_schema:
         site_settings: "Setări site"
       unsaved_changes: "Ai modificări nesalvate"
-      slug_placeholder: "(Opțional) cuvinte-punctate pentru url"
       creation_error: A apărut o eroare în timpul creării categoriei.
       save_error: A apărut o eroare in timpul salvării categoriei.
       validations:

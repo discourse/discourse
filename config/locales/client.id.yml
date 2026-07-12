@@ -1531,7 +1531,6 @@ id:
     created: "Dibuat"
     created_lowercase: "dibuat"
     trust_level: "Tingkat Kepercayaan"
-    search_hint: "username, email, atau alamat IP"
     create_account:
       title: "Mendaftar"
       already_have_account: "Sudah memiliki akun?"

@@ -2778,7 +2778,6 @@ cs:
     created: "Vytvořeno"
     created_lowercase: "vytvořeno"
     trust_level: "Úroveň důvěry"
-    search_hint: "uživatelské jméno, email nebo IP adresa"
     create_account:
       header_title: "Vítejte!"
       disclaimer: "Registrací souhlasíte se <a href='%{privacy_link}' target='blank'>zásadami ochrany osobních údajů</a> a <a href='%{tos_link}' target='blank'>podmínkami služby</a>."
@@ -4753,7 +4752,6 @@ cs:
       unsaved_changes: "Máte neuložené změny"
       slug: "URL kategorie"
       parent: "Nadřazená kategorie"
-      slug_placeholder: "(Nepovinné) slova s pomlčkou pro URL"
       creation_error: Během vytváření nové kategorie nastala chyba.
       save_error: Během ukládání kategorie nastala chyba.
       errors:

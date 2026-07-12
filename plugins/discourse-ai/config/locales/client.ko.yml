@@ -80,6 +80,7 @@ ko:
         select_option: "옵션 선택..."
       translations:
         title: "번역"
+        category_scope: "카테고리"
         stats:
           eta_minutes:
             other: "%{count}분"

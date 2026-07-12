@@ -328,6 +328,7 @@ ja:
         description: "フォーラムのすべてのコンテンツをユーザーの優先言語に自動的に翻訳します"
         supported_locales: "サポートされている言語"
         supported_locales_description: "このサイト設定では、訪問者も投稿の翻訳に貢献できます。"
+        category_scope: "カテゴリ"
         admin_actions:
           translation_settings: "翻訳の設定"
           localization_settings: "ローカリゼーションの設定"

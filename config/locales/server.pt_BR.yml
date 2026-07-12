@@ -1150,6 +1150,9 @@ pt_BR:
       weekly: "a cada semana"
       every_month: "a cada mês"
       every_six_months: "a cada seis meses"
+  calendar_subscriptions:
+    application_name: "Assinaturas de calendário"
+    bookmarks_feed_name: "%{site_title} - Lembretes de favoritos"
   user_api_key:
     title: 'Autorizar "%{application_name}"'
     authorize: "Autorizar"

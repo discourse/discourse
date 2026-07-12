@@ -63,6 +63,7 @@ sv:
         table: "Tabell"
       translations:
         title: "Översättningar"
+        category_scope: "Kategorier"
         stats:
           eta_minutes:
             one: "%{count} minut"

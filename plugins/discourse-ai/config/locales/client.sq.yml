@@ -58,6 +58,7 @@ sq:
       modals:
         select_option: "Zgjidhni një opsion..."
       translations:
+        category_scope: "Categories"
         stats:
           eta_minutes:
             one: "%{count} minutë"

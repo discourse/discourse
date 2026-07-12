@@ -56,6 +56,7 @@ et:
       modals:
         select_option: "Vali võimalus..."
       translations:
+        category_scope: "Liigid"
         stats:
           eta_minutes:
             one: "%{count} minut"
