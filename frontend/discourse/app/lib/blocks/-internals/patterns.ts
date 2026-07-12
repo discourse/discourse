@@ -55,7 +55,7 @@ export const FAILURE_TYPE = Object.freeze({
   OPTIONAL_MISSING: "optional-missing",
   /**
    * Block reference doesn't resolve to a registered block — most often a
-   * typo in a saved layout (`hero-banner` -> `hero-bannr`). Without the
+   * typo in a saved layout (`hero-banner` → `hero-bannr`). Without the
    * `?` suffix opt-in, these are normally a hard error in production;
    * in a permissive context they can be surfaced as labelled placeholders
    * so the author can swap or remove them.
