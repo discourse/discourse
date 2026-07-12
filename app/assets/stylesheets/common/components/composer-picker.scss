@@ -1,0 +1,153 @@
+$composer-picker-width: 500px;
+$composer-picker-panel-height: 300px;
+
+.fk-d-menu[data-content][data-identifier="composer-picker"] {
+  z-index: z("modal", "dialog");
+}
+
+.composer-picker {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  width: $composer-picker-width;
+  max-width: 95vw;
+
+  &__tabs {
+    display: flex;
+    gap: var(--space-1);
+    padding: var(--space-1) var(--space-2) 0;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__tab {
+    flex: 0 0 auto;
+    border-radius: 0;
+    background: transparent;
+
+    @include hover {
+      background: var(--d-hover);
+    }
+
+    &:focus {
+      background: var(--d-hover);
+    }
+
+    &.--active {
+      color: var(--tertiary);
+      box-shadow: inset 0 -2px 0 var(--tertiary);
+    }
+  }
+
+  &__panel {
+    display: flex;
+    width: 100%;
+    height: $composer-picker-panel-height;
+    min-height: 0;
+  }
+
+  .emoji-picker {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.fk-d-menu-modal .composer-picker {
+  width: 100%;
+  max-width: 100vw;
+  flex: 1 1 auto;
+
+  .composer-picker__panel {
+    height: auto;
+    flex: 1 1 auto;
+  }
+}
+
+.gif-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 0;
+
+  &__input {
+    background: var(--primary-very-low);
+    display: flex;
+    height: 50px;
+  }
+
+  &__filter {
+    width: 100%;
+    margin: var(--space-2);
+    border-radius: var(--d-border-radius);
+    box-sizing: border-box;
+
+    input {
+      background-color: transparent !important; // beat DFilterInput's base bg
+      width: 100%;
+    }
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    &.filter-input-container {
+      border-color: transparent;
+      background: var(--secondary);
+    }
+  }
+
+  &__content {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding: 0 var(--space-2) var(--space-2);
+  }
+
+  &__box {
+    .gifs-result-list {
+      position: relative;
+
+      .gifs-result {
+        position: absolute;
+      }
+    }
+
+    div.loading-container {
+      display: block;
+      height: 10px;
+    }
+  }
+
+  &__categories-header {
+    margin: var(--space-2) 0;
+    font-size: var(--font-0);
+    color: var(--primary-medium);
+    font-weight: normal;
+  }
+
+  &__loading-categories {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+  }
+
+  &__no-results {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-8) var(--space-4);
+    color: var(--primary-medium);
+    text-align: center;
+  }
+
+  &__branding {
+    display: flex;
+    justify-content: flex-end;
+    padding: var(--space-1) var(--space-2);
+    border-top: 1px solid var(--primary-low);
+  }
+
+  &__branding-logo {
+    height: 20px;
+  }
+}
