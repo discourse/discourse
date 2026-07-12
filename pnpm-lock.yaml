@@ -368,7 +368,7 @@ importers:
         version: link:../pretty-text
       prosemirror-codemark:
         specifier: ^0.4.2
-        version: 0.4.2(prosemirror-inputrules@1.5.1)(prosemirror-model@1.25.7)(prosemirror-state@1.4.4)(prosemirror-view@1.41.8)
+        version: 0.4.2(prosemirror-inputrules@1.5.1)(prosemirror-model@1.25.9)(prosemirror-state@1.4.4)(prosemirror-view@1.42.0)
       prosemirror-commands:
         specifier: ^1.7.1
         version: 1.7.1
@@ -380,7 +380,7 @@ importers:
         version: 1.4.1
       prosemirror-highlightjs:
         specifier: ^0.9.1
-        version: 0.9.1(highlight.js@11.11.1)(prosemirror-model@1.25.7)(prosemirror-state@1.4.4)(prosemirror-view@1.41.8)
+        version: 0.9.1(highlight.js@11.11.1)(prosemirror-model@1.25.9)(prosemirror-state@1.4.4)(prosemirror-view@1.42.0)
       prosemirror-history:
         specifier: ^1.5.0
         version: 1.5.0
@@ -394,8 +394,8 @@ importers:
         specifier: ^1.13.4
         version: 1.13.4
       prosemirror-model:
-        specifier: ^1.25.7
-        version: 1.25.7
+        specifier: ^1.25.9
+        version: 1.25.9
       prosemirror-schema-list:
         specifier: ^1.5.1
         version: 1.5.1
@@ -406,8 +406,8 @@ importers:
         specifier: ^1.12.0
         version: 1.12.0
       prosemirror-view:
-        specifier: ^1.41.8
-        version: 1.41.8
+        specifier: ^1.42.0
+        version: 1.42.0
       rete:
         specifier: ^2.0.6
         version: 2.0.6
@@ -682,259 +682,259 @@ importers:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/chat:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/checklist:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-adplugin:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-affiliate:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-ai:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-apple-auth:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-assign:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-cakeday:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-calendar:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-chat-integration:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-data-explorer:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-details:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-gamification:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-github:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-graphviz:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-hcaptcha:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-lazy-videos:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-local-dates:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-login-with-amazon:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-lti:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-math:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-microsoft-auth:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-narrative-bot:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-oauth2-basic:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-openid-connect:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-patreon:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-policy:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-post-voting:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-presence:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-reactions:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-rss-polling:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-solved:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-subscriptions:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-templates:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-topic-voting:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-user-notes:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-zendesk-plugin:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/footnote:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/poll:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/spoiler-alert:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/styleguide:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   themes/horizon:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
 packages:
 
@@ -1801,8 +1801,8 @@ packages:
   '@discourse/resize@2.1.1':
     resolution: {integrity: sha512-iSPfgyCWTXsLcYoUN7/TxTbCSMlSqCI2v9/dCmg5dQdr/qi0TtRKjMzmSy7+8+Ns2v076IQDtdyfvBT8CQPd3g==}
 
-  '@discourse/types@2026.6.0-06d03da3':
-    resolution: {integrity: sha512-2ER4lt8lFtFNcuyj7Y0Ry8RMLFPBYDfix8TNCh4TKP3FKlCMv+FzvDJ6Ix+CFBTqvh4KJ4uR/oCGYR3Q45yQow==}
+  '@discourse/types@2026.7.0-ded677e0':
+    resolution: {integrity: sha512-rN0+p2Hr4NkDyef60h0jmRHabUy354YFLsJgJjmcuUeDyQSJZ0GdKAfMUFTAc+LIli34MQRJjnk8vmnxW396Fg==}
     engines: {node: '>= 20', npm: please-use-pnpm, pnpm: ^10, yarn: please-use-pnpm}
 
   '@discourse/webp@1.5.0':
@@ -6830,8 +6830,8 @@ packages:
   prosemirror-markdown@1.13.4:
     resolution: {integrity: sha512-D98dm4cQ3Hs6EmjK500TdAOew4Z03EV71ajEFiWra3Upr7diytJsjF4mPV2dW+eK5uNectiRj0xFxYI9NLXDbw==}
 
-  prosemirror-model@1.25.7:
-    resolution: {integrity: sha512-A79aN8QEFUwI6cax8Yq4Rpcx1TJZ3Kagn+ii7qLo4/V8H3mMiHrhFyhTyHHvpSnOgMPpWiDGSwM3etwrxE50ug==}
+  prosemirror-model@1.25.9:
+    resolution: {integrity: sha512-pRTklkDDMMRopyoAcrr9wV/8g/RYgrLHBuJAb5hlEuYZRdm5yqmPjWId83fpBwPpSFqEdja0H7Dfd7z1X/npcA==}
 
   prosemirror-schema-list@1.5.1:
     resolution: {integrity: sha512-927lFx/uwyQaGwJxLWCZRkjXG0p48KpMj6ueoYiu4JX05GGuGcgzAy62dfiV8eFZftgyBUvLx76RsMe20fJl+Q==}
@@ -6842,8 +6842,8 @@ packages:
   prosemirror-transform@1.12.0:
     resolution: {integrity: sha512-GxboyN4AMIsoHNtz5uf2r2Ru551i5hWeCMD6E2Ib4Eogqoub0NflniaBPVQ4MrGE5yZ8JV9tUHg9qcZTTrcN4w==}
 
-  prosemirror-view@1.41.8:
-    resolution: {integrity: sha512-TnKDdohEatgyZNGCDWIdccOHXhYloJwbwU+phw/a23KBvJIR9lWQWW7WHHK3vBdOLDNuF7TaX98GObUZOWkOnA==}
+  prosemirror-view@1.42.0:
+    resolution: {integrity: sha512-N54DF3OXNWDuP81G1kbfCys8ZzIjuL1VnvJ2mk5STSu/fNxWIcX/EutQLA3s9KR/2wVhgDi4hzBB/1fINVxk0A==}
 
   proxy-addr@2.0.7:
     resolution: {integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==}
@@ -9449,7 +9449,7 @@ snapshots:
 
   '@discourse/resize@2.1.1': {}
 
-  '@discourse/types@2026.6.0-06d03da3': {}
+  '@discourse/types@2026.7.0-ded677e0': {}
 
   '@discourse/webp@1.5.0':
     dependencies:
@@ -15388,16 +15388,16 @@ snapshots:
 
   promise.hash.helper@1.0.8: {}
 
-  prosemirror-codemark@0.4.2(prosemirror-inputrules@1.5.1)(prosemirror-model@1.25.7)(prosemirror-state@1.4.4)(prosemirror-view@1.41.8):
+  prosemirror-codemark@0.4.2(prosemirror-inputrules@1.5.1)(prosemirror-model@1.25.9)(prosemirror-state@1.4.4)(prosemirror-view@1.42.0):
     dependencies:
       prosemirror-inputrules: 1.5.1
-      prosemirror-model: 1.25.7
+      prosemirror-model: 1.25.9
       prosemirror-state: 1.4.4
-      prosemirror-view: 1.41.8
+      prosemirror-view: 1.42.0
 
   prosemirror-commands@1.7.1:
     dependencies:
-      prosemirror-model: 1.25.7
+      prosemirror-model: 1.25.9
       prosemirror-state: 1.4.4
       prosemirror-transform: 1.12.0
 
@@ -15405,27 +15405,27 @@ snapshots:
     dependencies:
       prosemirror-state: 1.4.4
       prosemirror-transform: 1.12.0
-      prosemirror-view: 1.41.8
+      prosemirror-view: 1.42.0
 
   prosemirror-gapcursor@1.4.1:
     dependencies:
       prosemirror-keymap: 1.2.3
-      prosemirror-model: 1.25.7
+      prosemirror-model: 1.25.9
       prosemirror-state: 1.4.4
-      prosemirror-view: 1.41.8
+      prosemirror-view: 1.42.0
 
-  prosemirror-highlightjs@0.9.1(highlight.js@11.11.1)(prosemirror-model@1.25.7)(prosemirror-state@1.4.4)(prosemirror-view@1.41.8):
+  prosemirror-highlightjs@0.9.1(highlight.js@11.11.1)(prosemirror-model@1.25.9)(prosemirror-state@1.4.4)(prosemirror-view@1.42.0):
     dependencies:
       highlight.js: 11.11.1
-      prosemirror-model: 1.25.7
+      prosemirror-model: 1.25.9
       prosemirror-state: 1.4.4
-      prosemirror-view: 1.41.8
+      prosemirror-view: 1.42.0
 
   prosemirror-history@1.5.0:
     dependencies:
       prosemirror-state: 1.4.4
       prosemirror-transform: 1.12.0
-      prosemirror-view: 1.41.8
+      prosemirror-view: 1.42.0
       rope-sequence: 1.3.4
 
   prosemirror-inputrules@1.5.1:
@@ -15442,31 +15442,31 @@ snapshots:
     dependencies:
       '@types/markdown-it': 14.1.2
       markdown-it: 14.2.0
-      prosemirror-model: 1.25.7
+      prosemirror-model: 1.25.9
 
-  prosemirror-model@1.25.7:
+  prosemirror-model@1.25.9:
     dependencies:
       orderedmap: 2.1.1
 
   prosemirror-schema-list@1.5.1:
     dependencies:
-      prosemirror-model: 1.25.7
+      prosemirror-model: 1.25.9
       prosemirror-state: 1.4.4
       prosemirror-transform: 1.12.0
 
   prosemirror-state@1.4.4:
     dependencies:
-      prosemirror-model: 1.25.7
+      prosemirror-model: 1.25.9
       prosemirror-transform: 1.12.0
-      prosemirror-view: 1.41.8
+      prosemirror-view: 1.42.0
 
   prosemirror-transform@1.12.0:
     dependencies:
-      prosemirror-model: 1.25.7
+      prosemirror-model: 1.25.9
 
-  prosemirror-view@1.41.8:
+  prosemirror-view@1.42.0:
     dependencies:
-      prosemirror-model: 1.25.7
+      prosemirror-model: 1.25.9
       prosemirror-state: 1.4.4
       prosemirror-transform: 1.12.0
 
