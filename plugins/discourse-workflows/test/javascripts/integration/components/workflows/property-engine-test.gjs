@@ -823,6 +823,126 @@ module("Integration | Component | workflows property engine", function (hooks) {
     );
   });
 
+  test("condition builder supports declared integer and array fields", async function (assert) {
+    this.setProperties({
+      configuration: { conditions: [] },
+      formApi: null,
+      node: {
+        clientId: "branch",
+        type: "condition:if",
+        name: "Branch",
+      },
+      nodes: [
+        {
+          clientId: "trigger",
+          type: "trigger:sample",
+          typeVersion: "1.0",
+          name: "Trigger",
+        },
+        {
+          clientId: "branch",
+          type: "condition:if",
+          name: "Branch",
+        },
+      ],
+      connections: [
+        {
+          sourceClientId: "trigger",
+          targetClientId: "branch",
+        },
+      ],
+      nodeTypes: [
+        {
+          name: "trigger:sample",
+          versions: {
+            "1.0": {
+              output_contracts: [
+                {
+                  schema: {
+                    type: "object",
+                    properties: {
+                      post: {
+                        type: "object",
+                        properties: {
+                          id: { type: "integer" },
+                          mixed: { type: ["integer", "string"] },
+                          tags: {
+                            type: "array",
+                            items: { type: "string" },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      ],
+      nodeType: "condition:if",
+      schema: {
+        conditions: {
+          type: "array",
+          ui: { control: "condition_builder" },
+        },
+      },
+      registerApi: (api) => {
+        this.set("formApi", api);
+      },
+    });
+
+    await render(
+      <template>
+        <Form
+          @data={{this.configuration}}
+          @onRegisterApi={{this.registerApi}}
+          as |form transientData|
+        >
+          <PropertyEngineConfigurator
+            @form={{form}}
+            @formApi={{this.formApi}}
+            @configuration={{transientData}}
+            @connections={{this.connections}}
+            @node={{this.node}}
+            @nodes={{this.nodes}}
+            @nodeType={{this.nodeType}}
+            @nodeTypes={{this.nodeTypes}}
+            @schema={{this.schema}}
+            @session={{this.session}}
+          />
+        </Form>
+      </template>
+    );
+
+    await click(".workflows-empty-state .btn-primary");
+
+    assert
+      .dom("option[value='$json.post.tags']")
+      .exists("offers the array itself for array operators");
+    assert
+      .dom("option[value='$json.post.tags[0]']")
+      .exists("also offers the declared array item path");
+    assert
+      .dom("option[value='$json.post.mixed']")
+      .doesNotExist("does not guess an operator type for union fields");
+
+    await select(
+      ".workflows-property-engine__collection-row select",
+      "$json.post.id"
+    );
+
+    assert.deepEqual(
+      this.formApi.get("conditions.0.operator"),
+      {
+        operation: "equals",
+        type: "number",
+        singleValue: false,
+      },
+      "stores the runtime-supported number type for declared integers"
+    );
+  });
+
   test("renders webhook URL previews from schema controls", async function (assert) {
     this.setProperties({
       configuration: { path: "my-hook" },

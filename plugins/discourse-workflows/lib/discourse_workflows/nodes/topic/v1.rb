@@ -20,6 +20,9 @@ module DiscourseWorkflows
           capabilities: {
             run_scope: "per_item",
           },
+          output_contracts: [
+            { schema: Schema.merge(Schema::TOPIC_LIST_ITEM_SCHEMA, Schema::WEBHOOK_POST_SCHEMA) },
+          ],
           properties: {
             operation: {
               type: :options,

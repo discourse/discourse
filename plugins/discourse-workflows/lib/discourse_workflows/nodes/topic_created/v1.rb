@@ -15,6 +15,9 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           events: [:topic_created],
+          output_contracts: [
+            { schema: Schema.merge(Schema::TOPIC_LIST_ITEM_SCHEMA, Schema::POST_SCHEMA) },
+          ],
           properties: {
             topic_type: {
               type: :options,

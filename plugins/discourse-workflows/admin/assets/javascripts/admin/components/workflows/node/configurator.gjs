@@ -22,6 +22,7 @@ import {
   nodeTypeProducesData,
   nodeTypeStyle,
   resolveNodeTypeVersion,
+  typeVersionForNode,
 } from "../../../lib/workflows/node-types";
 import {
   credentialSlotAnchorField,
@@ -124,7 +125,7 @@ export default class NodeConfigurator extends Component {
   get resolvedNodeType() {
     return resolveNodeTypeVersion(
       findNodeType(this.nodeTypes, this.args.model.node.type),
-      this.args.model.node.typeVersion
+      typeVersionForNode(this.args.model.node)
     );
   }
 
@@ -168,7 +169,7 @@ export default class NodeConfigurator extends Component {
     return getPropertySchema(
       this.nodeTypes,
       this.args.model.node.type,
-      this.args.model.node.typeVersion
+      typeVersionForNode(this.args.model.node)
     );
   }
 

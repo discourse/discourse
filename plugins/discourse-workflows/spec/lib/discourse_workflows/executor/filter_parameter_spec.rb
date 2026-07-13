@@ -45,6 +45,89 @@ RSpec.describe DiscourseWorkflows::Executor::FilterParameter do
         ],
       )
     end
+
+    it "resolves rightValue for value operations regardless of singleValue" do
+      resolved_values = []
+      tracking_resolver =
+        Class
+          .new do
+            define_method(:initialize) { |values| @values = values }
+
+            define_method(:resolve) do |value|
+              @values << value
+              value
+            end
+          end
+          .new(resolved_values)
+
+      result =
+        described_class.execute_filter(
+          [
+            {
+              "leftValue" => "closed",
+              "rightValue" => "closed",
+              "operator" => {
+                "type" => "string",
+                "operation" => "equals",
+                "singleValue" => true,
+              },
+            },
+          ],
+          "and",
+          {},
+          tracking_resolver,
+        )
+
+      expect(result["passed"]).to eq(true)
+      expect(resolved_values).to eq(%w[closed closed])
+    end
+
+    it "does not resolve rightValue for single-value operations regardless of singleValue" do
+      resolved_values = []
+      tracking_resolver =
+        Class
+          .new do
+            define_method(:initialize) { |values| @values = values }
+
+            define_method(:resolve) do |value|
+              @values << value
+              value
+            end
+          end
+          .new(resolved_values)
+
+      result =
+        described_class.execute_filter(
+          [
+            {
+              "leftValue" => true,
+              "rightValue" => "must-not-resolve",
+              "operator" => {
+                "type" => "boolean",
+                "operation" => "true",
+                "singleValue" => false,
+              },
+            },
+          ],
+          "and",
+          {},
+          tracking_resolver,
+        )
+
+      expect(result["passed"]).to eq(true)
+      expect(resolved_values).to eq([true])
+    end
+  end
+
+  describe ".supported_operation?" do
+    it "uses the runtime type and operation contract" do
+      expect(described_class.supported_operation?("number", "gte")).to eq(true)
+      expect(described_class.supported_operation?("number", "contains")).to eq(false)
+      expect(described_class.supported_operation?("integer", "equals")).to eq(false)
+      expect(described_class.operation_needs_value?("equals")).to eq(true)
+      expect(described_class.operation_needs_value?("true")).to eq(false)
+      expect(described_class.operation_needs_value?("unknown")).to be_nil
+    end
   end
 
   describe ".evaluate_type" do
