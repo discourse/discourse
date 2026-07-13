@@ -5,19 +5,26 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
+import type { TrustedHTML } from "@ember/template";
 import { waitForPromise } from "@ember/test-waiters";
 import { modifier as modifierFn } from "ember-modifier";
 import htmlClass from "discourse/helpers/html-class";
 import { waitForAnimationEnd } from "discourse/lib/animation-utils";
 import { lock, unlock } from "discourse/lib/body-scroll-lock";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
+import type Site from "discourse/models/site";
+import type AppEventsService from "discourse/services/app-events";
+import type { CapabilitiesService } from "discourse/services/capabilities";
+import type ModalService from "discourse/services/modal";
 import { and, not, or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
-import DFlashMessage from "discourse/ui-kit/d-flash-message";
+import DFlashMessage, {
+  type FlashType,
+} from "discourse/ui-kit/d-flash-message";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
-import dSwipe from "discourse/ui-kit/modifiers/d-swipe";
+import dSwipe, { type SwipeState } from "discourse/ui-kit/modifiers/d-swipe";
 import dTrapTab from "discourse/ui-kit/modifiers/d-trap-tab";
 
 export const CLOSE_INITIATED_BY_BUTTON = "initiatedByCloseButton";
@@ -31,32 +38,74 @@ const SWIPE_CLOSE_DISTANCE_RATIO = 0.25;
 const SWIPE_SETTLE_EASING = "cubic-bezier(0.32, 0.72, 0, 1)";
 
 // progressive resistance when the modal is dragged past its resting position
-function dampenedOverdrag(distance) {
+function dampenedOverdrag(distance: number) {
   return Math.max(0, 8 * (Math.log(distance + 1) - 2));
 }
 
-export default class DModal extends Component {
-  @service appEvents;
-  @service capabilities;
-  @service modal;
-  @service site;
+// The consumer's close handler. DModal invokes it with an `initiatedBy` reason, but the
+// closers consumers pass (the modal service's `close`, or a float that renders DModal as its
+// mobile fallback) accept their own argument shapes, so this is a deliberately broad relay type.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type CloseModalCallback = (...args: any[]) => void;
 
-  @tracked wrapperElement;
+interface DModalSignature {
+  Element: HTMLDivElement | HTMLFormElement;
+  Args: {
+    closeModal?: CloseModalCallback;
+    beforeClose?: (args: {
+      initiatedBy: string;
+    }) => boolean | void | Promise<boolean | void>;
+    dismissable?: boolean;
+    autofocus?: boolean;
+    submitOnEnter?: boolean;
+    hidden?: boolean;
+    inline?: boolean;
+    tagName?: "div" | "form";
+    title?: string;
+    subtitle?: string;
+    hideHeader?: boolean;
+    hideFooter?: boolean;
+    headerClass?: string;
+    bodyClass?: string;
+    flash?: string | TrustedHTML;
+    flashType?: FlashType;
+  };
+  Blocks: {
+    default: [];
+    aboveHeader: [];
+    headerAboveTitle: [];
+    headerPrimaryAction: [];
+    belowModalTitle: [];
+    headerBelowTitle: [];
+    belowHeader: [];
+    body: [];
+    aboveFooter: [];
+    footer: [];
+    belowFooter: [];
+  };
+}
+
+export default class DModal extends Component<DModalSignature> {
+  @service declare appEvents: AppEventsService;
+  @service declare capabilities: CapabilitiesService;
+  @service declare modal: ModalService;
+  @service declare site: Site;
+
   @tracked animating = false;
-
-  registerModalContainer = modifierFn((el) => {
-    this.modalContainer = el;
+  registerModalContainer = modifierFn((el: HTMLElement) => {
+    this.#modalContainer = el;
   });
-
-  setupModalBody = modifierFn((el) => {
+  setupModalBody = modifierFn((el: HTMLElement) => {
     if (this.site.desktopView) {
       return;
     }
 
-    lock(el);
+    // `body-scroll-lock` is a vendored bundle whose optional `options` argument is typed as
+    // required; passing `undefined` keeps the original single-argument call.
+    lock(el, undefined);
 
     if (this.capabilities.isIOS) {
-      this.lockedScrollY = window.scrollY;
+      this.#lockedScrollY = window.scrollY;
       this.appEvents.on(
         "keyboard-visibility-change",
         this,
@@ -65,7 +114,7 @@ export default class DModal extends Component {
     }
 
     return () => {
-      unlock(el);
+      unlock(el, undefined);
 
       if (this.capabilities.isIOS) {
         this.appEvents.off(
@@ -76,9 +125,42 @@ export default class DModal extends Component {
       }
     };
   });
+  #modalContainer: HTMLElement;
+  #lockedScrollY?: number;
+  @tracked _wrapperElement?: HTMLElement;
+
+  get autofocus() {
+    return this.args.autofocus ?? true;
+  }
+
+  get dismissable() {
+    if (!this.args.closeModal) {
+      return false;
+    } else if ("dismissable" in this.args) {
+      return this.args.dismissable;
+    } else {
+      return true;
+    }
+  }
+
+  // Could be optimised to remove classic component once RFC389 is implemented
+  // https://rfcs.emberjs.com/id/0389-dynamic-tag-names
+  @cached
+  get dynamicElement() {
+    const tagName = this.args.tagName || "div";
+    if (!["div", "form"].includes(tagName)) {
+      throw `@tagName must be form or div`;
+    }
+
+    return dElement(tagName);
+  }
+
+  get mobileDismissable() {
+    return this.site.mobileView && this.dismissable;
+  }
 
   @action
-  resetDocumentScrollOnIOS(visible) {
+  resetDocumentScrollOnIOS(visible: boolean) {
     // iOS scrolls the page to the focused input when the keyboard opens
     // as a result when an input is within a dropdown within a modal, the modal is scrolled out of view.
     // This forces the modal back to the correct visible position.
@@ -86,23 +168,23 @@ export default class DModal extends Component {
       return;
     }
 
-    window.scrollTo(0, this.lockedScrollY ?? 0);
+    window.scrollTo(0, this.#lockedScrollY ?? 0);
   }
 
   @action
-  async setupModal(el) {
+  async setupModal(el: HTMLElement) {
     document.documentElement.addEventListener(
       "keydown",
       this.handleDocumentKeydown,
       { capture: true }
     );
 
-    this.wrapperElement = el;
+    this._wrapperElement = el;
     this.animating = true;
 
-    this.modalContainer.classList.add("is-entering");
-    await waitForAnimationEnd(this.modalContainer);
-    this.modalContainer.classList.remove("is-entering");
+    this.#modalContainer.classList.add("is-entering");
+    await waitForAnimationEnd(this.#modalContainer);
+    this.#modalContainer.classList.remove("is-entering");
 
     this.animating = false;
   }
@@ -116,51 +198,15 @@ export default class DModal extends Component {
     );
   }
 
-  get dismissable() {
-    if (!this.args.closeModal) {
-      return false;
-    } else if ("dismissable" in this.args) {
-      return this.args.dismissable;
-    } else {
-      return true;
-    }
-  }
-
-  get autofocus() {
-    return this.args.autofocus ?? true;
-  }
-
-  get mobileDismissable() {
-    return this.site.mobileView && this.dismissable;
-  }
-
-  shouldTriggerClickOnEnter(event) {
-    if (this.args.submitOnEnter === false) {
-      return false;
-    }
-
-    // skip when in a form, textarea, or select-kit element
-    if (
-      event.target.closest("form") ||
-      document.activeElement?.closest("form") ||
-      document.activeElement?.nodeName === "TEXTAREA" ||
-      document.activeElement?.closest(".select-kit")
-    ) {
-      return false;
-    }
-
-    return true;
-  }
-
   @action
-  handleSwipeStart(swipeState, event) {
+  handleSwipeStart(swipeState: SwipeState, event: Event) {
     if (this.#shouldDeferSwipeToContent(swipeState)) {
       event.preventDefault();
     }
   }
 
   @action
-  async handleSwipe(swipeEvent) {
+  async handleSwipe(swipeEvent: SwipeState) {
     if (this.animating) {
       return;
     }
@@ -176,7 +222,7 @@ export default class DModal extends Component {
   }
 
   @action
-  async handleSwipeEnded(swipeEvent) {
+  async handleSwipeEnded(swipeEvent: SwipeState) {
     if (this.animating) {
       // if the modal is animating we don't want to risk resetting the position
       // as the user releases the swipe at the same time
@@ -184,7 +230,7 @@ export default class DModal extends Component {
     }
 
     const closeDistance =
-      this.modalContainer.clientHeight * SWIPE_CLOSE_DISTANCE_RATIO;
+      this.#modalContainer.clientHeight * SWIPE_CLOSE_DISTANCE_RATIO;
 
     if (
       swipeEvent.goingUp() ||
@@ -199,13 +245,13 @@ export default class DModal extends Component {
   }
 
   @action
-  handleWrapperPointerDown(e) {
+  handleWrapperPointerDown(e: PointerEvent) {
     // prevents hamburger menu to close on modal backdrop click
     e.stopPropagation();
   }
 
   @action
-  handleWrapperClick(e) {
+  handleWrapperClick(e: MouseEvent) {
     if (e.button !== 0) {
       return; // Non-default mouse button
     }
@@ -218,7 +264,7 @@ export default class DModal extends Component {
   }
 
   @action
-  async closeModal(initiatedBy) {
+  async closeModal(initiatedBy: string) {
     if (!this.args.closeModal) {
       return;
     }
@@ -238,13 +284,13 @@ export default class DModal extends Component {
       } else if (initiatedBy === CLOSE_INITIATED_BY_SWIPE_DOWN) {
         await this.#animateSwipeDismiss();
       } else {
-        const backdrop = this.wrapperElement.nextElementSibling;
-        this.modalContainer.classList.add("is-exiting");
+        const backdrop = this._wrapperElement?.nextElementSibling;
+        this.#modalContainer.classList.add("is-exiting");
         if (backdrop) {
           backdrop.classList.add("is-exiting");
         }
 
-        await waitForAnimationEnd(this.modalContainer);
+        await waitForAnimationEnd(this.#modalContainer);
       }
     } finally {
       this.animating = false;
@@ -253,7 +299,7 @@ export default class DModal extends Component {
   }
 
   @action
-  handleDocumentKeydown(event) {
+  handleDocumentKeydown(event: KeyboardEvent) {
     if (this.args.hidden) {
       return;
     }
@@ -263,7 +309,7 @@ export default class DModal extends Component {
     // or inside a float-kit portal (menu/tooltip) opened from this modal,
     // since those render outside the modal DOM.
     if (
-      !this.wrapperElement.contains(document.activeElement) &&
+      !this._wrapperElement?.contains(document.activeElement) &&
       !document.activeElement?.closest(
         ".d-modal, .fk-d-menu, .fk-d-menu-modal, .fk-d-tooltip"
       )
@@ -277,9 +323,9 @@ export default class DModal extends Component {
       this.closeModal(CLOSE_INITIATED_BY_ESC);
     }
 
-    if (event.key === "Enter" && this.shouldTriggerClickOnEnter(event)) {
-      this.wrapperElement
-        .querySelector(".d-modal__footer .btn-primary")
+    if (event.key === "Enter" && this.#shouldTriggerClickOnEnter(event)) {
+      this._wrapperElement
+        ?.querySelector<HTMLElement>(".d-modal__footer .btn-primary")
         ?.click();
       event.preventDefault();
     }
@@ -290,29 +336,35 @@ export default class DModal extends Component {
     this.closeModal(CLOSE_INITIATED_BY_BUTTON);
   }
 
-  // Could be optimised to remove classic component once RFC389 is implemented
-  // https://rfcs.emberjs.com/id/0389-dynamic-tag-names
-  @cached
-  get dynamicElement() {
-    const tagName = this.args.tagName || "div";
-    if (!["div", "form"].includes(tagName)) {
-      throw `@tagName must be form or div`;
+  #shouldTriggerClickOnEnter(event: KeyboardEvent) {
+    if (this.args.submitOnEnter === false) {
+      return false;
     }
 
-    return dElement(tagName);
+    // skip when in a form, textarea, or select-kit element
+    if (
+      (event.target as HTMLElement)?.closest("form") ||
+      document.activeElement?.closest("form") ||
+      document.activeElement?.nodeName === "TEXTAREA" ||
+      document.activeElement?.closest(".select-kit")
+    ) {
+      return false;
+    }
+
+    return true;
   }
 
   // lets inner content consume the gesture instead of dragging the modal:
   // horizontal swipes, and vertical swipes started within scrollable content
   // that can still scroll in the gesture's direction
-  #shouldDeferSwipeToContent(swipeState) {
+  #shouldDeferSwipeToContent(swipeState: SwipeState) {
     if (swipeState.direction === "left" || swipeState.direction === "right") {
       return true;
     }
 
-    let element = swipeState.originalEvent?.target;
+    let element = swipeState.originalEvent?.target as HTMLElement | null;
 
-    while (element && element !== this.modalContainer) {
+    while (element && element !== this.#modalContainer) {
       if (element.scrollHeight > element.clientHeight) {
         const { overflowY } = window.getComputedStyle(element);
 
@@ -336,14 +388,14 @@ export default class DModal extends Component {
     return false;
   }
 
-  #animateBackdropOpacity(position) {
-    const backdrop = this.wrapperElement.nextElementSibling;
+  #animateBackdropOpacity(position: number) {
+    const backdrop = this._wrapperElement?.nextElementSibling;
 
     if (!backdrop) {
       return;
     }
 
-    const opacity = 1 - position / this.modalContainer.clientHeight;
+    const opacity = 1 - position / this.#modalContainer.clientHeight;
 
     waitForPromise(
       backdrop.animate([{ opacity: Math.max(0, Math.min(opacity, 0.6)) }], {
@@ -352,11 +404,11 @@ export default class DModal extends Component {
     );
   }
 
-  async #animateWrapperPosition(position, duration) {
+  async #animateWrapperPosition(position: number, duration: number) {
     this.#animateBackdropOpacity(position);
 
     await waitForPromise(
-      this.modalContainer.animate(
+      this.#modalContainer.animate(
         [{ transform: `translateY(${position}px)` }],
         {
           fill: "forwards",
@@ -372,7 +424,7 @@ export default class DModal extends Component {
   // overridden by the drag's fill-forwards animations anyway
   async #animateSwipeDismiss() {
     const duration = getMaxAnimationTimeMs();
-    const backdrop = this.wrapperElement.nextElementSibling;
+    const backdrop = this._wrapperElement?.nextElementSibling;
 
     if (backdrop) {
       waitForPromise(
@@ -382,7 +434,7 @@ export default class DModal extends Component {
     }
 
     await waitForPromise(
-      this.modalContainer.animate([{ transform: "translateY(100%)" }], {
+      this.#modalContainer.animate([{ transform: "translateY(100%)" }], {
         fill: "forwards",
         duration,
         easing: SWIPE_SETTLE_EASING,
@@ -391,18 +443,18 @@ export default class DModal extends Component {
   }
 
   async #animatePopOff() {
-    const backdrop = this.wrapperElement.nextElementSibling;
+    const backdrop = this._wrapperElement?.nextElementSibling;
 
     if (!backdrop) {
       return;
     }
 
-    this.modalContainer.classList.add("is-exiting");
+    this.#modalContainer.classList.add("is-exiting");
     backdrop.classList.add("is-exiting");
 
     await waitForPromise(
       Promise.all([
-        waitForAnimationEnd(this.modalContainer),
+        waitForAnimationEnd(this.#modalContainer),
         waitForAnimationEnd(backdrop),
       ])
     );

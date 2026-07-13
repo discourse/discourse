@@ -33,7 +33,7 @@ const DEFAULT_SLOTS = 6;
 /** @extends {Component<DOTPSignature>} */
 export default class DOTP extends Component {
   /**
-   * @type {import("discourse/services/capabilities").Capabilities}
+   * @type {import("discourse/services/capabilities").CapabilitiesService}
    */
   // @ts-ignore (incorrect no-initialization error)
   @service capabilities;
