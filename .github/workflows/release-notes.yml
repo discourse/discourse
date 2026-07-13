@@ -53,23 +53,22 @@ jobs:
       - name: Create output dir
         run: mkdir -p tmp/notes
 
-      - parallel:
-          - name: Core release notes
-            run: bin/rake "release_note:generate[ $from_ref , $to_ref ]" | tee tmp/notes/core.txt
+      - name: Core release notes
+        run: bin/rake "release_note:generate[ $from_ref , $to_ref ]" | tee tmp/notes/core.txt
 
-          - name: Calculate from/to dates from refs
-            id: dates
-            run: |
-              from=$(git show -s --date=format:'%Y-%m-%d' --format=%cd "${from_ref}^{commit}")
-              echo "from=$from" >> $GITHUB_OUTPUT
-              to=$(git show -s --date=format:'%Y-%m-%d' --format=%cd "${to_ref}^{commit}")
-              echo "to=$to" >> $GITHUB_OUTPUT
+      - name: Calculate from/to dates from refs
+        id: dates
+        run: |
+          from=$(git show -s --date=format:'%Y-%m-%d' --format=%cd "${from_ref}^{commit}")
+          echo "from=$from" >> $GITHUB_OUTPUT
+          to=$(git show -s --date=format:'%Y-%m-%d' --format=%cd "${to_ref}^{commit}")
+          echo "to=$to" >> $GITHUB_OUTPUT
 
-          - name: Setup all-the-plugins
-            run: |
-              git clone https://github.com/discourse/all-the-plugins tmp/all-the-plugins
-              cd tmp/all-the-plugins
-              ./reset-all-repos
+      - name: Setup all-the-plugins
+        run: |
+          git clone https://github.com/discourse/all-the-plugins tmp/all-the-plugins
+          cd tmp/all-the-plugins
+          ./reset-all-repos
 
       - name: Plugin release notes
         run: |

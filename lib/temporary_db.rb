@@ -83,7 +83,16 @@ class TemporaryDb
   end
 
   def find_free_port(range)
-    range.each { |port| return port if port_available?(port) }
+    range.each do |port|
+      lock_file = open_port_lock(port)
+      next if !lock_file
+
+      if lock_file.flock(File::LOCK_EX | File::LOCK_NB) && port_available?(port)
+        @port_lock_file = lock_file
+        return port
+      end
+      lock_file.close
+    end
   end
 
   def pg_port
@@ -96,13 +105,7 @@ class TemporaryDb
 
   def start
     init_data_directory
-    configure_database
-
-    puts "Starting postgres on port: #{pg_port}"
-    @previous_discourse_pg_port = ENV["DISCOURSE_PG_PORT"]
-    ENV["DISCOURSE_PG_PORT"] = pg_port.to_s
-
-    start_server
+    start_server_on_available_port
     @started = true
 
     create_database
@@ -110,6 +113,7 @@ class TemporaryDb
     puts "PG server is ready and DB is loaded"
   rescue StandardError
     restore_discourse_pg_port
+    release_port
     raise
   end
 
@@ -120,6 +124,7 @@ class TemporaryDb
     Open3.capture3(*args)
   ensure
     restore_discourse_pg_port
+    release_port
   end
 
   def connection_hash
@@ -190,6 +195,47 @@ class TemporaryDb
       "--username=discourse",
       error_prefix: "Failed to initialize postgres data directory",
     )
+  end
+
+  def start_server_on_available_port
+    configure_database
+
+    puts "Starting postgres on port: #{pg_port}"
+    @previous_discourse_pg_port = ENV["DISCOURSE_PG_PORT"]
+    ENV["DISCOURSE_PG_PORT"] = pg_port.to_s
+
+    start_server
+  end
+
+  def open_port_lock(port)
+    path = port_lock_path(port)
+    open_existing_port_lock(path)
+  rescue Errno::ENOENT
+    create_port_lock(path)
+  end
+
+  def open_existing_port_lock(path)
+    File.open(path, File::RDONLY | File::NOFOLLOW)
+  rescue Errno::EACCES, Errno::ELOOP, Errno::EPERM
+    nil
+  end
+
+  def create_port_lock(path)
+    File.open(path, File::RDONLY | File::CREAT | File::EXCL | File::NOFOLLOW, 0o644)
+  rescue Errno::EEXIST
+    open_existing_port_lock(path)
+  rescue Errno::EACCES, Errno::ELOOP, Errno::EPERM
+    nil
+  end
+
+  def port_lock_path(port)
+    File.join(Dir.tmpdir, "#{PG_TEMP_PREFIX}_#{port}.lock")
+  end
+
+  def release_port
+    @port_lock_file&.close
+    @port_lock_file = nil
+    @pg_port = nil
   end
 
   def configure_database
