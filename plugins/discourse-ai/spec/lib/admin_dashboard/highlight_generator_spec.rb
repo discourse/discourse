@@ -69,6 +69,34 @@ RSpec.describe DiscourseAi::AdminDashboard::HighlightGenerator do
     expect(again).to eq("Cached highlight.")
   end
 
+  it "uses category settings in the cache key" do
+    category = Fabricate(:category)
+    responses = [
+      { highlight: "Highlight before category ids." }.to_json,
+      { highlight: "Highlight after category ids." }.to_json,
+    ]
+
+    result =
+      DiscourseAi::Completions::Llm.with_prepared_responses(responses) do
+        described_class.generate(
+          start_date: "2026-05-01",
+          end_date: "2026-06-01",
+          period: "last_30_days",
+        )
+
+        SiteSetting.ai_admin_dashboard_highlights_category_scope = "include"
+        SiteSetting.ai_admin_dashboard_highlights_categories = category.id.to_s
+
+        described_class.generate(
+          start_date: "2026-05-01",
+          end_date: "2026-06-01",
+          period: "last_30_days",
+        )
+      end
+
+    expect(result).to eq("Highlight after category ids.")
+  end
+
   it "returns an empty string when there are no metrics" do
     allow(AdminDashboardHighlights).to receive(:build).and_return({ kpis: [] })
 

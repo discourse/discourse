@@ -1846,7 +1846,6 @@ ko:
     created: "생성일"
     created_lowercase: "생성일"
     trust_level: "신뢰 레벨"
-    search_hint: "아이디, 이메일 또는 IP 주소"
     create_account:
       header_title: "환영합니다!"
       disclaimer: "등록하면 <a href='%{privacy_link}' target='blank'>개인정보 취급방침</a> 및 <a href='%{tos_link}' target='blank'>이용약관</a>에 동의하게 됩니다."
@@ -3102,7 +3101,6 @@ ko:
       topic_featured_link_allowed: "이 카테고리에 추천 링크 허용"
       create: "새로운 카테고리"
       create_long: "새 카테고리 생성"
-      slug_placeholder: "(Optional) dashed-words for url"
       creation_error: 카테고리 생성 중에 오류가 발생했습니다.
       save_error: 카테고리 저장 중에 오류가 발생했습니다.
       validations:
@@ -3796,6 +3794,7 @@ ko:
       reports:
         title: "사용 가능한 리포트 목록"
         sidebar_title: "보고서"
+        all_groups: "모든 그룹"
         group_traffic: "트래픽"
         group_members: "회원"
         group_other: "기타"

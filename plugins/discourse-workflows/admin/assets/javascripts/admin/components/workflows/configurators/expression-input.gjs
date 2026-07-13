@@ -10,28 +10,37 @@ import {
   inputConnectionsForNode,
   inputIndexForConnection,
   inputSummaryForNode,
-  nodeOutputJsonPath,
+  nodeOutputFirstJsonPath,
+  nodeOutputLinkedItemJsonPath,
   outputIndexForConnection,
   previousNodeForConnection,
+  schemaFieldsForItems,
   schemaFieldsForNodeInput,
-  schemaFieldsForNodeOutput,
 } from "../../../lib/workflows/data-schema";
 import buildExpressionExtensions from "../../../lib/workflows/expression-extensions";
 import ExpressionPreview from "../variable/expression-preview";
 import VariableInput from "../variable/input";
+import ReferencePropertyPicker from "../variable/reference-property-picker";
+
+const REFERENCE_PICKER_IDENTIFIER = "workflows-reference-picker";
 
 export default class ExpressionInput extends Component {
   @service siteSettings;
   @service workflowsNodeTypes;
+  @service menu;
 
   @tracked isFocused = false;
   @tracked segments = [];
   wrapperElement = null;
   #focusOutTimer = null;
+  #pickerDismiss = null;
+  #pickerEditorElement = null;
+  #pickerTrigger = null;
 
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.#focusOutTimer);
+    this.#closeReferencePicker();
   }
 
   get displayValue() {
@@ -89,18 +98,23 @@ export default class ExpressionInput extends Component {
         prefix: itemPrefix,
       });
     }
+    // Pinned sample data, falling back to the last run.
     const ancestorNodes = node
-      ? ancestorOutputNodes(node, graph).map((ancestor) => ({
-          node: ancestor.node,
-          fields: schemaFieldsForNodeOutput(runData, ancestor.node.name, {
-            outputIndex: ancestor.outputIndex,
+      ? ancestorOutputNodes(node, graph).map((ancestor) => {
+          const items =
+            session?.outputItemsForNode(ancestor.node, ancestor.outputIndex) ||
+            [];
+          const prefix =
+            items.length === 1
+              ? nodeOutputFirstJsonPath(ancestor.node.name, {
+                  outputIndex: ancestor.outputIndex,
+                })
+              : nodeOutputLinkedItemJsonPath(ancestor.node.name);
+          return {
             node: ancestor.node,
-            prefix: nodeOutputJsonPath(runData, ancestor.node.name, {
-              outputIndex: ancestor.outputIndex,
-              node: ancestor.node,
-            }),
-          }),
-        }))
+            fields: schemaFieldsForItems(items, { prefix }),
+          };
+        })
       : [];
 
     return buildExpressionExtensions(cmParams, {
@@ -113,7 +127,96 @@ export default class ExpressionInput extends Component {
       workflowId: session?.workflowId,
       nodeId: node?.id,
       onSegmentsResolved: (segs) => (this.segments = segs),
+      onOpenReferencePicker: this.openReferencePicker,
     });
+  }
+
+  @action
+  openReferencePicker({ trigger, properties, current, onSelect, onEdit }) {
+    // Re-triggering on the same pill toggles the dropdown shut rather than
+    // closing and reopening it.
+    if (this.#pickerTrigger === trigger) {
+      this.#closeReferencePicker();
+      return;
+    }
+
+    this.#pickerTrigger = trigger;
+    this.menu.show(trigger, {
+      identifier: REFERENCE_PICKER_IDENTIFIER,
+      component: ReferencePropertyPicker,
+      placement: "bottom-start",
+      data: {
+        properties,
+        current,
+        onSelect: onSelect
+          ? (name) => {
+              this.#closeReferencePicker();
+              onSelect(name);
+            }
+          : null,
+        onEdit: onEdit
+          ? () => {
+              this.#closeReferencePicker();
+              onEdit();
+            }
+          : null,
+        // Fires however the menu closes (incl. float-kit's own outside-click),
+        // so our open-state can't go stale. Scoped to this trigger so a menu
+        // being replaced by another pill's doesn't clear the new one.
+        onClose: () => {
+          if (this.#pickerTrigger === trigger) {
+            this.#pickerTrigger = null;
+            this.#teardownPickerDismiss();
+          }
+        },
+      },
+    });
+    this.#armPickerDismiss();
+  }
+
+  // CodeMirror swallows pointerdowns before float-kit's outside-click detector
+  // sees them, so dismiss on a capture listener instead.
+  #armPickerDismiss() {
+    this.#teardownPickerDismiss();
+    const editor = this.wrapperElement?.querySelector(".cm-editor");
+    if (!editor) {
+      return;
+    }
+    this.#pickerEditorElement = editor;
+    this.#pickerDismiss = (event) => {
+      // A pointerdown on the pill that owns the open dropdown is left to the
+      // pill's own click handler, which toggles it shut — closing here too
+      // would make it close and immediately reopen.
+      const openPill = this.#pickerTrigger?.closest?.(".cm-wf-reference-pill");
+      if (
+        openPill &&
+        event.target?.closest?.(".cm-wf-reference-pill") === openPill
+      ) {
+        return;
+      }
+      this.#closeReferencePicker();
+    };
+    editor.addEventListener("pointerdown", this.#pickerDismiss, {
+      capture: true,
+    });
+  }
+
+  #teardownPickerDismiss() {
+    if (this.#pickerEditorElement && this.#pickerDismiss) {
+      this.#pickerEditorElement.removeEventListener(
+        "pointerdown",
+        this.#pickerDismiss,
+        { capture: true }
+      );
+    }
+    this.#pickerEditorElement = null;
+    this.#pickerDismiss = null;
+  }
+
+  #closeReferencePicker() {
+    this.#pickerTrigger = null;
+    this.menu.close(REFERENCE_PICKER_IDENTIFIER);
+    this.#teardownPickerDismiss();
   }
 
   @action

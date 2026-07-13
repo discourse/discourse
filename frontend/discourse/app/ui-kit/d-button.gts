@@ -1,4 +1,3 @@
-// @ts-check
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
@@ -12,66 +11,74 @@ import dElement from "discourse/ui-kit/helpers/d-element";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-/**
- * @typedef DButtonSignature
- *
- * @property {object} Args
- *
- * // Text
- * @property {string} [Args.title]
- * @property {string} [Args.translatedTitle]
- * @property {string} [Args.label]
- * @property {string} [Args.translatedLabel]
- *
- * // Actions / events
- * @property {function|object} [Args.action]
- * @property {any} [Args.actionParam]
- * @property {boolean} [Args.forwardEvent]
- * @property {function} [Args.onKeyDown]
- *
- * // Navigation
- * @property {string} [Args.href]
- * @property {string} [Args.route]
- * @property {object|object[]} [Args.routeModels]
- *
- * // State
- * @property {boolean} [Args.isLoading]
- * @property {boolean} [Args.disabled]
- * @property {boolean} [Args.preventFocus]
- *
- * // Display mode
- * @property {"link"} [Args.display]
- *
- * // Display / icon
- * @property {string} [Args.icon]
- * @property {boolean} [Args.ellipsis]
- * @property {string} [Args.suffixIcon]
- *
- * // Accessibility
- * @property {string} [Args.ariaLabel]
- * @property {string} [Args.translatedAriaLabel]
- * @property {boolean} [Args.ariaExpanded]
- * @property {boolean} [Args.ariaPressed]
- * @property {string} [Args.ariaControls]
- * @property {boolean} [Args.ariaHidden]
- *
- * // HTML attributes
- * @property {string} [Args.type]
- * @property {string} [Args.id]
- * @property {string} [Args.form]
- * @property {string} [Args.tabindex]
- * @property {string} [Args.class]
- *
- * // Root element type (enables ...attributes type checking)
- * @property {HTMLButtonElement} Element
- *
- * // Optional yield
- * @property {object} Blocks
- * @property {[]} Blocks.default Contents of the button
- */
+type DButtonActionCallback = (...args: unknown[]) => void;
 
-/** @extends {Component<DButtonSignature>} */
-export default class DButton extends Component {
+interface DButtonActionObject {
+  value: DButtonActionCallback;
+}
+
+type DButtonAction = DButtonActionCallback | DButtonActionObject;
+
+type RouteModel = string | number | object;
+
+interface DButtonSignature {
+  Args: {
+    // Text
+    title?: string;
+    translatedTitle?: string;
+    label?: string;
+    translatedLabel?: string;
+
+    // Actions / events
+    action?: DButtonAction;
+    actionParam?: unknown;
+    forwardEvent?: boolean;
+    onKeyDown?: (event: KeyboardEvent) => void;
+
+    // Navigation
+    href?: string;
+    route?: string;
+    routeModels?: RouteModel | RouteModel[];
+
+    // State
+    isLoading?: boolean;
+    disabled?: boolean;
+    preventFocus?: boolean;
+
+    // Display mode
+    display?: "link";
+
+    // Display / icon
+    icon?: string;
+    ellipsis?: boolean;
+    suffixIcon?: string;
+
+    // Accessibility
+    ariaLabel?: string;
+    translatedAriaLabel?: string;
+    ariaExpanded?: boolean;
+    ariaPressed?: boolean;
+    ariaControls?: string;
+    ariaHidden?: boolean;
+
+    // HTML attributes
+    type?: string;
+    id?: string;
+    form?: string;
+    tabindex?: string;
+    class?: string;
+  };
+
+  // Root element type (enables ...attributes type checking)
+  Element: HTMLButtonElement;
+
+  // Optional yield
+  Blocks: {
+    default: [];
+  };
+}
+
+export default class DButton extends Component<DButtonSignature> {
   @service router;
   @service capabilities;
 
@@ -146,7 +153,7 @@ export default class DButton extends Component {
   }
 
   @action
-  keyDown(e) {
+  keyDown(e: KeyboardEvent) {
     if (this.args.onKeyDown) {
       e.stopPropagation();
       this.args.onKeyDown(e);
@@ -156,18 +163,18 @@ export default class DButton extends Component {
   }
 
   @action
-  click(event) {
+  click(event: MouseEvent) {
     return this._triggerAction(event);
   }
 
   @action
-  mouseDown(event) {
+  mouseDown(event: MouseEvent) {
     if (this.args.preventFocus) {
       event.preventDefault();
     }
   }
 
-  _triggerAction(event) {
+  _triggerAction(event: Event) {
     const { action: actionVal, route, routeModels } = this.args;
     const isIOS = this.capabilities?.isIOS;
 
@@ -179,9 +186,11 @@ export default class DButton extends Component {
           if (isIOS) {
             // Don't optimise INP in iOS
             // it results in focus events not being triggered
-            forwardEvent
-              ? actionVal.value(actionParam, event)
-              : actionVal.value(actionParam);
+            if (forwardEvent) {
+              actionVal.value(actionParam, event);
+            } else {
+              actionVal.value(actionParam);
+            }
           } else {
             // Using `next()` to optimise INP
             next(() =>
@@ -194,9 +203,11 @@ export default class DButton extends Component {
           if (isIOS) {
             // Don't optimise INP in iOS
             // it results in focus events not being triggered
-            forwardEvent
-              ? actionVal(actionParam, event)
-              : actionVal(actionParam);
+            if (forwardEvent) {
+              actionVal(actionParam, event);
+            } else {
+              actionVal(actionParam);
+            }
           } else {
             // Using `next()` to optimise INP
             next(() =>

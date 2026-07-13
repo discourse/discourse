@@ -1948,7 +1948,6 @@ te:
     created: "సృష్టించిన"
     created_lowercase: "సృష్టించిన"
     trust_level: "నమ్మకపు స్థాయి"
-    search_hint: "సభ్యనామం, ఈమెయిల్ మరియు ఐపీ చిరునామా"
     create_account:
       header_title: "స్వాగతం!"
       disclaimer: "నమోదు చేయడం ద్వారా, మీరు <a href='%{privacy_link}' target='blank'>గోప్యతా విధానం</a> మరియు <a href='%{tos_link}' target='blank'>సేవా నిబంధనలను</a> అంగీకరిస్తున్నారు."
@@ -3427,7 +3426,6 @@ te:
         placeholder: "ట్యాగ్ సమూహాన్ని ఎంచుకోండి…"
       topic_featured_link_allowed: "ఈ వర్గంలో ఫీచర్ చేసిన లింక్లను అనుమతించండి"
       create_long: "కొత్త వర్గాన్ని సృష్టించండి"
-      slug_placeholder: "(ఐచ్చికం) వెబ్ చిరునామాలో పేరు డాష్ లతో"
       creation_error: ఈ వర్గం సృష్టించేప్పుడు దోషం
       save_error: వర్గాన్ని సేవ్ చేయడంలో లోపం ఏర్పడింది.
       description: "వివరణ"
@@ -4317,6 +4315,7 @@ te:
       reports:
         title: "అందుబాటులో ఉన్న నివేదికల జాబితా"
         sidebar_title: "నివేదికలు"
+        all_groups: "అన్ని సమూహాలు"
         group_traffic: "ట్రాఫిక్"
         group_members: "సభ్యులు"
         group_other: "ఇతర"

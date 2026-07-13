@@ -11,6 +11,7 @@ import CanCheckEmailsHelper from "discourse/lib/can-check-emails-helper";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
+import DiscourseURL from "discourse/lib/url";
 import { i18n } from "discourse-i18n";
 
 const MAX_BULK_SELECT_LIMIT = 100;
@@ -148,7 +149,22 @@ export default class AdminUsersListShowController extends Controller {
   @action
   onListFilterChange(event) {
     this.set("listFilter", event.target.value);
-    discourseDebounce(this, this.resetFilters, INPUT_DELAY);
+    discourseDebounce(this, this._listFilterChanged, INPUT_DELAY);
+  }
+
+  _listFilterChanged() {
+    // `filter` is deliberately not a registered query param (its name would
+    // clash with the :filter segment), so sync the URL without a transition
+    const url = new URL(window.location.href);
+    url.searchParams.delete("username");
+    if (this.listFilter) {
+      url.searchParams.set("filter", this.listFilter);
+    } else {
+      url.searchParams.delete("filter");
+    }
+    DiscourseURL.replaceState(url.pathname + url.search);
+
+    this.resetFilters();
   }
 
   @action

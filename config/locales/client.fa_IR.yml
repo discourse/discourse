@@ -2278,7 +2278,6 @@ fa_IR:
     created: "ساخته شده"
     created_lowercase: "ساخته شده"
     trust_level: "سطح اعتماد"
-    search_hint: "نام کاربری ، ایمیل یا ای پی "
     create_account:
       header_title: "خوش آمدید!"
       disclaimer: "با ثبت نام شما با <a href='%{privacy_link}' target='blank'>حریم خصوصی</a> و <a href='%{tos_link}' target='blank'>شرایط و ضوابط استفاده از سرویس </a> موافقت کرده اید."
@@ -3853,7 +3852,6 @@ fa_IR:
       type_settings_schema:
         site_settings: "تنظیمات سایت"
       save: "ذخیره دسته‌بندی"
-      slug_placeholder: "(اختیاری) کلمه با - جدا شده برای پیوند"
       creation_error: خطایی در ساخت این دسته بروز کرد.
       save_error: خطایی در ذخیره‌ی این دسته‌بندی روی داد.
       validations:
@@ -4829,6 +4827,7 @@ fa_IR:
         title: "لیستی از گزارشات موجود"
         sidebar_title: "گزارشات"
         back: "بازگشت به همه گزارش‌ها"
+        all_groups: "همه گروه‌ها"
         group_traffic: "ترافیک"
         group_members: "اعضاء"
         group_other: "دیگر"

@@ -769,7 +769,7 @@ export default class ReviewableItem extends Component {
                 title={{i18n "review.copy_permalink_title"}}
                 class="btn btn-transparent reviewable-permalink-copy"
               >
-                {{dIcon "d-post-share"}}
+                {{dIcon "link"}}
               </button>
 
               {{newReviewableStatus

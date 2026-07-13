@@ -56,6 +56,7 @@ hy:
         select_option: "Ընտրել..."
       translations:
         title: "Թարգմանություններ"
+        category_scope: "Կատեգորիաներ"
         stats:
           eta_minutes:
             one: "%{count} րոպե"

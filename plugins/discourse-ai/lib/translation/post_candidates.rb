@@ -59,25 +59,15 @@ module DiscourseAi
 
         posts = posts.joins(:topic)
 
-        # if no categories are excluded, posts from all categories will be sent for translation
-        # private categories need to be explicitly excluded
-        excluded_category_ids = DiscourseAi::Translation.excluded_category_ids
         pm_scope = SiteSetting.ai_translation_personal_messages
+        category_condition, category_params =
+          DiscourseAi::Translation.category_scope_condition(category_column: "topics.category_id")
 
-        if excluded_category_ids.present?
-          posts =
-            posts.where(
-              "topics.category_id NOT IN (:cats) OR topics.archetype = :pm",
-              cats: excluded_category_ids,
-              pm: Archetype.private_message,
-            )
-        else
-          posts =
-            posts.where(
-              "topics.category_id IS NOT NULL OR topics.archetype = :pm",
-              pm: Archetype.private_message,
-            )
-        end
+        posts =
+          posts.where(
+            "topics.archetype = :pm OR (#{category_condition})",
+            category_params.merge(pm: Archetype.private_message),
+          )
 
         # PM scope filter
         case pm_scope
@@ -116,7 +106,7 @@ module DiscourseAi
           SiteSetting.ai_translation_include_bot_content,
           SiteSetting.ai_translation_max_post_length,
           SiteSetting.ai_translation_personal_messages,
-          DiscourseAi::Translation.excluded_category_ids.sort.join(","),
+          DiscourseAi::Translation.category_scope_cache_key,
         ].join(":")
       end
 

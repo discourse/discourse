@@ -118,6 +118,8 @@ zh_CN:
     ai_embeddings_semantic_related_age_penalty: "对语义搜索结果中的话题应用指数式期限惩罚。0.0 = 无惩罚，0.3 = 轻微偏向于近期活跃的内容，1.0+ = 强烈偏向于活跃的内容。"
     ai_embeddings_semantic_related_age_time_scale: "计算期限惩罚的时间尺度，以天为单位。不活跃时长达到此天数的话题将受到约 50% 的惩罚，惩罚系数为1.0。使用 365 表示年度尺度，使用 90 表示季度尺度。"
     ai_embeddings_per_post_enabled: 为每个帖子生成嵌入向量
+    ai_admin_dashboard_highlights_category_scope: "选择 AI 突出显示可使用哪些分类。选择“包含”或“排除”相关选项时，请配合使用 {{setting:ai_admin_dashboard_highlights_categories}}。个人消息始终不会包含在内。"
+    ai_admin_dashboard_highlights_categories: "当 AI 突出显示类别范围设置为<strong>包含</strong>或<strong>排除</strong>时所使用的类别。"
     ai_summarization_enabled: "启用总结功能"
     ai_summarization_agent: "用于总结功能的智能体"
     ai_pm_summarization_allowed_groups: "能够创建摘要并在私信中查看的群组。"
@@ -144,7 +146,6 @@ zh_CN:
     ai_discord_search_agent: "用于 Discord 搜索的智能体。"
     ai_discord_allowed_guilds: "允许机器人搜索的 Discord 公会（服务器）"
     ai_translation_enabled: "启用 AI 翻译功能"
-    ai_translation_excluded_categories: "这些类别中的内容将不会被翻译。留空则可翻译所有类别的内容，包括私有类别。"
     ai_translation_personal_messages: "控制哪些个人消息需要翻译。'none' 表示禁用个人消息翻译。'group' 仅翻译群组个人消息。'all' 翻译所有个人消息。"
     ai_translation_include_bot_content: "启用后，机器人（用户 ID 小于 0）编写的内容也将发送进行翻译。"
     ai_translation_max_post_length: "要翻译的帖子的最大字符数。超过此长度的帖子将不会被翻译。"

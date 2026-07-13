@@ -5,7 +5,9 @@ import { buildAutoCloseBraces } from "./auto-close-braces";
 import { buildCompletions } from "./completions";
 import { buildDragDrop } from "./drag-drop";
 import { buildExpressionEvaluation } from "./expression-evaluation";
+import { buildFocusEmptyArea } from "./focus-empty-area";
 import { buildHoverTooltip } from "./hover-tooltip";
+import { buildReferencePills } from "./reference-pills";
 import { buildTheme } from "./theme";
 import { buildValidation } from "./validation";
 
@@ -20,13 +22,16 @@ export default function buildExpressionExtensions(cmParams, domainOpts = {}) {
   const scope = buildScope(domainOpts);
   const ancestorNodes = domainOpts.ancestorNodes || [];
   const completionOpts = { scope, ancestorNodes, sections };
+  const onOpenReferencePicker = domainOpts.onOpenReferencePicker;
 
   return [
     cmParams.utils.expressionLanguage(),
     buildTheme(cmParams),
     buildValidation(cmParams),
     buildAutoCloseBraces(cmParams),
-    buildDragDrop(cmParams, { itemPrefix }),
+    buildDragDrop(cmParams, { itemPrefix, scope, onOpenReferencePicker }),
+    buildReferencePills(cmParams, { scope, onOpenReferencePicker }),
+    buildFocusEmptyArea(cmParams),
     buildCompletions(cmParams, completionOpts),
     buildHoverTooltip(cmParams, completionOpts),
     buildArgumentInfo(cmParams, completionOpts),

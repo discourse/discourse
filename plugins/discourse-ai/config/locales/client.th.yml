@@ -52,6 +52,7 @@ th:
       modals:
         select_option: "เลือกตัวเลือก..."
       translations:
+        category_scope: "หมวดหมู่"
         stats:
           eta_hours:
             other: "%{count} ชั่วโมง"

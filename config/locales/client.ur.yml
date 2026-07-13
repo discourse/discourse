@@ -2632,7 +2632,6 @@ ur:
     created: "بنایا گیا"
     created_lowercase: "بنایا گیا"
     trust_level: "فعالیت کا درجہ"
-    search_hint: "اسمِ صارف، ای میل یا آئی پی ایڈریس"
     create_account:
       header_title: "خوش آمدید!"
       disclaimer: "رجسٹر کرنے پر آپ <a href='%{privacy_link}' target='blank'>پردہ داری کی پالیسی</a> اور <a href='%{tos_link}' target='blank'>سروس کی شرائط</a> سے اتفاق کرتے ہیں۔"
@@ -4596,7 +4595,6 @@ ur:
       save: "زمرہ محفوظ کریں"
       unsaved_changes: "آپ کی تبدلیاں محفوظ نہیں ہوئیں"
       parent: "بالائی زمرہ"
-      slug_placeholder: "(اختیاری) URL کے لئے ڈیش دار الفاظ"
       creation_error: زمرہ بنانے کے دوران ایک خرابی کا سامنا کرنا پڑا۔
       save_error: زمرہ محفوظ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔
       validations:
@@ -5691,6 +5689,7 @@ ur:
         title: "دستیاب رپورٹوں کی فہرست"
         sidebar_title: "رپورٹیں"
         back: "تمام رپورٹس پر واپس"
+        all_groups: "تمام گروپس"
         group_traffic: "ٹریفک"
         group_members: "ممبران"
         group_other: "دیگر"

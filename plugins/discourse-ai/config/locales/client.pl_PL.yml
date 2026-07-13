@@ -406,8 +406,8 @@ pl_PL:
         description: "Automatycznie tłumacz całą zawartość swojego forum na język preferowany przez użytkownika"
         supported_locales: "Obsługiwane języki"
         supported_locales_description: "To ustawienie witryny pozwala również odwiedzającym na dodawanie tłumaczeń wpisów."
-        excluded_categories: "Wykluczone kategorie"
-        excluded_categories_description: "Treści w tych kategoriach nie będą tłumaczone. Pozostaw puste, aby przetłumaczyć treści we wszystkich kategoriach, w tym w kategoriach prywatnych."
+        category_scope: "Kategorie"
+        category_scope_description: "Wybierz, czy automatyczne tłumaczenia mają wykorzystywać wszystkie kategorie, kategorie publiczne czy wybrane kategorie."
         admin_actions:
           translation_settings: "Ustawienia tłumaczenia"
           localization_settings: "Ustawienia lokalizacji"

@@ -98,6 +98,8 @@ module DiscourseAi
             Tools::Read,
             Tools::FlagPost,
             Tools::CloseTopic,
+            Tools::SuspendUser,
+            Tools::SilenceUser,
             Tools::UnlistTopic,
             Tools::LockPost,
             Tools::DeleteTopic,

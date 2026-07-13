@@ -62,6 +62,7 @@ hr:
         select_option: "Odaberite opciju..."
       translations:
         title: "Prijevodi"
+        category_scope: "Kategorije"
         stats:
           eta_minutes:
             one: "%{count} minuta"

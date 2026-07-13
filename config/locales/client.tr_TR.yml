@@ -2629,7 +2629,6 @@ tr_TR:
     created: "Oluşturuldu"
     created_lowercase: "oluşturuldu"
     trust_level: "Güven Seviyesi"
-    search_hint: "kullanıcı adı, e-posta veya IP adresi"
     create_account:
       header_title: "Hoş geldiniz!"
       disclaimer: "Kaydolarak, <a href='%{privacy_link}' target='blank'>gizlilik politikası</a> ve <a href='%{tos_link}' target='blank'>hizmet şartlarını</a>kabul etmiş olursunuz."
@@ -4582,7 +4581,6 @@ tr_TR:
       unsaved_changes: "Kaydedilmemiş değişiklikleriniz var"
       slug: "Kategori Kısa Adı"
       parent: "Ana kategori"
-      slug_placeholder: "(İsteğe bağlı) url için çizgiyle ayrılmış kelimeler"
       creation_error: Kategori oluşturulurken bir hata oluştu.
       save_error: Kategori kaydedilirken bir hata oluştu.
       errors:
@@ -5745,6 +5743,7 @@ tr_TR:
         title: "Mevcut raporlar listesi"
         sidebar_title: "Raporlar"
         back: "Tüm raporlara geri dön"
+        all_groups: "Tüm gruplar"
         group_engagement: "Taahhüt"
         group_traffic: "Trafik"
         group_members: "Üyeler"

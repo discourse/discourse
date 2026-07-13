@@ -1,14 +1,19 @@
 # frozen_string_literal: true
 
 module LocalizationAttributesReplacer
-  def self.replace_category_attributes(category, crawl_locale)
-    if loc = get_localization(category, crawl_locale)
+  def self.localize_category(category, locale)
+    if loc = get_localization(category, locale)
       category.name = loc.name if loc.name.present?
-      category.description = loc.description if loc.description.present?
+      localized_description = loc.description_first_paragraph
+      category.description = localized_description if localized_description.present?
     end
+  end
+
+  def self.replace_category_attributes(category, crawl_locale)
+    localize_category(category, crawl_locale)
 
     while category = category.parent_category
-      replace_category_attributes(category, crawl_locale)
+      localize_category(category, crawl_locale)
     end
   end
 

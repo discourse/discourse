@@ -62,8 +62,24 @@ RSpec.describe DiscourseWorkflows::Nodes::Modal::V1 do
           execution_id: 7,
           resume_token: "tok-7",
           action: "approve",
+          target_user_id: user.id,
         ),
       )
+    end
+
+    it "binds the target user into the action ids so another user's token differs" do
+      configuration = config.merge("target_user" => other_user.username)
+      exec_ctx = build_exec_ctx(configuration, ctx_user: user)
+
+      messages =
+        MessageBus.track_publish(described_class.user_channel(other_user.id)) do
+          described_class.new(parameters: configuration).execute(exec_ctx)
+        end
+
+      action_id = messages.first.data[:buttons].first["action_id"]
+      payload = DiscourseWorkflows::InteractiveResume.action_payload(action_id)
+      expect(payload["target_user_id"]).to eq(other_user.id)
+      expect(payload["target_user_id"]).not_to eq(user.id)
     end
 
     it "sends the modal to a configured target user instead of the triggering user" do

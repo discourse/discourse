@@ -12,7 +12,8 @@ describe Jobs::PostsLocaleDetectionBackfill do
     SiteSetting.ai_translation_enabled = true
     SiteSetting.ai_translation_backfill_hourly_rate = 100
     SiteSetting.content_localization_supported_locales = "en"
-    SiteSetting.ai_translation_excluded_categories = ""
+    SiteSetting.ai_translation_category_scope = "all"
+    SiteSetting.ai_translation_categories = ""
   end
 
   it "does nothing when translator is disabled" do
@@ -97,7 +98,7 @@ describe Jobs::PostsLocaleDetectionBackfill do
     job.execute({})
   end
 
-  describe "with excluded categories" do
+  describe "with selected categories" do
     fab!(:included_category, :category)
     fab!(:excluded_category, :category)
     fab!(:included_topic) { Fabricate(:topic, category: included_category) }
@@ -113,12 +114,12 @@ describe Jobs::PostsLocaleDetectionBackfill do
     fab!(:pm_post) { Fabricate(:post, topic: pm_topic, locale: nil) }
 
     before do
-      SiteSetting.ai_translation_excluded_categories =
-        Category.where.not(id: included_category.id).pluck(:id).join("|")
+      SiteSetting.ai_translation_category_scope = "include"
+      SiteSetting.ai_translation_categories = included_category.id.to_s
       SiteSetting.ai_translation_personal_messages = "none"
     end
 
-    it "does not process posts from excluded categories" do
+    it "only processes posts from selected categories" do
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(included_post).once
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(excluded_post).never
       DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(group_pm_post).never

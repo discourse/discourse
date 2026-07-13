@@ -274,7 +274,7 @@ task "db:seed" => "environment" do
     SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
   rescue => error
     raise if ENV["RAISE_SEED_ERRORS"] == "1"
-    error.backtrace.each { |l| puts l }
+    puts error.full_message(highlight: false, order: :top)
   end
 end
 

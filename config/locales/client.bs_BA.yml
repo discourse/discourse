@@ -1527,7 +1527,6 @@ bs_BA:
     created: "Stvoreno"
     created_lowercase: "objavljeno"
     trust_level: "Nivo povjerenja"
-    search_hint: "ime"
     create_account:
       header_title: "Dobrodošao!"
       disclaimer: "Registracijom pristajete na <a href='%{privacy_link}' target='blank'>politiku privatnosti</a> i <a href='%{tos_link}' target='blank'>uvjete pružanja usluge</a> ."
@@ -2550,7 +2549,6 @@ bs_BA:
         delete: "Delete"
       topic_featured_link_allowed: "Omogućite istaknute veze u ovoj kategoriji"
       create_long: "Napravite novu kategoriju"
-      slug_placeholder: "(Opcionalno) isprekidane riječi za url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
       validations:
@@ -3150,6 +3148,7 @@ bs_BA:
       reports:
         title: "Lista dostupnih izvještaja"
         sidebar_title: "Izvještaji"
+        all_groups: "Sve grupe"
         group_traffic: "Promet"
         group_members: "Članovi"
         group_other: "Other"

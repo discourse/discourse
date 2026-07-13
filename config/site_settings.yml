@@ -699,6 +699,12 @@ login:
     hidden: true
     validator: "EnableLocalLoginsViaCodeValidator"
     area: "login"
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/407068"
+      allow_enabled_for:
+        - everyone
   enable_passkeys:
     client: true
     default: true
@@ -1691,7 +1697,7 @@ posting:
       learn_more_url: "https://meta.discourse.org/t/-/404829"
   klipy_api_key:
     default: ""
-    client: true
+    secret: true
     area: "gifs"
   klipy_file_detail:
     default: "webp"
@@ -4638,7 +4644,7 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "alpha"
       impact: "feature,admins"
       learn_more_url: "https://meta.discourse.org/t/-/404528"
   admin_dashboard_reports_seeded:

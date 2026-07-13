@@ -852,7 +852,9 @@ class SessionController < ApplicationController
   end
 
   def ensure_login_code_allowed
-    raise Discourse::NotFound if !SiteSetting.enable_local_logins_via_code
+    if !UpcomingChanges.enabled_for_user?(:enable_local_logins_via_code, current_user)
+      raise Discourse::NotFound
+    end
     # Code login is a delivery variant of email login, so it also requires
     # `enable_local_logins_via_email` (checked via `check_login_via_email`).
     check_local_login_allowed(check_login_via_email: true)

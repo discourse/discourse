@@ -377,6 +377,7 @@ tr_TR:
         description: "Forumunuzdaki tüm içeriği kullanıcının tercih ettiği dile otomatik olarak çevirin"
         supported_locales: "Desteklenen diller"
         supported_locales_description: "Bu site ayarı, ziyaretçilerin yazı çevirilerine katkıda bulunmalarına da olanak tanır."
+        category_scope: "Kategoriler"
         admin_actions:
           translation_settings: "Çeviri ayarları"
           localization_settings: "Yerelleştirme ayarları"

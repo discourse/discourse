@@ -9,10 +9,20 @@ module DiscourseAi
       # including those without locale detected yet.
       def self.get
         categories = Category.all
-        excluded_category_ids = DiscourseAi::Translation.excluded_category_ids
-        categories =
-          categories.where.not(id: excluded_category_ids) if excluded_category_ids.present?
-        categories
+        case SiteSetting.ai_translation_category_scope
+        when "public"
+          categories.where(read_restricted: false)
+        when "include"
+          categories.where(id: DiscourseAi::Translation.category_ids_with_subcategories)
+        when "include_strict"
+          categories.where(id: DiscourseAi::Translation.category_ids)
+        when "exclude"
+          categories.where.not(id: DiscourseAi::Translation.category_ids_with_subcategories)
+        when "exclude_strict"
+          categories.where.not(id: DiscourseAi::Translation.category_ids)
+        else
+          categories
+        end
       end
 
       def self.calculate_completion_per_locale(locale)

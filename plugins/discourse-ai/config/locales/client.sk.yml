@@ -241,6 +241,7 @@ sk:
         card: "Karta"
       translations:
         title: "Preklady"
+        category_scope: "Kategórie"
         stats:
           eta_minutes:
             one: "%{count} minútu"

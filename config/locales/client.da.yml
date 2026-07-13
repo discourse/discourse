@@ -2111,7 +2111,6 @@ da:
     created: "Oprettet"
     created_lowercase: "oprettet"
     trust_level: "Tillidsniveau"
-    search_hint: "brugernavn, email eller IP adresse"
     create_account:
       header_title: "Velkommen!"
       disclaimer: "Ved at registrere dig accepterer du <a href='%{privacy_link}' target='blank'>Privatlivsbetingelser</a> og <a href='%{tos_link}' target='blank'>servicevilkårene</a> ."
@@ -3517,7 +3516,6 @@ da:
         tag_group: "Mærkegruppe"
       topic_featured_link_allowed: "Tillad fremhævede links i denne kategori"
       create_long: "Opret en ny kategori"
-      slug_placeholder: "(Valgfri) gennemstregede-ord for URL"
       creation_error: Der opstod en fejl under oprettelsen af kategorien.
       save_error: Der opstod en fejl da kategorien skulle gemmes.
       validations:
@@ -4342,6 +4340,7 @@ da:
         title: "Liste over tilgængelige rapporter"
         sidebar_title: "Rapporter"
         back: "Tilbage til alle rapporter"
+        all_groups: "Alle grupper"
         group_traffic: "Trafik"
         group_members: "Brugere"
         group_other: "Andre"

@@ -107,7 +107,7 @@ module Plugin
             )
             tree[normalized_file_path] = content
             if name == "test" && file.match(%r{/(acceptance|integration|unit)/})
-              if file.match?(/-test\.g?js$/)
+              if file.match?(/-test\.g?[jt]s$/)
                 entrypoints_config[name][:modules] << normalized_file_path
               end
             else
@@ -189,7 +189,7 @@ module Plugin
       listener =
         Listen.to(
           *Discourse.plugins.map(&:directory),
-          { ignore: [%r{/node_modules/}], only: /\.(gjs|js|hbs)\z/ },
+          { ignore: [%r{/node_modules/}], only: /\.(gjs|js|hbs|ts|gts)\z/ },
         ) do |modified, added, removed|
           changed_files = modified + added + removed
           changed_plugins = Set.new
@@ -245,8 +245,9 @@ module Plugin
     end
 
     private_class_method def self.has_source_files_in_dir(plugin_directory_name, dir)
-      Dir.glob("plugins/#{plugin_directory_name}/#{dir}/**/*.{js,hbs,gjs,es6}") { break true } ||
-        false
+      Dir.glob("plugins/#{plugin_directory_name}/#{dir}/**/*.{js,hbs,gjs,es6,ts,gts}") do
+        break true
+      end || false
     end
   end
 end

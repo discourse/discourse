@@ -1120,8 +1120,6 @@ describe DiscourseDataExplorer::QueryController do
     end
 
     describe "#generate_with_ai" do
-      before { SiteSetting.data_explorer_ai_queries_enabled = true }
-
       it "returns 404 when AI queries are disabled" do
         SiteSetting.data_explorer_ai_queries_enabled = false
         post "/admin/plugins/discourse-data-explorer/queries/generate.json",
@@ -1144,7 +1142,7 @@ describe DiscourseDataExplorer::QueryController do
         expect(response.status).to eq(400)
       end
 
-      it "enqueues a generation job and returns generation_id" do
+      it "enqueues a generation job by default and returns generation_id" do
         post "/admin/plugins/discourse-data-explorer/queries/generate.json",
              params: {
                ai_description: "show me users",
