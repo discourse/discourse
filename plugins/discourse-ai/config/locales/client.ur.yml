@@ -89,6 +89,7 @@ ur:
         select_option: "ایک آپشن منتخب کریں..."
       translations:
         title: "ترجمہ"
+        category_scope: "زمرہ جات"
         stats:
           eta_minutes:
             one: "%{count} منٹ"

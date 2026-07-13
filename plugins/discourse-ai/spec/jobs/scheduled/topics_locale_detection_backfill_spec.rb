@@ -12,7 +12,8 @@ describe Jobs::TopicsLocaleDetectionBackfill do
     SiteSetting.ai_translation_enabled = true
     SiteSetting.ai_translation_backfill_hourly_rate = 100
     SiteSetting.content_localization_supported_locales = "en"
-    SiteSetting.ai_translation_excluded_categories = ""
+    SiteSetting.ai_translation_category_scope = "all"
+    SiteSetting.ai_translation_categories = ""
   end
 
   it "does nothing when translator is disabled" do
@@ -82,7 +83,7 @@ describe Jobs::TopicsLocaleDetectionBackfill do
     job.execute({ limit: 10 })
   end
 
-  describe "with excluded categories" do
+  describe "with selected categories" do
     fab!(:included_category, :category)
     fab!(:excluded_category, :category)
     fab!(:included_topic) { Fabricate(:topic, category: included_category, locale: nil) }
@@ -94,12 +95,12 @@ describe Jobs::TopicsLocaleDetectionBackfill do
     fab!(:pm_topic, :private_message_topic)
 
     before do
-      SiteSetting.ai_translation_excluded_categories =
-        Category.where.not(id: included_category.id).pluck(:id).join("|")
+      SiteSetting.ai_translation_category_scope = "include"
+      SiteSetting.ai_translation_categories = included_category.id.to_s
       SiteSetting.ai_translation_personal_messages = "none"
     end
 
-    it "does not process topics from excluded categories" do
+    it "only processes topics from selected categories" do
       DiscourseAi::Translation::TopicLocaleDetector
         .expects(:detect_locale)
         .with(included_topic)

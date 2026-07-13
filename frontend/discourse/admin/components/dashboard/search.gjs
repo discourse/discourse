@@ -243,7 +243,7 @@ export default class DashboardSearch extends Component {
                           @query={{hash
                             term=row.term
                             period=this.trendingTermPeriod
-                            searchType="logged_in_only"
+                            searchType="non_staff_only"
                           }}
                           title={{row.term}}
                         >

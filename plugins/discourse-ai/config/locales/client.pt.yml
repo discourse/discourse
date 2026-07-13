@@ -132,6 +132,7 @@ pt:
         select_option: "Selecione uma opção..."
       translations:
         title: "Traduções"
+        category_scope: "Categorias"
         stats:
           title: "Estatísticas da tradução"
           eta_minutes:

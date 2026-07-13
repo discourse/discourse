@@ -58,6 +58,7 @@ zh_TW:
           name: "垃圾內容"
       translations:
         title: "翻譯"
+        category_scope: "分類"
         stats:
           eta_minutes:
             other: "%{count} 分"

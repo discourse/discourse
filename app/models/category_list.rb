@@ -143,20 +143,7 @@ class CategoryList
 
   def find_categories
     query = Category.includes(CategoryList.included_associations).secured(@guardian)
-
-    if SiteSetting.content_localization_enabled
-      locale = I18n.locale.to_s
-      query =
-        query.joins(
-          ActiveRecord::Base.sanitize_sql_array(
-            [
-              "LEFT JOIN category_localizations cl ON cl.category_id = categories.id AND cl.locale = ?",
-              locale,
-            ],
-          ),
-        )
-    end
-
+    query = query.includes(:localizations) if SiteSetting.content_localization_enabled
     query = self.class.order_categories(query)
 
     paginate = paginate_results?
@@ -177,15 +164,6 @@ class CategoryList
     query =
       DiscoursePluginRegistry.apply_modifier(:category_list_find_categories_query, query, self)
 
-    if SiteSetting.content_localization_enabled
-      query =
-        query.group("categories.id").select(
-          "categories.*,
-           MAX(COALESCE(cl.name, categories.name)) AS name,
-           MAX(COALESCE(cl.description, categories.description)) AS description",
-        )
-    end
-
     @categories = query.to_a
 
     if paginate && @options[:parent_category_id].blank?
@@ -195,11 +173,19 @@ class CategoryList
           .select(:id, "ROW_NUMBER() OVER (PARTITION BY parent_category_id) rownum")
           .where(parent_category_id: @categories.map { |c| c.id })
 
-      @categories +=
+      subcategories_query =
         Category.includes(CategoryList.included_associations).where(
           "id IN (WITH cte AS (#{categories_with_rownum.to_sql}) SELECT id FROM cte WHERE rownum <= ?)",
           SUBCATEGORIES_PER_CATEGORY,
         )
+      if SiteSetting.content_localization_enabled
+        subcategories_query = subcategories_query.includes(:localizations)
+      end
+      @categories += subcategories_query
+    end
+
+    if SiteSetting.content_localization_enabled
+      @categories.each { |c| LocalizationAttributesReplacer.localize_category(c, I18n.locale) }
     end
 
     if Site.preloaded_category_custom_fields.any?

@@ -69,6 +69,8 @@ export default <template>
     @minItemsForFilter={{FILTER_MINIMUM}}
     @searchableProps={{@controller.searchableProps}}
     @dropdownOptions={{@controller.dropdownOptions}}
+    @textFilterQueryParam="filter"
+    @dropdownFilterQueryParam="type"
     @inputPlaceholder={{i18n
       "admin.customize.colors.filters.search_placeholder"
     }}

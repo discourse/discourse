@@ -3526,6 +3526,37 @@ ALTER SEQUENCE public.data_explorer_query_groups_id_seq OWNED BY public.data_exp
 
 
 --
+-- Name: data_explorer_query_stats; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.data_explorer_query_stats (
+    id bigint NOT NULL,
+    query_id bigint NOT NULL,
+    date date NOT NULL,
+    total_runs integer DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: data_explorer_query_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.data_explorer_query_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: data_explorer_query_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.data_explorer_query_stats_id_seq OWNED BY public.data_explorer_query_stats.id;
+
+
+--
 -- Name: developers; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -4583,6 +4614,37 @@ CREATE TABLE public.discourse_workflows_execution_data (
     data jsonb DEFAULT '{}'::jsonb NOT NULL,
     workflow_data jsonb DEFAULT '{}'::jsonb NOT NULL
 );
+
+
+--
+-- Name: discourse_workflows_execution_stats; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.discourse_workflows_execution_stats (
+    id bigint NOT NULL,
+    workflow_id bigint NOT NULL,
+    date date NOT NULL,
+    total_runs integer DEFAULT 0 NOT NULL
+);
+
+
+--
+-- Name: discourse_workflows_execution_stats_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.discourse_workflows_execution_stats_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: discourse_workflows_execution_stats_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.discourse_workflows_execution_stats_id_seq OWNED BY public.discourse_workflows_execution_stats.id;
 
 
 --
@@ -12739,6 +12801,13 @@ ALTER TABLE ONLY public.data_explorer_query_groups ALTER COLUMN id SET DEFAULT n
 
 
 --
+-- Name: data_explorer_query_stats id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_query_stats ALTER COLUMN id SET DEFAULT nextval('public.data_explorer_query_stats_id_seq'::regclass);
+
+
+--
 -- Name: developers id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -12946,6 +13015,13 @@ ALTER TABLE ONLY public.discourse_workflows_credentials ALTER COLUMN id SET DEFA
 --
 
 ALTER TABLE ONLY public.discourse_workflows_data_tables ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_data_tables_id_seq'::regclass);
+
+
+--
+-- Name: discourse_workflows_execution_stats id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_execution_stats ALTER COLUMN id SET DEFAULT nextval('public.discourse_workflows_execution_stats_id_seq'::regclass);
 
 
 --
@@ -15021,6 +15097,14 @@ ALTER TABLE ONLY public.data_explorer_query_groups
 
 
 --
+-- Name: data_explorer_query_stats data_explorer_query_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.data_explorer_query_stats
+    ADD CONSTRAINT data_explorer_query_stats_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: developers developers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -15266,6 +15350,14 @@ ALTER TABLE ONLY public.discourse_workflows_credentials
 
 ALTER TABLE ONLY public.discourse_workflows_data_tables
     ADD CONSTRAINT discourse_workflows_data_tables_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: discourse_workflows_execution_stats discourse_workflows_execution_stats_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.discourse_workflows_execution_stats
+    ADD CONSTRAINT discourse_workflows_execution_stats_pkey PRIMARY KEY (id);
 
 
 --
@@ -17296,6 +17388,13 @@ CREATE UNIQUE INDEX idx_dwf_execution_data_on_execution_id ON public.discourse_w
 
 
 --
+-- Name: idx_dwf_execution_stats_on_workflow_id_and_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_dwf_execution_stats_on_workflow_id_and_date ON public.discourse_workflows_execution_stats USING btree (workflow_id, date);
+
+
+--
 -- Name: idx_dwf_executions_on_resume_token; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -18777,6 +18876,13 @@ CREATE INDEX index_data_explorer_query_groups_on_query_id ON public.data_explore
 --
 
 CREATE UNIQUE INDEX index_data_explorer_query_groups_on_query_id_and_group_id ON public.data_explorer_query_groups USING btree (query_id, group_id);
+
+
+--
+-- Name: index_data_explorer_query_stats_on_query_id_and_date; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_data_explorer_query_stats_on_query_id_and_date ON public.data_explorer_query_stats USING btree (query_id, date);
 
 
 --
@@ -22472,7 +22578,11 @@ SET search_path TO "$user", public;
 INSERT INTO "schema_migrations" (version) VALUES
 ('20260707184150'),
 ('20260707184146'),
+('20260708095336'),
+('20260708080308'),
 ('20260707013407'),
+('20260703164430'),
+('20260703163425'),
 ('20260702102111'),
 ('20260701073045'),
 ('20260630034050'),

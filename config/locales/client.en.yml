@@ -2887,7 +2887,7 @@ en:
     created: "Created"
     created_lowercase: "created"
     trust_level: "Trust Level"
-    search_hint: "username, email or IP address"
+    search_hint: "usernames or emails (comma or space separated), or an IP address"
 
     create_account:
       header_title: "Welcome!"
@@ -5187,7 +5187,7 @@ en:
       unsaved_changes: "You have unsaved changes"
       slug: "Category slug"
       parent: "Parent category"
-      slug_placeholder: "(Optional) dashed-words for url"
+      slug_placeholder: "Auto-generated if left blank"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
       errors:
@@ -8875,7 +8875,7 @@ en:
             header: "Header"
             full_page: "Full page"
             click_through_only: "All (click through only)"
-            logged_in_only: "Logged in only"
+            non_staff_only: "Non-staff users"
           header_search_results: "Header search results"
         logster:
           title: "Error logs"

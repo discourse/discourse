@@ -17,7 +17,7 @@ module DiscourseWorkflows
 
     private
 
-    def fetch_resume_request(params:)
+    def fetch_resume_request(params:, guardian:)
       payload = DiscourseWorkflows::InteractiveResume.action_payload(params.action_id)
       return if payload.blank?
 
@@ -28,12 +28,18 @@ module DiscourseWorkflows
       waiting_node = execution.find_waiting_node
       return unless waiting_node && waiting_node["type"] == NODE_TYPE
 
-      DiscourseWorkflows::InteractiveResume.from_action_id(
-        params.action_id,
-        expected_node_type: NODE_TYPE,
-        allowed_actions:
-          DiscourseWorkflows::Nodes::Modal::V1.button_values(waiting_node["parameters"]),
-      )
+      resume_request =
+        DiscourseWorkflows::InteractiveResume.from_action_id(
+          params.action_id,
+          expected_node_type: NODE_TYPE,
+          allowed_actions:
+            DiscourseWorkflows::Nodes::Modal::V1.button_values(waiting_node["parameters"]),
+        )
+      return if resume_request.blank?
+      return if resume_request.target_user_id.blank?
+      return if resume_request.target_user_id != guardian.user&.id
+
+      resume_request
     end
 
     def resume(resume_request:, guardian:)

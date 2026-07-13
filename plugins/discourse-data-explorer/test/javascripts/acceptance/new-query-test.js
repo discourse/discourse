@@ -8,7 +8,10 @@ import {
 
 acceptance("New Query", function (needs) {
   needs.user();
-  needs.settings({ data_explorer_enabled: true });
+  needs.settings({
+    data_explorer_enabled: true,
+    data_explorer_ai_queries_enabled: false,
+  });
 
   const dataExplorerStore = new KeyValueStore("discourse_data_explorer_");
 

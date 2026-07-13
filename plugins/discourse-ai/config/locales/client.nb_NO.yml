@@ -59,6 +59,7 @@ nb_NO:
         select_option: "Velg et alternativ..."
       translations:
         title: "Oversettelser"
+        category_scope: "Kategorier"
         stats:
           eta_minutes:
             one: "%{count} minutt"

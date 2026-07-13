@@ -7,7 +7,7 @@ RSpec.describe "Chat message created workflow trigger" do
 
   before do
     SiteSetting.chat_enabled = true
-    SiteSetting.discourse_workflows_enabled = true
+    SiteSetting.enable_discourse_workflows = true
   end
 
   it "enqueues matching workflows when a chat message is created" do

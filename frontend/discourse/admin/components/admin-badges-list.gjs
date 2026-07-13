@@ -27,6 +27,7 @@ export default class AdminBadgesList extends Component {
       <AdminFilterControls
         @array={{@badges}}
         @searchableProps={{this.searchableProps}}
+        @textFilterQueryParam="filter"
         @inputPlaceholder={{i18n "admin.badges.filter_placeholder"}}
         @noResultsMessage={{i18n "admin.badges.no_badges_found"}}
       >

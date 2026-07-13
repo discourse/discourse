@@ -57,6 +57,7 @@ ca:
         select_option: "Trieu una opció..."
       translations:
         title: "Traduccions"
+        category_scope: "Categories"
         stats:
           eta_minutes:
             one: "%{count} minut"

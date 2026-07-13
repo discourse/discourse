@@ -22,7 +22,12 @@ export default class AdminUsersListShowRoute extends DiscourseRoute {
         controller.setProperties({
           order: transition.to.queryParams.order,
           asc: transition.to.queryParams.asc,
-          listFilter: transition.to.queryParams.username,
+          // `filter` is deliberately not a registered query param (its name
+          // would clash with the :filter segment); `username` is kept as a
+          // legacy fallback for old links
+          listFilter:
+            transition.to.queryParams.filter ??
+            transition.to.queryParams.username,
           query: params.filter,
           activation:
             params.filter === "new"

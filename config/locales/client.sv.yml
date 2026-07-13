@@ -1979,7 +1979,6 @@ sv:
     created: "Skapad"
     created_lowercase: "skapad"
     trust_level: "Förtroendenivå"
-    search_hint: "användarnamn, e-post eller IP-adress"
     create_account:
       header_title: "Välkommen!"
       disclaimer: "Genom att registrera dig godkänner du <a href='%{privacy_link}' target='blank'>integritetspolicyn</a> och <a href='%{tos_link}' target='blank'>användarvillkoren</a>."
@@ -3469,7 +3468,6 @@ sv:
         tag_group: "Tagg-grupp"
       topic_featured_link_allowed: "Tillåt utvalda länkar i denna kategori"
       create_long: "Skapa en ny kategori"
-      slug_placeholder: "(Valfritt) streckade ord för url"
       creation_error: Det uppstod ett fel när kategorin skulle skapas.
       save_error: Ett fel inträffade då kategorin skulle sparas.
       validations:

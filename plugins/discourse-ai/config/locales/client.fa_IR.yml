@@ -88,6 +88,7 @@ fa_IR:
         select_option: "یک گزینه را انتخاب کنید..."
       translations:
         title: "ترجمه‌ها"
+        category_scope: "دسته‌بندی‌ها"
         stats:
           eta_minutes:
             one: "%{count} دقیقه"

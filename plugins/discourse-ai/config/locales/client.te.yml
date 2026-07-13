@@ -56,6 +56,7 @@ te:
           name: "స్పామ్"
       translations:
         title: "అనువాదాలు"
+        category_scope: "వర్గాలు"
         stats:
           eta_minutes:
             one: "ఒక నిమిషం"

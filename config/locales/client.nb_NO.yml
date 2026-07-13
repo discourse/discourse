@@ -2128,7 +2128,6 @@ nb_NO:
     created: "Opprettet"
     created_lowercase: "opprettet"
     trust_level: "Tillitsnivå"
-    search_hint: "brukernavn, e-post eller IP-adresse"
     create_account:
       header_title: "Velkommen!"
       disclaimer: "Ved å registrere deg, godtar du <a href='%{privacy_link}' target='blank'>retningslinjer for personvern</a> og <a href='%{tos_link}' target='blank'>vilkår for bruk</a>."
@@ -3640,7 +3639,6 @@ nb_NO:
         tag_group: "Stikkordgrupper"
       topic_featured_link_allowed: "Tillat fremhevede lenker i denne kategorien"
       create_long: "Opprett en ny kategori"
-      slug_placeholder: "(Valgfritt) sammensatte ord for bruk i URL"
       creation_error: Det oppstod en feil ved lagring av denne kategorien.
       save_error: Det oppstod en feil ved lagrinen av denne kategorien.
       validations:

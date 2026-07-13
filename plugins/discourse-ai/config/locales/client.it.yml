@@ -248,6 +248,7 @@ it:
         card: "Scheda"
       translations:
         title: "Traduzioni"
+        category_scope: "Categorie"
         stats:
           eta_minutes:
             one: "%{count} minuto"

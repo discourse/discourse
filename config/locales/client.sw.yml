@@ -1133,7 +1133,6 @@ sw:
     created: "Imeundwa"
     created_lowercase: "Imeundwa"
     trust_level: "Kipimo cha uaminifu"
-    search_hint: "jina la mtumiaji, barua pepe au Anwani ya Mtandao"
     create_account:
       header_title: "Karibu!"
       title: "Jiunge"

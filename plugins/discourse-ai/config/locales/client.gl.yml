@@ -59,6 +59,7 @@ gl:
         select_option: "Seleccione unha opción..."
       translations:
         title: "Traducións"
+        category_scope: "Categorías"
         stats:
           eta_minutes:
             one: "%{count} minuto"

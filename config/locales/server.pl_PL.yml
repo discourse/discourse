@@ -2634,7 +2634,7 @@ pl_PL:
     enable_inline_emoji_translation: "Włącza tłumaczenie wbudowanych emoji (bez spacji i znaków interpunkcyjnych przed)"
     emoji_deny_list: "Tych emoji nie będzie można używać w menu ani w shortcodes."
     enable_gifs: "Dodaje przycisk umożliwiający łatwe wyszukiwanie i wstawianie plików GIF do wpisów."
-    klipy_api_key: "Klucz API Klipy. Wymagany do obsługi wyszukiwania GIF-ów. Uwaga: ten klucz jest widoczny dla każdego, kto przegląda Twoją witrynę."
+    klipy_api_key: "Klucz API Klipy. Wymagany do obsługi wyszukiwania GIF-ów."
     klipy_file_detail: "Format obrazu do użycia. WebP ma mniejsze pliki, które ładują się szybciej, natomiast GIF zapewnia zgodność ze starszymi przeglądarkami."
     klipy_content_filter: "Poziom bezpieczeństwa treści dla wyników wyszukiwania plików GIF."
     klipy_country: "Dwuliterowy kod kraju dla wyników wyszukiwania GIF."
