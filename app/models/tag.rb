@@ -230,6 +230,24 @@ class Tag < ActiveRecord::Base
     SQL
   end
 
+  def self.recently_used_by(user, limit: 10)
+    return [] if user.blank?
+
+    recent_topic_ids =
+      Topic
+        .where(user:, archetype: Archetype.default)
+        .order(created_at: :desc, id: :desc)
+        .limit(limit)
+        .select(:id)
+
+    TopicTag
+      .joins(:topic)
+      .where(topic_id: recent_topic_ids)
+      .group(:tag_id)
+      .order(Arel.sql("MAX(topics.created_at) DESC, MAX(topics.id) DESC"))
+      .pluck(:tag_id)
+  end
+
   def self.include_tags?
     SiteSetting.tagging_enabled
   end
