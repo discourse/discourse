@@ -4,10 +4,12 @@ import sinon from "sinon";
 import { setPrefix } from "discourse/lib/get-url";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscourseURL, {
+  applyQueryParams,
   getCanonicalUrl,
   getCategoryAndTagUrl,
   isHttpUrl,
   prefixProtocol,
+  searchParamsFromPath,
   userPath,
 } from "discourse/lib/url";
 import Session from "discourse/models/session";
@@ -128,6 +130,45 @@ module("Unit | Utility | url", function (hooks) {
     setPrefix("/forum");
     assert.strictEqual(userPath(), "/forum/u");
     assert.strictEqual(userPath("eviltrout"), "/forum/u/eviltrout");
+  });
+
+  test("searchParamsFromPath parses app-relative paths", function (assert) {
+    const params = searchParamsFromPath(
+      "/admin/email-logs?subject=What?Now&address=sam%2Btest%40example.com#details?ignored"
+    );
+
+    assert.strictEqual(
+      params.get("subject"),
+      "What?Now",
+      "preserves raw query delimiters inside values"
+    );
+    assert.strictEqual(
+      params.get("address"),
+      "sam+test@example.com",
+      "decodes encoded values"
+    );
+    assert.false(params.has("ignored"), "ignores fragment contents");
+    assert.strictEqual(
+      [...searchParamsFromPath("")].length,
+      0,
+      "returns empty parameters for an empty path"
+    );
+  });
+
+  test("applyQueryParams updates paths without dropping URL parts", function (assert) {
+    assert.strictEqual(
+      applyQueryParams(
+        "/admin/email-logs?subject=What?Now&remove=1#details?tab=raw",
+        { filter: "new value", remove: null }
+      ),
+      "/admin/email-logs?subject=What%3FNow&filter=new+value#details?tab=raw",
+      "preserves query values and the complete fragment"
+    );
+    assert.strictEqual(
+      applyQueryParams("", { filter: "value" }),
+      "/?filter=value",
+      "uses the app root for an empty path"
+    );
   });
 
   test("routeTo with prefix", async function (assert) {
