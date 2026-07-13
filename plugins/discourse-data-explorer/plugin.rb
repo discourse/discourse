@@ -219,4 +219,16 @@ after_initialize do
       plugin: self,
     )
   end
+
+  register_stat("queries_total", stat_type: :de) { DiscourseDataExplorer::Statistics.queries_total }
+  register_stat("queries_created", stat_type: :de) do
+    DiscourseDataExplorer::Statistics.queries_created
+  end
+  register_stat("queries_edited", stat_type: :de) do
+    DiscourseDataExplorer::Statistics.queries_edited
+  end
+  register_stat("queries_executed", stat_type: :de) do
+    DiscourseDataExplorer::Statistics.queries_executed
+  end
+  register_stat("executions", stat_type: :de) { DiscourseDataExplorer::Statistics.executions }
 end
