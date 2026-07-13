@@ -192,8 +192,7 @@ describe "Admin Dashboard Redesign | Search section" do
     expect(search).to have_alert_no_result_rate_kpi("50%")
   end
 
-  it "shows staff a graceful empty state when no searches were logged",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+  it "shows staff a graceful empty state when no searches were logged" do
     dashboard.visit
     search = dashboard.search
 
@@ -208,8 +207,7 @@ describe "Admin Dashboard Redesign | Search section" do
     expect(search).to have_content_gaps_empty_state("No content gaps in this period.")
   end
 
-  it "tells staff when search logging is disabled instead of showing zeros",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+  it "tells staff when search logging is disabled instead of showing zeros" do
     SiteSetting.log_search_queries = false
 
     dashboard.visit
@@ -234,8 +232,7 @@ describe "Admin Dashboard Redesign | Search section" do
     )
   end
 
-  it "shows staff search activity for a selected custom date range",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+  it "shows staff search activity for a selected custom date range" do
     Fabricate(:clicked_search_log, term: "ruby", user: user, created_at: "2026-05-02 10:00")
     Fabricate.times(2, :search_log, term: "ruby", user: user, created_at: "2026-05-02 11:00")
 
