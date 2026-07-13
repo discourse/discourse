@@ -184,9 +184,7 @@ jobs:
           echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
       - name: Create databases
-        run: |
-          createdb discourse_test
-          createdb discourse_test_multisite
+        run: bin/rake db:create
 
       - parallel:
           - name: Migrate database
