@@ -1,9 +1,9 @@
 import { getOwner } from "@ember/owner";
-import { render } from "@ember/test-helpers";
+import { render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import PostMetaDataDate from "discourse/components/post/meta-data/date";
-import { relativeAge } from "discourse/lib/formatter";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import { fakeTime } from "discourse/tests/helpers/qunit-helpers";
 
 function renderComponent(post) {
   return render(<template><PostMetaDataDate @post={{post}} /></template>);
@@ -12,33 +12,64 @@ function renderComponent(post) {
 module("Integration | Component | Post | PostMetaDataDate", function (hooks) {
   setupRenderingTest(hooks);
 
+  let clock;
+
   hooks.beforeEach(function () {
+    clock = fakeTime("2026-07-13T12:00:00", null, true);
+
     this.store = getOwner(this).lookup("service:store");
     const topic = this.store.createRecord("topic", { id: 1 });
-    const post = this.store.createRecord("post", {
+    this.post = this.store.createRecord("post", {
       id: 123,
       post_number: 1,
       topic,
-      created_at: "2025-06-01T00:31:24.008Z",
     });
-
-    this.post = post;
   });
 
-  test("uses an abbreviated date for the accessible label", async function (assert) {
+  hooks.afterEach(function () {
+    clock?.restore();
+  });
+
+  test("announces recent posts with a relative label instead of the full date and time", async function (assert) {
+    this.post.created_at = moment().subtract(20, "minutes").toISOString();
+
     await renderComponent(this.post);
 
-    assert.dom("a.post-date").hasAria(
-      "label",
-      relativeAge(new Date(this.post.created_at), {
-        format: "medium-with-ago",
-        wrapInSpan: false,
-      }),
-      "the link is announced with an abbreviated date instead of the full date and time"
-    );
+    assert.dom("a.post-date").hasAria("label", "20 mins ago");
 
     assert
       .dom("a.post-date > span[aria-hidden=true] .relative-date")
       .exists("the relative date and its tooltip are accessibility-hidden");
+  });
+
+  test("refreshes the label as time passes", async function (assert) {
+    this.post.created_at = moment().subtract(2, "days").toISOString();
+
+    await renderComponent(this.post);
+
+    assert.dom("a.post-date").hasAria("label", "2 days ago");
+
+    clock.tick(24 * 60 * 60 * 1000);
+    getOwner(this).lookup("service:a11y").autoUpdatingRelativeDateRef =
+      new Date();
+    await settled();
+
+    assert.dom("a.post-date").hasAria("label", "3 days ago");
+  });
+
+  test("announces older posts with a short absolute date", async function (assert) {
+    this.post.created_at = moment().subtract(31, "days").toISOString();
+
+    await renderComponent(this.post);
+
+    assert.dom("a.post-date").hasAria("label", "Jun 12");
+  });
+
+  test("includes the year for posts from previous years", async function (assert) {
+    this.post.created_at = moment().subtract(1, "year").toISOString();
+
+    await renderComponent(this.post);
+
+    assert.dom("a.post-date").hasAria("label", "Jul 13, 2025");
   });
 });
