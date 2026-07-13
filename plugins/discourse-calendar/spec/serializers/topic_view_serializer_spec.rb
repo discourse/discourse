@@ -154,7 +154,6 @@ RSpec.describe TopicViewSerializer do
     end
 
     it "is included while the event is a livestream" do
-      Oneboxer.expects(:onebox).with("https://example.com/live").returns("")
       create_event(livestream: true)
 
       expect(topic.topic_chat_channel).to be_present
