@@ -592,6 +592,8 @@ pl_PL:
         categories: "Wymień kategorie"
         flag_post: "Oflaguj post"
         close_topic: "Zamknij temat"
+        suspend_user: "Zawieś użytkownika"
+        silence_user: "Wycisz użytkownika"
         unlist_topic: "Usuń temat z listy"
         lock_post: "Zablokuj wpis"
         delete_topic: "Usuń temat"
@@ -638,6 +640,8 @@ pl_PL:
         categories: "Wyświetl wszystkie publicznie widoczne kategorie na forum"
         flag_post: "Oflaguj bieżący wpis do sprawdzenia przez zespół"
         close_topic: "Zamknij lub otwórz temat"
+        suspend_user: "Zawieś (zablokuj) użytkownika, uniemożliwiając mu logowanie się lub publikowanie"
+        silence_user: "Ucisz użytkownika, blokując mu możliwość publikowania, dopóki może czytać"
         unlist_topic: "Wyświetlanie lub usuwanie tematu z listy"
         lock_post: "Zablokuj lub odblokuj wpis"
         delete_topic: "Usuń temat"
@@ -686,6 +690,8 @@ pl_PL:
         random_picker: "Wybieranie z %{options}, wybrane: %{result}"
         flag_post: "Flagowanie wpisu %{post_id} (flag_post: %{flag_post})"
         close_topic: "Zamykanie tematu %{topic_id} (zamknięto: %{closed})"
+        suspend_user: "Zawieszenie %{username} na %{duration_days} dni"
+        silence_user: "Wyciszanie %{username} na %{duration_days} dni"
         unlist_topic: "Usuwanie tematu z listy %{topic_id} (usunięto z listy: %{unlisted})"
         lock_post: "Blokowanie wpisu %{post_id} (zablokowano: %{locked})"
         delete_topic: "Usuwanie tematu %{topic_id} (usunięto: %{deleted})"
@@ -770,6 +776,22 @@ pl_PL:
           not_allowed: "Nie masz uprawnień do zamykania ani otwierania tego tematu."
           no_reason: "Aby zamknąć lub otworzyć temat, trzeba podać powód."
         success: "Temat zaktualizowano pomyślnie."
+      suspend_user:
+        errors:
+          not_found: "Użytkownik nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do zawieszenia tego użytkownika."
+          no_reason: "Aby zawiesić użytkownika, konieczne jest podanie przyczyny."
+          invalid_duration: "Czas trwania musi być dodatnią liczbą całkowitą dni, maksymalnie %{max}."
+          failed: "Nie udało się zawiesić użytkownika."
+        success: "Użytkownik %{username} został zawieszony."
+      silence_user:
+        errors:
+          not_found: "Użytkownik nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do uciszania tego użytkownika."
+          no_reason: "Aby uciszyć użytkownika, trzeba podać powód."
+          invalid_duration: "Czas trwania musi być dodatnią liczbą całkowitą dni, maksymalnie %{max}."
+          failed: "Nie udało się uciszyć użytkownika."
+        success: "Użytkownik %{username} został uciszony."
       unlist_topic:
         errors:
           not_found: "Temat nie został znaleziony."
@@ -894,7 +916,10 @@ pl_PL:
         target_missing: "Cel działania narzędzia już nie istnieje."
         tool_not_found: "Narzędzie „%{tool_name}” nie jest już dostępne."
         bot_user_missing: "Użytkownik bota już nie istnieje."
+        performer_not_human: "To działanie musi zatwierdzić lub odrzucić prawdziwa osoba, a nie bot."
+        post_mismatch: "Ta karta zatwierdzenia nie dotyczy tego wpisu."
         execution_error: "Nie udało się wykonać narzędzia: %{error}"
+        execution_error_unknown: "wystąpił nieoczekiwany błąd"
     summarization:
       configuration_hint:
         one: "Najpierw skonfiguruj ustawienie `%{setting}`."

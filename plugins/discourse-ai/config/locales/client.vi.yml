@@ -34,6 +34,14 @@ vi:
             canned_reply:
               label: "Trả lời"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Đang tải..."
+        tool: "Hoạt động"
+        user: "Người dùng"
+        approve: "Duyệt"
+        reject: "Từ chối"
+        approved: "Đã phê duyệt"
+        rejected: "Từ chối"
       llm_selector:
         none: "Không"
       features:

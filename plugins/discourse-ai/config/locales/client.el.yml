@@ -94,6 +94,14 @@ el:
     discourse_ai:
       bot_chats:
         tab_label: "Συνομιλίες bot"
+      ai_tool_approval:
+        loading: "Φόρτωση... "
+        tool: "Ενέργεια"
+        user: "Χρήστης"
+        approve: "Έγκριση"
+        reject: "Απόρριψη"
+        approved: "Εγκρίθηκε "
+        rejected: "Απορρίφθηκε"
       llm_selector:
         none: "Κανένα"
       features:

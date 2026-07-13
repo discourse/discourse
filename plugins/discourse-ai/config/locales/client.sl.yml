@@ -34,6 +34,14 @@ sl:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Nalagam..."
+        tool: "Dejanje"
+        user: "Uporabnik"
+        approve: "Odobri"
+        reject: "Zavrni"
+        approved: "Potrjeno"
+        rejected: "Zavrnjeno"
       llm_selector:
         none: "Brez"
       features:

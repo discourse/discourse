@@ -36,6 +36,14 @@ hr:
             canned_reply:
               label: "Odgovor"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Očitavanje..."
+        tool: "Akcija"
+        user: "Korisnik"
+        approve: "Odobrite"
+        reject: "Odbij"
+        approved: "Odobrio/la"
+        rejected: "Odbio/la"
       llm_selector:
         none: "Ništa"
       features:

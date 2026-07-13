@@ -249,6 +249,17 @@ pl_PL:
           select_agent: "Wybierz agenta..."
       bot_chats:
         tab_label: "Czaty botów"
+      ai_tool_approval:
+        loading: "Ładowanie..."
+        load_error: "Nie można załadować tego oczekującego działania."
+        agent: "Agent"
+        tool: "Działanie"
+        user: "Użytkownik"
+        approve: "Zatwierdź"
+        reject: "Odrzuć"
+        approved: "Zaakceptowany"
+        rejected: "Odrzucony"
+        awaiting_staff: "Oczekiwanie na zatwierdzenie przez personel"
       default_llm:
         title: "Domyślny model LLM"
         description: "Domyślny model LLM do użycia dla wszystkich funkcji AI. Będzie on używany, jeśli w konfiguracji funkcji lub agenta nie określono modelu LLM. Jeśli nie określono domyślnego modelu LLM, użyty zostanie ostatnio utworzony model LLM."

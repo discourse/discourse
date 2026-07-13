@@ -34,6 +34,13 @@ th:
             canned_reply:
               label: "ตอบ"
     discourse_ai:
+      ai_tool_approval:
+        loading: "กำลังโหลด..."
+        user: "ผู้ใช้"
+        approve: "อนุมัติ"
+        reject: "ละทิ้ง"
+        approved: "อนุมัติ"
+        rejected: "ถูกปฏิเสธ"
       llm_selector:
         none: "ไม่มี"
       features:

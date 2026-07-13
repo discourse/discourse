@@ -9127,7 +9127,7 @@ pl_PL:
             header: "Nagłówek"
             full_page: "Pełna strona"
             click_through_only: "wszystkie (tylko przeklikiwanie)"
-            logged_in_only: "Tylko zalogowani"
+            non_staff_only: "Użytkownicy spoza personelu"
           header_search_results: "Wyniki wyszukiwania w nagłówku"
         logster:
           title: "Dzienniki błędów"

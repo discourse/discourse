@@ -552,6 +552,8 @@ ar:
         categories: "إدراج الفئات"
         flag_post: "الإبلاغ عن المنشور"
         close_topic: "إغلاق الموضوع"
+        suspend_user: "تعليق المستخدم"
+        silence_user: "كتم المستخدم"
         unlist_topic: "إزالة الموضوع من القائمة"
         lock_post: "قفل المنشور"
         delete_topic: "حذف الموضوع"
@@ -744,6 +746,12 @@ ar:
           not_allowed: "غير مسموح لك بإغلاق هذا الموضوع أو فتحه."
           no_reason: "يجب تحديد سبب لإغلاق الموضوع أو فتحه."
         success: "تم تحديث الموضوع بنجاح."
+      suspend_user:
+        errors:
+          not_found: "المستخدم غير موجود."
+      silence_user:
+        errors:
+          not_found: "المستخدم غير موجود."
       unlist_topic:
         errors:
           not_found: "الموضوع غير موجود."
@@ -868,6 +876,7 @@ ar:
         tool_not_found: "لم تعد الأداة '%{tool_name}' متاحة."
         bot_user_missing: "لم يعد مستخدم الروبوت موجودًا."
         execution_error: "فشل تنفيذ الأداة: %{error}"
+        execution_error_unknown: "حدث خطأ غير متوقع"
     summarization:
       configuration_hint:
         zero: "قم بتكوين هذه الإعدادات أولًا: %{settings}"
