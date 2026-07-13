@@ -13,6 +13,9 @@ module UpcomingChanges
   # upcoming changes. If no conditional display rule is defined, the change will
   # always be displayed.
   #
+  # A change owned by a plugin that is disabled on this site is never displayed,
+  # and never takes effect -- see .owning_plugin_enabled?
+  #
   # Keep in mind this is called from UpcomingChanges::List service,
   # which loops over every change in an N1 depending on the filters admins
   # have selected, so caching may be appropriate at times.
@@ -21,6 +24,7 @@ module UpcomingChanges
       upcoming_change_name = upcoming_change_name.to_sym
 
       return false if !UpcomingChanges.owning_plugin_configurable?(upcoming_change_name)
+      return false if !UpcomingChanges.owning_plugin_enabled?(upcoming_change_name)
 
       if respond_to?("should_display_#{upcoming_change_name}?")
         return public_send("should_display_#{upcoming_change_name}?")
@@ -194,6 +198,30 @@ module UpcomingChanges
     Discourse.plugins_by_name[plugin_name]&.configurable? != false
   end
 
+  # An upcoming change owned by a plugin that is disabled on this site is not
+  # actionable, so it must neither be displayed nor take effect. Both .enabled?
+  # and ConditionalDisplay.should_display? consult this.
+  #
+  # Plugins cannot express this themselves via a conditional display callback,
+  # because those callbacks are filtered out of DiscoursePluginRegistry while the
+  # owning plugin is disabled.
+  def self.owning_plugin_enabled?(change_setting_name)
+    change_setting_name = change_setting_name.to_sym
+    plugin_name = settings_provider.plugins[change_setting_name]
+    return true if plugin_name.nil?
+
+    plugin = Discourse.plugins_by_name[plugin_name]
+    return true if plugin.nil?
+
+    # Some changes are the owning plugin's enabled_site_setting itself (e.g.
+    # enable_discourse_workflows). Plugin::Instance#enabled? reads that setting,
+    # which resolves back through .enabled? and recurses; and hiding the change
+    # while the plugin is off would remove the row the admin opts in from.
+    return true if plugin.enabled_site_setting&.to_sym == change_setting_name
+
+    plugin.enabled? != false
+  end
+
   # We dynamically determine if an upcoming change is enabled
   # or disabled based on the current status of the change as well
   # as whether the admin has manually toggled the change.
@@ -211,6 +239,13 @@ module UpcomingChanges
     # This intentionally takes precedence over the :permanent status below, since
     # a permanent change to an unavailable plugin still cannot take effect.
     return false if !owning_plugin_configurable?(change_setting_name)
+
+    # The owning plugin is disabled, so the change must not take effect either.
+    # Without this a change an admin opted into keeps acting on the site while
+    # its plugin is switched off -- its `hide_settings` stay hidden and its
+    # default overrides stay applied -- even though it is no longer displayed.
+    # The opt-in itself is untouched, so it resumes if the plugin is re-enabled.
+    return false if !owning_plugin_enabled?(change_setting_name)
 
     # An admin has modified the setting and a value is stored
     # in the database, since the default for upcoming changes
