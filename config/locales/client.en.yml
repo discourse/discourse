@@ -3229,6 +3229,7 @@ en:
     gifs:
       modal_title: "Search GIFs"
       composer_title: "Insert GIF"
+      placeholder: "Search KLIPY"
       powered_by: "Powered by Klipy"
       no_results: "Enter a keyword above to search for GIFs."
       browse_categories: "Browse by category"
