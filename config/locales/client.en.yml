@@ -6539,6 +6539,7 @@ en:
         enabled_for_throttle: "You have modified who this change is enabled for too quickly. Please wait a few seconds before trying again."
         change_enabled_for_success: "You have enabled this change for %{enabledFor}"
         change_disabled: "You have opted-out of this change"
+        depends_on_notice: "This change requires %{dependencyLinks} to be enabled."
         permanent_notice: "This change is now permanent and it will soon be removed. You are no longer able to opt-out."
         permanent_soon_notice: "This change will become permanent soon. You will no longer be able to opt-out."
         permanent_no_group_selection: "N/A, permanent changes apply to all groups."

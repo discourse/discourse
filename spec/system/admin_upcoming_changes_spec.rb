@@ -90,6 +90,53 @@ describe "Admin upcoming changes" do
     ).to have_no_permanent_soon_notice
   end
 
+  describe "when the change depends on other settings" do
+    before do
+      mock_upcoming_change_metadata(
+        {
+          set_locale_from_cookie: {
+            impact: "feature,all_members",
+            status: :experimental,
+            impact_type: "feature",
+            impact_role: "all_members",
+          },
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :experimental,
+            impact_type: "other",
+            impact_role: "developers",
+          },
+        },
+      )
+    end
+
+    it "shows a warning notice with links when the dependencies are not met" do
+      SiteSetting.allow_user_locale = false
+      upcoming_changes_page.visit
+
+      change_item = upcoming_changes_page.change_item(:set_locale_from_cookie)
+      expect(change_item).to have_depends_on_notice(
+        "This change requires Allow user locale to be enabled.",
+      )
+      expect(change_item.find_item(:set_locale_from_cookie)).to have_link(
+        "Allow user locale",
+        href: "/admin/site_settings/category/all_results?filter=allow_user_locale",
+      )
+      expect(
+        upcoming_changes_page.change_item(:enable_upload_debug_mode),
+      ).to have_no_depends_on_notice
+    end
+
+    it "does not show the notice when the dependencies are met" do
+      SiteSetting.allow_user_locale = true
+      upcoming_changes_page.visit
+
+      expect(
+        upcoming_changes_page.change_item(:set_locale_from_cookie),
+      ).to have_no_depends_on_notice
+    end
+  end
+
   it "does not show permanent upcoming changes" do
     mock_upcoming_change_metadata(
       {

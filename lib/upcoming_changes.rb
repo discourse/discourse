@@ -514,6 +514,25 @@ module UpcomingChanges
     settings_provider.type_supervisor.dependencies.dependents(change_setting_name.to_s)
   end
 
+  # Whether the settings the change itself depends_on (in site_settings.yml)
+  # currently hold the values the change needs. Used by the admin UI to warn
+  # admins when a change's prerequisites are not met, since enabling the change
+  # would have no effect (or be rejected by a validator) until they are.
+  def self.change_dependencies_met?(change_setting_name)
+    dependencies = settings_provider.type_supervisor.dependencies[change_setting_name.to_sym]
+    return true if dependencies.blank?
+
+    allowed_values = settings_provider.dependency_values[change_setting_name.to_sym]
+    dependencies.all? do |dependency|
+      value = settings_provider.public_send(dependency)
+      if (allowed = allowed_values&.dig(dependency))
+        allowed.include?(value.to_s)
+      else
+        value == true
+      end
+    end
+  end
+
   def self.including_css
     settings_provider.upcoming_change_site_settings.filter_map do |upcoming_change|
       upcoming_change if settings_provider.upcoming_change_metadata[upcoming_change][:body_class]
