@@ -1199,16 +1199,14 @@ class Search
   def tags_search
     return unless SiteSetting.tagging_enabled
     tags =
-      Tag
+      DiscourseTagging
+        .visible_tags(@guardian)
         .includes(:tag_search_data)
         .where("tag_search_data.search_data @@ #{ts_query}")
         .references(:tag_search_data)
         .order("name asc")
         .limit(limit)
-
-    hidden_tag_names = DiscourseTagging.hidden_tag_names(@guardian)
-
-    tags.each { |tag| @results.add(tag) if !hidden_tag_names.include?(tag.name) }
+        .each { |tag| @results.add(tag) }
   end
 
   def exclude_topics_search
