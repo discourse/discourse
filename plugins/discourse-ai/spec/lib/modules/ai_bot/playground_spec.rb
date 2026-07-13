@@ -678,6 +678,60 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         # thinking about this
       end
 
+      it "posts an approval message for every tool awaiting approval" do
+        first_target = Fabricate(:user)
+        second_target = Fabricate(:user)
+        agent.update!(tools: ["SuspendUser"], require_approval: true)
+
+        first_tool_call =
+          DiscourseAi::Completions::ToolCall.new(
+            name: "suspend_user",
+            id: "suspend-first",
+            parameters: {
+              username: first_target.username,
+              duration_days: 3,
+              reason: "spam",
+            },
+          )
+        second_tool_call =
+          DiscourseAi::Completions::ToolCall.new(
+            name: "suspend_user",
+            id: "suspend-second",
+            parameters: {
+              username: second_target.username,
+              duration_days: 3,
+              reason: "spam",
+            },
+          )
+
+        message =
+          DiscourseAi::Completions::Llm.with_prepared_responses(
+            [[first_tool_call, second_tool_call], "Both actions are awaiting approval."],
+          ) { ChatSDK::Message.create(channel_id: dm_channel.id, raw: "Suspend both", guardian:) }
+
+        message.reload
+        approval_messages =
+          Chat::Message.where(chat_channel: dm_channel).where.not(blocks: nil).order(:id)
+        reviewable_ids = ReviewableAiToolAction.order(:id).last(2).map(&:id)
+
+        expect(
+          approval_messages.map do |approval_message|
+            approval_message.blocks.first["elements"].map { |element| element["action_id"] }
+          end,
+        ).to eq(
+          reviewable_ids.map do |reviewable_id|
+            %W[
+              ai_tool_approval::approve::#{reviewable_id}
+              ai_tool_approval::reject::#{reviewable_id}
+            ]
+          end,
+        )
+        expect(approval_messages.map(&:thread_id)).to contain_exactly(
+          message.thread_id,
+          message.thread_id,
+        )
+      end
+
       it "can reply to a chat message" do
         message =
           DiscourseAi::Completions::Llm.with_prepared_responses(["World"]) do

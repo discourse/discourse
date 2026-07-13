@@ -405,6 +405,11 @@ en:
       default_pm_prefix: "[Untitled AI bot PM]"
       thinking: "Thinking"
       tool_pending_approval: "This action requires moderator approval before it can be executed."
+      chat_tool_approval:
+        approved: "Approved by @%{username}."
+        rejected: "Rejected by @%{username}."
+        failed: "Could not complete the action: %{error}"
+        unexpected_error: "an unexpected error occurred"
       agents:
         default_llm_required: "Default LLM model is required prior to enabling Chat"
         cannot_delete_system_agent: "System agents cannot be deleted, please disable it instead"
