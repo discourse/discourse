@@ -23,10 +23,12 @@ import topicTitleToken from "discourse/lib/topic-title-token";
 import DiscourseURL from "discourse/lib/url";
 import { ID_CONSTRAINT } from "discourse/models/topic";
 import DiscourseRoute from "discourse/routes/discourse";
+import { i18n } from "discourse-i18n";
 
 const SCROLL_DELAY = 500;
 
 export default class TopicRoute extends DiscourseRoute {
+  @service a11y;
   @service composer;
   @service screenTrack;
   @service currentUser;
@@ -34,10 +36,8 @@ export default class TopicRoute extends DiscourseRoute {
   @service router;
 
   scheduledReplace = null;
-
   lastScrollPos = null;
   isTransitioning = false;
-
   queryParams = {
     filter: { replace: true },
     username_filters: { replace: true },
@@ -45,6 +45,7 @@ export default class TopicRoute extends DiscourseRoute {
     context: { refreshModel: true },
     collapseReplies: { replace: true },
   };
+  #announcedUnreadForTopicId = null;
 
   buildRouteInfoMetadata() {
     return {
@@ -351,8 +352,23 @@ export default class TopicRoute extends DiscourseRoute {
     }
   }
 
+  announceUnreadPosts(topic) {
+    if (this.#announcedUnreadForTopicId === topic.id) {
+      return;
+    }
+    this.#announcedUnreadForTopicId = topic.id;
+
+    const lastRead = topic.last_read_post_number;
+    const unread = topic.highest_post_number - lastRead;
+    if (lastRead && unread > 0) {
+      this.a11y.announce(i18n("topic.unread_posts", { count: unread }));
+    }
+  }
+
   deactivate() {
     super.deactivate(...arguments);
+
+    this.#announcedUnreadForTopicId = null;
 
     this.searchService.searchContext = null;
 

@@ -22,7 +22,6 @@ import { registerPostInTopicPostStream } from "discourse/lib/process-node";
 import DiscourseURL from "discourse/lib/url";
 import Draft from "discourse/models/draft";
 import DiscourseRoute from "discourse/routes/discourse";
-import { i18n } from "discourse-i18n";
 
 export function nestedQueryString(params) {
   const query = new URLSearchParams();
@@ -38,7 +37,6 @@ export function nestedQueryString(params) {
 
 // This route is used for retrieving a topic based on params
 export default class TopicFromParams extends DiscourseRoute {
-  @service a11y;
   @service appEvents;
   @service composer;
   @service header;
@@ -49,8 +47,6 @@ export default class TopicFromParams extends DiscourseRoute {
   @service site;
   @service siteSettings;
   @service store;
-
-  #announcedUnreadForTopicId = null;
 
   buildRouteInfoMetadata() {
     return {
@@ -119,8 +115,6 @@ export default class TopicFromParams extends DiscourseRoute {
 
   deactivate() {
     super.deactivate(...arguments);
-
-    this.#announcedUnreadForTopicId = null;
 
     const topicController = this.controllerFor("topic");
     const nestedController = this.controllerFor("nested");
@@ -328,19 +322,8 @@ export default class TopicFromParams extends DiscourseRoute {
     return `nested-view-scroll:${cacheKey}`;
   }
 
-  // Announce once per topic entry so re-navigating between posts
-  // within the topic stays quiet.
   #announceUnreadPosts(topic) {
-    if (this.#announcedUnreadForTopicId === topic.id) {
-      return;
-    }
-    this.#announcedUnreadForTopicId = topic.id;
-
-    const lastRead = topic.last_read_post_number;
-    const unread = topic.highest_post_number - lastRead;
-    if (lastRead && unread > 0) {
-      this.a11y.announce(i18n("topic.unread_posts", { count: unread }));
-    }
+    getOwner(this).lookup("route:topic").announceUnreadPosts(topic);
   }
 
   #loadScrollAnchor(cacheKey) {
