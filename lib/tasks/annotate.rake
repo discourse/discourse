@@ -9,7 +9,7 @@ def annotate_in_temp_db(load_plugins:, annotaterb_args: [])
     "SKIP_OPTIMIZE_ICONS" => "1",
     "SKIP_SEED_FU" => "1",
   }
-  db = TemporaryDb.new
+  db = TemporaryDb.new(port: ENV["TEMPORARY_DB_PORT"]&.to_i)
   db.start
   db.with_env do
     system(env, "bin/rails", "db:migrate", "annotate:ensure_all_indexes", exception: true)

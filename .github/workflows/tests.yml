@@ -183,62 +183,61 @@ jobs:
           echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
-      - name: Create and migrate database
-        id: prepare-database
-        run: bin/rake db:create db:migrate
-        background: true
-
-      - name: Create and migrate parallel databases
-        id: prepare-parallel-databases
-        if: env.USES_PARALLEL_DATABASES == 'true'
-        run: bin/rake parallel:create parallel:migrate
-        background: true
-
-      - name: Fetch turbo_rspec_runtime.log cache
-        uses: actions/cache@v6
-        id: test-runtime-cache
-        if: matrix.build_type == 'backend' || matrix.build_type == 'system'
-        background: true
-        with:
-          path: tmp/turbo_rspec_runtime.log
-          key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
-          restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
-
-      - name: Wait for database
-        wait: prepare-database
-
-      - name: Check Annotations
-        if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins')
-        env:
-          LOAD_PLUGINS: ""
+      - name: Create databases
         run: |
-          directories=""
-          if [ "${{ matrix.target }}" = "core" ]; then
-            directories="app/models"
-          else
-            directories="$(script/list_bundled_plugins | xargs -I{} find {} -type d -path '*/app/models' -maxdepth 3)"
-          fi
+          createdb discourse_test
+          createdb discourse_test_multisite
 
-          # annotate:clean runs index setup + annotaterb in a temporary postgres so it
-          # doesn't pollute the rspec test DB.
-          MODEL_DIR="$(echo "${directories}" | tr '\n' ',')" bin/rake annotate:clean
+      - name: Prepare test environment
+        parallel:
+          - name: Migrate database
+            run: bin/rake db:migrate
 
-          if [ ! -z "$(git status --porcelain ${directories})" ]; then
-            echo "Core annotations are not up to date. To resolve, run:"
-            echo "  bin/rake annotate:clean"
-            echo
-            echo "Or manually apply the diff printed below:"
-            echo "---------------------------------------------"
-            git -c color.ui=always diff ${directories}
-            exit 1
-          fi
+          - name: Create and migrate parallel databases
+            if: env.USES_PARALLEL_DATABASES == 'true'
+            run: bin/rake parallel:create parallel:migrate
 
-      - name: Check structure dump
-        if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: bin/rake db:check_structure_dump
+          - name: Fetch turbo_rspec_runtime.log cache
+            uses: actions/cache@v6
+            id: test-runtime-cache
+            if: matrix.build_type == 'backend' || matrix.build_type == 'system'
+            with:
+              path: tmp/turbo_rspec_runtime.log
+              key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
+              restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
 
-      - name: Wait for test environment
-        wait-all:
+          - name: Check Annotations
+            if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins')
+            env:
+              LOAD_PLUGINS: ""
+              TEMPORARY_DB_PORT: "11000"
+            run: |
+              directories=""
+              if [ "${{ matrix.target }}" = "core" ]; then
+                directories="app/models"
+              else
+                directories="$(script/list_bundled_plugins | xargs -I{} find {} -type d -path '*/app/models' -maxdepth 3)"
+              fi
+
+              # annotate:clean runs index setup + annotaterb in a temporary postgres so it
+              # doesn't pollute the rspec test DB.
+              MODEL_DIR="$(echo "${directories}" | tr '\n' ',')" bin/rake annotate:clean
+
+              if [ ! -z "$(git status --porcelain ${directories})" ]; then
+                echo "Core annotations are not up to date. To resolve, run:"
+                echo "  bin/rake annotate:clean"
+                echo
+                echo "Or manually apply the diff printed below:"
+                echo "---------------------------------------------"
+                git -c color.ui=always diff ${directories}
+                exit 1
+              fi
+
+          - name: Check structure dump
+            if: matrix.build_type == 'backend' && matrix.target == 'core'
+            env:
+              TEMPORARY_DB_PORT: "11001"
+            run: bin/rake db:check_structure_dump
 
       - name: Check Zeitwerk reloading
         if: matrix.build_type == 'backend'
