@@ -318,6 +318,7 @@ end
 #  notify_on_linked_posts                         :boolean          default(TRUE), not null
 #  notify_on_solved                               :boolean          default(TRUE), not null
 #  oldest_search_log_date                         :datetime
+#  only_chat_push_notifications                   :boolean
 #  policy_email_frequency                         :integer          default("never"), not null
 #  push_notification_level                        :integer          default(1), not null
 #  seen_popups                                    :integer          is an Array

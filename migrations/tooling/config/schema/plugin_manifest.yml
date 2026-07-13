@@ -47,6 +47,7 @@ plugins:
         - dismissed_channel_retention_reminder
         - dismissed_dm_retention_reminder
         - ignore_channel_wide_mention
+        - only_chat_push_notifications
         - show_thread_title_prompts
   discourse-adplugin:
     tables:

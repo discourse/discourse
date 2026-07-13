@@ -7,6 +7,11 @@ class BackfillPushNotificationLevel < ActiveRecord::Migration[8.0]
   BATCH_SIZE = 30_000
 
   def up
+    # `only_chat_push_notifications` is a chat-plugin column; skip when it isn't
+    # present (e.g. the chat plugin is absent, or the migrations-tooling core-only
+    # schema) so this core migration never references a missing column.
+    return unless column_exists?(:user_options, :only_chat_push_notifications)
+
     loop do
       count = DB.exec(<<~SQL, batch_size: BATCH_SIZE)
         WITH cte AS (
