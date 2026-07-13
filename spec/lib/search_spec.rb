@@ -1842,7 +1842,7 @@ RSpec.describe Search do
         expect(search.tags.map(&:name)).to eq([tag.name, "#{tag.name}9"])
       end
 
-      it "includes category-restricted tags" do
+      it "filters category-restricted tags based on category access" do
         category_tag = Fabricate(:tag, name: "#{tag.name}9")
         tag_group.tags = [category_tag]
         category.set_permissions(admins: :full)
@@ -1852,7 +1852,7 @@ RSpec.describe Search do
         expect(Search.execute(tag.name, guardian: Guardian.new(admin)).tags).to eq(
           [tag, category_tag],
         )
-        expect(search.tags).to eq([tag, category_tag])
+        expect(search.tags).to eq([tag])
       end
     end
   end

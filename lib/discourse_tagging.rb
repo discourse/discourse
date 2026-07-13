@@ -626,10 +626,10 @@ module DiscourseTagging
   end
 
   def self.visible_tags(guardian)
-    if guardian&.is_staff?
-      Tag.all
-    else
-      # Visible tags either have no permissions or have allowable permissions
+    return Tag.all if guardian&.is_staff?
+
+    # Visible tags either have no permissions or have allowable permissions
+    permitted =
       Tag
         .where.not(id: TagGroupMembership.joins(tag_group: :tag_group_permissions).select(:tag_id))
         .or(
@@ -641,7 +641,30 @@ module DiscourseTagging
                 .select("tag_group_memberships.tag_id"),
           ),
         )
-    end
+
+    filter_visible_in_accessible_categories(permitted, guardian)
+  end
+
+  def self.filter_visible_in_accessible_categories(query, guardian = nil)
+    return query if guardian.nil? || guardian.is_staff?
+
+    query.where(<<~SQL, ids: guardian.allowed_category_ids)
+      tags.id NOT IN (
+        SELECT tag_id FROM category_tags
+        UNION
+        SELECT tgm.tag_id
+        FROM tag_group_memberships tgm
+        INNER JOIN category_tag_groups ctg ON ctg.tag_group_id = tgm.tag_group_id
+      )
+      OR tags.id IN (
+        SELECT tag_id FROM category_tags WHERE category_id IN (:ids)
+        UNION
+        SELECT tgm.tag_id
+        FROM tag_group_memberships tgm
+        INNER JOIN category_tag_groups ctg
+          ON ctg.tag_group_id = tgm.tag_group_id AND ctg.category_id IN (:ids)
+      )
+    SQL
   end
 
   def self.filter_visible(query, guardian = nil)
