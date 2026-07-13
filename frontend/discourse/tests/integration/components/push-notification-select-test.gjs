@@ -34,17 +34,19 @@ module("Integration | Component | push-notification-select", function (hooks) {
     );
     this.siteSettings.chat_enabled = true;
     this.model = EmberObject.create({
+      savedFields: null,
       user_option: EmberObject.create({
         push_notification_level: "all",
         chat_enabled: true,
       }),
-      save() {
+      save(fields) {
+        this.savedFields = fields;
         return Promise.resolve();
       },
     });
   });
 
-  test("shows 'Nothing' while not subscribed", async function (assert) {
+  test("shows 'none' while the device is not subscribed", async function (assert) {
     await render(
       <template><PushNotificationSelect @model={{this.model}} /></template>
     );
@@ -86,7 +88,7 @@ module("Integration | Component | push-notification-select", function (hooks) {
     );
   });
 
-  test("selecting 'Nothing' unsubscribes", async function (assert) {
+  test("selecting 'Nothing' unsubscribes and stores none", async function (assert) {
     this.desktopNotifications.isSubscribed = true;
 
     await render(
@@ -97,9 +99,10 @@ module("Integration | Component | push-notification-select", function (hooks) {
     await selectKit(".push-notification-select").selectRowByValue("none");
 
     assert.false(this.desktopNotifications.isSubscribed);
+    assert.strictEqual(this.model.user_option.push_notification_level, "none");
   });
 
-  test("selecting a level subscribes and stores it", async function (assert) {
+  test("selecting a level subscribes, stores it, and reflects it in the header", async function (assert) {
     await render(
       <template><PushNotificationSelect @model={{this.model}} /></template>
     );
@@ -111,6 +114,57 @@ module("Integration | Component | push-notification-select", function (hooks) {
     assert.strictEqual(
       this.model.user_option.push_notification_level,
       "chat_only"
+    );
+    assert.strictEqual(
+      selectKit(".push-notification-select").header().value(),
+      "chat_only"
+    );
+  });
+
+  test("switching between levels while subscribed updates the header", async function (assert) {
+    this.desktopNotifications.isSubscribed = true;
+
+    await render(
+      <template><PushNotificationSelect @model={{this.model}} /></template>
+    );
+
+    await selectKit(".push-notification-select").expand();
+    await selectKit(".push-notification-select").selectRowByValue("chat_only");
+
+    assert.strictEqual(
+      selectKit(".push-notification-select").header().value(),
+      "chat_only"
+    );
+
+    await selectKit(".push-notification-select").expand();
+    await selectKit(".push-notification-select").selectRowByValue("all");
+
+    assert.strictEqual(
+      selectKit(".push-notification-select").header().value(),
+      "all"
+    );
+  });
+
+  test("reverts to 'none' when the device can't subscribe", async function (assert) {
+    // enable() resolves without actually subscribing (e.g. push service error)
+    this.desktopNotifications.enable = () => {};
+
+    await render(
+      <template><PushNotificationSelect @model={{this.model}} /></template>
+    );
+
+    await selectKit(".push-notification-select").expand();
+    await selectKit(".push-notification-select").selectRowByValue("chat_only");
+
+    assert.strictEqual(
+      selectKit(".push-notification-select").header().value(),
+      "none",
+      "the combobox reverts to none when the subscription can't complete"
+    );
+    assert.strictEqual(
+      this.model.savedFields,
+      null,
+      "nothing is persisted when the subscription can't complete"
     );
   });
 });

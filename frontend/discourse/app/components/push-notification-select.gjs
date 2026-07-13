@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -9,6 +10,13 @@ import { i18n } from "discourse-i18n";
 export default class PushNotificationSelect extends Component {
   @service desktopNotifications;
   @service siteSettings;
+
+  @tracked level;
+
+  constructor() {
+    super(...arguments);
+    this.level = this.args.model.user_option.push_notification_level;
+  }
 
   get chatAvailable() {
     return (
@@ -40,35 +48,39 @@ export default class PushNotificationSelect extends Component {
       return "none";
     }
 
-    const level = this.args.model.user_option.push_notification_level;
-
-    if (level === "chat_only" && !this.chatAvailable) {
+    if (this.level === "chat_only" && !this.chatAvailable) {
       return "all";
     }
 
-    return level;
+    return this.level;
   }
 
   @action
   async onChange(value) {
     if (value === "none") {
       await this.desktopNotifications.disable();
+      await this.persistLevel("none");
       return;
     }
 
     if (!this.desktopNotifications.isSubscribed) {
-      await this.desktopNotifications.enable();
+      try {
+        await this.desktopNotifications.enable();
+      } catch {
+        // handled by the subscription check below
+      }
 
-      // enable() can fail (denied permission, push registration error) without
-      // throwing; don't persist a level for a user who isn't actually subscribed.
       if (!this.desktopNotifications.isSubscribed) {
+        this.level = "none";
         return;
       }
     }
 
-    // Persist immediately so the stored level can't disagree with the
-    // subscription state that was just changed (e.g. if the user navigates away
-    // before using the page's Save button).
+    await this.persistLevel(value);
+  }
+
+  async persistLevel(value) {
+    this.level = value;
     this.args.model.set("user_option.push_notification_level", value);
     await this.args.model
       .save(["push_notification_level"])

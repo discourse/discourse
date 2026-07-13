@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
-import { fn, hash } from "@ember/helper";
+import { tracked } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
@@ -23,6 +24,16 @@ export default class ChatNotifications extends Component {
 
   @service chatAudioManager;
 
+  @tracked chatSound;
+  @tracked headerIndicatorPreference;
+
+  constructor() {
+    super(...arguments);
+    this.chatSound = normalizeChatSoundName(this.userOption.chat_sound);
+    this.headerIndicatorPreference =
+      this.userOption.chat_header_indicator_preference;
+  }
+
   get model() {
     return this.args.outletArgs.model;
   }
@@ -36,10 +47,6 @@ export default class ChatNotifications extends Component {
       name: i18n(`chat.sounds.${value}`),
       value,
     }));
-  }
-
-  get chatSound() {
-    return normalizeChatSoundName(this.userOption.chat_sound);
   }
 
   get headerIndicatorOptions() {
@@ -64,8 +71,9 @@ export default class ChatNotifications extends Component {
   }
 
   @action
-  setUserOption(key, value) {
-    this.model.set(`user_option.${key}`, value);
+  setHeaderIndicatorPreference(value) {
+    this.headerIndicatorPreference = value;
+    this.model.set("user_option.chat_header_indicator_preference", value);
   }
 
   @action
@@ -74,6 +82,7 @@ export default class ChatNotifications extends Component {
       this.chatAudioManager?.play(sound, { throttle: false });
     }
 
+    this.chatSound = sound ?? null;
     this.model.set("user_option.chat_sound", sound ?? null);
   }
 
@@ -107,8 +116,8 @@ export default class ChatNotifications extends Component {
         <ComboBox
           @valueProperty="value"
           @content={{this.headerIndicatorOptions}}
-          @value={{this.userOption.chat_header_indicator_preference}}
-          @onChange={{fn this.setUserOption "chat_header_indicator_preference"}}
+          @value={{this.headerIndicatorPreference}}
+          @onChange={{this.setHeaderIndicatorPreference}}
           class="chat-header-indicator-preference"
         />
       </div>
