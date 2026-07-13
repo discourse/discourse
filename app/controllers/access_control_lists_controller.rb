@@ -41,15 +41,7 @@ class AccessControlListsController < ApplicationController
 
   def serialize_groups(groups)
     groups.map do |group|
-      {
-        id: group.id,
-        name: group.name,
-        full_name: group.full_name,
-        automatic: group.automatic,
-        flair_url: group.flair_url,
-        flair_bg_color: group.flair_bg_color,
-        flair_color: group.flair_color,
-      }
+      { id: group.id, name: group.name, full_name: group.full_name, automatic: group.automatic }
     end
   end
 end

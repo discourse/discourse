@@ -198,7 +198,6 @@ export default class DAccessControl extends Component {
     return this.acl.map((entry) => granteeValue(entry.type, entry.id));
   }
 
-  // TODO (martin) Handle user type ACLs here in next PR
   get selectedGroupIds() {
     return this.acl
       .filter((entry) => entry.type === "group")
@@ -252,7 +251,6 @@ export default class DAccessControl extends Component {
       (entry) => !mandatoryEntryKeys.has(`${entry.type}-${entry.id}`)
     );
 
-    // TODO (martin) Handle user type ACLs here in next PR
     this.mandatoryAcl.forEach((entry) => {
       if (entry.type === "group") {
         const group = (this.args.groups || []).find((g) => g.id === entry.id);

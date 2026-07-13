@@ -8,15 +8,7 @@ RSpec.describe AccessControlListsController do
 
     it "returns matching users and groups", :aggregate_failures do
       user = Fabricate(:user, username: "acl_search_user")
-      group =
-        Fabricate(
-          :group,
-          name: "acl_search_group",
-          full_name: "ACL search group",
-          flair_icon: "fa-users",
-          flair_bg_color: "CC0000",
-          flair_color: "FFFFFF",
-        )
+      group = Fabricate(:group, name: "acl_search_group", full_name: "ACL search group")
 
       get "/access-control/grantees/search.json", params: { term: "acl_search" }
 
@@ -30,9 +22,6 @@ RSpec.describe AccessControlListsController do
           "name" => group.name,
           "full_name" => group.full_name,
           "automatic" => false,
-          "flair_url" => "users",
-          "flair_bg_color" => group.flair_bg_color,
-          "flair_color" => group.flair_color,
         },
       )
     end
