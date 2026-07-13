@@ -183,9 +183,12 @@ jobs:
           echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
+      - name: Create database
+        run: bin/rake db:create
+
       - parallel:
-          - name: Create and migrate database
-            run: bin/rake db:create db:migrate
+          - name: Migrate database
+            run: bin/rake db:migrate
 
           - name: Create and migrate parallel databases
             if: env.USES_PARALLEL_DATABASES == 'true'
