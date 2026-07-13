@@ -46,6 +46,13 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
+      ai_tool_approval:
+        tool: "مەشغۇلات"
+        user: "ئىشلەتكۈچى"
+        approve: "تەستىقلا"
+        reject: "رەت قىل"
+        approved: "تەستىقلاندى"
+        rejected: "رەت قىلىندى"
       llm_selector:
         none: "يوق"
       features:

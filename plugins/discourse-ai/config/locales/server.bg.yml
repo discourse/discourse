@@ -15,6 +15,8 @@ bg:
           name: "По избор"
     ai_bot:
       tool_summary:
+        suspend_user: "Спиране на потребителя"
+        silence_user: "Заглушаване на потребителя"
         search: "Търсене"
         time: "Време "
         summarize: "Обобщаване"

@@ -48,6 +48,8 @@ lt:
       tool_summary:
         github_diff: "GitHub skirtumas"
         flag_post: "Vėliavų stulpas"
+        suspend_user: "Sustabdyti naudotojo"
+        silence_user: "Nutildyti vartotoją"
         search: "Paieška"
         time: "Laikas"
         summarize: "Apibendrinti"

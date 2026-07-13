@@ -204,6 +204,14 @@ pt_BR:
               description: "Permitir aplicar tags em postagens criadas pelo usuário do sistema."
     discourse_ai:
       title: "IA"
+      ai_tool_approval:
+        loading: "Carregando..."
+        tool: "Ação"
+        user: "Usuário(a)"
+        approve: "Aprovar"
+        reject: "Rejeitar"
+        approved: "Aprovado (approved)"
+        rejected: "Recusados(as)"
       default_llm:
         title: "Modelo de LLM padrão"
       llm_selector:

@@ -51,6 +51,14 @@ ro:
               label: "Permite postările de sistem"
               description: "Permite etichetarea postărilor create de utilizatorul sistemului."
     discourse_ai:
+      ai_tool_approval:
+        loading: "Se încarcă..."
+        tool: "Acțiune"
+        user: "Utilizator"
+        approve: "Aprobare"
+        reject: "Respingere"
+        approved: "Aprobat"
+        rejected: "Respins"
       default_llm:
         title: "Model LLM implicit"
       llm_selector:

@@ -564,6 +564,8 @@ zh_CN:
         categories: "列出类别"
         flag_post: "标记帖子"
         close_topic: "关闭话题"
+        suspend_user: "封禁用户"
+        silence_user: "禁言用户"
         unlist_topic: "取消公开话题"
         lock_post: "锁定帖子"
         delete_topic: "删除话题"
@@ -712,6 +714,12 @@ zh_CN:
           not_allowed: "您无权关闭或打开此话题。"
           no_reason: "关闭或打开话题需要提供理由。"
         success: "话题成功更新。"
+      suspend_user:
+        errors:
+          not_found: "找不到用户。"
+      silence_user:
+        errors:
+          not_found: "找不到用户。"
       unlist_topic:
         errors:
           not_found: "找不到话题。"
@@ -831,6 +839,7 @@ zh_CN:
         tool_not_found: "工具 '%{tool_name}' 不再可用。"
         bot_user_missing: "机器人用户不再存在。"
         execution_error: "工具执行失败：%{error}"
+        execution_error_unknown: "发生意外错误"
     summarization:
       configuration_hint:
         other: "首先配置这些设置：%{settings}"

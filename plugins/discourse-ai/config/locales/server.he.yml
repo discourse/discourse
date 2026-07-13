@@ -434,6 +434,8 @@ he:
         random_picker: "בורר אקראי"
         categories: "הצגת קטגוריות"
         flag_post: "סימון פוסט"
+        suspend_user: "השעיית משתמש"
+        silence_user: "השתקת משתמש"
         edit_post: "עריכת פוסט"
         search: "חיפוש"
         tags: "הצגת תגיות"

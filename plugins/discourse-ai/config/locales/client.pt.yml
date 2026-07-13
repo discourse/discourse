@@ -67,6 +67,14 @@ pt:
               label: "Responder"
     discourse_ai:
       title: "IA"
+      ai_tool_approval:
+        loading: "A carregar..."
+        tool: "Ação"
+        user: "Utilizador"
+        approve: "Aprovar"
+        reject: "Rejeitar"
+        approved: "Aprovado"
+        rejected: "Rejeitado"
       default_llm:
         title: "Modelo de LLM Predefinido"
       llm_selector:

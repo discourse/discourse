@@ -34,6 +34,14 @@ et:
             canned_reply:
               label: "Vasta"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Laadimine..."
+        tool: "Tegevus"
+        user: "Kasutaja"
+        approve: "Kinnita"
+        reject: "Lükka tagasi"
+        approved: "Heakskiidetud"
+        rejected: "Tagasi lükatud"
       llm_selector:
         none: "Pole"
       features:

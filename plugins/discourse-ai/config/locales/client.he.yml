@@ -191,6 +191,14 @@ he:
               description: "לאפשר תיוג של פוסטים שנוצרו על ידי משתמש המערכת."
     discourse_ai:
       title: "בינה מלאכותית"
+      ai_tool_approval:
+        loading: "בטעינה…"
+        tool: "פעולה"
+        user: "משתמש"
+        approve: "אישור"
+        reject: "לדחות"
+        approved: "אושר"
+        rejected: "נדחה"
       default_llm:
         title: "מודל LLM/מש״ג ברירת מחדל"
       llm_selector:

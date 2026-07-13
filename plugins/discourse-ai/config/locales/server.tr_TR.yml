@@ -543,6 +543,8 @@ tr_TR:
         categories: "Kategorileri listele"
         flag_post: "Gönderiye bayrak ekle"
         close_topic: "Konuyu kapat"
+        suspend_user: "Kullanıcıyı askıya al"
+        silence_user: "Kullanıcıyı sustur"
         unlist_topic: "Konuyu listeden kaldır"
         lock_post: "Gönderiyi kilitle"
         delete_topic: "Konuyu sil"
@@ -699,6 +701,12 @@ tr_TR:
           not_allowed: "Bu konuyu kapatamaz veya açamazsınız."
           no_reason: "Bir konuyu kapatmak veya açmak için bir neden belirtilmesi gerekir."
         success: "Konu başarıyla güncellendi."
+      suspend_user:
+        errors:
+          not_found: "Kullanıcı bulunamadı."
+      silence_user:
+        errors:
+          not_found: "Kullanıcı bulunamadı."
       unlist_topic:
         errors:
           not_found: "Konu bulunamadı."
@@ -819,6 +827,7 @@ tr_TR:
         tool_not_found: "'%{tool_name}' aracı artık kullanılamıyor."
         bot_user_missing: "Bu bot kullanıcısı artık mevcut değil."
         execution_error: "Araç çalıştırılamadı: %{error}"
+        execution_error_unknown: "beklenmedik bir hata oluştu"
     summarization:
       configuration_hint:
         one: "Önce `%{setting}` ayarını yapılandırın"

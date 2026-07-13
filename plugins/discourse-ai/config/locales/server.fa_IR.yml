@@ -29,6 +29,7 @@ fa_IR:
           name: "DALL-E 3"
       tool_summary:
         categories: "فهرست دسته‌بندی‌ها"
+        suspend_user: "کاربر تعلیق شده"
         search: "جستجو"
         tags: "فهرست برچسب‌ها"
         time: "زمان"

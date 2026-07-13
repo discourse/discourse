@@ -37,6 +37,8 @@ cs:
       topic_not_found: "Souhrn není k dispozici, téma nebylo nalezeno!"
       summarizing: "Vytvářím souhrn tématu"
       tool_summary:
+        suspend_user: "Pozastavit uživatele"
+        silence_user: "Ztišit uživatele"
         edit_post: "Upravit příspěvek"
         move_posts: "Přesunout příspěvky"
         search: "Vyhledávání"

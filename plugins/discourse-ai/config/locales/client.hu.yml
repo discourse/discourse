@@ -38,6 +38,14 @@ hu:
             canned_reply:
               label: "Válasz"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Betöltés…"
+        tool: "Művelet"
+        user: "Felhasználó"
+        approve: "Jóváhagyás"
+        reject: "Elutasítás"
+        approved: "Jóváhagyott"
+        rejected: "Elutasított"
       llm_selector:
         none: "Egyik sem"
       features:

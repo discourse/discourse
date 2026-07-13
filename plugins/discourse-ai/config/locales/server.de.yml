@@ -543,6 +543,8 @@ de:
         categories: "Kategorien auflisten"
         flag_post: "Beitrag melden"
         close_topic: "Thema schließen"
+        suspend_user: "Benutzer sperren"
+        silence_user: "Benutzer stummschalten"
         unlist_topic: "Thema aus der Liste entfernen"
         lock_post: "Beitrag sperren"
         delete_topic: "Thema löschen"
@@ -699,6 +701,12 @@ de:
           not_allowed: "Du darfst dieses Thema nicht schließen oder öffnen."
           no_reason: "Zum Schließen oder Öffnen eines Themas ist eine Begründung erforderlich."
         success: "Thema erfolgreich aktualisiert."
+      suspend_user:
+        errors:
+          not_found: "Benutzer nicht gefunden."
+      silence_user:
+        errors:
+          not_found: "Benutzer nicht gefunden."
       unlist_topic:
         errors:
           not_found: "Thema nicht gefunden."
@@ -819,6 +827,7 @@ de:
         tool_not_found: "Das Tool '%{tool_name}' ist nicht mehr verfügbar."
         bot_user_missing: "Der Bot-Benutzer existiert nicht mehr."
         execution_error: "Tool-Ausführung fehlgeschlagen: %{error}"
+        execution_error_unknown: "ein unerwarteter Fehler ist aufgetreten"
     summarization:
       configuration_hint:
         one: "Konfiguriere zunächst die Einstellung `%{setting}`."

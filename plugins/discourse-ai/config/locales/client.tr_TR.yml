@@ -232,6 +232,15 @@ tr_TR:
       discourse_workflows:
         ai_agent:
           agent_id: "Ajan"
+      ai_tool_approval:
+        loading: "Yükleniyor..."
+        agent: "Ajan"
+        tool: "Eylem"
+        user: "Kullanıcı"
+        approve: "Onayla"
+        reject: "Reddet"
+        approved: "Onaylandı"
+        rejected: "Reddedilen"
       default_llm:
         title: "Varsayılan LLM modeli"
         description: "Tüm AI özellikleri için kullanılacak varsayılan LLM modeli. Bu, özellik yapılandırmasında veya ajanda herhangi bir LLM belirtilmediğinde kullanılır. Varsayılan bir LLM belirtilmezse, en son oluşturulan LLM kullanılır."

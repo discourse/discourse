@@ -59,6 +59,14 @@ ur:
             hide_topic:
               label: "موضوع چھپائیں"
     discourse_ai:
+      ai_tool_approval:
+        loading: "لوڈ ہو رہا ہے..."
+        tool: "عمل"
+        user: "رکن"
+        approve: "منظور"
+        reject: "مسترد کریں"
+        approved: "منظورشدہ"
+        rejected: "مسترد کر دیا"
       llm_selector:
         none: "کوئی نہیں"
       features:

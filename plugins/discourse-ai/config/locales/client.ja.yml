@@ -200,6 +200,14 @@ ja:
               description: "システムユーザーが作成した投稿のタグ付けを許可します。"
     discourse_ai:
       title: "AI"
+      ai_tool_approval:
+        loading: "読み込み中..."
+        tool: "操作"
+        user: "ユーザー"
+        approve: "承認"
+        reject: "却下"
+        approved: "承認済み"
+        rejected: "拒否"
       default_llm:
         title: "デフォルトの LLM モデル"
       llm_selector:

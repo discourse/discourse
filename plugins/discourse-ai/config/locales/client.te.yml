@@ -36,6 +36,14 @@ te:
             canned_reply:
               label: "ప్రత్యుత్తరం ఇవ్వండి"
     discourse_ai:
+      ai_tool_approval:
+        loading: "లోడవుతోంది..."
+        tool: "చర్య"
+        user: "సభ్యుడు"
+        approve: "ఆమోదించండి"
+        reject: "తిరస్కరించు"
+        approved: "ఆమోదించబడింది"
+        rejected: "తిరస్కరించబడినవి"
       llm_selector:
         none: "ఏదీ లేదు"
       features:

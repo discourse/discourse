@@ -154,6 +154,14 @@ fi:
               description: "Kun tämä määritetään, se asettaa ylärajan mallin luomien saneiden enimmäismäärälle. Noudattaa LLM:n tuotossaneiden enimmäisrajaa."
     discourse_ai:
       title: "Tekoäly"
+      ai_tool_approval:
+        loading: "Ladataan..."
+        tool: "Toiminto"
+        user: "Käyttäjä"
+        approve: "Hyväksy"
+        reject: "Hylkää"
+        approved: "Hyväksytty"
+        rejected: "Hylätty"
       default_llm:
         title: "Oletusarvoinen LLM-malli"
       llm_selector:
