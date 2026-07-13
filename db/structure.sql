@@ -11473,7 +11473,7 @@ CREATE TABLE public.user_options (
     enable_upcoming_change_available_notifications boolean DEFAULT true NOT NULL,
     chat_announce_new_messages boolean DEFAULT true NOT NULL,
     chat_new_message_sound boolean DEFAULT false NOT NULL,
-    push_notification_level integer DEFAULT 0 NOT NULL
+    push_notification_level integer DEFAULT 1 NOT NULL
 );
 
 

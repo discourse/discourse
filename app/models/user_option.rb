@@ -19,7 +19,7 @@ class UserOption < ActiveRecord::Base
 
   self.ignored_columns = [
     "enable_experimental_sidebar", # TODO: Remove when 20250804021210_drop_enable_experimental_sidebar_user_option has been promoted to pre-deploy
-    "only_chat_push_notifications", # TODO(2027-01): Remove when 20260707184153_drop_only_chat_push_notifications_from_user_options has been promoted to pre-deploy
+    "only_chat_push_notifications", # TODO(2027-01): replaced by push_notification_level; drop the column in a follow-up PR once this has shipped
   ]
 
   self.primary_key = :user_id
@@ -32,7 +32,7 @@ class UserOption < ActiveRecord::Base
   scope :human_users, -> { where("user_id > 0") }
 
   enum :default_calendar, { none_selected: 0, ics: 1, google: 2 }, scopes: false
-  enum :push_notification_level, { all: 0, chat_only: 1 }, prefix: true, scopes: false
+  enum :push_notification_level, { none: 0, all: 1, chat_only: 2 }, prefix: true, scopes: false
 
   def self.ensure_consistency!
     sql = <<~SQL
@@ -73,13 +73,6 @@ class UserOption < ActiveRecord::Base
   validates :email_level, inclusion: { in: UserOption.email_level_types.values }
   validates :email_messages_level, inclusion: { in: UserOption.email_level_types.values }
   validates :timezone, timezone: true
-
-  # Ignore out-of-enum values rather than letting the enum setter raise
-  # ArgumentError (which would surface as a 500 on the preferences update path).
-  def push_notification_level=(value)
-    return unless self.class.push_notification_levels.key?(value.to_s)
-    super
-  end
 
   def set_defaults
     self.mailing_list_mode = SiteSetting.default_email_mailing_list_mode
@@ -326,7 +319,7 @@ end
 #  notify_on_solved                               :boolean          default(TRUE), not null
 #  oldest_search_log_date                         :datetime
 #  policy_email_frequency                         :integer          default("never"), not null
-#  push_notification_level                        :integer          default(0), not null
+#  push_notification_level                        :integer          default(1), not null
 #  seen_popups                                    :integer          is an Array
 #  show_original_content                          :boolean          default(FALSE), not null
 #  show_thread_title_prompts                      :boolean          default(TRUE), not null

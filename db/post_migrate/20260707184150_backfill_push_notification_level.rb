@@ -3,7 +3,7 @@
 class BackfillPushNotificationLevel < ActiveRecord::Migration[8.0]
   disable_ddl_transaction!
 
-  # push_notification_level enum: all: 0, chat_only: 1
+  # push_notification_level enum: none: 0, all: 1, chat_only: 2
   BATCH_SIZE = 30_000
 
   def up
@@ -12,11 +12,11 @@ class BackfillPushNotificationLevel < ActiveRecord::Migration[8.0]
         WITH cte AS (
           SELECT user_id
           FROM user_options
-          WHERE only_chat_push_notifications = true AND push_notification_level <> 1
+          WHERE only_chat_push_notifications = true AND push_notification_level <> 2
           LIMIT :batch_size
         )
         UPDATE user_options
-        SET push_notification_level = 1
+        SET push_notification_level = 2
         FROM cte
         WHERE user_options.user_id = cte.user_id
       SQL
