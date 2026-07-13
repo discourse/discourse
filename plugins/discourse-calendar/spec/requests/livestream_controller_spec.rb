@@ -12,6 +12,8 @@ module DiscourseCalendar
         post: post,
         location: "https://us06web.zoom.us/j/123456789?pwd=secret",
         livestream: true,
+        original_starts_at: 5.minutes.ago.iso8601,
+        original_ends_at: 1.hour.from_now.iso8601,
       )
     end
 
@@ -135,6 +137,17 @@ module DiscourseCalendar
 
         it "returns not found when the livestream URL is not a supported Zoom URL" do
           event.update!(location: "https://example.com/stream")
+
+          get "/discourse-calendar/livestream/zoom/signature.json", params: { topic_id: topic.id }
+
+          expect(response.status).to eq(404)
+        end
+
+        it "returns not found when the event is outside its timeframe" do
+          event.update!(
+            original_starts_at: 2.hours.from_now.iso8601,
+            original_ends_at: 3.hours.from_now.iso8601,
+          )
 
           get "/discourse-calendar/livestream/zoom/signature.json", params: { topic_id: topic.id }
 
