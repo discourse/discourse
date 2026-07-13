@@ -156,6 +156,18 @@ acceptance("User Preferences - Account", function (needs) {
       .exists("avatar selection modal includes option to upload");
   });
 
+  test("avatar selector handles an empty selectable avatars list", async function (assert) {
+    this.siteSettings.selectable_avatars_mode = "everyone";
+    this.siteSettings.selectable_avatars = [];
+
+    await visit("/u/eviltrout/preferences/account");
+    await click(".pref-avatar .btn");
+
+    assert
+      .dom(".avatar-choice")
+      .exists("opens the avatar selection modal without selectable avatars");
+  });
+
   test("avatars are not selectable for non-staff user when `selectable_avatars_mode` site setting is set to `staff`", async function (assert) {
     this.siteSettings.selectable_avatars_mode = "staff";
 
