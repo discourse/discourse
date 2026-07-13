@@ -20,9 +20,11 @@ Discourse is large with long history. Understand context before changes.
 - Make display strings translatable (use placeholders, not split strings)
 - Use "Sentence case" for strings, not "Proper Case" or "lower case"
 
-### JSDoc
-- Do not add JSDoc to any new code you write.
-- If JSDoc already exists, ensure any changes you make keep it accurate and up to date.
+### Comments & Types
+- Only add comments to code when absolutely necessary. Self-documenting code is preferred
+- In the frontend, typescript is typically used for platform-level code, javascript for business-logic
+- Platform-level frontend code should include accurate types & tsdoc descriptions for public APIs
+- Simple JSDoc comments can be used in other code for editor intellisense, but this is not essential
 
 ## Testing
 - Use the skill at `.skills/discourse-writing-rspec-tests` when writing RSpec tests
