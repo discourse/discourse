@@ -2308,6 +2308,8 @@ describe PostRevisor do
     end
 
     context "with nested reply stats" do
+      fab!(:nested_topic) { Fabricate(:nested_topic, topic: topic) }
+
       def direct_reply_count(post)
         NestedViewPostStat.where(post_id: post.id).pick(:direct_reply_count) || 0
       end

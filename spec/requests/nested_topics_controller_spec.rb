@@ -28,6 +28,10 @@ RSpec.describe NestedTopicsController, type: :request do
       hot_score: hot_score,
       hot_score_updated_at: Time.current,
     )
+    post.topic.upsert_custom_fields(
+      NestedReplies::HotScoreCalculator::FORMULA_VERSION_FIELD =>
+        NestedReplies::HotScoreCalculator::FORMULA_VERSION,
+    )
   end
 
   def set_hot_preload_settings(post_budget:, per_root_budget:, children_per_parent:)
