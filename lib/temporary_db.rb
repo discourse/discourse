@@ -10,12 +10,13 @@ class TemporaryDb
   STARTUP_TIMEOUT_SECONDS = 60
   DEFAULT_PG_SYSTEM_USER = "postgres"
 
-  def initialize(pg_system_user: DEFAULT_PG_SYSTEM_USER, versions: VERSIONS)
+  def initialize(pg_system_user: DEFAULT_PG_SYSTEM_USER, versions: VERSIONS, port: nil)
     @pg_temp_path = File.join(Dir.tmpdir, "#{PG_TEMP_PREFIX}_#{SecureRandom.hex(6)}")
     @pg_conf = "#{@pg_temp_path}/postgresql.conf"
     @pg_sock_path = "#{@pg_temp_path}/sockets"
     @pg_system_user = pg_system_user
     @versions = versions
+    @pg_port = port
   end
 
   def port_available?(port)
