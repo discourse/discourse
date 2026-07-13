@@ -18,21 +18,8 @@ import { isTesting } from "discourse/lib/environment";
 import type Site from "discourse/models/site";
 import { and } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
-import DModalUntyped from "discourse/ui-kit/d-modal";
+import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-
-// TODO(devxp-typescript-pending): drop this cast once DModal is authored in .gts with a
-// real Signature, then import it directly. Untyped .gjs today gives it no arg/attr types.
-const DModal = DModalUntyped as unknown as ComponentLike<{
-  Element: HTMLElement;
-  Args: {
-    closeModal?: FloatCallback;
-    hideHeader?: boolean;
-    autofocus?: boolean;
-    inline?: boolean;
-  };
-  Blocks: { default: [] };
-}>;
 
 /** The object yielded to each of the menu's blocks and passed to a rendered component. */
 export interface DMenuComponentArgs<Data = unknown> {
@@ -168,9 +155,10 @@ export default class DMenu<Data = unknown> extends Component<
       },
     };
 
-    // `curryComponent` is untyped and the curried `DButton` honors the menu's
-    // `@componentArgs` + modifier + splattributes + default block at runtime without
-    // declaring them, so the result is cast to a permissive component type.
+    // The template forwards `@componentArgs` plus element attributes and a modifier that
+    // the concrete trigger component (the default `DButton`, or a consumer-supplied one)
+    // does not declare but honors at runtime, so the result is cast to a component type
+    // describing that passthrough.
     return (this.args.triggerComponent ||
       curryComponent(DButton, baseArguments, getOwner(this))) as ComponentLike<{
       Element: HTMLElement;

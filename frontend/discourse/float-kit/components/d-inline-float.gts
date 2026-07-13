@@ -1,22 +1,12 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { service } from "@ember/service";
-import { type ComponentLike } from "@glint/template";
 import DFloatBody from "discourse/float-kit/components/d-float-body";
-import type { FloatCallback } from "discourse/float-kit/lib/constants";
 import type FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 import type Site from "discourse/models/site";
 import { and } from "discourse/truth-helpers";
-import DModalUntyped from "discourse/ui-kit/d-modal";
+import DModal from "discourse/ui-kit/d-modal";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-
-// TODO(devxp-typescript-pending): drop this cast once DModal is authored in .gts with a
-// real Signature, then import it directly. Untyped .gjs today gives it no arg/attr types.
-const DModal = DModalUntyped as unknown as ComponentLike<{
-  Element: HTMLElement;
-  Args: { closeModal?: FloatCallback; hideHeader?: boolean };
-  Blocks: { default: [] };
-}>;
 
 interface DInlineFloatSignature {
   Args: {

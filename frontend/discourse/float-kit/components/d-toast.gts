@@ -1,35 +1,15 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import type { ModifierLike } from "@glint/template";
 import type DToastInstance from "discourse/float-kit/lib/d-toast-instance";
 import autoCloseToast from "discourse/float-kit/modifiers/auto-close-toast";
 import deprecated from "discourse/lib/deprecated";
 import { getMaxAnimationTimeMs } from "discourse/lib/swipe-events";
 import { and } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
-import dSwipeUntyped from "discourse/ui-kit/modifiers/d-swipe";
+import dSwipe, { type SwipeState } from "discourse/ui-kit/modifiers/d-swipe";
 
 const VELOCITY_THRESHOLD = -1.2;
-
-/** The swipe state the `d-swipe` modifier reports to its callbacks. */
-interface SwipeState {
-  element: HTMLElement;
-  deltaY: number;
-  velocityY: number;
-}
-
-// TODO(devxp-typescript-pending): drop this cast once d-swipe is authored in .ts with a
-// real Signature, then import it directly. Untyped .js today gives it no arg types.
-const dSwipe = dSwipeUntyped as unknown as ModifierLike<{
-  Element: HTMLElement;
-  Args: {
-    Named: {
-      onDidSwipe?: (state: SwipeState) => void;
-      onDidEndSwipe?: (state: SwipeState) => void;
-    };
-  };
-}>;
 
 interface DToastSignature {
   Args: {
