@@ -150,7 +150,7 @@
     "ember-cli-htmlbars": "^7.0.1",
     "ember-exam": "^10.1.0",
     "ember-modifier": "^4.3.0",
-    "ember-qunit": "^9.0.4",
+    "ember-qunit": "^9.1.0",
     "ember-template-imports": "^4.4.0",
     "ember-truth-helpers": "^5.0.0",
     "expect-type": "^1.3.0",
