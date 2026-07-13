@@ -427,6 +427,15 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_problem_check(klass, self)
   end
 
+  def register_upcoming_change_conditional_display(setting_name, &block)
+    raise ArgumentError, "block is required" if block.blank?
+
+    DiscoursePluginRegistry.register_upcoming_change_conditional_display_callback(
+      { setting_name: setting_name.to_sym, callback: block },
+      self,
+    )
+  end
+
   def custom_avatar_column(column)
     reloadable_patch do |plugin|
       UserLookup.lookup_columns << column

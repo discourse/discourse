@@ -996,6 +996,37 @@ TEXT
     end
   end
 
+  describe "#register_upcoming_change_conditional_display" do
+    let(:plugin) { Plugin::Instance.new }
+
+    before { allow(DiscoursePluginRegistry).to receive(:clear_modifiers!) }
+
+    after do
+      DiscoursePluginRegistry.reset_register!(:upcoming_change_conditional_display_callbacks)
+    end
+
+    it "requires a block" do
+      expect {
+        plugin.register_upcoming_change_conditional_display(:enable_upload_debug_mode)
+      }.to raise_error(ArgumentError, "block is required")
+    end
+
+    it "registers a conditional display callback" do
+      plugin.register_upcoming_change_conditional_display(:enable_upload_debug_mode) { false }
+
+      callback = DiscoursePluginRegistry.upcoming_change_conditional_display_callbacks.first
+      expect(callback[:setting_name]).to eq(:enable_upload_debug_mode)
+      expect(callback[:callback]).to be_a(Proc)
+    end
+
+    it "normalizes setting names to symbols" do
+      plugin.register_upcoming_change_conditional_display("enable_upload_debug_mode") { true }
+
+      callback = DiscoursePluginRegistry.upcoming_change_conditional_display_callbacks.first
+      expect(callback[:setting_name]).to eq(:enable_upload_debug_mode)
+    end
+  end
+
   describe "#register_email_unsubscriber" do
     let(:plugin) { Plugin::Instance.new }
 
