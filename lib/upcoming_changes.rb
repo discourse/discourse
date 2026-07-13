@@ -16,6 +16,8 @@ module UpcomingChanges
   # have selected, so caching may be appropriate at times.
   class ConditionalDisplay
     def self.should_display?(upcoming_change_name)
+      return false if !UpcomingChanges.owning_plugin_configurable?(upcoming_change_name)
+
       if respond_to?("should_display_#{upcoming_change_name}?")
         return public_send("should_display_#{upcoming_change_name}?")
       end
@@ -167,6 +169,22 @@ module UpcomingChanges
     change_metadata(change_setting_name.to_sym).present?
   end
 
+  # An upcoming change owned by a plugin that is not configurable on this site,
+  # is never available. It must not be displayed, notified about, or enabled.
+  #
+  # This is deliberately broader than the guard in SiteSettingExtension#setting,
+  # which only forces a plugin's own enabled_site_setting to false. A change
+  # gating a sub-feature of an unavailable plugin is equally unavailable.
+  #
+  # Core changes have no owning plugin and return early, so the common case
+  # never reaches #configurable? and adds no cost to callers on hot paths like
+  # .settings_hidden_while_enabled.
+  def self.owning_plugin_configurable?(change_setting_name)
+    plugin_name = settings_provider.plugins[change_setting_name.to_sym]
+    return true if plugin_name.nil?
+    Discourse.plugins_by_name[plugin_name]&.configurable? != false
+  end
+
   # We dynamically determine if an upcoming change is enabled
   # or disabled based on the current status of the change as well
   # as whether the admin has manually toggled the change.
@@ -179,6 +197,11 @@ module UpcomingChanges
     if !exists?(change_setting_name)
       raise ArgumentError, "Unknown upcoming change: #{change_setting_name}"
     end
+
+    # The owning plugin is not available on this site, so neither is the change.
+    # This intentionally takes precedence over the :permanent status below, since
+    # a permanent change to an unavailable plugin still cannot take effect.
+    return false if !owning_plugin_configurable?(change_setting_name)
 
     # An admin has modified the setting and a value is stored
     # in the database, since the default for upcoming changes
