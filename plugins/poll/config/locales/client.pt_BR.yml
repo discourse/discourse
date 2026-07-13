@@ -10,8 +10,15 @@ pt_BR:
       site_settings:
         categories:
           poll: "Enquete do Discourse"
+      logs:
+        staff_actions:
+          actions:
+            poll_closed: "Enquete encerrada"
+            poll_opened: "Enquete aberta"
   js:
     poll:
+      title: "Enquete"
+      closed_by: "Fechada por %{username}"
       dynamic:
         enabled_hint: "Opções podem ser adicionadas ou removidas"
       voters:

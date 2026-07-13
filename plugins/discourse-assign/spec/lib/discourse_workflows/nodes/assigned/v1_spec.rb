@@ -9,7 +9,7 @@ RSpec.describe DiscourseWorkflows::Nodes::Assigned::V1 do
 
   before do
     SiteSetting.assign_enabled = true
-    SiteSetting.discourse_workflows_enabled = true
+    SiteSetting.enable_discourse_workflows = true
   end
 
   describe "#valid?" do

@@ -2617,7 +2617,6 @@ de:
     created: "Erstellt"
     created_lowercase: "erstellt"
     trust_level: "Vertrauensstufe"
-    search_hint: "Benutzername, E-Mail- oder IP-Adresse"
     create_account:
       header_title: "Willkommen!"
       disclaimer: "Mit der Registrierung stimmst du der <a href='%{privacy_link}' target='blank'>Datenschutzerklärung</a> und den <a href='%{tos_link}' target='blank'>Nutzungsbedingungen</a> zu."
@@ -4559,7 +4558,6 @@ de:
       unsaved_changes: "Du hast ungespeicherte Änderungen"
       slug: "Sprechender Name für URL der Kategorie"
       parent: "Übergeordnete Kategorie"
-      slug_placeholder: "(Optional) durch Bindestrich getrennte Wörter für URL"
       creation_error: Beim Erstellen der Kategorie ist ein Fehler aufgetreten.
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
       errors:

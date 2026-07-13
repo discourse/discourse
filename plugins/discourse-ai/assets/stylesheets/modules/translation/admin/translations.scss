@@ -12,7 +12,8 @@
   &__category-input-row {
     display: flex;
     align-items: center;
-    gap: 0.5em;
+    flex-wrap: wrap;
+    gap: var(--space-2);
 
     .multi-select,
     .category-selector {
@@ -21,11 +22,16 @@
 
     .setting-controls {
       float: none;
+      margin-inline-start: auto;
+    }
+
+    .setting-controls__undo {
+      margin-inline-start: auto;
     }
   }
 
   .settings .setting {
-    padding: 0.5em;
+    padding: var(--space-2);
 
     .setting-label,
     .setting-value {
@@ -41,6 +47,39 @@
       .select-kit {
         // Not ideal, but upstream .select-kit gets a width: 100% !important that is too eager
         max-width: calc(100% - 100px);
+      }
+    }
+  }
+
+  &__category-input-row {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    .setting-controls {
+      display: flex;
+      gap: var(--space-1);
+    }
+  }
+
+  &__category-scope-row,
+  &__category-selector-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+
+    .combo-box,
+    .category-selector {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+  }
+
+  .settings .setting .setting-value {
+    .ai-translations__category-scope-row,
+    .ai-translations__category-selector-row {
+      .select-kit {
+        max-width: 100%;
       }
     }
   }

@@ -2197,7 +2197,6 @@ sq:
     created: "Krijuar"
     created_lowercase: "krijuar"
     trust_level: "Niveli i besimit"
-    search_hint: "emri i anëtarit, email ose adresë IP"
     create_account:
       header_title: "Mirë se vini!"
       disclaimer: "Duke u regjistruar, ju pranoni <a href='%{privacy_link}' target='blank'>politikën e privatësisë</a> dhe <a href='%{tos_link}' target='blank'>kushtet e shërbimit</a>."
@@ -3501,7 +3500,6 @@ sq:
       required_tag_group:
         delete: "Fshij"
       create_long: "Krijo një kategori të re"
-      slug_placeholder: "(Optional) dashed-words for url"
       creation_error: Pati një gabim gjatë krijimit të kategorisë
       save_error: Pati një gabim gjatë ruajtjes së kategorisë
       validations:

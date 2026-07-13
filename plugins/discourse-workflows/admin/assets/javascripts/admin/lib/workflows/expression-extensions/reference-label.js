@@ -1,10 +1,8 @@
 import { i18n } from "discourse-i18n";
+import { NODE_REF_RE, parseNodeReferenceName } from "../expression-context";
 
 // Parses a "simple reference" into source + path. Anything more involved
 // (operators, arithmetic, multiple refs, method calls) returns null.
-
-// Matches a leading $('Node Name') / $("Node Name") node reference.
-const NODE_REF_RE = /^\$\((?:"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)')\)/;
 
 // An item selector after a node/$input ref: .first(), .item, .itemMatching('x')…
 const SELECTOR_RE =
@@ -37,21 +35,6 @@ const SOURCE_ICONS = {
   site_setting: "gear",
   execution: "bolt",
 };
-
-function parseNodeReferenceName(match) {
-  const doubleQuoted = match[1] !== undefined;
-  const raw = doubleQuoted ? match[1] : match[2];
-
-  if (doubleQuoted) {
-    try {
-      return JSON.parse(`"${raw}"`);
-    } catch {
-      return raw;
-    }
-  }
-
-  return raw.replace(/\\([\\'])/g, "$1");
-}
 
 function stripLeadingDot(text) {
   return text.startsWith(".") ? text.slice(1) : text;

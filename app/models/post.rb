@@ -575,10 +575,7 @@ class Post < ActiveRecord::Base
     category ||= Category.find_by(topic_id:)
     return unless category
 
-    doc = Nokogiri::HTML5.fragment(cooked)
-    doc.css("img").remove
-
-    if (html = doc.css("p").first&.inner_html&.strip)
+    if (html = Category.first_paragraph_description(cooked))
       new_description = html unless html.starts_with?(Category.post_template[..50])
       return category if category.description == new_description
       category.update_column(:description, new_description)

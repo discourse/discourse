@@ -188,7 +188,9 @@ whitelisted_fruits:
 
 And now you have support for 3 languages: English, Arabic and French.
 
-## :arrow_up_down: Min and max attributes
+## Additional setting attributes and options
+
+### Min and max attributes
 
 Sometimes you may need to specify limits that a setting value can't exceed to prevent your users from accidentally breaking the theme or possibly the whole site.
 
@@ -205,7 +207,7 @@ You can specify limits to `integer`, `float` and `string` type settings. For `in
 
 If your user tries to enter a value that's not within the allowed range, they'll see an error telling them what the min and max values are.
 
-<h3 id='heading--settings-js-css'>Access to settings in your JS/CSS/Handlebars</h3>
+### Access to settings in your JS/CSS/Handlebars
 
 Theme settings are made available globally as a `settings` variable in theme JavaScript files. For example:
 

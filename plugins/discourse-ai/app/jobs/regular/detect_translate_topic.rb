@@ -34,7 +34,7 @@ module Jobs
           return
         end
       else
-        return if DiscourseAi::Translation.category_excluded?(topic.category_id)
+        return if !DiscourseAi::Translation.category_allowed?(topic.category)
       end
 
       if (detected_locale = topic.locale).blank?

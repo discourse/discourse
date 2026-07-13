@@ -66,6 +66,7 @@ vi:
         select_option: "Chọn một tùy Chọn..."
       translations:
         title: "Bản dịch"
+        category_scope: "Danh mục"
         stats:
           eta_minutes:
             other: "%{count} phút"

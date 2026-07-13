@@ -133,6 +133,7 @@ el:
         select_option: "Διαλέξτε μία επιλογή..."
       translations:
         title: "Μεταφράσεις"
+        category_scope: "Κατηγορίες"
         admin_actions:
           localization_settings: "Ρυθμίσεις τοπικοποίησης"
         stats:

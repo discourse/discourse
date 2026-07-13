@@ -371,6 +371,7 @@ ru:
         description: "Автоматически переводить весь контент вашего форума на предпочитаемый пользователем язык"
         supported_locales: "Поддерживаемые языки"
         supported_locales_description: "Эта настройка сайта также позволяет посетителям добавлять переводы к сообщениям."
+        category_scope: "Категории"
         admin_actions:
           translation_settings: "Настройки перевода"
           localization_settings: "Настройки перевода"

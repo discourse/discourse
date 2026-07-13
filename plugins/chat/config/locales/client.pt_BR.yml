@@ -261,6 +261,23 @@ pt_BR:
         header: "Cabeçalho do chat"
         composer: "Compositor de chat"
         channels_list: "Lista de canais de chat"
+      screen_reader:
+        new_message: "%{username}: %{message}"
+        new_messages:
+          one: "%{count} nova mensagem"
+          other: "%{count} novas mensagens"
+        new_image:
+          one: "%{username} enviou uma imagem"
+          other: "%{username} enviou %{count} imagens"
+        new_attachment:
+          one: "%{username} enviou um anexo"
+          other: "%{username} enviou %{count} anexos"
+        new_message_with_image:
+          one: "%{username}: %{message} (com uma imagem)"
+          other: "%{username}: %{message} (com %{count} imagens)"
+        new_message_with_attachment:
+          one: "%{username}: %{message} (com um anexo)"
+          other: "%{username}: %{message} (com %{count} anexos)"
       no_direct_message_channels: "Você ainda não entrou em nenhum canal de mensagem direta!"
       no_direct_message_channels_cta: "Iniciar uma conversa"
       no_public_channels: "Você ainda não entrou em nenhum canal!"
@@ -270,8 +287,13 @@ pt_BR:
       only_chat_push_notifications:
         title: "Enviar apenas notificações por push"
       personalization_title: "Personalização"
+      accessibility_title: "Acessibilidade"
       ignore_channel_wide_mention:
         title: "Ignorar menções em todo o canal"
+      announce_new_messages:
+        title: "Anunciar novas mensagens para os leitores da tela"
+      new_message_sound:
+        title: "Tocar sons para novas mensagens enquanto o chat está em primeiro plano"
       show_thread_title_prompts:
         title: "Exibir prompts de título de linha de discussão"
         description: "Exibir prompts para definir um título para novas linhas de discussão"

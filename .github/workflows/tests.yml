@@ -54,7 +54,7 @@ jobs:
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 20
       MINIO_RUNNER_LOG_LEVEL: WARN
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
-      CAPYBARA_PLAYWRIGHT_SOFT_RESET: ${{ matrix.build_type == 'system' && (matrix.target == 'core' || matrix.target == 'chat') && '1' }}
+      CAPYBARA_PLAYWRIGHT_SOFT_RESET: ${{ matrix.build_type == 'system' && '1' }}
       CHEAP_SOURCE_MAPS: "1"
       DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
@@ -183,15 +183,49 @@ jobs:
           echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
-      - name: Create and migrate databases
-        run: |
-          if [ "$USES_PARALLEL_DATABASES" = "true" ]; then
-            parallel --halt now,fail=1 --line-buffer ::: \
-              'bin/rake db:create db:migrate' \
-              'bin/rake parallel:create parallel:migrate'
-          else
-            bin/rake db:create db:migrate
-          fi
+      - name: Create databases
+        run: bin/rake db:create
+
+      - parallel:
+          - name: Migrate database
+            run: bin/rake db:migrate
+
+          - name: Create and migrate parallel databases
+            if: env.USES_PARALLEL_DATABASES == 'true'
+            run: bin/rake parallel:create parallel:migrate
+
+          - name: Check Annotations
+            if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins')
+            env:
+              LOAD_PLUGINS: ""
+              TEMPORARY_DB_PORT: "11000"
+            run: |
+              directories=""
+              if [ "${{ matrix.target }}" = "core" ]; then
+                directories="app/models"
+              else
+                directories="$(script/list_bundled_plugins | xargs -I{} find {} -type d -path '*/app/models' -maxdepth 3)"
+              fi
+
+              # annotate:clean runs index setup + annotaterb in a temporary postgres so it
+              # doesn't pollute the rspec test DB.
+              MODEL_DIR="$(echo "${directories}" | tr '\n' ',')" bin/rake annotate:clean
+
+              if [ ! -z "$(git status --porcelain ${directories})" ]; then
+                echo "Core annotations are not up to date. To resolve, run:"
+                echo "  bin/rake annotate:clean"
+                echo
+                echo "Or manually apply the diff printed below:"
+                echo "---------------------------------------------"
+                git -c color.ui=always diff ${directories}
+                exit 1
+              fi
+
+          - name: Check structure dump
+            if: matrix.build_type == 'backend' && matrix.target == 'core'
+            env:
+              TEMPORARY_DB_PORT: "11001"
+            run: bin/rake db:check_structure_dump
 
       - name: Fetch turbo_rspec_runtime.log cache
         uses: actions/cache@v6
@@ -201,36 +235,6 @@ jobs:
           path: tmp/turbo_rspec_runtime.log
           key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
           restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
-
-      - name: Check Annotations
-        if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins')
-        env:
-          LOAD_PLUGINS: ""
-        run: |
-          directories=""
-          if [ "${{ matrix.target }}" = "core" ]; then
-            directories="app/models"
-          else
-            directories="$(script/list_bundled_plugins | xargs -I{} find {} -type d -path '*/app/models' -maxdepth 3)"
-          fi
-
-          # annotate:clean runs the seed + annotaterb in a temporary postgres so it
-          # doesn't pollute the rspec test DB.
-          MODEL_DIR="$(echo "${directories}" | tr '\n' ',')" bin/rake annotate:clean
-
-          if [ ! -z "$(git status --porcelain ${directories})" ]; then
-            echo "Core annotations are not up to date. To resolve, run:"
-            echo "  bin/rake annotate:clean"
-            echo
-            echo "Or manually apply the diff printed below:"
-            echo "---------------------------------------------"
-            git -c color.ui=always diff ${directories}
-            exit 1
-          fi
-
-      - name: Check structure dump
-        if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: bin/rake db:check_structure_dump
 
       - name: Check Zeitwerk reloading
         if: matrix.build_type == 'backend'

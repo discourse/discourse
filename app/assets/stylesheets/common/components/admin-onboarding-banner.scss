@@ -186,6 +186,10 @@
 }
 
 .theme-picker-modal {
+  .d-modal__container {
+    background-color: var(--primary-very-low);
+  }
+
   &__loading {
     display: flex;
     justify-content: center;
@@ -195,32 +199,32 @@
   &__themes {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: var(--space-4);
+    gap: var(--space-8);
   }
 
   &__card {
     position: relative;
     display: flex;
     flex-direction: column;
-    border: 2px solid var(--content-border-color);
-    border-radius: var(--d-border-radius);
-    overflow: hidden;
-    background: var(--secondary);
     cursor: pointer;
-    transition: border-color 0.15s ease;
 
-    &:hover {
-      border-color: var(--primary-low-mid);
+    .theme-card-preview__image-wrapper {
+      border: 2px solid var(--content-border-color);
+      height: 250px;
+      border-radius: var(--d-border-radius);
+      box-shadow: var(--shadow-card);
+
+      @include viewport.from(md) {
+        height: 24vw; // adjusts with window width (like the modal itself)
+      }
     }
 
+    &:hover,
     &.--selected {
-      border-color: var(--tertiary);
-      box-shadow: 0 0 0 1px var(--tertiary);
+      .theme-card-preview__image-wrapper {
+        border-color: var(--tertiary);
+      }
     }
-  }
-
-  .theme-card-preview__image-wrapper {
-    height: 220px;
   }
 
   .theme-card-preview__image {
@@ -231,13 +235,13 @@
   &__footer {
     display: flex;
     justify-content: center;
-    margin-top: var(--space-4);
+    margin-top: var(--space-8);
   }
 
   &__enabled-badge {
     position: absolute;
     top: 0;
-    right: 0;
+    right: -2px;
     display: inline-flex;
     align-items: center;
     gap: var(--space-1);
@@ -246,7 +250,7 @@
     color: var(--secondary);
     background: var(--tertiary);
     padding: var(--space-1) var(--space-2);
-    border-radius: 0 0 0 var(--d-border-radius);
+    border-radius: var(--d-border-radius);
     z-index: 1;
   }
 

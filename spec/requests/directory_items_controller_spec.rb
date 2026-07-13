@@ -314,6 +314,48 @@ RSpec.describe DirectoryItemsController do
       end
     end
 
+    it "does not order anonymous users by private user fields" do
+      group.add(walter_white)
+      private_field = Fabricate(:user_field, show_on_profile: false, show_on_user_card: false)
+
+      [
+        { user: evil_trout, field_value: "Alpha", likes_received: 3 },
+        { user: walter_white, field_value: "Mike", likes_received: 2 },
+        { user: stage_user, field_value: "Zulu", likes_received: 1 },
+      ].each do |data|
+        DirectoryItem.find_by!(
+          period_type: DirectoryItem.period_types[:all],
+          user: data[:user],
+        ).update!(likes_received: data[:likes_received])
+        UserCustomField.create!(
+          user_id: data[:user].id,
+          name: "user_field_#{private_field.id}",
+          value: data[:field_value],
+        )
+      end
+
+      get "/directory_items.json", params: { period: "all", group: group.name, asc: true }
+      expect(response.status).to eq(200)
+      baseline_usernames =
+        response.parsed_body["directory_items"].map { |item| item["user"]["username"] }
+
+      get "/directory_items.json",
+          params: {
+            period: "all",
+            group: group.name,
+            order: private_field.name,
+            asc: true,
+          }
+      expect(response.status).to eq(200)
+      ordered_usernames =
+        response.parsed_body["directory_items"].map { |item| item["user"]["username"] }
+
+      expect(baseline_usernames).to eq(
+        [stage_user.username, walter_white.username, evil_trout.username],
+      )
+      expect(ordered_usernames).to eq(baseline_usernames)
+    end
+
     it "searches users by user field value" do
       field1 = Fabricate(:user_field, searchable: true, show_on_profile: true)
       field2 = Fabricate(:user_field, searchable: true, show_on_profile: true)

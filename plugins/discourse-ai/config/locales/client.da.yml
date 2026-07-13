@@ -69,6 +69,7 @@ da:
         table: "Tabel"
       translations:
         title: "Oversættelser"
+        category_scope: "Kategorier"
         stats:
           eta_minutes:
             one: "%{count} minut"

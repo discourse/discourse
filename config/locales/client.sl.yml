@@ -1799,7 +1799,6 @@ sl:
     created: "Ustvarjeno"
     created_lowercase: "ustvarjeno"
     trust_level: "Nivo zaupanja"
-    search_hint: "uporabniško ime, e-naslov ali IP naslov"
     create_account:
       header_title: "Dobrodošli!"
       disclaimer: "Z registracijo sprejemate <a href='%{privacy_link}' target='blank'>Pravilnik o zasebnosti</a> in <a href='%{tos_link}' target='blank'>Pogoje uporabe</a>."
@@ -3030,7 +3029,6 @@ sl:
         placeholder: "Izberite skupino oznak…"
       topic_featured_link_allowed: "Dovoli najboljše povezave v tej kategoriji"
       create_long: "Ustvari novo kategorijo"
-      slug_placeholder: "(neobvezno) besede-s-črtico za URL"
       creation_error: Prišlo je do napake pri kreiranju kategorije.
       save_error: Prišlo je do napake pri shranjevanju kategorije.
       validations:

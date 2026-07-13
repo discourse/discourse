@@ -146,7 +146,7 @@ en:
       split_out:
         field_not_found: "The field '%{field}' wasn't found in any input item."
   site_settings:
-    discourse_workflows_enabled: "Enable the discourse-workflows plugin."
+    enable_discourse_workflows: "Enable the discourse-workflows plugin."
     discourse_workflows_ai_authoring_enabled: "Enable AI-assisted workflow authoring."
     discourse_workflows_ai_authoring_max_prompt_length: "Maximum length for AI workflow authoring prompts."
     discourse_workflows_ai_authoring_rate_limit_per_minute: "Maximum AI workflow authoring requests per minute per user."

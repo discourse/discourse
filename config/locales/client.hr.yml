@@ -2544,7 +2544,6 @@ hr:
     created: "Stvoreno"
     created_lowercase: "stvoreno"
     trust_level: "Razina Povjerenja"
-    search_hint: "korisničko ime, e-mail ili IP adresa"
     create_account:
       header_title: "Dobrodošli!"
       disclaimer: "Registracijom pristajete na <a href='%{privacy_link}' target='blank'>politiku privatnosti</a> i <a href='%{tos_link}' target='blank'>uvjete korištenja</a>."
@@ -4324,7 +4323,6 @@ hr:
       type_settings_schema:
         site_settings: "Postavke web-mjesta"
       unsaved_changes: "Imate nespremljene promjene"
-      slug_placeholder: "(Neobavezno) spojene-riječi za url"
       creation_error: Dogodila se greška pri stvaranju kategorije.
       save_error: Dogodila se greška pri spremanju kategorije.
       validations:

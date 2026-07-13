@@ -38,14 +38,17 @@ RSpec.describe Admin::SearchLogsController do
         expect(row["searches"]).to eq(3)
       end
 
-      it "counts only logged-in members' searches with the logged_in_only search type" do
-        Fabricate(:search_log, term: "discobot", user: user)
-        Fabricate.times(2, :search_log, term: "discobot")
+      it "returns only non-staff users' searches with the non_staff_only search type" do
+        Fabricate(:search_log, term: "member-search", user: user)
+        Fabricate(:search_log, term: "admin-search", user: admin)
+        Fabricate(:search_log, term: "moderator-search", user: moderator)
+        Fabricate(:search_log, term: "anonymous-search", user: nil)
 
-        get "/admin/logs/search_logs.json", params: { search_type: "logged_in_only" }
+        get "/admin/logs/search_logs.json", params: { search_type: "non_staff_only" }
 
-        row = response.parsed_body.find { |entry| entry["term"] == "discobot" }
-        expect(row["searches"]).to eq(1)
+        expect(response.parsed_body.map { |entry| [entry["term"], entry["searches"]] }).to eq(
+          [["member-search", 1]],
+        )
       end
     end
 
@@ -85,17 +88,16 @@ RSpec.describe Admin::SearchLogsController do
 
       include_examples "search log term accessible"
 
-      it "excludes anonymous searches from the graph with the logged_in_only search type" do
+      it "returns only non-staff users' searches with the non_staff_only search type" do
         Fabricate(:search_log, term: "discobot", user: user)
-        Fabricate.times(4, :search_log, term: "discobot")
-
-        get "/admin/logs/search_logs/term.json", params: { term: "discobot" }
-        expect(response.parsed_body["term"]["data"].sum { |point| point["y"] }).to eq(5)
+        Fabricate(:search_log, term: "discobot", user: admin)
+        Fabricate(:search_log, term: "discobot", user: moderator)
+        Fabricate(:search_log, term: "discobot", user: nil)
 
         get "/admin/logs/search_logs/term.json",
             params: {
               term: "discobot",
-              search_type: "logged_in_only",
+              search_type: "non_staff_only",
             }
         expect(response.parsed_body["term"]["data"].sum { |point| point["y"] }).to eq(1)
       end

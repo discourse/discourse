@@ -48,6 +48,7 @@ be:
         spam:
           name: "Спам"
       translations:
+        category_scope: "катэгорыі"
         stats:
           eta_minutes:
             one: "%{count} хвіліну"

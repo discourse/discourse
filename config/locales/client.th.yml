@@ -1324,7 +1324,6 @@ th:
     created: "สร้างเมื่อ"
     created_lowercase: "ตั้งเมื่อ"
     trust_level: "ระดับความน่าไว้ใจ"
-    search_hint: "ชื่อผู้ใช้ อีเมล หรือที่อยู่ไอพี"
     create_account:
       disclaimer: "เมื่อลงทะเบียน คุณได้ยอมรับ <a href='%{privacy_link}' target='blank'>นโยบายความเป็นส่วนตัว</a> และ <a href='%{tos_link}' target='blank'> เงื่อนไขการบริการ</a>"
       title: "สมัคร"

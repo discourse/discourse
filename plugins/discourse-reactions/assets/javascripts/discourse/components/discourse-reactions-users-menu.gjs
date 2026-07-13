@@ -3,6 +3,7 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { service } from "@ember/service";
 import UsersPopup from "discourse/components/user/users-popup";
 import { eq } from "discourse/truth-helpers";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
@@ -12,6 +13,8 @@ import { i18n } from "discourse-i18n";
 import CustomReaction from "../models/discourse-reactions-custom-reaction";
 
 export default class DiscourseReactionsUsersMenu extends Component {
+  @service router;
+
   @tracked activeFilter = null;
 
   fetchUsers = async (page, pageSize) => {
@@ -58,8 +61,20 @@ export default class DiscourseReactionsUsersMenu extends Component {
 
     return { users, canLoadMore };
   };
+
   #resetCallback = null;
+
   #tabCache = new Map();
+
+  constructor() {
+    super(...arguments);
+    this.router.on("routeWillChange", this.args.close);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.router.off("routeWillChange", this.args.close);
+  }
 
   get post() {
     return this.args.data.post;
