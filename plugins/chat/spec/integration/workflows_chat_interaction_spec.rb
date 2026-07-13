@@ -7,7 +7,7 @@ RSpec.describe "Chat interaction listener for workflow approvals" do
 
   before do
     SiteSetting.chat_enabled = true
-    SiteSetting.discourse_workflows_enabled = true
+    SiteSetting.enable_discourse_workflows = true
   end
 
   it "enqueues ResumeWorkflowApproval when an approve button is clicked" do

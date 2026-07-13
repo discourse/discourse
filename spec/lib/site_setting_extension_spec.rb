@@ -1091,6 +1091,28 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "upcoming changes owned by a non-configurable plugin" do
+    let(:setting_name) { :enable_experimental_sample_plugin_feature }
+
+    before do
+      SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+      SiteSetting.promote_upcoming_changes_on_status = :alpha
+    end
+
+    after do
+      SiteSetting.promote_upcoming_changes_on_status = :stable
+      UpcomingChanges.clear_caches!
+    end
+
+    it "reports the change as disabled even though it has been promoted" do
+      expect(UpcomingChanges.enabled?(setting_name)).to eq(false)
+    end
+
+    it "keeps the setting getter in agreement with UpcomingChanges.enabled?" do
+      expect(SiteSetting.public_send(setting_name)).to eq(UpcomingChanges.enabled?(setting_name))
+    end
+  end
+
   describe ".all_settings" do
     describe "non-configurable plugin filtering" do
       it "includes plugin site settings when the plugin is configurable" do

@@ -25,7 +25,7 @@ RSpec.describe DiscourseWorkflows::Execution::CheckSchedules do
     end
 
     context "when plugin is disabled" do
-      before { SiteSetting.discourse_workflows_enabled = false }
+      before { SiteSetting.enable_discourse_workflows = false }
 
       it { is_expected.to fail_a_policy(:workflows_enabled) }
     end

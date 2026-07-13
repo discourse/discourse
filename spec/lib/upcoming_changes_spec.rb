@@ -399,11 +399,64 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  describe ".owning_plugin_configurable?" do
+    let(:plugin_setting_name) { :enable_experimental_sample_plugin_feature }
+
+    it "returns true for a core change with no owning plugin" do
+      expect(described_class.owning_plugin_configurable?(setting_name)).to eq(true)
+    end
+
+    it "returns true when the owning plugin is configurable" do
+      SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(true)
+
+      expect(described_class.owning_plugin_configurable?(plugin_setting_name)).to eq(true)
+    end
+
+    it "returns false when the owning plugin is not configurable" do
+      SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+
+      expect(described_class.owning_plugin_configurable?(plugin_setting_name)).to eq(false)
+    end
+
+    it "returns true when the owning plugin has not been loaded yet" do
+      Discourse.stubs(:plugins_by_name).returns({})
+
+      expect(described_class.owning_plugin_configurable?(plugin_setting_name)).to eq(true)
+    end
+  end
+
   describe ".enabled?" do
     after do
       SiteSetting.remove_override!(setting_name)
       SiteSetting.promote_upcoming_changes_on_status = :stable
       UpcomingChanges.clear_caches!
+    end
+
+    context "when the owning plugin is not configurable" do
+      let(:plugin_setting_name) { :enable_experimental_sample_plugin_feature }
+
+      before { SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false) }
+
+      it "returns false even when the change has been promoted" do
+        SiteSetting.promote_upcoming_changes_on_status = :alpha
+
+        expect(described_class.enabled?(plugin_setting_name)).to eq(false)
+      end
+
+      it "returns false even when the change is permanent" do
+        mock_upcoming_change_metadata(
+          { enable_experimental_sample_plugin_feature: { status: :permanent } },
+        )
+
+        expect(described_class.enabled?(plugin_setting_name)).to eq(false)
+      end
+
+      it "returns true again once the plugin becomes configurable" do
+        SiteSetting.promote_upcoming_changes_on_status = :alpha
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(true)
+
+        expect(described_class.enabled?(plugin_setting_name)).to eq(true)
+      end
     end
 
     context "when the change is not registered" do
@@ -947,6 +1000,36 @@ RSpec.describe UpcomingChanges do
       expect(UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode)).to eq(
         true,
       )
+    end
+
+    context "when the owning plugin is not configurable" do
+      let(:plugin_setting_name) { :enable_experimental_sample_plugin_feature }
+
+      it "returns false" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+
+        expect(UpcomingChanges::ConditionalDisplay.should_display?(plugin_setting_name)).to eq(
+          false,
+        )
+      end
+
+      it "returns false without consulting the change's conditional display method" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+        UpcomingChanges::ConditionalDisplay.define_singleton_method(
+          :should_display_enable_experimental_sample_plugin_feature?,
+        ) { raise "should not be called" }
+
+        begin
+          expect(UpcomingChanges::ConditionalDisplay.should_display?(plugin_setting_name)).to eq(
+            false,
+          )
+        ensure
+          UpcomingChanges::ConditionalDisplay.singleton_class.send(
+            :remove_method,
+            :should_display_enable_experimental_sample_plugin_feature?,
+          )
+        end
+      end
     end
 
     context "when the conditional display method is defined for an upcoming change" do
