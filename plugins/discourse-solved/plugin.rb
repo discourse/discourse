@@ -57,9 +57,6 @@ after_initialize do
     ::PostSerializer.prepend(DiscourseSolved::PostSerializerExtension)
     ::PostMover.prepend(DiscourseSolved::PostMoverExtension)
     ::UserSummary.prepend(DiscourseSolved::UserSummaryExtension)
-    ::UpcomingChanges::ConditionalDisplay.extend(
-      DiscourseSolved::UpcomingChangesConditionalDisplayExtension,
-    )
 
     ::Topic.attr_accessor(:accepted_answer_user_ids)
     ::TopicPostersSummary.alias_method(:old_user_ids, :user_ids)
@@ -288,6 +285,8 @@ after_initialize do
   add_to_serializer(:topic_view, :shared_issue_visible) do
     scope.shared_issue_visible?(object.topic)
   end
+
+  register_upcoming_change_conditional_display(:enable_solved_badges) { SiteSetting.solved_enabled }
 
   on(:upcoming_change_enabled) do |setting_name|
     if setting_name == :enable_solved_badges
