@@ -186,7 +186,8 @@ jobs:
       - name: Create database
         run: bin/rake db:create
 
-      - parallel:
+      - name: Prepare test environment
+        parallel:
           - name: Migrate database
             run: bin/rake db:migrate
 
