@@ -44,6 +44,37 @@ end
 # from giving up too early.
 spawn_timeout(Integer(ENV["APP_SERVER_SPAWN_TIMEOUT"], exception: false) || 60)
 
+if (refork_after_raw = ENV["PITCHFORK_REFORK_AFTER"])
+  require "json"
+
+  reject_refork_after =
+    lambda { raise "PITCHFORK_REFORK_AFTER is invalid: #{refork_after_raw.inspect}" }
+
+  refork_after_limits =
+    begin
+      JSON.parse(refork_after_raw)
+    rescue JSON::ParserError
+      reject_refork_after.call
+    end
+
+  reject_refork_after.call if !refork_after_limits.is_a?(Array) || refork_after_limits.empty?
+
+  refork_after_limits.each_with_index do |limit, index|
+    valid =
+      if limit == false
+        index == refork_after_limits.size - 1
+      else
+        limit.is_a?(Integer) && limit.positive?
+      end
+
+    reject_refork_after.call if !valid
+  end
+
+  reject_refork_after.call if refork_after_limits.none? { |limit| limit.is_a?(Integer) }
+
+  refork_after(refork_after_limits)
+end
+
 check_client_connection false
 
 if ENV["RAILS_ENV"] != "production"
@@ -60,20 +91,18 @@ before_fork do |server|
 end
 
 after_mold_fork do |server, mold|
-  if mold.generation.zero?
-    Discourse.preload_rails!
+  Discourse.preload_rails! if mold.generation.zero?
 
-    supervisor = ENV["UNICORN_SUPERVISOR_PID"].to_i
+  supervisor = ENV["UNICORN_SUPERVISOR_PID"].to_i
 
-    if supervisor > 0
-      Thread.new do
-        while true
-          unless File.exist?("/proc/#{supervisor}")
-            server.logger.error "Kill self, supervisor is gone"
-            Process.kill "TERM", Process.pid
-          end
-          sleep 2
+  if supervisor > 0
+    Thread.new do
+      while true
+        unless File.exist?("/proc/#{supervisor}")
+          server.logger.error "Kill self, supervisor is gone"
+          Process.kill "TERM", Process.pid
         end
+        sleep 2
       end
     end
   end
