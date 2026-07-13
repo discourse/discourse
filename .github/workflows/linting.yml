@@ -68,8 +68,7 @@ jobs:
             exit 1
           fi
 
-      - name: Run lint checks
-        parallel:
+      - parallel:
           - name: Rubocop
             if: ${{ !cancelled() }}
             run: bundle exec rubocop

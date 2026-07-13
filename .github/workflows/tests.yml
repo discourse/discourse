@@ -188,8 +188,7 @@ jobs:
           createdb discourse_test
           createdb discourse_test_multisite
 
-      - name: Prepare test environment
-        parallel:
+      - parallel:
           - name: Migrate database
             run: bin/rake db:migrate
 
