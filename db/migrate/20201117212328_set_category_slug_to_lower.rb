@@ -59,7 +59,7 @@ class SetCategorySlugToLower < ActiveRecord::Migration[6.0]
     updates.each { |id, slug| execute <<~SQL }
         UPDATE categories
         SET slug = '#{PG::Connection.escape_string(slug)}'
-        WHERE id = #{id} -- #{PG::Connection.escape_string(old_slugs[id])}
+        WHERE id = #{id}
       SQL
 
     # Ensure all slugs are lowercase
