@@ -222,8 +222,7 @@ describe "Admin Dashboard Redesign | Search section" do
     expect(search).to have_no_kpis
   end
 
-  it "asks moderators to contact an admin when search logging is disabled",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+  it "asks moderators to contact an admin when search logging is disabled" do
     SiteSetting.log_search_queries = false
     sign_in(moderator)
 
