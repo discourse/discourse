@@ -22,7 +22,7 @@ module DiscourseWorkflows
       end
 
       def run!(run_id:)
-        return unless SiteSetting.discourse_workflows_enabled
+        return unless SiteSetting.enable_discourse_workflows
 
         run = WorkflowCallRun.find_by(id: run_id)
         return if run.blank?

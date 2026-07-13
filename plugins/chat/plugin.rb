@@ -124,7 +124,7 @@ after_initialize do
     end
 
     on(:chat_message_interaction) do |interaction|
-      next unless SiteSetting.discourse_workflows_enabled
+      next unless SiteSetting.enable_discourse_workflows
 
       action_id = interaction.action&.dig("action_id").to_s
       next if action_id.blank?

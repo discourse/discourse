@@ -3,7 +3,7 @@
 module DiscourseWorkflows
   class Policy::WorkflowsEnabled < Service::PolicyBase
     def call
-      SiteSetting.discourse_workflows_enabled
+      SiteSetting.enable_discourse_workflows
     end
 
     def reason
