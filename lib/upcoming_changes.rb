@@ -7,20 +7,29 @@ module UpcomingChanges
   # might modify how site behavior works if another setting is enabled,
   # and so on.
   #
-  # You can define any should_display_<upcoming_change_name>? method to control
-  # whether an upcoming change should be displayed to admins, and if the
-  # method is undefined the change will always be displayed.
+  # Core can define any should_display_<upcoming_change_name>? method to control
+  # whether an upcoming change should be displayed to admins. Plugins can use
+  # Plugin::Instance#register_upcoming_change_conditional_display for their own
+  # upcoming changes. If no conditional display rule is defined, the change will
+  # always be displayed.
   #
   # Keep in mind this is called from UpcomingChanges::List service,
   # which loops over every change in an N1 depending on the filters admins
   # have selected, so caching may be appropriate at times.
   class ConditionalDisplay
     def self.should_display?(upcoming_change_name)
+      upcoming_change_name = upcoming_change_name.to_sym
+
       if respond_to?("should_display_#{upcoming_change_name}?")
         return public_send("should_display_#{upcoming_change_name}?")
       end
 
-      true
+      callbacks =
+        DiscoursePluginRegistry.upcoming_change_conditional_display_callbacks.select do |callback|
+          callback[:setting_name] == upcoming_change_name
+        end
+
+      callbacks.empty? || callbacks.all? { |callback| callback[:callback].call }
     end
 
     def self.should_display_enable_horizon_high_context_topic_cards?

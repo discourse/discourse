@@ -896,7 +896,54 @@ RSpec.describe UpcomingChanges do
   end
 
   describe "conditional display" do
+    after do
+      DiscoursePluginRegistry.reset_register!(:upcoming_change_conditional_display_callbacks)
+    end
+
     it "returns true when the conditional display method is undefined for an upcoming change" do
+      expect(UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode)).to eq(
+        true,
+      )
+    end
+
+    it "returns true when the registered callback returns true" do
+      Plugin::Instance
+        .new
+        .register_upcoming_change_conditional_display(:enable_upload_debug_mode) { true }
+
+      expect(UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode)).to eq(
+        true,
+      )
+    end
+
+    it "returns false when the registered callback returns false" do
+      Plugin::Instance
+        .new
+        .register_upcoming_change_conditional_display(:enable_upload_debug_mode) { false }
+
+      expect(UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode)).to eq(
+        false,
+      )
+    end
+
+    it "returns false when any registered callback returns false" do
+      Plugin::Instance
+        .new
+        .register_upcoming_change_conditional_display(:enable_upload_debug_mode) { true }
+      Plugin::Instance
+        .new
+        .register_upcoming_change_conditional_display(:enable_upload_debug_mode) { false }
+
+      expect(UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode)).to eq(
+        false,
+      )
+    end
+
+    it "ignores callbacks from disabled plugins" do
+      plugin = Plugin::Instance.new
+      plugin.stubs(:enabled?).returns(false)
+      plugin.register_upcoming_change_conditional_display(:enable_upload_debug_mode) { false }
+
       expect(UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode)).to eq(
         true,
       )
@@ -918,6 +965,16 @@ RSpec.describe UpcomingChanges do
         end
 
         it "returns true" do
+          expect(
+            UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode),
+          ).to eq(true)
+        end
+
+        it "takes precedence over registered callbacks" do
+          Plugin::Instance
+            .new
+            .register_upcoming_change_conditional_display(:enable_upload_debug_mode) { false }
+
           expect(
             UpcomingChanges::ConditionalDisplay.should_display?(:enable_upload_debug_mode),
           ).to eq(true)

@@ -24,7 +24,7 @@ Key methods to understand:
 - `settings_hidden_while_enabled` — Returns the set of *other* site setting names that should be hidden from admins because an enabled change declares them in its `hide_settings:` metadata. Computed live (not toggled at opt-in time) so it tracks both opt-in paths and is multisite-safe. See [Hiding Settings While Enabled](#hiding-settings-while-enabled) below.
 
 
-**`UpcomingChanges::ConditionalDisplay`** (defined inside `lib/upcoming_changes.rb`) — Hides individual upcoming changes from the admin UI when they don't make sense in the current context (e.g. a Horizon-related change on a site without Horizon installed). Define a `should_display_<upcoming_change_name>?` class method on it to gate a specific change; if no method is defined, the change is always displayed. See [Conditional Display](#conditional-display) below.
+**`UpcomingChanges::ConditionalDisplay`** (defined inside `lib/upcoming_changes.rb`) — Hides individual upcoming changes from the admin UI when they don't make sense in the current context (e.g. a Horizon-related change on a site without Horizon installed). Core gates can define a `should_display_<upcoming_change_name>?` class method on it; plugin-owned upcoming changes should use `Plugin::Instance#register_upcoming_change_conditional_display`. If no rule is defined, the change is always displayed. See [Conditional Display](#conditional-display) below.
 
 **`app/models/upcoming_change_event.rb`** — Audit trail. Every lifecycle event (added, removed, status change, manual toggle, admin notification) is recorded here. Has unique indexes to prevent duplicate events of specific types per change.
 
@@ -142,8 +142,8 @@ Some upcoming changes only make sense to show admins under certain conditions �
 #### How It Works
 
 1. **Filtering** — `UpcomingChanges::List#fetch_upcoming_changes` calls `UpcomingChanges::ConditionalDisplay.should_display?(setting_name)` on every change after the status filter, before group/image enrichment. Changes that return `false` are dropped from the result entirely.
-2. **Resolution** — `should_display?` checks for a class method named `should_display_<upcoming_change_name>?` on `ConditionalDisplay`. If defined, its return value is used; otherwise the change is always displayed (returns `true`).
-3. **Definition site** — Add the gating method directly to the `ConditionalDisplay` class, typically next to (or inside) the relevant subsystem's code — e.g. a Horizon-specific gate can live with the Horizon code as long as `UpcomingChanges::ConditionalDisplay` is reopened to define it. Group related gates together for discoverability.
+2. **Resolution** — `should_display?` first checks for a class method named `should_display_<upcoming_change_name>?` on `ConditionalDisplay`. If defined, its return value is used. Otherwise it evaluates enabled plugin callbacks registered for that setting. If no method or callback is defined, the change is always displayed (returns `true`).
+3. **Definition site** — Core gates can live directly on `ConditionalDisplay`, typically next to the relevant subsystem's code. Plugin gates should be registered from the plugin initializer via `register_upcoming_change_conditional_display(:setting_name) { ... }` so disabled plugins are filtered by `DiscoursePluginRegistry`.
 
 #### Key Behaviors
 
@@ -298,7 +298,13 @@ Valid value sets:
 
 To hide an upcoming change from the admin UI under certain conditions:
 
-1. Reopen `UpcomingChanges::ConditionalDisplay` and define a class method named `should_display_<upcoming_change_name>?` that returns a boolean:
+1. For plugin-owned changes, register a callback from `plugin.rb`:
+   ```ruby
+   register_upcoming_change_conditional_display(:enable_plugin_feature) do
+     SiteSetting.some_dependency_enabled
+   end
+   ```
+2. For core changes, reopen `UpcomingChanges::ConditionalDisplay` and define a class method named `should_display_<upcoming_change_name>?` that returns a boolean:
    ```ruby
    module UpcomingChanges
      class ConditionalDisplay
@@ -308,10 +314,10 @@ To hide an upcoming change from the admin UI under certain conditions:
      end
    end
    ```
-2. Place the reopen near the related subsystem (e.g. inside the Horizon plugin) so the gate lives with the code that owns the condition.
-3. If the check is expensive, memoize inside the method — `List` calls `should_display?` once per change.
-4. No registration step is needed; `should_display?` finds the method dynamically via `respond_to?`.
-5. Test by stubbing the predicate — see [Testing Conditional Display](#testing-conditional-display).
+3. Place core gates near the related subsystem so the gate lives with the code that owns the condition.
+4. If the check is expensive, memoize inside the method or callback — `List` calls `should_display?` once per change.
+5. Multiple plugin callbacks for the same setting are combined with `all?`, so any enabled plugin can hide the change.
+6. Test by stubbing the predicate or registering a callback — see [Testing Conditional Display](#testing-conditional-display).
 
 ### Adding a Default Override
 
@@ -412,7 +418,15 @@ expect(SiteSetting.suggested_topics_max_days_old).to eq(730)
 
 ### Testing Conditional Display
 
-Stub the predicate method directly on `UpcomingChanges::ConditionalDisplay` rather than redefining it — this avoids leaking method definitions across examples:
+For plugin-owned changes, test the registry path:
+
+```ruby
+Plugin::Instance
+  .new
+  .register_upcoming_change_conditional_display(:enable_plugin_feature) { false }
+```
+
+For core changes, stub the predicate method directly on `UpcomingChanges::ConditionalDisplay` rather than redefining it — this avoids leaking method definitions across examples:
 
 ```ruby
 UpcomingChanges::ConditionalDisplay
