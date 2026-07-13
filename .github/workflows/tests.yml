@@ -196,15 +196,6 @@ jobs:
             if: env.USES_PARALLEL_DATABASES == 'true'
             run: bin/rake parallel:create parallel:migrate
 
-          - name: Fetch turbo_rspec_runtime.log cache
-            uses: actions/cache@v6
-            id: test-runtime-cache
-            if: matrix.build_type == 'backend' || matrix.build_type == 'system'
-            with:
-              path: tmp/turbo_rspec_runtime.log
-              key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
-              restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
-
           - name: Check Annotations
             if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins')
             env:
@@ -237,6 +228,15 @@ jobs:
             env:
               TEMPORARY_DB_PORT: "11001"
             run: bin/rake db:check_structure_dump
+
+      - name: Fetch turbo_rspec_runtime.log cache
+        uses: actions/cache@v6
+        id: test-runtime-cache
+        if: matrix.build_type == 'backend' || matrix.build_type == 'system'
+        with:
+          path: tmp/turbo_rspec_runtime.log
+          key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
+          restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
 
       - name: Check Zeitwerk reloading
         if: matrix.build_type == 'backend'
