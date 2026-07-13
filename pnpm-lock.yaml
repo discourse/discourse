@@ -577,6 +577,12 @@ importers:
       ember-template-imports:
         specifier: ^4.4.0
         version: 4.4.0
+      ember-truth-helpers:
+        specifier: ^5.0.0
+        version: 5.0.0
+      expect-type:
+        specifier: ^1.3.0
+        version: 1.3.0
       jquery:
         specifier: ^3.7.1
         version: 3.7.1
@@ -736,7 +742,7 @@ importers:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-chat-integration:
     dependencies:
@@ -1803,6 +1809,10 @@ packages:
 
   '@discourse/types@2026.6.0-06d03da3':
     resolution: {integrity: sha512-2ER4lt8lFtFNcuyj7Y0Ry8RMLFPBYDfix8TNCh4TKP3FKlCMv+FzvDJ6Ix+CFBTqvh4KJ4uR/oCGYR3Q45yQow==}
+    engines: {node: '>= 20', npm: please-use-pnpm, pnpm: ^10, yarn: please-use-pnpm}
+
+  '@discourse/types@2026.7.0-ded677e0':
+    resolution: {integrity: sha512-rN0+p2Hr4NkDyef60h0jmRHabUy354YFLsJgJjmcuUeDyQSJZ0GdKAfMUFTAc+LIli34MQRJjnk8vmnxW396Fg==}
     engines: {node: '>= 20', npm: please-use-pnpm, pnpm: ^10, yarn: please-use-pnpm}
 
   '@discourse/webp@1.5.0':
@@ -4403,6 +4413,9 @@ packages:
   ember-tracked-storage-polyfill@1.0.1:
     resolution: {integrity: sha512-lr66R+1H9qMXIUXxwzpixS/qTwsMEpJXS5s2nOdvQP9U/JYuZT9MexpvLktSUQ1uWEhGQA8DDeeVh4R1CvLDFQ==}
     engines: {node: 12.* || >= 14}
+
+  ember-truth-helpers@5.0.0:
+    resolution: {integrity: sha512-PnQd6D6hvlNC3k6gBu0SC2cvfXX6wH6W0nToomIIoxqyrD5cllk0zBh/j/1H0KsczVCWeuF9PWj5xJgL4jQAGg==}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -9456,6 +9469,8 @@ snapshots:
 
   '@discourse/types@2026.6.0-06d03da3': {}
 
+  '@discourse/types@2026.7.0-ded677e0': {}
+
   '@discourse/webp@1.5.0':
     dependencies:
       wasm-feature-detect: 1.8.0
@@ -12776,6 +12791,12 @@ snapshots:
   ember-tracked-storage-polyfill@1.0.1:
     dependencies:
       ember-cli-babel: 7.26.11
+    transitivePeerDependencies:
+      - supports-color
+
+  ember-truth-helpers@5.0.0:
+    dependencies:
+      '@embroider/addon-shim': 1.10.3
     transitivePeerDependencies:
       - supports-color
 
