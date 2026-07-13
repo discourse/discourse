@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { isDestroyed, isDestroying } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
@@ -49,10 +50,6 @@ export default abstract class FloatKitInstance {
   declare delayedHoverTimeout: ReturnType<typeof discourseLater>;
 
   declare openedByDelayedHover: boolean;
-
-  declare isDestroying?: boolean;
-
-  declare isDestroyed?: boolean;
 
   /**
    * The trigger narrowed to a real element, or `null` when it is a virtual reference.
@@ -132,7 +129,7 @@ export default abstract class FloatKitInstance {
     element.addEventListener("touchcancel", this.onTouchCancel, TOUCH_OPTIONS);
     element.addEventListener("touchend", this.onTouchCancel, TOUCH_OPTIONS);
     this.touchTimeout = discourseLater(() => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (isDestroying(this) || isDestroyed(this)) {
         return;
       }
 

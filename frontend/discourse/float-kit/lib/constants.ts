@@ -171,15 +171,18 @@ export interface ToastData {
   [key: string]: unknown;
 }
 
+/** The arguments a toast component receives (the default is `DDefaultToast`). */
+export interface ToastComponentArgs {
+  data?: ToastData;
+  close?: FloatCallback;
+  showProgressBar?: boolean;
+  onRegisterProgressBar?: (element: HTMLElement) => void;
+}
+
 /** The signature of a toast component (the default is `DDefaultToast`). */
 export type ToastComponent = ComponentLike<{
   Element: HTMLElement;
-  Args: {
-    data?: ToastData;
-    close?: FloatCallback;
-    showProgressBar?: boolean;
-    onRegisterProgressBar?: (element: HTMLElement) => void;
-  };
+  Args: ToastComponentArgs;
 }>;
 
 /** The options for a toast, after merging over the defaults below. */

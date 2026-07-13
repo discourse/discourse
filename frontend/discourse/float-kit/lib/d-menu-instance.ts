@@ -1,4 +1,5 @@
 import { tracked } from "@glimmer/tracking";
+import { isDestroying } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import Owner, { getOwner, setOwner } from "@ember/owner";
@@ -73,11 +74,7 @@ export default class DMenuInstance extends FloatKitInstance {
   async close(options = { focusTrigger: true }) {
     this.openedByDelayedHover = false;
 
-    // `getOwner` types the owner without the destroyable flags it carries at runtime.
-    const owner = getOwner(this) as
-      | (Owner & { isDestroying?: boolean })
-      | undefined;
-    if (owner?.isDestroying) {
+    if (isDestroying(getOwner(this)!)) {
       return;
     }
 

@@ -4,17 +4,14 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import type { AutoUpdateOptions } from "@floating-ui/dom";
 import { type ComponentLike } from "@glint/template";
 import curryComponent from "ember-curry-component";
 import { modifier } from "ember-modifier";
 import DFloatBody from "discourse/float-kit/components/d-float-body";
 import {
   type FloatCallback,
-  type FloatUiPlacement,
   MENU,
   type MenuOptions,
-  type VisibilityOptimizer,
 } from "discourse/float-kit/lib/constants";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 import { isTesting } from "discourse/lib/environment";
@@ -44,10 +41,22 @@ export interface DMenuComponentArgs<Data = unknown> {
   data?: Data;
 }
 
+// The option-bag arguments, derived from `MenuOptions` (the source of truth in
+// `constants.ts`) so the two lists can never drift. The generic fields are overridden
+// to carry the component's `Data` type and the concrete menu-instance type.
+type DMenuOptionArgs<Data> = Partial<
+  Omit<MenuOptions, "data" | "component" | "onRegisterApi">
+> & {
+  data?: Data;
+  component?: ComponentLike<{ Args: { data?: Data; close?: FloatCallback } }>;
+  onRegisterApi?: (instance: DMenuInstance) => void;
+};
+
 interface DMenuSignature<Data = unknown> {
   Element: HTMLElement;
-  Args: {
-    /* Explicitly-read arguments (not part of the options bag). */
+  Args: DMenuOptionArgs<Data> & {
+    // Arguments the component reads directly and forwards to the trigger button;
+    // these are not keys of `MENU.options`.
     onKeydown?: (event: KeyboardEvent) => unknown;
     triggerComponent?: ComponentLike;
     icon?: string;
@@ -56,44 +65,6 @@ interface DMenuSignature<Data = unknown> {
     title?: string;
     disabled?: boolean;
     isLoading?: boolean;
-
-    /* Every key of `MENU.options` (see `constants.ts` — the source of truth). */
-    animated?: boolean;
-    arrow?: boolean;
-    autofocus?: boolean;
-    beforeTrigger?: FloatCallback;
-    closeOnEscape?: boolean;
-    closeOnClickOutside?: boolean;
-    closeOnScroll?: boolean;
-    component?: ComponentLike<{ Args: { data?: Data; close?: FloatCallback } }>;
-    content?: string;
-    identifier?: string;
-    interactive?: boolean;
-    listeners?: boolean;
-    maxWidth?: number;
-    data?: Data;
-    offset?: number;
-    triggers?: string[];
-    untriggers?: string[];
-    placement?: FloatUiPlacement;
-    shiftBeforeVisibilityOptimizer?: boolean;
-    visibilityOptimizer?: VisibilityOptimizer;
-    fallbackPlacements?: readonly FloatUiPlacement[];
-    autoUpdate?: boolean | AutoUpdateOptions;
-    trapTab?: boolean;
-    onClose?: FloatCallback;
-    onShow?: FloatCallback;
-    onRegisterApi?: (instance: DMenuInstance) => void;
-    modalForMobile?: boolean;
-    inline?: boolean | null;
-    groupIdentifier?: string;
-    parentIdentifier?: string;
-    triggerClass?: string;
-    contentClass?: string;
-    class?: string;
-    matchTriggerMinWidth?: boolean;
-    matchTriggerWidth?: boolean;
-    portalOutletElement?: HTMLElement;
   };
   Blocks: {
     default: [DMenuComponentArgs<Data>];

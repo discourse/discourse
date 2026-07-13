@@ -2,17 +2,13 @@ import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import type { AutoUpdateOptions } from "@floating-ui/dom";
 import { type ComponentLike } from "@glint/template";
 import { modifier } from "ember-modifier";
 import DFloatBody from "discourse/float-kit/components/d-float-body";
 import {
   type FloatCallback,
-  type FloatTriggers,
-  type FloatUiPlacement,
   TOOLTIP,
   type TooltipOptions,
-  type VisibilityOptimizer,
 } from "discourse/float-kit/lib/constants";
 import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
 import type TooltipService from "discourse/float-kit/services/tooltip";
@@ -26,41 +22,24 @@ export interface DTooltipComponentArgs<Data = unknown> {
   data?: Data;
 }
 
+// The option-bag arguments, derived from `TooltipOptions` (the source of truth in
+// `constants.ts`) so the two lists can never drift. The generic fields are overridden
+// to carry the component's `Data` type and the concrete tooltip-instance type.
+type DTooltipOptionArgs<Data> = Partial<
+  Omit<TooltipOptions, "data" | "component" | "onRegisterApi">
+> & {
+  data?: Data;
+  component?: ComponentLike<{ Args: { data?: Data; close?: FloatCallback } }>;
+  onRegisterApi?: (instance: DTooltipInstance) => void;
+};
+
 interface DTooltipSignature<Data = unknown> {
   Element: HTMLSpanElement;
-  Args: {
-    /* Explicitly-read arguments (not part of the options bag). */
+  Args: DTooltipOptionArgs<Data> & {
+    // Arguments the component reads directly and forwards to the trigger button;
+    // these are not keys of `TOOLTIP.options`.
     icon?: string;
     label?: string;
-
-    /* Every key of `TOOLTIP.options` (see `constants.ts` — the source of truth). */
-    animated?: boolean;
-    arrow?: boolean;
-    beforeTrigger?: FloatCallback;
-    closeOnClickOutside?: boolean;
-    closeOnEscape?: boolean;
-    closeOnScroll?: boolean;
-    component?: ComponentLike<{ Args: { data?: Data; close?: FloatCallback } }>;
-    content?: string;
-    identifier?: string;
-    inline?: boolean | null;
-    interactive?: boolean;
-    listeners?: boolean;
-    maxWidth?: number;
-    data?: Data;
-    offset?: number;
-    triggers?: FloatTriggers;
-    untriggers?: FloatTriggers;
-    placement?: FloatUiPlacement;
-    shiftBeforeVisibilityOptimizer?: boolean;
-    visibilityOptimizer?: VisibilityOptimizer;
-    fallbackPlacements?: readonly FloatUiPlacement[];
-    autoUpdate?: boolean | AutoUpdateOptions;
-    trapTab?: boolean;
-    onClose?: FloatCallback;
-    onShow?: FloatCallback;
-    onRegisterApi?: (instance: DTooltipInstance) => void;
-    portalOutletElement?: HTMLElement;
   };
   Blocks: {
     default: [DTooltipComponentArgs<Data>];
