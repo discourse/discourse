@@ -8870,7 +8870,7 @@ en:
             header: "Header"
             full_page: "Full page"
             click_through_only: "All (click through only)"
-            logged_in_only: "Logged in only"
+            non_staff_only: "Non-staff users"
           header_search_results: "Header search results"
         logster:
           title: "Error logs"

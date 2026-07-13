@@ -22,7 +22,7 @@ describe "Admin Dashboard Redesign | Search section" do
     sign_in(current_user)
   end
 
-  it "lets staff review logged-in search health, inspect tooltips, and drill into terms",
+  it "lets staff review non-staff search health, inspect tooltips, and drill into terms",
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     Fabricate.times(
       15,
@@ -68,6 +68,15 @@ describe "Admin Dashboard Redesign | Search section" do
     )
     Fabricate.times(20, :search_log, term: "ruby", user: user, created_at: "2026-03-20 11:00")
 
+    Fabricate(:search_log, term: "admin-search", user: current_user, created_at: "2026-05-10 08:00")
+    Fabricate(:clicked_search_log, term: "ruby", user: moderator, created_at: "2026-05-10 08:30")
+    Fabricate(
+      :search_log,
+      term: "admin-prior-search",
+      user: current_user,
+      created_at: "2026-03-20 08:00",
+    )
+
     # Anonymous searches (likely crawlers) must be excluded from every metric. If they
     # were counted, "crawlerbot" would top trending and the no-result rate would spike.
     Fabricate.times(100, :search_log, term: "crawlerbot", created_at: "2026-05-10 09:00")
@@ -108,6 +117,7 @@ describe "Admin Dashboard Redesign | Search section" do
         { term: "discobot", searches: 2 },
       ],
     )
+    expect(search).to have_no_trending_term("admin-search")
     expect(search).to have_no_trending_term("crawlerbot")
 
     expect(search).to have_content_gap_rows(
@@ -141,7 +151,7 @@ describe "Admin Dashboard Redesign | Search section" do
 
     expect(page).to have_current_path("/admin/logs/search_logs/term", ignore_query: true)
     expect(Rack::Utils.parse_query(URI.parse(page.current_url).query)).to eq(
-      "searchType" => "logged_in_only",
+      "searchType" => "non_staff_only",
       "period" => "weekly",
       "term" => "ruby",
     )
@@ -250,7 +260,7 @@ describe "Admin Dashboard Redesign | Search section" do
 
     expect(page).to have_current_path("/admin/logs/search_logs/term", ignore_query: true)
     expect(Rack::Utils.parse_query(URI.parse(page.current_url).query)).to eq(
-      "searchType" => "logged_in_only",
+      "searchType" => "non_staff_only",
       "period" => "all",
       "term" => "ruby",
     )
