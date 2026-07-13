@@ -5,6 +5,8 @@ class GroupArchivedMessage < ActiveRecord::Base
   belongs_to :topic
 
   def self.move_to_inbox!(group_id, topic, opts = {})
+    return unless topic.private_message? && topic.topic_allowed_groups.exists?(group_id: group_id)
+
     topic_id = topic.id
 
     GroupArchivedMessage.where(group_id: group_id, topic_id: topic_id).destroy_all
@@ -22,6 +24,8 @@ class GroupArchivedMessage < ActiveRecord::Base
   end
 
   def self.archive!(group_id, topic, opts = {})
+    return unless topic.private_message? && topic.topic_allowed_groups.exists?(group_id: group_id)
+
     topic_id = topic.id
 
     GroupArchivedMessage.where(group_id: group_id, topic_id: topic_id).destroy_all
