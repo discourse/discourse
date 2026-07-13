@@ -21307,6 +21307,13 @@ CREATE INDEX index_topic_view_stats_on_viewed_at_and_topic_id ON public.topic_vi
 
 
 --
+-- Name: index_topic_views_for_user_participation; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_topic_views_for_user_participation ON public.topic_views USING btree (viewed_at, user_id, topic_id) WHERE (user_id IS NOT NULL);
+
+
+--
 -- Name: index_topic_views_on_topic_id_and_viewed_at; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22575,6 +22582,7 @@ ALTER TABLE ONLY public.ad_plugin_house_ads_groups
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260713180615'),
 ('20260708095336'),
 ('20260708080308'),
 ('20260707013407'),
