@@ -12,10 +12,7 @@ module NestedReplies
         "#{posts_table}.like_count DESC, #{posts_table}.post_number ASC"
       when "hot"
         fallback_score = NestedReplies::HotScoreCalculator.fallback_hot_score_sql(posts_table)
-        stale_score =
-          NestedReplies::HotScoreCalculator.persisted_score_stale_sql(
-            formula_version_table: "nested_hot_score_formula_version",
-          )
+        stale_score = NestedReplies::HotScoreCalculator.persisted_score_stale_sql
         "CASE WHEN #{stale_score} " \
           "THEN #{fallback_score} ELSE nested_view_post_stats.thread_hot_score END DESC, " \
           "CASE WHEN #{stale_score} " \
@@ -37,10 +34,6 @@ module NestedReplies
       <<~SQL.squish
         LEFT JOIN nested_view_post_stats
           ON nested_view_post_stats.post_id = #{posts_table}.id
-        LEFT JOIN topic_custom_fields nested_hot_score_formula_version
-          ON nested_hot_score_formula_version.topic_id = #{posts_table}.topic_id
-         AND nested_hot_score_formula_version.name =
-           '#{NestedReplies::HotScoreCalculator::FORMULA_VERSION_FIELD}'
       SQL
     end
 

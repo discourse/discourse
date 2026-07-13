@@ -69,13 +69,6 @@ module Jobs
             )
             AND (
               stats.hot_score_updated_at IS NULL
-              OR NOT EXISTS (
-                SELECT 1
-                FROM topic_custom_fields formula_version
-                WHERE formula_version.topic_id = topics.id
-                  AND formula_version.name = :formula_version_field
-                  AND formula_version.value = :formula_version
-              )
               OR (
                 COALESCE(topics.last_posted_at, topics.created_at) >=
                   NOW() - :freshness_window * INTERVAL '1 second'
@@ -98,8 +91,6 @@ module Jobs
         nested_by_default: SiteSetting.nested_replies_default,
         category_id: category_id,
         limit: SiteSetting.nested_replies_hot_score_batch_size,
-        formula_version_field: NestedReplies::HotScoreCalculator::FORMULA_VERSION_FIELD,
-        formula_version: NestedReplies::HotScoreCalculator::FORMULA_VERSION.to_s,
         freshness_window: NestedReplies::HotScoreCalculator.freshness_window_seconds,
         refresh_interval: NestedReplies::HotScoreCalculator.freshness_refresh_interval_seconds,
       )

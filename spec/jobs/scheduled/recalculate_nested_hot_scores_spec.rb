@@ -96,28 +96,6 @@ RSpec.describe Jobs::RecalculateNestedHotScores do
     expect(topic_marker.hot_score_updated_at).to eq_time(original_hot_score_updated_at)
   end
 
-  it "replaces scores from the previous formula", :aggregate_failures do
-    post = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
-    backfill_structural_stats
-    NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
-    TopicCustomField.where(
-      topic_id: topic.id,
-      name: NestedReplies::HotScoreCalculator::FORMULA_VERSION_FIELD,
-    ).delete_all
-    stat = NestedViewPostStat.find_by!(post: post)
-    stat.update_columns(
-      hot_score: NestedReplies::HotScoreCalculator::LEGACY_SCORE_THRESHOLD + 1,
-      thread_hot_score: NestedReplies::HotScoreCalculator::LEGACY_SCORE_THRESHOLD + 1,
-    )
-
-    execute
-
-    expect(stat.reload.hot_score).to be < NestedReplies::HotScoreCalculator::LEGACY_SCORE_THRESHOLD
-    expect(
-      topic.reload.custom_fields[NestedReplies::HotScoreCalculator::FORMULA_VERSION_FIELD],
-    ).to eq(NestedReplies::HotScoreCalculator::FORMULA_VERSION.to_s)
-  end
-
   it "refreshes a cooled topic once", :aggregate_failures do
     post = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
     cooled_at = Time.current - NestedReplies::HotScoreCalculator.freshness_window_seconds - 1.day

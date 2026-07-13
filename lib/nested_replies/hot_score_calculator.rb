@@ -2,8 +2,6 @@
 
 module NestedReplies
   class HotScoreCalculator
-    FORMULA_VERSION = 2
-    FORMULA_VERSION_FIELD = "nested_replies_hot_score_formula_version"
     HOT_SCORE_FLOOR = 0.0
     LIKE_WEIGHT = 1.0
     REPLY_WEIGHT = 2.0
@@ -11,9 +9,6 @@ module NestedReplies
     FRESHNESS_HALF_LIFE_SECONDS = 7.days.to_f
     FRESHNESS_REFRESH_INTERVAL_SECONDS = 6.hours.to_i
     FRESHNESS_CUTOFF_HALF_LIVES = 8
-    # The absolute-timestamp formula produced scores around 10,000. The bounded formula cannot
-    # approach this threshold with integer like and reply counters.
-    LEGACY_SCORE_THRESHOLD = 100.0
     CHILD_PENALTY = 0.25
     LOCK_VALIDITY_SECONDS = 5.minutes.to_i
 
@@ -93,21 +88,8 @@ module NestedReplies
       Math.log(1 + [engagement, 0.0].max) + freshness
     end
 
-    def self.persisted_score_stale_sql(
-      stats_table = "nested_view_post_stats",
-      formula_version_table: nil
-    )
-      stale_sql = <<~SQL.squish
-        #{stats_table}.hot_score_updated_at IS NULL
-        OR #{stats_table}.hot_score > #{LEGACY_SCORE_THRESHOLD}
-        OR #{stats_table}.thread_hot_score > #{LEGACY_SCORE_THRESHOLD}
-      SQL
-
-      if formula_version_table
-        stale_sql << " OR #{formula_version_table}.value IS DISTINCT FROM '#{FORMULA_VERSION}'"
-      end
-
-      stale_sql
+    def self.persisted_score_stale_sql(stats_table = "nested_view_post_stats")
+      "#{stats_table}.hot_score_updated_at IS NULL"
     end
 
     def self.public_post?(post)
@@ -200,14 +182,6 @@ module NestedReplies
     end
 
     def self.recalculate_for_post_without_lock(post_id)
-      topic_id = Post.with_deleted.where(id: post_id).pick(:topic_id)
-      return if topic_id.blank?
-
-      unless formula_current?(topic_id)
-        recalculate_topic_without_lock(topic_id)
-        return
-      end
-
       path = score_path(post_id)
       return if path.empty?
 
@@ -241,14 +215,6 @@ module NestedReplies
         propagate_topic_scores(topic_id)
         mark_topic_recalculated(topic_id)
       end
-    end
-
-    def self.formula_current?(topic_id)
-      TopicCustomField.exists?(
-        topic_id: topic_id,
-        name: FORMULA_VERSION_FIELD,
-        value: FORMULA_VERSION.to_s,
-      )
     end
 
     def self.score_path(post_id)
@@ -459,8 +425,6 @@ module NestedReplies
             hot_score_updated_at = EXCLUDED.hot_score_updated_at,
             updated_at = NOW()
         SQL
-
-      Topic.find_by(id: topic_id)&.upsert_custom_fields(FORMULA_VERSION_FIELD => FORMULA_VERSION)
     end
   end
 end

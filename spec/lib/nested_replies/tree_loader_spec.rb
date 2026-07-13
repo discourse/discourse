@@ -39,26 +39,17 @@ RSpec.describe NestedReplies::TreeLoader do
   end
 
   describe "#root_posts_scope" do
-    it "falls back for stale formulas with reply engagement" do
+    it "uses reply engagement when hot scores are missing" do
       engaged_root = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
       3.times { Fabricate(:post, topic: topic, reply_to_post_number: engaged_root.post_number) }
       root.update_columns(created_at: 1.day.ago)
       engaged_root.update_columns(created_at: root.created_at)
-      NestedViewPostStat.find_or_create_by!(post: root).update_columns(
-        hot_score: 90,
-        thread_hot_score: 90,
-        hot_score_updated_at: Time.current,
-      )
-      formula_field = NestedReplies::HotScoreCalculator::FORMULA_VERSION_FIELD
-      TopicCustomField.where(topic: topic, name: formula_field).delete_all
+      NestedViewPostStat.where(post_id: [root.id, engaged_root.id]).delete_all
       loader = described_class.new(topic: topic, guardian: user.guardian)
 
-      without_formula = loader.root_posts_scope("hot").limit(2).pluck(:id)
-      TopicCustomField.create!(topic: topic, name: formula_field, value: "outdated")
-      with_wrong_formula = loader.root_posts_scope("hot").limit(2).pluck(:id)
+      root_ids = loader.root_posts_scope("hot").limit(2).pluck(:id)
 
-      expect(without_formula).to eq([engaged_root.id, root.id])
-      expect(with_wrong_formula).to eq([engaged_root.id, root.id])
+      expect(root_ids).to eq([engaged_root.id, root.id])
     end
   end
 end
