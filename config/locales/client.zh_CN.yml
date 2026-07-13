@@ -2848,6 +2848,7 @@ zh_CN:
       composer_title: "插入 GIF"
       no_results: "在上方输入关键词搜索 GIF 动图。"
       browse_categories: "按类别浏览"
+      bad_api_key: "Klipy API 密钥缺失或无效。请检查 GIF API 密钥设置。"
     codemirror:
       expression:
         sections:
@@ -4414,6 +4415,7 @@ zh_CN:
       original_language: "此帖子最初使用%{language}编写"
       original_language_and_outdated: "此帖子最初使用%{language}编写。译文可能已过时"
       originally_written_in: "原始语言：%{language}"
+      tap_to_show_original: "点击此处查看原文"
       ai_translation_disclaimer: "AI 生成的译文可能不准确。"
     category:
       none: "（无类别）"

@@ -393,6 +393,7 @@ uk:
         send_bulk_invites: "Надіслати запрошення"
         group_selector_placeholder: "Виберіть групу..."
         user_selector_placeholder: "Виберіть користувача..."
+        attendance_label: "Відвідуваність"
         inline_title: "Вбудоване масове запрошення"
         csv_title: "CSV-масове запрошення"
       upcoming_events:
@@ -476,6 +477,8 @@ uk:
         create_event_button: "Створити подію"
         action_title: "Створити нову подію"
         all_day: "Цілий день"
+        livestream: "Пряма трансляція"
+        livestream_chat_disabled: "Увімкніть чат для створення каналів прямих трансляцій."
         reminder:
           units:
             minutes:
@@ -579,7 +582,11 @@ uk:
         allow_chat:
           label: "Інтеграція з чатом"
           checkbox_label: "Створення та керування каналом чату для конкретних подій"
+        livestream:
+          label: "Пряма трансляція"
+          checkbox_label: "Вставте URL-адресу як відео та відкрийте чат прямої трансляції для учасників"
         location:
+          label: "Місцезнаходження або URL-адреса"
           placeholder: "Додайте місце розташування, посилання або щось інше."
         description:
           label: "Опис"
