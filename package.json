@@ -10,7 +10,7 @@
     "@glint/ember-tsc": "^1.8.11",
     "@glint/tsserver-plugin": "^2.5.17",
     "@rdil/parallel-prettier": "^3.0.0",
-    "concurrently": "^9.2.1",
+    "concurrently": "^10.0.3",
     "eslint": "10.6.0",
     "execa": "^9.6.0",
     "jsdoc": "^4.0.5",
