@@ -16,9 +16,6 @@ const GROUPS = [
     name: "team_a",
     full_name: "Team A",
     automatic: false,
-    flair_url: "users",
-    flair_bg_color: "CC0000",
-    flair_color: "FFFFFF",
   },
   {
     id: AUTO_GROUPS.logged_in_users.id,
@@ -48,6 +45,35 @@ function controlledState(initialAcl = []) {
   })();
 }
 
+function permissionOptionSelector(permission) {
+  return `.d-access-control__permission-option[data-permission-id="${permission}"]`;
+}
+
+async function expandPermissionMenu(rowSelector = ".d-access-control__row") {
+  await click(`${rowSelector} .d-access-control__permission`);
+}
+
+async function selectPermission(permission, rowSelector) {
+  await expandPermissionMenu(rowSelector);
+  await click(permissionOptionSelector(permission));
+}
+
+function permissionOptionLabel(permission) {
+  return `${permissionOptionSelector(permission)} .d-access-control__permission-label`;
+}
+
+function permissionOptionDescription(permission) {
+  return `${permissionOptionSelector(
+    permission
+  )} .d-access-control__permission-description`;
+}
+
+function rowNames() {
+  return findAll(".d-access-control__item-name").map((row) =>
+    row.textContent.replace("Automatic", "").trim()
+  );
+}
+
 module("Integration | Component | DAccessControl", function (hooks) {
   setupRenderingTest(hooks);
 
@@ -68,10 +94,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
       .dom(".d-access-control__row")
       .doesNotExist("starts with no acl rows");
 
-    await click(".d-access-control__add");
-
     const chooser = selectKit(".d-access-control__chooser");
-    await chooser.expand();
     await chooser.expand();
 
     assert
@@ -94,22 +117,6 @@ module("Integration | Component | DAccessControl", function (hooks) {
       "Team A",
       "sets the display name from the chosen group"
     );
-    assert.strictEqual(added.name, "team_a", "keeps the group name for flair");
-    assert.strictEqual(
-      added.flair_url,
-      "users",
-      "keeps the flair URL for group flair rendering"
-    );
-    assert.strictEqual(
-      added.flair_bg_color,
-      "CC0000",
-      "keeps the flair background color for group flair rendering"
-    );
-    assert.strictEqual(
-      added.flair_color,
-      "FFFFFF",
-      "keeps the flair color for group flair rendering"
-    );
     assert.strictEqual(
       added.permission,
       "edit",
@@ -117,11 +124,11 @@ module("Integration | Component | DAccessControl", function (hooks) {
     );
 
     assert
-      .dom(".d-access-control__row .d-access-control__group-name")
+      .dom(".d-access-control__row .d-access-control__item-name")
       .hasText("Team A", "renders the newly added group row");
     assert
-      .dom(".d-access-control__row .avatar-flair")
-      .hasAttribute("title", "team_a", "renders the selected group's flair");
+      .dom(".d-access-control__row .d-icon-user-group")
+      .exists("renders the generic group icon");
   });
 
   test("a read-only default group is added with the view permission", async function (assert) {
@@ -137,10 +144,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
       </template>
     );
 
-    await click(".d-access-control__add");
-
     const chooser = selectKit(".d-access-control__chooser");
-    await chooser.expand();
     await chooser.expand();
     await chooser.selectRowByValue(`group:${AUTO_GROUPS.trust_level_0.id}`);
 
@@ -188,8 +192,6 @@ module("Integration | Component | DAccessControl", function (hooks) {
         />
       </template>
     );
-
-    await click(".d-access-control__add");
 
     const chooser = selectKit(".d-access-control__chooser");
     await chooser.expand();
@@ -242,7 +244,12 @@ module("Integration | Component | DAccessControl", function (hooks) {
           ? { ...permission, description: "Custom view description" }
           : permission
       ),
-      { id: "juggler", level: 3, name: "Juggler", description: "Full control" },
+      {
+        id: "juggler",
+        level: 3,
+        name: "Juggler",
+        description: "Full control",
+      },
     ];
 
     await render(
@@ -256,24 +263,21 @@ module("Integration | Component | DAccessControl", function (hooks) {
       </template>
     );
 
-    const permission = selectKit(".d-access-control__permission");
-    await permission.expand();
+    await expandPermissionMenu();
 
-    assert.strictEqual(
-      permission.rowByValue("view").description(),
-      "Custom view description",
-      "uses the transformed description for an existing option"
-    );
+    assert
+      .dom(permissionOptionDescription("view"))
+      .hasText(
+        "Custom view description",
+        "uses the transformed description for an existing option"
+      );
 
-    assert.true(
-      permission.rowByValue("juggler").exists(),
-      "renders the added permission option"
-    );
-    assert.strictEqual(
-      permission.rowByValue("juggler").label(),
-      "Juggler",
-      "the added option keeps its name"
-    );
+    assert
+      .dom(permissionOptionSelector("juggler"))
+      .exists("renders the added permission option");
+    assert
+      .dom(permissionOptionLabel("juggler"))
+      .hasText("Juggler", "the added option keeps its name");
   });
 
   test("loads multiple existing acl groups with their permissions", async function (assert) {
@@ -309,22 +313,24 @@ module("Integration | Component | DAccessControl", function (hooks) {
     const rows = [...document.querySelectorAll(".d-access-control__row")];
 
     assert
-      .dom(".d-access-control__group-name", rows[0])
+      .dom(".d-access-control__item-name", rows[0])
       .hasText("Another Group", "renders the first group name");
-    assert.strictEqual(
-      rows[0].querySelector(".select-kit-header").dataset.value,
-      "edit",
-      "loads the first group's permission"
-    );
+    assert
+      .dom(".d-access-control__permission", rows[0])
+      .hasText(
+        i18n("access_control.manage.access_permission_editor"),
+        "loads the first group's permission"
+      );
 
     assert
-      .dom(".d-access-control__group-name", rows[1])
+      .dom(".d-access-control__item-name", rows[1])
       .hasText("Some Group", "renders the second group name");
-    assert.strictEqual(
-      rows[1].querySelector(".select-kit-header").dataset.value,
-      "view",
-      "loads the second group's permission"
-    );
+    assert
+      .dom(".d-access-control__permission", rows[1])
+      .hasText(
+        i18n("access_control.manage.access_permission_viewer"),
+        "loads the second group's permission"
+      );
   });
 
   test("the Remove option removes the acl row", async function (assert) {
@@ -355,16 +361,13 @@ module("Integration | Component | DAccessControl", function (hooks) {
 
     assert.dom(".d-access-control__row").exists({ count: 2 });
 
-    // selectKit() targets the first matching dropdown, i.e. the "Some Group" row.
-    const permission = selectKit(".d-access-control__permission");
-    await permission.expand();
-    await permission.selectRowByValue("remove");
+    await selectPermission("remove");
 
     assert
       .dom(".d-access-control__row")
       .exists({ count: 1 }, "removes the row whose permission was removed");
     assert
-      .dom(".d-access-control__group-name")
+      .dom(".d-access-control__item-name")
       .hasText("Some Group", "keeps the remaining row");
   });
 
@@ -388,9 +391,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
       </template>
     );
 
-    const permission = selectKit(".d-access-control__permission");
-    await permission.expand();
-    await permission.selectRowByValue("edit");
+    await selectPermission("edit");
 
     assert.strictEqual(
       state.onChangeCalls.length,
@@ -424,19 +425,20 @@ module("Integration | Component | DAccessControl", function (hooks) {
       </template>
     );
 
-    const permission = selectKit(".d-access-control__permission");
-    await permission.expand();
+    await expandPermissionMenu();
 
-    assert.strictEqual(
-      permission.rowByValue("view").label(),
-      i18n("access_control.manage.access_permission_viewer"),
-      "renders the default viewer option"
-    );
-    assert.strictEqual(
-      permission.rowByValue("edit").label(),
-      i18n("access_control.manage.access_permission_editor"),
-      "renders the default editor option"
-    );
+    assert
+      .dom(permissionOptionLabel("view"))
+      .hasText(
+        i18n("access_control.manage.access_permission_viewer"),
+        "renders the default viewer option"
+      );
+    assert
+      .dom(permissionOptionLabel("edit"))
+      .hasText(
+        i18n("access_control.manage.access_permission_editor"),
+        "renders the default editor option"
+      );
   });
 
   test("filters banned permissions for the matching grantee", async function (assert) {
@@ -460,7 +462,12 @@ module("Integration | Component | DAccessControl", function (hooks) {
 
     const transformPermissionOptions = (permissions) => [
       ...permissions,
-      { id: "manage", level: 3, name: "Manager", description: "Full control" },
+      {
+        id: "manage",
+        level: 3,
+        name: "Manager",
+        description: "Full control",
+      },
     ];
 
     await render(
@@ -475,25 +482,20 @@ module("Integration | Component | DAccessControl", function (hooks) {
       </template>
     );
 
-    const permission = selectKit(".d-access-control__permission");
-    await permission.expand();
+    await expandPermissionMenu();
 
-    assert.true(
-      permission.rowByValue("view").exists(),
-      "keeps permissions not banned for this grantee"
-    );
-    assert.false(
-      permission.rowByValue("edit").exists(),
-      "removes a banned default permission"
-    );
-    assert.false(
-      permission.rowByValue("manage").exists(),
-      "removes a banned transformed permission"
-    );
-    assert.true(
-      permission.rowByValue("remove").exists(),
-      "keeps the remove action"
-    );
+    assert
+      .dom(permissionOptionSelector("view"))
+      .exists("keeps permissions not banned for this grantee");
+    assert
+      .dom(permissionOptionSelector("edit"))
+      .doesNotExist("removes a banned default permission");
+    assert
+      .dom(permissionOptionSelector("manage"))
+      .doesNotExist("removes a banned transformed permission");
+    assert
+      .dom(permissionOptionSelector("remove"))
+      .exists("keeps the remove action");
   });
 
   test("puts mandatory permissions at the top of the rows and disables removing the permission", async function (assert) {
@@ -526,15 +528,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     const rows = [...document.querySelectorAll(".d-access-control__row")];
     assert.dom(rows[0]).hasClass("--mandatory", "the mandatory row is first");
     assert
-      .dom(
-        rows[0].querySelector(
-          ".d-access-control__permission.dropdown-select-box"
-        )
-      )
-      .hasClass(
-        "is-disabled",
-        "the mandatory row's permission select is disabled"
-      );
+      .dom(".d-access-control__permission", rows[0])
+      .isDisabled("the mandatory row's permission select is disabled");
   });
 
   test("sorts rows by mandatory status, type, and name", async function (assert) {
@@ -584,9 +579,7 @@ module("Integration | Component | DAccessControl", function (hooks) {
     );
 
     assert.deepEqual(
-      findAll(".d-access-control__group-name").map((row) =>
-        row.textContent.trim()
-      ),
+      rowNames(),
       ["Alpha Group", "Zoe User", "Apple Group", "Beta Group", "Aaron User"],
       "sorts mandatory rows by name, then groups by name, then users by name"
     );
@@ -623,15 +616,15 @@ module("Integration | Component | DAccessControl", function (hooks) {
       .dom(".d-access-control__row")
       .hasClass("--mandatory", "marks the row as mandatory");
     assert
-      .dom(".d-access-control__group-name")
-      .hasText("Team A", "renders the mandatory group's name");
+      .dom(".d-access-control__item-name")
+      .includesText("Team A", "renders the mandatory group's name");
 
-    assert.strictEqual(
-      document.querySelector(".d-access-control__permission .select-kit-header")
-        .dataset.value,
-      "edit",
-      "uses the mandatory permission"
-    );
+    assert
+      .dom(".d-access-control__permission")
+      .hasText(
+        i18n("access_control.manage.access_permission_editor"),
+        "uses the mandatory permission"
+      );
     assert.strictEqual(
       state.onChangeCalls.length,
       0,
@@ -669,11 +662,11 @@ module("Integration | Component | DAccessControl", function (hooks) {
       .dom(".d-access-control__row")
       .exists({ count: 1 }, "does not render a duplicate group row");
 
-    assert.strictEqual(
-      document.querySelector(".d-access-control__permission .select-kit-header")
-        .dataset.value,
-      "edit",
-      "uses the mandatory permission"
-    );
+    assert
+      .dom(".d-access-control__permission")
+      .hasText(
+        i18n("access_control.manage.access_permission_editor"),
+        "uses the mandatory permission"
+      );
   });
 });

@@ -446,6 +446,7 @@ export default class DAccessControl extends Component {
               class={{dConcatClass
                 "d-access-control__row"
                 (if (eq row.type "user") "--user" "--group")
+                (if row.mandatory "--mandatory")
               }}
               data-row-type={{row.type}}
               data-row-id={{row.id}}
