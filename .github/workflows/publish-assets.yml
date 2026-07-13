@@ -19,6 +19,8 @@ jobs:
 
     steps:
       - name: Install gh cli
+        id: install-gh
+        background: true
         run: |
           # https://github.com/cli/cli/blob/trunk/docs/install_linux.md#debian-ubuntu-linux-raspberry-pi-os-apt
           (type -p wget >/dev/null || (sudo apt update && sudo apt install wget -y)) \
@@ -56,6 +58,9 @@ jobs:
 
       - name: pnpm install
         run: pnpm install --frozen-lockfile
+
+      - name: Wait for gh cli
+        wait: install-gh
 
       - name: build and release assets
         env:

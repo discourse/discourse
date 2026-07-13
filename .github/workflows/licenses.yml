@@ -38,6 +38,11 @@ jobs:
           key: ${{ runner.os }}-gem-${{ hashFiles('**/Gemfile.lock') }}
           restore-keys: ${{ runner.os }}-gem-
 
+      - name: pnpm install
+        id: pnpm-install
+        run: pnpm install
+        background: true
+
       - name: Setup gems
         run: |
           bundle config --local path vendor/bundle
@@ -50,16 +55,17 @@ jobs:
         run: |
           gem install licensed
 
-      - name: Check RubyGems Licenses
-        if: ${{ !cancelled() }}
-        run: |
-          licensed cache
-          licensed status
+      - name: Wait for pnpm install
+        wait: pnpm-install
 
-      - name: pnpm install
-        run: pnpm install
+      - parallel:
+          - name: Check RubyGems Licenses
+            if: ${{ !cancelled() }}
+            run: |
+              licensed cache
+              licensed status
 
-      - name: Check JS Licenses
-        if: ${{ !cancelled() }}
-        run: |
-          script/run-licensee
+          - name: Check JS Licenses
+            if: ${{ !cancelled() }}
+            run: |
+              script/run-licensee

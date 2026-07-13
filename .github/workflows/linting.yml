@@ -83,24 +83,24 @@ jobs:
             if: ${{ !cancelled() }}
             run: pnpm lint:js
 
-      - name: Types
-        if: ${{ !cancelled() }}
-        run: pnpm lint:types
+          - name: Types
+            if: ${{ !cancelled() }}
+            run: pnpm lint:types
 
-      - name: Prettier
-        if: ${{ !cancelled() }}
-        run: |
-          pnpm prettier -v
-          pnpm lint:prettier
+          - name: Prettier
+            if: ${{ !cancelled() }}
+            run: |
+              pnpm prettier -v
+              pnpm lint:prettier
 
-      - name: Stylelint
-        if: ${{ !cancelled() }}
-        run: pnpm lint:css
+          - name: Stylelint
+            if: ${{ !cancelled() }}
+            run: pnpm lint:css
 
-      - name: English locale lint (core)
-        if: ${{ !cancelled() }}
-        run: bundle exec ruby script/i18n_lint.rb "config/**/locales/{client,server}.en.yml"
+          - name: English locale lint (core)
+            if: ${{ !cancelled() }}
+            run: bundle exec ruby script/i18n_lint.rb "config/**/locales/{client,server}.en.yml"
 
-      - name: English locale lint (core plugins)
-        if: ${{ !cancelled() }}
-        run: bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"
+          - name: English locale lint (core plugins)
+            if: ${{ !cancelled() }}
+            run: bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"
