@@ -356,13 +356,13 @@ module DiscourseAi
             cancel_manager: context.cancel_manager,
           )
 
-        pending_approval = nil
+        pending_approvals = []
         new_prompts =
           bot.reply(context) do |partial, placeholder, type|
             # no support for thinking by design
             next if type == :thinking || type == :partial_tool
             if type == :chat_approval
-              pending_approval = partial
+              pending_approvals << partial
               next
             end
             streamer << partial
@@ -378,7 +378,7 @@ module DiscourseAi
           streamer = nil
         end
 
-        if pending_approval
+        pending_approvals.each do |pending_approval|
           post_chat_tool_approval(
             pending_approval,
             channel: channel,
