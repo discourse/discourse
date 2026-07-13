@@ -5,6 +5,12 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { getOwner, setOwner } from "@ember/owner";
 import { Promise } from "rsvp";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
+import {
+  applyModelCallbacks,
+  applyRegisteredFields,
+  mergeSaveProperties,
+  modelNameFor,
+} from "discourse/lib/model-extensions";
 import { enumerateTrackedEntries } from "discourse/lib/tracked-tools";
 
 export default class RestModel extends EmberObject {
@@ -38,6 +44,22 @@ export default class RestModel extends EmberObject {
   primaryKey = "id";
   @tracked __state;
 
+  constructor() {
+    super(...arguments);
+
+    // Defines plugin-registered fields as tracked properties, before the server
+    // payload is assigned. See `addModelField`.
+    applyRegisteredFields(this);
+  }
+
+  init() {
+    super.init(...arguments);
+
+    // Fires `init` callbacks after the create args are assigned, so they see
+    // the initial state. See `addModelCallback`.
+    applyModelCallbacks(modelNameFor(this), "init", this);
+  }
+
   @dependentKeyCompat
   get isNew() {
     return this.__state === "new";
@@ -61,7 +83,11 @@ export default class RestModel extends EmberObject {
 
     props = props || this.updateProperties();
 
+    const modelName = modelNameFor(this);
+    mergeSaveProperties(modelName, this, props);
+
     this.beforeUpdate(props);
+    applyModelCallbacks(modelName, "beforeUpdate", this, props);
 
     this.set("isSaving", true);
     return this.store
@@ -78,6 +104,7 @@ export default class RestModel extends EmberObject {
 
         this.setProperties(payload);
         this.afterUpdate(res);
+        applyModelCallbacks(modelName, "afterUpdate", this, res);
         res.target = this;
         return res;
       })
@@ -91,7 +118,11 @@ export default class RestModel extends EmberObject {
 
     props = props || this.createProperties();
 
+    const modelName = modelNameFor(this);
+    mergeSaveProperties(modelName, this, props);
+
     this.beforeCreate(props);
+    applyModelCallbacks(modelName, "beforeCreate", this, props);
 
     const adapter = this.store.adapterFor(this.__type);
 
@@ -111,6 +142,7 @@ export default class RestModel extends EmberObject {
         }
 
         this.afterCreate(res);
+        applyModelCallbacks(modelName, "afterCreate", this, res);
         res.target = this;
         return res;
       })

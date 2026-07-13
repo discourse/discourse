@@ -5,7 +5,12 @@ import { trackedArray } from "@ember/reactive/collections";
 import { isEmpty } from "@ember/utils";
 import { observes } from "@ember-decorators/object";
 import { ajax } from "discourse/lib/ajax";
+import {
+  applyModelCallbacks,
+  extraSavePropertiesFor,
+} from "discourse/lib/model-extensions";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import Category from "discourse/models/category";
 import GroupHistory from "discourse/models/group-history";
 import RestModel from "discourse/models/rest";
@@ -21,7 +26,8 @@ export default class Group extends RestModel {
   }
 
   static loadMembers(name, opts) {
-    return ajax(`/groups/${name}/members.json`, { data: opts });
+    const data = applyValueTransformer("group-members-request", opts, { name });
+    return ajax(`/groups/${name}/members.json`, { data });
   }
 
   static mentionable(name) {
@@ -404,10 +410,12 @@ export default class Group extends RestModel {
       attrs["owner_usernames"] = this.ownerUsernames;
     }
 
-    return attrs;
+    return { ...attrs, ...extraSavePropertiesFor("group", this) };
   }
 
   async create() {
+    applyModelCallbacks("group", "beforeCreate", this);
+
     const response = await ajax("/admin/groups", {
       type: "POST",
       data: { group: this.asJSON() },
@@ -420,20 +428,30 @@ export default class Group extends RestModel {
     });
 
     await this.reloadMembers();
+    await applyModelCallbacks("group", "afterCreate", this, response);
   }
 
-  save(opts = {}) {
-    return ajax(`/groups/${this.id}`, {
+  async save(opts = {}) {
+    applyModelCallbacks("group", "beforeUpdate", this, opts);
+
+    const result = await ajax(`/groups/${this.id}`, {
       type: "PUT",
       data: { group: this.asJSON(), ...opts },
     });
+
+    await applyModelCallbacks("group", "afterUpdate", this, result);
+    return result;
   }
 
-  destroy() {
+  async destroy() {
     if (!this.id) {
       return;
     }
-    return ajax(`/admin/groups/${this.id}`, { type: "DELETE" });
+
+    applyModelCallbacks("group", "beforeDestroy", this);
+    const result = await ajax(`/admin/groups/${this.id}`, { type: "DELETE" });
+    await applyModelCallbacks("group", "afterDestroy", this, result);
+    return result;
   }
 
   findLogs(offset, filters) {

@@ -34,7 +34,10 @@ import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
 import { emojiUnescape } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import { applyBehaviorTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import Badge from "discourse/models/badge";
@@ -259,6 +262,8 @@ export default class User extends RestModel.extend(Evented) {
 
   statusManager = new UserStatusManager(this);
 
+  @tracked _location;
+
   @computed("private_messages_stats.all")
   get hasPMs() {
     return this.private_messages_stats?.all > 0;
@@ -320,6 +325,17 @@ export default class User extends RestModel.extend(Evented) {
 
   set sidebarSections(value) {
     this.sidebar_sections = value;
+  }
+
+  @dependentKeyCompat
+  get location() {
+    return applyValueTransformer("user-location", this._location, {
+      user: this,
+    });
+  }
+
+  set location(value) {
+    this._location = value;
   }
 
   @computed("sidebarTags.@each.name")
@@ -454,7 +470,9 @@ export default class User extends RestModel.extend(Evented) {
   @computed()
   get path() {
     // no need to observe, requires a hard refresh to update
-    return userPath(this.username_lower);
+    return applyValueTransformer("user-path", userPath(this.username_lower), {
+      user: this,
+    });
   }
 
   @computed()

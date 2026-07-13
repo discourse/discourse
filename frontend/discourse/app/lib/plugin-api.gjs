@@ -74,6 +74,15 @@ import {
   registerHighlightJSPlugin,
 } from "discourse/lib/highlight-syntax";
 import { registerIconRenderer, replaceIcon } from "discourse/lib/icon-library";
+import {
+  defineModelAccessor,
+  defineModelMethod,
+  defineModelResettableField,
+  registerModelCallback,
+  registerModelField,
+  registerModelSaveProperty,
+  stampModelClass,
+} from "discourse/lib/model-extensions";
 import { registerModelTransformer } from "discourse/lib/model-transformers";
 import { registerNotificationTypeRenderer } from "discourse/lib/notification-types-manager";
 import { registerOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
@@ -748,6 +757,212 @@ class _PluginApi {
    */
   addTrackedTopicProperties(...names) {
     names.forEach((name) => _addTrackedTopicProperty(name));
+  }
+
+  // Resolves the `model:<name>` class; `stamp` marks it so instances can
+  // resolve their model name at construction.
+  _resolveModelClass(modelName, { stamp = false } = {}) {
+    const klass = this._resolveClass(`model:${modelName}`);
+    if (!klass) {
+      return;
+    }
+    if (stamp) {
+      stampModelClass(klass.class, modelName);
+    }
+    return klass.class;
+  }
+
+  /**
+   * Adds a tracked data field to a store model, so a property your plugin adds
+   * (e.g. one included in the server payload) is reactive in the UI.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the field to add.
+   * @param {Object} [options]
+   * @param {(*|Function)} [options.defaultValue] - Value when the server omits
+   *   the field (default `undefined`). A function runs per instance at
+   *   construction — before the payload (server wins) and too early for create
+   *   args — for per-record mutable defaults, e.g. `() => ({})`.
+   * @param {("array"|"object"|"set")} [options.type] - Store the field as a
+   *   reactive collection, created fresh per instance so it is never shared.
+   * @param {boolean} [options.resettable] - Requires a function `defaultValue`;
+   *   resets to it when the derived value changes, and a manual assignment
+   *   sticks until then.
+   *
+   * @example
+   * api.addModelField("bookmark", "is_pinned", { defaultValue: false });
+   * api.addModelField("post", "comments", { type: "array" });
+   * api.addModelField("post", "polls_votes", { type: "object" });
+   * api.addModelField("post", "meta", { defaultValue: () => ({}) });
+   * api.addModelField("composer", "createAsPostVoting", {
+   *   resettable: true,
+   *   defaultValue() {
+   *     return !!this.category?.create_as_post_voting_default;
+   *   },
+   * });
+   */
+  addModelField(modelName, name, options = {}) {
+    const klass = this._resolveModelClass(modelName, { stamp: true });
+    if (!klass) {
+      return;
+    }
+
+    if (options.resettable) {
+      if (typeof options.defaultValue !== "function") {
+        throw new Error(
+          "addModelField: `resettable` requires `defaultValue` to be a function (the initializer to reset to)."
+        );
+      }
+      defineModelResettableField(klass, name, options.defaultValue);
+    } else {
+      registerModelField(modelName, name, options);
+    }
+  }
+
+  /**
+   * Adds an accessor (getter and/or setter) to a store model.
+   *
+   * Defined on the prototype (works in templates and with autotracking). For a
+   * single side, prefer `addModelGetter` / `addModelSetter`.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the property to add.
+   * @param {Object} accessor
+   * @param {Function} [accessor.get] - Getter, called with the instance as `this`.
+   * @param {Function} [accessor.set] - Setter, called with the new value.
+   *
+   * @example
+   * api.addModelAccessor("post", "polls", {
+   *   get() {
+   *     return this._polls;
+   *   },
+   *   set(value) {
+   *     this._polls = value;
+   *   },
+   * });
+   */
+  addModelAccessor(modelName, name, accessor) {
+    const klass = this._resolveModelClass(modelName);
+    if (klass) {
+      defineModelAccessor(klass, name, accessor);
+    }
+  }
+
+  /**
+   * Adds a getter (computed/derived property) to a store model. Shorthand for
+   * `addModelAccessor` with only a getter.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the getter to add.
+   * @param {Function} getter - Called with the model instance as `this`.
+   *
+   * @example
+   * api.addModelGetter("bookmark", "isPinned", function () {
+   *   return this.is_pinned;
+   * });
+   */
+  addModelGetter(modelName, name, getter) {
+    this.addModelAccessor(modelName, name, { get: getter });
+  }
+
+  /**
+   * Adds a setter to a store model. Shorthand for `addModelAccessor` with only a
+   * setter.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "topic".
+   * @param {string} name - The name of the setter to add.
+   * @param {Function} setter - Called with the new value; the instance is `this`.
+   *
+   * @example
+   * api.addModelSetter("topic", "related_topics", function (value) {
+   *   this._relatedTopicsRecords = value;
+   * });
+   */
+  addModelSetter(modelName, name, setter) {
+    this.addModelAccessor(modelName, name, { set: setter });
+  }
+
+  /**
+   * Adds an instance method to a store model.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {string} name - The name of the method to add.
+   * @param {Function} fn - Called with the model instance as `this`.
+   *
+   * @example
+   * api.addModelMethod("bookmark", "togglePin", function () {
+   *   this.is_pinned = !this.is_pinned;
+   * });
+   */
+  addModelMethod(modelName, name, fn) {
+    const klass = this._resolveModelClass(modelName);
+    if (klass) {
+      defineModelMethod(klass, name, fn);
+    }
+  }
+
+  /**
+   * Registers a property to include in a model's save payload.
+   *
+   * For persisting a field your plugin adds (see `addModelField`). By default
+   * `instance[name]` is sent; pass `valueFn` (bound to the instance) to send a
+   * computed value, e.g. to nest data under `custom_fields`.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "group".
+   * @param {string} name - The name of the property to include when saving.
+   * @param {Function} [valueFn] - Returns the value to send; called with the
+   *   model instance as `this`.
+   *
+   * @example
+   * api.addModelSaveProperty("group", "assignable_level");
+   * api.addModelSaveProperty("group", "custom_fields", function () {
+   *   return { my_field: this.my_field };
+   * });
+   */
+  addModelSaveProperty(modelName, name, valueFn) {
+    if (this._resolveModelClass(modelName, { stamp: true })) {
+      registerModelSaveProperty(modelName, name, valueFn);
+    }
+  }
+
+  /**
+   * Registers a callback to run on a model's lifecycle.
+   *
+   * Runs with the model instance as `this`, replacing `modifyClass` overrides
+   * of `init`/`save`. `init` fires per instance after create args are applied.
+   * Create/update events fire on the standard store save path (and for `Group`,
+   * which also fires destroy); other models with a custom `save()` (e.g.
+   * `Category`) don't. `after*` callbacks returning a promise are awaited.
+   *
+   * Must be called from a pre-initializer, before the model is first looked up.
+   *
+   * @param {string} modelName - The model's resolver name, e.g. "bookmark".
+   * @param {("init"|"beforeCreate"|"afterCreate"|"beforeUpdate"|"afterUpdate"|"beforeDestroy"|"afterDestroy"|"beforeSave"|"afterSave")} event -
+   *   The lifecycle event. "beforeSave"/"afterSave" fire for both create and update.
+   * @param {Function} fn - Called with nothing (init/destroy), the request props
+   *   (before create/update), or the server result (after*).
+   *
+   * @example
+   * api.addModelCallback("bookmark", "afterSave", function (result) {
+   *   // ...
+   * });
+   */
+  addModelCallback(modelName, event, fn) {
+    if (this._resolveModelClass(modelName, { stamp: true })) {
+      registerModelCallback(modelName, event, fn);
+    }
   }
 
   /**

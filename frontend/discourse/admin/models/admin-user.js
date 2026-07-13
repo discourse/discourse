@@ -4,6 +4,7 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import { deepEqual } from "discourse/lib/object";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import User from "discourse/models/user";
 import { i18n } from "discourse-i18n";
@@ -265,9 +266,14 @@ export default class AdminUser extends User {
   }
 
   unsuspend() {
-    return ajax(`/admin/users/${this.id}/unsuspend`, {
-      type: "PUT",
-    }).then((result) => this.setProperties(result.suspension));
+    return applyBehaviorTransformer(
+      "admin-user-unsuspend",
+      () =>
+        ajax(`/admin/users/${this.id}/unsuspend`, {
+          type: "PUT",
+        }).then((result) => this.setProperties(result.suspension)),
+      { user: this }
+    );
   }
 
   logOut() {
@@ -298,20 +304,26 @@ export default class AdminUser extends User {
   }
 
   unsilence() {
-    this.set("silencingUser", true);
+    return applyBehaviorTransformer(
+      "admin-user-unsilence",
+      () => {
+        this.set("silencingUser", true);
 
-    return ajax(`/admin/users/${this.id}/unsilence`, {
-      type: "PUT",
-    })
-      .then((result) => {
-        this.setProperties({
-          silence_reason: result.unsilence.silence_reason,
-          full_silence_reason: result.unsilence.full_silence_reason,
-          silenced_at: result.unsilence.silence_at,
-          silenced_till: result.unsilence.silence_till,
-        });
-      })
-      .finally(() => this.set("silencingUser", false));
+        return ajax(`/admin/users/${this.id}/unsilence`, {
+          type: "PUT",
+        })
+          .then((result) => {
+            this.setProperties({
+              silence_reason: result.unsilence.silence_reason,
+              full_silence_reason: result.unsilence.full_silence_reason,
+              silenced_at: result.unsilence.silence_at,
+              silenced_till: result.unsilence.silence_till,
+            });
+          })
+          .finally(() => this.set("silencingUser", false));
+      },
+      { user: this }
+    );
   }
 
   silence(data) {
