@@ -10,7 +10,7 @@ Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-par
 
 Sometimes [site settings](https://meta.discourse.org/t/beginners-guide-to-creating-discourse-plugins-part-3-custom-settings/31115) aren't enough of an admin interface for your plugin to work the way you want. For example, if you install the [discourse-akismet](https://github.com/discourse/discourse-akismet) plugin, you might have noticed that it adds a navigation item to the admin plugins section in of your Discourse:
 
-<img src="//assets-meta-cdck-prod-meta.s3.dualstack.us-west-1.amazonaws.com/original/3X/2/c/2c42d190a226fcc85a017ab802c0eaafc872a4f7.png" width="690" height="169">
+<img src="upload://sFL6U4pXUufzJx0GvJbopshFdFp.png" width="690" height="169">
 
 In this tutorial we'll show you how to add an admin interface for your plugin. I'm going to call my plugin purple-tentacle, in honor of [one of my favorite computer games](https://en.wikipedia.org/wiki/Day_of_the_Tentacle). Seriously, **[I really love that game](https://twitter.com/eviltrout/status/627119973773746176)**!
 
@@ -97,7 +97,7 @@ en:
 
 If you restart your development server, you should be able to visit `/admin/plugins` and you'll see our link! If you click it, you'll see the button to show our purple tentacle:
 
-<img src="//assets-meta-cdck-prod-meta.s3.dualstack.us-west-1.amazonaws.com/original/3X/a/f/af2b79ca2649408553da39caf473d6715de99734.png" width="690" height="167">
+<img src="upload://g3tk3rECBW7HEYxIGlvO1pRCt0G.png" width="690" height="167">
 
 Unfortunately, when you click the button, nothing happens :(
 
@@ -135,7 +135,7 @@ export default class AdminPluginsPurpleTentacleController extends Controller {
 
 And now when we refresh our page, clicking the button shows our animated character!
 
-<img src="//assets-meta-cdck-prod-meta.s3.dualstack.us-west-1.amazonaws.com/original/3X/0/9/09dd726aea99bdb4783f785d0e8f611713b622be.png" width="647" height="462">
+<img src="upload://lU2ABNcxtZDW5bxcGcHSON8c89N.png" width="647" height="462">
 
 I'll leave it as an extra exercise to the reader to add a button that hides the tentacle when clicked :smile:
 

@@ -46,7 +46,7 @@ Once you've restarted your local server, visit the url `/admin/plugins` (make su
 
 If everything worked, you should see your plugin in the list:
 
-<img src="//assets-meta-cdck-prod-meta.s3.dualstack.us-west-1.amazonaws.com/original/3X/4/7/47a4b274553bd1fb0bba2d2df699ac136ad6a5cc.png" width="690" height="104">
+<img src="upload://lEa4tU1PrUVkMAfBK4bVl5TCibx.png" width="690" height="104">
 
 Congratulations, you just created your first plugin!
 
