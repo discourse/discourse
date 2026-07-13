@@ -6710,7 +6710,7 @@ en:
             apple_touch_icon:
               title: "Apple touch icon"
               description: "Icon used for Apple touch devices. If left blank, large_icon will be used."
-              help_text: "Recommended size is 180 x 180 pixels. A transparent background is not recommended."
+              help_text: "Recommended size is 180 x 180 pixels. Don't use an SVG image. A transparent background is not recommended."
             digest_logo:
               title: "Digest logo"
               description: "The alternate logo image used at the top of your site's email summary. If left blank, the image from the `logo` setting will be used."
