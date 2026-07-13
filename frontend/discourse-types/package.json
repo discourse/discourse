@@ -46,9 +46,6 @@
       "types": "./declarations/app/*.d.ts"
     }
   },
-  "dependencies": {
-    "ember-truth-helpers": "^5.0.0"
-  },
   "devDependencies": {
     "@types/node": "^25.3.3",
     "compare-versions": "^6.1.1"

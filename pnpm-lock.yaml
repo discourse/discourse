@@ -660,10 +660,6 @@ importers:
         version: 1.0.15
 
   frontend/discourse-types:
-    dependencies:
-      ember-truth-helpers:
-        specifier: ^5.0.0
-        version: 5.0.0
     devDependencies:
       '@types/node':
         specifier: ^25.3.3
@@ -746,7 +742,7 @@ importers:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-chat-integration:
     dependencies:
@@ -1813,6 +1809,10 @@ packages:
 
   '@discourse/types@2026.6.0-06d03da3':
     resolution: {integrity: sha512-2ER4lt8lFtFNcuyj7Y0Ry8RMLFPBYDfix8TNCh4TKP3FKlCMv+FzvDJ6Ix+CFBTqvh4KJ4uR/oCGYR3Q45yQow==}
+    engines: {node: '>= 20', npm: please-use-pnpm, pnpm: ^10, yarn: please-use-pnpm}
+
+  '@discourse/types@2026.7.0-ded677e0':
+    resolution: {integrity: sha512-rN0+p2Hr4NkDyef60h0jmRHabUy354YFLsJgJjmcuUeDyQSJZ0GdKAfMUFTAc+LIli34MQRJjnk8vmnxW396Fg==}
     engines: {node: '>= 20', npm: please-use-pnpm, pnpm: ^10, yarn: please-use-pnpm}
 
   '@discourse/webp@1.5.0':
@@ -9463,6 +9463,8 @@ snapshots:
   '@discourse/resize@2.1.1': {}
 
   '@discourse/types@2026.6.0-06d03da3': {}
+
+  '@discourse/types@2026.7.0-ded677e0': {}
 
   '@discourse/webp@1.5.0':
     dependencies:
