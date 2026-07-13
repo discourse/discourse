@@ -631,6 +631,7 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Searching site settings"
+        change_site_setting: "Change site setting"
         dall_e: "Generate image"
         search_meta_discourse: "Search Meta Discourse"
         javascript_evaluator: "Evaluate JavaScript"
@@ -681,6 +682,7 @@ en:
         setting_context: "Look up site setting context"
         schema: "Look up database schema"
         search_settings: "Search site settings"
+        change_site_setting: "Change the value of a site setting"
         dall_e: "Generate image using DALL-E 3"
         search_meta_discourse: "Search Meta Discourse"
         javascript_evaluator: "Evaluate JavaScript"
@@ -750,6 +752,7 @@ en:
         search_settings:
           one: "Found %{count} result for '%{query}'"
           other: "Found %{count} results for '%{query}'"
+        change_site_setting: "Changing site setting %{setting_name} to '%{value}'"
       discoveries:
         continue_conversation:
           title: "Discovery conversation: Search for %{query}"
@@ -917,6 +920,20 @@ en:
           no_note: "A note is required to add a note to a review queue item"
           failed: "Failed to add the note"
         success: "Successfully added a note to review queue item %{reviewable_id}"
+
+      change_site_setting:
+        errors:
+          no_reason: "A reason is required to change a site setting."
+          not_found: "Site setting '%{setting_name}' does not exist."
+          not_allowed: "You are not allowed to change site settings."
+          hidden: "Site setting '%{setting_name}' is hidden and cannot be changed here."
+          deprecated: "Site setting '%{setting_name}' is deprecated; use '%{new_name}' instead."
+          shadowed: "Site setting '%{setting_name}' is overridden globally and cannot be changed."
+          unconfigurable: "Site setting '%{setting_name}' belongs to a plugin that cannot be configured."
+          unsupported_type: "Site settings of type '%{type}' cannot be changed by the AI bot."
+          invalid_value: "Invalid value: %{error}"
+          failed: "Failed to change the site setting."
+        success: "Site setting %{setting_name} has been changed to '%{value}'."
 
     reviewables:
       ai_tool_action:
