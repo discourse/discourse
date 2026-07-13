@@ -46,7 +46,7 @@ Once you've restarted your local server, visit the url `/admin/plugins` (make su
 
 If everything worked, you should see your plugin in the list:
 
-<img src="upload://lEa4tU1PrUVkMAfBK4bVl5TCibx.png" width="690" height="104">
+![basic-plugin shown in the admin plugin list|690x104](/assets/basic-plugin-1.png)
 
 Congratulations, you just created your first plugin!
 

@@ -10,7 +10,7 @@ Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-par
 
 Sometimes [site settings](https://meta.discourse.org/t/beginners-guide-to-creating-discourse-plugins-part-3-custom-settings/31115) aren't enough of an admin interface for your plugin to work the way you want. For example, if you install the [discourse-akismet](https://github.com/discourse/discourse-akismet) plugin, you might have noticed that it adds a navigation item to the admin plugins section in of your Discourse:
 
-<img src="upload://sFL6U4pXUufzJx0GvJbopshFdFp.png" width="690" height="169">
+![Akismet navigation item in the admin plugins section|690x169](/assets/admin-interface-1.png)
 
 In this tutorial we'll show you how to add an admin interface for your plugin. I'm going to call my plugin purple-tentacle, in honor of [one of my favorite computer games](https://en.wikipedia.org/wiki/Day_of_the_Tentacle). Seriously, **[I really love that game](https://twitter.com/eviltrout/status/627119973773746176)**!
 
@@ -97,7 +97,7 @@ en:
 
 If you restart your development server, you should be able to visit `/admin/plugins` and you'll see our link! If you click it, you'll see the button to show our purple tentacle:
 
-<img src="upload://g3tk3rECBW7HEYxIGlvO1pRCt0G.png" width="690" height="167">
+![Purple tentacle plugin page with its show button|690x167](/assets/admin-interface-2.png)
 
 Unfortunately, when you click the button, nothing happens :(
 
@@ -135,7 +135,7 @@ export default class AdminPluginsPurpleTentacleController extends Controller {
 
 And now when we refresh our page, clicking the button shows our animated character!
 
-<img src="upload://lU2ABNcxtZDW5bxcGcHSON8c89N.png" width="647" height="462">
+![Animated purple tentacle shown after clicking the button|647x462](/assets/admin-interface-3.png)
 
 I'll leave it as an extra exercise to the reader to add a button that hides the tentacle when clicked :smile:
 

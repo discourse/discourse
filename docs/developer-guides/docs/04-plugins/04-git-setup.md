@@ -16,7 +16,7 @@ We suggest that you use [git](https://git-scm.com/) as version control for your 
 
 Once you've created your Github account, visit [this url](https://github.com/new) to create a new repository. You can call it anything you want, but generally something that starts with `discourse-` is good. Make sure the repository is **public**. Here's how my screen looked:
 
-<img src="upload://r0GjAZWbLqZk9ScoZj5BLOjE2gL.png" width="690" height="390">
+![GitHub new repository form|690x390](/assets/git-setup-1.png)
 
 ### Creating your local working folder
 

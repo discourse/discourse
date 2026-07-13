@@ -12,7 +12,7 @@ Did you know that Discourse has two large test suites for its code base? On the 
 
 Assuming you have a development environment set up, if you visit the `http://localhost:3000/tests` URL you will start running the JavaScript test suite in your browser. One fun aspect is that you can see it testing the application in a miniature window in the bottom right corner:
 
-<img src="upload://dIRiaCMVqSXuCoqtCF3WxclwjxV.png" width="690" height="481">
+![JavaScript test suite running in the browser|690x481](/assets/acceptance-tests-2.png)
 
 The Discourse application is built with **a lot** of tests that will begin running when you visit the `/tests` URL. So it may be helpful to filter your tests by the plugin you are working on. You can do that in the interface by clicking **Plugin** dropdown and selecting your plugin:
 

@@ -12,7 +12,7 @@ Discourse now supports importing color schemes from remote repository. Here I wi
 
 Head to `/admin/customize/colors` on your site and create a color scheme.
 
-<img src="upload://qfDgGXmYrxS6Iq1bLsmCKvsCqH3.png" width="690" height="451">
+![Creating a color scheme in the admin colors screen|690x451](/assets/color-scheme-1.png)
 
 Tips:
 
@@ -106,7 +106,7 @@ git push
 - Delete your local color scheme
 - In the `admin/customize/theme` screen import your theme from GitHub
 
-<img src="upload://rF2GkGmq9qErEbWzx2KQ335Wok0.png" width="690" height="278">
+![Importing a theme from GitHub in the admin customize screen|690x278](/assets/font-component-1.png)
 
 - Visit `admin/customize/colors` and ensure your color scheme looks correct.
 

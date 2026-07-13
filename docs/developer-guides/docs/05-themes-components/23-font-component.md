@@ -113,13 +113,13 @@ git push
 
 - In the `admin/customize/theme` screen import your theme from GitHub
 
-<img src="upload://rF2GkGmq9qErEbWzx2KQ335Wok0.png" width="690" height="278">
+![Importing a theme from GitHub in the admin customize screen|690x278](/assets/font-component-1.png)
 
 :confetti_ball:
 
 You can now easily share fonts!
 
-<img src="upload://fK1LJZ7injJXVDkRCcHGsS3jRQ.png" width="235" height="499">
+![Font selection dropdown showing the shared fonts|235x499](/assets/font-component-2.png)
 
 See also:
 
