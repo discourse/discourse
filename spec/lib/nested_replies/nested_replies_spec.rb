@@ -10,6 +10,47 @@ RSpec.describe NestedReplies do
     nested_category.category_setting.update!(nested_replies_default: true)
   end
 
+  describe "site setting activation event" do
+    fab!(:topic)
+    fab!(:op) { Fabricate(:post, topic: topic, post_number: 1) }
+
+    it "invalidates stats when nested replies are enabled" do
+      SiteSetting.nested_replies_enabled = false
+      stat =
+        NestedViewPostStat.create!(
+          post: op,
+          structural_backfilled_at: 1.hour.ago,
+          hot_score_updated_at: 1.hour.ago,
+        )
+
+      expect_enqueued_with(job: :backfill_nested_reply_stats) do
+        expect_enqueued_with(job: :recalculate_nested_hot_scores) do
+          SiteSetting.nested_replies_enabled = true
+        end
+      end
+
+      expect([stat.reload.structural_backfilled_at, stat.hot_score_updated_at]).to eq([nil, nil])
+    end
+
+    it "invalidates stats when nested replies become the default" do
+      SiteSetting.nested_replies_default = false
+      stat =
+        NestedViewPostStat.create!(
+          post: op,
+          structural_backfilled_at: 1.hour.ago,
+          hot_score_updated_at: 1.hour.ago,
+        )
+
+      expect_enqueued_with(job: :backfill_nested_reply_stats) do
+        expect_enqueued_with(job: :recalculate_nested_hot_scores) do
+          SiteSetting.nested_replies_default = true
+        end
+      end
+
+      expect([stat.reload.structural_backfilled_at, stat.hot_score_updated_at]).to eq([nil, nil])
+    end
+  end
+
   describe "topic_created event" do
     it "sets the nested field when category has nested default enabled" do
       post =

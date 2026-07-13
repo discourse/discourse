@@ -79,6 +79,15 @@ RSpec.describe NestedTopic::ConvertCategory do
         ) { result }
       end
 
+      it "enqueues one hot score backfill job" do
+        expect_enqueued_with(
+          job: :recalculate_nested_hot_scores,
+          args: {
+            category_id: category.id,
+          },
+        ) { result }
+      end
+
       it "does not enqueue one stats backfill job per converted batch" do
         SiteSetting.nested_replies_backfill_batch_size = 1
         Fabricate(:topic, category: category)
@@ -91,6 +100,12 @@ RSpec.describe NestedTopic::ConvertCategory do
         Fabricate(:nested_topic, topic: topic)
 
         expect_not_enqueued_with(job: :backfill_nested_reply_stats) { result }
+      end
+
+      it "skips hot score backfill when no topics are converted" do
+        Fabricate(:nested_topic, topic: topic)
+
+        expect_not_enqueued_with(job: :recalculate_nested_hot_scores) { result }
       end
     end
   end

@@ -1994,6 +1994,18 @@ nested_replies:
     min: 1
     max: 10000
     hidden: true
+  nested_replies_hot_score_batch_size:
+    default: 100
+    type: integer
+    min: 1
+    max: 10000
+    hidden: true
+  nested_replies_reconciliation_batch_size:
+    default: 100
+    type: integer
+    min: 1
+    max: 10000
+    hidden: true
   nested_replies_hot_preload_post_budget:
     default: 60
     type: integer

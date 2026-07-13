@@ -6,164 +6,116 @@ module Jobs
 
     cluster_concurrency 1
 
+    # The next scheduled run resumes any remaining backlog.
+    MAX_DRAIN_BATCHES = 20
+
     def execute(args = {})
       return unless SiteSetting.nested_replies_enabled
 
       args ||= {}
-      topic_ids = topic_ids_missing_stats(category_id: args[:category_id])
-      return if topic_ids.empty?
+      if args[:topic_id].present?
+        backfill_topic(args[:topic_id])
+        return
+      end
 
+      topic_ids =
+        topic_ids_missing_stats(
+          category_id: args[:category_id],
+          after_topic_id: args[:after_topic_id],
+        )
+      failed = false
       topic_ids.each do |topic_id|
-        backfill_topic(topic_id)
-        ensure_op_stat_row(topic_id)
+        NestedReplies::StructuralStats.recalculate_topic(topic_id)
+      rescue => error
+        failed = true
+        Discourse.warn_exception(
+          error,
+          message: "Failed to backfill nested reply stats for topic #{topic_id}",
+        )
+      end
+
+      unless failed
+        enqueue_continuation(
+          topic_ids,
+          category_id: args[:category_id],
+          drain_batch: [args[:drain_batch].to_i, 1].max,
+        )
       end
     end
 
     private
 
-    def topic_ids_missing_stats(category_id: nil)
+    def backfill_topic(topic_id)
+      return unless eligible_topic?(topic_id)
+
+      NestedReplies::StructuralStats.recalculate_topic(topic_id)
+    end
+
+    def eligible_topic?(topic_id)
+      DB.query_single(
+        <<~SQL,
+          SELECT 1
+          FROM topics
+          LEFT JOIN nested_topics ON nested_topics.topic_id = topics.id
+          INNER JOIN posts original_post
+            ON original_post.topic_id = topics.id
+           AND original_post.post_number = 1
+          WHERE topics.id = :topic_id
+            AND topics.deleted_at IS NULL
+            AND topics.archetype = :archetype
+            AND (:nested_replies_default OR nested_topics.topic_id IS NOT NULL)
+          LIMIT 1
+        SQL
+        topic_id: topic_id,
+        archetype: Archetype.default,
+        nested_replies_default: SiteSetting.nested_replies_default,
+      ).present?
+    end
+
+    def topic_ids_missing_stats(category_id: nil, after_topic_id: nil)
       category_id = category_id.to_i
-      category_filter = category_id.positive? ? "AND t.category_id = :category_id" : ""
+      after_topic_id = after_topic_id.to_i
+      category_filter = category_id.positive? ? "AND topics.category_id = :category_id" : ""
 
       DB.query_single(
         <<~SQL,
-          SELECT t.id
-          FROM topics t
-          LEFT JOIN nested_topics nt ON nt.topic_id = t.id
-          INNER JOIN posts op ON op.topic_id = t.id AND op.post_number = 1
-          LEFT JOIN nested_view_post_stats s ON s.post_id = op.id
-          WHERE t.deleted_at IS NULL
-            AND t.archetype = :archetype
-            AND (:nested_replies_default OR nt.topic_id IS NOT NULL)
+          SELECT topics.id
+          FROM topics
+          LEFT JOIN nested_topics ON nested_topics.topic_id = topics.id
+          INNER JOIN posts original_post
+            ON original_post.topic_id = topics.id
+           AND original_post.post_number = 1
+          LEFT JOIN nested_view_post_stats stats ON stats.post_id = original_post.id
+          WHERE topics.deleted_at IS NULL
+            AND topics.archetype = :archetype
+            AND (:nested_replies_default OR nested_topics.topic_id IS NOT NULL)
+            AND topics.id > :after_topic_id
             #{category_filter}
             AND EXISTS (
               SELECT 1
-              FROM posts reply
-              WHERE reply.topic_id = t.id
-                AND reply.post_number > 1
+              FROM posts replies
+              WHERE replies.topic_id = topics.id
+                AND replies.post_number > 1
             )
-            AND (
-              s.post_id IS NULL
-              OR s.structural_backfilled_at IS NULL
-              OR EXISTS (
-                SELECT 1
-                FROM posts child
-                INNER JOIN posts parent
-                  ON parent.topic_id = child.topic_id
-                 AND parent.post_number = child.reply_to_post_number
-                LEFT JOIN nested_view_post_stats parent_stats
-                  ON parent_stats.post_id = parent.id
-                WHERE child.topic_id = t.id
-                  AND child.reply_to_post_number IS NOT NULL
-                  AND child.post_number > 1
-                GROUP BY parent.id, parent_stats.post_id, parent_stats.direct_reply_count
-                HAVING parent_stats.post_id IS NULL
-                  OR parent_stats.direct_reply_count < COUNT(*)
-              )
-            )
-          ORDER BY t.id ASC
+            AND stats.structural_backfilled_at IS NULL
+          ORDER BY topics.id
           LIMIT :batch_size
         SQL
         archetype: Archetype.default,
         batch_size: SiteSetting.nested_replies_backfill_batch_size,
         category_id: category_id,
+        after_topic_id: after_topic_id,
         nested_replies_default: SiteSetting.nested_replies_default,
       )
     end
 
-    # The timestamp is a dedicated completion marker. OP row existence alone
-    # is insufficient because a live reply can create a partially populated
-    # counter row while older replies are still awaiting backfill.
-    def ensure_op_stat_row(topic_id)
-      DB.exec(<<~SQL, topic_id: topic_id)
-        INSERT INTO nested_view_post_stats
-          (post_id, direct_reply_count, whisper_direct_reply_count,
-           total_descendant_count, whisper_total_descendant_count,
-           structural_backfilled_at, created_at, updated_at)
-        SELECT p.id, 0, 0, 0, 0, NOW(), NOW(), NOW()
-        FROM posts p
-        WHERE p.topic_id = :topic_id AND p.post_number = 1
-        ON CONFLICT (post_id) DO UPDATE SET
-          structural_backfilled_at = EXCLUDED.structural_backfilled_at,
-          updated_at = NOW()
-      SQL
-    end
+    def enqueue_continuation(topic_ids, category_id: nil, drain_batch:)
+      return if topic_ids.size < SiteSetting.nested_replies_backfill_batch_size
+      return if drain_batch >= MAX_DRAIN_BATCHES
 
-    def backfill_topic(topic_id)
-      DB.exec(<<~SQL, topic_id: topic_id, whisper_type: Post.types[:whisper])
-        WITH RECURSIVE
-        edges AS (
-          SELECT post_number, reply_to_post_number, post_type
-          FROM posts
-          WHERE topic_id = :topic_id
-            AND reply_to_post_number IS NOT NULL
-            AND post_number > 1
-        ),
-        direct_counts AS (
-          SELECT reply_to_post_number AS parent_number, post_type,
-                 COUNT(*) AS cnt
-          FROM edges
-          GROUP BY reply_to_post_number, post_type
-        ),
-        direct_agg AS (
-          SELECT parent_number,
-                 SUM(cnt) AS direct_reply_count,
-                 SUM(CASE WHEN post_type = :whisper_type THEN cnt ELSE 0 END) AS whisper_direct_reply_count
-          FROM direct_counts
-          GROUP BY parent_number
-        ),
-        ancestor_walk AS (
-          SELECT e.reply_to_post_number AS ancestor_number,
-                 1 AS descendant_count,
-                 CASE WHEN e.post_type = :whisper_type THEN 1 ELSE 0 END AS whisper_descendant_count,
-                 1 AS depth,
-                 ARRAY[e.post_number, e.reply_to_post_number]::integer[] AS path
-          FROM edges e
-          UNION ALL
-          SELECT p.reply_to_post_number,
-                 a.descendant_count,
-                 a.whisper_descendant_count,
-                 a.depth + 1,
-                 a.path || p.reply_to_post_number
-          FROM ancestor_walk a
-          JOIN edges p ON p.post_number = a.ancestor_number
-          WHERE a.depth < 500
-            AND NOT p.reply_to_post_number = ANY(a.path)
-        ),
-        descendant_agg AS (
-          SELECT ancestor_number,
-                 COUNT(*) AS total_descendant_count,
-                 SUM(whisper_descendant_count) AS whisper_total_descendant_count
-          FROM ancestor_walk
-          GROUP BY ancestor_number
-        ),
-        combined AS (
-          SELECT p.id AS post_id,
-                 COALESCE(d.direct_reply_count, 0) AS direct_reply_count,
-                 COALESCE(d.whisper_direct_reply_count, 0) AS whisper_direct_reply_count,
-                 COALESCE(t.total_descendant_count, 0) AS total_descendant_count,
-                 COALESCE(t.whisper_total_descendant_count, 0) AS whisper_total_descendant_count
-          FROM posts p
-          LEFT JOIN direct_agg d ON d.parent_number = p.post_number
-          LEFT JOIN descendant_agg t ON t.ancestor_number = p.post_number
-          WHERE p.topic_id = :topic_id
-            AND (p.post_number = 1 OR d.parent_number IS NOT NULL OR t.ancestor_number IS NOT NULL)
-        )
-        INSERT INTO nested_view_post_stats
-          (post_id, direct_reply_count, whisper_direct_reply_count,
-           total_descendant_count, whisper_total_descendant_count,
-           created_at, updated_at)
-        SELECT post_id, direct_reply_count, whisper_direct_reply_count,
-               total_descendant_count, whisper_total_descendant_count,
-               NOW(), NOW()
-        FROM combined
-        ON CONFLICT (post_id) DO UPDATE SET
-          direct_reply_count = GREATEST(EXCLUDED.direct_reply_count, nested_view_post_stats.direct_reply_count),
-          whisper_direct_reply_count = GREATEST(EXCLUDED.whisper_direct_reply_count, nested_view_post_stats.whisper_direct_reply_count),
-          total_descendant_count = GREATEST(EXCLUDED.total_descendant_count, nested_view_post_stats.total_descendant_count),
-          whisper_total_descendant_count = GREATEST(EXCLUDED.whisper_total_descendant_count, nested_view_post_stats.whisper_total_descendant_count),
-          updated_at = NOW()
-      SQL
+      args = { after_topic_id: topic_ids.last, drain_batch: drain_batch + 1 }
+      args[:category_id] = category_id if category_id.to_i.positive?
+      Jobs.enqueue(:backfill_nested_reply_stats, args)
     end
   end
 end

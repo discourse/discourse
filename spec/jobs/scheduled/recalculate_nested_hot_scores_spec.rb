@@ -48,19 +48,16 @@ RSpec.describe Jobs::RecalculateNestedHotScores do
     expect(parent_stat.thread_hot_score).to be > parent_stat.hot_score
   end
 
-  it "does not claim ownership of a missing structural backfill marker" do
+  it "backfills hot scores without claiming the structural marker", :aggregate_failures do
     parent = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
     Fabricate(:post, topic: topic, reply_to_post_number: parent.post_number)
     NestedViewPostStat.delete_all
 
     execute
 
-    expect(NestedViewPostStat.find_by(post: op)).to be_nil
-
-    backfill_structural_stats
-    expect(NestedViewPostStat.find_by(post: op).total_descendant_count).to eq(2)
-
-    execute
+    topic_marker = NestedViewPostStat.find_by!(post: op)
+    expect(topic_marker.hot_score_updated_at).to be_present
+    expect(topic_marker.structural_backfilled_at).to be_nil
     expect(NestedViewPostStat.find_by(post: parent).hot_score_updated_at).to be_present
   end
 
@@ -167,5 +164,82 @@ RSpec.describe Jobs::RecalculateNestedHotScores do
     execute(topic_id: flat_topic.id)
 
     expect(NestedViewPostStat.find_by(post: post).hot_score_updated_at).to be_present
+  end
+
+  it "limits a scheduled run to the requested category" do
+    category = Fabricate(:category)
+    other_category = Fabricate(:category)
+    category_topic = Fabricate(:topic, category: category)
+    other_topic = Fabricate(:topic, category: other_category)
+    Fabricate(:nested_topic, topic: category_topic)
+    Fabricate(:nested_topic, topic: other_topic)
+    category_op = Fabricate(:post, topic: category_topic, post_number: 1)
+    other_op = Fabricate(:post, topic: other_topic, post_number: 1)
+    category_post =
+      Fabricate(:post, topic: category_topic, reply_to_post_number: category_op.post_number)
+    other_post = Fabricate(:post, topic: other_topic, reply_to_post_number: other_op.post_number)
+    NestedViewPostStat.delete_all
+
+    execute(category_id: category.id)
+
+    expect(NestedViewPostStat.find_by(post: category_post).hot_score_updated_at).to be_present
+    expect(NestedViewPostStat.find_by(post: other_post)).to be_nil
+  end
+
+  it "continues a full hot-score batch" do
+    SiteSetting.nested_replies_backfill_batch_size = 20
+    SiteSetting.nested_replies_hot_score_batch_size = 1
+    first_post = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
+    other_topic = Fabricate(:topic)
+    Fabricate(:nested_topic, topic: other_topic)
+    other_op = Fabricate(:post, topic: other_topic, post_number: 1)
+    other_post = Fabricate(:post, topic: other_topic, reply_to_post_number: other_op.post_number)
+    NestedViewPostStat.delete_all
+
+    expect_enqueued_with(job: :recalculate_nested_hot_scores, args: { drain_batch: 2 }) { execute }
+
+    expect(
+      NestedViewPostStat
+        .where(post_id: [first_post.id, other_post.id])
+        .where.not(hot_score_updated_at: nil)
+        .count,
+    ).to eq(1)
+  end
+
+  it "caps a hot-score drain chain", :aggregate_failures do
+    SiteSetting.nested_replies_hot_score_batch_size = 1
+    post = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
+    NestedViewPostStat.delete_all
+    described_class.jobs.clear
+
+    execute(drain_batch: described_class::MAX_DRAIN_BATCHES)
+
+    expect(NestedViewPostStat.find_by!(post: post).hot_score_updated_at).to be_present
+    expect(described_class.jobs).to be_empty
+  end
+
+  it "isolates a failed topic and stops the chain", :aggregate_failures do
+    SiteSetting.nested_replies_hot_score_batch_size = 2
+    Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
+    other_topic = Fabricate(:topic)
+    Fabricate(:nested_topic, topic: other_topic)
+    other_op = Fabricate(:post, topic: other_topic, post_number: 1)
+    other_post = Fabricate(:post, topic: other_topic, reply_to_post_number: other_op.post_number)
+    NestedViewPostStat.delete_all
+    described_class.jobs.clear
+    allow(Discourse).to receive(:warn_exception)
+    allow(NestedReplies::HotScoreCalculator).to receive(
+      :recalculate_topic,
+    ).and_wrap_original do |method, topic_id|
+      raise StandardError, "poison topic" if topic_id == topic.id
+
+      method.call(topic_id)
+    end
+
+    execute
+
+    expect(NestedViewPostStat.find_by(post: op)).to be_nil
+    expect(NestedViewPostStat.find_by!(post: other_post).hot_score_updated_at).to be_present
+    expect(described_class.jobs).to be_empty
   end
 end

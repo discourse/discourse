@@ -264,8 +264,11 @@ module NestedReplies
     end
 
     def hot_preload_rows(starting_posts, max_depth:, children_per_parent:)
-      fallback_score = NestedReplies::HotScoreCalculator.hot_score_sql("posts")
-      stale_score = NestedReplies::HotScoreCalculator.persisted_score_stale_sql
+      fallback_score = NestedReplies::HotScoreCalculator.fallback_hot_score_sql("posts")
+      stale_score =
+        NestedReplies::HotScoreCalculator.persisted_score_stale_sql(
+          formula_version_table: "nested_hot_score_formula_version",
+        )
       thread_hot_score =
         "CASE WHEN #{stale_score} " \
           "THEN #{fallback_score} ELSE nested_view_post_stats.thread_hot_score END"
@@ -428,6 +431,12 @@ module NestedReplies
     def flat_descendants_scope(parent_post_number, sort:, offset: 0, limit: CHILDREN_PER_PAGE)
       post_types = visible_post_types
       order_expr = NestedReplies::Sort.sql_order_expression(sort, posts_table: "p")
+      hot_formula_join = (<<~SQL.squish if sort == "hot")
+            LEFT JOIN topic_custom_fields nested_hot_score_formula_version
+              ON nested_hot_score_formula_version.topic_id = p.topic_id
+             AND nested_hot_score_formula_version.name =
+               '#{NestedReplies::HotScoreCalculator::FORMULA_VERSION_FIELD}'
+          SQL
 
       descendant_post_numbers =
         DB.query_single(
@@ -455,6 +464,7 @@ module NestedReplies
           FROM descendants d
           JOIN posts p ON p.post_number = d.post_number AND p.topic_id = :topic_id
           LEFT JOIN nested_view_post_stats ON nested_view_post_stats.post_id = p.id
+          #{hot_formula_join}
           WHERE #{visibility_sql(posts_table: "p")}
           ORDER BY #{order_expr}
           OFFSET :offset
@@ -517,6 +527,8 @@ module NestedReplies
       stat_counts = cached_total_descendant_counts(post_ids)
 
       return stat_counts if post_records.empty? || guardian.user&.whisperer?
+
+      return live_total_descendant_counts(post_records) unless structural_stats_backfilled?
 
       reply_counts ||= {}
       posts_needing_live_counts =
@@ -639,6 +651,7 @@ module NestedReplies
 
     def hot_scores_for_posts(posts)
       return {} if posts.empty?
+      return {} unless hot_score_formula_current?
 
       NestedViewPostStat
         .where(post_id: posts.map(&:id).uniq)
@@ -647,6 +660,19 @@ module NestedReplies
         .where(thread_hot_score: ..NestedReplies::HotScoreCalculator::LEGACY_SCORE_THRESHOLD)
         .pluck(:post_id, :thread_hot_score, :hot_score)
         .to_h { |post_id, thread_hot_score, hot_score| [post_id, [thread_hot_score, hot_score]] }
+    end
+
+    def structural_stats_backfilled?
+      NestedViewPostStat
+        .joins(:post)
+        .where(posts: { topic_id: topic.id, post_number: 1 })
+        .where.not(structural_backfilled_at: nil)
+        .exists?
+    end
+
+    def hot_score_formula_current?
+      topic.custom_fields[NestedReplies::HotScoreCalculator::FORMULA_VERSION_FIELD].to_s ==
+        NestedReplies::HotScoreCalculator::FORMULA_VERSION.to_s
     end
   end
 end

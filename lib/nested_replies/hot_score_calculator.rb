@@ -69,6 +69,21 @@ module NestedReplies
       SQL
     end
 
+    def self.fallback_hot_score_sql(table_name)
+      reply_count_sql = <<~SQL.squish
+        (
+          SELECT COUNT(*)
+          FROM posts nested_hot_direct_replies
+          WHERE nested_hot_direct_replies.topic_id = #{table_name}.topic_id
+            AND nested_hot_direct_replies.reply_to_post_number = #{table_name}.post_number
+            AND nested_hot_direct_replies.post_number > 1
+            AND #{public_post_sql("nested_hot_direct_replies")}
+        )
+      SQL
+
+      hot_score_sql(table_name, reply_count_sql: reply_count_sql)
+    end
+
     def self.score_for(post, direct_reply_count: 0, now: Time.current)
       return HOT_SCORE_FLOOR unless public_post?(post)
 
@@ -78,12 +93,21 @@ module NestedReplies
       Math.log(1 + [engagement, 0.0].max) + freshness
     end
 
-    def self.persisted_score_stale_sql(stats_table = "nested_view_post_stats")
-      <<~SQL.squish
+    def self.persisted_score_stale_sql(
+      stats_table = "nested_view_post_stats",
+      formula_version_table: nil
+    )
+      stale_sql = <<~SQL.squish
         #{stats_table}.hot_score_updated_at IS NULL
         OR #{stats_table}.hot_score > #{LEGACY_SCORE_THRESHOLD}
         OR #{stats_table}.thread_hot_score > #{LEGACY_SCORE_THRESHOLD}
       SQL
+
+      if formula_version_table
+        stale_sql << " OR #{formula_version_table}.value IS DISTINCT FROM '#{FORMULA_VERSION}'"
+      end
+
+      stale_sql
     end
 
     def self.public_post?(post)
@@ -155,13 +179,7 @@ module NestedReplies
     def self.recalculate_topic(topic_id)
       return if topic_id.blank?
 
-      with_topic_lock(topic_id) do
-        NestedViewPostStat.transaction do
-          reset_topic_scores(topic_id)
-          propagate_topic_scores(topic_id)
-          mark_topic_recalculated(topic_id)
-        end
-      end
+      with_topic_lock(topic_id) { recalculate_topic_without_lock(topic_id) }
     end
 
     def self.with_topic_lock(topic_id, &block)
@@ -182,6 +200,14 @@ module NestedReplies
     end
 
     def self.recalculate_for_post_without_lock(post_id)
+      topic_id = Post.with_deleted.where(id: post_id).pick(:topic_id)
+      return if topic_id.blank?
+
+      unless formula_current?(topic_id)
+        recalculate_topic_without_lock(topic_id)
+        return
+      end
+
       path = score_path(post_id)
       return if path.empty?
 
@@ -207,6 +233,22 @@ module NestedReplies
         end
 
       persist_scores(scores)
+    end
+
+    def self.recalculate_topic_without_lock(topic_id)
+      NestedViewPostStat.transaction do
+        reset_topic_scores(topic_id)
+        propagate_topic_scores(topic_id)
+        mark_topic_recalculated(topic_id)
+      end
+    end
+
+    def self.formula_current?(topic_id)
+      TopicCustomField.exists?(
+        topic_id: topic_id,
+        name: FORMULA_VERSION_FIELD,
+        value: FORMULA_VERSION.to_s,
+      )
     end
 
     def self.score_path(post_id)
@@ -403,13 +445,19 @@ module NestedReplies
 
     def self.mark_topic_recalculated(topic_id)
       DB.exec(<<~SQL, topic_id: topic_id)
-          UPDATE nested_view_post_stats stats
-          SET hot_score_updated_at = NOW(),
-              updated_at = NOW()
+          INSERT INTO nested_view_post_stats (
+            post_id,
+            hot_score_updated_at,
+            created_at,
+            updated_at
+          )
+          SELECT posts.id, NOW(), NOW(), NOW()
           FROM posts
           WHERE posts.topic_id = :topic_id
             AND posts.post_number = 1
-            AND stats.post_id = posts.id
+          ON CONFLICT (post_id) DO UPDATE SET
+            hot_score_updated_at = EXCLUDED.hot_score_updated_at,
+            updated_at = NOW()
         SQL
 
       Topic.find_by(id: topic_id)&.upsert_custom_fields(FORMULA_VERSION_FIELD => FORMULA_VERSION)

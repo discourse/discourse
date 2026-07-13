@@ -5,7 +5,8 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
 
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   fab!(:topic) { Fabricate(:topic, user: user) }
-  fab!(:op) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
+  fab!(:nested_topic) { Fabricate(:nested_topic, topic: topic) }
+  fab!(:op) { Fabricate(:post, topic: topic.reload, user: user, post_number: 1) }
 
   before { SiteSetting.nested_replies_enabled = true }
 
@@ -46,6 +47,15 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
   end
 
   describe "after_create stats increment" do
+    it "does not track structural stats for a flat topic" do
+      flat_topic = Fabricate(:topic, user: user)
+      flat_op = Fabricate(:post, topic: flat_topic, user: user, post_number: 1)
+
+      Fabricate(:post, topic: flat_topic, user: user, reply_to_post_number: flat_op.post_number)
+
+      expect(NestedViewPostStat.find_by(post: flat_op)).to be_nil
+    end
+
     it "uses constant queries regardless of chain depth" do
       chain_3 = create_reply_chain(depth: 3)
       queries_3 =
@@ -54,6 +64,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
         end
 
       topic2 = Fabricate(:topic, user: user)
+      Fabricate(:nested_topic, topic: topic2)
       Fabricate(:post, topic: topic2, user: user, post_number: 1)
       chain_10 = create_reply_chain(depth: 10, in_topic: topic2)
       queries_10 =
@@ -134,6 +145,104 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
         expect(stat.whisper_total_descendant_count).to be >= 1
       end
     end
+
+    it "ignores small actions while counting descendants below them" do
+      parent = Fabricate(:post, topic: topic, user: user, reply_to_post_number: op.post_number)
+      small_action =
+        Fabricate(:small_action, topic: topic, user: user, reply_to_post_number: parent.post_number)
+
+      Fabricate(:post, topic: topic, user: user, reply_to_post_number: small_action.post_number)
+
+      parent_stat = NestedViewPostStat.find_by!(post: parent)
+      expect([parent_stat.direct_reply_count, parent_stat.total_descendant_count]).to eq([0, 1])
+    end
+  end
+
+  describe "after_update stats adjustment" do
+    it "tracks regular, whisper, and small-action transitions" do
+      parent = Fabricate(:post, topic: topic, user: user, reply_to_post_number: op.post_number)
+      child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: parent.post_number)
+      parent_stat = NestedViewPostStat.find_by!(post: parent)
+
+      child.update!(post_type: Post.types[:whisper])
+      whisper_counts =
+        parent_stat.reload.attributes.values_at(
+          "direct_reply_count",
+          "total_descendant_count",
+          "whisper_direct_reply_count",
+          "whisper_total_descendant_count",
+        )
+
+      child.update!(post_type: Post.types[:small_action])
+      small_action_counts =
+        parent_stat.reload.attributes.values_at(
+          "direct_reply_count",
+          "total_descendant_count",
+          "whisper_direct_reply_count",
+          "whisper_total_descendant_count",
+        )
+
+      child.update!(post_type: Post.types[:regular])
+      regular_counts =
+        parent_stat.reload.attributes.values_at(
+          "direct_reply_count",
+          "total_descendant_count",
+          "whisper_direct_reply_count",
+          "whisper_total_descendant_count",
+        )
+
+      expect(whisper_counts).to eq([1, 1, 1, 1])
+      expect(small_action_counts).to eq([0, 0, 0, 0])
+      expect(regular_counts).to eq([1, 1, 0, 0])
+    end
+
+    it "moves a subtree while changing its post type" do
+      old_parent = Fabricate(:post, topic: topic, user: user, reply_to_post_number: op.post_number)
+      new_parent = Fabricate(:post, topic: topic, user: user, reply_to_post_number: op.post_number)
+      child =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: old_parent.post_number)
+      Fabricate(
+        :post,
+        topic: topic,
+        user: user,
+        reply_to_post_number: child.post_number,
+        post_type: Post.types[:whisper],
+      )
+
+      child.update!(reply_to_post_number: new_parent.post_number, post_type: Post.types[:whisper])
+
+      old_stat = NestedViewPostStat.find_by!(post: old_parent)
+      new_stat = NestedViewPostStat.find_by!(post: new_parent)
+      expect(
+        old_stat.attributes.values_at(
+          "direct_reply_count",
+          "total_descendant_count",
+          "whisper_direct_reply_count",
+          "whisper_total_descendant_count",
+        ),
+      ).to eq([0, 0, 0, 0])
+      expect(
+        new_stat.attributes.values_at(
+          "direct_reply_count",
+          "total_descendant_count",
+          "whisper_direct_reply_count",
+          "whisper_total_descendant_count",
+        ),
+      ).to eq([1, 2, 1, 2])
+    end
+
+    it "queues an exact rebuild after reparenting" do
+      old_parent = Fabricate(:post, topic: topic, user: user, reply_to_post_number: op.post_number)
+      new_parent = Fabricate(:post, topic: topic, user: user, reply_to_post_number: op.post_number)
+      child =
+        Fabricate(:post, topic: topic, user: user, reply_to_post_number: old_parent.post_number)
+
+      expect_enqueued_with(job: :backfill_nested_reply_stats, args: { topic_id: topic.id }) do
+        PostRevisor.new(child).revise!(user, reply_to_post_number: new_parent.post_number)
+      end
+
+      expect(child.reload.reply_to_post_number).to eq(new_parent.post_number)
+    end
   end
 
   describe "after_destroy stats decrement" do
@@ -144,6 +253,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
       queries_3 = track_sql_queries { leaf_3.destroy! }
 
       topic2 = Fabricate(:topic, user: user)
+      Fabricate(:nested_topic, topic: topic2)
       Fabricate(:post, topic: topic2, user: user, post_number: 1)
       chain_10 = create_reply_chain(depth: 10, in_topic: topic2)
       leaf_10 =
@@ -221,6 +331,15 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
       expect(parent_stat.direct_reply_count).to eq(1)
       expect(parent_stat.whisper_direct_reply_count).to eq(1)
     end
+
+    it "queues an exact rebuild after a hard delete" do
+      parent = Fabricate(:post, topic: topic, user: user, reply_to_post_number: op.post_number)
+      child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: parent.post_number)
+
+      expect_enqueued_with(job: :backfill_nested_reply_stats, args: { topic_id: topic.id }) do
+        child.destroy!
+      end
+    end
   end
 
   describe "hot score calculation" do
@@ -232,6 +351,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
         end
 
       topic2 = Fabricate(:topic, user: user)
+      Fabricate(:nested_topic, topic: topic2)
       Fabricate(:post, topic: topic2, user: user, post_number: 1)
       chain_10 = create_reply_chain(depth: 10, in_topic: topic2)
       queries_10 =

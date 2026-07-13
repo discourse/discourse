@@ -5,6 +5,7 @@ module NestedReplies
 end
 
 require_relative "nested_replies/ancestor_walker"
+require_relative "nested_replies/structural_stats"
 require_relative "nested_replies/hot_score_calculator"
 require_relative "nested_replies/sort"
 require_relative "nested_replies/tree_loader"

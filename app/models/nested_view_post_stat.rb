@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class NestedViewPostStat < ActiveRecord::Base
-  belongs_to :post
+  belongs_to :post, -> { with_deleted }
 end
 
 # == Schema Information

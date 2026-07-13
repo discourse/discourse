@@ -45,6 +45,21 @@ RSpec.describe NestedReplies::Sort do
       expect(sorted.map(&:post_number)).to eq([4, 3, 2])
     end
 
+    it "uses direct replies in the in-memory hot fallback" do
+      topic = Fabricate(:topic)
+      op = Fabricate(:post, topic: topic, post_number: 1)
+      unengaged = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
+      engaged = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
+      Fabricate(:post, topic: topic, reply_to_post_number: engaged.post_number)
+      created_at = 1.day.ago
+      unengaged.update_columns(created_at: created_at)
+      engaged.update_columns(created_at: created_at, reply_count: 1)
+
+      sorted = described_class.sort_in_memory([unengaged.reload, engaged.reload], "hot")
+
+      expect(sorted.map(&:id)).to eq([engaged.id, unengaged.id])
+    end
+
     it "raises on invalid algorithm" do
       expect { described_class.sort_in_memory(posts, "random") }.to raise_error(ArgumentError)
     end
@@ -52,8 +67,11 @@ RSpec.describe NestedReplies::Sort do
 
   describe ".sql_order_expression" do
     it "orders hot by branch score, own score, then post number" do
-      fallback_score = NestedReplies::HotScoreCalculator.hot_score_sql("posts")
-      stale_score = NestedReplies::HotScoreCalculator.persisted_score_stale_sql
+      fallback_score = NestedReplies::HotScoreCalculator.fallback_hot_score_sql("posts")
+      stale_score =
+        NestedReplies::HotScoreCalculator.persisted_score_stale_sql(
+          formula_version_table: "nested_hot_score_formula_version",
+        )
 
       expect(described_class.sql_order_expression("hot")).to eq(
         "CASE WHEN #{stale_score} " \

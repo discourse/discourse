@@ -17,7 +17,10 @@ class NestedTopic::ConvertCategory
   policy :category_nested_replies_enabled
   step :enable_nested_view_for_existing_topics
   step :mark_conversion_completed
-  only_if(:converted_topics?) { step :enqueue_nested_reply_stats_backfill }
+  only_if(:converted_topics?) do
+    step :enqueue_nested_reply_stats_backfill
+    step :enqueue_nested_hot_score_backfill
+  end
 
   private
 
@@ -90,5 +93,9 @@ class NestedTopic::ConvertCategory
 
   def enqueue_nested_reply_stats_backfill(category:)
     Jobs.enqueue(:backfill_nested_reply_stats, category_id: category.id)
+  end
+
+  def enqueue_nested_hot_score_backfill(category:)
+    Jobs.enqueue(:recalculate_nested_hot_scores, category_id: category.id)
   end
 end

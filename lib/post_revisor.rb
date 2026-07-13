@@ -598,8 +598,6 @@ class PostRevisor
 
     @post.extract_quoted_post_numbers
 
-    previous_reply_to_post_number = @post.reply_to_post_number_was
-
     @post_successfully_saved = @post.save(validate: @validate_post)
     @post_changes = @post.previous_changes.slice(*POST_TRACKED_FIELDS) if @post_successfully_saved
     @post.link_post_uploads
@@ -607,9 +605,6 @@ class PostRevisor
     if @post_successfully_saved
       @post.save_reply_relationships
       cleanup_previous_reply_to_relationship
-      if @post.saved_change_to_reply_to_post_number?
-        @post.nested_replies_apply_reparent(previous_reply_to_post_number)
-      end
     end
 
     # we don't want to increment post count on user merge

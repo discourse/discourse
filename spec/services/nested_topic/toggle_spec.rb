@@ -54,6 +54,12 @@ RSpec.describe NestedTopic::Toggle do
         end
       end
 
+      it "enqueues a structural stats backfill" do
+        expect_enqueued_with(job: :backfill_nested_reply_stats, args: { topic_id: topic.id }) do
+          result
+        end
+      end
+
       context "when nested topic already exists" do
         before { Fabricate(:nested_topic, topic: topic) }
 
@@ -78,6 +84,10 @@ RSpec.describe NestedTopic::Toggle do
 
       it "does not enqueue a hot score refresh" do
         expect_not_enqueued_with(job: :recalculate_nested_hot_scores) { result }
+      end
+
+      it "does not enqueue a structural stats backfill" do
+        expect_not_enqueued_with(job: :backfill_nested_reply_stats) { result }
       end
     end
 

@@ -6,179 +6,357 @@ module HasNestedReplyStats
   included do
     after_create :nested_replies_increment_stats
     after_destroy :nested_replies_decrement_stats
-    after_commit :nested_replies_refresh_hot_score_after_visibility_change, on: :update
-  end
-
-  # Moves this post's subtree from `previous_reply_to_post_number` to its
-  # current `reply_to_post_number` on the nested stats tree. Shared ancestors
-  # are left alone — their total descendant count is unchanged — while
-  # ancestors unique to either chain are adjusted by this post's subtree size.
-  def nested_replies_apply_reparent(previous_reply_to_post_number)
-    return unless SiteSetting.nested_replies_enabled
-    return if previous_reply_to_post_number == reply_to_post_number
-
-    subtree_size, whisper_subtree_size = nested_replies_subtree_sizes
-    is_whisper = post_type == Post.types[:whisper] ? 1 : 0
-
-    old_ancestors = nested_replies_walk(previous_reply_to_post_number)
-    new_ancestors = nested_replies_walk(reply_to_post_number)
-
-    old_ids = old_ancestors.map(&:id)
-    new_ids = new_ancestors.map(&:id)
-    old_only_ids = old_ids - new_ids
-    new_only_ids = new_ids - old_ids
-
-    old_direct_parent_id = old_ancestors.find { |a| a.depth == 1 }&.id
-    new_direct_parent_id = new_ancestors.find { |a| a.depth == 1 }&.id
-
-    if old_only_ids.any?
-      DB.exec(<<~SQL, ids: old_only_ids, subtree: subtree_size, whisper: whisper_subtree_size)
-        UPDATE nested_view_post_stats
-        SET total_descendant_count = GREATEST(total_descendant_count - :subtree, 0),
-            whisper_total_descendant_count = GREATEST(whisper_total_descendant_count - :whisper, 0),
-            updated_at = NOW()
-        WHERE post_id = ANY(ARRAY[:ids]::int[])
-      SQL
-    end
-
-    if new_only_ids.any?
-      DB.exec(<<~SQL, ids: new_only_ids, subtree: subtree_size, whisper: whisper_subtree_size)
-        INSERT INTO nested_view_post_stats (post_id, direct_reply_count, total_descendant_count,
-                                             whisper_direct_reply_count, whisper_total_descendant_count,
-                                             created_at, updated_at)
-        SELECT aid, 0, :subtree, 0, :whisper, NOW(), NOW()
-        FROM unnest(ARRAY[:ids]::int[]) AS aid
-        ON CONFLICT (post_id) DO UPDATE SET
-          total_descendant_count = nested_view_post_stats.total_descendant_count + :subtree,
-          whisper_total_descendant_count = nested_view_post_stats.whisper_total_descendant_count + :whisper,
-          updated_at = NOW()
-      SQL
-    end
-
-    DB.exec(<<~SQL, id: old_direct_parent_id, is_whisper: is_whisper) if old_direct_parent_id
-        UPDATE nested_view_post_stats
-        SET direct_reply_count = GREATEST(direct_reply_count - 1, 0),
-            whisper_direct_reply_count = GREATEST(whisper_direct_reply_count - :is_whisper, 0),
-            updated_at = NOW()
-        WHERE post_id = :id
-      SQL
-
-    DB.exec(<<~SQL, id: new_direct_parent_id, is_whisper: is_whisper) if new_direct_parent_id
-        INSERT INTO nested_view_post_stats (post_id, direct_reply_count, total_descendant_count,
-                                             whisper_direct_reply_count, whisper_total_descendant_count,
-                                             created_at, updated_at)
-        VALUES (:id, 1, 0, :is_whisper, 0, NOW(), NOW())
-        ON CONFLICT (post_id) DO UPDATE SET
-          direct_reply_count = nested_view_post_stats.direct_reply_count + 1,
-          whisper_direct_reply_count = nested_view_post_stats.whisper_direct_reply_count + :is_whisper,
-          updated_at = NOW()
-      SQL
-
-    DB.after_commit do
-      post = Post.with_deleted.includes(topic: :nested_topic).find_by(id: id)
-      if post
-        NestedReplies::HotScoreCalculator.recalculate_after_reparent(
-          post,
-          previous_reply_to_post_number,
-        )
-      end
-    end
+    after_update :nested_replies_apply_structural_changes
+    after_commit :nested_replies_refresh_after_update, on: :update
   end
 
   private
 
   def nested_replies_increment_stats
-    return unless SiteSetting.nested_replies_enabled
+    return unless nested_replies_tracks_stats?
     return if reply_to_post_number.blank?
 
-    ancestors = nested_replies_walk(reply_to_post_number)
-    return if ancestors.empty?
+    total, whisper = NestedReplies::StructuralStats.weights_for(post_type)
+    return if total.zero? && whisper.zero?
 
-    ancestor_ids = ancestors.map(&:id).uniq
-    direct_parent_id = ancestors.find { |a| a.depth == 1 }&.id
-    is_whisper = post_type == Post.types[:whisper] ? 1 : 0
+    NestedReplies::StructuralStats.with_topic_lock(topic_id) do
+      ancestors = nested_replies_walk(reply_to_post_number)
+      next if ancestors.empty?
 
-    DB.exec(<<~SQL, ids: ancestor_ids, parent_id: direct_parent_id, whisper: is_whisper)
-      INSERT INTO nested_view_post_stats (post_id, direct_reply_count, total_descendant_count,
-                                           whisper_direct_reply_count, whisper_total_descendant_count,
-                                           created_at, updated_at)
-      SELECT aid,
-             CASE WHEN aid = :parent_id THEN 1 ELSE 0 END,
-             1,
-             CASE WHEN aid = :parent_id THEN :whisper ELSE 0 END,
-             :whisper,
-             NOW(), NOW()
-      FROM unnest(ARRAY[:ids]::int[]) AS aid
-      ON CONFLICT (post_id) DO UPDATE SET
-        total_descendant_count = nested_view_post_stats.total_descendant_count + 1,
-        direct_reply_count = nested_view_post_stats.direct_reply_count +
-          CASE WHEN nested_view_post_stats.post_id = :parent_id THEN 1 ELSE 0 END,
-        whisper_total_descendant_count = nested_view_post_stats.whisper_total_descendant_count + :whisper,
-        whisper_direct_reply_count = nested_view_post_stats.whisper_direct_reply_count +
-          CASE WHEN nested_view_post_stats.post_id = :parent_id THEN :whisper ELSE 0 END,
-        updated_at = NOW()
-    SQL
+      ancestor_ids = ancestors.map(&:id).uniq
+      direct_parent_id = ancestors.find { |ancestor| ancestor.depth == 1 }&.id
+
+      DB.exec(
+        <<~SQL,
+          INSERT INTO nested_view_post_stats (
+            post_id,
+            direct_reply_count,
+            total_descendant_count,
+            whisper_direct_reply_count,
+            whisper_total_descendant_count,
+            created_at,
+            updated_at
+          )
+          SELECT ancestor_id,
+                 CASE WHEN ancestor_id = :parent_id THEN :total ELSE 0 END,
+                 :total,
+                 CASE WHEN ancestor_id = :parent_id THEN :whisper ELSE 0 END,
+                 :whisper,
+                 NOW(),
+                 NOW()
+          FROM unnest(ARRAY[:ids]::int[]) AS ancestor_id
+          ON CONFLICT (post_id) DO UPDATE SET
+            total_descendant_count = nested_view_post_stats.total_descendant_count + :total,
+            direct_reply_count = nested_view_post_stats.direct_reply_count +
+              CASE WHEN nested_view_post_stats.post_id = :parent_id THEN :total ELSE 0 END,
+            whisper_total_descendant_count =
+              nested_view_post_stats.whisper_total_descendant_count + :whisper,
+            whisper_direct_reply_count = nested_view_post_stats.whisper_direct_reply_count +
+              CASE WHEN nested_view_post_stats.post_id = :parent_id THEN :whisper ELSE 0 END,
+            updated_at = NOW()
+        SQL
+        ids: ancestor_ids,
+        parent_id: direct_parent_id,
+        total: total,
+        whisper: whisper,
+      )
+    end
   end
 
   def nested_replies_decrement_stats
-    return unless SiteSetting.nested_replies_enabled
-    if reply_to_post_number.present?
-      subtree_size, whisper_subtree_size = nested_replies_subtree_sizes
-      is_whisper = post_type == Post.types[:whisper] ? 1 : 0
+    return unless nested_replies_tracks_stats?
 
-      ancestors = nested_replies_walk(reply_to_post_number)
+    NestedReplies::StructuralStats.with_topic_lock(topic_id) do
+      if reply_to_post_number.present?
+        subtree_total, subtree_whisper = nested_replies_subtree_sizes
+        total, whisper = NestedReplies::StructuralStats.weights_for(post_type)
+        ancestors = nested_replies_walk(reply_to_post_number)
 
-      if ancestors.present?
-        ancestor_ids = ancestors.map(&:id)
-        direct_parent_id = ancestors.find { |a| a.depth == 1 }&.id
+        if ancestors.present?
+          ancestor_ids = ancestors.map(&:id).uniq
+          direct_parent_id = ancestors.find { |ancestor| ancestor.depth == 1 }&.id
 
-        DB.exec(
-          <<~SQL,
+          DB.exec(
+            <<~SQL,
+              UPDATE nested_view_post_stats
+              SET total_descendant_count = GREATEST(total_descendant_count - :subtree_total, 0),
+                  direct_reply_count = GREATEST(
+                    direct_reply_count -
+                      CASE WHEN post_id = :parent_id THEN :total ELSE 0 END,
+                    0
+                  ),
+                  whisper_total_descendant_count = GREATEST(
+                    whisper_total_descendant_count - :subtree_whisper,
+                    0
+                  ),
+                  whisper_direct_reply_count = GREATEST(
+                    whisper_direct_reply_count -
+                      CASE WHEN post_id = :parent_id THEN :whisper ELSE 0 END,
+                    0
+                  ),
+                  updated_at = NOW()
+              WHERE post_id = ANY(ARRAY[:ids]::int[])
+            SQL
+            ids: ancestor_ids,
+            parent_id: direct_parent_id,
+            subtree_total: subtree_total,
+            subtree_whisper: subtree_whisper,
+            total: total,
+            whisper: whisper,
+          )
+        end
+      end
+
+      NestedViewPostStat.where(post_id: id).delete_all
+    end
+
+    nested_replies_enqueue_structural_rebuild
+  end
+
+  def nested_replies_apply_structural_changes
+    return unless nested_replies_tracks_stats?
+
+    parent_changed = saved_change_to_reply_to_post_number?
+    post_type_changed = saved_change_to_post_type?
+    return unless parent_changed || post_type_changed
+
+    previous_parent = reply_to_post_number_before_last_save
+    previous_post_type = post_type_before_last_save
+
+    NestedReplies::StructuralStats.with_topic_lock(topic_id) do
+      if parent_changed
+        nested_replies_apply_reparent(previous_parent, previous_post_type)
+      else
+        nested_replies_apply_post_type_change(previous_post_type)
+      end
+    end
+  end
+
+  def nested_replies_apply_reparent(previous_parent, previous_post_type)
+    descendant_total, descendant_whisper = nested_replies_cached_descendant_sizes
+    previous_total, previous_whisper =
+      NestedReplies::StructuralStats.weights_for(previous_post_type)
+    current_total, current_whisper = NestedReplies::StructuralStats.weights_for(post_type)
+
+    previous_subtree_total = descendant_total + previous_total
+    previous_subtree_whisper = descendant_whisper + previous_whisper
+    current_subtree_total = descendant_total + current_total
+    current_subtree_whisper = descendant_whisper + current_whisper
+
+    previous_ancestors = nested_replies_walk(previous_parent)
+    current_ancestors = nested_replies_walk(reply_to_post_number)
+    previous_ids = previous_ancestors.map(&:id).uniq
+    current_ids = current_ancestors.map(&:id).uniq
+
+    nested_replies_decrement_ancestors(
+      previous_ids - current_ids,
+      previous_subtree_total,
+      previous_subtree_whisper,
+    )
+    nested_replies_increment_ancestors(
+      current_ids - previous_ids,
+      current_subtree_total,
+      current_subtree_whisper,
+    )
+
+    nested_replies_adjust_ancestors(
+      previous_ids & current_ids,
+      current_total - previous_total,
+      current_whisper - previous_whisper,
+    )
+
+    previous_direct_parent_id = previous_ancestors.find { |ancestor| ancestor.depth == 1 }&.id
+    current_direct_parent_id = current_ancestors.find { |ancestor| ancestor.depth == 1 }&.id
+
+    nested_replies_adjust_direct_parent(
+      previous_direct_parent_id,
+      -previous_total,
+      -previous_whisper,
+    )
+    nested_replies_adjust_direct_parent(
+      current_direct_parent_id,
+      current_total,
+      current_whisper,
+      insert_missing: true,
+    )
+  end
+
+  def nested_replies_apply_post_type_change(previous_post_type)
+    previous_total, previous_whisper =
+      NestedReplies::StructuralStats.weights_for(previous_post_type)
+    current_total, current_whisper = NestedReplies::StructuralStats.weights_for(post_type)
+    total_delta = current_total - previous_total
+    whisper_delta = current_whisper - previous_whisper
+    return if total_delta.zero? && whisper_delta.zero?
+
+    ancestors = nested_replies_walk(reply_to_post_number)
+    ancestor_ids = ancestors.map(&:id).uniq
+    nested_replies_adjust_ancestors(ancestor_ids, total_delta, whisper_delta)
+
+    direct_parent_id = ancestors.find { |ancestor| ancestor.depth == 1 }&.id
+    nested_replies_adjust_direct_parent(
+      direct_parent_id,
+      total_delta,
+      whisper_delta,
+      insert_missing: total_delta.positive? || whisper_delta.positive?,
+    )
+  end
+
+  def nested_replies_decrement_ancestors(ids, total, whisper)
+    return if ids.empty? || (total.zero? && whisper.zero?)
+
+    DB.exec(<<~SQL, ids: ids, total: total, whisper: whisper)
+        UPDATE nested_view_post_stats
+        SET total_descendant_count = GREATEST(total_descendant_count - :total, 0),
+            whisper_total_descendant_count = GREATEST(
+              whisper_total_descendant_count - :whisper,
+              0
+            ),
+            updated_at = NOW()
+        WHERE post_id = ANY(ARRAY[:ids]::int[])
+      SQL
+  end
+
+  def nested_replies_increment_ancestors(ids, total, whisper)
+    return if ids.empty? || (total.zero? && whisper.zero?)
+
+    DB.exec(<<~SQL, ids: ids, total: total, whisper: whisper)
+        INSERT INTO nested_view_post_stats (
+          post_id,
+          direct_reply_count,
+          total_descendant_count,
+          whisper_direct_reply_count,
+          whisper_total_descendant_count,
+          created_at,
+          updated_at
+        )
+        SELECT ancestor_id, 0, :total, 0, :whisper, NOW(), NOW()
+        FROM unnest(ARRAY[:ids]::int[]) AS ancestor_id
+        ON CONFLICT (post_id) DO UPDATE SET
+          total_descendant_count = nested_view_post_stats.total_descendant_count + :total,
+          whisper_total_descendant_count =
+            nested_view_post_stats.whisper_total_descendant_count + :whisper,
+          updated_at = NOW()
+      SQL
+  end
+
+  def nested_replies_adjust_existing_ancestors(ids, total_delta, whisper_delta)
+    return if ids.empty? || (total_delta.zero? && whisper_delta.zero?)
+
+    DB.exec(<<~SQL, ids: ids, total_delta: total_delta, whisper_delta: whisper_delta)
+        UPDATE nested_view_post_stats
+        SET total_descendant_count = GREATEST(total_descendant_count + :total_delta, 0),
+            whisper_total_descendant_count = GREATEST(
+              whisper_total_descendant_count + :whisper_delta,
+              0
+            ),
+            updated_at = NOW()
+        WHERE post_id = ANY(ARRAY[:ids]::int[])
+      SQL
+  end
+
+  def nested_replies_adjust_ancestors(ids, total_delta, whisper_delta)
+    if total_delta >= 0 && whisper_delta >= 0
+      nested_replies_increment_ancestors(ids, total_delta, whisper_delta)
+    else
+      nested_replies_adjust_existing_ancestors(ids, total_delta, whisper_delta)
+    end
+  end
+
+  def nested_replies_adjust_direct_parent(
+    parent_id,
+    total_delta,
+    whisper_delta,
+    insert_missing: false
+  )
+    return if parent_id.blank? || (total_delta.zero? && whisper_delta.zero?)
+
+    if insert_missing
+      DB.exec(<<~SQL, parent_id: parent_id, total_delta: total_delta, whisper_delta: whisper_delta)
+          INSERT INTO nested_view_post_stats (
+            post_id,
+            direct_reply_count,
+            total_descendant_count,
+            whisper_direct_reply_count,
+            whisper_total_descendant_count,
+            created_at,
+            updated_at
+          )
+          VALUES (:parent_id, :total_delta, 0, :whisper_delta, 0, NOW(), NOW())
+          ON CONFLICT (post_id) DO UPDATE SET
+            direct_reply_count = GREATEST(
+              nested_view_post_stats.direct_reply_count + :total_delta,
+              0
+            ),
+            whisper_direct_reply_count = GREATEST(
+              nested_view_post_stats.whisper_direct_reply_count + :whisper_delta,
+              0
+            ),
+            updated_at = NOW()
+        SQL
+    else
+      DB.exec(<<~SQL, parent_id: parent_id, total_delta: total_delta, whisper_delta: whisper_delta)
           UPDATE nested_view_post_stats
-          SET total_descendant_count = GREATEST(total_descendant_count - :removed, 0),
-              direct_reply_count = GREATEST(
-                direct_reply_count - CASE WHEN post_id = :parent_id THEN 1 ELSE 0 END,
-                0
-              ),
-              whisper_total_descendant_count = GREATEST(whisper_total_descendant_count - :whisper_removed, 0),
+          SET direct_reply_count = GREATEST(direct_reply_count + :total_delta, 0),
               whisper_direct_reply_count = GREATEST(
-                whisper_direct_reply_count - CASE WHEN post_id = :parent_id THEN :is_whisper ELSE 0 END,
+                whisper_direct_reply_count + :whisper_delta,
                 0
               ),
               updated_at = NOW()
-          WHERE post_id = ANY(ARRAY[:ids]::int[])
+          WHERE post_id = :parent_id
         SQL
-          ids: ancestor_ids,
-          parent_id: direct_parent_id,
-          removed: subtree_size,
-          whisper_removed: whisper_subtree_size,
-          is_whisper: is_whisper,
-        )
-      end
     end
-
-    NestedViewPostStat.where(post_id: id).delete_all
   end
 
   def nested_replies_subtree_sizes
+    descendant_total, descendant_whisper = nested_replies_cached_descendant_sizes
+    total, whisper = NestedReplies::StructuralStats.weights_for(post_type)
+    [descendant_total + total, descendant_whisper + whisper]
+  end
+
+  def nested_replies_cached_descendant_sizes
     stat =
       NestedViewPostStat.where(post_id: id).pick(
         :total_descendant_count,
         :whisper_total_descendant_count,
       )
-    is_whisper = post_type == Post.types[:whisper] ? 1 : 0
-    [1 + (stat&.first || 0), is_whisper + (stat&.second || 0)]
+    [stat&.first || 0, stat&.second || 0]
   end
 
-  def nested_replies_refresh_hot_score_after_visibility_change
-    return unless SiteSetting.nested_replies_enabled
-    return unless previous_changes.key?("hidden") || previous_changes.key?("post_type")
+  def nested_replies_refresh_after_update
+    return unless nested_replies_tracks_stats?
 
-    NestedReplies::HotScoreCalculator.recalculate_after_visibility_change(self)
+    parent_changed = previous_changes.key?("reply_to_post_number")
+    visibility_changed = previous_changes.key?("hidden") || previous_changes.key?("post_type")
+
+    if parent_changed
+      NestedReplies::HotScoreCalculator.recalculate_after_reparent(
+        self,
+        previous_changes["reply_to_post_number"].first,
+      )
+    elsif visibility_changed
+      NestedReplies::HotScoreCalculator.recalculate_after_visibility_change(self)
+    end
+
+    if parent_changed || previous_changes.key?("post_type")
+      nested_replies_enqueue_structural_rebuild
+    end
+  end
+
+  def nested_replies_enqueue_structural_rebuild
+    topic_id = self.topic_id
+
+    DB.after_commit do
+      next unless SiteSetting.nested_replies_enabled
+      next unless SiteSetting.nested_replies_default || NestedTopic.exists?(topic_id: topic_id)
+
+      Jobs.enqueue(:backfill_nested_reply_stats, topic_id: topic_id)
+    end
   end
 
   def nested_replies_walk(start_post_number)
     return [] if start_post_number.blank?
+
     # Include deleted ancestors — they may still have stat rows from when they
     # were alive, and those counts need to stay consistent.
     NestedReplies.walk_ancestors(
@@ -186,5 +364,9 @@ module HasNestedReplyStats
       start_post_number: start_post_number,
       exclude_deleted: false,
     )
+  end
+
+  def nested_replies_tracks_stats?
+    SiteSetting.nested_replies_enabled && topic&.nested_view?
   end
 end
