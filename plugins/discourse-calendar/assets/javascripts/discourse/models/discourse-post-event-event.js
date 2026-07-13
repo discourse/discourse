@@ -15,8 +15,18 @@ const DEFAULT_REMINDER = {
   unit: "minutes",
   period: "before",
 };
+// Keep in sync with the constants of the same name on
+// DiscoursePostEvent::Event, which enforces the same window server-side.
 const EARLY_ACCESS_MINUTES = 30;
 const GRACE_PERIOD_MINUTES = 10;
+
+export function isWithinEventTimeframe(startsAt, endsAt) {
+  const now = moment();
+  const opensAt = moment(startsAt).subtract(EARLY_ACCESS_MINUTES, "minutes");
+  const closesAt = moment(endsAt).add(GRACE_PERIOD_MINUTES, "minutes");
+
+  return now.isBetween(opensAt, closesAt);
+}
 
 export default class DiscoursePostEventEvent {
   static create(args = {}) {
@@ -171,14 +181,7 @@ export default class DiscoursePostEventEvent {
   }
 
   get currentlyWithinEventTimeframe() {
-    const now = moment();
-    const startsAt = moment(this.startsAt).subtract(
-      EARLY_ACCESS_MINUTES,
-      "minutes"
-    );
-    const endsAt = moment(this.endsAt).add(GRACE_PERIOD_MINUTES, "minutes");
-
-    return now.isBetween(startsAt, endsAt);
+    return isWithinEventTimeframe(this.startsAt, this.endsAt);
   }
 
   // An event without an end time never falls past its timeframe, since

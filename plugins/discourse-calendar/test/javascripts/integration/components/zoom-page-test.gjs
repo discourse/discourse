@@ -9,6 +9,7 @@ const FALLBACK_SELECTOR = ".discourse-calendar-livestream-zoom-page__fallback";
 const FRAME_SELECTOR = ".discourse-calendar-livestream-zoom-page__frame";
 const CHAT_BUTTON_SELECTOR =
   ".discourse-calendar-livestream-zoom-page__chat-button";
+const WAITING_SELECTOR = ".discourse-calendar-livestream-zoom-page__waiting";
 const ERROR_TEXT =
   "You left the webinar or we are unable to load Zoom in this page.";
 
@@ -43,7 +44,13 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
       chat_channel_id: 9,
       postStream: {
         posts: [
-          { event: { livestream_url: "https://us06web.zoom.us/j/123456789" } },
+          {
+            event: {
+              livestream_url: "https://us06web.zoom.us/j/123456789",
+              starts_at: moment().subtract(5, "minutes").toISOString(),
+              ends_at: moment().add(1, "hour").toISOString(),
+            },
+          },
         ],
       },
     };
@@ -60,6 +67,45 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
     assert.dom(FRAME_SELECTOR).exists();
     assert.dom(FALLBACK_SELECTOR).doesNotExist("no error before a failure");
     assert.strictEqual(loadZoom.callCount, 1, "sets the SDK up exactly once");
+  });
+
+  // Simulates navigating straight to /t/:slug/:id/zoom before the join window
+  // opens, bypassing the disabled button on the topic page.
+  test("does not load Zoom before the event timeframe", async function (assert) {
+    const loadZoom = stubLoadZoom();
+    stubReturnedFromZoom(false);
+    this.topic.postStream.posts[0].event.starts_at = moment()
+      .add(2, "hours")
+      .toISOString();
+
+    await render(
+      <template><LivestreamZoomPage @topic={{this.topic}} /></template>
+    );
+
+    assert.dom(FRAME_SELECTOR).doesNotExist();
+    assert
+      .dom(WAITING_SELECTOR)
+      .hasText("You can join the webinar closer to the event start time");
+    assert.strictEqual(loadZoom.callCount, 0, "never sets the SDK up");
+  });
+
+  test("does not load Zoom after the event timeframe", async function (assert) {
+    const loadZoom = stubLoadZoom();
+    stubReturnedFromZoom(false);
+    this.topic.postStream.posts[0].event.starts_at = moment()
+      .subtract(3, "hours")
+      .toISOString();
+    this.topic.postStream.posts[0].event.ends_at = moment()
+      .subtract(1, "hour")
+      .toISOString();
+
+    await render(
+      <template><LivestreamZoomPage @topic={{this.topic}} /></template>
+    );
+
+    assert.dom(FRAME_SELECTOR).doesNotExist();
+    assert.dom(WAITING_SELECTOR).exists();
+    assert.strictEqual(loadZoom.callCount, 0, "never sets the SDK up");
   });
 
   test("shows the fallback link when Zoom fails to load", async function (assert) {

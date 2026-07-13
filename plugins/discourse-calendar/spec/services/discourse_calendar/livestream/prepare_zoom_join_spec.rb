@@ -18,6 +18,8 @@ RSpec.describe DiscourseCalendar::Livestream::PrepareZoomJoin do
         post: post,
         livestream: true,
         location: "https://us06web.zoom.us/j/123456789?pwd=secret",
+        original_starts_at: 5.minutes.ago.iso8601,
+        original_ends_at: 1.hour.from_now.iso8601,
       )
     end
 
@@ -102,6 +104,67 @@ RSpec.describe DiscourseCalendar::Livestream::PrepareZoomJoin do
       before { event.update!(location: "https://example.com/stream") }
 
       it { is_expected.to fail_to_find_a_model(:zoom_join_data) }
+    end
+
+    context "when the event has not opened for early access yet" do
+      before do
+        event.update!(
+          original_starts_at: 2.hours.from_now.iso8601,
+          original_ends_at: 3.hours.from_now.iso8601,
+        )
+      end
+
+      it { is_expected.to fail_a_policy(:event_within_timeframe) }
+    end
+
+    context "when the event ended more than the grace period ago" do
+      before do
+        event.update!(original_starts_at: 3.hours.ago.iso8601, original_ends_at: 1.hour.ago.iso8601)
+      end
+
+      it { is_expected.to fail_a_policy(:event_within_timeframe) }
+    end
+
+    # TODO (martin) ignore_timeframe backs the showzoom testing workaround,
+    # remove these examples along with it before merge
+    context "when a staff user asks to ignore the timeframe" do
+      fab!(:admin)
+
+      let(:guardian) { admin.guardian }
+      let(:params) { { topic_id: topic.id, ignore_timeframe: true } }
+
+      before do
+        event.update!(
+          original_starts_at: 2.hours.from_now.iso8601,
+          original_ends_at: 3.hours.from_now.iso8601,
+        )
+      end
+
+      it { is_expected.to run_successfully }
+    end
+
+    context "when a regular user asks to ignore the timeframe" do
+      let(:params) { { topic_id: topic.id, ignore_timeframe: true } }
+
+      before do
+        event.update!(
+          original_starts_at: 2.hours.from_now.iso8601,
+          original_ends_at: 3.hours.from_now.iso8601,
+        )
+      end
+
+      it { is_expected.to fail_a_policy(:event_within_timeframe) }
+    end
+
+    context "when the event starts within the early access window" do
+      before do
+        event.update!(
+          original_starts_at: 15.minutes.from_now.iso8601,
+          original_ends_at: 2.hours.from_now.iso8601,
+        )
+      end
+
+      it { is_expected.to run_successfully }
     end
 
     context "when everything is valid" do

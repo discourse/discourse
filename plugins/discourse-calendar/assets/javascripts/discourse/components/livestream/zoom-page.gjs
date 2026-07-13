@@ -8,6 +8,7 @@ import { loadZoomMeetingSdk } from "discourse/lib/load-zoom-meeting-sdk";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import fetchZoomJoinPayload from "../../lib/fetch-zoom-join-payload";
+import { isWithinEventTimeframe } from "../../models/discourse-post-event-event";
 import MobileEmbeddableChatModal from "./modal/mobile-embeddable-chat-modal";
 
 export default class LivestreamZoomPage extends Component {
@@ -22,7 +23,7 @@ export default class LivestreamZoomPage extends Component {
   hasLoaded = false;
 
   setupZoom = modifier(async () => {
-    if (this.hasLoaded) {
+    if (this.hasLoaded || !this.canJoinNow) {
       return;
     }
 
@@ -32,6 +33,17 @@ export default class LivestreamZoomPage extends Component {
 
   get event() {
     return this.args.topic?.postStream?.posts?.[0]?.event;
+  }
+
+  // The join button on the topic page is disabled outside this window, but the
+  // route can be reached directly at any time, so the gate has to be applied
+  // here too. The server enforces the same window when issuing a signature.
+  get canJoinNow() {
+    return (
+      isWithinEventTimeframe(this.event?.starts_at, this.event?.ends_at) ||
+      // TODO (martin) showzoom is for testing only, remove before merge
+      new URLSearchParams(window.location.search).get("showzoom")
+    );
   }
 
   get zoomUrl() {
@@ -111,31 +123,37 @@ export default class LivestreamZoomPage extends Component {
 
   <template>
     <div class="discourse-calendar-livestream-zoom-page">
-      {{#if this.errorMessage}}
-        <div class="discourse-calendar-livestream-zoom-page__fallback">
-          <p>{{this.errorMessage}}</p>
+      {{#if this.canJoinNow}}
+        {{#if this.errorMessage}}
+          <div class="discourse-calendar-livestream-zoom-page__fallback">
+            <p>{{this.errorMessage}}</p>
 
-          <DButton
-            @href={{this.zoomUrl}}
-            @label="discourse_calendar.livestream.zoom.open_in_zoom"
-            @icon="up-right-from-square"
-          />
-
-          {{#if this.returnedFromZoom}}
             <DButton
-              @action={{this.retryZoom}}
-              @label="discourse_calendar.livestream.zoom.join"
-              @icon="video"
-              class="btn-primary"
+              @href={{this.zoomUrl}}
+              @label="discourse_calendar.livestream.zoom.open_in_zoom"
+              @icon="up-right-from-square"
             />
-          {{/if}}
-        </div>
-      {{/if}}
 
-      <div
-        class="discourse-calendar-livestream-zoom-page__frame"
-        {{this.setupZoom}}
-      ></div>
+            {{#if this.returnedFromZoom}}
+              <DButton
+                @action={{this.retryZoom}}
+                @label="discourse_calendar.livestream.zoom.join"
+                @icon="video"
+                class="btn-primary"
+              />
+            {{/if}}
+          </div>
+        {{/if}}
+
+        <div
+          class="discourse-calendar-livestream-zoom-page__frame"
+          {{this.setupZoom}}
+        ></div>
+      {{else}}
+        <p class="discourse-calendar-livestream-zoom-page__waiting">
+          {{i18n "discourse_calendar.livestream.zoom.too_early"}}
+        </p>
+      {{/if}}
 
       {{#if this.canOpenChat}}
         <DButton

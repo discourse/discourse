@@ -625,6 +625,63 @@ describe DiscoursePostEvent::Event do
     end
   end
 
+  describe "#currently_within_event_timeframe?" do
+    let(:user) { Fabricate(:user, admin: true) }
+    let(:topic) { Fabricate(:topic, user: user) }
+    let!(:first_post) { Fabricate(:post, topic: topic) }
+
+    def event_with(starts_at:, ends_at: nil)
+      DiscoursePostEvent::Event.create!(
+        original_starts_at: starts_at,
+        original_ends_at: ends_at,
+        post: first_post,
+      )
+    end
+
+    it "is false before the early access window opens" do
+      expect(event_with(starts_at: 45.minutes.from_now).currently_within_event_timeframe?).to be(
+        false,
+      )
+    end
+
+    it "is true within the early access window" do
+      expect(event_with(starts_at: 15.minutes.from_now).currently_within_event_timeframe?).to be(
+        true,
+      )
+    end
+
+    it "is true while the event is in progress" do
+      expect(
+        event_with(
+          starts_at: 1.hour.ago,
+          ends_at: 1.hour.from_now,
+        ).currently_within_event_timeframe?,
+      ).to be(true)
+    end
+
+    it "is true within the grace period after the end" do
+      expect(
+        event_with(
+          starts_at: 2.hours.ago,
+          ends_at: 5.minutes.ago,
+        ).currently_within_event_timeframe?,
+      ).to be(true)
+    end
+
+    it "is false once the grace period has passed" do
+      expect(
+        event_with(
+          starts_at: 2.hours.ago,
+          ends_at: 15.minutes.ago,
+        ).currently_within_event_timeframe?,
+      ).to be(false)
+    end
+
+    it "is true for a started event without an end time" do
+      expect(event_with(starts_at: 1.day.ago).currently_within_event_timeframe?).to be(true)
+    end
+  end
+
   describe "#expired?" do
     let(:user) { Fabricate(:user, admin: true) }
     let(:topic) { Fabricate(:topic, user: user) }

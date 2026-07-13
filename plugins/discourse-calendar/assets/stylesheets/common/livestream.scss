@@ -100,6 +100,13 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     min-height: calc(100vh - var(--header-offset, 0px));
   }
 
+  &__waiting {
+    margin: 0;
+    padding: 1rem;
+    color: var(--primary-medium);
+    text-align: center;
+  }
+
   &__fallback {
     position: absolute;
     top: 1rem;

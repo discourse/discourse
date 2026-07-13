@@ -3,6 +3,10 @@
 module DiscoursePostEvent
   class Event < ActiveRecord::Base
     PUBLIC_GROUP = "trust_level_0"
+    # Keep in sync with the constants of the same name in the
+    # DiscoursePostEventEvent JS model.
+    EARLY_ACCESS_MINUTES = 30
+    GRACE_PERIOD_MINUTES = 10
     MIN_NAME_LENGTH = 5
     MAX_NAME_LENGTH = 255
     MAX_DESCRIPTION_LENGTH = 1000
@@ -157,6 +161,17 @@ module DiscoursePostEvent
 
       return true if starts_at.nil?
       (ends_at || starts_at.end_of_day) <= Time.now
+    end
+
+    # Mirrors `currentlyWithinEventTimeframe` in the DiscoursePostEventEvent JS
+    # model: joining opens EARLY_ACCESS_MINUTES before the start and, when the
+    # event has an end time, closes GRACE_PERIOD_MINUTES after it.
+    def currently_within_event_timeframe?
+      return false if starts_at.nil?
+
+      now = Time.zone.now
+      return false if now < starts_at - EARLY_ACCESS_MINUTES.minutes
+      ends_at.nil? || now < ends_at + GRACE_PERIOD_MINUTES.minutes
     end
 
     def starts_at
