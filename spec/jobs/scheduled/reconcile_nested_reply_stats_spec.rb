@@ -5,7 +5,13 @@ RSpec.describe Jobs::ReconcileNestedReplyStats do
   fab!(:op) { Fabricate(:post, topic: topic, post_number: 1) }
   fab!(:nested_topic) { Fabricate(:nested_topic, topic: topic) }
 
-  before { SiteSetting.nested_replies_enabled = true }
+  before do
+    SiteSetting.nested_replies_enabled = true
+    SiteSetting.nested_replies_stats_valid_after = 0
+    NestedReplies::RecalculationQueue.clear
+  end
+
+  after { NestedReplies::RecalculationQueue.clear }
 
   def execute
     described_class.new.execute
@@ -98,5 +104,50 @@ RSpec.describe Jobs::ReconcileNestedReplyStats do
 
     expect(default_topic.nested_topic).to be_nil
     expect(stat.reload.total_descendant_count).to eq(1)
+  end
+
+  it "isolates a poison topic and repairs later topics", :aggregate_failures do
+    poison_parent = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
+    Fabricate(:post, topic: topic, reply_to_post_number: poison_parent.post_number)
+    NestedReplies::StructuralStats.recalculate_topic(topic.id)
+    poison_stat = NestedViewPostStat.find_by!(post: poison_parent)
+    poison_stat.update_columns(direct_reply_count: 999)
+
+    healthy_topic = Fabricate(:topic)
+    Fabricate(:nested_topic, topic: healthy_topic)
+    healthy_op = Fabricate(:post, topic: healthy_topic, post_number: 1)
+    healthy_parent =
+      Fabricate(:post, topic: healthy_topic, reply_to_post_number: healthy_op.post_number)
+    Fabricate(:post, topic: healthy_topic, reply_to_post_number: healthy_parent.post_number)
+    NestedReplies::StructuralStats.recalculate_topic(healthy_topic.id)
+    healthy_stat = NestedViewPostStat.find_by!(post: healthy_parent)
+    healthy_stat.update_columns(direct_reply_count: 999)
+    allow(Discourse).to receive(:warn_exception)
+    allow(NestedReplies::StructuralStats).to receive(
+      :recalculate_topic,
+    ).and_wrap_original do |method, topic_id|
+      raise StandardError, "poison topic" if topic_id == topic.id
+
+      method.call(topic_id)
+    end
+
+    execute
+
+    expect(poison_stat.reload.direct_reply_count).to eq(999)
+    expect(healthy_stat.reload.direct_reply_count).to eq(1)
+  end
+
+  it "does not reconcile markers older than the validity cutoff" do
+    parent = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
+    Fabricate(:post, topic: topic, reply_to_post_number: parent.post_number)
+    NestedReplies::StructuralStats.recalculate_topic(topic.id)
+    marker = NestedViewPostStat.find_by!(post: op)
+    stat = NestedViewPostStat.find_by!(post: parent)
+    stat.update_columns(direct_reply_count: 999)
+    SiteSetting.nested_replies_stats_valid_after = marker.structural_backfilled_at.to_f + 1
+
+    execute
+
+    expect(stat.reload.direct_reply_count).to eq(999)
   end
 end

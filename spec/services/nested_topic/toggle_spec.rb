@@ -15,6 +15,14 @@ RSpec.describe NestedTopic::Toggle do
     let(:dependencies) { { guardian: admin.guardian } }
     let(:enabled) { true }
 
+    before do
+      SiteSetting.nested_replies_enabled = true
+      SiteSetting.nested_replies_stats_valid_after = 0
+      NestedReplies::RecalculationQueue.clear
+    end
+
+    after { NestedReplies::RecalculationQueue.clear }
+
     context "when contract is invalid" do
       let(:params) { { topic_id: nil, enabled: true } }
 
@@ -48,16 +56,24 @@ RSpec.describe NestedTopic::Toggle do
         expect { result }.to change { NestedTopic.where(topic: topic).count }.from(0).to(1)
       end
 
-      it "enqueues a hot score refresh" do
-        expect_enqueued_with(job: :recalculate_nested_hot_scores, args: { topic_id: topic.id }) do
-          result
-        end
-      end
+      it "invalidates stale markers and queues an exact rebuild", :aggregate_failures do
+        op = Fabricate(:post, topic: topic, post_number: 1)
+        reply = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
+        NestedReplies::StructuralStats.recalculate_topic(topic.id)
+        NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+        NestedReplies::RecalculationQueue.clear
 
-      it "enqueues a structural stats backfill" do
-        expect_enqueued_with(job: :backfill_nested_reply_stats, args: { topic_id: topic.id }) do
-          result
-        end
+        expect_enqueued_with(job: :process_nested_reply_updates) { result }
+
+        marker = NestedViewPostStat.find_by!(post: op)
+        expect(marker.structural_backfilled_at).to be_nil
+        expect(marker.hot_score_updated_at).to be_nil
+
+        Jobs::ProcessNestedReplyUpdates.new.execute
+
+        expect(marker.reload.structural_backfilled_at).to be_present
+        expect(marker.hot_score_updated_at).to be_present
+        expect(NestedViewPostStat.find_by!(post: reply).hot_score_updated_at).to be_present
       end
 
       context "when nested topic already exists" do
@@ -82,12 +98,8 @@ RSpec.describe NestedTopic::Toggle do
         expect { result }.to change { NestedTopic.where(topic: topic).count }.from(1).to(0)
       end
 
-      it "does not enqueue a hot score refresh" do
-        expect_not_enqueued_with(job: :recalculate_nested_hot_scores) { result }
-      end
-
-      it "does not enqueue a structural stats backfill" do
-        expect_not_enqueued_with(job: :backfill_nested_reply_stats) { result }
+      it "does not enqueue a recalculation" do
+        expect_not_enqueued_with(job: :process_nested_reply_updates) { result }
       end
     end
 

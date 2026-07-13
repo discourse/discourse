@@ -74,7 +74,17 @@ class NestedTopic::ConvertCategory
         SELECT id, NOW(), NOW()
         FROM topics_to_convert
         ON CONFLICT (topic_id) DO NOTHING
-        RETURNING 1
+        RETURNING topic_id
+      ), invalidated AS (
+        UPDATE nested_view_post_stats stats
+        SET structural_backfilled_at = NULL,
+            hot_score_updated_at = NULL,
+            updated_at = NOW()
+        FROM posts, inserted
+        WHERE posts.id = stats.post_id
+          AND posts.topic_id = inserted.topic_id
+          AND posts.post_number = 1
+        RETURNING stats.post_id
       )
       SELECT COUNT(*)
       FROM inserted

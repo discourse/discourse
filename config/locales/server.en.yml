@@ -2928,6 +2928,7 @@ en:
     nested_replies_backfill_batch_size: "Number of topics to backfill nested reply stats for per batch."
     nested_replies_hot_score_batch_size: "Number of topics to backfill nested reply hot scores for per batch."
     nested_replies_reconciliation_batch_size: "Number of previously backfilled nested reply topics to reconcile per scheduled run."
+    nested_replies_stats_valid_after: "Timestamp after which nested reply statistics are considered valid."
     nested_replies_hot_preload_post_budget: "Maximum number of nested replies to preload for hot sort in one response."
     nested_replies_hot_preload_per_root_budget: "Maximum number of nested replies to preload for hot sort under one root branch."
     nested_replies_hot_preload_children_per_parent: "Maximum number of hot-sorted children to preload when expanding one nested reply parent."

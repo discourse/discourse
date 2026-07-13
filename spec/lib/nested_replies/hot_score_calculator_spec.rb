@@ -1,10 +1,19 @@
 # frozen_string_literal: true
 
 RSpec.describe NestedReplies::HotScoreCalculator do
-  before { SiteSetting.nested_replies_enabled = true }
+  before do
+    SiteSetting.nested_replies_enabled = true
+    NestedReplies::RecalculationQueue.clear
+  end
+
+  after { NestedReplies::RecalculationQueue.clear }
 
   def set_hot_score_inputs(post, created_at:, like_score: 0)
     post.update_columns(created_at: created_at, like_score: like_score)
+  end
+
+  def process_queued_updates
+    Jobs::ProcessNestedReplyUpdates.new.execute
   end
 
   describe ".score_for" do
@@ -180,8 +189,10 @@ RSpec.describe NestedReplies::HotScoreCalculator do
       hot_branch_score = NestedViewPostStat.find_by!(post: parent).thread_hot_score
 
       child.update!(hidden: true)
+      process_queued_updates
       hidden_branch_score = NestedViewPostStat.find_by!(post: parent).thread_hot_score
       child.update!(hidden: false)
+      process_queued_updates
 
       expect(hidden_branch_score).to be < hot_branch_score
       expect(NestedViewPostStat.find_by!(post: parent).thread_hot_score).to be_within(0.0001).of(
@@ -198,8 +209,10 @@ RSpec.describe NestedReplies::HotScoreCalculator do
       hot_branch_score = NestedViewPostStat.find_by!(post: parent).thread_hot_score
 
       child.update!(post_type: Post.types[:whisper])
+      process_queued_updates
       whisper_branch_score = NestedViewPostStat.find_by!(post: parent).thread_hot_score
       child.update!(post_type: Post.types[:regular])
+      process_queued_updates
 
       expect(whisper_branch_score).to be < hot_branch_score
       expect(NestedViewPostStat.find_by!(post: parent).thread_hot_score).to be_within(0.0001).of(
@@ -278,6 +291,44 @@ RSpec.describe NestedReplies::HotScoreCalculator do
       expect(NestedViewPostStat.find_by!(post: small_action).hot_score).to eq(0.0)
       expect(parent_stat.thread_hot_score).to eq(parent_stat.hot_score)
     end
+
+    it "propagates the hottest descendant in a full rebuild", :aggregate_failures do
+      root = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
+      cooler_child = Fabricate(:post, topic: topic, reply_to_post_number: root.post_number)
+      hotter_child = Fabricate(:post, topic: topic, reply_to_post_number: root.post_number)
+      grandchild = Fabricate(:post, topic: topic, reply_to_post_number: hotter_child.post_number)
+      set_hot_score_inputs(root, created_at: 10.days.ago)
+      set_hot_score_inputs(cooler_child, created_at: 10.days.ago, like_score: 1)
+      set_hot_score_inputs(hotter_child, created_at: 10.days.ago, like_score: 2)
+      set_hot_score_inputs(grandchild, created_at: 1.hour.ago, like_score: 100)
+
+      described_class.recalculate_topic(topic.id)
+
+      root_stat = NestedViewPostStat.find_by!(post: root)
+      hotter_child_stat = NestedViewPostStat.find_by!(post: hotter_child)
+      grandchild_stat = NestedViewPostStat.find_by!(post: grandchild)
+      expect(hotter_child_stat.thread_hot_score).to be_within(0.0001).of(
+        grandchild_stat.thread_hot_score - described_class.child_penalty,
+      )
+      expect(root_stat.thread_hot_score).to be_within(0.0001).of(
+        grandchild_stat.thread_hot_score - 2 * described_class.child_penalty,
+      )
+    end
+
+    it "rebuilds malformed cycles without recursing forever" do
+      root = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
+      child = Fabricate(:post, topic: topic, reply_to_post_number: root.post_number)
+      root.update_columns(reply_to_post_number: child.post_number)
+
+      described_class.recalculate_topic(topic.id)
+
+      expect(
+        NestedViewPostStat
+          .where(post_id: [root.id, child.id])
+          .where.not(hot_score_updated_at: nil)
+          .count,
+      ).to eq(2)
+    end
   end
 
   describe ".recalculate_for_post_if_nested" do
@@ -317,6 +368,7 @@ RSpec.describe NestedReplies::HotScoreCalculator do
       original_parent_score = NestedViewPostStat.find_by!(post: post).thread_hot_score
 
       expect(PostActionCreator.like(liker, child)).to be_success
+      process_queued_updates
 
       liked_child_score = NestedViewPostStat.find_by!(post: child).hot_score
       liked_parent_score = NestedViewPostStat.find_by!(post: post).thread_hot_score
@@ -324,6 +376,7 @@ RSpec.describe NestedReplies::HotScoreCalculator do
       expect(liked_parent_score).to be > original_parent_score
 
       expect(PostActionDestroyer.destroy(liker, child, :like)).to be_success
+      process_queued_updates
 
       expect(NestedViewPostStat.find_by!(post: child).hot_score).to be_within(0.0001).of(
         original_child_score,
@@ -346,6 +399,7 @@ RSpec.describe NestedReplies::HotScoreCalculator do
           reply_to_post_number: post.post_number,
           raw: "A direct reply with enough detail for this test.",
         )
+      process_queued_updates
 
       post.reload
       parent_stat = NestedViewPostStat.find_by!(post: post)
@@ -356,6 +410,7 @@ RSpec.describe NestedReplies::HotScoreCalculator do
       expect(parent_stat.hot_score).to be > original_score
 
       PostDestroyer.new(admin, reply).destroy
+      process_queued_updates
 
       expect(NestedViewPostStat.find_by!(post: post).hot_score).to be_within(0.0001).of(
         original_score,

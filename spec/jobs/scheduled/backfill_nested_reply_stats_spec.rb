@@ -5,7 +5,12 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
   fab!(:op) { Fabricate(:post, topic: topic, post_number: 1) }
   fab!(:nested_topic) { Fabricate(:nested_topic, topic: topic) }
 
-  before { SiteSetting.nested_replies_enabled = true }
+  before do
+    SiteSetting.nested_replies_enabled = true
+    NestedReplies::RecalculationQueue.clear
+  end
+
+  after { NestedReplies::RecalculationQueue.clear }
 
   def execute(args = nil)
     described_class.new.execute(args)
@@ -66,6 +71,66 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     )
     expect(NestedViewPostStat.find_by!(post: small_action).total_descendant_count).to eq(1)
     expect(NestedViewPostStat.find_by!(post: op).structural_backfilled_at).to be_present
+  end
+
+  it "excludes action-code whispers from structural counts", :aggregate_failures do
+    parent = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
+    Fabricate(:post, topic: topic, reply_to_post_number: parent.post_number)
+    Fabricate(
+      :post,
+      topic: topic,
+      reply_to_post_number: parent.post_number,
+      post_type: Post.types[:whisper],
+    )
+    action_whisper =
+      Fabricate(
+        :post,
+        topic: topic,
+        reply_to_post_number: parent.post_number,
+        post_type: Post.types[:whisper],
+        action_code: "assigned",
+      )
+    action_child = Fabricate(:post, topic: topic, reply_to_post_number: parent.post_number)
+    action_child.update_columns(reply_to_post_number: action_whisper.post_number)
+
+    execute
+
+    parent_stat = NestedViewPostStat.find_by!(post: parent)
+    expect(structural_counts(parent_stat)).to eq(
+      "direct_reply_count" => 2,
+      "total_descendant_count" => 3,
+      "whisper_direct_reply_count" => 1,
+      "whisper_total_descendant_count" => 1,
+    )
+  end
+
+  it "rebuilds a chain beyond the old recursive cutoff in batches" do
+    now = Time.current
+    rows =
+      (2..1006).map do |post_number|
+        {
+          topic_id: topic.id,
+          user_id: op.user_id,
+          post_number: post_number,
+          reply_to_post_number: post_number - 1,
+          post_type: Post.types[:regular],
+          raw: "Deep reply #{post_number}",
+          cooked: "<p>Deep reply #{post_number}</p>",
+          sort_order: post_number,
+          created_at: now,
+          updated_at: now,
+          last_version_at: now,
+        }
+      end
+    Post.insert_all!(rows)
+    NestedViewPostStat.delete_all
+
+    execute
+
+    first_reply = Post.find_by!(topic: topic, post_number: 2)
+    expect(NestedViewPostStat.find_by!(post: op).total_descendant_count).to eq(1005)
+    expect(NestedViewPostStat.find_by!(post: first_reply).total_descendant_count).to eq(1004)
+    expect(NestedViewPostStat.where(post_id: topic.posts.select(:id)).count).to eq(1006)
   end
 
   it "includes soft-deleted posts" do
@@ -142,7 +207,7 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
     expect(NestedViewPostStat.find_by(post: op)).to be_nil
   end
 
-  it "only scans topics with a missing completion marker" do
+  it "only scans topics with a missing or stale marker" do
     parent = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
     Fabricate(:post, topic: topic, reply_to_post_number: parent.post_number)
     execute
@@ -154,6 +219,12 @@ RSpec.describe Jobs::BackfillNestedReplyStats do
 
     expect(NestedViewPostStat.find_by(post: parent)).to be_nil
     expect(op_stat.reload.direct_reply_count).to eq(999)
+
+    SiteSetting.nested_replies_stats_valid_after = op_stat.structural_backfilled_at.to_f + 1
+    execute
+
+    expect(NestedViewPostStat.find_by(post: parent)).to be_present
+    expect(op_stat.reload.direct_reply_count).to eq(1)
   end
 
   it "limits the initial scan to one category" do

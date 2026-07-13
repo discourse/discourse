@@ -8,7 +8,13 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
   fab!(:nested_topic) { Fabricate(:nested_topic, topic: topic) }
   fab!(:op) { Fabricate(:post, topic: topic.reload, user: user, post_number: 1) }
 
-  before { SiteSetting.nested_replies_enabled = true }
+  before do
+    SiteSetting.nested_replies_enabled = true
+    SiteSetting.nested_replies_stats_valid_after = 0
+    NestedReplies::RecalculationQueue.clear
+  end
+
+  after { NestedReplies::RecalculationQueue.clear }
 
   def nested_reply_counter_stat_queries(queries)
     queries.count do |query|
@@ -231,17 +237,63 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
       ).to eq([1, 2, 1, 2])
     end
 
-    it "queues an exact rebuild after reparenting" do
+    it "removes and restores an action-code whisper" do
+      parent = Fabricate(:post, topic: topic, user: user, reply_to_post_number: op.post_number)
+      whisper =
+        Fabricate(
+          :post,
+          topic: topic,
+          user: user,
+          reply_to_post_number: parent.post_number,
+          post_type: Post.types[:whisper],
+        )
+      parent_stat = NestedViewPostStat.find_by!(post: parent)
+
+      whisper.update!(action_code: "assigned")
+      action_counts =
+        parent_stat.reload.attributes.values_at(
+          "direct_reply_count",
+          "total_descendant_count",
+          "whisper_direct_reply_count",
+          "whisper_total_descendant_count",
+        )
+      whisper.update!(action_code: nil)
+      visible_counts =
+        parent_stat.reload.attributes.values_at(
+          "direct_reply_count",
+          "total_descendant_count",
+          "whisper_direct_reply_count",
+          "whisper_total_descendant_count",
+        )
+
+      expect(action_counts).to eq([0, 0, 0, 0])
+      expect(visible_counts).to eq([1, 1, 1, 1])
+    end
+
+    it "queues and runs an exact rebuild after reparenting", :aggregate_failures do
       old_parent = Fabricate(:post, topic: topic, user: user, reply_to_post_number: op.post_number)
       new_parent = Fabricate(:post, topic: topic, user: user, reply_to_post_number: op.post_number)
       child =
         Fabricate(:post, topic: topic, user: user, reply_to_post_number: old_parent.post_number)
+      NestedReplies::StructuralStats.recalculate_topic(topic.id)
+      NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+      NestedReplies::RecalculationQueue.clear
 
-      expect_enqueued_with(job: :backfill_nested_reply_stats, args: { topic_id: topic.id }) do
+      expect_enqueued_with(job: :process_nested_reply_updates) do
         PostRevisor.new(child).revise!(user, reply_to_post_number: new_parent.post_number)
       end
 
+      marker = NestedViewPostStat.find_by!(post: op)
+      expect(marker.structural_backfilled_at).to be_nil
+      expect(marker.hot_score_updated_at).to be_nil
+
+      Jobs::ProcessNestedReplyUpdates.new.execute
+
       expect(child.reload.reply_to_post_number).to eq(new_parent.post_number)
+      expect(NestedViewPostStat.find_by!(post: old_parent).direct_reply_count).to eq(0)
+      expect(NestedViewPostStat.find_by!(post: new_parent).direct_reply_count).to eq(1)
+      expect(marker.reload.structural_backfilled_at).to be_present
+      expect(marker.hot_score_updated_at).to be_present
     end
   end
 
@@ -332,13 +384,25 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
       expect(parent_stat.whisper_direct_reply_count).to eq(1)
     end
 
-    it "queues an exact rebuild after a hard delete" do
+    it "queues and runs an exact rebuild after a hard delete", :aggregate_failures do
       parent = Fabricate(:post, topic: topic, user: user, reply_to_post_number: op.post_number)
       child = Fabricate(:post, topic: topic, user: user, reply_to_post_number: parent.post_number)
+      NestedReplies::StructuralStats.recalculate_topic(topic.id)
+      NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+      original_hot_marker = NestedViewPostStat.find_by!(post: op).hot_score_updated_at
+      NestedReplies::RecalculationQueue.clear
 
-      expect_enqueued_with(job: :backfill_nested_reply_stats, args: { topic_id: topic.id }) do
-        child.destroy!
-      end
+      expect_enqueued_with(job: :process_nested_reply_updates) { child.destroy! }
+
+      marker = NestedViewPostStat.find_by!(post: op)
+      expect(marker.structural_backfilled_at).to be_nil
+      expect(marker.hot_score_updated_at).to eq_time(original_hot_marker)
+
+      Jobs::ProcessNestedReplyUpdates.new.execute
+
+      expect(NestedViewPostStat.find_by!(post: parent).direct_reply_count).to eq(0)
+      expect(marker.reload.structural_backfilled_at).to be_present
+      expect(marker.hot_score_updated_at).to eq_time(original_hot_marker)
     end
   end
 
@@ -387,6 +451,7 @@ RSpec.describe "Nested replies N+1 elimination", type: :request do
       queries_3 = track_sql_queries { get context_url(topic, chain_3.last.post_number) }
 
       topic2 = Fabricate(:topic, user: user)
+      Fabricate(:nested_topic, topic: topic2)
       Fabricate(:post, topic: topic2, user: user, post_number: 1)
       chain_10 = create_reply_chain(depth: 10, in_topic: topic2)
 

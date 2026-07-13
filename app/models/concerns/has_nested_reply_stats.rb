@@ -16,7 +16,7 @@ module HasNestedReplyStats
     return unless nested_replies_tracks_stats?
     return if reply_to_post_number.blank?
 
-    total, whisper = NestedReplies::StructuralStats.weights_for(post_type)
+    total, whisper = NestedReplies::StructuralStats.weights_for(post_type, action_code)
     return if total.zero? && whisper.zero?
 
     NestedReplies::StructuralStats.with_topic_lock(topic_id) do
@@ -69,7 +69,7 @@ module HasNestedReplyStats
     NestedReplies::StructuralStats.with_topic_lock(topic_id) do
       if reply_to_post_number.present?
         subtree_total, subtree_whisper = nested_replies_subtree_sizes
-        total, whisper = NestedReplies::StructuralStats.weights_for(post_type)
+        total, whisper = NestedReplies::StructuralStats.weights_for(post_type, action_code)
         ancestors = nested_replies_walk(reply_to_post_number)
 
         if ancestors.present?
@@ -114,29 +114,33 @@ module HasNestedReplyStats
   end
 
   def nested_replies_apply_structural_changes
+    return if saved_change_to_topic_id?
     return unless nested_replies_tracks_stats?
 
     parent_changed = saved_change_to_reply_to_post_number?
     post_type_changed = saved_change_to_post_type?
-    return unless parent_changed || post_type_changed
+    action_code_changed = saved_change_to_action_code?
+    return unless parent_changed || post_type_changed || action_code_changed
 
     previous_parent = reply_to_post_number_before_last_save
     previous_post_type = post_type_before_last_save
+    previous_action_code = action_code_before_last_save
 
     NestedReplies::StructuralStats.with_topic_lock(topic_id) do
       if parent_changed
-        nested_replies_apply_reparent(previous_parent, previous_post_type)
+        nested_replies_apply_reparent(previous_parent, previous_post_type, previous_action_code)
       else
-        nested_replies_apply_post_type_change(previous_post_type)
+        nested_replies_apply_visibility_change(previous_post_type, previous_action_code)
       end
     end
   end
 
-  def nested_replies_apply_reparent(previous_parent, previous_post_type)
+  def nested_replies_apply_reparent(previous_parent, previous_post_type, previous_action_code)
     descendant_total, descendant_whisper = nested_replies_cached_descendant_sizes
     previous_total, previous_whisper =
-      NestedReplies::StructuralStats.weights_for(previous_post_type)
-    current_total, current_whisper = NestedReplies::StructuralStats.weights_for(post_type)
+      NestedReplies::StructuralStats.weights_for(previous_post_type, previous_action_code)
+    current_total, current_whisper =
+      NestedReplies::StructuralStats.weights_for(post_type, action_code)
 
     previous_subtree_total = descendant_total + previous_total
     previous_subtree_whisper = descendant_whisper + previous_whisper
@@ -181,10 +185,11 @@ module HasNestedReplyStats
     )
   end
 
-  def nested_replies_apply_post_type_change(previous_post_type)
+  def nested_replies_apply_visibility_change(previous_post_type, previous_action_code)
     previous_total, previous_whisper =
-      NestedReplies::StructuralStats.weights_for(previous_post_type)
-    current_total, current_whisper = NestedReplies::StructuralStats.weights_for(post_type)
+      NestedReplies::StructuralStats.weights_for(previous_post_type, previous_action_code)
+    current_total, current_whisper =
+      NestedReplies::StructuralStats.weights_for(post_type, action_code)
     total_delta = current_total - previous_total
     whisper_delta = current_whisper - previous_whisper
     return if total_delta.zero? && whisper_delta.zero?
@@ -310,7 +315,7 @@ module HasNestedReplyStats
 
   def nested_replies_subtree_sizes
     descendant_total, descendant_whisper = nested_replies_cached_descendant_sizes
-    total, whisper = NestedReplies::StructuralStats.weights_for(post_type)
+    total, whisper = NestedReplies::StructuralStats.weights_for(post_type, action_code)
     [descendant_total + total, descendant_whisper + whisper]
   end
 
@@ -324,22 +329,37 @@ module HasNestedReplyStats
   end
 
   def nested_replies_refresh_after_update
+    if previous_changes.key?("topic_id")
+      NestedReplies::RecalculationQueue.enqueue_topic_rebuilds(
+        previous_changes["topic_id"].compact.uniq,
+        structural: true,
+        hot: true,
+      )
+      return
+    end
+
     return unless nested_replies_tracks_stats?
 
     parent_changed = previous_changes.key?("reply_to_post_number")
-    visibility_changed = previous_changes.key?("hidden") || previous_changes.key?("post_type")
+    structural_visibility_changed =
+      previous_changes.key?("post_type") || previous_changes.key?("action_code")
+    hot_visibility_changed = previous_changes.key?("hidden") || structural_visibility_changed
 
     if parent_changed
-      NestedReplies::HotScoreCalculator.recalculate_after_reparent(
-        self,
-        previous_changes["reply_to_post_number"].first,
+      NestedReplies::RecalculationQueue.enqueue_topic_rebuilds(
+        [topic_id],
+        structural: true,
+        hot: true,
       )
-    elsif visibility_changed
-      NestedReplies::HotScoreCalculator.recalculate_after_visibility_change(self)
-    end
-
-    if parent_changed || previous_changes.key?("post_type")
-      nested_replies_enqueue_structural_rebuild
+    elsif structural_visibility_changed
+      NestedReplies::RecalculationQueue.enqueue_topic_rebuilds(
+        [topic_id],
+        structural: true,
+        hot: false,
+      )
+      NestedReplies::RecalculationQueue.enqueue_hot_post(id)
+    elsif hot_visibility_changed
+      NestedReplies::RecalculationQueue.enqueue_hot_post(id)
     end
   end
 
@@ -347,10 +367,11 @@ module HasNestedReplyStats
     topic_id = self.topic_id
 
     DB.after_commit do
-      next unless SiteSetting.nested_replies_enabled
-      next unless SiteSetting.nested_replies_default || NestedTopic.exists?(topic_id: topic_id)
-
-      Jobs.enqueue(:backfill_nested_reply_stats, topic_id: topic_id)
+      NestedReplies::RecalculationQueue.enqueue_topic_rebuilds(
+        [topic_id],
+        structural: true,
+        hot: false,
+      )
     end
   end
 

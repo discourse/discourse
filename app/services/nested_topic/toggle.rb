@@ -19,10 +19,7 @@ class NestedTopic::Toggle
     only_if(:disabling) { step :disable_nested_view }
   end
 
-  only_if(:enabling) do
-    step :backfill_nested_reply_stats
-    step :refresh_hot_scores
-  end
+  only_if(:enabling) { step :queue_nested_reply_stats_rebuild }
 
   private
 
@@ -50,11 +47,11 @@ class NestedTopic::Toggle
     topic.nested_topic&.destroy!
   end
 
-  def refresh_hot_scores(topic:)
-    Jobs.enqueue(:recalculate_nested_hot_scores, topic_id: topic.id)
-  end
-
-  def backfill_nested_reply_stats(topic:)
-    Jobs.enqueue(:backfill_nested_reply_stats, topic_id: topic.id)
+  def queue_nested_reply_stats_rebuild(topic:)
+    NestedReplies::RecalculationQueue.enqueue_topic_rebuilds(
+      [topic.id],
+      structural: true,
+      hot: true,
+    )
   end
 end

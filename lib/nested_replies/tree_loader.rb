@@ -88,7 +88,7 @@ module NestedReplies
       if guardian.user&.whisperer?
         scope =
           scope.where(
-            "post_type != :whisper OR action_code IS NULL OR action_code = ''",
+            "posts.post_type != :whisper OR posts.action_code IS NULL OR posts.action_code = ''",
             whisper: Post.types[:whisper],
           )
       end
@@ -265,7 +265,10 @@ module NestedReplies
 
     def hot_preload_rows(starting_posts, max_depth:, children_per_parent:)
       fallback_score = NestedReplies::HotScoreCalculator.fallback_hot_score_sql("posts")
-      stale_score = NestedReplies::HotScoreCalculator.persisted_score_stale_sql
+      stale_score =
+        NestedReplies::HotScoreCalculator.persisted_score_stale_sql(
+          topic_stats_table: "nested_hot_topic_stats",
+        )
       thread_hot_score =
         "CASE WHEN #{stale_score} " \
           "THEN #{fallback_score} ELSE nested_view_post_stats.thread_hot_score END"
@@ -403,7 +406,7 @@ module NestedReplies
         if sibling_ids.present?
           loaded_siblings =
             load_posts_for_tree(topic.posts.with_deleted.where(id: sibling_ids)).to_a
-          hot_scores = hot_scores_for_posts(loaded_siblings)
+          hot_scores = sort == "hot" ? hot_scores_for_posts(loaded_siblings) : {}
           grouped = loaded_siblings.group_by(&:reply_to_post_number)
 
           grouped.transform_values! do |posts|
@@ -428,6 +431,7 @@ module NestedReplies
     def flat_descendants_scope(parent_post_number, sort:, offset: 0, limit: CHILDREN_PER_PAGE)
       post_types = visible_post_types
       order_expr = NestedReplies::Sort.sql_order_expression(sort, posts_table: "p")
+      hot_join = sort == "hot" ? NestedReplies::Sort.hot_score_join_sql(posts_table: "p") : ""
 
       descendant_post_numbers =
         DB.query_single(
@@ -448,13 +452,12 @@ module NestedReplies
             JOIN descendants d ON p.reply_to_post_number = d.post_number
             WHERE p.topic_id = :topic_id
               AND p.post_number > 1
-              AND d.depth < :max_cte_depth
               AND NOT p.post_number = ANY(d.path)
           )
           SELECT d.post_number
           FROM descendants d
           JOIN posts p ON p.post_number = d.post_number AND p.topic_id = :topic_id
-          LEFT JOIN nested_view_post_stats ON nested_view_post_stats.post_id = p.id
+          #{hot_join}
           WHERE #{visibility_sql(posts_table: "p")}
           ORDER BY #{order_expr}
           OFFSET :offset
@@ -466,7 +469,6 @@ module NestedReplies
           whisper: Post.types[:whisper],
           offset: offset,
           limit: limit,
-          max_cte_depth: 500,
         )
 
       scope =
@@ -516,7 +518,7 @@ module NestedReplies
 
       stat_counts = cached_total_descendant_counts(post_ids)
 
-      return stat_counts if post_records.empty? || guardian.user&.whisperer?
+      return stat_counts if post_records.empty?
 
       return live_total_descendant_counts(post_records) unless structural_stats_backfilled?
 
@@ -546,6 +548,7 @@ module NestedReplies
             SELECT roots.post_number AS root_post_number,
                    child.post_number,
                    child.post_type,
+                   child.action_code,
                    1 AS depth,
                    ARRAY[roots.post_number, child.post_number]::integer[] AS path
             FROM posts roots
@@ -559,6 +562,7 @@ module NestedReplies
             SELECT descendants.root_post_number,
                    child.post_number,
                    child.post_type,
+                   child.action_code,
                    descendants.depth + 1,
                    descendants.path || child.post_number
             FROM descendants
@@ -566,18 +570,17 @@ module NestedReplies
               ON child.topic_id = :topic_id
              AND child.reply_to_post_number = descendants.post_number
             WHERE child.post_number > 1
-              AND descendants.depth < :max_cte_depth
               AND NOT child.post_number = ANY(descendants.path)
           )
           SELECT root_post_number, COUNT(*) AS total_descendant_count
           FROM descendants
-          WHERE post_type IN (:post_types)
+          WHERE #{visibility_sql(posts_table: "descendants")}
           GROUP BY root_post_number
         SQL
           topic_id: topic.id,
           post_ids: post_ids_by_number.values,
           post_types: visible_post_types,
-          max_cte_depth: 500,
+          whisper: Post.types[:whisper],
         )
 
       rows.each_with_object({}) do |row, counts|
@@ -587,74 +590,87 @@ module NestedReplies
     end
 
     def cached_total_descendant_counts(post_ids)
-      if guardian.user&.whisperer?
-        DB
-          .query(
-            <<~SQL,
-            WITH RECURSIVE roots AS (
-              SELECT id, post_number
-              FROM posts
-              WHERE topic_id = :topic_id
-                AND id IN (:post_ids)
-            ), descendants AS (
-              SELECT roots.id AS root_id,
-                     posts.post_number,
-                     1 AS depth,
-                     ARRAY[roots.post_number, posts.post_number]::integer[] AS path
-              FROM roots
-              JOIN posts ON posts.topic_id = :topic_id
-                AND posts.reply_to_post_number = roots.post_number
-                AND posts.post_number > 1
-              UNION ALL
-              SELECT descendants.root_id,
-                     posts.post_number,
-                     descendants.depth + 1,
-                     descendants.path || posts.post_number
-              FROM descendants
-              JOIN posts ON posts.topic_id = :topic_id
-                AND posts.reply_to_post_number = descendants.post_number
-                AND posts.post_number > 1
-              WHERE descendants.depth < :max_cte_depth
-                AND NOT posts.post_number = ANY(descendants.path)
-            )
-            SELECT descendants.root_id AS post_id, COUNT(*) AS descendant_count
-            FROM descendants
-            JOIN posts ON posts.topic_id = :topic_id
-              AND posts.post_number = descendants.post_number
-            WHERE #{visibility_sql}
-            GROUP BY descendants.root_id
-          SQL
-            topic_id: topic.id,
-            post_ids: post_ids.uniq,
-            post_types: visible_post_types,
-            whisper: Post.types[:whisper],
-            max_cte_depth: 500,
-          )
-          .to_h { |row| [row.post_id, row.descendant_count] }
-      else
-        NestedViewPostStat
-          .where(post_id: post_ids.uniq)
-          .pluck(:post_id, Arel.sql("total_descendant_count - whisper_total_descendant_count"))
-          .to_h
-      end
+      count_expression =
+        if guardian.user&.whisperer?
+          "total_descendant_count"
+        else
+          "total_descendant_count - whisper_total_descendant_count"
+        end
+
+      NestedViewPostStat
+        .where(post_id: post_ids.uniq)
+        .pluck(:post_id, Arel.sql(count_expression))
+        .to_h
     end
 
     def hot_scores_for_posts(posts)
       return {} if posts.empty?
 
-      NestedViewPostStat
-        .where(post_id: posts.map(&:id).uniq)
-        .where.not(hot_score_updated_at: nil)
-        .pluck(:post_id, :thread_hot_score, :hot_score)
-        .to_h { |post_id, thread_hot_score, hot_score| [post_id, [thread_hot_score, hot_score]] }
+      scores =
+        if hot_scores_current?
+          NestedViewPostStat
+            .where(post_id: posts.map(&:id).uniq)
+            .where(
+              "hot_score_updated_at >= ?",
+              Time.zone.at(NestedReplies::StatsFreshness.valid_after),
+            )
+            .pluck(:post_id, :thread_hot_score, :hot_score)
+            .to_h do |post_id, thread_hot_score, hot_score|
+              [post_id, [thread_hot_score, hot_score]]
+            end
+        else
+          {}
+        end
+
+      missing_posts = posts.reject { |post| scores.key?(post.id) }
+      direct_reply_counts = hot_direct_reply_counts(missing_posts.map(&:post_number))
+      missing_posts.each do |post|
+        hot_score =
+          NestedReplies::HotScoreCalculator.score_for(
+            post,
+            direct_reply_count: direct_reply_counts[post.post_number].to_i,
+          )
+        scores[post.id] = [hot_score, hot_score]
+      end
+
+      scores
+    end
+
+    def hot_direct_reply_counts(post_numbers)
+      return {} if post_numbers.empty?
+
+      Post
+        .with_deleted
+        .where(
+          topic_id: topic.id,
+          reply_to_post_number: post_numbers,
+          post_type: NestedReplies::HotScoreCalculator.public_post_types,
+          deleted_at: nil,
+          hidden: false,
+          user_deleted: false,
+        )
+        .group(:reply_to_post_number)
+        .count
+    end
+
+    def hot_scores_current?
+      return @hot_scores_current if defined?(@hot_scores_current)
+
+      marker =
+        NestedViewPostStat
+          .joins(:post)
+          .where(posts: { topic_id: topic.id, post_number: 1 })
+          .pick(:hot_score_updated_at)
+      @hot_scores_current = NestedReplies::StatsFreshness.current?(marker)
     end
 
     def structural_stats_backfilled?
-      NestedViewPostStat
-        .joins(:post)
-        .where(posts: { topic_id: topic.id, post_number: 1 })
-        .where.not(structural_backfilled_at: nil)
-        .exists?
+      marker =
+        NestedViewPostStat
+          .joins(:post)
+          .where(posts: { topic_id: topic.id, post_number: 1 })
+          .pick(:structural_backfilled_at)
+      NestedReplies::StatsFreshness.current?(marker)
     end
   end
 end

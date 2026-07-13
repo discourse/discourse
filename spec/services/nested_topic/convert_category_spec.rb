@@ -21,7 +21,10 @@ RSpec.describe NestedTopic::ConvertCategory do
       SiteSetting.nested_replies_enabled = true
       category.category_setting.update!(nested_replies_default: true)
       Fabricate(:nested_topic, topic: already_nested_topic)
+      NestedReplies::RecalculationQueue.clear
     end
+
+    after { NestedReplies::RecalculationQueue.clear }
 
     context "when the contract is invalid" do
       let(:params) { { category_id: nil } }
@@ -62,6 +65,32 @@ RSpec.describe NestedTopic::ConvertCategory do
         expect(NestedTopic.where(topic: already_nested_topic).count).to eq(1)
         expect(NestedTopic.where(topic: other_category_topic).exists?).to eq(false)
         expect(result[:converted_topic_count]).to eq(1)
+      end
+
+      it "invalidates only newly converted topic markers", :aggregate_failures do
+        op = Fabricate(:post, topic: topic, post_number: 1)
+        Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
+        existing_op = Fabricate(:post, topic: already_nested_topic, post_number: 1)
+        Fabricate(:post, topic: already_nested_topic, reply_to_post_number: existing_op.post_number)
+        NestedReplies::StructuralStats.recalculate_topic(topic.id)
+        NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+        NestedReplies::StructuralStats.recalculate_topic(already_nested_topic.id)
+        NestedReplies::HotScoreCalculator.recalculate_topic(already_nested_topic.id)
+
+        result
+
+        converted_marker = NestedViewPostStat.find_by!(post: op)
+        existing_marker = NestedViewPostStat.find_by!(post: existing_op)
+        expect(converted_marker.structural_backfilled_at).to be_nil
+        expect(converted_marker.hot_score_updated_at).to be_nil
+        expect(existing_marker.structural_backfilled_at).to be_present
+        expect(existing_marker.hot_score_updated_at).to be_present
+
+        Jobs::BackfillNestedReplyStats.new.execute(category_id: category.id)
+        Jobs::RecalculateNestedHotScores.new.execute(category_id: category.id)
+
+        expect(converted_marker.reload.structural_backfilled_at).to be_present
+        expect(converted_marker.hot_score_updated_at).to be_present
       end
 
       it "marks the category conversion as completed" do

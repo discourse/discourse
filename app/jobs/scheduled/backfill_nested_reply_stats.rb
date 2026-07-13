@@ -97,7 +97,10 @@ module Jobs
               WHERE replies.topic_id = topics.id
                 AND replies.post_number > 1
             )
-            AND stats.structural_backfilled_at IS NULL
+            AND (
+              stats.structural_backfilled_at IS NULL
+              OR stats.structural_backfilled_at < :stats_valid_after
+            )
           ORDER BY topics.id
           LIMIT :batch_size
         SQL
@@ -106,6 +109,7 @@ module Jobs
         category_id: category_id,
         after_topic_id: after_topic_id,
         nested_replies_default: SiteSetting.nested_replies_default,
+        stats_valid_after: Time.zone.at(NestedReplies::StatsFreshness.valid_after),
       )
     end
 

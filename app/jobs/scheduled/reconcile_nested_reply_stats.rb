@@ -9,14 +9,21 @@ module Jobs
     def execute(_args = {})
       return unless SiteSetting.nested_replies_enabled
 
-      topic_ids.each { |topic_id| NestedReplies::StructuralStats.recalculate_topic(topic_id) }
+      topic_ids.each do |topic_id|
+        NestedReplies::StructuralStats.recalculate_topic(topic_id)
+      rescue => error
+        Discourse.warn_exception(
+          error,
+          message: "Failed to reconcile nested reply stats for topic #{topic_id}",
+        )
+      end
     end
 
     private
 
     def topic_ids
-      # Initial backfill selection stays cheap by looking only for a missing
-      # marker. This rotating pass is where already-marked topics are repaired.
+      # Initial backfill selection stays cheap by looking only for a missing or
+      # stale marker. This rotating pass repairs currently valid topics.
       DB.query_single(
         <<~SQL,
           SELECT topics.id
@@ -29,7 +36,7 @@ module Jobs
           WHERE topics.deleted_at IS NULL
             AND topics.archetype = :archetype
             AND (:nested_replies_default OR nested_topics.topic_id IS NOT NULL)
-            AND stats.structural_backfilled_at IS NOT NULL
+            AND stats.structural_backfilled_at >= :stats_valid_after
             AND EXISTS (
               SELECT 1
               FROM posts replies
@@ -42,6 +49,7 @@ module Jobs
         archetype: Archetype.default,
         batch_size: SiteSetting.nested_replies_reconciliation_batch_size,
         nested_replies_default: SiteSetting.nested_replies_default,
+        stats_valid_after: Time.zone.at(NestedReplies::StatsFreshness.valid_after),
       )
     end
   end

@@ -5,8 +5,14 @@ RSpec.describe NestedTopicsController, type: :request do
   fab!(:admin)
   fab!(:topic) { Fabricate(:topic, user: user) }
   fab!(:op) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
+  fab!(:nested_topic) { Fabricate(:nested_topic, topic: topic) }
 
-  before { SiteSetting.nested_replies_enabled = true }
+  before do
+    SiteSetting.nested_replies_enabled = true
+    NestedReplies::RecalculationQueue.clear
+  end
+
+  after { NestedReplies::RecalculationQueue.clear }
 
   def show_url(topic, page: 0, sort: "top")
     "/n/#{topic.slug}/#{topic.id}.json?page=#{page}&sort=#{sort}"
@@ -23,6 +29,9 @@ RSpec.describe NestedTopicsController, type: :request do
   end
 
   def set_nested_hot_scores(post, thread_hot_score:, hot_score: thread_hot_score)
+    NestedViewPostStat.find_or_initialize_by(post_id: op.id).update!(
+      hot_score_updated_at: Time.current,
+    )
     NestedViewPostStat.find_or_initialize_by(post_id: post.id).update!(
       thread_hot_score: thread_hot_score,
       hot_score: hot_score,
@@ -34,6 +43,38 @@ RSpec.describe NestedTopicsController, type: :request do
     SiteSetting.nested_replies_hot_preload_post_budget = post_budget
     SiteSetting.nested_replies_hot_preload_per_root_budget = per_root_budget
     SiteSetting.nested_replies_hot_preload_children_per_parent = children_per_parent
+  end
+
+  describe "flat topic rejection" do
+    fab!(:flat_topic) { Fabricate(:topic, user: user) }
+    fab!(:flat_op) { Fabricate(:post, topic: flat_topic, user: user, post_number: 1) }
+
+    fab!(:flat_root) do
+      Fabricate(:post, topic: flat_topic, user: user, reply_to_post_number: flat_op.post_number)
+    end
+
+    it "rejects nested endpoints while allowing the toggle", :aggregate_failures do
+      sign_in(admin)
+
+      get show_url(flat_topic)
+      expect(response.status).to eq(404)
+
+      get children_url(flat_topic, flat_root.post_number)
+      expect(response.status).to eq(404)
+
+      get context_url(flat_topic, flat_root.post_number)
+      expect(response.status).to eq(404)
+
+      put "/n/#{flat_topic.slug}/#{flat_topic.id}/pin.json", params: { post_id: flat_root.id }
+      expect(response.status).to eq(404)
+
+      get "/n/#{flat_topic.slug}/#{flat_topic.id}/activity.json"
+      expect(response.status).to eq(404)
+
+      put "/n/#{flat_topic.slug}/#{flat_topic.id}/toggle.json", params: { enabled: true }
+      expect(response.status).to eq(200)
+      expect(flat_topic.reload.nested_view?).to eq(true)
+    end
   end
 
   describe "GET respond" do
@@ -420,8 +461,6 @@ RSpec.describe NestedTopicsController, type: :request do
     end
 
     it "sorts topic-level and OP replies in one hot root group" do
-      Fabricate(:nested_topic, topic: topic)
-
       freeze_time Time.zone.local(2026, 6, 1, 12, 0, 0) do
         11.times do
           Fabricate(
@@ -596,7 +635,6 @@ RSpec.describe NestedTopicsController, type: :request do
     end
 
     it "ranks and preloads calculator-produced branch heat", :aggregate_failures do
-      Fabricate(:nested_topic, topic: topic)
       newer_root =
         Fabricate(
           :post,
@@ -631,7 +669,6 @@ RSpec.describe NestedTopicsController, type: :request do
     end
 
     it "ignores invisible activity when ranking and preloading", :aggregate_failures do
-      Fabricate(:nested_topic, topic: topic)
       created_at = 1.day.ago
       invisible_root =
         Fabricate(
@@ -855,7 +892,7 @@ RSpec.describe NestedTopicsController, type: :request do
         Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil, like_count: 10)
       end
 
-      fab!(:nested_topic_record) { Fabricate(:nested_topic, topic: topic) }
+      let(:nested_topic_record) { nested_topic }
 
       def pin_posts(*posts)
         nested_topic_record.update!(pinned_post_ids: posts.map(&:id))
@@ -949,8 +986,6 @@ RSpec.describe NestedTopicsController, type: :request do
 
   describe "PUT pin" do
     fab!(:root_post) { Fabricate(:post, topic: topic, user: user, reply_to_post_number: nil) }
-
-    before { Fabricate(:nested_topic, topic: topic) }
 
     def pin_url(topic)
       "/n/#{topic.slug}/#{topic.id}/pin.json"
@@ -1699,43 +1734,43 @@ RSpec.describe NestedTopicsController, type: :request do
   end
 
   describe "PUT toggle" do
+    fab!(:toggle_topic) { Fabricate(:topic, user: user) }
+
     def toggle_url(topic)
       "/n/#{topic.slug}/#{topic.id}/toggle.json"
     end
 
     it "returns 403 for non-staff users" do
       sign_in(user)
-      put toggle_url(topic), params: { enabled: true }
+      put toggle_url(toggle_topic), params: { enabled: true }
       expect(response.status).to eq(403)
     end
 
     it "allows moderators to toggle nested view" do
       sign_in(Fabricate(:moderator))
-      put toggle_url(topic), params: { enabled: true }
+      put toggle_url(toggle_topic), params: { enabled: true }
       expect(response.status).to eq(200)
       expect(response.parsed_body["is_nested_view"]).to eq(true)
     end
 
     it "allows staff to enable nested view" do
       sign_in(admin)
-      put toggle_url(topic), params: { enabled: true }
+      put toggle_url(toggle_topic), params: { enabled: true }
       expect(response.status).to eq(200)
       expect(response.parsed_body["is_nested_view"]).to eq(true)
 
-      topic.reload
-      expect(topic.reload.nested_topic).to be_present
+      expect(toggle_topic.reload.nested_topic).to be_present
     end
 
     it "allows staff to disable nested view" do
-      Fabricate(:nested_topic, topic: topic)
+      Fabricate(:nested_topic, topic: toggle_topic)
 
       sign_in(admin)
-      put toggle_url(topic), params: { enabled: false }
+      put toggle_url(toggle_topic), params: { enabled: false }
       expect(response.status).to eq(200)
       expect(response.parsed_body["is_nested_view"]).to eq(false)
 
-      topic.reload
-      expect(topic.reload.nested_topic).to be_nil
+      expect(toggle_topic.reload.nested_topic).to be_nil
     end
 
     it "returns 404 for private messages" do
@@ -1786,10 +1821,7 @@ RSpec.describe NestedTopicsController, type: :request do
     describe "catching up on visit" do
       fab!(:reader) { Fabricate(:user, refresh_auto_groups: true) }
 
-      before do
-        Fabricate(:nested_topic, topic: topic)
-        topic.update!(highest_post_number: 2, highest_staff_post_number: 2)
-      end
+      before { topic.update!(highest_post_number: 2, highest_staff_post_number: 2) }
 
       it "advances last_read_post_number to highest_post_number for a nested topic" do
         sign_in(reader)
@@ -1821,13 +1853,14 @@ RSpec.describe NestedTopicsController, type: :request do
         expect(reply_notification.reload.read).to eq(true)
       end
 
-      it "does nothing for non-nested topics opened via /n/" do
+      it "rejects non-nested topics without tracking a visit" do
         flat_topic = Fabricate(:topic, user: user)
         Fabricate(:post, topic: flat_topic, user: user, post_number: 1)
         flat_topic.update!(highest_post_number: 1, highest_staff_post_number: 1)
 
         sign_in(reader)
         get show_url(flat_topic), params: { track_visit: true }
+        expect(response.status).to eq(404)
         Scheduler::Defer.do_all_work
 
         topic_user = TopicUser.find_by(topic: flat_topic, user: reader)

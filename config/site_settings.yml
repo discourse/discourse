@@ -2006,6 +2006,11 @@ nested_replies:
     min: 1
     max: 10000
     hidden: true
+  nested_replies_stats_valid_after:
+    default: 0.0
+    type: float
+    min: 0
+    hidden: true
   nested_replies_hot_preload_post_budget:
     default: 60
     type: integer

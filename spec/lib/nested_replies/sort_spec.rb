@@ -52,10 +52,17 @@ RSpec.describe NestedReplies::Sort do
       engaged = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
       Fabricate(:post, topic: topic, reply_to_post_number: engaged.post_number)
       created_at = 1.day.ago
-      unengaged.update_columns(created_at: created_at)
-      engaged.update_columns(created_at: created_at, reply_count: 1)
+      unengaged.update_columns(created_at: created_at, reply_count: 100)
+      engaged.update_columns(created_at: created_at, reply_count: 99)
 
-      sorted = described_class.sort_in_memory([unengaged.reload, engaged.reload], "hot")
+      sorted =
+        described_class.sort_in_memory(
+          [unengaged.reload, engaged.reload],
+          "hot",
+          direct_reply_counts: {
+            engaged.post_number => 1,
+          },
+        )
 
       expect(sorted.map(&:id)).to eq([engaged.id, unengaged.id])
     end
@@ -68,7 +75,10 @@ RSpec.describe NestedReplies::Sort do
   describe ".sql_order_expression" do
     it "orders hot by branch score, own score, then post number" do
       fallback_score = NestedReplies::HotScoreCalculator.fallback_hot_score_sql("posts")
-      stale_score = NestedReplies::HotScoreCalculator.persisted_score_stale_sql
+      stale_score =
+        NestedReplies::HotScoreCalculator.persisted_score_stale_sql(
+          topic_stats_table: "nested_hot_topic_stats",
+        )
 
       expect(described_class.sql_order_expression("hot")).to eq(
         "CASE WHEN #{stale_score} " \

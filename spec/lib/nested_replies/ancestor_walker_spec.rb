@@ -128,5 +128,32 @@ RSpec.describe NestedReplies do
       expect(result_by_depth[1].post_number).to eq(chain[2].post_number)
       expect(result_by_depth[2].post_number).to eq(chain[1].post_number)
     end
+
+    it "walks beyond the former default cutoff" do
+      chain = build_chain(105)
+
+      results =
+        NestedReplies.walk_ancestors(
+          topic_id: topic.id,
+          start_post_number: chain.last.reply_to_post_number,
+        )
+
+      expect(results.length).to eq(104)
+      expect(results.map(&:post_number)).to include(chain[1].post_number)
+    end
+
+    it "stops malformed cycles without a depth limit" do
+      chain = build_chain(3)
+      chain[1].update_columns(reply_to_post_number: chain[3].post_number)
+
+      results =
+        NestedReplies.walk_ancestors(topic_id: topic.id, start_post_number: chain[3].post_number)
+
+      expect(results.map(&:post_number)).to contain_exactly(
+        chain[1].post_number,
+        chain[2].post_number,
+        chain[3].post_number,
+      )
+    end
   end
 end

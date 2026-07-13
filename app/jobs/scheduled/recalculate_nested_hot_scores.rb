@@ -69,6 +69,7 @@ module Jobs
             )
             AND (
               stats.hot_score_updated_at IS NULL
+              OR stats.hot_score_updated_at < :stats_valid_after
               OR (
                 COALESCE(topics.last_posted_at, topics.created_at) >=
                   NOW() - :freshness_window * INTERVAL '1 second'
@@ -93,6 +94,7 @@ module Jobs
         limit: SiteSetting.nested_replies_hot_score_batch_size,
         freshness_window: NestedReplies::HotScoreCalculator.freshness_window_seconds,
         refresh_interval: NestedReplies::HotScoreCalculator.freshness_refresh_interval_seconds,
+        stats_valid_after: Time.zone.at(NestedReplies::StatsFreshness.valid_after),
       )
     end
 

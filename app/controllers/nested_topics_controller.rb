@@ -9,6 +9,7 @@ class NestedTopicsController < ApplicationController
   before_action :find_topic_with_topic_view, only: %i[show children context]
   before_action :find_topic, only: %i[pin toggle activity]
   before_action :ensure_not_pm
+  before_action :ensure_nested_view, only: %i[show children context pin activity]
   before_action :set_embed_class, only: %i[show context]
   after_action :track_visit, only: %i[show context]
   after_action :allow_embed_mode, only: %i[show context]
@@ -198,6 +199,10 @@ class NestedTopicsController < ApplicationController
     else
       raise Discourse::NotFound
     end
+  end
+
+  def ensure_nested_view
+    raise Discourse::NotFound unless @topic.nested_view?
   end
 
   def find_topic_with_topic_view

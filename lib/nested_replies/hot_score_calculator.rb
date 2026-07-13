@@ -11,6 +11,7 @@ module NestedReplies
     FRESHNESS_CUTOFF_HALF_LIVES = 8
     CHILD_PENALTY = 0.25
     LOCK_VALIDITY_SECONDS = 5.minutes.to_i
+    PERSIST_BATCH_SIZE = 1000
 
     def self.freshness_max_bonus
       FRESHNESS_MAX_BONUS
@@ -88,8 +89,15 @@ module NestedReplies
       Math.log(1 + [engagement, 0.0].max) + freshness
     end
 
-    def self.persisted_score_stale_sql(stats_table = "nested_view_post_stats")
-      "#{stats_table}.hot_score_updated_at IS NULL"
+    def self.persisted_score_stale_sql(
+      stats_table = "nested_view_post_stats",
+      topic_stats_table: nil
+    )
+      conditions = [StatsFreshness.stale_sql("#{stats_table}.hot_score_updated_at")]
+      if topic_stats_table
+        conditions << StatsFreshness.stale_sql("#{topic_stats_table}.hot_score_updated_at")
+      end
+      conditions.join(" OR ")
     end
 
     def self.public_post?(post)
@@ -156,6 +164,15 @@ module NestedReplies
       return if topic_id.blank?
 
       with_topic_lock(topic_id) { recalculate_for_post_without_lock(post_id) }
+    end
+
+    def self.recalculate_posts_for_topic(topic_id, post_ids)
+      post_ids = post_ids.compact.uniq
+      return if topic_id.blank? || post_ids.empty?
+
+      with_topic_lock(topic_id) do
+        post_ids.each { |post_id| recalculate_for_post_without_lock(post_id) }
+      end
     end
 
     def self.recalculate_topic(topic_id)
@@ -291,6 +308,10 @@ module NestedReplies
     def self.persist_scores(scores)
       return if scores.empty?
 
+      scores.each_slice(PERSIST_BATCH_SIZE) { |batch| persist_scores_batch(batch) }
+    end
+
+    def self.persist_scores_batch(scores)
       post_ids, hot_scores, thread_hot_scores = scores.transpose
       DB.exec(
         <<~SQL,
@@ -305,11 +326,11 @@ module NestedReplies
           SELECT updates.post_id,
                  updates.hot_score,
                  updates.thread_hot_score,
-                 NOW(),
+                 clock_timestamp(),
                  NOW(),
                  NOW()
           FROM UNNEST(
-            ARRAY[:post_ids]::integer[],
+            ARRAY[:post_ids]::bigint[],
             ARRAY[:hot_scores]::double precision[],
             ARRAY[:thread_hot_scores]::double precision[]
           ) AS updates(post_id, hot_score, thread_hot_score)
@@ -324,6 +345,7 @@ module NestedReplies
         thread_hot_scores: thread_hot_scores,
       )
     end
+    private_class_method :persist_scores_batch
 
     def self.reset_topic_scores(topic_id)
       DB.exec(<<~SQL, topic_id: topic_id)
@@ -355,7 +377,7 @@ module NestedReplies
           SELECT scored.post_id,
                  scored.hot_score,
                  scored.hot_score,
-                 NOW(),
+                 clock_timestamp(),
                  NOW(),
                  NOW()
           FROM scored
@@ -368,6 +390,65 @@ module NestedReplies
     end
 
     def self.propagate_topic_scores(topic_id)
+      rows = DB.query(<<~SQL, topic_id: topic_id)
+            SELECT posts.id,
+                   posts.post_number,
+                   posts.reply_to_post_number,
+                   stats.hot_score
+            FROM posts
+            INNER JOIN nested_view_post_stats stats ON stats.post_id = posts.id
+            WHERE posts.topic_id = :topic_id
+              AND posts.post_number > 1
+              AND posts.post_type IN (#{public_post_types.join(", ")})
+          SQL
+      rows_by_number = rows.index_by { |row| row.post_number.to_i }
+      child_counts = Hash.new(0)
+
+      rows.each do |row|
+        parent_number = row.reply_to_post_number&.to_i
+        child_counts[parent_number] += 1 if rows_by_number.key?(parent_number)
+      end
+
+      thread_scores = rows.to_h { |row| [row.post_number.to_i, row.hot_score.to_f] }
+      leaf_numbers = rows_by_number.keys.select { |post_number| child_counts[post_number].zero? }
+      processed_count = 0
+      leaf_index = 0
+
+      # Propagate the hottest descendant from leaves to roots in one pass.
+      while leaf_index < leaf_numbers.length
+        post_number = leaf_numbers[leaf_index]
+        leaf_index += 1
+        processed_count += 1
+
+        row = rows_by_number[post_number]
+        parent_number = row.reply_to_post_number&.to_i
+        next unless rows_by_number.key?(parent_number)
+
+        thread_scores[parent_number] = [
+          thread_scores[parent_number],
+          thread_scores[post_number] - child_penalty,
+        ].max
+        child_counts[parent_number] -= 1
+        leaf_numbers << parent_number if child_counts[parent_number].zero?
+      end
+
+      if processed_count != rows.length
+        propagate_topic_scores_with_recursive_sql(topic_id)
+        return
+      end
+
+      persist_scores(
+        rows.map do |score_row|
+          [
+            score_row.id.to_i,
+            score_row.hot_score.to_f,
+            thread_scores.fetch(score_row.post_number.to_i),
+          ]
+        end,
+      )
+    end
+
+    def self.propagate_topic_scores_with_recursive_sql(topic_id)
       DB.exec(<<~SQL, topic_id: topic_id, child_penalty: child_penalty)
           WITH RECURSIVE propagated AS (
             SELECT posts.id AS post_id,
@@ -408,6 +489,7 @@ module NestedReplies
           WHERE stats.post_id = thread_scores.post_id
         SQL
     end
+    private_class_method :propagate_topic_scores_with_recursive_sql
 
     def self.mark_topic_recalculated(topic_id)
       DB.exec(<<~SQL, topic_id: topic_id)
@@ -417,7 +499,7 @@ module NestedReplies
             created_at,
             updated_at
           )
-          SELECT posts.id, NOW(), NOW(), NOW()
+          SELECT posts.id, clock_timestamp(), NOW(), NOW()
           FROM posts
           WHERE posts.topic_id = :topic_id
             AND posts.post_number = 1

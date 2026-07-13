@@ -12,7 +12,10 @@ module NestedReplies
         "#{posts_table}.like_count DESC, #{posts_table}.post_number ASC"
       when "hot"
         fallback_score = NestedReplies::HotScoreCalculator.fallback_hot_score_sql(posts_table)
-        stale_score = NestedReplies::HotScoreCalculator.persisted_score_stale_sql
+        stale_score =
+          NestedReplies::HotScoreCalculator.persisted_score_stale_sql(
+            topic_stats_table: "nested_hot_topic_stats",
+          )
         "CASE WHEN #{stale_score} " \
           "THEN #{fallback_score} ELSE nested_view_post_stats.thread_hot_score END DESC, " \
           "CASE WHEN #{stale_score} " \
@@ -34,10 +37,15 @@ module NestedReplies
       <<~SQL.squish
         LEFT JOIN nested_view_post_stats
           ON nested_view_post_stats.post_id = #{posts_table}.id
+        LEFT JOIN posts nested_hot_original_post
+          ON nested_hot_original_post.topic_id = #{posts_table}.topic_id
+         AND nested_hot_original_post.post_number = 1
+        LEFT JOIN nested_view_post_stats nested_hot_topic_stats
+          ON nested_hot_topic_stats.post_id = nested_hot_original_post.id
       SQL
     end
 
-    def self.sort_in_memory(posts, algorithm, hot_scores: nil)
+    def self.sort_in_memory(posts, algorithm, hot_scores: nil, direct_reply_counts: nil)
       raise ArgumentError, "Invalid sort algorithm: #{algorithm}" unless valid?(algorithm)
 
       case algorithm
@@ -45,8 +53,14 @@ module NestedReplies
         posts.sort_by { |post| [-post.like_count, post.post_number] }
       when "hot"
         hot_scores ||= {}
+        direct_reply_counts ||= {}
         posts.sort_by do |post|
-          thread_hot_score, hot_score = hot_score_values(post, hot_scores[post.id])
+          thread_hot_score, hot_score =
+            hot_score_values(
+              post,
+              hot_scores[post.id],
+              direct_reply_count: direct_reply_counts[post.post_number],
+            )
           [-thread_hot_score, -hot_score, post.post_number]
         end
       when "new"
@@ -56,7 +70,7 @@ module NestedReplies
       end
     end
 
-    def self.hot_score_values(post, scores)
+    def self.hot_score_values(post, scores, direct_reply_count: nil)
       case scores
       when Array
         hot_score = (scores[1] || scores[0] || 0.0).to_f
@@ -70,7 +84,8 @@ module NestedReplies
       else
         hot_score =
           (
-            scores || HotScoreCalculator.score_for(post, direct_reply_count: post.reply_count.to_i)
+            scores ||
+              HotScoreCalculator.score_for(post, direct_reply_count: direct_reply_count.to_i)
           ).to_f
         [hot_score, hot_score]
       end

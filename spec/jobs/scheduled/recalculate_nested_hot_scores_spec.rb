@@ -5,7 +5,12 @@ RSpec.describe Jobs::RecalculateNestedHotScores do
   fab!(:op) { Fabricate(:post, topic: topic, post_number: 1) }
   fab!(:nested_topic) { Fabricate(:nested_topic, topic: topic) }
 
-  before { SiteSetting.nested_replies_enabled = true }
+  before do
+    SiteSetting.nested_replies_enabled = true
+    NestedReplies::RecalculationQueue.clear
+  end
+
+  after { NestedReplies::RecalculationQueue.clear }
 
   def execute(args = nil)
     described_class.new.execute(args)
@@ -94,6 +99,24 @@ RSpec.describe Jobs::RecalculateNestedHotScores do
 
     expect(topic_marker.reload.updated_at).to eq_time(original_updated_at)
     expect(topic_marker.hot_score_updated_at).to eq_time(original_hot_score_updated_at)
+  end
+
+  it "refreshes scores older than the validity cutoff", :aggregate_failures do
+    post = Fabricate(:post, topic: topic, reply_to_post_number: op.post_number)
+    set_hot_score_inputs(post, created_at: 1.day.ago, like_score: 1)
+    backfill_structural_stats
+    NestedReplies::HotScoreCalculator.recalculate_topic(topic.id)
+    topic_marker = NestedViewPostStat.find_by!(post: op)
+    previous_marker = topic_marker.hot_score_updated_at
+    post.update_columns(like_score: 20)
+    SiteSetting.nested_replies_stats_valid_after = previous_marker.to_f + 1
+
+    execute
+
+    expect(topic_marker.reload.hot_score_updated_at).to be > previous_marker
+    expect(NestedViewPostStat.find_by!(post: post).hot_score).to be_within(0.0001).of(
+      NestedReplies::HotScoreCalculator.score_for(post.reload),
+    )
   end
 
   it "refreshes a cooled topic once", :aggregate_failures do

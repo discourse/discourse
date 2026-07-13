@@ -8,11 +8,19 @@ RSpec.describe NestedReplies do
   before do
     SiteSetting.nested_replies_enabled = true
     nested_category.category_setting.update!(nested_replies_default: true)
+    NestedReplies::RecalculationQueue.clear
   end
+
+  after { NestedReplies::RecalculationQueue.clear }
 
   describe "site setting activation event" do
     fab!(:topic)
     fab!(:op) { Fabricate(:post, topic: topic, post_number: 1) }
+    fab!(:nested_topic) { Fabricate(:nested_topic, topic: topic) }
+
+    before { NestedReplies::RecalculationQueue.clear }
+
+    after { NestedReplies::RecalculationQueue.clear }
 
     it "invalidates stats when nested replies are enabled" do
       SiteSetting.nested_replies_enabled = false
@@ -23,11 +31,15 @@ RSpec.describe NestedReplies do
           hot_score_updated_at: 1.hour.ago,
         )
 
-      expect_enqueued_with(job: :backfill_nested_reply_stats) do
-        expect_enqueued_with(job: :recalculate_nested_hot_scores) do
-          SiteSetting.nested_replies_enabled = true
-        end
+      expect_enqueued_with(job: :invalidate_nested_reply_stats) do
+        SiteSetting.nested_replies_enabled = true
       end
+
+      cutoff = SiteSetting.nested_replies_stats_valid_after
+      expect(cutoff).to be > stat.structural_backfilled_at.to_f
+      expect([stat.reload.structural_backfilled_at, stat.hot_score_updated_at]).to all(be_present)
+
+      Jobs::InvalidateNestedReplyStats.new.execute
 
       expect([stat.reload.structural_backfilled_at, stat.hot_score_updated_at]).to eq([nil, nil])
     end
@@ -41,11 +53,15 @@ RSpec.describe NestedReplies do
           hot_score_updated_at: 1.hour.ago,
         )
 
-      expect_enqueued_with(job: :backfill_nested_reply_stats) do
-        expect_enqueued_with(job: :recalculate_nested_hot_scores) do
-          SiteSetting.nested_replies_default = true
-        end
+      expect_enqueued_with(job: :invalidate_nested_reply_stats) do
+        SiteSetting.nested_replies_default = true
       end
+
+      expect(SiteSetting.nested_replies_stats_valid_after).to be >
+        stat.structural_backfilled_at.to_f
+      expect([stat.reload.structural_backfilled_at, stat.hot_score_updated_at]).to all(be_present)
+
+      Jobs::InvalidateNestedReplyStats.new.execute
 
       expect([stat.reload.structural_backfilled_at, stat.hot_score_updated_at]).to eq([nil, nil])
     end
