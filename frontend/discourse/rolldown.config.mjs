@@ -84,6 +84,8 @@ export function buildConfig({ devMode } = {}) {
     },
     moduleTypes: {
       ".wasm": "asset",
+      ".gjs": "js",
+      ".gts": "ts",
     },
     input: {
       discourse: "discourse.js",
