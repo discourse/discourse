@@ -81,6 +81,10 @@ export default {
       "const compatModules = {",
       ...entries,
       "};",
+      // `default` is the cross-bundle lookup table indexed by babel-resolve-plugin-imports.
+      // `compatModules` is the set core registers with `define()`. They are the same object
+      // today, but will diverge under `staticModules`.
+      "export { compatModules };",
       "export default compatModules;",
       "",
     ].join("\n");

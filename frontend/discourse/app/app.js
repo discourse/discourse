@@ -57,11 +57,18 @@ window.moduleBroker = {
   },
 };
 
+// Themes and plugins expose the modules core should `define()` as a `compatModules` named
+// export. Under `staticModules` that is a subset of the bundle's default export, which is the
+// cross-bundle lookup table rather than the registration set.
+function compatModulesOf(bundle) {
+  return bundle.compatModules ?? bundle.default;
+}
+
 async function loadThemeFromModulePreload(link) {
   const themeId = link.dataset.themeId;
   try {
-    const compatModules = (await import(/* @vite-ignore */ link.href)).default;
-    for (const [key, mod] of Object.entries(compatModules)) {
+    const bundle = await import(/* @vite-ignore */ link.href);
+    for (const [key, mod] of Object.entries(compatModulesOf(bundle))) {
       define(`discourse/theme-${themeId}/${key}`, () => mod);
     }
   } catch (error) {
@@ -82,8 +89,8 @@ async function loadThemeFromModulePreload(link) {
 async function loadPluginFromModulePreload(link) {
   const pluginName = link.dataset.pluginName;
   try {
-    const compatModules = (await import(/* @vite-ignore */ link.href)).default;
-    for (const [key, mod] of Object.entries(compatModules)) {
+    const bundle = await import(/* @vite-ignore */ link.href);
+    for (const [key, mod] of Object.entries(compatModulesOf(bundle))) {
       define(`discourse/plugins/${pluginName}/${key}`, () => mod);
     }
   } catch (error) {
