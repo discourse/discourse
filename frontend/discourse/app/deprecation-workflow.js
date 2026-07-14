@@ -360,6 +360,7 @@ const workflows = [
     "discourse.global.site-settings",
     "discourse.global.user",
     "discourse.hbs-extension",
+    "discourse.es6-extension",
     "discourse.header-extra-info.needs-second-row-if",
     "discourse.header-service-topic",
     "discourse.hide-popover",
