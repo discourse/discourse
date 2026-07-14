@@ -64,6 +64,32 @@ function compatModulesOf(bundle) {
   return bundle.compatModules ?? bundle.default;
 }
 
+// A `staticModules` bundle can split routes out into lazy chunks. `@embroider/router` picks
+// these up by route name, awaits `load()`, and hands the default export to
+// `Resolver#addModules`. Route bundles are namespaced the same way the eager modules are, so
+// prefix their keys on the way through.
+function registerRouteBundles(bundle, prefix) {
+  window._embroiderRouteBundles_ ??= [];
+
+  for (const { names, load } of bundle.routes ?? []) {
+    window._embroiderRouteBundles_.push({
+      names,
+      load: async () => {
+        const routeModules = (await load()).default;
+
+        return {
+          default: Object.fromEntries(
+            Object.entries(routeModules).map(([key, mod]) => [
+              `${prefix}/${key}`,
+              mod,
+            ])
+          ),
+        };
+      },
+    });
+  }
+}
+
 async function loadThemeFromModulePreload(link) {
   const themeId = link.dataset.themeId;
   try {
@@ -71,6 +97,7 @@ async function loadThemeFromModulePreload(link) {
     for (const [key, mod] of Object.entries(compatModulesOf(bundle))) {
       define(`discourse/theme-${themeId}/${key}`, () => mod);
     }
+    registerRouteBundles(bundle, `discourse/theme-${themeId}`);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(
@@ -93,6 +120,7 @@ async function loadPluginFromModulePreload(link) {
     for (const [key, mod] of Object.entries(compatModulesOf(bundle))) {
       define(`discourse/plugins/${pluginName}/${key}`, () => mod);
     }
+    registerRouteBundles(bundle, `discourse/plugins/${pluginName}`);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(

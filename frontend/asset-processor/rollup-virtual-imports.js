@@ -97,6 +97,98 @@ function normalizeModules(moduleFilenames, label) {
   return { records, warnings };
 }
 
+// Route names are derived from file paths, the way Embroider does it: strip the
+// `routes/` / `controllers/` / `templates/` prefix and join the remaining segments with a dot.
+// Ember's resolver convention guarantees the path is the route name.
+const ROUTE_FILE_REGEX = /(^|\/)(routes|controllers|templates)\/(.+)$/;
+
+function routeNameFor(compatModuleName) {
+  const match = compatModuleName.match(ROUTE_FILE_REGEX);
+
+  if (!match) {
+    return null;
+  }
+
+  const [, , type, path] = match;
+
+  // Unlike a core app, Discourse nests connectors and classic component templates under
+  // `templates/`. They are not routes.
+  if (
+    type === "templates" &&
+    (path.startsWith("connectors/") || path.startsWith("components/"))
+  ) {
+    return null;
+  }
+
+  return path.split("/").join(".");
+}
+
+// `splitAtRoutes` values are route-name patterns with at most one trailing star. A star means
+// "this route and everything beneath it" — but splitting a route always claims its descendants
+// anyway, so `chat.*` and `chat` are the same thing. Reduce both to the base route name.
+function splitBasesFor(frontend) {
+  return Object.values(frontend?.splitAtRoutes ?? {}).map((pattern) =>
+    pattern.replace(/\.?\*$/, "")
+  );
+}
+
+// The bundle a route belongs to is its nearest splitting ancestor, or itself. Matching the
+// longest base gives that directly: `chat.visualizer` beats `chat` for `chat.visualizer`, which
+// is what keeps a more specific split out of its parent's bundle.
+function splitBaseFor(routeName, splitBases) {
+  let match = null;
+
+  for (const base of splitBases) {
+    const claims = routeName === base || routeName.startsWith(`${base}.`);
+
+    if (claims && (match === null || base.length > match.length)) {
+      match = base;
+    }
+  }
+
+  return match;
+}
+
+// Groups the route files which `splitAtRoutes` claims into one lazy bundle per base route.
+// Anything unclaimed is left for the eager set.
+export function routeBundlesFor(records, frontend) {
+  const splitBases = splitBasesFor(frontend);
+  const bundles = new Map();
+
+  if (splitBases.length === 0) {
+    return [];
+  }
+
+  for (const record of records) {
+    const routeName = routeNameFor(record.compatModuleName);
+
+    if (!routeName) {
+      continue;
+    }
+
+    const base = splitBaseFor(routeName, splitBases);
+
+    if (!base) {
+      continue;
+    }
+
+    let bundle = bundles.get(base);
+
+    if (!bundle) {
+      bundle = { base, names: new Set(), records: [] };
+      bundles.set(base, bundle);
+    }
+
+    bundle.names.add(routeName);
+    bundle.records.push(record);
+  }
+
+  return [...bundles.values()].map((bundle) => ({
+    ...bundle,
+    names: [...bundle.names].sort(),
+  }));
+}
+
 function renderMap(name, records, identifiers) {
   return [
     `const ${name} = {`,
@@ -139,8 +231,13 @@ export default {
       (frontend.sharedModules ?? []).map(stripExtension)
     );
 
-    const eager = records.filter((record) =>
-      isEagerModule(record.compatModuleName)
+    const bundles = routeBundlesFor(records, frontend);
+    const split = new Set(bundles.flatMap((bundle) => bundle.records));
+
+    // Route files claimed by a `splitAtRoutes` bundle are loaded lazily, so they must not also
+    // be registered eagerly here — that would defeat the split.
+    const eager = records.filter(
+      (record) => isEagerModule(record.compatModuleName) && !split.has(record)
     );
     const shared = records.filter((record) =>
       sharedPaths.has(stripExtension(record.importPath))
@@ -160,8 +257,47 @@ export default {
       ...warnings,
       ...renderMap("compatModules", eager, identifiers),
       ...renderMap("sharedModules", shared, identifiers),
+      "export const routes = [",
+      ...bundles.map(
+        (bundle) =>
+          `  { names: ${JSON.stringify(bundle.names)},` +
+          ` load: () => import("virtual:route:${bundle.base}") },`
+      ),
+      "];",
       "export { compatModules };",
       "export default sharedModules;",
+      "",
+    ].join("\n");
+  },
+  // One lazy route bundle. `@embroider/router` awaits this and hands the default export to
+  // `Resolver#addModules`, so the shape must be a plain module map.
+  "virtual:route": (moduleFilenames, opts, routeName) => {
+    const label = opts.pluginName
+      ? `PLUGIN ${opts.pluginName}`
+      : `THEME ${opts.themeId}`;
+
+    const { records } = normalizeModules(moduleFilenames, label);
+    const bundle = routeBundlesFor(records, opts.frontend).find(
+      (candidate) => candidate.base === routeName
+    );
+
+    if (!bundle) {
+      throw new Error(
+        `[${label}] No route bundle for "${routeName}" — no route files matched it.`
+      );
+    }
+
+    const identifiers = new Map(
+      bundle.records.map((record, i) => [record, `Mod${i + 1}`])
+    );
+
+    return [
+      ...bundle.records.map(
+        (record) =>
+          `import * as ${identifiers.get(record)} from "./${record.importPath}";`
+      ),
+      ...renderMap("routeCompatModules", bundle.records, identifiers),
+      "export default routeCompatModules;",
       "",
     ].join("\n");
   },

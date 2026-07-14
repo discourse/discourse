@@ -116,7 +116,97 @@ describe("virtual:entrypoint", () => {
 
     it("does not import modules which are neither eager nor shared", () => {
       expect(output).not.toContain('from "./discourse/lib/chat-utils"');
-      expect(output).not.toContain('from "./discourse/helpers/format-chat-date"');
+      expect(output).not.toContain(
+        'from "./discourse/helpers/format-chat-date"'
+      );
+    });
+
+    it("emits no routes export when nothing is split", () => {
+      expect(output).toContain("export const routes = [\n];");
+    });
+  });
+
+  describe("splitAtRoutes", () => {
+    const ROUTE_MODULES = [
+      "discourse/routes/chat.js",
+      "discourse/routes/chat/channel.js",
+      "discourse/controllers/chat/channel.js",
+      "discourse/templates/chat/channel.hbs",
+      "discourse/routes/chat/visualizer.js",
+      "discourse/templates/chat/visualizer.hbs",
+      "discourse/routes/browse.js",
+      "discourse/services/chat.js",
+      "discourse/templates/connectors/user-menu/chat.hbs",
+      "discourse/templates/components/chat-message.hbs",
+    ];
+
+    const frontend = {
+      staticModules: true,
+      splitAtRoutes: {
+        "chat/visualizer": "chat.visualizer",
+        "chat/*": "chat.*",
+      },
+    };
+
+    const output = entrypoint(ROUTE_MODULES, { frontend });
+
+    it("groups routes into a bundle per split base, nearest ancestor winning", () => {
+      // `chat.visualizer` is split separately, so it must not be swept into the `chat` bundle.
+      expect(output).toContain(
+        `{ names: ["chat.visualizer"], load: () => import("virtual:route:chat.visualizer") },`
+      );
+      expect(output).toContain(
+        `{ names: ["chat","chat.channel"], load: () => import("virtual:route:chat") },`
+      );
+    });
+
+    it("keeps split route files out of the eager set", () => {
+      const compatModules = output.slice(
+        output.indexOf("const compatModules"),
+        output.indexOf("const sharedModules")
+      );
+
+      expect(compatModules).not.toContain('"discourse/routes/chat"');
+      expect(compatModules).not.toContain('"discourse/routes/chat/channel"');
+      expect(compatModules).not.toContain('"discourse/templates/chat/channel"');
+
+      // Unclaimed routes stay eager.
+      expect(compatModules).toContain('"discourse/routes/browse":');
+      expect(compatModules).toContain('"discourse/services/chat":');
+    });
+
+    it("does not mistake connectors or component templates for routes", () => {
+      const compatModules = output.slice(
+        output.indexOf("const compatModules"),
+        output.indexOf("const sharedModules")
+      );
+
+      // Discourse nests these under `templates/`, unlike a core app. Treating them as routes
+      // would give bundles named `connectors.*` / `components.*` and drop them from the
+      // eager set.
+      expect(compatModules).toContain(
+        '"discourse/templates/connectors/user-menu/chat":'
+      );
+      expect(compatModules).toContain(
+        '"discourse/templates/components/chat-message":'
+      );
+    });
+
+    it("renders a route bundle as a plain module map", () => {
+      const bundle = rollupVirtualImports["virtual:route"](
+        ROUTE_MODULES,
+        { pluginName: "chat", frontend },
+        "chat"
+      );
+
+      expect(bundle).toContain('"discourse/routes/chat":');
+      expect(bundle).toContain('"discourse/routes/chat/channel":');
+      expect(bundle).toContain('"discourse/controllers/chat/channel":');
+      expect(bundle).toContain('"discourse/templates/chat/channel":');
+      expect(bundle).toContain("export default routeCompatModules;");
+
+      // The separately-split child does not belong to the parent bundle.
+      expect(bundle).not.toContain('"discourse/routes/chat/visualizer":');
     });
   });
 });
