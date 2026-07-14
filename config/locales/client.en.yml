@@ -6925,7 +6925,7 @@ en:
         category_management:
           title: "Category management"
           header_description: "Review category types, hierarchy, and the categories currently assigned to each type."
-          keywords: "categories|category types|discussion|events|support|ideas"
+          keywords: "categories|category types|discussion|category management"
           tabs:
             settings: "Settings"
           types:
@@ -6933,18 +6933,6 @@ en:
             all:
               title: "All categories"
               description: "All categories across every configured category type."
-            discussion:
-              title: "Discussion"
-              description: "Standard categories that are not assigned to another category type."
-            events:
-              title: "Events"
-              description: "Categories configured for calendar and event workflows."
-            support:
-              title: "Support"
-              description: "Categories configured for questions, answers, and solved workflows."
-            ideas:
-              title: "Ideas"
-              description: "Categories configured for idea collection and voting workflows."
           filter_placeholder: "Filter categories"
           no_results: "No %{type} categories found."
           open_settings: "Open settings"

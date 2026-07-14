@@ -56,16 +56,16 @@ export default class AdminCategoryManagementList extends Component {
   }
 
   get titleLabel() {
-    return `admin.config.category_management.types.${this.args.categoryType.id}.title`;
+    return this.args.categoryType.name;
   }
 
   get descriptionLabel() {
-    return `admin.config.category_management.types.${this.args.categoryType.id}.description`;
+    return this.args.categoryType.description;
   }
 
   get noResultsMessage() {
     return i18n("admin.config.category_management.no_results", {
-      type: i18n(this.titleLabel),
+      type: this.titleLabel,
     });
   }
 
@@ -176,8 +176,8 @@ export default class AdminCategoryManagementList extends Component {
       {{didUpdate this.typeChanged @categoryType}}
     >
       <DPageSubheader
-        @titleLabel={{i18n this.titleLabel}}
-        @descriptionLabel={{i18n this.descriptionLabel}}
+        @titleLabel={{this.titleLabel}}
+        @descriptionLabel={{this.descriptionLabel}}
       />
 
       <PluginOutlet

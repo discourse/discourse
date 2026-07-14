@@ -29,8 +29,11 @@ export default class AdminConfigCategoryManagementTypeRoute extends DiscourseRou
       "adminConfig.categoryManagement.type"
     ).category_type_id;
 
-    return i18n(
-      `admin.config.category_management.types.${categoryTypeId}.title`
-    );
+    if (categoryTypeId === "all") {
+      return i18n("admin.config.category_management.types.all.title");
+    }
+
+    return this.site.category_types.find((type) => type.id === categoryTypeId)
+      ?.title;
   }
 }
