@@ -58,8 +58,9 @@ window.moduleBroker = {
 };
 
 // Themes and plugins expose the modules core should `define()` as a `compatModules` named
-// export. Under `staticModules` that is a subset of the bundle's default export, which is the
-// cross-bundle lookup table rather than the registration set.
+// export. Under `staticModules` that is the set Discourse still resolves by name, and the
+// default export is the bundle's declared cross-bundle API — reached by ESM import through the
+// importmap, not through the loader registry, so it is deliberately not registered here.
 function compatModulesOf(bundle) {
   return bundle.compatModules ?? bundle.default;
 }

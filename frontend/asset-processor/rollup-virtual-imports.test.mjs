@@ -140,6 +140,8 @@ describe("virtual:entrypoint", () => {
       "discourse/services/chat.js",
       "discourse/templates/connectors/user-menu/chat.hbs",
       "discourse/templates/components/chat-message.hbs",
+      // Chat really has these: components in a directory called `routes`.
+      "discourse/components/chat/routes/channel.gjs",
     ];
 
     const frontend = {
@@ -192,6 +194,21 @@ describe("virtual:entrypoint", () => {
       expect(compatModules).toContain(
         '"discourse/templates/components/chat-message":'
       );
+    });
+
+    it("only treats top-level routes/controllers/templates as routes", () => {
+      // `discourse/components/chat/routes/channel` is a component sitting in a directory called
+      // `routes`. Matching `routes/` at any depth would make it a route named `channel`, and
+      // register it eagerly instead of letting it be imported.
+      const compatModules = output.slice(
+        output.indexOf("const compatModules"),
+        output.indexOf("const sharedModules")
+      );
+
+      expect(compatModules).not.toContain(
+        '"discourse/components/chat/routes/channel"'
+      );
+      expect(output).not.toContain('import("virtual:route:channel")');
     });
 
     it("renders a route bundle as a plain module map", () => {

@@ -9,33 +9,38 @@ const SUPPORTED_FILE_EXTENSIONS = [
 
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
-// Modules Discourse still looks up by name at runtime, and which therefore have to be
-// registered with `define()` even when the rest of the bundle is reached through static
-// imports. Everything else — components, helpers, modifiers, lib, unshared models — is
-// imported from `.gjs` under `staticModules`, so it can be left to tree-shaking.
-const EAGER_MODULE_PATTERNS = [
-  // enumerated out of `requirejs.entries` by `loadInitializers`
-  /(^|\/)pre-initializers\//,
-  /(^|\/)initializers\//,
-  /(^|\/)api-initializers\//,
-  /(^|\/)instance-initializers\//,
-  // scanned out of `requirejs.entries` by `mapRoutes`, which matches on the suffix alone —
-  // plugins name these `<something>-route-map`, not `route-map`.
-  /route-map$/,
-  // resolved by name by the plugin outlet system
-  /(^|\/)connectors\//,
-  // resolved by name via the resolver's suffix trie
-  /(^|\/)services\//,
-  /(^|\/)models\//,
-  /(^|\/)adapters\//,
-  /(^|\/)routes\//,
-  /(^|\/)controllers\//,
-  /(^|\/)templates\//,
+// Directories whose contents Discourse still looks up by name at runtime — by the plugin outlet
+// system, or via the resolver's suffix trie — and which therefore have to be registered with
+// `define()` even when the rest of the bundle is reached through static imports.
+//
+// Anchored to the top-level segment, the way Embroider anchors them at the app root:
+// `discourse/routes/channel` is a route, but `discourse/components/chat/routes/channel` is a
+// component which happens to sit in a directory called `routes`.
+const EAGER_DIRECTORIES = [
+  "connectors",
+  "services",
+  "models",
+  "adapters",
+  "routes",
+  "controllers",
+  "templates",
 ];
 
+const EAGER_DIRECTORY_REGEX = new RegExp(
+  `^[^/]+/(${EAGER_DIRECTORIES.join("|")})/`
+);
+
+// Everything else — components, helpers, modifiers, lib — is imported from `.gjs` under
+// `staticModules`, so it can be left to tree-shaking.
 function isEagerModule(compatModuleName) {
-  return EAGER_MODULE_PATTERNS.some((pattern) =>
-    pattern.test(compatModuleName)
+  return (
+    EAGER_DIRECTORY_REGEX.test(compatModuleName) ||
+    // `loadInitializers` enumerates the loader registry and matches these at any depth,
+    /\/(pre-initializers|initializers|api-initializers|instance-initializers)\//.test(
+      compatModuleName
+    ) ||
+    // and `mapRoutes` matches on the suffix alone — plugins name these `<something>-route-map`.
+    /route-map$/.test(compatModuleName)
   );
 }
 
@@ -100,8 +105,9 @@ function normalizeModules(moduleFilenames, label) {
 
 // Route names are derived from file paths, the way Embroider does it: strip the
 // `routes/` / `controllers/` / `templates/` prefix and join the remaining segments with a dot.
-// Ember's resolver convention guarantees the path is the route name.
-const ROUTE_FILE_REGEX = /(^|\/)(routes|controllers|templates)\/(.+)$/;
+// Ember's resolver convention guarantees the path is the route name. Anchored for the same
+// reason `EAGER_DIRECTORY_REGEX` is — a component under `components/chat/routes/` is not a route.
+const ROUTE_FILE_REGEX = /^[^/]+\/(routes|controllers|templates)\/(.+)$/;
 
 function routeNameFor(compatModuleName) {
   const match = compatModuleName.match(ROUTE_FILE_REGEX);
@@ -110,7 +116,7 @@ function routeNameFor(compatModuleName) {
     return null;
   }
 
-  const [, , type, path] = match;
+  const [, type, path] = match;
 
   // Unlike a core app, Discourse nests connectors and classic component templates under
   // `templates/`. They are not routes.
@@ -228,8 +234,12 @@ export default {
       ].join("\n");
     }
 
+    // Declared with or without the `/index` suffix, matching how cross-plugin imports resolve.
     const sharedPaths = new Set(
-      (frontend.sharedModules ?? []).map(stripExtension)
+      (frontend.sharedModules ?? []).flatMap((shared) => {
+        const path = stripExtension(shared);
+        return [path, `${path}/index`];
+      })
     );
 
     const bundles = routeBundlesFor(records, frontend);
