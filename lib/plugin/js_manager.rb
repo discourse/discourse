@@ -59,8 +59,8 @@ module Plugin
       read_manifest(plugin_directory_name)[entrypoint_name]["externalPluginImports"]
     end
 
-    # The lazy route chunk to preload for `path`, if any. Globs allow a single trailing star, and
-    # the first match wins, so a specific glob must be declared before a wildcard covering it.
+    # The lazy route chunk to preload for `path`, if any. The first match wins, so a specific glob
+    # must be declared before a wildcard covering it.
     def self.route_bundle_for_path(plugin_directory_name, entrypoint_name, path)
       bundles = read_manifest(plugin_directory_name).dig(entrypoint_name, "routeBundles")
 
@@ -69,12 +69,21 @@ module Plugin
       "js/plugins/#{bundle["fileName"].delete_suffix(".js")}" if bundle
     end
 
+    # A `*` matches exactly one path segment, except as the final segment, where it matches the
+    # rest of the path — or nothing, so `chat/*` also covers `/chat` itself. Dynamic segments make
+    # the first form necessary: chat's preferences route lives at `u/*/preferences/chat`.
     def self.url_glob_matches?(glob, path)
-      return path == glob if !glob.end_with?("*")
+      glob_segments = glob.split("/")
+      path_segments = path.split("/")
 
-      prefix = glob.delete_suffix("*").delete_suffix("/")
+      glob_segments.each_with_index do |segment, i|
+        return true if segment == "*" && i == glob_segments.size - 1
+        return false if path_segments[i].nil?
+        next if segment == "*"
+        return false if segment != path_segments[i]
+      end
 
-      path == prefix || path.start_with?("#{prefix}/")
+      glob_segments.size == path_segments.size
     end
     private_class_method :url_glob_matches?
 
