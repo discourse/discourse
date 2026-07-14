@@ -59,6 +59,25 @@ module DiscoursePostEvent
         expect(event_ids).to match_array([active_event1.id, active_event2.id])
       end
 
+      it "includes linkified multiline description HTML in detailed JSON" do
+        event =
+          Fabricate(
+            :event,
+            original_starts_at: 1.day.from_now,
+            description: "Visit https://example.com\n\nBring snacks",
+          )
+
+        get "/discourse-post-event/events.json", params: { include_details: "true" }
+
+        expect(response.status).to eq(200)
+        description_html =
+          response.parsed_body["events"].find { |event_json| event_json["id"] == event.id }[
+            "description_html"
+          ]
+        expect(description_html).to include('<a href="https://example.com"')
+        expect(description_html).to include("<br>")
+      end
+
       it "should return events in ics format" do
         event1 = Fabricate(:event, original_starts_at: 1.day.from_now, name: "Test Event 1")
         event2 = Fabricate(:event, original_starts_at: 2.days.from_now, name: "Test Event 2")
@@ -220,6 +239,65 @@ module DiscoursePostEvent
         expect(response.body).to include("SUMMARY:Valid Event")
       end
 
+      describe "with all-day events" do
+        before { freeze_time Time.utc(2026, 3, 1, 12) }
+
+        it "emits all-day events as DATE values with an exclusive end date" do
+          Fabricate(
+            :event,
+            original_starts_at: Time.utc(2026, 3, 12),
+            original_ends_at: Time.utc(2026, 3, 14).end_of_day,
+            all_day: true,
+            name: "All Day Conference",
+          )
+
+          get "/discourse-post-event/events.ics"
+
+          expect(response.status).to eq(200)
+          body = response.body
+          expect(body).to include("SUMMARY:All Day Conference")
+          expect(body).to include("DTSTART;VALUE=DATE:20260312")
+          expect(body).to include("DTEND;VALUE=DATE:20260315")
+          expect(body).not_to include("DTSTART:20260312T000000Z")
+        end
+
+        it "emits a single-day all-day event spanning one day" do
+          Fabricate(
+            :event,
+            original_starts_at: Time.utc(2026, 3, 12),
+            original_ends_at: nil,
+            all_day: true,
+            name: "All Day Holiday",
+          )
+
+          get "/discourse-post-event/events.ics"
+
+          expect(response.status).to eq(200)
+          body = response.body
+          expect(body).to include("DTSTART;VALUE=DATE:20260312")
+          expect(body).to include("DTEND;VALUE=DATE:20260313")
+        end
+
+        it "emits recurring all-day occurrences as DATE values" do
+          Fabricate(
+            :event,
+            original_starts_at: Time.utc(2026, 3, 12),
+            all_day: true,
+            recurrence: "every_week",
+            name: "Weekly All Day",
+          )
+
+          get "/discourse-post-event/events.ics"
+
+          expect(response.status).to eq(200)
+          body = response.body
+          expect(body.scan("DTSTART;VALUE=DATE:").size).to be > 1
+          expect(body).not_to match(/DTSTART:\d{8}T\d{6}Z/)
+          expect(body).to include("DTSTART;VALUE=DATE:20260312")
+          expect(body).to include("DTEND;VALUE=DATE:20260313")
+        end
+      end
+
       context "when include_interested is requested for an attending user" do
         fab!(:target_user, :user)
         fab!(:going_event) do
@@ -283,6 +361,42 @@ module DiscoursePostEvent
           expect(response.body).to include("SUMMARY:Interested Event")
         end
       end
+
+      context "when the attending user RSVPed to a recurring event" do
+        fab!(:target_user, :user)
+        fab!(:recurring_event) do
+          Fabricate(
+            :event,
+            original_starts_at: 1.day.from_now,
+            original_ends_at: 1.day.from_now + 1.hour,
+            recurrence: "every_week",
+            name: "Weekly Standup",
+          )
+        end
+
+        before { sign_in(target_user) }
+
+        it "returns only the current occurrence when they RSVPed to a single occurrence" do
+          Invitee.create_attendance!(target_user.id, recurring_event.id, :going, recurring: false)
+
+          get "/discourse-post-event/events.json", params: { attending_user: target_user.username }
+
+          expect(response.status).to eq(200)
+          event_json = response.parsed_body["events"].find { |e| e["id"] == recurring_event.id }
+          expect(event_json["occurrences"].size).to eq(1)
+          expect(event_json["occurrences"].first["starts_at"]).to eq(event_json["starts_at"])
+        end
+
+        it "returns the whole series when they RSVPed to every occurrence" do
+          Invitee.create_attendance!(target_user.id, recurring_event.id, :going, recurring: true)
+
+          get "/discourse-post-event/events.json", params: { attending_user: target_user.username }
+
+          expect(response.status).to eq(200)
+          event_json = response.parsed_body["events"].find { |e| e["id"] == recurring_event.id }
+          expect(event_json["occurrences"].size).to be > 1
+        end
+      end
     end
 
     context "with an all-day event" do
@@ -301,6 +415,22 @@ module DiscoursePostEvent
         expect(event["starts_at"]).to eq("2026-03-12")
         expect(event["ends_at"]).to eq("2026-03-14")
         expect(event["all_day"]).to eq(true)
+      end
+
+      it "serializes recurring no-end occurrences as a single day" do
+        freeze_time Time.utc(2026, 3, 1, 12)
+        Fabricate(
+          :event,
+          original_starts_at: Time.utc(2026, 2, 1),
+          all_day: true,
+          recurrence: "every_week",
+        )
+
+        get "/discourse-post-event/events.json"
+
+        expect(response.status).to eq(200)
+        occurrence = response.parsed_body["events"].first["occurrences"].first
+        expect(occurrence["ends_at"]).to eq(occurrence["starts_at"])
       end
     end
 
@@ -500,6 +630,51 @@ module DiscoursePostEvent
 
               expect(response.status).to eq(404)
             end
+          end
+        end
+
+        context "with a private event" do
+          fab!(:viewer, :user)
+          fab!(:invitee, :user)
+          fab!(:restricted_group) do
+            Fabricate(
+              :group,
+              visibility_level: Group.visibility_levels[:owners],
+              members_visibility_level: Group.visibility_levels[:owners],
+            ).tap { |group| group.add(invitee) }
+          end
+          fab!(:private_event_post) do
+            Fabricate(
+              :post,
+              user: Fabricate(:user, admin: true),
+              topic: Fabricate(:topic, category: Fabricate(:category)),
+            )
+          end
+          fab!(:private_event) do
+            Fabricate(
+              :event,
+              post: private_event_post,
+              status: DiscoursePostEvent::Event.statuses[:private],
+              raw_invitees: [restricted_group.name],
+            )
+          end
+
+          before do
+            private_event.create_invitees(
+              [{ user_id: invitee.id, status: Invitee.statuses[:going] }],
+            )
+            sign_in(viewer)
+          end
+
+          it "does not serialize invitee details for non-invited viewers who cannot see the invited group" do
+            get "/discourse-post-event/events/#{private_event.id}.json"
+
+            expect(response.status).to eq(200)
+            event = response.parsed_body["event"]
+            expect(event).not_to have_key("raw_invitees")
+            expect(event).not_to have_key("sample_invitees")
+            expect(event).not_to have_key("stats")
+            expect(event["should_display_invitees"]).to eq(false)
           end
         end
 
@@ -723,6 +898,79 @@ module DiscoursePostEvent
       Jobs.run_immediately!
       event.reload
       expect(event.invitees.with_status(:going).count).to be <= 1
+    end
+  end
+
+  describe "#show" do
+    before do
+      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_post_event_enabled = true
+    end
+
+    fab!(:admin_user) { Fabricate(:user, admin: true) }
+    fab!(:category)
+    fab!(:topic) { Fabricate(:topic, user: admin_user, category: category) }
+    fab!(:post_1) { Fabricate(:post, user: admin_user, topic: topic) }
+    fab!(:chat_channel) { Fabricate(:chat_channel, chatable: category) }
+    fab!(:event) { Fabricate(:event, post: post_1, chat_enabled: true, chat_channel: chat_channel) }
+    fab!(:chat_message) do
+      Fabricate(
+        :chat_message,
+        chat_channel: chat_channel,
+        user: admin_user,
+        message: "private chat message body",
+      )
+    end
+
+    before { chat_channel.update!(last_message: chat_message) }
+
+    context "when the viewer is anonymous" do
+      before do
+        SiteSetting.chat_enabled = true
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      end
+
+      it "does not include the chat channel block or last message body" do
+        get "/discourse-post-event/events/#{event.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["event"]).not_to have_key("channel")
+        expect(response.body).not_to include("private chat message body")
+      end
+    end
+
+    context "when the viewer cannot join the chat channel" do
+      fab!(:viewer, :user)
+
+      before do
+        SiteSetting.chat_enabled = true
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:staff]
+        sign_in(viewer)
+      end
+
+      it "does not include the chat channel block or last message body" do
+        get "/discourse-post-event/events/#{event.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["event"]).not_to have_key("channel")
+        expect(response.body).not_to include("private chat message body")
+      end
+    end
+
+    context "when the viewer can join the chat channel" do
+      before do
+        SiteSetting.chat_enabled = true
+        SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        sign_in(admin_user)
+      end
+
+      it "includes the chat channel block with the last message body" do
+        get "/discourse-post-event/events/#{event.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["event"]["channel"]).to be_present
+        expect(response.body).to include("private chat message body")
+      end
     end
   end
 

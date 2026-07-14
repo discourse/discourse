@@ -49,6 +49,15 @@ RSpec.describe UserSilencer do
       expect(post.hidden).to eq(false)
     end
 
+    it "does not silence or hide posts for staff users" do
+      user.update!(moderator: true)
+
+      expect(UserSilencer.silence(user, admin)).to eq(false)
+      expect(user.reload.silenced?).to eq(false)
+      expect(post.reload.hidden).to eq(false)
+      expect(post.topic.reload.visible).to eq(true)
+    end
+
     it "allows us to silence the user for a particular post" do
       expect(UserSilencer.was_silenced_for?(post)).to eq(false)
       UserSilencer.new(user, Discourse.system_user, post_id: post.id).silence
@@ -66,6 +75,17 @@ RSpec.describe UserSilencer do
       old_post.reload
       expect(old_post).to_not be_hidden
       expect(old_post.topic).to be_visible
+    end
+
+    it "links the staff action log to the reviewable when passed via opts" do
+      reviewable = Fabricate(:reviewable_flagged_post, target_created_by: user)
+
+      expect { UserSilencer.silence(user, admin, reviewable_id: reviewable.id) }.to change {
+        UserHistory.where(
+          action: UserHistory.actions[:silence_user],
+          reviewable_id: reviewable.id,
+        ).count
+      }.by(1)
     end
 
     context "with a plugin hook" do

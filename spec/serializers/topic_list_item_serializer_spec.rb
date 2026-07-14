@@ -298,6 +298,99 @@ RSpec.describe TopicListItemSerializer do
     end
   end
 
+  describe "#has_new_replies" do
+    fab!(:user)
+    fab!(:other_user, :user)
+    fab!(:nested_topic_record, :topic) { Fabricate(:topic, user: other_user) }
+
+    before do
+      SiteSetting.nested_replies_enabled = true
+      Fabricate(:nested_topic, topic: nested_topic_record)
+    end
+
+    def serialize_with_user_data(last_visited_at:)
+      nested_topic_record.user_data =
+        TopicUser
+          .find_or_create_by(user: user, topic: nested_topic_record)
+          .tap { |tu| tu.update!(last_visited_at: last_visited_at) }
+      TopicListItemSerializer.new(
+        nested_topic_record,
+        scope: Guardian.new(user),
+        root: false,
+      ).as_json
+    end
+
+    it "is included when bumped_at is after last_visited_at and the user wasn't the last poster" do
+      nested_topic_record.update!(bumped_at: 1.minute.ago, last_post_user_id: other_user.id)
+      json = serialize_with_user_data(last_visited_at: 5.minutes.ago)
+
+      expect(json[:has_new_replies]).to eq(true)
+    end
+
+    it "is omitted when last_visited_at is more recent than bumped_at" do
+      nested_topic_record.update!(bumped_at: 5.minutes.ago, last_post_user_id: other_user.id)
+      json = serialize_with_user_data(last_visited_at: 1.minute.ago)
+
+      expect(json.key?(:has_new_replies)).to eq(false)
+    end
+
+    it "is omitted when the current user was the last poster" do
+      nested_topic_record.update!(bumped_at: 1.minute.ago, last_post_user_id: user.id)
+      json = serialize_with_user_data(last_visited_at: 5.minutes.ago)
+
+      expect(json.key?(:has_new_replies)).to eq(false)
+    end
+
+    it "is omitted when the user has never visited the topic" do
+      nested_topic_record.update!(bumped_at: 1.minute.ago, last_post_user_id: other_user.id)
+      json = serialize_with_user_data(last_visited_at: nil)
+
+      expect(json.key?(:has_new_replies)).to eq(false)
+    end
+
+    it "is omitted from the payload for flat topics" do
+      flat_topic = Fabricate(:topic, user: other_user)
+      flat_topic.user_data =
+        TopicUser
+          .find_or_create_by(user: user, topic: flat_topic)
+          .tap { |tu| tu.update!(last_visited_at: 5.minutes.ago) }
+
+      json = TopicListItemSerializer.new(flat_topic, scope: Guardian.new(user), root: false).as_json
+
+      expect(json.key?(:has_new_replies)).to eq(false)
+    end
+
+    it "is omitted from the payload when the user is anonymous" do
+      json =
+        TopicListItemSerializer.new(nested_topic_record, scope: Guardian.new, root: false).as_json
+
+      expect(json.key?(:has_new_replies)).to eq(false)
+    end
+
+    it "leaves the existing flat-topic unread payload (unread_posts, unseen) intact" do
+      flat_topic = Fabricate(:topic, user: other_user, bumped_at: 1.minute.ago)
+      Fabricate(:post, topic: flat_topic, user: other_user)
+      Fabricate(:post, topic: flat_topic, user: other_user)
+      flat_topic.reload
+      flat_topic.user_data =
+        TopicUser
+          .find_or_create_by(user: user, topic: flat_topic)
+          .tap do |tu|
+            tu.update!(
+              last_visited_at: 5.minutes.ago,
+              last_read_post_number: 1,
+              notification_level: TopicUser.notification_levels[:watching],
+            )
+          end
+
+      json = TopicListItemSerializer.new(flat_topic, scope: Guardian.new(user), root: false).as_json
+
+      expect(json[:unread_posts]).to be > 0
+      expect(json.key?(:unseen)).to eq(true)
+      expect(json.key?(:has_new_replies)).to eq(false)
+    end
+  end
+
   describe "#is_hot" do
     describe "including the attr based on theme modifier or plugin registry" do
       fab!(:hot_topic, :topic)

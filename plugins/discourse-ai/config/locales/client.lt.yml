@@ -132,6 +132,14 @@ lt:
               label: "Slėpti temą"
     discourse_ai:
       title: "AI"
+      ai_tool_approval:
+        loading: "Kraunasi..."
+        tool: "Veiksmai"
+        user: "Narys"
+        approve: "Patvirtinti"
+        reject: "Atmesti"
+        approved: "Patvirtinta"
+        rejected: "Atmesta"
       llm_selector:
         none: "Nieko"
       features:
@@ -152,6 +160,8 @@ lt:
             access_control: "Prieigos kontrolė"
             ui_settings: "Vartotojo sąsajos nustatymai"
             integrations: "Integracijos"
+        nav:
+          enabled: "Galimas"
         filters:
           all: "Visi"
           reset: "Atstatyti"
@@ -169,6 +179,9 @@ lt:
             model_settings: "Modelio nustatymai"
             related_topics: "Susijusios temos"
             semantic_search: "Semantinė paieška"
+        admin_dashboard:
+          setting_groups:
+            settings: "Pagrindiniai nustatymai"
         discord:
           setting_groups:
             settings: "Pagrindiniai nustatymai"
@@ -216,6 +229,7 @@ lt:
         card: "Kortelė"
       translations:
         title: "Vertimai"
+        category_scope: "Kategorijos"
         stats:
           eta_minutes:
             one: "%{count} minutė"
@@ -238,6 +252,9 @@ lt:
             few: "%{count} pranešimai"
             many: "%{count} pranešimų"
             other: "%{count} pranešimų"
+        theme_translations:
+          translate:
+            label: "Versti"
       spam:
         short_title: "Šlamštas"
         title: "Šlamšto tvarkymo konfigūravimas"
@@ -286,6 +303,11 @@ lt:
         delete: "Pašalinti"
         temperature: "Temperatūra"
         top_p: "Viršutinė P"
+        thinking_effort_options:
+          none: "Nieko"
+          low: "Žemas"
+          medium: "Vidutinis"
+          high: "Aukštas"
         response_format:
           open_modal: "Redaguoti"
           modal:
@@ -410,6 +432,7 @@ lt:
           today: "Šandien"
           last_7_days: "Paskutinės 7 dienos"
           last_30_days: "Paskutinės 30 dienų"
+          editing_post: "Redaguojamas įrašas"
       sentiments:
         sentiment_analysis:
           filter_types:

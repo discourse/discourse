@@ -1,7 +1,10 @@
 import Component from "@glimmer/component";
 import Report from "discourse/admin/models/report";
+import { buildLegendIcon, dimColor } from "discourse/lib/chart-legend-icon";
 import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
+import { remToPx } from "discourse/lib/rem-to-px";
+import I18n, { i18n } from "discourse-i18n";
 import Chart from "./chart";
 
 function getCSSColor(varName) {
@@ -75,20 +78,22 @@ export default class AdminReportStackedChart extends Component {
     const chartOptions = options || {};
     chartOptions.hiddenLabels ??= [];
 
-    const chartData = makeArray(model.chartData || model.data).map(
-      (series) => ({
-        label: series.label,
-        color: series.color,
-        data: Report.collapse(model, series.data, chartOptions.chartGrouping),
-        req: series.req,
-      })
-    );
+    const sourceData = makeArray(model.chartData || model.data);
+    const chartGrouping =
+      chartOptions.chartGrouping ||
+      Report.groupingForDatapoints(sourceData[0]?.data?.length || 0);
+
+    const chartData = sourceData.map((series) => ({
+      label: series.label,
+      color: series.color,
+      data: Report.collapse(model, series.data, chartGrouping),
+      req: series.req,
+    }));
 
     const data = {
-      labels: chartData[0].data.map((point) => point.x),
+      labels: chartData[0]?.data.map((point) => point.x) ?? [],
       datasets: chartData.map((series) => ({
         label: series.label,
-        stack: "pageviews-stack",
         data: series.data,
         backgroundColor: series.color,
         _baseColor: series.color, // Store for gradient plugin
@@ -101,6 +106,7 @@ export default class AdminReportStackedChart extends Component {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
+    const timeUnit = Report.unitForGrouping(chartGrouping);
 
     return {
       type: "bar",
@@ -115,8 +121,8 @@ export default class AdminReportStackedChart extends Component {
         },
         plugins: {
           legend: {
-            display: true,
-            position: "bottom",
+            display: data.datasets.length > 1,
+            position: chartOptions.legendPosition || "bottom",
             onClick: (e, legendItem, legend) => {
               const index = legendItem.datasetIndex;
               const ci = legend.chart;
@@ -129,30 +135,26 @@ export default class AdminReportStackedChart extends Component {
                 }
               } else {
                 ci.show(index);
-                chartOptions.hiddenLabels = chartOptions.hiddenLabels.filter(
-                  (l) => l !== req
-                );
+                const hiddenIndex = chartOptions.hiddenLabels.indexOf(req);
+                if (hiddenIndex !== -1) {
+                  chartOptions.hiddenLabels.splice(hiddenIndex, 1);
+                }
               }
             },
             labels: {
               usePointStyle: true,
-              pointStyle: "rectRounded",
-              padding: 25,
-              boxWidth: 10,
-              boxHeight: 10,
+              padding: remToPx(1),
+              font: { size: remToPx(0.75) },
               generateLabels: (chart) => {
                 const textColor = getCSSColor("--primary-high");
                 return chart.data.datasets.map((dataset, i) => {
                   const isVisible = chart.isDatasetVisible(i);
                   return {
                     text: dataset.label,
-                    fontColor: textColor,
-                    fillStyle: isVisible ? dataset._baseColor : "transparent",
-                    strokeStyle: dataset._baseColor,
-                    lineWidth: 2,
+                    fontColor: isVisible ? textColor : dimColor(textColor),
                     hidden: false,
                     datasetIndex: i,
-                    pointStyle: "rectRounded",
+                    pointStyle: buildLegendIcon(dataset._baseColor, isVisible),
                   };
                 });
               },
@@ -182,10 +184,11 @@ export default class AdminReportStackedChart extends Component {
                   (sum, item) => sum + parseInt(item.parsed.y || 0, 10),
                   0
                 );
-                return `Total: ${total}`;
+                return i18n("admin.reports.chart.total", {
+                  count: I18n.toNumber(total, { precision: 0 }),
+                });
               },
-              title: (tooltipItem) =>
-                moment(tooltipItem[0].parsed.x).format("LL"),
+              title: (tooltipItem) => this.#tooltipTitle(tooltipItem),
             },
           },
         },
@@ -204,13 +207,13 @@ export default class AdminReportStackedChart extends Component {
             display: true,
             grid: {
               color: getCSSColor("--primary-very-low"),
+              display: !chartOptions.hideYAxisGridLines,
             },
             ticks: {
               callback: (label) => number(label),
               sampleSize: 5,
               maxRotation: 25,
               minRotation: 0,
-              step: 1,
             },
           },
           x: {
@@ -218,13 +221,10 @@ export default class AdminReportStackedChart extends Component {
             display: true,
 
             grid: { display: false },
-            type: "time",
-            time: {
-              unit: chartOptions.chartGrouping
-                ? Report.unitForGrouping(chartOptions.chartGrouping)
-                : Report.unitForDatapoints(data.labels.length),
-            },
+            type: "category",
             ticks: {
+              callback: (value) =>
+                this.#categoryTickLabel(value, data.labels, timeUnit),
               sampleSize: 5,
               maxRotation: 50,
               minRotation: 0,
@@ -237,8 +237,53 @@ export default class AdminReportStackedChart extends Component {
 
   <template>
     <Chart
+      ...attributes
       @chartConfig={{this.chartConfig}}
       class="admin-report-chart admin-report-stacked-chart"
     />
   </template>
+
+  #tooltipTitle(tooltipItem) {
+    const point = tooltipItem[0].raw;
+    const startDate = point?.x ?? tooltipItem[0].parsed.x;
+
+    if (point?.end_date) {
+      return this.#tooltipDateRange(startDate, point.end_date);
+    }
+
+    return this.#dateLabelMoment(startDate).format("LL");
+  }
+
+  #tooltipDateRange(startValue, endValue) {
+    const startDate = this.#dateLabelMoment(startValue);
+    const endDate = this.#dateLabelMoment(endValue);
+
+    if (startDate.isSame(endDate, "day")) {
+      return startDate.format("LL");
+    }
+
+    return `${startDate.format("ll")} - ${endDate.format("ll")}`;
+  }
+
+  #categoryTickLabel(value, labels, timeUnit) {
+    const label = labels[value] ?? value;
+
+    return this.#formatDateLabel(label, timeUnit);
+  }
+
+  #formatDateLabel(label, timeUnit) {
+    const date = this.#dateLabelMoment(label);
+
+    if (timeUnit === "month") {
+      return date.format("MMM YYYY");
+    }
+
+    return date.format("D MMM");
+  }
+
+  #dateLabelMoment(value) {
+    return typeof value === "string"
+      ? moment.utc(value, "YYYY-MM-DD")
+      : moment(value);
+  }
 }

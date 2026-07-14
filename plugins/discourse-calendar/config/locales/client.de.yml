@@ -12,6 +12,12 @@ de:
         categories:
           discourse_post_event: "Discourse Ereignis"
           discourse_calendar: "Kalender und Ereignisse"
+      web_hooks:
+        calendar_event:
+          group_name: "Kalenderereignis"
+          calendar_event_created: "Kalenderereignis wurde erstellt"
+          calendar_event_updated: "Kalenderereignis wurde aktualisiert"
+          calendar_event_destroyed: "Kalenderereignis wurde zerstört"
   js:
     notifications:
       titles:
@@ -27,7 +33,17 @@ de:
             topic_id:
               label: Themen-ID
     discourse_calendar:
+      livestream:
+        chat:
+          going: "Klicke auf \"Dabei\""
+          join_channel_header: "🌟Mach mit! 🌟"
+          join_channel_message: "Bestätige deine Teilnahme und schalte unseren Event-Chat frei. Beteilige dich an Diskussionen, teile deine Begeisterung und vernetze dich mit anderen Teilnehmern!"
       invite_user_notification: "%{username} lädt dich ein zu: %{description}"
+      preferences:
+        all_events: "Discourse Kalender – Alle Ereignisse"
+        all_events_description: "Alle Forum-Ereignisse"
+        my_events: "Discourse Kalender – Meine Ereignisse"
+        my_events_description: "Ereignisse, die du besuchst oder an denen du interessiert bist"
       on_holiday: "Im Urlaub"
       disable_holiday: "Deaktivieren"
       enable_holiday: "Aktivieren"
@@ -322,6 +338,7 @@ de:
       search: "Suche …"
       group_availability: "%{group} Verfügbarkeit"
     discourse_post_event:
+      new_event: "Neues Ereignis"
       notifications:
         before_event_reminder: "Ein Ereignis beginnt in Kürze"
         after_event_reminder: "Ein Ereignis wurde beendet"
@@ -329,6 +346,9 @@ de:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} hat automatisch deine Teilnahme festgelegt und dich zu %{eventName} eingeladen"
         an_event: "einem Ereignis"
+      event_description:
+        show_more: "Mehr anzeigen"
+        show_less: "Weniger anzeigen"
       edit_reason: "Ereignis aktualisiert"
       edit_reason_closed: "Ereignis geschlossen"
       edit_reason_opened: "Ereignis geöffnet"
@@ -397,10 +417,12 @@ de:
       models:
         invitee:
           no_users: "Keine Benutzer gefunden"
+          this_event: "Dieser Termin"
+          this_and_following: "Dieser Termin und alle folgenden Termine"
+          leave_event: "Ereignis verlassen"
           status:
-            unknown: "Nicht interessiert"
             going: "Dabei"
-            not_going: "Nicht dabei"
+            not_going: "Nicht teilnehmen"
             interested: "Interessiert"
             going_count:
               one: "%{count} nimmt teil"
@@ -429,11 +451,45 @@ de:
               title: "Privat"
               description: "An einem privaten Ereignis können nur eingeladene Benutzer teilnehmen."
       composer:
-        name_placeholder: "Ereignis"
-        end_date_placeholder: "Enddatum festlegen"
+        name_placeholder: "Name des Ereignisses"
+        end_date_placeholder: "Enddatum"
         location_placeholder: "Ort oder URL hinzufügen"
-        max_attendees_placeholder: "Maximale Teilnehmerzahl festlegen"
+        max_attendees_placeholder: "Unbegrenzte Teilnehmeranzahl"
+        max_attendees_display:
+          one: "Max %{count} Teilnehmer"
+          other: "Max %{count} Teilnehmer"
+        no_rsvps_label: "Keine Anmeldung erforderlich"
         description_placeholder: "Beschreibung hinzufügen"
+        event_title_placeholder: "Name des Ereignisses"
+        create_event_button: "Ereignis erstellen"
+        action_title: "Erstelle ein neues Ereignis"
+        all_day: "Ganztägig"
+        reminder:
+          units:
+            minutes:
+              one: "Minute"
+              other: "Minuten"
+            hours:
+              one: "Stunde"
+              other: "Stunden"
+            days:
+              one: "Tag"
+              other: "Tage"
+            weeks:
+              one: "Woche"
+              other: "Wochen"
+          before: "%{unit} bevor"
+          after: "%{unit} danach"
+          notification_title: "Benachrichtige Teilnehmer"
+          bump_topic_title: "Thema automatisch nach oben verschieben"
+          remove: "Benachrichtigung entfernen"
+      composer_actions:
+        create_event:
+          label: "Ereignis erstellen"
+          desc: "Erstelle ein neues Ereignis in dieser Kategorie"
+        create_topic:
+          label: "Erstelle ein neues Thema"
+          desc: "Erstelle ein reguläres Thema statt eines Ereignisses"
       builder_modal:
         custom_fields:
           label: "Benutzerdefinierte Felder"
@@ -441,6 +497,7 @@ de:
           description: "Erlaubte benutzerdefinierte Felder werden in den Website-Einstellungen definiert. Benutzerdefinierte Felder werden verwendet, um Daten an andere Plug-ins zu übermitteln."
         create_event_title: "Ereignis erstellen"
         update_event_title: "Ereignis bearbeiten"
+        advanced_settings_title: "Erweiterte Einstellungen"
         confirm_delete: "Bist du sicher, dass du dieses Ereignis löschen möchtest?"
         confirm_close: "Bist du sicher, dass du dieses Ereignis beenden möchtest?"
         confirm_open: "Bist du sicher, dass du dieses Ereignis öffnen möchtest?"
@@ -454,11 +511,18 @@ de:
         timezone:
           label: Zeitzone
           remove_timezone: Keine Zeitzone (UTC)
+        starts_at:
+          label: "Startdatum"
+        ends_at:
+          label: "Enddatum"
+        all_day:
+          label: "Ganztägiges Ereignis"
+          description: "Ein ganztägiges Ereignis enthält keine Uhrzeiten, nur ein Datum. Da Ereignis läuft vom Tagesanfang bis -ende."
         reminders:
           label: "Erinnerungen"
           types:
             bump_topic: "Thema automatisch nach oben verschieben"
-            notification: "Teilnehmer benachrichtigen"
+            notification: "Benachrichtige Teilnehmer"
           units:
             minutes: "Minuten"
             hours: "Stunden"
@@ -468,30 +532,34 @@ de:
             before: "vor"
             after: "nach"
         recurrence_until:
-          label: "Bis (einschließlich)"
+          label: "Bis (einschließlich dieses Datums)"
         recurrence:
           label: "Wiederholung"
           none: "Keine Wiederholung"
           every_day: "Täglich"
-          every_month: "Jeden Monat an diesem Wochentag"
           every_weekday: "Jeden Wochentag"
-          every_week: "Jede Woche an diesem Wochentag"
-          every_two_weeks: "Alle zwei Wochen an diesem Wochentag"
-          every_four_weeks: "Alle vier Wochen an diesem Wochentag"
-        minimal:
-          label: "Minimales Event"
-          checkbox_label: "Schaltflächen „Dabei“/„Nicht dabei“ und Status der eingeladenen Personen ausblenden"
+          every_week: "Jeden %{weekday}"
+          every_two_weeks: "Alle zwei Wochen am %{weekday}"
+          every_four_weeks: "Alle 4 Wochen am %{weekday}"
+          every_month: "Am %{ordinal} %{weekday} jeden Monat"
+          ordinals:
+            first: "ersten"
+            second: "zweiten"
+            third: "dritten"
+            fourth: "vierten"
+            last: "Zuletzt gewählter Termin"
         max_attendees:
           label: "Maximale Teilnehmerzahl"
           placeholder: "Keine Begrenzung"
+        attendance:
+          label: "Wie viele Mitglieder können an diesem Event teilnehmen?"
+          unlimited: "unbegrenzt"
+          up_to: "Bis zu..."
+          none: "Keine Auswahl"
         allow_chat:
           label: "Chat-Integration"
           checkbox_label: "Erstelle und verwalte ereignisspezifische Chat-Kanäle"
-        url:
-          label: "URL"
-          placeholder: "Optional"
         location:
-          label: "Ort"
           placeholder: "Füge einen Ort, einen Link oder etwas anderes hinzu."
         description:
           label: "Beschreibung"
@@ -501,9 +569,18 @@ de:
           placeholder: "Optional, standardmäßig Titel des Themas"
         invitees:
           label: "Eingeladene Gruppen"
-        status:
-          label: "Status"
+        event_type:
+          label: "Teilnahme Typ"
+          public:
+            title: "Öffentlich"
+            description: "Jeder kann teilnehmen."
+          private:
+            title: "Nur eingeladene können teilnehmen."
+            description: "Nur Mitglieder der ausgewählten Gruppe können teilnehmen."
         delete_confirmation_message: "Dieses Ereignis löschen?"
+        image:
+          label: "Ereignisbild"
       invite_user_or_group:
         title: "Benachrichtige Benutzer oder Gruppe(n)"
         invite: "Senden"
+        success: "Einladung gesendet"

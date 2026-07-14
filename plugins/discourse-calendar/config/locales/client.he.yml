@@ -329,6 +329,9 @@ he:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "הנוכחות שלך הוגדרה על ידי %{username} שגם הזמין או הזמינה אותך אל %{eventName}"
         an_event: "אירוע"
+      event_description:
+        show_more: "להציג יותר"
+        show_less: "להציג פחות"
       edit_reason: "האירוע עודכן"
       edit_reason_closed: "אירוע נסגר"
       edit_reason_opened: "אירוע נפתח"
@@ -384,7 +387,6 @@ he:
       upcoming_events_list:
         title: "אירועים קרובים"
         empty: "אין אירועים בקרוב"
-        all_day: "יום שלם"
         error: "משיכת האירועים נכשלה"
         try_again: "ניסיון נוסף"
         view_all: "להציג הכול"
@@ -398,10 +400,9 @@ he:
       models:
         invitee:
           no_users: "לא נמצאו משתמשים"
+          leave_event: "עזיבת האירוע"
           status:
-            unknown: "לא מעניין"
             going: "אשתתף"
-            not_going: "לא אשתתף"
             interested: "מעניין"
             going_count:
               one: "%{count} מגיעים/ות"
@@ -437,6 +438,35 @@ he:
             private:
               title: "פרטי"
               description: "לאירוע פרטי יכולים להצטרף רק משתמשים שהוזמנו."
+      composer:
+        name_placeholder: "שם האירוע"
+        event_title_placeholder: "שם האירוע"
+        create_event_button: "יצירת אירוע"
+        reminder:
+          units:
+            minutes:
+              one: "דקה"
+              two: "דקות"
+              many: "דקות"
+              other: "דקות"
+            hours:
+              one: "שעה"
+              two: "שעות"
+              many: "שעתיים"
+              other: "שעתיים"
+            days:
+              one: "יום"
+              two: "יום"
+              many: "יום"
+              other: "יום"
+            weeks:
+              one: "שבוע"
+              two: "שבועות"
+              many: "שבועות"
+              other: "שבועות"
+      composer_actions:
+        create_event:
+          label: "יצירת אירוע"
       builder_modal:
         custom_fields:
           label: "שדות משלך"
@@ -444,6 +474,7 @@ he:
           description: "השדות המותאמים אישית המורשים מוגדרים בהגדרות האתר. שדות מותאומים אישית משמשים להעביר נתונים לתוספים אחרים."
         create_event_title: "יצירת אירוע"
         update_event_title: "עריכת אירוע"
+        advanced_settings_title: "הגדרות מתקדמות"
         confirm_delete: "למחוק את האירוע הזה?"
         confirm_close: "לסגור את האירוע הזה?"
         confirm_open: "לפתוח את האירוע הזה?"
@@ -459,9 +490,6 @@ he:
           remove_timezone: אין אזור זמן (UTC)
         reminders:
           label: "תזכורות"
-          types:
-            bump_topic: "הקפצת נושא אוטומטית"
-            notification: "הודעה למשתתפים"
           units:
             minutes: "דקות"
             hours: "שעות"
@@ -470,31 +498,22 @@ he:
           periods:
             before: "לפני"
             after: "אחרי"
-        recurrence_until:
-          label: "עד (כולל)"
         recurrence:
           label: "חזרה"
           none: "ללא חזרה"
           every_day: "כל יום"
-          every_month: "כל חודש ביום הזה בשבוע"
           every_weekday: "כל יום חול"
-          every_week: "כל שבוע ביום הזה בשבוע"
-          every_two_weeks: "כל שבועיים ביום הזה בשבוע"
-          every_four_weeks: "כל ארבעה שבועות ביום הזה בשבוע"
-        minimal:
-          label: "אירוע מזערי"
-          checkbox_label: "הסתרת כפתורי הצטרפות/העדרות ומצב מוזמנים"
+          ordinals:
+            last: "האחרון"
         max_attendees:
           label: "כמות משתתפים מרבית"
           placeholder: "אין הגבלה"
+        attendance:
+          none: "ללא"
         allow_chat:
           label: "שילוב צ׳אט"
           checkbox_label: "יצירה וניהול של ערוץ צ׳אט ייעודי לאירוע"
-        url:
-          label: "כתובת"
-          placeholder: "רשות"
         location:
-          label: "מיקום"
           placeholder: "הוספת מיקום, קישור או משהו."
         description:
           label: "תיאור"
@@ -504,8 +523,10 @@ he:
           placeholder: "רשות, ברירת המחדל היא כותרת הנושא"
         invitees:
           label: "קבוצות שהוזמנו"
-        status:
-          label: "מצב"
+        event_type:
+          public:
+            title: "ציבורי"
       invite_user_or_group:
         title: "להודיע למשתמשים או לקבוצות"
         invite: "שליחה"
+        success: "נשלחה הזמנה"

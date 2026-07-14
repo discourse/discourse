@@ -1,7 +1,6 @@
-import { render } from "@ember/test-helpers";
+import { find, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { queryAll } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 import PollResultsStandard from "discourse/plugins/poll/discourse/components/poll-results-standard";
 
@@ -34,7 +33,7 @@ const PRELOADEDVOTERS = {
   ],
 };
 
-module("Poll | Component | poll-results-standard", function (hooks) {
+module("Component | PollResultsStandard", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Renders the standard results Component correctly", async function (assert) {
@@ -66,8 +65,8 @@ module("Poll | Component | poll-results-standard", function (hooks) {
       </template>
     );
 
-    assert.dom(queryAll(".option .percentage")[0]).hasText("56%");
-    assert.dom(queryAll(".option .percentage")[1]).hasText("44%");
+    assert.dom(find(".option .percentage")).hasText("56%");
+    assert.dom(findAll(".option .percentage")[1]).hasText("44%");
     assert.dom("ul.poll-voters-list").exists();
   });
 
@@ -130,8 +129,8 @@ module("Poll | Component | poll-results-standard", function (hooks) {
       </template>
     );
 
-    assert.dom(queryAll(".option .percentage")[0]).hasText("56%");
-    assert.dom(queryAll(".option .percentage")[1]).hasText("44%");
+    assert.dom(find(".option .percentage")).hasText("56%");
+    assert.dom(findAll(".option .percentage")[1]).hasText("44%");
   });
 
   test("options in ascending order", async function (assert) {
@@ -161,15 +160,15 @@ module("Poll | Component | poll-results-standard", function (hooks) {
       </template>
     );
 
-    let percentages = queryAll(".option .percentage");
+    let percentages = findAll(".option .percentage");
     assert.dom(percentages[0]).hasText("41%");
     assert.dom(percentages[1]).hasText("33%");
     assert.dom(percentages[2]).hasText("16%");
     assert.dom(percentages[3]).hasText("8%");
 
-    assert.dom(queryAll(".option")[3].querySelectorAll("span")[1]).hasText("a");
+    assert.dom(findAll(".option")[3].querySelectorAll("span")[1]).hasText("a");
     assert.dom(percentages[4]).hasText("8%");
-    assert.dom(queryAll(".option")[4].querySelectorAll("span")[1]).hasText("b");
+    assert.dom(findAll(".option")[4].querySelectorAll("span")[1]).hasText("b");
   });
 
   test("options in ascending order, showing absolute vote number", async function (assert) {
@@ -201,14 +200,14 @@ module("Poll | Component | poll-results-standard", function (hooks) {
       </template>
     );
 
-    let percentages = queryAll(".option .absolute");
+    let percentages = findAll(".option .absolute");
     assert.dom(percentages[0]).hasText(i18n("poll.votes", { count: 5 }));
     assert.dom(percentages[1]).hasText(i18n("poll.votes", { count: 4 }));
     assert.dom(percentages[2]).hasText(i18n("poll.votes", { count: 2 }));
     assert.dom(percentages[3]).hasText(i18n("poll.votes", { count: 1 }));
 
-    assert.dom(queryAll(".option")[3].querySelectorAll("span")[1]).hasText("a");
+    assert.dom(findAll(".option")[3].querySelectorAll("span")[1]).hasText("a");
     assert.dom(percentages[4]).hasText(i18n("poll.votes", { count: 1 }));
-    assert.dom(queryAll(".option")[4].querySelectorAll("span")[1]).hasText("b");
+    assert.dom(findAll(".option")[4].querySelectorAll("span")[1]).hasText("b");
   });
 });

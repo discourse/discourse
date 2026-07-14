@@ -5,8 +5,6 @@
 # https://translate.discourse.org/
 
 ru:
-  site_settings:
-    rss_polling_enabled: "[RSS-опрос] Включить импорт встроенных сообщений из нескольких RSS-лент"
-    rss_polling_frequency: "[RSS Polling] Частота опроса ленты (в минутах)"
-    rss_polling_use_pubdate: "[RSS-опрос] Использовать pubDate из RSS-ленты как дату создания темы"
-    rss_polling_update_tags: "[RSS-опрос] Обновлять теги у темы при ее изменении. При отключении этого параметра подтягиваются только начальные теги, но последующие обновления тегов игнорируются."
+  rss_polling:
+    errors:
+      unknown_author_username: "Пользователь с именем пользователя '%{username} ' не найден."

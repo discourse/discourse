@@ -148,6 +148,44 @@ RSpec.describe Assigner do
       )
     end
 
+    it "triggers assigned event after assigning" do
+      event = DiscourseEvent.track(:assigned) { assigner.assign(moderator) }
+
+      assignment = event[:params].first
+      expect(assignment).to eq(topic.assignment)
+      expect(assignment.target).to eq(topic)
+    end
+
+    it "enqueues assigned workflows matching the assignment target" do
+      SiteSetting.enable_discourse_workflows = true
+      Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+      DiscourseWorkflows::Registry.reset_indexes!
+
+      create_published_workflow("all-assignments")
+      create_published_workflow("topic-assignments", "topic_assignments_only" => true)
+
+      post_assignment_topic = Fabricate(:post).topic
+      post_assignment_post = Fabricate(:post, topic: post_assignment_topic)
+
+      described_class.new(post_assignment_post, moderator_2).assign(moderator)
+
+      expect(enqueued_workflow_trigger_node_ids).to contain_exactly("all-assignments")
+
+      Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.clear
+
+      described_class.new(topic, moderator_2).assign(moderator)
+
+      expect(enqueued_workflow_trigger_node_ids).to contain_exactly(
+        "all-assignments",
+        "topic-assignments",
+      )
+
+      trigger_data =
+        Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.last["args"].first["trigger_data"]
+      expect(trigger_data["assignment"]["target_type"]).to eq("Topic")
+      expect(trigger_data["post"]["id"]).to eq(topic.first_post.id)
+    end
+
     it "does not update notification level if already watching" do
       TopicUser.change(
         moderator.id,
@@ -215,6 +253,37 @@ RSpec.describe Assigner do
 
     def assigned_to?(assignee)
       assigner.assign(assignee).fetch(:success)
+    end
+
+    def create_published_workflow(trigger_node_id, configuration = {})
+      Fabricate(
+        :discourse_workflows_workflow,
+        created_by: moderator_2,
+        published: true,
+        nodes: [
+          {
+            "id" => trigger_node_id,
+            "type" => "trigger:assigned",
+            "typeVersion" => "1.0",
+            "name" => trigger_node_id.humanize,
+            "position" => {
+              "x" => 0,
+              "y" => 0,
+            },
+            "parameters" => configuration.deep_stringify_keys,
+            "credentials" => {
+            },
+          },
+        ],
+        connections: {
+        },
+      )
+    end
+
+    def enqueued_workflow_trigger_node_ids
+      Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map do |job|
+        job["args"].first["trigger_node_id"]
+      end
     end
 
     describe "forbidden reasons" do
@@ -304,9 +373,7 @@ RSpec.describe Assigner do
 
       it "reassigns a post even when at the assignments limit" do
         posts =
-          (described_class::ASSIGNMENTS_PER_TOPIC_LIMIT).times.map do
-            Fabricate(:post, topic: topic)
-          end
+          described_class::ASSIGNMENTS_PER_TOPIC_LIMIT.times.map { Fabricate(:post, topic: topic) }
 
         posts.each do |post|
           user = Fabricate(:moderator)
@@ -399,6 +466,71 @@ RSpec.describe Assigner do
 
         expect(assign[:success]).to eq(false)
         expect(assign[:reason]).to eq(:forbidden_group_assignee_cant_see_topic)
+      end
+    end
+
+    describe "category scoped assignment permissions" do
+      before { SiteSetting.assign_allowed_on_groups = "" }
+
+      it "allows group members to assign members of the same scoped group in the scoped category" do
+        category = Fabricate(:category)
+        topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: category) }
+        group = Fabricate(:group)
+        assigner = Fabricate(:user, groups: [group])
+        assignee = Fabricate(:user, groups: [group])
+        allow_group_to_assign_in_category(category, group)
+
+        result = described_class.new(topic, assigner).assign(assignee)
+
+        expect(result[:success]).to eq(true)
+        expect(topic.reload.assignment.assigned_to).to eq(assignee)
+      end
+
+      it "does not apply parent category rules to subcategories" do
+        parent_category = Fabricate(:category)
+        child_category = Fabricate(:category, parent_category: parent_category)
+        parent_topic =
+          Fabricate(:post).topic.tap { |topic| topic.update!(category: parent_category) }
+        child_topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: child_category) }
+        group = Fabricate(:group)
+        assigner = Fabricate(:user, groups: [group])
+        assignee = Fabricate(:user, groups: [group])
+        allow_group_to_assign_in_category(parent_category, group)
+
+        parent_result = described_class.new(parent_topic, assigner).assign(assignee)
+        child_result = described_class.new(child_topic, assigner).assign(assignee)
+
+        expect(parent_result[:success]).to eq(true)
+        expect(child_result).to eq(success: false, reason: :forbidden_assigner_not_allowed)
+      end
+
+      it "allows globally enabled group members to be assigned outside scoped categories" do
+        category = Fabricate(:category)
+        other_category = Fabricate(:category)
+        other_topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: other_category) }
+        group = Fabricate(:group)
+        assignee = Fabricate(:user, groups: [group])
+        allow_group_to_assign_in_category(category, group)
+
+        scoped_result = described_class.new(other_topic, admin).assign(assignee)
+        SiteSetting.assign_allowed_on_groups = group.id.to_s
+        global_result = described_class.new(other_topic, admin).assign(assignee)
+
+        expect(scoped_result).to eq(success: false, reason: :forbidden_assign_to)
+        expect(global_result[:success]).to eq(true)
+      end
+
+      it "allows the scoped group to be assigned directly in the scoped category" do
+        category = Fabricate(:category)
+        topic = Fabricate(:post).topic.tap { |topic| topic.update!(category: category) }
+        group = Fabricate(:group)
+        assigner = Fabricate(:user, groups: [group])
+        allow_group_to_assign_in_category(category, group)
+
+        result = described_class.new(topic, assigner).assign(group)
+
+        expect(result[:success]).to eq(true)
+        expect(topic.reload.assignment.assigned_to).to eq(group)
       end
     end
 

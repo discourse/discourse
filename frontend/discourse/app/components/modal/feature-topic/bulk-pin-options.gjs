@@ -5,8 +5,8 @@ import { service } from "@ember/service";
 import PinOptionSection, {
   MAX_GLOBALLY_PINNED_TOPICS,
 } from "discourse/components/modal/feature-topic/pin-option-section";
-import { categoryLinkHTML } from "discourse/helpers/category-link";
 import { ajax } from "discourse/lib/ajax";
+import { categoryLinkHTML } from "discourse/ui-kit/helpers/d-category-link";
 import { i18n } from "discourse-i18n";
 
 export default class BulkPinOptions extends Component {

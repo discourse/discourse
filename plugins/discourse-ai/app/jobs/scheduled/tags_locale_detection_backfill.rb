@@ -27,14 +27,12 @@ module Jobs
       return if tags.empty?
 
       tags.each do |tag|
-        begin
-          DiscourseAi::Translation::TagLocaleDetector.detect_locale(tag)
-        rescue FinalDestination::SSRFDetector::LookupFailedError
-        rescue => e
-          DiscourseAi::Translation::VerboseLogger.log(
-            "Failed to detect tag #{tag.id}'s locale: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
-          )
-        end
+        DiscourseAi::Translation::TagLocaleDetector.detect_locale(tag)
+      rescue FinalDestination::SSRFDetector::LookupFailedError
+      rescue => e
+        DiscourseAi::Translation::VerboseLogger.log(
+          "Failed to detect tag #{tag.id}'s locale: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
+        )
       end
 
       DiscourseAi::Translation::VerboseLogger.log("Detected #{tags.size} tag locales")

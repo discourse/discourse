@@ -1,12 +1,10 @@
 import { LinkTo } from "@ember/routing";
-import { optionalRequire } from "discourse/lib/utilities";
 import { and } from "discourse/truth-helpers";
+import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title" with {
+  discourseImport: "optional",
+};
 
-const ChannelTitle = optionalRequire(
-  "discourse/plugins/chat/discourse/components/channel-title"
-);
-
-const DiscoursePostEventChatChannel = <template>
+export default <template>
   {{#if (and @event.channel ChannelTitle)}}
     <section class="event__section event-chat-channel">
       <span></span>
@@ -19,6 +17,4 @@ const DiscoursePostEventChatChannel = <template>
       </LinkTo>
     </section>
   {{/if}}
-</template>;
-
-export default DiscoursePostEventChatChannel;
+</template>

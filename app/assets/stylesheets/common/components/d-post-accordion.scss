@@ -1,0 +1,170 @@
+.d-post-accordion {
+  --d-post-accordion-font-size: var(--font-down-1-rem);
+  --d-post-accordion-radius: var(--d-border-radius-large);
+  --d-post-accordion-border-color: var(--primary-low);
+  --d-post-accordion-background: var(--secondary);
+  --d-post-accordion-header-color: var(--primary);
+  --d-post-accordion-header-background: var(--secondary);
+  --d-post-accordion-header-border-color: var(--d-post-accordion-border-color);
+  --d-post-accordion-item-header-color: var(--primary-low-mid);
+  --d-post-accordion-item-header-background: var(--primary-very-low);
+  --d-post-accordion-item-link-color: var(--primary-low-mid);
+  --d-post-accordion-item-username-color: var(--primary-medium);
+  --d-post-accordion-item-control-color: var(--primary-medium);
+
+  * {
+    font-size: var(--d-post-accordion-font-size);
+  }
+
+  &__layout {
+    border-radius: var(--d-post-accordion-radius);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--d-post-accordion-header-color);
+    background-color: var(--d-post-accordion-header-background);
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--d-post-accordion-header-border-color);
+    border-bottom: 0;
+    border-radius: var(--d-post-accordion-radius) var(--d-post-accordion-radius)
+      0 0;
+    overflow: hidden;
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--d-post-accordion-border-color);
+    border-top: 0;
+    border-radius: 0 0 var(--d-post-accordion-radius)
+      var(--d-post-accordion-radius);
+    overflow: hidden;
+  }
+
+  &__item {
+    border-top: 1px solid var(--d-post-accordion-border-color);
+  }
+}
+
+.d-post-accordion-item {
+  background: var(--d-post-accordion-background);
+  border-top: 1px solid var(--d-post-accordion-border-color);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-down-1);
+    color: var(--d-post-accordion-item-header-color);
+    background: var(--d-post-accordion-item-header-background);
+  }
+
+  &__body {
+    border-top: 1px solid var(--d-post-accordion-border-color);
+  }
+
+  &__metadata {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+
+    a {
+      &,
+      &:hover,
+      &:visited {
+        color: var(--d-post-accordion-item-link-color);
+      }
+    }
+
+    .user-link {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+      color: var(--d-post-accordion-item-username-color);
+      font-weight: bold;
+
+      &,
+      &:hover,
+      &:visited {
+        color: var(--d-post-accordion-item-username-color);
+      }
+    }
+  }
+
+  &__controls {
+    margin-left: auto;
+
+    .btn {
+      padding: 0;
+
+      .d-icon {
+        color: var(--d-post-accordion-item-control-color);
+        background: transparent;
+        font-size: var(--font-down-1);
+      }
+
+      &:hover,
+      &:visited {
+        .discourse-no-touch &,
+        .discourse-touch & {
+          color: var(--d-post-accordion-item-control-color);
+          background: transparent;
+
+          .d-icon {
+            color: var(--d-post-accordion-item-control-color);
+            background: transparent;
+          }
+        }
+      }
+    }
+  }
+
+  &__content {
+    position: relative;
+    border-left: 0;
+    background: var(--d-post-accordion-background);
+    padding: var(--space-2) var(--space-3) 0 var(--space-3);
+    margin: 0;
+    max-height: calc(
+      var(--max-lines-displayed, 6) * var(--cooked-line-height) * 1em
+    ); // max-lines-displayed set in post-accordion-item.gjs
+    overflow: hidden;
+
+    .cooked {
+      padding: 0 !important;
+    }
+  }
+
+  &[data-overflowing="true"] &__content::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    background: linear-gradient(
+      transparent,
+      75%,
+      var(--d-post-accordion-background)
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  &__read-more {
+    padding: var(--space-3);
+  }
+
+  &:not([data-expanded]) > &__body {
+    display: none;
+  }
+
+  &:last-of-type {
+    border-radius: 0 0 var(--d-post-accordion-radius)
+      var(--d-post-accordion-radius);
+  }
+}

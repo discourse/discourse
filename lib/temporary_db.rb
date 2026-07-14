@@ -10,11 +10,13 @@ class TemporaryDb
   STARTUP_TIMEOUT_SECONDS = 60
   DEFAULT_PG_SYSTEM_USER = "postgres"
 
-  def initialize(pg_system_user: DEFAULT_PG_SYSTEM_USER)
+  def initialize(pg_system_user: DEFAULT_PG_SYSTEM_USER, versions: VERSIONS, port: nil)
     @pg_temp_path = File.join(Dir.tmpdir, "#{PG_TEMP_PREFIX}_#{SecureRandom.hex(6)}")
     @pg_conf = "#{@pg_temp_path}/postgresql.conf"
     @pg_sock_path = "#{@pg_temp_path}/sockets"
     @pg_system_user = pg_system_user
+    @versions = versions
+    @pg_port = port
   end
 
   def port_available?(port)
@@ -28,26 +30,53 @@ class TemporaryDb
     return @pg_bin_path if @pg_bin_path
 
     # Debian/Ubuntu: /usr/lib/postgresql/{version}/bin
-    VERSIONS.reverse_each do |v|
+    @versions.reverse_each do |v|
       bin_path = "/usr/lib/postgresql/#{v}/bin"
       return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
     end
 
     # RHEL/Fedora (PGDG): /usr/pgsql-{version}/bin
-    VERSIONS.reverse_each do |v|
+    @versions.reverse_each do |v|
       bin_path = "/usr/pgsql-#{v}/bin"
       return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
     end
 
-    # macOS Postgres.app
-    bin_path = "/Applications/Postgres.app/Contents/Versions/latest/bin"
-    return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
+    # macOS Postgres.app: /Applications/Postgres.app/Contents/Versions/{version}/bin
+    @versions.reverse_each do |v|
+      bin_path = "/Applications/Postgres.app/Contents/Versions/#{v}/bin"
+      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
+    end
 
-    # Fallback: check if pg_ctl is on PATH (e.g. Fedora system packages install to /usr/bin)
-    pg_ctl = `which pg_ctl 2>/dev/null`.strip
-    return @pg_bin_path = File.dirname(pg_ctl) if pg_ctl.present?
+    # macOS MacPorts: /opt/local/lib/postgresql{version}/bin
+    @versions.reverse_each do |v|
+      bin_path = "/opt/local/lib/postgresql#{v}/bin"
+      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
+    end
 
-    raise "Cannot find pg_ctl. Install the PostgreSQL server package."
+    # macOS homebrew: /opt/homebrew/opt/postgresql@{version}/bin
+    @versions.reverse_each do |v|
+      bin_path = "/opt/homebrew/opt/postgresql@#{v}/bin"
+      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
+    end
+
+    # Arch AUR packages: /opt/postgresql{version}/bin
+    @versions.reverse_each do |v|
+      bin_path = "/opt/postgresql#{v}/bin"
+      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
+    end
+
+    # Unversioned fallbacks — skipped when the caller pinned a version range.
+    if @versions == VERSIONS
+      bin_path = "/Applications/Postgres.app/Contents/Versions/latest/bin"
+      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
+
+      # Fallback: check if pg_ctl is on PATH (e.g. Fedora system packages install to /usr/bin)
+      pg_ctl = `which pg_ctl 2>/dev/null`.strip
+      return @pg_bin_path = File.dirname(pg_ctl) if pg_ctl.present?
+    end
+
+    raise "Cannot find pg_ctl for PostgreSQL #{@versions.first}–#{@versions.last}. " \
+            "Install one of those server packages (e.g. `postgresql-#{@versions.first}` on Debian/Ubuntu)."
   end
 
   def initdb_path
@@ -68,7 +97,7 @@ class TemporaryDb
 
   def start
     init_data_directory
-    configure_ports
+    configure_database
 
     puts "Starting postgres on port: #{pg_port}"
     @previous_discourse_pg_port = ENV["DISCOURSE_PG_PORT"]
@@ -77,7 +106,6 @@ class TemporaryDb
     start_server
     @started = true
 
-    create_user
     create_database
 
     puts "PG server is ready and DB is loaded"
@@ -105,12 +133,15 @@ class TemporaryDb
     old_port = ENV["PGPORT"]
     old_dev_db = ENV["DISCOURSE_DEV_DB"]
     old_rails_db = ENV["RAILS_DB"]
+    old_path = ENV["PATH"]
 
     ENV["PGHOST"] = "localhost"
     ENV["PGUSER"] = "discourse"
     ENV["PGPORT"] = pg_port.to_s
     ENV["DISCOURSE_DEV_DB"] = "discourse"
     ENV["RAILS_DB"] = "discourse"
+    # Make sure subprocess `pg_dump`/`psql` match the pinned server version.
+    ENV["PATH"] = "#{pg_bin_path}:#{old_path}"
 
     yield
   ensure
@@ -119,6 +150,7 @@ class TemporaryDb
     ENV["PGPORT"] = old_port
     ENV["DISCOURSE_DEV_DB"] = old_dev_db
     ENV["RAILS_DB"] = old_rails_db
+    ENV["PATH"] = old_path
   end
 
   def remove
@@ -156,15 +188,26 @@ class TemporaryDb
       "--locale=en_US.UTF-8",
       "-E",
       "UTF8",
+      "--username=discourse",
       error_prefix: "Failed to initialize postgres data directory",
     )
   end
 
-  def configure_ports
+  def configure_database
     FileUtils.mkdir(@pg_sock_path)
     FileUtils.chown(@pg_system_user, nil, @pg_sock_path) if running_as_root?
     conf = File.read(@pg_conf)
-    File.write(@pg_conf, conf + "\nport = #{pg_port}\nunix_socket_directories = '#{@pg_sock_path}'")
+    conf << <<~CONF
+
+      port = #{pg_port}
+      unix_socket_directories = '#{@pg_sock_path}'
+      fsync = off
+      synchronous_commit = off
+      full_page_writes = off
+      wal_level = minimal
+      max_wal_senders = 0
+    CONF
+    File.write(@pg_conf, conf)
   end
 
   def start_server
@@ -183,21 +226,6 @@ class TemporaryDb
     )
   end
 
-  def create_user
-    run_command!(
-      "createuser",
-      "-h",
-      "localhost",
-      "-p",
-      pg_port.to_s,
-      "-s",
-      "-D",
-      "-w",
-      "discourse",
-      error_prefix: "Failed to create temporary postgres superuser",
-    )
-  end
-
   def create_database
     run_command!(
       "createdb",
@@ -205,6 +233,8 @@ class TemporaryDb
       "localhost",
       "-p",
       pg_port.to_s,
+      "-U",
+      "discourse",
       "discourse",
       error_prefix: "Failed to create temporary postgres database",
     )

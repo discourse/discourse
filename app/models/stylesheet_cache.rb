@@ -44,13 +44,13 @@ end
 # Table name: stylesheet_cache
 #
 #  id         :integer          not null, primary key
-#  target     :string           not null
-#  digest     :string           not null
 #  content    :text             not null
+#  digest     :string           not null
+#  source_map :text
+#  target     :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  theme_id   :integer          default(-1), not null
-#  source_map :text
 #
 # Indexes
 #

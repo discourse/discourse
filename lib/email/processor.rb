@@ -14,24 +14,22 @@ module Email
     end
 
     def process!
-      begin
-        @receiver = Email::Receiver.new(@mail, @opts)
-        @receiver.process!
-      rescue RateLimiter::LimitExceeded
-        if @opts[:retry_on_rate_limit]
-          Jobs.enqueue(:process_email, mail: @mail, source: @opts[:source])
-        else
-          raise
-        end
-      rescue => e
-        return handle_bounce(e) if @receiver&.is_bounce?
+      @receiver = Email::Receiver.new(@mail, @opts)
+      @receiver.process!
+    rescue RateLimiter::LimitExceeded
+      if @opts[:retry_on_rate_limit]
+        Jobs.enqueue(:process_email, mail: @mail, source: @opts[:source])
+      else
+        raise
+      end
+    rescue => e
+      return handle_bounce(e) if @receiver&.is_bounce?
 
-        log_email_process_failure(@mail, e)
-        incoming_email = @receiver.try(:incoming_email)
-        rejection_message = handle_failure(@mail, e)
-        if rejection_message.present?
-          set_incoming_email_rejection_message(incoming_email, rejection_message.body.to_s)
-        end
+      log_email_process_failure(@mail, e)
+      incoming_email = @receiver.try(:incoming_email)
+      rejection_message = handle_failure(@mail, e)
+      if rejection_message.present?
+        set_incoming_email_rejection_message(incoming_email, rejection_message.body.to_s)
       end
     end
 

@@ -30,6 +30,7 @@ module Patreon
 
       # Special catch all patrons virtual reward
       rewards["0"] ||= {}
+      rewards["0"]["id"] = "0"
       rewards["0"]["title"] = "All Patrons"
       rewards["0"]["amount_cents"] = 0
 

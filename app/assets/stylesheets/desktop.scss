@@ -1,4 +1,3 @@
-@import "desktop/_index";
-
-// Import all component-specific files
-@import "desktop/components/_index";
+// This file intentionally left blank — the stylesheet compiler generates `@import "desktop"`
+// Plugins and themes can still add desktop styles for import
+// Instead of authoring desktop-specific styles, use media queries in the common stylesheets

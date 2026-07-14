@@ -9,12 +9,9 @@ import { isEmpty, isPresent } from "@ember/utils";
 import AdminPostMenu from "discourse/components/admin-post-menu";
 import DeleteTopicDisallowedModal from "discourse/components/modal/delete-topic-disallowed";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import SmallUserList, {
-  smallUserAttrs,
-} from "discourse/components/small-user-list";
 import UserTip from "discourse/components/user-tip";
-import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { deferAnonymousAction } from "discourse/lib/anonymous-action";
 import DAG from "discourse/lib/dag";
 import {
   applyBehaviorTransformer,
@@ -22,6 +19,10 @@ import {
   applyValueTransformer,
 } from "discourse/lib/transformer";
 import { and } from "discourse/truth-helpers";
+import DSmallUserList, {
+  smallUserAttrs,
+} from "discourse/ui-kit/d-small-user-list";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import PostMenuButtonConfig from "./menu/button-config";
 import PostMenuButtonWrapper from "./menu/button-wrapper";
@@ -39,7 +40,6 @@ import PostMenuReplyButton from "./menu/buttons/reply";
 import PostMenuShareButton from "./menu/buttons/share";
 import PostMenuShowMoreButton from "./menu/buttons/show-more";
 
-const LIKE_ACTION = 2;
 const VIBRATE_DURATION = 5;
 
 const buttonKeys = Object.freeze({
@@ -82,7 +82,6 @@ const defaultDagOptions = {
 export default class PostMenu extends Component {
   @service capabilities;
   @service currentUser;
-  @service keyValueStore;
   @service modal;
   @service menu;
   @service siteSettings;
@@ -93,9 +92,7 @@ export default class PostMenu extends Component {
     true,
     this.#prepareStaticMethodsState({ collapsed: true })
   );
-  @tracked isWhoLikedVisible = false;
-  @tracked likedUsers = [];
-  @tracked totalLikedUsers;
+
   @tracked isWhoReadVisible = false;
   @tracked readers = [];
   @tracked totalReaders;
@@ -117,7 +114,6 @@ export default class PostMenu extends Component {
       showMoreActions: this.showMoreActions,
       showLogin: this.args.showLogin,
       toggleReplies: this.args.toggleReplies,
-      toggleWhoLiked: this.toggleWhoLiked,
       toggleWhoRead: this.toggleWhoRead,
     };
   }
@@ -428,10 +424,6 @@ export default class PostMenu extends Component {
     return this.registeredButtons.get(buttonKeys.SHOW_MORE);
   }
 
-  get remainingLikedUsers() {
-    return this.totalLikedUsers - this.likedUsers.length;
-  }
-
   get remainingReaders() {
     return this.totalReaders - this.readers.length;
   }
@@ -455,14 +447,14 @@ export default class PostMenu extends Component {
       "post-menu-toggle-like-action",
       async () => {
         if (!this.currentUser) {
-          this.keyValueStore &&
-            this.keyValueStore.set({
-              key: "likedPostId",
-              value: this.args.post.id,
-            });
-
-          this.args.showLogin();
-          return;
+          // Archived topics reject likes server-side; closed topics still
+          // accept them, so let anon defer-and-replay after login.
+          if (this.args.post.topic?.archived) {
+            return;
+          }
+          return deferAnonymousAction(this, "like_post", {
+            post_id: this.args.post.id,
+          });
         }
 
         if (
@@ -473,10 +465,6 @@ export default class PostMenu extends Component {
         }
 
         await this.args.toggleLike();
-
-        if (!this.collapsed) {
-          await this.#fetchWhoLiked();
-        }
       },
       this.staticMethodsArgs
     );
@@ -523,23 +511,12 @@ export default class PostMenu extends Component {
     this.collapsed = false;
 
     const fetchData = [
-      !this.isWhoLikedVisible && this.#fetchWhoLiked(),
       !this.isWhoReadVisible &&
         this.args.showReadIndicator &&
         this.#fetchWhoRead(),
     ].filter(Boolean);
 
     await Promise.all(fetchData);
-  }
-
-  @action
-  toggleWhoLiked() {
-    if (this.isWhoLikedVisible) {
-      this.isWhoLikedVisible = false;
-      return;
-    }
-
-    this.#fetchWhoLiked();
   }
 
   @action
@@ -568,17 +545,6 @@ export default class PostMenu extends Component {
       );
   }
 
-  async #fetchWhoLiked() {
-    const users = await this.store.find("post-action-user", {
-      id: this.args.post.id,
-      post_action_type_id: LIKE_ACTION,
-    });
-
-    this.likedUsers = users.content.map(smallUserAttrs);
-    this.totalLikedUsers = users.totalRows;
-    this.isWhoLikedVisible = true;
-  }
-
   async #fetchWhoRead() {
     const users = await this.store.find("post-reader", {
       id: this.args.post.id,
@@ -595,9 +561,9 @@ export default class PostMenu extends Component {
       collapsed: collapsed ?? this.collapsed,
       currentUser: this.currentUser,
       filteredRepliesView: this.args.filteredRepliesView,
-      isWhoLikedVisible: this.isWhoLikedVisible,
       isWhoReadVisible: this.isWhoReadVisible,
       isWikiMode: this.isWikiMode,
+      nestedReplyView: this.args.nestedReplyView,
       repliesShown: this.args.repliesShown,
       repliesButtonDisabled: this.args.repliesButtonDisabled,
       replyDirectlyBelow:
@@ -619,7 +585,7 @@ export default class PostMenu extends Component {
     >
       <nav
         {{! this.collapsed is included in the check below because "Show More" button can be overriden to be always visible }}
-        class={{concatClass
+        class={{dConcatClass
           "post-controls"
           (if
             (and
@@ -636,6 +602,7 @@ export default class PostMenu extends Component {
             "replies-button-visible"
           )
         }}
+        role="none"
       >
         {{! do not include PluginOutlets here, use the PostMenu DAG API instead }}
         {{#each this.extraControls key="key" as |extraControl|}}
@@ -657,7 +624,7 @@ export default class PostMenu extends Component {
           {{/each}}
         </div>
       </nav>
-      <SmallUserList
+      <DSmallUserList
         class="who-read"
         @addSelf={{false}}
         @isVisible={{this.isWhoReadVisible}}

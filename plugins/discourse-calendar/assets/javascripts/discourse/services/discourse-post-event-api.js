@@ -67,6 +67,7 @@ export default class DiscoursePostEventApi extends Service {
     event.sampleInvitees.forEach((invitee) => {
       if (invitee.id === event.watchingInvitee.id) {
         invitee.status = event.watchingInvitee.status;
+        invitee.recurring = event.watchingInvitee.recurring;
       }
     });
 

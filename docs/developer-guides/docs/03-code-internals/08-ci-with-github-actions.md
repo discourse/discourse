@@ -45,7 +45,7 @@ For plugin and components tests to work effectively, its important that you writ
 For details on how to write front-end tests with EmberJS see:
 
 - https://meta.discourse.org/t/write-ember-acceptance-and-component-tests-for-discourse/49167
-- https://guides.emberjs.com/v3.28.0/testing/
+- https://guides.emberjs.com/release/testing/
 
 For more details on writing test RSpec tests with Rails see:
 

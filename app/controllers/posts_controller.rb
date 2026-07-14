@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class PostsController < ApplicationController
+  include TagParamLimit
+
   # Bug with Rails 7+
   # see https://github.com/rails/rails/issues/44867
   self._flash_types -= [:notice]
@@ -114,6 +116,7 @@ class PostsController < ApplicationController
             add_excerpt: true,
             add_title: true,
             all_post_actions: counts,
+            ignored_user_like_counts: PostAction.ignored_user_like_counts_for(posts, current_user),
           ),
         )
       end
@@ -149,7 +152,15 @@ class PostsController < ApplicationController
       end
 
       format.json do
-        render_json_dump(serialize_data(posts, PostSerializer, scope: guardian, add_excerpt: true))
+        render_json_dump(
+          serialize_data(
+            posts,
+            PostSerializer,
+            scope: guardian,
+            add_excerpt: true,
+            ignored_user_like_counts: PostAction.ignored_user_like_counts_for(posts, current_user),
+          ),
+        )
       end
     end
   end
@@ -181,6 +192,8 @@ class PostsController < ApplicationController
   end
 
   def create
+    return if reject_too_many_tags!(:tags)
+
     manager_params = create_params
     manager_params[:first_post_checks] = !is_api?
     manager_params[:advance_draft] = !is_api?
@@ -231,6 +244,10 @@ class PostsController < ApplicationController
       edit_reason: params[:post][:edit_reason],
       locale: params[:post][:locale],
     }
+
+    if params[:post].key?(:reply_to_post_number)
+      changes[:reply_to_post_number] = params[:post][:reply_to_post_number]
+    end
 
     Post.plugin_permitted_update_params.keys.each { |param| changes[param] = params[:post][param] }
 
@@ -510,6 +527,18 @@ class PostsController < ApplicationController
     render body: nil
   end
 
+  def permanently_delete_check
+    post = find_post_from_params
+    obj = post.is_first_post? ? post.topic : post
+
+    if guardian.can_permanently_delete?(obj)
+      render json: { can_permanently_delete: true }
+    else
+      reason = obj.cannot_permanently_delete_reason(current_user)
+      render json: { can_permanently_delete: false, reason: }
+    end
+  end
+
   def permanently_delete_revisions
     guardian.ensure_can_permanently_delete_post_revisions!
 
@@ -555,22 +584,22 @@ class PostsController < ApplicationController
   def revert
     raise Discourse::NotFound unless guardian.is_staff?
 
-    post_id = params[:id] || params[:post_id]
     revision = params[:revision].to_i
     raise Discourse::InvalidParameters.new(:revision) if revision < 2
 
-    post_revision = PostRevision.find_by(post_id: post_id, number: revision)
-    raise Discourse::NotFound unless post_revision
-
     post = find_post_from_params
     raise Discourse::NotFound if post.blank?
+
+    post_revision = PostRevision.find_by(post_id: post.id, number: revision)
+    raise Discourse::NotFound unless post_revision
 
     post_revision.post = post
     guardian.ensure_can_see!(post_revision)
     guardian.ensure_can_edit!(post)
     if post_revision.modifications["raw"].blank? && post_revision.modifications["title"].blank? &&
          post_revision.modifications["category_id"].blank? &&
-         post_revision.modifications["tags"].blank?
+         post_revision.modifications["tags"].blank? &&
+         post_revision.modifications["reply_to_post_number"].blank?
       return render_json_error(I18n.t("revert_version_same"))
     end
 
@@ -580,6 +609,10 @@ class PostsController < ApplicationController
     changes[:raw] = post_revision.modifications["raw"][0] if post_revision.modifications[
       "raw"
     ].present? && post_revision.modifications["raw"][0] != post.raw
+    if post_revision.modifications["reply_to_post_number"].present? &&
+         post_revision.modifications["reply_to_post_number"][0] != post.reply_to_post_number
+      changes[:reply_to_post_number] = post_revision.modifications["reply_to_post_number"][0]
+    end
     if post.is_first_post?
       changes[:title] = post_revision.modifications["title"][0] if post_revision.modifications[
         "title"
@@ -778,29 +811,30 @@ class PostsController < ApplicationController
   end
 
   def find_post_revision_from_params
-    post_id = params[:id] || params[:post_id]
     revision = params[:revision].to_i
     raise Discourse::InvalidParameters.new(:revision) if revision < 2
 
-    post_revision = PostRevision.find_by(post_id: post_id, number: revision)
+    post = find_post_from_params
+
+    post_revision = PostRevision.find_by(post_id: post.id, number: revision)
     raise Discourse::NotFound unless post_revision
 
-    post_revision.post = find_post_from_params
+    post_revision.post = post
     guardian.ensure_can_see!(post_revision)
 
     post_revision
   end
 
   def find_latest_post_revision_from_params
-    post_id = params[:id] || params[:post_id]
+    post = find_post_from_params
 
-    finder = PostRevision.where(post_id: post_id).order(:number)
+    finder = PostRevision.where(post_id: post.id).order(:number)
     finder = finder.where(hidden: false) unless guardian.is_staff?
     post_revision = finder.last
 
     raise Discourse::NotFound unless post_revision
 
-    post_revision.post = find_post_from_params
+    post_revision.post = post
     guardian.ensure_can_see!(post_revision)
 
     post_revision

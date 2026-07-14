@@ -8,26 +8,41 @@ RSpec.describe PopulateImageQualitySetting do
     ActiveRecord::Migration.verbose = false
   end
 
-  after { ActiveRecord::Migration.verbose = @original_verbose }
+  after do
+    ActiveRecord::Migration.verbose = @original_verbose
+    Discourse.clear_site_creation_date_cache
+  end
 
-  it "works" do
-    mapping = { 60 => 50, 75 => 70, 99 => 90, 100 => 100 }
+  it "is a no-op on fresh installs" do
+    DB.exec("UPDATE schema_migration_details SET created_at = NOW()")
+    Discourse.clear_site_creation_date_cache
 
-    mapping.each do |current, expected|
-      # SETUP
-      DB.exec(<<~SQL)
-        INSERT INTO site_settings (name, data_type, value, created_at, updated_at)
-        VALUES ('recompress_original_jpg_quality', 1, #{current}, NOW(), NOW())
-        ON CONFLICT (name) DO UPDATE SET value = EXCLUDED.value
-      SQL
+    expect { PopulateImageQualitySetting.new.up }.not_to change {
+      DB.query_single("SELECT count(*) FROM site_settings WHERE name = 'image_quality'").first
+    }
+  end
 
-      # EXERCISE
-      PopulateImageQualitySetting.new.up
+  context "when the site is an existing install" do
+    before do
+      DB.exec("UPDATE schema_migration_details SET created_at = NOW() - INTERVAL '2 hours'")
+      Discourse.clear_site_creation_date_cache
+    end
 
-      # ASSERT
-      row = DB.query("SELECT value FROM site_settings WHERE name = 'image_quality'")[0]
+    it "maps recompress_original_jpg_quality into image_quality buckets" do
+      mapping = { 60 => 50, 75 => 70, 99 => 90, 100 => 100 }
 
-      expect(row.value.to_i).to eq(expected)
+      mapping.each do |current, expected|
+        DB.exec(<<~SQL)
+          INSERT INTO site_settings (name, data_type, value, created_at, updated_at)
+          VALUES ('recompress_original_jpg_quality', 1, #{current}, NOW(), NOW())
+          ON CONFLICT (name) DO UPDATE SET value = EXCLUDED.value
+        SQL
+
+        PopulateImageQualitySetting.new.up
+
+        row = DB.query("SELECT value FROM site_settings WHERE name = 'image_quality'")[0]
+        expect(row.value.to_i).to eq(expected)
+      end
     end
   end
 end

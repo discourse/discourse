@@ -6,7 +6,7 @@ describe DiscourseTopicVoting::VotesController do
   let(:topic) { Fabricate(:topic, category_id: category.id) }
 
   before do
-    DiscourseTopicVoting::CategorySetting.create!(category: category)
+    DiscourseTopicVoting::CategorySetting.create!(category:)
     Category.reset_voting_cache
     SiteSetting.topic_voting_show_who_voted = true
     SiteSetting.topic_voting_enabled = true
@@ -16,6 +16,13 @@ describe DiscourseTopicVoting::VotesController do
   it "does not allow voting if voting is not enabled" do
     SiteSetting.topic_voting_enabled = false
     post "/voting/vote.json", params: { topic_id: topic.id }
+    expect(response.status).to eq(404)
+  end
+
+  it "returns not found for a stale topic id when voting" do
+    topic.destroy
+    post "/voting/vote.json", params: { topic_id: topic.id }
+
     expect(response.status).to eq(404)
   end
 
@@ -44,6 +51,29 @@ describe DiscourseTopicVoting::VotesController do
     expect(user.reload.vote_count).to eq(0)
   end
 
+  it "returns 403 when the user already voted" do
+    DiscourseTopicVoting::Vote.create!(user:, topic:)
+
+    post "/voting/vote.json", params: { topic_id: topic.id }
+
+    expect(response.status).to eq(403)
+  end
+
+  it "returns 403 with voting payload when the user reached the vote limit" do
+    SiteSetting.public_send("topic_voting_tl#{user.trust_level}_vote_limit=", 0)
+
+    post "/voting/vote.json", params: { topic_id: topic.id }
+
+    expect(response.status).to eq(403)
+
+    json = response.parsed_body
+    expect(json["can_vote"]).to eq(false)
+    expect(json["vote_limit"]).to eq(0)
+    expect(json["vote_count"]).to eq(0)
+    expect(json["votes_left"]).to eq(0)
+    expect(json["alert"]).to eq(true)
+  end
+
   context "when vote limits are disabled" do
     before do
       SiteSetting.topic_voting_enable_vote_limits = false
@@ -62,7 +92,7 @@ describe DiscourseTopicVoting::VotesController do
     end
 
     it "returns nil for limit fields on unvote" do
-      DiscourseTopicVoting::Vote.create!(user: user, topic: topic)
+      DiscourseTopicVoting::Vote.create!(user:, topic:)
 
       post "/voting/unvote.json", params: { topic_id: topic.id }
       expect(response.status).to eq(200)
@@ -88,6 +118,9 @@ describe DiscourseTopicVoting::VotesController do
   end
 
   it "triggers a topic_unvote webhook when unvoting" do
+    DiscourseTopicVoting::Vote.create!(user:, topic:)
+    topic.update_vote_count
+
     Fabricate(:topic_voting_web_hook)
     post "/voting/unvote.json", params: { topic_id: topic.id }
     expect(response.status).to eq(200)
@@ -98,5 +131,70 @@ describe DiscourseTopicVoting::VotesController do
     expect(payload["topic_slug"]).to eq(topic.slug)
     expect(payload["voter_id"]).to eq(user.id)
     expect(payload["vote_count"]).to eq(0)
+  end
+
+  it "does not remove an archived vote when unvoting" do
+    DiscourseTopicVoting::Vote.create!(user:, topic:, archive: true)
+    topic.update_vote_count
+
+    post "/voting/unvote.json", params: { topic_id: topic.id }
+
+    expect(response.status).to eq(200)
+    expect(DiscourseTopicVoting::Vote.where(user:, topic:, archive: true).count).to eq(1)
+    expect(topic.reload.vote_count).to eq(1)
+  end
+
+  it "returns 200 when there is no active vote to remove" do
+    post "/voting/unvote.json", params: { topic_id: topic.id }
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body["vote_count"]).to eq(0)
+  end
+
+  it "limits who-voted previews to VOTE_PREVIEW_LIMIT users by default" do
+    stub_const(DiscourseTopicVoting, "VOTER_PREVIEW_LIMIT", 10) do
+      Fabricate
+        .times(11, :user)
+        .each { |voter| DiscourseTopicVoting::Vote.create!(user: voter, topic:) }
+
+      get "/voting/who.json", params: { topic_id: topic.id }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body.length).to eq(DiscourseTopicVoting::VOTER_PREVIEW_LIMIT)
+    end
+  end
+
+  it "still returns voters after the topic has been closed" do
+    voter = Fabricate(:user)
+    DiscourseTopicVoting::Vote.create!(user: voter, topic:)
+    topic.update_vote_count
+
+    Jobs.run_immediately!
+    topic.update_status("closed", true, Discourse.system_user)
+
+    get "/voting/who.json", params: { topic_id: topic.id }
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.pluck("id")).to eq([voter.id])
+  end
+
+  it "includes archived votes and honors a smaller who-voted limit" do
+    older_voter = Fabricate(:user)
+    newer_voter = Fabricate(:user)
+    archived_voter = Fabricate(:user)
+
+    DiscourseTopicVoting::Vote.create!(user: older_voter, topic:, created_at: 2.hours.ago)
+    DiscourseTopicVoting::Vote.create!(user: newer_voter, topic:, created_at: 1.hour.ago)
+    DiscourseTopicVoting::Vote.create!(
+      user: archived_voter,
+      topic:,
+      archive: true,
+      created_at: Time.zone.now,
+    )
+
+    get "/voting/who.json", params: { topic_id: topic.id, limit: 1 }
+
+    expect(response.status).to eq(200)
+    expect(response.parsed_body.pluck("id")).to eq([archived_voter.id])
   end
 end

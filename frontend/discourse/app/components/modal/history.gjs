@@ -3,17 +3,18 @@ import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DModal from "discourse/components/d-modal";
 import Revision from "discourse/components/modal/history/revision";
 import Revisions from "discourse/components/modal/history/revisions";
 import TopicFooter from "discourse/components/modal/history/topic-footer";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
-import dasherize from "discourse/helpers/dasherize";
+import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
 import { iconHTML } from "discourse/lib/icon-library";
 import { sanitizeAsync } from "discourse/lib/text";
 import Category from "discourse/models/category";
 import Post from "discourse/models/post";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DModal from "discourse/ui-kit/d-modal";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
+import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
 import { i18n } from "discourse-i18n";
 
 function customTagArray(val) {
@@ -28,6 +29,7 @@ function customTagArray(val) {
 
 export default class History extends Component {
   @service dialog;
+  @service modal;
   @service site;
   @service currentUser;
   @service siteSettings;
@@ -113,6 +115,14 @@ export default class History extends Component {
 
   get bodyDiffHTML() {
     return this.postRevision?.body_changes?.[this.viewMode];
+  }
+
+  get diffHidden() {
+    return (
+      !this.postRevision?.body_changes &&
+      !this.postRevision?.diff_error &&
+      (this.postRevision?.previous_hidden || this.postRevision?.current_hidden)
+    );
   }
 
   @action
@@ -229,6 +239,21 @@ export default class History extends Component {
           await Category.asyncFindById(result.category_id)
         );
       }
+      if (result.post) {
+        // `PostSerializer` omits `reply_to_user` when the user is nil OR
+        // when `suppress_reply_when_quoting` is on and the post quotes its
+        // target. Treat a missing key as "leave alone" — only clear it
+        // when the post number is also cleared.
+        const props = {
+          reply_to_post_number: result.post.reply_to_post_number ?? null,
+        };
+        if ("reply_to_user" in result.post) {
+          props.reply_to_user = result.post.reply_to_user;
+        } else if (result.post.reply_to_post_number == null) {
+          props.reply_to_user = null;
+        }
+        post.setProperties(props);
+      }
       this.args.closeModal();
     } catch (e) {
       if (e.jqXHR.responseJSON?.errors?.[0]) {
@@ -244,6 +269,10 @@ export default class History extends Component {
   }
 
   get hiddenClasses() {
+    if (this.diffHidden) {
+      return null;
+    }
+
     if (this.viewMode === "inline") {
       return this.postRevision?.previous_hidden ||
         this.postRevision?.current_hidden
@@ -336,12 +365,16 @@ export default class History extends Component {
 
   @action
   permanentlyDeleteVersions() {
-    this.dialog.yesNoConfirm({
-      message: i18n("post.revisions.controls.destroy_confirm"),
-      didConfirm: () => {
-        Post.permanentlyDeleteRevisions(this.postRevision?.post_id).then(() => {
-          this.args.closeModal();
-        });
+    const postId = this.postRevision?.post_id;
+    this.args.closeModal();
+
+    this.modal.show(PermanentlyDeleteConfirmModal, {
+      model: {
+        message: i18n("post.revisions.controls.destroy_confirm"),
+        confirmPhrase: i18n("post.controls.permanently_delete_confirm_phrase"),
+        didConfirm: () => {
+          Post.permanentlyDeleteRevisions(postId);
+        },
       },
     });
   }
@@ -366,13 +399,14 @@ export default class History extends Component {
     <DModal
       @title={{i18n this.modalTitleKey}}
       @closeModal={{@closeModal}}
-      class="history-modal -max {{concat '--mode-' (dasherize this.viewMode)}}"
+      class="history-modal --max
+        {{concat '--mode-' (dDasherize this.viewMode)}}"
     >
       <:body>
         {{#if this.error}}
           <div class="alert alert-error">{{this.error}}</div>
         {{/if}}
-        <ConditionalLoadingSpinner @condition={{this.initialLoad}}>
+        <DConditionalLoadingSpinner @condition={{this.initialLoad}}>
           {{#if this.postRevision}}
             <Revision
               @model={{this.postRevision}}
@@ -386,6 +420,7 @@ export default class History extends Component {
             <Revisions
               @model={{this.postRevision}}
               @hiddenClasses={{this.hiddenClasses}}
+              @diffHidden={{this.diffHidden}}
               @mobileView={{this.site.mobileView}}
               @userChanges={{this.user_changes}}
               @previousCategory={{this.previousCategory}}
@@ -399,7 +434,7 @@ export default class History extends Component {
               @viewMode={{this.viewMode}}
             />
           {{/if}}
-        </ConditionalLoadingSpinner>
+        </DConditionalLoadingSpinner>
       </:body>
       <:footer>
         {{#if @model.editPost}}

@@ -1,0 +1,40 @@
+.uc-modernize-foundation-theme {
+  .select-kit.is-expanded .select-kit-filter.is-expanded {
+    border: none;
+  }
+
+  .select-kit .caret-icon {
+    font-size: var(--font-down-1);
+  }
+
+  .list-controls .combo-box .combo-box-header {
+    &:hover {
+      background-color: var(--primary-100);
+    }
+  }
+
+  .select-kit.single-select.is-expanded .select-kit-header:not(.btn),
+  .select-kit.single-select .select-kit-header:not(.btn):focus,
+  .select-kit.single-select .select-kit-header:not(.btn):active {
+    background-color: var(--primary-100);
+    outline: none;
+    border-color: var(--primary-300);
+  }
+
+  .select-kit.combo-box.category-drop .category-drop-header[data-value=""],
+  .select-kit.combo-box.category-drop .caret-icon,
+  .select-kit.combo-box.tag-drop .tag-drop-header,
+  .select-kit.combo-box.tag-drop .selected-name,
+  .select-kit.combo-box.tag-drop .caret-icon,
+  .select-kit.combo-box.solved-status-filter .selected-name {
+    color: var(--primary);
+  }
+
+  .select-kit .select-kit-header.btn-default {
+    border: var(--d-button-default-border);
+  }
+
+  .d-multi-select__search-container {
+    padding-block: 0;
+  }
+}

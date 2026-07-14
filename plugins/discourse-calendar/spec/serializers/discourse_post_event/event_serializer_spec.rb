@@ -37,6 +37,33 @@ describe DiscoursePostEvent::EventSerializer do
         json = DiscoursePostEvent::EventSerializer.new(private_event, scope: Guardian.new).as_json
         expect(json[:event][:stats]).to eq(
           going: 1,
+          going_recurring: 0,
+          interested: 0,
+          invited: 2,
+          not_going: 0,
+          capacity: nil,
+        )
+      end
+    end
+
+    context "with recurring 'going' invitees" do
+      before do
+        private_event.update_with_params!(raw_invitees: [group_1.name])
+        DiscoursePostEvent::Invitee.create_attendance!(invitee_1.id, private_event.id, :going)
+        DiscoursePostEvent::Invitee.create_attendance!(
+          invitee_2.id,
+          private_event.id,
+          :going,
+          recurring: true,
+        )
+        private_event.reload
+      end
+
+      it "counts only recurring 'going' invitees in going_recurring" do
+        json = DiscoursePostEvent::EventSerializer.new(private_event, scope: Guardian.new).as_json
+        expect(json[:event][:stats]).to eq(
+          going: 2,
+          going_recurring: 1,
           interested: 0,
           invited: 2,
           not_going: 0,
@@ -52,6 +79,47 @@ describe DiscoursePostEvent::EventSerializer do
     it "returns the event category's id" do
       json = DiscoursePostEvent::EventSerializer.new(event, scope: Guardian.new).as_json
       expect(json[:event][:category_id]).to eq(category.id)
+    end
+
+    it "includes image_upload key as nil when not set" do
+      json = DiscoursePostEvent::EventSerializer.new(event, scope: Guardian.new).as_json
+      expect(json[:event]).to have_key(:image_upload)
+      expect(json[:event][:image_upload]).to be_nil
+    end
+
+    context "when event has an image" do
+      fab!(:upload)
+      fab!(:event_with_image) do
+        Fabricate(:event, post: Fabricate(:post, topic: topic), image_upload: upload)
+      end
+
+      it "includes image_upload in serialized output" do
+        json =
+          DiscoursePostEvent::EventSerializer.new(event_with_image, scope: Guardian.new).as_json
+        expect(json[:event][:image_upload][:id]).to eq(upload.id)
+        expect(json[:event][:image_upload][:url]).to include(upload.url)
+      end
+    end
+
+    context "when event is a livestream" do
+      let(:livestream_url) { "https://example.com/live" }
+      let(:livestream_post) { Fabricate(:post, topic: topic) }
+      let(:livestream_event) do
+        Fabricate(:event, post: livestream_post, livestream: true, location: livestream_url)
+      end
+
+      before { Jobs.run_later! }
+
+      it "does not enqueue onebox warming while serializing" do
+        livestream_event
+
+        expect_not_enqueued_with(job: :warm_livestream_onebox) do
+          json =
+            DiscoursePostEvent::EventSerializer.new(livestream_event, scope: Guardian.new).as_json
+
+          expect(json[:event][:livestream_onebox]).to be_nil
+        end
+      end
     end
 
     context "when event has duration" do

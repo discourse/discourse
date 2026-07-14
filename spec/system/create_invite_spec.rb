@@ -215,8 +215,8 @@ describe "Creating Invites" do
 
     it "replaces the expiresAfterDays field with expiresAt with date and time controls after creating the invite" do
       create_invite_modal.form.field("expiresAfterDays").select(1)
-      create_invite_modal.save_button.click
       now = Time.zone.now
+      create_invite_modal.save_button.click
 
       expect(create_invite_modal.form).to have_no_field_with_name("expiresAfterDays")
       expect(create_invite_modal.form).to have_field_with_name("expiresAt")
@@ -225,8 +225,9 @@ describe "Creating Invites" do
       date = expires_at_field.find(".date-picker").value
       time = expires_at_field.find(".time-input").value
 
-      expire_date = Time.parse("#{date} #{time}:#{now.strftime("%S")}").utc
-      expect(expire_date).to be_within_one_minute_of(now + 1.day)
+      expire_date = Time.parse("#{date} #{time}").utc
+      expected = (now + 1.day).beginning_of_minute
+      expect(expire_date).to eq(expected).or eq(expected + 1.minute)
     end
   end
 

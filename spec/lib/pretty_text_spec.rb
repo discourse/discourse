@@ -704,14 +704,12 @@ RSpec.describe PrettyText do
     end
 
     it "does censor code fences" do
-      begin
-        %w[apple banana].each do |w|
-          Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor])
-        end
-        expect(PrettyText.cook("# banana")).not_to include("banana")
-      ensure
-        Discourse.redis.flushdb
+      %w[apple banana].each do |w|
+        Fabricate(:watched_word, word: w, action: WatchedWord.actions[:censor])
       end
+      expect(PrettyText.cook("# banana")).not_to include("banana")
+    ensure
+      Discourse.redis.flushdb
     end
 
     it "strips out unicode bidirectional (bidi) override characters and replaces with a highlighted span" do
@@ -1630,6 +1628,13 @@ RSpec.describe PrettyText do
       expect(PrettyText.cook("💣")).to match(/\:bomb\:/)
     end
 
+    it "renders a denied emoji name as plain text when the name contains regex metacharacters" do
+      SiteSetting.emoji_deny_list = "+1"
+      Emoji.clear_cache
+
+      expect(PrettyText.cook(":+1: hello")).to eq("<p>:+1: hello</p>")
+    end
+
     it "does not replace left right arrow" do
       expect(PrettyText.cook("&harr;")).to eq("<p>↔</p>")
     end
@@ -1757,6 +1762,34 @@ RSpec.describe PrettyText do
       Emoji.clear_cache
 
       expect(PrettyText.cook("hello :trout:")).to match(/<img src[^>]+trout[^>]+>/)
+    end
+
+    it "rewrites a custom emoji's S3 url through the configured CDN" do
+      setup_s3
+      SiteSetting.s3_cdn_url = "https://cdn.example.com"
+
+      raw_url = "#{SiteSetting.Upload.absolute_base_url}/original/1X/trout.png"
+      CustomEmoji.create!(name: "trout", upload: Fabricate(:upload, url: raw_url))
+      Emoji.clear_cache
+
+      cooked = PrettyText.cook("hello :trout:")
+      expect(cooked).to include("https://cdn.example.com/original/1X/trout.png")
+      expect(cooked).not_to include(raw_url)
+    end
+
+    it "rewrites a custom emoji's S3 url through the CDN when unescaping titles" do
+      setup_s3
+      SiteSetting.s3_cdn_url = "https://cdn.example.com"
+
+      raw_url = "#{SiteSetting.Upload.absolute_base_url}/original/1X/trout.png"
+      CustomEmoji.create!(name: "trout", upload: Fabricate(:upload, url: raw_url))
+      Emoji.clear_cache
+
+      unescaped = PrettyText.unescape_emoji("hello :trout:")
+      expect(unescaped).to match(
+        %r{<img[^>]+\bsrc=['"]https://cdn\.example\.com/original/1X/trout\.png},
+      )
+      expect(unescaped).not_to include(SiteSetting.Upload.absolute_base_url)
     end
   end
 
@@ -1922,6 +1955,37 @@ RSpec.describe PrettyText do
         "data-type": "category",
         "data-slug": private_category.slug,
         "data-id": private_category.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+
+    tag_with_periods = Fabricate(:tag, name: "sam.i.am")
+    Fabricate(:topic, tags: [tag_with_periods])
+    cooked = PrettyText.cook(" #sam.i.am", user_id: user.id)
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag_with_periods.url,
+        "data-type": "tag",
+        "data-slug": tag_with_periods.name,
+        "data-id": tag_with_periods.id,
+      },
+    ) do
+      with_tag("span", with: { class: "hashtag-icon-placeholder" })
+    end
+
+    cooked = PrettyText.cook(" #known::tag.", user_id: user.id)
+    expect(cooked).to include("</a>.")
+    expect(cooked).to have_tag(
+      "a",
+      with: {
+        class: "hashtag-cooked",
+        href: tag.url,
+        "data-type": "tag",
+        "data-slug": tag.name,
+        "data-id": tag.id,
       },
     ) do
       with_tag("span", with: { class: "hashtag-icon-placeholder" })
@@ -2462,6 +2526,17 @@ HTML
     expect(PrettyText.cook("<test>alert(42)</test>")).to eq "<p>alert(42)</p>"
   end
 
+  it "sanitizes html without cooking markdown" do
+    sanitized =
+      PrettyText.sanitize(
+        '<a href="https://example.com" target="_blank" rel="noopener" onclick="alert(1)">learn more</a><a href="javascript:alert(1)">bad</a><script>alert(1)</script>',
+      )
+
+    expect(sanitized).to eq(
+      '<a href="https://example.com" target="_blank">learn more</a><a>bad</a>',
+    )
+  end
+
   it "should not onebox magically linked urls" do
     expect(PrettyText.cook("[url]site.com[/url]")).not_to include("onebox")
   end
@@ -2533,6 +2608,60 @@ HTML
     end
   end
 
+  describe "upload:// links" do
+    it "treats the label as literal so formatting characters are preserved" do
+      cooked = PrettyText.cook <<~MD
+        ![_test_file_|100x100](upload://abc.jpg)
+        [_test_file_.txt|attachment](upload://abc.txt)
+      MD
+
+      expect(cooked).to include('alt="_test_file_"')
+      expect(cooked).to include('class="attachment"')
+      expect(cooked).to include(">_test_file_.txt<")
+      expect(cooked).not_to include("<em>")
+    end
+
+    it "unescapes backslash escapes left over from legacy posts" do
+      cooked = PrettyText.cook("![20260421\\_140231|100x100](upload://abc.jpg)")
+
+      expect(cooked).to include('alt="20260421_140231"')
+    end
+
+    it "leaves non-upload links alone" do
+      cooked = PrettyText.cook("[_foo_](http://example.com)")
+
+      expect(cooked).to include("<em>foo</em>")
+    end
+
+    it "keeps plain URLs in the label intact when they would otherwise linkify" do
+      cooked = PrettyText.cook("![foo https://example.com bar|100x100](upload://abc.jpg)")
+
+      expect(cooked).to include('alt="foo https://example.com bar"')
+    end
+
+    it "keeps hashtags and mentions in the label literal" do
+      cooked = PrettyText.cook("[#cat @sam|attachment](upload://abc.txt)")
+
+      expect(cooked).to include(">#cat @sam<")
+      expect(cooked).not_to include("hashtag")
+      expect(cooked).not_to include("mention")
+    end
+
+    it "treats reference-style upload labels as literal too" do
+      cooked = PrettyText.cook("[_foo_][1]\n\n[1]: upload://abc.jpg")
+
+      expect(cooked).to include(">_foo_<")
+      expect(cooked).not_to include("<em>")
+    end
+
+    it "still renders inline formatting in non-upload attachment labels" do
+      cooked = PrettyText.cook("[**bold**|attachment](https://example.com/file.pdf)")
+
+      expect(cooked).to include('class="attachment"')
+      expect(cooked).to include("<strong>bold</strong>")
+    end
+  end
+
   describe "upload decoding" do
     it "can decode upload:// for default setup" do
       set_cdn_url("https://cdn.com")
@@ -2591,6 +2720,27 @@ HTML
       HTML
 
       expect(PrettyText.cook(raw)).to eq(cooked.strip)
+    end
+
+    it "handles attachment filenames with markdown characters" do
+      SiteSetting.authorized_extensions = "txt"
+
+      {
+        "_test_file_.txt" => "<em>",
+        "*test*.txt" => "<em>",
+        "**bold**.txt" => "<strong>",
+        "~~strike~~.txt" => "<s>",
+        "`code`.txt" => "<code>",
+      }.each do |filename, bad_tag|
+        upload = Fabricate(:upload, original_filename: filename, extension: "txt")
+        markdown = UploadMarkdown.new(upload).to_markdown
+        cooked = PrettyText.cook(markdown)
+
+        expect(cooked).to include('class="attachment"'),
+        "expected attachment class for filename: #{filename}\nmarkdown: #{markdown}\ncooked: #{cooked}"
+        expect(cooked).not_to include(bad_tag),
+        "unexpected #{bad_tag} for filename: #{filename}\nmarkdown: #{markdown}\ncooked: #{cooked}"
+      end
     end
 
     it "can place a blank image if we can not find the upload" do
@@ -2718,7 +2868,7 @@ HTML
     # basically it is super hard to remember every single rare letter when there are
     # so many, so ruby tags provide a hint.
     #
-    html = (<<~MD).strip
+    html = <<~MD.strip
       <ruby lang="je">
         <rb lang="je">X</rb>
         漢 <rp>(</rp><rt lang="je"> ㄏㄢˋ </rt><rp>)</rp>

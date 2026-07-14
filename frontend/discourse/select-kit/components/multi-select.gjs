@@ -1,6 +1,5 @@
 import { concat } from "@ember/helper";
 import { computed } from "@ember/object";
-import { next } from "@ember/runloop";
 import { isPresent } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import componentForCollection from "discourse/helpers/component-for-collection";
@@ -92,11 +91,14 @@ export default class MultiSelect extends SelectKitComponent {
   }
 
   select(value, item) {
+    if (typeof item?.onSelect === "function") {
+      item.onSelect(this.selectKit, item);
+      return;
+    }
+
     if (this.selectKit.hasSelection && this.selectKit.options.maximum === 1) {
-      this.selectKit.deselectByValue(this.getValue(this.selectedContent[0]));
-      next(() => {
-        this.selectKit.select(value, item);
-      });
+      const newItem = item || this.defaultItem(value, value);
+      this.selectKit.change(makeArray(value), makeArray(newItem));
       return;
     }
 

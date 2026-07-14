@@ -140,15 +140,50 @@ class UserAction < ActiveRecord::Base
   end
 
   def self.count_daily_engaged_users(start_date = nil, end_date = nil)
-    result = select(:user_id).distinct.where(action_type: USER_ACTED_TYPES)
-
     if start_date && end_date
-      result = result.group("date(created_at)")
-      result = result.where("created_at > ? AND created_at < ?", start_date, end_date)
-      result = result.order("date(created_at)")
-    end
+      sql = <<~SQL
+        SELECT day, COUNT(*) AS count
+        FROM (
+          SELECT DISTINCT date(created_at) AS day, user_id
+          FROM user_actions
+          WHERE action_type IN (:action_types)
+            AND created_at > :start_date
+            AND created_at < :end_date
+        ) distinct_daily_users
+        GROUP BY day
+        ORDER BY day
+      SQL
 
-    result.count
+      DB
+        .query(sql, action_types: USER_ACTED_TYPES, start_date: start_date, end_date: end_date)
+        .each_with_object({}) { |row, counts| counts[row.day] = row.count }
+    else
+      sql = <<~SQL
+        WITH RECURSIVE engaged_users AS (
+          (
+            SELECT user_id
+            FROM user_actions
+            WHERE action_type IN (:action_types)
+            ORDER BY user_id
+            LIMIT 1
+          )
+          UNION ALL
+          SELECT (
+            SELECT user_id
+            FROM user_actions
+            WHERE user_id > engaged_users.user_id
+              AND action_type IN (:action_types)
+            ORDER BY user_id
+            LIMIT 1
+          )
+          FROM engaged_users
+          WHERE engaged_users.user_id IS NOT NULL
+        )
+        SELECT COUNT(*) FROM engaged_users WHERE user_id IS NOT NULL
+      SQL
+
+      DB.query_single(sql, action_types: USER_ACTED_TYPES).first
+    end
   end
 
   def self.stream_item(action_id, guardian)
@@ -274,45 +309,43 @@ class UserAction < ActiveRecord::Base
     require_parameters(hash, *required_parameters)
 
     transaction(requires_new: true) do
-      begin
-        # TODO there are conditions when this is called and user_id was already rolled back and is invalid.
+      # TODO there are conditions when this is called and user_id was already rolled back and is invalid.
 
-        # protect against dupes, for some reason this is failing in some cases
-        action = self.find_by(hash.select { |k, _| required_parameters.include?(k) })
-        return action if action
+      # protect against dupes, for some reason this is failing in some cases
+      action = find_by(hash.select { |k, _| required_parameters.include?(k) })
+      return action if action
 
-        action = self.new(hash)
+      action = new(hash)
 
-        action.created_at = hash[:created_at] if hash[:created_at]
-        action.save!
+      action.created_at = hash[:created_at] if hash[:created_at]
+      action.save!
 
-        user_id = hash[:user_id]
+      user_id = hash[:user_id]
 
-        topic = Topic.includes(:category).find_by(id: hash[:target_topic_id])
+      topic = Topic.includes(:category).find_by(id: hash[:target_topic_id])
 
-        update_like_count(user_id, hash[:action_type], 1) if topic && !topic.private_message?
+      update_like_count(user_id, hash[:action_type], 1) if topic && !topic.private_message?
 
-        user_ids = user_id != action.acting_user_id ? [user_id] : nil
+      user_ids = user_id != action.acting_user_id ? [user_id] : nil
 
-        group_ids = nil
-        if topic&.category&.read_restricted
-          group_ids = [Group::AUTO_GROUPS[:admins]] | topic.category.groups.pluck("groups.id")
-        end
-
-        if action.user && (user_ids.present? || group_ids.present?)
-          MessageBus.publish(
-            "/u/#{action.user.username_lower}",
-            action.id,
-            user_ids: user_ids,
-            group_ids: group_ids,
-          )
-        end
-
-        action
-      rescue ActiveRecord::RecordNotUnique
-        # can happen, don't care already logged
-        raise ActiveRecord::Rollback
+      group_ids = nil
+      if topic&.category&.read_restricted
+        group_ids = [Group::AUTO_GROUPS[:admins]] | topic.category.groups.pluck("groups.id")
       end
+
+      if action.user && (user_ids.present? || group_ids.present?)
+        MessageBus.publish(
+          "/u/#{action.user.username_lower}",
+          action.id,
+          user_ids: user_ids,
+          group_ids: group_ids,
+        )
+      end
+
+      action
+    rescue ActiveRecord::RecordNotUnique
+      # can happen, don't care already logged
+      raise ActiveRecord::Rollback
     end
   end
 
@@ -327,7 +360,11 @@ class UserAction < ActiveRecord::Base
     )
     if action = UserAction.find_by(hash.except(:created_at))
       action.destroy
-      MessageBus.publish("/user/#{hash[:user_id]}", user_action_id: action.id, remove: true)
+      MessageBus.publish(
+        "/user/#{action.user_id}",
+        { user_action_id: action.id, remove: true },
+        user_ids: [action.user_id],
+      )
     end
 
     if !Topic.where(id: hash[:target_topic_id], archetype: Archetype.private_message).exists?
@@ -384,7 +421,7 @@ class UserAction < ActiveRecord::Base
   end
 
   def self.ensure_consistency!(limit = nil)
-    self.synchronize_target_topic_ids(nil, limit: limit)
+    synchronize_target_topic_ids(nil, limit: limit)
   end
 
   def self.update_like_count(user_id, action_type, delta)
@@ -405,10 +442,10 @@ class UserAction < ActiveRecord::Base
 
       current_user_id = -2
       current_user_id = guardian.user.id if guardian.user
-      builder.where(
-        "NOT COALESCE(p.hidden, false) OR p.user_id = :current_user_id",
-        current_user_id: current_user_id,
-      )
+      builder.where(<<~SQL, current_user_id: current_user_id)
+        NOT COALESCE(p.hidden, p2.hidden, false) OR
+        CASE WHEN p.id IS NULL THEN p2.user_id ELSE p.user_id END = :current_user_id
+      SQL
     end
 
     visible_post_types = Topic.visible_post_types(guardian.user)
@@ -417,10 +454,13 @@ class UserAction < ActiveRecord::Base
       visible_post_types: visible_post_types,
     )
 
-    builder.where("t.visible") if guardian.user&.id != user_id && !guardian.is_staff?
+    if !guardian.is_staff? && (guardian.user.nil? || guardian.user.id != user_id)
+      builder.where("t.visible")
+    end
 
     filter_private_messages(builder, user_id, guardian, ignore_private_messages)
     filter_categories(builder, guardian)
+    filter_ignored_users(builder, guardian)
   end
 
   def self.filter_private_messages(builder, user_id, guardian, ignore_private_messages = false)
@@ -467,6 +507,20 @@ class UserAction < ActiveRecord::Base
     builder
   end
 
+  def self.filter_ignored_users(builder, guardian)
+    return unless guardian&.user
+
+    builder.where(<<~SQL, current_user_id: guardian.user.id)
+      NOT EXISTS (
+        SELECT 1 FROM ignored_users ig
+        INNER JOIN users iu ON iu.id = ig.ignored_user_id
+        WHERE ig.user_id = :current_user_id
+          AND ig.ignored_user_id = a.acting_user_id
+          AND ig.ignored_user_id <> :current_user_id
+      )
+    SQL
+  end
+
   def self.require_parameters(data, *params)
     params.each { |p| raise Discourse::InvalidParameters.new(p) if data[p].nil? }
   end
@@ -478,20 +532,20 @@ end
 #
 #  id              :integer          not null, primary key
 #  action_type     :integer          not null
-#  user_id         :integer          not null
-#  target_topic_id :integer
-#  target_post_id  :integer
-#  target_user_id  :integer
-#  acting_user_id  :integer
 #  created_at      :datetime         not null
 #  updated_at      :datetime         not null
+#  acting_user_id  :integer
+#  target_post_id  :integer
+#  target_topic_id :integer
+#  target_user_id  :integer
+#  user_id         :integer          not null
 #
 # Indexes
 #
 #  idx_unique_rows                                   (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
 #  idx_user_actions_speed_up_user_all                (user_id,created_at,action_type)
 #  index_user_actions_on_acting_user_id              (acting_user_id)
-#  index_user_actions_on_action_type_and_created_at  (action_type,created_at)
+#  index_user_actions_on_action_type_and_created_at  (action_type,created_at,user_id)
 #  index_user_actions_on_target_post_id              (target_post_id)
 #  index_user_actions_on_target_user_id              (target_user_id) WHERE (target_user_id IS NOT NULL)
 #  index_user_actions_on_user_id_and_action_type     (user_id,action_type)

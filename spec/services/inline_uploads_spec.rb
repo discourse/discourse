@@ -617,6 +617,16 @@ RSpec.describe InlineUploads do
         MD
       end
 
+      it "strips structural markdown characters from attachment labels so the link can't break" do
+        md = <<~MD
+        <a class="attachment" href="#{upload.url}">a]b|c_d</a>
+        MD
+
+        expect(InlineUploads.process(md)).to eq(<<~MD)
+        [abc_d|attachment](#{upload.short_url})
+        MD
+      end
+
       it "should correct full upload url to the shorter version" do
         md = <<~MD
         Some random text

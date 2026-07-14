@@ -1,9 +1,9 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
-acceptance(`Cakeday`, function (needs) {
+acceptance("Cakeday", function (needs) {
   needs.user();
   needs.settings({
     cakeday_enabled: true,
@@ -221,7 +221,7 @@ acceptance(`Cakeday`, function (needs) {
   test("Anniversary emoji", async function (assert) {
     await visit("/t/some-really-interesting-topic/11");
 
-    const posterIcons = queryAll(".poster-icon");
+    const posterIcons = findAll(".poster-icon");
 
     assert
       .dom(posterIcons[0])
@@ -231,10 +231,16 @@ acceptance(`Cakeday`, function (needs) {
       .hasAttribute("title", i18n("user.date_of_birth.title"));
     assert.dom("img.emoji", posterIcons[0]).exists({ count: 1 });
     assert.dom("img.emoji", posterIcons[1]).exists({ count: 1 });
+    assert
+      .dom("img.emoji", posterIcons[0])
+      .hasAttribute("title", i18n("user.anniversary.title"));
+    assert
+      .dom("img.emoji", posterIcons[1])
+      .hasAttribute("title", i18n("user.date_of_birth.title"));
 
     await click(".trigger-user-card a[data-user-card]");
 
-    const emojiImages = queryAll(".emoji-images div");
+    const emojiImages = findAll(".emoji-images div");
 
     assert
       .dom(emojiImages[1])

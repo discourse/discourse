@@ -3,7 +3,7 @@ import { cached } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { modifier } from "ember-modifier";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 const IS_PINNED_CLASS = "is-pinned";
@@ -90,7 +90,7 @@ export default class ChatMessageSeparator extends Component {
   <template>
     {{#if this.formattedFirstMessageDate}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "chat-message-separator"
           "chat-message-separator-date"
           (if this.isNewestMessage "with-last-visit")

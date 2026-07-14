@@ -204,6 +204,14 @@ pt_BR:
               description: "Permitir aplicar tags em postagens criadas pelo usuário do sistema."
     discourse_ai:
       title: "IA"
+      ai_tool_approval:
+        loading: "Carregando..."
+        tool: "Ação"
+        user: "Usuário(a)"
+        approve: "Aprovar"
+        reject: "Rejeitar"
+        approved: "Aprovado (approved)"
+        rejected: "Recusados(as)"
       default_llm:
         title: "Modelo de LLM padrão"
       llm_selector:
@@ -235,8 +243,7 @@ pt_BR:
             ui_settings: "Configurações da interface do usuário"
             integrations: "Integrações"
         nav:
-          configured: "Configurado"
-          unconfigured: "Não configurado"
+          enabled: "Ativados"
         filters:
           all: "Tudo"
           no_results: "Não foi encontrado nenhum recurso correspondente aos seus filtros."
@@ -249,7 +256,7 @@ pt_BR:
           gists: "Resumos breves da lista de tópicos"
           setting_groups:
             settings: "Configurações básicas"
-            gists: "Gists"
+            gists: "Resumos"
             backfill: "Backfill"
         search:
           name: "Pesquisar"
@@ -265,6 +272,9 @@ pt_BR:
             model_settings: "Configurações de modelo"
             related_topics: "Tópicos relacionados"
             semantic_search: "Pesquisa semântica"
+        admin_dashboard:
+          setting_groups:
+            settings: "Configurações básicas"
         discord:
           name: "Integração com o Discourse"
           description: "Adiciona a possibilidade de pesquisar nos canais do Discord"
@@ -335,6 +345,7 @@ pt_BR:
         description: "Traduzir automaticamente todo o conteúdo no seu fórum para a linguagem preferida do usuário"
         supported_locales: "Idiomas suportados"
         supported_locales_description: "Esta configuração do site também permite que os visitantes contribuam com traduções das postagens."
+        category_scope: "Categorias"
         admin_actions:
           translation_settings: "Configurações de tradução"
           localization_settings: "Configurações de localização"
@@ -359,6 +370,9 @@ pt_BR:
           bar_done:
             one: "%{count} postagem"
             other: "%{count} postagens"
+        theme_translations:
+          translate:
+            label: "Traduzir"
         translations_menu:
           translate:
             label: "Traduzir postagem"
@@ -472,9 +486,6 @@ pt_BR:
         no_llm_selected: "Nenhum modelo de linguagem selecionado"
         max_context_posts: "Máximo de postagens de contexto"
         max_context_posts_help: "A quantidade máxima de postagens para usar como contexto para a IA ao responder ao(à) usuário(a). (deixar vazio para padrão)"
-        vision_enabled: Visão ativada
-        vision_enabled_help: Ative para a IA tentar entender as imagens postadas pelos(as) usuários(as) no tópico conforme o modelo usado na visão compatível. É compatível com os modelos mais recentes do Anthropic, Google e OpenAI.
-        vision_max_pixels: Tamanho de imagem compatível
         vision_max_pixel_sizes:
           low: Baixa qualidade - menor custo (256x256)
           medium: Qualidade média (512x512)
@@ -505,6 +516,12 @@ pt_BR:
         temperature_help: "A Temperatura a ser usada para o LLM. Aumente para incrementar a criatividade (deixe vazio para usar o padrão do modelo, que geralmente é um valor que varia entre 0,0 e 2,0)"
         top_p: "P Máximo"
         top_p_help: "O P Máximo a ser usado para o LLM, aumente para incrementar o fator aleatório (deixe vazio para usar o padrão do modelo, que geralmente é um valor que varia entre 0.0 e 1.0)"
+        thinking_effort_options:
+          none: "Nenhum"
+          low: "Baixo(a)"
+          medium: "Médio(a)"
+          high: "Alto(a)"
+          max: "Máx"
         priority: "Prioridade"
         tool_options: "Opções de ferramenta"
         rag_conversation_chunks: "Pesquisar pedaços de conversa"
@@ -651,9 +668,6 @@ pt_BR:
         max_output_tokens: "Máximo de tokens de saída"
         url: "URL do serviço da hospedagem do modelo"
         api_key: "Chave de API do serviço da hospedagem do modelo"
-        vision_enabled: "Visão ativada"
-        allowed_attachment_types: "Anexos permitidos"
-        attachment_types_placeholder: "Selecione ou digite as extensões (ex.: pdf, txt, docx)"
         ai_bot_user: "Usuário(a) de bot de IA"
         cost_input: "Custo de entrada"
         cost_cached_input: "Custo de entrada em cache"
@@ -681,9 +695,7 @@ pt_BR:
             custom: "Personalizado..."
           hours: "horas"
           max_tokens_help: "Quantidade máxima de tokens (palavras e caracteres) que podem ser usados por cada usuário(a) neste grupo durante o período especificado. Tokens são unidades usadas para modelos de IA processarem texto: 1 token equivale a aproximadamente 4 caracteres ou 3/4 de uma palavra."
-          max_tokens_required: "Deve ser definida se o máximo de usos não estiver definido"
           max_usages_help: "A quantidade máxima de vezes que cada usuário(a) neste grupo pode usar o modelo de IA durante o período especificado. Essa cota é rastreada para cada usuário(a) individual e não é compartilhada no grupo."
-          max_usages_required: "Deve ser definido se o máximo de tokens não estiver definido"
         credit_allocation:
           credits_remaining: "%{remaining} de %{total} créditos restantes (%{percentage}%)"
           soft_limit_warning: "Este modelo tem %{percentage}% de créditos de IA restantes hoje"
@@ -702,20 +714,14 @@ pt_BR:
           other: "Este modelo é usado atualmente por %{settings}. Se for configurado incorretamente, os recursos não funcionarão como esperado. "
         model_description:
           none: "Configurações gerais que funcionam com a maioria dos modelos de linguagens"
-          anthropic-claude-opus-4-6: "Modelo mais inteligente da Anthropic"
+          anthropic-claude-opus-4-7: "Modelo mais inteligente da Anthropic"
           anthropic-claude-sonnet-4-6: "Equilíbrio ideal entre custo e velocidade"
           anthropic-claude-haiku-4-5: "Rápido e econômico"
-          google-gemini-3-pro: "O modelo mais inteligente do Google"
+          google-gemini-3-1-pro: "O modelo mais inteligente do Google"
           google-gemini-3-flash: "Modelo rápido e econômico com raciocínio multimodal"
-          open_ai-gpt-5-2: "O modelo principal da OpenAI, muito adequado para a resolução de problemas em diversas áreas."
-          open_ai-gpt-5-mini: "Proporciona um equilíbrio entre inteligência, velocidade e custo."
-          open_ai-gpt-5-nano: "O modelo do GPT-5 mais rápido e econômico"
-          open_router-deepseek-deepseek-v3-2: "O mais recente modelo de alto desempenho da DeepSeek"
-          open_router-moonshotai-kimi-k2-5: "Modelo multimodal da Moonshot com recursos de visão"
-          open_router-x-ai-grok-4-fast: "O modelo principal da xAI com visão"
-          open_router-minimax-minimax-m2-5: "Modelo multimodal do MiniMax com contexto amplo"
-          open_router-z-ai-glm-5: "Modelo multimodal da Z-AI com visão"
-          open_router-arcee-ai-trinity-large-preview-free: "Modelo gratuito de código aberto da Arcee AI"
+          open_ai-gpt-5-4: "O modelo principal da OpenAI, muito adequado para a resolução de problemas em diversas áreas."
+          open_ai-gpt-5-4-nano: "O modelo do GPT-5 mais rápido e econômico"
+          open_router-moonshotai-kimi-k2-6: "Modelo multimodal da Moonshot com recursos de visão"
         preseeded_model_description: "Modelo de código aberto pré-configurado que utiliza %{model}"
         configured:
           title: "LLMs configurados"
@@ -739,8 +745,6 @@ pt_BR:
           max_output_tokens: "A quantidade máxima de tokens que o modelo pode gerar em uma única solicitação"
           display_name: "O nome usado para referenciar este modelo na interface do seu site."
           name: "Incluímos na chamada da API para especificar qual modelo será usado"
-          vision_enabled: "Ative para a IA tentar entender as imagens. Depende do modelo usado na visão compatível. É compatível com os modelos mais recentes do Anthropic, Google e OpenAI."
-          allowed_attachment_types: "Escolher quais tipos de anexos serão encaminhados para o modelo. Deixe em branco para não permitir anexos. As imagens são controladas por visão computacional."
           cost_input: "O custo de entrada a cada 1 milhão de tokens para este modelo"
           cost_cached_input: "O custo de entrada em cache por 1 milhão de tokens para este modelo (ao ler do cache de prompts)"
           cost_cache_write: "O custo de gravação em cache por 1 milhão de tokens para este modelo (ao gravar no cache de prompts)"
@@ -792,11 +796,7 @@ pt_BR:
         title: "Sugerir alterações com IA"
         description: "Escolha uma das opções abaixo, e a IA vai sugerir uma nova versão do texto."
         selection_hint: "Dica: antes de abrir o ajudante, você pode selecionar uma parte do texto para reescrever apenas ela."
-        suggest: "Sugestão com IA"
         suggest_errors:
-          too_many_tags:
-            one: "Você pode ter até %{count} etiqueta"
-            other: "Você pode ter até %{count} etiquetas"
           no_suggestions: "Sem sugestões disponíveis"
         missing_content: "Insira conteúdo para gerar sugestões."
         context_menu:
@@ -934,10 +934,6 @@ pt_BR:
           title: "Visualizar interação com IA"
           copy_request: "Copiar solicitação"
           copy_response: "Copiar resposta"
-          request_tokens: "Tokens de solicitação:"
-          response_tokens: "Tokens de resposta:"
-          cache_read_tokens: "Tokens de leitura em cache:"
-          cache_write_tokens: "Tokens de gravação em cache:"
           request: "Solicitação"
           response: "Resposta"
           next_log: "Próximo"
@@ -986,11 +982,14 @@ pt_BR:
             one: "A mensagem deve ter pelo menos %{count} caractere"
             other: "A mensagem deve ter pelo menos %{count} caracteres"
           messages_sidebar_title: "Conversas"
+          starred: "Marcado como favorito"
           today: "Hoje"
           last_7_days: "Últimos sete dias"
           last_30_days: "Últimos 30 dias"
           upload_files: "Enviar arquivos"
           uploads_in_progress: "Não é possível enviar enquanto houver envios em andamento"
+          scroll_to_bottom: "Rolar para a parte inferior"
+          editing_post: "Editando postagem"
       sentiments:
         dashboard:
           title: "Sentimento"

@@ -50,6 +50,13 @@ pl_PL:
             delete_ai_secret: "Usuń sekret AI"
             update_ai_spam_settings: "Zaktualizuj ustawienia spamu AI"
   js:
+    discourse_workflows:
+      node_unavailable:
+        requires_ai: "Wymaga włączenia wtyczki AI"
+      nodes:
+        "action:ai_agent": "Agent AI"
+      node_descriptions:
+        "action:ai_agent": "Uruchom agenta AI, aby przetwarzać dane lub generować treści"
     discourse_automation:
       scriptables:
         llm_report:
@@ -173,7 +180,7 @@ pl_PL:
               description: "Oflaguj post (jako spam lub do sprawdzenia)"
             notify_author_pm:
               label: "Powiadom autora przez PW"
-              description: "Wyślij osobistą wiadomość do autora wpisu, gdy jego wpis zostanie umieszczony w kolejce i usunięty"
+              description: "Wyślij prywatną wiadomość do autora wpisu, gdy jego wpis zostanie umieszczony w kolejce i usunięty"
             notify_author_pm_user:
               label: "Nadawca PW"
               description: "Użytkownik, który wyśle PW (domyślnie system)"
@@ -181,7 +188,7 @@ pl_PL:
               label: "Treść PW"
               description: "Opcjonalna niestandardowa wiadomość do wysłania do autora"
             include_personal_messages:
-              label: "Dołącz osobiste wiadomości"
+              label: "Dołącz prywatne wiadomości"
               description: "Skanuj i sortuj również wiadomości prywatne"
             whisper:
               label: "Odpowiedz szeptem"
@@ -226,6 +233,33 @@ pl_PL:
               description: "Zezwól na tagowanie wpisów tworzonych przez użytkownika systemowego."
     discourse_ai:
       title: "AI"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Agent"
+          forced_llm_notice_description: "Ten agent jest zablokowany na skonfigurowanym domyślnym LLM. Przepływ pracy nie może go zastąpić."
+          llm_model_id: "Model LLM"
+          llm_model_default: "Użyj ustawień domyślnych agenta"
+          llm_model_default_with_name: "Użyj ustawień domyślnych agenta (%{value})"
+          prompt: "Monit"
+          runner_username: "Uruchom jako"
+          runner_username_tooltip: "Użytkownik, którego uprawnienia służą do widoczności przesyłania i narzędzi agenta AI. Użyj systemu do automatyzacji przepływu pracy."
+          upload_ids: "Identyfikatory przesłania"
+          upload_ids_tooltip: "Opcjonalne identyfikatory przesyłania do dołączenia do monitu. Przesyłanie obrazów jest uwzględniane, gdy agent ma włączoną widoczność; przesyłanie dokumentów jest uwzględniane, gdy wybrany program LLM obsługuje ich typ pliku."
+          upload_ids_placeholder: "={{ $json.post.upload_ids }}"
+          select_agent: "Wybierz agenta..."
+      bot_chats:
+        tab_label: "Czaty botów"
+      ai_tool_approval:
+        loading: "Ładowanie..."
+        load_error: "Nie można załadować tego oczekującego działania."
+        agent: "Agent"
+        tool: "Działanie"
+        user: "Użytkownik"
+        approve: "Zatwierdź"
+        reject: "Odrzuć"
+        approved: "Zaakceptowany"
+        rejected: "Odrzucony"
+        awaiting_staff: "Oczekiwanie na zatwierdzenie przez personel"
       default_llm:
         title: "Domyślny model LLM"
         description: "Domyślny model LLM do użycia dla wszystkich funkcji AI. Będzie on używany, jeśli w konfiguracji funkcji lub agenta nie określono modelu LLM. Jeśli nie określono domyślnego modelu LLM, użyty zostanie ostatnio utworzony model LLM."
@@ -269,8 +303,8 @@ pl_PL:
             ui_settings: "Ustawienia interfejsu użytkownika"
             integrations: "Integracje"
         nav:
-          configured: "Skonfigurowany"
-          unconfigured: "Nieskonfigurowany"
+          enabled: "Włączono"
+          not_enabled: "Nie włączono"
         filters:
           all: "Wszystkie"
           text: "Wyszukaj funkcje, agentów, LLM-y lub grupy..."
@@ -300,6 +334,12 @@ pl_PL:
             model_settings: "Ustawienia modelu"
             related_topics: "Powiązane tematy"
             semantic_search: "Wyszukiwanie semantyczne"
+        admin_dashboard:
+          name: "Panel administracyjny"
+          description: "Pomaga menedżerom społeczności dostrzegać znaczące zmiany i decydować, gdzie szukać dalej"
+          highlights: "Najważniejsze wydarzenia"
+          setting_groups:
+            settings: "Ustawienia podstawowe"
         discord:
           name: "Integracja z Discordem"
           description: "Dodaje możliwość wyszukiwania kanałów Discord"
@@ -377,6 +417,8 @@ pl_PL:
         description: "Automatycznie tłumacz całą zawartość swojego forum na język preferowany przez użytkownika"
         supported_locales: "Obsługiwane języki"
         supported_locales_description: "To ustawienie witryny pozwala również odwiedzającym na dodawanie tłumaczeń wpisów."
+        category_scope: "Kategorie"
+        category_scope_description: "Wybierz, czy automatyczne tłumaczenia mają wykorzystywać wszystkie kategorie, kategorie publiczne czy wybrane kategorie."
         admin_actions:
           translation_settings: "Ustawienia tłumaczenia"
           localization_settings: "Ustawienia lokalizacji"
@@ -409,6 +451,12 @@ pl_PL:
             few: "%{count} wpisy"
             many: "%{count} wpisów"
             other: "%{count} wpisów"
+        theme_translations:
+          translate:
+            label: "Przetłumacz"
+            title: "Przetłumacz na wszystkie obsługiwane języki, używając wybranego języka jako języka źródłowego"
+            queued: "Tłumaczenie w kolejce"
+            failed: "Nie udało się dodać tłumaczenia do kolejki"
         translations_menu:
           translate:
             label: "Przetłumacz post"
@@ -431,6 +479,7 @@ pl_PL:
         spam_detected: "Wykryto spam"
         custom_instructions_placeholder: "Instrukcje dla AI specyficzne dla witryny, aby pomóc w dokładniejszej identyfikacji spamu"
         enable: "Włącz"
+        enabled_locked_tip: "Wykrywanie spamu AI nie może być wyłączone na tej stronie."
         spam_tip: "Wykrywanie spamu przez sztuczną inteligencję będzie skanować pierwsze 3 posty wszystkich nowych użytkowników w tematach publicznych. Oznaczy je do sprawdzenia i zablokuje użytkowników, jeśli istnieje prawdopodobieństwo, że są spamem."
         settings_saved: "Ustawienia zapisane"
         spam_description: "Identyfikuje potencjalny spam przy użyciu wybranego LLM i oznacza go dla moderatorów witryny w celu sprawdzenia w kolejce przeglądania."
@@ -509,6 +558,7 @@ pl_PL:
         credit_allocations: "Alokacje kredytów"
       ai_agent:
         ai_tools: "Narzędzia"
+        native_tools_help: "Narzędzia natywne dostawcy, takie jak wyszukiwanie w sieci lub pobieranie stron, pojawiają się, gdy włączona jest opcja „Zawsze używaj domyślnego modelu języka” i wybrany domyślny model języka je obsługuje."
         mcp_servers: "Serwery MCP"
         mcp_server_tools_help: "Wybrane serwery MCP domyślnie udostępniają wszystkie swoje narzędzia. Zawęż je dla każdego agenta, aby zmniejszyć zużycie tokenów i zapewnić sobie wybór narzędzi."
         mcp_server_tool_count:
@@ -557,9 +607,9 @@ pl_PL:
         max_turn_tokens_help: "Maksymalna łączna liczba tokenów (wejściowych i wyjściowych) zużytych we wszystkich wywołaniach LLM podczas jednej odpowiedzi bota. Po ustawieniu zastępuje stałe limity ukończenia/narzędzi budżetem tokenów, umożliwiając bardziej efektywne działanie agenta. Pozostaw puste, aby zachować domyślne limity."
         compression_threshold: "Próg kompresji"
         compression_threshold_help: "Procent wykorzystania kontekstu (20–99), przy którym włącza się automatyczna kompresja. Niższe wartości powodują szybsze uruchomienie kompresji, co pozwala zachować większy margines bezpieczeństwa."
-        vision_enabled: Wizja włączona
-        vision_enabled_help: Jeśli jest włączona, sztuczna inteligencja będzie próbowała zrozumieć obrazy publikowane przez użytkowników w temacie, w zależności od używanego modelu wspierającego widzenie. Obsługiwane przez najnowsze modele Anthropic, Google i OpenAI.
-        vision_max_pixels: Obsługiwany rozmiar obrazu
+        vision_enabled: Dołącz przesyłanie obrazów
+        vision_enabled_help: Jeśli ta opcja jest włączona, agent może uwzględniać obrazy ze wpisów i czatów, jeśli wybrany model obsługuje wprowadzanie obrazów.
+        vision_max_pixels: Maksymalny rozmiar obrazu
         vision_max_pixel_sizes:
           low: Niska jakość - najtańsza (256x256)
           medium: Średnia jakość (512x512)
@@ -579,8 +629,8 @@ pl_PL:
         allow_chat_direct_messages_help: "Jeśli ta opcja jest włączona, użytkownicy z uprawnionych grup będą mogli wysyłać wiadomości bezpośrednie do tego agenta."
         allow_chat_channel_mentions: "Zezwalaj na wzmianki na kanale czatu"
         allow_chat_channel_mentions_help: "Jeśli ta opcja jest włączona, użytkownicy z uprawnionych grup mogą wspominać o tym agencie na kanałach czatu."
-        allow_personal_messages: "Zezwalaj na wiadomości osobiste"
-        allow_personal_messages_help: "Jeśli ta opcja jest włączona, użytkownicy w dozwolonych grupach mogą wysyłać osobiste wiadomości do tego agenta."
+        allow_personal_messages: "Zezwalaj na prywatne wiadomości"
+        allow_personal_messages_help: "Jeśli ta opcja jest włączona, użytkownicy w dozwolonych grupach mogą wysyłać prywatne wiadomości do tego agenta."
         allow_topic_mentions: "Zezwalaj na wzmianki o temacie"
         allow_topic_mentions_help: "Jeśli ta opcja jest włączona, użytkownicy w dozwolonych grupach mogą wspominać o tym agencie w tematach."
         require_approval: "Wymagaj zatwierdzenia narzędzi moderacyjnych"
@@ -628,6 +678,7 @@ pl_PL:
         confirm_delete: "Czy na pewno chcesz usunąć tego agenta?"
         new: "Nowy agent"
         no_agents: "Nie utworzono jeszcze żadnych agentów"
+        manage_agents: "Zarządzaj agentami"
         title: "Agenty"
         short_title: "Agenty"
         delete: "Usuń"
@@ -635,6 +686,17 @@ pl_PL:
         temperature_help: "Temperatura używana w LLM. Zwiększ, aby zwiększyć kreatywność (pozostaw puste, aby użyć domyślnej wartości modelu, zazwyczaj od 0,0 do 2,0)."
         top_p: "Top P"
         top_p_help: "Top P do użycia w LLM, zwiększ, aby zwiększyć losowość (pozostaw puste, aby użyć domyślnego modelu, zazwyczaj wartość od 0,0 do 1,0)."
+        thinking_effort: "Wysiłek umysłowy"
+        thinking_effort_help: "Ile modele zdolne do rozumowania powinny myśleć przed udzieleniem odpowiedzi? Wyższe wartości mogą usprawnić trudne zadania, ale mogą zwiększyć opóźnienia i koszty. Dostawcy nieobsługiwani ignorują to ustawienie."
+        thinking_effort_options:
+          default: "Model domyślny"
+          none: "Brak"
+          minimal: "Minimalny"
+          low: "Niski"
+          medium: "Średni"
+          high: "Wysoki"
+          xhigh: "Bardzo wysoki"
+          max: "Maksymalny"
         priority: "Priorytet"
         priority_help: "Priorytetowe agenty są wyświetlane użytkownikom na górze listy agentów. Jeśli wiele agentów ma priorytet, zostaną one posortowane alfabetycznie."
         tool_options: "Opcje narzędzi"
@@ -868,9 +930,9 @@ pl_PL:
         max_output_tokens: "Maksymalna liczba tokenów wyjściowych"
         url: "Adres URL usługi hostującej model"
         api_key: "Klucz API usługi hostującej model"
-        vision_enabled: "Wizja włączona"
-        allowed_attachment_types: "Dozwolone załączniki"
-        attachment_types_placeholder: "Wybierz lub wpisz rozszerzenia (np. pdf, txt, docx)"
+        vision_enabled: "Obsługuje wprowadzanie obrazu"
+        allowed_attachment_types: "Dozwolone załączniki dokumentów"
+        attachment_types_placeholder: "Wybierz lub wpisz rozszerzenia (np. pdf, txt, csv, docx, xlsx)"
         ai_bot_user: "Użytkownik bota AI"
         cost_input: "Koszt wejściowy"
         cost_cached_input: "Koszt buforowanego wejścia"
@@ -888,6 +950,7 @@ pl_PL:
           group: "Grupa"
           max_tokens: "Maksymalna liczba tokenów"
           max_usages: "Maksymalna liczba użyć"
+          max_cost: "Maksymalny koszt"
           duration: "Czas trwania"
           confirm_delete: "Czy na pewno chcesz usunąć ten limit?"
           add: "Dodaj limit"
@@ -899,9 +962,11 @@ pl_PL:
             custom: "Niestandardowy..."
           hours: "godzin"
           max_tokens_help: "Maksymalna liczba tokenów (słów i znaków), które każdy użytkownik w tej grupie może wykorzystać w określonym czasie. Tokeny to jednostki używane przez modele AI do przetwarzania tekstu - w przybliżeniu 1 token = 4 znaki lub 3/4 słowa."
-          max_tokens_required: "Musi być ustawiony, jeśli nie ustawiono maksymalnego użycia"
+          max_tokens_required: "Należy ustawić, jeśli nie ustawiono maksymalnego użycia i maksymalnego kosztu"
           max_usages_help: "Maksymalna liczba przypadków, w których każdy użytkownik w tej grupie może użyć modelu AI w określonym czasie. Ten limit jest śledzony dla poszczególnych użytkowników, a nie współdzielony przez grupę."
-          max_usages_required: "Musi być ustawiony, jeśli nie ustawiono maksymalnej liczby tokenów"
+          max_usages_required: "Należy ustawić, jeśli nie ustawiono maksymalnej liczby tokenów i maksymalnego kosztu"
+          max_cost_help: "Maksymalny szacowany koszt, jaki każdy użytkownik z tej grupy może wydać na ten model sztucznej inteligencji w określonym czasie. Koszt jest oparty na skonfigurowanych cenach danych wejściowych, wyjściowych, danych wejściowych z pamięci podręcznej i zapisów w pamięci podręcznej modelu."
+          max_cost_required: "Należy ustawić, jeśli nie ustawiono maksymalnej liczby tokenów i maksymalnego wykorzystania"
         credit_allocation:
           credits_remaining: "Pozostało %{remaining} z %{total} kredytów (%{percentage}%)"
           soft_limit_warning: "Ten model ma dziś %{percentage}% pozostałych kredytów AI"
@@ -923,20 +988,20 @@ pl_PL:
           other: "Ten model jest obecnie używany przez: %{settings}. W przypadku nieprawidłowej konfiguracji funkcje nie będą działać zgodnie z oczekiwaniami. "
         model_description:
           none: "Ogólne ustawienia, które działają dla większości modeli językowych"
-          anthropic-claude-opus-4-6: "Najbardziej inteligentny model Anthropic"
+          anthropic-claude-opus-4-7: "Najbardziej inteligentny model Anthropic"
           anthropic-claude-sonnet-4-6: "Optymalna równowaga między szybkością a kosztami"
           anthropic-claude-haiku-4-5: "Szybki i opłacalny"
-          google-gemini-3-pro: "Najinteligentniejszy model Google"
+          google-gemini-3-1-pro: "Najinteligentniejszy model Google"
           google-gemini-3-flash: "Szybki i ekonomiczny dzięki rozumowaniu multimodalnemu"
-          open_ai-gpt-5-2: "Flagowy model OpenAI, doskonale nadający się do rozwiązywania problemów w różnych domenach"
-          open_ai-gpt-5-mini: "Zapewnia równowagę między inteligencją, szybkością i kosztami"
-          open_ai-gpt-5-nano: "Najszybszy i najbardziej ekonomiczny model GPT-5"
-          open_router-deepseek-deepseek-v3-2: "Najnowszy, wysokowydajny model firmy DeepSeek"
-          open_router-moonshotai-kimi-k2-5: "Multimodalny model Moonshot z funkcjami wizyjnymi"
-          open_router-x-ai-grok-4-fast: "Flagowy model xAI z wizją"
-          open_router-minimax-minimax-m2-5: "Multimodalny model MiniMax z dużym kontekstem"
-          open_router-z-ai-glm-5: "Multimodalny model Z-AI z wizją"
-          open_router-arcee-ai-trinity-large-preview-free: "Darmowy model open-source od Arcee AI"
+          open_ai-gpt-5-5: "Najbardziej zaawansowany model OpenAI z rozszerzonym kontekstem"
+          open_ai-gpt-5-4: "Flagowy model OpenAI, doskonale nadający się do rozwiązywania problemów w różnych domenach"
+          open_ai-gpt-5-4-nano: "Najszybszy i najbardziej ekonomiczny model GPT-5"
+          open_router-moonshotai-kimi-k2-6: "Multimodalny model Moonshot z funkcjami wizyjnymi"
+          open_router-deepseek-deepseek-v4-flash: "Najnowszy, wysokowydajny model DeepSeek z kontekstem 1M"
+          open_router-minimax-minimax-m2-7: "Model MiniMax z dużym kontekstem"
+          open_router-x-ai-grok-4-1-fast: "Szybki multimodalny model xAI z bardzo dużym kontekstem"
+          open_router-z-ai-glm-5-1: "Model Z-AI skoncentrowany na rozumowaniu"
+          open_router-qwen-qwen3-6-plus: "Multimodalny model Qwena z kontekstem 1M"
         preseeded_model_description: "Wstępnie skonfigurowany model open-source wykorzystujący %{model}"
         configured:
           title: "Skonfigurowane LLM"
@@ -955,13 +1020,15 @@ pl_PL:
           success: "Powodzenie!"
           invalid_config: "Najpierw napraw następujące błędy w konfiguracji:"
           failure: "Próba nawiązania kontaktu z modelem zwróciła następujący błąd: %{error}"
+          failure_non_streaming: "Nieudane żądanie nietransmisyjne: %{error}"
+          failure_streaming: "Nie udało się przesłać strumieniowo: %{error}"
         hints:
           max_prompt_tokens: "Maksymalna liczba tokenów, jaką model może przetworzyć w jednym żądaniu"
           max_output_tokens: "Maksymalna liczba tokenów, jaką model może wygenerować w jednym żądaniu"
           display_name: "Nazwa używana do odwoływania się do tego modelu w interfejsie Twojej witryny."
           name: "Uwzględniamy to w wywołaniu API, aby określić, którego modelu będziemy używać"
-          vision_enabled: "Po włączeniu tej opcji, sztuczna inteligencja będzie próbować interpretować obrazy. Zależy to od używanego modelu obsługującego widzenie. Obsługiwane są najnowsze modele firm Anthropic, Google i OpenAI."
-          allowed_attachment_types: "Wybierz typy załączników, które mają być przesyłane do modelu. Pozostaw puste, aby zablokować możliwość dodawania załączników. Obrazy są kontrolowane za pomocą wizji."
+          vision_enabled: "Czy ten model/dostawca może odbierać i rozumieć obrazy."
+          allowed_attachment_types: "Wybierz typy załączników dokumentów, które można konwertować lub przekazywać dalej. Pozostaw puste pole, aby nie zezwalać na załączanie dokumentów. Obrazy są kontrolowane osobno."
           cost_input: "Koszt wejściowy na 1 mln tokenów dla tego modelu"
           cost_cached_input: "Koszt wejścia w pamięci podręcznej na 1 mln tokenów dla tego modelu (przy odczycie z pamięci podręcznej)"
           cost_cache_write: "Koszt zapisu do pamięci podręcznej na 1 mln tokenów dla tego modelu (podczas zapisu do pamięci podręcznej)"
@@ -999,6 +1066,9 @@ pl_PL:
           disable_streaming: "Wyłącz uzupełnianie strumieniowania (zmień żądania strumieniowe na żądania niestrumieniowe)"
           reasoning_effort: "Wysiłek rozumowania (dotyczy tylko modeli rozumowania)"
           service_tier: "Poziom usług (elastyczny = niższy koszt/większe opóźnienie, priorytet = szybsze przetwarzanie)"
+          reasoning_parser: "Analizator wnioskowania vLLM"
+          thinking_override: "Zastąpienie myślenia"
+          thinking_token_budget: "Budżet tokena myślenia"
           enable_reasoning: "Włącz wnioskowanie (dotyczy tylko modeli wnioskowania)"
           adaptive_thinking: "Włącz myślenie adaptacyjne (zalecane dla modeli Claude 4.6)"
           enable_thinking: "Włącz myślenie (modele Gemini 2.5 – wykorzystuje budżet tokenów)"
@@ -1012,6 +1082,11 @@ pl_PL:
           prompt_caching_tool_results: "Wyniki narzędzi – pamięć podręczna, gdy dostępne są wyniki narzędzi (zalecane)"
           prompt_caching_always: "Zawsze – zawsze używaj szybkiego buforowania"
           effort: "Poziom wysiłku"
+        provider_field_hints:
+          reasoning_parser: "Musi być zgodny z ustawieniem serwera vLLM --reasoning-parser. Discourse nie może zmieniać parserów podczas żądania; wykorzystuje to do kształtowania opcji żądania."
+          thinking_override: "Opcjonalnie wymuś obsługiwane szablony czatu vLLM, aby włączyć lub wyłączyć myślenie dla każdego żądania. Nieobsługiwane parsery zachowują domyślne ustawienia serwera."
+          reasoning_effort: "Wysyła opcję żądania reasoning_effort vLLM dla parserów, które ją obsługują."
+          thinking_token_budget: "Opcjonalny limit dla tokenów wnioskowania. Wymaga parsera wnioskowania vLLM i jest ignorowany, gdy wysiłek wnioskowania wynosi Brak."
       related_topics:
         title: "Powiązane tematy"
         pill: "Powiązane"
@@ -1019,13 +1094,10 @@ pl_PL:
         title: "Zaproponuj zmiany za pomocą AI"
         description: "Wybierz jedną z poniższych opcji, a sztuczna inteligencja zasugeruje Ci nową wersję tekstu."
         selection_hint: "Wskazówka: Możesz także zaznaczyć część tekstu przed otwarciem pomocnika, aby przepisać tylko ten fragment."
-        suggest: "Zasugeruj za pomocą AI"
+        suggest: "Pokaż sugestie AI"
+        choose: "Wybierz za mnie"
+        suggestions: "Sugestie"
         suggest_errors:
-          too_many_tags:
-            one: "Możesz mieć maksymalnie %{count} znacznik"
-            few: "Możesz mieć maksymalnie %{count} znaczniki"
-            many: "Możesz mieć maksymalnie %{count} znaczników"
-            other: "Możesz mieć maksymalnie %{count} znaczników"
           no_suggestions: "Brak dostępnych sugestii"
         missing_content: "Wprowadź treść, aby wygenerować sugestie."
         context_menu:
@@ -1174,10 +1246,12 @@ pl_PL:
           title: "Wyświetl interakcję AI"
           copy_request: "Prośba o kopiowanie"
           copy_response: "Odpowiedź kopiowania"
-          request_tokens: "Tokeny żądania:"
-          response_tokens: "Tokeny odpowiedzi:"
-          cache_read_tokens: "Tokeny odczytu pamięci podręcznej:"
-          cache_write_tokens: "Tokeny zapisu pamięci podręcznej:"
+          this_turn: "Ta tura:"
+          whole_conversation: "Rozmowa:"
+          tokens_summary: "%{request_tokens} wejście → %{response_tokens} wyjście"
+          cache_both: "(pamięć podręczna %{read} odczyt, %{write} zapis)"
+          cache_read_only: "(odczyt pamięci podręcznej %{read})"
+          cache_write_only: "(zapis pamięci podręcznej %{write})"
           request: "Żądanie"
           response: "Odpowiedź"
           next_log: "Następna"
@@ -1228,11 +1302,20 @@ pl_PL:
             many: "Wiadomość musi mieć długość %{count} znaków lub więcej"
             other: "Wiadomość musi mieć długość %{count} znaków lub więcej"
           messages_sidebar_title: "Rozmowy"
+          starred: "Wyróżnione"
+          star_conversation: "Wyróżnij rozmowę"
+          unstar_conversation: "Usuń wyróżnienie rozmowy"
+          open_conversation_menu: "Otwórz menu konwersacji"
           today: "Dzisiaj"
           last_7_days: "Ostatnie 7 dni"
           last_30_days: "Ostatnie 30 dni"
           upload_files: "Prześlij pliki"
           uploads_in_progress: "Nie można przesłać, gdy trwa przesyłanie"
+          show_toolbar: "Pokaż pasek narzędzi formatowania"
+          hide_toolbar: "Ukryj pasek narzędzi formatowania"
+          scroll_to_bottom: "Przewiń na dół"
+          streaming_below: "Nowa treść poniżej"
+          editing_post: "Edycja wpisu"
       sentiments:
         dashboard:
           title: "Sentiment"

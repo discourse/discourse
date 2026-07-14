@@ -29,31 +29,37 @@ module DiscourseSubscriptions
       end
 
       case event[:type]
-      when "checkout.session.completed"
+      when "checkout.session.completed", "checkout.session.async_payment_succeeded"
         checkout_session = event[:data][:object]
 
-        if SiteSetting.discourse_subscriptions_enable_verbose_logging
-          Rails.logger.warn("checkout.session.completed data: #{checkout_session}")
-        end
-        email = checkout_session[:customer_email]
-
         return head :ok if checkout_session[:status] != "complete"
+        return head :ok if checkout_session[:payment_status] != "paid"
+
+        if SiteSetting.discourse_subscriptions_enable_verbose_logging
+          Rails.logger.warn("#{event[:type]} data: #{checkout_session}")
+        end
+
+        user = trusted_checkout_session_user(checkout_session)
+
+        return render_json_error "user not found" if !user
+
+        email = checkout_session[:customer_email]
         return render_json_error "email not found" if !email
 
+        if !checkout_session_email_belongs_to_user?(email, user)
+          return render_json_error "user not found"
+        end
+
         if checkout_session[:customer].nil?
-          customer = ::Stripe::Customer.create({ email: email }, stripe_request_opts)
+          customer = ::Stripe::Customer.create({ email: user.email }, stripe_request_opts)
           customer_id = customer[:id]
         else
           customer_id = checkout_session[:customer]
         end
 
         if SiteSetting.discourse_subscriptions_enable_verbose_logging
-          Rails.logger.warn("Looking up user with email: #{email}")
+          Rails.logger.warn("Processing checkout session for user: #{user.email} (id: #{user.id})")
         end
-
-        user = ::User.find_by_username_or_email(email)
-
-        return render_json_error "user not found" if !user
 
         discourse_customer = Customer.create(user_id: user.id, customer_id: customer_id)
 
@@ -132,6 +138,22 @@ module DiscourseSubscriptions
     end
 
     private
+
+    def checkout_session_email_belongs_to_user?(email, user)
+      ::UserEmail.exists?(user_id: user.id, email: ::Email.downcase(email))
+    end
+
+    def trusted_checkout_session_user(checkout_session)
+      client_reference_id =
+        checkout_session[:client_reference_id] || checkout_session["client_reference_id"]
+
+      return if client_reference_id.blank?
+
+      ::User.find_signed(
+        client_reference_id,
+        purpose: DiscourseSubscriptions::CHECKOUT_SESSION_USER_REFERENCE_PURPOSE,
+      )
+    end
 
     def update_status(customer_id, subscription_id, status)
       discourse_subscription =

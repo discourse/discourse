@@ -17,6 +17,112 @@ RSpec.describe ReviewableClaimedTopicsController do
       expect(response.status).to eq(403)
     end
 
+    context "when logged in as a category group moderator who cannot see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_reviewable) { Fabricate(:reviewable_flagged_post, topic: private_topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        SiteSetting.reviewable_claiming = "optional"
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+        sign_in(cat_mod_user)
+      end
+
+      it "prevents claiming a topic the user cannot see" do
+        post "/reviewable_claimed_topics.json",
+             params: {
+               reviewable_claimed_topic: {
+                 topic_id: private_topic.id,
+               },
+             }
+
+        expect(response.status).to eq(403)
+        expect(
+          ReviewableClaimedTopic.where(
+            user_id: cat_mod_user.id,
+            topic_id: private_topic.id,
+          ).exists?,
+        ).to eq(false)
+      end
+
+      it "prevents claiming a topic the user cannot see with automatic param" do
+        post "/reviewable_claimed_topics.json",
+             params: {
+               reviewable_claimed_topic: {
+                 topic_id: private_topic.id,
+                 automatic: "true",
+               },
+             }
+
+        expect(response.status).to eq(403)
+        expect(
+          ReviewableClaimedTopic.where(
+            user_id: cat_mod_user.id,
+            topic_id: private_topic.id,
+          ).exists?,
+        ).to eq(false)
+      end
+
+      it "prevents claiming a deleted topic the user cannot see" do
+        first_post = private_topic.first_post || Fabricate(:post, topic: private_topic)
+        PostDestroyer.new(Discourse.system_user, first_post, context: "Automated testing").destroy
+
+        post "/reviewable_claimed_topics.json",
+             params: {
+               reviewable_claimed_topic: {
+                 topic_id: private_topic.id,
+               },
+             }
+
+        expect(response.status).to eq(403)
+        expect(
+          ReviewableClaimedTopic.where(
+            user_id: cat_mod_user.id,
+            topic_id: private_topic.id,
+          ).exists?,
+        ).to eq(false)
+      end
+    end
+
+    context "when logged in as a category group moderator who can see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_reviewable) { Fabricate(:reviewable_flagged_post, topic: private_topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        SiteSetting.reviewable_claiming = "optional"
+        private_category.set_permissions(mod_group => :full)
+        private_category.save!
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+        sign_in(cat_mod_user)
+      end
+
+      it "allows claiming a topic the user can see" do
+        post "/reviewable_claimed_topics.json",
+             params: {
+               reviewable_claimed_topic: {
+                 topic_id: private_topic.id,
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(
+          ReviewableClaimedTopic.where(
+            user_id: cat_mod_user.id,
+            topic_id: private_topic.id,
+          ).exists?,
+        ).to eq(true)
+      end
+    end
+
     context "when logged in" do
       before do
         SiteSetting.reviewable_claiming = "optional"
@@ -162,6 +268,64 @@ RSpec.describe ReviewableClaimedTopicsController do
 
         expect(existing_topic_status).to eq(404)
         expect(non_existing_topic_status).to eq(404)
+      end
+    end
+
+    context "when logged in as a category group moderator who cannot see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_claimed) { Fabricate(:reviewable_claimed_topic, topic: private_topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        SiteSetting.reviewable_claiming = "optional"
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+        sign_in(cat_mod_user)
+      end
+
+      it "prevents unclaiming a topic the user cannot see" do
+        delete "/reviewable_claimed_topics/#{private_topic.id}.json"
+
+        expect(response.status).to eq(404)
+        expect(ReviewableClaimedTopic.where(topic_id: private_topic.id).exists?).to eq(true)
+      end
+
+      it "prevents unclaiming a deleted topic the user cannot see" do
+        first_post = private_topic.first_post || Fabricate(:post, topic: private_topic)
+        PostDestroyer.new(Discourse.system_user, first_post, context: "Automated testing").destroy
+
+        delete "/reviewable_claimed_topics/#{private_topic.id}.json"
+
+        expect(response.status).to eq(404)
+        expect(ReviewableClaimedTopic.where(topic_id: private_topic.id).exists?).to eq(true)
+      end
+    end
+
+    context "when logged in as a category group moderator who can see the topic" do
+      fab!(:mod_group, :group)
+      fab!(:cat_mod_user, :user)
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_claimed) { Fabricate(:reviewable_claimed_topic, topic: private_topic) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        SiteSetting.reviewable_claiming = "optional"
+        private_category.set_permissions(mod_group => :full)
+        private_category.save!
+        Fabricate(:category_moderation_group, category: private_category, group: mod_group)
+        mod_group.add(cat_mod_user)
+        sign_in(cat_mod_user)
+      end
+
+      it "allows unclaiming a topic the user can see" do
+        delete "/reviewable_claimed_topics/#{private_topic.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(ReviewableClaimedTopic.where(topic_id: private_topic.id).exists?).to eq(false)
       end
     end
 

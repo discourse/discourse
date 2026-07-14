@@ -324,6 +324,9 @@ sk:
         ongoing_event_reminder: "Udalosť prebieha"
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} automaticky nastavila vašu účasť a pozvala vás na stránku %{eventName}."
+      event_description:
+        show_more: "Zobraziť viac"
+        show_less: "Zobraziť menej"
       edit_reason: "Udalosť aktualizovaná"
       edit_reason_closed: "Udalosť je uzavretá"
       edit_reason_opened: "Udalosť otvorená"
@@ -379,7 +382,6 @@ sk:
       upcoming_events_list:
         title: "Nadchádzajúce udalosti"
         empty: "Žiadne nadchádzajúce udalosti"
-        all_day: "Celodenný"
         error: "Nepodarilo sa načítať udalosti"
         try_again: "Skúste to znova"
         view_all: "Zobraziť všetko"
@@ -393,10 +395,9 @@ sk:
       models:
         invitee:
           no_users: "Nenašli sa žiadni používatelia"
+          leave_event: "Opustiť udalosť"
           status:
-            unknown: "Nemám záujem"
             going: "Idem"
-            not_going: "Nejdem"
             interested: "Záujem"
             going_count:
               one: "%{count} ide"
@@ -431,6 +432,35 @@ sk:
             private:
               title: "Súkromné"
               description: "K súkromnej udalosti sa môžu pripojiť len pozvaní používatelia."
+      composer:
+        name_placeholder: "Názov udalosti"
+        event_title_placeholder: "Názov udalosti"
+        create_event_button: "Vytvoriť udalosť"
+        reminder:
+          units:
+            minutes:
+              one: "minúta"
+              few: "minúty"
+              many: "minút"
+              other: "minút"
+            hours:
+              one: "hodina"
+              few: "hodín"
+              many: "hodiny"
+              other: "hodiny"
+            days:
+              one: "deň"
+              few: "dní"
+              many: "dní"
+              other: "dní"
+            weeks:
+              one: "týždeň"
+              few: "týždne"
+              many: "týždne"
+              other: "týždne"
+      composer_actions:
+        create_event:
+          label: "Vytvoriť udalosť"
       builder_modal:
         custom_fields:
           label: "Vlastné polia"
@@ -451,11 +481,10 @@ sk:
         timezone:
           label: Časové pásmo
           remove_timezone: Bez časového pásma (UTC)
+        starts_at:
+          label: "Dátum začiatku"
         reminders:
           label: "Pripomienky"
-          types:
-            bump_topic: "téma s automatickým posunom"
-            notification: "upozorniť účastníkov"
           units:
             minutes: "minút"
             hours: "hodiny"
@@ -464,28 +493,17 @@ sk:
           periods:
             before: "pred"
             after: "po"
-        recurrence_until:
-          label: "Do (vrátane)"
         recurrence:
           label: "Opakovanie"
           none: "Žiadna opakovaná udalosť"
           every_day: "Každý deň"
-          every_month: "Každý mesiac v tento pracovný deň"
           every_weekday: "Každý pracovný deň"
-          every_week: "Každý týždeň v tento pracovný deň"
-          every_two_weeks: "Každé dva týždne v tento pracovný deň"
-          every_four_weeks: "Každé štyri týždne v tento pracovný deň"
-        minimal:
-          label: "Minimálna udalosť"
-          checkbox_label: "Skryť tlačidlá Zúčastním sa/Nezúčastním sa a stav pozvaných"
+        attendance:
+          none: "Žiadny"
         allow_chat:
           label: "Integrácia chatu"
           checkbox_label: "Vytvorenie a správa kanála chatu pre konkrétnu udalosť"
-        url:
-          label: "URL"
-          placeholder: "Voliteľné"
         location:
-          label: "Poloha"
           placeholder: "Pridajte miesto, odkaz alebo niečo podobné."
         description:
           label: "Popis"
@@ -495,8 +513,10 @@ sk:
           placeholder: "Voliteľné, predvolene je názov témy"
         invitees:
           label: "Pozvané skupiny"
-        status:
-          label: "Stav"
+        event_type:
+          public:
+            title: "Verejné"
       invite_user_or_group:
         title: "Upozorniť používateľa (používateľov) alebo skupinu (skupiny)"
         invite: "Odoslať"
+        success: "Pozvánka bola odoslaná"

@@ -1,35 +1,16 @@
-import Component from "@glimmer/component";
-import { action } from "@ember/object";
-import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
-export default class TagInfoButton extends Component {
-  @service router;
+const TagInfoButton = <template>
+  <DButton
+    @icon="circle-info"
+    @ariaLabel="tagging.info"
+    @title="tagging.info"
+    @action={{@toggleInfo}}
+    @ariaPressed={{if @active true false}}
+    @isLoading={{@loading}}
+    id="show-tag-info"
+    class="btn-default"
+  />
+</template>;
 
-  get canEditTags() {
-    return this.args.currentUser?.canEditTags;
-  }
-
-  @action
-  handleClick() {
-    this.router.transitionTo(
-      "tag.edit.tab",
-      this.args.tag.slug,
-      this.args.tag.id,
-      "general"
-    );
-  }
-
-  <template>
-    {{#if this.canEditTags}}
-      <DButton
-        @icon="wrench"
-        @ariaLabel="tagging.edit"
-        @title="tagging.edit"
-        @action={{this.handleClick}}
-        id="show-tag-info"
-        class="btn-default"
-      />
-    {{/if}}
-  </template>
-}
+export default TagInfoButton;

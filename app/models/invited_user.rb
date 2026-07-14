@@ -27,11 +27,11 @@ end
 # Table name: invited_users
 #
 #  id          :bigint           not null, primary key
-#  user_id     :integer
-#  invite_id   :integer          not null
 #  redeemed_at :datetime
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  invite_id   :integer          not null
+#  user_id     :integer
 #
 # Indexes
 #

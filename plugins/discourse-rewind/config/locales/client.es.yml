@@ -9,44 +9,50 @@ es:
     admin:
       site_settings:
         categories:
-          discourse_rewind: "Discourse Rebobina"
+          discourse_rewind: "Discourse Rewind"
   js:
     discourse_rewind:
-      placeholder: Discourse Rebobina
-      title: Rebobinar
+      placeholder: Discourse Rewind
+      title: Rewind
       loading: "Reticulando splines..."
-      viewing_other_user: "Estás viendo el informe de Discourse Rebobina de <strong>%{username}</strong> ."
+      viewing_other_user: "Estás viendo el informe de Discourse Rewind de <strong>%{username}</strong>."
       cannot_view_rewind: >
-        No puedes ver este reporte de Discourse Rebobina. Quizás su propietario no lo ha compartido públicamente? <br><br> $> _<br><br>
+        No puedes ver este informe de Discourse Rewind. ¿Quizás su propietario no lo ha compartido públicamente? <br><br> $> _<br><br>
       preferences:
-        enable_rewind: "Activa Discourse Rebobina. Esto muestra el resumen de actividades de fin de año en tu perfil y en tu avatar."
-        share_publicly: "Comparte el resumen de Discourse Rebobina con otros miembros del foro. Cualquier miembro del foro podrá ver tu resumen de Discourse Rebobina."
-        cannot_share_when_profile_hidden: "Para compartir Rebobina debes permitir que otros vean tu perfil público."
-      profile_link: "Mira tu Discourse Rebobina %{rewindYear}"
+        enable_rewind: "Activa Discourse Rewind. Esto muestra el resumen de actividades de fin de año en tu perfil y en tu avatar."
+        share_publicly: "Comparte el resumen de Discourse Rewind con otros miembros del foro. Cualquier miembro del foro podrá ver tu resumen de Discourse Rewind."
+        cannot_share_when_profile_hidden: "Para compartir el Rewind debes permitir que otros vean tu perfil público."
+      profile_link: "Mira tu Discourse Rewind de %{rewindYear}"
       share:
         toggle_label:
           private: "Privado"
           public: "Público"
-        confirm: "Asegúrate de revisar tu Rebobina antes de compartirla, ya que puede incluir datos de mensajes personales. Puedes volver a configurarlo como privado en cualquier momento."
+        confirm: "Asegúrate de revisar tu Rewind antes de compartirlo, ya que puede incluir datos de mensajes personales. Puedes volver a configurarlo como privado en cualquier momento."
         confirm_button:
           enable: "Hacer público"
           disable: "Mantener privado"
-        enabled_success: "Ahora puedes compartir tu Rebobina con otros miembros de la comunidad."
-        disabled_success: "Tu Rebobina ahora es privada."
+        enabled_success: "Ahora puedes compartir tu Rewind con otros miembros de la comunidad."
+        disabled_success: "Tu Rewind ahora es privado."
       reports:
         activity_calendar:
           title: Calendario de actividades
           cell_title:
-            visited_no_posts: "Visitaste y acechaste en %{date}, pero no hiciste ninguna publicación."
+            visited_no_posts: "Visitaste y echaste un vistazo en %{date}, pero no hiciste ninguna publicación."
+            visited_no_posts_others: "%{username} visitó y echó un vistazo el %{date}, pero no hizo ninguna publicación."
             visited_with_posts:
-              one: "Hiciste %{count} publicación en %{date}."
-              other: "Hiciste %{count} publicaciones en %{date}."
-            no_activity: "No estuviste por aquí en %{date}."
+              one: "Hiciste %{count} publicación el %{date}."
+              other: "Hiciste %{count} publicaciones el %{date}."
+            visited_with_posts_others:
+              one: "%{username} hizo %{count} publicación el %{date}."
+              other: "%{username} hicieron %{count} publicaciones el %{date}."
+            no_activity: "No estuviste por aquí el %{date}."
+            no_activity_others: "%{username} no estuvo por aquí el %{date}."
         top_words:
           title: Uso de palabras
         reading_time:
           title: Tiempo de lectura
           book_comparison: "¡Pasaste <code>%{readingTime}</code> leyendo nuestra comunidad! Ese es el tiempo que te llevaría leer <i>%{bookTitle}</i>"
+          book_comparison_others: "¡%{username} pasó <code>%{readingTime}</code> leyendo nuestra comunidad! Ese es el tiempo que te llevaría leer <i>%{bookTitle}</i>"
         post_used_reactions:
           title: Reacciones más utilizadas en los temas
           total_number: "Número total de reacciones: %{count}"
@@ -54,24 +60,37 @@ es:
           title: Reacciones más recibidas en temas
         fbff:
           title: Tu mejor amigo/a del foro
+          title_others: "El mejor amigo del foro de %{username}"
         most_viewed_categories:
           title:
             one: Tu categoría más vista
             other: Tus %{count} categorías más vistas
+          title_others:
+            one: "La categoría más vista de %{username}"
+            other: "Las %{count} categorías más vistas de %{username}"
         most_viewed_tags:
           title:
             one: Tu etiqueta más vista
             other: Tus %{count} etiquetas más vistas
+          title_others:
+            one: "La etiqueta más vista de %{username}"
+            other: "Las %{count} etiquetas más vistas de %{username}"
         best_topics:
           view_topic: Ver tema
           title:
             one: Tu mejor tema
             other: Tus %{count} mejores temas
+          title_others:
+            one: "El mejor tema de %{username}"
+            other: "Los %{count} mejores temas de %{username}"
         best_posts:
           view_post: Ver publicación
           title:
             one: Tu mejor publicación
             other: Tus %{count} mejores publicaciones
+          title_others:
+            one: "La mejor publicación de %{username}"
+            other: "Las %{count} mejores publicaciones de %{username}"
         ai_usage:
           title: Uso de IA
           total_requests: Total de solicitudes
@@ -80,7 +99,7 @@ es:
           favorite_features: Funciones más utilizadas
           favorite_models: Modelos de IA más utilizados
           wake_up: "Despierta, %{username}..."
-          system_title: "USO DE AI DETECTADO"
+          system_title: "USO DE IA DETECTADO"
           section_features: "CARACTERÍSTICAS PRINCIPALES"
           section_models: "MEJORES MODELOS"
         assignments:
@@ -94,22 +113,44 @@ es:
         chat_usage:
           title: Actividad del chat
           total_messages: Total de mensajes
+          dm_messages: Mensajes directos
+          unique_dm_channels: Conversaciones de mensajes directos
           reactions_received: Reacciones recibidas
           avg_message_length: Longitud media de los mensajes
           favorite_channels: Canales favoritos
           messages: mensajes
+          bot_name: XxRewindBotxX
           author: Tú
           author_others: "%{username}"
-          channel_title: "#actividad-en-el-chat"
+          channel_title: "#actividad-del-chat"
           status_online: "● en línea"
+          message_1:
+            one: "¡Has enviado <strong>%{count}</strong> mensaje este año!"
+            other: "¡Has enviado <strong>%{count}</strong> mensajes este año!"
           reply_1: "lol impresionante B-)"
+          message_2_MF: |
+            Tenías { dm_count, plural,
+                one {<strong>#</strong> conversación por MD}
+              other {<strong>#</strong> conversaciones por MD}
+            } con { channel_count, plural,
+                one {<strong>#</strong> persona o grupo}
+              other {<strong>#</strong> personas o grupos diferentes}
+            }.
           reply_2: "MOo0oLa :D"
+          message_3:
+            one: "¡A la gente le han encantado tus mensajes! Has recibido <strong>%{count}</strong> reacción ❤️"
+            other: "¡A la gente le han encantado tus mensajes! Has recibido <strong>%{count}</strong> reacciones ❤️"
+          reply_3: "r0fl rAwr 8-)"
           message_4: "La longitud media de tus mensajes fue de <strong>%{length}</strong> caracteres"
           message_5: "Tus canales favoritos:"
+          dancing_baby_alt: "Bebé bailarín"
         favorite_gifs:
           title:
             one: Tu GIF favorito
             other: Tus %{count} GIF favoritos
+          title_others:
+            one: "El GIF favorito de %{username}"
+            other: "Los %{count} GIF favoritos de %{username}"
           total_usage:
             one: Usado %{count} vez
             other: Usado %{count} veces en total
@@ -120,12 +161,14 @@ es:
           redemption_rate: Tasa de aceptación
           avg_trust_level: Nivel de confianza promedio
           invitee_impact: Impacto de tus invitados
+          invitee_impact_others: "Impacto de los invitados de %{username}"
           invitee_posts: Publicaciones creadas
           invitee_topics: Temas creados
           invitee_likes: Me gusta dados
           most_active_invitee: Invitado más activo
           guest_book_title: Libro de visitas
           guest_book_subtitle: Tus invitaciones a la comunidad
+          guest_book_subtitle_others: "Invitaciones a la comunidad de %{username}"
           label_invitations_sent: "Invitaciones enviadas:"
           label_guests_joined: "Invitaciones aceptadas:"
           label_acceptance_rate: "Tasa de aceptación:"
@@ -137,21 +180,26 @@ es:
         new_user_interactions:
           title: Mentorizando nuevos usuarios
           subtitle:
-            one: Has ayudado a %{count} nuevo usuario este año
-            other: Has ayudado a %{count} nuevos usuarios este año
+            one: Has ayudado a %{count} usuario nuevo este año
+            other: Has ayudado a %{count} usuarios nuevos este año
+          subtitle_others:
+            one: "%{username} ha ayudado a %{count} usuario nuevo este año"
+            other: "%{username} ha ayudado a %{count} usuarios nuevos este año"
           new_member:
-            one: "%{count} nuevo miembro"
-            other: "%{count} nuevos miembros"
+            one: "%{count} miembro nuevo"
+            other: "%{count} miembros nuevos"
           total_interactions: Total de interacciones
           unique_new_users: Nuevos usuarios únicos
           likes_given: Me gusta dados
           replies: Respuestas a las publicaciones
           mentions: Menciones
-          topics_with_new_users: Temas con nuevos usuarios
+          topics_with_new_users: Temas con usuarios nuevos
           contributions_helped: tus contribuciones ayudaron a
+          contributions_helped_others: "Las contribuciones de %{username} han ayudado a"
         time_of_day_activity:
           title: Ritmo de actividad diaria
           play_button: Reproduce tu actividad como sonido
+          play_button_others: "Reproducir la actividad de %{username} como sonido"
           stop_button: Detener la reproducción de audio
         writing_analysis:
           title: Análisis de escritura
@@ -164,7 +212,7 @@ es:
           release_info: Libera %{rewindYear} del CDCK
           total_words: Total de palabras
           total_posts: Total de publicaciones
-          avg_post_length: Longitud media de publicaciones
+          avg_post_length: Longitud media de las publicaciones
           readability_score_label: Puntuación de legibilidad
           readability_level: Nivel de legibilidad
           readability_score:

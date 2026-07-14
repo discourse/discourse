@@ -1,8 +1,8 @@
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
 import ModalJsonSchemaEditor from "discourse/components/modal/json-schema-editor";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 import BaseField from "./da-base-field";
 import DAFieldDescription from "./da-field-description";

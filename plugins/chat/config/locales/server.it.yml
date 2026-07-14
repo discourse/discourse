@@ -30,7 +30,6 @@ it:
     chat_editing_grace_period_max_diff_low_trust: "Numero massimo di modifiche ai caratteri consentite nel periodo di grazia per la modifica della chat, se ne vengono modificate di più, visualizza l'etichetta (modificato) accanto al messaggio di chat (livello di attendibilità 0 e 1)."
     chat_editing_grace_period_max_diff_high_trust: "Numero massimo di modifiche ai caratteri consentite nel periodo di grazia per la modifica della chat, se ne vengono modificate di più, visualizza l'etichetta (modificato) accanto al messaggio di chat (livello di attendibilità 2 e superiori)."
     chat_preferred_index: "Scheda preferita per il caricamento di /chat."
-    allow_chat_in_anonymous_mode: "Abilita questa impostazione per consentire agli utenti che navigano sul tuo sito in modo anonimo di utilizzare la chat. Questa impostazione richiede che l'opzione \"Consenti modalità anonima\" sia abilitata."
     errors:
       chat_default_channel: "Il canale di chat predefinito deve essere un canale pubblico."
       direct_message_enabled_groups_invalid: "Devi specificare almeno un gruppo per questa impostazione. Se non vuoi che nessuno al di fuori dello staff possa inviare messaggi diretti, scegli il gruppo dello staff."
@@ -211,10 +210,17 @@ it:
         other_type: "%{username} ha menzionato %{identifier} nella chat personale"
       new_chat_message: '%{username} ha inviato un messaggio in "%{channel}"'
       new_direct_chat_message: "%{username} ha inviato un messaggio nella chat personale"
+    actions:
+      chat_reply:
+        title: Rispondi
   discourse_automation:
     scriptables:
       send_chat_message:
         title: Invia messaggio di chat
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Approva"
+      default_deny_label: "Nega"
   reviewable_score_types:
     needs_review:
       title: "Necessita di revisione"

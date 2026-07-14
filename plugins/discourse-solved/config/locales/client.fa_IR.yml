@@ -5,6 +5,25 @@
 # https://translate.discourse.org/
 
 fa_IR:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "راه حل مورد قبول"
+        sections:
+          support:
+            filter:
+              all_categories: "همه‌ی دسته‌بندی‌ها"
+            answerers:
+              staff: "همکاران"
+              member: "اعضاء"
+              basic: "پایه‌ای"
+            response_time:
+              buckets:
+                lt_1h: "< ۱ ساعت"
+                gt_24h: "> ۲۴ ساعت"
   js:
     notifications:
       alt:
@@ -32,6 +51,8 @@ fa_IR:
       move_post_cancel: "لغو"
       confirm_solved_removal_confirm: "تایید"
       confirm_solved_removal_cancel: "لغو"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "نوشته شما به عنوان راه حل مشخص شد"

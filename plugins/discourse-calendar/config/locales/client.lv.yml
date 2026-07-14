@@ -40,6 +40,13 @@ lv:
               title: "Publisks"
             private:
               title: "Privāts"
+      composer:
+        reminder:
+          units:
+            days:
+              zero: "dienas"
+              one: "diena"
+              other: "dienas"
       builder_modal:
         custom_fields:
           placeholder: "Pēc izvēles"
@@ -59,14 +66,12 @@ lv:
           label: "Atkārtošanās"
           none: "Bez atkārtošanās"
           every_day: "Katru dienu"
-        url:
-          label: "URL"
-          placeholder: "Pēc izvēles"
-        location:
-          label: "Atrašanās vieta"
+        attendance:
+          none: "Nav"
         description:
           label: "Apraksts"
-        status:
-          label: "Statuss"
+        event_type:
+          public:
+            title: "Publisks"
       invite_user_or_group:
         invite: "Sūtīt"

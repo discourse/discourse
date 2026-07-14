@@ -8,11 +8,11 @@ end
 #
 # Table name: user_search_data
 #
-#  user_id     :integer          not null, primary key
-#  search_data :tsvector
-#  raw_data    :text
 #  locale      :text
+#  raw_data    :text
+#  search_data :tsvector
 #  version     :integer          default(0)
+#  user_id     :integer          not null, primary key
 #
 # Indexes
 #

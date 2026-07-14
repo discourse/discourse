@@ -18,6 +18,7 @@ export function defaultRenderTag(tag, params) {
   const tagName = typeof tag === "string" ? tag : tag.name;
   const visibleName = escapeExpression(tagName);
   const tagNameLower = visibleName.toLowerCase();
+  const tagPathName = tagNameLower.replaceAll(".", "%2E");
 
   const classes = ["discourse-tag"];
   const htmlTag = params.tagName || "a";
@@ -28,12 +29,12 @@ export function defaultRenderTag(tag, params) {
       const username = params.tagsForUser
         ? params.tagsForUser
         : User.current().username;
-      path = `/u/${username}/messages/tags/${tagNameLower}`;
+      path = `/u/${username}/messages/tags/${tagPathName}`;
     } else if (typeof tag === "object" && tag.id) {
       const slugForUrl = tag.slug || `${tag.id}-tag`;
       path = `/tag/${slugForUrl}/${tag.id}`;
     } else {
-      path = `/tag/${tagNameLower}`;
+      path = `/tag/${tagPathName}`;
     }
   }
   const href = path ? ` href='${getURL(path)}' ` : "";

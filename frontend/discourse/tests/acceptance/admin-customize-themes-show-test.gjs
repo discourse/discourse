@@ -67,6 +67,50 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
             child_themes: [],
             parent_themes: [],
             remote_theme: null,
+            translations: [
+              {
+                key: "theme_metadata.description",
+                value: "The classic Discourse theme...",
+                default: "The classic Discourse theme...",
+              },
+            ],
+          },
+          {
+            id: 42,
+            name: "Git theme",
+            created_at: "2025-06-11T23:50:31.187Z",
+            updated_at: "2025-06-12T03:09:26.162Z",
+            default: false,
+            component: false,
+            user_selectable: false,
+            auto_update: false,
+            remote_theme_id: 42,
+            settings: [],
+            supported: true,
+            enabled: true,
+            theme_fields: [],
+            system: false,
+            color_scheme: null,
+            user: {
+              id: -1,
+              username: "system",
+              name: "system",
+              avatar_template: "/images/discourse-logo-sketch-small.png",
+              title: null,
+            },
+            child_themes: [],
+            parent_themes: [],
+            remote_theme: {
+              id: 42,
+              remote_url: "https://github.com/example/theme.git",
+              remote_version: "def456",
+              local_version: "abc123",
+              commits_behind: 2,
+              branch: "main",
+              is_git: true,
+              local_compat_ref: "d-compat/2026.5",
+              remote_compat_ref: "d-compat/2026.5",
+            },
             translations: [],
           },
         ],
@@ -104,5 +148,40 @@ acceptance("Admin - Customize - Themes - Show", function (needs) {
       .hasText(
         "This is a custom element that replaces the included components setting."
       );
+  });
+
+  test("admin-customize-theme-translation-selector plugin outlet exposes the theme", async function (assert) {
+    withPluginApi((api) => {
+      api.renderInOutlet(
+        "admin-customize-theme-translation-selector",
+        <template>
+          <span class="theme-translation-outlet-test">
+            theme:{{@outletArgs.theme.id}}
+          </span>
+        </template>
+      );
+    });
+
+    await visit("/admin/customize/themes/-1");
+    assert
+      .dom(".translation-selector-container .theme-translation-outlet-test")
+      .hasText(
+        "theme:-1",
+        "the theme id is exposed via outletArgs on the translation selector outlet"
+      );
+  });
+
+  test("shows the compatibility-pinned ref for the pending update", async function (assert) {
+    await visit("/admin/customize/themes/42");
+
+    assert
+      .dom(".status-message")
+      .includesText(
+        "Theme is 2 commits behind d-compat/2026.5",
+        "the compat ref is interpolated into the commits-behind message"
+      );
+    assert
+      .dom(".status-message code")
+      .hasText("d-compat/2026.5", "the ref is rendered inside a code tag");
   });
 });

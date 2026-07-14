@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class SafeModeButton extends Component {
@@ -24,13 +24,13 @@ export default class SafeModeButton extends Component {
   <template>
     <button
       title={{i18n "dev_tools.toggle_safe_mode"}}
-      class={{concatClass
+      class={{dConcatClass
         "toggle-safe-mode"
         (if this.safeModeActive "--active")
       }}
       {{on "click" this.toggleSafeMode}}
     >
-      {{icon "truck-medical"}}
+      {{dIcon "truck-medical"}}
     </button>
   </template>
 }

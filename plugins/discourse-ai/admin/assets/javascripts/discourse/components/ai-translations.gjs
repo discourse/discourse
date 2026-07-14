@@ -7,13 +7,17 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
 import Chart from "discourse/admin/components/chart";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import Category from "discourse/models/category";
+import CategorySelector from "discourse/select-kit/components/category-selector";
+import ComboBox from "discourse/select-kit/components/combo-box";
 import MultiSelect from "discourse/select-kit/components/multi-select";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AiTranslations extends Component {
@@ -23,9 +27,10 @@ export default class AiTranslations extends Component {
   @service site;
   @service siteSettings;
 
-  @tracked data = this.args.model?.translation_progress;
-  @tracked done = this.args.model?.posts_with_detected_locale;
-  @tracked total = this.args.model?.total;
+  @tracked data = null;
+  @tracked done = null;
+  @tracked total = null;
+  @tracked loadingProgress = false;
   @tracked
   translationEnabled =
     this.args.model?.translation_enabled &&
@@ -40,14 +45,46 @@ export default class AiTranslations extends Component {
     ? this.siteSettings.content_localization_supported_locales.split("|")
     : [];
   @tracked isSavingLocales = false;
+  @tracked isSavingCategories = false;
   @tracked isTogglingTranslation = false;
-  @tracked hourlyRate = this.args.model?.hourly_rate || 0;
   @tracked creditStatus = null;
   @tracked creditCheckComplete = false;
+  @tracked categoryScope = this.args.model?.category_scope || "public";
+  @tracked originalCategoryScope = this.args.model?.category_scope || "public";
+  @tracked categories = [];
+  @tracked originalCategoryIds = this.args.model?.category_ids || [];
+  hourlyRate = this.args.model?.hourly_rate || 0;
 
   constructor() {
     super(...arguments);
     this._checkCredits();
+    this._loadCategories();
+    if (this.enabled) {
+      this._loadProgress();
+    }
+  }
+
+  async _loadCategories() {
+    const ids = this.args.model?.category_ids || [];
+    if (ids.length) {
+      this.categories = await Category.asyncFindByIds(ids);
+    }
+  }
+
+  async _loadProgress() {
+    this.loadingProgress = true;
+    try {
+      const response = await ajax(
+        "/admin/plugins/discourse-ai/ai-translations/progress.json"
+      );
+      this.data = response.translation_progress;
+      this.total = response.total;
+      this.done = response.posts_with_detected_locale;
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.loadingProgress = false;
+    }
   }
 
   async _checkCredits() {
@@ -90,14 +127,37 @@ export default class AiTranslations extends Component {
   }
 
   get showLocaleSelector() {
-    const noLocales =
-      this.args.model?.no_locales_configured ||
-      this.originalLocales.length === 0;
-    return noLocales && !this.translationEnabled;
+    return !this.translationEnabled;
   }
 
-  get showLocalizationSettingsButton() {
-    return this.enabled || !this.showLocaleSelector;
+  get categoriesChanged() {
+    const current = [...this.categories.map((category) => category.id)]
+      .sort()
+      .join("|");
+    const original = [...this.originalCategoryIds].sort().join("|");
+    return (
+      this.categoryScope !== this.originalCategoryScope || current !== original
+    );
+  }
+
+  get categoryScopeOptions() {
+    return [
+      "all",
+      "public",
+      "include",
+      "include_strict",
+      "exclude",
+      "exclude_strict",
+    ].map((value) => ({
+      value,
+      name: i18n(`category_scope.${value}`),
+    }));
+  }
+
+  get showCategorySelector() {
+    return ["include", "include_strict", "exclude", "exclude_strict"].includes(
+      this.categoryScope
+    );
   }
 
   get isToggleDisabled() {
@@ -185,6 +245,51 @@ export default class AiTranslations extends Component {
   }
 
   @action
+  updateCategoryScope(scope) {
+    this.categoryScope = scope;
+  }
+
+  @action
+  updateCategories(categories) {
+    this.categories = categories;
+  }
+
+  @action
+  async saveCategories() {
+    this.isSavingCategories = true;
+    try {
+      const ids = this.categories.map((category) => category.id);
+      await ajax("/admin/site_settings/bulk_update", {
+        type: "PUT",
+        data: {
+          settings: {
+            ai_translation_category_scope: { value: this.categoryScope },
+            ai_translation_categories: { value: ids.join("|") },
+          },
+        },
+      });
+      this.originalCategoryScope = this.categoryScope;
+      this.originalCategoryIds = ids;
+    } catch (e) {
+      popupAjaxError(e);
+    } finally {
+      this.isSavingCategories = false;
+    }
+  }
+
+  @action
+  async cancelCategories() {
+    this.categoryScope = this.originalCategoryScope;
+    this.categories = await Category.asyncFindByIds(this.originalCategoryIds);
+  }
+
+  @action
+  resetCategories() {
+    this.categoryScope = "public";
+    this.categories = [];
+  }
+
+  @action
   async toggleTranslationEnabled() {
     if (this.isTogglingTranslation) {
       return;
@@ -210,16 +315,8 @@ export default class AiTranslations extends Component {
       this.translationEnabled = !this.translationEnabled;
 
       if (this.translationEnabled && !this.args.model.no_locales_configured) {
-        const response = await ajax(
-          "/admin/plugins/discourse-ai/ai-translations"
-        );
-        if (response.enabled) {
-          this.data = response.translation_progress;
-          this.total = response.total;
-          this.done = response.posts_with_detected_locale;
-          this.enabled = response.enabled;
-          this.hourlyRate = response.hourly_rate || 0;
-        }
+        this.enabled = true;
+        this._loadProgress();
       } else {
         this.enabled = false;
       }
@@ -439,27 +536,23 @@ export default class AiTranslations extends Component {
         @learnMoreUrl="https://meta.discourse.org/t/-/370969"
       >
         <:actions as |actions|>
-          {{#if this.enabled}}
-            <actions.Default
-              @label="discourse_ai.translations.admin_actions.translation_settings"
-              @route="adminPlugins.show.discourse-ai-features.edit"
-              @routeModels={{@model.translation_id}}
-              class="ai-translation-settings-button"
-            />
-          {{/if}}
-          {{#if this.showLocalizationSettingsButton}}
-            <actions.Default
-              @label="discourse_ai.translations.admin_actions.localization_settings"
-              @route="adminConfig.localization.settings"
-              class="ai-localization-settings-button"
-            />
-          {{/if}}
+          <actions.Default
+            @label="discourse_ai.translations.admin_actions.translation_settings"
+            @route="adminPlugins.show.discourse-ai-features.edit"
+            @routeModels={{@model.translation_id}}
+            class="ai-translation-settings-button"
+          />
+          <actions.Default
+            @label="discourse_ai.translations.admin_actions.localization_settings"
+            @route="adminConfig.localization.settings"
+            class="ai-localization-settings-button"
+          />
         </:actions>
       </DPageSubheader>
 
       {{#if this.creditLimitReached}}
         <div class="alert alert-warning ai-translations__credit-warning">
-          {{icon "triangle-exclamation"}}
+          {{dIcon "triangle-exclamation"}}
           <span>{{this.creditLimitWarningMessage}}</span>
         </div>
       {{/if}}
@@ -514,6 +607,89 @@ export default class AiTranslations extends Component {
                   }}</div>
               </div>
             </div>
+            <div class="setting">
+              <div class="setting-label">
+                <label>{{i18n
+                    "discourse_ai.translations.category_scope"
+                  }}</label>
+              </div>
+              <div class="setting-value">
+                <div class="ai-translations__category-input-row">
+                  <div class="ai-translations__category-scope-row">
+                    <ComboBox
+                      @value={{this.categoryScope}}
+                      @content={{this.categoryScopeOptions}}
+                      @onChange={{this.updateCategoryScope}}
+                      @valueProperty="value"
+                      @nameProperty="name"
+                    />
+                    {{#unless this.showCategorySelector}}
+                      {{#if this.categoriesChanged}}
+                        <div class="setting-controls">
+                          <DButton
+                            @action={{this.saveCategories}}
+                            @icon="check"
+                            @isLoading={{this.isSavingCategories}}
+                            @ariaLabel="save"
+                            class="ok setting-controls__ok"
+                          />
+                          <DButton
+                            @action={{this.cancelCategories}}
+                            @icon="xmark"
+                            @isLoading={{this.isSavingCategories}}
+                            @ariaLabel="cancel"
+                            class="cancel setting-controls__cancel"
+                          />
+                        </div>
+                      {{else if this.categories.length}}
+                        <DButton
+                          @action={{this.resetCategories}}
+                          @icon="arrow-rotate-left"
+                          @label="admin.settings.reset"
+                          class="undo setting-controls__undo"
+                        />
+                      {{/if}}
+                    {{/unless}}
+                  </div>
+                  {{#if this.showCategorySelector}}
+                    <div class="ai-translations__category-selector-row">
+                      <CategorySelector
+                        @categories={{this.categories}}
+                        @onChange={{this.updateCategories}}
+                      />
+                      {{#if this.categoriesChanged}}
+                        <div class="setting-controls">
+                          <DButton
+                            @action={{this.saveCategories}}
+                            @icon="check"
+                            @isLoading={{this.isSavingCategories}}
+                            @ariaLabel="save"
+                            class="ok setting-controls__ok"
+                          />
+                          <DButton
+                            @action={{this.cancelCategories}}
+                            @icon="xmark"
+                            @isLoading={{this.isSavingCategories}}
+                            @ariaLabel="cancel"
+                            class="cancel setting-controls__cancel"
+                          />
+                        </div>
+                      {{else if this.categories.length}}
+                        <DButton
+                          @action={{this.resetCategories}}
+                          @icon="arrow-rotate-left"
+                          @label="admin.settings.reset"
+                          class="undo setting-controls__undo"
+                        />
+                      {{/if}}
+                    </div>
+                  {{/if}}
+                </div>
+                <div class="desc">{{i18n
+                    "discourse_ai.translations.category_scope_description"
+                  }}</div>
+              </div>
+            </div>
           </div>
         </div>
       {{/if}}
@@ -528,30 +704,33 @@ export default class AiTranslations extends Component {
       </div>
 
       {{#if this.enabled}}
-        <AdminConfigAreaCard class="ai-translations__charts">
-          <:header>
-            {{i18n "discourse_ai.translations.progress_chart.title"}}
-          </:header>
-          <:content>
-            <div class="ai-translations__stats-container">
-              {{#if this.backfillStatusMessage}}
-                <div class="ai-translations__stat-item">
-                  <span class="ai-translations__stat-label">
-                    {{this.backfillStatusMessage}}
-                  </span>
+        <DConditionalLoadingSpinner @condition={{this.loadingProgress}}>
+          {{#if this.data}}
+            <AdminConfigAreaCard class="ai-translations__charts">
+              <:header>
+                {{i18n "discourse_ai.translations.progress_chart.title"}}
+              </:header>
+              <:content>
+                <div class="ai-translations__stats-container">
+                  {{#if this.backfillStatusMessage}}
+                    <div class="ai-translations__stat-item">
+                      <span class="ai-translations__stat-label">
+                        {{this.backfillStatusMessage}}
+                      </span>
+                    </div>
+                  {{/if}}
                 </div>
-              {{/if}}
-            </div>
-            <div class="ai-translations__chart-container">
-              <Chart
-                @chartConfig={{this.chartConfig}}
-                @loadChartDataLabelsPlugin={{true}}
-                class="ai-translations__chart"
-              />
-            </div>
-          </:content>
-        </AdminConfigAreaCard>
-
+                <div class="ai-translations__chart-container">
+                  <Chart
+                    @chartConfig={{this.chartConfig}}
+                    @loadChartDataLabelsPlugin={{true}}
+                    class="ai-translations__chart"
+                  />
+                </div>
+              </:content>
+            </AdminConfigAreaCard>
+          {{/if}}
+        </DConditionalLoadingSpinner>
       {{/if}}
 
     </div>

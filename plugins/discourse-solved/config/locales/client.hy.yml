@@ -5,6 +5,25 @@
 # https://translate.discourse.org/
 
 hy:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Ընդունված լուծումներ"
+        sections:
+          support:
+            filter:
+              all_categories: "Բոլոր կատեգորիաները"
+            answerers:
+              staff: "Անձնակազմ"
+              member: "Անդամներ"
+              basic: "Հիմնական"
+            response_time:
+              buckets:
+                lt_1h: "< 1 ժամով"
+                gt_24h: "> Վերջին 24 ժամվա"
   js:
     notifications:
       alt:
@@ -30,6 +49,8 @@ hy:
       move_post_cancel: "Չեղարկել"
       confirm_solved_removal_confirm: "Հաստատել"
       confirm_solved_removal_cancel: "Չեղարկել"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
     topic_statuses:
       solved:
         help: "Այս թեման ունի լուծում:"

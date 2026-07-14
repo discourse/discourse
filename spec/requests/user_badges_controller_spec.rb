@@ -47,6 +47,36 @@ RSpec.describe UserBadgesController do
       get "/user_badges.json"
       expect(response.status).to eq(400)
     end
+
+    it "returns not found for hidden new user profiles" do
+      hidden_user = Fabricate(:trust_level_0)
+      hidden_user.user_stat.update!(post_count: 1)
+      Fabricate(:user_badge, user: hidden_user, badge: badge)
+
+      get "/user_badges.json", params: { badge_id: badge.id, username: hidden_user.username }
+
+      expect(response.status).to eq(404)
+      expect(response.body).not_to include(hidden_user.username)
+    end
+
+    it "returns badges for visible inactive profiles" do
+      inactive_user = Fabricate(:user, active: false)
+      inactive_user.user_stat.update!(post_count: 1)
+      Fabricate(:user_badge, user: inactive_user, badge: badge)
+
+      get "/user_badges.json", params: { badge_id: badge.id, username: inactive_user.username }
+
+      expect(response.status).to eq(200)
+
+      parsed_body = response.parsed_body
+      aggregate_failures do
+        expect(parsed_body["user_badge_info"]["grant_count"]).to eq(1)
+        expect(parsed_body["user_badge_info"]["username"]).to eq(inactive_user.username)
+        expect(parsed_body["user_badge_info"]["user_badges"].first["user_id"]).to eq(
+          inactive_user.id,
+        )
+      end
+    end
   end
 
   describe "#show" do
@@ -312,6 +342,26 @@ RSpec.describe UserBadgesController do
            }
 
       expect(response.status).to eq(200)
+    end
+
+    it "grants badge when a nested-view post link is given in reason" do
+      post = create_post
+      topic = post.topic
+      nested_url = "#{Discourse.base_url}/n/#{topic.slug}/#{topic.id}/#{post.post_number}"
+
+      sign_in(admin)
+
+      post "/user_badges.json",
+           params: {
+             badge_id: badge.id,
+             username: user.username,
+             reason: nested_url,
+           }
+
+      expect(response.status).to eq(200)
+      expect(UserBadge.exists?(badge_id: badge.id, post_id: post.id, granted_by: admin.id)).to eq(
+        true,
+      )
     end
 
     describe "with relative_url_root" do

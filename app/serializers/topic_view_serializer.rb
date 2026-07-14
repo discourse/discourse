@@ -78,8 +78,8 @@ class TopicViewSerializer < ApplicationSerializer
     :user_last_posted_at,
     :is_shared_draft,
     :slow_mode_enabled_until,
-    :has_localized_content,
     :can_localize_topic,
+    :is_nested_view,
   )
 
   has_one :details, serializer: TopicViewDetailsSerializer, root: false, embed: :objects
@@ -320,22 +320,19 @@ class TopicViewSerializer < ApplicationSerializer
     object.topic.visibility_reason_id.present?
   end
 
-  def has_localized_content
-    topic_has_localization = !object.topic.in_user_locale? && object.topic.has_localization?
-    return true if topic_has_localization
-
-    object.posts.any? { |post| !post.in_user_locale? && post.has_localization? }
-  end
-
-  def include_has_localized_content?
-    SiteSetting.content_localization_enabled
-  end
-
   def can_localize_topic
     true
   end
 
   def include_can_localize_topic?
     SiteSetting.content_localization_enabled && scope.can_localize_topic?(object.topic)
+  end
+
+  def is_nested_view
+    true
+  end
+
+  def include_is_nested_view?
+    object.topic.nested_view?
   end
 end

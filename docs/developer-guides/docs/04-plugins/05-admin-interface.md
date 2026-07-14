@@ -10,7 +10,7 @@ Previous tutorial: https://meta.discourse.org/t/developing-discourse-plugins-par
 
 Sometimes [site settings](https://meta.discourse.org/t/beginners-guide-to-creating-discourse-plugins-part-3-custom-settings/31115) aren't enough of an admin interface for your plugin to work the way you want. For example, if you install the [discourse-akismet](https://github.com/discourse/discourse-akismet) plugin, you might have noticed that it adds a navigation item to the admin plugins section in of your Discourse:
 
-<img src="//assets-meta-cdck-prod-meta.s3.dualstack.us-west-1.amazonaws.com/original/3X/2/c/2c42d190a226fcc85a017ab802c0eaafc872a4f7.png" width="690" height="169">
+![Akismet navigation item in the admin plugins section|690x169](/assets/admin-interface-1.png)
 
 In this tutorial we'll show you how to add an admin interface for your plugin. I'm going to call my plugin purple-tentacle, in honor of [one of my favorite computer games](https://en.wikipedia.org/wiki/Day_of_the_Tentacle). Seriously, **[I really love that game](https://twitter.com/eviltrout/status/627119973773746176)**!
 
@@ -42,23 +42,27 @@ The lines below that set up the server side mapping of routes for our plugin. On
 
 Next, we'll add a template that will be displayed when the user visits the `/admin/plugins/purple-tentacle` path. It will just be a button that shows an animated gif of purple tentacle when the user clicks a button:
 
-**`assets/javascripts/discourse/templates/admin/plugins-purple-tentacle.hbs`**
+**`assets/javascripts/discourse/templates/admin/plugins-purple-tentacle.gjs`**
 
-```hbs
-{{#if tentacleVisible}}
-  <div class="tentacle">
-    <img src="https://eviltrout.com/images/tentacle.gif" />
+```gjs
+import DButton from "discourse/components/d-button";
+
+<template>
+  {{#if @controller.tentacleVisible}}
+    <div class="tentacle">
+      <img src="https://eviltrout.com/images/tentacle.gif" />
+    </div>
+  {{/if}}
+
+  <div class="buttons">
+    <DButton
+      @label="purple_tentacle.show"
+      @action={{@controller.showTentacle}}
+      @icon="eye"
+      @id="show-tentacle"
+    />
   </div>
-{{/if}}
-
-<div class="buttons">
-  <DButton
-    @label="purple_tentacle.show"
-    @action={{action "showTentacle"}}
-    @icon="eye"
-    @id="show-tentacle"
-  />
-</div>
+</template>
 ```
 
 If you've learned the basics of handlebars the template should be pretty simple to understand. The `<DButton />` is a component in Discourse we use for showing a button with a label and icon.
@@ -77,7 +81,7 @@ export default {
 };
 ```
 
-A route map is something we added to discourse to make it so that plugins could add routes to the ember application. The syntax within `map()` is very similar to [Ember's router](https://guides.emberjs.com/v3.28.0/routing/defining-your-routes/). In this case our route map is very simple, it just declares one route called `purple-tentacle` under `/admin/plugins`.
+A route map is something we added to discourse to make it so that plugins could add routes to the ember application. The syntax within `map()` is very similar to [Ember's router](https://guides.emberjs.com/release/routing/defining-your-routes/). In this case our route map is very simple, it just declares one route called `purple-tentacle` under `/admin/plugins`.
 
 Finally, let's add our translation strings:
 
@@ -93,7 +97,7 @@ en:
 
 If you restart your development server, you should be able to visit `/admin/plugins` and you'll see our link! If you click it, you'll see the button to show our purple tentacle:
 
-<img src="//assets-meta-cdck-prod-meta.s3.dualstack.us-west-1.amazonaws.com/original/3X/a/f/af2b79ca2649408553da39caf473d6715de99734.png" width="690" height="167">
+![Purple tentacle plugin page with its show button|690x167](/assets/admin-interface-2.png)
 
 Unfortunately, when you click the button, nothing happens :(
 
@@ -103,12 +107,12 @@ If you look at your developer console, you should see an error that provides a c
 Uncaught Error: Nothing handled the action 'showTentacle'`
 ```
 
-Ah yes, the reason is in our handlebars template we are depending on a couple of things:
+Ah yes, the reason is in our template we are depending on a couple of things:
 
-1. That when the user clicks the button, `showTentacle` will be called.
+1. That when the user clicks the button, `showTentacle` will be called on the controller.
 2. `showTentacle` should set the property `tentacleVisible` to `true` so that the image shows up.
 
-If you haven't read the [Ember Guides on Controllers](https://guides.emberjs.com/v3.28.0/routing/controllers/) now is a good time to do so, because we'll implement a controller for our `purple-tentacle` template that will handle this logic.
+If you haven't read the [Ember Guides on Controllers](https://guides.emberjs.com/release/routing/controllers/) now is a good time to do so, because we'll implement a controller for our `purple-tentacle` template that will handle this logic.
 
 Create the following file:
 
@@ -131,7 +135,7 @@ export default class AdminPluginsPurpleTentacleController extends Controller {
 
 And now when we refresh our page, clicking the button shows our animated character!
 
-<img src="//assets-meta-cdck-prod-meta.s3.dualstack.us-west-1.amazonaws.com/original/3X/0/9/09dd726aea99bdb4783f785d0e8f611713b622be.png" width="647" height="462">
+![Animated purple tentacle shown after clicking the button|647x462](/assets/admin-interface-3.png)
 
 I'll leave it as an extra exercise to the reader to add a button that hides the tentacle when clicked :smile:
 

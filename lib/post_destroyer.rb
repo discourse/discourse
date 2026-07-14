@@ -46,14 +46,14 @@ class PostDestroyer
       .find_each { |post| PostDestroyer.new(Discourse.system_user, post, context: context).destroy }
   end
 
-  def self.delete_with_replies(performed_by, post, reviewable = nil, defer_reply_flags: true)
+  def self.delete_with_replies(performed_by, post, reviewable_id = nil, defer_reply_flags: true)
     reply_ids = post.reply_ids(Guardian.new(performed_by), only_replies_to_single_post: false)
     replies = Post.where(id: reply_ids.map { |r| r[:id] })
-    PostDestroyer.new(performed_by, post, reviewable: reviewable).destroy
+    PostDestroyer.new(performed_by, post, reviewable_id: reviewable_id).destroy
 
     options = { defer_flags: defer_reply_flags }
     if SiteSetting.notify_users_after_responses_deleted_on_flagged_post
-      options.merge!({ reviewable: reviewable, notify_responders: true, parent_post: post })
+      options.merge!({ reviewable_id: reviewable_id, notify_responders: true, parent_post: post })
     end
     replies.each { |reply| PostDestroyer.new(performed_by, reply, options).destroy }
   end
@@ -83,6 +83,8 @@ class PostDestroyer
     elsif @user.id == @post.user_id
       mark_for_deletion(delete_removed_posts_after)
     end
+
+    resolve_reviewables_for_author_deletion if @user.id == @post.user_id
 
     UserActionManager.post_destroyed(@post)
 
@@ -134,6 +136,7 @@ class PostDestroyer
     if @post.is_first_post?
       UserActionManager.topic_created(@topic)
       DiscourseEvent.trigger(:topic_recovered, @topic, @user)
+
       if @user.id != @post.user_id
         StaffActionLogger.new(@user).log_topic_delete_recover(
           @topic,
@@ -141,9 +144,12 @@ class PostDestroyer
           @opts.slice(:context),
         )
       end
+
       if SiteSetting.tos_topic_id == @topic.id || SiteSetting.privacy_topic_id == @topic.id
         Discourse.clear_urls!
       end
+    else
+      StaffActionLogger.new(@user).log_post_recover(@post) if @user.id != @post.user_id
     end
   end
 
@@ -203,16 +209,18 @@ class PostDestroyer
       remove_associated_notifications
 
       if @user.id != @post.user_id && !@opts[:skip_staff_log]
+        logger = StaffActionLogger.new(@user)
+
         if @post.topic && @post.is_first_post?
-          StaffActionLogger.new(@user).log_topic_delete_recover(
+          logger.log_topic_delete_recover(
             @post.topic,
             permanent? ? "delete_topic_permanently" : "delete_topic",
-            @opts.slice(:context),
+            @opts.slice(:context, :reviewable_id),
           )
         else
-          StaffActionLogger.new(@user).log_post_deletion(
+          logger.log_post_deletion(
             @post,
-            **@opts.slice(:context),
+            **@opts.slice(:context, :reviewable_id),
             permanent: permanent?,
           )
         end
@@ -278,7 +286,6 @@ class PostDestroyer
         @post.update_column(:user_deleted, true)
         @post.topic_links.each(&:destroy)
         @post.topic.update_column(:closed, true) if @post.is_first_post?
-        resolve_reviewables_for_author_deletion
       end
     end
   end
@@ -327,7 +334,7 @@ class PostDestroyer
         .select(:created_at, :user_id, :post_number)
         .where("topic_id = ? and id <> ?", @post.topic_id, @post.id)
         .where.not(user_id: nil)
-        .where.not(post_type: Post.types[:whisper])
+        .where.not(post_type: [Post.types[:whisper], Post.types[:small_action]])
         .order("created_at desc")
         .first
 
@@ -389,7 +396,7 @@ class PostDestroyer
   end
 
   def handle_reviewable_after_deletion
-    if @opts[:reviewable]
+    if @opts[:reviewable_id]
       handle_explicit_reviewable
     elsif @post.reviewable_flag
       handle_post_reviewable_flag
@@ -397,8 +404,11 @@ class PostDestroyer
   end
 
   def handle_explicit_reviewable
+    reviewable = Reviewable.find_by(id: @opts[:reviewable_id])
+    return unless reviewable
+
     notify_deletion(
-      @opts[:reviewable],
+      reviewable,
       { notify_responders: @opts[:notify_responders], parent_post: @opts[:parent_post] },
     )
 

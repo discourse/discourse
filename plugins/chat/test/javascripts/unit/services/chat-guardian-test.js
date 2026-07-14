@@ -4,7 +4,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-acceptance("Discourse Chat | Unit | Service | chat-guardian", function (needs) {
+acceptance("Unit | Service | chat-guardian", function (needs) {
   needs.hooks.beforeEach(function () {
     Object.defineProperty(this, "chatGuardian", {
       get: () => this.container.lookup("service:chat-guardian"),

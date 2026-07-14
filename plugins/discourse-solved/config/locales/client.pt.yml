@@ -5,6 +5,25 @@
 # https://translate.discourse.org/
 
 pt:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Soluções aceites"
+        sections:
+          support:
+            filter:
+              all_categories: "Todas as categorias"
+            answerers:
+              staff: "Pessoal"
+              member: "Membros"
+              basic: "Básico"
+            response_time:
+              buckets:
+                lt_1h: "< 1 hora"
+                gt_24h: "> 24 horas"
   js:
     notifications:
       alt:
@@ -31,6 +50,8 @@ pt:
       move_post_cancel: "Cancelar"
       confirm_solved_removal_confirm: "Confirmar"
       confirm_solved_removal_cancel: "Cancelar"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
     topic_statuses:
       solved:

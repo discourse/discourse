@@ -16,7 +16,7 @@ module DiscourseAi
         end
 
         def max_prompt_tokens
-          buffer = (opts[:max_tokens] || 2500) + 50
+          buffer = (opts[:reserved_output_tokens] || opts[:max_tokens] || 2500) + 50
 
           if tools.present?
             @function_size ||= llm_model.tokenizer_class.size(tools.to_json.to_s)
@@ -28,6 +28,12 @@ module DiscourseAi
 
         def translate
           hoist_reasoning(super)
+        end
+
+        def native_tools
+          return [] unless prompt.native_tool?(DiscourseAi::Completions::NativeTools::WEB_SEARCH)
+
+          [{ type: "web_search" }]
         end
 
         private
@@ -56,6 +62,10 @@ module DiscourseAi
         end
 
         def model_msg(msg)
+          if (output_items = open_ai_response_output_items(msg)).present?
+            return output_items.deep_dup
+          end
+
           message_for_role("assistant", msg)
         end
 
@@ -97,7 +107,7 @@ module DiscourseAi
           content_array =
             to_encoded_content_array(
               content: content_array.flatten,
-              upload_encoder: ->(details) { upload_node(details) },
+              upload_encoder: ->(details) { upload_node(details, role) },
               text_encoder: ->(text) { text_node(text, role) },
               other_encoder: ->(hash) { thinking_signature_node(hash) },
               allow_images:,
@@ -138,14 +148,21 @@ module DiscourseAi
         def open_ai_reasoning_data(message)
           info = message[:thinking_provider_info]
           return if info.blank?
-          info[:open_ai_responses] || info["open_ai_responses"]
+
+          info.deep_symbolize_keys[:open_ai_responses]
+        end
+
+        def open_ai_response_output_items(message)
+          open_ai_reasoning_data(message)&.dig(:output_items)
         end
 
         def text_node(text, role)
           { type: role == "user" ? "input_text" : "output_text", text: text }
         end
 
-        def upload_node(details)
+        def upload_node(details, role)
+          return text_node(details[:text], role) if details[:text].present?
+
           if details[:mime_type] == "application/pdf" || details[:kind] == :document
             file_node(details)
           else

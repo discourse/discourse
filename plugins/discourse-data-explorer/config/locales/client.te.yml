@@ -6,20 +6,22 @@
 
 te:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "ఫలితాలు లేవు"
     explorer:
       default_query: "అప్రమేయ"
       or: "లేదా"
       create: "సృష్టించండి"
       ai:
         generate: "ఉత్పత్తించు"
+        optional: "ఐచ్ఛికం"
       help:
         label: "సహాయం"
       types:
         bool:
           yes: "అవును"
           no: "లేదు"
-      export: "ఎగుమతి"
-      edit: "సవరించండి"
       delete: "తొలగించండి"
       query_groups: "సమూహాలు"
       query_description: "వివరణ"
@@ -27,3 +29,9 @@ te:
       reset_params: "రీసెట్ చేయండి"
     group:
       reports: "నివేదికలు"
+    discourse_workflows:
+      sql:
+        param_value: "విలువ"
+        output:
+          results: "ఫలితాలు"
+          no_results: "ఫలితాలు లేవు"

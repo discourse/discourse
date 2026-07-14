@@ -6,10 +6,21 @@
 
 be:
   js:
+    user_api_key:
+      authorize: "Аўтарызаваць"
+      deny: "Скасаваць"
+      no_trust_level: "На жаль, у вас няма неабходнага ўзроўню даверу для доступу да карыстальніцкага API"
+      generic_error: "На жаль, мы не можам выдаваць ключы карыстальніцкага API, гэтая функцыя можа быць адключана адміністратарам сайта."
+      device:
+        continue: "Працягнуць"
     blocks:
       ghost:
         status: "Статус"
         failed: "памылка"
+    access_control:
+      manage:
+        access_permission_editor: "Рэдактар"
+        access_permission_remove: "Выдаліць"
     number:
       format:
         separator: ","
@@ -198,6 +209,8 @@ be:
       placeholder: дата
       from_placeholder: "з даты"
       to_placeholder: "па дату"
+    date_range_picker:
+      apply: "Прымяніць"
     languages:
       ar:
         name: Арабская
@@ -304,7 +317,7 @@ be:
       twitter: "Абагуліць у X"
       facebook: "Абагуліць у Facebook"
       email: "Адправіць па электроннай пошце"
-      url: "Скапіяваць і абагуліць URL-адрас"
+      url: "Скапіраваць і абагуліць URL-адрас"
     word_connector:
       comma: ", "
       last_item: "і"
@@ -386,8 +399,6 @@ be:
     privacy: "Прыватнасць"
     tos: "Умовы абслугоўвання"
     rules: "Правілы"
-    mobile_view: "Мабільная версія"
-    desktop_view: "Поўная версія"
     now: "толькі што"
     read_more: "чытаць далей"
     more: "Больш"
@@ -559,6 +570,9 @@ be:
           few: "+ яшчэ %{count} чарнавікі"
           many: "+ яшчэ %{count} чарнавікоў"
           other: "+ яшчэ %{count} чарнавікоў"
+    embed_mode:
+      signin_flow:
+        cancel: "Скасаваць"
     topic_count_all:
       one: "Паглядзець %{count} новую тэму"
       few: "Паглядзець %{count} новыя тэмы"
@@ -593,7 +607,7 @@ be:
     cancel: "Скасаваць"
     done: "Выканана"
     deleting: "Выдаленне…"
-    save: "Захаваць змены"
+    save: "Захаваць змяненні"
     saving: "Захаванне…"
     saved: "Захавана!"
     upload: "Запампаваць"
@@ -644,7 +658,7 @@ be:
       delete: "Выдаліць"
       settings:
         saved: "Захавана"
-        save_changes: "Захаваць змены"
+        save_changes: "Захаваць змяненні"
         title: "Налады"
       moderation_history: "Гісторыя мадэрацыі"
       title: "Разгляд"
@@ -799,8 +813,6 @@ be:
             password: "Пароль"
           settings:
             title: "Налады"
-        membership:
-          access: Доступ
         categories:
           title: Катэгорыі
         tags:
@@ -940,11 +952,6 @@ be:
       trust_level: "Узровень даверу"
       notifications: "Апавяшчэнні"
       statistics: "Статыстыка"
-      desktop_notifications:
-        perm_default: "Уключыць апавяшчэнні"
-        perm_denied_btn: "Няма доступу"
-        disable: "Адключыць апавяшчэнні"
-        enable: "Уключыць апавяшчэнні"
       dismiss_notifications_tooltip: "Пазначыць ўсё апавяшчэнні як прачытаныя"
       color_schemes:
         undo: "Скінуць"
@@ -970,6 +977,7 @@ be:
       muted_users: "Адключаныя"
       apps: "Праграмы"
       api_approved: "Ухвалена:"
+      api_expires_never: "ніколі"
       theme: "Тэма"
       messages:
         inbox: "Уваходныя"
@@ -1044,7 +1052,7 @@ be:
         title: "Электронная пошта"
         primary_label: "асноўны"
         resent_label: "Ліст адпраўлены"
-        update_email: "Змяніць email"
+        update_email: "Змяніць адрас электроннай пошты"
         invalid: "Увядзіце правільны адрас электроннай пошты"
       associated_accounts:
         title: "Звязаныя ўліковыя запісы"
@@ -1247,7 +1255,6 @@ be:
     created: "Створана"
     created_lowercase: "створана"
     trust_level: "Узровень даверу"
-    search_hint: "імя карыстальніка, email або IP-адрас"
     create_account:
       header_title: "Вітаем!"
       title: "Рэгістрацыя"
@@ -1264,6 +1271,12 @@ be:
       button_ok: "ОК"
     email_login:
       confirm_title: Перайсці да %{site_name}
+    code_login:
+      email_label: "Электронная пошта"
+      continue_button: "Працягнуць"
+      verify_button: "Працягнуць"
+      account_ready_continue: "Працягнуць"
+      username_label: "Імя карыстальніка"
     login:
       title: "Уваход"
       username: "Карыстальнік"
@@ -1330,7 +1343,7 @@ be:
       create_topic: "Стварыць тэму"
       title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
       title_or_link_placeholder: "Увядзіце загаловак, або ўстаўце тут спасылку"
-      edit_reason_placeholder: "прычына рэдагавання"
+      edit_reason_placeholder: "Чаму вы рэдагуеце допіс?"
       reply_placeholder: "Увядзіце тэкст тут. Выкарыстоўвайце для фармаціравання Markdown, BBCode або HTML. Перацягвайце або ўстаўляйце відарысы."
       reply_placeholder_no_images: "Увядзіце тэкст тут. Выкарыстоўвайце для фармаціравання Markdown, BBCode або HTML."
       view_new_post: "Праглядзець новы допіс."
@@ -1351,16 +1364,22 @@ be:
       upload_description: "Увядзіце апісанне запампоўкі"
       list_item: "Элемент спіса"
       wrap_modal:
+        attribute_value: "значэнне"
         apply: "Прымяніць"
       help: "Даведка па рэдагаванні Markdown"
+      edit_reason: "Чаму вы рэдагуеце допіс?"
       modal_ok: "ОК"
       admin_options_title: "Неабавязковыя налады каманды для гэтай тэмы"
       composer_actions:
         reply: Адказаць
         edit: Рэдагаваць
+        reply_to_topic:
+          trigger: Тэма
+        reply_to_message:
+          trigger: Паведамленне
         create_personal_message:
-          label: "Новае паведамленне"
           desc: "Напісаць новае асабістае паведамленне"
+        unknown_user: "Карыстальнік"
       ignore: "Ігнараваць"
       image: "відарыс"
     notifications:
@@ -1418,6 +1437,7 @@ be:
             after: пасля
         views:
           label: Прагляды
+    header_panel: "Header"
     new_item: "новы"
     go_back: "вярнуцца назад"
     not_logged_in_user: "старонка карыстальніка з вынікам бягучай актыўнасці і наладамі"
@@ -1465,6 +1485,16 @@ be:
         name: "Ва Уваходныя"
       delete_topics:
         name: "Выдаліць"
+      convert_to_private_message:
+        name: "Стварыць асабістае паведамленне"
+    nested_replies:
+      sort:
+        label: "сартаваць па"
+        top: "Топ тэм"
+        new: "Новы"
+      pinned_reply: "Замацаваныя"
+    share_target:
+      new_message: "Новае паведамленне"
     topic:
       create: "Новая тэма"
       archive_message:
@@ -1625,7 +1655,6 @@ be:
             title: "Паказаць адрозненні ў крыніцах побач"
       bookmarks:
         name: "Назва"
-        options: "Параметры"
     category:
       none: "(без катэгорыі)"
       all: "Усе катэгорыі"
@@ -1634,6 +1663,7 @@ be:
       view: "Прагляд тэм у катэгорыі"
       general: "Агульныя"
       settings: "Налады"
+      moderation: "Мадэрацыя"
       topic_template: "Шаблон"
       tags: "Тэгі"
       localization:
@@ -1690,7 +1720,7 @@ be:
         options:
           ignore: "Ігнараваць"
       sort_options:
-        default: "прадвызначана"
+        default: "Прадвызначаная"
         likes: "Падабайкі"
         views: "Прагляды"
         posts: "Допісы"
@@ -1767,6 +1797,7 @@ be:
         topics: "Тэмы"
         replies: "Адказы"
       posted:
+        title: "Мае допісы"
         help: "тэмы, у якіх ёсць вашы допісы"
       bookmarks:
         title: "Закладкі"
@@ -1802,28 +1833,33 @@ be:
       download: "Спампаваць"
     keyboard_shortcuts_help:
       title: "Спалучэнні клавіш"
+      description_header: "Апісанне"
       jump_to:
         title: "Перайсці да"
-        top: "%{shortcut} Топ"
+        home: "Галоўная старонка"
+        latest: "Апошняя"
+        new: "Новы"
+        unread: "Непрачытаныя"
+        categories: "катэгорыі"
+        top: "Топ тэм"
+        bookmarks: "Закладкі"
+        profile: "Профіль"
+        messages: "Паведамленні"
+        drafts: "Чарнавікі"
       navigation:
         title: "Навігацыя"
-        open: "%{shortcut} Адкрыць выбраную тэму"
+        back: "Назад"
       application:
         title: "Праграма"
-        notifications: "%{shortcut} Адкрыць апавяшчэнні"
-        log_out: "%{shortcut} Выйсці"
+        search: "Пошук"
+        log_out: "выхад"
+      composing:
+        preformatted: "Папярэдне фармаціраваны тэкст"
+        blockquote: "Цытата"
+      bookmarks:
+        tomorrow: "заўтра"
       actions:
         title: "Дзеянні"
-        share_post: "%{shortcut} Абагуліць допіс"
-        reply_post: "%{shortcut} Адказаць на допіс"
-        quote_post: "%{shortcut} Працытаваць допіс"
-        like: "%{shortcut} Упадабаць допіс"
-        flag: "%{shortcut} Паскардзіцца на допіс"
-        bookmark: "%{shortcut} Дадаць допіс у закладкі"
-        edit: "%{shortcut} Рэдагаваць допіс"
-        delete: "%{shortcut} Выдаліць допіс"
-        mark_muted: "%{shortcut} Адключыць апавяшчэнні тэмы"
-        mark_tracking: "%{shortcut} Адсочваць тэму"
       admin:
         title: "Адміністратар"
     badges:
@@ -1934,6 +1970,7 @@ be:
           links:
             about:
               content: "Пра сайт"
+              title: "Больш падрабязнасцей пра гэты сайт"
             admin:
               content: "Адміністратар"
             badges:
@@ -1942,6 +1979,7 @@ be:
               content: "Фільтр"
             topics:
               content: "Тэмы"
+              title: "Усе тэмы"
             faq:
               content: "Частыя пытанні"
             guidelines:
@@ -1950,8 +1988,14 @@ be:
               content: "Групы"
             users:
               content: "Карыстальнікі"
+            my_posts:
+              content: "Мае допісы"
+              content_drafts: "Мае чарнавікі"
             review:
               content: "Разгляд"
+            my_messages:
+              content: "Мае паведамленні"
+              title: "Мае асабістыя паведамленні"
       search: "Пошук"
       footer:
         interface_color_selector:
@@ -1970,7 +2014,7 @@ be:
         modal:
           cancel: "скасаваць"
           create: "Захаваць"
-          reason: "чаму вы рэдагуеце допіс?"
+          reason: "Чаму вы рэдагуеце допіс?"
       spreadsheet:
         about: "Пра сайт"
     filter:
@@ -1989,6 +2033,7 @@ be:
           never: "ніколі"
       reports:
         sidebar_title: "Справаздачы"
+        all_groups: "Усе групы"
         group_traffic: "Трафік"
         group_members: "Члены"
         group_other: "Іншае"
@@ -2014,6 +2059,8 @@ be:
           admins: "Адміністратары"
           moderators: "Мадэратары"
           staff: "Персанал"
+        impact_types:
+          other_type: "Іншае"
         filter:
           all: "Усе"
           disabled: "Адключана"
@@ -2042,6 +2089,9 @@ be:
             email: "Электронная пошта"
             opengraph_image:
               description: "Прадвызначаны відарыс OpenGraph, які выкарыстоўваецца, калі на старонцы няма іншага адпаведнага відарыса. Калі пакінуць пустым, будзе выкарыстоўвацца large_icon."
+            og_image_preview:
+              generate: "Згенерыраваць"
+              topic_id_label: "Ідэнтыфікатар тэмы"
         fonts:
           backfill_modal:
             modal_yes: "Так"
@@ -2074,6 +2124,9 @@ be:
           sub_pages:
             logs:
               title: "Журналы"
+        problem_checks:
+          status: "Статус"
+          ignore: "Ігнараваць"
         reports:
           title: "Справаздачы"
           sub_pages:
@@ -2124,7 +2177,7 @@ be:
         no_check_performed: "Праверка абнаўленняў не была выканана. Пераканайцеся, што Sidekiq працуе."
         stale_data: "Праверка абнаўленняў не праводзілася апошнім часам. Пераканайцеся, што Sidekiq працуе."
         installed_version: "Усталяваная"
-        latest_version: "Апошняя"
+        dismiss_notice: "Ігнараваць"
         new_features:
           learn_more: "Даведацца больш..."
         last_checked: "Апошняя праверка"
@@ -2148,6 +2201,37 @@ be:
         reports_tab: "Справаздачы"
         report_filter_any: "любы"
         disabled: Адключана
+        sections:
+          reports:
+            title: "Справаздачы"
+          engagement:
+            activity_by_category:
+              category: "Катэгорыя"
+              topics: "тэмы"
+              posts: "Допісы"
+              share: "Абагуліць"
+            whos_posting:
+              all_categories: "Усе катэгорыі"
+              staff: "Персанал"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Новы"
+                "1": "асноўнай"
+                "2": "Член"
+                "3": "рэгулярнае"
+                "4": "лідэр"
+          search:
+            title: "Пошук"
+            table:
+              searches: "Пошукавых запытаў"
+              status: "Статус"
+        reports_section:
+          modal:
+            apply: "Прымяніць"
+        site_traffic:
+          series:
+            anonymous: "ананімны"
+            crawlers: "Краўлеры пошукавых сістэм"
         reports:
           today: "сёння"
           yesterday: "учора"
@@ -2183,249 +2267,249 @@ be:
         title: "Групы"
         edit: "Рэдагаваць групы"
         refresh: "Абнавіць"
-        about: "Edit your group membership and names here"
+        about: "Змяніце тут членства ў групе і імёны"
         group_members: "Удзельнікі групы"
-        delete: "выдаліць"
-        delete_failed: "Не атрымалася выдаліць групу. Калі гэта - аўтаматычная група, яе немагчыма знішчыць."
-        add: "дадаць"
+        delete: "Выдаліць"
+        delete_failed: "Не ўдалося выдаліць групу. Калі гэта аўтаматычная група, яе немагчыма знішчыць."
+        add: "Дадаць"
       api_keys:
-        edit: "рэдагаваць"
-        save: "захаваць"
-        cancel: "адмяніць"
+        edit: "Рэдагаваць"
+        save: "Захаваць"
+        cancel: "Скасаваць"
         continue: "Працягнуць"
-        copy_key: "капіяваць"
-        revoke: "адклікаць"
+        copy_key: "Капіраваць"
+        revoke: "Адклікаць"
       api:
-        generate_master: "Згенераваць Галоўны ключ API"
+        generate_master: "Згенерыраваць галоўны ключ API"
         none: "Пакуль няма ніводнага актыўнага ключа API."
         user: "Карыстальнік"
         title: "API"
-        never_used: ніколі
-        generate: "згенераваць"
-        revoke: "Адклікнуць"
-        active_keys: "Актыўныя API ключы"
-        manage_keys: Кіраваць ключамі
-        show_details: Дэталі
+        never_used: Ніколі
+        generate: "Згенерыраваць"
+        revoke: "Адклікаць"
+        active_keys: "Актыўныя ключы API"
+        manage_keys: Кіраванне ключамі
+        show_details: Падрабязнасці
         description: Апісанне
         save: Захаваць
         continue: Працягнуць
         scopes:
-          action: дзеянне
+          action: Дзеянне
           descriptions:
             topics:
               delete: Выдаліць тэму.
             posts:
-              delete: Выдаліць паведамленне.
+              delete: Выдаліць допіс.
             invites:
-              create: Адправіць запрашэнні па электроннай пошце альбо стварыць спасылкі для запрашэнняў.
+              create: Адправіць запрашэнні па электроннай пошце або стварыць спасылкі для запрашэння.
       web_hooks:
-        create: "стварыць"
-        edit: "рэдагаваць"
-        save: "стварыць..."
-        delete: "выдаляць"
-        cancel: "адмяніць"
-        secret: "сакрэт"
-        active: "актыўны"
+        create: "Стварыць"
+        edit: "Рэдагаваць"
+        save: "Захаваць"
+        delete: "Выдаліць"
+        cancel: "Скасаваць"
+        secret: "Сакрэт"
+        active: "Актыўны"
         delivery_status:
-          title: "стан дастаўкі"
-          failed: "памылка"
-          successful: "паспяхова"
+          title: "Стан дастаўкі"
+          failed: "Няўдалая"
+          successful: "Паспяховая"
           disabled: "Адключана"
         events:
-          request: "запыт"
-          headers: "загалоўкі"
-          body: "цела"
+          request: "Запыт"
+          headers: "Загалоўкі"
+          body: "Змест"
           timestamp: "Створана"
-          actions: "загалоўкі....................."
+          actions: "Дзеянні"
           filter_status:
-            failed: "памылка"
+            failed: "Няўдалыя"
       home:
-        title: "дома"
+        title: "Галоўная старонка"
       account:
-        title: "Аккаўнт"
+        title: "Уліковы запіс"
         sidebar_link:
-          backups: "Бэкапы"
+          backups: "Рэзервовыя копіі"
       community:
-        title: "супольнасць"
+        title: "Супольнасць"
         sidebar_link:
-          badges: "значкі"
-          notifications: "Натыфікацыі"
-          permalinks: "Сталыя спасылкі"
-          users: "карыстальнікаў"
-          groups: "групы"
-          legal: "Legal"
+          badges: "Значкі"
+          notifications: "Апавяшчэнні"
+          permalinks: "Пастаянныя спасылкі"
+          users: "Карыстальнікі"
+          groups: "Групы"
+          legal: "Юрыдычная інфармацыя"
           moderation_flags:
             title: "Мадэрацыя"
       appearance:
         sidebar_link:
-          emoji: "Emoji"
-          navigation: "рух"
+          emoji: "Эмодзі"
+          navigation: "Навігацыя"
           themes_and_components:
             keywords: "пашырэнне"
       security:
         title: "Бяспека"
       section_landing_pages:
         account:
-          title: "Аккаўнт"
+          title: "Уліковы запіс"
           backups:
-            title: "Бэкапы"
+            title: "Рэзервовыя копіі"
       config_areas:
         about:
-          company_name: "імя"
+          company_name: "Назва"
           extra_groups:
-            groups: "групы"
+            groups: "Групы"
           saved: "захавана!"
         flags:
           description: "Апісанне"
-          edit: "рэдагаваць"
+          edit: "Рэдагаваць"
           delete: "Выдаліць"
-          flags_tab: "сцягі"
+          flags_tab: "Скаргі"
           form:
-            save: "захаваць"
-            name: "імя"
+            save: "Захаваць"
+            name: "Назва"
             description: "Апісанне"
-            invalid_applies_to: "абавязковыя"
+            invalid_applies_to: "Абавязкова"
             topic: "тэмы"
-            post: "паведамленняў"
+            post: "допісы"
         permalinks:
-          edit: "рэдагаваць"
-          delete: "выдаляць"
+          edit: "Рэдагаваць"
+          delete: "Выдаліць"
         embeddable_host:
-          edit: "рэдагаваць"
-          delete: "выдаляць"
+          edit: "Рэдагаваць"
+          delete: "Выдаліць"
         themes_and_components:
-          breadcrumb_title: "Кастамізаваць"
+          breadcrumb_title: "Дапасаваць"
           components:
-            name: "імя"
-            edit: "рэдагаваць"
-            preview: "Папярэдні прагляд"
-            export: "экспарт"
-            delete: "выдаляць"
-            filter_by_all: "Усё"
+            name: "Назва"
+            edit: "Рэдагаваць"
+            preview: "Перадпрагляд"
+            export: "Экспарт"
+            delete: "Выдаліць"
+            filter_by_all: "Усе"
         user_fields:
           type: "Тып"
-          delete: "выдаляць"
+          delete: "Выдаліць"
         color_palettes:
-          palette_name: "імя"
-          delete: "выдаляць"
+          palette_name: "Назва"
+          delete: "Выдаліць"
           colors:
-            title: "<......"
+            title: "Колеры"
       plugins:
-        title: "Плагіны"
+        title: "Убудовы"
         name: "Назва"
-        version: "версія"
+        version: "Версія"
         change_settings_short: "Налады"
         filters:
-          all: "усе"
-          disabled: "Адключана"
-          reset: "скінуць"
+          all: "Усе"
+          disabled: "Адключаныя"
+          reset: "Скінуць"
       backups:
-        title: "Бэкапы"
+        title: "Рэзервовыя копіі"
         menu:
-          backups: "Бэкапы"
-          logs: "Логі"
-        none: "No backup available"
+          backups: "Рэзервовыя копіі"
+          logs: "Журналы"
+        none: "Няма даступных рэзервовых копій"
         read_only:
           enable:
-            title: "Ўключыць рэжым толькі для чытання"
-            label: "Ўключыць Толькі для чытання"
-            confirm: "Вы ўпэўненыя, што жадаеце ўключыць рэжым толькі для чытання?"
+            title: "Уключыць рэжым \"Толькі для чытання\""
+            label: "Уключыць \"Толькі для чытання\""
+            confirm: "Вы ўпэўнены, што хочаце ўключыць рэжым \"Толькі для чытання\"?"
           disable:
-            title: "Адключыць рэжым Толькі для чытання"
-            label: "Адключыць Толькі для чытання"
+            title: "Адключыць рэжым \"Толькі для чытання\""
+            label: "Адключыць \"Толькі для чытання\""
         columns:
-          filename: "Назва файлу"
-          size: "Size"
+          filename: "Назва файла"
+          size: "Памер"
         upload:
-          label: "Загрузіць"
+          label: "Запампаваць"
         settings: "Налады"
         operations:
           cancel:
-            label: "Адмяніць"
-            title: "Cancel the current operation"
-            confirm: "Are you sure you want to cancel the current operation?"
+            label: "Скасаваць"
+            title: "Скасаваць бягучую аперацыю"
+            confirm: "Вы ўпэўнены, што хочаце скасаваць бягучую аперацыю?"
           backup:
-            label: "Backup"
-            title: "Create a backup"
+            label: "Рэзервовая копія"
+            title: "Стварыць рэзервовую копію"
           download:
-            label: "спампаваць"
+            label: "Спампаваць"
           destroy:
-            title: "выдаляць"
-            confirm: "Are you sure you want to destroy this backup?"
+            title: "Выдаліць"
+            confirm: "Вы ўпэўнены, што хочаце знішчыць гэту рэзервовую копію?"
           restore:
-            label: "Restore"
-            title: "Restore the backup"
+            label: "Аднавіць"
+            title: "Аднавіць рэзервовую копію"
           rollback:
-            label: "Rollback"
-            title: "Rollback the database to previous working state"
+            label: "Адкаціць"
+            title: "Адкаціць базу даных да папярэдняга працоўнага стану"
       export_csv:
-        button_text: "экспарт"
+        button_text: "Экспарт"
       export_json:
-        button_text: "экспарт"
+        button_text: "Экспарт"
       customize:
-        title: "Кастамізаваць"
-        preview: "preview"
-        save: "Save"
-        new: "Новая"
-        new_style: "New Style"
+        title: "Дапасаваць"
+        preview: "перадпрагляд"
+        save: "Захаваць"
+        new: "Новы"
+        new_style: "Новы стыль"
         delete: "Выдаліць"
-        color: "колер"
-        opacity: "непразрыстасць"
+        color: "Колер"
+        opacity: "Непразрыстасць"
         email_templates:
           title: "Электронная пошта"
-          subject: "тэма"
-          body: "цела"
-          revert: "вярнуць змены"
-          revert_confirm: "Ці ўпэўненыя вы, што хочаце вярнуць вашы змены?"
+          subject: "Тэма"
+          body: "Змест"
+          revert: "Скасаваць змяненні"
+          revert_confirm: "Вы ўпэўнены, што хочаце скасаваць змяненні?"
           edit: "Рэдагаваць"
         component:
-          all_filter: "Усё"
+          all_filter: "Усе"
           disabled_filter: "Адключана"
         theme:
-          theme: "тэма"
-          filter_all: "усе"
-          customize_desc: "Кастамізаваць:"
-          create: "стварыць"
-          create_type: "тып"
+          theme: "Тэма"
+          filter_all: "Усе"
+          customize_desc: "Дапасаваць:"
+          create: "Стварыць"
+          create_type: "Тып"
           create_name: "Назва"
-          save: "захаваць"
-          edit: "рэдагаваць"
-          mobile: "Мабільны"
-          preview: "папярэдні прагляд"
-          cancel: "адмяніць"
-          uploads: "Загрузкі"
-          upload: "Загрузіць"
-          installed: "устаноўленая"
-          install_popular: "папулярны"
-          about_theme: "Аб тэме"
-          version: "версія:"
+          save: "Захаваць"
+          edit: "Рэдагаваць"
+          mobile: "Мабільная"
+          preview: "Перадпрагляд"
+          cancel: "Скасаваць"
+          uploads: "Запампоўкі"
+          upload: "Запампаваць"
+          installed: "Усталяваная"
+          install_popular: "Папулярныя"
+          about_theme: "Пра тэму"
+          version: "Версія:"
           enable: "Уключыць"
           disable: "Адключыць"
           add: "Дадаць"
-          all_filter: "Усё"
-          active_filter: "актыўныя"
+          all_filter: "Усе"
+          active_filter: "Актыўныя"
         schema:
           fields:
             required: "*абавязковыя"
             number:
-              too_large: "павінен быць менш або роўны %{count}"
+              too_large: "павінна быць менш за або роўна %{count}"
         colors:
-          light: "святло"
-          dark: "цёмна"
-          title: "<......"
+          light: "светлая"
+          dark: "цёмная"
+          title: "Колеры"
           edit: "Рэдагаваць"
           filters:
-            all: "усе"
-          copy_name_prefix: "капіяваць з"
-          undo: "Адмяніць"
-          undo_title: "Адмяніць вашыя змены гэтага колеру з часу апошняга захавання."
+            all: "Усе"
+          copy_name_prefix: "Копія"
+          undo: "Адрабіць"
+          undo_title: "Адрабіць вашы змяненні гэтага колеру з часу апошняга захавання."
           revert: "Вярнуць"
           primary:
-            name: "асноўнай"
+            name: "асноўны"
           secondary:
             name: "другасны"
           tertiary:
-            name: "троесны"
+            name: "дадатковы"
           header_background:
             name: "фон загалоўка"
           highlight:
@@ -2435,166 +2519,167 @@ be:
           love:
             name: "каханне"
           editor:
-            light: "святло"
-            dark: "цёмна"
+            light: "Светлая"
+            dark: "Цёмная"
       email:
-        title: "Емейлы"
+        title: "Электронныя лісты"
         settings: "Налады"
-        templates: "шаблоны"
-        sent: "Sent"
-        skipped: "Skipped"
-        received: "Атрымана"
-        rejected: "адхілена"
-        user: "карыстальнік"
-        test_email_address: "электронны скрыню для праверкі"
+        templates: "Шаблоны"
+        sent: "Адпраўленыя"
+        skipped: "Прапушчаныя"
+        received: "Атрыманыя"
+        rejected: "Адхіленыя"
+        user: "Карыстальнік"
+        test_email_address: "адрас электроннай пошты для праверкі"
         sent_test: "адпраўлена!"
-        refresh: "абнавіць"
-        send_digest: "адправіць"
-        format: "фармат"
+        refresh: "Абнавіць"
+        send_digest: "Адправіць"
+        format: "Фармат"
         html: "html"
         text: "тэкст"
         incoming_emails:
-          from_address: "ад"
-          to_addresses: "да"
-          subject: "тэма"
-          error: "памылка"
+          from_address: "Ад"
+          to_addresses: "Каму"
+          subject: "Тэма"
+          error: "Памылка"
           modal:
-            error: "памылка"
-            headers: "загалоўкі"
-            subject: "тэма"
-            body: "цела"
+            error: "Памылка"
+            headers: "Загалоўкі"
+            subject: "Тэма"
+            body: "Тэкст"
           filters:
             from_placeholder: "from@example.com"
             to_placeholder: "to@example.com"
             cc_placeholder: "cc@example.com"
-            error_placeholder: "памылка"
+            error_placeholder: "Памылка"
         logs:
-          none: "No logs found."
+          none: "Журналаў не знойдзена."
           filters:
-            title: "Filter"
-            user_placeholder: "username"
+            title: "Фільтр"
+            user_placeholder: "імя карыстальніка"
             address_placeholder: "name@example.com"
       moderation_history:
         actions:
-          delete_topic: "Тэма выдаленая"
+          delete_topic: "Тэма выдалена"
       logs:
-        nav_title: "Логі"
-        action: "дзеянне"
-        created_at: "створаны"
-        last_match_at: "апошняя адпаведнасць"
-        match_count: "адпаведнасці"
-        ip_address: "IP"
-        topic_id: "ID тэмы"
-        post_id: "ID паведамлення"
-        category_id: "ID катэгорыі"
-        delete: "выдаліць"
-        edit: "рэдагаваць"
-        save: "захаваць"
+        nav_title: "Журналы"
+        action: "Дзеянне"
+        created_at: "Створана"
+        last_match_at: "Апошняе супадзенне"
+        match_count: "Супадзенні"
+        ip_address: "IP-адрас"
+        topic_id: "Ідэнтыфікатар тэмы"
+        post_id: "Ідэнтыфікатар допісу"
+        category_id: "Ідэнтыфікатар катэгорыі"
+        reviewable_id: "Разгляд"
+        delete: "Выдаліць"
+        edit: "Рэдагаваць"
+        save: "Захаваць"
         screened_actions:
-          block: "block"
-          do_nothing: "do nothing"
+          block: "заблакіраваць"
+          do_nothing: "нічога не рабіць"
         staff_actions:
           all: "усе"
-          filter: "Filter:"
-          staff_user: "карыстальнік"
-          subject: "тэма"
-          when: "калі"
-          details: "дэталі"
-          new_value: "Новая"
-          modal_title: "дэталі"
+          filter: "Фільтр:"
+          staff_user: "Карыстальнік"
+          subject: "Тэма"
+          when: "Калі"
+          details: "Падрабязнасці"
+          new_value: "Новае"
+          modal_title: "Падрабязнасці"
           actions:
             delete_user: "выдаленне карыстальніка"
             change_trust_level: "змяненне ўзроўню даверу"
-            change_username: "змена імя карыстальніка"
-            change_site_setting: "змена імя карыстальніка..."
-            change_theme: "змена імя карыстальніка......"
-            delete_theme: "выдаліць тэму"
-            change_site_text: "змяніць тэкст сайта"
+            change_username: "змяненне імя карыстальніка"
+            change_site_setting: "змяненне налад сайта"
+            change_theme: "змяненне тэмы"
+            delete_theme: "выдаленне тэмы"
+            change_site_text: "змяненне тэксту сайта"
             suspend_user: "прыпыненне карыстальніка"
-            unsuspend_user: "адмене прыпынення"
-            grant_badge: "даць значок"
-            revoke_badge: "адмяніць значок"
-            check_email: "Праверыць электронную пошту"
-            delete_topic: "выдаліць тэму"
-            recover_topic: "адмяніць выдаленне тэмы"
-            delete_post: "выдаліць паведамленне"
-            impersonate: "ўвасобіцца"
-            anonymize_user: "ананімны карыстальнік"
-            change_category_settings: "змяніць налады катэгорыі"
-            delete_category: "выдаліць катэгорыю"
-            create_category: "стварыць катэгорыю"
-            grant_admin: "зрабіць адміністратарам"
-            revoke_admin: "адклікаць администраторство"
-            grant_moderation: "зрабіць мадэратарам"
-            revoke_moderation: "адклікаць правы мадэратара"
-            deleted_tag: "выдаліць тэг"
-            lock_trust_level: "заблакаваць ўзровень даверу"
-            post_rejected: "публікацыя адхілена"
+            unsuspend_user: "скасаванне прыпынення карыстальніка"
+            grant_badge: "выдача значка"
+            revoke_badge: "адкліканне значка"
+            check_email: "праверка электроннай пошты"
+            delete_topic: "выдаленне тэмы"
+            recover_topic: "скасаванне выдалення тэмы"
+            delete_post: "выдаленне допісу"
+            impersonate: "уваход ад імені карыстальніка"
+            anonymize_user: "ананімізацыя карыстальніка"
+            change_category_settings: "змяненне налад катэгорыі"
+            delete_category: "выдаленне катэгорыі"
+            create_category: "стварэнне катэгорыі"
+            grant_admin: "прызначэнне адміністратара"
+            revoke_admin: "адкліканне адміністратара"
+            grant_moderation: "прызначэнне мадэратара"
+            revoke_moderation: "адкліканне мадэратара"
+            deleted_tag: "выдаленне тэга"
+            lock_trust_level: "блакіраванне ўзроўню даверу"
+            post_rejected: "адхіленне допісу"
         screened_emails:
-          description: "Калі хто-то спрабуе стварыць новы ўліковы запіс, наступныя электронныя скрыні будуць правераны і рэгістрацыю заблакаваны, ці прынятыя нейкія іншых дзеянняў."
+          description: "Калі хтосьці паспрабуе стварыць новы ўліковы запіс, будуць правераны наступныя адрасы электроннай пошты, і рэгістрацыя будзе заблакіравана, або будуць выкананы іншыя дзеянні."
           actions:
-            allow: "дазволіць"
+            allow: "Дазволіць"
         screened_urls:
-          title: "Screened URLs"
-          description: "Пералічаныя тут вэб-адрасы выкарыстоўваліся ў паведамленнях карыстальнікаў, якія былі ідэнтыфікаваныя як спамераў."
-          url: "URL спасылка"
-          domain: "дамен"
+          title: "Правераныя URL-адрасы"
+          description: "Пералічаныя тут URL-адрасы выкарыстоўваліся ў допісах карыстальнікаў, якія былі ідэнтыфікаваныя як спамеры."
+          url: "URL-адрас"
+          domain: "Дамен"
         screened_ips:
-          title: "Screened IPs"
-          delete_confirm: "Вы ўпэўненыя, што жадаеце выдаліць правіла для %{ip_address}?"
+          title: "Правераныя IP-адрасы"
+          delete_confirm: "Вы ўпэўнены, што хочаце выдаліць правіла для %{ip_address}?"
           actions:
-            block: "заблакаваць"
-            do_nothing: "дазволіць"
+            block: "Заблакіраваць"
+            do_nothing: "Дазволіць"
           form:
-            label: "новая:"
+            label: "Новы:"
             ip_address: "IP-адрас"
-            add: "дадаць"
-            filter: "пошук"
+            add: "Дадаць"
+            filter: "Пошук"
         search_logs:
-          term: "тэрмін"
-          searches: "пошукавыя"
+          term: "Выраз"
+          searches: "Пошукавых запытаў"
           click_through_rate: "CTR"
           types:
-            header: "Header"
+            header: "Загаловак"
       watched_words:
         search: "пошук"
-        clear_filter: "ачысціць"
-        download: спампаваць
+        clear_filter: "Ачысціць"
+        download: Спампаваць
         actions:
-          block: "заблакаваць"
-          flag: "Пазначыць"
+          block: "Заблакіраваць"
+          flag: "Паскардзіцца"
           link: "Спасылка"
         form:
           link_label: "Спасылка"
-          add: "дадаць"
-          success: "поспех"
+          add: "Дадаць"
+          success: "Гатова"
       form_templates:
-        nav_title: "шаблоны"
+        nav_title: "Шаблоны"
         new_template: "Новы шаблон"
         list_table:
           headings:
-            name: "Імя"
+            name: "Назва"
             active_categories: "Актыўныя катэгорыі"
             actions: "Дзеянні"
         view_template:
-          close: "зачыніць"
+          close: "Закрыць"
           edit: "Рэдагаваць"
           delete: "Выдаліць"
         new_template_form:
           submit: "Захаваць"
-          cancel: "Адмяніць"
+          cancel: "Скасаваць"
           name:
             label: "Назва шаблона"
           template:
             label: "Шаблон"
-          preview: "Папярэдні прагляд"
+          preview: "Перадпрагляд"
         quick_insert_fields:
           add_new_field: "Дадаць"
           checkbox: "Птушка"
           input: "Кароткі адказ"
           textarea: "Доўгі адказ"
-          dropdown: "Выпадаючы спіс"
-          upload: "Загрузіць файл"
+          dropdown: "Выпадны спіс"
+          upload: "Запампаваць файл"
         validations_modal:
           table_headers:
             type: "Тып"
@@ -2610,119 +2695,123 @@ be:
             second: "Варыянт 2"
             third: "Варыянт 3"
       impersonate:
-        title: "ўвасобіцца"
-        not_found: "Карыстача не ўдалося знайсці."
-        invalid: "Выбачайце, Вы не можаце ўвасобіцца ў карыстальніка."
+        title: "Уваход ад імені карыстальніка"
+        not_found: "Гэты карыстальнік не знойдзены."
+        invalid: "Вы не можаце ўвайсці ад імені гэтага карыстальніка."
       users:
         title: "Карыстальнікі"
-        create: "дадаць адміністратара"
-        last_emailed: "Апошні емэйл"
-        not_found: "Выбачайце, такога імя карыстальніка няма ў нашай сістэме."
-        id_not_found: "Выбачайце, карыстальніка з такім нумарам няма ў нашай сістэме."
+        create: "Дадаць адміністратара"
+        last_emailed: "Апошні ліст"
+        not_found: "Карыстальніка з такім іменем няма ў нашай сістэме."
+        id_not_found: "Карыстальніка з такім нумарам няма ў нашай сістэме."
         status: "Статус"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Закрыць"
+              confirm: "Прыпыніць"
           delete:
             confirmation_modal:
-              close: "зачыніць"
-              confirm: "выдаляць"
+              close: "Закрыць"
+              confirm: "Выдаліць"
         nav:
           new: "Новыя"
-          active: "актыўныя"
-          staff: "персанал"
-          suspended: "прыпыненыя"
-          silenced: "глушыцелем"
-        approved: "Адобрана?"
+          active: "Актыўныя"
+          staff: "Персанал"
+          suspended: "Прыпыненыя"
+          silenced: "Заглушаныя"
+        approved: "Ухвалены?"
         titles:
-          staff: "персанал"
-          moderators: "мадэратары"
+          staff: "Персанал"
+          moderators: "Мадэратары"
       user:
-        suspend_reason: "прычына"
-        silence_reason: "прычына"
-        silence_modal_title: "Silence Карыстальнік"
-        post_edits: "паведамленне рэдагуе"
-        silenced: "глушыцелем?"
+        suspend_reason: "Прычына"
+        silence_reason: "Прычына"
+        silence_modal_title: "Заглушыць карыстальніка"
+        post_edits: "Рэдагаванні допісаў"
+        silenced: "Заглушаны?"
         moderator: "Мадэратар?"
-        admin: "Адмін?"
-        suspended: "Прыпынена?"
+        admin: "Адміністратар?"
+        suspended: "Прыпынены?"
         show_admin_profile: "Адміністратар"
         show_public_profile: "Паказаць публічны профіль"
-        ip_lookup: "пошук IP"
+        ip_lookup: "Пошук IP-адраса"
         log_out: "Выйсці"
         logged_out: "Карыстальнік выйшаў з сістэмы на ўсіх прыладах"
-        revoke_admin: "адклікаць администраторство"
-        grant_admin: "зрабіць адміністратарам"
+        revoke_admin: "Адклікаць правы адміністратара"
+        grant_admin: "Прызначыць адміністратарам"
         revoke_moderation: "Адклікаць правы мадэратара"
-        grant_moderation: "зрабіць мадэратарам"
-        unsuspend: "адмяніць прыпыненьне"
-        suspend: "прыпыніць"
-        reputation: рэпутацыя
-        permissions: дазволу
+        grant_moderation: "Прызначыць мадэратарам"
+        unsuspend: "Скасаваць прыпыненне"
+        suspend: "Прыпыніць"
+        reputation: Рэпутацыя
+        permissions: Дазволы
         activity: Актыўнасць
         last_100_days: "за апошнія 100 дзён"
-        posts_read_count: паведамленняў прачытана
-        post_count: паведамленняў створаны
-        topics_entered: тым перагледжаны
-        flags_given_count: скаргаў пададзена
-        flags_received_count: скаргаў атрымана
-        warnings_received_count: атрымана папярэджанняў
-        approve: "ўхваліць"
-        approved_by: "ўхвалена"
-        approve_success: "Карыстальнік адобраны і яму адпраўлен ліст з інструкцыямі для актывацыі."
-        approve_bulk_success: "Поспех! Ўсіх выбраных карыстальнікаў было прынята і паведамлена пра гэта."
-        time_read: "час чытання"
-        post_edits_count: "паведамленне рэдагуе"
-        anonymize: "ананімны карыстальнік"
-        anonymize_yes: "Так, схаваць гэты рахунак"
-        delete: "выдаліць карыстальніка"
+        posts_read_count: Допісаў прачытана
+        post_count: Допісаў створана
+        topics_entered: Тэм прагледжана
+        flags_given_count: Скаргаў пададзена
+        flags_received_count: Скаргаў атрымана
+        warnings_received_count: Папярэджанняў атрымана
+        approve: "Ухваліць"
+        approved_by: "ухвалены"
+        approve_success: "Карыстальнік ухвалены і яму адпраўлены ліст з інструкцыямі для актывацыі."
+        approve_bulk_success: "Гатова! Усе выбраныя карыстальнікі былі ўхвалены і атрымалі апавяшчэнне."
+        time_read: "Час чытання"
+        post_edits_count: "Рэдагаванняў допісу"
+        anonymize: "Ананімны карыстальнік"
+        anonymize_yes: "Так, ананімізаваць гэты ўліковы запіс"
+        delete: "Выдаліць карыстальніка"
         delete_posts:
-          button: "прычына..."
+          button: "Выдаліць усе допісы"
           confirmation:
-            cancel: "Адмяніць"
+            cancel: "Скасаваць"
         merge:
           prompt:
-            cancel: "адмяніць"
+            cancel: "Скасаваць"
           confirmation:
-            cancel: "адмяніць"
-        deleted: "Карыстальніка быў выдалены."
-        delete_failed: "Пры выдаленні карыстальніка адбылася памылка. Пераканайцеся, што ўсе паведамленні карыстальніка выдалены перад тым, як выдаляць самога карыстальніка."
+            cancel: "Скасаваць"
+        deleted: "Карыстальнік выдалены."
+        delete_failed: "Падчас выдалення гэтага карыстальніка адбылася памылка. Перад тым, як спрабаваць выдаліць карыстальніка, пераканайцеся, што ўсе допісы карыстальніка выдалены."
         send_activation_email: "Адправіць ліст для актывацыі"
-        activation_email_sent: "Ліст для актывацыі дасланы."
-        send_activation_email_failed: "Пры адпраўцы актывацыйны лісты адбылася памылка. %{Error}"
+        activation_email_sent: "Ліст для актывацыі адпраўлены."
+        send_activation_email_failed: "Пры адпраўцы ліста актывацыі адбылася памылка. %{error}"
         activate: "Актываваць уліковы запіс"
         activate_failed: "Пры актывацыі карыстальніка адбылася памылка."
-        deactivate_account: "Дэактываваць акаўнт"
-        deactivate_failed: "Падчас дэактывацыі карыстальніка адбылася памылка."
+        deactivate_account: "Дэактываваць уліковы запіс"
+        deactivate_failed: "Пры дэактывацыі карыстальніка адбылася памылка."
         reset_bounce_score:
-          label: "скінуць"
-        deactivate_explanation: "Дэактываваны карыстальнік павінен паўторна пацвердзіць свой электронны скрыню."
+          label: "Скінуць"
+        deactivate_explanation: "Дэактываваны карыстальнік павінен паўторна пацвердзіць свой адрас электроннай пошты."
         suspended_explanation: "Прыпынены карыстальнік не можа ўвайсці ў сістэму."
-        trust_level_change_failed: "Падчас змены Ўзроўню даверу карыстальніка адбылася памылка."
-        suspend_modal_title: "прыпыніць карыстальніка"
-        trust_level_2_users: "Карыстальнікі з Узроўнем даверу 2"
-        trust_level_3_requirements: "Патрабаванні для Узроўня даверу 3"
-        silenced_count: "глушыцелем"
-        suspended_count: "падвешаны"
+        trust_level_change_failed: "Падчас змянення ўзроўню даверу карыстальніка адбылася памылка."
+        suspend_modal_title: "Прыпыніць карыстальніка"
+        trust_level_2_users: "Карыстальнікі ўзроўню даверу 2"
+        trust_level_3_requirements: "Патрабаванні да ўзроўню даверу 3"
+        silenced_count: "Заглушаны"
+        suspended_count: "Прыпынены"
         other_matches_list:
           username: "Імя карыстальніка"
-          trust_level: "узровень даверу"
-          read_time: "час чытання"
-          posts: "паведамленняў"
+          trust_level: "Узровень даверу"
+          read_time: "Час чытання"
+          posts: "Допісаў"
         tl3_requirements:
-          title: "Патрабаванні для Узроўня даверу 3"
+          title: "Патрабаванні да ўзроўню даверу 3"
           table_title:
             one: "За апошні дзень:"
-            few: "За апошнія %{count} дзён:"
+            few: "За апошнія %{count} дні:"
             many: "За апошнія %{count} дзён:"
-            other: "За апошнія %{count} дзён:"
-          value_heading: "значэнне"
-          requirement_heading: "патрабаванне"
-          days: "дзён"
-          topics_replied_to: "Тэмы, на якія адказаў (а)"
-          topics_viewed: "прагледжана Тым"
-          topics_viewed_all_time: "Прагледжана Тым (за ўвесь час)"
-          posts_read: "прачытана Паведамленняў"
-          posts_read_all_time: "Прачытана паведамленняў (увесь час)"
-          flagged_posts: "абскарджаны паведамлення"
+            other: "За апошнія %{count} дня:"
+          value_heading: "Значэнне"
+          requirement_heading: "Патрабаванне"
+          days: "сут."
+          topics_replied_to: "Тэм, на якія адказаў(-ла)"
+          topics_viewed: "Тэм прагледжана"
+          topics_viewed_all_time: "Тэм прагледжана (за ўвесь час)"
+          posts_read: "Допісаў прачытана"
+          posts_read_all_time: "Допісаў прачытана (за ўвесь час)"
+          flagged_posts: "Допісаў са скаргамі"
           likes_given: "упадабаныя"
           likes_received: "атрыманыя перавагі"
         discourse_connect:
@@ -2735,10 +2824,10 @@ be:
         type: "тып поля"
         description: "поле апісання"
         preferences: "Налады"
-        save: "захаваць"
+        save: "Захаваць"
         edit: "рэдагаваць"
         delete: "выдаліць"
-        cancel: "адмяніць"
+        cancel: "Скасаваць"
         options: "Налады"
         required:
           enabled: "абавязковыя"
@@ -2747,7 +2836,7 @@ be:
           dropdown: "Выпадаючы спіс"
       site_text:
         edit: "рэдагаваць"
-        revert: "вярнуць змены"
+        revert: "Вярнуць змяненні"
         revert_confirm: "Ці ўпэўненыя вы, што хочаце вярнуць вашы змены?"
         go_back: "Вярнуцца да пошуку"
         show_overriden: "Паказваць толькі перавызначаны"

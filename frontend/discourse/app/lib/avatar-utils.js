@@ -7,6 +7,8 @@ let allowedSizes = null;
 
 export function translateSize(size) {
   switch (size) {
+    case "micro":
+      return 12;
     case "tiny":
       return 24;
     case "small":

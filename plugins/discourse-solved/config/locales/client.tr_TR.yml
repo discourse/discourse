@@ -10,6 +10,24 @@ tr_TR:
       site_settings:
         categories:
           discourse_solved: "Discourse Çözüldü"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Kabul edilen çözümler"
+        sections:
+          support:
+            title: "Destek"
+            filter:
+              all_categories: "Tüm kategoriler"
+            answerers:
+              staff: "Personel"
+              member: "Üyeler"
+              basic: "Temel"
+            response_time:
+              buckets:
+                lt_1h: "< 1 saat"
+                gt_24h: "> 24 saat"
   js:
     notifications:
       alt:
@@ -23,7 +41,6 @@ tr_TR:
       allow_accepted_answers: "Konu sahibinin ve personelin bir yanıtı çözüm olarak işaretlemesine izin verin"
       solved_topics_auto_close_hours: "Konu çözüldü olarak işaretlendiğinde, son yanıttan (n) saat sonra otomatik olarak kapatılsın."
       notify_on_staff_accept_solved: "Personel bir çözümü işaretlediğinde konu açan kişiye bildirim gönder"
-      empty_box_on_unsolved: "Konu listesinde çözülmemiş konuların yanında boş bir onay kutusu göster"
       accept_answer: "Bu yanıtın sorunu çözüp çözmediğini seçin"
       accepted_description: "Bu, bu konu için kabul edilen çözümdür"
       has_no_accepted_answer: "Bu konunun çözümü yok"
@@ -33,7 +50,7 @@ tr_TR:
       solution_summary:
         one: "çözüm"
         other: "çözüm"
-      accepted_answer_solver_info: "%{user} tarafından %{post} içinde çözüldü."
+      accepted_answer_solver_info: "%{user} tarafından %{post} içinde"
       accepted_answer_post_number: "%{post_number}. gönderi"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -43,7 +60,7 @@ tr_TR:
       no_solved_topics_title: "Henüz hiçbir konuyu çözmediniz"
       no_solved_topics_title_others: "%{username} henüz hiçbir konuyu çözmedi"
       no_solved_topics_body: "Bir konuya yararlı bir yanıt verdiğinizde, yanıtınız konu sahibi veya personel tarafından çözüm olarak seçilebilir."
-      marked_solved_by: "%{user} tarafından çözüldü olarak işaretlendi"
+      marked_solved_by: "%{user} tarafından kabul edildi"
       confirm_move_solution_title: "Çözüm gönderisini taşı"
       confirm_move_solution:
         one: "Seçtiğiniz gönderi bu konunun çözümü olarak işaretlenmiştir. Gönderiyi taşırsanız, konu çözülmemiş olarak güncellenecektir."
@@ -57,6 +74,8 @@ tr_TR:
       confirm_solved_removal: "Bu değişiklik, bu konu için çözümleri devre dışı bırakacak ve kabul edilen çözümü kaldıracaktır."
       confirm_solved_removal_confirm: "Onayla"
       confirm_solved_removal_cancel: "İptal et"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Sorunuz yanıtlandı mı?
         description: "Yanıtı vurgulayın ve doğru cevabın altındaki çözüm düğmesini kullanarak başkalarına yardımcı olun."
@@ -71,9 +90,6 @@ tr_TR:
           description: "Bu konudaki her yeni yanıt ve konunun çözüldüğü zaman size bildirim gönderilecektir. Bu konu için yeni yanıtların sayısı gösterilecektir."
       category_type_support:
         title: "Destek"
-        not_support_type: "Dikkat! Bu kategoride gönderileri çözüm olarak işaretleme özelliğini devre dışı bıraktınız. Bu özelliği tekrar etkinleştirmek için Ayarlar sekmesinde ilgili ayarları bulabilirsiniz."
-        remove_support_type: "Destek türünü kaldır"
-        confirm_remove_support_type: "Bu kategorideki gönderileri çözüm olarak işaretleme özelliğini kaldırmak istediğinizden emin misiniz? Bu özelliği daha sonra Ayarlar sekmesinden yeniden etkinleştirebilirsiniz."
     topic_statuses:
       solved:
         help: "Bu konunun bir çözümü var"

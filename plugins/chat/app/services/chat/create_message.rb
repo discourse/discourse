@@ -83,9 +83,9 @@ module Chat
       step :create_webhook_event
       step :update_channel_last_message
       step :update_membership_last_read
-      step :process_direct_message_channel
     end
 
+    step :process_direct_message_channel
     step :publish_new_thread
     step :process
     step :publish_user_tracking_state

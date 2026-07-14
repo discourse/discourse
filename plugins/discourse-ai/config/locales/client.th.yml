@@ -34,6 +34,13 @@ th:
             canned_reply:
               label: "ตอบ"
     discourse_ai:
+      ai_tool_approval:
+        loading: "กำลังโหลด..."
+        user: "ผู้ใช้"
+        approve: "อนุมัติ"
+        reject: "ละทิ้ง"
+        approved: "อนุมัติ"
+        rejected: "ถูกปฏิเสธ"
       llm_selector:
         none: "ไม่มี"
       features:
@@ -52,6 +59,7 @@ th:
       modals:
         select_option: "เลือกตัวเลือก..."
       translations:
+        category_scope: "หมวดหมู่"
         stats:
           eta_hours:
             other: "%{count} ชั่วโมง"
@@ -81,6 +89,11 @@ th:
         save: "บันทึก"
         enabled: "เปิดใช้"
         delete: "ลบ"
+        thinking_effort_options:
+          none: "ไม่มี"
+          low: "ต่ำ"
+          medium: "ปานกลาง"
+          high: "สูง"
         response_format:
           open_modal: "แก้ไข"
       rag:

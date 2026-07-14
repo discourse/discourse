@@ -13,6 +13,7 @@ import { waitForPromise } from "@ember/test-waiters";
  * @property {import("discourse/services/modal").default} modal
  * @property {import("discourse/float-kit/services/toasts").default} toasts
  * @property {import("discourse/models/site").default} site
+ * @property {Record<string, unknown>} siteSettings
  * @property {(toolbar: import("discourse/lib/composer/toolbar").ToolbarBase) => void} replaceToolbar
  * @property {(nodeView: import("discourse/static/prosemirror/lib/glimmer-node-view").default) => void} addGlimmerNodeView
  * @property {(nodeView: import("discourse/static/prosemirror/lib/glimmer-node-view").default) => void} removeGlimmerNodeView
@@ -22,6 +23,8 @@ import { waitForPromise } from "@ember/test-waiters";
  * @typedef {Object} EditorInstanceUtils
  * @property {(markdown: string) => import("prosemirror-model").Node} convertFromMarkdown
  * @property {(doc: import("prosemirror-model").Node) => string} convertToMarkdown
+ * @property {(text: string) => string[]} splitNonEmptyLines
+ * @property {(schema: import("prosemirror-model").Schema, listType: import("prosemirror-model").NodeType, lines: string[]) => import("prosemirror-model").Node} buildListNode
  * @property {() => void} toggleRichEditor
  */
 
@@ -134,6 +137,15 @@ import { waitForPromise } from "@ember/test-waiters";
 
 /** @type {RichEditorExtension[]} */
 const registeredExtensions = [];
+let defaultExtensionsRegistered = false;
+
+export function markDefaultExtensionsRegistered() {
+  defaultExtensionsRegistered = true;
+}
+
+export function areDefaultExtensionsRegistered() {
+  return defaultExtensionsRegistered;
+}
 
 /**
  * Registers an extension for the rich editor
@@ -146,16 +158,22 @@ export function registerRichEditorExtension(extension) {
   registeredExtensions.push(extension);
 }
 
-export function clearRichEditorExtensions() {
+export async function clearRichEditorExtensions() {
+  // Import it first - a lazy import later would re-register the defaults.
+  const module = await waitForPromise(
+    import(
+      /* dynamicChunkName: "prosemirror-extensions" */ "discourse/static/prosemirror/extensions/register-default"
+    )
+  );
   registeredExtensions.length = 0;
+  defaultExtensionsRegistered = false;
+  return module;
 }
 
 export async function resetRichEditorExtensions() {
-  const { default: extensions } = await waitForPromise(
-    import("discourse/static/prosemirror/extensions/register-default")
-  );
-  clearRichEditorExtensions();
+  const { default: extensions } = await clearRichEditorExtensions();
   extensions.forEach(registerRichEditorExtension);
+  markDefaultExtensionsRegistered();
 }
 
 /**

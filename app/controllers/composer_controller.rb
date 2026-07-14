@@ -4,8 +4,9 @@ class ComposerController < ApplicationController
   requires_login
 
   def mentions
-    @names = params.require(:names)
-    raise Discourse::InvalidParameters.new(:names) if !@names.kind_of?(Array) || @names.size > 20
+    names = params.require(:names)
+    raise Discourse::InvalidParameters.new(:names) if !names.kind_of?(Array) || names.size > 20
+    @names = names.map { |n| n.to_s.downcase }
 
     if params[:topic_id].present?
       @topic = Topic.find_by(id: params[:topic_id])
@@ -18,7 +19,7 @@ class ComposerController < ApplicationController
         if !params[:allowed_names].is_a?(Array)
           raise Discourse::InvalidParameters.new(:allowed_names)
         end
-        params[:allowed_names] << current_user.username
+        (params[:allowed_names] + [current_user.username]).map(&:downcase)
       else
         []
       end
@@ -35,7 +36,7 @@ class ComposerController < ApplicationController
       end
     end
 
-    if @topic && @names.include?(SiteSetting.here_mention) && guardian.can_mention_here?
+    if @topic && @names.include?(SiteSetting.here_mention.downcase) && guardian.can_mention_here?
       here_count =
         PostAlerter.new.expand_here_mention(@topic.first_post, exclude_ids: [current_user.id]).size
     end
@@ -43,41 +44,26 @@ class ComposerController < ApplicationController
     serialized_groups =
       groups
         .values
-        .reduce({}) do |hash, group|
-          serialized_group = { user_count: group.user_count }
+        .each_with_object({}) do |group, hash|
+          name = group.name.downcase
+          members_visible = members_visible_group_ids.include?(group.id)
+          serialized_group = members_visible ? { user_count: group.user_count } : {}
 
-          if group_reasons[group.name] == :not_allowed &&
-               members_visible_group_ids.include?(group.id) &&
+          if group_reasons[name] == :not_allowed && members_visible &&
                (@topic&.private_message? || @allowed_names.present?)
-            # Find users that are notified already because they have been invited
-            # directly or via a group
-            notified_count =
-              GroupUser
-                # invited directly
-                .where(user_id: topic_allowed_user_ids)
-                .or(
-                  # invited via a group
-                  GroupUser.where(
-                    user_id: GroupUser.where(group_id: topic_allowed_group_ids).select(:user_id),
-                  ),
-                )
-                .where(group_id: group.id)
-                .select(:user_id)
-                .distinct
-                .count
+            notified_count = already_notified_member_count(group)
 
             if notified_count > 0
               if notified_count == group.user_count
-                group_reasons.delete(group.name)
+                group_reasons.delete(name)
               else
-                group_reasons[group.name] = :some_not_allowed
+                group_reasons[name] = :some_not_allowed
                 serialized_group[:notified_count] = notified_count
               end
             end
           end
 
-          hash[group.name] = serialized_group
-          hash
+          hash[name] = serialized_group
         end
 
     render json: {
@@ -111,7 +97,7 @@ class ComposerController < ApplicationController
     # Non-staff users can see only basic information why the users cannot see the topic.
     reason = nil if !guardian.is_staff? && reason != :private && reason != :category
 
-    reason
+    DiscoursePluginRegistry.apply_modifier(:composer_mention_user_reason, reason, user)
   end
 
   def group_reason(group)
@@ -121,6 +107,20 @@ class ComposerController < ApplicationController
           !topic_allowed_group_ids.include?(group.id)
       :not_allowed
     end
+  end
+
+  def already_notified_member_count(group)
+    GroupUser
+      .where(user_id: topic_allowed_user_ids)
+      .or(
+        GroupUser.where(
+          user_id: GroupUser.where(group_id: topic_allowed_group_ids).select(:user_id),
+        ),
+      )
+      .where(group:)
+      .select(:user_id)
+      .distinct
+      .count
   end
 
   def is_user_allowed?(user, user_ids, group_ids)
@@ -133,33 +133,44 @@ class ComposerController < ApplicationController
   def visible_group_ids_for_allowed_check
     @visible_group_ids_for_allowed_check ||=
       if @allowed_names.present?
-        Group.members_visible_groups(current_user).where(name: @allowed_names).pluck(:id).to_set
+        Group
+          .members_visible_groups(current_user)
+          .where("LOWER(name) IN (?)", @allowed_names)
+          .pluck(:id)
+          .to_set
       else
         topic_allowed_group_ids || Set.new
       end
   end
 
   def users
-    @users ||=
-      User.not_staged.where(username_lower: @names.map(&:downcase)).index_by(&:username_lower)
+    @users ||= User.not_staged.where(username_lower: @names).index_by(&:username_lower)
   end
 
   def groups
     @groups ||=
       Group
         .visible_groups(current_user)
-        .where("lower(name) IN (?)", @names.map(&:downcase))
-        .index_by(&:name)
+        .where("LOWER(name) IN (?)", @names)
+        .index_by { |g| g.name.downcase }
   end
 
   def mentionable_group_ids
     @mentionable_group_ids ||=
-      Group.mentionable(current_user, include_public: false).where(name: @names).pluck(:id).to_set
+      Group
+        .mentionable(current_user, include_public: false)
+        .where("LOWER(name) IN (?)", @names)
+        .pluck(:id)
+        .to_set
   end
 
   def members_visible_group_ids
     @members_visible_group_ids ||=
-      Group.members_visible_groups(current_user).where(name: @names).pluck(:id).to_set
+      Group
+        .members_visible_groups(current_user)
+        .where("LOWER(name) IN (?)", @names)
+        .pluck(:id)
+        .to_set
   end
 
   def topic_muted_by
@@ -179,7 +190,7 @@ class ComposerController < ApplicationController
   def topic_allowed_user_ids
     @topic_allowed_user_ids ||=
       if @allowed_names.present?
-        User.where(username_lower: @allowed_names.map(&:downcase)).pluck(:id).to_set
+        User.where(username_lower: @allowed_names).pluck(:id).to_set
       elsif @topic&.private_message?
         TopicAllowedUser.where(topic: @topic).pluck(:user_id).to_set
       end
@@ -188,7 +199,11 @@ class ComposerController < ApplicationController
   def topic_allowed_group_ids
     @topic_allowed_group_ids ||=
       if @allowed_names.present?
-        Group.messageable(current_user).where(name: @allowed_names).pluck(:id).to_set
+        Group
+          .messageable(current_user)
+          .where("LOWER(name) IN (?)", @allowed_names)
+          .pluck(:id)
+          .to_set
       elsif @topic&.private_message?
         TopicAllowedGroup.where(topic: @topic).pluck(:group_id).to_set
       end

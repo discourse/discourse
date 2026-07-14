@@ -9,13 +9,11 @@ module DiscourseSubscriptions
       requires_plugin PLUGIN_NAME
 
       def index
-        begin
-          promo_codes = ::Stripe::PromotionCode.list({ limit: 100 }, stripe_request_opts)[:data]
-          promo_codes = promo_codes.select { |code| code[:coupon][:valid] == true }
-          render_json_dump promo_codes
-        rescue ::Stripe::InvalidRequestError => e
-          render_json_error e.message
-        end
+        promo_codes = ::Stripe::PromotionCode.list({ limit: 100 }, stripe_request_opts)[:data]
+        promo_codes = promo_codes.select { |code| code[:coupon][:valid] == true }
+        render_json_dump promo_codes
+      rescue ::Stripe::InvalidRequestError => e
+        render_json_error e.message
       end
 
       def create

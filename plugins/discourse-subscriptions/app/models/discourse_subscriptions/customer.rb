@@ -19,11 +19,11 @@ end
 # Table name: discourse_subscriptions_customers
 #
 #  id          :bigint           not null, primary key
+#  created_at  :datetime         not null
+#  updated_at  :datetime         not null
 #  customer_id :string           not null
 #  product_id  :string
 #  user_id     :bigint
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
 #
 # Indexes
 #

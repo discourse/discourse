@@ -4,19 +4,19 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
-import DecoratedHtml from "discourse/components/decorated-html";
-import InterpolatedTranslation from "discourse/components/interpolated-translation";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
 import ReviewableNoteForm from "discourse/components/reviewable/note-form";
-import UserLink from "discourse/components/user-link";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import escape from "discourse/lib/escape";
 import { and, eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import DInterpolatedTranslation from "discourse/ui-kit/d-interpolated-translation";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const HISTORY_CLAIMED_ID = 3;
@@ -243,14 +243,14 @@ export default class ReviewableTimeline extends Component {
           {{#each this.timelineEvents as |event|}}
             <div class="timeline-event">
               <div class="timeline-event__icon">
-                {{icon event.icon}}
+                {{dIcon event.icon}}
               </div>
 
               <div class="timeline-event__content">
                 <div class="timeline-event__main">
                   <div class="timeline-event__text">
                     <div class="timeline-event__title">
-                      <InterpolatedTranslation
+                      <DInterpolatedTranslation
                         @key={{event.titleKey}}
                         as |Placeholder|
                       >
@@ -259,19 +259,19 @@ export default class ReviewableTimeline extends Component {
                         </Placeholder>
 
                         <Placeholder @name="username">
-                          {{avatar event.user imageSize="tiny"}}
-                          <UserLink
+                          {{dAvatar event.user imageSize="tiny"}}
+                          <DUserLink
                             @user={{event.user}}
-                          >{{event.user.username}}</UserLink>
+                          >{{event.user.username}}</DUserLink>
                         </Placeholder>
 
                         <Placeholder @name="relativeDate">
-                          {{formatDate event.date format="medium"}}
+                          {{dFormatDate event.date format="medium"}}
                         </Placeholder>
-                      </InterpolatedTranslation>
+                      </DInterpolatedTranslation>
                     </div>
                     {{#if event.description}}
-                      <DecoratedHtml
+                      <DDecoratedHtml
                         @className="timeline-event__description"
                         @html={{event.description}}
                       />
@@ -297,7 +297,7 @@ export default class ReviewableTimeline extends Component {
       {{else}}
         <div class="timeline-empty">
           <div class="timeline-empty__icon">
-            {{icon "clock"}}
+            {{dIcon "clock"}}
           </div>
           <p class="timeline-empty__message">
             {{i18n "review.timeline.no_events"}}

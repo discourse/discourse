@@ -51,25 +51,25 @@ class UserBadge < ActiveRecord::Base
   validates :granted_by, presence: true
 
   after_create do
-    Badge.increment_counter "grant_count", self.badge_id
-    user_ids = [self.user_id]
+    Badge.increment_counter "grant_count", badge_id
+    user_ids = [user_id]
     UserStat.update_distinct_badge_count(user_ids)
     UserBadge.update_featured_ranks!(user_ids)
-    self.trigger_user_badge_granted_event
+    trigger_user_badge_granted_event
   end
 
   after_destroy do
-    Badge.decrement_counter "grant_count", self.badge_id
-    user_ids = [self.user_id]
+    Badge.decrement_counter "grant_count", badge_id
+    user_ids = [user_id]
     UserStat.update_distinct_badge_count(user_ids)
     UserBadge.update_featured_ranks!(user_ids)
 
-    DiscourseEvent.trigger(:user_badge_removed, self.badge_id, self.user_id)
+    DiscourseEvent.trigger(:user_badge_removed, badge_id, user_id)
     DiscourseEvent.trigger(:user_badge_revoked, user_badge: self)
   end
 
   def self.ensure_consistency!(user_ids = [])
-    self.update_featured_ranks!(user_ids)
+    update_featured_ranks!(user_ids)
   end
 
   def self.update_featured_ranks!(user_ids = [])
@@ -120,11 +120,11 @@ class UserBadge < ActiveRecord::Base
   private
 
   def trigger_user_badge_granted_event
-    self.class.trigger_user_badge_granted_event(self.badge_id, self.user_id)
+    self.class.trigger_user_badge_granted_event(badge_id, user_id)
   end
 
   def single_grant_badge?
-    self.badge ? self.badge.single_grant? : true
+    badge ? badge.single_grant? : true
   end
 end
 
@@ -133,16 +133,16 @@ end
 # Table name: user_badges
 #
 #  id              :integer          not null, primary key
-#  badge_id        :integer          not null
-#  user_id         :integer          not null
-#  granted_at      :datetime         not null
-#  granted_by_id   :integer          not null
-#  post_id         :integer
-#  seq             :integer          default(0), not null
 #  featured_rank   :integer
-#  created_at      :datetime         not null
+#  granted_at      :datetime         not null
 #  is_favorite     :boolean
+#  seq             :integer          default(0), not null
+#  created_at      :datetime         not null
+#  badge_id        :integer          not null
+#  granted_by_id   :integer          not null
 #  notification_id :bigint
+#  post_id         :integer
+#  user_id         :integer          not null
 #
 # Indexes
 #

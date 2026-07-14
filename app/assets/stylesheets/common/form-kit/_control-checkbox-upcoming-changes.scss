@@ -6,6 +6,7 @@
       opacity: 0;
 
       &-label {
+        position: relative;
         display: flex;
         gap: 0.75em;
         margin: 0;
@@ -43,7 +44,7 @@
         left: 50%;
         width: 50%;
         height: 50%;
-        background: var(--tertiary-high);
+        background: var(--tertiary);
         border-radius: 50%;
         transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         opacity: 0;
@@ -73,7 +74,7 @@
 
   .form-kit__control-checkbox-label:hover
     .form-kit__control-checkbox-checkmark {
-    border-color: var(--tertiary-high);
+    border-color: var(--tertiary);
   }
 
   .form-kit__control-checkbox:checked + .form-kit__control-checkbox-checkmark {

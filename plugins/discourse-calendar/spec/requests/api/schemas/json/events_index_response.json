@@ -48,6 +48,9 @@
           "all_day": {
             "type": "boolean"
           },
+          "custom_fields": {
+            "type": ["object", "null"]
+          },
           "post": {
             "type": "object",
             "additionalProperties": false,

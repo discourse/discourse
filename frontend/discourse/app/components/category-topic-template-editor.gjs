@@ -4,10 +4,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import DEditor from "discourse/components/d-editor";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import TextField from "discourse/components/text-field";
 import FormTemplateChooser from "discourse/select-kit/components/form-template-chooser";
+import DEditor from "discourse/ui-kit/d-editor";
+import DTextField from "discourse/ui-kit/d-text-field";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 import { i18n } from "discourse-i18n";
 
 export default class CategoryTopicTemplateEditor extends Component {
@@ -114,7 +114,7 @@ export default class CategoryTopicTemplateEditor extends Component {
       <label for="category-topic-title-placeholder">
         {{i18n "category.topic_title_placeholder"}}
       </label>
-      <TextField
+      <DTextField
         @value={{this.topicTitlePlaceholder}}
         @id="category-topic-title-placeholder"
         @placeholderKey="category.topic_title_placeholder_placeholder"

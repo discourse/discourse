@@ -6,7 +6,7 @@ class ThemeModifierSet < ActiveRecord::Base
   belongs_to :theme
 
   def self.modifiers
-    @modifiers ||= self.load_modifiers
+    @modifiers ||= load_modifiers
   end
 
   validate :type_validator
@@ -38,11 +38,10 @@ class ThemeModifierSet < ActiveRecord::Base
   # Given the ids of multiple active themes / theme components, this function
   # will combine them into a 'resolved' behavior
   def self.resolve_modifier_for_themes(theme_ids, modifier_name)
-    return nil if !(config = self.modifiers[modifier_name])
+    return nil if !(config = modifiers[modifier_name])
 
     all_values =
-      self
-        .where(theme_id: theme_ids)
+      where(theme_id: theme_ids)
         .where.not(modifier_name => nil)
         .map { |s| s.public_send(modifier_name) }
     case config[:type]

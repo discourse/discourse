@@ -15,6 +15,7 @@ he:
         title: תזמון פוסט בנושא עם תוצאות דפדפן נתונים
         description: קבלת דוחות מתוזמנים מפורסמים בנושא מסוים
   data_explorer:
+    admin_dashboard_label: "דפדפן נתונים"
     report_generator:
       private_message:
         title: "דוח מתוזמן עבור %{query_name}"

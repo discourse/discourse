@@ -4,12 +4,13 @@
 module TopicGuardian
   def can_remove_allowed_users?(topic, target_user = nil)
     is_staff? || (is_my_own?(topic) && @user.has_trust_level?(TrustLevel[2])) ||
-      (topic.allowed_users.count > 1 && topic.user != target_user && !!(is_me?(target_user)))
+      (topic.allowed_users.count > 1 && topic.user != target_user && !!is_me?(target_user))
   end
 
   def can_review_topic?(topic)
     return false if anonymous? || topic.nil?
     return true if is_staff?
+    return false if !can_see_topic?(topic)
 
     is_category_group_moderator?(topic.category)
   end
@@ -58,6 +59,15 @@ module TopicGuardian
       (!category || Category.topic_create_allowed(self).where(id: category_id).count == 1)
   end
 
+  def can_set_topic_timer?(topic = nil)
+    return false if anonymous? || is_silenced?
+    return true if @user.is_system_user?
+    return false if topic && !can_see_topic?(topic)
+    return true if is_staff?
+
+    @user.in_any_groups?(SiteSetting.topic_timers_allowed_groups_map)
+  end
+
   def can_move_topic_to_category?(category)
     category =
       (
@@ -101,33 +111,25 @@ module TopicGuardian
     # can't edit topics in secured categories where you don't have permission to create topics
     # except for a tiny edge case where the topic is uncategorized and you are trying
     # to fix it but uncategorized is disabled
-    if (
-         SiteSetting.allow_uncategorized_topics ||
-           topic.category_id != SiteSetting.uncategorized_category_id
-       )
+    if SiteSetting.allow_uncategorized_topics ||
+         topic.category_id != SiteSetting.uncategorized_category_id
       return false if !can_create_topic_on_category?(topic.category)
     end
 
     # Editing a shared draft.
-    if (
-         !topic.archived && !topic.private_message? &&
-           topic.category_id == SiteSetting.shared_drafts_category.to_i &&
-           can_see_category?(topic.category) && can_see_shared_draft? && can_create_post?(topic)
-       )
+    if !topic.archived && !topic.private_message? &&
+         topic.category_id == SiteSetting.shared_drafts_category.to_i &&
+         can_see_category?(topic.category) && can_see_shared_draft? && can_create_post?(topic)
       return true
     end
 
-    if (
-         is_in_edit_post_groups? && topic.archived && !topic.private_message? &&
-           can_create_post?(topic)
-       )
+    if is_in_edit_post_groups? && topic.archived && !topic.private_message? &&
+         can_create_post?(topic)
       return true
     end
 
-    if (
-         is_in_edit_topic_groups? && !topic.archived && !topic.private_message? &&
-           can_create_post?(topic)
-       )
+    if is_in_edit_topic_groups? && !topic.archived && !topic.private_message? &&
+         can_create_post?(topic)
       return true
     end
 
@@ -144,6 +146,7 @@ module TopicGuardian
 
   def can_recover_topic?(topic)
     return false if topic.blank?
+    return false if !is_staff? && !can_see_topic?(topic, false)
 
     if is_category_group_moderator?(topic.category) ||
          user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
@@ -157,7 +160,7 @@ module TopicGuardian
     return false if topic.trashed?
     return false if topic.is_category_topic?
     return false if Discourse.static_doc_topic_ids.include?(topic.id)
-    return true if is_category_group_moderator?(topic.category)
+    return true if is_category_group_moderator?(topic.category) && can_see_topic?(topic)
     return true if user&.in_any_groups?(SiteSetting.delete_all_posts_and_topics_allowed_groups_map)
 
     is_my_own?(topic) && can_delete_own_topic?(topic)
@@ -174,15 +177,7 @@ module TopicGuardian
     # All other posts that were deleted still must be permanently deleted
     # before the topic can be deleted with the exception of small action
     # posts that will be deleted right before the topic is.
-    all_posts_count =
-      Post
-        .with_deleted
-        .where(topic_id: topic.id)
-        .where(
-          post_type: [Post.types[:regular], Post.types[:moderator_action], Post.types[:whisper]],
-        )
-        .count
-    return false if all_posts_count > 1
+    return false if topic.deletable_posts_count > 1
 
     return false if !is_admin? || !can_see_topic?(topic)
     return false if !topic.deleted_at
@@ -325,6 +320,9 @@ module TopicGuardian
     return true if new_archetype == topic.archetype
     if new_archetype == Archetype.banner || topic.archetype == Archetype.banner
       return can_banner_topic?(topic)
+    end
+    if new_archetype == Archetype.private_message || topic.private_message?
+      return can_convert_topic?(topic)
     end
     true
   end

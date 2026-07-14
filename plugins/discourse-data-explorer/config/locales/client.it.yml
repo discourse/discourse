@@ -14,6 +14,9 @@ it:
       explorer:
         no_semicolons: "Rimuovi i punti e virgola dalla query."
         dirty: "È necessario salvare la query prima di eseguirla."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Nessun risultato"
     explorer:
       default_query: "Predefinito"
       or: "o"
@@ -25,6 +28,7 @@ it:
       description_placeholder: "Inserisci una descrizione qui"
       ai:
         generate: "Genera"
+        optional: "opzionale"
       import:
         label: "Importa"
         unparseable_json: "File JSON non analizzabile."
@@ -41,17 +45,15 @@ it:
           yes: "Sì"
           no: "No"
           null_: "Null"
-      export: "Esporta"
       view_json: "Visualizza JSON"
       save: "Salva le modifiche"
       run: "Esegui"
       undo: "Annulla modifiche"
-      edit: "Modifica"
       delete: "Elimina"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Tabella"
-      show_graph: "Grafico"
+      chart:
+        form:
+          label: "Tipo di grafico"
+          bar: "Barra"
       others_dirty: "Una query ha modifiche non salvate che andranno perse se esci."
       run_time: "Query completata in %{value} ms."
       result_count:
@@ -68,7 +70,6 @@ it:
       query_time: "Ultima esecuzione"
       query_user: "Creato da"
       column: "Colonna %{number}"
-      explain_label: "Includere il piano query?"
       reset_params: "Annulla"
       search_placeholder: "Ricerca..."
       no_search_results: "Spiacenti, non abbiamo trovato alcun risultato che corrisponda al tuo testo."
@@ -85,6 +86,16 @@ it:
           descriptions:
             data_explorer:
               run_queries: "Esegui le query di Data Explorer. Limita la chiave API a un insieme di query specificando i loro ID."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Data Explorer"
+      sql:
+        query_id: "Query"
+        add_param: "Aggiungi parametro"
+        param_value: "Valore"
+        output:
+          results: "Risultati"
+          no_results: "Nessun risultato"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

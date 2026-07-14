@@ -9,7 +9,6 @@ fa_IR:
     chat_enabled: "گفتگو را فعال کنید."
     enable_public_channels: "کانال های عمومی را بر اساس دسته ها فعال کنید."
     chat_allow_uploads: "بارگذاری در کانال‌های گفتگو عمومی و کانال‌های پیام مستقیم مجاز است."
-    allow_chat_in_anonymous_mode: "این تنظیمات را فعال کنید تا به کاربران اجازه دهید که هنگام مرور وبگاه شما به صورت ناشناس از گفتگو استفاده کنند. این تنظیم نیاز دارد که ابتدا تنظیمات فعال‌سازی «حالت ناشناس فعال» باشد."
     errors:
       chat_upload_not_allowed_secure_uploads: "وقتی که در تنظیمات سایت آپلودهای ایمن فعال باشد، آپلود گفتگو مجاز نیست."
       allow_chat_in_anonymous_mode_invalid: "این تنظیم نیاز دارد که ابتدا تنظیمات «فعال‌سازی حالت ناشناس» فعال باشد."
@@ -70,10 +69,19 @@ fa_IR:
       and_x_others:
         one: "و %{count} نفر دیگر"
         other: "و %{count} نفر دیگر"
+  discourse_push_notifications:
+    actions:
+      chat_reply:
+        title: پاسخ
+        placeholder: پاسخ…
   discourse_automation:
     scriptables:
       send_chat_message:
         title: ارسال پیام
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "تایید"
+      default_deny_label: "رد کردن"
   reviewable_score_types:
     needs_review:
       title: "نیاز به بررسی دارد"
@@ -88,6 +96,10 @@ fa_IR:
         one: "شما یک پیام گفتگو جدیدی دارید"
         other: "شما پیام‌های گفتگو جدیدی دارید"
       from: "%{site_name}"
+      subject:
+        private_email_improved:
+          one: "پیام جدید"
+          other: "پیام جدید"
       view_messages:
         one: "مشاهده پیام"
         other: "مشاهده %{count} پیام"

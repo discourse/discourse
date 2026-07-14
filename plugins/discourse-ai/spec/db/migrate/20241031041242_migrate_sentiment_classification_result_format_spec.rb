@@ -7,6 +7,8 @@ require Rails.root.join(
 RSpec.describe MigrateSentimentClassificationResultFormat do
   let(:connection) { ActiveRecord::Base.connection }
 
+  around { |example| ActiveRecord::Migration.suppress_messages { example.run } }
+
   before do
     enable_current_plugin
     connection.execute(<<~SQL)

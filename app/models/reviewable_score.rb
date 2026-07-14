@@ -104,20 +104,20 @@ end
 # Table name: reviewable_scores
 #
 #  id                    :bigint           not null, primary key
-#  reviewable_id         :integer          not null
-#  user_id               :integer          not null
+#  context               :string
+#  reason                :string
 #  reviewable_score_type :integer          not null
-#  status                :integer          not null
-#  score                 :float            default(0.0), not null
-#  take_action_bonus     :float            default(0.0), not null
-#  reviewed_by_id        :integer
 #  reviewed_at           :datetime
-#  meta_topic_id         :integer
+#  score                 :float            default(0.0), not null
+#  status                :integer          not null
+#  take_action_bonus     :float            default(0.0), not null
+#  user_accuracy_bonus   :float            default(0.0), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  reason                :string
-#  user_accuracy_bonus   :float            default(0.0), not null
-#  context               :string
+#  meta_topic_id         :integer
+#  reviewable_id         :integer          not null
+#  reviewed_by_id        :integer
+#  user_id               :integer          not null
 #
 # Indexes
 #

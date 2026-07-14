@@ -4,6 +4,7 @@ import { action, computed } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
+import AdminUserUpcomingChanges from "discourse/admin/components/admin-user-upcoming-changes";
 import AdminUser from "discourse/admin/models/admin-user";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
@@ -183,6 +184,15 @@ export default class AdminUserIndexController extends Controller {
   @computed("ssoLastPayload")
   get ssoPayload() {
     return this.ssoLastPayload.split("&");
+  }
+
+  @action
+  openUserUpcomingChanges() {
+    this.modal.show(AdminUserUpcomingChanges, {
+      model: {
+        user: this.model,
+      },
+    });
   }
 
   @action
@@ -432,65 +442,25 @@ export default class AdminUserIndexController extends Controller {
       .catch(popupAjaxError);
   }
 
+  get deleteUserOptions() {
+    return this.adminTools.deleteUserOptions;
+  }
+
   @action
-  destroyUser() {
-    const postCount = this.get("model.post_count");
+  destroyUser(optionId) {
+    const postCount = this.model.post_count;
     const maxPostCount = this.siteSettings.delete_all_posts_max;
     const location = document.location.pathname;
 
-    const performDestroy = (block) => {
-      this.dialog.notice(i18n("admin.user.deleting_user"));
-      let formData = { context: location };
-      if (block) {
-        formData["block_email"] = true;
-        formData["block_urls"] = true;
-        formData["block_ip"] = true;
-      }
-      if (postCount <= maxPostCount) {
-        formData["delete_posts"] = true;
-      }
-      this.model
-        .destroy(formData)
-        .then((data) => {
-          if (data.deleted) {
-            if (/^\/admin\/users\/list\//.test(location)) {
-              document.location = location;
-            } else {
-              document.location = getURL("/admin/users/list/active");
-            }
-          } else {
-            this.dialog.alert(i18n("admin.user.delete_failed"));
-          }
-        })
-        .catch(() => {
-          this.dialog.alert(i18n("admin.user.delete_failed"));
-        });
-    };
-
-    this.dialog.alert({
-      title: i18n("admin.user.delete_confirm_title"),
-      message: i18n("admin.user.delete_confirm"),
-      class: "delete-user-modal",
-      buttons: [
-        {
-          label: i18n("admin.user.delete_dont_block"),
-          class: "btn-danger delete-dont-block",
-          action: () => {
-            return performDestroy(false);
-          },
-        },
-        {
-          icon: "triangle-exclamation",
-          label: i18n("admin.user.delete_and_block"),
-          class: "btn-danger delete-and-block",
-          action: () => {
-            return performDestroy(true);
-          },
-        },
-        {
-          label: i18n("composer.cancel"),
-        },
-      ],
+    this.adminTools.showDeleteUserModal(this.model.id, optionId, {
+      deletePosts: postCount <= maxPostCount,
+      onDeleted: () => {
+        if (/^\/admin\/users\/list\//.test(location)) {
+          document.location = location;
+        } else {
+          document.location = getURL("/admin/users/list/active");
+        }
+      },
     });
   }
 

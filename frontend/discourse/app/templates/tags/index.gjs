@@ -1,16 +1,21 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import DButton from "discourse/components/d-button";
 import DiscourseBanner from "discourse/components/discourse-banner";
-import ExpandingTextArea from "discourse/components/expanding-text-area";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TagList from "discourse/components/tag-list";
-import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { not, or } from "discourse/truth-helpers";
+import DAsyncContent from "discourse/ui-kit/d-async-content.gjs";
+import DButton from "discourse/ui-kit/d-button";
+import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 import { i18n } from "discourse-i18n";
+
+async function loadTagsAdminDropdownComponent() {
+  const module = await import("discourse/admin/components/tags-admin-dropdown");
+  return module.default;
+}
 
 export default <template>
   <div class="container">
@@ -35,7 +40,7 @@ export default <template>
                 count=@controller.bulkCreateResults.created.length
               }}
             </h4>
-            {{discourseTags null tags=@controller.bulkCreateResults.created}}
+            {{dDiscourseTags null tags=@controller.bulkCreateResults.created}}
           </div>
         {{/if}}
 
@@ -47,7 +52,7 @@ export default <template>
                 count=@controller.bulkCreateResults.existing.length
               }}
             </h4>
-            {{discourseTags null tags=@controller.bulkCreateResults.existing}}
+            {{dDiscourseTags null tags=@controller.bulkCreateResults.existing}}
           </div>
         {{/if}}
 
@@ -67,35 +72,41 @@ export default <template>
     <div class="container tags-controls">
       <h2>{{i18n "tagging.tags"}}</h2>
       {{#if @controller.canAdminTags}}
-        <@controller.TagsAdminDropdownComponent />
-        <form
-          class="bulk-create-tags-form"
-          {{on "submit" @controller.bulkCreateTags}}
-        >
-          <label for="bulk-tags-input" class="sr-only">
-            {{i18n "tagging.bulk_create_inline_placeholder"}}
-          </label>
-          <ExpandingTextArea
-            {{didInsert @controller.registerTextarea}}
-            {{on "input" (withEventValue (fn (mut @controller.bulkTagInput)))}}
-            value={{@controller.bulkTagInput}}
-            placeholder={{i18n "tagging.bulk_create_inline_placeholder"}}
-            disabled={{@controller.isCreatingTags}}
-            rows="1"
-            id="bulk-tags-input"
-            class="bulk-tags-input"
-          />
-          <DButton
-            @action={{@controller.bulkCreateTags}}
-            @disabled={{or
-              @controller.isCreatingTags
-              (not @controller.canCreateTags)
-            }}
-            @icon="tag"
-            @label="tagging.bulk_create_button"
-            class="btn-primary"
-          />
-        </form>
+        <DAsyncContent @asyncData={{(loadTagsAdminDropdownComponent)}}>
+          <:content as |TagsAdminDropdownComponent|>
+            <TagsAdminDropdownComponent />
+            <form
+              class="bulk-create-tags-form"
+              {{on "submit" @controller.bulkCreateTags}}
+            >
+              <label for="bulk-tags-input" class="sr-only">
+                {{i18n "tagging.bulk_create_inline_placeholder"}}
+              </label>
+              <DExpandingTextArea
+                {{on
+                  "input"
+                  (withEventValue (fn (mut @controller.bulkTagInput)))
+                }}
+                @value={{@controller.bulkTagInput}}
+                placeholder={{i18n "tagging.bulk_create_inline_placeholder"}}
+                disabled={{@controller.isCreatingTags}}
+                rows="1"
+                id="bulk-tags-input"
+                class="bulk-tags-input"
+              />
+              <DButton
+                @action={{@controller.bulkCreateTags}}
+                @disabled={{or
+                  @controller.isCreatingTags
+                  (not @controller.canCreateTags)
+                }}
+                @icon="tag"
+                @label="tagging.bulk_create_button"
+                class="btn-primary"
+              />
+            </form>
+          </:content>
+        </DAsyncContent>
       {{/if}}
     </div>
 

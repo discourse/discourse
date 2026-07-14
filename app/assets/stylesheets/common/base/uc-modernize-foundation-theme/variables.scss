@@ -1,0 +1,13 @@
+.uc-modernize-foundation-theme {
+  // New Variables
+  --webkit-font-smoothing: antialiased;
+  --welcome-banner-text-align: center;
+  --welcome-banner-search-menu-margin-inline: auto;
+  -webkit-font-smoothing: var(--webkit-font-smoothing);
+
+  // Misc
+  --main-outlet-padding-top: var(--space-4);
+  --d-nav-underline-height: var(--space-half);
+  --d-input-border: 1px solid var(--primary-300);
+  --input-border-color: var(--primary-300);
+}

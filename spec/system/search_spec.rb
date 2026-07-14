@@ -89,25 +89,24 @@ describe "Search" do
     before do
       SearchIndexer.enable
       SearchIndexer.index(topic, force: true)
-      SiteSetting.rate_limit_search_anon_user_per_minute = 4
+      SiteSetting.rate_limit_search_anon_user_per_minute = 1
       RateLimiter.enable
       Fabricate(:theme_site_setting_with_service, name: "enable_welcome_banner", value: false)
     end
 
     after { SearchIndexer.disable }
 
-    xit "rate limits searches for anonymous users" do
-      queries = %w[one two three four]
-
+    it "rate limits searches for anonymous users" do
       visit("/search?expanded=true")
 
-      queries.each do |query|
-        search_page.clear_search_input
-        search_page.type_in_search(query)
-        search_page.click_search_button
-      end
+      search_page.type_in_search("first")
+      search_page.click_search_button
+      expect(search_page).to have_no_css(".search-container .spinner")
 
-      # Rate limit error should kick in after 4 queries
+      search_page.clear_search_input
+      search_page.type_in_search("second")
+      search_page.click_search_button
+
       expect(search_page).to have_warning_message
     end
   end
@@ -126,6 +125,7 @@ describe "Search" do
       visit("/")
       search_page.click_search_icon
       search_page.type_in_search_menu("test")
+
       search_page.click_search_menu_link
       expect(search_page).to have_topic_title_for_first_search_result(topic.title)
       search_page.click_first_topic
@@ -256,13 +256,10 @@ describe "Search" do
       find(".search-info .bulk-select").click
       find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .bulk-select input").click
       find(".search-info .bulk-select-topics-dropdown-trigger").click
-      find(".bulk-select-topics-dropdown-content .append-tags").click
-      expect(topic_bulk_actions_modal).to be_open
-      tag_selector = PageObjects::Components::SelectKit.new(".tag-chooser")
-      tag_selector.search(tag1.name)
-      tag_selector.select_row_by_name(tag1.name)
-      tag_selector.collapse
-      topic_bulk_actions_modal.click_bulk_topics_confirm
+      PageObjects::Components::TopicListHeader.new.click_bulk_button("manage-tags")
+      manage_tags_modal = PageObjects::Modals::ManageTags.new
+      manage_tags_modal.add_tags(tag1.name)
+      manage_tags_modal.click_confirm
       expect(
         find(".fps-result .fps-topic[data-topic-id=\"#{topic.id}\"] .discourse-tags"),
       ).to have_content(tag1.name)

@@ -24,6 +24,27 @@ describe "Composer - ProseMirror - Autocomplete" do
     expect(composer).to have_emoji_autocomplete
   end
 
+  it "keeps emoji autocomplete open when pressing arrow down near a horizontal rule" do
+    open_composer
+
+    composer.send_keys(:enter, "---", :enter)
+
+    expect(rich).to have_css("hr")
+
+    composer.send_keys(:up, :up)
+    composer.type_content(" :smi")
+
+    expect(composer).to have_emoji_autocomplete_selected(1)
+
+    composer.send_keys(:down)
+
+    expect(composer).to have_emoji_autocomplete_selected(2)
+
+    composer.send_keys(:up)
+
+    expect(composer).to have_emoji_autocomplete_selected(1)
+  end
+
   it "strips partially written emoji when using 'more' emoji modal" do
     open_composer
 
@@ -130,6 +151,11 @@ describe "Composer - ProseMirror - Autocomplete" do
         SiteSetting.external_system_avatars_url =
           "/letter_avatar_proxy/v4/letter/{first_letter}/{color}/{size}.png"
         SiteSetting.unicode_usernames = true
+
+        stub_request(:get, %r{\Ahttps://avatars\.discourse-cdn\.com/}).to_return(
+          status: 200,
+          body: "",
+        )
       end
 
       it "renders unicode mentions as nodes" do

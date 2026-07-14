@@ -6,7 +6,7 @@ import { i18n } from "discourse-i18n";
 import anniversariesFixtures from "../fixtures/anniversaries";
 import birthdaysFixtures from "../fixtures/birthdays";
 
-acceptance("Cakeday - Sidebar with cakeday disabled", function (needs) {
+acceptance("Sidebar with cakeday disabled", function (needs) {
   needs.user();
 
   needs.settings({
@@ -40,7 +40,7 @@ acceptance("Cakeday - Sidebar with cakeday disabled", function (needs) {
   });
 });
 
-acceptance("Cakeday - Sidebar with cakeday enabled", function (needs) {
+acceptance("Sidebar with cakeday enabled", function (needs) {
   needs.user();
 
   needs.settings({

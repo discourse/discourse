@@ -51,21 +51,81 @@
     font-size: var(--font-up-1-rem);
   }
 
-  img[data-placeholder="true"] {
-    animation: placeholder 1.5s infinite;
+  .upload-placeholder {
+    &.--image {
+      position: relative;
+      display: inline-block;
+      vertical-align: bottom;
 
-    @keyframes placeholder {
-      0% {
-        opacity: 0.6;
-      }
+      img {
+        max-width: 350px;
 
-      50% {
-        opacity: 0.4;
+        @include viewport.until(sm) {
+          max-width: 100%;
+        }
+        height: auto;
+        border-radius: var(--d-border-radius);
+        display: block;
+        animation: placeholder 1.5s infinite;
       }
+    }
 
-      100% {
-        opacity: 0.6;
+    &.--file {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0 var(--space-1) 0 0.65em;
+      border: 1px solid var(--primary-low-mid);
+      border-radius: var(--d-border-radius);
+      color: var(--primary-high);
+      font-size: var(--font-down-1-rem);
+
+      .d-icon {
+        fill: currentcolor;
       }
+    }
+
+    &__overlay {
+      position: absolute;
+      bottom: var(--space-2);
+      right: var(--space-2);
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      padding: 0 var(--space-1) 0 0.65em;
+      background: var(--primary-very-low);
+      border: 1px solid var(--primary-low-mid);
+      border-radius: var(--d-border-radius);
+      color: var(--primary-high);
+      font-size: var(--font-down-1-rem);
+    }
+
+    &__progress {
+      color: var(--tertiary);
+      font-weight: bold;
+    }
+
+    &__filename,
+    &__icon {
+      animation: placeholder 1.5s infinite;
+    }
+
+    &__cancel {
+      padding: 0.5em 0.65em;
+    }
+  }
+
+  @keyframes placeholder {
+    0% {
+      opacity: 0.6;
+    }
+
+    50% {
+      opacity: 0.4;
+    }
+
+    100% {
+      opacity: 0.6;
     }
   }
 
@@ -184,7 +244,7 @@
     padding: var(--space-half) var(--space-2) 0 var(--space-2);
     margin-block: var(--space-4);
 
-    > div {
+    > div:not(.composer-image-gallery__mode-buttons) {
       display: flex;
       flex-wrap: wrap;
       gap: var(--space-2);
@@ -306,7 +366,8 @@
 
 .fk-d-menu[data-identifier="composer-link-toolbar"],
 .fk-d-menu[data-identifier="composer-image-toolbar"],
-.fk-d-menu[data-identifier="composer-image-alt-text"] {
+.fk-d-menu[data-identifier="composer-image-alt-text"],
+.fk-d-menu[data-identifier="composer-onebox-toolbar"] {
   user-select: none;
   z-index: z("composer", "dropdown");
 
@@ -341,6 +402,7 @@
 
     &.--active {
       background: var(--d-selected);
+      color: var(--d-selected-text-color);
     }
   }
 
@@ -434,6 +496,10 @@
       user-select: none;
       cursor: zoom-in;
     }
+  }
+
+  &:has(.image-alt-text-input:focus-within) img.ProseMirror-selectednode {
+    cursor: default;
   }
 }
 

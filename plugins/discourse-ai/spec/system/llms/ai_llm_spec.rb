@@ -16,7 +16,7 @@ RSpec.describe "Managing LLM configurations" do
   it "correctly sets defaults" do
     visit "/admin/plugins/discourse-ai/ai-llms"
 
-    find("[data-llm-id='anthropic-claude-opus-4-6'] button").click()
+    find("[data-llm-id='anthropic-claude-opus-4-7'] button").click()
 
     secret_selector = PageObjects::Components::SelectKit.new(".ai-secret-selector__dropdown")
     secret_selector.expand
@@ -32,9 +32,9 @@ RSpec.describe "Managing LLM configurations" do
     expect(llm.api_key).to eq("abcd")
 
     preset = DiscourseAi::Completions::Llm.presets.find { |p| p[:id] == "anthropic" }
-    model_preset = preset[:models].find { |m| m[:name] == "claude-opus-4-6" }
+    model_preset = preset[:models].find { |m| m[:name] == "claude-opus-4-7" }
 
-    expect(llm.name).to eq("claude-opus-4-6")
+    expect(llm.name).to eq("claude-opus-4-7")
     expect(llm.url).to eq(preset[:endpoint])
     expect(llm.tokenizer).to eq(preset[:tokenizer].to_s)
     expect(llm.max_prompt_tokens.to_i).to eq(model_preset[:tokens])
@@ -150,21 +150,15 @@ RSpec.describe "Managing LLM configurations" do
     it "prefills the quotas form" do
       visit "/admin/plugins/discourse-ai/ai-llms/#{llm_model_1.id}/edit"
 
-      expect(page).to have_selector(
-        ".ai-llm-quotas__table .ai-llm-quotas__cell",
-        text: group_1.name,
-      )
+      expect(page).to have_selector(".ai-llm-quotas__item", text: group_1.name)
     end
 
     it "can remove a quota" do
       visit "/admin/plugins/discourse-ai/ai-llms/#{llm_model_1.id}/edit"
 
-      find(".ai-llm-quotas__delete-btn:nth-child(1)").click
+      find(".ai-llm-quotas__delete-btn").click
 
-      expect(page).to have_no_selector(
-        ".ai-llm-quotas__table .ai-llm-quotas__cell",
-        text: group_1.name,
-      )
+      expect(page).to have_no_selector(".ai-llm-quotas__item", text: group_1.name)
     end
 
     it "can add a quota" do
@@ -177,10 +171,7 @@ RSpec.describe "Managing LLM configurations" do
       form.field("max_tokens").fill_in(2000)
       form.submit
 
-      expect(page).to have_selector(
-        ".ai-llm-quotas__table .ai-llm-quotas__cell",
-        text: Group.find(1).name,
-      )
+      expect(page).to have_selector(".ai-llm-quotas__item", text: Group.find(1).name)
     end
   end
 

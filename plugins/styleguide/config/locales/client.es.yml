@@ -85,6 +85,8 @@ es:
           title: "Lista de publicaciones"
           empty_example: "<PostList /> estado vacío"
           populated_example: "<PostList /> estado poblado"
+        post_oneboxes:
+          title: "Oneboxes publicadas"
         topic_map:
           title: "Mapa del tema"
         site_header:
@@ -115,3 +117,5 @@ es:
         char_counter:
           title: "Contador de caracteres"
           placeholder: "Introduce aquí tu texto..."
+        segmented_control:
+          title: "Control segmentado (grupo de botones de alternancia)"

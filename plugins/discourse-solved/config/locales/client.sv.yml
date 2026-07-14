@@ -5,6 +5,26 @@
 # https://translate.discourse.org/
 
 sv:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Godkända lösningar"
+        sections:
+          support:
+            title: "Stöd"
+            filter:
+              all_categories: "Alla kategorier"
+            answerers:
+              staff: "Personal"
+              member: "Medlemmar"
+              basic: "Grundläggande"
+            response_time:
+              buckets:
+                lt_1h: "< 1 timme"
+                gt_24h: "> 24 timmar"
   js:
     notifications:
       alt:
@@ -37,6 +57,8 @@ sv:
       move_post_cancel: "Avbryt"
       confirm_solved_removal_confirm: "Bekräfta"
       confirm_solved_removal_cancel: "Avbryt"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Har din fråga besvarats?
         description: "Markera svaret och hjälp andra genom att använda lösningsknappen under det korrekta svaret."

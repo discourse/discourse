@@ -8,6 +8,7 @@ nl:
   site_settings:
     chat_separate_sidebar_mode: "Afzonderlijke zijbalkmodussen weergeven voor forum en chat."
     chat_enabled: "Chat inschakelen."
+    chat_pinned_messages: "Schakel vastgemaakte berichten in chatkanalen in."
     enable_public_channels: "Openbare kanalen inschakelen op basis van categorieën"
     chat_allowed_groups: "Gebruikers in deze groepen kunnen chatten. Houd er rekening mee dat beheerders en moderators altijd toegang hebben tot de chat."
     chat_channel_retention_days: "Chatberichten in reguliere kanalen worden dit aantal dagen bewaard. Stel dit in op '0' om berichten voor altijd te bewaren."
@@ -20,9 +21,11 @@ nl:
     chat_duplicate_message_sensitivity: "De waarschijnlijkheid dat een dubbel bericht van dezelfde afzender in korte tijd wordt geblokkeerd. Decimaal getal tussen 0 en 1,0, waarbij 1,0 de hoogste instelling is (blokkeert vaker berichten in een kortere tijd). Stel in op '0' om dubbele berichten toe te staan."
     chat_minimum_message_length: "Minimumaantal tekens voor een chatbericht."
     chat_allow_uploads: "Sta uploads toe in openbare chatkanalen en kanalen voor directe berichten."
+    chat_show_copy_button_on_codeblocks: "Geef kopieerknop weer in codeblokken in chatberichten."
     chat_archive_destination_topic_status: "De status die het bestemmingstopic moet hebben zodra een kanaalarchivering is voltooid. Dit is alleen van toepassing als het bestemmingstopic een nieuw onderwerp is en geen bestaand topic."
     direct_message_enabled_groups: "Sta gebruikers binnen deze groepen toe privéchats van gebruiker tot gebruiker te maken. Opmerking: medewerkers kunnen altijd privéchats maken en gebruikers kunnen reageren op privéchats die zijn gestart door gebruikers die toestemming hebben om ze te maken."
     chat_message_flag_allowed_groups: "Gebruikers in deze groepen kunnen chatberichten markeren. Houd er rekening mee dat beheerders en moderators altijd chatberichten kunnen markeren."
+    chat_pinning_messages_allowed_groups: "Gebruikers in deze groepen kunnen chatberichten vastmaken in kanalen waartoe ze toegang hebben. Beheerders en moderators kunnen altijd chatberichten vastmaken. Elk lid van een groepschat of direct bericht kan daar berichten vastmaken."
     max_mentions_per_chat_message: "Maximale aantal @naam-vermeldingen dat een gebruiker in een chatbericht kan gebruiken."
     chat_max_direct_message_users: "Gebruikers kunnen niet meer dan dit aantal andere gebruikers toevoegen bij het maken van een nieuw direct bericht. Stel dit in op 0 om alleen berichten aan een gebruiker zelf toe te staan. Medewerkers zijn uitgezonderd van deze instelling."
     chat_allow_archiving_channels: "Medewerkers toestaan om berichten in een topic te archiveren bij het sluiten van een kanaal."
@@ -30,7 +33,7 @@ nl:
     chat_editing_grace_period_max_diff_low_trust: "Maximale aantal toegestane tekenwijzigingen in wachtperiode voor chatbewerking; bij meer wijzigingen wordt de tag (bewerkt) weergegeven naast het chatbericht (vertrouwensniveau 0 en 1)"
     chat_editing_grace_period_max_diff_high_trust: "Maximale aantal toegestane tekenwijzigingen in wachtperiode voor chatbewerking; bij meer wijzigingen wordt de tag (bewerkt) weergegeven naast het chatbericht (vertrouwensniveau 2 en hoger)"
     chat_preferred_index: "Voorkeurstabblad bij het laden van /chat."
-    allow_chat_in_anonymous_mode: "Schakel deze instelling in om gebruikers die anoniem op je site zijn toe te staan te chatten. Deze instelling vereist dat de instelling 'allow anonymous mode' is ingeschakeld."
+    chat_search_enabled: "Schakel deze instelling in om gebruikers de mogelijkheid te geven chatberichten te zoeken."
     errors:
       chat_default_channel: "Het standaard chatkanaal moet een openbaar kanaal zijn."
       direct_message_enabled_groups_invalid: "Je moet ten minste één groep opgeven voor deze instelling. Als je niet wilt dat iemand behalve medewerkers directe berichten stuurt, kies dan de medewerkersgroep."
@@ -72,6 +75,7 @@ nl:
         closed: "Het kanaal is gesloten, er kunnen geen berichten worden bewerkt of verwijderd"
         read_only: "Het kanaal is alleen-lezen, er kunnen geen berichten worden bewerkt of verwijderd"
       user_cannot_send_message: "Je kunt op dit moment geen berichten sturen."
+      user_not_in_channel: "Je moet lid zijn van dit kanaal."
       rate_limit_exceeded: "De limiet van chatberichten die binnen 30 seconden kunnen worden gestuurd is overschreden"
       auto_silence_from_flags: "Chatbericht gemarkeerd met een score die hoog genoeg is om de gebruiker te dempen."
       channel_cannot_be_archived: "Het kanaal kan op dit moment niet worden gearchiveerd, het moet gesloten zijn of open voor archivering."
@@ -103,12 +107,22 @@ nl:
       thread_invalid_for_channel: "Thread maakt geen deel uit van het opgegeven kanaal."
       thread_does_not_match_parent: "Thread komt niet overeen met het bovenliggende bericht."
       invalid_direct_message: "Je hebt geen toestemming om dit directe bericht te maken."
+      pin_limit_reached: "Dit kanaal heeft het maximale aantal vastgemaakte berichten bereikt (%{limit})."
+      message_already_pinned: "Dit bericht is al vastgemaakt."
+      message_not_pinned: "Dit bericht is niet vastgemaakt."
     reviewables:
       message_already_handled: "Bedankt, maar we hebben dat bericht al beoordeeld en vastgesteld dat het niet opnieuw hoeft te worden gemarkeerd."
       actions:
+        message_actions:
+          bundle_title: "Wat wil je met het bericht doen?"
         no_action_message:
           title: "Geen actie"
+          description: "Laat het bericht zoals het is."
+        delete_message:
+          title: "Bericht verwijderen"
+          description: "Verwijder het bericht permanent."
         restore_message:
+          title: "Bericht herstellen"
           description: "Herstel het bericht zodat gebruikers het kunnen zien."
         agree:
           title: "Akkoord..."
@@ -131,12 +145,17 @@ nl:
           title: "Bericht verwijderen"
           description: "Verwijder het bericht zodat gebruikers het niet kunnen zien."
         delete_and_agree:
+          title: "Markering negeren en bericht verwijderen"
           description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder het bericht."
         disagree_and_restore:
           title: "Niet akkoord en bericht herstellen"
           description: "Herstel het bericht zodat alle gebruikers het kunnen zien."
+        disagree:
+          title: "Bericht behouden"
+          description: "Ga niet akkoord met de markering en laat het bericht ongewijzigd."
         ignore:
           title: "Markering negeren"
+          description: "Verwijder het uit de wachtrij zonder actie te ondernemen."
       direct_messages:
         transcript_title: "Transcript van eerdere berichten in %{channel_name}"
         transcript_body: "Om je meer context te geven, hebben we een transcript van de vorige berichten opgenomen in deze conversatie (maximaal tien):\n\n%{transcript}"
@@ -185,6 +204,7 @@ nl:
         is_already_in_use: "is al in gebruik"
     bookmarkable:
       notification_title_channel: "bericht in %{channel_name}"
+      notification_title_direct_message: "bericht met %{channel_name}"
     personal_chat: "privéchat"
     onebox:
       inline_to_message: "Bericht %{message_id} van %{username} – #%{chat_channel}"
@@ -212,10 +232,17 @@ nl:
         other_type: "%{username} heeft %{identifier} genoemd in een privéchat"
       new_chat_message: '%{username} heeft een bericht gestuurd in "%{channel}"'
       new_direct_chat_message: "%{username} heeft een bericht gestuurd in een privéchat"
+    actions:
+      chat_reply:
+        title: Antwoord
   discourse_automation:
     scriptables:
       send_chat_message:
         title: Chatbericht sturen
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Goedkeuren"
+      default_deny_label: "Weigeren"
   reviewable_score_types:
     needs_review:
       title: "Beoordeling nodig"
@@ -239,18 +266,43 @@ nl:
         private_email:
           one: "[%{site_name}] Nieuw bericht"
           other: "[%{site_name}] Nieuwe berichten"
+        private_email_improved:
+          one: "Nieuw bericht"
+          other: "Nieuw berichten"
         watched_thread:
           one: "[%{site_name}] Nieuw threadbericht in %{channel}"
           other: "[%{site_name}] Nieuwe threadberichten in %{channel}"
+        watched_thread_improved:
+          one: "Nieuw threadbericht in %{channel}"
+          other: "Nieuw threadberichten in %{channel}"
+        watched_threads:
+          one: "[%{site_name}] Nieuwe threadberichten in %{channel} en %{count} ander kanaal"
+          other: "[%{site_name}] Nieuwe threadberichten in %{channel} en %{count} andere kanalen"
+        watched_threads_improved:
+          one: "Nieuwe threadberichten in %{channel} en %{count} ander kanaal"
+          other: "Nieuwe threadberichten in %{channel} en %{count} andere kanalen"
         chat_dm_1:
           one: "[%{site_name}] Nieuw bericht van %{name}"
           other: "[%{site_name}] Nieuw berichten van %{name}"
+        chat_dm_1_improved:
+          one: "Nieuw bericht van %{name}"
+          other: "Nieuw berichten van %{name}"
         chat_dm_2: "[%{site_name}] Nieuwe berichten van %{name_1} en %{name_2}"
+        chat_dm_2_improved: "Nieuwe berichten van %{name_1} en %{name_2}"
+        chat_dm_3_or_more: "[%{site_name}] Nieuwe berichten van %{name} en %{count} anderen kanalen voor directe berichten"
+        chat_dm_3_or_more_improved: "Nieuwe berichten van %{name} en %{count} anderen kanalen voor directe berichten"
         chat_channel_1:
           one: "[%{site_name}] Nieuw bericht in %{channel}"
           other: "[%{site_name}] Nieuwe berichten in %{channel}"
+        chat_channel_1_improved:
+          one: "Nieuw bericht in %{channel}"
+          other: "Nieuwe berichten in %{channel}"
         chat_channel_2: "[%{site_name}] Nieuwe berichten in %{channel_1} en %{channel_2}"
+        chat_channel_2_improved: "Nieuwe berichten in %{channel_1} en %{channel_2}"
+        chat_channel_3_or_more: "[%{site_name}] Nieuwe berichten in %{channel} en %{count} andere kanalen"
+        chat_channel_3_or_more_improved: "Nieuwe berichten in %{channel} en %{count} andere kanalen"
         chat_channel_and_dm: "[%{site_name}] Nieuwe berichten in %{channel} en van %{name}"
+        chat_channel_and_dm_improved: "Nieuwe berichten in %{channel} en van %{name}"
       unsubscribe: "Deze chatsamenvatting wordt verzonden van %{site_link} wanneer je afwezig bent. Wijzig je %{email_preferences_link}, of %{unsubscribe_link} om je af te melden."
       unsubscribe_no_link: "Deze chatsamenvatting wordt verzonden van %{site_link} wanneer je afwezig bent. Wijzig je %{email_preferences_link}."
       view_messages:
@@ -259,8 +311,10 @@ nl:
       view_more:
         one: "Nog %{count} bericht weergeven"
         other: "Nog %{count} berichten weergeven"
+      your_chat_settings: "e-mailvoorkeur chat"
   unsubscribe:
     chat_summary:
+      select_title: "Stel de e-mails met chatsamenvattingen in op:"
       never: Nooit
       when_away: Alleen wanneer afwezig
   category:

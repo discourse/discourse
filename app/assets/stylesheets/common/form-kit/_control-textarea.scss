@@ -8,5 +8,6 @@
     // reset textarea styles
     height: 150px;
     padding: 0.5em !important;
+    min-width: var(--form-kit-small-input);
   }
 }

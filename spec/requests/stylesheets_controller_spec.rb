@@ -116,6 +116,61 @@ RSpec.describe StylesheetsController do
     end
   end
 
+  context "when a plugin registers assets for each target" do
+    fab!(:user)
+    fab!(:admin)
+
+    let(:plugin) { plugin_from_fixtures("stylesheet_targets_plugin") }
+
+    matcher :have_stylesheet do |target|
+      match { |body| body.include?(%(data-target="stylesheet_targets_#{target}")) }
+    end
+
+    before do
+      Discourse.plugins << plugin
+      plugin.activate!
+      Stylesheet::Importer.register_imports!
+      StylesheetCache.destroy_all
+    end
+
+    after do
+      Discourse.plugins.delete(plugin)
+      Stylesheet::Importer.register_imports!
+      DiscoursePluginRegistry.reset!
+    end
+
+    it "renders a link tag for every target when viewer is staff" do
+      sign_in(admin)
+      get "/latest"
+
+      expect(response.body).to have_stylesheet(:plugin)
+      expect(response.body).to have_stylesheet(:plugin_mobile)
+      expect(response.body).to have_stylesheet(:plugin_desktop)
+      expect(response.body).to have_stylesheet(:plugin_admin)
+    end
+
+    it "does not render the admin link tag for non-staff users" do
+      sign_in(user)
+      get "/latest"
+
+      expect(response.body).to have_stylesheet(:plugin)
+      expect(response.body).to have_stylesheet(:plugin_mobile)
+      expect(response.body).to have_stylesheet(:plugin_desktop)
+      expect(response.body).not_to have_stylesheet(:plugin_admin)
+    end
+
+    it "does not render any link tags when the plugin is disabled" do
+      plugin.stubs(:enabled?).returns(false)
+      sign_in(admin)
+      get "/latest"
+
+      expect(response.body).not_to have_stylesheet(:plugin)
+      expect(response.body).not_to have_stylesheet(:plugin_mobile)
+      expect(response.body).not_to have_stylesheet(:plugin_desktop)
+      expect(response.body).not_to have_stylesheet(:plugin_admin)
+    end
+  end
+
   it "ignores Accept header and does not include Vary header" do
     StylesheetCache.destroy_all
     manager = Stylesheet::Manager.new(theme_id: nil)

@@ -181,6 +181,7 @@ lt:
         title: Nauja žinutė
         prefix: "Kam:"
       create_channel:
+        description: "Aprašymas"
         type: "Tipas"
         types:
           category: "Kategorija"
@@ -289,3 +290,8 @@ lt:
       panels:
         chat:
           label: "Pokalbis"
+    discourse_workflows:
+      send_chat_message:
+        message: "Žinutės"
+      chat_approval:
+        message: "Žinutės"

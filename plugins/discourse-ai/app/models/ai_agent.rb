@@ -39,6 +39,11 @@ class AiAgent < ActiveRecord::Base
   # leaves some room for growth but sets a maximum to avoid memory issues
   # we may want to revisit this in the future
   validates :vision_max_pixels, numericality: { greater_than: 0, maximum: 4_000_000 }
+  validates :thinking_effort,
+            inclusion: {
+              in: ["default", *DiscourseAi::Completions::ThinkingConfig::VALUES],
+            },
+            allow_nil: true
 
   validates :rag_chunk_tokens, numericality: { greater_than: 0, maximum: 50_000 }
   validates :rag_chunk_overlap_tokens, numericality: { greater_than: -1, maximum: 200 }
@@ -46,6 +51,7 @@ class AiAgent < ActiveRecord::Base
   validates :forced_tool_count, numericality: { greater_than: -2, maximum: 100_000 }
 
   validate :tools_can_not_be_duplicated
+  validate :native_tools_require_supported_forced_llm
 
   has_many :rag_document_fragments, dependent: :destroy, as: :target
   has_many :ai_agent_mcp_servers, dependent: :destroy
@@ -162,6 +168,8 @@ class AiAgent < ActiveRecord::Base
 
   def bump_cache
     self.class.agent_cache.flush!
+    return if !DiscourseAi::AiHelper::Assistant.prompt_agent_ids.include?(id)
+    DiscourseAi::AiHelper::Assistant.clear_prompt_cache!
   end
 
   def tools_can_not_be_duplicated
@@ -205,6 +213,29 @@ class AiAgent < ActiveRecord::Base
     end
   end
 
+  def native_tools_require_supported_forced_llm
+    return unless tools.is_a?(Array)
+
+    native_ids =
+      tools.filter_map do |tool|
+        inner_name, _, _ = tool.is_a?(Array) ? tool : [tool, nil]
+        next unless DiscourseAi::Completions::NativeTools.prefixed?(inner_name)
+        DiscourseAi::Completions::NativeTools.strip_prefix(inner_name)
+      end
+
+    return if native_ids.empty?
+
+    if !force_default_llm || default_llm.blank?
+      errors.add(:tools, I18n.t("discourse_ai.ai_bot.agents.native_tool_requires_forced_llm"))
+      return
+    end
+
+    supported = DiscourseAi::Completions::NativeTools.supported_ids_for(default_llm)
+    if (native_ids - supported).present?
+      errors.add(:tools, I18n.t("discourse_ai.ai_bot.agents.native_tool_unsupported_by_llm"))
+    end
+  end
+
   def class_instance
     attributes = %i[
       id
@@ -225,6 +256,7 @@ class AiAgent < ActiveRecord::Base
       description
       allowed_group_ids
       show_thinking
+      thinking_effort
       enabled
       execution_mode
       max_turn_tokens
@@ -234,7 +266,7 @@ class AiAgent < ActiveRecord::Base
 
     instance_attributes = {}
     attributes.each do |attr|
-      value = self.read_attribute(attr)
+      value = self[attr]
       instance_attributes[attr] = value
     end
 
@@ -242,6 +274,7 @@ class AiAgent < ActiveRecord::Base
 
     options = {}
     force_tool_use = []
+    native_tools = []
 
     tools =
       self.tools.filter_map do |element|
@@ -252,7 +285,11 @@ class AiAgent < ActiveRecord::Base
         inner_name, current_options, should_force_tool_use =
           element.is_a?(Array) ? element : [element, nil]
 
-        if inner_name.start_with?("custom-")
+        if DiscourseAi::Completions::NativeTools.prefixed?(inner_name)
+          id = DiscourseAi::Completions::NativeTools.strip_prefix(inner_name)
+          native_tools << id if DiscourseAi::Completions::NativeTools.valid?(id)
+          next
+        elsif inner_name.start_with?("custom-")
           custom_tool_id = inner_name.split("-", 2).last.to_i
           if AiTool.exists?(id: custom_tool_id, enabled: true)
             klass = DiscourseAi::Agents::Tools::Custom.class_instance(custom_tool_id)
@@ -293,7 +330,7 @@ class AiAgent < ActiveRecord::Base
     )
     instance_attributes[:mcp_server_ids] = enabled_mcp_servers.map(&:id)
 
-    agent_class = DiscourseAi::Agents::Agent.system_agents_by_id[self.id]
+    agent_class = DiscourseAi::Agents::Agent.system_agents_by_id[id]
     if agent_class
       return(
         # we need a new copy so we don't leak information
@@ -305,12 +342,14 @@ class AiAgent < ActiveRecord::Base
             # description/name are localized
             define_singleton_method(key) { value } if key != :description && key != :name
           end
+          define_method(:thinking_effort) { self.class.thinking_effort }
           define_method(:options) { options }
+          define_method(:native_tools) { native_tools }
         end
       )
     end
 
-    ai_agent_id = self.id
+    ai_agent_id = id
 
     Class.new(DiscourseAi::Agents::Agent) do
       instance_attributes.each { |key, value| define_singleton_method(key) { value } }
@@ -327,11 +366,13 @@ class AiAgent < ActiveRecord::Base
       end
 
       define_method(:tools) { tools }
+      define_method(:native_tools) { native_tools }
       define_method(:force_tool_use) { force_tool_use }
       define_method(:forced_tool_count) { @ai_agent&.forced_tool_count }
       define_method(:options) { options }
       define_method(:temperature) { @ai_agent&.temperature }
       define_method(:top_p) { @ai_agent&.top_p }
+      define_method(:thinking_effort) { @ai_agent&.thinking_effort }
       define_method(:system_prompt) { @ai_agent&.system_prompt || "You are a helpful bot." }
       define_method(:uploads) { @ai_agent&.uploads }
       define_method(:response_format) { @ai_agent&.response_format }
@@ -487,6 +528,7 @@ end
 #  system                      :boolean          default(FALSE), not null
 #  system_prompt               :string(10000000) not null
 #  temperature                 :float
+#  thinking_effort             :string
 #  tools                       :json             not null
 #  top_p                       :float
 #  vision_enabled              :boolean          default(FALSE), not null

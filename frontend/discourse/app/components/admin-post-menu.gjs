@@ -1,11 +1,12 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
+import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import concatClass from "discourse/helpers/concat-class";
 import { and, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class AdminPostMenu extends Component {
   @service currentUser;
@@ -26,6 +27,35 @@ export default class AdminPostMenu extends Component {
 
   get canChangePostOwner() {
     return this.currentUser?.canChangePostOwner;
+  }
+
+  get nestedPinButton() {
+    if (!this.siteSettings.nested_replies_enabled) {
+      return null;
+    }
+    const topicController = getOwner(this).lookup("controller:topic");
+    if (!topicController?.shouldRenderNestedView) {
+      return null;
+    }
+
+    const post = this.args.data.post;
+    if (post.post_number === 1) {
+      return null;
+    }
+    if (post.reply_to_post_number && post.reply_to_post_number !== 1) {
+      return null;
+    }
+
+    const nestedController = getOwner(this).lookup("controller:nested");
+    const isPinned = nestedController?.pinnedPostIds?.includes(post.id);
+
+    return {
+      isPinned,
+      label: isPinned
+        ? "nested_replies.unpin_reply"
+        : "nested_replies.pin_reply",
+      action: () => nestedController?.togglePinPost(post),
+    };
   }
 
   @action
@@ -50,7 +80,7 @@ export default class AdminPostMenu extends Component {
   }
 
   <template>
-    <DropdownMenu as |dropdown|>
+    <DDropdownMenu as |dropdown|>
       {{#if this.currentUser.staff}}
         <dropdown.item>
           <DButton
@@ -70,8 +100,13 @@ export default class AdminPostMenu extends Component {
               "post.controls.revert_to_regular"
               "post.controls.convert_to_moderator"
             }}
+            @title={{if
+              @data.post.isModeratorAction
+              ""
+              "post.controls.convert_to_moderator_description"
+            }}
             @icon="shield-halved"
-            class={{concatClass
+            class={{dConcatClass
               "btn btn-transparent toggle-post-type"
               (if @data.post.isModeratorAction "btn-success")
             }}
@@ -89,8 +124,8 @@ export default class AdminPostMenu extends Component {
               "post.controls.change_post_notice"
               "post.controls.add_post_notice"
             }}
-            @title="post.controls.unhide"
-            class={{concatClass
+            @title="post.controls.add_post_notice_description"
+            class={{dConcatClass
               "btn btn-transparent"
               (if @data.post.notice "change-notice" "add-notice")
               (if @data.post.notice "btn-success")
@@ -116,7 +151,6 @@ export default class AdminPostMenu extends Component {
           <DButton
             @label="post.controls.change_owner"
             @icon="user"
-            @title="post.controls.lock_post_description"
             class="btn btn-transparent change-owner"
             @action={{fn this.topicAction "changePostOwner"}}
           />
@@ -141,7 +175,7 @@ export default class AdminPostMenu extends Component {
               @label="post.controls.unlock_post"
               @icon="unlock"
               @title="post.controls.unlock_post_description"
-              class={{concatClass
+              class={{dConcatClass
                 "btn btn-transparent unlock-post"
                 (if @data.post.locked "btn-success")
               }}
@@ -178,7 +212,7 @@ export default class AdminPostMenu extends Component {
             <DButton
               @label="post.controls.unwiki"
               @icon="far-pen-to-square"
-              class={{concatClass
+              class={{dConcatClass
                 "btn btn-transparent wiki wikied"
                 (if @data.post.wiki "btn-success")
               }}
@@ -189,6 +223,7 @@ export default class AdminPostMenu extends Component {
           <dropdown.item>
             <DButton
               @label="post.controls.wiki"
+              @title="post.controls.wiki_description"
               @icon="far-pen-to-square"
               class="btn btn-transparent wiki"
               @action={{fn this.topicAction "toggleWiki"}}
@@ -201,6 +236,7 @@ export default class AdminPostMenu extends Component {
         <dropdown.item>
           <DButton
             @label="post.controls.publish_page"
+            @title="post.controls.publish_page_description"
             @icon="file"
             class="btn btn-transparent publish-page"
             @action={{fn this.topicAction "showPagePublish"}}
@@ -212,9 +248,21 @@ export default class AdminPostMenu extends Component {
         <dropdown.item>
           <DButton
             @label="post.controls.rebake"
+            @title="post.controls.rebake_description"
             @icon="rotate"
             class="btn btn-transparent rebuild-html"
             @action={{fn this.topicAction "rebakePost"}}
+          />
+        </dropdown.item>
+      {{/if}}
+
+      {{#if this.nestedPinButton}}
+        <dropdown.item>
+          <DButton
+            @label={{this.nestedPinButton.label}}
+            @icon="thumbtack"
+            class="btn btn-transparent pin-reply"
+            @action={{fn this.extraAction this.nestedPinButton}}
           />
         </dropdown.item>
       {{/if}}
@@ -224,12 +272,14 @@ export default class AdminPostMenu extends Component {
           <DButton
             @label={{button.label}}
             @translatedLabel={{button.translatedLabel}}
+            @title={{button.title}}
+            @translatedTitle={{button.translatedTitle}}
             @icon={{button.icon}}
-            class={{concatClass "btn btn-transparent" button.className}}
+            class={{dConcatClass "btn btn-transparent" button.className}}
             @action={{fn this.extraAction button}}
           />
         </dropdown.item>
       {{/each}}
-    </DropdownMenu>
+    </DDropdownMenu>
   </template>
 }

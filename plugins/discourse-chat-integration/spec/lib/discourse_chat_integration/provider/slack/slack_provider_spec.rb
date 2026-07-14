@@ -59,6 +59,50 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
     end
   end
 
+  describe ".valid_slack_incoming_webhook_url?" do
+    it "returns true for an incoming webhook URL under /services/" do
+      expect(
+        described_class.valid_slack_incoming_webhook_url?(
+          "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
+        ),
+      ).to eq(true)
+    end
+
+    it "returns true for a workflow webhook URL under /workflows/" do
+      expect(
+        described_class.valid_slack_incoming_webhook_url?(
+          "https://hooks.slack.com/workflows/0000000000000/0000000000000/XXXXXXXXXXXXXXXXXXXXXXXX",
+        ),
+      ).to eq(true)
+    end
+
+    it "returns false for http" do
+      expect(
+        described_class.valid_slack_incoming_webhook_url?(
+          "http://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
+        ),
+      ).to eq(false)
+    end
+
+    it "returns false when the host is not hooks.slack.com" do
+      expect(
+        described_class.valid_slack_incoming_webhook_url?(
+          "https://evil.example.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
+        ),
+      ).to eq(false)
+    end
+
+    it "returns false when the path is not /services/ or /workflows/" do
+      expect(
+        described_class.valid_slack_incoming_webhook_url?("https://hooks.slack.com/other/path"),
+      ).to eq(false)
+    end
+
+    it "returns false for an invalid URL" do
+      expect(described_class.valid_slack_incoming_webhook_url?("not a url")).to eq(false)
+    end
+  end
+
   describe ".trigger_notifications" do
     before do
       SiteSetting.chat_integration_slack_outbound_webhook_url =
@@ -355,6 +399,162 @@ RSpec.describe DiscourseChatIntegration::Provider::SlackProvider do
           },
         )
       expect(described_class.get_channel_by_name("#general")).to eq(expected)
+    end
+  end
+
+  describe ".setup" do
+    fab!(:admin)
+
+    before do
+      SiteSetting.chat_integration_slack_enabled = false
+      SiteSetting.chat_integration_slack_access_token = ""
+      SiteSetting.chat_integration_slack_outbound_webhook_url = ""
+    end
+
+    it "raises when both token and webhook URL are blank" do
+      expect { described_class.setup(admin, {}) }.to raise_error(
+        DiscourseChatIntegration::ProviderError,
+      ) do |e|
+        expect(e.info[:error_key]).to eq(
+          "chat_integration.provider.slack.errors.at_least_one_required",
+        )
+      end
+    end
+
+    it "calls auth.test and persists token when token is provided" do
+      stub =
+        stub_request(:post, "https://slack.com/api/auth.test").to_return(
+          body: { ok: true }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+
+      described_class.setup(admin, { chat_integration_slack_access_token: "xoxb-test-token" })
+
+      expect(stub).to have_been_requested.once
+      expect(SiteSetting.chat_integration_slack_access_token).to eq("xoxb-test-token")
+      expect(SiteSetting.chat_integration_slack_enabled).to eq(true)
+    end
+
+    it "raises when auth.test returns ok false" do
+      stub_request(:post, "https://slack.com/api/auth.test").to_return(
+        body: { ok: false, error: "invalid_auth" }.to_json,
+        headers: {
+          "Content-Type" => "application/json",
+        },
+      )
+
+      expect {
+        described_class.setup(admin, { chat_integration_slack_access_token: "bad" })
+      }.to raise_error(DiscourseChatIntegration::ProviderError) do |e|
+        expect(e.info[:error_key]).to eq("chat_integration.provider.slack.errors.auth_error")
+      end
+    end
+
+    it "persists webhook URL and enables provider when only webhook is provided" do
+      url = "https://hooks.slack.com/services/T00000000/B00000000/xxxxxxxxxxxxxxxxxxxxxxxx"
+
+      described_class.setup(admin, { chat_integration_slack_outbound_webhook_url: url })
+
+      expect(SiteSetting.chat_integration_slack_outbound_webhook_url).to eq(url)
+      expect(SiteSetting.chat_integration_slack_enabled).to eq(true)
+    end
+
+    it "raises when webhook URL is not a valid Slack incoming webhook URL" do
+      expect {
+        described_class.setup(
+          admin,
+          { chat_integration_slack_outbound_webhook_url: "https://example.com/hook" },
+        )
+      }.to raise_error(DiscourseChatIntegration::ProviderError) do |e|
+        expect(e.info[:error_key]).to eq(
+          "chat_integration.provider.slack.errors.invalid_webhook_url",
+        )
+      end
+    end
+
+    it "raises when webhook URL uses HTTP instead of HTTPS" do
+      expect {
+        described_class.setup(
+          admin,
+          {
+            chat_integration_slack_outbound_webhook_url:
+              "http://hooks.slack.com/services/T00000000/B00000000/xxx",
+          },
+        )
+      }.to raise_error(DiscourseChatIntegration::ProviderError) do |e|
+        expect(e.info[:error_key]).to eq(
+          "chat_integration.provider.slack.errors.invalid_webhook_url",
+        )
+      end
+    end
+
+    it "raises when webhook URL has wrong path prefix" do
+      expect {
+        described_class.setup(
+          admin,
+          { chat_integration_slack_outbound_webhook_url: "https://hooks.slack.com/other/path" },
+        )
+      }.to raise_error(DiscourseChatIntegration::ProviderError) do |e|
+        expect(e.info[:error_key]).to eq(
+          "chat_integration.provider.slack.errors.invalid_webhook_url",
+        )
+      end
+    end
+
+    it "accepts a valid /workflows/ webhook URL" do
+      url = "https://hooks.slack.com/workflows/T00000000/B00000000/xxxxxxxxxxxxxxxxxxxxxxxx"
+
+      described_class.setup(admin, { chat_integration_slack_outbound_webhook_url: url })
+
+      expect(SiteSetting.chat_integration_slack_outbound_webhook_url).to eq(url)
+      expect(SiteSetting.chat_integration_slack_enabled).to eq(true)
+    end
+
+    it "persists both token and webhook when both are provided" do
+      stub_request(:post, "https://slack.com/api/auth.test").to_return(
+        body: { ok: true }.to_json,
+        headers: {
+          "Content-Type" => "application/json",
+        },
+      )
+
+      hook = "https://hooks.slack.com/services/T00000000/B00000000/xxxxxxxxxxxxxxxxxxxxxxxx"
+
+      described_class.setup(
+        admin,
+        {
+          chat_integration_slack_access_token: "xoxb-both",
+          chat_integration_slack_outbound_webhook_url: hook,
+        },
+      )
+
+      expect(SiteSetting.chat_integration_slack_access_token).to eq("xoxb-both")
+      expect(SiteSetting.chat_integration_slack_outbound_webhook_url).to eq(hook)
+    end
+
+    it "raises when webhook URL is invalid even if the token is valid" do
+      stub_request(:post, "https://slack.com/api/auth.test").to_return(
+        body: { ok: true }.to_json,
+        headers: {
+          "Content-Type" => "application/json",
+        },
+      )
+
+      expect {
+        described_class.setup(
+          admin,
+          {
+            chat_integration_slack_access_token: "xoxb-good",
+            chat_integration_slack_outbound_webhook_url: "https://example.com/hook",
+          },
+        )
+      }.to raise_error(DiscourseChatIntegration::ProviderError) do |e|
+        expect(e.info[:error_key]).to eq(
+          "chat_integration.provider.slack.errors.invalid_webhook_url",
+        )
+      end
     end
   end
 end

@@ -8,6 +8,17 @@ class ReviewableFlaggedPostSerializer < ReviewableSerializer
     true
   end
 
+  def cooked
+    post = object.target
+    return if post.blank?
+
+    if ContentLocalization.show_translated_post?(post, scope)
+      post.get_localization&.cooked.presence || post.cooked
+    else
+      post.cooked
+    end
+  end
+
   def post_version
     object.target&.version
   end

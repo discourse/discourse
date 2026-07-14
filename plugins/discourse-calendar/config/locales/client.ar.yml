@@ -12,6 +12,12 @@ ar:
         categories:
           discourse_post_event: "حدث Discourse"
           discourse_calendar: "التقويم والأحداث"
+      web_hooks:
+        calendar_event:
+          group_name: "حدث تقويم"
+          calendar_event_created: "تم إنشاء حدث التقويم"
+          calendar_event_updated: "تم تحديث حدث التقويم"
+          calendar_event_destroyed: "تم حذف حدث التقويم"
   js:
     notifications:
       titles:
@@ -28,6 +34,11 @@ ar:
               label: معرِّف الموضوع
     discourse_calendar:
       invite_user_notification: "دعاك %{username} إلى: %{description}"
+      preferences:
+        all_events: "تقويم Discourse - جميع الأحداث"
+        all_events_description: "جميع أحداث المنتدى"
+        my_events: "تقويم Discourse - أحداثي"
+        my_events_description: "الأحداث التي ستحضرها أو المهتم بها"
       on_holiday: "في عطلة"
       disable_holiday: "إيقاف"
       enable_holiday: "تفعيل"
@@ -329,6 +340,9 @@ ar:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "حدَّد %{username} حضورك تلقائيًا ودعاك إلى %{eventName}"
         an_event: "حدث"
+      event_description:
+        show_more: "عرض المزيد"
+        show_less: "عرض أقل"
       edit_reason: "تم تحديث الحدث"
       edit_reason_closed: "تم إغلاق الحدث"
       edit_reason_opened: "تم فتح الحدث"
@@ -387,7 +401,6 @@ ar:
       upcoming_events_list:
         title: "الأحداث القادمة"
         empty: "لا توجد أحداث قادمة"
-        all_day: "طوال اليوم"
         error: "فشل استرداد الأحداث"
         try_again: "إعادة المحاولة"
         view_all: "عرض الكل"
@@ -401,10 +414,9 @@ ar:
       models:
         invitee:
           no_users: "لم يتم العثور على المستخدمين"
+          leave_event: "مغادرة الحدث"
           status:
-            unknown: "غير مهتم"
             going: "ذاهب"
-            not_going: "لست ذاهبًا"
             interested: "مهتم"
             going_count:
               zero: "%{count} ذاهبون"
@@ -449,11 +461,46 @@ ar:
               title: "خاص"
               description: "لا يمكن إلا للمستخدمين المدعوين الانضمام إلى حدثٍ خاص."
       composer:
-        name_placeholder: "حدث"
-        end_date_placeholder: "تعيين تاريخ الانتهاء"
+        name_placeholder: "اسم الحدث"
         location_placeholder: "أضف الموقع أو عنوان URL"
-        max_attendees_placeholder: "حدد الحد الأقصى للحضور"
         description_placeholder: "أضف وصفًا للحدث"
+        event_title_placeholder: "اسم الحدث"
+        create_event_button: "إنشاء حدث"
+        reminder:
+          units:
+            minutes:
+              zero: "دقائق"
+              one: "دقيقة واحدة"
+              two: "دقائق"
+              few: "دقائق"
+              many: "دقائق"
+              other: "دقائق"
+            hours:
+              zero: "الساعات"
+              one: "ساعة واحدة"
+              two: "الساعات"
+              few: "الساعات"
+              many: "الساعات"
+              other: "الساعات"
+            days:
+              zero: "أيام"
+              one: "يوم واحد"
+              two: "أيام"
+              few: "أيام"
+              many: "أيام"
+              other: "أيام"
+            weeks:
+              zero: "أسابيع"
+              one: "أسبوع"
+              two: "أسابيع"
+              few: "أسابيع"
+              many: "أسابيع"
+              other: "أسابيع"
+      composer_actions:
+        create_event:
+          label: "إنشاء حدث"
+        create_topic:
+          label: "أنشئ موضوع"
       builder_modal:
         custom_fields:
           label: "الحقول المخصَّصة"
@@ -461,6 +508,7 @@ ar:
           description: "يتم تحديد الحقول المخصَّصة المسموح بها في إعدادات الموقع. ويتم استخدام الحقول المخصَّصة لنقل البيانات إلى المكوِّنات الإضافية الأخرى."
         create_event_title: "إنشاء حدث"
         update_event_title: "تعديل الحدث"
+        advanced_settings_title: "الإعدادات المتقدمة"
         confirm_delete: "هل تريد بالتأكيد حذف هذا الحدث؟"
         confirm_close: "هل تريد بالتأكيد إغلاق هذا الحدث؟"
         confirm_open: "هل تريد بالتأكيد فتح هذا الحدث؟"
@@ -474,11 +522,12 @@ ar:
         timezone:
           label: المنطقة الزمنية
           remove_timezone: لا توجد منطقة زمنية (UTC)
+        starts_at:
+          label: "تاريخ البدء"
+        all_day:
+          label: "حدث يستمر طوال اليوم"
         reminders:
           label: "التذكيرات"
-          types:
-            bump_topic: "رفع الموضوع تلقائيًا"
-            notification: "إرسال إشعار إلى المشاركين"
           units:
             minutes: "دقائق"
             hours: "الساعات"
@@ -487,31 +536,22 @@ ar:
           periods:
             before: "قبل"
             after: "بعد"
-        recurrence_until:
-          label: "حتى (شامل)"
         recurrence:
           label: "التكرار"
           none: "بلا تكرار"
           every_day: "كل يوم"
-          every_month: "كل شهر في هذا اليوم من الأسبوع"
           every_weekday: "كل أيام الأسبوع"
-          every_week: "كل أسبوع في هذا اليوم"
-          every_two_weeks: "كل أسبوعين في هذا اليوم"
-          every_four_weeks: "كل أربعة أسابيع في هذا اليوم"
-        minimal:
-          label: "حدث صغير"
-          checkbox_label: "إخفاء زرَّي ذاهب/غير ذاهب وحالة المدعوين"
+          ordinals:
+            last: "اخر"
         max_attendees:
           label: "الحد الأقصى للحضور"
           placeholder: "لا يوجد حد"
+        attendance:
+          none: "لا يوجد"
         allow_chat:
           label: "تكامل الدردشة"
           checkbox_label: "إنشاء قناة دردشة خاصة بحدث معين وإدارتها"
-        url:
-          label: "عنوان URL"
-          placeholder: "اختياري"
         location:
-          label: "الموقع الجغرافي"
           placeholder: "أضف موقعًا أو رابطًا أو أي شيء آخر."
         description:
           label: "الوصف"
@@ -521,9 +561,13 @@ ar:
           placeholder: "اختياري، الإعدادات الافتراضية لعنوان الموضوع"
         invitees:
           label: "المجموعات المدعوة"
-        status:
-          label: "الحالة"
+        event_type:
+          public:
+            title: "عام"
         delete_confirmation_message: "هل تريد حذف هذا الحدث؟"
+        image:
+          label: "صورة الحدث"
       invite_user_or_group:
         title: "إرسال إشعار إلى المستخدمين أو المجموعات"
         invite: "إرسال"
+        success: "تم إرسال الدعوة"

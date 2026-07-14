@@ -74,3 +74,6 @@ pl_PL:
           topic_list_between:
             title: "Pomiędzy tematami"
             description: "Reklamy do wyświetlania pomiędzy tematami, po każdym N‐tym temacie."
+          nested_roots_between:
+            title: "Między zagnieżdżonymi głównymi"
+            description: "Reklamy będą wyświetlane pomiędzy odpowiedziami głównymi w widoku zagnieżdżonych odpowiedzi, po każdych N odpowiedziach głównych."

@@ -2,10 +2,10 @@ import { hash } from "@ember/helper";
 import IgnoredUserList from "discourse/components/ignored-user-list";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
-import SaveControls from "discourse/components/save-controls";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import UserChooser from "discourse/select-kit/components/user-chooser";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -17,7 +17,7 @@ export default <template>
       data-setting-name="user-ignored-users"
     >
       <div class="controls tracking-controls user-notifications">
-        <label>{{icon "far-eye-slash" class="icon"}}
+        <label>{{dIcon "far-eye-slash" class="icon"}}
           {{i18n "user.ignored_users"}}</label>
         <IgnoredUserList
           @model={{@controller.model}}
@@ -31,7 +31,7 @@ export default <template>
     <div class="control-group user-mute" data-setting-name="user-muted-users">
       <div class="controls tracking-controls">
         <label>
-          {{icon "d-muted" class="icon"}}
+          {{dIcon "d-muted" class="icon"}}
           <span>{{i18n "user.muted_users"}}</span>
         </label>
         <UserChooser
@@ -94,7 +94,7 @@ export default <template>
     />
   </span>
 
-  <SaveControls
+  <DSaveControls
     @model={{@controller.model}}
     @action={{@controller.save}}
     @saved={{@controller.saved}}

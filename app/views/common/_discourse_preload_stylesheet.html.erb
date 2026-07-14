@@ -2,10 +2,10 @@
 
 <%- if rtl? %>
   <%= discourse_stylesheet_preload_tag(:common_rtl) %>
-  <%= discourse_stylesheet_preload_tag(mobile_view? ? :mobile_rtl : :desktop_rtl) %>
+  <%= discourse_stylesheet_preload_tag(mobile_device? ? :mobile_rtl : :desktop_rtl) %>
 <%- else %>
   <%= discourse_stylesheet_preload_tag(:common) %>
-  <%= discourse_stylesheet_preload_tag(mobile_view? ? :mobile : :desktop) %>
+  <%= discourse_stylesheet_preload_tag(mobile_device? ? :mobile : :desktop) %>
 <%- end %>
 
 <%- if staff? %>
@@ -24,10 +24,10 @@
   <%- end %>
 <%- end %>
 
-<%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: mobile_view?, desktop_view: !mobile_view?, request: request, rtl: rtl?).each do |file| %>
+<%- Discourse.find_plugin_css_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, mobile_view: mobile_device?, desktop_view: !mobile_device?, include_admin: staff?, request: request, rtl: rtl?).each do |file| %>
   <%= discourse_stylesheet_preload_tag(file) %>
 <%- end %>
 
 <%- if theme_id.present? %>
-  <%= discourse_stylesheet_preload_tag(mobile_view? ? :mobile_theme : :desktop_theme) %>
+  <%= discourse_stylesheet_preload_tag(mobile_device? ? :mobile_theme : :desktop_theme) %>
 <%- end %>

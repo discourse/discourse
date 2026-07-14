@@ -1,5 +1,5 @@
 import { LinkTo } from "@ember/routing";
-import icon from "discourse/helpers/d-icon";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -17,7 +17,7 @@ export default <template>
     <section>
       {{#unless @controller.model.content}}
         <LinkTo @route="tagGroups.new" class="btn btn-primary">
-          {{icon "plus"}}
+          {{dIcon "plus"}}
           {{i18n "tagging.groups.new"}}
         </LinkTo>
       {{/unless}}

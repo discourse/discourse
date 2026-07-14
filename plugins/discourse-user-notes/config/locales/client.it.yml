@@ -8,5 +8,4 @@ it:
   js:
     user_notes:
       title: "Note utente"
-      attach_note_description: "Aggiungi una nota su questo utente. Questa nota sarà visibile solo allo staff."
       delete_confirm: "Sei sicuro di voler cancellare questa nota utente?"

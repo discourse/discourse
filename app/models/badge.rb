@@ -126,7 +126,7 @@ class Badge < ActiveRecord::Base
 
   after_save do
     if saved_change_to_image_upload_id?
-      UploadReference.ensure_exist!(upload_ids: [self.image_upload_id], target: self)
+      UploadReference.ensure_exist!(upload_ids: [image_upload_id], target: self)
     end
   end
 
@@ -181,13 +181,13 @@ class Badge < ActiveRecord::Base
   end
 
   def clear_user_titles!
-    DB.exec(<<~SQL, badge_id: self.id, updated_at: Time.zone.now)
+    DB.exec(<<~SQL, badge_id: id, updated_at: Time.zone.now)
       UPDATE users AS u
       SET title = '', updated_at = :updated_at
       FROM user_profiles AS up
       WHERE up.user_id = u.id AND up.granted_title_badge_id = :badge_id
     SQL
-    DB.exec(<<~SQL, badge_id: self.id)
+    DB.exec(<<~SQL, badge_id: id)
       UPDATE user_profiles AS up
       SET granted_title_badge_id = NULL
       WHERE up.granted_title_badge_id = :badge_id
@@ -197,7 +197,7 @@ class Badge < ActiveRecord::Base
   ##
   # Update all user titles based on a badge to the new name
   def update_user_titles!(new_title)
-    DB.exec(<<~SQL, granted_title_badge_id: self.id, title: new_title, updated_at: Time.zone.now)
+    DB.exec(<<~SQL, granted_title_badge_id: id, title: new_title, updated_at: Time.zone.now)
       UPDATE users AS u
       SET title = :title, updated_at = :updated_at
       FROM user_profiles AS up
@@ -209,7 +209,7 @@ class Badge < ActiveRecord::Base
   # When a badge has its TranslationOverride cleared, reset
   # all user titles granted to the standard name.
   def reset_user_titles!
-    DB.exec(<<~SQL, granted_title_badge_id: self.id, updated_at: Time.zone.now)
+    DB.exec(<<~SQL, granted_title_badge_id: id, updated_at: Time.zone.now)
       UPDATE users AS u
       SET title = badges.name, updated_at = :updated_at
       FROM user_profiles AS up
@@ -246,31 +246,29 @@ class Badge < ActiveRecord::Base
   end
 
   def single_grant?
-    !self.multiple_grant?
+    !multiple_grant?
   end
 
   def default_icon=(val)
-    if self.image_upload_id.blank?
+    if image_upload_id.blank?
       self.icon ||= val
       self.icon = val if self.icon == "certificate"
     end
   end
 
   def default_allow_title=(val)
-    return if !self.new_record?
+    return if !new_record?
     self.allow_title = val
   end
 
   def default_enabled=(val)
-    return if !self.new_record?
+    return if !new_record?
     self.enabled = val
   end
 
   def default_badge_grouping_id=(val)
     # allow to correct orphans
-    if !self.badge_grouping_id || self.badge_grouping_id <= BadgeGrouping::Other
-      self.badge_grouping_id = val
-    end
+    self.badge_grouping_id = val if !badge_grouping_id || badge_grouping_id <= BadgeGrouping::Other
   end
 
   def display_name
@@ -310,7 +308,7 @@ class Badge < ActiveRecord::Base
   end
 
   def slug
-    Slug.for(self.display_name, "-")
+    Slug.for(display_name, "-")
   end
 
   def manually_grantable?
@@ -336,7 +334,7 @@ class Badge < ActiveRecord::Base
   end
 
   def sanitize_description
-    self.description = sanitize_field(self.description) if description_changed?
+    self.description = sanitize_field(description) if description_changed?
   end
 end
 
@@ -345,27 +343,27 @@ end
 # Table name: badges
 #
 #  id                  :integer          not null, primary key
-#  name                :string           not null
-#  description         :text
-#  badge_type_id       :integer          not null
-#  grant_count         :integer          default(0), not null
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
 #  allow_title         :boolean          default(FALSE), not null
-#  multiple_grant      :boolean          default(FALSE), not null
+#  auto_revoke         :boolean          default(TRUE), not null
+#  description         :text
+#  enabled             :boolean          default(TRUE), not null
+#  grant_count         :integer          default(0), not null
 #  icon                :string           default("certificate")
 #  listable            :boolean          default(TRUE)
-#  target_posts        :boolean          default(FALSE)
+#  long_description    :text
+#  multiple_grant      :boolean          default(FALSE), not null
+#  name                :string           not null
 #  query               :text
-#  enabled             :boolean          default(TRUE), not null
-#  auto_revoke         :boolean          default(TRUE), not null
-#  badge_grouping_id   :integer          default(5), not null
-#  trigger             :integer
+#  show_in_post_header :boolean          default(FALSE), not null
 #  show_posts          :boolean          default(FALSE), not null
 #  system              :boolean          default(FALSE), not null
-#  long_description    :text
+#  target_posts        :boolean          default(FALSE)
+#  trigger             :integer
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  badge_grouping_id   :integer          default(5), not null
+#  badge_type_id       :integer          not null
 #  image_upload_id     :integer
-#  show_in_post_header :boolean          default(FALSE), not null
 #
 # Indexes
 #

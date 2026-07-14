@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { array } from "@ember/helper";
+import { array, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { trackedObject } from "@ember/reactive/collections";
 import { service } from "@ember/service";
@@ -53,11 +53,6 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
           label: i18n("admin.upcoming_changes.filter.status_stable"),
           value: "stable",
           filterFn: (change) => change.upcoming_change.status === "stable",
-        },
-        {
-          label: i18n("admin.upcoming_changes.filter.status_permanent"),
-          value: "permanent",
-          filterFn: (change) => change.upcoming_change.status === "permanent",
         },
       ],
       type: [
@@ -181,6 +176,13 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
       }}
       @initialTextFilter={{@changeNamesFilter}}
       @onResetFilters={{@onClearChangeNamesFilter}}
+      @textFilterQueryParam="changeNamesFilter"
+      @dropdownFilterQueryParams={{hash
+        status="status"
+        type="type"
+        impactRole="impactRole"
+        enabled="enabled"
+      }}
     >
       <:content as |upcomingChanges|>
         <table class="d-table upcoming-changes-table">

@@ -2,7 +2,7 @@
 
 RSpec.describe "Admin AI translations" do
   fab!(:admin)
-  let(:page_header) { PageObjects::Components::DPageHeader.new }
+  let(:translations_page) { PageObjects::Pages::AdminAiTranslations.new }
 
   before do
     enable_current_plugin
@@ -34,27 +34,27 @@ RSpec.describe "Admin AI translations" do
       SiteSetting.ai_translation_backfill_hourly_rate = 10
       SiteSetting.ai_translation_backfill_max_age_days = 30
 
-      visit "/admin/plugins/discourse-ai/ai-translations"
+      translations_page.visit
     end
 
     it "displays the translations page with chart" do
+      expect(translations_page).to have_translations_page
       expect(page).to have_content(I18n.t("js.discourse_ai.translations.title"))
       expect(page).to have_content(I18n.t("js.discourse_ai.translations.description"))
 
-      # Verify the action buttons are present with their CSS classes
-      expect(page).to have_css(".ai-translation-settings-button")
-      expect(page).to have_css(".ai-localization-settings-button")
+      expect(translations_page).to have_translation_settings_button
+      expect(translations_page).to have_localization_settings_button
 
-      # Verify chart container is present
-      expect(page).to have_css(".ai-translations__charts")
-      expect(page).to have_css(".ai-translations__chart")
+      expect(translations_page).to have_charts_section
+      expect(translations_page).to have_chart
+
+      screenshot_marker(label: "ai-admin-translations", only: "desktop")
     end
 
     it "navigates to translation settings when clicking the settings button" do
       translation_id = DiscourseAi::Configuration::Module::TRANSLATION_ID
       find(".ai-translation-settings-button").click
 
-      # Verify we navigated to the correct route
       expect(page).to have_current_path(
         "/admin/plugins/discourse-ai/ai-features/#{translation_id}/edit",
       )
@@ -63,29 +63,37 @@ RSpec.describe "Admin AI translations" do
     it "navigates to localization settings when clicking the localization button" do
       find(".ai-localization-settings-button").click
 
-      # Verify we navigated to the correct route
       expect(page).to have_current_path("/admin/config/localization")
     end
   end
 
   describe "when translations are disabled" do
+    fab!(:category)
+
     before do
       SiteSetting.discourse_ai_enabled = true
       SiteSetting.ai_translation_enabled = false
       SiteSetting.content_localization_supported_locales = "en|fr|es"
+      SiteSetting.ai_translation_category_scope = "include"
+      SiteSetting.ai_translation_categories = category.id.to_s
       SiteSetting.ai_translation_backfill_max_age_days = 30
 
-      visit "/admin/plugins/discourse-ai/ai-translations"
+      translations_page.visit
     end
 
     it "shows the toggle in off state and no chart" do
-      expect(page).to have_css(".d-toggle-switch")
+      expect(translations_page).to have_toggle
 
-      expect(page).to have_no_css(".ai-translations__chart")
+      expect(translations_page).to have_no_chart
     end
 
     it "shows localization settings button" do
-      expect(page).to have_css(".ai-localization-settings-button")
+      expect(translations_page).to have_localization_settings_button
+    end
+
+    it "keeps language and category selectors visible" do
+      expect(page).to have_css(".ai-translations__locale-input-row .multi-select")
+      expect(page).to have_css(".ai-translations__category-input-row .category-selector")
     end
   end
 
@@ -96,27 +104,62 @@ RSpec.describe "Admin AI translations" do
       SiteSetting.content_localization_supported_locales = ""
       SiteSetting.ai_translation_backfill_max_age_days = 30
 
-      visit "/admin/plugins/discourse-ai/ai-translations"
+      translations_page.visit
     end
 
     it "displays the alert with locale selector" do
-      expect(page).to have_css(".alert.alert-info")
+      expect(translations_page).to have_locale_selector
       expect(page).to have_content(I18n.t("js.discourse_ai.translations.supported_locales"))
-      expect(page).to have_css(".multi-select")
+    end
+
+    it "displays the category scope selector alongside the locale selector" do
+      expect(page).to have_css(".alert.alert-info")
+      expect(page).to have_content(I18n.t("js.discourse_ai.translations.category_scope"))
+      expect(page).to have_css(".ai-translations__category-input-row .combo-box")
     end
 
     it "allows adding and saving languages" do
-      find(".multi-select").click
+      within(".ai-translations__locale-input-row") do
+        find(".multi-select").click
+        find(".select-kit-row[data-value='en']").click
+        find(".setting-controls__ok").click
+      end
 
-      find(".select-kit-row[data-value='en']").click
-
-      expect(page).to have_css(".setting-controls__ok")
-
-      find(".setting-controls__ok").click
-
-      expect(page).to have_no_css(".setting-controls__ok")
+      expect(page).to have_no_css(".ai-translations__locale-input-row .setting-controls__ok")
 
       expect(SiteSetting.content_localization_supported_locales).to eq("en")
+    end
+  end
+
+  describe "when selected categories are configured" do
+    fab!(:category)
+
+    before do
+      SiteSetting.discourse_ai_enabled = true
+      SiteSetting.ai_translation_enabled = false
+      SiteSetting.content_localization_supported_locales = "en|fr"
+      SiteSetting.ai_translation_category_scope = "include"
+      SiteSetting.ai_translation_categories = ""
+      SiteSetting.ai_translation_backfill_max_age_days = 30
+
+      visit "/admin/plugins/discourse-ai/ai-translations"
+    end
+
+    it "displays the setup alert with the category selector" do
+      expect(page).to have_css(".alert.alert-info")
+      expect(page).to have_content(I18n.t("js.discourse_ai.translations.category_scope"))
+      expect(page).to have_css(".category-selector")
+    end
+
+    it "allows adding and saving selected categories" do
+      find(".category-selector").click
+      find(".category-row[data-value='#{category.id}']").click
+
+      within(".ai-translations__category-input-row") { find(".setting-controls__ok").click }
+
+      expect(page).to have_no_css(".ai-translations__category-input-row .setting-controls__ok")
+      expect(SiteSetting.ai_translation_category_scope).to eq("include")
+      expect(SiteSetting.ai_translation_categories).to eq(category.id.to_s)
     end
   end
 
@@ -143,37 +186,37 @@ RSpec.describe "Admin AI translations" do
     it "displays the translation toggle" do
       SiteSetting.ai_translation_enabled = false
 
-      visit "/admin/plugins/discourse-ai/ai-translations"
+      translations_page.visit
 
-      expect(page).to have_css(".ai-translations__toggle-container .d-toggle-switch")
+      expect(translations_page).to have_toggle
     end
 
     it "shows charts when translations are enabled" do
       SiteSetting.ai_translation_enabled = true
       SiteSetting.ai_translation_backfill_hourly_rate = 10
 
-      visit "/admin/plugins/discourse-ai/ai-translations"
+      translations_page.visit
 
-      expect(page).to have_css(".ai-translations__toggle-container")
-      expect(page).to have_css(".ai-translations__charts")
+      expect(translations_page).to have_toggle
+      expect(translations_page).to have_charts_section
     end
 
     it "hides charts when translations are disabled" do
       SiteSetting.ai_translation_enabled = false
 
-      visit "/admin/plugins/discourse-ai/ai-translations"
+      translations_page.visit
 
-      expect(page).to have_css(".ai-translations__toggle-container")
-      expect(page).to have_no_css(".ai-translations__charts")
+      expect(translations_page).to have_toggle
+      expect(translations_page).to have_no_chart
     end
 
     it "keeps toggle disabled when no locales are configured" do
       SiteSetting.ai_translation_enabled = false
       SiteSetting.content_localization_supported_locales = ""
 
-      visit "/admin/plugins/discourse-ai/ai-translations"
+      translations_page.visit
 
-      expect(page).to have_css(".d-toggle-switch__checkbox[disabled]")
+      expect(translations_page).to have_toggle_disabled
     end
   end
 end

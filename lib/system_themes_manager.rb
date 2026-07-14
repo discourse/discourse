@@ -9,25 +9,24 @@ class SystemThemesManager
     theme_id = Theme::CORE_THEMES[theme_name]
     raise Discourse::InvalidParameters unless theme_id
 
-    theme_dir = "#{Rails.root}/themes/#{theme_name}"
+    theme_dir = "#{Rails.root.join("themes/#{theme_name}")}"
 
     is_initial_install = !Theme.exists?(id: theme_id)
+
+    before_save =
+      if is_initial_install && theme_id == Theme::CORE_THEMES["horizon"]
+        ->(t) { t.dark_color_scheme = t.color_schemes.find { |s| s.name == "Horizon Dark" } }
+      end
 
     theme =
       RemoteTheme.import_theme_from_directory(
         theme_dir,
         theme_id: theme_id,
         allow_out_of_sequence_migration: !is_initial_install,
+        before_save: before_save,
       )
-    theme.update_column(:enabled, true)
 
-    if is_initial_install
-      if theme_id == Theme::CORE_THEMES["horizon"]
-        theme.update!(dark_color_scheme: theme.color_schemes.find_by(name: "Horizon Dark"))
-      end
-    end
-
-    theme.save!
+    theme.update_column(:enabled, true) unless theme.enabled?
 
     Stylesheet::Manager.clear_theme_cache!
   end

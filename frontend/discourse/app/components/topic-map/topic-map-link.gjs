@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import { and } from "discourse/truth-helpers";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 
 const TRUNCATE_LENGTH_LIMIT = 85;
@@ -33,7 +33,7 @@ export default class TopicMapLink extends Component {
     >
       <span class="content">
         {{#if @title}}
-          {{replaceEmoji this.truncatedContent}}
+          {{dReplaceEmoji this.truncatedContent}}
         {{else}}
           {{this.truncatedContent}}
         {{/if}}

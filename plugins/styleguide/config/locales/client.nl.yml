@@ -38,6 +38,8 @@ nl:
           title: "Lettertypesysteem"
         colors:
           title: "Kleuren"
+        dialog:
+          title: "Dialoog"
         icons:
           title: "Pictogrammen"
           full_list: "Zie de volledige lijst van Font Awesome-pictogrammen"
@@ -59,6 +61,8 @@ nl:
           title: "Navigatie gestapeld"
         categories_list:
           title: "Categorieënlijst"
+        topic_link:
+          title: "Topiclink en -status"
         topic_list_item:
           title: "Topiclijstitem"
         topic_statuses:
@@ -81,6 +85,8 @@ nl:
           title: "Berichtenlijst"
           empty_example: "<PostList /> lege toestand"
           populated_example: "<PostList /> gevulde toestand"
+        post_oneboxes:
+          title: "Oneboxes plaatsen"
         topic_map:
           title: "Topickaart"
         site_header:
@@ -89,6 +95,8 @@ nl:
           title: "Meer topics"
         post_menu:
           title: "Berichtmenu"
+        docked_composer:
+          title: "Gedockte editor"
         modal:
           title: "Modaal"
           header: "Modaaltitel"
@@ -99,6 +107,8 @@ nl:
           title: "Koptekstpictogrammen"
         spinners:
           title: "Kringvelden"
+        otp:
+          title: "OTP"
         empty_state:
           title: "Lege toestand"
         tooltips:
@@ -109,3 +119,5 @@ nl:
         char_counter:
           title: "Tekensteller"
           placeholder: "Voer hier je tekst in..."
+        segmented_control:
+          title: "Gesegmenteerde bediening (knopschakelgroep)"

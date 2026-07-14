@@ -195,7 +195,7 @@ describe "Composer - ProseMirror - Images" do
   describe "image lightbox" do
     let(:lightbox) { PageObjects::Components::PhotoSwipe.new }
 
-    def click_selected_image_to_open_lightbox
+    def click_selected_image
       page.execute_script(<<~JS)
         document.querySelector('.composer-image-node img.ProseMirror-selectednode')?.click();
       JS
@@ -205,7 +205,7 @@ describe "Composer - ProseMirror - Images" do
       open_composer
       paste_and_click_image
 
-      click_selected_image_to_open_lightbox
+      click_selected_image
 
       expect(lightbox).to be_visible
       expect(lightbox).to have_no_counter
@@ -227,7 +227,7 @@ describe "Composer - ProseMirror - Images" do
       first_image.click
       expect(first_image[:class]).to include("ProseMirror-selectednode")
 
-      click_selected_image_to_open_lightbox
+      click_selected_image
 
       expect(lightbox).to be_visible
       expect(lightbox).to have_css(".pswp__counter", text: "1 / 2")
@@ -241,12 +241,29 @@ describe "Composer - ProseMirror - Images" do
       expect(page).to have_css("[data-identifier='composer-image-toolbar']")
     end
 
+    it "lets the user dismiss the alt text input by clicking the image without opening the lightbox" do
+      open_composer
+      paste_and_click_image
+
+      find(".image-alt-text-input__display").click
+      find(".image-alt-text-input__field").fill_in(with: "described image")
+
+      click_selected_image
+
+      expect(page).to have_no_css(".image-alt-text-input.--expanded")
+      expect(rich.find(".composer-image-node img")["alt"]).to eq("described image")
+      expect(page).to have_no_css(".pswp")
+
+      click_selected_image
+      expect(lightbox).to be_visible
+    end
+
     it "navigates between images using prev/next buttons" do
       open_composer
       composer.type_content("![first](upload://test1.png)\n\n![second](upload://test2.png)")
 
       rich.find(".composer-image-node img[alt='first']").click
-      click_selected_image_to_open_lightbox
+      click_selected_image
 
       expect(lightbox).to be_visible
       expect(lightbox).to have_caption_title("first")

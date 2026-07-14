@@ -152,7 +152,7 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
           SiteSetting.google_oauth2_hd_groups_service_account_admin_email = "admin@example.com"
           SiteSetting.google_oauth2_hd_groups_service_account_json = {
             "private_key" => private_key.to_s,
-            :"client_email" => "discourse-group-sync@example.iam.gserviceaccount.com",
+            :client_email => "discourse-group-sync@example.iam.gserviceaccount.com",
           }.to_json
           SiteSetting.google_oauth2_hd_groups = true
 
@@ -202,7 +202,7 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
         it "doesn't explode with invalid credentials" do
           SiteSetting.google_oauth2_hd_groups_service_account_json = {
             "private_key" => OpenSSL::PKey::RSA.generate(2048).to_s,
-            :"client_email" => "discourse-group-sync@example.iam.gserviceaccount.com",
+            :client_email => "discourse-group-sync@example.iam.gserviceaccount.com",
           }.to_json
 
           result = described_class.new.after_authenticate(@auth_hash)

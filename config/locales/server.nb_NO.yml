@@ -179,7 +179,13 @@ nb_NO:
   not_in_group:
     join_group: "Bli medlem av gruppe"
   reading_time: "Lesetid"
+  reading_time_minutes:
+    one: "%{count} minutt 🕑"
+    other: "%{count} minutter 🕑"
   likes: "Likes"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Vi beklager, men nye brukere er midlertidig begrenset til %{count} svar i det samme tråden."
     other: "Vi beklager, men for nye brukere er det en midlertidig begrenset på %{count} svar i samme emne."
@@ -288,6 +294,11 @@ nb_NO:
       trust_level_2: "tillitsnivå_2"
       trust_level_3: "tillitsnivå_3"
       trust_level_4: "tillitsnivå_4"
+    default_full_names:
+      everyone: "Alle"
+      admins: "Adminer"
+      moderators: "Moderatorer"
+      staff: "Stab"
     request_membership_pm:
       title: "Ønske om medlemskap i gruppen @%{group_name}"
   education:
@@ -621,6 +632,9 @@ nb_NO:
       session_info: "Les informasjon om brukersesjon"
       read: "Les alt"
       write: "Skriv alt"
+    device:
+      code: "Kode"
+      continue: "Fortsett"
   reports:
     default:
       labels:
@@ -673,6 +687,29 @@ nb_NO:
       title: "Nye Bidragsytere"
       xaxis: "Dag"
       yaxis: "Antall nye bidragsytere"
+    activity_by_category:
+      labels:
+        category: "Kategori"
+        topics: "Emner"
+        posts: "Innlegg"
+        share: "Del"
+    posters_by_member_type:
+      labels:
+        count: "Innlegg"
+        share: "Del"
+      types:
+        staff: "Stab"
+    trust_level_pipeline:
+      labels:
+        count: "Medlemmer"
+        share: "Del"
+        signups: "Påmeldinger"
+      levels:
+        "0": "Ny"
+        "1": "Basic"
+        "2": "Medlem"
+        "3": "Aktivt medlem"
+        "4": "Leder"
     trust_level_growth:
       yaxis: "Dag"
     consolidated_page_views:
@@ -690,6 +727,8 @@ nb_NO:
     consolidated_page_views_browser_detection:
       yaxis: "Dag"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonym"
       yaxis: "Dag"
     dau_by_mau:
       xaxis: "Dag"
@@ -783,6 +822,12 @@ nb_NO:
         user: "Bruker"
         num_clicks: "Klikk"
         num_topics: "Emner"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Besøk"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Besøk"
     top_traffic_sources:
       title: "Topp trafikk-kilder"
       xaxis: "Domene"
@@ -828,6 +873,8 @@ nb_NO:
     page_view_anon_browser_reqs:
       xaxis: "Dag"
     page_view_logged_in_browser_reqs:
+      xaxis: "Dag"
+    page_view_embed_reqs:
       xaxis: "Dag"
     http_background_reqs:
       title: "Bakgrunn"
@@ -875,7 +922,7 @@ nb_NO:
       labels:
         user: Bruker
         location: Sted
-    staff_logins:
+    admin_logins:
       labels:
         user: Bruker
         location: Sted
@@ -944,7 +991,6 @@ nb_NO:
     edit_history_visible_to_public: "La alle se tidligere versjoner av et redigert innlegg. Hvis det er slått av, kan kun staben se det."
     delete_removed_posts_after: "Innlegg som blir fjernet av forfatter blir automatisk slettet etter (n) timer. Sett til 0 og innleggene blir slettet øyeblikkelig."
     fixed_category_positions: "Hvis denne er valgt kan du manuelt bestemme rekkefølgen i listen over kategorier. Ellers vil kategoriene sorteres automatisk basert på aktivitet."
-    fixed_category_positions_on_create: "Hvis denne er valgt vil den fastsatte rekkefølgen på kategorier også gjelde for dialogboksen når man lager nye emner (krever fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Legg til rel nofollow på alle lenker som publiseres av brukere, bortsett fra interne lenker (inkludert foreldredomener). Hvis du endrer denne, må du rebake alle innlegg med: "rake posts:rebake"'
     exclude_rel_nofollow_domains: "En liste over domener hvor nofollow ikke skal legges til i lenker. example.com vil automatisk også tillate sub.example.com. Som et minimum bør du legge til dette nettstedets domene slik at søkeroboter klarer å finne alt innholdet. Hvis andre deler av nettstedet ditt ligger under forskjellige domener bør de også legges til."
     post_excerpt_maxlength: "Maksimal lengde på utdrag eller oppsummering av innlegg."
@@ -986,7 +1032,6 @@ nb_NO:
     suppress_digest_email_after_days: "Utelat oppsummerings-eposter for brukere ikke sett på nettstedet siden mer enn (n) dager."
     digest_suppress_categories: "Utelat disse kategoriene i oppsummerings-eposter"
     allow_profile_backgrounds: "Gi brukere mulighet til å laste opp profilbakgrunner."
-    enable_mobile_theme: "Mobilenheter bruker et mobilvennlig drakt, med muligheten til å gå til den fulle siden. Deaktiver dette hvis du ønsker å bruke et tilpasset stilark."
     dominating_topic_minimum_percent: "Hvor mange innlegg en bruker kan lage innenfor en topic før de blir påminnet om dominering av en topic."
     automatically_unpin_topics: "Automatisk fjern feste for emner når brukeren når bunnen."
     embed_post_limit: "Maksimalt antall innlegg som skal bygges inn."
@@ -1014,6 +1059,10 @@ nb_NO:
       topic: "Resultater"
       user: "Brukere"
     results_page: "Søkeresultater for \"%{term}\""
+  posts_filter:
+    description:
+      order_latest: "Siste innlegg"
+      order_latest_topic: "Siste emner"
   most_recent_poster: "Ferskeste innlegg av"
   redirected_to_top_reasons:
     new_user: "Velkommen til felleskapet vårt! Dette er de mest populære emnene for tiden. "
@@ -1146,11 +1195,14 @@ nb_NO:
       join_the_discussion: "Les mer"
       popular_posts: "Populære innlegg"
       more_new: "Nytt for deg"
+      subject_template_improved: "Sammendrag"
       click_here: "trykk her"
     forgot_password:
       title: "Glemt passord"
     set_password:
       title: "Sett passord"
+    admin_login:
+      subject_template_improved: "Login"
     post_approved:
       title: "Ditt innlegg ble godkjent"
   page_not_found:
@@ -1294,6 +1346,8 @@ nb_NO:
               private:
                 label: "Privat"
   onebox:
+    google_meet:
+      meeting_code: "Kode:"
     github:
       closed: "lukket"
       status_date:

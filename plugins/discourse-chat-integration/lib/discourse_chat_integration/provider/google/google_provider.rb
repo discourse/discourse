@@ -4,6 +4,7 @@ module DiscourseChatIntegration
   module Provider
     module GoogleProvider
       PROVIDER_NAME = "google"
+      POPULARITY_SCORE = 80
       PROVIDER_ENABLED_SETTING = :chat_integration_google_enabled
       CHANNEL_IDENTIFIER_KEY = "name"
       CHANNEL_PARAMETERS = [

@@ -6,6 +6,23 @@
 
 tr_TR:
   accepted_answer: "Kabul Edilen Yanıt"
+  category_types:
+    support:
+      name: "Destek"
+      title: "destek"
+      description: "Üyelerin soru sorabildiği ve yanıtları çözüm olarak işaretleyebildiği yer."
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Konu sahibinin ve personelin bir yanıtı çözüm olarak işaretlemesine izin verin"
+      solved_topics_auto_close_hours:
+        label: "Çözülmüş konuları otomatik olarak kapat (saat)"
+        description: "Çözüldü olarak işaretlendikten sonra bu kadar saat geçtikten sonra konuyu otomatik olarak kapat. Devre dışı bırakmak için 0 olarak ayarla."
+      notify_on_staff_accept_solved:
+        label: "Personel bir çözümü işaretlediğinde konu açan kişiye bildirim gönder"
+      solved_topics_auto_close_duration:
+        label: "Çözülmüş konuları otomatik olarak kapat"
+        description: "Son yanıtın üzerinden bu süre geçtikten sonra çözülmüş konuları otomatik olarak kapat. Devre dışı bırakmak için 0 olarak ayarla."
   site_settings:
     solved_enabled: "Çözüldü eklentisini etkinleştirin, kullanıcıların konularda yanıtları çözüldü olarak seçmesine izin verin"
     allow_solved_on_all_topics: "Kullanıcıların tüm konularda çözüm seçmesine izin verin (işaretli olmadığında, çözümler kategori veya etiket başına etkinleştirilebilir)"

@@ -14,10 +14,49 @@ de:
     chat_integration:
       menu_title: "Chat-Integrationen"
       settings: "Einstellungen"
+      nav:
+        providers: "Anbieter"
+        providers_description: "Konfiguriere die Integration von Chat-Anbietern"
+      add_provider: "Anbieter hinzufügen"
+      view_provider_settings: "Anbietereinstellungen anzeigen"
+      more_providers: "Mehr"
+      confirm_setup_provider: "Bist du sicher, dass du den Anbieter %{provider} aktivieren möchtest? Du kannst ihn später auf der Registerkarte „Einstellungen“ wieder deaktivieren."
+      setup_provider_modal:
+        title: "Anbieter %{provider} einrichten"
+        setup_instructions: "Bitte gib die folgenden Details ein, um den Anbieter %{provider} einzurichten. %{additionalInstructions}"
+        confirm_setup: "Einrichtung bestätigen"
+        success: "Anbieter %{provider} erfolgreich eingerichtet"
+        slack:
+          instructions: "Entweder ist ein Zugriffstoken oder eine ausgehende Webhook-URL erforderlich."
+          at_least_one_required: "Gib ein Zugriffstoken oder eine ausgehende Webhook-URL ein."
+          access_token:
+            title: "Zugriffstoken"
+            description: "Das OAuth-Zugriffstoken des Slack-Bots"
+          outbound_webhook_url:
+            title: "Ausgehende Webhook-URL"
+            description: "Die ausgehende Slack-Webhook-URL"
+        telegram:
+          instructions: "Das Zugriffstoken wird beim Speichern validiert."
+          access_token:
+            title: "Zugriffstoken"
+            description: "Das Telegram-Bot-Zugriffstoken von BotFather"
+      empty_state:
+        title: "Verbinde deine Chat-Plattform"
+        body: "Sende Benachrichtigungen von Discourse an den Chat deines Teams. Wähle einen Anbieter, um loszulegen."
+      channels_title: "Kanäle"
+      channels_description: "Konfiguriere die Kanäle für den Anbieter %{provider}."
+      no_channels: "Es wurden noch keine Kanäle konfiguriert."
+      channel_actions: "Kanalaktionen"
+      add_first_channel: "Füge deinen ersten %{provider} Kanal hinzu"
       channels_with_errors: "Das letzte Versenden von Nachrichten ist bei einigen Kanälen dieses Providers fehlgeschlagen. Klicke auf das/die Fehlersymbol(e), um mehr zu erfahren."
       channel_exception: "Ein unbekannter Fehler ist aufgetreten, als zuletzt eine Nachricht an diesen Kanal gesendet wurde."
       group_mention_template: "Erwähnungen von: @%{name}"
       group_message_template: "Nachrichten an: @%{name}"
+      choose_group: "(Wähle eine Gruppe)"
+      all_categories: "(Alle Kategorien)"
+      all_tags: "(Alle Schlagwörter)"
+      create_rule: "Regel erstellen"
+      add_channel: "Kanal hinzufügen"
       delete_channel: "Löschen"
       test_channel: "Test"
       edit_channel: "Bearbeiten"
@@ -25,11 +64,14 @@ de:
       test_modal:
         title: "Test-Nachricht senden"
         topic: "Thema"
+        send: "Test-Nachricht senden"
         close: "Schließen"
         error: "Ein unbekannter Fehler ist beim Senden der Nachricht aufgetreten. Bitte überprüfe die Website-Protokolle für weitere Informationen."
         success: "Nachricht erfolgreich versendet"
       type:
         normal: Normal
+        group_message: Gruppennachricht
+        group_mention: Gruppenerwähnung
       filter:
         mute: 'Stummschalten'
         follow: 'Nur erster Beitrag'
@@ -50,6 +92,9 @@ de:
           ok: "Gültig"
           fail: "Ungültiges Format"
       edit_rule_modal:
+        edit_title: Regel bearbeiten
+        create_title: Regel erstellen
+        save: Regel speichern
         cancel: Abbrechen
         provider: Anbieter
         type: Art
@@ -70,7 +115,11 @@ de:
           param:
             identifier:
               title: Kanal
+              help: "Zum Beispiel #kanal oder @benutzername"
           errors:
+            at_least_one_required: "Gib ein Zugriffstoken oder eine ausgehende Webhook-URL ein."
+            invalid_webhook_url: "Die ausgehende Webhook-URL muss ein gültiger Link im Format https://hooks.slack.com/services/... sein."
+            auth_error: "Das angegebene Authentifizierungstoken ist ungültig"
             action_prohibited: "Der Bot hat keine Berechtigung, in diesem Kanal zu schreiben"
             channel_not_found: "Der angegebene Kanal existiert nicht auf Slack"
         telegram:
@@ -83,6 +132,8 @@ de:
               title: Chat-ID
               help: Eine Nummer, die du vom Bot erhalten hast, oder eine Broadcast-Kanal-Kennung in der Form @channelname
           errors:
+            access_token_required: "Ein Bot-Zugriffstoken ist erforderlich."
+            webhook_setup_failed: "Der Webhook konnte nicht bei Telegram registriert werden. Überprüfe das Token und versuche es erneut."
             channel_not_found: "Der angegebene Kanal existiert nicht auf Telegram"
             forbidden: "Der Bot hat keine Berechtigung, in diesem Kanal zu schreiben"
         discord:
@@ -93,6 +144,7 @@ de:
               help: "Ein Name, um den Kanal zu beschreiben. Dieser wird nicht verwendet, um die Verbindung mit Discord herzustellen."
             webhook_url:
               title: Webhook-URL
+              help: Die Webhook-URL, die in den Einstellungen deines Discord-Servers erstellt wurde. Sie sollte im Format `https://discord.com/api/webhooks/<webhook-id>/<webhook-token>` sein.
         guilded:
           title: "Guilded"
           param:
@@ -107,6 +159,7 @@ de:
           param:
             identifier:
               title: Kanal
+              help: "Zum Beispiel #kanal oder @benutzername"
           errors:
             channel_not_found: "Der angegebene Kanal existiert nicht in Mattermost"
         matrix:
@@ -137,6 +190,7 @@ de:
           param:
             identifier:
               title: Kanal
+              help: "Zum Beispiel #kanal oder @benutzername"
           errors:
             invalid_channel: "Dieser Kanal exisitert nicht in Rocket Chat"
         gitter:
@@ -144,6 +198,7 @@ de:
           param:
             name:
               title: "Name"
+              help: "Der Name eines Gitter-Raums, zum Beispiel gitterHQ/services"
             webhook_url:
               title: "Webhook-URL"
               help: "Die URL, welche beim Erstellen einer neuen Integration in einem Gitter-Raum angegeben wird."

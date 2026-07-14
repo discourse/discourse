@@ -1,143 +1,100 @@
+@use "lib/viewport";
+
 .post-event-builder-modal {
+  [name="attendanceMode"] {
+    .form-kit__control-radio-description {
+      margin-top: var(--space-2);
+    }
+  }
+
+  .reminder-item {
+    display: flex;
+    gap: var(--space-half);
+
+    .form-kit__container {
+      flex: 1 1 auto;
+    }
+
+    .d-select {
+      text-overflow: ellipsis;
+    }
+
+    .form-kit__field-input-number {
+      flex: 0;
+
+      @include viewport.until(md) {
+        min-width: 4em !important; // overrides another important
+      }
+
+      input {
+        width: inherit;
+      }
+    }
+  }
+
   .conditional-loading-section {
     background: transparent;
   }
 
-  .event-field {
-    display: flex;
-    margin-bottom: 2em;
-    flex-direction: column;
-
-    &.description {
-      textarea {
-        border-radius: var(--d-input-border-radius);
-        margin: 0;
-      }
+  .reminders {
+    .form-kit__container-content {
+      flex-wrap: wrap;
     }
 
-    &.name,
-    &.url {
-      input {
-        width: 100%;
-      }
-    }
-
-    .event-field-description {
-      margin: 0 0 0.5em 0;
-    }
-
-    .event-field-label {
+    .reminder-item {
       display: flex;
-      min-height: 1px;
-      padding-top: 0;
-      top: 0;
-      vertical-align: middle;
       align-items: center;
+      flex: 1 0 auto;
+      padding: 0.25em 0;
+      gap: var(--space-1);
+      margin-bottom: var(--space-2);
 
-      .label {
-        font-weight: 700;
-        margin-bottom: 0.5em;
-      }
-    }
-
-    .event-field-control {
-      display: flex;
-      flex: 1;
-      flex-direction: column;
-
-      .select-kit.available-recurrences {
-        width: 100%;
-      }
-
-      .custom-field-label {
-        font-weight: 500;
-        margin: 0.5em 0 0.25em 0;
-      }
-
-      .custom-field-input {
-        width: 100%;
-      }
-
-      .radio-label,
-      .checkbox-label {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1em;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-
-        input[type="radio"] {
-          width: auto;
-        }
-
-        .message {
-          margin: 0 0 0 1em;
-          padding: 0;
-          display: flex;
-          flex-direction: column;
-
-          .description {
-            font-weight: normal;
-          }
-        }
-      }
-
-      .ac-wrap {
-        max-width: 100%;
+      @include viewport.until(sm) {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
       }
 
       input {
-        margin: 0;
+        margin-bottom: 0;
       }
-    }
-  }
 
-  .event-field.reminders {
-    display: flex;
+      .select-kit-header {
+        height: 100%;
+      }
 
-    .reminders-list {
-      display: flex;
-      flex-direction: column;
-      margin-bottom: 1em;
-
-      .reminder-item {
-        display: flex;
-        flex: 1 0 auto;
-        padding: 0.25em 0;
-
-        .select-kit-header {
-          height: 100%;
-        }
-
+      @include viewport.from(sm) {
         .reminder-type {
           width: 320px;
-          margin-right: 0.5em;
         }
 
         .reminder-value {
-          width: 60px;
-          margin-right: 0.5em;
+          min-width: unset !important; // overrides another important
         }
 
         .reminder-unit {
           width: 140px;
-          margin-right: 0.5em;
         }
+      }
 
-        .reminder-period {
-          margin-right: 0.5em;
-        }
+      .reminder-period {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--space-2);
+      }
 
-        .remove-reminder {
-          margin-left: auto;
-        }
+      .remove-reminder {
+        margin-left: auto;
       }
     }
 
-    .add-reminder {
+    .form-kit__collection + .add-reminder {
       align-self: flex-start;
+      margin-top: var(--form-kit-gutter-y);
     }
+  }
+
+  .d-date-time-input {
+    width: 100%;
   }
 }

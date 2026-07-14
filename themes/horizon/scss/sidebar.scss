@@ -3,6 +3,7 @@
 :root {
   --sidebar-section-wrapper-padding: 0 var(--space-2) var(--space-4)
     var(--space-4);
+  --d-sidebar-active-background: var(--d-selected);
 }
 
 body.has-full-page-chat .sidebar-wrapper,
@@ -87,10 +88,6 @@ body.has-full-page-chat .sidebar-wrapper,
 
 .sidebar-new-topic-button__wrapper {
   margin: 0 var(--space-2) var(--space-4) var(--space-4);
-
-  .sidebar-new-topic-button .d-icon {
-    display: none;
-  }
 }
 
 // put the draft menu above the slide-out hamburger on small desktop screens

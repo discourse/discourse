@@ -6,6 +6,10 @@
 
 sl:
   accepted_answer: "Sprejet odgovor"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Lastniku teme in osebju dovolite, da odgovor označijo kot rešitev"
   site_settings:
     solved_enabled: "Omogočite vtičnik za rešitve, omogočite uporabnikom, da izberejo rešitve za teme"
     allow_solved_on_all_topics: "Uporabnikom omogočite izbiro rešitev za vse teme (če ta možnost ni označena, je mogoče omogočiti rešitve za posamezno kategorijo ali oznako)."

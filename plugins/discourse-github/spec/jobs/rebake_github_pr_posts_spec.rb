@@ -28,11 +28,17 @@ RSpec.describe Jobs::RebakeGithubPrPosts do
       expect(Oneboxer).to have_received(:preview).with(pr_url, invalidate_oneboxes: true)
     end
 
+    it "invalidates the inline onebox cache for the PR URL" do
+      allow(InlineOneboxer).to receive(:invalidate)
+      described_class.new.execute(pr_url:)
+
+      expect(InlineOneboxer).to have_received(:invalidate).with(pr_url)
+    end
+
     it "rebakes posts with full GitHub PR oneboxes" do
       create_post_with_link(<<~HTML)
         <aside class="onebox githubpullrequest"><a href="#{pr_url}">PR</a></aside>
       HTML
-
       expect_any_instance_of(Post).to receive(:rebake!).with(
         priority: :low,
         skip_publish_rebaked_changes: true,
@@ -41,10 +47,25 @@ RSpec.describe Jobs::RebakeGithubPrPosts do
       described_class.new.execute(pr_url:)
     end
 
-    it "does not rebake posts with plain links or inline oneboxes" do
-      create_post_with_link(%(<a href="#{pr_url}">plain link</a>))
+    it "rebakes posts with inline oneboxes for the PR URL" do
       create_post_with_link(%(<a href="#{pr_url}" class="inline-onebox">inline onebox</a>))
+      expect_any_instance_of(Post).to receive(:rebake!).with(
+        priority: :low,
+        skip_publish_rebaked_changes: true,
+      )
 
+      described_class.new.execute(pr_url:)
+    end
+
+    it "does not rebake posts with plain links" do
+      create_post_with_link(%(<a href="#{pr_url}">plain link</a>))
+      expect_any_instance_of(Post).not_to receive(:rebake!)
+
+      described_class.new.execute(pr_url:)
+    end
+
+    it "does not rebake posts with an inline onebox for an unrelated URL" do
+      create_post_with_link(%(<a href="https://example.com/other" class="inline-onebox">other</a>))
       expect_any_instance_of(Post).not_to receive(:rebake!)
 
       described_class.new.execute(pr_url:)
@@ -96,6 +117,17 @@ RSpec.describe Jobs::RebakeGithubPrPosts do
         create_chat_message_with_link(%(<a href="#{pr_url}">plain link</a>))
 
         expect_any_instance_of(Chat::Message).not_to receive(:rebake!)
+
+        described_class.new.execute(pr_url:)
+      end
+
+      it "rebakes chat messages with inline oneboxes for the PR URL" do
+        create_chat_message_with_link(%(<a href="#{pr_url}" class="inline-onebox">inline</a>))
+
+        expect_any_instance_of(Chat::Message).to receive(:rebake!).with(
+          priority: :low,
+          skip_notifications: true,
+        )
 
         described_class.new.execute(pr_url:)
       end

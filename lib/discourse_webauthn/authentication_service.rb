@@ -17,24 +17,31 @@ module DiscourseWebauthn
       end
 
       # 6. Identify the user being authenticated and verify that this user is the
-      #    owner of the public key credential source credentialSource identified by credential.id:
-
-      # 6a. If the user was identified before the authentication ceremony was initiated,
-      #     verify that the identified user account contains a credential record whose id equals credential.rawId.
-      security_key = UserSecurityKey.find_by(credential_id: @params[:credentialId])
+      #    owner of the public key credential source credentialSource identified by credential.id.
+      #    Disabled credentials must be rejected even if a row still exists in the database;
+      #    advertised allow-lists already exclude them, but the lookup here must enforce it too.
+      security_key = UserSecurityKey.find_by(credential_id: @params[:credentialId], enabled: true)
       raise(KeyNotFoundError, I18n.t("webauthn.validation.not_found_error")) if security_key.blank?
 
-      if @factor_type == UserSecurityKey.factor_types[:second_factor] &&
-           (@current_user == nil || security_key.user == nil || security_key.user != @current_user)
+      accepted_factor_types = Array(@factor_type)
+      if accepted_factor_types.exclude?(security_key.factor_type)
         raise(OwnershipError, I18n.t("webauthn.validation.ownership_error"))
       end
 
-      # 6b. If the user was not identified before the authentication ceremony was initiated,
-      #     verify that response.userHandle is present. Verify that the user account identified by response.userHandle
-      #     contains a credential record whose id equals credential.rawId
-      if @factor_type == UserSecurityKey.factor_types[:first_factor] &&
-           Base64.decode64(@params[:userHandle]) != security_key.user.secure_identifier
-        raise(OwnershipError, I18n.t("webauthn.validation.ownership_error"))
+      if @current_user
+        # 6a. If the user was identified before the authentication ceremony was initiated,
+        #     verify that the identified user account contains a credential record whose id equals credential.rawId.
+        if security_key.user_id != @current_user.id
+          raise(OwnershipError, I18n.t("webauthn.validation.ownership_error"))
+        end
+      else
+        # 6b. If the user was not identified before the authentication ceremony was initiated,
+        #     verify that response.userHandle is present. Verify that the user account identified by response.userHandle
+        #     contains a credential record whose id equals credential.rawId
+        if @params[:userHandle].blank? ||
+             Base64.decode64(@params[:userHandle]) != security_key.user.secure_identifier
+          raise(OwnershipError, I18n.t("webauthn.validation.ownership_error"))
+        end
       end
 
       # 7. No upstream step
@@ -72,7 +79,7 @@ module DiscourseWebauthn
       #     User verification SHOULD be required if, and only if, options.userVerification is set to required.
       #     If user verification was determined to be required, verify that the UV bit of the flags in authData is set.
       #     Otherwise, ignore the value of the UV flag.
-      validate_user_verification if @factor_type == UserSecurityKey.factor_types[:first_factor]
+      validate_user_verification if security_key.first_factor?
 
       # 19. If the BE bit of the flags in authData is not set, verify that the BS bit is not set.
       #     Not using this right now.

@@ -191,6 +191,14 @@ he:
               description: "לאפשר תיוג של פוסטים שנוצרו על ידי משתמש המערכת."
     discourse_ai:
       title: "בינה מלאכותית"
+      ai_tool_approval:
+        loading: "בטעינה…"
+        tool: "פעולה"
+        user: "משתמש"
+        approve: "אישור"
+        reject: "לדחות"
+        approved: "אושר"
+        rejected: "נדחה"
       default_llm:
         title: "מודל LLM/מש״ג ברירת מחדל"
       llm_selector:
@@ -219,8 +227,7 @@ he:
           name: "בוט"
           description: "צ׳אט בוט שיכול לענות על שאלות ולסייע למשתמשים בהודעות אישיות, בפורום ובצ׳אט"
         nav:
-          configured: "מוגדר"
-          unconfigured: "לא מוגדר"
+          enabled: "פעיל"
         filters:
           all: "הכול"
           no_results: "לא נמצאו יכולות שתואמות למסננים שלך."
@@ -294,6 +301,7 @@ he:
         description: "תרגום כל התוכן של הפורום שלך לשפת המשתמש המועדפת אוטומטית"
         supported_locales: "שפות נתמכות"
         supported_locales_description: "הגדרת האתר הזאת מאפשרת גם למבקרים לתרום תרגומים לפוסטים."
+        category_scope: "קטגוריות"
         admin_actions:
           translation_settings: "הגדרות תרגום"
           localization_settings: "הגדרות התאמת שפה"
@@ -324,6 +332,9 @@ he:
             two: "שני פוסטים"
             many: "שני פוסטים"
             other: "שני פוסטים"
+        theme_translations:
+          translate:
+            label: "תרגום"
         translations_menu:
           translate:
             label: "תרגום פוסט"
@@ -427,9 +438,6 @@ he:
         no_llm_selected: "לא נבחר דגם שפה"
         max_context_posts: "כמות מרבית של פוסטים להקשר"
         max_context_posts_help: "הכמות המרבית של פוסטים לשימוש כהקשר לבינה המלאכותית בעת מענה למשתמש (ריק לברירת מחדל)"
-        vision_enabled: ראייה מופעלת
-        vision_enabled_help: אם האפשרות פעילה, הבינה מלאכותית תנסה להבין תמונות שהמשתמשים מפרסמים בנושא, כתלות בתמיכה של המודל בעיבוד תמונות. נתמך על ידי המודלים העדכניים ביותר מבית Anthropic,‏ Google ו־OpenAI.
-        vision_max_pixels: גודל התמונות הנתמכות
         vision_max_pixel_sizes:
           low: איכות נמוכה - הזול ביותר (256×256)
           medium: איכות בינונית (512×512)
@@ -459,6 +467,12 @@ he:
         temperature_help: "טמפרטורה לשימוש למודל השפה הגדול (LLM), הגדלה תגדיל את היצירתיות (אפשר להשאיר ריק לשימוש בברירת המחדל של הדגם, בדרך כלל זה ערך בין 0.0 לבין 2.0)"
         top_p: "ה־P המובילים"
         top_p_help: "ה־P המובילים לשימוש למודל השפה הגדול (LLM), הגדלה תגדיל את היצירתיות (אפשר להשאיר ריק לשימוש בברירת המחדל של הדגם, בדרך כלל זה ערך בין 0.0 לבין 1.0)"
+        thinking_effort_options:
+          none: "ללא"
+          low: "נמוכה"
+          medium: "בינונית"
+          high: "גבוהה"
+          max: "מרבי"
         priority: "עדיפות"
         tool_options: "אפשרויות כלי"
         rag_conversation_chunks: "חיפוש בחלקי הדיון"
@@ -586,7 +600,6 @@ he:
         max_output_tokens: "כמות אסימוני פלט מרבית"
         url: "כתובת השירות שמארח את המודל"
         api_key: "מפתח ה־API של השירות שמארח את המודל"
-        vision_enabled: "ראייה מופעלת"
         ai_bot_user: "משתמש בוט בינה מלאכותית"
         cost_input: "עלות קלט"
         cost_cached_input: "עלות קלט מאוחסן"
@@ -603,6 +616,7 @@ he:
           group: "קבוצה"
           max_tokens: "כמות אסימונים מרבית"
           max_usages: "כמות שימושים מרבית"
+          max_cost: "עלות מרבית"
           duration: "משך"
           confirm_delete: "למחוק את המכסה הזאת?"
           add: "הוספת מכסה"
@@ -613,8 +627,10 @@ he:
             week: "7 ימים"
             custom: "התאמה אישית…"
           hours: "שעות"
-          max_tokens_required: "חובה להגדיר אם לא הוגדרה כמות שימושים מרבית"
-          max_usages_required: "חובה להגדיר אם לא הוגדרה כמות אסימונים מרבית"
+          max_tokens_required: "חייב להיות מוגדר אם שימושים מרביים ועלות מרבית לא מוגדרות"
+          max_usages_required: "חובה להגדיר אם כמות אסימונים מרבית ועלות מרבית לא מוגדרות"
+          max_cost_help: "העלות המרבית המשוערת שכל משתמש בקבוצה זו יכול להוציא על מודל הבינה המלאכותית הזה במהלך פרק הזמן שצוין. העלות מבוססת על מחירי הקלט, הפלט, הקלט במטמון וכתיבה למטמון שהוגדרו עבור המודל."
+          max_cost_required: "חובה להגדיר אם כמות אסימונים מרבית וכמות שימושים מרבית לא מוגדרות"
         credit_allocation:
           next_reset: "האסימונים מתאפסים ב־%{time}"
         usage:
@@ -632,11 +648,11 @@ he:
           other: "המודל הזה משמש את: %{settings}. אם ההגדרות שגויות היכולת לא תעבודנה כמצופה."
         model_description:
           none: "הגדרות כלליות שעובדות עבור רוב המודלים של השפות"
-          anthropic-claude-opus-4-6: "המודל החכם ביותר של Anthropic"
+          anthropic-claude-opus-4-7: "המודל החכם ביותר של Anthropic"
           anthropic-claude-sonnet-4-6: "איזון מיטבי בין מהירות לעלות"
           anthropic-claude-haiku-4-5: "מהיר וחסכוני"
-          google-gemini-3-pro: "המודל החכם ביותר של Google"
-          open_ai-gpt-5-nano: "מודל GPT-5 החסכוני והמהיר ביותר"
+          google-gemini-3-1-pro: "המודל החכם ביותר של Google"
+          open_ai-gpt-5-4-nano: "מודל GPT-5 החסכוני והמהיר ביותר"
         preseeded_model_description: "מודל קוד פתוח שהוגדר מראש ומשתמש ב־%{model}"
         configured:
           title: "LLMs (מודלי שפה גדולים) מוגדרים"
@@ -660,7 +676,6 @@ he:
           max_output_tokens: "מספר האסימונים המרבי שהמודל יכול לייצר בבקשה בודדת"
           display_name: "השם משמש להתייחסות למודל הזה על פני כלל ממשק האתר שלך."
           name: "אנו מצרפים את זה לקריאת ה־API כדי לציין באיזה מודל להשתמש"
-          vision_enabled: "אם האפשרות פעילה, הבינה מלאכותית תנסה להבין תמונות. כתלות בתמיכה של המודל בעיבוד תמונות. נתמך על ידי המודלים העדכניים ביותר מבית Anthropic,‏ Google ו־OpenAI."
           cost_input: "עלות הקלט לכל מיליון אסימונים למודל זה"
           cost_output: "עלות הפלט לכל מיליון אסימונים למודל זה"
           cost_measure: "$/מיליון אסימונים"
@@ -703,13 +718,7 @@ he:
         title: "הצעת שינויים באמצעות בינה מלאכותית"
         description: "נא לבחור באחת מהאפשרויות להלן והבינה המלאכותית תציע לך גרסה חדשה של הטקסט."
         selection_hint: "עצה: אפשר לבחור חלק מהטקסט בטרם פתיחת המסייע כדי לשכתב רק את החלק הזה."
-        suggest: "הצעה עם בינה מלאכותית"
         suggest_errors:
-          too_many_tags:
-            one: "יכולה להיות לך עד תגית אחת"
-            two: "יכולות להיות לך עד שתי תגיות"
-            many: "יכולות להיות לך עד %{count} תגיות"
-            other: "יכולות להיות לך עד %{count} תגיות"
           no_suggestions: "אין הצעות זמינות"
         missing_content: "נא למלא קצת תוכן כדי לחולל הצעות."
         context_menu:
@@ -832,8 +841,6 @@ he:
           title: "הצגת התכתובת מול הבינה המלאכותית"
           copy_request: "העתקת הבקשה"
           copy_response: "העתקת תגובה"
-          request_tokens: "אסימוני בקשה:"
-          response_tokens: "אסימוני תגובה:"
           request: "בקשה"
           response: "תשובה"
           next_log: "הבא"
@@ -889,6 +896,7 @@ he:
           last_30_days: "30 הימים האחרונים"
           upload_files: "העלאת קבצים"
           uploads_in_progress: "לא ניתן להגיש תוך כדי שמתבצעות העלאות"
+          editing_post: "רשומה נערכת"
       sentiments:
         dashboard:
           title: "רגש"

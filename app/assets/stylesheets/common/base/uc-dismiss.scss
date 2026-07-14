@@ -12,10 +12,14 @@
 
       .dismiss-read {
         box-shadow: var(--shadow-dropdown);
+      }
 
-        .d-icon {
-          display: none;
-        }
+      .topic-dismiss-buttons__button .d-icon {
+        display: none;
+      }
+
+      .topic-dismiss-buttons__menu .d-icon {
+        display: inline-flex;
       }
 
       .footer-nav-visible & {
@@ -23,6 +27,18 @@
           var(--footer-nav-height) + env(safe-area-inset-bottom) +
             var(--space-4)
         );
+      }
+    }
+
+    .dismiss-container-bottom {
+      .topic-dismiss-buttons__menu {
+        display: none;
+      }
+
+      .topic-dismiss-buttons__button {
+        border-top-right-radius: var(--d-button-border-radius);
+        border-bottom-right-radius: var(--d-button-border-radius);
+        border-right: var(--d-button-default-border);
       }
     }
   }

@@ -2,7 +2,6 @@ import "core-js/actual/url";
 import postcssLightDark from "@csstools/postcss-light-dark-function";
 import autoprefixer from "autoprefixer";
 import postcss from "postcss";
-import minmax from "postcss-media-minmax";
 import postcssNesting from "postcss-nesting";
 import { browsers } from "../discourse/config/targets";
 import postcssVariablePrefixer from "./postcss-variable-prefixer";
@@ -11,7 +10,6 @@ const postCssProcessor = postcss([
   autoprefixer({
     overrideBrowserslist: browsers,
   }),
-  minmax(),
   postcssLightDark,
   postcssNesting, // Un-nests the native css nesting from postcssLightDark
   postcssVariablePrefixer(),

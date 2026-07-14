@@ -27,6 +27,9 @@ ug:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
+      event_description:
+        show_more: "تېخىمۇ كۆپ كۆرسەت"
+        show_less: "ئازراق كۆرسەت"
       show_all: "ھەممىنى كۆرسەت"
       add_to_calendar: "يىلنامەگە قوش"
       created_by: "قۇرغۇچى"
@@ -48,6 +51,18 @@ ug:
               title: "ئاممىۋى"
             private:
               title: "شەخسىي"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "مىنۇت"
+              other: "مىنۇت"
+            hours:
+              one: "سائەت"
+              other: "سائەت"
+            days:
+              one: "كۈن"
+              other: "كۈن"
       builder_modal:
         custom_fields:
           placeholder: "تاللاشچان"
@@ -55,6 +70,8 @@ ug:
         update: "ساقلا"
         timezone:
           label: ۋاقىت رايونى
+        starts_at:
+          label: "باشلىنىش ۋاقتى"
         reminders:
           units:
             minutes: "مىنۇت"
@@ -67,14 +84,13 @@ ug:
           label: "تەكرار"
           none: "تەكرارلانمايدۇ"
           every_day: "ھەر كۈنى"
-        url:
-          label: "تور ئادرېسى"
-          placeholder: "تاللاشچان"
-        location:
-          label: "ئورنى"
+        attendance:
+          none: "يوق"
         description:
           label: "چۈشەندۈرۈش"
-        status:
-          label: "ھالەت"
+        event_type:
+          public:
+            title: "ئاممىۋى"
       invite_user_or_group:
         invite: "يوللا"
+        success: "تەكلىپ يوللاندى"

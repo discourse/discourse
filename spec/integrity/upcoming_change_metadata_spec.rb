@@ -2,8 +2,8 @@
 
 def upcoming_change_setting_files
   [
-    File.join(Rails.root, "config", "site_settings.yml"),
-    *Dir["#{Rails.root}/plugins/*/config/settings.yml"].sort,
+    Rails.root.join("config/site_settings.yml").to_s,
+    *Dir["#{Rails.root.join("plugins/*/config/settings.yml")}"].sort,
   ]
 end
 
@@ -15,7 +15,7 @@ def each_upcoming_change_setting
         next if opts[:upcoming_change].blank?
 
         setting = {
-          file: file.delete_prefix("#{Rails.root}/"),
+          file: file.delete_prefix("#{Rails.root.join("")}"),
           setting_name: setting_name,
           default: default,
           options: opts,
@@ -45,7 +45,7 @@ RSpec.describe "upcoming change metadata integrity checks" do
 
     it "#{label} is valid" do
       metadata = setting[:upcoming_change]
-      allowed_keys = %i[status impact learn_more_url disallow_enabled_for_groups]
+      allowed_keys = %i[status impact learn_more_url allow_enabled_for body_class hide_settings]
       required_keys = %i[status impact]
       unsupported_keys = metadata.keys - allowed_keys
       missing_keys = required_keys - metadata.keys
@@ -53,6 +53,10 @@ RSpec.describe "upcoming change metadata integrity checks" do
       status = metadata[:status].to_sym
       impact = metadata[:impact]
       impact_parts = impact.is_a?(String) ? impact.split(",") : []
+      learn_more_url = metadata[:learn_more_url]
+      allow_enabled_for = metadata[:allow_enabled_for]
+      body_class = metadata[:body_class]
+      hide_settings = metadata[:hide_settings]
 
       aggregate_failures do
         expect(setting[:options][:hidden]).to eq(true), "#{label} must set `hidden: true`"
@@ -79,9 +83,48 @@ RSpec.describe "upcoming change metadata integrity checks" do
           "#{label} has invalid upcoming_change impact role #{impact_role.inspect}. Valid roles: #{valid_upcoming_change_impact_roles.join(", ")}"
         end
 
-        if metadata.key?(:disallow_enabled_for_groups)
-          expect(metadata[:disallow_enabled_for_groups]).to eq(true),
-          "#{label} should omit `upcoming_change.disallow_enabled_for_groups` unless it is `true`"
+        if status != :conceptual
+          aggregate_failures do
+            expect(learn_more_url).to be_present,
+            "#{label} must set `upcoming_change.learn_more_url` when status is not `conceptual`"
+
+            if learn_more_url.present?
+              expect(learn_more_url).to match(%r{\Ahttps://meta\.discourse\.org/t/-/\d+\z}),
+              "#{label} upcoming_change.learn_more_url must match https://meta.discourse.org/t/-/NNNN, do not include the topic slug"
+            end
+          end
+        end
+
+        if allow_enabled_for.present?
+          valid_values = %w[everyone staff specific_groups]
+          allow_strings = Array(allow_enabled_for).map(&:to_s)
+
+          expect(allow_enabled_for).to be_an(Array),
+          "#{label} `upcoming_change.allow_enabled_for` must be an array"
+          expect(allow_strings).not_to be_empty,
+          "#{label} `upcoming_change.allow_enabled_for` must not be empty"
+          expect(allow_strings - valid_values).to be_empty,
+          "#{label} `upcoming_change.allow_enabled_for` contains invalid values: #{(allow_strings - valid_values).join(", ")}. Valid values: #{valid_values.join(", ")}"
+
+          if allow_strings.include?("everyone")
+            expect(allow_strings).to eq(["everyone"]),
+            "#{label} `upcoming_change.allow_enabled_for` may not combine `everyone` with other values"
+          end
+        end
+
+        unless body_class.nil?
+          expect([true, false]).to include(body_class),
+          "#{label} `upcoming_change.body_class` must be a boolean"
+        end
+
+        if hide_settings.present?
+          expect(hide_settings).to be_an(Array),
+          "#{label} `upcoming_change.hide_settings` must be an array"
+
+          unknown_settings =
+            Array(hide_settings).map(&:to_s).reject { |s| SiteSetting.respond_to?(s) }
+          expect(unknown_settings).to be_empty,
+          "#{label} `upcoming_change.hide_settings` references unknown site settings: #{unknown_settings.join(", ")}"
         end
       end
     end

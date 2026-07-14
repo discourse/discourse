@@ -47,6 +47,12 @@ end
 
 `execute` is the default for all migration SQL. Only use `DB.exec`/`DB.query` when you need parameterized queries (`:param` syntax) or return values.
 
+## Fresh installs must not gain application rows
+
+Fresh installs provision the database from `db/structure.sql`, which captures schema only — rows are not serialized. Any data a migration inserts on a fresh DB silently disappears on new installs. CI (`db:check_structure_dump`) asserts no application tables have rows after a clean `db:migrate`.
+
+Seed data belongs in `db/fixtures/` (or `plugins/<name>/db/fixtures/`). When a migration on existing sites needs to write rows (e.g. preserve old default behavior), gate the insert on `Migration::Helpers.existing_site?` so fresh installs skip it; pair it with a fixture that handles the new default.
+
 ## Safely removing columns
 
 Multi-step process across deployments. Helpers: `lib/migration/column_dropper.rb`, `lib/migration/base_dropper.rb`.
@@ -174,6 +180,14 @@ For trigram search: `using: "gist", opclass: :gist_trgm_ops`.
 
 Default Rails naming works unless the name exceeds 63 chars (PG limit) — then use a custom `name:`.
 
+## Transaction-disabled migrations
+
+Do not perform schema changes (`add_column`, `remove_column`, `rename_column`, `change_column`, `change_column_null`, `create_table`, `drop_table`, etc.) in a migration that calls `disable_ddl_transaction!`.
+
+Without the wrapping transaction, each statement autocommits. If the migration runs several statements and one fails partway through, the completed statements are committed and won't roll back, leaving the schema half-migrated and hard to recover.
+
+`disable_ddl_transaction!` is only for operations that can't run inside a transaction block: concurrent index creation (see Indexing) and batched data backfills (see Data backfills). Keep such a migration limited to the single operation that requires it, and move any other schema changes to a separate migration that keeps its DDL transaction so they stay atomic.
+
 ## Foreign keys
 
 **Discourse mostly does NOT use foreign keys.** Referential integrity is enforced by application logic and `EnsureDbConsistency` (`app/jobs/scheduled/ensure_db_consistency.rb`), which runs every 12 hours calling `ensure_consistency!` on 18 core models.
@@ -266,15 +280,16 @@ end
 
 The same pattern works for plugin migrations — just adjust the `require` path (e.g., `plugins/chat/db/migrate/...`).
 
-## Running annotations
+## Regenerating structure.sql and annotations
 
-After any migration that alters table schema (add/remove/rename columns, create tables), run:
+After any schema-altering migration (columns, tables, indexes), regenerate both `db/structure.sql` and model annotations. CI fails if either is stale.
 
 ```bash
-bin/annotate --models
+bin/rake db:dump_structure   # rewrites db/structure.sql from a clean migrated DB
+bin/rake annotate:clean      # rewrites all model annotations (core + bundled plugins)
 ```
 
-This updates the schema comments at the top of model files to reflect the current database schema.
+Both tasks spin up a disposable database and load all bundled plugins, so output is invariant to the local `plugins/` directory. Commit the regenerated files alongside the migration.
 
 ## Review checklist
 
@@ -290,4 +305,6 @@ This updates the schema comments at the top of model files to reflect the curren
 10. No foreign keys unless strong justification
 11. No application code (models, `SiteSetting`) — query DB directly
 12. `execute` for SQL; `DB.exec`/`DB.query` only when param binding or return values needed
-13. Run `bin/annotate --models` after schema-altering migrations
+13. No rows inserted on fresh installs — seed data lives in `db/fixtures/`; inserts that exist only to preserve behavior on upgrades are gated on `Migration::Helpers.existing_site?`
+14. After schema-altering migrations, `bin/rake db:dump_structure` and `bin/rake annotate:clean` were run and the regenerated files committed
+15. Transaction-disabled migrations (`disable_ddl_transaction!`) contain only the operation that requires it (concurrent index or batched backfill), no other schema changes

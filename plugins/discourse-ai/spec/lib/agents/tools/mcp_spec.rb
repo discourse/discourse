@@ -108,7 +108,7 @@ RSpec.describe DiscourseAi::Agents::Tools::Mcp do
     expect(schema[:properties][:combined][:required]).to eq(["b"])
 
     expect(schema[:required]).to eq(%w[places])
-    expect(schema).not_to have_key(:"$defs")
+    expect(schema).not_to have_key(:$defs)
   end
 
   it "uses a short title in thinking summaries and renders the invocation parameters in details" do

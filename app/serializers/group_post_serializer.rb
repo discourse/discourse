@@ -43,7 +43,7 @@ class GroupPostSerializer < ApplicationSerializer
     object.topic.posts_count
   end
 
-  def include_user_long_name?
+  def include_name?
     SiteSetting.enable_names?
   end
 

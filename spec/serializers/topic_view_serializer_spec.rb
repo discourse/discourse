@@ -715,38 +715,4 @@ RSpec.describe TopicViewSerializer do
       end
     end
   end
-
-  describe "#has_localized_content" do
-    before { SiteSetting.content_localization_enabled = true }
-
-    it "returns true if the topic has localization" do
-      Fabricate(:topic_localization, topic:, locale: "ja")
-      I18n.locale = "ja"
-      topic.update!(locale: "en")
-
-      json = serialize_topic(topic, user)
-      expect(json[:has_localized_content]).to eq(true)
-    end
-
-    it "returns true if any post has localization" do
-      loc = Fabricate(:post_localization, locale: "ja")
-      I18n.locale = "ja"
-      loc.post.update!(locale: "en")
-
-      json = serialize_topic(loc.post.topic, user)
-      expect(json[:has_localized_content]).to eq(true)
-    end
-
-    it "returns false if the topic does not have localization" do
-      json = serialize_topic(topic, user)
-      expect(json[:has_localized_content]).to eq(false)
-    end
-
-    it "does not return attribute if setting is disabled" do
-      SiteSetting.content_localization_enabled = false
-
-      json = serialize_topic(topic, user)
-      expect(json[:has_localized_content]).to eq(nil)
-    end
-  end
 end

@@ -261,6 +261,23 @@ pt_BR:
         header: "Cabeçalho do chat"
         composer: "Compositor de chat"
         channels_list: "Lista de canais de chat"
+      screen_reader:
+        new_message: "%{username}: %{message}"
+        new_messages:
+          one: "%{count} nova mensagem"
+          other: "%{count} novas mensagens"
+        new_image:
+          one: "%{username} enviou uma imagem"
+          other: "%{username} enviou %{count} imagens"
+        new_attachment:
+          one: "%{username} enviou um anexo"
+          other: "%{username} enviou %{count} anexos"
+        new_message_with_image:
+          one: "%{username}: %{message} (com uma imagem)"
+          other: "%{username}: %{message} (com %{count} imagens)"
+        new_message_with_attachment:
+          one: "%{username}: %{message} (com um anexo)"
+          other: "%{username}: %{message} (com %{count} anexos)"
       no_direct_message_channels: "Você ainda não entrou em nenhum canal de mensagem direta!"
       no_direct_message_channels_cta: "Iniciar uma conversa"
       no_public_channels: "Você ainda não entrou em nenhum canal!"
@@ -270,8 +287,13 @@ pt_BR:
       only_chat_push_notifications:
         title: "Enviar apenas notificações por push"
       personalization_title: "Personalização"
+      accessibility_title: "Acessibilidade"
       ignore_channel_wide_mention:
         title: "Ignorar menções em todo o canal"
+      announce_new_messages:
+        title: "Anunciar novas mensagens para os leitores da tela"
+      new_message_sound:
+        title: "Tocar sons para novas mensagens enquanto o chat está em primeiro plano"
       show_thread_title_prompts:
         title: "Exibir prompts de título de linha de discussão"
         description: "Exibir prompts para definir um título para novas linhas de discussão"
@@ -300,7 +322,6 @@ pt_BR:
       retry_staged_message:
         title: "Erro de rede"
         action: "Enviar novamente?"
-      unreliable_network: "A rede não é confiável, enviar mensagens e salvar rascunho pode não funcionar"
       bookmark_message: "Marcador"
       bookmark_message_edit: "Editar marcador"
       restore: "Restaurar mensagem excluída"
@@ -318,8 +339,6 @@ pt_BR:
         title: "Som de notificação do chat no desktop"
       sounds:
         none: "Nenhum"
-        bell: "Sino"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Anexar arquivo"
@@ -400,8 +419,6 @@ pt_BR:
         input_placeholder: Adicionar um nome
         slug_description: Um slug de canal é usado na URL em vez do nome do canal
         name: Nome do canal
-        slug: Slug do canal (opcional)
-        emoji: Emoji do canal (opcional)
         reset_emoji: Redefinir emoji
       channel_edit_description_modal:
         title: Editar descrição
@@ -459,16 +476,14 @@ pt_BR:
             one: 'Os(as) usuários(as) em %{group} e %{count} outro grupo terão acesso a este canal de acordo com as <a href="%{settingLink}" target="_blank">configurações de segurança</a>'
             other: 'Os(as) usuários(as) em %{group} e %{count} outros grupos terão acesso a este canal de acordo com as <a href="%{settingLink}" target="_blank">configurações de segurança</a>'
         create: "Criar canal"
-        description: "Descrição (opcional)"
+        description: "Descrição"
         name: "Nome do canal"
-        slug: "Slug do canal (opcional)"
         title: "Novo canal"
         type: "Tipo"
         types:
           category: "Categoria"
           topic: "Tópico"
         emoji:
-          label: "Emoji do canal (opcional)"
           reset: "Redefinir emoji"
       reviewable:
         type: "Mensagem de chat"
@@ -792,3 +807,14 @@ pt_BR:
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Enviar mensagem de chat"
+      chat_message_created:
+        channel_id: "Canal"
+      send_chat_message:
+        channel_id: "Canal"
+        message: "Mensagem"
+      chat_approval:
+        message: "Mensagem"
+        channel_id: "Canal"

@@ -24,8 +24,8 @@ module Chat
     end
 
     def generate_auto_slug
-      return if self.slug.present?
-      self.slug = Slug.for(self.title.strip, "")
+      return if slug.present?
+      self.slug = Slug.for(title.strip, "")
       self.slug = "" if duplicate_slug?
     end
   end
@@ -36,27 +36,27 @@ end
 # Table name: chat_channels
 #
 #  id                          :bigint           not null, primary key
-#  chatable_id                 :bigint           not null
-#  deleted_at                  :datetime
-#  deleted_by_id               :integer
-#  featured_in_category_id     :integer
-#  delete_after_seconds        :integer
+#  allow_channel_wide_mentions :boolean          default(TRUE), not null
+#  auto_join_users             :boolean          default(FALSE), not null
 #  chatable_type               :string           not null
+#  delete_after_seconds        :integer
+#  deleted_at                  :datetime
+#  description                 :text
+#  emoji                       :string
+#  messages_count              :integer          default(0), not null
+#  name                        :string
+#  slug                        :string
+#  status                      :integer          default("open"), not null
+#  threading_enabled           :boolean          default(FALSE), not null
+#  type                        :string
+#  user_count                  :integer          default(0), not null
+#  user_count_stale            :boolean          default(FALSE), not null
 #  created_at                  :datetime         not null
 #  updated_at                  :datetime         not null
-#  name                        :string
-#  description                 :text
-#  status                      :integer          default("open"), not null
-#  user_count                  :integer          default(0), not null
-#  auto_join_users             :boolean          default(FALSE), not null
-#  user_count_stale            :boolean          default(FALSE), not null
-#  slug                        :string
-#  type                        :string
-#  allow_channel_wide_mentions :boolean          default(TRUE), not null
-#  messages_count              :integer          default(0), not null
-#  threading_enabled           :boolean          default(FALSE), not null
+#  chatable_id                 :bigint           not null
+#  deleted_by_id               :integer
+#  featured_in_category_id     :integer
 #  last_message_id             :bigint
-#  emoji                       :string
 #
 # Indexes
 #

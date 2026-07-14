@@ -177,9 +177,8 @@ end
 def purge_old_data
   puts "Removing canned replies data"
 
-  begin
-    ActiveRecord::Base.transaction do
-      DB.exec <<~SQL
+  ActiveRecord::Base.transaction do
+    DB.exec <<~SQL
         DELETE FROM site_settings#{" "}
         WHERE name IN (
           'canned_replies_groups',#{" "}
@@ -188,20 +187,19 @@ def purge_old_data
         )
       SQL
 
-      canned_replies_plugin_name = "discourse-canned-replies"
-      canned_replies_store_name = "replies"
-      old_replies =
-        PluginStoreRow.find_by(
-          plugin_name: canned_replies_plugin_name,
-          key: canned_replies_store_name,
-        )
+    canned_replies_plugin_name = "discourse-canned-replies"
+    canned_replies_store_name = "replies"
+    old_replies =
+      PluginStoreRow.find_by(
+        plugin_name: canned_replies_plugin_name,
+        key: canned_replies_store_name,
+      )
 
-      (old_replies.presence&.destroy!)
+    old_replies.presence&.destroy!
 
-      puts "Finished!"
-    rescue StandardError => e
-      puts e
-      puts "Transaction aborted! All changes were rolled back!"
-    end
+    puts "Finished!"
+  rescue StandardError => e
+    puts e
+    puts "Transaction aborted! All changes were rolled back!"
   end
 end

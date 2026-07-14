@@ -52,6 +52,7 @@ class PostCreator
   #     target_user_ids       - array of user IDs for membership (private message, alternative to target_usernames)
   #     target_group_names    - comma delimited list of groups for membership (private message)
   #     target_emails         - comma delimited list of emails for membership (private message)
+  #     private_message_context - optional context for plugin PM permission modifiers
   #     created_at            - Topic creation time (optional)
   #     pinned_at             - Topic pinned time (optional)
   #     pinned_globally       - Is the topic pinned globally (optional)
@@ -69,10 +70,8 @@ class PostCreator
 
     opts[:title] = pg_clean_up(opts[:title]) if opts[:title]&.include?("\u0000")
     opts[:raw] = pg_clean_up(opts[:raw]) if opts[:raw]&.include?("\u0000")
-    opts[:visible] = false if (
-      (opts[:visible].nil? && opts[:hidden_reason_id].present?) ||
-        (opts[:embed_url].present? && SiteSetting.embed_unlisted?)
-    )
+    opts[:visible] = false if (opts[:visible].nil? && opts[:hidden_reason_id].present?) ||
+      (opts[:embed_url].present? && SiteSetting.embed_unlisted?)
 
     opts.delete(:reply_to_post_number) unless opts[:topic_id]
   end
@@ -235,7 +234,7 @@ class PostCreator
     end
 
     if !opts[:import_mode] && !opts[:reviewed_queued_post]
-      handle_spam if (@spam || @post)
+      handle_spam if @spam || @post
 
       ReviewablePost.queue_for_review_if_possible(@post, @user) if !@spam && @post && errors.blank?
     end
@@ -246,8 +245,8 @@ class PostCreator
   def create!
     create
 
-    if !self.errors.full_messages.empty?
-      raise ActiveRecord::RecordNotSaved.new(self.errors.full_messages.to_sentence)
+    if !errors.full_messages.empty?
+      raise ActiveRecord::RecordNotSaved.new(errors.full_messages.to_sentence)
     end
 
     @post
@@ -293,14 +292,12 @@ class PostCreator
 
     post.word_count = post.raw.scan(/[[:word:]]+/).size
 
-    increase_posts_count =
-      !post.topic&.private_message? || post.post_type != Post.types[:small_action]
     post.post_number ||=
       Topic.next_post_number(
         post.topic_id,
         reply: post.reply_to_post_number.present?,
         post_type: post.post_type,
-        post: increase_posts_count,
+        post: true,
       )
 
     cooking_options = post.cooking_options || {}
@@ -333,7 +330,15 @@ class PostCreator
     if reply_info.present?
       post.reply_to_user_id ||= reply_info.user_id
       whisper_type = Post.types[:whisper]
-      post.post_type = whisper_type if reply_info.post_type == whisper_type
+
+      if reply_info.post_type == whisper_type
+        if post.acting_user&.whisperer?
+          post.post_type = whisper_type
+        else
+          post.errors.add(:base, I18n.t(:topic_not_found))
+          throw :abort
+        end
+      end
     end
   end
 
@@ -515,11 +520,14 @@ class PostCreator
   def update_topic_stats
     attrs = { updated_at: Time.now }
 
-    if @post.post_type != Post.types[:whisper] && !@opts[:silent]
-      attrs[:last_posted_at] = @post.created_at
-      attrs[:last_post_user_id] = @post.user_id
-      attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
-      attrs[:excerpt] = @post.excerpt_for_topic if new_topic?
+    if !@post.whisper? && !@opts[:silent]
+      unless @post.small_action?
+        attrs[:last_posted_at] = @post.created_at
+        attrs[:last_post_user_id] = @post.user_id
+        attrs[:word_count] = (@topic.word_count || 0) + @post.word_count
+        attrs[:excerpt] = @post.excerpt_for_topic if new_topic?
+      end
+
       attrs[:bumped_at] = @post.created_at unless @post.no_bump
     end
 
@@ -615,7 +623,7 @@ class PostCreator
 
     UserStatCountUpdater.increment!(@post) if !@post.hidden || @post.topic.visible
 
-    if !@topic.private_message? && @post.post_type != Post.types[:whisper]
+    if !@topic.private_message? && !@post.whisper? && !@post.small_action?
       @user.update(last_posted_at: @post.created_at)
     end
   end

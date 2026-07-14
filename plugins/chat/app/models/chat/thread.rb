@@ -68,7 +68,7 @@ module Chat
     # Since the `replies` for the thread can all be deleted, to avoid errors
     # in lists and previews of the thread, we can consider the original message
     # as the last message in this case as a fallback.
-    before_create { self.last_message_id = self.original_message_id }
+    before_create { self.last_message_id = original_message_id }
 
     def add(user, notification_level: Chat::NotificationLevels.all[:tracking])
       membership = Chat::UserChatThreadMembership.find_by(user:, thread: self)
@@ -97,15 +97,15 @@ module Chat
     end
 
     def replies
-      self.chat_messages.where.not(id: self.original_message_id).order("created_at ASC, id ASC")
+      chat_messages.where.not(id: original_message_id).order("created_at ASC, id ASC")
     end
 
     def url
-      "#{channel.url}/t/#{self.id}"
+      "#{channel.url}/t/#{id}"
     end
 
     def relative_url
-      "#{channel.relative_url}/t/#{self.id}"
+      "#{channel.relative_url}/t/#{id}"
     end
 
     def excerpt
@@ -113,7 +113,7 @@ module Chat
     end
 
     def update_last_message_id!
-      self.update!(last_message_id: self.latest_not_deleted_message_id)
+      update!(last_message_id: latest_not_deleted_message_id)
     end
 
     def latest_not_deleted_message_id(anchor_message_id: nil)
@@ -127,8 +127,8 @@ module Chat
         ORDER BY created_at DESC, id DESC
         LIMIT 1
       SQL
-        channel_id: self.channel_id,
-        thread_id: self.id,
+        channel_id: channel_id,
+        thread_id: id,
         anchor_message_id: anchor_message_id,
       ).first
     end
@@ -173,7 +173,7 @@ module Chat
         RETURNING ct.id AS thread_id
       SQL
       return if updated_thread_ids.empty?
-      self.clear_caches!(updated_thread_ids)
+      clear_caches!(updated_thread_ids)
     end
   end
 end
@@ -183,16 +183,16 @@ end
 # Table name: chat_threads
 #
 #  id                       :bigint           not null, primary key
-#  channel_id               :bigint           not null
-#  original_message_id      :bigint           not null
-#  original_message_user_id :bigint           not null
+#  force                    :boolean          default(FALSE), not null
+#  replies_count            :integer          default(0), not null
 #  status                   :integer          default("open"), not null
 #  title                    :string
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
-#  replies_count            :integer          default(0), not null
+#  channel_id               :bigint           not null
 #  last_message_id          :bigint
-#  force                    :boolean          default(FALSE), not null
+#  original_message_id      :bigint           not null
+#  original_message_user_id :bigint           not null
 #
 # Indexes
 #

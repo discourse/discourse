@@ -25,6 +25,7 @@ sv:
       description_placeholder: "Ange en beskrivning här"
       ai:
         generate: "Generera"
+        optional: "valfritt"
       import:
         label: "Importera"
         unparseable_json: "JSON-fil kan inte tolkas."
@@ -41,15 +42,13 @@ sv:
           yes: "Ja"
           no: "Nej"
           null_: "Tomt"
-      export: "Exportera"
       save: "Spara ändringar"
       run: "Kör"
-      edit: "Redigera"
       delete: "Ta bort"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Tabell"
-      show_graph: "Graf"
+      chart:
+        form:
+          label: "Diagramtyp"
+          bar: "Stapel"
       others_dirty: "En sökning har ändringar som inte har sparats och kommer att förloras om du lämnar sidan."
       run_time: "Sökning slutförd efter %{value} ms."
       result_count:
@@ -66,7 +65,6 @@ sv:
       query_time: "Senast körd"
       query_user: "Skapat av"
       column: "Kolumn %{number}"
-      explain_label: "Inkludera sökningsplan?"
       reset_params: "Återställ"
       search_placeholder: "Sök..."
       no_search_results: "Tyvärr kunde vi inte hitta några resultat som stämmer överens med din text."
@@ -78,3 +76,11 @@ sv:
           descriptions:
             data_explorer:
               run_queries: "Kör frågor för datautforskaren. Begränsa API-nyckeln till en viss uppsättning frågor genom att specificera fråge-ID:n."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Datautforskaren"
+      sql:
+        query_id: "Sökning"
+        param_value: "Värde"
+        output:
+          results: "Resultat"

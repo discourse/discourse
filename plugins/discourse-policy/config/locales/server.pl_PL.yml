@@ -16,6 +16,8 @@ pl_PL:
       group_not_found: "Nie znaleziono grupy dla zasad"
       no_policy: "Nie ma żadnych zasad dla postów"
       staff_only: "Zasady mogą mieć zastosowanie wyłącznie w postach obsługi"
+      policy_group_inaccessible: "Ta polityka nie może być obecnie zaakceptowana. Prosimy o kontakt z administratorem witryny."
+      no_policy_permission: "Nie masz uprawnień do modyfikowania zasad w tym wpisie."
     error:
       no_permission: "Nieupoważnione"
   reports:

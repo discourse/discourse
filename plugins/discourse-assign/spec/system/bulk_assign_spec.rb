@@ -12,6 +12,7 @@ describe "Assign | Bulk Assign" do
   before do
     SiteSetting.assign_enabled = true
 
+    admin.update!(last_seen_at: 1.day.ago)
     sign_in(admin)
   end
 

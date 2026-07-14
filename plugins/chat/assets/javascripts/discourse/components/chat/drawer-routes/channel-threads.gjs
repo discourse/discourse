@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import replaceEmoji from "discourse/helpers/replace-emoji";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import { i18n } from "discourse-i18n";
 import Navbar from "discourse/plugins/chat/discourse/components/chat/navbar";
 import ChatThreadList from "discourse/plugins/chat/discourse/components/chat-thread-list";
@@ -16,7 +16,7 @@ export default class ChatDrawerRoutesChannelThreads extends Component {
     return trustHTML(
       i18n("chat.threads.list") +
         " - " +
-        replaceEmoji(this.args.model.channel.escapedTitle)
+        dReplaceEmoji(this.args.model.channel.escapedTitle)
     );
   }
 

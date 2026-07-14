@@ -71,3 +71,11 @@ zh_TW:
     edit_assignments_modal:
       topic: "話題"
       post: "貼文"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "已指派"
+      assign_topic:
+        operations:
+          assign: "指派"
+          unassign: "取消指派"
+        topic_id: "話題 ID"

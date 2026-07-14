@@ -34,6 +34,14 @@ ca:
             canned_reply:
               label: "Respon"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Carregant..."
+        tool: "Acció"
+        user: "Usuari"
+        approve: "Aprova"
+        reject: "Rebutja"
+        approved: "Aprovat"
+        rejected: "Rebutjat"
       llm_selector:
         none: "Cap"
       features:
@@ -44,6 +52,8 @@ ca:
         expand_list:
           one: "(%{count} més)"
           other: "(%{count} més)"
+        nav:
+          enabled: "Activat"
         filters:
           all: "Tots"
           reset: "Restableix"
@@ -55,6 +65,7 @@ ca:
         select_option: "Trieu una opció..."
       translations:
         title: "Traduccions"
+        category_scope: "Categories"
         stats:
           eta_minutes:
             one: "%{count} minut"
@@ -92,6 +103,12 @@ ca:
         save: "Desa"
         enabled: "Activat?"
         delete: "Suprimeix"
+        thinking_effort_options:
+          none: "Cap"
+          low: "Baixa"
+          medium: "Mitjana"
+          high: "Alta"
+          max: "Màxim"
         response_format:
           open_modal: "Edita"
           modal:

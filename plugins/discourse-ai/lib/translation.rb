@@ -38,6 +38,92 @@ module DiscourseAi
         SiteSetting.ai_translation_backfill_max_age_days > 0
     end
 
+    def self.category_ids
+      SiteSetting.ai_translation_categories.to_s.split("|").filter_map { |id| id.presence&.to_i }
+    end
+
+    def self.category_ids_with_subcategories
+      category_ids.flat_map { |category_id| Category.subcategory_ids(category_id) }.uniq
+    end
+
+    def self.category_scope_cache_key
+      ids =
+        case SiteSetting.ai_translation_category_scope
+        when "include", "exclude"
+          category_ids_with_subcategories
+        else
+          category_ids
+        end
+
+      "#{SiteSetting.ai_translation_category_scope}:#{ids.sort.join("|")}"
+    end
+
+    def self.category_scope_condition(category_column:)
+      case SiteSetting.ai_translation_category_scope
+      when "all"
+        ["#{category_column} IS NOT NULL", {}]
+      when "include"
+        ids = category_ids_with_subcategories
+        return "1 = 0", {} if ids.blank?
+
+        ["#{category_column} IN (:category_ids)", { category_ids: ids }]
+      when "include_strict"
+        ids = category_ids
+        return "1 = 0", {} if ids.blank?
+
+        ["#{category_column} IN (:category_ids)", { category_ids: ids }]
+      when "exclude"
+        ids = category_ids_with_subcategories
+        return "#{category_column} IS NOT NULL", {} if ids.blank?
+
+        [
+          "#{category_column} IS NOT NULL AND #{category_column} NOT IN (:category_ids)",
+          { category_ids: ids },
+        ]
+      when "exclude_strict"
+        ids = category_ids
+        return "#{category_column} IS NOT NULL", {} if ids.blank?
+
+        [
+          "#{category_column} IS NOT NULL AND #{category_column} NOT IN (:category_ids)",
+          { category_ids: ids },
+        ]
+      else
+        [
+          "#{category_column} IS NOT NULL AND EXISTS (
+            SELECT 1 FROM categories category_scope_categories
+            WHERE category_scope_categories.id = #{category_column}
+              AND category_scope_categories.read_restricted = false
+          )",
+          {},
+        ]
+      end
+    end
+
+    def self.category_allowed?(category)
+      category_id = category.respond_to?(:id) ? category.id : category
+      return false if category_id.blank?
+
+      case SiteSetting.ai_translation_category_scope
+      when "all"
+        true
+      when "include"
+        category_ids_with_subcategories.include?(category_id)
+      when "include_strict"
+        category_ids.include?(category_id)
+      when "exclude"
+        !category_ids_with_subcategories.include?(category_id)
+      when "exclude_strict"
+        !category_ids.include?(category_id)
+      else
+        if category.respond_to?(:read_restricted)
+          !category.read_restricted
+        else
+          Category.where(id: category_id, read_restricted: false).exists?
+        end
+      end
+    end
+
     def self.llm_model_for_agent(agent_id)
       return nil if agent_id.blank?
 

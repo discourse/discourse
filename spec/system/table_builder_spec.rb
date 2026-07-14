@@ -155,6 +155,14 @@ describe "Table Builder" do
         expect(page).to have_no_css(".insert-table-modal")
       end
 
+      it "closes the modal if there are no changes in a table with empty headers" do
+        topic_page.visit_topic(topic2)
+        topic_page.find(".btn-edit-table", visible: :all).click
+        insert_table_modal.cancel
+
+        expect(page).to have_no_css(".insert-table-modal")
+      end
+
       it "should show a warning popup if there are unsaved changes" do
         topic_page.visit_topic(topic)
         topic_page.find(".btn-edit-table", visible: :all).click

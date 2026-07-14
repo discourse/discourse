@@ -59,10 +59,8 @@ RSpec.describe DiscourseAi::AgentImporter do
           expect { importer.import! }.to raise_error(
             DiscourseAi::AgentImporter::ImportError,
           ) do |error|
-            expect(error.conflicts).to eq(
-              agent: "Test Agent",
-              custom_tools: %w[browse_web calculator],
-            )
+            expect(error.conflicts[:agent]).to eq("Test Agent")
+            expect(error.conflicts[:custom_tools]).to contain_exactly("browse_web", "calculator")
           end
         end
       end

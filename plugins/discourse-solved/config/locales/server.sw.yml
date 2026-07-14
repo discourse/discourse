@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 sw:
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Ruhusu Muanzilishi wa Mada na Wasaidizi kuchagua jibu kama Suluhisho"
   site_settings:
     solved_enabled: "Ruhusu plugin ya suluhisho, waruhusu watumiaji wachague suluhisho ya mada"
     accept_all_solutions_trust_level: "Kiwango cha chini cha uaminifu kinachohitajika kukubali suluhisho kwenye mada zozote (hata kama sio OP)"

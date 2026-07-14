@@ -38,6 +38,14 @@ cs:
             canned_reply:
               label: "Odpověď"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Načítá se..."
+        tool: "Akce"
+        user: "Uživatel"
+        approve: "Schválení"
+        reject: "Odmítnout"
+        approved: "Schválen"
+        rejected: "Odmítnuto"
       llm_selector:
         none: "Žádný"
       features:
@@ -52,6 +60,8 @@ cs:
           many: "(%{count} další)"
           other: "(%{count} další)"
         collapse_list: "(zobrazit méně)"
+        nav:
+          enabled: "Zapnuto"
         filters:
           all: "Vše"
           reset: "obnovit výchozí"
@@ -69,6 +79,7 @@ cs:
         select_option: "Vyberte možnost..."
       translations:
         title: "Překlady"
+        category_scope: "Kategorie"
         stats:
           eta_minutes:
             one: "%{count} minutu"
@@ -124,6 +135,12 @@ cs:
           select_all: "Vybrat vše"
           clear_all: "Zrušit vše"
         delete: "Smazat"
+        thinking_effort_options:
+          none: "Žádný"
+          low: "Nízká"
+          medium: "Střední"
+          high: "Vysoká"
+          max: "Max"
         response_format:
           open_modal: "Upravit"
           modal:
@@ -195,7 +212,7 @@ cs:
           ai_summarization: "Shrnout"
           ai_spam: "Spam"
         model_description:
-          anthropic-claude-opus-4-6: "Nejinteligentnější model společnosti Anthropic"
+          anthropic-claude-opus-4-7: "Nejinteligentnější model společnosti Anthropic"
           anthropic-claude-sonnet-4-6: "Optimální poměr rychlosti a nákladů"
         next:
           title: "Další"
@@ -224,13 +241,7 @@ cs:
         title: "Navrhněte změny pomocí AI"
         description: "Vyberte jednu z níže uvedených možností a umělá inteligence vám navrhne novou verzi textu."
         selection_hint: "Tip: Před otevřením pomocníka můžete také vybrat část textu a přepsat pouze tuto část."
-        suggest: "Navrhnout s AI"
         suggest_errors:
-          too_many_tags:
-            one: "Můžete mít max. %{count} štítek"
-            few: "Můžete mít max. %{count} štítky"
-            many: "Můžete mít max. %{count} štítků"
-            other: "Můžete mít max. %{count} štítků"
           no_suggestions: "Nejsou k dispozici žádné návrhy"
         missing_content: "Chcete-li generovat návrhy, zadejte nějaký obsah."
         context_menu:
@@ -310,8 +321,6 @@ cs:
           title: "Zobrazit interakci s umělou inteligencí"
           copy_request: "Kopírovat požadavek"
           copy_response: "Kopírovat odpověď"
-          request_tokens: "Tokeny požadavku:"
-          response_tokens: "Tokeny odpovědi:"
           request: "Požadavek"
           response: "Odpověď"
           next_log: "Další"
@@ -356,10 +365,13 @@ cs:
           placeholder: "Zeptejte se..."
           new: "Nová otázka"
           messages_sidebar_title: "Konverzace"
+          starred: "Oblíbené"
           today: "Dnes"
           last_7_days: "Posledních 7 dní"
           last_30_days: "Posledních 30 dní"
           upload_files: "Nahrát soubory"
+          scroll_to_bottom: "Přejít na konec"
+          editing_post: "Příspěvek je upravován"
       sentiments:
         dashboard:
           title: "Sentiment"

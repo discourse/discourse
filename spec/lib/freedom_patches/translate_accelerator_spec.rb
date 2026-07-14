@@ -3,7 +3,7 @@
 RSpec.describe "translate accelerator" do
   before do
     @original_i18n_load_path = I18n.load_path.dup
-    I18n.load_path += Dir["#{Rails.root}/spec/fixtures/i18n/translate_accelerator.*.yml"]
+    I18n.load_path += Dir["#{Rails.root.join("spec/fixtures/i18n/translate_accelerator.*.yml")}"]
     I18n.reload!
   end
 

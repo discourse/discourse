@@ -66,7 +66,7 @@ RSpec.describe "discourse-presence" do
     end
 
     it "handles category moderators for edit" do
-      SiteSetting.edit_all_post_groups = nil
+      SiteSetting.edit_all_post_groups = ""
       p = Fabricate(:post, topic: private_topic, user: private_topic.user)
 
       c = PresenceChannel.new("/discourse-presence/edit/#{p.id}")
@@ -278,6 +278,42 @@ RSpec.describe "discourse-presence" do
         c = PresenceChannel.new("/discourse-presence/translate/#{post.id}")
         expect(c.config.allowed_user_ids).to contain_exactly(user.id)
       end
+    end
+  end
+
+  describe "PresenceController#get" do
+    fab!(:editor, :trust_level_1)
+    fab!(:attacker, :trust_level_1)
+
+    fab!(:private_group) { Fabricate(:group).tap { |private_group| private_group.add(editor) } }
+
+    fab!(:private_category) { Fabricate(:private_category, group: private_group) }
+    fab!(:private_topic) { Fabricate(:topic, category: private_category, user: editor) }
+    fab!(:wiki_post) { Fabricate(:post, topic: private_topic, user: editor, wiki: true) }
+
+    before do
+      PresenceChannel.clear_all!
+      SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
+    end
+
+    after { PresenceChannel.clear_all! }
+
+    it "hides private wiki edit presence from outsiders" do
+      channel_name = "/discourse-presence/edit/#{wiki_post.id}"
+
+      sign_in(editor)
+      post "/presence/update.json",
+           params: {
+             client_id: SecureRandom.hex,
+             present_channels: [channel_name],
+           }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).to eq(channel_name => true)
+
+      sign_in(attacker)
+      get "/presence/get", params: { channels: [channel_name] }
+      expect(response.status).to eq(200)
+      expect(response.parsed_body[channel_name]).to eq(nil)
     end
   end
 end

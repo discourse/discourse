@@ -187,7 +187,7 @@ module BackupRestore
         status = @success ? :restore_succeeded : :restore_failed
 
         logs = Discourse::Utils.logs_markdown(@logger.logs, user: user)
-        post = SystemMessage.create_from_system_user(user, status, logs: logs)
+        SystemMessage.create_from_system_user(user, status, logs: logs)
       else
         log "Could not send notification to '#{@user_info[:username]}' " \
               "(#{@user_info[:email]}), because the user does not exist."

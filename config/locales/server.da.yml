@@ -273,7 +273,13 @@ da:
   deleted_topic: "Ups! Dette emne er blevet slettet og er ikke længere tilgængeligt."
   delete_topic_failed: "Der opstod en fejl under sletning af dette emne. Kontakt venligst webstedets administrator."
   reading_time: "Læsetid"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} min 🕑"
   likes: "Synes godt om"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Beklager, men nye brugere kan kun skrive %{count} svar i hvert emne til at starte med."
     other: "Beklager, men nye brugere kan kun skrive %{count} svar i hvert emne til at starte med."
@@ -422,6 +428,13 @@ da:
       trust_level_2: "tillidsniveau_2"
       trust_level_3: "tillidsniveau_3"
       trust_level_4: "tillidsniveau_4"
+    default_full_names:
+      everyone: "Alle"
+      admins: "Admins"
+      moderators: "Moderatorer"
+      staff: "Personale"
+      anonymous_users: "Anonyme brugere"
+      logged_in_users: "Brugere logget på"
     request_membership_pm:
       title: "Anmodning om medlemskab af @%{group_name}"
     request_accepted_pm:
@@ -873,6 +886,9 @@ da:
       write: "Skriv alt"
       one_time_password: "Opret et engangs login token"
       bookmarks_calendar: "Læse bogmærkepåmindelser"
+    device:
+      code: "Kode"
+      continue: "Fortsæt"
     invalid_public_key: "Beklager, den offentlige nøgle er ugyldig."
     invalid_auth_redirect: "Beklager, denne auth_redirect vært er ikke tilladt."
     invalid_token: "Manglede, ugyldigt eller udløbet token."
@@ -940,6 +956,31 @@ da:
       xaxis: "Dag"
       yaxis: "Antal nye bidragsydere"
       description: "Antal brugere, der har foretaget deres første indlæg i denne periode."
+    activity_by_category:
+      labels:
+        category: "Kategori"
+        topics: "Emner"
+        posts: "Indlæg"
+        share: "Del"
+    posters_by_member_type:
+      labels:
+        count: "Indlæg"
+        share: "Del"
+      types:
+        staff: "Personale"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Tillidsniveau"
+        count: "Brugere"
+        share: "Del"
+        signups: "Tilmeldinger"
+      levels:
+        "0": "Nye"
+        "1": "Basis"
+        "2": "Bruger"
+        "3": "Almindelig"
+        "4": "Leder"
     trust_level_growth:
       title: "Tillidsniveau vækst"
       xaxis:
@@ -975,9 +1016,8 @@ da:
     site_traffic:
       title: "Webstedstrafik"
       xaxis:
-        page_view_anon_browser: "Sidevisninger (anonyme)"
-        page_view_logged_in_browser: "Sidevisninger (logget ind)"
-        page_view_crawler: "Kendte crawlere"
+        page_view_anon_browser: "Anonym"
+        page_view_crawler: "Crawlere"
         page_view_other: "Anden trafik"
       yaxis: "Dag"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
@@ -1086,6 +1126,12 @@ da:
         num_clicks: "Klik"
         num_topics: "Emner"
       description: "Brugere opført efter antal klik på links, de har delt."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Besøg"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Besøg"
     top_traffic_sources:
       title: "Top Trafik Kilder"
       xaxis: "Domæne"
@@ -1136,6 +1182,8 @@ da:
     page_view_anon_browser_reqs:
       xaxis: "Dag"
     page_view_logged_in_browser_reqs:
+      xaxis: "Dag"
+    page_view_embed_reqs:
       xaxis: "Dag"
     http_background_reqs:
       title: "Baggrund"
@@ -1193,7 +1241,7 @@ da:
         os: Operativsystem
         login_time: Login Tid
       description: "Detaljer om nye logins, der afviger mistænkeligt fra tidligere logins."
-    staff_logins:
+    admin_logins:
       title: "Admin Logins"
       labels:
         user: Bruger
@@ -1295,7 +1343,6 @@ da:
     edit_history_visible_to_public: "Tillad alle at se tidligere versioner af et redigeret indlæg. Når slået fra, kan kun administrator se dette."
     delete_removed_posts_after: "Indlæg, fjernet af forfatteren, vil blive automatisk slettet efter (n) hours. Såfremt værdien sat til 0 vil indlæg blive fjernet straks."
     fixed_category_positions: "Hvis afkrydset, vil du være i stand til at arrangere kategorier i en fast rækkefølge. Hvis ikke afkrydset vil de være listet i en rækkefølge baseret på aktivitet."
-    fixed_category_positions_on_create: "Hvis afkrydset vil kategori visning blive vedligeholdt baseret på emne (kræver manuelt valgt visning af kategorier)."
     add_rel_nofollow_to_user_content: 'Tilføj rel nofollow til alt indsendt brugerindhold, undtagen interne links (herunder overordnede domæner). Hvis du ændrer dette, skal du gen-bage alle indlæg med: "rake indlæg:rebake“'
     exclude_rel_nofollow_domains: "En liste over domæner, hvor nofollow ikke skal føjes til links. eksempel.dk tillader automatisk også sub.eksempel.dk. Som et minimum bør du tilføje domænet på dette websted for at hjælpe webcrawlere med at finde alt indhold. Hvis andre dele af dit websted er på andre domæner, bør du også tilføje dem."
     post_excerpt_maxlength: "Max længde på uddrag af indlæg / opsummering."
@@ -1305,7 +1352,6 @@ da:
     post_onebox_maxlength: "Max længde af Discourse indlæg i tegn"
     allowed_inline_onebox_domains: "En liste over domæner, der vil blive onebox'et i miniatureform, hvis de linkes uden en titel"
     facebook_app_access_token: "Et token genereret fra dit Facebook-app-id og hemmelighed. Bruges til at generere Instagram oneboxes."
-    favicon: "Et favicon til dit websted, se <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. For at fungere korrekt over et CDN skal det være en png. Ændres til 32x32. Hvis det er tomt, vil large_icon blive brugt."
     notification_email: "Afsender email adresse, anvendt når der sendes esentielle system emails. Domænet her skal have korrekt opsatte SPF, DKIM og 'PTR records', for succesfuld afskibning af mails."
     detailed_404: "Giver flere detaljer til brugerne om, hvorfor de ikke kan få adgang til et bestemt emne. Bemærk: Dette er mindre sikkert, fordi brugerne vil vide, om en URL oversættes til et gyldigt emne."
     force_https: "Tving din side til kun at anvende HTTPS. Slå ikke denne funktion til før det er sat helt op og virker overalt! Har du tjekket dit CDN, alle social logins, og eksterne logos og afhængigheder og sikret at de også er HTTPS kompatible?"
@@ -1322,8 +1368,6 @@ da:
     hide_post_sensitivity: "Sandsynligheden for, at et anmeldt indlæg bliver skjult"
     auto_close_topic_sensitivity: "Sandsynligheden for at et anmeldt emne automatisk vil blive lukket"
     cooldown_minutes_after_hiding_posts: "Antal minutter en bruger må vente indtil de kan redigere et indlæg der er blevet skjult via fællesskabs-anmeldelse"
-    max_topics_in_first_day: "Det maksimale antal af emner en bruger må lave i en 24 timers periode efter at have skrevet det første indlæg"
-    max_replies_in_first_day: "Det maksimale antal af svar en bruger må foretage i 24 timers perioden efter at have skrevet deres første indlæg"
     tl2_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr dag for tl2 (medlemmer) ved at gange med dette tal"
     tl3_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr. dag for tl3 (regular) ved at gange med dette tal"
     tl4_additional_likes_per_day_multiplier: "Øg antallet af 'synes godt om' pr. dag for tl4 (leader) ved at gange med dette tal"
@@ -1340,13 +1384,11 @@ da:
     ga_version: "Version af Google Universal Analytics der skal benyttes: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "Google Universal Analytics tracking code ID, fx: UA-12345678-9; se <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     moderators_change_post_ownership: "Tillad moderatorer at ændre ejerskab af indlæg"
-    use_admin_ip_allowlist: "Administratorer kan kun logge ind, hvis de kommer fra en IP-adresse, der er defineret i listen Screenede IP'er (Admin> Logs> Screenede Ip'er)."
     blocked_ip_blocks: "En liste over private IP-blokke, der aldrig bør gennemsøges af Discourse"
     allowed_internal_hosts: "En liste over interne værter, som discourse sikkert kan gennemsøge til brug for oneboxing og andre formål"
     allowed_onebox_iframes: "En liste over iframe src-domæner som er tilladt via Onebox-integrering. `*` tillader alle standard Onebox moduler."
     allowed_crawler_user_agents: "Brugeragenter for webcrawlere, der skal have adgang til webstedet. ADVARSEL! INDSTILLES DETTE VIL ALLE CRAWLERE, DER IKKE ER ANGIVET HER BLIVE NÆGTET!"
     blocked_crawler_user_agents: "Entydigt store og små bogstaver i brugeragentstrengen, der identificerer webcrawlere, der ikke skal have adgang til webstedet. Gælder ikke, hvis tilladelsesliste er defineret."
-    slow_down_crawler_rate: "Hvis der er angivet slow_down_crawler_user_agents, gælder denne sats for alle crawlere (antal sekunders forsinkelse mellem anmodninger)"
     invalidate_inactive_admin_email_after_days: "Administratorkonti, der ikke har besøgt webstedet i dette antal dage, skal validere deres e-mailadresse igen, før de logger ind. Indstil til til 0 for at deaktivere."
     share_links: "Angiv hvilke elementer der skal vises i “del“-dialogboksen og i hvilken rækkefølge."
     site_contact_username: "Et gyldigt personale-brugernavn, som alle automatiske meddelelser skal sendes fra. Hvis den er tom, bruges standard systemkontoen."
@@ -1360,7 +1402,6 @@ da:
     email_token_valid_hours: "Glemte password / konto aktiverings muligheder er gyldige i (n) timer."
     log_out_strict: "Når brugeren logger af, log da ud af alle sessioner, på alle enheder"
     version_checks: "Ping Discourse Hub for versionopdateringer, og vis meddelelser om ny version på instrumentbrættet <a href='%{base_path}/admin' target='_blank'>/admin</a>"
-    new_version_emails: "Send en email til contact_email adressen når der er en ny version af Discourse tilgængelig."
     invite_expiry_days: "Hvor længe brugerinvitationsnøgler er gyldige, i dage."
     invite_only: "Alle nye brugere skal udtrykkeligt inviteres af betroede brugere eller medarbejdere. Offentlig registrering er deaktiveret."
     login_required: "Kræv godkendelse til at læse indhold på dette site, og tillad ikke anonym adgang."
@@ -1371,11 +1412,8 @@ da:
     reserved_usernames: "Brugernavne, hvor tilmelding ikke er tilladt. Jokertegn * kan bruges til at matche ethvert tegn nul eller flere gange."
     password_unique_characters: "Minimum antal unikke tegn, som en adgangskode skal have."
     block_common_passwords: "Tillad ikke adgangskoder som findes i de 10.000 mest benyttede adgangskoder."
-    auth_skip_create_confirm: Ved tilmelding via ekstern godkendelse, skal popop'en oprettelse af konto springes over. Bedst brugt sammen med auth_overrides_email, auth_overrides_username og auth_overrides_name.
-    auth_immediately: "Omdiriger automatisk til det eksterne login-system uden brugerinteraktion. Dette træder kun i kraft, når login_required er sandt, og der kun er én ekstern godkendelsesmetode"
     enable_discourse_connect: "Aktivér loin via DiscourseConnect (tidligere 'Discourse SSO') (ADVARSEL: BRUGERNES e-mailadresser *SKAL* VALIDERES AF DEN EKSTERNE SIDE!)"
     verbose_discourse_connect_logging: "Log detaljeret DiscourseConnect relateret diagnostik til <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_discourse_connect_provider: "Implementer DiscourseConnect (tidligere 'Discourse SSO') providerprotokollen på /session/sso_provider slutpunktet, kræver, at discourse_connect_provider_secrets indstilles"
     discourse_connect_secret: "Hemmelig streng, der bruges til kryptografisk godkendelse af DiscourseConnect-oplysninger, sørg for at der er 10 tegn eller mere"
     discourse_connect_overrides_bio: "Tilsidesætter brugerbio i brugerprofilen og forhindrer brugeren i at ændre den"
     discourse_connect_overrides_groups: "Synkronisér alle manuelle gruppemedlemskaber med grupper angivet i grupper-attributten (ADVARSEL: hvis du ikke angiver grupper, vil alle manuelle gruppemedlemmer blive ryddet for brugeren)"
@@ -1387,13 +1425,10 @@ da:
     enable_google_oauth2_logins: "Aktiver Google Oauth2 godkendelse. Dette er den godkendelsesmetode, som Google i øjeblikket understøtter. Kræver nøgle og hemmelighed. Se <a href='https://meta.discourse.org/t/15858' target='_blank'>Konfigurer Google-login til Discourse</a>."
     google_oauth2_client_secret: "Klient hemmelighed til din Google-applikation."
     google_oauth2_prompt: "En valgfri mellemrums-afgrænset liste over strengværdier, der specificerer, om godkendelsesserveren beder brugeren om gen-godkendelse og samtykke. Se <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> for de mulige værdier."
-    enable_twitter_logins: "Aktivér Twitter-godkendelse, kræver twitter_consumer_key og twitter_consumer_secret. Se <a href='https://meta.discourse.org/t/13395' target='_blank'>Konfiguration af Twitter-login (og rige indlejringer) for Discourse</a>."
     twitter_consumer_key: "Forbrugernøgle til Twitter-godkendelse, registreret på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Forbrugerhemmelighed til Twitter-godkendelse, registreret på <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_facebook_logins: "Aktivér Facebook-godkendelse, kræver facebook_app_id og facebook_app_secret. Se <a href='https://meta.discourse.org/t/13394' target='_blank'>Konfiguration af Facebook-login til Discourse</a>."
     facebook_app_id: "App-id til Facebook godkendelse og deling, registreret på <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "App hemmelighed til Facebook-godkendelse, registreret på <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
-    enable_github_logins: "Aktivér GitHub-godkendelse, kræver github_client_id og github_client_secret. Se <a href='https://meta.discourse.org/t/13745' target='_blank'>Konfiguration af GitHub-login til Discourse</a>."
     github_client_id: "Klient-id til GitHub-godkendelse, registreret på <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Klient hemmelighed til GitHub-godkendelse, registreret på <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "Tillad brugere at godkende ved hjælp af Discord?"
@@ -1494,7 +1529,6 @@ da:
     pop3_polling_delete_from_server: "Slet e-mails fra serveren. BEMÆRK: Hvis du deaktiverer dette, skal du manuelt rense din postindbakke"
     log_mail_processing_failures: "Log alle e-mail-behandlingsfejl til <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     enable_smtp: "Aktiver SMTP for afsendelse af notifikationer for gruppemeddelelser."
-    email_site_title: "Titlen på webstedet der bruges som afsender af e-mails fra webstedet. Standard er 'titel', hvis ikke angivet. Hvis din 'titel' indeholder tegn, der ikke er tilladt i e-mail-afsenderstrenge, så brug denne indstilling."
     delete_all_posts_max: "Det maksimale antal indlæg der kan slettes på én gang med “Slet alle indlæg”-knappen. Hvis en bruger har mere end dette antal indlæg, kan indlæggene ikke slettes på én gang og brugeren kan ikke slettes."
     email_editable: "Lad brugerne skifte deres e-mail-adresse efter oprettelsen."
     logout_redirect: "Placering at omdirigere browseren til efter logout (fx: https://example.dk/logud)"
@@ -1513,7 +1547,6 @@ da:
     show_inactive_accounts: "Tillad brugere der er logget ind at gennemse profiler af inaktive konti."
     user_selected_primary_groups: "Tillad brugere at indstille deres egen primære gruppe"
     allow_profile_backgrounds: "Tillad brugere at uploade en profil baggrund."
-    enable_mobile_theme: "Mobile enheder bruger et mobilvenligt tema, med mulighed for at skifte til det fulde site. Deaktivér dette hvis du ønsker at anvende et brugerdefineret stylesheet som er fuldstændigt responsivt."
     suppress_uncategorized_badge: "Vis ikke emblemet for ikke-kategoriserede emner i emnelister."
     topic_page_title_includes_category: "Emneside <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>titelmærke</a> inkluderer kategorienavnet."
     short_progress_text_threshold: "Når antallet af indlæg overstiger dette tal viser statuslinjen kun det aktuelle indlægsnummer. Hvis du ændrer bredden af statuslinjen kan det være nødvendigt at opdatere denne værdi."
@@ -1541,7 +1574,6 @@ da:
     default_categories_watching: "Liste over kategorier der som standard overvåges."
     default_categories_tracking: "Liste over kategorier der som standard følges."
     default_categories_muted: "Liste over kategorier der som standard har tavshed."
-    default_categories_normal: "Liste over kategorier som ikke er tavse som standard. Nyttigt når `mute_all_categories_by_default` webstedsindstilling er aktiveret."
     mute_all_categories_by_default: "Indstil standardniveauet for notifikationer for alle kategorier til tavshed. Kræv, at brugerne tilmelder sig kategorier for at de skal vises på 'seneste' og 'kategorisider'. Hvis du ønsker at ændre standardindstillingerne for anonyme brugere, skal du indstille 'default_category_settings'."
     default_tags_watching: "Liste over tags, der er overvåget som standard."
     default_tags_tracking: "Liste over tags, der spores som standard."
@@ -1597,6 +1629,10 @@ da:
     results_page: "Søgeresultater for '%{term}'"
     audio: "[audio]"
     video: "[video]"
+  posts_filter:
+    description:
+      order_latest: "Seneste indlæg"
+      order_latest_topic: "Seneste emner"
   discourse_connect:
     login_error: "Login fejl"
     not_found: "Din konto blev ikke fundet. Kontakt venligst webstedets administrator."
@@ -1679,7 +1715,6 @@ da:
     errors: "%{errors}"
     not_available: "Ikke ledigt. Prøv %{suggestion}?"
     something_already_taken: "Noget gik galt, måske er brugernavnet eller e-mail-adressen allerede registreret. Prøv “Glemt adgangskode“-linket."
-    omniauth_confirm_title: "Log ind med %{provider}"
     omniauth_confirm_button: "Fortsæt"
     authenticator_error_no_valid_email: "Mailadresser, der har tilknytning til %{account}, er ikke tilladt. Du er måske nødt til at bruge en anden mailadresse i forbindelse med din konto."
     new_registrations_disabled: "Det er ikke tilladt at oprette nye brugerkonti på nuværende tidspunkt."
@@ -2036,7 +2071,6 @@ da:
         Dit svar blev sendt fra en blokeret e-mail-adresse. Prøv at sende fra en anden e-mail-adresse, eller [kontakt en medarbejder](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-Mail Afvist Ikke Tilladt E-Mail"
-      subject_template: "[%{email_prefix}] E-mail problem -- Blokeret e-mail"
       text_body_template: |
         Vi beklager, men din e-mail til %{destination} (med titlen %{former_title}) fungerede ikke.
 
@@ -2270,7 +2304,6 @@ da:
       text_body_template: "Indstillingen `download_remote_images_to_local` blev slået fra fordi grænsen for bug af diskplads i `download_remote_images_threshold` blev nået."
     new_user_of_the_month:
       title: "Du er månedens nye bruger!"
-      subject_template: "Du er månedens nye bruger!"
       text_body_template: |
         Tillykke, du har optjent **Månedens nye bruger for %{month_year}**. :trophy:
 
@@ -2289,6 +2322,7 @@ da:
     [Afmeld](%{unsubscribe_url}).
   subject_re: "Sv: "
   subject_pm: "[PM] "
+  email_from: "%{user_name}"
   user_notifications:
     previous_discussion: "Tidligere Svar"
     in_reply_to: "Som svar på"
@@ -2547,6 +2581,7 @@ da:
     account_exists:
       title: "Konto findes allerede"
       subject_template: "[%{email_prefix}] Kontoen findes allerede"
+      subject_template_improved: "Konto findes allerede"
       text_body_template: |
         Du har lige prøvet at oprette en konto på %{site_name} eller prøvet at ændre e-mailen til en konto til %{email}. Der findes dog allerede en konto til %{email}.
 
@@ -2558,6 +2593,7 @@ da:
     account_second_factor_disabled:
       title: "To-Faktor godkendelse deaktiveret"
       subject_template: "[%{email_prefix}] To-Faktor godkendelse deaktiveret"
+      subject_template_improved: "To-Faktor godkendelse deaktiveret"
     digest:
       since_last_visit: "Siden dit sidste besøg"
       new_topics: "Nye Emner"
@@ -2569,6 +2605,7 @@ da:
       popular_posts: "Populære Indlæg"
       more_new: "Nyt for dig"
       subject_template: "[%{email_prefix}] Sammendrag"
+      subject_template_improved: "Statistik"
       your_email_settings: "dine e-mail-indstillinger"
       click_here: "klik her"
       from: "%{site_name}"
@@ -2586,6 +2623,7 @@ da:
       title: "Log ind via link"
       preview: "Log ind via link."
       subject_template: "[%{email_prefix}] Log ind via link"
+      subject_template_improved: "Log ind via link"
       text_body_template: |
         Her er dit link til at logge ind på [%{site_name}](%{base_url}).
 
@@ -2595,7 +2633,6 @@ da:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Angiv adgangskode"
-      subject_template: "[%{email_prefix}] Angiv adgangskode"
       text_body_template: |
         Nogen bad om at tilføje en adgangskode til din konto på [%{site_name}](%{base_url}). Alternativt kan du logge ind ved hjælp af enhver understøttet onlinetjeneste (Google, Facebook osv.), Der er knyttet til denne validerede e-mail-adresse.
 
@@ -2606,6 +2643,7 @@ da:
     admin_login:
       title: "Admin Login"
       subject_template: "[%{email_prefix}] Login"
+      subject_template_improved: "Brugernavn"
       text_body_template: |
         Nogen bad om at logge ind på din konto på [%{site_name}](%{base_url}).
 
@@ -2615,7 +2653,6 @@ da:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "Konto Oprettet"
-      subject_template: "[%{email_prefix}] Din Nye Konto"
       text_body_template: |
         En ny konto blev oprettet til dig på %{site_name}
 
@@ -3071,11 +3108,6 @@ da:
       invalid:
         one: "Det mærke, du valgte, kan ikke bruges"
         other: "Ingen af de tags, du har valgt, kan bruges"
-      in_this_category: '"%{tag_name}" kan ikke bruges i denne kategori'
-      restricted_to:
-        one: '"%{tag_name}" er begrænset til kategorien "%{category_names}"'
-        other: '"%{tag_name}" er begrænset til følgende kategorier: %{category_names}'
-      synonym: 'Synonymer er ikke tilladt. Brug "%{tag_name}" i stedet.'
       has_synonyms: '"%{tag_name}" kan ikke bruges, fordi den har synonymer.'
     invalid_target_tag: "kan ikke være synonym for et synonym"
     synonyms_exist: "er ikke tilladt, mens synonymer eksisterer"
@@ -3113,6 +3145,8 @@ da:
   search_logs:
     graph_title: "Antal søgninger"
   onebox:
+    google_meet:
+      meeting_code: "Kode:"
     github:
       closed: "lukket"
       status_date:

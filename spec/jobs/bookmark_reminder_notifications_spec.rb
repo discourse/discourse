@@ -50,13 +50,11 @@ RSpec.describe Jobs::BookmarkReminderNotifications do
 
   context "when the number of notifications exceed max_reminder_notifications_per_run" do
     it "does not send them in the current run, but will send them in the next" do
-      begin
-        Jobs::BookmarkReminderNotifications.max_reminder_notifications_per_run = 2
-        job.execute
-        expect(bookmark1.reload.reminder_last_sent_at).not_to eq(nil)
-        expect(bookmark2.reload.reminder_last_sent_at).not_to eq(nil)
-        expect(bookmark3.reload.reminder_last_sent_at).to eq(nil)
-      end
+      Jobs::BookmarkReminderNotifications.max_reminder_notifications_per_run = 2
+      job.execute
+      expect(bookmark1.reload.reminder_last_sent_at).not_to eq(nil)
+      expect(bookmark2.reload.reminder_last_sent_at).not_to eq(nil)
+      expect(bookmark3.reload.reminder_last_sent_at).to eq(nil)
     end
   end
 

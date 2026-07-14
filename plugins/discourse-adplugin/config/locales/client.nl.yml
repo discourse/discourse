@@ -18,6 +18,17 @@ nl:
           amazon_plugin: "Amazon"
           carbonads_plugin: "Carbon Ads"
           adbutler_plugin: "AdButler"
+      dashboard:
+        reports:
+          filters:
+            ad_type:
+              label: "Advertentietype"
+            house_ad_name:
+              label: "Naam House Ad"
+            ad_placement:
+              label: "Advertentieplaatsing"
+            user_type:
+              label: "Gebruikerstype"
       adplugin:
         house_ads:
           title: "House Ads"
@@ -26,20 +37,27 @@ nl:
           new_name: "Nieuwe House Ad"
           save: "Opslaan"
           delete: "Verwijderen"
+          confirm_delete: "Weet je zeker dat je deze advertentie wilt verwijderen?"
           html: "HTML"
           categories: "Categorieën"
+          routes: "Routes"
           groups: "Groepen"
+          description: "Maak en beheer je eigen advertenties die op verschillende posities op je site worden weergegeven."
+          get_started: "Er zijn nog geen House Ads gemaakt."
           filter_placeholder: "Selecteer advertenties..."
           more_settings: "Meer instellingen"
           show_to_anons: "Weergeven voor anonieme gebruikers"
           show_to_logged_in_users: "Weergegeven voor ingelogde gebruikers"
           category_chooser_description: "Kies de categorieën waarin deze advertentie moet worden weergegeven of laat dit leeg om de advertentie overal weer te geven. De site-instelling 'no_ads_for_categories' heeft voorrang op deze instelling."
+          category_chooser_description_with_routes: "Kies de categorieën waarin deze advertentie moet worden weergegeven. Laat deze en routekeuzes leeg om de advertentie overal weer te geven. De site-instelling 'no_ads_for_categories' heeft prioriteit op deze instelling."
+          route_chooser_description: "Kies de pagina's/routes waar deze advertentie moet worden weergegeven. Laat deze en categorieselecties leeg om de advertentie overal weer te geven."
           group_chooser_description: "Kies de groepen die deze advertentie kunnen bekijken of laat dit leeg om de advertentie aan alle aangemelde gebruikers te tonen."
           preview: "Voorbeeld"
           back: "House Ads"
           name: "Naam"
           edit: "Bewerken"
           tabs:
+            ads: "Advertenties"
             settings: "Instellingen"
           topic_list_top:
             title: "Advertenteis boven topicslijst"

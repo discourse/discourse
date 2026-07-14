@@ -1,5 +1,5 @@
 import { click, find, visit } from "@ember/test-helpers";
-import { skip, test } from "qunit";
+import { test } from "qunit";
 import cookie, { removeCookie } from "discourse/lib/cookie";
 import Session from "discourse/models/session";
 import Site from "discourse/models/site";
@@ -65,41 +65,6 @@ acceptance("User Preferences - Interface", function (needs) {
     removeCookie("text_size");
   });
 
-  skip("shows no default option for light scheme when theme's color scheme is user selectable", async function (assert) {
-    let meta = document.createElement("meta");
-    meta.name = "discourse_theme_id";
-    meta.content = "2";
-    document.getElementsByTagName("head")[0].appendChild(meta);
-
-    let site = Site.current();
-    site.set("user_themes", [
-      { theme_id: 1, name: "Cool Theme", color_scheme_id: 2, default: true },
-      {
-        theme_id: 2,
-        name: "Some Other Theme",
-        color_scheme_id: 3,
-        default: false,
-      },
-    ]);
-
-    site.set("user_color_schemes", [
-      { id: 2, name: "Cool Breeze" },
-      { id: 3, name: "Dark Night" },
-    ]);
-
-    await visit("/u/eviltrout/preferences/interface");
-
-    assert.dom(".light-color-scheme").exists("has regular dropdown");
-    assert.strictEqual(selectKit(".theme .select-kit").header().value(), "2");
-
-    await selectKit(".light-color-scheme .select-kit").expand();
-    assert
-      .dom(".light-color-scheme .select-kit .select-kit-row")
-      .exists({ count: 2 });
-
-    document.querySelector("meta[name='discourse_theme_id']").remove();
-  });
-
   test("shows reset seen user tips popups button", async function (assert) {
     let site = Site.current();
     site.set("user_tips", { first_notification: 1 });
@@ -138,11 +103,22 @@ acceptance(
         return helper.response(userFixtures["/u/charlie.json"]);
       });
     });
+
     needs.hooks.beforeEach(() => {
+      document
+        .querySelectorAll("meta[name='discourse_theme_id']")
+        .forEach((el) => el.remove());
+
       let meta = document.createElement("meta");
       meta.name = "discourse_theme_id";
       meta.content = "2";
       document.getElementsByTagName("head")[0].appendChild(meta);
+    });
+
+    needs.hooks.afterEach(() => {
+      document
+        .querySelectorAll("meta[name='discourse_theme_id']")
+        .forEach((el) => el.remove());
     });
 
     test("no color scheme picker by default", async function (assert) {
@@ -209,8 +185,6 @@ acceptance(
 
       await dropdownObject.expand();
       assert.strictEqual(dropdownObject.rows().length, 2);
-
-      document.querySelector("meta[name='discourse_theme_id']").remove();
     });
 
     test("light and dark color scheme pickers", async function (assert) {
@@ -304,7 +278,7 @@ acceptance(
       );
     });
 
-    skip("preview the color scheme only in current user's profile", async function (assert) {
+    test("preview the color scheme only in current user's profile", async function (assert) {
       let site = Site.current();
       site.set("user_themes", [
         {
@@ -322,6 +296,9 @@ acceptance(
       ]);
 
       await visit("/u/eviltrout/preferences/interface");
+
+      // force light mode, otherwise mode is ambiguous
+      this.container.lookup("service:interface-color").forceLightMode();
 
       await selectKit(".light-color-scheme .combobox").expand();
       await selectKit(".light-color-scheme .combobox").selectRowByValue(3);

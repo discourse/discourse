@@ -135,8 +135,11 @@ RSpec.describe UserSummary do
     # Don't include replies to whispers
     topic3 = create_post(user: topic1.user).topic
     topic3_post = create_post(topic: topic3, post_type: Post.types[:whisper])
-    topic3_reply =
-      create_post(topic: topic3, reply_to_post_number: topic3_post.post_number, user: topic3.user)
+    topic3_reply = create_post(topic: topic3, user: topic1.user)
+    topic3_reply.update_columns(
+      reply_to_post_number: topic3_post.post_number,
+      post_type: Post.types[:whisper],
+    )
 
     # Don't include replies to private messages
     replied_to_user = Fabricate(:user)

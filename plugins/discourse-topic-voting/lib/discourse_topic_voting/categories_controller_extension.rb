@@ -8,6 +8,10 @@ module DiscourseTopicVoting
 
       category_params = super
 
+      # TODO: Remove this whole controller extension when this gets promoted
+      # to Permanent
+      return category_params if SiteSetting.enable_ideas_category_type_setup
+
       if @vote_enabled && !@category&.discourse_topic_voting_category_setting
         category_params[:discourse_topic_voting_category_setting_attributes] = {}
       elsif !@vote_enabled && @category&.discourse_topic_voting_category_setting

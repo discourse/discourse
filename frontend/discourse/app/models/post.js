@@ -14,7 +14,6 @@ import {
   defineTrackedProperty,
   enumerateTrackedKeys,
 } from "discourse/lib/tracked-tools";
-import { applyValueTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { postUrl } from "discourse/lib/utilities";
 import ActionSummary from "discourse/models/action-summary";
@@ -155,6 +154,7 @@ export default class Post extends RestModel {
   @tracked customShare = null;
   @tracked deleted_at;
   @tracked deleted_by;
+  @tracked deleted_post_placeholder;
   @tracked excerpt;
   @tracked expandedExcerpt;
   @tracked group_moderator;
@@ -168,6 +168,8 @@ export default class Post extends RestModel {
   @tracked likeAction;
   @tracked link_counts;
   @tracked localization_outdated;
+  @tracked localizedCooked;
+  @tracked localized_oneboxes;
   @tracked locked;
   @tracked moderator;
   @tracked name;
@@ -267,8 +269,7 @@ export default class Post extends RestModel {
   }
 
   get shareUrl() {
-    const url = this.customShare || resolveShareUrl(this.url, this.currentUser);
-    return applyValueTransformer("post-share-url", url, { post: this });
+    return this.customShare || resolveShareUrl(this.url, this.currentUser);
   }
 
   @computed("name", "username")
@@ -446,6 +447,10 @@ export default class Post extends RestModel {
 
   get isModeratorAction() {
     return this.post_type === this.site.post_types.moderator_action;
+  }
+
+  get isWarning() {
+    return this.topic?.is_warning;
   }
 
   get isSmallAction() {
@@ -709,6 +714,22 @@ export default class Post extends RestModel {
     return ajax(`/posts/${this.id}/cooked.json`).then((result) => {
       this.setProperties({ cooked: result.cooked, cooked_hidden: false });
     });
+  }
+
+  async toggleLocalizedContent() {
+    if (this.localizedCooked) {
+      this.setProperties({
+        cooked: this.localizedCooked,
+        localizedCooked: null,
+      });
+    } else {
+      const result = await ajax(`/posts/${this.id}/cooked.json`);
+
+      this.setProperties({
+        localizedCooked: this.cooked,
+        cooked: result.cooked,
+      });
+    }
   }
 
   rebake() {

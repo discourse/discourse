@@ -1442,6 +1442,36 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
       expect(request_body.dig("output_config", "effort")).to eq("max")
     end
 
+    it "includes effort in output_config when set to xhigh" do
+      model.update!(provider_params: { access_key_id: "123", region: "us-east-1", effort: "xhigh" })
+
+      proxy = DiscourseAi::Completions::Llm.proxy(model)
+      request = nil
+
+      content = {
+        content: [text: "test response"],
+        usage: {
+          input_tokens: 10,
+          output_tokens: 5,
+        },
+      }.to_json
+
+      stub_request(
+        :post,
+        "https://bedrock-runtime.us-east-1.amazonaws.com/model/anthropic.claude-3-sonnet-20240229-v1:0/invoke",
+      )
+        .with do |inner_request|
+          request = inner_request
+          true
+        end
+        .to_return(status: 200, body: content)
+
+      proxy.generate("test prompt", user: user)
+
+      request_body = JSON.parse(request.body)
+      expect(request_body.dig("output_config", "effort")).to eq("xhigh")
+    end
+
     it "includes effort in output_config when set to low, medium, or high" do
       model.update!(
         provider_params: {

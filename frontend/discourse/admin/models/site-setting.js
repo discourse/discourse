@@ -1,5 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, set } from "@ember/object";
+import { trustHTML } from "@ember/template";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import {
   DEFAULT_USER_PREFERENCES,
@@ -9,6 +10,16 @@ import SettingObjectHelper from "discourse/admin/lib/setting-object-helper";
 import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
+
+/**
+ * `true` when a value is the *enabled* state of a bool site setting: boolean
+ * `true`, the string `"true"`, or any value whose `String()` is exactly `"true"`.
+ * This is not general JS truthiness: `"false"` is not enabled, and is safe
+ * for `null` / `undefined` (unlike calling `.toString()` on the value).
+ */
+export function isSettingValueTrue(value) {
+  return String(value) === "true";
+}
 
 const AUTO_REFRESH_ON_SAVE = [
   "logo",
@@ -143,11 +154,35 @@ export default class SiteSetting extends EmberObject {
     };
   }
 
+  get definition() {
+    return {
+      key: this.setting,
+      label: this.humanized_name,
+      description: trustHTML(this.description),
+      type: this.type,
+      list_type: this.list_type,
+      min: this.min,
+      max: this.max,
+      choices: this.choices,
+      valid_values: this.validValues,
+    };
+  }
+
   get requiresConfirmation() {
-    return (
-      this.requires_confirmation ===
-      SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple
-    );
+    switch (this.requires_confirmation) {
+      case SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple:
+        return true;
+      case SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple_on_enable: {
+        const val = this.buffered?.get("value");
+        return isSettingValueTrue(val);
+      }
+      case SITE_SETTING_REQUIRES_CONFIRMATION_TYPES.simple_on_disable: {
+        const val = this.buffered?.get("value");
+        return !isSettingValueTrue(val);
+      }
+      default:
+        return false;
+    }
   }
 
   get requiresReload() {

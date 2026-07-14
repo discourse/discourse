@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import CreatedBy from "discourse/components/reviewable/created-by";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | reviewable | created-by", function (hooks) {
+module("Integration | Component | Reviewable | CreatedBy", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders user avatar and name when user is provided", async function (assert) {

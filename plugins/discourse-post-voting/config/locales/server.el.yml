@@ -35,11 +35,6 @@ el:
   discourse_post_voting:
     reviewables:
       actions:
-        comment_actions:
-          bundle_title: "Τι θέλετε να κάνετε με το σχόλιο;"
-        no_action_comment:
-          title: "Καμία ενέργεια"
-          description: "Αφήστε το σχόλιο ως έχει."
         agree_and_keep_comment:
           title: "Διατήρηση σχολίου"
           description: "Συμφωνώ με την αναφορά και διατήρηση του σχολίου χωρίς αλλαγή."
@@ -73,6 +68,19 @@ el:
   post_action_types:
     vote:
       title: "Ψήφισε"
+      description: "Ψηφίστε για αυτήν την ανάρτηση"
+      short_description: "Ψηφίστε για αυτήν την ανάρτηση"
+      long_form: "ψηφίσατε για αυτήν την ανάρτηση"
+  vote:
+    error:
+      user_has_not_voted: "Ο χρήστης δεν έχει ψηφίσει."
+      user_over_limit: "Δεν μπορείτε να υπερβείτε τον αριθμό των ψήφων για το επίπεδο εμπιστοσύνης σας."
+      already_voted: "Μπορείτε να ψηφίσετε μόνο μία φορά ανά ερώτηση."
+      undo_vote_action_window:
+        one: "Δεν μπορείτε να αναιρέσετε την ψήφο σας %{count} λεπτό μετά την ψηφοφορία."
+        other: "Δεν μπορείτε να αναιρέσετε την ψήφο σας %{count} λεπτά μετά την ψηφοφορία."
+      one_vote_per_post: "Μπορείτε να ψηφίσετε μόνο μία φορά για κάθε ανάρτηση."
+      one_vote_per_comment: "Μπορείτε να ψηφίσετε μόνο μία φορά για κάθε σχόλιο."
   post_voting:
     comment:
       errors:

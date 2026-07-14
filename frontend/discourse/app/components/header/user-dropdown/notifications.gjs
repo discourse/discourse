@@ -3,12 +3,12 @@ import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import icon from "discourse/helpers/d-icon";
+import { applyValueTransformer } from "discourse/lib/transformer";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import {
   addExtraUserClasses,
   renderAvatar,
-} from "discourse/helpers/user-avatar";
-import { applyValueTransformer } from "discourse/lib/transformer";
+} from "discourse/ui-kit/helpers/d-user-avatar";
 import { i18n } from "discourse-i18n";
 import UserTip from "../../user-tip";
 import UserStatusBubble from "./user-status-bubble";
@@ -80,7 +80,7 @@ export default class Notifications extends Component {
       <div
         class="do-not-disturb-background"
         title={{i18n "notifications.paused"}}
-      >{{icon "discourse-dnd"}}</div>
+      >{{dIcon "discourse-dnd"}}</div>
     {{else}}
       {{#if this.currentUser.new_personal_messages_notifications_count}}
         <a
@@ -99,7 +99,7 @@ export default class Notifications extends Component {
             )
           }}
         >
-          {{icon "envelope"}}
+          {{dIcon "envelope"}}
         </a>
       {{else if this.currentUser.unseen_reviewable_count}}
         <a
@@ -114,7 +114,7 @@ export default class Notifications extends Component {
             (hash count=this.currentUser.unseen_reviewable_count)
           }}
         >
-          {{icon "flag"}}
+          {{dIcon "flag"}}
         </a>
       {{else if this.currentUser.all_unread_notifications_count}}
         <a

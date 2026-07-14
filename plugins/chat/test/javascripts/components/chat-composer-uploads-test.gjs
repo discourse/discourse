@@ -2,7 +2,10 @@ import { click, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
-import { createFile } from "discourse/tests/helpers/qunit-helpers";
+import {
+  createFile,
+  silenceConsoleErrorsMatching,
+} from "discourse/tests/helpers/qunit-helpers";
 import ChatComposerUploads from "discourse/plugins/chat/discourse/components/chat-composer-uploads";
 
 const fakeUpload = {
@@ -38,7 +41,7 @@ function setupUploadPretender() {
   );
 }
 
-module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
+module("Component | ChatComposerUploads", function (hooks) {
   setupRenderingTest(hooks);
 
   test("loading uploads from an outside source (e.g. draft or editing message)", async function (assert) {
@@ -113,6 +116,7 @@ module("Discourse Chat | Component | chat-composer-uploads", function (hooks) {
   });
 
   test("cancelling in progress upload", async function (assert) {
+    silenceConsoleErrorsMatching("[Uppy]");
     setupUploadPretender();
 
     this.set("changedUploads", null);

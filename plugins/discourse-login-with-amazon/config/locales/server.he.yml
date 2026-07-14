@@ -6,7 +6,6 @@
 
 he:
   site_settings:
-    enable_login_with_amazon: "הפעלת כניסה עם אימות מול Amazon, דורש את `login with amazon client id` ואת `login with amazon client secret`."
     login_with_amazon_client_id: "כניסה עם מזהה לקוח של Amazon"
     login_with_amazon_client_secret: "כניסה עם סוד לקוח של Amazon"
     login_with_amazon_scope: "כניסה עם scopes של OAuth2 של Amazon (מופרדים ברווחים)"

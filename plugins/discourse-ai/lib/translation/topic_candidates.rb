@@ -3,6 +3,34 @@
 module DiscourseAi
   module Translation
     class TopicCandidates < BaseCandidates
+      def self.needs_localization(limit:)
+        locales = DiscourseAi::Translation.locales
+        return [] if locales.blank?
+
+        locale_map = {}
+        locales.each { |l| locale_map[l.split("_").first] ||= l }
+
+        target_locale_values = locale_map.map { |base, full| "('#{base}', '#{full}')" }.join(", ")
+
+        base_sql = get.where.not(locale: nil).to_sql
+
+        sql = <<~SQL
+          SELECT et.id AS topic_id, target.target_locale
+          FROM (#{base_sql}) et
+          JOIN (VALUES #{target_locale_values}) AS target(base_locale, target_locale)
+            ON target.base_locale != split_part(et.locale, '_', 1)
+          WHERE NOT EXISTS (
+            SELECT 1 FROM topic_localizations tl
+            WHERE tl.topic_id = et.id
+              AND split_part(tl.locale, '_', 1) = target.base_locale
+          )
+          ORDER BY et.updated_at DESC, target.target_locale
+          LIMIT #{limit.to_i}
+        SQL
+
+        DB.query(sql).map { |r| [r.topic_id, r.target_locale] }
+      end
+
       private
 
       # all topics that are eligible for translation based on site settings,
@@ -17,21 +45,15 @@ module DiscourseAi
         topics =
           topics.where("topics.user_id > 0") unless SiteSetting.ai_translation_include_bot_content
 
-        target_category_ids = SiteSetting.ai_translation_target_categories
         pm_scope = SiteSetting.ai_translation_personal_messages
+        category_condition, category_params =
+          DiscourseAi::Translation.category_scope_condition(category_column: "topics.category_id")
 
-        # Category filter: include target categories + PMs (PMs filtered in next step)
-        if target_category_ids.present?
-          category_ids = target_category_ids.split("|").map(&:to_i)
-          topics =
-            topics.where(
-              "topics.category_id IN (:cats) OR topics.archetype = :pm",
-              cats: category_ids,
-              pm: Archetype.private_message,
-            )
-        else
-          topics = topics.where(archetype: Archetype.private_message)
-        end
+        topics =
+          topics.where(
+            "topics.archetype = :pm OR (#{category_condition})",
+            category_params.merge(pm: Archetype.private_message),
+          )
 
         # PM scope filter
         case pm_scope

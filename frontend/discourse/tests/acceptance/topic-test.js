@@ -42,7 +42,7 @@ acceptance(`Topic`, function (needs) {
 
   test("Reply as new topic", async function (assert) {
     await visit("/t/internationalization-localization/280");
-    await click("button.share:nth-of-type(1)");
+    await click(".topic-post[data-post-number='1'] button.share");
     await click("button.new-topic");
 
     assert.dom(".d-editor-input").exists("the composer input is visible");
@@ -62,7 +62,7 @@ acceptance(`Topic`, function (needs) {
 
   test("Reply as new message", async function (assert) {
     await visit("/t/pm-for-testing/12");
-    await click("button.share:nth-of-type(1)");
+    await click(".topic-post[data-post-number='1'] button.share");
     await click("button.new-topic");
 
     assert.dom(".d-editor-input").exists("the composer input is visible");
@@ -570,6 +570,15 @@ acceptance(`Topic last visit line`, function (needs) {
     assert
       .dom(".topic-post-visited-line.post-10")
       .exists("shows the last visited line on the right post");
+
+    assert
+      .dom(".topic-post-visited-line.post-10 .topic-post-visited-message")
+      .hasAria("level", "2", "the marker is part of heading navigation")
+      .hasAttribute(
+        "role",
+        "heading",
+        "the marker is part of heading navigation"
+      );
 
     await visit("/t/-/9");
 

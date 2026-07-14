@@ -2,16 +2,16 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import BulkTopicActions, {
   addBulkDropdownAction,
 } from "discourse/components/modal/bulk-topic-actions";
 import DismissReadModal from "discourse/components/modal/dismiss-read";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import Topic from "discourse/models/topic";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const _customButtons = [];
@@ -93,6 +93,13 @@ export default class BulkSelectTopicsDropdown extends Component {
         name: i18n("topic_bulk_actions.close_topics.name"),
       },
       {
+        id: "manage-tags",
+        icon: "tag",
+        name: i18n("topic_bulk_actions.manage_tags.name"),
+        visible: ({ currentUser, siteSettings }) =>
+          siteSettings.tagging_enabled && currentUser.canManageTopic,
+      },
+      {
         id: "pin-topics",
         icon: "thumbtack",
         name: i18n("topic_bulk_actions.pin_topics.name"),
@@ -125,6 +132,42 @@ export default class BulkSelectTopicsDropdown extends Component {
         visible: ({ topics }) => topics.every((t) => t.isPrivateMessage),
       },
       {
+        id: "convert-to-public-topic",
+        icon: "comments",
+        name: i18n("topic_bulk_actions.convert_to_public_topic.name"),
+        visible: ({ topics, currentUser }) =>
+          currentUser.staff && topics.every((t) => t.isPrivateMessage),
+      },
+      {
+        id: "convert-to-private-message",
+        icon: "envelope",
+        name: i18n("topic_bulk_actions.convert_to_private_message.name"),
+        visible: ({ topics, currentUser }) =>
+          currentUser.staff && topics.every((t) => !t.isPrivateMessage),
+      },
+      {
+        id: "enable-nested-replies",
+        icon: "nested-thread",
+        name: i18n("topic_bulk_actions.enable_nested_replies.name"),
+        visible: ({ topics, currentUser, siteSettings }) =>
+          currentUser.staff &&
+          siteSettings.nested_replies_enabled &&
+          !siteSettings.nested_replies_default &&
+          !topics.some((t) => t.isPrivateMessage) &&
+          topics.some((t) => !t.is_nested_view),
+      },
+      {
+        id: "disable-nested-replies",
+        icon: "nested-thread",
+        name: i18n("topic_bulk_actions.disable_nested_replies.name"),
+        visible: ({ topics, currentUser, siteSettings }) =>
+          currentUser.staff &&
+          siteSettings.nested_replies_enabled &&
+          !siteSettings.nested_replies_default &&
+          !topics.some((t) => t.isPrivateMessage) &&
+          topics.some((t) => t.is_nested_view),
+      },
+      {
         id: "unlist-topics",
         icon: "far-eye-slash",
         name: i18n("topic_bulk_actions.unlist_topics.name"),
@@ -139,27 +182,6 @@ export default class BulkSelectTopicsDropdown extends Component {
         visible: ({ topics }) =>
           topics.some((t) => !t.visible) &&
           !topics.some((t) => t.isPrivateMessage),
-      },
-      {
-        id: "append-tags",
-        icon: "tag",
-        name: i18n("topic_bulk_actions.append_tags.name"),
-        visible: ({ currentUser, siteSettings }) =>
-          siteSettings.tagging_enabled && currentUser.canManageTopic,
-      },
-      {
-        id: "replace-tags",
-        icon: "tag",
-        name: i18n("topic_bulk_actions.replace_tags.name"),
-        visible: ({ currentUser, siteSettings }) =>
-          siteSettings.tagging_enabled && currentUser.canManageTopic,
-      },
-      {
-        id: "remove-tags",
-        icon: "tag",
-        name: i18n("topic_bulk_actions.remove_tags.name"),
-        visible: ({ currentUser, siteSettings }) =>
-          siteSettings.tagging_enabled && currentUser.canManageTopic,
       },
       {
         id: "delete-topics",
@@ -296,6 +318,15 @@ export default class BulkSelectTopicsDropdown extends Component {
           }
         );
         break;
+      case "convert-to-public-topic":
+      case "convert-to-private-message":
+        const actionName = actionId.replaceAll("-", "_");
+        this.showBulkTopicActionsModal(actionId, actionName, {
+          allowSilent: true,
+          description: i18n(`topic_bulk_actions.${actionName}.description`),
+          confirmButtonTranslationKey: "topics.bulk.confirm_update_topics",
+        });
+        break;
       case "unlist-topics":
         this.showBulkTopicActionsModal("unlist", "unlist_topics", {
           description: i18n(`topic_bulk_actions.unlist_topics.description`),
@@ -307,22 +338,10 @@ export default class BulkSelectTopicsDropdown extends Component {
           confirmButtonTranslationKey: "topics.bulk.confirm_relist_topics",
         });
         break;
-      case "append-tags":
-        this.showBulkTopicActionsModal(actionId, "append_tags", {
-          description: i18n(`topic_bulk_actions.append_tags.description`),
-          confirmButtonTranslationKey: "topics.bulk.confirm_update_topics",
-        });
-        break;
-      case "replace-tags":
-        this.showBulkTopicActionsModal(actionId, "change_tags", {
-          description: i18n(`topic_bulk_actions.replace_tags.description`),
-          confirmButtonTranslationKey: "topics.bulk.confirm_update_topics",
-        });
-        break;
-      case "remove-tags":
-        this.showBulkTopicActionsModal(actionId, "remove_tags", {
-          description: i18n(`topic_bulk_actions.remove_tags.description`),
-          confirmButtonTranslationKey: "topics.bulk.confirm_update_topics",
+      case "manage-tags":
+        this.showBulkTopicActionsModal(actionId, "manage_tags", {
+          allowSilent: true,
+          confirmButtonTranslationKey: "topics.bulk.confirm_apply_to_topics",
         });
         break;
       case "delete-topics":
@@ -346,6 +365,24 @@ export default class BulkSelectTopicsDropdown extends Component {
         this.showBulkTopicActionsModal("unpin", "unpin_topics", {
           description: i18n("topic_bulk_actions.unpin_topics.description"),
           confirmButtonTranslationKey: "topics.bulk.confirm_unpin_topics",
+        });
+        break;
+      case "enable-nested-replies":
+        this.showBulkTopicActionsModal(actionId, "enable_nested_replies", {
+          description: i18n(
+            "topic_bulk_actions.enable_nested_replies.description"
+          ),
+          confirmButtonTranslationKey:
+            "topics.bulk.confirm_enable_nested_replies",
+        });
+        break;
+      case "disable-nested-replies":
+        this.showBulkTopicActionsModal(actionId, "disable_nested_replies", {
+          description: i18n(
+            "topic_bulk_actions.disable_nested_replies.description"
+          ),
+          confirmButtonTranslationKey:
+            "topics.bulk.confirm_disable_nested_replies",
         });
         break;
       case "defer":
@@ -413,22 +450,22 @@ export default class BulkSelectTopicsDropdown extends Component {
         <span class="d-button-label">
           {{i18n "select_kit.components.bulk_select_topics_dropdown.title"}}
         </span>
-        {{icon "angle-down"}}
+        {{dIcon "angle-down"}}
       </:trigger>
 
       <:content>
-        <DropdownMenu as |dropdown|>
+        <DDropdownMenu as |dropdown|>
           {{#each this.buttons as |button|}}
             <dropdown.item>
               <DButton
                 @translatedLabel={{button.name}}
                 @icon={{button.icon}}
-                class={{concatClass "btn-transparent" button.id button.class}}
+                class={{dConcatClass "btn-transparent" button.id button.class}}
                 @action={{fn this.onSelect button.id}}
               />
             </dropdown.item>
           {{/each}}
-        </DropdownMenu>
+        </DDropdownMenu>
       </:content>
     </DMenu>
   </template>

@@ -10,6 +10,8 @@ id:
       default_query: "Asal"
       or: "atau"
       create: "Buat"
+      ai:
+        optional: "opsional"
       help:
         label: "Bantuan"
       schema:
@@ -18,10 +20,15 @@ id:
         bool:
           yes: "Ya"
           no: "Tidak"
-      export: "Ekspor"
-      edit: "Ubah"
       delete: "Hapus"
+      chart:
+        form:
+          bar: "Batang"
       query_groups: "Grup"
       query_description: "Deskripsi"
       reset_params: "Reset"
       search_placeholder: "Cari..."
+    discourse_workflows:
+      sql:
+        output:
+          results: "Hasil"

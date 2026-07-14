@@ -79,6 +79,19 @@ export const AI_FEATURE_SETTING_GROUPS = {
     },
   ],
 
+  admin_dashboard: [
+    {
+      key: "settings",
+      titleKey: "discourse_ai.features.admin_dashboard.setting_groups.settings",
+      settings: [
+        "ai_admin_dashboard_enabled",
+        "ai_admin_dashboard_highlights_agent",
+        "ai_admin_dashboard_highlights_category_scope",
+        "ai_admin_dashboard_highlights_categories",
+      ],
+    },
+  ],
+
   bot: [
     {
       key: "settings",
@@ -166,7 +179,8 @@ export const AI_FEATURE_SETTING_GROUPS = {
         "discourse_ai.features.translation.setting_groups.backfill_and_limits",
       settings: [
         "ai_translation_backfill_hourly_rate",
-        "ai_translation_target_categories",
+        "ai_translation_category_scope",
+        "ai_translation_categories",
         "ai_translation_personal_messages",
         "ai_translation_include_bot_content",
         "ai_translation_max_post_length",

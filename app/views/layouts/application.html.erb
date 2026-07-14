@@ -26,17 +26,15 @@
         include_unofficial: allow_third_party_plugins?,
         request: request,
         include_admin_asset: staff?
-      }) if ENV["ROLLUP_PLUGIN_COMPILER"] != "0"
+      })
      %>
 
     <%= build_plugin_html 'server:before-script-load' %>
 
-    <% add_resource_preload_list(script_asset_path("start-discourse"), "script") %>
-    <% add_resource_preload_list(script_asset_path("browser-update"), "script") %>
-    <link rel="preload" href="<%= script_asset_path "start-discourse" %>" as="script" nonce="<%= csp_nonce_placeholder %>">
-    <link rel="preload" href="<%= script_asset_path "browser-update" %>" as="script" nonce="<%= csp_nonce_placeholder %>">
-
-    <%= preload_script 'browser-detect' %>
+    <script nonce="<%= csp_nonce_placeholder %>">
+      window.EmberENV ??= {};
+      window.EmberENV._DEFAULT_ASYNC_OBSERVERS = true;
+    </script>
 
     <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
     <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
@@ -53,25 +51,18 @@
       <%= theme_translations_lookup %>
     <%- end %>
 
-    <%= preload_script "vendor" %>
-    <%= preload_script "discourse" %>
+    <link rel="preload" href="<%= script_asset_path "js/browser-update" %>" as="script" nonce="<%= csp_nonce_placeholder %>">
 
-    <%= render("layouts/plugin_js", opts: {
-        include_official: allow_plugins?,
-        include_unofficial: allow_third_party_plugins?,
-        request: request,
-        include_admin_asset: staff?
-      }) if ENV["ROLLUP_PLUGIN_COMPILER"] == "0"
-     %>
+    <%= preload_script 'js/browser-detect' %>
 
-    <%- if staff? %>
-      <% EmberCli.script_chunks["chunk.admin"]&.each do |script_name| %>
-        <link rel="preload" href="<%= script_asset_path(script_name) %>" as="script" nonce="<%= csp_nonce_placeholder %>" data-discourse-entrypoint="admin">
-      <% end %>
-    <%- end %>
+    <%= preload_script "vendor", type_module: true %>
+
+    <%= module_preloads_for "discourse", (staff? ? "admin/compat-modules" : nil) %>
 
     <%- unless customization_disabled? %>
-      <%= theme_js_lookup %>
+      <%- theme_js_assets.each do |asset| %>
+        <link rel="modulepreload" href="<%= asset[:url] %>" data-theme-id="<%= asset[:theme_id] %>" nonce="<%= csp_nonce_placeholder %>">
+      <%- end %>
       <%= theme_lookup("head_tag") %>
     <%- end %>
 
@@ -151,11 +142,11 @@
       </form>
     <% end %>
 
-    <script defer src="<%= script_asset_path "start-discourse" %>" nonce="<%= csp_nonce_placeholder %>"></script>
+    <%= preload_script "discourse", type_module: true %>
+
+    <script defer src="<%= script_asset_path "js/browser-update" %>" nonce="<%= csp_nonce_placeholder %>"></script>
 
     <%= yield :data %>
-
-    <script defer src="<%= script_asset_path "browser-update" %>" nonce="<%= csp_nonce_placeholder %>"></script>
 
     <%- unless customization_disabled? %>
       <%= theme_lookup("body_tag") %>

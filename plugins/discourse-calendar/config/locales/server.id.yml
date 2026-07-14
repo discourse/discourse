@@ -10,6 +10,9 @@ id:
       labels:
         username: Nama Pengguna
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Hari"
     invite_user_notification: "%{username} mengundang Anda ke: %{description}"
   discourse_post_event:
     errors:

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
-import RadioButton from "discourse/components/radio-button";
-import icon from "discourse/helpers/d-icon";
+import DRadioButton from "discourse/ui-kit/d-radio-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class InstallThemeItem extends Component {
@@ -10,7 +10,7 @@ export default class InstallThemeItem extends Component {
 
   <template>
     <div class={{this.classes}}>
-      <RadioButton
+      <DRadioButton
         @name="install-items"
         @id={{@value}}
         @value={{@value}}
@@ -18,11 +18,11 @@ export default class InstallThemeItem extends Component {
       />
       <label class="radio" for={{@value}}>
         {{#if @showIcon}}
-          {{icon "plus"}}
+          {{dIcon "plus"}}
         {{/if}}
         {{i18n @label}}
       </label>
-      {{icon "angle-right"}}
+      {{dIcon "angle-right"}}
     </div>
   </template>
 }

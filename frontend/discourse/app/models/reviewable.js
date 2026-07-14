@@ -79,9 +79,13 @@ export default class Reviewable extends RestModel {
     });
   }
 
-  @computed("resolvedType", "reviewable_scores")
+  @computed("resolvedType", "reviewable_scores", "status")
   get userReviewableContextQuestion() {
     if (this.resolvedType === "ReviewableUser") {
+      // in this case the only remaining action is "scrub record" so the question shouldn't show
+      if (this.status !== PENDING) {
+        return null;
+      }
       const isSuspectUser = this.reviewable_scores?.some(
         (score) => score.reason_type === "suspect_user"
       );

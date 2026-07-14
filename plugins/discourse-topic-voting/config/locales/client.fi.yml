@@ -12,14 +12,10 @@ fi:
     topic_voting:
       reached_limit: "Sinulla ei ole enempää ääniä, poista antamasi ääni!"
       list_votes: "Kaikki antamasi äänet"
-      votes_nav_help: "ketjut, joilla on eniten ääniä"
       voted: "Äänestit tässä ketjussa"
       allow_topic_voting: "Salli käyttäjien antaa ääniä ketjuissa tällä alueella"
       vote_title: "Äänestä"
       vote_title_plural: "Äänet"
-      voted_title: "Äänestetty"
-      voting_closed_title: "Suljettu"
-      voting_limit: "Raja"
       votes:
         one: "%{count} ääni"
         other: "%{count} ääntä"
@@ -27,12 +23,14 @@ fi:
         one: "Ääni"
         other: "Äänet"
       remove_vote: "Poista ääni"
+      and_more_voters: "ja %{count} muuta..."
+      show_voters: "Näytä äänestäneet"
+      vote_count_thousands: "%{count} k"
       no_votes_title_self: "Et ole vielä äänestänyt ketjuja"
       no_votes_title_others: "%{username} ei ole vielä äänestänyt ketjuja"
     filters:
       votes:
         title: "Äänet"
-        help: "ketjut, joilla on eniten ääniä"
       my_votes:
         title: "Omat äänet"
         help: "ketjut, joissa olet äänestänyt"

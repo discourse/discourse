@@ -16,8 +16,9 @@ ur:
   chat:
     deleted_chat_username: حذف کردہ
     errors:
-      not_accepting_dms: "معذرت، %{username} اِس وقت پیغامات قبول نہیں کر رہا ہے۔"
+      not_accepting_dms: "معذرت، %{username} اِس وقت پیغامات قبول نہیں کر رہے۔"
       actor_disallowed_dms: "آپ نے اراکین کو ذاتی اور براہ راست پیغامات بھیجنے سے روکنے کا انتخاب کیا ہے، لہذا آپ نئے براہ راست پیغامات نہیں بنا سکتے۔"
+      actor_preventing_target_user_from_dm: "آپ نے %{username} کو ذاتی اور براہ راست پیغامات بھیجنے سے روکاہے، اس لیے آپ انھیں نئے براہ راست پیغامات نہیں بھیج سکتے۔"
     reviewables:
       actions:
         no_action_message:
@@ -37,17 +38,29 @@ ur:
         single_user: "%{username}"
     mention_warning:
       dismiss: "بر خاست کریں"
+      global_mentions_disallowed: "اس چینل میں @here اور @all تذکرے غیر فعال ہیں۔"
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "غیر ascii حروف پر مشتمل ہے"
+    personal_chat: "نجی گفتگو"
     onebox:
       thread_title_connector: "میں"
   discourse_push_notifications:
     popup:
       chat_mention:
         direct: '%{username} نے آپ کا تذکرہ "%{channel}" میں کیا'
+        other_type: '%{username} نے "%{channel}" میں %{identifier} کا ذکر کیا'
       direct_message_chat_mention:
         direct: "%{username} نے نجی چیٹ میں آپ کا تذکرہ کیا"
+        other_type: "%{username} نے نجی گفتگو میں %{identifier} کا ذکر کیا"
+      new_direct_chat_message: "%{username} نجی گفتگو میں ایک پیغام بھیجا"
+    actions:
+      chat_reply:
+        title: جواب
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "منظور"
+      default_deny_label: "انکار"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

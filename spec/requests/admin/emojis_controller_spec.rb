@@ -55,7 +55,7 @@ RSpec.describe Admin::EmojiController do
           post "/admin/config/emoji.json",
                params: {
                  name: "test",
-                 file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/fake.jpg"),
+                 file: fixture_file_upload("#{Rails.root.join("spec/fixtures/images/fake.jpg")}"),
                }
 
           expect(response.status).to eq(422)
@@ -71,7 +71,7 @@ RSpec.describe Admin::EmojiController do
           post "/admin/config/emoji.json",
                params: {
                  name: "test",
-                 file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png"),
+                 file: fixture_file_upload("#{Rails.root.join("spec/fixtures/images/logo.png")}"),
                }
 
           expect(response.status).to eq(422)
@@ -88,7 +88,7 @@ RSpec.describe Admin::EmojiController do
         post "/admin/config/emoji.json",
              params: {
                name: "test",
-               file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png"),
+               file: fixture_file_upload("#{Rails.root.join("spec/fixtures/images/logo.png")}"),
              }
 
         custom_emoji = CustomEmoji.last
@@ -111,7 +111,7 @@ RSpec.describe Admin::EmojiController do
         post "/admin/config/emoji.json",
              params: {
                name: "test",
-               file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png"),
+               file: fixture_file_upload("#{Rails.root.join("spec/fixtures/images/logo.png")}"),
              }
 
         last_log = UserHistory.last
@@ -128,7 +128,7 @@ RSpec.describe Admin::EmojiController do
              params: {
                name: "test",
                group: "Foo",
-               file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png"),
+               file: fixture_file_upload("#{Rails.root.join("spec/fixtures/images/logo.png")}"),
              }
 
         custom_emoji = CustomEmoji.last
@@ -143,7 +143,7 @@ RSpec.describe Admin::EmojiController do
         post "/admin/config/emoji.json",
              params: {
                name: "test_svg",
-               file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/image.svg"),
+               file: fixture_file_upload("#{Rails.root.join("spec/fixtures/images/image.svg")}"),
              }
 
         expect(response.status).to eq(200)
@@ -161,7 +161,7 @@ RSpec.describe Admin::EmojiController do
         post "/admin/config/emoji.json",
              params: {
                name: "test_gif",
-               file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/animated.gif"),
+               file: fixture_file_upload("#{Rails.root.join("spec/fixtures/images/animated.gif")}"),
              }
 
         expect(response.status).to eq(200)
@@ -179,7 +179,7 @@ RSpec.describe Admin::EmojiController do
         post "/admin/config/emoji.json",
              params: {
                name: "test.png",
-               file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png"),
+               file: fixture_file_upload("#{Rails.root.join("spec/fixtures/images/logo.png")}"),
              }
 
         custom_emoji = CustomEmoji.last
@@ -192,7 +192,7 @@ RSpec.describe Admin::EmojiController do
         post "/admin/config/emoji.json",
              params: {
                name: "st&#* onk$",
-               file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png"),
+               file: fixture_file_upload("#{Rails.root.join("spec/fixtures/images/logo.png")}"),
              }
 
         custom_emoji = CustomEmoji.last
@@ -202,7 +202,7 @@ RSpec.describe Admin::EmojiController do
         post "/admin/config/emoji.json",
              params: {
                name: "PaRTYpaRrot",
-               file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png"),
+               file: fixture_file_upload("#{Rails.root.join("spec/fixtures/images/logo.png")}"),
              }
 
         custom_emoji = CustomEmoji.last
@@ -216,7 +216,7 @@ RSpec.describe Admin::EmojiController do
         post "/admin/config/emoji.json",
              params: {
                name: "test",
-               file: fixture_file_upload("#{Rails.root}/spec/fixtures/images/logo.png"),
+               file: fixture_file_upload("#{Rails.root.join("spec/fixtures/images/logo.png")}"),
              }
 
         expect(response.status).to eq(404)

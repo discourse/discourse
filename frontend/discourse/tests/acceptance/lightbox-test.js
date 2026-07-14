@@ -1,4 +1,4 @@
-import { click, visit, waitFor } from "@ember/test-helpers";
+import { click, visit, waitFor, waitUntil } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
@@ -62,5 +62,57 @@ acceptance("Lightbox", function (needs) {
     assert
       .dom(".pswp__caption .pswp__caption-title")
       .hasHtml(/^&lt;script&gt;image&lt;\/script&gt;/);
+  });
+});
+
+acceptance("Lightbox - grid order", function (needs) {
+  needs.user();
+
+  needs.pretender((server, helper) => {
+    const topicResponse = cloneJSON(topicFixtures["/t/280/1.json"]);
+
+    const anchor = (title) => `
+      <a class="lightbox" href="/images/d-logo-sketch.png"
+         data-large-src="/images/d-logo-sketch.png"
+         data-target-width="640" data-target-height="480"
+         title="${title}">
+        <img src="/images/d-logo-sketch-small.png" width="640" height="480" alt="${title}">
+        <div class="meta"><span class="informations">640×480</span></div>
+      </a>
+    `;
+
+    topicResponse.post_stream.posts[0].cooked = `
+      <div class="d-image-grid">
+        ${anchor("img1")}
+        ${anchor("img2")}
+        ${anchor("img3")}
+        ${anchor("img4")}
+      </div>
+    `;
+
+    server.get("/t/280.json", () => helper.response(topicResponse));
+    server.get("/t/280/:post_number.json", () =>
+      helper.response(topicResponse)
+    );
+  });
+
+  test("Arrow navigation follows original markdown order, not column-balanced DOM order", async function (assert) {
+    await visit("/t/internationalization-localization/280");
+
+    await click(".d-image-grid .lightbox[title='img1']");
+    await waitFor(".pswp--open");
+    assert.dom(".pswp__caption-title").hasText("img1");
+
+    for (const expected of ["img2", "img3", "img4"]) {
+      await click(".pswp__button--arrow--next");
+      await waitUntil(
+        () =>
+          document.querySelector(".pswp__caption-title")?.textContent ===
+          expected
+      );
+      assert.dom(".pswp__caption-title").hasText(expected);
+    }
+
+    await click(".pswp__button--close");
   });
 });

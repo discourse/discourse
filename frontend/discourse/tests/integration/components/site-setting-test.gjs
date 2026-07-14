@@ -1,11 +1,5 @@
-import {
-  click,
-  fillIn,
-  render,
-  triggerEvent,
-  typeIn,
-} from "@ember/test-helpers";
-import { module, skip, test } from "qunit";
+import { click, fillIn, render, triggerEvent } from "@ember/test-helpers";
+import { module, test } from "qunit";
 import SiteSettingComponent from "discourse/admin/components/site-setting";
 import SiteSetting from "discourse/admin/models/site-setting";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -139,22 +133,31 @@ module("Integration | Component | SiteSetting", function (hooks) {
       .hasText("jpg, jpeg, png, gif, heic, heif, webp, avif, svg");
   });
 
-  // Skipping for now because ember-test-helpers doesn't check for defaultPrevented when firing that event chain
-  skip("prevents decimal in integer setting input", async function (assert) {
-    this.set(
-      "setting",
-      SiteSetting.create({
-        setting: "suggested_topics_unread_max_days_old",
-        value: "",
-        type: "integer",
-      })
-    );
+  test("prevents decimal in integer setting input", async function (assert) {
+    const setting = SiteSetting.create({
+      setting: "suggested_topics_unread_max_days_old",
+      value: "",
+      type: "integer",
+    });
 
     await render(
-      <template><SiteSettingComponent @setting={{this.setting}} /></template>
+      <template><SiteSettingComponent @setting={{setting}} /></template>
     );
-    await typeIn(".input-setting-integer", "90,5", { delay: 1000 });
-    assert.dom(".input-setting-integer").hasValue("905");
+
+    const input = document.querySelector(".input-setting-integer");
+    const isPrevented = (key) => {
+      const event = new KeyboardEvent("keydown", {
+        key,
+        bubbles: true,
+        cancelable: true,
+      });
+      input.dispatchEvent(event);
+      return event.defaultPrevented;
+    };
+
+    assert.true(isPrevented(","), "prevents ,");
+    assert.true(isPrevented("."), "prevents .");
+    assert.false(isPrevented("9"), "allows 9");
   });
 
   test("does not consider an integer setting overridden if the value is the same as the default", async function (assert) {
@@ -226,7 +229,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
       );
   });
 
-  test("Shows update status for default_categories_ sitesettings", async function (assert) {
+  test("Shows update status for default_categories_* site settings", async function (assert) {
     this.set(
       "setting",
       SiteSetting.create({
@@ -260,7 +263,7 @@ module("Integration | Component | SiteSetting", function (hooks) {
     assert.dom(".desc.site-setting").hasTextContaining("Update completed");
   });
 
-  test("Shows update status for default_tags_ sitesettings", async function (assert) {
+  test("Shows update status for default_tags_* site settings", async function (assert) {
     this.set(
       "setting",
       SiteSetting.create({
@@ -431,6 +434,56 @@ module(
       );
 
       assert.dom(".setting-theme-warning__text").includesHtml(expectedText);
+    });
+
+    test("shows notice for settings that depend on another setting", async function (assert) {
+      this.set(
+        "setting",
+        SiteSetting.create({
+          setting: "dependent_setting",
+          value: "1",
+          type: "integer",
+          depends_on: ["parent_setting"],
+          depends_on_humanized_names: ["Parent setting"],
+        })
+      );
+
+      await render(
+        <template><SiteSettingComponent @setting={{this.setting}} /></template>
+      );
+
+      assert
+        .dom(".setting-depends-on-notice")
+        .exists("notice wrapper is displayed");
+      assert
+        .dom(".setting-depends-on-notice__text")
+        .includesText(
+          "This setting is only applied when Parent setting is enabled"
+        );
+      assert
+        .dom(".setting-depends-on-notice__text a")
+        .hasAttribute(
+          "href",
+          "/admin/site_settings/category/all_results?filter=parent_setting"
+        )
+        .hasText("Parent setting");
+    });
+
+    test("does not show the depends_on notice when setting has no dependencies", async function (assert) {
+      this.set(
+        "setting",
+        SiteSetting.create({
+          setting: "plain_setting",
+          value: "1",
+          type: "integer",
+        })
+      );
+
+      await render(
+        <template><SiteSettingComponent @setting={{this.setting}} /></template>
+      );
+
+      assert.dom(".setting-depends-on-notice").doesNotExist();
     });
   }
 );
@@ -742,6 +795,108 @@ module(
           `has ${fontClass} CSS class`
         );
       });
+    });
+  }
+);
+
+module(
+  "Integration | Component | SiteSetting | depends_behavior: hidden",
+  function (hooks) {
+    setupRenderingTest(hooks);
+
+    hooks.beforeEach(function () {
+      this.store = this.container.lookup("service:admin-site-setting-store");
+      this.parent = SiteSetting.create({
+        setting: "parent_flag",
+        value: "false",
+        default: "false",
+        type: "bool",
+      });
+      this.child = SiteSetting.create({
+        setting: "child_value",
+        value: "5",
+        default: "5",
+        type: "integer",
+        depends_on: ["parent_flag"],
+        depends_behavior: "hidden",
+      });
+    });
+
+    test("child renders disabled when parent is falsy", async function (assert) {
+      this.store.register([this.parent, this.child]);
+
+      await render(
+        <template><SiteSettingComponent @setting={{this.child}} /></template>
+      );
+
+      assert
+        .dom("[data-setting='child_value']")
+        .hasClass("disabled-by-dependency");
+      assert.dom(".input-setting-integer").hasAttribute("disabled");
+    });
+
+    test("child renders enabled when parent is truthy", async function (assert) {
+      this.parent.value = "true";
+      this.store.register([this.parent, this.child]);
+
+      await render(
+        <template><SiteSettingComponent @setting={{this.child}} /></template>
+      );
+
+      assert
+        .dom("[data-setting='child_value']")
+        .hasNoClass("disabled-by-dependency");
+      assert.dom(".input-setting-integer").doesNotHaveAttribute("disabled");
+    });
+
+    test("toggling parent reactively flips child disabled and latches revealed", async function (assert) {
+      this.store.register([this.parent, this.child]);
+
+      await render(
+        <template>
+          <SiteSettingComponent @setting={{this.parent}} />
+          <SiteSettingComponent @setting={{this.child}} />
+        </template>
+      );
+
+      assert.false(this.store.isRevealed(this.child));
+      assert
+        .dom("[data-setting='child_value']")
+        .hasClass("disabled-by-dependency");
+
+      await click("[data-setting='parent_flag'] input[type=checkbox]");
+      assert.true(
+        this.store.isRevealed(this.child),
+        "revealed latched on toggle-on"
+      );
+      assert
+        .dom("[data-setting='child_value']")
+        .hasNoClass("disabled-by-dependency");
+
+      await click("[data-setting='parent_flag'] input[type=checkbox]");
+      assert.true(this.store.isRevealed(this.child), "revealed stays latched");
+      assert
+        .dom("[data-setting='child_value']")
+        .hasClass("disabled-by-dependency", "disabled again, not re-hidden");
+    });
+
+    test("resetting parent to a truthy default latches revealed", async function (assert) {
+      this.parent.default = "true";
+      this.store.register([this.parent, this.child]);
+
+      await render(
+        <template>
+          <SiteSettingComponent @setting={{this.parent}} />
+          <SiteSettingComponent @setting={{this.child}} />
+        </template>
+      );
+
+      await click("[data-setting='parent_flag'] .setting-controls__undo");
+
+      assert.true(this.store.isRevealed(this.child));
+      assert
+        .dom("[data-setting='child_value']")
+        .hasNoClass("disabled-by-dependency");
     });
   }
 );

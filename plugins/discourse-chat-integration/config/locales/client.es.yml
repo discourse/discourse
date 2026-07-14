@@ -14,9 +14,27 @@ es:
     chat_integration:
       menu_title: "Integraciones de chat"
       settings: "Ajustes"
+      nav:
+        providers: "Proveedores"
+        providers_description: "Configura las integraciones con proveedores de chat"
+      add_provider: "Añadir proveedor"
+      more_providers: "Más"
+      empty_state:
+        title: "Conecta tu plataforma de chat"
+        body: "Envía notificaciones de Discourse al chat de tu equipo. Elige un proveedor para empezar."
+      channels_title: "Canales"
+      no_channels: "Aún no se ha configurado ningún canal."
+      channel_actions: "Acciones del canal"
+      add_first_channel: "Añade tu primer canal de %{provider}"
       channels_with_errors: "Algunos canales de este proveedor fallaron la última vez que se enviaron mensajes. Haz clic en los iconos de error para obtener más información."
+      channel_exception: "Se produjo un error desconocido la última vez que se envió un mensaje a este canal."
       group_mention_template: "Menciones de: @%{name}"
       group_message_template: "Mensajes a: @%{name}"
+      choose_group: "(Elige un grupo)"
+      all_categories: "(Todas las categorías)"
+      all_tags: "(Todas las etiquetas)"
+      create_rule: "Crear regla"
+      add_channel: "Añadir canal"
       delete_channel: "Eliminar"
       test_channel: "Probar"
       edit_channel: "Editar"
@@ -24,10 +42,14 @@ es:
       test_modal:
         title: "Enviar un mensaje de prueba"
         topic: "Tema"
+        send: "Enviar mensaje de prueba"
         close: "Cerrar"
+        error: "Se ha producido un error desconocido al enviar el mensaje. Comprueba los registros del sitio para obtener más información."
         success: "Mensaje enviado correctamente."
       type:
         normal: Normal
+        group_message: Mensaje grupal
+        group_mention: Mención grupal
       filter:
         mute: 'Silenciar'
         follow: 'Solo la primera publicación'
@@ -48,6 +70,9 @@ es:
           ok: "Válido"
           fail: "Formato no válido"
       edit_rule_modal:
+        edit_title: Editar regla
+        create_title: Crear regla
+        save: Guardar regla
         cancel: Cancelar
         provider: Proveedor
         type: Tipo
@@ -68,8 +93,11 @@ es:
           param:
             identifier:
               title: Canal
+              help: "Por ejemplo, #canal o @nombredeusuario"
           errors:
+            auth_error: "El token de autenticación proporcionado no es válido"
             action_prohibited: "Este bot no tiene permiso para publicar en ese canal."
+            channel_not_found: "El canal especificado no existe en Slack"
         telegram:
           title: "Telegram"
           param:
@@ -90,6 +118,7 @@ es:
               help: "Un nombre para describir el canal. No se usará para la conexión con Discord."
             webhook_url:
               title: URL del webhook
+              help: La URL del webhook creada en la configuración de tu servidor de Discord debe tener el formato https://discord.com/api/webhooks/<webhook-id>/<webhook-token>
         guilded:
           title: "Guilded"
           param:
@@ -104,6 +133,7 @@ es:
           param:
             identifier:
               title: Canal
+              help: "Por ejemplo, #canal o @nombredeusuario"
           errors:
             channel_not_found: "El canal especificado no existe en Mattermost"
         matrix:
@@ -114,6 +144,7 @@ es:
               help: "Un nombre para describir el canal. No se usa para la conexión con Matrix."
             room_id:
               title: "ID de la sala"
+              help: "El «private identifier» de la sala. Debería ser algo como !abcdefghijkl"
           errors:
             unknown_token: "Token de acceso no válido"
             unknown_room: "La ID de la sala no es válida"
@@ -133,6 +164,7 @@ es:
           param:
             identifier:
               title: Canal
+              help: "Por ejemplo, #canal o @nombredeusuario"
           errors:
             invalid_channel: "Ese canal no existe en Rocket Chat"
         gitter:
@@ -140,6 +172,7 @@ es:
           param:
             name:
               title: "Nombre"
+              help: "El nombre de la sala de Gitter. Por ejemplo: gitterHQ/services"
             webhook_url:
               title: "URL del webhook"
               help: "La URL que se proporciona al crear una nueva integración en una sala de Gitter."

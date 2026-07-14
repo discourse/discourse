@@ -8,8 +8,6 @@ sv:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "Ingen åtgärd"
         agree_and_suspend:
           title: "Stäng av användare"
           description: "Godkänn flaggning och stäng av användaren."

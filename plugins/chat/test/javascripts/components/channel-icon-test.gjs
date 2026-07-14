@@ -7,7 +7,7 @@ import ChannelIcon from "discourse/plugins/chat/discourse/components/channel-ico
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 import { CHATABLE_TYPES } from "discourse/plugins/chat/discourse/models/chat-channel";
 
-module("Discourse Chat | Component | <ChannelIcon />", function (hooks) {
+module("Component | <ChannelIcon />", function (hooks) {
   setupRenderingTest(hooks);
 
   test("category channel - badge", async function (assert) {
@@ -68,18 +68,72 @@ module("Discourse Chat | Component | <ChannelIcon />", function (hooks) {
     assert.dom(`.chat-user-avatar .avatar[title="${user.username}"]`).exists();
   });
 
-  test("dm channel - multiple users", async function (assert) {
+  test("group DM channel - 2 users", async function (assert) {
+    const channel = new ChatFabricators(getOwner(this)).directMessageChannel({
+      chatable: new ChatFabricators(getOwner(this)).directMessage({
+        users: [
+          new CoreFabricators(getOwner(this)).user(),
+          new CoreFabricators(getOwner(this)).user(),
+        ],
+      }),
+      group: true,
+    });
+
+    const user = channel.chatable.users[0];
+
+    await render(<template><ChannelIcon @channel={{channel}} /></template>);
+
+    assert.dom(".chat-channel-icon.--avatar").exists();
+    assert
+      .dom(
+        `.chat-channel-icon.--avatar .chat-user-avatar__container .avatar[title="${user.username}"]`
+      )
+      .exists();
+  });
+
+  test("group DM channel - 2 users with emoji", async function (assert) {
+    const channel = new ChatFabricators(getOwner(this)).directMessageChannel({
+      users: [
+        new CoreFabricators(getOwner(this)).user(),
+        new CoreFabricators(getOwner(this)).user(),
+      ],
+      group: true,
+      emoji: "tada",
+    });
+
+    await render(<template><ChannelIcon @channel={{channel}} /></template>);
+
+    assert.dom(".chat-channel-icon.--emoji .emoji[title='tada']").exists();
+  });
+
+  test("group DM channel - 3 users", async function (assert) {
     const channel = new ChatFabricators(getOwner(this)).directMessageChannel({
       users: [
         new CoreFabricators(getOwner(this)).user(),
         new CoreFabricators(getOwner(this)).user(),
         new CoreFabricators(getOwner(this)).user(),
       ],
+      group: true,
     });
-    channel.chatable.group = true;
 
     await render(<template><ChannelIcon @channel={{channel}} /></template>);
 
-    assert.dom(".chat-channel-icon.--users-count").hasText("3");
+    assert.dom(".chat-channel-icon.--users-count").exists().hasText("3");
+  });
+
+  test("group DM channel - with emoji", async function (assert) {
+    const channel = new ChatFabricators(getOwner(this)).directMessageChannel({
+      users: [
+        new CoreFabricators(getOwner(this)).user(),
+        new CoreFabricators(getOwner(this)).user(),
+        new CoreFabricators(getOwner(this)).user(),
+      ],
+      group: true,
+      emoji: "tada",
+    });
+
+    await render(<template><ChannelIcon @channel={{channel}} /></template>);
+
+    assert.dom(".chat-channel-icon.--emoji .emoji[title='tada']").exists();
   });
 });

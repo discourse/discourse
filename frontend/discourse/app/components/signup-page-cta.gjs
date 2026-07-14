@@ -1,6 +1,6 @@
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 const SignupPageCta = <template>

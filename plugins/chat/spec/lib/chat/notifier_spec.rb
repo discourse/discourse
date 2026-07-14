@@ -778,4 +778,57 @@ describe Chat::Notifier do
       end
     end
   end
+
+  describe ".push_notification_reply_action" do
+    fab!(:user)
+    fab!(:channel, :category_channel)
+    fab!(:thread, :chat_thread)
+
+    it "returns a chat-reply action and channel + message data for non-threaded messages" do
+      message = Fabricate(:chat_message, chat_channel: channel)
+
+      payload = described_class.push_notification_reply_action(message, user)
+
+      expect(payload[:actions]).to match(
+        [
+          a_hash_including(
+            action: "chat-reply",
+            type: "text",
+            title: I18n.t("discourse_push_notifications.actions.chat_reply.title"),
+            placeholder: I18n.t("discourse_push_notifications.actions.chat_reply.placeholder"),
+          ),
+        ],
+      )
+      expect(payload[:actions].first[:icon]).to include("inline_reply")
+      expect(payload[:action_data]).to eq(channel_id: channel.id, message_id: message.id)
+    end
+
+    it "includes thread_id when the source message is in a thread" do
+      message = Fabricate(:chat_message, chat_channel: thread.channel, thread_id: thread.id)
+
+      payload = described_class.push_notification_reply_action(message, user)
+
+      expect(payload[:action_data]).to eq(
+        channel_id: thread.channel_id,
+        message_id: message.id,
+        thread_id: thread.id,
+      )
+    end
+
+    it "translates the action title using the user's locale" do
+      SiteSetting.allow_user_locale = true
+      user.update!(locale: "fr")
+      TranslationOverride.upsert!(
+        "fr",
+        "discourse_push_notifications.actions.chat_reply.title",
+        "Répondre",
+      )
+
+      message = Fabricate(:chat_message, chat_channel: channel)
+
+      payload = described_class.push_notification_reply_action(message, user)
+
+      expect(payload[:actions].first[:title]).to eq("Répondre")
+    end
+  end
 end

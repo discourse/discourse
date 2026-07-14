@@ -3,7 +3,7 @@
 class Report
   # Change this line each time report format change
   # and you want to ensure cache is reset
-  SCHEMA_VERSION = 4
+  SCHEMA_VERSION = 5
 
   FILTERS = %i[
     name
@@ -36,10 +36,25 @@ class Report
     page_view_logged_in_reqs
   ]
 
-  ADMIN_ONLY_REPORTS = %w[top_uploads]
+  ADMIN_ONLY_REPORTS = %w[
+    admin_logins
+    top_uploads
+    topic_view_stats
+    top_referrers_by_browser_pageviews
+    top_countries_by_browser_pageviews
+  ]
+  IP_ADDRESS_REPORTS = %w[suspicious_logins]
+  BROWSER_PAGEVIEW_REPORTS = %w[
+    top_countries_by_browser_pageviews
+    top_referrers_by_browser_pageviews
+  ]
 
-  def self.hidden?(type, admin:)
-    return true if !admin && ADMIN_ONLY_REPORTS.include?(type)
+  def self.hidden?(type, guardian:)
+    return true if !guardian.is_admin? && ADMIN_ONLY_REPORTS.include?(type)
+    if BROWSER_PAGEVIEW_REPORTS.include?(type) && !SiteSetting.persist_browser_pageview_events
+      return true
+    end
+
     hidden_reports =
       SiteSetting.use_legacy_pageviews ? HIDDEN_PAGEVIEW_REPORTS : HIDDEN_LEGACY_PAGEVIEW_REPORTS
     hidden_reports.include?(type)
@@ -76,7 +91,6 @@ class Report
     trust_level_growth
     user_flagging_ratio
     user_to_user_private_messages
-    web_crawlers
     web_hook_events_daily_aggregate
   ]
 
@@ -102,14 +116,16 @@ class Report
   include Reports::Posts
   include Reports::ProfileViews
   include Reports::Signups
-  include Reports::StaffLogins
+  include Reports::AdminLogins
   include Reports::StorageStats
   include Reports::SuspiciousLogins
   include Reports::SystemPrivateMessages
   include Reports::TimeToFirstResponse
+  include Reports::TopCountriesByBrowserPageviews
   include Reports::TopIgnoredUsers
   include Reports::TopReferredTopics
   include Reports::TopReferrers
+  include Reports::TopReferrersByBrowserPageviews
   include Reports::TopTrafficSources
   include Reports::TopUploads
   include Reports::TopUsersByLikesReceived
@@ -120,6 +136,9 @@ class Report
   include Reports::TopicViewStats
   include Reports::TrendingSearch
   include Reports::TrustLevelGrowth
+  include Reports::TrustLevelPipeline
+  include Reports::PostersByMemberType
+  include Reports::ActivityByCategory
   include Reports::UserFlaggingRatio
   include Reports::UserToUserPrivateMessages
   include Reports::UserToUserPrivateMessagesWithReplies
@@ -154,7 +173,8 @@ class Report
                 :legacy,
                 :default_group_by,
                 :y_axis_title,
-                :current_user
+                :current_user,
+                :guardian
 
   def self.default_days
     30
@@ -187,6 +207,8 @@ class Report
   end
 
   def self.cache_key(report)
+    guardian = report.guardian || report.current_user&.guardian
+
     [
       "reports",
       report.type,
@@ -196,7 +218,8 @@ class Report
       report.limit,
       report.filters.blank? ? nil : MultiJson.dump(report.filters),
       SCHEMA_VERSION,
-      report.current_user&.id,
+      guardian&.user&.id || report.current_user&.id,
+      guardian&.can_see_ip?,
     ].compact.map(&:to_s).join(":")
   end
 
@@ -231,8 +254,9 @@ class Report
 
   def self.wrap_slow_query(timeout = 20_000)
     ActiveRecord::Base.connection.transaction do
-      # Allows only read only transactions
-      DB.exec "SET TRANSACTION READ ONLY"
+      # Allows only read only transactions. Skipped in tests, where threads
+      # share one connection and read-only would break concurrent writes.
+      DB.exec "SET TRANSACTION READ ONLY" if !Rails.env.test?
       # Set a statement timeout so we can't tie up the server
       DB.exec "SET LOCAL statement_timeout = #{timeout}"
       yield
@@ -240,11 +264,11 @@ class Report
   end
 
   def prev_start_date
-    self.start_date - (self.end_date - self.start_date)
+    start_date - (end_date - start_date)
   end
 
   def prev_end_date
-    self.start_date
+    start_date
   end
 
   def as_json(options = nil)
@@ -261,30 +285,30 @@ class Report
       data: data,
       start_date: start_date&.iso8601,
       end_date: end_date&.iso8601,
-      prev_data: self.prev_data,
+      prev_data: prev_data,
       prev_start_date: prev_start_date&.iso8601,
       prev_end_date: prev_end_date&.iso8601,
-      prev30Days: self.prev30Days,
-      dates_filtering: self.dates_filtering,
+      prev30Days: prev30Days,
+      dates_filtering: dates_filtering,
       report_key: Report.cache_key(self),
-      primary_color: self.primary_color,
-      secondary_color: self.secondary_color,
-      available_filters: self.available_filters.map { |k, v| { id: k }.merge(v) },
+      primary_color: primary_color,
+      secondary_color: secondary_color,
+      available_filters: available_filters.map { |k, v| { id: k }.merge(v) },
       labels: labels || Report.default_labels,
-      average: self.average,
-      percent: self.percent,
-      higher_is_better: self.higher_is_better,
-      modes: self.modes,
+      average: average,
+      percent: percent,
+      higher_is_better: higher_is_better,
+      modes: modes,
     }.tap do |json|
-      json[:legacy] = self.legacy if self.legacy
-      json[:icon] = self.icon if self.icon
-      json[:error] = self.error if self.error
-      json[:total] = self.total if self.total
-      json[:prev_period] = self.prev_period if self.prev_period
-      json[:prev30Days] = self.prev30Days if self.prev30Days
-      json[:limit] = self.limit if self.limit
-      json[:default_group_by] = self.default_group_by if self.default_group_by
-      json[:y_axis_title] = self.y_axis_title if self.y_axis_title
+      json[:legacy] = legacy if legacy
+      json[:icon] = icon if icon
+      json[:error] = error if error
+      json[:total] = total if total
+      json[:prev_period] = prev_period if prev_period
+      json[:prev30Days] = prev30Days if prev30Days
+      json[:limit] = limit if limit
+      json[:default_group_by] = default_group_by if default_group_by
+      json[:y_axis_title] = y_axis_title if y_axis_title
 
       if type == "page_view_crawler_reqs"
         json[:related_report] = Report.find(
@@ -296,13 +320,21 @@ class Report
     end
   end
 
-  def Report.add_report(name, &block)
+  def Report.add_report(name, exclude_from_dashboard: false, &block)
     singleton_class.instance_eval { define_method("report_#{name}", &block) }
+    dashboard_excluded_report_types << name.to_s if exclude_from_dashboard
   end
 
   # Only used for testing.
   def Report.remove_report(name)
     singleton_class.instance_eval { remove_method("report_#{name}") }
+    dashboard_excluded_report_types.delete(name.to_s)
+  end
+
+  # Report types a plugin has marked as not mountable on the customisable
+  # admin dashboard. They remain available on the regular reports page.
+  def Report.dashboard_excluded_report_types
+    @dashboard_excluded_report_types ||= Set.new
   end
 
   def self._get(type, opts = nil)
@@ -317,10 +349,13 @@ class Report
     report.average = opts[:average] if opts[:average]
     report.percent = opts[:percent] if opts[:percent]
     report.filters = opts[:filters] if opts[:filters]
+    report.guardian = opts[:guardian] if opts[:guardian]
     report.current_user = opts[:current_user] if opts[:current_user]
+    report.current_user ||= report.guardian&.user
+    report.guardian ||= report.current_user&.guardian
     report.labels = Report.default_labels
 
-    report.legacy = LEGACY_REPORTS.include?(type) if SiteSetting.reporting_improvements
+    report.legacy = LEGACY_REPORTS.include?(type)
 
     report
   end
@@ -409,7 +444,7 @@ class Report
     report.total = data.sum(:count)
 
     report.prev30Days =
-      data.where("date >= ? AND date < ?", (report.start_date - 31.days), report.start_date).sum(
+      data.where("date >= ? AND date < ?", report.start_date - 31.days, report.start_date).sum(
         :count,
       )
   end
@@ -440,8 +475,19 @@ class Report
   end
 
   def self.report_about(report, subject_class, report_method = :count_per_day)
-    basic_report_about report, subject_class, report_method, report.start_date, report.end_date
-    add_counts report, subject_class
+    data_start = report.facets.include?(:prev_period) ? report.prev_start_date : report.start_date
+    counts = subject_class.public_send(report_method, data_start, report.end_date)
+
+    prev_period_count = nil
+
+    if report.facets.include?(:prev_period)
+      counts, prev_counts = split_date_counts(counts, report.start_date)
+      prev_period_count = prev_counts.sum { |_date, count| count }
+    end
+
+    report.data = counts.map { |date, count| { x: date, y: count } }
+
+    add_counts report, subject_class, prev_period_count: prev_period_count
   end
 
   def self.basic_report_about(report, subject_class, report_method, *args)
@@ -452,6 +498,11 @@ class Report
       .each { |date, count| report.data << { x: date, y: count } }
   end
 
+  def self.split_date_counts(counts, current_start)
+    current_start_date = current_start.to_date
+    counts.partition { |date, _count| date.to_date >= current_start_date }
+  end
+
   def self.add_prev_data(report, subject_class, report_method, *args)
     if report.modes.include?(Report::MODES[:chart]) && report.facets.include?(:prev_period)
       prev_data = subject_class.public_send(report_method, *args)
@@ -459,16 +510,18 @@ class Report
     end
   end
 
-  def self.add_counts(report, subject_class, query_column = "created_at")
+  def self.add_counts(report, subject_class, query_column = "created_at", prev_period_count: nil)
     if report.facets.include?(:prev_period)
-      prev_data =
-        subject_class.where(
-          "#{query_column} >= ? and #{query_column} < ?",
-          report.prev_start_date,
-          report.prev_end_date,
-        )
-
-      report.prev_period = prev_data.count
+      report.prev_period =
+        if prev_period_count
+          prev_period_count
+        else
+          subject_class.where(
+            "#{query_column} >= ? and #{query_column} < ?",
+            report.prev_start_date,
+            report.prev_end_date,
+          ).count
+        end
     end
 
     report.total = subject_class.count if report.facets.include?(:total)

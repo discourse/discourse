@@ -1,12 +1,12 @@
 import { fn, hash } from "@ember/helper";
-import DButton from "discourse/components/d-button";
-import DateTimeInputRange from "discourse/components/date-time-input-range";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DDateTimeInputRange from "discourse/ui-kit/d-date-time-input-range";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -175,7 +175,7 @@ export default <template>
         <label class="filter-label">
           {{i18n "review.date_filter"}}
         </label>
-        <DateTimeInputRange
+        <DDateTimeInputRange
           @from={{@controller.filterFromDate}}
           @to={{@controller.filterToDate}}
           @onChange={{@controller.setRange}}

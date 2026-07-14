@@ -128,7 +128,7 @@ describe Post do
                 expect(event_1.ends_at.to_s).to eq("2020-08-19 16:32:00 UTC")
               end
 
-              it "removes status from non going invitees" do
+              it "clears status from invitees not marked as recurring" do
                 going_invitee =
                   event_1.invitees.find_by(status: DiscoursePostEvent::Invitee.statuses[:going])
                 interested_invitee =
@@ -138,10 +138,8 @@ describe Post do
 
                 event_1.update_with_params!(original_ends_at: Time.now)
 
-                expect(going_invitee.reload.status).to eq(
-                  DiscoursePostEvent::Invitee.statuses[:going],
-                )
-                expect(interested_invitee.reload.status).to eq(nil)
+                expect(going_invitee.reload.status).to be_nil
+                expect(interested_invitee.reload.status).to be_nil
               end
 
               # that will be handled by new job, uncomment when finished

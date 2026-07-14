@@ -6,7 +6,7 @@ class LocalizedCookedPostProcessor
   def initialize(post_localization, post, opts = {})
     @post_localization = post_localization
     @post = post
-    @opts = opts
+    @opts = (opts || {}).merge(locale: post_localization.locale)
     @doc = Loofah.html5_fragment(@post_localization.cooked)
     @cooking_options = @post.cooking_options || {}
     @cooking_options[:topic_id] = @post.topic_id

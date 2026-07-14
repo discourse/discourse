@@ -163,6 +163,7 @@ class TagsController < ::ApplicationController
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
       fetch_tag(raise_not_found: false)
+      raise Discourse::NotFound if params[:tag_id].present? && @tag.blank?
 
       if @tag
         if @tag.target_tag_id.present? && @tag.target_tag_id != @tag.id
@@ -218,7 +219,7 @@ class TagsController < ::ApplicationController
 
       canonical_params = params.slice(:category_slug_path_with_id, :tag_slug, :tag_id)
       canonical_method = url_method(canonical_params)
-      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(canonical_method, *(canonical_params.values.map { |t| t.force_encoding("UTF-8") }))}"
+      canonical_url "#{Discourse.base_url_no_prefix}#{public_send(canonical_method, *canonical_params.values.map { |t| t.force_encoding("UTF-8") })}"
 
       if @list.topics.size == 0 && @tag_name != "none" && !Tag.where_name(@tag_name).exists?
         raise Discourse::NotFound.new("tag not found", check_permalinks: true)
@@ -320,30 +321,28 @@ class TagsController < ::ApplicationController
     file = params[:file] || params[:files].first
 
     hijack do
-      begin
-        Tag.transaction do
-          CSV.foreach(file.tempfile) do |row|
-            if row.length > 2
-              raise Discourse::InvalidParameters.new(I18n.t("tags.upload_row_too_long"))
-            end
+      Tag.transaction do
+        CSV.foreach(file.tempfile) do |row|
+          if row.length > 2
+            raise Discourse::InvalidParameters.new(I18n.t("tags.upload_row_too_long"))
+          end
 
-            tag_name = DiscourseTagging.clean_tag(row[0])
-            tag_group_name = row[1] || nil
+          tag_name = DiscourseTagging.clean_tag(row[0])
+          tag_group_name = row[1] || nil
 
-            tag = Tag.find_by_name(tag_name) || Tag.create!(name: tag_name)
+          tag = Tag.find_by_name(tag_name) || Tag.create!(name: tag_name)
 
-            if tag_group_name
-              tag_group =
-                TagGroup.find_by_name_insensitive(tag_group_name) ||
-                  TagGroup.create!(name: tag_group_name)
-              tag.tag_groups << tag_group if tag.tag_groups.exclude?(tag_group)
-            end
+          if tag_group_name
+            tag_group =
+              TagGroup.find_by_name_insensitive(tag_group_name) ||
+                TagGroup.create!(name: tag_group_name)
+            tag.tag_groups << tag_group if tag.tag_groups.exclude?(tag_group)
           end
         end
-        render json: success_json
-      rescue Discourse::InvalidParameters => e
-        render json: failed_json.merge(errors: [e.message]), status: :unprocessable_entity
       end
+      render json: success_json
+    rescue Discourse::InvalidParameters => e
+      render json: failed_json.merge(errors: [e.message]), status: :unprocessable_entity
     end
   end
 
@@ -405,82 +404,19 @@ class TagsController < ::ApplicationController
       )
     end
 
-    filter_params = {
-      for_input: params[:filterForInput],
-      selected_tags: params[:selected_tags],
-      selected_tag_ids: params[:selected_tag_ids],
-      exclude_synonyms: params[:excludeSynonyms],
-      exclude_has_synonyms: params[:excludeHasSynonyms],
-    }
-
-    if limit = fetch_limit_from_params(default: nil, max: SiteSetting.max_tag_search_results)
-      filter_params[:limit] = limit
-    end
-
-    filter_params[:category] = Category.find_by_id(params[:categoryId]) if params[:categoryId]
-
-    if params[:q].present?
-      clean_name = DiscourseTagging.clean_tag(params[:q])
-      filter_params[:term] = clean_name
-      filter_params[:order_search_results] = true
-    else
-      filter_params[:order_popularity] = true
-    end
-
-    tags_with_counts, filter_result_context =
-      DiscourseTagging.filter_allowed_tags(guardian, **filter_params, with_context: true)
-
-    tags_with_counts = Tag.with_localizations(tags_with_counts)
-
-    tags = self.class.tag_counts_json(tags_with_counts, guardian)
-
-    json_response = { results: tags }
-
-    if clean_name && !tags.find { |h| h[:name].downcase == clean_name.downcase } &&
-         tag = Tag.where_name(clean_name).first
-      # filter_allowed_tags determined that the tag entered is not allowed
-      json_response[:forbidden] = params[:q]
-
-      if filter_params[:exclude_synonyms] && tag.synonym?
-        json_response[:forbidden_message] = I18n.t(
-          "tags.forbidden.synonym",
-          tag_name: tag.target_tag.name,
-        )
-      elsif filter_params[:exclude_has_synonyms] && tag.synonyms.exists?
-        json_response[:forbidden_message] = I18n.t(
-          "tags.forbidden.has_synonyms",
-          tag_name: tag.name,
-        )
-      else
-        category_names = tag.categories.where(id: guardian.allowed_category_ids).pluck(:name)
-        category_names +=
-          Category
-            .joins(tag_groups: :tags)
-            .where(id: guardian.allowed_category_ids, "tags.id": tag.id)
-            .pluck(:name)
-
-        if category_names.present?
-          category_names.uniq!
-          json_response[:forbidden_message] = I18n.t(
-            "tags.forbidden.restricted_to",
-            count: category_names.count,
-            tag_name: tag.name,
-            category_names: category_names.join(", "),
-          )
-        else
-          json_response[:forbidden_message] = I18n.t(
-            "tags.forbidden.in_this_category",
-            tag_name: tag.name,
-          )
-        end
+    Tags::Search.call(service_params) do
+      on_success do |tags:, forbidden:, forbidden_message:, required_tag_group:|
+        json_response = { results: tags }
+        json_response[:forbidden] = forbidden if forbidden
+        json_response[:forbidden_message] = forbidden_message if forbidden_message
+        json_response[:required_tag_group] = required_tag_group if required_tag_group
+        render json: json_response
       end
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+      end
+      on_failure { render json: failed_json, status: :unprocessable_entity }
     end
-
-    if required_tag_group = filter_result_context[:required_tag_group]
-      json_response[:required_tag_group] = required_tag_group
-    end
-
-    render json: json_response
   end
 
   def notifications
@@ -583,6 +519,7 @@ class TagsController < ::ApplicationController
     tag = tag.target_tag if tag.target_tag_id.present?
 
     url = tag.url
+    url += tag_edit_path_suffix
     url += "/l/#{filter}" if filter.present?
 
     if @filter_on_category
@@ -607,8 +544,8 @@ class TagsController < ::ApplicationController
     return false if request.format.json?
     # intersection routes use tag_name, not tag_slug/tag_id - don't redirect
     return false if params[:additional_tag_names].present?
-    # don't redirect if we found the tag by name (numeric tag name on legacy route)
-    return false if @tag_found_by_name
+    # numeric-name fallback should only suppress redirects on legacy routes without a slug
+    return false if @tag_found_by_name && params[:tag_slug].blank?
 
     if params[:tag_id].present?
       # new format - redirect if slug doesn't match
@@ -623,9 +560,20 @@ class TagsController < ::ApplicationController
     raise Discourse::NotFound unless SiteSetting.tagging_enabled?
   end
 
+  def tag_edit_path_suffix
+    return "/edit/#{params[:tab]}" if params[:tab].present?
+    return "/edit" if request.path.delete_prefix(Discourse.base_path).end_with?("/edit")
+
+    ""
+  end
+
   def self.tag_counts_json(tags, guardian)
     show_pm_tags = guardian.can_tag_pms?
-    target_tags = Tag.where(id: tags.map(&:target_tag_id).compact.uniq).select(:id, :name, :slug)
+    target_tags =
+      Tag
+        .visible(guardian)
+        .where(id: tags.filter_map(&:target_tag_id).uniq)
+        .select(:id, :name, :slug)
 
     tags
       .map do |t|

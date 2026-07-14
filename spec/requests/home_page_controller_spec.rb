@@ -28,7 +28,10 @@ RSpec.describe HomePageController do
 
         it "should allow plugin to override output" do
           plugin =
-            plugin_class.new(nil, "#{Rails.root}/spec/fixtures/plugins/csp_extension/plugin.rb")
+            plugin_class.new(
+              nil,
+              "#{Rails.root.join("spec/fixtures/plugins/csp_extension/plugin.rb")}",
+            )
 
           plugin.register_html_builder("server:custom-homepage-crawler-view") do |c|
             "<div>override</div>"
@@ -57,6 +60,18 @@ RSpec.describe HomePageController do
         expect(response.body).to include(
           "<meta name=\"description\" content=\"This is a test description\">",
         )
+      end
+
+      it "uses the configured crawler route when a custom homepage is enabled" do
+        ThemeModifierHelper.any_instance.stubs(:custom_homepage).returns(true)
+        SiteSetting.custom_homepage_crawler_route = "categories"
+        category = Fabricate(:category, name: "Crawler Category")
+
+        get "/", headers: { "HTTP_USER_AGENT" => "Googlebot" }
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(category.name)
+        expect(response.body).not_to include("crawler-view-anon-menu")
       end
 
       it "should not display the site description on another route" do

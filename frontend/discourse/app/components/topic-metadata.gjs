@@ -1,11 +1,11 @@
 import { hash } from "@ember/helper";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
+import DButton from "discourse/ui-kit/d-button";
 
-<template>
+export default <template>
   {{#if @showCategoryChooser}}
     <div class="edit-category__wrapper">
       <PluginOutlet
@@ -36,6 +36,7 @@ import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
             minimum=@minimumRequiredTags
             filterPlaceholder="tagging.choose_for_topic"
             useHeaderFilter=true
+            prioritizeRecentTags=true
           }}
         />
       </PluginOutlet>

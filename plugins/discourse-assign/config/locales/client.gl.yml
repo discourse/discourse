@@ -37,3 +37,8 @@ gl:
     edit_assignments_modal:
       topic: "Tema"
       post: "Publicación"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "Asignado"
+      assign_topic:
+        topic_id: "ID do tema"

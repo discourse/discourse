@@ -38,10 +38,8 @@ class TimeSniffer
     end
 
     def to_time
-      Time.use_zone(self.zone) do
-        Time.zone.parse(
-          "#{self.year}-#{self.month}-#{self.day} #{self.hours}:#{self.minutes}:#{self.seconds}",
-        )
+      Time.use_zone(zone) do
+        Time.zone.parse("#{year}-#{month}-#{day} #{hours}:#{minutes}:#{seconds}")
       end
     end
 
@@ -51,13 +49,13 @@ class TimeSniffer
 
     def to_hash
       {
-        year: self.year,
-        month: self.month,
-        day: self.day,
-        hours: self.hours,
-        minutes: self.minutes,
-        seconds: self.seconds,
-        zone: self.zone,
+        year: year,
+        month: month,
+        day: day,
+        hours: hours,
+        minutes: minutes,
+        seconds: seconds,
+        zone: zone,
       }
     end
 
@@ -195,11 +193,11 @@ class TimeSniffer
     end
 
     def input_from_offset
-      self.input[self.offset..-1]
+      input[self.offset..-1]
     end
 
     def peek_time(relative_to)
-      m = self.input_from_offset.match(TIME_REGEX)
+      m = input_from_offset.match(TIME_REGEX)
       if m
         parsed =
           relative_to.with(
@@ -302,7 +300,7 @@ class TimeSniffer
       if match
         begin
           result = instance_exec(match, &blk)
-        rescue Exception => e
+        rescue Exception
           raise if @raise_errors
         else
           return result if result

@@ -325,6 +325,9 @@ it:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} ha impostato automaticamente la tua presenza e ti ha invitato a %{eventName}"
         an_event: "un evento"
+      event_description:
+        show_more: "Mostra altro"
+        show_less: "Mostra meno"
       edit_reason: "Evento aggiornato"
       edit_reason_closed: "Evento chiuso"
       edit_reason_opened: "Evento aperto"
@@ -378,7 +381,6 @@ it:
       upcoming_events_list:
         title: "Prossimi eventi"
         empty: "Nessun evento in programma"
-        all_day: "Tutto il giorno"
         error: "Impossibile recuperare gli eventi"
         try_again: "Riprova"
         view_all: "Vedi tutto"
@@ -392,10 +394,9 @@ it:
       models:
         invitee:
           no_users: "Nessun utente trovato"
+          leave_event: "Abbandona l'evento"
           status:
-            unknown: "Nessun interesse"
             going: "Parteciperò"
-            not_going: "Non parteciperò"
             interested: "Interessato"
             going_count:
               one: "%{count} partecipa"
@@ -422,6 +423,27 @@ it:
             private:
               title: "Privato"
               description: "Solo gli utenti invitati possono partecipare a un evento privato."
+      composer:
+        name_placeholder: "Nome dell'evento"
+        event_title_placeholder: "Nome dell'evento"
+        create_event_button: "Crea evento"
+        reminder:
+          units:
+            minutes:
+              one: "minuto"
+              other: "minuti"
+            hours:
+              one: "ora"
+              other: "ore"
+            days:
+              one: "al giorno"
+              other: "giorni"
+            weeks:
+              one: "settimana"
+              other: "settimane"
+      composer_actions:
+        create_event:
+          label: "Crea evento"
       builder_modal:
         custom_fields:
           label: "Campi personalizzati"
@@ -442,11 +464,10 @@ it:
         timezone:
           label: Fuso orario
           remove_timezone: Nessun fuso orario (UTC)
+        starts_at:
+          label: "Data iniziale"
         reminders:
           label: "Promemoria"
-          types:
-            bump_topic: "riproponi automaticamente l’argomento"
-            notification: "avvisa i partecipanti"
           units:
             minutes: "minuti"
             hours: "ore"
@@ -455,28 +476,19 @@ it:
           periods:
             before: "prima del"
             after: "dopo il"
-        recurrence_until:
-          label: "Fino a (incluso)"
         recurrence:
           label: "Ricorrenza"
           none: "Non periodico"
           every_day: "Ogni giorno"
-          every_month: "Ogni mese in questo giorno feriale"
           every_weekday: "Ogni giorno feriale"
-          every_week: "Ogni settimana in questo giorno feriale"
-          every_two_weeks: "Ogni due settimane in questo giorno feriale"
-          every_four_weeks: "Ogni quattro settimane in questo giorno feriale"
-        minimal:
-          label: "Evento minimale"
-          checkbox_label: "Nascondi i pulsanti Parteciperò/Non parteciperò e lo stato degli invitati"
+          ordinals:
+            last: "ultimo"
+        attendance:
+          none: "Nessuna"
         allow_chat:
           label: "Integrazione della chat"
           checkbox_label: "Crea e gestisci un canale di chat specifico per l'evento"
-        url:
-          label: "URL"
-          placeholder: "Facoltativo"
         location:
-          label: "Località"
           placeholder: "Aggiungi una posizione, un collegamento o qualcosa del genere."
         description:
           label: "Descrizione"
@@ -486,8 +498,10 @@ it:
           placeholder: "Facoltativo, valore predefinito titolo dell'argomento"
         invitees:
           label: "Gruppi invitati"
-        status:
-          label: "Stato"
+        event_type:
+          public:
+            title: "Pubblico"
       invite_user_or_group:
         title: "Notifica utenti o gruppi"
         invite: "Invia"
+        success: "Invito inviato"

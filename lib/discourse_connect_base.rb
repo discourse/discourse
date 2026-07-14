@@ -10,6 +10,9 @@ class DiscourseConnectBase
   class SignatureError < ParseError
   end
 
+  class BlankSecretError < ParseError
+  end
+
   ACCESSORS = %i[
     add_groups
     admin
@@ -85,6 +88,8 @@ class DiscourseConnectBase
     sso = new(**init_kwargs)
     sso.sso_secret = sso_secret if sso_secret
 
+    raise BlankSecretError if sso.sso_secret.blank?
+
     parsed = Rack::Utils.parse_query(payload)
 
     raise PayloadParseError.new(<<~MSG) if parsed["sso"] =~ %r{[^a-zA-Z0-9=\r\n/+]}m
@@ -150,7 +155,7 @@ class DiscourseConnectBase
   end
 
   def to_json
-    self.to_h.to_json
+    to_h.to_json
   end
 
   def to_url(base_url = nil)
@@ -164,7 +169,7 @@ class DiscourseConnectBase
   end
 
   def unsigned_payload
-    Rack::Utils.build_query(self.to_h)
+    Rack::Utils.build_query(to_h)
   end
 
   def to_h

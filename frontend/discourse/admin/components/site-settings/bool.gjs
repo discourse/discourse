@@ -2,13 +2,12 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
-import { isEmpty } from "@ember/utils";
+import { isSettingValueTrue } from "discourse/admin/models/site-setting";
+import linkifySettingLinks from "discourse/admin/modifiers/linkify-setting-links";
 
 export default class Bool extends Component {
   get enabled() {
-    return isEmpty(this.args.value)
-      ? false
-      : this.args.value.toString() === "true";
+    return isSettingValueTrue(this.args.value);
   }
 
   @action
@@ -28,7 +27,9 @@ export default class Bool extends Component {
         checked={{this.enabled}}
         disabled={{@disabled}}
       />
-      <span>{{trustHTML @setting.description}}</span>
+      <span {{linkifySettingLinks @setting.description}}>{{trustHTML
+          @setting.description
+        }}</span>
     </label>
   </template>
 }

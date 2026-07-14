@@ -98,7 +98,7 @@ describe "Composer - ProseMirror editor - Checklist extension" do
       expect(checklist).to have_checkboxes(count: 2)
       expect(checklist).to have_items(count: 2)
 
-      rich.send_keys(:home)
+      rich.send_keys(SystemHelpers::LINE_START_KEY)
       rich.send_keys(:backspace)
 
       expect(checklist).to have_checkboxes(count: 1)

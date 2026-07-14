@@ -5,6 +5,23 @@
 # https://translate.discourse.org/
 
 id:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Solusi yang diterima"
+        sections:
+          support:
+            filter:
+              all_categories: "Semua kategori"
+            answerers:
+              staff: "Staf"
+              member: "Anggota"
+            response_time:
+              buckets:
+                gt_24h: "> 24 jam"
   js:
     notifications:
       alt:

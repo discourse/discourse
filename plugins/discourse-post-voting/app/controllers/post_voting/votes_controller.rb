@@ -86,15 +86,20 @@ module PostVoting
 
     def voters
       # TODO: Probably a site setting to hide/show voters
+      vote_scope = PostVotingVote.where(votable_id: @post.id, votable_type: "Post")
+
       voters =
         User
           .joins(:post_voting_votes)
-          .where(post_voting_votes: { votable_id: @post.id, votable_type: "Post" })
+          .merge(vote_scope)
           .order("post_voting_votes.created_at DESC")
           .select("users.*", "post_voting_votes.direction")
           .limit(VOTERS_LIMIT)
 
-      render_json_dump(voters: serialize_data(voters, BasicVoterSerializer))
+      render_json_dump(
+        voters: serialize_data(voters, BasicVoterSerializer),
+        total_voters_count: vote_scope.count,
+      )
     end
 
     private

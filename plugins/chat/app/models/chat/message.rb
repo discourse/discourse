@@ -125,12 +125,12 @@ module Chat
     def validate_message
       WatchedWordsValidator.new(attributes: [:message]).validate(self) if !user&.bot?
 
-      if self.new_record? || self.changed.include?("message")
+      if new_record? || changed.include?("message")
         Chat::DuplicateMessageValidator.new(self).validate
       end
 
       if uploads.empty? && message_too_short?
-        self.errors.add(
+        errors.add(
           :base,
           I18n.t(
             "chat.errors.minimum_length_not_met",
@@ -140,7 +140,7 @@ module Chat
       end
 
       if message_too_long?
-        self.errors.add(
+        errors.add(
           :base,
           I18n.t("chat.errors.message_too_long", count: SiteSetting.chat_maximum_message_length),
         )
@@ -174,21 +174,16 @@ module Chat
     end
 
     def only_uploads?
-      self.message.blank? && self.uploads.present?
+      message.blank? && uploads.present?
     end
 
     def to_markdown
       upload_markdown =
-        self
-          .upload_references
-          .includes(:upload)
-          .order(:created_at)
-          .map(&:to_markdown)
-          .reject(&:empty?)
+        upload_references.includes(:upload).order(:created_at).map(&:to_markdown).reject(&:empty?)
 
-      return self.message if upload_markdown.empty?
+      return message if upload_markdown.empty?
 
-      return ["#{self.message}\n"].concat(upload_markdown).join("\n") if self.message.present?
+      return ["#{message}\n"].concat(upload_markdown).join("\n") if message.present?
 
       upload_markdown.join("\n")
     end
@@ -196,7 +191,7 @@ module Chat
     def cook
       ensure_last_editor_id
 
-      self.cooked = self.class.cook(self.message, user_id: self.last_editor_id)
+      self.cooked = self.class.cook(message, user_id: last_editor_id)
       self.cooked_version = BAKED_VERSION
 
       invalidate_parsed_mentions
@@ -204,7 +199,7 @@ module Chat
 
     def rebake!(invalidate_oneboxes: false, priority: nil, skip_notifications: false)
       ensure_last_editor_id
-      args = { chat_message_id: self.id }
+      args = { chat_message_id: id }
       args[:invalidate_oneboxes] = true if invalidate_oneboxes
       args[:skip_notifications] = true if skip_notifications
       args[:queue] = priority.to_s if priority && priority != :normal
@@ -301,9 +296,9 @@ module Chat
 
     def url
       if in_thread?
-        "#{Discourse.base_path}/chat/c/-/#{self.chat_channel_id}/t/#{self.thread_id}/#{self.id}"
+        "#{Discourse.base_path}/chat/c/-/#{chat_channel_id}/t/#{thread_id}/#{id}"
       else
-        "#{Discourse.base_path}/chat/c/-/#{self.chat_channel_id}/#{self.id}"
+        "#{Discourse.base_path}/chat/c/-/#{chat_channel_id}/#{id}"
       end
     end
 
@@ -315,7 +310,7 @@ module Chat
     end
 
     def in_thread?
-      self.thread_id.present? && (self.chat_channel.threading_enabled || self.thread&.force)
+      thread_id.present? && (chat_channel.threading_enabled || thread&.force)
     end
 
     def thread_reply?
@@ -323,7 +318,7 @@ module Chat
     end
 
     def thread_om?
-      in_thread? && self.thread&.original_message_id == self.id
+      in_thread? && thread&.original_message_id == id
     end
 
     def parsed_mentions
@@ -344,9 +339,7 @@ module Chat
       return if target_ids.empty?
 
       mentions =
-        target_ids.map do |target_id|
-          { chat_message_id: self.id, target_id: target_id, type: type }
-        end
+        target_ids.map { |target_id| { chat_message_id: id, target_id: target_id, type: type } }
 
       Chat::Mention.insert_all(mentions)
     end
@@ -360,7 +353,7 @@ module Chat
     end
 
     def ensure_last_editor_id
-      self.last_editor_id ||= self.user_id
+      self.last_editor_id ||= user_id
     end
 
     def create_or_delete_all_mention
@@ -406,27 +399,28 @@ end
 # Table name: chat_messages
 #
 #  id              :bigint           not null, primary key
-#  chat_channel_id :bigint           not null
-#  user_id         :integer
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#  deleted_at      :datetime
-#  deleted_by_id   :integer
-#  in_reply_to_id  :bigint
-#  message         :text
+#  blocks          :jsonb
 #  cooked          :text
 #  cooked_version  :integer
+#  created_by_sdk  :boolean          default(FALSE), not null
+#  deleted_at      :datetime
+#  excerpt         :string(1000)
+#  message         :text
+#  streaming       :boolean          default(FALSE), not null
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  chat_channel_id :bigint           not null
+#  deleted_by_id   :integer
+#  in_reply_to_id  :bigint
 #  last_editor_id  :integer          not null
 #  thread_id       :bigint
-#  streaming       :boolean          default(FALSE), not null
-#  excerpt         :string(1000)
-#  created_by_sdk  :boolean          default(FALSE), not null
-#  blocks          :jsonb
+#  user_id         :integer
 #
 # Indexes
 #
 #  idx_chat_messages_by_created_at_not_deleted            (created_at) WHERE (deleted_at IS NULL)
 #  idx_chat_messages_by_thread_id_not_deleted             (thread_id) WHERE (deleted_at IS NULL)
+#  idx_chat_messages_thread_id_id_user_id_not_deleted     (thread_id,id) WHERE (deleted_at IS NULL)
 #  index_chat_messages_on_chat_channel_id_and_created_at  (chat_channel_id,created_at)
 #  index_chat_messages_on_chat_channel_id_and_id          (chat_channel_id,id) WHERE (deleted_at IS NOT NULL)
 #  index_chat_messages_on_last_editor_id                  (last_editor_id)

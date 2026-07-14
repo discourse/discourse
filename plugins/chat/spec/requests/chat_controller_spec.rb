@@ -74,52 +74,6 @@ RSpec.describe Chat::ChatController do
     end
   end
 
-  xdescribe "#edit_message" do
-    fab!(:chat_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: user) }
-
-    context "when current user is silenced" do
-      before do
-        UserSilencer.new(user).silence
-        sign_in(user)
-      end
-
-      it "raises an invalid request" do
-        put "/chat/#{chat_channel.id}/edit/#{chat_message.id}.json", params: { new_message: "Hi" }
-        expect(response.status).to eq(422)
-      end
-    end
-
-    it "errors when a user tries to edit another user's message" do
-      sign_in(Fabricate(:user))
-
-      put "/chat/#{chat_channel.id}/edit/#{chat_message.id}.json", params: { new_message: "edit!" }
-      expect(response.status).to eq(422)
-    end
-
-    it "errors when staff tries to edit another user's message" do
-      sign_in(admin)
-      new_message = "Vrroooom cars go fast"
-
-      put "/chat/#{chat_channel.id}/edit/#{chat_message.id}.json",
-          params: {
-            new_message: new_message,
-          }
-      expect(response.status).to eq(422)
-    end
-
-    it "allows a user to edit their own messages" do
-      sign_in(user)
-      new_message = "Wow markvanlan must be a good programmer"
-
-      put "/chat/#{chat_channel.id}/edit/#{chat_message.id}.json",
-          params: {
-            new_message: new_message,
-          }
-      expect(response.status).to eq(200)
-      expect(chat_message.reload.message).to eq(new_message)
-    end
-  end
-
   describe "react" do
     fab!(:chat_channel, :category_channel)
     fab!(:chat_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: user) }
@@ -287,6 +241,133 @@ RSpec.describe Chat::ChatController do
     end
   end
 
+  describe "#message_reactions_users" do
+    fab!(:chat_channel, :category_channel)
+    fab!(:chat_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: user) }
+    fab!(:reactor_1, :user)
+    fab!(:reactor_2, :user)
+
+    # ordered by created_at: heart/reactor_1, heart/reactor_2, +1/reactor_1
+    fab!(:heart_1) do
+      Fabricate(:chat_message_reaction, chat_message: chat_message, user: reactor_1, emoji: "heart")
+    end
+    fab!(:heart_2) do
+      Fabricate(:chat_message_reaction, chat_message: chat_message, user: reactor_2, emoji: "heart")
+    end
+    fab!(:thumbsup_1) do
+      Fabricate(:chat_message_reaction, chat_message: chat_message, user: reactor_1, emoji: "+1")
+    end
+
+    it "returns all reactors with their emoji and the total count" do
+      sign_in(user)
+      get "/chat/#{chat_channel.id}/#{chat_message.id}/reactions-users.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["total_rows"]).to eq(3)
+      expect(
+        response.parsed_body["users"].map { |reactor| [reactor["username"], reactor["reaction"]] },
+      ).to eq(
+        [[reactor_1.username, "heart"], [reactor_2.username, "heart"], [reactor_1.username, "+1"]],
+      )
+    end
+
+    it "serializes each reactor with the BasicUserSerializer fields plus the reaction" do
+      sign_in(user)
+      get "/chat/#{chat_channel.id}/#{chat_message.id}/reactions-users.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["users"].first).to eq(
+        {
+          "id" => reactor_1.id,
+          "username" => reactor_1.username,
+          "name" => reactor_1.name,
+          "avatar_template" => reactor_1.avatar_template,
+          "reaction" => "heart",
+        },
+      )
+    end
+
+    it "filters by the emoji param" do
+      sign_in(user)
+      get "/chat/#{chat_channel.id}/#{chat_message.id}/reactions-users.json",
+          params: {
+            emoji: "heart",
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["total_rows"]).to eq(2)
+      expect(
+        response.parsed_body["users"].map { |reactor| reactor["username"] },
+      ).to contain_exactly(reactor_1.username, reactor_2.username)
+    end
+
+    it "paginates using page and limit" do
+      sign_in(user)
+
+      get "/chat/#{chat_channel.id}/#{chat_message.id}/reactions-users.json",
+          params: {
+            page: 0,
+            limit: 1,
+          }
+      expect(response.parsed_body["total_rows"]).to eq(3)
+      expect(response.parsed_body["users"].map { |reactor| reactor["username"] }).to eq(
+        [reactor_1.username],
+      )
+
+      get "/chat/#{chat_channel.id}/#{chat_message.id}/reactions-users.json",
+          params: {
+            page: 1,
+            limit: 1,
+          }
+      expect(response.parsed_body["users"].map { |reactor| reactor["username"] }).to eq(
+        [reactor_2.username],
+      )
+    end
+
+    it "excludes reactions from users the requester is ignoring" do
+      Fabricate(:ignored_user, user: user, ignored_user: reactor_2)
+      sign_in(user)
+
+      get "/chat/#{chat_channel.id}/#{chat_message.id}/reactions-users.json"
+
+      expect(response.parsed_body["total_rows"]).to eq(2)
+      expect(response.parsed_body["users"].map { |reactor| reactor["username"] }).not_to include(
+        reactor_2.username,
+      )
+    end
+
+    it "returns a 404 when the message does not exist" do
+      sign_in(user)
+      get "/chat/#{chat_channel.id}/-999/reactions-users.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns a 404 when the message is trashed" do
+      chat_message.trash!
+      sign_in(user)
+      get "/chat/#{chat_channel.id}/#{chat_message.id}/reactions-users.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns a 403 for anonymous users" do
+      get "/chat/#{chat_channel.id}/#{chat_message.id}/reactions-users.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "returns a 403 when the channel is not accessible" do
+      private_channel =
+        Fabricate(
+          :category_channel,
+          chatable: Fabricate(:private_category, group: Fabricate(:group)),
+        )
+      private_message = Fabricate(:chat_message, chat_channel: private_channel, user: admin)
+
+      sign_in(user)
+      get "/chat/#{private_channel.id}/#{private_message.id}/reactions-users.json"
+      expect(response.status).to eq(403)
+    end
+  end
+
   describe "#dismiss_retention_reminder" do
     it "errors for anon" do
       post "/chat/dismiss-retention-reminder.json", params: { chatable_type: "Category" }
@@ -350,7 +431,7 @@ RSpec.describe Chat::ChatController do
     let(:message3) { Fabricate(:chat_message, user: user, chat_channel: channel, message: "aw :(") }
 
     it "returns a 403 if the user can't chat" do
-      SiteSetting.chat_allowed_groups = nil
+      SiteSetting.chat_allowed_groups = ""
       sign_in(user)
       post "/chat/#{channel.id}/quote.json",
            params: {

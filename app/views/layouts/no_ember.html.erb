@@ -18,7 +18,7 @@
     <%= build_plugin_html 'server:before-head-close' %>
   <%- end -%>
 
-  <%= preload_script "pageview" %>
+  <%= preload_script "js/pageview" %>
 </head>
 <body class="no-ember <%= @custom_body_class %>">
   <%- if allow_plugins? %>

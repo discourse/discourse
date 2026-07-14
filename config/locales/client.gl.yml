@@ -6,11 +6,25 @@
 
 gl:
   js:
+    user_api_key:
+      authorize: "Autorizar"
+      deny: "Cancelar"
+      copied: "Copiado!"
+      otp_description: 'Gustaríalle darlle permiso a "%{application_name}" para acceder a este sitio?'
+      no_trust_level: "Sentímolo, non ten o nivel de confianza que se necesita para acceder á API de usuario"
+      generic_error: "Sentimolo, non nos é posible emitir chaves API de usuario, pois esta funcionalidade debeu ser desactivada polo administrador do sitio"
+      device:
+        code: "Código"
+        continue: "Continuar"
     blocks:
       ghost:
         status: "Estado"
         hidden: "agochado"
         failed: "fallou"
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Retirar"
     number:
       format:
         separator: ","
@@ -118,6 +132,8 @@ gl:
       next_month: "Mes seguinte"
       placeholder: data
       to_placeholder: "ata a data"
+    date_range_picker:
+      apply: "Aplicar"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "pechar"
@@ -209,6 +225,9 @@ gl:
     age: "Idade"
     joined: "Inscrito"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Modo avanzado"
+      simple_mode: "Modo simple"
     show_more: "amosar máis"
     show_help: "Opcións"
     links: "Ligazóns"
@@ -222,8 +241,6 @@ gl:
     tos: "Termos do servizo"
     rules: "Regras"
     conduct: "Código de conduta"
-    mobile_view: "Visualización móbil"
-    desktop_view: "Visualización en escritorio"
     now: "agora mesmiño"
     read_more: "ler máis"
     more: "Máis"
@@ -319,6 +336,9 @@ gl:
       remove: "Retirar"
       remove_confirmation: "Confirma que quere retirar este borrador?"
       new_topic: "Borrador de novo tema"
+    embed_mode:
+      signin_flow:
+        cancel: "Cancelar"
     topic_count_all:
       one: "Ver %{count} tema novo"
       other: "Ver %{count} temas novos"
@@ -677,7 +697,6 @@ gl:
             allow_unknown_sender_topic_replies: "Permitir respostas ao tema de remitente descoñecido."
         membership:
           title: Incorporación
-          access: Acceso
         categories:
           title: Categorías
           long_title: "Notificacións predeterminadas de categoría"
@@ -710,7 +729,6 @@ gl:
         title: "Permisos"
         none: "Non hai categorías asociadas a este grupo."
         description: "Os membros deste grupo poden acceder a estas categorías"
-      public_admission: "Permitir que os usuarios se unan ao grupo libremente (require un grupo visíbel ao público)"
       public_exit: "Permitir que os usuarios abandonen o grupo libremente"
       empty:
         posts: "Non hai publicacións de membros deste grupo"
@@ -726,7 +744,6 @@ gl:
       request: "Petición"
       message: "Mensaxe"
       confirm_leave: "Confirma o abandono deste grupo?"
-      allow_membership_requests: "Permitirlles aos usuarios que envíen peticións de incorporación aos propietarios do grupo (require un grupo visíbel ao público)"
       membership_request_template: "Personalizar o modelo que se lles amosa aos usuarios cando se envía unha petición de incorporación"
       membership_request:
         submit: "Enviar petición"
@@ -938,7 +955,6 @@ gl:
         normal_option: "Normal"
         normal_option_title: "Recibirá unha notificación se este usuario lle responde, cita a súa mensaxe ou menciona o seu nome."
       notification_schedule:
-        title: "Calendario de notificacións"
         label: "Activar o calendario personalizado de notificacións"
         midnight: "Medianoite"
         none: "Ningunha"
@@ -975,13 +991,8 @@ gl:
       notifications: "Notificacións"
       statistics: "Estatísticas"
       desktop_notifications:
-        label: "Notificacións ao vivo"
         not_supported: "Este navegador non admite notificacións. Desculpe."
-        perm_default: "Acender notificacións"
-        perm_denied_btn: "Permiso denegado"
         perm_denied_expl: "Denegou o permiso para recibir notificacións no navegador. Permita as notificacións na configuración do navegador."
-        disable: "Desactivar as notificacións"
-        enable: "Activar as notificacións"
         consent_prompt: "Quere recibir notificacións ao vivo cando a xente lea as súas publicacións?"
       dismiss: "Desbotar"
       dismiss_notifications: "Desbotar todo"
@@ -1076,6 +1087,9 @@ gl:
       undo_revoke_access: "Desfacer a revogación de acceso"
       api_approved: "Aprobado:"
       api_last_used_at: "Último utilizado o:"
+      api_expires_at: "Caduca:"
+      api_expired_at: "Caducou:"
+      api_expires_never: "nunca"
       theme: "Tema"
       save_to_change_theme: 'Para actualizar o tema, prema "%{save_text}"'
       home: "Páxina de inicio predeterminada"
@@ -1610,7 +1624,6 @@ gl:
     created: "Creado"
     created_lowercase: "creado"
     trust_level: "Nivel de confianza"
-    search_hint: "nome de usuario, enderezo de  correo ou enderezo IP"
     create_account:
       header_title: "Dámoslle a benvida!"
       disclaimer: "Ao rexistrarse, acepta a <a href='%{privacy_link}' target='blank'>norma de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos de servizo</a>."
@@ -1647,6 +1660,13 @@ gl:
       confirm_title: Continuar a %{site_name}
       logging_in_as: Iniciar sesión como %{email}
       confirm_button: Finalizar inicio de sesión
+    code_login:
+      email_label: "Enderezo de correo"
+      continue_button: "Continuar"
+      verify_button: "Continuar"
+      signup_title: "Crear unha conta nova"
+      account_ready_continue: "Continuar"
+      username_label: "Nome de usuario"
     login:
       title: "Acceder"
       username: "Usuario"
@@ -1831,7 +1851,7 @@ gl:
       discard: "Desbotar"
       title_placeholder: "Sobre que trata a discusión, nunha soa frase?"
       title_or_link_placeholder: "Escriba o título ou pegue unha ligazón aquí"
-      edit_reason_placeholder: "por que o está editando?"
+      edit_reason_placeholder: "Por que o está editando?"
       topic_featured_link_placeholder: "Escriba a ligazón amosada co título."
       remove_featured_link: "Retirar a ligazón do tema."
       reply_placeholder: "Escriba aquí. Utilice Markdown, BBCode ou HTML para formatar. Arrastre ou pegue as imaxes."
@@ -1862,8 +1882,11 @@ gl:
       upload_description: "introducir a descrición da carga aquí"
       list_item: "Elemento da listaxe"
       wrap_modal:
+        attribute_key: "Chave"
+        attribute_value: "Valor"
         apply: "Aplicar"
       help: "Axuda para a edición con Markdown"
+      edit_reason: "Por que o está editando?"
       modal_ok: "De acordo"
       cant_send_pm: "Sentímolo pero non pode enviar unha mensaxe a %{username}."
       yourself_confirm:
@@ -1885,19 +1908,20 @@ gl:
           label: Responder como nova mensaxe de grupo
         reply_to_topic:
           label: Responder ao tema
+          trigger: Tema
           desc: Responder ao tema, non a ningunha publicación específica
+        reply_to_message:
+          trigger: Mensaxe
         toggle_whisper:
           label: Trocar rumor
-          desc: Os rumores son visíbeis unicamente para os membros do equipo
         create_personal_message:
-          label: "Nova mensaxe"
           desc: "Crear unha nova mensaxe privada"
         shared_draft:
           label: "Borrador compartido"
           desc: "Facer borrador dun tema que soamente será visíbel por usuarios admitidos"
         toggle_topic_bump:
-          label: "Trocar a promoción do tema"
           desc: "Responder sen cambiar a data da última resposta"
+        unknown_user: "Usuario"
       reload: "Recargar"
       ignore: "Ignorar"
       image: "imaxe"
@@ -2088,6 +2112,7 @@ gl:
           placeholder: mínimo
         max_views:
           placeholder: máximo
+    header_panel: "Cabeceira"
     new_item: "novo"
     go_back: "volver"
     not_logged_in_user: "páxina do usuario cun resumo das actividades e preferencias actuais"
@@ -2120,11 +2145,6 @@ gl:
         move_messages_to_inbox: "Mover á caixa de entrada"
         change_notification_level: "Cambiar o nivel de notificacións"
         choose_new_category: "Seleccionar a nova categoría dos temas:"
-        choose_new_tags: "Seleccione novas etiquetas para estes temas:"
-        changed_tags: "As etiquetas deses temas cambiaron."
-        confirm_remove_tags:
-          one: "Retiraranse todas as etiquetas deste tema. Está seguro?"
-          other: "Retiraranse todas as etiquetas destes <b>%{count}</b> temas. Está seguro?"
         progress:
           one: "Progreso: <strong>%{count}</strong> tema"
           other: "Progreso: <strong>%{count}</strong> temas"
@@ -2150,12 +2170,28 @@ gl:
         name: "Arquivo"
       move_messages_to_inbox:
         name: "Mover á caixa de entrada"
-      remove_tags:
-        name: "Retirar etiquetas"
-      replace_tags:
-        name: "Substituír etiquetas"
       delete_topics:
         name: "Eliminar"
+      convert_to_private_message:
+        name: "Facer privada a mensaxe"
+    nested_replies:
+      sort:
+        label: "Ordenar por"
+        top: "Destacados"
+        new: "Novo"
+      load_more_children:
+        one: "%{count} resposta máis"
+        other: "%{count} respostas máis"
+      collapsed_replies:
+        one: "%{count} resposta"
+        other: "%{count} repostas"
+      collapse: "Pregar"
+      no_replies: "Aínda sen respostas."
+      deleted_post_placeholder: "[eliminado]"
+      ignored_post_placeholder: "[ignorado]"
+      pinned_reply: "Fixado"
+    share_target:
+      new_message: "Nova mensaxe"
     topic:
       filter_to:
         one: "%{count} publicación no tema"
@@ -2554,6 +2590,10 @@ gl:
       sr_post_like_count_button:
         one: "A %{count} persoa gustoulle esta publicación."
         other: "A %{count} persoas gustoulles esta publicación."
+      likes_popup:
+        title:
+          one: "%{count} gústame"
+          other: "%{count} gústame"
       filtered_replies_hint:
         one: "Ver esta publicación e a súa resposta"
         other: "Ver esta publicación e as súas %{count} respostas"
@@ -2567,8 +2607,6 @@ gl:
           actions: "Accións"
           edit: "Editar"
           delete: "Eliminar"
-        post_language_selector:
-          none: "Ningunha"
       errors:
         create: "Sentímolo pero produciuse un erro creando a publicación. Ténteo de novo."
         edit: "Sentímolo pero produciuse un erro editando a publicación. Ténteo de novo."
@@ -2617,7 +2655,6 @@ gl:
           just_the_post: "Non, só esta publicación"
         admin: "accións admin. nas publicacións"
         admin_action: "Administrador"
-        permanently_delete: "Eliminar definitivamente"
         wiki: "Crear wiki"
         unwiki: "Eliminar wiki"
         convert_to_moderator: "Engadir cor do equipo"
@@ -2704,7 +2741,6 @@ gl:
         name: "Nome"
         name_placeholder: "Para que serve este marcador?"
         set_reminder: "Lémbreme"
-        options: "Opcións"
         actions:
           delete_bookmark:
             name: "Eliminar marcador"
@@ -2733,6 +2769,7 @@ gl:
       back: "Volver á categoría"
       general: "Xeral"
       settings: "Configuración"
+      moderation: "Moderación"
       tags: "Etiquetas"
       localization:
         name: "Nome"
@@ -2750,7 +2787,6 @@ gl:
         tag_group: "Grupo de etiquetas"
       topic_featured_link_allowed: "Permitir ligazóns de actualidade nesta categoría"
       create_long: "Crear unha nova categoría"
-      slug_placeholder: "Inserir guións entre palabras para o url (opcional)"
       creation_error: Produciuse un erro durante a creación desta categoría.
       save_error: Produciuse un erro gardando a categoría.
       validations:
@@ -2834,7 +2870,7 @@ gl:
           low: "Baixa"
           high: "Alta"
       sort_options:
-        default: "predeterminado"
+        default: "Predeterminado"
         likes: "Gústames"
         views: "Vistas"
         posts: "Publicacións"
@@ -3051,80 +3087,52 @@ gl:
       shortcut_delimiter_slash: "%{shortcut1}/%{shortcut2}"
       shortcut_delimiter_space: "%{shortcut1} %{shortcut2}"
       title: "Atallos do teclado"
+      description_header: "Descrición"
+      key_header: "Chave"
+      search_aliases:
+        shift: "maiús"
       jump_to:
         title: "Ir a"
-        home: "%{shortcut} Inicio"
-        latest: "%{shortcut} Último"
-        new: "%{shortcut} Novo"
-        unread: "%{shortcut} Pendentes de lectura"
-        categories: "%{shortcut} Categorías"
-        top: "%{shortcut} Arriba"
-        bookmarks: "%{shortcut} Marcadores"
-        profile: "%{shortcut} Perfil"
-        messages: "%{shortcut} Mensaxes"
-        drafts: "%{shortcut} Borradores"
-        next: "%{shortcut} Seguinte tema"
-        previous: "%{shortcut} Tema anterior"
+        home: "Inicio"
+        latest: "Últimos"
+        new: "Novo"
+        unread: "Pendentes de lectura"
+        categories: "Categorías"
+        top: "Destacados"
+        bookmarks: "Marcadores"
+        profile: "Perfil"
+        messages: "Mensaxes"
+        drafts: "Borradores"
       navigation:
         title: "Navegación"
-        jump: "%{shortcut} Ir á publicación #"
-        back: "%{shortcut} Volver"
-        up_down: "%{shortcut} Mover selección &uarr; &darr;"
-        open: "%{shortcut} Abrir tema seleccionado"
-        next_prev: "%{shortcut} Sección seguinte/anterior"
-        go_to_unread_post: "%{shortcut} Ir á primeira publicación pendente de lectura"
+        back: "Volver"
+        up_down: "Mover selección &uarr; &darr;"
       application:
         title: "Aplicativo"
-        notifications: "%{shortcut} Abrir notificacións"
-        user_profile_menu: "%{shortcut} Abrir o menú do usuario"
-        show_incoming_updated_topics: "%{shortcut} Amosar temas actualizados"
-        search: "%{shortcut} Buscar"
-        help: "%{shortcut} Abrir a axuda do teclado"
-        log_out: "%{shortcut} Saír da sesión"
+        search: "Buscar"
+        log_out: "Saír da sesión"
       composing:
         title: "Escribindo"
-        return: "%{shortcut} Volver ao panel de composición"
-        fullscreen: "%{shortcut} Panel de composición en pantalla completa"
+        preformatted: "Texto preformatado"
+        blockquote: "Cita"
       bookmarks:
         title: "Marcadores"
-        enter: "%{shortcut} Gardar e pechar"
-        later_today: "%{shortcut} Hoxe pero despois"
-        later_this_week: "%{shortcut} Esta semana pero despois"
-        tomorrow: "%{shortcut} Mañá"
-        next_week: "%{shortcut} A vindeira semana"
-        next_month: "%{shortcut} O vindeiro mes"
-        next_business_week: "%{shortcut} A principios da próxima semana"
-        next_business_day: "%{shortcut} O vindeiro día laborábel"
-        custom: "%{shortcut} Personalizar data e hora"
-        none: "%{shortcut} Sen recordatorio"
-        delete: "%{shortcut} Eliminar marcador"
+        later_today: "Hoxe, máis tarde"
+        later_this_week: "Máis tarde, esta semana"
+        tomorrow: "Mañá"
+        next_week: "A vindeira semana"
+        next_month: "O vindeiro mes"
+        next_business_day: "O vindeiro día laborábel"
+        custom: "Personalizar data e hora"
+        delete: "Eliminar marcador"
       actions:
         title: "Accións"
-        bookmark_topic: "%{shortcut} Trocar marcar tema"
-        pin_unpin_topic: "%{shortcut} Fixar/Desprender tema"
-        share_topic: "%{shortcut} Compartir tema"
-        share_post: "%{shortcut} Compartir publicación"
-        reply_as_new_topic: "%{shortcut} Responder como tema ligado"
-        reply_topic: "%{shortcut} Responder no tema"
-        reply_post: "%{shortcut} Responder na publicación"
-        quote_post: "%{shortcut} Citar a publicación"
-        like: "%{shortcut} Gústame a publicación"
-        flag: "%{shortcut} Sinalar a publicación"
-        bookmark: "%{shortcut} Marcar a publicación"
-        edit: "%{shortcut} Editar a publicación"
-        delete: "%{shortcut} Eliminar a publicación"
-        mark_muted: "%{shortcut} Silenciar o tema"
-        mark_tracking: "%{shortcut} Seguir o tema"
-        mark_watching: "%{shortcut} Ver o tema"
-        print: "%{shortcut} Imprimir o tema"
-        topic_admin_actions: "%{shortcut} Abrir intervencións do admin no tema"
+        reply_as_new_topic: "Responder como tema ligado"
+        reply_topic: "Responder ao tema"
       search_menu:
         title: "Menú de busca"
-        prev_next: "%{shortcut} Mover a selección arriba e abaixo"
-        insert_url: "%{shortcut} Introducir selección no panel de composición"
       admin:
         title: "Administrador"
-        search_prev_next: "%{shortcut} Mover a selección arriba e abaixo"
     badges:
       earned_n_times:
         one: "Gañou esta insignia %{count} vez"
@@ -3165,13 +3173,6 @@ gl:
       default_info: "Esta etiqueta non se restrinxe a ningunha categoría e non ten sinónimos."
       category_restricted: "Esta etiqueta restrínxese ás categorías ás que non ten permiso para acceder."
       synonyms: "Sinónimos"
-      synonyms_description: "Cando se usen as seguintes etiquetas, substituílas por <b>%{base_tag_name}</b>."
-      tag_groups_info:
-        one: 'Esta etiqueta pertence ao grupo «%{tag_groups}».'
-        other: "Esta etiqueta pertence a estes grupos: «%{tag_groups}»."
-      category_restrictions:
-        one: "Só pode usarse nesta categoría:"
-        other: "Só pode usarse nestas categorías:"
       add_synonyms_label: "Engadir sinónimos:"
       add_synonyms: "Engadir"
       add_synonyms_explanation:
@@ -3380,7 +3381,7 @@ gl:
         modal:
           cancel: "cancelar"
           create: "Gardar"
-          reason: "por que o está editando?"
+          reason: "Por que o está editando?"
       spreadsheet:
         show: "Amosar"
         about: "Verbo de"
@@ -3406,6 +3407,7 @@ gl:
       reports:
         title: "Listaxe dos informes dispoñíbeis"
         sidebar_title: "Informes"
+        all_groups: "Todos os grupos"
         group_traffic: "Tráfico"
         group_members: "Membros"
         group_other: "Outro"
@@ -3434,6 +3436,8 @@ gl:
           admins: "Administradores"
           moderators: "Moderadores"
           staff: "Equipo"
+        impact_types:
+          other_type: "Outro"
         filter:
           all: "Todas"
           enabled: "Activado"
@@ -3467,6 +3471,9 @@ gl:
               description: "Capturas de pantalla que presentan as funcionalidades da súa instalación e funcionalidade na páxina de arranque da instalación. Todas as imaxes deberían ser cargas en local e das mesmas dimensións."
             opengraph_image:
               description: "Imaxe de gráfico aberto predeterminada que se utiliza cando a páxina non ten ningunha outra imaxe adecuada."
+            og_image_preview:
+              generate: "Xerar"
+              topic_id_label: "ID do tema"
         fonts:
           title: "Tipos de letra"
           form:
@@ -3507,6 +3514,9 @@ gl:
           sub_pages:
             logs:
               title: "Rexistros"
+        problem_checks:
+          status: "Estado"
+          ignore: "Ignorar"
         reports:
           title: "Informes"
           sub_pages:
@@ -3572,9 +3582,9 @@ gl:
         no_check_performed: "Non se efectuou unha busca de actualizacións. Asegúrese de que sidekiq está executándose."
         stale_data: "Non se efectuou unha busca de actualizacións ultimamente. Asegúrese de que sidekiq está executándose."
         installed_version: "Instalado"
-        latest_version: "Últimos"
+        github: "Github"
         problems_found: "Algúns consellos baseados na súa configuración actual do sitio"
-        dismiss_notice: "Desbotar"
+        dismiss_notice: "Ignorar"
         new_features:
           learn_more: "Saber máis..."
         last_checked: "Última comprobación"
@@ -3615,6 +3625,42 @@ gl:
         exception_error: Sentímolo pero produciuse un erro ao executar a consulta
         too_many_requests: Executou esta acción demasiadas veces. Agarde antes de volvelo tentar.
         not_found_error: Sentímolo pero o informe non existe
+        sections:
+          reports:
+            title: "Informes"
+          engagement:
+            activity_by_category:
+              category: "Categoría"
+              topics: "Temas"
+              posts: "Publicacións"
+              share: "Compartir"
+            whos_posting:
+              all_categories: "Todas as categorías"
+              staff: "Equipo"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Novo"
+                "1": "Básico"
+                "2": "Membro"
+                "3": "Normal"
+                "4": "Líder"
+          search:
+            title: "Buscar"
+            table:
+              searches: "Buscas"
+              status: "Estado"
+        reports_section:
+          no_data: "Non hai datos que amosar"
+          modal:
+            enabled_heading: "Activado"
+            all_heading: "Todos os informes"
+            apply: "Aplicar"
+        site_traffic:
+          series:
+            anonymous: "Anónimo"
+            crawlers: "Rastrexadores"
+        period:
+          custom: "Personalizado"
         reports:
           trend_title: "Cambio do %{percent}. Actualmente %{current}, era %{prev} no período anterior."
           today: "Hoxe"
@@ -3671,7 +3717,6 @@ gl:
             email: Correo electrónico
             incoming_email: "Personalizar enderezos de correo-e entrantes"
             incoming_email_placeholder: "introducir enderezos de correo"
-            visibility: Visibilidade
             visibility_levels:
               title: "Quen pode ver este grupo?"
               public: "Todos"
@@ -3868,8 +3913,12 @@ gl:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Nome"
+          company_url: "Sitio web"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Grupos"
+          locale_selector:
+            title: "Idioma"
           optional: "(opcional)"
           update: "Actualizar"
           saved: "gardado!"
@@ -4308,6 +4357,7 @@ gl:
         topic_id: "ID do tema"
         post_id: "ID da publicación"
         category_id: "ID da categoría"
+        reviewable_id: "Revisar"
         delete: "Eliminar"
         edit: "Editar"
         save: "Gardar"
@@ -4528,6 +4578,10 @@ gl:
         active: "Activado"
         status: "Estado"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Pechar"
+              confirm: "Suspender"
           delete:
             confirmation_modal:
               close: "Pechar"
@@ -4539,6 +4593,8 @@ gl:
           suspended: "Suspendido"
           silenced: "Silenciado"
           staged: "Transitorio"
+        activation_filter:
+          activated: "Activado"
         approved: "Aprobado?"
         titles:
           pending: "Usuarios pendentes de revisión"

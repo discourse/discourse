@@ -12,13 +12,23 @@ sr:
       create: "Kreiraj"
       ai:
         generate: "Generiši"
+        optional: "opciono"
       types:
         bool:
           yes: "Da"
           no: "Ne"
-      export: "Izvoz"
-      edit: "Izmeni"
       delete: "Obriši"
+      chart:
+        form:
+          label: "Tip grafikona"
+          bar: "Dijagram"
+        tooltip:
+          total: "Ukupno: %{count}"
       query_groups: "Grupe"
       query_description: "Opis"
       reset_params: "Reset"
+    discourse_workflows:
+      sql:
+        param_value: "Vriednost"
+        output:
+          results: "Rezultati"

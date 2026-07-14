@@ -1,4 +1,4 @@
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 import HouseAdsListSetting from "./house-ads-list-setting";
 
 const HouseAdsSettingsPanel = <template>
@@ -31,6 +31,12 @@ const HouseAdsSettingsPanel = <template>
       <HouseAdsListSetting
         @name="topic_list_between"
         @value={{@adSettings.topic_list_between}}
+        @allAds={{@houseAds}}
+        @adSettings={{@adSettings}}
+      />
+      <HouseAdsListSetting
+        @name="nested_roots_between"
+        @value={{@adSettings.nested_roots_between}}
         @allAds={{@houseAds}}
         @adSettings={{@adSettings}}
       />

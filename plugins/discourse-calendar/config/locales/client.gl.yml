@@ -49,6 +49,18 @@ gl:
               title: "Pública"
             private:
               title: "Privada"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "minuto"
+              other: "minutos"
+            hours:
+              one: "hora"
+              other: "horas"
+            days:
+              one: "día"
+              other: "días"
       builder_modal:
         custom_fields:
           placeholder: "Opcional"
@@ -68,14 +80,14 @@ gl:
           label: "Periodicidade"
           none: "Sen periodicidade"
           every_day: "Todos os días"
-        url:
-          label: "URL"
-          placeholder: "Opcional"
-        location:
-          label: "Localización"
+          ordinals:
+            last: "último"
+        attendance:
+          none: "Ningunha"
         description:
           label: "Descrición"
-        status:
-          label: "Estado"
+        event_type:
+          public:
+            title: "Pública"
       invite_user_or_group:
         invite: "Enviar"

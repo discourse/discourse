@@ -12,6 +12,12 @@ tr_TR:
         categories:
           discourse_post_event: "Discourse Etkinliği"
           discourse_calendar: "Takvim ve Etkinlikler"
+      web_hooks:
+        calendar_event:
+          group_name: "Takvim Etkinliği"
+          calendar_event_created: "Takvim etkinliği oluşturuldu"
+          calendar_event_updated: "Takvim etkinliği güncellendi"
+          calendar_event_destroyed: "Takvim etkinliği silindi"
   js:
     notifications:
       titles:
@@ -28,6 +34,11 @@ tr_TR:
               label: Konu kimliği
     discourse_calendar:
       invite_user_notification: "%{username} sizi şuraya davet etti: %{description}"
+      preferences:
+        all_events: "Etkinlik Takvimi - Tüm Etkinlikler"
+        all_events_description: "Tüm forum etkinlikleri"
+        my_events: "Etkinlik Takvimi - Etkinliklerim"
+        my_events_description: "Katılacağınız veya ilgilendiğiniz etkinlikler"
       on_holiday: "Tatilde"
       disable_holiday: "Devre dışı bırak"
       enable_holiday: "Etkinleştir"
@@ -329,6 +340,9 @@ tr_TR:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username}, katılımınızı otomatik olarak ayarladı ve sizi %{eventName} adlı etkinliğe davet etti"
         an_event: "bir etkinlik"
+      event_description:
+        show_more: "Daha fazla göster"
+        show_less: "Daha az göster"
       edit_reason: "Etkinlik güncellendi"
       edit_reason_closed: "Etkinlik kapatıldı"
       edit_reason_opened: "Etkinlik açıldı"
@@ -383,7 +397,6 @@ tr_TR:
       upcoming_events_list:
         title: "Yaklaşan etkinlikler"
         empty: "Yaklaşan etkinlik yok"
-        all_day: "Tüm gün"
         error: "Etkinlikler alınamadı"
         try_again: "Tekrar deneyin"
         view_all: "Tümünü görüntüle"
@@ -397,10 +410,9 @@ tr_TR:
       models:
         invitee:
           no_users: "Kullanıcı bulunamadı"
+          leave_event: "Etkinlikten ayrıl"
           status:
-            unknown: "İlgilenmiyorum"
             going: "Gidiyorum"
-            not_going: "Gitmiyorum"
             interested: "İlgileniyorum"
             going_count:
               one: "%{count} gidiyor"
@@ -429,11 +441,28 @@ tr_TR:
               title: "Özel"
               description: "Özel bir etkinliğe yalnızca davet edilen kullanıcılar katılabilir."
       composer:
-        name_placeholder: "Etkinlik"
-        end_date_placeholder: "Bitiş tarihini ayarla"
+        name_placeholder: "Etkinlik adı"
         location_placeholder: "Konum veya URL ekle"
-        max_attendees_placeholder: "Maksimum katılımcı sayısını belirle"
         description_placeholder: "Etkinlik açıklaması ekle"
+        event_title_placeholder: "Etkinlik adı"
+        create_event_button: "Etkinlik oluştur"
+        reminder:
+          units:
+            minutes:
+              one: "dakika"
+              other: "dakika"
+            hours:
+              one: "saat"
+              other: "saat"
+            days:
+              one: "gün"
+              other: "gün"
+            weeks:
+              one: "hafta"
+              other: "hafta"
+      composer_actions:
+        create_event:
+          label: "Etkinlik oluştur"
       builder_modal:
         custom_fields:
           label: "Özel Alanlar"
@@ -441,6 +470,7 @@ tr_TR:
           description: "İzin verilen özel alanlar site ayarlarında tanımlanır. Özel alanlar, verileri diğer eklentilere iletmek için kullanılır."
         create_event_title: "Etkinlik oluşturun"
         update_event_title: "Etkinliği düzenleyin"
+        advanced_settings_title: "Gelişmiş ayarlar"
         confirm_delete: "Bu etkinliği silmek istediğinizden emin misiniz?"
         confirm_close: "Bu etkinliği kapatmak istediğinizden emin misiniz?"
         confirm_open: "Bu etkinliği açmak istediğinizden emin misiniz?"
@@ -454,11 +484,12 @@ tr_TR:
         timezone:
           label: Saat dilimi
           remove_timezone: Saat dilimi yok (UTC)
+        starts_at:
+          label: "Başlangıç tarihi"
+        all_day:
+          label: "Gün boyu sürecek etkinlik"
         reminders:
           label: "Anımsatıcılar"
-          types:
-            bump_topic: "konuyu otomatik üste sıçrat"
-            notification: "katılımcıları bilgilendirin"
           units:
             minutes: "dakika"
             hours: "saat"
@@ -467,31 +498,22 @@ tr_TR:
           periods:
             before: "önce"
             after: "sonra"
-        recurrence_until:
-          label: "Kadar (dâhil)"
         recurrence:
           label: "Yinelenme"
           none: "Yineleme yok"
           every_day: "Her gün"
-          every_month: "Her ay bu hafta içi günü"
           every_weekday: "Hafta içi her gün"
-          every_week: "Her hafta bu hafta içi günü"
-          every_two_weeks: "İki haftada bir bu hafta içi günü"
-          every_four_weeks: "Her dört haftada bir hafta içi bu gün"
-        minimal:
-          label: "Minimal etkinlik"
-          checkbox_label: "Giden/Gitmeyen düğmelerini ve davetlilerin durumunu gizle"
+          ordinals:
+            last: "son"
         max_attendees:
           label: "Maksimum katılımcı sayısı"
           placeholder: "Sınır yok"
+        attendance:
+          none: "Hiçbiri"
         allow_chat:
           label: "Sohbet entegrasyonu"
           checkbox_label: "Etkinliğe özel sohbet kanalı oluşturun ve yönetin"
-        url:
-          label: "URL"
-          placeholder: "İsteğe bağlı"
         location:
-          label: "Konum"
           placeholder: "Konum, bağlantı veya başka bir şey ekleyin."
         description:
           label: "Açıklama"
@@ -501,9 +523,13 @@ tr_TR:
           placeholder: "İsteğe bağlı, varsayılan olarak konu başlığı"
         invitees:
           label: "Davet edilen gruplar"
-        status:
-          label: "Durum"
+        event_type:
+          public:
+            title: "Genel"
         delete_confirmation_message: "Bu etkinliği silmek ister misiniz?"
+        image:
+          label: "Etkinlik görseli"
       invite_user_or_group:
         title: "Kullanıcıları veya grupları bilgilendir"
         invite: "Gönder"
+        success: "Davet gönderildi"

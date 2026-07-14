@@ -1,0 +1,151 @@
+# frozen_string_literal: true
+
+require "extralite"
+require "fileutils"
+
+module Migrations
+  module Database
+    class Connection
+      TRANSACTION_BATCH_SIZE = 1000
+      PREPARED_STATEMENT_CACHE_SIZE = 5
+
+      def self.open_database(path:)
+        path = File.expand_path(path, Migrations.root_path)
+        FileUtils.mkdir_p(File.dirname(path))
+
+        db = Extralite::Database.new(path)
+        db.pragma(
+          busy_timeout: 60_000, # 60 seconds
+          journal_mode: "wal",
+          synchronous: "off",
+          temp_store: "memory",
+          locking_mode: "normal",
+          cache_size: -10_000, # 10_000 pages
+        )
+        db
+      end
+
+      attr_reader :db, :path
+
+      def initialize(path:, transaction_batch_size: TRANSACTION_BATCH_SIZE)
+        @path = File.expand_path(path, Migrations.root_path)
+        @transaction_batch_size = transaction_batch_size
+        @db = self.class.open_database(path:)
+        @statement_counter = 0
+        @statement_cache = PreparedStatementCache.new(PREPARED_STATEMENT_CACHE_SIZE)
+
+        @fork_hooks = setup_fork_handling
+      end
+
+      def close
+        close_connection(keep_path: false)
+
+        before_hook, after_hook = @fork_hooks
+        ForkManager.remove_before_fork(before_hook)
+        ForkManager.remove_after_fork_parent(after_hook)
+      end
+
+      def closed?
+        @db.nil? || @db.closed?
+      end
+
+      def insert(sql, parameters = [])
+        begin_transaction if @statement_counter == 0
+
+        stmt = @statement_cache.getset(sql) { @db.prepare(sql) }
+        stmt.execute(parameters)
+
+        if (@statement_counter += 1) >= @transaction_batch_size
+          commit_transaction
+        end
+
+        nil
+      end
+
+      def query(sql, *parameters, &block)
+        @db.query(sql, *parameters, &block)
+      end
+
+      def query_array(sql, *parameters, &block)
+        @db.query_array(sql, *parameters, &block)
+      end
+
+      def query_value(sql, *parameters)
+        @db.query_single_splat(sql, *parameters)
+      end
+
+      def count(sql, *parameters)
+        query_value(sql, *parameters)
+      end
+
+      def tables
+        @db.tables
+      end
+
+      def execute(sql, *parameters)
+        @db.execute(sql, *parameters)
+      end
+
+      # `ATTACH` can't run inside a transaction, so commit any open batch first.
+      # `dedupe_tables` merge with `INSERT OR IGNORE`; the rest raise on a
+      # duplicate row (see `Consolidator`).
+      def merge_database(other_path, tables:, dedupe_tables: [])
+        commit_transaction
+        @db.execute("ATTACH DATABASE ? AS merge_source", other_path)
+        begin
+          tables.each do |table|
+            quoted = quote_identifier(table)
+            conflict_clause = dedupe_tables.include?(table) ? "OR IGNORE " : ""
+            @db.execute(
+              "INSERT #{conflict_clause}INTO main.#{quoted} SELECT * FROM merge_source.#{quoted}",
+            )
+          rescue Extralite::Error => e
+            raise "Failed to merge table #{table.inspect}: #{e.message}"
+          end
+        ensure
+          @db.execute("DETACH DATABASE merge_source")
+        end
+
+        nil
+      end
+
+      def begin_transaction
+        @db.execute("BEGIN DEFERRED TRANSACTION") unless @db.transaction_active?
+      end
+
+      def commit_transaction
+        if @db.transaction_active?
+          @db.execute("COMMIT")
+          @statement_counter = 0
+        end
+      end
+
+      private
+
+      def quote_identifier(name)
+        %("#{name.gsub('"', '""')}")
+      end
+
+      def close_connection(keep_path:)
+        return if @db.nil?
+
+        commit_transaction
+        @statement_cache.clear
+        @db.close
+
+        @path = nil unless keep_path
+        @db = nil
+        @statement_counter = 0
+      end
+
+      def setup_fork_handling
+        before_hook = ForkManager.before_fork { close_connection(keep_path: true) }
+
+        after_hook =
+          ForkManager.after_fork_parent { @db = self.class.open_database(path: @path) if @path }
+
+        [before_hook, after_hook]
+      end
+    end
+  end
+end

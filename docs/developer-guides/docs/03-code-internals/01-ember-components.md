@@ -6,7 +6,7 @@ id: ember-components
 
 In the [previous tutorial](https://meta.discourse.org/t/creating-routes-in-discourse-and-showing-data/48827) I showed how to configure both the server and the client side parts of Discourse to respond to a request.
 
-We now recommend you to read the Ember component documentation: https://guides.emberjs.com/v5.8.0/components/introducing-components/
+We now recommend you to read the Ember component documentation: https://guides.emberjs.com/release/components/introducing-components/
 
 [details="Old tutorial"]
 In this tutorial, I’m going to create a new [Ember Component](https://guides.emberjs.com/v2.7.0/components/defining-a-component/) as a way to wrap third party Javascript. This is going to be similar to a [YouTube](https://www.youtube.com/watch?v=S_l_DL8ysQQ) video I made a while back, which you may find informative, only this time it’s specific to Discourse and how we lay out files in our project.

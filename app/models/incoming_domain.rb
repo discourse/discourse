@@ -36,8 +36,8 @@ end
 # Table name: incoming_domains
 #
 #  id    :integer          not null, primary key
-#  name  :string(100)      not null
 #  https :boolean          default(FALSE), not null
+#  name  :string(100)      not null
 #  port  :integer          not null
 #
 # Indexes

@@ -93,7 +93,9 @@ describe DiscourseAi::Automation::LlmTriage do
 
     expect(reviewable.target_id).to eq(post.id)
     expect(reviewable.target_type).to eq("Post")
-    expect(reviewable.reviewable_scores.first.reason).to include("bad")
+    expect(reviewable.reviewable_scores.first.reason).to eq(
+      I18n.t("discourse_ai.ai_bot.flag_post.reason", reason: "bad"),
+    )
   end
 
   it "flags via tool call when the agent invokes flag_post" do
@@ -139,6 +141,77 @@ describe DiscourseAi::Automation::LlmTriage do
 
     expect(post.reload).to be_hidden
     expect(post.topic.reload.visible).to eq(false)
+    expect(ReviewableFlaggedPost.last.reviewable_scores.first.reason).to eq(
+      I18n.t("discourse_ai.ai_bot.flag_post.score_reason"),
+    )
+  end
+
+  it "keeps one reviewable when spam follows review" do
+    DiscourseAi::Completions::Llm.with_prepared_responses(%w[bad bad]) do
+      triage(
+        post: post,
+        triage_agent_id: ai_agent.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :review,
+        automation: nil,
+      )
+
+      triage(
+        post: post,
+        triage_agent_id: ai_agent.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :spam,
+        automation: nil,
+      )
+    end
+
+    reviewables = Reviewable.pending.where(target: post)
+    reviewable = reviewables.first
+
+    aggregate_failures do
+      expect(reviewables.size).to eq(1)
+      expect(reviewable).to be_a(ReviewableFlaggedPost)
+      expect(reviewable.reviewable_scores.map(&:reviewable_score_type)).to contain_exactly(
+        ReviewableScore.types[:needs_approval],
+        ReviewableScore.types[:spam],
+      )
+    end
+  end
+
+  it "keeps one reviewable when review follows spam" do
+    DiscourseAi::Completions::Llm.with_prepared_responses(%w[bad bad]) do
+      triage(
+        post: post,
+        triage_agent_id: ai_agent.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :spam,
+        automation: nil,
+      )
+
+      triage(
+        post: post,
+        triage_agent_id: ai_agent.id,
+        search_for_text: "bad",
+        flag_post: true,
+        flag_type: :review,
+        automation: nil,
+      )
+    end
+
+    reviewables = Reviewable.pending.where(target: post)
+    reviewable = reviewables.first
+
+    aggregate_failures do
+      expect(reviewables.size).to eq(1)
+      expect(reviewable).to be_a(ReviewableFlaggedPost)
+      expect(reviewable.reviewable_scores.map(&:reviewable_score_type)).to contain_exactly(
+        ReviewableScore.types[:needs_approval],
+        ReviewableScore.types[:spam],
+      )
+    end
   end
 
   it "can handle spam+silence flags" do
@@ -361,6 +434,31 @@ describe DiscourseAi::Automation::LlmTriage do
     end
   end
 
+  it "includes document uploads when triaging even if image uploads are disabled" do
+    ai_agent.update!(vision_enabled: false)
+    llm_model.update!(allowed_attachment_types: ["txt"])
+    SiteSetting.authorized_extensions = "*"
+    image_upload = Fabricate(:image_upload, posts: [post])
+    document_upload = Fabricate(:upload, original_filename: "notes.txt", extension: "txt")
+    UploadReference.create!(target: post, upload: document_upload)
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+      triage(
+        post: post.reload,
+        triage_agent_id: ai_agent.id,
+        search_for_text: "bad",
+        flag_post: true,
+        automation: nil,
+      )
+
+      triage_prompt = DiscourseAi::Completions::Llm.prompts.last
+      content = triage_prompt.messages.last[:content]
+
+      expect(content).to include({ upload_id: document_upload.id })
+      expect(content).not_to include({ upload_id: image_upload.id })
+    end
+  end
+
   it "includes stop_sequences in the completion call" do
     sequences = %w[GOOD BAD]
 
@@ -398,6 +496,7 @@ describe DiscourseAi::Automation::LlmTriage do
   end
 
   it "includes the base path in the flagged post message" do
+    automation = Fabricate(:automation, script: "llm_triage")
     allow(Discourse).to receive(:base_path).and_return("http://test.host")
 
     DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
@@ -406,7 +505,7 @@ describe DiscourseAi::Automation::LlmTriage do
         triage_agent_id: ai_agent.id,
         search_for_text: "bad",
         flag_post: true,
-        automation: nil,
+        automation: automation,
       )
     end
 

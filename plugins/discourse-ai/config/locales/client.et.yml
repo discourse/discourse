@@ -34,6 +34,14 @@ et:
             canned_reply:
               label: "Vasta"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Laadimine..."
+        tool: "Tegevus"
+        user: "Kasutaja"
+        approve: "Kinnita"
+        reject: "Lükka tagasi"
+        approved: "Heakskiidetud"
+        rejected: "Tagasi lükatud"
       llm_selector:
         none: "Pole"
       features:
@@ -44,6 +52,8 @@ et:
         expand_list:
           one: "(veel %{count})"
           other: "(veel %{count})"
+        nav:
+          enabled: "Sisse lülitatud"
         filters:
           all: "Kõik"
           reset: "Nulli"
@@ -54,6 +64,7 @@ et:
       modals:
         select_option: "Vali võimalus..."
       translations:
+        category_scope: "Liigid"
         stats:
           eta_minutes:
             one: "%{count} minut"
@@ -88,6 +99,11 @@ et:
         save: "Salvesta"
         enabled: "Sisse lülitatud?"
         delete: "Kustuta"
+        thinking_effort_options:
+          none: "Pole"
+          medium: "Keskmine"
+          high: "Kõrge"
+          max: "Maksimum"
         response_format:
           open_modal: "Muuda"
         filters:

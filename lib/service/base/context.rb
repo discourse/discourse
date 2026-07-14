@@ -23,15 +23,16 @@ module Service
       end
 
       def to_h
-        store.deep_dup
+        store.dup
       end
 
       def with_isolation(persist_keys: [])
-        @isolated_store = to_h
+        isolated_stores << to_h
         yield
       ensure
-        @store.merge!(@isolated_store.slice(*persist_keys, *step_result_keys))
-        @isolated_store = nil
+        isolated_stores.pop.then do |isolated_store|
+          store.merge!(isolated_store.slice(*persist_keys, *step_result_keys(isolated_store)))
+        end
       end
 
       # @return [Boolean] returns +true+ if the context is set as successful (default)
@@ -74,11 +75,15 @@ module Service
       private
 
       def store
-        @isolated_store || @store
+        isolated_stores.last || @store
       end
 
-      def step_result_keys
-        store.keys.select { it.start_with?("result.") }
+      def isolated_stores
+        @isolated_stores ||= []
+      end
+
+      def step_result_keys(source = store)
+        source.keys.select { it.start_with?("result.") }
       end
 
       def method_missing(method_name, *args, &block)

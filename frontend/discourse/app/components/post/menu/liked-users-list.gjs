@@ -1,26 +1,58 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import UserAvatar from "discourse/components/user-avatar";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DUserAvatar from "discourse/ui-kit/d-user-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import PostLikedUsersMenu from "./liked-users-menu";
 
 const LIKE_ACTION = 2; // The action type ID for "like" in Discourse
 const DISPLAY_MAX_USERS = 8; // will show X users, then a button to show one more row of X;
+const MENU_IDENTIFIER = "post-liked-users-menu";
 
 export default class LikedUsersList extends Component {
+  @service menu;
+  @service siteSettings;
   @service store;
 
   @tracked likedUsers;
   @tracked loadingLikedUsers = false;
   @tracked slicedUsersVisible = false;
+
+  get useNewMenu() {
+    return this.siteSettings.enable_new_post_reactions_menu;
+  }
+
+  get buttonIcon() {
+    return this.args.post.yours ? "d-liked" : null;
+  }
+
+  @action
+  togglePopup(event) {
+    const target = event.currentTarget;
+    const virtualElement = {
+      getBoundingClientRect: () => target.getBoundingClientRect(),
+    };
+
+    this.menu.show(virtualElement, {
+      identifier: MENU_IDENTIFIER,
+      component: PostLikedUsersMenu,
+      modalForMobile: true,
+      closeOnScroll: true,
+      arrow: true,
+      placement: "bottom",
+      offset: 15,
+      data: { post: this.args.post },
+    });
+  }
 
   @action
   async fetchLikedUsers() {
@@ -78,90 +110,118 @@ export default class LikedUsersList extends Component {
   }
 
   <template>
-    <DMenu
-      @modalForMobile={{true}}
-      @identifier="post-like-users_{{@post.id}}"
-      @onShow={{this.fetchLikedUsers}}
-      @triggerClass={{concatClass
-        "post-action-menu__like-count"
-        "like-count"
-        "btn-flat"
-        "button-count"
-        "highlight-action"
-        (if @post.yours "my-likes" "regular-likes")
-      }}
-      @icon={{if @post.yours "d-liked" ""}}
-      @placement="top"
-      label={{i18n "post.sr_post_like_count_button" count=@post.likeCount}}
-      id="post-like-users_{{@post.id}}"
-    >
-      <:trigger>
+    {{#if this.useNewMenu}}
+      <button
+        type="button"
+        aria-label={{i18n
+          "post.sr_post_like_count_button"
+          count=@post.likeCount
+        }}
+        class={{dConcatClass
+          "btn btn-flat no-text"
+          "post-action-menu__like-count"
+          "like-count"
+          "button-count"
+          "highlight-action"
+          (if @post.liked "has-liked")
+          (if @post.yours "my-likes" "regular-likes")
+        }}
+        {{on "click" this.togglePopup}}
+        ...attributes
+      >
+        {{#if this.buttonIcon}}
+          {{dIcon this.buttonIcon}}
+        {{/if}}
         {{@post.likeCount}}
-      </:trigger>
-      <:content>
-        <ConditionalLoadingSpinner
-          @condition={{this.loadingLikedUsers}}
-          class="liked-users-list__container"
-        >
-          <span class="liked-users-list__count">
-            {{icon "d-liked" class="liked-users-list__count-icon"}}
-            {{@post.likeCount}}
-          </span>
-          <div class="liked-users-list">
-            <ul class="liked-users-list__list">
-              {{#each this.truncatedUsers as |user|}}
-                <li class="liked-users-list__item">
-                  <PluginOutlet
-                    @name="liked-users-list-avatar"
-                    @outletArgs={{lazyHash user=user post=@post}}
-                  >
-                    <UserAvatar
-                      class="trigger-user-card"
-                      @user={{user}}
-                      @size="small"
-                    />
-                  </PluginOutlet>
-                </li>
-              {{/each}}
-              {{#if this.slicedUsers}}
-                <li class="liked-users-list__item">
-                  <DButton
-                    class="liked-users-list__more-button btn-flat"
-                    @icon={{this.toggleSlicedUsersVisiblityIcon}}
-                    @action={{this.toggleSlicedUsersVisiblity}}
-                  />
-                </li>
-              {{/if}}
-            </ul>
-            {{#if this.slicedUsersVisible}}
+      </button>
+    {{else}}
+      <DMenu
+        @modalForMobile={{true}}
+        @identifier="post-like-users_{{@post.id}}"
+        @onShow={{this.fetchLikedUsers}}
+        @triggerClass={{dConcatClass
+          "post-action-menu__like-count"
+          "like-count"
+          "btn-flat"
+          "button-count"
+          "highlight-action"
+          (if @post.yours "my-likes" "regular-likes")
+        }}
+        @icon={{if @post.yours "d-liked" ""}}
+        @placement="top"
+        label={{i18n "post.sr_post_like_count_button" count=@post.likeCount}}
+        id="post-like-users_{{@post.id}}"
+      >
+        <:trigger>
+          {{@post.likeCount}}
+        </:trigger>
+        <:content>
+          <DConditionalLoadingSpinner
+            @condition={{this.loadingLikedUsers}}
+            class="liked-users-list__container"
+          >
+            <span class="liked-users-list__count">
+              {{dIcon "d-liked" class="liked-users-list__count-icon"}}
+              {{@post.likeCount}}
+            </span>
+            <div class="liked-users-list">
               <ul class="liked-users-list__list">
-                {{#each this.slicedUsers as |user|}}
+                {{#each this.truncatedUsers as |user|}}
                   <li class="liked-users-list__item">
                     <PluginOutlet
                       @name="liked-users-list-avatar"
                       @outletArgs={{lazyHash user=user post=@post}}
                     >
-                      <UserAvatar
+                      <DUserAvatar
                         class="trigger-user-card"
+                        @ariaHidden={{false}}
                         @user={{user}}
                         @size="small"
                       />
                     </PluginOutlet>
                   </li>
                 {{/each}}
+                {{#if this.slicedUsers}}
+                  <li class="liked-users-list__item">
+                    <DButton
+                      class="liked-users-list__more-button btn-flat"
+                      @icon={{this.toggleSlicedUsersVisiblityIcon}}
+                      @action={{this.toggleSlicedUsersVisiblity}}
+                    />
+                  </li>
+                {{/if}}
               </ul>
-              {{#if this.hiddenUserCount}}
-                <span class="liked-users-list__more">
-                  {{i18n
-                    "discourse_reactions.state_panel.more_users"
-                    count=this.hiddenUserCount
-                  }}
-                </span>
+              {{#if this.slicedUsersVisible}}
+                <ul class="liked-users-list__list">
+                  {{#each this.slicedUsers as |user|}}
+                    <li class="liked-users-list__item">
+                      <PluginOutlet
+                        @name="liked-users-list-avatar"
+                        @outletArgs={{lazyHash user=user post=@post}}
+                      >
+                        <DUserAvatar
+                          class="trigger-user-card"
+                          @ariaHidden={{false}}
+                          @user={{user}}
+                          @size="small"
+                        />
+                      </PluginOutlet>
+                    </li>
+                  {{/each}}
+                </ul>
+                {{#if this.hiddenUserCount}}
+                  <span class="liked-users-list__more">
+                    {{i18n
+                      "discourse_reactions.state_panel.more_users"
+                      count=this.hiddenUserCount
+                    }}
+                  </span>
+                {{/if}}
               {{/if}}
-            {{/if}}
-          </div>
-        </ConditionalLoadingSpinner>
-      </:content>
-    </DMenu>
+            </div>
+          </DConditionalLoadingSpinner>
+        </:content>
+      </DMenu>
+    {{/if}}
   </template>
 }

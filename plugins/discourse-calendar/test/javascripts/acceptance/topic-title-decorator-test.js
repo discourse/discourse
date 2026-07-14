@@ -1,11 +1,11 @@
-import { visit } from "@ember/test-helpers";
+import { findAll, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
 import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
-import { acceptance, queryAll } from "discourse/tests/helpers/qunit-helpers";
+import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Discourse Calendar - Event Title Decorator", function (needs) {
+acceptance("Event Title Decorator", function (needs) {
   needs.user();
   needs.settings({
     calendar_enabled: true,
@@ -33,7 +33,7 @@ acceptance("Discourse Calendar - Event Title Decorator", function (needs) {
 
     await visit("/latest");
 
-    const topics = queryAll(".topic-list-item");
+    const topics = findAll(".topic-list-item");
 
     assert.dom(".event-date.past", topics[0]).exists();
     assert.dom(".event-date", topics[0]).hasAttribute("data-starts-at");

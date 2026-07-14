@@ -125,7 +125,7 @@ module DiscourseNarrativeBot
           raw:
             I18n.t(
               "#{I18N_KEY}.edit.bot_created_post_raw",
-              i18n_post_args(discobot_username: self.discobot_username),
+              i18n_post_args(discobot_username: discobot_username),
             ),
           topic_id: data[:topic_id],
           skip_bot: true,
@@ -145,7 +145,7 @@ module DiscourseNarrativeBot
           raw:
             I18n.t(
               "#{I18N_KEY}.recover.deleted_post_raw",
-              i18n_post_args(discobot_username: self.discobot_username),
+              i18n_post_args(discobot_username: discobot_username),
             ),
           topic_id: data[:topic_id],
           skip_bot: true,
@@ -159,8 +159,8 @@ module DiscourseNarrativeBot
       if SiteSetting.delete_removed_posts_after < 1
         opts[:delete_removed_posts_after] = 1
 
-        result = PostActionCreator.notify_moderators(self.discobot_user, post)
-        result.reviewable.perform(self.discobot_user, :ignore_and_do_nothing)
+        result = PostActionCreator.notify_moderators(discobot_user, post)
+        result.reviewable.perform(discobot_user, :ignore_and_do_nothing)
       end
 
       PostDestroyer.new(@user, post, opts).destroy
@@ -233,7 +233,7 @@ module DiscourseNarrativeBot
       #{instance_eval(&@next_instructions)}
       MD
 
-      PostCreator.create!(self.discobot_user, raw: raw, topic_id: @topic_id)
+      PostCreator.create!(discobot_user, raw: raw, topic_id: @topic_id)
     end
 
     def missing_delete
@@ -257,7 +257,7 @@ module DiscourseNarrativeBot
       #{instance_eval(&@next_instructions)}
       MD
 
-      PostCreator.create!(self.discobot_user, raw: raw, topic_id: @post.topic_id)
+      PostCreator.create!(discobot_user, raw: raw, topic_id: @post.topic_id)
     end
 
     def missing_recover
@@ -323,7 +323,7 @@ module DiscourseNarrativeBot
 
       fake_delay
 
-      post = PostCreator.create!(self.discobot_user, raw: raw, topic_id: @topic_id)
+      post = PostCreator.create!(discobot_user, raw: raw, topic_id: @topic_id)
 
       enqueue_timeout_job(@user)
       post

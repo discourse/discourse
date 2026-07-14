@@ -8,8 +8,6 @@ sk:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "Žiadna akcia"
         agree_and_suspend:
           title: "Pozastavenie používateľa"
           description: "Súhlas s príznakom a pozastavenie používateľa."

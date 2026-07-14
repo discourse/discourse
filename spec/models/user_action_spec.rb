@@ -8,6 +8,44 @@ RSpec.describe UserAction do
   it { is_expected.to validate_presence_of :action_type }
   it { is_expected.to validate_presence_of :user_id }
 
+  describe ".remove_action!" do
+    fab!(:user)
+    fab!(:target_post) { Fabricate(:post, user: user) }
+
+    it "scopes removal messages to the affected user", :aggregate_failures do
+      action =
+        described_class.log_action!(
+          action_type: UserAction::EDIT,
+          user_id: user.id,
+          acting_user_id: user.id,
+          target_topic_id: target_post.topic_id,
+          target_post_id: target_post.id,
+        )
+
+      messages =
+        MessageBus.track_publish("/user/#{user.id}") do
+          described_class.remove_action!(
+            action_type: UserAction::EDIT,
+            user_id: user.id,
+            acting_user_id: user.id,
+            target_topic_id: target_post.topic_id,
+            target_post_id: target_post.id,
+          )
+        end
+
+      expect(messages).to contain_exactly(
+        have_attributes(
+          data: {
+            user_action_id: action.id,
+            remove: true,
+          },
+          user_ids: [user.id],
+          group_ids: nil,
+        ),
+      )
+    end
+  end
+
   describe "#stream" do
     fab!(:public_post, :post)
     let(:public_topic) { public_post.topic }
@@ -244,6 +282,40 @@ RSpec.describe UserAction do
       it "doesn't add the entry to the stream" do
         PostActionCreator.like(liker, post)
         expect(likee_stream.count).not_to eq(old_count + 1)
+      end
+    end
+
+    context "with ignored users" do
+      before { Fabricate(:ignored_user, user: likee, ignored_user: liker) }
+
+      def likee_stream_for(viewer)
+        UserAction.stream(user_id: likee.id, guardian: Guardian.new(viewer))
+      end
+
+      it "hides likes from ignored users when the ignorer views the stream" do
+        PostActionCreator.like(liker, post)
+        expect(likee_stream_for(likee).count).to eq(old_count)
+      end
+
+      it "still shows the likes to anonymous viewers" do
+        PostActionCreator.like(liker, post)
+        expect(likee_stream.count).to eq(old_count + 1)
+      end
+
+      it "still shows the likes to other logged-in viewers who aren't ignoring the liker" do
+        other = Fabricate(:user)
+        PostActionCreator.like(liker, post)
+        expect(likee_stream_for(other).count).to eq(old_count + 1)
+      end
+
+      it "hides only the ignored user's actions, not other users' actions on the same topic" do
+        normal_user = Fabricate(:user)
+        PostActionCreator.like(normal_user, post)
+        PostActionCreator.like(liker, post)
+
+        acting_user_ids = likee_stream_for(likee).map(&:acting_user_id).uniq
+        expect(acting_user_ids).to include(normal_user.id)
+        expect(acting_user_ids).not_to include(liker.id)
       end
     end
   end

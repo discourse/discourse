@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class DiscardDraftModal extends Component {
@@ -25,14 +25,14 @@ export default class DiscardDraftModal extends Component {
     >
       <:body>
         <div class="instructions" role="heading" aria-level="1">
-          {{i18n "post.cancel_composer.confirm"}}
+          {{i18n @model.confirmMessageKey}}
         </div>
       </:body>
 
       <:footer>
         <DButton
           @icon="trash-can"
-          @label="post.cancel_composer.discard"
+          @label={{@model.discardButtonKey}}
           @action={{this.discardDraft}}
           class="btn-danger discard-draft-modal__discard-btn"
         />

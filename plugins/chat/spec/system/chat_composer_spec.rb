@@ -18,11 +18,10 @@ RSpec.describe "Chat composer" do
   end
 
   context "when adding an emoji through the picker" do
-    xit "adds the emoji to the composer" do
+    it "adds the emoji to the composer" do
       chat_page.visit_channel(channel_1)
-      channel_page.open_action_menu
-      channel_page.click_action_button("emoji")
-      find("[data-emoji='grimacing']").click(wait: 0.5)
+      channel_page.composer.open_emoji_picker
+      find(".emoji-picker [data-emoji='grimacing']").click
 
       expect(channel_page.composer).to have_value(":grimacing:")
     end
@@ -60,33 +59,52 @@ RSpec.describe "Chat composer" do
   end
 
   context "when opening emoji picker through more button of the autocomplete" do
-    xit "prefills the emoji picker filter input" do
+    it "prefills the emoji picker filter input" do
       chat_page.visit_channel(channel_1)
-      find(".chat-composer__input").fill_in(with: ":gri")
+      find(".chat-composer__input").send_keys(":gri")
 
       click_link(I18n.t("js.composer.more_emoji"))
 
-      expect(find(".emoji-picker .filter-input")).to have_value("gri")
+      expect(find(".emoji-picker .filter-input").value).to eq("gri")
     end
 
-    xit "filters with the prefilled input" do
+    it "filters with the prefilled input" do
       chat_page.visit_channel(channel_1)
-      find(".chat-composer__input").fill_in(with: ":fr")
+      find(".chat-composer__input").send_keys(":fr")
 
       click_link(I18n.t("js.composer.more_emoji"))
 
-      expect(page).to have_selector(".emoji-picker [data-emoji='fr']")
-      expect(page).to have_no_selector(".emoji-picker [data-emoji='grinning']")
+      expect(page).to have_selector(".emoji-picker [data-emoji='france']")
+      expect(page).to have_no_selector(".emoji-picker [data-emoji='grinning_face']")
     end
 
-    xit "replaces the partially typed emoji with the selected" do
+    it "replaces the partially typed emoji with the selected" do
       chat_page.visit_channel(channel_1)
-      find(".chat-composer__input").fill_in(with: "hey :gri")
+      find(".chat-composer__input").send_keys("hey :gri")
 
       click_link(I18n.t("js.composer.more_emoji"))
-      find("[data-emoji='grimacing']").click(wait: 0.5)
+      find(".emoji-picker [data-emoji='grimacing']").click
 
-      expect(channel_page.composer).to have_value("hey :grimacing:")
+      expect(channel_page.composer).to have_value("hey :grimacing: ")
+    end
+
+    it "replaces a partially typed term containing Unicode letters" do
+      chat_page.visit_channel(channel_1)
+      input = find(".chat-composer__input")
+      input.send_keys(":gri")
+      # Inject a Unicode character into the partial term while the autocomplete
+      # is open, so the captured term spans non-ASCII letters too.
+      page.execute_script(<<~JS)
+        const el = document.querySelector(".chat-composer__input");
+        el.focus();
+        el.setSelectionRange(el.value.length, el.value.length);
+        document.execCommand("insertText", false, "ü");
+      JS
+
+      click_link(I18n.t("js.composer.more_emoji"))
+      find(".emoji-picker [data-emoji='grimacing']").click
+
+      expect(channel_page.composer).to have_value(":grimacing: ")
     end
   end
 
@@ -239,7 +257,8 @@ RSpec.describe "Chat composer" do
       chat_page.visit_channel(channel_1)
 
       file_path = file_from_fixtures("logo.png", "images").path
-      cdp.with_slow_upload do
+      # Hold the upload request in-flight, without throttling everything.
+      cdp.with_pending_requests(%r{/uploads\.json}) do
         attach_file("channel-file-uploader", file_path, make_visible: true)
         expect(page).to have_css(".chat-composer-upload--in-progress")
         expect(page).to have_css(".chat-composer.is-send-disabled")

@@ -8,7 +8,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender from "discourse/tests/helpers/create-pretender";
 import AiSearchDiscoveries from "discourse/plugins/discourse-ai/discourse/components/ai-search-discoveries";
 
-module("Integration | Component | ai-search-discoveries", function (hooks) {
+module("Integration | Component | AiSearchDiscoveries", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

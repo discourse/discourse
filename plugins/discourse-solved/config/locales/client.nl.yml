@@ -10,6 +10,24 @@ nl:
       site_settings:
         categories:
           discourse_solved: "Discourse opgelost"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Geaccepteerde oplossingen"
+        sections:
+          support:
+            title: "Steunen"
+            filter:
+              all_categories: "Alle categorieën"
+            answerers:
+              staff: "Medewerker"
+              member: "Leden"
+              basic: "Basis"
+            response_time:
+              buckets:
+                lt_1h: "< 1 uur"
+                gt_24h: "> 24 uur"
   js:
     notifications:
       alt:
@@ -19,8 +37,10 @@ nl:
     solutions: "Oplossingen"
     solved:
       title: "Opgelost"
+      notify_on_solved: "Informeren als een topic dat ik volg of observeer is opgelost. Is alleen van toepassing voor topics in categorieën die oplossingen toestaan."
       allow_accepted_answers: "Topiceigenaar en medewerkers toestaan een antwoord als oplossing te markeren"
       solved_topics_auto_close_hours: "Topic (n) uur na het laatste antwoord automatisch sluiten zodra het topic als opgelost is gemarkeerd."
+      notify_on_staff_accept_solved: "Topiceigenaar informeren als medewerker een oplossing markeert"
       accept_answer: "Selecteer als dit antwoord het probleem oplost"
       accepted_description: "Dit is de geaccepteerde oplossing voor dit topic"
       has_no_accepted_answer: "Dit topic heeft geen oplossing"
@@ -30,6 +50,7 @@ nl:
       solution_summary:
         one: "oplossing"
         other: "oplossingen"
+      accepted_answer_solver_info: "door %{user} in %{post}"
       accepted_answer_post_number: "bericht %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -39,15 +60,34 @@ nl:
       no_solved_topics_title: "Je hebt nog geen topics opgelost"
       no_solved_topics_title_others: "%{username} heeft nog geen topics opgelost"
       no_solved_topics_body: "Als je een nuttig antwoord geeft op een topic, kan je antwoord door de eigenaar van het topic of door een medewerker als oplossing worden gekozen."
+      marked_solved_by: "geaccepteerd door %{user}"
+      confirm_move_solution_title: "Oplossingsbericht verplaatsen"
+      confirm_move_solution:
+        one: "Het bericht dat je hebt geselecteerd is gemarkeerd als de oplossing voor dit topic. Als je het verplaatst, wordt het topic bijgewerkt naar onopgelost."
+        other: "Een van de berichten die je hebt geselecteerd is gemarkeerd als de oplossing voor dit topic. Als je ze verplaatst, wordt het topic bijgewerkt naar onopgelost."
+      move_post_confirm:
+        one: "Bericht verplaatsen"
+        other: "Berichten verplaatsen"
       move_post_cancel: "Annuleren"
+      dont_show_again: "Begrepen, dit niet meer weergeven"
+      confirm_solved_removal_title: "Oplossing wordt verwijderd"
+      confirm_solved_removal: "Deze wijziging schakelt oplossingen voor dit topic uit en verwijdert de geaccepteerde oplossing."
       confirm_solved_removal_confirm: "Bevestigen"
       confirm_solved_removal_cancel: "Annuleren"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Is je vraag beantwoord?
         description: "Markeer het antwoord en help anderen door de oplossingsknop onder het juiste antwoord te gebruiken."
       topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "Je bericht is gemarkeerd als oplossing"
+        topic_solved_title: "Topic opgelost"
+      topic_notifications:
+        tracking:
+          description: "Je ontvangt een melding als iemand je @naam noemt, je beantwoordt of als het topic is opgelost. Het aantal nieuwe antwoorden op dit topic wordt weergegeven."
+        watching:
+          description: "Je ontvangt een melding van elke nieuwe antwoord in dit topic en wanneer het topic is opgelost. Het aantal nieuwe antwoorden op dit topic wordt weergegeven."
       category_type_support:
         title: "Steunen"
     topic_statuses:

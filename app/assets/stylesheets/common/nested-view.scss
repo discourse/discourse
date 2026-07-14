@@ -1,0 +1,1477 @@
+@use "lib/viewport";
+
+.selected-posts.nested-view__selected-posts {
+  @include viewport.from(sm) {
+    width: min(18rem, calc(100vw - 2rem));
+  }
+}
+
+// PostCookedHtml appends a selection barrier after the final block, so
+// `:last-child` does not usually match the final cooked paragraph.
+.nested-view__op-content,
+.nested-post__content {
+  .cooked > p {
+    &:last-child,
+    &:has(+ .cooked-selection-barrier:last-child) {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// ── Top-level nested view ──────────────────────────────────────────
+.nested-view {
+  // Avatar size for the "small" PostAvatar used in nested posts.
+  // Also anchors the sticky controls/avatar spacing.
+  --nested-avatar-size: 24px;
+  --nested-controls-height: calc(
+    var(--nested-avatar-size) + var(--space-2) + var(--space-2)
+  );
+  --nested-sticky-avatar-top-gap: var(--space-1);
+  --nested-sticky-avatar-bottom-offset: calc(var(--space-2) + var(--space-1));
+  background: var(--secondary);
+  margin: 0 auto;
+  padding: var(--space-4);
+  border-radius: var(--d-border-radius-large);
+  max-width: calc(
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+      var(--topic-avatar-width)
+  );
+
+  &__header {
+    margin-bottom: 1em;
+    padding-bottom: 0.75em;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--font-up-4);
+    line-height: var(--line-height-medium);
+    overflow-wrap: break-word;
+
+    a {
+      color: var(--primary);
+    }
+
+    .edit-topic__wrapper {
+      white-space: nowrap;
+      font-size: var(--font-down-3);
+      vertical-align: 0.125em;
+      margin-left: var(--space-1);
+    }
+
+    html.discourse-no-touch & {
+      .fancy-title {
+        .edit-topic {
+          opacity: 0;
+          transition: opacity 0.15s linear;
+          background: none;
+        }
+
+        &:hover,
+        &:focus-visible {
+          .edit-topic {
+            opacity: 1;
+          }
+        }
+      }
+    }
+  }
+
+  .edit-topic-title {
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    gap: 0.5em;
+    width: 100%;
+
+    .edit-title__wrapper {
+      flex: 1 1 100%;
+
+      #edit-title {
+        width: 100%;
+        margin: 0;
+      }
+    }
+
+    .edit-category__wrapper {
+      flex: 1 1 5%;
+
+      .select-kit.combo-box.category-chooser {
+        width: 100%;
+        height: 100%;
+      }
+    }
+
+    .edit-tags__wrapper {
+      flex: 1 1 33%;
+
+      .mini-tag-chooser {
+        width: 100%;
+      }
+    }
+
+    .edit-controls {
+      display: flex;
+      width: 100%;
+      gap: 0.5em;
+    }
+  }
+
+  &__topic-map {
+    margin-bottom: 0.25em;
+    padding-bottom: 0.25em;
+    border-bottom: 0;
+    max-width: none;
+
+    .top-replies {
+      display: none;
+    }
+  }
+
+  &__op > &__topic-map {
+    margin: 0.75em 0 0;
+    padding: 0.75em 0 0;
+    border-top: 1px solid var(--primary-low);
+  }
+
+  #topic-footer-buttons.nested-view__topic-actions {
+    flex-flow: row wrap;
+    align-items: center;
+    gap: 0.5em;
+    max-width: none;
+    margin-bottom: 0.75em;
+
+    .topic-footer-main-buttons {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1em;
+    margin-bottom: 1em;
+  }
+
+  &:not(.nested-context-view) > &__controls {
+    position: sticky;
+    top: var(--header-offset, 0);
+    z-index: z("timeline");
+    box-sizing: border-box;
+    min-height: var(--nested-controls-height);
+    padding: 0.25em 0;
+    background: var(--secondary);
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__controls-left {
+    display: flex;
+    align-items: center;
+    gap: 0.85em;
+    min-width: 0;
+  }
+
+  &__controls-right {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    margin-left: auto;
+  }
+
+  &__activity-link.btn {
+    font-size: var(--font-down-1);
+    padding: 0.35em 0.55em;
+    min-height: auto;
+    line-height: var(--line-height-small);
+    white-space: nowrap;
+  }
+
+  .nested-sort-selector {
+    display: flex;
+    align-items: center;
+    gap: 0.35em;
+    margin: 0;
+    font-size: var(--font-down-1);
+
+    &__label {
+      color: var(--primary-high);
+    }
+
+    &__trigger.btn {
+      padding: 0.35em 0.55em;
+      min-height: auto;
+      line-height: var(--line-height-small);
+    }
+
+    .d-icon {
+      margin-left: 0.15em;
+    }
+  }
+
+  &__op {
+    margin-bottom: 1.5em;
+    padding: 1em;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+
+    // Establish a containing block for the absolutely-positioned
+    // .read-state dot so it anchors to the post-infos right edge
+    // instead of climbing to a distant ancestor.
+    .post-infos {
+      position: relative;
+
+      .read-state {
+        right: -10px;
+      }
+    }
+  }
+
+  &__op-article {
+    .select-posts {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      white-space: nowrap;
+
+      button {
+        background-color: var(--primary-low);
+        color: var(--primary);
+        box-shadow: var(--shadow-dropdown);
+      }
+    }
+
+    &.selected .select-posts button.select-post {
+      background-color: var(--tertiary);
+      color: var(--secondary);
+      border-color: var(--tertiary);
+    }
+  }
+
+  &__op-row {
+    display: flex;
+    gap: 0.75em;
+
+    .topic-avatar {
+      border-top: none;
+      float: none;
+      width: auto;
+      padding-top: 0;
+      height: auto;
+    }
+
+    .topic-meta-data {
+      padding: 0;
+      margin-left: 0;
+      font-size: var(--font-down-1);
+    }
+
+    @include viewport.from(sm) {
+      > .topic-avatar {
+        position: sticky;
+        top: calc(var(--header-offset) + var(--space-3));
+        align-self: flex-start;
+        margin-bottom: 25px;
+      }
+    }
+
+    @include viewport.until(sm) {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: start;
+      column-gap: 0.75em;
+      row-gap: 0.5em;
+
+      .nested-view__op-body {
+        display: contents;
+      }
+
+      .topic-meta-data {
+        align-self: center;
+      }
+
+      .nested-view__op-content,
+      .nested-view__op-menu,
+      .post-links-container {
+        grid-column: 1 / -1;
+      }
+    }
+  }
+
+  &__op-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__op-article.is-deleted {
+    .nested-view__op-content > .cooked {
+      background-color: var(--danger-low-mid);
+    }
+  }
+
+  &__op-content {
+    margin-top: 0.5em;
+  }
+
+  &__op-menu {
+    margin: 0.25em 0;
+
+    .post-action-menu__show-replies {
+      display: none;
+    }
+
+    // Left-align the post menu in nested view on desktop (mobile keeps the
+    // Core right-aligned layout). Compounded with .post-menu-area to beat
+    // the Core `.post-menu-area { padding-left: ... }` rule from
+    // desktop/topic.scss, which has equal specificity but loads later.
+    @include viewport.from(sm) {
+      &.post-menu-area {
+        padding-left: 0;
+        margin-top: 1em;
+      }
+
+      nav.post-controls {
+        justify-content: flex-start;
+
+        .actions {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  &__roots {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__empty {
+    padding: 2em;
+    text-align: center;
+    color: var(--primary-medium);
+    font-size: var(--font-up-1);
+  }
+
+  &__new-replies {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1em;
+  }
+
+  &__floating-actions {
+    position: sticky;
+    bottom: 0;
+    z-index: z("header") - 2; // below header, above page content and footer-nav
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 1em;
+    gap: 0.5em;
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease,
+      bottom 0.3s ease;
+
+    &.--hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(2em);
+    }
+
+    .select-kit.topic-notifications-button .select-kit-header {
+      box-shadow: var(--shadow-dropdown);
+      border-radius: 2em;
+      background: var(--secondary);
+    }
+
+    .topic-admin-menu-button-container .fk-d-menu__trigger {
+      box-shadow: var(--shadow-dropdown);
+      border-radius: 2em;
+      background: var(--secondary);
+    }
+  }
+
+  &__floating-reply {
+    box-shadow: var(--shadow-dropdown);
+  }
+}
+
+// ── Context view ──────────────────────────────────────────────────
+.nested-context-view {
+  &__banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.75em 1em;
+    margin-bottom: 1em;
+    background: var(--tertiary-very-low);
+    border: 1px solid var(--tertiary-low);
+    border-radius: var(--d-border-radius);
+    font-size: var(--font-down-1);
+    position: sticky;
+    top: var(--header-offset, 0);
+    z-index: 9;
+  }
+
+  &__banner-icon {
+    color: var(--tertiary);
+
+    .d-icon {
+      width: 1em;
+      height: 1em;
+    }
+  }
+
+  &__banner-text {
+    color: var(--primary-high);
+    margin-right: auto;
+  }
+
+  &__nav {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+  }
+}
+
+// ── Nested post (single comment in tree) ───────────────────────────
+.nested-post {
+  --nested-column-gap: var(--space-2);
+  --nested-connector-offset: var(--space-2);
+  --nested-vertical-gap: 0.5em;
+  --nested-hook-width: calc(var(--nested-avatar-size) / 2);
+  --nested-line-offset: calc(
+    var(--nested-connector-offset) + var(--nested-avatar-size) / 2
+  );
+  --nested-line-width: 1px;
+  --nested-line-center-adjust: 0.5px;
+  --nested-load-more-left-adjust: var(--nested-line-width);
+  --nested-sticky-avatar-top: calc(
+    var(--header-offset, 0px) + var(--nested-controls-height) +
+      var(--nested-sticky-avatar-top-gap)
+  );
+
+  // Grid splits article (row 1) from children (row 2) so the sticky avatar is
+  // bounded by the post itself and does not continue past the post menu into
+  // the reply subtree.
+  display: grid;
+  grid-template-columns: var(--nested-avatar-size) 1fr;
+  column-gap: var(--nested-column-gap);
+  position: relative;
+
+  &:not(.--depth-0) {
+    padding-top: var(--nested-vertical-gap);
+
+    // L-shaped connector from parent's depth-line to this post's avatar.
+    // Extends 4px above the element to bridge the gap between the parent's
+    // depth-line (grid row 1) and this child (grid row 2).
+    &::before {
+      content: "";
+      position: absolute;
+      top: -4px; // overlap parent grid row by 4px to bridge gap
+      left: calc(-1 * var(--nested-line-offset));
+      width: var(--nested-hook-width);
+      height: calc(
+        var(--nested-vertical-gap) + var(--nested-avatar-size) / 2 + 5px // +5px visually centers the hook on the avatar
+      );
+      border-left: var(--nested-line-width) solid var(--primary-low);
+      border-bottom: var(--nested-line-width) solid var(--primary-low);
+      border-radius: 0 0 0 12px;
+      transition: border-color 0.15s ease;
+    }
+
+    // Vertical continuation line connecting to the next sibling.
+    // Only drawn for non-last children; last child stops at its connector.
+    // Overlaps the L-connector curve by 4px to prevent thin-line rendering
+    // caused by border-radius anti-aliasing.
+    &:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: calc(-1 * var(--nested-line-offset));
+
+      // +1px aligns with L-connector bottom; -10px overlaps its border-radius
+      // curve to prevent subpixel gaps from anti-aliasing
+      top: calc(
+        var(--nested-vertical-gap) + var(--nested-avatar-size) / 2 + 1px - 10px
+      );
+      bottom: 0;
+      width: var(--nested-line-width);
+      background: var(--primary-low);
+      transition: background-color 0.15s ease;
+    }
+  }
+
+  // When the parent's depth-line is hovered, highlight child connectors
+  &:not(.--depth-0).--parent-line-highlighted {
+    &::before {
+      border-color: var(--tertiary);
+    }
+
+    &:not(:last-child)::after {
+      background: var(--tertiary);
+    }
+  }
+
+  // Transparent overlay covering the parent's line area through this child.
+  // Provides click-to-collapse and hover-to-highlight for the parent line.
+  &__parent-line-btn {
+    position: absolute;
+    left: calc(-1 * var(--nested-line-offset) - 10px);
+    top: 0;
+    bottom: 0;
+    width: 22px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+
+    // Visual feedback is provided by --parent-line-highlighted class (JS).
+    // Transparent outline ensures visibility in Windows High Contrast Mode.
+    &:focus-visible {
+      outline: 2px solid transparent;
+    }
+  }
+
+  &.--depth-0 {
+    padding-bottom: 0.75em;
+    margin-top: 0.5em;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  // Left column: sticky avatar on top, clickable depth line below.
+  &__gutter {
+    grid-column: 1;
+    grid-row: 1;
+    margin-bottom: var(--nested-sticky-avatar-bottom-offset);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .topic-avatar {
+      position: sticky;
+      top: var(--nested-sticky-avatar-top);
+      z-index: 2;
+      border-top: none;
+      float: none;
+      width: auto;
+      padding-top: 0;
+      height: auto;
+
+      .avatar-flair {
+        background-size: 12px 12px;
+        width: 12px;
+        height: 12px;
+        right: -3px;
+        bottom: -2px;
+      }
+    }
+  }
+
+  // Depth line sits below the avatar. Extends 1em below the gutter so it
+  // overlaps the first child's L-connector, masking any subpixel rounding
+  // offset between grid column 1 (gutter) and column 2 (children).
+  &__depth-line {
+    flex: 1;
+    width: 100%;
+    position: relative;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    min-height: var(--space-2);
+
+    &::after {
+      content: "";
+      position: absolute;
+      left: calc(var(--nested-avatar-size) / 2);
+      top: 6px;
+      bottom: 0;
+      width: var(--nested-line-width);
+      border-radius: var(--nested-line-center-adjust);
+      background: var(--primary-low);
+      transition: background-color 0.15s ease;
+    }
+
+    // Transparent outline preserves WHCM focus visibility while
+    // letting the tertiary line color serve as the primary indicator.
+    &:focus-visible,
+    &--highlighted {
+      outline: 2px solid transparent;
+
+      &::after {
+        background: var(--tertiary);
+      }
+
+      .nested-post__depth-line-icon .d-icon {
+        color: var(--tertiary);
+      }
+    }
+
+    @media (hover: hover) {
+      &:hover {
+        &::after {
+          background: var(--tertiary);
+        }
+
+        .nested-post__depth-line-icon .d-icon {
+          color: var(--tertiary);
+        }
+      }
+    }
+
+    &--leaf {
+      &::after {
+        opacity: 0.18;
+        transition:
+          background-color 0.15s ease,
+          opacity 0.15s ease;
+      }
+
+      .nested-post__depth-line-icon .d-icon {
+        opacity: 0.45;
+        transition:
+          color 0.15s ease,
+          opacity 0.15s ease;
+      }
+
+      &:focus-visible,
+      &.nested-post__depth-line--highlighted {
+        &::after {
+          opacity: 1;
+        }
+
+        .nested-post__depth-line-icon .d-icon {
+          opacity: 1;
+        }
+      }
+    }
+
+    // When children are collapsed, turn the vertical line into an L-shape
+    // that bends toward the "N replies" expand button
+    &--collapsed {
+      &::after {
+        left: calc(var(--nested-avatar-size) / 2);
+        bottom: 14px; // aligns L-bend with the "N replies" expand button
+        width: calc(var(--nested-avatar-size) / 2);
+        transform: none;
+        background: none;
+        border-left: var(--nested-line-width) solid var(--primary-low);
+        border-bottom: var(--nested-line-width) solid var(--primary-low);
+        border-radius: 0 0 0 12px;
+        transition: border-color 0.15s ease;
+      }
+
+      @media (hover: hover) {
+        &:hover {
+          &::after {
+            background: none;
+            border-color: var(--tertiary);
+          }
+        }
+      }
+
+      &:focus-visible {
+        outline: 2px solid transparent;
+
+        &::after {
+          background: none;
+          border-color: var(--tertiary);
+        }
+      }
+    }
+  }
+
+  @media (hover: hover) {
+    &:hover > .nested-post__gutter .nested-post__depth-line--leaf {
+      &::after {
+        opacity: 1;
+      }
+
+      .nested-post__depth-line-icon .d-icon {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__depth-line-icon {
+    position: absolute;
+    bottom: 0;
+    left: calc(50% + var(--nested-line-center-adjust));
+    transform: translateX(-50%);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    padding: 1px;
+    border-radius: 50%;
+    background: var(--secondary);
+
+    .d-icon {
+      width: 100%;
+      height: 100%;
+      color: var(--primary-low);
+      transition: color 0.15s ease;
+    }
+  }
+
+  // display: contents dissolves __main from the grid so its children
+  // (article + nested-post-children) become grid items directly.
+  &__main {
+    display: contents;
+  }
+
+  &__article {
+    grid-column: 2;
+    grid-row: 1;
+    min-width: 0;
+
+    .topic-meta-data {
+      padding: 0;
+    }
+
+    .select-posts {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      white-space: nowrap;
+
+      button {
+        background-color: var(--primary-low);
+        color: var(--primary);
+        box-shadow: var(--shadow-dropdown);
+      }
+    }
+  }
+
+  &.selected &__article .select-posts button.select-post {
+    background-color: var(--tertiary);
+    color: var(--secondary);
+    border-color: var(--tertiary);
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.25em;
+
+    // Hide the reply-to line, as the lines between posts already visually indicate the reply structure
+    .reply-to-tab {
+      display: none;
+    }
+
+    .topic-meta-data {
+      display: contents;
+
+      .names {
+        flex: none;
+        margin-right: 0;
+      }
+    }
+
+    .post-infos {
+      order: 1;
+      margin-inline-start: auto;
+      font-size: var(--font-down-2);
+      color: var(--primary-medium);
+      transform: translateY(1px); // optical alignment with username baseline
+    }
+
+    // Read state was all whacky, this makes it nice.
+    .read-state {
+      position: relative;
+      right: -5px;
+    }
+  }
+
+  &__op-badge {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-down-2);
+    line-height: var(--line-height-small);
+    font-weight: bold;
+    color: var(--tertiary);
+    background: var(--tertiary-very-low);
+    border: 1px solid var(--tertiary-low);
+    border-radius: var(--d-border-radius);
+    padding: 0.1em 0.4em;
+    margin: 0.25em 0.25em 0.25em 0;
+    transform: translateY(1px);
+  }
+
+  &__pinned-badge {
+    font-size: var(--font-down-2);
+    font-weight: bold;
+    color: var(--success);
+    background: var(--success-low);
+    border: 1px solid var(--success-medium);
+    border-radius: var(--d-border-radius);
+    padding: 0.1em 0.4em;
+    line-height: 1;
+  }
+
+  &__content {
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+  }
+
+  &__menu {
+    margin: 0.25em 0;
+
+    .post-action-menu__show-replies {
+      display: none;
+    }
+
+    // Left-align the post menu in nested view on desktop (mobile keeps the
+    // Core right-aligned layout). Compounded with .post-menu-area to beat
+    // the Core `.post-menu-area { padding-left: ... }` rule from
+    // desktop/topic.scss, which has equal specificity but loads later.
+    @include viewport.from(sm) {
+      &.post-menu-area {
+        padding-left: 0;
+        margin-top: 0;
+      }
+
+      nav.post-controls {
+        justify-content: flex-start;
+
+        .actions {
+          margin-left: 0;
+        }
+      }
+    }
+  }
+
+  &__expand-replies.btn {
+    color: var(--tertiary);
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      color: var(--tertiary);
+    }
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    font-size: var(--font-down-1);
+  }
+
+  &__collapsed-bar {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.35em;
+    padding: 0.15em 0.25em;
+    border: none;
+    background: none;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    cursor: pointer;
+    border-radius: var(--d-border-radius);
+    white-space: nowrap;
+    align-self: center;
+
+    &:hover {
+      color: var(--tertiary);
+    }
+  }
+
+  &__collapsed-separator {
+    color: var(--primary-low-mid);
+  }
+
+  &__collapsed-username {
+    color: var(--primary-high-or-secondary-low);
+  }
+
+  &__collapsed-reply-count {
+    color: var(--tertiary);
+  }
+
+  &__placeholder {
+    grid-column: 2;
+    grid-row: 1;
+
+    &--deleted {
+      padding: 0 0 2em;
+      margin-top: -0.35em;
+    }
+
+    &--ignored {
+      min-height: var(--nested-avatar-size);
+      display: flex;
+      align-items: center;
+      padding-bottom: 1em;
+    }
+  }
+
+  &__placeholder-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25em;
+  }
+
+  &__placeholder-label {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-style: italic;
+  }
+
+  &__placeholder-reveal {
+    background-color: var(--danger-low-mid);
+    padding: 0.5em;
+    width: 100%;
+  }
+
+  &__placeholder-reveal-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-bottom: 0.5em;
+
+    .topic-meta-data {
+      display: contents;
+    }
+
+    .post-infos {
+      margin-left: auto;
+      order: 1;
+    }
+  }
+
+  &--whisper {
+    .nested-post__content .cooked {
+      font-style: italic;
+      color: var(--primary-medium);
+    }
+  }
+
+  &__placeholder-avatar {
+    position: sticky;
+    top: var(--nested-sticky-avatar-top);
+    z-index: 2;
+    width: var(--nested-avatar-size);
+    height: var(--nested-avatar-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-low-mid);
+
+    .d-icon {
+      width: 14px;
+      height: 14px;
+    }
+
+    &--reveal {
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      border-radius: 50%;
+      transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+
+      &:hover:not(:disabled),
+      &:focus-visible {
+        background-color: var(--primary-low);
+        color: var(--primary);
+      }
+
+      &:disabled {
+        cursor: default;
+      }
+    }
+  }
+
+  &__continue-link {
+    color: var(--tertiary);
+    font-weight: bold;
+  }
+}
+
+// ── Children container ─────────────────────────────────────────────
+.nested-post-children {
+  grid-column: 2;
+  grid-row: 2;
+
+  &__load-more {
+    margin: 0.5em 0;
+    color: var(--tertiary);
+    font-size: var(--font-down-1);
+    position: relative;
+
+    // L-shaped hook connecting the sibling continuation line to this button
+    &::before {
+      content: "";
+      position: absolute;
+      left: calc(
+        -1 * var(--nested-line-offset) - var(--nested-load-more-left-adjust) +
+          1px
+      );
+      top: -1em;
+      height: calc(50% + 1em);
+      width: var(--nested-line-offset);
+      border-left: var(--nested-line-width) solid var(--primary-low);
+      border-bottom: var(--nested-line-width) solid var(--primary-low);
+      border-radius: 0 0 0 12px;
+      transition: border-color 0.15s ease;
+    }
+
+    // When the parent's depth-line is hovered, highlight this hook to match
+    // the sibling continuation lines above it.
+    &.--parent-line-highlighted::before {
+      border-color: var(--tertiary);
+    }
+  }
+}
+
+// ── Deep-link highlight animation ──────────────────────────────────
+.nested-post--highlighted {
+  animation: nested-post-highlight 2s ease-out;
+}
+
+@keyframes nested-post-highlight {
+  0% {
+    background-color: var(--tertiary-low);
+  }
+
+  100% {
+    background-color: transparent;
+  }
+}
+
+// ── Activity log modal ────────────────────────────────────────────
+.nested-activity-log-modal {
+  .d-modal__body {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  &__list {
+    @include unstyled-list;
+  }
+
+  &__item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5em;
+    padding: 0.65em 0;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid var(--primary-low);
+    }
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    color: var(--primary-medium);
+    margin-top: 0.15em;
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__desc {
+    display: flex;
+    align-items: center;
+    gap: 0.35em;
+    flex-wrap: wrap;
+  }
+
+  &__message {
+    margin-top: 0.35em;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+  }
+
+  &__empty {
+    color: var(--primary-medium);
+    text-align: center;
+    padding: 1em 0;
+  }
+}
+
+// ── Mobile layout ─────────────────────────────────────────────────
+// Reddit-style mobile redesign: avatars move inline into the post
+// header (handled via JS template conditional), the gutter becomes a
+// narrow column holding only vertical depth-lines that run the full
+// height of each subtree for continuous visual hierarchy.
+@include viewport.until(sm) {
+  // ── View-level overrides ──
+  .nested-view {
+    padding: 0.5em;
+    border-radius: 0;
+  }
+
+  .nested-view.-mobile-focused {
+    .nested-view__header {
+      margin-bottom: 0;
+    }
+  }
+
+  .nested-view__title {
+    font-size: var(--font-up-3);
+  }
+
+  .nested-view__controls {
+    flex-wrap: wrap;
+    background: var(--secondary);
+    margin-left: -0.5em;
+    margin-right: -0.5em;
+    padding: 0.5em;
+    margin-bottom: 0;
+  }
+
+  .nested-view__controls-left {
+    flex-wrap: wrap;
+  }
+
+  // Full-width cards: break out of container side padding
+  .nested-view__op,
+  .nested-view__roots {
+    margin-left: -0.5em;
+    margin-right: -0.5em;
+  }
+
+  .nested-view__topic-map {
+    background: var(--secondary);
+    margin-left: -0.5em;
+    margin-right: -0.5em;
+    padding: 0.5em;
+    margin-bottom: 0;
+  }
+
+  // OP rendered as a full-width white card
+  .nested-view__op {
+    padding: 0.5em;
+    background: var(--secondary);
+    border: none;
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+
+  .nested-view__op-row {
+    gap: 0.5em;
+  }
+
+  // Grey gap between root-level thread cards (and after OP)
+  .nested-view__roots,
+  .nested-view__mobile-focus {
+    gap: 0.5em;
+  }
+
+  .nested-view__mobile-focus {
+    --nested-mobile-ancestor-avatar-size: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-left: -0.5em;
+    margin-right: -0.5em;
+  }
+
+  .nested-view__mobile-ancestors {
+    display: flex;
+    flex-direction: column;
+    background: var(--secondary);
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  .nested-view__mobile-focus-back,
+  .nested-view__mobile-ancestor {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    width: 100%;
+    min-width: 0;
+    min-height: calc(var(--nested-mobile-ancestor-avatar-size) + 1em);
+    padding: 0.5em;
+    color: var(--primary-medium);
+    background: var(--secondary);
+    border: 0;
+    text-align: left;
+    cursor: pointer;
+
+    .d-icon {
+      flex: 0 0 auto;
+      width: 0.75em;
+      color: var(--primary-medium);
+    }
+
+    .topic-avatar {
+      flex: 0 0 auto;
+      border-top: 0;
+      padding: 0;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--tertiary);
+      outline-offset: -2px;
+    }
+  }
+
+  .nested-view__mobile-ancestor {
+    border-top: 1px solid var(--primary-low);
+    font-size: var(--font-down-1);
+    min-height: calc(var(--nested-mobile-ancestor-avatar-size) + 0.75em);
+    padding-block: 0.375em;
+  }
+
+  .nested-view__mobile-ancestor-avatar {
+    display: flex;
+    flex: 0 0 var(--nested-mobile-ancestor-avatar-size);
+    align-items: center;
+    justify-content: center;
+    width: var(--nested-mobile-ancestor-avatar-size);
+    height: var(--nested-mobile-ancestor-avatar-size);
+
+    .avatar {
+      width: var(--nested-mobile-ancestor-avatar-size);
+      height: var(--nested-mobile-ancestor-avatar-size);
+      max-width: var(--nested-mobile-ancestor-avatar-size);
+      max-height: var(--nested-mobile-ancestor-avatar-size);
+    }
+  }
+
+  .nested-view__mobile-ancestor-meta {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5em;
+    min-width: 0;
+  }
+
+  .nested-view__mobile-ancestor-username {
+    flex: 0 0 auto;
+    color: var(--primary-high-or-secondary-low);
+    font-weight: bold;
+  }
+
+  .nested-view__mobile-ancestor-excerpt {
+    min-width: 0;
+    overflow: hidden;
+    color: var(--primary-medium);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .nested-view__mobile-focused-branch {
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.5em;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .nested-view__mobile-focus {
+      overflow-x: clip;
+
+      &.--forward {
+        .nested-view__mobile-focused-branch {
+          animation: nested-mobile-slide-forward 180ms ease-out both;
+        }
+
+        .nested-view__mobile-ancestors,
+        .nested-view__mobile-focus-back {
+          animation: nested-mobile-fade-in 160ms ease-out both;
+        }
+      }
+
+      &.--back {
+        .nested-view__mobile-focused-branch {
+          animation: nested-mobile-slide-back 180ms ease-out both;
+        }
+
+        .nested-view__mobile-ancestors,
+        .nested-view__mobile-focus-back {
+          animation: nested-mobile-fade-in 140ms ease-out both;
+        }
+      }
+    }
+
+    .nested-post-children {
+      animation: nested-mobile-replies-in 160ms ease-out both;
+    }
+  }
+
+  // Strip L-hook connectors on load-more buttons
+  .nested-post-children__load-more::before {
+    content: none;
+  }
+
+  // ── Individual nested post overrides ──
+  // Gutter stays wide enough for the avatar so sticky avatars remain attached
+  // to the mobile rail, while children remain indented in the content column.
+  .nested-post {
+    --nested-line-gutter: var(--nested-avatar-size);
+    --nested-column-gap: var(--space-1);
+    --nested-mobile-line-offset: calc(var(--nested-line-gutter) / 2);
+    --nested-line-center-adjust: var(--nested-line-width);
+    --nested-mobile-line-nudge: calc(-1 * var(--space-1));
+    --nested-mobile-line-start: calc(var(--nested-avatar-size) + 6px);
+    grid-template-columns: var(--nested-line-gutter) 1fr;
+    column-gap: var(--nested-column-gap);
+
+    // Tighter vertical spacing between siblings
+    --nested-vertical-gap: 0.25em;
+
+    // Keep the gutter bounded to the post row on mobile too. The depth-line
+    // remains available as the collapse target for this post, but the sticky
+    // avatar stops with the post instead of following the entire child subtree.
+    > .nested-post__gutter {
+      grid-row: 1;
+      position: relative;
+      z-index: 1;
+      pointer-events: none;
+
+      .topic-avatar,
+      .nested-post__placeholder-avatar {
+        pointer-events: auto;
+      }
+    }
+
+    // Depth-line: vertical bar under the avatar, no decorative hooks.
+    > .nested-post__gutter .nested-post__depth-line {
+      position: absolute;
+      top: var(--nested-mobile-line-start);
+      bottom: 0;
+      left: var(--nested-mobile-line-nudge);
+      min-height: 0;
+      pointer-events: auto;
+
+      &::after {
+        left: calc(
+          var(--nested-mobile-line-offset) - var(--nested-line-center-adjust)
+        );
+        top: 0;
+        bottom: 0;
+      }
+
+      // Override the desktop L-bend on collapsed lines — straight bar
+      &--collapsed::after {
+        border: none;
+        background: var(--primary-low);
+        width: var(--nested-line-width);
+        border-radius: 0;
+        left: calc(
+          var(--nested-mobile-line-offset) - var(--nested-line-center-adjust)
+        );
+        bottom: 0;
+      }
+    }
+
+    // Hide the collapse icon — tapping the line itself collapses
+    .nested-post__depth-line-icon {
+      display: none;
+    }
+
+    .nested-post__collapsed-bar {
+      padding-inline: 0;
+    }
+
+    // Mobile strips desktop connector hooks, so the desktop padding used to
+    // make room for those hooks must not shift the post's internal grid math.
+    &:not(.--depth-0) {
+      padding-top: 0;
+
+      &::before,
+      &:not(:last-child)::after {
+        content: none;
+      }
+    }
+
+    &:not(.--depth-0) + &:not(.--depth-0) {
+      margin-top: var(--nested-vertical-gap);
+    }
+
+    // No hover interaction on touch — depth-line handles collapse
+    > .nested-post__parent-line-btn {
+      display: none;
+    }
+
+    // Root threads rendered as full-width white cards.
+    // padding-left: 0 so the gutter starts at the card edge (= viewport
+    // edge after negative margins), giving consistent line spacing.
+    &.--depth-0 {
+      background: var(--secondary);
+      border-radius: 0;
+      padding: 0.5em 0.5em 0.5em 0;
+      margin-top: 0;
+    }
+
+    // Compact post headers
+    .nested-post__header {
+      flex-wrap: wrap;
+      gap: var(--space-2);
+
+      .topic-meta-data {
+        margin-left: 0;
+      }
+    }
+
+    .nested-post__content {
+      overflow-x: auto;
+    }
+  }
+}
+
+@keyframes nested-mobile-slide-forward {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes nested-mobile-slide-back {
+  from {
+    opacity: 0;
+    transform: translateX(-18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes nested-mobile-replies-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes nested-mobile-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+html.footer-nav-visible {
+  .nested-view__floating-actions {
+    bottom: calc(var(--footer-nav-height) + env(safe-area-inset-bottom) + 1em);
+  }
+}

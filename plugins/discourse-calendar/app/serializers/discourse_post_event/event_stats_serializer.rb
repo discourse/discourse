@@ -3,6 +3,7 @@
 module DiscoursePostEvent
   class EventStatsSerializer < ApplicationSerializer
     attributes :going
+    attributes :going_recurring
     attributes :interested
     attributes :not_going
     attributes :invited
@@ -20,6 +21,11 @@ module DiscoursePostEvent
 
     def going
       @going ||= counts[Invitee.statuses[:going]] || 0
+    end
+
+    def going_recurring
+      @going_recurring ||=
+        object.invitees.where(status: Invitee.statuses[:going], recurring: true).count
     end
 
     def interested

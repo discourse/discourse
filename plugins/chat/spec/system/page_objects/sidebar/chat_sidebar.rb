@@ -81,8 +81,12 @@ module PageObjects
         self
       end
 
+      def has_channel?(channel)
+        has_css?(".sidebar-section-link.channel-#{channel.id}")
+      end
+
       def has_no_channel?(channel)
-        has_no_css?(".sidebar-row.channel-#{channel.id}")
+        has_no_css?(".sidebar-section-link.channel-#{channel.id}")
       end
 
       def has_user_threads_section?
@@ -101,13 +105,13 @@ module PageObjects
 
       def has_unread_user_threads?
         has_css?(
-          ".sidebar-section-link[data-link-name='user-threads'] .sidebar-section-link-content-badge.icon.unread",
+          ".sidebar-section-link[data-link-name='user-threads'] .sidebar-section-link-suffix.icon.unread",
         )
       end
 
       def has_no_unread_user_threads?
         has_no_css?(
-          ".sidebar-section-link[data-link-name='user-threads'] .sidebar-section-link-content-badge.icon.unread",
+          ".sidebar-section-link[data-link-name='user-threads'] .sidebar-section-link-suffix.icon.unread",
         )
       end
 
@@ -146,12 +150,14 @@ module PageObjects
       # Requires open_notification_settings to be called first
       def set_notification_level(level)
         find(".chat-channel-sidebar-link-menu__notification-level-#{level}").click
+        has_no_css?(".chat-channel-sidebar-link-menu__notification-level-#{level}")
         self
       end
 
       # Requires open_notification_settings to be called first
       def toggle_mute_channel
         find(".chat-channel-sidebar-link-menu__mute-channel").click
+        has_no_css?(".chat-channel-sidebar-link-menu__mute-channel")
         self
       end
     end

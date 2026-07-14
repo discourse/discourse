@@ -67,6 +67,14 @@ pt:
               label: "Responder"
     discourse_ai:
       title: "IA"
+      ai_tool_approval:
+        loading: "A carregar..."
+        tool: "Ação"
+        user: "Utilizador"
+        approve: "Aprovar"
+        reject: "Rejeitar"
+        approved: "Aprovado"
+        rejected: "Rejeitado"
       default_llm:
         title: "Modelo de LLM Predefinido"
       llm_selector:
@@ -91,8 +99,7 @@ pt:
           name: "Robô"
           description: "Um robô de conversação pode responder a perguntas e assistir os utilizadores nas mensagens pessoais, fórum e na conversação"
         nav:
-          configured: "Configurada"
-          unconfigured: "Não configurada"
+          enabled: "Ativado"
         filters:
           all: "Todos"
           reset: "Repor"
@@ -133,6 +140,7 @@ pt:
         select_option: "Selecione uma opção..."
       translations:
         title: "Traduções"
+        category_scope: "Categorias"
         stats:
           title: "Estatísticas da tradução"
           eta_minutes:
@@ -148,6 +156,9 @@ pt:
           bar_done:
             one: "%{count} mensagem"
             other: "%{count} mensagens"
+        theme_translations:
+          translate:
+            label: "Traduzir"
       spam:
         short_title: "Spam"
         title: "Configurar manipulação do lixo eletrónico"
@@ -181,6 +192,12 @@ pt:
           clear_all: "Limpar tudo"
         allowed_groups: "Grupos permitidos"
         delete: "Eliminar"
+        thinking_effort_options:
+          none: "Nenhuma"
+          low: "Baixa"
+          medium: "Médio"
+          high: "Elevado"
+          max: "Máximo"
         response_format:
           open_modal: "Editar"
           modal:
@@ -249,7 +266,7 @@ pt:
           ai_summarization: "Resumir"
           ai_spam: "Spam"
         model_description:
-          anthropic-claude-opus-4-6: "O modelo mais inteligente da Anthropic"
+          anthropic-claude-opus-4-7: "O modelo mais inteligente da Anthropic"
         next:
           title: "Próximo"
         tests:
@@ -295,6 +312,7 @@ pt:
           today: "Hoje"
           last_7_days: "Últimos 7 Dias"
           last_30_days: "Últimos 30 Dias"
+          scroll_to_bottom: "Rolar até o final"
       sentiments:
         sentiment_analysis:
           filter_types:

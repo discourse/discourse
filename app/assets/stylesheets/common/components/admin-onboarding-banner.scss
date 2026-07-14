@@ -2,7 +2,7 @@
 @import "common/foundation/mixins";
 
 .admin-onboarding-banner {
-  margin-bottom: 1em;
+  margin-bottom: var(--space-4);
   color: var(--secondary);
 
   @include viewport.until(sm) {
@@ -182,5 +182,92 @@
 
   &__body {
     max-width: var(--modal-max-width);
+  }
+}
+
+.theme-picker-modal {
+  .d-modal__container {
+    background-color: var(--primary-very-low);
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    padding: var(--space-6);
+  }
+
+  &__themes {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-8);
+  }
+
+  &__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+
+    .theme-card-preview__image-wrapper {
+      border: 2px solid var(--content-border-color);
+      height: 250px;
+      border-radius: var(--d-border-radius);
+      box-shadow: var(--shadow-card);
+
+      @include viewport.from(md) {
+        height: 24vw; // adjusts with window width (like the modal itself)
+      }
+    }
+
+    &:hover,
+    &.--selected {
+      .theme-card-preview__image-wrapper {
+        border-color: var(--tertiary);
+      }
+    }
+  }
+
+  .theme-card-preview__image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--space-8);
+  }
+
+  &__enabled-badge {
+    position: absolute;
+    top: 0;
+    right: -2px;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: var(--font-down-2);
+    font-weight: 700;
+    color: var(--secondary);
+    background: var(--tertiary);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--d-border-radius);
+    z-index: 1;
+  }
+
+  &__browse-all,
+  &__upgrade-text {
+    margin-top: var(--space-4);
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    text-align: center;
+  }
+
+  &__browse-all a,
+  &__upgrade-link {
+    color: var(--tertiary);
+
+    &:hover {
+      color: var(--tertiary-hover);
+    }
   }
 }

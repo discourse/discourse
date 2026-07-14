@@ -2,11 +2,28 @@
 
 module PostVoting
   module GuardianExtension
+    def can_vote_on_post?(post, direction: nil)
+      return false if !user
+      return false if !post
+      return false if !post.is_post_voting_topic?
+      return false if !can_see?(post)
+      return false if post.user_id == user.id
+      return false if post.topic.archived?
+      return false if post.topic.closed?
+      if direction
+        if PostVotingVote.exists?(votable: post, user_id: user.id, direction: direction)
+          return false
+        end
+        return false if !PostVoting::VoteManager.can_undo(post, user)
+      end
+      true
+    end
+
     def can_edit_comment?(comment)
-      return false if !self.user
-      return true if comment.user_id == self.user.id
-      return true if self.is_admin?
-      return true if self.is_moderator?
+      return false if !user
+      return true if comment.user_id == user.id
+      return true if is_admin?
+      return true if is_moderator?
       false
     end
 
@@ -15,10 +32,10 @@ module PostVoting
     end
 
     def can_flag_post_voting_comments?
-      return false if self.user.silenced?
-      return true if self.user.staff?
+      return false if user.silenced?
+      return true if user.staff?
 
-      self.user.in_any_groups?(SiteSetting.flag_posts_voting_comments_allowed_groups_map)
+      user.in_any_groups?(SiteSetting.flag_posts_voting_comments_allowed_groups_map)
     end
 
     def can_flag_post_voting_comment?(comment)

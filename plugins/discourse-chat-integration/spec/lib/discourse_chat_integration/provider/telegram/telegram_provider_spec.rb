@@ -60,4 +60,65 @@ RSpec.describe DiscourseChatIntegration::Provider::TelegramProvider do
       expect(described_class.get_channel_by_name("Awesome Channel")).to eq(expected)
     end
   end
+
+  describe ".setup" do
+    fab!(:admin)
+
+    before do
+      SiteSetting.chat_integration_telegram_enabled = false
+      SiteSetting.chat_integration_telegram_access_token = ""
+      SiteSetting.chat_integration_telegram_secret = ""
+    end
+
+    it "raises when access token is blank" do
+      expect { described_class.setup(admin, {}) }.to raise_error(
+        DiscourseChatIntegration::ProviderError,
+      ) do |e|
+        expect(e.info[:error_key]).to eq(
+          "chat_integration.provider.telegram.errors.access_token_required",
+        )
+      end
+    end
+
+    it "persists settings when setWebhook succeeds" do
+      stub =
+        stub_request(:post, %r{https://api\.telegram\.org/botnewtok/setWebhook}).to_return(
+          body: { ok: true }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+
+      described_class.setup(admin, { chat_integration_telegram_access_token: "newtok" })
+
+      expect(stub).to have_been_requested.once
+      expect(SiteSetting.chat_integration_telegram_access_token).to eq("newtok")
+      expect(SiteSetting.chat_integration_telegram_secret).to be_present
+      expect(SiteSetting.chat_integration_telegram_enabled).to eq(true)
+    end
+
+    it "raises and does not change stored token when setWebhook fails" do
+      SiteSetting.chat_integration_telegram_access_token = "unchanged"
+      SiteSetting.chat_integration_telegram_secret = "existing-secret"
+
+      stub_request(:post, %r{https://api\.telegram\.org/botbad/setWebhook}).to_return(
+        body: { ok: false, description: "Bad Request" }.to_json,
+        headers: {
+          "Content-Type" => "application/json",
+        },
+      )
+
+      expect {
+        described_class.setup(admin, { chat_integration_telegram_access_token: "bad" })
+      }.to raise_error(DiscourseChatIntegration::ProviderError) do |e|
+        expect(e.info[:error_key]).to eq(
+          "chat_integration.provider.telegram.errors.webhook_setup_failed",
+        )
+      end
+
+      expect(SiteSetting.chat_integration_telegram_access_token).to eq("unchanged")
+      expect(SiteSetting.chat_integration_telegram_secret).to eq("existing-secret")
+      expect(SiteSetting.chat_integration_telegram_enabled).to eq(false)
+    end
+  end
 end

@@ -211,7 +211,15 @@ ro:
   not_in_group:
     join_group: "Alătură-te grupului"
   reading_time: "Durata citirii"
+  reading_time_minutes:
+    one: "%{count} minut 🕑"
+    few: "%{count} minute 🕑"
+    other: "%{count} de minute 🕑"
   likes: "Aprecieri"
+  likes_count:
+    one: "%{count} ❤"
+    few: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Ne pare rău, dar utilizatorii noi sunt limitați la %{count} răspuns pe discuție."
     few: "Ne pare rău, dar utilizatorii noi sunt limitați la %{count} răspunsuri pe discuție."
@@ -324,6 +332,11 @@ ro:
       trust_level_2: "nivel_de_încredere_2"
       trust_level_3: "nivel_de_încredere_3"
       trust_level_4: "nivel_de_încredere_4"
+    default_full_names:
+      everyone: "Toată lumea"
+      admins: "Admini"
+      moderators: "Moderatori"
+      staff: "Echipa"
     default_descriptions:
       everyone: "Grup automat care include toți membrii"
       staff: "Grup automat, inclusiv administratori și moderatori"
@@ -661,6 +674,9 @@ ro:
       session_info: "Citește informațiile despre sesiunea utilizatorului"
       read: "Citește tot"
       write: "Scrie tot"
+    device:
+      code: "Cod"
+      continue: "Continuă"
   reports:
     default:
       labels:
@@ -693,6 +709,30 @@ ro:
       xaxis: "Zi"
     new_contributors:
       xaxis: "Zi"
+    activity_by_category:
+      labels:
+        category: "Categorie"
+        topics: "Discuții"
+        posts: "Articole"
+        share: "Partajează"
+    posters_by_member_type:
+      labels:
+        count: "Articole"
+        share: "Partajează"
+      types:
+        staff: "Echipa"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Membri"
+        share: "Partajează"
+        signups: "Înregistrări"
+      levels:
+        "0": "Nou"
+        "1": "De bază"
+        "2": "Membru"
+        "3": "Utilizator frecvent"
+        "4": "Lider"
     trust_level_growth:
       yaxis: "Zi"
     consolidated_page_views:
@@ -719,8 +759,8 @@ ro:
     site_traffic:
       title: "Trafic site"
       xaxis:
-        page_view_anon_browser: "Afișări de pagină (anonim)"
-        page_view_logged_in_browser: "Afișări de pagină (conectat)"
+        page_view_anon_browser: "Anonimi"
+        page_view_crawler: "Crawlere"
         page_view_other: "Alt trafic"
       yaxis: "Zi"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
@@ -806,6 +846,12 @@ ro:
         user: "Utilizator"
         num_clicks: "Click-uri"
         num_topics: "Discuții"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Vizite"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Vizite"
     top_traffic_sources:
       title: "Top surse de trafic"
       xaxis: "Domeniu"
@@ -854,6 +900,8 @@ ro:
       xaxis: "Zi"
     page_view_logged_in_browser_reqs:
       xaxis: "Zi"
+    page_view_embed_reqs:
+      xaxis: "Zi"
     http_background_reqs:
       title: "Fundal"
       xaxis: "Zi"
@@ -899,7 +947,7 @@ ro:
       labels:
         user: Utilizator
         location: Locație
-    staff_logins:
+    admin_logins:
       labels:
         user: Utilizator
         location: Locație
@@ -976,7 +1024,6 @@ ro:
     edit_history_visible_to_public: "Permite tuturor să vadă versiunile precedente ale unei postări editate. Când e dezactivat, ele pot fi văzute doar de membrii echipei."
     delete_removed_posts_after: "Postările șterse de către autor vor fi automat șterse după (n) de ore. Dacă este setat la 0, postările vor fi șterse imediat."
     fixed_category_positions: "Dacă e bifat, veți putea aranja categoriile într-o ordine fixă. Dacă e nebifat, categoriile sunt listate în ordinea activității."
-    fixed_category_positions_on_create: "Dacă este bifat, ordonarea categoriilor va fi menținută în dialogul de creare a subiectelor (presupune fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Adaugă atributul rel nofollow la toate conținuturile transmise de către utilizator, cu excepția link-urilor interne (includiv domeniile părinte). Dacă schimbi această setare, postările trebuie refăcute cu: "rake posts:rebake"'
     post_excerpt_maxlength: "Lungimea maximă a unui fragment/rezumat dintr-o postare."
     show_pinned_excerpt_mobile: "Arată fragmente din subiectele fixate în vizualizarea de mobil."
@@ -984,7 +1031,6 @@ ro:
     post_onebox_maxlength: "Lungimea maximă a unei postări afișate în Onebox (în caractere)"
     onebox_locale: "Locala trimisă furnizorilor onebox. Dacă este lăsată necompletat, se va folosi locala implicită"
     notification_email: "Adresă expeditor: adresa de email folosită când se trimit toate emailurile esențiale ale sistemului. Domeniul specificat aici trebuie să aibă setate corect SPF, DKIM și reverse PTR pentru ca emailul să poată fi livrat."
-    email_subject: "Format de subiect personalizabil pentru emailurile standard. Vezi <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     force_https: "Forțează site-ul să folosească exclusiv HTTPS. ATENȚIE: NU activa această opțiune până nu ai verificat dacă HTTPS este configurat în întregime și funcționează absolut peste tot. Ai verificat, de asemenea, dacă și CND-ul, toate autentificările cu cont pe rețele de socializaer și toate logo-urile și dependențele externe sunt compatibile cu HTTPS?"
     summary_score_threshold: "Scorul minim necesar pentru ca o postare să fie inclusă în 'Rezumă acest subiect'"
     summary_percent_filter: "Când un utilizator face click pe 'Rezumatul acestui subiect', arată primele % de postări"
@@ -993,8 +1039,6 @@ ro:
     anon_polling_interval: "Cât de frecvent să interogheze clienții anonimi, în milisecunde"
     background_polling_interval: "Cât de des să interogheze clienții, în milisecunde (când fereastra este fundal)"
     cooldown_minutes_after_hiding_posts: "Numărul de minute pe care un utilizator trebuie să le aștepte până când va putea edita o postare ascunsă prin marcaje de avertizare ale comunității."
-    max_topics_in_first_day: "Numărul maxim de subiecte pe care un utilizator are voie să le creeze într-o perioadă de 24 de ore după ce și-a creat prima postare"
-    max_replies_in_first_day: "Numărul maxim de răspunsuri pe care un utilizator are voie să le creeze într-o perioadă de 24 de ore după ce și-a creat prima postare"
     tl2_additional_likes_per_day_multiplier: "Crește numărul maxim de aprecieri pe zi pentru (membrii cu) nivelul de încredere 2, multiplicând cu această valoare"
     tl3_additional_likes_per_day_multiplier: "Crește numărul maxim de aprecieri pe zi pentru (membrii cu) nivelul de încredere 3, multiplicând cu această valoare"
     tl4_additional_likes_per_day_multiplier: "Crește numărul maxim de aprecieri pe zi pentru (membrii cu) nivelul de încredere 4, multiplicând cu această valoare"
@@ -1010,7 +1054,6 @@ ro:
     moderators_manage_categories: "Permite moderatorilor să creeze și să gestioneze categorii"
     moderators_manage_groups: "Permite moderatorilor să creeze și să gestioneze grupuri"
     cors_origins: "Origini permise pentru interogările inter-origini (CORS). Fiecare origine trebuie să includă http:// sau https://. Variabila env DISCOURSE_ENABLE_CORS trebuie setată pe true pentru a activa CORS."
-    use_admin_ip_allowlist: "Adminii se pot autentifica numai dacă au o adresă IP definită în lista de IP-uri verificate (Admin > Rapoarte > IP-uri verificate) "
     allowed_iframes: "O listă de prefixe URL sursă pentru iframe pe care Discourse le poate permite în siguranță în postări. * poate fi folosit pentru a potrivi orice număr de caractere diferite de /."
     post_menu: "Configurează vizibilitatea și ordinea elementelor implicite din meniul articolului. Elementele suplimentare adăugate de module sau teme sunt gestionate separat și nu vor apărea în această listă."
     post_menu_hidden_items: "Elementele de meniu care se ascund în mod implicit în meniul articolului, cu excepția cazului în care se face clic pe o elipsă de expansiune. Elementele suplimentare adăugate de module sau teme sunt gestionate separat și nu vor apărea în această listă."
@@ -1030,7 +1073,6 @@ ro:
     enable_rich_text_paste: "Activează conversia automată din HTML în Markdown la lipirea textului în compozitor."
     email_token_valid_hours: "Tokenul uitat parolă / activează cont sunt valabili pentru (n) ore."
     log_out_strict: "La ieșire, închide TOATE sesiunile pentru utilizator, pe toate dispozitivele."
-    new_version_emails: "Trimite un email la adresa contact_email când o nouă versiune de Discourse este disponibilă."
     include_in_discourse_discover: "Permite CDCK, Inc. („Discourse”) să prezinte această comunitate pe <a href='https://discover.discourse.org' target='_blank'>pagina Discover</a> și în materialele de marketing Discourse. Procedând astfel, vei partaja datele necesare pentru ca site-ul tău să fie inclus în serviciu. Te rugăm să reții că promovarea comunităților este la discreția Discourse."
     invite_expiry_days: "Cât timp sunt valabile cheile de invitație ale utilizatorilor, în zile"
     login_required: "Cere autentificare pentru a citi conținutul acestui site, blochează accesul anonim."
@@ -1043,12 +1085,10 @@ ro:
     allow_new_registrations: "Permite înregistrarea noilor utilizatori. Debifați pentru a restricționa pe oricine să creeze un cont nou."
     enable_signup_cta: "Arată o notificare către utilizatorii anonimi care revin prin care să le ceri să se înregistreze pentru a avea un cont pe site."
     google_oauth2_client_secret: "Secret client al aplicației tale Google."
-    google_oauth2_hd_groups: "Preia grupurile Google ale utilizatorilor pe domeniul găzduit la autentificare. Grupurile Google preluate pot fi utilizate pentru a acorda automat calitatea de membru al grupului Discourse (consultă setările grupului). Pentru mai multe informații, vezi https://meta.discourse.org/t/226850"
     google_oauth2_verbose_logging: "Înregistrează diagnostice verbale legate de Google OAuth2 în <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     remove_older_backups: "Elimină copii de siguranță mai vechi de numărul specificat de zile. Lasă necompletat pentru a dezactiva."
     backup_frequency: "Specifică intervalul, în zile, la care sunt create copii de rezervă automate ale site-ului. Dacă este setat la 7, de exemplu, o copie de rezervă nouă va fi generată în fiecare săptămână. Setează 0 pentru a dezactiva."
     s3_backup_bucket: "Containerul (bucket) de la distanță care ține backupurile. ATENȚIE: Asgură-te că e un container privat."
-    s3_use_acls: "AWS recomandă să nu folosești ACL pentru bucket-urile S3; debifează această opțiune doar dacă intenționezi să configurezi politici de permisiuni pe `s3_upload_bucket` și `s3_backup_bucket`."
     backup_time_of_day: "Ora în format UTC la care să înceapă operațiunea de backup."
     backup_with_uploads: "Include încărcări în backup-urile programate. Dezactivarea acestei opțiuni va face backup doar la baza de date."
     active_user_rate_limit_secs: "Cât de des se actualizează câmpul 'last_seen_at', în secunde"
@@ -1131,7 +1171,6 @@ ro:
     max_image_size_kb: "Dimensiunea maximă de încărcare imagini. Acest lucru trebuie configurat în nginx (client_max_body_size)/apache sau proxy, de asemenea. Imaginile mai mari decât aceasta și mai mici decât client_max_body_size vor fi redimensionate pentru a se potrivi la încărcare."
     max_attachment_size_kb: "Dimensiunea maximă de încărcare a fișierelor atașate. Acest lucru trebuie configurat în nginx (client_max_body_size)/apache sau proxy, de asemenea."
     authorized_extensions: "O listă de extensii de fișiere permise pentru încărcare"
-    authorized_extensions_for_staff: "O listă de extensii de fișiere permise pentru încărcare pentru utilizatori din echipă, în plus față de lista definită în setarea `authorized_extensions` a site-ului."
     theme_authorized_extensions: "O listă de extensii de fișiere permise pentru încărcarea temelor"
     title_prettify: "Repară greșelile comune și erorile, incluzând toate majuscule, literă mică pentru primul caracter, multiple ! și ?, extra . la sfârșit, etc."
     topic_views_heat_low: "După acest număr de vizualizări, câmpul vizualizări este ușor evidențiat."
@@ -1186,8 +1225,6 @@ ro:
     pop3_polling_openssl_verify: "Verifică certificatul server TLS (Implicit: activat)"
     pop3_polling_username: "Numele de utilizator al contului POP3 pentru retragerea emailurilor."
     pop3_polling_password: "Parola contului de POP3 pentru retragerea emailurilor."
-    email_prefix: "[Eticheta] e folosită în subiectul email-ului. Implicit va fi \"titlul\", dacă nu este setată altfel."
-    email_site_title: "Titlul site-ului folosit ca expeditor de email-uri trimise de site. Implicit va fi 'titlu', dacă nu este setat altfel. Dacă 'titlul' conține caractere care nu sunt permise în email, folosiți această setare."
     minimum_topics_similar: "Câte subiecte trebuie să existe deja până ce câmpul subiecte similare este prezent când se compune o discuție nouă."
     relative_date_duration: "Numărul de zile după crearea unei postări cât data postării va sta afișată în format relativ (7z) în loc de format absolut (20 Feb)."
     delete_user_max_post_age: "Nu permite ștergerea utilizatorilor a căror prima postare e mai veche de (x) de zile."
@@ -1207,16 +1244,13 @@ ro:
     detect_custom_avatars: "Dacă sau nu să verifice dacă utilizatorii și-au încărcat poze de profil personalizate."
     max_daily_gravatar_crawls: "Numărul maxim zilnic de verificări pe care Discourse le va face pe Gravatar pentru a vedea dacă există avatare personalizate."
     enable_user_directory: "Furnizează un „carte de telefon” cu utilizatorii"
-    allow_anonymous_mode: "Activează opțiunea pentru ca utilizatorii să treacă la modul anonim pentru postare. Când este activată, utilizatorii pot opta ca identitățile lor să fie ascunse atunci când creează postări sau subiecte pe tot site-ul. Vezi și „permite aprecieri anonime”."
     anonymous_account_duration_minutes: "Pentru protejarea anonimității, creează un nou cont anonim la fiecare N minute pentru fiecare utilizator. Exemplu: dacă e setat la 600, imediat ce au trecut 600 de minute de la ultima postare șI utilizatorul a comutat pe anonim, va fi creat un nou cont anonim."
     allow_users_to_hide_profile: "Permite utilizatorilor să-şi ascundă profilul şi prezenţa"
     allow_profile_backgrounds: "Permite utilizatorilor să încarce fundaluri de profil."
     get_a_room_threshold: "Numărul de postări pe care un utilizator poate să le facă la adresa aceleiași persoane înainte de a primi un avertisment."
-    enable_mobile_theme: "Dispozitivele mobile folosesc o temă cu abilitatea de a schimba la întregul site. Dezactivează pentru a folosi o foiae de stil personalizată ce este total responsivă."
     dominating_topic_minimum_percent: "Ce procent din postările unui subiect trebuie să scrie un utilizator înainte de i se aminti că domină excesiv subiectul."
     suppress_uncategorized_badge: "Nu arăta ecusonul pentru subiectele fără categorie în lista de subiecte."
     permalink_normalizations: "Aplică următorul regex înainte de a detecta permalink-urile, de exemplu: /(topic.*)\\?.*/\\1 va elimina șirurile de interogare din căile subiectelor. Formatul este regex+șir folosește \\1 etc.pentru a capturarea secvențelor"
-    disable_system_edit_notifications: "Deactivează editarea notificărilo de către utilizator atunci când setarea 'download_remote_images_to_local' este activată."
     automatically_unpin_topics: "Desprinde automat subiecte când utilizatorul ajunge la sfârșitul paginii."
     read_time_word_count: "Contor de cuvinte pe minut pentru calcularea timpului estimat de citire."
     enable_powered_by_discourse: "Afișează legătura „Propulsat de Discourse” către discourse.org în partea de jos a majorității paginilor."
@@ -1226,11 +1260,8 @@ ro:
     display_name_on_posts: "Arată atât numele complet cât și numele de utilizator în postări."
     show_time_gap_days: "Dacă două postări sunt create la acest număr de zile distantă una de alta, afișează decalajul în subiect."
     short_progress_text_threshold: "După ce numărul de postări într-un subiect devine mai mare decât acest număr, bara de progres va afișa doar numărul postării curente. Dacă schiimbi lățimea barei de progres, va trebui să schimbi această valoare."
-    default_code_lang: "Evidențierea implicită a sintaxei limbajului de programare aplicată blocurilor de cod markdown (auto, text, ruby, python etc.). Această valoare trebuie să fie prezentă și în setarea `limbaje evidențiate` a site-ului."
-    autohighlight_all_code: "Aplică evidențierea sintaxei la blocurile de tip &lt;code&gt; HTML, chiar dacă nu au specificat un limbaj. Pentru a configura blocurile de cod scrise în markdown, folosește setarea „limbaj de programare implicit”."
     highlighted_languages: "Reguli de evidențiere a sintaxei incluse. (Atenție: includerea prea multor limbi poate afecta performanța) consultă: <a href='https://highlightjs.org/demo/' target='_blank'>https://highlightjs.org/demo</a> pentru o demonstrație"
     embed_unlisted: "Subiectele încorporate vor fi nelistate până când un utilizator răspunde."
-    import_embed_unlisted: "Subiectele încorporate importate vor fi de-listate până când un utilizator răspunde (chiar și atunci când setarea site-ului „încorporează de-listate” este debifată)."
     allowed_href_schemes: "Alte tipuri de linkuri permise, în afară de http și https."
     embed_post_limit: "Numărul maxim de postări care să fie încorporate."
     embed_username_required: "Numele utilizator pentru acest subiect este obligatoriu."
@@ -1281,7 +1312,6 @@ ro:
     enable_welcome_banner: "Afișează un banner pe paginile principale ale subiectelor pentru a ura bun venit membri și a le permite să caute conținut în site"
     welcome_banner_location: "Stabilește unde va apărea bannerul de bun venit pe pagină."
     welcome_banner_page_visibility: "Stabilește pe ce pagini va apărea bannerul de bun venit."
-    experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
     show_preview_for_form_templates: "Activează funcționalitatea de previzualizare pentru șabloanele de formulare"
     experimental_impersonation_time_limit_minutes: "Cât durează până când o sesiune de preluare a identității se încheie automat."
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
@@ -1293,13 +1323,7 @@ ro:
     rich_editor: "Activează editorul îmbogățit pentru compoziție astfel încât toți utilizatorii să poată comuta între modul Markdown curent și noul editor de text îmbogățit pentru o compoziție mai intuitivă și mai ușor de utilizat."
     default_composition_mode: "Setează modul implicit pentru compozitorul comunității tale. Modul de text îmbogățit oferă o experienţă de scriere mai modernă, familiară pentru majoritatea utilizatorilor, în timp ce Markdown este potrivit pentru publicul mai tehnic. Membrii pot folosi o comutare în bara de instrumente a compozitorului pentru a comuta între moduri."
     reviewable_ui_refresh: "Grupuri care pot folosi noua interfață de utilizator experimentală în coada de revizuire."
-    viewport_based_mobile_mode: "Folosește lățimea ferestrei de vizualizare pentru a determina modurile mobil sau desktop. Această setare va fi eliminată în curând. Dacă ai nevoie să o dezactivezi, te rog să ne anunți <a href='https://meta.discourse.org/t/384280'>pe Meta</a>."
-    content_localization_enabled: "Afișează conținutul localizat pentru utilizatori bazat pe preferințele lor de navigator sau de limbă ale utilizatorului. Acest conținut poate include categorii, etichete, postări și subiecte. Localele acceptate sunt setate în „locale disponibile pentru localizarea conținutului”."
-    content_localization_allowed_groups: "Grupuri care pot actualiza conținutul localizat. Necesită „localizarea conținutului activat”."
-    content_localization_language_switcher: "Arată un comutator de limbă în antet, permițând vizitatorilor să schimbe între versiunile traduse Discourse și conținutul la care au contribuit utilizatorii. Folosește limbile definite în „locale acceptate din localizarea de conținut”"
-    content_localization_crawler_param: "Servește conținut localizat crawlerelor web atunci când opțiunile „localizare conținut” și „setare locală din parametru” sunt activate. Lista localelor acceptate este definită în secțiunea „locale acceptate în localizarea conținutului”."
     content_localization_allow_author_localization: "Permite autorilor să actualizeze localizările propriilor subiecte și postări prin intermediul meniului postări."
-    fake_upcoming_change: "Aceasta este o modificare viitoare falsă, în scopuri de testare. Nu este nevoie să traduci acest șir."
     errors:
       invalid_email: "Adresă de email invalidă."
       invalid_username: "Nu există nici un utilizator cu acest nume de utilizator."
@@ -1338,6 +1362,10 @@ ro:
       user: "Utilizatori"
     results_page: "Caută rezultate pentru '%{term}'"
     audio: "[audio]"
+  posts_filter:
+    description:
+      order_latest: "Ultimele postări"
+      order_latest_topic: "Ultimele subiecte"
   filter:
     description:
       status: "Filtrează subiectele după starea lor"
@@ -1896,6 +1924,7 @@ ro:
     account_second_factor_disabled:
       title: "Autentificarea în doi pași (2FA) este dezactivată"
       subject_template: "[%{email_prefix}] Autentificare în doi pași (2FA) dezactivată"
+      subject_template_improved: "Autentificarea în doi pași (2FA) este dezactivată"
     digest:
       since_last_visit: "De la ultima ta vizită"
       new_topics: "Subiecte noi"
@@ -1905,6 +1934,7 @@ ro:
       popular_topics: "Subiecte notorii"
       join_the_discussion: "Citește mai mult"
       popular_posts: "Postări notorii"
+      subject_template_improved: "Rezumat"
       unsubscribe: "Acest rezumat este transmis de pe %{site_link} când a trecut ceva vreme de când nu te-am mai văzut. Poți schimba %{email_preferences_link} sau, pentru a te dezabona, %{unsubscribe_link}"
       your_email_settings: "setările de email"
       click_here: "click aici"
@@ -1927,8 +1957,9 @@ ro:
 
         Faceți clic pe următorul link pentru a alege o parolă:
         %{base_url}/u/password-reset/%{email_token}
+    admin_login:
+      subject_template_improved: "Autentificare"
     account_created:
-      subject_template: "[%{email_prefix}] Noul tău cont"
       text_body_template: |
         Un nou cont a fost creat pentru tine la %{site_name}
 
@@ -2240,6 +2271,8 @@ ro:
               private:
                 label: "Privat"
   onebox:
+    google_meet:
+      meeting_code: "Cod:"
     github:
       closed: "închis"
       status_date:

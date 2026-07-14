@@ -48,6 +48,71 @@ RSpec.describe AboutController do
       end
     end
 
+    context "with localized site settings" do
+      before do
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.set_locale_from_param = true
+        SiteSetting.title = "English title"
+        SiteSetting.site_description = "English description"
+
+        SiteSettingLocalization.create!(setting_name: "title", locale: "ja", value: "日本語タイトル")
+        SiteSettingLocalization.create!(
+          setting_name: "site_description",
+          locale: "ja",
+          value: "日本語の説明",
+        )
+      end
+
+      it "uses localized values in the JSON response" do
+        get "/about.json", params: { Discourse::LOCALE_PARAM => "ja" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("about", "title")).to eq("日本語タイトル")
+        expect(response.parsed_body.dig("about", "description")).to eq("日本語の説明")
+      end
+
+      it "falls back to default values when a localized value is blank" do
+        SiteSettingLocalization.find_by!(setting_name: "title", locale: "ja").update_column(
+          :value,
+          "",
+        )
+
+        get "/about.json", params: { Discourse::LOCALE_PARAM => "ja" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("about", "title")).to eq("English title")
+        expect(response.parsed_body.dig("about", "description")).to eq("日本語の説明")
+      end
+
+      it "uses localized values in crawler metadata" do
+        get "/about",
+            params: {
+              Discourse::LOCALE_PARAM => "ja",
+            },
+            headers: {
+              "HTTP_USER_AGENT" => "Googlebot",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.body).to include(
+          "<title>#{I18n.t("js.about.simple_title", locale: :ja)} - 日本語タイトル</title>",
+        )
+        expect(response.body).to include(%(meta name="description" content="日本語の説明"))
+      end
+
+      it "uses original values when the user prefers original content" do
+        user = Fabricate(:user, locale: "ja")
+        user.user_option.update!(show_original_content: true)
+        sign_in(user)
+
+        get "/about.json", params: { Discourse::LOCALE_PARAM => "ja" }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("about", "title")).to eq("English title")
+        expect(response.parsed_body.dig("about", "description")).to eq("English description")
+      end
+    end
+
     it "serializes stats when 'Guardian#can_see_about_stats?' is true" do
       Guardian.any_instance.stubs(:can_see_about_stats?).returns(true)
       get "/about.json"
@@ -62,6 +127,30 @@ RSpec.describe AboutController do
 
       expect(response.status).to eq(200)
       expect(response.parsed_body["about"].keys).not_to include("stats")
+    end
+
+    context "with a granular API key" do
+      fab!(:admin)
+      fab!(:user)
+      fab!(:api_key, refind: false) do
+        Fabricate(
+          :api_key,
+          api_key_scopes: [Fabricate.build(:api_key_scope, resource: "about", action: "read")],
+        )
+      end
+
+      before do
+        SiteSetting.hide_user_profiles_from_public = true
+        SiteSetting.login_required = true
+      end
+
+      it "uses the supplied API username for about requests" do
+        get "/about.json", headers: { "Api-Key": api_key.key, "Api-Username": user.username }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("about", "title")).to eq(SiteSetting.title)
+        expect(response.parsed_body.dig("about", "admin_ids") || []).to include(admin.id)
+      end
     end
 
     context "with profile visibility controls" do

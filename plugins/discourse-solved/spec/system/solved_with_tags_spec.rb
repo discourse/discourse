@@ -55,9 +55,8 @@ describe "Solved with tags" do
     fab!(:other_tag, :tag)
     fab!(:topic_with_solved_tag) { Fabricate(:topic_with_op, user: admin, tags: [tag, other_tag]) }
     fab!(:answer) { Fabricate(:post, topic: topic_with_solved_tag) }
-    fab!(:solved_record) do
-      Fabricate(:solved_topic, topic: topic_with_solved_tag, answer_post: answer)
-    end
+    fab!(:solved_record) { Fabricate(:solved_topic, topic: topic_with_solved_tag) }
+    fab!(:topic_answer) { Fabricate(:topic_answer, solved_topic: solved_record, post: answer) }
 
     it "shows confirmation when removing the solved tag from a topic with an accepted answer" do
       sign_in(admin)

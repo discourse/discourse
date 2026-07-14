@@ -12,6 +12,10 @@ export default class AdminSearchLogsTermController extends Controller {
       id: "all",
       name: i18n("admin.logs.search_logs.types.all_search_types"),
     },
+    {
+      id: "non_staff_only",
+      name: i18n("admin.logs.search_logs.types.non_staff_only"),
+    },
     { id: "header", name: i18n("admin.logs.search_logs.types.header") },
     {
       id: "full_page",
@@ -48,14 +52,12 @@ export default class AdminSearchLogsTermController extends Controller {
           },
         },
         scales: {
-          y: [
-            {
-              display: true,
-              ticks: {
-                stepSize: 1,
-              },
+          y: {
+            display: true,
+            ticks: {
+              stepSize: 1,
             },
-          ],
+          },
         },
       },
     };

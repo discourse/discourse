@@ -26,6 +26,13 @@ bg:
     popup:
       chat_mention:
         direct: '%{username} ви спомена в "%{channel}"'
+    actions:
+      chat_reply:
+        title: Отговорете
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Одобри"
+      default_deny_label: "Отказ"
   reviewable_score_types:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"

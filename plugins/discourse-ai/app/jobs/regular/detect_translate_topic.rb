@@ -34,9 +34,7 @@ module Jobs
           return
         end
       else
-        target_category_ids = SiteSetting.ai_translation_target_categories
-        return if target_category_ids.blank?
-        return if target_category_ids.split("|").map(&:to_i).exclude?(topic.category_id)
+        return if !DiscourseAi::Translation.category_allowed?(topic.category)
       end
 
       if (detected_locale = topic.locale).blank?
@@ -53,9 +51,17 @@ module Jobs
       locales = DiscourseAi::Translation.locales
       return if locales.blank?
 
+      existing_base_locales =
+        TopicLocalization
+          .where(topic_id: topic.id)
+          .pluck(:locale)
+          .map { |l| l.split("_").first }
+          .to_set
+
       locales.each do |locale|
         next if LocaleNormalizer.is_same?(locale, detected_locale)
-        exists = topic.localizations.matching_locale(locale).exists?
+        base_locale = locale.split("_").first
+        exists = existing_base_locales.include?(base_locale)
 
         has_quota = DiscourseAi::Translation::TopicLocalizer.has_relocalize_quota?(topic, locale)
         next if !force && exists && !has_quota

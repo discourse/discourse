@@ -62,6 +62,8 @@ class Category < ActiveRecord::Base
            :require_topic_approval,
            :require_topic_approval=,
            :require_topic_approval?,
+           :nested_replies_default,
+           :nested_replies_default=,
            :topic_posting_review_mode,
            :topic_posting_review_mode=,
            :reply_posting_review_mode,
@@ -73,6 +75,22 @@ class Category < ActiveRecord::Base
 
   accepts_nested_attributes_for :category_setting, update_only: true
   accepts_nested_attributes_for :category_localizations, allow_destroy: true
+
+  def nested_replies_conversion_completed?
+    !!ActiveModel::Type::Boolean.new.cast(
+      custom_fields[NestedReplies::CONVERSION_COMPLETED_CUSTOM_FIELD],
+    )
+  end
+
+  def mark_nested_replies_conversion_completed!
+    custom_fields[NestedReplies::CONVERSION_COMPLETED_CUSTOM_FIELD] = true
+    save_custom_fields(true, run_validations: false)
+  end
+
+  def clear_nested_replies_conversion_completed!
+    custom_fields.delete(NestedReplies::CONVERSION_COMPLETED_CUSTOM_FIELD)
+    save_custom_fields(true, run_validations: false)
+  end
 
   validates :user_id, presence: true
 
@@ -94,6 +112,7 @@ class Category < ActiveRecord::Base
   validates :num_featured_topics, numericality: { only_integer: true, greater_than: 0 }
   validates :search_priority, inclusion: { in: Searchable::PRIORITIES.values }
 
+  validate :emoji_exists
   validate :parent_category_validator
   validate :email_in_validator
   validate :ensure_slug
@@ -127,6 +146,7 @@ class Category < ActiveRecord::Base
   after_update :create_category_permalink, if: :saved_change_to_slug?
   after_update :revise_category_definition, if: :saved_change_to_description?
   after_update :run_plugin_category_update_param_callbacks
+  after_update :enqueue_category_hashtag_remap, if: :saved_change_to_hashtag_ref?
   after_destroy :trash_category_definition
   after_destroy :clear_related_site_settings
 
@@ -144,10 +164,10 @@ class Category < ActiveRecord::Base
     if saved_change_to_uploaded_logo_id? || saved_change_to_uploaded_logo_dark_id? ||
          saved_change_to_uploaded_background_id? || saved_change_to_uploaded_background_dark_id?
       upload_ids = [
-        self.uploaded_logo_id,
-        self.uploaded_logo_dark_id,
-        self.uploaded_background_id,
-        self.uploaded_background_dark_id,
+        uploaded_logo_id,
+        uploaded_logo_dark_id,
+        uploaded_background_id,
+        uploaded_background_dark_id,
       ]
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
@@ -244,7 +264,7 @@ class Category < ActiveRecord::Base
                 :subcategory_count
 
   # Allows us to skip creating the category definition topic in tests.
-  attr_accessor :skip_category_definition
+  attr_accessor :skip_category_definition, :skip_publish
 
   enum :style_type, { square: 0, icon: 1, emoji: 2 }
 
@@ -329,7 +349,6 @@ class Category < ActiveRecord::Base
   end
 
   def category_types
-    return {} if !SiteSetting.enable_simplified_category_creation
     Categories::TypeRegistry
       .all
       .values
@@ -345,6 +364,10 @@ class Category < ActiveRecord::Base
       .flatten(1)
       .map { |setting| setting[:key].to_sym }
       .uniq
+  end
+
+  def emoji_exists
+    errors.add(:emoji, :invalid) if emoji.present? && !Emoji.exists?(emoji)
   end
 
   # Accepts an array of slugs with each item in the array
@@ -423,7 +446,7 @@ class Category < ActiveRecord::Base
   end
 
   def top_level?
-    self.parent_category_id.nil?
+    parent_category_id.nil?
   end
 
   def self.scoped_to_permissions(guardian, permission_types)
@@ -515,6 +538,7 @@ class Category < ActiveRecord::Base
           AND topics.visible = true
           AND posts.deleted_at IS NULL
           AND posts.user_deleted = false
+          AND posts.post_type <> #{Post.types[:small_action]}
           #{c.topic_id ? "AND topics.id != :topic_id" : ""}
       SQL
 
@@ -531,11 +555,11 @@ class Category < ActiveRecord::Base
     query =
       Post
         .joins(:topic)
-        .where(["topics.category_id = ?", self.id])
+        .where(["topics.category_id = ?", id])
         .where("topics.visible = true")
         .where("posts.deleted_at IS NULL")
         .where("posts.user_deleted = false")
-    self.topic_id ? query.where.not(topics: { id: self.topic_id }) : query
+    topic_id ? query.where.not(topics: { id: topic_id }) : query
   end
 
   # Internal: Generate the text of post prompting to enter category description.
@@ -569,19 +593,19 @@ class Category < ActiveRecord::Base
 
   def revise_category_definition
     return if skip_category_definition
-    return if self.topic.blank? || self.topic.first_post.blank?
+    return if topic.blank? || topic.first_post.blank?
 
     # NOTE: Revising the first post will also update the category description,
     # see PostRevisor#update_category_description
-    self.topic.first_post.revise(self.user, { raw: self.description }, skip_validations: true)
+    topic.first_post.revise(user, { raw: description }, skip_validations: true)
   end
 
   def trash_category_definition
-    self.topic&.trash!
+    topic&.trash!
   end
 
   def clear_related_site_settings
-    SiteSetting.general_category_id = -1 if self.id == SiteSetting.general_category_id
+    SiteSetting.general_category_id = -1 if id == SiteSetting.general_category_id
   end
 
   def topic_url
@@ -592,40 +616,54 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def self.first_paragraph_description(cooked)
+    doc = Nokogiri::HTML5.fragment(cooked)
+    doc.css("img").remove
+    doc.css("p").first&.inner_html&.strip
+  end
+
   def description_text
-    return nil unless self.description
+    return nil unless description
 
     @@cache_text ||= LruRedux::ThreadSafeCache.new(1000)
-    @@cache_text.getset(self.description) do
-      text = Nokogiri::HTML5.fragment(self.description).text.strip
-      ERB::Util.html_escape(text).html_safe
+    @@cache_text.getset(description) do
+      ERB::Util.html_escape(plain_text_description.to_s).html_safe
     end
   end
 
+  def plain_text_description
+    return nil unless description
+
+    @@cache_plain_text ||= LruRedux::ThreadSafeCache.new(1000)
+    @@cache_plain_text
+      .getset(description) { Nokogiri::HTML5.fragment(description).text.strip }
+      .presence
+  end
+
   def description_excerpt
-    return nil unless self.description
+    return nil unless description
 
     @@cache_excerpt ||= LruRedux::ThreadSafeCache.new(1000)
-    @@cache_excerpt.getset(self.description) { PrettyText.excerpt(description, 300) }
+    @@cache_excerpt.getset(description) { PrettyText.excerpt(description, 300) }
   end
 
   def access_category_via_group
     Group
       .joins(:category_groups)
-      .where("category_groups.category_id = ?", self.id)
+      .where("category_groups.category_id = ?", id)
       .where("groups.public_admission OR groups.allow_membership_requests")
       .order(:allow_membership_requests)
       .first
   end
 
   def duplicate_slug?
-    Category.where(slug: self.slug, parent_category_id: parent_category_id).where.not(id: id).any?
+    Category.where(slug: slug, parent_category_id: parent_category_id).where.not(id: id).any?
   end
 
   def ensure_slug
     return if name.blank?
 
-    self.name.strip!
+    name.strip!
 
     if slug.present?
       # if we don't unescape it first we strip the % from the encoded version
@@ -648,17 +686,19 @@ class Category < ActiveRecord::Base
     # only allow to use category itself id.
     match_id = /\A(\d+)-category/.match(self.slug)
     if match_id.present?
-      errors.add(:slug, :invalid) if new_record? || (match_id[1] != self.id.to_s)
+      errors.add(:slug, :invalid) if new_record? || (match_id[1] != id.to_s)
     end
   end
 
   def slug_for_url
-    slug.present? ? self.slug : "#{self.id}-category"
+    slug.presence || "#{id}-category"
   end
 
   def publish_category
-    if self.read_restricted
-      group_ids = self.groups.pluck(:id)
+    return if skip_publish
+
+    if read_restricted
+      group_ids = groups.pluck(:id)
 
       if group_ids.present?
         MessageBus.publish(
@@ -677,18 +717,18 @@ class Category < ActiveRecord::Base
 
   def remove_site_settings
     SiteSetting.all_settings.each do |s|
-      SiteSetting.set(s[:setting], "") if s[:type] == "category" && s[:value].to_i == self.id
+      SiteSetting.set(s[:setting], "") if s[:type] == "category" && s[:value].to_i == id
     end
   end
 
   def publish_category_deletion
-    MessageBus.publish("/categories", deleted_categories: [self.id])
+    MessageBus.publish("/categories", deleted_categories: [id])
   end
 
   # This is used in a validation so has to produce accurate results before the
   # record has been saved
   def height_of_ancestors(max_height = SiteSetting.max_category_nesting)
-    parent_id = self.parent_category_id
+    parent_id = parent_category_id
 
     return max_height if parent_id == id
 
@@ -716,7 +756,7 @@ class Category < ActiveRecord::Base
   # This is used in a validation so has to produce accurate results before the
   # record has been saved
   def depth_of_descendants(max_depth = SiteSetting.max_category_nesting)
-    parent_id = self.parent_category_id
+    parent_id = parent_category_id
 
     return max_depth if parent_id == id
 
@@ -828,7 +868,7 @@ class Category < ActiveRecord::Base
 
   def auto_bump_limiter
     return nil if num_auto_bump_daily.to_i == 0
-    RateLimiter.new(nil, "auto_bump_limit_#{self.id}", 1, 1.day.to_i / num_auto_bump_daily.to_i)
+    RateLimiter.new(nil, "auto_bump_limit_#{id}", 1, 1.day.to_i / num_auto_bump_daily.to_i)
   end
 
   def clear_auto_bump_cache!
@@ -863,9 +903,9 @@ class Category < ActiveRecord::Base
         .visible
         .listable_topics
         .exclude_scheduled_bump_topics
-        .where(category_id: self.id)
-        .where.not(id: self.topic_id)
-        .where("bumped_at < ?", (self.auto_bump_cooldown_days || 1).days.ago)
+        .where(category_id: id)
+        .where.not(id: topic_id)
+        .where("bumped_at < ?", (auto_bump_cooldown_days || 1).days.ago)
         .where("pinned_at IS NULL AND NOT closed AND NOT archived")
         .order("bumped_at ASC")
         .limit(1)
@@ -910,15 +950,15 @@ class Category < ActiveRecord::Base
   end
 
   def email_in_validator
-    return if self.email_in.blank?
+    return if email_in.blank?
     email_in
       .split("|")
       .each do |email|
         escaped = Rack::Utils.escape_html(email)
         if !Email.is_valid?(email)
-          self.errors.add(:base, I18n.t("category.errors.invalid_email_in", email: escaped))
+          errors.add(:base, I18n.t("category.errors.invalid_email_in", email: escaped))
         elsif group = Group.find_by_email(email)
-          self.errors.add(
+          errors.add(
             :base,
             I18n.t(
               "category.errors.email_already_used_in_group",
@@ -926,8 +966,8 @@ class Category < ActiveRecord::Base
               group_name: Rack::Utils.escape_html(group.name),
             ),
           )
-        elsif category = Category.where.not(id: self.id).find_by_email(email)
-          self.errors.add(
+        elsif category = Category.where.not(id: id).find_by_email(email)
+          errors.add(
             :base,
             I18n.t(
               "category.errors.email_already_used_in_category",
@@ -940,15 +980,15 @@ class Category < ActiveRecord::Base
   end
 
   def downcase_name
-    self.name_lower = name.downcase if self.name
+    self.name_lower = name.downcase if name
   end
 
   def visible_group_names(user)
-    self.groups.visible_groups(user)
+    groups.visible_groups(user)
   end
 
   def secure_group_ids
-    groups.pluck("groups.id") if self.read_restricted?
+    groups.pluck("groups.id") if read_restricted?
   end
 
   def update_latest
@@ -957,7 +997,7 @@ class Category < ActiveRecord::Base
         .order("posts.created_at desc")
         .where("NOT hidden")
         .joins("join topics on topics.id = topic_id")
-        .where("topics.category_id = :id", id: self.id)
+        .where("topics.category_id = :id", id: id)
         .limit(1)
         .pluck("posts.id")
         .first
@@ -966,35 +1006,33 @@ class Category < ActiveRecord::Base
       Topic
         .order("topics.created_at desc")
         .where("visible")
-        .where("topics.category_id = :id", id: self.id)
+        .where("topics.category_id = :id", id: id)
         .limit(1)
         .pluck("topics.id")
         .first
 
-    self.update(latest_topic_id: latest_topic_id, latest_post_id: latest_post_id)
+    update(latest_topic_id: latest_topic_id, latest_post_id: latest_post_id)
   end
 
   def self.query_parent_category(parent_slug)
     encoded_parent_slug = CGI.escape(parent_slug) if SiteSetting.slug_generation_method == "encoded"
-    self.where(slug: (encoded_parent_slug || parent_slug), parent_category_id: nil).pick(:id) ||
-      self.where(id: parent_slug.to_i).pick(:id)
+    where(slug: encoded_parent_slug || parent_slug, parent_category_id: nil).pick(:id) ||
+      where(id: parent_slug.to_i).pick(:id)
   end
 
   def self.query_category(slug_or_id, parent_category_id)
     encoded_slug_or_id = CGI.escape(slug_or_id) if SiteSetting.slug_generation_method == "encoded"
-    self.where(
-      slug: (encoded_slug_or_id || slug_or_id),
-      parent_category_id: parent_category_id,
-    ).first || self.where(id: slug_or_id.to_i, parent_category_id: parent_category_id).first
+    where(slug: encoded_slug_or_id || slug_or_id, parent_category_id: parent_category_id).first ||
+      where(id: slug_or_id.to_i, parent_category_id: parent_category_id).first
   end
 
   def self.find_by_email(email)
-    self.where("string_to_array(email_in, '|') @> ARRAY[?]", Email.downcase(email)).first
+    where("string_to_array(email_in, '|') @> ARRAY[?]", Email.downcase(email)).first
   end
 
   def has_children?
     return @has_children if defined?(@has_children)
-    @has_children = (id && Category.where(parent_category_id: id).exists?)
+    @has_children = id && Category.where(parent_category_id: id).exists?
   end
 
   def uncategorized?
@@ -1022,9 +1060,7 @@ class Category < ActiveRecord::Base
   end
 
   def url
-    @@url_cache.defer_get_set(self.id.to_s) do
-      "#{Discourse.base_path}/c/#{slug_path.join("/")}/#{self.id}"
-    end
+    @@url_cache.defer_get_set(id.to_s) { "#{Discourse.base_path}/c/#{slug_path.join("/")}/#{id}" }
   end
 
   def slug_url_without_id
@@ -1069,7 +1105,7 @@ class Category < ActiveRecord::Base
   def index_search
     Jobs.enqueue(
       :index_category_for_search,
-      category_id: self.id,
+      category_id: id,
       force: saved_change_to_attribute?(:name),
     )
   end
@@ -1182,47 +1218,89 @@ class Category < ActiveRecord::Base
       .find_each { |category| category.create_category_definition }
   end
 
+  def self.hashtag_ref_from(slug:, parent_category_id:)
+    parent_slug = Category.where(id: parent_category_id).pick(:slug) if parent_category_id.present?
+    [parent_slug, slug].compact.join(Category::SLUG_REF_SEPARATOR)
+  end
+
   def slug_path(parent_ids = Set.new)
-    if self.parent_category_id.present?
-      if parent_ids.add?(self.parent_category_id)
-        self.parent_category.slug_path(parent_ids) << self.slug_for_url
+    if parent_category_id.present?
+      if parent_ids.add?(parent_category_id)
+        parent_category.slug_path(parent_ids) << slug_for_url
       else
         []
       end
     else
-      [self.slug_for_url]
+      [slug_for_url]
     end
   end
 
   def slug_ref(depth: 1)
-    if self.parent_category_id.present?
-      built_ref = [self.slug]
-      parent = self.parent_category
+    if parent_category_id.present?
+      built_ref = [slug]
+      parent = parent_category
       while parent.present? && (built_ref.length < depth + 1)
         built_ref << parent.slug
         parent = parent.parent_category
       end
       built_ref.reverse.join(Category::SLUG_REF_SEPARATOR)
     else
-      self.slug
+      slug
     end
   end
 
-  def cannot_delete_reason
-    return I18n.t("category.cannot_delete.uncategorized") if self.uncategorized?
-    return I18n.t("category.cannot_delete.has_subcategories") if self.has_children?
+  def saved_change_to_hashtag_ref?
+    saved_change_to_slug? || saved_change_to_parent_category_id?
+  end
 
-    if self.topic_count != 0
-      oldest_topic = self.topics.where.not(id: self.topic_id).order("created_at ASC").limit(1).first
+  def enqueue_category_hashtag_remap
+    old_slug = saved_change_to_slug? ? slug_before_last_save : slug
+    old_parent_category_id =
+      if saved_change_to_parent_category_id?
+        parent_category_id_before_last_save
+      else
+        parent_category_id
+      end
+
+    enqueue_category_hashtag_remap_job(
+      category_id: id,
+      old_ref:
+        Category.hashtag_ref_from(slug: old_slug, parent_category_id: old_parent_category_id),
+      new_ref: slug_ref,
+    )
+
+    if saved_change_to_slug?
+      subcategories.find_each do |subcategory|
+        enqueue_category_hashtag_remap_job(
+          category_id: subcategory.id,
+          old_ref: [old_slug, subcategory.slug].join(Category::SLUG_REF_SEPARATOR),
+          new_ref: [slug, subcategory.slug].join(Category::SLUG_REF_SEPARATOR),
+        )
+      end
+    end
+  end
+
+  def enqueue_category_hashtag_remap_job(category_id:, old_ref:, new_ref:)
+    return if old_ref.blank? || new_ref.blank? || old_ref == new_ref
+
+    DB.after_commit { Jobs.enqueue(:remap_category_hashtag, category_id:, old_ref:, new_ref:) }
+  end
+
+  def cannot_delete_reason
+    return I18n.t("category.cannot_delete.uncategorized") if uncategorized?
+    return I18n.t("category.cannot_delete.has_subcategories") if has_children?
+
+    if topic_count != 0
+      oldest_topic = topics.where.not(id: topic_id).order("created_at ASC").limit(1).first
       if oldest_topic
         I18n.t(
           "category.cannot_delete.topic_exists",
-          count: self.topic_count,
+          count: topic_count,
           topic_link: "<a href=\"#{oldest_topic.url}\">#{CGI.escapeHTML(oldest_topic.title)}</a>",
         )
       else
         # This is a weird case, probably indicating a bug.
-        I18n.t("category.cannot_delete.topic_exists_no_oldest", count: self.topic_count)
+        I18n.t("category.cannot_delete.topic_exists_no_oldest", count: topic_count)
       end
     end
   end
@@ -1262,7 +1340,7 @@ class Category < ActiveRecord::Base
   end
 
   def ensure_category_setting
-    self.build_category_setting if self.category_setting.blank?
+    build_category_setting if category_setting.blank?
   end
 
   def group_based_posting_review_mode?(post_type)

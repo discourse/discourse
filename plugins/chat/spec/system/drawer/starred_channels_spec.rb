@@ -186,5 +186,22 @@ RSpec.describe "Drawer - starred channels" do
       find(".c-navbar__back-button").click
       expect(drawer_page).to have_open_channels
     end
+
+    it "returns to starred channels even after closing and reopening the drawer" do
+      visit("/")
+      chat_page.open_from_header
+      drawer_page.open_channel_row(channel_1)
+      expect(drawer_page).to have_open_channel(channel_1)
+
+      drawer_page.close
+      expect(chat_page).to have_no_drawer
+
+      chat_page.open_from_header
+      expect(drawer_page).to have_open_channel(channel_1)
+
+      drawer_page.back
+
+      expect(drawer_page).to have_open_starred_channels
+    end
   end
 end

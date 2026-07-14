@@ -4,10 +4,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
-import element from "discourse/helpers/element";
 import { bind } from "discourse/lib/decorators";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dElement from "discourse/ui-kit/helpers/d-element";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -41,16 +41,16 @@ export default class UpcomingChangesDebugButton extends Component {
   <template>
     <DMenu
       @identifier="upcoming-changes-debug-menu"
-      @triggerClass={{concatClass
+      @triggerClass={{dConcatClass
         "toggle-upcoming-changes-menu"
         (if this.isActive "--active")
       }}
-      @triggerComponent={{element "button"}}
+      @triggerComponent={{dElement "button"}}
       @modalForMobile={{false}}
       @title={{i18n "dev_tools.toggle_upcoming_changes_debug"}}
     >
       <:trigger>
-        {{icon "flask"}}
+        {{dIcon "flask"}}
       </:trigger>
       <:content>
         <div class="upcoming-changes-debug-menu">

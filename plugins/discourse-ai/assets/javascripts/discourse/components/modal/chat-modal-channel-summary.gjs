@@ -1,12 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import DModal from "discourse/components/d-modal";
-import DModalCancel from "discourse/components/d-modal-cancel";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import DModal from "discourse/ui-kit/d-modal";
+import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import { i18n } from "discourse-i18n";
 import {
   isAiCreditLimitError,
@@ -80,9 +80,9 @@ export default class ChatModalChannelSummary extends Component {
           @valueProperty="value"
           class="summarization-since"
         />
-        <ConditionalLoadingSection @isLoading={{this.loading}}>
+        <DConditionalLoadingSection @isLoading={{this.loading}}>
           <p class="summary-area">{{this.summary}}</p>
-        </ConditionalLoadingSection>
+        </DConditionalLoadingSection>
       </:body>
       <:footer>
         <DModalCancel @close={{@closeModal}} />

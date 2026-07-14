@@ -31,11 +31,15 @@ uk:
       status_change: "Змінено статус призначення для %{who} %{when}"
     discourse_assign:
       add_unassigned_filter: "Додайте фільтр «непризначені» до категорії"
+      additional_assign_allowed_groups: "Додаткові групи з дозволом на призначення"
+      additional_assign_allowed_groups_description: "Учасники цих груп можуть призначати теми в цій категорії. Групи, які вже дозволені глобально, відображаються тут і не можуть бути видалені. Налаштування батьківської категорії не застосовуються до підкатегорій."
       cant_act: "Ви не можете діяти на основі прапорів, призначених іншим користувачам"
       cant_act_unclaimed: "Ви повинні претендувати на цю тему, перш ніж реагувати на прапори."
       topic_search_placeholder: "Пошук тем за назвою або змістом публікації"
       sidebar_name_filter_placeholder: "Ім'я/Ім'я користувача"
       assigned: "Призначено"
+      group_no_assignments_title: "Немає завдань"
+      group_no_assignments_body: "Наразі для цієї групи немає активних завдань."
       group_everyone: "Усі"
       assigned_to: "Призначено для"
       assigned_topic_to: "Призначена тема для <a href='%{path}'>%{username}</a>"
@@ -138,6 +142,22 @@ uk:
           unassigned: "не призначені"
         assigned:
           label: "Призначено для"
+    topics:
+      bulk:
+        unassign: "Скасувати призначення тем"
+        assign: "Призначити теми"
+        assign_description: "Призначити вибрані теми наступному користувачеві:"
+        unassign_description: "Ви хочете скасувати призначення вибраних тем?"
+        confirm_assign_topics:
+          one: "Призначити тему %{count}"
+          few: "Призначити %{count} теми"
+          many: "Призначити %{count} тем"
+          other: "Призначити %{count} тем"
+        confirm_unassign_topics:
+          one: "Скасувати призначення %{count} тем"
+          few: "Скасувати призначення %{count} теми"
+          many: "Скасувати призначення %{count} тем"
+          other: "Скасувати призначення %{count} тем"
     discourse_automation:
       scriptables:
         random_assign:
@@ -190,3 +210,23 @@ uk:
       title: "Редагувати призначення"
       topic: "Тема"
       post: "Допис"
+    discourse_workflows:
+      node_unavailable:
+        requires_assign: "Потрібно ввімкнути плагін Assign"
+      nodes:
+        "action:assign_topic": "Призначити тему"
+        "trigger:assigned": "Призначено"
+      node_descriptions:
+        "action:assign_topic": "Призначити або скасувати призначення теми"
+        "trigger:assigned": "Спрацьовує, коли призначено тему або публікацію"
+      assign_topic:
+        operation: "Операція"
+        operations:
+          assign: "Призначити"
+          unassign: "Скасувати призначення"
+        topic_id: "ID теми"
+        assignee: "Правонаступник"
+        replace_existing: "Замінити існуюче завдання"
+      assigned:
+        topic_assignments_only: "Активується лише тоді, коли метою завдання є тема, а не окремий допис"
+        topic_assignments_only_description: "Тільки завдання за темами"

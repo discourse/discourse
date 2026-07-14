@@ -2,14 +2,12 @@ import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import { bind } from "discourse/lib/decorators";
-import { optionalRequire } from "discourse/lib/utilities";
 import User from "discourse/models/user";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel" with {
+  discourseImport: "optional",
+};
 import DiscoursePostEventEventStats from "./discourse-post-event-event-stats";
 import DiscoursePostEventInvitee from "./discourse-post-event-invitee";
-
-const ChatChannel = optionalRequire(
-  "discourse/plugins/chat/discourse/models/chat-channel"
-);
 
 const DEFAULT_REMINDER = {
   type: "notification",
@@ -35,12 +33,15 @@ export default class DiscoursePostEventEvent {
   @tracked location;
   @tracked url;
   @tracked description;
+  @tracked descriptionHtml;
   @tracked timezone;
   @tracked showLocalTime;
   @tracked status;
   @tracked post;
   @tracked minimal;
   @tracked chatEnabled;
+  @tracked livestream;
+  @tracked livestreamOnebox;
   @tracked canUpdateAttendance;
   @tracked canActOnDiscoursePostEvent;
   @tracked shouldDisplayInvitees;
@@ -53,6 +54,7 @@ export default class DiscoursePostEventEvent {
   @tracked recurrence;
   @tracked customFields;
   @tracked channel;
+  @tracked imageUpload;
 
   @tracked _watchingInvitee;
   @tracked _sampleInvitees;
@@ -74,6 +76,7 @@ export default class DiscoursePostEventEvent {
     this.location = args.location;
     this.url = args.url;
     this.description = args.description;
+    this.descriptionHtml = args.description_html;
     this.timezone = args.timezone;
     this.showLocalTime = args.show_local_time;
     this.status = args.status;
@@ -84,6 +87,8 @@ export default class DiscoursePostEventEvent {
     this.isStandalone = args.is_standalone;
     this.minimal = args.minimal;
     this.chatEnabled = args.chat_enabled;
+    this.livestream = args.livestream;
+    this.livestreamOnebox = args.livestream_onebox;
     this.maxAttendees = args.max_attendees;
     this.atCapacity = args.at_capacity;
     this.recurrence = args.recurrence;
@@ -98,6 +103,7 @@ export default class DiscoursePostEventEvent {
     if (args.channel && ChatChannel) {
       this.channel = ChatChannel.create(args.channel);
     }
+    this.imageUpload = args.image_upload;
   }
 
   get watchingInvitee() {
@@ -152,6 +158,10 @@ export default class DiscoursePostEventEvent {
     return this.status === "private";
   }
 
+  get imageUrl() {
+    return this.imageUpload?.url;
+  }
+
   updateFromEvent(event) {
     this.name = event.name;
     this.startsAt = event.startsAt;
@@ -163,6 +173,7 @@ export default class DiscoursePostEventEvent {
     this.timezone = event.timezone;
     this.showLocalTime = event.showLocalTime;
     this.description = event.description;
+    this.descriptionHtml = event.descriptionHtml;
     this.status = event.status;
     this.creator = event.creator;
     this.isClosed = event.isClosed;
@@ -170,6 +181,8 @@ export default class DiscoursePostEventEvent {
     this.isStandalone = event.isStandalone;
     this.minimal = event.minimal;
     this.chatEnabled = event.chatEnabled;
+    this.livestream = event.livestream;
+    this.livestreamOnebox = event.livestreamOnebox;
     this.rrule = event.rrule;
     this.maxAttendees = event.maxAttendees;
     this.atCapacity = event.atCapacity;
@@ -181,6 +194,7 @@ export default class DiscoursePostEventEvent {
     this.stats = event.stats;
     this.sampleInvitees = event.sampleInvitees || [];
     this.reminders = event.reminders;
+    this.imageUpload = event.imageUpload;
   }
 
   @bind

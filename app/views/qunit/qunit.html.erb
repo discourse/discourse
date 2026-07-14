@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Discourse QUnit Test Runner</title>
+    <%= discourse_color_scheme_stylesheets %>
+    <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content">
+    <meta name="color-scheme" content="light dark">
+
+    <%- if @has_test_bundle %>
+      <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
+      <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
+      <%= preload_script_url ExtraLocalesController.url("admin"), type_module: true %>
+      <%= preload_script_url ExtraLocalesController.url("wizard"), type_module: true %>
+      <%= theme_translations_lookup %>
+
+      <script nonce="<%= csp_nonce_placeholder %>">
+        window._discourseQunitPluginNames = <%= Discourse.plugins.map(&:directory_name).to_json.html_safe %>;
+      </script>
+
+      <%= tag.iframe srcdoc: tag.script(
+        src: script_asset_path(EmberAssets.script_chunks["qunit-live-reload"].first),
+        nonce: csp_nonce_placeholder,
+        type: "module",
+      ), style: "display: none;" %>
+
+      <%= preload_script "test-support" %>
+
+      <%= render "layouts/plugin_js",
+        opts: {
+          include_disabled: true,
+          include_admin_asset: true,
+          include_test_assets_for: @testing_plugins,
+          only: @required_plugins
+        }
+      %>
+
+      <%= theme_lookup("head_tag") %>
+      <%= theme_tests %>
+      <%= fake_preload_data %>
+
+      <%= tag.meta id: 'data-discourse-setup', data: client_side_setup_data %>
+      <meta property="og:title" content="">
+      <meta property="og:url" content="">
+      <meta name="twitter:title" content="">
+      <meta name="twitter:url" content="/">
+      <meta name="discourse/config/environment" content="<%=u discourse_config_environment(testing: true) %>" />
+      <meta name="theme-color" content="#ffffff">
+
+      <link rel="canonical" href="/">
+
+      <style>
+        <%= File.read("#{Rails.root}/frontend/discourse/node_modules/qunit/qunit/qunit.css").html_safe %>
+
+        #ember-testing * {
+          -webkit-transition: none !important;
+          -moz-transition: none !important;
+          -o-transition: none !important;
+          transition: none !important;
+        }
+      </style>
+
+      <%= discourse_stylesheet_link_tag(:common, theme_id: nil) %>
+      <%= discourse_stylesheet_link_tag(:desktop, theme_id: nil) %>
+      <%= discourse_stylesheet_link_tag(:admin) %>
+      <%= discourse_stylesheet_link_tag(:wizard) %>
+
+      <%- Discourse.find_plugin_css_assets(include_disabled: true, only: @required_plugins, mobile_view: false, desktop_view: true, request: request).each do |file| %>
+        <%= discourse_stylesheet_link_tag(file) %>
+      <%- end %>
+    <%- end %>
+
+    <%- if params['testem'] %>
+      <script defer src="/testem.js" nonce="<%= csp_nonce_placeholder %>"></script>
+    <%- end %>
+  </head>
+  <body>
+    <%- if !@has_test_bundle %>
+      This is a production installation of Discourse, and cannot be used for theme testing.
+      For more information, see <a href="https://meta.discourse.org/t/66857">this guide</a>.
+    <% else %>
+      <discourse-assets-icons></discourse-assets-icons>
+
+      <script nonce="<%= csp_nonce_placeholder %>">
+        window.EmberENV ??= {};
+        window.EmberENV._DEFAULT_ASYNC_OBSERVERS = true;
+      </script>
+
+      <%= preload_script "test-entrypoint", type_module: true %>
+    <%- end %>
+
+    <%= discourse_stylesheet_link_tag("qunit-custom", theme_id: nil) %>
+  </body>
+</html>

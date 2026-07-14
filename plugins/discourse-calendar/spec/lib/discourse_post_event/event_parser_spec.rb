@@ -114,12 +114,66 @@ describe DiscoursePostEvent::EventParser do
 
   it "doesn't escape urls" do
     post_event = build_post user, <<~TXT
-        [event start="2020" url="https://example.com/?q=foo&all=true"]
+        [event start="2020" url="https://example.com/?q=foo&all=true" image="upload://6c4fsAgNM6Npo7raNCPqVm2whzz.jpeg"]
         [/event]
       TXT
 
     events = parser.extract_events(post_event)
     expect(events[0][:url]).to eq("https://example.com/?q=foo&all=true")
+    expect(events[0][:image]).to eq("upload://6c4fsAgNM6Npo7raNCPqVm2whzz.jpeg")
+  end
+
+  it "extracts description as plain text" do
+    post_event = build_post user, <<~TXT
+      [event start="2020"]
+      Check out https://example.com for details
+      [/event]
+    TXT
+
+    events = parser.extract_events(post_event)
+    expect(events[0][:description]).to eq("Check out https://example.com for details")
+  end
+
+  describe ".linkify_description" do
+    it "wraps URLs in anchor tags" do
+      expect(parser.linkify_description("Visit https://example.com for info")).to eq(
+        'Visit <a href="https://example.com" rel="noopener nofollow ugc">https://example.com</a> for info',
+      )
+    end
+
+    it "handles multiple URLs" do
+      expect(parser.linkify_description("See https://a.com and https://b.com")).to eq(
+        'See <a href="https://a.com" rel="noopener nofollow ugc">https://a.com</a> and <a href="https://b.com" rel="noopener nofollow ugc">https://b.com</a>',
+      )
+    end
+
+    it "leaves text without URLs unchanged" do
+      expect(parser.linkify_description("No links here")).to eq("No links here")
+    end
+
+    it "escapes HTML in description text" do
+      expect(parser.linkify_description("Use <b>bold</b> & more at https://example.com")).to eq(
+        'Use &lt;b&gt;bold&lt;/b&gt; &amp; more at <a href="https://example.com" rel="noopener nofollow ugc">https://example.com</a>',
+      )
+    end
+
+    it "omits nofollow for staff posts" do
+      staff_user = Fabricate(:admin)
+      post = Fabricate(:post, user: staff_user)
+
+      expect(parser.linkify_description("See https://example.com", post: post)).to eq(
+        'See <a href="https://example.com">https://example.com</a>',
+      )
+    end
+
+    it "does not leak markup out of the generated href when a url is followed by html" do
+      result = parser.linkify_description('http://example.com/"><script>alert(1)</script>')
+
+      doc = Nokogiri::HTML5.fragment(result)
+      expect(doc.css("script")).to be_empty
+      expect(doc.at_css("a")["href"]).to eq("http://example.com/")
+      expect(result).not_to include("<script>")
+    end
   end
 
   context "with custom fields" do
@@ -133,7 +187,7 @@ describe DiscoursePostEvent::EventParser do
 
       events = parser.extract_events(post_event)
       expect(events[0][:"foo-bar"]).to eq("1")
-      expect(events[0][:"bar"]).to eq("2")
+      expect(events[0][:bar]).to eq("2")
     end
 
     it "doesn’t parse not allowed custom fields" do
@@ -143,7 +197,29 @@ describe DiscoursePostEvent::EventParser do
       TXT
 
       events = parser.extract_events(post_event)
-      expect(events[0][:"baz"]).to eq(nil)
+      expect(events[0][:baz]).to eq(nil)
+    end
+  end
+
+  context "with mixed-case custom fields" do
+    before do
+      SiteSetting.discourse_post_event_allowed_custom_fields =
+        "field_aa|fieldbb|field_CC|fieldDD|my.field"
+    end
+
+    it "parses fields regardless of case or separators" do
+      post_event = build_post user, <<~TXT
+        [event start="2020" fieldAa="1" fieldbb="2" fieldCc="3" fielddd="4" myField="5"]
+        [/event]
+      TXT
+
+      event = parser.extract_events(post_event)[0]
+
+      expect(event[:field_aa]).to eq("1")
+      expect(event[:fieldbb]).to eq("2")
+      expect(event[:field_CC]).to eq("3")
+      expect(event[:fieldDD]).to eq("4")
+      expect(event[:"my.field"]).to eq("5")
     end
   end
 end

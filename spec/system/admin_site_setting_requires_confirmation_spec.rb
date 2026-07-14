@@ -37,4 +37,44 @@ describe "Admin Site Setting Requires Confirmation" do
     expect(dialog).to be_closed
     expect(settings_page).to have_no_overridden_setting("min_password_length")
   end
+
+  context "with simple_on_enable confirmation type" do
+    it "shows confirmation when enabling the setting" do
+      settings_page.visit("can_permanently_delete")
+      settings_page.toggle_bool_setting("can_permanently_delete")
+      expect(dialog).to be_open
+      expect(dialog).to have_content(
+        I18n.t(
+          "admin_js.admin.site_settings.requires_confirmation_messages.can_permanently_delete.prompt",
+        ),
+      )
+    end
+
+    it "does not show confirmation when disabling the setting" do
+      SiteSetting.can_permanently_delete = true
+      settings_page.visit("can_permanently_delete")
+      settings_page.toggle_bool_setting("can_permanently_delete")
+      expect(dialog).to be_closed
+    end
+  end
+
+  context "with simple_on_disable confirmation type" do
+    it "shows confirmation when disabling the setting but not when enabling it" do
+      settings_page.visit("content_security_policy")
+      settings_page.toggle_bool_setting("content_security_policy")
+      expect(dialog).to be_open
+      expect(dialog).to have_content(
+        I18n.t(
+          "admin_js.admin.site_settings.requires_confirmation_messages.content_security_policy.prompt",
+        ),
+      )
+      dialog.click_yes
+      expect(dialog).to be_closed
+      expect(settings_page).to have_overridden_setting("content_security_policy")
+
+      settings_page.toggle_bool_setting("content_security_policy")
+      expect(dialog).to be_closed
+      expect(settings_page).to have_no_overridden_setting("content_security_policy")
+    end
+  end
 end

@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class AssignedToPost extends Component {
@@ -19,6 +19,10 @@ export default class AssignedToPost extends Component {
     }
   }
 
+  get canAssign() {
+    return this.args.post.can_assign;
+  }
+
   @action
   unassign() {
     this.taskActions.unassignPost(this.args.post);
@@ -31,9 +35,9 @@ export default class AssignedToPost extends Component {
 
   <template>
     {{#if @assignedToUser}}
-      {{icon "user-plus"}}
+      {{dIcon "user-plus"}}
     {{else}}
-      {{icon "group-plus"}}
+      {{dIcon "group-plus"}}
     {{/if}}
 
     <span class="assign-text">
@@ -48,30 +52,32 @@ export default class AssignedToPost extends Component {
       {{/if}}
     </a>
 
-    <DMenu
-      @identifier="post-assign-menu"
-      @icon="ellipsis"
-      class="btn-flat more-button"
-      @autofocus={{true}}
-    >
-      <DropdownMenu as |dropdown|>
-        <dropdown.item>
-          <DButton
-            @action={{this.unassign}}
-            @icon="user-plus"
-            @label="discourse_assign.unassign.title"
-            class="btn-transparent unassign-btn"
-          />
-        </dropdown.item>
-        <dropdown.item>
-          <DButton
-            @action={{this.editAssignment}}
-            @icon="group-plus"
-            @label="discourse_assign.reassign.title_w_ellipsis"
-            class="btn-transparent edit-assignment-btn"
-          />
-        </dropdown.item>
-      </DropdownMenu>
-    </DMenu>
+    {{#if this.canAssign}}
+      <DMenu
+        @identifier="post-assign-menu"
+        @icon="ellipsis"
+        class="btn-flat more-button"
+        @autofocus={{true}}
+      >
+        <DDropdownMenu as |dropdown|>
+          <dropdown.item>
+            <DButton
+              @action={{this.unassign}}
+              @icon="user-plus"
+              @label="discourse_assign.unassign.title"
+              class="btn-transparent unassign-btn"
+            />
+          </dropdown.item>
+          <dropdown.item>
+            <DButton
+              @action={{this.editAssignment}}
+              @icon="group-plus"
+              @label="discourse_assign.reassign.title_w_ellipsis"
+              class="btn-transparent edit-assignment-btn"
+            />
+          </dropdown.item>
+        </DDropdownMenu>
+      </DMenu>
+    {{/if}}
   </template>
 }

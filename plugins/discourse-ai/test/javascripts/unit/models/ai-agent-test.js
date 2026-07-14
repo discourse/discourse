@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
 import AiAgent from "discourse/plugins/discourse-ai/discourse/admin/models/ai-agent";
 
-module("Discourse AI | Unit | Model | ai-agent", function () {
+module("Unit | Model | ai-agent", function () {
   test("toPOJO", function (assert) {
     const properties = {
       mcp_server_tool_names: { 9: ["search_issues"] },

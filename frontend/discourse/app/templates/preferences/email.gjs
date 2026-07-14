@@ -1,11 +1,11 @@
 import { LinkTo } from "@ember/routing";
-import DButton from "discourse/components/d-button";
-import InputTip from "discourse/components/input-tip";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import TextField from "discourse/components/text-field";
 import bodyClass from "discourse/helpers/body-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DButton from "discourse/ui-kit/d-button";
+import DInputTip from "discourse/ui-kit/d-input-tip";
+import DTextField from "discourse/ui-kit/d-text-field";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -19,7 +19,7 @@ export default <template>
         {{#if @controller.success}}
           <div class="alert alert-success">{{@controller.successMessage}}</div>
           <LinkTo @route="preferences.account" class="success-back">
-            {{icon "arrow-left"}}
+            {{dIcon "arrow-left"}}
             {{i18n "user.change_email.back_to_preferences"}}
           </LinkTo>
         {{else}}
@@ -37,7 +37,7 @@ export default <template>
               }}
             </label>
             <div class="controls">
-              <TextField
+              <DTextField
                 @value={{@controller.newEmail}}
                 @id="change-email"
                 @classNames="input-xxlarge"
@@ -50,7 +50,7 @@ export default <template>
                   {{i18n "user.email.instructions"}}
                 {{/if}}
               </div>
-              <InputTip @validation={{@controller.emailValidation}} />
+              <DInputTip @validation={{@controller.emailValidation}} />
             </div>
           </div>
           <div class="controls save-button">

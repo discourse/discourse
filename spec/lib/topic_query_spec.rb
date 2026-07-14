@@ -1275,6 +1275,26 @@ RSpec.describe TopicQuery do
       end
     end
 
+    context "with a small action at the tail of an unread topic" do
+      it "excludes the topic from the unread list" do
+        topic = create_post(raw: "the original post", title: "super amazing title").topic
+        topic.add_small_action(Discourse.system_user, "closed.enabled")
+        topic.update_columns(updated_at: Time.zone.now, bumped_at: 1.year.ago)
+
+        TopicUser.change(
+          user.id,
+          topic.id,
+          notification_level: TopicUser.notification_levels[:tracking],
+        )
+        TopicUser.update_last_read(user, topic.id, 1, 1, 1)
+        user.user_stat.update!(first_unread_at: 1.minute.ago)
+
+        # The small action does not advance highest_post_number, so the user has
+        # read everything that counts — the topic is no longer unread.
+        expect(TopicQuery.new(user).list_unread.topics).not_to include(topic)
+      end
+    end
+
     context "with read data" do
       fab!(:partially_read) { Fabricate(:post, user: creator).topic }
       fab!(:fully_read) { Fabricate(:post, user: creator).topic }
@@ -1627,14 +1647,10 @@ RSpec.describe TopicQuery do
       end
     end
 
-    context "when logged in and user is part of the `experimental_new_new_view_groups` site setting groups" do
-      fab!(:group)
+    context "when unified new is enabled" do
       fab!(:topic)
 
-      before do
-        SiteSetting.experimental_new_new_view_groups = group.name
-        group.add(user)
-      end
+      before { SiteSetting.enable_unified_new = true }
 
       after { clear_cache! }
 
@@ -1921,8 +1937,8 @@ RSpec.describe TopicQuery do
           fully_read_archived.archived = true
           fully_read_archived.save
 
-          old_partially_read.update!(updated_at: 2.weeks.ago)
-          partially_read.update!(updated_at: Time.now)
+          old_partially_read.update!(bumped_at: 2.weeks.ago)
+          partially_read.update!(bumped_at: Time.now)
         end
 
         it "operates correctly" do
@@ -2356,6 +2372,15 @@ RSpec.describe TopicQuery do
         )
       end
     end
+    fab!(:second_watched_tag) do
+      Fabricate(:tag).tap do |tag|
+        TagUser.create!(
+          user: user,
+          tag: tag,
+          notification_level: TagUser.notification_levels[:watching],
+        )
+      end
+    end
     fab!(:muted_tag) do
       Fabricate(:tag).tap do |tag|
         TagUser.create!(
@@ -2385,6 +2410,18 @@ RSpec.describe TopicQuery do
           topic_in_watched_category_and_muted_tag.id,
           topic_in_muted_category_and_watched_tag.id,
         )
+      end
+
+      it "does not return fewer topics when multiple watched tags match the same topic" do
+        user.user_option.update!(watched_precedence_over_muted: true)
+        topics_with_multiple_watched_tags =
+          4.times.map do
+            Fabricate(:topic, category: muted_category, tags: [watched_tag, second_watched_tag])
+          end
+
+        query = TopicQuery.new(user, per_page: 4).list_latest
+
+        expect(query.topics.map(&:id)).to eq(topics_with_multiple_watched_tags.reverse.map(&:id))
       end
     end
 

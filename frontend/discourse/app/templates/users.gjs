@@ -2,19 +2,19 @@ import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import DirectoryTable from "discourse/components/directory-table";
-import EmptyState from "discourse/components/empty-state";
-import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import basePath from "discourse/helpers/base-path";
 import bodyClass from "discourse/helpers/body-class";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import PeriodChooser from "discourse/select-kit/components/period-chooser";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import dBasePath from "discourse/ui-kit/helpers/d-base-path";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -24,7 +24,7 @@ export default <template>
 
   {{bodyClass "users-page"}}
   <section>
-    <LoadMore
+    <DLoadMore
       @action={{@controller.loadMore}}
       @enabled={{@controller.model.canLoadMore}}
       @isLoading={{@controller.isLoading}}
@@ -93,7 +93,7 @@ export default <template>
             </div>
           </div>
 
-          <ConditionalLoadingSpinner @condition={{@controller.isLoading}}>
+          <DConditionalLoadingSpinner @condition={{@controller.isLoading}}>
             {{#if @controller.model.content}}
               <DirectoryTable
                 @items={{@controller.model.content}}
@@ -103,11 +103,11 @@ export default <template>
                 @asc={{@controller.asc}}
                 @updateOrderAndAsc={{@controller.updateOrderAndAsc}}
               />
-              <ConditionalLoadingSpinner
+              <DConditionalLoadingSpinner
                 @condition={{@controller.model.loadingMore}}
               />
             {{else}}
-              <EmptyState
+              <DEmptyState
                 @body={{if
                   @controller.name
                   (i18n "directory.no_results_with_search")
@@ -115,7 +115,7 @@ export default <template>
                     @controller.currentUser.staff
                     (trustHTML
                       (i18n
-                        "directory.no_results.extra_body" basePath=(basePath)
+                        "directory.no_results.extra_body" basePath=(dBasePath)
                       )
                     )
                     (i18n "directory.no_results.body")
@@ -123,9 +123,9 @@ export default <template>
                 }}
               />
             {{/if}}
-          </ConditionalLoadingSpinner>
+          </DConditionalLoadingSpinner>
         </div>
       </div>
-    </LoadMore>
+    </DLoadMore>
   </section>
 </template>

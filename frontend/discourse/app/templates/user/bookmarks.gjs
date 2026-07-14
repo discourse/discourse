@@ -1,16 +1,16 @@
 import { Input } from "@ember/component";
 import BookmarkList from "discourse/components/bookmark-list";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import EmptyState from "discourse/components/empty-state";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   {{bodyClass "user-activity-bookmarks-page"}}
 
-  <ConditionalLoadingSpinner @condition={{@controller.loading}}>
+  <DConditionalLoadingSpinner @condition={{@controller.loading}}>
     <PluginOutlet @name="above-user-bookmarks" @connectorTagName="div" />
 
     {{#if @controller.permissionDenied}}
@@ -18,7 +18,7 @@ export default <template>
           "bookmarks.list_permission_denied"
         }}</div>
     {{else if @controller.userDoesNotHaveBookmarks}}
-      <EmptyState
+      <DEmptyState
         @title={{i18n "user.no_bookmarks_title"}}
         @body={{@controller.emptyStateBody}}
       />
@@ -50,5 +50,5 @@ export default <template>
         />
       {{/if}}
     {{/if}}
-  </ConditionalLoadingSpinner>
+  </DConditionalLoadingSpinner>
 </template>

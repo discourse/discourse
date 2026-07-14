@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 da:
+  data_explorer:
+    admin_dashboard_label: "Data Udforsker"

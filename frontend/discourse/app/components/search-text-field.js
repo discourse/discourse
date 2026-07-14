@@ -1,13 +1,11 @@
-/* eslint-disable ember/no-jquery */
 import { computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { on } from "@ember-decorators/object";
-import $ from "jquery";
-import TextField from "discourse/components/text-field";
 import { applySearchAutocomplete } from "discourse/lib/search";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
-export default class SearchTextField extends TextField {
+export default class SearchTextField extends DTextField {
   autocomplete = "off";
   enterkeyhint = "search";
   autocapitalize = "none";
@@ -28,14 +26,13 @@ export default class SearchTextField extends TextField {
       getOwner(this)
     );
 
-    const $searchInput = $(this.element);
     if (!this.hasAutofocus) {
       return;
     }
     // iOS is crazy, without this we will not be
     // at the top of the page
-    $(window).scrollTop(0);
-    $searchInput.focus();
+    window.scrollTo(0, 0);
+    this.element.focus();
   }
 
   @on("willDestroyElement")

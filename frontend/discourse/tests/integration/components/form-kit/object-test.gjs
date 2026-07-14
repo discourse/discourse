@@ -1,9 +1,24 @@
-import { array, concat, fn, hash } from "@ember/helper";
-import { click, render } from "@ember/test-helpers";
+import { array, concat, fn, get, hash } from "@ember/helper";
+import { click, focus, render, typeIn } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import Form from "discourse/components/form";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import formKit from "discourse/tests/helpers/form-kit-helper";
+
+function getFieldMeta() {
+  return {
+    qux: { type: "text" },
+    quux: { type: "text" },
+  };
+}
+
+function fieldType(type) {
+  return type === "checkbox" ? "checkbox" : "input";
+}
+
+function fieldKeys(obj) {
+  return obj ? Object.keys(obj) : [];
+}
 
 module("Integration | Component | FormKit | Object", function (hooks) {
   setupRenderingTest(hooks);
@@ -104,5 +119,37 @@ module("Integration | Component | FormKit | Object", function (hooks) {
     await formKit().field("one.two.0.foo").fillIn("2");
 
     assert.form().field("one.two.0.foo").hasValue("2");
+  });
+
+  test("retains focus when @type depends on yielded data inside form.Object", async function (assert) {
+    await render(
+      <template>
+        <Form
+          @data={{hash foo="bar" baz=(hash qux="" quux="test")}}
+          as |form data|
+        >
+          <form.Object @name="baz" as |object objectData|>
+            {{#each (fieldKeys objectData) as |key|}}
+              {{#let (get (getFieldMeta data.foo) key) as |params|}}
+                <object.Field
+                  @type={{fieldType params.type}}
+                  @name={{key}}
+                  @title={{key}}
+                  as |field|
+                >
+                  <field.Control />
+                </object.Field>
+              {{/let}}
+            {{/each}}
+          </form.Object>
+        </Form>
+      </template>
+    );
+
+    const input = document.querySelector("[data-name='baz.qux'] input");
+    await focus(input);
+    await typeIn(input, "u", { delay: 0 });
+
+    assert.strictEqual(document.activeElement, input, "focus retained");
   });
 });

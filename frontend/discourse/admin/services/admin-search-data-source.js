@@ -53,17 +53,19 @@ export class PageLinkFormatter {
     this.parentLabel = parentLabel;
   }
 
-  format() {
-    let url;
+  url() {
     if (this.link.route) {
       if (this.link.routeModels) {
-        url = this.router.urlFor(this.link.route, ...this.link.routeModels);
-      } else {
-        url = this.router.urlFor(this.link.route);
+        return this.router.urlFor(this.link.route, ...this.link.routeModels);
       }
+      return this.router.urlFor(this.link.route);
     } else if (this.link.href) {
-      url = getURL(this.link.href);
+      return getURL(this.link.href);
     }
+  }
+
+  format() {
+    const url = this.url();
 
     const sectionLabel = labelOrText(this.navMapSection);
     const linkLabel = labelOrText(this.link);
@@ -111,17 +113,13 @@ export class SettingLinkFormatter {
     this.setting = setting;
     this.plugins = plugins;
     this.settingPageMap = settingPageMap;
-    this.settingPluginNames = {};
+  }
+
+  get dasherizedPluginName() {
+    return this.setting.plugin?.replaceAll("_", "-");
   }
 
   format() {
-    if (this.setting.plugin) {
-      if (!this.settingPluginNames[this.setting.plugin]) {
-        this.settingPluginNames[this.setting.plugin] =
-          this.setting.plugin.replaceAll("_", "-");
-      }
-    }
-
     const [rootLabel, fullLabel] = this.buildLabel();
     const url = this.buildURL();
 
@@ -145,7 +143,7 @@ export class SettingLinkFormatter {
     let rootLabel;
 
     if (this.setting.plugin) {
-      const plugin = this.plugins[this.settingPluginNames[this.setting.plugin]];
+      const plugin = this.plugins[this.dasherizedPluginName];
       if (plugin) {
         rootLabel = plugin.admin_route?.label
           ? i18n(plugin.admin_route?.label)
@@ -174,7 +172,7 @@ export class SettingLinkFormatter {
     // to focus/highlight on a specific element on the page, for now though the filter is fine.
     let url;
     if (this.setting.plugin) {
-      const plugin = this.plugins[this.settingPluginNames[this.setting.plugin]];
+      const plugin = this.plugins[this.dasherizedPluginName];
       const settingPluginCategoryName = this.setting.plugin.replace(/-/g, "_");
 
       if (plugin && plugin.admin_route.use_new_show_route) {
@@ -245,6 +243,7 @@ export default class AdminSearchDataSource extends Service {
     categories: {},
     areas: {},
   };
+  #settingLinkDataCached = false;
   @tracked _mapCached = false;
 
   async buildMap() {
@@ -375,20 +374,7 @@ export default class AdminSearchDataSource extends Service {
 
     // Cache the setting area + category URLs for later use
     // when building the setting list via #processSettings.
-    if (link.settings_area && !this.settingPageMap.areas[link.settings_area]) {
-      this.settingPageMap.areas[link.settings_area] = link.multi_tabbed
-        ? `${formattedPageLink.url}/settings`
-        : formattedPageLink.url;
-    }
-
-    if (
-      link.settings_category &&
-      !this.settingPageMap.categories[link.settings_category]
-    ) {
-      this.settingPageMap.categories[link.settings_category] = link.multi_tabbed
-        ? `${formattedPageLink.url}/settings`
-        : formattedPageLink.url;
-    }
+    this.#cacheSettingPageURL(link, formattedPageLink.url);
 
     this.pageDataSourceItems.push({
       label: formattedPageLink.label,
@@ -400,6 +386,64 @@ export default class AdminSearchDataSource extends Service {
     });
 
     return formattedPageLink.label;
+  }
+
+  urlForSetting({ setting, primaryArea, category, plugin }) {
+    this.#ensureSettingLinkData();
+
+    return new SettingLinkFormatter(
+      this.router,
+      { setting, plugin, primary_area: primaryArea, category },
+      this.plugins,
+      this.settingPageMap
+    ).buildURL();
+  }
+
+  // Builds just the data needed to resolve a setting's config page URL (the
+  // area/category -> page map and the plugins map) without the network request
+  // that buildMap performs for the full admin search index.
+  #ensureSettingLinkData() {
+    if (this._mapCached || this.#settingLinkDataCached) {
+      return;
+    }
+
+    this.adminNavManager.filteredNavMap.forEach((navMapSection) => {
+      navMapSection.links.forEach((link) => {
+        this.#cacheSettingPageURLFromLink(link);
+        link.links?.forEach((subLink) =>
+          this.#cacheSettingPageURLFromLink(subLink)
+        );
+      });
+    });
+
+    this.plugins = this.buildPluginsMap();
+    this.#settingLinkDataCached = true;
+  }
+
+  #cacheSettingPageURLFromLink(link) {
+    if (!link.settings_area && !link.settings_category) {
+      return;
+    }
+
+    this.#cacheSettingPageURL(
+      link,
+      new PageLinkFormatter(this.router, null, link).url()
+    );
+  }
+
+  #cacheSettingPageURL(link, url) {
+    const pageURL = link.multi_tabbed ? `${url}/settings` : url;
+
+    if (link.settings_area && !this.settingPageMap.areas[link.settings_area]) {
+      this.settingPageMap.areas[link.settings_area] = pageURL;
+    }
+
+    if (
+      link.settings_category &&
+      !this.settingPageMap.categories[link.settings_category]
+    ) {
+      this.settingPageMap.categories[link.settings_category] = pageURL;
+    }
   }
 
   #processSettings(settings) {

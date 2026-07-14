@@ -26,6 +26,12 @@
     margin-top: var(--space-2);
   }
 
+  &__depends-on-notice {
+    font-size: var(--font-down-1);
+    color: var(--danger);
+    margin-top: var(--space-2);
+  }
+
   &__opt-in-groups-label {
     display: block;
     font-size: var(--font-down-1);

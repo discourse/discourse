@@ -4,7 +4,7 @@ RSpec.describe ThemeObjectsSettingMetadataSerializer do
   fab!(:theme)
 
   let(:theme_setting) do
-    yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml")
+    yaml = File.read("#{Rails.root.join("spec/fixtures/theme_settings/objects_settings.yaml")}")
     theme.set_field(target: :settings, name: "yaml", value: yaml)
     theme.save!
     theme.settings
@@ -15,7 +15,8 @@ RSpec.describe ThemeObjectsSettingMetadataSerializer do
       theme.set_field(
         target: :translations,
         name: "en",
-        value: File.read("#{Rails.root}/spec/fixtures/theme_locales/objects_settings/en.yaml"),
+        value:
+          File.read("#{Rails.root.join("spec/fixtures/theme_locales/objects_settings/en.yaml")}"),
       )
 
       theme.save!

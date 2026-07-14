@@ -35,11 +35,6 @@ de:
   discourse_post_voting:
     reviewables:
       actions:
-        comment_actions:
-          bundle_title: "Was willst du mit dem Kommentar machen?"
-        no_action_comment:
-          title: "Keine Aktion"
-          description: "Kommentar unverändert lassen."
         agree_and_keep_comment:
           title: "Kommentar behalten"
           description: "Meldung zustimmen und den Kommentar unbearbeitet lassen."

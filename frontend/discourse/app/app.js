@@ -1,19 +1,15 @@
+import "./global-compat";
 import "./setup-deprecation-workflow";
 import "./array-shim";
 import "decorator-transforms/globals";
 import "./loader-shims";
+import "./ui-kit-shims";
+import "./module-shims";
 import "./discourse-common-loader-shims";
-import "./global-compat";
-import dialogHolderCompatModules from "discourse/dialog-holder/dialog-holder-compat-modules";
-import floatKitCompatModules from "discourse/float-kit/float-kit-compat-modules";
-import selectKitCompatModules from "discourse/select-kit/select-kit-compat-modules";
-import truthHelperCompatModules from "discourse/truth-helpers/truth-helpers-compat-modules";
-defineModules("select-kit", selectKitCompatModules);
-defineModules("float-kit", floatKitCompatModules);
-defineModules("truth-helpers", truthHelperCompatModules);
-defineModules("dialog-holder", dialogHolderCompatModules);
-
+import embroiderCompatModules from "@embroider/virtual/compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
+import { registerSettings } from "discourse/lib/theme-settings-store";
+import { defineModules } from "./lib/loader-shim";
 
 // Register Discourse's standard implicit injections on common framework classes.
 registerDiscourseImplicitInjections();
@@ -21,18 +17,42 @@ registerDiscourseImplicitInjections();
 import { DEBUG } from "@glimmer/env";
 import Application from "@ember/application";
 import { VERSION } from "@ember/version";
+import setupInspector from "@embroider/legacy-inspector-support/ember-source-4.12";
 import { importSync } from "@embroider/macros";
-import require from "require";
 import { normalizeEmberEventHandling } from "discourse/lib/ember-events";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { populatePreloadStore } from "discourse/lib/preload-store";
 import { buildResolver } from "discourse/resolver";
+
+populatePreloadStore();
+
+defineModules(null, embroiderCompatModules);
+
+import dialogHolderCompatModules from "discourse/dialog-holder/compat-modules";
+
+defineModules("discourse/dialog-holder", dialogHolderCompatModules);
+
+import floatKitCompatModules from "discourse/float-kit/compat-modules";
+
+defineModules("discourse/float-kit", floatKitCompatModules);
+
+import selectKitCompatModules from "discourse/select-kit/compat-modules";
+
+defineModules("discourse/select-kit", selectKitCompatModules);
+
+import truthHelpersCompatModules from "discourse/truth-helpers/compat-modules";
+
+defineModules("discourse/truth-helpers", truthHelpersCompatModules);
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
 
 window.moduleBroker = {
-  lookup(moduleName) {
+  lookup(moduleName, optional = false) {
+    if (optional && !require.has(moduleName)) {
+      return {};
+    }
     return require(moduleName);
   },
 };
@@ -40,8 +60,7 @@ window.moduleBroker = {
 async function loadThemeFromModulePreload(link) {
   const themeId = link.dataset.themeId;
   try {
-    const compatModules = (await import(/* webpackIgnore: true */ link.href))
-      .default;
+    const compatModules = (await import(/* @vite-ignore */ link.href)).default;
     for (const [key, mod] of Object.entries(compatModules)) {
       define(`discourse/theme-${themeId}/${key}`, () => mod);
     }
@@ -49,11 +68,11 @@ async function loadThemeFromModulePreload(link) {
     // eslint-disable-next-line no-console
     console.error(
       `Failed to load theme ${link.dataset.themeId} from ${link.href}`,
-      String(error)
+      window.Testem ? String(error) : error
     );
 
     if (DEBUG && (isRailsTesting() || isTesting())) {
-      throw new Error(error);
+      throw new Error(error, { cause: error });
     }
 
     fireThemeErrorEvent({ themeId: link.dataset.themeId, error });
@@ -63,8 +82,7 @@ async function loadThemeFromModulePreload(link) {
 async function loadPluginFromModulePreload(link) {
   const pluginName = link.dataset.pluginName;
   try {
-    const compatModules = (await import(/* webpackIgnore: true */ link.href))
-      .default;
+    const compatModules = (await import(/* @vite-ignore */ link.href)).default;
     for (const [key, mod] of Object.entries(compatModules)) {
       define(`discourse/plugins/${pluginName}/${key}`, () => mod);
     }
@@ -72,12 +90,12 @@ async function loadPluginFromModulePreload(link) {
     // eslint-disable-next-line no-console
     console.error(
       `Failed to load plugin ${link.dataset.pluginName} from ${link.href}`,
-      error
+      String(error)
     );
 
     if (DEBUG) {
       if (isRailsTesting() || isTesting()) {
-        throw new Error(error);
+        throw new Error(error, { cause: error });
       }
 
       let { addError } = importSync("discourse/static/development-error");
@@ -86,7 +104,23 @@ async function loadPluginFromModulePreload(link) {
   }
 }
 
+function registerPreloadedThemeSettings() {
+  try {
+    const element = document.getElementById("data-preloaded");
+    const preloaded = JSON.parse(element.dataset.preloaded);
+    const activatedThemes = JSON.parse(preloaded.activatedThemes);
+    for (const [themeId, info] of Object.entries(activatedThemes)) {
+      registerSettings(parseInt(themeId, 10), info.settings);
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Failed to register preloaded theme settings", error);
+  }
+}
+
 export async function loadThemesAndPlugins() {
+  registerPreloadedThemeSettings();
+
   const promises = [
     ...[
       ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
@@ -99,18 +133,12 @@ export async function loadThemesAndPlugins() {
   await Promise.all(promises);
 }
 
-function defineModules(name, compatModules) {
-  for (const [key, mod] of Object.entries(compatModules)) {
-    define(`discourse/${name}/${key.slice(2)}`, () => mod);
-  }
-}
-
 export async function loadAdmin() {
   defineModules(
-    "admin",
+    "discourse/admin",
     (
       await import(
-        /* webpackChunkName: "admin" */ "discourse/admin/admin-compat-modules"
+        /* dynamicChunkName: "admin" */ "discourse/admin/compat-modules"
       )
     ).default
   );
@@ -119,6 +147,8 @@ export async function loadAdmin() {
 class Discourse extends Application {
   modulePrefix = "discourse";
   rootElement = "#main";
+
+  inspector = setupInspector(this);
 
   customEvents = {
     paste: "paste",
@@ -154,7 +184,6 @@ class Discourse extends Application {
 
   ready() {
     performance.mark("discourse-ready");
-    document.querySelector("#d-splash")?.remove();
   }
 }
 

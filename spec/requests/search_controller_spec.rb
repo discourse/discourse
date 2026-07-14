@@ -153,6 +153,78 @@ RSpec.describe SearchController do
       expect(data["users"][0]["id"]).to eq(user.id)
     end
 
+    context "with category-restricted tags" do
+      fab!(:tag_access_group, :group)
+      fab!(:private_category) { Fabricate(:private_category, group: tag_access_group) }
+      fab!(:category_tag) do
+        Fabricate(:tag, name: "classified-category-tag", description: "Category tag description")
+      end
+      fab!(:category_tag_group_tag) do
+        Fabricate(
+          :tag,
+          name: "classified-category-tag-group",
+          description: "Category tag group description",
+        )
+      end
+      fab!(:tag_group) { Fabricate(:tag_group, tags: [category_tag_group_tag]) }
+      fab!(:regular_user, :user)
+      fab!(:authorized_user, :user)
+      fab!(:admin)
+
+      before do
+        SiteSetting.tagging_enabled = true
+        CategoryTag.create!(category: private_category, tag: category_tag)
+        CategoryTagGroup.create!(category: private_category, tag_group: tag_group)
+        tag_access_group.add(authorized_user)
+        SearchIndexer.index(category_tag, force: true)
+        SearchIndexer.index(category_tag_group_tag, force: true)
+      end
+
+      it "does not expose either restriction type to anonymous users" do
+        get "/search/query.json", params: { term: "classified" }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["tags"]).to be_empty
+      end
+
+      it "does not expose either restriction type to unauthorized regular users" do
+        sign_in(regular_user)
+
+        get "/search/query.json", params: { term: "classified" }
+
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body["tags"]).to be_empty
+      end
+
+      it "exposes both restriction types to users who can access the category" do
+        sign_in(authorized_user)
+
+        get "/search/query.json", params: { term: "classified" }
+
+        expect(response).to have_http_status(:ok)
+        expect(
+          response.parsed_body["tags"].map { |tag| tag.values_at("name", "description") },
+        ).to contain_exactly(
+          [category_tag.name, category_tag.description],
+          [category_tag_group_tag.name, category_tag_group_tag.description],
+        )
+      end
+
+      it "exposes both restriction types to admins" do
+        sign_in(admin)
+
+        get "/search/query.json", params: { term: "classified" }
+
+        expect(response).to have_http_status(:ok)
+        expect(
+          response.parsed_body["tags"].map { |tag| tag.values_at("name", "description") },
+        ).to contain_exactly(
+          [category_tag.name, category_tag.description],
+          [category_tag_group_tag.name, category_tag_group_tag.description],
+        )
+      end
+    end
+
     context "when searching by topic id" do
       it "should not be restricted by minimum search term length" do
         SiteSetting.min_search_term_length = 20_000
@@ -525,7 +597,7 @@ RSpec.describe SearchController do
         end
       end
 
-      before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
+      before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}" }
 
       it "returns extra categories and parent categories" do
         get "/search.json", params: { q: "hello" }

@@ -4,6 +4,10 @@ require "highline/import"
 module SystemHelpers
   PLATFORM_KEY_MODIFIER = RUBY_PLATFORM =~ /darwin/i ? :meta : :control
 
+  # Pass to `send_keys` to move the caret to the start of the current line in a
+  # contenteditable. The Home key doesn't move the caret on macOS; Cmd+Left does.
+  LINE_START_KEY = RUBY_PLATFORM =~ /darwin/i ? %i[meta left] : :home
+
   def pause_test
     msg = "Test paused. Press enter to resume, or `d` + enter to start debugger.\n\n"
     msg += "Browser inspection URLs:\n"
@@ -60,13 +64,19 @@ module SystemHelpers
   end
 
   def setup_system_test
+    # `time:` freezes Ruby and the page's JavaScript clock, but not the browser's cookie-store
+    # clock. Persistent cookies use an absolute expiry based on Ruby time, so historical examples
+    # can create cookies the browser rejects as expired. The sign-in response still succeeds, but
+    # subsequent requests are anonymous. Browser state is reset after each example, so system tests
+    # only need session cookies.
+    SiteSetting.persistent_sessions = false
     SiteSetting.login_required = false
     SiteSetting.has_login_hint = false
+    SiteSetting.global_notice = ""
     SiteSetting.force_hostname = Capybara.server_host
     SiteSetting.port = Capybara.server_port
     SiteSetting.external_system_avatars_url = ""
     SiteSetting.enable_user_tips = false
-    SiteSetting.splash_screen = false
     SiteSetting.allowed_internal_hosts =
       (
         SiteSetting.allowed_internal_hosts.to_s.split("|") +
@@ -149,6 +159,19 @@ module SystemHelpers
         freeze_time(&example)
       end
     end
+  end
+
+  def select_all_content(selector)
+    js = <<-JS
+      const el = document.querySelector(arguments[0]);
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    JS
+
+    page.execute_script(js, selector)
   end
 
   def select_text_range(selector, start = 0, offset = 5)
@@ -367,8 +390,24 @@ module SystemHelpers
     element.with_playwright_element_handle do |playwright_element|
       playwright_element.wait_for_element_state("hidden")
     rescue Playwright::Error => e
-      raise e unless e.message.match?(/Element is not attached to the DOM/)
+      raise if !detached_element_error?(e)
     end
+  end
+
+  # Retries the block on "Element is not attached to the DOM" error.
+  # That's usually a `find(...).click` racing a re-render.
+  def with_dom_retry(timeout: Capybara.default_max_wait_time)
+    deadline = Time.current + timeout.seconds
+    begin
+      yield
+    rescue Playwright::Error => e
+      retry if detached_element_error?(e) && Time.current < deadline
+      raise
+    end
+  end
+
+  def detached_element_error?(error)
+    error.is_a?(Playwright::Error) && error.message.include?("Element is not attached to the DOM")
   end
 
   def locator(selector, locator = nil)
@@ -385,5 +424,32 @@ module SystemHelpers
 
   def html_translation_to_text(html_translation)
     Nokogiri.HTML5(html_translation).at("body").inner_text
+  end
+
+  def capture_log_entries(controller:, entries:, action: nil)
+    log = Rails.root.join("log", "#{Rails.env}.log")
+    File.truncate(log, 0) if File.exist?(log)
+
+    yield
+
+    read =
+      lambda do
+        return [] unless File.exist?(log)
+        File.open(log) do |f|
+          f
+            .read
+            .lines
+            .reject { |l| l.strip.empty? }
+            .filter_map do |line|
+              JSON.parse(line)
+            rescue JSON::ParserError
+              nil
+            end
+            .select { |e| e["controller"] == controller && (action.nil? || e["action"] == action) }
+        end
+      end
+
+    try_until_success { raise Capybara::ExpectationNotMet if read.call.size < entries }
+    read.call
   end
 end

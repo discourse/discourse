@@ -259,12 +259,13 @@ class TopicQuery
           builder.add_results(unread_messages(pm_params.merge(count: builder.results_left)))
         end
       else
-        if @user.new_new_view_enabled?
+        if @user.unified_new_enabled?
           builder.add_results(
             new_and_unread_results(
               topic:,
               per_page: builder.results_left,
               max_age: SiteSetting.suggested_topics_unread_max_days_old,
+              age_column: :bumped_at,
             ),
           )
         else
@@ -273,6 +274,7 @@ class TopicQuery
               topic: topic,
               per_page: builder.results_left,
               max_age: SiteSetting.suggested_topics_unread_max_days_old,
+              age_column: :bumped_at,
             ),
             :high,
           )
@@ -332,7 +334,7 @@ class TopicQuery
   end
 
   def list_new
-    if @user&.new_new_view_enabled?
+    if @user&.unified_new_enabled?
       list =
         case @options[:subset]
         when "topics"
@@ -433,7 +435,7 @@ class TopicQuery
   end
 
   def self.unseen_filter(list, user)
-    self.new.unseen_filter(list, user.first_seen_at || user.created_at, user.whisperer?)
+    new.unseen_filter(list, user.first_seen_at || user.created_at, user.whisperer?)
   end
 
   def self.new_filter(list, treat_as_new_topic_start_date: nil, treat_as_new_topic_clause_sql: nil)
@@ -819,6 +821,7 @@ class TopicQuery
 
     # Start with a list of all topics
     result = Topic.includes(:category)
+    result = result.includes(:nested_topic) if SiteSetting.nested_replies_enabled
 
     if @user
       result =
@@ -845,7 +848,7 @@ class TopicQuery
       result = result.references(:categories)
 
       if !@options[:order]
-        filter = (options[:filter] || options[:f])
+        filter = options[:filter] || options[:f]
         # category default sort order
         sort_order, sort_ascending =
           Category.where(id: category_id).pick(:sort_order, :sort_ascending)
@@ -958,7 +961,7 @@ class TopicQuery
         )
     end
 
-    if (filter = (options[:filter] || options[:f])) && @user
+    if (filter = options[:filter] || options[:f]) && @user
       action = (PostActionType.types[:like] if filter == "liked")
       if action
         result =
@@ -1026,32 +1029,35 @@ class TopicQuery
           []
         end
 
-      # OR watched_topic_tags.id IS NOT NULL",
+      query_params = {
+        category_id: category_id || -1,
+        default: CategoryUser.default_notification_level,
+        indirectly_muted_category_ids:
+          CategoryUser.indirectly_muted_category_ids(user).presence || [-1],
+        muted: CategoryUser.notification_levels[:muted],
+        regular: TopicUser.notification_levels[:regular],
+      }
+
       list =
         list.references("cu").joins(
           "LEFT JOIN category_users ON category_users.category_id = topics.category_id AND category_users.user_id = #{user.id}",
         )
+      query_params[:watched_tag_ids] = watched_tag_ids if watched_tag_ids.present?
+
+      muted_category_condition =
+        +"topics.category_id = :category_id
+                OR
+                (COALESCE(category_users.notification_level, :default) <> :muted AND (topics.category_id IS NULL OR topics.category_id NOT IN(:indirectly_muted_category_ids)))"
+
       if watched_tag_ids.present?
-        list =
-          list.joins(
-            "LEFT JOIN topic_tags watched_topic_tags ON watched_topic_tags.topic_id = topics.id AND #{DB.sql_fragment("watched_topic_tags.tag_id IN (?)", watched_tag_ids)}",
-          )
+        muted_category_condition << "
+                OR EXISTS (SELECT 1 FROM topic_tags watched_topic_tags WHERE watched_topic_tags.topic_id = topics.id AND watched_topic_tags.tag_id IN (:watched_tag_ids))"
       end
 
-      list =
-        list.where(
-          "topics.category_id = :category_id
-                OR
-                (COALESCE(category_users.notification_level, :default) <> :muted AND (topics.category_id IS NULL OR topics.category_id NOT IN(:indirectly_muted_category_ids)))
-                #{watched_tag_ids.present? ? "OR watched_topic_tags.id IS NOT NULL" : ""}
-                OR tu.notification_level > :regular",
-          category_id: category_id || -1,
-          default: CategoryUser.default_notification_level,
-          indirectly_muted_category_ids:
-            CategoryUser.indirectly_muted_category_ids(user).presence || [-1],
-          muted: CategoryUser.notification_levels[:muted],
-          regular: TopicUser.notification_levels[:regular],
-        )
+      muted_category_condition << "
+                OR tu.notification_level > :regular"
+
+      list = list.where(muted_category_condition, query_params)
     elsif SiteSetting.mute_all_categories_by_default
       category_ids = [
         SiteSetting.default_categories_watching.split("|"),
@@ -1191,8 +1197,8 @@ class TopicQuery
   end
 
   def allowed_messages(messages, params)
-    user_ids = (params[:target_user_ids] || [])
-    group_ids = ((params[:target_group_ids] - params[:my_group_ids]) || [])
+    user_ids = params[:target_user_ids] || []
+    group_ids = (params[:target_group_ids] - params[:my_group_ids]) || []
 
     if user_ids.present?
       messages =
@@ -1334,7 +1340,11 @@ class TopicQuery
 
       # perf note, in the past we tried doing this in a subquery but performance was
       # terrible, also tried with a join and it was bad
-      results = results.where("topics.updated_at >= ?", unread_at)
+      #
+      # Default to updated_at so the unread/new lists stay consistent with the unread
+      # count (TopicTrackingState); suggested topics opt into bumped_at via age_column.
+      age_column = options[:age_column] == :bumped_at ? "bumped_at" : "updated_at"
+      results = results.where("topics.#{age_column} >= ?", unread_at)
     end
     results
   end

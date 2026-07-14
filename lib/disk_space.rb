@@ -30,7 +30,7 @@ class DiskSpace
   end
 
   def self.uploads_path
-    "#{Rails.root}/public/#{Discourse.store.upload_path}"
+    "#{Rails.root.join("public/#{Discourse.store.upload_path}")}"
   end
   private_class_method :uploads_path
 end

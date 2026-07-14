@@ -75,7 +75,12 @@ namespace :release do
       puts "Tag #{current_version.tag_name} already exists, skipping"
     else
       puts "Tagging release #{current_version.tag_name}"
-      ReleaseUtils.git "tag", "-a", current_version.tag_name, "-m", "version #{current_version}"
+      ReleaseUtils.git "tag",
+                       "-a",
+                       current_version.tag_name,
+                       "-m",
+                       "version #{current_version}",
+                       check_ref.to_s
 
       if ReleaseUtils.dry_run?
         puts "[DRY RUN] Skipping pushing tag to origin"
@@ -107,7 +112,7 @@ namespace :release do
           else
             "backwards-compatibility alias for `#{ReleaseUtils::PRIMARY_RELEASE_TAG}` tag"
           end
-        ReleaseUtils.git "tag", "-a", synonym_tag, "-m", message, "-f"
+        ReleaseUtils.git "tag", "-a", synonym_tag, "-m", message, "-f", check_ref.to_s
       end
       if ReleaseUtils.dry_run?
         puts "[DRY RUN] Skipping pushing #{ReleaseUtils::RELEASE_TAGS.inspect} tags to origin"
@@ -131,7 +136,7 @@ namespace :release do
           else
             "backwards-compatibility alias for `#{ReleaseUtils::PRIMARY_ESR_TAG}` tag"
           end
-        ReleaseUtils.git "tag", "-a", synonym_tag, "-m", message, "-f"
+        ReleaseUtils.git "tag", "-a", synonym_tag, "-m", message, "-f", check_ref.to_s
       end
       if ReleaseUtils.dry_run?
         puts "[DRY RUN] Skipping pushing #{ReleaseUtils::ESR_TAGS.inspect} tags to origin"

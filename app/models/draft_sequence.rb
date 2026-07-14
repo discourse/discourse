@@ -51,9 +51,9 @@ end
 # Table name: draft_sequences
 #
 #  id        :integer          not null, primary key
-#  user_id   :integer          not null
 #  draft_key :string           not null
 #  sequence  :bigint           not null
+#  user_id   :integer          not null
 #
 # Indexes
 #

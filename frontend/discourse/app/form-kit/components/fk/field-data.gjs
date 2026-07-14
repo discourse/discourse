@@ -6,7 +6,7 @@ import curryComponent from "ember-curry-component";
 import { resolveFieldControl } from "discourse/form-kit/lib/field-control";
 import ValidationParser from "discourse/form-kit/lib/validation-parser";
 import Validator from "discourse/form-kit/lib/validator";
-import uniqueId from "discourse/helpers/unique-id";
+import dUniqueId from "discourse/ui-kit/helpers/d-unique-id";
 
 /**
  * Represents a field in a form with validation, registration, and field data management capabilities.
@@ -16,13 +16,15 @@ export default class FKFieldData extends Component {
    * Unique identifier for the field.
    * @type {string}
    */
-  id = uniqueId();
+  id = dUniqueId();
 
   /**
    * Unique identifier for the field's error element.
    * @type {string}
    */
-  errorId = uniqueId();
+  errorId = dUniqueId();
+
+  #controlArgs = { field: this };
 
   // Set by legacy controls in their constructor (during render),
   // read by the applyControlType modifier (post-render)
@@ -108,9 +110,11 @@ export default class FKFieldData extends Component {
    */
   @cached
   get Control() {
-    const { component, args } = resolveFieldControl(this.type);
-
-    return curryComponent(component, { field: this, ...args }, getOwner(this));
+    return curryComponent(
+      resolveFieldControl(this.type, getOwner(this)),
+      this.#controlArgs,
+      getOwner(this)
+    );
   }
 
   /**
@@ -122,19 +126,13 @@ export default class FKFieldData extends Component {
   }
 
   /**
-   * Format of the title.
+   * Format of the title and description (label area). Overrides @format
+   * for the title and description, leaving the field's content area at
+   * @format. Useful when long descriptions need more room than the input.
    * @type {string}
    */
-  get titleFormat() {
-    return this.args.titleFormat || this.format;
-  }
-
-  /**
-   * Format of the description.
-   * @type {string}
-   */
-  get descriptionFormat() {
-    return this.args.descriptionFormat || this.format;
+  get labelFormat() {
+    return this.args.labelFormat;
   }
 
   /**
@@ -163,6 +161,14 @@ export default class FKFieldData extends Component {
   }
 
   /**
+   * Placeholder text for input fields.
+   * @type {string}
+   */
+  get placeholder() {
+    return this.args.placeholder;
+  }
+
+  /**
    * Help text of the field.
    * @type {string}
    */
@@ -174,6 +180,32 @@ export default class FKFieldData extends Component {
     return (this.args.errors ?? {})[this.name];
   }
 
+  get descriptionId() {
+    return `${this.id}-description`;
+  }
+
+  get helpTextId() {
+    return `${this.id}-help-text`;
+  }
+
+  get describedBy() {
+    const ids = [];
+
+    if (this.description) {
+      ids.push(this.descriptionId);
+    }
+
+    if (this.helpText) {
+      ids.push(this.helpTextId);
+    }
+
+    if (this.error) {
+      ids.push(this.errorId);
+    }
+
+    return ids.length ? ids.join(" ") : undefined;
+  }
+
   /**
    * Indicates whether to show the field's title.
    * Defaults to `true`.
@@ -181,6 +213,16 @@ export default class FKFieldData extends Component {
    */
   get showTitle() {
     return this.args.showTitle ?? true;
+  }
+
+  /**
+   * Indicates whether to show the `(optional)` marker next to the title when
+   * the field has no `required` validation rule.
+   * Defaults to `true`.
+   * @type {boolean}
+   */
+  get showOptional() {
+    return this.args.showOptional ?? true;
   }
 
   /**

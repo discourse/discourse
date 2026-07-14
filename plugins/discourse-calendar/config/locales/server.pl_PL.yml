@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 pl_PL:
+  category_types:
+    events:
+      name: "Wydarzenia"
+      title: "wydarzenia"
+      description: "Miejsce, w którym członkowie mogą wyszukiwać i omawiać nadchodzące wydarzenia we wspólnym kalendarzu."
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "Przeczytaj wydarzenia w kalendarzu"
   reports:
     currently_away:
       title: Użytkownicy aktualnie nieobecni
@@ -37,12 +45,15 @@ pl_PL:
     map_events_to_color: "Przypisz kolor do każdego tagu lub kategorii."
     map_events_title: "Nadpisuje „Wydarzenia” w tytule paska bocznego „Nadchodzące wydarzenia” dla każdej kategorii."
     calendar_enabled: "Włącz wtyczkę discourse-calendar. Spowoduje to dodanie obsługi tagu [calendar][/calendar] w pierwszym wpisie tematu."
-    discourse_post_event_enabled: "Włącza funkcje wydarzeń. Uwaga: wymagane jest również włączenie opcji „kalendarz włączony”."
+    discourse_post_event_enabled: "Włącza funkcje zdarzeń. Uwaga: wymagane jest również włączenie opcji {{setting:calendar_enabled}}."
     displayed_invitees_limit: "Ogranicza liczbę zaproszeń wyświetlanych w wydarzeniu."
     display_post_event_date_on_topic_title: "Wyświetla datę wydarzenia po tytule tematu."
     use_local_event_date: "Użyj daty lokalnej po tytule tematu zamiast czasu względnego."
     discourse_post_event_allowed_on_groups: "Grupy, które mogą tworzyć wydarzenia."
     discourse_post_event_allowed_custom_fields: "Umożliwia każdemu zdarzeniu ustawienie wartości pól niestandardowych."
+    discourse_post_event_allowed_custom_fields_invalid: "Te nazwy pól niestandardowych są nieprawidłowe: %{names}. Nazwy muszą zaczynać się i kończyć literą lub cyfrą, a jako separatory należy używać kropek, myślników lub podkreśleń (na przykład: dress_code, live-stream, q.and.a)."
+    discourse_post_event_allowed_custom_fields_collision: "Te niestandardowe nazwy pól odpowiadają tej samej nazwie po znormalizowaniu kropek, myślników i wielkości liter: %{names}. Każde pole niestandardowe musi być unikatowe."
+    discourse_post_event_allowed_custom_fields_reserved: "Te niestandardowe nazwy pól są zarezerwowane przez wbudowane opcje zdarzeń (na przykład nazwa, adres URL, status, lokalizacja): %{names}. Wybierz inne nazwy."
     discourse_post_event_edit_notifications_time_extension: "Wydłuża (w minutach) okres po zakończeniu wydarzenia, w którym osoby zaproszone są nadal powiadamiane o edycji w oryginalnym poście."
     holiday_calendar_topic_id: "Identyfikator tematu kalendarza świąt/nieobecności personelu."
     holiday_status_emoji: Określa emoji używane dla statusu świąt.
@@ -63,11 +74,39 @@ pl_PL:
     event_participation_buttons: "Lista przycisków umożliwiających udział w wydarzeniu, z których mogą korzystać użytkownicy."
     sidebar_show_upcoming_events: "Pokaż link do nadchodzących wydarzeń na pasku bocznym w sekcji „Więcej”."
     calendar_first_day_of_week: "Ustaw pierwszy dzień tygodnia, w którym będzie wyświetlany kalendarz. Dostępne opcje to sobota, niedziela lub poniedziałek."
+    enable_events_category_type_setup: "Włącza opcję typu kategorii Wydarzenia podczas konfiguracji tworzenia kategorii."
+    livestream_embeddable_chat_allowed_paths: "Dozwolone ścieżki dla osadzanego czatu na żywo."
+    livestream_enable_modal_chat_on_mobile: "Pokaż czat na żywo w oknie modalnym na urządzeniu mobilnym."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        label: "Domyślny widok kalendarza"
+        day: "Dzień"
+        week: "Tydzień"
+        month: "Miesiąc"
+        year: "Rok"
+      display_weekends:
+        label: "Wyświetl weekendy"
+      discourse_post_event_allowed_on_groups:
+        label: "Grupy mogące tworzyć wydarzenia"
+      use_local_event_date:
+        label: "Format daty wydarzenia"
+        local: "Data lokalna (np. 20 kwietnia)"
+        relative: "Czas względny (np. w ciągu 2 dni)"
+      sort_categories_by_event_start_date_enabled:
+        label: "Sortowanie tematów"
+        event_date: "Data wydarzenia"
+        latest_post: "Najnowsza aktywność wpisów"
+      sidebar_show_upcoming_events:
+        label: 'Pokaż link „Nadchodzące wydarzenia” w menu nawigacyjnym'
+    calendar_subscriptions:
+      all_events_feed_name: "%{site_title} - Wszystkie wydarzenia"
+      my_events_feed_name: "%{site_title} - Moje wydarzenia"
     invite_user_notification: "%{username} zaprosił Cię do: %{description}"
     calendar_must_be_in_first_post: "Tag kalendarza może być użyty tylko w pierwszym poście tematu."
     more_than_one_calendar: "W poście nie można umieścić więcej niż jednego kalendarza."
     more_than_two_dates: "Post w temacie kalendarza nie może zawierać więcej niż dwóch dat."
+    whisper_not_allowed: "Szeptów nie można używać do tworzenia wydarzeń w kalendarzu."
     event_expired: "Wydarzenie wygasło"
     holiday_status:
       description: "Na świętach"

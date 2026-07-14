@@ -41,24 +41,14 @@ describe "Subscription products" do
     plans_json =
       File.read(
         Rails.root.join(
-          "plugins",
-          "discourse-subscriptions",
-          "spec",
-          "fixtures",
-          "json",
-          "stripe-price-list.json",
+          "plugins/discourse-subscriptions/spec/fixtures/json/stripe-price-list.json",
         ),
       )
 
     subscriptions_json =
       File.read(
         Rails.root.join(
-          "plugins",
-          "discourse-subscriptions",
-          "spec",
-          "fixtures",
-          "json",
-          "stripe-subscription-list.json",
+          "plugins/discourse-subscriptions/spec/fixtures/json/stripe-subscription-list.json",
         ),
       )
 

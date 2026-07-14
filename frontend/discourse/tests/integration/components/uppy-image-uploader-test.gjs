@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | uppy-image-uploader", function (hooks) {
+module("Integration | Component | UppyImageUploader", function (hooks) {
   setupRenderingTest(hooks);
 
   test("with image", async function (assert) {

@@ -135,6 +135,86 @@ describe "Tag Groups" do
     end
   end
 
+  describe "editing a private tag group's permissions are preserved" do
+    fab!(:staff_group, :group)
+    fab!(:tag3) { Fabricate(:tag, name: "rats") }
+    fab!(:private_tag_group) do
+      Fabricate(:tag_group, name: "Private Group", tags: [tag1, tag2]).tap do |tg|
+        tg.permissions = { staff_group.id => TagGroupPermission.permission_types[:full] }
+        tg.save!
+      end
+    end
+
+    it "does not wipe permissions when the group chooser clears and re-selects groups" do
+      tag_groups_page.visit_tag_group(private_tag_group)
+      expect(tag_groups_page).to have_private_permission_checked
+
+      tag_groups_page.private_group_chooser.expand
+      tag_groups_page.private_group_chooser.unselect_by_name(staff_group.name)
+      tag_groups_page.private_group_chooser.select_row_by_name(staff_group.name)
+      tag_groups_page.private_group_chooser.collapse
+
+      tag_groups_page.tags_chooser.expand
+      tag_groups_page.tags_chooser.search("rats")
+      tag_groups_page.tags_chooser.select_row_by_name("rats")
+      tag_groups_page.tags_chooser.collapse
+
+      tag_groups_page.save
+
+      page.refresh
+      tag_groups_page.click_tag_group("Private Group")
+
+      expect(tag_groups_page).to have_tag_in_group("rats")
+      expect(tag_groups_page).to have_private_permission_checked
+      expect(tag_groups_page).to have_private_group(staff_group.name)
+    end
+
+    it "does not change permissions when navigating from a public tag group then editing tags" do
+      public_tag_group = Fabricate(:tag_group, name: "Public Group", tags: [tag1])
+
+      tag_groups_page.visit_tag_group(public_tag_group)
+      expect(tag_groups_page).to have_public_permission_checked
+
+      tag_groups_page.click_tag_group("Private Group")
+      expect(tag_groups_page).to have_private_permission_checked
+
+      tag_groups_page.tags_chooser.expand
+      tag_groups_page.tags_chooser.search("rats")
+      tag_groups_page.tags_chooser.select_row_by_name("rats")
+      tag_groups_page.tags_chooser.collapse
+
+      tag_groups_page.save
+
+      page.refresh
+      tag_groups_page.click_tag_group("Private Group")
+
+      expect(tag_groups_page).to have_tag_in_group("rats")
+      expect(tag_groups_page).to have_private_permission_checked
+      expect(tag_groups_page).to have_private_group(staff_group.name)
+    end
+
+    it "blocks save and preserves permissions when group chooser is cleared on a private group" do
+      tag_groups_page.visit_tag_group(private_tag_group)
+      expect(tag_groups_page).to have_private_permission_checked
+
+      tag_groups_page.private_group_chooser.expand
+      tag_groups_page.private_group_chooser.unselect_by_name(staff_group.name)
+      tag_groups_page.private_group_chooser.collapse
+
+      tag_groups_page.save
+
+      dialog = PageObjects::Components::Dialog.new
+      expect(dialog).to have_content(I18n.t("js.tagging.groups.cannot_save.no_groups"))
+      dialog.click_yes
+
+      page.refresh
+      tag_groups_page.click_tag_group("Private Group")
+
+      expect(tag_groups_page).to have_private_permission_checked
+      expect(tag_groups_page).to have_private_group(staff_group.name)
+    end
+  end
+
   describe "deleting a tag group" do
     fab!(:tag_group) { Fabricate(:tag_group, name: "To Delete", tags: [tag1]) }
 

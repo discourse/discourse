@@ -546,22 +546,22 @@ end
 #
 # Table name: topic_users
 #
-#  user_id                  :integer          not null
-#  topic_id                 :integer          not null
-#  posted                   :boolean          default(FALSE), not null
+#  id                       :integer          not null, primary key
+#  bookmarked               :boolean          default(FALSE)
+#  cleared_pinned_at        :datetime
+#  first_visited_at         :datetime
+#  last_emailed_post_number :integer
+#  last_posted_at           :datetime
 #  last_read_post_number    :integer
 #  last_visited_at          :datetime
-#  first_visited_at         :datetime
+#  liked                    :boolean          default(FALSE)
 #  notification_level       :integer          default(1), not null
 #  notifications_changed_at :datetime
-#  notifications_reason_id  :integer
+#  posted                   :boolean          default(FALSE), not null
 #  total_msecs_viewed       :integer          default(0), not null
-#  cleared_pinned_at        :datetime
-#  id                       :integer          not null, primary key
-#  last_emailed_post_number :integer
-#  liked                    :boolean          default(FALSE)
-#  bookmarked               :boolean          default(FALSE)
-#  last_posted_at           :datetime
+#  notifications_reason_id  :integer
+#  topic_id                 :integer          not null
+#  user_id                  :integer          not null
 #
 # Indexes
 #

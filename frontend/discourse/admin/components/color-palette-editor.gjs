@@ -5,11 +5,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 function isColorOverriden(color) {
@@ -153,7 +153,7 @@ const Picker = class extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "color-palette-editor__picker"
         "form-kit__control-input"
         (if this.invalid "--invalid")
@@ -170,7 +170,7 @@ const Picker = class extends Component {
         {{on "change" this.onChange}}
       />
       <div class="color-palette-editor__input-wrapper">
-        {{icon "hashtag" class="color-palette-editor__icon"}}
+        {{dIcon "hashtag" class="color-palette-editor__icon"}}
         <input
           class="color-palette-editor__text-input"
           data-position={{@position}}
@@ -237,7 +237,7 @@ export default class ColorPaletteEditor extends Component {
               />
               {{#unless @disabled}}
                 <DButton
-                  class={{concatClass
+                  class={{dConcatClass
                     "btn-flat"
                     "color-palette-editor__revert"
                     (unless (isColorOverriden color) "--hidden")

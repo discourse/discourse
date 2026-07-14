@@ -109,6 +109,12 @@
   }
 }
 
+.chat-integration-setup-provider-modal {
+  &__instructions {
+    margin-top: 0;
+  }
+}
+
 .chat-integration-modal {
   .provider-name {
     font-weight: 600;

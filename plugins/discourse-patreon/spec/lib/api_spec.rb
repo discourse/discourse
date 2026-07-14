@@ -49,8 +49,8 @@ RSpec.describe Patreon::Api do
       stub_url(401, url)
       described_class.campaign_data
       expect(ProblemCheckTracker[:access_token_invalid].blips).to eq(1)
-      expect(AdminNotice.find_by(identifier: :access_token_invalid).message).to eq(
-        I18n.t("dashboard.problem.access_token_invalid", base_path: Discourse.base_path),
+      expect(AdminNotice.find_by(identifier: :access_token_invalid).message).to include(
+        "www.patreon.com/platform/documentation/clients",
       )
     end
 

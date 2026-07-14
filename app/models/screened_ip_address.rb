@@ -29,10 +29,10 @@ class ScreenedIpAddress < ActiveRecord::Base
   end
 
   def check_for_match
-    if self.errors[:ip_address].blank?
-      matched = self.class.match_for_ip_address(self.ip_address)
-      if matched && matched.action_type == self.action_type
-        self.errors.add(:ip_address, :ip_address_already_screened)
+    if errors[:ip_address].blank?
+      matched = self.class.match_for_ip_address(ip_address)
+      if matched && matched.action_type == action_type
+        errors.add(:ip_address, :ip_address_already_screened)
       end
     end
   end
@@ -42,7 +42,7 @@ class ScreenedIpAddress < ActiveRecord::Base
   # inet/cidr columns:
   def ip_address=(val)
     if val.nil?
-      self.errors.add(:ip_address, :invalid)
+      errors.add(:ip_address, :invalid)
       return
     end
 
@@ -54,7 +54,7 @@ class ScreenedIpAddress < ActiveRecord::Base
     v = IPAddr.handle_wildcards(val)
 
     if v.nil?
-      self.errors.add(:ip_address, :invalid)
+      errors.add(:ip_address, :invalid)
       return
     end
 
@@ -63,7 +63,7 @@ class ScreenedIpAddress < ActiveRecord::Base
     # this gets even messier, Ruby 1.9.2 raised a different exception to Ruby 2.0.0
     # handle both exceptions
   rescue ArgumentError, IPAddr::InvalidAddressError
-    self.errors.add(:ip_address, :invalid)
+    errors.add(:ip_address, :invalid)
   end
 
   # Return a string with the ip address and mask in standard format. e.g., "127.0.0.0/8".
@@ -168,10 +168,10 @@ end
 # Table name: screened_ip_addresses
 #
 #  id            :integer          not null, primary key
-#  ip_address    :inet             not null
 #  action_type   :integer          not null
-#  match_count   :integer          default(0), not null
+#  ip_address    :inet             not null
 #  last_match_at :datetime
+#  match_count   :integer          default(0), not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
 #

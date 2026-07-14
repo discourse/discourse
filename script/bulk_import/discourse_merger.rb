@@ -443,10 +443,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     puts ""
     print "copying uploads..."
 
-    FileUtils.cp_r(
-      File.join(@uploads_path, "."),
-      File.join(Rails.root, "public", "uploads", "default"),
-    )
+    FileUtils.cp_r(File.join(@uploads_path, "."), Rails.public_path.join("uploads/default").to_s)
 
     columns = Upload.columns.map(&:name)
     last_id = Upload.unscoped.maximum(:id) || 1

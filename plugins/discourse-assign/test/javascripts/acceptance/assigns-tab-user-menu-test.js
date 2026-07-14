@@ -15,6 +15,7 @@ const USER_MENU_ASSIGN_RESPONSE = {
       read: false,
       high_priority: true,
       created_at: "2022-08-11T21:32:32.404Z",
+      topic_bumped_at: "2022-08-11T21:32:32.404Z",
       post_number: 1,
       topic_id: 227,
       fancy_title: "Test poll topic please bear with me :heart:",
@@ -33,6 +34,7 @@ const USER_MENU_ASSIGN_RESPONSE = {
       read: true,
       high_priority: true,
       created_at: "2022-08-11T21:32:32.404Z",
+      topic_bumped_at: "2022-08-12T21:32:32.404Z",
       post_number: 1,
       topic_id: 228,
       fancy_title: "Test poll topic please bear with me 2 :ok_hand:",
@@ -47,45 +49,40 @@ const USER_MENU_ASSIGN_RESPONSE = {
   ],
 };
 
-acceptance(
-  "Discourse Assign | user menu | user cannot assign",
-  function (needs) {
-    needs.user({
-      can_assign: false,
-    });
-    needs.settings({
-      assign_enabled: true,
-    });
+acceptance("user menu | user cannot assign", function (needs) {
+  needs.user({
+    can_assign: false,
+  });
+  needs.settings({
+    assign_enabled: true,
+  });
 
-    test("the assigns tab is not shown", async function (assert) {
-      await visit("/");
-      await click(".d-header-icons .current-user button");
-      assert.dom("#user-menu-button-assign-list").doesNotExist();
-    });
-  }
-);
+  test("the assigns tab is not shown", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user button");
+    assert.dom("#user-menu-button-assign-list").doesNotExist();
+  });
+});
 
-acceptance(
-  "Discourse Assign | user menu | assign_enabled setting is disabled",
-  function (needs) {
-    needs.user({
-      can_assign: false,
-    });
-    needs.settings({
-      assign_enabled: false,
-    });
+acceptance("user menu | assign_enabled setting is disabled", function (needs) {
+  needs.user({
+    can_assign: false,
+  });
+  needs.settings({
+    assign_enabled: false,
+  });
 
-    test("the assigns tab is not shown", async function (assert) {
-      await visit("/");
-      await click(".d-header-icons .current-user button");
-      assert.dom("#user-menu-button-assign-list").doesNotExist();
-    });
-  }
-);
+  test("the assigns tab is not shown", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user button");
+    assert.dom("#user-menu-button-assign-list").doesNotExist();
+  });
+});
 
-acceptance("Discourse Assign | user menu", function (needs) {
+acceptance("user menu", function (needs) {
   needs.user({
     can_assign: true,
+    can_assign_globally: true,
     grouped_unread_notifications: {
       34: 173, // assigned notification type
     },
@@ -166,7 +163,7 @@ acceptance("Discourse Assign | user menu", function (needs) {
     );
   });
 
-  test("displays unread assign notifications on top and fills the remaining space with read assigns", async function (assert) {
+  test("displays unread assign notifications first, ordered by topic bump date", async function (assert) {
     await visit("/");
     await click(".d-header-icons .current-user button");
     await click("#user-menu-button-assign-list");

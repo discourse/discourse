@@ -24,6 +24,12 @@ module PageObjects
         post.find(".show-replies").click
       end
 
+      def jump_to_reply(reply)
+        find(
+          "#embedded-posts__bottom--#{@post_number} .reply[data-post-id='#{reply.id}'] a.post-info.arrow",
+        ).click
+      end
+
       def load_more_replies
         find("#embedded-posts__bottom--#{@post_number} .load-more-replies").click
       end
@@ -67,6 +73,11 @@ module PageObjects
       def post_language
         post.find(".post-info.post-language").hover
         find(".post-language-content")
+      end
+
+      def toggle_localized_content
+        post.find(".post-info.post-language .fk-d-tooltip__trigger").click
+        self
       end
 
       def open_post_history

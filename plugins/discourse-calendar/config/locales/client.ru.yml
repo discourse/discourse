@@ -12,6 +12,12 @@ ru:
         categories:
           discourse_post_event: "Мероприятие Discourse"
           discourse_calendar: "Календарь и события"
+      web_hooks:
+        calendar_event:
+          group_name: "Событие календаря"
+          calendar_event_created: "Событие в календаре создано."
+          calendar_event_updated: "Событие в календаре обновлено."
+          calendar_event_destroyed: "Событие в календаре уничтожено"
   js:
     notifications:
       titles:
@@ -27,7 +33,16 @@ ru:
             topic_id:
               label: ID темы
     discourse_calendar:
+      livestream:
+        chat:
+          join_channel_header: "🌟 Присоединяйтесь к обсуждению! 🌟"
+          join_channel_message: "Подтвердите свое участие и откройте чат мероприятия. Присоединяйтесь к обсуждениям, делитесь своими впечатлениями и общайтесь с другими участниками!"
       invite_user_notification: "Пользователь %{username} приглашает вас: %{description}"
+      preferences:
+        all_events: "Discourse Календарь - Все события"
+        all_events_description: "Все события форума"
+        my_events: "Discourse Календарь — Мои события"
+        my_events_description: "Мероприятия, которые вы собираетесь посетить или которыми вы интересуетесь."
       on_holiday: "Выходные"
       disable_holiday: "Отключить"
       enable_holiday: "Включить"
@@ -322,6 +337,7 @@ ru:
       search: "Поиск…"
       group_availability: "доступность %{group}"
     discourse_post_event:
+      new_event: "Новое событие"
       notifications:
         before_event_reminder: "Мероприятие скоро начнется"
         after_event_reminder: "Мероприятие закончилось"
@@ -329,6 +345,9 @@ ru:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} автоматически определил(-а) ваше присутствие и пригласил(-а) вас на мероприятие «%{eventName}»"
         an_event: "событие"
+      event_description:
+        show_more: "Развернуть"
+        show_less: "Свернуть"
       edit_reason: "Мероприятие обновлено"
       edit_reason_closed: "Мероприятие закрыто"
       edit_reason_opened: "Мероприятие открыто"
@@ -399,10 +418,12 @@ ru:
       models:
         invitee:
           no_users: "Пользователи не найдены"
+          this_event: "Это событие"
+          this_and_following: "Это событие и все последующие события"
+          leave_event: "Покинуть мероприятие"
           status:
-            unknown: "Не интересует"
             going: "Участвую"
-            not_going: "Не участвую"
+            not_going: "Не пойду"
             interested: "Интересно"
             going_count:
               one: "%{count} участвует"
@@ -439,11 +460,49 @@ ru:
               title: "Закрытое"
               description: "К закрытому мероприятию могут присоединиться только приглашенные пользователи."
       composer:
-        name_placeholder: "Событие"
-        end_date_placeholder: "Установить дату окончания"
+        name_placeholder: "Название события"
+        end_date_placeholder: "Дата окончания"
         location_placeholder: "Добавить местоположение или URL"
-        max_attendees_placeholder: "Установить максимальное количество участников"
+        max_attendees_placeholder: "Неограниченное количество участников"
+        no_rsvps_label: "Не ведется учет посещаемости"
         description_placeholder: "Добавить описание события"
+        event_title_placeholder: "Название события"
+        create_event_button: "Создать мероприятие"
+        action_title: "Создать новое событие"
+        all_day: "Весь день"
+        reminder:
+          units:
+            minutes:
+              one: "минуту"
+              few: "мин"
+              many: "мин"
+              other: "мин"
+            hours:
+              one: "час"
+              few: "ч."
+              many: "ч."
+              other: "ч."
+            days:
+              one: "дата"
+              few: "сут."
+              many: "сут."
+              other: "сут."
+            weeks:
+              one: "неделю"
+              few: "нед."
+              many: "нед."
+              other: "нед."
+          before: "%{unit} перед"
+          after: "%{unit} после"
+          notification_title: "Уведомить участников"
+          bump_topic_title: "Автоматическое поднятие темы"
+          remove: "Удалить напоминание"
+      composer_actions:
+        create_event:
+          label: "Создать мероприятие"
+          desc: "Создать новое событие в этой категории"
+        create_topic:
+          label: "Создать тему"
       builder_modal:
         custom_fields:
           label: "Настраиваемые поля"
@@ -451,6 +510,7 @@ ru:
           description: "Настраиваемые поля разрешены в настройках сайта. Поля используются для передачи данных в другие плагины."
         create_event_title: "Создать мероприятие"
         update_event_title: "Изменить мероприятие"
+        advanced_settings_title: "Расширенные настройки"
         confirm_delete: "Действительно удалить это мероприятие ?"
         confirm_close: "Действительно закрыть это мероприятие ?"
         confirm_open: "Действительно открыть это мероприятие ?"
@@ -464,11 +524,18 @@ ru:
         timezone:
           label: Часовой пояс
           remove_timezone: Без часового пояса (UTC)
+        starts_at:
+          label: "Дата начала"
+        ends_at:
+          label: "Дата окончания"
+        all_day:
+          label: "Мероприятие на весь день"
+          description: "Мероприятие, рассчитанное на весь день, не будет иметь определенного расписания, только дату. Мероприятие будет проходить с начала дня до конца дня."
         reminders:
           label: "Напоминания"
           types:
-            bump_topic: "автоматическое поднятие темы"
-            notification: "уведомление участников"
+            bump_topic: "Автоматическое поднятие темы"
+            notification: "Уведомить участников"
           units:
             minutes: "мин"
             hours: "ч."
@@ -478,30 +545,31 @@ ru:
             before: "до"
             after: "после"
         recurrence_until:
-          label: "До (включительно)"
+          label: "До (включая эту дату)"
         recurrence:
           label: "Повторение"
           none: "Без повторения"
           every_day: "Каждый день"
-          every_month: "Каждый месяц в этот будний день"
           every_weekday: "Каждый будний день"
-          every_week: "Каждую неделю в этот будний день"
-          every_two_weeks: "Каждые две недели в этот будний день"
-          every_four_weeks: "Каждые четыре недели в этот будний день"
-        minimal:
-          label: "Минимальное событие"
-          checkbox_label: "Скрыть кнопки «Участвую», «Не участвую» и статус приглашенных"
+          every_week: "Каждый %{weekday}"
+          ordinals:
+            first: "первый"
+            second: "второй"
+            third: "третий"
+            fourth: "четвертый"
+            last: "использовать ранее установленные дату и время"
         max_attendees:
           label: "Максимальное количество участников"
           placeholder: "Нет ограничений"
+        attendance:
+          label: "Сколько участников могут принять участие в этом мероприятии?"
+          unlimited: "Без ограничений"
+          up_to: "До..."
+          none: "Нет"
         allow_chat:
           label: "Интеграция чата"
           checkbox_label: "Создать и настроить чат-канал для конкретного события"
-        url:
-          label: "URL-адрес"
-          placeholder: "Необязательно"
         location:
-          label: "Расположение"
           placeholder: "Добавьте местоположение, ссылку или что-то еще."
         description:
           label: "Описание"
@@ -511,9 +579,18 @@ ru:
           placeholder: "Необязательно, по умолчанию используется заголовок темы"
         invitees:
           label: "Приглашённые группы"
-        status:
-          label: "Статус"
+        event_type:
+          label: "Тип посещаемости"
+          public:
+            title: "Публичное"
+            description: "Принять участие может любой желающий."
+          private:
+            title: "Только по приглашению"
+            description: "Участвовать могут только члены определенных групп."
         delete_confirmation_message: "Удалить это событие?"
+        image:
+          label: "Изображение события"
       invite_user_or_group:
         title: "Уведомить пользователей или группы"
         invite: "Отправить"
+        success: "Приглашение отправлено"

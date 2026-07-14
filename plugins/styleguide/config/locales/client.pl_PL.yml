@@ -95,10 +95,13 @@ pl_PL:
           title: "Więcej tematów"
         post_menu:
           title: "Menu postu"
+        docked_composer:
+          title: "Kompozytor zadokowany"
         modal:
           title: "Modalne"
           header: "Tytuł modalu"
           footer: "Stopka modalu"
+          open: "Otwórz okno modalne"
         user_about:
           title: "Blok o użytkowniku"
         header_icons:
@@ -117,3 +120,5 @@ pl_PL:
         char_counter:
           title: "Licznik znaków"
           placeholder: "Tutaj wpisz swój tekst..."
+        segmented_control:
+          title: "Sterowanie segmentowe (grupa przełączników przycisków)"

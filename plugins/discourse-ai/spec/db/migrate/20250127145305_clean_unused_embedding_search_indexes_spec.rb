@@ -9,6 +9,8 @@ RSpec.describe CleanUnusedEmbeddingSearchIndexes do
 
   let(:connection) { ActiveRecord::Base.connection }
 
+  around { |example| ActiveRecord::Migration.suppress_messages { example.run } }
+
   before { enable_current_plugin }
 
   describe "#up" do

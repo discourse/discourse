@@ -90,6 +90,9 @@ ko:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
+      event_description:
+        show_more: "더 보기"
+        show_less: "간략히 보기"
       edit_reason: "이벤트 업데이트됨"
       show_all: "모두 보기"
       add_to_calendar: "캘린더에 추가"
@@ -113,7 +116,6 @@ ko:
       models:
         invitee:
           status:
-            unknown: "관심 없음"
             interested: "관심"
         event:
           expired: "만료됨"
@@ -123,6 +125,21 @@ ko:
               title: "공개"
             private:
               title: "비공개"
+      composer:
+        name_placeholder: "이벤트 이름"
+        event_title_placeholder: "이벤트 이름"
+        create_event_button: "이벤트 만들기"
+        reminder:
+          units:
+            minutes:
+              other: "분"
+            hours:
+              other: "시간"
+            days:
+              other: "일"
+      composer_actions:
+        create_event:
+          label: "이벤트 만들기"
       builder_modal:
         custom_fields:
           label: "사용자 정의 필드"
@@ -149,16 +166,16 @@ ko:
           label: "반복"
           none: "반복 없음"
           every_day: "매일"
-        url:
-          label: "URL"
-          placeholder: "선택 사항"
-        location:
-          label: "위치"
+          ordinals:
+            last: "마지막"
+        attendance:
+          none: "없음"
         description:
           label: "내용"
         name:
           label: "이벤트 이름"
-        status:
-          label: "상태"
+        event_type:
+          public:
+            title: "공개"
       invite_user_or_group:
         invite: "보내기"

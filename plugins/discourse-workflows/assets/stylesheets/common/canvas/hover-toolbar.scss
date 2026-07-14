@@ -1,0 +1,88 @@
+.workflow-canvas-toolbar {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: calc(var(--z-canvas-elements) + 2);
+
+  &.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  &.--inline {
+    position: static;
+    transform: none;
+    opacity: 1;
+    width: fit-content;
+    margin: 0 auto;
+  }
+
+  .workflows-canvas__rete-container.is-dragging & {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &__btn,
+  &__btn.btn {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    border: none;
+    background: var(--primary-very-high);
+    color: var(--secondary);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+
+    .d-icon {
+      font-size: var(--font-down-3);
+      color: inherit;
+    }
+
+    &:hover,
+    &:focus-visible {
+      background: var(--primary-high);
+
+      .d-icon {
+        color: inherit;
+      }
+    }
+
+    &.--success {
+      background: var(--workflow-status-success);
+
+      &:hover {
+        background: color-mix(
+          in srgb,
+          var(--workflow-status-success) 85%,
+          black
+        );
+      }
+    }
+
+    &.is-disabled,
+    &:disabled {
+      background: var(--primary-low-mid);
+      color: var(--primary-medium);
+      cursor: not-allowed;
+      box-shadow: none;
+      opacity: 1;
+
+      &:hover,
+      &:focus-visible {
+        background: var(--primary-low-mid);
+        color: var(--primary-medium);
+      }
+    }
+  }
+}

@@ -127,7 +127,7 @@ RSpec.describe "Visit channel" do
           it "allows to join it" do
             chat.visit_channel(category_channel_1)
 
-            expect(page).to have_content(I18n.t("js.chat.channel_settings.join_channel"))
+            expect(page).to have_content(I18n.t("js.chat.channel_settings.join"))
           end
 
           it "shows a preview of the channel" do
@@ -152,10 +152,7 @@ RSpec.describe "Visit channel" do
             it "allows to join it" do
               chat.visit_thread(thread)
 
-              expect(page).to have_content(
-                I18n.t("js.chat.channel_settings.join_channel"),
-                count: 2,
-              )
+              expect(page).to have_content(I18n.t("js.chat.channel_settings.join"), count: 2)
             end
           end
         end

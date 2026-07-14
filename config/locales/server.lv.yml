@@ -64,6 +64,10 @@ lv:
       exclusion: ir rezervēts
   not_in_group:
     join_group: "Pievienoties grupai"
+  reading_time_minutes:
+    zero: "%{count} minūtes 🕑"
+    one: "%{count} minūtes 🕑"
+    other: "%{count} minūtes 🕑"
   likes: "Patīk"
   embed:
     start_discussion: "Sākt Diskusiju"
@@ -109,6 +113,11 @@ lv:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Ikviens"
+      admins: "Administratori"
+      moderators: "Moderātori"
+      staff: "Personāls"
   education:
     until_posts:
       zero: "%{count} raksti"
@@ -236,6 +245,9 @@ lv:
       confirm_title: Turpināt %{site_name}
       logging_in_as: Piesakoties kā %{username}
       confirm_button: Pabeigt pieteikšanos
+    device:
+      code: "Kods"
+      continue: "Turpināt"
   reports:
     default:
       labels:
@@ -264,6 +276,26 @@ lv:
       xaxis: "Diena"
     new_contributors:
       xaxis: "Diena"
+    activity_by_category:
+      labels:
+        category: "Sadaļa"
+        topics: "Tēmas"
+        posts: "Ieraksti"
+        share: "Dalīties"
+    posters_by_member_type:
+      labels:
+        count: "Ieraksti"
+        share: "Dalīties"
+      types:
+        staff: "Personāls"
+    trust_level_pipeline:
+      labels:
+        count: "Dalībnieki"
+        share: "Dalīties"
+      levels:
+        "0": "Jauns"
+        "2": "Biedrs"
+        "3": "Regulārs"
     trust_level_growth:
       yaxis: "Diena"
     consolidated_page_views:
@@ -279,6 +311,8 @@ lv:
     consolidated_page_views_browser_detection:
       yaxis: "Diena"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonīmi"
       yaxis: "Diena"
     dau_by_mau:
       xaxis: "Diena"
@@ -333,6 +367,12 @@ lv:
       labels:
         user: "Lietotājs"
         num_topics: "Tēmas"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Apmeklējumi"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Apmeklējumi"
     top_traffic_sources:
       xaxis: "Domēns"
       num_topics: "Tēmas"
@@ -363,6 +403,8 @@ lv:
       xaxis: "Diena"
     page_view_logged_in_browser_reqs:
       xaxis: "Diena"
+    page_view_embed_reqs:
+      xaxis: "Diena"
     http_background_reqs:
       xaxis: "Diena"
     http_2xx_reqs:
@@ -392,7 +434,7 @@ lv:
       labels:
         user: Lietotājs
         location: Atrašanās vieta
-    staff_logins:
+    admin_logins:
       labels:
         user: Lietotājs
         location: Atrašanās vieta
@@ -430,6 +472,9 @@ lv:
       category: "Sadaļas"
       user: "Lietotāji"
     results_page: "Meklēšanas rezultāti vaicājumam “%{term}”"
+  posts_filter:
+    description:
+      order_latest_topic: "Jaunākās tēmas"
   login:
     security_key_description: "Kad esat sagatavojis savu fiziskās drošības atslēgu, nospiediet tālāk esošo pogu Autentificēt ar drošības atslēgu."
     security_key_alternative: "Izmēģiniet citu veidu"
@@ -462,8 +507,11 @@ lv:
       liked_received: "Saņemtās atzinības"
       new_users: "Jauni lietotāji"
       join_the_discussion: "Lasīt vairāk"
+      subject_template_improved: "Kopsavilkums"
     set_password:
       title: "Iestatīt paroli"
+    admin_login:
+      subject_template_improved: "Ielogoties"
   page_not_found:
     page_title: "Lapa nav atrasta"
     see_more: "Vairāk"
@@ -506,6 +554,8 @@ lv:
               private:
                 label: "Privāts"
   onebox:
+    google_meet:
+      meeting_code: "Kods:"
     github:
       closed: "slēgts"
       status_date:

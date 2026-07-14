@@ -184,7 +184,9 @@ module DiscoursePostEvent
     end
 
     def self.listable_topics(guardian)
-      Topic.listable_topics.secured(guardian)
+      topics = Topic.listable_topics.secured(guardian)
+      topics = topics.visible unless guardian.can_see_unlisted_topics?
+      topics
     end
 
     def self.private_messages(user)

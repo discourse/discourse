@@ -1,22 +1,22 @@
 import { fn, get, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
-import DButton from "discourse/components/d-button";
 import EmailDropdown from "discourse/components/email-dropdown";
 import GoogleIcon from "discourse/components/google-icon";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import SaveControls from "discourse/components/save-controls";
-import TextField from "discourse/components/text-field";
-import UserStatusMessage from "discourse/components/user-status-message";
 import UsernamePreference from "discourse/components/username-preference";
-import boundAvatar from "discourse/helpers/bound-avatar";
-import icon from "discourse/helpers/d-icon";
-import dasherize from "discourse/helpers/dasherize";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import FlairChooser from "discourse/select-kit/components/flair-chooser";
 import { or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DSaveControls from "discourse/ui-kit/d-save-controls";
+import DTextField from "discourse/ui-kit/d-text-field";
+import DUserStatusMessage from "discourse/ui-kit/d-user-status-message";
+import dBoundAvatar from "discourse/ui-kit/helpers/d-bound-avatar";
+import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -43,7 +43,7 @@ export default <template>
       />
       <div class="controls">
         {{! we want the "huge" version even though we're downsizing it in CSS }}
-        {{boundAvatar @controller.model "huge"}}
+        {{dBoundAvatar @controller.model "huge"}}
         <DButton
           @action={{fn (routeAction "showAvatarSelector") @controller.model}}
           @icon="pencil"
@@ -106,7 +106,7 @@ export default <template>
           {{#if @controller.canAddEmail}}
             <div class="controls">
               <LinkTo @route="preferences.email" @query={{hash new=1}}>
-                {{icon "plus"}}
+                {{dIcon "plus"}}
                 {{i18n "user.email.add_email"}}
               </LinkTo>
             </div>
@@ -119,7 +119,7 @@ export default <template>
                 @route="preferences.email"
                 class="btn btn-default btn-small btn-icon pad-left no-text"
               >
-                {{icon "pencil"}}
+                {{dIcon "pencil"}}
               </LinkTo>
             {{/if}}
           </div>
@@ -166,14 +166,14 @@ export default <template>
             {{#each @controller.authProviders as |authProvider|}}
               {{#if authProvider.account}}
                 <tr
-                  class="{{dasherize authProvider.method.name}}
+                  class="{{dDasherize authProvider.method.name}}
                     account-connected"
                 >
                   <td class="associated-account__icon">
                     {{#if authProvider.method.isGoogle}}
                       <GoogleIcon />
                     {{else}}
-                      {{icon (or authProvider.method.icon "user")}}
+                      {{dIcon (or authProvider.method.icon "user")}}
                     {{/if}}
                   </td>
                   <td>
@@ -213,15 +213,15 @@ export default <template>
                   </td>
                 </tr>
               {{else}}
-                <tr class={{dasherize authProvider.method.name}}>
+                <tr class={{dDasherize authProvider.method.name}}>
                   <td
                     class="associated-account__icon
-                      {{dasherize authProvider.method.name}}"
+                      {{dDasherize authProvider.method.name}}"
                   >
                     {{#if authProvider.method.isGoogle}}
                       <GoogleIcon />
                     {{else}}
-                      {{icon (or authProvider.method.icon "user")}}
+                      {{dIcon (or authProvider.method.icon "user")}}
                     {{/if}}
                   </td>
                   <td>
@@ -281,7 +281,7 @@ export default <template>
       <label class="control-label">{{i18n "user.name.title"}}</label>
       <div class="controls">
         {{#if @controller.model.can_edit_name}}
-          <TextField
+          <DTextField
             @value={{@controller.newNameInput}}
             @classNames="input-xxlarge"
             @maxlength="255"
@@ -340,7 +340,7 @@ export default <template>
       <label class="control-label">{{i18n "user.status.title"}}</label>
       <div class="controls">
         {{#if @controller.newStatus}}
-          <UserStatusMessage
+          <DUserStatusMessage
             @status={{@controller.newStatus}}
             @showDescription={{true}}
           />
@@ -413,7 +413,7 @@ export default <template>
   </span>
 
   {{#if @controller.canSaveUser}}
-    <SaveControls
+    <DSaveControls
       @model={{@controller.model}}
       @action={{@controller.save}}
       @saved={{@controller.saved}}

@@ -260,6 +260,8 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
   module("authorization and security", function () {
     test("throws when @block component used directly in template", async function (assert) {
+      const stub = sinon.stub(console, "error");
+
       @block("direct-usage-block")
       class DirectUsageBlock extends Component {
         <template>
@@ -278,6 +280,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         errorThrown?.message?.includes("cannot be used directly in templates"),
         "throws authorization error"
       );
+      assert.true(stub.calledWithMatch("Error occurred:"));
+
+      stub.restore();
     });
   });
 
@@ -1631,6 +1636,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
   module("error handling", function () {
     test("outlet continues rendering other blocks when one block throws", async function (assert) {
+      const stub = sinon.stub(console, "error");
       let errorCaught = null;
       setupOnerror((error) => {
         errorCaught = error;
@@ -1671,6 +1677,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         errorCaught?.message?.includes("Block render error"),
         "error message is correct"
       );
+      assert.true(stub.calledWithMatch("Error occurred:"));
+
+      stub.restore();
     });
 
     test("block with invalid condition type shows warning in dev mode", async function (assert) {

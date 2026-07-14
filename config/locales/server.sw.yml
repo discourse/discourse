@@ -229,6 +229,11 @@ sw:
       trust_level_2: "kiwango_cha_uaminifu_2"
       trust_level_3: "kiwango_cha_uaminifu_3"
       trust_level_4: "kiwango_cha_uaminifu_4"
+    default_full_names:
+      everyone: "Kila Mtu"
+      admins: "Viongozi"
+      moderators: "Wasimamizi"
+      staff: "Wasaidizi"
     request_membership_pm:
       title: "Ombi la Uanachama wa @%{group_name}"
   education:
@@ -508,6 +513,9 @@ sw:
       session_info: "Soma taarifa za kipindi cha mtumiaji"
       read: "Soma zote"
       write: "Andika zote"
+    device:
+      code: "Kodi"
+      continue: "Endelea"
   reports:
     default:
       labels:
@@ -540,6 +548,29 @@ sw:
       title: "Wachangiaji Wapya"
       xaxis: "Siku"
       yaxis: "Idadi ya wachangiaji wapya"
+    activity_by_category:
+      labels:
+        category: "Kikundi"
+        topics: "Mada"
+        posts: "Machapisho"
+        share: "Shirikisha"
+    posters_by_member_type:
+      labels:
+        count: "Machapisho"
+        share: "Shirikisha"
+      types:
+        staff: "Wasaidizi"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Wanachama"
+        share: "Shirikisha"
+      levels:
+        "0": "Mpya"
+        "1": "Kawaida"
+        "2": "Mwanachama"
+        "3": "Kawaida"
+        "4": "Kiongozi"
     trust_level_growth:
       yaxis: "Siku"
     consolidated_page_views:
@@ -556,6 +587,8 @@ sw:
     consolidated_page_views_browser_detection:
       yaxis: "Siku"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Asiyejulikana"
       yaxis: "Siku"
     dau_by_mau:
       xaxis: "Siku"
@@ -643,6 +676,12 @@ sw:
         user: "Mtumiaji"
         num_clicks: "Imebonyezwa"
         num_topics: "Mada"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Waliotembelea"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Waliotembelea"
     top_traffic_sources:
       title: "Chanzo cha Msongamano Kwenye Mtandao"
       xaxis: "Kikoa"
@@ -682,6 +721,8 @@ sw:
     page_view_anon_browser_reqs:
       xaxis: "Siku"
     page_view_logged_in_browser_reqs:
+      xaxis: "Siku"
+    page_view_embed_reqs:
       xaxis: "Siku"
     http_background_reqs:
       title: "Mandharinyuma"
@@ -727,7 +768,7 @@ sw:
       labels:
         user: Mtumiaji
         location: Sehemu
-    staff_logins:
+    admin_logins:
       labels:
         user: Mtumiaji
         location: Sehemu
@@ -795,7 +836,6 @@ sw:
     topics_per_period_in_top_summary: "Namba ya mada za juu zitakazo onyeshwa kama chaguo-msingi la muhtasari wa mada za juu."
     topics_per_period_in_top_page: "Idadi ya mada za juu zitakazo onyeshwa kwenye upande wa 'Onyesha Zaidi' mada za juu."
     email_token_valid_hours: "Nimesahau nywila / tokens za kuanzisha akaunti zina kibali cha masaa (n)"
-    new_version_emails: "Tuma barua pepe kwa barua pepe_mawasiliano toleo jipya la Discourse likitolewa."
     invite_expiry_days: "Funguo za mualiko ni sahihi, kwa siku ngapi"
     password_unique_characters: "Idadi ya chini ya herufi pekee nywila inahitaji."
     block_common_passwords: "Usiruhusu nywila amabazo zipo kati ya nywila 10,000 zinazotumika mara kwa mara."
@@ -920,6 +960,10 @@ sw:
       topic: "Majibu"
       user: "Watumiaji"
     results_page: "Majibu ya utafiti ya '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "Machapisho Mapya"
+      order_latest_topic: "Mada za hivi karibuni"
   discourse_connect:
     login_error: "Hitilafu Wakati wa Kuingia."
     not_found: "Akaunti yako haijapatikana. Tafadhali wasiliana na msimamizi wa tovuti."
@@ -1189,7 +1233,6 @@ sw:
         Jibu lako limetumwa kwa kutumia barua pepe iliyozuiliwa. Jaribu kutumia barua pepe nyingine, au [wasiliana na msaidizi](%{base_url}/kuhusu).
     email_reject_not_allowed_email:
       title: "Barua Pepe Kataza Barua Pepe Hairuhusiwi "
-      subject_template: "[%{email_prefix}] Tatizo la Barua -- Barua Pepe Imezuiliwa"
       text_body_template: |
         Tunaomba radhi, ila ujumbe wa barua pepe kwenda kwa %{destination} (jina la %{former_title}) haujafika.
 
@@ -1364,7 +1407,6 @@ sw:
       title: "Ukumbusho wa Watumiaji Waliosubirishwa"
     new_user_of_the_month:
       title: "Wewe ni Mtumiaji Mpya wa Mwezi!"
-      subject_template: "Wewe ni Mtumiaji Mpya wa Mwezi!"
       text_body_template: |
         Hongera, umepata tunzo ya **Mtumiaji Mpya wa Mwezi wa %{month_year}**. :trophy:
 
@@ -1584,6 +1626,7 @@ sw:
     account_exists:
       title: "Akaunti tayari ipo"
       subject_template: "[%{email_prefix}] Akaunti tayari ipo"
+      subject_template_improved: "Akaunti tayari ipo"
       text_body_template: |
         Umejaribu kutengeneza akaunti kwenye %{site_name}, au umejaribu kubadilisha barua pepe ya akaunti kuwa %{email}. Lakini, hiyo akaunti ya %{email} tayari ipo.
 
@@ -1603,6 +1646,7 @@ sw:
       popular_posts: "Machapisho Maarufu"
       more_new: "Mpya kwako"
       subject_template: "Muhtasari wa [%{email_prefix}]"
+      subject_template_improved: "Muhtasari"
       unsubscribe: "Muhtasari huu umetumwa kutoka kwa %{site_link} kama hatujakuona kwa mda fulani. Badilisha %{email_preferences_link}, au %{unsubscribe_link} kujiengua."
       your_email_settings: "mipangilio yako ya barua pepe"
       click_here: "bofya hapa"
@@ -1620,6 +1664,7 @@ sw:
       title: "Ingia kupitia kiungo"
       preview: "Ingia kupitia kiungo."
       subject_template: "Ingia kupitia kiungo [%{email_prefix}] "
+      subject_template_improved: "Ingia kupitia kiungo"
       text_body_template: |
         Hiki ni kiungo cha kuingia kwenye [%{site_name}](%{base_url}).
 
@@ -1629,7 +1674,6 @@ sw:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Tengeneza Nywila"
-      subject_template: "Weka Nywila [%{email_prefix}]"
       text_body_template: |
         Mtu anataka kutengeneza nywila ya akaunti yako[%{site_name}](%{base_url}). Au unaweza kuingia kwa kutumia njia nyingine (Google, Facebook au njia nyingine) kupitia barua pepe iliyothibitishwa.
 
@@ -1640,9 +1684,9 @@ sw:
     admin_login:
       title: "Ingia Kiongozi"
       subject_template: "[%{email_prefix}] Ingia"
+      subject_template_improved: "Ingia"
     account_created:
       title: "Akaunti Imetengenezwa"
-      subject_template: "[%{email_prefix}] Akaunti Yako Mpya"
       text_body_template: |
         Akaunti yako mpya imetengenezwa kwa ajili yako kwenye %{site_name}
 
@@ -1955,6 +1999,8 @@ sw:
   search_logs:
     graph_title: "Idadi ya Utafiti"
   onebox:
+    google_meet:
+      meeting_code: "Kodi:"
     github:
       closed: "imefungwa"
       status_date:

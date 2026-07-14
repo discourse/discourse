@@ -74,6 +74,8 @@ ug:
         chat_usage:
           title: سۆھبەت پائالىيىتى
           total_messages: جەمئىي ئۇچۇر
+          dm_messages: بىۋاسىتە ئۇچۇر
+          unique_dm_channels: بىۋاسىتە ئۇچۇر سۆھبىتى
           reactions_received: تاپشۇرۇۋالغان ئىنكاس
           avg_message_length: ئوتتۇرىچە ئۇچۇر ئۇزۇنلۇقى
           favorite_channels: ياقتۇرىدىغان قانال
@@ -83,8 +85,14 @@ ug:
           author_others: "%{username}"
           channel_title: "#سۆھبەت پائالىيىتى"
           status_online: "● توردا"
+          message_1:
+            one: "سىز بۇ يىل <strong>%{count}</strong> ئۇچۇر يوللىدىڭىز!"
+            other: "سىز بۇ يىل <strong>%{count}</strong> ئۇچۇر يوللىدىڭىز!"
           reply_1: "lol قالتىس B-)"
           reply_2: "ئاجايىپ :D"
+          message_3:
+            one: "كىشىلەر ئۇچۇرىڭىزنى ياقتۇردى! <strong>%{count}</strong> ئىنكاسقا ئېرىشتىڭىز ❤️"
+            other: "كىشىلەر ئۇچۇرىڭىزنى ياقتۇردى! <strong>%{count}</strong> ئىنكاسقا ئېرىشتىڭىز ❤️"
           reply_3: "r0fl rAwr 8-)"
           message_4: "سىزنىڭ ئوتتۇرىچە ئۇچۇر ئۇزۇنلۇقىڭىز <strong>%{length}</strong> ھەرپ"
           message_5: "ياقتۇرىدىغان قانىلىڭىز:"
@@ -122,6 +130,9 @@ ug:
           subtitle:
             one: سىز بۇ يىل %{count} يېڭى ئىشلەتكۈچىگە ياردەم قىلدىڭىز
             other: سىز بۇ يىل %{count} يېڭى ئىشلەتكۈچىگە ياردەم قىلدىڭىز
+          subtitle_others:
+            one: "%{username} بۇ يىل %{count} يېڭى ئىشلەتكۈچىگە ياردەم قىلدى"
+            other: "%{username} بۇ يىل %{count} يېڭى ئىشلەتكۈچىگە ياردەم قىلدى"
           new_member:
             one: "%{count} يېڭى ئەزا"
             other: "%{count} يېڭى ئەزا"
@@ -132,9 +143,11 @@ ug:
           mentions: ئاتاش
           topics_with_new_users: يېڭى ئىشلەتكۈچىنىڭ تېمىسى
           contributions_helped: تۆھپىڭىز ياردەم قىلدى
+          contributions_helped_others: "%{username} نىڭ تۆھپىسى ياردەم بەردى"
         time_of_day_activity:
           title: كۈندىلىك پائالىيەت رېتىمى
           play_button: پائالىيىتىڭىزنى ئاۋازلىق ياڭرىتىدۇ
+          play_button_others: "%{username} نىڭ پائالىيىتىنى ئاۋاز سۈپىتىدە ياڭرات"
           stop_button: ئاۋاز ياڭرىتىشنى توختات
         writing_analysis:
           title: يازما تەھلىلى

@@ -6,10 +6,8 @@
 
 ar:
   js:
-    discourse_hCaptcha:
-      missing_token: "يُرجى إكمال تحدي hCaptcha."
+    discourse_captcha:
       placeholder: عنصر نائب
-      contact_system_administrator: "حدثت مشكلة مع hCaptcha، إذا استمرت هذه المشكلة، يُرجى التواصل مع مسؤول النظام"
   admin_js:
     admin:
       site_settings:

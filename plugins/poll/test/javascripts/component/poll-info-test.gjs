@@ -10,7 +10,7 @@ const OPTIONS = [
   { id: "6c986ebcde3d5822a6e91a695c388094", html: "Other", votes: 5, rank: 0 },
 ];
 
-module("Poll | Component | poll-info", function (hooks) {
+module("Component | PollInfo", function (hooks) {
   setupRenderingTest(hooks);
 
   test("public multiple poll with results anytime", async function (assert) {
@@ -118,5 +118,41 @@ module("Poll | Component | poll-info", function (hooks) {
         i18n("poll.public.title").replace(/<\/?[^>]+(>|$)/g, ""),
         "displays the public label"
       );
+  });
+
+  test("displays who closed the poll", async function (assert) {
+    this.setProperties({
+      options: OPTIONS,
+      close: null,
+      closed: true,
+      closedBy: { username: "jane" },
+      results: [],
+      showResults: false,
+      postUserId: 59,
+      isPublic: false,
+      hasVoted: false,
+      voters: [],
+    });
+
+    await render(
+      <template>
+        <PollInfo
+          @options={{this.options}}
+          @close={{this.close}}
+          @closed={{this.closed}}
+          @closedBy={{this.closedBy}}
+          @results={{this.results}}
+          @showResults={{this.showResults}}
+          @postUserId={{this.postUserId}}
+          @isPublic={{this.isPublic}}
+          @hasVoted={{this.hasVoted}}
+          @voters={{this.voters}}
+        />
+      </template>
+    );
+
+    assert
+      .dom(".poll-info_instructions li.poll-info_closed-by span")
+      .hasText(i18n("poll.closed_by", { username: "jane" }));
   });
 });

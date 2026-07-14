@@ -13,19 +13,21 @@ import { isNone } from "@ember/utils";
 import SettingValidationMessage from "discourse/admin/components/setting-validation-message";
 import Description from "discourse/admin/components/site-settings/description";
 import JobStatus from "discourse/admin/components/site-settings/job-status";
-import SiteSetting from "discourse/admin/models/site-setting";
-import DButton from "discourse/components/d-button";
+import SiteSetting, {
+  isSettingValueTrue,
+} from "discourse/admin/models/site-setting";
 import JsonSchemaEditorModal from "discourse/components/modal/json-schema-editor";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import basePath from "discourse/helpers/base-path";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { deepEqual } from "discourse/lib/object";
 import { sanitize } from "discourse/lib/text";
 import { splitString } from "discourse/lib/utilities";
-import { and } from "discourse/truth-helpers";
+import { and, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dBasePath from "discourse/ui-kit/helpers/d-base-path";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const CUSTOM_TYPES = [
@@ -44,6 +46,7 @@ const CUSTOM_TYPES = [
   "secret_list",
   "upload",
   "group_list",
+  "group",
   "tag_list",
   "tag_group_list",
   "color",
@@ -62,6 +65,7 @@ const CUSTOM_TYPES = [
 export default class SiteSettingComponent extends Component {
   @service modal;
   @service router;
+  @service adminSiteSettingStore;
   @service siteSettingChangeTracker;
   @service messageBus;
   @service site;
@@ -137,8 +141,26 @@ export default class SiteSettingComponent extends Component {
     return `site-settings/${this.typeClass}`;
   }
 
+  get siteSettingComponent() {
+    return getOwner(this).resolveRegistration("component:site-setting");
+  }
+
   get overridden() {
-    return !this.#valuesEqual(this.setting.default, this.buffered.get("value"));
+    return this.settingIsOverridden(this.setting);
+  }
+
+  get groupedOverridden() {
+    return [this.setting, ...this.inlineDependentSettings].some((setting) =>
+      this.settingIsOverridden(setting)
+    );
+  }
+
+  settingIsOverridden(setting) {
+    return !this.#valuesEqual(
+      setting.default,
+      setting.buffered.get("value"),
+      setting
+    );
   }
 
   get displayDescription() {
@@ -153,10 +175,38 @@ export default class SiteSettingComponent extends Component {
     return this.setting.upcoming_change_default_override_metadata;
   }
 
+  get showDependsOnNotice() {
+    return this.setting.depends_on?.length > 0;
+  }
+
+  get dependsOnNoticeText() {
+    const path = dBasePath();
+    const links = this.setting.depends_on
+      .map((name, index) => {
+        const label = sanitize(
+          this.setting.depends_on_humanized_names?.[index] ||
+            name.replaceAll("_", " ")
+        );
+        return `<a href="${path}/admin/site_settings/category/all_results?filter=${encodeURIComponent(name)}">${label}</a>`;
+      })
+      .join(", ");
+    const translationKey =
+      Object.keys(this.setting.depends_on_values ?? {}).length > 0
+        ? "admin.site_settings.depends_on_values_notice"
+        : "admin.site_settings.depends_on_notice";
+
+    return trustHTML(
+      i18n(translationKey, {
+        count: this.setting.depends_on.length,
+        dependencyLinks: links,
+      })
+    );
+  }
+
   get themeSiteSettingWarningText() {
     return trustHTML(
       i18n("admin.theme_site_settings.site_setting_warning", {
-        basePath,
+        basePath: dBasePath,
         defaultThemeName: sanitize(this.defaultTheme.name),
         defaultThemeId: this.defaultTheme.theme_id,
       })
@@ -180,7 +230,7 @@ export default class SiteSettingComponent extends Component {
     ) {
       return trustHTML(
         i18n("admin.upcoming_changes.default_warning", {
-          basePath,
+          basePath: dBasePath,
           changeNamesFilter:
             this.setting.upcoming_change_default_override_metadata
               .change_setting_name,
@@ -194,7 +244,7 @@ export default class SiteSettingComponent extends Component {
 
     return trustHTML(
       i18n("admin.upcoming_changes.default_warning_short", {
-        basePath,
+        basePath: dBasePath,
         changeNamesFilter:
           this.setting.upcoming_change_default_override_metadata
             .change_setting_name,
@@ -203,8 +253,26 @@ export default class SiteSettingComponent extends Component {
   }
 
   get dirty() {
+    return this.settingIsDirty(this.setting);
+  }
+
+  get groupedDirty() {
+    return this.dirtySettings.length > 0;
+  }
+
+  get dirtySettings() {
+    return [this.setting, ...this.inlineDependentSettings].filter((setting) =>
+      this.settingIsDirty(setting)
+    );
+  }
+
+  settingIsDirty(setting) {
     let bufferVal = this.buffered.get("value");
-    let settingVal = this.setting?.value;
+    let settingVal = setting?.value;
+
+    if (setting !== this.setting) {
+      bufferVal = setting.buffered.get("value");
+    }
 
     if (isNone(bufferVal)) {
       bufferVal = "";
@@ -214,12 +282,12 @@ export default class SiteSettingComponent extends Component {
       settingVal = "";
     }
 
-    const dirty = !this.#valuesEqual(bufferVal, settingVal);
+    const dirty = !this.#valuesEqual(bufferVal, settingVal, setting);
 
     if (dirty) {
-      this.siteSettingChangeTracker.add(this.setting);
+      this.siteSettingChangeTracker.add(setting);
     } else {
-      this.siteSettingChangeTracker.remove(this.setting);
+      this.siteSettingChangeTracker.remove(setting);
     }
 
     return dirty;
@@ -243,6 +311,14 @@ export default class SiteSettingComponent extends Component {
 
   get setting() {
     return this.args.setting;
+  }
+
+  get inlineDependentSettings() {
+    if (this.args.inline) {
+      return [];
+    }
+
+    return this.adminSiteSettingStore.inlineDependentSettings(this.setting);
   }
 
   get settingName() {
@@ -329,7 +405,9 @@ export default class SiteSettingComponent extends Component {
   }
 
   get disableControls() {
-    return !!this.setting.isSaving;
+    return [this.setting, ...this.inlineDependentSettings].some(
+      (setting) => setting.isSaving
+    );
   }
 
   get staffLogFilter() {
@@ -337,7 +415,18 @@ export default class SiteSettingComponent extends Component {
   }
 
   get isDisabled() {
-    return this.setting.themeable || this.setting.disabled;
+    return (
+      this.setting.themeable ||
+      this.setting.disabled ||
+      this.isDisabledByDependency
+    );
+  }
+
+  get isDisabledByDependency() {
+    if (this.setting.depends_behavior !== "hidden") {
+      return false;
+    }
+    return !this.adminSiteSettingStore.dependenciesSatisfied(this.setting);
   }
 
   get canUpdate() {
@@ -354,37 +443,49 @@ export default class SiteSettingComponent extends Component {
 
   @action
   async update() {
-    if (this.setting.requiresConfirmation) {
-      const confirm = await this.siteSettingChangeTracker.confirmChanges(
-        this.setting
-      );
+    const dirtySettings = this.dirtySettings;
+
+    for (const setting of dirtySettings) {
+      if (!setting.requiresConfirmation) {
+        continue;
+      }
+
+      const confirm =
+        await this.siteSettingChangeTracker.confirmChanges(setting);
 
       if (!confirm) {
         return;
       }
     }
 
-    if (this.setting.affectsExistingUsers) {
-      await this.siteSettingChangeTracker.configureBackfill(this.setting);
+    for (const setting of dirtySettings) {
+      if (setting.affectsExistingUsers) {
+        await this.siteSettingChangeTracker.configureBackfill(setting);
+      }
     }
 
-    await this.save();
+    await this.save(dirtySettings);
   }
 
   @action
-  async save() {
+  async save(settings = [this.setting]) {
+    settings.forEach((setting) => (setting.isSaving = true));
+
     try {
-      this.setting.isSaving = true;
+      await this._save(settings);
 
-      await this._save();
+      const refreshParams = {};
+      settings.forEach((setting) => {
+        setting.validationMessage = null;
+        setting.buffered.applyChanges();
 
-      this.setting.validationMessage = null;
-      this.buffered.applyChanges();
+        if (setting.requiresReload) {
+          refreshParams[setting.setting] = setting.value;
+        }
+      });
 
-      if (this.setting.requiresReload) {
-        this.siteSettingChangeTracker.refreshPage({
-          [this.setting.setting]: this.setting.value,
-        });
+      if (Object.keys(refreshParams).length > 0) {
+        this.siteSettingChangeTracker.refreshPage(refreshParams);
       }
     } catch (e) {
       const json = e.jqXHR?.responseJSON;
@@ -396,20 +497,27 @@ export default class SiteSettingComponent extends Component {
           this.buffered.discardChanges();
         }
 
-        this.setting.validationMessage = errorString;
+        settings.forEach(
+          (setting) => (setting.validationMessage = errorString)
+        );
       } else {
         // eslint-disable-next-line no-console
         console.error(e);
-        this.setting.validationMessage = i18n("generic_error");
+        settings.forEach(
+          (setting) => (setting.validationMessage = i18n("generic_error"))
+        );
       }
     } finally {
-      this.setting.isSaving = false;
+      settings.forEach((setting) => (setting.isSaving = false));
     }
   }
 
   @action
   changeValueCallback(value) {
     this.buffered.set("value", value);
+    if (isSettingValueTrue(value)) {
+      this.adminSiteSettingStore.reveal(this.setting.setting);
+    }
   }
 
   @action
@@ -419,14 +527,25 @@ export default class SiteSettingComponent extends Component {
 
   @action
   cancel() {
-    this.buffered.discardChanges();
-    this.setting.validationMessage = null;
+    this.dirtySettings.forEach((setting) => {
+      setting.buffered.discardChanges();
+      setting.validationMessage = null;
+    });
   }
 
   @action
   resetDefault() {
-    this.buffered.set("value", this.setting.default);
-    this.setting.validationMessage = null;
+    [this.setting, ...this.inlineDependentSettings].forEach((setting) => {
+      if (!this.settingIsOverridden(setting)) {
+        return;
+      }
+
+      setting.buffered.set("value", setting.default);
+      setting.validationMessage = null;
+      if (isSettingValueTrue(setting.default)) {
+        this.adminSiteSettingStore.reveal(setting.setting);
+      }
+    });
   }
 
   @action
@@ -445,19 +564,27 @@ export default class SiteSettingComponent extends Component {
     this.setting.validationMessage = null;
   }
 
-  _save() {
-    const setting = this.buffered;
-    return SiteSetting.update(setting.get("setting"), setting.get("value"), {
-      updateExistingUsers: this.setting.updateExistingUsers,
+  _save(settings) {
+    if (settings.length === 1) {
+      const setting = settings[0].buffered;
+      return SiteSetting.update(setting.get("setting"), setting.get("value"), {
+        updateExistingUsers: settings[0].updateExistingUsers,
+      });
+    }
+
+    const params = {};
+    settings.forEach((setting) => {
+      params[setting.buffered.get("setting")] = {
+        value: setting.buffered.get("value"),
+        backfill: !!setting.updateExistingUsers,
+      };
     });
+
+    return SiteSetting.bulkUpdate(params);
   }
 
-  #valuesEqual(a, b) {
-    if (
-      this.setting.json_schema ||
-      this.setting.schema ||
-      this.setting.objects_schema
-    ) {
+  #valuesEqual(a, b, setting = this.setting) {
+    if (setting.json_schema || setting.schema || setting.objects_schema) {
       return deepEqual(a, b);
     } else {
       return a?.toString() === b?.toString();
@@ -470,7 +597,9 @@ export default class SiteSettingComponent extends Component {
       class="row setting
         {{this.typeClass}}
         {{if this.overridden 'overridden'}}
-        {{if this.isDisabled 'disabled'}}"
+        {{if this.isDisabled 'disabled'}}
+        {{if this.isDisabledByDependency 'disabled-by-dependency'}}
+        {{if @inline 'inline-dependent-setting'}}"
       ...attributes
     >
       <div class="setting-label">
@@ -485,7 +614,7 @@ export default class SiteSettingComponent extends Component {
               title={{i18n "admin.settings.history"}}
             >
               <span class="history-icon">
-                {{icon "clock-rotate-left"}}
+                {{dIcon "clock-rotate-left"}}
               </span>
             </LinkTo>
           {{/if}}
@@ -535,6 +664,16 @@ export default class SiteSettingComponent extends Component {
             <Description @description={{this.setting.description}} />
             <JobStatus @status={{this.status}} @progress={{this.progress}} />
           {{/if}}
+          {{#if this.inlineDependentSettings.length}}
+            <div class="inline-dependent-settings">
+              {{#each this.inlineDependentSettings as |dependentSetting|}}
+                <this.siteSettingComponent
+                  @setting={{dependentSetting}}
+                  @inline={{true}}
+                />
+              {{/each}}
+            </div>
+          {{/if}}
           <PluginOutlet
             @name="site-setting-after-description"
             @outletArgs={{lazyHash setting=this.setting}}
@@ -542,7 +681,7 @@ export default class SiteSettingComponent extends Component {
           {{#if this.showThemeSiteSettingWarning}}
             <div class="setting-override-warning setting-theme-warning">
               <p class="setting-theme-warning__text">
-                {{icon "paintbrush"}}
+                {{dIcon "paintbrush"}}
                 {{this.themeSiteSettingWarningText}}
               </p>
             </div>
@@ -552,15 +691,23 @@ export default class SiteSettingComponent extends Component {
               class="setting-override-warning setting-upcoming-change-warning"
             >
               <p class="setting-upcoming-change-warning__text">
-                {{icon "flask"}}
+                {{dIcon "flask"}}
                 {{this.upcomingChangeDefaultWarningText}}
+              </p>
+            </div>
+          {{/if}}
+          {{#if this.showDependsOnNotice}}
+            <div class="setting-override-warning setting-depends-on-notice">
+              <p class="setting-depends-on-notice__text">
+                {{dIcon "link"}}
+                {{this.dependsOnNoticeText}}
               </p>
             </div>
           {{/if}}
         {{/if}}
       </div>
 
-      {{#if (and this.dirty this.canUpdate)}}
+      {{#if (and this.groupedDirty this.canUpdate (not @inline))}}
         <div class="setting-controls">
           <DButton
             @action={{this.update}}
@@ -577,7 +724,7 @@ export default class SiteSettingComponent extends Component {
             class="cancel setting-controls__cancel"
           />
         </div>
-      {{else if (and this.overridden this.canUpdate)}}
+      {{else if (and this.groupedOverridden this.canUpdate (not @inline))}}
         {{#if this.setting.secret}}
           <DButton
             @action={{this.toggleSecret}}

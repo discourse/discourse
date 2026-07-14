@@ -14,6 +14,9 @@ ja:
       explorer:
         no_semicolons: "クエリからセミコロンを削除します。"
         dirty: "クエリは保存してから実行する必要があります。"
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "結果がありません"
     explorer:
       default_query: "デフォルト"
       or: "または"
@@ -25,6 +28,7 @@ ja:
       description_placeholder: "説明をここに入力"
       ai:
         generate: "生成"
+        optional: "オプション"
       import:
         label: "インポート"
         unparseable_json: "解析不能な JSON ファイルです。"
@@ -41,18 +45,15 @@ ja:
           yes: "はい"
           no: "いいえ"
           null_: "Null"
-      export: "エクスポート"
       view_json: "JSON を表示"
-      view: "表示"
       save: "変更を保存"
       run: "実行"
       undo: "変更を破棄"
-      edit: "編集"
       delete: "削除"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "テーブル"
-      show_graph: "グラフ"
+      chart:
+        form:
+          label: "グラフの種類"
+          bar: "棒"
       others_dirty: "クエリには保存されていない変更があり、移動すると失われます。"
       run_time: "クエリは %{value} ミリ秒で完了しました。"
       result_count:
@@ -67,7 +68,6 @@ ja:
       query_time: "最終実行"
       query_user: "作成者"
       column: "列 %{number}"
-      explain_label: "クエリプランを含めますか？"
       reset_params: "リセット"
       search_placeholder: "検索..."
       no_search_results: "残念ながら、テキストに一致する結果は見つかりませんでした。"
@@ -84,6 +84,16 @@ ja:
           descriptions:
             data_explorer:
               run_queries: "データエクスプローラーのクエリを実行します。クエリ ID を指定して、API キーを一連のクエリに制限します。"
+    discourse_workflows:
+      nodes:
+        "action:sql": "データエクスプローラー"
+      sql:
+        query_id: "クエリ"
+        add_param: "パラメーターを追加"
+        param_value: "値"
+        output:
+          results: "結果"
+          no_results: "結果がありません"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

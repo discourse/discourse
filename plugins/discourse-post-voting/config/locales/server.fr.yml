@@ -35,8 +35,6 @@ fr:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "Aucune action"
         agree_and_keep_comment:
           title: "Conserver le commentaire"
           description: "Accepter le signalement et conserver le commentaire tel quel."

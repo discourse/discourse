@@ -8,9 +8,10 @@ RSpec.describe SuggestedTopicSerializer do
   fab!(:post) { Fabricate(:post, topic: topic) }
   fab!(:topic2, :topic)
   fab!(:post2) { Fabricate(:post, topic: topic2) }
-  fab!(:guardian) { Guardian.new(user) }
-  fab!(:serializer) { described_class.new(topic, scope: guardian) }
-  fab!(:serializer2) { described_class.new(topic2, scope: guardian) }
+
+  let(:guardian) { Guardian.new(user) }
+  let(:serializer) { described_class.new(topic, scope: guardian) }
+  let(:serializer2) { described_class.new(topic2, scope: guardian) }
 
   before do
     SiteSetting.assign_enabled = true

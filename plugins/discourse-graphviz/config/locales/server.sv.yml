@@ -7,4 +7,3 @@
 sv:
   site_settings:
     discourse_graphviz_enabled: "Aktivera Graphviz-tillägget"
-    graphviz_default_svg: "Standardvärdet är SVG-rendering istället för bildrendering, kan anpassas per graf med elementet `svg=true|false`."

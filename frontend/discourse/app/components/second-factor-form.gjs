@@ -16,6 +16,8 @@ export default class SecondFactorForm extends Component {
         return i18n("login.second_factor_title");
       case SECOND_FACTOR_METHODS.SECURITY_KEY:
         return i18n("login.second_factor_title");
+      case SECOND_FACTOR_METHODS.PASSKEY:
+        return i18n("login.second_factor_title");
       case SECOND_FACTOR_METHODS.BACKUP_CODE:
         return i18n("login.second_factor_backup_title");
     }
@@ -28,6 +30,8 @@ export default class SecondFactorForm extends Component {
         return i18n("login.second_factor_description");
       case SECOND_FACTOR_METHODS.SECURITY_KEY:
         return i18n("login.security_key_description");
+      case SECOND_FACTOR_METHODS.PASSKEY:
+        return i18n("login.passkey_2fa_description");
       case SECOND_FACTOR_METHODS.BACKUP_CODE:
         return i18n("login.second_factor_backup_description");
     }

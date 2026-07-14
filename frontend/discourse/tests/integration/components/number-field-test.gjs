@@ -1,10 +1,10 @@
 import { fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import NumberField from "discourse/components/number-field";
 import { withSilencedDeprecationsAsync } from "discourse/lib/deprecated";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import DNumberField from "discourse/ui-kit/d-number-field";
 
-module("Integration | Component | number-field", function (hooks) {
+module("Integration | Component | NumberField", function (hooks) {
   setupRenderingTest(hooks);
 
   test("number field", async function (assert) {
@@ -13,7 +13,7 @@ module("Integration | Component | number-field", function (hooks) {
     await withSilencedDeprecationsAsync("discourse.number-field", async () => {
       await render(
         <template>
-          <NumberField @value={{this.value}} @classNames="number-field-test" />
+          <DNumberField @value={{this.value}} @classNames="number-field-test" />
         </template>
       );
     });
@@ -42,7 +42,7 @@ module("Integration | Component | number-field", function (hooks) {
     await withSilencedDeprecationsAsync("discourse.number-field", async () => {
       await render(
         <template>
-          <NumberField
+          <DNumberField
             @value={{this.value}}
             @classNames="number-field-test"
             @min="1"
@@ -63,7 +63,7 @@ module("Integration | Component | number-field", function (hooks) {
     await withSilencedDeprecationsAsync("discourse.number-field", async () => {
       await render(
         <template>
-          <NumberField
+          <DNumberField
             @value={{this.value}}
             @classNames="number-field-test"
             @min="-10"

@@ -421,29 +421,29 @@ module("Unit | Lib | Blocks | outlet-matcher", function () {
   });
 
   module("warnUnknownOutletPatterns", function (hooks) {
-    let consoleSpy;
+    let consoleStub;
 
     hooks.beforeEach(function () {
-      consoleSpy = sinon.spy(console, "warn");
+      consoleStub = sinon.stub(console, "warn");
     });
 
     hooks.afterEach(function () {
-      consoleSpy.restore();
+      consoleStub.restore();
     });
 
     test("does not warn for null patterns", function (assert) {
       warnUnknownOutletPatterns(null, "test-block", "allowedOutlets");
-      assert.false(consoleSpy.called);
+      assert.false(consoleStub.called);
     });
 
     test("does not warn for empty patterns", function (assert) {
       warnUnknownOutletPatterns([], "test-block", "allowedOutlets");
-      assert.false(consoleSpy.called);
+      assert.false(consoleStub.called);
     });
 
     test("does not warn for patterns matching known outlets", function (assert) {
       warnUnknownOutletPatterns(["sidebar-*"], "test-block", "allowedOutlets");
-      assert.false(consoleSpy.called);
+      assert.false(consoleStub.called);
     });
 
     test("warns for unregistered namespaced patterns", function (assert) {
@@ -455,7 +455,7 @@ module("Unit | Lib | Blocks | outlet-matcher", function () {
         "allowedOutlets"
       );
       assert.strictEqual(
-        consoleSpy.callCount,
+        consoleStub.callCount,
         2,
         "warns for each unregistered namespaced pattern"
       );
@@ -467,19 +467,19 @@ module("Unit | Lib | Blocks | outlet-matcher", function () {
         "test-block",
         "allowedOutlets"
       );
-      assert.true(consoleSpy.calledOnce);
+      assert.true(consoleStub.calledOnce);
       assert.true(
-        consoleSpy.firstCall.args[0].includes(
+        consoleStub.firstCall.args[0].includes(
           "does not match any registered outlet"
         )
       );
-      assert.true(consoleSpy.firstCall.args[0].includes("test-block"));
-      assert.true(consoleSpy.firstCall.args[0].includes("allowedOutlets"));
+      assert.true(consoleStub.firstCall.args[0].includes("test-block"));
+      assert.true(consoleStub.firstCall.args[0].includes("allowedOutlets"));
     });
 
     test("warns for typos in outlet names", function (assert) {
       warnUnknownOutletPatterns(["sidbar-*"], "test-block", "allowedOutlets");
-      assert.true(consoleSpy.calledOnce);
+      assert.true(consoleStub.calledOnce);
     });
 
     test("warns for each unmatched pattern", function (assert) {
@@ -488,7 +488,7 @@ module("Unit | Lib | Blocks | outlet-matcher", function () {
         "test-block",
         "allowedOutlets"
       );
-      assert.strictEqual(consoleSpy.callCount, 2);
+      assert.strictEqual(consoleStub.callCount, 2);
     });
   });
 });

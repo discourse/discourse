@@ -10,10 +10,10 @@ end
 # Table name: tag_group_memberships
 #
 #  id           :integer          not null, primary key
-#  tag_id       :integer          not null
-#  tag_group_id :integer          not null
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
+#  tag_group_id :integer          not null
+#  tag_id       :integer          not null
 #
 # Indexes
 #

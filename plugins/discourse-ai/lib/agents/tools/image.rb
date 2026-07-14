@@ -92,38 +92,36 @@ module DiscourseAi
           errors = []
 
           selected_prompts.each_with_index do |prompt, index|
-            begin
-              # Create tool instance with parameters
-              tool_params = { prompt: prompt }
-              tool_params[:size] = size if size
+            # Create tool instance with parameters
+            tool_params = { prompt: prompt }
+            tool_params[:size] = size if size
 
-              tool_instance =
-                tool_class.new(tool_params, bot_user: bot_user, llm: llm, context: context)
+            tool_instance =
+              tool_class.new(tool_params, bot_user: bot_user, llm: llm, context: context)
 
-              # Invoke the tool
-              tool_instance.invoke { |_progress| }
+            # Invoke the tool
+            tool_instance.invoke { |_progress| }
 
-              # Extract the custom_raw which contains the generated image markdown
-              if tool_instance.custom_raw.present?
-                # Parse the upload short_url from the markdown
-                upload_match = tool_instance.custom_raw.match(%r{!\[.*?\]\((upload://[^)]+)\)})
-                if upload_match
-                  short_url = upload_match[1]
-                  sha1 = Upload.sha1_from_short_url(short_url)
-                  upload = Upload.find_by(sha1: sha1) if sha1
-                  if upload
-                    uploads << {
-                      prompt: prompt,
-                      upload: upload,
-                      seed: nil, # Custom tools don't provide seeds
-                    }
-                  end
+            # Extract the custom_raw which contains the generated image markdown
+            if tool_instance.custom_raw.present?
+              # Parse the upload short_url from the markdown
+              upload_match = tool_instance.custom_raw.match(%r{!\[.*?\]\((upload://[^)]+)\)})
+              if upload_match
+                short_url = upload_match[1]
+                sha1 = Upload.sha1_from_short_url(short_url)
+                upload = Upload.find_by(sha1: sha1) if sha1
+                if upload
+                  uploads << {
+                    prompt: prompt,
+                    upload: upload,
+                    seed: nil, # Custom tools don't provide seeds
+                  }
                 end
               end
-            rescue => e
-              Rails.logger.warn("Failed to generate image for prompt #{prompt}: #{e}")
-              errors << e.message
             end
+          rescue => e
+            Rails.logger.warn("Failed to generate image for prompt #{prompt}: #{e}")
+            errors << e.message
           end
 
           if uploads.empty?

@@ -15,13 +15,18 @@ fi:
       title: RSS-pollaus
     admin:
       rss_polling:
-        feed: Syöteasetukset
-        discourse: Discoursen asetukset
         author: Käyttäjä
         feed_url: URL
         discourse_category: Alue
         discourse_tags: Tunnisteet
-        feed_category_filter: Aluesuodatin
-        documentation: RSS-pollauksen määritysohjeet
-        destroy_feed:
-          confirm: "Haluatko varmasti poistaa tämän syötteen?"
+        feeds:
+          edit: Muokkaa
+          delete: Poista
+          save: Tallenna
+          confirm_delete: "Haluatko varmasti poistaa tämän syötteen?"
+        test:
+          title: Esikatselu
+          dismiss: Selvä
+        status:
+          enabled: Käytössä
+          disabled: Pois käytöstä

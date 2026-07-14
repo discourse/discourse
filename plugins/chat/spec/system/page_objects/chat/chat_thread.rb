@@ -56,6 +56,10 @@ module PageObjects
         header.find(".c-navbar__close-thread-button").click
       end
 
+      def open_original_message
+        find(".chat-message-info__original-message").click
+      end
+
       def has_back_link_to_thread_list?(channel)
         header.has_css?(".c-navbar__back-button[href='#{channel.relative_url + "/t"}']")
       end
@@ -66,6 +70,14 @@ module PageObjects
 
       def back
         header.find(".c-navbar__back-button").click
+      end
+
+      def back_to_thread_list(channel)
+        header.find(".c-navbar__back-button[href='#{channel.relative_url}/t']").click
+      end
+
+      def back_to_channel(channel)
+        header.find(".c-navbar__back-button[href='#{channel.relative_url}']").click
       end
 
       def has_no_unread_list_indicator?

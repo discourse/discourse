@@ -120,3 +120,16 @@ nav.post-controls .actions button {
 .archetype-private_message {
   --pm-border-radius: var(--d-border-radius);
 }
+
+.header-title {
+  .event-date {
+    font-size: var(--font-down-3);
+    border: 1px solid var(--tertiary-low);
+    background: var(--tertiary-low);
+
+    &.past {
+      border-color: transparent;
+      background-color: transparent;
+    }
+  }
+}

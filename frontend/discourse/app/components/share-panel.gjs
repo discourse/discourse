@@ -3,11 +3,11 @@ import Component from "@ember/component";
 import { action, computed, set } from "@ember/object";
 import { trustHTML } from "@ember/template";
 import { isEmpty } from "@ember/utils";
-import DTextarea from "discourse/components/d-textarea";
 import ShareSource from "discourse/components/share-source";
 import discourseLater from "discourse/lib/later";
 import Sharing from "discourse/lib/sharing";
 import { escapeExpression } from "discourse/lib/utilities";
+import DTextarea from "discourse/ui-kit/d-textarea";
 import { i18n } from "discourse-i18n";
 
 export default class SharePanel extends Component {

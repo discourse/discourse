@@ -9,7 +9,7 @@ zh_TW:
     overall_sentiment:
       yaxis: "日期"
     emotion_neutral:
-      title: "\U0001F610 中性"
+      title: "😐 中性"
   discourse_ai:
     tools:
       presets:
@@ -17,6 +17,7 @@ zh_TW:
           name: "客製"
     ai_bot:
       tool_summary:
+        silence_user: "使用者靜音"
         search: "搜尋"
         time: "時間"
         summarize: "總結"
@@ -56,7 +57,7 @@ zh_TW:
     sentiment:
       reports:
         post_emotion:
-          neutral: "中性 \U0001F610"
+          neutral: "中性 😐"
         sentiment_analysis:
           neutral: "中性"
     ai_staff_action_logger:

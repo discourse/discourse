@@ -21,6 +21,7 @@ de:
     chat_duplicate_message_sensitivity: "Die Wahrscheinlichkeit, dass eine doppelte Nachricht desselben Absenders innerhalb eines kurzen Zeitraums blockiert wird. Dezimalzahl zwischen 0 und 1,0, wobei 1,0 die höchste Einstellung ist (Nachrichten werden häufiger in kürzerer Zeit blockiert). Auf `0` setzen, um doppelte Nachrichten zuzulassen."
     chat_minimum_message_length: "Mindestanzahl von Zeichen für eine Chat-Nachricht."
     chat_allow_uploads: "Uploads in öffentlichen Chat-Kanälen und Direktnachrichtenkanälen zulassen."
+    chat_show_copy_button_on_codeblocks: "Zeigt die Schaltfläche „Kopieren“ auf Codeblöcken in Chat-Nachrichten an."
     chat_archive_destination_topic_status: "Der Status, den das Zielthema haben soll, sobald eine Kanalarchivierung abgeschlossen ist. Dies gilt nur, wenn das Zielthema ein neues Thema ist und kein vorhandenes."
     direct_message_enabled_groups: "Benutzern in diesen Gruppen erlauben, persönliche Benutzer-zu-Benutzer-Chats zu erstellen. Hinweis: Teammitglieder können immer persönliche Chats erstellen und Benutzer können auf persönliche Chats antworten, die von Benutzern initiiert wurden, die die Berechtigung haben, sie zu erstellen."
     chat_message_flag_allowed_groups: "Benutzer in diesen Gruppen dürfen Chat-Nachrichten melden. Beachte, dass Administratoren und Moderatoren immer Chatnachrichten melden können."
@@ -32,7 +33,6 @@ de:
     chat_editing_grace_period_max_diff_low_trust: "Maximale Anzahl von Zeichenänderungen, die innerhalb der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das Schlagwort „(bearbeitet)“ in der Chat-Nachricht angezeigt (Vertrauensstufe 0 und 1)."
     chat_editing_grace_period_max_diff_high_trust: "Maximale Anzahl von Zeichenänderungen, die innerhalb der Chat-Bearbeitungsfrist erlaubt sind. Wenn mehr geändert werden, wird das Schlagwort „(bearbeitet)“ in der Chat-Nachricht angezeigt (Vertrauensstufe 2 und höher)."
     chat_preferred_index: "Bevorzugte Registerkarte beim Laden von /chat."
-    allow_chat_in_anonymous_mode: "Aktiviere diese Einstellung, um Benutzern im anonymen Modus die Nutzung des Chats zu ermöglichen. Für diese Einstellung muss die Einstellung „allow anonymous mode“ aktiviert sein."
     chat_search_enabled: "Aktiviere diese Einstellung, um Benutzern die Suche nach Chatnachrichten zu ermöglichen."
     errors:
       chat_default_channel: "Der Standard-Chat-Kanal muss ein öffentlicher Kanal sein."
@@ -232,10 +232,17 @@ de:
         other_type: "%{username} hat %{identifier} im persönlichen Chat erwähnt"
       new_chat_message: '%{username} hat eine Nachricht in „%{channel}“ gesendet'
       new_direct_chat_message: "%{username} hat eine Nachricht im persönlichen Chat gesendet"
+    actions:
+      chat_reply:
+        title: Antworten
   discourse_automation:
     scriptables:
       send_chat_message:
         title: Chat-Nachricht senden
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Genehmigen"
+      default_deny_label: "ablehnen"
   reviewable_score_types:
     needs_review:
       title: "Überprüfung erforderlich"
@@ -259,23 +266,43 @@ de:
         private_email:
           one: "[%{site_name}] Neue Nachricht"
           other: "[%{site_name}] Neue Nachrichten"
+        private_email_improved:
+          one: "Neue Nachricht"
+          other: "Neue Nachrichten"
         watched_thread:
           one: "[%{site_name}] Neue Thread-Nachricht in %{channel}"
           other: "[%{site_name}] Neue Thread-Nachrichten in %{channel}"
+        watched_thread_improved:
+          one: "Neue Thread-Nachricht in %{channel}"
+          other: "Neue Thread-Nachrichten in %{channel}"
         watched_threads:
           one: "[%{site_name}] Neue Thread-Nachrichten in %{channel} und %{count} anderen Kanal"
           other: "[%{site_name}] Neue Thread-Nachrichten in %{channel} und %{count} anderen Kanälen"
+        watched_threads_improved:
+          one: "Neue Thread-Nachrichten in %{channel} und %{count} weiteren Kanal"
+          other: "Neue Thread-Nachrichten in %{channel} und %{count} weiteren Kanälen"
         chat_dm_1:
           one: "[%{site_name}] Neue Nachricht von %{name}"
           other: "[%{site_name}] Neue Nachrichten von %{name}"
+        chat_dm_1_improved:
+          one: "Neue Nachricht von %{name}"
+          other: "Neue Nachrichten von %{name}"
         chat_dm_2: "[%{site_name}] Neue Nachrichten von %{name_1} und %{name_2}"
+        chat_dm_2_improved: "Neue Nachrichten von %{name_1} und %{name_2}"
         chat_dm_3_or_more: "[%{site_name}] Neue Nachrichten von %{name} und in %{count} anderen Direktnachrichtenkanälen"
+        chat_dm_3_or_more_improved: "Neue Nachrichten von %{name} und %{count} weiteren Direktnachrichtenkanälen"
         chat_channel_1:
           one: "[%{site_name}] Neue Nachricht in %{channel}"
           other: "[%{site_name}] Neue Nachrichten in %{channel}"
+        chat_channel_1_improved:
+          one: "Neue Nachricht in %{channel}"
+          other: "Neue Nachrichten in %{channel}"
         chat_channel_2: "[%{site_name}] Neue Nachrichten in %{channel_1} und %{channel_2}"
+        chat_channel_2_improved: "Neue Nachrichten in %{channel_1} und %{channel_2}"
         chat_channel_3_or_more: "[%{site_name}] Neue Nachrichten in %{channel} und %{count} anderen Kanälen"
+        chat_channel_3_or_more_improved: "Neue Nachrichten in %{channel} und %{count} weiteren Kanälen"
         chat_channel_and_dm: "[%{site_name}] Neue Nachrichten in %{channel} und von %{name}"
+        chat_channel_and_dm_improved: "Neue Nachrichten in %{channel} und von %{name}"
       unsubscribe: "Diese Chat-Zusammenfassung wird dir von %{site_link} gesendet, wenn du abwesend bist. Ändere deine %{email_preferences_link} oder %{unsubscribe_link}, um dich abzumelden."
       unsubscribe_no_link: "Diese Chat-Zusammenfassung wird dir von %{site_link} gesendet, wenn du abwesend bist. Ändere deine %{email_preferences_link}."
       view_messages:

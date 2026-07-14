@@ -36,6 +36,8 @@ nl:
       topic_search_placeholder: "Zoek topics op titel of berichtinhoud"
       sidebar_name_filter_placeholder: "Naam/gebruikersnaam"
       assigned: "Toegewezen"
+      group_no_assignments_title: "Geen toewijzingen"
+      group_no_assignments_body: "Er zijn momenteel geen actieve toewijzingen voor deze groep."
       group_everyone: "Iedereen"
       assigned_to: "Toegewezen aan"
       assigned_topic_to: "Topic toegewezen aan <a href='%{path}'>%{username}</a>"
@@ -129,6 +131,8 @@ nl:
       web_hooks:
         assign_event:
           group_name: "Toewijzingsgebeurtenissen"
+          assigned: "Wanneer een gebruiker een topic toewijst"
+          unassigned: "Wanneer een gebruiker de toewijzing van een topic opheft"
     search:
       advanced:
         in:
@@ -136,6 +140,18 @@ nl:
           unassigned: "zijn niet langer toegewezen"
         assigned:
           label: "Toegewezen aan"
+    topics:
+      bulk:
+        unassign: "Toewijzing van topics opheffen"
+        assign: "Topics toewijzen"
+        assign_description: "Wijs de geselecteerde topics toe aan de volgende gebruiker:"
+        unassign_description: "Wil je de toewijzing van de geselecteerde topics opheffen?"
+        confirm_assign_topics:
+          one: "%{count} topic toewijzen"
+          other: "%{count} topics toewijzen"
+        confirm_unassign_topics:
+          one: "Toewijzing van %{count} topic opheffen"
+          other: "Toewijzing van %{count} topics opheffen"
     discourse_automation:
       scriptables:
         random_assign:
@@ -184,3 +200,13 @@ nl:
       title: "Toewijzingen bewerken"
       topic: "Topic"
       post: "Bericht"
+    discourse_workflows:
+      nodes:
+        "action:assign_topic": "Topic toewijzen"
+        "trigger:assigned": "Toegewezen"
+      assign_topic:
+        operations:
+          assign: "Toewijzen"
+          unassign: "Toewijzing opheffen"
+        topic_id: "Topic-ID"
+        assignee: "Toegewezen persoon"

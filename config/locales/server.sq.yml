@@ -133,7 +133,13 @@ sq:
   not_in_group:
     join_group: "Bashkoju grupit"
   reading_time: "Koha e leximit"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    other: "%{count} mins 🕑"
   likes: "Pëlqime"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   embed:
     start_discussion: "Fillo Diskutim"
     continue: "Vazhdo Diskutimin"
@@ -189,6 +195,11 @@ sq:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Të gjithë"
+      admins: "Administratorët"
+      moderators: "Moderatorë"
+      staff: "Stafi"
   education:
     until_posts:
       one: "%{count} postim"
@@ -423,6 +434,9 @@ sq:
       notifications: "Leximin dhe pastrimin e njoftimeve"
       push: "Njoftime \"push\" drejt shërbimeve të jashtme"
       session_info: "Leximin e informacionit të sesionit të llogarisë"
+    device:
+      code: "Kodi"
+      continue: "Vazhdoni"
   reports:
     default:
       labels:
@@ -450,6 +464,29 @@ sq:
       xaxis: "Ditë"
     new_contributors:
       xaxis: "Day"
+    activity_by_category:
+      labels:
+        category: "Kategori"
+        topics: "Topics"
+        posts: "Postime"
+        share: "Shpërndaje"
+    posters_by_member_type:
+      labels:
+        count: "Postime"
+        share: "Shpërndaje"
+      types:
+        staff: "Stafi"
+    trust_level_pipeline:
+      labels:
+        count: "Anëtarë"
+        share: "Shpërndaje"
+        signups: "Regjistrimet"
+      levels:
+        "0": "I Ri"
+        "1": "Anëtar i Thjeshtë"
+        "2": "Anëtar"
+        "3": "I zakonshëm"
+        "4": "Udhëheqës"
     trust_level_growth:
       yaxis: "Day"
     consolidated_page_views:
@@ -466,6 +503,8 @@ sq:
     consolidated_page_views_browser_detection:
       yaxis: "Dit"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonim"
       yaxis: "Dit"
     dau_by_mau:
       xaxis: "Day"
@@ -542,6 +581,12 @@ sq:
         user: "User"
         num_clicks: "Clicks"
         num_topics: "Tema"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Vizita"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Vizita"
     top_traffic_sources:
       title: "Top Traffic Sources"
       xaxis: "Domain"
@@ -577,6 +622,8 @@ sq:
       xaxis: "Dit"
     page_view_logged_in_browser_reqs:
       xaxis: "Dit"
+    page_view_embed_reqs:
+      xaxis: "Day"
     http_background_reqs:
       title: "Background"
       xaxis: "Day"
@@ -618,7 +665,7 @@ sq:
       labels:
         user: User
         location: Vendndodhja
-    staff_logins:
+    admin_logins:
       labels:
         user: User
         location: Vendndodhja
@@ -668,7 +715,6 @@ sq:
     edit_history_visible_to_public: "Allow everyone to see previous versions of an edited post. When disabled, only staff members can view."
     delete_removed_posts_after: "Posts removed by the author will be automatically deleted after (n) hours. If set to 0, posts will be deleted immediately."
     fixed_category_positions: "If checked, you will be able to arrange categories into a fixed order. If unchecked, categories are listed in order of activity."
-    fixed_category_positions_on_create: "If checked, category ordering will be maintained on topic creation dialog (requires fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Add rel nofollow to all submitted user content, except for internal links (including parent domains). If you change this, you must rebake all posts with: "rake posts:rebake"'
     post_excerpt_maxlength: "Gjatësia maksimale e një përmbledhjeje të një postimi. "
     post_onebox_maxlength: "Maximum length of a oneboxed Discourse post in characters."
@@ -680,7 +726,6 @@ sq:
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
     cooldown_minutes_after_hiding_posts: "Number of minutes a user must wait before they can edit a post hidden via community flagging"
-    max_replies_in_first_day: "Numri maksimal i përgjigjeve që një përdorues ka të drejtë të krijojë në periudhën 24-orëshe pas postimit të tij të parë"
     tl2_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl2 (member) by multiplying with this number"
     tl3_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl3 (regular) by multiplying with this number"
     tl4_additional_likes_per_day_multiplier: "Increase limit of likes per day for tl4 (leader) by multiplying with this number"
@@ -698,7 +743,6 @@ sq:
     topics_per_period_in_top_page: "Number of top topics shown on the expanded 'Show More' top topics."
     email_token_valid_hours: "Forgot password / activate account tokens are valid for (n) hours."
     log_out_strict: "When logging out, log out ALL sessions for the user on all devices"
-    new_version_emails: "Send an email to the contact_email address when a new version of Discourse is available."
     invite_expiry_days: "How long user invitation keys are valid, in days"
     login_required: "Require authentication to read content on this site, disallow anonymous access."
     block_common_passwords: "Mos lejo fjalëkalimet që gjenden në 10,000 fjalëkalimet më të përdorshme."
@@ -785,8 +829,6 @@ sq:
     pop3_polling_ssl: "Use SSL while connecting to the POP3 server. (Recommended)"
     pop3_polling_username: "The username for the POP3 account to poll for email."
     pop3_polling_password: "The password for the POP3 account to poll for email."
-    email_prefix: "The [label] used in the subject of emails. It will default to 'title' if not set."
-    email_site_title: "The title of the site used as the sender of emails from the site. Default to 'title' if not set. If your 'title' contains characters that are not allowed in email sender strings, use this setting."
     minimum_topics_similar: "How many topics need to exist before similar topics are presented when composing new topics."
     relative_date_duration: "Number of days after posting where post dates will be shown as relative (7d) instead of absolute (20 Feb)."
     delete_user_max_post_age: "Don't allow deleting users whose first post is older than (x) days."
@@ -799,10 +841,8 @@ sq:
     enable_user_directory: "Provide a directory of users for browsing"
     anonymous_account_duration_minutes: "To protect anonymity create a new anonymous account every N minutes for each user. Example: if set to 600, as soon as 600 minutes elapse from last post AND user switches to anon, a new anonymous account is created."
     allow_profile_backgrounds: "Allow users to upload profile backgrounds."
-    enable_mobile_theme: "Mobile devices use a mobile-friendly theme, with the ability to switch to the full site. Disable this if you want to use a custom stylesheet that is fully responsive."
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
-    disable_system_edit_notifications: "Disables edit notifications by the system user when 'download_remote_images_to_local' is active."
     automatically_unpin_topics: "Çngjiti temat automatikisht kur përdoruesi arrin fundin e faqes."
     read_time_word_count: "Numërimi i fjalëve për minutë për të llogaritur kohën e vlerësuar të leximit."
     enable_names: "Show the user's full name on their profile, user card, and emails. Disable to hide full name everywhere."
@@ -832,6 +872,10 @@ sq:
       category: "Categories"
       topic: "Results"
       user: "Users"
+  posts_filter:
+    description:
+      order_latest: "Postimet e fundit"
+      order_latest_topic: "Temat e fundit"
   original_poster: "Postuesi fillestar"
   most_recent_poster: "Postuesi i përgjigjes së fundit"
   frequent_poster: "Postues i shpeshtë"
@@ -1141,11 +1185,14 @@ sq:
       new_users: "Përdorues të rinj"
       join_the_discussion: "Më shumë"
       subject_template: "[%{email_prefix}] Përmbledhja"
+      subject_template_improved: "Përmbledhja"
       click_here: "klikoni këtu"
     forgot_password:
       title: "Harruat Fjalëkalimin"
     set_password:
       title: "Vendos Fjalëkalim"
+    admin_login:
+      subject_template_improved: "Identifikohu"
     confirm_new_email:
       subject_template: "[%{email_prefix}] Konfirmoni adresën tuaj të re të emailit"
     confirm_new_email_via_admin:
@@ -1389,6 +1436,8 @@ sq:
               private:
                 label: "Private"
   onebox:
+    google_meet:
+      meeting_code: "Kodi:"
     github:
       status_date:
         approved: "aprovuar"

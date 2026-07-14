@@ -6,7 +6,7 @@ task "assets:precompile:build" do
 
     raise "Unknown ember version '#{ember_version}'" if !%w[5].include?(ember_version)
 
-    compile_command = "EMBER_ENV=production #{Rails.root}/script/assemble_ember_build.rb"
+    compile_command = "EMBER_ENV=production #{Rails.root.join("script/assemble_ember_build.rb")}"
 
     only_ember_precompile_build_remaining = (ARGV.last == "assets:precompile:build")
     only_assets_precompile_remaining = (ARGV.last == "assets:precompile")
@@ -18,17 +18,13 @@ task "assets:precompile:build" do
       exec "#{compile_command} && SKIP_EMBER_CLI_COMPILE=1 bin/rake assets:precompile"
     else
       system compile_command, exception: true
-      EmberCli.clear_cache!
+      EmberAssets.clear_cache!
     end
   end
 end
 
 task "assets:precompile:build_plugins": "environment" do
-  if ENV["ROLLUP_PLUGIN_COMPILER"] != "0"
-    Plugin::JsManager.new.compile!
-  else
-    puts "Skipping plugin JS compilation, set ROLLUP_PLUGIN_COMPILER=1 to enable"
-  end
+  Plugin::JsManager.new.compile!
 end
 
 task "assets:precompile:before": %w[environment assets:precompile:build]
@@ -60,20 +56,18 @@ task "assets:precompile:css" => "environment" do
 end
 
 task "assets:flush_sw" => "environment" do
-  begin
-    hostname = Discourse.current_hostname
-    default_port = SiteSetting.force_https? ? 443 : 80
-    port = SiteSetting.port.to_i > 0 ? SiteSetting.port : default_port
-    STDERR.puts "Flushing service worker script"
-    `curl -s -m 1 --resolve '#{hostname}:#{port}:127.0.0.1' #{Discourse.base_url}/service-worker.js > /dev/null`
-    STDERR.puts "done"
-  rescue StandardError
-    STDERR.puts "Warning: unable to flush service worker script"
-  end
+  hostname = Discourse.current_hostname
+  default_port = SiteSetting.force_https? ? 443 : 80
+  port = SiteSetting.port.to_i > 0 ? SiteSetting.port : default_port
+  STDERR.puts "Flushing service worker script"
+  `curl -s -m 1 --resolve '#{hostname}:#{port}:127.0.0.1' #{Discourse.base_url}/service-worker.js > /dev/null`
+  STDERR.puts "done"
+rescue StandardError
+  STDERR.puts "Warning: unable to flush service worker script"
 end
 
 def assets_path
-  "#{Rails.root}/public/assets"
+  "#{Rails.public_path.join("assets")}"
 end
 
 def gzip(path)
@@ -118,15 +112,15 @@ def log_task_duration(task_description, &task)
 end
 
 task "assets:precompile:compress_js": "environment" do
-  puts "Compressing JavaScript files"
+  puts "Compressing JavaScript and WASM files"
 
   load_path = Rails.application.assets.load_path
 
-  log_task_duration("Done compressing all JS files") do
+  log_task_duration("Done compressing all JS and WASM files") do
     concurrent? do |proc|
       load_path
         .assets
-        .select { |asset| asset.logical_path.extname == ".js" }
+        .select { |asset| %w[.js .wasm].include?(asset.logical_path.extname) }
         .each do |asset|
           digested_path = asset.digested_path.to_s
 
@@ -154,7 +148,7 @@ task "assets:precompile:compress_js": "environment" do
 
   if GlobalSetting.fallback_assets_path.present?
     begin
-      FileUtils.cp_r("#{Rails.root}/public/assets/.", GlobalSetting.fallback_assets_path)
+      FileUtils.cp_r("#{Rails.public_path.join("assets/.")}", GlobalSetting.fallback_assets_path)
     rescue => e
       STDERR.puts "Failed to backup assets to #{GlobalSetting.fallback_assets_path}"
       STDERR.puts e

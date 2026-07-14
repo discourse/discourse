@@ -115,6 +115,8 @@ RSpec.describe "Mobile Chat footer", mobile: true do
         visit("/")
         chat_page.open_from_header
 
+        expect(page).to have_css("#c-footer-channels")
+
         Fabricate(
           :chat_message_with_service,
           chat_channel: channel,
@@ -157,6 +159,7 @@ RSpec.describe "Mobile Chat footer", mobile: true do
           visit("/")
           chat_page.open_from_header
 
+          expect(page).to have_css("#c-footer-direct-messages")
           expect(page).to have_no_css("#c-footer-direct-messages .c-unread-indicator.-urgent")
 
           Fabricate(

@@ -36,6 +36,14 @@ hr:
             canned_reply:
               label: "Odgovor"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Očitavanje..."
+        tool: "Akcija"
+        user: "Korisnik"
+        approve: "Odobrite"
+        reject: "Odbij"
+        approved: "Odobrio/la"
+        rejected: "Odbio/la"
       llm_selector:
         none: "Ništa"
       features:
@@ -49,6 +57,8 @@ hr:
           few: "(%{count} još)"
           other: "(%{count} još)"
         collapse_list: "(prikaži manje)"
+        nav:
+          enabled: "Omogućeno"
         filters:
           all: "Sve"
           reset: "Resetirati"
@@ -60,6 +70,7 @@ hr:
         select_option: "Odaberite opciju..."
       translations:
         title: "Prijevodi"
+        category_scope: "Kategorije"
         stats:
           eta_minutes:
             one: "%{count} minuta"
@@ -104,6 +115,12 @@ hr:
           clear_all: "Obriši sve"
         allowed_groups: "Dopuštene grupe"
         delete: "Izbriši"
+        thinking_effort_options:
+          none: "Ništa"
+          low: "Nizak"
+          medium: "Srednji"
+          high: "Visok"
+          max: "Maks"
         response_format:
           open_modal: "Uredi"
           modal:

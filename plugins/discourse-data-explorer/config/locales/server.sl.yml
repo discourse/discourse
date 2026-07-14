@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 sl:
+  data_explorer:
+    admin_dashboard_label: "Raziskovalec podatkov"

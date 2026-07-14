@@ -1,7 +1,7 @@
 import { hash } from "@ember/helper";
-import DPageSubheader from "discourse/components/d-page-subheader";
 import Form from "discourse/components/form";
 import UserChooser from "discourse/select-kit/components/user-chooser";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
 import { i18n } from "discourse-i18n";
 
 export default <template>

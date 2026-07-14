@@ -6,7 +6,6 @@
 
 ru:
   site_settings:
-    enable_login_with_amazon: "Включите аутентификацию входа через Amazon, требуется «Вход с ID клиента Amazon» и «Вход с ключом клиента Amazon»."
     login_with_amazon_client_id: "Вход с ID клиента Amazon"
     login_with_amazon_client_secret: "Вход с ключом клиента Amazon"
     login_with_amazon_scope: "Вход с помощью Amazon OAuth2 (через пробел)"

@@ -144,6 +144,26 @@ module(
           "***[`Hello`](https://example.com)***",
         ],
       ],
+      // Typographer replacements are always disabled in the rich editor,
+      // regardless of the `enable_markdown_typographer` site setting (which
+      // defaults to true, as it is here). The document mirrors the raw markdown
+      // source (no smart quotes, dashes, ellipsis, etc.) and round-trips back
+      // to the same source on save.
+      "typographer disabled": [
+        ["hello -- world", "<p>hello -- world</p>", "hello -- world"],
+        ["hello --- world", "<p>hello --- world</p>", "hello --- world"],
+        ["hello... world", "<p>hello... world</p>", "hello... world"],
+        ["+-5", "<p>+-5</p>", "+-5"],
+        ["(tm)", "<p>(tm)</p>", "(tm)"],
+        ["(pa)", "<p>(pa)</p>", "(pa)"],
+        ['"hello" world', '<p>"hello" world</p>', '"hello" world'],
+        ["it's here", "<p>it's here</p>", "it's here"],
+        [
+          "`hello -- world`",
+          "<p><code>hello -- world</code></p>",
+          "`hello -- world`",
+        ],
+      ],
     };
 
     Object.entries(testCases).forEach(([name, tests]) => {

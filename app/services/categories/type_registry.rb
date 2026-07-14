@@ -31,12 +31,23 @@ module Categories
         types
       end
 
-      def list(only_visible: false)
-        types.values.select { |type| only_visible ? type.visible? : true }.map(&:metadata)
+      def list(only_visible: false, guardian: nil)
+        types
+          .values
+          .select { |type| only_visible ? type.visible? : true }
+          .map { |type| type.metadata(guardian:) }
       end
 
       def valid?(id)
         types.key?(id.to_sym)
+      end
+
+      def owner(id)
+        owners[id.to_sym]
+      end
+
+      def plugin_display_name(id)
+        Discourse.plugins_by_name[owner(id)]&.humanized_name
       end
 
       def reset!
@@ -45,7 +56,7 @@ module Categories
 
         # Always need to re-register the core Discussion type, the system doesn't work
         # without it.
-        self.register(Categories::Types::Discussion)
+        register(Categories::Types::Discussion)
       end
 
       # Returns all the category type counts in a hash with the type

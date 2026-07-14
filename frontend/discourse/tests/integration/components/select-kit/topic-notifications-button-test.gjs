@@ -28,7 +28,7 @@ const originalTranslation =
   I18n.translations.en.js.topic.notifications.tracking_pm.title;
 
 module(
-  "Integration | Component | select-kit/topic-notifications-button",
+  "Integration | Component | SelectKit | TopicNotificationsButton",
   function (hooks) {
     setupRenderingTest(hooks);
 

@@ -87,13 +87,15 @@ class RemoteTheme < ActiveRecord::Base
   def self.import_theme_from_directory(
     directory,
     theme_id: nil,
-    allow_out_of_sequence_migration: false
+    allow_out_of_sequence_migration: false,
+    before_save: nil
   )
     update_theme(
       ThemeStore::DirectoryImporter.new(directory),
       update_components: "none",
       theme_id: theme_id,
       allow_out_of_sequence_migration: allow_out_of_sequence_migration,
+      before_save: before_save,
     )
   end
 
@@ -103,7 +105,8 @@ class RemoteTheme < ActiveRecord::Base
     theme_id: nil,
     update_components: nil,
     run_migrations: true,
-    allow_out_of_sequence_migration: false
+    allow_out_of_sequence_migration: false,
+    before_save: nil
   )
     importer.import!
 
@@ -139,6 +142,7 @@ class RemoteTheme < ActiveRecord::Base
         already_in_transaction: true,
         run_migrations:,
         allow_out_of_sequence_migration:,
+        before_save: before_save,
       )
 
       if existing && update_components.present? && update_components != "none"
@@ -202,15 +206,14 @@ class RemoteTheme < ActiveRecord::Base
   end
 
   def self.out_of_date_themes
-    self
-      .joined_remotes
+    joined_remotes
       .where("commits_behind > 0 OR remote_version <> local_version")
       .where(themes: { enabled: true })
       .pluck("themes.name", "themes.id")
   end
 
   def self.unreachable_themes
-    self.joined_remotes.where.not(last_error_text: nil).pluck("themes.name", "themes.id")
+    joined_remotes.where.not(last_error_text: nil).pluck("themes.name", "themes.id")
   end
 
   def out_of_date?
@@ -227,9 +230,10 @@ class RemoteTheme < ActiveRecord::Base
     else
       self.updated_at = Time.zone.now
       self.remote_version, self.commits_behind = importer.commits_since(local_version)
+      self.remote_compat_ref = importer.compatibility_resolved_ref
       self.last_error_text = nil
     ensure
-      self.save!
+      save!
       begin
         importer.cleanup!
       rescue => e
@@ -244,7 +248,8 @@ class RemoteTheme < ActiveRecord::Base
     raise_if_theme_save_fails: true,
     already_in_transaction: false,
     run_migrations: true,
-    allow_out_of_sequence_migration: false
+    allow_out_of_sequence_migration: false,
+    before_save: nil
   )
     cleanup = false
 
@@ -255,7 +260,7 @@ class RemoteTheme < ActiveRecord::Base
         importer.import!
       rescue RemoteTheme::ImportError => err
         self.last_error_text = err.message
-        self.save!
+        save!
         return self
       else
         self.last_error_text = nil
@@ -298,22 +303,17 @@ class RemoteTheme < ActiveRecord::Base
     end
 
     # Update all theme attributes if this is just a placeholder
-    if self.remote_url.present? && !self.local_version && !self.commits_behind
-      self.theme.name = theme_info["name"]
-      self.theme.component = [true, "true"].include?(theme_info["component"])
-      self.theme.child_components = theme_info["components"].presence || []
+    if remote_url.present? && !local_version && !commits_behind
+      theme.name = theme_info["name"]
+      theme.component = [true, "true"].include?(theme_info["component"])
+      theme.child_components = theme_info["components"].presence || []
     end
 
-    METADATA_PROPERTIES.each do |property|
-      self.public_send(:"#{property}=", theme_info[property.to_s])
-    end
+    METADATA_PROPERTIES.each { |property| public_send(:"#{property}=", theme_info[property.to_s]) }
 
-    if !self.valid?
+    if !valid?
       raise ImportError,
-            I18n.t(
-              "themes.import_error.about_json_values",
-              errors: self.errors.full_messages.join(","),
-            )
+            I18n.t("themes.import_error.about_json_values", errors: errors.full_messages.join(","))
     end
 
     ThemeModifierSet.modifiers.keys.each do |modifier_name|
@@ -378,17 +378,25 @@ class RemoteTheme < ActiveRecord::Base
       self.remote_updated_at = Time.zone.now
       self.remote_version = importer.version
       self.local_version = importer.version
+      self.local_compat_ref = self.remote_compat_ref = importer.compatibility_resolved_ref
       self.commits_behind = 0
     end
 
     transaction_block = ->(*) do
-      # Destroy fields that no longer exist in the remote theme
       field_ids_to_destroy = theme.theme_fields.pluck(:id) - updated_fields.map { |tf| tf&.id }
-      ThemeField.where(id: field_ids_to_destroy).destroy_all
+      theme
+        .theme_fields
+        .where(id: field_ids_to_destroy)
+        .each do |field|
+          field.mark_for_destruction
+          theme.changed_fields << field
+        end
 
       update_theme_color_schemes(theme, theme_info["color_schemes"]) unless theme.component
 
-      self.save!
+      save!
+
+      before_save&.call(theme)
 
       if raise_if_theme_save_fails
         theme.save!
@@ -409,7 +417,7 @@ class RemoteTheme < ActiveRecord::Base
     if already_in_transaction
       transaction_block.call
     else
-      self.transaction(&transaction_block)
+      transaction(&transaction_block)
     end
 
     theme.theme_modifier_set.save! if theme.theme_modifier_set.refresh_theme_setting_modifiers
@@ -576,20 +584,22 @@ end
 # Table name: remote_themes
 #
 #  id                        :integer          not null, primary key
+#  about_url                 :string
+#  authors                   :string
+#  branch                    :string
+#  commits_behind            :integer
+#  last_error_text           :text
+#  license_url               :string
+#  local_compat_ref          :string
+#  local_version             :string
+#  maximum_discourse_version :string
+#  minimum_discourse_version :string
+#  private_key               :text
+#  remote_compat_ref         :string
+#  remote_updated_at         :datetime
 #  remote_url                :string           not null
 #  remote_version            :string
-#  local_version             :string
-#  about_url                 :string
-#  license_url               :string
-#  commits_behind            :integer
-#  remote_updated_at         :datetime
+#  theme_version             :string
 #  created_at                :datetime         not null
 #  updated_at                :datetime         not null
-#  private_key               :text
-#  branch                    :string
-#  last_error_text           :text
-#  authors                   :string
-#  theme_version             :string
-#  minimum_discourse_version :string
-#  maximum_discourse_version :string
 #

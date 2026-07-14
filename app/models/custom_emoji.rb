@@ -14,7 +14,7 @@ class CustomEmoji < ActiveRecord::Base
 
   after_save do
     if saved_change_to_upload_id?
-      UploadReference.ensure_exist!(upload_ids: [self.upload_id], target: self)
+      UploadReference.ensure_exist!(upload_ids: [upload_id], target: self)
     end
   end
 
@@ -30,11 +30,11 @@ end
 # Table name: custom_emojis
 #
 #  id         :integer          not null, primary key
+#  group      :string(20)
 #  name       :string           not null
-#  upload_id  :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  group      :string(20)
+#  upload_id  :integer          not null
 #  user_id    :integer          default(-1), not null
 #
 # Indexes

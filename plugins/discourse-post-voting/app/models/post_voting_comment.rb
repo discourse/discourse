@@ -46,7 +46,7 @@ class PostVotingComment < ActiveRecord::Base
   private
 
   def cook_raw
-    self.cooked = self.class.cook(self.raw)
+    self.cooked = self.class.cook(raw)
     self.cooked_version = COOKED_VERSION #TODO automatic rebaking once version is bumped
   end
 
@@ -57,8 +57,7 @@ class PostVotingComment < ActiveRecord::Base
       errors.add(:base, I18n.t("post_voting.comment.errors.post_voting_not_enabled"))
     elsif post.reply_to_post_number.present?
       errors.add(:base, I18n.t("post_voting.comment.errors.not_permitted"))
-    elsif self.class.where(post_id: self.post_id).count >=
-          SiteSetting.post_voting_comment_limit_per_post
+    elsif self.class.where(post_id: post_id).count >= SiteSetting.post_voting_comment_limit_per_post
       errors.add(
         :base,
         I18n.t(
@@ -70,7 +69,7 @@ class PostVotingComment < ActiveRecord::Base
   end
 
   def ensure_last_editor_id
-    self.last_editor_id ||= self.user_id
+    self.last_editor_id ||= user_id
   end
 end
 
@@ -79,17 +78,17 @@ end
 # Table name: post_voting_comments
 #
 #  id             :bigint           not null, primary key
-#  post_id        :integer          not null
-#  user_id        :integer          not null
-#  raw            :text             not null
 #  cooked         :text             not null
 #  cooked_version :integer
 #  deleted_at     :datetime
-#  deleted_by_id  :integer
+#  qa_vote_count  :integer          default(0)
+#  raw            :text             not null
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
-#  qa_vote_count  :integer          default(0)
+#  deleted_by_id  :integer
 #  last_editor_id :integer          not null
+#  post_id        :integer          not null
+#  user_id        :integer          not null
 #
 # Indexes
 #

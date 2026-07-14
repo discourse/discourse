@@ -46,15 +46,14 @@ class GroupsController < ApplicationController
       raise Discourse::InvalidAccess.new(:enable_group_directory)
     end
 
-    order = %w[name user_count].delete(params[:order])
+    requested_order = %w[name user_count].delete(params[:order])
     dir = params[:asc].to_s == "true" ? "ASC" : "DESC"
-    sort = order ? "#{order} #{dir}" : nil
-    groups = Group.visible_groups(current_user, sort)
+    groups = Group.visible_groups(current_user)
     type_filters = TYPE_FILTERS.keys
 
     if (username = params[:username]).present?
       raise Discourse::NotFound unless user = User.find_by_username(username)
-      groups = TYPE_FILTERS[:my].call(groups.members_visible_groups(current_user, sort), user)
+      groups = TYPE_FILTERS[:my].call(groups.members_visible_groups(current_user), user)
       type_filters = type_filters - %i[my owner]
     end
 
@@ -90,6 +89,9 @@ class GroupsController < ApplicationController
 
     type_filters.delete(:non_automatic)
 
+    order = group_directory_order(groups, requested_order)
+    groups = apply_group_directory_order(groups, order, dir)
+
     # count the total before doing pagination
     total = groups.count
 
@@ -110,7 +112,13 @@ class GroupsController < ApplicationController
       },
       total_rows_groups: total,
       load_more_groups:
-        groups_path(page: page + 1, type: type, order: order, asc: params[:asc], filter: filter),
+        groups_path(
+          page: page + 1,
+          type: type,
+          order: order,
+          asc: order ? params[:asc] : nil,
+          filter: filter,
+        ),
     )
   end
 
@@ -121,8 +129,7 @@ class GroupsController < ApplicationController
       format.html do
         @title = group.full_name.present? ? group.full_name.capitalize : group.name
         @full_title = "#{@title} - #{SiteSetting.title}"
-        @description_meta =
-          group.bio_cooked.present? ? PrettyText.excerpt(group.bio_cooked, 300) : @title
+        @description_meta = group.bio_summary || @title
         render :show
       end
 
@@ -156,7 +163,7 @@ class GroupsController < ApplicationController
     group = Group.find(params[:id])
     guardian.ensure_can_edit!(group) if !guardian.can_admin_group?(group)
 
-    group_attributes = group_params(automatic: group.automatic)
+    group_attributes = group_params(automatic: group.automatic, group:)
     reset_group_email_settings_if_disabled!(group, group_attributes)
 
     categories, tags = []
@@ -423,19 +430,17 @@ class GroupsController < ApplicationController
       skip_email ||= params.key?(:notify_users) && !notify
 
       emails.each do |email|
-        begin
-          Invite.generate(current_user, email:, group_ids:, skip_email:)
-        rescue RateLimiter::LimitExceeded => e
-          return(
-            render_json_error(
-              I18n.t(
-                "invite.rate_limit",
-                count: SiteSetting.max_invites_per_day,
-                time_left: e.time_left,
-              ),
-            )
+        Invite.generate(current_user, email:, group_ids:, skip_email:)
+      rescue RateLimiter::LimitExceeded => e
+        return(
+          render_json_error(
+            I18n.t(
+              "invite.rate_limit",
+              count: SiteSetting.max_invites_per_day,
+              time_left: e.time_left,
+            ),
           )
-        end
+        )
       end
 
       render json: success_json.merge!(usernames: uniq_users.map(&:username), emails: emails)
@@ -474,7 +479,7 @@ class GroupsController < ApplicationController
       RateLimiter.new(current_user, "public_group_membership", 3, 1.minute).performed!
     end
 
-    group = Group.find(params[:id])
+    group = find_group_for_show
     raise Discourse::NotFound unless group
     raise Discourse::InvalidAccess unless group.public_admission
 
@@ -533,7 +538,7 @@ class GroupsController < ApplicationController
   end
 
   def mentionable
-    group = find_group(:name, ensure_can_see: false)
+    group = find_group(:name)
 
     if group
       render json: { mentionable: Group.mentionable(current_user).where(id: group.id).present? }
@@ -543,7 +548,7 @@ class GroupsController < ApplicationController
   end
 
   def messageable
-    group = find_group(:name, ensure_can_see: false)
+    group = find_group(:name)
 
     if group
       render json: { messageable: guardian.can_send_private_message?(group) }
@@ -686,12 +691,17 @@ class GroupsController < ApplicationController
   end
 
   def search
-    include_everyone = params[:include_everyone] == "true"
-    order = ["name"]
+    include_everyone =
+      (params[:include_everyone] == "true" || params[:include_pseudogroups] == "true") &&
+        !SiteSetting.granular_anonymous_and_logged_in_groups_permissions
+    include_pseudogroups = params[:include_pseudogroups] == "true"
     groups =
-      Group.visible_groups(current_user, order, include_everyone: include_everyone).includes(
-        :flair_upload,
-      )
+      Group.visible_groups(
+        current_user,
+        ["name"],
+        include_everyone: include_everyone,
+        include_pseudogroups: include_pseudogroups,
+      ).includes(:flair_upload)
 
     if (term = params[:term]).present?
       groups =
@@ -752,30 +762,28 @@ class GroupsController < ApplicationController
     end
 
     hijack do
-      begin
-        raise Discourse::InvalidParameters if params[:ssl_mode].blank?
+      raise Discourse::InvalidParameters if params[:ssl_mode].blank?
 
-        settings.delete(:ssl_mode)
+      settings.delete(:ssl_mode)
 
-        if Group.smtp_ssl_modes.values.exclude?(params[:ssl_mode].to_i)
-          raise Discourse::InvalidParameters.new("SSL mode must be valid")
-        end
-
-        final_settings =
-          settings.merge(
-            enable_tls: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:ssl_tls],
-            enable_starttls_auto: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:starttls],
-          ).permit(:host, :port, :username, :password, :enable_tls, :enable_starttls_auto, :debug)
-        EmailSettingsValidator.validate_as_user(
-          current_user,
-          "smtp",
-          **final_settings.to_h.symbolize_keys,
-        )
-
-        render json: success_json
-      rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS, StandardError => err
-        render_json_error(EmailSettingsExceptionHandler.friendly_exception_message(err, email_host))
+      if Group.smtp_ssl_modes.values.exclude?(params[:ssl_mode].to_i)
+        raise Discourse::InvalidParameters.new("SSL mode must be valid")
       end
+
+      final_settings =
+        settings.merge(
+          enable_tls: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:ssl_tls],
+          enable_starttls_auto: params[:ssl_mode].to_i == Group.smtp_ssl_modes[:starttls],
+        ).permit(:host, :port, :username, :password, :enable_tls, :enable_starttls_auto, :debug)
+      EmailSettingsValidator.validate_as_user(
+        current_user,
+        "smtp",
+        **final_settings.to_h.symbolize_keys,
+      )
+
+      render json: success_json
+    rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS, StandardError => err
+      render_json_error(EmailSettingsExceptionHandler.friendly_exception_message(err, email_host))
     end
   end
 
@@ -787,6 +795,28 @@ class GroupsController < ApplicationController
 
   private
 
+  def group_directory_order(groups, requested_order)
+    return requested_order if requested_order != "user_count"
+
+    member_visible_group_ids =
+      Group.members_visible_groups(current_user).unscope(:order).select(:id)
+
+    requested_order if !groups.unscope(:order).where.not(id: member_visible_group_ids).exists?
+  end
+
+  def apply_group_directory_order(groups, order, dir)
+    return groups if order.blank?
+
+    sort =
+      if order == "user_count"
+        "groups.user_count #{dir}, groups.name ASC"
+      else
+        "groups.name #{dir}"
+      end
+
+    groups.reorder(sort)
+  end
+
   def add_users_to_group(group, users, notify = false)
     user_ids = users.map(&:id)
     added_user_ids = GroupManager.new(group).add(user_ids)
@@ -796,7 +826,7 @@ class GroupsController < ApplicationController
     end
   end
 
-  def group_params(automatic: false)
+  def group_params(automatic: false, group: nil)
     attributes = %i[
       bio_raw
       default_notification_level
@@ -836,13 +866,16 @@ class GroupsController < ApplicationController
         :primary_group,
         :name,
         :grant_trust_level,
-        :automatic_membership_email_domains,
         :publish_read_state,
         :allow_unknown_sender_topic_replies,
       )
 
       custom_fields = DiscoursePluginRegistry.editable_group_custom_fields
       attributes << { custom_fields: custom_fields } if custom_fields.present?
+    end
+
+    if !automatic && group && guardian.can_admin_group?(group)
+      attributes.push(:automatic_membership_email_domains)
     end
 
     if !automatic || current_user.admin
@@ -919,7 +952,7 @@ class GroupsController < ApplicationController
     tags = {}
 
     NotificationLevels.all.each do |key, value|
-      category_ids = (params["#{key}_category_ids".to_sym] || []) - ["-1"]
+      category_ids = (params[:"#{key}_category_ids"] || []) - ["-1"]
 
       category_ids.each do |category_id|
         category_id = category_id.to_i
@@ -939,7 +972,7 @@ class GroupsController < ApplicationController
         categories[category_id] = metadata
       end
 
-      tag_names = (params["#{key}_tags".to_sym] || []) - ["-1"]
+      tag_names = (params[:"#{key}_tags"] || []) - ["-1"]
       tag_ids = Tag.where(name: tag_names).pluck(:id)
 
       tag_ids.each do |tag_id|

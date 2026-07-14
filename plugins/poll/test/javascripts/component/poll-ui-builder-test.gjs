@@ -20,7 +20,7 @@ async function setupBuilder() {
   return results;
 }
 
-module("Poll | Component | poll-ui-builder", function (hooks) {
+module("Component | PollUiBuilder", function (hooks) {
   setupRenderingTest(hooks);
 
   test("Can switch poll type", async function (assert) {
@@ -37,7 +37,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
       .dom(".poll-type-value-number")
       .doesNotExist("number type is hidden by default");
 
-    await click(".show-advanced");
+    await click(".advanced-mode-btn");
     assert
       .dom(".poll-type-value-number")
       .exists("number type appears in advanced mode");
@@ -94,7 +94,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
   test("number mode", async function (assert) {
     const results = await setupBuilder();
 
-    await click(".show-advanced");
+    await click(".advanced-mode-btn");
     await click(".poll-type-value-number");
 
     await click(".insert-poll");
@@ -139,7 +139,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
       "has correct output"
     );
 
-    await click(".show-advanced");
+    await click(".advanced-mode-btn");
 
     await click(".poll-toggle-public");
 
@@ -188,7 +188,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
       "has correct output"
     );
 
-    await click(".show-advanced");
+    await click(".advanced-mode-btn");
 
     await click(".poll-toggle-public");
 
@@ -203,7 +203,7 @@ module("Poll | Component | poll-ui-builder", function (hooks) {
   test("staff_only option is not present for non-staff", async function (assert) {
     await setupBuilder();
 
-    await click(".show-advanced");
+    await click(".advanced-mode-btn");
     const resultVisibility = selectKit(".poll-result");
 
     assert.strictEqual(resultVisibility.header().value(), "always");

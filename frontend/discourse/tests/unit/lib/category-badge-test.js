@@ -1,10 +1,9 @@
-/* eslint-disable ember/no-jquery */
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
-import $ from "jquery";
 import { module, test } from "qunit";
-import { categoryBadgeHTML } from "discourse/helpers/category-link";
+import domFromString from "discourse/lib/dom-from-string";
 import { helperContext } from "discourse/lib/helpers";
+import { categoryBadgeHTML } from "discourse/ui-kit/helpers/d-category-link";
 
 module("Unit | Utility | category-badge", function (hooks) {
   setupTest(hooks);
@@ -22,7 +21,7 @@ module("Unit | Utility | category-badge", function (hooks) {
       color: "ff0",
       text_color: "f00",
     });
-    const tag = $.parseHTML(categoryBadgeHTML(category))[0];
+    const tag = domFromString(categoryBadgeHTML(category))[0];
 
     assert.strictEqual(tag.tagName, "A", "creates a `a` wrapper tag");
     assert.strictEqual(
@@ -41,7 +40,7 @@ module("Unit | Utility | category-badge", function (hooks) {
   test("undefined color", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const noColor = store.createRecord("category", { name: "hello", id: 123 });
-    const tag = $.parseHTML(categoryBadgeHTML(noColor))[0];
+    const tag = domFromString(categoryBadgeHTML(noColor))[0];
 
     assert.blank(
       tag.attributes["style"],
@@ -102,12 +101,12 @@ module("Unit | Utility | category-badge", function (hooks) {
       id: 234,
     });
 
-    let tag = $.parseHTML(categoryBadgeHTML(rtlCategory))[0];
+    let tag = domFromString(categoryBadgeHTML(rtlCategory))[0];
 
     let dirSpan = tag.children[0].children[0];
     assert.strictEqual(dirSpan.dir, "auto");
 
-    tag = $.parseHTML(categoryBadgeHTML(ltrCategory))[0];
+    tag = domFromString(categoryBadgeHTML(ltrCategory))[0];
     dirSpan = tag.children[0].children[0];
     assert.strictEqual(dirSpan.dir, "auto");
   });

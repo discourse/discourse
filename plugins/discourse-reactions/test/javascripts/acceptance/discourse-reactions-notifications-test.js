@@ -3,7 +3,7 @@ import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import { i18n } from "discourse-i18n";
 
-acceptance("Discourse Reactions - Notifications", function (needs) {
+acceptance("Notifications", function (needs) {
   needs.user();
 
   needs.settings({
@@ -243,90 +243,87 @@ acceptance("Discourse Reactions - Notifications", function (needs) {
   });
 });
 
-acceptance(
-  "Discourse Reactions - Notifications | Full Name Setting On",
-  function (needs) {
-    needs.user();
+acceptance("Notifications | Full Name Setting On", function (needs) {
+  needs.user();
 
-    needs.settings({
-      discourse_reactions_enabled: true,
-      discourse_reactions_enabled_reactions: "otter|open_mouth",
-      discourse_reactions_reaction_for_like: "heart",
-      discourse_reactions_like_icon: "heart",
-      prioritize_full_name_in_ux: true,
-    });
+  needs.settings({
+    discourse_reactions_enabled: true,
+    discourse_reactions_enabled_reactions: "otter|open_mouth",
+    discourse_reactions_reaction_for_like: "heart",
+    discourse_reactions_like_icon: "heart",
+    prioritize_full_name_in_ux: true,
+  });
 
-    needs.pretender((server, helper) => {
-      server.get("/notifications", () => {
-        return helper.response({
-          notifications: [
-            {
-              id: 842,
-              user_id: 88,
-              notification_type: 25,
-              read: true,
-              high_priority: false,
-              created_at: "2021-08-19T23:00:11.166Z",
-              post_number: 3,
-              topic_id: 138,
-              fancy_title: "Topic with 2 likes (total) from 2 users",
-              slug: "topic-with-2-likes-total-from-2-users",
-              data: {
-                topic_title: "Topic with 2 likes (total) from 2 users",
-                original_post_id: 443,
-                original_post_type: 1,
-                original_username: "jammed-radio",
-                revision_number: null,
-                display_username: "jammed-radio",
-                display_name: "Bruce Wayne I",
-                previous_notification_id: 933,
-                username2: "broken-radio",
-                name2: "Brucer Wayner II",
-                reaction_icon: "heart",
-                count: 2,
-              },
+  needs.pretender((server, helper) => {
+    server.get("/notifications", () => {
+      return helper.response({
+        notifications: [
+          {
+            id: 842,
+            user_id: 88,
+            notification_type: 25,
+            read: true,
+            high_priority: false,
+            created_at: "2021-08-19T23:00:11.166Z",
+            post_number: 3,
+            topic_id: 138,
+            fancy_title: "Topic with 2 likes (total) from 2 users",
+            slug: "topic-with-2-likes-total-from-2-users",
+            data: {
+              topic_title: "Topic with 2 likes (total) from 2 users",
+              original_post_id: 443,
+              original_post_type: 1,
+              original_username: "jammed-radio",
+              revision_number: null,
+              display_username: "jammed-radio",
+              display_name: "Bruce Wayne I",
+              previous_notification_id: 933,
+              username2: "broken-radio",
+              name2: "Brucer Wayner II",
+              reaction_icon: "heart",
+              count: 2,
             },
-            {
-              id: 2189,
-              user_id: 88,
-              notification_type: 25,
-              read: true,
-              high_priority: false,
-              created_at: "2020-11-13T03:10:41.166Z",
-              post_number: 31,
-              topic_id: 913,
-              fancy_title: "Topic with likes and reactions",
-              slug: "topic-with-likes-and-reactions",
-              data: {
-                topic_title: "Topic with likes and reactions",
-                original_post_id: 384,
-                original_post_type: 1,
-                original_username: "nuclear-reactor",
-                revision_number: null,
-                display_username: "nuclear-reactor",
-                display_name: "Monkey D. Luffy",
-                previous_notification_id: 933,
-                username2: "solar-engine",
-                name2: "Roronoa Zoro",
-                count: 4,
-              },
+          },
+          {
+            id: 2189,
+            user_id: 88,
+            notification_type: 25,
+            read: true,
+            high_priority: false,
+            created_at: "2020-11-13T03:10:41.166Z",
+            post_number: 31,
+            topic_id: 913,
+            fancy_title: "Topic with likes and reactions",
+            slug: "topic-with-likes-and-reactions",
+            data: {
+              topic_title: "Topic with likes and reactions",
+              original_post_id: 384,
+              original_post_type: 1,
+              original_username: "nuclear-reactor",
+              revision_number: null,
+              display_username: "nuclear-reactor",
+              display_name: "Monkey D. Luffy",
+              previous_notification_id: 933,
+              username2: "solar-engine",
+              name2: "Roronoa Zoro",
+              count: 4,
             },
-          ],
-        });
+          },
+        ],
       });
     });
+  });
 
-    test("reaction notifications with full name site setting on", async function (assert) {
-      await visit("/");
-      await click(".d-header-icons .current-user button");
+  test("reaction notifications with full name site setting on", async function (assert) {
+    await visit("/");
+    await click(".d-header-icons .current-user button");
 
-      assert
-        .dom("li.notification.reaction:nth-child(1) a")
-        .hasText(/Bruce Wayne I, Brucer Wayner II/);
+    assert
+      .dom("li.notification.reaction:nth-child(1) a")
+      .hasText(/Bruce Wayne I, Brucer Wayner II/);
 
-      assert
-        .dom("li.notification.reaction:nth-child(2) a")
-        .hasText(/Monkey D. Luffy and 3 others/);
-    });
-  }
-);
+    assert
+      .dom("li.notification.reaction:nth-child(2) a")
+      .hasText(/Monkey D. Luffy and 3 others/);
+  });
+});

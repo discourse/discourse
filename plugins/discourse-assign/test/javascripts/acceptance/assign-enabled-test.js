@@ -1,6 +1,7 @@
 import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
+import topicFixtures from "discourse/tests/fixtures/topic";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import pretender, {
   parsePostData,
@@ -12,7 +13,15 @@ import {
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-acceptance(`Discourse Assign | Assign mobile`, function (needs) {
+function topicWithAssignablePosts() {
+  const topic = cloneJSON(topicFixtures["/t/280/1.json"]);
+  topic.can_assign = true;
+  topic.post_stream.posts.forEach((post) => (post.can_assign = true));
+
+  return topic;
+}
+
+acceptance("Assign mobile", function (needs) {
   needs.user();
   needs.mobileView();
   needs.settings({
@@ -20,6 +29,13 @@ acceptance(`Discourse Assign | Assign mobile`, function (needs) {
   });
 
   needs.pretender((server, helper) => {
+    server.get("/t/280.json", () =>
+      helper.response(topicWithAssignablePosts())
+    );
+    server.get("/t/280/:post_number.json", () =>
+      helper.response(topicWithAssignablePosts())
+    );
+
     server.get("/assign/suggestions", () => {
       return helper.response({
         success: true,
@@ -47,13 +63,20 @@ acceptance(`Discourse Assign | Assign mobile`, function (needs) {
   });
 });
 
-acceptance(`Discourse Assign | Assign desktop`, function (needs) {
+acceptance("Assign desktop", function (needs) {
   needs.user({ can_assign: true });
   needs.settings({
     assign_enabled: true,
   });
 
   needs.pretender((server, helper) => {
+    server.get("/t/280.json", () =>
+      helper.response(topicWithAssignablePosts())
+    );
+    server.get("/t/280/:post_number.json", () =>
+      helper.response(topicWithAssignablePosts())
+    );
+
     server.get("/assign/suggestions", () => {
       return helper.response({
         success: true,
@@ -120,7 +143,7 @@ acceptance(`Discourse Assign | Assign desktop`, function (needs) {
   });
 });
 
-acceptance(`Discourse Assign | Assign Status enabled`, function (needs) {
+acceptance("Assign Status enabled", function (needs) {
   needs.user({
     can_assign: true,
   });
@@ -182,7 +205,7 @@ acceptance(`Discourse Assign | Assign Status enabled`, function (needs) {
   });
 });
 
-acceptance(`Discourse Assign | Assign Status disabled`, function (needs) {
+acceptance("Assign Status disabled", function (needs) {
   needs.user({
     can_assign: true,
   });
@@ -244,7 +267,7 @@ const remindersFrequency = [
   },
 ];
 
-acceptance("Discourse Assign | User preferences", function (needs) {
+acceptance("User preferences", function (needs) {
   needs.user({ can_assign: true, reminders_frequency: remindersFrequency });
   needs.settings({
     assign_enabled: true,
@@ -289,7 +312,7 @@ acceptance("Discourse Assign | User preferences", function (needs) {
 });
 
 acceptance(
-  "Discourse Assign | User preferences | Pre-selected reminder frequency",
+  "User preferences | Pre-selected reminder frequency",
   function (needs) {
     needs.user({ can_assign: true, reminders_frequency: remindersFrequency });
     needs.settings({

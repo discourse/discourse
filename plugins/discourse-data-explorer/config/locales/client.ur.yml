@@ -14,6 +14,9 @@ ur:
       explorer:
         no_semicolons: "کمانڈ سے semicolons ہٹا دیں۔"
         dirty: "چلانے سے پہلے آپ کا کمانڈ کو محفوظ کرنا لازمی ہے۔"
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "کوئی نتائج نہیں"
     explorer:
       default_query: "ڈِیفالٹ"
       or: "یا"
@@ -24,6 +27,7 @@ ur:
       description_placeholder: "یہاں تفصیل درج کریں"
       ai:
         generate: "تخلیق کریں"
+        optional: "اختیاری"
       import:
         label: "درآمد"
       help:
@@ -37,14 +41,12 @@ ur:
           yes: "ہاں"
           no: "نہیں"
           null_: "خالی"
-      export: "برآمد"
-      view: "مشاهده"
       save: "تبدیلیاں محفوظ کریں"
       run: "چلائیں"
-      edit: "ترمیم کریں"
       delete: "مٹائیں"
-      download_json: "JSON"
-      download_csv: "CSV"
+      chart:
+        form:
+          bar: "بار"
       others_dirty: "ایک ڈیٹا کمانڈ کی غیرمحفوظ کردہ تبدیلیاں موجود ہیں جو آپ کے یہاں سے جانے کے بعد کھو جائیں گی۔"
       result_count:
         one: "%{count} نتیجہ۔"
@@ -55,9 +57,17 @@ ur:
       query_description: "تفصیل"
       query_time: "چلا آخری دفعہ"
       query_user: "نے بنایا"
-      explain_label: "ڈیٹا کمانڈ پلَین شامل کریں؟"
       reset_params: "رِی سَیٹ"
       search_placeholder: "تلاش کریں..."
-      no_search_results: "معذرت، ہمیں آپ کے متن سے ملتے ہوے کوئی نتائج نہ مل سکے۔"
+      no_search_results: "معذرت، ہمیں آپ کے متن سے ملتے ہوے کوئی نتائج نہیں ملے۔"
     group:
       reports: "رپورٹیں"
+    discourse_workflows:
+      nodes:
+        "action:sql": "ڈیٹا ایکسپلورر"
+      sql:
+        query_id: "ڈیٹا کمانڈ"
+        param_value: "وَیلِیو"
+        output:
+          results: "نتائج"
+          no_results: "کوئی نتائج نہیں"

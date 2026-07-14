@@ -15,4 +15,10 @@ RSpec.describe ApiKeyScope do
       )
     end
   end
+
+  describe ".scope_mappings" do
+    it "does not define a granular scope for about requests" do
+      expect(described_class.scope_mappings).not_to have_key(:about)
+    end
+  end
 end

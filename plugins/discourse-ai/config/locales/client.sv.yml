@@ -36,6 +36,14 @@ sv:
             canned_reply:
               label: "Svara"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Laddar..."
+        tool: "Åtgärd"
+        user: "Användare"
+        approve: "Godkänn"
+        reject: "Avvisa"
+        approved: "Godkända"
+        rejected: "Avvisade"
       llm_selector:
         none: "Ingen"
       features:
@@ -48,6 +56,8 @@ sv:
           one: "(ytterligare %{count})"
           other: "(ytterligare %{count})"
         collapse_list: "(visa mindre)"
+        nav:
+          enabled: "Aktiverad"
         filters:
           all: "Alla"
           reset: "Återställ"
@@ -61,6 +71,7 @@ sv:
         table: "Tabell"
       translations:
         title: "Översättningar"
+        category_scope: "Kategorier"
         stats:
           eta_minutes:
             one: "%{count} minut"
@@ -101,6 +112,12 @@ sv:
         enabled: "Aktiverad?"
         allowed_groups: "Tillåtna grupper"
         delete: "Ta bort"
+        thinking_effort_options:
+          none: "Ingen"
+          low: "Låg"
+          medium: "Medium"
+          high: "Hög"
+          max: "Max"
         response_format:
           open_modal: "Redigera"
           modal:

@@ -6,7 +6,14 @@ describe DiscourseGamification::LeaderboardCachedView do
   fab!(:other_user, :user)
   fab!(:moderator)
   fab!(:leaderboard) { Fabricate(:gamification_leaderboard, created_by_id: admin.id) }
-  fab!(:gamification_score) { Fabricate(:gamification_score, user_id: user.id, date: 8.days.ago) }
+  fab!(:gamification_score) do
+    Fabricate(
+      :gamification_leaderboard_score,
+      leaderboard_id: leaderboard.id,
+      user_id: user.id,
+      date: 8.days.ago,
+    )
+  end
 
   let(:mviews) do
     DiscourseGamification::GamificationLeaderboard.periods.map do |period, _|
@@ -43,10 +50,32 @@ describe DiscourseGamification::LeaderboardCachedView do
   describe "#refresh" do
     before do
       described_class.new(leaderboard).create
-      Fabricate(:gamification_score, user_id: user.id, score: 10)
-      Fabricate(:gamification_score, user_id: admin.id, score: 20)
-      Fabricate(:gamification_score, user_id: other_user.id, score: 1, date: 5.days.ago)
-      Fabricate(:gamification_score, user_id: other_user.id, score: 4, date: 3.days.ago)
+      Fabricate(
+        :gamification_leaderboard_score,
+        leaderboard_id: leaderboard.id,
+        user_id: user.id,
+        score: 10,
+      )
+      Fabricate(
+        :gamification_leaderboard_score,
+        leaderboard_id: leaderboard.id,
+        user_id: admin.id,
+        score: 20,
+      )
+      Fabricate(
+        :gamification_leaderboard_score,
+        leaderboard_id: leaderboard.id,
+        user_id: other_user.id,
+        score: 1,
+        date: 5.days.ago,
+      )
+      Fabricate(
+        :gamification_leaderboard_score,
+        leaderboard_id: leaderboard.id,
+        user_id: other_user.id,
+        score: 4,
+        date: 3.days.ago,
+      )
     end
 
     it "refreshes leaderboard materialized views with the latest scores" do
@@ -145,7 +174,15 @@ describe DiscourseGamification::LeaderboardCachedView do
           leaderboard_to + 1.day,
           leaderboard_to + 15.days,
           leaderboard_to + 30.days,
-        ].each { |date| Fabricate(:gamification_score, user_id: user.id, date: date, score: 10) }
+        ].each do |date|
+          Fabricate(
+            :gamification_leaderboard_score,
+            leaderboard_id: leaderboard.id,
+            user_id: user.id,
+            date: date,
+            score: 10,
+          )
+        end
       end
 
       it "filters scores for leaderboard with both 'from_date' and 'to_date' configured" do
@@ -198,10 +235,30 @@ describe DiscourseGamification::LeaderboardCachedView do
 
     context "with leaderboard ranking strategies" do
       before do
-        Fabricate(:gamification_score, user_id: user.id, score: 20)
-        Fabricate(:gamification_score, user_id: admin.id, score: 50)
-        Fabricate(:gamification_score, user_id: other_user.id, score: 20)
-        Fabricate(:gamification_score, user_id: moderator.id, score: 10)
+        Fabricate(
+          :gamification_leaderboard_score,
+          leaderboard_id: leaderboard.id,
+          user_id: user.id,
+          score: 20,
+        )
+        Fabricate(
+          :gamification_leaderboard_score,
+          leaderboard_id: leaderboard.id,
+          user_id: admin.id,
+          score: 50,
+        )
+        Fabricate(
+          :gamification_leaderboard_score,
+          leaderboard_id: leaderboard.id,
+          user_id: other_user.id,
+          score: 20,
+        )
+        Fabricate(
+          :gamification_leaderboard_score,
+          leaderboard_id: leaderboard.id,
+          user_id: moderator.id,
+          score: 10,
+        )
       end
 
       context "with 'rank'" do

@@ -1,7 +1,7 @@
-import DModal from "discourse/components/d-modal";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
-<template>
+export default <template>
   <DModal
     @title={{i18n
       "discourse_ai.mcp_servers.tools_modal.title"

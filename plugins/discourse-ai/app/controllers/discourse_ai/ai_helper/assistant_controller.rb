@@ -34,13 +34,16 @@ module DiscourseAi
           raise Discourse::InvalidParameters.new(:custom_prompt) if params[:custom_prompt].blank?
         end
 
+        assistant = DiscourseAi::AiHelper::Assistant.new
+        assistant.ensure_mode_access!(params[:mode], current_user)
+
         if params[:mode] == DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST
           return suggest_thumbnails(input)
         end
 
         hijack do
           render json:
-                   DiscourseAi::AiHelper::Assistant.new.generate_and_send_prompt(
+                   assistant.generate_and_send_prompt(
                      params[:mode],
                      input,
                      current_user,
@@ -97,10 +100,14 @@ module DiscourseAi
         if params[:topic_id]
           topic = Topic.find_by(id: params[:topic_id])
           guardian.ensure_can_see!(topic)
-          opts = { topic_id: topic.id }
+          opts = { topic_id: topic.id, category: topic.category, selected_tag_ids: topic.tag_ids }
         else
           input = get_text_param!
-          opts = { text: input }
+          opts = {
+            text: input,
+            category: suggestible_category,
+            selected_tag_ids: selected_tag_ids_param,
+          }
         end
 
         render json: DiscourseAi::AiHelper::SemanticCategorizer.new(current_user, opts).tags,
@@ -170,7 +177,11 @@ module DiscourseAi
         raise Discourse::InvalidParameters.new(:location) if !location
 
         raise Discourse::InvalidParameters.new(:mode) if params[:mode].blank?
+
+        assistant = DiscourseAi::AiHelper::Assistant.new
+
         if params[:mode] == DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST
+          assistant.ensure_mode_access!(params[:mode], current_user)
           return suggest_thumbnails(text)
         end
 
@@ -181,6 +192,11 @@ module DiscourseAi
         # to stream we must have an appropriate client_id
         # otherwise we may end up streaming the data to the wrong client
         raise Discourse::InvalidParameters.new(:client_id) if params[:client_id].blank?
+
+        # The UI only renders modes from `current_user.ai_helper_prompts`, but a crafted
+        # API request can still hit this endpoint directly. Enforce the selected agent's
+        # group restrictions here before enqueueing async work.
+        assistant.ensure_mode_access!(params[:mode], current_user)
 
         channel_id = next_channel_id
         progress_channel = "discourse_ai_helper/stream_suggestions/#{channel_id}"
@@ -240,9 +256,11 @@ module DiscourseAi
 
         check_secure_upload_permission(image) if image.secure?
         user = current_user
+        assistant = DiscourseAi::AiHelper::Assistant.new
+        assistant.ensure_mode_access!(DiscourseAi::AiHelper::Assistant::IMAGE_CAPTION, user)
 
         hijack do
-          caption = DiscourseAi::AiHelper::Assistant.new.generate_image_caption(image, user)
+          caption = assistant.generate_image_caption(image, user)
           render json: {
                    caption:
                      "#{caption} (#{I18n.t("discourse_ai.ai_helper.image_caption.attribution")})",
@@ -274,6 +292,15 @@ module DiscourseAi
 
       def get_post_param!
         params[:post_id].tap { |t| raise Discourse::InvalidParameters.new(:post_id) if t.blank? }
+      end
+
+      def suggestible_category
+        return if params[:category_id].blank?
+        Category.where(id: params[:category_id]).where(id: guardian.allowed_category_ids).first
+      end
+
+      def selected_tag_ids_param
+        Tag.where_name(Array(params[:selected_tags]).first(100)).pluck(:id)
       end
 
       def rate_limiter_performed!

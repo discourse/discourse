@@ -4,6 +4,8 @@ export const POPULAR_THEMES = [
     value: "https://github.com/discourse/graceful",
     preview:
       "https://discourse.theme-creator.io/theme/Discourse/graceful-theme",
+    screenshot_url:
+      "https://github.com/discourse/graceful/blob/main/screenshots/light.png?raw=true",
     description: "A light and graceful theme for Discourse.",
     meta_url: "https://meta.discourse.org/t/graceful-theme/93040",
   },
@@ -12,6 +14,8 @@ export const POPULAR_THEMES = [
     value: "https://github.com/discourse/material-design-stock-theme",
     preview:
       "https://discourse.theme-creator.io/theme/Discourse/material-design-theme",
+    screenshot_url:
+      "https://github.com/discourse/material-design-stock-theme/blob/main/screenshots/light.png?raw=true",
     description:
       "Inspired by Material Design, this theme comes with several color palettes.",
     meta_url: "https://meta.discourse.org/t/material-design-theme/47142",
@@ -20,6 +24,8 @@ export const POPULAR_THEMES = [
     name: "Mint",
     value: "https://github.com/discourse/discourse-mint-theme",
     preview: "https://discourse.theme-creator.io/theme/Discourse/mint-theme",
+    screenshot_url:
+      "https://github.com/discourse/discourse-mint-theme/blob/main/screenshots/light.webp?raw=true",
     description:
       "A minty colored theme with featured homepage categories and a search banner.",
     meta_url: "https://meta.discourse.org/t/mint-theme/202822",
@@ -29,6 +35,8 @@ export const POPULAR_THEMES = [
     value: "https://github.com/discourse/discourse-simple-theme",
     preview:
       "https://discourse.theme-creator.io/theme/Discourse/sams-simple-theme",
+    screenshot_url:
+      "https://github.com/discourse/discourse-simple-theme/blob/main/screenshots/light.png?raw=true",
     description:
       "Simplified front page design with classic colors and typography.",
     meta_url: "https://meta.discourse.org/t/sams-simple-theme/23552",
@@ -49,13 +57,6 @@ export const POPULAR_THEMES = [
       "https://discourse.theme-creator.io/theme/Discourse/custom-header-links",
     description: "Easily add custom text-based links to the header.",
     meta_url: "https://meta.discourse.org/t/custom-header-links/90588",
-    component: true,
-  },
-  {
-    name: "Discourse GIFS",
-    value: "https://github.com/discourse/discourse-gifs",
-    description: "Adds a button to easily search and insert GIFs in posts.",
-    meta_url: "https://meta.discourse.org/t/discourse-gifs/158738",
     component: true,
   },
   {

@@ -85,8 +85,7 @@ RSpec.describe Jobs::ExportUserArchive do
       expect(system_message.first_post.raw).to eq(
         I18n.t(
           "system_messages.csv_export_succeeded.text_body_template",
-          download_link:
-            "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.human_filesize})",
+          download_link: UploadMarkdown.new(upload).attachment_markdown,
         ).chomp,
       )
 
@@ -145,8 +144,7 @@ RSpec.describe Jobs::ExportUserArchive do
         expect(system_message.first_post.raw).to eq(
           I18n.t(
             "system_messages.csv_export_succeeded.text_body_template",
-            download_link:
-              "[#{upload.original_filename}|attachment](#{upload.short_url}) (#{upload.human_filesize})",
+            download_link: UploadMarkdown.new(upload).attachment_markdown,
           ).chomp,
         )
       end

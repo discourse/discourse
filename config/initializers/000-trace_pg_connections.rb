@@ -23,7 +23,7 @@ if ENV["TRACE_PG_CONNECTIONS"]
         super(*args).tap do
           next if ENV["TRACE_PG_CONNECTIONS"] == "SIDEKIQ" && !Sidekiq.server?
           FileUtils.mkdir_p(TRACE_DIR)
-          @trace_filename = "#{TRACE_DIR}/#{Process.pid}_#{self.object_id}.txt"
+          @trace_filename = "#{TRACE_DIR}/#{Process.pid}_#{object_id}.txt"
           trace File.new(@trace_filename, "w")
         end
         @access_log_mutex = Mutex.new
@@ -80,7 +80,7 @@ if ENV["TRACE_PG_CONNECTIONS"]
     ]
 
     LOG_ACCESS_METHODS.each do |method|
-      new_method = "#{method}_without_logging".to_sym
+      new_method = :"#{method}_without_logging"
       alias_method new_method, method
 
       define_method(method) { |*args, &blk| log_access { send(new_method, *args, &blk) } }

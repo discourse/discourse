@@ -4,7 +4,7 @@ import TagList from "discourse/admin/components/site-settings/tag-list";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-module("Integration | Component | site-settings/tag-list", function (hooks) {
+module("Integration | Component | SiteSettings | TagList", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

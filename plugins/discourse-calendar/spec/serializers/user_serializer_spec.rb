@@ -11,7 +11,7 @@ describe UserSerializer do
   end
 
   context "as another user" do
-    fab!(:guardian) { Fabricate(:user).guardian }
+    let(:guardian) { Fabricate(:user).guardian }
 
     it "does not return user region" do
       expect(json[:user][:custom_fields]).to be_blank
@@ -19,7 +19,7 @@ describe UserSerializer do
   end
 
   context "as current user" do
-    fab!(:guardian) { user.guardian }
+    let(:guardian) { user.guardian }
 
     it "returns user region" do
       expect(json[:user][:custom_fields]).to eq(DiscourseCalendar::REGION_CUSTOM_FIELD => "uk")
@@ -27,7 +27,7 @@ describe UserSerializer do
   end
 
   context "as staff" do
-    fab!(:guardian) { Fabricate(:admin).guardian }
+    let(:guardian) { Fabricate(:admin).guardian }
 
     it "returns user region" do
       expect(json[:user][:custom_fields]).to eq(DiscourseCalendar::REGION_CUSTOM_FIELD => "uk")

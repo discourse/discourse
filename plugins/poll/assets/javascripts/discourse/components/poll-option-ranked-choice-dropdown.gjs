@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class PollOptionsDropdownComponent extends Component {
@@ -31,10 +31,10 @@ export default class PollOptionsDropdownComponent extends Component {
         <span class="d-button-label">
           {{this.rankLabel}}
         </span>
-        {{icon "angle-down"}}
+        {{dIcon "angle-down"}}
       </:trigger>
       <:content>
-        <DropdownMenu as |dropdown|>
+        <DDropdownMenu as |dropdown|>
           {{#each @rankedChoiceDropdownContent as |content|}}
             <dropdown.item>
               <DButton
@@ -44,7 +44,7 @@ export default class PollOptionsDropdownComponent extends Component {
               />
             </dropdown.item>
           {{/each}}
-        </DropdownMenu>
+        </DDropdownMenu>
       </:content>
     </DMenu>
   </template>

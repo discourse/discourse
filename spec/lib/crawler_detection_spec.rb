@@ -2,7 +2,7 @@
 
 RSpec.describe CrawlerDetection do
   def crawler!(user_agent, via = nil)
-    raise "#{user_agent} should be a crawler!" if (!CrawlerDetection.crawler?(user_agent, via))
+    raise "#{user_agent} should be a crawler!" if !CrawlerDetection.crawler?(user_agent, via)
   end
 
   def not_crawler!(s)
@@ -94,6 +94,42 @@ RSpec.describe CrawlerDetection do
     end
   end
 
+  describe ".crawler_layout_request?" do
+    it "returns true for crawler HTML requests" do
+      request = ActionDispatch::TestRequest.create("HTTP_USER_AGENT" => "Googlebot")
+
+      expect(CrawlerDetection.crawler_layout_request?(request)).to eq(true)
+    end
+
+    it "returns false for JSON requests" do
+      request =
+        ActionDispatch::TestRequest.create(
+          "HTTP_USER_AGENT" => "Googlebot",
+          "action_dispatch.request.path_parameters" => {
+            format: "json",
+          },
+        )
+
+      expect(CrawlerDetection.crawler_layout_request?(request)).to eq(false)
+    end
+
+    it "honors the escaped fragments site setting" do
+      SiteSetting.enable_escaped_fragments = false
+      request =
+        ActionDispatch::TestRequest.create(
+          "HTTP_USER_AGENT" =>
+            "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/32.0.1667.0 Safari/537.36",
+        )
+      request.params["_escaped_fragment_"] = ""
+
+      expect(CrawlerDetection.crawler_layout_request?(request)).to eq(false)
+
+      SiteSetting.enable_escaped_fragments = true
+
+      expect(CrawlerDetection.crawler_layout_request?(request)).to eq(true)
+    end
+  end
+
   describe ".allow_crawler?" do
     it "returns true if allowlist and blocklist are blank" do
       expect(
@@ -155,6 +191,31 @@ RSpec.describe CrawlerDetection do
         expect(CrawlerDetection.allow_crawler?("Googlebot-Image/1.0")).to eq(false)
         expect(CrawlerDetection.allow_crawler?("Twitterbot")).to eq(false)
       end
+    end
+  end
+
+  describe ".crawler_ip?" do
+    it "returns false when the IP is blank" do
+      expect(CrawlerDetection.crawler_ip?(nil)).to eq(false)
+      expect(CrawlerDetection.crawler_ip?("")).to eq(false)
+    end
+
+    it "returns false when the resolved ASN is not in crawler_asns site setting" do
+      DiscourseIpInfo.stubs(:get).with("1.2.3.4").returns({ asn: 1 })
+      expect(CrawlerDetection.crawler_ip?("1.2.3.4")).to eq(false)
+    end
+
+    it "returns false when the resolved ASN is missing" do
+      DiscourseIpInfo.stubs(:get).with("1.2.3.4").returns({})
+      expect(CrawlerDetection.crawler_ip?("1.2.3.4")).to eq(false)
+    end
+
+    it "returns true when the resolved ASN is in crawler_asns site setting" do
+      DiscourseIpInfo
+        .stubs(:get)
+        .with("1.2.3.4")
+        .returns({ asn: SiteSetting.crawler_asns_map.first.to_i })
+      expect(CrawlerDetection.crawler_ip?("1.2.3.4")).to eq(true)
     end
   end
 

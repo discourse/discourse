@@ -34,6 +34,14 @@ sr:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Učitavanje..."
+        tool: "Akcije"
+        user: "Korisnik"
+        approve: "Odobri"
+        reject: "Odbij"
+        approved: "Potvrđenji"
+        rejected: "Odbačen"
       llm_selector:
         none: "Ništa"
       features:
@@ -46,16 +54,21 @@ sr:
           few: "(još %{count} člana)"
           other: "(još %{count} članova)"
         collapse_list: "(pokaži manje)"
+        nav:
+          enabled: "Omogućeno"
         filters:
           all: "Sve"
           reset: "Reset"
         search:
           name: "Pretraži"
+        admin_dashboard:
+          highlights: "Istaknuto"
         spam:
           name: "Nepoželjno"
       modals:
         select_option: "Izaberi jednu od opcija..."
       translations:
+        category_scope: "Kategorije"
         stats:
           eta_hours:
             one: "%{count} сат"
@@ -92,6 +105,12 @@ sr:
         enabled: "Omgućeno"
         allowed_groups: "Dozvoljene grupe"
         delete: "Obriši"
+        thinking_effort_options:
+          none: "Ništa"
+          low: "Manji"
+          medium: "Srednje"
+          high: "Visoko"
+          max: "Maksimalno"
         response_format:
           open_modal: "Izmeni"
         filters:
@@ -179,6 +198,7 @@ sr:
           today: "Danas"
           last_7_days: "Последњих 7 дана"
           last_30_days: "Последњих 30 дана"
+          editing_post: "Uređivanje objave"
       sentiments:
         sentiment_analysis:
           filter_types:

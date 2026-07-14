@@ -1,4 +1,4 @@
-import { fillIn, render } from "@ember/test-helpers";
+import { click, fillIn, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ExplorerSchema from "discourse/plugins/discourse-data-explorer/discourse/components/explorer-schema";
@@ -36,14 +36,30 @@ const schema = {
   ],
 };
 
-module("Data Explorer Plugin | Component | explorer-schema", function (hooks) {
+module("Component | ExplorerSchema", function (hooks) {
   setupRenderingTest(hooks);
 
   test("will automatically convert to lowercase", async function (assert) {
+    this.setProperties({ schema });
+
+    await render(
+      <template><ExplorerSchema @schema={{this.schema}} /></template>
+    );
+
+    await fillIn(`.schema-search input`, "Cat");
+
+    assert.dom(".schema-table").exists();
+
+    await fillIn(`.schema-search input`, "NotExist");
+
+    assert.dom(".schema-table").doesNotExist();
+  });
+
+  test("can be hidden and shown again", async function (assert) {
     this.setProperties({
       schema,
       hideSchema: false,
-      updateHideSchema: () => {},
+      updateHideSchema: (value) => this.set("hideSchema", value),
     });
 
     await render(
@@ -56,12 +72,22 @@ module("Data Explorer Plugin | Component | explorer-schema", function (hooks) {
       </template>
     );
 
-    await fillIn(`.schema-search input`, "Cat");
+    assert.dom(".schema-search__input").exists("search input is visible");
+    assert
+      .dom(".schema__toggle.--collapse")
+      .hasAttribute("aria-label", "Hide schema");
 
-    assert.dom(".schema-table").exists();
+    await click(".schema__toggle.--collapse");
 
-    await fillIn(`.schema-search input`, "NotExist");
+    assert.dom(".schema-search__input").doesNotExist("search input is hidden");
+    assert.dom(".schema-table").doesNotExist("schema tables are hidden");
+    assert
+      .dom(".schema__toggle.--expand")
+      .hasAttribute("aria-label", "Show schema");
 
-    assert.dom(".schema-table").doesNotExist();
+    await click(".schema__toggle.--expand");
+
+    assert.dom(".schema-search__input").exists("search input is visible again");
+    assert.dom(".schema-table").exists("schema tables are visible again");
   });
 });

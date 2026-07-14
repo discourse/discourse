@@ -102,6 +102,7 @@ et:
         title: Uus sõnum
         prefix: "Kellele:"
       create_channel:
+        description: "Kirjeldus"
         type: "Tüüp"
         types:
           category: "Foorum"
@@ -206,3 +207,12 @@ et:
       panels:
         chat:
           label: "Vestlus"
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Kanal"
+      send_chat_message:
+        channel_id: "Kanal"
+        message: "Sõnum"
+      chat_approval:
+        message: "Sõnum"
+        channel_id: "Kanal"

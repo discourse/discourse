@@ -1,8 +1,8 @@
 import AdminBackupsActions from "discourse/admin/components/admin-backups-actions";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -25,17 +25,17 @@ export default <template>
         {{/if}}
       </:actions>
       <:tabs>
-        <NavItem
+        <DNavItem
           @route="admin.backups.settings"
           @label="settings"
           class="admin-backups-tabs__settings"
         />
-        <NavItem
+        <DNavItem
           @route="admin.backups.index"
           @label="admin.backups.menu.backup_files"
           class="admin-backups-tabs__files"
         />
-        <NavItem
+        <DNavItem
           @route="admin.backups.logs"
           @label="admin.backups.menu.logs"
           class="admin-backups-tabs__logs"

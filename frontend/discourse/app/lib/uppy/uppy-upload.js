@@ -121,16 +121,16 @@ export default class UppyUpload {
       "change",
       this.#fileInputEventListener
     );
-    this.appEvents.off(
-      `upload-mixin:${this.config.id}:add-files`,
-      this.addFiles
-    );
-    this.appEvents.off(
-      `upload-mixin:${this.config.id}:cancel-upload`,
-      this.cancelSingleUpload
-    );
-    if (this.uppyWrapper.uppyInstance?.close) {
-      this.uppyWrapper.uppyInstance.close();
+    if (this.uppyWrapper.uppyInstance) {
+      this.appEvents.off(
+        `upload-mixin:${this.config.id}:add-files`,
+        this.addFiles
+      );
+      this.appEvents.off(
+        `upload-mixin:${this.config.id}:cancel-upload`,
+        this.cancelSingleUpload
+      );
+      this.uppyWrapper.uppyInstance.close?.();
     }
   }
 
@@ -176,7 +176,7 @@ export default class UppyUpload {
       },
 
       onBeforeUpload: (files) => {
-        let tooMany = false;
+        let tooMany;
         const fileCount = Object.keys(files).length;
         const maxFiles =
           this.config.maxFiles || this.siteSettings.simultaneous_uploads;
@@ -287,7 +287,7 @@ export default class UppyUpload {
     this.uppyWrapper.uppyInstance.on(
       "upload-error",
       (file, error, response) => {
-        if (response.aborted) {
+        if (response?.aborted) {
           return; // User cancelled the upload
         }
         this.#removeInProgressUpload(file.id);

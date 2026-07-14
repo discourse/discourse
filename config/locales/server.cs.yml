@@ -387,7 +387,6 @@ cs:
       page_publishing_requirements: "Publikování stránek nelze povolit, pokud je povoleno zabezpečené nahrávání."
       s3_backup_requires_s3_settings: "S3 nemůžete použít jako umístění zálohy, pokud nezadáte '%{setting_name}'."
       s3_bucket_reused: "Nemůžete použít stejný segment pro 's3_upload_bucket' a 's3_backup_bucket'. Vyberte jiný bucket nebo použijte pro každý bucket jinou cestu."
-      secure_uploads_requirements: "Nahrávání S3 a seznamy ACL S3 musí být před povolením zabezpečeného nahrávání povoleny."
       share_quote_facebook_requirements: "Chcete-li povolit sdílení citací pro Facebook, musíte nastavit Facebook app id."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Nemůžete vynutit 2FA, pokud je zakázáno lokální přihlašování."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "Nemůžete vynutit 2FA, pokud je povoleno DiscourseConnect."
@@ -427,7 +426,6 @@ cs:
       <p>V opačném případě prosím <a href="%{base_url}/password-reset">Obnovte své heslo</a>.</p>
     not_found_template_link: |
       <p>Tuto pozvánku na <a href="%{base_url}">%{site_name}</a> již nelze uplatnit. Požádejte osobu, která vás pozvala, aby vám poslala novou pozvánku.</p>
-    existing_user_cannot_redeem: "Tuto pozvánku nelze uplatnit. Požádejte osobu, která vás pozvala, aby vám poslala novou pozvánku."
     existing_user_already_redemeed: "Tento odkaz s pozvánkou jste již uplatnili."
     user_exists: "Není třeba zvát <b>%{email}</b>, účet již má!"
     invite_exists: "<b>%{email}</b> jste již pozvali."
@@ -492,7 +490,17 @@ cs:
   deleted_topic: "Jejda! Toto téma bylo smazáno a již není k dispozici."
   delete_topic_failed: "Při mazání tohoto tématu došlo k chybě. Obraťte se prosím na správce webu."
   reading_time: "Čas čtení"
+  reading_time_minutes:
+    one: "%{count} minuta 🕑"
+    few: "%{count} minuty 🕑"
+    many: "%{count} minut 🕑"
+    other: "%{count} minut 🕑"
   likes: "Líbí se"
+  likes_count:
+    one: "%{count} ❤"
+    few: "%{count} ❤"
+    many: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "Jejda! Tuto akci jste již provedli. Můžete zkusit obnovit stránku?"
   too_many_replies:
     one: "Je nám líto, ale noví uživatelé jsou dočasně omezeni na %{count} odpověď v tématu."
@@ -696,6 +704,13 @@ cs:
       trust_level_2: "uroven_duvery_2"
       trust_level_3: "uroven_duvery_3"
       trust_level_4: "uroven_duvery_4"
+    default_full_names:
+      everyone: "Všichni"
+      admins: "Administrátoři"
+      moderators: "Moderátoři"
+      staff: "Redakce"
+      anonymous_users: "Anonymní uživatelé"
+      logged_in_users: "Přihlášení uživatelé"
     default_descriptions:
       everyone: "Automatická skupina zahrnující všechny členy"
       staff: "Automatická skupina včetně administrátorů a moderátorů"
@@ -930,7 +945,6 @@ cs:
       many: "%{count} Líbí se"
       other: "%{count} Líbí se"
     cannot_permanently_delete:
-      many_posts: "Toto téma obsahuje obnovené příspěvky. Před trvalým odstraněním tohoto tématu je prosím trvale smažte."
       wait_or_different_admin: "Před trvalým smazáním tohoto příspěvku musíte počkat %{time_left} nebo to musí udělat jiný administrátor."
   rate_limiter:
     slow_down: "Tuto akci jste provedli příliš mnohokrát, zkuste to prosím znovu později."
@@ -1311,6 +1325,10 @@ cs:
       one_time_password: "Vytvoření jednorázového přihlašovacího tokenu"
       bookmarks_calendar: "Čtení připomenutí záložek"
       user_status: "Čtení a aktualizace stavu uživatele"
+    device:
+      code: "Kód"
+      continue: "Pokračovat"
+      authorize_title: 'Autorizovat „%{application_name}“'
     invalid_public_key: "Omlouváme se, veřejný klíč je neplatný."
     invalid_auth_redirect: "Omlouváme se, ale tento hostitel auth_redirect není povolen."
     invalid_token: "Chybějící, neplatný nebo vypršený token."
@@ -1386,6 +1404,31 @@ cs:
       xaxis: "Den"
       yaxis: "Počet nových přispěvatelů"
       description: "Počet uživatelů, kteří během tohoto období vytvořili svůj první příspěvek."
+    activity_by_category:
+      labels:
+        category: "Kategorie"
+        topics: "Témata"
+        posts: "Příspěvky"
+        share: "Sdílet"
+    posters_by_member_type:
+      labels:
+        count: "Příspěvky"
+        share: "Sdílet"
+      types:
+        staff: "Redakce"
+    trust_level_pipeline:
+      description_link: "https://meta.discourse.cz/t/vysvetleni-urovni-duvery-v-discourse/29"
+      labels:
+        level: "Úroveň důvěry"
+        count: "Členové"
+        share: "Sdílet"
+        signups: "Registrace"
+      levels:
+        "0": "Nový"
+        "1": "Základní"
+        "2": "Člen"
+        "3": "Stálý člen"
+        "4": "Leader"
     trust_level_growth:
       title: "Růst úrovně důvěry"
       xaxis:
@@ -1429,9 +1472,8 @@ cs:
     site_traffic:
       title: "Návštěvnost stránek"
       xaxis:
-        page_view_anon_browser: "Zobrazení (anonymní)"
-        page_view_logged_in_browser: "Zobrazení (přihlášení)"
-        page_view_crawler: "Známé prohledávače"
+        page_view_anon_browser: "Anonymní"
+        page_view_crawler: "Vyhledávače"
         page_view_other: "Ostatní provoz"
       yaxis: "Den"
       description: "Počty zobrazených stránek pro přihlášené uživatele, anonymní uživatele, známé prohledávače a další provoz."
@@ -1546,6 +1588,12 @@ cs:
         num_clicks: "Kliknutí"
         num_topics: "Témata"
       description: "Uživatelé uvedení podle počtu kliknutí na odkazy, které sdíleli."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Návštěv"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Návštěv"
     top_traffic_sources:
       title: "Zdroje provozu"
       xaxis: "Doména"
@@ -1608,6 +1656,8 @@ cs:
       xaxis: "Den"
       yaxis: "Přihlášená zobrazení stránek v prohlížeči"
       description: "Počet zobrazení stránek přihlášenými návštěvníky pomocí skutečných prohlížečů."
+    page_view_embed_reqs:
+      xaxis: "Den"
     http_background_reqs:
       title: "Pozadí"
       xaxis: "Den"
@@ -1669,7 +1719,7 @@ cs:
         os: Operační systém
         login_time: Čas přihlášení
       description: "Podrobnosti o nových přihlášeních, které se podezřele liší od předchozích přihlášení."
-    staff_logins:
+    admin_logins:
       title: "Přihlášení správců"
       labels:
         user: Uživatel
@@ -1733,7 +1783,6 @@ cs:
       group_email_credentials: 'Došlo k problému s e-mailovými přihlašovacími údaji pro skupinu <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>. Dokud nebude tento problém vyřešen, nebudou ze skupinové schránky odesílány žádné e-maily. %{error}'
       rails_env: "Váš server běží v módu %{env}."
       host_names: "Vaše konfigurace v souboru config/database.yml používá 'localhost' jako jméno hostitele. Změňte toto nastavení na doménu vašeho webu."
-      sidekiq: 'Neběží Sidekiq. Mnoho úkolů, jako je odesílání e-mailů, provádí Sidekiq asynchronně. Ujistěte se, že je spuštěn alespoň jeden proces Sidekiq. <a href="https://github.com/mperham/sidekiq" target="_blank">Více informací o Sidekiq zde</a>.'
       queue_size: "Počet čekajících úloh je %{queue_size}, což je příliš mnoho. Mohlo by to indikovat problém se službou Sidekiq, nebo je zapotřebí spustit více Sidekiq worker procesů."
       ram: "Váš server má méně než 1 GB paměti. Doporučená konfigurace je alespoň 1 GB paměti."
       google_oauth2_config: 'Server je nakonfigurován tak, aby umožňoval registraci a přihlášení pomocí Google OAuth2 (enable_google_oauth2_logins), ale hodnoty client id a client secret nejsou nastaveny. Přejděte do <a href="%{base_path}/admin/site_settings">nastavení webu</a> a aktualizujte nastavení. <a href="https://meta.discourse.org/t/configuring-google-login-for-discourse/15858" target="_blank">Více informací naleznete v této příručce</a>.'
@@ -1805,7 +1854,6 @@ cs:
     default_composer_category: "Kategorie použitá k předvyplnění rozbalovací nabídky kategorií při vytváření nového tématu."
     allow_uncategorized_topics: "Povolit vytváření témat bez kategorie. VAROVÁNÍ: Pokud již existují témata bez přiřazené kategorie, musíte je před vypnutím překategorizovat."
     allow_duplicate_topic_titles: "Povolit témata se stejným, duplicitním názvem"
-    allow_duplicate_topic_titles_category: "Povolit témata se shodnými, duplicitními názvy, pokud se kategorie liší. Parametr allow_duplicate_topic_titles musí být zakázán."
     unique_posts_mins: "Kolik minut musí uplynout, než může uživatel zaslat příspěvek se stejným obsahem"
     educate_until_posts: "Když uživatel začne psát svých prvních (n) nových příspěvků, zobrazit v editoru vyskakovací panel pro vzdělávání nových uživatelů."
     site_description: "Popište tento web jednou větou. Viditelné pro všechny návštěvníky včetně anonymních uživatelů."
@@ -1816,8 +1864,6 @@ cs:
     download_remote_images_to_local: "Převést vzdálené (hotlinkované) obrázky na místní obrázky jejich stažením; Tím se zachová obsah, i když budou obrázky v budoucnu ze vzdáleného webu odstraněny."
     download_remote_images_threshold: "Minimální místo na disku potřebné pro lokální stahování vzdálených obrázků (v procentech)"
     disabled_image_download_domains: "Z těchto domén nebudou nikdy stahovány vzdálené obrázky."
-    block_hotlinked_media: "Zabránit uživatelům v zavádění vzdálených (hotlinkovaných) médií ve svých příspěvcích. Vzdálené médium, které není staženo pomocí 'download_remote_images_to_local', bude nahrazeno zástupným odkazem."
-    block_hotlinked_media_exceptions: "Seznam základních URL adres, které jsou vyňaty z nastavení block_hotlinked_media. Uveďte včetně protokolu (např. https://example.com)."
     editing_grace_period: "Po dobu (n) sekund po odeslání úpravy se nevytvoří nová verze v historii příspěvku."
     editing_grace_period_max_diff: "Maximální počet povolených změn znaků v rámci lhůty pro úpravy. Pokud se změní více znaků, uloží další revizi (úroveň důvěry 0 a 1)."
     editing_grace_period_max_diff_high_trust: "Maximální počet povolených změn znaků v rámci lhůty pro úpravy. Pokud se změní více znaků, uloží další revizi (úroveň důvěry 2 a vyšší)."
@@ -1831,7 +1877,6 @@ cs:
     max_image_height: "Maximální výška miniatur obrázků v příspěvku. Vyšší obrázky budou zmenšeny a zobrazeny jako lightbox."
     responsive_post_image_sizes: "Změnit velikost náhledů lightboxu tak, aby umožňovaly zobrazení na obrazovkách s vysokým rozlišením (DPI) s následujícími poměry pixelů. Odeberte všechny hodnoty, chcete-li responzivní obrázky deaktivovat."
     fixed_category_positions: "Pokud je zaškrtnuto, budete moci kategorie uspořádat v pevném pořadí. Pokud není zaškrtnuto, kategorie jsou seřazeny podle aktivity."
-    fixed_category_positions_on_create: "Pokud je zaškrtnuto, bude v dialogovém okně pro vytváření témat zachováno pořadí kategorií (vyžaduje zapnuté fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Přidat atribut rel nofollow ke veškerému odeslanému uživatelskému obsahu, s výjimkou interních odkazů (včetně nadřazených domén). Pokud toto změníte, musíte všechny příspěvky znovu přegenerovat pomocí: "rake posts:rebake".'
     exclude_rel_nofollow_domains: "Seznam domén, u kterých by se k odkazům nemělo přidávat omezení nofollow. Doména example.com automaticky povolí i doménu sub.example.com. Minimálně byste měli přidat doménu tohoto webu, aby webové roboty mohly najít veškerý obsah. Pokud se další části vašeho webu nacházejí na jiných doménách, přidejte je také."
     max_form_template_title_length: "Maximální povolená délka pro názvy šablon formulářů."
@@ -1845,7 +1890,6 @@ cs:
     blocked_onebox_domains: "Seznam domén, které nikdy nebudou interpretovány jako onebox, např. wikipedia.org\n(Zástupné znaky * ? nejsou podporovány)"
     block_onebox_on_redirect: "Zabránit oneboxování URL, které vedou k přesměrování stránky. Tato konfigurace zastavuje vytvoření vizuální karty (onebox) pro každou URL, která přesměruje na jinou destinaci, z důvodu, aby byly upřednostněny přímé, nepřesměrované URL adresy."
     allowed_inline_onebox_domains: "Seznam domén, které budou v případě odkazu bez názvu zobrazeny v oneboxu v miniaturním formátu."
-    enable_inline_onebox_on_all_domains: "Ignorovat nastavení webu allowed_inline_onebox_domains a povolit inline onebox na všech doménách."
     onebox_locale: "Národní prostředí (locale) odeslané poskytovatelům oneboxu. Pokud zůstane prázdné, použije se výchozí národní prostředí"
     force_custom_user_agent_hosts: "Hostitelé, pro které se má u všech požadavků používat vlastní uživatelský agent OneBox. (Zvláště užitečné pro hostitele, kteří omezují přístup pomocí uživatelského agenta)."
     max_oneboxes_per_post: "Nastavte maximální počet Oneboxů, které lze zahrnout do jednoho příspěvku. Oneboxy poskytují náhled odkazovaného obsahu v příspěvku."
@@ -1853,20 +1897,9 @@ cs:
     github_onebox_access_tokens: "Mapování organizace nebo uživatele GitHubu na přístupový token GitHubu, který se používá ke generování oneboxů GitHubu pro soukromé repozitáře, commity, pull requesty, úkoly a obsah souborů. Bez něj budou oneboxy fungovat pouze pro veřejné URL adresy GitHubu."
     logo: "Obrázek loga v levém horním rohu vašeho webu. Použijte široký obdélníkový obrázek s výškou 120 a poměrem stran větším než 3:1. Pokud jej ponecháte prázdný, zobrazí se text názvu webu."
     logo_small: "Malý obrázek loga v levém horním rohu vašeho webu, viditelný při posouvání dolů. Použijte čtvercový obrázek o rozměrech 120 × 120. Pokud jej necháte prázdný, zobrazí se domovský glyf."
-    digest_logo: "Alternativní obrázek loga použitý v horní části e-mailového souhrnu vašeho webu. Použijte obrázek ve formátu širokého obdélníku. Nepoužívejte obrázek ve formátu SVG. Pokud toto pole ponecháte prázdné, použije se obrázek z nastavení „logo“."
-    mobile_logo: "Logo použité v mobilní verzi vašeho webu. Doporučujeme čtvercovou ikonu, aby se zabránilo přeplnění záhlaví, ale můžete použít široký obdélníkový obrázek s výškou 120 a poměrem stran větším než 3:1. Pokud toto pole ponecháte prázdné, použije se obrázek z nastavení loga."
-    logo_dark: "Alternativa pro tmavé schéma pro nastavení 'logo'."
-    logo_small_dark: "Alternativa pro tmavé schéma pro nastavení 'logo small'."
-    mobile_logo_dark: "Alternativa pro tmavé schéma pro nastavení 'mobile logo'."
-    large_icon: "Obrázek použitý jako základ pro další ikony. Ideálně by měl být větší než 512 x 512. Pokud pole ponecháte prázdné, použije se logo_small."
-    manifest_icon: "Obrázek použitý jako logo/úvodní obrázek v systému Android. Jeho velikost bude automaticky změněna na 512 × 512. Pokud pole ponecháte prázdné, použije se large_icon."
     manifest_screenshots: "Snímky obrazovky, které na stránce s výzvou k instalaci předvádějí funkce vaší instance a funkce. Všechny obrázky by měly být lokálně nahrávány a mít stejné rozměry."
-    favicon: "Favicon pro váš web, viz <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Pro správné fungování přes CDN musí být ve formátu png. Velikost bude změněna na 32x32. Pokud zůstane prázdná, použije se large_icon."
-    opengraph_image: "Výchozí obrázek opengraph, který se použije, pokud stránka nemá jiný vhodný obrázek. Pokud zůstane prázdný, použije se large_icon"
-    x_summary_large_image: "„Velký souhrnný obrázek“ karty Twitteru (měl by mít šířku alespoň 280 a výšku alespoň 150, nesmí být ve formátu .svg). Pokud se toto pole ponechá prázdné, budou generována běžná metadata karty pomocí opengraph_image, pokud se zároveň nejedná o soubor .svg."
     notification_email: "E-mailová adresa odesílatele používaná při odesílání všech základních systémových e-mailů. Aby mohl e-mail dorazit, zde určená doména musí mít správně nastavené SPF, DKIM a reverzní PTR záznamy."
     email_custom_headers: "Seznam vlastních záhlaví e-mailů (headers)"
-    email_subject: "Přizpůsobitelný formát předmětu pro standardní e-maily. Viz <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Poskytuje uživatelům více podrobností o tom, proč nemají přístup k určitému tématu. Poznámka: Toto je méně bezpečné, protože uživatelé budou vědět, zda URL odkazuje na platné téma."
     force_https: "Vynuťte, aby váš web používal pouze HTTPS. VAROVÁNÍ: NEPOVOLUJTE tuto funkci, dokud neověříte, zda je HTTPS plně nastaven a funguje naprosto všude! Zkontrolovali jste také svou CDN, všechna přihlášení k sociálním sítím a všechna externí loga/závislosti, abyste se ujistili, že jsou také kompatibilní s HTTPS?"
     summary_score_threshold: "Minimální skóre potřebné pro zařazení příspěvku do „Shrnout toto téma“"
@@ -1875,7 +1908,6 @@ cs:
     summary_percent_filter: "Když uživatel klikne na „Shrnout toto téma“, zobrazit horní procento příspěvků"
     summary_max_results: "Maximální počet příspěvků vrácených funkcí „Shrnout toto téma“"
     summary_timeline_button: "Zobrazit tlačítko „Shrnout“ na časové ose"
-    enable_personal_messages: "ZASTARALÉ, použijte místo toho nastavení 'personal message enabled groups'. Povolte uživatelům s úrovní důvěry 1 (konfigurovatelné pomocí minimální důvěryhodnosti pro odesílání zpráv) vytvářet zprávy a odpovídat na ně. Upozorňujeme, že členové redakce mohou odesílat zprávy vždy, bez ohledu na cokoli."
     personal_message_enabled_groups: "Povolit uživatelům v těchto skupinách VYTVÁŘET soukromé zprávy. DŮLEŽITÉ: 1) Všichni uživatelé mohou ODPOVÍDAT na zprávy. 2) Administrátoři a moderátoři mohou VYTVÁŘET zprávy pro libovolného uživatele. 3) Skupiny s úrovní důvěry zahrnují vyšší úrovně; výběrem trust_level_1 povolíte TL1, TL2, TL3, TL4, ale ne TL0. 4) V rámci zasílání zpráv konkrétním skupinám bude toto nastavení přepsáno nastavením interakcí skupiny."
     enable_system_message_replies: "Umožňuje uživatelům odpovídat na systémové zprávy, i když jsou soukromé zprávy vypnuty."
     enable_chunked_encoding: "Povolit serverem blokové kódování odpovědí. Tato funkce funguje na většině nastavení, nicméně některé proxy servery mohou ukládat do vyrovnávací paměti, což způsobuje zpoždění odpovědí."
@@ -1887,8 +1919,6 @@ cs:
     silence_new_user_sensitivity: "Pravděpodobnost, že nový uživatel bude ztišen na základě nahlášení spamu."
     auto_close_topic_sensitivity: "Pravděpodobnost, že nahlášené téma bude automaticky uzavřeno"
     cooldown_minutes_after_hiding_posts: "Počet minut, které musí uživatel čekat, než bude moci upravit příspěvek skrytý prostřednictvím nahlášení komunitou"
-    max_topics_in_first_day: "Maximální počet témat, která může uživatel vytvořit během 24 hodin od vytvoření svého prvního příspěvku"
-    max_replies_in_first_day: "Maximální počet odpovědí, které může uživatel vytvořit během 24 hodin od vytvoření svého prvního příspěvku"
     tl2_additional_likes_per_day_multiplier: "Zvyšte denní limit Líbí se pro úroveň důvěry 2 (člen) vynásobením tohoto čísla"
     tl3_additional_likes_per_day_multiplier: "Zvyšte denní limit Líbí se pro úroveň důvěry 3 (stálý) vynásobením tohoto čísla"
     tl4_additional_likes_per_day_multiplier: "Zvyšte denní limit Líbí se pro úroveň důvěry 4 (leader) vynásobením tohoto čísla"
@@ -1898,7 +1928,6 @@ cs:
     tl2_additional_flags_per_day_multiplier: "Zvyšte denní limit nahlášení pro úroveň důvěry 2 (člen) vynásobením tohoto čísla"
     tl3_additional_flags_per_day_multiplier: "Zvyšte denní limit úprav pro úroveň důvěry 3 (stálý) vynásobením tohoto čísla"
     tl4_additional_flags_per_day_multiplier: "Zvyšte denní limit úprav pro úroveň důvěry 4 (leader) vynásobením tohoto čísla"
-    num_users_to_silence_new_user: "Pokud příspěvky nového uživatele překročí nastavení hide_post_sensitivity a má příznaky spamu od tolika různých uživatelů, skryjte všechny jeho příspěvky a zabraňte mu v budoucnu v odesílání příspěvků. 0 pro zakázání."
     num_tl3_flags_to_silence_new_user: "Pokud příspěvky nového uživatele dostanou tolik příznaků z num_tl3_users_to_silence_new_user různých uživatelů úrovně důvěryhodnosti 3, skryjte všechny jeho příspěvky a zabraňte mu v budoucím psaní. 0 pro zakázání."
     num_tl3_users_to_silence_new_user: "Pokud příspěvky nového uživatele dostanou příznaky num_tl3_flags_to_silence_new_user od tohoto počtu různých uživatelů s úrovní důvěryhodnosti 3, skryjte všechny jeho příspěvky a zabraňte mu v budoucnu psát. 0 pro zakázání."
     notify_mods_when_user_silenced: "Pokud je uživatel automaticky ztišen, pošlete zprávu všem moderátorům."
@@ -1930,16 +1959,12 @@ cs:
     moderators_manage_groups: "Povolit moderátorům vytvářet a spravovat skupiny"
     moderators_change_post_ownership: "Povolit moderátorům změnit vlastnictví příspěvku"
     cors_origins: "Povolené origins pro cross-origin požadavky (CORS). Každý origin musí obsahovat http:// nebo https://. Proměnná prostředí DISCOURSE_ENABLE_CORS musí být nastavena na hodnotu true, aby bylo možné povolit CORS."
-    use_admin_ip_allowlist: "Administrátoři se mohou přihlásit pouze v případě, že se nacházejí na IP adrese definované v seznamu filtrovaných IP adres (Administrace > Protokoly a monitoring > Filtrované IP)."
     blocked_ip_blocks: "Seznam bloků soukromých IP adres, které by Discourse nikdy neměl procházet"
     allowed_internal_hosts: "Seznam interních hostitelů, které může Discourse bezpečně procházet pro OneBoxing a další účely."
     allowed_onebox_iframes: "Seznam domén iframe src, které jsou povoleny prostřednictvím vkládání do OneBoxu. `*` povolí všechny výchozí enginy OneBoxu."
     allowed_iframes: "Seznam předpon URL iframe src, které Discourse bezpečně povoluje v příspěvcích. Znak * lze použít pro libovolný počet znaků jiných než /."
     allowed_crawler_user_agents: "Uživatelské agenty webových prohledávačů (crawlerů), kterým by měl být umožněn přístup na web. VAROVÁNÍ! TOTO NASTAVENÍ ZAKÁŽE VŠECHNY PROHLEDÁVAČE, KTERÉ ZDE NEJSOU UVEDENY!"
     blocked_crawler_user_agents: "Unikátní slovo v řetězci uživatelského agenta, které nerozlišuje velká a malá písmena a identifikuje webové roboty, kterým by neměl být povolen přístup k webu. Nepoužije se, pokud je definován seznam povolených."
-    slow_down_crawler_user_agents: 'Uživatelské agenty webových prohledávačů, jejichž rychlost by měla být omezena dle nastavení „zpomalit rychlost prohledávače“. Každá hodnota musí mít délku alespoň 3 znaky.'
-    slow_down_crawler_rate: "Pokud je zadána hodnota slow_down_crawler_user_agents,použije se tato hodnota na všechny crawlery (počet sekund prodlevy mezi požadavky)."
-    content_security_policy: "Povolte zásady zabezpečení obsahu (CSP). CSP je další vrstva zabezpečení, která pomáhá předcházet určitým typům útoků, včetně Cross Site Scripting (XSS) a data injection."
     content_security_policy_report_only: "Povolit Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_frame_ancestors: "Omezit, kdo může zabudovat tento web do iframů přes CSP. Nastavte povolené hostitele v <a href='%{base_path}/admin/customize/embedding'>Zabudování</a>"
     content_security_policy_script_src: "Další zdroje skriptů na seznamu povolených. Aktuální hostitel a CDN jsou zahrnuty ve výchozím nastavení. Viz <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Zmírnění útoků XSS pomocí zásad zabezpečení obsahu.</a> (CSP). Ostatní zdroje hostitelů jsou ignorovány, protože je povoleno nastavení strict-dynamic."
@@ -1964,7 +1989,6 @@ cs:
     max_reply_history: "Maximální počet odpovědí, které lze rozbalit při rozbalování odpovědi"
     topics_per_period_in_top_summary: "Počet nejlepších témat zobrazených ve výchozím souhrnu nejlepších témat."
     topics_per_period_in_top_page: "Počet nejlepších témat zobrazených v rozbalené sekci „Zobrazit více“ s nejlepšími tématy."
-    redirect_users_to_top_page: "Automaticky přesměrovat nové a dlouho nepřítomné uživatele na seznam nejlepších témat (top). Platí pouze v případě, že je v nastavení 'top menu' webu uvedeno 'top'."
     top_page_default_timeframe: "Výchozí časové období stránky Nejlepší pro anonymní uživatele (pro přihlášené uživatele se nastaví automaticky na základě jejich poslední návštěvy)."
     moderators_view_emails: "Povolit moderátorům zobrazení e-mailových adres uživatelů."
     moderators_view_ips: "Povolit moderátorům zobrazení IP adres uživatelů."
@@ -1986,7 +2010,6 @@ cs:
     hide_email_address_taken: "Neinformovat uživatele o existenci účtu s danou e-mailovou adresou během registrace nebo během procesu zapomenutí hesla. V případě požadavku na zapomenuté heslo požadovat celou e-mailovou adresu."
     log_out_strict: "Při odhlašování odhlásit VŠECHNY relace uživatele na všech zařízeních"
     version_checks: "Odesílat příkaz ping na Discourse Hub pro aktualizace verzí a zobrazit informace o nových verzích na nástěnce <a href='%{base_path}/admin' target='_blank'>/admin</a>"
-    new_version_emails: "Až bude k dispozici nová verze Discourse, poslat e-mail na adresu contact_email."
     include_in_discourse_discover: "Dovolte společnosti CDCK, Inc. („Discourse“), aby tuto komunitu zobrazila na stránce <a href='https://discover.discourse.org' target='_blank'>Discover</a> a v marketingových materiálech Discourse. Tímto způsobem sdílíte data potřebná k tomu, aby byl váš web zahrnut do služby. Upozorňujeme, že propagace komunit je na uvážení společnosti Discourse."
     invite_expiry_days: "Platnost uživatelských pozvánek ve dnech"
     invite_only: "Všichni noví uživatelé musí být výslovně pozváni důvěryhodnými uživateli nebo zaměstnanci. Veřejná registrace je zakázána."
@@ -2000,12 +2023,9 @@ cs:
     min_admin_password_length: "Zadejte minimální délku hesla pro administrátory. Tím zajistíte, že všechna hesla administrátorů splňují určité požadavky pro větší zabezpečení. Toto nastavení je nezbytné pro ochranu účtu správce před možným neoprávněným přístupem."
     password_unique_characters: "Minimální počet unikátních znaků, které musí heslo obsahovat."
     block_common_passwords: "Nepovolit heslo pokud je mezi 10 000 nejběžnějšími."
-    auth_skip_create_confirm: Při registraci přes externí autorizaci přeskočte vyskakovací okno pro vytvoření účtu. Nejlépe využijete společně s auth_overrides_email, auth_overrides_username a auth_overrides_name.
-    auth_immediately: "Automaticky přesměrovat na externí přihlašovací systém bez zásahu uživatele. Toto se projeví pouze tehdy, když je login_required nastaveno na hodnotu true a existuje pouze jedna externí metoda ověřování."
     auth_require_interaction: "Vyžadovat interakci uživatele před přesměrováním na externí přihlašovací systém pomocí `/auth/*`. Toto je hloubková obrana proti útokům typu „Login CSRF“. Toto nastavení deaktivujte pouze v případě, že plně důvěřujete, že všechny povolené metody ověřování jsou chráněny před útoky typu „Login CSRF“."
     enable_discourse_connect: "Povolit přihlášení přes DiscourseConnect (dříve „Discourse SSO“) (VAROVÁNÍ: E-MAILOVÉ ADRESY UŽIVATELŮ *MUSÍ* BÝT OVĚŘENY EXTERNÍ STRÁNKOU!)"
     verbose_discourse_connect_logging: "Zaznamenat podrobný protokol diagnostiky související s DiscourseConnect do <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_discourse_connect_provider: "Implementovat protokol poskytovatele DiscourseConnect (dříve 'Discourse SSO') na endpointu /session/sso_provider, vyžaduje nastavení discourse_connect_provider_secrets."
     discourse_connect_url: "URL adresa koncového bodu DiscourseConnect (musí obsahovat http:// nebo https:// a nesmí obsahovat koncové lomítko)"
     discourse_connect_secret: "Tajný řetězec používaný ke kryptografickému ověřování informací z DiscourseConnect, ujistěte se, že má 10 nebo více znaků."
     discourse_connect_provider_secrets: "Seznam párů doména-tajný klíč, které používají DiscourseConnect. Ujistěte se, že tajný klíč DiscourseConnect má 10 nebo více znaků. Zástupný znak * lze použít k nalezení libovolné domény nebo pouze její části (např. *.example.com)."
@@ -2031,24 +2051,19 @@ cs:
     google_oauth2_client_secret: "Client secret vaší Google aplikace."
     google_oauth2_prompt: "Volitelný seznam textových hodnot oddělených mezerami, který určuje, zda autorizační server vyzve uživatele k opětovnému ověření a souhlasu. Možné hodnoty naleznete na <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> ."
     google_oauth2_hd: "Volitelná doména Google Apps Hosted, na kterou bude přihlašování omezeno. Další podrobnosti naleznete na adrese <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>."
-    google_oauth2_hd_groups: "Po ověření načíst skupiny Google uživatelů na hostované doméně. Načtené skupiny Google lze použít k automatickému udělení členství ve skupinách Discourse (viz nastavení skupiny). Více informací naleznete na adrese https://meta.discourse.org/t/226850"
     google_oauth2_hd_groups_service_account_admin_email: "E-mailová adresa patřící k účtu správce Google Workspace. Bude použita spolu s přihlašovacími údaji k servisnímu účtu k načtení informací o skupinách."
     google_oauth2_hd_groups_service_account_json: "Klíčové informace pro servisní účet ve formátu JSON. Budou použity k načtení informací o skupinách."
     google_oauth2_verbose_logging: "Zaznamenávat podrobné diagnostické informace související s Google OAuth2 do <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_twitter_logins: "Povolit ověřování na X, vyžaduje twitter_consumer_key a twitter_consumer_secret. Viz <a href='https://meta.discourse.org/t/13395' target='_blank'>Konfigurace přihlášení na Twitter (a rich embedů) pro Discourse</a>."
     twitter_consumer_key: "Uživatelský klíč pro ověřování na X, registrovaný na <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Consumer secret pro ověřování na X, registrovaný na <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_facebook_logins: "Povolit ověřování na Facebooku, vyžaduje facebook_app_id a facebook_app_secret. Viz <a href='https://meta.discourse.org/t/13394' target='_blank'>Konfigurace přihlášení k Facebooku pro Discourse</a>."
     facebook_app_id: "App id pro ověřování a sdílení na Facebooku, registrované na <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     facebook_app_secret: "App secret pro ověřování na Facebooku, registrovaný na <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
-    enable_github_logins: "Povolit ověřování na GitHubu, vyžaduje github_client_id a github_client_secret. Viz <a href='https://meta.discourse.org/t/13745' target='_blank'>Konfigurace přihlášení na GitHub pro Discourse</a>."
     github_client_id: "Client id pro ověřování na GitHubu, registrovaný na <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     github_client_secret: "Client secret pro ověřování na GitHubu, registrovaný na <a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>"
     enable_discord_logins: "Povolit uživatelům ověřování pomocí Discordu"
     discord_client_id: 'Discord Client ID (potřebujete ho? navštivte <a href="https://discordapp.com/developers/applications/me">portál pro vývojáře Discordu</a>)'
     discord_secret: "Discord Client Secrete Key se používá k ověřování a aktivaci funkcí souvisejících s Discordem na tomto webu, jako např. přihlášení pomocí Discordu. Tento tajný klíč odpovídá aplikaci Discord vytvořené pro tento web a je nezbytný pro bezpečnou komunikaci s rozhraním Discord API."
     discord_trusted_guilds: 'Povolit přihlášení přes Discord pouze členům těchto cechů na Discordu. Použijte číselné ID cechu. Pro více informací si přečtěte pokyny <a href="https://meta.discourse.org/t/configuring-discord-login-for-discourse/127129">zde</a>. Pro povolení přístupu libovolného cechu ponechte prázdné.'
-    enable_linkedin_oidc_logins: "Povolit ověřování na LinkedInu, vyžaduje linkedin_client_id a linkedin_client_secret."
     linkedin_oidc_client_id: "Client ID pro ověřování na LinkedIn, registrované na <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
     linkedin_oidc_client_secret: "Client secret pro ověřování na LinkedInu, registrovaný na <a href='https://www.linkedin.com/developers/apps' target='_blank'>https://www.linkedin.com/developers/apps</a>"
     enable_backups: "Povolit administrátorům vytvářet zálohy"
@@ -2060,11 +2075,8 @@ cs:
     s3_endpoint: "Koncový bod lze upravit pro zálohování na službu kompatibilní s S3, jako je DigitalOcean Spaces nebo Minio. VAROVÁNÍ: Pokud používáte AWS S3, ponechte pole prázdné."
     s3_configure_tombstone_policy: "Povolit pravidla automatického mazání pro odstraněných nahraných souborů (tombstones). DŮLEŽITÉ: Pokud je zakázáno, po odstranění nahraných souborů nebude místo obnoveno."
     s3_disable_cleanup: "Zabraňte odstraňování starých záloh z S3, pokud je jich více, než je povolený maximální počet."
-    s3_use_acls: "AWS doporučuje nepoužívat ACL na S3 bucketech; zaškrtnutí této možnosti zrušte pouze v případě, že chcete konfigurovat zásady oprávnění na nakonfigurovaných `s3_upload_bucket` a `s3_backup_bucket`."
-    enable_direct_s3_uploads: "Umožňuje přímé nahrávání vícedílných (multipart) souborů do Amazon S3, více informací naleznete na https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469."
     backup_time_of_day: "Čas v UTC, kdy má dojít k zálohování."
     backup_with_uploads: "Zahrnout do plánovaných záloh i nahrané soubory. Zakázáním této možnosti se zálohuje pouze databáze."
-    backup_location: "Umístění, kde jsou uloženy zálohy. DŮLEŽITÉ: S3 vyžaduje platné přihlašovací údaje S3. Při změně nastavení z Lokální na S3 je nutné spustit úlohu rake `s3:ensure_cors_rules`."
     backup_gzip_compression_level_for_uploads: "Úroveň komprese Gzip použitá pro kompresi nahraných souborů."
     include_thumbnails_in_backups: "Zahrnout do záloh vygenerované miniatury (thumbnails). Zakázáním této možnosti se zmenší velikost záloh, ale po obnovení bude nutné přegenerovat (rebake) všechny příspěvky."
     active_user_rate_limit_secs: "Jak často aktualizujeme informaci o poslední návštěvě uživatelů, v sekundách"
@@ -2101,7 +2113,6 @@ cs:
     purge_deleted_uploads_grace_period_days: "Grace period (in days) before a deleted upload is erased."
     purge_unactivated_users_grace_period_days: "Doba odkladu (ve dnech), než bude uživatel, který si neaktivoval účet, smazán. Nastavte hodnotu 0, abyste nikdy nemazali neaktivované uživatele."
     enable_s3_uploads: "Umístit nahrané soubory na úložiště Amazon S3. DŮLEŽITÉ: vyžaduje platné přihlašovací údaje S3 (oba access key id & secret access key)."
-    s3_use_iam_profile: 'Pro udělení přístupu k S3 bucketu použijte <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">profil instance AWS EC2</a> . POZNÁMKA: Povolení této funkce vyžaduje, aby Discourse běžel ve vhodně nakonfigurované instanci EC2, a přepíše nastavení „s3 access key id“ a „s3 secret access key“.'
     s3_upload_bucket: "Název Amazon S3 bucketu, do kterého budou soubory nahrány. VAROVÁNÍ: Musí být malými písmeny, bez teček, bez podtržítek."
     s3_access_key_id: "The Amazon S3 access key,, který bude použit k nahrávání obrázků, příloh a záloh."
     s3_secret_access_key: "The Amazon S3 secret access key, který bude použit k nahrávání obrázků, příloh a záloh."
@@ -2109,13 +2120,11 @@ cs:
     s3_cdn_url: "URL adresa CDN, která se má použít pro všechny zdroje S3 (například: https://cdn.somewhere.com). VAROVÁNÍ: po změně tohoto nastavení je nutné znovu přegenerovat (rebake) všechny staré příspěvky."
     s3_use_cdn_url_for_all_uploads: "Použít CDN URL pro všechny soubory nahrané do S3, nejen pouze pro obrázky."
     avatar_sizes: "Seznam automaticky generovaných velikostí avatarů."
-    external_system_avatars_enabled: "Umožňuje použití externí služby pro generování systémových avatarů. Pokud je toto nastavení povoleno, avatary uživatelů se místo vytváření v systému Discourse generují a poskytují externí službou definovanou nastavením `external_system_avatars_url`."
     external_system_avatars_url: "URL adresa externí služby systémových avatarů. Povolené substituce jsou {username} {first_letter} {color} {size}. Pro zakázání ponechte prázdné."
     external_emoji_url: "Adresa URL externí služby pro obrázky emoji. Pro vypnutí ponechte prázdné."
     use_site_small_logo_as_system_avatar: "Místo systémového avatara uživatele použít malé logo webu. Vyžaduje, aby bylo logo přítomno."
     restrict_letter_avatar_colors: "Seznam šestimístných hexadecimálních hodnot barev, které se použijí pro pozadí písmenného avatara."
     enable_listing_suspended_users_on_search: "Umožnit běžným uživatelům vyhledávat pozastavené uživatele."
-    selectable_avatars_mode: "Umožnit uživatelům vybrat si avatara ze seznamu selectable_avatars a omezit nahrávání vlastních avatarů na vybranou úroveň důvěry."
     selectable_avatars: "Zadejte kolekci avatarů, ze kterých si uživatelé mohou vybrat svůj profilový obrázek. Výběr se zobrazí při vytváření uživatelského profilu nebo při aktualizaci avatara v profilu."
     allow_all_attachments_for_group_messages: "Pro skupinové zprávy povolit všechny typy e-mailových příloh."
     png_to_jpg_quality: "Kvalita převedeného souboru PNG do JPG (1 je nejnižší kvalita, 99 je nejlepší kvalita, 100 pro vypnutí)."
@@ -2126,7 +2135,6 @@ cs:
     composer_media_optimization_image_enabled: "Umožňuje optimalizaci nahrávaných obrázků na straně prohlížeče."
     composer_media_optimization_image_bytes_optimization_threshold: "Minimální velikost obrázku pro spuštění optimalizace na straně prohlížeče"
     composer_media_optimization_image_resize_dimensions_threshold: "Minimální šířka obrázku pro spuštění změny velikosti na straně prohlížeče"
-    composer_media_optimization_image_resize_width_target: "Obrázky s šířkou větší než `composer_media_optimization_image_dimensions_resize_threshold` budou změněny na tuto šířku. Musí být >= než `composer_media_optimization_image_dimensions_resize_threshold`."
     composer_media_optimization_image_encode_quality: "Kvalita kódování JPG použitá v procesu optimalizace."
     video_conversion_enabled: "Povolit konverzi videa pro nahrané video soubory. To umožňuje převod videí do webově kompatibilních formátů."
     video_conversion_service: "Služba pro konverzi videa, která se má použít ke zpracování nahraných videí."
@@ -2167,7 +2175,6 @@ cs:
     edit_wiki_post_allowed_groups: "Skupiny, které mohou upravovat příspěvky označené jako wiki. Administrátoři a moderátoři mohou příspěvky označené jako wiki upravovat vždy."
     edit_post_allowed_groups: "Skupiny, které mohou upravovat příspěvky. Administrátoři a moderátoři mohou příspěvky upravovat vždy."
     self_wiki_allowed_groups: "Povolit uživatelům v těchto skupinách vytvářet si vlastní wiki příspěvky. Administrátoři a moderátoři si mohou vytvořit vlastní wiki příspěvky kdykoli."
-    min_trust_to_send_messages: "ZASTARALÉ, použijte místo toho nastavení 'personal message enabled groups'. Minimální úroveň důvěry požadovaná pro vytváření nových soukromých zpráv."
     send_email_messages_allowed_groups: "Skupiny, které mohou posílat soukromé zprávy e-mailem. Administrátoři a moderátoři mohou posílat soukromé zprávy e-mailem kdykoli."
     flag_post_allowed_groups: "Skupiny, které mohou nahlašovat příspěvky. Administrátoři a moderátoři mohou příspěvky nahlašovat vždy."
     post_links_allowed_groups: "Skupiny, které mohou vkládat odkazy do příspěvků. Administrátoři a moderátoři mohou odkazy zveřejňovat vždy."
@@ -2185,7 +2192,6 @@ cs:
     max_mentions_per_post: "Maximální počet zmínek @name, která může kdokoli použít v příspěvku."
     max_users_notified_per_group_mention: "Maximální počet uživatelů, kteří mohou obdržet oznámení, pokud je zmíněna skupina (pokud je dosaženo prahové hodnoty, nebudou se odesílat žádná oznámení)"
     enable_mentions: "Umožňuje uživatelům vzájemně se označovat nebo odkazovat ve svých příspěvcích pomocí symbolu '@'."
-    here_mention: "Jméno použité pro @zmínku, které umožňuje privilegovaným uživatelům upozornit až maximálně 'max_here_mentioned' osob účastnících se tématu. Nesmí se jednat o existující uživatelské jméno."
     max_here_mentioned: "Maximální počet zmíněných osob pomocí @here."
     here_mention_allowed_groups: "Skupiny, které mohou zmínit @here. Administrátoři a moderátoři mohou @here zmínit vždy."
     create_thumbnails: "Vytvářet miniatury a obrázky v lightboxu, které jsou příliš velké na to, aby se vešly do příspěvku."
@@ -2207,7 +2213,6 @@ cs:
     max_image_size_kb: "Maximální velikost nahrávaného obrázku. Toto musí být také nakonfigurováno v nginx (client_max_body_size) nebo apache nebo proxy. Obrázky větší než toto a menší než client_max_body_size budou změněny tak, aby se vešly při nahrávání."
     max_attachment_size_kb: "Maximální velikost nahrávaných souborů příloh. Toto musí být také nakonfigurováno v nginx (client_max_body_size) / apache nebo proxy."
     authorized_extensions: "Seznam přípon souborů povolených pro nahrávání"
-    authorized_extensions_for_staff: "Seznam přípon souborů povolených k nahrávání pro členy redakce, rozšiřující seznam definovaný v nastavení webu `authorized_extensions`."
     theme_authorized_extensions: "Seznam přípon souborů povolených pro nahrávání motivů"
     max_image_megapixels: "Maximální počet megapixelů povolený pro obrázek. Obrázky s vyšším počtem megapixelů budou odmítnuty."
     title_prettify: "Zabrání běžným překlepům a chybám v názvu tématu, včetně psaní velkými písmeny, malé písmeno na začátku, vícenásobné vykřičníky a otazníky, atd."
@@ -2243,9 +2248,7 @@ cs:
     num_flaggers_to_close_topic: "Minimální počet unikátních nahlašovatelů potřebný k automatickému pozastavení tématu za účelem intervence"
     num_hours_to_close_topic: "Počet hodin, po které má být téma pozastaveno kvůli intervenci."
     auto_respond_to_flag_actions: "Povolit automatickou odpověď při odebírání příznaku nahlášení."
-    auto_silence_fast_typers_on_first_post: "Automatické ztišení uživatelů, kteří nesplňují práh rychlého psaní `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximální úroveň důvěry pro automatické ztišení rychle píšících"
-    auto_silence_first_post_regex: "Regex nerozlišující velká a malá písmena, který po zadání způsobí, že první příspěvek uživatele bude umlčen a odeslán do fronty na schválení. Příklad: raging|a[bc]a , způsobí, že všechny příspěvky obsahující raging nebo aba nebo aca budou umlčeny jako první. Platí pouze pro první příspěvek. ZRUŠENO: Místo toho použijte Umlčet sledovaná slova."
     reviewable_claiming: "Musí být obsah k revizi nárokován, než na něj bude možné reagovat?"
     reply_by_email_address: "Šablona emailé adresy pro odpověď emailem, např. %%{reply_key}@reply.myforum.com"
     ignore_by_title: "Ignorovat příchozí e-maily na základě jejich názvu."
@@ -2268,9 +2271,7 @@ cs:
     enable_group_directory: "Zveřejnit adresář skupin"
     enable_category_group_moderation: "Povolit skupinám moderovat obsah v konkrétních kategoriích"
     group_in_subject: "Nastavit %%{optional_pm} v předmětu e-mailu podle názvu první skupiny v SZ, viz: <a href='https://meta.discourse.org/t/customize-specific-email-templates/88323' target='_blank'>Přizpůsobit formát předmětu pro standardní e-maily</a>"
-    allow_anonymous_mode: "Povolit uživatelům možnost přepnout se při odesílání příspěvků do anonymního režimu. Po aktivaci mohou uživatelé při vytváření příspěvků nebo témat na webu zvolit skrytí své identity. Viz také `allow anonymous likes`."
     anonymous_account_duration_minutes: "Pro ochranu anonymity vytvářet pro každého uživatele každých N minut nový anonymní účet. Příklad: pokud je nastaveno na 600, jakmile od posledního příspěvku uplyne 600 minut A ZÁROVEŇ se uživatel přepne na anonymního uživatele, vytvoří se nový anonymní účet."
-    hide_new_user_profiles: "Skrýt profily uživatelů s úrovní důvěryhodnosti 1 nebo nižší před veřejností a uživatelům s úrovní důvěryhodnosti 1 důvěřovat, dokud poprvé nepřispějí. Tato funkce je bezpodmínečně zakázána na stránkách s nastavením 'must_approve_users' a 'invite_only'."
     allow_users_to_hide_profile: "Umožnit uživatelům skrýt svůj profil a přítomnost"
     hide_user_activity_tab: "Skrýt kartu Aktivita v uživatelském profilu pro jiné uživatele, než jsou správci a vlastníci profilu."
     delete_associated_accounts_on_password_reset: "Odstranit přidružené uživatelské účty, když uživatel změní heslo."
@@ -2282,16 +2283,13 @@ cs:
     clean_up_inactive_users_after_days: "Počet dní před odstraněním neaktivního uživatele (úroveň důvěryhodnosti 0 bez jakýchkoli příspěvků). Chcete-li čištění zakázat, nastavte hodnotu 0."
     clean_up_unused_staged_users_after_days: "Počet dní před odstraněním nepoužívaného předběžného uživatele (bez jakýchkoli příspěvků). Chcete-li čištění zakázat, nastavte hodnotu 0."
     user_selected_primary_groups: "Umožnit uživatelům nastavit si vlastní primární skupinu"
-    enable_mobile_theme: "Používat na mobilních zařízeních verzi přizpůsobenou pro mobily s možností přejít na plnou verzi. Zrušte, pokud chcete používat vlastní plně responzivní kaskádový styl."
     permalink_normalizations: "Před přiřazením trvalých odkazů použijte následující regulární výraz, např.: /(topic.*)\\?.*/\\1 pomůže odstranit query string z route témat. Formát je regex+řetězec. Použijte \\1 atd. pro přístup k captures."
-    disable_system_edit_notifications: "Zakáže upozornění na úpravy od systémového uživatele, když je aktivní 'download_remote_images_to_local'."
     penalty_step_hours: "Výchozí sankce pro ztišení nebo pozastavení uživatelů v hodinách. První přestupek se rovná první hodnotě, druhý přestupek druhé hodnotě, atd."
     penalty_include_post_message: "Automatické zahrnutí zprávy s urážlivým příspěvkem do šablony e-mailové zprávy při ztišení nebo pozastavení uživatele."
     full_name_requirement: "Nastavení celého jména jako povinného, nepovinného nebo nepovinného, ale skrytého v registračním formuláři."
     enable_names: "Zobrazení celého jména uživatele v jeho profilu, kartě uživatele a e-mailech. Zakázáním skryjete celé jméno všude."
     short_progress_text_threshold: "After the number of posts in a topic goes above this number, the progress bar will only show the current post number. If you change the progress bar's width, you may need to change this value."
     embed_unlisted: "Vložená témata budou skryta, dokud uživatel neodpoví."
-    import_embed_unlisted: "Importovaná vložená témata budou skryta, dokud uživatel neodpoví (i když není zaškrtnuto nastavení webu `embed unlisted`)."
     embed_post_limit: "Maximální počet příspěvků k zabudování."
     slug_generation_method: "Vyberte metodu generování URL. 'encoded' vygeneruje řetězec se znaky procent. 'none' zakáže zkratky URL úplně."
     approve_unless_staged: "Nová témata a příspěvky vytvořené předběžně založenými uživateli musí být schváleny."
@@ -2312,10 +2310,8 @@ cs:
     dashboard_general_tab_activity_metrics: "Na kartě Obecné vyberte sestavy, které se mají zobrazovat jako metriky aktivity."
     gravatar_name: "Zadejte název poskytovatele služby Gravatar. Tento název se obvykle používá k identifikaci zdroje, který webu poskytuje avatary Gravatar."
     gravatar_base_url: "Zadejte adresu URL pro přístup k rozhraní API poskytovatele Gravatar. Toto nastavení je rozhodující pro převod e-mailových adres na adresy URL služby Gravatar, kde jsou uloženy obrázky avatarů."
-    gravatar_login_url: "URL relativní k `gravatar_base_url`, která uživateli poskytuje přihlášení ke službě Gravatar."
     allow_changing_staged_user_tracking: "Umožnit administrátorovi změnit předvolby oznámení o kategoriích a štítcích u předběžně založeného uživatele.."
     use_email_for_username_and_name_suggestions: "Pro návrhy uživatelského jména a jména použijte první část e-mailové adresy. Upozornění: To může usnadnit zjištění e-mailové adresy vašich členů útočníky (protože mnoho lidí používá běžné poskytovatele e-mailu, jako je `gmail.com`)."
-    use_name_for_username_suggestions: "Při navrhování uživatelských jmen použít celé jméno uživatele."
     adobe_analytics_tags_url: "Adresa URL tagů Adobe Analytics (`https://assets.adobedtm.com/...`)"
     errors:
       invalid_email: "Neplatná emailová adresa."
@@ -2339,6 +2335,10 @@ cs:
       user: "Uživatelé"
     results_page: "Výsledky hledání pro '%{term}'"
     audio: "[zvuky]"
+  posts_filter:
+    description:
+      order_latest: "Nejnovější příspěvky"
+      order_latest_topic: "Nejnovější témata"
   filter:
     description:
       status: "Filtrovat témata podle jejich stavu"
@@ -2563,7 +2563,6 @@ cs:
     not_available: "Není k dispozici. Nechcete zkusit %{suggestion}?"
     something_already_taken: "Nastala chyba při zpracování, zřejmě je dané uživatelské jméno nebo email již zaregistrován. Zkuste odkaz pro obnovení hesla."
     omniauth_error_unknown: "Něco se pokazilo při zpracování vašeho přihlášení, zkuste to prosím znovu."
-    omniauth_confirm_title: "Přihlásit pomocí %{provider}"
     omniauth_confirm_button: "Pokračovat"
     authenticator_error_no_valid_email: "Nejsou povoleny žádné e-mailové adresy spojené s %{account} . Možná bude nutné nakonfigurovat účet s jinou e-mailovou adresou."
     new_registrations_disabled: "Registrace nových účtů nejsou v tuto chvíli povoleny."
@@ -3088,7 +3087,6 @@ cs:
         Vaše odpověď byla odeslána ze zablokované e-mailové adresy. Zkuste odeslat z jiné e-mailové adresy nebo [kontaktujte redakci](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "Odmítnutí e-mailu: Nepovolená adresa"
-      subject_template: "[%{email_prefix}] Problém s e-mailem -- Blokovaná adresa"
       text_body_template: |
         Je nám líto, ale vaše e-mailová zpráva na adresu %{destination} (s názvem %{former_title}) nefungovala.
 
@@ -3364,6 +3362,7 @@ cs:
     Chcete-li se odhlásit z těchto e-mailů, [klikněte zde](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[SZ] "
+  email_from_group: "%{group_name}"
   user_notifications:
     previous_discussion: "Předchozí diskuze"
     reached_limit:
@@ -3575,6 +3574,7 @@ cs:
     account_exists:
       title: "Účet již existuje"
       subject_template: "[%{email_prefix}] Účet již existuje"
+      subject_template_improved: "Účet již existuje"
       text_body_template: |
         Právě jste se pokusili vytvořit účet na %{site_name}, nebo jste se pokusili změnit e-mail účtu na %{email}. Účet pro %{email} však již existuje.
 
@@ -3596,6 +3596,7 @@ cs:
       popular_posts: "Populární příspěvky"
       more_new: "Novinky pro vás"
       subject_template: "[%{email_prefix}] Shrnutí"
+      subject_template_improved: "Souhrn"
       unsubscribe: "Tento souhrn je odeslán z %{site_link} poté, co jsme vás už nějakou dobu neviděli. Změňte %{email_preferences_link} nebo %{unsubscribe_link} pro odhlášení odběru."
       your_email_settings: "vaše nastavení e-mailů"
       click_here: "klikněte zde"
@@ -3613,6 +3614,7 @@ cs:
       title: "Přihlášení pomocí odkazu"
       preview: "Přihlášení pomocí odkazu."
       subject_template: "[%{email_prefix}] Přihlášení pomocí odkazu"
+      subject_template_improved: "Přihlášení pomocí odkazu"
       text_body_template: |
         Zde je Váš odkaz pro přihlášení na [%{site_name}](%{base_url}).
 
@@ -3622,7 +3624,6 @@ cs:
         %{base_url}/session/email-login/%{email_token}.
     set_password:
       title: "Nastavit heslo"
-      subject_template: "[%{email_prefix}] Nastavení hesla"
       text_body_template: |
         Někdo požádal o přidání hesla k vašemu účtu na [%{site_name}](%{base_url}). Případně se můžete přihlásit pomocí jakékoli podporované online služby (Google, Facebook atd.), která je spojena s touto ověřenou e-mailovou adresou.
 
@@ -3633,6 +3634,7 @@ cs:
     admin_login:
       title: "Přihlášení správce"
       subject_template: "[%{email_prefix}] Přihlášení"
+      subject_template_improved: "Login"
       text_body_template: |
         Někdo požádal o přihlášení k vašemu účtu na [%{site_name}](%{base_url}).
 
@@ -3747,7 +3749,6 @@ cs:
         Pokud na výše uvedený odkaz nelze kliknout, zkuste jej zkopírovat a vložit do adresního řádku vašeho webového prohlížeče.
     suspicious_login:
       title: "Upozornění na nové přihlášení"
-      subject_template: "[%{site_name}] Nové přihlášení z %{location}"
       text_body_template: |
         Dobrý den,
 
@@ -4317,13 +4318,6 @@ cs:
         few: "Žádný z vybraných štítků nelze použít"
         many: "Žádný z vybraných štítků nelze použít"
         other: "Žádný z vybraných štítků nelze použít"
-      in_this_category: '"%{tag_name}" nelze v této kategorii použít'
-      restricted_to:
-        one: '„%{tag_name}“ je omezen na kategorii „%{category_names}“'
-        few: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
-        many: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
-        other: '"%{tag_name}" je omezen na následující kategorie: %{category_names}'
-      synonym: 'Synonyma nejsou povolena. Místo toho použijte "%{tag_name}".'
       has_synonyms: '"%{tag_name}" nelze použít, protože má synonyma.'
       restricted_tags_cannot_be_used_in_category:
         one: 'Štítek "%{tags}" nelze použít v kategorii "%{category}". Odstraňte jej prosím.'
@@ -4404,6 +4398,8 @@ cs:
   onebox:
     discourse:
       user_joined_community: "Připojil/a se %{date}"
+    google_meet:
+      meeting_code: "Kód:"
     gitlab:
       truncated_file: "Tento soubor byl zkrácen."
       show_original: "zobrazit originál"

@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
 import { action, get } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const buttonOptionsMap = {
   exportResults: {
@@ -133,11 +133,14 @@ export default class PollButtonsDropdownComponent extends Component {
       {{#if this.showDropdown}}
         <DMenu class="widget-dropdown-header">
           <:trigger>
-            {{icon "gear"}}
+            {{dIcon "gear"}}
           </:trigger>
           <:content>
-            <DropdownMenu as |dropdown|>
-              {{#each this.getDropdownContent as |content|}}
+            <DDropdownMenu as |dropdown|>
+              {{#each this.getDropdownContent as |content index|}}
+                {{#if index}}
+                  <dropdown.divider />
+                {{/if}}
                 <dropdown.item>
                   <DButton
                     class="widget-button {{content.className}}"
@@ -146,9 +149,8 @@ export default class PollButtonsDropdownComponent extends Component {
                     @action={{fn this.dropDownClick content.action}}
                   />
                 </dropdown.item>
-                <dropdown.divider />
               {{/each}}
-            </DropdownMenu>
+            </DDropdownMenu>
           </:content>
         </DMenu>
       {{else if this.showDropdownAsButton}}

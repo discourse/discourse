@@ -43,6 +43,11 @@ module PageObjects
         self
       end
 
+      def open_composer_actions_new
+        find(".composer-actions-trigger").click
+        self
+      end
+
       def click_toolbar_button(button_class)
         find(".d-editor-button-bar button.#{button_class}").click
         self
@@ -67,7 +72,7 @@ module PageObjects
       end
 
       def has_input_title?(value)
-        expect(find("#{@composer_id} input#reply-title").value).to eq(value)
+        has_field?("reply-title", with: value)
       end
 
       def fill_content(content)
@@ -105,7 +110,13 @@ module PageObjects
       end
 
       def has_value?(value)
-        expect(composer_input.value).to eq(value)
+        within(@composer_id) do
+          if value.nil?
+            has_no_field?(class: "d-editor-input")
+          else
+            has_field?(class: "d-editor-input", with: value)
+          end
+        end
       end
 
       def has_popup_content?(content)
@@ -116,8 +127,17 @@ module PageObjects
         !actions.include?(action)
       end
 
+      def has_no_action_id?(action_id)
+        has_no_css?(".composer-actions-dropdown [data-action-id='#{action_id}']")
+      end
+
       def select_action(action)
         find(action(action)).click
+        self
+      end
+
+      def select_action_by_id(action_id)
+        find(".composer-actions-dropdown [data-action-id='#{action_id}']").click
         self
       end
 
@@ -154,11 +174,11 @@ module PageObjects
       end
 
       def locale
-        find("#{@composer_id} #{POST_LANGUAGE_SELECTOR}")
+        find("#{@composer_id} .d-editor-button-bar #{POST_LANGUAGE_SELECTOR}")
       end
 
       def set_locale(locale)
-        Components::DMenu.new(POST_LANGUAGE_SELECTOR).expand
+        click_toolbar_button("post-language-selector-trigger")
         within("#d-menu-portals", visible: false) { find("button", text: locale).click }
       end
 
@@ -193,6 +213,10 @@ module PageObjects
 
       def has_no_emoji_autocomplete?
         has_no_css?(AUTOCOMPLETE_MENU)
+      end
+
+      def has_emoji_autocomplete_selected?(index)
+        has_css?("#{AUTOCOMPLETE_MENU} ul li:nth-child(#{index}) a.selected")
       end
 
       EMOJI_SUGGESTION_SELECTOR = "#{AUTOCOMPLETE_MENU} .emoji-shortname"

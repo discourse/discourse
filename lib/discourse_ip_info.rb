@@ -6,6 +6,8 @@ require "resolv"
 class DiscourseIpInfo
   include Singleton
 
+  HOSTNAME_LOOKUP_TIMEOUT_SECONDS = 1
+
   def initialize
     open_db(DiscourseIpInfo.path)
   end
@@ -17,7 +19,7 @@ class DiscourseIpInfo
   end
 
   def self.path
-    @path ||= File.join(Rails.root, "vendor", "data")
+    @path ||= Rails.root.join("vendor/data").to_s
   end
 
   def self.mmdb_path(name)
@@ -82,15 +84,13 @@ class DiscourseIpInfo
   end
 
   def mmdb_load(filepath)
-    begin
-      MaxMindDB.new(filepath, MaxMindDB::LOW_MEMORY_FILE_READER)
-    rescue Errno::ENOENT => e
-      Rails.logger.warn("MaxMindDB (#{filepath}) could not be found: #{e}")
-      nil
-    rescue => e
-      Discourse.warn_exception(e, message: "MaxMindDB (#{filepath}) could not be loaded.")
-      nil
-    end
+    MaxMindDB.new(filepath, MaxMindDB::LOW_MEMORY_FILE_READER)
+  rescue Errno::ENOENT => e
+    Rails.logger.warn("MaxMindDB (#{filepath}) could not be found: #{e}")
+    nil
+  rescue => e
+    Discourse.warn_exception(e, message: "MaxMindDB (#{filepath}) could not be loaded.")
+    nil
   end
 
   def lookup(ip, locale: :en, resolve_hostname: false)
@@ -143,13 +143,14 @@ class DiscourseIpInfo
       end
     end
 
-    # this can block for quite a while
-    # only use it explicitly when needed
     if resolve_hostname
       begin
-        result = Resolv::DNS.new.getname(ip)
+        dns = Resolv::DNS.new
+        dns.timeouts = HOSTNAME_LOOKUP_TIMEOUT_SECONDS
+
+        result = dns.getname(ip)
         ret[:hostname] = result&.to_s
-      rescue Resolv::ResolvError
+      rescue Resolv::ResolvError, Timeout::Error
       end
     end
 

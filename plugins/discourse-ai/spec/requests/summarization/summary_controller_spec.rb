@@ -41,6 +41,55 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
       end
     end
 
+    describe "CSRF protection for state-changing summary requests" do
+      fab!(:user, :leader)
+
+      before do
+        sign_in(user)
+        Group.find(Group::AUTO_GROUPS[:trust_level_3]).add(user)
+      end
+
+      it "does not enqueue a streaming job via GET when no cached summary exists" do
+        expect { get "/discourse-ai/summarization/t/#{topic.id}.json?stream=true" }.not_to change {
+          Jobs::StreamTopicAiSummary.jobs.size
+        }
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["error_type"]).to eq("not_found")
+      end
+
+      it "does not generate a summary via GET when no cached summary exists" do
+        DiscourseAi::Completions::Llm.with_prepared_responses(["This is a summary"]) do
+          expect { get "/discourse-ai/summarization/t/#{topic.id}.json" }.not_to change {
+            AiSummary.where(target: topic).count
+          }
+        end
+
+        expect(response.status).to eq(404)
+        expect(response.parsed_body["error_type"]).to eq("not_found")
+      end
+
+      it "enqueues a streaming job via POST" do
+        post "/discourse-ai/summarization/t/#{topic.id}.json", params: { stream: true }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
+        expect(Jobs::StreamTopicAiSummary.jobs.size).to eq(1)
+      end
+
+      it "generates a summary via POST" do
+        summary_text = "This is a summary"
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([summary_text]) do
+          post "/discourse-ai/summarization/t/#{topic.id}.json"
+        end
+
+        expect(response.status).to eq(200)
+        expect(AiSummary.where(target: topic).count).to eq(1)
+        expect(response.parsed_body.dig("ai_topic_summary", "summarized_text")).to eq(summary_text)
+      end
+    end
+
     context "for anons" do
       it "returns a 404 if there is no cached summary" do
         get "/discourse-ai/summarization/t/#{topic.id}.json"
@@ -99,7 +148,7 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
         summary_text = "This is a summary"
 
         DiscourseAi::Completions::Llm.with_prepared_responses([summary_text]) do
-          get "/discourse-ai/summarization/t/#{topic.id}.json"
+          post "/discourse-ai/summarization/t/#{topic.id}.json"
 
           expect(response.status).to eq(200)
           response_summary = response.parsed_body["ai_topic_summary"]
@@ -115,7 +164,9 @@ RSpec.describe DiscourseAi::Summarization::SummaryController do
       end
 
       it "signals the summary is outdated" do
-        get "/discourse-ai/summarization/t/#{topic.id}.json"
+        DiscourseAi::Completions::Llm.with_prepared_responses(["This is a summary"]) do
+          post "/discourse-ai/summarization/t/#{topic.id}.json"
+        end
 
         Fabricate(:post, topic: topic, post_number: 3)
         topic.update!(highest_post_number: 3)

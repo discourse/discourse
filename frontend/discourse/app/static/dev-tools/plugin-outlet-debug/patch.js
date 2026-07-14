@@ -14,23 +14,25 @@ export function patchConnectors() {
   // so ArgsTable can display deprecation info without separate prop passing
   _setIncludeDeprecatedArgsProperty(true);
 
-  _setOutletDebugCallback((outletName, existing, { outletArgs } = {}) => {
-    existing ||= [];
+  _setOutletDebugCallback(
+    (outletName, existing, { outletArgs, aliases, deprecated } = {}) => {
+      existing ||= [];
 
-    if (!devToolsState.pluginOutletDebug) {
-      return existing;
+      if (!devToolsState.pluginOutletDebug) {
+        return existing;
+      }
+
+      if (SKIP_EXISTING_FOR_OUTLETS.includes(outletName)) {
+        existing = [];
+      }
+
+      const componentClass = curryComponent(
+        OutletInfoComponent,
+        { outletName, outletArgs, aliases, deprecated },
+        getOwnerWithFallback()
+      );
+
+      return [{ componentClass }, ...existing];
     }
-
-    if (SKIP_EXISTING_FOR_OUTLETS.includes(outletName)) {
-      existing = [];
-    }
-
-    const componentClass = curryComponent(
-      OutletInfoComponent,
-      { outletName, outletArgs },
-      getOwnerWithFallback()
-    );
-
-    return [{ componentClass }, ...existing];
-  });
+  );
 }

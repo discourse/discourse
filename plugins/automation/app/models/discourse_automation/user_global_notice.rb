@@ -13,12 +13,12 @@ end
 # Table name: discourse_automation_user_global_notices
 #
 #  id         :bigint           not null, primary key
-#  user_id    :integer          not null
-#  notice     :text             not null
 #  identifier :string           not null
 #  level      :string           default("info")
+#  notice     :text             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  user_id    :integer          not null
 #
 # Indexes
 #

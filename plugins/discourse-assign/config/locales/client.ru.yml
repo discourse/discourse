@@ -138,6 +138,10 @@ ru:
           unassigned: "Без назначенного ответственного"
         assigned:
           label: "Назначено:"
+    topics:
+      bulk:
+        assign_description: "Назначьте выбранные темы следующему пользователю:"
+        unassign_description: "Вы хотите отменить назначение выбранных тем?"
     discourse_automation:
       scriptables:
         random_assign:
@@ -190,3 +194,12 @@ ru:
       title: "Изменить назначения"
       topic: "Тема"
       post: "Публикация"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "Назначенные"
+      assign_topic:
+        operations:
+          assign: "Назначить"
+          unassign: "Снять ответственного"
+        topic_id: "ID темы"
+        assignee: "Назначенный"

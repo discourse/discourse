@@ -6,12 +6,26 @@
 
 fr:
   js:
+    user_api_key:
+      authorize: "Autoriser"
+      deny: "Annuler"
+      copied: "Copié !"
+      otp_description: 'Voulez-vous autoriser « %{application_name} » à accéder à ce site ?'
+      no_trust_level: "Nous sommes désolés, vous n'avez pas le niveau de confiance requis pour accéder à l'API utilisateur"
+      generic_error: "Nous sommes désolés, nous n'avons pu générer de clés pour l'API utilisateur. Cette fonctionnalité a peut-être été désactivée par l'administrateur"
+      device:
+        code: "Code"
+        continue: "Continuer"
     blocks:
       ghost:
         status: "Statut"
         in_location: "dans"
         hidden: "masqué"
         failed: "échec"
+    access_control:
+      manage:
+        access_permission_editor: "Éditeur"
+        access_permission_remove: "Supprimer"
     number:
       format:
         separator: ","
@@ -144,6 +158,15 @@ fr:
       placeholder: date
       from_placeholder: "date de début"
       to_placeholder: "date de fin"
+    date_range_picker:
+      apply: "Appliquer"
+      start_date: "Date de début"
+      presets:
+        last_7_days: "Ces 7 derniers jours"
+        last_30_days: "30 derniers jours"
+        last_3_months: "3 derniers mois"
+        last_6_months: "6 derniers mois"
+        last_year: "L'année dernière"
     languages:
       ar:
         name: Arabe
@@ -366,6 +389,9 @@ fr:
     age: "Âge"
     joined: "Inscrit(e)"
     admin_title: "Administration"
+    advanced_mode_toggle:
+      advanced_mode: "Mode avancé"
+      simple_mode: "Mode simple"
     show_more: "afficher plus"
     show_help: "Options"
     links: "Liens"
@@ -379,8 +405,6 @@ fr:
     tos: "Conditions générales d'utilisation"
     rules: "Règles"
     conduct: "Code de conduite"
-    mobile_view: "Version mobile"
-    desktop_view: "Version ordinateur"
     now: "à l'instant"
     read_more: "lire la suite"
     more: "Plus"
@@ -412,11 +436,10 @@ fr:
       pill: "Suggérés"
       pm_title: "Messages suggérés"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Sélectionné"
       start_posting:
         back: "Retour"
-      spread_the_word:
-        action: "Copier le lien"
-        copied_to_clipboard: "Lien copié dans le presse-papiers!"
     about:
       edit: "Modifier cette page"
       simple_title: "À propos"
@@ -587,6 +610,9 @@ fr:
         other_drafts:
           one: "+%{count} autre brouillon"
           other: "+%{count} autres brouillons"
+    embed_mode:
+      signin_flow:
+        cancel: "Annuler"
     topic_count_all:
       one: "Voir %{count} nouveau sujet"
       other: "Voir %{count} nouveaux sujets"
@@ -1079,7 +1105,8 @@ fr:
             from_alias_hint: "Alias à utiliser comme adresse d'expédition lors de l'envoi d'e-mails SMTP de groupe. Veuillez noter que cela peut ne pas être pris en charge par tous les prestataires de messagerie, nous vous invitons à consulter la documentation de votre prestataire."
         membership:
           title: Adhésion
-          access: Accès
+          join_method:
+            invite: "Sur invitation uniquement"
         categories:
           title: Catégories
           long_title: "Notifications par défaut de la catégorie"
@@ -1112,7 +1139,6 @@ fr:
         title: "Permissions"
         none: "Aucune catégorie n'est associée à ce groupe."
         description: "Les membres de ce groupe peuvent accéder à ces catégories"
-      public_admission: "Autoriser les utilisateurs à rejoindre le groupe librement (nécessite que le groupe soit visible)"
       public_exit: "Autoriser les utilisateurs à quitter librement le groupe"
       empty:
         posts: "Aucune publication n'a été envoyée par les membres de ce groupe"
@@ -1128,7 +1154,6 @@ fr:
       request: "Demander à rejoindre"
       message: "Message"
       confirm_leave: "Voulez-vous vraiment quitter ce groupe ?"
-      allow_membership_requests: "Autoriser les utilisateurs à envoyer des demandes d'adhésion aux propriétaires du groupe (nécessite que le groupe soit visible publiquement)"
       membership_request_template: "Modèle personnalisé à afficher lors de l'envoi d'une demande d'adhésion par un utilisateur"
       membership_request:
         submit: "Soumettre la demande"
@@ -1365,7 +1390,6 @@ fr:
         normal_option: "Normal"
         normal_option_title: "Vous recevrez une notification si cet utilisateur vous répond, vous cite ou vous mentionne."
       notification_schedule:
-        title: "Planification des notifications"
         label: "Activer la planification personnalisée des notifications"
         tip: "En dehors de ces heures, vos notifications seront suspendues."
         midnight: "Minuit"
@@ -1409,13 +1433,8 @@ fr:
       notifications: "Notifications"
       statistics: "Statistiques"
       desktop_notifications:
-        label: "Notifications instantanées"
         not_supported: "Nous sommes désolés, les notifications ne sont pas supportées sur ce navigateur."
-        perm_default: "Activer les notifications"
-        perm_denied_btn: "Permission refusée"
         perm_denied_expl: "Vous n'avez pas autorisé les notifications. Autorisez-les à partir des paramètres de votre navigateur."
-        disable: "Désactiver les notifications"
-        enable: "Activer les notifications"
         each_browser_note: "Remarque : vous devez modifier ce paramètre sur chaque navigateur utilisé. Toutes les notifications seront désactivées si vous suspendez les notifications à partir du menu utilisateur, quel que soit ce paramètre."
         consent_prompt: "Souhaitez-vous recevoir des notifications en temps réel en cas de réponse à vos messages ?"
       dismiss: "Vu"
@@ -1547,6 +1566,9 @@ fr:
       undo_revoke_access: "Annuler la révocation d'accès"
       api_approved: "Approuvé :"
       api_last_used_at: "Dernière utilisation :"
+      api_expires_at: "Expire le:"
+      api_expired_at: "Expiré:"
+      api_expires_never: "jamais"
       theme: "Thème"
       save_to_change_theme: 'Le thème sera mis à jour après un clic sur « %{save_text} »'
       home: "Page d'accueil par défaut"
@@ -2407,7 +2429,6 @@ fr:
     created: "Créé"
     created_lowercase: "créé"
     trust_level: "Niveau de confiance"
-    search_hint: "nom d'utilisateur, adresse e-mail ou adresse IP"
     create_account:
       header_title: "Bienvenue !"
       disclaimer: "En vous inscrivant, vous acceptez la <a href='%{privacy_link}' target='blank'>politique de confidentialité</a> et les <a href='%{tos_link}' target='blank'>conditions générales d'utilisation</a>."
@@ -2451,6 +2472,13 @@ fr:
       confirm_title: Continuer vers %{site_name}
       logging_in_as: Connexion en tant que %{email}
       confirm_button: Complétez la connexion
+    code_login:
+      email_label: "E-mail"
+      continue_button: "Continuer"
+      verify_button: "Continuer"
+      signup_title: "Créer votre compte"
+      account_ready_continue: "Continuer"
+      username_label: "Nom d'utilisateur"
     login:
       header_title: "Ravi de vous revoir"
       title: "Se connecter"
@@ -2760,7 +2788,7 @@ fr:
       users_placeholder: "Ajouter des utilisateurs ou des groupes"
       title_placeholder: "Pouvez-vous résumer le sujet en une courte phrase ?"
       title_or_link_placeholder: "Saisissez un titre ou copiez un lien ici"
-      edit_reason_placeholder: "pourquoi modifiez-vous le message ?"
+      edit_reason_placeholder: "Pourquoi modifiez-vous le tableau ?"
       topic_featured_link_placeholder: "Saisissez le lien à afficher avec le titre."
       remove_featured_link: "Retirer le lien du sujet."
       reply_placeholder: "Saisissez votre message ici. Pour le mettre en forme, utilisez du Markdown, du BBCode ou du HTML. Glissez-déposez ou collez des images."
@@ -2812,8 +2840,11 @@ fr:
       list_item: "Élément"
       toggle_direction: "Basculer la section"
       wrap_modal:
+        attribute_key: "Clé"
+        attribute_value: "Valeur"
         apply: "Appliquer"
       help: "Aide à l'édition Markdown"
+      edit_reason: "Pourquoi modifiez-vous le tableau ?"
       exit_fullscreen_prompt: "Appuyez sur <kbd>ÉCHAP</kbd> pour quitter le mode plein écran"
       modal_ok: "OK"
       cant_send_pm: "Nous sommes désolés, vous ne pouvez pas envoyer de message à l'utilisateur %{username}."
@@ -2843,24 +2874,24 @@ fr:
           desc: Créer un nouveau message avec les mêmes destinataires
         reply_to_topic:
           label: Répondre au sujet
+          trigger: Sujet
           desc: Répondre au sujet, pas à un message spécifique
+        reply_to_message:
+          trigger: Message
         toggle_whisper:
           label: Activer/désactiver le murmure
-          desc: Les murmures ne sont visibles que par les responsables
         create_topic:
-          label: "Nouveau sujet"
           desc: Créer un nouveau sujet
         create_personal_message:
-          label: "Nouveau message direct"
           desc: "Créer un nouveau message direct"
         shared_draft:
           label: "Brouillon partagé"
           desc: "Créer un brouillon de sujet qui ne sera visible que par les utilisateurs autorisés"
         toggle_topic_bump:
-          label: "Activer/désactiver l'actualisation du sujet"
           desc: "Répondre sans changer la date de dernière réponse"
         toggle_unlisted:
           label: Activer/désactiver l'état non répertorié
+        unknown_user: "Utilisateur"
       reload: "Recharger"
       ignore: "Ignorer"
       image_alt_text:
@@ -2880,6 +2911,9 @@ fr:
         copy: "Copier le lien"
         remove: "Supprimer le lien"
         visit: "Ouvrir le lien dans un onglet externe"
+        link_copied: "Lien copié !"
+      onebox_toolbar:
+        copy: "Copier le lien"
         link_copied: "Lien copié !"
     notifications:
       tooltip:
@@ -3143,6 +3177,7 @@ fr:
           placeholder: maximum
           aria_label: filtrer par nombre de vues maximal
     hamburger_menu: "Menu de navigation"
+    header_panel: "En-tête"
     new_item: "nouveau"
     go_back: "retour"
     not_logged_in_user: "page utilisateur avec un résumé de l'activité et les préférences"
@@ -3220,6 +3255,17 @@ fr:
           other: "Marquer comme lus (%{count})…"
         dismiss_tooltip: "Marquer les nouveaux messages comme vus, ou arrêter de suivre des sujets"
         also_dismiss_topics: "Arrêter de suivre ces sujets pour qu'ils ne soient plus jamais marqués comme non lus"
+        dismiss_new_topics: "Ignorer les nouveaux sujets"
+        dismiss_new_replies: "Ignorer les nouvelles réponses"
+        dismiss_new_topics_with_selected:
+          one: "Marquer comme lus (%{count})"
+          other: "Marquer comme lus (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Marquer comme lus (%{count})"
+          other: "Marquer comme lus (%{count})"
+        dismiss_all_with_selected:
+          one: "Marquer comme lus (%{count})"
+          other: "Marquer comme lus (%{count})"
         dismiss_new: "Marquer comme vu(s)"
         dismiss_new_modal:
           title: "Ignorer les nouveaux"
@@ -3242,19 +3288,9 @@ fr:
         archive_messages: "Déplacer vers les archives"
         change_notification_level: "Modifier le niveau de notification"
         choose_new_category: "Choisissez la nouvelle catégorie pour ces sujets :"
-        selected_sole_category:
-          one: "Vous avez sélectionné <b>%{count}</b> sujet de la catégorie :"
-          other: "Vous avez sélectionné <b>%{count}</b> sujets de la catégorie :"
         selected_count:
           one: "Sélection : %{count}"
           other: "Sélection : %{count}"
-        append_tags: "Ajouter des étiquettes"
-        choose_new_tags: "Choisissez de nouvelles étiquettes pour ces sujets :"
-        choose_append_tags: "Ajouter des étiquettes"
-        changed_tags: "Les étiquettes de ces sujets ont été modifiées."
-        confirm_remove_tags:
-          one: "Toutes les étiquettes seront supprimées de ce sujet. Voulez-vous continuer ?"
-          other: "Toutes les étiquettes seront supprimées des <b>%{count}</b> sujets. Voulez-vous continuer ?"
         progress:
           one: "Progression : <strong>%{count}</strong> sujet"
           other: "Progression : <strong>%{count}</strong> sujets"
@@ -3278,7 +3314,7 @@ fr:
         education:
           topic_tracking_preferences: 'Vous pouvez consulter et modifier vos paramètres de suivi des nouveaux sujets dans <a href="%{basePath}/my/preferences/tracking">vos préférences</a>.'
           unread: "Rien n'a été oublié... impressionnant !"
-          new_new: "Rien de nouveau pour le moment... revenez bientôt !"
+          unified_new: "Rien de nouveau pour le moment... revenez bientôt !"
           new: "Rien de nouveau pour le moment... revenez bientôt !"
     topic_bulk_actions:
       dismiss:
@@ -3296,20 +3332,42 @@ fr:
         name: "Retirer de la liste"
       relist_topics:
         name: "Remettre dans la liste"
-      remove_tags:
-        name: "Supprimer des étiquettes"
-      replace_tags:
-        name: "Remplacer des étiquettes"
+      manage_tags:
+        add:
+          title: "Ajouter des étiquettes"
       delete_topics:
         name: "Supprimer"
       update_category:
         name: "Mettre à jour la catégorie"
+      convert_to_public_topic:
+        name: "Rendre le sujet public…"
+      convert_to_private_message:
+        name: "Transformer en message direct"
       reset_bump_dates:
         name: "Réinitialiser la date d'actualisation"
       defer:
         name: "Marquer comme non lu"
       update_notifications:
         name: "Mettre à jour les notifications"
+    nested_replies:
+      sort:
+        label: "Trier par"
+        top: "Top"
+        new: "Nouveau"
+      load_more_children:
+        one: "%{count} réponse supplémentaire"
+        other: "%{count} réponses supplémentaires"
+      collapsed_replies:
+        one: "%{count} réponse"
+        other: "%{count} réponses"
+      collapse: "Réduire"
+      no_replies: "Pas encore de réponse."
+      deleted_post_placeholder: "[supprimés]"
+      ignored_post_placeholder: "[ignoré]"
+      pinned_reply: "Épinglé"
+    share_target:
+      new_topic: "Nouveau sujet"
+      new_message: "Nouveau message direct"
     topic:
       filter_to:
         one: "%{count} message dans le sujet"
@@ -3362,39 +3420,6 @@ fr:
       read_more: "Vous voulez en savoir plus ? <a href='%{categoryLink}'>Parcourez toutes les catégories</a> ou <a href='%{latestLink}'>affichez les derniers sujets</a>."
       unread_indicator: "Aucun membre n'a encore lu le dernier message de ce sujet."
       participant_groups: "Groupes de participants"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Il y a <a href="{basePath}/unread"># message non lu</a>}
-              other {Il y a <a href="{basePath}/unread"># messages non lus</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { et il reste <a href="{basePath}/new"># nouveau</a> sujet,}
-              other { et il reste <a href="{basePath}/new"># nouveaux</a> sujets,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Il reste <a href="{basePath}/unread"># sujet</a> non lu,}
-              other {Il reste <a href="{basePath}/unread"># sujets</a> non lus,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Il reste <a href="{basePath}/new"># nouveau</a> sujet,}
-              other {Il reste <a href="{basePath}/new"># nouveaux</a> sujets,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { ou parcourez d'autres sujets dans {categoryLink}}
-          false { ou <a href="{basePath}/latest">consultez les derniers sujets</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} réponse. Passer à la première publication"
         other: "%{count} réponses. Passer à la première publication"
@@ -3821,6 +3846,10 @@ fr:
       sr_post_like_count_button:
         one: "%{count} personne a aimé cette publication."
         other: "%{count} personnes ont aimé cette publication."
+      likes_popup:
+        title:
+          one: "%{count} « J'aime »"
+          other: "%{count} « J'aime »"
       sr_post_read_count_button:
         one: "%{count} personne a lu cette publication."
         other: "%{count} personnes ont lu cette publication."
@@ -3848,7 +3877,7 @@ fr:
           confirm_delete: "Voulez-vous vraiment supprimer les traductions de « %{languageCode} » ?"
         success: "Les traductions ont été mises à jour avec succès"
         post_language_selector:
-          none: "Aucune"
+          none: "Non défini"
         edit_warning:
           action_original: "Modifier la publication originale"
           action_translation: "Modifier cette traduction"
@@ -3871,6 +3900,7 @@ fr:
         attachment_download_requires_login: "Nous sommes désolés, vous devez être connecté(e) pour télécharger une pièce jointe."
       cancel_composer:
         discard: "Abandonner"
+        discard_edit: "Annuler les modifications"
       via_email: "ce message est arrivé par e-mail"
       via_auto_generated_email: "ce message est arrivé via un e-mail généré automatiquement"
       whisper: "ce message est un murmure privé pour les modérateurs"
@@ -3914,7 +3944,7 @@ fr:
         admin: "actions d'administration sur le message"
         admin_action: "Administrateur"
         permanently_delete: "Supprimer définitivement"
-        permanently_delete_confirmation: "Voulez-vous vraiment supprimer définitivement ce message ? Vous ne pourrez plus le récupérer."
+        permanently_delete_confirm_phrase: "supprimer définitivement"
         wiki: "Basculer en mode wiki"
         unwiki: "Retirer le mode wiki"
         convert_to_moderator: "Ajouter la couleur modérateur"
@@ -4020,7 +4050,6 @@ fr:
         name_placeholder: "À quoi correspond ce signet ?"
         name_input_label: "Nom du signet"
         set_reminder: "Me le rappeler"
-        options: "Options"
         actions:
           delete_bookmark:
             name: "Supprimer le signet"
@@ -4059,6 +4088,7 @@ fr:
       back: "Retour à la catégorie"
       general: "Général"
       settings: "Paramètres"
+      moderation: "Modération"
       advanced: "Avancé"
       topic_template: "Modèle"
       tags: "Étiquettes"
@@ -4090,7 +4120,6 @@ fr:
       type_settings_schema:
         site_settings: "Paramètres du site"
       unsaved_changes: "Vous avez des modifications non enregistrées"
-      slug_placeholder: "(Facultatif) mots séparés par des tirets pour l'URL"
       creation_error: Une erreur s'est produite lors de la création de la catégorie.
       save_error: Une erreur s'est produite lors de l'enregistrement de la catégorie.
       validations:
@@ -4195,7 +4224,7 @@ fr:
           low: "Faible"
           high: "Élevée"
       sort_options:
-        default: "par défaut"
+        default: "Par défaut"
         likes: "« J'aime »"
         views: "Vues"
         posts: "Messages"
@@ -4430,7 +4459,7 @@ fr:
         new_replies_tooltip: "Nouvelles réponses"
         replies: "Réponses"
         replies_with_count: "Réponses (%{count})"
-      new_new:
+      unified_new:
         help: "sujets créés ou auxquels on a répondu au cours des derniers jours"
       posted:
         title: "Mes publications"
@@ -4495,107 +4524,61 @@ fr:
       title: "Raccourcis clavier"
       short_title: "Raccourcis"
       search_ctrl_f_tip: "Pour effectuer une recherche dans l'ensemble de ce forum, appuyez sur <kbd>/</kbd>"
+      description_header: "Description"
+      key_header: "Clé"
+      search_aliases:
+        shift: "maj"
       jump_to:
         title: "Aller à"
-        home: "%{shortcut} Accueil"
-        latest: "%{shortcut} Récents"
-        new: "%{shortcut} Nouveaux"
-        unread: "%{shortcut} Non lus"
-        categories: "%{shortcut} Catégories"
-        top: "%{shortcut} Top"
-        bookmarks: "%{shortcut} Signets"
-        profile: "%{shortcut} Profil"
-        messages: "%{shortcut} Messages directs"
-        drafts: "%{shortcut} Brouillons"
-        next: "%{shortcut} Sujet suivant"
-        previous: "%{shortcut} Sujet précédent"
+        home: "Accueil"
+        latest: "Récents"
+        new: "Nouveau"
+        unread: "Non lus"
+        unseen: "Non lus"
+        categories: "Catégories"
+        top: "Top"
+        bookmarks: "Signets"
+        profile: "Profil"
+        messages: "Messages directs"
+        drafts: "Brouillons"
       navigation:
         title: "Navigation"
-        jump: "%{shortcut} Accéder au message numéro"
-        back: "%{shortcut} Retour"
-        up_down: "%{shortcut} Déplacer la sélection &uarr; &darr;"
-        open: "%{shortcut} Ouvrir le sujet sélectionné"
-        next_prev: "%{shortcut} Section suivante/précédente"
-        go_to_unread_post: "%{shortcut} Accéder au premier message non lu"
+        back: "Retour"
+        up_down: "Déplacer la sélection &uarr; &darr;"
       application:
         title: "Application"
-        notifications: "%{shortcut} Ouvrir les notifications"
-        hamburger_menu: "%{shortcut} Ouvrir le menu de navigation"
-        user_profile_menu: "%{shortcut} Ouvrir le menu utilisateur"
-        show_incoming_updated_topics: "%{shortcut} Afficher les sujets mis à jour"
-        search: "%{shortcut} Rechercher"
-        filter_sidebar: "%{shortcut} Barre latérale des filtres"
-        help: "%{shortcut} Ouvrir l'aide du clavier"
-        toggle_bulk_select: "%{shortcut} Activer/désactiver la sélection groupée"
-        dismiss: "%{shortcut} Rejeter les sujets sélectionnés"
-        x: "%{shortcut} Basculer la sélection (en mode de sélection groupée)"
-        log_out: "%{shortcut} Se déconnecter"
+        search: "Recherche"
+        log_out: "Déconnexion"
       composing:
         title: "Édition"
-        return: "%{shortcut} Revenir à l'éditeur"
-        minimize: "%{shortcut} Réduire l'éditeur"
-        create_or_reply: "%{shortcut} Créer un sujet ou publier une réponse"
-        fullscreen: "%{shortcut} Éditeur en plein écran"
-        insert_current_time: "%{shortcut} Insérer l'heure actuelle"
-        bold: "%{shortcut} Gras"
-        italic: "%{shortcut} Italique"
-        link: "%{shortcut} Insérer un lien"
-        preformatted: "%{shortcut} Texte préformaté"
-        paragraph: "%{shortcut} Paragraphe"
-        heading_1: "%{shortcut} Titre 1"
-        heading_2: "%{shortcut} Titre 2"
-        heading_3: "%{shortcut} Titre 3"
-        heading_4: "%{shortcut} Titre 4"
-        toggle_direction: "%{shortcut} Inverser la direction du texte"
-        ordered_list: "%{shortcut} Liste ordonnée"
-        unordered_list: "%{shortcut} Liste non ordonnée"
-        blockquote: "%{shortcut} Citation en bloc"
+        link: "Insérer un lien"
+        preformatted: "Texte préformaté"
+        paragraph: "Paragraphe"
+        blockquote: "Citation"
       bookmarks:
         title: "Gestion des signets"
-        enter: "%{shortcut} Enregistrer et fermer"
-        later_today: "%{shortcut} Plus tard dans la journée"
-        later_this_week: "%{shortcut} Plus tard cette semaine"
-        tomorrow: "%{shortcut} Demain"
-        next_week: "%{shortcut} La semaine prochaine"
-        next_month: "%{shortcut} Le mois prochain"
-        next_business_week: "%{shortcut} Au début de la semaine prochaine"
-        next_business_day: "%{shortcut} Prochain jour ouvré"
-        custom: "%{shortcut} Date et heure personnalisées"
-        none: "%{shortcut} Pas de rappel"
-        delete: "%{shortcut} Supprimer le signet"
+        later_today: "Plus tard dans la journée"
+        later_this_week: "Plus tard dans la semaine"
+        tomorrow: "Demain"
+        next_week: "La semaine prochaine"
+        next_month: "Le mois prochain"
+        next_business_day: "Au prochain jour ouvré"
+        custom: "Date et heure personnalisées"
+        none: "Pas de rappel"
+        delete: "Supprimer le signet"
       actions:
         title: "Actions"
-        bookmark_topic: "%{shortcut} Modifier le signet du sujet"
-        pin_unpin_topic: "%{shortcut} Épingler/désépingler le sujet"
-        share_topic: "%{shortcut} Partager le sujet"
-        share_post: "%{shortcut} Partager le message"
-        reply_as_new_topic: "%{shortcut} Répondre via un sujet lié"
-        reply_topic: "%{shortcut} Répondre au sujet"
-        reply_post: "%{shortcut} Répondre au message"
-        quote_post: "%{shortcut} Citer le message"
-        like: "%{shortcut} Aimer le message"
-        flag: "%{shortcut} Signaler le message"
-        bookmark: "%{shortcut} Mettre un signet au message"
-        edit: "%{shortcut} Modifier le message"
-        delete: "%{shortcut} Supprimer le message"
-        mark_muted: "%{shortcut} Mettre le sujet en sourdine"
-        mark_regular: "%{shortcut} Sujet normal (par défaut)"
-        mark_tracking: "%{shortcut} Suivre le sujet"
-        mark_watching: "%{shortcut} Surveiller le sujet"
-        print: "%{shortcut} Imprimer le sujet"
-        defer: "%{shortcut} Marquer le sujet comme non lu"
-        topic_admin_actions: "%{shortcut} Ouvrir les actions d'administration du sujet"
-        archive_private_message: "%{shortcut} Activer/désactiver l'archivage des messages directs"
+        reply_as_new_topic: "Répondre via un sujet lié"
+        reply_topic: "Répondre au sujet"
+        flag: "Signaler cette publication"
+        delete: "Supprimer la publication"
+        mark_tracking: "Suivre le sujet"
+        mark_watching: "Surveiller le sujet"
+        defer: "Marquer le sujet comme non lu"
       search_menu:
         title: "Menu de recherche"
-        prev_next: "%{shortcut} Déplacer la sélection vers le haut et bas"
-        insert_url: "%{shortcut} Insérer la sélection dans l'éditeur ouvert"
-        full_page_search: "%{shortcut} Lance la recherche pleine page"
       admin:
         title: "Administrateur"
-        search_prev_next: "%{shortcut} Déplacer la sélection vers le haut et bas"
-        search_open: "%{shortcut} Ouvrir la recherche pour l'interface d'administration"
-        search_full_page: "%{shortcut} Ouvrir la recherche d'administration en pleine page"
     badges:
       earned_n_times:
         one: "A reçu ce badge %{count} fois"
@@ -4663,14 +4646,7 @@ fr:
       staff_info: "Pour y définir des restrictions d'utilisation, placez cette étiquette dans un <a href=%{basePath}/tag_groups>groupe d'étiquettes</a>."
       category_restricted: "Cette étiquette est limitée à des catégories auxquelles vous n'avez pas la permission d'accéder."
       synonyms: "Synonymes"
-      synonyms_description: "Quand les étiquettes suivantes sont utilisées, elles seront remplacées par <b>%{base_tag_name}</b>."
       save: "Enregistrer le nom et la description de l'étiquette"
-      tag_groups_info:
-        one: 'Cette étiquette appartient au groupe « %{tag_groups} ».'
-        other: "Cette étiquette appartient aux groupes : %{tag_groups}."
-      category_restrictions:
-        one: "Elle ne peut être utilisée que dans cette catégorie :"
-        other: "Elle ne peut être utilisée que dans ces catégories :"
       edit_synonyms: "Modifier les synonymes"
       add_synonyms_label: "Ajoutez des synonymes :"
       add_synonyms: "Ajouter"
@@ -4832,8 +4808,6 @@ fr:
       no_read_topics_body: "Une fois que vous aurez commencé à lire les discussions, vous verrez une liste ici. Pour commencer à lire, recherchez les sujets qui vous intéressent dans <a href='%{topUrl}'>Top</a> ou <a href='%{categoriesUrl}'>Catégories</a> ou recherchez par mot-clé %{searchIcon}"
     no_group_messages_title: "Aucun message de groupe trouvé"
     topic_entrance:
-      sr_jump_top_button: "Accéder à la première publication - %{date}"
-      sr_jump_bottom_button: "Accéder à la dernière publication - %{date}"
       jump_top_button_title: "Accéder à la première publication"
       jump_bottom_button_title: "Accéder à la dernière publication"
     fullscreen_table:
@@ -5076,7 +5050,7 @@ fr:
           title: "Modifier le tableau"
           cancel: "annuler"
           create: "Enregistrer"
-          reason: "pourquoi modifiez-vous le tableau ?"
+          reason: "Pourquoi modifiez-vous le tableau ?"
           trigger_reason: "Ajouter la raison de la modification"
         default_edit_reason: "Modifier avec l'éditeur de tableaux"
       default_header:
@@ -5206,6 +5180,7 @@ fr:
         title: "Liste des rapports disponibles"
         sidebar_title: "Rapports"
         back: "Retour à tous les rapports"
+        all_groups: "Tous les groupes"
         group_traffic: "Trafic"
         group_members: "Membres"
         group_other: "Autre"
@@ -5239,6 +5214,9 @@ fr:
           admins: "Administrateurs "
           moderators: "Modérateurs"
           staff: "Responsable"
+        impact_types:
+          feature_type: "Fonctionnalité"
+          other_type: "Autre"
         filter:
           all: "Tout"
           enabled: "Activé"
@@ -5255,7 +5233,6 @@ fr:
           header_description: "Fournissez ici des informations sur ce site et votre équipe afin que les visiteurs puissent savoir en quoi consiste votre communauté, qui la soutient et comment vous contacter en cas de problème. Ce contenu est affiché sur la page <a href='%{basePath}/about'>À propos</a> de votre site."
         developer:
           title: "Développeur"
-          header_description: "Paramètres du développeur pour contrôler les limites de débit, les multiplicateurs et les calculs, le mode sans échec et d'autres fonctionnalités avancées"
         experimental:
           title: "Expérimental"
           header_description: "Activez ou désactivez les fonctionnalités expérimentales de votre site. La plupart d'entre elles peuvent être contrôlées par groupe."
@@ -5350,6 +5327,9 @@ fr:
             opengraph_image:
               title: "Image OpenGraph"
               description: "Image OpenGraph par défaut, utilisée lorsque la page ne contient aucune autre image appropriée. Si ce champ est laissé vide, l'icône large_icon sera utilisée."
+            og_image_preview:
+              generate: "Générer"
+              topic_id_label: "ID du sujet"
             x_summary_large_image:
               title: "Résumé X « summary large image »"
               description: "Carte X « summary large image ». Si ce champ est laissé vide, les métadonnées de carte normales sont générées à partir d'OpenGraph_image, à condition qu'il ne s'agisse pas non plus d'un fichier .svg."
@@ -5450,6 +5430,13 @@ fr:
             logs:
               title: "Journaux"
               header_description: "Affichez et gérez les journaux pour les sauvegardes, les restaurations et les téléversements"
+        problem_checks:
+          priority: "Priorité"
+          status: "Statut"
+          last_run_at: "Dernière exécution"
+          ignore: "Ignorer"
+          more_options:
+            title: "Plus d'options"
         reports:
           title: "Rapports"
           header_description: "Les rapports sont un outil puissant qui vous permet de comprendre ce qui se passe sur votre site. Ils peuvent vous aider à identifier les tendances, à repérer les problèmes et à prendre des décisions sur la base de données."
@@ -5621,9 +5608,9 @@ fr:
         stale_data: "Une vérification de mises à jour n'a pas été effectuée récemment. Vérifiez que sidekiq est en cours d'exécution."
         version_check_pending: "Il semble que vous avez effectué une mise à jour récemment. Fantastique !"
         installed_version: "Installée"
-        latest_version: "Dernière"
+        github: "GitHub"
         problems_found: "Quelques conseils d'après vos paramètres actuels"
-        dismiss_notice: "Rejeter"
+        dismiss_notice: "Ignorer"
         new_features:
           title: "Quoi de neuf ?"
           subtitle: "Nous publions de nouvelles fonctionnalités et améliorations en permanence. Cette page présente les grandes lignes, mais vous pouvez cliquer sur « En savoir plus » pour accéder à des notes de mise à jour détaillées."
@@ -5667,6 +5654,49 @@ fr:
         too_many_requests: Vous avez effectué cette action trop de fois. Merci d'attendre avant de réessayer.
         not_found_error: Nous sommes désolés, ce rapport n'existe pas
         custom_date_range: Plage de dates personnalisée
+        sections:
+          reports:
+            title: "Rapports"
+          traffic:
+            title: "Trafic du site"
+          engagement:
+            activity_by_category:
+              category: "Catégorie"
+              topics: "Sujets"
+              posts: "Publications"
+              share: "Partager"
+            whos_posting:
+              all_categories: "Toutes les catégories"
+              staff: "Responsable"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nouveau"
+                "1": "Actif"
+                "2": "Membre"
+                "3": "Normal"
+                "4": "Meneur"
+          search:
+            title: "Recherche"
+            table:
+              searches: "Recherches"
+              status: "Statut"
+        reports_section:
+          no_data: "Aucune donnée à afficher"
+          modal:
+            enabled_heading: "Activé"
+            all_heading: "Tous les rapports"
+            apply: "Appliquer"
+        configure:
+          button: "Configurer"
+        site_traffic:
+          series:
+            anonymous: "Anonymes"
+            crawlers: "Robots d'indexation"
+        period:
+          last_7_days: "Ces 7 derniers jours"
+          last_30_days: "30 derniers jours"
+          last_3_months: "3 derniers mois"
+          custom: "Personnalisé"
         reports:
           trend_title: "Variation de %{percent}. La valeur actuelle est de %{current}. Elle était de %{prev} pour la période précédente."
           percent_change_tooltip: "Changement de %{percent}."
@@ -5743,7 +5773,6 @@ fr:
             incoming_email: "Adresse e-mail entrante personnalisée"
             incoming_email_placeholder: "saisissez une adresse e-mail"
             incoming_email_tooltip: "Vous pouvez séparer plusieurs adresses e-mail avec le caractère « | »."
-            visibility: Visibilité
             visibility_levels:
               title: "Qui peut voir ce groupe ?"
               public: "Tout le monde"
@@ -6168,9 +6197,10 @@ fr:
           your_organization: "Votre organisation"
           your_organization_description: "Nous utiliserons ces informations dans les Conditions d'utilisation et l'Avis de confidentialité pour indiquer qui exploite le site et sous quelle juridiction."
           company_name: "Nom"
-          company_name_placeholder: "Organisation Acme"
           company_name_warning: |
             Si ce champ est laissé vide, aucune condition d'utilisation ni aucun avis de confidentialité ne seront fournis.
+          company_url: "Site Web"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Droit applicable"
           governing_law_placeholder: "Province, État ou pays"
           governing_law_help: |
@@ -6187,6 +6217,8 @@ fr:
             initial_members: "Liste étendue des membres"
             initial_members_description: "Nombre de membres du groupe à afficher avant d'ajouter un bouton Afficher plus."
             show_description: "Inclure une description"
+          locale_selector:
+            title: "Langue "
           optional: "(facultatif)"
           update: "Mettre à jour"
           toasts:
@@ -6898,6 +6930,7 @@ fr:
         topic_id: "Identifiant du sujet"
         post_id: "Identifiant du message"
         category_id: "Identifiant de la catégorie"
+        reviewable_id: "À examiner"
         delete: "Supprimer"
         edit: "Modifier"
         save: "Enregistrer"
@@ -7238,11 +7271,12 @@ fr:
         silence_reason: "Raison de la mise en sourdine"
         bulk_actions:
           title: "Actions groupées"
-          admin_cant_be_deleted: "Cet utilisateur ne peut pas être supprimé, car il est administrateur"
-          too_many_or_old_posts: "Cet utilisateur ne peut pas être supprimé, car il a trop de publications ou une publication très ancienne"
-          too_many_selected_users:
-            one: "Vous avez atteint la limite de %{count} utilisateur pour la suppression groupée"
-            other: "Vous avez atteint la limite de %{count} utilisateurs pour la suppression groupée"
+          select_all: "Tout sélectionner"
+          clear_all: "Tout effacer"
+          suspend:
+            confirmation_modal:
+              close: "Fermer"
+              confirm: "Suspendre"
           delete:
             label: "Supprimer les utilisateurs…"
             confirmation_modal:
@@ -7270,6 +7304,9 @@ fr:
           suspended: "Suspendus"
           silenced: "En sourdine"
           staged: "Distants"
+        activation_filter:
+          all: "Tous les utilisateurs"
+          activated: "Activé"
         approved: "Approuvé ?"
         titles:
           active: "Utilisateurs actifs"
@@ -7461,7 +7498,6 @@ fr:
           other: "Impossible de supprimer tous les messages parce que l'utilisateur a plus de %{count} messages. (delete_all_posts_max)"
         delete_confirm_title: "Voulez-vous vraiment supprimer cet utilisateur ? Cette action est définitive !"
         delete_confirm: "Il est généralement préférable d'anonymiser les utilisateurs plutôt que de les supprimer, afin d'éviter de supprimer du contenu dans les discussions existantes."
-        delete_and_block: "Supprimer l'utilisateur et bloquer son adresse e-mail et son adresse IP"
         delete_dont_block: "Supprimer l'utilisateur"
         deleting_user: "Suppression de l'utilisateur…"
         deleted: "L'utilisateur a été supprimé."

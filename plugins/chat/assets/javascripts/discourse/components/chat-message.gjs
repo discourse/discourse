@@ -9,9 +9,7 @@ import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { cancel, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
 import EmojiPicker from "discourse/components/emoji-picker";
-import concatClass from "discourse/helpers/concat-class";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
@@ -20,6 +18,8 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 import { updateUserStatusOnMention } from "discourse/lib/update-user-status-on-mention";
 import isZoomed from "discourse/lib/zoom-check";
 import { eq, lt, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import ChatMessageAvatar from "discourse/plugins/chat/discourse/components/chat/message/avatar";
 import ChatMessageError from "discourse/plugins/chat/discourse/components/chat/message/error";
@@ -261,10 +261,14 @@ export default class ChatMessage extends Component {
   get show() {
     return (
       !this.args.message?.deletedAt ||
-      this.currentUser.id === this.args.message?.user?.id ||
-      this.currentUser.staff ||
+      this.currentUser?.id === this.args.message?.user?.id ||
+      this.currentUser?.staff ||
       this.args.message?.channel?.canModerate
     );
+  }
+
+  get isByCurrentUser() {
+    return this.currentUser?.id === this.args.message?.user?.id;
   }
 
   @action
@@ -521,8 +525,8 @@ export default class ChatMessage extends Component {
   get shouldRenderStopMessageStreamingButton() {
     return (
       this.args.message.streaming &&
-      (this.currentUser.admin ||
-        this.args.message.inReplyTo?.user?.id === this.currentUser.id)
+      (this.currentUser?.admin ||
+        this.args.message.inReplyTo?.user?.id === this.currentUser?.id)
     );
   }
 
@@ -549,7 +553,7 @@ export default class ChatMessage extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     {{#if this.shouldRender}}
       {{#if this.includeSeparator}}
         <ChatMessageSeparator
@@ -559,14 +563,13 @@ export default class ChatMessage extends Component {
       {{/if}}
 
       <div
-        class={{concatClass
+        class={{dConcatClass
           "chat-message-container"
           (if this.pane.selectingMessages "-selectable")
           (if @message.highlighted "-highlighted")
           (if @message.streaming "-streaming")
           (if (lt @message.user.id 0) "is-bot")
-          (if (eq @message.user.id this.currentUser.id) "is-by-current-user")
-          (if (eq @message.id this.currentUser.id) "is-by-current-user")
+          (if this.isByCurrentUser "is-by-current-user")
           (if
             (eq
               @message.id

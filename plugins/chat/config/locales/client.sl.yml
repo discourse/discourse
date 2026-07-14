@@ -119,6 +119,7 @@ sl:
           few: "%{count}/%{max} člani"
           other: "%{count}/%{max} članov"
       create_channel:
+        description: "Opis"
         type: "Tip"
         types:
           category: "Kategorija"
@@ -250,3 +251,8 @@ sl:
       panels:
         chat:
           label: "Klepet"
+    discourse_workflows:
+      send_chat_message:
+        message: "Opozorilo"
+      chat_approval:
+        message: "Opozorilo"

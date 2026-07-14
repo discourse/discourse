@@ -6,6 +6,35 @@
 
 zh_CN:
   js:
+    user_api_key:
+      title: '授权“%{application_name}”'
+      authorize: "授权"
+      deny: "取消"
+      logged_in_as: "登录身份"
+      permissions_header: '这将允许“%{application_name}”：'
+      redirect_warning: "授权会将您重定向到"
+      expiry_notice: '此密钥 “%{application_name}” 将于 %{expires_at} 过期。'
+      write_scope_warning: "请求完全写入权限 — 此应用程序将能够发布、编辑和删除内容。只有在你完全信任的情况下才能继续。"
+      copy_key: "复制密钥"
+      copied: "已复制！"
+      otp_description: '要允许“%{application_name}”访问此网站吗？'
+      no_trust_level: "抱歉，您没有访问用户 API 所需的信任级别"
+      generic_error: "抱歉，我们无法发布用户 API 密钥，此功能可能被网站管理员禁用"
+      device:
+        title: "授权应用程序"
+        enter_code: "输入应用程序中显示的代码。"
+        code: "代码"
+        enter_full_code: "请输入完整代码以授权此应用程序。"
+        continue: "继续"
+        invalid_code: "抱歉，该代码无效。请检查代码并重试。"
+        expired_code: "抱歉，该代码已过期或已被使用。请在应用程序中申请新代码，然后重试。"
+        authorize_title: '授权“%{application_name}”'
+        expiry_notice: "过期时间： %{expires_at}"
+        no_expiry_warning: "该密钥不会自动过期。请仅在完全信任该应用程序的情况下才对其进行授权。"
+        unregistered_app_warning: "此应用程序未经本网站注册或验证。请仅在您完全信任代码来源的情况下继续。"
+        complete: "授权完成"
+        denied: "授权被拒绝"
+        return_to_cli: "您现在可以返回终端或应用程序了。"
     blocks:
       ghost:
         status: "状态"
@@ -22,6 +51,16 @@ zh_CN:
         no_visible_children_hint: "由于所有子元素都不可见，此容器块不会呈现。"
         condition_failed_hint: "由于条件不满足，此代码块不会呈现。"
         head_hidden_tail_hint: "由于 `head` 容器中已先呈现了另一个代码块，此代码块不会呈现。"
+    access_control:
+      manage:
+        access_permission_editor: "编辑者"
+        access_permission_editor_description: "可以创建和编辑此对象中的内容"
+        access_permission_viewer: "查看器"
+        access_permission_viewer_description: "可以查看此对象中的内容"
+        access_permission_remove: "移除"
+        access_permission_remove_description: "移除该群组的权限"
+        add_group: "添加群组"
+        mandatory_acl_tooltip: "此权限对该对象而言是强制性的，无法移除。"
     carousel:
       go_to_slide: "转到幻灯片 %{index}"
       previous: "上一张幻灯片"
@@ -73,6 +112,7 @@ zh_CN:
           other: "< %{count} 分钟"
         x_minutes:
           other: "%{count} 分钟"
+        x_minutes_seconds: "%{minutes}分钟 %{seconds}秒"
         about_x_hours:
           other: "%{count} 小时"
         x_days:
@@ -130,6 +170,18 @@ zh_CN:
       placeholder: 日期
       from_placeholder: "起始日期"
       to_placeholder: "截止日期"
+    date_range_picker:
+      apply: "应用"
+      start_date: "开始日期"
+      end_date: "结束日期"
+      date_placeholder: "yyyy/mm/dd"
+      presets:
+        label: "日期范围预设"
+        last_7_days: "过去 7 天"
+        last_30_days: "过去 30 天"
+        last_3_months: "过去 3 个月"
+        last_6_months: "过去 6 个月"
+        last_year: "去年"
     languages:
       ar:
         name: 阿拉伯语
@@ -241,6 +293,7 @@ zh_CN:
       comma: ", "
       last_item: "和"
     action_codes:
+      topic_created: "%{when} 创建了此话题"
       public_topic: "%{when}将此话题设为公开"
       open_topic: "%{when}将此转换为话题"
       private_topic: "%{when}将此话题转换为个人消息"
@@ -301,6 +354,8 @@ zh_CN:
       search_placeholder: "搜索"
     impersonation:
       notice: "您正在模拟 %{username}"
+      time_left:
+        other: "（还剩 %{count} 分钟）"
       stop: "停止模拟"
     themes:
       default_description: "默认"
@@ -313,6 +368,7 @@ zh_CN:
     broken_transformer_alert: "出错了。您的网站可能无法正常运行。"
     broken_block_alert: "检测到块配置错误。请查看浏览器控制台了解详情。"
     broken_block_factory_alert: "块加载失败。某些 UI 元素可能无法正确显示。"
+    on_before_category_types_change_error: "更改类别类型时发生错误。请查看浏览器控制台以获取更多信息。"
     critical_deprecation:
       notice: "<b>[管理员通知]</b> %{source} 包含需要更新的代码。（id：%{id}）"
       learn_more_link: "(<a href='%{url}' target='_blank'><em>了解详情</em></a>)"
@@ -328,11 +384,19 @@ zh_CN:
         visual_overlay: "视觉叠加"
         ghost_blocks: "幽灵块"
         condition_debugging: "条件调试"
+      plugin_outlet_debug:
+        find_on_github: "在 GitHub 上查找"
+        wrapper: "(wrapper)"
+        outlet_args: "Outlet 参数"
+        no_outlet_args: "此 Outlet 未传入任何参数"
+        aliases: "别名"
+        deprecated: "已弃用"
+        deprecated_outlet: "此 Outlet 已弃用，将在未来版本中移除。"
+        since: "（自 %{version} 起）"
       toggle_safe_mode: "切换安全模式"
       toggle_verbose_localization: "切换详细本地化"
-      toggle_mobile_view: "切换移动视图"
       disable_dev_tools: "禁用开发者工具"
-      toggle_upcoming_changes_debug: "切换“即将推出的更改”调试模式"
+      toggle_upcoming_changes_debug: "切换即将推出的更改调试"
     s3:
       regions:
         ap_northeast_1: "亚太地区（东京）"
@@ -376,6 +440,9 @@ zh_CN:
     age: "年龄"
     joined: "加入日期："
     admin_title: "管理员"
+    advanced_mode_toggle:
+      advanced_mode: "高级模式"
+      simple_mode: "简单模式"
     show_more: "显示更多"
     show_help: "选项"
     links: "链接"
@@ -388,8 +455,6 @@ zh_CN:
     tos: "服务条款"
     rules: "规则"
     conduct: "行为准则"
-    mobile_view: "移动版视图"
-    desktop_view: "桌面版视图"
     now: "刚刚"
     read_more: "阅读更多"
     more: "更多"
@@ -420,6 +485,17 @@ zh_CN:
     admin_onboarding_banner:
       launch_in_easy_steps: "只需 %{step_count} 个简单步骤启动"
       congrats_onboarding_complete: "恭喜您完成入门流程！"
+      select_theme:
+        title: "自定义您的站点"
+        description: "为您的社区选择一个起始主题"
+        action: "选择主题"
+        modal_title: "选择一个主题"
+        use_theme: "使用所选主题"
+        enabled: "已选择"
+        applying_theme: "正在应用主题..."
+        browse_all: "管理主题"
+        show_light_screenshot: "显示浅色截图"
+        show_dark_screenshot: "显示深色截图"
       invite_collaborators:
         title: "邀请协作者"
         description: "早期成员有助于让您的社区充满活力"
@@ -447,11 +523,6 @@ zh_CN:
           what_is_your_favorite_food:
             title: "你最喜欢吃什么？"
             body: "与社区分享你最喜爱的食物！我先说：我喜欢披萨，尤其是加了奶酪和意大利辣香肠的披萨。"
-      spread_the_word:
-        title: "广而告之！"
-        description: "将链接分享给你社交网络中的所有人"
-        action: "复制链接"
-        copied_to_clipboard: "链接已复制到剪贴板！"
     about:
       edit: "编辑此页面"
       simple_title: "关于"
@@ -518,41 +589,45 @@ zh_CN:
         year:
           other: "%{count} 年前创建"
     bookmarked:
-      title: "加入书签"
+      title: "添加为书签"
       edit_bookmark:
         other: "编辑书签"
       delete_bookmarks: "删除所有书签"
       help:
-        bookmark: "点击以将此话题加入书签"
+        bookmark: "点击以将此话题添加为书签"
         edit_bookmark: "点击以编辑有关此话题中帖子的书签"
         edit_bookmark_for_topic: "点击以编辑此话题的书签"
         unbookmark: "点击以移除此话题中的所有书签"
         unbookmark_with_reminder: "点击以移除此话题中的所有书签和提醒"
     bookmarks:
       also_set_reminder: "是否同时设置提醒？"
-      bookmarked_success: "已加入书签！"
+      bookmarked_success: "已添加为书签！"
       deleted_bookmark_success: "书签已删除！"
       reminder_set_success: "提醒已设置！"
       reminder_clear_success: "提醒已清除"
-      created: "您已将此帖子加入书签。%{name}"
-      created_generic: "您已将此加入书签。%{name}"
+      created: "您已将此帖子添加为书签。%{name}"
+      created_generic: "您已将此添加为书签。%{name}"
       create: "创建书签"
       clear_reminder: "清除提醒"
       edit: "编辑书签"
-      not_bookmarked: "将此帖子加入书签"
+      not_bookmarked: "将此帖子添加为书签"
       topic_bookmark: "话题"
       post_bookmark: "帖子 #%{post_number}"
       jump_to_post: "跳转到 %{post_number}"
+      bookmark_topic: "将话题添加为书签"
+      edit_topic_bookmark: "编辑话题书签"
+      delete_topic_bookmark: "删除话题书签"
       remove_reminder_keep_bookmark: "移除提醒并保留书签"
-      created_with_reminder: "您已将此帖子加入书签，并于 %{date}设置了一个提醒。%{name}"
-      created_with_reminder_generic: "您已将此加入书签并设置了一个提醒 %{date}。%{name}"
+      created_with_reminder: "您已将此帖子添加为书签，并于 %{date}设置了一个提醒。%{name}"
+      created_with_reminder_generic: "您已将此添加为书签并设置了一个提醒 %{date}。%{name}"
       delete: "删除书签"
       confirm_delete: "确定要删除此书签吗？提醒也将一并删除。"
+      confirm_clear: "确定要删除此话题中的所有书签吗？"
       save: "保存"
       no_timezone: '您尚未设置时区，将无法设置提醒，在<a href="%{basePath}/my/preferences/profile">您的个人资料中</a>进行设置。'
       invalid_custom_datetime: "您提供的日期和时间无效，请重试。"
       list_permission_denied: "您没有权限查看此用户的书签。"
-      no_user_bookmarks: "您没有已加入书签的帖子；书签让您可以快速定位特定帖子。"
+      no_user_bookmarks: "您没有已添加为书签的帖子；书签让您可以快速定位特定帖子。"
       auto_delete_preference:
         label: "在您收到通知后"
         never: "保留书签"
@@ -615,6 +690,19 @@ zh_CN:
       allow_access: "允许访问"
       continue_as_guest: "以访客身份继续"
       be_first_to_reply: "成为第一个回复的人！"
+      replying_to: "正在回复 %{username}"
+      editing_post: "正在编辑帖子"
+      reply_placeholder: "撰写回复…"
+      signin_flow:
+        share_session_title: "登录到 %{site_name}"
+        share_session_message: "要继续， %{site_name} 需要获得您当前会话的权限才能在此页面中使用。请点击下方按钮允许访问。"
+        signin_required_title: "登录到 %{site_name}"
+        signin_required_message: "我们没有找到现有的 %{site_name} 会话。请打开新标签页登录或注册，然后返回此处继续。"
+        open_signin_tab: "打开登录标签页"
+        waiting_title: "等待登录"
+        waiting_message: "请在新标签页中完成登录。完成后，此页面将自动更新。"
+        cancel: "取消"
+        sign_in_to_reply: "登录后回复"
     topic_count_all:
       other: "查看 %{count} 个新话题"
     topic_count_categories:
@@ -1136,7 +1224,12 @@ zh_CN:
             from_alias_hint: "发送群组 SMTP 电子邮件时用作发件人地址的别名。请注意，并非所有邮件提供商都支持此功能，请查阅您的邮件提供商的文档。"
         membership:
           title: 成员资格
-          access: 访问
+          visibility_and_access: "访问 & 可见性"
+          join_method_title: "用户如何加入？"
+          join_method:
+            free: "任何人都可以自由加入"
+            request: "任何人都可以申请加入"
+            invite: "仅限邀请"
         categories:
           title: 类别
           long_title: "类别默认通知"
@@ -1169,7 +1262,6 @@ zh_CN:
         title: "权限"
         none: "没有类别与此群组关联。"
         description: "此群组的成员可以访问这些类别"
-      public_admission: "允许用户自由加入群组（要求群组公开可见）"
       public_exit: "允许用户自由离开群组"
       empty:
         posts: "此群组的成员没有发布帖子"
@@ -1185,7 +1277,6 @@ zh_CN:
       request: "请求"
       message: "消息"
       confirm_leave: "确定要离开此群组吗？"
-      allow_membership_requests: "允许用户向群组所有者发送成员资格请求（要求群组公开可见）"
       membership_request_template: "在用户发送成员资格请求时向其显示的自定义模板"
       membership_request:
         submit: "提交请求"
@@ -1403,6 +1494,7 @@ zh_CN:
           in_specific_groups: "用户属于此更改所需的特定群组"
           enabled_for_everyone: "此更改已对所有成员启用"
           enabled_for_no_one: "此更改已对所有成员禁用"
+        enable_available_notifications: "即将推出的更改可供预览时，请通知我。"
       user_notifications:
         filters:
           filter_by: "筛选依据"
@@ -1489,9 +1581,9 @@ zh_CN:
       no_messages_title: "您没有任何消息"
       no_messages_body: >
         需要直接与某人对话而不是公开讨论？选择他的头像并点击 %{icon} 消息按钮，向他们发送消息。<br><br> 如果您需要帮助，可以<a href='%{aboutUrl}'>向管理人员发送消息</a>。
-      no_bookmarks_title: "您还没有将任何内容加入书签"
+      no_bookmarks_title: "您还没有将任何内容添加为书签"
       no_bookmarks_body: >
-        使用 %{icon} 按钮开始将帖子加入书签，它们将出现在这里，便于参考。您也可以安排提醒！
+        使用 %{icon} 按钮开始将帖子添加为书签，它们将出现在这里，便于参考。您也可以安排提醒！
       no_bookmarks_search: "使用提供的搜索查询找不到书签。"
       no_notifications_title: "您还没有任何通知"
       no_notifications_body: >
@@ -1531,6 +1623,7 @@ zh_CN:
       enable_smart_lists: "在编辑器中编写时启用智能列表"
       enable_defer: "启用将话题标记为未读"
       enable_markdown_monospace_font: "在输入框的 Markdown 模式下使用等宽字体"
+      show_original_content: "显示原文内容，而非翻译内容。"
       experimental_sidebar:
         enable: "启用边栏"
         options: "选项"
@@ -1607,6 +1700,9 @@ zh_CN:
       undo_revoke_access: "撤消访问权限撤消操作"
       api_approved: "已批准："
       api_last_used_at: "最后使用时间："
+      api_expires_at: "过期时间:"
+      api_expired_at: "已过期:"
+      api_expires_never: "从不"
       api_show_permissions:
         other: "已授予权限 (%{count})"
       theme: "主题"
@@ -1714,21 +1810,21 @@ zh_CN:
         upcoming_changes: "即将推出的更改"
         calendar_subscriptions: "日历"
       calendar_subscriptions:
-        description: "生成订阅链接，以便与您常用的日历应用（例如 Google 日历、Apple 日历、Outlook 等）同步。这些链接是您帐户中日历事件（例如书签提醒、日历事件等）的私有链接。您可以随时撤销或续订生成的订阅链接。"
+        description: "生成订阅链接，以便与您喜爱的日历应用（例如 Google 日历、Apple 日历、Outlook 等）同步。这些 URL 是您帐户中日历事件（例如书签提醒、日历事件等）的不公开链接。您可以随时撤销或续订生成的订阅链接。"
         generate: "生成订阅 URL"
         regenerate: "重新生成 URL"
-        regenerate_confirm: "这将使您现有的日历订阅 URL 失效。任何使用旧 URL 的日历应用都将无法收到更新。是否继续？"
+        regenerate_confirm: "这将使您现有的日历订阅 URL 失效。任何使用旧 URL 的日历应用都将停止接收更新。是否继续？"
         revoke: "撤销订阅"
         revoke_confirm: "这将撤销您现有的日历订阅 URL。任何使用这些 URL 的日历应用都将停止接收更新。是否继续？"
-        urls_warning: "订阅 URL 已准备就绪！点击下方按钮即可将其 URL 到您的日历应用。注意：这些 URL 仅显示一次。"
+        urls_warning: "订阅 URL 已准备就绪！点击下方按钮即可将其链接到您的日历应用。注意：这些 URL 仅显示一次。"
         bookmarks: "书签提醒"
-        bookmarks_description: "您的书签及提醒日期"
+        bookmarks_description: "您的书签与提醒日期"
         copy: "复制 URL"
         copied: "已复制！"
         add_to_google: "Google 日历"
-        add_to_outlook: "微软 Outlook"
+        add_to_outlook: "Microsoft Outlook"
         add_to_apple: "Apple 日历"
-        active_subscription: "您有一个活跃的日历订阅。"
+        active_subscription: "您有一个有效的日历订阅。"
       change_password:
         success: "（电子邮件已发送）"
         in_progress: "（正在发送电子邮件）"
@@ -2133,7 +2229,9 @@ zh_CN:
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
           description: "描述"
+          description_help: "可帮助您识别此邀请的备注。"
           restrict: "限制为"
+          restrict_help: "输入电子邮件或电子邮件域，以限制谁可以接受此邀请。"
           restrict_email: "仅限电子邮件"
           restrict_domain: "仅限网域"
           email_or_domain_placeholder: "name@example.com 或者 example.com"
@@ -2143,6 +2241,7 @@ zh_CN:
           expires_at: "到期时间"
           expires_after: "有效截止时间"
           custom_message: "自定义消息"
+          custom_message_help: "包含在邀请邮件中。"
           custom_message_placeholder: "在您的邀请中添加个人备注"
           send_invite_email: "保存并发送电子邮件"
           send_invite_email_instructions: "限制只允许电子邮件邀请并发送邀请电子邮件"
@@ -2436,7 +2535,7 @@ zh_CN:
     created: "创建"
     created_lowercase: "创建"
     trust_level: "信任级别"
-    search_hint: "用户名、电子邮件或 IP 地址"
+    search_hint: "用户名或电子邮件地址（以逗号或空格分隔），或 IP 地址"
     create_account:
       header_title: "欢迎！"
       disclaimer: "注册，即表示您同意<a href='%{privacy_link}' target='blank'>隐私政策</a>和<a href='%{tos_link}' target='blank'>服务条款</a>。"
@@ -2480,6 +2579,30 @@ zh_CN:
       confirm_title: 继续访问 %{site_name}
       logging_in_as: 以 %{email} 登录
       confirm_button: 完成登录
+    code_login:
+      email_label: "电子邮件"
+      continue_button: "继续"
+      check_your_email: "请查看您的电子邮件"
+      code_instructions: "我们已向 <b>%{email}</b>发送了6位数的验证码。请在下方输入验证码以继续。"
+      verify_button: "继续"
+      resend: "重新发送代码"
+      resend_countdown: "重新发送代码（%{count}s）"
+      code_resent: "我们发送了一个新的验证码。"
+      use_different_email: "请使用另一个电子邮箱地址"
+      use_password_instead: "改用密码登录"
+      email_me_code: "通过电子邮件向我发送一次性登录码"
+      signup_title: "创建您的帐户"
+      signup_instructions: "输入你的邮箱地址加入这个社区。我们会发送一封包含验证码的邮件，验证完成后就能开始啦！"
+      user_fields_title: "快完成了"
+      user_fields_instructions: "只需再填写一些信息，即可完成账户注册。"
+      account_ready_title: "您的账户已准备就绪！🎉"
+      account_ready_edit: "选择您的用户名和头像"
+      account_ready_continue: "继续"
+      username_label: "用户名"
+      username_placeholder: "选择一个用户名"
+      change_avatar: "更改头像"
+      username_taken: "该用户名已被占用，请换一个。"
+      username_unavailable: "该用户名不可用。试试 %{suggestion}。"
     login:
       header_title: "欢迎回来"
       title: "登录"
@@ -2498,6 +2621,9 @@ zh_CN:
       security_key_description: "当您准备好实物安全密钥或兼容的移动设备后，请按下面的“使用安全密钥进行身份验证”按钮。"
       security_key_alternative: "尝试另一种方式"
       security_key_authenticate: "使用安全密钥进行身份验证"
+      passkey_2fa_description: "请使用您的通行密钥验证身份。"
+      use_passkey: "使用通行密钥"
+      use_security_key: "使用安全密钥"
       security_key_not_allowed_error: "安全密钥身份验证过程超时或被取消。"
       security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
       security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
@@ -2572,6 +2698,7 @@ zh_CN:
         totp: "改用身份验证器应用"
         backup_code: "改用备份代码"
         security_key: "改用安全密钥"
+        passkey: "改用通行密钥"
       no_login_methods:
         title: "没有登录方法"
         description: "未配置登录方法。管理员可访问 <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> 重新配置网站。"
@@ -2664,7 +2791,11 @@ zh_CN:
         categories_admin_dropdown:
           title: "管理类别"
         tag_category_admin_dropdown:
+          title: "类别和标签设置"
           edit_category: "编辑类别"
+          edit_category_description: "调整%{badge}的设置"
+          edit_tag: "编辑标签"
+          edit_tag_description: "调整%{badge}的设置"
         bulk_select_topics_dropdown:
           title: "批量操作"
         bulk_select_bookmarks_dropdown:
@@ -2697,6 +2828,15 @@ zh_CN:
       default: 自定义表情符号
     filter_input:
       clear: "清除筛选器"
+    d_icon_grid_picker:
+      select_icon: "选择图标"
+      search_placeholder: "搜索图标…"
+      no_results: "找不到图标"
+      results_count:
+        other: "找到 %{count} 个图标"
+      favorites: "收藏夹"
+      selected_icon: "所选图标：%{iconName}"
+      clear: "清除图标"
     shared_drafts:
       title: "共享草稿"
       notice: "此话题只对可以发布共享草稿的用户可见。"
@@ -2704,6 +2844,39 @@ zh_CN:
       publish: "发布共享草稿"
       confirm_publish: "确定要发布此草稿吗？"
       publishing: "正在发布话题…"
+    gifs:
+      modal_title: "搜索 GIF"
+      composer_title: "插入 GIF"
+      powered_by: "由 Klipy 提供支持"
+      no_results: "在上方输入关键词搜索 GIF 动图。"
+      browse_categories: "按类别浏览"
+      bad_api_key: "Klipy API 密钥缺失或无效。请检查 GIF API 密钥设置。"
+    codemirror:
+      expression:
+        sections:
+          recommended: "推荐"
+          properties: "属性"
+          methods: "方法"
+          metadata: "元数据"
+          globals: "全局"
+        methods:
+          string:
+            length: "字符串中的字符数。"
+            includes: "如果字符串包含该子字符串，则返回 true。"
+            startsWith: "如果字符串以给定的字符开头，则返回 true。"
+            endsWith: "如果字符串以给定的字符结尾，则返回 true。"
+            split: "将字符串拆分成子字符串数组。"
+            replaceAll: "替换搜索字符串的所有出现位置。"
+            replace: "替换搜索字符串的第一次出现。"
+            trim: "删除字符串两端的空格。"
+            trimStart: "删除字符串开头的空格。"
+            trimEnd: "删除字符串末尾的空格。"
+            toLowerCase: "将字符串转换为小写。"
+            toUpperCase: "将字符串转换为大写。"
+            slice: "提取字符串的一部分。"
+            substring: "返回字符串中两个索引之间的部分。"
+            indexOf: "返回首次出现的位置索引；若未找到，则返回 -1。"
+            match: "将字符串与正则表达式进行匹配。"
     composer:
       autocomplete:
         username_missing: "所选自动补全结果缺少用户名。"
@@ -2735,6 +2908,15 @@ zh_CN:
         no_translation_yet: "开始输入以查看翻译预览…"
         placeholder: "在此处输入帖子的翻译…"
         show_raw_markdown: "以原格式显示"
+      change_reply_to:
+        title: "更改回复目标"
+        hint: "滚动时间轴，找到您要回复的帖子。"
+        current_selection: "已选中：帖子 #%{post_number} ，作者：@%{username}"
+        invalid_target: "选择比你正在编辑的帖子更早的帖子。"
+        submit: "设置回复目标"
+        open: "更改此回复指向的帖子"
+        open_from_menu: "回复另一个帖子"
+        remove: "删除回复目标"
       group_mentioned_limit:
         other: "<b>警告</b>！您提及了 <a href='%{group_link}'> %{group} </a>，但是此群组的成员数量超过了管理员配置的 %{count} 个用户的最大可提及数量限制。没有人会收到通知。"
       group_mentioned:
@@ -2782,11 +2964,12 @@ zh_CN:
       title: "或按 %{modifier}Enter"
       save_and_close: "保存并关闭"
       discard: "舍弃"
+      cancel_edit: "取消编辑"
       draft_saved: "草稿已保存！"
       users_placeholder: "选择用户或群组"
       title_placeholder: "用一句话概括讨论内容…"
       title_or_link_placeholder: "输入标题，或在此处粘贴链接"
-      edit_reason_placeholder: "编辑原因"
+      edit_reason_placeholder: "为何进行编辑？"
       topic_featured_link_placeholder: "输入标题中显示的链接。"
       remove_featured_link: "从话题中移除链接。"
       reply_placeholder: "在此处输入。使用 Markdown、BBCode 或 HTML 进行排版。拖放或粘贴图片以插入。"
@@ -2801,6 +2984,7 @@ zh_CN:
       uploading: "正在上传…"
       show_preview: "显示预览"
       hide_preview: "隐藏预览"
+      resize: "调整编辑器大小"
       switch_to_markdown: "切换到标准 Markdown 编辑器 (%{keyboardShortcut})"
       switch_to_rich_text: "切换到新的富文本编辑器 (%{keyboardShortcut})"
       quote_post_title: "引用整个帖子"
@@ -2844,6 +3028,8 @@ zh_CN:
         name_label: "将名称换行"
         attributes_label: "属性"
         add_attribute: "添加属性"
+        attribute_key: "键"
+        attribute_value: "值"
         remove_attribute: "移除属性"
         apply: "应用"
         unwrap: "取消换行"
@@ -2853,7 +3039,10 @@ zh_CN:
       collapse: "最小化编辑器面板"
       open: "打开编辑器面板"
       abandon: "关闭编辑器并舍弃草稿"
-      edit_reason: "添加您的编辑理由"
+      edit_reason: "为何进行编辑？"
+      whisper_indicator:
+        public: "可见的"
+        whispering: "密语"
       enter_fullscreen: "进入全屏编辑器"
       exit_fullscreen: "退出全屏编辑器"
       exit_fullscreen_prompt: "按 <kbd>ESC</kbd> 退出全屏"
@@ -2888,25 +3077,34 @@ zh_CN:
           desc: 创建以相同收件人开头的新消息
         reply_to_topic:
           label: 回复话题
+          trigger: 话题
+          desc: 回复话题，不是任何特定的帖子
+        reply_to_message:
+          label: 回复消息
+          trigger: 发送私信
           desc: 回复话题，不是任何特定的帖子
         toggle_whisper:
           label: 切换密语
-          desc: 密语仅对管理人员可见
+          desc: 只有允许的群组才能看到密语
         create_topic:
-          label: "新建话题"
+          label: 创建话题
           desc: 创建新话题
         create_personal_message:
-          label: "新建消息"
+          label: 创建消息
           desc: "创建新的个人消息"
         shared_draft:
           label: "共享草稿"
           desc: "起草一个仅对允许的用户可见的话题"
         toggle_topic_bump:
-          label: "切换话题顶帖"
+          label: "请勿顶帖"
           desc: "回复但不更改最新回复日期"
+        create_unlisted_topic: "取消公开话题"
         toggle_unlisted:
           label: 切换取消公开
           desc: "不公开的话题只能通过直接链接访问"
+        edit_post: "正在编辑帖子"
+        no_actions_available: "没有可用建议"
+        unknown_user: "用户"
       reload: "重新加载"
       ignore: "忽略"
       image_alt_text:
@@ -2933,6 +3131,13 @@ zh_CN:
         copy: "复制链接"
         remove: "移除链接"
         visit: "在外部标签页中打开链接"
+        link_copied: "链接已复制！"
+        load_preview: "加载预览"
+        preview_failed: "无法加载预览"
+      onebox_toolbar:
+        copy: "复制链接"
+        visit: "打开链接"
+        remove_preview: "移除预览"
         link_copied: "链接已复制！"
       unsupported_token: "富文本编辑器不支持此帖子中使用的所有功能；会将您切换到 Markdown 编辑器。"
     notifications:
@@ -2970,6 +3175,10 @@ zh_CN:
       liked_by_2_users: "%{username}、%{username2}"
       liked_by_multiple_users:
         other: "%{username} 和其他 %{count} 人"
+      replied_consolidated_in_topic:
+        other: "%{count} 你的话题中有新回复"
+      replied_consolidated_to_post:
+        other: "%{count} 您的帖子有新回复"
       liked_consolidated_description:
         other: "点赞了您的 %{count} 个帖子"
       liked_consolidated: "<span>%{username}</span> %{description}"
@@ -2999,12 +3208,12 @@ zh_CN:
           title: "即将推出的更改"
           description: "'%{changeName}' 可供预览"
           description_two: "'%{changeName1}' 和 '%{changeName2}' 可供预览"
-          description_many: "'%{changeName}' 和 %{otherChangeCount} ' 更多更改可供预览"
+          description_many: "'%{changeName}' 和其他 %{otherChangeCount} 项更改可供预览"
         automatically_promoted:
           title: "即将推出的更改"
           description: "'%{changeName}' 已自动启用"
           description_two: "'%{changeName1}' 和 '%{changeName2}' 已自动启用"
-          description_many: "'%{changeName}' 和 %{otherChangeCount} 的更多更改已自动启用"
+          description_many: "'%{changeName}' 和其他 %{otherChangeCount} 项更改已自动启用"
       dismiss_confirmation:
         body:
           default:
@@ -3158,7 +3367,7 @@ zh_CN:
           watching: 我正在关注
           tracking: 我正在跟踪
           private: 在我的消息中
-          bookmarks: 我已加入书签
+          bookmarks: 我已添加为书签
           first: 是第一个帖子
           pinned: 被置顶
           seen: 我读过
@@ -3197,11 +3406,17 @@ zh_CN:
           placeholder: 最大值
           aria_label: 按最大浏览量筛选
     hamburger_menu: "导航菜单"
+    header_panel: "标头"
     new_item: "新"
     go_back: "返回"
     not_logged_in_user: "包含当前活动和偏好设置总结的用户页面"
     current_user: "转到您的用户页面"
     view_all: "查看所有%{tab}"
+    permanently_delete:
+      title: "绝对确定吗？"
+      confirm_instruction: "请在下方输入 <b>%{phrase}</b> 进行确认："
+      controls:
+        delete: "我明白后果，永久删除"
     user_menu:
       generic_no_items: "此列表中没有条目。"
       sr_menu_tabs: "用户菜单标签页"
@@ -3254,6 +3469,10 @@ zh_CN:
         clear_all: "全部清除"
         unlist_topics: "取消公开话题"
         relist_topics: "重新公开话题"
+        pin_topics: "将这些话题设为精选"
+        unpin_topics: "取消置顶话题"
+        enable_nested_replies: "启用嵌套回复"
+        disable_nested_replies: "禁用嵌套回复"
         reset_bump_dates: "重置顶帖日期"
         defer: "标记为未读"
         delete: "删除话题"
@@ -3272,6 +3491,17 @@ zh_CN:
           other: "忽略（%{count} 个）…"
         dismiss_tooltip: "仅忽略新帖子或停止跟踪话题"
         also_dismiss_topics: "停止跟踪这些话题，以便它们不再显示为我的未读话题"
+        dismiss_all: "全部忽略"
+        dismiss_new_topics: "忽略新话题"
+        dismiss_new_replies: "忽略新回复"
+        dismiss_new_topics_with_selected:
+          other: "忽略（%{count} 个）"
+        dismiss_new_replies_with_selected:
+          other: "忽略（%{count} 个）"
+        dismiss_all_with_selected:
+          other: "忽略（%{count} 个）"
+        dismiss_new_menu: "忽略选项"
+        dismiss_and_stop_tracking: "忽略并停止跟踪"
         dismiss_new: "忽略新话题"
         dismiss_new_modal:
           title: "关闭新话题"
@@ -3292,40 +3522,41 @@ zh_CN:
         archive_topics: "归档话题"
         move_messages_to_inbox: "移至收件箱"
         archive_messages: "移至归档"
+        convert_to_public_topic: "设为公开话题…"
+        convert_to_private_message: "设为个人消息"
         notification_level: "更新通知"
         change_notification_level: "更改通知级别"
         choose_new_category: "为话题选择新类别："
-        selected_sole_category:
-          other: "您已从以下类别中选择 <b>%{count}</b> 个话题。"
         selected_count:
           other: "已选择 %{count} 个"
-        change_tags: "替换标签"
-        append_tags: "添加标签"
-        choose_new_tags: "为这些话题选择新标签："
-        choose_append_tags: "添加标签"
-        changed_tags: "这些话题的标签已更改。"
-        remove_tags: "移除标签"
-        confirm_remove_tags:
-          other: "所有标签将从 <b>%{count}</b> 个话题中移除。确定吗？"
+        manage_tags: "管理标签"
+        confirm_unpin_topics:
+          other: "取消置顶 %{count} 个话题"
+        confirm_enable_nested_replies:
+          other: "在 %{count} 主题上启用嵌套回复"
+        confirm_disable_nested_replies:
+          other: "在 %{count} 主题上禁用嵌套回复"
         confirm_update_topics:
           other: "更新 %{count} 个话题"
+        confirm_apply_to_topics:
+          other: "重新公开 %{count} 个话题"
         confirm_close_topics:
           other: "关闭 %{count} 个话题"
         confirm_archive_topics:
-          other: "存档 %{count} 个话题"
+          other: "归档 %{count} 个话题"
         confirm_unlist_topics:
           other: "关闭 %{count} 个话题"
         confirm_relist_topics:
-          other: "重新公开 %{count} 个主题"
+          other: "重新公开 %{count} 个话题"
         confirm_archive_messages:
-          other: "存档 %{count} 个消息"
+          other: "归档 %{count} 条消息"
         confirm_move_to_inbox:
-          other: "将 %{count} 个消息移至收件箱"
+          other: "将 %{count} 条消息移至收件箱"
         confirm_delete_topics:
           other: "删除 %{count} 个话题"
         progress:
           other: "进度：<strong>%{count}</strong> 个话题"
-        notify: "通知用户此变更"
+        notify: "将此更改通知用户"
         performing: "正在执行批量操作，请稍候…"
         completed: "批量操作成功完成！"
         completed_count:
@@ -3343,7 +3574,7 @@ zh_CN:
         read: "您还没有阅读任何话题。"
         posted: "您尚未在任何话题中发帖。"
         latest: "您全都看过了！"
-        bookmarks: "您还没有将任何话题加入书签。"
+        bookmarks: "您还没有将任何话题添加为书签。"
         category: "没有%{category}话题。"
         top: "没有热门话题。"
         hot: "没有热门话题。"
@@ -3351,7 +3582,7 @@ zh_CN:
         education:
           topic_tracking_preferences: '您可以在<a href="%{basePath}/my/preferences/tracking">您的偏好设置</a>中查看和更改新的话题跟踪设置。'
           unread: "没有未读内容… 太棒了！"
-          new_new: "目前没有新内容… 稍后再查看！"
+          unified_new: "目前没有新内容… 稍后再查看！"
           new: "目前没有新内容… 稍后再查看！"
           generic: "这里没什么可看的… 稍后回来看看！"
     topic_bulk_actions:
@@ -3359,48 +3590,127 @@ zh_CN:
         name: "忽略"
       close_topics:
         name: "关闭"
-        description: "关闭的话题阻止新的回复。 <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>了解更多</a>"
+        description: "关闭的话题阻止新回复<a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>了解详情</a>"
         note: "为这些话题添加注释"
         optional: '（可选）'
       archive_topics:
         name: "归档"
-        description: "已存档的话题列表在搜索和最新主题列表中被隐藏。 <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>了解更多的</a>"
+        description: "已归档的话题会在搜索和最新话题列表中隐藏。<a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>了解详情</a>"
       archive_messages:
         name: "移至归档"
       move_messages_to_inbox:
         name: "移至收件箱"
       unlist_topics:
         name: "取消公开"
-        description: "未公开的主题不会显示在话题列表中，但仍可通过直接链接访问。 <a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>了解更多</a>"
+        description: "取消公开的话题会在话题列表中隐藏，但仍可以通过直接链接访问。<a href='https://meta.discourse.org/t/understanding-closed-unlisted-and-archived-topics/51238' target='_blank'>了解详情</a>"
       relist_topics:
         name: "重新公开"
-      remove_tags:
-        name: "移除标签"
-        description: "从所选话题中移除所有标签。"
-      append_tags:
-        name: "添加标签"
-        description: "为选定的话题添加以下标签："
-      replace_tags:
-        name: "替换标签"
-        description: "将所选话题的所有现有标签替换为以下内容："
+      manage_tags:
+        name: "管理标签"
+        add:
+          title: "添加标签"
+          description: "已添加到所有选定话题"
+        remove:
+          title: "移除标签"
+          description: "每当存在时删除"
+          all_toggle: "移除所有标签"
+          all_warning: "<strong>所有现有标签</strong> 将从所选主题中移除。此操作无法撤销。"
+        replace:
+          title: "替换标签"
+          description: "将一个标签替换成另一个标签。"
+          add_replacement: "添加替换"
+          remove_replacement: "移除替换"
+          from_placeholder: "替换标签"
+          to_placeholder: "替换标签"
+          missing_from: "需要添加源标签。"
+          missing_to: "需要更换标签"
       delete_topics:
         name: "删除"
-        description: "永久删除所选话题。此操作无法撤销。"
+        description: "永久删除所选话题。此操作无法撤消。"
       update_category:
         name: "更新类别"
-        description: "将所有选定的话题移至以下类别："
+        description: "将所有所选话题移至以下类别："
+      convert_to_public_topic:
+        name: "设为公开话题…"
+        description: "将所选个人消息移至以下类别的公开话题中："
+      convert_to_private_message:
+        name: "设为个人消息"
+        description: "将所选公开话题转换为个人消息。"
       reset_bump_dates:
         name: "重置顶帖日期"
-        description: "您是否想更新顶帖日期为帖子最后创建的日期？这可能会影响它们在话题列表列表中的排序。"
+        description: "是否要将顶帖日期更新为帖子最后创建的日期？这可能会影响它们在话题列表列表中的排序。"
       defer:
         name: "标记为未读"
       update_notifications:
         name: "更新通知"
         description: "将所选话题的个人通知级别更新为："
+      pin_topics:
+        name: "置顶"
+      unpin_topics:
+        name: "取消置顶"
+        description: "取消置顶所有被置顶到一个类别或全局置顶的所选话题"
+      enable_nested_replies:
+        name: "启用嵌套回复"
+        description: "将所选话题切换到嵌套视图。回复将以线程形式显示。"
+      disable_nested_replies:
+        name: "禁用嵌套回复"
+        description: "将选中的话题切换回平铺视图。"
+    nested_replies:
+      nested_view: "嵌套视图"
+      flat_view: "平面视图"
+      sort:
+        label: "排序依据"
+        top: "热门"
+        new: "新"
+        old: "旧"
+      load_more_children:
+        other: "其他 %{count} 条回复"
+      load_more_children_generic: "更多回复"
+      continue_thread: "继续此消息串"
+      new_replies:
+        other: "%{count} 条新回复"
+      collapsed_replies:
+        other: "%{count} 条回复"
+      collapsed_post: "已折叠的帖子"
+      collapse: "收起"
+      collapse_parent: "收起父消息串"
+      focused_path: "重点回复路径"
+      return_to_branch: "返回到 %{username}的分支"
+      all_replies: "所有回复"
+      category_settings:
+        default_nested_view: "为此类别中的话题默认使用嵌套视图。"
+        convert_existing: "转换现有主题"
+        convert_existing_description: "此分类下的现有话题在转换之前不会使用嵌套回复。运行一次即可将其切换到嵌套视图。"
+        convert_existing_confirm: "将此类别中的所有现有话题转换为嵌套回复？"
+        convert_existing_complete: "现有话题已转换为嵌套回复。"
+        save_first: "在转换现有话题之前，请保存此类别设置。"
+      no_replies: "暂无回复。"
+      deleted_post_placeholder: "[已删除]"
+      ignored_post_placeholder: "[已忽略]"
+      toggle_ignored_content: "显示忽略的内容"
+      op_badge: "OP"
+      pinned_reply: "已置顶"
+      pin_reply: "置顶"
+      unpin_reply: "取消置顶"
+      topic_admin_menu:
+        enable_nested_replies: "启用嵌套回复"
+        disable_nested_replies: "禁用嵌套回复"
+      activity_log:
+        link: "活动日志"
+        title: "主题活动日志"
+        empty: "暂无主题活动显示。"
+      context:
+        banner: "您正在查看的是此话题中的单个消息串。"
+        view_full_topic: "查看完整话题"
+        view_parent_context: "查看父上下文"
+    share_target:
+      new_topic: "新建话题"
+      new_message: "新建消息"
     topic:
       filter_to:
         other: "话题中的 %{count} 个帖子"
       create: "新建话题"
+      create_shared_draft: "新共享草稿"
       create_long: "创建新话题"
       create_group: "新建话题和草稿"
       open_draft: "打开草稿"
@@ -3416,6 +3726,7 @@ zh_CN:
         title: "标记为未读"
       list: "话题"
       new: "新话题"
+      has_new_replies: "上次访问后的新回复"
       unread: "未读"
       new_topics:
         other: "%{count} 个新话题"
@@ -3445,35 +3756,6 @@ zh_CN:
       read_more: "想阅读更多？请<a href='%{categoryLink}'>浏览所有类别</a>或<a href='%{latestLink}'>查看最新话题</a>。"
       unread_indicator: "还没有成员读过此话题的最新帖子。"
       participant_groups: "参与者群组"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-              other {有 <a href="{basePath}/unread"># 个未读</a>话题}
-            }
-            { NEW, plural,
-                 =0 {}
-              other {和 <a href="{basePath}/new"># 个新</a>话题，}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-              other {还有 <a href="{basePath}/unread"># 个未读</a>话题，}
-            }
-            { NEW, plural,
-                 =0 {}
-              other {还有 <a href="{basePath}/new"># 个新</a>话题，}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true {或浏览{categoryLink}中的其他话题}
-          false {或<a href="{basePath}/latest">查看最新话题</a>}
-          other {}
-        }
       reply_count_link:
         other: "%{count} 条回复，跳转到第一个帖子"
       created_at: "创建日期：%{date}"
@@ -3520,6 +3802,7 @@ zh_CN:
         publish_to: "发布至："
         when: "时间："
         time_frame_required: "请选择时间范围"
+        category_required: "请选择一个类别"
         min_duration: "持续时间必须大于 0"
         max_duration: "持续时间必须小于 20 年"
         duration: "持续时间"
@@ -3562,7 +3845,7 @@ zh_CN:
       auto_close_immediate:
         other: "该话题中的最后一个帖子已经存在 %{count} 小时，因此该话题将被立即关闭。"
       auto_delete_immediate:
-        other: "该话题中的最后一篇帖子已经存在 %{count} 小时，因此该话题将被立即删除。"
+        other: "话题中的最后一个帖子已经存在 %{count} 小时，因此该话题将被立即删除。"
       timeline:
         back: "返回"
         back_description: "返回上一个未读帖子"
@@ -3676,6 +3959,7 @@ zh_CN:
         unpin: "将此话题从%{categoryLink}类别顶部移除。"
         unpin_until: "将此话题从%{categoryLink}类别顶部移除，或等到<strong>%{until}</strong>。"
         pin_note: "用户可以为自己单独取消置顶话题。"
+        pin_until: "置顶至"
         pin_validation: "置顶此话题需要一个日期。"
         not_pinned: "%{categoryLink}没有置顶话题。"
         already_pinned:
@@ -3694,6 +3978,12 @@ zh_CN:
         banner_note: "用户可以通过忽略话题来忽略横幅。任何时候都只能将一个话题设为横幅。"
         no_banner_exists: "没有横幅话题。"
         banner_exists: "当前设置了<strong class='badge badge-notification unread'>一个</strong>横幅话题。"
+      bulk_feature_topic:
+        pin: "让这些话题显示在话题类别的顶部，直到"
+        pin_note: "用户可以为自己单独取消置顶话题。"
+        pin_globally: "让这些话题显示在所有话题列表的顶部，直到"
+        pin_button: "置顶话题"
+        pin_globally_button: "全站置顶话题"
       inviting: "正在邀请…"
       automatically_add_to_groups: "此邀请还包括以下群组的访问权限："
       invite_private:
@@ -3895,6 +4185,9 @@ zh_CN:
         other: "您和其他 %{count} 人赞了此帖子"
       sr_post_like_count_button:
         other: "%{count} 人赞了此帖子。"
+      likes_popup:
+        title:
+          other: "%{count} 个赞"
       sr_post_read_count_button:
         other: "%{count} 人读了此帖子。"
       filtered_replies_hint:
@@ -3921,7 +4214,8 @@ zh_CN:
         success: "翻译已成功更新"
         post_language_selector:
           title: "帖子语言"
-          none: "无"
+          header: "此帖子的语言为…"
+          none: "未设置"
         edit_warning:
           message: "这是一篇翻译的帖子。<br><br>您想编辑%{language}原帖，还是编辑此特定翻译？"
           action_original: "编辑原帖"
@@ -3944,7 +4238,9 @@ zh_CN:
         attachment_download_requires_login: "抱歉，您需要登录才能下载附件。"
       cancel_composer:
         confirm: "是否要放弃您的帖子？"
+        confirm_edit: "确定要舍弃所做的更改吗？"
         discard: "舍弃"
+        discard_edit: "舍弃更改"
       via_email: "此帖子通过电子邮件送达"
       via_auto_generated_email: "此帖子通过自动生成的电子邮件送达"
       whisper: "此帖子是对版主的密语"
@@ -3953,6 +4249,7 @@ zh_CN:
         about: "此帖子是一个 Wiki"
       few_likes_left: "谢谢您分享爱！您今天只剩下几个赞了。"
       controls:
+        menu_label: "帖子操作"
         reply: "开始撰写对此帖子的回复"
         like_action: "点赞"
         like: "点赞此帖子"
@@ -3970,6 +4267,7 @@ zh_CN:
         delete: "删除此帖子"
         undelete_action: "取消删除帖子"
         undelete: "取消删除此帖子"
+        view_deleted: "查看已删除的帖子内容"
         share_action: "分享"
         share: "分享此帖子的链接"
         copy_action: "复制链接"
@@ -3986,13 +4284,19 @@ zh_CN:
         admin: "帖子管理员操作"
         admin_action: "管理员"
         permanently_delete: "永久删除"
-        permanently_delete_confirmation: "确定要永久删除此帖子吗？您将无法恢复它。"
+        permanently_delete_post_confirmation: "此操作<b>无法</b>撤消。这将<b>永久删除</b>此帖子并将其从数据库中移除。"
+        permanently_delete_topic_confirmation: "此操作<b>无法</b>撤消。这将<b>永久删除</b>此话题并将其从数据库中移除。"
+        permanently_delete_confirm_phrase: "永久删除"
         wiki: "设为 Wiki"
+        wiki_description: "允许特定群组编辑此帖子"
         unwiki: "移除 Wiki"
         convert_to_moderator: "添加管理人员颜色"
+        convert_to_moderator_description: "高亮显示此帖子的内容"
         revert_to_regular: "移除管理人员颜色"
         rebake: "重新构建 HTML"
+        rebake_description: "重新处理此帖子以修正格式或嵌入内容"
         publish_page: "页面发布"
+        publish_page_description: "将此话题发布为独立页面"
         unhide: "取消隐藏"
         change_owner: "更改所有权…"
         grant_badge: "授予徽章…"
@@ -4000,6 +4304,7 @@ zh_CN:
         lock_post_description: "阻止发帖人编辑此帖子"
         unlock_post: "解锁帖子"
         unlock_post_description: "允许发帖人编辑此帖子"
+        add_post_notice_description: "在此帖子上方添加高亮通知"
         delete_topic_disallowed_modal: "您无权删除此话题。如果您确实希望将其删除，请提交举报并说明原因，以便引起版主注意。"
         delete_topic_disallowed: "您无权删除此话题"
         delete_topic_confirm_modal:
@@ -4039,10 +4344,11 @@ zh_CN:
         confirm:
           other: "确定要合并这 %{count} 个帖子吗？"
       revisions:
-        diff_too_complex: "差异过于复杂，无法显示。请尝试查看各个较小的修改。"
         locale:
           no_locale_set: "未设置语言"
           locale_removed: "语言已移除"
+        reply_to:
+          none: "没有回复目标"
         controls:
           first: "第一个修订"
           previous: "上一个修订"
@@ -4087,7 +4393,6 @@ zh_CN:
         name_placeholder: "此书签有什么用？"
         name_input_label: "书签名称"
         set_reminder: "提醒我"
-        options: "选项"
         actions:
           delete_bookmark:
             name: "删除书签"
@@ -4115,7 +4420,9 @@ zh_CN:
         instructions: "分享此帖子的链接："
       original_language: "此帖子最初使用%{language}编写"
       original_language_and_outdated: "此帖子最初使用%{language}编写。译文可能已过时"
-      ai_translation_disclaimer: "AI 生成的翻译可能不准确。"
+      originally_written_in: "原始语言：%{language}"
+      tap_to_show_original: "点击此处查看原文"
+      ai_translation_disclaimer: "AI 生成的译文可能不准确。"
     category:
       none: "（无类别）"
       all: "所有类别"
@@ -4127,16 +4434,17 @@ zh_CN:
       back: "返回类别"
       general: "常规"
       settings: "设置"
+      moderation: "审核"
       advanced: "高级"
       show_advanced: "高级设置"
       topic_template: "模板"
       topic_title_placeholder: "类别话题标题占位符"
-      topic_title_placeholder_placeholder: "[可选] 此分类的自定义话题标题占位符"
+      topic_title_placeholder_placeholder: "[可选] 此类别的自定义话题标题占位符"
       tags: "标签"
       localizations: "本地化"
       localization:
         language: "类别语言"
-        language_description: "该类别名称和描述的主要语言。"
+        language_description: "此类别名称和描述的主要语言。"
         locale: "语言区域"
         name: "名称"
         description: "描述"
@@ -4158,26 +4466,30 @@ zh_CN:
         add: "添加所需标签组"
         placeholder: "选择标签群组…"
         min_count: "标签数"
-        tag_group: "标签组"
+        tag_group: "标签群组"
       topic_featured_link_allowed: "在此类别中允许精选链接"
       delete: "删除类别"
+      danger_zone:
+        title: "危险区域"
+        delete_title: "删除此类别"
+        delete_description: "删除后，此类别及其设置将无法恢复。其中的话题需要事先重新分配。"
+        delete_title_forbidden: "无法删除此类别"
       create: "新建类别"
-      create_with_type: "新 %{typeName} 类别"
+      create_with_type: "新建%{typeName}类别"
       create_long: "创建新类别"
-      settings_apply_to_all_of_type_warning: "以下更改将适用于此类型的所有类别"
+      settings_apply_to_all_of_type_warning: "以下更改将应用于此类型的所有类别"
       type_settings_schema:
         category_settings: "类别设置"
         category_custom_fields: "类别设置"
-        site_settings: "网站设置"
+        site_settings: "站点设置"
       choose_type:
         title: "选择类别类型"
-        requires_plugin: "需要插件"
       create_category: "创建类别"
       save: "保存类别"
       unsaved_changes: "您有未保存的更改"
       slug: "类别缩略名"
       parent: "父类别"
-      slug_placeholder: "（可选）用于 URL 以“-”分隔的字词"
+      slug_placeholder: "如果留空，则自动生成"
       creation_error: 创建类别时出错。
       save_error: 保存类别时出错。
       errors:
@@ -4185,6 +4497,7 @@ zh_CN:
       validations:
         emoji_required: "选择一个表情符号。"
         icon_required: "选择一个图标。"
+        groups_required: "为此审批模式选择至少一个群组。"
       name: "类别名称"
       untitled: "无标题类别"
       description: "描述"
@@ -4197,6 +4510,7 @@ zh_CN:
       icon: "图标"
       emoji: "表情符号"
       select_emoji: "选择表情符号"
+      select_icon: "选择图标"
       background_color: "颜色"
       foreground_color: "文本颜色"
       color_validations:
@@ -4215,6 +4529,10 @@ zh_CN:
       color_used: "使用的颜色"
       predefined_colors: "预定义颜色选项"
       name_placeholder: "建议使用一到两个词"
+      category_types: "类别类型"
+      unknown_category_type: "未知类别类型"
+      unknown_category_type_description: "此分类不支持或未启用分类类型“%{categoryType}”。"
+      category_types_no_results: "未找到其他类别类型"
       color_placeholder: "任意网页颜色"
       delete_confirm: "确定要删除此类别吗？"
       delete_error: "删除类别时出错。"
@@ -4269,10 +4587,18 @@ zh_CN:
       review_group_name: "群组名称"
       require_topic_approval: "所有新话题都需要版主审批"
       require_reply_approval: "所有新回复都需要版主审批"
+      require_topic_approval_for: "所有新话题都需要版主审批…"
+      require_reply_approval_for: "所有新回复都需要版主审批…"
+      new_topic_approval: "新话题审批"
+      new_reply_approval: "新回复审批"
       posting_review_modes:
         no_one: "没有人"
         everyone: "所有人"
-      posting_review_groups_placeholder: "选择组…"
+        everyone_except: "除所选群组之外的所有人"
+        no_one_except: "除所选群组之外没有人"
+      posting_review_groups_require_approval: "需要审批的群组"
+      posting_review_groups_no_approval: "不需要批准的群组"
+      posting_review_groups_placeholder: "选择群组…"
       this_year: "今年"
       position: "类别页面上的位置："
       default_position: "默认位置"
@@ -4333,6 +4659,7 @@ zh_CN:
         created: "创建日期"
       sort_ascending: "升序"
       sort_descending: "降序"
+      sort_direction: "排序方向"
       subcategory_list_styles:
         rows: "行"
         rows_with_featured_topics: "有精选话题的行"
@@ -4426,7 +4753,7 @@ zh_CN:
       warning:
         help: "这是一个官方警告。"
       bookmarked:
-        help: "您已将此话题加入书签"
+        help: "您已将此话题添加为书签"
       locked:
         help: "此话题已被关闭；不再接受新回复"
       archived:
@@ -4544,7 +4871,7 @@ zh_CN:
         new_replies_tooltip: "新回复"
         replies: "回复"
         replies_with_count: "回复 (%{count})"
-      new_new:
+      unified_new:
         help: "最近几天创建或回复的话题"
       posted:
         title: "我的帖子"
@@ -4613,110 +4940,119 @@ zh_CN:
       title: "键盘快捷键"
       short_title: "快捷键"
       search_ctrl_f_tip: "要搜索整个论坛，请按 <kbd>/</kbd>"
+      description_header: "描述"
+      key_header: "键"
+      search_aliases:
+        shift: "shift"
+        alt: "添加选项"
+        meta: "meta cmd 命令 win windows 超级"
+        ctrl: "Ctrl 控制"
+        enter: "输入回车"
+        esc: "Esc 退出"
       jump_to:
         title: "跳到"
-        home: "%{shortcut} 首页"
-        latest: "%{shortcut} 最新"
-        new: "%{shortcut} 新"
-        unread: "%{shortcut} 未读"
-        unseen: "%{shortcut} 未读"
-        categories: "%{shortcut} 类别"
-        top: "%{shortcut} 排行榜"
-        bookmarks: "%{shortcut} 书签"
-        profile: "%{shortcut} 个人资料"
-        messages: "%{shortcut} 消息"
-        drafts: "%{shortcut} 草稿"
-        next: "%{shortcut} 下一个话题"
-        previous: "%{shortcut} 上一个话题"
+        home: "首页"
+        latest: "最新"
+        new: "新"
+        unread: "未读"
+        unseen: "未读"
+        categories: "类别"
+        top: "排行榜"
+        bookmarks: "书签"
+        profile: "资料"
+        messages: "消息"
+        drafts: "草稿"
+        next: "下一个话题"
+        previous: "上一个话题"
       navigation:
         title: "导航"
-        jump: "%{shortcut} 转到帖子 #"
-        back: "%{shortcut} 返回"
-        up_down: "%{shortcut} 移动选择 &uarr; &darr;"
-        open: "%{shortcut} 打开所选话题"
-        open_new_window: "%{shortcut} 在新标签页/窗口中打开所选话题"
-        next_prev: "%{shortcut} 下一个/上一个部分"
-        go_to_unread_post: "%{shortcut} 转到第一个未读帖子"
+        jump: "前往帖子#"
+        back: "返回"
+        up_down: "移动选择 &uarr; &darr;"
+        open: "打开所选话题"
+        open_new_window: "在新标签页/窗口中打开所选话题"
+        next_prev: "下一节/上一节"
+        go_to_unread_post: "前往第一篇未读帖子"
       application:
         title: "应用程序"
-        create: "%{shortcut} 创建新话题或个人消息"
-        notifications: "%{shortcut} 打开通知"
-        hamburger_menu: "%{shortcut} 打开导航菜单"
-        user_profile_menu: "%{shortcut} 打开用户菜单"
-        show_incoming_updated_topics: "%{shortcut} 显示更新的话题"
-        search: "%{shortcut} 搜索"
-        filter_sidebar: "%{shortcut} 筛选边栏"
-        help: "%{shortcut} 打开键盘帮助"
-        toggle_bulk_select: "%{shortcut} 切换批量选择"
-        dismiss: "%{shortcut} 忽略所选话题"
-        x: "%{shortcut} 切换选择 (批量选择模式下)"
-        log_out: "%{shortcut} 退出"
+        create: "创建新话题或个人消息"
+        notifications: "打开通知"
+        hamburger_menu: "打开导航菜单"
+        user_profile_menu: "打开用户菜单"
+        show_incoming_updated_topics: "显示更新主题"
+        search: "搜索"
+        filter_sidebar: "筛选侧边栏"
+        help: "打开键盘帮助"
+        toggle_bulk_select: "切换批量选择"
+        dismiss: "忽略所选话题"
+        x: "切换选择（在批量选择模式下）"
+        log_out: "退出"
       composing:
         title: "撰写"
-        return: "%{shortcut} 返回编辑器"
-        minimize: "%{shortcut} 最小化输入框"
-        create_or_reply: "%{shortcut} 创建话题或帖子回复"
-        fullscreen: "%{shortcut} 全屏编辑器"
-        insert_current_time: "%{shortcut} 插入当前时间"
-        bold: "%{shortcut} 粗体"
-        italic: "%{shortcut} 斜体"
-        link: "%{shortcut} 插入链接"
-        preformatted: "%{shortcut} 预格式化文本"
-        paragraph: "%{shortcut} 段落"
-        heading_1: "%{shortcut} 标题 1"
-        heading_2: "%{shortcut} 标题 2"
-        heading_3: "%{shortcut} 标题 3"
-        heading_4: "%{shortcut} 标题 4"
-        toggle_direction: "%{shortcut} 切换文本方向"
-        ordered_list: "%{shortcut} 有序列表"
-        unordered_list: "%{shortcut} 无序列表"
-        blockquote: "%{shortcut} 块引用"
+        return: "返回编辑器"
+        minimize: "最小化编辑器"
+        create_or_reply: "创建主题或回复"
+        fullscreen: "全屏编辑器"
+        insert_current_time: "输入当前时间"
+        bold: "粗体"
+        italic: "斜体"
+        link: "插入链接"
+        preformatted: "预先格式化的文本"
+        paragraph: "段落"
+        heading_1: "标题 1"
+        heading_2: "标题 2"
+        heading_3: "标题 3"
+        heading_4: "标题 4"
+        toggle_direction: "切换文本方向"
+        ordered_list: "有序列表"
+        unordered_list: "无序列表"
+        blockquote: "块引用"
       bookmarks:
         title: "书签"
-        enter: "%{shortcut} 保存并关闭"
-        later_today: "%{shortcut} 今天晚些时候"
-        later_this_week: "%{shortcut} 本周晚些时候"
-        tomorrow: "%{shortcut} 明天"
-        next_week: "%{shortcut} 下周"
-        next_month: "%{shortcut} 下个月"
-        next_business_week: "%{shortcut} 下周开始"
-        next_business_day: "%{shortcut} 下一个工作日"
-        custom: "%{shortcut} 自定义日期和时间"
-        none: "%{shortcut} 无提醒"
-        delete: "%{shortcut} 删除书签"
+        enter: "保存并关闭"
+        later_today: "今天晚些时候"
+        later_this_week: "本周晚些时候"
+        tomorrow: "明天"
+        next_week: "下周"
+        next_month: "下个月"
+        next_business_week: "下周开始"
+        next_business_day: "下一个工作日"
+        custom: "自定义日期和时间"
+        none: "无提醒"
+        delete: "删除书签"
       actions:
         title: "操作"
-        bookmark_topic: "%{shortcut} 切换书签话题"
-        pin_unpin_topic: "%{shortcut} 置顶/取消置顶话题"
-        share_topic: "%{shortcut} 分享话题"
-        share_post: "%{shortcut} 分享帖子"
-        reply_as_new_topic: "%{shortcut} 作为链接话题回复"
-        reply_topic: "%{shortcut} 回复话题"
-        reply_post: "%{shortcut} 回复帖子"
-        quote_post: "%{shortcut} 引用帖子"
-        like: "%{shortcut} 点赞帖子"
-        flag: "%{shortcut} 举报帖子"
-        bookmark: "%{shortcut} 将帖子加入书签"
-        edit: "%{shortcut} 编辑帖子"
-        delete: "%{shortcut} 删除帖子"
-        mark_muted: "%{shortcut} 将话题设为免打扰"
-        mark_regular: "%{shortcut} 常规（默认）话题"
-        mark_tracking: "%{shortcut} 跟踪话题"
-        mark_watching: "%{shortcut} 关注话题"
-        print: "%{shortcut} 打印话题"
-        defer: "%{shortcut} 将话题记为未读"
-        topic_admin_actions: "%{shortcut} 打开话题管理员操作"
-        archive_private_message: "%{shortcut} 切换归档个人信息"
+        bookmark_topic: "切换书签话题"
+        pin_unpin_topic: "置顶/取消置顶话题"
+        share_topic: "分享话题"
+        share_post: "分享帖子"
+        reply_as_new_topic: "作为链接话题回复"
+        reply_topic: "回复话题"
+        reply_post: "回复帖子"
+        quote_post: "引用帖子"
+        like: "点赞帖子"
+        flag: "标记帖子"
+        bookmark: "添加书签"
+        edit: "编辑帖子"
+        delete: "删除帖子"
+        mark_muted: "话题免打扰"
+        mark_regular: "常规（默认）话题"
+        mark_tracking: "跟踪话题"
+        mark_watching: "关注话题"
+        print: "打印话题"
+        defer: "将话题标记为未读"
+        topic_admin_actions: "打开话题管理员操作"
+        archive_private_message: "切换存档个人消息"
       search_menu:
         title: "搜索菜单"
-        prev_next: "%{shortcut} 上下移动所选内容"
-        insert_url: "%{shortcut} 将所选内容插入到打开的编辑器"
-        full_page_search: "%{shortcut} 启动完整页面搜索"
+        prev_next: "上下移动所选内容"
+        insert_url: "将所选内容插入到打开的编辑器中"
+        full_page_search: "启动完整页面搜索"
       admin:
         title: "管理员"
-        search_prev_next: "%{shortcut} 上下移动所选内容"
-        search_open: "%{shortcut} 打开管理员界面的搜索"
-        search_full_page: "%{shortcut} 打开全页管理员搜索"
+        search_prev_next: "上下移动所选内容"
+        search_open: "打开管理员界面的搜索"
+        search_full_page: "打开整页管理员搜索"
     badges:
       earned_n_times:
         other: "已获得此徽章 %{count} 次"
@@ -4746,7 +5082,7 @@ zh_CN:
           name: 其他
         posting:
           name: 发帖
-      favorite_max_reached: "您无法将更多徽章加入书签。"
+      favorite_max_reached: "您无法将更多徽章添加为书签。"
       favorite_max_not_reached: "将此徽章标记为收藏"
       favorite_count: "%{count}/%{max} 个徽章已被标记为收藏"
     download_calendar:
@@ -4779,16 +5115,17 @@ zh_CN:
       staff_info: "要添加限制，请将此标签放入<a href=%{basePath}/tag_groups>标签组</a>。"
       category_restricted: "此标签仅限于您无权访问的类别。"
       synonyms: "同义词"
-      synonyms_description: "使用以下标签时，它们将被替换为 <b>%{base_tag_name}</b>。"
+      synonyms_description:
+        other: "同义词 %{synonyms} 将被替换为 %{base_tag_name}。"
       synonyms_inline: "这些同义词将被替换为 %{base_tag_name}："
+      synonym_hint: "→ %{tag_name}"
       save: "保存标签的名称和描述"
       tag_groups_info:
-        other: "此标签属于以下组：%{tag_groups}。"
+        other: "此标签属于以下标签组： %{tag_groups}。"
       tag_groups_info_prefix:
-        other: "此标签属于群组： "
+        other: "此标签属于以下标签组："
       category_restrictions:
-        other: "它只能用于以下类别："
-      restricted_to: "限于"
+        other: "它只能用于以下类别： %{categories}。"
       no_synonyms: "此标签没有同义词。"
       edit_synonyms: "编辑同义词"
       add_synonyms_label: "添加同义词："
@@ -4916,7 +5253,7 @@ zh_CN:
           read: "您还没有阅读任何话题。"
           posted: "您尚未在任何话题中发帖。"
           latest: "没有最新话题。"
-          bookmarks: "您还没有将任何话题加入书签。"
+          bookmarks: "您还没有将任何话题添加为书签。"
           top: "没有热门话题。"
     invite:
       custom_message: "通过撰写<a href>自定义消息</a>，使您的邀请更个性化。"
@@ -4973,8 +5310,6 @@ zh_CN:
       no_read_topics_body: "开始阅读讨论后，您会在此处看到一个列表。要开始阅读，请在<a href='%{topUrl}'>热门</a>或<a href='%{categoriesUrl}'>类别</a>中或者通过关键字搜索 %{searchIcon}，查找您感兴趣的话题"
     no_group_messages_title: "未找到群组消息"
     topic_entrance:
-      sr_jump_top_button: "跳到第一个帖子 - %{date}"
-      sr_jump_bottom_button: "跳到最后一个帖子 - %{date}"
       jump_top_button_title: "跳到第一个帖子"
       jump_bottom_button_title: "跳到最后一个帖子"
     fullscreen_table:
@@ -5288,7 +5623,7 @@ zh_CN:
           unseen: "带有 %{tag} 标签的未显示话题"
           hot: "带有 %{tag} 标签的热门话题"
           posted: "您发表过帖子的带有 %{tag} 标签的话题"
-          bookmarks: "您已加入书签的带“%{tag}”标签的话题"
+          bookmarks: "您已添加为书签的带“%{tag}”标签的话题"
           default: "带有“%{tag}”标签的%{filter}话题"
         multi_tag:
           default: "带有“%{tags}”标签的话题"
@@ -5300,7 +5635,7 @@ zh_CN:
           unseen: "%{category}中带有 %{tag} 标签的未显示话题"
           hot: "%{category}中带有 %{tag} 标签的热门话题"
           posted: "%{category}中您发过帖的带有“%{tag}”标签的话题"
-          bookmarks: "%{category}中您已加入书签的带有“%{tag}”标签的话题"
+          bookmarks: "%{category}中您已添加为书签的带有“%{tag}”标签的话题"
           default: "%{category}中带有标签“%{tag}”的%{filter}话题"
         no_tags:
           all:
@@ -5321,15 +5656,9 @@ zh_CN:
             unseen: "%{category}中无标签的未查看话题"
             hot: "%{category}中无标签的热门话题"
             posted: "%{category}中您发过帖的无标签的话题"
-            bookmarks: "%{category}中您已加入书签的无标签的话题"
+            bookmarks: "%{category}中您已添加为书签的无标签的话题"
             default: "%{category}中无标签的%{filter}话题"
         categories: "所有类别"
-    content_localization:
-      toggle_localized:
-        translated: "此页面为机器翻译。点击查看原文。"
-        not_translated: "此页面未翻译。点击进行翻译。"
-        translations_enabled: "已启用翻译"
-        translations_disabled: "已禁用翻译"
     language_switcher:
       title: "更改站点语言"
   admin_js:
@@ -5351,6 +5680,7 @@ zh_CN:
         title: "可用报告列表"
         sidebar_title: "报告"
         back: "返回到所有报告"
+        all_groups: "所有群组"
         group_engagement: "参与度"
         group_traffic: "流量"
         group_members: "成员"
@@ -5358,6 +5688,8 @@ zh_CN:
         group_moderation_and_security: "审核与安全"
         group_other: "其他"
         legacy_warning: "这是一份旧版报告，即将停用。如果您需要帮助寻找替代报告，请联系支持团队。"
+        chart:
+          total: "总计： %{count}"
       config_sections:
         account:
           title: "帐户"
@@ -5399,8 +5731,8 @@ zh_CN:
         permanent_no_group_selection: "不适用，永久更改适用于所有群组。"
         no_changes: "目前暂无即将推出的更改"
         preview: "预览"
-        default_warning: "由于<a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>即将推出的更改</a>，该设置的默认值已从 %{oldDefaultValue} 更改为 %{newDefaultValue}。"
-        default_warning_short: "此设置的默认值已更改，请在 <a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>即将推出的更改</a> 页面中阅读更多相关信息。"
+        default_warning: "由于<a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>即将推出的更改</a>，此设置的默认值已从“%{oldDefaultValue}”更改为“%{newDefaultValue}”。"
+        default_warning_short: "此设置的默认值已更改，请在<a href='%{basePath}/admin/config/upcoming-changes?changeNamesFilter=%{changeNamesFilter}'>即将推出的更改</a>页面中阅读更多相关信息。"
         enabled_for_options:
           no_one: "没有人"
           everyone: "所有人"
@@ -5416,15 +5748,19 @@ zh_CN:
           permanent: "永久"
         status_descriptions:
           experimental: "此功能尚处于早期开发阶段，可能会发生重大变化或被终止。可能与其他功能不完全兼容。"
-          alpha: "此功能正在积极开发和完善中。功能可能会有所更改，也可能尚未完全完善，但目前足够稳定，可以尝试使用。"
-          beta: "该项目已接近完成，可供提前体验。仍有可能进行一些细微的修改。"
-          stable: "这项功能已经完成并得到充分支持。不久后，它将在所有 Discourse 网站上推出。"
+          alpha: "此功能正在积极开发和完善中。功能可能会有所更改，也可能尚未完全完善，但目前足够稳定，可以试用。"
+          beta: "此项目已接近完成，可供提前体验。仍有可能进行一些细微的修改。"
+          stable: "这项功能已经完成并得到充分支持。不久后，它将在所有 Discourse 站点上推出。"
         impact_roles:
           admins: "管理员"
           moderators: "版主"
           staff: "管理人员"
           all_members: "所有成员"
           developers: "开发者"
+        impact_types:
+          feature_type: "功能"
+          other_type: "其他"
+          site_setting_default_type: "设为默认"
         filter:
           search_placeholder: "按名称、描述或插件筛选…"
           no_results: "没有与您的筛选条件匹配的即将推出的更改"
@@ -5437,7 +5773,7 @@ zh_CN:
           impact_type_all: "所有影响类型"
           impact_type_feature: "功能"
           impact_type_other: "其他"
-          impact_type_site_setting_default: "设置默认值"
+          impact_type_site_setting_default: "设为默认"
           status_all: "所有状态"
           status_conceptual: "概念性"
           status_experimental: "实验性"
@@ -5457,7 +5793,7 @@ zh_CN:
           header_description: "在这里提供有关此站点和您的团队的信息，以便人们可以了解您的社区、幕后人员，以及在出现问题时如何联系您。显示在您的站点的<a href='%{basePath}/about'>“关于”页面</a>上。"
         developer:
           title: "开发者"
-          header_description: "控制速率限值、乘数与计算、安全模式和其他高级功能的开发者设置"
+          header_description: "开发者设置用于控制安全模式和其他高级功能"
         experimental:
           title: "实验性"
           header_description: "切换网站的实验性功能，其中大部分功能可按组进行控制"
@@ -5568,6 +5904,9 @@ zh_CN:
             opengraph_image:
               title: "OpenGraph 图片"
               description: "默认 opengraph 图片，当页面没有其他合适的图片时使用。如果留空，将使用 large_icon。"
+            og_image_preview:
+              generate: "生成"
+              topic_id_label: "话题 ID"
             x_summary_large_image:
               title: "X 摘要大图"
               description: "X 卡摘要大图。如果留空，则使用 OpenGraph_image（只要它不是 .svg）生成常规卡片元数据。"
@@ -5704,6 +6043,20 @@ zh_CN:
             logs:
               title: "日志"
               header_description: "查看和管理备份、恢复和上传内容"
+        problem_checks:
+          title: "问题检查"
+          header_description: "查看所有已注册的问题检查及其当前状态。"
+          identifier: "检查"
+          target: "目标"
+          priority: "优先级"
+          status: "状态"
+          passing: "通过"
+          failing: "失败"
+          last_run_at: "最后一次运行"
+          ignore: "忽略"
+          watch: "关注"
+          more_options:
+            title: "更多选项"
         reports:
           title: "报告"
           header_description: "报告是帮助您了解站点上所发生事情的强大工具。它们可以帮助您了解趋势、发现问题并根据数据做出决策。"
@@ -5880,13 +6233,13 @@ zh_CN:
         stale_data: "最近尚未执行更新检查。确保 sidekiq 正在运行。"
         version_check_pending: "看起来您最近更新了。太棒了！"
         installed_version: "已安装"
-        latest_version: "最新"
+        github: "GitHub"
         problems_found: "基于您当前网站设置的一些建议"
         dismiss_notice: "忽略"
         new_features:
           title: "最新变化"
           subtitle: "我们一直在发布新功能和改进。本页涵盖了重点内容，但您也可以点击“了解详情”查看详细的版本说明。"
-          no_new_features_found: "Feed 中没有条目，或者您的所选筛选器没有返回结果。 您可以在 <a href='%{url}' target='_blank'>Discourse Meta 社区</a>上看到以前的新功能公告。"
+          no_new_features_found: "Feed 中没有条目，或者您的所选筛选器没有返回结果。您可以在 <a href='%{url}' target='_blank'>Discourse Meta 社区</a>上查看以前的新功能公告。"
           no_new_features_error: "加载 Feed 时出错。您可以在 <a href='%{url}' target='_blank'>Discourse Meta 社区</a>上查看以前的新功能公告。"
           learn_more: "了解详情…"
         last_checked: "上次检查"
@@ -5927,6 +6280,105 @@ zh_CN:
         too_many_requests: 您执行此操作的次数过多。请稍后再试。
         not_found_error: 抱歉，此报告不存在
         custom_date_range: 自定义日期范围
+        loading: "正在加载仪表盘…"
+        stable: "稳定"
+        sections:
+          highlights:
+            title: "高亮显示"
+          reports:
+            title: "举报"
+          traffic:
+            title: "网站流量"
+          engagement:
+            title: "参与度"
+            fetch_error: "互动数据加载失败。请尝试刷新页面。"
+            activity_by_category:
+              title: "按类别显示的活动"
+              description: "各类别下的话题、帖子及成员参与情况。"
+              category: "类别"
+              topics: "话题"
+              posts: "帖子"
+              page_views: "页面浏览量"
+              share: "分享"
+              vs_prior: "与之前相比"
+              empty: "所选时间段内无任何活动。"
+            whos_posting:
+              title: "谁在发帖？"
+              all_categories: "所有类别"
+              include_subcategories: "包括子类别"
+              new_members: "新成员"
+              returning: "返回"
+              staff: "管理人员"
+              empty: "所选时间段内没有帖子。"
+            trust_level_pipeline:
+              title: "信任级别变化"
+              trust_levels:
+                "0": "新"
+                "1": "基本用户"
+                "2": "成员"
+                "3": "常规"
+                "4": "领导者"
+              trend:
+                climbing:
+                  other: "+%{count} 升级"
+                dropping:
+                  other: "-%{count} 降级"
+              stable_aria: "不变"
+            headline:
+              healthy_growth:
+                title: "成员们正在养成回来的习惯。"
+                summary: "在此期间，用户黏性、日活跃用户和新注册用户数均有所增长。"
+              declining:
+                title: "成员回来的频率降低了。"
+                summary: "在此期间，用户黏性、日活跃用户和新注册用户数均有所下降。"
+              engaged_but_shrinking:
+                title: "社区成员保持活跃，但社区规模正在缩小。"
+              metrics:
+                new_signups: "新注册用户"
+                dau_mau: "日活跃用户（DAU）/月活跃用户（MAU）粘性"
+                daily_engaged_users: "每日参与"
+          search:
+            title: "搜索"
+            table:
+              searches: "搜索"
+              status: "状态"
+        reports_section:
+          modal:
+            enabled_heading: "已启用"
+            all_heading: "所有报告"
+            apply: "应用"
+        configure:
+          button: "配置"
+        highlights:
+          kpi:
+            new_signups:
+              tooltip: "已创建的帐户，包括未激活帐户和暂存帐户。"
+            dau_mau:
+              tooltip: '月活跃用户中回访用户的比例。这可以反映社区的“粘性”，即用户回访的频率。'
+            new_contributors:
+              tooltip: "首次发帖的成员人数。"
+            daily_engaged_users:
+              tooltip: "社区每天平均点赞或发帖的成员人数。"
+        site_traffic:
+          kpi:
+            bounce_rate:
+              label: "跳出率"
+              tooltip: "单次页面浏览且停留时间少于 10 秒的会话占比。"
+            average_session_duration:
+              label: "平均会话时长"
+              tooltip: "在选定时间段内，访客在您的社区停留的平均时间。"
+            session_metrics:
+              empty_tooltip: "本周期有访问记录后显示访问量。"
+          series:
+            anonymous: "匿名"
+            embedded: "嵌入式页面浏览量"
+            crawlers: "抓取工具"
+          see_details: "查看详情"
+        period:
+          last_7_days: "过去 7 天"
+          last_30_days: "过去 30 天"
+          last_3_months: "过去 3 个月"
+          custom: "自定义"
         reports:
           trend_title: "变化 %{percent}。目前为 %{current}，上一个期间为 %{prev}。"
           percent_change_tooltip: "%{percent} 变化。"
@@ -6004,7 +6456,6 @@ zh_CN:
             incoming_email: "自定义传入电子邮件地址"
             incoming_email_placeholder: "输入电子邮件地址"
             incoming_email_tooltip: "您可以使用 | 字符分隔多个电子邮件地址。"
-            visibility: 公开范围
             visibility_levels:
               title: "谁能看到此群组？"
               public: "所有人"
@@ -6178,6 +6629,7 @@ zh_CN:
             invites:
               create: 发送电子邮件邀请或生成邀请链接。
             badges:
+              list: 获取徽章列表。
               create: 创建新徽章。
               show: 获取有关徽章的信息。
               update: 更新徽章。
@@ -6427,9 +6879,11 @@ zh_CN:
           your_organization: "您的组织"
           your_organization_description: "我们将在《服务条款》和《隐私声明》中显示此信息来表明此网站的运营方和司法管辖区。"
           company_name: "名称"
-          company_name_placeholder: "Acme 组织"
+          company_name_placeholder: "ExampleCo"
           company_name_warning: |
             如果留空，将不提供样板《服务条款》或《隐私声明》。
+          company_url: "网站"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "适用法律"
           governing_law_placeholder: "省、州或国家/地区"
           governing_law_help: |
@@ -6446,6 +6900,8 @@ zh_CN:
             initial_members: "展开成员"
             initial_members_description: "添加“查看更多”按钮之前要显示的群组成员数量。"
             show_description: "包括描述"
+          locale_selector:
+            title: "语言"
           optional: "（可选）"
           update: "更新"
           toasts:
@@ -6752,6 +7208,8 @@ zh_CN:
           beginners_guide_title: "Discourse 主题初学者使用指南"
           developers_guide_title: "Discourse 主题开发者指南"
           browse_themes: "浏览社区主题"
+          install_more_themes: "安装更多主题"
+          install_more_themes_description: "浏览热门社区主题，或从文件或 Git 仓库安装主题。"
           customize_desc: "自定义："
           title: "主题"
           description: "主题是广泛的自定义设置，可以更改论坛设计风格的多个元素，通常还包括额外的前端功能。"
@@ -6789,7 +7247,7 @@ zh_CN:
           dark_color_scheme: "深色调色板"
           default_light_scheme: "浅色（默认）"
           color_scheme_select: "选择主题使用的颜色。"
-          only_theme_color_schemes: "该主题限制了可使用的调色板。"
+          only_theme_color_schemes: "此主题限制了可使用的调色板。"
           dark_color_scheme_select: "选择主题在深色模式下使用的颜色。"
           edit_colors: "编辑颜色"
           custom_sections: "自定义部分："
@@ -6853,9 +7311,11 @@ zh_CN:
           finish_install: "完成主题安装"
           last_attempt: "安装过程未完成，最后一次尝试："
           remote_branch: "分支名称（可选）"
+          remote_branch_placeholder: "选择一个具体的分支，或保持为空"
           public_key: "授予以下公钥访问仓库的权限："
           install: "安装"
           installed: "已安装"
+          screenshot: "%{name} 截图"
           install_popular: "热门"
           install_upload: "从您的设备"
           install_git_repo: "从 git 仓库"
@@ -6885,6 +7345,16 @@ zh_CN:
           update_success: "%{theme} 更新完成"
           up_to_date: "主题已经是最新版本，上次检查日期："
           has_overwritten_history: "当前主题版本不再存在，因为 Git 历史记录已被强制推送覆盖。"
+          change_source:
+            button: "更改源"
+            title: "更改主题源"
+            repository_url: "存储库 URL"
+            branch: "分支"
+            updating: "正在更新主题源…"
+            update: "更新源"
+            has_existing_key: "此主题已配置 SSH 密钥。"
+            generate_new_key: "生成新的 SSH 密钥"
+            keep_existing_key: "保留现有的 SSH 密钥"
           add: "添加"
           theme_settings: "自定义主题设置"
           theme_site_settings: "主题可以覆盖的设置"
@@ -7177,6 +7647,7 @@ zh_CN:
         topic_id: "话题 ID"
         post_id: "帖子 ID"
         category_id: "类别 ID"
+        reviewable_id: "审核"
         delete: "删除"
         edit: "编辑"
         save: "保存"
@@ -7324,6 +7795,7 @@ zh_CN:
             change_site_setting_groups: "更改站点设置群组"
             discourse_id_regenerate_credentials: "重新生成 Discourse ID 凭据"
             configure_category_type: "配置类别类型"
+            unconfigure_category_type: "未配置类别类型"
         screened_emails:
           title: "已屏蔽的电子邮件地址"
           description: "当有人尝试创建新帐户时，将检查以下电子邮件地址并禁止注册，或执行某些其他操作。"
@@ -7361,6 +7833,7 @@ zh_CN:
             header: "标头"
             full_page: "完整页面"
             click_through_only: "全部（仅点击后到达）"
+            non_staff_only: "非工作人员用户"
           header_search_results: "标头搜索结果"
         logster:
           title: "错误日志"
@@ -7529,10 +8002,12 @@ zh_CN:
         silence_reason: "禁言原因"
         bulk_actions:
           title: "批量操作"
-          admin_cant_be_deleted: "无法删除此用户，因为他们是管理员"
-          too_many_or_old_posts: "无法删除此用户，因为他们有太多帖子或有很早之前的帖子"
-          too_many_selected_users:
-            other: "您已达到批量删除用户上限 %{count}"
+          select_all: "全选"
+          clear_all: "全部清除"
+          suspend:
+            confirmation_modal:
+              close: "关闭"
+              confirm: "封禁"
           delete:
             label: "删除用户…"
             confirmation_modal:
@@ -7557,6 +8032,9 @@ zh_CN:
           suspended: "被封禁"
           silenced: "被禁言"
           staged: "暂存"
+        activation_filter:
+          all: "所有用户"
+          activated: "已激活"
         approved: "已批准？"
         titles:
           active: "活跃用户"
@@ -7756,7 +8234,6 @@ zh_CN:
           other: "无法删除所有帖子，因为该用户的帖子超过 %{count} 篇。(delete_all_posts_max)"
         delete_confirm_title: "确定要删除此用户吗？此操作无法撤消！"
         delete_confirm: "通常最好将用户匿名而不是删除他们，以避免从现有讨论中移除内容。"
-        delete_and_block: "删除用户并屏蔽其电子邮件地址和 IP 地址"
         delete_dont_block: "删除用户"
         deleting_user: "正在删除用户…"
         deleted: "该用户已被删除。"
@@ -7895,6 +8372,7 @@ zh_CN:
           disabled: "在注册表单上隐藏"
         searchable:
           title: "可搜索"
+          tooltip: "启用此功能后，任何人都可以通过该字段的值查找成员，并在搜索结果中看到该字段，即使该字段未显示在成员的个人资料或用户卡片上。"
           enabled: "可搜索"
           disabled: "不可搜索"
         field_types:
@@ -7923,7 +8401,7 @@ zh_CN:
         interpolation_keys: "可用的插值键："
         interpolation_key_insert: "点击插入"
         interpolation_key_used: "已使用"
-        interpolation_key_invalid: "未知密钥——将不会进行插值"
+        interpolation_key_invalid: "未知密钥 – 将不会进行插值"
         outdated:
           title: "此翻译已过时"
           description: "自此替换创建以来，此键的默认翻译已更改。请在下面检查您的翻译是否与对原始意图所做的任何更改相符。"
@@ -7942,6 +8420,8 @@ zh_CN:
       site_settings:
         title: "网站设置"
         description: "配置您的 Discourse 网站的设置以自定义其外观、功能和用户体验。"
+        depends_on_notice:
+          other: "此设置仅在启用%{dependencyLinks}时生效。"
         discard:
           other: "舍弃更改"
         save:
@@ -8005,6 +8485,7 @@ zh_CN:
           groups: "群组"
           dashboard: "信息中心"
           navigation: "导航"
+          nested_replies: "嵌套回复"
           experimental: "实验性"
         secret_list:
           invalid_input: "输入字段不能为空或包含竖线字符。"
@@ -8032,20 +8513,23 @@ zh_CN:
             prompt: "更改此设置可能会对您的网站产生深远或意想不到的后果。确定要继续吗？"
             confirm: "是，我确定"
           min_password_length:
-            prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
-            confirm: "是，更新密码策略"
+            prompt: "您即将修改密码政策。这将影响所有从现在起更改密码的用户。确定要继续吗？"
+            confirm: "是，更新密码政策"
           min_admin_password_length:
-            prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的管理员。确定要继续吗？"
-            confirm: "是，更新密码策略"
+            prompt: "您即将修改密码政策。这将影响所有从现在起更改密码的管理员。确定要继续吗？"
+            confirm: "是，更新密码政策"
           password_unique_characters:
-            prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
-            confirm: "是，更新密码策略"
+            prompt: "您即将更改密码政策。这将影响所有从现在起更改密码的用户。确定要继续吗？"
+            confirm: "是，更新密码政策"
           block_common_passwords:
-            prompt: "您即将修改密码策略。这将影响所有从现在起更改密码的用户。确定要继续吗？"
-            confirm: "是，更新密码策略"
+            prompt: "您即将修改密码政策。这将影响所有从现在起更改密码的用户。确定要继续吗？"
+            confirm: "是，更新密码政策"
           clean_up_inactive_users_after_days:
             prompt: "将此值设置为 0 以外的任何值都会导致在该天数内不再活跃的用户被永久删除。确定要继续吗？"
             confirm: "是的，我明白除非我将此值设置为 0，否则不活跃用户将被永久删除。"
+          can_permanently_delete:
+            prompt: "启用此功能后，管理员可以永久删除帖子、话题和帖子修订。永久删除的数据无法恢复。这也可能影响数据完整性并导致现有链接失效。"
+            confirm: "我明白"
         job_status:
           completed: "更新完成"
           enqueued: "正在更新"
@@ -8204,7 +8688,8 @@ zh_CN:
         crawler_settings_saved: "抓取工具设置已保存"
         back: "返回嵌入"
         configuration_snippet: "配置片段"
-        full_app_mode_description: "在嵌入的 iframe 中加载完整的 Discourse 应用，使用户能够直接回复、点赞、引用并与话题互动。"
+        full_app_mode: "完整应用模式"
+        full_app_mode_description: "在嵌入的 iframe 中加载完整的 Discourse 应用，使用户能够直接回复、点赞、引用并与话题互动"
         host_form:
           add_header: "添加主机"
           edit_header: "编辑主机"

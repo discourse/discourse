@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import ReviewableFlagReason from "discourse/components/reviewable/flag-reason";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | reviewable | flag-reason", function (hooks) {
+module("Integration | Component | Reviewable | FlagReason", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders with basic arguments", async function (assert) {

@@ -157,6 +157,14 @@ export default function () {
     );
 
     this.route(
+      "adminProblemChecks",
+      { path: "/problem-checks", resetNamespace: true },
+      function () {
+        this.route("index", { path: "/" });
+      }
+    );
+
+    this.route(
       "adminReports",
       { path: "/reports", resetNamespace: true },
       function () {
@@ -371,6 +379,9 @@ export default function () {
         });
         this.route("logo");
         this.route("fonts");
+        this.route("gifs", function () {
+          this.route("settings", { path: "/" });
+        });
         this.route("adminWelcomeBanner", { path: "/welcome-banner" });
         this.route("navigation", function () {
           this.route("settings", { path: "/" });

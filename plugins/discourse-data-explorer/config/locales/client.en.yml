@@ -1,4 +1,9 @@
 en:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_data_explorer: "Discourse Data Explorer"
   js:
     discourse_ai:
       features:
@@ -10,11 +15,21 @@ en:
       explorer:
         no_semicolons: "Remove the semicolons from the query."
         dirty: "You must save the query before running."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "No results"
+      manage_reports_hint:
+        title: "Create a Data Explorer query"
+        description: "Write a custom SQL query to surface anything specific to your community."
     explorer:
       default_query: "Default"
       default_query_notice: "This is a default query, the SQL cannot be edited. To edit the SQL, create a new query."
       queries: "Queries"
       query_created: "Query created!"
+      mode:
+        label: "Query authoring mode"
+        manual: "Write SQL"
+        ai: "Generate with AI"
       or: "or"
       admins_only: "The data explorer is only available to admins."
       allow_groups: "Allow groups to access this query"
@@ -23,15 +38,20 @@ en:
       create_placeholder: "Query name..."
       description_placeholder: "Enter a description here"
       ai:
-        or_divider: "OR"
         description_title: "Generate with AI"
         description_hint: "Describe what you want in plain language. We'll generate the SQL, name, and description for you."
         description_placeholder: "e.g. Show me signups across time"
+        regenerate_placeholder: "e.g. Update the query to limit to 50 results"
+        prompt_label: "Prompt"
         generate: "Generate"
-        generating_name: "Generating..."
+        regenerate: "Update prompt"
         generating: "Generating query with AI..."
         generation_timeout: "AI query generation timed out. You can write the SQL manually."
         generation_error: "Something went wrong generating the query."
+        save_query: "Save query"
+        write_manually: "Write SQL manually"
+        sql_label: "SQL"
+        optional: "optional"
       import:
         label: "Import"
         unparseable_json: "Unparseable JSON file."
@@ -69,26 +89,48 @@ en:
       schema:
         title: "Database Schema"
         filter: "Search..."
+        search_tables: "Search tables"
+        hide: "Hide schema"
+        show: "Show schema"
         sensitive: "The contents of this column may contain particularly sensitive or private information. Please exercise caution when using the contents of this column."
       types:
         bool:
           yes: "Yes"
           no: "No"
           null_: "Null"
-      export: "Export"
       view_json: "View JSON"
-      view: "View"
       save: "Save changes"
       saverun: "Save changes and run"
       run: "Run"
       undo: "Discard changes"
-      edit: "Edit"
       delete: "Delete"
       recover: "Undelete query"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Table"
-      show_graph: "Graph"
+      sql_label: "SQL"
+      run_with_explain: "Run with query plan"
+      run_options: "More run options"
+      view:
+        label: "Result view"
+      chart:
+        form:
+          label: "Chart type"
+          line: "Line"
+          bar: "Bar"
+          stacked: "Stacked"
+          dual_axis: "Dual axis"
+        tooltip:
+          total: "Total: %{count}"
+      chart_empty:
+        no_rows: "No rows to chart."
+        no_numeric: "This query has no numeric columns to chart."
+        no_numeric_with_columns: "This query has no numeric columns to chart (ignored: %{columns})."
+        view_as_table: "View as table"
+      chart_footnote:
+        ignored: "Columns not charted: %{columns}"
+      export_as:
+        label: "Export as…"
+        results_json: "Results (JSON)"
+        results_csv: "Results (CSV)"
+        query_json: "Query definition (JSON)"
       others_dirty: "A query has unsaved changes that will be lost if you navigate away."
       run_time: "Query completed in %{value} ms."
       cached_result_notice: "Showing cached results from %{relative_time}."
@@ -106,7 +148,6 @@ en:
       query_time: "Last run"
       query_user: "Created by"
       column: "Column %{number}"
-      explain_label: "Include query plan?"
       save_params: "Set defaults"
       reset_params: "Reset"
       search_placeholder: "Search..."
@@ -126,6 +167,32 @@ en:
           descriptions:
             data_explorer:
               run_queries: "Run Data Explorer queries. Restrict the API key to a set of queries by specifying queries IDs."
+    discourse_workflows:
+      node_unavailable:
+        requires_data_explorer: "Requires the Data Explorer plugin to be enabled"
+      nodes:
+        "action:sql": "Data Explorer"
+      node_descriptions:
+        "action:sql": "Run a read-only SQL query against the database"
+      sql:
+        operation: "Operation"
+        operation_description: "How to run the query"
+        queries: "Queries"
+        raw: "Raw SQL"
+        query_id: "Query"
+        query_id_description: "Select a saved query to run"
+        query_params: "Query parameters"
+        query_params_description: "Fill in the parameters for the selected query"
+        query: "SQL query"
+        query_description: "Write a read-only SQL query. Declare parameters with Data Explorer syntax and map their values below."
+        params: "Query parameters"
+        params_description: "Parameters can be used as :my_param in the SQL query."
+        add_param: "Add parameter"
+        param_name: "Param"
+        param_value: "Value"
+        output:
+          results: "Results"
+          no_results: "No results"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

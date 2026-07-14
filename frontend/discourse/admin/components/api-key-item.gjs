@@ -3,13 +3,13 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import avatar from "discourse/helpers/avatar";
-import icon from "discourse/helpers/d-icon";
-import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const SCOPE_ICONS = {
@@ -84,7 +84,7 @@ export default class ApiKeyItem extends Component {
         <div class="d-table__mobile-label">{{i18n "admin.api.user"}}</div>
         {{#if @apiKey.user}}
           <LinkTo @route="adminUser" @model={{@apiKey.user}}>
-            {{avatar @apiKey.user imageSize="small"}}
+            {{dAvatar @apiKey.user imageSize="small"}}
           </LinkTo>
         {{else}}
           {{i18n "admin.api.all_users"}}
@@ -94,22 +94,22 @@ export default class ApiKeyItem extends Component {
         <div class="d-table__mobile-label">{{i18n "admin.api.created"}}</div>
         <div class="d-table__value-wrapper">
           <LinkTo @route="adminUser" @model={{@apiKey.createdBy}}>
-            {{avatar @apiKey.createdBy imageSize="small"}}
+            {{dAvatar @apiKey.createdBy imageSize="small"}}
           </LinkTo>
-          {{formatDate @apiKey.created_at}}
+          {{dFormatDate @apiKey.created_at}}
         </div>
       </td>
       <td class="d-table__cell --detail key-scope">
         <div class="d-table__mobile-label">{{i18n "admin.api.scope"}}</div>
         <div class="d-table__value-wrapper">
-          {{icon this.scopeIcon}}
+          {{dIcon this.scopeIcon}}
           {{this.scopeName}}
         </div>
       </td>
       <td class="d-table__cell --detail key-last-used">
         <div class="d-table__mobile-label">{{i18n "admin.api.last_used"}}</div>
         {{#if @apiKey.last_used_at}}
-          {{formatDate @apiKey.last_used_at}}
+          {{dFormatDate @apiKey.last_used_at}}
         {{else}}
           {{i18n "admin.api.never_used"}}
         {{/if}}
@@ -130,7 +130,7 @@ export default class ApiKeyItem extends Component {
             @triggerClass="btn-default"
           >
             <:content>
-              <DropdownMenu as |dropdown|>
+              <DDropdownMenu as |dropdown|>
                 {{#if @apiKey.revoked_at}}
                   <dropdown.item>
                     <DButton
@@ -151,7 +151,7 @@ export default class ApiKeyItem extends Component {
                     />
                   </dropdown.item>
                 {{/if}}
-              </DropdownMenu>
+              </DDropdownMenu>
             </:content>
           </DMenu>
         </div>

@@ -69,3 +69,11 @@ hy:
     edit_assignments_modal:
       topic: "Թեմա"
       post: "Գրառում"
+    discourse_workflows:
+      nodes:
+        "trigger:assigned": "Վերագրված"
+      assign_topic:
+        operations:
+          assign: "Վերագրել"
+          unassign: "Ետ կանչել վերագրումը"
+        topic_id: "Թեմայի ID"

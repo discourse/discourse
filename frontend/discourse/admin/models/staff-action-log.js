@@ -6,8 +6,10 @@ import RestModel from "discourse/models/rest";
 import { i18n } from "discourse-i18n";
 
 function format(label, value, escape = true) {
+  const labelBr = value && value.toString().includes("\n") ? "<br/>" : " ";
+  value = value ? value.toString() : "";
   return value
-    ? `<b>${i18n(label)}</b>: ${escape ? escapeExpression(value) : value}`
+    ? `<b>${i18n(label)}:</b>${labelBr} ${escape ? escapeExpression(value.replaceAll("\n", "<br/>")) : value.replaceAll("\n", "<br/>")}`
     : "";
 }
 
@@ -48,6 +50,7 @@ export default class StaffActionLog extends RestModel {
     "topic_id",
     "post_id",
     "category_id",
+    "reviewable_id",
     "new_value",
     "previous_value",
     "details",
@@ -63,18 +66,29 @@ export default class StaffActionLog extends RestModel {
       ? `<a href data-link-topic-id="${this.topic_id}">${this.topic_id}</a>`
       : null;
 
+    const reviewableLink = this.reviewable_id
+      ? `<a href="/review/${this.reviewable_id}">${this.reviewable_id}</a>`
+      : null;
+
     let lines = [
       format("email", this.email),
       format("admin.logs.ip_address", this.ip_address),
       format("admin.logs.topic_id", topicLink, false),
       format("admin.logs.post_id", postLink, false),
       format("admin.logs.category_id", this.category_id),
+      format("admin.logs.reviewable_id", reviewableLink, false),
     ];
 
     if (!this.useCustomModalForDetails) {
-      lines.push(format("admin.logs.staff_actions.new_value", this.new_value));
       lines.push(
-        format("admin.logs.staff_actions.previous_value", this.previous_value)
+        format("admin.logs.staff_actions.new_value", this.new_value, false)
+      );
+      lines.push(
+        format(
+          "admin.logs.staff_actions.previous_value",
+          this.previous_value,
+          false
+        )
       );
     }
 

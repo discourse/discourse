@@ -18,7 +18,8 @@ describe Jobs::DetectTranslatePost do
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
     SiteSetting.content_localization_supported_locales = locales.join("|")
-    SiteSetting.ai_translation_target_categories = post.topic.category_id.to_s
+    SiteSetting.ai_translation_category_scope = "all"
+    SiteSetting.ai_translation_categories = ""
   end
 
   it "does nothing when translator is disabled" do
@@ -144,13 +145,13 @@ describe Jobs::DetectTranslatePost do
     expect { job.execute({ post_id: post.id }) }.not_to raise_error
   end
 
-  describe "with target categories and PM scope" do
-    fab!(:target_category, :category)
-    fab!(:non_target_category, :category)
-    fab!(:target_topic) { Fabricate(:topic, category: target_category) }
-    fab!(:non_target_topic) { Fabricate(:topic, category: non_target_category) }
-    fab!(:target_post) { Fabricate(:post, topic: target_topic) }
-    fab!(:non_target_post) { Fabricate(:post, topic: non_target_topic) }
+  describe "with category scope and PM scope" do
+    fab!(:included_category, :category)
+    fab!(:excluded_category, :category)
+    fab!(:included_topic) { Fabricate(:topic, category: included_category) }
+    fab!(:excluded_topic) { Fabricate(:topic, category: excluded_category) }
+    fab!(:included_post) { Fabricate(:post, topic: included_topic) }
+    fab!(:excluded_post) { Fabricate(:post, topic: excluded_topic) }
 
     fab!(:personal_pm_topic, :private_message_topic)
     fab!(:personal_pm_post) { Fabricate(:post, topic: personal_pm_topic) }
@@ -160,19 +161,33 @@ describe Jobs::DetectTranslatePost do
     end
     fab!(:group_pm_post) { Fabricate(:post, topic: group_pm_topic) }
 
-    before { SiteSetting.ai_translation_target_categories = target_category.id.to_s }
-
-    it "skips posts not in target categories" do
-      DiscourseAi::Translation::PostLocaleDetector
-        .expects(:detect_locale)
-        .with(non_target_post)
-        .never
-      job.execute({ post_id: non_target_post.id })
+    before do
+      SiteSetting.ai_translation_category_scope = "exclude"
+      SiteSetting.ai_translation_categories = excluded_category.id.to_s
     end
 
-    it "processes posts in target categories" do
-      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(target_post).once
-      job.execute({ post_id: target_post.id })
+    it "skips posts outside the category scope" do
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(excluded_post).never
+      job.execute({ post_id: excluded_post.id })
+    end
+
+    it "processes posts in included categories" do
+      DiscourseAi::Translation::PostLocaleDetector.expects(:detect_locale).with(included_post).once
+      job.execute({ post_id: included_post.id })
+    end
+
+    it "processes posts from selected subcategories" do
+      subcategory = Fabricate(:category, parent_category: included_category)
+      subcategory_post = Fabricate(:post, topic: Fabricate(:topic, category: subcategory))
+      SiteSetting.ai_translation_category_scope = "include"
+      SiteSetting.ai_translation_categories = included_category.id.to_s
+
+      DiscourseAi::Translation::PostLocaleDetector
+        .expects(:detect_locale)
+        .with(subcategory_post)
+        .once
+
+      job.execute({ post_id: subcategory_post.id })
     end
 
     context "when pm_translation_scope is none" do

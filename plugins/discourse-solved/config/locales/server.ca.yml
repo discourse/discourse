@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 ca:
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Permet que el propietari del tema i l'equip responsable marquin una resposta com a solució"
   site_settings:
     solved_enabled: "Activa el connector de resolts. Permet als usuaris seleccionar solucions per als temes."
     accept_all_solutions_trust_level: "Nivell mínim de confiança necessari per a acceptar solucions sobre qualsevol tema (encara que no sigui OP)"

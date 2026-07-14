@@ -1,8 +1,8 @@
 import { fn } from "@ember/helper";
-import BadgeCard from "discourse/components/badge-card";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import bodyClass from "discourse/helpers/body-class";
 import lazyHash from "discourse/helpers/lazy-hash";
+import DBadgeCard from "discourse/ui-kit/d-badge-card";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -31,7 +31,7 @@ export default <template>
 
       <div class="badge-group-list">
         {{#each @controller.sortedBadges as |ub|}}
-          <BadgeCard
+          <DBadgeCard
             @badge={{ub.badge}}
             @count={{ub.count}}
             @canFavorite={{ub.can_favorite}}

@@ -2,6 +2,7 @@
 
 module DiscourseChatIntegration::Provider::PowerAutomateProvider
   PROVIDER_NAME = "powerautomate"
+  POPULARITY_SCORE = 80
   PROVIDER_ENABLED_SETTING = :chat_integration_powerautomate_enabled
   CHANNEL_IDENTIFIER_KEY = "name"
   CHANNEL_PARAMETERS = [
@@ -52,7 +53,7 @@ module DiscourseChatIntegration::Provider::PowerAutomateProvider
     elsif topic.category
       category =
         (
-          if (topic.category.parent_category)
+          if topic.category.parent_category
             "[#{topic.category.parent_category.name}/#{topic.category.name}]"
           else
             "[#{topic.category.name}]"

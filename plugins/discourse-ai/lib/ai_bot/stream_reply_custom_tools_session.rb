@@ -113,7 +113,9 @@ module DiscourseAi
               DiscourseAi::Completions::PromptMessagesBuilder.messages_from_post(
                 @source_post,
                 max_posts: max_context_posts,
-                include_uploads: @bot.agent.class.vision_enabled,
+                include_image_uploads: @bot.agent.class.vision_enabled,
+                include_document_uploads: @bot.model.allowed_attachment_types.present?,
+                allowed_attachment_types: @bot.model.allowed_attachment_types,
                 bot_usernames: available_bot_usernames,
               ),
           )
@@ -175,6 +177,15 @@ module DiscourseAi
 
         token_budget = resolve_token_budget
         use_token_budget = resolve_execution_mode == "agentic"
+
+        if use_token_budget && token_budget.blank?
+          # max_turn_tokens is optional; default the turn budget to half of the
+          # LLM context window. If the LLM exposes no context window, fall back
+          # to the fixed completion/tool limits rather than crashing on a nil
+          # budget comparison.
+          token_budget = DiscourseAi::Agents::Bot.default_max_turn_tokens(llm)
+          use_token_budget = token_budget.present?
+        end
 
         execution_context = nil
         token_usage_tracker = nil

@@ -2,9 +2,9 @@
 
 module Helpers
   def get_patreon_response(filename)
-    dest = "#{Rails.root}/tmp/spec/#{filename}"
+    dest = "#{Rails.root.join("tmp/spec/#{filename}")}"
     FileUtils.mkdir_p(File.dirname(dest))
-    FileUtils.cp("#{Rails.root}/plugins/discourse-patreon/spec/fixtures/#{filename}", dest)
+    FileUtils.cp("#{Rails.root.join("plugins/discourse-patreon/spec/fixtures/#{filename}")}", dest)
     File.new(dest).read
   end
 end

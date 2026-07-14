@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 pt:
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Permitir que o autor do tópico e a equipa marquem uma resposta como a solução"
   site_settings:
     solved_enabled: "Activar o plugin \"Solução\", permitindo aos utilizadores seleccionar soluções para tópicos"
     accept_all_solutions_trust_level: "Nível de confiança mínimo necessário para aceitar soluções em qualquer tópico (mesmo quando não é o autor do tópico)"

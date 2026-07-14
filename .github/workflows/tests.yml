@@ -24,7 +24,7 @@ permissions:
 jobs:
   build:
     if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
-    name: ${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}${{ matrix.plugin_compiler == 'legacy' && ' (legacy)' || '' }}
+    name: ${{ (matrix.target == 'core-plugins' && 'plugins (core)') || (matrix.target == 'official-plugins' && 'plugins (official)') || (matrix.target == 'chat' && 'plugins (chat)') || matrix.target }} ${{ matrix.build_type }}
     runs-on: >-
       ${{
         github.repository_owner == 'discourse' && (
@@ -52,61 +52,58 @@ jobs:
       PGPASSWORD: discourse
       USES_PARALLEL_DATABASES: ${{ matrix.build_type == 'backend' || matrix.build_type == 'system' }}
       CAPYBARA_DEFAULT_MAX_WAIT_TIME: 20
-      MINIO_RUNNER_LOG_LEVEL: DEBUG
+      MINIO_RUNNER_LOG_LEVEL: WARN
       DISCOURSE_TURBO_RSPEC_RETRY_AND_LOG_FLAKY_TESTS: ${{ (matrix.build_type == 'system' || matrix.build_type == 'backend') && '1' }}
+      CAPYBARA_PLAYWRIGHT_SOFT_RESET: ${{ matrix.build_type == 'system' && '1' }}
       CHEAP_SOURCE_MAPS: "1"
+      DBUS_SESSION_BUS_ADDRESS: "unix:path=/dev/null"
       MINIO_RUNNER_INSTALL_DIR: /home/discourse/.minio_runner
-      TESTEM_BROWSER: ${{ (startsWith(matrix.browser, 'Firefox') && 'Firefox') || matrix.browser }}
-      TESTEM_FIREFOX_PATH: ${{ (matrix.browser == 'Firefox Evergreen') && '/opt/firefox-evergreen/firefox' }}
       EMBER_ENV: development
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
-      ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
       QUNIT_REUSE_BUILD: 1
-      ROLLUP_PLUGIN_COMPILER: ${{ matrix.plugin_compiler == 'rollup' && '1' || '0' }}
+      PLAYWRIGHT_BROWSERS_PATH: /home/discourse/.cache/ms-playwright
 
     strategy:
       fail-fast: false
 
       matrix:
-        build_type: [backend, frontend, system]
-        target: [core, plugins, themes]
-        browser: [Chrome]
-        plugin_compiler: ["rollup"]
-        exclude:
-          - build_type: backend
-            target: themes
-          # Exclude combined plugins from system tests - use split targets instead
-          - build_type: system
-            target: plugins
         include:
-          # Split plugin targets for system tests only
-          - build_type: system
-            target: core-plugins
-            browser: Chrome
-          - build_type: system
-            target: official-plugins
-            browser: Chrome
-          - build_type: system
-            target: chat
-            browser: Chrome
-          - build_type: frontend
-            target: plugins
-            plugin_compiler: "legacy"
-          # - build_type: frontend
-          #   target: core
-          #   browser: Firefox Evergreen
-          # - build_type: frontend
-          #   target: core
-          #   browser: Firefox ESR
+          - target: core
+            build_type: backend
+          - target: core
+            build_type: frontend
+          - target: core
+            build_type: system
+          - target: plugins
+            build_type: backend
+          - target: plugins
+            build_type: frontend
+          - target: core-plugins
+            build_type: system
+          - target: chat
+            build_type: system
+          - target: official-plugins
+            build_type: system
+          - target: themes
+            build_type: frontend
+          - target: themes
+            build_type: system
 
     steps:
+      - name: Enable jemalloc
+        run: echo /usr/lib/libjemalloc.so.1 > /etc/ld.so.preload
+
+      - name: Verify jemalloc is loaded into Ruby
+        run: |
+          ruby -e 'abort "jemalloc not loaded" unless File.read("/proc/self/maps").include?("libjemalloc")'
+
       - name: Set working directory owner
         run: chown root:root .
 
       - name: Set PARALLEL_TEST_PROCESSORS for system tests
         if: matrix.build_type == 'system'
         run: |
-          echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2))" >> $GITHUB_ENV
+          echo "PARALLEL_TEST_PROCESSORS=$(($(nproc) / 2 + 2))" >> $GITHUB_ENV
 
       - name: Set QUNIT_PARALLEL for QUnit tests
         if: matrix.build_type == 'frontend'
@@ -117,7 +114,7 @@ jobs:
             echo "QUNIT_PARALLEL=$(($(nproc) / 2))" >> $GITHUB_ENV
           fi
 
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
@@ -186,85 +183,58 @@ jobs:
           echo "127.0.0.1 minio.local" | sudo tee -a /etc/hosts
           echo "127.0.0.1 discoursetest.minio.local" | sudo tee -a /etc/hosts
 
-      - name: Get CPU cores
-        id: cpu-info
-        run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
+      - name: Create databases
+        run: bin/rake db:create
 
-      - name: Fetch app state cache
-        uses: actions/cache@v5
-        id: app-cache
-        with:
-          path: tmp/app-cache
-          key: >-
-            ${{ runner.os }}-
-            ${{ steps.cpu-info.outputs.cpu-cores }}-
-            ${{ hashFiles('.github/workflows/tests.yml') }}-
-            ${{ hashFiles('db/**/*', 'plugins/**/db/**/*') }}-
-            ${{ hashFiles('config/environments/test.rb') }}-
-            ${{ env.LOAD_PLUGINS }}-
-            ${{ env.USES_PARALLEL_DATABASES }}-
-            ${{ env.PARALLEL_TEST_PROCESSORS }}-
-            ${{ matrix.target }}-
+      - parallel:
+          - name: Migrate database
+            run: bin/rake db:migrate
 
-      - name: Restore database from cache
-        if: steps.app-cache.outputs.cache-hit == 'true'
-        run: script/silence_successful_output psql --quiet -o /dev/null -f tmp/app-cache/cache.sql postgres
+          - name: Create and migrate parallel databases
+            if: env.USES_PARALLEL_DATABASES == 'true'
+            run: bin/rake parallel:create parallel:migrate
 
-      - name: Restore uploads from cache
-        if: steps.app-cache.outputs.cache-hit == 'true'
-        run: rm -rf public/uploads && cp -r tmp/app-cache/uploads public/uploads
+          - name: Check Annotations
+            if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins')
+            env:
+              LOAD_PLUGINS: ""
+              TEMPORARY_DB_PORT: "11000"
+            run: |
+              directories=""
+              if [ "${{ matrix.target }}" = "core" ]; then
+                directories="app/models"
+              else
+                directories="$(script/list_bundled_plugins | xargs -I{} find {} -type d -path '*/app/models' -maxdepth 3)"
+              fi
 
-      - name: Create and migrate database
-        run: |
-          bin/rake db:create
-          script/silence_successful_output bin/rake db:migrate
+              # annotate:clean runs index setup + annotaterb in a temporary postgres so it
+              # doesn't pollute the rspec test DB.
+              MODEL_DIR="$(echo "${directories}" | tr '\n' ',')" bin/rake annotate:clean
 
-      - name: Create and migrate parallel databases
-        if: env.USES_PARALLEL_DATABASES == 'true' && steps.app-cache.outputs.cache-hit != 'true'
-        run: |
-          bin/rake parallel:create
-          script/silence_successful_output bin/rake parallel:migrate
+              if [ ! -z "$(git status --porcelain ${directories})" ]; then
+                echo "Core annotations are not up to date. To resolve, run:"
+                echo "  bin/rake annotate:clean"
+                echo
+                echo "Or manually apply the diff printed below:"
+                echo "---------------------------------------------"
+                git -c color.ui=always diff ${directories}
+                exit 1
+              fi
 
-      - name: Dump database for cache
-        if: steps.app-cache.outputs.cache-hit != 'true'
-        run: mkdir -p tmp/app-cache && pg_dumpall > tmp/app-cache/cache.sql
-
-      - name: Dump uploads for cache
-        if: steps.app-cache.outputs.cache-hit != 'true'
-        run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
+          - name: Check structure dump
+            if: matrix.build_type == 'backend' && matrix.target == 'core'
+            env:
+              TEMPORARY_DB_PORT: "11001"
+            run: bin/rake db:check_structure_dump
 
       - name: Fetch turbo_rspec_runtime.log cache
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         id: test-runtime-cache
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         with:
           path: tmp/turbo_rspec_runtime.log
           key: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-${{ github.run_id }}
           restore-keys: rspec-runtime-${{ matrix.build_type }}-${{ matrix.target }}-
-
-      - name: Check Annotations
-        if: matrix.build_type == 'backend' && (matrix.target == 'core' || matrix.target == 'plugins')
-        run: |
-          bin/rake annotate:ensure_all_indexes
-
-          directories=""
-          if [ "${{ matrix.target }}" = "core" ]; then
-            directories="app/models"
-          else
-            directories="$(script/list_bundled_plugins | xargs -I{} find {} -type d -path '*/app/models' -maxdepth 3)"
-          fi
-
-          bin/annotaterb models --model-dir $(echo "${directories}" | tr '\n' ',')
-
-          if [ ! -z "$(git status --porcelain ${directories})" ]; then
-            echo "Core annotations are not up to date. To resolve, run:"
-            echo "  bin/rake annotate:clean"
-            echo
-            echo "Or manually apply the diff printed below:"
-            echo "---------------------------------------------"
-            git -c color.ui=always diff ${directories}
-            exit 1
-          fi
 
       - name: Check Zeitwerk reloading
         if: matrix.build_type == 'backend'
@@ -282,23 +252,31 @@ jobs:
       - name: Check SKIP_DB_AND_REDIS bootability
         if: matrix.build_type == 'backend'
         run: |
-          if ! (SKIP_DB_AND_REDIS=1 DISCOURSE_DEV_DB="nonexist" bin/rails runner "puts 'booted successfully'"); then
+          if ! (SKIP_DB_AND_REDIS=1 RAILS_DB="nonexistent" bin/rails runner "puts 'booted successfully'"); then
             echo
             echo "---------------------------------------------"
             echo
             echo "::error::SKIP_DB_AND_REDIS boot failed. Make sure the database is not being accessed during the Rails boot process."
-            echo "To reproduce locally, run \`SKIP_DB_AND_REDIS=1 DISCOURSE_DEV_DB='nonexist' bin/rails runner \"puts 'booted successfully'\"\`."
+            echo "To reproduce locally, run \`SKIP_DB_AND_REDIS=1 RAILS_DB='nonexistent' bin/rails runner \"puts 'booted successfully'\"\`."
             echo
             exit 1
           fi
 
       - name: Core RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'core'
-        run: bin/turbo_rspec --use-runtime-info --verbose --format=progress --profile=50
+        run: bin/turbo_rspec --use-runtime-info --format=progress
 
       - name: Ember Build
         if: matrix.build_type == 'system' || matrix.build_type == 'frontend'
         run: script/assemble_ember_build.rb
+
+      - name: Prepare Chrome environment for QUnit
+        if: matrix.build_type == 'frontend'
+        run: |
+          mkdir -p "$HOME/.pki/nssdb" "$HOME/.local/share/pki/nssdb"
+          dbus-daemon --system --fork 2>/dev/null || true
+          bus_addr=$(dbus-daemon --session --fork --print-address 2>/dev/null)
+          echo "DBUS_SESSION_BUS_ADDRESS=$bus_addr" >> "$GITHUB_ENV"
 
       - name: Core QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'core'
@@ -312,7 +290,7 @@ jobs:
       - name: Plugins RSpec
         if: matrix.build_type == 'backend' && matrix.target == 'plugins'
         run: |
-          bin/rake plugin:turbo_spec['*','--verbose --format=progress --use-runtime-info --profile=50']
+          bin/rake plugin:turbo_spec['*','--format=progress --use-runtime-info']
 
       - name: Plugins QUnit
         if: matrix.build_type == 'frontend' && matrix.target == 'plugins'
@@ -323,62 +301,49 @@ jobs:
         run: DISCOURSE_DEV_DB=discourse_test bin/rake themes:qunit_all_official
 
       - uses: actions/upload-artifact@v7
-        if: always() && matrix.build_type == 'frontend'
+        if: always() && matrix.build_type == 'frontend' && matrix.target == 'core'
         with:
           name: ember-exam-execution-${{ matrix.target }}-${{ matrix.browser }}-frontend-${{ hashFiles('./frontend/discourse/test-execution-*.json') }}
           path: ./frontend/discourse/test-execution-*.json
-
-      - name: Install playwright
-        if: matrix.build_type == 'system'
-        run: pnpm playwright install --with-deps --no-shell chromium
 
       - name: Core System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation spec/system
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation spec/system
 
       - name: Core Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'core-plugins'
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="plugins/chat/*" --use-runtime-info --format documentation plugins/*/spec/system
 
       - name: Official Plugins System Tests
         if: matrix.build_type == 'system' && matrix.target == 'official-plugins'
         env:
           CHECKOUT_TIMEOUT: 10
         run: |
-          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="$(script/list_bundled_plugins '/*' | paste -sd, -)" --use-runtime-info --profile=50 --verbose --format documentation plugins/*/spec/system
+          RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --exclude-pattern="$(script/list_bundled_plugins '/*' | paste -sd, -)" --use-runtime-info --format documentation plugins/*/spec/system
 
       - name: Chat System Tests
         if: matrix.build_type == 'system' && matrix.target == 'chat'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --profile=50 --verbose --format documentation plugins/chat/spec/system
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --use-runtime-info --format documentation plugins/chat/spec/system
 
       - name: Theme System Tests
         if: matrix.build_type == 'system' && matrix.target == 'themes'
         env:
           CHECKOUT_TIMEOUT: 10
-        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --profile=50 --verbose --format documentation tmp/themes/*/spec/system themes/*/spec/system
-
-      - name: Check for failed system test artifacts
-        id: check-failed-system-test-artifacts
-        if: always() && matrix.build_type == 'system'
-        run: |
-          if [ -d tmp/capybara ] && [ "$(ls -A tmp/capybara/)" ]; then
-            echo "exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "exists=false" >> $GITHUB_OUTPUT
-          fi
+        run: RAILS_ENABLE_TEST_LOG=1 RAILS_TEST_LOG_LEVEL=error bin/turbo_rspec --format documentation tmp/themes/*/spec/system themes/*/spec/system
 
       - name: Upload failed system test artifacts
         uses: actions/upload-artifact@v7
-        if: always() && steps.check-failed-system-test-artifacts.outputs.exists == 'true'
+        if: always() && matrix.build_type == 'system'
         with:
           name: failed-system-test-artifacts-${{ matrix.build_type }}-${{ matrix.target }}
+          if-no-files-found: ignore
           path: |
             tmp/capybara/*.png
             tmp/capybara/*.zip
@@ -410,22 +375,31 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Merge Artifacts
+      - name: Check for artifacts to merge
+        id: check-artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          names=$(gh api "repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts?per_page=100" --jq '.artifacts[].name')
+          if echo "$names" | grep -q '^failed-system-test-artifacts-'; then
+            echo "has_failed_system=true" >> "$GITHUB_OUTPUT"
+          fi
+          if echo "$names" | grep -q '^flaky-test-reports-'; then
+            echo "has_flaky=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Merge failed system test artifacts
+        if: steps.check-artifacts.outputs.has_failed_system == 'true'
         uses: actions/upload-artifact/merge@v7
         with:
           name: failed-system-test-artifacts
           pattern: failed-system-test-artifacts-*
           delete-merged: true
-          separate-directories: false
-        # Don't fail the job if there aren't any artifacts to merge.
-        continue-on-error: true
 
-      - name: Merge Artifacts
+      - name: Merge flaky test reports
+        if: steps.check-artifacts.outputs.has_flaky == 'true'
         uses: actions/upload-artifact/merge@v7
         with:
           name: flaky-test-reports
           pattern: flaky-test-reports-*
           delete-merged: true
-          separate-directories: false
-        # Don't fail the job if there aren't any artifacts to merge.
-        continue-on-error: true

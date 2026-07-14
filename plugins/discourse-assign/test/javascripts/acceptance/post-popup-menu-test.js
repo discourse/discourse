@@ -26,7 +26,7 @@ const selectors = {
 const topic = topicWithAssignedPosts();
 const post = topic.post_stream.posts[1];
 
-acceptance(`Discourse Assign | Post popup menu`, function (needs) {
+acceptance("Post popup menu", function (needs) {
   needs.user();
   needs.settings({
     assign_enabled: true,

@@ -25,6 +25,26 @@ discourse_ai:
     default: ""
     secret: true
     json_schema: DiscourseAi::Sentiment::SentimentSiteSettingJsonSchema
+  ai_sentiment_sentiment_classification_strategy:
+    default: "classification_model"
+    type: enum
+    choices:
+      - classification_model
+      - agent
+  ai_sentiment_sentiment_agent:
+    default: "-36"
+    type: enum
+    enum: "DiscourseAi::Configuration::AgentEnumerator"
+  ai_sentiment_emotion_classification_strategy:
+    default: "classification_model"
+    type: enum
+    choices:
+      - classification_model
+      - agent
+  ai_sentiment_emotion_agent:
+    default: "-37"
+    type: enum
+    enum: "DiscourseAi::Configuration::AgentEnumerator"
   ai_sentiment_backfill_maximum_posts_per_hour:
     default: 2500
     min: 0
@@ -268,6 +288,37 @@ discourse_ai:
     default: ""
     hidden: true
 
+  ai_admin_dashboard_enabled:
+    default: false
+    client: true
+    validator: "DiscourseAi::Configuration::LlmDependencyValidator"
+    area: "ai-features/admin_dashboard"
+  ai_admin_dashboard_highlights_agent:
+    default: "-38"
+    type: enum
+    enum: "DiscourseAi::Configuration::AgentEnumerator"
+    area: "ai-features/admin_dashboard"
+  ai_admin_dashboard_highlights_category_scope:
+    type: enum
+    default: "public"
+    enum: "CategoryScopeSiteSetting"
+    client: false
+    area: "ai-features/admin_dashboard"
+  ai_admin_dashboard_highlights_categories:
+    type: category_list
+    default: ""
+    client: false
+    area: "ai-features/admin_dashboard"
+    depends_on:
+      - ai_admin_dashboard_highlights_category_scope
+    depends_on_values:
+      ai_admin_dashboard_highlights_category_scope:
+        - include
+        - include_strict
+        - exclude
+        - exclude_strict
+    depends_behavior: "hidden"
+    dependent_setting_display: "inline"
   ai_summarization_enabled:
     default: false
     client: true
@@ -310,6 +361,14 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/bot"
+  enable_ai_bot_starred_conversations:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403285"
   ai_bot_enabled_llms:
     default: ""
     client: true
@@ -354,6 +413,15 @@ discourse_ai:
     default: ""
     secret: true
     area: "ai-features/bot"
+  ai_bot_enable_docked_composer:
+    default: false
+    hidden: true
+    client: true
+    area: "ai-features/bot"
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403327"
   ai_discover_enabled:
     default: false
     client: true
@@ -373,6 +441,7 @@ discourse_ai:
   ai_discord_search_enabled:
     default: false
     client: true
+    validator: "DiscourseAi::Configuration::DiscordSearchAgentValidator"
     area: "ai-features/discord"
   ai_discord_app_id:
     default: ""
@@ -388,11 +457,13 @@ discourse_ai:
     choices:
       - search
       - agent
+    validator: "DiscourseAi::Configuration::DiscordSearchAgentValidator"
     area: "ai-features/discord"
   ai_discord_search_agent:
     default: ""
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
+    validator: "DiscourseAi::Configuration::DiscordSearchAgentValidator"
     area: "ai-features/discord"
   ai_discord_allowed_guilds:
     type: list
@@ -454,11 +525,27 @@ discourse_ai:
     max: 100000
     client: false
     area: "ai-features/translation"
-  ai_translation_target_categories:
+  ai_translation_category_scope:
+    type: enum
+    default: "public"
+    enum: "CategoryScopeSiteSetting"
+    client: false
+    area: "ai-features/translation"
+  ai_translation_categories:
     type: category_list
     default: ""
     client: false
     area: "ai-features/translation"
+    depends_on:
+      - ai_translation_category_scope
+    depends_on_values:
+      ai_translation_category_scope:
+        - include
+        - include_strict
+        - exclude
+        - exclude_strict
+    depends_behavior: "hidden"
+    dependent_setting_display: "inline"
   ai_translation_personal_messages:
     type: enum
     default: "none"

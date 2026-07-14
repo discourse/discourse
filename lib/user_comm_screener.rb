@@ -263,7 +263,7 @@ class UserCommScreener
           end
         disallowed_pms_from =
           if acting_user.user_option.enable_allowed_pm_users
-            (user_ids_by_preference_type["disallowed_pm"] || [])
+            user_ids_by_preference_type["disallowed_pm"] || []
           else
             []
           end

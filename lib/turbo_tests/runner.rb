@@ -12,8 +12,6 @@ module TurboTests
       use_runtime_info = opts.fetch(:use_runtime_info, false)
       retry_and_log_flaky_tests = opts.fetch(:retry_and_log_flaky_tests, false)
 
-      STDOUT.puts "VERBOSE" if verbose
-
       reporter =
         Reporter.from_config(
           formatters,
@@ -107,21 +105,11 @@ module TurboTests
     protected
 
     def check_for_migrations
-      config =
-        ActiveRecord::Base
-          .configurations
-          .find_db_config("test")
-          .configuration_hash
-          .merge("database" => "discourse_test_1")
-
       ActiveRecord::Tasks::DatabaseTasks.migrations_paths = %w[db/migrate db/post_migrate]
-
-      begin
-        ActiveRecord::Migration.check_all_pending!
-      rescue ActiveRecord::PendingMigrationError
-        puts "There are pending migrations, run rake parallel:migrate"
-        exit 1
-      end
+      ActiveRecord::Migration.check_all_pending!
+    rescue ActiveRecord::PendingMigrationError
+      STDERR.puts "There are pending migrations, run rake parallel:migrate"
+      exit 1
     end
 
     def setup_tmp_dir

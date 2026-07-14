@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 sk:
+  category_types:
+    events:
+      name: "Udalosti"
+      title: "udalosti"
   reports:
     currently_away:
       title: Používatelia, ktorí sú momentálne preč,
@@ -36,7 +40,6 @@ sk:
     map_events_to_color: "Priraďte farbu každej značke alebo kategórii."
     map_events_title: "Prepíše „Udalosti“ v názve bočného panela „Nadchádzajúce udalosti“ pre každú kategóriu."
     calendar_enabled: "Povoľte plugin discourse-calendar. Týmto sa pridá podpora pre značku [calendar][/calendar] v prvom príspevku témy."
-    discourse_post_event_enabled: "Povolí funkcie udalostí. Poznámka: Na povolenie je tiež potrebné mať povolený kalendár."
     displayed_invitees_limit: "Obmedzuje počet pozvaných osôb zobrazených na udalosti."
     display_post_event_date_on_topic_title: "Zobrazí dátum udalosti za názvom témy."
     use_local_event_date: "Používanie miestneho dátumu za názvom témy namiesto relatívneho času."
@@ -61,6 +64,12 @@ sk:
     event_participation_buttons: "Zoznam tlačidiel účasti na udalosti, ktoré môžu používatelia používať."
     sidebar_show_upcoming_events: "Zobrazenie odkazu na nadchádzajúce udalosti v bočnom paneli v časti \"Viac\"."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Deň"
+        week: "Týždeň"
+        month: "Mesiac"
+        year: "Rok"
     invite_user_notification: "%{username} vás pozval na: %{description}"
     calendar_must_be_in_first_post: "Značku kalendára možno použiť len v prvom príspevku témy."
     more_than_one_calendar: "V jednom príspevku nemôžete mať viac ako jeden kalendár."

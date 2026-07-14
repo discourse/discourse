@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
 import { emojiUrlFor } from "discourse/lib/text";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import { showUserNotes } from "../../lib/user-notes";
 
@@ -44,7 +44,7 @@ export default class ShowUserNotesOnFlags extends Component {
               class="emoji"
             />
           {{else}}
-            {{icon "pen-to-square"}}
+            {{dIcon "pen-to-square"}}
           {{/if}}
         </DButton>
       {{/if}}

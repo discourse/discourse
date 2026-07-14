@@ -34,6 +34,14 @@ vi:
             canned_reply:
               label: "Trả lời"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Đang tải..."
+        tool: "Hoạt động"
+        user: "Người dùng"
+        approve: "Duyệt"
+        reject: "Từ chối"
+        approved: "Đã phê duyệt"
+        rejected: "Từ chối"
       llm_selector:
         none: "Không"
       features:
@@ -45,6 +53,8 @@ vi:
         expand_list:
           other: "(%{count} khác)"
         collapse_list: "(thu gọn)"
+        nav:
+          enabled: "Đã bật"
         filters:
           all: "Tất cả"
           reset: "Cài lại"
@@ -64,6 +74,7 @@ vi:
         select_option: "Chọn một tùy Chọn..."
       translations:
         title: "Bản dịch"
+        category_scope: "Danh mục"
         stats:
           eta_minutes:
             other: "%{count} phút"
@@ -101,6 +112,12 @@ vi:
           select_all: "Chọn hết"
           clear_all: "Xóa hết"
         delete: "Xóa"
+        thinking_effort_options:
+          none: "Không"
+          low: "Thấp"
+          medium: "Trung bình"
+          high: "Cao"
+          max: "Tối đa"
         response_format:
           open_modal: "Sửa"
           modal:
@@ -239,6 +256,7 @@ vi:
           today: "Hôm nay"
           last_7_days: "7 ngày qua"
           last_30_days: "30 ngày qua"
+          editing_post: "Đang chỉnh sửa tút"
       sentiments:
         sentiment_analysis:
           filter_types:

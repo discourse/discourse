@@ -41,10 +41,10 @@ end
 #
 # Table name: given_daily_likes
 #
-#  user_id       :integer          not null
-#  likes_given   :integer          not null
 #  given_date    :date             not null
+#  likes_given   :integer          not null
 #  limit_reached :boolean          default(FALSE), not null
+#  user_id       :integer          not null
 #
 # Indexes
 #

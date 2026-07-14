@@ -188,6 +188,7 @@ describe "Thread list in side panel | full page" do
         trash_message!(thread_1.original_message, user: other_user)
         chat_page.visit_threads_list(channel)
 
+        expect(thread_list_page).to have_loaded
         expect(thread_list_page).to have_no_thread(thread_1)
 
         restore_message!(thread_1.original_message, user: other_user)

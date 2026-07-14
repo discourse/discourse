@@ -115,7 +115,7 @@ class ReviewablePost < Reviewable
   end
 
   def perform_reject_and_delete(performed_by, _args)
-    PostDestroyer.new(performed_by, post, reviewable: self).destroy
+    PostDestroyer.new(performed_by, post, reviewable_id: id).destroy
 
     create_result(:success, :rejected, [created_by_id], false)
   end
@@ -127,7 +127,7 @@ class ReviewablePost < Reviewable
   private
 
   def post
-    @post ||= (target || Post.with_deleted.find_by(id: target_id))
+    @post ||= target || Post.with_deleted.find_by(id: target_id)
   end
 end
 
@@ -136,26 +136,26 @@ end
 # Table name: reviewables
 #
 #  id                      :bigint           not null, primary key
+#  force_review            :boolean          default(FALSE), not null
+#  latest_score            :datetime
+#  payload                 :json
+#  potential_spam          :boolean          default(FALSE), not null
+#  potentially_illegal     :boolean          default(FALSE)
+#  reject_reason           :text
+#  reviewable_by_moderator :boolean          default(FALSE), not null
+#  score                   :float            default(0.0), not null
+#  status                  :integer          default("pending"), not null
+#  target_type             :string
 #  type                    :string           not null
 #  type_source             :string           default("unknown"), not null
-#  status                  :integer          default("pending"), not null
-#  created_by_id           :integer          not null
-#  reviewable_by_moderator :boolean          default(FALSE), not null
-#  category_id             :integer
-#  topic_id                :integer
-#  score                   :float            default(0.0), not null
-#  potential_spam          :boolean          default(FALSE), not null
-#  target_id               :integer
-#  target_type             :string
-#  target_created_by_id    :integer
-#  payload                 :json
 #  version                 :integer          default(0), not null
-#  latest_score            :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  force_review            :boolean          default(FALSE), not null
-#  reject_reason           :text
-#  potentially_illegal     :boolean          default(FALSE)
+#  category_id             :integer
+#  created_by_id           :integer          not null
+#  target_created_by_id    :integer
+#  target_id               :integer
+#  topic_id                :integer
 #
 # Indexes
 #

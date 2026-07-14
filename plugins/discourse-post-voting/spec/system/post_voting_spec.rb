@@ -22,6 +22,37 @@ RSpec.describe "Post voting" do
     expect(topic_page).to have_no_comment_menu
   end
 
+  it "does not show a negative remaining voters label when downvotes outnumber upvotes" do
+    SiteSetting.post_voting_enabled = true
+
+    topic = Fabricate(:topic, subtype: Topic::POST_VOTING_SUBTYPE, user: admin)
+    post_1 = Fabricate(:post, topic: topic, user: admin)
+    answer = Fabricate(:post, topic: topic, user: admin)
+
+    user3 = Fabricate(:user, refresh_auto_groups: true)
+
+    Fabricate(:post_voting_vote, votable: answer, user: user1)
+    Fabricate(
+      :post_voting_vote,
+      votable: answer,
+      user: user2,
+      direction: PostVotingVote.directions[:down],
+    )
+    Fabricate(
+      :post_voting_vote,
+      votable: answer,
+      user: user3,
+      direction: PostVotingVote.directions[:down],
+    )
+
+    sign_in(admin)
+
+    topic_page.visit_topic(topic)
+    topic_page.click_vote_count(answer)
+
+    expect(topic_page).to have_no_remaining_voters_label
+  end
+
   it "disallows voting on archived or closed topics" do
     SiteSetting.post_voting_enabled = true
     topic = Fabricate(:topic, subtype: Topic::POST_VOTING_SUBTYPE, user: user2, archived: true)

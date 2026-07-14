@@ -38,6 +38,14 @@ hu:
             canned_reply:
               label: "Válasz"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Betöltés…"
+        tool: "Művelet"
+        user: "Felhasználó"
+        approve: "Jóváhagyás"
+        reject: "Elutasítás"
+        approved: "Jóváhagyott"
+        rejected: "Elutasított"
       llm_selector:
         none: "Egyik sem"
       features:
@@ -50,6 +58,8 @@ hu:
           one: "(%{count} további)"
           other: "(%{count} további)"
         collapse_list: "(kevesebb megjelenítése)"
+        nav:
+          enabled: "Bekapcsolva"
         filters:
           all: "Összes"
           reset: "Alaphelyzetbe állítás"
@@ -66,6 +76,7 @@ hu:
         table: "Táblázat"
       translations:
         title: "Fordítások"
+        category_scope: "Kategóriák"
         stats:
           eta_minutes:
             one: "%{count} perc"
@@ -111,6 +122,12 @@ hu:
           select_all: "Összes kiválasztása"
           clear_all: "Összes törlése"
         delete: "Törlés"
+        thinking_effort_options:
+          none: "Egyik sem"
+          low: "Alacsony"
+          medium: "Közepes"
+          high: "Magas"
+          max: "Max"
         response_format:
           open_modal: "Szerkesztés"
           modal:
@@ -234,9 +251,12 @@ hu:
         share_modal:
           copy: "Másolás"
         conversations:
+          starred: "Csillagozott"
           today: "Ma"
           last_7_days: "Elmúlt 7 nap"
           last_30_days: "Elmúlt 30 nap"
+          scroll_to_bottom: "Görgetés lefelé"
+          editing_post: "Bejegyzés szerkesztése"
       sentiments:
         sentiment_analysis:
           filter_types:

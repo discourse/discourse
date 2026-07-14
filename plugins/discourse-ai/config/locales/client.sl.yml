@@ -34,6 +34,14 @@ sl:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Nalagam..."
+        tool: "Dejanje"
+        user: "Uporabnik"
+        approve: "Odobri"
+        reject: "Zavrni"
+        approved: "Potrjeno"
+        rejected: "Zavrnjeno"
       llm_selector:
         none: "Brez"
       features:
@@ -48,6 +56,8 @@ sl:
           few: "(%{count} več)"
           other: "(%{count} več)"
         collapse_list: "(manj)"
+        nav:
+          enabled: "Vključeno"
         filters:
           all: "Vsi"
           reset: "Ponastavi"
@@ -60,6 +70,7 @@ sl:
       layout:
         table: "Tabela"
       translations:
+        category_scope: "Kategorije"
         stats:
           eta_minutes:
             one: "%{count} minuta"
@@ -106,6 +117,12 @@ sl:
         enabled: "Vključeno?"
         allowed_groups: "Dovoljene skupine"
         delete: "Izbriši"
+        thinking_effort_options:
+          none: "Brez"
+          low: "Nizka"
+          medium: "Srednja"
+          high: "Visoka"
+          max: "Največ"
         response_format:
           open_modal: "Uredi"
         filters:

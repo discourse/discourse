@@ -8,11 +8,11 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { LinkTo } from "@ember/routing";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
 import { and, eq, not, or } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import SectionLinkPrefix from "./section-link-prefix";
 
 /**
@@ -40,6 +40,7 @@ export function isHex(input) {
  * @param {Object} @suffixArgs - Arguments to pass to the suffix component
  */
 export default class SectionLink extends Component {
+  @service capabilities;
   @service currentUser;
 
   @tracked hovering = false;
@@ -140,9 +141,13 @@ export default class SectionLink extends Component {
     }
   }
 
+  get shouldRenderHoverAction() {
+    return this.args.hoverValue && !this.capabilities.touch;
+  }
+
   @action
   hoveringSectionLink() {
-    if (this.hoverActionActive) {
+    if (this.capabilities.touch || this.hoverActionActive) {
       return;
     }
     this.hovering = true;
@@ -150,7 +155,7 @@ export default class SectionLink extends Component {
 
   @action
   stopHoveringSectionLink() {
-    if (this.hoverActionActive) {
+    if (this.capabilities.touch || this.hoverActionActive) {
       return;
     }
     this.hovering = false;
@@ -213,7 +218,7 @@ export default class SectionLink extends Component {
             />
 
             <span
-              class={{concatClass
+              class={{dConcatClass
                 "sidebar-section-link-content-text"
                 @contentCSSClass
               }}
@@ -234,20 +239,20 @@ export default class SectionLink extends Component {
 
             {{#if @suffixValue}}
               <span
-                class={{concatClass
+                class={{dConcatClass
                   "sidebar-section-link-suffix"
                   @suffixType
                   @suffixCSSClass
                 }}
               >
                 {{#if (eq @suffixType "icon")}}
-                  {{icon @suffixValue}}
+                  {{dIcon @suffixValue}}
                 {{/if}}
               </span>
             {{/if}}
 
-            {{! template-lint-disable no-nested-interactive }}
-            {{#if @hoverValue}}
+            {{! eslint-disable ember/template-no-nested-interactive }}
+            {{#if this.shouldRenderHoverAction}}
               <span class="sidebar-section-link-hover">
                 <button
                   {{on "click" this.runHoverAction}}
@@ -256,7 +261,7 @@ export default class SectionLink extends Component {
                   class="sidebar-section-hover-button btn-flat"
                 >
                   {{#if (eq @hoverType "icon")}}
-                    {{icon @hoverValue class="hover-icon"}}
+                    {{dIcon @hoverValue class="hover-icon"}}
                   {{/if}}
                 </button>
               </span>
@@ -281,7 +286,7 @@ export default class SectionLink extends Component {
             />
 
             <span
-              class={{concatClass
+              class={{dConcatClass
                 "sidebar-section-link-content-text"
                 @contentCSSClass
               }}
@@ -302,19 +307,19 @@ export default class SectionLink extends Component {
 
             {{#if @suffixValue}}
               <span
-                class={{concatClass
+                class={{dConcatClass
                   "sidebar-section-link-suffix"
                   @suffixType
                   @suffixCSSClass
                 }}
               >
                 {{#if (eq @suffixType "icon")}}
-                  {{icon @suffixValue}}
+                  {{dIcon @suffixValue}}
                 {{/if}}
               </span>
             {{/if}}
 
-            {{#if @hoverValue}}
+            {{#if this.shouldRenderHoverAction}}
               <span class="sidebar-section-link-hover">
                 <button
                   {{on "click" this.runHoverAction}}
@@ -323,7 +328,7 @@ export default class SectionLink extends Component {
                   class="sidebar-section-hover-button btn-flat"
                 >
                   {{#if (eq @hoverType "icon")}}
-                    {{icon @hoverValue class="hover-icon"}}
+                    {{dIcon @hoverValue class="hover-icon"}}
                   {{/if}}
                 </button>
               </span>

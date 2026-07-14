@@ -46,7 +46,7 @@ class FakeStreamUpdater {
   }
 }
 
-module("Discourse AI | Unit | Lib | ai-streamer", function () {
+module("Unit | Lib | ai-streamer", function () {
   function confirmPlaceholder(html, expected, assert) {
     const element = document.createElement("div");
     element.innerHTML = html;

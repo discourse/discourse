@@ -5,11 +5,11 @@
 @import "alert";
 @import "authorize-api-key";
 @import "bbcode";
+@import "categories-topic-list";
 @import "category-list";
 @import "code_highlighting";
 @import "colorpicker";
 @import "compose";
-@import "composer-user-selector";
 @import "crawler_layout";
 @import "d-icon";
 @import "d-image-grid";
@@ -17,7 +17,6 @@
 @import "directory";
 @import "discourse";
 @import "edit-category";
-@import "uc-simplified-category-setup-edit-categories";
 @import "edit-topic-timer-modal";
 @import "embedded-posts";
 @import "ember-select";

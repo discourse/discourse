@@ -50,6 +50,9 @@ nl:
         description: "Beschrijving"
         actions: "Acties"
         settings: "Instellingen"
+        no_channels: "Er zijn geen chats aan deze categorie gekoppeld"
+        no_channels_body: "Je kunt meerdere chatrooms per categorie hebben, toegankelijk voor dezelfde leden op basis van de beveiligingsinstellingen van de categorie. <a href='%{chatBrowseUrl}'>Maak een chatkanaal</a>."
+        include_subcategories: "Subcategoriekanalen opnemen"
       text_copied: Tekst gekopieerd naar klembord
       link_copied: Link gekopieerd naar klembord
       back_to_forum: "Forum"
@@ -64,9 +67,21 @@ nl:
       cancel: "Annuleren"
       cancel_reply: "Antwoord annuleren"
       chat_channels: "Kanalen"
+      starred: "Met ster"
+      starred_channels: "Kanalen met een ster"
+      starred_channels_empty: "Je hebt nog geen ster aan een kanaal toegevoegd. Voeg een ster toe aan kanalen voor snelle toegang hier."
+      pinned_messages:
+        title: "Vastgemaakte berichten"
+        close: "Vastgemaakte berichten sluiten"
+        pinned_by_you: "Vastgemaakt door jou"
+        pinned_by_user: "Vastgemaakt door %{username}"
+      no_pinned_messages: "Geen vastgemaakte berichten in dit kanaal."
+      pin_message: "Bericht vastmaken"
+      unpin_message: "Bericht losmaken"
       pinned: "Vastgemaakt"
       browse_all_channels: "Alle kanalen bekijken"
       see_in: "Bekijken in"
+      open_channel_menu: "Kanaalmenu openen"
       move_to_channel:
         title: "Berichten verplaatsen naar kanaal"
         instructions:
@@ -81,13 +96,18 @@ nl:
         title: "Kanaalinstellingen"
         edit: "Bewerken"
         add: "Toevoegen"
+        star_channel: "Ster toevoegen aan kanaal"
+        unstar_channel: "Ster verwijderen van kanaal"
         close_channel: "Kanaal sluiten"
         open_channel: "Kanaal openen"
+        open_channel_disabled_archived: "Gearchiveerde kanalen kunnen niet opnieuw worden geopend."
+        open_channel_disabled_read_only: "Alleen-lezen kanalen kunnen niet opnieuw worden geopend."
         archive_channel: "Kanaal archiveren"
         delete_channel: "Kanaal verwijderen"
         join_channel: "Deelnemen aan kanaal"
         leave_channel: "Kanaal verlaten"
         leave_groupchat_info: "Als je deze groepschat verlaat, heb je er geen toegang meer toe en ontvang je geen meldingen meer. Om weer deel te kunnen nemen, moet je opnieuw worden uitgenodigd door een lid van de groepschat."
+        notification_settings: "Meldingsinstellingen"
         notification_settings_context: "Meldingen"
         join: "Deelnemen"
         leave: "Verlaten"
@@ -136,6 +156,7 @@ nl:
       email_frequency:
         description: "We sturen alleen een e-mail als we je de afgelopen 15 minuten niet hebben gezien."
         never: "Nooit"
+        title: "Stuur me een e-mail als ik een chatprivébericht of groepschat ontvang."
         when_away: "Alleen wanneer afwezig"
       header_indicator_preference:
         title: "Activiteitsindicator weergeven in kop"
@@ -146,6 +167,7 @@ nl:
       separate_sidebar_mode:
         title: "Afzonderlijke zijbalkmodussen weergeven voor forum en chat"
       send_shortcut:
+        title: "Snelkoppeling verzenden"
         enter:
           label: "Verzenden met Enter"
         meta_enter:
@@ -239,6 +261,10 @@ nl:
         header: "Chatkop"
         composer: "Chateditor"
         channels_list: "Chatkanalenlijst"
+      screen_reader:
+        new_messages:
+          one: "%{count} nieuw bericht"
+          other: "%{count} nieuw berichten"
       no_direct_message_channels: "Je neemt nog niet deel aan directe berichten!"
       no_direct_message_channels_cta: "Gesprek starten"
       no_public_channels: "Je neemt nog niet deel aan kanalen!"
@@ -247,6 +273,7 @@ nl:
       chat_notifications_title: "Chatmeldingen"
       only_chat_push_notifications:
         title: "Alleen chatpushmeldingen sturen"
+      personalization_title: "Personalisatie"
       ignore_channel_wide_mention:
         title: "Kanaalbrede vermeldingen negeren"
       show_thread_title_prompts:
@@ -277,7 +304,6 @@ nl:
       retry_staged_message:
         title: "Netwerkfout"
         action: "Opnieuw sturen?"
-      unreliable_network: "Netwerk is onbetrouwbaar, het verzenden van berichten en het opslaan van concepten werkt mogelijk niet"
       bookmark_message: "Bladwijzer maken"
       bookmark_message_edit: "Bladwijzer bewerken"
       restore: "Verwijderd bericht herstellen"
@@ -291,12 +317,13 @@ nl:
         other: "Je hebt %{count} ongelezen discussies"
       scroll_to_bottom: "Naar beneden scrollen"
       scroll_to_new_messages: "Nieuwe berichten weergeven"
+      new_messages:
+        one: "%{count} nieuw bericht"
+        other: "%{count} nieuw berichten"
       sound:
         title: "Geluid bureaubladmelding chat"
       sounds:
         none: "Geen"
-        bell: "Bel"
-        ding: "Ding"
       title: "chat"
       title_capitalized: "Chat"
       upload: "Voeg een bestand toe"
@@ -332,6 +359,10 @@ nl:
         yesterday: Gisteren
       search_view:
         filter_placeholder: Zoeken in berichten
+        message_result_label: "Chatbericht van %{username}: %{preview} %{threadInfo}"
+        in_thread: "in thread %{title}"
+        sr_instructions: "Druk op Enter of de spatiebalk om het bericht te openen. Gebruik Tab om tussen de resultaten te schakelen."
+        results_list_label: "Zoekresultaten chatbericht"
       members_view:
         filter_placeholder: Leden zoeken
         add_member: Lid toevoegen
@@ -373,7 +404,7 @@ nl:
         input_placeholder: Voeg een naam toe
         slug_description: Er wordt een kanaalslug gebruikt in de URL in plaats van de kanaalnaam
         name: Kanaalnaam
-        slug: Kanaalslug (optioneel)
+        reset_emoji: Emoji resetten
       channel_edit_description_modal:
         title: Beschrijving bewerken
         input_placeholder: Voeg een beschrijving toe
@@ -430,14 +461,15 @@ nl:
             one: 'Gebruikers in %{group} en %{count} andere groep hebben toegang tot dit kanaal volgens de <a href="%{settingLink}" target="_blank">beveiligingsinstellingen</a>'
             other: 'Gebruikers in %{group} en %{count} andere groepen hebben toegang tot dit kanaal volgens de <a href="%{settingLink}" target="_blank">beveiligingsinstellingen</a>'
         create: "Kanaal maken"
-        description: "Beschrijving (optioneel)"
+        description: "Beschrijving"
         name: "Kanaalnaam"
-        slug: "Kanaalslug (optioneel)"
         title: "Nieuw kanaal"
         type: "Type"
         types:
           category: "Categorie"
           topic: "Topic"
+        emoji:
+          reset: "Emoji resetten"
       reviewable:
         type: "Chatbericht"
         message_in_channel: "Kanaal"
@@ -450,6 +482,10 @@ nl:
           other: "<span>Jij, %{commaSeparatedUsernames} en %{count} anderen hebben gereageerd met </span>:%{emoji}:"
         single_user: "<span>%{username} heeft gereageerd met </span>:%{emoji}:"
         multiple_users: "<span>%{commaSeparatedUsernames} en %{username} hebben gereageerd met </span>:%{emoji}:"
+        users_popup:
+          title:
+            one: "%{count} reactie"
+            other: "%{count} reacties"
         multiple_users_and_more:
           one: "<span>%{commaSeparatedUsernames} en %{count} ander hebben gereageerd met </span>:%{emoji}:"
           other: "<span>%{commaSeparatedUsernames} en %{count} anderen hebben gereageerd met </span>:%{emoji}:"
@@ -480,6 +516,7 @@ nl:
         follow: "Deelnemen"
         followed: "Lid sinds"
         mute: "Kanaal dempen"
+        unmute: "Dempen kanaal opheffen"
         threading_enabled: "Ingeschakeld"
         threading_disabled: "Uitgeschakeld"
         muted_on: "Aan"
@@ -505,6 +542,8 @@ nl:
           export_has_started: "Het exporteren is begonnen. Je ontvangt een privébericht als het klaar is."
       search:
         short_title: Zoeken
+        title: Chat zoeken
+        aria_label: "Overschakelen naar chat zoeken"
         no_results: "Geen resultaten gevonden"
         sort:
           relevance: "Relevantie"
@@ -585,10 +624,15 @@ nl:
           one: "%{commaSeparatedUsernames} en %{count} ander zijn aan het typen"
           other: "%{commaSeparatedUsernames} en %{count} anderen zijn aan het typen"
       retention_reminders:
+        chat_settings: "Chatinstellingen"
         indefinitely_short: "oneindig"
+        indefinitely_long: "%{chatSettingsLink} zijn zo ingesteld dat chatberichten oneindig worden bewaard."
         short:
           one: "%{count} dag"
           other: "%{count} dagen"
+        long:
+          one: "%{chatSettingsLink} zijn zo ingesteld dat chatberichten %{count} dag worden bewaard."
+          other: "%{chatSettingsLink} zijn zo ingesteld dat chatberichten %{count} dagen worden bewaard."
       flags:
         off_topic: "Dit bericht is niet relevant voor de huidige discussie zoals gedefinieerd door de kanaaltitel en moet waarschijnlijk worden verplaats naar elders."
         inappropriate: "Dit bericht bevat inhoud die een redelijk persoon als aanstootgevend, kwetsend of een overtreding van <a href=\"%{basePath}/guidelines\">onze communityrichtlijnen</a> zou beschouwen."
@@ -720,6 +764,7 @@ nl:
           composer_bold: "%{shortcut} Vet (alleen opstellen)"
           composer_italic: "%{shortcut} Cursief (alleen opstellen)"
           composer_code: "%{shortcut} Code (alleen opstellen)"
+          drawer_toggle: "%{shortcut} Chatlade in-/uitschakelen"
           drawer_close: "%{shortcut} Chatlade sluiten"
           mark_all_channels_read: "%{shortcut} Alle kanalen als gelezen markeren"
     topic_statuses:
@@ -746,7 +791,20 @@ nl:
           title: Chat
     sidebar:
       start_new_dm:
+        text: Ster toevoegen aan nieuwe direct bericht
         title: Maak een persoonlijke chat
       panels:
         chat:
           label: "Chat"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "Chatbericht sturen"
+        "trigger:chat_message_created": "Chatbericht gemaakt"
+      chat_message_created:
+        channel_id: "Kanaal"
+      send_chat_message:
+        channel_id: "Kanaal"
+        message: "Bericht"
+      chat_approval:
+        message: "Bericht"
+        channel_id: "Kanaal"

@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { fn } from "@ember/helper";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import avatar from "discourse/helpers/bound-avatar-template";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
 import PollVotersRankedChoice from "./poll-voters-ranked-choice";
 
 export default class PollVotersComponent extends Component {
@@ -19,20 +19,20 @@ export default class PollVotersComponent extends Component {
           {{#each @voters as |user|}}
             <li>
               <a data-user-card={{user.username}} title={{user.username}}>
-                {{avatar user.avatar_template "tiny"}}
+                {{dBoundAvatarTemplate user.avatar_template "tiny"}}
               </a>
             </li>
           {{/each}}
         {{/if}}
       </ul>
       {{#if this.showMore}}
-        <ConditionalLoadingSpinner @condition={{@loading}}>
+        <DConditionalLoadingSpinner @condition={{@loading}}>
           <DButton
             @action={{fn @fetchVoters @optionId}}
             @icon="chevron-down"
             class="poll-voters-toggle-expand"
           />
-        </ConditionalLoadingSpinner>
+        </DConditionalLoadingSpinner>
       {{/if}}
     </div>
   </template>

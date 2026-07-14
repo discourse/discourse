@@ -7,6 +7,8 @@ export default function topicWithAssignedPosts() {
   const firstReply = topic.post_stream.posts[1];
   const secondReply = topic.post_stream.posts[2];
 
+  firstReply["can_assign"] = true;
+  secondReply["can_assign"] = true;
   topic["indirectly_assigned_to"] = {
     [firstReply.id]: {
       assigned_to: {

@@ -7,12 +7,12 @@ module DiscourseSolved
         type_id :support
 
         class << self
-          def visible?
-            SiteSetting.enable_support_category_type_setup
-          end
-
           def enable_plugin
             SiteSetting.solved_enabled = true
+          end
+
+          def plugin_enabled?
+            SiteSetting.solved_enabled
           end
 
           def category_matches?(category)
@@ -33,6 +33,7 @@ module DiscourseSolved
             configuration_values.reverse_merge!(
               DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD => "true",
               DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD => "true",
+              DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD => "true",
             )
             configuration_values.merge!(
               DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD => "true",
@@ -49,8 +50,15 @@ module DiscourseSolved
             DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
           end
 
+          def unconfigure_category(category, guardian:)
+            category.custom_fields[DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD] = "false"
+            category.save!
+
+            DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
+          end
+
           def configuration_schema
-            {
+            schema = {
               general_category_settings: {
                 name: {
                   default: I18n.t("category_types.support.name"),
@@ -98,17 +106,54 @@ module DiscourseSolved
                   label:
                     I18n.t("discourse_solved.category_type.notify_on_staff_accept_solved.label"),
                 },
-                DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD => {
-                  default: true,
-                  type: :bool,
-                  label: I18n.t("discourse_solved.category_type.empty_box_on_unsolved.label"),
-                },
+              },
+              site_texts: {
               },
             }
+
+            # The empty-box-on-unsolved styling isn't used by the Horizon theme,
+            # so hide the toggle (and the field) when Horizon is the site's
+            # default theme.
+            unless default_theme_horizon?
+              schema[:category_custom_fields][
+                DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD
+              ] = {
+                default: true,
+                type: :bool,
+                label: I18n.t("discourse_solved.category_type.empty_box_on_unsolved.label"),
+              }
+            end
+
+            if SiteSetting.enable_solved_shared_issues
+              schema[:category_custom_fields][
+                DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD
+              ] = {
+                default: true,
+                type: :bool,
+                label: I18n.t("discourse_solved.category_type.enable_shared_issues.label"),
+                description:
+                  I18n.t("discourse_solved.category_type.enable_shared_issues.description"),
+              }
+
+              schema[:site_texts]["js.solved.shared_issue.label"] = {
+                label: I18n.t("discourse_solved.category_type.shared_issue_label.label"),
+                description:
+                  I18n.t("discourse_solved.category_type.shared_issue_label.description"),
+                depends_on: DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD,
+              }
+            end
+
+            schema
           end
 
           def icon
             "person_raising_hand"
+          end
+
+          private
+
+          def default_theme_horizon?
+            SiteSetting.default_theme_id == Theme.horizon_theme.id
           end
         end
       end

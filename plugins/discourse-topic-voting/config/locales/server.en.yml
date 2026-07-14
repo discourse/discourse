@@ -1,5 +1,12 @@
 en:
+  category_types:
+    ideas:
+      name: "Ideas"
+      title: "ideas"
+      description: "Where members can submit ideas and vote on the ones they want most."
+
   site_settings:
+    enable_ideas_category_type_setup: "Enables the Ideas category type option during category creation setup."
     topic_voting_enabled: 'Allow users to vote on topics?'
     topic_voting_enable_vote_limits: 'Limit the number of votes per user based on trust level'
     topic_voting_tl0_vote_limit: 'How many active votes are TL0 users allowed?'
@@ -11,6 +18,25 @@ en:
     topic_voting_show_votes_on_profile: 'Allow users to see their votes in their activity feed?'
     topic_voting_alert_votes_left: 'Alert user when this many votes are left'
   topic_voting:
+    category_type:
+      show_who_voted:
+        label: "Show who voted"
+      show_votes_on_profile:
+        label: "Show votes on profile"
+      enable_vote_limits:
+        label: "Limit member votes"
+      tl0_vote_limit:
+        label: "TL0 vote limit"
+      tl1_vote_limit:
+        label: "TL1 vote limit"
+      tl2_vote_limit:
+        label: "TL2 vote limit"
+      tl3_vote_limit:
+        label: "TL3 vote limit"
+      tl4_vote_limit:
+        label: "TL4 vote limit"
+      alert_votes_left:
+        label: "Alert when votes remaining"
     votes_moved:
       one: "A vote has been moved."
       other: "%{count} votes have been moved."
@@ -23,3 +49,21 @@ en:
         topic_votes_max: "Maximum number of topic votes"
         order_topic_votes: "Order topics by most votes"
         order_topic_votes_asc: "Order topics by fewest votes"
+
+  badges:
+    daydreamer:
+      name: "Daydreamer"
+      description: "Receive a vote on your topic"
+      long_description: "This badge is granted for receiving a vote on one of your topics. :white_check_mark: Nice idea. :+1:"
+    brainstormer:
+      name: "Brainstormer"
+      description: "Receive 5 votes on your topic"
+      long_description: "This badge is granted for receiving 5 votes on one of your topics. :white_check_mark: Your topic is getting traction."
+    innovator:
+      name: "Innovator"
+      description: "Receive 15 votes on your topic"
+      long_description: "This badge is granted for receiving 15 votes on one of your topics. :white_check_mark: So good it can't be ignored."
+    visionary:
+      name: "Visionary"
+      description: "Receive 25 votes on your topic"
+      long_description: "This badge is granted for receiving 25 votes on one of your topics. :white_check_mark: Give the people what they want! :clap:"

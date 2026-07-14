@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import SiteSettingUpload from "discourse/admin/components/site-settings/upload";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | site-settings/upload", function (hooks) {
+module("Integration | Component | SiteSettings | Upload", function (hooks) {
   setupRenderingTest(hooks);
 
   test("with image file shows preview and lightbox", async function (assert) {

@@ -1,50 +1,56 @@
-import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { i18n } from "discourse-i18n";
 
-const PLUGIN_ID = "discourse-hCaptcha";
+function captchaSelector(siteSettings) {
+  if (siteSettings.discourse_captcha_provider !== "none") {
+    return siteSettings.discourse_captcha_provider;
+  } else {
+    return false;
+  }
+}
 
 function initializeHCaptcha(api, container) {
   const siteSettings = container.lookup("service:site-settings");
 
-  if (!siteSettings.discourse_hcaptcha_enabled) {
+  if (
+    !siteSettings.discourse_captcha_enabled ||
+    !captchaSelector(siteSettings)
+  ) {
     return;
   }
 
-  api.modifyClassStatic("model:user", {
-    pluginId: PLUGIN_ID,
+  api.registerBehaviorTransformer("create-account", async ({ next }) => {
+    const captchaService = container.lookup("service:captcha-service");
+    captchaService.submitted = true;
 
-    createAccount() {
-      const hCaptchaService = getOwnerWithFallback(this).lookup(
-        "service:h-captcha-service"
-      );
-      hCaptchaService.submitted = true;
-
-      if (hCaptchaService.invalid) {
-        return Promise.reject();
-      }
-
-      const data = {
-        token: hCaptchaService.token,
+    if (captchaService.invalid) {
+      return {
+        success: false,
+        message: i18n("discourse_captcha.missing_token"),
       };
+    }
 
-      const originalAccountCreation = this._super;
-      return ajax("/hcaptcha/create.json", {
-        data,
+    const captchaRoute = captchaSelector(siteSettings);
+
+    try {
+      await ajax(`/captcha/${captchaRoute}/create.json`, {
+        data: { token: captchaService.token },
         type: "POST",
-      })
-        .then(() => {
-          return originalAccountCreation(...arguments);
-        })
-        .catch(() => {
-          hCaptchaService.failed = true;
-          return Promise.reject();
-        })
-        .finally(() => {
-          hCaptchaService.reset();
-        });
-    },
+      });
+    } catch {
+      captchaService.reset();
+      return {
+        success: false,
+        message: i18n("discourse_captcha.verification_failed"),
+      };
+    }
+
+    try {
+      return await next();
+    } finally {
+      captchaService.reset();
+    }
   });
 }
 

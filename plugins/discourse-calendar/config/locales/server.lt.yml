@@ -20,6 +20,12 @@ lt:
   site_settings:
     calendar_categories: "Rodyti kalendorių kategorijos viršuje. categoryId yra privalomas. pvz.: categoryId=6;weekends=false;defaultView=year;\n Kiti galimi nustatymai: weekends(true/false) ir defaultView(day,week,month,year)."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Diena"
+        week: "Per savaitę"
+        month: "Per mėnesį"
+        year: "Metai"
     holiday_status:
       description: "Švenčių metu"
   discourse_post_event:

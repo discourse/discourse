@@ -6,9 +6,9 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { classNames, tagName } from "@ember-decorators/component";
 import ScreenedIpAddress from "discourse/admin/models/screened-ip-address";
-import DButton from "discourse/components/d-button";
-import TextField from "discourse/components/text-field";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 /**
@@ -94,7 +94,7 @@ export default class ScreenedIpAddressForm extends Component {
 
   <template>
     <label>{{i18n "admin.logs.screened_ips.form.label"}}</label>
-    <TextField
+    <DTextField
       @value={{this.ip_address}}
       @disabled={{this.formSubmitted}}
       @placeholderKey="admin.logs.screened_ips.form.ip_address"

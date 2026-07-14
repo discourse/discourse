@@ -33,6 +33,10 @@ class ReviewableScoreSerializer < ApplicationSerializer
   has_one :reviewable_conversation, serializer: ReviewableConversationSerializer
   has_one :reviewed_by, serializer: BasicUserSerializer, root: "users"
 
+  def include_reviewable_conversation?
+    object.meta_topic.present? && scope&.can_see?(object.meta_topic)
+  end
+
   def agree_stats
     {
       agreed: user.user_stat.flags_agreed,
@@ -93,20 +97,16 @@ class ReviewableScoreSerializer < ApplicationSerializer
     words = watched_words_found
 
     if words.nil? || words.empty?
-      text =
-        I18n.t("reviewables.reasons.no_context.watched_word", link: link, default: "watched_word")
+      I18n.t("reviewables.reasons.no_context.watched_word", link: link, default: "watched_word")
     else
-      text =
-        I18n.t(
-          "reviewables.reasons.watched_word",
-          link: link,
-          words: words.join(", "),
-          count: words.length,
-          default: "watched_word",
-        )
+      I18n.t(
+        "reviewables.reasons.watched_word",
+        link: link,
+        words: words.map { |w| CGI.escapeHTML(w) }.join(", "),
+        count: words.length,
+        default: "watched_word",
+      )
     end
-
-    text
   end
 
   def watched_words_found

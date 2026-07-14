@@ -1,10 +1,7 @@
 import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
-import { LinkTo } from "@ember/routing";
-import { isEmpty } from "@ember/utils";
-import concatClass from "discourse/helpers/concat-class";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
-import ChannelTitle from "./channel-title";
 import ToggleChannelMembershipButton from "./toggle-channel-membership-button";
 
 export default class ChatChannelPreviewCard extends Component {
@@ -12,36 +9,29 @@ export default class ChatChannelPreviewCard extends Component {
     return this.args.channel?.isOpen && this.args.channel?.canJoin;
   }
 
-  get hasDescription() {
-    return !isEmpty(this.args.channel?.description);
+  get channelPlaceholder() {
+    return i18n("chat.placeholder_channel", {
+      channelName: `#${this.args.channel.title}`,
+    });
   }
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "chat-channel-preview-card"
-        (unless this.hasDescription "-no-description")
         (unless this.showJoinButton "-no-button")
       }}
     >
-      <ChannelTitle @channel={{@channel}} />
-      {{#if this.hasDescription}}
-        <p class="chat-channel-preview-card__description">
-          {{@channel.description}}
-        </p>
-      {{/if}}
       {{#if this.showJoinButton}}
+        <div class="chat-channel__placeholder">
+          {{this.channelPlaceholder}}
+        </div>
+
         <ToggleChannelMembershipButton
           @channel={{@channel}}
-          @options={{hash joinClass="btn-primary"}}
+          @options={{hash joinClass="btn-primary" labelType="short"}}
         />
       {{/if}}
-      <LinkTo
-        @route="chat.browse"
-        class="chat-channel-preview-card__browse-all"
-      >
-        {{i18n "chat.browse_all_channels"}}
-      </LinkTo>
     </div>
   </template>
 }

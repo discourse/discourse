@@ -7,7 +7,6 @@ import { schedule } from "@ember/runloop";
 import { tagName } from "@ember-decorators/component";
 import ComposerMessage from "discourse/components/composer-message";
 import ShareTopic from "discourse/components/modal/share-topic";
-import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import {
   addUniqueValueToArray,
@@ -16,10 +15,25 @@ import {
 import { debounce } from "discourse/lib/decorators";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import LinkLookup from "discourse/lib/link-lookup";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 import { autoTrackedArray } from "../lib/tracked-tools";
 
 let _messagesCache = {};
+let _educationMessageShown = false;
+
+export function resetComposerMessagesCache() {
+  _messagesCache = {};
+  _educationMessageShown = false;
+}
+
+function visibleMessages(messages) {
+  if (!_educationMessageShown) {
+    return messages?.content || [];
+  }
+
+  return messages?.content?.filter((msg) => msg.id !== "education") || [];
+}
 
 @tagName("")
 export default class ComposerMessages extends Component {
@@ -49,6 +63,7 @@ export default class ComposerMessages extends Component {
     this.appEvents.on("composer:find-similar", this, this._findSimilar);
     this.appEvents.on("composer-messages:close", this, this._closeTop);
     this.appEvents.on("composer-messages:create", this, this._create);
+    this.appEvents.on("composer:saved", this, this._resetEducationMessageState);
     this.reset();
   }
 
@@ -60,6 +75,11 @@ export default class ComposerMessages extends Component {
     this.appEvents.off("composer:find-similar", this, this._findSimilar);
     this.appEvents.off("composer-messages:close", this, this._closeTop);
     this.appEvents.off("composer-messages:create", this, this._create);
+    this.appEvents.off(
+      "composer:saved",
+      this,
+      this._resetEducationMessageState
+    );
   }
 
   _closeTop() {
@@ -87,6 +107,10 @@ export default class ComposerMessages extends Component {
     });
   }
 
+  _resetEducationMessageState() {
+    _educationMessageShown = false;
+  }
+
   // Resets all active messages.
   // For example if composing a new post.
   reset() {
@@ -107,12 +131,19 @@ export default class ComposerMessages extends Component {
       return;
     }
 
-    for (const msg of this.queuedForTyping) {
+    const queuedMessages = [...this.queuedForTyping];
+    this.queuedForTyping.length = 0;
+
+    for (const msg of queuedMessages) {
       if (this.composer.whisper && msg.hide_if_whisper) {
-        return;
+        continue;
       }
 
       this.popup(msg);
+
+      if (msg.id === "education") {
+        _educationMessageShown = true;
+      }
     }
 
     if (this.composer.privateMessage) {
@@ -295,11 +326,14 @@ export default class ComposerMessages extends Component {
 
     this.set("checkedMessages", true);
 
-    messages.content.forEach((msg) => {
+    visibleMessages(messages).forEach((msg) => {
       if (msg.wait_for_typing) {
         addUniqueValueToArray(this.queuedForTyping, msg);
       } else {
         this.popup(msg);
+        if (msg.id === "education") {
+          _educationMessageShown = true;
+        }
       }
     });
   }
@@ -353,7 +387,10 @@ export default class ComposerMessages extends Component {
 
   <template>
     <div
-      class={{concatClass "composer-popup-container" (if this.hidden "hidden")}}
+      class={{dConcatClass
+        "composer-popup-container"
+        (if this.hidden "hidden")
+      }}
       ...attributes
     >
       {{#each this.messages as |message|}}

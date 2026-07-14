@@ -2,17 +2,17 @@
 
 describe "Admin Onboarding Banner" do
   fab!(:admin)
-  # ensures there is at least one topic, otherwise the topic recent date check doesn't pass
-  fab!(:topic)
 
   let(:banner) { PageObjects::Components::AdminOnboardingBanner.new }
   let(:predefined_topics_modal) { PageObjects::Modals::AdminOnboardingPredefinedTopics.new }
+  let(:theme_picker_modal) { PageObjects::Modals::AdminOnboardingThemePicker.new }
   let(:create_invite_modal) { PageObjects::Modals::CreateInvite.new }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
 
   before do
     SiteSetting.enable_site_owner_onboarding = true
+    SiteSetting.default_theme_id = Theme.foundation_theme.id
 
     sign_in(admin)
   end
@@ -25,9 +25,9 @@ describe "Admin Onboarding Banner" do
 
     it "shows all three onboarding steps" do
       visit("/")
-      expect(banner.step("start_posting")).to be_present
+      expect(banner.step("select_theme")).to be_present
       expect(banner.step("invite_collaborators")).to be_present
-      expect(banner.step("spread_the_word")).to be_present
+      expect(banner.step("start_posting")).to be_present
     end
 
     it "can close the banner prematurely" do
@@ -102,22 +102,34 @@ describe "Admin Onboarding Banner" do
     end
   end
 
-  describe "spread the word step" do
-    it "copies site URL to clipboard and marks step complete" do
+  describe "select theme step" do
+    it "opens the theme picker modal" do
       visit("/")
-      expect(banner.step_not_completed?("spread_the_word")).to eq(true)
+      expect(banner.step_not_completed?("select_theme")).to eq(true)
 
-      banner.click_step_action("spread_the_word")
+      banner.click_step_action("select_theme")
 
-      expect(banner.step_completed?("spread_the_word")).to eq(true)
-      expect(toasts).to have_success(
-        I18n.t("js.admin_onboarding_banner.spread_the_word.copied_to_clipboard"),
-      )
+      expect(theme_picker_modal).to be_open
+      expect(theme_picker_modal).to have_theme_cards(minimum: 1)
+    end
+
+    it "sets a theme as default and marks step complete" do
+      visit("/")
+      banner.click_step_action("select_theme")
+
+      expect(theme_picker_modal).to be_open
+
+      selected_name = theme_picker_modal.select_first_selectable_theme
+
+      # Page reloads after theme selection; wait for it to complete
+      expect(page).to have_css(".admin-onboarding-banner")
+      expect(banner.step_completed?("select_theme")).to eq(true)
+      expect(Theme.find(SiteSetting.default_theme_id).name).to eq(selected_name)
     end
   end
 
   describe "completing all steps" do
-    it "disables onboarding when all steps are complete" do
+    it "disables onboarding when select theme is completed last" do
       visit("/")
 
       banner.click_step_action("start_posting")
@@ -134,10 +146,11 @@ describe "Admin Onboarding Banner" do
 
       expect(banner.step_completed?("invite_collaborators")).to eq(true)
 
-      banner.click_step_action("spread_the_word")
+      banner.click_step_action("select_theme")
+      expect(theme_picker_modal).to be_open
+      theme_picker_modal.select_first_selectable_theme
 
-      # banner is hidden after all steps are complete; No need to check for `spread_the_word` step completion
-
+      # Page reloads after theme selection; banner disappears when all steps complete
       expect(banner).to be_not_visible
       expect(SiteSetting.enable_site_owner_onboarding).to eq(false)
     end

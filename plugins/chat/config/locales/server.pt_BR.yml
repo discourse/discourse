@@ -32,7 +32,6 @@ pt_BR:
     chat_editing_grace_period_max_diff_low_trust: "Quantidade máxima de alterações de caracteres permitidas no período de carência da edição do chat. Se houver mais alterações, a etiqueta (editada) será mostrada na mensagem do chat (nível de confiança 0 e 1)."
     chat_editing_grace_period_max_diff_high_trust: "Quantidade máxima de alterações de caracteres permitidas no período de carência da edição do chat. Se houver mais alterações, a etiqueta (editada) será mostrada na mensagem do chat (nível de confiança 2 e acima)."
     chat_preferred_index: "Aba preferencial ao carregar /chat."
-    allow_chat_in_anonymous_mode: "Ative esta configuração para permitir que os(as) usuários(as) que estiverem acessando seu site anominamente usem o chat. Essa configuração requer a definição \"allow anonymous mode\" para ser ativada."
     chat_search_enabled: "Ative esta configuração para permitir que os usuários pesquisem mensagens de chat."
     errors:
       chat_default_channel: "O canal de chat padrão deve ser um canal público."
@@ -232,10 +231,17 @@ pt_BR:
         other_type: "%{username} mencionou %{identifier} no chat pessoal"
       new_chat_message: '%{username} enviou uma mensagem em "%{channel}"'
       new_direct_chat_message: "%{username} enviou uma mensagem no chat"
+    actions:
+      chat_reply:
+        title: Responder
   discourse_automation:
     scriptables:
       send_chat_message:
         title: Enviar mensagem de chat
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Aprovar"
+      default_deny_label: "Negar"
   reviewable_score_types:
     needs_review:
       title: "Precisa de revisão"

@@ -77,6 +77,16 @@ RSpec.describe Chat::Api::ChannelsMessagesInteractionsController do
         )
       end
 
+      it "does not expose action values in the response" do
+        post "/chat/api/channels/#{accessible_channel.id}/messages/#{accessible_message.id}/interactions",
+             params: {
+               action_id: "xxx",
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("interaction", "action")).not_to have_key("value")
+      end
+
       it "returns 404 when action_id does not match any block element" do
         post "/chat/api/channels/#{accessible_channel.id}/messages/#{accessible_message.id}/interactions",
              params: {

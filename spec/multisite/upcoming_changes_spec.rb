@@ -12,7 +12,7 @@ RSpec.describe "Multisite UpcomingChanges cache", type: :multisite do
         },
       },
     )
-    Rails.stubs(:public_path).returns(File.join(Rails.root, "spec", "fixtures"))
+    Rails.stubs(:public_path).returns(Rails.root.join("spec/fixtures").to_s)
   end
 
   after do

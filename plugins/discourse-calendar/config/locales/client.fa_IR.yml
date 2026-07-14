@@ -319,6 +319,9 @@ fa_IR:
         ongoing_event_reminder: "یک رویداد در حال انجام است"
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} به طور خودکار حضور شما را تنظیم کرده و شما را به %{eventName} دعوت کرده است"
+      event_description:
+        show_more: "نمایش بیشتر"
+        show_less: "نمایش کمتر"
       edit_reason: "رویداد به‌روز شد"
       edit_reason_closed: "رویداد بسته شد"
       edit_reason_opened: "رویداد باز شد"
@@ -364,7 +367,6 @@ fa_IR:
       upcoming_events_list:
         title: "رویدادهای آینده"
         empty: "هیچ رویدادی در آینده وجود ندارد"
-        all_day: "تمام روز"
         error: "بازیابی رویدادها شکست خورد"
         try_again: "دوباره امتحان کنید"
         view_all: "مشاهده همه"
@@ -377,6 +379,7 @@ fa_IR:
       models:
         invitee:
           no_users: "هیچ کاربری یافت نشد"
+          leave_event: "ترک رویداد"
         event:
           expired: "منقضی شده"
           closed: "بسته شده"
@@ -387,6 +390,29 @@ fa_IR:
             private:
               title: "خصوصی"
               description: "فقط کاربران دعوت شده می‌توانند به رویداد خصوصی بپیوندند"
+      composer:
+        name_placeholder: "نام رویداد"
+        event_title_placeholder: "نام رویداد"
+        create_event_button: "ایجاد رویداد"
+        reminder:
+          units:
+            minutes:
+              one: "دقیقه"
+              other: "دقیقه"
+            hours:
+              one: "ساعت"
+              other: "ساعت"
+            days:
+              one: "روز"
+              other: "روزها"
+            weeks:
+              one: "هفته"
+              other: "هفته"
+      composer_actions:
+        create_event:
+          label: "ایجاد رویداد"
+        create_topic:
+          label: "ایجاد موضوع"
       builder_modal:
         custom_fields:
           label: "فیلدهای سفارشی"
@@ -406,8 +432,6 @@ fa_IR:
           remove_timezone: بدون منطقه زمانی (UTC)
         reminders:
           label: "یادآورها"
-          types:
-            notification: "اطلاع دادن به شرکت‌کنندگان"
           units:
             minutes: "دقیقه"
             hours: "ساعت"
@@ -420,16 +444,11 @@ fa_IR:
           label: "همروندی"
           none: "بدون همروندی"
           every_day: "هر روز"
-          every_month: "هر ماه در این روز"
           every_weekday: "هر هفته"
-          every_week: "هر هفته در این روز"
-          every_two_weeks: "هر دو هفته در این روز"
-          every_four_weeks: "هر چهار هفته در این روز"
-        url:
-          label: "نشانی اینترنتی"
-          placeholder: "اختیاری"
-        location:
-          label: "موقعیت"
+          ordinals:
+            last: "آخرین"
+        attendance:
+          none: "هیچ‌کدام"
         description:
           label: "توضیح"
         name:
@@ -437,8 +456,9 @@ fa_IR:
           placeholder: "اختیاری، پیش‌فرض عنوان موضوع است"
         invitees:
           label: "گروه‌های دعوت شده"
-        status:
-          label: "وضعیت"
+        event_type:
+          public:
+            title: "عمومی"
       invite_user_or_group:
         title: "اطلاع دادن به کاربر(ها) یا گروه(ها)"
         invite: "ارسال"

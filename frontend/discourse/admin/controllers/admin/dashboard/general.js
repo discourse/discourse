@@ -108,7 +108,13 @@ export default class AdminDashboardGeneralController extends AdminDashboardTabCo
   @computed
   get siteTrafficOptions() {
     return {
-      stackedChart: { hiddenLabels: ["page_view_other", "page_view_crawler"] },
+      stackedChart: {
+        hiddenLabels: [
+          "page_view_other",
+          "page_view_crawler",
+          "page_view_embed",
+        ],
+      },
     };
   }
 

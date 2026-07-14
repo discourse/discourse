@@ -147,7 +147,7 @@ if defined?(DiscourseAutomation)
           flag_type: flag_type.to_s.to_sym,
           max_post_tokens: max_post_tokens,
           stop_sequences: stop_sequences,
-          automation: self.automation,
+          automation: automation,
           max_output_tokens: max_output_tokens,
           action: context["action"],
           notify_author_pm: notify_author_pm,

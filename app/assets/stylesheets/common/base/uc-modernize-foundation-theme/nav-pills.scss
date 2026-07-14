@@ -1,0 +1,17 @@
+.uc-modernize-foundation-theme {
+  .nav-pills > li > a:hover::after,
+  .nav-pills > li button:hover::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: var(--d-nav-underline-height);
+    background: var(--d-nav-color--hover);
+  }
+
+  .navigation-container .nav-pills > li > a {
+    padding: 0 0.65em;
+    height: var(--d-control-height);
+  }
+}

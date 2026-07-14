@@ -13,11 +13,104 @@ RSpec.describe DiscourseAi::AiBot::BotController do
   end
 
   describe "#show_debug_info" do
+    fab!(:debug_bot_model) { Fabricate(:llm_model, name: "debug-bot-model") }
+    fab!(:debug_bot_user) do
+      enable_current_plugin
+      toggle_enabled_bots(bots: [debug_bot_model])
+      debug_bot_model.reload.user
+    end
+
+    fab!(:pm_topic) { Fabricate(:private_message_topic, user: user, recipient: debug_bot_user) }
+    fab!(:pm_post) { Fabricate(:post, topic: pm_topic, user: debug_bot_user) }
+    fab!(:pm_post2) { Fabricate(:post, topic: pm_topic, user: debug_bot_user) }
+    fab!(:pm_post3) { Fabricate(:post, topic: pm_topic, user: user) }
+
     before { SiteSetting.ai_bot_enabled = true }
 
     it "returns a 403 when the user cannot debug the AI bot conversation" do
       get "/discourse-ai/ai-bot/post/#{pm_post.id}/show-debug-info"
       expect(response.status).to eq(403)
+    end
+
+    it "does not disclose hidden whisper audit logs" do
+      debug_group = Fabricate(:group)
+      debug_group.add(user)
+      SiteSetting.ai_bot_debugging_allowed_groups = debug_group.id.to_s
+      SiteSetting.whispers_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+
+      visible_bot_post = Fabricate(:post, user: debug_bot_user)
+      hidden_whisper_post =
+        Fabricate(
+          :post,
+          topic: visible_bot_post.topic,
+          user: Fabricate(:admin),
+          post_type: Post.types[:whisper],
+        )
+      later_regular_post = Fabricate(:post, topic: visible_bot_post.topic, user: user)
+
+      visible_bot_log =
+        AiApiAuditLog.create!(
+          post_id: visible_bot_post.id,
+          provider_id: 1,
+          topic_id: visible_bot_post.topic_id,
+          feature_name: "ai_bot",
+          raw_request_payload: "bot request",
+          raw_response_payload: "bot response",
+          request_tokens: 1,
+          response_tokens: 2,
+          created_at: 2.minutes.ago,
+        )
+
+      hidden_bot_log =
+        AiApiAuditLog.create!(
+          post_id: hidden_whisper_post.id,
+          provider_id: 1,
+          topic_id: hidden_whisper_post.topic_id,
+          feature_name: "ai_bot",
+          raw_request_payload: "hidden bot request",
+          raw_response_payload: "hidden bot response",
+          request_tokens: 3,
+          response_tokens: 4,
+          created_at: 1.minute.ago,
+        )
+
+      hidden_translation_log =
+        AiApiAuditLog.create!(
+          post_id: hidden_whisper_post.id,
+          provider_id: 1,
+          topic_id: hidden_whisper_post.topic_id,
+          feature_name: "translation",
+          raw_request_payload: "hidden translation request",
+          raw_response_payload: "hidden translation response",
+          request_tokens: 5,
+          response_tokens: 6,
+          created_at: Time.zone.now,
+        )
+
+      get "/discourse-ai/ai-bot/post/#{later_regular_post.id}/show-debug-info"
+      show_debug_info_status = response.status
+      show_debug_info_body = response.parsed_body.deep_dup
+
+      get "/discourse-ai/ai-bot/show-debug-info/#{hidden_translation_log.id}"
+      hidden_translation_status = response.status
+      hidden_translation_body = response.parsed_body.deep_dup
+
+      get "/discourse-ai/ai-bot/show-debug-info/#{hidden_bot_log.id}"
+      hidden_bot_status = response.status
+      hidden_bot_body = response.parsed_body.deep_dup
+
+      aggregate_failures do
+        expect(show_debug_info_status).to eq(200)
+        expect(show_debug_info_body["id"]).to eq(visible_bot_log.id)
+        expect(show_debug_info_body["raw_request_payload"]).to eq("bot request")
+        expect(show_debug_info_body["raw_response_payload"]).to eq("bot response")
+
+        expect(hidden_translation_status).to eq(403)
+        expect(hidden_translation_body["errors"]).to include(I18n.t("invalid_access"))
+
+        expect(hidden_bot_status).to eq(403)
+        expect(hidden_bot_body["errors"]).to include(I18n.t("invalid_access"))
+      end
     end
 
     it "returns debug info if the user can debug the AI bot conversation" do
@@ -28,6 +121,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
         AiApiAuditLog.create!(
           provider_id: 1,
           topic_id: pm_topic.id,
+          feature_name: "ai_bot",
           raw_request_payload: "request",
           raw_response_payload: "response",
           request_tokens: 1,
@@ -39,6 +133,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
           post_id: pm_post.id,
           provider_id: 1,
           topic_id: pm_topic.id,
+          feature_name: "ai_bot",
           raw_request_payload: "request",
           raw_response_payload: "response",
           request_tokens: 1,
@@ -50,6 +145,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
           post_id: pm_post2.id,
           provider_id: 1,
           topic_id: pm_topic.id,
+          feature_name: "ai_bot",
           raw_request_payload: "request",
           raw_response_payload: "response",
           request_tokens: 1,
@@ -72,16 +168,169 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       expect(response.parsed_body["raw_request_payload"]).to eq("request")
       expect(response.parsed_body["raw_response_payload"]).to eq("response")
 
-      # return previous post if current has no debug info
       get "/discourse-ai/ai-bot/post/#{pm_post3.id}/show-debug-info"
       expect(response.status).to eq(200)
       expect(response.parsed_body["request_tokens"]).to eq(1)
       expect(response.parsed_body["response_tokens"]).to eq(2)
 
-      # can return debug info by id as well
       get "/discourse-ai/ai-bot/show-debug-info/#{log1.id}"
       expect(response.status).to eq(200)
       expect(response.parsed_body["id"]).to eq(log1.id)
+    end
+
+    context "with conversation totals and spending" do
+      fab!(:llm_model) do
+        Fabricate(
+          :llm_model,
+          input_cost: 3.0,
+          output_cost: 6.0,
+          cached_input_cost: 1.0,
+          cache_write_cost: 2.0,
+        )
+      end
+
+      fab!(:other_llm_model) do
+        Fabricate(
+          :llm_model,
+          name: "other-model",
+          input_cost: 10.0,
+          output_cost: 20.0,
+          cached_input_cost: 5.0,
+          cache_write_cost: 8.0,
+        )
+      end
+
+      let(:allowed_user) { pm_topic.topic_allowed_users.first.user }
+
+      before do
+        sign_in(allowed_user)
+        Group.refresh_automatic_groups!
+        SiteSetting.ai_bot_debugging_allowed_groups = allowed_user.groups.first.id.to_s
+      end
+
+      it "computes per-turn spending and conversation totals across multiple models" do
+        log_a =
+          AiApiAuditLog.create!(
+            post_id: pm_post.id,
+            provider_id: 1,
+            topic_id: pm_topic.id,
+            llm_id: llm_model.id,
+            feature_name: "ai_bot",
+            raw_request_payload: "req",
+            raw_response_payload: "res",
+            request_tokens: 1_000_000,
+            response_tokens: 500_000,
+            cache_read_tokens: 200_000,
+            cache_write_tokens: 100_000,
+          )
+
+        AiApiAuditLog.create!(
+          post_id: pm_post2.id,
+          provider_id: 1,
+          topic_id: pm_topic.id,
+          llm_id: other_llm_model.id,
+          feature_name: "ai_bot",
+          raw_request_payload: "req",
+          raw_response_payload: "res",
+          request_tokens: 2_000_000,
+          response_tokens: 1_000_000,
+        )
+
+        get "/discourse-ai/ai-bot/show-debug-info/#{log_a.id}"
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+        expected_turn_spending =
+          (1_000_000 * 3.0 + 500_000 * 6.0 + 200_000 * 1.0 + 100_000 * 2.0) / 1_000_000.0
+        expect(body["spending"]).to be_within(0.000001).of(expected_turn_spending)
+
+        expect(body["conversation_request_tokens"]).to eq(3_000_000)
+        expect(body["conversation_response_tokens"]).to eq(1_500_000)
+        expect(body["conversation_cache_read_tokens"]).to eq(200_000)
+        expect(body["conversation_cache_write_tokens"]).to eq(100_000)
+
+        expected_conversation_spending =
+          expected_turn_spending + (2_000_000 * 10.0 + 1_000_000 * 20.0) / 1_000_000.0
+        expect(body["conversation_spending"]).to be_within(0.000001).of(
+          expected_conversation_spending,
+        )
+      end
+
+      it "returns nil spending when the log has no llm_model" do
+        log_a =
+          AiApiAuditLog.create!(
+            post_id: pm_post.id,
+            provider_id: 1,
+            topic_id: pm_topic.id,
+            feature_name: "ai_bot",
+            raw_request_payload: "req",
+            raw_response_payload: "res",
+            request_tokens: 100,
+            response_tokens: 200,
+          )
+
+        get "/discourse-ai/ai-bot/show-debug-info/#{log_a.id}"
+        expect(response.status).to eq(200)
+
+        body = response.parsed_body
+        expect(body["spending"]).to be_nil
+        expect(body["conversation_request_tokens"]).to eq(100)
+        expect(body["conversation_response_tokens"]).to eq(200)
+        expect(body["conversation_spending"]).to be_nil
+      end
+
+      it "returns nil conversation fields when topic_id is absent" do
+        log_a =
+          AiApiAuditLog.create!(
+            provider_id: 1,
+            llm_id: llm_model.id,
+            feature_name: "ai_bot",
+            raw_request_payload: "req",
+            raw_response_payload: "res",
+            request_tokens: 100,
+            response_tokens: 200,
+          )
+        SiteSetting.ai_bot_debugging_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+        sign_in(Fabricate(:admin))
+
+        get "/discourse-ai/ai-bot/show-debug-info/#{log_a.id}"
+        # no topic means the endpoint 404s, so assert via serializer directly
+        serialized = AiApiAuditLogSerializer.new(log_a, root: false).as_json
+        expect(serialized[:conversation_request_tokens]).to be_nil
+        expect(serialized[:conversation_response_tokens]).to be_nil
+        expect(serialized[:conversation_cache_read_tokens]).to be_nil
+        expect(serialized[:conversation_cache_write_tokens]).to be_nil
+        expect(serialized[:conversation_spending]).to be_nil
+      end
+    end
+
+    it "returns topic-level debug info for any feature for a post in the conversation" do
+      user = pm_topic.topic_allowed_users.first.user
+      sign_in(user)
+
+      log =
+        AiApiAuditLog.create!(
+          provider_id: 1,
+          topic_id: pm_topic.id,
+          feature_name: "translation",
+          raw_request_payload: "request",
+          raw_response_payload: "response",
+          request_tokens: 1,
+          response_tokens: 2,
+        )
+
+      Group.refresh_automatic_groups!
+      SiteSetting.ai_bot_debugging_allowed_groups = user.groups.first.id.to_s
+
+      get "/discourse-ai/ai-bot/post/#{pm_post.id}/show-debug-info"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["id"]).to eq(log.id)
+
+      get "/discourse-ai/ai-bot/show-debug-info/#{log.id}"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["id"]).to eq(log.id)
     end
   end
 
@@ -199,20 +448,25 @@ RSpec.describe DiscourseAi::AiBot::BotController do
 
     it "streams a replacement into the existing bot reply" do
       retry_text = "second attempt"
+      messages = nil
 
       DiscourseAi::Completions::Llm.with_prepared_responses([retry_text]) do
         post "/discourse-ai/ai-bot/post/#{reply_post.id}/retry"
 
-        Jobs::CreateAiReply.new.execute(
-          post_id: prompt_post.id,
-          bot_user_id: bot_user.id,
-          agent_id: reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD].to_i,
-          reply_post_id: reply_post.id,
-        )
+        messages =
+          MessageBus.track_publish("discourse-ai/ai-bot/topic/#{reply_post.topic_id}") do
+            Jobs::CreateAiReply.new.execute(
+              post_id: prompt_post.id,
+              bot_user_id: bot_user.id,
+              agent_id: reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD].to_i,
+              reply_post_id: reply_post.id,
+            )
+          end
       end
 
       expect(response.status).to eq(200)
       expect(reply_post.reload.raw).to eq(retry_text)
+      expect(messages.first.data).to include(post_id: reply_post.id, raw: "")
       expect(reply_post.custom_fields[DiscourseAi::AiBot::POST_AI_AGENT_ID_FIELD].to_i).to eq(
         agent.id,
       )

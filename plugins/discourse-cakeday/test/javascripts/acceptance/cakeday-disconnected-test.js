@@ -2,7 +2,7 @@ import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
-acceptance("Cakeday - disconnected", function (needs) {
+acceptance("disconnected", function (needs) {
   needs.settings({
     cakeday_enabled: true,
     cakeday_emoji: "cake",

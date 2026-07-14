@@ -6,20 +6,13 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
   requires_plugin DiscourseReactions::PLUGIN_NAME
 
-  before_action :ensure_logged_in, except: [:post_reactions_users]
+  before_action :ensure_logged_in, except: %i[reactions_users_list post_reactions_users]
 
   def toggle
     post = fetch_post_from_params
     reaction = params[:reaction]
 
-    invalid_reaction =
-      if SiteSetting.discourse_reactions_allow_any_emoji
-        !Emoji.exists?(reaction)
-      else
-        DiscourseReactions::Reaction.valid_reactions.exclude?(params[:reaction])
-      end
-
-    return render_json_error(post) if invalid_reaction
+    return render_json_error(post) unless DiscourseReactions::Reaction.valid?(reaction)
 
     begin
       manager =
@@ -95,7 +88,7 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     raise Discourse::InvalidAccess unless guardian.can_see_notifications?(user)
 
     posts = Post.joins(:topic).where(user_id: user.id)
-    posts = guardian.filter_allowed_categories(posts)
+    posts = visible_posts_for_reactions_received(posts)
     post_ids = posts.select(:id)
 
     reaction_users =
@@ -103,6 +96,12 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
         .joins(:reaction)
         .where(post_id: post_ids)
         .where.not(discourse_reactions_reactions: { reaction_users_count: nil })
+    reaction_users =
+      DiscourseReactions::PostReactionsQuery.apply_ignored_users_filter(
+        reaction_users,
+        user_column: "discourse_reactions_reaction_users.user_id",
+        current_user_id: current_user.id,
+      )
 
     # Guarantee backwards compatibility if someone was calling this endpoint with the old param.
     # TODO(roman): Remove after the 2.9 release.
@@ -142,6 +141,12 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
           .where("discourse_reactions_reaction_users.id IS NULL")
           .order(created_at: :desc)
           .limit(PAGE_SIZE)
+      likes =
+        DiscourseReactions::PostReactionsQuery.apply_ignored_users_filter(
+          likes,
+          user_column: "post_actions.user_id",
+          current_user_id: current_user.id,
+        )
 
       if params[:before_like_id]
         likes = likes.where("post_actions.id < ?", params[:before_like_id].to_i)
@@ -158,6 +163,34 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     render_serialized reaction_users.first(PAGE_SIZE), UserReactionSerializer
   end
 
+  def reactions_users_list
+    post = fetch_post_from_params
+    page = params[:page].to_i.clamp(0..)
+    limit = params[:limit].present? ? params[:limit].to_i.clamp(1, 50) : 30
+
+    rows, total =
+      DiscourseReactions::PostReactionsQuery.call(
+        post: post,
+        reaction_filter: params[:reaction_value],
+        limit: limit,
+        offset: page * limit,
+        current_user_id: current_user&.id,
+      )
+
+    users =
+      rows.map do |row|
+        {
+          id: row.id,
+          username: row.username,
+          name: row.name,
+          avatar_template: User.avatar_template(row.username, row.uploaded_avatar_id),
+          reaction: row.reaction,
+        }
+      end
+
+    render_json_dump(users: users, total_rows: total)
+  end
+
   def post_reactions_users
     params.require(:id).to_i
     reaction_value = params[:reaction_value]
@@ -166,8 +199,10 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     raise Discourse::InvalidParameters if !post
 
     reaction_users = []
+    main_reaction_id = DiscourseReactions::Reaction.main_reaction_id
+    main_reaction = nil
 
-    if !reaction_value || reaction_value == DiscourseReactions::Reaction.main_reaction_id
+    if !reaction_value || reaction_value == main_reaction_id
       # We only want to get likes that don't have an associated ReactionUser
       # record, which count as a like or there will be double ups for main_reaction_id.
       likes =
@@ -194,14 +229,36 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
           )
 
       likes = likes.where.not(id: historical_reaction_likes.select(:id))
+      likes =
+        DiscourseReactions::PostReactionsQuery.apply_ignored_users_filter(
+          likes,
+          user_column: "post_actions.user_id",
+          current_user_id: current_user&.id,
+        )
+
+      main_reaction =
+        DiscourseReactions::Reaction.find_by(reaction_value: main_reaction_id, post_id: post.id)
     end
 
+    reactions =
+      if !reaction_value
+        post.reactions.select do |reaction|
+          reaction[:reaction_users_count] && reaction[:reaction_value] != main_reaction_id
+        end
+      elsif reaction_value != main_reaction_id
+        post
+          .reactions
+          .where(reaction_value: reaction_value)
+          .select { |reaction| reaction[:reaction_users_count] }
+      else
+        []
+      end
+
+    reactions_for_counts = reactions.dup
+    reactions_for_counts << main_reaction if main_reaction&.[](:reaction_users_count)
+    reaction_user_counts = filtered_reaction_users_counts(reactions_for_counts)
+
     if likes.present?
-      main_reaction =
-        DiscourseReactions::Reaction.find_by(
-          reaction_value: DiscourseReactions::Reaction.main_reaction_id,
-          post_id: post.id,
-        )
       count = likes.length
       users = format_likes_users(likes)
 
@@ -211,30 +268,18 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
       if main_reaction && main_reaction[:reaction_users_count]
         (users << get_users(main_reaction)).flatten!
         users.sort_by! { |user| user[:created_at] }
-        count += main_reaction.reaction_users_count.to_i
+        count += reaction_user_counts[main_reaction.id].to_i
       end
 
       reaction_users << {
-        id: DiscourseReactions::Reaction.main_reaction_id,
+        id: main_reaction_id,
         count: count,
         users: users.reverse.slice(0, MAX_USERS_COUNT + 1),
       }
     end
 
-    if !reaction_value
-      post
-        .reactions
-        .select do |reaction|
-          reaction[:reaction_users_count] &&
-            reaction[:reaction_value] != DiscourseReactions::Reaction.main_reaction_id
-        end
-        .each { |reaction| reaction_users << format_reaction_user(reaction) }
-    elsif reaction_value != DiscourseReactions::Reaction.main_reaction_id
-      post
-        .reactions
-        .where(reaction_value: reaction_value)
-        .select { |reaction| reaction[:reaction_users_count] }
-        .each { |reaction| reaction_users << format_reaction_user(reaction) }
+    reactions.each do |reaction|
+      reaction_users << format_reaction_user(reaction, count: reaction_user_counts[reaction.id])
     end
 
     render_json_dump(reaction_users: reaction_users)
@@ -242,9 +287,22 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
 
   private
 
+  def visible_posts_for_reactions_received(posts)
+    visible_topic_ids = guardian.can_see_topic_ids(topic_ids: posts.distinct.pluck(:topic_id))
+
+    posts =
+      posts.where(topic_id: visible_topic_ids, post_type: Topic.visible_post_types(current_user))
+
+    guardian.filter_hidden_posts(posts)
+  end
+
   def get_users(reaction)
-    reaction
-      .reaction_users
+    DiscourseReactions::PostReactionsQuery
+      .apply_ignored_users_filter(
+        reaction.reaction_users,
+        user_column: "discourse_reactions_reaction_users.user_id",
+        current_user_id: current_user&.id,
+      )
       .includes(:user)
       .order("discourse_reactions_reaction_users.created_at desc")
       .limit(MAX_USERS_COUNT + 1)
@@ -259,16 +317,30 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
       end
   end
 
-  def post_serializer(post)
-    PostSerializer.new(post, scope: guardian, root: false)
+  def format_reaction_user(reaction, count:)
+    { id: reaction.reaction_value, count: count.to_i, users: get_users(reaction) }
   end
 
-  def format_reaction_user(reaction)
-    {
-      id: reaction.reaction_value,
-      count: reaction.reaction_users_count.to_i,
-      users: get_users(reaction),
-    }
+  def filtered_reaction_users_counts(reactions)
+    reactions = reactions.compact
+    return {} if reactions.blank?
+
+    if current_user.blank? || current_user.ignored_user_ids.empty?
+      return(
+        reactions.each_with_object({}) do |reaction, counts|
+          counts[reaction.id] = reaction.reaction_users_count.to_i
+        end
+      )
+    end
+
+    DiscourseReactions::PostReactionsQuery
+      .apply_ignored_users_filter(
+        DiscourseReactions::ReactionUser.where(reaction_id: reactions.map(&:id)),
+        user_column: "discourse_reactions_reaction_users.user_id",
+        current_user_id: current_user.id,
+      )
+      .group(:reaction_id)
+      .count
   end
 
   def format_like_user(like)
@@ -285,6 +357,10 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
     likes.includes([:user]).limit(MAX_USERS_COUNT + 1).map { |like| format_like_user(like) }
   end
 
+  def post_serializer(post)
+    PostSerializer.new(post, scope: guardian, root: false)
+  end
+
   def fetch_post_from_params
     post_id = params[:post_id] || params[:id]
     post = Post.find(post_id)
@@ -293,19 +369,27 @@ class DiscourseReactions::CustomReactionsController < ApplicationController
   end
 
   def publish_change_to_clients!(post, reaction: nil, previous_reaction: nil)
+    return unless (topic = post.topic)
+
     message = { post_id: post.id, reactions: [reaction, previous_reaction].compact.uniq }
 
     opts = {}
-    secure_audience = post.topic.secure_audience_publish_messages
+    secure_audience = topic.secure_audience_publish_messages
     opts = secure_audience if secure_audience[:user_ids] != [] && secure_audience[:group_ids] != []
 
-    MessageBus.publish("/topic/#{post.topic.id}/reactions", message, opts)
+    MessageBus.publish("/topic/#{topic.id}/reactions", message, opts)
   end
 
   def secure_reaction_users!(reaction_users)
     builder = DB.build("/*where*/")
     UserAction.apply_common_filters(builder, current_user.id, guardian)
-    reaction_users.where(builder.to_sql.delete_prefix("/*where*/").delete_prefix("WHERE"))
+    sql =
+      builder
+        .to_sql
+        .delete_prefix("/*where*/")
+        .delete_prefix("WHERE")
+        .gsub("a.acting_user_id", "discourse_reactions_reaction_users.user_id")
+    reaction_users.where(sql)
   end
 
   def translate_to_reactions(likes)

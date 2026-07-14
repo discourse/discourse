@@ -12,9 +12,10 @@ th:
     topic_voting:
       reached_limit: "คุณใช้คะแนนโหวตหมดแล้ว ลบอันที่โหวตไปแล้วออกก่อน"
       vote_title_plural: "โหวต"
-      voting_closed_title: "ปิด"
       anonymous_button:
         other: "โหวต"
+      show_voters: "แสดงรายชื่อผู้โหวต"
+      vote_count_thousands: "%{count}พัน"
     filters:
       votes:
         title: "โหวต"

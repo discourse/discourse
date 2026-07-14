@@ -150,14 +150,10 @@ export default class Site extends RestModel {
       return true;
     }
 
-    if (this.siteSettings.viewport_based_mobile_mode) {
-      return withSilencedDeprecations(
-        "discourse.static-viewport-initialization",
-        () => !this.capabilities.viewport.sm
-      );
-    } else {
-      return Mobile.mobileView;
-    }
+    return withSilencedDeprecations(
+      "discourse.static-viewport-initialization",
+      () => !this.capabilities.viewport.sm
+    );
   }
 
   @dependentKeyCompat

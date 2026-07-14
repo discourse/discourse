@@ -1,0 +1,42 @@
+.livestream-topic.chat-enabled.archetype-regular {
+  // we need to fullscreen the header icons to match the chat panel
+  // being on the right side of the screen
+  .d-header-wrap .wrap {
+    margin: 0;
+    max-width: 100%;
+  }
+
+  #main-outlet-wrapper {
+    grid-template-areas:
+      "sidebar content livestream"
+      "sidebar below-content livestream";
+    margin: 0;
+    padding-right: 0;
+    max-width: 100%;
+  }
+
+  #custom-chat-container {
+    height: calc(
+      var(--composer-vh, var(--1dvh)) * 100 - var(--header-offset, 0px)
+    ) !important;
+    grid-area: livestream;
+    border-left: 2px solid var(--primary-very-low);
+    display: flex;
+    position: sticky;
+    top: var(--header-offset);
+    background: var(--d-content-background, var(--secondary));
+
+    --1dvh: 1vh;
+    align-self: start;
+    overflow-y: auto;
+    margin-left: 1em;
+
+    .livestream-chat-close {
+      display: none;
+    }
+
+    .chat-drawer {
+      height: 100%;
+    }
+  }
+}

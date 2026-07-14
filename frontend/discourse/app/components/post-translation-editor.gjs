@@ -3,11 +3,11 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import DEditor from "discourse/components/d-editor";
-import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import PostLocalization from "discourse/models/post-localization";
+import DEditor from "discourse/ui-kit/d-editor";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 export default class PostTranslationEditor extends Component {
@@ -83,7 +83,7 @@ export default class PostTranslationEditor extends Component {
     {{#if this.composer.model.post.firstPost}}
       <div class="topic-title-translator title-and-category with-preview">
         <div class="title-input-column">
-          <TextField
+          <DTextField
             @value={{this.composer.model.title}}
             @id="translated-topic-title"
             @maxLength={{this.siteSettings.max_topic_title_length}}

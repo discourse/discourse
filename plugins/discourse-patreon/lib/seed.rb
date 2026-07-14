@@ -5,7 +5,7 @@ module Patreon
     def self.seed_content!
       flair =
         File.open(
-          "#{Rails.root}/plugins/discourse-patreon/public/images/patreon-logomark-color-on-white.png",
+          "#{Rails.root.join("plugins/discourse-patreon/public/images/patreon-logomark-color-on-white.png")}",
         )
       flair_upload =
         UploadCreator.new(flair, "patreon-flair.png").create_for(Discourse.system_user.id)

@@ -4,6 +4,8 @@ module DiscourseAi
   module Completions
     module Endpoints
       class AwsBedrockConverse < Base
+        include AnthropicShared
+
         def self.can_contact?(llm_model)
           llm_model.provider == "aws_bedrock_converse"
         end
@@ -60,6 +62,8 @@ module DiscourseAi
 
           max_tokens = enforce_max_output_tokens(model_params[:max_tokens])
           model_params[:max_tokens] = max_tokens if max_tokens
+          @thinking_config ||= resolve_thinking_config(model_params)
+          model_params = apply_thinking_config_to_model_params(model_params)
           model_params = normalize_model_params(model_params)
 
           prompt = dialect.translate
@@ -81,8 +85,16 @@ module DiscourseAi
           raw_response = +""
           log = nil
 
-          sdk_params = build_converse_params(prompt, model_params, dialect)
-          request_body = sdk_params.to_json
+          sdk_params = build_converse_params(prompt, provider_model_params(model_params), dialect)
+          # Image bytes in sdk_params are raw binary (ASCII-8BIT) and cannot be
+          # encoded as UTF-8 JSON for logging. Fall back to a placeholder so the
+          # request can still proceed when binary payloads are present.
+          request_body =
+            begin
+              sdk_params.to_json
+            rescue EncodingError, JSON::GeneratorError
+              "[converse params contained binary payload, omitted from log]"
+            end
 
           log =
             start_log(
@@ -168,6 +180,7 @@ module DiscourseAi
               response_data
             end
           rescue Aws::BedrockRuntime::Errors::ServiceError => e
+            log.response_status = e.context&.http_response&.status_code if log
             Rails.logger.error("#{self.class.name}: #{e.class}: #{e.message}")
             raise CompletionFailed, e.message
           ensure
@@ -182,7 +195,8 @@ module DiscourseAi
               log.cache_write_tokens =
                 processor.cache_write_input_tokens if processor.cache_write_input_tokens
               log.response_tokens = tokenizer.size(partials_raw) if log.response_tokens.blank?
-              log.response_status ||= 200
+              log.response_status ||= 200 if call_status == :success
+              log.estimated_cost = estimated_cost_for(log)
               log.created_at = start_time
               log.updated_at = Time.now
               log.duration_msecs = (Time.now - start_time) * 1000
@@ -191,7 +205,15 @@ module DiscourseAi
               execution_context&.token_usage_tracker&.add_from_audit_log(log)
 
               AiApiRequestStat.record_from_audit_log(log, llm_model: @llm_model)
-              LlmQuota.log_usage(@llm_model, user, log.request_tokens, log.response_tokens)
+              LlmQuota.log_usage(
+                @llm_model,
+                user,
+                request_tokens: log.request_tokens,
+                response_tokens: log.response_tokens,
+                cache_read_tokens: log.cache_read_tokens,
+                cache_write_tokens: log.cache_write_tokens,
+                estimated_cost: log.estimated_cost,
+              )
               LlmCreditAllocation.deduct_credits!(
                 @llm_model,
                 feature_name,
@@ -219,19 +241,14 @@ module DiscourseAi
           raise if !cancelled
         end
 
+        def supports_anthropic_thinking?
+          llm_model.name.include?("anthropic") || llm_model.name.include?("claude")
+        end
+
         def default_options(dialect)
           options = {}
-
-          if llm_model.lookup_custom_param("adaptive_thinking")
-            options[:thinking] = { type: "adaptive" }
-          elsif llm_model.lookup_custom_param("enable_reasoning")
-            reasoning_tokens =
-              llm_model.lookup_custom_param("reasoning_tokens").to_i.clamp(1024, 32_768)
-            options[:thinking] = { type: "enabled", budget_tokens: reasoning_tokens }
-          end
-
-          effort = llm_model.lookup_custom_param("effort")
-          options[:output_config] = { effort: effort } if %w[low medium high max].include?(effort)
+          apply_anthropic_thinking_config!(options) if supports_anthropic_thinking?
+          apply_anthropic_effort_config!(options) if supports_anthropic_thinking?
 
           options
         end
@@ -241,13 +258,8 @@ module DiscourseAi
         def normalize_model_params(model_params)
           model_params = model_params.dup
 
-          thinking_enabled =
-            llm_model.lookup_custom_param("adaptive_thinking") ||
-              llm_model.lookup_custom_param("enable_reasoning")
-
-          if thinking_enabled
-            model_params.delete(:temperature)
-            model_params.delete(:top_p)
+          if thinking_config.present? && thinking_config.enabled?
+            strip_sampling_params_for_thinking!(model_params)
           else
             model_params.delete(:top_p) if llm_model.lookup_custom_param("disable_top_p")
             if llm_model.lookup_custom_param("disable_temperature")
@@ -267,6 +279,9 @@ module DiscourseAi
 
           region = llm_model.lookup_custom_param("region")
           client_options = { region: region, http_read_timeout: TIMEOUT }
+          # AWS SDK already retries modeled throttling, 5xx, and networking failures
+          # by default. Keep Bedrock Converse on SDK-managed retries to avoid
+          # double-retrying request streams in Discourse's HTTP retry loop.
 
           role_arn = llm_model.lookup_custom_param("role_arn")
           access_key_id = llm_model.lookup_custom_param("access_key_id")
@@ -292,6 +307,7 @@ module DiscourseAi
 
         def build_converse_params(prompt, model_params, dialect)
           options = default_options(dialect).merge(model_params.except(:response_format))
+          apply_anthropic_thinking_config!(options)
 
           params = { model_id: llm_model.name, messages: prompt.messages }
 

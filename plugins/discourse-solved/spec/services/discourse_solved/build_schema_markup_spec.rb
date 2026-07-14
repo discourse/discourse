@@ -108,6 +108,144 @@ RSpec.describe DiscourseSolved::BuildSchemaMarkup do
       end
     end
 
+    context "when the accepted answer is hidden but visible to the requesting user" do
+      fab!(:admin)
+      fab!(:answer_post) { Fabricate(:post, topic:, hidden: true) }
+
+      # An admin can see hidden posts, so this isolates the eligible_answer? hidden filter
+      # from the guardian's can_see_post? check.
+      let(:guardian) { Guardian.new(admin) }
+
+      before do
+        SiteSetting.solved_add_schema_markup = "always"
+        Fabricate(:solved_topic, topic:, answer_post:)
+      end
+
+      it { is_expected.to fail_a_policy(:has_answers) }
+    end
+
+    describe "with multiple solutions enabled" do
+      before { SiteSetting.solved_allow_multiple_solutions = true }
+
+      describe "when topic has two accepted answers and one not accepted" do
+        fab!(:answer_post_1) { Fabricate(:post, topic:) }
+        fab!(:answer_post_2) { Fabricate(:post, topic:) }
+        fab!(:non_answer_post) { Fabricate(:post, topic:) }
+        fab!(:solved_topic) { Fabricate(:solved_topic, topic:) }
+
+        before do
+          Fabricate(:topic_answer, solved_topic:, post: answer_post_1)
+          Fabricate(:topic_answer, solved_topic:, post: answer_post_2)
+        end
+
+        it "builds QAPage markup with both acceptedAnswers and suggestedAnswer" do
+          html = result[:html]
+          expect(html).to include('"@type":"QAPage"')
+          expect(html).to include('"answerCount":3')
+          expect(html).to include('"acceptedAnswer"')
+          expect(html).to include('"suggestedAnswer"')
+
+          accepted_answer_index = html.index("acceptedAnswer")
+          suggested_answer_index = html.index("suggestedAnswer")
+
+          accepted_answer_part = html[accepted_answer_index..suggested_answer_index]
+          accepted_answer_part_split = accepted_answer_part.split("},{")
+          expect(accepted_answer_part_split[0]).to include('"@type":"Answer"')
+          expect(accepted_answer_part_split[0]).to include(answer_post_1.url)
+          expect(accepted_answer_part_split[1]).to include('"@type":"Answer"')
+          expect(accepted_answer_part_split[1]).to include(answer_post_2.url)
+
+          suggested_answer_part = html[suggested_answer_index..]
+          expect(accepted_answer_part).to include('"@type":"Answer"')
+          expect(suggested_answer_part).to include(non_answer_post.url)
+        end
+      end
+    end
+
+    context "with a non-text post" do
+      before { SiteSetting.solved_add_schema_markup = "always" }
+
+      context "when video-only" do
+        fab!(:non_text_post) do
+          Fabricate(
+            :post,
+            topic:,
+            raw: "https://www.youtube.com/watch?v=test",
+            cooked:
+              '<div class="onebox video-onebox"><iframe src="https://youtube.com/embed/test"></iframe></div>',
+          )
+        end
+
+        context "when it is the only reply" do
+          it { is_expected.to fail_a_policy(:has_answers) }
+        end
+
+        context "with other replies" do
+          fab!(:visible_reply) { Fabricate(:post, topic:) }
+
+          before { Fabricate(:solved_topic, topic:, answer_post: non_text_post) }
+
+          it "excludes the accepted answer and falls back to suggested answers" do
+            html = result[:html]
+            expect(html).not_to include('"acceptedAnswer"')
+            expect(html).to include('"suggestedAnswer"')
+            expect(html).to include('"answerCount":1')
+          end
+        end
+      end
+
+      context "when image-only" do
+        fab!(:non_text_post) do
+          Fabricate(:post, topic:, cooked: '<p><img src="/uploads/foo.png"></p>')
+        end
+
+        context "when it is the only reply" do
+          it { is_expected.to fail_a_policy(:has_answers) }
+        end
+
+        context "with other replies" do
+          fab!(:visible_reply) { Fabricate(:post, topic:) }
+
+          before { Fabricate(:solved_topic, topic:, answer_post: non_text_post) }
+
+          it "excludes the accepted answer and falls back to suggested answers" do
+            html = result[:html]
+            expect(html).not_to include('"acceptedAnswer"')
+            expect(html).to include('"suggestedAnswer"')
+            expect(html).to include('"answerCount":1')
+          end
+        end
+      end
+
+      context "when emoji-only" do
+        fab!(:non_text_post) do
+          Fabricate(
+            :post,
+            topic:,
+            cooked:
+              '<p><img src="/images/emoji/twitter/smile.png" class="emoji" alt=":smile:"></p>',
+          )
+        end
+
+        context "when it is the only reply" do
+          it { is_expected.to fail_a_policy(:has_answers) }
+        end
+
+        context "with other replies" do
+          fab!(:visible_reply) { Fabricate(:post, topic:) }
+
+          before { Fabricate(:solved_topic, topic:, answer_post: non_text_post) }
+
+          it "excludes the accepted answer and falls back to suggested answers" do
+            html = result[:html]
+            expect(html).not_to include('"acceptedAnswer"')
+            expect(html).to include('"suggestedAnswer"')
+            expect(html).to include('"answerCount":1')
+          end
+        end
+      end
+    end
+
     context "when the accepted answer is hidden but there are other visible replies" do
       fab!(:answer_user, :user)
       fab!(:answer_post) { Fabricate(:post, topic:, user: answer_user, like_count: 3) }

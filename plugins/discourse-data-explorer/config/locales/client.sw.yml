@@ -24,6 +24,7 @@ sw:
       description_placeholder: "Andika maelezo hapa"
       ai:
         generate: "Tengeneza"
+        optional: "sio Muhimu"
       import:
         label: "Imeingizwa kutoka sehemu nyingine"
       help:
@@ -37,16 +38,19 @@ sw:
           yes: "Ndio"
           no: "Hapana"
           null_: "Hamna Kitu"
-      export: "Hamisha"
-      edit: "Hariri"
       delete: "Futa"
-      download_json: "JSON"
-      download_csv: "CSV"
       others_dirty: "Mabaliko uliyofanya kwenye ulizo hayajahifadhiwa, hifadhi kabla ya kwenda kwingine."
       query_name: "Swali"
       query_groups: "Makundi"
       query_description: "Maelezo"
       query_user: "Imetengenezwa na"
-      explain_label: "pamoja na mpango wa swala?"
       reset_params: "Weka/Anzisha Upya"
       search_placeholder: "Tafuta"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Utafiti wa Taarifa"
+      sql:
+        query_id: "Swali"
+        param_value: "Thamani"
+        output:
+          results: "Majibu"

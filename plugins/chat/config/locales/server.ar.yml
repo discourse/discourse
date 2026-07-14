@@ -21,6 +21,7 @@ ar:
     chat_duplicate_message_sensitivity: "احتمالية حظر الرسائل المكررة خلال فترة قصيرة من المُرسل نفسه. رقم عشري بين 0 و1.0، مع كون 1.0 هو أعلى إعداد (يحظر الرسائل بشكلٍٍ أكثر تكرارًا في فترة زمنية أقصر). اضبط القيمة على `0` للسماح بالرسائل المكررة."
     chat_minimum_message_length: "الحد الأدنى لعدد الأحرف لرسالة دردشة."
     chat_allow_uploads: "السماح بالتحميلات في قنوات الدردشة العامة وقنوات الرسائل المباشرة."
+    chat_show_copy_button_on_codeblocks: "إظهار زر النسخ في كتل الرموز البرمجية داخل رسائل الدردشة."
     chat_archive_destination_topic_status: "الحالة التي يجب أن يكون عليها الموضوع المستهدف بعد اكتمال أرشيف القناة. ينطبق ذلك فقط عندما يكون الموضوع المستهدف موضوعًا جديدًا وليس موضوعًا موجودًا."
     direct_message_enabled_groups: "السماح للمستخدمين في تلك المجموعات بإنشاء دردشات شخصية بين مستخدم وآخر. ملاحظة: يمكن للموظفين دائمًا إنشاء دردشات شخصية، وسيتمكن المستخدمون من الرد على الدردشات الشخصية التي بدأها مستخدمون لديهم إذن بإنشائها."
     chat_message_flag_allowed_groups: "يُسمَح للمستخدمين في هذه المجموعات بوضع علامة على رسائل الدردشة. لاحظ أن المسؤولين والمشرفين يمكنهم دائمًا وضع علامة على رسائل الدردشة‎."
@@ -32,7 +33,6 @@ ar:
     chat_editing_grace_period_max_diff_low_trust: "الحد الأقصى لعدد تغييرات الأحرف المسموح بها خلال فترة السماح بالتعديل في الدردشة، وعرض علامة (تم التعديل) بجانب رسالة الدردشة إذا تم تغيير المزيد (مستوى الثقة 0 و1)."
     chat_editing_grace_period_max_diff_high_trust: "الحد الأقصى لعدد تغييرات الأحرف المسموح بها خلال فترة السماح بالتعديل في الدردشة، وعرض علامة (تم التعديل) بجانب رسالة الدردشة إذا تم تغيير المزيد (مستوى الثقة 2 وأعلى)."
     chat_preferred_index: "علامة التبويب المفضَّلة عند تحميل /chat."
-    allow_chat_in_anonymous_mode: "فعّل هذا الإعداد للسماح للمستخدمين الذين يتصفحون موقعك بشكل مجهول باستخدام الدردشة. يتطلب هذا الإعداد تفعيل خيار \"السماح بالوضع المجهول\"."
     chat_search_enabled: "فعّل هذا الإعداد للسماح للمستخدمين بالبحث في رسائل الدردشة."
     errors:
       chat_default_channel: "يجب أن تكون قناة الدردشة الافتراضية قناةً عامة."
@@ -284,10 +284,18 @@ ar:
         other_type: "أشار %{username} إلى %{identifier} في الدردشة الشخصية"
       new_chat_message: 'أرسل %{username} رسالة في "%{channel}"'
       new_direct_chat_message: "أرسل %{username} رسالة في الدردشة الشخصية"
+    actions:
+      chat_reply:
+        title: الرد
+        placeholder: الرد…
   discourse_automation:
     scriptables:
       send_chat_message:
         title: إرسال رسالة دردشة
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "الموافقة"
+      default_deny_label: "رفض"
   reviewable_score_types:
     needs_review:
       title: "بحاجة إلى المراجعة"
@@ -319,6 +327,13 @@ ar:
           few: "‎ [%{site_name}] ‎رسائل جديدة"
           many: "‎ [%{site_name}] ‎رسائل جديدة"
           other: "‎[%{site_name}] ‎ رسائل جديدة"
+        private_email_improved:
+          zero: "رسائل جديدة"
+          one: "رسالة جديدة"
+          two: "رسالتان جديدتان"
+          few: "رسائل جديدة"
+          many: "رسائل جديدة"
+          other: "رسائل جديدة"
         watched_thread:
           zero: "[%{site_name}] سلاسل رسائل جديدة في %{channel}"
           one: "[%{site_name}] سلسلة رسائل جديدة في %{channel}"
@@ -326,6 +341,13 @@ ar:
           few: "[%{site_name}] سلاسل رسائل جديدة في %{channel}"
           many: "[%{site_name}] سلاسل رسائل جديدة في %{channel}"
           other: "[%{site_name}] سلاسل رسائل جديدة في %{channel}"
+        watched_thread_improved:
+          zero: "رسائل جديدة في سلسلة دردشة قناة %{channel}"
+          one: "رسالة جديدة في سلسلة دردشة قناة %{channel}"
+          two: "رسالتان جديدتان في سلسلة دردشة قناة %{channel}"
+          few: "رسائل جديدة في سلسلة دردشة قناة %{channel}"
+          many: "رسائل جديدة في سلسلة دردشة قناة %{channel}"
+          other: "رسائل جديدة في سلسلة دردشة قناة %{channel}"
         watched_threads:
           zero: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} قنوات أخرى"
           one: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} قناة أخرى"
@@ -333,6 +355,13 @@ ar:
           few: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} قنوات أخرى"
           many: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} قناة أخرى"
           other: "[%{site_name}] سلسلة رسائل جديدة في %{channel} و%{count} قناة أخرى"
+        watched_threads_improved:
+          zero: "رسائل جديدة في سلسلة دردشة قناة %{channel} و%{count} من القنوات الأخرى"
+          one: "رسائل جديدة في سلسلة دردشة قناة %{channel} وقناة أخرى %{count}"
+          two: "رسائل جديدة في سلسلة دردشة قناة %{channel} وقناتين أخريين %{count}"
+          few: "رسائل جديدة في سلسلة دردشة قناة %{channel} و%{count} قنوات أخرى"
+          many: "رسائل جديدة في سلسلة دردشة قناة %{channel} و%{count} قناة أخرى"
+          other: "رسائل جديدة في سلسلة دردشة قناة %{channel} و%{count} قناة أخرى"
         chat_dm_1:
           zero: "‎[%{site_name}] ‎ رسالة جديدة من %{name}"
           one: "‎[%{site_name}] ‎ رسالة جديدة من %{name}"
@@ -340,8 +369,17 @@ ar:
           few: "‎[%{site_name}] ‎ رسائل جديدة من ‎ %{name}"
           many: "‎[%{site_name}] ‎ رسائل جديدة من ‎ %{name}"
           other: "‎ [%{site_name}] ‎رسائل جديدة من ‎ %{name}"
+        chat_dm_1_improved:
+          zero: "رسائل جديدة من %{name}"
+          one: "رسالة جديدة من %{name}"
+          two: "رسالتان جديدتان من %{name}"
+          few: "رسائل جديدة من %{name}"
+          many: "رسائل جديدة من %{name}"
+          other: "رسائل جديدة من %{name}"
         chat_dm_2: "‎ [%{site_name}]رسائل جديدة من‎ %{name_1} ‎و‎%{name_2}"
+        chat_dm_2_improved: "رسائل جديدة من %{name_1} و%{name_2}"
         chat_dm_3_or_more: "‎[%{site_name}] ‎ رسائل جديدة من‎ %{name} ‎ومن %{count} ‎من قنوات الرسائل المباشرة الأخرى"
+        chat_dm_3_or_more_improved: "رسائل جديدة من %{name} و%{count} من قنوات الرسائل الخاصة الأخرى"
         chat_channel_1:
           zero: "‎[%{site_name}] رسالة جديدة في ‎ %{channel}"
           one: "‎[%{site_name}] رسالة جديدة في ‎ %{channel}"
@@ -349,9 +387,19 @@ ar:
           few: "‎ [%{site_name}]رسائل جديدة في ‎ %{channel}"
           many: "‎[%{site_name}] رسالة جديدة في ‎ %{channel}"
           other: "‎[%{site_name}] رسالة جديدة في ‎ %{channel}"
+        chat_channel_1_improved:
+          zero: "رسائل جديدة في %{channel}"
+          one: "رسالة جديدة في %{channel}"
+          two: "رسالتان جديدتان في %{channel}"
+          few: "رسائل جديدة في %{channel}"
+          many: "رسائل جديدة في %{channel}"
+          other: "رسائل جديدة في %{channel}"
         chat_channel_2: "‎[%{site_name}]‎ رسائل جديدة في‎ %{channel_1} ‎و‎%{channel_2}"
+        chat_channel_2_improved: "رسائل جديدة في %{channel_1} و%{channel_2}"
         chat_channel_3_or_more: "‎[%{site_name}] رسائل جديدة في‎ %{channel} ‎و‎%{count} ‎ من القنوات الأخرى"
+        chat_channel_3_or_more_improved: "رسائل جديدة في‎ %{channel} ‎و‎%{count} ‎ من القنوات الأخرى"
         chat_channel_and_dm: "‎[%{site_name}] رسائل جديدة في‎ %{channel} ‎ومن‎ %{name}"
+        chat_channel_and_dm_improved: "رسائل جديدة في %{channel} ومن %{name}"
       unsubscribe: "يتم إرسال ملخص الدردشة هذا من %{site_link} عندما تكون غائبًا. غيِّر %{email_preferences_link} أو %{unsubscribe_link} لإلغاء الاشتراك."
       unsubscribe_no_link: "يتم إرسال ملخص الدردشة هذا من %{site_link} عندما تكون غائبًا. غيِّر %{email_preferences_link} لديك."
       view_messages:

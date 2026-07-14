@@ -77,4 +77,23 @@ RSpec.describe SuggestedTopicSerializer do
       expect(json[:op_like_count]).to eq(5)
     end
   end
+
+  describe "#is_nested_view" do
+    before { SiteSetting.nested_replies_enabled = true }
+
+    it "returns true when the topic uses nested replies" do
+      topic = Fabricate(:topic)
+      Fabricate(:nested_topic, topic: topic)
+
+      json = SuggestedTopicSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
+      expect(json[:is_nested_view]).to eq(true)
+    end
+
+    it "omits the attribute when the topic uses the flat view" do
+      topic = Fabricate(:topic)
+
+      json = SuggestedTopicSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
+      expect(json).not_to have_key(:is_nested_view)
+    end
+  end
 end

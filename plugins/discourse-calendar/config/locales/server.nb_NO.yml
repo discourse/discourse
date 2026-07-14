@@ -9,6 +9,13 @@ nb_NO:
     currently_away:
       labels:
         username: Brukernavn
+  discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Dag"
+        week: "Den siste uken"
+        month: "Den siste måneden"
+        year: "Det siste året"
   discourse_post_event:
     errors:
       bulk_invite:

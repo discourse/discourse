@@ -4,12 +4,12 @@ import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, set, setProperties } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import EmojiPicker from "discourse/components/emoji-picker";
 import EmojiPickerDetached from "discourse/components/emoji-picker/detached";
 import { addUniqueValueToArray } from "discourse/lib/array-tools";
 import { emojiUrlFor } from "discourse/lib/text";
 import { not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 export default class EmojiValueList extends Component {
@@ -195,6 +195,7 @@ export default class EmojiValueList extends Component {
             "admin.site_settings.emoji_list.add_emoji_button.label"
           }}
           @didSelectEmoji={{this.emojiSelected}}
+          @btnClass="btn-default"
         />
       </div>
     </div>

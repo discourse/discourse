@@ -7,18 +7,81 @@ module PageObjects
         TRIGGER_MENU_SELECTOR = ".discourse-post-event-more-menu-trigger"
 
         def open_more_menu
-          find(TRIGGER_MENU_SELECTOR).click
+          try_until_success do
+            locator("#{TRIGGER_MENU_SELECTOR}:not(.--saving)").click
+            yield if block_given?
+          end
           self
         end
 
         def going
-          find(".going-button").click
+          locator(".going-button").click
+          self
+        end
+
+        def has_going_menu?
+          has_css?(".discourse-post-event-going-menu-trigger")
+        end
+
+        def has_no_going_menu?
+          has_no_css?(".discourse-post-event-going-menu-trigger")
+        end
+
+        def has_going_button?
+          has_css?(".going-button")
+        end
+
+        def has_going_status?
+          has_css?(".event-status.status-going")
+        end
+
+        def has_going_count?(count)
+          has_css?(".event-invitees-icon .going", text: count.to_s)
+        end
+
+        def has_invitee_avatar?(username)
+          has_css?(".event-invitees-avatars [data-user-card='#{username}']")
+        end
+
+        def has_no_invitee_avatar?(username)
+          has_no_css?(".event-invitees-avatars [data-user-card='#{username}']")
+        end
+
+        def close_popup
+          locator(".discourse-post-event-close").click
+          has_no_css?("[data-identifier='post-event-menu']")
+          self
+        end
+
+        def open_going_menu
+          locator(".discourse-post-event-going-menu-trigger").click
+          has_css?(".discourse-post-event-going-menu-content")
+          self
+        end
+
+        def going_this_event
+          open_going_menu
+          locator(".discourse-post-event-going-menu-content .going-once").click
+          self
+        end
+
+        def going_all_following
+          open_going_menu
+          locator(".discourse-post-event-going-menu-content .going-all").click
           self
         end
 
         def open_bulk_invite_modal
-          open_more_menu
-          find(".dropdown-menu__item.bulk-invite").click
+          open_more_menu { locator(".dropdown-menu__item.bulk-invite").click }
+          self
+        end
+
+        def has_title_link_href?(href)
+          has_css?(".event-info .name a[href='#{href}']")
+        end
+
+        def open_invite_user_or_group_modal
+          open_more_menu { locator(".dropdown-menu__item.invite-user-or-group").click }
           self
         end
 
@@ -43,7 +106,7 @@ module PageObjects
         end
 
         def click_description_toggle
-          find(".event-description__toggle").click
+          locator(".event-description__toggle").click
           self
         end
 
@@ -57,9 +120,8 @@ module PageObjects
 
         def close
           has_css?(".discourse-post-event .status-and-creators .status:not(.closed)")
-          open_more_menu
-          find(".close-event").click
-          find("#dialog-holder .btn-primary").click
+          open_more_menu { locator(".close-event").click }
+          locator("#dialog-holder .btn-primary").click
           has_css?(".discourse-post-event .status-and-creators .status.closed")
           has_no_css?("#{TRIGGER_MENU_SELECTOR}.--saving")
           self
@@ -67,23 +129,20 @@ module PageObjects
 
         def open
           has_css?(".discourse-post-event .status-and-creators .status.closed")
-          open_more_menu
-          find(".open-event").click
-          find("#dialog-holder .btn-primary").click
+          open_more_menu { locator(".open-event").click }
+          locator("#dialog-holder .btn-primary").click
           has_css?(".discourse-post-event .status-and-creators .status:not(.closed)")
           has_no_css?("#{TRIGGER_MENU_SELECTOR}.--saving")
           self
         end
 
         def add_to_calendar
-          open_more_menu
-          find(".add-to-calendar .btn").click
+          open_more_menu { locator(".add-to-calendar .btn").click }
           self
         end
 
         def edit
-          open_more_menu
-          find(".edit-event").click
+          open_more_menu { locator(".edit-event").click }
         end
       end
     end

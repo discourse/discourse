@@ -14,12 +14,14 @@ register_svg_icon "square-check"
 register_svg_icon "far-square"
 
 register_asset "stylesheets/solutions.scss"
+register_asset "stylesheets/admin/dashboard-support.scss", :admin
 
 module ::DiscourseSolved
   PLUGIN_NAME = "discourse-solved"
   ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD = "enable_accepted_answers"
   NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD = "notify_on_staff_accept_solved"
   EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD = "empty_box_on_unsolved"
+  SHARED_ISSUES_ENABLED_CUSTOM_FIELD = "enable_shared_issues"
   MAX_AUTO_CLOSE_HOURS = 20.years.to_i / 1.hour.to_i
 
   def self.accept_answer!(post, acting_user, topic: nil)
@@ -39,7 +41,7 @@ end
 require_relative "lib/discourse_solved/engine"
 
 after_initialize do
-  SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-solved", "db", "fixtures").to_s
+  SeedFu.fixture_paths << Rails.root.join("plugins/discourse-solved/db/fixtures").to_s
 
   UserUpdater::OPTION_ATTR.push(:notify_on_solved)
   add_to_serializer(:user_option, :notify_on_solved) { object.notify_on_solved }
@@ -50,12 +52,13 @@ after_initialize do
     ::WebHook.prepend(DiscourseSolved::WebHookExtension)
     ::TopicViewSerializer.prepend(DiscourseSolved::TopicViewSerializerExtension)
     ::Topic.prepend(DiscourseSolved::TopicExtension)
+    ::User.prepend(DiscourseSolved::UserExtension)
     ::Category.prepend(DiscourseSolved::CategoryExtension)
     ::PostSerializer.prepend(DiscourseSolved::PostSerializerExtension)
     ::PostMover.prepend(DiscourseSolved::PostMoverExtension)
     ::UserSummary.prepend(DiscourseSolved::UserSummaryExtension)
 
-    ::Topic.attr_accessor(:accepted_answer_user_id)
+    ::Topic.attr_accessor(:accepted_answer_user_ids)
     ::TopicPostersSummary.alias_method(:old_user_ids, :user_ids)
     ::TopicPostersSummary.prepend(DiscourseSolved::TopicPostersSummaryExtension)
     [
@@ -67,12 +70,34 @@ after_initialize do
     ].each { |klass| klass.include(DiscourseSolved::TopicAnswerMixin) }
   end
 
-  register_category_list_topics_preloader_associations(:solved) if SiteSetting.solved_enabled
-  register_topic_preloader_associations(:solved) if SiteSetting.solved_enabled
-  Search.custom_topic_eager_load { [:solved] } if SiteSetting.solved_enabled
-  Site.preloaded_category_custom_fields << DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD
-  Site.preloaded_category_custom_fields << DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD
-  Site.preloaded_category_custom_fields << DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD
+  solved_topic_answer_preload = { solved: :topic_answers }
+
+  if SiteSetting.solved_enabled
+    register_category_list_topics_preloader_associations(solved_topic_answer_preload)
+    register_topic_preloader_associations(solved_topic_answer_preload)
+    Search.custom_topic_eager_load { [solved_topic_answer_preload] }
+  end
+
+  TopicView.on_preload do |topic_view|
+    next unless SiteSetting.solved_enabled
+
+    solved = topic_view.topic.solved
+    next unless solved
+
+    ActiveRecord::Associations::Preloader.new(
+      records: [solved],
+      associations: {
+        topic_answers: [{ post: :user }, :accepter],
+      },
+    ).call
+  end
+
+  register_preloaded_category_custom_fields(DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD)
+  register_preloaded_category_custom_fields(
+    DiscourseSolved::NOTIFY_ON_STAFF_ACCEPT_SOLVED_CUSTOM_FIELD,
+  )
+  register_preloaded_category_custom_fields(DiscourseSolved::EMPTY_BOX_ON_UNSOLVED_CUSTOM_FIELD)
+  register_preloaded_category_custom_fields(DiscourseSolved::SHARED_ISSUES_ENABLED_CUSTOM_FIELD)
 
   add_api_key_scope(
     :solved,
@@ -91,9 +116,19 @@ after_initialize do
     DiscourseSolved::SchemaUtils.post_schema(post, topic) || schema
   end
 
+  register_modifier(:topic_crawler_skip_post) do |default, post, topic|
+    DiscourseSolved::SchemaUtils.qa_page_schema?(topic) &&
+      post.post_type == Post.types[:small_action]
+  end
+
   register_html_builder("server:topic-main-entity-meta-crawler") do |controller|
     topic_view = controller.instance_variable_get(:@topic_view)
-    DiscourseSolved::SchemaUtils.main_entity_meta(topic_view&.topic)
+    DiscourseSolved::SchemaUtils.main_entity_meta(topic_view&.topic, topic_view&.crawler_posts)
+  end
+
+  register_html_builder("server:topic-show-crawler-post-end") do |controller, post:|
+    topic = controller.instance_variable_get(:@topic_view)&.topic
+    DiscourseSolved::SchemaUtils.post_answer_meta(post, topic) if topic
   end
 
   register_html_builder("server:before-head-close-crawler") do |controller|
@@ -156,6 +191,49 @@ after_initialize do
         .where("discourse_solved_solved_topics.created_at >= ?", report.start_date - 30.days)
         .where("discourse_solved_solved_topics.created_at <= ?", report.start_date)
         .count
+
+    if report.facets.include?(:prev_period)
+      report.prev_period =
+        accepted_solutions
+          .where("discourse_solved_solved_topics.created_at >= ?", report.prev_start_date)
+          .where("discourse_solved_solved_topics.created_at < ?", report.prev_end_date)
+          .count
+    end
+  end
+
+  register_admin_dashboard_highlight_kpi(
+    type: :accepted_solutions,
+    report: "accepted_solutions",
+    enabled: -> do
+      next true if SiteSetting.allow_solved_on_all_topics
+
+      Discourse
+        .cache
+        .fetch("solved_admin_dashboard_kpi_enabled", expires_in: 5.minutes) do
+          Category
+            .joins(
+              "INNER JOIN category_custom_fields ON category_custom_fields.category_id = categories.id",
+            )
+            .where(
+              category_custom_fields: {
+                name: DiscourseSolved::ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD,
+                value: "true",
+              },
+            )
+            .exists?
+        end
+    end,
+  )
+
+  register_admin_dashboard_section(
+    id: "support",
+    enabled: -> { DiscourseSolved::AdminDashboardSupport.available? },
+  ) do |start_date:, end_date:, current_user:|
+    DiscourseSolved::AdminDashboardSupport.build(
+      start_date: start_date,
+      end_date: end_date,
+      current_user: current_user,
+    )
   end
 
   register_modifier(:search_rank_sort_priorities) do |priorities, _search|
@@ -186,8 +264,27 @@ after_initialize do
   add_to_serializer(:post, :can_unaccept_answer) do
     scope.can_unaccept_answer?(topic, object) && accepted_answer
   end
-  add_to_serializer(:post, :accepted_answer) { topic&.solved&.answer_post_id == object.id }
+  add_to_serializer(:post, :accepted_answer) do
+    topic&.topic_answers&.any? { |topic_answer| topic_answer.answer_post_id == object.id }
+  end
   add_to_serializer(:post, :topic_accepted_answer) { topic&.solved&.present? }
+
+  add_to_serializer(
+    :topic_view,
+    :shared_issue_count,
+    include_condition: -> { scope.shared_issue_visible?(object.topic) },
+  ) { DiscourseSolved::SharedIssue.count_for(object.topic) }
+  add_to_serializer(
+    :topic_view,
+    :user_created_shared_issue,
+    include_condition: -> { scope.shared_issue_visible?(object.topic) && scope.user.present? },
+  ) { DiscourseSolved::SharedIssue.exists?(topic_id: object.topic.id, user_id: scope.user.id) }
+  add_to_serializer(:topic_view, :can_create_shared_issue) do
+    scope.can_create_shared_issue?(object.topic)
+  end
+  add_to_serializer(:topic_view, :shared_issue_visible) do
+    scope.shared_issue_visible?(object.topic)
+  end
 
   on(:post_destroyed) do |post|
     DiscourseSolved::UnacceptAnswer.call(
@@ -231,16 +328,13 @@ after_initialize do
       options[:refresh_stream] = true
 
       if !new_allowed
-        if topic.solved.present?
-          post = topic.solved.answer_post
-          if post
-            DiscourseSolved::UnacceptAnswer.call(
-              params: {
-                post_id: post.id,
-              },
-              guardian: Discourse.system_user.guardian,
-            )
-          end
+        topic.topic_answers.each do |ta|
+          DiscourseSolved::UnacceptAnswer.call(
+            params: {
+              post_id: ta.answer_post_id,
+            },
+            guardian: Discourse.system_user.guardian,
+          )
         end
       end
     end
@@ -252,23 +346,25 @@ after_initialize do
      WHERE di.period_type = :period_type AND di.solutions IS NOT NULL;
 
     WITH x AS (
-      SELECT p.user_id, COUNT(DISTINCT st.id) AS solutions
+    SELECT p.user_id, COUNT(DISTINCT sta.id) AS solutions
       FROM discourse_solved_solved_topics AS st
+      JOIN discourse_solved_topic_answers AS sta
+        ON sta.solved_topic_id = st.id
+       AND COALESCE(sta.created_at, :since) > :since
       JOIN posts AS p
-         ON p.id = st.answer_post_id
-        AND COALESCE(st.created_at, :since) > :since
-        AND p.deleted_at IS NULL
+        ON p.id = sta.answer_post_id
+       AND p.deleted_at IS NULL
       JOIN topics AS t
-         ON t.id = st.topic_id
-        AND t.archetype <> 'private_message'
-        AND t.deleted_at IS NULL
+        ON t.id = st.topic_id
+       AND t.archetype <> 'private_message'
+       AND t.deleted_at IS NULL
       JOIN users AS u
-         ON u.id = p.user_id
-      WHERE u.id > 0
-        AND u.active
-        AND u.silenced_till IS NULL
-        AND u.suspended_till IS NULL
-      GROUP BY p.user_id
+        ON u.id = p.user_id
+     WHERE u.id > 0
+       AND u.active
+       AND u.silenced_till IS NULL
+       AND u.suspended_till IS NULL
+     GROUP BY p.user_id
     )
     UPDATE directory_items di
        SET solutions = x.solutions
@@ -296,15 +392,19 @@ after_initialize do
 
   register_topic_list_preload_user_ids do |topics, user_ids|
     # [{ topic_id => answer_user_id }, ... ]
-    topics_with_answer_poster =
+    topics_with_answer_users =
       DiscourseSolved::SolvedTopic
-        .joins(:answer_post)
+        .joins(topic_answers: :post)
         .where(topic_id: topics.map(&:id))
-        .pluck(:topic_id, "posts.user_id")
-        .to_h
+        .distinct
+        .pluck("discourse_solved_solved_topics.topic_id", "posts.user_id")
+        .each_with_object({}) { |(topic_id, user_id), h| (h[topic_id] ||= []) << user_id }
 
-    topics.each { |topic| topic.accepted_answer_user_id = topics_with_answer_poster[topic.id] }
-    user_ids.concat(topics_with_answer_poster.values)
+    topics.each do |topic|
+      topic.accepted_answer_user_ids = topics_with_answer_users[topic.id] || []
+    end
+
+    user_ids.concat(topics_with_answer_users.values.flatten.uniq)
   end
 
   DiscourseSolved::RegisterFilters.register(self)

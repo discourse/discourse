@@ -3,6 +3,14 @@
 module Reports::SiteTraffic
   extend ActiveSupport::Concern
 
+  SERIES_COLORS = {
+    "page_view_logged_in_browser" => "#4B3CE0",
+    "page_view_anon_browser" => "#9C8DEC",
+    "page_view_crawler" => "#D5CDF7",
+    "page_view_embed" => "#E6E1F8",
+    "page_view_other" => "#E84A5F",
+  }.freeze
+
   class_methods do
     def report_site_traffic(report)
       report.modes = [Report::MODES[:stacked_chart]]
@@ -25,6 +33,7 @@ module Reports::SiteTraffic
               SUM(CASE WHEN req_type = :page_view_logged_in_browser THEN count ELSE 0 END) AS page_view_logged_in_browser,
               SUM(CASE WHEN req_type = :page_view_anon_browser THEN count ELSE 0 END) AS page_view_anon_browser,
               SUM(CASE WHEN req_type = :page_view_crawler THEN count ELSE 0 END) AS page_view_crawler,
+              SUM(CASE WHEN req_type = :page_view_embed THEN count ELSE 0 END) AS page_view_embed,
               SUM(
                 CASE WHEN req_type = :page_view_anon THEN count
                     WHEN req_type = :page_view_logged_in THEN count
@@ -46,6 +55,7 @@ module Reports::SiteTraffic
           page_view_logged_in: ApplicationRequest.req_types[:page_view_logged_in],
           page_view_anon_browser: ApplicationRequest.req_types[:page_view_anon_browser],
           page_view_logged_in_browser: ApplicationRequest.req_types[:page_view_logged_in_browser],
+          page_view_embed: ApplicationRequest.req_types[:page_view_embed],
           first_browser_pageview_date: first_browser_pageview_date,
         )
 
@@ -53,28 +63,38 @@ module Reports::SiteTraffic
         {
           req: "page_view_logged_in_browser",
           label: I18n.t("reports.site_traffic.xaxis.page_view_logged_in_browser"),
-          color: report.colors[:turquoise],
+          color: SERIES_COLORS.fetch("page_view_logged_in_browser"),
           data: data.map { |row| { x: row.date, y: row.page_view_logged_in_browser } },
         },
         {
           req: "page_view_anon_browser",
           label: I18n.t("reports.site_traffic.xaxis.page_view_anon_browser"),
-          color: report.colors[:lime],
+          color: SERIES_COLORS.fetch("page_view_anon_browser"),
           data: data.map { |row| { x: row.date, y: row.page_view_anon_browser } },
         },
         {
           req: "page_view_crawler",
           label: I18n.t("reports.site_traffic.xaxis.page_view_crawler"),
-          color: report.colors[:purple],
+          color: SERIES_COLORS.fetch("page_view_crawler"),
           data: data.map { |row| { x: row.date, y: row.page_view_crawler } },
         },
-        {
-          req: "page_view_other",
-          label: I18n.t("reports.site_traffic.xaxis.page_view_other"),
-          color: report.colors[:magenta],
-          data: data.map { |row| { x: row.date, y: row.page_view_other } },
-        },
       ]
+
+      if EmbeddableHost.exists?
+        report.data << {
+          req: "page_view_embed",
+          label: I18n.t("reports.site_traffic.xaxis.page_view_embed"),
+          color: SERIES_COLORS.fetch("page_view_embed"),
+          data: data.map { |row| { x: row.date, y: row.page_view_embed } },
+        }
+      end
+
+      report.data << {
+        req: "page_view_other",
+        label: I18n.t("reports.site_traffic.xaxis.page_view_other"),
+        color: SERIES_COLORS.fetch("page_view_other"),
+        data: data.map { |row| { x: row.date, y: row.page_view_other } },
+      }
     end
   end
 end

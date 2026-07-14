@@ -17,12 +17,6 @@ describe "Edit Category General" do
         I18n.t("js.category.color_validations.non_hexdecimal"),
       )
 
-      form.field("color").fill_in("")
-      category_page.save_settings
-      expect(form.field("color")).to have_errors(
-        I18n.t("js.category.color_validations.cant_be_empty"),
-      )
-
       form.field("color").fill_in("A")
       category_page.save_settings
       expect(form.field("color")).to have_errors(
@@ -36,38 +30,6 @@ describe "Edit Category General" do
       form.field("color").fill_in("AB1")
       category_page.save_settings
       expect(form.field("color")).to have_no_errors
-    end
-  end
-
-  context "when changing text color" do
-    it "displays an error when the hex code is invalid" do
-      category_page.visit_general(category)
-
-      form.field("text_color").fill_in("ABZ")
-      category_page.save_settings
-      expect(form.field("text_color")).to have_errors(
-        I18n.t("js.category.color_validations.non_hexdecimal"),
-      )
-
-      form.field("text_color").fill_in("")
-      category_page.save_settings
-      expect(form.field("text_color")).to have_errors(
-        I18n.t("js.category.color_validations.cant_be_empty"),
-      )
-
-      form.field("text_color").fill_in("A")
-      category_page.save_settings
-      expect(form.field("text_color")).to have_errors(
-        I18n.t("js.category.color_validations.incorrect_length"),
-      )
-    end
-
-    it "saves successfully when the hex code is valid" do
-      category_page.visit_general(category)
-
-      form.field("text_color").fill_in("AB1")
-      category_page.save_settings
-      expect(form.field("text_color")).to have_no_errors
     end
   end
 end

@@ -915,20 +915,17 @@ RSpec.describe PostAction do
       end
     end
 
-    skip "should not add a moderator post when post is flagged via private message" do
-      Jobs.run_immediately!
-      user = Fabricate(:user)
-      result = PostActionCreator.create(user, post, :notify_user, message: "WAT")
-      action = result.post_action
-      action.reload.related_post.topic
-      expect(user.notifications.count).to eq(0)
+    it "does not add a moderator post to the notify_user PM topic when an unrelated flag is agreed" do
+      user = Fabricate(:user, refresh_auto_groups: true)
+      notify_result = PostActionCreator.create(user, post, :notify_user, message: "WAT")
+      pm_topic = notify_result.post_action.related_post.topic
+
+      flag_result = PostActionCreator.create(user, post, :spam)
 
       SiteSetting.auto_respond_to_flag_actions = true
-      result.reviewable.perform(admin, :agree_and_keep)
-      expect(user.reload.user_stat.flags_agreed).to eq(0)
+      flag_result.reviewable.perform(admin, :agree_and_keep)
 
-      user_notifications = user.notifications
-      expect(user_notifications.count).to eq(0)
+      expect(pm_topic.reload.posts.count).to eq(1)
     end
   end
 

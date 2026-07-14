@@ -8,7 +8,7 @@ import { i18n } from "discourse-i18n";
 
 let createAsPostVotingSetInRequest = false;
 
-acceptance("Discourse Post Voting - composer", function (needs) {
+acceptance("composer", function (needs) {
   needs.user();
   needs.settings({ post_voting_enabled: true });
 

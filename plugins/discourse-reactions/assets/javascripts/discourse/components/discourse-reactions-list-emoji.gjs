@@ -11,8 +11,8 @@ import {
   offset,
   shift,
 } from "@floating-ui/dom";
-import emoji from "discourse/helpers/emoji";
 import { bind } from "discourse/lib/decorators";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
 const DISPLAY_MAX_USERS = 19;
@@ -22,12 +22,20 @@ export default class DiscourseReactionsListEmoji extends Component {
 
   @tracked loadingReactions = false;
 
+  get useNewMenu() {
+    return this.siteSettings.enable_new_post_reactions_menu;
+  }
+
   get elementId() {
     return `discourse-reactions-list-emoji-${this.args.post.id}-${this.args.reaction.id}`;
   }
 
   @action
   pointerOver(event) {
+    if (this.useNewMenu) {
+      return;
+    }
+
     if (event.pointerType !== "mouse" || !this.args.reaction.count) {
       return;
     }
@@ -59,6 +67,9 @@ export default class DiscourseReactionsListEmoji extends Component {
   }
 
   _loadReactionUsers() {
+    if (!this.args.getUsers) {
+      return;
+    }
     this.loadingReactions = true;
     this.args.getUsers(this.args.reaction.id).finally(() => {
       this.loadingReactions = false;
@@ -90,41 +101,56 @@ export default class DiscourseReactionsListEmoji extends Component {
   }
 
   <template>
-    <div
-      class="discourse-reactions-list-emoji"
-      id={{this.elementId}}
-      {{on "pointerover" this.pointerOver}}
-    >
-      {{#if @reaction.count}}
-        {{emoji
-          @reaction.id
-          skipTitle=true
-          class=(if
-            this.siteSettings.discourse_reactions_desaturated_reaction_panel
-            "desaturated"
-            ""
-          )
-        }}
+    {{#if this.useNewMenu}}
+      <div class="discourse-reactions-list-emoji" id={{this.elementId}}>
+        {{#if @reaction.count}}
+          {{dEmoji
+            @reaction.id
+            class=(if
+              this.siteSettings.discourse_reactions_desaturated_reaction_panel
+              "desaturated"
+              ""
+            )
+          }}
+        {{/if}}
+      </div>
+    {{else}}
+      <div
+        class="discourse-reactions-list-emoji"
+        id={{this.elementId}}
+        {{on "pointerover" this.pointerOver}}
+      >
+        {{#if @reaction.count}}
+          {{dEmoji
+            @reaction.id
+            skipTitle=true
+            class=(if
+              this.siteSettings.discourse_reactions_desaturated_reaction_panel
+              "desaturated"
+              ""
+            )
+          }}
 
-        <div class="user-list">
-          <div class="container">
-            <span class="heading">{{@reaction.id}}</span>
-            {{#each this.truncatedUsers as |user|}}
-              <span class="username">{{this.displayNameForUser user}}</span>
-            {{else}}
-              <div class="center"><div class="spinner small"></div></div>
-            {{/each}}
-            {{#if this.hiddenUserCount}}
-              <span class="other-users">
-                {{i18n
-                  "discourse_reactions.state_panel.more_users"
-                  count=this.hiddenUserCount
-                }}
-              </span>
-            {{/if}}
+          <div class="user-list">
+            <div class="container">
+              <span class="heading">{{@reaction.id}}</span>
+              {{#each this.truncatedUsers as |user|}}
+                <span class="username">{{this.displayNameForUser user}}</span>
+              {{else}}
+                <div class="center"><div class="spinner small"></div></div>
+              {{/each}}
+              {{#if this.hiddenUserCount}}
+                <span class="other-users">
+                  {{i18n
+                    "discourse_reactions.state_panel.more_users"
+                    count=this.hiddenUserCount
+                  }}
+                </span>
+              {{/if}}
+            </div>
           </div>
-        </div>
-      {{/if}}
-    </div>
+        {{/if}}
+      </div>
+    {{/if}}
   </template>
 }

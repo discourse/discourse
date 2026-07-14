@@ -5,7 +5,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import UploadedImageListModal from "discourse/admin/components/modal/uploaded-image-list";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 @tagName("")
 export default class UploadedImageList extends Component {

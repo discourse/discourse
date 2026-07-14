@@ -5,11 +5,19 @@
 # https://translate.discourse.org/
 
 es:
+  admin_js:
+    admin:
+      api:
+        scopes:
+          descriptions:
+            automation:
+              trigger_automation: "Activar automatización a través de la API"
   js:
     admin:
       logs:
         staff_actions:
           actions:
+            create_automation: crear automatización
             update_automation: actualizar automatización
             delete_automation: eliminar automatización
     discourse_automation:
@@ -68,8 +76,10 @@ es:
           fields:
             categories:
               label: Categorías
+              description: Solo se activará cuando el tema marcado esté en estas categorías
             tags:
               label: Etiquetas
+              description: Solo se activará cuando el tema marcado tenga cualquiera de estas etiquetas
         not_found: No se ha podido encontrar el activador «%{trigger}» para la automatización «%{automation}», asegúrate de que el plugin asociado está instalado
         user_badge_granted:
           fields:
@@ -205,6 +215,9 @@ es:
               description: "Opcional, limita la activación solo a publicaciones con estas características"
           created: Creado
           edited: Editado
+          topics: Temas (todas las categorías)
+          personal_messages: Solo mensajes personales
+          public_topics: Temas (solo categorías públicas)
           with_images: Imágenes
           with_links: Enlaces
           with_code: Código
@@ -280,7 +293,11 @@ es:
         email_on_flagged_post:
           fields:
             email_template:
-              label: Plantilla de email
+              label: Plantilla de correo electrónico
+              description: Admite marcadores de posición de automatización
+            recipients:
+              label: Destinatarios
+              description: Usuarios o direcciones de correo electrónico a las que notificar
         not_found: No se ha podido encontrar el script «%{script}» para la automatización «%{automation}», asegúrate de que el plugin asociado está instalado
         zapier_webhook:
           fields:
@@ -432,7 +449,7 @@ es:
           title: Establecer temporizador de tema
           fields:
             type:
-              label: Tipo de temporizador
+              label: Tipo del temporizador
             duration:
               label: Duración del temporizador
       unnamed_automation: "Automatización sin nombre"
@@ -447,6 +464,9 @@ es:
           runs_today: "%{count} hoy"
           runs_this_week: "%{count} esta semana"
           runs_this_month: "%{count} este mes"
+          recent_errors:
+            one: "%{count} error reciente"
+            other: "%{count} errores recientes"
           runs:
             label: Ejecuciones
           name:

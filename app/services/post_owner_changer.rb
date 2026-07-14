@@ -9,7 +9,7 @@ class PostOwnerChanger
     @skip_revision = params[:skip_revision] || false
 
     %i[post_ids topic new_owner acting_user].each do |arg|
-      raise ArgumentError.new(arg) if self.instance_variable_get("@#{arg}").blank?
+      raise ArgumentError.new(arg) if instance_variable_get("@#{arg}").blank?
     end
   end
 

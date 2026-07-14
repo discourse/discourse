@@ -13,7 +13,8 @@ RSpec.describe "Admin editing objects type" do
       theme.set_field(
         target: :settings,
         name: "yaml",
-        value: File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml"),
+        value:
+          File.read("#{Rails.root.join("spec/fixtures/theme_settings/objects_settings.yaml")}"),
       )
 
       theme.save!
@@ -28,7 +29,8 @@ RSpec.describe "Admin editing objects type" do
       theme.set_field(
         target: :translations,
         name: "en",
-        value: File.read("#{Rails.root}/spec/fixtures/theme_locales/objects_settings/en.yaml"),
+        value:
+          File.read("#{Rails.root.join("spec/fixtures/theme_locales/objects_settings/en.yaml")}"),
       )
 
       theme.save!
@@ -160,7 +162,7 @@ RSpec.describe "Admin editing objects type" do
   describe "when editing a site setting of objects type" do
     before do
       SiteSetting.load_settings(
-        File.join("#{Rails.root}/spec/fixtures/site_settings/object_settings.yml"),
+        Rails.root.join("spec/fixtures/site_settings/object_settings.yml").to_s,
       )
     end
 

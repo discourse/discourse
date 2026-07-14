@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 describe PostMover do
-  fab!(:admin)
   fab!(:user)
   fab!(:topic_1) { Fabricate(:topic, user: user) }
   fab!(:topic_2) { Fabricate(:topic, user: user) }
@@ -17,7 +16,7 @@ describe PostMover do
   fab!(:user_reaction_3) { Fabricate(:reaction_user, reaction: reaction_3, post: post_2) }
   fab!(:user_reaction_4) { Fabricate(:reaction_user, reaction: reaction_4, post: post_2) }
 
-  before { SiteSetting.discourse_reactions_enabled = true }
+  before { enable_current_plugin }
 
   it "should create new post when topic's first post has no reactions" do
     old_topic = Fabricate(:topic)
@@ -47,7 +46,7 @@ describe PostMover do
     expect(new_post.reactions_user.count).to eq(0)
   end
 
-  xit "should add old post's reactions to new post when a topic's first post is moved" do
+  it "should add old post's reactions to new post when a topic's first post is moved" do
     expect(post_1.reactions).to contain_exactly(reaction_1, reaction_2)
     expect(topic_2.posts.count).to eq(0)
 

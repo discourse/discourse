@@ -72,9 +72,9 @@ end
 # Table name: sitemaps
 #
 #  id             :bigint           not null, primary key
-#  name           :string           not null
-#  last_posted_at :datetime         not null
 #  enabled        :boolean          default(TRUE), not null
+#  last_posted_at :datetime         not null
+#  name           :string           not null
 #
 # Indexes
 #

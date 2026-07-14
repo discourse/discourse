@@ -6,20 +6,22 @@ module Jobs
 
     def execute(args)
       if SiteSetting.version_checks? &&
-           (DiscourseUpdates.updated_at.nil? || DiscourseUpdates.updated_at < (1.minute.ago))
+           (DiscourseUpdates.updated_at.nil? || DiscourseUpdates.updated_at < 1.minute.ago)
         begin
           prev_missing_versions_count = DiscourseUpdates.missing_versions_count || 0
 
           json = DiscourseHub.discourse_version_check
           DiscourseUpdates.last_installed_version = Discourse::VERSION::STRING
           DiscourseUpdates.latest_version = json["latestVersion"]
+          DiscourseUpdates.latest_pretty_version = json["latestPrettyVersion"]
+          DiscourseUpdates.latest_sha = json["latestSha"]
           DiscourseUpdates.critical_updates_available = json["criticalUpdates"]
           DiscourseUpdates.missing_versions_count = json["missingVersionsCount"]
           DiscourseUpdates.updated_at = Time.zone.now
           DiscourseUpdates.missing_versions = json["versions"]
 
-          if SiteSetting.new_version_emails && json["missingVersionsCount"] > (0) &&
-               prev_missing_versions_count < (json["missingVersionsCount"].to_i)
+          if SiteSetting.new_version_emails && json["missingVersionsCount"] > 0 &&
+               prev_missing_versions_count < json["missingVersionsCount"].to_i
             message = VersionMailer.send_notice
             Email::Sender.new(message, :new_version).send
           end

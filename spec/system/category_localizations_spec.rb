@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "Category Localizations" do
-  SWITCHER_SELECTOR = "button[data-identifier='language-switcher']"
+  let(:switcher_selector) { "button[data-identifier='language-switcher']" }
 
   fab!(:admin)
   fab!(:category) do
@@ -17,7 +17,7 @@ describe "Category Localizations" do
   end
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new("form") }
-  let(:switcher) { PageObjects::Components::DMenu.new(SWITCHER_SELECTOR) }
+  let(:switcher) { PageObjects::Components::DMenu.new(switcher_selector) }
 
   before do
     SiteSetting.content_localization_supported_locales = "es|ja|fr"
@@ -168,7 +168,11 @@ describe "Category Localizations" do
           category_page.save_settings
           page.refresh
 
-          expect(category_page).to_not have_css("#control-localizations-0-locale option.--selected")
+          expect(CategoryLocalization.where(category_id: category.id).count).to eq(1)
+          expect(category_page).to have_selector(
+            ".edit-category-tab-localizations .form-kit__collection .form-kit__row",
+            count: 1,
+          )
         end
       end
     end
@@ -277,7 +281,6 @@ describe "Category Localizations" do
 
             category_page.visit(category)
             category_page.click_edit_category
-            category_page.click_setting_tab("general")
 
             expect(find(".edit-category-tab-general input.category-name").value).to eq(
               category.name,

@@ -30,7 +30,6 @@ fr:
     chat_editing_grace_period_max_diff_low_trust: "Nombre maximal de modifications de caractères autorisées pendant la période de grâce de modification de la discussion. Si d'autres modifications sont apportées, l'étiquette (modifiée) est affichée à côté du message de discussion (niveaux de confiance 0 et 1)."
     chat_editing_grace_period_max_diff_high_trust: "Nombre maximal de modifications de caractères autorisées pendant la période de grâce de modification de la discussion. Si d'autres modifications sont apportées, l'étiquette (modifiée) est affichée à côté du message de discussion (niveaux de confiance 2 et supérieurs)."
     chat_preferred_index: "Onglet préféré lors du chargement de /chat."
-    allow_chat_in_anonymous_mode: "Activez ce paramètre pour permettre aux utilisateurs qui parcourent votre site de manière anonyme d'utiliser la messagerie instantanée. Ce paramètre nécessite l'activation du paramètre « Autoriser le mode anonyme »."
     errors:
       chat_default_channel: "Le canal de discussion par défaut doit être un canal public."
       direct_message_enabled_groups_invalid: "Vous devez spécifier au moins un groupe pour ce paramètre. Si vous ne souhaitez pas que quiconque, à l'exception du personnel, envoie des messages directs, choisissez le groupe des responsables."
@@ -212,10 +211,17 @@ fr:
         other_type: "%{username} a mentionné %{identifier} dans la discussion privée"
       new_chat_message: '%{username} a envoyé un message dans « %{channel} »'
       new_direct_chat_message: "%{username} a envoyé un message dans la discussion privée"
+    actions:
+      chat_reply:
+        title: Réponse
   discourse_automation:
     scriptables:
       send_chat_message:
         title: Envoyer un message de chat
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Approuver"
+      default_deny_label: "Refuser"
   reviewable_score_types:
     needs_review:
       title: "Nécessite un examen"

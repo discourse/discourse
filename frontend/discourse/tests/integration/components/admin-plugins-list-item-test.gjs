@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import AdminPluginsListItem from "discourse/admin/components/admin-plugins-list-item";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | admin-plugins-list-item", function (hooks) {
+module("Integration | Component | AdminPluginsListItem", function (hooks) {
   setupRenderingTest(hooks);
 
   function pluginAttrs() {

@@ -4,13 +4,13 @@ import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DMultiSelect from "discourse/components/d-multi-select";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DMultiSelect from "discourse/ui-kit/d-multi-select";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class AdminWelcomeBannerForm extends Component {
@@ -358,7 +358,7 @@ export default class AdminWelcomeBannerForm extends Component {
   }
 
   <template>
-    <ConditionalLoadingSpinner @condition={{this.isLoading}}>
+    <DConditionalLoadingSpinner @condition={{this.isLoading}}>
       <Form
         @onSubmit={{this.save}}
         @data={{this.formData}}
@@ -625,6 +625,6 @@ export default class AdminWelcomeBannerForm extends Component {
         </form.Section>
         <form.Submit />
       </Form>
-    </ConditionalLoadingSpinner>
+    </DConditionalLoadingSpinner>
   </template>
 }

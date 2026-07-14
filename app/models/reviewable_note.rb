@@ -18,11 +18,11 @@ end
 # Table name: reviewable_notes
 #
 #  id            :bigint           not null, primary key
-#  reviewable_id :bigint           not null
-#  user_id       :bigint           not null
 #  content       :text             not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  reviewable_id :bigint           not null
+#  user_id       :bigint           not null
 #
 # Indexes
 #

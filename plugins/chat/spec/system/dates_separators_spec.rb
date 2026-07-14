@@ -6,6 +6,7 @@ RSpec.describe "Dates separators" do
 
   let(:chat_page) { PageObjects::Pages::Chat.new }
   let(:channel_page) { PageObjects::Pages::ChatChannel.new }
+  let(:sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     chat_system_bootstrap
@@ -15,21 +16,19 @@ RSpec.describe "Dates separators" do
 
   context "when today separator is out of screen" do
     before do
-      15.times { Fabricate(:chat_message, chat_channel: channel_1, created_at: 1.day.ago) }
+      15.times { Fabricate(:chat_message, chat_channel: channel_1, created_at: 2.days.ago) }
       30.times { Fabricate(:chat_message, chat_channel: channel_1) }
     end
 
-    xit "shows it as a sticky date" do
+    it "shows it as a sticky date" do
       chat_page.visit_channel(channel_1)
 
       expect(page.find(".chat-message-separator__text-container.is-pinned")).to have_content(
         I18n.t("js.chat.chat_message_separator.today"),
       )
       expect(page).to have_css(
-        ".chat-message-separator__text-container:not(.is-pinned)",
-        visible: :hidden,
-        text:
-          "#{I18n.t("js.chat.chat_message_separator.yesterday")} - #{I18n.t("js.chat.last_visit")}",
+        ".chat-message-separator-date.with-last-visit .chat-message-separator__text-container:not(.is-pinned)",
+        text: I18n.t("js.chat.last_visit"),
       )
     end
   end
@@ -46,7 +45,7 @@ RSpec.describe "Dates separators" do
     it "doesn't impact the last visit separator" do
       chat_page.visit_channel(channel_1)
       channel_page.send_message("message1")
-      chat_page.visit_channel(channel_2)
+      sidebar_page.open_channel(channel_2)
 
       using_session(:user_1) do
         sign_in(user_1)
@@ -54,7 +53,7 @@ RSpec.describe "Dates separators" do
         channel_page.send_message("message2")
       end
 
-      chat_page.visit_channel(channel_1)
+      sidebar_page.open_channel(channel_1)
 
       expect(page).to have_css(
         ".chat-message-separator__text-container",

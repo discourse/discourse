@@ -18,6 +18,7 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
       expect(json["upvoteCount"]).to eq(2)
       expect(json["answerCount"]).to eq(0)
       expect(json["datePublished"]).to eq(topic.created_at)
+      expect(json["dateModified"]).to be_present
     end
 
     it "serializes the author" do
@@ -38,7 +39,7 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
 
     subject(:json) do
       described_class
-        .new(topic, root: false, accepted_answer: answer_post)
+        .new(topic, root: false, accepted_answers: [answer_post])
         .serializable_hash
         .deep_stringify_keys
     end
@@ -47,9 +48,12 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
       expect(json["answerCount"]).to eq(1)
     end
 
-    it "includes the accepted answer" do
-      accepted = json["acceptedAnswer"]
+    it "includes accepted answer as an array of Answer objects" do
+      accepted = json["acceptedAnswer"].sole
       expect(accepted["@type"]).to eq("Answer")
+      expect(accepted["text"]).to be_present
+      expect(accepted["datePublished"]).to be_present
+      expect(accepted["dateModified"]).to be_present
       expect(accepted["upvoteCount"]).to eq(7)
       expect(accepted["author"]).to eq(
         { "@type" => "Person", "name" => answer_user.username, "url" => answer_user.full_url },
@@ -63,7 +67,12 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
 
     subject(:json) do
       described_class
-        .new(topic, root: false, accepted_answer: answer_post, suggested_answers: [suggested_post])
+        .new(
+          topic,
+          root: false,
+          accepted_answers: [answer_post],
+          suggested_answers: [suggested_post],
+        )
         .serializable_hash
         .deep_stringify_keys
     end
@@ -73,7 +82,12 @@ RSpec.describe DiscourseSolved::QuestionSchemaSerializer do
     end
 
     it "includes suggestedAnswer as an array of Answer objects" do
-      expect(json["suggestedAnswer"].sole["@type"]).to eq("Answer")
+      suggested = json["suggestedAnswer"].sole
+      expect(suggested["@type"]).to eq("Answer")
+      expect(suggested["text"]).to be_present
+      expect(suggested["datePublished"]).to be_present
+      expect(suggested["dateModified"]).to be_present
+      expect(suggested["upvoteCount"]).to eq(0)
     end
   end
 end

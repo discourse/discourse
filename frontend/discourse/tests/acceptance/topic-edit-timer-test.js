@@ -1,4 +1,4 @@
-import { click, fillIn, select, visit } from "@ember/test-helpers";
+import { click, fillIn, findAll, select, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { cloneJSON } from "discourse/lib/object";
 import topicFixtures from "discourse/tests/fixtures/topic";
@@ -6,7 +6,6 @@ import {
   acceptance,
   fakeTime,
   loggedInUser,
-  queryAll,
   updateCurrentUser,
 } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -361,7 +360,7 @@ acceptance("Topic - Edit timer", function (needs) {
     await click(".admin-topic-timer-update button");
 
     assert.deepEqual(
-      [...queryAll("div.tap-tile-grid div.tap-tile-title")].map((el) =>
+      findAll("div.tap-tile-grid div.tap-tile-title").map((el) =>
         el.innerText.trim()
       ),
       [

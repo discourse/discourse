@@ -771,7 +771,7 @@ textarea {
 
         &.active {
           font-weight: bold;
-          color: var(--primary);
+          color: var(--d-selected-text-color);
           background: var(--d-selected);
         }
       }
@@ -1215,9 +1215,7 @@ body.has-sidebar-page {
 
 // todo: replace — legacy, currently only seems to be used for assigns
 .mobile-nav {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+  @include unstyled-list;
   position: relative;
 
   a {

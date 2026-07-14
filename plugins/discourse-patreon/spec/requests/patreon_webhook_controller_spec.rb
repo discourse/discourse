@@ -209,6 +209,24 @@ RSpec.describe Patreon::PatreonWebhookController do
                       Patreon::RewardUser.all[reward_id].count
                     }.by(-1)
       end
+
+      it "removes user from group mapped to reward 0 on pledge:delete" do
+        user = Fabricate(:user, email: "roo@aar.com")
+        group = Fabricate(:group)
+        Patreon.set("filters", group.id.to_s => ["0"])
+
+        post_request(body, "create")
+        patron_id = JSON.parse(body)["data"]["relationships"]["patron"]["data"]["id"]
+
+        expect(Patreon::RewardUser.all["0"]).to include(patron_id)
+        expect(group.users.reload).to include(user)
+
+        post_request(body, "delete")
+
+        expect(response.status).to eq(200)
+        expect(Patreon::RewardUser.all["0"] || []).not_to include(patron_id)
+        expect(group.users.reload).not_to include(user)
+      end
     end
   end
 end

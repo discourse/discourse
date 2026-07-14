@@ -1,8 +1,6 @@
-/* eslint-disable ember/no-jquery */
 import { action } from "@ember/object";
 import { trackedArray } from "@ember/reactive/collections";
 import { service } from "@ember/service";
-import $ from "jquery";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import Bookmark from "discourse/models/bookmark";
@@ -74,7 +72,11 @@ export default class UserActivityBookmarks extends DiscourseRoute {
     let url = `/u/${this.modelFor("user").username}/bookmarks.json`;
 
     if (params) {
-      url += "?" + $.param(params);
+      const searchParams = new URLSearchParams();
+      Object.entries(params).forEach(([key, value]) =>
+        searchParams.set(key, value ?? "")
+      );
+      url += "?" + searchParams;
     }
 
     return ajax(url);

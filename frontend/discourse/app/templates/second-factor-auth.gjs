@@ -1,9 +1,9 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import DButton from "discourse/components/d-button";
-import SecondFactorInput from "discourse/components/second-factor-input";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import { gt, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DSecondFactorInput from "discourse/ui-kit/d-second-factor-input";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -18,7 +18,17 @@ export default <template>
       <p class="action-description">{{@controller.customDescription}}</p>
     {{/if}}
     <p>{{@controller.secondFactorDescription}}</p>
-    {{#if @controller.showSecurityKeyForm}}
+    {{#if @controller.showPasskeyForm}}
+      <div id="security-key">
+        <DButton
+          @action={{@controller.authenticatePasskey}}
+          @icon="user"
+          @label="login.use_passkey"
+          id="passkey-authenticate-button"
+          class="btn-large btn-primary"
+        />
+      </div>
+    {{else if @controller.showSecurityKeyForm}}
       <div id="security-key">
         <DButton
           @action={{@controller.authenticateSecurityKey}}
@@ -30,7 +40,7 @@ export default <template>
       </div>
     {{else if (or @controller.showTotpForm @controller.showBackupCodesForm)}}
       <form class={{@controller.inputFormClass}}>
-        <SecondFactorInput
+        <DSecondFactorInput
           @onChange={{fn (mut @controller.secondFactorToken)}}
           @secondFactorMethod={{@controller.shownSecondFactorMethod}}
           value={{@controller.secondFactorToken}}

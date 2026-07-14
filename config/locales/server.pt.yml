@@ -252,7 +252,13 @@ pt:
   deleted_topic: "Oops! Este tópico foi excluído e não está mais disponível."
   delete_topic_failed: "Ocorreu um erro ao excluir esse tópico. Entre em contato com o administrador do site."
   reading_time: "Tempo de leitura"
+  reading_time_minutes:
+    one: "%{count} minuto 🕑"
+    other: "%{count} minutos 🕑"
   likes: "Gostos"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Pedimos desculpa mas novos utilizadores estão temporariamente limitados a %{count} resposta no mesmo tópico."
     other: "Pedimos desculpa mas novos utilizadores estão temporariamente limitados a %{count} respostas no mesmo tópico."
@@ -387,6 +393,11 @@ pt:
       trust_level_2: "nivel_de_confianca_2"
       trust_level_3: "nivel_de_confianca_3"
       trust_level_4: "nivel_de_confianca_4"
+    default_full_names:
+      everyone: "Todos"
+      admins: "Administradores"
+      moderators: "Moderadores"
+      staff: "Pessoal"
     request_membership_pm:
       title: "Pedido de Adesão para @%{group_name}"
   education:
@@ -713,6 +724,9 @@ pt:
       session_info: "Ler info da sessão de utilizador"
       read: "Ler todos"
       write: "Escrever todos"
+    device:
+      code: "Código"
+      continue: "Continuar"
   reports:
     default:
       labels:
@@ -751,6 +765,30 @@ pt:
       xaxis: "Dia"
     new_contributors:
       xaxis: "Dia"
+    activity_by_category:
+      labels:
+        category: "Categoria"
+        topics: "Tópicos"
+        posts: "Mensagens"
+        share: "Partilhar"
+    posters_by_member_type:
+      labels:
+        count: "Mensagens"
+        share: "Partilhar"
+      types:
+        staff: "Pessoal"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Membros"
+        share: "Partilhar"
+        signups: "Registos"
+      levels:
+        "0": "Novo"
+        "1": "Básico"
+        "2": "Membro"
+        "3": "Habitual"
+        "4": "Líder"
     trust_level_growth:
       yaxis: "Dia"
     consolidated_page_views:
@@ -767,6 +805,8 @@ pt:
     consolidated_page_views_browser_detection:
       yaxis: "Dia"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anónimo"
       yaxis: "Dia"
     dau_by_mau:
       xaxis: "Dia"
@@ -850,6 +890,12 @@ pt:
         user: "Utilizador"
         num_clicks: "Cliques"
         num_topics: "Tópicos"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Visitas"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Visitas"
     top_traffic_sources:
       title: "As Melhores Fontes de Tráfego"
       xaxis: "Domínio"
@@ -896,6 +942,8 @@ pt:
       xaxis: "Dia"
     page_view_logged_in_browser_reqs:
       xaxis: "Dia"
+    page_view_embed_reqs:
+      xaxis: "Dia"
     http_background_reqs:
       title: "Fundo"
       xaxis: "Dia"
@@ -940,7 +988,7 @@ pt:
       labels:
         user: Utilizador
         location: Localização
-    staff_logins:
+    admin_logins:
       labels:
         user: Utilizador
         location: Localização
@@ -1003,7 +1051,6 @@ pt:
     edit_history_visible_to_public: "Permitir que todos vejam versões anteriores de uma mensagem editada. Quando desativado, apenas membros do pessoal podem ver."
     delete_removed_posts_after: "Mensagens removidas pelo autor serão automaticamente eliminadas após um período de (n) horas. Se estiver definido a 0, as mensagens serão eliminadas imediatamente."
     fixed_category_positions: "Se estiver marcado, irá conseguir organizar as categorias por uma ordem fixa. Se não estiver marcado, as categorias são listadas por ordem de actividade."
-    fixed_category_positions_on_create: "Se marcado, a ordenação de categorias irá ser mantida no diálogo de criação do tópico (requer fixed_category_positions)"
     add_rel_nofollow_to_user_content: 'Adicionar a etiqueta rel nofollow em todos os conteúdos submetidos pelo utilizador, excepto para hiperligações internas (incluindo domínios pai). Se mudar isto, terá que atualizar todas as suas mensagens com: "rake posts:rebake"'
     post_excerpt_maxlength: "Tamanho máximo do excerto/sumário de uma mensagem."
     show_pinned_excerpt_mobile: "Mostrar excerto em publicações afixadas na vista móvel."
@@ -1020,8 +1067,6 @@ pt:
     anon_polling_interval: "Com que frequência os clientes anónimos podem sondar o servidor em milisegundos"
     background_polling_interval: "Com que frequência deverão os clientes solicitar o servidor, em milissegundos (quando a janela está em plano de fundo)"
     cooldown_minutes_after_hiding_posts: "Número de minutos que o utilizador deve esperar antes de poder editar uma mensagem oculta devido a sinalizações por parte da comunidade"
-    max_topics_in_first_day: "O número máximo de tópicos que o utilizador pode criar no período de 24 horas após criar a sua primeira publicação"
-    max_replies_in_first_day: "O número máximo de respostas que um utilizador pode criar no período de 24 horas após criar a sua primeira publicação"
     tl2_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc2 (membro) ao multiplicar por este número"
     tl3_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc3 (habitual) ao multiplicar por este número"
     tl4_additional_likes_per_day_multiplier: "Aumentar limite de gostos por dia para nc4 (líder) ao multiplicar por este número"
@@ -1029,7 +1074,6 @@ pt:
     post_undo_action_window_mins: "Número de minutos durante o qual os utilizadores têm permissão para desfazer ações numa mensagem (gostos, sinalizações, etc)."
     maximum_session_age: "Utilizador permanecerá ligado durante n horas desde a última visita"
     cors_origins: "Permitidos compartilhamentos de recursos de origem-cruzada (CORS). Cada origem deve incluir http:// ou https://. A variável de ambiente DISCOURSE_ENABLE_CORS tem que estar configurada a verdadeiro para ativar o CORS."
-    use_admin_ip_allowlist: "Os Administradores só podem iniciar sessão se estiverem num endereço IP definido na lista de IPs Rastreados (Admin > Logs > IPs Rastreados)."
     include_secure_categories_in_tag_counts: "Quando ativada, a contagem de tópicos para uma tag incluirá tópicos que estão em categorias restritas de leitura para todos os utilizadores. Quando desabilitada, os utilizadores normais visualizam apenas uma contagem de tópicos para uma tag em que todos os tópicos estão em categorias públicas."
     top_menu: "Determine quais os itens que aparecem na navegação da página incial, e em que ordem."
     share_links: "Determinar que elementos aparecem no diálogo de partilha, e em que ordem."
@@ -1046,7 +1090,6 @@ pt:
     blocked_email_domains: "Uma lista de domínios de correio eletrónico com os quais os utilizadores não estão autorizados a registar contas. Os subdomínios são tratados automaticamente para os domínios especificados. Os símbolos de substituição * e ? não são suportados. Exemplo: mailinator.com"
     allowed_email_domains: "Uma lista de domínios de correio eletrónico com os quais os utilizadores DEVEM registar as contas. Os subdomínios são tratados automaticamente para os domínios especificados. Os símbolos de substituição * e ? não são suportados. AVISO: os utilizadores com domínios de correio eletrónico diferentes dos listados não serão permitidos!"
     log_out_strict: "Ao terminar sessão, saia de TODAS as sessões do utilizador em todos dispositivos"
-    new_version_emails: "Enviar um email para o endereço 'contact_email' quando uma nova versão do Discourse estiver disponível."
     invite_expiry_days: "Durante quantos dias as chaves de convite são válidas."
     login_required: "Requerer autenticação para ler conteúdo neste sítio, não permitir acesso anónimo."
     block_common_passwords: "Não permitir palavras-passe que estejam nas 10,000 palavras-passe mais comuns."
@@ -1180,8 +1223,6 @@ pt:
     pop3_polling_openssl_verify: "Verificar o certificado de TLS do server. (Por defeito: activado)"
     pop3_polling_username: "O nome de utilizador para a conta POP3 para obter e-mail."
     pop3_polling_password: "A palavra-passe para a conta POP3 obter e-mail."
-    email_prefix: "A [etiqueta] usada no assunto dos emails. Se não estiver configurada, será 'Título' por defeito."
-    email_site_title: "Título do sítio usado como remetente de emails. Se não for configurado, será 'título' por defeito. Se o seu 'título' contém caracteres que não são permitidos na string do remetente de email, utilize esta configuração."
     minimum_topics_similar: "Quantos tópicos precisam de existir antes de serem apresentados tópicos semelhantes ao compor novos tópicos."
     relative_date_duration: "Número de dias após uma publicação durante o qual as datas das mensagens serão mostradas como relativas(7d) em vez de absolutas(20 Fev)."
     delete_user_max_post_age: "Não permitir eliminação de utilizadores cuja primeira mensagem é mais antiga que (x) dias."
@@ -1202,11 +1243,9 @@ pt:
     max_notifications_per_user: "O número máximo de notificações por utilizador, se este número for excedido as notificações antigas serão eliminadas. Reforçado semanalmente. Defina como 0 para desativar"
     allowed_user_website_domains: "O ''site'' da Web do utilizador será verificado em relação a estes domínios."
     allow_profile_backgrounds: "Permitir que os utilizadores carreguem fundos de perfil."
-    enable_mobile_theme: "Os dispositivos móveis usam um tema mobile-friendly, com a possibilidade de mudar para o sítio completo. Desative isto se quer usar um estilo personalizado que é totalmente responsivo."
     dominating_topic_minimum_percent: "Que percentagem de mensagens um utilizador tem que fazer num tópico antes de ser relembrado sobre dominar demasiado um tópico."
     suppress_uncategorized_badge: "Não mostrar distintivos para tópicos sem categoria nas listagens de tópicos."
     permalink_normalizations: "Aplicar a seguinte expressão regular antes de igualar ligações permanentes, por exemplo: /(topic.*)\\?.*/\\1 irá remover rotas de tópico. O formato é regex+string utilize \\1 etc. para aceder a capturas"
-    disable_system_edit_notifications: "Desativa as notificações de edição pelo utilizador do sistema quando 'download_remote_images_to_local' está ativo."
     automatically_unpin_topics: "Desafixar tópicos automaticamente quando um utilizador chega ao final."
     read_time_word_count: "Contagem de palavras por minuto para calcular tempo estimado de leitura."
     enable_names: "Mostrar o nome completo do utilizador no seu perfil, cartão de utilizador, e emails. Desativar para esconder o nome completo em todos os locais."
@@ -1250,7 +1289,6 @@ pt:
     max_tags_in_filter_list: "Número máximo de etiquetas a mostrar no filtro de etiquetas. Serão mostradas as etiquetas mais utilizadas."
     tags_sort_alphabetically: "Mostrar etiquetas por ordem alfabética. São, por omissão, ordenadas por popularidade."
     suppress_overlapping_tags_in_list: "Se as etiquetas coincidirem exactamente com palavras nos títulos dos tópicos, não mostrar as etiquetas"
-    create_revision_on_bulk_topic_moves: "Criar revisão para os primeiros posts quando os tópicos são movidos em massa para uma nova categoria."
     show_preview_for_form_templates: "Ativar a pré-visualização para a funcionalidade de modelos de formulário"
     errors:
       invalid_email: "Endereço de email inválido."
@@ -1279,6 +1317,10 @@ pt:
       topic: "Resultados"
       user: "Utilizadores"
     results_page: "Resultados da pesquisa por '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "Últimas mensagens"
+      order_latest_topic: "Tópicos recentes"
   filter:
     description:
       in: "Filtrar tópicos nas listas pessoais"
@@ -1771,11 +1813,14 @@ pt:
       popular_topics: "Tópicos Populares"
       join_the_discussion: "Ler Mais"
       popular_posts: "Publicações Populares"
+      subject_template_improved: "Resumo"
       click_here: "clique aqui"
     forgot_password:
       title: "Esqueci a palavra-passe"
     set_password:
       title: "Definir Palavra-passe"
+    admin_login:
+      subject_template_improved: "Login"
     notify_old_email:
       text_body_template: |2
 
@@ -2050,6 +2095,8 @@ pt:
               private:
                 label: "Privado"
   onebox:
+    google_meet:
+      meeting_code: "Código:"
     github:
       closed: "fechado"
       status_date:

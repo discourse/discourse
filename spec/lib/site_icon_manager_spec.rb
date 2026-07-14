@@ -30,7 +30,7 @@ RSpec.describe SiteIconManager do
     SiteSetting.logo = ""
     SiteSetting.logo_small = ""
 
-    Upload.find_by(id: SiteIconManager::SKETCH_LOGO_ID)&.destroy
+    Upload.find_by(id: SiteIconManager::SKETCH_LOGO_ID)&.delete
 
     expect(SiteIconManager.favicon).to eq(nil)
     expect(SiteIconManager.large_icon).to eq(nil)

@@ -34,6 +34,14 @@ sw:
             canned_reply:
               label: "Jibu"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Inaandaa...."
+        tool: "Kitendo"
+        user: "Mtumiaji"
+        approve: "Imethibitishwa"
+        reject: "Kataa"
+        approved: "Wamekubaliwa"
+        rejected: "Imekataliwa"
       llm_selector:
         none: "Hakuna"
       features:
@@ -41,6 +49,8 @@ sw:
         groups: "Makundi:"
         no_groups: "Hakuna"
         edit: "Mipangilio"
+        nav:
+          enabled: "Imeruhusiwa"
         filters:
           all: "Yote"
           reset: "Weka/Anzisha Upya"
@@ -51,6 +61,7 @@ sw:
       modals:
         select_option: "Chagua chaguo moja..."
       translations:
+        category_scope: "Kategoria"
         stats:
           eta_hours:
             one: "saa %{count}"
@@ -82,6 +93,9 @@ sw:
         save: "Hifadhi"
         enabled: "Imeruhusiwa?"
         delete: "Futa"
+        thinking_effort_options:
+          none: "Hakuna"
+          max: "Kiwango cha juu"
         response_format:
           open_modal: "Hariri"
         filters:

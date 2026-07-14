@@ -208,7 +208,7 @@ describe "Viewing reviewable item" do
       before do
         reviewable_flagged_post.target_created_by.update!(ip_address: "81.2.69.142")
 
-        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s)
         Resolv::DNS
           .any_instance
           .stubs(:getname)
@@ -250,6 +250,30 @@ describe "Viewing reviewable item" do
 
         expect(review_page).to have_ip_lookup_modal
         expect(review_page).to have_account_in_modal(other_user.username)
+      end
+
+      it "shows correct IP when navigating between reviewables" do
+        other_reviewable =
+          Fabricate(
+            :reviewable_flagged_post,
+            target_created_by: Fabricate(:user, ip_address: "2.125.160.216"),
+          )
+
+        Resolv::DNS
+          .any_instance
+          .stubs(:getname)
+          .with("2.125.160.216")
+          .returns("ip-2-125-160-216.example.com")
+
+        review_page.visit_reviewable(reviewable_flagged_post)
+        review_page.click_insights_tab
+
+        expect(review_page).to have_ip_hostname("ip-81-2-69-142.example.com")
+
+        review_page.visit_reviewable(other_reviewable)
+        review_page.click_insights_tab
+
+        expect(review_page).to have_ip_hostname("ip-2-125-160-216.example.com")
       end
 
       context "when category moderator" do
@@ -295,8 +319,11 @@ describe "Viewing reviewable item" do
     end
 
     it "shows context question for rejected queued post" do
+      reviewable_queued_post.update!(status: Reviewable.statuses[:rejected])
+
       review_page.visit_reviewable(reviewable_queued_post)
 
+      expect(review_page).to have_reviewable_with_rejected_status(reviewable_queued_post)
       expect(review_page).to have_context_question(
         reviewable_queued_post,
         I18n.t("js.review.context_question.approve_post"),
@@ -331,6 +358,11 @@ describe "Viewing reviewable item" do
       expect(review_page).to have_reviewable_with_rejected_status(reviewable)
 
       expect(page).to have_text(user.name)
+
+      expect(review_page).to have_no_context_question(
+        reviewable,
+        I18n.t("js.review.context_question.approve_user"),
+      )
 
       review_page.click_scrub_user_button
 

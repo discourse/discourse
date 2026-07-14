@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import AdminConfigAreaCard from "discourse/admin/components/admin-config-area-card";
-import DButton from "discourse/components/d-button";
-import icon from "discourse/helpers/d-icon";
+import DButton from "discourse/ui-kit/d-button";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class InstallThemeCard extends Component {
@@ -58,7 +58,7 @@ export default class InstallThemeCard extends Component {
               target="_blank"
             >
               {{i18n resource.key}}
-              {{icon "up-right-from-square"}}
+              {{dIcon "up-right-from-square"}}
             </a>
           {{/each}}
         </div>

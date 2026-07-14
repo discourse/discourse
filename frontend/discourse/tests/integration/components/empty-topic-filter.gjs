@@ -20,8 +20,8 @@ module("Integration | Component | EmptyTopicFilter", function (hooks) {
       .hasText(i18n("topics.none.education.new"));
   });
 
-  test("renders new_new education text when newFilter is true and new_new_view_enabled", async function (assert) {
-    this.currentUser.new_new_view_enabled = true;
+  test("renders unified_new education text when newFilter is true and unified_new_enabled", async function (assert) {
+    this.currentUser.unified_new_enabled = true;
 
     await render(
       <template>
@@ -31,7 +31,7 @@ module("Integration | Component | EmptyTopicFilter", function (hooks) {
 
     assert
       .dom(".empty-topic-filter__text")
-      .hasText(i18n("topics.none.education.new_new"));
+      .hasText(i18n("topics.none.education.unified_new"));
   });
 
   test("renders unread education text when unreadFilter is true", async function (assert) {

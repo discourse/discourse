@@ -63,46 +63,27 @@ module DiscourseAi
 
           api_url = "https://api.github.com/repos/#{repo}/git/trees/#{branch_name}?recursive=1"
 
-          response_code = "unknown error"
-          tree_data = nil
+          begin
+            tree_data = github_client.get(api_url)
+          rescue Discourse::GithubApi::Error => e
+            return { error: "Failed to perform file search. #{e.message}" }
+          end
 
-          send_http_request(
-            api_url,
-            headers: {
-              "Accept" => "application/vnd.github.v3+json",
-            },
-            authenticate_github: true,
-          ) do |response|
-            response_code = response.code
-            if response_code == "200"
-              begin
-                tree_data = JSON.parse(read_response_body(response))
-              rescue JSON::ParserError
-                response_code = "500 - JSON parse error"
+          matching_files =
+            tree_data["tree"]
+              .select do |item|
+                item["type"] == "blob" && keywords.any? { |keyword| item["path"].include?(keyword) }
               end
-            end
-          end
+              .map { |item| { path: item["path"], size: item["size"] } }
+              .take(MAX_FILE_SEARCH_RESULTS)
 
-          if response_code == "200"
-            matching_files =
-              tree_data["tree"]
-                .select do |item|
-                  item["type"] == "blob" &&
-                    keywords.any? { |keyword| item["path"].include?(keyword) }
-                end
-                .map { |item| { path: item["path"], size: item["size"] } }
-                .take(MAX_FILE_SEARCH_RESULTS)
-
-            result = { matching_files: matching_files, branch: branch_name }
-            if matching_files.length == MAX_FILE_SEARCH_RESULTS
-              result[
-                :note
-              ] = "Result limit reached (#{MAX_FILE_SEARCH_RESULTS} files). There may be more matching files."
-            end
-            result
-          else
-            { error: "Failed to perform file search. Status code: #{response_code}" }
+          result = { matching_files: matching_files, branch: branch_name }
+          if matching_files.length == MAX_FILE_SEARCH_RESULTS
+            result[
+              :note
+            ] = "Result limit reached (#{MAX_FILE_SEARCH_RESULTS} files). There may be more matching files."
           end
+          result
         end
       end
     end

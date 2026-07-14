@@ -27,12 +27,12 @@ end
 # Table name: associated_groups
 #
 #  id            :bigint           not null, primary key
+#  last_used     :datetime         not null
 #  name          :string           not null
 #  provider_name :string           not null
-#  provider_id   :string           not null
-#  last_used     :datetime         not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  provider_id   :string           not null
 #
 # Indexes
 #

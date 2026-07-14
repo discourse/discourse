@@ -168,6 +168,10 @@ class TopicsFilter
       end
     when "public"
       @scope = @scope.joins(:category).where("NOT categories.read_restricted")
+    when "noreplies"
+      @scope = @scope.where("topics.posts_count = 1")
+    when "single_user"
+      @scope = @scope.where("topics.participant_count = 1")
     else
       if custom_filter = TopicsFilter.custom_status_filters[status]
         @scope = custom_filter[:block].call(@scope) if custom_filter[:enabled].call
@@ -277,6 +281,8 @@ class TopicsFilter
       { name: "status:unlisted", description: I18n.t("filter.description.status_unlisted") },
       { name: "status:deleted", description: I18n.t("filter.description.status_deleted") },
       { name: "status:public", description: I18n.t("filter.description.status_public") },
+      { name: "status:noreplies", description: I18n.t("filter.description.status_noreplies") },
+      { name: "status:single_user", description: I18n.t("filter.description.status_single_user") },
       { name: "order:", description: I18n.t("filter.description.order"), priority: 1 },
       { name: "order:activity", description: I18n.t("filter.description.order_activity") },
       { name: "order:activity-asc", description: I18n.t("filter.description.order_activity_asc") },
@@ -491,7 +497,7 @@ class TopicsFilter
       column_name: "first_posts.like_count",
       min:,
       max:,
-      scope: self.joins_first_posts(@scope),
+      scope: joins_first_posts(@scope),
     )
   end
 
@@ -937,14 +943,9 @@ class TopicsFilter
       break if key_prefix && key_prefix != "-"
 
       value.scan(
-        /\A(?<tag_names>([\p{N}\p{L}\-_]+)(?<delimiter>[,+])?([\p{N}\p{L}\-_]+)?(\k<delimiter>[\p{N}\p{L}\-_]+)*)\z/,
+        /\A(?<tag_names>([\p{N}\p{L}\-_.]+)(?<delimiter>[,+])?([\p{N}\p{L}\-_.]+)?(\k<delimiter>[\p{N}\p{L}\-_.]+)*)\z/,
       ) do |tag_names, delimiter|
-        match_all =
-          if delimiter == ","
-            false
-          else
-            true
-          end
+        match_all = delimiter != ","
 
         tags = tag_names.split(delimiter)
         tag_ids = tag_ids_from_tag_names(tags)

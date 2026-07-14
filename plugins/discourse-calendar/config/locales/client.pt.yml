@@ -38,6 +38,9 @@ pt:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username}%{description}"
+      event_description:
+        show_more: "Mostrar mais"
+        show_less: "Mostrar menos"
       show_all: "Mostrar tudo"
       add_to_calendar: "Adicionar ao calendário"
       bulk_invite: "Convite em Série"
@@ -58,6 +61,18 @@ pt:
               title: "Público"
             private:
               title: "Privado"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "minuto"
+              other: "minutos"
+            hours:
+              one: "hora"
+              other: "horas"
+            days:
+              one: "dia"
+              other: "dias"
       builder_modal:
         custom_fields:
           placeholder: "Opcional"
@@ -77,14 +92,14 @@ pt:
           label: "Recorrência"
           none: "Nenhuma recorrência"
           every_day: "Diariamente"
-        url:
-          label: "URL"
-          placeholder: "Opcional"
-        location:
-          label: "Localização"
+          ordinals:
+            last: "último"
+        attendance:
+          none: "Nenhuma"
         description:
           label: "Descrição"
-        status:
-          label: "Estado"
+        event_type:
+          public:
+            title: "Público"
       invite_user_or_group:
         invite: "Enviar"

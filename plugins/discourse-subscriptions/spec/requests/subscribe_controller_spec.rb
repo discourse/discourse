@@ -126,6 +126,8 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
     describe "#get_contributors" do
       before do
         Fabricate(:product, external_id: "prod_campaign")
+        user.user_stat.update!(post_count: 1)
+        campaign_user.user_stat.update!(post_count: 1)
         Fabricate(:customer, product_id: "prodct_23456", user_id: user.id, customer_id: "x")
         Fabricate(
           :customer,
@@ -158,7 +160,7 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
         end
 
         it "shows all purchases if campaign product not set" do
-          SiteSetting.discourse_subscriptions_campaign_product = nil
+          SiteSetting.discourse_subscriptions_campaign_product = ""
 
           get "/s/contributors.json"
 
@@ -170,6 +172,8 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
 
     describe "#show" do
       it "retrieves the product" do
+        Fabricate(:product, external_id: "prod_walterwhite")
+
         ::Stripe::Product
           .expects(:retrieve)
           .with("prod_walterwhite", DiscourseSubscriptions::Stripe.request_opts)
@@ -224,6 +228,52 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
           },
         )
       end
+
+      it "returns 404 for a product outside the allowlist" do
+        ::Stripe::Product.expects(:retrieve).never
+        ::Stripe::Price.expects(:list).never
+
+        get "/s/prod_hidden.json"
+
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
+  describe "#contributors" do
+    fab!(:contributor, :user)
+    fab!(:hidden_contributor, :user)
+
+    before do
+      SiteSetting.discourse_subscriptions_campaign_show_contributors = true
+      SiteSetting.discourse_subscriptions_campaign_product = ""
+      SiteSetting.hide_user_profiles_from_public = false
+      SiteSetting.allow_users_to_hide_profile = true
+      contributor.user_stat.update!(post_count: 1)
+      hidden_contributor.user_stat.update!(post_count: 1)
+      hidden_contributor.user_option.update!(hide_profile: true)
+      Fabricate(:customer, product_id: "prodct_23456", user_id: contributor.id, customer_id: "x")
+      Fabricate(
+        :customer,
+        product_id: "prod_campaign",
+        user_id: hidden_contributor.id,
+        customer_id: "y",
+      )
+    end
+
+    it "enforces profile visibility for anonymous contributors" do
+      get "/s/contributors.json"
+
+      expect(response).to have_http_status(:ok)
+      visible_contributor_ids = response.parsed_body.map { |serialized_user| serialized_user["id"] }
+
+      SiteSetting.hide_user_profiles_from_public = true
+
+      get "/s/contributors.json"
+
+      expect(visible_contributor_ids).to contain_exactly(contributor.id)
+      expect(response).to have_http_status(:forbidden)
+      expect(response.parsed_body).to include("error_type" => "invalid_access")
     end
   end
 
@@ -238,12 +288,14 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
     end
 
     context "when authenticated" do
+      fab!(:published_product) { Fabricate(:product, external_id: "product_12345") }
+
       before { sign_in(user) }
 
       describe "#create" do
         before do
           ::Stripe::Customer
-            .expects(:create)
+            .stubs(:create)
             .with(anything, DiscourseSubscriptions::Stripe.request_opts)
             .returns(id: "cus_1234")
         end
@@ -322,6 +374,28 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
           expect {
             post "/s/create.json", params: { plan: "plan_1234", source: "tok_1234" }
           }.to change { DiscourseSubscriptions::Customer.count }
+        end
+
+        it "rejects a plan outside the allowlist" do
+          ::Stripe::Price
+            .expects(:retrieve)
+            .with("price_hidden", DiscourseSubscriptions::Stripe.request_opts)
+            .returns(
+              type: "recurring",
+              product: "prod_hidden",
+              metadata: {
+                group_name: "awesome",
+                trial_period_days: 0,
+              },
+            )
+          ::Stripe::Customer.expects(:create).never
+          ::Stripe::Subscription.expects(:create).never
+
+          expect {
+            post "/s/create.json", params: { plan: "price_hidden", source: "tok_1234" }
+          }.not_to change { DiscourseSubscriptions::Customer.count }
+
+          expect(response.status).to eq(404)
         end
 
         it "returns 422 on a one time payment subscription error" do
@@ -468,7 +542,7 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
           ::Stripe::Price
             .expects(:retrieve)
             .with(anything, DiscourseSubscriptions::Stripe.request_opts)
-            .returns(type: "recurring", metadata: {})
+            .returns(type: "recurring", product: "product_12345", metadata: {})
             .twice
           ::Stripe::Subscription
             .expects(:create)
@@ -494,7 +568,7 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
             ::Stripe::Price
               .expects(:retrieve)
               .with(anything, DiscourseSubscriptions::Stripe.request_opts)
-              .returns(type: "recurring", metadata: {})
+              .returns(type: "recurring", product: "product_12345", metadata: {})
             ::Stripe::Subscription
               .expects(:create)
               .with(anything, DiscourseSubscriptions::Stripe.request_opts)
@@ -666,7 +740,7 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
             ::Stripe::Price
               .expects(:retrieve)
               .with(anything, DiscourseSubscriptions::Stripe.request_opts)
-              .returns(id: "plan_1234", product: "prod_1234", metadata: {})
+              .returns(id: "plan_1234", product: "product_12345", metadata: {})
             ::Stripe::Subscription
               .expects(:retrieve)
               .with(anything, DiscourseSubscriptions::Stripe.request_opts)
@@ -685,7 +759,7 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
             ::Stripe::Price
               .expects(:retrieve)
               .with(anything, DiscourseSubscriptions::Stripe.request_opts)
-              .returns(id: "plan_1234", product: "prod_1234", metadata: {})
+              .returns(id: "plan_1234", product: "product_12345", metadata: {})
             ::Stripe::Invoice
               .expects(:retrieve)
               .with(anything, DiscourseSubscriptions::Stripe.request_opts)
@@ -708,7 +782,7 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
           ::Stripe::Price
             .expects(:retrieve)
             .with(anything, DiscourseSubscriptions::Stripe.request_opts)
-            .returns(id: "plan_1234", product: "prod_1234", metadata: {})
+            .returns(id: "plan_1234", product: "product_12345", metadata: {})
           ::Stripe::Subscription
             .expects(:retrieve)
             .with(anything, DiscourseSubscriptions::Stripe.request_opts)
@@ -719,6 +793,24 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
 
           post "/s/finalize.json"
           expect(response.status).to eq(403)
+        end
+
+        it "rejects a pending plan outside the allowlist" do
+          server_session["pending_subscription"] = {
+            transaction_id: "sub_123",
+            plan_id: "price_hidden",
+          }
+          ::Stripe::Price
+            .expects(:retrieve)
+            .with("price_hidden", DiscourseSubscriptions::Stripe.request_opts)
+            .returns(id: "price_hidden", product: "prod_hidden", metadata: {})
+          ::Stripe::Subscription.expects(:retrieve).never
+
+          expect { post "/s/finalize.json" }.not_to change {
+            DiscourseSubscriptions::Customer.count
+          }
+
+          expect(response.status).to eq(404)
         end
       end
 
@@ -742,7 +834,13 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
             ::Stripe::Price
               .expects(:retrieve)
               .with(anything, DiscourseSubscriptions::Stripe.request_opts)
-              .returns(type: "recurring", metadata: { group_name: "admins" })
+              .returns(
+                type: "recurring",
+                product: "product_12345",
+                metadata: {
+                  group_name: "admins",
+                },
+              )
             post "/s/create.json", params: { plan: "plan_1234", source: "tok_1234" }
             expect(user.admin).to eq false
           end
@@ -751,7 +849,13 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
             ::Stripe::Price
               .expects(:retrieve)
               .with(anything, DiscourseSubscriptions::Stripe.request_opts)
-              .returns(type: "recurring", metadata: { group_name: "other" })
+              .returns(
+                type: "recurring",
+                product: "product_12345",
+                metadata: {
+                  group_name: "other",
+                },
+              )
             post "/s/create.json", params: { plan: "plan_1234", source: "tok_1234" }
             expect(user.groups).to be_empty
           end
@@ -766,7 +870,13 @@ RSpec.describe DiscourseSubscriptions::SubscribeController do
             ::Stripe::Price
               .expects(:retrieve)
               .with(anything, DiscourseSubscriptions::Stripe.request_opts)
-              .returns(type: "recurring", metadata: { group_name: group_name })
+              .returns(
+                type: "recurring",
+                product: "product_12345",
+                metadata: {
+                  group_name: group_name,
+                },
+              )
           end
 
           it "does not add the user to the group when subscription fails" do

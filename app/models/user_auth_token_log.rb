@@ -10,13 +10,13 @@ end
 #
 #  id                 :integer          not null, primary key
 #  action             :string           not null
+#  auth_token         :string
+#  client_ip          :inet
+#  path               :string
+#  user_agent         :string
+#  created_at         :datetime
 #  user_auth_token_id :integer
 #  user_id            :integer
-#  client_ip          :inet
-#  user_agent         :string
-#  auth_token         :string
-#  created_at         :datetime
-#  path               :string
 #
 # Indexes
 #

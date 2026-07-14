@@ -166,10 +166,26 @@
           ]
         },
         "featured_topic": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer"
+            },
+            "title": {
+              "type": "string"
+            },
+            "fancy_title": {
+              "type": "string"
+            },
+            "slug": {
+              "type": "string"
+            },
+            "posts_count": {
+              "type": "integer"
+            }
+          },
+          "required": ["id", "title", "fancy_title", "slug", "posts_count"]
         },
         "staged": {
           "type": "boolean"
@@ -753,6 +769,12 @@
             "notify_on_linked_posts": {
               "type": "boolean"
             },
+            "push_notification_level": {
+              "type": "string"
+            },
+            "enable_upcoming_change_available_notifications": {
+              "type": "boolean"
+            },
             "include_tl0_in_digests": {
               "type": "boolean"
             },
@@ -859,6 +881,8 @@
             "email_in_reply_to",
             "like_notification_frequency",
             "notify_on_linked_posts",
+            "push_notification_level",
+            "enable_upcoming_change_available_notifications",
             "include_tl0_in_digests",
             "theme_ids",
             "theme_key_seq",

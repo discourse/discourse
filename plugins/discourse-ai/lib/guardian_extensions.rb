@@ -53,7 +53,6 @@ module DiscourseAi
     def can_request_summary?
       return false if anonymous?
 
-      user_group_ids = user.group_ids
       if (ai_agent = AiAgent.find_by_id_from_cache(SiteSetting.ai_summarization_agent)).blank?
         return false
       end
@@ -72,6 +71,14 @@ module DiscourseAi
       end
 
       user.in_any_groups?(SiteSetting.ai_bot_debugging_allowed_groups_map)
+    end
+
+    def can_send_pm_to_ai_bot?(target)
+      return false if anonymous?
+      return false if !SiteSetting.discourse_ai_enabled || !SiteSetting.ai_bot_enabled
+      return false if !target.is_a?(::User)
+
+      DiscourseAi::AiBot::EntryPoint.personal_message_bot_user_ids(user).include?(target.id)
     end
 
     def can_share_ai_bot_conversation?(target)

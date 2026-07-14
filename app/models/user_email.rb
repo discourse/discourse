@@ -19,9 +19,9 @@ class UserEmail < ActiveRecord::Base
 
   scope :secondary, -> { where(primary: false) }
 
-  before_save -> { destroy_email_tokens(self.email_was) }, if: :will_save_change_to_email?
+  before_save -> { destroy_email_tokens(email_was) }, if: :will_save_change_to_email?
 
-  after_destroy { destroy_email_tokens(self.email) }
+  after_destroy { destroy_email_tokens(email) }
   def self.ensure_consistency!
     user_ids_without_primary_email = DB.query_single <<~SQL
       SELECT u.id
@@ -42,8 +42,8 @@ class UserEmail < ActiveRecord::Base
 
   def normalize_email
     self.normalized_email =
-      if self.email.present?
-        username, domain = self.email.split("@", 2)
+      if email.present?
+        username, domain = email.split("@", 2)
         username = username.gsub(".", "").gsub(/\+.*/, "")
         "#{username}@#{domain}"
       end
@@ -52,24 +52,24 @@ class UserEmail < ActiveRecord::Base
   private
 
   def strip_downcase_email
-    if self.email
-      self.email = self.email.strip
-      self.email = self.email.downcase
+    if email
+      self.email = email.strip
+      self.email = email.downcase
     end
   end
 
   def validate_email?
-    return false if self.skip_validate_email
+    return false if skip_validate_email
     email_changed?
   end
 
   def validate_unique_email?
-    return false if self.skip_validate_unique_email
+    return false if skip_validate_unique_email
     will_save_change_to_email?
   end
 
   def normalize_emails?
-    return false if self.skip_normalize_email
+    return false if skip_normalize_email
 
     SiteSetting.normalize_emails?
   end
@@ -79,7 +79,7 @@ class UserEmail < ActiveRecord::Base
     scope = scope.where.not(id: id) if persisted?
 
     email_exists =
-      if self.normalize_emails?
+      if normalize_emails?
         scope.where(
           "lower(email) = ? OR lower(normalized_email) = ?",
           email,
@@ -89,12 +89,12 @@ class UserEmail < ActiveRecord::Base
         scope.where("lower(email) = ?", email).exists?
       end
 
-    self.errors.add(:email, :taken) if email_exists
+    errors.add(:email, :taken) if email_exists
   end
 
   def user_id_not_changed
-    if self.will_save_change_to_user_id? && self.persisted?
-      self.errors.add(
+    if will_save_change_to_user_id? && persisted?
+      errors.add(
         :user_id,
         I18n.t(
           "activerecord.errors.models.user_email.attributes.user_id.reassigning_primary_email",
@@ -113,12 +113,12 @@ end
 # Table name: user_emails
 #
 #  id               :integer          not null, primary key
-#  user_id          :integer          not null
 #  email            :string(513)      not null
+#  normalized_email :string
 #  primary          :boolean          default(FALSE), not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  normalized_email :string
+#  user_id          :integer          not null
 #
 # Indexes
 #

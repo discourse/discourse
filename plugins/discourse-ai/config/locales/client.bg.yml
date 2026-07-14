@@ -34,6 +34,14 @@ bg:
             canned_reply:
               label: "Отговорете"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Зарежда се..."
+        tool: "Действия"
+        user: "Потребител"
+        approve: "Одобри"
+        reject: "Отхвърли"
+        approved: "Одобрена"
+        rejected: "Отхвърлени"
       llm_selector:
         none: "Без"
       features:
@@ -46,6 +54,8 @@ bg:
           one: "(още %{count})"
           other: "(още %{count})"
         collapse_list: "(покажи по-малко)"
+        nav:
+          enabled: "Да е включен"
         filters:
           all: "Всички"
           reset: "Нулиране"
@@ -56,6 +66,7 @@ bg:
       modals:
         select_option: "Изберете опция..."
       translations:
+        category_scope: "Категории"
         stats:
           eta_minutes:
             one: "%{count} минута"
@@ -94,6 +105,12 @@ bg:
         save: "Запази"
         enabled: "Да е включен?"
         delete: "Изтрий"
+        thinking_effort_options:
+          none: "Без"
+          low: "Ниска"
+          medium: "Среден"
+          high: "Висок"
+          max: "Максимално"
         response_format:
           open_modal: "Редактирай"
           modal:

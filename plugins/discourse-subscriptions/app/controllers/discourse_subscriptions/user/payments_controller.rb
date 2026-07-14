@@ -10,54 +10,50 @@ module DiscourseSubscriptions
       requires_login
 
       def index
-        begin
-          customer = Customer.where(user_id: current_user.id)
-          customer_ids = customer.map { |c| c.customer_id } if customer
-          product_ids = Product.all.pluck(:external_id)
+        customer = Customer.where(user_id: current_user.id)
+        customer_ids = customer.map { |c| c.customer_id } if customer
+        product_ids = Product.all.pluck(:external_id)
 
-          data = []
+        data = []
 
-          if customer_ids.present? && product_ids.present?
-            customer_ids.each do |customer_id|
-              # lots of matching because the Stripe API doesn't make it easy to match products => payments except from invoices
-              all_invoices = ::Stripe::Invoice.list({ customer: customer_id }, stripe_request_opts)
-              invoices_with_products = parse_invoices(all_invoices, product_ids)
-              invoice_ids = invoices_with_products.map { |invoice| invoice[:id] }
-              payments =
-                ::Stripe::PaymentIntent.list({ customer: customer_id }, stripe_request_opts)
-              payments_from_invoices =
-                payments[:data].select { |payment| invoice_ids.include?(payment[:invoice]) }
+        if customer_ids.present? && product_ids.present?
+          customer_ids.each do |customer_id|
+            # lots of matching because the Stripe API doesn't make it easy to match products => payments except from invoices
+            all_invoices = ::Stripe::Invoice.list({ customer: customer_id }, stripe_request_opts)
+            invoices_with_products = parse_invoices(all_invoices, product_ids)
+            invoice_ids = invoices_with_products.map { |invoice| invoice[:id] }
+            payments = ::Stripe::PaymentIntent.list({ customer: customer_id }, stripe_request_opts)
+            payments_from_invoices =
+              payments[:data].select { |payment| invoice_ids.include?(payment[:invoice]) }
 
-              if SiteSetting.discourse_subscriptions_enable_verbose_logging
-                Rails.logger.warn("Payments from invoices: #{payments_from_invoices}")
-              end
-
-              # Pricing table one-off purchases do not have invoices
-              payments_without_invoices =
-                payments[:data].select { |payment| payment[:invoice].nil? }
-
-              if SiteSetting.discourse_subscriptions_enable_verbose_logging
-                Rails.logger.warn("Payments without invoices: #{payments_without_invoices}")
-              end
-
-              data = data | payments_from_invoices | payments_without_invoices
-            end
-          end
-
-          if SiteSetting.discourse_subscriptions_pricing_table_enabled && current_user.email
-            related_guest_payments = fetch_guest_payments(current_user.email)
             if SiteSetting.discourse_subscriptions_enable_verbose_logging
-              Rails.logger.warn("Related guest payments: #{related_guest_payments}")
+              Rails.logger.warn("Payments from invoices: #{payments_from_invoices}")
             end
-            data = data | related_guest_payments
+
+            # Pricing table one-off purchases do not have invoices
+            payments_without_invoices = payments[:data].select { |payment| payment[:invoice].nil? }
+
+            if SiteSetting.discourse_subscriptions_enable_verbose_logging
+              Rails.logger.warn("Payments without invoices: #{payments_without_invoices}")
+            end
+
+            data = data | payments_from_invoices | payments_without_invoices
           end
-
-          data = data.sort_by { |pmt| pmt[:created] }.reverse
-
-          render_json_dump data
-        rescue ::Stripe::InvalidRequestError => e
-          render_json_error e.message
         end
+
+        if SiteSetting.discourse_subscriptions_pricing_table_enabled && current_user.email
+          related_guest_payments = fetch_guest_payments(current_user.email)
+          if SiteSetting.discourse_subscriptions_enable_verbose_logging
+            Rails.logger.warn("Related guest payments: #{related_guest_payments}")
+          end
+          data = data | related_guest_payments
+        end
+
+        data = data.sort_by { |pmt| pmt[:created] }.reverse
+
+        render_json_dump data
+      rescue ::Stripe::InvalidRequestError => e
+        render_json_error e.message
       end
 
       private

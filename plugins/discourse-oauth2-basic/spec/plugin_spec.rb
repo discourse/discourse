@@ -123,6 +123,95 @@ describe OAuth2BasicAuthenticator do
         end
       end
 
+      describe "group syncing" do
+        before { SiteSetting.oauth2_json_groups_path = "account.groups" }
+
+        it "sets associated_groups from the configured path" do
+          body = { account: { email: "newemail@example.com", groups: %w[admins editors] } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.associated_groups).to eq(
+            [{ id: "admins", name: "admins" }, { id: "editors", name: "editors" }],
+          )
+        end
+
+        it "clears associated_groups when the path resolves to an empty array" do
+          body = { account: { email: "newemail@example.com", groups: [] } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.associated_groups).to eq([])
+        end
+
+        it "clears associated_groups when the path doesn't resolve" do
+          body = { account: { email: "newemail@example.com" } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.associated_groups).to eq([])
+        end
+
+        it "clears associated_groups and logs when the path resolves to a non-array" do
+          body = { account: { email: "newemail@example.com", groups: "admins" } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.associated_groups).to eq([])
+        end
+
+        it "leaves associated_groups nil when no path is configured" do
+          SiteSetting.oauth2_json_groups_path = ""
+          body = { account: { email: "newemail@example.com", groups: %w[admins editors] } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.associated_groups).to be_nil
+        end
+      end
+
+      describe "user field mappings" do
+        fab!(:user_field)
+
+        before do
+          SiteSetting.oauth2_user_field_mappings = [
+            { "path" => "account.department", "user_field_id" => user_field.id },
+          ].to_json
+        end
+
+        it "populates user_field_values from the user JSON" do
+          body = { account: { email: "newemail@example.com", department: "Engineering" } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.user_field_values).to eq(user_field.id.to_s => "Engineering")
+        end
+
+        it "clears the field when the path resolves to an empty string" do
+          body = { account: { email: "newemail@example.com", department: "" } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.user_field_values).to eq(user_field.id.to_s => "")
+        end
+
+        it "skips the mapping when the path doesn't resolve" do
+          body = { account: { email: "newemail@example.com" } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.user_field_values).to eq({})
+        end
+
+        it "joins array values with commas" do
+          body = { account: { email: "newemail@example.com", department: %w[Eng Ops] } }.to_json
+          stub_request(:get, SiteSetting.oauth2_user_json_url).to_return(status: 200, body: body)
+
+          result = authenticator.after_authenticate(auth)
+          expect(result.user_field_values).to eq(user_field.id.to_s => "Eng,Ops")
+        end
+      end
+
       describe "required attributes" do
         after { DiscoursePluginRegistry.reset_register!(:oauth2_basic_required_json_paths) }
 

@@ -1,17 +1,5 @@
 # frozen_string_literal: true
 
-unless defined?(FakeExternalAgent)
-  class FakeExternalAgent < DiscourseAi::Agents::Agent
-    def tools
-      []
-    end
-
-    def system_prompt
-      "Test agent"
-    end
-  end
-end
-
 RSpec.describe "Admin AI features configuration" do
   fab!(:admin)
   fab!(:llm_model)
@@ -32,24 +20,25 @@ RSpec.describe "Admin AI features configuration" do
     sign_in(admin)
   end
 
-  it "lists all agent backed AI features separated by configured/unconfigured" do
-    all_modules = DiscourseAi::Configuration::Module.all
+  it "lists all persona backed AI features separated by enabled/not enabled" do
+    all_modules = DiscourseAi::Configuration::Module.all.select(&:visible?)
     configured_count = all_modules.count(&:enabled?)
-
     ai_features_page.visit
-    ai_features_page.toggle_configured
+    ai_features_page.toggle_enabled
 
     expect(ai_features_page).to have_listed_modules(configured_count)
 
-    ai_features_page.toggle_unconfigured
+    ai_features_page.toggle_not_enabled
 
     expect(ai_features_page).to have_listed_modules(all_modules.size - configured_count)
+
+    screenshot_marker(label: "ai-admin-features")
   end
 
   it "lists the agent used for the corresponding AI feature" do
     ai_features_page.visit
 
-    ai_features_page.toggle_configured
+    ai_features_page.toggle_enabled
 
     expect(ai_features_page).to have_feature_agent("topic_summaries", summarization_agent.name)
   end
@@ -57,7 +46,7 @@ RSpec.describe "Admin AI features configuration" do
   it "lists the groups allowed to use the AI feature" do
     ai_features_page.visit
 
-    ai_features_page.toggle_configured
+    ai_features_page.toggle_enabled
 
     expect(ai_features_page).to have_feature_groups("topic_summaries", [group_1.name, group_2.name])
   end
@@ -85,7 +74,7 @@ RSpec.describe "Admin AI features configuration" do
     expect(page).to have_css(".ai-feature-editor")
 
     field = form.field("ai_bot_allowed_groups")
-    expect(field.component).to have_css(".list-setting")
+    expect(field.component).to have_css(".group-chooser")
     expect(field.component).to have_content(group_1.name)
     expect(field.component).to have_content(group_2.name)
   end
@@ -111,19 +100,16 @@ RSpec.describe "Admin AI features configuration" do
   context "with external AI features" do
     let(:fake_plugin) do
       plugin = Plugin::Instance.new
-      plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+      plugin.path = "#{Rails.root.join("spec/fixtures/plugins/my_plugin/plugin.rb")}"
       plugin
     end
 
     before do
-      DiscoursePluginRegistry.register_external_ai_feature(
-        {
-          module_name: :test_external,
-          feature: :test_feature,
-          agent_klass: FakeExternalAgent,
-          enabled_by_setting: nil,
-        },
-        fake_plugin,
+      DiscourseAi.register_feature(
+        module_name: :test_external,
+        feature: :test_feature,
+        agent_klass: DiscourseAi::TestHelpers::FakeExternalAgent,
+        plugin: fake_plugin,
       )
     end
 

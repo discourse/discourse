@@ -14,6 +14,18 @@ module DiscourseAi
 
       has_many :inferred_concept_topics
       has_many :inferred_concepts, through: :inferred_concept_topics
+
+      has_many :ai_conversation_stars,
+               class_name: "DiscourseAi::AiBot::ConversationStar",
+               foreign_key: :topic_id
+
+      def self.ai_conversation_custom_field_join_sql
+        <<~SQL.squish
+          INNER JOIN topic_custom_fields tcf ON tcf.topic_id = topics.id
+            AND tcf.name = #{connection.quote(DiscourseAi::AiBot::TOPIC_AI_BOT_PM_FIELD)}
+            AND tcf.value = 't'
+        SQL
+      end
     end
   end
 end

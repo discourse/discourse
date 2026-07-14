@@ -36,6 +36,14 @@ zh_TW:
             canned_reply:
               label: "回覆"
     discourse_ai:
+      ai_tool_approval:
+        loading: "載入中..."
+        tool: "動作"
+        user: "使用者"
+        approve: "批准"
+        reject: "拒絕"
+        approved: "已同意"
+        rejected: "拒絶"
       llm_selector:
         none: "無"
       features:
@@ -47,6 +55,8 @@ zh_TW:
         expand_list:
           other: "(%{count} 更多)"
         collapse_list: "(顯示更少)"
+        nav:
+          enabled: "啟用"
         filters:
           all: "全部"
           reset: "重置"
@@ -56,6 +66,7 @@ zh_TW:
           name: "垃圾內容"
       translations:
         title: "翻譯"
+        category_scope: "分類"
         stats:
           eta_minutes:
             other: "%{count} 分"
@@ -94,6 +105,12 @@ zh_TW:
         mcp_tools_modal:
           clear_all: "清除全部"
         delete: "刪除"
+        thinking_effort_options:
+          none: "無"
+          low: "低"
+          medium: "中間的"
+          high: "高"
+          max: "最大"
         response_format:
           open_modal: "編輯"
           modal:
@@ -206,6 +223,7 @@ zh_TW:
           today: "今天"
           last_7_days: "過去 7 天"
           last_30_days: "過去 30 天"
+          scroll_to_bottom: "捲動到底部"
       sentiments:
         sentiment_analysis:
           filter_types:

@@ -23,10 +23,10 @@ class ThemeField < ActiveRecord::Base
 
   after_save do
     if (
-         self.type_id == ThemeField.types[:theme_screenshot_upload_var] ||
-           self.type_id == ThemeField.types[:theme_upload_var]
+         type_id == ThemeField.types[:theme_screenshot_upload_var] ||
+           type_id == ThemeField.types[:theme_upload_var]
        ) && saved_change_to_upload_id?
-      UploadReference.ensure_exist!(upload_ids: [self.upload_id], target: self)
+      UploadReference.ensure_exist!(upload_ids: [upload_id], target: self)
     end
   end
 
@@ -136,7 +136,7 @@ class ThemeField < ActiveRecord::Base
       .select { |node| inline_javascript?(node) }
       .each_with_index do |node, index|
         unique_name =
-          "theme-#{theme_id}-inline-#{Theme.targets[self.target_id]}-#{name}#{"-#{index + 1}" if index > 0}"
+          "theme-#{theme_id}-inline-#{Theme.targets[target_id]}-#{name}#{"-#{index + 1}" if index > 0}"
 
         cache =
           raw_javascript_caches.find { |c| c.name == unique_name } ||
@@ -170,9 +170,9 @@ class ThemeField < ActiveRecord::Base
   end
 
   def validate_svg_sprite_xml
-    upload = Upload.find_by(id: self.upload_id)
+    upload = Upload.find_by(id: upload_id)
 
-    return "Error with #{self.name}: No upload found for the provided upload_id" if upload.nil?
+    return "Error with #{name}: No upload found for the provided upload_id" if upload.nil?
 
     if Discourse.store.external?
       path = Discourse.store.download(upload)
@@ -180,19 +180,19 @@ class ThemeField < ActiveRecord::Base
       path = Discourse.store.path_for(upload)
     end
 
-    return "Error with #{self.name}: Could not download icon sprite" if path.nil?
+    return "Error with #{name}: Could not download icon sprite" if path.nil?
 
     error = nil
 
     begin
       content = File.read(path)
       if content.to_s.bytesize > SvgSprite::MAX_THEME_SPRITE_SIZE
-        error = "Error with #{self.name}: Icon sprite file is too large"
+        error = "Error with #{name}: Icon sprite file is too large"
       else
         Nokogiri.XML(content) { |config| config.options = Nokogiri::XML::ParseOptions::NOBLANKS }
       end
     rescue => e
-      error = "Error with #{self.name}: #{e.inspect}"
+      error = "Error with #{name}: #{e.inspect}"
     end
 
     error
@@ -208,14 +208,12 @@ class ThemeField < ActiveRecord::Base
 
     fallback_data =
       fallback_fields.each_with_index.map do |field, index|
-        begin
-          field.raw_translation_data(internal: internal)
-        rescue ThemeTranslationParser::InvalidYaml
-          # If this is the locale with the error, raise it.
-          # If not, let the other theme_field raise the error when it processes itself
-          raise if field.id == id
-          {}
-        end
+        field.raw_translation_data(internal: internal)
+      rescue ThemeTranslationParser::InvalidYaml
+        # If this is the locale with the error, raise it.
+        # If not, let the other theme_field raise the error when it processes itself
+        raise if field.id == id
+        {}
       end
 
     # TODO: Deduplicate the fallback data in the same way as JSLocaleHelper#load_translations_merged
@@ -238,10 +236,10 @@ class ThemeField < ActiveRecord::Base
     data = translation_data
 
     js = <<~JS
-      /* Translation data for theme #{self.theme_id} (#{self.name})*/
+      /* Translation data for theme #{theme_id} (#{name})*/
       const localeData = window._discourse_locale_data ??= {};
       localeData.theme ??= {};
-      localeData.theme[#{self.theme_id}] = #{data.to_json};
+      localeData.theme[#{theme_id}] = #{data.to_json};
     JS
 
     javascript_cache.content = js
@@ -258,7 +256,7 @@ class ThemeField < ActiveRecord::Base
   end
 
   def validate_yaml!
-    return unless self.name == "yaml"
+    return unless name == "yaml"
 
     errors = []
 
@@ -328,52 +326,50 @@ class ThemeField < ActiveRecord::Base
   end
 
   def basic_html_field?
-    ThemeField.basic_targets.include?(Theme.targets[self.target_id].to_s) &&
-      ThemeField.html_fields.include?(self.name)
+    ThemeField.basic_targets.include?(Theme.targets[target_id].to_s) &&
+      ThemeField.html_fields.include?(name)
   end
 
   def extra_js_field?
-    Theme.targets[self.target_id] == :extra_js
+    Theme.targets[target_id] == :extra_js
   end
 
   def js_tests_field?
-    Theme.targets[self.target_id] == :tests_js
+    Theme.targets[target_id] == :tests_js
   end
 
   def basic_scss_field?
-    ThemeField.basic_targets.include?(Theme.targets[self.target_id].to_s) &&
-      ThemeField.scss_fields.include?(self.name)
+    ThemeField.basic_targets.include?(Theme.targets[target_id].to_s) &&
+      ThemeField.scss_fields.include?(name)
   end
 
   def extra_scss_field?
-    Theme.targets[self.target_id] == :extra_scss
+    Theme.targets[target_id] == :extra_scss
   end
 
   def settings_field?
-    Theme.targets[:settings] == self.target_id
+    Theme.targets[:settings] == target_id
   end
 
   def translation_field?
-    Theme.targets[:translations] == self.target_id
+    Theme.targets[:translations] == target_id
   end
 
   def svg_sprite_field?
-    ThemeField.theme_var_type_ids.include?(self.type_id) &&
-      self.name == SvgSprite.theme_sprite_variable_name
+    ThemeField.theme_var_type_ids.include?(type_id) && name == SvgSprite.theme_sprite_variable_name
   end
 
   def migration_field?
-    Theme.targets[:migrations] == self.target_id
+    Theme.targets[:migrations] == target_id
   end
 
   def ensure_baked!
-    needs_baking = !self.value_baked || compiler_version != Theme.compiler_version
+    needs_baking = !value_baked || compiler_version != Theme.compiler_version
     return unless needs_baking
 
     if basic_html_field? || translation_field?
-      self.value_baked, self.error =
-        translation_field? ? process_translation : process_html(self.value)
-      self.error = nil if self.error.blank?
+      self.value_baked, self.error = translation_field? ? process_translation : process_html(value)
+      self.error = nil if error.blank?
       self.compiler_version = Theme.compiler_version
       CSP::Extension.clear_theme_extensions_cache!
     elsif extra_js_field? || js_tests_field?
@@ -399,13 +395,9 @@ class ThemeField < ActiveRecord::Base
       self.compiler_version = Theme.compiler_version
     end
 
-    if self.will_save_change_to_value_baked? || self.will_save_change_to_compiler_version? ||
-         self.will_save_change_to_error?
-      self.update_columns(
-        value_baked: value_baked,
-        compiler_version: compiler_version,
-        error: error,
-      )
+    if will_save_change_to_value_baked? || will_save_change_to_compiler_version? ||
+         will_save_change_to_error?
+      update_columns(value_baked: value_baked, compiler_version: compiler_version, error: error)
     end
   rescue ActiveRecord::ReadOnlyError
     # Just noop if ActiveRecord is preventing writes for now. In an ideal world, this method will not be called in GET
@@ -414,7 +406,7 @@ class ThemeField < ActiveRecord::Base
 
   def scss_entrypoint_name
     if name == "scss"
-      self.target_name
+      target_name
     elsif target_name == "common" && name == "color_definitions"
       "color_definitions"
     elsif target_name == "common" && name == "embedded_scss"
@@ -427,15 +419,15 @@ class ThemeField < ActiveRecord::Base
   def compile_scss(prepended_scss = nil)
     prepended_scss ||= Stylesheet::Importer.new({}).prepended_scss
 
-    self.theme.with_scss_load_paths do |load_paths|
+    theme.with_scss_load_paths do |load_paths|
       Stylesheet::Compiler.compile(
         <<~SCSS,
           #{prepended_scss}
-          #{self.theme.scss_variables}
+          #{theme.scss_variables}
           @import \"theme-entrypoint/#{scss_entrypoint_name}\";
         SCSS
-        "#{Theme.targets[self.target_id]}.scss",
-        theme: self.theme,
+        "#{Theme.targets[target_id]}.scss",
+        theme: theme,
         load_paths: load_paths,
       )
     end
@@ -458,15 +450,15 @@ class ThemeField < ActiveRecord::Base
     result = ["failed"]
     begin
       result = compile_scss
-      if contains_optimized_link?(self.value)
+      if contains_optimized_link?(value)
         self.error = I18n.t("themes.errors.optimized_link")
-      elsif contains_ember_css_selector?(self.value)
+      elsif contains_ember_css_selector?(value)
         self.error = I18n.t("themes.ember_selector_error")
       else
         self.error = nil unless error.nil?
       end
     rescue SassC::SyntaxError, SassC::NotRenderedError, AssetProcessor::TranspileError => e
-      self.error = e.message unless self.destroyed?
+      self.error = e.message unless destroyed?
     end
     self.compiler_version = Theme.compiler_version
     self.value_baked = Digest::SHA1.hexdigest(result.join(",")) # We don't use the compiled CSS here, we just use it to invalidate the stylesheet cache
@@ -678,26 +670,24 @@ class ThemeField < ActiveRecord::Base
   end
 
   def upsert_svg_sprite!
-    begin
-      content = upload.content
-    rescue => e
-      Discourse.warn_exception(e, message: "Failed to fetch svg sprite for theme field #{id}")
+    content = upload.content
+  rescue => e
+    Discourse.warn_exception(e, message: "Failed to fetch svg sprite for theme field #{id}")
+  else
+    if content.length > SvgSprite::MAX_THEME_SPRITE_SIZE
+      Rails.logger.warn(
+        "can't store theme svg sprite for theme #{theme_id} and upload #{upload_id}, sprite too big",
+      )
     else
-      if content.length > SvgSprite::MAX_THEME_SPRITE_SIZE
-        Rails.logger.warn(
-          "can't store theme svg sprite for theme #{theme_id} and upload #{upload_id}, sprite too big",
-        )
-      else
-        ThemeSvgSprite.upsert(
-          { theme_id: theme_id, upload_id: upload_id, sprite: content },
-          unique_by: :theme_id,
-        )
-      end
+      ThemeSvgSprite.upsert(
+        { theme_id: theme_id, upload_id: upload_id, sprite: content },
+        unique_by: :theme_id,
+      )
     end
   end
 
   def upload_url
-    self.upload&.url
+    upload&.url
   end
 
   private
@@ -716,17 +706,14 @@ class ThemeField < ActiveRecord::Base
 
   def migration_filename_is_valid
     if !name.match?(/\A\d{4}-[a-zA-Z0-9]+/)
-      self.errors.add(
-        :base,
-        I18n.t("themes.import_error.migrations.invalid_filename", filename: name),
-      )
+      errors.add(:base, I18n.t("themes.import_error.migrations.invalid_filename", filename: name))
       return
     end
 
     # the 5 here is the length of the first 4 digits and the dash that follows
     # them
     if name.size - 5 > MIGRATION_NAME_PART_MAX_LENGTH
-      self.errors.add(
+      errors.add(
         :base,
         I18n.t(
           "themes.import_error.migrations.name_too_long",
@@ -742,17 +729,17 @@ end
 # Table name: theme_fields
 #
 #  id               :integer          not null, primary key
-#  theme_id         :integer          not null
-#  target_id        :integer          not null
+#  compiler_version :string(50)       default("0"), not null
+#  error            :string
 #  name             :string(255)      not null
 #  value            :text             not null
 #  value_baked      :text
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
-#  compiler_version :string(50)       default("0"), not null
-#  error            :string
-#  upload_id        :integer
+#  target_id        :integer          not null
+#  theme_id         :integer          not null
 #  type_id          :integer          default(0), not null
+#  upload_id        :integer
 #
 # Indexes
 #

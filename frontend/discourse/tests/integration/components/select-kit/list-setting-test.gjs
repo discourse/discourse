@@ -4,7 +4,7 @@ import ListSetting from "discourse/select-kit/components/list-setting";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
-module("Integration | Component | select-kit/list-setting", function (hooks) {
+module("Integration | Component | SelectKit | ListSetting", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

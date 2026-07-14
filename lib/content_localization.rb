@@ -7,6 +7,7 @@ class ContentLocalization
   # @return [Boolean] if the cookie is set, false otherwise
   def self.show_original?(scope)
     return true if scope&.user&.user_option&.show_original_content
+    return false if scope&.user
     scope&.request&.cookies&.key?(SHOW_ORIGINAL_COOKIE)
   end
 
@@ -43,5 +44,10 @@ class ContentLocalization
   # @return [Boolean]
   def self.show_translated_tag?(tag, scope)
     SiteSetting.content_localization_enabled && tag.locale.present? && !tag.in_user_locale?
+  end
+
+  def self.crawler_locale_param_enabled?
+    SiteSetting.content_localization_enabled && SiteSetting.content_localization_crawler_param &&
+      SiteSetting.set_locale_from_param
   end
 end

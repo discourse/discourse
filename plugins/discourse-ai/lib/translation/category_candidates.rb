@@ -8,11 +8,20 @@ module DiscourseAi
       # all categories that are eligible for translation based on site settings,
       # including those without locale detected yet.
       def self.get
-        target_category_ids = SiteSetting.ai_translation_target_categories
-        if target_category_ids.present?
-          Category.where(id: target_category_ids.split("|").map(&:to_i))
+        categories = Category.all
+        case SiteSetting.ai_translation_category_scope
+        when "public"
+          categories.where(read_restricted: false)
+        when "include"
+          categories.where(id: DiscourseAi::Translation.category_ids_with_subcategories)
+        when "include_strict"
+          categories.where(id: DiscourseAi::Translation.category_ids)
+        when "exclude"
+          categories.where.not(id: DiscourseAi::Translation.category_ids_with_subcategories)
+        when "exclude_strict"
+          categories.where.not(id: DiscourseAi::Translation.category_ids)
         else
-          Category.none
+          categories
         end
       end
 

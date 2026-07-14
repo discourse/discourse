@@ -339,6 +339,16 @@ module("Unit | Utility | uploads", function (hooks) {
       testUploadMarkdown("important.txt", { short_url }),
       `[important.txt|attachment](${short_url}) (42 Bytes)`
     );
+
+    assert.strictEqual(
+      testUploadMarkdown("_test_file_.txt", { short_url }),
+      `[_test_file_.txt|attachment](${short_url}) (42 Bytes)`
+    );
+
+    assert.strictEqual(
+      testUploadMarkdown("[foo|bar].txt", { short_url }),
+      `[foobar.txt|attachment](${short_url}) (42 Bytes)`
+    );
   });
 
   test("getUploadMarkdown - replaces GUID in image alt text on iOS", function (assert) {

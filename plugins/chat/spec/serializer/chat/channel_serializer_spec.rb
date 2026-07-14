@@ -122,4 +122,32 @@ describe Chat::ChannelSerializer do
 
     expect(serializer.as_json[:unicode_title]).to eq("🐈 Cats")
   end
+
+  describe "#last_message" do
+    fab!(:last_message) { Fabricate(:chat_message, chat_channel: chat_channel) }
+
+    before { chat_channel.update!(last_message: last_message) }
+
+    context "when the user can preview the channel" do
+      let(:guardian_user) { admin }
+
+      it "includes the last_message" do
+        expect(serializer.as_json[:last_message]).to be_present
+        expect(serializer.as_json[:last_message][:id]).to eq(last_message.id)
+      end
+    end
+
+    context "when the user cannot preview the channel" do
+      fab!(:private_channel, :private_category_channel)
+      fab!(:last_private_message) { Fabricate(:chat_message, chat_channel: private_channel) }
+
+      let(:chat_channel) { private_channel }
+
+      before { private_channel.update!(last_message: last_private_message) }
+
+      it "omits the last_message" do
+        expect(serializer.as_json[:last_message]).to be_nil
+      end
+    end
+  end
 end

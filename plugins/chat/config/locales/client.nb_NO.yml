@@ -85,6 +85,7 @@ nb_NO:
           one: "%{count} medlem"
           other: "%{count} medlemmer"
       create_channel:
+        description: "Beskrivelse"
         type: "Type"
         types:
           category: "Kategori"
@@ -177,3 +178,12 @@ nb_NO:
           fields:
             message:
               label: Send
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Kanal"
+      send_chat_message:
+        channel_id: "Kanal"
+        message: "Send"
+      chat_approval:
+        message: "Send"
+        channel_id: "Kanal"

@@ -2,6 +2,9 @@
 #  A class that handles interaction between a plugin and the Discourse App.
 #
 class DiscoursePluginRegistry
+  # Non-default plugin stylesheet targets, each rendered as its own <link> tag.
+  STYLESHEET_TARGETS = %i[desktop mobile admin]
+
   @@register_names = Set.new
 
   # Plugins often need to be able to register additional handlers, data, or
@@ -58,6 +61,7 @@ class DiscoursePluginRegistry
   define_register :stylesheets, Hash
   define_register :mobile_stylesheets, Hash
   define_register :desktop_stylesheets, Hash
+  define_register :admin_stylesheets, Hash
   define_register :color_definition_stylesheets, Hash
   define_register :serialized_current_user_fields, Set
   define_register :seed_data, ActiveSupport::HashWithIndifferentAccess
@@ -119,7 +123,10 @@ class DiscoursePluginRegistry
   define_filtered_register :search_handlers
 
   define_filtered_register :stats
+  define_filtered_register :admin_dashboard_highlight_kpis
+  define_filtered_register :admin_dashboard_sections
   define_filtered_register :bookmarkables
+  define_filtered_register :admin_dashboard_report_sources
 
   define_filtered_register :list_suggested_for_providers
 
@@ -131,24 +138,28 @@ class DiscoursePluginRegistry
 
   define_filtered_register :flag_applies_to_types
 
+  define_filtered_register :upcoming_change_conditional_display_callbacks
+
   define_filtered_register :calendar_subscription_feeds
 
   define_filtered_register :custom_filter_mappings
 
+  define_filtered_register :acl_target_classes
+
   define_filtered_register :reviewable_types do |singleton|
     singleton.define_singleton_method("reviewable_types_lookup") do
-      public_send(:"_raw_reviewable_types")
+      public_send(:_raw_reviewable_types)
         .filter_map { |h| { plugin: h[:plugin].name, klass: h[:value] } if h[:plugin].enabled? }
         .uniq
     end
   end
 
   def self.register_auth_provider(auth_provider)
-    self.auth_providers << auth_provider
+    auth_providers << auth_provider
   end
 
   def self.register_mail_poller(mail_poller)
-    self.mail_pollers << mail_poller
+    mail_pollers << mail_poller
   end
 
   def register_js(filename, options = {})
@@ -157,11 +168,11 @@ class DiscoursePluginRegistry
   end
 
   def self.register_service_worker(filename, options = {})
-    self.service_workers << filename
+    service_workers << filename
   end
 
   def self.register_svg_icon(icon)
-    self.svg_icons << icon.strip
+    svg_icons << icon.strip
   end
 
   def register_css(filename, plugin_directory_name)
@@ -170,13 +181,13 @@ class DiscoursePluginRegistry
   end
 
   def self.register_locale(locale, options = {})
-    self.locales[locale] = options
+    locales[locale] = options
   end
 
   def self.unregister_locale(locale)
     raise "unregister_locale can only be used in tests" if !Rails.env.test?
 
-    self.locales.delete(locale)
+    locales.delete(locale)
   end
 
   def register_archetype(name, options = {})
@@ -188,41 +199,38 @@ class DiscoursePluginRegistry
   def self.register_asset(asset, opts = nil, plugin_directory_name = nil)
     if asset =~ JS_REGEX
       if opts == :vendored_pretty_text
-        self.vendored_pretty_text << asset
+        vendored_pretty_text << asset
       elsif opts == :vendored_core_pretty_text
-        self.vendored_core_pretty_text << asset
+        vendored_core_pretty_text << asset
       else
-        self.javascripts << asset
+        javascripts << asset
       end
     elsif asset =~ /\.css$|\.scss\z/
       if opts == :mobile
-        self.mobile_stylesheets[plugin_directory_name] ||= Set.new
-        self.mobile_stylesheets[plugin_directory_name] << asset
+        mobile_stylesheets[plugin_directory_name] ||= Set.new
+        mobile_stylesheets[plugin_directory_name] << asset
       elsif opts == :desktop
-        self.desktop_stylesheets[plugin_directory_name] ||= Set.new
-        self.desktop_stylesheets[plugin_directory_name] << asset
+        desktop_stylesheets[plugin_directory_name] ||= Set.new
+        desktop_stylesheets[plugin_directory_name] << asset
+      elsif opts == :admin
+        admin_stylesheets[plugin_directory_name] ||= Set.new
+        admin_stylesheets[plugin_directory_name] << asset
       elsif opts == :color_definitions
-        self.color_definition_stylesheets[plugin_directory_name] = asset
+        color_definition_stylesheets[plugin_directory_name] = asset
       else
-        self.stylesheets[plugin_directory_name] ||= Set.new
-        self.stylesheets[plugin_directory_name] << asset
+        stylesheets[plugin_directory_name] ||= Set.new
+        stylesheets[plugin_directory_name] << asset
       end
     end
   end
 
   def self.stylesheets_exists?(plugin_directory_name, target = nil)
-    case target
-    when :desktop
-      self.desktop_stylesheets[plugin_directory_name].present?
-    when :mobile
-      self.mobile_stylesheets[plugin_directory_name].present?
-    else
-      self.stylesheets[plugin_directory_name].present?
-    end
+    register = target.in?(STYLESHEET_TARGETS) ? "#{target}_stylesheets" : "stylesheets"
+    public_send(register)[plugin_directory_name].present?
   end
 
   def self.register_seed_data(key, value)
-    self.seed_data[key] = value
+    seed_data[key] = value
   end
 
   def self.register_seed_path_builder(&block)
@@ -241,14 +249,12 @@ class DiscoursePluginRegistry
 
   def self.seed_paths
     result = SeedFu.fixture_paths.dup
-    unless Rails.env.test? && ENV["LOAD_PLUGINS"] != "1"
-      seed_path_builders.each { |b| result += b.call }
-    end
+    seed_path_builders.each { |b| result += b.call } if GlobalSetting.load_plugins?
     result.uniq
   end
 
   def self.register_seedfu_filter(filter = nil)
-    self.seedfu_filter << filter
+    seedfu_filter << filter
   end
 
   VENDORED_CORE_PRETTY_TEXT_MAP = {

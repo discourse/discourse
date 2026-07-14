@@ -22,6 +22,8 @@ RSpec.describe FixBrokenOpenAiEmbeddingsConfig do
     ).first
   end
 
+  around { |example| ActiveRecord::Migration.suppress_messages { example.run } }
+
   before { enable_current_plugin }
 
   describe "#up" do

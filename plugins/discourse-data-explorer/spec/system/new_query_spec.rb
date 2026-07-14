@@ -7,6 +7,7 @@ describe "Data explorer new query" do
 
   before do
     SiteSetting.data_explorer_enabled = true
+    SiteSetting.data_explorer_ai_queries_enabled = false
     sign_in admin
   end
 
@@ -16,16 +17,20 @@ describe "Data explorer new query" do
     expect(page).to have_current_path("/admin/plugins/discourse-data-explorer/queries/new")
   end
 
-  it "creates a query with name and description" do
+  it "creates a query with name, description, and SQL" do
+    query_runner.visit_new_query
+    expect(page).to have_css(".query-new__manual-form .right-panel .schema", text: "topics")
+
     query_runner
-      .visit_new_query
       .fill_new_query_name("Test Query")
       .fill_new_query_description("A test description")
+      .fill_new_query_sql("SELECT 1")
       .submit_new_query
 
     query = DiscourseDataExplorer::Query.last
     expect(query.name).to eq("Test Query")
     expect(query.description).to eq("A test description")
+    expect(query.sql).to eq("SELECT 1")
 
     expect(page).to have_current_path("/admin/plugins/discourse-data-explorer/queries/#{query.id}")
     expect(query_runner).to have_query_name("Test Query")

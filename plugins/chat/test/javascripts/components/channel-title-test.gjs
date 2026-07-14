@@ -5,7 +5,7 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Discourse Chat | Component | <ChannelTitle />", function (hooks) {
+module("Component | <ChannelTitle />", function (hooks) {
   setupRenderingTest(hooks);
 
   test("icon", async function (assert) {

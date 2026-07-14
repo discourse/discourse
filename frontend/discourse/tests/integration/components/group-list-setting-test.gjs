@@ -103,6 +103,65 @@ module("Integration | Component | group-list site-setting", function (hooks) {
     assert.dom(".selected-content button").hasClass("disabled");
   });
 
+  test("swaps everyone for logged_in_users when granular permissions are enabled", async function (assert) {
+    this.siteSettings.granular_anonymous_and_logged_in_groups_permissions = true;
+
+    this.site.groups = [
+      {
+        id: 1,
+        name: "Donuts",
+      },
+      {
+        id: 5,
+        name: "logged_in_users",
+      },
+      {
+        id: 11,
+        name: "trust_level_1",
+      },
+    ];
+
+    this.set(
+      "setting",
+      SiteSetting.create({
+        category: "foo",
+        default: "",
+        description: "Choose groups",
+        placeholder: null,
+        preview: null,
+        secret: false,
+        setting: "foo_bar",
+        type: "group_list",
+        value: "0|11",
+      })
+    );
+
+    await render(
+      <template><SiteSettingComponent @setting={{this.setting}} /></template>
+    );
+
+    const subject = selectKit(".list-setting");
+
+    assert.strictEqual(
+      subject.header().value(),
+      "5,11",
+      "displays logged_in_users instead of everyone without mutating the stored value"
+    );
+
+    assert.strictEqual(this.setting.value, "0|11");
+    assert.strictEqual(this.setting.buffered.get("value"), "0|11");
+
+    await subject.expand();
+    await subject.selectRowByValue("1");
+
+    assert.strictEqual(
+      this.setting.buffered.get("value"),
+      "0|11|1",
+      "maps logged_in_users back to everyone in the buffered value"
+    );
+    assert.strictEqual(this.setting.value, "0|11");
+  });
+
   test("disallowed groups", async function (assert) {
     this.site.groups = [
       {

@@ -1,0 +1,6 @@
+en:
+  js:
+    graphviz:
+      composer_title: "Insert Graphviz graph"
+    composer:
+      graphviz_sample: "digraph G {\n  a -> b;\n  b -> c;\n  a -> c;\n}"

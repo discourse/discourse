@@ -36,6 +36,8 @@ ar:
       topic_search_placeholder: "البحث في الموضوعات بالعنوان أو محتوى المنشور"
       sidebar_name_filter_placeholder: "الاسم/اسم المستخدم"
       assigned: "تم تعيينك"
+      group_no_assignments_title: "لا توجد مهام"
+      group_no_assignments_body: "لا توجد حاليًا مهام نشطة لهذه المجموعة."
       group_everyone: "الجميع"
       assigned_to: "معيَّنة إلى"
       assigned_topic_to: "تم تعيين الموضوع إلى المستخدم <a href='%{path}'>%{username}</a>"
@@ -138,6 +140,26 @@ ar:
           unassigned: "غير معيَّنة"
         assigned:
           label: "معيَّنة إلى"
+    topics:
+      bulk:
+        unassign: "إلغاء تعيين الموضوعات"
+        assign: "تعيين الموضوعات"
+        assign_description: "تعيين الموضوعات المحددة إلى المستخدم التالي:"
+        unassign_description: "هل تريد إلغاء تعيين الموضوعات المحددة؟"
+        confirm_assign_topics:
+          zero: "تعيين %{count} من الموضوعات"
+          one: "تعيين موضوع واحد (%{count})"
+          two: "تعيين موضوعيْن (%{count})"
+          few: "تعيين %{count} موضوعات"
+          many: "تعيين %{count} موضوعًا"
+          other: "تعيين %{count} موضوع"
+        confirm_unassign_topics:
+          zero: "إلغاء تعيين %{count} من الموضوعات"
+          one: "إلغاء تعيين موضوع واحد (%{count})"
+          two: "إلغاء تعيين موضوعيْن (%{count})"
+          few: "إلغاء تعيين %{count} موضوعات"
+          many: "إلغاء تعيين %{count} موضوعًا"
+          other: "إلغاء تعيين %{count} موضوع"
     discourse_automation:
       scriptables:
         random_assign:
@@ -194,3 +216,13 @@ ar:
       title: "تعديل المهام المعيَّنة"
       topic: "الموضوع"
       post: "المنشور"
+    discourse_workflows:
+      nodes:
+        "action:assign_topic": "تعيين موضوع"
+        "trigger:assigned": "تم تعيينك"
+      assign_topic:
+        operations:
+          assign: "تعيين"
+          unassign: "إلغاء التعيين"
+        topic_id: "معرِّف الموضوع"
+        assignee: "المعيَّن"

@@ -1,10 +1,10 @@
 import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import { service } from "@ember/service";
-import DModal from "discourse/components/d-modal";
 import DFloatBody from "discourse/float-kit/components/d-float-body";
-import concatClass from "discourse/helpers/concat-class";
 import { and } from "discourse/truth-helpers";
+import DModal from "discourse/ui-kit/d-modal";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class DInlineFloat extends Component {
   @service site;
@@ -17,7 +17,7 @@ export default class DInlineFloat extends Component {
           @hideHeader={{true}}
           data-identifier={{@instance.options.identifier}}
           data-content
-          class={{concatClass
+          class={{dConcatClass
             "fk-d-menu-modal"
             (concat @instance.options.identifier "-content")
           }}

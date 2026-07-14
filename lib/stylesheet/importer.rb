@@ -16,7 +16,7 @@ module Stylesheet
       Discourse.plugins.each do |plugin|
         plugin_directory_name = plugin.directory_name
 
-        ["", "mobile", "desktop"].each do |type|
+        ["", "mobile", "desktop", "admin"].each do |type|
           asset_name = type.present? ? "#{plugin_directory_name}_#{type}" : plugin_directory_name
           stylesheets =
             (
@@ -164,7 +164,7 @@ module Stylesheet
           rescue StandardError
             ColorScheme.base_colors
           end
-      elsif (@theme_id && !theme.component)
+      elsif @theme_id && !theme.component
         colors = theme&.color_scheme&.resolved_colors || ColorScheme.base_colors
       else
         # this is a slightly ugly backwards compatibility fix,

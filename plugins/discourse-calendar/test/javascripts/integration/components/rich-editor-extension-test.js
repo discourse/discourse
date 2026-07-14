@@ -2,7 +2,7 @@ import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import { testMarkdown } from "discourse/tests/helpers/rich-editor-helper";
 
-module("Integration | Component | rich-editor-extension", function (hooks) {
+module("Integration | Component | RichEditorExtension", function (hooks) {
   setupRenderingTest(hooks);
 
   const testCases = {
@@ -64,5 +64,34 @@ module("Integration | Component | rich-editor-extension", function (hooks) {
         await testMarkdown(assert, markdown, expectedHtml, expectedMarkdown);
       });
     });
+  });
+
+  test("event preserves allowed custom fields", async function (assert) {
+    this.siteSettings.rich_editor = true;
+    this.siteSettings.discourse_post_event_allowed_custom_fields =
+      "fancy_field";
+
+    await testMarkdown(
+      assert,
+      `[event start="2025-03-21 15:41" status="public" timezone="Europe/Paris" fancyField="hello world"]\n[/event]\n`,
+      (a) => {
+        a.dom(".composer-event-node").exists("Event node should be rendered");
+      },
+      `[event start="2025-03-21 15:41" status=public timezone=Europe/Paris fancyField="hello world"]\n[/event]\n`
+    );
+  });
+
+  test("event preserves custom fields with uppercase letters", async function (assert) {
+    this.siteSettings.rich_editor = true;
+    this.siteSettings.discourse_post_event_allowed_custom_fields = "dress_CODE";
+
+    await testMarkdown(
+      assert,
+      `[event start="2025-03-21 15:41" status="public" timezone="Europe/Paris" dressCode="black tie"]\n[/event]\n`,
+      (a) => {
+        a.dom(".composer-event-node").exists("Event node should be rendered");
+      },
+      `[event start="2025-03-21 15:41" status=public timezone=Europe/Paris dressCode="black tie"]\n[/event]\n`
+    );
   });
 });

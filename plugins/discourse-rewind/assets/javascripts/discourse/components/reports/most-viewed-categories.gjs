@@ -3,9 +3,9 @@ import { tracked } from "@glimmer/tracking";
 import { concat, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import concatClass from "discourse/helpers/concat-class";
 import getURL from "discourse/lib/get-url";
 import { eq } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 /**
@@ -51,7 +51,7 @@ export default class MostViewedCategories extends Component {
         <div class="rewind-report-container">
           {{#each @report.data as |data|}}
             <a
-              class={{concatClass
+              class={{dConcatClass
                 "folder-wrapper"
                 (if (eq this.openedCategoryId data.category_id) "--opened" "")
               }}

@@ -7,9 +7,17 @@
 nl:
   admin_js:
     admin:
+      calendar: "Kalender en evenementen"
       site_settings:
         categories:
           discourse_post_event: "Discourse-evenement"
+          discourse_calendar: "Kalender en evenementen"
+      web_hooks:
+        calendar_event:
+          group_name: "Kalenderevenement"
+          calendar_event_created: "Kalenderevenement gemaakt"
+          calendar_event_updated: "Kalenderevenement bijgewerkt"
+          calendar_event_destroyed: "Kalenderevenement vernietigd"
   js:
     notifications:
       titles:
@@ -26,6 +34,11 @@ nl:
               label: Topic-ID
     discourse_calendar:
       invite_user_notification: "%{username} heeft je uitgenodigd voor: %{description}"
+      preferences:
+        all_events: "Discourse-kalender - Alle evenementen"
+        all_events_description: "Alle forumevenementen"
+        my_events: "Discourse-kalender - Mijn evenementen"
+        my_events_description: "Evenementen waar je naartoe gaat of in geïnteresseerd bent"
       on_holiday: "Op feestdag"
       disable_holiday: "Uitschakelen"
       enable_holiday: "Inschakelen"
@@ -34,6 +47,7 @@ nl:
         header_title: "Feestdag"
         pick_region_description: "Kies een regio om de feestdagen voor die regio te zien."
         disabled_holidays_description: "Uitgeschakelde feestdagen worden uitgesloten van de feestdagenkalender voor medewerkers."
+        header_description: "Kies een regio om de vakanties voor die regio te zien. Uitgeschakelde feestdagen worden uitgesloten van de vakantiekalender voor medewerkers."
       date: "Datum"
       add_to_calendar: "Toevoegen aan Google-agenda"
       toggle_timezone_offset_title: "Tijdzoneoffset schakelen"
@@ -42,6 +56,7 @@ nl:
         title: "Regio"
         none: "Geen"
         use_current_region: "Huidige regio gebruiken"
+        select_region: "Selecteer een regio..."
         names:
           ae: "Verenigde Arabische Emiraten"
           ar: "Argentinië"
@@ -325,6 +340,9 @@ nl:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} heeft automatisch je aanwezigheid ingesteld en je uitgenodigd voor %{eventName}"
         an_event: "een evenement"
+      event_description:
+        show_more: "Meer weergeven"
+        show_less: "Minder weergeven"
       edit_reason: "Evenement bijgewerkt"
       edit_reason_closed: "Evenement gesloten"
       edit_reason_opened: "Evenement geopend"
@@ -347,6 +365,7 @@ nl:
       bulk_invite: "Bulkuitnodiging"
       close_event: "Evenement sluiten"
       open_event: "Evenement openen"
+      destroy_event: "Evenement vernietigen"
       invitees_modal:
         title_invited: "Evenementdeelname"
         title_participated: "Lijst van deelnemende gebruikers"
@@ -378,7 +397,6 @@ nl:
       upcoming_events_list:
         title: "Aankomende evenementen"
         empty: "Geen aankomende evenementen"
-        all_day: "Hele dag"
         error: "Ophalen van evenementen mislukt"
         try_again: "Opnieuw proberen"
         view_all: "Alles weergeven"
@@ -392,10 +410,9 @@ nl:
       models:
         invitee:
           no_users: "Geen gebruikers gevonden"
+          leave_event: "Evenement verlaten"
           status:
-            unknown: "Niet geïnteresseerd"
             going: "Gaan"
-            not_going: "Niet gaan"
             interested: "Geïnteresseerd"
             going_count:
               one: "%{count} gaan"
@@ -412,6 +429,7 @@ nl:
         event:
           expired: "Verlopen"
           closed: "Gesloten"
+          full: "Vol"
           status:
             standalone:
               title: "Losstaand"
@@ -422,6 +440,29 @@ nl:
             private:
               title: "Privé"
               description: "Alleen uitgenodigde gebruikers kunnen deelnemen aan een privé-evenement."
+      composer:
+        name_placeholder: "Evenementnaam"
+        location_placeholder: "Locatie of URL toevoegen"
+        description_placeholder: "Evenementbeschrijving toevoegen"
+        event_title_placeholder: "Evenementnaam"
+        create_event_button: "Evenement maken"
+        reminder:
+          units:
+            minutes:
+              one: "minuut"
+              other: "minuten"
+            hours:
+              one: "uur"
+              other: "uur"
+            days:
+              one: "dag"
+              other: "dagen"
+            weeks:
+              one: "week"
+              other: "weken"
+      composer_actions:
+        create_event:
+          label: "Evenement maken"
       builder_modal:
         custom_fields:
           label: "Aangepaste velden"
@@ -429,6 +470,7 @@ nl:
           description: "Toegestane aangepaste velden worden gedefinieerd in de site-instellingen. Aangepaste velden worden gebruikt om gegevens door te geven aan andere plug-ins."
         create_event_title: "Evenement maken"
         update_event_title: "Evenement bewerken"
+        advanced_settings_title: "Geavanceerde instellingen"
         confirm_delete: "Weet je zeker dat je dit evenement wilt verwijderen?"
         confirm_close: "Weet je zeker dat je dit evenement wilt sluiten?"
         confirm_open: "Weet je zeker dat je dit evenement wilt openen?"
@@ -442,11 +484,12 @@ nl:
         timezone:
           label: Tijdzone
           remove_timezone: Geen tijdzone (UTC)
+        starts_at:
+          label: "Begindatum"
+        all_day:
+          label: "Evenement dat de hele dag duurt"
         reminders:
           label: "Herinneringen"
-          types:
-            bump_topic: "topic automatisch omhoog plaatsen"
-            notification: "deelnemers informeren"
           units:
             minutes: "minuten"
             hours: "uur"
@@ -455,28 +498,22 @@ nl:
           periods:
             before: "voor"
             after: "na"
-        recurrence_until:
-          label: "Tot (inbegrepen)"
         recurrence:
           label: "Herhaling"
           none: "Geen herhaling"
           every_day: "Elke dag"
-          every_month: "Elke maand op deze weekdag"
           every_weekday: "Elke weekdag"
-          every_week: "Elke week op deze weekdag"
-          every_two_weeks: "Elke twee weken op deze weekdag"
-          every_four_weeks: "Elke vier weken op deze weekdag"
-        minimal:
-          label: "Minimaal evenement"
-          checkbox_label: "Knoppen Gaan/Niet gaan en genodigdenstatus verbergen"
+          ordinals:
+            last: "afgelopen"
+        max_attendees:
+          label: "Maximaal aantal deelnemers"
+          placeholder: "Geen limiet"
+        attendance:
+          none: "Geen"
         allow_chat:
           label: "Chatintegratie"
           checkbox_label: "Evenementspecifiek chatkanaal maken en beheren"
-        url:
-          label: "URL"
-          placeholder: "Optioneel"
         location:
-          label: "Locatie"
           placeholder: "Voeg een locatie, link of iets anders toe."
         description:
           label: "Beschrijving"
@@ -486,8 +523,13 @@ nl:
           placeholder: "Optioneel, standaard ingesteld op topictitel"
         invitees:
           label: "Uitgenodigde groepen"
-        status:
-          label: "Status"
+        event_type:
+          public:
+            title: "Openbaar"
+        delete_confirmation_message: "Dit evenement verwijderen?"
+        image:
+          label: "Evenementafbeelding"
       invite_user_or_group:
         title: "Gebruiker(s) of groep(en) informeren"
         invite: "Sturen"
+        success: "Uitnodiging gestuurd"

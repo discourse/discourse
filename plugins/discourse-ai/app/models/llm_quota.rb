@@ -13,6 +13,7 @@ class LlmQuota < ActiveRecord::Base
   validates :duration_seconds, presence: true, numericality: { greater_than: 0 }
   validates :max_tokens, numericality: { only_integer: true, greater_than: 0, allow_nil: true }
   validates :max_usages, numericality: { greater_than: 0, allow_nil: true }
+  validates :max_cost, numericality: { greater_than: 0, allow_nil: true }
 
   validate :at_least_one_limit
 
@@ -37,14 +38,36 @@ class LlmQuota < ActiveRecord::Base
     raise errors.first
   end
 
-  def self.log_usage(llm, user, input_tokens, output_tokens)
+  def self.log_usage(
+    llm,
+    user,
+    request_tokens:,
+    response_tokens:,
+    cache_read_tokens: 0,
+    cache_write_tokens: 0,
+    estimated_cost: nil
+  )
     return if user.blank?
+
+    estimated_cost ||=
+      llm.estimated_cost_for_tokens(
+        request_tokens: request_tokens,
+        response_tokens: response_tokens,
+        cache_read_tokens: cache_read_tokens,
+        cache_write_tokens: cache_write_tokens,
+      )
 
     quotas = joins(:group).where(llm_model: llm).where(group: user.groups)
 
     quotas.each do |quota|
       usage = LlmQuotaUsage.find_or_create_for(user: user, llm_quota: quota)
-      usage.increment_usage!(input_tokens: input_tokens, output_tokens: output_tokens)
+      usage.increment_usage!(
+        input_tokens: request_tokens,
+        output_tokens: response_tokens,
+        cache_read_tokens: cache_read_tokens,
+        cache_write_tokens: cache_write_tokens,
+        cost: estimated_cost,
+      )
     end
   end
 
@@ -56,10 +79,14 @@ class LlmQuota < ActiveRecord::Base
     max_usages
   end
 
+  def available_cost
+    max_cost
+  end
+
   private
 
   def at_least_one_limit
-    if max_tokens.nil? && max_usages.nil?
+    if max_tokens.nil? && max_usages.nil? && max_cost.nil?
       errors.add(:base, I18n.t("discourse_ai.errors.quota_required"))
     end
   end
@@ -70,13 +97,14 @@ end
 # Table name: llm_quotas
 #
 #  id               :bigint           not null, primary key
-#  group_id         :bigint           not null
-#  llm_model_id     :bigint           not null
+#  duration_seconds :integer          not null
+#  max_cost         :decimal(20, 10)
 #  max_tokens       :integer
 #  max_usages       :integer
-#  duration_seconds :integer          not null
 #  created_at       :datetime         not null
 #  updated_at       :datetime         not null
+#  group_id         :bigint           not null
+#  llm_model_id     :bigint           not null
 #
 # Indexes
 #

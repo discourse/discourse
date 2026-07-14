@@ -14,22 +14,64 @@ pl_PL:
     chat_integration:
       menu_title: "Integracje czatu"
       settings: "Ustawień"
+      nav:
+        providers: "Dostawcy"
+        providers_description: "Konfiguruj integracje dostawców czatów"
+      add_provider: "Dodaj dostawcę"
+      view_provider_settings: "Wyświetl ustawienia dostawcy"
+      more_providers: "Więcej"
+      confirm_setup_provider: "Czy na pewno chcesz włączyć dostawcę %{provider} ? Możesz go później wyłączyć na karcie Ustawienia."
+      setup_provider_modal:
+        title: "Skonfiguruj dostawcę %{provider}"
+        setup_instructions: "Podaj następujące szczegóły, aby skonfigurować dostawcę %{provider} . %{additionalInstructions}"
+        confirm_setup: "Potwierdź konfigurację"
+        success: "Dostawca %{provider} został pomyślnie skonfigurowany"
+        slack:
+          instructions: "Wymagany jest token dostępu lub adres URL webhooka wychodzącego."
+          at_least_one_required: "Wprowadź token dostępu lub adres URL webhooka wychodzącego."
+          access_token:
+            title: "Token dostępu"
+            description: "Token dostępu OAuth bota Slacka"
+          outbound_webhook_url:
+            title: "Adres URL webhooka wychodzącego"
+            description: "Adres URL webhooka wychodzącego Slacka"
+        telegram:
+          instructions: "Token dostępu zostanie sprawdzony przy zapisywaniu."
+          access_token:
+            title: "Token dostępu"
+            description: "Token dostępu do bota Telegramu od BotFather"
+      empty_state:
+        title: "Połącz swoją platformę czatu"
+        body: "Wysyłaj powiadomienia z Discourse na czat swojego zespołu. Wybierz dostawcę, aby rozpocząć."
+      channels_title: "Kanały"
+      channels_description: "Skonfiguruj kanały dla dostawcy %{provider}."
+      no_channels: "Nie skonfigurowano jeszcze żadnych kanałów."
+      channel_actions: "Działania kanału"
+      add_first_channel: "Dodaj swój pierwszy kanał %{provider}"
       channels_with_errors: "Niektóre kanały dla tego dostawcy nie powiodły się, gdy zostały wysłane ostatnie wiadomości. Kliknij ikonę błędu, aby dowiedzieć się więcej."
       channel_exception: "Podczas ostatniego wysyłania wiadomości do tego kanału wystąpił nieznany błąd."
       group_mention_template: "Wzmianki o: @%{name}"
       group_message_template: "Wiadomości do: @%{name}"
+      choose_group: "(Wybierz grupę)"
+      all_categories: "(Wszystkie kategorie)"
+      all_tags: "(Wszystkie tagi)"
+      create_rule: "Utwórz regułę"
+      add_channel: "Dodaj kanał"
       delete_channel: "Usuń"
       test_channel: "Sprawdź"
       edit_channel: "Edytuj"
-      channel_delete_confirm: "Jesteś pewien, że chcesz usunąć ten kanał? Wszystkie połączone reguły zostaną usunięte."
+      channel_delete_confirm: "Czy na pewno chcesz usunąć ten kanał? Wszystkie powiązane reguły zostaną usunięte."
       test_modal:
         title: "Wyślij wiadomość testową"
         topic: "Temat"
+        send: "Wyślij wiadomość testową"
         close: "Zamknij"
         error: "Podczas wysyłania wiadomości wystąpił nieznany błąd. Sprawdź dzienniki witryny, aby uzyskać więcej informacji."
         success: "Wiadomość wysłana poprawnie"
       type:
         normal: Normalny
+        group_message: Wiadomość grupowa
+        group_mention: Wzmianka grupowa
       filter:
         mute: 'Wycisz'
         follow: 'Tylko pierwszy post'
@@ -50,6 +92,9 @@ pl_PL:
           ok: "Poprawny"
           fail: "Niepoprawny format"
       edit_rule_modal:
+        edit_title: Edytuj regułę
+        create_title: Utwórz regułę
+        save: Zapisz regułę
         cancel: Anuluj
         provider: Dostawca
         type: Typ
@@ -70,7 +115,11 @@ pl_PL:
           param:
             identifier:
               title: Kanał
+              help: "Na przykład #kanał lub @nazwaużytkownika"
           errors:
+            at_least_one_required: "Wprowadź token dostępu lub adres URL webhooka wychodzącego."
+            invalid_webhook_url: "Adres URL webhooka wychodzącego musi być prawidłowym linkiem https://hooks.slack.com/services/..."
+            auth_error: "Podany token uwierzytelniania jest nieprawidłowy"
             action_prohibited: "Bot nie ma uprawnień do publikowania na tym kanale"
             channel_not_found: "Podany kanał nie istnieje w Slacku"
         telegram:
@@ -83,6 +132,8 @@ pl_PL:
               title: ID czatu
               help: Numer nadany przez bota lub identyfikator kanału nadawania w formie @nazwakanału
           errors:
+            access_token_required: "Wymagany jest token dostępu bota."
+            webhook_setup_failed: "Nie udało się zarejestrować webhooka w Telegramie. Sprawdź token i spróbuj ponownie."
             channel_not_found: "Określony kanał nie istnieje w Telegramie"
             forbidden: "Bot nie ma uprawnień do publikowania na tym kanale"
         discord:
@@ -93,6 +144,7 @@ pl_PL:
               help: "Nazwa opisująca kanał. Nie służy do połączenia z Discord."
             webhook_url:
               title: URL webhooka
+              help: Adres URL webhooka utworzony w ustawieniach serwera Discord powinien mieć format https://discord.com/api/webhooks/<webhook-id>/<webhook-token>
         guilded:
           title: "Guilded"
           param:
@@ -107,6 +159,7 @@ pl_PL:
           param:
             identifier:
               title: Kanał
+              help: "Na przykład #kanał lub @nazwaużytkownika"
           errors:
             channel_not_found: "Określony kanał nie istnieje w Mattermost"
         matrix:
@@ -137,6 +190,7 @@ pl_PL:
           param:
             identifier:
               title: Kanał
+              help: "Na przykład #kanał lub @nazwaużytkownika"
           errors:
             invalid_channel: "Ten kanał nie istnieje na Rocket Chat"
         gitter:
@@ -144,6 +198,7 @@ pl_PL:
           param:
             name:
               title: "Nazwa"
+              help: "Nazwa pokoju Gitter, na przykład gitterHQ/services"
             webhook_url:
               title: "URL webhooka"
               help: "Adres URL podany podczas tworzenia nowej integracji w pokoju Gitter."

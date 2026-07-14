@@ -55,7 +55,7 @@ class Admin::PermalinksController < Admin::AdminController
       category_id: extract_param(permitted_params, "category"),
       tag_id:
         extract_param(permitted_params, "tag").then do |tag_name|
-          (Tag.where(name: tag_name).pluck(:id).first || -1) if tag_name
+          Tag.where(name: tag_name).pluck(:id).first || -1 if tag_name
         end,
       user_id: extract_param(permitted_params, "user"),
       external_url: extract_param(permitted_params, "external_url"),

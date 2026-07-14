@@ -8,13 +8,16 @@ export default apiInitializer((api) => {
     return;
   }
 
+  // When AI translation is enabled, deprioritize the manual language selector since language is auto-detected
+  api.registerValueTransformer("post-language-selector-priority", () => "last");
+
   api.registerCustomPostMessageCallback(
     "localized",
     (topicController, data) => {
       const currentUser = api.getCurrentUser();
-      const showOriginal =
-        currentUser?.user_option?.show_original_content ||
-        cookie("content-localization-show-original");
+      const showOriginal = currentUser
+        ? currentUser.user_option?.show_original_content
+        : cookie("content-localization-show-original");
 
       if (!showOriginal) {
         const postStream = topicController.get("model.postStream");

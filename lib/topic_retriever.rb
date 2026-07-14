@@ -7,7 +7,7 @@ class TopicRetriever
   end
 
   def retrieve
-    perform_retrieve unless (invalid_url? || retrieved_recently?)
+    perform_retrieve unless invalid_url? || retrieved_recently?
   end
 
   private

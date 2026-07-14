@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 th:
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "อนุญาตให้เจ้าของกระทู้และทีมงานทำเครื่องหมายการตอบกลับว่าเป็นวิธีแก้ปัญหา"
   reports:
     accepted_solutions:
       yaxis: "ทั้งหมด"

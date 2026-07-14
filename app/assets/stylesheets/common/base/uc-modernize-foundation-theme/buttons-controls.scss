@@ -1,0 +1,28 @@
+@use "lib/viewport";
+
+.uc-modernize-foundation-theme {
+  --d-button-default-bg-color: var(--secondary);
+  --d-button-default-border: 1px solid var(--primary-300);
+  --d-button-default-border--hover: 1px solid var(--primary-400);
+  --d-button-default-bg-color--hover: var(--primary-200);
+  --d-button-default-text-color--hover: var(--primary);
+  --d-button-default-icon-color--hover: var(--primary);
+  --d-button-default-text-color: var(--primary-900);
+  --d-button-default-icon-color: var(--primary-900);
+
+  .sidebar-section-header-dropdown-btn {
+    --d-button-default-border: none;
+  }
+
+  // button on /my/badges
+  .favorite-btn {
+    border-color: var(--primary-low);
+    border-bottom: none;
+    border-right: none;
+
+    &:hover {
+      border-bottom: none;
+      border-right: none;
+    }
+  }
+}

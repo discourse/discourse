@@ -9,11 +9,11 @@ import { isEmpty } from "@ember/utils";
 import AdminPenaltyPostAction from "discourse/admin/components/admin-penalty-post-action";
 import AdminPenaltyReason from "discourse/admin/components/admin-penalty-reason";
 import AdminPenaltySimilarUsers from "discourse/admin/components/admin-penalty-similar-users";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import FutureDateInput from "discourse/components/future-date-input";
 import { extractError } from "discourse/lib/ajax-error";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DFutureDateInput from "discourse/ui-kit/d-future-date-input";
+import DModal from "discourse/ui-kit/d-modal";
 import I18n, { i18n } from "discourse-i18n";
 
 export default class PenalizeUser extends Component {
@@ -103,6 +103,7 @@ export default class PenalizeUser extends Component {
         post_action: this.postAction,
         post_edit: this.postEdit,
         other_user_ids: this.otherUserIds,
+        reviewable_id: this.args.model.reviewableId,
       };
 
       if (this.args.model.penaltyType === "suspend") {
@@ -155,7 +156,7 @@ export default class PenalizeUser extends Component {
 
   <template>
     <DModal
-      class="{{@model.penaltyType}}-user-modal"
+      class="{{@model.penaltyType}}-user-modal --large"
       @title={{i18n this.modalTitle}}
       @closeModal={{this.warnBeforeClosing}}
       @flash={{this.flash}}
@@ -164,7 +165,7 @@ export default class PenalizeUser extends Component {
         {{#if this.canPenalize}}
           <div class="penalty-duration-controls">
             {{#if (eq @model.penaltyType "suspend")}}
-              <FutureDateInput
+              <DFutureDateInput
                 @label="admin.user.suspend_duration"
                 @clearable={{false}}
                 @input={{this.penalizeUntil}}
@@ -172,7 +173,7 @@ export default class PenalizeUser extends Component {
                 class="suspend-until"
               />
             {{else if (eq @model.penaltyType "silence")}}
-              <FutureDateInput
+              <DFutureDateInput
                 @label="admin.user.silence_duration"
                 @clearable={{false}}
                 @input={{this.penalizeUntil}}
@@ -219,9 +220,9 @@ export default class PenalizeUser extends Component {
             <div class="cant-silence">{{i18n "admin.user.cant_silence"}}</div>
           {{/if}}
         {{/if}}
+        <div class="penalty-history">{{trustHTML this.penaltyHistory}}</div>
       </:body>
       <:footer>
-        <div class="penalty-history">{{trustHTML this.penaltyHistory}}</div>
         <DButton
           class="btn-danger perform-penalize"
           @action={{this.penalizeUser}}

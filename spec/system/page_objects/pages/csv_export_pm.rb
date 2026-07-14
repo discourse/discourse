@@ -9,20 +9,23 @@ module PageObjects
       end
 
       def download_and_extract
-        click_link ".zip"
-        Downloads.wait_for_download
+        original_save_path = Capybara.save_path
+        Capybara.save_path = Downloads::FOLDER.join("_unused")
 
-        zip_name = find("a.attachment").text
-        zip_path = File.join(Downloads::FOLDER, zip_name)
-        @downloaded_files << zip_path
+        zip_path =
+          page.driver.with_playwright_page do |pw_page|
+            pw_page.expect_download { click_link ".zip" }.path
+          end
 
         csv_path = unzip(zip_path).first
         @downloaded_files << csv_path
         CSV.read(csv_path)
+      ensure
+        Capybara.save_path = original_save_path
       end
 
       def clear_downloads
-        @downloaded_files.each { |file| FileUtils.rm(file) }
+        @downloaded_files.each { |file| FileUtils.rm_f(file) }
         @downloaded_files = []
       end
 

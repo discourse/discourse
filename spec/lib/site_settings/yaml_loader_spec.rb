@@ -24,14 +24,16 @@ RSpec.describe SiteSettings::YamlLoader do
   end
 
   let!(:receiver) { Receiver.new }
-  let(:simple) { "#{Rails.root}/spec/fixtures/site_settings/simple.yml" }
-  let(:client) { "#{Rails.root}/spec/fixtures/site_settings/client.yml" }
-  let(:enum) { "#{Rails.root}/spec/fixtures/site_settings/enum.yml" }
-  let(:enum_client) { "#{Rails.root}/spec/fixtures/site_settings/enum_client.yml" }
-  let(:deprecated_env) { "#{Rails.root}/spec/fixtures/site_settings/deprecated_env.yml" }
-  let(:deprecated_hidden) { "#{Rails.root}/spec/fixtures/site_settings/deprecated_hidden.yml" }
-  let(:locale_default) { "#{Rails.root}/spec/fixtures/site_settings/locale_default.yml" }
-  let(:nil_default) { "#{Rails.root}/spec/fixtures/site_settings/nil_default.yml" }
+  let(:simple) { "#{Rails.root.join("spec/fixtures/site_settings/simple.yml")}" }
+  let(:client) { "#{Rails.root.join("spec/fixtures/site_settings/client.yml")}" }
+  let(:enum) { "#{Rails.root.join("spec/fixtures/site_settings/enum.yml")}" }
+  let(:enum_client) { "#{Rails.root.join("spec/fixtures/site_settings/enum_client.yml")}" }
+  let(:deprecated_env) { "#{Rails.root.join("spec/fixtures/site_settings/deprecated_env.yml")}" }
+  let(:deprecated_hidden) do
+    "#{Rails.root.join("spec/fixtures/site_settings/deprecated_hidden.yml")}"
+  end
+  let(:locale_default) { "#{Rails.root.join("spec/fixtures/site_settings/locale_default.yml")}" }
+  let(:nil_default) { "#{Rails.root.join("spec/fixtures/site_settings/nil_default.yml")}" }
 
   it "loads simple settings" do
     receiver.expects(:setting).with("category1", "title", "My Site", {}).once
@@ -72,8 +74,8 @@ RSpec.describe SiteSettings::YamlLoader do
     receiver
       .expects(:setting)
       .with do |category, name, default, opts|
-        category == ("basics") && name == ("default_locale") && default == ("en") &&
-          opts[:enum] == ("LocaleSiteSetting") && opts[:client] == true
+        category == "basics" && name == "default_locale" && default == "en" &&
+          opts[:enum] == "LocaleSiteSetting" && opts[:client] == true
       end
     receiver.load_yaml(enum_client)
   end

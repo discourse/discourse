@@ -30,6 +30,9 @@ lt:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
+      event_description:
+        show_more: "Rodyti daugiau"
+        show_less: "Rodyti mažiau"
       show_all: "Rodyti viską"
       add_to_calendar: "Pridėti prie kalendoriaus"
       created_by: "Sukurta"
@@ -52,11 +55,25 @@ lt:
             private:
               title: "Privatu"
       composer:
-        name_placeholder: "Įvykis"
-        end_date_placeholder: "Nustatyti pabaigos datą"
         location_placeholder: "Pridėti vietą arba URL"
-        max_attendees_placeholder: "Nustatyti maksimalų dalyvių skaičių"
         description_placeholder: "Pridėti įvykio aprašymą"
+        reminder:
+          units:
+            minutes:
+              one: "minutė"
+              few: "minutės"
+              many: "minutės"
+              other: "minutės"
+            hours:
+              one: "valanda"
+              few: "valandos"
+              many: "valandos"
+              other: "valandos"
+            days:
+              one: "diena"
+              few: "dienos"
+              many: "dienos"
+              other: "dienos"
       builder_modal:
         custom_fields:
           placeholder: "Pasirinktinai"
@@ -76,15 +93,13 @@ lt:
           label: "Pasikartojimas"
           none: "Nėra pasikartojimo"
           every_day: "Kiekvieną dieną"
-        url:
-          label: "Nuoroda"
-          placeholder: "Pasirinktinai"
-        location:
-          label: "Vieta"
+        attendance:
+          none: "Nieko"
         description:
           label: "Aprašymas"
-        status:
-          label: "Statusas"
+        event_type:
+          public:
+            title: "Vieša"
         delete_confirmation_message: "Ištrinti šį įvykį?"
       invite_user_or_group:
         invite: "Siųsti"

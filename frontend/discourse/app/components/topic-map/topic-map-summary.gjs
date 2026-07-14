@@ -5,21 +5,21 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import TopicMapLink from "discourse/components/topic-map/topic-map-link";
 import TopicParticipants from "discourse/components/topic-map/topic-participants";
 import TopicViews from "discourse/components/topic-map/topic-views";
 import TopicViewsChart from "discourse/components/topic-map/topic-views-chart";
 import DMenu from "discourse/float-kit/components/d-menu";
-import avatar from "discourse/helpers/bound-avatar-template";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
-import number from "discourse/helpers/number";
 import { ajax } from "discourse/lib/ajax";
 import { emojiUnescape } from "discourse/lib/text";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 const TRUNCATED_LINKS_LIMIT = 5;
@@ -68,7 +68,15 @@ export default class TopicMapSummary extends Component {
   }
 
   get topRepliesSummaryEnabled() {
-    return this.args.postStream.summary;
+    return this.args.postStream?.summary;
+  }
+
+  get shouldShowReplyCount() {
+    return this.args.topic.is_nested_view;
+  }
+
+  get replyCount() {
+    return this.args.topic.replyCount;
   }
 
   get topRepliesTitle() {
@@ -90,7 +98,7 @@ export default class TopicMapSummary extends Component {
   }
 
   get loneStat() {
-    if (this.args.topic.has_summary) {
+    if (this.args.topic.has_summary || this.shouldShowReplyCount) {
       return false;
     }
     return [this.hasLikes, this.hasUsers, this.hasLinks].every((stat) => !stat);
@@ -148,13 +156,13 @@ export default class TopicMapSummary extends Component {
 
   @action
   showTopReplies() {
-    this.args.postStream.showTopReplies();
+    this.args.postStream?.showTopReplies();
   }
 
   @action
   cancelFilter() {
-    this.args.postStream.cancelFilter();
-    this.args.postStream.refresh();
+    this.args.postStream?.cancelFilter();
+    this.args.postStream?.refresh();
   }
 
   @action
@@ -237,7 +245,7 @@ export default class TopicMapSummary extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "topic-map__stats"
         (if this.loneStat "--single-stat")
         (if this.manyStats "--many-stats")
@@ -254,14 +262,14 @@ export default class TopicMapSummary extends Component {
         @onShow={{this.fetchViews}}
       >
         <:trigger>
-          {{number this.minViewsCount noTitle="true"}}
+          {{dNumber this.minViewsCount noTitle="true"}}
           <span class="topic-map__stat-label">
             {{i18n "views_lowercase" count=this.minViewsCount}}
           </span>
         </:trigger>
         <:content>
           <h3>{{i18n "topic_map.menu_titles.views"}}</h3>
-          <ConditionalLoadingSpinner @condition={{this.loading}}>
+          <DConditionalLoadingSpinner @condition={{this.loading}}>
             {{#if this.shouldShowViewsChart}}
               <TopicViewsChart
                 @views={{this.views}}
@@ -270,9 +278,18 @@ export default class TopicMapSummary extends Component {
             {{else}}
               <TopicViews @views={{this.views}} />
             {{/if}}
-          </ConditionalLoadingSpinner>
+          </DConditionalLoadingSpinner>
         </:content>
       </DMenu>
+
+      {{#if this.shouldShowReplyCount}}
+        <div class="topic-map__stat topic-map__replies">
+          {{dNumber this.replyCount noTitle="true"}}
+          <span class="topic-map__stat-label">
+            {{i18n "replies_lowercase" count=this.replyCount}}
+          </span>
+        </div>
+      {{/if}}
 
       {{#if this.hasLikes}}
         <DMenu
@@ -286,7 +303,7 @@ export default class TopicMapSummary extends Component {
           @autofocus={{true}}
         >
           <:trigger>
-            {{number @topic.like_count noTitle="true"}}
+            {{dNumber @topic.like_count noTitle="true"}}
             <span class="topic-map__stat-label">
               {{i18n "likes_lowercase" count=@topic.like_count}}
             </span>
@@ -295,7 +312,7 @@ export default class TopicMapSummary extends Component {
             <h3 {{didInsert this.fetchMostLiked}}>{{i18n
                 "topic_map.menu_titles.replies"
               }}</h3>
-            <ConditionalLoadingSpinner @condition={{this.loading}}>
+            <DConditionalLoadingSpinner @condition={{this.loading}}>
               <PluginOutlet
                 @name="most-liked-replies"
                 @outletArgs={{lazyHash
@@ -308,7 +325,7 @@ export default class TopicMapSummary extends Component {
                     <li>
                       <a href={{this.postUrl post}}>
                         <span class="like-section__user">
-                          {{avatar
+                          {{dBoundAvatarTemplate
                             post.avatar_template
                             "tiny"
                             (hash title=post.username)
@@ -317,7 +334,7 @@ export default class TopicMapSummary extends Component {
                         </span>
                         <span class="like-section__likes">
                           {{post.like_count}}
-                          {{icon "heart"}}</span>
+                          {{dIcon "heart"}}</span>
                         <p>
                           {{trustHTML (emojiUnescape post.blurb)}}
                         </p>
@@ -326,7 +343,7 @@ export default class TopicMapSummary extends Component {
                   {{/each}}
                 </ul>
               </PluginOutlet>
-            </ConditionalLoadingSpinner>
+            </DConditionalLoadingSpinner>
           </:content>
         </DMenu>
       {{/if}}
@@ -343,7 +360,11 @@ export default class TopicMapSummary extends Component {
           @autofocus={{true}}
         >
           <:trigger>
-            {{number this.linksCount maxDisplay=LINKS_THRESHOLD noTitle="true"}}
+            {{dNumber
+              this.linksCount
+              maxDisplay=LINKS_THRESHOLD
+              noTitle="true"
+            }}
             <span class="topic-map__stat-label">
               {{i18n "links_lowercase" count=this.linksCount}}
             </span>
@@ -390,7 +411,7 @@ export default class TopicMapSummary extends Component {
           @autofocus={{true}}
         >
           <:trigger>
-            {{number @topic.participant_count noTitle="true"}}
+            {{dNumber @topic.participant_count noTitle="true"}}
             <span class="topic-map__stat-label">
               {{i18n "users_lowercase" count=@topic.participant_count}}
             </span>

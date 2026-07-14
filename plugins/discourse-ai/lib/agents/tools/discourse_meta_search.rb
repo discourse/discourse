@@ -119,7 +119,7 @@ module DiscourseAi
                 self.class.categories
               end
 
-            topics = (json["topics"]).index_by { it["id"] }
+            topics = json["topics"].index_by { it["id"] }
 
             format_results(posts, args: parameters) do |post|
               topic = topics[post["topic_id"]]

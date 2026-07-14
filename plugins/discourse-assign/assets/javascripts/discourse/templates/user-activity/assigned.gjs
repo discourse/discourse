@@ -1,15 +1,15 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import BasicTopicList from "discourse/components/basic-topic-list";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import EmptyState from "discourse/components/empty-state";
-import LoadMore from "discourse/components/load-more";
 import withEventValue from "discourse/helpers/with-event-value";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DEmptyState from "discourse/ui-kit/d-empty-state";
+import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 
 export default <template>
   {{#if @controller.doesntHaveAssignments}}
-    <EmptyState
+    <DEmptyState
       @title={{i18n "user.no_assignments_title"}}
       @body={{@controller.emptyStateBody}}
     />
@@ -27,7 +27,7 @@ export default <template>
       </div>
     </div>
 
-    <LoadMore
+    <DLoadMore
       @selector=".paginated-topics-list .topic-list tr"
       @action={{@controller.loadMore}}
       class="paginated-topics-list"
@@ -50,7 +50,9 @@ export default <template>
         @listContext="assigned"
       />
 
-      <ConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />
-    </LoadMore>
+      <DConditionalLoadingSpinner
+        @condition={{@controller.model.loadingMore}}
+      />
+    </DLoadMore>
   {{/if}}
 </template>

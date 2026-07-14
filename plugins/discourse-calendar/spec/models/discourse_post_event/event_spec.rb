@@ -20,6 +20,150 @@ describe DiscoursePostEvent::Event do
     ).is_at_most(DiscoursePostEvent::Event::MAX_NAME_LENGTH)
   end
 
+  describe "#warm_livestream_onebox" do
+    let(:livestream_url) { "https://example.com/live" }
+
+    fab!(:topic) { Fabricate(:topic, category: nil) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before { Jobs.run_later! }
+
+    it "enqueues onebox warming for a livestream URL" do
+      expect_enqueued_with(
+        job: :warm_livestream_onebox,
+        args: {
+          event_id: post.id,
+          url: livestream_url,
+        },
+      ) { Fabricate(:event, post: post, livestream: true, location: livestream_url) }
+    end
+
+    it "skips onebox warming when the onebox is cached" do
+      Discourse.cache.write(
+        Oneboxer.onebox_cache_key(livestream_url),
+        { onebox: "<aside>cached</aside>" },
+      )
+
+      expect_not_enqueued_with(job: :warm_livestream_onebox) do
+        Fabricate(:event, post: post, livestream: true, location: livestream_url)
+      end
+    end
+  end
+
+  describe "#create_livestream_chat_channel" do
+    fab!(:category)
+    fab!(:topic) { Fabricate(:topic, category: category) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    before do
+      SiteSetting.chat_enabled = true
+      Jobs.run_later!
+    end
+
+    it "creates the chat channel after the livestream event is committed" do
+      expect {
+        Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+      }.to change(DiscourseCalendar::Livestream::TopicChatChannel, :count).by(1)
+
+      expect(post.topic.topic_chat_channel.chat_channel.chatable).to eq(category)
+    end
+
+    it "does not create a chat channel when chat is disabled" do
+      SiteSetting.chat_enabled = false
+
+      expect {
+        Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+      }.not_to change(DiscourseCalendar::Livestream::TopicChatChannel, :count)
+    end
+
+    it "does not create a chat channel for a livestream event on a reply" do
+      reply = Fabricate(:post, topic: topic)
+
+      expect {
+        Fabricate(:event, post: reply, livestream: true, location: "https://example.com/live")
+      }.not_to change(DiscourseCalendar::Livestream::TopicChatChannel, :count)
+    end
+  end
+
+  describe "#reset_invalid_livestream" do
+    fab!(:post)
+
+    # enqueue (don't run) the onebox-warming job so it doesn't make a real request
+    before { Jobs.run_later! }
+
+    it "keeps livestream enabled for an http(s) location" do
+      event = Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+
+      expect(event.reload.livestream).to eq(true)
+    end
+
+    it "resets livestream when the location is not an http(s) URL" do
+      event = Fabricate(:event, post: post, livestream: true, location: "Room 5")
+
+      expect(event.reload.livestream).to eq(false)
+    end
+
+    it "resets livestream when there is no location" do
+      event = Fabricate(:event, post: post, livestream: true)
+
+      expect(event.reload.livestream).to eq(false)
+    end
+
+    it "resets livestream when the location is edited away from a URL" do
+      event = Fabricate(:event, post: post, livestream: true, location: "https://example.com/live")
+      event.update!(location: "Room 5")
+
+      expect(event.reload.livestream).to eq(false)
+    end
+
+    it "resets livestream when the event is not on the first post" do
+      reply = Fabricate(:post, topic: post.topic)
+      expect(reply.is_first_post?).to be(false)
+
+      event = Fabricate(:event, post: reply, livestream: true, location: "https://example.com/live")
+
+      expect(event.reload.livestream).to eq(false)
+    end
+  end
+
+  describe "#raw_invitees_are_groups" do
+    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+
+    it "is invalid when an invitee matches a username that is not a group" do
+      Fabricate(:user, username: "not_a_group")
+      event =
+        Fabricate.build(
+          :event,
+          post: post,
+          original_starts_at: Time.now,
+          raw_invitees: ["not_a_group"],
+        )
+
+      expect(event).not_to be_valid
+      expect(event.errors[:base]).to include(
+        I18n.t("discourse_post_event.errors.models.event.raw_invitees.only_group"),
+      )
+    end
+
+    it "is valid when an invitee is a group whose name collides with a username" do
+      Fabricate(:user).update_columns(
+        username: DiscoursePostEvent::Event::PUBLIC_GROUP,
+        username_lower: DiscoursePostEvent::Event::PUBLIC_GROUP,
+      )
+      event =
+        Fabricate.build(
+          :event,
+          post: post,
+          original_starts_at: Time.now,
+          raw_invitees: [DiscoursePostEvent::Event::PUBLIC_GROUP],
+        )
+
+      expect(event).to be_valid
+    end
+  end
+
   describe "topic custom fields callback" do
     let(:user) { Fabricate(:user, admin: true) }
     let!(:notified_user) { Fabricate(:user) }
@@ -601,6 +745,64 @@ describe DiscoursePostEvent::Event do
           }
         end
       end
+
+      context "when an invitee is no longer allowed" do
+        let(:group_2) { Fabricate(:group) }
+
+        it "resets the pruned invitee's topic tracking" do
+          event_1.invitees.find_by(user_id: user_1.id).update_attendance!(:going)
+          expect(TopicUser.find_by(user: user_1, topic: post_1.topic).notification_level).to eq(
+            TopicUser.notification_levels[:watching],
+          )
+
+          event_1.update_with_params!(raw_invitees: [group_2.name])
+
+          expect(event_1.invitees.find_by(user_id: user_1.id)).to be_nil
+          expect(TopicUser.find_by(user: user_1, topic: post_1.topic).notification_level).to eq(
+            TopicUser.notification_levels[:regular],
+          )
+        end
+
+        it "unfollows the pruned invitee from the livestream chat channel" do
+          channel = Fabricate(:category_channel)
+          Fabricate(:topic_chat_channel, topic: post_1.topic, chat_channel: channel)
+          membership =
+            Fabricate(
+              :user_chat_channel_membership,
+              user: user_1,
+              chat_channel: channel,
+              following: true,
+            )
+
+          event_1.update_with_params!(raw_invitees: [group_2.name])
+
+          expect(event_1.invitees.find_by(user_id: user_1.id)).to be_nil
+          expect(membership.reload.following).to eq(false)
+        end
+      end
+    end
+  end
+
+  describe "resetting topic tracking when the event is destroyed" do
+    fab!(:user_1, :user)
+    fab!(:topic_1, :topic)
+    fab!(:post_1) { Fabricate(:post, topic: topic_1) }
+    fab!(:event_1) { Fabricate(:event, post: post_1) }
+
+    before { event_1.create_invitees([{ user_id: user_1.id, status: 0 }]) }
+
+    it "resets a watching invitee back to regular, leaving the topic intact" do
+      event_1.invitees.find_by(user_id: user_1.id).update_attendance!(:going)
+      expect(TopicUser.find_by(user: user_1, topic: topic_1).notification_level).to eq(
+        TopicUser.notification_levels[:watching],
+      )
+
+      event_1.destroy!
+
+      expect(Topic.exists?(topic_1.id)).to eq(true)
+      expect(TopicUser.find_by(user: user_1, topic: topic_1).notification_level).to eq(
+        TopicUser.notification_levels[:regular],
+      )
     end
   end
 
@@ -771,6 +973,261 @@ describe DiscoursePostEvent::Event do
         expect(non_recurring_event.ends_at).not_to be_nil
       end
     end
+  end
+
+  describe "syncing from raw" do
+    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:post) { Fabricate(:post, topic: topic, user: user) }
+    fab!(:upload)
+
+    it "sets livestream from the bbcode attribute" do
+      Jobs.run_later!
+
+      post.update!(
+        raw:
+          "[event start=\"2020-04-24 14:15\" livestream=\"true\" location=\"https://example.com/live\"]\n[/event]",
+      )
+      post.rebake!
+      DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
+      post.reload
+
+      expect(post.event.livestream).to eq(true)
+    end
+
+    it "defaults livestream to false when the attribute is absent" do
+      post.update!(raw: "[event start=\"2020-04-24 14:15\"]\n[/event]")
+      post.rebake!
+      DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
+      post.reload
+
+      expect(post.event.livestream).to eq(false)
+    end
+
+    it "ignores livestream=true when the location is not an http(s) URL" do
+      post.update!(
+        raw: "[event start=\"2020-04-24 14:15\" livestream=\"true\" location=\"Room 5\"]\n[/event]",
+      )
+      post.rebake!
+      DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
+      post.reload
+
+      expect(post.event.livestream).to eq(false)
+    end
+
+    context "with image" do
+      before do
+        post.update!(
+          raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
+        )
+        post.rebake!
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
+        post.reload
+      end
+
+      it "resolves image to image_upload_id and creates UploadReference" do
+        expect(post.event.image_upload_id).to eq(upload.id)
+        expect(UploadReference.exists?(upload_id: upload.id, target: post.event)).to eq(true)
+      end
+
+      it "clears image_upload_id when image is removed" do
+        post.update!(raw: "[event start=\"2020-04-24 14:15\"]\n[/event]")
+        post.rebake!
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
+        post.reload
+
+        expect(post.event.image_upload_id).to be_nil
+        expect(UploadReference.exists?(upload_id: upload.id, target: post.event)).to eq(false)
+      end
+    end
+
+    describe "post.image_upload_id sync on post_process_cooked" do
+      fab!(:topic) { Fabricate(:topic, user: user) }
+
+      it "sets post.image_upload_id from the event image after post processing" do
+        post =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: user,
+            raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
+          )
+        post.rebake!
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
+        post.reload
+        CookedPostProcessor.new(post).post_process
+
+        post.reload
+        expect(post.image_upload_id).to eq(upload.id)
+      end
+
+      it "sets topic.image_upload_id when the post is the first post" do
+        post = topic.first_post || Fabricate(:post, topic: topic, user: user, post_number: 1)
+        post.update!(
+          raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
+        )
+        post.rebake!
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
+        post.reload
+        CookedPostProcessor.new(post).post_process
+
+        post.reload
+        topic.reload
+        expect(topic.image_upload_id).to eq(upload.id)
+      end
+
+      it "does not override post.image_upload_id when event has no image" do
+        other_upload = Fabricate(:upload)
+        post =
+          Fabricate(
+            :post,
+            topic: topic,
+            user: user,
+            raw: "[event start=\"2020-04-24 14:15\"]\n[/event]\n![image](#{other_upload.url})",
+          )
+        post.rebake!
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
+        post.reload
+        CookedPostProcessor.new(post).post_process
+
+        post.reload
+        expect(post.image_upload_id).not_to eq(nil)
+        expect(post.event.image_upload_id).to be_nil
+      end
+    end
+
+    context "with an image from a different secure post" do
+      fab!(:private_upload_owner, :user)
+      fab!(:private_upload_recipient, :user)
+      fab!(:private_upload_post) do
+        Fabricate(
+          :private_message_post,
+          user: private_upload_owner,
+          recipient: private_upload_recipient,
+        )
+      end
+      fab!(:private_upload) do
+        Fabricate(
+          :secure_upload,
+          user: private_upload_owner,
+          access_control_post: private_upload_post,
+        )
+      end
+
+      before do
+        setup_s3
+        SiteSetting.secure_uploads = true
+
+        post.update!(
+          raw: "[event start=\"2020-04-24 14:15\" image=\"#{private_upload.url}\"]\n[/event]",
+        )
+        post.rebake!
+      end
+
+      it "does not associate the upload" do
+        DiscoursePostEvent::Event::SyncFromPost.call(params: { post_id: post.id })
+        post.reload
+
+        expect(post.event.image_upload_id).to be_nil
+        expect(UploadReference.exists?(upload_id: private_upload.id, target: post.event)).to eq(
+          false,
+        )
+      end
+    end
+  end
+
+  describe "post/topic image_upload_id sync on post_edited" do
+    fab!(:user) { Fabricate(:user, admin: true) }
+    fab!(:topic) { Fabricate(:topic, user: user) }
+    fab!(:post) { Fabricate(:post, topic: topic, user: user, post_number: 1) }
+    fab!(:upload)
+
+    it "syncs event image to post and topic when image is added" do
+      PostRevisor.new(post).revise!(
+        user,
+        raw: "[event start=\"2020-04-24 14:15\" image=\"#{upload.short_url}\"]\n[/event]",
+      )
+      post.reload
+      topic.reload
+
+      expect(post.image_upload_id).to eq(upload.id)
+      expect(topic.image_upload_id).to eq(upload.id)
+    end
+
+    it "does not clear post image_upload_id when event has no image but post has inline images" do
+      other_upload = Fabricate(:upload)
+      PostRevisor.new(post).revise!(
+        user,
+        raw: "[event start=\"2020-04-24 14:15\"]\n[/event]\n![image](#{other_upload.short_url})",
+      )
+      CookedPostProcessor.new(post).post_process
+      post.reload
+
+      PostRevisor.new(post).revise!(
+        user,
+        raw:
+          "[event start=\"2020-04-24 14:15\"]\n[/event]\n![image](#{other_upload.short_url})\nupdated text",
+      )
+      post.reload
+
+      expect(post.image_upload_id).to eq(other_upload.id)
+    end
+  end
+end
+
+describe DiscoursePostEvent::Event, "#most_likely_going" do
+  before do
+    Jobs.run_immediately!
+    SiteSetting.calendar_enabled = true
+    SiteSetting.discourse_post_event_enabled = true
+  end
+
+  fab!(:event)
+
+  it "orders going invitees by RSVP time (created_at), not by user id" do
+    early_rsvp = Fabricate(:user)
+    late_rsvp = Fabricate(:user)
+    # later-created user (higher id) RSVP'd first, so should come first
+    expect(late_rsvp.id).to be > early_rsvp.id
+
+    Fabricate(
+      :post_event_invitee,
+      event:,
+      user: late_rsvp,
+      status: DiscoursePostEvent::Invitee.statuses[:going],
+      created_at: 2.hours.ago,
+    )
+    Fabricate(
+      :post_event_invitee,
+      event:,
+      user: early_rsvp,
+      status: DiscoursePostEvent::Invitee.statuses[:going],
+      created_at: 1.hour.ago,
+    )
+
+    expect(event.most_likely_going.map(&:user)).to eq([late_rsvp, early_rsvp])
+  end
+
+  it "groups going invitees ahead of interested ones regardless of RSVP time" do
+    interested = Fabricate(:user)
+    going = Fabricate(:user)
+
+    Fabricate(
+      :post_event_invitee,
+      event:,
+      user: interested,
+      status: DiscoursePostEvent::Invitee.statuses[:interested],
+      created_at: 2.hours.ago,
+    )
+    Fabricate(
+      :post_event_invitee,
+      event:,
+      user: going,
+      status: DiscoursePostEvent::Invitee.statuses[:going],
+      created_at: 1.hour.ago,
+    )
+
+    expect(event.most_likely_going.map(&:user)).to eq([going, interested])
   end
 end
 

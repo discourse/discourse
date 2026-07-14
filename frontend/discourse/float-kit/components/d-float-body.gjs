@@ -6,10 +6,9 @@ import DFloatPortal from "discourse/float-kit/components/d-float-portal";
 import { getScrollParent } from "discourse/float-kit/lib/get-scroll-parent";
 import FloatKitApplyFloatingUi from "discourse/float-kit/modifiers/apply-floating-ui";
 import FloatKitCloseOnEscape from "discourse/float-kit/modifiers/close-on-escape";
-import concatClass from "discourse/helpers/concat-class";
-import closeOnClickOutside from "discourse/modifiers/close-on-click-outside";
-import TrapTab from "discourse/modifiers/trap-tab";
-import { and } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dCloseOnClickOutside from "discourse/ui-kit/modifiers/d-close-on-click-outside";
+import dTrapTab from "discourse/ui-kit/modifiers/d-trap-tab";
 
 export default class DFloatBody extends Component {
   closeOnScroll = modifierFn(() => {
@@ -26,28 +25,29 @@ export default class DFloatBody extends Component {
     };
   });
 
-  trapPointerDown = modifierFn((element) => {
+  trapInteractionPropagation = modifierFn((element) => {
     const handler = (event) => {
       event.stopPropagation();
     };
 
-    element.addEventListener("pointerdown", handler);
+    const events = ["pointerdown", "mousedown", "touchend"];
+    events.forEach((name) => element.addEventListener(name, handler));
 
     return () => {
-      element.removeEventListener("pointerdown", handler);
+      events.forEach((name) => element.removeEventListener(name, handler));
     };
   });
 
   get supportsCloseOnClickOutside() {
-    return this.args.instance.expanded && this.options.closeOnClickOutside;
+    return this.options.closeOnClickOutside;
   }
 
   get supportsCloseOnEscape() {
-    return this.args.instance.expanded && this.options.closeOnEscape;
+    return this.options.closeOnEscape;
   }
 
   get supportsCloseOnScroll() {
-    return this.args.instance.expanded && this.options.closeOnScroll;
+    return this.options.closeOnScroll;
   }
 
   get trigger() {
@@ -76,8 +76,9 @@ export default class DFloatBody extends Component {
       @inline={{@inline}}
       @portalOutletElement={{@instance.portalOutletElement}}
     >
+      {{! eslint-disable-next-line ember/template-no-unsupported-role-attributes }}
       <div
-        class={{concatClass
+        class={{dConcatClass
           @mainClass
           (if this.options.animated "-animated")
           (if @instance.expanded "-expanded")
@@ -88,12 +89,12 @@ export default class DFloatBody extends Component {
         aria-expanded={{if @instance.expanded "true" "false"}}
         role={{@role}}
         {{FloatKitApplyFloatingUi this.trigger this.options @instance}}
-        {{this.trapPointerDown}}
-        {{(if @trapTab (modifier TrapTab autofocus=this.options.autofocus))}}
+        {{this.trapInteractionPropagation}}
+        {{(if @trapTab (modifier dTrapTab autofocus=this.options.autofocus))}}
         {{(if
-          (and @instance.expanded this.supportsCloseOnClickOutside)
+          this.supportsCloseOnClickOutside
           (modifier
-            closeOnClickOutside
+            dCloseOnClickOutside
             (fn @instance.close (hash focusTrigger=false))
             (hash target=this.content)
           )

@@ -59,6 +59,14 @@ ur:
             hide_topic:
               label: "موضوع چھپائیں"
     discourse_ai:
+      ai_tool_approval:
+        loading: "لوڈ ہو رہا ہے..."
+        tool: "عمل"
+        user: "رکن"
+        approve: "منظور"
+        reject: "مسترد کریں"
+        approved: "منظورشدہ"
+        rejected: "مسترد کر دیا"
       llm_selector:
         none: "کوئی نہیں"
       features:
@@ -70,11 +78,15 @@ ur:
         expand_list:
           one: "(%{count} مزید)"
           other: "(%{count} مزید)"
+        nav:
+          enabled: "فعال شدہ"
         filters:
           all: "تمام"
           reset: "رِی سَیٹ"
         search:
           name: "تلاش کریں"
+        admin_dashboard:
+          highlights: "نمایاں نکات"
         ai_helper:
           setting_groups:
             automation: "آٹومیشن"
@@ -85,6 +97,7 @@ ur:
         select_option: "ایک آپشن منتخب کریں..."
       translations:
         title: "ترجمہ"
+        category_scope: "زمرہ جات"
         stats:
           eta_minutes:
             one: "%{count} منٹ"
@@ -135,6 +148,12 @@ ur:
           select_all: "سبھی منتخب کریں"
           clear_all: "سبھی ہٹا دیں"
         delete: "حذف کریں"
+        thinking_effort_options:
+          none: "کوئی نہیں"
+          low: "کم"
+          medium: "درمیانی"
+          high: "زیادہ"
+          max: "زیادہ سے زیادہ"
         response_format:
           open_modal: "ترمیم کریں"
           modal:
@@ -257,6 +276,8 @@ ur:
           today: "آج"
           last_7_days: "پچھلے 7 دن"
           last_30_days: "پچھلے 30 دن"
+          scroll_to_bottom: "نیچے تک سکرول کریں"
+          editing_post: "پوسٹ میں ترمیم جاری"
       sentiments:
         sentiment_analysis:
           filter_types:

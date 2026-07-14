@@ -2,19 +2,20 @@
 
 # we should set the locale before the migration
 task "set_locale" do
-  begin
-    I18n.locale =
-      begin
-        (SiteSetting.default_locale || :en)
-      rescue StandardError
-        :en
-      end
-  rescue I18n::InvalidLocale
-    I18n.locale = :en
-  end
+  I18n.locale =
+    begin
+      SiteSetting.default_locale || :en
+    rescue StandardError
+      :en
+    end
+rescue I18n::InvalidLocale
+  I18n.locale = :en
 end
 
 module MultisiteTestHelpers
+  MULTISITE_CONFIG_PATH = "spec/fixtures/multisite/two_dbs.yml"
+  MULTISITE_TEST_SITE = "second"
+
   def self.load_multisite?
     Rails.env.test? && !ENV["RAILS_DB"] && !ENV["SKIP_MULTISITE"]
   end
@@ -23,14 +24,23 @@ module MultisiteTestHelpers
     (ENV["RAILS_ENV"] == "test" || !ENV["RAILS_ENV"]) && !ENV["RAILS_DB"] &&
       !ENV["SKIP_MULTISITE"] && !ENV["SKIP_TEST_DATABASE"]
   end
+
+  # Routes ActiveRecord at the multisite test DB via RailsMultisite for the
+  # duration of the block, then restores the prior connection.
+  def self.with_multisite_test_connection(&block)
+    RailsMultisite::ConnectionManagement.config_filename = MULTISITE_CONFIG_PATH
+    RailsMultisite::ConnectionManagement.with_connection(MULTISITE_TEST_SITE, &block)
+  ensure
+    RailsMultisite::ConnectionManagement.clear_settings!
+  end
 end
 
-task "db:environment:set" => [:load_config] do |_, args|
+task "db:environment:set" => [:load_config] do
   if MultisiteTestHelpers.load_multisite?
-    system(
-      "RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:environment:set",
-      exception: true,
-    )
+    MultisiteTestHelpers.with_multisite_test_connection do
+      pool = ActiveRecord::Tasks::DatabaseTasks.migration_connection_pool
+      pool.internal_metadata.create_table_and_set_flags(pool.migration_context.current_environment)
+    end
   end
 end
 
@@ -39,14 +49,10 @@ task "db:force_skip_persist" do
   GlobalSetting.skip_redis = true
 end
 
-task "db:create" => [:load_config] do |_, args|
+task "db:create" => [:load_config] do
   if MultisiteTestHelpers.create_multisite?
-    unless system("RAILS_ENV=test RAILS_DB=discourse_test_multisite rake db:create")
-      STDERR.puts "-" * 80
-      STDERR.puts "ERROR: Could not create multisite DB. A common cause of this is a plugin"
-      STDERR.puts "checking the column structure when initializing, which raises an error."
-      STDERR.puts "-" * 80
-      raise "Could not initialize discourse_test_multisite"
+    MultisiteTestHelpers.with_multisite_test_connection do
+      ActiveRecord::Tasks::DatabaseTasks.create(ActiveRecord::Base.connection_db_config)
     end
   end
 end
@@ -60,14 +66,16 @@ begin
     top_level_tasks = Rake.application.top_level_tasks
     db_create_index = top_level_tasks.index("db:create")
     if db_create_index && db_create_index < top_level_tasks.length - 1
-      exec "#{Rails.root}/bin/rake", *top_level_tasks[db_create_index + 1..-1]
+      exec "#{Rails.root.join("bin/rake")}", *top_level_tasks[db_create_index + 1..-1]
     end
   end
 end
 
-task "db:drop" => [:load_config] do |_, args|
+task "db:drop" => [:load_config] do
   if MultisiteTestHelpers.create_multisite?
-    system("RAILS_DB=discourse_test_multisite RAILS_ENV=test rake db:drop", exception: true)
+    MultisiteTestHelpers.with_multisite_test_connection do
+      ActiveRecord::Tasks::DatabaseTasks.drop(ActiveRecord::Base.connection_db_config)
+    end
   end
 end
 
@@ -75,6 +83,25 @@ begin
   Rake::Task["db:migrate"].clear
   Rake::Task["db:rollback"].clear
 end
+
+# Loading structure.sql populates `schema_migrations` but not our custom
+# `schema_migration_details` table. Backfill it so `Discourse.site_creation_date` works.
+module BackfillSchemaMigrationDetails
+  def load_schema(*)
+    result = super
+    conn = ActiveRecord::Base.connection
+    conn.execute(<<~SQL) if conn.table_exists?("schema_migration_details")
+        INSERT INTO schema_migration_details (version, created_at)
+        SELECT sm.version, current_timestamp
+          FROM schema_migrations sm
+          LEFT JOIN schema_migration_details smd ON smd.version = sm.version
+         WHERE smd.version IS NULL
+         ORDER BY sm.version
+      SQL
+    result
+  end
+end
+ActiveRecord::Tasks::DatabaseTasks.singleton_class.prepend(BackfillSchemaMigrationDetails)
 
 task "db:rollback" => %w[environment set_locale] do |_, args|
   step = ENV["STEP"] ? ENV["STEP"].to_i : 1
@@ -102,7 +129,11 @@ class SeedHelper
 end
 
 def execute_db_migration
-  ActiveRecord::Tasks::DatabaseTasks.migrate
+  if ENV["SKIP_STRUCTURE_SQL"] == "1"
+    ActiveRecord::Tasks::DatabaseTasks.migrate(skip_initialize: true)
+  else
+    ActiveRecord::Tasks::DatabaseTasks.migrate
+  end
 
   if ENV["SKIP_SEED_FU"] != "1"
     Rake::Task["db:seed"].reenable
@@ -119,6 +150,7 @@ task "multisite:migrate" => %w[
        environment
        set_locale
        assets:precompile:asset_processor
+       db:migrate
      ] do |_, args|
   DistributedMutex.synchronize(
     "db_migration",
@@ -129,17 +161,19 @@ task "multisite:migrate" => %w[
 
     puts "Multisite migrator is running using #{concurrency} processes"
 
-    databases = RailsMultisite::ConnectionManagement.all_dbs
+    # `db:migrate` prereq already migrated the default database.
+    databases =
+      RailsMultisite::ConnectionManagement.all_dbs - [RailsMultisite::ConnectionManagement::DEFAULT]
 
     puts "Running migrations and seeds for #{databases.join(", ")} database(s)"
 
-    migrate_database =
-      lambda do |db|
-        output = StringIO.new
-        error = nil
+    should_fork = concurrency > 1 && databases.length > 1
 
-        begin
-          $stdout = $stderr = output
+    ENV["RAISE_SEED_ERRORS"] = "1"
+
+    migrate_databases =
+      lambda do |shard|
+        shard.each do |db|
           RailsMultisite::ConnectionManagement.with_connection(db) do
             puts "-" * 40
             start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
@@ -148,52 +182,47 @@ task "multisite:migrate" => %w[
             puts "Migrating #{db} done (#{(Process.clock_gettime(Process::CLOCK_MONOTONIC) - start).round(2)}s)"
             puts "Completed"
           end
-        rescue => e
-          error = e
-        ensure
-          $stdout = STDOUT
-          $stderr = STDERR
+        end
+      end
+
+    log_dir = nil
+
+    begin
+      if should_fork
+        log_dir = Dir.mktmpdir("multisite-migrate-")
+
+        database_shard_size = (databases.size.to_f / concurrency).ceil
+        database_shards = databases.each_slice(database_shard_size).to_a
+
+        Discourse.before_fork
+
+        pids =
+          database_shards.map do |database_shard|
+            Process.fork do
+              Discourse.after_fork
+              $stdout.reopen(File.join(log_dir, "worker-#{Process.pid}.log"), "w")
+              $stderr.reopen($stdout)
+              $stdout.sync = true
+              migrate_databases.call(database_shard)
+            end
+          end
+
+        remaining = pids.to_set
+        failed = false
+        until remaining.empty?
+          pid, status = Process.waitpid2(-1)
+          next unless remaining.delete?(pid)
+          failed = true unless status.success?
+          log_path = File.join(log_dir, "worker-#{pid}.log")
+          puts File.read(log_path) if File.exist?(log_path)
         end
 
-        { db: db, output: output.string, error: error }
+        raise "One or more child processes failed while migrating" if failed
+      else
+        migrate_databases.call(databases)
       end
-
-    should_fork = concurrency > 1 && databases.length > 1
-
-    Discourse.before_fork if should_fork
-
-    results =
-      Parallel.map(
-        databases,
-        in_processes: should_fork ? concurrency : 0,
-        isolation: false,
-        finish_in_order: true,
-        finish:
-          lambda do |db, _index, result|
-            result[:output]&.lines&.each { |line| puts "[#{db}] #{line}" }
-          end,
-      ) do |db|
-        $after_fork_called ||= (Discourse.after_fork || true) if should_fork
-        ENV["RAISE_SEED_ERRORS"] = "1"
-        migrate_database.call(db)
-      end
-
-    errors = results.select { |r| r[:error] }
-
-    if errors.any?
-      $stderr.puts
-      $stderr.puts "-" * 80
-      $stderr.puts "#{errors.length} database(s) failed!"
-
-      errors.each do |result|
-        $stderr.puts
-        $stderr.puts "Failed to process #{result[:db]}"
-        $stderr.puts result[:error].inspect
-        $stderr.puts result[:error].backtrace
-        $stderr.puts
-      end
-
-      raise errors.first[:error]
+    ensure
+      FileUtils.rm_rf(log_dir) if log_dir
     end
 
     Rake::Task["db:_dump"].invoke
@@ -223,12 +252,10 @@ task "db:migrate" => %w[
     end
 
     %i[pg_trgm unaccent].each do |extension|
-      begin
-        DB.exec "CREATE EXTENSION IF NOT EXISTS #{extension}"
-      rescue => e
-        STDERR.puts "Cannot enable database extension #{extension}"
-        STDERR.puts e
-      end
+      DB.exec "CREATE EXTENSION IF NOT EXISTS #{extension}"
+    rescue => e
+      STDERR.puts "Cannot enable database extension #{extension}"
+      STDERR.puts e
     end
 
     execute_db_migration
@@ -236,7 +263,7 @@ task "db:migrate" => %w[
   end
 
   if !Discourse.is_parallel_test? && MultisiteTestHelpers.load_multisite?
-    system("RAILS_DB=discourse_test_multisite rake db:migrate", exception: true)
+    MultisiteTestHelpers.with_multisite_test_connection { execute_db_migration }
   end
 end
 
@@ -247,7 +274,7 @@ task "db:seed" => "environment" do
     SeedFu.seed(SeedHelper.paths, SeedHelper.filter)
   rescue => error
     raise if ENV["RAISE_SEED_ERRORS"] == "1"
-    error.backtrace.each { |l| puts l }
+    puts error.full_message(highlight: false, order: :top)
   end
 end
 
@@ -379,7 +406,7 @@ task "db:validate_indexes", [:arg] => %w[db:ensure_post_migrations environment] 
 
   puts
 
-  fix_indexes = (ENV["FIX_INDEXES"] == "1" || args[:arg] == "fix")
+  fix_indexes = ENV["FIX_INDEXES"] == "1" || args[:arg] == "fix"
   inconsistency_found = false
 
   RailsMultisite::ConnectionManagement.each_connection do |db_name|
@@ -438,11 +465,9 @@ task "db:validate_indexes", [:arg] => %w[db:ensure_post_migrations environment] 
       if fix_indexes
         puts "Adding missing indexes..."
         missing.each do |m|
-          begin
-            DB.exec(m)
-          rescue => e
-            $stderr.puts "Error running: #{m} - #{e}"
-          end
+          DB.exec(m)
+        rescue => e
+          $stderr.puts "Error running: #{m} - #{e}"
         end
       end
     else
@@ -530,24 +555,20 @@ task "db:rebuild_indexes" => "environment" do
         "SELECT indexname FROM pg_indexes WHERE schemaname = 'public' AND tablename IN ('#{table_names.join("', '")}')",
       )
     index_names.each do |index_name|
-      begin
-        puts index_name
-        DB.exec("DROP INDEX public.#{index_name}")
-      rescue ActiveRecord::StatementInvalid
-        # It's this:
-        # PG::Error: ERROR:  cannot drop index category_users_pkey because constraint category_users_pkey on table category_users requires it
-        # HINT:  You can drop constraint category_users_pkey on table category_users instead.
-      end
+      puts index_name
+      DB.exec("DROP INDEX public.#{index_name}")
+    rescue ActiveRecord::StatementInvalid
+      # It's this:
+      # PG::Error: ERROR:  cannot drop index category_users_pkey because constraint category_users_pkey on table category_users requires it
+      # HINT:  You can drop constraint category_users_pkey on table category_users instead.
     end
 
     # Create the indexes
     table_names.each do |table_name|
       index_definitions[table_name].each do |index_def|
-        begin
-          DB.exec(index_def)
-        rescue ActiveRecord::StatementInvalid
-          # Trying to recreate a primary key
-        end
+        DB.exec(index_def)
+      rescue ActiveRecord::StatementInvalid
+        # Trying to recreate a primary key
       end
     end
   rescue StandardError
@@ -560,14 +581,12 @@ end
 
 desc "Check that the DB can be accessed"
 task "db:status:json" do
-  begin
-    Rake::Task["environment"].invoke
-    DB.query("SELECT 1")
-  rescue StandardError
-    puts({ status: "error" }.to_json)
-  else
-    puts({ status: "ok" }.to_json)
-  end
+  Rake::Task["environment"].invoke
+  DB.query("SELECT 1")
+rescue StandardError
+  puts({ status: "error" }.to_json)
+else
+  puts({ status: "ok" }.to_json)
 end
 
 desc "Grow notification id column to a big int in case of overflow"

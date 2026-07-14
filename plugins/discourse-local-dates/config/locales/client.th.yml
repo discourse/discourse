@@ -17,8 +17,6 @@ th:
       create:
         form:
           insert: แทรก
-          advanced_mode: โหมดขั้นสูง
-          simple_mode: โหมดอย่างง่าย
           format_description: "รูปแบบที่ใช้แสดงวันที่แก่ผู้ใช้ ใช้ Z เพื่อแสดงเวลาต่างจาก UTC และ zz สำหรับชื่อเขตเวลา"
           timezones_title: เขตเวลาที่จะแสดง
           timezones_description: เขตเวลาจะถูกใช้เพื่อแสดงวันที่ในการแสดงตัวอย่างและฟอลแบ็ก

@@ -2,7 +2,7 @@
 module DiscourseDataExplorer
   class ResultFormatConverter
     def self.convert(file_type, result, opts = {})
-      self.new(result, opts).send("to_#{file_type}")
+      new(result, opts).send("to_#{file_type}")
     end
 
     def initialize(result, opts)
@@ -44,7 +44,8 @@ module DiscourseDataExplorer
       json[:explain] = result[:explain] if opts[:explain]
 
       if !opts[:download]
-        relations, colrender = DataExplorer.add_extra_data(pg_result)
+        guardian = Guardian.new(opts[:current_user])
+        relations, colrender = DataExplorer.add_extra_data(pg_result, guardian:)
         json[:relations] = relations
         json[:colrender] = colrender
       end

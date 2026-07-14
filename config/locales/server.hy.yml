@@ -195,7 +195,13 @@ hy:
   read_only_mode_enabled: "Կայքը գտնվում է միայն կարդալու ռեժիմում: Միջամտությունները անջատված են:"
   invalid_grant_badge_reason_link: "Արտաքին կամ անվավեր discourse-ի հղումը թույլատրված չէ կրծքանշանի պատճառի մեջ:"
   reading_time: "Կարդալու ժամանակը"
+  reading_time_minutes:
+    one: "%{count} րոպե 🕑"
+    other: "%{count} րոպե 🕑"
   likes: "Հավանումներ"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Ցավում ենք, սակայն նոր օգտատերերը ժամանակավորապես սահմանափակված են մինչև %{count} պատասխան միևնույն թեմայում:"
     other: "Ցավում ենք, սակայն նոր օգտատերերը ժամանակավորապես սահմանափակված են թողնելու մինչև %{count} պատասխան միևնույն թեմայում:"
@@ -311,6 +317,12 @@ hy:
       trust_level_2: "trust_level_2"
       trust_level_3: "trust_level_3"
       trust_level_4: "trust_level_4"
+    default_full_names:
+      everyone: "Բոլորը"
+      moderators: "Մոդերատորներ"
+      staff: "Անձնակազմ"
+      anonymous_users: "Անանուն օգտատերեր"
+      logged_in_users: "Մուտքագրված օգտատերեր"
     request_membership_pm:
       title: "@%{group_name}-ի անդամակցության հարցում"
   education:
@@ -685,6 +697,9 @@ hy:
       session_info: "Կարդալ օգտատիրոջ սեանսի ինֆոն"
       read: "Կարդալ ամբողջը"
       write: "Գրել ամբողջը"
+    device:
+      code: "Կոդ"
+      continue: "Շարունակել"
   flags:
     errors:
       already_handled: "Դրոշակը արդեն մշակված է"
@@ -753,6 +768,30 @@ hy:
       xaxis: "Օր"
       yaxis: "Նոր մասնակիցների քանակ"
       description: "Այն օգտատերերի քանակը, որոնք այս ժամանակահատվածում կատարել են իրենց առաջին գրառումը:"
+    activity_by_category:
+      labels:
+        category: "Կատեգորիա"
+        topics: "Թեմաներ"
+        posts: "Գրառումներ"
+        share: "Կիսվել"
+    posters_by_member_type:
+      labels:
+        count: "Գրառումներ"
+        share: "Կիսվել"
+      types:
+        staff: "Անձնակազմ"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        count: "Անդամներ"
+        share: "Կիսվել"
+        signups: "Գրանցումներ"
+      levels:
+        "0": "Նոր"
+        "1": "Հիմնական"
+        "2": "Անդամ"
+        "3": "Սովորական"
+        "4": "Առաջնորդ"
     trust_level_growth:
       yaxis: "Օր"
     consolidated_page_views:
@@ -776,6 +815,9 @@ hy:
     consolidated_page_views_browser_detection:
       yaxis: "Օր"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Անանուն"
+        page_view_crawler: "Տվյալների հավաքագրիչներ (Crawler)"
       yaxis: "Օր"
     dau_by_mau:
       xaxis: "Օր"
@@ -885,6 +927,12 @@ hy:
         num_clicks: "Սեղմումներ"
         num_topics: "Թեմաներ"
       description: "Օգտատերեր՝ ցուցակավորված ըստ այն հղումների սեղմումների, որոնցով կիսվել են:"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Այցելություններ"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Այցելություններ"
     top_traffic_sources:
       title: "Թոփ Այցելությունների Աղբյուրներ"
       xaxis: "Դոմեն"
@@ -937,6 +985,8 @@ hy:
     page_view_anon_browser_reqs:
       xaxis: "Օր"
     page_view_logged_in_browser_reqs:
+      xaxis: "Օր"
+    page_view_embed_reqs:
       xaxis: "Օր"
     http_background_reqs:
       title: "Ֆոն"
@@ -994,7 +1044,7 @@ hy:
         os: Օպերացիոն Համակարգ
         login_time: Մուտքի Ժամանակ
       description: "Նախորդ մուտքերից կասկածելիորեն տարբերվող նոր մուտքերի մանրամասներ"
-    staff_logins:
+    admin_logins:
       title: "Ադմինի Մուտքեր"
       labels:
         user: Օգտատեր
@@ -1083,7 +1133,6 @@ hy:
     delete_removed_posts_after: "Հեղինակի կողմից հեռացված գրառումները ավտոմատ կերպով կհեռացվեն (n) ժամ անց: Եթե սահմանված է 0, գրառումները կհեռացվեն անմիջապես:"
     responsive_post_image_sizes: "Փոփոխեք նախադիտման նկարների չափերը՝ հետևյալ պիքսելների հարաբերակցությամբ բարձր DPI -ով էկրանները թույլատրելու համար:"
     fixed_category_positions: "Եթե նշված է, Դուք կարող եք դասավորել կատեգորիաները որոշակի կարգով: Եթե նշված չէ, կատեգորիաները դասավորվում են ըստ ակտիվության կարգի:"
-    fixed_category_positions_on_create: "Եթե նշված է, կատեգորիաների դասավորությունը կկարգավորվի թեմայի ստեղծման երկխոսությունում (պահանջում է fixed_category_positions):"
     add_rel_nofollow_to_user_content: 'Ավելացնել rel nofollow բոլոր կիրառված նյութերի համար, բացառությամբ ներքին հղումների (ներառյալ մայր-դոմենները): Եթե Դուք փոփոխեք սա, Դուք պետք է թարմացնեք բոլոր գրառումները՝ "rake posts:rebake" :'
     exclude_rel_nofollow_domains: "Դոմենների ցանկը, որտեղ nofollow-ն չպետք է ավելացվի հղումներին: example.com -ը ավտոմատ կերպով կթույլատրի նաև sub.example.com -ը: Որպես նվազագույն՝ Դուք պետք է ավելացնեք այս կայքի դոմենը՝ ցանցային տվյալների հավաքագրիչներին (crawler) օգնելու գտնել բոլոր նյութերը: Եթե Ձեր վեբ-կայքի այլ մասեր այլ դոմենների վրա են, ավելացրեք դրանք ևս:"
     post_excerpt_maxlength: "Գրառման հատվածի / ամփոփման առավելագույն երկարությունը:"
@@ -1093,9 +1142,7 @@ hy:
     allowed_inline_onebox_domains: "Դոմենների ցանկ, որոնք կվերածվեն սմարթ-ներդիրի փոքրացված տեսքով՝ առանց վերնագրի կապակցված լինելու դեպքում"
     logo: "Ձեր կայքի վերևի ձախ կողմում գտնվող լոգոյի նկարը: Օգտագործեք լայն ուղղանկյուն նկար 120 բարձրությամբ և 3:1 -ից բարձր հարաբերակցությամբ: Եթե թողնեք դատարկ, կցուցադրվի կայքի վերնագրի տեքստը:"
     logo_small: "Ձեր կայքի վերևի ձախ կողմում գտնվող փոքր լոգոյի նկարը, որը ցուցադրվում է ներքև իջնելիս: Օգտագործեք քառակուսի 120 × 120 նկար: Եթե թողնեք դատարկ, կցուցադրվի հիմնական նկարը:"
-    digest_logo: "Ձեր կայքի ամփոփման նամակի վերևում օգտագործված այլընտրանքային լոգոյի նկարը: Օգտագործեք լայն ուղղանկյուն նկար: Մի օգտագործեք SVG նկար: Եթե թողնեք դատարկ, կօգտագործվի `լոգո` կարգավորման նկարը: "
     notification_email: "Ումից. էլ. հասցեն, որն օգտագործվում է բոլոր էական համակարգային նամակները ուղարկելիս: Այստեղ սահմանված դոմենը պետք է ունենա SPF, DKIM և հակադարձ PTR գրառումներ՝ ճիշտ սահմանված էլ. նամակի ստացման համար:"
-    email_subject: "Անհատականացվող սուբյեկտի ֆորմատ ստանդարտ էլ. հասցեների համար: Այցելեք <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     force_https: "Պարտադրեք Ձեր կայքին օգտագործել միայն HTTPS: ՈՒՇԱԴՐՈՒԹՅՈՒՆ՝ ՄԻ միացրեք սա, քանի դեռ համոզված չեք, որ HTTPS -ը ամբողջությամբ կարգավորված է և աշխատում է բացառապես ամենուր! Դուք ստուգե՞լ եք նաև Ձեր CDN-ը, բոլոր սոցիալական կայքերը և ցանկացած արտաքին լոգո / կախյալներ՝ համոզվելու համար, որ դրանք բոլորը համատեղելի են HTTPS -ի հետ:"
     summary_score_threshold: "'Ամփոփել Այս Թեման'-ի մեջ ներառման համար անհրաժեշտ գրառման նվազագույն միավորը"
     summary_percent_filter: "Երբ օգտատերը սեղմում է 'Ամփոփել Այս Թեման' , ցուցադրել գրառումների թոփ %-ը"
@@ -1106,8 +1153,6 @@ hy:
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
     cooldown_minutes_after_hiding_posts: "Րոպեների քանակը, որ օգտատերը պետք է սպասի՝ մինչ համայնքի դրոշակավորման միջոցով թաքցված գրառման խմբագրել կարողանալը"
-    max_topics_in_first_day: "Թեմաների առավելագույն քանակը, որը օգտատերը կարող է ստեղծել իր առաջին գրառումի ստեղծումից հետո 24 ժամվա ընթացքում"
-    max_replies_in_first_day: "Պատասխանների առավելագույն քանակը, որ օգտատիրոջը թույլատրվում է ստեղծել իր առաջին գրառումը ստեղծելուց հետո 24 ժամվա ընթացքում:"
     tl2_additional_likes_per_day_multiplier: "Բարձրացնել յուրաքանչյուր օրվա հավանումների սահմանաչափը ՎՄ2-ով օգտատերերի համար՝ բազմապատկելով այս թվով"
     tl3_additional_likes_per_day_multiplier: "Բարձրացնել յուրաքանչյուր օրվա հավանումների սահմանաչափը ՎՄ3-ով օգտատերերի համար՝ բազմապատկելով այս թվով"
     tl4_additional_likes_per_day_multiplier: "Բարձրացնել յուրաքանչյուր օրվա հավանումների սահմանաչափը ՎՄ4-ով օգտատերերի համար՝ բազմապատկելով այս թվով"
@@ -1123,10 +1168,8 @@ hy:
     enable_escaped_fragments: "Վերադարձ դեպի Google's Ajax-Crawling API , եթե ոչ մի ցանցային տվայլների հավաքագրիչ (webcrawler) հայտնաբերված չէ: Այցելեք <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_change_post_ownership: "Թույլատրել մոդերատորներին փոխել գրառման սեփականության իրավունքը"
     cors_origins: "Թույլատրելի origin-ներ խաչաձև origin հարցումների համար (CORS): Յուրաքանչյուր origin պետք է ներառի http:// կամ https://: DISCOURSE_ENABLE_CORS env փոփոխականը պետք է սահմանված լինի true ՝ CORS -ի միացման համար:"
-    use_admin_ip_allowlist: "Ադմինները կարող են մուտք գործել, եթե միայն ունեն Ցուցադրված IP-ների ցանկում սահմանված IP հասցե (Admin > Logs > Screened Ips):"
     blocked_ip_blocks: "Մասնավոր IP արգելափակումների ցանկ, որոնք երբեք չպետք է ենթարկվեն տվյալների հավաքագրման Discourse-ի կողմից:"
     allowed_internal_hosts: "Ներքին հոսթերի ցանկ, որը discourse-ը կարող է ապահով հավաքագրել սմարթ-ներդիրի և այլ նպատակների համար"
-    slow_down_crawler_rate: "Եթե slow_down_crawler_user_agents -ը որոշված է, այս գնահատականը կկիրառվի տվյալների բոլոր հավաքագրիչների նկատմամբ (հարցումների միջև դադարի վայրկյանների քանակը)"
     invalidate_inactive_admin_email_after_days: "Ադմինի հաշիվները, որոնք չեն այցելել կայք այսքան օրվա ընթացքում, պետք է վերա-վավերացնեն իրենց էլ. հասցեն մինչ մուտք գործելը: Սահմանեք 0 անջատելու համար:"
     share_links: "Որոշեք, թե որ տարրերն են հայտնվելու կիսման երկխոսության մեջ և ինչ հերթականությամբ:"
     site_contact_username: "Անձնակազմի որևէ վավեր օգտանուն, որից պետք է ուղարկվեն բոլոր ավտոմատ հաղորդագրությունները: Դատարկ թողնելու դեպքում կօգտագործվի Համակարգի լռելյայն հաշիվը:"
@@ -1142,7 +1185,6 @@ hy:
     email_token_valid_hours: "Մոռացել եմ գաղտնաբառը / ակտիվացնել հաշիվը տոկենները վավեր են (n) ժամ: "
     log_out_strict: "Ելքագրվելիս դուրս գալ օգտատիրոջ ԲՈԼՈՐ գործընթացներից բոլոր սարքերի վրա:"
     version_checks: "Ստուգել Discourse Hub -ը տարբերակի թարմացումների համար և ցուցադրել նոր տարբերակի հաղորդագրությունները <a href='%{base_path}/admin' target='_blank'>/admin</a> կառավարման հարթակում:"
-    new_version_emails: "Ուղարկել էլ. նամակ contact_email հասցեին, երբ հասանելի է Discourse -ի նոր տարբերակ:"
     invite_expiry_days: "Որքան ժամանակ են հասանելի օգտատիրոջ հրավերի key-երը, օրերով"
     login_required: "Պահանջել նույնականացում՝ այս կայքի նյութերը կարդալու համար, չթույլատրել անանուն մուտքերը:"
     min_username_length: "Օգտանվան նվազագույն երկարությունը սիմվոլներով: ՈՒՇԱԴՐՈՒԹՅՈՒՆ՝ եթե գոյություն ունեցող որևէ օգտատեր կամ խումբ ունի սրանից ավելի կարճ անուն, Ձեր կայքը կդադարի գործել!"
@@ -1158,10 +1200,8 @@ hy:
     google_oauth2_client_secret: "Ձեր Google նույնականացման հաճախորդի գաղտնի արժեք"
     google_oauth2_prompt: "Տողերի արժեքների ընտրովի ցանկ՝ բաժանված բացատով, որը սահմանում է, թե արդյոք նույնականացման սերվերը օգնում է օգտատիրոջը վերանույնականացման և համաձայնեցման գործում: Այցելեք <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a> հնարավոր արժեքների համար:"
     google_oauth2_hd: "Ընտրովի Google Apps Hosted դոմեն, որով պետք է սահմանափակվի մուտքը: Այցելեք <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a> մանրամասների համար:"
-    enable_twitter_logins: "Միացնել Twitter նույնականացումը, պահանջում է requires twitter_consumer_key և twitter_consumer_secret: Այցելեք <a href='https://meta.discourse.org/t/13395' target='_blank'>Twitter մուտքի (և rich զետեղումների) կարգավորում Discourse -ի համար</a>:"
     twitter_consumer_key: "Twitter նույնականացման համարսՍպառողի key, որը գրանցված է այստեղ՝ <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
     twitter_consumer_secret: "Հաճախորդի գաղտնի արժեքը Twitter-ով վավերականացման համար, որը գտնվում է այստեղ՝ <a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>"
-    enable_facebook_logins: "Միացնել Facebook նույնականացումը, պահանջում է facebook_app_id և facebook_app_secret: Այցելեք <a href='https://meta.discourse.org/t/13394' target='_blank'>Facebook մուտքի կարգավորում Discourse-ի համար</a>:"
     facebook_app_secret: "Հավելվածի գաղտնի արժեք Facebook նույնականացման համար, գրանցված այստեղ՝ <a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>"
     enable_backups: "Թույլատրել ադմինիստրատորներին ստեղծել ֆորումի պահուստներ"
     s3_backup_bucket: "Պահուստների պահպանման համար հեռակա արկղ: ԶԳՈՒՇԱՑՈՒՄ՝ Համոզվեք, որ այն գաղտնի արկղ է:"
@@ -1200,7 +1240,6 @@ hy:
     purge_deleted_uploads_grace_period_days: "Արտոնյալ ժամկետը (օրերով) , որից հետո հեռացված վերբեռնումը ջնջվում է:"
     purge_unactivated_users_grace_period_days: "Արտոնյալ ժամկետը (օրերով) , որից հետո իր հաշիվը չակտիվացրած օգտատերը ջնջվում է: Սահմանեք 0՝ չակտիվացված օգտատերերին երբեք չջնջելու համար:"
     enable_s3_uploads: "Տեղադրել վերբեռնումները Amazon S3 պահեստում: ԿԱՐԵՎՈՐ՝ պահանջում է վավեր S3 տվյալներ (access key id և secret access key):"
-    s3_use_iam_profile: 'Օգտագործեք <a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">AWS EC2 օրինակ-պրոֆիլ</a> S3 արկղին հասանելիություն շնորհելու համար: ՆԿԱՏԻ ՈՒՆԵՑԵՔ. սա միացնելը պահանջում է Discourse -ի գործարկում ճիշտ կարգավորված EC2 օրինակ և վերասահմանում է "s3 access key id" և "s3 secret access key" կարգավորումները:'
     s3_upload_bucket: "Amazon S3 արկղի անվանում, որտեղ կվերբեռնվեն ֆայլերը: ՈՒՇԱԴՐՈՒԹՅՈՒՆ՝ պետք է լինի փոքրատառերով, առանց բացերի, առանց գծերի:"
     s3_access_key_id: "Amazon S3 access key id, որը կօգտագործվի նկարներ, կցորդներ և պահուստներ վերբեռնելու համար:"
     s3_secret_access_key: "Amazon S3 secret access key, որը կօգտագործվի նկարներ, կցորդներ և պահուստներ վերբեռնելու համար:"
@@ -1315,8 +1354,6 @@ hy:
     pop3_polling_password: "POP3 հաշվի գաղտնաբառ՝ էլ. փոստի հարցում կատարելու համար:"
     pop3_polling_delete_from_server: "Ջնջել էլ. նամակները սերվերից: ՆՇՈՒՄ՝ եթե Դուք անջատում եք սա, Դուք պետք է ձեռքով մաքրեք Ձեր էլ. փոստի մուտքերը:"
     log_mail_processing_failures: "Գրառել բոլոր էլ. հասցեների գործընթացների ձախողումները <a href='%{base_path}/logs' target='_blank'>/գրառումներ</a> -ում"
-    email_prefix: "Էլ. նամակների թեմայում օգտագործված [պիտակը] : Այն լռելյայն կլինի 'վերնագիր' , եթե սահմանված չէ:"
-    email_site_title: "Կայքի վերնագիրը, որն օգտագործվում է որպես կայքից էլ. նամակներ ուղարկող: Եթե սահմանված չէ՝ լռելյայն արժեքն է 'վերնագիր': Եթե Ձեր 'վերնագիր' -ը պարունակում է սիմվոլներ, որոնէ թույլատրելի չեն էլ. նամակների ուղարկողի տողում, օգտագործեք այս կարգավորումը:"
     find_related_post_with_key: "Օգտագործել 'reply key' -ը միայն պատասխանած գրառումը գտնելու համար: ՈՒՇԱԴՐՈՒԹՅՈՒՆ՝ սա անջատելը թույլ է տալիս օգտատիրոջ անձնավորում՝ հիմնված էլ. հասցեի վրա:"
     minimum_topics_similar: "Քանի թեման պետք է գոյություն ունենա, մինչ նոր թեմա ստեղծելիս նմանատիպ թեմաները ներկայացվեն:"
     relative_date_duration: "Հրապարակումից հետո օրերի քանակը, երբ հրապարակման ամսաթիվը կցուցադրվի հարաբերականորեն (7 օր)՝ բացարձակի փոխարեն (20 Փետ):"
@@ -1350,13 +1387,11 @@ hy:
     ignored_users_message_gap_days: "Որքան սպասել՝ մինչ մոդերատորներին կրկին ծանուցելը օգտատիրոջ մասին, որը անտեսվել է շատ այլոց կողմից:"
     allow_profile_backgrounds: "Թույլատրել օգտատերերին վերբեռնել պրոֆիլի ֆոն:"
     get_a_room_threshold: "Գրառումների քանակը, որ օգտատերը պետք է կատարի նույն մարդուն նույն թեմայում՝ մինչ զգուշացում ստանալը:"
-    enable_mobile_theme: "Հեռախոսային սարքավորումները օգտագործում են հարմարեցված թեմա՝ ամբողջական կայքին անցնելու կարողությամբ: Անջատեք սա, եթե ցանկանում եք օգտագործել մասնավոր ոճ, որը ամբողջովին արձագանքող(responsive) է:"
     dominating_topic_minimum_percent: "Թեմայի գրառումների քանի տոկոսը պետք է կատարի օգտատերը՝ մինչ թեմայում կատարելապես գերադրական դիրք ունենալու մասին հիշեցում ստանալը:"
     suppress_uncategorized_badge: "Չցուցադրել չկատեգորիզացված թեմաների համար կրծքանշանը թեմաների ցանկում:"
     header_dropdown_category_count: "Քանի կատեգորիա պետք է ցուցադրվի վերնամասի բացվող ցուցակի մենյուում:"
     permalink_normalizations: "Կիրառել հետևյալ կարգավորումը՝ մինչ մշտահղումները համապատասխանեցնելը, օրինակ՝ /(topic.*)\\?.*/\\1 -ը կառանձնացնի հարցման տողերը թեմայի ուղիներից: Ֆորմատը՝ regex+string , օգտագործեք \\1 և այլն՝ հասանելիության գրավման համար:"
     global_notice: "Ցուցադրել ՇՏԱՊ, ԱՆՀՐԱԺԵՇՏՈՒԹՅՈՒՆ, ոչ-չեղարկելի գլոբալ բանների նշումը բոլոր այցելուներին, փոխեք դատարկի՝ թաքցնելու համար (HTML -ը թույլատրված է):"
-    disable_system_edit_notifications: "Անջատում է խմբագրման ծանուցումները համակարգի օգտատիրոջ կողմից, երբ 'download_remote_images_to_local' -ը ակտիվ է:"
     automatically_unpin_topics: "Ավտոմատ կերպով ապակցել թեմաները, երբ օգտատերը հասնում է ներքև:"
     read_time_word_count: "Յուրաքանչյուր րոպեում բառերի քանակը՝ կարդալու մոտավոր ժամանակը հաշվարկելու համար:"
     auto_handle_queued_age: "Ավտոմատ կերպով կարգավորել գրառումները, որոնք սպասում են վերանայման, այսքան օր: Դրոշակները կանտեսվեն: Հերթի մեջ դրված գրառումները և օգտատերերը կմերժվեն: Սահմանեք 0՝ այս հատկանիշը անջատելու համար:"
@@ -1447,6 +1482,10 @@ hy:
       topic: "Արդյունքներ"
       user: "Օգտատերեր"
     results_page: "Որոնման արդյունքներ '%{term}' -ի համար"
+  posts_filter:
+    description:
+      order_latest: "Վերջին գրառումները"
+      order_latest_topic: "Վերջին թեմաները"
   discourse_connect:
     login_error: "Մուտքի Սխալ"
     not_found: "Ձեր հաշիվը չի գտնվել: Խնդրում ենք կապվել կայքի ադմինիստրատորի հետ:"
@@ -1819,7 +1858,6 @@ hy:
         Ձեր պատասխանը ուղարկվել է արգելափակված էլ. հասցեից: Փորձեք ուղարկել մեկ այլ էլ. հասցե կամ [կապվեք անձնակազմի որևէ անդամի հետ](%{base_url}/about):
     email_reject_not_allowed_email:
       title: "Էլ. փոստի Մերժում - Անթույլատրելի Էլ. հասցե"
-      subject_template: "[%{email_prefix}] Էլ. փոստի խնդիր -- Արգելափակված Էլ. հասցե"
       text_body_template: |
         Ցավում ենք, սակայն Ձեր էլ. նամակը %{destination} -ին (%{former_title} վերնագրով) չաշխատեց:
 
@@ -2046,7 +2084,6 @@ hy:
       text_body_template: " `download_remote_images_to_local` կարգավորումը անջատվել է, քանի որ հասել եք `download_remote_images_threshold` -ում դիսկի տարածքի սահմանին:"
     new_user_of_the_month:
       title: "Դուք Ամսվա Նոր Օգտատերն եք !"
-      subject_template: "Դուք Ամսվա Նոր Օգտատերն եք !"
       text_body_template: |
         Շնորհավորում ենք, Դուք վաստակեցիք **Ամսվա լավագույն Նոր Օգտատեր կոչումը %{month_year} ամսվա համար**: :trophy:
 
@@ -2283,6 +2320,7 @@ hy:
     account_exists:
       title: "Հաշիվը արդեն գոյություն ունի"
       subject_template: "[%{email_prefix}] Հաշիվը արդեն գոյություն ունի"
+      subject_template_improved: "Հաշիվը արդեն գոյություն ունի"
       text_body_template: "Դուք հենց նոր փորձել եք ստեղծել հաշիվ %{site_name} -ում կամ փոփոխել հաշվի էլ. հասցեն %{email} -ի: Համենայն դեպս, հաշիվն արդեն գոյություն ունի %{email}-ով:\n\nԵթե մոռացել եք Ձեր գաղտնաբառը, [վերահաստատեք այն հիմա](%{base_url}/գաղտնաբառի-վերահաստատում):\n\nԵթե Դուք չեք փորձել ստեղծել հաշիվ %{email} -ով կամ փոփոխել Ձեր էլ. հասցեն, մի անհանգստացեք - Դուք հանգիստ կարող եք անտեսել այս հաղորդագրությունը: \n\nԵթե ունեք հարցեր, [կապվեք մեր բարեհամբույր անձնակազմի հետ](%{base_url}/մեր մասին):\n"
     digest:
       since_last_visit: "Ձեր վերջին այցելությունից հետո"
@@ -2295,6 +2333,7 @@ hy:
       popular_posts: "Ճանաչված Գրառումներ"
       more_new: "Նոր Ձեր համար"
       subject_template: "[%{email_prefix}] Ամփոփում"
+      subject_template_improved: "Ամփոփումը"
       unsubscribe: "Այս ամփոփումը ուղարկվում է %{site_link} -ից, երբ մենք չենք տեսնում Ձեզ մի որոշ ժամանակ: Փոփոխեք %{email_preferences_link} -ը կամ դուրս եկեք բաժանորդագրումից՝ %{unsubscribe_link} :"
       your_email_settings: "Ձեր էլ. հասցեի կարգավորումները"
       click_here: "սեղմեք այստեղ"
@@ -2312,6 +2351,7 @@ hy:
       title: "Մուտք գործեք հղման միջոցով"
       preview: "Մուտք գործեք հղման միջոցով."
       subject_template: "[%{email_prefix}] Մուտք գործեք հղման միջոցով"
+      subject_template_improved: "Մուտք գործեք հղման միջոցով"
       text_body_template: |
         Ահա Ձեր մուտքի հղումը այստեղ՝ [%{site_name}](%{base_url}).
 
@@ -2321,7 +2361,6 @@ hy:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Սահմանել Գաղտնաբառ"
-      subject_template: "[%{email_prefix}] Սահմանել Գաղտնաբառ"
       text_body_template: |
         Ինչ-որ մեկը խնդրել է ավելացնել գաղտնաբառ [%{site_name}]-ի Ձեր հաշվի համար (%{base_url}): Այլ կերպ, Դուք կարող եք մուտք գործել՝ օգտագործելով ապահովվող ցանկացած օնլայն ծառայություն (Google, Facebook, և այլն) , որը կապված է այս վավերացված էլ. հասցեի հետ:
 
@@ -2332,9 +2371,9 @@ hy:
     admin_login:
       title: "Ադմինի Մուտք"
       subject_template: "[%{email_prefix}] Մուտք"
+      subject_template_improved: "Մուտք"
     account_created:
       title: "Ստեղծված Հաշիվ"
-      subject_template: "[%{email_prefix}] Ձեր Նոր Հաշիվը"
       text_body_template: |
         Ձեր համար ստեղծվել է նոր հաշիվ%{site_name} -ում:
 
@@ -2392,7 +2431,6 @@ hy:
         Եթե վերևի հղումը հնարավոր չէ սեղմել, փորձեք կրկնօրինակել և տեղադրել այն Ձեր վեբ-բրաուզերի հասցեի տողում:
     suspicious_login:
       title: "Նոր Մուտքի Զգուշացում"
-      subject_template: "[%{site_name}] Նոր Մուտք %{location} -ից"
     post_approved:
       title: "Ձեր գրառումը հաստատված է"
   page_not_found:
@@ -2707,11 +2745,6 @@ hy:
   tags:
     title: "Թեգեր"
     upload_row_too_long: "CSV ֆայլը պետք է ունենա մեկ թեգ յուրաքանչյուր տողում: Ըստ ցանկության՝ թեգը կարող է շարունակվել ստորակետով և ապա՝ թեգի խմբի անվանմանմբ:"
-    forbidden:
-      in_this_category: '"%{tag_name}" -ը չի կարող օգտագործվել այս կատեգորիայում'
-      restricted_to:
-        one: '"%{tag_name}"-ը արգելված է "%{category_names}" կատեգորիայում:'
-        other: '"%{tag_name}" -ը արգելված է հետևյալ կատեգորիաներում՝ %{category_names}'
   rss_by_tag: "%{tag} թեգով թեմաներ "
   finish_installation:
     congratulations: "Շնորհավորում ենք, Դուք տեղադրել եք Discourse -ը!"
@@ -2744,6 +2777,8 @@ hy:
   search_logs:
     graph_title: "Որոնումների Քանակ"
   onebox:
+    google_meet:
+      meeting_code: "Կոդ:"
     github:
       closed: "փակված"
       status_date:

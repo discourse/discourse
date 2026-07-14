@@ -36,6 +36,7 @@ module CookedProcessorMixin
             invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
             user_id: @model&.user_id,
             category_id: @category_id,
+            locale: @opts[:locale],
           )
 
         @has_oneboxes = true if onebox.present?
@@ -345,6 +346,9 @@ module CookedProcessorMixin
     if title = inline_onebox&.dig(:title)
       element.children = CGI.escapeHTML(title)
       element.add_class("inline-onebox")
+      if css_class = inline_onebox[:css_class]
+        element.add_class(css_class)
+      end
     end
 
     remove_inline_onebox_loading_class(element)
@@ -426,7 +430,7 @@ module CookedProcessorMixin
 
     original_width, original_height = nil
 
-    if (upload.present?)
+    if upload.present?
       original_width = upload.width || 0
       original_height = upload.height || 0
     else

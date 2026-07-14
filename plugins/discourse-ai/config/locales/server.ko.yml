@@ -9,7 +9,7 @@ ko:
     overall_sentiment:
       yaxis: "날짜"
     emotion_neutral:
-      title: "\U0001F610 중립국"
+      title: "😐 중립국"
   discourse_ai:
     tools:
       presets:
@@ -57,7 +57,7 @@ ko:
     sentiment:
       reports:
         post_emotion:
-          neutral: "중립국 \U0001F610"
+          neutral: "중립국 😐"
         sentiment_analysis:
           neutral: "중립국"
     ai_staff_action_logger:

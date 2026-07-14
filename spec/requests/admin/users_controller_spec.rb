@@ -38,6 +38,65 @@ RSpec.describe Admin::UsersController do
         expect(silenced_user["silence_reason"]).to eq("because I said so")
       end
 
+      it "returns suspend reason when user is suspended" do
+        UserSuspender.new(
+          user,
+          suspended_till: 1.year.from_now,
+          reason: "because I said so",
+          by_user: admin,
+        ).suspend
+
+        get "/admin/users/list.json"
+        expect(response.status).to eq(200)
+
+        suspended_user = response.parsed_body.find { |u| u["id"] == user.id }
+        expect(suspended_user["suspend_reason"]).to eq("because I said so")
+      end
+
+      it "reports an already-suspended user as not suspendable" do
+        UserSuspender.new(
+          user,
+          suspended_till: 1.year.from_now,
+          reason: "spam",
+          by_user: admin,
+        ).suspend
+
+        get "/admin/users/list/suspended.json"
+        expect(response.status).to eq(200)
+
+        suspended_user = response.parsed_body.find { |u| u["id"] == user.id }
+        expect(suspended_user["can_be_suspended"]).to eq(false)
+      end
+
+      it "filters by activation status on the new tab" do
+        not_activated_user = Fabricate(:user, active: false)
+
+        get "/admin/users/list/new.json", params: { activation: "not_activated" }
+        expect(response.status).to eq(200)
+
+        ids = response.parsed_body.map { |u| u["id"] }
+        expect(ids).to include(not_activated_user.id)
+        expect(ids).not_to include(admin.id)
+      end
+
+      it "filters by multiple usernames or emails at once" do
+        user_one = Fabricate(:user, username: "bulk_user_1")
+        user_two = Fabricate(:user, email: "bulk2@example.com")
+
+        get "/admin/users/list.json", params: { filter: "bulk_user_1,bulk2@example.com" }
+        expect(response.status).to eq(200)
+
+        ids = response.parsed_body.map { |u| u["id"] }
+        expect(ids).to contain_exactly(user_one.id, user_two.id)
+      end
+
+      it "returns a 400 when the filter has too many terms" do
+        filter = (0..AdminUserIndexQuery::MAX_FILTER_TERMS).map { |i| "u#{i}" }.join(",")
+
+        get "/admin/users/list.json", params: { filter: filter }
+        expect(response.status).to eq(400)
+      end
+
       context "when showing emails" do
         it "returns email for all the users" do
           get "/admin/users/list.json", params: { show_emails: "true" }
@@ -71,6 +130,70 @@ RSpec.describe Admin::UsersController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body).to be_present
+      end
+
+      it "doesn't return staged user emails when moderators_view_emails is disabled" do
+        SiteSetting.moderators_view_emails = false
+        staged_user = Fabricate(:staged, email: "staged@example.com")
+        Fabricate(:secondary_email, user: staged_user, email: "staged-secondary@example.com")
+
+        get "/admin/users/list.json", params: { query: "staged", show_emails: "true" }
+
+        expect(response.status).to eq(200)
+        listed_user =
+          response.parsed_body.find { |listed_user| listed_user["id"] == staged_user.id }
+        expect(listed_user).to be_present
+        expect(listed_user["email"]).to eq(nil)
+        expect(listed_user["secondary_emails"]).to eq(nil)
+      end
+
+      it "returns users with the same IP as a user" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
+        same_ip_user = Fabricate(:user, ip_address: "42.42.42.42")
+        Fabricate(:user, ip_address: "43.43.43.43")
+
+        get "/admin/users/list.json",
+            params: {
+              same_ip_user_id: target_user.id,
+              exclude: target_user.id,
+              order: "trust_level DESC",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |result| result["id"] }).to contain_exactly(
+          same_ip_user.id,
+        )
+      end
+
+      it "does not allow raw IP searches when IP viewing is disabled" do
+        SiteSetting.moderators_view_ips = false
+        user_with_ip = Fabricate(:user, ip_address: "42.42.42.42")
+
+        get "/admin/users/list.json", params: { filter: user_with_ip.ip_address }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |result| result["id"] }).not_to include(user_with_ip.id)
+      end
+
+      it "ignores raw IP filters when searching by a server-resolved same-IP user" do
+        SiteSetting.moderators_view_ips = false
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
+        same_ip_user = Fabricate(:user, ip_address: "42.42.42.42")
+        Fabricate(:user, ip_address: "43.43.43.43")
+
+        get "/admin/users/list.json",
+            params: {
+              same_ip_user_id: target_user.id,
+              exclude: target_user.id,
+              filter: "43.43.43.43",
+              ip: "43.43.43.43",
+              order: "trust_level DESC",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.map { |result| result["id"] }).to contain_exactly(
+          same_ip_user.id,
+        )
       end
     end
 
@@ -122,6 +245,28 @@ RSpec.describe Admin::UsersController do
         get "/admin/users/#{user.id}.json"
         expect(response.status).to eq(200)
         expect(response.parsed_body["silence_reason"]).to eq("because I said so")
+      end
+
+      it "does not leak the message body in the public silence_reason" do
+        put "/admin/users/#{user.id}/silence.json",
+            params: {
+              reason: "because I said so",
+              message: "private email body",
+              post_action: "delete",
+              silenced_till: 2.days.from_now,
+            }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["silence"]["silence_reason"]).to eq("because I said so")
+        expect(response.parsed_body["silence"]["full_silence_reason"]).to eq(
+          "because I said so\n\nprivate email body",
+        )
+
+        get "/admin/users/#{user.id}.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["silence_reason"]).to eq("because I said so")
+        expect(response.parsed_body["full_silence_reason"]).to eq(
+          "because I said so<br><br>private email body",
+        )
       end
 
       context "with a non-existing user" do
@@ -215,6 +360,18 @@ RSpec.describe Admin::UsersController do
             target_user_id: evil_trout.id,
           ).count,
         ).to eq(1)
+      end
+
+      it "approves a user whose previous reviewable was rejected" do
+        evil_trout.update!(active: true)
+        reviewable =
+          Fabricate(:reviewable_user, target: evil_trout, status: Reviewable.statuses[:rejected])
+
+        put "/admin/users/#{evil_trout.id}/approve.json"
+
+        expect(response.status).to eq(200)
+        expect(evil_trout.reload).to be_approved
+        expect(reviewable.reload).to be_approved
       end
     end
 
@@ -1691,6 +1848,98 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe "#suspend_bulk" do
+    fab!(:suspended_users) { Fabricate.times(3, :user) }
+
+    let(:suspend_params) do
+      { user_ids: suspended_users.map(&:id), reason: "spam wave", suspend_until: 1.year.from_now }
+    end
+
+    def suspended_count
+      User.where(id: suspended_users.map(&:id)).where.not(suspended_till: nil).count
+    end
+
+    shared_examples "bulk user suspension possible" do
+      before { sign_in(current_user) }
+
+      it "can suspend multiple users" do
+        put "/admin/users/suspend-bulk.json", params: suspend_params
+        expect(response.status).to eq(200)
+        expect(suspended_count).to eq(3)
+      end
+
+      it "responds with 404 when sending non-existent user ids" do
+        put "/admin/users/suspend-bulk.json",
+            params: {
+              user_ids: [0],
+              reason: "spam wave",
+              suspend_until: 1.year.from_now,
+            }
+        expect(response.status).to eq(404)
+      end
+
+      it "responds with 400 when no reason is provided" do
+        put "/admin/users/suspend-bulk.json",
+            params: {
+              user_ids: suspended_users.map(&:id),
+              suspend_until: 1.year.from_now,
+            }
+        expect(response.status).to eq(400)
+        expect(suspended_count).to eq(0)
+      end
+
+      it "doesn't allow suspending a user that can't be suspended" do
+        suspended_users[0].update!(admin: true)
+
+        put "/admin/users/suspend-bulk.json", params: suspend_params
+        expect(response.status).to eq(403)
+        expect(suspended_count).to eq(0)
+      end
+
+      it "doesn't accept more than 100 user ids" do
+        put "/admin/users/suspend-bulk.json",
+            params: suspend_params.merge(user_ids: suspended_users.map(&:id) + (1..101).to_a)
+        expect(response.status).to eq(400)
+        expect(suspended_count).to eq(0)
+      end
+
+      it "doesn't re-suspend an already-suspended user" do
+        UserSuspender.new(
+          suspended_users[0],
+          suspended_till: 1.year.from_now,
+          reason: "spam",
+          by_user: current_user,
+        ).suspend
+
+        put "/admin/users/suspend-bulk.json", params: suspend_params
+        expect(response.status).to eq(403)
+        expect(suspended_count).to eq(1)
+      end
+    end
+
+    context "when logged in as an admin" do
+      include_examples "bulk user suspension possible" do
+        let(:current_user) { admin }
+      end
+    end
+
+    context "when logged in as a moderator" do
+      include_examples "bulk user suspension possible" do
+        let(:current_user) { moderator }
+      end
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      it "responds with a 404 and doesn't suspend users" do
+        put "/admin/users/suspend-bulk.json", params: suspend_params
+        expect(response.status).to eq(404)
+        expect(suspended_count).to eq(0)
+      end
+    end
+  end
+
   describe "#activate" do
     fab!(:reg_user, :inactive_user)
 
@@ -2121,7 +2370,7 @@ RSpec.describe Admin::UsersController do
       it "retrieves IP info" do
         ip = "81.2.69.142"
 
-        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s)
         Resolv::DNS.any_instance.stubs(:getname).with(ip).returns("ip-81-2-69-142.example.com")
 
         get "/admin/users/ip-info.json", params: { ip: ip }
@@ -2144,6 +2393,27 @@ RSpec.describe Admin::UsersController do
       before { sign_in(admin) }
 
       include_examples "IP info retrieval possible"
+
+      it "returns IP info without hostname when reverse DNS is interrupted" do
+        ip = "81.2.69.142"
+
+        DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s)
+        Resolv::DNS.any_instance.stubs(:getname).with(ip).raises(Timeout::Error)
+
+        get "/admin/users/ip-info.json", params: { ip: ip }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.symbolize_keys).to eq(
+          city: "London",
+          country: "United Kingdom",
+          country_code: "GB",
+          geoname_ids: [6_255_148, 2_635_167, 2_643_743, 6_269_131],
+          location: "London, England, United Kingdom",
+          region: "England",
+          latitude: 51.5142,
+          longitude: -0.0931,
+        )
+      end
     end
 
     context "when logged in as a moderator" do
@@ -2158,7 +2428,7 @@ RSpec.describe Admin::UsersController do
       it "prevents retrieval of IP info with a 404 response" do
         ip = "81.2.69.142"
 
-        DiscourseIpInfo.open_db(File.join(Rails.root, "spec", "fixtures", "mmdb"))
+        DiscourseIpInfo.open_db(Rails.root.join("spec/fixtures/mmdb").to_s)
         Resolv::DNS.any_instance.stubs(:getname).with(ip).returns("ip-81-2-69-142.example.com")
 
         get "/admin/users/ip-info.json", params: { ip: ip }
@@ -2169,21 +2439,90 @@ RSpec.describe Admin::UsersController do
     end
   end
 
+  describe "#total_other_accounts_with_same_ip" do
+    shared_examples "counting other accounts with same ip possible" do
+      it "returns the count for a user" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
+        Fabricate(:user, ip_address: "42.42.42.42")
+        Fabricate(:user, ip_address: "42.42.42.42")
+
+        get "/admin/users/total-others-with-same-ip.json",
+            params: {
+              user_id: target_user.id,
+              exclude: target_user.id,
+              order: "trust_level DESC",
+            }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["total"]).to eq(2)
+      end
+    end
+
+    context "when logged in as an admin" do
+      before { sign_in(admin) }
+
+      include_examples "counting other accounts with same ip possible"
+    end
+
+    context "when logged in as a moderator" do
+      before { sign_in(moderator) }
+
+      include_examples "counting other accounts with same ip possible"
+    end
+
+    context "when logged in as a non-staff user" do
+      before { sign_in(user) }
+
+      it "denies access with a 404 response" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
+
+        get "/admin/users/total-others-with-same-ip.json",
+            params: {
+              user_id: target_user.id,
+              exclude: target_user.id,
+              order: "trust_level DESC",
+            }
+
+        expect(response.status).to eq(404)
+      end
+    end
+  end
+
   describe "#delete_other_accounts_with_same_ip" do
     shared_examples "deleting other accounts with same ip possible" do
       it "works" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
         user_a = Fabricate(:user, ip_address: "42.42.42.42")
         user_b = Fabricate(:user, ip_address: "42.42.42.42")
 
         delete "/admin/users/delete-others-with-same-ip.json",
                params: {
-                 ip: "42.42.42.42",
-                 exclude: -1,
+                 user_id: target_user.id,
+                 exclude: target_user.id,
                  order: "trust_level DESC",
                }
         expect(response.status).to eq(200)
-        expect(User.where(id: user_a.id).count).to eq(0)
-        expect(User.where(id: user_b.id).count).to eq(0)
+        expect(User.exists?(target_user.id)).to eq(true)
+        expect(User.exists?(user_a.id)).to eq(false)
+        expect(User.exists?(user_b.id)).to eq(false)
+      end
+
+      it "does not delete the target user when exclude is tampered with" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
+        other_user = Fabricate(:user, ip_address: "42.42.42.42")
+
+        delete "/admin/users/delete-others-with-same-ip.json",
+               params: {
+                 user_id: target_user.id,
+                 exclude: other_user.id,
+                 filter: target_user.ip_address,
+                 ip: target_user.ip_address,
+                 order: "trust_level DESC",
+               }
+
+        expect(response.status).to eq(200)
+        expect(User.exists?(target_user.id)).to eq(true)
+        expect(User.exists?(other_user.id)).to eq(false)
       end
     end
 
@@ -2197,25 +2536,50 @@ RSpec.describe Admin::UsersController do
       before { sign_in(moderator) }
 
       include_examples "deleting other accounts with same ip possible"
+
+      it "does not reveal the IP address in the staff log context without IP viewing permission" do
+        SiteSetting.moderators_view_ips = false
+        ip_address = "42.42.42.42"
+        target_user = Fabricate(:user, ip_address: ip_address)
+        Fabricate(:user, ip_address: ip_address)
+
+        delete "/admin/users/delete-others-with-same-ip.json",
+               params: {
+                 user_id: target_user.id,
+                 exclude: target_user.id,
+                 order: "trust_level DESC",
+               }
+
+        expect(response.status).to eq(200)
+
+        histories =
+          UserHistory.where(action: UserHistory.actions[:delete_user], acting_user_id: moderator.id)
+        contexts = histories.pluck(:context)
+
+        expect(histories).to be_exists
+        expect(contexts).to all(include(target_user.username))
+        expect(contexts).to all(exclude(ip_address))
+      end
     end
 
     context "when logged in as a non-staff user" do
       before { sign_in(user) }
 
       it "prevents deletion of other accounts with same ip with a 404 response" do
+        target_user = Fabricate(:user, ip_address: "42.42.42.42")
         user_a = Fabricate(:user, ip_address: "42.42.42.42")
         user_b = Fabricate(:user, ip_address: "42.42.42.42")
 
         delete "/admin/users/delete-others-with-same-ip.json",
                params: {
-                 ip: "42.42.42.42",
-                 exclude: -1,
+                 user_id: target_user.id,
+                 exclude: target_user.id,
                  order: "trust_level DESC",
                }
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
-        expect(User.where(id: user_a.id).count).to eq(1)
-        expect(User.where(id: user_b.id).count).to eq(1)
+        expect(User.exists?(user_a.id)).to eq(true)
+        expect(User.exists?(user_b.id)).to eq(true)
       end
     end
   end
@@ -2227,11 +2591,11 @@ RSpec.describe Admin::UsersController do
     before do
       SiteSetting.email_editable = false
       SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.discourse_connect_secret = sso_secret
       SiteSetting.enable_discourse_connect = true
       SiteSetting.auth_overrides_email = true
       SiteSetting.auth_overrides_name = true
       SiteSetting.auth_overrides_username = true
-      SiteSetting.discourse_connect_secret = sso_secret
       sso.sso_secret = sso_secret
     end
 
@@ -2770,6 +3134,7 @@ RSpec.describe Admin::UsersController do
 
     before do
       SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+      SiteSetting.discourse_connect_secret = "x" * 10
       SiteSetting.enable_discourse_connect = true
     end
 

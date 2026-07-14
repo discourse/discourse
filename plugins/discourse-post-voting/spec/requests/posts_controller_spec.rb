@@ -15,6 +15,9 @@ describe PostsController do
              raw: "this is some raw",
              title: "this is some title",
              create_as_post_voting: true,
+           }.to_json,
+           headers: {
+             "CONTENT_TYPE" => "application/json",
            }
 
       expect(response.status).to eq(200)
@@ -33,6 +36,9 @@ describe PostsController do
              create_as_post_voting: true,
              archetype: Archetype.private_message,
              target_recipients: user.username,
+           }.to_json,
+           headers: {
+             "CONTENT_TYPE" => "application/json",
            }
 
       expect(response.status).to eq(200)

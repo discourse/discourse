@@ -25,6 +25,7 @@ class PostRevisionSerializer < ApplicationSerializer
              :body_changes,
              :title_changes,
              :user_changes,
+             :reply_to_post_number_changes,
              :tags_changes,
              :category_id_changes,
              :can_edit,
@@ -33,12 +34,18 @@ class PostRevisionSerializer < ApplicationSerializer
   # Creates a field called field_name_changes with previous and
   # current members if a field has changed in this revision
   def self.add_compared_field(field)
-    changes_name = "#{field}_changes".to_sym
+    changes_name = :"#{field}_changes"
 
-    self.attributes changes_name
-    define_method(changes_name) { { previous: previous[field], current: current[field] } }
+    attributes changes_name
+    define_method(changes_name) do
+      return if suppress_hidden_diffs?
 
-    define_method("include_#{changes_name}?") { previous[field] != current[field] }
+      { previous: previous[field], current: current[field] }
+    end
+
+    define_method("include_#{changes_name}?") do
+      !suppress_hidden_diffs? && previous[field] != current[field]
+    end
   end
 
   add_compared_field :wiki
@@ -46,11 +53,13 @@ class PostRevisionSerializer < ApplicationSerializer
   add_compared_field :locale
 
   def previous_hidden
-    previous["hidden"]
+    return previous["hidden"] if scope.can_view_hidden_post_revisions?
+
+    previous_side_hidden?
   end
 
   def current_hidden
-    current["hidden"]
+    !!(adjacent_current && adjacent_current["hidden"])
   end
 
   def first_revision
@@ -103,6 +112,10 @@ class PostRevisionSerializer < ApplicationSerializer
     user.name
   end
 
+  def include_acting_user_name?
+    SiteSetting.enable_names?
+  end
+
   def avatar_template
     user.avatar_template
   end
@@ -120,6 +133,8 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def body_changes
+    return if suppress_hidden_diffs?
+
     cooked_diff = DiscourseDiff.new(previous["cooked"], current["cooked"])
     raw_diff = DiscourseDiff.new(previous["raw"], current["raw"])
 
@@ -134,6 +149,8 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def title_changes
+    return if suppress_hidden_diffs?
+
     prev = "<div>#{previous["title"] && CGI.escapeHTML(previous["title"])}</div>"
     cur = "<div>#{current["title"] && CGI.escapeHTML(current["title"])}</div>"
 
@@ -157,10 +174,12 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def include_title_changes?
-    object.post.post_number == 1
+    object.post.post_number == 1 && !suppress_hidden_diffs?
   end
 
   def user_changes
+    return if suppress_hidden_diffs?
+
     prev = previous["user_id"]
     cur = current["user_id"]
 
@@ -183,10 +202,25 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def include_user_changes?
-    previous["user_id"] != current["user_id"]
+    !suppress_hidden_diffs? && previous["user_id"] != current["user_id"]
+  end
+
+  def reply_to_post_number_changes
+    return if suppress_hidden_diffs?
+
+    {
+      previous: reply_to_info(previous["reply_to_post_number"]),
+      current: reply_to_info(current["reply_to_post_number"]),
+    }
+  end
+
+  def include_reply_to_post_number_changes?
+    !suppress_hidden_diffs? && previous["reply_to_post_number"] != current["reply_to_post_number"]
   end
 
   def tags_changes
+    return if suppress_hidden_diffs?
+
     pre = filter_tags previous["tags"]
     cur = filter_tags current["tags"]
 
@@ -194,10 +228,12 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def include_tags_changes?
-    previous["tags"] != current["tags"] && scope.can_see_tags?(topic)
+    !suppress_hidden_diffs? && previous["tags"] != current["tags"] && scope.can_see_tags?(topic)
   end
 
   def category_id_changes
+    return if suppress_hidden_diffs?
+
     pre = filter_category_id previous["category_id"]
     cur = filter_category_id current["category_id"]
 
@@ -205,10 +241,12 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def include_category_id_changes?
-    previous["category_id"] != current["category_id"]
+    !suppress_hidden_diffs? && previous["category_id"] != current["category_id"]
   end
 
   def locale_changes
+    return if suppress_hidden_diffs?
+
     prev = previous["locale"].presence
     cur = current["locale"].presence
     { previous: prev, current: cur }
@@ -243,6 +281,7 @@ class PostRevisionSerializer < ApplicationSerializer
       "post_type" => [post.post_type],
       "user_id" => [post.user_id],
       "locale" => [post.locale],
+      "reply_to_post_number" => [post.reply_to_post_number],
     }
 
     # Retrieve any `tracked_topic_fields`
@@ -294,6 +333,24 @@ class PostRevisionSerializer < ApplicationSerializer
     @all_revisions
   end
 
+  def adjacent_previous
+    @adjacent_previous ||=
+      all_revisions.select { |revision| revision["revision"] < current_revision }.last
+  end
+
+  def adjacent_current
+    @adjacent_current ||=
+      all_revisions.select { |revision| revision["revision"] > current_revision }.first
+  end
+
+  def previous_side_hidden?
+    !!(previous["hidden"] || (adjacent_previous && adjacent_previous["hidden"]))
+  end
+
+  def suppress_hidden_diffs?
+    !scope.can_view_hidden_post_revisions? && (previous_side_hidden? || current_hidden)
+  end
+
   def previous
     @previous ||= revisions.select { |r| r["revision"] <= current_revision }.last
   end
@@ -318,5 +375,22 @@ class PostRevisionSerializer < ApplicationSerializer
   def filter_category_id(category_id)
     return if category_id.blank?
     Category.secured(scope).find_by(id: category_id)&.id
+  end
+
+  def reply_to_info(post_number)
+    return nil if post_number.blank?
+
+    target = Post.with_deleted.where(topic_id: topic.id, post_number: post_number).first
+    return nil if target.blank? || !scope.can_see?(target)
+
+    info = { post_number: target.post_number }
+
+    if target.user
+      info[:username] = target.user.username_lower
+      info[:display_username] = target.user.username
+      info[:avatar_template] = target.user.avatar_template
+    end
+
+    info
   end
 end

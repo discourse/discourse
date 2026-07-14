@@ -153,7 +153,7 @@ RSpec.describe ::Jobs::Base do
   end
 
   context "when `Discourse.enable_sidekiq_logging?` is `true`" do
-    let(:tmp_log_file_path) { "#{Rails.root}/tmp/sidekiq_test_log.log" }
+    let(:tmp_log_file_path) { "#{Rails.root.join("tmp/sidekiq_test_log.log")}" }
 
     before do
       Discourse.enable_sidekiq_logging

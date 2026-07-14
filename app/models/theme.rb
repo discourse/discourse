@@ -17,6 +17,7 @@ class Theme < ActiveRecord::Base
     user_selectable
     updated_at
   ]
+  PRIVATE_CACHED_SETTING_KEYS = %w[theme_uploads theme_uploads_local theme_setting_type_info]
 
   class SettingsMigrationError < StandardError
   end
@@ -151,11 +152,14 @@ class Theme < ActiveRecord::Base
 
     any_non_css_fields_changed =
       changed_fields.any? { |f| !(f.basic_scss_field? || f.extra_scss_field?) }
+    any_extra_js_fields_changed = changed_fields.any?(&:extra_js_field?)
 
-    changed_fields.each(&:save!)
+    changed_fields.each { |f| f.marked_for_destruction? ? f.destroy : f.save! }
     changed_fields.clear
 
     theme_modifier_set.save!
+
+    theme_fields.reload
 
     theme_fields.select(&:basic_html_field?).each(&:invalidate_baked!) if saved_change_to_name?
 
@@ -169,7 +173,7 @@ class Theme < ActiveRecord::Base
     settings_field&.ensure_baked! # Other fields require setting to be **baked**
     theme_fields.each(&:ensure_baked!)
 
-    update_javascript_cache!
+    update_javascript_cache! if any_extra_js_fields_changed
 
     remove_from_cache!
     ColorScheme.hex_cache.clear
@@ -214,11 +218,15 @@ class Theme < ActiveRecord::Base
   def update_javascript_cache!
     all_extra_js = load_all_extra_js
     if all_extra_js.present?
-      js_compiler = ThemeJavascriptCompiler.new(id, name, build_settings_hash)
+      js_compiler = ThemeJavascriptCompiler.new(id, name)
       js_compiler.append_tree(all_extra_js)
 
       javascript_cache || build_javascript_cache
-      javascript_cache.update!(content: js_compiler.content, source_map: js_compiler.source_map)
+      javascript_cache.update!(
+        content: js_compiler.content,
+        source_map: js_compiler.source_map,
+        external_plugin_imports: js_compiler.external_plugin_imports,
+      )
     else
       javascript_cache&.destroy!
     end
@@ -226,15 +234,15 @@ class Theme < ActiveRecord::Base
 
   after_destroy do
     remove_from_cache!
-    Theme.clear_default! if SiteSetting.default_theme_id == self.id
+    Theme.clear_default! if SiteSetting.default_theme_id == id
 
-    if self.id
+    if id
       ColorScheme
-        .where(theme_id: self.id)
+        .where(theme_id: id)
         .where("id NOT IN (SELECT color_scheme_id FROM themes where color_scheme_id IS NOT NULL)")
         .destroy_all
 
-      ColorScheme.where(theme_id: self.id).update_all(theme_id: nil)
+      ColorScheme.where(theme_id: id).update_all(theme_id: nil)
     end
 
     Theme.expire_site_cache!
@@ -250,7 +258,6 @@ class Theme < ActiveRecord::Base
         GlobalSetting.s3_endpoint,
         GlobalSetting.s3_bucket,
         Discourse.current_hostname,
-        ENV["ROLLUP_PLUGIN_COMPILER"],
       ]
       Digest::SHA1.hexdigest(dependencies.join)
     end
@@ -273,7 +280,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.is_parent_theme?(id)
-    self.parent_theme_ids.include?(id)
+    parent_theme_ids.include?(id)
   end
 
   def self.user_theme_ids
@@ -341,7 +348,7 @@ class Theme < ActiveRecord::Base
 
     get_set_cache "transformed_ids_#{id}" do
       all_ids =
-        if self.is_parent_theme?(id)
+        if is_parent_theme?(id)
           components = components_for(id).tap { |c| c.sort!.uniq! }
           [id, *components]
         else
@@ -432,7 +439,7 @@ class Theme < ActiveRecord::Base
       Theme.clear_default! if default?
 
       ChildTheme.where("parent_theme_id = ?", id).destroy_all
-      self.save!
+      save!
     end
   end
 
@@ -443,7 +450,7 @@ class Theme < ActiveRecord::Base
       self.enabled = true
       self.component = false
       ChildTheme.where("child_theme_id = ?", id).destroy_all
-      self.save!
+      save!
     end
   end
 
@@ -455,9 +462,38 @@ class Theme < ActiveRecord::Base
     return "" if theme_id.blank?
 
     theme_ids = !skip_transformation ? transform_ids(theme_id) : [theme_id]
-    resolved = (resolve_baked_field(theme_ids, target.to_sym, field) || "")
+    resolved = resolve_baked_field(theme_ids, target.to_sym, field) || ""
     resolved = resolved.gsub(ThemeField::CSP_NONCE_PLACEHOLDER, csp_nonce) if csp_nonce
     resolved.html_safe
+  end
+
+  # An array of `{ url:, theme_id:, external_plugin_imports: }` hashes describing
+  # the theme's baked `extra_js` javascript caches.
+  def self.js_asset_info(theme_id, skip_transformation: false)
+    return [] if theme_id.blank?
+
+    theme_ids = !skip_transformation ? transform_ids(theme_id) : [theme_id]
+
+    get_set_cache("#{theme_ids.join(",")}:extra_js:#{Theme.compiler_version}") do
+      require_rebake =
+        ThemeField
+          .where(theme_id: theme_ids, target_id: targets[:extra_js])
+          .where.not(compiler_version: compiler_version)
+
+      ActiveRecord::Base.transaction do
+        require_rebake.each(&:ensure_baked!)
+        Theme.where(id: require_rebake.map(&:theme_id)).each(&:update_javascript_cache!)
+      end
+
+      JavascriptCache
+        .where(theme_id: theme_ids)
+        .index_by(&:theme_id)
+        .values_at(*theme_ids)
+        .compact
+        .map do |c|
+          { url: c.url, theme_id: c.theme_id, external_plugin_imports: c.external_plugin_imports }
+        end
+    end
   end
 
   def self.lookup_modifier(theme_ids, modifier_name)
@@ -493,7 +529,7 @@ class Theme < ActiveRecord::Base
   end
 
   def self.lookup_target(target_id)
-    self.targets.invert[target_id]
+    targets.invert[target_id]
   end
 
   def self.notify_theme_change(
@@ -507,7 +543,13 @@ class Theme < ActiveRecord::Base
 
     if with_scheme
       targets.prepend(:common, :desktop, :mobile, :admin)
-      targets.append(*Discourse.find_plugin_css_assets(mobile_view: true, desktop_view: true))
+      targets.append(
+        *Discourse.find_plugin_css_assets(
+          mobile_view: true,
+          desktop_view: true,
+          include_admin: true,
+        ),
+      )
       Stylesheet::Manager.cache.clear if clear_manager_cache
     end
 
@@ -545,30 +587,6 @@ class Theme < ActiveRecord::Base
     target = :desktop if target == :desktop_theme
 
     case target
-    when :extra_js
-      get_set_cache("#{theme_ids.join(",")}:extra_js:#{Theme.compiler_version}") do
-        require_rebake =
-          ThemeField
-            .where(theme_id: theme_ids, target_id: targets[:extra_js])
-            .where.not(compiler_version: compiler_version)
-
-        ActiveRecord::Base.transaction do
-          require_rebake.each { |tf| tf.ensure_baked! }
-
-          Theme.where(id: require_rebake.map(&:theme_id)).each(&:update_javascript_cache!)
-        end
-
-        caches =
-          JavascriptCache
-            .where(theme_id: theme_ids)
-            .index_by(&:theme_id)
-            .values_at(*theme_ids)
-            .compact
-
-        caches.map { |c| <<~HTML.html_safe }.join("\n")
-          <link rel="modulepreload" href="#{c.url}" data-theme-id="#{c.theme_id}" nonce="#{ThemeField::CSP_NONCE_PLACEHOLDER}" />
-        HTML
-      end
     when :translations
       theme_field_values(theme_ids, :translations, I18n.fallbacks[name])
         .to_a
@@ -624,7 +642,7 @@ class Theme < ActiveRecord::Base
 
   # def foundation_theme
   # def horizon_theme
-  CORE_THEMES.each { |name, id| define_singleton_method("#{name}_theme") { Theme.find(id) } }
+  CORE_THEMES.each { |name, id| define_singleton_method("#{name}_theme") { Theme.find_by(id: id) } }
   def resolve_baked_field(target, name)
     list_baked_fields(target, name).map { |f| f.value_baked || f.value }.join("\n")
   end
@@ -677,7 +695,8 @@ class Theme < ActiveRecord::Base
 
     if field
       if value.blank? && !upload_id
-        field.destroy
+        field.mark_for_destruction
+        changed_fields << field
       else
         if field.value != value || field.upload_id != upload_id
           field.value = value
@@ -771,15 +790,15 @@ class Theme < ActiveRecord::Base
   end
 
   def cached_settings
-    Theme.get_set_cache "settings_for_theme_#{self.id}" do
+    Theme.get_set_cache "settings_for_theme_#{id}" do
       build_settings_hash
     end
   end
 
   def cached_default_settings
-    Theme.get_set_cache "default_settings_for_theme_#{self.id}" do
+    Theme.get_set_cache "default_settings_for_theme_#{id}" do
       settings_hash = {}
-      self.settings.each { |name, setting| settings_hash[name] = setting.default }
+      settings.each { |name, setting| settings_hash[name] = setting.default }
 
       theme_uploads = build_theme_uploads_hash
       settings_hash["theme_uploads"] = theme_uploads if theme_uploads.present?
@@ -787,21 +806,25 @@ class Theme < ActiveRecord::Base
       theme_uploads_local = build_local_theme_uploads_hash
       settings_hash["theme_uploads_local"] = theme_uploads_local if theme_uploads_local.present?
 
+      settings_hash["theme_setting_type_info"] = build_theme_setting_type_info_hash if settings.any?
+
       settings_hash
     end
   end
 
   def build_settings_hash
-    hash = {}
-    self.settings.each { |name, setting| hash[name] = setting.value }
+    settings_hash = {}
+    settings.each { |name, setting| settings_hash[name] = setting.value }
 
     theme_uploads = build_theme_uploads_hash
-    hash["theme_uploads"] = theme_uploads if theme_uploads.present?
+    settings_hash["theme_uploads"] = theme_uploads if theme_uploads.present?
 
     theme_uploads_local = build_local_theme_uploads_hash
-    hash["theme_uploads_local"] = theme_uploads_local if theme_uploads_local.present?
+    settings_hash["theme_uploads_local"] = theme_uploads_local if theme_uploads_local.present?
 
-    hash
+    settings_hash["theme_setting_type_info"] = build_theme_setting_type_info_hash if settings.any?
+
+    settings_hash
   end
 
   def build_theme_uploads_hash
@@ -822,6 +845,30 @@ class Theme < ActiveRecord::Base
         hash[field.name] = field.javascript_cache.local_url if field.javascript_cache
       end
     hash
+  end
+
+  def build_theme_setting_type_info_hash
+    settings.each_with_object({}) do |(name, setting), hash|
+      hash[name] = { type: setting.type_name.to_s }.merge(
+        setting.opts.compact.except(:description, :max, :min),
+      )
+    end
+  end
+
+  def resolve_group_settings_for_user(settings_hash, guardian)
+    resolved_hash = settings_hash.dup
+
+    (cached_settings["theme_setting_type_info"] || []).each do |name, info|
+      next unless info[:type] == "list"
+      next unless info[:resolve_group_membership]
+
+      # Replace group list with user_in_ prefixed boolean (prevents leaking group IDs)
+      group_ids = settings_hash[name].to_s.split("|").map(&:to_i)
+      resolved_hash.delete(name)
+      resolved_hash[:"user_in_#{name}"] = guardian.in_any_groups?(group_ids)
+    end
+
+    resolved_hash
   end
 
   # Retrieves a theme setting
@@ -885,9 +932,9 @@ class Theme < ActiveRecord::Base
       end
 
       meta[:color_schemes] = {}.tap do |hash|
-        schemes = self.color_schemes
+        schemes = color_schemes
         # The selected color scheme may not belong to the theme, so include it anyway
-        schemes = [self.color_scheme] + schemes if self.color_scheme
+        schemes = [color_scheme] + schemes if color_scheme
         schemes.uniq.each do |scheme|
           hash[scheme.name] = {}.tap do |colors|
             scheme.colors.each { |color| colors[color.name] = color.hex }
@@ -897,7 +944,7 @@ class Theme < ActiveRecord::Base
 
       meta[:modifiers] = {}.tap do |hash|
         ThemeModifierSet.modifiers.keys.each do |modifier|
-          value = self.theme_modifier_set.public_send(modifier)
+          value = theme_modifier_set.public_send(modifier)
           hash[modifier] = value if !value.nil?
         end
       end
@@ -962,7 +1009,7 @@ class Theme < ActiveRecord::Base
     end
 
     settings_hash&.each do |name, value|
-      next if name == "theme_uploads" || name == "theme_uploads_local"
+      next if Theme::PRIVATE_CACHED_SETTING_KEYS.include?(name)
       contents << to_scss_variable(name, value)
     end
 
@@ -977,13 +1024,13 @@ class Theme < ActiveRecord::Base
 
       next if results.blank?
 
-      old_settings = self.theme_settings.pluck(:name)
-      self.theme_settings.destroy_all
+      old_settings = theme_settings.pluck(:name)
+      theme_settings.destroy_all
 
       final_result = results.last
 
       final_result[:settings_after].each do |key, val|
-        self.update_setting(key.to_sym, val)
+        update_setting(key.to_sym, val)
       rescue Discourse::NotFound
         if old_settings.include?(key)
           final_result[:settings_after].delete(key)
@@ -1001,7 +1048,7 @@ class Theme < ActiveRecord::Base
       results.each do |res|
         record =
           ThemeSettingsMigration.new(
-            theme_id: self.id,
+            theme_id: id,
             version: res[:version],
             name: res[:name],
             theme_field_id: res[:theme_field_id],
@@ -1014,12 +1061,11 @@ class Theme < ActiveRecord::Base
         allow_out_of_sequence_migration ? record.save : record.save!
       end
 
-      self.reload
-      self.update_javascript_cache!
+      reload
     end
 
     if start_transaction
-      self.transaction(&block)
+      transaction(&block)
     else
       block.call
     end
@@ -1061,7 +1107,7 @@ class Theme < ActiveRecord::Base
         theme_fields.where(target_id: Theme.targets[:migrations]).order(name: :asc),
       )
 
-    compiler = ThemeJavascriptCompiler.new(id, name, cached_default_settings, minify: false)
+    compiler = ThemeJavascriptCompiler.new(id, name, minify: false)
     compiler.append_tree(load_all_extra_js)
     compiler.append_tree(migrations_tree)
     compiler.append_tree(tests_tree)
@@ -1085,11 +1131,11 @@ class Theme < ActiveRecord::Base
   end
 
   def user_selectable_count
-    UserOption.where(theme_ids: [self.id]).count
+    UserOption.where(theme_ids: [id]).count
   end
 
   def themeable_site_settings
-    return [] if self.component?
+    return [] if component?
     ThemeSiteSettingResolver.new(theme: self).resolved_theme_site_settings
   end
 

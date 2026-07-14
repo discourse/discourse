@@ -138,25 +138,23 @@ class DestroyTask
       .human_users
       .where(admin: false)
       .find_each do |user|
-        begin
-          if UserDestroyer.new(Discourse.system_user).destroy(
-               user,
-               delete_posts: true,
-               context: "destroy task",
-             )
-            @io.puts "#{user.username} deleted"
-          else
-            @io.puts "#{user.username} not deleted"
-          end
-        rescue UserDestroyer::PostsExistError
-          raise Discourse::InvalidAccess.new(
-                  "User #{user.username} has #{user.post_count} posts, so can't be deleted.",
-                )
-        rescue NoMethodError
-          @io.puts "#{user.username} could not be deleted"
-        rescue Discourse::InvalidAccess => e
-          @io.puts "#{user.username} #{e.message}"
+        if UserDestroyer.new(Discourse.system_user).destroy(
+             user,
+             delete_posts: true,
+             context: "destroy task",
+           )
+          @io.puts "#{user.username} deleted"
+        else
+          @io.puts "#{user.username} not deleted"
         end
+      rescue UserDestroyer::PostsExistError
+        raise Discourse::InvalidAccess.new(
+                "User #{user.username} has #{user.post_count} posts, so can't be deleted.",
+              )
+      rescue NoMethodError
+        @io.puts "#{user.username} could not be deleted"
+      rescue Discourse::InvalidAccess => e
+        @io.puts "#{user.username} #{e.message}"
       end
   end
 

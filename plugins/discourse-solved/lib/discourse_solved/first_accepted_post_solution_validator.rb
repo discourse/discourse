@@ -10,8 +10,8 @@ module DiscourseSolved
         return false
       end
 
-      !DiscourseSolved::SolvedTopic
-        .joins(:answer_post)
+      !DiscourseSolved::TopicAnswer
+        .joins(:post)
         .where("posts.user_id = ? AND posts.id != ?", post.user_id, post.id)
         .exists?
     end

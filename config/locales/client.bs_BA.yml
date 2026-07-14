@@ -6,11 +6,21 @@
 
 bs_BA:
   js:
+    user_api_key:
+      deny: "Odustani"
+      copied: "Kopirano!"
+      device:
+        code: "Šifra"
+        continue: "Nastavi"
     blocks:
       ghost:
         status: "Status"
         hidden: "hidden"
         failed: "neuspješno"
+    access_control:
+      manage:
+        access_permission_editor: "Urednik"
+        access_permission_remove: "Ukloni"
     number:
       format:
         separator: "."
@@ -140,6 +150,8 @@ bs_BA:
       next_month: "Sljedeći mjesec"
       placeholder: datum
       to_placeholder: "do datuma"
+    date_range_picker:
+      apply: "Snimi"
     share:
       topic_html: 'Tema: <span class="topic-title">%{topicTitle}</span>'
       close: "zatvori"
@@ -226,6 +238,9 @@ bs_BA:
     age: "Godište"
     joined: "Pridružio se"
     admin_title: "Admin"
+    advanced_mode_toggle:
+      advanced_mode: "Napredni način"
+      simple_mode: "Jednostavan način"
     show_more: "prikaži još"
     show_help: "Opcije"
     links: "Linkovi"
@@ -240,8 +255,6 @@ bs_BA:
     tos: "Uslovi korištenja"
     rules: "Pravila"
     conduct: "Kodeks ponašanja"
-    mobile_view: "Mobilni prikaz"
-    desktop_view: "Desktop prikaz"
     now: "upravo sada"
     read_more: "pročitaj više"
     more: "Više"
@@ -334,6 +347,9 @@ bs_BA:
       resume: "Nastavi"
       remove: "Ukloni"
       new_topic: "Nacrt nove teme"
+    embed_mode:
+      signin_flow:
+        cancel: "Odustani"
     topic_count_all:
       one: "Pogledaj %{count} novu temu"
       few: "Pogledaj %{count} nove teme"
@@ -677,7 +693,6 @@ bs_BA:
             title: "Postavke"
         membership:
           title: Članstvo
-          access: Pristup
         categories:
           title: Kategorije
           long_title: "Zadane obavijesti kategorije"
@@ -710,7 +725,6 @@ bs_BA:
         title: "Permisije"
         none: "Ne postoje kategorije povezane s ovom grupom."
         description: "Članovi ove grupe mogu pristupiti ovim kategorijama"
-      public_admission: "Omogući korisnicima da se mogu slobodno učlaniti u grupu (zahtjeva da grupa bude javno otvorena)"
       public_exit: "Omogući korisnicima da mogu slobodno napustiti grupu"
       empty:
         posts: "Ne postoje postovi člana ove grupe"
@@ -726,7 +740,6 @@ bs_BA:
       request: "Zatraži"
       message: "Poruka"
       confirm_leave: "Jeste li sigurni da želite napustiti ovu grupu?"
-      allow_membership_requests: "Dopusti korisnicima da smiju slati molbe za učlanjenje u grupu vlasnicima grupa (Potrebno je da je grupa javno vidljiva)"
       membership_request_template: "Prilagođeni memorandum kao priložak koji se prikazuje korisnicima prilikom slanja zahtjeva za učlanjenje"
       membership_request:
         submit: "Poslati zahtjev "
@@ -947,13 +960,8 @@ bs_BA:
       notifications: "Obavijest"
       statistics: "Statistika"
       desktop_notifications:
-        label: "Uživo obavjesti"
         not_supported: "Obavjesti nisu podržane na ovom web pregledniku."
-        perm_default: "Upali obavjesti"
-        perm_denied_btn: "Zabranjen pristup"
         perm_denied_expl: "Odbili ste dozvolu za slanje notifikacija. Omogućite ih kroz postavke vašeg pretraživača."
-        disable: "Isključi obavjesti"
-        enable: "Uključi obavijesti"
         consent_prompt: "Da li želite uživo obavjesti kada neko odgovori na vaše objave? "
       dismiss: "Odpusti"
       dismiss_notifications: "Odpusti sve"
@@ -1040,6 +1048,8 @@ bs_BA:
       undo_revoke_access: "Poništi oduzeti pristup"
       api_approved: "Odobreno:"
       api_last_used_at: "Zadnje korišteno kod"
+      api_expires_at: "Ističe:"
+      api_expires_never: "nikad"
       theme: "Izgled"
       save_to_change_theme: 'Tema će biti ažurirana nakon što kliknete "%{save_text}"'
       home: "Uobičajena početna stranica"
@@ -1517,7 +1527,6 @@ bs_BA:
     created: "Stvoreno"
     created_lowercase: "objavljeno"
     trust_level: "Nivo povjerenja"
-    search_hint: "ime"
     create_account:
       header_title: "Dobrodošao!"
       disclaimer: "Registracijom pristajete na <a href='%{privacy_link}' target='blank'>politiku privatnosti</a> i <a href='%{tos_link}' target='blank'>uvjete pružanja usluge</a> ."
@@ -1553,6 +1562,12 @@ bs_BA:
       confirm_title: Nastavi ka %{site_name}
       logging_in_as: Prijavite se kao %{email}
       confirm_button: Završi prijavu
+    code_login:
+      email_label: "Email"
+      continue_button: "Nastavi"
+      verify_button: "Nastavi"
+      account_ready_continue: "Nastavi"
+      username_label: "Nadimak"
     login:
       title: "Prijava"
       username: "Korisnik"
@@ -1705,7 +1720,7 @@ bs_BA:
       discard: "Odbaci"
       title_placeholder: "O čemu je ova diskusija u jednoj rečenici?"
       title_or_link_placeholder: "Ukucajte naziv, ili zalijepite link ovdje"
-      edit_reason_placeholder: "zašto pravite izmjenu?"
+      edit_reason_placeholder: "Zašto pravite izmjenu?"
       topic_featured_link_placeholder: "Unesite link prikazan sa nazivom"
       remove_featured_link: "Odstranite link sa teme."
       reply_placeholder: "Ovdje unesite vaš tekst. Koristite Markdown, BBcode ili HTML kako bi formatirali vaš tekst. Za postavljanje slika, sliku prevucite ili zalijepite u ovo polje."
@@ -1735,8 +1750,11 @@ bs_BA:
       upload_description: "unesi opis učitanog"
       list_item: "Listaj predmet"
       wrap_modal:
+        attribute_key: "Ključ"
+        attribute_value: "Value"
         apply: "Snimi"
       help: "Pomoć za Markdown"
+      edit_reason: "Zašto pravite izmjenu?"
       modal_ok: "OK"
       cant_send_pm: "Neuspješno, ne možete slati poruke ka %{username}."
       yourself_confirm:
@@ -1754,18 +1772,19 @@ bs_BA:
           desc: Kreiraj novu temu linkanu na ovu temu
         reply_to_topic:
           label: Odgovori na temu
+          trigger: Topic
           desc: Odgovori na temu, ne ciljajući na neku posebnu objavu
+        reply_to_message:
+          trigger: Privatna Poruka
         toggle_whisper:
           label: Uključi Šapat
-          desc: Šapati su vidljivi samo administratorima
         create_personal_message:
-          label: "Nova poruka"
           desc: "Kreiraj novu personalnu poruku"
         shared_draft:
           label: "Dijeljena skica"
         toggle_topic_bump:
-          label: "Toggle topic bump"
           desc: "Odgovori bez izmjene zadnjeg datuma odgovora"
+        unknown_user: "User"
       ignore: "Zanemari"
       image: "slika"
     notifications:
@@ -1936,6 +1955,7 @@ bs_BA:
             after: poslije
         views:
           label: Pogledano
+    header_panel: "Header"
     new_item: "novo"
     go_back: "go back"
     not_logged_in_user: "user page with summary of current activity and preferences"
@@ -1966,8 +1986,6 @@ bs_BA:
         actions: "Masovno odrađene akcije"
         move_messages_to_inbox: "Idi u inbox"
         choose_new_category: "Izaberi novu kategoriju za temu:"
-        choose_new_tags: "Odaberi nove tagove za ove teme:"
-        changed_tags: "Tagovi ovih tema su izmijenjeni."
         error_topic_count:
           one: "%{count} tema"
           few: "%{count} teme"
@@ -1990,10 +2008,30 @@ bs_BA:
         name: "Arhiva"
       move_messages_to_inbox:
         name: "Premjesti u Sanduče"
-      replace_tags:
-        name: "Zamijeni oznake"
       delete_topics:
         name: "Delete"
+      convert_to_private_message:
+        name: "Pretvori u privatnu poruku"
+    nested_replies:
+      sort:
+        label: "Sortiraj po"
+        top: "Top teme"
+        new: "Novo"
+      load_more_children:
+        one: "još %{count} odgovor"
+        few: "još %{count} odgovora"
+        other: "još %{count} odgovora"
+      collapsed_replies:
+        one: "%{count} odgovor"
+        few: "%{count} odgovora"
+        other: "%{count} odgovora"
+      collapse: "Spusti"
+      no_replies: "Bez odgovora."
+      deleted_post_placeholder: "[isbrisano]"
+      ignored_post_placeholder: "[ignorisano]"
+      pinned_reply: "Zakačena"
+    share_target:
+      new_message: "Nova poruka"
     topic:
       filter_to:
         one: "%{count} objava u temi"
@@ -2359,8 +2397,6 @@ bs_BA:
           actions: "Akcije"
           edit: "Edit"
           delete: "Delete"
-        post_language_selector:
-          none: "Ništa"
       errors:
         create: "Sorry, there was an error creating your post. Please try again."
         edit: "Sorry, there was an error editing your post. Please try again."
@@ -2482,7 +2518,6 @@ bs_BA:
         name: "Ime"
         name_placeholder: "Za što služi ova zabilješka?"
         set_reminder: "Podsjeti me"
-        options: "Opcije"
         actions:
           delete_bookmark:
             name: "Obriši zabilješku"
@@ -2499,6 +2534,7 @@ bs_BA:
       view: "View Topics in Category"
       general: "General"
       settings: "Postavke"
+      moderation: "Moderacija"
       tags: "Oznake"
       localization:
         name: "Ime"
@@ -2513,7 +2549,6 @@ bs_BA:
         delete: "Delete"
       topic_featured_link_allowed: "Omogućite istaknute veze u ovoj kategoriji"
       create_long: "Napravite novu kategoriju"
-      slug_placeholder: "(Opcionalno) isprekidane riječi za url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
       validations:
@@ -2583,7 +2618,7 @@ bs_BA:
           low: "Nisko"
           high: "Visoko"
       sort_options:
-        default: "obićno"
+        default: "Uobičajen"
         likes: "Sviđanja"
         views: "Pogledano"
         posts: "Objava"
@@ -2805,79 +2840,52 @@ bs_BA:
       shortcut_delimiter_or: "%{shortcut1} ili %{shortcut2}"
       shortcut_delimiter_slash: "%{shortcut1} / %{shortcut2}"
       title: "Kratice tipkovnice"
+      description_header: "Opis"
+      key_header: "Ključ"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Skoči na"
-        home: "%{shortcut} Početak"
-        latest: "%{shortcut} Zadnje"
-        new: "%{shortcut} Nove Teme"
-        unread: "%{shortcut} Nepročitane"
-        categories: "%{shortcut} Kategorije"
-        top: "%{shortcut} Na vrh"
-        bookmarks: "%{shortcut} Zabilješke"
-        profile: "%{shortcut} Profil"
-        messages: "%{shortcut} Porka"
-        drafts: "%{shortcut}Skica"
-        previous: "%{shortcut} Prethodna tema"
+        home: "Naslovnica"
+        latest: "Zadnje"
+        new: "Novo"
+        unread: "Nepročitano"
+        categories: "Kategorije"
+        top: "Top teme"
+        bookmarks: "Zabilješke"
+        profile: "Profil"
+        messages: "Poruke"
+        drafts: "Skice"
       navigation:
         title: "Navigacija"
-        jump: "%{shortcut} Idi na post #"
-        back: "%{shortcut} Nazad"
-        up_down: "%{shortcut} Move selection &uarr; &darr;"
-        open: "%{shortcut} Open selected topic"
-        next_prev: "%{shortcut} Next/previous section"
-        go_to_unread_post: "%{shortcut} Idi na prvu nepročitanu poruku"
+        back: "Prethodno"
+        up_down: "Move selection &uarr; &darr;"
       application:
         title: "Aplikacija"
-        notifications: "%{shortcut} Otvori notifikacije"
-        user_profile_menu: "%{shortcut} Otvori meni korisnika"
-        show_incoming_updated_topics: "%{shortcut} Pročitaj promjenje teme"
-        search: "%{shortcut} Traži"
-        help: "%{shortcut} Otvori pomoć za tastaturu"
-        log_out: "%{shortcut} Odjavi se"
+        search: "Pretraži"
+        log_out: "Odjavi se"
       composing:
         title: "komppziranje"
-        return: "%{shortcut} Povratak kompozitoru"
-        fullscreen: "%{shortcut} Kompozitor preko cijelog ekrana"
+        preformatted: "Formatiran Tekst"
+        blockquote: "\"Blockquote\" izdvojeni citat"
       bookmarks:
         title: "Zabilježavanje"
-        enter: "%{shortcut} Sačuvaj i zatvori"
-        later_today: "%{shortcut} Danas"
-        later_this_week: "%{shortcut} Ove sedmice"
-        tomorrow: "%{shortcut} Sutra"
-        next_week: "%{shortcut} Sledeće sedmice"
-        next_month: "%{shortcut} Sledećeg meseca"
-        next_business_week: "%{shortcut} Početak naredne sedmice"
-        next_business_day: "%{shortcut} Sledeći radni dan"
-        custom: "%{shortcut} Odabrani datum i vrijeme"
-        none: "%{shortcut} Bez podsjetnika"
-        delete: "%{shortcut} Izbriši zabilješku"
+        later_today: "Na kraju dana"
+        later_this_week: "Kasnije ove sedmice"
+        tomorrow: "Sutra"
+        next_week: "Sljedeće sedmice"
+        next_month: "Sljedeći mjesec"
+        next_business_day: "Sljedeći radni dan"
+        custom: "Precizirano vrijeme i datum"
+        delete: "Obriši zabilješku"
       actions:
         title: "Akcije"
-        bookmark_topic: "%{shortcut} Stavi/Ukloni zabilješku"
-        pin_unpin_topic: "%{shortcut} Zakvači/odkvači temu"
-        share_topic: "%{shortcut} Podijeli temu"
-        share_post: "%{shortcut} Podijeli post"
-        reply_as_new_topic: "%{shortcut} Odgovori kroz novu temu"
-        reply_topic: "%{shortcut} Odgovori na Temu"
-        reply_post: "%{shortcut} Odgovori na post"
-        quote_post: "%{shortcut} Citiraj odgovor"
-        like: "%{shortcut} Lajkuj post"
-        flag: "%{shortcut} Prijavi objavu"
-        bookmark: "%{shortcut} Zabilježi objavu"
-        edit: "%{shortcut} Izmjeni post"
-        delete: "%{shortcut} Obriši post"
-        mark_muted: "%{shortcut} Mutiraj temu"
-        mark_tracking: "%{shortcut} Prati temu"
-        mark_watching: "%{shortcut} Motri temu"
-        print: "%{shortcut} Odštampaj temu"
-        topic_admin_actions: "%{shortcut} Otvori opcije administriranja teme"
+        reply_as_new_topic: "Odgovori kao linkana tema"
+        reply_topic: "Odgovori na temu"
       search_menu:
         title: "Meni za pretragu"
-        prev_next: "%{shortcut} Pomjeri odabir prema gore ili dolje"
-        insert_url: "%{shortcut} Umetnite odabir u otvoreni skladatelj"
       admin:
         title: "Admin"
-        search_prev_next: "%{shortcut} Pomjeri odabir prema gore ili dolje"
     badges:
       earned_n_times:
         one: "Zaradio / la sam ovu oznaku %{count} time"
@@ -2921,15 +2929,6 @@ bs_BA:
       default_info: "Ovaj oznaka nije predodređena ni za jednu kategoriju i nema sinonime."
       category_restricted: "Ova oznaka je predodređena za kategorije na koje nemate pravo pristupa."
       synonyms: "Sinonimi"
-      synonyms_description: "U slučaju da se sljedeće oznake koriste, iste će biti zamijenjene sa <b>%{base_tag_name}</b>."
-      tag_groups_info:
-        one: 'Ovaj tag pripada grupi "%{tag_groups}".'
-        few: "Ovaj tag pripada sljedećim grupama: %{tag_groups}."
-        other: "Ova oznaka pripada sljedećim grupama: %{tag_groups}."
-      category_restrictions:
-        one: "Moguće je koristiti samo u sljedećoj kategoriji:"
-        few: "Moguće je koristiti samo u sljedećim kategorijama:"
-        other: "Moguće je koristiti samo u sljedećim kategorijama:"
       add_synonyms_label: "Dodaj sinonime:"
       add_synonyms: "Dodaj"
       add_synonyms_explanation:
@@ -3125,7 +3124,7 @@ bs_BA:
         modal:
           cancel: "otkaži"
           create: "Save"
-          reason: "zašto pravite izmjenu?"
+          reason: "Zašto pravite izmjenu?"
       spreadsheet:
         show: "Show"
         about: "O nama"
@@ -3149,6 +3148,7 @@ bs_BA:
       reports:
         title: "Lista dostupnih izvještaja"
         sidebar_title: "Izvještaji"
+        all_groups: "Sve grupe"
         group_traffic: "Promet"
         group_members: "Članovi"
         group_other: "Other"
@@ -3177,6 +3177,8 @@ bs_BA:
           admins: "Admins"
           moderators: "Moderators"
           staff: "Staff"
+        impact_types:
+          other_type: "Other"
         filter:
           all: "Sve"
           enabled: "Omogućen"
@@ -3206,6 +3208,9 @@ bs_BA:
           form:
             mobile: "Mobilno"
             email: "Email"
+            og_image_preview:
+              generate: "Generate"
+              topic_id_label: "ID teme"
         fonts:
           backfill_modal:
             modal_yes: "Da"
@@ -3240,6 +3245,9 @@ bs_BA:
           sub_pages:
             logs:
               title: "Logs"
+        problem_checks:
+          status: "Status"
+          ignore: "Zanemari"
         reports:
           title: "Izvještaji"
           sub_pages:
@@ -3303,9 +3311,9 @@ bs_BA:
         no_check_performed: "A check for updates has not been performed. Ensure sidekiq is running."
         stale_data: "A check for updates has not been performed lately. Ensure sidekiq is running."
         installed_version: "Installed"
-        latest_version: "Zadnje"
+        github: "GitHub"
         problems_found: "Neki saveti na osnovu vaših trenutnih postavki sajta"
-        dismiss_notice: "Odbaci"
+        dismiss_notice: "Zanemari"
         new_features:
           learn_more: "Saznaj više..."
         last_checked: "Zadnje pogledani"
@@ -3347,6 +3355,41 @@ bs_BA:
         exception_error: Žao nam je, došlo je do pogreške prilikom izvršavanja upita
         too_many_requests: Izveli ste ovu akciju previše puta. Pričekajte prije ponovnog pokušaja.
         not_found_error: Izvinite, ovaj izveštaj ne postoji
+        sections:
+          reports:
+            title: "Izvještaji"
+          engagement:
+            activity_by_category:
+              category: "Kategorija"
+              topics: "Topics"
+              posts: "Objave"
+              share: "Dijeli"
+            whos_posting:
+              all_categories: "Sve kategorije"
+              staff: "Staff"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Novo"
+                "1": "Osnovni"
+                "2": "Član"
+                "3": "Normalno"
+                "4": "Vođa"
+          search:
+            title: "Pretraži"
+            table:
+              searches: "Pretraživanja"
+              status: "Status"
+        reports_section:
+          no_data: "Nema podataka za prikaz"
+          modal:
+            enabled_heading: "Omogućen"
+            all_heading: "Svi izvještaji"
+            apply: "Snimi"
+        site_traffic:
+          series:
+            anonymous: "Anoniman"
+        period:
+          custom: "Custom"
         reports:
           trend_title: "%{percent} change. Trenutno je %{current}, u prethodnom periodu bio %{prev}."
           today: "Today"
@@ -3403,7 +3446,6 @@ bs_BA:
             email: Email
             incoming_email: "Prilagođena dolazna adresa e-pošte"
             incoming_email_placeholder: "unesite adresu e-pošte"
-            visibility: Vidljivost
             visibility_levels:
               title: "Ko može vidjeti ovu grupu?"
               public: "Svatko"
@@ -3568,6 +3610,8 @@ bs_BA:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
           company_name: "Ime"
+          company_url: "Web stranica"
+          company_url_placeholder: "https://example-co.com"
           extra_groups:
             groups: "Groups"
           optional: "(opciono)"
@@ -3950,6 +3994,7 @@ bs_BA:
         topic_id: "Topic ID"
         post_id: "Post ID"
         category_id: "ID kategorije"
+        reviewable_id: "Pregled"
         delete: "Delete"
         edit: "Edit"
         save: "Save"
@@ -4144,6 +4189,10 @@ bs_BA:
         active: "Aktivirano"
         status: "Status"
         bulk_actions:
+          suspend:
+            confirmation_modal:
+              close: "Zatvori"
+              confirm: "Suspend"
           delete:
             confirmation_modal:
               close: "Zatvori"
@@ -4155,6 +4204,8 @@ bs_BA:
           suspended: "Suspended"
           silenced: "Stišano"
           staged: "Priređen"
+        activation_filter:
+          activated: "Aktivirano"
         approved: "Approved?"
         titles:
           pending: "Users Pending Review"

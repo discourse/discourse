@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 export default class AssignButton extends Component {
   static shouldRender(args) {
-    return !args.post.firstPost;
+    return !args.post.firstPost && args.post.can_assign;
   }
 
   static hidden(args) {

@@ -2,6 +2,7 @@
 
 class SharedAiConversation < ActiveRecord::Base
   DEFAULT_MAX_POSTS = 100
+  ARTIFACT_SECURITY_MODES = %w[lax hybrid strict]
 
   belongs_to :user
   belongs_to :target, polymorphic: true
@@ -19,33 +20,39 @@ class SharedAiConversation < ActiveRecord::Base
     conversation = find_by(user: user, target: target)
     conversation_data = build_conversation_data(target, max_posts: max_posts)
 
-    conversation =
+    shared =
       if conversation
         conversation.update(**conversation_data)
-        conversation
       else
-        create(user_id: user.id, target: target, **conversation_data)
+        conversation = create(user_id: user.id, target: target, **conversation_data)
+        conversation.persisted?
       end
 
-    ::Jobs.enqueue(:shared_conversation_adjust_upload_security, conversation_id: conversation.id)
+    if shared
+      share_artifacts(target, max_posts: max_posts)
+      ::Jobs.enqueue(:shared_conversation_adjust_upload_security, conversation_id: conversation.id)
+    end
 
     conversation
   end
 
   def self.destroy_conversation(conversation)
+    target_id = conversation.target_id
+    target_type = conversation.target_type
+    target_topic = conversation.target_topic(with_deleted: true)
+
     conversation.destroy
 
-    maybe_topic = conversation.target
-    if maybe_topic.is_a?(Topic)
-      AiArtifact.where(post: maybe_topic.posts).update_all(
+    if target_topic
+      AiArtifact.where(post: target_topic.posts.with_deleted).update_all(
         "metadata = jsonb_set(COALESCE(metadata, '{}'), '{public}', 'false')",
       )
     end
 
     ::Jobs.enqueue(
       :shared_conversation_adjust_upload_security,
-      target_id: conversation.target_id,
-      target_type: conversation.target_type,
+      target_id: target_id,
+      target_type: target_type,
     )
   end
 
@@ -72,7 +79,7 @@ class SharedAiConversation < ActiveRecord::Base
 
   def to_json
     posts =
-      self.populated_context.map do |post|
+      populated_context.map do |post|
         {
           id: post.id,
           cooked: post.cooked,
@@ -80,11 +87,35 @@ class SharedAiConversation < ActiveRecord::Base
           created_at: post.created_at,
         }
       end
-    { llm_name: self.llm_name, share_key: self.share_key, title: self.title, posts: posts }
+    { llm_name: llm_name, share_key: share_key, title: title, posts: posts }
   end
 
   def url
     "#{Discourse.base_uri}/discourse-ai/ai-bot/shared-ai-conversations/#{share_key}"
+  end
+
+  def publicly_visible?
+    topic = target_topic
+    return false if topic.blank?
+
+    source_guardian = user.guardian
+    return false if DiscourseAi::AiBot::EntryPoint.ai_share_error(topic, source_guardian)
+
+    context_post_ids = context.filter_map { |context_post| context_post["id"] }
+    return false if context_post_ids.blank?
+
+    posts_by_id = Post.where(id: context_post_ids, topic_id: topic.id).index_by(&:id)
+    context_post_ids.all? do |post_id|
+      post = posts_by_id[post_id]
+      post.present? && source_guardian.can_see?(post)
+    end
+  end
+
+  def target_topic(with_deleted: false)
+    return if target_type != "Topic"
+
+    scope = with_deleted ? Topic.with_deleted : Topic
+    scope.find_by(id: target_id)
   end
 
   def html_excerpt
@@ -149,14 +180,7 @@ class SharedAiConversation < ActiveRecord::Base
       agent = AiAgent.find_by(id: agent_id.to_i)&.name
     end
 
-    posts =
-      topic
-        .posts
-        .by_post_number
-        .where(post_type: Post.types[:regular])
-        .where.not(cooked: nil)
-        .where(deleted_at: nil)
-        .limit(max_posts)
+    posts = conversation_posts(topic, max_posts: max_posts)
 
     {
       llm_name: llm_name,
@@ -180,7 +204,7 @@ class SharedAiConversation < ActiveRecord::Base
 
   def self.cook_artifacts(post)
     html = post.cooked
-    return html if !%w[lax hybrid strict].include?(SiteSetting.ai_artifact_security)
+    return html if !ARTIFACT_SECURITY_MODES.include?(SiteSetting.ai_artifact_security)
 
     doc = Nokogiri::HTML5.fragment(html)
     doc
@@ -189,13 +213,34 @@ class SharedAiConversation < ActiveRecord::Base
         id = node["data-ai-artifact-id"].to_i
         version = node["data-ai-artifact-version"]
         version_number = version.to_i if version
-        if id > 0
-          AiArtifact.share_publicly(id: id, post: post)
-          node.replace(AiArtifact.iframe_for(id, version_number))
-        end
+        node.replace(AiArtifact.iframe_for(id, version_number)) if id > 0
       end
 
     doc.to_s
+  end
+
+  def self.share_artifacts(topic, max_posts: DEFAULT_MAX_POSTS)
+    return if !ARTIFACT_SECURITY_MODES.include?(SiteSetting.ai_artifact_security)
+
+    conversation_posts(topic, max_posts: max_posts).each do |post|
+      doc = Nokogiri::HTML5.fragment(post.cooked)
+      doc
+        .css("div.ai-artifact")
+        .each do |node|
+          id = node["data-ai-artifact-id"].to_i
+          AiArtifact.share_publicly(id: id, post: post) if id > 0
+        end
+    end
+  end
+
+  def self.conversation_posts(topic, max_posts: DEFAULT_MAX_POSTS)
+    topic
+      .posts
+      .by_post_number
+      .where(post_type: Post.types[:regular])
+      .where.not(cooked: nil)
+      .where(deleted_at: nil)
+      .limit(max_posts)
   end
 
   private
@@ -215,16 +260,16 @@ end
 # Table name: shared_ai_conversations
 #
 #  id          :bigint           not null, primary key
-#  user_id     :integer          not null
-#  target_id   :integer          not null
+#  context     :jsonb            not null
+#  excerpt     :string           not null
+#  llm_name    :string           not null
+#  share_key   :string           not null
 #  target_type :string           not null
 #  title       :string           not null
-#  llm_name    :string           not null
-#  context     :jsonb            not null
-#  share_key   :string           not null
-#  excerpt     :string           not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
+#  target_id   :integer          not null
+#  user_id     :integer          not null
 #
 # Indexes
 #

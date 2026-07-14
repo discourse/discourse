@@ -1,11 +1,11 @@
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 const PostMenuCopyLinkButton = <template>
   <DButton
     class="post-action-menu__copy-link"
     ...attributes
     @action={{@buttonActions.copyLink}}
-    @icon="d-post-share"
+    @icon="link"
     @label={{if @showLabel "post.controls.copy_action"}}
     @title="post.controls.copy_title"
     @ariaLabel="post.controls.copy_title"

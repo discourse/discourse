@@ -23,7 +23,7 @@ class ExportCsvController < ApplicationController
       unless current_user.admin ||
                UserExport.where(
                  user_id: entity_id || current_user.id,
-                 created_at: (Time.zone.now.all_day),
+                 created_at: Time.zone.now.all_day,
                ).count == 0
         render_json_error I18n.t("csv_export.rate_limit_error")
         return

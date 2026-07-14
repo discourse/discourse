@@ -13,9 +13,8 @@ class ReviewableQueuedPost < Reviewable
   end
 
   after_save do
-    if saved_change_to_payload? && self.status.to_sym == :pending &&
-         self.payload&.[]("raw").present?
-      upload_ids = Upload.extract_upload_ids(self.payload["raw"])
+    if saved_change_to_payload? && status.to_sym == :pending && payload&.[]("raw").present?
+      upload_ids = Upload.extract_upload_ids(payload["raw"])
       UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
     end
   end
@@ -30,12 +29,6 @@ class ReviewableQueuedPost < Reviewable
       revise_feedback: params[:revise_feedback],
       revise_custom_reason: params[:revise_custom_reason],
     }
-  end
-
-  def updatable_reviewable_scores
-    # Approvals are possible for already rejected queued posts. We need the
-    # scores to be updated when this happens.
-    reviewable_scores.pending.or(reviewable_scores.disagreed)
   end
 
   def build_combined_actions(actions, guardian, args)
@@ -114,9 +107,13 @@ class ReviewableQueuedPost < Reviewable
     self.topic_id = created_post.topic_id if topic_id.nil?
     save
 
-    UserSilencer.unsilence(target_created_by, performed_by) if target_created_by.silenced?
+    if target_created_by.silenced?
+      UserSilencer.unsilence(target_created_by, performed_by, reviewable_id: id)
+    end
 
-    StaffActionLogger.new(performed_by).log_post_approved(created_post) if performed_by.staff?
+    if performed_by.staff?
+      StaffActionLogger.new(performed_by).log_post_approved(created_post, reviewable_id: id)
+    end
 
     # Backwards compatibility, new code should listen for `reviewable_transitioned_to`
     DiscourseEvent.trigger(:approved_post, self, created_post)
@@ -155,7 +152,7 @@ class ReviewableQueuedPost < Reviewable
 
   def perform_revise_and_reject_post(performed_by, args)
     has_contact_user = SiteSetting.site_contact_username.present?
-    is_new_topic = self.topic.blank?
+    is_new_topic = topic.blank?
 
     edit_instructions_key =
       if is_new_topic && has_contact_user
@@ -169,18 +166,17 @@ class ReviewableQueuedPost < Reviewable
       end
 
     pm_translation_args = {
-      topic_title: self.topic&.title || self.payload["title"],
-      topic_url: self.topic&.url,
+      topic_title: topic&.title || payload["title"],
+      topic_url: topic&.url,
       reason: args[:revise_custom_reason].presence || args[:revise_reason],
       feedback: args[:revise_feedback],
-      original_post: self.payload["raw"],
+      original_post: payload["raw"],
       site_name: SiteSetting.title,
-      edit_instructions:
-        I18n.t(edit_instructions_key, locale: self.target_created_by.effective_locale),
+      edit_instructions: I18n.t(edit_instructions_key, locale: target_created_by.effective_locale),
     }
 
     SystemMessage.create(
-      self.target_created_by,
+      target_created_by,
       (
         if is_new_topic
           :reviewable_queued_post_revise_and_reject_new_topic
@@ -238,26 +234,26 @@ end
 # Table name: reviewables
 #
 #  id                      :bigint           not null, primary key
+#  force_review            :boolean          default(FALSE), not null
+#  latest_score            :datetime
+#  payload                 :json
+#  potential_spam          :boolean          default(FALSE), not null
+#  potentially_illegal     :boolean          default(FALSE)
+#  reject_reason           :text
+#  reviewable_by_moderator :boolean          default(FALSE), not null
+#  score                   :float            default(0.0), not null
+#  status                  :integer          default("pending"), not null
+#  target_type             :string
 #  type                    :string           not null
 #  type_source             :string           default("unknown"), not null
-#  status                  :integer          default("pending"), not null
-#  created_by_id           :integer          not null
-#  reviewable_by_moderator :boolean          default(FALSE), not null
-#  category_id             :integer
-#  topic_id                :integer
-#  score                   :float            default(0.0), not null
-#  potential_spam          :boolean          default(FALSE), not null
-#  target_id               :integer
-#  target_type             :string
-#  target_created_by_id    :integer
-#  payload                 :json
 #  version                 :integer          default(0), not null
-#  latest_score            :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  force_review            :boolean          default(FALSE), not null
-#  reject_reason           :text
-#  potentially_illegal     :boolean          default(FALSE)
+#  category_id             :integer
+#  created_by_id           :integer          not null
+#  target_created_by_id    :integer
+#  target_id               :integer
+#  topic_id                :integer
 #
 # Indexes
 #

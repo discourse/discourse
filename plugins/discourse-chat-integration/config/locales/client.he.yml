@@ -14,9 +14,29 @@ he:
     chat_integration:
       menu_title: "שילובי צ׳אט"
       settings: "הגדרות"
+      nav:
+        providers: "ספקים"
+      add_provider: "הוספת ספק"
+      view_provider_settings: "הצגת הגדרות ספק"
+      more_providers: "עוד"
+      confirm_setup_provider: "להפעיל את הספק %{provider}? אפשר להשבית אותו אחר כך בלשונית ההגדרות."
+      setup_provider_modal:
+        title: "הגדרת הספק %{provider}"
+        slack:
+          access_token:
+            title: "אסימון גישה"
+        telegram:
+          access_token:
+            title: "אסימון גישה"
+      channels_title: "ערוצים"
       channels_with_errors: "בפעם האחרונה שנשלחו מסרים כמה ערוצים נכשלו עבור הספר הזה. לחץ על סמליל(י) השגיאה כדי לקבל עוד מידע"
       group_mention_template: "אזכורים של: ‎@%{name}‎"
       group_message_template: "הודעות אל: ‎@%{name}‎"
+      choose_group: "(נא לבחור קבוצה)"
+      all_categories: "(כל הקטגוריות)"
+      all_tags: "(כל התגיות)"
+      create_rule: "יצירת כלל"
+      add_channel: "הוספת ערוץ"
       delete_channel: "מחיקה"
       test_channel: "נסיון"
       edit_channel: "עריכה"
@@ -24,10 +44,14 @@ he:
       test_modal:
         title: "שליחת הודעת ניסיון"
         topic: "נושא"
+        send: "שליחת הודעת בדיקה"
         close: "סגירה"
+        error: "שגיאה לא מזוהה התרחשה בעת שליחת ההודעה. יש לבדוק ביומני האתר לקבלת מידע נוסף."
         success: "ההודעה נשלחה בהצלחה"
       type:
         normal: רגיל
+        group_message: הודעה קבוצתית
+        group_mention: איזכור קבוצה
       filter:
         mute: 'השתקה'
         follow: 'הודעה ראשונה בלבד'
@@ -48,6 +72,9 @@ he:
           ok: "מאומת"
           fail: "פורמט לא חוקי"
       edit_rule_modal:
+        edit_title: עריכת כלל
+        create_title: יצירת כלל
+        save: שמירת כלל
         cancel: ביטול
         provider: ספק
         type: סוג
@@ -68,6 +95,7 @@ he:
           param:
             identifier:
               title: ערוץ
+              help: "למשל #ערוץ או @שם_משתמש"
           errors:
             action_prohibited: "לבוט אין הרשה לפרסם לערוץ הזה"
             channel_not_found: "הערוץ שצוין לא קיים ב־Slack"

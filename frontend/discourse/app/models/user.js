@@ -34,6 +34,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import singleton from "discourse/lib/singleton";
 import { emojiUnescape } from "discourse/lib/text";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
+import { applyBehaviorTransformer } from "discourse/lib/transformer";
 import { userPath } from "discourse/lib/url";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import Badge from "discourse/models/badge";
@@ -54,6 +55,7 @@ export const SECOND_FACTOR_METHODS = {
   TOTP: 1,
   BACKUP_CODE: 2,
   SECURITY_KEY: 3,
+  PASSKEY: 4,
 };
 
 export const MAX_SECOND_FACTOR_NAME_LENGTH = 300;
@@ -125,6 +127,7 @@ let userOptionFields = [
   "enable_markdown_monospace_font",
   "enable_quoting",
   "enable_smart_lists",
+  "enable_upcoming_change_available_notifications",
   "external_links_in_new_tab",
   "hide_presence",
   "hide_profile",
@@ -137,6 +140,7 @@ let userOptionFields = [
   "new_topic_duration_minutes",
   "notification_level_when_replying",
   "notify_on_linked_posts",
+  "push_notification_level",
   "seen_popups",
   "show_original_content",
   "sidebar_link_to_filtered_list",
@@ -295,6 +299,11 @@ export default class User extends RestModel.extend(Evented) {
     return this.staff || this.isLeader;
   }
 
+  @computed("can_set_topic_timer", "canManageTopic")
+  get canSetTopicTimer() {
+    return this.can_set_topic_timer ?? this.canManageTopic;
+  }
+
   @computed("sidebar_category_ids")
   get sidebarCategoryIds() {
     return this.sidebar_category_ids;
@@ -401,8 +410,12 @@ export default class User extends RestModel.extend(Evented) {
     return this.staff && this.get("has_new_upcoming_changes");
   }
 
-  destroySession() {
-    return ajax(`/session/${this.username}`, { type: "DELETE" });
+  destroySession(pushSubscription) {
+    const data = {};
+    if (pushSubscription) {
+      data.push_subscription = pushSubscription;
+    }
+    return ajax(`/session/${this.username}`, { type: "DELETE", data });
   }
 
   @computed("username_lower")
@@ -1503,7 +1516,7 @@ User.reopenClass({
     return result;
   },
 
-  createAccount(attrs) {
+  async createAccount(attrs) {
     let data = {
       name: attrs.accountName,
       email: attrs.accountEmail,
@@ -1519,10 +1532,15 @@ User.reopenClass({
       data.invite_code = attrs.inviteCode;
     }
 
-    return ajax(userPath(), {
-      data,
-      type: "POST",
-    });
+    return applyBehaviorTransformer(
+      "create-account",
+      () =>
+        ajax(userPath(), {
+          data,
+          type: "POST",
+        }),
+      { data }
+    );
   },
 
   _saveTimezone(user) {

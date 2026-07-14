@@ -1,0 +1,64 @@
+.leaderboard-admin {
+  &__title {
+    display: inline-block;
+  }
+
+  &__cta-new {
+    display: flex;
+    margin-top: 1rem;
+  }
+
+  &__btn-recalculate {
+    float: right;
+    margin-right: 1rem;
+  }
+
+  &__btn-new {
+    float: right;
+  }
+
+  &__btn-back {
+    margin-bottom: 1rem;
+    padding-left: 0;
+  }
+
+  &__listitem-action {
+    text-align: right;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+    justify-content: flex-end;
+  }
+}
+
+.leaderboard-edit {
+  &__cancel {
+    margin-left: 1rem;
+  }
+}
+
+.leaderboard-scoring-details {
+  margin-top: 1em;
+
+  > summary {
+    font-size: var(--font-up-1);
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0.5em 0;
+  }
+
+  &__description {
+    color: var(--primary-medium);
+    margin: 0 0 1em;
+  }
+
+  .form-kit__section + .form-kit__section {
+    margin-top: 1.5em;
+  }
+}
+
+.new-leaderboard-container {
+  .form-kit__row {
+    padding-top: 0;
+  }
+}

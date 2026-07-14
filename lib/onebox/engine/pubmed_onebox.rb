@@ -24,7 +24,7 @@ module Onebox
       def authors
         initials = xml.css("Initials").map { |x| x.content }
         last_names = xml.css("LastName").map { |x| x.content }
-        author_list = (initials.zip(last_names)).map { |i, l| i + " " + l }
+        author_list = initials.zip(last_names).map { |i, l| i + " " + l }
         if author_list.length > 1
           author_list[-2] = author_list[-2] + " and " + author_list[-1]
           author_list.pop

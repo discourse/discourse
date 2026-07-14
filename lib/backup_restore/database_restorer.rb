@@ -54,7 +54,7 @@ module BackupRestore
       Dir[Rails.root.join(Migration::SafeMigrate.post_migration_path, "**/*.rb")] +
         Dir[Rails.root.join("db/migrate/*.rb")] +
         Dir[Rails.root.join("plugins/**", Migration::SafeMigrate.post_migration_path, "**/*.rb")] +
-        Dir[Rails.root.join("plugins/**", "db/migrate/*.rb")]
+        Dir[Rails.root.join("plugins/**/db/migrate/*.rb")]
     end
 
     protected
@@ -76,16 +76,14 @@ module BackupRestore
         end
 
       IO.popen(restore_dump_command) do |pipe|
-        begin
-          while line = pipe.readline
-            logs << line
-            last_line = line
-          end
-        rescue EOFError
-          # finished reading...
-        ensure
-          psql_running = false
+        while line = pipe.readline
+          logs << line
+          last_line = line
         end
+      rescue EOFError
+        # finished reading...
+      ensure
+        psql_running = false
       end
 
       logs << ""
@@ -178,6 +176,7 @@ module BackupRestore
               "SKIP_OPTIMIZE_ICONS" => "1",
               "DISABLE_TRANSLATION_OVERRIDES" => "1",
               "SKIP_SEED_FU" => "1",
+              "SKIP_STRUCTURE_SQL" => "1",
             },
             "rake",
             "db:migrate",

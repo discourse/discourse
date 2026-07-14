@@ -7,7 +7,7 @@ class SchemaSettingsObjectValidator
 
       objects.each_with_index do |object, index|
         humanize_error_messages(
-          self.new(schema: schema, object: object).validate,
+          new(schema: schema, object: object).validate,
           index:,
           error_messages:,
         )
@@ -20,13 +20,89 @@ class SchemaSettingsObjectValidator
       values = Set.new
 
       objects.each do |object|
-        values.merge(self.new(schema: schema, object: object).property_values_of_type(type))
+        values.merge(new(schema: schema, object: object).property_values_of_type(type))
       end
 
       values.to_a
     end
 
+    def upload_ids(schema:, objects:)
+      property_values_of_type(schema:, objects:, type: "upload").filter_map do |value|
+        # TODO(gabriel): this if branch was to deal wit ha legacy logic bug where some upload fields were stored as URLs instead of IDs.
+        # This can be removed by May 2027.
+        if value.is_a?(Integer)
+          value
+        elsif value.is_a?(String) && value.present?
+          Upload.get_from_url(value)&.id
+        end
+      end
+    end
+
+    def normalize_uploads(schema:, objects:)
+      return objects if objects.blank?
+
+      transform_uploads_in_objects(objects.deep_dup, schema[:properties]) do |value|
+        if value.is_a?(String) && value.present?
+          Upload.get_from_url(value)&.id || value
+        else
+          value
+        end
+      end
+    end
+
+    def hydrate_uploads(schema:, objects:, cdn: false)
+      return objects if objects.blank?
+
+      upload_ids =
+        property_values_of_type(schema: schema, objects: objects, type: "upload").select do |value|
+          value.is_a?(Integer)
+        end
+      return objects if upload_ids.empty?
+
+      uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
+      transform_uploads_in_objects(objects.deep_dup, schema[:properties]) do |value|
+        if upload = uploads_by_id[value]
+          cdn ? Discourse.store.cdn_url(upload.url) : upload.url
+        else
+          value
+        end
+      end
+    end
+
     private
+
+    def transform_uploads_in_objects(objects, properties, &block)
+      objects.each do |object|
+        properties.each do |property_name, property_attributes|
+          key = object_key(object, property_name)
+          next if key.nil?
+
+          case property_attributes[:type]
+          when "upload"
+            object[key] = block.call(object[key])
+          when "objects"
+            nested_objects = object[key]
+            if nested_objects.is_a?(Array)
+              transform_uploads_in_objects(
+                nested_objects,
+                property_attributes[:schema][:properties],
+                &block
+              )
+            end
+          end
+        end
+      end
+
+      objects
+    end
+
+    def object_key(object, property_name)
+      string_key = property_name.to_s
+      return string_key if object.key?(string_key)
+
+      symbol_key = property_name.to_sym
+      symbol_key if object.key?(symbol_key)
+    end
 
     def humanize_error_messages(errors, index:, error_messages:)
       errors.each do |property_json_pointer, error_details|

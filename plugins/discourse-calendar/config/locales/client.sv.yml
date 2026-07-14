@@ -310,6 +310,9 @@ sv:
       notifications:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} har automatiskt ställt in din närvaro och bjudit in dig till %{eventName}"
+      event_description:
+        show_more: "Visa mer"
+        show_less: "Visa mindre"
       edit_reason: "Evenemang uppdaterat"
       topic_title:
         starts_at: "Evenemanget börjar: %{date}"
@@ -357,9 +360,7 @@ sv:
       models:
         invitee:
           status:
-            unknown: "Inte intresserad"
             going: "Kommer"
-            not_going: "Kommer inte"
             interested: "Intresserad"
         event:
           expired: "Utgången"
@@ -374,6 +375,24 @@ sv:
             private:
               title: "Privat"
               description: "Endast inbjudna användare kan besöka ett privat evenemang."
+      composer:
+        name_placeholder: "Evenemangsnamn"
+        event_title_placeholder: "Evenemangsnamn"
+        create_event_button: "Skapa händelse"
+        reminder:
+          units:
+            minutes:
+              one: "minut"
+              other: "minuter"
+            hours:
+              one: "timme"
+              other: "timmar"
+            days:
+              one: "dag"
+              other: "dagar"
+      composer_actions:
+        create_event:
+          label: "Skapa händelse"
       builder_modal:
         custom_fields:
           label: "Anpassade fält"
@@ -403,15 +422,11 @@ sv:
           label: "Upprepning"
           none: "Ingen upprepning"
           every_day: "Varje dag"
-          every_month: "Varje månad på denna veckodag"
           every_weekday: "Varje veckodag"
-          every_week: "Varje vecka på denna veckodag"
-          every_two_weeks: "Varannan vecka på denna veckodag"
-        url:
-          label: "URL"
-          placeholder: "Valfritt"
-        location:
-          label: "Plats"
+          ordinals:
+            last: "senaste"
+        attendance:
+          none: "Ingen"
         description:
           label: "Beskrivning"
         name:
@@ -419,8 +434,10 @@ sv:
           placeholder: "Valfritt, som standard används ämnesrubriken"
         invitees:
           label: "Inbjudna grupper"
-        status:
-          label: "Status"
+        event_type:
+          public:
+            title: "Offentligt"
       invite_user_or_group:
         title: "Meddela användare eller grupp(er)"
         invite: "Skicka"
+        success: "Inbjudan skickad"

@@ -9,12 +9,17 @@ module DiscourseAi
 
       attr_reader :start_date, :end_date, :base_query, :timezone
 
-      def initialize(start_date: 30.days.ago, end_date: Time.current, timezone: Time.zone.name)
+      def initialize(
+        start_date: 30.days.ago,
+        end_date: Time.current,
+        timezone: Time.zone.name,
+        exact_range: false
+      )
         @timezone = timezone
 
         Time.zone = timezone # Set the timezone for parsing dates in the user's timezone
-        @start_date = start_date.beginning_of_day
-        @end_date = end_date.end_of_day
+        @start_date = exact_range ? start_date : start_date.beginning_of_day
+        @end_date = exact_range ? end_date : end_date.end_of_day
         Time.zone = nil # Reset to default timezone
 
         @base_query = AiApiRequestStat.between(@start_date, @end_date)
@@ -45,36 +50,44 @@ module DiscourseAi
       end
 
       def total_spending
-        total =
-          total_input_spending + total_output_spending + total_cache_read_spending +
-            total_cache_write_spending
-        total.round(2)
+        (stats.total_spending || 0).to_f.round(2)
       end
 
       def total_input_spending
-        model_costs.sum { |row| row.input_cost.to_f * row.total_request_tokens.to_i / 1_000_000.0 }
+        spending_component_total(:input)
       end
 
       def total_output_spending
-        model_costs.sum do |row|
-          row.output_cost.to_f * row.total_response_tokens.to_i / 1_000_000.0
-        end
+        spending_component_total(:output)
       end
 
       def total_cache_read_spending
-        model_costs.sum do |row|
-          row.cached_input_cost.to_f * row.total_cache_read_tokens.to_i / 1_000_000.0
-        end
+        spending_component_total(:cache_read)
       end
 
       def total_cache_write_spending
+        spending_component_total(:cache_write)
+      end
+
+      def spending_component_total(component)
+        info = LlmModel::COST_COMPONENTS.fetch(component)
+        cost_attr = info[:cost]
+        tokens_attr = "total_#{info[:tokens]}"
+
         model_costs.sum do |row|
-          row.cache_write_cost.to_f * row.total_cache_write_tokens.to_i / 1_000_000.0
+          row.public_send(cost_attr).to_f * row.public_send(tokens_attr).to_i / 1_000_000.0
         end
       end
 
       def stats
-        @stats ||= base_query.select("SUM(usage_count) as total_requests", *token_total_columns)[0]
+        @stats ||=
+          base_query.joins(LLM_MODEL_JOIN).select(
+            "SUM(usage_count) as total_requests",
+            *token_total_columns,
+            spending_total_column,
+          )[
+            0
+          ]
       end
 
       def model_costs
@@ -242,13 +255,16 @@ module DiscourseAi
       end
 
       def token_count_and_total_columns
-        [
-          *token_total_columns,
-          "SUM(COALESCE(request_tokens, 0) * COALESCE(llm_models.input_cost, 0))  / 1000000.0 as input_spending",
-          "SUM(COALESCE(response_tokens, 0) * COALESCE(llm_models.output_cost, 0)) / 1000000.0 as output_spending",
-          "SUM(COALESCE(cache_read_tokens, 0) * COALESCE(llm_models.cached_input_cost, 0)) / 1000000.0 as cache_read_spending",
-          "SUM(COALESCE(cache_write_tokens, 0) * COALESCE(llm_models.cache_write_cost, 0)) / 1000000.0 as cache_write_spending",
-        ]
+        spending_columns =
+          LlmModel::COST_COMPONENTS.keys.map do |component|
+            expr = LlmModel.spending_component_sql(component, :ai_api_request_stats)
+            "SUM(#{expr}) / 1000000.0 as #{component}_spending"
+          end
+        [*token_total_columns, spending_total_column, *spending_columns]
+      end
+
+      def spending_total_column
+        "SUM(#{LlmModel.estimated_or_calculated_spending_sql(:ai_api_request_stats)}) as total_spending"
       end
     end
   end

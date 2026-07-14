@@ -265,7 +265,11 @@ ko:
   deleted_topic: "이 주제는 삭제되었으며 더는 사용할 수 없습니다."
   delete_topic_failed: "이 주제를 삭제하는 중에 오류가 발생했습니다. 사이트 관리자에게 문의하세요."
   reading_time: "읽은 시간"
+  reading_time_minutes:
+    other: "%{count}분 🕑"
   likes: "좋아요"
+  likes_count:
+    other: "%{count} ❤"
   too_many_replies:
     other: "신규 사용자는 일시적으로 동일 주제에 %{count}개까지만 댓글을 달 수 있습니다."
   max_consecutive_replies:
@@ -404,6 +408,13 @@ ko:
       trust_level_2: "회원등급 2"
       trust_level_3: "회원등급 3"
       trust_level_4: "회원등급 4"
+    default_full_names:
+      everyone: "모두"
+      admins: "관리자"
+      moderators: "관리자"
+      staff: "스태프"
+      anonymous_users: "익명 사용자"
+      logged_in_users: "로그인 한 사용자"
     request_membership_pm:
       title: "@%{group_name}에 멤버십 요청"
     request_accepted_pm:
@@ -834,6 +845,9 @@ ko:
       write: "모두 쓰기"
       one_time_password: "일회성 로그인 토큰 생성"
       bookmarks_calendar: "북마크 미리 알림 읽기"
+    device:
+      code: "코드"
+      continue: "계속하기"
     invalid_public_key: "공개 키가 유효하지 않습니다."
     invalid_auth_redirect: "이 auth_redirect 호스트는 허용되지 않습니다."
     invalid_token: "토큰이 없거나 유효하지 않거나 만료되었습니다."
@@ -905,6 +919,31 @@ ko:
       xaxis: "일"
       yaxis: "새 기여자 수"
       description: "이 기간에 첫 게시물을 작성한 사용자 수입니다."
+    activity_by_category:
+      labels:
+        category: "카테고리"
+        topics: "글"
+        posts: "글"
+        share: "공유하기"
+    posters_by_member_type:
+      labels:
+        count: "글"
+        share: "공유하기"
+      types:
+        staff: "스태프"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "신뢰 레벨"
+        count: "회원"
+        share: "공유하기"
+        signups: "가입하기"
+      levels:
+        "0": "신규"
+        "1": "초보회원"
+        "2": "회원"
+        "3": "일반"
+        "4": "지도자"
     trust_level_growth:
       title: "신뢰 레벨 성장"
       xaxis:
@@ -935,6 +974,9 @@ ko:
     consolidated_page_views_browser_detection:
       yaxis: "일"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "익명"
+        page_view_crawler: "겉옷"
       yaxis: "일"
       description_link: "https://meta.discourse.org/t/understanding-pageviews-and-the-site-traffic-report/324062"
     dau_by_mau:
@@ -1045,6 +1087,12 @@ ko:
         num_clicks: "클릭 수"
         num_topics: "토픽"
       description: "사용자가 공유한 링크의 클릭 수로 사용자를 나열합니다."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "방문"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "방문"
     top_traffic_sources:
       title: "주요 트래픽 소스"
       xaxis: "도메인"
@@ -1098,6 +1146,8 @@ ko:
     page_view_anon_browser_reqs:
       xaxis: "일"
     page_view_logged_in_browser_reqs:
+      xaxis: "일"
+    page_view_embed_reqs:
       xaxis: "일"
     http_background_reqs:
       title: "백그라운드"
@@ -1156,13 +1206,13 @@ ko:
         os: 운영체제
         login_time: 로그인 시간
       description: "이전 로그인과 다른 의심스러운 새 로그인의 상세 정보입니다."
-    staff_logins:
+    admin_logins:
       title: "관리자 로그인"
       labels:
         user: 사용자
         location: 위치
-        login_at: 로그인 시간
-      description: "위치가 있는 관리자 로그인 시간 목록입니다."
+        login_at: 에 로그인
+      description: "위치가있는 관리자 로그인 시간 목록"
     top_uploads:
       title: "주요 업로드"
       labels:
@@ -1249,7 +1299,6 @@ ko:
     category_search_priority_high_weight: "카테고리 검색 우선순위가 높은 순위에 가중치가 적용됩니다."
     allow_uncategorized_topics: "카테고리 없이 주제 생성을 허용합니다. 경고: 카테고리가 없는 주제가 있을 경우 이 기능을 비활성화하기 전에 카테고리를 다시 지정해야 합니다."
     allow_duplicate_topic_titles: "동일한 중복 제목을 가진 주제를 허용합니다."
-    allow_duplicate_topic_titles_category: "카테고리가 다른 경우 동일한 중복 제목을 가진 주제를 허용합니다. allow_duplicate_topic_titles를 비활성화해야 합니다."
     unique_posts_mins: "사용자가 동일한 콘텐츠로 다시 게시물을 작성하기 위해 필요한 시간(분)"
     educate_until_posts: "사용자가 첫 (n)개의 새 게시물을 작성하기 시작하면 작성기에 신규 사용자 교육 패널 팝업을 표시합니다."
     crawl_images: "원격 URL에서 이미지를 가져와 올바른 너비 및 높이 치수를 삽입합니다."
@@ -1265,7 +1314,6 @@ ko:
     notify_users_after_responses_deleted_on_flagged_post: "게시물이 신고되어 제거되면 게시물에 반응을 보였거나 반응이 제거된 모든 사용자에게 알림이 전송됩니다."
     responsive_post_image_sizes: "라이트 박스 미리보기 이미지의 크기를 조정하여 다음 픽셀 비율의 높은 DPI 화면을 허용합니다. 반응형 이미지를 비활성화하려면 모든 값을 제거하세요."
     fixed_category_positions: "체크하면 고정된 순서로 카테고리를 정렬할 수 있습니다. 체크하지 않으면 카테고리는 활동 순으로 나열됩니다."
-    fixed_category_positions_on_create: "체크하면 주제 생성 대화창의 카테고리 순서가 유지됩니다(fixed_category_positions 필요)."
     add_rel_nofollow_to_user_content: '내부 링크(상위 도메인 포함)를 제외하고 제출된 모든 사용자 콘텐츠에 rel nofollow를 추가합니다. 이를 변경하면 "rake posts:rebake" 로 모든 게시물을 다시 적용해야 합니다.'
     exclude_rel_nofollow_domains: "링크에 nofollow를 추가하면 안 되는 도메인 목록입니다. example.com은 자동으로 sub.example.com도 허용합니다. 웹 크롤러가 모든 콘텐츠를 찾을 수 있도록 최소한 이 사이트의 도메인을 추가해야 합니다. 웹사이트의 다른 부분이 다른 도메인에 있는 경우 해당 부분도 추가하세요."
     post_excerpt_maxlength: "게시물 발췌 / 요약의 최대 길이입니다."
@@ -1278,17 +1326,8 @@ ko:
     facebook_app_access_token: "Facebook 앱 ID 및 암호에서 생성된 토큰입니다. Instagram onebox를 생성하는 데 사용됩니다."
     logo: "사이트 왼쪽 상단의 로고 이미지입니다. 높이가 120이고 종횡비가 3:1보다 큰 넓은 직사각형 이미지를 사용하세요. 비워두면 사이트 제목 텍스트가 표시됩니다."
     logo_small: "아래로 스크롤하면 사이트 왼쪽 상단에 작은 로고 이미지가 표시됩니다. 정사각형 120 × 120 이미지를 사용하세요. 비워두면 홈 글리프가 표시됩니다."
-    digest_logo: "사이트 이메일 요약 상단에 사용되는 대체 로고 이미지입니다. 넓은 직사각형 이미지를 사용하세요. SVG 이미지를 사용하면 안 됩니다. 비워두면 `logo` 설정의 이미지가 사용됩니다."
-    logo_dark: "'로고' 사이트 설정용 다크 구성표 대안입니다."
-    logo_small_dark: "'작은 로고' 사이트 설정용 다크 구성표 대안입니다."
-    mobile_logo_dark: "'모바일 로고' 사이트 설정용 다크 구성표 대안입니다."
-    large_icon: "다른 메타 데이터 아이콘의 기본으로 사용되는 이미지입니다. 이상적으로 512 x 512보다 커야 합니다. 비워두면 logo_small이 사용됩니다."
-    manifest_icon: "Android에서 로고/스플래시 이미지로 사용되는 이미지입니다. 512 × 512로 크기가 자동 조정됩니다. 비워두면 large_icon이 사용됩니다."
     manifest_screenshots: "설치 프롬프트 페이지에서 인스턴스 기능 및 함수 기능을 보여주는 스크린 샷입니다. 모든 이미지는 로컬 업로드여야 하며 크기가 동일해야 합니다."
-    favicon: "사이트의 즐겨찾기 아이콘은 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>을 참조하세요. CDN에서 올바르게 작동하려면 png여야 합니다. 32x32로 크기가 조정됩니다. 비워두면 large_icon이 사용됩니다."
-    opengraph_image: "페이지에 다른 적절한 이미지가 없을 때 사용되는 디폴트 오픈그래프 이미지입니다. 비워두면 large_icon이 사용됩니다"
     notification_email: "from: 이메일 주소는 모든 필수 시스템 이메일을 전송하는 데 사용됩니다. 여기에 지정된 도메인은 SPF, DKIM이 있어야 하며, 리버스 PTR 레코드가 제대로 설정되어 있어야 메일이 도착할 수 있습니다."
-    email_subject: "표준 이메일에 대한 사용자 정의 가능한 주제 형식. <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323을</a> 참조 <a href='https://meta.discourse.org/t/customize-subject-format-for-standard-emails/20801' target='_blank'>하십시오.</a>"
     detailed_404: "특정 주제에 액세스할 수 없는 이유에 대한 자세한 정보를 사용자에게 제공합니다. 참고: URL이 유효한 주제로 연결되는지 사용자가 알기 때문에 보안 수준이 떨어집니다."
     force_https: "사이트가 HTTPS만을 사용하도록 강제합니다. 경고: HTTPS가 완벽히 구성되어 제대로 작동하는 것을 확인하기 전까지는 이 옵션을 활성화하지 마세요. CDN, 소셜 로그인, 외부 로고 / 종속성이 HTTPS와 호환하는지 확인하셨나요?"
     summary_score_threshold: "'이 주제 요약'에 포함되기 위한 게시물의 최소 점수"
@@ -1307,8 +1346,6 @@ ko:
     silence_new_user_sensitivity: "스팸 신고로 인해 새 사용자가 차단될 가능성"
     auto_close_topic_sensitivity: "신고된 글이 자동으로 잠금 처리될 가능성"
     cooldown_minutes_after_hiding_posts: "커뮤니티 신고로 인해 숨겨진 주제를 사용자가 편집할 수 있기 전까지 대기해야 하는 시간(분)"
-    max_topics_in_first_day: "첫 게시물 생성 후 24시간 사용자가 생성할 수 있는 최대 주제 수"
-    max_replies_in_first_day: "첫 게시물 생성 후 24시간 사용자가 생성할 수 있는 최대 댓글 수"
     tl2_additional_likes_per_day_multiplier: "tl2(회원)의 일일 좋아요 한도를 올릴 배수"
     tl3_additional_likes_per_day_multiplier: "tl3(정회원)의 일일 좋아요 한도를 올릴 배수"
     tl4_additional_likes_per_day_multiplier: "tl4(리더)의 일일 좋아요 한도를 올릴 배수"
@@ -1339,13 +1376,11 @@ ko:
     enable_escaped_fragments: "웹 크롤러가 탐지되지 않으면 Google의 Ajax-Crawling API로 폴백하세요. <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>를 참조하세요."
     moderators_change_post_ownership: "운영자가 게시물 소유자를 변경할 수 있도록 허용"
     cors_origins: "교차 출처 요청(Cross-Origin Resource Sharing, CORS)의 허용된 출처입니다. 각 출처는 반드시 http:// 나 https://를 포함해야 합니다. DISCOURSE_ENABLE_CORS 환경 변수를 true로 설정해야 CORS를 활성화할 수 있습니다."
-    use_admin_ip_allowlist: "관리자는 스크린된 IP 목록(관리자 > 로그> 스크린된 IP)에 정의된 IP 주소에서만 로그인할 수 있습니다."
     blocked_ip_blocks: "Discourse에서 크롤링해서는 안 되는 개인 IP 차단 목록"
     allowed_internal_hosts: "onebox 및 기타 목적을 위해 Discourse에서 안전하게 크롤링할 수 있는 내부 호스트 목록"
     allowed_onebox_iframes: "Onebox 임베드를 통해 허용되는 iframe src 도메인 목록입니다. `*` 는 모든 디폴트 Onebox 엔진을 허용합니다."
     allowed_crawler_user_agents: "사이트 액세스를 허용해야 하는 웹 크롤러의 사용자 에이전트입니다. 경고! 이것을 설정하면 여기에 나열되지 않은 모든 크롤러가 비활성화됩니다!"
     blocked_crawler_user_agents: "사이트 액세스가 허용되지 않아야 하는 웹 크롤러를 식별하는 사용자 에이전트 스트링에서 대소문자를 구분하지 않는 고유한 단어입니다. 허용 목록이 정의된 경우 적용되지 않습니다."
-    slow_down_crawler_rate: "slow_down_crawler_user_agents를 지정하면 이 비율이 모든 크롤러에 적용됩니다(요청 간 지연 시간(초))."
     content_security_policy_frame_ancestors: "CSP를 통해 iframe에 이 사이트를 임베드할 수 있는 사용자를 제한합니다. <a href='%{base_path}/admin/customize/embedding'>임베딩</a>에서 허용된 호스트를 제어합니다."
     invalidate_inactive_admin_email_after_days: "이 기간에 사이트를 방문하지 않은 관리자 계정은 로그인하기 전에 이메일 주소를 다시 확인해야 합니다. 비활성화하려면 0으로 설정하세요."
     share_links: "공유 대화창에 표시할 항목과 순서를 결정합니다."
@@ -1366,7 +1401,6 @@ ko:
     hide_email_address_taken: "가입하는 동안 또는 비밀번호 찾기 과정에서 제공한 이메일 주소를 사용한 계정이 존재한다는 것을 사용자에게 알리지 마세요. '비밀번호 찾기' 요청에는 전체 이메일이 필요합니다."
     log_out_strict: "로그아웃 시, 모든 디바이스에서 사용자의 모든 세션을 로그아웃합니다"
     version_checks: "버전 업데이트를 위해 Discourse Hub를 Ping하고 <a href='%{base_path}/admin' target='_blank'>/admin</a> 대시보드에 새 버전 메시지를 표시합니다"
-    new_version_emails: "사용 가능한 새 Discourse 버전이 있으면 등록된 contact_email 주소로 이메일을 전송합니다."
     invite_expiry_days: "사용자 초대 키의 유효 기간(일)"
     invite_only: "모든 신규 사용자는 신뢰할 수 있는 사용자 또는 운영진이 명시적으로 초대해야 합니다. 공개 등록이 비활성화되었습니다."
     login_required: "이 사이트의 콘텐츠를 읽으려면 인증이 필요하며 익명 액세스를 허용하지 않습니다."
@@ -1377,11 +1411,8 @@ ko:
     reserved_usernames: "가입이 허용되지 않은 아이디입니다. 와일드카드 기호 *를 사용하여 하나 이상의 문자를 일치시키면 사용할 수 있습니다."
     password_unique_characters: "비밀번호에 포함해야 하는 최소 고유 문자 수입니다."
     block_common_passwords: "가장 흔한 10,000개의 비밀번호에 속하는 비밀번호는 허용되지 않습니다."
-    auth_skip_create_confirm: 외부 인증으로 가입 시 계정 생성 팝업을 건너뜁니다. auth_overrides_email, auth_overrides_username 및 auth_overrides_name과 함께 사용하는 것이 가장 좋습니다.
-    auth_immediately: "사용자 인터랙션 없이 자동으로 외부 로그인 시스템으로 리디렉션합니다. 이는 login_required가 true이고 외부 인증 방법이 하나뿐인 경우에만 적용됩니다."
     enable_discourse_connect: "DiscourseConnect(기존 'Discourse SSO')를 통한 로그인을 활성화합니다(경고: 사용자의 이메일 주소는 *반드시* 외부 사이트에서 검증되어야 합니다!)"
     verbose_discourse_connect_logging: "자세한 DiscourseConnect 관련 진단을 <a href='%{base_path}/logs' target='_blank'>/log</a>에 기록합니다."
-    enable_discourse_connect_provider: "/session/sso_provider 엔드포인트에서 DiscourseConnect(기존 'Discourse SSO') 공급자 프로토콜을 구현하려면 discourse_connect_provider_secrets를 설정해야 합니다."
     discourse_connect_secret: "DiscourseConnect 정보를 암호화 방식으로 인증하는 데 사용되는 암호 문자열이며, 10자 이상이어야 합니다."
     discourse_connect_provider_secrets: "DiscourseConnect를 사용하는 도메인 암호 쌍의 목록입니다. DiscourseConnect 암호가 10자 이상인지 확인하세요. 와일드카드 기호 *는 모든 도메인 또는 그 일부(예: *.example.com)와 일치하는 데 사용할 수 있습니다."
     discourse_connect_overrides_bio: "사용자 프로필의 사용자 소개 기능를 오버라이드하고 사용자가 변경할 수 없도록 합니다"
@@ -1400,13 +1431,10 @@ ko:
     google_oauth2_client_secret: "Google 애플리케이션의 클라이언트 암호입니다."
     google_oauth2_prompt: "인증 서버가 사용자에게 재인증 및 동의를 요청하는지 여부를 지정하는 공백으로 구분된 스트링 값 선택사항 목록입니다. <a href='https://developers.google.com/identity/protocols/OpenIDConnect#prompt' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#prompt</a>에서 가능한 값을 확인하세요."
     google_oauth2_hd: "로그인이 제한되는 선택적 Google Apps 호스팅 도메인입니다. 자세한 내용은 <a href='https://developers.google.com/identity/protocols/OpenIDConnect#hd-param' target='_blank'>https://developers.google.com/identity/protocols/OpenIDConnect#hd-param</a>을 참조하세요."
-    enable_twitter_logins: "Twitter 인증을 활성화하려면 twitter_consumer_key 및 twitter_consumer_secret이 필요합니다. <a href='https://meta.discourse.org/t/13395' target='_blank'>Discourse용 Twitter 로그인 환경설정 및 리치 임베드</a>를 참조하세요."
     twitter_consumer_key: "<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>에 등록된 Twitter 인증용 소비자 키"
     twitter_consumer_secret: "<a href='https://developer.twitter.com/apps' target='_blank'>https://developer.twitter.com/apps</a>에 등록된 Twitter 인증용 소비자 암호"
-    enable_facebook_logins: "Facebook 인증을 사용하려면 facebook_app_id 및 facebook_app_secret이 필요합니다. <a href='https://meta.discourse.org/t/13394' target='_blank'>Discourse용 Facebook 로그인 환경설정</a>을 참조하세요."
     facebook_app_id: "<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>에 등록된 Facebook 인증 및 공유용 앱 ID"
     facebook_app_secret: "<a href='https://developers.facebook.com/apps/' target='_blank'>https://developers.facebook.com/apps</a>에 등록된 Facebook 인증용 앱 암호"
-    enable_github_logins: "GitHub 인증을 활성화하려면 github_client_id 및 github_client_secret이 필요합니다. <a href='https://meta.discourse.org/t/13745' target='_blank'>Discourse용 GitHub 로그인 환경설정</a>을 참조하세요."
     github_client_id: "<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>에 등록된 GitHub 인증용 클라이언트 ID"
     github_client_secret: "<a href='https://github.com/settings/developers/' target='_blank'>https://github.com/settings/developers</a>에 등록된 GitHub 인증용 클라이언트 암호"
     enable_discord_logins: "사용자가 Discord를 사용하여 인증하도록 허용할까요?"
@@ -1457,7 +1485,6 @@ ko:
     purge_deleted_uploads_grace_period_days: "삭제된 업로드가 지워지기 전 유예 기간(일)입니다."
     purge_unactivated_users_grace_period_days: "계정을 활성화하지 않은 사용자가 삭제되기 전의 유예 기간(일)입니다. 활성화되지 않은 사용자를 제거하지 않으려면 0으로 설정하세요."
     enable_s3_uploads: "Amazon S3 스토리지에 업로드하세요. 중요: 유효한 S3 크리덴셜이 필요합니다.(액세스 키 ID 및 암호 액세스 키 모두)."
-    s3_use_iam_profile: '<a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2_instance-profiles.html">AWS EC2 인스턴스 프로필</a>을 사용하여 S3 버킷 액세스를 부여합니다. 참고: 이를 활성화하려면 적절하게 환경설정된 EC2 인스턴스에서 Discourse를 실행해야 하며 ''s3 액세스 키 ID'' 및 ''s3 암호 액세스 키'' 설정을 오버라이드합니다.'
     s3_upload_bucket: "파일이 업로드될 Amazon S3 버킷 이름입니다. 경고: 소문자 알파벳만 허용되며 마침표나 언더스코어가 없어야 합니다."
     s3_access_key_id: "이미지, 첨부 파일 및 백업을 업로드하는 데 사용될 Amazon S3 액세스 키 ID입니다."
     s3_secret_access_key: "이미지, 첨부 파일 및 백업을 업로드하는 데 사용될 Amazon S3 암호 액세스 키입니다."
@@ -1476,7 +1503,6 @@ ko:
     composer_media_optimization_image_enabled: "업로드된 이미지 파일의 클라이언트 측 미디어 최적화를 활성화합니다."
     composer_media_optimization_image_bytes_optimization_threshold: "클라이언트 측 최적화를 트리거하기 위한 최소 이미지 파일 크기"
     composer_media_optimization_image_resize_dimensions_threshold: "클라이언트 측 크기 조정을 트리거하는 최소 이미지 너비"
-    composer_media_optimization_image_resize_width_target: "너비가 `composer_media_optimization_image_dimensions_resize_threshold` 보다 큰 이미지는 이 너비로 크기가 조정됩니다. `composer_media_optimization_image_dimensions_resize_threshold` 보다 크거나 같아야 합니다."
     min_ratio_to_crop: "큰 이미지를 자르는 데 사용되는 비율입니다. 너비 / 높이의 결과를 입력하세요."
     simultaneous_uploads: "작성기에서 드래그 앤 드롭할 수 있는 최대 파일 수"
     default_invitee_trust_level: "초대된 사용자의 디폴트 신뢰 레벨(0~4)입니다."
@@ -1602,10 +1628,7 @@ ko:
     pop3_polling_password: "이메일을 가져올 POP3 계정의 비밀번호"
     pop3_polling_delete_from_server: "서버에서 이메일을 삭제하세요. 참고: 이 기능을 비활성화하면 받은 편지함을 수동으로 정리해야 합니다."
     log_mail_processing_failures: "모든 이메일 처리 실패를 <a href='%{base_path}/logs' target='_blank'>/logs</a>에 기록"
-    email_in_authserv_id: "수신 이메일에 대한 인증 확인을 수행하는 서비스의 식별자입니다. 이를 환경설정하는 방법에 대한 지침은 <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a>을 참조하세요."
     enable_smtp: "그룹 메시지에 대한 알림을 보내기 위해 SMTP를 활성화합니다."
-    email_prefix: "이메일 제목에 사용할 [라벨]입니다. 설정하지 않으면 기본적으로 '제목'이 됩니다."
-    email_site_title: "사이트에서 이메일의 발신자로 사용되는 사이트 제목입니다. 설정하지 않으면 기본적으로 '제목'이 됩니다. '제목'에 이메일 발신자 스트링에 허용되지 않는 문자가 포함된 경우 이 설정을 사용하세요."
     find_related_post_with_key: "댓글을 달은 게시물을 찾으려면 '댓글 키'만 사용하세요. 경고: 이 기능을 비활성화하면 이메일 주소를 기반으로 사용자 가장이 허용됩니다."
     minimum_topics_similar: "새 주제를 작성할 때 유사한 주제가 표시되기 전에 존재해야 하는 주제 수입니다."
     relative_date_duration: "게시 날짜가 절대적(2월 20일) 대신 상대적(7일)으로 표시되는 게시 후 일 수입니다."
@@ -1649,15 +1672,12 @@ ko:
     allow_profile_backgrounds: "사용자가 프로필 배경을 업로드하도록 허용합니다."
     get_a_room_threshold: "사용자가 경고를 받기 전에 동일한 주제에서 동일한 사람에게 작성해야 하는 게시물 수입니다."
     dont_feed_the_trolls_threshold: "경고를 받기 전, 다른 사용자로부터 받은 경고(flag)의 수"
-    enable_mobile_theme: "모바일 디바이스는 모바일 환경에 친화적인 테마를 사용하며 PC용 화면으로 전환할 수 있습니다. 완전 반응형 사용자 지정 스타일시트를 사용하려면 이 기능을 비활성화하세요."
     dominating_topic_minimum_percent: "주제를 과도하게 점유한다는 알림을 받기 전에 사용자가 주제에서 작성해야 하는 게시물의 퍼센트입니다."
     suppress_uncategorized_badge: "주제 목록에서 카테고리가 없는 주제에 대한 배지를 표시하지 않습니다."
     header_dropdown_category_count: "헤더 드롭다운 메뉴에 표시할 수 있는 카테고리 수입니다."
     permalink_normalizations: "고정 링크를 일치시키기 전에 다음 정규식을 적용합니다. 예를 들어, /(topic.*)\\\\?.*/\\\\1은 주제 경로에서 쿼리 스트링을 제거합니다. 형식은 regex+string입니다. 캡처에 액세스하려면 \\\\1 등을 사용하세요."
     global_notice: "모든 방문자에게 긴급, 비상, 닫을 수 없는 글로벌 배너 알림을 표시합니다. 숨기려면 공백으로 변경하세요(HTML 허용)."
-    disable_system_edit_notifications: "'download_remote_images_to_local'가 활성화되어 있으면 시스템 사용자에 의한 편집 알림을 비활성화합니다."
     notification_consolidation_threshold: "알림이 하나로 통합되기 전에 받은 좋아요 또는 멤버십 요청 알림의 수입니다. 비활성화하려면 0으로 설정하세요."
-    likes_notification_consolidation_window_mins: "한계치에 도달하면 좋아요 알림이 단일 알림으로 통합되는 시간(분)입니다. 한계치는 `SiteSetting.notification_consolidation_threshold` 를 통해 환경설정할 수 있습니다."
     automatically_unpin_topics: "주제 하단에 도달하면 주제를 자동으로 고정 해제합니다."
     read_time_word_count: "추정 읽은 시간 계산을 위한 1분당 워드 카운트입니다."
     topic_page_title_includes_category: "주제 페이지 <a href='https://developer.mozilla.org/en-US/docs/Web/HTML/Element/title' target='_blank'>제목 태그</a>에는 카테고리 이름이 포함됩니다."
@@ -1686,7 +1706,6 @@ ko:
     notify_about_queued_posts_after: "이 시간 이상 검토 대기 중인 게시물이 있는 경우 모든 운영자에게 알림을 보냅니다. 이러한 알림을 비활성화하려면 0으로 설정하세요."
     auto_close_messages_post_count: "자동으로 종료되기 전에 메시지에 허용되는 최대 게시물 수(비활성화하려면 0으로 설정)"
     auto_close_topics_post_count: "자동으로 종료되기 전에 주제에 허용되는 최대 게시물 수(비활성화하려면 0으로 설정)"
-    auto_close_topics_create_linked_topic: "'주제 자동 종료 게시물 수' 설정에 따라 주제가 자동으로 종료될 때 새 연결된 주제 생성"
     code_formatting_style: "작성기의 코드 버튼은 기본적으로 이 코드 서식 스타일로 설정됩니다"
     max_allowed_message_recipients: "메시지에 허용되는 최대 수신자입니다."
     new_user_notice_tl: "신규 사용자 게시물 알림을 보기 위한 최소 신뢰 레벨입니다."
@@ -1719,7 +1738,6 @@ ko:
     default_categories_tracking: "기본적으로 추적되는 카테고리 목록입니다."
     default_categories_muted: "기본적으로 뮤트되는 카테고리 목록입니다."
     default_categories_watching_first_post: "기본적으로 각 새 주제의 첫 게시물이 구독되는 카테고리 목록입니다."
-    default_categories_normal: "기본적으로 뮤트되지 않은 카테고리 목록입니다. `mute_all_categories_by_default` 사이트 설정이 활성화된 경우 유용합니다."
     mute_all_categories_by_default: "모든 카테고리의 디폴트 알림 레벨을 뮤트로 설정합니다. 사용자가 '최신' 및 '카테고리' 페이지에 표시되도록 카테고리를 선택해야 합니다. 익명 사용자의 디폴트값을 수정하려면 'default_categories_' 설정을 설정하세요."
     default_tags_watching: "기본적으로 구독되는 태그 목록입니다."
     default_tags_tracking: "기본적으로 추적되는 태그 목록입니다."
@@ -1748,7 +1766,6 @@ ko:
     dashboard_general_tab_activity_metrics: "일반 탭에서 활동 메트릭으로 표시할 리포트를 선택합니다."
     share_quote_buttons: "인용 공유 위젯에 표시되는 항목과 순서를 결정합니다."
     share_quote_visibility: "인용 공유 버튼을 언제 표시할지 결정합니다. 표시 안 함, 익명 사용자만, 모든 사용자 중 선택합니다. "
-    create_revision_on_bulk_topic_moves: "주제가 일괄 새 카테고리로 이동되면 첫 게시물에 대한 수정 버전을 생성합니다."
     errors:
       invalid_css_color: "유효하지 않은 색상입니다. 색상 이름 또는 16진수 값을 입력하세요."
       invalid_email: "유효하지 않은 이메일 주소입니다."
@@ -1811,6 +1828,10 @@ ko:
     results_page: "&#39;%{term}&#39;에 대한 검색 결과"
     audio: "[오디오]"
     video: "[비디오]"
+  posts_filter:
+    description:
+      order_latest: "최근 글"
+      order_latest_topic: "최신 토픽"
   filter:
     description:
       status: "글의 상태별 필터링"
@@ -1921,7 +1942,6 @@ ko:
     not_available: "사용할 수 없습니다. %{suggestion} 아이디는 어떠세요?"
     something_already_taken: "문제가 발생했습니다. 아이디 또는 이메일이 이미 등록되어 있을 수 있습니다. 비밀번호 찾기 링크를 시도해 보세요."
     omniauth_error_unknown: "로그인을 처리하는 중에 문제가 발생했습니다. 다시 시도하세요."
-    omniauth_confirm_title: "%{provider} 로그인"
     omniauth_confirm_button: "계속"
     authenticator_error_no_valid_email: "%{account} 계정과 연결된 이메일 주소는 허용되지 않습니다. 다른 이메일 주소로 계정을 환경설정해야 할 수도 있습니다."
     new_registrations_disabled: "지금은 새 계정을 등록할 수 없습니다."
@@ -2346,7 +2366,6 @@ ko:
         차단된 이메일 주소를 사용하여 보낸 답장입니다. 다른 이메일 주소로 보내거나 [운영진에게 문의하세요](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "이메일 거부, 허용되지 않는 이메일"
-      subject_template: "[%{email_prefix}] 이메일 문제 -- 차단된 이메일"
       text_body_template: |
         %{destination}(제목: %{former_title})에 보낸 이메일 메시지가 거부되었습니다.
 
@@ -2504,7 +2523,6 @@ ko:
         주제에 댓글을 달 권한이 없습니다. 오류라고 생각되면 [운영진에게 문의하세요](%{base_url}/about).
     email_reject_reply_to_digest:
       title: "이메일 거부, 요약에 답장"
-      subject_template: "[%{email_prefix}] 이메일 문제 -- 요약에 답장"
       text_body_template: |
         %{destination}(제목: %{former_title})에 보낸 이메일 메시지가 거부되었습니다.
 
@@ -2620,7 +2638,6 @@ ko:
       text_body_template: "`download_remote_images_threshold` 디스크 용량 한도에 도달하여 `download_remote_images_to_local` 설정이 비활성화되었습니다."
     new_user_of_the_month:
       title: "이달의 신규 사용자로 선정되었습니다!"
-      subject_template: "이달의 신규 사용자로 선정되었습니다!"
       text_body_template: |
         축하합니다. **%{month_year}의 신규 사용자** 로 선정되었습니다. :trophy:
 
@@ -2645,6 +2662,7 @@ ko:
     이러한 이메일을 구독 해제하려면 [여기를 클릭하세요](%{unsubscribe_url}).
   subject_re: "덧: "
   subject_pm: "[PM] "
+  email_from: "%{user_name}"
   user_notifications:
     previous_discussion: "이전 답장"
     reached_limit:
@@ -2927,6 +2945,7 @@ ko:
     account_exists:
       title: "계정이 이미 존재함"
       subject_template: "[%{email_prefix}] 계정이 이미 존재합니다"
+      subject_template_improved: "계정이 이미 존재합니다"
       text_body_template: |
         %{site_name}에서 계정을 만들려고 했거나 계정의 이메일을 %{email} 이메일로 변경하려고 시도했으나 %{email}의 계정이 이미 존재합니다.
 
@@ -2938,6 +2957,7 @@ ko:
     account_second_factor_disabled:
       title: "2단계 인증 비활성화됨"
       subject_template: "[%{email_prefix}] 2단계 인증 비활성화됨"
+      subject_template_improved: "2단계 인증 사용 안 함"
     digest:
       since_last_visit: "마지막 방문 이후"
       new_topics: "새 주제"
@@ -2950,6 +2970,7 @@ ko:
       popular_posts: "인기 게시물"
       more_new: "맞춤 신규 항목"
       subject_template: "[%{email_prefix}] 요약"
+      subject_template_improved: "요약"
       unsubscribe: "이 요약은 한동안 방문하지 않은 경우 %{site_link}에서 전송됩니다. %{email_preferences_link}에서 변경하거나 %{unsubscribe_link}에서 구독 해제할 수 있습니다."
       your_email_settings: "이메일 설정"
       click_here: "여기를 클릭"
@@ -2968,6 +2989,7 @@ ko:
       title: "링크를 통해 로그인"
       preview: "링크를 통해 로그인."
       subject_template: "[%{email_prefix}] 링크를 통해 로그인"
+      subject_template_improved: "링크를 통해 로그인"
       text_body_template: |
         다음은 [%{site_name}](%{base_url})에 로그인할 수 있는 링크입니다.
 
@@ -2977,7 +2999,6 @@ ko:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "비밀번호 설정"
-      subject_template: "[%{email_prefix}] 비밀번호 설정"
       text_body_template: |
         누군가가 [%{site_name}](%{base_url}) 계정에 비밀번호를 추가하도록 요청했습니다. 대안으로 검증된 이 이메일 주소와 연결된 지원되는 온라인 서비스(Google, Facebook 등)를 사용하여 로그인할 수 있습니다.
 
@@ -2988,6 +3009,7 @@ ko:
     admin_login:
       title: "관리자 로그인"
       subject_template: "[%{email_prefix}] 로그인"
+      subject_template_improved: "로그인"
       text_body_template: |
         누군가가 [%{site_name}](%{base_url}) 계정에 로그인하도록 요청했습니다.
 
@@ -2997,7 +3019,6 @@ ko:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "계정 생성됨"
-      subject_template: "[%{email_prefix}] 새 계정"
       text_body_template: |
         %{site_name}에서 새 계정이 생성되었습니다.
 
@@ -3107,7 +3128,6 @@ ko:
         위 링크를 클릭할 수 없으면 웹 브라우저의 주소 표시줄에 복사하여 붙여 넣으세요.
     suspicious_login:
       title: "새 로그인 알림"
-      subject_template: "[%{site_name}] %{location}에서 새 로그인 발생"
     post_approved:
       title: "게시물 승인됨"
       subject_template: "[%{site_name}] 게시물이 승인되었습니다"
@@ -3491,10 +3511,6 @@ ko:
     forbidden:
       invalid:
         other: "선택한 태그를 사용할 수 없음"
-      in_this_category: '이 카테고리에서는 ''%{tag_name}'' 태그를 사용할 수 없습니다'
-      restricted_to:
-        other: '''%{tag_name}'' 태그는 다음 카테고리로 제한됩니다. %{category_names}'
-      synonym: '동의어는 허용되지 않습니다. 대신 ''%{tag_name}'' 태그를 사용하세요.'
       has_synonyms: '''%{tag_name}''에는 동의어가 있으므로 사용할 수 없습니다.'
     required_tags_from_group:
       other: "최소 %{count}개의 %{tag_group_name} 태그를 포함해야 합니다. 이 그룹의 태그는 %{tags}입니다. %{tags}."
@@ -3538,6 +3554,8 @@ ko:
   search_logs:
     graph_title: "검색 횟수"
   onebox:
+    google_meet:
+      meeting_code: "코드:"
     github:
       opened: "열림"
       closed: "닫힘"

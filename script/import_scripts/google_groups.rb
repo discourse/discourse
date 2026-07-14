@@ -39,33 +39,27 @@ MAX_GET_RETRIES = 5
 MAX_FIND_RETRIES = 3
 
 def get(url)
-  begin
-    retries ||= 0
-    driver.get(url)
-  rescue Net::ReadTimeout
-    sleep retries
-    retry if (retries += 1) < MAX_GET_RETRIES
-  end
+  retries ||= 0
+  driver.get(url)
+rescue Net::ReadTimeout
+  sleep retries
+  retry if (retries += 1) < MAX_GET_RETRIES
 end
 
 def extract(css, parent_element = driver)
-  begin
-    retries ||= 0
-    parent_element.find_elements(css: css).map { |element| yield(element) }
-  rescue Net::ReadTimeout, Selenium::WebDriver::Error::StaleElementReferenceError
-    sleep retries
-    retry if (retries += 1) < MAX_FIND_RETRIES
-  end
+  retries ||= 0
+  parent_element.find_elements(css: css).map { |element| yield(element) }
+rescue Net::ReadTimeout, Selenium::WebDriver::Error::StaleElementReferenceError
+  sleep retries
+  retry if (retries += 1) < MAX_FIND_RETRIES
 end
 
 def find(css, parent_element = driver)
-  begin
-    retries ||= 0
-    parent_element.find_element(css: css)
-  rescue Net::ReadTimeout, Selenium::WebDriver::Error::ElementNotInteractableError
-    sleep retries
-    retry if (retries += 1) < MAX_FIND_RETRIES
-  end
+  retries ||= 0
+  parent_element.find_element(css: css)
+rescue Net::ReadTimeout, Selenium::WebDriver::Error::ElementNotInteractableError
+  sleep retries
+  retry if (retries += 1) < MAX_FIND_RETRIES
 end
 
 def base_url

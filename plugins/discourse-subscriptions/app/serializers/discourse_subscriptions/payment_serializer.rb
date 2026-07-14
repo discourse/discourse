@@ -30,11 +30,9 @@ module DiscourseSubscriptions
     private
 
     def user
-      begin
-        User.find(object.user_id)
-      rescue StandardError
-        nil
-      end
+      User.find(object.user_id)
+    rescue StandardError
+      nil
     end
 
     def currency_unit

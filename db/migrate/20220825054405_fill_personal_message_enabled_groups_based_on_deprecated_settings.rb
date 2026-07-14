@@ -2,6 +2,8 @@
 
 class FillPersonalMessageEnabledGroupsBasedOnDeprecatedSettings < ActiveRecord::Migration[7.0]
   def up
+    return if Migration::Helpers.new_site?
+
     enable_personal_messages_raw =
       DB.query_single(
         "SELECT value FROM site_settings WHERE name = 'enable_personal_messages'",

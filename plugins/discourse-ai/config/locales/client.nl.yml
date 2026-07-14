@@ -12,6 +12,9 @@ nl:
           descriptions:
             ai:
               search: "Staat AI zoeken toe"
+              stream_completion: "Maakt streamen van voltooiingen van AI-agenten mogelijk"
+              update_agents: "Maakt het bijwerken van AI-agenten mogelijk"
+              manage_artifacts: "Maakt het beheren van AI-artefacten mogelijk (zichtbaar maken, weergeven, maken, bijwerken, verwijderen)."
       site_settings:
         categories:
           discourse_ai: "Discourse AI"
@@ -33,14 +36,23 @@ nl:
             create_ai_llm_model: "LLM-model maken"
             update_ai_llm_model: "LLM-model bijwerken"
             delete_ai_llm_model: "LLM-model verwijderen"
+            create_ai_agent: "AI-agent maken"
+            update_ai_agent: "AI-agent bijwerken"
+            delete_ai_agent: "AI-agent verwijderen"
             create_ai_tool: "AI-tool maken"
             update_ai_tool: "AI-tool bijwerken"
             delete_ai_tool: "AI-tool verwijderen"
             create_ai_embedding: "AI-insluiting maken"
             update_ai_embedding: "AI-insluiting bijwerken"
             delete_ai_embedding: "AI-insluiting verwijderen"
+            create_ai_secret: "AI-geheim maken"
+            update_ai_secret: "AI-geheim bijwerken"
+            delete_ai_secret: "AI-geheim verwijderen"
             update_ai_spam_settings: "AI-spaminstellingen bijwerken"
   js:
+    discourse_workflows:
+      nodes:
+        "action:ai_agent": "AI-agent"
     discourse_automation:
       scriptables:
         llm_report:
@@ -105,14 +117,33 @@ nl:
             top_p:
               label: "Top P"
               description: "Te gebruiken top P voor de LLM. Verhoog deze om de willekeur te vergroten (laat dit leeg om de standaardinstelling van het model te gebruiken)"
+            agent_id:
+              label: "Agent"
+              description: "Te gebruiken AI-agent voor rapportgeneratie"
+        ai_tool_action:
+          fields:
+            tool:
+              label: "AI-tool"
+              description: "De AI-tool die wordt uitgevoerd wanneer de automatisering wordt geactiveerd"
+            llm_model:
+              label: "LLM-model"
+              description: "Taalmodel voor tools die llm.generate() gebruiken (optioneel)"
         llm_agent_triage:
           fields:
+            agent:
+              label: "Agent"
+              description: "De te gebruiken AI-agent voor triage (moet standaard-LLM en gebruiker hebben ingesteld)"
             whisper:
               label: "Antwoorden als fluisterbericht"
+              description: "Of de respons van de agent een fluisterbericht moet zijn"
             silent_mode:
               label: "Stille modus"
+              description: "In de stille modus ontvangt de agent de content, maar plaatst niets op het forum. Dit is handig bij triage met behulp van tools."
         llm_triage:
           fields:
+            triage_agent:
+              label: "Agent"
+              description: "De te gebruiken agent voor triage. Zorg dat deze antwoordt met een enkel woord dat kan worden gebruikt om de actie te activeren"
             max_post_tokens:
               label: "Maximaal aantal plaatsingstokens"
               description: "Het maximale aantal tokens om te scannen met LLM-triage"
@@ -143,24 +174,88 @@ nl:
             flag_post:
               label: "Bericht markeren"
               description: "Markeert berichten (als spam of ter beoordeling)"
+            notify_author_pm:
+              label: "Auteur melding sturen via PB"
+              description: "Stuur een persoonlijk bericht naar de auteur van het bericht wanneer zijn bericht in de wachtrij wordt geplaatst en verwijderd"
+            notify_author_pm_user:
+              label: "PB-afzender"
+              description: "Gebruiker die de PB stuurt (standaard volgens systeem)"
+            notify_author_pm_message:
+              label: "PB-inhoud"
+              description: "Optioneel aangepast bericht om naar de auteur te sturen"
             include_personal_messages:
               label: "Persoonlijke berichten opnemen"
               description: "Scan en triageer ook persoonlijke berichten"
             whisper:
               label: "Antwoorden als fluisterbericht"
               description: "Of de respons van de AI een fluisterbericht moet zijn"
+            reply_agent:
+              label: "Antwoordagent"
+              description: "De te gebruiken AI-agent voor antwoorden (moet standaard-LLM hebben), krijgt voorrang boven standaardantwoorden"
             max_output_tokens:
               label: "Maximaal aantal uitvoertokens"
               description: "Door dit op te geven wordt een bovenlimiet ingesteld voor het maximale aantal tokens dat het model kan genereren. Respecteert de maximumlimiet voor uitvoertokens van de LLM."
+        llm_tagger:
+          tag_mode:
+            manual: "Gebruik specifieke taglijst (hieronder geconfigureerd)"
+            discover: "Laat AI alle sitetags ontdekken en gebruiken."
+          fields:
+            tagger_agent:
+              label: "AI-agent"
+              description: "De te gebruiken AI-agent voor het analyseren en taggen van topics"
+            tag_mode:
+              label: "Tagselectiemodus"
+              description: "Kies hoe de AI tags selecteert."
+            available_tags:
+              label: "Beschikbare tags"
+              description: "Tags waaruit de AI kan kiezen (alleen gebruikt in de handmatige modus)"
+            confidence_threshold:
+              label: "Vertrouwensdrempel"
+              description: "Minimaal vereist betrouwbaarheidspercentage (0-100) om voorgestelde tags toe te passen"
+            max_tags_per_post:
+              label: "Maximum aantal tags per bericht"
+              description: "Maximum aantal tags dat in één bericht kan worden toegepast"
+            max_post_tokens:
+              label: "Maximaal aantal berichttokens"
+              description: "Maximaal aantal tokens uit de berichtcontent om te analyseren"
+            allow_restricted_tags:
+              label: "Beperkte tags toestaan"
+              description: "Toestaan dat AI tags met beperkte toestemmingen of zichtbaarheid kan voorstellen en toepassen."
+            max_posts_for_context:
+              label: "Maximaal aantal berichten voor context"
+              description: "Maximum aantal berichten van het topic om mee te nemen voor analysecontext (standaard: 5)"
+            allow_system_posts:
+              label: "Systeemberichten toestaan"
+              description: "Taggen van berichten die zijn gemaakt door de systeemgebruiker toestaan."
     discourse_ai:
       title: "AI"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Agent"
+      ai_tool_approval:
+        loading: "Laden..."
+        agent: "Agent"
+        tool: "Actie"
+        user: "Gebruiker"
+        approve: "Goedkeuren"
+        reject: "Weigeren"
+        approved: "Goedgekeurd"
+        rejected: "Geweigerd"
       default_llm:
         title: "Standaard LLM-model"
+        description: "Het standaard LLM-model dat voor alle AI-functies wordt gebruikt. Dit model wordt gebruikt als er geen LLM is opgegeven in de functieconfiguratie of agent. Als er geen standaard-LLM is opgegeven, wordt de laatst gemaakte LLM gebruikt."
       llm_selector:
         none: "Geen"
+        saved: "Standaard LLM-model bijgewerkt"
       features:
         short_title: "Functies"
+        description: "Dit zijn de AI-functies die beschikbaar zijn voor bezoekers van je site. Deze kunnen worden geconfigureerd voor specifieke agenten en LLM's en de toegang kan per groep worden beheerd."
+        back: "Terug naar AI-functies"
+        settings_save_error: "Sommige instellingen kunnen niet worden opgeslagen."
         disabled: "(uitgeschakeld)"
+        agent:
+          one: "Agent:"
+          other: "Agenten:"
         groups: "Groepen:"
         llm:
           one: "LLM:"
@@ -177,11 +272,16 @@ nl:
           bot: "Chatbot"
           name: "Bot"
           description: "Een chatbot die vragen kan beantwoorden en gebruikers kan helpen in persoonlijke berichten, op het forum en in de chat"
+          setting_groups:
+            settings: "Basisinstellingen"
+            access_control: "Toegangsbeheer"
+            ui_settings: "UI-instellingen"
+            integrations: "Integraties"
         nav:
-          configured: "Geconfigureerd"
-          unconfigured: "Niet geconfigureerd"
+          enabled: "Ingeschakeld"
         filters:
           all: "Alles"
+          text: "Zoek naar functies, agenten, LLM's of groepen..."
           no_results: "Geen functies gevonden die aan je filters voldoen."
           reset: "Resetten"
         no_automations: "Er zijn nog geen automatiseringen"
@@ -190,27 +290,48 @@ nl:
           description: "Maakt een samenvattingsknop beschikbaar waarmee bezoekers topics kunnen samenvatten"
           topic_summaries: "Topicsamenvattingen"
           gists: "Korte samenvattingen voor topiclijst"
+          setting_groups:
+            settings: "Basisinstellingen"
+            gists: "Gists"
+            backfill: "Aanvullen"
         search:
           name: "Zoeken"
           description: "Verbetert de zoekervaring door AI-gegenereerde antwoorden op vragen te bieden"
           discoveries: "Ontdekkingen"
+          setting_groups:
+            settings: "Basisinstellingen"
         embeddings:
           name: "Insluitingen"
           description: "Ondersteunt functies zoals gerelateerde topics en AI-zoeken door semantische representaties van tekst te genereren"
           hyde: "HyDE"
           setting_groups:
+            model_settings: "Modelinstellingen"
             related_topics: "Gerelateerde topics"
+            semantic_search: "Semantisch zoeken"
+        admin_dashboard:
+          setting_groups:
+            settings: "Basisinstellingen"
         discord:
           name: "Discord-integratie"
           description: "Voegt de mogelijkheid toe om in Discord-kanalen te zoeken"
           search: "Discord-zoeken"
+          setting_groups:
+            settings: "Basisinstellingen"
+            discord_configuration: "Discord-configuratie"
         inference:
           name: "Afgeleide concepten"
           description: "Classificeert topics en berichten in interessegebieden / labels."
           generate_concepts: "Conceptenafleiding"
           match_concepts: "Conceptenmatching"
           deduplicate_concepts: "Conceptendeduplicatie"
+          setting_groups:
+            settings: "Basisinstellingen"
+            topic_criteria: "Topiccriteria"
+            post_criteria: "Berichtcriteria"
+            agents: "Agenten"
         ai_helper:
+          edit: "Instellingen AI-helper bewerken"
+          name: "AI-helper"
           description: "Helpt gebruikers bij de interactie met de community, zoals het maken van topics, het schrijven van berichten en het lezen van content"
           proofread: Tekst proeflezen
           title_suggestions: "Titels voorstellen"
@@ -223,8 +344,12 @@ nl:
           image_caption: "Afbeeldingen bijschriften geven"
           translator: "Vertaler"
           post_illustrator: "Berichtillustrator"
+          chat_thread_titles: "Chatthreadtitels"
           setting_groups:
+            access_permissions: "Toegang en toestemmingen"
+            enabled_features: "Ingeschakelde functies"
             automation: "Automatisering"
+            agents: "Agenten"
         translation:
           name: "Vertaling"
           description: "Vertaalt content in ondersteunde talen"
@@ -232,6 +357,15 @@ nl:
           post_raw_translator: "Ruwe berichtvertaler"
           topic_title_translator: "Topictitelvertaler"
           short_text_translator: "Kortetekstvertaler"
+          schedule_untranslated: "Vertalingen plannen"
+          schedule_topic_success:
+            one: "Geplande vertaling voor %{count} onvertaald bericht."
+            other: "Geplande vertaling voor %{count} onvertaalde berichten."
+          schedule_topic_error: "Vertalingen plannnen mislukt. Probeer het opnieuw."
+          setting_groups:
+            settings: "Basisinstellingen"
+            agents: "Agenten"
+            backfill_and_limits: "Aanvullen en limieten"
         spam:
           name: "Spam"
           description: "Identificeert potentiële spam met behulp van de geselecteerde LLM en markeert deze voor sitemoderators om te inspecteren in de beoordelingswachtrij"
@@ -249,7 +383,18 @@ nl:
         card: "Kaart"
       translations:
         title: "Vertalingen"
+        description: "Vertaal automatisch alle con tent op je forum naar de voorkeurstaal van de gebruiker"
+        supported_locales: "Ondersteunde talen"
+        supported_locales_description: "Met deze site-instelling kunnen bezoekers ook bijdragen aan vertalingen van berichten."
+        category_scope: "Categorieën"
+        admin_actions:
+          translation_settings: "Vertaalinstellingen"
+          localization_settings: "Lokalisatie-instellingen"
+          enable_translations: "Automatische vertalingen inschakelen"
         stats:
+          title: "Vertaalstatistieken"
+          backfill_disabled: "Aanvullen is uitgeschakeld, alleen nieuwe berichten worden vertaald."
+          backfill_message: "<a href='%{settingsUrl}'>Aanvulinstellingen</a> zijn geconfigureerd om alle berichten na %{date} te vertalen, dit duurt naar schatting %{eta}."
           eta_minutes:
             one: "%{count} minuut"
             other: "%{count} minuten"
@@ -260,13 +405,31 @@ nl:
             one: "%{count} dag"
             other: "%{count} dagen"
         progress_chart:
+          title: "Vertaalvoortgang"
+          data_label: "%{percentage}%"
+          tooltip_translated: "%{done} van de %{total} niet-%{language} berichten vertaald"
           bar_done:
             one: "%{count} bericht"
             other: "%{count} berichten"
+        theme_translations:
+          translate:
+            label: "Vertalen"
+            title: "Vertaal naar alle ondersteunde talen met de geselecteerde taal als bron"
+            queued: "Vertaling in wachtrij geplaatst"
+            failed: "Vertaling in wachtrij plaatsen mislukt"
+        translations_menu:
+          translate:
+            label: "Bericht vertalen"
+            title: "Vertaalt dit bericht naar alle ondersteunde talen"
+            confirm: "Hiermee worden bestaande vertalingen van dit bericht bijgewerkt. Weet je het zeker?"
+            success: "Bericht is verzonden voor vertaling"
+        credit_limit_warning: "Vertalingen worden gepauzeerd vanwege creditlimieten. Ze worden hervat wanneer de credits worden gereset op %{reset_time}."
+        credit_limit_warning_no_time: "Vertalingen worden gepauzeerd vanwege creditlimieten. Ze worden hervat wanneer de credits worden gereset."
       spam:
         short_title: "Spam"
         title: "Spamafhandeling configureren"
         select_llm: "Selecteer LLM"
+        select_agent: "Selecteer agent"
         custom_instructions: "Aangepaste instructies"
         custom_instructions_help: "Aangepaste instructies specifiek voor jouw site om de AI te helpen bij het identificeren van spam, bijvoorbeeld 'Wees agressiever bij het scannen van berichten die niet in het Engels zijn'."
         last_seven_days: "Afgelopen 7 dagen"
@@ -287,7 +450,10 @@ nl:
           post_url_label: "Bericht-URL of -ID"
           post_url_placeholder: "https://jouw-forum.com/t/topic/123/4 of bericht-ID"
           result: "Resultaat"
+          reason: "Redenering"
           llm: "LLM"
+          scan_history: "Scangeschiedenis"
+          sent_message: "Bericht verzonden"
           system_prompt: "Systeemprompt"
           scan_log: "Scanlog"
           run: "Test uitvoeren"
@@ -310,6 +476,7 @@ nl:
         feature: "Functie"
         usage_count: "Gebruiksaantal"
         model: "Model"
+        credits_remaining: "Resterende credits"
         models_breakdown: "Gebruik per model"
         users_breakdown: "Gebruik per gebruiker"
         all_features: "Alle functies"
@@ -319,6 +486,8 @@ nl:
         request_tokens: "Verzoektokens"
         response_tokens: "Antwoordtokens"
         net_request_tokens: "Netto verzoektokens"
+        cache_read_tokens: "Cacheleestokens"
+        cache_write_tokens: "Cacheschrijftokens"
         cached_tokens: "Gecachete tokens"
         cached_request_tokens: "Gecachete verzoektokens"
         total_spending: "Geschatte kosten"
@@ -326,12 +495,18 @@ nl:
         no_models: "Geen modelgebruiksgegevens gevonden"
         no_features: "Geen functiegebruiksgegevens gevonden"
         total: "Totaal"
+        included_in_plan: "Inbegrepen in het plan"
+        included_models: "Inbegrepen gebruik"
+        billed_models: "Gefactureerd gebruik"
+        cost: "Kosten"
         subheader_description: "Tokens zijn de basiseenheden die LLM's gebruiken om tekst te begrijpen en te genereren. Gebruiksgegevens kunnen de kosten beïnvloeden"
         stat_tooltips:
           total_requests: "Alle verzoeken aan LLM's via Discourse"
           total_tokens: "Alle tokens die zijn gebruikt bij het prompten van een LLM"
           request_tokens: "Tokens die zijn gebruikt wanneer de LLM probeert te begrijpen wat je zegt"
           response_tokens: "Tokens die zijn gebruikt wanneer de LLM antwoordt op je prompt"
+          cache_read_tokens: "Eerder verwerkte verzoektokens die de LLM uit de cache hergebruikt om prestaties en kosten te optimaliseren"
+          cache_write_tokens: "Verzoektokens die naar de cache zijn geschreven voor mogelijk toekomstig hergebruik"
           cached_tokens: "Eerder verwerkte verzoektokens die de LLM hergebruikt om prestaties en kosten te optimaliseren"
           total_spending: "Cumulatieve kosten van alle tokens die door de LLM's worden gebruikt, gebaseerd op de gespecificeerde kostenmetrieken die zijn toegevoegd aan de LLM-configuratie-instellingen"
         periods:
@@ -339,56 +514,131 @@ nl:
           last_week: "Vorige week"
           last_month: "Vorige maand"
           custom: "Aangepast..."
+        credit_allocations: "Credittoewijzingen"
       ai_agent:
         ai_tools: "Tools"
+        mcp_servers: "MCP-servers"
+        mcp_server_tools_help: "Bepaalde MCP-servers geven standaard al hun tools vrij. Beperk ze per agent om het gebruik van tokens te verminderen en de keuze van tools gericht te houden."
+        mcp_server_tool_count:
+          one: "%{count} tool"
+          other: "%{count} tools"
+        mcp_server_enabled_tool_count:
+          one: "%{count} tool ingeschakeld"
+          other: "%{count} tools ingeschakeld"
+        mcp_server_all_tools_enabled: "Alle tools ingeschakeld"
+        mcp_server_enabled_tools:
+          one: "%{count} van %{total} tool ingeschakeld"
+          other: "%{count} van %{total} tools ingeschakeld"
+        mcp_server_choose_tools: "Kies tools"
+        mcp_server_edit_tools: "Tools bewerken"
         tool_strategies:
           all: "Toepassen op alle antwoorden"
           replies:
             one: "Alleen toepassen op eerste antwoord"
             other: "Alleen toepassen op eerste %{count} antwoorden"
+        back: "Terug naar agenten"
         name: "Naam"
         edit: "Bewerken"
         export: "Exporteren"
         import: "Importeren"
+        import_error_conflict: "Conflict gedetecteerd bij het importeren van %{name}. Wil je de bestaande agent bijwerken?"
         overwrite: "Overschrijven"
         description: "Beschrijving"
         no_llm_selected: "Geen taalmodel geselecteerd"
+        use_parent_llm: "Taalmodel van agent gebruiken"
         max_context_posts: "Maximaal aantal contextberichten"
         max_context_posts_help: "Het maximale aantal berichten dat als context voor de AI kan worden gebruikt bij het reageren op een gebruiker. (Leeg voor standaardinstelling)"
-        vision_enabled: Zicht ingeschakeld
-        vision_enabled_help: Indien ingeschakeld, zal de AI proberen afbeeldingen te begrijpen die gebruikers in het topic plaatsen, afhankelijk van het gebruikte model ter ondersteuning van zicht. Ondersteund door de nieuwste modellen van Anthropic, Google en OpenAI.
-        vision_max_pixels: Ondersteunde afbeeldingsgrootte
+        execution_mode: "Uitvoeringsmodus"
+        execution_mode_help: "Bepaalt hoe de agent de tooluitvoering en conversatiecontext beheert. Standaard wordt gebruik gemaakt van vaste beurt/toollimieten. Agentic gebruikt een tokenbudget met automatische contextcompressie voor langere, capabelere sessies voor toolgebruik."
+        execution_mode_options:
+          default: "Standaard (vaste limieten)"
+          agentic: "Agentic (tokenbudget)"
+        max_turn_tokens: "Maximaal aantal beurttokens"
+        max_turn_tokens_help: "Maximaal totaal aantal tokens (invoer + uitvoer) verbruikt over alle LLM-aanroepen tijdens een enkele botantwoord. Als dit is ingesteld, worden de vaste voltooiing-/toollimieten vervangen door een tokenbudget, waardoor meer agentgedrag mogelijk is. Laat leeg voor standaard limieten."
+        compression_threshold: "Compressiedrempel"
+        compression_threshold_help: "Percentage van contextgebruik (20-99) waarbij automatische compressie begint. Lagere waarden activeren compressie eerder, waardoor meer ruimte behouden blijft."
         vision_max_pixel_sizes:
           low: Lage kwaliteit - goedkoopst (256x256)
           medium: Middelmatige kwaliteit (512x512)
           high: Hoge kwaliteit - langzaamst (1024x1024)
+        show_thinking: Denken tonen
+        show_thinking_help: Toont eindgebruikers het interne denken en toolaanroepen van het taalmodel.
         mentionable: Vermeldingen toestaan
+        mentionable_help: Indien ingeschakeld, kunnen gebruikers in toegestane groepen deze gebruiker vermelden in berichten. De AI reageert als deze agent.
         user: Gebruiker
         create_user: Gebruiker maken
+        create_user_help: Je kunt optioneel een gebruiker aan deze agent koppelen. Als je dat doet, gebruikt de AI deze gebruiker om op verzoeken te antwoorden.
         default_llm: Standaard taalmodel
+        default_llm_help: Het te gebruiken standaard taalmodel voor deze agent. Vereist als je de agent wilt vermelden in openbare berichten.
         system_prompt: Systeemprompt
         forced_tool_strategy: Gedwongen toolstrategie
         allow_chat_direct_messages: "Directe chatberichten toestaan"
+        allow_chat_direct_messages_help: "Indien ingeschakeld, kunnen gebruikers in toegestane groepen directe berichten naar deze agent sturen."
         allow_chat_channel_mentions: "Vermelding in chatkanalen toestaan"
+        allow_chat_channel_mentions_help: "Indien ingeschakeld, kunnen gebruikers in toegestane groepen deze agent vermelden in chatkanalen."
         allow_personal_messages: "Persoonlijke berichten toestaan"
+        allow_personal_messages_help: "Indien ingeschakeld, kunnen gebruikers in toegestane groepen persoonlijke berichten naar deze agent sturen."
         allow_topic_mentions: "Vermelding in topics toestaan"
+        allow_topic_mentions_help: "Indien ingeschakeld, kunnen gebruikers in toegestane groepen deze agent vermelden in topics."
+        require_approval: "Vereist goedkeuring voor moderatietools"
+        require_approval_help: "Wanneer ingeschakeld, worden moderatieacties (sluiten, verwijderen, bewerken, enz.) naar de beoordelingswachtrij gestuurd voor goedkeuring door de moderator voordat ze worden uitgevoerd."
         force_default_llm: "Altijd standaard taalmodel gebruiken"
         save: "Opslaan"
+        saved: "Agent opgeslagen"
         enabled: "Ingeschakeld?"
         tools: "Ingeschakelde tools"
+        tokens: "tokens"
+        context_cost: "Contextkosten"
+        token_usage: "Tokengebruik"
+        tool_count: "Aantal tools"
+        tool_count_value:
+          one: "%{count} tool"
+          other: "%{count} tools"
+        tool_tokens_total: "~%{tokens} tokens"
+        mcp_server_cost_name: "%{name} (MCP-server)"
+        mcp_server_cost_value:
+          one: "~%{tokens} tokens, %{count} tool"
+          other: "~%{tokens} tokens, %{count} tools"
+        mcp_server_tokens_only: "~%{tokens} tokens"
         mcp_tools_modal:
+          title: "%{name} tools"
+          summary: "Standaard kan deze agent elke tool van deze server gebruiken. Selecteer een kleinere set om de toegang te beperken en de promptkosten te verlagen."
+          filter_placeholder: "Filter tools"
+          select_all: "Selecteer alles"
           clear_all: "Alles wissen"
+          selection_summary:
+            one: "%{count} van %{total} tool geselecteerd"
+            other: "%{count} van %{total} tools geselecteerd"
+          empty: "Er zijn geen tools die aan dit filter voldoen."
+        tool_severity_medium: "Matige capaciteit"
+        tool_severity_high: "Hoge capaciteit"
+        tool_severity_too_many: "Te veel tools"
+        tool_tokens_warning: "Overtollige tools verminderen de AI-prestaties doordat ze waardevol conversatiegeheugen in beslag nemen. Overweeg om niet-essentiële tools te verwijderen."
+        tool_count_warning: "De definitie van elke tool wordt bij elk verzoek naar het model gestuurd. Het hebben van veel tools verhoogt het gebruik van tokens en kan het model verwarren, wat leidt tot een slechtere toolselectie. Behoud alleen tools die deze agent echt nodig heeft."
         forced_tools: "Geforceerde tools"
         allowed_groups: "Toegestane groepen"
+        confirm_delete: "Weet je zeker dat je deze agent wilt verwijderen?"
+        new: "Nieuwe agent"
+        no_agents: "Je hebt nog geen agenten gemaakt"
+        title: "Agenten"
+        short_title: "Agenten"
         delete: "Verwijderen"
         temperature: "Temperatuur"
         temperature_help: "Te gebruiken temperatuur voor de LLM. Verhoog deze om de creativiteit te vergroten (laat dit leeg om de standaardinstelling van het model te gebruiken, doorgaans een waarde van 0,0 tot 2,0)"
         top_p: "Top P"
         top_p_help: "Te gebruiken Top P voor de LLM. Verhoog deze om de willekeurigheid te vergroten (laat dit leeg om de standaardinstelling van het model te gebruiken, doorgaans een waarde van 0,0 tot 1,0)"
+        thinking_effort_options:
+          none: "Geen"
+          low: "Laag"
+          medium: "Middel"
+          high: "Hoog"
+          max: "Max"
         priority: "Prioriteit"
+        priority_help: "Prioritaire agenten worden bovenaan de agentlijst weergegeven voor gebruikers. Als meerdere agenten prioriteit hebben, worden deze alfabetisch gesorteerd."
         tool_options: "Toolopties"
         rag_conversation_chunks: "Conversatiechunks zoeken"
         rag_conversation_chunks_help: "Het te gebruiken aantal chunks voor zoeken door het RAG-model. Verhoog dit om de hoeveelheid context te vergroten die de AI kan gebruiken."
+        agent_description: "Agenten zijn een krachtige functie waarmee je het gedrag van de AI-engine kunt aanpassen in je Discourse-forum. Ze fungeren als een 'systeembericht' dat de reacties en interacties van de AI stuurt, waardoor je een persoonlijkere en boeiendere gebruikerservaring creëert."
         response_format:
           title: "JSON-responsindeling"
           no_format: "Geen JSON-indeling opgegeven"
@@ -408,8 +658,11 @@ nl:
           enabled: "AI-bot?"
         ai_bot:
           title: "AI-botopties"
+          save_first: "Nadat je de agent hebt opgeslagen, zijn er meer AI-botopties beschikbaar."
         filters:
+          text: "Zoek een agent"
           reset: "Resetten"
+          no_results: "Geen agenten gevonden die aan je filters voldoen."
           all_features: "Elke functie"
         features_list:
           one: "Functie:"
@@ -438,7 +691,10 @@ nl:
           uploading: "Uploaden..."
           remove: "Upload verwijderen"
       tools:
+        back: "Terug naar tools"
         short_title: "Tools"
+        keywords: "mcp|mcp-server|modelcontextprotocol"
+        script_tools: "Scripttools"
         export: "Exporteren"
         import: "Importeren"
         import_error_conflict: "Tool bestaat al. Wil je deze updaten?"
@@ -448,14 +704,17 @@ nl:
         name_help: "De naam wordt weergegeven in de Discourse-gebruikersinterface en is de korte identificatie die je gebruikt om de tool te vinden in verschillende instellingen. Deze moet uniek zijn."
         new: "Nieuwe tool"
         tool_name: "Toolnaam"
+        tool_name_help: "De toolnaam wordt gepresenteerd aan het grote taalmodel. Deze is niet uniek, maar wel uniek per agent. (Agent valideert bij opslaan)"
         description: "Beschrijving"
         description_help: "Een duidelijke beschrijving van het doel van de tool voor het taalmodel"
+        subheader_description: "Tools en MCP-servers breiden de mogelijkheden van AI-agenten uit."
         summary: "Samenvatting"
         summary_help: "Samenvatting van de tools die voor eindgebruikers moeten worden weergegeven"
         script: "Script"
         parameters: "Parameters"
         save: "Opslaan"
         parameter_type: "Parametertype"
+        parameter_item_type: "Itemtype"
         add_parameter: "Parameter toevoegen"
         remove_parameter: "Verwijderen"
         parameter_required: "Vereist"
@@ -464,6 +723,11 @@ nl:
         parameter_description: "Parameterbeschrijving"
         enum_value: "Enumwaarde"
         add_enum_value: "Enumwaarde toevoegen"
+        secret_alias: "Aanmeldgegevensalias"
+        secret_alias_help: "Alias waarnaar verwezen wordt vanuit scripts via secrets.get('alias_name'). Gebruik letters, cijfers en onderstrepingstekens."
+        secret_credential: "Aanmeldgegevens"
+        add_secret_contract: "Aanmeldgegevens toevoegen"
+        remove_secret_contract: "Aanmeldgegevens verwijderen"
         credential_not_set: "(niet ingesteld)"
         edit: "Bewerken"
         test: "Testen"
@@ -476,30 +740,112 @@ nl:
           result: "Testresultaat"
       secrets:
         short_title: "Aanmeldgegevens"
+        description: "Beheer verificatieaanmeldingsgegevens die worden gedeeld door LLM's, insluitingen en tools."
         name: "Naam"
         secret: "Waarde"
+        select_secret: "Selecteer aanmeldingsgegevens..."
+        create_new: "Nieuwe aanmeldingsgegevens"
+        add_secret: "Aanmeldgegevens toevoegen"
+        saved: "Aanmeldgegevens opgeslagen"
+        confirm_delete: "Weet je zeker dat je deze aanmeldingsgegevens wilt verwijderen?"
+        delete_failed_in_use: "Deze aanmeldingsgegevens zijn momenteel in gebruik en kunnen niet worden verwijderd."
+        no_secrets: "Nog geen aanmeldingsgegevens"
+        new_title: "Nieuwe aanmeldingsgegevens"
+        edit_title: "Aanmeldgegevens bewerken"
+        back: "Terug naar aanmeldingsgegevens"
         save: "Opslaan"
         edit: "Bewerken"
         delete: "Verwijderen"
+        used_by: "Gebruikt door"
+        not_used: "Niet in gebruik"
         embedding: "Insluiting"
+        cannot_delete_in_use: "Deze aanmeldingsgegevens kunnen niet worden verwijderd omdat ze in gebruik zijn door:"
         tool: "Tool"
+        mcp_server: "MCP-server"
+        mcp_server_oauth_client_secret: "OAuth-clientgeheim MCP-server"
+        modal:
+          title: "Nieuwe aanmeldingsgegevens maken"
       mcp_servers:
+        short_title: "MCP-servers"
+        new: "Nieuwe MCP-server"
         name: "Naam"
         description: "Beschrijving"
         url: "URL"
+        auth_type: "Verificatie"
         auth_types:
+          none: "Geen verificatie"
+          header_secret: "Koptekst aanmeldingsgegevens"
           oauth: "OAuth"
+        secret: "Aanmeldgegevens"
+        auth_header: "Verificatiekoptekst"
+        auth_scheme: "Verificatieschema"
+        oauth_client_registration: "OAuth-clientregistratie"
+        oauth_client_registration_types:
+          client_metadata_document: "Clientmetagegevensdocument"
+          manual: "Handmatige clientaanmeldingsgegevens"
+        oauth_client_id: "OAuth-client-ID"
+        oauth_client_secret: "OAuth-clientgeheim"
+        oauth_scopes: "OAuth-bereiken"
+        oauth_authorization_params: "OAuth-autorisatieparameters"
+        oauth_authorization_params_help: "Optioneel JSON-object dat wordt samengevoegd in het autorisatieverzoek. Gebruik null om een standaard parameter te verwijderen."
+        oauth_authorization_params_placeholder: '{"access_type":"offline"}'
+        oauth_token_params: "OAuth-tokenparameters"
+        oauth_token_params_help: "Optioneel JSON-object dat wordt samengevoegd in tokenverzoeken. Gebruik null om een standaard parameter te verwijderen."
+        oauth_token_params_placeholder: "{}"
+        oauth_require_refresh_token: "Vernieuwingstoken vereisen"
+        oauth_require_refresh_token_help: "Mislukt de OAuth-verbinding als de provider geen vernieuwingstoken retourneert."
+        oauth_json_object_required: "%{field} moet een JSON-object zijn."
+        oauth_show_advanced_options: "Geavanceerde opties weergeven"
+        oauth_hide_advanced_options: "Geavanceerde opties verbergen"
+        oauth_connection: "OAuth-verbinding"
+        oauth_status: "OAuth-status"
         oauth_statuses:
+          disconnected: "Verbinding verbroken"
           connected: "Verbonden"
+          refresh_failed: "Vernieuwen mislukt"
+          error: "Vereist aandacht"
         oauth_connect: "Verbinden"
+        oauth_reconnect: "Opnieuw verbinding maken"
+        oauth_disconnect: "Verbinding verbreken"
+        oauth_connect_help: "Gebruik Connect om de server op te slaan en te autoriseren."
+        oauth_client_metadata_url: "Clientmetagegevens-URL"
+        oauth_granted_scopes: "Toegekende bereiken"
+        oauth_access_token_expires_at: "Toegangstoken verloopt op"
+        oauth_authorization_endpoint: "Autorisatie-eindpunt"
+        oauth_token_endpoint: "Tokeneindpunt"
+        oauth_revocation_endpoint: "Intrekkingseindpunt"
+        oauth_issuer: "Uitgever"
+        oauth_last_error: "Laatste OAuth-fout"
+        oauth_show_details: "Details weergeven"
         oauth_hide_details: "Details verbergen"
+        timeout_seconds: "Time-out verzoek (seconden)"
+        timeout_seconds_tooltip: "Hoelang Discourse wacht op de MCP-server voordat het verzoek mislukt. Houd 30 aan, tenzij de server constant traag is."
         enabled: "Ingeschakeld"
         save: "Opslaan"
         edit: "Bewerken"
         delete: "Verwijderen"
+        test: "Verbinding testen"
+        saved: "MCP-server opgeslagen"
+        confirm_delete: "Weet je zeker dat je deze MCP-server wilt verwijderen?"
+        back: "Terug naar tools"
+        health: "Gezondheid"
+        healthy: "Gezond"
+        unhealthy: "Vereist aandacht"
+        tool_count:
+          one: "%{count} tool"
+          other: "%{count} tools"
         tools_modal:
+          title: "%{name}-tools"
+          summary:
+            one: "Deze server geeft momenteel %{count} tool vrij."
+            other: "Deze server geeft momenteel %{count} tools vrij."
           parameters: "Parameters"
           required: "Vereist"
+          no_parameters: "Deze tool vereist geen parameters."
+        test_result: "Verbindingsresultaat"
+        test_summary:
+          one: "%{count} tool ontdekt met protocol %{version}."
+          other: "%{count} tools ontdekt met protocol %{version}."
       llms:
         short_title: "LLM's"
         no_llms: "Nog geen LLM's"
@@ -512,14 +858,15 @@ nl:
         max_output_tokens: "Maximaal aantal uitvoertokens"
         url: "URL van de service die het model host"
         api_key: "API-sleutel van de service die het model host"
-        vision_enabled: "Zicht ingeschakeld"
         ai_bot_user: "AI-botgebruiker"
         cost_input: "Invoerkosten"
         cost_cached_input: "Kosten gecachte invoer"
+        cost_cache_write: "Cacheschrijfkosten"
         cost_output: "Uitvoerkosten"
         save: "Opslaan"
         edit: "Bewerken"
         saved: "LLM-model opgeslagen"
+        back: "Terug naar LLM's"
         confirm_delete: Weet je zeker dat je dit model wilt verwijderen?
         delete: Verwijderen
         quotas:
@@ -539,13 +886,17 @@ nl:
             custom: "Aangepast..."
           hours: "uur"
           max_tokens_help: "Maximum aantal tokens (woorden en tekens) dat elke gebruiker in deze groep kan gebruiken binnen de opgegeven tijdsduur. Tokens zijn de eenheden die door AI-modellen worden gebruikt om tekst te verwerken. Ruwweg 1 token = 4 tekens of 3/4 van een woord."
-          max_tokens_required: "Moet worden ingesteld als het maximale aantal gebruiken niet is ingesteld"
           max_usages_help: "Maximum aantal keren dat elke gebruiker in deze groep het AI-model kan gebruiken binnen de opgegeven tijdsduur. Dit quotum wordt bijgehouden per individuele gebruiker, niet gedeeld door de groep."
-          max_usages_required: "Moet worden ingesteld als het maximale aantal tokens niet is ingesteld"
+        credit_allocation:
+          credits_remaining: "%{remaining} van %{total} credits resterend (%{percentage}%)"
+          soft_limit_warning: "Dit model heeft nog %{percentage}% van de AI-credits voor vandaag."
+          hard_limit_warning: "Je hebt geen AI-credits meer voor dit model. AI-functies die gebruikmaken van dit model zijn pas weer beschikbaar vanaf %{reset_date}"
+          next_reset: "Credits gereset op %{time}"
         usage:
           ai_bot: "AI-bot"
           ai_helper: "Helper (%{agent})"
           ai_helper_image_caption: "Afbeeldingsbijschrift"
+          ai_agent: "Agent (%{agent})"
           ai_summarization: "Samenvatten"
           ai_embeddings_semantic_search: "AI zoeken"
           ai_spam: "Spam"
@@ -555,10 +906,14 @@ nl:
           other: "Dit model wordt momenteel gebruikt door de volgende: %{settings}. Als het onjuist is geconfigureerd, werken functies niet zoals verwacht. "
         model_description:
           none: "Algemene instellingen die werken voor de meeste taalmodellen"
-          anthropic-claude-opus-4-6: "Het intelligentste model van Antropic"
+          anthropic-claude-opus-4-7: "Het intelligentste model van Antropic"
           anthropic-claude-sonnet-4-6: "Optimale balans tussen snelheid en kosten"
           anthropic-claude-haiku-4-5: "Snel en kosteneffectief"
-          open_ai-gpt-5-nano: "Snelste en meest kostenefficiënte GPT-5-model"
+          google-gemini-3-1-pro: "Het intelligentste model van Google"
+          google-gemini-3-flash: "Snel en kostenefficiënt met multimodale redenering"
+          open_ai-gpt-5-4: "Het vlaggenschipmodel van OpenAI. Het is zeer geschikt voor probleemoplossing in verschillende domeinen."
+          open_ai-gpt-5-4-nano: "Snelste en meest kostenefficiënte GPT-5-model"
+          open_router-moonshotai-kimi-k2-6: "Het multimodale model van Moonshot met zichtmogelijkheden"
         preseeded_model_description: "Voorgeconfigureerd open-source model met %{model}"
         configured:
           title: "Geconfigureerde LLM's"
@@ -575,18 +930,21 @@ nl:
           title: "Test uitvoeren"
           running: "Test uitvoeren..."
           success: "Succes!"
+          invalid_config: "Los eerst de volgende fouten in je configuratie op:"
           failure: "Een poging om verbinding te maken met het model resulteerde in deze fout: %{error}"
         hints:
           max_prompt_tokens: "Het maximale aantal tokens dat het model in één verzoek kan verwerken"
           max_output_tokens: "Het maximale aantal tokens dat het model in één verzoek kan genereren"
           display_name: "De naam die wordt gebruikt om naar dit model te verwijzen in de interface van je site."
           name: "We nemen dit op in de API-aanroep om aan te geven welk model we gebruiken"
-          vision_enabled: "Indien ingeschakeld, zal de AI proberen afbeeldingen te begrijpen. Dit is afhankelijk van het gebruikte model ter ondersteuning van zicht. Ondersteund door de nieuwste modellen van Anthropic, Google en OpenAI."
           cost_input: "De invoerkosten per 1 miljoen tokens voor dit model"
+          cost_cached_input: "De gecachete invoerkosten per 1 miljoen tokens voor dit model (bij lezen uit promptcache)"
+          cost_cache_write: "De cacheschrijfkosten per 1 miljoen tokens voor dit model (bij schrijven naar promptcache)"
           cost_output: "De uitvoerkosten per 1 miljoen tokens voor dit model"
           cost_measure: "$/miljoen tokens"
         providers:
           aws_bedrock: "AWS Bedrock"
+          aws_bedrock_converse: "AWS Bedrock (Converse API)"
           anthropic: "Anthropic"
           vllm: "vLLM"
           hugging_face: "Hugging Face"
@@ -599,23 +957,36 @@ nl:
           samba_nova: "SambaNova"
           mistral: "Mistral"
           open_router: "OpenRouter"
+          groq: "Groq"
           fake: "Aangepast"
         provider_fields:
           access_key_id: "Toegangssleutel-ID AWS Bedrock"
+          role_arn: "Rol ARN AWS Bedrock"
+          inference_profile_arn: "ARN toepassingsinferentieprofiel AWS Bedrock"
           region: "Regio AWS Bedrock"
           organization: "Optionele organisatie-ID OpenAI"
           disable_system_prompt: "Systeembericht uitschakelen in prompts"
           enable_native_tool: "Ondersteuning voor native tools inschakelen"
           disable_native_tools: "Ondersteuning voor native tool uitschakelen (gebruik tools op XML-basis)"
+          disable_native_structured_output: "Schakel native gestructureerde uitvoer uit (gebruik in plaats daarvan het vooraf invullen van assistentberichten; vereist voor Claude 3.x en ouder)"
           provider_order: "Volgorde van providers (door komma's gescheiden lijst)"
           provider_quantizations: "Volgorde van providerkwantificeringen (door komma's gescheiden lijst, bijvoorbeeld: fp16, fp8)"
           disable_streaming: "Streamingvoltooiingen uitschakelen (streaming- naar niet-streaming-verzoeken converteren)"
           reasoning_effort: "Redeneringsinspanning (alleen van toepassing op redeneringsmodellen)"
+          service_tier: "Serviceniveau (flex = lagere kosten/hogere latentie, prioriteit = snellere verwerking)"
           enable_reasoning: "Redeneren inschakelen (alleen van toepassing op redeneringsmodellen)"
+          adaptive_thinking: "Schakel adaptief denken in (aanbevolen voor Claude 4.6-modellen)"
+          enable_thinking: "Denken inschakelen (Gemini 2.5-modellen - gebruikt tokenbudget)"
+          thinking_level: "Denkniveau (Gemini 3-modellen - bepaalt de redeneringsdiepte)"
           thinking_tokens: "Aantal tokens dat wordt gebruikt voor denken"
           reasoning_tokens: "Aantal tokens dat wordt gebruikt voor redeneren"
           disable_temperature: "Temperatuur uitschakelen (sommige denkmodellen ondersteunen geen temperatuur)"
           disable_top_p: "Top P uitschakelen (sommige denkmodellen ondersteunen geen top P)"
+          prompt_caching: "Promptcachingmodus"
+          prompt_caching_never: "Nooit - gebruik geen promptcaching"
+          prompt_caching_tool_results: "Toolresultaten - cache wanneer toolresultaten aanwezig zijn (aanbevolen)"
+          prompt_caching_always: "Altijd - gebruik altijd promptcaching"
+          effort: "Inspanningsniveau"
       related_topics:
         title: "Gerelateerde topics"
         pill: "Gerelateerd"
@@ -623,11 +994,7 @@ nl:
         title: "Stel wijzigingen voor met behulp van AI"
         description: "Kies een van de onderstaande opties, dan zal de AI je een nieuwe versie van de tekst voorstellen."
         selection_hint: "Tip: je kunt ook een deel van de tekst selecteren voordat je de hulp opent om alleen dat deel te herschrijven."
-        suggest: "Voorstellen met AI"
         suggest_errors:
-          too_many_tags:
-            one: "Je kunt maximaal %{count} tag hebben"
-            other: "Je kunt maximaal %{count} tags hebben"
           no_suggestions: "Geen suggesties beschikbaar"
         missing_content: "Voer wat inhoud in om suggesties te genereren."
         context_menu:
@@ -667,16 +1034,26 @@ nl:
           credits: "Bijschrift door AI"
           save_caption: "Opslaan"
         no_content_error: "Voeg eerst inhoud toe om er AI-acties op uit te voeren"
+      errors:
+        credit_limit_dialog:
+          title: "AI-creditlimiet bereikt"
+          message_user: "Deze community heeft zijn AI-creditlimiet voor vandaag bereikt. Probeer het opnieuw na %{reset_time} of neem contact op met je sitebeheerder voor meer informatie."
+          message_without_time_user: "Deze community heeft zijn AI-creditlimiet voor vandaag bereikt. Reacties zijn niet beschikbaar totdat je limiet is gereset. Neem contact op met je sitebeheerder voor meer informatie."
+          message_admin: "Je hebt de AI-creditlimiet voor je plan bereikt. Reacties zijn niet beschikbaar totdat je limiet wordt gereset op %{reset_time}."
+          message_without_time_admin: "Je hebt de AI-creditlimiet voor je plan bereikt. Reacties zijn niet beschikbaar totdat je limiet wordt gereset."
       reviewables:
         model_used: "Gebruikt model:"
         accuracy: "Nauwkeurigheid:"
         ai_tool_action:
+          agent: "Agent"
           tool: "Tool"
           parameters: "Parameters"
+          post: "Activerend bericht"
       embeddings:
         short_title: "Insluitingen"
         description: "Insluitingen zijn numerieke representaties van gegevens die betekenis en relaties vastleggen, waardoor AI-functies van Discourse zoals Gerelateerde onderwerpen en AI-zoeken content kunnen begrijpen en verbinden."
         new: "Nieuwe insluiting"
+        back: "Terug naar insluitingen"
         save: "Opslaan"
         saved: "Insluitingsconfiguratie opgeslagen"
         delete: "Verwijderen"
@@ -723,12 +1100,21 @@ nl:
           model_name: "Modelnaam"
         semantic_search: "Topics (semantisch)"
         semantic_search_results:
+          toggle: "AI-resultaten"
           unavailable: "AI-resultaten niet beschikbaar"
+          zero_results_expanded: "Geen resultaten gevonden, %{count} AI-resultaten weergegeven"
         semantic_search_tooltips:
           results_explanation: "Als dit is ingeschakeld, worden hieronder extra AI-zoekresultaten toegevoegd."
           invalid_sort: "Zoekresultaten moeten worden gesorteerd op Relevantie om AI-resultaten weer te geven"
+          not_submitted: "Dien een zoekopdracht in om AI-resultaten in te schakelen"
+          no_results: "Geen AI-resultaten voor deze zoekopdracht gevonden"
         semantic_search_unavailable_tooltip: "Zoekresultaten moeten worden gesorteerd op Relevantie om AI-resultaten weer te geven"
         ai_generated_result: "Zoekresultaat gevonden met AI"
+        ai_results_notice:
+          no_results: "Geen exacte overeenkomsten, maar hier zijn enkele gerelateerde resultaten."
+          few_results:
+            one: "%{count} overeenkomst gevonden - gerelateerde resultaten worden weergeven."
+            other: "%{count} overeenkomsten gevonden - gerelateerde resultaten worden weergeven."
         quick_search:
           suffix: "in alle topics en berichten met AI"
       ai_artifact:
@@ -737,6 +1123,7 @@ nl:
         click_to_run_label: "Artefact uitvoeren"
       ai_bot:
         title: "AI-bot"
+        agent: "Agent"
         llm: "Model"
         pm_warning: "AI-chatbotberichten worden regelmatig gecontroleerd door moderators."
         cancel_streaming: "Stoppen met antwoorden"
@@ -754,8 +1141,12 @@ nl:
           title: "AI-interactie weergeven"
           copy_request: "Verzoek kopiëren"
           copy_response: "Antwoord kopiëren"
-          request_tokens: "Verzoektokens:"
-          response_tokens: "Antwoordtokens:"
+          this_turn: "Deze beurt:"
+          whole_conversation: "Conversatie:"
+          tokens_summary: "%{request_tokens} in → %{response_tokens} uit"
+          cache_both: "(cache %{read} lezen, %{write} schrijven)"
+          cache_read_only: "(cache %{read} lezen)"
+          cache_write_only: "(cache %{write} schrijven)"
           request: "Verzoek"
           response: "Antwoord"
           next_log: "Volgende"
@@ -804,11 +1195,14 @@ nl:
             one: "Bericht moet %{count} teken of langer zijn"
             other: "Bericht moet %{count} tekens of langer zijn"
           messages_sidebar_title: "Conversaties"
+          starred: "Met ster"
           today: "Vandaag"
           last_7_days: "Afgelopen 7 dagen"
           last_30_days: "Afgelopen 30 dagen"
           upload_files: "Bestanden uploaden"
           uploads_in_progress: "Kan niet verzenden terwijl het uploaden bezig is"
+          scroll_to_bottom: "Naar beneden scrollen"
+          editing_post: "Bericht bewerken "
       sentiments:
         dashboard:
           title: "Sentiment"
@@ -839,7 +1233,23 @@ nl:
         topic:
           title: "Topicsamenvatting"
           close: "Samenvattingspaneel sluiten"
+          regenerate_ai_summaries: "AI-samenvattingen opnieuw genereren"
+          regen_modal_description: "Kies welk type AI-samenvatting je opnieuw wilt genereren voor dit topic."
+          bulk_regen_description: "Kies welk type AI-samenvatting je opnieuw wilt genereren voor de geselecteerde topics."
+          regenerate_gists_option: "Korte samenvattingen (gists)"
           regenerate_summaries_option: "Topicsamenvattingen"
+          regenerate_gists_success:
+            one: "Korte samenvatting opnieuw gegenereerd"
+            other: "%{count} korte samenvattingen opnieuw gegenereerd"
+          regenerate_gists_error:
+            one: "Korte samenvatting opnieuw genereren mislukt"
+            other: "%{count} korte samenvattingen opnieuw genereren mislukt"
+          regenerate_topic_summary_success:
+            one: "Topicsamenvatting opnieuw gegenereerd"
+            other: "%{count} topicsamenvattingen opnieuw gegenereerd"
+          regenerate_topic_summary_error:
+            one: "Topicsamenvatting opnieuw genereren mislukt"
+            other: "%{count} topicsamenvattingen opnieuw genereren mislukt"
         topic_list_layout:
           button:
             compact: "Compact"
@@ -853,6 +1263,7 @@ nl:
         loading_convo: "Conversatie laden"
         collapse: "Samenvouwen"
         timed_out: "Discobot kon geen ontdekkingen vinden. Er is iets misgegaan."
+        user_setting: "AI-zoekontdekkingen inschakelen"
         tooltip:
           header: "AI-gestuurd zoeken"
           content: "Zoeken in natuurlijke taal, aangestuurd door %{model}"
@@ -862,8 +1273,15 @@ nl:
       user_preferences:
         empty: "Er zijn op dit moment geen relevante instellingen beschikbaar"
     review:
+      statuses:
+        approved_tool_action:
+          title: "Tool goedgekeurd"
+        rejected_tool_action:
+          title: "Tool afgekeurd"
       types:
         reviewable_ai_post:
           title: "Door AI gemarkeerd bericht"
         reviewable_ai_chat_message:
           title: "Door AI gemarkeerd chatbericht"
+        reviewable_ai_tool_action:
+          title: "AI-toolactie"

@@ -4,10 +4,10 @@ import { on } from "@ember/modifier";
 import EditCategoryTab from "discourse/admin/components/edit-category-tab";
 import BackButton from "discourse/components/back-button";
 import BreadCrumbs from "discourse/components/bread-crumbs";
-import DPageHeader from "discourse/components/d-page-header";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import { and } from "discourse/truth-helpers";
+import DPageHeader from "discourse/ui-kit/d-page-header";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
 
 export default class EditCategoryTabsHorizontalTemplate extends Component {
   evaluateTabCondition(tab, controller) {
@@ -20,6 +20,12 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
     });
   }
 
+  get dynamicCategoryTypeTabs() {
+    return Object.values(this.args.controller.model.categoryTypes ?? {}).filter(
+      (type) => type.id !== "discussion" && type.visible
+    );
+  }
+
   get visiblePrimaryTabs() {
     return registeredEditCategoryTabs.filter(
       (tab) =>
@@ -28,7 +34,10 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
   }
 
   get hasPrimaryTabs() {
-    return this.visiblePrimaryTabs.length > 0;
+    return (
+      this.visiblePrimaryTabs.length > 0 ||
+      this.dynamicCategoryTypeTabs.length > 0
+    );
   }
 
   <template>
@@ -75,6 +84,15 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
               {{/if}}
             {{/if}}
           {{/each}}
+          {{#each this.dynamicCategoryTypeTabs as |dynamicTab|}}
+            <EditCategoryTab
+              @panels={{@controller.panels}}
+              @selectedTab={{@controller.selectedTab}}
+              @params={{@controller.parentParams}}
+              @tab={{dynamicTab.id}}
+              @tabTitle={{dynamicTab.name}}
+            />
+          {{/each}}
           <EditCategoryTab
             @panels={{@controller.panels}}
             @selectedTab={{@controller.selectedTab}}
@@ -86,6 +104,12 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
             @selectedTab={{@controller.selectedTab}}
             @params={{@controller.parentParams}}
             @tab="settings"
+          />
+          <EditCategoryTab
+            @panels={{@controller.panels}}
+            @selectedTab={{@controller.selectedTab}}
+            @params={{@controller.parentParams}}
+            @tab="moderation"
           />
           <EditCategoryTab
             @panels={{@controller.panels}}
@@ -144,6 +168,15 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
               @params={{@controller.parentParams}}
               @tab={{pluginTab.id}}
               @tabTitle={{pluginTab.name}}
+            />
+          {{/each}}
+          {{#each this.dynamicCategoryTypeTabs as |dynamicTab|}}
+            <EditCategoryTab
+              @panels={{@controller.panels}}
+              @selectedTab={{@controller.selectedTab}}
+              @params={{@controller.parentParams}}
+              @tab={{dynamicTab.id}}
+              @tabTitle={{dynamicTab.name}}
             />
           {{/each}}
         {{/if}}

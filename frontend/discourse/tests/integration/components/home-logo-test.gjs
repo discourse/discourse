@@ -13,7 +13,7 @@ const darkLogo = "/images/d-logo-sketch.png?dark";
 const title = "Cool Forum";
 const prefersDark = "(prefers-color-scheme: dark)";
 
-module("Integration | Component | home-logo", function (hooks) {
+module("Integration | Component | HomeLogo", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.afterEach(function () {

@@ -31,8 +31,11 @@ en:
         title: Triage posts using AI
         description: "Triage posts using a large language model"
         flagged_post: |
-          <div>Response from the model:</div>
-          <p>%{llm_response}</p>
+          %{score_reason}
+          %{response}
+        flagged_post_response: |
+          <p>Response from the model: %{llm_response}</p>
+        flagged_post_score_reason: |
           <b>Triggered by the <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> rule.</b>
         notify_author_pm:
           subject: "Your post was temporarily removed for review"
@@ -50,6 +53,7 @@ en:
         description: "Automatically tag topics using AI"
   site_settings:
     discourse_ai_enabled: "Enable the discourse AI plugin."
+    enable_ai_bot_starred_conversations: "Allow users to star AI bot conversations and show them in a Starred sidebar section."
     ai_default_llm_model: "The default LLM model to use for all AI features"
     ai_artifact_security: "The AI artifact system generates IFRAMEs with runnable code. Strict mode forces an extra click to run code. Lax mode runs code immediately. Hybrid mode allows user to supply data-ai-artifact-autorun to show right away. Disabled mode disables the artifact system."
     ai_toxicity_enabled: "Enable the toxicity module."
@@ -69,7 +73,12 @@ en:
     ai_sentiment_enabled: "Enable the sentiment module."
     ai_sentiment_inference_service_api_endpoint: "URL where the API is running for the sentiment module"
     ai_sentiment_inference_service_api_key: "API key for the sentiment API"
-    ai_sentiment_models: "Models to use for inference. Sentiment classifies post on the positive/neutral/negative space. Emotion classifies on the anger/disgust/fear/joy/neutral/sadness/surprise space."
+    ai_sentiment_model_configs: "Classification model endpoints to use for inference. Sentiment classifies posts as positive, neutral, or negative. Emotion classifies posts across supported emotion labels."
+    ai_sentiment_models: "Classification model endpoints to use for inference. Sentiment classifies posts as positive, neutral, or negative. Emotion classifies posts across supported emotion labels."
+    ai_sentiment_sentiment_classification_strategy: "Sentiment classification backend."
+    ai_sentiment_sentiment_agent: "Agent to use for sentiment classification when the sentiment backend is agent."
+    ai_sentiment_emotion_classification_strategy: "Emotion classification backend."
+    ai_sentiment_emotion_agent: "Agent to use for emotion classification when the emotion backend is agent."
 
     ai_nsfw_detection_enabled: "Enable the NSFW module."
     ai_nsfw_inference_service_api_endpoint: "URL where the API is running for the NSFW module"
@@ -111,6 +120,10 @@ en:
     ai_embeddings_semantic_related_age_time_scale: "Time scale in days for age penalty calculation. Topics inactive this many days receive ~50% penalty with penalty=1.0. Use 365 for yearly scale, 90 for quarterly scale."
     ai_embeddings_per_post_enabled: Generate embeddings for each post
 
+    ai_admin_dashboard_enabled: "Enable AI features on the admin dashboard."
+    ai_admin_dashboard_highlights_agent: "Agent that explains notable community shifts on the admin dashboard."
+    ai_admin_dashboard_highlights_category_scope: "Choose which categories AI highlights can use. Include and exclude options use {{setting:ai_admin_dashboard_highlights_categories}}. Personal messages are always excluded."
+    ai_admin_dashboard_highlights_categories: "Categories used when the AI highlights category scope is set to <strong>include</strong> or <strong>exclude</strong>."
     ai_summarization_enabled: "Enable the summarize feature"
     ai_summarization_agent: "Agent to use for summarize feature"
     ai_pm_summarization_allowed_groups: "Groups allowed to create and view summaries in PMs."
@@ -126,6 +139,7 @@ en:
     ai_bot_add_to_header: "Display a button in the header to start a PM with an AI Bot"
     ai_bot_add_to_community_section: "Display a link in the sidebar community section to start a PM with an AI Bot"
     ai_bot_github_access_token: "GitHub access token for use with GitHub AI tools (required for search support)"
+    ai_bot_enable_docked_composer: "Enable the docked chat-style composer for AI bot conversations instead of the standard floating composer."
 
     ai_discover_enabled: "Enable the discovery search feature"
     ai_discover_agent: "Agent to use for discovery search feature"
@@ -141,7 +155,8 @@ en:
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
 
     ai_translation_enabled: "Enable the AI translation feature"
-    ai_translation_target_categories: "Only content in the selected categories will be translated. Subcategories must be added separately. Leave empty to disable translation of topics in categories."
+    ai_translation_category_scope: "Choose which categories AI translation can use. Include and exclude options use {{setting:ai_translation_categories}}. Personal messages are controlled by {{setting:ai_translation_personal_messages}}."
+    ai_translation_categories: "Categories used when the AI translation category scope is set to <strong>include</strong> or <strong>exclude</strong>."
     ai_translation_personal_messages: "Controls which personal messages are translated. 'none' disables PM translation. 'group' translates only group PMs. 'all' translates all PMs."
     ai_translation_include_bot_content: "When enabled, content written by bots (user IDs below 0) will also be sent for translation."
     ai_translation_max_post_length: "The maximum number of characters for a post to be translated. Posts longer than this will not be translated."
@@ -264,6 +279,13 @@ en:
       copied: "Copied to clipboard"
     unknown_model: "Unknown AI model"
 
+    discourse_workflows:
+      ai_agent:
+        errors:
+          locked_default_llm_missing: "Agent '%{agent}' is locked to its default LLM, but no valid default LLM is configured"
+          llm_not_found: "LLM model with id %{llm_model_id} not found"
+          no_llm_configured: "No LLM is configured for agent '%{agent}'. Select an LLM model or configure an agent/site default LLM."
+
     tools:
       custom_name: "%{name} (custom)"
       presets:
@@ -383,11 +405,21 @@ en:
       default_pm_prefix: "[Untitled AI bot PM]"
       thinking: "Thinking"
       tool_pending_approval: "This action requires moderator approval before it can be executed."
+      chat_tool_approval:
+        approved: "Approved by @%{username}."
+        rejected: "Rejected by @%{username}."
+        failed: "Could not complete the action: %{error}"
+        unexpected_error: "an unexpected error occurred"
       agents:
         default_llm_required: "Default LLM model is required prior to enabling Chat"
         cannot_delete_system_agent: "System agents cannot be deleted, please disable it instead"
         cannot_edit_system_agent: "System agents can only be renamed, you may not edit tools or system prompt, instead disable and make a copy"
         cannot_have_duplicate_tools: "Can not have duplicate tools"
+        native_tool_requires_forced_llm: "Provider-native tools require a default LLM with \"Force default LLM\" enabled"
+        native_tool_unsupported_by_llm: "The selected default LLM does not support one of the enabled provider-native tools"
+        admin_dashboard_highlights:
+          name: "Admin Dashboard Highlights"
+          description: "Writes the brief readout shown at the top of the admin dashboard, explaining what changed and what deserves attention this period"
         github_helper:
           name: "GitHub Helper"
           description: "AI Bot specialized in assisting with GitHub-related tasks and questions"
@@ -493,6 +525,12 @@ en:
         chat_thread_titler:
           name: "Chat Thread Titler"
           description: "Default agent powering automatic chat thread title generation"
+        sentiment_classifier:
+          name: "Sentiment classifier"
+          description: "Default agent powering sentiment classification"
+        emotion_classifier:
+          name: "Emotion classifier"
+          description: "Default agent powering emotion classification"
 
       topic_not_found: "Summary unavailable, topic not found!"
       summarizing: "Summarizing topic"
@@ -550,6 +588,13 @@ en:
           flag_type:
             name: "Flag Type"
             description: "Controls whether the post is reviewed, hidden, deleted, or treated as spam."
+      native_tools:
+        web_search:
+          name: "Web Search (native)"
+          help: "Lets the model search the web using the provider's built-in search, when the agent is forced to a supported LLM."
+        web_fetch:
+          name: "Web Fetch (native)"
+          help: "Lets the model open and read web pages using the provider's built-in web access, when the agent is forced to a supported LLM."
       tool_summary:
         read_artifact: "Read a web artifact"
         search_uploaded_documents: "Search uploaded documents"
@@ -564,6 +609,8 @@ en:
         categories: "List categories"
         flag_post: "Flag post"
         close_topic: "Close topic"
+        suspend_user: "Suspend user"
+        silence_user: "Silence user"
         unlist_topic: "Unlist topic"
         lock_post: "Lock post"
         delete_topic: "Delete topic"
@@ -576,6 +623,7 @@ en:
         grant_badge: "Grant badge"
         list_reviewables: "List review queue"
         perform_reviewable_action: "Review queue action"
+        add_reviewable_note: "Add review queue note"
         assign: "Assign topic"
         mark_as_solved: "Mark as solved"
         search: "Search"
@@ -609,6 +657,8 @@ en:
         categories: "List all publicly visible categories on the forum"
         flag_post: "Flag the current post for staff review"
         close_topic: "Close or open a topic"
+        suspend_user: "Suspend (ban) a user, blocking them from logging in or posting"
+        silence_user: "Silence a user, blocking them from posting while they can still read"
         unlist_topic: "List or unlist a topic"
         lock_post: "Lock or unlock a post"
         delete_topic: "Delete a topic"
@@ -621,6 +671,7 @@ en:
         grant_badge: "Grant a badge to a user"
         list_reviewables: "List pending review queue items with optional filtering"
         perform_reviewable_action: "Perform an action on a review queue item"
+        add_reviewable_note: "Add a note to a review queue item"
         assign: "Assign or unassign a topic to a user or group"
         mark_as_solved: "Mark or unmark a post as the accepted solution"
         search: "Search all public topics on the forum"
@@ -654,6 +705,8 @@ en:
         random_picker: "Picking from %{options}, picked: %{result}"
         flag_post: "Flagging post %{post_id} (flag_post: %{flag_post})"
         close_topic: "Closing topic %{topic_id} (closed: %{closed})"
+        suspend_user: "Suspending %{username} for %{duration_days} day(s)"
+        silence_user: "Silencing %{username} for %{duration_days} day(s)"
         unlist_topic: "Unlisting topic %{topic_id} (unlisted: %{unlisted})"
         lock_post: "Locking post %{post_id} (locked: %{locked})"
         delete_topic: "Deleting topic %{topic_id} (deleted: %{deleted})"
@@ -666,6 +719,7 @@ en:
         grant_badge: "Granting badge '%{badge_name}' to %{username}"
         list_reviewables: "Listing review queue items (type: %{type})"
         perform_reviewable_action: "Performing %{action} on reviewable %{reviewable_id}"
+        add_reviewable_note: "Adding note to reviewable %{reviewable_id}"
         assign: "Assigning topic %{topic_id} (assigned: %{assigned})"
         mark_as_solved: "Marking post %{post_id} as solved (solved: %{solved})"
         read: "Reading: <a href='%{url}'>%{title}</a>"
@@ -715,6 +769,7 @@ en:
         already_flagged: "Post is already flagged for review."
         flagged: "Post flagged for review."
         reason: "AI bot flagged this post.\n\nReason: %{reason}"
+        score_reason: "AI bot flagged this post."
 
       close_topic:
         errors:
@@ -722,6 +777,24 @@ en:
           not_allowed: "You are not allowed to close or open this topic."
           no_reason: "A reason is required to close or open a topic."
         success: "Topic updated successfully."
+
+      suspend_user:
+        errors:
+          not_found: "User not found."
+          not_allowed: "You are not allowed to suspend this user."
+          no_reason: "A reason is required to suspend a user."
+          invalid_duration: "Duration must be a positive whole number of days, up to %{max}."
+          failed: "Failed to suspend user."
+        success: "User %{username} has been suspended."
+
+      silence_user:
+        errors:
+          not_found: "User not found."
+          not_allowed: "You are not allowed to silence this user."
+          no_reason: "A reason is required to silence a user."
+          invalid_duration: "Duration must be a positive whole number of days, up to %{max}."
+          failed: "Failed to silence user."
+        success: "User %{username} has been silenced."
 
       unlist_topic:
         errors:
@@ -842,6 +915,14 @@ en:
           action_failed: "Failed to perform the action"
         success: "Successfully performed '%{action}' on review queue item %{reviewable_id}"
 
+      add_reviewable_note:
+        errors:
+          not_allowed: "You are not allowed to access the review queue"
+          not_found: "Review queue item not found"
+          no_note: "A note is required to add a note to a review queue item"
+          failed: "Failed to add the note"
+        success: "Successfully added a note to review queue item %{reviewable_id}"
+
     reviewables:
       ai_tool_action:
         title: "AI Tool Action"
@@ -852,7 +933,10 @@ en:
         target_missing: "The tool action target no longer exists."
         tool_not_found: "Tool '%{tool_name}' is no longer available."
         bot_user_missing: "The bot user no longer exists."
+        performer_not_human: "This action must be approved or rejected by a real person, not a bot."
+        post_mismatch: "This approval card does not belong to this post."
         execution_error: "Tool execution failed: %{error}"
+        execution_error_unknown: "an unexpected error occurred"
 
     summarization:
       configuration_hint:
@@ -877,12 +961,17 @@ en:
           negative: "Negative"
           neutral: "Neutral"
 
+    discord:
+      configuration:
+        agent_user_required: "The Discord search agent must have an associated user before Discord agent mode can be enabled."
+
     llm:
       configuration:
         create_llm: "You need to setup an LLM before enabling this feature"
         disable_modules_first: "You must disable these modules first: %{settings}"
         set_llm_first: "Set %{setting} first"
         model_unreachable: "We couldn't get a response from this model. Check your settings first."
+        empty_response: "The model returned an empty response."
         invalid_seeded_model: "You can't use this model with this feature"
         invalid_agent_response_format: "The selected agent must have a response format with a boolean field names \"spam\""
         must_select_model: "You must select a LLM first"
@@ -937,13 +1026,13 @@ en:
 
     errors:
       quota_exceeded: "You have exceeded the quota for this model. Please try again in %{relative_time}."
-      quota_required: "You must specify maximum tokens or usages for this model"
+      quota_required: "You must specify maximum tokens, uses, or cost for this model"
       no_query_specified: The query parameter is required, please specify it.
       no_user_for_agent: The agent specified does not have a user associated with it.
-      agent_not_found: "The agent specified does not exist. Check the agent_name or agent_id params (legacy: agent_name or agent_id)."
+      agent_not_found: "The agent specified does not exist. Check the agent_name or agent_id params (legacy: persona_name or persona_id)."
       no_user_specified: The username or the user_unique_id parameter is required, please specify it.
       user_not_found: The user specified does not exist. Check the username param.
-      agent_disabled: "The agent specified is disabled. Check the agent_name or agent_id params (legacy: agent_name or agent_id)."
+      agent_disabled: "The agent specified is disabled. Check the agent_name or agent_id params (legacy: persona_name or persona_id)."
       no_default_llm: The agent must have a default_llm defined.
       user_not_allowed: The user is not allowed to participate in the topic.
       invalid_stream_resume_token: The resume_token is invalid or has expired.

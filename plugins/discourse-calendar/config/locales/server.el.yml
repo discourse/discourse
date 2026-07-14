@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 el:
+  category_types:
+    events:
+      name: "Συμβάντα"
+      title: "συμβάντα"
+      description: "Όπου τα μέλη μπορούν να βρουν και να συζητήσουν επερχόμενες εκδηλώσεις σε ένα κοινόχρηστο ημερολόγιο."
   reports:
     currently_away:
       labels:
@@ -21,6 +26,27 @@ el:
     discourse_post_event_allowed_on_groups: "Ομάδες που επιτρέπεται να δημιουργούν εκδηλώσεις."
     event_participation_buttons: "Λίστα κουμπιών συμμετοχής σε εκδήλωση που μπορούν να χρησιμοποιήσουν οι χρήστες."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        label: "Προεπιλεγμένη προβολή ημερολογίου"
+        day: "Ημέρα"
+        week: "Εβδομάδα"
+        month: "Μήνας"
+        year: "Χρόνος"
+      display_weekends:
+        label: "Εμφάνιση Σαββατοκύριακων"
+      discourse_post_event_allowed_on_groups:
+        label: "Ομάδες που μπορούν να δημιουργήσουν εκδηλώσεις"
+      use_local_event_date:
+        label: "Μορφή ημερομηνίας εκδήλωσης"
+        local: "Τοπική ημερομηνία (π.χ., 20 Απριλίου)"
+        relative: "Σχετικός χρόνος (π.χ., σε 2 ημέρες)"
+      sort_categories_by_event_start_date_enabled:
+        label: "Ταξινόμηση θεμάτων"
+        event_date: "Ημερομηνία εκδήλωσης"
+        latest_post: "Τελευταία δραστηριότητα ανάρτησης"
+      sidebar_show_upcoming_events:
+        label: 'Εμφάνιση συνδέσμου «Προσεχείς εκδηλώσεις» στο μενού πλοήγησης'
     invite_user_notification: "Ο/Η %{username} σας προσκάλεσε στο: %{description}"
     event_expired: "Η εκδήλωση έληξε"
   discourse_post_event:

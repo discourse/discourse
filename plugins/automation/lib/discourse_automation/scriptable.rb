@@ -28,7 +28,7 @@ module DiscourseAutomation
       @version = 0
       @fields = []
       @placeholders = []
-      @triggerables = (@@plugin_triggerables[name&.to_sym] || [])
+      @triggerables = @@plugin_triggerables[name&.to_sym] || []
       @script = proc {}
       @on_reset = proc {}
       @not_found = false

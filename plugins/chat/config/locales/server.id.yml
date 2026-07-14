@@ -175,10 +175,17 @@ id:
         other_type: "%{username} menyebut %{identifier} di obrolan pribadi"
       new_chat_message: '%{username} mengirim pesan di "%{channel}"'
       new_direct_chat_message: "%{username} mengirim pesan di obrolan pribadi"
+    actions:
+      chat_reply:
+        title: Balas
   discourse_automation:
     scriptables:
       send_chat_message:
         title: Kirim pesan obrolan
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Terima"
+      default_deny_label: "Menolak"
   reviewable_score_types:
     needs_review:
       title: "Perlu Reviu"

@@ -195,25 +195,33 @@
   }
 
   .reviewable-user-details {
+    --name-width: 8em;
+    --name-margin: 1em;
     padding-bottom: 0.25em;
     display: flex;
     margin-bottom: 0.5em;
+
+    @include viewport.until(sm) {
+      flex-direction: column;
+    }
 
     &:not(:last-child) {
       border-bottom: 1px solid var(--content-border-color);
     }
 
     .name {
-      width: 8em;
+      width: var(--name-width);
       font-weight: bold;
-      margin-right: 1em;
+      margin-right: var(--name-margin);
     }
 
     .value {
-      max-width: calc(
-        100% - 8em - 1em
-      ); // subtracting width of name and margin-right
-      overflow-wrap: break-word;
+      max-width: calc(100% - var(--name-width) - var(--name-margin));
+      overflow-wrap: anywhere;
+
+      @include viewport.until(sm) {
+        width: auto;
+      }
     }
   }
 }
@@ -232,10 +240,6 @@
   border: 1px solid var(--content-border-color);
   border-radius: var(--d-border-radius);
 
-  .score-filter {
-    width: 5em;
-  }
-
   .reviewable-filter {
     display: flex;
     flex-direction: column;
@@ -243,11 +247,6 @@
 
     .filter-label {
       margin: 0 0 0.5em 0;
-    }
-
-    .score-filter {
-      margin: 0;
-      width: 100%;
     }
 
     .category-chooser {
@@ -263,14 +262,6 @@
   .btn-small {
     margin-left: 0.5em;
   }
-}
-
-.claimed-actions {
-  display: flex;
-  flex: 1 1 100%;
-  margin-right: 0;
-  align-items: center;
-  margin-bottom: 0.5em;
 }
 
 .reviewable-topics {
@@ -485,17 +476,6 @@
       color: var(--secondary);
       border-radius: 8px;
       background-color: var(--secondary-high);
-
-      &.-flagged-post,
-      &.-flagged-chat-message {
-        background-color: var(--danger);
-      }
-
-      &.-queued-post,
-      &.-queued-topic,
-      &.-user {
-        background-color: var(--tertiary);
-      }
     }
 
     .reply-count {
@@ -572,14 +552,7 @@
     white-space: nowrap;
   }
 
-  .reviewed-by {
-    .date {
-      margin-left: 0.5em;
-    }
-  }
-
-  .user,
-  .reviewed-by {
+  .user {
     display: flex;
     align-items: center;
   }
@@ -639,8 +612,7 @@
       white-space: nowrap;
       vertical-align: baseline;
 
-      &.user a,
-      &.reviewed-by a {
+      &.user a {
         max-width: 150px;
 
         @include ellipsis;
@@ -692,15 +664,6 @@
   flex-wrap: wrap;
   width: 100%;
   gap: var(--space-2) var(--space-4);
-
-  .editable-created-by {
-    display: flex;
-    margin-bottom: 0.5em;
-
-    .avatar {
-      margin-right: 0.25em;
-    }
-  }
 
   .editable-field {
     .mini-tag-chooser {

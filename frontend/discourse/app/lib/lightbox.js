@@ -11,6 +11,40 @@ import { i18n } from "discourse-i18n";
 
 const INIT_PROMISES = new WeakMap();
 
+export function sortLightboxItems(items) {
+  const result = [];
+  let i = 0;
+  while (i < items.length) {
+    const grid = items[i].closest(".d-image-grid");
+    if (!grid) {
+      result.push(items[i++]);
+      continue;
+    }
+    let j = i;
+    while (j < items.length && items[j].closest(".d-image-grid") === grid) {
+      j++;
+    }
+    const gridItems = items.slice(i, j);
+    const sorted = gridItems.every((item) => {
+      const position = item.dataset.lightboxPosition;
+      return (
+        position !== undefined &&
+        position !== "" &&
+        Number.isInteger(Number(position))
+      );
+    })
+      ? gridItems.sort(
+          (a, b) =>
+            Number(a.dataset.lightboxPosition) -
+            Number(b.dataset.lightboxPosition)
+        )
+      : gridItems;
+    result.push(...sorted);
+    i = j;
+  }
+  return result;
+}
+
 export default function lightbox(elem, additionalData = {}) {
   if (!elem) {
     return Promise.resolve();
@@ -37,14 +71,16 @@ async function initLightbox(elem, additionalData = {}) {
   const caps = helperContext().capabilities;
 
   const { default: PhotoSwipeLightbox } = await waitForPromise(
-    import("photoswipe/lightbox")
+    import(/* dynamicChunkName: "photoswipe-lightbox" */ "photoswipe/lightbox")
   );
   const isTestEnv = isTesting() || isRailsTesting();
   const canDownload =
     !siteSettings.prevent_anons_from_downloading_files || !!currentUser;
   const canQuoteImage = !!currentUser;
   const rtl = isDocumentRTL();
-  const items = [...elem.querySelectorAll(SELECTORS.DEFAULT_ITEM_SELECTOR)];
+  const items = sortLightboxItems([
+    ...elem.querySelectorAll(SELECTORS.DEFAULT_ITEM_SELECTOR),
+  ]);
 
   if (rtl) {
     items.reverse();
@@ -70,7 +106,10 @@ async function initLightbox(elem, additionalData = {}) {
     escKey: false,
     tapAction,
     paddingFn,
-    pswpModule: async () => await waitForPromise(import("photoswipe")),
+    pswpModule: async () =>
+      await waitForPromise(
+        import(/* dynamicChunkName: "photoswipe" */ "photoswipe")
+      ),
     appendToEl: isTesting() && document.getElementById("ember-testing"),
   });
 
@@ -291,7 +330,8 @@ async function initLightbox(elem, additionalData = {}) {
     // this ensures that cropped images (eg: grid) do not cause jittering when closing
     data.thumbCropped = true;
 
-    data.src = data.src || el.getAttribute("data-large-src");
+    data.src ||= el.getAttribute("data-large-src");
+    data.msrc ||= imgEl?.currentSrc || imgEl?.src;
     data.origSrc =
       imgEl?.getAttribute("data-orig-src") ||
       el.getAttribute("data-orig-src") ||

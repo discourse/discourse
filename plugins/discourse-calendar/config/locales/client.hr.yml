@@ -29,6 +29,9 @@ hr:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
+      event_description:
+        show_more: "Prikaži više"
+        show_less: "Prikaži manje"
       show_all: "Prikaži sve"
       add_to_calendar: "Dodaj u kalendar"
       created_by: "Napravio"
@@ -50,6 +53,21 @@ hr:
               title: "Javnost"
             private:
               title: "Privatno"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "minuta"
+              few: "minute"
+              other: "minute"
+            hours:
+              one: "sat"
+              few: "sata"
+              other: "sati"
+            days:
+              one: "dan"
+              few: "dana"
+              other: "dana"
       builder_modal:
         custom_fields:
           placeholder: "Neobvezno"
@@ -69,14 +87,14 @@ hr:
           label: "Ponavljanje"
           none: "Nema ponavljanja"
           every_day: "Svaki dan"
-        url:
-          label: "URL"
-          placeholder: "Opcionalno"
-        location:
-          label: "Lokacija"
+          ordinals:
+            last: "zadnji"
+        attendance:
+          none: "Ništa"
         description:
           label: "Opis"
-        status:
-          label: "Statust"
+        event_type:
+          public:
+            title: "Javnost"
       invite_user_or_group:
         invite: "Pošalji"

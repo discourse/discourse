@@ -17,6 +17,12 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
     Fabricate(:reviewable_post_voting_comment, target: comment, created_by: moderator)
   end
 
+  describe "#post" do
+    it "returns the post that the comment belongs to" do
+      expect(reviewable.post).to eq(post)
+    end
+  end
+
   it "agree_and_keep agrees with the flag and doesn't delete the comment" do
     reviewable.perform(moderator, :agree_and_keep_comment)
 
@@ -62,26 +68,54 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
   end
 
   context "when the flagged comment author is silenced" do
-    before do
-      UserSilencer.silence(
-        comment_poster,
-        Discourse.system_user,
-        silenced_till: 10.minutes.from_now,
-        reason: I18n.t("post_voting.comment.errors.auto_silence_from_flags"),
-      )
+    context "when the user was silenced for this post" do
+      before do
+        UserSilencer.silence(
+          comment_poster,
+          Discourse.system_user,
+          silenced_till: 10.minutes.from_now,
+          reason: I18n.t("post_voting.comment.errors.auto_silence_from_flags"),
+          post_id: post.id,
+        )
+      end
+
+      it "perform_disagree unsilences the user" do
+        reviewable.perform(moderator, :disagree)
+
+        expect(comment_poster.reload.silenced?).to eq(false)
+      end
+
+      it "perform_disagree_and_restore unsilences the user" do
+        comment.trash!(user)
+        reviewable.perform(moderator, :disagree_and_restore)
+
+        expect(comment_poster.reload.silenced?).to eq(false)
+      end
     end
 
-    it "perform_disagree unsilences the user" do
-      reviewable.perform(moderator, :disagree)
+    context "when the user was silenced for a different reason" do
+      before do
+        UserSilencer.silence(
+          comment_poster,
+          Discourse.system_user,
+          silenced_till: 10.minutes.from_now,
+          reason: "unrelated reason",
+        )
+      end
 
-      expect(user.reload.silenced?).to eq(false)
-    end
+      it "perform_disagree does not unsilence the user" do
+        reviewable.perform(moderator, :disagree)
 
-    it "perform_disagree_and_restore unsilences the user" do
-      comment.trash!(user)
-      reviewable.perform(moderator, :disagree_and_restore)
+        expect(comment_poster.reload.silenced?).to eq(true)
+      end
 
-      expect(user.reload.silenced?).to eq(false)
+      it "perform_disagree_and_restore does not unsilence the user" do
+        comment.trash!(user)
+        reviewable.perform(moderator, :disagree_and_restore)
+
+        expect(comment_poster.reload.silenced?).to eq(true)
+        expect(comment.reload.deleted_at).to be_nil
+      end
     end
   end
 
@@ -91,6 +125,74 @@ RSpec.describe ReviewablePostVotingComment, type: :model do
       expect { comment_poster.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { comment.reload }.to raise_error(ActiveRecord::RecordNotFound)
       expect { reviewable.reload }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+  end
+
+  context "with category group moderators" do
+    fab!(:group)
+    fab!(:category_mod) { Fabricate(:user, groups: [group]) }
+
+    before do
+      SiteSetting.enable_category_group_moderation = true
+      Fabricate(:category_moderation_group, category: topic.category, group: group)
+    end
+
+    context "when the user was silenced for this post" do
+      before do
+        UserSilencer.silence(
+          comment_poster,
+          Discourse.system_user,
+          silenced_till: 10.minutes.from_now,
+          reason: I18n.t("post_voting.comment.errors.auto_silence_from_flags"),
+          post_id: post.id,
+        )
+      end
+
+      it "allows category moderator to unsilence the user by disagreeing" do
+        reviewable.perform(category_mod, :disagree)
+
+        expect(reviewable).to be_rejected
+        expect(comment_poster.reload.silenced?).to eq(false)
+      end
+    end
+
+    context "when the user was silenced for a different post" do
+      fab!(:other_post, :post)
+
+      before do
+        UserSilencer.silence(
+          comment_poster,
+          Discourse.system_user,
+          silenced_till: 10.minutes.from_now,
+          reason: "silenced for different post",
+          post_id: other_post.id,
+        )
+      end
+
+      it "does not allow category moderator to unsilence via unrelated reviewable" do
+        reviewable.perform(category_mod, :disagree)
+
+        expect(reviewable).to be_rejected
+        expect(comment_poster.reload.silenced?).to eq(true)
+      end
+    end
+
+    context "when the user was silenced by staff for unrelated reasons" do
+      before do
+        UserSilencer.silence(
+          comment_poster,
+          admin,
+          silenced_till: 10.minutes.from_now,
+          reason: "staff silenced for policy violation",
+        )
+      end
+
+      it "does not allow category moderator to unsilence via disagreeing with flag" do
+        reviewable.perform(category_mod, :disagree)
+
+        expect(reviewable).to be_rejected
+        expect(comment_poster.reload.silenced?).to eq(true)
+      end
     end
   end
 end

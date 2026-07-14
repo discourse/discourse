@@ -329,6 +329,9 @@ cs:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} automaticky nastavil vaši účast a pozval vás na %{eventName}"
         an_event: "událost"
+      event_description:
+        show_more: "Zobrazit více"
+        show_less: "Zobrazit méně"
       edit_reason: "Událost aktualizována"
       edit_reason_closed: "Akce uzavřena"
       edit_reason_opened: "Událost otevřena"
@@ -385,7 +388,6 @@ cs:
       upcoming_events_list:
         title: "Nadcházející události"
         empty: "Žádné nadcházející události"
-        all_day: "Celodenní"
         error: "Nepodařilo se načíst události"
         try_again: "Zkusit znovu"
         view_all: "Zobrazit vše"
@@ -399,10 +401,9 @@ cs:
       models:
         invitee:
           no_users: "Nebyli nalezeni žádní uživatelé"
+          leave_event: "Opustit událost"
           status:
-            unknown: "Nemám zájem"
             going: "Zúčastním se"
-            not_going: "Nezúčastním se"
             interested: "Mám zájem"
             going_count:
               one: "%{count} se účastní"
@@ -439,11 +440,36 @@ cs:
               title: "Soukromá"
               description: "Soukromé události se můžou účastnit jen pozvaní uživatelé."
       composer:
-        name_placeholder: "Událost"
-        end_date_placeholder: "Nastavit datum ukončení"
+        name_placeholder: "Název události"
         location_placeholder: "Přidat polohu nebo adresu URL"
-        max_attendees_placeholder: "Nastavit maximální počet účastníků"
         description_placeholder: "Přidat popis události"
+        event_title_placeholder: "Název události"
+        create_event_button: "Vytvořit událost"
+        reminder:
+          units:
+            minutes:
+              one: "minutu"
+              few: "minuty"
+              many: "minuty"
+              other: "minuty"
+            hours:
+              one: "hodinu"
+              few: "hodiny"
+              many: "hodiny"
+              other: "hodiny"
+            days:
+              one: "den"
+              few: "dnech"
+              many: "dnech"
+              other: "dny"
+            weeks:
+              one: "týden"
+              few: "týdny"
+              many: "týdny"
+              other: "týdny"
+      composer_actions:
+        create_event:
+          label: "Vytvořit událost"
       builder_modal:
         custom_fields:
           label: "Vlastní pole"
@@ -451,6 +477,7 @@ cs:
           description: "Povolená vlastní pole jsou definována v nastavení webu. Vlastní pole se používají k přenosu dat do jiných pluginů."
         create_event_title: "Vytvořit událost"
         update_event_title: "Upravit událost"
+        advanced_settings_title: "Pokročilá nastavení"
         confirm_delete: "Určitě chcete tuto událost smazat?"
         confirm_close: "Opravdu chcete uzavřít tuto událost?"
         confirm_open: "Opravdu chcete otevřít tuto událost?"
@@ -466,9 +493,6 @@ cs:
           remove_timezone: Žádné časové pásmo (UTC)
         reminders:
           label: "Připomínky"
-          types:
-            bump_topic: "automaticky pošťouchnout téma"
-            notification: "upozornit účastníky"
           units:
             minutes: "minuty"
             hours: "hodiny"
@@ -477,31 +501,22 @@ cs:
           periods:
             before: "před"
             after: "po"
-        recurrence_until:
-          label: "Do (včetně)"
         recurrence:
           label: "Opakování"
           none: "Bez opakování"
           every_day: "Každý den"
-          every_month: "Každý měsíc v tento den v týdnu"
           every_weekday: "Každý den v týdnu"
-          every_week: "Každý týden v tento den"
-          every_two_weeks: "Každé dva týdny v tento den"
-          every_four_weeks: "Každé čtyři týdny v tento den"
-        minimal:
-          label: "Mini-událost"
-          checkbox_label: "Skrýt tlačítka Zúčastním/Nuzúčastním a stav pozvaných osob"
+          ordinals:
+            last: "poslední"
         max_attendees:
           label: "Maximální počet účastníků"
           placeholder: "Bez omezení"
+        attendance:
+          none: "Žádný"
         allow_chat:
           label: "Integrace chatu"
           checkbox_label: "Vytvoří a spravuje speciální kanál chatu pro tuto událost"
-        url:
-          label: "URL"
-          placeholder: "Volitelné"
         location:
-          label: "Poloha"
           placeholder: "Přidejte místo, odkaz, atp."
         description:
           label: "Popis"
@@ -511,9 +526,11 @@ cs:
           placeholder: "Volitelný, ve výchozím stavu název tématu"
         invitees:
           label: "Pozvané skupiny"
-        status:
-          label: "Stav"
+        event_type:
+          public:
+            title: "Veřejná"
         delete_confirmation_message: "Smazat tuto událost?"
       invite_user_or_group:
         title: "Oznámit uživatelům nebo skupinám"
         invite: "Odeslat"
+        success: "Pozvánka odeslána"

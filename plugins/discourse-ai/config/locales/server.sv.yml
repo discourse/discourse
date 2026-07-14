@@ -9,7 +9,7 @@ sv:
     overall_sentiment:
       yaxis: "Datum"
     emotion_neutral:
-      title: "\U0001F610 Neutralt"
+      title: "😐 Neutralt"
   discourse_ai:
     tools:
       presets:
@@ -17,6 +17,8 @@ sv:
           name: "Anpassad"
     ai_bot:
       tool_summary:
+        suspend_user: "Stäng av användare"
+        silence_user: "Tysta användare"
         search: "Sök"
         time: "Tid"
         summarize: "Sammanfatta"
@@ -62,7 +64,7 @@ sv:
     sentiment:
       reports:
         post_emotion:
-          neutral: "Neutralt \U0001F610"
+          neutral: "Neutralt 😐"
         sentiment_analysis:
           neutral: "Neutralt"
     ai_staff_action_logger:

@@ -59,6 +59,9 @@ ru:
     chat_integration_webex_excerpt_length: "Размер сообщения в Webex Teams"
     chat_integration_google_enabled: "Включить провайдера для чат-интеграции c Google Chat"
     chat_integration_google_excerpt_length: "Размер сообщения в Google Chat"
+  dashboard:
+    problem:
+      channel_errors: "В некоторых каналах интеграции чата обнаружены ошибки. Для получения дополнительной информации посетите раздел <a href='%{base_path}/admin/plugins/discourse-chat-integration'>интеграции чата</a>."
   discourse_automation:
     scriptables:
       send_slack_message:
@@ -75,6 +78,10 @@ ru:
       added_and_removed: "Добавлено — %{added}, удалено — %{removed}"
       added: "Добавлено: %{added}"
       removed: "Удалено: %{removed}"
+    errors:
+      provider_already_enabled: "Поставщик '%{name}' уже включен"
+      provider_not_found: "Поставщик '%{name}' не найден"
+      setting_update_failed: "Не удалось обновить настройки: %{errors}"
     provider:
       slack:
         status:

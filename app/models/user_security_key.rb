@@ -22,7 +22,7 @@ class UserSecurityKey < ActiveRecord::Base
   private
 
   def count_per_user_does_not_exceed_limit
-    if UserSecurityKey.where(user_id: self.user_id).count >= MAX_KEYS_PER_USER
+    if UserSecurityKey.where(user_id: user_id).count >= MAX_KEYS_PER_USER
       errors.add(:base, I18n.t("login.too_many_security_keys"))
     end
   end
@@ -33,15 +33,15 @@ end
 # Table name: user_security_keys
 #
 #  id            :bigint           not null, primary key
-#  user_id       :bigint           not null
-#  credential_id :string           not null
-#  public_key    :string           not null
-#  factor_type   :integer          default(0), not null
 #  enabled       :boolean          default(TRUE), not null
-#  name          :string(300)      not null
+#  factor_type   :integer          default(0), not null
 #  last_used     :datetime
+#  name          :string(300)      not null
+#  public_key    :string           not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  credential_id :string           not null
+#  user_id       :bigint           not null
 #
 # Indexes
 #

@@ -1,14 +1,29 @@
 # frozen_string_literal: true
 
 class Admin::DashboardController < Admin::StaffController
-  def index
-    data = AdminDashboardIndexData.fetch_cached_stats
+  BULK_REPORTS_FILTER_KEYS = %i[start_date end_date].freeze
 
-    if SiteSetting.version_checks?
-      data.merge!(version_check: DiscourseUpdates.check_version.as_json)
+  before_action :ensure_admin,
+                only: %i[available_reports update_reports_section update_configuration]
+
+  def index
+    if dashboard_improvements?
+      data = dashboard_sections_payload
+    else
+      data = AdminDashboardIndexData.fetch_cached_stats
+
+      if SiteSetting.version_checks?
+        data.merge!(version_check: DiscourseUpdates.check_version.as_json)
+      end
     end
 
     render json: data
+  end
+
+  def update_configuration
+    sections = params.permit(sections: %i[id visible])[:sections] || []
+    AdminDashboardSectionConfiguration.update(sections, actor: current_user)
+    head :no_content
   end
 
   def moderation
@@ -27,7 +42,7 @@ class Admin::DashboardController < Admin::StaffController
   def problems
     ProblemCheck.realtime.run_all
 
-    render json: { problems: serialize_data(AdminNotice.problem.all, AdminNoticeSerializer) }
+    render json: { problems: serialized_problems }
   end
 
   def new_features
@@ -76,9 +91,101 @@ class Admin::DashboardController < Admin::StaffController
     end
   end
 
+  def update_reports_section
+    AdminDashboard::Reports::LayoutUpdater.call(
+      items: parse_reports_items_payload,
+      guardian: guardian,
+    )
+    head :no_content
+  end
+
+  def available_reports
+    search = params[:search]
+    cursor = params.permit(cursor: %i[title key])[:cursor]&.to_h&.symbolize_keys
+    enabled = AdminDashboard::Reports::Section.build(guardian: guardian, search: search)[:items]
+    listing = AdminDashboard::Reports::Listing.call(cursor: cursor, search: search)
+
+    render json: {
+             providers: listing[:providers],
+             enabled: enabled,
+             available: listing[:items],
+             has_more: listing[:has_more],
+             cursor: listing[:cursor],
+           }
+  end
+
+  def bulk_reports
+    permitted_filters = params.permit(filters: BULK_REPORTS_FILTER_KEYS).fetch(:filters, nil)
+    filters = permitted_filters.present? ? permitted_filters.to_h.symbolize_keys : {}
+
+    hijack do
+      render_json_dump(
+        AdminDashboard::Reports::BulkFetch.call(
+          items: parse_reports_items_payload,
+          filters: filters,
+          guardian: guardian,
+        ),
+      )
+    end
+  end
+
   private
+
+  def serialized_problems
+    serialize_data(AdminNotice.problem.order(:id), AdminNoticeSerializer)
+  end
+
+  def dashboard_sections_payload
+    visible_ids = AdminDashboardSectionConfiguration.visible_section_ids
+    data = {
+      sections:
+        AdminDashboardSectionLoader.build(
+          section_ids: visible_ids,
+          current_user: current_user,
+          start_date: params[:start_date],
+          end_date: params[:end_date],
+        ),
+      problems: serialized_problems,
+    }
+    if current_user.admin?
+      data[:configuration] = { sections: AdminDashboardSectionConfiguration.sections }
+    end
+    data
+  end
 
   def mark_new_features_as_seen
     DiscourseUpdates.mark_new_features_as_seen(current_user.id)
+  end
+
+  def ensure_dashboard_improvements_enabled
+    raise Discourse::NotFound if !dashboard_improvements?
+  end
+
+  def dashboard_improvements?
+    dashboard_improvements_enabled =
+      UpcomingChanges.enabled_for_user?(:dashboard_improvements, current_user)
+
+    if params[:version] == "alt"
+      !dashboard_improvements_enabled
+    else
+      dashboard_improvements_enabled
+    end
+  end
+
+  def parse_reports_items_payload
+    raise Discourse::InvalidParameters.new(:items) if !params[:items].is_a?(Array)
+    if params[:items].size > AdminDashboardReport::VISIBLE_CAP
+      raise Discourse::InvalidParameters.new(:items)
+    end
+
+    params
+      .permit(items: %i[source identifier])
+      .fetch(:items, [])
+      .map do |entry|
+        source = entry[:source]
+        identifier = entry[:identifier]
+        raise Discourse::InvalidParameters.new(:items) if source.blank? || identifier.blank?
+        { source: source.to_s, identifier: identifier.to_s }
+      end
   end
 end

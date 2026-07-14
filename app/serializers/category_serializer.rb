@@ -8,6 +8,7 @@ class CategorySerializer < SiteCategorySerializer
                :num_auto_bump_daily,
                :require_reply_approval,
                :require_topic_approval,
+               :nested_replies_default,
                :topic_posting_review_mode,
                :reply_posting_review_mode
   end
@@ -42,7 +43,8 @@ class CategorySerializer < SiteCategorySerializer
              :style_type,
              :emoji,
              :icon,
-             :category_types
+             :category_type_settings,
+             :available_category_types
 
   has_one :category_setting, serializer: CategorySettingSerializer, embed: :objects
   has_many :category_localizations, serializer: CategoryLocalizationSerializer, embed: :objects
@@ -84,12 +86,16 @@ class CategorySerializer < SiteCategorySerializer
       end
   end
 
+  def can_edit_category?
+    scope && scope.can_edit?(object)
+  end
+
   def include_group_permissions?
-    scope&.can_edit?(object)
+    can_edit_category?
   end
 
   def include_available_groups?
-    scope && scope.can_edit?(object)
+    can_edit_category?
   end
 
   def available_groups
@@ -117,15 +123,15 @@ class CategorySerializer < SiteCategorySerializer
   end
 
   def include_cannot_delete_reason?
-    !include_can_delete? && scope && scope.can_edit?(object)
+    !include_can_delete? && can_edit_category?
   end
 
   def include_email_in?
-    scope && scope.can_edit?(object)
+    can_edit_category?
   end
 
   def include_email_in_allow_strangers?
-    scope && scope.can_edit?(object)
+    can_edit_category?
   end
 
   def include_notification_level?
@@ -155,8 +161,25 @@ class CategorySerializer < SiteCategorySerializer
     category_description
   end
 
-  def category_types
-    return {} if !SiteSetting.enable_simplified_category_creation
-    object.category_types
+  def include_category_type_settings?
+    can_edit_category?
+  end
+
+  def category_type_settings
+    Categories::TypeRegistry
+      .all
+      .values
+      .reduce({}) do |result, type_klass|
+        next result unless type_klass.category_matches?(object)
+        result.merge(type_klass.read_category_settings(object))
+      end
+  end
+
+  def include_available_category_types?
+    can_edit_category?
+  end
+
+  def available_category_types
+    Categories::TypeRegistry.list(only_visible: true, guardian: scope)
   end
 end

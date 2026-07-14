@@ -1,51 +1,108 @@
 .authorize-api-key {
-  max-width: 480px;
+  max-width: 42rem;
   margin: 0 auto;
-  padding: 0 1em;
+  padding: 3rem 1rem;
+
+  h1 {
+    margin: 0 0 0.75rem;
+    font-size: var(--font-up-5);
+    line-height: var(--line-height-small);
+  }
+
+  .alert {
+    border: 0;
+    border-radius: var(--d-border-radius-large);
+    margin: 1rem 0;
+    padding: 1rem 1.25rem;
+
+    p {
+      margin: 0;
+    }
+  }
 
   &__user {
     display: flex;
     align-items: center;
-    gap: 0.35em;
-    font-size: var(--font-down-1);
+    gap: 0.4rem;
     color: var(--primary-medium);
-    margin-bottom: 1.5em;
+    margin-bottom: 1.5rem;
   }
 
   &__username {
     color: var(--primary);
+    font-weight: 600;
+  }
+
+  &__summary {
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius-large);
+    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+  }
+
+  &__permissions,
+  &__summary-detail,
+  &__summary-notice {
+    padding: 0;
   }
 
   &__permissions {
-    background-color: var(--primary-very-low);
-    border-radius: 4px;
-    padding: 1em;
-    margin-bottom: 1em;
+    margin-bottom: 1rem;
   }
 
   &__permissions-header {
-    margin: 0 0 0.5em;
+    margin: 0 0 0.75rem;
   }
 
   &__scopes {
     margin: 0;
-    padding-left: 1.25em;
+    padding-left: 1.25rem;
+  }
+
+  &__summary-detail,
+  &__summary-notice {
+    color: var(--primary-high);
+    font-size: var(--font-down-1-rem);
+
+    p {
+      margin: 0;
+    }
+  }
+
+  &__summary-notice {
+    margin-bottom: 1rem;
   }
 
   &__redirect {
-    background-color: var(--highlight-bg);
-    border-radius: 4px;
-    padding: 1em;
-    margin-bottom: 1.5em;
+    background: var(--highlight-bg);
+    border-radius: var(--d-border-radius-large);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
   }
 
   &__redirect-url {
     margin: 0;
-    word-break: break-all;
+    word-break: break-word;
   }
 
   &__buttons {
     display: flex;
-    gap: 0.5em;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1.25rem;
+  }
+
+  &__code-form {
+    margin-top: 1.5rem;
+
+    .d-otp-slot {
+      font-size: var(--font-up-1);
+      padding: 0.625em 0.8em;
+    }
+  }
+
+  &__code-input {
+    margin-top: 0.75rem;
   }
 }

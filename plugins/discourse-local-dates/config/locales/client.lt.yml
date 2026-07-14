@@ -17,8 +17,6 @@ lt:
       create:
         form:
           insert: Įterpti
-          advanced_mode: Išplėstinis režimas
-          simple_mode: Paprastas režimas
           format_description: "Formatas, naudojamas rodyti datą vartotojui. Naudokite Z, kad parodytumėte poslinkį, o zz - laiko juostos pavadinimą."
           timezones_title: Rodyti laiko zonas
           timezones_description: Laiko juostos bus naudojamos datoms rodyti peržiūroje ir atsarginiame lange.

@@ -8,8 +8,165 @@
 .category-list {
   table-layout: fixed;
 
+  @include viewport.from(sm) {
+    margin-bottom: 10px;
+    width: 100%;
+
+    td,
+    th {
+      color: var(--d-topic-list-header-text-color);
+
+      &:first-of-type {
+        padding-inline-start: var(--d-topic-list-data-padding-inline-start);
+      }
+
+      &:last-of-type {
+        padding-inline-end: var(--d-topic-list-data-padding-inline-end);
+      }
+    }
+
+    td {
+      padding: var(--d-topic-list-data-padding-y)
+        var(--d-topic-list-data-padding-x);
+      vertical-align: top;
+    }
+
+    th {
+      vertical-align: middle;
+      font-size: var(--d-topic-list-data-font-size);
+    }
+
+    .topics .badge-notification,
+    .category .badge-notification {
+      background-color: transparent;
+      color: var(--primary-med-or-secondary-high);
+    }
+
+    .topics {
+      width: 80px;
+      text-align: right;
+
+      .value {
+        font-size: var(--font-up-1);
+        font-weight: bold;
+      }
+
+      .unit {
+        font-size: var(--font-down-1);
+      }
+
+      .badge-notification {
+        display: block;
+        text-align: right;
+        padding-right: 0;
+
+        &:first-child {
+          margin-top: 0.75em;
+        }
+      }
+    }
+
+    .subcategories {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.15em 0.75em;
+      margin-top: 0.5em;
+
+      .subcategory {
+        display: inline-flex;
+        align-items: baseline;
+        gap: 0.25em;
+
+        @include ellipsis;
+
+        .badge-category {
+          min-width: 0;
+        }
+      }
+
+      .category__badges {
+        display: flex;
+        gap: 0.25em;
+
+        .badge-notification {
+          top: 0;
+          padding: 0;
+        }
+      }
+
+      .badge-notification.unread-posts {
+        display: block;
+        padding: 0;
+      }
+
+      &__more-subcategories {
+        font-size: var(--font-down-1);
+
+        a {
+          color: var(--primary-high);
+        }
+      }
+    }
+
+    .featured-topic {
+      display: flex;
+      align-items: baseline;
+
+      a.last-posted-at,
+      a.last-posted-at:visited {
+        font-size: var(--font-down-1);
+        color: var(--primary-med-or-secondary-high);
+      }
+
+      .title {
+        @include ellipsis;
+        flex: 0 1 auto;
+      }
+
+      .topic-post-badges .badge.unread-posts,
+      .title {
+        margin-right: 5px;
+      }
+
+      &.--glimmer button.-trigger {
+        background: transparent;
+        border: none;
+        padding: 0;
+      }
+
+      .topic-statuses {
+        display: flex;
+      }
+    }
+  }
+
   tbody {
     .category {
+      @include viewport.from(sm) {
+        border-left: 6px solid var(--category-badge-color, var(--primary-low));
+
+        h3,
+        h4 {
+          line-height: var(--line-height-medium);
+
+          a[href] {
+            color: var(--primary);
+          }
+        }
+
+        h3 {
+          font-size: var(--font-up-2);
+        }
+
+        h4 {
+          font-size: var(--font-up-1);
+        }
+
+        .latest {
+          padding: 0 0 10px 10px;
+        }
+      }
+
       &.no-category-style {
         border-color: transparent;
         border-left: 0;
@@ -33,6 +190,14 @@
   }
 
   &.with-topics {
+    @include viewport.from(sm) {
+      margin-left: 3px;
+
+      .category {
+        width: 45%;
+      }
+    }
+
     .subcategories-with-subcategories {
       .category-description {
         display: none;
@@ -334,9 +499,8 @@
 
     ul {
       color: var(--primary-medium);
-      list-style: none;
-      padding: 0;
-      margin: 0;
+
+      @include unstyled-list;
     }
 
     li {
@@ -657,5 +821,39 @@
 
   .category-topics-count a {
     color: var(--primary);
+  }
+}
+
+@include viewport.from(sm) {
+  .categories-and-latest,
+  .categories-and-top {
+    display: flex;
+    flex-flow: row wrap;
+
+    div.column {
+      flex: 1 0 0px;
+      flex-direction: row;
+      min-width: 300px;
+    }
+
+    div.column.categories {
+      margin-right: 1em;
+
+      @media all and (width >= 700px) {
+        margin-right: 2em;
+      }
+    }
+
+    .discourse-tags {
+      .discourse-tag {
+        font-size: var(--font-down-1);
+      }
+    }
+
+    .subcategories-with-subcategories {
+      .category-description {
+        display: none;
+      }
+    }
   }
 }

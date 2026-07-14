@@ -121,8 +121,8 @@ en:
         title: Send Slack message
       send_chat_integration_message:
         title: Send Chat-Integration message
-  chat_integration:
 
+  chat_integration:
     all_categories: "(all categories)"
     deleted_category: "(deleted category)"
     deleted_group: "(deleted group)"
@@ -130,11 +130,15 @@ en:
     group_mention_template: "mentions of: @%{name}"
     group_message_template: "messages to: @%{name}"
 
-
     topic_tag_changed:
       added_and_removed: "Added %{added} and removed %{removed}"
       added: "Added %{added}"
       removed: "Removed %{removed}"
+
+    errors:
+      provider_already_enabled: "Provider '%{name}' is already enabled"
+      provider_not_found: "Provider '%{name}' not found"
+      setting_update_failed: "Failed to update settings: %{errors}"
 
     provider:
 

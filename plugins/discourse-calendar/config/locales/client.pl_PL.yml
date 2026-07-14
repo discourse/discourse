@@ -12,6 +12,12 @@ pl_PL:
         categories:
           discourse_post_event: "Wydarzenie Discourse"
           discourse_calendar: "Kalendarz i wydarzenia"
+      web_hooks:
+        calendar_event:
+          group_name: "Wydarzenie w kalendarzu"
+          calendar_event_created: "Utworzono wydarzenie w kalendarzu"
+          calendar_event_updated: "Wydarzenie w kalendarzu zostało zaktualizowane"
+          calendar_event_destroyed: "Wydarzenie w kalendarzu zostało zniszczone"
   js:
     notifications:
       titles:
@@ -27,7 +33,17 @@ pl_PL:
             topic_id:
               label: ID tematu
     discourse_calendar:
+      livestream:
+        chat:
+          going: "Kliknij „Idę”"
+          join_channel_header: "🌟 Dołącz do nas! 🌟"
+          join_channel_message: "Potwierdź swoją obecność i odblokuj nasz czat wydarzenia. Zanurz się w dyskusjach, podziel się swoim entuzjazmem i połącz się z innymi uczestnikami!"
       invite_user_notification: "%{username} zaprosił Cię do: %{description}"
+      preferences:
+        all_events: "Kalendarz Discourse – wszystkie wydarzenia"
+        all_events_description: "Wszystkie wydarzenia na forum"
+        my_events: "Kalendarz Discourse – moje wydarzenia"
+        my_events_description: "Wydarzenia, na które się wybierasz lub które Cię interesują"
       on_holiday: "Na świętach"
       disable_holiday: "Wyłącz"
       enable_holiday: "Włącz"
@@ -322,6 +338,7 @@ pl_PL:
       search: "Wyszukiwanie..."
       group_availability: "Dostępność %{group}"
     discourse_post_event:
+      new_event: "Nowe wydarzenie"
       notifications:
         before_event_reminder: "Wydarzenie wkrótce się rozpocznie"
         after_event_reminder: "Wydarzenie zakończyło się"
@@ -329,6 +346,9 @@ pl_PL:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} automatycznie ustawił Twoją obecność i zaprosił Cię do %{eventName}"
         an_event: "zdarzenie"
+      event_description:
+        show_more: "Pokaż więcej"
+        show_less: "Pokaż mniej"
       edit_reason: "Wydarzenie zaktualizowane"
       edit_reason_closed: "Wydarzenie zamknięte"
       edit_reason_opened: "Wydarzenie otwarte"
@@ -373,6 +393,7 @@ pl_PL:
         send_bulk_invites: "Wyślij zaproszenia"
         group_selector_placeholder: "Wybierz grupę..."
         user_selector_placeholder: "Wybierz użytkownika..."
+        attendance_label: "Obecność"
         inline_title: "Zaproszenie zbiorcze w trybie inline"
         csv_title: "Zaproszenie zbiorcze CSV"
       upcoming_events:
@@ -399,10 +420,12 @@ pl_PL:
       models:
         invitee:
           no_users: "Nie znaleziono użytkowników"
+          this_event: "To wydarzenie"
+          this_and_following: "To wydarzenie i wszystkie kolejne wydarzenia"
+          leave_event: "Opuść wydarzenie"
           status:
-            unknown: "Nie zainteresowany"
             going: "Wezmę udział"
-            not_going: "Nie biorę udziału"
+            not_going: "Nie idę"
             interested: "Zainteresowany"
             going_count:
               one: "%{count} idzie"
@@ -439,11 +462,57 @@ pl_PL:
               title: "Prywatne"
               description: "Do wydarzenia prywatnego mogą dołączyć wyłącznie zaproszeni użytkownicy."
       composer:
-        name_placeholder: "Wydarzenie"
-        end_date_placeholder: "Ustaw datę zakończenia"
+        name_placeholder: "Nazwa wydarzenia"
+        end_date_placeholder: "Data zakończenia"
         location_placeholder: "Dodaj lokalizację lub adres URL"
-        max_attendees_placeholder: "Ustaw maksymalną liczbę uczestników"
+        max_attendees_placeholder: "Nieograniczona liczba uczestników"
+        max_attendees_display:
+          one: "Maksymalnie %{count} uczestnik"
+          few: "Maksymalnie %{count} uczestników"
+          many: "Maksymalnie %{count} uczestników"
+          other: "Maksymalnie %{count} uczestników"
+        no_rsvps_label: "Nieodnotowywanie obecności"
         description_placeholder: "Dodaj opis wydarzenia"
+        event_title_placeholder: "Nazwa wydarzenia"
+        create_event_button: "Utwórz wydarzenie"
+        action_title: "Utwórz nowe wydarzenie"
+        all_day: "Cały dzień"
+        livestream: "Transmisja na żywo"
+        livestream_chat_disabled: "Włącz czat, aby tworzyć kanały transmisji na żywo."
+        reminder:
+          units:
+            minutes:
+              one: "minuta"
+              few: "minuty"
+              many: "minut"
+              other: "minut"
+            hours:
+              one: "godzina"
+              few: "godziny"
+              many: "godzin"
+              other: "godzin"
+            days:
+              one: "dzień"
+              few: "dni"
+              many: "dni"
+              other: "dni"
+            weeks:
+              one: "tydzień"
+              few: "tygodnie"
+              many: "tygodnie"
+              other: "tygodnie"
+          before: "%{unit} przed"
+          after: "%{unit} po"
+          notification_title: "Powiadom uczestników"
+          bump_topic_title: "Automatycznie podbij temat"
+          remove: "Usuń przypomnienie"
+      composer_actions:
+        create_event:
+          label: "Utwórz wydarzenie"
+          desc: "Utwórz nowe wydarzenie w tej kategorii"
+        create_topic:
+          label: "Utwórz temat"
+          desc: "Utwórz regularny temat zamiast wydarzenia"
       builder_modal:
         custom_fields:
           label: "Pola niestandardowe"
@@ -451,6 +520,7 @@ pl_PL:
           description: "Dozwolone pola niestandardowe są zdefiniowane w ustawieniach witryny. Pola niestandardowe służą do przesyłania danych do innych wtyczek."
         create_event_title: "Utwórz wydarzenie"
         update_event_title: "Edytuj wydarzenie"
+        advanced_settings_title: "Ustawienia zaawansowane"
         confirm_delete: "Czy na pewno chcesz usunąć to wydarzenie?"
         confirm_close: "Czy na pewno chcesz zamknąć to wydarzenie?"
         confirm_open: "Czy na pewno chcesz otworzyć to wydarzenie?"
@@ -464,11 +534,18 @@ pl_PL:
         timezone:
           label: Strefa czasowa
           remove_timezone: Brak strefy czasowej (UTC)
+        starts_at:
+          label: "Data rozpoczęcia"
+        ends_at:
+          label: "Data zakończenia"
+        all_day:
+          label: "Wydarzenie całodniowe"
+          description: "Wydarzenie całodniowe nie będzie miało konkretnych godzin, tylko datę. Wydarzenie będzie trwało od początku do końca dnia."
         reminders:
           label: "Przypomnienia"
           types:
-            bump_topic: "automatycznie podbij temat"
-            notification: "powiadom uczestników"
+            bump_topic: "Automatycznie podbij temat"
+            notification: "Powiadom uczestników"
           units:
             minutes: "minut"
             hours: "godzin"
@@ -478,30 +555,38 @@ pl_PL:
             before: "przed"
             after: "po"
         recurrence_until:
-          label: "Do (włącznie)"
+          label: "Do (włącznie z tą datą)"
         recurrence:
           label: "Powtarzanie"
           none: "Brak powtarzania"
           every_day: "Codziennie"
-          every_month: "Co miesiąc w ten dzień tygodnia"
           every_weekday: "Każdego dnia roboczego"
-          every_week: "Co tydzień w ten dzień tygodnia"
-          every_two_weeks: "Co dwa tygodnie w ten dzień tygodnia"
-          every_four_weeks: "Co cztery tygodnie w ten dzień tygodnia"
-        minimal:
-          label: "Minimalne wydarzenie"
-          checkbox_label: "Ukryj przyciski Wezmę udział/Nie biorę udziału oraz status zaproszeń"
+          every_week: "Co %{weekday}"
+          every_two_weeks: "Co drugi %{weekday}"
+          every_four_weeks: "Co 4 tygodnie w %{weekday}"
+          every_month: "%{ordinal} %{weekday} każdego miesiąca"
+          ordinals:
+            first: "pierwszy"
+            second: "drugi"
+            third: "trzeci"
+            fourth: "czwarty"
+            last: "ostatni"
         max_attendees:
           label: "Maksymalna liczba uczestników"
           placeholder: "Bez limitu"
+        attendance:
+          label: "Ilu członków może potwierdzić swój udział w tym wydarzeniu?"
+          unlimited: "Bez ograniczeń"
+          up_to: "Do..."
+          none: "Brak"
         allow_chat:
           label: "Integracja czatu"
           checkbox_label: "Twórz i zarządzaj kanałami czatu specyficznymi dla wydarzenia"
-        url:
-          label: "URL"
-          placeholder: "Opcjonalnie"
+        livestream:
+          label: "Transmisja na żywo"
+          checkbox_label: "Osadź adres URL jako wideo i otwórz czat na żywo dla uczestników"
         location:
-          label: "Lokalizacja"
+          label: "Lokalizacja lub adres URL"
           placeholder: "Dodaj lokalizację, link lub coś takiego."
         description:
           label: "Opis"
@@ -511,9 +596,18 @@ pl_PL:
           placeholder: "Opcjonalne, domyślnie jest to tytuł tematu"
         invitees:
           label: "Zaproszone grupy"
-        status:
-          label: "Status"
+        event_type:
+          label: "Rodzaj obecności"
+          public:
+            title: "Publiczny"
+            description: "Udział może wziąć każdy."
+          private:
+            title: "Tylko na zaproszenie"
+            description: "Udział mogą wziąć tylko członkowie wybranych grup."
         delete_confirmation_message: "Usunąć to wydarzenie?"
+        image:
+          label: "Obraz zdarzenia"
       invite_user_or_group:
         title: "Powiadom użytkowników lub grupy"
         invite: "Wyślij"
+        success: "Zaproszenie wysłane"

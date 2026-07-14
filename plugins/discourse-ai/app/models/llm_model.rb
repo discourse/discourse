@@ -10,11 +10,85 @@ class LlmModel < ActiveRecord::Base
   BEDROCK_CONVERSE_PROVIDER_NAME = "aws_bedrock_converse"
   DEFAULT_ALLOWED_ATTACHMENT_TYPES = [].freeze
   ATTACHMENT_TYPE_ALIASES = {
-    "md" => "markdown",
-    "markdown" => "markdown",
+    "markdown" => "md",
+    "md" => "md",
     "htm" => "html",
     "text" => "txt",
   }.freeze
+
+  COST_COMPONENTS = {
+    input: {
+      tokens: :request_tokens,
+      cost: :input_cost,
+    },
+    output: {
+      tokens: :response_tokens,
+      cost: :output_cost,
+    },
+    cache_read: {
+      tokens: :cache_read_tokens,
+      cost: :cached_input_cost,
+    },
+    cache_write: {
+      tokens: :cache_write_tokens,
+      cost: :cache_write_cost,
+    },
+  }.freeze
+
+  def self.spending_component_sql(component, table)
+    info = COST_COMPONENTS.fetch(component)
+    qt = connection.quote_table_name(table.to_s)
+    "COALESCE(#{qt}.#{info[:tokens]}, 0) * COALESCE(llm_models.#{info[:cost]}, 0)"
+  end
+
+  def self.spending_sql(table)
+    COST_COMPONENTS.keys.map { |k| spending_component_sql(k, table) }.join(" + ")
+  end
+
+  def self.spending_dollars_sql(table)
+    "(#{spending_sql(table)}) / 1000000.0"
+  end
+
+  def self.estimated_or_calculated_spending_sql(table)
+    qt = connection.quote_table_name(table.to_s)
+    "COALESCE(#{qt}.estimated_cost, CASE WHEN llm_models.id IS NULL THEN NULL ELSE #{spending_dollars_sql(table)} END)"
+  end
+
+  def estimated_cost_for_tokens(
+    request_tokens:,
+    response_tokens:,
+    cache_read_tokens: 0,
+    cache_write_tokens: 0
+  )
+    return nil if !costs_configured?
+
+    [
+      [request_tokens, input_cost],
+      [response_tokens, output_cost],
+      [cache_read_tokens, cached_input_cost],
+      [cache_write_tokens, cache_write_cost],
+    ].sum(BigDecimal("0")) do |tokens, cost|
+      BigDecimal(tokens.to_i.to_s) * BigDecimal((cost || 0).to_s) / 1_000_000
+    end
+  end
+
+  def spending_for(record)
+    if record.respond_to?(:estimated_cost) && record.estimated_cost.present?
+      record.estimated_cost.to_d.round(6).to_f
+    else
+      estimated_cost_for_tokens(
+        request_tokens: record.request_tokens,
+        response_tokens: record.response_tokens,
+        cache_read_tokens: record.cache_read_tokens,
+        cache_write_tokens: record.cache_write_tokens,
+      )&.round(6)&.to_f
+    end
+  end
+
+  def costs_configured?
+    [input_cost, output_cost, cached_input_cost].any? { |cost| !cost.nil? } ||
+      cache_write_cost.to_f != 0
+  end
 
   has_many :llm_quotas, dependent: :destroy
   has_one :llm_credit_allocation, dependent: :destroy
@@ -74,7 +148,7 @@ class LlmModel < ActiveRecord::Base
         },
         effort: {
           type: :enum,
-          values: %w[default low medium high max],
+          values: ["default", *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES],
           default: "default",
         },
         disable_native_tools: :checkbox,
@@ -109,7 +183,7 @@ class LlmModel < ActiveRecord::Base
         },
         effort: {
           type: :enum,
-          values: %w[default low medium high max],
+          values: ["default", *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES],
           default: "default",
         },
         disable_temperature: {
@@ -140,7 +214,7 @@ class LlmModel < ActiveRecord::Base
         },
         effort: {
           type: :enum,
-          values: %w[default low medium high max],
+          values: ["default", *DiscourseAi::Completions::Endpoints::AnthropicShared::EFFORT_VALUES],
           default: "default",
         },
         disable_native_tools: :checkbox,
@@ -221,6 +295,11 @@ class LlmModel < ActiveRecord::Base
           hidden_if: :enable_thinking,
         },
         disable_top_p: :checkbox,
+        service_tier: {
+          type: :enum,
+          values: %w[default standard flex priority],
+          default: "default",
+        },
       },
       azure: {
         disable_native_tools: :checkbox,
@@ -251,11 +330,54 @@ class LlmModel < ActiveRecord::Base
       vllm: {
         disable_system_prompt: :checkbox,
         disable_native_tools: :checkbox,
-        enable_thinking: :checkbox,
+        reasoning_parser: {
+          type: :enum,
+          values: [
+            { id: "default", name: "Server default" },
+            { id: "deepseek_r1", name: "deepseek_r1" },
+            { id: "qwen3", name: "qwen3" },
+            { id: "deepseek_v3", name: "deepseek_v3" },
+            { id: "deepseek_v4", name: "deepseek_v4" },
+            { id: "gemma4", name: "gemma4" },
+            { id: "granite", name: "granite" },
+            { id: "glm45", name: "glm45" },
+            { id: "hunyuan_a13b", name: "hunyuan_a13b" },
+            { id: "cohere_command3", name: "cohere_command3" },
+            { id: "ernie45", name: "ernie45" },
+            { id: "holo2", name: "holo2" },
+            { id: "minimax_m2_append_think", name: "minimax_m2_append_think" },
+          ],
+          default: "default",
+          tooltip: "discourse_ai.llms.provider_field_hints.reasoning_parser",
+        },
+        thinking_override: {
+          type: :enum,
+          values: [
+            { id: "default", name: "Server default" },
+            { id: "on", name: "Force on" },
+            { id: "off", name: "Force off" },
+          ],
+          default: "default",
+          depends_on: :reasoning_parser,
+          tooltip: "discourse_ai.llms.provider_field_hints.thinking_override",
+        },
         reasoning_effort: {
           type: :enum,
-          values: %w[default none minimal low medium high xhigh],
+          values: [
+            { id: "default", name: "Server default" },
+            { id: "none", name: "None" },
+            { id: "low", name: "Low" },
+            { id: "medium", name: "Medium" },
+            { id: "high", name: "High" },
+          ],
           default: "default",
+          depends_on: :reasoning_parser,
+          tooltip: "discourse_ai.llms.provider_field_hints.reasoning_effort",
+        },
+        thinking_token_budget: {
+          type: :number,
+          depends_on: :reasoning_parser,
+          tooltip: "discourse_ai.llms.provider_field_hints.thinking_token_budget",
         },
         disable_temperature: {
           type: :checkbox,
@@ -324,7 +446,7 @@ class LlmModel < ActiveRecord::Base
             trust_level: TrustLevel[4],
           )
         new_user.save!(validate: false)
-        self.update!(user: new_user)
+        update!(user: new_user)
       else
         user.active = true
         user.save!(validate: false)
@@ -344,7 +466,7 @@ class LlmModel < ActiveRecord::Base
       user.update!(active: false) if user.active
     else
       user.destroy!
-      self.update!(user: nil)
+      update!(user: nil)
     end
   end
 
@@ -352,11 +474,7 @@ class LlmModel < ActiveRecord::Base
     tokenizer.constantize
   end
 
-  def allowed_attachment_types
-    (self[:allowed_attachment_types].presence || DEFAULT_ALLOWED_ATTACHMENT_TYPES).map(&:downcase)
-  end
-
-  def allowed_attachment_types=(value)
+  def self.normalize_attachment_types(value)
     normalized =
       Array(value)
         .map { |v| v.to_s.downcase.strip }
@@ -364,7 +482,17 @@ class LlmModel < ActiveRecord::Base
         .reject(&:blank?)
         .uniq
     normalized = DEFAULT_ALLOWED_ATTACHMENT_TYPES if normalized.empty?
-    self[:allowed_attachment_types] = normalized
+    normalized
+  end
+
+  def allowed_attachment_types
+    self.class.normalize_attachment_types(
+      self[:allowed_attachment_types].presence || DEFAULT_ALLOWED_ATTACHMENT_TYPES,
+    )
+  end
+
+  def allowed_attachment_types=(value)
+    self[:allowed_attachment_types] = self.class.normalize_attachment_types(value)
   end
 
   def lookup_custom_param(key)

@@ -112,7 +112,7 @@ export function timeShortcuts(timezone) {
     tomorrow() {
       return {
         id: TIME_SHORTCUT_TYPES.TOMORROW,
-        icon: "far-sun",
+        icon: "calendar-day",
         label: "time_shortcut.tomorrow",
         time: tomorrow(timezone),
         timeFormatKey: "dates.time_short_day",

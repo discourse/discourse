@@ -35,11 +35,6 @@ hu:
   discourse_post_voting:
     reviewables:
       actions:
-        comment_actions:
-          bundle_title: "Mit akarsz csinálni a hozzászólással?"
-        no_action_comment:
-          title: "Nincs művelet"
-          description: "Hagyd a hozzászólást úgy, ahogy van."
         agree_and_keep_comment:
           title: "Hozzászólás megtartása"
           description: "Egyetértek a megjelöléssel, de a hozzászólást változatlanul hagyom."

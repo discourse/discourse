@@ -149,6 +149,19 @@ module DiscoursePostEvent
         expect(Invitee).to exist(user_id: other_user.id, status: Invitee.statuses[:interested])
       end
 
+      it "persists the recurring flag when joining" do
+        post "/discourse-post-event/events/#{event.id}/invitees.json",
+             params: {
+               invitee: {
+                 status: "going",
+                 recurring: true,
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(Invitee).to exist(user_id: user.id, recurring: true)
+      end
+
       it "returns 403 when non-staff tries to invite themselves to a private event" do
         private_event = Fabricate(:event, post: post_1, status: "private")
         other_user = Fabricate(:user)
@@ -224,6 +237,19 @@ module DiscoursePostEvent
 
         expect(response.status).to eq(200)
         expect(invitee.reload.status).to eq(Invitee.statuses[:interested])
+      end
+
+      it "persists the recurring flag when updating" do
+        put "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json",
+            params: {
+              invitee: {
+                status: "going",
+                recurring: true,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(invitee.reload.recurring).to eq(true)
       end
 
       it "returns 404 when invitee does not exist" do

@@ -1,0 +1,48 @@
+@use "lib/viewport";
+
+.uc-modernize-foundation-theme {
+  .d-header {
+    height: 3.25em;
+  }
+
+  .d-header .title {
+    @include viewport.from(sm) {
+      --d-logo-height: 2.3em;
+    }
+  }
+
+  .extra-info-wrapper .title-wrapper {
+    @include viewport.from(sm) {
+      font-size: var(--font-down-1);
+    }
+  }
+
+  .header-sidebar-toggle button,
+  .d-header-icons .icon {
+    width: 2em;
+    height: 2em;
+  }
+
+  .d-header-icons .badge-notification {
+    right: -6px;
+    padding: 0.2em 0.4em;
+  }
+
+  .header-sidebar-toggle button .d-icon,
+  .d-header-icons
+    .header-dropdown-toggle:not(.user-menu-panel, .language-switcher)
+    .d-icon {
+    font-size: var(--font-up-3);
+  }
+
+  .d-header-icons .icon img.avatar {
+    width: 2em;
+    height: 2em;
+  }
+
+  .d-header-icons .btn.icon {
+    height: 2em !important;
+    width: 2em !important;
+    padding: 0.2143em !important;
+  }
+}

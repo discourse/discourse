@@ -5,10 +5,6 @@
 # https://translate.discourse.org/
 
 it:
-  admin_js:
-    site_settings:
-      categories:
-        post_voting: Votazioni dei messaggi
   post_voting:
     reviewables:
       comment_already_handled: "Grazie, ma abbiamo già esaminato questo commento e stabilito che non è necessario contrassegnarlo di nuovo."
@@ -37,6 +33,7 @@ it:
       already_voted: "Puoi votare una sola volta per domanda."
       user_over_limit: "Non puoi superare il numero di voti per il tuo livello di attendibilità."
       one_vote_per_post: "Puoi votare una sola volta per messaggio."
+      toggle_voters: "Mostra i votanti"
     last_answer_lowercase: ultima risposta
     answer_lowercase:
       one: risposta
@@ -58,6 +55,8 @@ it:
           edit: "modifica"
           cancel: "annulla"
           add: "Aggiungi un commento"
+          actions:
+            delete: "Elimina il commento"
           show:
             one: Mostra %{count} altro commento
             other: Mostra altri %{count} commenti

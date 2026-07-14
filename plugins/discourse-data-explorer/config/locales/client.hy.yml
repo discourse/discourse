@@ -24,6 +24,7 @@ hy:
       description_placeholder: "Մուտքագրեք նկարագրություն այստեղ"
       ai:
         generate: "Գեներացնել"
+        optional: "ընտրովի"
       import:
         label: "Ներմուծել"
       help:
@@ -37,12 +38,8 @@ hy:
           yes: "Այո"
           no: "Ոչ"
           null_: "Զրոյական"
-      export: "Արտահանել"
       run: "Գործարկել"
-      edit: "Խմբագրել"
       delete: "Ջնջել"
-      download_json: "JSON"
-      download_csv: "CSV"
       others_dirty: "Հարցումն ունի չպահպանված փոփոխություններ, որոնք կկորչեն, եթե Դուք տեղափոխվեք:"
       result_count:
         one: "%{count} արդյունք"
@@ -52,9 +49,16 @@ hy:
       query_description: "Նկարագրություն"
       query_time: "Վերջին գործարկումը"
       query_user: "Ստեղծել է՝"
-      explain_label: "Ներառե՞լ հարցման պլանը:"
       reset_params: "Վերահաստատե;"
       search_placeholder: "Որոնում..."
       no_search_results: "Ներողություն, մենք չկարողացանք գտնել Ձեր տեքստի հետ համընկնող որևէ արդյունք:"
     group:
       reports: "Հաշվետվություններ"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Տվյալների Ուսումնասիրում"
+      sql:
+        query_id: "Հարցում"
+        param_value: "Արժեք"
+        output:
+          results: "Արդյունքները"

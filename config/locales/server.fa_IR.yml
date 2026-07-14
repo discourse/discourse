@@ -324,7 +324,7 @@ fa_IR:
       page_publishing_requirements: "اگر آپلودهای ایمن فعال باشد، انتشار صفحه نمی تواند فعال شود."
       s3_backup_requires_s3_settings: "شما نمی توانید از S3 به عنوان مکان پشتیبان استفاده کنید مگر اینکه «%{setting_name}» را ارائه کرده باشید."
       s3_bucket_reused: "شما نمی توانید از یک مخزن برای \"s3_upload_bucket\" و \"s3_backup_bucket\" استفاده کنید. یک مخزن متفاوت انتخاب کنید یا برای هر مخزن از مسیر متفاوتی استفاده کنید."
-      secure_uploads_requirements: "قبل از فعال کردن آپلودهای ایمن، آپلودهای S3 و ACLهای S3 باید فعال شوند."
+      secure_uploads_requirements: "قبل از فعال کردن بارگذاری‌های ایمن، بارگذاری‌های S3 باید فعال شوند."
       share_quote_facebook_requirements: "برای فعال کردن اشتراک‌گذاری نقل قول برای فیس‌بوک، باید یک شناسه برنامه فیسبوک تنظیم کنید."
       second_factor_cannot_be_enforced_with_disabled_local_login: "اگر ورود به سیستم محلی غیرفعال باشد، نمی توانید 2FA را اعمال کنید."
       second_factor_cannot_be_enforced_with_discourse_connect_enabled: "اگر DiscourseConnect فعال باشد، نمی توانید 2FA را اعمال کنید."
@@ -361,7 +361,6 @@ fa_IR:
       <p>در غیر این صورت لطفاً <a href="%{base_url}/password-reset">رمز عبور را</a>بازنشانی کنید.</p>
     not_found_template_link: |
       <p>این دعوت‌نامه برای <a href="%{base_url}">%{site_name}</a> دیگر قابل استفاده نیست. لطفا از فردی که شما را دعوت کرده است، بخواهید یکبار دیگر دعوت‌نامه جدیدی ارسال کند.</p>
-    existing_user_cannot_redeem: "این دعوتنامه قابل استفاده نیست. لطفا از شخصی که شما را دعوت کرده بخواهید برای شما دعوتنامه جدیدی ارسال کند."
     existing_user_already_redemeed: "شما قبلا این پیوند دعوتنامه را استفاده‌ کرده‌اید."
     user_exists: "نیازی به دعوت <b>%{email}</b> نیست، در حال حاضر حساب کاربری دارند! "
     invite_exists: "شما قبلا <b>%{email}</b> را دعوت کرده‌اید."
@@ -422,7 +421,13 @@ fa_IR:
   deleted_topic: "متاسفیم! این موضوع حذف شده است و دیگر در دسترس نیست."
   delete_topic_failed: "هنگام حذف موضوع خطایی روی داد. لطفا با مدیر سایت تماس بگیرید."
   reading_time: "زمان مطالعه"
+  reading_time_minutes:
+    one: "%{count} دقیقه 🕑"
+    other: "%{count} دقیقه 🕑"
   likes: "پسند‌ها"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   action_already_performed: "متاسفیم! شما قبلاً این عمل را انجام داده اید. آیا می توانید صفحه را به روز کنید؟"
   too_many_replies:
     one: "متأسفیم، ولی کاربران جدید موقتا محدود به %{count}  پاسخ در یک موضوع هستند."
@@ -586,6 +591,13 @@ fa_IR:
       trust_level_2: "سطح اعتماد 2"
       trust_level_3: "سطح اعتماد 3"
       trust_level_4: "سطح اعتماد 4"
+    default_full_names:
+      everyone: "همه"
+      admins: "مدیران ارشد"
+      moderators: "ناظران"
+      staff: "همکاران"
+      anonymous_users: "کاربران ناشناس"
+      logged_in_users: "کاربران وارد شده"
     default_descriptions:
       everyone: "گروه خودکار شامل همه اعضا"
       staff: "گروه خودکار شامل مدیران و ناظرها"
@@ -1051,6 +1063,9 @@ fa_IR:
       one_time_password: "یک رمز ورود یک بار مصرف ایجاد کنید"
       bookmarks_calendar: "یادآورهای نشانک را بخوانید"
       user_status: "خواندن و به‌روزرسانی وضعیت کاربر"
+    device:
+      code: "کد"
+      continue: "ادامه"
     invalid_public_key: "متأسفیم، کلید عمومی نامعتبر است."
     invalid_auth_redirect: "با عرض پوزش، این میزبان auth_redirect مجاز نیست."
     invalid_token: "توکن گم شده، نامعتبر یا منقضی شده است"
@@ -1120,6 +1135,31 @@ fa_IR:
       xaxis: "روز"
       yaxis: "تعداد مشارکت کنندگان جدید"
       description: "تعداد کاربرانی که اولین پست خود را در این مدت ارسال کردند."
+    activity_by_category:
+      labels:
+        category: "دسته‌بندی"
+        topics: "موضوعات"
+        posts: "فرسته‌ها"
+        share: "اشتراک‌گذاری"
+    posters_by_member_type:
+      labels:
+        count: "فرسته‌ها"
+        share: "اشتراک‌گذاری"
+      types:
+        staff: "همکاران"
+    trust_level_pipeline:
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "سطح اعتماد"
+        count: "اعضاء"
+        share: "اشتراک‌گذاری"
+        signups: "ثبت‌نام‌ها"
+      levels:
+        "0": "جدید"
+        "1": "پایه‌ای"
+        "2": "عضو"
+        "3": "عادی"
+        "4": "رهبر"
     trust_level_growth:
       title: "رشد سطح اعتماد"
       xaxis:
@@ -1158,9 +1198,8 @@ fa_IR:
     site_traffic:
       title: "ترافیک سایت"
       xaxis:
-        page_view_anon_browser: "بازدید از صفحه (ناشناس)"
-        page_view_logged_in_browser: "بازدید از صفحه (وارد شده)"
-        page_view_crawler: "خزنده های شناخته شده"
+        page_view_anon_browser: "ناشناس"
+        page_view_crawler: "خزنده‌ها"
         page_view_other: "ترافیک‌های دیگر"
       yaxis: "روز"
       description: "بازدید از صفحه برای کاربران وارد شده، کاربران ناشناس، خزنده های شناخته شده و سایر ترافیک‌ها."
@@ -1273,6 +1312,12 @@ fa_IR:
         num_clicks: "کلیک‌ها"
         num_topics: "موضوعات"
       description: "لیست کاربران بر اساس تعداد کلیک روی پیوندهایی که به اشتراک گذاشته‌اند."
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "بازدیدها"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "بازدیدها"
     top_traffic_sources:
       title: "بالاترین منابع ترافیک"
       xaxis: "دومین"
@@ -1329,6 +1374,8 @@ fa_IR:
     page_view_logged_in_browser_reqs:
       xaxis: "روز"
       description: "تعداد بازدید از صفحه توسط بازدیدکنندگان وارد شده با استفاده از مرورگرهای واقعی."
+    page_view_embed_reqs:
+      xaxis: "روز"
     http_background_reqs:
       title: "پس زمینه"
       xaxis: "روز"
@@ -1386,7 +1433,7 @@ fa_IR:
         os: سیستم‌عامل
         login_time: زمان ورود
       description: "جزئیات ورودهای جدید که به طور مشکوکی با ورودهای قبلی متفاوت است."
-    staff_logins:
+    admin_logins:
       title: "ورود مدیریت"
       labels:
         user: کاربر
@@ -1440,7 +1487,6 @@ fa_IR:
       group_email_credentials: 'مشکلی در اعتبار نامه ایمیل برای گروه <a href="%{base_path}/g/%{group_name}/manage/email">%{group_full_name}</a>وجود داشت. تا زمانی که این مشکل برطرف نشود، هیچ ایمیلی از صندوق ورودی گروه ارسال نخواهد شد. %{error}'
       rails_env: "سرور شما در حالت %{env} در حال اجراست"
       host_names: "config/database.yml فایل شما از اسم هاست پیش فرض localhost استفاده کرده. برای استفاده از نام سایتتان این قسمت را به‌روز کنید."
-      sidekiq: 'Sidekiq کار نمی کند. کار‌های زیادی مثل ارسال ایمیل ها، برای اجرا نیازمند sidekiq هستند. لطفا مطمئن شوید که حداقل یک پروسه sidekiq کار می‌کند. <a href="https://github.com/mperham/sidekiq" target="_blank"> درباره Sidekiq بیشتر بدانید.</a>'
       queue_size: "تعداد کار های زمانبندی شده %{queue_size}، که مقدار بالاییست. این مسئله می‌تواند باعث بروز مشکل در پردازش(های) Sidekiq شود، یا می‌توانید عامل‌های Sidekiq بیشتری اضافه کنید."
       ram: "سرور شما با کمتر از ۱ گیگایابت رم راه‌اندازی شده است. برای دیسکورس حداقل ۱ گیگابایت رم لازم است تا به درستی کار کند."
       subfolder_ends_in_slash: "تنظیمات زیرپوشه نادرست است، مقدار DISCOURSE_RELATIVE_URL_ROOT با نویسه‌ی slash تمام می‌شود."
@@ -1499,7 +1545,6 @@ fa_IR:
     max_image_width: "حداکثر عرض تصاویر بندانگشتی در یک پست. تصاویری که عرض بیشتری داشته باشند، تغییر اندازه داده شده و در لایت‌باکس نمایش داده می‌شوند.\n\n"
     max_image_height: "حداکثر طول تصاویر بندانگشتی در یک پست.\nتصاویری که طول بیشتری داشته باشند، تغییر اندازه داده شده و در لایت‌باکس نمایش داده می‌شوند.\n\n"
     fixed_category_positions: "اگر فعال باشد٬ شما این امکان را دارید تا دسته‌ندی‌ها را به ترتیب در یک نظم ثابت قرار دهید. اگر فعال نباشد، دسته‌بندی‌ها بر اساس فعالیتشان قرار می گیرند."
-    fixed_category_positions_on_create: "اگر انتخاب شود بدین معنی است که ترتیب دسته‌بندی‌ها در پنجره ایجاد یک عنوان جدید مدیریت خواهد شد (نیازمند fixed_category_positions است)."
     add_rel_nofollow_to_user_content: 'nofollow REL را به تمام محتویات ارسال شده توسط کاربر اضافه کن، به جز برای پیوندهای داخلی (به همراه دامنه‌های والد). اگر این قسمت را عوض کنید، باید تمام نوشته‌ها را با دستور زیر rebake کنید: "rake posts:rebake"'
     max_form_template_title_length: "حداکثر طول مجاز برای عناوین قالب فرم."
     max_form_template_content_length: "حداکثر طول مجاز برای محتوای قالب فرم."
@@ -1519,8 +1564,6 @@ fa_IR:
     anon_polling_interval: "هر چند مدت باید مشتری‌های ناشناس نظرسنجی بشوند در هر میلی ثانیه"
     background_polling_interval: "هر چند وقت یکبار مشتری‌ها باید نظرسنجی بشوند در هر ثانیه (وقتی پنجره در پس زمینه است)"
     cooldown_minutes_after_hiding_posts: "تعداد دقایقی که کاربر باید قبل از ویرایش مخفی یک نوشته از طریق پرچم گزاری انجمن صبر کند"
-    max_topics_in_first_day: "حداکثر تعداد موضوعاتی که کاربر 24 ساعت بعد از ایجاد اولین نوشته‌اش می‌تواند ایجاد کند."
-    max_replies_in_first_day: "حداکثر تعداد پاسخ‌هایی که کاربر 24 ساعت بعد از ایجاد اولین نوشته‌اش می‌تواند ارسال کند."
     tl2_additional_likes_per_day_multiplier: "کنترل بالا رفتن پسند‌ها در روز برای tl2 (اعضا) از طریق حاصل ضرب این شماره"
     tl3_additional_likes_per_day_multiplier: "کنترل بالا رفتن پسند ها در روز برای tl3 (معمولی) از طریق حاصل ضرب این شماره"
     tl4_additional_likes_per_day_multiplier: "با ضرب در این عدد، محدودیت لایک در روز برای tl4 (رهبر) را افزایش دهید"
@@ -1528,7 +1571,6 @@ fa_IR:
     post_undo_action_window_mins: "تعداد دقایقی که کاربران اجازه دارند اقدامی را که در نوشته انجام داده اند باز گردانند. (پسند، پرچم گذاری و...)."
     maximum_session_age: "کاربر برای n ساعت از آخرین بازدید در حالت وارد شده می‌ماند."
     cors_origins: "ریشه های مجاز برای cross-origin requests درخواست متقابل منشاء (CORS). هر منشاء باید دارای http:// or https://. The DISCOURSE_ENABLE_CORS env برای تنظیم به کارگیری CORS باید متغیر باشد."
-    use_admin_ip_allowlist: "مدیر‌ها فقط در صورتی می‌توانند وارد شوند که در لیست آیپی‌های نمایش داده شده باشند. (مدیریت > گزارش‌ها > آیپی‌های نمایش داده شده)"
     content_security_policy_report_only: "فعال کردن Content-Security-Policy-Report-Only (CSP)"
     share_links: "مشخص کنید کدام موارد روی کادر گفتگو در قسمت اشترک گذاری و بر اساس چه ترتیبی نشان داده شوند. "
     site_contact_username: "یک نام کاربری مدیر برای ارسال خودکار پیام‌ها. اگر خالی گذاشته شود، از حساب‌کاربری پیش‌فرض سیستم استفاده می‌شود."
@@ -1544,7 +1586,6 @@ fa_IR:
     email_token_valid_hours: "رمز عبور فراموش شده/ حساب کاربری فعال تا (n) ساعت اعتبار دارد."
     hidden_post_visible_groups: "به کاربرانی که در این گروه‌ها هستند اجازه دهید که نوشته‌های پنهان شده را مشاهد کنند. کاربرانی که به عنوان مدیر هستند همیشه می‌توانند نوشته‌های پنهان را مشاهده کنند."
     log_out_strict: "بعد از خروج از حساب کاربری، کاربر را از تمام session‌ها بر روی تمام دستگاه‌ها خارج کن"
-    new_version_emails: "هنگامی که نسخه جدیدی از Discourse در دسترس است، یک ایمیل به آدرس contact_email ارسال کنید."
     invite_expiry_days: "کلید دعوتنامه فراخوان برای چه مدت اعتبار دارد، واحد روز"
     login_required: "برای خواندن محتوا در سایت نیاز به تصدیق است، دسترسی ناشناس رد شود."
     min_username_length: "حداقل طول نام کاربری به نویسه. توجه: اگر کاربری در حال حاضر نام کاربری کوتاه تر از این مقدار داشته باشد سایت به مشکل برمی‌خورد."
@@ -1686,8 +1727,6 @@ fa_IR:
     pop3_polling_openssl_verify: "تایید گواهینامه سرور TLS (پیش‌فرض: فعال)"
     pop3_polling_username: "نام کاربری برای حساب کاربری POP3 برای نظرسنجی در ایمیل."
     pop3_polling_password: "رمز عبور برای حساب کاربری POP3 برای نظرسنجی در ایمیل."
-    email_prefix: "[برچسب] مورد استفاده در موضوع ایمیل‌ها. اگر تنظیم نشود، به طور پیش‌فرض روی «عنوان» خواهد بود."
-    email_site_title: "عنوان این سایت به فرستنده ایمیل‌ها در سایت استفاده شده. اگر مقداری عنوان شامل نویسه‌های غیر مجاز باشد، به 'عنوان' تبدیل خواهد شد."
     minimum_topics_similar: "چند موضوع باید قبل از وجود موضوعات مشابه، وجود داشته باشد، وقتی که موضوع جدید ایجاد می‌کنیم."
     relative_date_duration: "تعداد روزها بعد از پست کردن جایی که تاریخ نوشته به عنوان نسبی (7 روز) به‌جای (23 بهمن) نشان داده می شود."
     delete_user_max_post_age: "به کاربرانی که عمر نوشته‌شان بیشتر از (x) روز است اجازه پاک کردن نده."
@@ -1707,15 +1746,12 @@ fa_IR:
     max_daily_gravatar_crawls: "حداکثر تعداد دفعاتی که Discourse در یک روز Gravatar را برای آواتارهای سفارشی بررسی می کند"
     enable_user_directory: "شاخه کاربری را برای مرور ارائه کن"
     enable_group_directory: "یک فهرست راهنما برای گروه‌ها فراهم کنید"
-    allow_anonymous_mode: "گزینه‌ای را فعال کنید که به کاربران اجازه دهد برای ارسال نوشته‌ها به حالت ناشناس تغییر کنند. با فعال‌سازی، کاربران می‌توانند هویت خود را هنگام ایجاد نوشته‌ها یا موضوعات در وبگاه پنهان کنند. همچنین به اجازه پسندیده ناشناس مراجعه کنید."
     anonymous_account_duration_minutes: "برای محافظت از ناشناس ماندن، هر N دقیقه برای هر کاربر یک حساب‌کاربری ناشناس بساز. برای مثال: اگر به ۶۰۰ تنظیم شود، به محض اینکه ۶۰۰ دقیقه از آخرین فرسته گذشت و کاربر به حالت ناشناس تغییر کرد، حساب کاربری جدید ناشناس ساخته می شود."
     allow_profile_backgrounds: "به کاربر اجازه بده تا پس‌زمینه نمایه خود را بارگذاری کند."
     get_a_room_threshold: "تعداد نوشته‌هایی که کاربر باید در یک موضوع ایجاد کند تا به او اخطار داده شود."
-    enable_mobile_theme: "دستگاه های موبایلی که از قالب مناسب موبایل استفاده می کنند٬‌ با قابلیت جابجایی به حالت نمایش کامل. اگر از استایلی استفاده می‌کنید که کاملا واکنشگرا است این قسمت را غیر‌فعال کنید."
     dominating_topic_minimum_percent: "درصد نوشته‌هایی که کاربر در یک موضوع باید ایجاد کند تا درباره‌ی تسلط بیش‌از‌حد بر آن موضوع به او یاداوری شود. (برای ایجاد تعادل در مشارکت دادن دیگران در موضوع و جلوگیری از یک طرفه شدن بحث‌ها)"
     suppress_uncategorized_badge: "نشان را برای موضوعات دسته‌بندی نشده در فهرست موضوعات نشان نده."
     permalink_normalizations: "Regex زیر را قبل از تطبیق پیوندهای ثابت اعمال کنید، به عنوان مثال: /(topic.*)\\?.*/\\1 رشته های پرس و جو را از مسیرهای موضوع حذف می کند. فرمت به صورت regex+string است. از \\1 و غیره برای دسترسی به captureها استفاده کنید."
-    disable_system_edit_notifications: "هنگامی که «download_remote_images_to_local» فعال است، اعلان‌های ویرایش توسط کاربر سیستم را غیرفعال می‌کند."
     automatically_unpin_topics: "وقتی کاربر به پایین صفحه می‌رسد سنجاق موضوع‌ها به‌صورت خودکار برداشته شود."
     read_time_word_count: "تعداد کلمه در دقیقه برای محاسبه تخمین زمان خواندن."
     enable_names: "نام و نام‌خانوادگی کاربران را در نمایه، کارت کاربری و ایمیل‌هایشان نمایش بده. قابلیت پنهان کردن نام کامل را در هرجایی غیرفعال کن."
@@ -1757,7 +1793,6 @@ fa_IR:
     suppress_overlapping_tags_in_list: "اگر برچسب با عنوان موضوع دقیقا یکی بودند، برچسب را نشان نده."
     enable_sitemap: "یک نقشه سایت برای سایت خود ایجاد کنید و آن را در پرونده robots.txt قرار دهید."
     sitemap_page_size: "تعداد آدرس‌های اینترنتی که باید در هر صفحه نقشه سایت گنجانده شود. حداکثر ۵۰٫۰۰۰"
-    use_name_for_username_suggestions: "هنگام پیشنهاد نام‌کاربری از نام کامل، کاربر استفاده کنید."
     errors:
       invalid_email: "آدرس ایمیل نامعتبر"
       invalid_username: "هیچ کاربری با این نام‌کاربری وجود ندارد."
@@ -1790,6 +1825,10 @@ fa_IR:
       topic: "نتایج"
       user: "کاربران"
     results_page: "نتایج جستجو برای '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "آخرین فرسته‌ها"
+      order_latest_topic: "آخرین موضوعات"
   filter:
     description:
       in_new: "نمایش موضوعاتی که جدید هستند یا پاسخ جدید دارند"
@@ -2063,8 +2102,6 @@ fa_IR:
     email_reject_screened_email:
       title: "ایمیل نمایش داده شده رد می‌شود"
       subject_template: "[%{email_prefix}] مشکل ایمیل -- ایمیل مسدود شد"
-    email_reject_not_allowed_email:
-      subject_template: "[%{email_prefix}] مشکل ایمیل -- ایمیل مسدود شد"
     email_reject_inactive_user:
       title: "ایمیل رد شده کاربر غیر‌فعال"
       subject_template: "[%{email_prefix}] مشکل ایمیل -- کاربر غیر‌فعال"
@@ -2187,7 +2224,6 @@ fa_IR:
       text_body_template: " تنظیم `download_remote_images_to_local` غیرفعال شد زیرا به محدودیت فضای دیسک در `download_remote_images_threshold` رسیده بود."
     new_user_of_the_month:
       title: "شما کاربر جدید ماه هستید!"
-      subject_template: "شما کاربر جدید ماه هستید!"
     queued_posts_reminder:
       title: "یادآور نوشته‌های زمانبندی شده"
       subject_template:
@@ -2203,6 +2239,7 @@ fa_IR:
     برای لغو اشتراک از این ایمیل‌ها[کلیک کنید](%{unsubscribe_url}).
   subject_re: "پاسخ: "
   subject_pm: "[PM] "
+  email_from_group: "%{group_name}"
   user_notifications:
     previous_discussion: "پاسخ‌های قبلی"
     reached_limit:
@@ -2405,6 +2442,7 @@ fa_IR:
     account_exists:
       title: "حساب کاربری وحود دارد"
       subject_template: "[%{email_prefix}] حساب کاربری وحود دارد"
+      subject_template_improved: "حساب کاربری وحود دارد"
     digest:
       since_last_visit: "از آخرین بازدید شما"
       new_topics: "موضوع جدید"
@@ -2416,6 +2454,7 @@ fa_IR:
       popular_posts: "نوشته‌های محبوب"
       more_new: "جدید برای شما"
       subject_template: "«%{email_prefix}» خلاصه"
+      subject_template_improved: "خلاصه"
       click_here: "اینجا کلیک کنید"
       from: "%{site_name}"
     forgot_password:
@@ -2430,7 +2469,6 @@ fa_IR:
         %{base_url}/u/password-reset/%{email_token}
     set_password:
       title: "تنظیم رمز عبور"
-      subject_template: "[%{email_prefix}] تنظیم رمز عبور"
       text_body_template: |
         فردی درخواست افزودن رمز به حساب‌کاربری شما در [%{site_name}](%{base_url}) را داشته. به جای آن، می‌توانید با حساب کاربری خود در سرویس‌های (گوگل، فیسبوک و...) که دارای ایمیل معتبر هستند نیز وارد شوید.
 
@@ -2441,9 +2479,9 @@ fa_IR:
     admin_login:
       title: "ورود مدیریت"
       subject_template: "[%{email_prefix}] ورود"
+      subject_template_improved: "ورود"
     account_created:
       title: "حساب کاربری ایجاد شد"
-      subject_template: "[%{email_prefix}] حساب کاربری جدید شما"
       text_body_template: |
         یک حساب کاربری در %{site_name} برای شما ساخته شده
 
@@ -2773,6 +2811,8 @@ fa_IR:
   onebox:
     discourse:
       user_joined_community: "در %{date} عضو شدن"
+    google_meet:
+      meeting_code: "کد:"
     github:
       closed: "بسته"
       status_date:

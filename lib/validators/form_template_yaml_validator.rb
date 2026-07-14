@@ -16,26 +16,24 @@ class FormTemplateYamlValidator < ActiveModel::Validator
   }
 
   def validate(record)
-    begin
-      yaml = Psych.safe_load(record.template)
+    yaml = Psych.safe_load(record.template)
 
-      unless yaml.is_a?(Array)
-        record.errors.add(:template, I18n.t("form_templates.errors.invalid_yaml"))
-        return
-      end
-
-      existing_ids = []
-      yaml.each do |field|
-        check_missing_fields(record, field)
-        check_allowed_types(record, field)
-        check_ids(record, field, existing_ids)
-        check_descriptions_html(record, field)
-      end
-
-      check_tag_groups(record, yaml.map { |f| f["tag_group"] })
-    rescue Psych::SyntaxError
+    unless yaml.is_a?(Array)
       record.errors.add(:template, I18n.t("form_templates.errors.invalid_yaml"))
+      return
     end
+
+    existing_ids = []
+    yaml.each do |field|
+      check_missing_fields(record, field)
+      check_allowed_types(record, field)
+      check_ids(record, field, existing_ids)
+      check_descriptions_html(record, field)
+    end
+
+    check_tag_groups(record, yaml.map { |f| f["tag_group"] })
+  rescue Psych::SyntaxError
+    record.errors.add(:template, I18n.t("form_templates.errors.invalid_yaml"))
   end
 
   def check_allowed_types(record, field)

@@ -37,21 +37,21 @@ To obtain two different URLs, there are two main approaches:
 If your change is small enough to be easily feature-flagged, then you could add logic to toggle it based on a **URL query parameter**. Then your two urls could be
 
 ```
-http://localhost:4200?flag=before
-http://localhost:4200?flag=after
+http://localhost:3000?flag=before
+http://localhost:3000?flag=after
 ```
 
-If the change is too large for that, then you could clone Discourse into a second directory and launch a **second copy of ember-cli**. It can be proxied to the same Rails server using a command like
+If the change is too large for that, then you could clone Discourse into a second directory and launch a **second copy of rails**.
 
 ```sh
-EMBER_ENV=production pnpm ember serve --port 4201 --proxy http://localhost:3000
+EMBER_ENV=production UNICORN_PORT=3001 bin/dev
 ```
 
 And then your two URLs would be
 
 ```
-http://localhost:4200
-http://localhost:4201
+http://localhost:3000
+http://localhost:3001
 ```
 
 If you take this approach, make sure that both copies of the app have the performance telemetry you introduced in step 1 of this guide
@@ -72,11 +72,11 @@ This is my `bench.json` file, which will take 300 samples of each target:
       },
       "expand": [
         {
-          "url": "http://localhost:4200",
+          "url": "http://localhost:3000",
           "name": "before"
         },
         {
-          "url": "http://localhost:4201",
+          "url": "http://localhost:3001",
           "name": "after"
         }
       ]

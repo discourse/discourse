@@ -4,10 +4,42 @@ describe DiscourseGamification::DirectoryIntegration do
   fab!(:user_1, :admin)
   fab!(:user_2, :user)
   fab!(:leaderboard, :gamification_leaderboard)
-  fab!(:score_1) { Fabricate(:gamification_score, user_id: user_1.id, score: 10, date: 8.days.ago) }
-  fab!(:score_2) { Fabricate(:gamification_score, user_id: user_1.id, score: 40, date: 3.days.ago) }
-  fab!(:score_3) { Fabricate(:gamification_score, user_id: user_2.id, score: 25, date: 5.days.ago) }
-  fab!(:score_4) { Fabricate(:gamification_score, user_id: user_2.id, score: 5, date: 2.days.ago) }
+  fab!(:score_1) do
+    Fabricate(
+      :gamification_leaderboard_score,
+      leaderboard_id: leaderboard.id,
+      user_id: user_1.id,
+      score: 10,
+      date: 8.days.ago,
+    )
+  end
+  fab!(:score_2) do
+    Fabricate(
+      :gamification_leaderboard_score,
+      leaderboard_id: leaderboard.id,
+      user_id: user_1.id,
+      score: 40,
+      date: 3.days.ago,
+    )
+  end
+  fab!(:score_3) do
+    Fabricate(
+      :gamification_leaderboard_score,
+      leaderboard_id: leaderboard.id,
+      user_id: user_2.id,
+      score: 25,
+      date: 5.days.ago,
+    )
+  end
+  fab!(:score_4) do
+    Fabricate(
+      :gamification_leaderboard_score,
+      leaderboard_id: leaderboard.id,
+      user_id: user_2.id,
+      score: 5,
+      date: 2.days.ago,
+    )
+  end
 
   before do
     SiteSetting.discourse_gamification_enabled = true
@@ -50,9 +82,6 @@ describe DiscourseGamification::DirectoryIntegration do
       end
 
       it "returns sum of points earned between leaderboard's 'from_date' and 'to_date'" do
-        expect(DiscourseGamification::GamificationScore.where(user: user_1).sum(:score)).to eq(50)
-        expect(DiscourseGamification::GamificationScore.where(user: user_2).sum(:score)).to eq(30)
-
         expect(all_time_score_for(user_1)).to eq(40)
         expect(all_time_score_for(user_2)).to eq(25)
       end
@@ -61,9 +90,6 @@ describe DiscourseGamification::DirectoryIntegration do
 
   context "without a date-restricted default leaderboard" do
     it "returns sum of all scores for the period" do
-      expect(DiscourseGamification::GamificationScore.where(user: user_1).sum(:score)).to eq(50)
-      expect(DiscourseGamification::GamificationScore.where(user: user_2).sum(:score)).to eq(30)
-
       expect(all_time_score_for(user_1)).to eq(50)
       expect(all_time_score_for(user_2)).to eq(30)
     end

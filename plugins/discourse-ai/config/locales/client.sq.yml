@@ -34,6 +34,14 @@ sq:
             canned_reply:
               label: "Përgjigju"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Duke ngarkuar..."
+        tool: "Veprimi"
+        user: "User"
+        approve: "Aprovo"
+        reject: "Refuzo"
+        approved: "Aprovuar"
+        rejected: "Rejected"
       llm_selector:
         none: "Asnjë"
       features:
@@ -46,6 +54,8 @@ sq:
           one: "(%{count} tjetër)"
           other: "(%{count} të tjera)"
         collapse_list: "(shfaq më pak)"
+        nav:
+          enabled: "Aktivizuar"
         filters:
           all: "Të gjitha"
           reset: "Rivendosni"
@@ -56,6 +66,7 @@ sq:
       modals:
         select_option: "Zgjidhni një opsion..."
       translations:
+        category_scope: "Categories"
         stats:
           eta_minutes:
             one: "%{count} minutë"
@@ -92,6 +103,12 @@ sq:
         save: "Ruani"
         enabled: "Aktivizuar?"
         delete: "Fshij"
+        thinking_effort_options:
+          none: "Asnjë"
+          low: "I ulët"
+          medium: "Mesatar"
+          high: "I lartë"
+          max: "Maksimumi"
         response_format:
           open_modal: "Redaktoni"
         filters:

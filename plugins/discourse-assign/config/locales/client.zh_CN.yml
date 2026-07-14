@@ -31,11 +31,15 @@ zh_CN:
       status_change: "于 %{when}更改了 %{who} 的指定状态"
     discourse_assign:
       add_unassigned_filter: "将“未指定”筛选器添加到类别"
+      additional_assign_allowed_groups: "具有分配权限的其他组"
+      additional_assign_allowed_groups_description: "这些群组的成员可以在此类别中分配主题。已全局允许的群组会显示在此处，且无法移除。父类别设置不适用于子类别。"
       cant_act: "您不能对已指定给其他用户的举报采取行动"
       cant_act_unclaimed: "在对举报采取行动之前，您必须先认领此话题。"
       topic_search_placeholder: "按标题或帖子内容搜索话题"
       sidebar_name_filter_placeholder: "名称/用户名"
       assigned: "已指定"
+      group_no_assignments_title: "没有任务"
+      group_no_assignments_body: "此群组目前没有有效任务。"
       group_everyone: "所有人"
       assigned_to: "已指定给"
       assigned_topic_to: "将话题指定给 <a href='%{path}'>%{username}</a>"
@@ -138,6 +142,16 @@ zh_CN:
           unassigned: "已被取消指定"
         assigned:
           label: "已指定给"
+    topics:
+      bulk:
+        unassign: "取消指定话题"
+        assign: "指定话题"
+        assign_description: "将所选话题指定给以下用户："
+        unassign_description: "是否取消指定所选话题？"
+        confirm_assign_topics:
+          other: "指定 %{count} 个话题"
+        confirm_unassign_topics:
+          other: "取消指定 %{count} 个话题"
     discourse_automation:
       scriptables:
         random_assign:
@@ -184,3 +198,19 @@ zh_CN:
       title: "编辑指定"
       topic: "话题"
       post: "帖子"
+    discourse_workflows:
+      node_unavailable:
+        requires_assign: "需要启用 Assign 插件"
+      nodes:
+        "action:assign_topic": "指定话题"
+        "trigger:assigned": "已指定"
+      node_descriptions:
+        "action:assign_topic": "分配或取消分配主题"
+      assign_topic:
+        operation: "操作"
+        operations:
+          assign: "指定"
+          unassign: "取消指定"
+        topic_id: "话题 ID"
+        assignee: "受理人"
+        replace_existing: "替换现有任务"

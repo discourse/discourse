@@ -1,5 +1,6 @@
 import { module, test } from "qunit";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { testRenderedMarkdown } from "discourse/tests/helpers/rich-editor-helper";
 
 module(
@@ -144,5 +145,15 @@ module(
           .hasAttribute("data-orig-src", "upload://hash");
       })
     );
+
+    test("upload:// image alt text is preserved verbatim across round-trips", async function (assert) {
+      pretender.post("/uploads/lookup-urls", () => response([]));
+      await testRenderedMarkdown(
+        "![_test_file_|100x100](upload://hash)",
+        (a) => {
+          a.dom("img").hasAttribute("alt", "_test_file_");
+        }
+      ).call(this, assert);
+    });
   }
 );

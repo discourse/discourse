@@ -2,13 +2,16 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import setAcceptedSolution from "../lib/set-accepted-solution";
+import DButton from "discourse/ui-kit/d-button";
+import setAcceptedSolutions from "../lib/set-accepted-solutions";
 
 export default class SolvedAcceptAnswerButton extends Component {
-  static hidden(args) {
+  static hidden(args, context) {
+    if (context.siteSettings.solved_allow_multiple_solutions) {
+      return false;
+    }
     return args.post.topic_accepted_answer;
   }
 
@@ -58,12 +61,12 @@ async function acceptPost(post) {
   const topic = post.topic;
 
   try {
-    const acceptedAnswer = await ajax("/solution/accept", {
+    const acceptedAnswers = await ajax("/solution/accept", {
       type: "POST",
       data: { id: post.id },
     });
 
-    setAcceptedSolution(topic, acceptedAnswer);
+    setAcceptedSolutions(topic, acceptedAnswers);
   } catch (e) {
     popupAjaxError(e);
   }

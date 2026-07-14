@@ -12,7 +12,7 @@ class ThemeTranslationParser
 
   def self.check_contains_hashes(hash)
     hash.all? do |_key, value|
-      value.is_a?(String) || (value.is_a?(Hash) && self.check_contains_hashes(value))
+      value.is_a?(String) || (value.is_a?(Hash) && check_contains_hashes(value))
     end
   end
 

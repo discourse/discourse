@@ -325,6 +325,9 @@ fi:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} on asettanut osallistumisesi automaattisesti ja kutsunut sinut tapahtumaan %{eventName}"
         an_event: "tapahtuma"
+      event_description:
+        show_more: "Näytä lisää"
+        show_less: "Näytä vähemmän"
       edit_reason: "Tapahtuma päivitetty"
       edit_reason_closed: "Tapahtuma suljettu"
       edit_reason_opened: "Tapahtuma avattu"
@@ -378,7 +381,6 @@ fi:
       upcoming_events_list:
         title: "Tulevat tapahtumat"
         empty: "Ei tulevia tapahtumia"
-        all_day: "Koko päivä"
         error: "Tapahtumien hakeminen epäonnistui"
         try_again: "Yritä uudelleen"
         view_all: "Näytä kaikki"
@@ -392,10 +394,9 @@ fi:
       models:
         invitee:
           no_users: "Käyttäjiä ei löydy"
+          leave_event: "Poistu tapahtumasta"
           status:
-            unknown: "Ei kiinnostunut"
             going: "Menossa"
-            not_going: "Ei menossa"
             interested: "Kiinnostunut"
             going_count:
               one: "%{count} menossa"
@@ -422,6 +423,27 @@ fi:
             private:
               title: "Yksityinen"
               description: "Yksityiseen tapahtumaan voivat liittyä vain kutsutut käyttäjät."
+      composer:
+        name_placeholder: "Tapahtuman nimi"
+        event_title_placeholder: "Tapahtuman nimi"
+        create_event_button: "Luo tapahtuma"
+        reminder:
+          units:
+            minutes:
+              one: "minuutti"
+              other: "minuuttia"
+            hours:
+              one: "tunti"
+              other: "tuntia"
+            days:
+              one: "päivä"
+              other: "päivää"
+            weeks:
+              one: "viikko"
+              other: "viikkoa"
+      composer_actions:
+        create_event:
+          label: "Luo tapahtuma"
       builder_modal:
         custom_fields:
           label: "Mukautetut kentät"
@@ -442,11 +464,10 @@ fi:
         timezone:
           label: Aikavyöhyke
           remove_timezone: Ei aikavyöhykettä (UTC)
+        starts_at:
+          label: "Alkamispäivä"
         reminders:
           label: "Muistutukset"
-          types:
-            bump_topic: "nosta ketjua automaattisesti"
-            notification: "Ilmoita osallistujille"
           units:
             minutes: "minuuttia"
             hours: "tuntia"
@@ -455,28 +476,19 @@ fi:
           periods:
             before: "ennen"
             after: "jälkeen"
-        recurrence_until:
-          label: "Asti (mukaan lukien)"
         recurrence:
           label: "Toistuvuus"
           none: "Ei toistu"
           every_day: "Joka päivä"
-          every_month: "Kuukausittain tänä arkipäivänä"
           every_weekday: "Arkipäivisin"
-          every_week: "Viikoittain tänä arkipäivänä"
-          every_two_weeks: "Kahden viikon välein tänä arkipäivänä"
-          every_four_weeks: "Neljän viikon välein tänä arkipäivänä"
-        minimal:
-          label: "Minimaalinen tapahtuma"
-          checkbox_label: "Piilota Menossa- ja Ei menossa -painikeet sekä kutsuttujen tila"
+          ordinals:
+            last: "viimeisin"
+        attendance:
+          none: "Ei valittu"
         allow_chat:
           label: "Chat-integraatio"
           checkbox_label: "Luo ja hallitse tapahtumakohtaista chat-kanavaa"
-        url:
-          label: "URL"
-          placeholder: "Valinnainen"
         location:
-          label: "Paikka"
           placeholder: "Lisää sijainti, linkki tai jotain."
         description:
           label: "Kuvaus"
@@ -486,8 +498,10 @@ fi:
           placeholder: "Valinnainen, oletuksena ketjun otsikko"
         invitees:
           label: "Kutsutut ryhmät"
-        status:
-          label: "Tila"
+        event_type:
+          public:
+            title: "Julkinen"
       invite_user_or_group:
         title: "Ilmoita käyttäjille tai ryhmille"
         invite: "Lähetä"
+        success: "Kutsu lähetetty"

@@ -120,7 +120,17 @@ sl:
   not_in_group:
     join_group: "Pridruži se skupini"
   reading_time: "Čas branja"
+  reading_time_minutes:
+    one: "%{count} minuto 🕑"
+    two: "%{count} minuti 🕑"
+    few: "%{count} minute 🕑"
+    other: "%{count} minut 🕑"
   likes: "Všečki"
+  likes_count:
+    one: "%{count} ❤"
+    two: "%{count} ❤"
+    few: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Novi uporabniki so začasno omejeni na %{count} odgovor v isti temi."
     two: "Novi uporabniki so začasno omejeni na %{count} odgovora v isti temi."
@@ -220,6 +230,11 @@ sl:
       admins: "administratorji"
       moderators: "moderatorji"
       staff: "osebje"
+    default_full_names:
+      everyone: "Vsi"
+      admins: "Administratorji"
+      moderators: "Moderatorji"
+      staff: "Osebje"
   education:
     until_posts:
       one: "%{count} prispevek"
@@ -563,6 +578,9 @@ sl:
       confirm_title: Nadaljujte na %{site_name}
       logging_in_as: Prijava kot %{username}
       confirm_button: Zaključi prijavo
+    device:
+      code: "Koda"
+      continue: "Nadaljuj"
   flags:
     errors:
       already_handled: "Prijava je bila že obdelana"
@@ -596,6 +614,29 @@ sl:
       xaxis:
         desktop: "Namizno"
         mobile: "Mobilno"
+    activity_by_category:
+      labels:
+        category: "Kategorija"
+        topics: "Tem"
+        posts: "Prispevki"
+        share: "Deli"
+    posters_by_member_type:
+      labels:
+        count: "Prispevki"
+        share: "Deli"
+      types:
+        staff: "Osebje"
+    trust_level_pipeline:
+      labels:
+        count: "Člani"
+        share: "Deli"
+        signups: "Registracije"
+      levels:
+        "0": "Novi"
+        "1": "Osnovni uporabnik"
+        "2": "Polnopraven član"
+        "3": "Običajne"
+        "4": "Vodja"
     consolidated_page_views:
       labels:
         post: Prispevek
@@ -605,6 +646,9 @@ sl:
       xaxis:
         api: "API"
         user_api: "Uporabniški API"
+    site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonimni"
     topics:
       title: "Tem"
     posts:
@@ -638,6 +682,12 @@ sl:
       labels:
         user: "Uporabnik"
         num_topics: "Tem"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Obiskov"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Obiskov"
     top_traffic_sources:
       xaxis: "Domena"
       num_topics: "Tem"
@@ -652,6 +702,8 @@ sl:
       title: "Anonimni"
     page_view_total_reqs:
       title: "Ogledov strani"
+    page_view_embed_reqs:
+      xaxis: "Dan"
     http_total_reqs:
       title: "Skupaj"
     topics_with_no_response:
@@ -663,7 +715,7 @@ sl:
       labels:
         user: Uporabnik
         location: Lokacija
-    staff_logins:
+    admin_logins:
       labels:
         user: Uporabnik
         location: Lokacija
@@ -694,12 +746,7 @@ sl:
     disabled: "onemogočeno"
     allow_uncategorized_topics: "Dovoli ustvarjanje tem brez kategorije. OPOZORILO: Če obstajajo nerazvrščene teme, jih morate ponovno razvrstiti, preden izklopite to nastavitev."
     download_remote_images_to_local: "Pretvorite oddaljene (povezane) slike v lokalne slike tako, da jih prenesete; To ohranja vsebino, tudi če bodo slike v prihodnosti odstranjene z oddaljenega spletnega mesta."
-    block_hotlinked_media: "Uporabnikom preprečite, da bi v svoje objave vključevali oddaljene (povezane) medijske vsebine. Oddaljene vsebine, ki niso prenesene z uporabo nastavitve 'download_remote_images_to_local', bodo zamenjane z nadomestno povezavo."
-    block_hotlinked_media_exceptions: "Seznam naslovov URL domen, za katere ne velja nastavitev block_hotlinked_media. Naslove vpišite vključno s protokolom (npr. https://example.com)."
-    x_summary_large_image: "Velika slika povzetka za kartico Twitter (imeti mora vsaj 280 pik v širino in vsaj 150 pik v višino, ne sme biti .svg). Če ostane prazno se metapodatki kartice ustvarijo z uporabo opengraph_image, razen če tudi ta ni .svg"
     send_welcome_message: "Pošlji sporočilo z dobrodošlico in kratkimi uvodnimi navodili vsem novim uporabnikom."
-    auth_skip_create_confirm: Pri prijavi s pomočjo zunanjega overjanja preskočite pojavno okno za ustvarjanje računa. Priporočena uporaba skupaj z auth_overrides_email, auth_overrides_username in auth_overrides_name.
-    auth_immediately: "Samodejno preusmeri na zunanji sistem za prijavo brez interakcije uporabnika. To začne veljati šele, ko je login_required vklopljen in ko obstaja samo en način zunanje overitve"
     enable_discourse_connect: "Omogoči vpis s pomočjo DiscourseConnect (prej »Discourse SSO«) (OPOZORILO: E-POŠTNI NASLOVI UPORABNIKOV *MORAJO* BITI OVERJENI PRI ZUNANJEM PONUDNIKU!)"
     avatar_sizes: "Seznam samodejno ustvarjenih velikosti avatarjev."
     use_site_small_logo_as_system_avatar: "Uporabi mali logotip spletnega mesta za avatar sistemskega uporabnika. Deluje le, če je logotip na voljo."
@@ -715,6 +762,9 @@ sl:
       topic: "Rezultati"
       user: "Uporabniki"
     results_page: "Zadetki iskanja za '%{term}'"
+  posts_filter:
+    description:
+      order_latest_topic: "Zadnje teme"
   original_poster: "Originalni avtor"
   most_recent_poster: "Zadnji odgovarja"
   frequent_poster: "Pogosto odgovarja"
@@ -1053,7 +1103,6 @@ sl:
         Vaše e-sporočilo je bilo poslano na blokiran e-naslov. Poskusite poslati na drug e-naslov ali [kontaktirajte osebje](%{base_url}/about).
     email_reject_not_allowed_email:
       title: "E-sporočilo zavrnjeno - nedovoljen e-naslov"
-      subject_template: "[%{email_prefix}] Napaka e-pošte -- blokiran e-naslov"
       text_body_template: |
         Žal nam je, ampak vaše e-sporočilo poslano na %{destination} (z naslovom %{former_title}) ni bilo sprejeto.
 
@@ -1275,7 +1324,6 @@ sl:
       text_body_template: "Nastavitev `download_remote_images_to_local` je onemogočena, ker je bil dosežena `download_remote_images_threshold` omejitev prostora na disku ."
     new_user_of_the_month:
       title: "Vi ste nov uporabnik meseca!"
-      subject_template: "Vi ste nov uporabnik meseca!"
       text_body_template: |
         Čestitamo, osvojili ste **Nov uporabnik meseca %{month_year}**. :trophy:
 
@@ -1506,6 +1554,7 @@ sl:
     account_exists:
       title: "Račun že obstaja"
       subject_template: "[%{email_prefix}] Račun že obstaja"
+      subject_template_improved: "Račun že obstaja"
       text_body_template: |
         Poizkusili ste ustvariti račun na %{site_name} ali spremeniti e-naslov računa na %{email}, vendar račun s tem naslovom že obstaja.
 
@@ -1525,6 +1574,7 @@ sl:
       popular_posts: "Zanimivi prispevki"
       more_new: "Novo za vas"
       subject_template: "[%{email_prefix}] Povzetek"
+      subject_template_improved: "Povzetek"
       unsubscribe: "Ta povzetek je poslan s strani %{site_link}, ker vas nekaj časa ni bilo na strani. Spremenite %{email_preferences_link} ali %{unsubscribe_link} za odjavo."
       your_email_settings: "vaše nastavitve e-pošte"
       click_here: "kliknite tukaj"
@@ -1542,6 +1592,7 @@ sl:
       title: "Prijava s povezavo"
       preview: "Prijava s povezavo."
       subject_template: "[%{email_prefix}] Prijava s povezavo"
+      subject_template_improved: "Prijava s povezavo"
       text_body_template: |
         Tukaj je vaša povezava za prijavo na [%{site_name}](%{base_url}).
 
@@ -1551,7 +1602,6 @@ sl:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "Nastavi geslo"
-      subject_template: "[%{email_prefix}] Nastavi geslo"
       text_body_template: |
         Nekdo je zahteval dodajanje gesla na vašemu računu pri [%{site_name}](%{base_url}). Alternativno se lahko prijavite tudi s podprtimi zunanjimi računi (Google, Facebook...), ki se ujemajo z vašim e-naslovom.
 
@@ -1562,9 +1612,9 @@ sl:
     admin_login:
       title: "Admin prijava"
       subject_template: "[%{email_prefix}] Prijava"
+      subject_template_improved: "Prijava"
     account_created:
       title: "Račun ustvarjen"
-      subject_template: "[%{email_prefix}] Vaš nov uporabniški račun"
       text_body_template: |
         Ustvarjen je bil nov uporabniški račun na %{site_name}
 
@@ -1639,7 +1689,6 @@ sl:
         Če zgornja povezava ne deluje, poskusite kopirati povezavo v naslov v vašem spletnem brskalniku.
     suspicious_login:
       title: "Opozorilo nove prijave"
-      subject_template: "[%{site_name}] Opozorilo nove prijave iz %{location}"
     post_approved:
       title: "Vaš prispevek je bil odobren"
   page_not_found:
@@ -1895,12 +1944,6 @@ sl:
     submit_button: "Pošlji e-sporočilo"
   tags:
     title: "Oznake"
-    forbidden:
-      restricted_to:
-        one: '"%{tag_name}" oznaka je omejena za kategorijo "%{category_names}"'
-        two: '"%{tag_name}" oznaka je omejena samo za naslednji kategoriji: %{category_names}'
-        few: '"%{tag_name}" oznaka je omejena samo za naslednje kategorije: %{category_names}'
-        other: '"%{tag_name}" oznaka je omejena samo za naslednje kategorije: %{category_names}'
   finish_installation:
     register:
       button: "Registracija"
@@ -1925,6 +1968,8 @@ sl:
               private:
                 label: "Zasebni"
   onebox:
+    google_meet:
+      meeting_code: "Koda:"
     github:
       closed: "zaprto"
       status_date:

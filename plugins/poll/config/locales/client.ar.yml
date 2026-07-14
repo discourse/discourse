@@ -12,6 +12,7 @@ ar:
           poll: "استطلاع رأي Discourse"
   js:
     poll:
+      title: "استطلاع رأي"
       dynamic:
         enabled_hint: "يمكن إضافة الخيارات أو إزالتها."
       voters:
@@ -191,5 +192,3 @@ ar:
           add: إضافة خيار
         automatic_close:
           label: إغلاق الاستطلاع تلقائيًا
-        show_advanced: "إظهار الخيارات المتقدمة"
-        hide_advanced: "إخفاء الخيارات المتقدمة"

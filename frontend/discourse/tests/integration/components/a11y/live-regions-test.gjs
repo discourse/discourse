@@ -1,11 +1,13 @@
+import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
+import { service } from "@ember/service";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import { disableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | a11y/live-regions", function (hooks) {
+module("Integration | Component | A11y | LiveRegions", function (hooks) {
   setupRenderingTest(hooks);
 
   test("renders polite and assertive live regions", async function (assert) {
@@ -59,5 +61,39 @@ module("Integration | Component | a11y/live-regions", function (hooks) {
     assert
       .dom("#a11y-announcements-polite")
       .hasText("Test polite message", "displays polite message");
+  });
+
+  test("announce called during render does not trigger a backtracking assertion", async function (assert) {
+    disableClearA11yAnnouncementsInTests();
+
+    // Mirrors DIconGridPickerContent: a getter read during render calls `announce`.
+    // <A11yLiveRegions /> renders first and reads the tracked message map, so a
+    // synchronous announce (write) later in the same render trips Ember's
+    // backtracking-rerender assertion and breaks the render. The announcer is placed
+    // AFTER the live regions to establish that read-before-write ordering.
+    class RenderTimeAnnouncer extends Component {
+      @service a11y;
+
+      get announced() {
+        this.a11y.announce("Announced during render", "polite", 500);
+        return "";
+      }
+
+      <template>{{this.announced}}</template>
+    }
+
+    await render(
+      <template>
+        <A11yLiveRegions />
+        <RenderTimeAnnouncer />
+      </template>
+    );
+
+    assert
+      .dom("#a11y-announcements-polite")
+      .hasText(
+        "Announced during render",
+        "the render-time announcement is shown without a backtracking error"
+      );
   });
 });

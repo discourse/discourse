@@ -74,7 +74,7 @@ class ImportScripts::Vanilla < ImportScripts::Base
           CSV
             .parse(data.join("\n"), headers: true, header_converters: :symbol)
             .map { |row| row.to_hash }
-        instance_variable_set("@#{table}".to_sym, parsed_data)
+        instance_variable_set(:"@#{table}", parsed_data)
       end
     end
   end

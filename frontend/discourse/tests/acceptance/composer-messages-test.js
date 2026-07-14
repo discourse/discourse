@@ -175,6 +175,43 @@ acceptance("Composer - Messages - Duplicate links", function (needs) {
   });
 });
 
+acceptance("Composer - Messages - Education", function (needs) {
+  needs.user();
+
+  test("shows wait_for_typing message only once", async function (assert) {
+    pretender.get("/composer_messages", () =>
+      response({
+        composer_messages: [
+          {
+            id: "education",
+            templateName: "education",
+            wait_for_typing: true,
+            body: "Education message",
+          },
+        ],
+      })
+    );
+
+    await visit("/t/internationalization-localization/280");
+    await click("button.create");
+
+    await triggerEvent("#reply-control", "transitionend", {
+      propertyName: "height",
+    });
+
+    await triggerKeyEvent(".d-editor-input", "keyup", "Space");
+    assert.dom(".composer-popup").exists("shows composer warning message");
+
+    await click(".composer-popup .close");
+    assert.dom(".composer-popup").doesNotExist("composer warning is closed");
+
+    await triggerKeyEvent(".d-editor-input", "keyup", "Space");
+    assert
+      .dom(".composer-popup")
+      .doesNotExist("composer warning does not show again");
+  });
+});
+
 acceptance("Composer - Messages - Private Messages", function (needs) {
   needs.user({
     id: 32,

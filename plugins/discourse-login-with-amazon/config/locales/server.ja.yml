@@ -6,7 +6,6 @@
 
 ja:
   site_settings:
-    enable_login_with_amazon: "「Amazon でログイン」認証を有効にします。 `login with amazon client id` と `login with amazon client secret` が必要です。"
     login_with_amazon_client_id: "「Amazon でログイン」クライアント ID"
     login_with_amazon_client_secret: "「Amazon でログイン」クライアントシークレット"
     login_with_amazon_scope: "「Amazon でログイン」OAuth2 スコープ（スペース区切り）"

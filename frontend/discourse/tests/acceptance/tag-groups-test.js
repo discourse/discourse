@@ -20,7 +20,9 @@ acceptance("Tag Groups", function (needs) {
     };
 
     server.post("/tag_groups", () => helper.response(tagGroups));
-    server.get("/forum/tag_groups", () => helper.response(tagGroups));
+    server.get("/forum/tag_groups", () =>
+      helper.response({ tag_groups: [tagGroups.tag_group] })
+    );
     server.get("/groups/search.json", () => {
       return helper.response([
         {

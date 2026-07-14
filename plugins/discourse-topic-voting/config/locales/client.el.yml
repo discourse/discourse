@@ -10,19 +10,20 @@ el:
       sort_options:
         votes: "Ψήφοι"
     topic_voting:
+      category_type_ideas:
+        title: "Ιδέες"
       notification_label:
         vote_released: "Ψήφος επιστράφηκε"
       title: "Ψηφοφορία Θέματος"
       reached_limit: "Έχετε χρησιμοποιήσει όλες τις ψήφους σας, αφαιρέστε μια υπάρχουσα ψήφο!"
       list_votes: "Λίστα των ψήφων σας"
-      votes_nav_help: "θέματα με τις περισσότερες ψήφους"
+      votes_nav_help: "θέματα με τις περισσότερες ψήφους όλων των εποχών"
+      hot_nav_help: "κορυφαία πρόσφατα θέματα, συμπεριλαμβανομένων εκείνων με πρόσφατες ψήφους"
       voted: "Ψηφίσατε για αυτό το θέμα"
       allow_topic_voting: "Να επιτρέπεται στους χρήστες να ψηφίζουν για θέματα αυτής της κατηγορίας"
       vote_title: "Ψήφισε"
       vote_title_plural: "Ψήφοι"
-      voted_title: "Ψήφισα"
-      voting_closed_title: "Κλειστή"
-      voting_limit: "Όριο"
+      voting_closed_description: "Η ψηφοφορία είναι κλειστή για αυτό το θέμα"
       see_votes: "Έχετε %{count}/%{max} ψήφους ακόμα"
       locked: "Κλειδωμένη"
       locked_description: "Αυξήστε το επίπεδο εμπιστοσύνης σας για να ψηφίσετε"
@@ -33,12 +34,17 @@ el:
         one: "Ψήφισε"
         other: "Ψήφοι"
       remove_vote: "Αφαίρεση ψήφου"
+      watch_topic: "Ειδοποίησέ με για νέες αναρτήσεις"
+      no_votes_yet: "Κανείς δεν έχει ψηφίσει ακόμη για αυτό"
+      and_more_voters: "και %{count} ακόμα..."
+      show_voters: "Εμφάνιση ψηφοφόρων"
+      vote_count_thousands: "%{count}χιλ."
       no_votes_title_self: "Δεν έχετε ψηφίσει σε κανένα θέμα ακόμη"
       no_votes_title_others: "Ο χρήστης %{username} δεν έχει ψηφίσει σε κανένα θέμα ακόμη"
     filters:
       votes:
         title: "Ψήφοι"
-        help: "θέματα με τις περισσότερες ψήφους"
+        help: "θέματα με τις περισσότερες ψήφους όλων των εποχών"
       my_votes:
         title: "Οι Ψήφοι Μου"
         help: "θέματα στα οποία ψηφίσατε"

@@ -10,10 +10,7 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import AdminUser from "discourse/admin/models/admin-user";
 import BackButton from "discourse/components/back-button";
-import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
-import Avatar from "discourse/helpers/bound-avatar-template";
-import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   addUniqueValueToArray,
@@ -24,6 +21,9 @@ import getURL from "discourse/lib/get-url";
 import Group from "discourse/models/group";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { and, eq, gt, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiAgentMcpToolSelectorModal from "../components/modal/ai-agent-mcp-tool-selector-modal";
 import AiAgentResponseFormatEditor from "../components/modal/ai-agent-response-format-editor";
@@ -106,6 +106,22 @@ export default class AgentEditor extends Component {
         name: i18n("discourse_ai.ai_agent.execution_mode_options.agentic"),
       },
     ];
+  }
+
+  get thinkingEffortValues() {
+    return [
+      "default",
+      "none",
+      "minimal",
+      "low",
+      "medium",
+      "high",
+      "xhigh",
+      "max",
+    ].map((id) => ({
+      id,
+      name: i18n(`discourse_ai.ai_agent.thinking_effort_options.${id}`),
+    }));
   }
 
   get forcedToolStrategies() {
@@ -279,6 +295,67 @@ export default class AgentEditor extends Component {
   @action
   availableForcedTools(tools) {
     return this.allTools.filter((tool) => tools.includes(tool.id));
+  }
+
+  @cached
+  get llmsById() {
+    const map = {};
+    for (const llm of this.args.agents.resultSetMeta.llms || []) {
+      map[llm.id] = llm;
+    }
+    return map;
+  }
+
+  // Provider-native tools are only offered when the agent forces a default LLM
+  // whose provider supports the tool.
+  supportedNativeToolIds(forceDefaultLlm, defaultLlmId) {
+    if (!forceDefaultLlm || !defaultLlmId) {
+      return [];
+    }
+    return this.llmsById[defaultLlmId]?.supported_native_tools || [];
+  }
+
+  @action
+  availableTools(data) {
+    const supported = this.supportedNativeToolIds(
+      data?.force_default_llm,
+      data?.default_llm_id
+    );
+    return this.allTools.filter((tool) => {
+      if (!tool.native) {
+        return true;
+      }
+      return supported.includes(tool.id.replace("native-", ""));
+    });
+  }
+
+  pruneNativeTools(form, data, forceDefaultLlm, defaultLlmId) {
+    const supported = this.supportedNativeToolIds(
+      forceDefaultLlm,
+      defaultLlmId
+    );
+    const tools = data.tools || [];
+    const kept = tools.filter((toolId) => {
+      if (!toolId.startsWith("native-")) {
+        return true;
+      }
+      return supported.includes(toolId.replace("native-", ""));
+    });
+    if (kept.length !== tools.length) {
+      this.updateToolNames(form, data, kept);
+    }
+  }
+
+  @action
+  onDefaultLlmChange(form, data, value) {
+    form.set("default_llm_id", value);
+    this.pruneNativeTools(form, data, data.force_default_llm, value);
+  }
+
+  @action
+  onForceDefaultLlmChange(form, data, value, { set }) {
+    set("force_default_llm", value);
+    this.pruneNativeTools(form, data, value, data.default_llm_id);
   }
 
   mcpServerById(serverId) {
@@ -594,11 +671,11 @@ export default class AgentEditor extends Component {
           @title={{i18n "discourse_ai.ai_agent.system_prompt"}}
           @validation="required|length:1,100000"
           @disabled={{data.system}}
-          @format="large"
+          @format="full"
           @type="textarea"
           as |field|
         >
-          <field.Control />
+          <field.Control @autoResize={{true}} />
         </form.Field>
 
         <AiAgentResponseFormatEditor @form={{form}} @data={{data}} />
@@ -615,11 +692,25 @@ export default class AgentEditor extends Component {
             <AiLlmSelector
               @value={{field.value}}
               @llms={{@agents.resultSetMeta.llms}}
-              @onChange={{field.set}}
+              @onChange={{fn this.onDefaultLlmChange form data}}
               class="ai-agent-editor__llms"
             />
           </field.Control>
         </form.Field>
+
+        {{#if (and (not @model.isNew) data.default_llm_id)}}
+          <form.Field
+            @name="force_default_llm"
+            @title={{i18n "discourse_ai.ai_agent.force_default_llm"}}
+            @showTitle={{false}}
+            @format="large"
+            @type="checkbox"
+            @onSet={{fn this.onForceDefaultLlmChange form data}}
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
+        {{/if}}
 
         <form.Field
           @name="allowed_group_ids"
@@ -698,6 +789,23 @@ export default class AgentEditor extends Component {
           </form.Field>
         {{/if}}
 
+        <form.Field
+          @name="thinking_effort"
+          @title={{i18n "discourse_ai.ai_agent.thinking_effort"}}
+          @tooltip={{i18n "discourse_ai.ai_agent.thinking_effort_help"}}
+          @format="large"
+          @type="select"
+          as |field|
+        >
+          <field.Control as |select|>
+            {{#each this.thinkingEffortValues as |effort|}}
+              <select.Option
+                @value={{effort.id}}
+              >{{effort.name}}</select.Option>
+            {{/each}}
+          </field.Control>
+        </form.Field>
+
         {{#if (this.showExamples data)}}
           <form.Section
             @title={{i18n "discourse_ai.ai_agent.examples.title"}}
@@ -733,6 +841,7 @@ export default class AgentEditor extends Component {
           <form.Field
             @name="tools"
             @title={{i18n "discourse_ai.ai_agent.tools"}}
+            @tooltip={{i18n "discourse_ai.ai_agent.native_tools_help"}}
             @format="large"
             @type="custom"
             as |field|
@@ -742,7 +851,7 @@ export default class AgentEditor extends Component {
                 @value={{field.value}}
                 @disabled={{data.system}}
                 @onChange={{fn this.updateToolNames form data}}
-                @content={{@agents.resultSetMeta.tools}}
+                @content={{this.availableTools data}}
               />
             </field.Control>
           </form.Field>
@@ -899,7 +1008,7 @@ export default class AgentEditor extends Component {
                           totalSelectedToolTokens
                         }}
                       >
-                        {{icon "caret-down"}}
+                        {{dIcon "caret-down"}}
                       </span>
                       <span
                         class="ai-agent-editor__tool-context-cost-bar-indicator --count"
@@ -907,14 +1016,14 @@ export default class AgentEditor extends Component {
                           totalSelectedToolCount
                         }}
                       >
-                        {{icon "caret-up"}}
+                        {{dIcon "caret-up"}}
                       </span>
                     </div>
                     <span class="ai-agent-editor__tool-context-cost-legend">
                       <span
                         class="ai-agent-editor__tool-context-cost-legend-item --token"
                       >
-                        {{icon "caret-down"}}
+                        {{dIcon "caret-down"}}
                         {{i18n "discourse_ai.ai_agent.token_usage"}}:
                         <span
                           class="ai-agent-editor__tool-context-cost-value
@@ -929,7 +1038,7 @@ export default class AgentEditor extends Component {
                       <span
                         class="ai-agent-editor__tool-context-cost-legend-item --count"
                       >
-                        {{icon "caret-up"}}
+                        {{dIcon "caret-up"}}
                         {{i18n "discourse_ai.ai_agent.tool_count"}}:
                         <span
                           class="ai-agent-editor__tool-context-cost-value
@@ -1160,22 +1269,7 @@ export default class AgentEditor extends Component {
             <field.Control />
           </form.Field>
 
-          {{#if @model.isNew}}
-            <div>{{i18n "discourse_ai.ai_agent.ai_bot.save_first"}}</div>
-          {{else}}
-            {{#if data.default_llm_id}}
-              <form.Field
-                @name="force_default_llm"
-                @title={{i18n "discourse_ai.ai_agent.force_default_llm"}}
-                @showTitle={{false}}
-                @format="large"
-                @type="checkbox"
-                as |field|
-              >
-                <field.Control />
-              </form.Field>
-            {{/if}}
-
+          {{#unless @model.isNew}}
             <form.Container
               @title={{i18n "discourse_ai.ai_agent.user"}}
               @tooltip={{unless
@@ -1190,7 +1284,7 @@ export default class AgentEditor extends Component {
                   href={{data.user.path}}
                   data-user-card={{data.user.username}}
                 >
-                  {{Avatar data.user.avatar_template "small"}}
+                  {{dBoundAvatarTemplate data.user.avatar_template "small"}}
                 </a>
                 <LinkTo @route="adminUser" @model={{this.adminUser}}>
                   {{data.user.username}}
@@ -1203,70 +1297,64 @@ export default class AgentEditor extends Component {
                 />
               {{/if}}
             </form.Container>
+          {{/unless}}
 
-            {{#if data.user}}
-              <form.Field
-                @name="allow_personal_messages"
-                @title={{i18n "discourse_ai.ai_agent.allow_personal_messages"}}
-                @tooltip={{i18n
-                  "discourse_ai.ai_agent.allow_personal_messages_help"
-                }}
-                @showTitle={{false}}
-                @format="large"
-                @type="checkbox"
-                as |field|
-              >
-                <field.Control />
-              </form.Field>
+          <form.Field
+            @name="allow_personal_messages"
+            @title={{i18n "discourse_ai.ai_agent.allow_personal_messages"}}
+            @tooltip={{i18n
+              "discourse_ai.ai_agent.allow_personal_messages_help"
+            }}
+            @showTitle={{false}}
+            @format="large"
+            @type="checkbox"
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
 
-              <form.Field
-                @name="allow_topic_mentions"
-                @title={{i18n "discourse_ai.ai_agent.allow_topic_mentions"}}
-                @tooltip={{i18n
-                  "discourse_ai.ai_agent.allow_topic_mentions_help"
-                }}
-                @showTitle={{false}}
-                @format="large"
-                @type="checkbox"
-                as |field|
-              >
-                <field.Control />
-              </form.Field>
+          <form.Field
+            @name="allow_topic_mentions"
+            @title={{i18n "discourse_ai.ai_agent.allow_topic_mentions"}}
+            @tooltip={{i18n "discourse_ai.ai_agent.allow_topic_mentions_help"}}
+            @showTitle={{false}}
+            @format="large"
+            @type="checkbox"
+            as |field|
+          >
+            <field.Control />
+          </form.Field>
 
-              {{#if this.chatPluginEnabled}}
-                <form.Field
-                  @name="allow_chat_direct_messages"
-                  @title={{i18n
-                    "discourse_ai.ai_agent.allow_chat_direct_messages"
-                  }}
-                  @tooltip={{i18n
-                    "discourse_ai.ai_agent.allow_chat_direct_messages_help"
-                  }}
-                  @showTitle={{false}}
-                  @format="large"
-                  @type="checkbox"
-                  as |field|
-                >
-                  <field.Control />
-                </form.Field>
+          {{#if this.chatPluginEnabled}}
+            <form.Field
+              @name="allow_chat_direct_messages"
+              @title={{i18n "discourse_ai.ai_agent.allow_chat_direct_messages"}}
+              @tooltip={{i18n
+                "discourse_ai.ai_agent.allow_chat_direct_messages_help"
+              }}
+              @showTitle={{false}}
+              @format="large"
+              @type="checkbox"
+              as |field|
+            >
+              <field.Control />
+            </form.Field>
 
-                <form.Field
-                  @name="allow_chat_channel_mentions"
-                  @title={{i18n
-                    "discourse_ai.ai_agent.allow_chat_channel_mentions"
-                  }}
-                  @tooltip={{i18n
-                    "discourse_ai.ai_agent.allow_chat_channel_mentions_help"
-                  }}
-                  @showTitle={{false}}
-                  @format="large"
-                  @type="checkbox"
-                  as |field|
-                >
-                  <field.Control />
-                </form.Field>
-              {{/if}}
-            {{/if}}
+            <form.Field
+              @name="allow_chat_channel_mentions"
+              @title={{i18n
+                "discourse_ai.ai_agent.allow_chat_channel_mentions"
+              }}
+              @tooltip={{i18n
+                "discourse_ai.ai_agent.allow_chat_channel_mentions_help"
+              }}
+              @showTitle={{false}}
+              @format="large"
+              @type="checkbox"
+              as |field|
+            >
+              <field.Control />
+            </form.Field>
           {{/if}}
         </form.Section>
 

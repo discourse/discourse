@@ -20,6 +20,9 @@ module Chat
     MULTIQUOTE_ATTR = "multiQuote=\"true\""
     NO_LINK_ATTR = "noLink=\"true\""
 
+    # Keep in sync with frontend/discourse-markdown-it/src/features/bbcode-block.js
+    QUOTATION_MARKS = ["\"\"", "''", "«»", "“”", "””", "‘’", "„“", "‚’", "‹›"].freeze
+
     class TranscriptBBCode
       attr_reader :channel,
                   :multiquote,
@@ -128,7 +131,7 @@ module Chat
       end
 
       def channel_attr
-        "channel=\"#{channel.title(@acting_user)}\""
+        serialize_attr("channel", channel.title(@acting_user))
       end
 
       def channel_id_attr
@@ -144,7 +147,17 @@ module Chat
 
         thread_title = thread.title.presence || I18n.t("chat.transcript.default_thread_title")
         thread_title += " (#{range})" if range.present?
-        "threadTitle=\"#{thread_title}\""
+        serialize_attr("threadTitle", thread_title)
+      end
+
+      def serialize_attr(name, value)
+        QUOTATION_MARKS.each do |pair|
+          open, close = pair.chars
+          next if value.include?(open) || value.include?(close)
+          return "#{name}=#{open}#{value}#{close}"
+        end
+
+        "#{name}=\"#{value.delete('"')}\""
       end
     end
 
@@ -277,7 +290,10 @@ module Chat
     private
 
     def group_messages(messages)
-      messages.group_by { |msg| msg.thread_id || msg.id }.values
+      # Namespacing the key prevents collisions between chat_message id and chat_thread id.
+      messages
+        .group_by { |msg| msg.thread_id ? [:thread, msg.thread_id] : [:message, msg.id] }
+        .values
     end
 
     def messages

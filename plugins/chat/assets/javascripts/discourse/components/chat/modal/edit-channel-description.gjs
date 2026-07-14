@@ -3,12 +3,12 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import CharCounter from "discourse/components/char-counter";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
-import DModalCancel from "discourse/components/d-modal-cancel";
 import withEventValue from "discourse/helpers/with-event-value";
 import { extractError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DCharCounter from "discourse/ui-kit/d-char-counter";
+import DModal from "discourse/ui-kit/d-modal";
+import DModalCancel from "discourse/ui-kit/d-modal-cancel";
 import { i18n } from "discourse-i18n";
 
 const DESCRIPTION_MAX_LENGTH = 280;
@@ -65,7 +65,7 @@ export default class ChatModalEditChannelDescription extends Component {
         <span class="chat-modal-edit-channel-description__description">{{i18n
             "chat.channel_edit_description_modal.description"
           }}</span>
-        <CharCounter
+        <DCharCounter
           @value={{this.editedDescription}}
           @max={{this.descriptionMaxLength}}
         >
@@ -76,7 +76,7 @@ export default class ChatModalEditChannelDescription extends Component {
               "chat.channel_edit_description_modal.input_placeholder"
             }}
           >{{this.editedDescription}}</textarea>
-        </CharCounter>
+        </DCharCounter>
       </:body>
       <:footer>
         <DButton

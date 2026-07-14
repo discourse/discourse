@@ -4,6 +4,7 @@ module DiscourseChatIntegration
   module Provider
     module MattermostProvider
       PROVIDER_NAME = "mattermost"
+      POPULARITY_SCORE = 80
       PROVIDER_ENABLED_SETTING = :chat_integration_mattermost_enabled
       CHANNEL_IDENTIFIER_KEY = "identifier"
       CHANNEL_PARAMETERS = [{ key: "identifier", regex: '^[@#]\S*$', unique: true }]
@@ -43,7 +44,7 @@ module DiscourseChatIntegration
         elsif topic.category
           category =
             (
-              if (topic.category.parent_category)
+              if topic.category.parent_category
                 "[#{topic.category.parent_category.name}/#{topic.category.name}]"
               else
                 "[#{topic.category.name}]"
@@ -54,9 +55,7 @@ module DiscourseChatIntegration
         icon_url =
           if SiteSetting.chat_integration_mattermost_icon_url.present?
             UrlHelper.absolute(SiteSetting.chat_integration_mattermost_icon_url)
-          elsif (
-                url = (SiteSetting.try(:site_logo_small_url) || SiteSetting.logo_small_url)
-              ).present?
+          elsif (url = SiteSetting.try(:site_logo_small_url) || SiteSetting.logo_small_url).present?
             UrlHelper.absolute(url)
           end
 
@@ -92,7 +91,7 @@ module DiscourseChatIntegration
         channel_id = channel.data["identifier"]
         message = mattermost_message(post, channel_id)
 
-        self.send_via_webhook(message)
+        send_via_webhook(message)
       end
 
       def self.get_channel_by_name(name)

@@ -71,5 +71,23 @@ describe TopicsController do
       queries = track_sql_queries { get "/t/#{post.topic_id}.json" }
       expect(queries.filter { |q| q.include?("reactions") }.size).to eq(count)
     end
+
+    it "does not generate N+1 queries when the viewer has ignored users" do
+      sign_in(user_1)
+      Fabricate(:ignored_user, user: user_1, ignored_user: user_2)
+
+      Fabricate(:reaction_user, reaction: laughing_reaction, user: user_2, post: post)
+      Fabricate(:reaction_user, reaction: hugs_reaction, user: user_3, post: post)
+
+      queries = track_sql_queries { get "/t/#{post.topic_id}.json" }
+      count = queries.filter { |q| q.include?("reactions") }.size
+
+      Fabricate(:reaction_user, reaction: open_mouth_reaction, user: user_4, post: post)
+      Fabricate(:reaction_user, reaction: hugs_reaction, user: Fabricate(:user), post: post)
+      Fabricate(:reaction_user, reaction: laughing_reaction, user: Fabricate(:user), post: post)
+
+      queries = track_sql_queries { get "/t/#{post.topic_id}.json" }
+      expect(queries.filter { |q| q.include?("reactions") }.size).to eq(count)
+    end
   end
 end

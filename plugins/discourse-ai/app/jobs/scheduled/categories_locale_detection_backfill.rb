@@ -19,27 +19,19 @@ module Jobs
         return
       end
 
-      target_category_ids = SiteSetting.ai_translation_target_categories
-      if target_category_ids.present?
-        categories =
-          Category.where(locale: nil).where(id: target_category_ids.split("|").map(&:to_i))
-      else
-        return
-      end
+      categories = DiscourseAi::Translation::CategoryCandidates.get.where(locale: nil)
 
       limit = SiteSetting.ai_translation_backfill_hourly_rate
       categories = categories.limit(limit)
       return if categories.empty?
 
       categories.each do |category|
-        begin
-          DiscourseAi::Translation::CategoryLocaleDetector.detect_locale(category)
-        rescue FinalDestination::SSRFDetector::LookupFailedError
-        rescue => e
-          DiscourseAi::Translation::VerboseLogger.log(
-            "Failed to detect category #{category.id}'s locale: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
-          )
-        end
+        DiscourseAi::Translation::CategoryLocaleDetector.detect_locale(category)
+      rescue FinalDestination::SSRFDetector::LookupFailedError
+      rescue => e
+        DiscourseAi::Translation::VerboseLogger.log(
+          "Failed to detect category #{category.id}'s locale: #{e.message}\n\n#{e.backtrace[0..3].join("\n")}",
+        )
       end
 
       DiscourseAi::Translation::VerboseLogger.log("Detected #{categories.size} category locales")

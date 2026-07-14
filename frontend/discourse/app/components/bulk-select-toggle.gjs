@@ -1,4 +1,4 @@
-import DButton from "discourse/components/d-button";
+import DButton from "discourse/ui-kit/d-button";
 
 const BulkSelectToggle = <template>
   <DButton

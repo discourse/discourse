@@ -12,6 +12,11 @@ RSpec.describe Patreon::Campaign do
       expect(Patreon.get("pledges").count).to eq(3)
       expect(Patreon::Pledge::Decline.all.count).to eq(2)
       expect(Patreon.get("rewards").count).to eq(expected_rewards_count)
+      expect(Patreon.get("rewards")["0"]).to include(
+        "id" => "0",
+        "title" => "All Patrons",
+        "amount_cents" => 0,
+      )
       expect(Patreon.get("users").count).to eq(3)
       expect(Patreon.get("reward-users")["0"].count).to eq(3)
       expect(Patreon.get("filters").count).to eq(1)

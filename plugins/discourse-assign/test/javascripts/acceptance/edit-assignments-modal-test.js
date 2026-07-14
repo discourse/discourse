@@ -12,7 +12,7 @@ const secondReply = topic.post_stream.posts[2];
 const new_assignee_1 = "user_1";
 const new_assignee_2 = "user_2";
 
-acceptance(`Discourse Assign | Edit assignments modal`, function (needs) {
+acceptance("Edit assignments modal", function (needs) {
   needs.user({ can_assign: true });
   needs.settings({
     assign_enabled: true,

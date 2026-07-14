@@ -28,6 +28,13 @@ uk:
         react_with: "Відреагувати на цей пост: %{reaction}"
         cant_remove_reaction: "Ви більше не можете видалити вашу реакцію"
         remove_reaction: "Видалити цю реакцію %{reaction}"
+      users_popup:
+        all: "Всі"
+        title:
+          one: "%{count} Реакція"
+          few: "%{count} Реакції"
+          many: "%{count} Реакцій"
+          other: "%{count} Реакцій"
       counter:
         aria_label:
           one: "%{count} реакція"

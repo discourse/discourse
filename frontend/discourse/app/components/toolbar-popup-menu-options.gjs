@@ -4,14 +4,14 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { iconHTML } from "discourse/lib/icon-library";
 import { translateModKey } from "discourse/lib/utilities";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ToolbarPopupMenuOptions extends Component {
@@ -162,6 +162,15 @@ export default class ToolbarPopupMenuOptions extends Component {
     return config.icon;
   }
 
+  get triggerLabel() {
+    const label = this.args.triggerLabel;
+    if (typeof label === "function") {
+      return label({ state: this.textManipulationState });
+    }
+
+    return label;
+  }
+
   <template>
     <DMenu
       @identifier={{concat "toolbar-menu__" @class}}
@@ -174,15 +183,23 @@ export default class ToolbarPopupMenuOptions extends Component {
       @offset={{5}}
       @onKeydown={{@onKeydown}}
       tabindex="-1"
-      @triggerClass={{concatClass "toolbar__button" @class}}
+      @triggerClass={{dConcatClass "toolbar__button" @class}}
       @class="toolbar-popup-menu-options"
       title={{@title}}
     >
       <:trigger>
-        {{icon (this.getIcon this.args)}}
+        {{dIcon (this.getIcon this.args)}}
+        {{#if this.triggerLabel}}
+          <span class="toolbar-popup-menu-options__trigger-label">
+            {{this.triggerLabel}}
+          </span>
+        {{/if}}
       </:trigger>
       <:content>
-        <DropdownMenu {{this.trackScrollability}} as |dropdown|>
+        <DDropdownMenu {{this.trackScrollability}} as |dropdown|>
+          {{#if @header}}
+            <li class="dropdown-menu__header">{{@header}}</li>
+          {{/if}}
           {{#each this.convertedContent as |option|}}
             <dropdown.item>
               <DButton
@@ -191,12 +208,12 @@ export default class ToolbarPopupMenuOptions extends Component {
                 @icon={{this.getIcon option}}
                 @action={{fn this.onSelect option}}
                 data-name={{option.name}}
-                class={{concatClass (if (this.getActive option) "--active")}}
+                class={{dConcatClass (if (this.getActive option) "--active")}}
                 aria-keyshortcuts={{option.ariaKeyshortcuts}}
               />
             </dropdown.item>
           {{/each}}
-        </DropdownMenu>
+        </DDropdownMenu>
       </:content>
     </DMenu>
   </template>

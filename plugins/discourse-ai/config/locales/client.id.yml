@@ -84,6 +84,14 @@ id:
               label: "Balas"
     discourse_ai:
       title: "AI"
+      ai_tool_approval:
+        loading: "Diproses..."
+        tool: "Aksi"
+        user: "Pengguna"
+        approve: "Terima"
+        reject: "Tolak"
+        approved: "Disetujui"
+        rejected: "Ditolak"
       llm_selector:
         none: "Tidak ada"
       features:
@@ -94,6 +102,8 @@ id:
         expand_list:
           other: "(%{count} lainnya)"
         collapse_list: "(tampilkan lebih sedikit)"
+        nav:
+          enabled: "Diaktifkan"
         filters:
           all: "Semua"
           reset: "Reset"
@@ -104,6 +114,7 @@ id:
       modals:
         select_option: "Memilih sebuah pilihan..."
       translations:
+        category_scope: "Kategori"
         stats:
           eta_minutes:
             other: "%{count} menit"
@@ -140,6 +151,11 @@ id:
         delete: "Hapus"
         temperature: "Temperatur"
         top_p: "Top P"
+        thinking_effort_options:
+          none: "Tidak ada"
+          low: "Rendah"
+          medium: "Sedang"
+          high: "Tinggi"
         response_format:
           open_modal: "Ubah"
         filters:

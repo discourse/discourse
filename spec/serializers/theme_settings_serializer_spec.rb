@@ -4,7 +4,7 @@ RSpec.describe ThemeSettingsSerializer do
   fab!(:theme)
 
   let(:theme_setting) do
-    yaml = File.read("#{Rails.root}/spec/fixtures/theme_settings/objects_settings.yaml")
+    yaml = File.read("#{Rails.root.join("spec/fixtures/theme_settings/objects_settings.yaml")}")
     theme.set_field(target: :settings, name: "yaml", value: yaml)
     theme.save!
     theme.settings

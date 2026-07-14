@@ -10,6 +10,24 @@ fr:
       site_settings:
         categories:
           discourse_solved: "Discourse résolu"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Solutions acceptées"
+        sections:
+          support:
+            title: "Soutenir"
+            filter:
+              all_categories: "Toutes les catégories"
+            answerers:
+              staff: "Responsable"
+              member: "Membres"
+              basic: "Actif"
+            response_time:
+              buckets:
+                lt_1h: "< 1 heure"
+                gt_24h: "> 24 heures"
   js:
     notifications:
       alt:
@@ -42,6 +60,8 @@ fr:
       move_post_cancel: "Annuler"
       confirm_solved_removal_confirm: "Confirmer"
       confirm_solved_removal_cancel: "Annuler"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: Votre question a-t-elle reçu une réponse ?
         description: "Mettez la réponse en surbrillance et aidez les autres utilisateurs en utilisant le bouton de solution sous la réponse adéquate."

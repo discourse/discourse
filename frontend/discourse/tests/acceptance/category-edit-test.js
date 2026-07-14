@@ -3,9 +3,18 @@ import { test } from "qunit";
 import sinon from "sinon";
 import DiscourseURL from "discourse/lib/url";
 import pretender from "discourse/tests/helpers/create-pretender";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
+
+function latestCategorySavePayload() {
+  const request = pretender.handledRequests.findLast(
+    ({ method, requestBody }) => method === "PUT" && requestBody
+  );
+
+  return JSON.parse(request.requestBody);
+}
 
 acceptance("Category Edit", function (needs) {
   needs.user();
@@ -24,12 +33,14 @@ acceptance("Category Edit", function (needs) {
     assert.dom(".category-breadcrumb .badge-category").hasText("bug");
     assert.dom(".badge-category__wrapper .badge-category").hasText("bug");
     await fillIn("input.category-name", "testing");
-    assert.dom(".category-style .badge-category__name").hasText("testing");
+    assert
+      .dom(".edit-category-tab-general .badge-category__name")
+      .hasText("testing");
 
-    await click(".edit-category-topic-template a");
+    await visit("/c/bug/edit/topic-template");
     await fillIn(".d-editor-input", "this is the new topic template");
 
-    await click("#save-category");
+    await click(".admin-changes-banner .btn-primary");
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/topic-template",
@@ -37,11 +48,9 @@ acceptance("Category Edit", function (needs) {
     );
 
     await visit("/c/bug/edit/settings");
-    const searchPriorityChooser = selectKit("#category-search-priority");
-    await searchPriorityChooser.expand();
-    await searchPriorityChooser.selectRowByValue(1);
+    await formKit().field("search_priority").select(1);
 
-    await click("#save-category");
+    await click(".admin-changes-banner .btn-primary");
     assert.strictEqual(
       currentURL(),
       "/c/bug/edit/settings",
@@ -60,70 +69,56 @@ acceptance("Category Edit", function (needs) {
   test("Editing required tag groups", async function (assert) {
     await visit("/c/bug/edit/tags");
 
-    assert.dom(".minimum-required-tags").exists();
+    assert.dom("#category-minimum-tags").exists();
 
-    assert.dom(".required-tag-groups").exists();
-    assert.dom(".required-tag-group-row").doesNotExist();
-
-    await click(".add-required-tag-group");
-    assert.dom(".required-tag-group-row").exists({ count: 1 });
+    assert.dom(".form-kit__collection").doesNotExist();
 
     await click(".add-required-tag-group");
-    assert.dom(".required-tag-group-row").exists({ count: 2 });
+    assert.dom(".form-kit__collection .form-kit__row").exists({ count: 1 });
+
+    await click(".add-required-tag-group");
+    assert.dom(".form-kit__collection .form-kit__row").exists({ count: 2 });
 
     await click(".delete-required-tag-group");
-    assert.dom(".required-tag-group-row").exists({ count: 1 });
+    assert.dom(".form-kit__collection .form-kit__row").exists({ count: 1 });
 
     const tagGroupChooser = selectKit(
-      ".required-tag-group-row .tag-group-chooser"
+      ".form-kit__collection .form-kit__row .tag-group-chooser"
     );
     await tagGroupChooser.expand();
     await tagGroupChooser.selectRowByValue("TagGroup1");
 
-    await click("#save-category");
-    assert.dom(".required-tag-group-row").exists({ count: 1 });
+    await click(".admin-changes-banner .btn-primary");
+    assert.dom(".form-kit__collection .form-kit__row").exists({ count: 1 });
 
     await click(".delete-required-tag-group");
-    assert.dom(".required-tag-group-row").doesNotExist();
+    assert.dom(".form-kit__collection").doesNotExist();
 
-    await click("#save-category");
-    assert.dom(".required-tag-group-row").doesNotExist();
+    assert
+      .dom(".admin-changes-banner")
+      .exists("save banner stays visible when collection is emptied");
   });
 
   test("Editing allowed tags and tag groups", async function (assert) {
     await visit("/c/bug/edit/tags");
 
-    const allowedTagChooser = selectKit("#category-allowed-tags");
-    await allowedTagChooser.expand();
-    await allowedTagChooser.selectRowByName("monkey");
+    await formKit().field("allowed_tags").selectByName("monkey");
+    await formKit().control("#category-allowed-tag-groups").select("TagGroup1");
 
-    await allowedTagChooser.collapse();
-    const allowedTagGroupChooser = selectKit("#category-allowed-tag-groups");
-    await allowedTagGroupChooser.expand();
-    await allowedTagGroupChooser.selectRowByValue("TagGroup1");
+    await click(".admin-changes-banner .btn-primary");
 
-    await click("#save-category");
-
-    const payload = JSON.parse(
-      pretender.handledRequests[pretender.handledRequests.length - 1]
-        .requestBody
-    );
+    const payload = latestCategorySavePayload();
     assert.deepEqual(payload.allowed_tags, ["monkey"]);
     assert.deepEqual(payload.allowed_tag_groups, ["TagGroup1"]);
 
-    await allowedTagGroupChooser.collapse();
-    await allowedTagChooser.expand();
-    await allowedTagChooser.deselectItemByName("monkey");
+    await formKit().field("allowed_tags").deselectByName("monkey");
+    await formKit()
+      .control("#category-allowed-tag-groups")
+      .deselectByValue("TagGroup1");
 
-    await allowedTagGroupChooser.expand();
-    await allowedTagGroupChooser.deselectItemByValue("TagGroup1");
+    await click(".admin-changes-banner .btn-primary");
 
-    await click("#save-category");
-
-    const removePayload = JSON.parse(
-      pretender.handledRequests[pretender.handledRequests.length - 1]
-        .requestBody
-    );
+    const removePayload = latestCategorySavePayload();
     assert.deepEqual(removePayload.allowed_tags, []);
     assert.deepEqual(removePayload.allowed_tag_groups, []);
   });
@@ -139,7 +134,7 @@ acceptance("Category Edit", function (needs) {
     await categoryChooser.expand();
 
     const names = [...categoryChooser.rows()].map((row) => row.dataset.name);
-    assert.true(names.includes("(no category)"));
+    assert.true(Boolean(categoryChooser.clearButton()));
     assert.false(names.includes("Uncategorized"));
   });
 
@@ -154,7 +149,7 @@ acceptance("Category Edit", function (needs) {
     await categoryChooser.expand();
 
     const names = [...categoryChooser.rows()].map((row) => row.dataset.name);
-    assert.true(names.includes("(no category)"));
+    assert.true(Boolean(categoryChooser.clearButton()));
     assert.false(names.includes("Uncategorized"));
   });
 
@@ -179,8 +174,10 @@ acceptance("Category Edit", function (needs) {
 
   test("Error Saving", async function (assert) {
     await visit("/c/bug/edit/settings");
-    await fillIn(".email-in", "duplicate@example.com");
-    await click("#save-category");
+
+    // eslint-disable-next-line ember/require-valid-css-selector-in-test-helpers -- FormKit fillIn(value), not Ember fillIn(selector)
+    await formKit().field("email_in").fillIn("duplicate@example.com");
+    await click(".admin-changes-banner .btn-primary");
 
     assert.dom(".dialog-body").hasText(
       i18n("generic_error_with_reason", {
@@ -193,13 +190,15 @@ acceptance("Category Edit", function (needs) {
   });
 
   test("Nested subcategory error when saving", async function (assert) {
+    this.siteSettings.max_category_nesting = 3;
+
     await visit("/c/bug/edit");
 
     const categoryChooser = selectKit(".category-chooser.single-select");
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(1002);
 
-    await click("#save-category");
+    await click(".admin-changes-banner .btn-primary");
 
     assert.dom(".dialog-body").hasText(
       i18n("generic_error_with_reason", {
@@ -220,16 +219,16 @@ acceptance("Category Edit", function (needs) {
   });
 
   test("Subcategory list settings", async function (assert) {
-    await visit("/c/bug/edit/settings");
+    await visit("/c/bug/edit/images");
 
     assert
-      .dom(".subcategory-list-style-field")
+      .dom("[data-name='subcategory_list_style']")
       .doesNotExist("subcategory list style isn't visible by default");
 
-    await click(".show-subcategory-list-field input[type=checkbox]");
+    await formKit().field("show_subcategory_list").toggle();
 
     assert
-      .dom(".subcategory-list-style-field")
+      .dom("[data-name='subcategory_list_style']")
       .exists(
         "subcategory list style is shown if show subcategory list is checked"
       );
@@ -242,13 +241,13 @@ acceptance("Category Edit", function (needs) {
     await categoryChooser.expand();
     await categoryChooser.selectRowByValue(3);
 
-    await visit("/c/bug/edit/settings");
+    await visit("/c/bug/edit/images");
 
     assert
-      .dom(".show-subcategory-list-field")
+      .dom("[data-name='show_subcategory_list']")
       .doesNotExist("show subcategory list isn't visible for child categories");
     assert
-      .dom(".subcategory-list-style-field")
+      .dom("[data-name='subcategory_list_style']")
       .doesNotExist(
         "subcategory list style isn't visible for child categories"
       );
@@ -259,7 +258,6 @@ acceptance(
   "Category Edit - parent category permission inheritance",
   function (needs) {
     needs.user();
-    needs.settings({ enable_simplified_category_creation: true });
     needs.pretender((server, helper) => {
       // Sub-category with only moderator permissions
       server.get("/c/restricted-group/find_by_slug.json", () =>
@@ -279,6 +277,20 @@ acceptance(
               { permission_type: 1, group_name: "moderators", group_id: 2 },
             ],
             custom_fields: {},
+            category_types: {
+              discussion: {
+                id: "discussion",
+                name: "Discussion",
+                configuration_schema: {},
+              },
+            },
+            available_category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            ],
           },
         })
       );
@@ -298,6 +310,20 @@ acceptance(
               { permission_type: 1, group_name: "moderators", group_id: 2 },
               { permission_type: 1, group_name: "custom_group", group_id: 4 },
             ],
+            category_types: {
+              discussion: {
+                id: "discussion",
+                name: "Discussion",
+                configuration_schema: {},
+              },
+            },
+            available_category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            ],
           },
         })
       );
@@ -316,6 +342,20 @@ acceptance(
             group_permissions: [
               { permission_type: 1, group_name: "custom_group", group_id: 4 },
             ],
+            category_types: {
+              support: {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            },
+            available_category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            ],
           },
         })
       );
@@ -333,6 +373,20 @@ acceptance(
             available_groups: ["admins", "moderators", "staff"],
             group_permissions: [
               { permission_type: 1, group_name: "everyone", group_id: 0 },
+            ],
+            category_types: {
+              support: {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            },
+            available_category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
             ],
           },
         })
@@ -357,6 +411,20 @@ acceptance(
               { permission_type: 1, group_name: "staff", group_id: 3 },
             ],
             custom_fields: {},
+            category_types: {
+              discussion: {
+                id: "discussion",
+                name: "Discussion",
+                configuration_schema: {},
+              },
+            },
+            available_category_types: [
+              {
+                id: "support",
+                name: "Support",
+                configuration_schema: {},
+              },
+            ],
           },
         })
       );
@@ -371,10 +439,7 @@ acceptance(
 
       await click(".admin-changes-banner .btn-primary");
 
-      const payload = JSON.parse(
-        pretender.handledRequests[pretender.handledRequests.length - 1]
-          .requestBody
-      );
+      const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { moderators: 1 });
     });
 
@@ -387,10 +452,7 @@ acceptance(
 
       await click(".admin-changes-banner .btn-primary");
 
-      const payload = JSON.parse(
-        pretender.handledRequests[pretender.handledRequests.length - 1]
-          .requestBody
-      );
+      const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { custom_group: 1 });
     });
 
@@ -403,10 +465,7 @@ acceptance(
 
       await click(".admin-changes-banner .btn-primary");
 
-      const payload = JSON.parse(
-        pretender.handledRequests[pretender.handledRequests.length - 1]
-          .requestBody
-      );
+      const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { moderators: 1 });
     });
 
@@ -422,10 +481,7 @@ acceptance(
 
       await click(".admin-changes-banner .btn-primary");
 
-      const payload = JSON.parse(
-        pretender.handledRequests[pretender.handledRequests.length - 1]
-          .requestBody
-      );
+      const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { moderators: 1 });
     });
 
@@ -438,10 +494,7 @@ acceptance(
 
       await click(".admin-changes-banner .btn-primary");
 
-      const payload = JSON.parse(
-        pretender.handledRequests[pretender.handledRequests.length - 1]
-          .requestBody
-      );
+      const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { everyone: 3, staff: 1 });
     });
 
@@ -454,10 +507,7 @@ acceptance(
 
       await click(".admin-changes-banner .btn-primary");
 
-      const payload = JSON.parse(
-        pretender.handledRequests[pretender.handledRequests.length - 1]
-          .requestBody
-      );
+      const payload = latestCategorySavePayload();
       assert.deepEqual(payload.permissions, { custom_group: 1 });
     });
   }

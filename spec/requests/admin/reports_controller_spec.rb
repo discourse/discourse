@@ -221,16 +221,47 @@ RSpec.describe Admin::ReportsController do
                 topics: {
                   limit: 10,
                 },
+                admin_logins: {
+                  limit: 10,
+                },
                 top_uploads: {
+                  limit: 10,
+                },
+                topic_view_stats: {
                   limit: 10,
                 },
               },
             }
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["reports"].count).to eq(2)
+        expect(response.parsed_body["reports"].count).to eq(4)
         expect(response.parsed_body["reports"][0]["type"]).to eq("topics")
         expect(response.parsed_body["reports"][1]).to include("error" => "not_found", "data" => nil)
+        expect(response.parsed_body["reports"][2]).to include("error" => "not_found", "data" => nil)
+        expect(response.parsed_body["reports"][3]).to include("error" => "not_found", "data" => nil)
+      end
+
+      it "redacts suspicious login IP addresses when IP viewing is disabled" do
+        SiteSetting.moderators_view_ips = false
+        DiscourseIpInfo.stubs(:get).returns(location: "Earth")
+        user.user_auth_token_logs.create!(
+          action: "suspicious",
+          client_ip: "1.1.1.1",
+          user_agent: "Mozilla/5.0",
+          created_at: 1.hour.ago,
+        )
+
+        get "/admin/reports/bulk.json", params: { reports: { suspicious_logins: { limit: 10 } } }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["reports"].count).to eq(1)
+
+        report = response.parsed_body["reports"].first
+        row = report["data"].first
+        expect(report["type"]).to eq("suspicious_logins")
+        expect(row["username"]).to eq(user.username)
+        expect(row["client_ip"]).to be_nil
+        expect(row["location"]).to eq("Earth")
       end
     end
 
@@ -421,11 +452,38 @@ RSpec.describe Admin::ReportsController do
         expect(response.parsed_body["report"]["total"]).to eq(1)
       end
 
-      it "does not allow accessing admin-only reports" do
-        get "/admin/reports/top_uploads.json"
+      context "when moderators cannot view IPs" do
+        before do
+          SiteSetting.moderators_view_ips = false
+          DiscourseIpInfo.stubs(:get).returns(location: "Earth")
 
-        expect(response.status).to eq(404)
-        expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+          user.user_auth_token_logs.create!(
+            action: "suspicious",
+            client_ip: "1.1.1.1",
+            user_agent: "Mozilla/5.0",
+            created_at: 1.hour.ago,
+          )
+        end
+
+        it "redacts suspicious login IP address while retaining location" do
+          get "/admin/reports/suspicious_logins.json"
+
+          expect(response.status).to eq(200)
+
+          row = response.parsed_body.dig("report", "data", 0)
+          expect(row["username"]).to eq(user.username)
+          expect(row["client_ip"]).to be_nil
+          expect(row["location"]).to eq("Earth")
+        end
+      end
+
+      it "does not allow accessing admin-only reports" do
+        Report::ADMIN_ONLY_REPORTS.each do |report_type|
+          get "/admin/reports/#{report_type}.json"
+
+          expect(response.status).to eq(404)
+          expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
+        end
       end
     end
 
@@ -477,6 +535,34 @@ RSpec.describe Admin::ReportsController do
       it "does allow running the page_view_legacy_total_reqs report" do
         get "/admin/reports/page_view_legacy_total_reqs.json"
         expect(response.status).to eq(200)
+      end
+    end
+
+    context "with browser pageview reports" do
+      it "lets an admin run them only when persist_browser_pageview_events is enabled" do
+        sign_in(admin)
+
+        SiteSetting.persist_browser_pageview_events = false
+        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+          get "/admin/reports/#{report_type}.json"
+          expect(response.status).to eq(404)
+        end
+
+        SiteSetting.persist_browser_pageview_events = true
+        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+          get "/admin/reports/#{report_type}.json"
+          expect(response.status).to eq(200)
+        end
+      end
+
+      it "denies a moderator even when persist_browser_pageview_events is enabled" do
+        SiteSetting.persist_browser_pageview_events = true
+        sign_in(moderator)
+
+        Report::BROWSER_PAGEVIEW_REPORTS.each do |report_type|
+          get "/admin/reports/#{report_type}.json"
+          expect(response.status).to eq(404)
+        end
       end
     end
   end

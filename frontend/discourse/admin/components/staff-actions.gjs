@@ -25,7 +25,7 @@ export default class StaffActions extends Component {
   }
 
   <template>
-    {{! template-lint-disable no-invalid-interactive }}
+    {{! eslint-disable ember/template-no-invalid-interactive }}
     <div class="table staff-actions" {{on "click" this.openLinks}}>
       {{yield}}
     </div>

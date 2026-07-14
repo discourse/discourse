@@ -69,10 +69,10 @@ end
 # Table name: topic_thumbnails
 #
 #  id                 :bigint           not null, primary key
-#  upload_id          :bigint           not null
-#  optimized_image_id :bigint
-#  max_width          :integer          not null
 #  max_height         :integer          not null
+#  max_width          :integer          not null
+#  optimized_image_id :bigint
+#  upload_id          :bigint           not null
 #
 # Indexes
 #

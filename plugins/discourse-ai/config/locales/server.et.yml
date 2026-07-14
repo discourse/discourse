@@ -9,7 +9,7 @@ et:
     overall_sentiment:
       yaxis: "Kuupäev"
     emotion_neutral:
-      title: "\U0001F610 Neutraalne"
+      title: "😐 Neutraalne"
   discourse_ai:
     tools:
       presets:
@@ -56,6 +56,6 @@ et:
     sentiment:
       reports:
         post_emotion:
-          neutral: "Neutraalne \U0001F610"
+          neutral: "Neutraalne 😐"
         sentiment_analysis:
           neutral: "Neutraalne"

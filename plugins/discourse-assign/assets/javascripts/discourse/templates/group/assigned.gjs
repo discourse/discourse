@@ -1,10 +1,10 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import LoadMore from "discourse/components/load-more";
 import MobileNav from "discourse/components/mobile-nav";
 import bodyClass from "discourse/helpers/body-class";
 import withEventValue from "discourse/helpers/with-event-value";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DLoadMore from "discourse/ui-kit/d-load-more";
 import { i18n } from "discourse-i18n";
 import GroupAssignedFilter from "../../components/group-assigned-filter";
 
@@ -29,7 +29,7 @@ export default <template>
         </div>
       {{/if}}
 
-      <LoadMore @selector=".activity-nav li" @action={{@controller.loadMore}}>
+      <DLoadMore @selector=".activity-nav li" @action={{@controller.loadMore}}>
         <GroupAssignedFilter
           @showAvatar={{false}}
           @filter="everyone"
@@ -62,8 +62,8 @@ export default <template>
           />
         {{/each}}
 
-        <ConditionalLoadingSpinner @condition={{@controller.loading}} />
-      </LoadMore>
+        <DConditionalLoadingSpinner @condition={{@controller.loading}} />
+      </DLoadMore>
     </MobileNav>
   </section>
 

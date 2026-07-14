@@ -24,7 +24,7 @@ const setDefaultState = (ctx, options = {}) => {
   ctx.setProperties(properties);
 };
 
-module("Integration | Component | select-kit/combo-box", function (hooks) {
+module("Integration | Component | SelectKit | ComboBox", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {

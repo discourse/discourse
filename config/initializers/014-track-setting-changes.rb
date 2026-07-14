@@ -4,11 +4,13 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   Category.clear_subcategory_ids if name === :max_category_nesting
 
   # Enabling `must_approve_users` on an existing site is odd, so we assume that the
-  # existing users are approved.
+  # existing users are approved unless they currently have a pending reviewable.
   if name == :must_approve_users && new_value == true
     User
       .where(approved: false)
-      .joins("LEFT JOIN reviewables r ON r.target_id = users.id")
+      .joins(
+        "LEFT JOIN reviewables r ON r.target_id = users.id AND r.target_type = 'User' AND r.status = #{Reviewable.statuses[:pending]}",
+      )
       .where(r: { id: nil })
       .update_all(approved: true)
   end
@@ -102,13 +104,11 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   if SiteSetting.discourse_id_client_id.present? && SiteSetting.discourse_id_client_secret.present?
     if %i[title logo logo_small site_description].include?(name)
       Scheduler::Defer.later("Update Discourse ID metadata") do
-        begin
-          DiscourseId::Register.call(update: true)
-        rescue StandardError => e
-          Rails.logger.error(
-            "Failed to update Discourse ID metadata after #{name} change: #{e.message}",
-          )
-        end
+        DiscourseId::Register.call(update: true)
+      rescue StandardError => e
+        Rails.logger.error(
+          "Failed to update Discourse ID metadata after #{name} change: #{e.message}",
+        )
       end
     end
   end

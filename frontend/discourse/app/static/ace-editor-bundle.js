@@ -1,4 +1,4 @@
-export * from "ace-builds/src-noconflict/ace";
+export { default } from "ace-builds/src-noconflict/ace";
 
 import "ace-builds/src-noconflict/mode-scss";
 import "ace-builds/src-noconflict/mode-html";

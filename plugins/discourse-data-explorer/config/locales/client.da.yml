@@ -14,6 +14,9 @@ da:
       explorer:
         no_semicolons: "Fjern semikoloner fra forespørgslen."
         dirty: "Du skal gemme forespørgslen, før du kører den."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Ingen resultater"
     explorer:
       default_query: "Standard"
       or: "eller"
@@ -25,6 +28,7 @@ da:
       description_placeholder: "Indtast en beskrivelse her"
       ai:
         generate: "Generér"
+        optional: "valgfri"
       import:
         label: "Importer"
       help:
@@ -38,15 +42,13 @@ da:
           yes: "Ja"
           no: "Nej"
           null_: "Null"
-      export: "Eksporter"
       save: "Gem ændringer"
       run: "Kør"
-      edit: "Rediger"
       delete: "Slet"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Tabel"
-      show_graph: "Graf"
+      chart:
+        form:
+          label: "Diagramtype"
+          bar: "Bar"
       result_count:
         one: "%{count} resultat."
         other: "%{count} resultater."
@@ -59,3 +61,12 @@ da:
       search_placeholder: "Søg..."
     group:
       reports: "Rapporter"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Data Udforsker"
+      sql:
+        query_id: "Forespørgsel"
+        param_value: "værdi"
+        output:
+          results: "Resultater"
+          no_results: "Ingen resultater"

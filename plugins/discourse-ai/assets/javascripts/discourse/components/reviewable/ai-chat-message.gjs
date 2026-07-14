@@ -5,8 +5,13 @@ import { LinkTo } from "@ember/routing";
 import ReviewableCreatedBy from "discourse/components/reviewable/created-by";
 import ReviewableTopicLink from "discourse/components/reviewable/topic-link";
 import highlightWatchedWords from "discourse/lib/highlight-watched-words";
-import { optionalRequire } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title" with {
+  discourseImport: "optional",
+};
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel" with {
+  discourseImport: "optional",
+};
 import ModelAccuracies from "../model-accuracies";
 
 export default class ReviewableRefreshAiChatMessage extends Component {
@@ -16,10 +21,6 @@ export default class ReviewableRefreshAiChatMessage extends Component {
       return;
     }
 
-    const ChatChannel = optionalRequire(
-      "discourse/plugins/chat/discourse/models/chat-channel"
-    );
-
     return ChatChannel.create(this.args.reviewable.chat_channel);
   }
 
@@ -27,12 +28,6 @@ export default class ReviewableRefreshAiChatMessage extends Component {
     return (
       this.args.reviewable.payload?.message_cooked ||
       this.args.reviewable.cooked
-    );
-  }
-
-  get ChannelTitle() {
-    return optionalRequire(
-      "discourse/plugins/chat/discourse/components/channel-title"
     );
   }
 
@@ -52,7 +47,7 @@ export default class ReviewableRefreshAiChatMessage extends Component {
               @reviewable.target_id
             }}
           >
-            <this.ChannelTitle @channel={{this.channel}} />
+            <ChannelTitle @channel={{this.channel}} />
           </LinkTo>
         {{else}}
           <ReviewableTopicLink @reviewable={{@reviewable}} />

@@ -187,16 +187,14 @@ module Jobs
     end
 
     def provide_results(user_export, zip_filename, export_title, args)
-      begin
-        create_upload_for_user(user_export, zip_filename)
-      ensure
-        post = notify_user(user_export, export_title)
+      create_upload_for_user(user_export, zip_filename)
+    ensure
+      post = notify_user(user_export, export_title)
 
-        if user_export.present? && post.present?
-          topic = post.topic
-          user_export.update_columns(topic_id: topic.id)
-          topic.update_status("closed", true, Discourse.system_user)
-        end
+      if user_export.present? && post.present?
+        topic = post.topic
+        user_export.update_columns(topic_id: topic.id)
+        topic.update_status("closed", true, Discourse.system_user)
       end
     end
 

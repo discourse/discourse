@@ -164,18 +164,7 @@ RSpec.describe PrivateMessageTopicTrackingState do
       expect(messages).to eq([])
     end
 
-    it "publishes small_action posts only to staff users" do
-      staff = Fabricate(:moderator, refresh_auto_groups: true)
-      private_message.topic_allowed_users.create!(user_id: staff.id)
-      TopicUser.change(
-        staff.id,
-        private_message.id,
-        notification_level: NotificationLevels.all[:watching],
-        last_read_post_number: 1,
-      )
-
-      TopicUser.find_by(user: user_2, topic: private_message).update!(last_read_post_number: 1)
-
+    it "does not publish small_action posts" do
       small_action =
         Fabricate(
           :post,
@@ -187,9 +176,7 @@ RSpec.describe PrivateMessageTopicTrackingState do
 
       messages = MessageBus.track_publish { described_class.publish_unread(small_action) }
 
-      published_user_ids = messages.flat_map(&:user_ids)
-      expect(published_user_ids).to include(staff.id)
-      expect(published_user_ids).not_to include(user_2.id)
+      expect(messages).to eq([])
     end
   end
 

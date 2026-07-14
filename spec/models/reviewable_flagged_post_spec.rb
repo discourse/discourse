@@ -261,11 +261,12 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "sends email when deleting a spammer" do
+      SiteSetting.simple_email_subject = true
       expect { reviewable.perform(moderator, :delete_user) }.to change {
         ActionMailer::Base.deliveries.count
       }
       expect(ActionMailer::Base.deliveries.last.subject).to include(
-        I18n.t("user_notifications.account_deleted.subject_template", email_prefix: "Discourse"),
+        I18n.t("user_notifications.account_deleted.subject_template_improved"),
       )
     end
 
@@ -278,11 +279,12 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
 
     it "sends email when deleting and blocking a spammer" do
+      SiteSetting.simple_email_subject = true
       expect { reviewable.perform(moderator, :delete_user_block) }.to change {
         ActionMailer::Base.deliveries.count
       }
       expect(ActionMailer::Base.deliveries.last.subject).to include(
-        I18n.t("user_notifications.account_deleted.subject_template", email_prefix: "Discourse"),
+        I18n.t("user_notifications.account_deleted.subject_template_improved"),
       )
     end
 
@@ -330,6 +332,30 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       expect(post.reload.deleted_at).to be_present
       expect(reply.reload.deleted_at).to be_present
       expect(nested_reply.reload.deleted_at).to be_present
+    end
+
+    it "delete_and_ignore_replies links the staff action log to the reviewable" do
+      create_reply(post)
+      post.reload
+
+      expect { reviewable.perform(moderator, :delete_and_ignore_replies) }.to change {
+        UserHistory.where(
+          action: UserHistory.actions[:delete_topic],
+          reviewable_id: reviewable.id,
+        ).count
+      }.by(1)
+    end
+
+    it "delete_and_agree_replies links the staff action log to the reviewable" do
+      create_reply(post)
+      post.reload
+
+      expect { reviewable.perform(moderator, :delete_and_agree_replies) }.to change {
+        UserHistory.where(
+          action: UserHistory.actions[:delete_topic],
+          reviewable_id: reviewable.id,
+        ).count
+      }.by(1)
     end
 
     it "disagrees with the flags" do
@@ -470,6 +496,27 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
     end
   end
 
+  describe "#perform_disagree" do
+    it "restores a hidden post even when the author would no longer pass post validations" do
+      SiteSetting.newuser_max_embedded_media = 1
+
+      author = Fabricate(:user, trust_level: TrustLevel[1], refresh_auto_groups: true)
+      flagged_post =
+        create_post(
+          user: author,
+          raw: "![one](http://example.com/one.png)\n![two](http://example.com/two.png)",
+        )
+      reviewable = PostActionCreator.spam(user, flagged_post).reviewable
+      flagged_post.hide!(PostActionType.types[:spam])
+
+      author.update!(trust_level: TrustLevel[0])
+
+      expect { reviewable.perform(moderator, :disagree) }.not_to raise_error
+      expect(flagged_post.reload.hidden).to eq(false)
+      expect(flagged_post.topic.reload.visible).to eq(true)
+    end
+  end
+
   describe "#perform_disagree_and_restore" do
     it "notifies the user about the flagged post being restored" do
       reviewable = Fabricate(:reviewable_flagged_post)
@@ -482,6 +529,53 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
       reviewable.perform(moderator, :disagree_and_restore)
 
       assert_pm_creation_enqueued(reviewable.post.user_id, "flags_disagreed")
+    end
+
+    it "unsilences the user if they were silenced for the post" do
+      reviewable = Fabricate(:reviewable_flagged_post)
+      target_user = reviewable.post.user
+      reviewable.post.update(
+        hidden: true,
+        hidden_at: Time.zone.now,
+        hidden_reason_id: PostActionType.types[:spam],
+      )
+      UserSilencer.silence(target_user, moderator, post_id: reviewable.post.id)
+
+      expect(target_user.reload.silenced?).to eq(true)
+
+      reviewable.perform(moderator, :disagree_and_restore)
+
+      expect(target_user.reload.silenced?).to eq(false)
+    end
+
+    context "with category group moderator" do
+      fab!(:group)
+      fab!(:category_moderator) { Fabricate(:user, refresh_auto_groups: true) }
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        group.add(category_moderator)
+      end
+
+      it "unsilences the user if they were silenced for a post in the moderated category" do
+        category = Fabricate(:category)
+        Fabricate(:category_moderation_group, category: category, group: group)
+
+        topic = Fabricate(:topic, category: category)
+        post = Fabricate(:post, topic: topic)
+        target_user = post.user
+
+        reviewable = PostActionCreator.spam(user, post).reviewable
+        post.update(hidden: true, hidden_at: Time.zone.now)
+        UserSilencer.silence(target_user, moderator, post_id: post.id)
+
+        expect(target_user.reload.silenced?).to eq(true)
+
+        reviewable.perform(category_moderator, :disagree_and_restore)
+
+        expect(post.reload.hidden?).to eq(false)
+        expect(target_user.reload.silenced?).to eq(false)
+      end
     end
   end
 

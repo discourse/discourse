@@ -16,11 +16,14 @@ be:
         bool:
           yes: "Так"
           no: "Не"
-      export: "экспарт"
-      edit: "Рэдагаваць"
       delete: "Выдаліць"
       query_groups: "групы"
       query_description: "Апісанне"
       reset_params: "скінуць"
     group:
       reports: "Справаздачы"
+    discourse_workflows:
+      sql:
+        param_value: "Значэнне"
+        output:
+          results: "Вынікі"

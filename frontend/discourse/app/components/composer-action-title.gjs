@@ -1,11 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
-import { computed, set } from "@ember/object";
+import { on } from "@ember/modifier";
+import { action, computed, set } from "@ember/object";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import PostLanguageSelector from "discourse/components/post-language-selector";
+import ComposerActionsNew from "discourse/components/composer-actions-new";
 import escape from "discourse/lib/escape";
 import { iconHTML } from "discourse/lib/icon-library";
 import {
@@ -17,7 +18,8 @@ import {
   PRIVATE_MESSAGE,
   REPLY,
 } from "discourse/models/composer";
-import ComposerActions from "discourse/select-kit/components/composer-actions";
+import ComposerActionsOld from "discourse/select-kit/components/composer-actions";
+import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
 
 const TITLES = {
@@ -30,11 +32,11 @@ const TITLES = {
 
 @tagName("")
 export default class ComposerActionTitle extends Component {
-  @service currentUser;
-  @service siteSettings;
-
   // Note we update when some other attributes like tag/category change to allow
   // text customizations to use those.
+
+  @service composer;
+  @service siteSettings;
 
   @computed("model.replyOptions")
   get options() {
@@ -52,6 +54,20 @@ export default class ComposerActionTitle extends Component {
 
   set action(value) {
     set(this, "model.action", value);
+  }
+
+  @computed("action", "model.post.can_edit", "model.topic")
+  get canEditReplyTo() {
+    return (
+      this.action === EDIT &&
+      !!this.model?.post?.can_edit &&
+      !!this.model?.topic
+    );
+  }
+
+  @action
+  openChangeReplyToModal() {
+    this.composer.openChangeReplyToModal();
   }
 
   @computed("options", "action", "model.tags", "model.category")
@@ -85,39 +101,31 @@ export default class ComposerActionTitle extends Component {
         return this._formatEditUserPost(
           this.options.userAvatar,
           this.options.userLink,
-          this.options.postLink,
-          this.options.originalUser
+          this.options.postLink
         );
       }
     }
   }
 
-  @computed("action")
-  get showPostLanguageSelector() {
-    const allowedActions = [CREATE_TOPIC, EDIT, REPLY];
-    return (
-      this.currentUser &&
-      this.siteSettings.content_localization_enabled &&
-      allowedActions.includes(this.action)
+  @computed("options.originalUser")
+  get replyTargetSegment() {
+    const originalUser = this.options?.originalUser;
+    if (!originalUser) {
+      return null;
+    }
+    return trustHTML(
+      `${iconHTML("share", { class: "reply-to-glyph" })}
+       ${originalUser.avatar}
+       <span class="original-username">${escape(originalUser.username)}</span>`
     );
   }
 
-  _formatEditUserPost(userAvatar, userLink, postLink, originalUser) {
-    let editTitle = `
+  _formatEditUserPost(userAvatar, userLink, postLink) {
+    return trustHTML(`
       <a class="post-link" href="${postLink.href}">${postLink.anchor}</a>
       ${userAvatar}
       <span class="username">${escape(userLink.anchor)}</span>
-    `;
-
-    if (originalUser) {
-      editTitle += `
-        ${iconHTML("share", { class: "reply-to-glyph" })}
-        ${originalUser.avatar}
-        <span class="original-username">${escape(originalUser.username)}</span>
-      `;
-    }
-
-    return trustHTML(editTitle);
+    `);
   }
 
   _formatReplyToTopic(link) {
@@ -137,29 +145,61 @@ export default class ComposerActionTitle extends Component {
 
   <template>
     <div class="composer-action-title" ...attributes>
-      <ComposerActions
-        @composerModel={{this.model}}
-        @replyOptions={{this.model.replyOptions}}
-        @canWhisper={{this.canWhisper}}
-        @canUnlistTopic={{this.canUnlistTopic}}
-        @action={{this.model.action}}
-        @tabindex={{this.tabindex}}
-        @topic={{this.model.topic}}
-        @post={{this.model.post}}
-        @whisper={{this.model.whisper}}
-        @noBump={{this.model.noBump}}
-        @options={{hash mobilePlacementStrategy="fixed"}}
-      />
+      {{#if this.siteSettings.enable_new_composer_actions}}
+        <span class="action-title" role="heading" aria-level="1">
+          <ComposerActionsNew
+            @composerModel={{this.model}}
+            @replyOptions={{this.model.replyOptions}}
+            @action={{this.model.action}}
+            @tabindex={{this.tabindex}}
+            @topic={{this.model.topic}}
+            @post={{this.model.post}}
+            @options={{hash mobilePlacementStrategy="fixed"}}
+          />
 
-      <span class="action-title" role="heading" aria-level="1">
-        {{this.actionTitle}}
-      </span>
-
-      {{#if this.showPostLanguageSelector}}
-        <PostLanguageSelector
+          {{#if this.replyTargetSegment}}
+            {{#if this.canEditReplyTo}}
+              <DButton
+                @action={{this.openChangeReplyToModal}}
+                @title="composer.change_reply_to.open"
+                @translatedLabel={{this.replyTargetSegment}}
+                class="composer-edit-reply-to btn-default"
+              />
+            {{else}}
+              {{this.replyTargetSegment}}
+            {{/if}}
+          {{/if}}
+        </span>
+      {{else}}
+        <ComposerActionsOld
           @composerModel={{this.model}}
-          @selectedLanguage={{this.model.locale}}
+          @replyOptions={{this.model.replyOptions}}
+          @canWhisper={{this.canWhisper}}
+          @canUnlistTopic={{this.canUnlistTopic}}
+          @action={{this.model.action}}
+          @tabindex={{this.tabindex}}
+          @topic={{this.model.topic}}
+          @post={{this.model.post}}
+          @whisper={{this.model.whisper}}
+          @noBump={{this.model.noBump}}
+          @options={{hash mobilePlacementStrategy="fixed"}}
         />
+
+        <span class="action-title" role="heading" aria-level="1">
+          {{this.actionTitle}}
+          {{#if this.replyTargetSegment}}
+            {{#if this.canEditReplyTo}}
+              <button
+                type="button"
+                class="composer-edit-reply-to"
+                title={{i18n "composer.change_reply_to.open"}}
+                {{on "click" this.openChangeReplyToModal}}
+              >{{this.replyTargetSegment}}</button>
+            {{else}}
+              {{this.replyTargetSegment}}
+            {{/if}}
+          {{/if}}
+        </span>
       {{/if}}
     </div>
   </template>

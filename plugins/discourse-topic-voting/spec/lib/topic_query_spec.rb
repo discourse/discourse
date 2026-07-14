@@ -22,6 +22,13 @@ describe TopicQuery do
   end
 
   it "returns topics voted by user" do
+    archived_topic = Fabricate(:topic, category: category1)
+    DiscourseTopicVoting::Vote.create!(
+      topic_id: archived_topic.id,
+      user_id: user0.id,
+      archive: true,
+    )
+
     expect(TopicQuery.new(user0, { state: "my_votes" }).list_latest.topics.map(&:id)).to eq(
       [topic1.id],
     )
@@ -41,5 +48,54 @@ describe TopicQuery do
     expect(TopicQuery.new(user0, opts.merge(page: 2)).list_latest.topics.map(&:id)).to eq(
       [topic3.id],
     )
+  end
+
+  describe "#list_hot" do
+    fab!(:voting_category, :category)
+    fab!(:non_voting_category, :category)
+
+    before { DiscourseTopicVoting::CategorySetting.create!(category: voting_category) }
+
+    it "uses vote-trending logic for voting categories" do
+      user1 = Fabricate(:user)
+      user2 = Fabricate(:user)
+
+      old_topic = Fabricate(:topic, category: voting_category)
+      DiscourseTopicVoting::Vote.create!(
+        topic_id: old_topic.id,
+        user_id: user1.id,
+        created_at: 60.days.ago,
+      )
+      DiscourseTopicVoting::Vote.create!(
+        topic_id: old_topic.id,
+        user_id: user2.id,
+        created_at: 60.days.ago,
+      )
+      DiscourseTopicVoting::TopicVoteCount.create!(topic_id: old_topic.id, votes_count: 2)
+
+      recent_topic = Fabricate(:topic, category: voting_category)
+      DiscourseTopicVoting::Vote.create!(
+        topic_id: recent_topic.id,
+        user_id: user1.id,
+        created_at: 1.hour.ago,
+      )
+      DiscourseTopicVoting::TopicVoteCount.create!(topic_id: recent_topic.id, votes_count: 1)
+
+      result = TopicQuery.new(user0, { category: voting_category.slug }).list_hot.topics.map(&:id)
+
+      expect(result.index(recent_topic.id)).to be < result.index(old_topic.id)
+    end
+
+    it "uses standard hot logic for non-voting categories" do
+      topic_a = Fabricate(:topic, category: non_voting_category)
+      topic_b = Fabricate(:topic, category: non_voting_category)
+      TopicHotScore.create!(topic_id: topic_a.id, score: 5.0)
+      TopicHotScore.create!(topic_id: topic_b.id, score: 10.0)
+
+      result =
+        TopicQuery.new(user0, { category: non_voting_category.slug }).list_hot.topics.map(&:id)
+
+      expect(result).to eq([topic_b.id, topic_a.id])
+    end
   end
 end

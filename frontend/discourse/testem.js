@@ -3,6 +3,8 @@ const fs = require("fs");
 const displayUtils = require("testem/lib/utils/displayutils");
 const colors = require("@colors/colors/safe");
 
+require("./patch-testem-output")();
+
 const SANDBOX_DISABLE_VALUES = ["1", "true"];
 const sandboxDisabled =
   process.env.CI ||
@@ -59,13 +61,17 @@ class Reporter extends TapReporter {
 
   display(prefix, result) {
     if (this.willDisplay(result)) {
-      const string = displayUtils.resultString(
+      this.showBrowserVersion(prefix);
+
+      const rawString = displayUtils.resultString(
         this.id++,
         prefix,
         result,
         this.quietLogs,
         this.strictSpecCompliance
       );
+
+      const string = this.reformatTapLine(rawString, prefix);
 
       const color = this.colorForResult(result);
       const matches = string.match(/([\S\s]+?)(\n\s+browser\slog:[\S\s]+)/);
@@ -77,6 +83,43 @@ class Reporter extends TapReporter {
         this.out.write(color(string));
       }
     }
+  }
+
+  showBrowserVersion(prefix) {
+    if (!prefix) {
+      return;
+    }
+
+    this.shownBrowserVersions ??= new Set();
+    if (!this.shownBrowserVersions.has(prefix)) {
+      this.shownBrowserVersions.add(prefix);
+      this.out.write(colors.gray(`# Launcher: ${prefix}\n`));
+    }
+  }
+
+  reformatTapLine(rawString, prefix) {
+    const newlineIndex = rawString.indexOf("\n");
+    const firstLine =
+      newlineIndex >= 0 ? rawString.slice(0, newlineIndex) : rawString;
+    const rest = newlineIndex >= 0 ? rawString.slice(newlineIndex) : "";
+    let line = firstLine;
+
+    if (prefix) {
+      const escaped = prefix.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      line = line.replace(
+        new RegExp(
+          `^(ok|not ok|skip|todo) (\\d+) ${escaped} - (\\[\\d+ ms\\])`
+        ),
+        "$1 $2 $3"
+      );
+    }
+
+    line = line.replace(
+      /^(ok|not ok|skip|todo) (\d+) (\[\d+ ms\]) - Browser Id (\d+) - /,
+      "$1 $2 #$4 $3 - "
+    );
+
+    return line + rest;
   }
 
   colorForResult(result) {
@@ -218,7 +261,7 @@ class Reporter extends TapReporter {
 }
 
 module.exports = {
-  test_page: "tests/index.html?hidepassed",
+  test_page: "tests?hidepassed",
   disable_watching: true,
   launch_in_ci: [process.env.TESTEM_DEFAULT_BROWSER || "Chrome"],
   tap_failed_tests_only: false,
@@ -237,10 +280,11 @@ module.exports = {
       "--disable-software-rasterizer",
       "--disable-search-engine-choice-screen",
       "--mute-audio",
-      "--remote-debugging-port=4201",
+      `--remote-debugging-port=${process.env.CI ? 0 : 3001}`,
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
+      "--disable-background-networking",
     ].filter(Boolean),
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container or when explicitly requested
@@ -250,10 +294,11 @@ module.exports = {
       "--disable-software-rasterizer",
       "--disable-search-engine-choice-screen",
       "--mute-audio",
-      "--remote-debugging-port=4201",
+      `--remote-debugging-port=${process.env.CI ? 0 : 3001}`,
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
+      "--disable-background-networking",
     ].filter(Boolean),
     Firefox: ["-headless", "--width=1440", "--height=900"],
   },
@@ -277,62 +322,18 @@ fetch(`${target}/about.json`).catch(() => {
 });
 
 const pluginTestPages = process.env.PLUGIN_TARGETS;
+const themeTestPages = process.env.THEME_TEST_PAGES;
+module.exports.proxies = {};
+
 if (pluginTestPages) {
   module.exports.test_page = pluginTestPages.split(",").map((plugin) => {
-    return `tests/index.html?hidepassed&target=${plugin}`;
+    return `tests?hidepassed&target=${plugin}`;
   });
+} else if (themeTestPages) {
+  // avoid double-slash in paths
+  module.exports.test_page = themeTestPages
+    .split(",")
+    .map((p) => p.replace(/^\//, ""));
 }
 
-const themeTestPages = process.env.THEME_TEST_PAGES;
-
-if (themeTestPages) {
-  module.exports.test_page = themeTestPages.split(",");
-  module.exports.proxies = {};
-
-  // Prepend a prefix to the path of the route such that the server handling the request can easily identify `/theme-qunit`
-  // requests. This is required because testem prepends a string to the path of the `test_page` option when it makes
-  // the request and there is no easy way for us to strip the string from the path through the proxy. As such, we let the
-  // destination server handle the request base on the prefix instead.
-  module.exports.proxies[`/*/theme-qunit`] = {
-    target: `${target}/testem-theme-qunit`,
-    xfwd: true,
-  };
-
-  module.exports.proxies["/*/*"] = { target, xfwd: true };
-
-  module.exports.middleware = [
-    function (app) {
-      // Make the testem.js file available under /assets
-      // so it's within the app's CSP
-      app.get("/assets/testem.js", function (req, res, next) {
-        req.url = "/testem.js";
-        next();
-      });
-    },
-  ];
-} else {
-  // Running with ember cli, but we want to pass through plugin request to Rails
-  module.exports.proxies = {
-    "/assets/plugins/": {
-      target,
-    },
-    "/assets/js/plugins/": {
-      target,
-    },
-    "/assets/map/plugins/": {
-      target,
-    },
-    "/plugins/": {
-      target,
-    },
-    "/bootstrap/": {
-      target,
-    },
-    "/stylesheets/": {
-      target,
-    },
-    "/extra-locales/": {
-      target,
-    },
-  };
-}
+module.exports.proxies["/*/*"] = { target, xfwd: true };

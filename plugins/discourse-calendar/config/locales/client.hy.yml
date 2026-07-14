@@ -29,6 +29,9 @@ hy:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
+      event_description:
+        show_more: "Ցույց տալ ավելին"
+        show_less: "Ցույց տալ ավելի քիչ"
       created_by: "Ստեղծել է՝"
       bulk_invite: "Զանգվածային Հրավեր"
       bulk_invite_modal:
@@ -48,6 +51,18 @@ hy:
               title: "Հանրային"
             private:
               title: "Մասնավոր"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "րոպե"
+              other: "րոպե"
+            hours:
+              one: "ժամ"
+              other: "ժամ"
+            days:
+              one: "օր"
+              other: "օր"
       builder_modal:
         custom_fields:
           placeholder: "Ընտրովի"
@@ -66,14 +81,14 @@ hy:
         recurrence:
           label: "Կրկնություն"
           none: "Կրկնություն չկա"
-        url:
-          label: "URL"
-          placeholder: "Ընտրովի"
-        location:
-          label: "Տեղակայություն"
+          ordinals:
+            last: "օգտագործել ամսաթվի և ժամանակի վերջին գրառումը  "
+        attendance:
+          none: "Ոչ մի"
         description:
           label: "Նկարագրություն"
-        status:
-          label: "Ստատուս"
+        event_type:
+          public:
+            title: "Հանրային"
       invite_user_or_group:
         invite: "Ուղարկել"

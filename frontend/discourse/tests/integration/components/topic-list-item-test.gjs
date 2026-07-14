@@ -5,7 +5,7 @@ import BulkSelectHelper from "discourse/lib/bulk-select-helper";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | topic-list-item", function (hooks) {
+module("Integration | Component | TopicListItem", function (hooks) {
   setupRenderingTest(hooks);
 
   test("checkbox is rendered checked if topic is in selected array", async function (assert) {
@@ -59,6 +59,27 @@ module("Integration | Component | topic-list-item", function (hooks) {
     assert
       .dom(".topic-list-item[data-topic-id='1235']")
       .doesNotHaveClass("bar");
+  });
+
+  test("topic-list-item-class transformer receives category context", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "topic-list-item-class",
+        ({ value, context }) => {
+          value.push(`cat-${context.category?.id ?? "none"}`);
+          return value;
+        }
+      );
+    });
+
+    const store = this.owner.lookup("service:store");
+    this.owner.lookup("service:topic-tracking-state").filterCategory =
+      store.createRecord("category", { id: 42 });
+    const topics = [store.createRecord("topic", { id: 2024 })];
+
+    await render(<template><TopicList @topics={{topics}} /></template>);
+
+    assert.dom(".topic-list-item[data-topic-id='2024']").hasClass("cat-42");
   });
 
   test("shows unread-by-group-member indicator", async function (assert) {

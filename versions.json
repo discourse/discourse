@@ -1,27 +1,51 @@
 {
-  "2026.4": {
-    "developmentStartDate": "2026-03-31",
-    "releaseDate": "2026-04",
-    "supportEndDate": "2026-06",
+  "2026.7": {
+    "developmentStartDate": "2026-06-30",
+    "releaseDate": "2026-07",
+    "supportEndDate": "2027-03",
     "released": false,
+    "esr": true,
+    "supported": true
+  },
+  "2026.6": {
+    "developmentStartDate": "2026-05-28",
+    "releaseDate": "2026-06-30",
+    "supportEndDate": "2026-08",
+    "released": true,
     "esr": false,
     "supported": true
+  },
+  "2026.5": {
+    "developmentStartDate": "2026-04-28",
+    "releaseDate": "2026-05-28",
+    "supportEndDate": "2026-07",
+    "released": true,
+    "esr": false,
+    "supported": true
+  },
+  "2026.4": {
+    "developmentStartDate": "2026-03-31",
+    "releaseDate": "2026-04-28",
+    "supportEndDate": "2026-06-30",
+    "released": true,
+    "esr": false,
+    "supported": false
   },
   "2026.3": {
     "developmentStartDate": "2026-02-26",
     "releaseDate": "2026-03-31",
-    "supportEndDate": "2026-05",
+    "supportEndDate": "2026-05-28",
     "released": true,
     "esr": false,
-    "supported": true
+    "supported": false
   },
   "2026.2": {
     "developmentStartDate": "2026-01-28",
     "releaseDate": "2026-02-26",
-    "supportEndDate": "2026-04",
+    "supportEndDate": "2026-04-28",
     "released": true,
     "esr": false,
-    "supported": true
+    "supported": false
   },
   "2026.1": {
     "developmentStartDate": "2025-12-30",

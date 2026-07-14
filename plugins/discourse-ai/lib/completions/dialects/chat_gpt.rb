@@ -30,7 +30,7 @@ module DiscourseAi
         def max_prompt_tokens
           # provide a buffer of 120 tokens - our function counting is not
           # 100% accurate and getting numbers to align exactly is very hard
-          buffer = (opts[:max_tokens] || 2500) + 50
+          buffer = (opts[:reserved_output_tokens] || opts[:max_tokens] || 2500) + 50
 
           if tools.present?
             # note this is about 100 tokens over, OpenAI have a more optimal representation
@@ -129,7 +129,7 @@ module DiscourseAi
           content_array =
             to_encoded_content_array(
               content: content_array.flatten,
-              upload_encoder: ->(details) { upload_node(details) },
+              upload_encoder: ->(details) { upload_node(details, role) },
               text_encoder: ->(text) { text_node(text, role) },
               other_encoder: ->(hash) { hash },
               allow_images:,
@@ -154,7 +154,9 @@ module DiscourseAi
           { type: "text", text: text }
         end
 
-        def upload_node(details)
+        def upload_node(details, role)
+          return text_node(details[:text], role) if details[:text].present?
+
           if details[:mime_type] == "application/pdf" || details[:kind] == :document
             file_node(details)
           else

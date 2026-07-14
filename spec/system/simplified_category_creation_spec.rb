@@ -7,19 +7,15 @@ describe "Simplified Category Creation" do
 
   let(:category_page) { PageObjects::Pages::Category.new }
   let(:form) { PageObjects::Components::FormKit.new(".form-kit") }
-  let(:icon_picker) { PageObjects::Components::DIconGridPicker.new }
   let(:category_type_card) { PageObjects::Components::CategoryTypeCard.new }
   let(:category_permission_row) { PageObjects::Components::CategoryPermissionRow.new }
   let(:toasts) { PageObjects::Components::Toasts.new }
 
-  before do
-    SiteSetting.enable_simplified_category_creation = true
-    sign_in(admin)
-  end
+  before { sign_in(admin) }
 
   describe "Selecting category type when setting up a new category" do
     it "automatically skips category type selection when only one type (discussion) is available" do
-      visit("/new-category/setup")
+      category_page.visit_new_category
       expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
       expect(page).to have_current_path("/new-category/general")
     end
@@ -118,21 +114,9 @@ describe "Simplified Category Creation" do
       form.field("color").fill_in("GGGGGG")
       category_page.save_settings
 
-      expect(page).to have_content("Color is invalid")
-    end
-
-    it "shows error when icon is missing" do
-      category_page.visit_new_category
-
-      form.field("name").fill_in("Test Category")
-
-      icon_picker.expand
-      icon_picker.select_first_icon
-      icon_picker.clear
-
-      category_page.save_settings
-
-      expect(form.field("icon")).to have_errors(I18n.t("js.category.validations.icon_required"))
+      expect(form.field("color")).to have_errors(
+        I18n.t("js.category.color_validations.non_hexdecimal"),
+      )
     end
 
     it "shows advanced tabs when toggled" do
@@ -248,6 +232,12 @@ describe "Simplified Category Creation" do
       expect(page).to have_content("Updated category description")
       expect(toasts).to have_success(I18n.t("js.category.description_updated"))
     end
+
+    it "does not allow selecting other category types when creating a new category" do
+      category_page.visit_new_category
+      expect(page).to have_content(I18n.t("js.category.create_with_type", typeName: "discussion"))
+      expect(page).to have_no_css(".category-type-selector")
+    end
   end
 
   describe "Security Tab" do
@@ -295,13 +285,13 @@ describe "Simplified Category Creation" do
     end
   end
 
-  describe "Settings Tab" do
+  describe "Moderation Tab" do
     it "creates a category with a group-based posting review mode" do
       category_page.visit_new_category
 
       form.field("name").fill_in("Review Test")
       category_page.toggle_advanced_settings
-      find(".edit-category-settings a").click
+      find(".edit-category-moderation a").click
 
       category_page.topic_posting_review_mode_chooser(simplified: true).expand
       category_page.topic_posting_review_mode_chooser(simplified: true).select_row_by_value(
@@ -320,13 +310,13 @@ describe "Simplified Category Creation" do
       expect(category_page).to have_no_posting_review_groups_error
 
       created_category = Category.find_by(name: "Review Test")
-      category_page.visit_settings(created_category)
+      category_page.visit_moderation(created_category)
       expect(category_page).to have_topic_posting_review_mode("everyone_except", simplified: true)
       expect(category_page).to have_topic_posting_review_groups(group, simplified: true)
     end
 
     it "allows selecting 'everyone' mode" do
-      category_page.visit_settings(category)
+      category_page.visit_moderation(category)
 
       category_page.topic_posting_review_mode_chooser(simplified: true).expand
       category_page.topic_posting_review_mode_chooser(simplified: true).select_row_by_value(
@@ -334,12 +324,12 @@ describe "Simplified Category Creation" do
       )
       category_page.save_settings
 
-      category_page.visit_settings(category)
+      category_page.visit_moderation(category)
       expect(category_page).to have_topic_posting_review_mode("everyone", simplified: true)
     end
 
     it "allows selecting 'everyone_except' mode with groups" do
-      category_page.visit_settings(category)
+      category_page.visit_moderation(category)
 
       category_page.topic_posting_review_mode_chooser(simplified: true).expand
       category_page.topic_posting_review_mode_chooser(simplified: true).select_row_by_value(
@@ -356,7 +346,7 @@ describe "Simplified Category Creation" do
 
       category_page.save_settings
 
-      category_page.visit_settings(category)
+      category_page.visit_moderation(category)
       expect(category_page).to have_no_posting_review_groups_error
       expect(category_page).to have_topic_posting_review_mode("everyone_except", simplified: true)
       expect(category_page).to have_topic_posting_review_groups(group, simplified: true)
@@ -370,18 +360,16 @@ describe "Simplified Category Creation" do
     end
 
     it "sets default view to latest" do
-      category_page.visit_images(category)
+      category_page.visit_appearance(category)
 
-      default_view_selector = PageObjects::Components::SelectKit.new("#category-default-view")
-      default_view_selector.expand
-      default_view_selector.select_row_by_value("latest")
+      form.field("default_view").select("latest")
       category_page.save_settings
 
       expect(category.reload.default_view).to eq("latest")
     end
 
     it "uploads a category logo" do
-      category_page.visit_images(category)
+      category_page.visit_appearance(category)
 
       attach_file(
         "category-logo-uploader__input",

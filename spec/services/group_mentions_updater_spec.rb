@@ -41,6 +41,23 @@ RSpec.describe GroupMentionsUpdater do
       expect(post.reload.raw_mentions).to eq([])
     end
 
+    it "should update the category description when a category description topic mentions the group" do
+      group = Fabricate(:group, name: "old_team", mentionable_level: Group::ALIAS_LEVELS[:everyone])
+
+      category = Fabricate(:category_with_definition)
+      first_post = category.topic.first_post
+      first_post.revise(first_post.user, { raw: "This category is managed by @old_team" })
+      category.reload
+
+      expect(category.description).to include("old_team")
+
+      GroupMentionsUpdater.update("new_team", "old_team")
+      category.reload
+
+      expect(category.description).to include("new_team")
+      expect(category.description).not_to include("old_team")
+    end
+
     it "should ignore validations" do
       everyone_mention_level = Group::ALIAS_LEVELS[:everyone]
 

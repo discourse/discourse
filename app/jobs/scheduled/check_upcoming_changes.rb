@@ -25,19 +25,14 @@ module Jobs
 
     private
 
+    # Note that we do not notify admins about new upcoming changes,
+    # or those that reach promotion status - 1, inline in this service.
+    # That only happens once a week in Jobs::NotifyAdminsOfAvailableUpcomingChanges
     def track_changes(site)
       UpcomingChanges::Track.call(guardian: Discourse.system_user.guardian) do |result|
-        on_success do |added_changes:, removed_changes:, notified_admins_for_added_changes:, status_changes:|
+        on_success do |added_changes:, removed_changes:, status_changes:|
           added_changes.each do |change_name|
             verbose_log(site, :info, "Added upcoming change '#{change_name}'")
-          end
-
-          notified_admins_for_added_changes.each do |change_name|
-            verbose_log(
-              site,
-              :info,
-              "Notified site admins about added upcoming change '#{change_name}'",
-            )
           end
 
           removed_changes.each do |change_name|
@@ -80,6 +75,8 @@ module Jobs
               case status[:error_key]
               when :does_not_meet_or_exceed_promotion_status
                 :info
+              when :should_not_be_displayed
+                :debug
               when :already_notified_about_promotion
                 :debug
               when :already_manually_toggled

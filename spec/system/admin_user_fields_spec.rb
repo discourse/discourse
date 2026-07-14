@@ -25,7 +25,7 @@ describe "Admin User Fields" do
 
     user_fields_page.add_field(name: "Occupation", description: "")
 
-    expect(user_fields_page.form.field(:description)).to have_errors("Required")
+    expect(user_fields_page.form.field("description")).to have_errors("Required")
   end
 
   it "makes sure new required fields are editable after signup" do
@@ -39,11 +39,11 @@ describe "Admin User Fields" do
 
     user_fields_page.choose_requirement("for_all_users")
 
-    expect(form).to have_field(editable_label, checked: true, disabled: true)
+    expect(form).to have_field(editable_label, checked: true, disabled: true, visible: :all)
 
     user_fields_page.choose_requirement("optional")
 
-    expect(form).to have_field(editable_label, checked: true, disabled: false)
+    expect(form).to have_field(editable_label, checked: true, disabled: false, visible: :all)
   end
 
   it "makes sure fields are available on signup when they have to" do
@@ -57,33 +57,30 @@ describe "Admin User Fields" do
 
     user_fields_page.choose_requirement("for_all_users")
 
-    expect(form).to have_field(show_on_signup_label, checked: true, disabled: true)
+    expect(form).to have_field(show_on_signup_label, checked: true, disabled: true, visible: :all)
 
     user_fields_page.choose_requirement("on_signup")
 
-    expect(form).to have_field(show_on_signup_label, checked: true, disabled: true)
+    expect(form).to have_field(show_on_signup_label, checked: true, disabled: true, visible: :all)
 
     user_fields_page.choose_requirement("optional")
 
-    expect(form).to have_field(show_on_signup_label, checked: true, disabled: false)
+    expect(form).to have_field(show_on_signup_label, checked: true, disabled: false, visible: :all)
 
     user_fields_page.unselect_preference("editable")
 
-    expect(form).to have_field(show_on_signup_label, checked: true, disabled: true)
+    expect(form).to have_field(show_on_signup_label, checked: true, disabled: true, visible: :all)
   end
 
   it "requires confirmation when applying required fields retroactively" do
     user_fields_page.visit
-    user_fields_page.click_add_field
-
-    form = page.find(".user-field")
-
-    form.find(".user-field-name").fill_in(with: "Favourite Pokémon")
-    form.find(".user-field-desc").fill_in(with: "Hint: It's Mudkip")
-
+    user_fields_page.add_field(
+      name: "Favourite Pokémon",
+      description: "Hint: It's Mudkip",
+      save: false,
+    )
     user_fields_page.choose_requirement("for_all_users")
-
-    form.find(".btn-primary").click
+    user_fields_page.form.submit
 
     expect(page).to have_text(I18n.t("admin_js.admin.user_fields.requirement.confirmation"))
   end

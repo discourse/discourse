@@ -329,6 +329,9 @@ pt_BR:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} definiu automaticamente sua presença e convidou para %{eventName}"
         an_event: "um evento"
+      event_description:
+        show_more: "Exibir mais"
+        show_less: "Exibir menos"
       edit_reason: "Evento atualizado"
       edit_reason_closed: "Evento fechado"
       edit_reason_opened: "Evento aberto"
@@ -383,7 +386,6 @@ pt_BR:
       upcoming_events_list:
         title: "Próximos eventos"
         empty: "Nenhum evento próximo"
-        all_day: "O dia todo"
         error: "Falha ao recuperar eventos"
         try_again: "Tentar novamente"
         view_all: "Visualizar tudo"
@@ -397,10 +399,9 @@ pt_BR:
       models:
         invitee:
           no_users: "Nenhum usuário(a) encontrado(a)"
+          leave_event: "Sair do evento"
           status:
-            unknown: "Não tenho interesse"
             going: "Eu vou"
-            not_going: "Não vou"
             interested: "Interessado"
             going_count:
               one: "%{count} vai"
@@ -429,11 +430,28 @@ pt_BR:
               title: "Privado(a)"
               description: "Um evento privado só pode ter a participação de usuários(as) convidados(as)."
       composer:
-        name_placeholder: "Evento"
-        end_date_placeholder: "Definir data final"
+        name_placeholder: "Nome do evento"
         location_placeholder: "Adicionar local ou URL"
-        max_attendees_placeholder: "Definir o máximo de participantes"
         description_placeholder: "Adicionar descrição do evento"
+        event_title_placeholder: "Nome do evento"
+        create_event_button: "Criar evento"
+        reminder:
+          units:
+            minutes:
+              one: "minuto"
+              other: "minutos"
+            hours:
+              one: "hora"
+              other: "horas"
+            days:
+              one: "dia"
+              other: "dias"
+            weeks:
+              one: "semana"
+              other: "semanas"
+      composer_actions:
+        create_event:
+          label: "Criar evento"
       builder_modal:
         custom_fields:
           label: "Campos personalizados"
@@ -441,6 +459,7 @@ pt_BR:
           description: "Os campos personalizados permitidos são definidos nas configurações do site. Os campos personalizados são usados para transmitir dados para outros plugins."
         create_event_title: "Criar evento"
         update_event_title: "Editar evento"
+        advanced_settings_title: "Configurações avançadas"
         confirm_delete: "Você tem certeza de que quer excluir este evento?"
         confirm_close: "Você tem certeza de que deseja fechar este evento?"
         confirm_open: "Você tem certeza de que deseja abrir este evento?"
@@ -454,11 +473,10 @@ pt_BR:
         timezone:
           label: Fuso horário
           remove_timezone: Sem fuso horário (UTC)
+        starts_at:
+          label: "Data de início"
         reminders:
           label: "Lembretes"
-          types:
-            bump_topic: "impulsionar tópico automaticamente"
-            notification: "notificar participantes"
           units:
             minutes: "minutos"
             hours: "horas"
@@ -467,31 +485,22 @@ pt_BR:
           periods:
             before: "antes"
             after: "depois"
-        recurrence_until:
-          label: "Até (inclusive)"
         recurrence:
           label: "Recorrência"
           none: "Sem recorrência"
           every_day: "Todos os dias"
-          every_month: "Todo mês, neste dia da semana"
           every_weekday: "Todos os dias da semana"
-          every_week: "Toda semana, neste dia da semana"
-          every_two_weeks: "A cada duas semanas, neste dia da semana"
-          every_four_weeks: "A cada quatro semanas, neste dia da semana"
-        minimal:
-          label: "evento mínimo"
-          checkbox_label: "Ocultar botões Vou/Não vou e status dos(as) convidados(as)"
+          ordinals:
+            last: "último"
         max_attendees:
           label: "Máximo de participantes"
           placeholder: "Sem limite"
+        attendance:
+          none: "Nenhum"
         allow_chat:
           label: "Integração com chat"
           checkbox_label: "Criar e gerenciar canal de chat específico de evento"
-        url:
-          label: "URL"
-          placeholder: "Opcional"
         location:
-          label: "Localização"
           placeholder: "Adicione um link, local ou qualquer outra coisa."
         description:
           label: "Descrição"
@@ -501,9 +510,11 @@ pt_BR:
           placeholder: "Opcional, o padrão é o título do tópico"
         invitees:
           label: "Grupos convidados"
-        status:
-          label: "Status"
+        event_type:
+          public:
+            title: "Pública"
         delete_confirmation_message: "Excluir este evento?"
       invite_user_or_group:
         title: "Notificar usuário(s) ou grupo(s)"
         invite: "Enviar"
+        success: "Convite enviado"

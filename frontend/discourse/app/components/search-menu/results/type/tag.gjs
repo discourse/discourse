@@ -1,10 +1,10 @@
-import icon from "discourse/helpers/d-icon";
-import discourseTag from "discourse/helpers/discourse-tag";
 import { or } from "discourse/truth-helpers";
+import dDiscourseTag from "discourse/ui-kit/helpers/d-discourse-tag";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 const Tag = <template>
-  {{icon "tag"}}
-  {{discourseTag (or @result.name @result) tagName="span"}}
+  {{dIcon "tag"}}
+  {{dDiscourseTag (or @result.name @result) tagName="span"}}
 </template>;
 
 export default Tag;

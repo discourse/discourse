@@ -7,7 +7,7 @@ import deprecated from "discourse/lib/deprecated";
 import EmbedMode from "discourse/lib/embed-mode";
 import getURL from "discourse/lib/get-url";
 import logout from "discourse/lib/logout";
-import mobile from "discourse/lib/mobile";
+import { getCurrentPushSubscription } from "discourse/lib/push-notifications";
 import identifySource, { consolePrefix } from "discourse/lib/source-identifier";
 import DiscourseURL from "discourse/lib/url";
 import Category from "discourse/models/category";
@@ -21,6 +21,7 @@ export default class ApplicationRoute extends DiscourseRoute {
   @service currentUser;
   @service dialog;
   @service documentTitle;
+  @service embedAuthFlow;
   @service historyStore;
   @service loadingSlider;
   @service modal;
@@ -72,25 +73,20 @@ export default class ApplicationRoute extends DiscourseRoute {
   }
 
   @action
-  toggleMobileView() {
-    mobile.toggleMobileView();
-  }
-
-  @action
   toggleSidebar() {
     this.controllerFor("application").send("toggleSidebar");
   }
 
   @action
-  logout() {
+  async logout() {
     const { isReadOnly, isStaffWritesOnly } = this.site;
 
     if (isReadOnly && !isStaffWritesOnly) {
       this.dialog.alert(i18n("read_only_mode.logout_disabled"));
     } else if (this.currentUser) {
-      this.currentUser
-        .destroySession()
-        .then((response) => logout({ redirect: response["redirect_url"] }));
+      const pushSubscription = await getCurrentPushSubscription();
+      const response = await this.currentUser.destroySession(pushSubscription);
+      logout({ redirect: response["redirect_url"] });
     }
   }
 
@@ -178,7 +174,11 @@ export default class ApplicationRoute extends DiscourseRoute {
   @action
   showLogin(props = {}) {
     if (EmbedMode.enabled) {
-      window.open(getURL("/login"), "_blank");
+      if (this.embedAuthFlow.isActive) {
+        this.embedAuthFlow.requestAccess({ intent: "login" });
+      } else {
+        window.open(getURL("/login"), "_blank");
+      }
       return;
     }
 
@@ -194,7 +194,11 @@ export default class ApplicationRoute extends DiscourseRoute {
   @action
   showCreateAccount(props = {}) {
     if (EmbedMode.enabled) {
-      window.open(getURL("/signup"), "_blank");
+      if (this.embedAuthFlow.isActive) {
+        this.embedAuthFlow.requestAccess({ intent: "signup" });
+      } else {
+        window.open(getURL("/signup"), "_blank");
+      }
       return;
     }
 

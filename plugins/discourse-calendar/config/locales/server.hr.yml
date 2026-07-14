@@ -27,6 +27,13 @@ hr:
         ```tekst
         %{logs}
         ```
+  discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Dan"
+        week: "Tjedan"
+        month: "Mjesec"
+        year: "Godina"
   discourse_post_event:
     errors:
       bulk_invite:

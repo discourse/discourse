@@ -48,6 +48,54 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       )
     end
 
+    it "includes vLLM reasoning controls metadata" do
+      get "/admin/plugins/discourse-ai/ai-llms.json"
+      expect(response).to be_successful
+
+      vllm_params = response.parsed_body.dig("meta", "provider_params", "vllm")
+      expect(vllm_params["reasoning_parser"]["values"]).to contain_exactly(
+        { "id" => "default", "name" => "Server default" },
+        { "id" => "deepseek_r1", "name" => "deepseek_r1" },
+        { "id" => "qwen3", "name" => "qwen3" },
+        { "id" => "deepseek_v3", "name" => "deepseek_v3" },
+        { "id" => "deepseek_v4", "name" => "deepseek_v4" },
+        { "id" => "gemma4", "name" => "gemma4" },
+        { "id" => "granite", "name" => "granite" },
+        { "id" => "glm45", "name" => "glm45" },
+        { "id" => "hunyuan_a13b", "name" => "hunyuan_a13b" },
+        { "id" => "cohere_command3", "name" => "cohere_command3" },
+        { "id" => "ernie45", "name" => "ernie45" },
+        { "id" => "holo2", "name" => "holo2" },
+        { "id" => "minimax_m2_append_think", "name" => "minimax_m2_append_think" },
+      )
+      expect(vllm_params["thinking_override"]["values"]).to contain_exactly(
+        { "id" => "default", "name" => "Server default" },
+        { "id" => "on", "name" => "Force on" },
+        { "id" => "off", "name" => "Force off" },
+      )
+      expect(vllm_params["reasoning_effort"]["values"]).to contain_exactly(
+        { "id" => "default", "name" => "Server default" },
+        { "id" => "none", "name" => "None" },
+        { "id" => "low", "name" => "Low" },
+        { "id" => "medium", "name" => "Medium" },
+        { "id" => "high", "name" => "High" },
+      )
+      expect(vllm_params["thinking_token_budget"]["type"]).to eq("number")
+      expect(vllm_params).not_to have_key("enable_thinking")
+    end
+
+    it "includes Gemini service tier metadata" do
+      get "/admin/plugins/discourse-ai/ai-llms.json"
+      expect(response).to be_successful
+
+      google_params = response.parsed_body.dig("meta", "provider_params", "google")
+      expect(google_params["service_tier"]).to include(
+        "type" => "enum",
+        "values" => %w[default standard flex priority],
+        "default" => "default",
+      )
+    end
+
     it "lists enabled features on appropriate LLMs" do
       SiteSetting.ai_bot_enabled = true
       SiteSetting.ai_bot_enabled_llms = llm_model.id.to_s
@@ -106,7 +154,15 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
     context "with quotas" do
       let(:group) { Fabricate(:group) }
       let(:quota_params) do
-        [{ group_id: group.id, max_tokens: 1000, max_usages: 10, duration_seconds: 86_400 }]
+        [
+          {
+            group_id: group.id,
+            max_tokens: 1000,
+            max_usages: 10,
+            max_cost: "1.25",
+            duration_seconds: 86_400,
+          },
+        ]
       end
 
       it "creates model with quotas" do
@@ -120,6 +176,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(created_model.llm_quotas.count).to eq(1)
         quota = created_model.llm_quotas.first
         expect(quota.max_tokens).to eq(1000)
+        expect(quota.max_cost).to eq(BigDecimal("1.25"))
         expect(quota.group_id).to eq(group.id)
       end
     end
@@ -303,6 +360,58 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
         expect(created_model.lookup_custom_param("disable_system_prompt")).to eq(true)
       end
 
+      it "stores vLLM reasoning provider params" do
+        post "/admin/plugins/discourse-ai/ai-llms.json",
+             params: {
+               ai_llm:
+                 valid_attrs.merge(
+                   provider: "vllm",
+                   provider_params: {
+                     reasoning_parser: "qwen3",
+                     thinking_override: "off",
+                     reasoning_effort: "medium",
+                     thinking_token_budget: "1024",
+                     enable_thinking: true,
+                     unknown_param: "ignored",
+                   },
+                 ),
+             }
+
+        created_model = LlmModel.last
+
+        expect(response.status).to eq(201)
+        expect(created_model.provider_params).to include(
+          "reasoning_parser" => "qwen3",
+          "thinking_override" => "off",
+          "reasoning_effort" => "medium",
+          "thinking_token_budget" => "1024",
+        )
+        expect(created_model.provider_params).not_to include("enable_thinking", "unknown_param")
+      end
+
+      it "sanitizes vLLM params when reasoning parser is inactive" do
+        post "/admin/plugins/discourse-ai/ai-llms.json",
+             params: {
+               ai_llm:
+                 valid_attrs.merge(
+                   provider: "vllm",
+                   provider_params: {
+                     reasoning_parser: "default",
+                     thinking_override: "on",
+                     reasoning_effort: "high",
+                     thinking_token_budget: "1024",
+                   },
+                 ),
+             }
+
+        created_model = LlmModel.last
+
+        expect(response.status).to eq(201)
+        expect(created_model.provider_params["thinking_override"]).to eq("default")
+        expect(created_model.provider_params["reasoning_effort"]).to eq("default")
+        expect(created_model.provider_params["thinking_token_budget"]).to be_nil
+      end
+
       it "casts hash-form checkbox fields to booleans" do
         post "/admin/plugins/discourse-ai/ai-llms.json",
              params: {
@@ -383,12 +492,14 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
                       group_id: group1.id,
                       max_tokens: 1500,
                       max_usages: 15,
+                      max_cost: "1.50",
                       duration_seconds: 43_200,
                     },
                     {
                       group_id: group3.id,
                       max_tokens: 3000,
                       max_usages: 30,
+                      max_cost: "3.00",
                       duration_seconds: 86_400,
                     },
                   ],
@@ -403,6 +514,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
           updated_quota1 = llm_model.llm_quotas.find_by(group: group1)
           expect(updated_quota1.max_tokens).to eq(1500)
           expect(updated_quota1.max_usages).to eq(15)
+          expect(updated_quota1.max_cost).to eq(BigDecimal("1.5"))
           expect(updated_quota1.duration_seconds).to eq(43_200)
 
           expect(llm_model.llm_quotas.find_by(group: group2)).to be_nil
@@ -411,7 +523,78 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
           expect(new_quota).to be_present
           expect(new_quota.max_tokens).to eq(3000)
           expect(new_quota.max_usages).to eq(30)
+          expect(new_quota.max_cost).to eq(BigDecimal("3.0"))
           expect(new_quota.duration_seconds).to eq(86_400)
+        end
+
+        it "returns validation errors for invalid quota limits" do
+          group1 = Fabricate(:group)
+          group2 = Fabricate(:group)
+          quota =
+            Fabricate(
+              :llm_quota,
+              llm_model: llm_model,
+              group: group1,
+              max_tokens: 1000,
+              max_usages: nil,
+              max_cost: "1.50",
+              duration_seconds: 86_400,
+            )
+          other_quota = Fabricate(:llm_quota, llm_model: llm_model, group: group2)
+
+          put "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json",
+              params: {
+                ai_llm: {
+                  llm_quotas: [
+                    {
+                      group_id: group1.id,
+                      max_tokens: 0,
+                      max_usages: nil,
+                      max_cost: "1.50",
+                      duration_seconds: 86_400,
+                    },
+                  ],
+                },
+              }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include("Max tokens must be greater than 0")
+          expect(quota.reload.max_tokens).to eq(1000)
+          expect(LlmQuota.exists?(other_quota.id)).to eq(true)
+        end
+
+        it "clears optional quota limits when blank values are submitted" do
+          group = Fabricate(:group)
+          quota =
+            Fabricate(
+              :llm_quota,
+              llm_model: llm_model,
+              group: group,
+              max_tokens: 1000,
+              max_usages: 10,
+              max_cost: "1.50",
+              duration_seconds: 86_400,
+            )
+
+          put "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json",
+              params: {
+                ai_llm: {
+                  llm_quotas: [
+                    {
+                      group_id: group.id,
+                      max_tokens: "",
+                      max_usages: "",
+                      max_cost: "2.50",
+                      duration_seconds: 86_400,
+                    },
+                  ],
+                },
+              }
+
+          expect(response.status).to eq(200)
+          expect(quota.reload.max_tokens).to be_nil
+          expect(quota.max_usages).to be_nil
+          expect(quota.max_cost).to eq(BigDecimal("2.5"))
         end
       end
 
@@ -538,7 +721,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
     end
 
     it "does not route via GET to prevent CSRF" do
-      DiscourseAi::Completions::Llm.with_prepared_responses(["a response"]) do
+      DiscourseAi::Completions::Llm.with_prepared_responses(%w[a a]) do
         get "/admin/plugins/discourse-ai/ai-llms/test.json", params: { ai_llm: test_attrs }
         expect(response.status).to eq(404)
       end
@@ -546,7 +729,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
 
     context "when we can contact the model" do
       it "returns a success true flag" do
-        DiscourseAi::Completions::Llm.with_prepared_responses(["a response"]) do
+        DiscourseAi::Completions::Llm.with_prepared_responses(%w[a a]) do
           post "/admin/plugins/discourse-ai/ai-llms/test.json", params: { ai_llm: test_attrs }
 
           expect(response).to be_successful
@@ -572,6 +755,20 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
           expect(response).to be_successful
           expect(response.parsed_body["success"]).to eq(false)
           expect(response.parsed_body["error"]).to eq(error_message.to_json)
+          expect(response.parsed_body["failed_mode"]).to eq("non_streaming")
+        end
+      end
+
+      it "reports a streaming failure when only the streaming probe fails" do
+        error = DiscourseAi::Completions::Endpoints::Base::CompletionFailed.new("stream broken")
+
+        DiscourseAi::Completions::Llm.with_prepared_responses(["a", error]) do
+          post "/admin/plugins/discourse-ai/ai-llms/test.json", params: { ai_llm: test_attrs }
+
+          expect(response).to be_successful
+          expect(response.parsed_body["success"]).to eq(false)
+          expect(response.parsed_body["error"]).to eq("stream broken")
+          expect(response.parsed_body["failed_mode"]).to eq("streaming")
         end
       end
     end
@@ -595,7 +792,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       fab!(:seeded_llm) { Fabricate(:fake_model, id: -200) }
 
       it "tests the existing model directly instead of using params" do
-        DiscourseAi::Completions::Llm.with_prepared_responses(["a response"]) do
+        DiscourseAi::Completions::Llm.with_prepared_responses(%w[a a]) do
           post "/admin/plugins/discourse-ai/ai-llms/test.json",
                params: {
                  ai_llm: {

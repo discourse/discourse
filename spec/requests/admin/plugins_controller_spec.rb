@@ -43,11 +43,8 @@ RSpec.describe Admin::PluginsController do
   describe "#show" do
     before do
       spoiler_alert =
-        Plugin::Instance.parse_from_source(
-          File.join(Rails.root, "plugins", "spoiler-alert", "plugin.rb"),
-        )
-      poll =
-        Plugin::Instance.parse_from_source(File.join(Rails.root, "plugins", "poll", "plugin.rb"))
+        Plugin::Instance.parse_from_source(Rails.root.join("plugins/spoiler-alert/plugin.rb").to_s)
+      poll = Plugin::Instance.parse_from_source(Rails.root.join("plugins/poll/plugin.rb").to_s)
 
       Discourse.stubs(:plugins_by_name).returns(
         { "discourse-spoiler-alert" => spoiler_alert, "poll" => poll },

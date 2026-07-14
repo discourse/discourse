@@ -1,0 +1,63 @@
+@use "lib/viewport";
+
+.manage-tags-form {
+  &__remove-section {
+    position: relative;
+
+    #control-remove_all_tags {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: auto;
+
+      .form-kit__container-title {
+        color: var(--primary-medium);
+        font-weight: normal !important;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  &__warning {
+    margin-top: 2rem;
+  }
+
+  &__replace {
+    .form-kit__container-content {
+      flex-direction: column;
+      row-gap: var(--space-2);
+    }
+
+    .form-kit__row {
+      padding-top: 0;
+
+      // Form-kit collapses every `--col-*` to 100% width below `lg`, which
+      // stacks the from-chooser, arrow, to-chooser and remove button into a
+      // tall column. Restore the desktop ratios so the replace row stays on
+      // a single line on mobile.
+      // TODO: looking at adding a proper opt-out in form-kit so we don't
+      // need this override.
+      @include viewport.until(lg) {
+        .--col-1 {
+          width: 8.33333333% !important;
+        }
+
+        .--col-5 {
+          width: 41.66666667% !important;
+        }
+      }
+    }
+  }
+
+  &__replace-arrow {
+    text-align: center;
+    height: 2.25em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__replace-row-add {
+    width: 100%;
+  }
+}

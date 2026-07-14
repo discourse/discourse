@@ -5,6 +5,24 @@
 # https://translate.discourse.org/
 
 zh_TW:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "接受的解決方案"
+        sections:
+          support:
+            filter:
+              all_categories: "所有分類"
+            answerers:
+              staff: "管理員"
+              member: "成員"
+              basic: "初級使用者"
+            response_time:
+              buckets:
+                lt_1h: "< 1 小時"
   js:
     notifications:
       alt:
@@ -35,6 +53,8 @@ zh_TW:
       move_post_cancel: "取消"
       confirm_solved_removal_confirm: "確認"
       confirm_solved_removal_cancel: "取消"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: 您的問題已得到解答嗎？
         description: "在正確的回覆下方按下解答按鈕以突顯解決方案來幫助他人。"

@@ -5,7 +5,7 @@ RSpec.describe S3Inventory do
     S3Inventory.new(:upload, s3_inventory_bucket: "some-inventory-bucket/inventoried-bucket/prefix")
   end
 
-  let(:csv_filename) { "#{Rails.root}/spec/fixtures/csv/s3_inventory.csv" }
+  let(:csv_filename) { "#{Rails.root.join("spec/fixtures/csv/s3_inventory.csv")}" }
 
   let(:system_themes_screenshots) do
     UploadReference

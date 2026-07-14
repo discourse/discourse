@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, hash } from "@ember/helper";
+import { concat, fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
@@ -8,25 +8,41 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DIconGridPicker from "discourse/components/d-icon-grid-picker";
-import DecoratedHtml from "discourse/components/decorated-html";
 import EmojiPicker from "discourse/components/emoji-picker";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import categoryBadge from "discourse/helpers/category-badge";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
+import {
+  availableCategoryType,
+  unavailableBadgeText,
+} from "discourse/lib/category-type-utils";
 import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
+import { bind } from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
+import { runOnBeforeCategoryTypesChange } from "discourse/lib/on-before-category-types-change";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
 import PermissionType from "discourse/models/permission-type";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { eq, or } from "discourse/truth-helpers";
+import DDecoratedHtml from "discourse/ui-kit/d-decorated-html";
+import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
+import DMultiSelect from "discourse/ui-kit/d-multi-select";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+
+const DISCUSSION_TYPE_ID = "discussion";
 
 export default class UpsertCategoryGeneral extends Component {
   @service appEvents;
@@ -35,6 +51,7 @@ export default class UpsertCategoryGeneral extends Component {
   @service toasts;
   @service composer;
   @service store;
+  @service categoryTypeChooser;
 
   @tracked loadingDescription = false;
   @tracked descriptionHtml = null;
@@ -50,6 +67,26 @@ export default class UpsertCategoryGeneral extends Component {
   );
 
   #previousPermissions = null;
+
+  constructor() {
+    super(...arguments);
+
+    this.categoryTypes = [...this.categoryTypeChooser.allTypes].map((type) => ({
+      ...type,
+      preventRemoval: type.id === DISCUSSION_TYPE_ID,
+    }));
+  }
+
+  @bind
+  mapCategoryTypeIdsToTypes(ids) {
+    if (!ids?.length) {
+      return [];
+    }
+
+    return ids
+      .map((id) => this.categoryTypes.find((type) => type.id === id))
+      .filter(Boolean);
+  }
 
   @action
   registerDescriptionListener() {
@@ -282,6 +319,14 @@ export default class UpsertCategoryGeneral extends Component {
       : "category.visibility.public";
   }
 
+  get privateVisibilityLocked() {
+    return applyValueTransformer("category-visibility-private-locked", false, {
+      category: this.args.category,
+      form: this.args.form,
+      transientData: this.args.transientData,
+    });
+  }
+
   get showWarning() {
     return this.args.category.isUncategorizedCategory;
   }
@@ -306,6 +351,21 @@ export default class UpsertCategoryGeneral extends Component {
 
   @action
   onChangeVisibility(value) {
+    // Wrapped so consumers can intercept the change; skipping `next` vetoes it.
+    return applyBehaviorTransformer(
+      "category-visibility-change",
+      () => this.#applyVisibilityChange(value),
+      {
+        nextVisibility: value,
+        previousVisibility: this.categoryVisibility,
+        category: this.args.category,
+        form: this.args.form,
+        transientData: this.args.transientData,
+      }
+    );
+  }
+
+  #applyVisibilityChange(value) {
     // Save current permissions before switching to public
     if (value === "public" && this.isPrivateCategory) {
       this.#previousPermissions = (this.permissions || []).map((p) => ({
@@ -335,8 +395,46 @@ export default class UpsertCategoryGeneral extends Component {
     );
   }
 
-  get #isEditingExistingCategory() {
-    return Boolean(this.args.category.id);
+  get isEditingExistingCategory() {
+    return this.args.category.id != null;
+  }
+
+  @bind
+  async loadTypes(term) {
+    return this.categoryTypes.filter((type) => {
+      if (type.id === DISCUSSION_TYPE_ID) {
+        return false;
+      }
+
+      return type.name.toLowerCase().includes(term.toLowerCase());
+    });
+  }
+
+  @action
+  async onChangeCategoryTypes(field, newSelectedTypes) {
+    const nextTypes = [...newSelectedTypes];
+
+    const previousTypes = this.mapCategoryTypeIdsToTypes(field.value);
+
+    const allowed = await runOnBeforeCategoryTypesChange({
+      nextTypes,
+      previousTypes,
+      category: this.args.category,
+      form: this.args.form,
+      transientData: this.args.transientData,
+    });
+
+    if (!allowed) {
+      this.typeSelectorDMenuApi?.close();
+      return;
+    }
+
+    field.set(nextTypes.map((type) => type.id));
+  }
+
+  @action
+  onRegisterTypeSelectorDMenuApi(api) {
+    this.typeSelectorDMenuApi = api;
   }
 
   #parentPermissionsAllowEveryone(parentPermissions) {
@@ -353,7 +451,7 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   #shouldRetainPermissionsForParent(parentPermissions) {
-    if (!this.#isEditingExistingCategory) {
+    if (!this.isEditingExistingCategory) {
       return false;
     }
 
@@ -371,7 +469,7 @@ export default class UpsertCategoryGeneral extends Component {
   async onParentCategoryChange(parentCategoryId) {
     if (!parentCategoryId) {
       this.args.form.set("visibility", null);
-      if (!this.#isEditingExistingCategory) {
+      if (!this.isEditingExistingCategory) {
         this.#setFormPermissions([this.#everyoneFullPermission]);
       }
       return;
@@ -483,13 +581,107 @@ export default class UpsertCategoryGeneral extends Component {
     return rDiff + gDiff + bDiff;
   }
 
+  @action
+  validateColor(name, color, { addError }) {
+    color = color.trim();
+
+    let title;
+    if (name === "color") {
+      title = i18n("category.background_color");
+    } else {
+      throw new Error(`unknown title for category attribute ${name}`);
+    }
+
+    if (!color) {
+      addError(name, {
+        title,
+        message: i18n("category.color_validations.cant_be_empty"),
+      });
+      return;
+    }
+
+    if (color.length !== 3 && color.length !== 6) {
+      addError(name, {
+        title,
+        message: i18n("category.color_validations.incorrect_length"),
+      });
+      return;
+    }
+
+    if (!/^[0-9A-Fa-f]+$/.test(color)) {
+      addError(name, {
+        title,
+        message: i18n("category.color_validations.non_hexdecimal"),
+      });
+    }
+  }
+
   #setFormPermissions(permissions) {
     this.args.form.set("permissions", permissions);
   }
 
   <template>
+    {{#if (or this.isEditingExistingCategory @showAdvancedTabs)}}
+      <@form.Field
+        @name="category_types"
+        @title={{i18n "category.category_types"}}
+        @format="max"
+        @type="custom"
+        @showOptional={{false}}
+        as |field|
+      >
+        <field.Control>
+          <DMultiSelect
+            id={{field.id}}
+            @loadFn={{this.loadTypes}}
+            @onChange={{fn this.onChangeCategoryTypes field}}
+            @selection={{this.mapCategoryTypeIdsToTypes field.value}}
+            @onRegisterDMenuApi={{this.onRegisterTypeSelectorDMenuApi}}
+            @contentClass="category-type-selector__content"
+            @noResultsLabel={{i18n "category.category_types_no_results"}}
+            class="category-type-selector"
+          >
+            <:result as |type|>
+              <div
+                class={{dConcatClass
+                  "category-type-selector__result"
+                  (unless (availableCategoryType type) "--unavailable")
+                  (concat "--category-type-" type.id)
+                }}
+              >
+                <div class="category-type-selector__name">
+                  <span class="category-type-selector__icon">
+                    {{dEmoji type.icon}}
+                  </span>
+
+                  {{type.name}}
+
+                  {{#unless (availableCategoryType type)}}
+                    <span class="category-type-selector__result-badge">
+                      <PluginOutlet
+                        @name="category-type-selector-result-badge"
+                        @outletArgs={{lazyHash type=type}}
+                      >
+                        {{unavailableBadgeText type}}
+                      </PluginOutlet>
+                    </span>
+                  {{/unless}}
+                </div>
+                <div class="category-type-selector__description">
+                  {{type.description}}
+                </div>
+              </div>
+            </:result>
+            <:selection as |type|>
+              {{type.name}}
+            </:selection>
+          </DMultiSelect>
+        </field.Control>
+      </@form.Field>
+    {{/if}}
+
     <@form.Section
-      class={{concatClass
+      class={{dConcatClass
         "edit-category-tab"
         "edit-category-tab-general"
         (if (eq @selectedTab "general") "active")
@@ -530,6 +722,7 @@ export default class UpsertCategoryGeneral extends Component {
         @title={{i18n "category.background_color"}}
         @format="max"
         @validation="required"
+        @validate={{this.validateColor}}
         @onSet={{this.onBackgroundColorSet}}
         @type="color"
         as |field|
@@ -583,7 +776,8 @@ export default class UpsertCategoryGeneral extends Component {
                     <DIconGridPicker
                       @value={{field.value}}
                       @onChange={{field.set}}
-                      @allowClear={{true}}
+                      @showCaret={{true}}
+                      @showSelectedName={{true}}
                       @iconColor={{concat "#" @transientData.color}}
                     />
                   </field.Control>
@@ -606,6 +800,9 @@ export default class UpsertCategoryGeneral extends Component {
                       @didSelectEmoji={{field.set}}
                       @modalForMobile={{false}}
                       @btnClass="btn-default btn-emoji"
+                      @icon={{null}}
+                      @showCaret={{true}}
+                      @showSelectedName={{true}}
                       @label={{unless
                         field.value
                         (i18n "category.select_emoji")
@@ -617,8 +814,10 @@ export default class UpsertCategoryGeneral extends Component {
 
               <Content @name="square">
                 {{trustHTML
-                  (categoryBadge
-                    (this.buildTransientModel @transientData) styleType="square"
+                  (dCategoryBadge
+                    (this.buildTransientModel @transientData)
+                    styleType="square"
+                    previewColor=true
                   )
                 }}
               </Content>
@@ -634,10 +833,10 @@ export default class UpsertCategoryGeneral extends Component {
         >
           <@form.Container
             @title={{i18n "category.description"}}
-            class="edit-category-description-container"
+            class="edit-category-description-container --full"
           >
             <div
-              class={{concatClass
+              class={{dConcatClass
                 "description-content"
                 (unless this.descriptionExpanded "--collapsed")
                 (if this.descriptionOverflows "--overflowing")
@@ -648,7 +847,7 @@ export default class UpsertCategoryGeneral extends Component {
                 this.categoryDescription
               }}
             >
-              <DecoratedHtml
+              <DDecoratedHtml
                 @html={{this.categoryDescription}}
                 @className="readonly-field"
               />
@@ -731,19 +930,26 @@ export default class UpsertCategoryGeneral extends Component {
               >
                 <:trigger>
                   <Condition @name="public" @disabled={{true}}>
-                    {{icon "ban"}}
+                    {{dIcon "ban"}}
                     {{i18n this.publicVisibilityLabel}}
                   </Condition>
                 </:trigger>
               </DTooltip>
             {{else}}
               <Condition @name="public">
-                {{icon "check"}}
+                {{dIcon "check"}}
                 {{i18n this.publicVisibilityLabel}}
               </Condition>
             {{/if}}
-            <Condition @name="group_restricted">
-              {{icon "check"}}
+            <Condition
+              @name="group_restricted"
+              @locked={{this.privateVisibilityLocked}}
+            >
+              {{#if this.privateVisibilityLocked}}
+                {{dIcon "lock"}}
+              {{else}}
+                {{dIcon "check"}}
+              {{/if}}
               {{i18n "category.visibility.group_restricted"}}
             </Condition>
           </cc.Conditions>
@@ -760,7 +966,7 @@ export default class UpsertCategoryGeneral extends Component {
                   @onChange={{this.onChangeAccessGroups}}
                   @options={{hash disabled=this.isParentRestricted}}
                 />
-                {{! template-lint-disable no-invalid-interactive }}
+                {{! eslint-disable ember/template-no-invalid-interactive }}
                 <span
                   class="category-permission-hint"
                   {{on "click" this.goToSecurityTab}}

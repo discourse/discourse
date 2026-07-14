@@ -16,8 +16,7 @@ describe UserCardSerializer do
     it "returns the correct count" do
       expect(serializer.as_json[:accepted_answers]).to eq(0)
 
-      topic = Fabricate(:topic)
-      Fabricate(:post, topic:)
+      topic = Fabricate(:topic_with_op)
       post = Fabricate(:post, topic:, user:)
       DiscourseSolved::AcceptAnswer.call!(
         params: {
@@ -27,6 +26,46 @@ describe UserCardSerializer do
       )
 
       expect(serializer.as_json[:accepted_answers]).to eq(1)
+    end
+
+    describe "with multiple solutions enabled" do
+      before { SiteSetting.solved_allow_multiple_solutions = true }
+
+      it "returns the correct count" do
+        expect(serializer.as_json[:accepted_answers]).to eq(0)
+
+        topic = Fabricate(:topic_with_op)
+        post = Fabricate(:post, topic:, user:)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: post.id,
+          },
+          guardian: Discourse.system_user.guardian,
+        )
+
+        expect(serializer.as_json[:accepted_answers]).to eq(1)
+
+        post2 = Fabricate(:post, topic:, user:)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: post2.id,
+          },
+          guardian: Discourse.system_user.guardian,
+        )
+
+        expect(serializer.as_json[:accepted_answers]).to eq(2)
+
+        topic2 = Fabricate(:topic_with_op)
+        post3 = Fabricate(:post, topic: topic2, user:)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: post3.id,
+          },
+          guardian: Discourse.system_user.guardian,
+        )
+
+        expect(serializer.as_json[:accepted_answers]).to eq(3)
+      end
     end
   end
 end

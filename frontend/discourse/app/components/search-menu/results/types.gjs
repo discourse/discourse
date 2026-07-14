@@ -95,8 +95,8 @@ export default class Types extends Component {
           aria-label={{concat (i18n "search.results") " " resultType.type}}
         >
           {{#each resultType.results as |result|}}
-            {{! template-lint-disable no-pointer-down-event-binding }}
-            {{! template-lint-disable no-invalid-interactive }}
+
+            {{! eslint-disable ember/template-no-invalid-interactive }}
             <li
               class="item"
               {{on

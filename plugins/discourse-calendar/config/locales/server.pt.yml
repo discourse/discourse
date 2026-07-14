@@ -13,8 +13,13 @@ pt:
     triggerables:
       event_started:
         title: Evento iniciado
-  site_settings:
-    discourse_post_event_enabled: "Ativa as funcionalidades de 'Evento'. Nota: também precisa de 'calendário ativado' para ser ativada"
+  discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Dia"
+        week: "Semana"
+        month: "Mês"
+        year: "Ano"
   discourse_post_event:
     errors:
       bulk_invite:

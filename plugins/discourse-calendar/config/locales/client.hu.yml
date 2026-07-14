@@ -329,6 +329,9 @@ hu:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} automatikusan beállította a részvételét, és meghívta erre: %{eventName}"
         an_event: "esemény"
+      event_description:
+        show_more: "Több megjelenítése"
+        show_less: "Kevesebb megjelenítése"
       edit_reason: "Esemény frissítve"
       edit_reason_closed: "Esemény lezárva"
       edit_reason_opened: "Esemény megnyitva"
@@ -383,7 +386,6 @@ hu:
       upcoming_events_list:
         title: "Közelgő események"
         empty: "Nincsenek közelgő események"
-        all_day: "Egész nap"
         error: "Nem sikerült lekérni az eseményeket"
         try_again: "Próbáld újra"
         view_all: "Összes megtekintése"
@@ -397,10 +399,9 @@ hu:
       models:
         invitee:
           no_users: "Nem található felhasználó"
+          leave_event: "Kilépés az eseményről"
           status:
-            unknown: "Nem érdekli"
             going: "Megy"
-            not_going: "Nem megy"
             interested: "Érdeklődik"
             going_count:
               one: "%{count} résztvevő"
@@ -429,11 +430,28 @@ hu:
               title: "Privát"
               description: "Privát eseményhez csak a meghívott felhasználók csatlakozhatnak."
       composer:
-        name_placeholder: "Esemény"
-        end_date_placeholder: "Befejezési dátum beállítása"
+        name_placeholder: "Esemény neve"
         location_placeholder: "Helyszín vagy URL hozzáadása"
-        max_attendees_placeholder: "Maximális résztvevők beállítása"
         description_placeholder: "Esemény leírásának hozzáadása"
+        event_title_placeholder: "Esemény neve"
+        create_event_button: "Esemény létrehozása"
+        reminder:
+          units:
+            minutes:
+              one: "perc"
+              other: "perc"
+            hours:
+              one: "óra"
+              other: "óra"
+            days:
+              one: "nap"
+              other: "nap"
+            weeks:
+              one: "hét"
+              other: "hetek"
+      composer_actions:
+        create_event:
+          label: "Esemény létrehozása"
       builder_modal:
         custom_fields:
           label: "Egyéni mezők"
@@ -441,6 +459,7 @@ hu:
           description: "Az engedélyezett egyéni mezők a webhely beállításaiban vannak meghatározva. Az egyéni mezők az adatok más bővítményeknek történő továbbítására szolgálnak."
         create_event_title: "Esemény létrehozása"
         update_event_title: "Esemény szerkesztése"
+        advanced_settings_title: "Speciális beállítások"
         confirm_delete: "Biztos, hogy törli ezt az eseményt?"
         confirm_close: "Biztos, hogy lezárja ezt az eseményt?"
         confirm_open: "Biztosan meg szeretnéd nyitni ezt az eseményt?"
@@ -456,9 +475,6 @@ hu:
           remove_timezone: Nincs időzóna (UTC)
         reminders:
           label: "Emlékeztetők"
-          types:
-            bump_topic: "Téma automatikus előresorolása"
-            notification: "résztvevők értesítése"
           units:
             minutes: "perc"
             hours: "óra"
@@ -467,31 +483,22 @@ hu:
           periods:
             before: "előtte"
             after: "utána"
-        recurrence_until:
-          label: "Amíg (beleértve)"
         recurrence:
           label: "Ismétlődés"
           none: "Nincs ismétlődés"
           every_day: "Naponta"
-          every_month: "Minden hónapban ezen a hétköznapon"
           every_weekday: "Minden hétköznap"
-          every_week: "Minden héten ezen a hétköznapon"
-          every_two_weeks: "Kéthetente ezen a hétköznapon"
-          every_four_weeks: "Négyhetente ezen a hétköznapon"
-        minimal:
-          label: "Minimális esemény"
-          checkbox_label: "Elrejti az Elmegyek/Nem megyek gombokat és a meghívottak állapotát"
+          ordinals:
+            last: "legutóbbi"
         max_attendees:
           label: "Maximális résztvevők"
           placeholder: "Nincs korlát"
+        attendance:
+          none: "Egyik sem"
         allow_chat:
           label: "Csevegés integráció"
           checkbox_label: "Eseményspecifikus csevegőcsatorna létrehozása és kezelése"
-        url:
-          label: "Webcím"
-          placeholder: "Nem kötelező"
         location:
-          label: "Hely"
           placeholder: "Adj hozzá egy helyszínt, linket vagy valami hasonlót."
         description:
           label: "Leírás"
@@ -501,9 +508,11 @@ hu:
           placeholder: "Nem kötelező, alapértelmezés szerint a téma címe"
         invitees:
           label: "Meghívott csoportok"
-        status:
-          label: "Állapot"
+        event_type:
+          public:
+            title: "Nyilvános"
         delete_confirmation_message: "Törli ezt az eseményt?"
       invite_user_or_group:
         title: "Felhasználók vagy csoportok értesítése"
         invite: "Küldés"
+        success: "Meghívó elküldve"

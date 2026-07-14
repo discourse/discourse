@@ -39,8 +39,11 @@ pl_PL:
         title: Oceniaj posty za pomocą sztucznej inteligencji
         description: "Oceniaj posty przy użyciu dużego modelu językowego"
         flagged_post: |
-          <div>Odpowiedź modelu:</div>
-          <p>%{llm_response}</p>
+          %{score_reason}
+          %{response}
+        flagged_post_response: |
+          <p>Odpowiedź modelu: %{llm_response}</p>
+        flagged_post_score_reason: |
           <b>Wyzwalane przez regułę <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> .</b>
         notify_author_pm:
           subject: "Twój post został tymczasowo usunięty w celu sprawdzenia"
@@ -58,6 +61,7 @@ pl_PL:
         description: "Automatycznie taguj tematy za pomocą AI"
   site_settings:
     discourse_ai_enabled: "Włącz wtyczkę Discourse AI."
+    enable_ai_bot_starred_conversations: "Zezwól użytkownikom na wyróżnianie rozmów botów AI i wyświetlanie ich w sekcji oznaczonej gwiazdką na pasku bocznym."
     ai_default_llm_model: "Domyślny model LLM do wykorzystania we wszystkich funkcjach AI"
     ai_artifact_security: "System artefaktów AI generuje ramki IFRAME z kodem, który można uruchomić. Tryb ścisły wymusza dodatkowe kliknięcie, aby uruchomić kod. Tryb łagodny uruchamia kod natychmiast. Tryb hybrydowy pozwala użytkownikowi na podanie danych w trybie artefakt-sztuczna inteligencja-autorun, aby wyświetlić je natychmiast. Tryb wyłączony wyłącza system artefaktów."
     ai_toxicity_enabled: "Włącz moduł toksyczności."
@@ -76,7 +80,12 @@ pl_PL:
     ai_sentiment_enabled: "Włącz moduł sentymentu."
     ai_sentiment_inference_service_api_endpoint: "Adres URL, pod którym działa interfejs API dla modułu sentymentu"
     ai_sentiment_inference_service_api_key: "Klucz dla API sentymentu"
-    ai_sentiment_models: "Modele używane do wnioskowania. Sentyment klasyfikuje post w przestrzeni pozytywnej/neutralnej/negatywnej. Emocje klasyfikuje się w przestrzeni gniewu/wstrętu/strachu/radości/neutralności/smutku/zaskoczenia."
+    ai_sentiment_model_configs: "Punkty końcowe modelu klasyfikacji do wykorzystania we wnioskowaniu. Odczucie klasyfikuje wpisy jako pozytywne, neutralne lub negatywne. Emocja klasyfikuje wpisy według obsługiwanych etykiet emocji."
+    ai_sentiment_models: "Punkty końcowe modelu klasyfikacji do wykorzystania we wnioskowaniu. Odczucie klasyfikuje wpisy jako pozytywne, neutralne lub negatywne. Emocja klasyfikuje posty według obsługiwanych etykiet emocji."
+    ai_sentiment_sentiment_classification_strategy: "Backend klasyfikacji odczuć."
+    ai_sentiment_sentiment_agent: "Agent używany do klasyfikowania odczuć, gdy zapleczem odczuć jest agent."
+    ai_sentiment_emotion_classification_strategy: "Backend klasyfikacji emocji."
+    ai_sentiment_emotion_agent: "Agent do wykorzystania w klasyfikacji emocji, gdy zapleczem emocji jest agent."
     ai_nsfw_detection_enabled: "Włącz moduł NSFW."
     ai_nsfw_inference_service_api_endpoint: "Adres URL, pod którym działa interfejs API dla modułu NSFW"
     ai_nsfw_inference_service_api_key: "Klucz dla NSFW API"
@@ -101,7 +110,7 @@ pl_PL:
     ai_helper_post_illustrator_agent: "Osobowość do wykorzystania w funkcji ilustrowania wpisów przez pomocnika AI. Uwaga: aby ta funkcja działała, musisz również utworzyć narzędzie do generowania obrazów (Administrator > Wtyczki > Discourse AI > Narzędzia)."
     ai_helper_chat_thread_title_agent: "Agent używany do generowania tytułów wątków czatu."
     ai_embeddings_selected_model: "Użyj wybranego modelu do generowania osadzeń."
-    ai_embeddings_generate_for_pms: "Generuj osadzenia dla wiadomości osobistych."
+    ai_embeddings_generate_for_pms: "Generuj osadzenia dla prywatnych wiadomości."
     ai_embeddings_semantic_related_topics_enabled: "Użyj wyszukiwania semantycznego dla powiązanych tematów."
     ai_embeddings_semantic_related_topics: "Maksymalna liczba tematów do wyświetlenia w sekcji powiązanych tematów."
     ai_embeddings_backfill_batch_size: "Liczba osadzań do uzupełnienia co 15 minut."
@@ -112,6 +121,10 @@ pl_PL:
     ai_embeddings_semantic_related_age_penalty: "Zastosuj wykładniczą karę wiekową do tematów w wynikach wyszukiwania semantycznego. 0,0 = brak kary, 0,3 = delikatne nastawienie do ostatnio aktywnych treści, 1,0+ = silne nastawienie do niedawno aktywnych treści."
     ai_embeddings_semantic_related_age_time_scale: "Skala czasowa w dniach obliczania kary wiekowej. Tematy nieaktywne przez wiele dni otrzymują ~ 50% kary z karą = 1,0. Użyj 365 dla skali rocznej, 90 dla skali kwartalnej."
     ai_embeddings_per_post_enabled: Generuj osadzenia dla każdego wpisu
+    ai_admin_dashboard_enabled: "Włącz funkcje AI w panelu administracyjnym."
+    ai_admin_dashboard_highlights_agent: "Agent wyjaśniający istotne zmiany w społeczności w panelu administracyjnym."
+    ai_admin_dashboard_highlights_category_scope: "Wybierz kategorie, z których mogą korzystać wyróżnienia AI. Opcje uwzględnienia i wykluczenia użyj {{setting:ai_admin_dashboard_highlights_categories}}. Prywatne wiadomości są zawsze wykluczane."
+    ai_admin_dashboard_highlights_categories: "Kategorie używane, gdy zakres kategorii wyróżnień sztucznej inteligencji jest ustawiony na <strong>obejmują</strong> lub <strong>wykluczają</strong>."
     ai_summarization_enabled: "Włącz funkcję podsumowania"
     ai_summarization_agent: "Agent do wykorzystania w funkcji podsumowania"
     ai_pm_summarization_allowed_groups: "Grupy mogą tworzyć i przeglądać podsumowania w wiadomościach prywatnych."
@@ -126,6 +139,7 @@ pl_PL:
     ai_bot_add_to_header: "Wyświetl przycisk w nagłówku, aby rozpocząć wiadomość prywatną z botem AI"
     ai_bot_add_to_community_section: "Wyświetl link w sekcji społeczności na pasku bocznym, aby rozpocząć prywatną wiadomość z botem AI"
     ai_bot_github_access_token: "Token dostępu GitHub do użytku z narzędziami GitHub AI (wymagany do obsługi wyszukiwania)"
+    ai_bot_enable_docked_composer: "Włącz dokowany kompozytor w stylu czatu dla konwersacji botów AI zamiast standardowego kompozytora pływającego."
     ai_discover_enabled: "Włącz funkcję wyszukiwania odkrywczego"
     ai_discover_agent: "Agent do wykorzystania w funkcji wyszukiwania odkrywczego"
     ai_google_custom_search_api_key: "Klucz dla Google Custom Search API, zobacz: https://developers.google.com/custom-search"
@@ -137,8 +151,9 @@ pl_PL:
     ai_discord_search_agent: "Agent używany do wyszukiwania Discord."
     ai_discord_allowed_guilds: "Gildie (serwery) Discord, na których bot może wyszukiwać"
     ai_translation_enabled: "Włącz funkcję tłumaczenia AI"
-    ai_translation_target_categories: "Tłumaczone będą tylko treści z wybranych kategorii. Podkategorie należy dodać osobno. Pozostaw puste, aby wyłączyć tłumaczenie tematów w kategoriach."
-    ai_translation_personal_messages: "Kontroluje, które wiadomości osobiste są tłumaczone. 'none' wyłącza tłumaczenie wiadomości prywatnych. 'group' tłumaczy tylko wiadomości prywatne grupy. 'all' tłumaczy wszystkie wiadomości prywatne."
+    ai_translation_category_scope: "Wybierz kategorie, z których może korzystać tłumaczenie AI. Opcje uwzględnienia i wykluczenia użyj {{setting:ai_translation_categories}}. Prywatne wiadomości są kontrolowane przez {{setting:ai_translation_personal_messages}}."
+    ai_translation_categories: "Kategorie używane, gdy zakres kategorii tłumaczenia AI jest ustawiony na <strong>dołącz</strong> lub <strong>wyklucz</strong>."
+    ai_translation_personal_messages: "Kontroluje, które prywatne wiadomości są tłumaczone. 'none' wyłącza tłumaczenie wiadomości prywatnych. 'group' tłumaczy tylko wiadomości prywatne grupy. 'all' tłumaczy wszystkie wiadomości prywatne."
     ai_translation_include_bot_content: "Po włączeniu tej opcji treści tworzone przez boty (identyfikatory użytkowników poniżej 0) będą również wysyłane do tłumaczenia."
     ai_translation_max_post_length: "Maksymalna liczba znaków w poście do przetłumaczenia. Posty dłuższe niż ta liczba nie będą tłumaczone."
     ai_translation_backfill_max_age_days: "Maksymalny wiek posta i tematu do przetłumaczenia. Posty i tematy starsze niż ten wiek nie będą tłumaczone. Wartość 0 wyłącza uzupełnianie, ale nie wyłącza tłumaczenia nowych postów."
@@ -160,88 +175,88 @@ pl_PL:
       xaxis: "Pozytywny(%)"
       yaxis: "Data"
     emotion_admiration:
-      title: "\U0001F929 Podziw"
+      title: "🤩 Podziw"
       description: "Posty sklasyfikowane pod kątem podziwu emocjonalnego za pośrednictwem sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_amusement:
-      title: "\U0001F604 Rozrywka"
+      title: "😄 Rozrywka"
       description: "Posty sklasyfikowane pod kątem emocji rozrywki za pomocą sztucznej inteligencji, przy użyciu modelu 'SamLowe/roberta-base-go_emotions'."
     emotion_anger:
-      title: "\U0001F620 Gniew"
+      title: "😠 Gniew"
       description: "Posty sklasyfikowane według emocji gniew za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_annoyance:
-      title: "\U0001F612 Irytacja"
+      title: "😒 Irytacja"
       description: "Posty sklasyfikowane pod kątem emocji irytacji za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_approval:
-      title: "\U0001F44DAprobata"
+      title: "👍Aprobata"
       description: "Posty sklasyfikowane na podstawie akceptacji emocji przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_caring:
-      title: "\U0001F917 Troskliwy"
+      title: "🤗 Troskliwy"
       description: "Posty klasyfikowane pod kątem emocji za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_confusion:
-      title: "\U0001F615 Zamieszanie"
+      title: "😕 Zamieszanie"
       description: "Posty sklasyfikowane pod kątem emocji za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_curiosity:
-      title: "\U0001F914 Ciekawość"
+      title: "🤔 Ciekawość"
       description: "Posty klasyfikowane pod kątem ciekawości emocjonalnej za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_desire:
-      title: "\U0001F60D Pragnienie"
+      title: "😍 Pragnienie"
       description: "Posty sklasyfikowane według pożądanej emocji za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_disappointment:
-      title: "\U0001F61E Rozczarowanie"
+      title: "😞 Rozczarowanie"
       description: "Posty sklasyfikowane pod kątem emocji rozczarowania przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_disapproval:
-      title: "\U0001F44E Niezadowolenie"
+      title: "👎 Niezadowolenie"
       description: "Posty sklasyfikowane pod kątem emocji dezaprobaty przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_disgust:
-      title: "\U0001F922 Niesmak"
+      title: "🤢 Niesmak"
       description: "Posty sklasyfikowane za pomocą sztucznej inteligencji z emocją wstrętu, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_embarrassment:
-      title: "\U0001F633 Zażenowanie"
+      title: "😳 Zażenowanie"
       description: "Posty sklasyfikowane pod kątem emocji zażenowania przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_excitement:
-      title: "\U0001F92A Podniecenie"
+      title: "🤪 Podniecenie"
       description: "Posty klasyfikowane według emocji wywołanych przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_fear:
-      title: "\U0001F628 Strach"
+      title: "😨 Strach"
       description: "Posty sklasyfikowane za pomocą sztucznej inteligencji, z uwzględnieniem emocji strachu, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_gratitude:
-      title: "\U0001F64F Wdzięczność"
+      title: "🙏 Wdzięczność"
       description: "Posty sklasyfikowane pod kątem wdzięczności za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_grief:
-      title: "\U0001F622 Żal"
+      title: "😢 Żal"
       description: "Posty sklasyfikowane pod kątem emocji żałoby za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_joy:
-      title: "\U0001F60A Radość"
+      title: "😊 Radość"
       description: "Posty sklasyfikowane według emocji „radość” za pomocą sztucznej inteligencji, wykorzystując model „SamLowe/roberta-base-go_emotions”."
     emotion_love:
       title: '❤️ Miłość'
       description: "Posty sklasyfikowane według emocji „miłość” za pomocą sztucznej inteligencji, wykorzystując model „SamLowe/roberta-base-go_emotions”."
     emotion_nervousness:
-      title: "\U0001F630 Nerwowość"
+      title: "😰 Nerwowość"
       description: "Posty sklasyfikowane pod kątem emocji związanych z nerwowością za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_neutral:
-      title: "\U0001F610 Neutralne"
+      title: "😐 Neutralne"
       description: "Posty sklasyfikowane jako neutralne emocjonalnie przez sztuczną inteligencję, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_optimism:
-      title: "\U0001F31F Optymizm"
+      title: "🌟 Optymizm"
       description: "Posty sklasyfikowane pod kątem optymizmu emocjonalnego za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_pride:
-      title: "\U0001F981 Duma"
+      title: "🦁 Duma"
       description: "Posty sklasyfikowane za pomocą sztucznej inteligencji z emocją dumy, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_realization:
-      title: "\U0001F4A1 Uświadomienie"
+      title: "💡 Uświadomienie"
       description: "Posty sklasyfikowane pod kątem realizacji emocji za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_relief:
-      title: "\U0001F60C Ulga"
+      title: "😌 Ulga"
       description: "Posty sklasyfikowane pod kątem ulgi emocjonalnej za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_remorse:
-      title: "\U0001F614 Wyrzuty sumienia"
+      title: "😔 Wyrzuty sumienia"
       description: "Posty sklasyfikowane pod kątem wyrzutów sumienia za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_sadness:
-      title: "\U0001F62D Smutek"
+      title: "😭 Smutek"
       description: "Posty sklasyfikowane według emocji smutek za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
     emotion_surprise:
-      title: "\U0001F632 Niespodzianka"
+      title: "😲 Niespodzianka"
       description: "Posty sklasyfikowane według emocji zaskoczenia za pomocą sztucznej inteligencji, przy użyciu modelu „SamLowe/roberta-base-go_emotions”."
   discourse_ai:
     ai_artifact:
@@ -258,6 +273,12 @@ pl_PL:
       change_description: "Zmień opis"
       copied: "Skopiowano do schowka"
     unknown_model: "Nieznany model AI"
+    discourse_workflows:
+      ai_agent:
+        errors:
+          locked_default_llm_missing: "Agent „%{agent}” jest zablokowany na swoim domyślnym LLM, ale nie skonfigurowano żadnego prawidłowego domyślnego LLM"
+          llm_not_found: "Nie znaleziono modelu LLM o identyfikatorze %{llm_model_id}"
+          no_llm_configured: "Nie skonfigurowano LLM dla agenta „%{agent}”. Wybierz model LLM lub skonfiguruj domyślny LLM agenta/lokacji."
     tools:
       custom_name: "%{name} (niestandardowe)"
       presets:
@@ -356,12 +377,12 @@ pl_PL:
       title: "%{title} - Rozmowa AI - %{site_name}"
       errors:
         not_allowed: "Nie masz uprawnień do udostępniania tego tematu"
-        other_people_in_pm: "Wiadomości osobiste przekazywane innym osobom nie mogą być udostępniane publicznie"
-        other_content_in_pm: "Wiadomości osobiste zawierające wpisy innych osób nie mogą być udostępniane publicznie"
+        other_people_in_pm: "Prywatne wiadomości przekazywane innym osobom nie mogą być udostępniane publicznie"
+        other_content_in_pm: "Prywatne wiadomości zawierające wpisy innych osób nie mogą być udostępniane publicznie"
         failed_to_share: "Nie udało się udostępnić konwersacji"
         conversation_deleted: "Udostępniona konwersacja została pomyślnie usunięta"
     spam_detection:
-      flag_reason: "Oznaczono jako spam przez <a href='%{url}'>Discourse AI</a>"
+      flag_reason: "Oflagowano jako spam przez <a href='%{url}'>AI Discourse</a>"
       silence_reason: "Użytkownik wyciszony automatycznie przez <a href='%{url}'>Discourse AI</a>"
       invalid_error_type: "Podano nieprawidłowy typ błędu"
       unexpected: "Wystąpił nieoczekiwany błąd"
@@ -378,6 +399,11 @@ pl_PL:
         cannot_delete_system_agent: "Nie można usunąć agentów systemowych, zamiast tego należy je wyłączyć"
         cannot_edit_system_agent: "Można zmienić tylko nazwy agentów systemowych, nie można edytować narzędzi ani komunikatów systemowych, zamiast tego należy je wyłączyć i utworzyć kopię"
         cannot_have_duplicate_tools: "Nie można mieć duplikatów narzędzi"
+        native_tool_requires_forced_llm: "Narzędzia natywne dostawcy wymagają domyślnego LLM z włączoną opcją „Wymuś domyślny LLM”"
+        native_tool_unsupported_by_llm: "Wybrany domyślny program LLM nie obsługuje żadnego z włączonych narzędzi natywnych dostawcy"
+        admin_dashboard_highlights:
+          name: "Najważniejsze informacje na temat panelu administracyjnego"
+          description: "Wyświetla krótki odczyt wyświetlany na górze panelu administracyjnego, wyjaśniając, co się zmieniło i na co należy zwrócić uwagę w tym okresie"
         github_helper:
           name: "Pomocnik GitHub"
           description: "Bot AI specjalizujący się w pomocy w zadaniach i pytaniach związanych z GitHubem"
@@ -454,7 +480,7 @@ pl_PL:
           name: "Tłumacz"
           description: "Domyślny agent obsługujący funkcję tłumacza pomocnika"
         image_captioner:
-          name: "Podpisy pod obrazkami"
+          name: "Podpisy pod obrazami"
           description: "Domyślny agent obsługujący funkcję podpisu obrazu pomocnika"
         locale_detector:
           name: "Detektor ustawień regionalnych"
@@ -483,6 +509,12 @@ pl_PL:
         chat_thread_titler:
           name: "Tytułowanie wątku czatu"
           description: "Domyślny agent obsługujący automatyczne generowanie tytułów wątków czatu"
+        sentiment_classifier:
+          name: "Klasyfikator odczuć"
+          description: "Domyślny agent zasilający klasyfikację odczuć"
+        emotion_classifier:
+          name: "Klasyfikator emocji"
+          description: "Domyślny agent obsługujący klasyfikację emocji"
       topic_not_found: "Podsumowanie niedostępne, nie znaleziono tematu!"
       summarizing: "Podsumowanie tematu"
       searching: "Wyszukiwanie: '%{query}'"
@@ -539,6 +571,13 @@ pl_PL:
           flag_type:
             name: "Typ flagi"
             description: "Kontroluje, czy wpis jest sprawdzany, ukrywany, usuwany lub traktowany jako spam."
+      native_tools:
+        web_search:
+          name: "Wyszukiwanie w sieci (natywne)"
+          help: "Umożliwia modelowi przeszukiwanie sieci przy użyciu wbudowanej wyszukiwarki dostawcy, gdy agent jest zmuszony do korzystania z obsługiwanego LLM."
+        web_fetch:
+          name: "Pobieranie z sieci (natywne)"
+          help: "Umożliwia modelowi otwieranie i odczytywanie stron internetowych przy użyciu wbudowanego dostępu do sieci dostawcy, gdy agent jest wymuszony przez obsługiwany protokół LLM."
       tool_summary:
         read_artifact: "Przeczytaj artefakt sieciowy"
         search_uploaded_documents: "Wyszukaj przesłane dokumenty"
@@ -553,6 +592,8 @@ pl_PL:
         categories: "Wymień kategorie"
         flag_post: "Oflaguj post"
         close_topic: "Zamknij temat"
+        suspend_user: "Zawieś użytkownika"
+        silence_user: "Wycisz użytkownika"
         unlist_topic: "Usuń temat z listy"
         lock_post: "Zablokuj wpis"
         delete_topic: "Usuń temat"
@@ -565,6 +606,7 @@ pl_PL:
         grant_badge: "Przyznaj odznakę"
         list_reviewables: "Kolejka do przeglądu listy"
         perform_reviewable_action: "Działanie kolejki przeglądu"
+        add_reviewable_note: "Dodaj notatkę do kolejki przeglądu"
         assign: "Przypisz temat"
         mark_as_solved: "Oznacz jako rozwiązany"
         search: "Szukaj"
@@ -598,6 +640,8 @@ pl_PL:
         categories: "Wyświetl wszystkie publicznie widoczne kategorie na forum"
         flag_post: "Oflaguj bieżący wpis do sprawdzenia przez zespół"
         close_topic: "Zamknij lub otwórz temat"
+        suspend_user: "Zawieś (zablokuj) użytkownika, uniemożliwiając mu logowanie się lub publikowanie"
+        silence_user: "Ucisz użytkownika, blokując mu możliwość publikowania, dopóki może czytać"
         unlist_topic: "Wyświetlanie lub usuwanie tematu z listy"
         lock_post: "Zablokuj lub odblokuj wpis"
         delete_topic: "Usuń temat"
@@ -610,6 +654,7 @@ pl_PL:
         grant_badge: "Przyznaj użytkownikowi odznakę"
         list_reviewables: "Wyświetl listę oczekujących na przegląd elementów w kolejce z opcjonalnym filtrowaniem"
         perform_reviewable_action: "Wykonaj działanie w kolejce przeglądu"
+        add_reviewable_note: "Dodaj notatkę do elementu w kolejce przeglądu"
         assign: "Przypisz lub usuń przypisanie tematu użytkownikowi lub grupie"
         mark_as_solved: "Oznacz lub odznacz wpis jako zaakceptowane rozwiązanie"
         search: "Przeszukaj wszystkie publiczne tematy na forum"
@@ -645,6 +690,8 @@ pl_PL:
         random_picker: "Wybieranie z %{options}, wybrane: %{result}"
         flag_post: "Flagowanie wpisu %{post_id} (flag_post: %{flag_post})"
         close_topic: "Zamykanie tematu %{topic_id} (zamknięto: %{closed})"
+        suspend_user: "Zawieszenie %{username} na %{duration_days} dni"
+        silence_user: "Wyciszanie %{username} na %{duration_days} dni"
         unlist_topic: "Usuwanie tematu z listy %{topic_id} (usunięto z listy: %{unlisted})"
         lock_post: "Blokowanie wpisu %{post_id} (zablokowano: %{locked})"
         delete_topic: "Usuwanie tematu %{topic_id} (usunięto: %{deleted})"
@@ -657,6 +704,7 @@ pl_PL:
         grant_badge: "Przyznanie odznaki „%{badge_name}” użytkownikowi %{username}"
         list_reviewables: "Wyświetlanie listy elementów kolejki przeglądu (typ: %{type})"
         perform_reviewable_action: "Wykonywanie %{action} na %{reviewable_id} do przejrzenia"
+        add_reviewable_note: "Dodawanie notatki do %{reviewable_id} do przeglądu"
         assign: "Przypisanie tematu %{topic_id} (przypisano: %{assigned})"
         mark_as_solved: "Oznaczanie wpisu %{post_id} jako rozwiązany (rozwiązany: %{solved})"
         read: "Czytanie: <a href='%{url}'>%{title}</a>"
@@ -721,12 +769,29 @@ pl_PL:
         already_flagged: "Wpis został już oflagowany do sprawdzenia."
         flagged: "Wpis oflagowany do sprawdzenia."
         reason: "Bot AI oflagował ten wpis.\n\nPowód: %{reason}"
+        score_reason: "Bot AI oznaczył ten wpis."
       close_topic:
         errors:
           not_found: "Temat nie został znaleziony."
           not_allowed: "Nie masz uprawnień do zamykania ani otwierania tego tematu."
           no_reason: "Aby zamknąć lub otworzyć temat, trzeba podać powód."
         success: "Temat zaktualizowano pomyślnie."
+      suspend_user:
+        errors:
+          not_found: "Użytkownik nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do zawieszenia tego użytkownika."
+          no_reason: "Aby zawiesić użytkownika, konieczne jest podanie przyczyny."
+          invalid_duration: "Czas trwania musi być dodatnią liczbą całkowitą dni, maksymalnie %{max}."
+          failed: "Nie udało się zawiesić użytkownika."
+        success: "Użytkownik %{username} został zawieszony."
+      silence_user:
+        errors:
+          not_found: "Użytkownik nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do uciszania tego użytkownika."
+          no_reason: "Aby uciszyć użytkownika, trzeba podać powód."
+          invalid_duration: "Czas trwania musi być dodatnią liczbą całkowitą dni, maksymalnie %{max}."
+          failed: "Nie udało się uciszyć użytkownika."
+        success: "Użytkownik %{username} został uciszony."
       unlist_topic:
         errors:
           not_found: "Temat nie został znaleziony."
@@ -834,6 +899,13 @@ pl_PL:
           conflict: "Ten element kolejki przeglądu został zaktualizowany przez kogoś innego. Spróbuj ponownie."
           action_failed: "Nie udało się wykonać działania"
         success: "Pomyślnie wykonano działanie „%{action}” na elemencie kolejki przeglądu %{reviewable_id}"
+      add_reviewable_note:
+        errors:
+          not_allowed: "Nie masz dostępu do kolejki przeglądu"
+          not_found: "Nie znaleziono elementu kolejki przeglądu"
+          no_note: "Aby dodać notatkę do elementu kolejki przeglądu, wymagana jest notatka"
+          failed: "Nie udało się dodać notatki"
+        success: "Pomyślnie dodano notatkę do elementu kolejki przeglądu %{reviewable_id}"
     reviewables:
       ai_tool_action:
         title: "Działanie narzędzia AI"
@@ -844,7 +916,10 @@ pl_PL:
         target_missing: "Cel działania narzędzia już nie istnieje."
         tool_not_found: "Narzędzie „%{tool_name}” nie jest już dostępne."
         bot_user_missing: "Użytkownik bota już nie istnieje."
+        performer_not_human: "To działanie musi zatwierdzić lub odrzucić prawdziwa osoba, a nie bot."
+        post_mismatch: "Ta karta zatwierdzenia nie dotyczy tego wpisu."
         execution_error: "Nie udało się wykonać narzędzia: %{error}"
+        execution_error_unknown: "wystąpił nieoczekiwany błąd"
     summarization:
       configuration_hint:
         one: "Najpierw skonfiguruj ustawienie `%{setting}`."
@@ -857,23 +932,27 @@ pl_PL:
       reports:
         overall_sentiment: "Ogólny nastrój (pozytywny - negatywny)"
         post_emotion:
-          sadness: "Smutek \U0001F622"
-          surprise: "Niespodzianka \U0001F631"
-          neutral: "Neutralne \U0001F610"
-          fear: "Strach \U0001F628"
-          anger: "Gniew \U0001F621"
-          joy: "Radość \U0001F600"
-          disgust: "Niesmak \U0001F922"
+          sadness: "Smutek 😢"
+          surprise: "Niespodzianka 😱"
+          neutral: "Neutralne 😐"
+          fear: "Strach 😨"
+          anger: "Gniew 😡"
+          joy: "Radość 😀"
+          disgust: "Niesmak 🤢"
         sentiment_analysis:
           positive: "Pozytywne"
           negative: "Negatywne"
           neutral: "Neutralne"
+    discord:
+      configuration:
+        agent_user_required: "Aby można było włączyć tryb agenta Discord, agent wyszukiwania Discord musi mieć skojarzonego użytkownika."
     llm:
       configuration:
         create_llm: "Przed włączeniem tej funkcji należy skonfigurować LLM"
         disable_modules_first: "Najpierw musisz wyłączyć te moduły: %{settings}"
         set_llm_first: "Najpierw ustaw %{setting}"
         model_unreachable: "Nie mogliśmy uzyskać odpowiedzi od tego modelu. Sprawdź najpierw swoje ustawienia."
+        empty_response: "Model zwrócił pustą odpowiedź."
         invalid_seeded_model: "Nie można używać tego modelu z tą funkcją"
         invalid_agent_response_format: "Wybrany agent musi mieć format odpowiedzi z polem logicznym o nazwie „spam”"
         must_select_model: "Najpierw musisz wybrać LLM"
@@ -923,13 +1002,13 @@ pl_PL:
       limit_exceeded_admin: "Osiągnięto limit kredytu AI. Spróbuj ponownie po %{reset_time}."
     errors:
       quota_exceeded: "Przekroczyłeś limit dla tego modelu. Spróbuj ponownie za %{relative_time}."
-      quota_required: "Musisz określić maksymalną liczbę tokenów lub użyć dla tego modelu"
+      quota_required: "Musisz określić maksymalną liczbę tokenów, zastosowań lub koszt dla tego modelu"
       no_query_specified: Parametr zapytania jest wymagany, podaj go.
       no_user_for_agent: Określony agent nie ma powiązanego użytkownika.
-      agent_not_found: "Określony agent nie istnieje. Sprawdź parametry agent_name lub agent_id (starsze: agent_name lub agent_id)."
+      agent_not_found: "Podany agent nie istnieje. Sprawdź parametry agent_name lub agent_id (starsze: persona_name lub persona_id)."
       no_user_specified: Wymagana jest nazwa użytkownika lub parametr user_unique_id, proszę go podać.
       user_not_found: Podany użytkownik nie istnieje. Sprawdź parametr nazwy użytkownika.
-      agent_disabled: "Określony agent jest wyłączony. Sprawdź parametry agent_name lub agent_id (starsze: agent_name lub agent_id)."
+      agent_disabled: "Określony agent jest wyłączony. Sprawdź parametry agent_name lub agent_id (starsze: persona_name lub persona_id)."
       no_default_llm: Agent musi mieć zdefiniowany parametr default_llm.
       user_not_allowed: Użytkownik nie ma prawa brać udziału w dyskusji na ten temat.
       invalid_stream_resume_token: Token resume_token jest nieprawidłowy lub wygasł.

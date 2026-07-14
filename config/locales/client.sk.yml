@@ -6,12 +6,26 @@
 
 sk:
   js:
+    user_api_key:
+      authorize: "Autorizovať"
+      deny: "Zrušiť"
+      copied: "Skopírované!"
+      otp_description: 'Chcete povoliť prístup na túto stránku "%{application_name}"?'
+      no_trust_level: "Ľutujeme, nemáte dostatočný stupeň dôvery na prístup k používateľskému API"
+      generic_error: "Ľutujeme, nie je možné vystaviť používateľský API kľúč, táto možnosť môže byť vypnutá administrátorom."
+      device:
+        code: "Kód"
+        continue: "Pokračovať"
     blocks:
       ghost:
         status: "Stav"
         in_location: "v"
         hidden: "skryté"
         failed: "nepodarilo sa"
+    access_control:
+      manage:
+        access_permission_editor: "Editor"
+        access_permission_remove: "Odstrániť"
     number:
       format:
         separator: ","
@@ -200,6 +214,15 @@ sk:
       placeholder: Dátum
       from_placeholder: "od dátumu"
       to_placeholder: "k dnešnému dňu"
+    date_range_picker:
+      apply: "Použi"
+      start_date: "Dátum začiatku"
+      presets:
+        last_7_days: "Posledných 7 dní"
+        last_30_days: "Posledných 30 dní"
+        last_3_months: "Posledných 3 mesiacov"
+        last_6_months: "Posledných 6 mesiacov"
+        last_year: "Minulý rok"
     share:
       topic_html: 'Téma: <span class="topic-title">%{topicTitle}</span>'
       post: "príspevok č.%{postNumber} od @%{username}"
@@ -317,6 +340,9 @@ sk:
     age: "Vek"
     joined: "Registrovaný"
     admin_title: "Administrácia"
+    advanced_mode_toggle:
+      advanced_mode: "Pokročilý režim"
+      simple_mode: "Jednoduchý režim"
     show_more: "zobraz viac"
     show_help: "Možnosti"
     links: "Odkazy"
@@ -332,8 +358,6 @@ sk:
     tos: "Podmienky používania"
     rules: "Pravidlá"
     conduct: "Kódex správania"
-    mobile_view: "Mobilná verzia"
-    desktop_view: "Zobrazenie pre počítač"
     now: "práve teraz"
     read_more: "čítaj ďalej"
     more: "Viac"
@@ -371,11 +395,10 @@ sk:
       pill: "Odporúčané"
       pm_title: "Odporúčané správy"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Vybrané"
       start_posting:
         back: "Späť"
-      spread_the_word:
-        action: "Kopírovať odkaz"
-        copied_to_clipboard: "Odkaz bol skopírovaný do schránky!"
     about:
       edit: "Upraviť túto stránku"
       simple_title: "O fóre"
@@ -579,6 +602,9 @@ sk:
           few: "+%{count} ďalších návrhov"
           many: "+%{count} ďalších návrhov"
           other: "+%{count} ďalšie návrhy"
+    embed_mode:
+      signin_flow:
+        cancel: "Zrušiť"
     topic_count_all:
       one: "Pozrieť %{count} novú tému."
       few: "Pozrieť %{count} nových tém."
@@ -1112,7 +1138,8 @@ sk:
             from_alias_hint: "Alias, ktorý sa má použiť ako adresa odosielateľa pri odosielaní skupinových e-mailov SMTP. Upozorňujeme, že to nemusia podporovať všetci poskytovatelia pošty, pozrite si dokumentáciu poskytovateľa pošty."
         membership:
           title: Členstvo
-          access: Prístup
+          join_method:
+            invite: "Len na pozvánky"
         categories:
           title: Kategórie
           long_title: "Predvolené upozornenia kategórie"
@@ -1145,7 +1172,6 @@ sk:
         title: "Práva"
         none: "K tejto skupine nie sú priradené žiadne kategórie."
         description: "Členovia tejto skupiny majú prístup k týmto kategóriám"
-      public_admission: "Povoliť používateľom slobodne sa stať člen skupiny (kupina musí byť verejne viditeľná)"
       public_exit: "Povoliť používateľom slobodne opustiť skupinu."
       empty:
         posts: "Žiadne príspevky od členov tejto skupiny"
@@ -1161,7 +1187,6 @@ sk:
       request: "Požiadavka"
       message: "Správa"
       confirm_leave: "Naozaj chcete opustiť túto skupinu?"
-      allow_membership_requests: "Povoliť používateľom odosielať žiadosti o členstvo vlastníkom skupiny (vyžaduje verejne viditeľnú skupinu)"
       membership_request_template: "Vlastná šablóna, ktorá sa zobrazí používateľom pri posielaní žiadosti o členstvo"
       membership_request:
         submit: "Odošli požiadavku"
@@ -1418,7 +1443,6 @@ sk:
         normal_option: "Normálne"
         normal_option_title: "Budete upozornení, ak vám tento používateľ odpovie, cituje vás alebo sa o vás zmieni."
       notification_schedule:
-        title: "Harmonogram upozornení"
         label: "Povoliť vlastný plán upozornení"
         tip: "Mimo týchto hodín budú vaše upozornenia pozastavené."
         midnight: "Polnoc"
@@ -1462,13 +1486,8 @@ sk:
       notifications: "Upozornenia"
       statistics: "Štatistiky"
       desktop_notifications:
-        label: "Upozornenia na pracovnej ploche"
         not_supported: "Ľutujeme, tento prehliadač nepodporuje upozornenia."
-        perm_default: "Zapnúť upozornenia"
-        perm_denied_btn: "Prístup zamietnutý"
         perm_denied_expl: "Povolenie pre zobrazenie notifikácií ste zakázali. Notifikácie povolíte v nastaveniach vášho prehliadača."
-        disable: "Zakázať upozornenia"
-        enable: "Povoliť upozornenia"
         each_browser_note: "Poznámka: Toto nastavenie musíte zmeniť v každom prehliadači, ktorý používate. Všetky upozornenia budú zakázané, ak pozastavíte upozornenia z používateľskej ponuky, bez ohľadu na toto nastavenie."
         consent_prompt: "Prajete si dostávať upozornenia na pracovnej ploche hneď keď niekto odpovie na váš príspevok?"
       dismiss: "Zahodiť"
@@ -1597,6 +1616,9 @@ sk:
       undo_revoke_access: "Zrušiť odvolanie prístupu"
       api_approved: "Schválený:"
       api_last_used_at: "Naposledy použité:"
+      api_expires_at: "Platnosť vyprší:"
+      api_expired_at: "Vypršala platnosť:"
+      api_expires_never: "nikdy"
       theme: "Téma"
       save_to_change_theme: 'Téma bude aktualizovaná po kliknutí na "%{save_text}"'
       home: "Predvolená domovská stránka"
@@ -2549,7 +2571,6 @@ sk:
     created: "Vytvorené"
     created_lowercase: "vytvorené"
     trust_level: "Stupeň dôvery"
-    search_hint: "používateľské meno, email alebo IP adresa"
     create_account:
       header_title: "Vitajte!"
       disclaimer: "Registráciou súhlasíte s <a href='%{privacy_link}' target='blank'>zásadami ochrany osobných údajov</a> a <a href='%{tos_link}' target='blank'>zmluvnými podmienkami</a>."
@@ -2593,6 +2614,13 @@ sk:
       confirm_title: Pokračujte na %{site_name}
       logging_in_as: Prihlásenie ako %{email}
       confirm_button: Dokončiť prihlásenie
+    code_login:
+      email_label: "Email"
+      continue_button: "Pokračovať"
+      verify_button: "Pokračovať"
+      signup_title: "Vytvorte si účet"
+      account_ready_continue: "Pokračovať"
+      username_label: "Používateľské meno"
     login:
       header_title: "Vitajte späť"
       title: "Prihlásenie"
@@ -2920,7 +2948,7 @@ sk:
       users_placeholder: "Pridanie používateľov alebo skupín"
       title_placeholder: "O čom je této diskusia v jednej stručnej vete?"
       title_or_link_placeholder: "Napíšte názov témy alebo tu skopírujte odkaz"
-      edit_reason_placeholder: "prečo upravujete?"
+      edit_reason_placeholder: "Prečo upravujete?"
       topic_featured_link_placeholder: "Zadajte odkaz zobrazený s názvom."
       remove_featured_link: "Odstrániť odkaz z témy."
       reply_placeholder: "Píšte sem. Formátujte pomocou Markdown, BBCode alebo HTML. Pretiahnite alebo vložte obrázky."
@@ -2969,8 +2997,11 @@ sk:
       upload_description: "tu zadajte popis uploadu"
       list_item: "Položka zoznamu"
       wrap_modal:
+        attribute_key: "Kľúč"
+        attribute_value: "Hodnota"
         apply: "Použi"
       help: "Nápoveda úprav pre Markdown"
+      edit_reason: "Prečo upravujete?"
       exit_fullscreen_prompt: "Stlačením <kbd>ESC</kbd> ukončíte celú obrazovku"
       modal_ok: "OK"
       cant_send_pm: "Ľutujeme, nemôžete poslať správu používateľovi %{username}."
@@ -3000,23 +3031,22 @@ sk:
           desc: Vytvorenie novej správy začínajúcej s rovnakými príjemcami
         reply_to_topic:
           label: Odpovedať na tému
+          trigger: Téma
           desc: Odpovedzte na tému, nie na konkrétny príspevok
+        reply_to_message:
+          trigger: Správa
         toggle_whisper:
           label: Prepnúť šepot
-          desc: Šepot je viditeľný iba pre zamestnancov
         create_topic:
-          label: "Nová téma"
           desc: Vytvorte novú tému
-        create_personal_message:
-          label: "Nová správa"
         shared_draft:
           label: "Zdieľaný koncept"
           desc: "Navrhnite tému, ktorá bude viditeľná iba pre povolených používateľov"
         toggle_topic_bump:
-          label: "Prepnúť tému bump"
           desc: "Odpoveď bez zmeny dátumu poslednej odpovede"
         toggle_unlisted:
           label: Prepínanie nezaradených
+        unknown_user: "Používateľ"
       reload: "Znovu načítať"
       ignore: "Ignorovať"
       image_alt_text:
@@ -3036,6 +3066,9 @@ sk:
         copy: "Kopírovať odkaz"
         remove: "Odstrániť odkaz"
         visit: "Otvoriť odkaz na externej karte"
+        link_copied: "Odkaz skopírovaný!"
+      onebox_toolbar:
+        copy: "Kopírovať odkaz"
         link_copied: "Odkaz skopírovaný!"
     notifications:
       tooltip:
@@ -3329,6 +3362,7 @@ sk:
           placeholder: maximum
           aria_label: filtrovať podľa maximálneho počtu zobrazení
     hamburger_menu: "Navigačné menu"
+    header_panel: "Hlavička"
     new_item: "nový"
     go_back: "späť"
     not_logged_in_user: "používateľská stránka so súhrnom aktivít a nastavení"
@@ -3428,6 +3462,23 @@ sk:
           other: "Odmietnuť (%{count})…"
         dismiss_tooltip: "Zahoď iba nové príspevky, alebo prestaň pozorovať témy"
         also_dismiss_topics: "Prestať pozorovať tieto témy. Už sa nikdy nebudú ukazovať medzi neprečítanými"
+        dismiss_new_topics: "Zamietnuť nové témy"
+        dismiss_new_replies: "Skryť nové odpovede"
+        dismiss_new_topics_with_selected:
+          one: "Zamietnuť (%{count})"
+          few: "Zamietnuť (%{count})"
+          many: "Zamietnuť (%{count})"
+          other: "Zamietnuť (%{count})"
+        dismiss_new_replies_with_selected:
+          one: "Zamietnuť (%{count})"
+          few: "Zamietnuť (%{count})"
+          many: "Zamietnuť (%{count})"
+          other: "Zamietnuť (%{count})"
+        dismiss_all_with_selected:
+          one: "Zamietnuť (%{count})"
+          few: "Zamietnuť (%{count})"
+          many: "Zamietnuť (%{count})"
+          other: "Zamietnuť (%{count})"
         dismiss_new: "Zahodiť. Nová"
         dismiss_new_modal:
           title: "Zamietnuť nové"
@@ -3456,23 +3507,11 @@ sk:
         archive_messages: "Presunúť do archívu"
         change_notification_level: "Zmena úrovne oznámení"
         choose_new_category: "Vyberte pre tému novú kategóriu:"
-        selected_sole_category:
-          one: "Vybrali ste <b>%{count}</b> tému z kategórie:"
-          few: "Vybrali ste <b>%{count}</b> tém z kategórie:"
-          many: "Vybrali ste <b>%{count}</b> tém z kategórie:"
-          other: "Vybrali ste <b>%{count}</b> témy z kategórie:"
         selected_count:
           one: "%{count} vybrané"
           few: "%{count} vybrané"
           many: "%{count} vybrané"
           other: "%{count} vybrané"
-        choose_new_tags: "Vyberte si nové značky pre tieto témy:"
-        changed_tags: "Značky týchto tém boli zmenené."
-        confirm_remove_tags:
-          one: "Všetky značky budú z tejto témy odstránené. Ste si istí?"
-          few: "Všetky značky budú odstránené z %{count} tém. Ste si istý/á?"
-          many: "Všetky značky budú odstránené z %{count} tém. Ste si istý/á?"
-          other: "Všetky značky budú odstránené z %{count} tém. Ste si istý/á?"
         progress:
           one: "Pokrok: <strong>%{count}</strong> téma"
           few: "Pokrok: <strong>%{count}</strong> tém"
@@ -3500,7 +3539,7 @@ sk:
         education:
           topic_tracking_preferences: 'Nastavenia sledovania novej témy si môžete pozrieť a zmeniť v <a href="%{basePath}/my/preferences/tracking">nastaveniach</a>.'
           unread: "Nič nezostalo neprečítané... pôsobivé!"
-          new_new: "Momentálne nič nové... čoskoro sa vráťte!"
+          unified_new: "Momentálne nič nové... skúste to znova neskôr!"
           new: "Momentálne nič nové... skúste to znova neskôr!"
     topic_bulk_actions:
       dismiss:
@@ -3518,20 +3557,42 @@ sk:
         name: "Zrušiť zoznam"
       relist_topics:
         name: "Opätovné zaradenie do zoznamu"
-      remove_tags:
-        name: "Odstrániť značky"
-      replace_tags:
-        name: "Nahradiť značky"
       delete_topics:
         name: "Odstrániť"
       update_category:
         name: "Aktualizovať kategóriu"
+      convert_to_public_topic:
+        name: "Zverejnenie témy…"
+      convert_to_private_message:
+        name: "Vytvorte osobnú správu"
       reset_bump_dates:
         name: "Obnovenie dátumov zvýraznenia"
       defer:
         name: "Označiť ako neprečítané"
       update_notifications:
         name: "Aktualizovať upozornenia"
+    nested_replies:
+      sort:
+        label: "Zoradiť podľa"
+        top: "Najlepšie"
+        new: "Nový"
+      load_more_children:
+        one: "%{count} ďalšia odpoveď"
+        few: "%{count} ďalšie odpovede"
+        many: "%{count} ďalších odpovedí"
+        other: "%{count} ďalších odpovedí"
+      collapsed_replies:
+        one: "%{count} odpoveď"
+        few: "%{count} odpovede"
+        many: "%{count} odpovedí"
+        other: "%{count} odpovedí"
+      collapse: "Zbaliť"
+      no_replies: "Zatiaľ žiadne odpovede."
+      ignored_post_placeholder: "[ignorovať]"
+      pinned_reply: "Pripnutý"
+    share_target:
+      new_topic: "Nová téma"
+      new_message: "Nová správa"
     topic:
       filter_to:
         one: "%{count} príspevok k téme"
@@ -3594,39 +3655,6 @@ sk:
       read_more: "Chcete si prečítať viac? <a href='%{categoryLink}'>Prezrite si všetky kategórie</a> alebo <a href='%{latestLink}'>najnovšie témy</a>."
       unread_indicator: "Posledný príspevok v tejto téme si zatiaľ neprečítal žiadny člen."
       participant_groups: "Skupiny účastníkov"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-                one {Je <a href="{basePath}/unread"># neprečítaná</a>}
-              other {Sú <a href="{basePath}/unread"># neprečítané</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-                one { a <a href="{basePath}/new"># nová</a> téma zostávajúca,}
-              other { a <a href="{basePath}/new"># nové</a> témy zostávajúce,}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-                one {Je <a href="{basePath}/unread"># neprečítaná</a> téma zostávajúca,}
-              other {Sú <a href="{basePath}/unread"># neprečítané</a> témy zostávajúce,}
-            }
-            { NEW, plural,
-                 =0 {}
-                one {Je <a href="{basePath}/new"># nová</a> téma zostávajúca,}
-              other {Sú <a href="{basePath}/new"># nové</a> témy zostávajúce,}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { alebo prehliadajte ďalšie témy v {categoryLink}}
-          false { alebo <a href="{basePath}/latest">zobraziť najnovšie témy</a>}
-          other {}
-        }
       reply_count_link:
         one: "%{count} odpoveď, skok na prvý príspevok"
         few: "%{count} odpovedí, skok na prvý príspevok"
@@ -4086,6 +4114,12 @@ sk:
         few: "Tento príspevok sa páčil %{count} ľuďom."
         many: "Tento príspevok sa páčil %{count} ľuďom."
         other: "Tento príspevok sa páčil %{count} ľuďom."
+      likes_popup:
+        title:
+          one: "%{count} lajk"
+          few: "%{count} lajkov"
+          many: "%{count} lajky"
+          other: "%{count} lajky"
       sr_post_read_count_button:
         one: "%{count} osoba prečítala tento príspevok."
         few: "Tento príspevok si prečítalo %{count} ľudí."
@@ -4121,7 +4155,7 @@ sk:
           confirm_delete: "Ste si istí, že chcete odstrániť preklady pre '%{languageCode}'?"
         success: "Preklady boli úspešne aktualizované"
         post_language_selector:
-          none: "Žiadny"
+          none: "Nie je nastavené"
         edit_warning:
           action_original: "Upraviť pôvodný príspevok"
           action_translation: "Upraviť tento preklad"
@@ -4146,6 +4180,7 @@ sk:
         attachment_download_requires_login: "Ľutujeme, pre stiahnutie príloh musíte byť prihlásený."
       cancel_composer:
         discard: "Zahodiť"
+        discard_edit: "Zahodenie zmien"
       via_email: "tento príspevok prišiel emailom"
       via_auto_generated_email: "tento príspevok prišiel prostredníctvom automaticky generovaného e-mailu"
       whisper: "tento príspevok je súkromným šepotom pre moderátorov"
@@ -4193,7 +4228,7 @@ sk:
         admin: "akcie administrátora príspevku"
         admin_action: "Admin"
         permanently_delete: "Natrvalo odstrániť"
-        permanently_delete_confirmation: "Naozaj chcete natrvalo odstrániť tento príspevok? Nebudete ho môcť obnoviť."
+        permanently_delete_confirm_phrase: "natrvalo odstrániť"
         wiki: "Spraviť Wiki"
         unwiki: "Odstrániť Wiki"
         convert_to_moderator: "Pridať farbu personálu"
@@ -4313,7 +4348,6 @@ sk:
         name_placeholder: "Na čo slúži táto záložka?"
         name_input_label: "Názov záložky"
         set_reminder: "Pripomeň mi"
-        options: "Možnosti"
         actions:
           delete_bookmark:
             name: "Odstrániť záložku"
@@ -4352,6 +4386,7 @@ sk:
       back: "Späť na kategóriu"
       general: "Všeobecné"
       settings: "Nastavenia"
+      moderation: "Moderovanie"
       advanced: "Pokročilé"
       topic_template: "Šablóna"
       tags: "Značky"
@@ -4380,7 +4415,6 @@ sk:
       type_settings_schema:
         site_settings: "Nastavenia stránky"
       unsaved_changes: "Máte neuložené zmeny"
-      slug_placeholder: "(Voliteľné) pomlčkou-prerušované-slová pre url"
       creation_error: Nastala chyba počas vytvárania kategórie.
       save_error: Nastala chyba počas ukladania kategórie
       validations:
@@ -4484,7 +4518,7 @@ sk:
           low: "Nízka"
           high: "Vysoká"
       sort_options:
-        default: "predvolené"
+        default: "Predvolené"
         likes: "Páči sa mi"
         views: "Zobrazenia"
         posts: "Príspevky"
@@ -4755,7 +4789,7 @@ sk:
         new_replies_tooltip: "Nové odpovede"
         replies: "Odpovede"
         replies_with_count: "Odpovede (%{count})"
-      new_new:
+      unified_new:
         help: "témy vytvorené alebo zodpovedané za posledných niekoľko dní"
       posted:
         title: "Moje príspevky"
@@ -4821,105 +4855,61 @@ sk:
       title: "Klávesové skratky"
       short_title: "Skratky"
       search_ctrl_f_tip: "Ak chcete vyhľadávať v celom tomto fóre, stlačte tlačidlo <kbd>/</kbd>"
+      description_header: "Popis"
+      key_header: "Kľúč"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Choď na"
-        home: "%{shortcut} Domov"
-        latest: "%{shortcut} Najnovšie"
-        new: "%{shortcut} Nové"
-        unread: "%{shortcut} Neprečítané"
-        categories: "%{shortcut} Kategórie"
-        top: "%{shortcut} Top"
-        bookmarks: "%{shortcut} Záložky"
-        profile: "%{shortcut} Profil"
-        messages: "%{shortcut} Správy"
-        drafts: "%{shortcut} Koncepty"
-        next: "%{shortcut} Ďalšia téma"
-        previous: "%{shortcut} Predchádzajúca téma"
+        home: "Domov"
+        latest: "Najnovšie"
+        new: "Nový"
+        unread: "Neprečítané"
+        unseen: "Nevidené"
+        categories: "Kategórie"
+        top: "Najlepšie"
+        bookmarks: "Záložky"
+        profile: "Profil"
+        messages: "Správy"
+        drafts: "Koncepty"
       navigation:
         title: "Navigácia"
-        jump: "%{shortcut} Choď na príspevok #"
-        back: "%{shortcut} Späť"
-        up_down: "%{shortcut} Presuň označené &uarr; &darr;"
-        open: "%{shortcut}Otvoriť zvolenú tému"
-        next_prev: "%{shortcut} Nasledujúca/predchádzajúca sekcia"
-        go_to_unread_post: "%{shortcut} Prejsť na prvý neprečítaný príspevok"
+        back: "Späť"
+        up_down: "Presuň označené &uarr; &darr;"
       application:
         title: "Aplikácia"
-        notifications: "%{shortcut} Otvor upozornenia"
-        hamburger_menu: "%{shortcut} Otvorenie navigačného menu"
-        user_profile_menu: "%{shortcut} Otvor užívateľské menu"
-        show_incoming_updated_topics: "%{shortcut} Zobraz aktualizované témy"
-        search: "%{shortcut} Vyhľadávanie"
-        filter_sidebar: "%{shortcut} Bočný panel filtra"
-        help: "%{shortcut} Pomoc s klávesovými skratkami"
-        toggle_bulk_select: "%{shortcut} Prepnúť hromadný výber"
-        dismiss: "%{shortcut} Zrušiť vybraté témy"
-        x: "%{shortcut} Prepnúť výber (v režime hromadného výberu)"
-        log_out: "%{shortcut} Odhlásiť sa"
+        search: "Hľadať"
+        log_out: "Odhlásiť sa"
       composing:
         title: "Vytváranie"
-        return: "%{shortcut} Návrat k editora správ"
-        fullscreen: "%{shortcut} Režim celoobrazovkového editora"
-        insert_current_time: "%{shortcut} Vložiť aktuálny čas"
-        bold: "%{shortcut} Tučné písmo"
-        italic: "%{shortcut} Kurzíva"
-        link: "%{shortcut} Vložiť odkaz"
-        preformatted: "%{shortcut} Predformátovaný text"
-        paragraph: "%{shortcut} Odsek"
-        heading_1: "%{shortcut} Nadpis 1"
-        heading_2: "%{shortcut} Nadpis 2"
-        heading_3: "%{shortcut} Nadpis 3"
-        heading_4: "%{shortcut} Nadpis 4"
-        toggle_direction: "%{shortcut} Prepnúť smer textu"
-        ordered_list: "%{shortcut} Zoradený zoznam"
-        unordered_list: "%{shortcut} Neusporiadaný zoznam"
-        blockquote: "%{shortcut} Bloková citácia"
+        link: "Vložiť odkaz"
+        preformatted: "Preformátovaný text"
+        paragraph: "Odsek"
+        blockquote: "Úvodzovky"
       bookmarks:
         title: "Záložky"
-        enter: "%{shortcut} Uložiť a zatvoriť"
-        later_today: "%{shortcut} Neskôr dnes"
-        later_this_week: "%{shortcut} Neskôr tento týždeň"
-        tomorrow: "%{shortcut} Zajtra"
-        next_week: "%{shortcut} Budúci týždeň"
-        next_month: "%{shortcut} Budúci mesiac"
-        next_business_week: "%{shortcut} Začiatok budúceho týždňa"
-        next_business_day: "%{shortcut} Nasledujúci pracovný deň"
-        custom: "%{shortcut} Vlastný dátum a čas"
-        none: "%{shortcut} Žiadna pripomienka"
-        delete: "%{shortcut} Odstrániť záložku"
+        later_today: "Neskôr dnes"
+        later_this_week: "Neskôr tento týždeň"
+        tomorrow: "Zajtra"
+        next_week: "Budúci týždeň"
+        next_month: "Budúci mesiac"
+        next_business_day: "Nasledujúci pracovný deň"
+        custom: "Vlastný dátum a čas"
+        none: "Žiadna pripomienka"
+        delete: "Odstrániť záložku"
       actions:
         title: "Akcie"
-        bookmark_topic: "%{shortcut} Prepnúť zazáložkovanie témy"
-        pin_unpin_topic: "%{shortcut} Pripnúť/Odopnúť tému"
-        share_topic: "%{shortcut} Zdielať tému"
-        share_post: "%{shortcut} Zdielať príspevok"
-        reply_as_new_topic: "%{shortcut} Odpovedať formou prepojenej témy"
-        reply_topic: "%{shortcut} Odpovedať na tému"
-        reply_post: "%{shortcut} Odpovedať na príspevok"
-        quote_post: "%{shortcut} Citovať príspevok"
-        like: "%{shortcut} Označiť príspevok \"Páči sa\""
-        flag: "%{shortcut} Nahlásiť príspevok "
-        bookmark: "%{shortcut} Pridať príspevok do záložiek"
-        edit: "%{shortcut} Upraviť príspevok"
-        delete: "%{shortcut} Zmazať príspevok"
-        mark_muted: "%{shortcut} Umlčať tému"
-        mark_regular: "%{shortcut} Normálna (predvolená) téma"
-        mark_tracking: "%{shortcut} Pozorovať tému"
-        mark_watching: "%{shortcut} Pozorovať tému"
-        print: "%{shortcut} Vytlačiť tému"
-        defer: "%{shortcut} Označiť tému ako neprečítanú"
-        topic_admin_actions: "%{shortcut} Akcie správcu otvorenej témy"
-        archive_private_message: "%{shortcut} Prepnúť archiváciu osobnej správy"
+        reply_as_new_topic: "Odpovedať ako prepojené téma"
+        reply_topic: "Odpovedať na tému"
+        flag: "Príspevok s vlajkou"
+        delete: "Odstrániť príspevok"
+        mark_tracking: "Sledovať tému"
+        mark_watching: "Sledujte tému"
+        defer: "Označiť tému ako neprečítanú"
       search_menu:
         title: "Ponuka vyhľadávania"
-        prev_next: "%{shortcut} Presun výberu nahor a nadol"
-        insert_url: "%{shortcut} Vložiť výber do otvoreného editora"
-        full_page_search: "%{shortcut} Spustí vyhľadávanie na celej stránke"
       admin:
         title: "Admin"
-        search_prev_next: "%{shortcut} Presun výberu nahor a nadol"
-        search_open: "%{shortcut} Otvorenie vyhľadávania v rozhraní správcu"
-        search_full_page: "%{shortcut} Otvoriť celú stránku administrátorského vyhľadávania"
     badges:
       earned_n_times:
         one: "Získal tento odkaz %{count}-krát"
@@ -5001,18 +4991,7 @@ sk:
       staff_info: "Ak chcete pridať obmedzenia, vložte túto značku do skupiny značiek <a href=%{basePath}/tag_groups></a>."
       category_restricted: "Táto značka je obmedzená na kategórie, ku ktorým nemáte oprávnenie na prístup."
       synonyms: "Synonymá"
-      synonyms_description: "Ak sa použijú nasledujúce značky, nahradia sa týmito značkami <b>%{base_tag_name}</b>."
       save: "Uloženie názvu a popisu značky"
-      tag_groups_info:
-        one: 'Táto značka patrí do skupiny "%{tag_groups}".'
-        few: "Táto značka patrí do skupín \"%{tag_groups}\"."
-        many: "Táto značka patrí do skupín \"%{tag_groups}\"."
-        other: "Táto značka patrí do týchto skupín: %{tag_groups}."
-      category_restrictions:
-        one: "Môže sa používať len v tejto kategórii:"
-        few: "Môže sa používať len v týchto kategóriách:"
-        many: "Môže sa používať len v týchto kategóriách:"
-        other: "Môže sa používať len v týchto kategóriách:"
       edit_synonyms: "Upraviť synonymá"
       add_synonyms_label: "Pridajte synonymá:"
       add_synonyms: "Pridať"
@@ -5184,8 +5163,6 @@ sk:
       no_read_topics_body: "Keď začnete čítať diskusie, zobrazí sa vám zoznam. Ak chcete začať čítať, vyhľadajte témy, ktoré vás zaujímajú <a href='%{topUrl}'>Najlepšie</a> alebo <a href='%{categoriesUrl}'>Kategórie</a> alebo hľadajte podľa kľúčového slova %{searchIcon}"
     no_group_messages_title: "Nenašli sa žiadne skupinové správy"
     topic_entrance:
-      sr_jump_top_button: "Prejsť na prvý príspevok - %{date}"
-      sr_jump_bottom_button: "Prejsť na posledný príspevok - %{date}"
       jump_top_button_title: "Prejsť na prvý príspevok"
       jump_bottom_button_title: "Prejsť na posledný príspevok"
     fullscreen_table:
@@ -5452,7 +5429,7 @@ sk:
           title: "Upraviť tabuľku"
           cancel: "zrušiť"
           create: "Uložiť"
-          reason: "prečo upravujete?"
+          reason: "Prečo upravujete?"
           trigger_reason: "Pridať dôvod úpravy"
         default_edit_reason: "Aktualizujte tabuľku pomocou editora tabuliek"
       default_header:
@@ -5582,6 +5559,7 @@ sk:
         title: "Zoznam dostupných prehľadov"
         sidebar_title: "Hlásenia"
         back: "Späť na všetky správy"
+        all_groups: "Všetky skupiny"
         group_traffic: "Vyťaženie"
         group_members: "Členovia"
         group_other: "Ostatné"
@@ -5615,6 +5593,9 @@ sk:
           admins: "Administrátori"
           moderators: "Moderátori"
           staff: "Personál"
+        impact_types:
+          feature_type: "Funkcia"
+          other_type: "Ostatné"
         filter:
           all: "Všetky"
           enabled: "Povolené"
@@ -5631,7 +5612,6 @@ sk:
           header_description: "Uveďte tu informácie o tejto stránke a vašom tíme, aby sa ľudia dozvedeli, o čom je vaša komunita, kto za ňou stojí a ako vás môžu kontaktovať v prípade problému. Zobrazuje sa na <a href='%{basePath}/about'>stránke O</a> vašej lokalite."
         developer:
           title: "Vývojár"
-          header_description: "Nastavenia vývojára na ovládanie limitov rýchlosti, násobiteľov a výpočtov, bezpečného režimu a ďalších pokročilých funkcií"
         experimental:
           title: "Experimentálne"
           header_description: "Zapínanie alebo vypínanie experimentálnych funkcií na vašom webe, väčšinu z nich možno ovládať skupinovo."
@@ -5726,6 +5706,9 @@ sk:
             opengraph_image:
               title: "Obrázok OpenGraph"
               description: "Predvolený obrázok opengraph, ktorý sa používa, ak stránka nemá iný vhodný obrázok. Ak zostane prázdny, použije sa large_icon."
+            og_image_preview:
+              generate: "Generovať"
+              topic_id_label: "ID témy"
             x_summary_large_image:
               title: "X súhrnný veľký obrázok"
               description: "X karta \"súhrnný veľký obrázok\". Ak zostanú prázdne, bežné metadáta karty sa generujú pomocou OpenGraph_image, pokiaľ to nie je zároveň .svg."
@@ -5824,6 +5807,13 @@ sk:
             logs:
               title: "Logy"
               header_description: "Zobrazenie a správa protokolov pre zálohovanie, obnovenie a odosielanie"
+        problem_checks:
+          priority: "Priorita"
+          status: "Stav"
+          last_run_at: "Posledný beh"
+          ignore: "Ignorovať"
+          more_options:
+            title: "Ďalšie možnosti"
         reports:
           title: "Hlásenia"
           header_description: "Správy sú účinným nástrojom, ktorý vám pomôže pochopiť, čo sa deje na vašom webe. Pomôžu vám identifikovať trendy, odhaliť problémy a prijímať rozhodnutia na základe údajov."
@@ -5997,9 +5987,9 @@ sk:
         stale_data: "V poslednej dobe neprebehlo zisťovanie aktualizácií. Uistite sa že je spustený sidekiq."
         version_check_pending: "Vyzerá to, že ste nedávno aktualizovali. Fantastické!"
         installed_version: "Nainštalované"
-        latest_version: "Najnovšie"
+        github: "GitHub"
         problems_found: "Niekoľko rád na základe aktuálnych nastavení vášho webu"
-        dismiss_notice: "Zahodiť"
+        dismiss_notice: "Ignorovať"
         new_features:
           title: "Čo je nové?"
           subtitle: "Neustále vydávame nové funkcie a vylepšenia. Táto stránka obsahuje najdôležitejšie informácie, ale kliknutím na \"Ďalšie informácie\" si môžete pozrieť rozsiahle poznámky k vydaniu."
@@ -6045,6 +6035,49 @@ sk:
         too_many_requests: Túto akciu ste vykonali príliš veľakrát. Pred opätovným pokusom počkajte.
         not_found_error: Prepáčte, toto hlásenie neexistuje
         custom_date_range: Vlastný rozsah dátumov
+        sections:
+          reports:
+            title: "Hlásení"
+          traffic:
+            title: "Návštevnosť stránky"
+          engagement:
+            activity_by_category:
+              category: "Kategória"
+              topics: "Témy"
+              posts: "Príspevky"
+              share: "Zdieľať"
+            whos_posting:
+              all_categories: "Všetky kategórie"
+              staff: "Personál"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Nový"
+                "1": "Základné"
+                "2": "Člen"
+                "3": "Bežné"
+                "4": "Vodca"
+          search:
+            title: "Hľadať"
+            table:
+              searches: "Vyhľadávania"
+              status: "Stav"
+        reports_section:
+          no_data: "Žiadne údaje na zobrazenie"
+          modal:
+            enabled_heading: "Povolené"
+            all_heading: "Všetky hlásenia"
+            apply: "Použi"
+        configure:
+          button: "Konfigurovať"
+        site_traffic:
+          series:
+            anonymous: "Anonymný"
+            crawlers: "Crawlery"
+        period:
+          last_7_days: "Posledných 7 dní"
+          last_30_days: "Posledných 30 dní"
+          last_3_months: "Posledných 3 mesiacov"
+          custom: "Vlastné"
         reports:
           trend_title: "%{percent} zmena. V súčasnosti %{current}, v predchádzajúcom období bola %{prev} ."
           percent_change_tooltip: "%{percent} zmena."
@@ -6127,7 +6160,6 @@ sk:
             incoming_email: "Vlastná e-mailová adresa pre príchodziu poštu"
             incoming_email_placeholder: "zadajte emailovú adresu"
             incoming_email_tooltip: "Viacero e-mailových adries môžete oddeliť pomocou znaku |."
-            visibility: Viditeľnosť
             visibility_levels:
               title: "Kto môže vidieť túto skupinu?"
               public: "Každý"
@@ -6564,9 +6596,10 @@ sk:
           your_organization: "Vaša organizácia"
           your_organization_description: "Tieto informácie použijeme v podmienkach používania služby a v oznámení o ochrane osobných údajov, aby sme uviedli, kto prevádzkuje stránku a pod akou jurisdikciou."
           company_name: "Meno"
-          company_name_placeholder: "Organizácia Acme"
           company_name_warning: |
             Ak zostane prázdne, nebudú poskytnuté žiadne všeobecné podmienky služby ani oznámenie o ochrane osobných údajov.
+          company_url: "Webová stránka"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Platné právo"
           governing_law_placeholder: "Provincia, štát alebo krajina"
           governing_law_help: |
@@ -6583,6 +6616,8 @@ sk:
             initial_members: "Rozšírenie počtu členov"
             initial_members_description: "Počet členov skupiny, ktorí sa majú zobraziť pred pridaním tlačidla Zobraziť viac."
             show_description: "Zahrnúť popis"
+          locale_selector:
+            title: "Jazyk"
           optional: "(nepovinné)"
           update: "Aktualizovať"
           toasts:
@@ -7302,6 +7337,7 @@ sk:
         topic_id: "ID témy"
         post_id: "ID príspevku"
         category_id: "ID kategórie"
+        reviewable_id: "Recenzia"
         delete: "Odstrániť"
         edit: "Upraviť"
         save: "Uložiť"
@@ -7643,13 +7679,11 @@ sk:
         silence_reason: "Dôvod ticha"
         bulk_actions:
           title: "Hromadné akcie"
-          admin_cant_be_deleted: "Tento používateľ nemôže byť odstránený, pretože je správcom"
-          too_many_or_old_posts: "Tento používateľ nemôže byť odstránený, má príliš veľa príspevkov alebo veľmi starý príspevok"
-          too_many_selected_users:
-            one: "Dosiahli ste limit %{count} používateľa na hromadné odstránenie"
-            few: "Dosiahli ste limit %{count} používateľov na hromadné odstránenie"
-            many: "Dosiahli ste limit %{count} používateľov na hromadné odstránenie"
-            other: "Dosiahli ste limit %{count} používateľov na hromadné odstránenie"
+          clear_all: "Vymazať všetko"
+          suspend:
+            confirmation_modal:
+              close: "Zatvoriť"
+              confirm: "Odobrať"
           delete:
             label: "Odstrániť používateľov…"
             confirmation_modal:
@@ -7683,6 +7717,9 @@ sk:
           suspended: "Odobrate práva"
           silenced: "Umlčané"
           staged: "Dočasný"
+        activation_filter:
+          all: "Všetci používatelia"
+          activated: "Aktivované"
         approved: "Schválený?"
         titles:
           active: "Aktívni používatelia"
@@ -7888,7 +7925,6 @@ sk:
           other: "Nedá sa zmazať všetky píspevky, pretože používateľ má viac ako %{count} príspevkov. (delete_all_posts_max)"
         delete_confirm_title: "Ste si istí, že chcete odstrániť tohto používateľa? Je to natrvalo!"
         delete_confirm: "Vo všeobecnosti sa uprednostňuje anonymizácia používateľov pred ich vymazaním, aby sa zabránilo odstráneniu obsahu existujúcich diskusií."
-        delete_and_block: "Odstrániť používateľa a zablokovať jeho e-mail a IP adresu"
         delete_dont_block: "Odstránenie používateľa"
         deleting_user: "Odstránenie používateľa…"
         deleted: "Používateľ bol vymazaný."

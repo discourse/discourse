@@ -2,9 +2,9 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import ChatChannelSidebarContextNotificationSubmenu from "./chat-channel-sidebar-context-notification-submenu";
 
 export default class ChatChannelSidebarContextMenu extends Component {
@@ -116,13 +116,14 @@ export default class ChatChannelSidebarContextMenu extends Component {
       component: ChatChannelSidebarContextNotificationSubmenu,
       modalForMobile: true,
       placement: "right-start",
+      offset: { mainAxis: 10, crossAxis: -5 },
       data: { channel: this.channel },
       onClose: () => this.args.close(),
     });
   }
 
   <template>
-    <DropdownMenu class="chat-channel-sidebar-link-menu" as |dropdown|>
+    <DDropdownMenu class="chat-channel-sidebar-link-menu" as |dropdown|>
       <dropdown.item>
         <DButton
           @action={{this.openNotificationSettings}}
@@ -162,6 +163,6 @@ export default class ChatChannelSidebarContextMenu extends Component {
           class="chat-channel-sidebar-link-menu__leave-channel --danger"
         />
       </dropdown.item>
-    </DropdownMenu>
+    </DDropdownMenu>
   </template>
 }

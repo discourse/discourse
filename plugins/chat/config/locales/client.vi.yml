@@ -140,6 +140,7 @@ vi:
         title: Tin nhắn mới
         prefix: "Tới:"
       create_channel:
+        description: "Mô tả"
         type: "Loại"
         types:
           category: "Chuyên mục"
@@ -292,3 +293,8 @@ vi:
         chat_notifications: "Thông báo chat"
         chat_notifications_with_unread:
           other: "Thông báo chat - %{count} chưa đọc"
+    discourse_workflows:
+      send_chat_message:
+        message: "Nhắn tin"
+      chat_approval:
+        message: "Nhắn tin"

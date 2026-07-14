@@ -26,6 +26,9 @@ sq:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
+      event_description:
+        show_more: "Shfaq më shumë"
+        show_less: "Shfaq më pak"
       show_all: "Shfaqni të gjitha"
       bulk_invite: "Ftesë me shumicë"
       bulk_invite_modal:
@@ -44,6 +47,18 @@ sq:
               title: "Publike"
             private:
               title: "Private"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "minutë"
+              other: "minuta"
+            hours:
+              one: "orë"
+              other: "orë"
+            days:
+              one: "day"
+              other: "ditë"
       builder_modal:
         custom_fields:
           placeholder: "Fakultative"
@@ -59,12 +74,12 @@ sq:
           periods:
             before: "përpara"
             after: "pas"
-        url:
-          label: "URL"
-          placeholder: "Fakultative"
-        location:
-          label: "Vendndodhja"
+        attendance:
+          none: "Asnjë"
         description:
           label: "Përshkrimi"
-        status:
-          label: "Status"
+        event_type:
+          public:
+            title: "Publike"
+      invite_user_or_group:
+        success: "Ftesa u dërgua"

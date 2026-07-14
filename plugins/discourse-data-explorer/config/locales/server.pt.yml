@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 pt:
+  data_explorer:
+    admin_dashboard_label: "Explorador de Dados"

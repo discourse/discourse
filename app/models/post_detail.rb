@@ -12,12 +12,12 @@ end
 # Table name: post_details
 #
 #  id         :integer          not null, primary key
-#  post_id    :integer
+#  extra      :text
 #  key        :string
 #  value      :string
-#  extra      :text
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  post_id    :integer
 #
 # Indexes
 #

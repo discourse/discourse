@@ -31,9 +31,9 @@ import FKOptional from "discourse/form-kit/components/fk/optional";
 import FKRow from "discourse/form-kit/components/fk/row";
 import FKText from "discourse/form-kit/components/fk/text";
 import FKTooltip from "discourse/form-kit/components/fk/tooltip";
-import concatClass from "discourse/helpers/concat-class";
 import deprecated from "discourse/lib/deprecated";
 import { and, eq, not } from "discourse/truth-helpers";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 const RowColWrapper = <template>
   <FKRow as |row|>
@@ -44,7 +44,7 @@ const RowColWrapper = <template>
 </template>;
 
 const EmptyWrapper = <template>
-  {{! template-lint-disable no-yield-only }}
+  {{! eslint-disable ember/template-no-yield-only }}
   {{yield}}
 </template>;
 
@@ -126,53 +126,49 @@ export default class FKField extends Component {
           {{#if (has-block-params)}}
             <div
               id={{concat "control-" field.normalizedName}}
-              class={{concatClass
+              class={{dConcatClass
                 "form-kit__container"
                 "form-kit__field"
                 (if field.type (concat "form-kit__field-" field.type))
                 (if field.error "has-error")
                 (if field.disabled "is-disabled")
-                (if (eq field.format "full") "--full")
+                (if field.format (concat "--" field.format))
               }}
               data-disabled={{field.disabled}}
               data-name={{field.name}}
+              ...attributes
               {{this.applyControlType field}}
               {{didInsert (fn @registerField field.name field)}}
               {{willDestroy (fn @unregisterField field.name)}}
             >
               {{#if (and field.showTitle (not (eq field.type "checkbox")))}}
                 <FKLabel
-                  class={{concatClass
+                  class={{dConcatClass
                     "form-kit__container-title"
-                    (if field.titleFormat (concat "--" field.titleFormat))
+                    (if field.labelFormat (concat "--" field.labelFormat))
                   }}
                   @fieldId={{field.id}}
                 >
                   <span>{{field.title}}</span>
 
-                  <FKOptional @field={{field}} />
+                  {{#if field.showOptional}}
+                    <FKOptional @field={{field}} />
+                  {{/if}}
                   <FKTooltip @field={{field}} />
                 </FKLabel>
               {{/if}}
 
               {{#if field.description}}
                 <FKText
-                  class={{concatClass
+                  id={{field.descriptionId}}
+                  class={{dConcatClass
                     "form-kit__container-description"
-                    (if
-                      field.descriptionFormat
-                      (concat "--" field.descriptionFormat)
-                    )
+                    (if field.labelFormat (concat "--" field.labelFormat))
                   }}
                 >{{field.description}}</FKText>
               {{/if}}
 
-              <div
-                class={{concatClass
-                  "form-kit__container-content"
-                  (if field.format (concat "--" field.format))
-                }}
-              >
+              <div class="form-kit__container-content">
                 {{#if field.hasExplicitType}}
                   {{yield field}}
                 {{else}}
@@ -181,6 +177,7 @@ export default class FKField extends Component {
 
                 {{#if field.helpText}}
                   <FKText
+                    id={{field.helpTextId}}
                     class="form-kit__container-help-text"
                   >{{field.helpText}}</FKText>
                 {{/if}}

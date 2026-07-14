@@ -6,12 +6,22 @@
 
 vi:
   js:
+    user_api_key:
+      deny: "Hủy"
+      copied: "Đã sao chép!"
+      device:
+        code: "Mã"
+        continue: "Tiếp tục"
     blocks:
       ghost:
         status: "Trạng thái"
         in_location: "trong"
         hidden: "ẩn"
         failed: "thất bại"
+    access_control:
+      manage:
+        access_permission_editor: "Lần Đầu Sửa Tút"
+        access_permission_remove: "Bỏ"
     carousel:
       go_to_slide: "Đến slide %{index}"
       previous: "Slide trước"
@@ -120,6 +130,14 @@ vi:
       placeholder: ngày
       from_placeholder: "từ ngày"
       to_placeholder: "đến nay"
+    date_range_picker:
+      apply: "Áp dụng"
+      presets:
+        last_7_days: "7 ngày qua"
+        last_30_days: "30 ngày qua"
+        last_3_months: "3 tháng qua"
+        last_6_months: "6 tháng qua"
+        last_year: "Năm ngoái"
     languages:
       ar:
         name: Tiếng Ả Rập
@@ -347,6 +365,9 @@ vi:
     age: "Tuổi"
     joined: "Đã tham gia"
     admin_title: "Quản trị"
+    advanced_mode_toggle:
+      advanced_mode: "Chế độ nâng cao"
+      simple_mode: "Chế độ đơn giản"
     show_more: "Thêm"
     show_help: "Tùy chọn"
     links: "Liên kết"
@@ -359,8 +380,6 @@ vi:
     tos: "Điều khoản dịch vụ"
     rules: "Các quy tắc"
     conduct: "Quy tắc ứng xử"
-    mobile_view: "Xem chế độ điện thoại"
-    desktop_view: "Xem chế độ máy tính"
     now: "vừa xong"
     read_more: "đọc thêm"
     more: "Thêm nữa"
@@ -389,10 +408,10 @@ vi:
       pill: "Đề xuất"
       pm_title: "Tin nhắn gợi ý"
     admin_onboarding_banner:
+      select_theme:
+        enabled: "Đã chọn"
       start_posting:
         back: "Quay lại"
-      spread_the_word:
-        action: "Sao chép link"
     about:
       edit: "Sửa trang này"
       simple_title: "Giới thiệu"
@@ -546,6 +565,10 @@ vi:
         view_all: "Xem tất cả bản nháp"
         other_drafts:
           other: "+%{count} bản nháp khác"
+    embed_mode:
+      editing_post: "Đang chỉnh sửa tút"
+      signin_flow:
+        cancel: "Hủy"
     topic_count_all:
       other: "Xem %{count} chủ đề mới"
     topic_count_categories:
@@ -1058,7 +1081,6 @@ vi:
             from_alias_hint: "Bí danh để sử dụng làm địa chỉ từ khi gửi email SMTP nhóm. Lưu ý rằng điều này có thể không được hỗ trợ bởi tất cả các nhà cung cấp email, vui lòng tham khảo tài liệu của nhà cung cấp email của bạn."
         membership:
           title: Thành viên
-          access: Truy cập
         categories:
           title: Chuyên mục
           long_title: "Thông báo mặc định của chuyên mục"
@@ -1091,7 +1113,6 @@ vi:
         title: "Quyền"
         none: "Không có chuyên mục nào được liên kết với nhóm này."
         description: "Thành viên của nhóm này có quyền truy cập các chuyên mục sau"
-      public_admission: "Cho phép Thành viên tham gia nhóm một cách tự do (nhóm hiển thị công khai)"
       public_exit: "Cho phép Thành viên thoát khỏi nhóm một cách tự do"
       empty:
         posts: "Không có tút nào từ các thành viên của nhóm này."
@@ -1107,7 +1128,6 @@ vi:
       request: "Yêu cầu"
       message: "Nhắn tin"
       confirm_leave: "Bạn có chắc muốn rời khỏi nhóm này?"
-      allow_membership_requests: "Cho phép thành viên gửi yêu cầu tham gia đến chủ nhóm (Yêu cầu nhóm hiển thị công khai)"
       membership_request_template: "đã tùy chỉnh để hiển thị cho người dùng khi gửi yêu cầu thành viên"
       membership_request:
         submit: "Gửi yêu cầu"
@@ -1347,7 +1367,6 @@ vi:
         normal_option: "Bình thường"
         normal_option_title: "Bạn sẽ được thông báo khi người này trả lời, trích dẫn hoặc nhắc đến bạn."
       notification_schedule:
-        title: "Lịch thông báo"
         label: "Bật lịch thông báo tùy chỉnh"
         tip: "Ngoài những giờ này, thông báo của bạn sẽ tạm dừng."
         midnight: "Nửa đêm"
@@ -1391,13 +1410,8 @@ vi:
       notifications: "Thông báo"
       statistics: "Thống kê"
       desktop_notifications:
-        label: "Thông báo trực tiếp"
         not_supported: "Xin lỗi. Trình duyệt của bạn không hỗ trợ Notification."
-        perm_default: "Mở thông báo"
-        perm_denied_btn: "Không có quyền"
         perm_denied_expl: "Bạn đã từ chối nhận thông báo, để nhận lại bạn cần thiết lập trình duyệt."
-        disable: "Khóa Notification"
-        enable: "Cho phép thông báo"
         each_browser_note: "Lưu ý: Bạn phải thay đổi cài đặt này trên mọi trình duyệt bạn sử dụng. Tất cả thông báo sẽ bị tắt nếu bạn tạm dừng thông báo từ menu người dùng, bất kể cài đặt này như thế nào."
         consent_prompt: "Bạn có muốn thông báo trực tiếp khi mọi người trả lời bài đăng của bạn không?"
       dismiss: "Hủy bỏ"
@@ -1529,6 +1543,9 @@ vi:
       undo_revoke_access: "Cấp lại quyền"
       api_approved: "Chấp thuận:"
       api_last_used_at: "Sử dụng lần cuối lúc:"
+      api_expires_at: "Hết hạn:"
+      api_expired_at: "Hết hạn:"
+      api_expires_never: "Không bao giờ"
       theme: "Giao diện"
       save_to_change_theme: 'Chủ đề sẽ được cập nhật sau khi bạn nhấn "%{save_text}"'
       home: "Mặc định trang chủ"
@@ -2352,7 +2369,6 @@ vi:
     created: "Tạo bởi"
     created_lowercase: "Đã tạo"
     trust_level: "Độ tin cậy"
-    search_hint: "username, email or IP address"
     create_account:
       header_title: "Chào mừng!"
       disclaimer: "Đăng ký nghĩa là bạn đồng ý với <a href='%{privacy_link}' target='blank'>chính sách bảo mật</a> và <a href='%{tos_link}' target='blank'>điều khoản dịch vụ</a>."
@@ -2396,6 +2412,13 @@ vi:
       confirm_title: Tiếp tục tới %{site_name}
       logging_in_as: Đăng nhập bằng %{email}
       confirm_button: Kết thúc đăng nhập
+    code_login:
+      email_label: "Email"
+      continue_button: "Tiếp tục"
+      verify_button: "Tiếp tục"
+      signup_title: "Tạo tài khoản của bạn"
+      account_ready_continue: "Tiếp tục"
+      username_label: "Tên người dùng"
     login:
       header_title: "Chào mừng trở lại"
       title: "Đăng nhập"
@@ -2618,6 +2641,10 @@ vi:
       publish: "Xuất bản bản nháp"
       confirm_publish: "Bạn có chắc chắn muốn xuất bản bản nháp này không?"
       publishing: "Đang đăng chủ đề…"
+    codemirror:
+      expression:
+        sections:
+          metadata: "Metadata"
     composer:
       autocomplete:
         username_missing: "Kết quả tự động điền được chọn thiếu tên người dùng."
@@ -2700,7 +2727,7 @@ vi:
       users_placeholder: "Thêm người dùng hoặc nhóm"
       title_placeholder: "Tóm tắt chủ đề này trong một câu ngắn gọn"
       title_or_link_placeholder: "Nhập tiêu đề, hoặc dán link vào đây"
-      edit_reason_placeholder: "Lý do bạn sửa?"
+      edit_reason_placeholder: "Lý do bạn sửa"
       topic_featured_link_placeholder: "Nhập liên kết hiển thị với tiêu đề."
       remove_featured_link: "Xóa liên kết khỏi chủ đề."
       reply_placeholder: "Nhập ở đây. Định dạng bằng Markdown, BBCode, hoặc HTML. Kéo thả hoặc dán hình ảnh."
@@ -2757,6 +2784,8 @@ vi:
         name_label: "Tên bọc"
         attributes_label: "Thuộc tính"
         add_attribute: "Thêm thuộc tính"
+        attribute_key: "Phím"
+        attribute_value: "Giá trị"
         remove_attribute: "Xóa thuộc tính"
         apply: "Áp dụng"
         unwrap: "Mở bọc"
@@ -2766,6 +2795,7 @@ vi:
       collapse: "Thu nhỏ trình soạn thảo"
       open: "Mở rộng trình soạn thảo"
       abandon: "Đóng trình soạn thảo và xóa bản nháp"
+      edit_reason: "Lý do bạn sửa"
       enter_fullscreen: "Phóng to trình soạn thảo"
       exit_fullscreen: "Thoát khỏi trình soạn toàn màn hình"
       exit_fullscreen_prompt: "Nhấn <kbd>ESC</kbd> để thoát khỏi chế độ toàn màn hình"
@@ -2800,25 +2830,26 @@ vi:
           desc: Tạo tin nhắn mới bắt đầu với cùng người nhận
         reply_to_topic:
           label: Trả lời chủ đề
+          trigger: Chủ đề
           desc: Trả lời chủ đề, không ảnh hưởng bất kỳ tút nào
+        reply_to_message:
+          trigger: Nhắn tin
         toggle_whisper:
           label: Chuyển đổi nói thầm
-          desc: Những lời thì thầm chỉ hiển thị với MOD
         create_topic:
-          label: "Chủ đề mới"
           desc: Tạo một chủ đề mới
         create_personal_message:
-          label: "Tin nhắn mới"
           desc: "Tạo một tin nhắn cá nhân mới"
         shared_draft:
           label: "Bản nháp được Chia sẻ"
           desc: "Nháp một chủ đề sẽ chỉ hiển thị cho người dùng được phép"
         toggle_topic_bump:
-          label: "Bật/tắt đẩy chủ đề"
           desc: "Trả lời mà không thay đổi ngày trả lời gần nhất"
         toggle_unlisted:
           label: Bật/tắt chế độ không công khai
           desc: "Các chủ đề không công khai chỉ có thể truy cập thông qua link trực tiếp"
+        edit_post: "Đang chỉnh sửa tút"
+        unknown_user: "Người dùng"
       reload: "Nạp lại"
       ignore: "Bỏ qua"
       image_alt_text:
@@ -2845,6 +2876,9 @@ vi:
         copy: "Sao chép link"
         remove: "Gỡ link"
         visit: "Mở link trong tab mới"
+        link_copied: "Đã sao chép link!"
+      onebox_toolbar:
+        copy: "Sao chép link"
         link_copied: "Đã sao chép link!"
       unsupported_token: "Trình soạn thảo rich text không hỗ trợ tất cả các tính năng được sử dụng trong tút này; chuyển sang trình soạn thảo Markdown."
     notifications:
@@ -3103,6 +3137,7 @@ vi:
           placeholder: Tối đa
           aria_label: lọc theo lượt xem tối đa
     hamburger_menu: "Menu điều hướng"
+    header_panel: "Header"
     new_item: "mới"
     go_back: "quay trở lại"
     not_logged_in_user: "Trang cá nhân với tóm tắt các hoạt động và cấu hình"
@@ -3174,6 +3209,14 @@ vi:
           other: "Loại bỏ (%{count})…"
         dismiss_tooltip: "Chỉ bỏ qua tút mới hoặc dừng theo dõi chủ đề"
         also_dismiss_topics: "Ngừng theo dõi các chủ đề này để không hiển thị lại là chủ đề chưa đọc"
+        dismiss_new_topics: "Bỏ qua các chủ đề mới"
+        dismiss_new_replies: "Bỏ qua các trả lời mới"
+        dismiss_new_topics_with_selected:
+          other: "Loại bỏ (%{count})"
+        dismiss_new_replies_with_selected:
+          other: "Loại bỏ (%{count})"
+        dismiss_all_with_selected:
+          other: "Loại bỏ (%{count})"
         dismiss_new: "Bỏ qua tất cả"
         dismiss_new_modal:
           title: "Bỏ qua mục mới"
@@ -3193,14 +3236,8 @@ vi:
         archive_messages: "Di chuyển đến Lưu trữ"
         change_notification_level: "Thay đổi mức thông báo"
         choose_new_category: "Chọn chuyên mục mới cho chủ đề này:"
-        selected_sole_category:
-          other: "Bạn đã chọn <b>%{count}</b> chủ đề từ chuyên mục:"
         selected_count:
           other: "%{count} được chọn"
-        choose_new_tags: "Chọn thẻ mới cho các chuyên mục sau:"
-        changed_tags: "Các thẻ của các chủ đề đó đã được thay đổi."
-        confirm_remove_tags:
-          other: "Tất cả các thẻ sẽ bị xóa khỏi <b>%{count}</b> chủ đề. Bạn có chắc không?"
         progress:
           other: "Tiến độ: <strong>%{count}</strong> chủ đề"
         notify: "Thông báo cho người dùng về thay đổi này"
@@ -3223,7 +3260,7 @@ vi:
         education:
           topic_tracking_preferences: 'Bạn có thể xem và thay đổi cài đặt theo dõi chủ đề của mình trong <a href="%{basePath}/my/preferences/tracking">thiết lập</a>.'
           unread: "Đã đọc hết... thật ấn tượng!"
-          new_new: "Hiện tại chưa có gì mới... hãy quay lại sau!"
+          unified_new: "Hiện tại chưa có gì mới... hãy quay lại sau!"
           new: "Hiện tại chưa có gì mới... hãy quay lại sau!"
           generic: "Không có gì để xem ở đây... hãy quay lại sau!"
     topic_bulk_actions:
@@ -3242,20 +3279,37 @@ vi:
         name: "Bỏ công khai"
       relist_topics:
         name: "Công khai lại"
-      remove_tags:
-        name: "Xóa thẻ"
-      replace_tags:
-        name: "Thay thế thẻ"
       delete_topics:
         name: "Xóa"
       update_category:
         name: "Cập nhật chuyên mục"
+      convert_to_public_topic:
+        name: "Đăng chủ đề công khai…"
+      convert_to_private_message:
+        name: "Gửi tin nhắn cá nhân"
       reset_bump_dates:
         name: "Đặt lại ngày đẩy"
       defer:
         name: "Đánh dấu là Chưa đọc"
       update_notifications:
         name: "Cập nhật thông báo"
+    nested_replies:
+      sort:
+        label: "Sắp xếp theo"
+        top: "Top"
+        new: "Chủ đề mới"
+      load_more_children:
+        other: "còn %{count} câu trả lời"
+      collapsed_replies:
+        other: "%{count} trả lời"
+      collapse: "Thu gọn"
+      no_replies: "Chưa có trả lời."
+      deleted_post_placeholder: "[đã xóa]"
+      ignored_post_placeholder: "[đã bỏ qua]"
+      pinned_reply: "Đã ghim"
+    share_target:
+      new_topic: "Chủ đề mới"
+      new_message: "Tin nhắn mới"
     topic:
       filter_to:
         other: "%{count} tút trong chủ đề"
@@ -3303,35 +3357,6 @@ vi:
       read_more: "Bạn muốn đọc thêm? <a href='%{categoryLink}'>Duyệt tất cả chuyên mục</a> hoặc <a href='%{latestLink}'>xem các chủ đề mới nhất</a>."
       unread_indicator: "Chưa có thành viên nào đọc bài cuối cùng của chủ đề này."
       participant_groups: "Các nhóm tham gia"
-      read_more_MF: |
-        { HAS_UNREAD_AND_NEW, select,
-          true {
-            { UNREAD, plural,
-                 =0 {}
-              other {Vẫn còn <a href="{basePath}/unread"># chủ đề chưa đọc</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-              other { và <a href="{basePath}/new"># chủ đề mới</a>}
-            }
-          }
-          false {
-            { UNREAD, plural,
-                 =0 {}
-              other {Vẫn còn <a href="{basePath}/unread"># chủ đề chưa đọc</a>}
-            }
-            { NEW, plural,
-                 =0 {}
-              other {Vẫn còn <a href="{basePath}/new"># chủ đề mới</a>}
-            }
-          }
-          other {}
-        }
-        { HAS_CATEGORY, select,
-          true { trong {categoryLink}}
-          false { hoặc <a href="{basePath}/latest">xem những chủ đề mới nhất</a>}
-          other {}
-        }
       reply_count_link:
         other: "%{count} trả lời, chuyển đến tút đầu tiên"
       created_at: "Ngày tạo: %{date}"
@@ -3751,6 +3776,9 @@ vi:
         other: "bạn và %{count} người khác đã thích tút này"
       sr_post_like_count_button:
         other: "%{count} người thích bài viết này."
+      likes_popup:
+        title:
+          other: "%{count} lượt thích"
       sr_post_read_count_button:
         other: "%{count} người đã đọc tút này."
       filtered_replies_hint:
@@ -3776,8 +3804,7 @@ vi:
           confirm_delete: "Bạn có chắc muốn xóa các bản dịch cho '%{languageCode}'?"
         success: "Bản dịch đã được cập nhật thành công."
         post_language_selector:
-          title: "Ngôn ngữ tút"
-          none: "Không"
+          none: "Chưa đặt"
         edit_warning:
           message: "Đây là tút đã được dịch.<br><br>Bạn có muốn chỉnh sửa tút gốc trong %{language} hay chỉnh sửa bản dịch này?"
           action_original: "Chỉnh sửa tút gốc"
@@ -3801,6 +3828,7 @@ vi:
       cancel_composer:
         confirm: "Bạn có chắc muốn hủy bỏ tút này?"
         discard: "Hủy bỏ"
+        discard_edit: "Hủy bỏ các thay đổi"
       via_email: "Tút này đăng bằng email"
       via_auto_generated_email: "tút này đến qua một email được tạo tự động"
       whisper: "tút này là lời nhắn từ kiểm duyệt viên"
@@ -3842,7 +3870,7 @@ vi:
         admin: "Quản lý tút"
         admin_action: "Quản trị"
         permanently_delete: "Xóa vĩnh viễn"
-        permanently_delete_confirmation: "Bạn có chắc muốn xóa vĩnh viễn tút này? Bạn sẽ không thể khôi phục nó."
+        permanently_delete_confirm_phrase: "xóa vĩnh viễn"
         wiki: "Tạo Wiki"
         unwiki: "Xóa Wiki"
         convert_to_moderator: "Thêm màu Nhân viên"
@@ -3942,7 +3970,6 @@ vi:
         name_placeholder: "Bạn đánh dấu cái này để làm gì?"
         name_input_label: "Tên đánh dấu"
         set_reminder: "Nhắc nhở tôi"
-        options: "Lựa chọn"
         actions:
           delete_bookmark:
             name: "Xóa đánh dấu"
@@ -3981,6 +4008,7 @@ vi:
       back: "Quay lại chuyên mục"
       general: "Chung"
       settings: "Cấu hình"
+      moderation: "Người kiểm duyệt"
       advanced: "Nâng cao"
       show_advanced: "Cài đặt nâng cao"
       topic_template: "Template"
@@ -4018,7 +4046,6 @@ vi:
       unsaved_changes: "Bạn có những thay đổi chưa được lưu"
       slug: "Đường dẫn chuyên mục"
       parent: "Chuyên mục chính"
-      slug_placeholder: "(Tùy chọn) các từ sử dụng trong url"
       creation_error: Có lỗi xảy ra khi tạo chuyên mục
       save_error: Có lỗi xảy ra khi lưu chuyên mục
       errors:
@@ -4152,7 +4179,7 @@ vi:
           high: "Cao"
           very_high: "Rất cao"
       sort_options:
-        default: "mặc định"
+        default: "Mặc định"
         likes: "Thích"
         op_likes: "Lượt thích tút gốc"
         views: "Xem"
@@ -4378,7 +4405,7 @@ vi:
         new_replies_tooltip: "Các trả lời mới"
         replies: "Trả lời"
         replies_with_count: "Trả lời (%{count})"
-      new_new:
+      unified_new:
         help: "các chủ đề được tạo hoặc trả lời trong vài ngày qua"
       posted:
         title: "Tút của tôi"
@@ -4447,110 +4474,60 @@ vi:
       title: "Phím tắt"
       short_title: "Các phím tắt"
       search_ctrl_f_tip: "Để tìm kiếm trên toàn bộ diễn đàn này, nhấn <kbd>/</kbd>"
+      description_header: "Mô tả"
+      key_header: "Phím"
+      search_aliases:
+        shift: "shift"
       jump_to:
         title: "Di chuyển nhanh"
-        home: "%{shortcut} Trang chủ"
-        latest: "%{shortcut} Cuối cùng"
-        new: "%{shortcut} Mới"
-        unread: "%{shortcut} Chưa đọc"
-        unseen: "%{shortcut} Chưa xem"
-        categories: "%{shortcut} Chuyên mục"
-        top: "%{shortcut} Top"
-        bookmarks: "%{shortcut} Đánh dấu"
-        profile: "%{shortcut} Hồ sơ"
-        messages: "%{shortcut} Tin nhắn"
-        drafts: "%{shortcut} Bản nháp"
-        next: "%{shortcut} Chủ đề Tiếp theo"
-        previous: "%{shortcut} Chủ đề Trước đó"
+        home: "Trang chủ"
+        latest: "Gần đây"
+        new: "Chủ đề mới"
+        unread: "Chưa đọc"
+        unseen: "Chưa xem"
+        categories: "Danh mục"
+        top: "Top"
+        bookmarks: "Các đánh dấu"
+        profile: "Tiểu sử"
+        messages: "Tin nhắn"
+        drafts: "Nháp"
       navigation:
         title: "Điều hướng"
-        jump: "%{shortcut} Đến tút #"
-        back: "%{shortcut} Quay lại"
-        up_down: "%{shortcut} Di chuyển lựa chọn &uarr; &darr;"
-        open: "%{shortcut} Mở chủ đề đã chọn"
-        open_new_window: "%{shortcut} Mở chủ đề đã chọn trong tab/cửa sổ mới"
-        next_prev: "%{shortcut} Phần tiếp theo/trước đó"
-        go_to_unread_post: "%{shortcut} Đi đến tút chưa đọc đầu tiên"
+        back: "Quay lại"
+        up_down: "Di chuyển lựa chọn &uarr; &darr;"
       application:
         title: "Ứng dụng"
-        create: "%{shortcut} Tạo chủ đề mới hoặc tin nhắn cá nhân"
-        notifications: "%{shortcut} Mở thông báo"
-        hamburger_menu: "%{shortcut} Mở menu điều hướng"
-        user_profile_menu: "%{shortcut} Mở menu thành viên"
-        show_incoming_updated_topics: "%{shortcut} Hiển thị các chủ đề đã cập nhật"
-        search: "%{shortcut} Tìm kiếm"
-        filter_sidebar: "%{shortcut} Lọc thanh bên"
-        help: "%{shortcut} Mở trợ giúp phím tắt"
-        toggle_bulk_select: "%{shortcut} Bật/tắt chọn nhiều mục"
-        dismiss: "%{shortcut} Bỏ qua các chủ đề đã chọn"
-        x: "%{shortcut} Bật/tắt chọn (trong chế độ chọn hàng loạt)"
-        log_out: "%{shortcut} Đăng xuất"
+        search: "Tìm"
+        log_out: "Đăng Xuất"
       composing:
         title: "Soạn thảo"
-        return: "%{shortcut} Quay lại trình soạn thảo"
-        minimize: "%{shortcut} Thu nhỏ trình soạn thảo"
-        create_or_reply: "%{shortcut} Tạo chủ đề hoặc đăng trả lời"
-        fullscreen: "%{shortcut} Soạn tút toàn màn hình"
-        insert_current_time: "%{shortcut} Chèn thời gian hiện tại"
-        bold: "%{shortcut} In đậm"
-        italic: "%{shortcut} In nghiêng"
-        link: "%{shortcut} Chèn link"
-        preformatted: "%{shortcut} Đoạn mã"
-        paragraph: "%{shortcut} Đoạn văn"
-        heading_1: "%{shortcut} Tiêu đề 1"
-        heading_2: "%{shortcut} Tiêu đề 2"
-        heading_3: "%{shortcut} Tiêu đề 3"
-        heading_4: "%{shortcut} Tiêu đề 4"
-        toggle_direction: "%{shortcut} Đổi lề"
-        ordered_list: "%{shortcut} Danh sách có thứ tự"
-        unordered_list: "%{shortcut} Danh sách không thứ tự"
-        blockquote: "%{shortcut} Trích dẫn"
+        link: "Chèn link"
+        preformatted: "Đoạn mã"
+        paragraph: "Đoạn văn"
+        blockquote: "Blockquote"
       bookmarks:
         title: "Đánh dấu"
-        enter: "%{shortcut} Lưu và đóng"
-        later_today: "%{shortcut} Cuối ngày hôm nay"
-        later_this_week: "%{shortcut} Cuối tuần này"
-        tomorrow: "%{shortcut} Ngày mai"
-        next_week: "%{shortcut} Tuần sau"
-        next_month: "%{shortcut} Tháng sau"
-        next_business_week: "%{shortcut} Đầu tuần sau"
-        next_business_day: "%{shortcut} Ngày làm việc tiếp theo"
-        custom: "%{shortcut} Ngày và giờ tùy chỉnh"
-        none: "%{shortcut} Không nhắc nhở"
-        delete: "%{shortcut} Xóa dấu trang"
+        enter: "Lưu và đóng"
+        later_today: "Cuối ngày hôm nay"
+        later_this_week: "Cuối tuần này"
+        tomorrow: "Ngày mai"
+        next_week: "Tuần sau"
+        next_month: "Tháng sau"
+        next_business_day: "Ngày làm việc tiếp theo"
+        custom: "Ngày giờ tùy chỉnh"
+        delete: "Xóa đánh dấu"
       actions:
         title: "Hành động"
-        bookmark_topic: "%{shortcut} Bật/tắt đánh dấu chủ đề"
-        pin_unpin_topic: "%{shortcut} Ghim/Bỏ ghim"
-        share_topic: "%{shortcut} Chia sẻ chủ đề"
-        share_post: "%{shortcut} Chia sẻ tút"
-        reply_as_new_topic: "%{shortcut} Trả lời như là một liên kết đến tút"
-        reply_topic: "%{shortcut} Trả lời chủ đề"
-        reply_post: "%{shortcut} Trả lời tút"
-        quote_post: "%{shortcut} Trích dẫn tút"
-        like: "%{shortcut} Thích tút"
-        flag: "%{shortcut} Báo cáo tút"
-        bookmark: "%{shortcut} Đánh dấu tút"
-        edit: "%{shortcut} Sửa tút"
-        delete: "%{shortcut} Xóa tút"
-        mark_muted: "%{shortcut} Phớt lờ chủ đề"
-        mark_regular: "%{shortcut} Bình thường (mặc định) chủ đề"
-        mark_tracking: "%{shortcut} Theo dõi chủ đề"
-        mark_watching: "%{shortcut} Giám sát chủ đề"
-        print: "%{shortcut} In chủ đề"
-        defer: "%{shortcut} Đánh dấu chủ đề là chưa đọc"
-        topic_admin_actions: "%{shortcut} Quản lý chủ đề"
-        archive_private_message: "%{shortcut} Bật/tắt lưu trữ tin nhắn cá nhân"
+        reply_as_new_topic: "Trả lời dưới dạng chủ đề được liên kết"
+        reply_topic: "Trả lời chủ đề"
+        delete: "Xóa tút"
+        mark_tracking: "Theo dõi chủ đề"
+        mark_watching: "Giám sát chủ đề"
+        defer: "Đánh dấu chủ đề là chưa đọc"
       search_menu:
         title: "Menu Tìm kiếm"
-        prev_next: "%{shortcut} Di chuyển lựa chọn lên/xuống"
-        insert_url: "%{shortcut} Chèn lựa chọn vào trình soạn thảo"
-        full_page_search: "%{shortcut} Khởi chạy tìm kiếm toàn trang"
       admin:
         title: "Quản trị"
-        search_prev_next: "%{shortcut} Di chuyển lựa chọn lên/xuống"
-        search_open: "%{shortcut} Mở tìm kiếm giao diện quản trị"
-        search_full_page: "%{shortcut} Mở trang quản trị tìm kiếm toàn màn hình"
     badges:
       earned_n_times:
         other: "Đã giành được huy hiệu này %{count} lần"
@@ -4613,12 +4590,7 @@ vi:
       staff_info: "Để thêm các hạn chế, hãy đặt thẻ này vào <a href=%{basePath}/tag_groups>nhóm thẻ</a>."
       category_restricted: "Thẻ này bị giới hạn đối với các chuyên mục bạn không có quyền truy cập."
       synonyms: "Từ đồng nghĩa"
-      synonyms_description: "Khi các thẻ sau được sử dụng, chúng sẽ được thay thế bằng <b>%{base_tag_name}</b>."
       save: "Lưu tên và mô tả của thẻ"
-      tag_groups_info:
-        other: "Thẻ này thuộc các nhóm: %{tag_groups}."
-      category_restrictions:
-        other: "Nó chỉ có thể được sử dụng trong các chuyên mục sau:"
       edit_synonyms: "Chỉnh sửa từ đồng nghĩa"
       add_synonyms_label: "Thêm từ đồng nghĩa:"
       add_synonyms: "Thêm"
@@ -4788,8 +4760,6 @@ vi:
       no_read_topics_body: "Khi bạn bắt đầu đọc các cuộc thảo luận, bạn sẽ thấy một danh sách ở đây. Để bắt đầu đọc, hãy tìm các chủ đề mà bạn quan tâm trong <a href='%{topUrl}'>Top</a> hoặc <a href='%{categoriesUrl}'>Chuyên mục</a> hoặc tìm kiếm theo từ khóa %{searchIcon}"
     no_group_messages_title: "Không tìm thấy tin nhắn nhóm nào"
     topic_entrance:
-      sr_jump_top_button: "Chuyển đến tút đầu tiên - %{date}"
-      sr_jump_bottom_button: "Chuyển đến tút cuối - %{date}"
       jump_top_button_title: "Chuyển đến tút đầu tiên"
       jump_bottom_button_title: "Chuyển đến tút cuối cùng"
     fullscreen_table:
@@ -5139,10 +5109,6 @@ vi:
             bookmarks: "Các chủ đề trong %{category} không có thẻ mà bạn đã đánh dấu"
             default: "%{filter} chủ đề trong %{category} không có thẻ"
         categories: "Tất cả chuyên mục"
-    content_localization:
-      toggle_localized:
-        translated: "Trang này được dịch máy. Nhấn để xem bản gốc."
-        not_translated: "Trang này chưa được dịch. Nhấn để dịch."
     language_switcher:
       title: "Thay đổi ngôn ngữ"
   admin_js:
@@ -5163,6 +5129,7 @@ vi:
         title: "Danh sách các báo cáo có sẵn"
         sidebar_title: "Báo cáo"
         back: "Quay lại tất cả báo cáo"
+        all_groups: "Các nhóm"
         group_traffic: "Băng thông"
         group_members: "Thành viên kênh"
         group_other: "Khác"
@@ -5224,6 +5191,9 @@ vi:
           staff: "Nhân viên"
           all_members: "Tất cả thành viên"
           developers: "Nhà phát triển"
+        impact_types:
+          feature_type: "Tính năng"
+          other_type: "Khác"
         filter:
           search_placeholder: "Lọc theo tên, mô tả hoặc plugin..."
           no_results: "Không có thay đổi sắp tới nào phù hợp với bộ lọc của bạn"
@@ -5254,7 +5224,6 @@ vi:
           header_description: "Hãy cung cấp thông tin ở đây về trang web này và nhóm của bạn để mọi người có thể hiểu cộng đồng của bạn là gì, ai đứng sau nó và cách liên hệ với bạn trong trường hợp có vấn đề. Thông tin này sẽ được hiển thị trên trang <a href='%{basePath}/about'>Giới thiệu</a>của trang web của bạn."
         developer:
           title: "Nhà phát triển"
-          header_description: "Cài đặt cho nhà phát triển để kiểm soát giới hạn tốc độ, hệ số nhân, tính toán, chế độ an toàn và các tính năng nâng cao khác."
         experimental:
           title: "Thí nghiệm"
           header_description: "Bật hoặc tắt các tính năng thử nghiệm cho trang web của bạn, hầu hết các tính năng này có thể được kiểm soát theo nhóm."
@@ -5363,6 +5332,9 @@ vi:
             opengraph_image:
               title: "Hình ảnh OpenGraph"
               description: "Ảnh mặc định của OpenGraph, được sử dụng khi trang không có ảnh nào khác phù hợp. Nếu để trống, ảnh large_icon sẽ được sử dụng."
+            og_image_preview:
+              generate: "Khởi tạo"
+              topic_id_label: "ID Chủ đề"
             x_summary_large_image:
               title: "Hình ảnh tóm tắt X lớn"
               description: "Thẻ X 'hình ảnh tóm tắt lớn'. Nếu để trống, siêu dữ liệu thẻ thông thường sẽ được tạo bằng OpenGraph_image, miễn là hình ảnh đó không phải là định dạng .svg."
@@ -5499,6 +5471,11 @@ vi:
             logs:
               title: "Log"
               header_description: "Xem và quản lý nhật ký cho các tác vụ sao lưu, khôi phục và tải lên."
+        problem_checks:
+          status: "Trạng thái"
+          ignore: "Bỏ qua"
+          more_options:
+            title: "Nhiều tùy chọn hơn"
         reports:
           title: "Báo cáo"
           header_description: "Báo cáo là công cụ mạnh mẽ giúp bạn hiểu rõ những gì đang diễn ra trên trang web của mình. Chúng có thể giúp bạn nhận diện xu hướng, phát hiện vấn đề và đưa ra quyết định dựa trên dữ liệu."
@@ -5672,13 +5649,12 @@ vi:
         stale_data: "Kiểm tra phiên bản mới đã không được thực hiện gần đây, đảm bảo rằng Sidekiq đang chạy."
         version_check_pending: "Có vẻ như bạn đã cập nhật gần đây. Tuyệt vời!"
         installed_version: "Đã cài đặt"
-        latest_version: "Gần đây"
+        github: "GitHub"
         problems_found: "Một số lời khuyên dựa trên cài đặt trang web hiện tại của bạn"
         dismiss_notice: "Bỏ qua"
         new_features:
           title: "Có gì mới?"
           subtitle: "Chúng tôi liên tục phát hành các tính năng và cải tiến mới. Trang này nêu bật những điểm chính, nhưng bạn có thể nhấn vào 'Tìm hiểu thêm' để xem ghi chú phát hành chi tiết."
-          no_new_features_error: "Đã xảy ra lỗi khi tải nguồn cấp dữ liệu. Bạn có thể xem các thông báo tính năng mới trước đó trên <a href='%{url}' target='_blank'>cộng đồng Discourse Meta</a>."
           learn_more: "Tìm hiểu thêm..."
         last_checked: "Kiểm tra lần cuối"
         refresh_problems: "Làm mới"
@@ -5718,6 +5694,46 @@ vi:
         too_many_requests: Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi trước khi thử lại.
         not_found_error: Xin lỗi, báo cáo này không tồn tại
         custom_date_range: Khoảng thời gian tùy chỉnh
+        stable: "ổn định"
+        sections:
+          reports:
+            title: "Báo cáo"
+          engagement:
+            activity_by_category:
+              category: "Danh mục"
+              topics: "Các chủ đề"
+              posts: "Số lượng tút"
+              share: "Chia sẻ"
+            whos_posting:
+              all_categories: "Tất cả danh mục"
+              staff: "Nhân viên"
+            trust_level_pipeline:
+              trust_levels:
+                "0": "Chủ đề mới"
+                "1": "Cơ Bản"
+                "2": "Nâng Cao"
+                "3": "Tích Cực"
+                "4": "Nhà Lãnh Đạo"
+          search:
+            title: "Tìm"
+            table:
+              searches: "Số lần tìm kiếm"
+              status: "Trạng thái"
+        reports_section:
+          no_data: "Không có dữ liệu để hiển thị"
+          modal:
+            enabled_heading: "Đã bật"
+            all_heading: "Tất cả các báo cáo"
+            apply: "Áp dụng"
+        site_traffic:
+          series:
+            anonymous: "Ẩn danh"
+            crawlers: "Trình thu thập thông tin"
+        period:
+          last_7_days: "7 ngày qua"
+          last_30_days: "30 ngày qua"
+          last_3_months: "3 tháng qua"
+          custom: "Tùy biến"
         reports:
           trend_title: "%{percent} thay đổi. Hiện tại là %{current}, là %{prev} trong giai đoạn trước."
           percent_change_tooltip: "%{percent} thay đổi."
@@ -5794,7 +5810,6 @@ vi:
             incoming_email: "Tùy chỉnh địa chỉ email đến"
             incoming_email_placeholder: "điền địa chỉ email"
             incoming_email_tooltip: "Bạn có thể phân tách nhiều địa chỉ email bằng ký tự |."
-            visibility: Khả năng hiển thị
             visibility_levels:
               title: "Ai có thể xem nhóm"
               public: "Mọi người"
@@ -6216,9 +6231,10 @@ vi:
           your_organization: "Tổ chức của bạn"
           your_organization_description: "Chúng tôi sẽ sử dụng thông tin này trong Điều khoản dịch vụ và Thông báo bảo mật để nêu rõ ai là người vận hành trang web và thuộc thẩm quyền nào."
           company_name: "Tên"
-          company_name_placeholder: "Tổ chức Acme"
           company_name_warning: |
             Nếu để trống, sẽ không cung cấp các điều khoản dịch vụ hoặc thông báo về quyền riêng tư mẫu.
+          company_url: "Trang web"
+          company_url_placeholder: "https://example-co.com"
           governing_law: "Luật áp dụng"
           governing_law_placeholder: "Tỉnh, Thành phố hoặc Quốc gia"
           governing_law_help: |
@@ -6235,6 +6251,8 @@ vi:
             initial_members: "Thành viên mở rộng"
             initial_members_description: "Số lượng thành viên nhóm cần hiển thị trước khi thêm nút \"Xem thêm\"."
             show_description: "Bao gồm mô tả"
+          locale_selector:
+            title: "Ngôn ngữ"
           optional: "(tùy chọn)"
           update: "Cập nhật"
           toasts:
@@ -6962,6 +6980,7 @@ vi:
         topic_id: "ID Chủ đề"
         post_id: "ID Tút"
         category_id: "ID Chuyên mục"
+        reviewable_id: "Review"
         delete: "Xóa"
         edit: "Sửa"
         save: "Lưu"
@@ -7313,10 +7332,12 @@ vi:
         silence_reason: "Lý do hạn chế"
         bulk_actions:
           title: "Thao tác hàng loạt"
-          admin_cant_be_deleted: "Người dùng này không thể bị xóa vì họ là quản trị viên."
-          too_many_or_old_posts: "Người dùng này không thể bị xóa vì họ có quá nhiều tút hoặc một tút rất cũ."
-          too_many_selected_users:
-            other: "Bạn đã đạt đến giới hạn %{count} người dùng cho việc xóa hàng loạt."
+          select_all: "Chọn hết"
+          clear_all: "Xóa hết"
+          suspend:
+            confirmation_modal:
+              close: "Đóng lại"
+              confirm: "Đình chỉ"
           delete:
             label: "Xóa người dùng…"
             confirmation_modal:
@@ -7341,6 +7362,9 @@ vi:
           suspended: "Đã đình chỉ"
           silenced: "Đã hạn chế"
           staged: "Đóng thế"
+        activation_filter:
+          all: "Tất cả Thành viên"
+          activated: "Đã kích hoạt"
         approved: "Đã duyệt?"
         titles:
           active: "Thành viên đang hoạt động"
@@ -7551,7 +7575,6 @@ vi:
           other: "Không thể xóa tất cả các tút do tài khoản có hơn %{count} tút. (delete_all_posts_max)"
         delete_confirm_title: "Bạn có chắc muốn xóa thành viên này? Việc xóa này là vĩnh viễn!"
         delete_confirm: "Nói chung, việc ẩn danh người dùng thường được ưu tiên hơn là xóa họ, để tránh việc xóa nội dung khỏi các cuộc thảo luận hiện có."
-        delete_and_block: "Xóa người dùng và chặn địa chỉ email và địa chỉ IP của họ"
         delete_dont_block: "Xóa người dùng"
         deleting_user: "Đang xóa người dùng…"
         deleted: "Thành viên này đã bị xóa"

@@ -6,18 +6,18 @@ import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
-import avatar from "discourse/helpers/avatar";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { gt } from "discourse/truth-helpers";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import AiAgent from "../admin/models/ai-agent";
 import AiAgentEditor from "./ai-agent-editor";
@@ -238,10 +238,10 @@ export default class AiAgentListEditor extends Component {
                   @triggerClass="btn-default btn-icon"
                 >
                   <:trigger>
-                    {{icon this.currentLayout.icon}}
+                    {{dIcon this.currentLayout.icon}}
                   </:trigger>
                   <:content>
-                    <DropdownMenu as |dropdown|>
+                    <DDropdownMenu as |dropdown|>
                       {{#each LAYOUT_BUTTONS as |button|}}
                         <dropdown.item>
                           <DButton
@@ -252,14 +252,14 @@ export default class AiAgentListEditor extends Component {
                           />
                         </dropdown.item>
                       {{/each}}
-                    </DropdownMenu>
+                    </DDropdownMenu>
                   </:content>
                 </DMenu>
               {{/if}}
             </:actions>
             <:content as |filteredAgents|>
               <table
-                class={{concatClass
+                class={{dConcatClass
                   "content-list ai-agent-list-editor d-table"
                   (concat "--layout-" this.currentLayout.id)
                 }}
@@ -275,7 +275,7 @@ export default class AiAgentListEditor extends Component {
                   {{#each filteredAgents as |agent|}}
                     <tr
                       data-agent-id={{agent.id}}
-                      class={{concatClass
+                      class={{dConcatClass
                         "ai-agent-list__row d-table__row"
                         (if agent.priority "--priority")
                         (if agent.enabled "--enabled")
@@ -285,7 +285,7 @@ export default class AiAgentListEditor extends Component {
                         <div class="ai-agent-list__name-with-description">
                           <h3 class="ai-agent-list__name">
                             {{#if agent.user}}
-                              {{avatar agent.user imageSize="tiny"}}
+                              {{dAvatar agent.user imageSize="tiny"}}
                             {{/if}}
                             {{agent.name}}
                           </h3>

@@ -2,6 +2,57 @@
 # frozen_string_literal: true
 
 RSpec.describe ApplicationHelper do
+  describe "#discourse_pageview_tracking_meta_tags" do
+    it "includes beacon tracking meta tags for anonymous users when dashboard_improvements is enabled" do
+      SiteSetting.dashboard_improvements = true
+      helper.stubs(:current_user).returns(nil)
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-track-view-session-id"')
+      expect(tags).to include('name="discourse-beacon-pageview-enabled"')
+    end
+
+    it "omits beacon tracking meta tags when dashboard_improvements is disabled" do
+      SiteSetting.dashboard_improvements = false
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-track-view-session-id"')
+      expect(tags).not_to include('name="discourse-beacon-pageview-enabled"')
+    end
+
+    it "includes beacon tracking meta tags for browser pageview event triggers" do
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.persist_browser_pageview_events = false
+      SiteSetting.trigger_browser_pageview_events = true
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-track-view-session-id"')
+      expect(tags).to include('name="discourse-beacon-pageview-enabled"')
+    end
+
+    it "includes the engagement tracking meta tag when pageview events are persisted" do
+      SiteSetting.persist_browser_pageview_events = true
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-engagement-tracking-enabled"')
+    end
+
+    it "omits the engagement tracking meta tag in a trigger-only config so the browser does not send /srv/se beacons the server rejects" do
+      SiteSetting.dashboard_improvements = true
+      SiteSetting.persist_browser_pageview_events = false
+      SiteSetting.trigger_browser_pageview_events = true
+
+      tags = helper.discourse_pageview_tracking_meta_tags
+
+      expect(tags).to include('name="discourse-beacon-pageview-enabled"')
+      expect(tags).not_to include('name="discourse-engagement-tracking-enabled"')
+    end
+  end
+
   describe "preload_script" do
     def script_tag(url, entrypoint, nonce)
       <<~HTML
@@ -57,12 +108,17 @@ RSpec.describe ApplicationHelper do
         global_setting :s3_access_key_id, "123"
         global_setting :s3_secret_access_key, "123"
         global_setting :s3_cdn_url, "https://s3cdn.com"
+
+        # Backend RSpec tests might be run without real manifest/assets
+        EmberAssets.stubs(:script_chunks).returns(
+          { "discourse" => ["js/discourse-20n62q6s.digested"] },
+        )
       end
 
       it "deals correctly with subfolder" do
         set_subfolder "/community"
-        expect(helper.preload_script("start-discourse")).to include(
-          %r{https://s3cdn.com/assets/start-discourse-\w{8}.js},
+        expect(helper.preload_script("discourse")).to include(
+          %r{https://s3cdn.com/assets/js/discourse-\w{8}.digested.js},
         )
       end
 
@@ -70,41 +126,41 @@ RSpec.describe ApplicationHelper do
         global_setting :s3_cdn_url, "https://s3cdn.com/s3_subpath"
         set_cdn_url "https://awesome.com"
         set_subfolder "/community"
-        expect(helper.preload_script("start-discourse")).to include(
-          %r{https://s3cdn.com/s3_subpath/assets/start-discourse-\w{8}.js},
+        expect(helper.preload_script("discourse")).to include(
+          %r{https://s3cdn.com/s3_subpath/assets/js/discourse-\w{8}.digested.js},
         )
       end
 
       it "returns magic brotli mangling for brotli requests" do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = "br"
-        link = helper.preload_script("start-discourse")
+        link = helper.preload_script("discourse")
 
-        expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.br.js})
+        expect(link).to include(%r{https://s3cdn.com/assets/br/discourse-\w{8}.digested.js})
       end
 
       it "gives s3 cdn if asset host is not set" do
-        link = helper.preload_script("start-discourse")
+        link = helper.preload_script("discourse")
 
-        expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.js})
+        expect(link).to include(%r{https://s3cdn.com/assets/js/discourse-\w{8}.digested.js})
       end
 
       it "can fall back to gzip compression" do
         helper.request.env["HTTP_ACCEPT_ENCODING"] = "gzip"
-        link = helper.preload_script("start-discourse")
-        expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.gz.js})
+        link = helper.preload_script("discourse")
+        expect(link).to include(%r{https://s3cdn.com/assets/gz/discourse-\w{8}.digested.js})
       end
 
       it "gives s3 cdn even if asset host is set" do
         set_cdn_url "https://awesome.com"
-        link = helper.preload_script("start-discourse")
+        link = helper.preload_script("discourse")
 
-        expect(link).to include(%r{https://s3cdn.com/assets/start-discourse-\w{8}.js})
+        expect(link).to include(%r{https://s3cdn.com/assets/js/discourse-\w{8}.digested.js})
       end
 
       it "uses separate asset CDN if configured" do
         global_setting :s3_asset_cdn_url, "https://s3-asset-cdn.example.com"
-        expect(helper.preload_script("start-discourse")).to include(
-          %r{https://s3-asset-cdn.example.com/assets/start-discourse-\w{8}.js},
+        expect(helper.preload_script("discourse")).to include(
+          %r{https://s3-asset-cdn.example.com/assets/js/discourse-\w{8}.digested.js},
         )
       end
     end
@@ -125,7 +181,7 @@ RSpec.describe ApplicationHelper do
     end
 
     it "does not include extra attrs when none are provided" do
-      result = helper.preload_script("start-discourse")
+      result = helper.preload_script("discourse")
       expect(result).not_to include("data-plugin-name")
       expect(result).not_to include("data-preinstalled")
       expect(result).not_to include("data-official")
@@ -155,14 +211,14 @@ RSpec.describe ApplicationHelper do
 
   describe "add_resource_preload_list" do
     it "adds resources to the preload list" do
-      add_resource_preload_list("/assets/start-discourse.js", "script")
+      add_resource_preload_list("/assets/discourse.js", "script")
       add_resource_preload_list("/assets/discourse.css", "style")
 
       expect(controller.instance_variable_get(:@asset_preload_links).size).to eq(2)
     end
 
     it "adds resources to the preload list when preload_script is called" do
-      helper.preload_script("start-discourse")
+      helper.preload_script("discourse")
 
       expect(controller.instance_variable_get(:@asset_preload_links).size).to eq(1)
     end
@@ -175,7 +231,7 @@ RSpec.describe ApplicationHelper do
 
     it "adds resources as the correct type" do
       helper.discourse_stylesheet_link_tag(:desktop)
-      helper.preload_script("start-discourse")
+      helper.preload_script("discourse")
 
       expect(controller.instance_variable_get(:@asset_preload_links)[0]).to match(/as="style"/)
       expect(controller.instance_variable_get(:@asset_preload_links)[1]).to match(/as="script"/)
@@ -257,7 +313,7 @@ RSpec.describe ApplicationHelper do
       end
 
       context "when on desktop" do
-        before { session[:mobile_view] = "0" }
+        before { helper.stubs(:mobile_device?).returns(false) }
 
         context "when logo_dark is not set" do
           it "will return site_logo_url instead" do
@@ -275,7 +331,7 @@ RSpec.describe ApplicationHelper do
       end
 
       context "when on mobile" do
-        before { session[:mobile_view] = "1" }
+        before { helper.stubs(:mobile_device?).returns(true) }
 
         context "when mobile_logo_dark is not set" do
           it "will return site_mobile_logo_url instead" do
@@ -351,153 +407,75 @@ RSpec.describe ApplicationHelper do
     end
   end
 
-  describe "#mobile_view?" do
-    context "when enable_mobile_theme is true" do
-      before { SiteSetting.enable_mobile_theme = true }
-
-      it "is true if mobile_view is '1' in the session" do
-        session[:mobile_view] = "1"
-        expect(helper.mobile_view?).to eq(true)
-      end
-
-      it "is false if mobile_view is '0' in the session" do
-        session[:mobile_view] = "0"
-        expect(helper.mobile_view?).to eq(false)
-      end
-
-      context "when mobile_view session is cleared" do
-        before { params[:mobile_view] = "auto" }
-
-        it "is false if user agent is not mobile" do
-          session[:mobile_view] = "1"
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36",
-            )
-          expect(helper.mobile_view?).to be_falsey
-        end
-
-        it "is true for iPhone" do
-          session[:mobile_view] = "0"
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1",
-            )
-          expect(helper.mobile_view?).to eq(true)
-        end
-      end
-
-      context "when mobile_view is not set" do
-        it "is false if user agent is not mobile" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36",
-            )
-          expect(helper.mobile_view?).to be_falsey
-        end
-
-        it "is true for iPhone" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1",
-            )
-          expect(helper.mobile_view?).to eq(true)
-        end
-
-        it "is true for Android Samsung Galaxy" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (Linux; Android 5.0.2; SAMSUNG SM-G925F Build/LRX22G) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/4.0 Chrome/44.0.2403.133 Mobile Safari/537.36",
-            )
-          expect(helper.mobile_view?).to eq(true)
-        end
-
-        it "is true for Android Google Nexus 5X" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (Linux; Android 6.0; Nexus 5X Build/MDB08I) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.43 Mobile Safari/537.36",
-            )
-          expect(helper.mobile_view?).to eq(true)
-        end
-
-        it "is false for iPad" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B14 3 Safari/601.1",
-            )
-          expect(helper.mobile_view?).to eq(false)
-        end
-
-        it "is false for Nexus 10 tablet" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (Linux; Android 5.1.1; Nexus 10 Build/LMY49G) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.91 Safari/537.36",
-            )
-          expect(helper.mobile_view?).to be_falsey
-        end
-
-        it "is false for Nexus 7 tablet" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 7 Build/MMB29Q) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.91 Safari/537.36",
-            )
-          expect(helper.mobile_view?).to be_falsey
-        end
-      end
+  describe "#mobile_device?" do
+    it "is false if user agent is not mobile" do
+      controller
+        .request
+        .stubs(:user_agent)
+        .returns(
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.87 Safari/537.36",
+        )
+      expect(helper.mobile_device?).to be_falsey
     end
 
-    context "when enable_mobile_theme is false" do
-      before { SiteSetting.enable_mobile_theme = false }
+    it "is true for iPhone" do
+      controller
+        .request
+        .stubs(:user_agent)
+        .returns(
+          "Mozilla/5.0 (iPhone; CPU iPhone OS 9_2_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13D15 Safari/601.1",
+        )
+      expect(helper.mobile_device?).to eq(true)
+    end
 
-      it "is false if mobile_view is '1' in the session" do
-        session[:mobile_view] = "1"
-        expect(helper.mobile_view?).to eq(false)
-      end
+    it "is true for Android Samsung Galaxy" do
+      controller
+        .request
+        .stubs(:user_agent)
+        .returns(
+          "Mozilla/5.0 (Linux; Android 5.0.2; SAMSUNG SM-G925F Build/LRX22G) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/4.0 Chrome/44.0.2403.133 Mobile Safari/537.36",
+        )
+      expect(helper.mobile_device?).to eq(true)
+    end
 
-      it "is false if mobile_view is '0' in the session" do
-        session[:mobile_view] = "0"
-        expect(helper.mobile_view?).to eq(false)
-      end
+    it "is true for Android Google Nexus 5X" do
+      controller
+        .request
+        .stubs(:user_agent)
+        .returns(
+          "Mozilla/5.0 (Linux; Android 6.0; Nexus 5X Build/MDB08I) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/46.0.2490.43 Mobile Safari/537.36",
+        )
+      expect(helper.mobile_device?).to eq(true)
+    end
 
-      context "when mobile_view is not set" do
-        it "is false if user agent is not mobile" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.17 Safari/537.36",
-            )
-          expect(helper.mobile_view?).to eq(false)
-        end
+    it "is false for iPad" do
+      controller
+        .request
+        .stubs(:user_agent)
+        .returns(
+          "Mozilla/5.0 (iPad; CPU OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B14 3 Safari/601.1",
+        )
+      expect(helper.mobile_device?).to eq(false)
+    end
 
-        it "is false for iPhone" do
-          controller
-            .request
-            .stubs(:user_agent)
-            .returns(
-              "Mozilla/5.0 (iPhone; U; ru; CPU iPhone OS 4_2_1 like Mac OS X; ru) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8C148a Safari/6533.18.5",
-            )
-          expect(helper.mobile_view?).to eq(false)
-        end
-      end
+    it "is false for Nexus 10 tablet" do
+      controller
+        .request
+        .stubs(:user_agent)
+        .returns(
+          "Mozilla/5.0 (Linux; Android 5.1.1; Nexus 10 Build/LMY49G) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.91 Safari/537.36",
+        )
+      expect(helper.mobile_device?).to be_falsey
+    end
+
+    it "is false for Nexus 7 tablet" do
+      controller
+        .request
+        .stubs(:user_agent)
+        .returns(
+          "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 7 Build/MMB29Q) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.91 Safari/537.36",
+        )
+      expect(helper.mobile_device?).to be_falsey
     end
   end
 
@@ -623,6 +601,16 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "crawlable_meta_data" do
+    it "escapes the description exactly once" do
+      result =
+        helper.crawlable_meta_data(description: %(Tom & O'Reilly "><script>alert(1)</script>))
+
+      expect(result).to include(
+        %(<meta property="og:description" content="Tom &amp; O&#39;Reilly &quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;" />),
+      )
+      expect(result).not_to include("<script>")
+    end
+
     it "Supports ASCII URLs with odd chars" do
       result =
         helper.crawlable_meta_data(
@@ -933,13 +921,29 @@ RSpec.describe ApplicationHelper do
 
     context "with custom light scheme" do
       before do
-        @new_cs = Fabricate(:color_scheme, name: "Flamboyant")
+        @new_cs = Fabricate(:color_scheme, name: "Flamboyant", user_selectable: true)
         user.user_option.color_scheme_id = @new_cs.id
         user.user_option.save!
         helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
       end
 
       it "returns color scheme from user option value" do
+        color_stylesheets = helper.discourse_color_scheme_stylesheets
+        expect(color_stylesheets).to include("color_definitions_flamboyant")
+      end
+
+      it "falls back to base scheme when the scheme is no longer user selectable" do
+        @new_cs.update!(user_selectable: false)
+
+        color_stylesheets = helper.discourse_color_scheme_stylesheets
+        expect(color_stylesheets).not_to include("color_definitions_flamboyant")
+        expect(color_stylesheets).to include("color_definitions_light-default")
+      end
+
+      it "keeps a non-user-selectable scheme that is the theme's own color scheme" do
+        @new_cs.update!(user_selectable: false)
+        Theme.find_default.update!(color_scheme_id: @new_cs.id)
+
         color_stylesheets = helper.discourse_color_scheme_stylesheets
         expect(color_stylesheets).to include("color_definitions_flamboyant")
       end
@@ -968,7 +972,7 @@ RSpec.describe ApplicationHelper do
         user.user_option.interface_color_mode = UserOption::LIGHT_MODE
         user.user_option.save!
         helper.request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = user
-        @new_cs = Fabricate(:color_scheme, name: "Custom Color Scheme")
+        @new_cs = Fabricate(:color_scheme, name: "Custom Color Scheme", user_selectable: true)
 
         Theme.find_default.update!(dark_color_scheme_id: ColorScheme.where(name: "Dark").pick(:id))
       end
@@ -1049,12 +1053,12 @@ RSpec.describe ApplicationHelper do
 
   describe "#discourse_theme_color_meta_tags" do
     before do
-      light = Fabricate(:color_scheme)
+      light = Fabricate(:color_scheme, user_selectable: true)
       light.color_scheme_colors << ColorSchemeColor.new(name: "header_background", hex: "abcdef")
       light.save!
       helper.request.cookies["color_scheme_id"] = light.id
 
-      dark = Fabricate(:color_scheme)
+      dark = Fabricate(:color_scheme, user_selectable: true)
       dark.color_scheme_colors << ColorSchemeColor.new(name: "header_background", hex: "defabc")
       dark.save!
       helper.request.cookies["dark_scheme_id"] = dark.id
@@ -1108,7 +1112,7 @@ RSpec.describe ApplicationHelper do
     end
 
     it "renders a 'light dark' color-scheme if a dark scheme is set" do
-      dark = Fabricate(:color_scheme)
+      dark = Fabricate(:color_scheme, user_selectable: true)
       dark.save!
       helper.request.cookies["dark_scheme_id"] = dark.id
 
@@ -1119,8 +1123,8 @@ RSpec.describe ApplicationHelper do
   end
 
   describe "#dark_scheme_id" do
-    fab!(:dark_scheme, :color_scheme)
-    fab!(:light_scheme, :color_scheme)
+    fab!(:dark_scheme) { Fabricate(:color_scheme, user_selectable: true) }
+    fab!(:light_scheme) { Fabricate(:color_scheme, user_selectable: true) }
 
     before do
       helper.request.cookies["color_scheme_id"] = light_scheme.id
@@ -1326,6 +1330,78 @@ RSpec.describe ApplicationHelper do
       expect(result).to include('itemprop="comment"')
       expect(result).to include("itemscope")
       expect(result).to include('itemtype="http://schema.org/Comment"')
+    end
+  end
+
+  describe "#shared_session_key" do
+    fab!(:user)
+
+    before { SiteSetting.long_polling_base_url = "https://mb.example.com/" }
+
+    context "when the request carries an auth token" do
+      let(:auth_token) { UserAuthToken.generate!(user_id: user.id) }
+
+      before do
+        helper.stubs(:current_user).returns(user)
+        helper.request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY] = auth_token
+      end
+
+      it "binds the stored value to the auth token" do
+        key = helper.shared_session_key
+        expect(
+          Discourse.redis.get(Auth::DefaultCurrentUserProvider.shared_session_redis_key(key)),
+        ).to eq(auth_token.id.to_s)
+      end
+    end
+
+    context "when the auth token does not belong to the current user" do
+      fab!(:other_user, :user)
+
+      before do
+        helper.stubs(:current_user).returns(user)
+        helper.request.env[
+          Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY
+        ] = UserAuthToken.generate!(user_id: other_user.id)
+      end
+
+      it "returns no shared session key" do
+        expect(helper.shared_session_key).to eq(nil)
+      end
+    end
+
+    context "when the auth token is impersonating the current user" do
+      fab!(:admin)
+
+      let(:auth_token) do
+        UserAuthToken
+          .generate!(user_id: admin.id)
+          .tap do |token|
+            token.update!(impersonated_user_id: user.id, impersonation_expires_at: 1.hour.from_now)
+          end
+      end
+
+      before do
+        helper.stubs(:current_user).returns(user)
+        helper.request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY] = auth_token
+      end
+
+      it "binds the stored value to the impersonating token" do
+        key = helper.shared_session_key
+        expect(
+          Discourse.redis.get(Auth::DefaultCurrentUserProvider.shared_session_redis_key(key)),
+        ).to eq(auth_token.id.to_s)
+      end
+    end
+
+    context "when the request carries no auth token" do
+      before do
+        helper.stubs(:current_user).returns(user)
+        helper.request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY] = nil
+      end
+
+      it "returns no shared session key" do
+        expect(helper.shared_session_key).to eq(nil)
+      end
     end
   end
 end

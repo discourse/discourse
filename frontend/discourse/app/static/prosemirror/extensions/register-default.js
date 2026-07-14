@@ -1,6 +1,9 @@
 // @ts-check
 
-import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import {
+  markDefaultExtensionsRegistered,
+  registerRichEditorExtension,
+} from "discourse/lib/composer/rich-editor-extensions";
 import bulletList from "./bullet-list";
 import code from "./code";
 import codeBlock from "./code-block";
@@ -17,6 +20,7 @@ import linkToolbar from "./link-toolbar";
 import markdownPaste from "./markdown-paste";
 import mention from "./mention";
 import onebox from "./onebox";
+import oneboxToolbar from "./onebox-toolbar";
 import orderedList from "./ordered-list";
 import overrideDragGhost from "./override-drag-ghost";
 import quote from "./quote";
@@ -24,8 +28,9 @@ import strikethrough from "./strikethrough";
 import table from "./table";
 import trailingInlineSpace from "./trailing-inline-space";
 import trailingParagraph from "./trailing-paragraph";
-import typographerReplacements from "./typographer-replacements";
 import underline from "./underline";
+import uploadPlaceholder from "./upload-placeholder";
+import wordPaste from "./word-paste";
 import wrap from "./wrap";
 
 /**
@@ -38,6 +43,7 @@ const defaultExtensions = [
   emoji,
   image,
   onebox,
+  oneboxToolbar,
   code,
   link,
   linkToolbar,
@@ -51,9 +57,9 @@ const defaultExtensions = [
   htmlInline,
   htmlBlock,
   trailingParagraph,
-  typographerReplacements,
   table,
   markdownPaste,
+  wordPaste,
   orderedList,
   bulletList,
   wrap,
@@ -61,8 +67,10 @@ const defaultExtensions = [
   overrideDragGhost,
   hardBreak,
   grid,
+  uploadPlaceholder,
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);
+markDefaultExtensionsRegistered();
 
 export default defaultExtensions;

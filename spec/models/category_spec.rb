@@ -1072,8 +1072,7 @@ RSpec.describe Category do
 
       expect(category.auto_bump_topic!).to eq(true)
       expect(Topic.where(bumped_at: time).count).to eq(1)
-      # our extra bump message
-      expect(post1.topic.reload.posts_count).to eq(2)
+      expect(post1.topic.reload.posts_count).to eq(1)
 
       time = freeze_time 13.hours.from_now
 
@@ -1634,6 +1633,55 @@ RSpec.describe Category do
       it "allows limiting depth" do
         expect(subcategory_2.slug_ref(depth: 1)).to eq("bar#{Category::SLUG_REF_SEPARATOR}boo")
       end
+    end
+  end
+
+  describe "category hashtag remapping" do
+    it "enqueues a remap job when the slug changes" do
+      category = Fabricate(:category, slug: "support")
+
+      expect_enqueued_with(
+        job: :remap_category_hashtag,
+        args: {
+          category_id: category.id,
+          old_ref: "support",
+          new_ref: "help",
+        },
+      ) { category.update!(slug: "help") }
+    end
+
+    it "enqueues a remap job when the parent changes" do
+      category = Fabricate(:category, slug: "bucks")
+      parent_category = Fabricate(:category, slug: "support")
+
+      expect_enqueued_with(
+        job: :remap_category_hashtag,
+        args: {
+          category_id: category.id,
+          old_ref: "bucks",
+          new_ref: "support:bucks",
+        },
+      ) { category.update!(parent_category: parent_category) }
+    end
+
+    it "enqueues child remap jobs when the slug changes" do
+      parent_category = Fabricate(:category, slug: "support")
+      category = Fabricate(:category, slug: "bucks", parent_category: parent_category)
+
+      expect_enqueued_with(
+        job: :remap_category_hashtag,
+        args: {
+          category_id: category.id,
+          old_ref: "support:bucks",
+          new_ref: "help:bucks",
+        },
+      ) { parent_category.update!(slug: "help") }
+    end
+
+    it "does not enqueue a remap job for unrelated changes" do
+      category = Fabricate(:category, slug: "support")
+
+      expect_not_enqueued_with(job: :remap_category_hashtag) { category.update!(color: "ABCDEF") }
     end
   end
 

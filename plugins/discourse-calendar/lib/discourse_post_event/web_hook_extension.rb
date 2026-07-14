@@ -41,6 +41,16 @@ module DiscoursePostEvent
             end
           )
 
+        event_image =
+          if calendar_event.image_upload.present?
+            {
+              id: calendar_event.image_upload.id,
+              url: UrlHelper.absolute(calendar_event.image_upload.url),
+              width: calendar_event.image_upload.width,
+              height: calendar_event.image_upload.height,
+            }
+          end
+
         {
           event: {
             id: calendar_event.id,
@@ -60,6 +70,7 @@ module DiscoursePostEvent
             max_attendees: calendar_event.max_attendees,
             chat_enabled: calendar_event.chat_enabled,
             allowed_groups: calendar_event.raw_invitees,
+            image: event_image,
           },
           post: {
             id: post&.id,

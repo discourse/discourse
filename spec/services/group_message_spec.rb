@@ -19,9 +19,9 @@ RSpec.describe GroupMessage do
       PostCreator
         .expects(:create)
         .with do |from_user, opts|
-          from_user.id == (admin.id) && opts[:target_group_names] &&
+          from_user.id == admin.id && opts[:target_group_names] &&
             opts[:target_group_names].include?(Group[:moderators].name) &&
-            opts[:archetype] == (Archetype.private_message) && opts[:title].present? &&
+            opts[:archetype] == Archetype.private_message && opts[:title].present? &&
             opts[:raw].present?
         end
         .returns(stub_everything)

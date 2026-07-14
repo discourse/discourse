@@ -255,7 +255,6 @@ sv:
       retry_staged_message:
         title: "Nätverksfel"
         action: "Skicka igen?"
-      unreliable_network: "Nätverket är opålitligt, det fungerar kanske inte att skicka meddelanden och spara utkast"
       bookmark_message: "Bokmärk"
       bookmark_message_edit: "Redigera bokmärke"
       restore: "Återställ raderat meddelande"
@@ -273,8 +272,6 @@ sv:
         title: "Meddelandeljud för chatt via dator"
       sounds:
         none: "Ingen"
-        bell: "Bell"
-        ding: "Ding"
       title: "chatt"
       title_capitalized: "Chatt"
       upload: "Bifoga en fil"
@@ -350,7 +347,6 @@ sv:
         input_placeholder: Lägg till ett namn
         slug_description: Ett dynamiskt kanalfält används i URL:en istället för kanalnamnet
         name: Kanalnamn
-        slug: Dynamiskt kanalfält (valfritt)
       channel_edit_description_modal:
         title: Redigera beskrivning
         input_placeholder: Lägg till en beskrivning
@@ -407,9 +403,8 @@ sv:
             one: 'Användare i %{group} och ytterligare %{count} grupp kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningarna</a>'
             other: 'Användare i %{group} och ytterligare %{count} grupper kommer att ha åtkomst till denna kanal enligt <a href="%{settingLink}" target="_blank">säkerhetsinställningarna</a>'
         create: "Skapa kanal"
-        description: "Beskrivning (valfritt)"
+        description: "Beskrivning"
         name: "Kanalnamn"
-        slug: "Dynamiskt kanalfält (valfritt)"
         title: "Ny kanal"
         type: "Typ"
         types:
@@ -691,3 +686,12 @@ sv:
       panels:
         chat:
           label: "Chatt"
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "Kanal"
+      send_chat_message:
+        channel_id: "Kanal"
+        message: "Meddelande"
+      chat_approval:
+        message: "Meddelande"
+        channel_id: "Kanal"

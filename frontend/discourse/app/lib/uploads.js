@@ -201,7 +201,7 @@ export function authorizedExtensions(staff, siteSettings) {
 
 function authorizedImagesExtensions(staff, siteSettings) {
   return authorizesAllExtensions(staff, siteSettings)
-    ? "png, jpg, jpeg, gif, svg, ico, heic, heif, webp, avif"
+    ? "png, jpg, jpeg, gif, svg, ico, heic, heif, webp, avif, jxl"
     : imagesExtensions(staff, siteSettings).join(", ");
 }
 
@@ -235,7 +235,7 @@ export function authorizesOneOrMoreImageExtensions(staff, siteSettings) {
 }
 
 export function isImage(path) {
-  return /\.(png|webp|jpe?g|gif|svg|ico|heic|heif|avif)$/i.test(path);
+  return /\.(png|webp|jpe?g|gif|svg|ico|heic|heif|avif|jxl)$/i.test(path);
 }
 
 export function isVideo(path) {
@@ -300,7 +300,7 @@ function playableMediaMarkdown(upload, type) {
 }
 
 function attachmentMarkdown(upload) {
-  return `[${upload.original_filename}|attachment](${
+  return `[${upload.original_filename.replace(/\[|\]|\|/g, "")}|attachment](${
     upload.short_url
   }) (${I18n.toHumanSize(upload.filesize)})`;
 }

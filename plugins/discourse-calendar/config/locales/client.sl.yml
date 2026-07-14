@@ -294,6 +294,9 @@ sl:
       notifications:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} vas je povabil na %{eventName} in vam določil udeležbo"
+      event_description:
+        show_more: "Več"
+        show_less: "Manj"
       edit_reason: "Dogodek posodobljen"
       topic_title:
         starts_at: "Dogodek se bo pričel: %{date}"
@@ -343,9 +346,7 @@ sl:
       models:
         invitee:
           status:
-            unknown: "Neodločen"
             going: "Pridem"
-            not_going: "Ne pridem"
             interested: "Mogoče pridem"
         event:
           expired: "Poteklo"
@@ -360,6 +361,30 @@ sl:
             private:
               title: "Zasebni"
               description: "Na zasebni dogodek se lahko prijavijo samo povabljenci."
+      composer:
+        name_placeholder: "Ime dogodka"
+        event_title_placeholder: "Ime dogodka"
+        create_event_button: "Ustvari dogodek"
+        reminder:
+          units:
+            minutes:
+              one: "minuta"
+              two: "minuti"
+              few: "minute"
+              other: "minut"
+            hours:
+              one: "ura"
+              two: "uri"
+              few: "ure"
+              other: "ur"
+            days:
+              one: "dan"
+              two: "dneva"
+              few: "dnevi"
+              other: "dni"
+      composer_actions:
+        create_event:
+          label: "Ustvari dogodek"
       builder_modal:
         custom_fields:
           label: "Polja po meri"
@@ -388,14 +413,11 @@ sl:
           label: "Ponavljanje"
           none: "Brez"
           every_day: "Vsak dan"
-          every_month: "Mesečno na ta dan"
           every_weekday: "Vsak delavnik"
-          every_week: "Tedensko na ta dan"
-        url:
-          label: "URL"
-          placeholder: "Neobvezno"
-        location:
-          label: "Lokacija"
+          ordinals:
+            last: "zadnji"
+        attendance:
+          none: "Brez"
         description:
           label: "Opis"
         name:
@@ -403,8 +425,9 @@ sl:
           placeholder: "Neobvezno, privzeto enako imenu dogodka"
         invitees:
           label: "Povabljene grupe"
-        status:
-          label: "Status"
+        event_type:
+          public:
+            title: "Javni"
       invite_user_or_group:
         title: "Obvesti uporabnike oz. grupe"
         invite: "Pošlji"

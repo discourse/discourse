@@ -103,7 +103,7 @@ module HasCustomFields
     # and create a "sideloaded" version for easy querying by id.
     def custom_fields_for_ids(ids, allowed_fields)
       klass = "#{name}CustomField".constantize
-      foreign_key = "#{name.underscore}_id".to_sym
+      foreign_key = :"#{name.underscore}_id"
 
       result = {}
 
@@ -300,8 +300,6 @@ module HasCustomFields
           if descriptor.array_type? || (field_type != :json && Array === value)
             value = Array(value || [])
             value.compact!
-            sub_type = field_type[0]
-
             value.map! { |v| descriptor.serialize(v) }
 
             unless value == fields.map(&:value)

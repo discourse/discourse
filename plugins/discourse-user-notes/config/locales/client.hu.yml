@@ -9,7 +9,6 @@ hu:
     user_notes:
       title: "Felhasználói megjegyzések"
       attach: "Felhasználói megjegyzés hozzáadása"
-      attach_note_description: "Adjon hozzá egy megjegyzést erről a felhasználóról. Ez a megjegyzés csak a személyzet számára lesz látható."
       remove: "Felhasználói megjegyzés eltávolítása"
       show: "%{count} megjegyzés"
       delete_confirm: "Biztosan törölni szeretné ezt a felhasználói megjegyzést?"

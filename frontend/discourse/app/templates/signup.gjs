@@ -1,66 +1,92 @@
 import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { trustHTML } from "@ember/template";
-import FlashMessage from "discourse/components/flash-message";
+import CodeLoginForm from "discourse/components/code-login-form";
 import FullnameInput from "discourse/components/fullname-input";
 import HoneypotInput from "discourse/components/honeypot-input";
-import InputTip from "discourse/components/input-tip";
 import LoginButtons from "discourse/components/login-buttons";
-import PasswordField from "discourse/components/password-field";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import SignupPageCta from "discourse/components/signup-page-cta";
 import SignupProgressBar from "discourse/components/signup-progress-bar";
-import TogglePasswordMask from "discourse/components/toggle-password-mask";
 import UserField from "discourse/components/user-field";
 import WelcomeHeader from "discourse/components/welcome-header";
 import bodyClass from "discourse/helpers/body-class";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import hideApplicationHeaderButtons from "discourse/helpers/hide-application-header-buttons";
 import hideApplicationSidebar from "discourse/helpers/hide-application-sidebar";
 import lazyHash from "discourse/helpers/lazy-hash";
-import loadingSpinner from "discourse/helpers/loading-spinner";
 import routeAction from "discourse/helpers/route-action";
 import valueEntered from "discourse/helpers/value-entered";
 import { and, not } from "discourse/truth-helpers";
+import DFlashMessage from "discourse/ui-kit/d-flash-message";
+import DInputTip from "discourse/ui-kit/d-input-tip";
+import DPasswordField from "discourse/ui-kit/d-password-field";
+import DTogglePasswordMask from "discourse/ui-kit/d-toggle-password-mask";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dLoadingSpinner from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 export default <template>
-  {{! template-lint-disable no-duplicate-id }}
   {{hideApplicationHeaderButtons "search" "login" "signup" "menu"}}
   {{hideApplicationSidebar}}
   {{bodyClass "signup-page"}}
 
   <div class="signup-fullpage">
-    <FlashMessage
+    <DFlashMessage
       @flash={{@controller.flash}}
       @type={{@controller.flashType}}
     />
 
-    <div class={{concatClass "signup-body" @controller.bodyClasses}}>
+    <div class={{dConcatClass "signup-body" @controller.bodyClasses}}>
       <PluginOutlet
         @name="create-account-before-modal-body"
         @connectorTagName="div"
       />
 
       <div
-        class={{concatClass
+        class={{dConcatClass
           (if @controller.site.desktopView "login-left-side")
           @controller.authOptions.auth_provider
         }}
       >
         {{#unless @controller.skipConfirmation}}
-          <SignupProgressBar @step={{@controller.progressBarStep}} />
-          <WelcomeHeader
-            id="create-account-title"
-            @header={{i18n "create_account.header_title"}}
-          >
+          {{! Code signup renders its own heading inside CodeLoginForm. }}
+          {{#unless @controller.showCodeSignupForm}}
+            <SignupProgressBar @step={{@controller.progressBarStep}} />
             <PluginOutlet
-              @name="create-account-header-bottom"
-              @outletArgs={{lazyHash showLogin=(routeAction "showLogin")}}
-            />
-          </WelcomeHeader>
+              @name="signup-heading"
+              @outletArgs={{lazyHash
+                step="form"
+                context="signup"
+                title=(i18n "create_account.header_title")
+              }}
+            >
+              <WelcomeHeader
+                id="create-account-title"
+                @header={{i18n "create_account.header_title"}}
+              >
+                <PluginOutlet
+                  @name="create-account-header-bottom"
+                  @outletArgs={{lazyHash showLogin=(routeAction "showLogin")}}
+                />
+              </WelcomeHeader>
+            </PluginOutlet>
+          {{/unless}}
         {{/unless}}
+        {{#if @controller.showCodeSignupForm}}
+          <CodeLoginForm
+            @context="signup"
+            @initialEmail={{@controller.accountEmail}}
+            @onStepChange={{@controller.updateCodeSignupStep}}
+          />
+          {{#if
+            (and @controller.codeSignupOnEmailStep @controller.disclaimerHtml)
+          }}
+            <div class="signup-page-cta__disclaimer">
+              {{trustHTML @controller.disclaimerHtml}}
+            </div>
+          {{/if}}
+        {{/if}}
         {{#if @controller.showCreateForm}}
           <form id="login-form">
             {{#if @controller.associateHtml}}
@@ -86,7 +112,7 @@ export default <template>
                 {{i18n "user.email.title"}}
               </label>
               {{#if @controller.showEmailValidation}}
-                <InputTip
+                <DInputTip
                   @validation={{@controller.emailValidation}}
                   id="account-email-validation"
                 />
@@ -131,7 +157,7 @@ export default <template>
                 </span>
 
               {{else}}
-                <InputTip
+                <DInputTip
                   @validation={{@controller.usernameValidation}}
                   id="username-validation"
                 />
@@ -169,7 +195,7 @@ export default <template>
 
             <div class="input-group create-account__password">
               {{#if @controller.passwordRequired}}
-                <PasswordField
+                <DPasswordField
                   {{on "focusin" @controller.scrollInputIntoView}}
                   @value={{@controller.accountPassword}}
                   @capsLockOn={{@controller.capsLockOn}}
@@ -183,14 +209,14 @@ export default <template>
                 <label class="alt-placeholder" for="new-account-password">
                   {{i18n "user.password.title"}}
                 </label>
-                <TogglePasswordMask
+                <DTogglePasswordMask
                   @maskPassword={{@controller.maskPassword}}
                   @togglePasswordMask={{@controller.togglePasswordMask}}
                 />
                 <div class="create-account__password-info">
                   <div class="create-account__password-tip-validation">
                     {{#if @controller.showPasswordValidation}}
-                      <InputTip
+                      <DInputTip
                         @validation={{@controller.passwordValidation}}
                         id="password-validation"
                       />
@@ -205,12 +231,12 @@ export default <template>
                       </span>
                     {{/if}}
                     <div
-                      class={{concatClass
+                      class={{dConcatClass
                         "caps-lock-warning"
                         (unless @controller.capsLockOn "hidden")
                       }}
                     >
-                      {{icon "triangle-exclamation"}}
+                      {{dIcon "triangle-exclamation"}}
                       {{i18n "login.caps_lock_warning"}}
                     </div>
                   </div>
@@ -315,7 +341,7 @@ export default <template>
         {{/if}}
 
         {{#if @controller.skipConfirmation}}
-          {{loadingSpinner size="large"}}
+          {{dLoadingSpinner size="large"}}
         {{/if}}
       </div>
 

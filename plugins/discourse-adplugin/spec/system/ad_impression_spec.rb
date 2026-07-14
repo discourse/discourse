@@ -52,7 +52,6 @@ describe "AdPlugin::AdImpression" do
     it "does not record impression before scrolling into view" do
       visit "/latest"
 
-      expect(page).to have_css("#site-logo")
       expect(AdPlugin::AdImpression.count).to eq(0)
 
       page.execute_script("window.scrollTo(0, document.body.scrollHeight);")

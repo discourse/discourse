@@ -9,7 +9,7 @@ hy:
     overall_sentiment:
       yaxis: "Ամսաթիվ"
     emotion_neutral:
-      title: "\U0001F610 Նեյտրալ"
+      title: "😐 Նեյտրալ"
   discourse_ai:
     tools:
       presets:
@@ -56,7 +56,7 @@ hy:
     sentiment:
       reports:
         post_emotion:
-          neutral: "Նեյտրալ \U0001F610"
+          neutral: "Նեյտրալ 😐"
         sentiment_analysis:
           neutral: "Նեյտրալ"
     ai_staff_action_logger:

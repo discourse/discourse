@@ -5,10 +5,21 @@
 # https://translate.discourse.org/
 
 vi:
+  category_types:
+    events:
+      name: "Sự kiện"
+      title: "sự kiện"
   reports:
     currently_away:
       labels:
         username: Tên tài khoản
+  discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Ngày"
+        week: "Tuần"
+        month: "Tháng"
+        year: "Năm"
   discourse_post_event:
     errors:
       bulk_invite:

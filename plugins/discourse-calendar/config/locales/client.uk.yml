@@ -12,6 +12,12 @@ uk:
         categories:
           discourse_post_event: "Подія Discourse"
           discourse_calendar: "Календар та події"
+      web_hooks:
+        calendar_event:
+          group_name: "Календар подій"
+          calendar_event_created: "Створено подію календаря"
+          calendar_event_updated: "Подію календаря оновлено"
+          calendar_event_destroyed: "Подію календаря знищено"
   js:
     notifications:
       titles:
@@ -27,7 +33,17 @@ uk:
             topic_id:
               label: ID теми
     discourse_calendar:
+      livestream:
+        chat:
+          going: "Натисніть «Продовжити»"
+          join_channel_header: "🌟 Приєднуйтесь до обговорення! 🌟"
+          join_channel_message: "Підтвердіть свою присутність та розблокуйте наш чат події. Зануртесь в обговорення, діліться своїми враженнями та спілкуйтеся з іншими учасниками!"
       invite_user_notification: "%{username} запросили Вас на: %{description}"
+      preferences:
+        all_events: "Discourse Календар - Усі події"
+        all_events_description: "Усі події форуму"
+        my_events: "Discourse Календар - Мої події"
+        my_events_description: "Події, на які ви збираєтеся або які вас цікавлять"
       on_holiday: "У відпустці"
       disable_holiday: "Вимкнути"
       enable_holiday: "Увімкнути"
@@ -322,6 +338,7 @@ uk:
       search: "Пошук…"
       group_availability: "%{group} доступність"
     discourse_post_event:
+      new_event: "Нова подія"
       notifications:
         before_event_reminder: "Подія ось-ось розпочнеться"
         after_event_reminder: "Подія завершилася"
@@ -329,6 +346,9 @@ uk:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} автоматично встановив вашу присутність і запросив вас на %{eventName}"
         an_event: "подія"
+      event_description:
+        show_more: "Показати більше"
+        show_less: "Показати менше"
       edit_reason: "Подію оновлено"
       edit_reason_closed: "Подія закрита"
       edit_reason_opened: "Подія відкрита"
@@ -373,6 +393,7 @@ uk:
         send_bulk_invites: "Надіслати запрошення"
         group_selector_placeholder: "Виберіть групу..."
         user_selector_placeholder: "Виберіть користувача..."
+        attendance_label: "Відвідуваність"
         inline_title: "Вбудоване масове запрошення"
         csv_title: "CSV-масове запрошення"
       upcoming_events:
@@ -385,7 +406,7 @@ uk:
       upcoming_events_list:
         title: "Майбутні події"
         empty: "Немає майбутніх подій"
-        all_day: "Увесь день"
+        all_day: "Цілий день"
         error: "Не вдалося отримати події"
         try_again: "Спробуйте ще раз"
         view_all: "Переглянути всі"
@@ -399,10 +420,12 @@ uk:
       models:
         invitee:
           no_users: "Користувачів не знайдено"
+          this_event: "Ця подія"
+          this_and_following: "Ця подія і всі наступні події"
+          leave_event: "Залишити подію"
           status:
-            unknown: "Не цікавить"
             going: "Йду"
-            not_going: "Не піду."
+            not_going: "Не йде"
             interested: "Цікавить"
             going_count:
               one: "%{count} йдуть"
@@ -439,11 +462,57 @@ uk:
               title: "Приватні"
               description: "До закритої події можуть приєднатися лише запрошені користувачі."
       composer:
-        name_placeholder: "Подія"
-        end_date_placeholder: "Встановіть дату закінчення"
+        name_placeholder: "Назва події"
+        end_date_placeholder: "Дата завершення"
         location_placeholder: "Додати місцезнаходження або URL-адресу"
-        max_attendees_placeholder: "Встановити максимальну кількість відвідувачів"
+        max_attendees_placeholder: "Необмежена кількість учасників"
+        max_attendees_display:
+          one: "Макс. кількість учасників %{count}"
+          few: "Макс. кількість учасників %{count}"
+          many: "Макс. кількість учасників %{count}"
+          other: "Макс. %{count} учасників"
+        no_rsvps_label: "Не збирається інформація про відвідуваність"
         description_placeholder: "Додати опис події"
+        event_title_placeholder: "Назва події"
+        create_event_button: "Створити подію"
+        action_title: "Створити нову подію"
+        all_day: "Цілий день"
+        livestream: "Пряма трансляція"
+        livestream_chat_disabled: "Увімкніть чат для створення каналів прямих трансляцій."
+        reminder:
+          units:
+            minutes:
+              one: "хвилина"
+              few: "хвилини"
+              many: "хвилини"
+              other: "хвилини"
+            hours:
+              one: "година"
+              few: "години"
+              many: "годин"
+              other: "годин"
+            days:
+              one: "день"
+              few: "дні"
+              many: "днів"
+              other: "днів"
+            weeks:
+              one: "тиждень"
+              few: "тижнів"
+              many: "тижнів"
+              other: "тижнів"
+          before: "%{unit} раніше"
+          after: "%{unit} після"
+          notification_title: "Повідомляти учасників"
+          bump_topic_title: "Тема автоматичного виведення"
+          remove: "Видалити нагадування"
+      composer_actions:
+        create_event:
+          label: "Створити подію"
+          desc: "Створити нову подію в цій категорії"
+        create_topic:
+          label: "Створити тему"
+          desc: "Створити звичайну тему замість події"
       builder_modal:
         custom_fields:
           label: "Користувацькі поля"
@@ -451,6 +520,7 @@ uk:
           description: "Дозволені спеціальні поля визначаються в налаштуваннях сайту. Користувальницькі поля використовуються для передачі даних іншим плагінам."
         create_event_title: "Створити подію"
         update_event_title: "Редагувати подію"
+        advanced_settings_title: "Розширені налаштування"
         confirm_delete: "Ви впевнені, що хочете видалити цю подію?"
         confirm_close: "Ви впевнені, що хочете закрити цю подію?"
         confirm_open: "Ви впевнені, що хочете відкрити цю подію?"
@@ -464,11 +534,18 @@ uk:
         timezone:
           label: Часовий пояс
           remove_timezone: Без часового поясу (UTC)
+        starts_at:
+          label: "Дата початку"
+        ends_at:
+          label: "Дата закінчення"
+        all_day:
+          label: "Подія на цілий день"
+          description: "У заходу, що триває цілий день, не буде конкретного часу, лише дата. Захід триватиме від початку до кінця дня."
         reminders:
           label: "Нагадування"
           types:
-            bump_topic: "автоматичне зібрання теми"
-            notification: "сповістити учасників"
+            bump_topic: "Авто-завантаження теми"
+            notification: "Повідомляти учасників"
           units:
             minutes: "хвилини"
             hours: "годин"
@@ -478,30 +555,38 @@ uk:
             before: "до"
             after: "після"
         recurrence_until:
-          label: "До (включно)"
+          label: "До (включаючи цю дату)"
         recurrence:
           label: "Повторення"
           none: "Без повторів"
           every_day: "Щодня"
-          every_month: "Щомісяця в будні"
           every_weekday: "Щодня в будній день"
-          every_week: "Щотижня в цей будній день"
-          every_two_weeks: "Кожні два тижні в цей будній день"
-          every_four_weeks: "Кожні чотири тижні в цей будній день"
-        minimal:
-          label: "Мінімальна подія"
-          checkbox_label: "Приховати кнопки \"Йду/Не йду\" та статус запрошених"
+          every_week: "Кожен %{weekday}"
+          every_two_weeks: "Кожен другий %{weekday}"
+          every_four_weeks: "Кожні 4 тижні на %{weekday}"
+          every_month: "%{ordinal} %{weekday} кожного місяця"
+          ordinals:
+            first: "перший"
+            second: "другий"
+            third: "третій"
+            fourth: "четвертий"
+            last: "останнє вибране"
         max_attendees:
           label: "Максимальна кількість учасників"
           placeholder: "Без обмежень"
+        attendance:
+          label: "Скільки учасників можуть подати заявку на участь у цьому заході?"
+          unlimited: "Необмежена"
+          up_to: "До..."
+          none: "Немає"
         allow_chat:
           label: "Інтеграція з чатом"
           checkbox_label: "Створення та керування каналом чату для конкретних подій"
-        url:
-          label: "Посилання"
-          placeholder: "Опціонально"
+        livestream:
+          label: "Пряма трансляція"
+          checkbox_label: "Вставте URL-адресу як відео та відкрийте чат прямої трансляції для учасників"
         location:
-          label: "Місцезнаходження"
+          label: "Місцезнаходження або URL-адреса"
           placeholder: "Додайте місце розташування, посилання або щось інше."
         description:
           label: "Опис"
@@ -511,9 +596,18 @@ uk:
           placeholder: "Необов'язково, типові значення для назви теми"
         invitees:
           label: "Запрошені групи"
-        status:
-          label: "Статус"
+        event_type:
+          label: "Тип відвідуваності"
+          public:
+            title: "Публічні"
+            description: "Будь-хто може взяти участь."
+          private:
+            title: "Тільки за запрошенням"
+            description: "Участь можуть взяти лише члени обраних груп."
         delete_confirmation_message: "Видалити цю подію?"
+        image:
+          label: "Зображення події"
       invite_user_or_group:
         title: "Сповістити користувача(ів) або групу(и)"
         invite: "Надіслати"
+        success: "Запрошення надіслано"

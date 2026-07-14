@@ -20,10 +20,15 @@
 #                         These groups cannot be selected and will be stripped if set via API.
 #                         Only applies to group_list type settings.
 # requires_confirmation - A string that indicates if the setting requires confirmation before it can be changed.
-#                         Only valid value here is "simple" which will display a confirmation dialog when the setting
-#                         is changed.
+#                         Valid values are "simple" (always display a confirmation dialog when the setting is changed),
+#                         "simple_on_enable" (only when the setting is enabled), and "simple_on_disable" (only when
+#                         the setting is disabled).
 # themeable             - Set to true if themes can override this site setting. Generally, only client side affecting settings
 #                         that change the UI should be themeable, and try limit to simple setting types like bool, list, integer, enum.
+# localizable           - Set to true if content localization can translate this setting. Use a hash for translation-specific
+#                         options:
+#                          - max_length: maximum localized value length
+#                          - cooked: true when the localized value should be cooked markdown
 # upcoming_change_default_override - Allow an upcoming change to control the new default value of this setting.
 #                          - upcoming_change: The site setting of the upcoming change to control this
 #                          - new_default: The new default value when the upcoming change is enabled
@@ -31,12 +36,23 @@
 #                          - status: experimental | alpha | beta | stable
 #                          - impact: two parts separated by comma - feature|other|site_setting_default , staff|admins|moderators|all_members|developers
 #                          - learn_more_url: a url for more information
-#                          - disallow_enabled_for_groups: true (optional) - restricts "Enabled for"
-#                            to only "Everyone" and "No One", removing group-based options.
+#                          - body_class: (optional boolean) to include a uc-NAME CSS class on the <body> element when the change is enabled
+#                          - allow_enabled_for: (optional array) restricts which "Enabled for"
+#                            dropdown options the admin can pick for this upcoming change.
+#                            Valid values: everyone, staff, specific_groups.
+#
+#                            "No one" is always present and cannot be removed. If `everyone` is included it must be
+#                            the only value (it cannot combine with staff or specific_groups).
+#                            Omit the key to allow all four options (the default permissive
+#                            behavior).
 # depends_on            - One or more boolean settings that must be true for this setting to take effect.
+# depends_on_values     - Optional hash of depends_on setting names to values that make this setting take effect.
+#                         Use this when the parent setting is not boolean, for example an enum setting.
 # depends_behavior      - The behavior of the dependent setting. Only currently supported behaviour is "hidden"
-#                         to hide the setting if the dependent setting is false. If left blank, no special behavior
-#                         is applied and the setting is shown as normal.
+#                         to hide the setting if the dependent setting is false or does not match depends_on_values.
+#                         If left blank, no special behavior is applied and the setting is shown as normal.
+# dependent_setting_display - Optional display mode for hidden dependent settings. "inline" renders the setting
+#                         under its parent instead of as a separate row.
 #
 #
 #
@@ -80,9 +96,13 @@ required:
     client: true
     default: "Discourse"
     area: "about"
+    localizable:
+      max_length: 255
   site_description:
     default: ""
     area: "about"
+    localizable:
+      max_length: 1000
   short_site_description:
     default: ""
     client: true
@@ -114,6 +134,9 @@ required:
     list_type: simple
     area: "analytics"
   company_name:
+    default: ""
+    area: "about|legal"
+  company_url:
     default: ""
     area: "about|legal"
   governing_law:
@@ -173,6 +196,10 @@ branding:
     default: ""
     client: true
     type: upload
+  generate_topic_og_image:
+    default: false
+    client: true
+    hidden: true
   opengraph_image:
     default: ""
     client: true
@@ -277,21 +304,17 @@ basic:
     type: list
     list_type: simple
     default: "latest|new|unread|hot|categories"
-    regex: "latest"
-    regex_error: "site_settings.errors.must_include_latest"
-    validator: RegexPresenceValidator
+    validator: "TopMenuValidator"
     allow_any: false
-    choices:
-      - latest
-      - new
-      - unread
-      - unseen
-      - top
-      - categories
-      - read
-      - posted
-      - bookmarks
-      - hot
+    choices: "TopMenu.choices"
+    area: "interface"
+    upcoming_change_default_override:
+      upcoming_change: "enable_unified_new"
+      new_default: "latest|new|hot|categories"
+  custom_homepage_crawler_route:
+    type: enum
+    default: "latest"
+    choices: "TopMenu.crawler_homepage_choices"
     area: "interface"
   post_menu:
     client: true
@@ -386,10 +409,6 @@ basic:
     min: 2
     max: 3
     hidden: true
-  enable_mobile_theme:
-    client: true
-    default: true
-    hidden: true
   enable_direct_s3_uploads:
     client: true
     default: false
@@ -456,7 +475,7 @@ basic:
     default: ""
     allow_any: false
     refresh: true
-    disallowed_groups: "0"
+    disallowed_groups: "0|4|5"
     area: "group_permissions"
   hidden_post_visible_groups:
     type: group_list
@@ -464,6 +483,8 @@ basic:
     default: "14"
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
+    mandatory_values: "1|2" # auto groups admins & moderators
     area: "group_permissions"
   push_notifications_prompt:
     default: true
@@ -541,11 +562,13 @@ basic:
   about_page_hidden_groups:
     default: ""
     type: group_list
+    disallowed_groups: "4"
     area: "group_permissions"
   about_page_extra_groups:
     client: true
     default: ""
     type: group_list
+    disallowed_groups: "4"
     area: "about"
   about_page_extra_groups_initial_members:
     client: true
@@ -575,6 +598,9 @@ basic:
     max: 10_000
     hidden: true
     area: "about"
+    localizable:
+      max_length: 10_000
+      cooked: true
   extended_site_description_cooked:
     default: ""
     hidden: true
@@ -596,13 +622,38 @@ basic:
   trigger_browser_pageview_events:
     default: false
     hidden: true
+  persist_browser_pageview_events:
+    default: true
+    hidden: true
+  clean_up_browser_pageview_events:
+    default: false
+    hidden: true
+  browser_pageview_referrer_backfill_batch_size:
+    default: 5000
+    type: integer
+    min: 1
+    max: 20000
+    hidden: true
+  browser_pageview_max_engaged_seconds:
+    default: 1800
+    type: integer
+    min: 1
+    max: 86400
+    hidden: true
+    client: true
+  experimental_detect_crawler_pageviews:
+    default: false
+    hidden: true
+  crawler_automation_user_agents:
+    default: "HeadlessChrome|Playwright|Puppeteer|Selenium|PhantomJS|jsdom"
+    hidden: true
   interface_color_selector:
     client: true
     enum: "InterfaceColorSelectorSetting"
     default: "disabled"
     area: "interface"
   promote_upcoming_changes_on_status:
-    default: "stable"
+    default: "beta"
     type: enum
     choices:
       - experimental
@@ -642,10 +693,29 @@ login:
     default: true
     validator: "EnableLocalLoginsViaEmailValidator"
     area: "login"
+  enable_local_logins_via_code:
+    client: true
+    default: false
+    hidden: true
+    validator: "EnableLocalLoginsViaCodeValidator"
+    area: "login"
+    depends_on:
+      - enable_local_logins
+      - enable_local_logins_via_email
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/407068"
+      allow_enabled_for:
+        - everyone
   enable_passkeys:
     client: true
     default: true
     hidden: true
+  allow_passkeys_for_2fa:
+    client: true
+    default: false
+    area: "login"
   allow_new_registrations:
     client: true
     default: true
@@ -1060,6 +1130,13 @@ users:
     client: true
     default: true
     area: "users"
+  directory_hourly_refresh_max_users:
+    default: 100
+    hidden: true
+    area: "users"
+  directory_columns_seeded:
+    default: false
+    hidden: true
   allow_anonymous_mode:
     default: false
     client: true
@@ -1072,6 +1149,7 @@ users:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     validator: "AtLeastOneGroupValidator"
     area: "group_permissions"
   anonymous_account_duration_minutes:
@@ -1316,6 +1394,19 @@ posting:
     default: false
     refresh: true
     area: "posts_and_topics"
+  remove_and_replace_uncategorized:
+    default: false
+    client: true
+    hidden: true
+    upcoming_change:
+      status: "experimental"
+      impact: "other,all_members"
+      allow_enabled_for:
+        - everyone
+      hide_settings:
+        - allow_uncategorized_topics
+        - suppress_uncategorized_badge
+      learn_more_url: "https://meta.discourse.org/t/-/406373"
   allow_duplicate_topic_titles:
     default: false
     area: "posts_and_topics"
@@ -1339,6 +1430,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   editing_grace_period:
     default: 300
@@ -1361,6 +1453,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     validator: "AtLeastOneGroupValidator"
     area: "group_permissions"
   post_edit_time_limit:
@@ -1441,6 +1534,10 @@ posting:
   max_mentions_per_post:
     default: 10
     area: "notifications"
+  max_quotes_per_post:
+    default: 50
+    min: 0
+    area: "posts_and_topics"
   max_users_notified_per_group_mention:
     default: 100
     client: true
@@ -1465,6 +1562,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   title_max_word_length:
     default: 30
@@ -1509,6 +1607,10 @@ posting:
     client: true
     default: false
     area: "posts_and_topics"
+  hide_disabled_create_topic_button:
+    client: true
+    default: false
+    hidden: true
   show_pinned_excerpt_mobile:
     client: true
     default: true
@@ -1587,6 +1689,54 @@ posting:
     client: true
     refresh: true
     area: "emojis"
+  enable_gifs:
+    default: false
+    client: true
+    hidden: true
+    area: "gifs"
+    upcoming_change:
+      status: "stable"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/404829"
+  klipy_api_key:
+    default: ""
+    secret: true
+    area: "gifs"
+  klipy_file_detail:
+    default: "webp"
+    client: true
+    area: "gifs"
+    type: enum
+    choices:
+      - webp
+      - gif
+  klipy_content_filter:
+    default: "high"
+    client: true
+    area: "gifs"
+    type: enum
+    choices:
+      - high
+      - medium
+      - low
+      - "off"
+  klipy_country:
+    default: "US"
+    client: true
+    area: "gifs"
+  klipy_locale:
+    default: "en_US"
+    client: true
+    area: "gifs"
+  klipy_limit_infinite_search_results:
+    default: false
+    client: true
+    area: "gifs"
+  klipy_max_results_limit:
+    default: 240
+    client: true
+    area: "gifs"
+    min: 24
   approve_post_count:
     default: 0
     area: "posts_and_topics"
@@ -1596,6 +1746,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   approve_new_topics_unless_allowed_groups:
     default: "1|2|10" # auto groups admins, moderators, trust_level_0
@@ -1603,6 +1754,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   approve_suspect_users:
     default: true
@@ -1697,6 +1849,7 @@ posting:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   blur_tl0_flagged_posts_media:
     default: true
@@ -1765,6 +1918,7 @@ content_localization:
     allow_any: false
     client: true
     default: "1|2" # admin, moderator
+    disallowed_groups: "4"
     area: "localization"
   content_localization_allow_author_localization:
     default: true
@@ -1796,9 +1950,58 @@ content_localization:
   content_localization_crawler_param:
     default: false
     area: "localization"
+    validator: "ContentLocalizationCrawlerParamValidator"
   content_localization_use_default_locale_when_unsupported:
     default: true
     area: "localization"
+
+nested_replies:
+  nested_replies_enabled:
+    default: false
+    client: true
+    area: "posts_and_topics"
+  nested_replies_default:
+    default: false
+    client: true
+    area: "posts_and_topics"
+    depends_on:
+      - "nested_replies_enabled"
+    depends_behavior: "hidden"
+  nested_replies_default_sort:
+    default: "top"
+    client: true
+    type: enum
+    choices:
+      - top
+      - new
+      - old
+    area: "posts_and_topics"
+    depends_on:
+      - "nested_replies_enabled"
+    depends_behavior: "hidden"
+  nested_replies_max_depth:
+    default: 3
+    client: true
+    type: integer
+    min: 1
+    max: 10
+    area: "posts_and_topics"
+    depends_on:
+      - "nested_replies_enabled"
+    depends_behavior: "hidden"
+  nested_replies_cap_nesting_depth:
+    default: true
+    client: true
+    area: "posts_and_topics"
+    depends_on:
+      - "nested_replies_enabled"
+    depends_behavior: "hidden"
+  nested_replies_backfill_batch_size:
+    default: 100
+    type: integer
+    min: 1
+    max: 10000
+    hidden: true
 
 email:
   email_time_window_mins:
@@ -1876,6 +2079,16 @@ email:
   email_subject:
     default: "[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}"
     area: "email"
+  simple_email_subject:
+    default: false
+    client: true
+    hidden: true
+    upcoming_change:
+      status: "stable"
+      impact: "feature,all_members"
+      allow_enabled_for:
+        - everyone
+      learn_more_url: "https://meta.discourse.org/t/-/395927"
   reply_by_email_enabled:
     default: false
     validator: "ReplyByEmailEnabledValidator"
@@ -1921,6 +2134,7 @@ email:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   email_in_authserv_id:
     default: ""
@@ -2011,6 +2225,10 @@ email:
   sendgrid_verification_key:
     default: ""
     secret: true
+  aws_sns_topic_arn_allowlist:
+    default: ""
+    type: list
+    list_type: simple
   mailjet_webhook_token:
     default: ""
     secret: true
@@ -2121,6 +2339,7 @@ email:
     default: "1|2"
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
 
 files:
@@ -2154,7 +2373,7 @@ files:
     list_type: file_types
   authorized_extensions:
     client: true
-    default: "jpg|jpeg|png|gif|heic|heif|webp|avif|svg"
+    default: "jpg|jpeg|png|gif|heic|heif|webp|avif|svg|jxl"
     refresh: true
     type: list
     list_type: file_types
@@ -2243,6 +2462,15 @@ files:
   s3_secret_access_key:
     default: ""
     secret: true
+  s3_role_arn:
+    default: ""
+    min: 20
+    max: 2048 # https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html
+  s3_role_session_name:
+    default: ""
+    min: 2
+    max: 64
+    regex: '^[\w+=,.@\-]+$' # https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html
   s3_region:
     default: "us-east-1"
     enum: "S3RegionSiteSetting"
@@ -2299,6 +2527,7 @@ files:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   default_avatars:
     default: ""
@@ -2350,7 +2579,7 @@ files:
   image_quality:
     enum: "ImageQualitySetting"
     client: true
-    default: 70
+    default: 90
   png_to_jpg_quality:
     default: 0
     min: 0
@@ -2413,6 +2642,20 @@ files:
     default: 0
     client: true
     hidden: true
+  composer_media_optimization_image_convert_enabled:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/402705"
+      allow_enabled_for:
+        - everyone
+  composer_media_optimization_gif_conversion_threshold:
+    default: 512000
+    hidden: true
+    client: true
   composer_media_optimization_debug_mode:
     default: false
     client: true
@@ -2457,6 +2700,15 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
+    area: "group_permissions"
+  topic_timers_allowed_groups:
+    default: "1|2|14" # auto group admins, moderators, trust_level_4
+    mandatory_values: "1|2" # auto group admins, moderators
+    type: group_list
+    allow_any: false
+    refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   edit_wiki_post_allowed_groups:
     default: "1|2|11" # auto group admins, moderators, trust_level_1
@@ -2464,6 +2716,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   edit_post_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
@@ -2471,6 +2724,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   self_wiki_allowed_groups:
     default: "1|2|13" # auto group admins, moderators, trust_level_3
@@ -2478,6 +2732,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   send_email_messages_allowed_groups:
     default: "1|2|14" # auto group admins, moderators, trust_level_4
@@ -2485,6 +2740,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   flag_post_allowed_groups:
     default: "1|2|11" # auto group admins, moderators, trust_level_1
@@ -2492,6 +2748,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "flags|group_permissions"
   allow_all_users_to_flag_illegal_content:
     default: false
@@ -2507,6 +2764,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   embedded_media_post_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
@@ -2514,6 +2772,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   profile_background_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
@@ -2521,6 +2780,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   user_card_background_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
@@ -2528,6 +2788,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   invite_allowed_groups:
     default: "1|2|12" # auto group admins, moderators, trust_level_2
@@ -2535,6 +2796,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   ignore_allowed_groups:
     default: "1|2|12" # auto group admins, moderators, trust_level_2
@@ -2542,6 +2804,7 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   allow_flagging_staff: true
   send_tl1_welcome_message: true
@@ -2595,14 +2858,14 @@ trust:
     max: 100
     area: "trust_levels"
   tl3_requires_topics_viewed_cap:
-    default: 500
+    default: 250
     area: "trust_levels"
   tl3_requires_posts_read:
     default: 25
     max: 100
     area: "trust_levels"
   tl3_requires_posts_read_cap:
-    default: 20000
+    default: 2000
     max: 99000
     area: "trust_levels"
   tl3_requires_topics_viewed_all_time:
@@ -2615,7 +2878,7 @@ trust:
     default: 5
     area: "trust_levels"
   tl3_promotion_min_duration:
-    default: 14
+    default: 100
     max: 10000
     area: "trust_levels"
   tl3_requires_likes_given:
@@ -2634,15 +2897,18 @@ trust:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   edit_all_topic_groups:
     default: "13"
     type: group_list
+    disallowed_groups: "4"
     area: "group_permissions"
   edit_all_post_groups:
     default: "1|2|14" # auto group admins, moderators, and TL4
     mandatory_values: "1|2" # auto group admins, moderators
     type: group_list
+    disallowed_groups: "4"
     area: "group_permissions"
 
 security:
@@ -2690,6 +2956,7 @@ security:
     type: group_list
     list_type: compact
     default: ""
+    disallowed_groups: "4"
   moderators_view_emails:
     client: true
     default: false
@@ -2716,6 +2983,17 @@ security:
   crawler_check_bypass_agents:
     hidden: true
     default: "cubot|MetaIAB"
+  # 16509/14618=AWS, 396982=Google Cloud, 15169/36040=Google, 8075=Microsoft,
+  # 714=Apple, 13238=Yandex, 32934=Meta, 13335=Cloudflare,
+  # 140577=Ahrefs, 210743=Babbar, 7941=Internet Archive,
+  # 16276=OVH, 24940=Hetzner, 136907=Huawei Cloud, 51747=Internet Vikings,
+  # 4134/4837=China Telecom/Unicom, 5089=Virgin, 55836=Reliance Jio,
+  # 5410=Bouygues, 701=Verizon, 6805=Telefonica, 45899=VNPT
+  crawler_asns:
+    hidden: true
+    default: "16509|16276|714|13238|14618|136907|32934|15169|4134|4837|24940|396982|8075|51747|140577|45899|210743|13335|36040|5089|55836|5410|701|7941|6805"
+    type: list
+    list_type: compact
   cors_origins:
     default: ""
     type: list
@@ -2767,8 +3045,13 @@ security:
     max_file_size_kb: 512
   content_security_policy:
     default: true
+    requires_confirmation: "simple_on_disable"
   content_security_policy_report_only:
     default: false
+  content_security_policy_report_uri:
+    default: ""
+    regex: '\Ahttps?://[^\s;,]+\z'
+    regex_error: "site_settings.errors.invalid_csp_report_uri"
   content_security_policy_frame_ancestors:
     default: true
   content_security_policy_script_src:
@@ -2791,7 +3074,7 @@ security:
   can_permanently_delete:
     default: false
     client: true
-    hidden: true
+    requires_confirmation: "simple_on_enable"
   suppress_secured_categories_from_admin:
     default: false
   include_secure_categories_in_tag_counts:
@@ -2981,6 +3264,10 @@ rate_limits:
     default: 30
   max_topics_per_day: 20
   max_personal_messages_per_day: 20
+  limit_admin_personal_messages_per_day:
+    default: 0
+    min: 0
+    hidden: true
   max_likes_per_day: 50
   max_bookmarks_per_day: 20
   max_flags_per_day:
@@ -2992,6 +3279,8 @@ rate_limits:
   max_topic_invitations_per_minute: 5
   max_topics_in_first_day: 3
   max_replies_in_first_day: 10
+  tl1_max_topics_in_first_day: 6
+  tl1_max_replies_in_first_day: 30
   tl2_additional_likes_per_day_multiplier: 1.5
   tl3_additional_likes_per_day_multiplier: 2
   tl4_additional_likes_per_day_multiplier: 3
@@ -3154,9 +3443,6 @@ developer:
     default: 50
     hidden: true
     client: true
-  viewport_based_mobile_mode:
-    default: true
-    client: true
   site_setting_verbose_client_logging:
     default: false
     client: true
@@ -3187,11 +3473,21 @@ navigation:
       - "top"
       - "bottom"
     area: "navigation"
+  sidebar_seeded:
+    default: false
+    hidden: true
 
 embedding:
   embed_full_app:
     default: false
     client: true
+    area: "embedding"
+  embed_full_app_signin_flow:
+    default: true
+    client: true
+    area: "embedding"
+  suppress_third_party_analytics_in_embed:
+    default: true
     area: "embedding"
   embed_by_username:
     default: ""
@@ -3759,36 +4055,15 @@ uncategorized:
     min: 100
     hidden: true
 
-  create_revision_on_bulk_topic_moves:
-    default: true
-    area: "posts_and_topics"
-
   allow_changing_staged_user_tracking:
     default: false
     area: "users"
-
-  splash_screen:
-    default: true
-    area: "interface"
-
-  enable_custom_splash_screen:
-    default: false
-    client: true
-    hidden: true
-    area: "interface"
-    upcoming_change:
-      status: "beta"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/395100"
 
   splash_screen_image:
     default: ""
     type: upload
     authorized_extensions: "svg"
     area: "interface"
-    depends_on:
-      - "enable_custom_splash_screen"
-    depends_behavior: "hidden"
     validator: "UploadSettingValidator"
 
   suggest_weekends_in_date_pickers:
@@ -3807,7 +4082,7 @@ uncategorized:
 
   enable_site_owner_onboarding:
     client: true
-    default: false
+    default: true
     hidden: true
   site_owner_onboarding_max_days:
     default: 5
@@ -3839,16 +4114,6 @@ uncategorized:
     enum: "WelcomeBannerPageVisibility"
     default: "top_menu_pages"
     area: "interface"
-
-  modernize_foundation_theme:
-    default: false
-    client: true
-    hidden: true
-    area: "experimental"
-    upcoming_change:
-      impact: "feature,all_members"
-      status: "experimental"
-      learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"
 
 user_preferences:
   default_email_digest_frequency:
@@ -4045,6 +4310,7 @@ user_api:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   allowed_user_api_push_urls:
     default: ""
@@ -4060,6 +4326,10 @@ user_api:
     default: 0
     max: 36500
     hidden: true
+  max_user_api_key_expiry_days:
+    default: 365
+    max: 36500
+    hidden: true
   unused_registered_user_api_key_clients_days:
     default: 30
     max: 36500
@@ -4067,6 +4337,9 @@ user_api:
   create_user_api_key_client_ip_rate_limit_override_ips:
     default: ""
     type: list
+    hidden: true
+  verbose_user_api_key_device_auth_logging:
+    default: false
     hidden: true
 
 tags:
@@ -4108,6 +4381,7 @@ tags:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   edit_tags_allowed_groups:
     default: "1|2" # auto group admins, moderators
@@ -4115,6 +4389,7 @@ tags:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   tag_topic_allowed_groups:
     default: "1|2|10" # auto group admins, moderators, trust_level_0
@@ -4122,6 +4397,7 @@ tags:
     type: group_list
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     client: true
     area: "group_permissions"
   max_tag_search_results:
@@ -4151,6 +4427,7 @@ tags:
     default: ""
     allow_any: false
     refresh: true
+    disallowed_groups: "4"
     area: "group_permissions"
   suppress_overlapping_tags_in_list:
     default: false
@@ -4230,11 +4507,14 @@ experimental:
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "permanent"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/395768"
-      disallow_enabled_for_groups: true
   enable_auto_grid_images:
+    default: true
+    client: true
+    area: "experimental"
+  enable_new_checkbox_style:
     default: false
     client: true
     hidden: true
@@ -4242,14 +4522,33 @@ experimental:
     upcoming_change:
       status: "stable"
       impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/394784"
-  enable_new_checkbox_style:
+      learn_more_url: "https://meta.discourse.org/t/-/403284"
+      body_class: true
+  enable_new_post_reactions_menu:
     default: false
     client: true
     hidden: true
     area: "experimental"
     upcoming_change:
-      status: "experimental"
+      status: "stable"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/389820"
+  enable_new_composer_actions:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/403635"
+  prioritize_recently_used_tags:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "conceptual"
       impact: "feature,all_members"
   rename_faq_to_guidelines:
     default: false
@@ -4261,32 +4560,20 @@ experimental:
       learn_more_url: "https://meta.discourse.org/t/-/395099"
   enable_form_templates:
     client: true
-    default: false
-    hidden: true
-    upcoming_change:
-      status: "stable"
-      impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/278631"
-  impersonate_without_logout:
-    default: false
-    client: true
-    hidden: true
-    upcoming_change:
-      status: "stable"
-      impact: "feature,staff"
-      learn_more_url: "https://meta.discourse.org/t/-/119683"
+    default: true
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
     area: "experimental"
-  experimental_new_new_view_groups:
+  enable_unified_new:
+    default: false
+    hidden: true
     client: true
-    type: group_list
-    list_type: compact
-    default: ""
-    allow_any: false
     refresh: true
-    area: "group_permissions|navigation|experimental"
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/404728"
   enable_rich_text_paste:
     client: true
     default: true
@@ -4306,17 +4593,71 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "stable"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/387322"
+      body_class: true
   enable_simplified_category_creation:
     default: false
     hidden: true
     client: true
     upcoming_change:
-      status: "beta"
+      status: "permanent"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/394971"
+  enable_new_defaults_for_trust_level_3_requirements:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "permanent"
+      impact: "site_setting_default,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/397098"
+      allow_enabled_for:
+        - everyone
   experimental_topic_category_change_notification:
+    default: false
+    hidden: true
+  modernize_foundation_theme:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      impact: "feature,all_members"
+      status: "beta"
+      learn_more_url: "https://meta.discourse.org/t/-/395331"
+      body_class: true
+  enable_horizon_high_context_topic_cards:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "stable"
+      impact: "site_setting_default,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/402843"
+      allow_enabled_for:
+        - everyone
+  granular_anonymous_and_logged_in_groups_permissions:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/402273"
+      allow_enabled_for:
+        - everyone
+  dashboard_improvements:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,admins"
+      learn_more_url: "https://meta.discourse.org/t/-/404528"
+  admin_dashboard_reports_seeded:
     default: false
     hidden: true

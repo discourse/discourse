@@ -6,7 +6,14 @@
 
 pl_PL:
   site_settings:
-    rss_polling_enabled: "[Pobieranie RSS] Włącz importowanie osadzonych postów z wielu kanałów RSS"
-    rss_polling_frequency: "[Pobieranie RSS] Częstotliwość aktualizacji strony (w minutach)"
-    rss_polling_use_pubdate: "[Pobieranie RSS] Ustaw datę utworzenia tematu na datę publikacji znalezioną w kanale RSS"
-    rss_polling_update_tags: "[Pobieranie RSS] Aktualizuj tagi tematu, gdy temat jest aktualizowany. Wyłączenie tej opcji powoduje pobranie początkowych tagów, ale uniemożliwia dalsze ich zmiany."
+    rss_polling_enabled: "Włącz importowanie osadzonych postów z wielu kanałów RSS"
+    rss_polling_frequency: "Częstotliwość sprawdzania kanału informacyjnego (w minutach)"
+    rss_polling_feed_request_timeout: "Maksymalny czas (w sekundach) oczekiwania na odpowiedź kanału podczas jego pobierania."
+    rss_polling_verbose_logging: "Rejestruj szczegółowe informacje o każdej próbie sprawdzania, w tym, które elementy zostały zaimportowane lub pominięte i dlaczego."
+    rss_polling_use_pubdate: "Ustaw datę utworzenia tematu na datę publikacji znalezioną w kanale RSS"
+    rss_polling_update_tags: "Aktualizuj tagi tematu, gdy temat jest aktualizowany. Wyłączenie tej opcji powoduje pobranie początkowych tagów, ale uniemożliwia dalsze ich zmiany."
+  rss_polling:
+    errors:
+      feed_url_must_be_http: "Adres URL kanału musi zaczynać się od http:// lub https://."
+      unknown_author_username: "Nie znaleziono użytkownika o nazwie „%{username}”."
+      required_tag_group: "Tematy w sekcji „%{category}” wymagają co najmniej tagów %{count} z grupy „%{tag_group}” (%{tags}). Dodaj jeden z tych tagów, aby importowane elementy nie były odrzucane."

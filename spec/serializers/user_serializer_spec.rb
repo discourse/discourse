@@ -173,10 +173,12 @@ RSpec.describe UserSerializer do
           notification_level: TagUser.notification_levels[:watching_first_post],
         )
 
-        expect(json[:muted_tags]).to eq([{ id: tag1.id, name: tag1.name }])
-        expect(json[:tracked_tags]).to eq([{ id: tag2.id, name: tag2.name }])
-        expect(json[:watched_tags]).to eq([{ id: tag3.id, name: tag3.name }])
-        expect(json[:watching_first_post_tags]).to eq([{ id: tag4.id, name: tag4.name }])
+        expect(json[:muted_tags]).to eq([{ id: tag1.id, name: tag1.name, slug: tag1.slug }])
+        expect(json[:tracked_tags]).to eq([{ id: tag2.id, name: tag2.name, slug: tag2.slug }])
+        expect(json[:watched_tags]).to eq([{ id: tag3.id, name: tag3.name, slug: tag3.slug }])
+        expect(json[:watching_first_post_tags]).to eq(
+          [{ id: tag4.id, name: tag4.name, slug: tag4.slug }],
+        )
       end
     end
 
@@ -436,11 +438,44 @@ RSpec.describe UserSerializer do
     end
 
     it "includes the correct fields for each audience" do
-      expect(admin_json[:user_fields].keys).to contain_exactly(*fields.map { |f| f.id.to_s })
-      expect(other_user_json[:user_fields].keys).to contain_exactly(
-        *fields[2..5].map { |f| f.id.to_s },
+      expect(admin_json[:user_fields].keys).to contain_exactly(
+        *fields.map { |field| field.id.to_s },
       )
-      expect(self_json[:user_fields].keys).to contain_exactly(*fields.map { |f| f.id.to_s })
+      expect(other_user_json[:user_fields].keys).to contain_exactly(
+        *fields[2..5].map { |field| field.id.to_s },
+      )
+      expect(self_json[:user_fields].keys).to contain_exactly(*fields.map { |field| field.id.to_s })
+    end
+  end
+
+  context "when public profiles are hidden from anonymous viewers" do
+    fab!(:user)
+    fab!(:user_field) { Fabricate(:user_field, show_on_profile: true) }
+
+    before do
+      SiteSetting.hide_user_profiles_from_public = true
+      user.user_stat.update!(post_count: 1)
+      user.user_profile.update!(
+        bio_raw: "private bio",
+        bio_cooked: "private cooked bio",
+        location: "private location",
+        website: "https://example.com/private",
+      )
+      user.set_user_field(user_field.id, "private field")
+    end
+
+    it "does not serialize profile details" do
+      json = UserSerializer.new(user, scope: Guardian.new, root: false).as_json
+
+      expect(json.keys).not_to include(
+        :bio_raw,
+        :bio_cooked,
+        :bio_excerpt,
+        :location,
+        :website,
+        :website_name,
+        :user_fields,
+      )
     end
   end
 
@@ -474,6 +509,24 @@ RSpec.describe UserSerializer do
       expect(json[:user_api_keys][0][:id]).to eq(user_api_key_1.id)
       expect(json[:user_api_keys][1][:id]).to eq(user_api_key_4.id)
       expect(json[:user_api_keys][2][:id]).to eq(user_api_key_2.id)
+    end
+
+    it "includes expires_at" do
+      freeze_time
+      key = Fabricate(:readonly_user_api_key, user: user, expires_at: 1.day.from_now)
+
+      json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
+
+      serialized_key = json[:user_api_keys].find { |api_key| api_key[:id] == key.id }
+      expect(serialized_key[:expires_at]).to eq_time(1.day.from_now)
+    end
+
+    it "includes expired keys that have not been revoked" do
+      expired_key = Fabricate(:readonly_user_api_key, user: user, expires_at: 1.day.ago)
+
+      json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
+
+      expect(json[:user_api_keys].map { |key| key[:id] }).to include(expired_key.id)
     end
   end
 
@@ -509,6 +562,72 @@ RSpec.describe UserSerializer do
       expect(json[:user_passkeys][0][:name]).to eq(passkey0.name)
       expect(json[:user_passkeys][0][:last_used]).to eq(passkey0.last_used)
       expect(json[:user_passkeys][1][:id]).to eq(passkey1.id)
+    end
+  end
+
+  context "with no_password" do
+    fab!(:passwordless_user) { Fabricate(:user, password: nil) }
+
+    it "is not included for anonymous viewers" do
+      json = UserSerializer.new(passwordless_user, scope: Guardian.new, root: false).as_json
+
+      expect(json).not_to have_key(:no_password)
+    end
+
+    it "is not included when viewed by another non-staff user" do
+      json =
+        UserSerializer.new(
+          passwordless_user,
+          scope: Guardian.new(Fabricate(:user)),
+          root: false,
+        ).as_json
+
+      expect(json).not_to have_key(:no_password)
+    end
+
+    it "is included when viewed by an admin" do
+      json =
+        UserSerializer.new(
+          passwordless_user,
+          scope: Guardian.new(Fabricate(:admin)),
+          root: false,
+        ).as_json
+
+      expect(json[:no_password]).to eq(true)
+    end
+
+    it "is included when viewed by a moderator" do
+      json =
+        UserSerializer.new(
+          passwordless_user,
+          scope: Guardian.new(Fabricate(:moderator)),
+          root: false,
+        ).as_json
+
+      expect(json[:no_password]).to eq(true)
+    end
+
+    it "is included when the user views their own profile and has no password" do
+      json =
+        UserSerializer.new(
+          passwordless_user,
+          scope: Guardian.new(passwordless_user),
+          root: false,
+        ).as_json
+
+      expect(json[:no_password]).to eq(true)
+    end
+
+    it "is not included when the user views their own profile but has a password" do
+      json = UserSerializer.new(user, scope: Guardian.new(user), root: false).as_json
+
+      expect(json).not_to have_key(:no_password)
+    end
+
+    it "is not included for staff when the target user has a password" do
+      json = UserSerializer.new(user, scope: Guardian.new(Fabricate(:admin)), root: false).as_json
+
+      expect(json).not_to have_key(:no_password)
     end
   end
 

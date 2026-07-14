@@ -1,8 +1,14 @@
 /* eslint-disable ember/no-observers */
 import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import EmberObject, { action, computed, set } from "@ember/object";
+import EmberObject, {
+  action,
+  computed,
+  getProperties,
+  set,
+} from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
+import { getOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty, isPresent } from "@ember/utils";
@@ -15,8 +21,8 @@ import ChangePostNoticeModal from "discourse/components/modal/change-post-notice
 import ConvertToPublicTopicModal from "discourse/components/modal/convert-to-public-topic";
 import DeleteTopicConfirmModal from "discourse/components/modal/delete-topic-confirm";
 import JumpToPost from "discourse/components/modal/jump-to-post";
+import PermanentlyDeleteConfirmModal from "discourse/components/modal/permanently-delete-confirm";
 import { MIN_POSTS_COUNT } from "discourse/components/topic-map/topic-map-summary";
-import { spinnerHTML } from "discourse/helpers/loading-spinner";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
@@ -27,6 +33,7 @@ import {
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
 import { bind } from "discourse/lib/decorators";
+import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import discourseLater from "discourse/lib/later";
@@ -36,7 +43,10 @@ import QuoteState from "discourse/lib/quote-state";
 import { extractLinkMeta } from "discourse/lib/render-topic-featured-link";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
-import { applyBehaviorTransformer } from "discourse/lib/transformer";
+import {
+  applyBehaviorTransformer,
+  applyValueTransformer,
+} from "discourse/lib/transformer";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 import Bookmark, { AUTO_DELETE_PREFERENCES } from "discourse/models/bookmark";
@@ -47,12 +57,24 @@ import Post from "discourse/models/post";
 import Topic from "discourse/models/topic";
 import TopicLocalization from "discourse/models/topic-localization";
 import TopicTimer from "discourse/models/topic-timer";
+import { spinnerHTML } from "discourse/ui-kit/helpers/d-loading-spinner";
 import { i18n } from "discourse-i18n";
 
 let customPostMessageCallbacks = {};
 
 const RETRIES_ON_RATE_LIMIT = 4;
 const MIN_BOTTOM_MAP_WORD_COUNT = 200;
+const TOPIC_QUERY_PARAMS = [
+  "filter",
+  "username_filters",
+  "replies_to_post_number",
+  "sort",
+  "context",
+  { collapseReplies: "collapse_replies" },
+];
+const TOPIC_PAGE_QUERY_PARAM_PROPERTIES = TOPIC_QUERY_PARAMS.map((param) =>
+  typeof param === "string" ? param : Object.keys(param)[0]
+);
 
 export function resetCustomPostMessageCallbacks() {
   customPostMessageCallbacks = {};
@@ -92,7 +114,7 @@ export default class TopicController extends Controller {
   @autoTrackedArray bookmarks = [];
   @autoTrackedArray selectedPostIds = [];
 
-  queryParams = ["filter", "username_filters", "replies_to_post_number"];
+  queryParams = TOPIC_QUERY_PARAMS;
 
   editingTopic = false;
   enteredAt = null;
@@ -102,6 +124,9 @@ export default class TopicController extends Controller {
   username_filters = null;
   replies_to_post_number = null;
   filter = null;
+  sort = null;
+  context = null;
+  collapseReplies = false;
   quoteState = new QuoteState();
   currentPostId = null;
   userLastReadPostNumber = null;
@@ -125,6 +150,27 @@ export default class TopicController extends Controller {
   willDestroy() {
     super.willDestroy(...arguments);
     this.appEvents.off("post:show-revision", this, "_showRevision");
+  }
+
+  get nestedController() {
+    return getOwner(this).lookup("controller:nested");
+  }
+
+  @computed(
+    "filter",
+    "username_filters",
+    "replies_to_post_number",
+    "sort",
+    "context",
+    "collapseReplies"
+  )
+  get topicPageQueryParams() {
+    return getProperties(this, TOPIC_PAGE_QUERY_PARAM_PROPERTIES);
+  }
+
+  @computed("model.is_nested_view")
+  get shouldRenderNestedView() {
+    return this.model?.is_nested_view;
   }
 
   @computed("model.isPrivateMessage")
@@ -313,6 +359,12 @@ export default class TopicController extends Controller {
     "model.word_count",
     "model.postStream.loadingFilter"
   )
+  get showTopicFooterButtons() {
+    return applyValueTransformer("topic-show-footer-buttons", true, {
+      topic: this.model,
+    });
+  }
+
   get showBottomTopicMap() {
     // filter out small posts, because they're short
     const postsCount =
@@ -574,63 +626,79 @@ export default class TopicController extends Controller {
   }
 
   @action
-  selectText() {
-    const { postId, buffer, opts } = this.quoteState;
-    const loadedPost = this.get("model.postStream").findLoadedPost(postId);
-    const promise = loadedPost
-      ? Promise.resolve(loadedPost)
-      : this.get("model.postStream").loadPost(postId);
+  async selectText() {
+    const { postId } = this.quoteState;
+    const postStream = this.get("model.postStream");
+    const composer = this.composer;
+    const { markdown: buffer, opts } = await this.quoteState.markdown();
 
-    return promise.then(async (post) => {
-      const composer = this.composer;
-      const viewOpen = composer.get("model.viewOpen");
-
-      // If we can't create a post, delegate to reply as new topic
-      if (!viewOpen && !this.get("model.details.can_create_post")) {
-        this.send("replyAsNewTopic", post);
-        return;
-      }
-
-      const composerOpts = {
-        action: Composer.REPLY,
-        draftSequence: post.get("topic.draft_sequence"),
-        draftKey: post.get("topic.draft_key"),
-      };
-
-      if (post.get("post_number") === 1) {
-        composerOpts.topic = post.get("topic");
-      } else {
-        composerOpts.post = post;
-      }
-
-      // If the composer is associated with a different post, we don't change it.
-      const composerPost = composer.get("model.post");
-      if (composerPost && composerPost.get("id") !== this.get("post.id")) {
-        composerOpts.post = composerPost;
-      }
-
+    if (EmbedMode.enabled) {
+      const loadedPost = postStream.findLoadedPost(postId);
+      const post = loadedPost ? loadedPost : await postStream.loadPost(postId);
       const quotedText = buildQuote(post, buffer, opts);
-
-      if (composer.get("model.viewOpen")) {
+      this.appEvents.trigger("embed-composer:reply-to-post", post);
+      if (quotedText?.trim()) {
         this.appEvents.trigger("composer:insert-block", quotedText);
-      } else if (composer.get("model.viewDraft")) {
-        const model = composer.get("model");
-        model.set("reply", model.get("reply") + "\n" + quotedText);
-        composer.openIfDraft();
-      } else {
-        const draftData = await Draft.get(composerOpts.draftKey);
-
-        if (draftData.draft) {
-          const data = JSON.parse(draftData.draft);
-          composerOpts.draftSequence = draftData.draft_sequence;
-          composerOpts.reply = data.reply + "\n" + quotedText;
-        } else {
-          composerOpts.quote = quotedText;
-        }
-
-        composer.open(composerOpts);
       }
-    });
+      return;
+    }
+
+    const loadedPost = postStream.findLoadedPost(postId);
+    const post = loadedPost ? loadedPost : await postStream.loadPost(postId);
+
+    const quoteEvent = { post, buffer, opts, handled: false };
+    this.appEvents.trigger("topic:quote-post", quoteEvent);
+    if (quoteEvent.handled) {
+      return;
+    }
+
+    const viewOpen = composer.get("model.viewOpen");
+
+    // If we can't create a post, delegate to reply as new topic
+    if (!viewOpen && !this.get("model.details.can_create_post")) {
+      await this.replyAsNewTopic(post);
+      return;
+    }
+
+    const composerOpts = {
+      action: Composer.REPLY,
+      draftSequence: post.get("topic.draft_sequence"),
+      draftKey: post.get("topic.draft_key"),
+    };
+
+    if (post.get("post_number") === 1) {
+      composerOpts.topic = post.get("topic");
+    } else {
+      composerOpts.post = post;
+    }
+
+    // If the composer is associated with a different post, we don't change it.
+    const composerPost = composer.get("model.post");
+    if (composerPost && composerPost.get("id") !== this.get("post.id")) {
+      composerOpts.post = composerPost;
+    }
+
+    const quotedText = buildQuote(post, buffer, opts);
+
+    if (composer.get("model.viewOpen")) {
+      this.appEvents.trigger("composer:insert-block", quotedText);
+    } else if (composer.get("model.viewDraft")) {
+      const model = composer.get("model");
+      model.set("reply", model.get("reply") + "\n" + quotedText);
+      composer.openIfDraft();
+    } else {
+      const draftData = await Draft.get(composerOpts.draftKey);
+
+      if (draftData.draft) {
+        const data = JSON.parse(draftData.draft);
+        composerOpts.draftSequence = draftData.draft_sequence;
+        composerOpts.reply = data.reply + "\n" + quotedText;
+      } else {
+        composerOpts.quote = quotedText;
+      }
+
+      composer.open(composerOpts);
+    }
   }
 
   @action
@@ -825,7 +893,6 @@ export default class TopicController extends Controller {
   // Post related methods
   @action
   async replyToPost(post) {
-    const composerController = this.composer;
     const topic = post ? post.get("topic") : this.model;
     const quoteState = this.quoteState;
     const postStream = this.get("model.postStream");
@@ -837,13 +904,19 @@ export default class TopicController extends Controller {
     }
 
     const quotedPost = postStream.findLoadedPost(quoteState.postId);
-    const quotedText = buildQuote(
-      quotedPost,
-      quoteState.buffer,
-      quoteState.opts
-    );
-
+    const { markdown: buffer, opts: quoteOpts } = await quoteState.markdown();
+    const quotedText = buildQuote(quotedPost, buffer, quoteOpts);
     quoteState.clear();
+
+    if (EmbedMode.enabled) {
+      this.appEvents.trigger("embed-composer:reply-to-post", post);
+      if (quotedText?.trim()) {
+        this.appEvents.trigger("composer:insert-block", quotedText.trim());
+      }
+      return false;
+    }
+
+    const composerController = this.composer;
 
     if (
       composerController.get("model.topic.id") === topic.get("id") &&
@@ -999,11 +1072,29 @@ export default class TopicController extends Controller {
   }
 
   @action
-  permanentlyDeletePost(post) {
-    return this.dialog.yesNoConfirm({
-      message: i18n("post.controls.permanently_delete_confirmation"),
-      didConfirm: () => {
-        this.send("deletePost", post, { force_destroy: true });
+  async permanentlyDeletePost(post) {
+    let result;
+    try {
+      result = await ajax(`/posts/${post.id}/permanently_delete_check.json`);
+    } catch (error) {
+      return popupAjaxError(error);
+    }
+
+    if (!result.can_permanently_delete) {
+      return this.dialog.alert(result.reason);
+    }
+
+    const message = post.firstPost
+      ? i18n("post.controls.permanently_delete_topic_confirmation")
+      : i18n("post.controls.permanently_delete_post_confirmation");
+
+    return this.modal.show(PermanentlyDeleteConfirmModal, {
+      model: {
+        message,
+        confirmPhrase: i18n("post.controls.permanently_delete_confirm_phrase"),
+        didConfirm: () => {
+          this.send("deletePost", post, { force_destroy: true });
+        },
       },
     });
   }
@@ -1014,6 +1105,17 @@ export default class TopicController extends Controller {
       return this.dialog.alert(i18n("post.controls.edit_anonymous"));
     } else if (!post.can_edit) {
       return false;
+    }
+
+    if (EmbedMode.enabled) {
+      this.appEvents.trigger("embed-composer:edit-post", post);
+      return;
+    }
+
+    const editEvent = { post, handled: false };
+    this.appEvents.trigger("topic:edit-post", editEvent);
+    if (editEvent.handled) {
+      return;
     }
 
     const topic = this.model;
@@ -1255,8 +1357,7 @@ export default class TopicController extends Controller {
 
   @action
   changePostOwner(post) {
-    this.selectedPostIds = [post.id];
-    this.send("changeOwner");
+    this.send("changeOwner", post);
   }
 
   @action
@@ -1271,8 +1372,7 @@ export default class TopicController extends Controller {
 
   @action
   grantBadge(post) {
-    this.selectedPostIds = [post.id];
-    this.send("showGrantBadgeModal");
+    this.send("showGrantBadgeModal", post);
   }
 
   @action
@@ -1447,10 +1547,11 @@ export default class TopicController extends Controller {
   }
 
   @action
-  replyAsNewTopic(post) {
+  async replyAsNewTopic(post) {
     const composerController = this.composer;
     const { quoteState } = this;
-    const quotedText = buildQuote(post, quoteState.buffer, quoteState.opts);
+    const { markdown: buffer, opts } = await quoteState.markdown();
+    const quotedText = buildQuote(post, buffer, opts);
 
     quoteState.clear();
 
@@ -1844,16 +1945,14 @@ export default class TopicController extends Controller {
   }
 
   @action
-  buildQuoteMarkdown() {
-    const { postId, buffer, opts } = this.quoteState;
-    const loadedPost = this.get("model.postStream").findLoadedPost(postId);
-    const promise = loadedPost
-      ? Promise.resolve(loadedPost)
-      : this.get("model.postStream").loadPost(postId);
+  async buildQuoteMarkdown() {
+    const { postId } = this.quoteState;
+    const postStream = this.get("model.postStream");
+    const { markdown: buffer, opts } = await this.quoteState.markdown();
+    const loadedPost = postStream.findLoadedPost(postId);
+    const post = loadedPost ? loadedPost : await postStream.loadPost(postId);
 
-    return promise.then((post) => {
-      return buildQuote(post, buffer, opts);
-    });
+    return buildQuote(post, buffer, opts);
   }
 
   @action
@@ -1953,6 +2052,11 @@ export default class TopicController extends Controller {
         "details.notifications_reason_id",
         data.notifications_reason_id
       );
+      return;
+    }
+
+    if (this.shouldRenderNestedView) {
+      this.#onNestedTopicMessage(data);
       return;
     }
 
@@ -2074,11 +2178,72 @@ export default class TopicController extends Controller {
     }
   }
 
+  #onNestedTopicMessage(data) {
+    const topic = this.model;
+
+    if (data.reload_topic) {
+      topic
+        .reload()
+        .then(() => this.appEvents.trigger("header:update-topic", topic));
+      return;
+    }
+
+    switch (data.type) {
+      case "created":
+      case "revised":
+      case "rebaked":
+      case "deleted":
+      case "destroyed":
+      case "recovered":
+      case "acted":
+      case "read":
+      case "liked":
+      case "unliked":
+        // The nested controller owns rendered-post updates for these messages.
+        break;
+      case "move_to_inbox":
+        topic.set("message_archived", false);
+        break;
+      case "archived":
+        topic.set("message_archived", true);
+        break;
+      case "stats":
+        ["last_posted_at", "like_count", "posts_count"].forEach((property) => {
+          const value = data[property];
+          if (typeof value !== "undefined") {
+            topic.set(property, value);
+          }
+        });
+
+        if (data["last_poster"]) {
+          topic.details.set("last_poster", data["last_poster"]);
+        }
+        break;
+      case "remove_allowed_user":
+        this.router.transitionTo("userPrivateMessages", this.currentUser);
+        break;
+      default: {
+        let callback = customPostMessageCallbacks[data.type];
+        if (callback) {
+          callback(this, data);
+        } else {
+          // eslint-disable-next-line no-console
+          console.warn("unknown topic bus message type", data);
+        }
+      }
+    }
+  }
+
   reply() {
     this.replyToPost();
   }
 
   readPosts(topicId, postNumbers) {
+    if (this.shouldRenderNestedView) {
+      this.nestedController.readPosts(topicId, postNumbers);
+      return;
+    }
+
     const topic = this.model;
     const postStream = topic.get("postStream");
 

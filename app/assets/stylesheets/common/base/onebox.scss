@@ -358,6 +358,69 @@ aside.onebox {
   @include gdocs-logo("drive");
 }
 
+.google-meet-onebox {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 1em;
+  overflow-wrap: anywhere;
+
+  &__icon {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 3.25em;
+    height: 3.25em;
+    margin-block-start: 0.15em;
+    color: var(--primary-medium);
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__icon .d-icon {
+    width: 1.5em;
+    height: 1.5em;
+  }
+
+  &__content {
+    display: grid;
+    min-width: 0;
+    justify-items: start;
+    gap: 0.55em;
+  }
+
+  &__code,
+  &__description {
+    margin: 0;
+    color: var(--primary-high);
+  }
+
+  &__code {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35em;
+  }
+
+  &__code-value {
+    padding: 0.15em 0.35em;
+    font-family: var(--d-font-family--monospace);
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+  }
+
+  &__join {
+    font-weight: 600;
+  }
+}
+
+aside.onebox .onebox-body .google-meet-onebox__title {
+  margin: 0;
+}
+
 // Google Calendar Placeholder
 .gdocs-onebox-splash {
   background-color: var(--primary-low-mid);
@@ -591,6 +654,10 @@ pre.onebox code ol.lines li.selected {
     font-size: 0.875em;
     line-height: calc((13 + 4) / 13);
     box-sizing: border-box;
+
+    @include viewport.until(sm) {
+      max-height: 50vh;
+    }
 
     .show-more {
       font-family: var(--font-family);

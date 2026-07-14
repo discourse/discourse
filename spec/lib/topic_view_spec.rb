@@ -1108,6 +1108,19 @@ RSpec.describe TopicView do
         expect(topic_view_for_post(2).image_url).to eq(nil)
         expect(topic_view_for_post(3).image_url).to end_with(post3_upload.url)
       end
+
+      it "uses the generated OG image only for eligible topics" do
+        SiteSetting.generate_topic_og_image = true
+        og_upload = Fabricate(:image_upload)
+        topic.update_column(:og_image_upload_id, og_upload.id)
+
+        expect(topic_view_for_post(1).image_url).to end_with(og_upload.url)
+
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        topic.update_column(:category_id, private_category.id)
+
+        expect(TopicView.new(topic.id, admin, post_number: 1).image_url).to eq(nil)
+      end
     end
   end
 
@@ -1279,6 +1292,262 @@ RSpec.describe TopicView do
           &modifier
         )
       end
+    end
+  end
+
+  describe "#localized_oneboxes" do
+    fab!(:reader) { Fabricate(:user, locale: "ja") }
+    fab!(:source_topic, :topic)
+    fab!(:source_post) do
+      Fabricate(:post, topic: source_topic, post_number: 1, locale: "ja", raw: "見てください")
+    end
+
+    fab!(:linked_topic) { Fabricate(:topic, title: "Sun Tzu's strategies", locale: "en") }
+    fab!(:linked_first_post) do
+      Fabricate(
+        :post,
+        topic: linked_topic,
+        post_number: 1,
+        locale: "en",
+        raw: "Subdue the enemy without fighting.",
+      )
+    end
+    fab!(:linked_second_post) do
+      Fabricate(
+        :post,
+        topic: linked_topic,
+        post_number: 2,
+        locale: "en",
+        raw: "Every battle is won before it is fought.",
+      )
+    end
+
+    def link_to(post, **overrides)
+      TopicLink.create!(
+        {
+          topic: source_topic,
+          post: source_post,
+          user: source_post.user,
+          url: post.url,
+          domain: Discourse.current_hostname,
+          internal: true,
+          # onebox cards are extracted as quote links (aside.quote)
+          quote: true,
+          reflection: false,
+          link_topic_id: post.topic_id,
+          link_post_id: post.id,
+        }.merge(overrides),
+      )
+    end
+
+    def localized_oneboxes_for(post, viewer: reader)
+      I18n.with_locale(:ja) { TopicView.new(post.topic_id, viewer).localized_oneboxes[post.id] }
+    end
+
+    before { SiteSetting.content_localization_enabled = true }
+
+    it "returns the translated title and preview for an internal onebox" do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      Fabricate(:post_localization, post: linked_first_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+      link_to(linked_first_post)
+
+      entries = localized_oneboxes_for(source_post)
+
+      expect(entries.size).to eq(1)
+      expect(entries.first[:topic_id]).to eq(linked_topic.id)
+      expect(entries.first[:post_number]).to eq(1)
+      expect(entries.first[:title]).to eq("孫子の兵法")
+      expect(entries.first[:excerpt]).to include("戦わずして勝つ")
+    end
+
+    it "produces a sanitized excerpt (no script/event-handler markup)" do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      Fabricate(
+        :post_localization,
+        post: linked_first_post,
+        locale: "ja",
+        cooked: "<p>安全な要約<script>alert(1)</script><img src=x onerror=alert(2)></p>",
+      )
+      link_to(linked_first_post)
+
+      excerpt = localized_oneboxes_for(source_post).first[:excerpt]
+
+      expect(excerpt).to include("安全な要約")
+      expect(excerpt).not_to include("<script")
+      expect(excerpt).not_to include("onerror")
+    end
+
+    it "uses the linked post's own translation, not another post's" do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      Fabricate(:post_localization, post: linked_first_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+      Fabricate(:post_localization, post: linked_second_post, locale: "ja", cooked: "<p>戦う前に勝つ</p>")
+      link_to(linked_second_post)
+
+      entry = localized_oneboxes_for(source_post).first
+
+      expect(entry[:post_number]).to eq(2)
+      expect(entry[:excerpt]).to include("戦う前に勝つ")
+      expect(entry[:excerpt]).not_to include("戦わずして勝つ")
+    end
+
+    it "localizes a topic-level onebox whose link_post_id was never recorded" do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      Fabricate(:post_localization, post: linked_first_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+      link_to(linked_first_post, link_post_id: nil)
+
+      entry = localized_oneboxes_for(source_post).first
+
+      expect(entry[:post_number]).to eq(1)
+      expect(entry[:title]).to eq("孫子の兵法")
+      expect(entry[:excerpt]).to include("戦わずして勝つ")
+    end
+
+    it "prefers the exact locale over a regional variant" do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "正確な日本語タイトル")
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja_JP", title: "地域別の日本語タイトル")
+      link_to(linked_first_post)
+
+      entry = localized_oneboxes_for(source_post).first
+
+      expect(entry[:title]).to eq("正確な日本語タイトル")
+    end
+
+    it "sends only the title when the linked post has no translation" do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      link_to(linked_first_post)
+
+      entry = localized_oneboxes_for(source_post).first
+
+      expect(entry[:title]).to eq("孫子の兵法")
+      expect(entry).not_to have_key(:excerpt)
+    end
+
+    it "returns nothing when there is no translation" do
+      link_to(linked_first_post)
+
+      expect(localized_oneboxes_for(source_post)).to be_blank
+    end
+
+    it "returns nothing when the linked topic is already in the reader's language" do
+      linked_topic.update!(locale: "ja")
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      link_to(linked_first_post)
+
+      expect(localized_oneboxes_for(source_post)).to be_blank
+    end
+
+    it "returns nothing when content localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      link_to(linked_first_post)
+
+      expect(localized_oneboxes_for(source_post)).to be_blank
+    end
+
+    it "skips posts the reader sees translated (their cards are localized at cook time)" do
+      source_post.update!(locale: "en")
+      Fabricate(:post_localization, post: source_post, locale: "ja", raw: "翻訳", cooked: "<p>翻訳</p>")
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      link_to(linked_first_post)
+
+      expect(localized_oneboxes_for(source_post)).to be_blank
+    end
+
+    it "localizes oneboxes in an untranslated post viewed in a foreign language" do
+      # source post is English with no Japanese translation, so the reader sees
+      # its original cooked — its oneboxes should still be localized.
+      source_post.update!(locale: "en")
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      Fabricate(:post_localization, post: linked_first_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+      link_to(linked_first_post)
+
+      entry = localized_oneboxes_for(source_post).first
+
+      expect(entry[:title]).to eq("孫子の兵法")
+      expect(entry[:excerpt]).to include("戦わずして勝つ")
+    end
+
+    context "with visibility restrictions" do
+      it "does not expose a topic the reader cannot see" do
+        secured_category = Fabricate(:category)
+        secured_category.set_permissions(staff: :full)
+        secured_category.save!
+        linked_topic.update!(category: secured_category)
+        Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+        link_to(linked_first_post)
+
+        expect(localized_oneboxes_for(source_post)).to be_blank
+      end
+
+      it "does not expose a private message" do
+        pm = Fabricate(:private_message_topic, title: "Secret plans")
+        pm_post = Fabricate(:post, topic: pm, post_number: 1, locale: "en")
+        Fabricate(:topic_localization, topic: pm, locale: "ja", title: "秘密")
+        link_to(pm_post)
+
+        expect(localized_oneboxes_for(source_post)).to be_blank
+      end
+
+      it "does not expose a deleted linked post" do
+        Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+        Fabricate(
+          :post_localization,
+          post: linked_first_post,
+          locale: "ja",
+          cooked: "<p>戦わずして勝つ</p>",
+        )
+        link_to(linked_first_post)
+        linked_first_post.trash!
+
+        expect(localized_oneboxes_for(source_post)).to be_blank
+      end
+
+      it "does not expose a hidden linked post" do
+        Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+        Fabricate(
+          :post_localization,
+          post: linked_first_post,
+          locale: "ja",
+          cooked: "<p>戦わずして勝つ</p>",
+        )
+        link_to(linked_first_post)
+        linked_first_post.update!(hidden: true)
+
+        expect(localized_oneboxes_for(source_post)).to be_blank
+      end
+
+      it "requires anonymous visibility for a cross-category linked topic" do
+        # mirrors Oneboxer.local_topic: a card to a different category is only
+        # baked when anonymous can see it, so we must not emit swap data for a
+        # staff-only topic even to a staff reader.
+        secured_category = Fabricate(:category)
+        secured_category.set_permissions(staff: :full)
+        secured_category.save!
+        linked_topic.update!(category: secured_category)
+        Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+        link_to(linked_first_post)
+
+        admin = Fabricate(:admin, locale: "ja")
+        expect(localized_oneboxes_for(source_post, viewer: admin)).to be_blank
+      end
+    end
+
+    it "localizes an internal onebox link regardless of the quote flag" do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      Fabricate(:post_localization, post: linked_first_post, locale: "ja", cooked: "<p>戦わずして勝つ</p>")
+      link_to(linked_first_post, quote: false)
+
+      entry = localized_oneboxes_for(source_post).first
+
+      expect(entry[:title]).to eq("孫子の兵法")
+      expect(entry[:excerpt]).to include("戦わずして勝つ")
+    end
+
+    it "ignores inbound reflection links" do
+      Fabricate(:topic_localization, topic: linked_topic, locale: "ja", title: "孫子の兵法")
+      link_to(linked_first_post, reflection: true)
+
+      expect(localized_oneboxes_for(source_post)).to be_blank
     end
   end
 end

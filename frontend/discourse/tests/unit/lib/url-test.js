@@ -4,11 +4,15 @@ import sinon from "sinon";
 import { setPrefix } from "discourse/lib/get-url";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import DiscourseURL, {
+  applyQueryParams,
   getCanonicalUrl,
   getCategoryAndTagUrl,
+  isHttpUrl,
   prefixProtocol,
+  searchParamsFromPath,
   userPath,
 } from "discourse/lib/url";
+import Session from "discourse/models/session";
 import { logIn } from "discourse/tests/helpers/qunit-helpers";
 
 module("Unit | Utility | url", function (hooks) {
@@ -91,6 +95,7 @@ module("Unit | Utility | url", function (hooks) {
   test("isInternalTopic", function (assert) {
     sinon.stub(DiscourseURL, "origin").get(() => "https://eviltrout.com");
     assert.true(DiscourseURL.isInternalTopic("https://eviltrout.com/t/123"));
+    assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/n/123"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/admin"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/u/test"));
     assert.false(DiscourseURL.isInternalTopic("https://eviltrout.com/tamales"));
@@ -104,6 +109,9 @@ module("Unit | Utility | url", function (hooks) {
 
     assert.true(
       DiscourseURL.isInternalTopic("https://eviltrout.com/forum/t/123")
+    );
+    assert.false(
+      DiscourseURL.isInternalTopic("https://eviltrout.com/forum/n/123")
     );
     assert.false(
       DiscourseURL.isInternalTopic("https://eviltrout.com/forum/admin")
@@ -122,6 +130,45 @@ module("Unit | Utility | url", function (hooks) {
     setPrefix("/forum");
     assert.strictEqual(userPath(), "/forum/u");
     assert.strictEqual(userPath("eviltrout"), "/forum/u/eviltrout");
+  });
+
+  test("searchParamsFromPath parses app-relative paths", function (assert) {
+    const params = searchParamsFromPath(
+      "/admin/email-logs?subject=What?Now&address=sam%2Btest%40example.com#details?ignored"
+    );
+
+    assert.strictEqual(
+      params.get("subject"),
+      "What?Now",
+      "preserves raw query delimiters inside values"
+    );
+    assert.strictEqual(
+      params.get("address"),
+      "sam+test@example.com",
+      "decodes encoded values"
+    );
+    assert.false(params.has("ignored"), "ignores fragment contents");
+    assert.strictEqual(
+      [...searchParamsFromPath("")].length,
+      0,
+      "returns empty parameters for an empty path"
+    );
+  });
+
+  test("applyQueryParams updates paths without dropping URL parts", function (assert) {
+    assert.strictEqual(
+      applyQueryParams(
+        "/admin/email-logs?subject=What?Now&remove=1#details?tab=raw",
+        { filter: "new value", remove: null }
+      ),
+      "/admin/email-logs?subject=What%3FNow&filter=new+value#details?tab=raw",
+      "preserves query values and the complete fragment"
+    );
+    assert.strictEqual(
+      applyQueryParams("", { filter: "value" }),
+      "/?filter=value",
+      "uses the app root for an empty path"
+    );
   });
 
   test("routeTo with prefix", async function (assert) {
@@ -193,75 +240,6 @@ module("Unit | Utility | url", function (hooks) {
     );
   });
 
-  test("routeTo applies route-to-url value transformer", async function (assert) {
-    sinon.stub(DiscourseURL, "origin").get(() => "http://example.com");
-    sinon.stub(DiscourseURL, "handleURL");
-    sinon.stub(DiscourseURL, "router").get(() => {
-      return { currentURL: "/bar" };
-    });
-
-    withPluginApi((api) => {
-      api.registerValueTransformer("route-to-url", ({ value }) => {
-        if (value === "/t/some-topic/123") {
-          return "/nested/some-topic/123";
-        }
-        return value;
-      });
-    });
-
-    DiscourseURL.routeTo("/t/some-topic/123");
-    assert.true(
-      DiscourseURL.handleURL.calledWith("/nested/some-topic/123"),
-      "the transformed URL is used for routing"
-    );
-  });
-
-  test("routeTo passes untransformed URLs through", async function (assert) {
-    sinon.stub(DiscourseURL, "origin").get(() => "http://example.com");
-    sinon.stub(DiscourseURL, "handleURL");
-    sinon.stub(DiscourseURL, "router").get(() => {
-      return { currentURL: "/bar" };
-    });
-
-    withPluginApi((api) => {
-      api.registerValueTransformer("route-to-url", ({ value }) => {
-        if (value.startsWith("/t/redirect-me")) {
-          return "/other/path";
-        }
-        return value;
-      });
-    });
-
-    DiscourseURL.routeTo("/some/other/path");
-    assert.true(
-      DiscourseURL.handleURL.calledWith("/some/other/path"),
-      "non-matching URLs pass through unchanged"
-    );
-  });
-
-  test("routeTo aborts when transformer returns null", async function (assert) {
-    sinon.stub(DiscourseURL, "origin").get(() => "http://example.com");
-    sinon.stub(DiscourseURL, "handleURL");
-    sinon.stub(DiscourseURL, "redirectTo");
-    sinon.stub(DiscourseURL, "router").get(() => {
-      return { currentURL: "/bar" };
-    });
-
-    withPluginApi((api) => {
-      api.registerValueTransformer("route-to-url", () => null);
-    });
-
-    DiscourseURL.routeTo("/t/some-topic/123");
-    assert.false(
-      DiscourseURL.handleURL.called,
-      "handleURL is not called when transformer returns null"
-    );
-    assert.false(
-      DiscourseURL.redirectTo.called,
-      "redirectTo is not called when transformer returns null"
-    );
-  });
-
   test("prefixProtocol", async function (assert) {
     assert.strictEqual(
       prefixProtocol("mailto:mr-beaver@aol.com"),
@@ -291,38 +269,49 @@ module("Unit | Utility | url", function (hooks) {
     assert.strictEqual(prefixProtocol("#anchor-fragment"), "#anchor-fragment");
   });
 
+  test("isHttpUrl", function (assert) {
+    assert.true(isHttpUrl("http://www.discourse.org"));
+    assert.true(isHttpUrl("https://www.discourse.org"));
+    assert.true(isHttpUrl("  https://www.discourse.org  "));
+
+    assert.false(isHttpUrl("ftp://www.discourse.org"));
+    assert.false(isHttpUrl("mailto:mr-beaver@aol.com"));
+    assert.false(isHttpUrl("www.discourse.org"));
+    assert.false(isHttpUrl("not a url"));
+    assert.false(isHttpUrl(""));
+    assert.false(isHttpUrl(null));
+    assert.false(isHttpUrl(undefined));
+  });
+
   test("getCategoryAndTagUrl", function (assert) {
+    const cat = { path: "/c/foo/1", default_list_filter: "all" };
+    const noneCat = { path: "/c/foo/1", default_list_filter: "none" };
+    const noneTag = { slug: "none", id: null };
+    const bugTag = { slug: "bug", id: 7 };
+
+    // category only
+    assert.strictEqual(getCategoryAndTagUrl(cat, true), "/c/foo/1");
+    assert.strictEqual(getCategoryAndTagUrl(cat, false), "/c/foo/1/none");
+    assert.strictEqual(getCategoryAndTagUrl(noneCat, true), "/c/foo/1/all");
+    assert.strictEqual(getCategoryAndTagUrl(noneCat, false), "/c/foo/1/none");
+
+    // category + tag
     assert.strictEqual(
-      getCategoryAndTagUrl(
-        { path: "/c/foo/1", default_list_filter: "all" },
-        true
-      ),
-      "/c/foo/1"
+      getCategoryAndTagUrl(cat, true, "none"),
+      "/tags/c/foo/1/none"
+    );
+    assert.strictEqual(
+      getCategoryAndTagUrl(cat, true, noneTag),
+      "/tags/c/foo/1/none"
+    );
+    assert.strictEqual(
+      getCategoryAndTagUrl(cat, true, bugTag),
+      "/tags/c/foo/1/bug/7"
     );
 
-    assert.strictEqual(
-      getCategoryAndTagUrl(
-        { path: "/c/foo/1", default_list_filter: "all" },
-        false
-      ),
-      "/c/foo/1/none"
-    );
-
-    assert.strictEqual(
-      getCategoryAndTagUrl(
-        { path: "/c/foo/1", default_list_filter: "none" },
-        true
-      ),
-      "/c/foo/1/all"
-    );
-
-    assert.strictEqual(
-      getCategoryAndTagUrl(
-        { path: "/c/foo/1", default_list_filter: "none" },
-        false
-      ),
-      "/c/foo/1/none"
-    );
+    // tag only
+    assert.strictEqual(getCategoryAndTagUrl(null, true, "none"), "/tag/none");
+    assert.strictEqual(getCategoryAndTagUrl(null, true, bugTag), "/tag/bug/7");
   });
 
   test("routeTo redirects secure uploads URLS because they are server side only", async function (assert) {
@@ -380,6 +369,43 @@ module("Unit | Utility | url", function (hooks) {
         DiscourseURL.redirectTo.calledWith(route),
         `${route} is redirected to server`
       );
+    }
+  });
+
+  test("routeTo full page loads when a refresh is required", async function (assert) {
+    sinon.stub(DiscourseURL, "isComposerOpen").get(() => false);
+    sinon.stub(DiscourseURL, "redirectTo");
+    sinon.stub(DiscourseURL, "handleURL");
+
+    try {
+      Session.currentProp("requiresRefresh", true);
+
+      DiscourseURL.routeTo("/t/some-topic/123");
+      assert.true(
+        DiscourseURL.redirectTo.calledWith("/t/some-topic/123"),
+        "does a full page load when a refresh is required"
+      );
+
+      DiscourseURL.redirectTo.resetHistory();
+
+      withPluginApi((api) => {
+        api.registerValueTransformer(
+          "full-page-refresh-on-navigation",
+          () => false
+        );
+      });
+
+      DiscourseURL.routeTo("/t/some-topic/123");
+      assert.false(
+        DiscourseURL.redirectTo.called,
+        "the transformer can defer the full page load"
+      );
+      assert.true(
+        DiscourseURL.handleURL.calledWith("/t/some-topic/123"),
+        "navigates within the app instead"
+      );
+    } finally {
+      Session.resetCurrent(null);
     }
   });
 

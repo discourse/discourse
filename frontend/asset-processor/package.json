@@ -2,7 +2,7 @@
   "name": "asset-processor",
   "version": "1.0.0",
   "private": true,
-  "description": "Uses esbuild to create a 'asset processor' bundle for loading into mini-racer",
+  "description": "Uses rolldown to create a 'asset processor' bundle for loading into mini-racer",
   "author": "Discourse",
   "license": "GPL-2.0-only",
   "keywords": [],
@@ -10,35 +10,32 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@babel/core": "^7.28.5",
+    "@babel/core": "^7.29.7",
+    "@babel/plugin-transform-typescript": "^7.29.7",
     "@babel/preset-env": "^7.29.2",
-    "@babel/standalone": "^7.29.2",
-    "@csstools/postcss-light-dark-function": "^3.0.0",
-    "@rollup/browser": "^4.60.1",
+    "@babel/standalone": "^7.29.7",
+    "@csstools/postcss-light-dark-function": "^3.0.1",
+    "@rollup/browser": "^4.62.0",
     "@rollup/plugin-babel": "^7.0.0",
-    "abort-controller": "^3.0.0",
-    "autoprefixer": "^10.4.27",
+    "autoprefixer": "^10.5.0",
     "babel-plugin-ember-template-compilation": "^4.0.0",
     "content-tag": "^4.0.0",
     "core-js": "^3.49.0",
-    "decorator-transforms": "^2.3.1",
+    "decorator-transforms": "^2.3.2",
     "discourse": "workspace:0.0.0",
-    "discourse-plugins": "workspace:1.0.0",
     "ember-cli-htmlbars": "^7.0.1",
     "ember-source": "~6.10.0",
     "ember-this-fallback": "^0.4.0",
     "fastestsmallesttextencoderdecoder": "^1.0.22",
     "magic-string": "^0.30.21",
-    "memfs": "^4.39.0",
     "path-browserify": "^1.0.1",
     "polyfill-crypto.getrandomvalues": "^1.0.0",
-    "postcss": "^8.5.6",
-    "postcss-js": "^5.1.0",
-    "postcss-media-minmax": "^5.0.0",
+    "postcss": "^8.5.15",
     "postcss-nesting": "^14.0.0",
-    "readable-stream": "^4.7.0",
+    "rolldown": "1.1.2",
     "source-map-js": "^1.2.1",
-    "terser": "^5.46.1"
+    "strip-test-selectors": "^0.1.0",
+    "terser": "^5.47.1"
   },
   "engines": {
     "node": ">= 20",
@@ -47,6 +44,6 @@
     "pnpm": "^10"
   },
   "devDependencies": {
-    "vitest": "^4.0.18"
+    "vitest": "^4.1.9"
   }
 }

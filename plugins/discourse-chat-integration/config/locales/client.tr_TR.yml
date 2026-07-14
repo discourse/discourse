@@ -14,10 +14,49 @@ tr_TR:
     chat_integration:
       menu_title: "Sohbet Entegrasyonları"
       settings: "Ayarlar"
+      nav:
+        providers: "Sağlayıcılar"
+        providers_description: "Sohbet sağlayıcısı entegrasyonlarını yapılandırın"
+      add_provider: "Sağlayıcı ekle"
+      view_provider_settings: "Sağlayıcı ayarlarını görüntüle"
+      more_providers: "Daha fazla"
+      confirm_setup_provider: "%{provider} sağlayıcısını etkinleştirmek istediğinizden emin misiniz? Bu ayar daha sonra Ayarlar sekmesinden devre dışı bırakılabilir."
+      setup_provider_modal:
+        title: "%{provider} sağlayıcısını kur"
+        setup_instructions: "%{provider} sağlayıcısını kurmak için lütfen aşağıdaki bilgileri girin. %{additionalInstructions}"
+        confirm_setup: "Kurulumu onayla"
+        success: "%{provider} sağlayıcısı başarıyla kuruldu"
+        slack:
+          instructions: "Erişim jetonu veya giden webhook URL'si gereklidir."
+          at_least_one_required: "Bir erişim jetonu veya giden webhook URL'si girin."
+          access_token:
+            title: "Erişim jetonu"
+            description: "Slack botunun OAuth erişim jetonu"
+          outbound_webhook_url:
+            title: "Giden webhook URL'si"
+            description: "Slack'in giden webhook URL'si"
+        telegram:
+          instructions: "Erişim jetonu, kaydetme işlemi sırasında doğrulanacaktır."
+          access_token:
+            title: "Erişim jetonu"
+            description: "BotFather'dan alınan Telegram bot erişim jetonu"
+      empty_state:
+        title: "Sohbet platformunuzu bağlayın."
+        body: "Discourse'tan ekibinizin sohbetine bildirimler gönderin. Başlamak için bir sağlayıcı seçin."
+      channels_title: "Kanallar"
+      channels_description: "%{provider} sağlayıcısı için kanalları yapılandırın."
+      no_channels: "Henüz hiçbir kanal yapılandırılmadı."
+      channel_actions: "Kanal işlemleri"
+      add_first_channel: "İlk %{provider} kanalınızı ekleyin"
       channels_with_errors: "Bu sağlayıcı için bazı kanallar en son mesaj gönderildiğinde başarısız oldu. Daha fazla bilgi edinmek için hata simgelerine tıklayın."
       channel_exception: "Bu kanala en son mesaj gönderilirken bilinmeyen bir hata oluştu."
       group_mention_template: "Şu kullanıcıdan bahsedildi: @%{name}"
       group_message_template: "Şu kullanıcıya mesaj gönderildi: @%{name}"
+      choose_group: "(Grup seçin)"
+      all_categories: "(Tüm kategoriler)"
+      all_tags: "(Tüm etiketler)"
+      create_rule: "Kural oluştur"
+      add_channel: "Kanal ekle"
       delete_channel: "Sil"
       test_channel: "Test"
       edit_channel: "Düzenle"
@@ -25,11 +64,14 @@ tr_TR:
       test_modal:
         title: "Test mesajı gönderin"
         topic: "Konu"
+        send: "Test mesajı gönder"
         close: "Kapat"
         error: "Mesaj gönderilirken bilinmeyen bir hata oluştu. Daha fazla bilgi için site günlüklerini kontrol edin."
         success: "Mesaj başarıyla gönderildi"
       type:
         normal: Normal
+        group_message: Grup mesajı
+        group_mention: Grup bahsetmesi
       filter:
         mute: 'Sessize al'
         follow: 'Sadece ilk gönderi'
@@ -50,6 +92,9 @@ tr_TR:
           ok: "Geçerli"
           fail: "Geçersiz biçim"
       edit_rule_modal:
+        edit_title: Kuralı düzenle
+        create_title: Kural oluştur
+        save: Kuralı kaydet
         cancel: İptal et
         provider: Sağlayıcı
         type: Tür
@@ -70,7 +115,11 @@ tr_TR:
           param:
             identifier:
               title: Kanal
+              help: "Örneğin #kanal veya @kullanıcıadı"
           errors:
+            at_least_one_required: "Bir erişim jetonu veya giden webhook URL'si girin."
+            invalid_webhook_url: "Giden webhook URL'si, geçerli bir https://hooks.slack.com/services/... bağlantısı olmalıdır."
+            auth_error: "Verilen kimlik doğrulama belirteci geçersiz."
             action_prohibited: "Botun bu kanala gönderi yapma izni yok"
             channel_not_found: "Belirtilen kanal Slack'te mevcut değil"
         telegram:
@@ -83,6 +132,8 @@ tr_TR:
               title: Sohbet Kimliği
               help: Bot tarafından size verilen bir numara veya @channelname biçimindeki bir yayın kanalı tanımlayıcısı
           errors:
+            access_token_required: "Bir bot erişim jetonu gereklidir."
+            webhook_setup_failed: "Webhook Telegram'a kaydedilemedi. Jetonu kontrol edin ve tekrar deneyin."
             channel_not_found: "Belirtilen kanal Telegram'da mevcut değil"
             forbidden: "Botun bu kanala gönderi yapma izni yok"
         discord:
@@ -93,6 +144,7 @@ tr_TR:
               help: "Kanalı tanımlayan bir ad. Discord bağlantısı için kullanılmaz."
             webhook_url:
               title: Web kancası URL'si
+              help: 'Discord sunucu ayarlarınızda oluşturulan webhook URL''si şu formatta olmalıdır: https://discord.com/api/webhooks/<webhook-id>/<webhook-token>'
         guilded:
           title: "Guilded"
           param:
@@ -107,6 +159,7 @@ tr_TR:
           param:
             identifier:
               title: Kanal
+              help: "Örneğin #kanal veya @kullanıcıadı"
           errors:
             channel_not_found: "Belirtilen kanal Mattermost'ta mevcut değil"
         matrix:
@@ -137,6 +190,7 @@ tr_TR:
           param:
             identifier:
               title: Kanal
+              help: "Örneğin #kanal veya @kullanıcıadı"
           errors:
             invalid_channel: "Bu kanal Rocket Chat'te mevcut değil"
         gitter:
@@ -144,6 +198,7 @@ tr_TR:
           param:
             name:
               title: "Ad"
+              help: "Gitter odasının adı örneğin gitterHQ/services"
             webhook_url:
               title: "Web kancası URL'si"
               help: "Bir Gitter odasında yeni bir entegrasyon oluşturduğunuzda sağlanan URL."

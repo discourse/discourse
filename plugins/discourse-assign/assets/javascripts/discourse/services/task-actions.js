@@ -1,4 +1,3 @@
-/* eslint-disable ember/no-side-effects */
 import { tracked } from "@glimmer/tracking";
 import Service, { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -9,31 +8,99 @@ import AssignUser from "../components/modal/assign-user";
 export default class TaskActions extends Service {
   @service modal;
 
-  @tracked allowedGroups;
-  @tracked allowedGroupsForAssignment;
-  #suggestionsPromise; // eslint-disable-line no-unused-private-class-members
-  @tracked _suggestions;
+  @tracked suggestionsRevision = 0;
+  #allowedGroupsByTarget = new Map();
+  #allowedGroupsForAssignmentByTarget = new Map();
+  #suggestionsByTarget = new Map();
+  #suggestionsPromisesByTarget = new Map();
 
   get suggestions() {
-    if (this._suggestions) {
-      return this._suggestions;
-    }
-
-    this.#suggestionsPromise ||= this.#fetchSuggestions();
-
-    return null;
+    return this.suggestionsFor();
   }
 
-  async #fetchSuggestions() {
-    const data = await ajax("/assign/suggestions");
+  get allowedGroups() {
+    return this.allowedGroupsFor();
+  }
+
+  get allowedGroupsForAssignment() {
+    return this.allowedGroupsForAssignmentFor();
+  }
+
+  suggestionsFor(targetId, targetType = "Topic") {
+    this.suggestionsRevision;
+    this.#ensureSuggestions(targetId, targetType);
+
+    return (
+      this.#suggestionsByTarget.get(
+        this.#suggestionsKey(targetId, targetType)
+      ) || null
+    );
+  }
+
+  allowedGroupsFor(targetId, targetType = "Topic") {
+    this.suggestionsRevision;
+    this.#ensureSuggestions(targetId, targetType);
+
+    return (
+      this.#allowedGroupsByTarget.get(
+        this.#suggestionsKey(targetId, targetType)
+      ) || []
+    );
+  }
+
+  allowedGroupsForAssignmentFor(targetId, targetType = "Topic") {
+    this.suggestionsRevision;
+    this.#ensureSuggestions(targetId, targetType);
+
+    return (
+      this.#allowedGroupsForAssignmentByTarget.get(
+        this.#suggestionsKey(targetId, targetType)
+      ) || []
+    );
+  }
+
+  #ensureSuggestions(targetId, targetType) {
+    const key = this.#suggestionsKey(targetId, targetType);
+
+    if (
+      this.#suggestionsByTarget.has(key) ||
+      this.#suggestionsPromisesByTarget.has(key)
+    ) {
+      return;
+    }
+
+    this.#suggestionsPromisesByTarget.set(
+      key,
+      this.#fetchSuggestions(key, targetId, targetType)
+    );
+  }
+
+  async #fetchSuggestions(key, targetId, targetType) {
+    const data = {};
+
+    if (targetId) {
+      data.target_id = targetId;
+      data.target_type = targetType;
+    }
+
+    const response = await ajax("/assign/suggestions", { data });
 
     if (this.isDestroying || this.isDestroyed) {
       return;
     }
 
-    this._suggestions = data.suggestions;
-    this.allowedGroups = data.assign_allowed_on_groups;
-    this.allowedGroupsForAssignment = data.assign_allowed_for_groups;
+    this.#suggestionsByTarget.set(key, response.suggestions);
+    this.#allowedGroupsByTarget.set(key, response.assign_allowed_on_groups);
+    this.#allowedGroupsForAssignmentByTarget.set(
+      key,
+      response.assign_allowed_for_groups
+    );
+    this.#suggestionsPromisesByTarget.delete(key);
+    this.suggestionsRevision++;
+  }
+
+  #suggestionsKey(targetId, targetType) {
+    return targetId ? `${targetType}:${targetId}` : "default";
   }
 
   unassign(targetId, targetType = "Topic") {

@@ -106,57 +106,55 @@ RSpec.describe Jobs::CleanUpUploads do
   end
 
   it "does not clean up upload site settings" do
-    begin
-      original_provider = SiteSetting.provider
-      SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
-      SiteSetting.clean_orphan_uploads_grace_period_hours = 1
+    original_provider = SiteSetting.provider
+    SiteSetting.provider = SiteSettings::DbProvider.new(SiteSetting)
+    SiteSetting.clean_orphan_uploads_grace_period_hours = 1
 
-      system_upload = fabricate_upload(id: -999)
-      logo_upload = fabricate_upload
-      logo_small_upload = fabricate_upload
-      digest_logo_upload = fabricate_upload
-      mobile_logo_upload = fabricate_upload
-      large_icon_upload = fabricate_upload
-      opengraph_image_upload = fabricate_upload
-      x_summary_large_image_upload = fabricate_upload
-      favicon_upload = fabricate_upload
-      apple_touch_icon_upload = fabricate_upload
+    system_upload = fabricate_upload(id: -999)
+    logo_upload = fabricate_upload
+    logo_small_upload = fabricate_upload
+    digest_logo_upload = fabricate_upload
+    mobile_logo_upload = fabricate_upload
+    large_icon_upload = fabricate_upload
+    opengraph_image_upload = fabricate_upload
+    x_summary_large_image_upload = fabricate_upload
+    favicon_upload = fabricate_upload
+    apple_touch_icon_upload = fabricate_upload
 
-      SiteSetting.logo = logo_upload
-      SiteSetting.logo_small = logo_small_upload
-      SiteSetting.digest_logo = digest_logo_upload
-      SiteSetting.mobile_logo = mobile_logo_upload
-      SiteSetting.large_icon = large_icon_upload
-      SiteSetting.opengraph_image = opengraph_image_upload
+    SiteSetting.logo = logo_upload
+    SiteSetting.logo_small = logo_small_upload
+    SiteSetting.digest_logo = digest_logo_upload
+    SiteSetting.mobile_logo = mobile_logo_upload
+    SiteSetting.large_icon = large_icon_upload
+    SiteSetting.opengraph_image = opengraph_image_upload
 
-      SiteSetting.x_summary_large_image = x_summary_large_image_upload
+    SiteSetting.x_summary_large_image = x_summary_large_image_upload
 
-      SiteSetting.favicon = favicon_upload
-      SiteSetting.apple_touch_icon = apple_touch_icon_upload
+    SiteSetting.favicon = favicon_upload
+    SiteSetting.apple_touch_icon = apple_touch_icon_upload
 
-      Jobs::CleanUpUploads.new.execute(nil)
+    Jobs::CleanUpUploads.new.execute(nil)
 
-      [
-        logo_upload,
-        logo_small_upload,
-        digest_logo_upload,
-        mobile_logo_upload,
-        large_icon_upload,
-        opengraph_image_upload,
-        x_summary_large_image_upload,
-        favicon_upload,
-        apple_touch_icon_upload,
-        system_upload,
-      ].each { |record| expect(Upload.exists?(id: record.id)).to eq(true) }
+    [
+      logo_upload,
+      logo_small_upload,
+      digest_logo_upload,
+      mobile_logo_upload,
+      large_icon_upload,
+      opengraph_image_upload,
+      x_summary_large_image_upload,
+      favicon_upload,
+      apple_touch_icon_upload,
+      system_upload,
+    ].each { |record| expect(Upload.exists?(id: record.id)).to eq(true) }
 
-      fabricate_upload
-      SiteSetting.opengraph_image = ""
+    fabricate_upload
+    SiteSetting.opengraph_image = ""
 
-      Jobs::CleanUpUploads.new.execute(nil)
-    ensure
-      SiteSetting.delete_all
-      SiteSetting.provider = original_provider
-    end
+    Jobs::CleanUpUploads.new.execute(nil)
+  ensure
+    SiteSetting.delete_all
+    SiteSetting.provider = original_provider
   end
 
   it "does not clean up selectable avatars" do

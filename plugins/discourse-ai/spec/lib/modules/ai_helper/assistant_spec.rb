@@ -293,7 +293,12 @@ RSpec.describe DiscourseAi::AiHelper::Assistant do
 
       context "when the agent is not using structured outputs" do
         it "still works" do
-          regular_agent = Fabricate(:ai_agent, response_format: nil)
+          regular_agent =
+            Fabricate(
+              :ai_agent,
+              response_format: nil,
+              allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+            )
           SiteSetting.ai_helper_translator_agent = regular_agent.id
 
           response =

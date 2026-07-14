@@ -50,10 +50,10 @@ end
 # Table name: group_associated_groups
 #
 #  id                  :bigint           not null, primary key
-#  group_id            :bigint           not null
-#  associated_group_id :bigint           not null
 #  created_at          :datetime         not null
 #  updated_at          :datetime         not null
+#  associated_group_id :bigint           not null
+#  group_id            :bigint           not null
 #
 # Indexes
 #

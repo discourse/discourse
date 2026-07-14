@@ -235,6 +235,11 @@
     }
   }
 
+  [data-name="system_prompt"] {
+    --expanding-text-area-min-height: 13.5rem;
+    --expanding-text-area-max-height: 43.75rem;
+  }
+
   &__tool-options {
     padding: 1em;
     border: 1px solid var(--content-border-color);

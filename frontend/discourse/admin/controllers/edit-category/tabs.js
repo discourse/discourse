@@ -3,6 +3,7 @@ import Controller from "@ember/controller";
 import { action, computed, getProperties } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
+import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
@@ -13,29 +14,6 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
-// Only fields managed through FormKit in the legacy edit-category flow.
-// Other legacy tab components (settings, tags, etc.) write directly to the model.
-const LEGACY_FORMKIT_FIELDS = [
-  "name",
-  "slug",
-  "parent_category_id",
-  "color",
-  "text_color",
-  "style_type",
-  "emoji",
-  "icon",
-  "locale",
-  "localizations",
-  "email_in",
-  "email_in_enabled",
-  "email_in_allow_strangers",
-  "mailinglist_mirror",
-  "topic_template",
-  "topic_title_placeholder",
-  "form_template_ids",
-];
-
-// All fields managed through FormKit in the simplified creation flow.
 const SIMPLIFIED_FIELD_LIST = [
   "name",
   "slug",
@@ -89,6 +67,7 @@ const SIMPLIFIED_FIELD_LIST = [
 ];
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
+const DISCUSSION_TYPE_ID = "discussion";
 
 export default class EditCategoryTabsController extends Controller {
   @service currentUser;
@@ -106,6 +85,10 @@ export default class EditCategoryTabsController extends Controller {
   @tracked formData;
   @tracked selectedTab = "general";
   @tracked formApi = null;
+  @tracked siteTextsLocale = this.siteSettings.default_locale;
+  @tracked isLoadingSiteTextsLocale = false;
+  @tracked siteTextEdits = {};
+  @tracked siteTextOriginals = {};
   @autoTrackedArray panels = [];
   saving = false;
   deleting = false;
@@ -130,49 +113,73 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   initFormData() {
-    const enableSimplifiedCategoryCreation =
-      this.siteSettings.enable_simplified_category_creation;
-    const data = getProperties(
-      this.model,
-      ...(enableSimplifiedCategoryCreation
-        ? SIMPLIFIED_FIELD_LIST
-        : LEGACY_FORMKIT_FIELDS)
-    );
+    const data = getProperties(this.model, ...SIMPLIFIED_FIELD_LIST);
 
     if (this.siteSettings.content_localization_enabled && !data.locale) {
       data.locale = this.siteSettings.default_locale;
     }
 
-    if (enableSimplifiedCategoryCreation) {
-      if (!this.model.styleType) {
-        data.style_type = "icon";
-      }
-
-      data.required_tag_groups = Array.from(
-        data.required_tag_groups ?? [],
-        (rtg) => ({ ...rtg })
-      );
-      data.category_setting = { ...(this.model.category_setting ?? {}) };
-      data.custom_fields = { ...(this.model.custom_fields ?? {}) };
-
-      data.category_type_site_settings = {};
-
-      Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
-        categoryType.configuration_schema.category_custom_fields?.forEach(
-          (field) => {
-            data.custom_fields[field.key] ??= field.default;
-          }
-        );
-
-        categoryType.configuration_schema.site_settings?.forEach((setting) => {
-          data.category_type_site_settings[setting.key] = this.model.id
-            ? setting.current
-            : setting.default;
-        });
-      });
+    if (!this.model.styleType) {
+      data.style_type = "icon";
     }
 
+    data.required_tag_groups = Array.from(
+      data.required_tag_groups ?? [],
+      (rtg) => ({
+        ...rtg,
+      })
+    );
+    data.category_setting = { ...(this.model.category_setting ?? {}) };
+    data.custom_fields = { ...(this.model.custom_fields ?? {}) };
+
+    data.category_type_site_settings = {};
+    data.category_type_settings = {
+      ...(this.model.category_type_settings ?? {}),
+    };
+    data.site_texts = {};
+    data.category_types = Object.keys(this.model.categoryTypes ?? {});
+
+    if (!data.category_types.includes(DISCUSSION_TYPE_ID)) {
+      data.category_types.unshift(DISCUSSION_TYPE_ID);
+    }
+
+    Object.values(this.model.categoryTypes ?? {}).forEach((categoryType) => {
+      categoryType.configuration_schema.category_custom_fields?.forEach(
+        (field) => {
+          data.custom_fields[field.key] ??= field.default;
+        }
+      );
+
+      categoryType.configuration_schema.category_settings?.forEach((field) => {
+        data.category_type_settings[field.key] ??= field.default;
+      });
+
+      categoryType.configuration_schema.site_settings?.forEach((setting) => {
+        data.category_type_site_settings[setting.key] = this.model.id
+          ? setting.current
+          : setting.default;
+      });
+
+      // Site texts are translation overrides, not stored on the category. The
+      // server provides the current value (default locale) so we can seed the
+      // field without an extra request, then diff against it on save. Keyed by
+      // the dot-free form name (the i18n key itself is not FormKit-safe).
+      categoryType.configuration_schema.site_texts?.forEach((text) => {
+        data.site_texts[text.name] = text.current ?? "";
+      });
+    });
+
+    // Customizable text is always seeded with the default locale's value, so
+    // reset the editing language to match whenever the form is (re)initialized.
+    const defaultLocale = this.siteSettings.default_locale;
+    this.siteTextsLocale = defaultLocale;
+    this.siteTextOriginals = { [defaultLocale]: { ...data.site_texts } };
+    this.siteTextEdits = { [defaultLocale]: { ...data.site_texts } };
     this.formData = data;
+  }
+
+  get availableLocales() {
+    return this.siteSettings.available_locales;
   }
 
   @computed("saving", "deleting")
@@ -212,7 +219,33 @@ export default class EditCategoryTabsController extends Controller {
   }
 
   get isFormDirty() {
-    return this.formApi?.isDirty ?? false;
+    return (this.formApi?.isDirty ?? false) || this.hasPendingSiteTextChanges;
+  }
+
+  // True when any locale (visible or stashed) has customizable text that
+  // differs from its saved value. The form's own dirty flag only reflects the
+  // locale currently on screen, so we track the rest ourselves.
+  get hasPendingSiteTextChanges() {
+    const entries = this._siteTextEntries;
+    if (entries.length === 0) {
+      return false;
+    }
+
+    const edits = {
+      ...this.siteTextEdits,
+      [this.siteTextsLocale]: this._visibleSiteTexts,
+    };
+
+    return Object.entries(edits).some(([locale, values]) => {
+      const originals = this.siteTextOriginals[locale] ?? {};
+      return entries.some(
+        (entry) => (values[entry.name] ?? "") !== (originals[entry.name] ?? "")
+      );
+    });
+  }
+
+  get _visibleSiteTexts() {
+    return this.formApi?.get("site_texts") ?? {};
   }
 
   @action
@@ -222,12 +255,15 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   setSelectedTab(tab) {
+    if (tab !== "general") {
+      this.showAdvancedTabs = true;
+    }
+
     if (this.selectedTab === tab) {
       return;
     }
 
     this.selectedTab = tab;
-    this.showAdvancedTabs = this.showAdvancedTabs || tab !== "general";
   }
 
   /**
@@ -243,10 +279,6 @@ export default class EditCategoryTabsController extends Controller {
    */
   @action
   validateForm(data, { addError, removeError }) {
-    if (!this.siteSettings.enable_simplified_category_creation) {
-      return;
-    }
-
     for (const validator of this.validators) {
       validator(data, { addError, removeError });
     }
@@ -310,6 +342,18 @@ export default class EditCategoryTabsController extends Controller {
   @action
   onFormReset() {
     this.afterResetCallbacks.forEach((callback) => callback());
+
+    const restored = {};
+    for (const [locale, values] of Object.entries(this.siteTextOriginals)) {
+      restored[locale] = { ...values };
+    }
+    this.siteTextEdits = restored;
+
+    const current = this.siteTextOriginals[this.siteTextsLocale] ?? {};
+    this._siteTextEntries.forEach((entry) => {
+      this.formApi?.set(`site_texts.${entry.name}`, current[entry.name] ?? "");
+    });
+    this.formApi?.commitField("site_texts");
   }
 
   @action
@@ -369,12 +413,31 @@ export default class EditCategoryTabsController extends Controller {
     this.set("saving", true);
 
     try {
+      const previousTypes = new Set(
+        Object.keys(this.model.categoryTypes ?? {})
+      );
       const result = await this.model.save();
+      const siteTextsChanged = await this._saveSiteTexts();
       const updatedModel = this.site.updateCategory(result.category);
       updatedModel.setupGroupsAndPermissions();
 
       if (lostAccess) {
         this.router.transitionTo(`discovery.${defaultHomepage()}`);
+        return;
+      }
+
+      const newTypes = Object.keys(result.category.category_types ?? {});
+      const typeWasAdded = newTypes.some((t) => !previousTypes.has(t));
+      // A reload is needed when site texts change
+      if (typeWasAdded || siteTextsChanged) {
+        if (this.model.id) {
+          window.location.reload();
+        } else {
+          window.location = this.router.urlFor(
+            "editCategory",
+            Category.slugFor(updatedModel)
+          );
+        }
         return;
       }
 
@@ -402,6 +465,109 @@ export default class EditCategoryTabsController extends Controller {
       popupAjaxError(error);
       this.model.set("parent_category_id", undefined);
     }
+  }
+
+  @action
+  async switchSiteTextsLocale(locale) {
+    if (locale === this.siteTextsLocale) {
+      return;
+    }
+
+    this._stashVisibleSiteTexts();
+
+    this.isLoadingSiteTextsLocale = true;
+    const previousLocale = this.siteTextsLocale;
+    this.siteTextsLocale = locale;
+
+    try {
+      let values = this.siteTextEdits[locale];
+      if (!values) {
+        values = await this._fetchSiteTexts(locale);
+        this.siteTextOriginals = {
+          ...this.siteTextOriginals,
+          [locale]: { ...values },
+        };
+        this.siteTextEdits = { ...this.siteTextEdits, [locale]: { ...values } };
+      }
+
+      this._siteTextEntries.forEach((entry) => {
+        this.formApi?.set(`site_texts.${entry.name}`, values[entry.name] ?? "");
+      });
+      this.formApi?.commitField("site_texts");
+    } catch (error) {
+      this.siteTextsLocale = previousLocale;
+      popupAjaxError(error);
+    } finally {
+      this.isLoadingSiteTextsLocale = false;
+    }
+  }
+
+  _stashVisibleSiteTexts() {
+    this.siteTextEdits = {
+      ...this.siteTextEdits,
+      [this.siteTextsLocale]: { ...this._visibleSiteTexts },
+    };
+  }
+
+  async _fetchSiteTexts(locale) {
+    const entries = this._siteTextEntries;
+    const responses = await Promise.all(
+      entries.map((entry) =>
+        ajax(
+          `/admin/customize/site_texts/${encodeURIComponent(entry.key)}.json`,
+          { data: { locale } }
+        ).catch(() => ({ site_text: { value: "" } }))
+      )
+    );
+
+    const values = {};
+    entries.forEach((entry, index) => {
+      values[entry.name] = responses[index].site_text?.value ?? "";
+    });
+    return values;
+  }
+
+  async _saveSiteTexts() {
+    this._stashVisibleSiteTexts();
+
+    const entries = this._siteTextEntries;
+    let changed = false;
+
+    for (const [locale, values] of Object.entries(this.siteTextEdits)) {
+      const originals = this.siteTextOriginals[locale] ?? {};
+
+      for (const entry of entries) {
+        const newValue = values[entry.name] ?? "";
+        if (newValue === (originals[entry.name] ?? "")) {
+          continue;
+        }
+
+        const url = `/admin/customize/site_texts/${encodeURIComponent(
+          entry.key
+        )}?locale=${encodeURIComponent(locale)}`;
+        if (newValue.trim() === "") {
+          await ajax(url, { type: "DELETE" });
+        } else {
+          await ajax(url, {
+            type: "PUT",
+            data: { site_text: { value: newValue, locale } },
+          });
+        }
+        changed = true;
+      }
+    }
+
+    return changed;
+  }
+
+  get _siteTextEntries() {
+    const entries = [];
+    Object.values(this.model?.categoryTypes ?? {}).forEach((categoryType) => {
+      categoryType.configuration_schema.site_texts?.forEach((entry) =>
+        entries.push(entry)
+      );
+    });
+    return entries;
   }
 
   @action

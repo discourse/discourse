@@ -14,9 +14,49 @@ nl:
     chat_integration:
       menu_title: "Chatintegraties"
       settings: "Instellingen"
+      nav:
+        providers: "Providers"
+        providers_description: "Chatproviderintegraties configureren"
+      add_provider: "Provider toevoegen"
+      view_provider_settings: "Providerinstellingen bekijken"
+      more_providers: "Meer"
+      confirm_setup_provider: "Weet je zeker dat je de provider %{provider} wilt inschakelen? Deze kan later worden uitgeschakeld op het tabblad Instellingen."
+      setup_provider_modal:
+        title: "Provider %{provider} instellen"
+        setup_instructions: "Verstrek de volgende gegevens om de provider %{provider} in te stellen. %{additionalInstructions}"
+        confirm_setup: "Instellingen bevestigen"
+        success: "Provider %{provider} ingesteld"
+        slack:
+          instructions: "Toegangstoken of uitgaande webhook-URL is vereist."
+          at_least_one_required: "Voer een toegangstoken of uitgaande webhook-URL in."
+          access_token:
+            title: "Toegangstoken"
+            description: "Het OAuth-toegangstoken van de Slack-bot"
+          outbound_webhook_url:
+            title: "Uitgaande webhook-URL"
+            description: "De uitgaande webhook-URL van Slack"
+        telegram:
+          instructions: "Het toegangstoken wordt gevalideerd bij het opslaan."
+          access_token:
+            title: "Toegangstoken"
+            description: "Het Telegram-bottoegangstoken van BotFather"
+      empty_state:
+        title: "Je chatplatform koppelen"
+        body: "Stuur meldingen van Discourse naar de chat van je team. Kies een provider om te beginnen."
+      channels_title: "Kanalen"
+      channels_description: "Configureer kanalen voor de provider %{provider}."
+      no_channels: "Er zijn nog geen kanalen geconfigureerd."
+      channel_actions: "Kanaalacties"
+      add_first_channel: "Voeg je eerste kanaal van %{provider} toe"
       channels_with_errors: "De laatste keer dat berichten werden gestuurd, werkten sommige kanalen niet voor deze provider. Klik op de foutpictogrammen voor meer informatie."
+      channel_exception: "De laatste keer dat een bericht naar dit kanaal werd gestuurd, is een onbekende fout opgetreden."
       group_mention_template: "Vermeldingen van: @%{name}"
       group_message_template: "Berichten naar: @%{name}"
+      choose_group: "(Kies een groep)"
+      all_categories: "(Alle categorieën)"
+      all_tags: "(Alle tags)"
+      create_rule: "Regel maken"
+      add_channel: "Kanaal toevoegen"
       delete_channel: "Verwijderen"
       test_channel: "Testen"
       edit_channel: "Bewerken"
@@ -24,10 +64,14 @@ nl:
       test_modal:
         title: "Stuur een testbericht"
         topic: "Topic"
+        send: "Testbericht sturen"
         close: "Sluiten"
+        error: "Tijdens het verzenden van het bericht is een onbekende fout opgetreden. Zie de sitelogs voor meer informatie."
         success: "Bericht verzonden"
       type:
         normal: Normaal
+        group_message: Groepsbericht
+        group_mention: Groepsvermelding
       filter:
         mute: 'Dempen'
         follow: 'Alleen eerste bericht'
@@ -48,6 +92,9 @@ nl:
           ok: "Geldig"
           fail: "Ongeldige notatie"
       edit_rule_modal:
+        edit_title: Regel bewerken
+        create_title: Regel maken
+        save: Regel opslaan
         cancel: Annuleren
         provider: Provider
         type: Type
@@ -68,8 +115,13 @@ nl:
           param:
             identifier:
               title: Kanaal
+              help: "Bijvoorbeeld #kanaal of @gebruikersnaam"
           errors:
+            at_least_one_required: "Voer een toegangstoken of uitgaande webhook-URL in."
+            invalid_webhook_url: "De uitgaande webhook-URL moet een geldige link met https://hooks.slack.com/services/... zijn."
+            auth_error: "Het verstrekte verificatietoken is ongeldig"
             action_prohibited: "De bot heeft geen toestemming om berichten in dat kanaal te plaatsen"
+            channel_not_found: "Het opgegeven kanaal bestaat niet op Slack"
         telegram:
           title: "Telegram"
           param:
@@ -80,6 +132,8 @@ nl:
               title: Chat-ID
               help: Een door de bot aan jou gegeven nummer, of een broadcastkanaal-ID in de vorm @kanaalnaam
           errors:
+            access_token_required: "Een bottoegangstoken is vereist."
+            webhook_setup_failed: "Kan de webhook niet registreren bij Telegram. Controleer het token en probeer het opnieuw."
             channel_not_found: "Het opgegeven kanaal bestaat niet op Telegram"
             forbidden: "De bot heeft geen toestemming om berichten in dit kanaal te plaatsen"
         discord:
@@ -90,6 +144,7 @@ nl:
               help: "Een naam om het kanaal te beschrijven. Deze wordt niet gebruikt voor de verbinding met Discord."
             webhook_url:
               title: Webhook-URL
+              help: De gemaakte webhook-URL in je Discord-server instellingen moet de indeling https://discord.com/api/webhooks/<webhook-id>/<webhook-token> hebben
         guilded:
           title: "Guilded"
           param:
@@ -104,6 +159,7 @@ nl:
           param:
             identifier:
               title: Kanaal
+              help: "Bijvoorbeeld #kanaal of @gebruikersnaam"
           errors:
             channel_not_found: "Het opgegeven kanaal bestaat niet op Mattermost"
         matrix:
@@ -114,6 +170,7 @@ nl:
               help: "Een naam om het kanaal te beschrijven. Deze wordt niet gebruikt voor de verbinding met Matrix."
             room_id:
               title: "Ruimte-ID"
+              help: "De 'privé-ID' voor de ruimte. Deze dient eruit te zien als !abcdefghijkl"
           errors:
             unknown_token: "Toegangstoken is ongeldig"
             unknown_room: "Ruimte-ID is ongeldig"
@@ -133,6 +190,7 @@ nl:
           param:
             identifier:
               title: Kanaal
+              help: "Bijvoorbeeld #kanaal of @gebruikersnaam"
           errors:
             invalid_channel: "Dat kanaal bestaat niet op Rocket Chat"
         gitter:
@@ -140,6 +198,7 @@ nl:
           param:
             name:
               title: "Naam"
+              help: "De naam van een Gitter-ruimte voor bijvoorbeeld gitterHQ/services"
             webhook_url:
               title: "Webhook-URL"
               help: "De opgegeven URL wanneer je een nieuwe integratie maakt in een Gitter-ruimte."

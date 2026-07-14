@@ -6,16 +6,10 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { actionDescriptionHtml } from "discourse/components/post-action-description";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
-import TopicLocalizedContentToggle from "discourse/components/topic-localized-content-toggle";
 import UserTip from "discourse/components/user-tip";
-import ageWithTooltip from "discourse/helpers/age-with-tooltip";
-import categoryLink from "discourse/helpers/category-link";
-import icon from "discourse/helpers/d-icon";
-import discourseTags from "discourse/helpers/discourse-tags";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { bind, debounce } from "discourse/lib/decorators";
@@ -23,6 +17,11 @@ import domUtils from "discourse/lib/dom-utils";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import TopicNotificationsButton from "discourse/select-kit/components/topic-notifications-button";
 import { and, not, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dAgeWithTooltip from "discourse/ui-kit/helpers/d-age-with-tooltip";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import BackButton from "./back-button";
 import Scroller from "./scroller";
@@ -107,10 +106,14 @@ export default class TopicTimelineScrollArea extends Component {
       }
     });
 
+    // The timeline is usually rendered on a topic page where both of these
+    // anchors exist. When it's rendered outside of that context (for example,
+    // a modal opened from a floating composer on a non-topic route), they
+    // may be absent — skip observing rather than crashing.
     const elements = [
       document.querySelector(".container.posts"),
       document.querySelector("#topic-bottom"),
-    ];
+    ].filter(Boolean);
 
     for (let i = 0; i < elements.length; i++) {
       this.intersectionObserver.observe(elements[i]);
@@ -164,10 +167,7 @@ export default class TopicTimelineScrollArea extends Component {
   }
 
   get showTimelineControls() {
-    return (
-      !this.args.fullscreen &&
-      (this.currentUser || this.args.model.has_localized_content)
-    );
+    return !this.args.fullscreen && this.currentUser;
   }
 
   get topicTitle() {
@@ -519,7 +519,7 @@ export default class TopicTimelineScrollArea extends Component {
           <div class="topic-header-extra">
             {{#if this.showTags}}
               <div class="list-tags">
-                {{discourseTags @model mode="list" tags=@model.tags}}
+                {{dDiscourseTags @model mode="list" tags=@model.tags}}
               </div>
             {{/if}}
             {{#if this.siteSettings.topic_featured_link_enabled}}
@@ -531,9 +531,9 @@ export default class TopicTimelineScrollArea extends Component {
         {{#if (and (not @model.isPrivateMessage) @model.category)}}
           <div class="topic-category">
             {{#if @model.category.parentCategory}}
-              {{categoryLink @model.category.parentCategory}}
+              {{dCategoryLink @model.category.parentCategory}}
             {{/if}}
-            {{categoryLink @model.category}}
+            {{dCategoryLink @model.category}}
           </div>
         {{/if}}
 
@@ -566,10 +566,6 @@ export default class TopicTimelineScrollArea extends Component {
           @convertToPublicTopic={{@convertToPublicTopic}}
           @convertToPrivateMessage={{@convertToPrivateMessage}}
         />
-
-        {{#if @model.has_localized_content}}
-          <TopicLocalizedContentToggle @topic={{@model}} />
-        {{/if}}
       </div>
     {{/if}}
 
@@ -603,8 +599,8 @@ export default class TopicTimelineScrollArea extends Component {
           style={{this.timelineScrollareaStyle}}
           {{didInsert this.registerScrollarea}}
         >
+          {{! eslint-disable ember/template-no-invalid-interactive }}
           <div
-            {{! template-lint-disable no-invalid-interactive }}
             {{on "click" this.updatePercentage}}
             style={{this.beforePadding}}
             class="timeline-padding"
@@ -623,8 +619,8 @@ export default class TopicTimelineScrollArea extends Component {
             {{didInsert this.registerScroller}}
           />
 
+          {{! eslint-disable ember/template-no-invalid-interactive }}
           <div
-            {{! template-lint-disable no-invalid-interactive }}
             {{on "click" this.updatePercentage}}
             style={{this.afterPadding}}
             class="timeline-padding"
@@ -632,7 +628,7 @@ export default class TopicTimelineScrollArea extends Component {
 
           {{#if (and this.hasBackPosition this.showButton)}}
             <div class="timeline-last-read" style={{this.lastReadStyle}}>
-              {{icon "minus" class="progress"}}
+              {{dIcon "minus" class="progress"}}
               <BackButton @onGoBack={{this.goBack}} />
             </div>
           {{/if}}
@@ -645,7 +641,7 @@ export default class TopicTimelineScrollArea extends Component {
             class="now-date"
           >
             <span>
-              {{ageWithTooltip this.nowDate this.nowDateOptions}}
+              {{dAgeWithTooltip this.nowDate this.nowDateOptions}}
             </span>
           </a>
         </div>

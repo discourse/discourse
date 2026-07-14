@@ -3,14 +3,14 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import avatar from "discourse/helpers/bound-avatar-template";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { bind } from "discourse/lib/decorators";
 import { and, not } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import dBoundAvatarTemplate from "discourse/ui-kit/helpers/d-bound-avatar-template";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import PolicyBuilder from "./modal/policy-builder";
 
@@ -283,14 +283,14 @@ export default class PostPolicy extends Component {
               <span class="user-count">
                 {{this.post.policy_accepted_by_count}}
               </span>
-              {{icon "user-check"}}
+              {{dIcon "user-check"}}
             </a>
 
             {{#unless this.showNotAccepted}}
               {{#if this.acceptedUsers.length}}
                 <div class="users accepted">
                   {{#each this.acceptedUsers as |acceptedUser|}}
-                    {{avatar acceptedUser.avatar_template "tiny"}}
+                    {{dBoundAvatarTemplate acceptedUser.avatar_template "tiny"}}
                   {{/each}}
 
                   {{#if this.remainingAcceptedUsers}}
@@ -301,7 +301,7 @@ export default class PostPolicy extends Component {
                     >
                       +
                       {{this.remainingAcceptedUsers}}
-                      {{icon "user"}}
+                      {{dIcon "user"}}
                     </a>
                   {{/if}}
                 </div>
@@ -321,13 +321,16 @@ export default class PostPolicy extends Component {
               <span class="user-count">
                 {{this.post.policy_not_accepted_by_count}}
               </span>
-              {{icon "user-xmark"}}
+              {{dIcon "user-xmark"}}
             </a>
 
             {{#if this.showNotAccepted}}
               <div class="users not-accepted">
                 {{#each this.notAcceptedUsers as |notAcceptedUser|}}
-                  {{avatar notAcceptedUser.avatar_template "tiny"}}
+                  {{dBoundAvatarTemplate
+                    notAcceptedUser.avatar_template
+                    "tiny"
+                  }}
                 {{/each}}
 
                 {{#if this.remainingNotAcceptedUsers}}
@@ -338,7 +341,7 @@ export default class PostPolicy extends Component {
                   >
                     +
                     {{this.remainingNotAcceptedUsers}}
-                    {{icon "user"}}
+                    {{dIcon "user"}}
                   </a>
                 {{/if}}
               </div>

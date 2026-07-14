@@ -219,7 +219,7 @@ class ImportScripts::Drupal < ImportScripts::Base
           }
           if row["pid"]
             parent = topic_lookup_from_imported_post_id("cid:#{row["pid"]}")
-            h[:reply_to_post_number] = parent[:post_number] if parent && parent[:post_number] > (1)
+            h[:reply_to_post_number] = parent[:post_number] if parent && parent[:post_number] > 1
           end
           h
         else

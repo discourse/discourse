@@ -1,7 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    faraday (2.14.1)
+    faraday (2.14.2)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
@@ -13,7 +13,7 @@ GEM
       faraday (~> 2.0)
     ffi (1.17.0)
     ffi (1.17.0-arm64-darwin)
-    json (2.19.2)
+    json (2.19.5)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)

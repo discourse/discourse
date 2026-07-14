@@ -5,25 +5,33 @@ RSpec.describe TopicsController do
   let(:topic) { p1.topic }
   let(:p2) { Fabricate(:post, like_count: 2, topic:, user: Fabricate(:user)) }
 
-  def expected_schema_json
-    answer_json =
-      ',"acceptedAnswer":{"@type":"Answer","text":"%{answer_text}","upvoteCount":%{answer_likes},"datePublished":"%{answered_at}","url":"%{answer_url}","author":{"@type":"Person","name":"%{username2}","url":"%{user2_url}"}}' %
-        {
-          answer_text: p2.excerpt,
-          answer_likes: p2.like_count,
-          answered_at: p2.created_at.as_json,
-          answer_url: p2.full_url,
-          username2: p2.user&.username,
-          user2_url: p2.user&.full_url,
-        }
+  def answer_json(post)
+    '{"@type":"Answer","author":{"@type":"Person","name":"%{username2}","url":"%{user2_url}"},"dateModified":"%{answer_modified}","datePublished":"%{answered_at}","text":"%{answer_text}","upvoteCount":%{answer_likes},"url":"%{answer_url}"}' %
+      {
+        answer_text: post.excerpt,
+        answer_likes: post.like_count,
+        answered_at: post.created_at.as_json,
+        answer_modified: (post.last_version_at || post.created_at).as_json,
+        answer_url: post.full_url,
+        username2: post.user&.username,
+        user2_url: post.user&.full_url,
+      }
+  end
 
-    '<script type="application/ld+json">{"@context":"http://schema.org","@type":"QAPage","name":"%{title}","mainEntity":{"@type":"Question","name":"%{title}","text":"%{question_text}","upvoteCount":%{question_likes},"answerCount":1,"datePublished":"%{created_at}","author":{"@type":"Person","name":"%{username1}","url":"%{user1_url}"}%{answer_json}}}</script>' %
+  def p2_single_answer_json
+    ',"acceptedAnswer":[%{answer_json}]' % { answer_json: answer_json(p2) }
+  end
+
+  def expected_schema_json(answer_json, answer_count = 1)
+    '<script type="application/ld+json">{"@context":"http://schema.org","@type":"QAPage","name":"%{title}","datePublished":"%{created_at}","mainEntity":{"@type":"Question","answerCount":%{answer_count},"author":{"@type":"Person","name":"%{username1}","url":"%{user1_url}"},"dateModified":"%{question_modified}","datePublished":"%{created_at}","name":"%{title}","text":"%{question_text}","upvoteCount":%{question_likes}%{answer_json}}}</script>' %
       # rubocop:enable Layout/LineLength
       {
+        answer_count:,
         title: topic.title,
         question_text: p1.excerpt,
         question_likes: p1.like_count,
         created_at: topic.created_at.as_json,
+        question_modified: (p1.last_version_at || p1.created_at).as_json,
         username1: topic.user&.username,
         user1_url: topic.user&.full_url,
         answer_json:,
@@ -44,7 +52,7 @@ RSpec.describe TopicsController do
 
       get "/t/#{topic.slug}/#{topic.id}"
 
-      expect(response.body).to include(expected_schema_json)
+      expect(response.body).to include(expected_schema_json(p2_single_answer_json))
     end
 
     it "should include quoted content in schema information" do
@@ -64,25 +72,27 @@ RSpec.describe TopicsController do
       SiteSetting.display_name_on_posts = true
       SiteSetting.show_who_marked_solved = true
       accepter = Fabricate(:user)
-      Fabricate(:solved_topic, topic:, answer_post: p2, accepter:)
+      Fabricate(:solved_topic, topic:, topic_answer: Fabricate(:topic_answer, post: p2, accepter:))
 
       get "/t/#{topic.slug}/#{topic.id}.json"
 
-      expect(response.parsed_body["accepted_answer"]["name"]).to eq(p2.user.name)
-      expect(response.parsed_body["accepted_answer"]["username"]).to eq(p2.user.username)
-      expect(response.parsed_body["accepted_answer"]["accepter_name"]).to eq(accepter.name)
-      expect(response.parsed_body["accepted_answer"]["accepter_username"]).to eq(accepter.username)
+      expect(response.parsed_body["accepted_answers"][0]["name"]).to eq(p2.user.name)
+      expect(response.parsed_body["accepted_answers"][0]["username"]).to eq(p2.user.username)
+      expect(response.parsed_body["accepted_answers"][0]["accepter_name"]).to eq(accepter.name)
+      expect(response.parsed_body["accepted_answers"][0]["accepter_username"]).to eq(
+        accepter.username,
+      )
 
       SiteSetting.show_who_marked_solved = false
       get "/t/#{topic.slug}/#{topic.id}.json"
-      expect(response.parsed_body["accepted_answer"]["accepter_name"]).to eq(nil)
-      expect(response.parsed_body["accepted_answer"]["accepter_username"]).to eq(nil)
+      expect(response.parsed_body["accepted_answers"][0]["accepter_name"]).to eq(nil)
+      expect(response.parsed_body["accepted_answers"][0]["accepter_username"]).to eq(nil)
 
       # enable_names is default ON, this ensures disabling it also disables names here
       SiteSetting.enable_names = false
       get "/t/#{topic.slug}/#{topic.id}.json"
-      expect(response.parsed_body["accepted_answer"]["name"]).to eq(nil)
-      expect(response.parsed_body["accepted_answer"]["accepter_name"]).to eq(nil)
+      expect(response.parsed_body["accepted_answers"][0]["name"]).to eq(nil)
+      expect(response.parsed_body["accepted_answers"][0]["accepter_name"]).to eq(nil)
     end
 
     it "should not include user name when site setting is disabled" do
@@ -91,8 +101,69 @@ RSpec.describe TopicsController do
 
       get "/t/#{topic.slug}/#{topic.id}.json"
 
-      expect(response.parsed_body["accepted_answer"]["name"]).to eq(nil)
-      expect(response.parsed_body["accepted_answer"]["username"]).to eq(p2.user.username)
+      expect(response.parsed_body["accepted_answers"][0]["name"]).to eq(nil)
+      expect(response.parsed_body["accepted_answers"][0]["username"]).to eq(p2.user.username)
+    end
+
+    it "does not serialize accepted answers hidden from the current user" do
+      answer_post =
+        Fabricate(:post, topic:, raw: "secret accepted whisper solution", user: Fabricate(:user))
+      Fabricate(:solved_topic, topic:, answer_post:)
+      answer_post.update!(post_type: Post.types[:whisper])
+      sign_in(Fabricate(:user))
+
+      get "/t/#{topic.slug}/#{topic.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["accepted_answers"]).to be_nil
+      expect(response.parsed_body.to_s).not_to include(answer_post.raw)
+    end
+
+    it "does not serialize accepted answers that are hidden from the current user" do
+      answer_post =
+        Fabricate(:post, topic:, raw: "secret accepted hidden solution", user: Fabricate(:user))
+      Fabricate(:solved_topic, topic:, answer_post:)
+      answer_post.update!(
+        hidden: true,
+        hidden_reason_id: Post.hidden_reasons[:flag_threshold_reached],
+      )
+      sign_in(Fabricate(:user))
+
+      get "/t/#{topic.slug}/#{topic.id}.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["accepted_answers"]).to be_nil
+      expect(response.parsed_body.to_s).not_to include(answer_post.raw)
+    end
+
+    describe "with multiple solutions enabled" do
+      before { SiteSetting.solved_allow_multiple_solutions = true }
+
+      describe "when topic has two accepted answers and one not accepted" do
+        let(:p3) { Fabricate(:post, topic:) }
+        let(:p4) { Fabricate(:post, topic:) }
+        let(:solved_topic) { Fabricate(:solved_topic, topic:) }
+
+        before do
+          Fabricate(:topic_answer, solved_topic:, post: p2)
+          Fabricate(:topic_answer, solved_topic:, post: p3)
+          p4
+        end
+
+        it "should include correct schema information " do
+          get "/t/#{topic.slug}/#{topic.id}"
+
+          two_accepted_answers_json =
+            ',"acceptedAnswer":[%{answer_p2},%{answer_p3}]' %
+              { answer_p2: answer_json(p2), answer_p3: answer_json(p3) }
+          suggested_answer_json =
+            ',"suggestedAnswer":[%{answer_p4}]' % { answer_p4: answer_json(p4) }
+
+          answers_json = "#{two_accepted_answers_json}#{suggested_answer_json}"
+
+          expect(response.body).to include(expected_schema_json(answers_json, 3))
+        end
+      end
     end
   end
 
@@ -153,12 +224,13 @@ RSpec.describe TopicsController do
       qa_page = doc.at_css('[itemtype*="QAPage"]')
       expect(qa_page).to be_present
       expect(qa_page.at_css('> [itemprop="name"]')["content"]).to eq(topic.title)
-      expect(qa_page.at_css('> [itemprop="datePublished"]')["content"]).to be_present
 
       question = doc.at_css('[itemtype*="Question"]')
       expect(question).to be_present
       expect(question.at_css('[itemprop="name"]')["content"]).to eq(topic.title)
+      expect(question.at_css('[itemprop="datePublished"]')["content"]).to be_present
       expect(question.at_css('[itemprop="answerCount"]')["content"]).to eq("2")
+      expect(question.at_css('[itemprop="upvoteCount"]')["content"]).to eq(p1.like_count.to_s)
       expect(question.at_css('[itemprop="text"]')).to be_present
       expect(question.at_css('[itemprop="author"] [itemprop="name"]')).to be_present
 
@@ -168,6 +240,12 @@ RSpec.describe TopicsController do
       expect(accepted.at_css('[itemprop="text"]')).to be_present
       expect(accepted.at_css('[itemprop="datePublished"]')).to be_present
       expect(accepted.at_css('[itemprop="author"] [itemprop="name"]')).to be_present
+      expect(accepted.at_css('[itemprop="author"] [itemprop="url"]')["content"]).to include(
+        p2.user.username,
+      )
+      expect(accepted.at_css('[itemprop="upvoteCount"]')["content"]).to eq(p2.like_count.to_s)
+      accepted_urls = accepted.css('meta[itemprop="url"]').map { |el| el["content"] }
+      expect(accepted_urls).to include(p2.full_url)
 
       suggested = doc.at_css("#post_#{p3.post_number}")
       expect(suggested["itemprop"]).to eq("suggestedAnswer")
@@ -175,6 +253,98 @@ RSpec.describe TopicsController do
       expect(suggested.at_css('[itemprop="text"]')).to be_present
       expect(suggested.at_css('[itemprop="datePublished"]')).to be_present
       expect(suggested.at_css('[itemprop="author"] [itemprop="name"]')).to be_present
+      expect(suggested.at_css('[itemprop="author"] [itemprop="url"]')["content"]).to include(
+        p3.user.username,
+      )
+      expect(suggested.at_css('[itemprop="upvoteCount"]')["content"]).to eq(p3.like_count.to_s)
+      suggested_urls = suggested.css('meta[itemprop="url"]').map { |el| el["content"] }
+      expect(suggested_urls).to include(p3.full_url)
+    end
+
+    it "does not leak microdata from ineligible posts into the Question scope" do
+      ineligible =
+        Fabricate(:post, topic:, user: Fabricate(:user), post_type: Post.types[:moderator_action])
+      Fabricate(:solved_topic, topic:, answer_post: p2)
+
+      get "/t/#{topic.slug}/#{topic.id}", env: crawler_env
+      doc = parsed_crawler_body
+
+      question = doc.at_css('[itemtype*="Question"]')
+      ineligible_node = doc.at_css("#post_#{ineligible.post_number}")
+
+      expect(ineligible_node).to be_present
+      expect(question.xpath('./*[@itemprop="datePublished"]').size).to eq(1)
+      expect(ineligible_node.css("[itemprop]")).to be_empty
+    end
+
+    describe "with multiple solutions enabled" do
+      let(:p3) { Fabricate(:post, topic:, cooked: "p3 cooked") }
+      let(:p4) { Fabricate(:post, topic:, cooked: "p4 cooked") }
+      let(:solved_topic) { Fabricate(:solved_topic, topic:) }
+
+      before do
+        SiteSetting.solved_allow_multiple_solutions = true
+        Fabricate(:topic_answer, solved_topic:, post: p2)
+        Fabricate(:topic_answer, solved_topic:, post: p3)
+        p4
+      end
+
+      it "should include two acceptedAnswers and a suggestedAnswer in qaschema" do
+        get "/t/#{topic.slug}/#{topic.id}", env: crawler_env
+        doc = parsed_crawler_body
+
+        qa_page = doc.at_css('[itemtype*="QAPage"]')
+        expect(qa_page).to be_present
+        expect(qa_page.at_css('> [itemprop="name"]')["content"]).to eq(topic.title)
+
+        question = doc.at_css('[itemtype*="Question"]')
+        expect(question).to be_present
+        expect(question.at_css('[itemprop="name"]')["content"]).to eq(topic.title)
+        expect(question.at_css('[itemprop="datePublished"]')["content"]).to be_present
+        expect(question.at_css('[itemprop="answerCount"]')["content"]).to eq("3")
+        expect(question.at_css('[itemprop="upvoteCount"]')["content"]).to eq(p1.like_count.to_s)
+        expect(question.at_css('[itemprop="text"]')).to be_present
+        expect(question.at_css('[itemprop="author"] [itemprop="name"]')).to be_present
+
+        accepted = doc.at_css("#post_#{p2.post_number}")
+        expect(accepted["itemprop"]).to eq("acceptedAnswer")
+        expect(accepted["itemtype"]).to include("Answer")
+        expect(accepted.at_css('[itemprop="text"]')).to be_present
+        expect(accepted.at_css('[itemprop="datePublished"]')).to be_present
+        expect(accepted.at_css('[itemprop="author"] [itemprop="name"]')).to be_present
+        expect(accepted.at_css('[itemprop="author"] [itemprop="url"]')["content"]).to include(
+          p2.user.username,
+        )
+        expect(accepted.at_css('[itemprop="upvoteCount"]')["content"]).to eq(p2.like_count.to_s)
+        accepted_urls = accepted.css('meta[itemprop="url"]').map { |el| el["content"] }
+        expect(accepted_urls).to include(p2.full_url)
+
+        accepted = doc.at_css("#post_#{p3.post_number}")
+        expect(accepted["itemprop"]).to eq("acceptedAnswer")
+        expect(accepted["itemtype"]).to include("Answer")
+        expect(accepted.at_css('[itemprop="text"]')).to be_present
+        expect(accepted.at_css('[itemprop="datePublished"]')).to be_present
+        expect(accepted.at_css('[itemprop="author"] [itemprop="name"]')).to be_present
+        expect(accepted.at_css('[itemprop="author"] [itemprop="url"]')["content"]).to include(
+          p3.user.username,
+        )
+        expect(accepted.at_css('[itemprop="upvoteCount"]')["content"]).to eq(p3.like_count.to_s)
+        accepted_urls = accepted.css('meta[itemprop="url"]').map { |el| el["content"] }
+        expect(accepted_urls).to include(p3.full_url)
+
+        suggested = doc.at_css("#post_#{p4.post_number}")
+        expect(suggested["itemprop"]).to eq("suggestedAnswer")
+        expect(suggested["itemtype"]).to include("Answer")
+        expect(suggested.at_css('[itemprop="text"]')).to be_present
+        expect(suggested.at_css('[itemprop="datePublished"]')).to be_present
+        expect(suggested.at_css('[itemprop="author"] [itemprop="name"]')).to be_present
+        expect(suggested.at_css('[itemprop="author"] [itemprop="url"]')["content"]).to include(
+          p4.user.username,
+        )
+        expect(suggested.at_css('[itemprop="upvoteCount"]')["content"]).to eq(p4.like_count.to_s)
+        suggested_urls = suggested.css('meta[itemprop="url"]').map { |el| el["content"] }
+        expect(suggested_urls).to include(p4.full_url)
+      end
     end
 
     it "does not modify schema for topics without solved enabled" do
@@ -231,7 +401,7 @@ RSpec.describe TopicsController do
 
       get "/t/#{topic.slug}/#{topic.id}"
 
-      expect(response.body).to include(expected_schema_json)
+      expect(response.body).to include(expected_schema_json(p2_single_answer_json))
     end
 
     it "doesn't include solved schema information when the topic has a different tag" do
@@ -242,7 +412,7 @@ RSpec.describe TopicsController do
 
       get "/t/#{topic.slug}/#{topic.id}"
 
-      expect(response.body).not_to include(expected_schema_json)
+      expect(response.body).not_to include(expected_schema_json(p2_single_answer_json))
     end
   end
 end

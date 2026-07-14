@@ -24,6 +24,7 @@ describe UserNotifications do
   before do
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.simple_email_subject = false
   end
 
   def create_message(chat_channel, message, mention_klass = nil)
@@ -644,6 +645,25 @@ describe UserNotifications do
       it "does not send current user a chat summary email" do
         no_chat_summary_email
       end
+    end
+  end
+
+  describe "when SiteSetting.simple_email_subject is enabled" do
+    before do
+      SiteSetting.simple_email_subject = true
+      followed_channel.add(user)
+      create_message(followed_channel, "hello @#{user.username}", Chat::UserMention)
+    end
+
+    it "uses the improved chat summary subject" do
+      expect(chat_summary_email.subject).to eq(
+        I18n.t(
+          "user_notifications.chat_summary.subject.chat_channel_1_improved",
+          site_name:,
+          channel: followed_channel.name,
+          count: 1,
+        ),
+      )
     end
   end
 end

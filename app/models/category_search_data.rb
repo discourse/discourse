@@ -8,11 +8,11 @@ end
 #
 # Table name: category_search_data
 #
-#  category_id :integer          not null, primary key
-#  search_data :tsvector
-#  raw_data    :text
 #  locale      :text
+#  raw_data    :text
+#  search_data :tsvector
 #  version     :integer          default(0)
+#  category_id :integer          not null, primary key
 #
 # Indexes
 #

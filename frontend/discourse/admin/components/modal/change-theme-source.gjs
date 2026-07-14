@@ -2,13 +2,13 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import ConditionalLoadingSection from "discourse/components/conditional-loading-section";
-import CopyButton from "discourse/components/copy-button";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSection from "discourse/ui-kit/d-conditional-loading-section";
+import DCopyButton from "discourse/ui-kit/d-copy-button";
+import DModal from "discourse/ui-kit/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class ChangeThemeSourceModal extends Component {
@@ -16,6 +16,7 @@ export default class ChangeThemeSourceModal extends Component {
   @tracked loading = false;
   @tracked generateNewKey = false;
   @tracked remoteUrl = this.args.model.theme.remote_theme?.remote_url || "";
+  @tracked formApi = null;
 
   @cached
   get data() {
@@ -40,8 +41,9 @@ export default class ChangeThemeSourceModal extends Component {
   }
 
   @action
-  onRemoteUrlChange(value) {
+  onRemoteUrlChange(value, { set, name }) {
     this.remoteUrl = value;
+    set(name, value);
   }
 
   @action
@@ -107,7 +109,7 @@ export default class ChangeThemeSourceModal extends Component {
       @closeModal={{@closeModal}}
     >
       <:body>
-        <ConditionalLoadingSection
+        <DConditionalLoadingSection
           @isLoading={{this.loading}}
           @title={{i18n "admin.customize.theme.change_source.updating"}}
         >
@@ -174,14 +176,14 @@ export default class ChangeThemeSourceModal extends Component {
                         readonly="true"
                         {{didInsert this.generatePublicKey}}
                       >{{this.publicKey}}</textarea>
-                      <CopyButton @selector="textarea.public-key-value" />
+                      <DCopyButton @selector="textarea.public-key-value" />
                     </div>
                   </div>
                 {{/if}}
               </div>
             {{/if}}
           </Form>
-        </ConditionalLoadingSection>
+        </DConditionalLoadingSection>
       </:body>
       <:footer>
         <DButton

@@ -26,10 +26,25 @@ describe RRuleConfigurator do
         expect(rule).to eq("FREQ=MONTHLY;BYDAY=1MO")
       end
 
-      it "generates the correct rule for the last day of the month" do
-        last_day = Time.utc(2020, 8, 31, 16, 32) # Last day of August 2020
+      it "uses BYDAY=-1 when the start is the fifth (and final) Monday of the month" do
+        last_day = Time.utc(2020, 8, 31, 16, 32) # 5th and last Monday of August 2020
         rule = RRuleConfigurator.rule(recurrence: "every_month", starts_at: last_day)
-        expect(rule).to eq("FREQ=MONTHLY;BYDAY=5MO")
+        expect(rule).to eq("FREQ=MONTHLY;BYDAY=-1MO")
+      end
+
+      it "uses BYDAY=-1 when the fourth occurrence is also the last in the month" do
+        # September 2025 has only 4 Mondays (1, 8, 15, 22, 29 — 5 actually)
+        # Use February 2026 instead: only 4 Mondays (2, 9, 16, 23)
+        last_monday = Time.utc(2026, 2, 23, 12, 0)
+        rule = RRuleConfigurator.rule(recurrence: "every_month", starts_at: last_monday)
+        expect(rule).to eq("FREQ=MONTHLY;BYDAY=-1MO")
+      end
+
+      it "uses BYDAY=4 when there is also a fifth occurrence in the month" do
+        # March 2027: 1, 8, 15, 22, 29 — 5 Mondays. The 4th Monday is Mar 22.
+        fourth_monday = Time.utc(2027, 3, 22, 12, 0)
+        rule = RRuleConfigurator.rule(recurrence: "every_month", starts_at: fourth_monday)
+        expect(rule).to eq("FREQ=MONTHLY;BYDAY=4MO")
       end
     end
 

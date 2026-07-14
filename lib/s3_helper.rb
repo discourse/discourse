@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "aws-sdk-s3"
+require "aws-sdk-sts"
 
 class S3Helper
   FIFTEEN_MEGABYTES = 15 * 1024 * 1024
@@ -81,6 +82,14 @@ class S3Helper
           options[:body] = file
           obj.put(options).etag
         end
+      rescue Aws::S3::Errors::MetadataTooLarge
+        if options[:content_disposition].present?
+          options.delete(:content_disposition)
+          file.rewind if file.respond_to?(:rewind)
+          retry
+        else
+          raise
+        end
       end
 
     [path, etag.gsub('"', "")]
@@ -95,7 +104,7 @@ class S3Helper
 
     # copy the file in tombstone
     if copy_to_tombstone && @tombstone_prefix.present?
-      self.copy(get_path_for_s3_upload(s3_filename), File.join(@tombstone_prefix, s3_filename))
+      copy(get_path_for_s3_upload(s3_filename), File.join(@tombstone_prefix, s3_filename))
     end
 
     # delete the file
@@ -289,12 +298,33 @@ class S3Helper
     opts[:http_continue_timeout] = SiteSetting.s3_http_continue_timeout
     opts[:use_dualstack_endpoint] = SiteSetting.Upload.use_dualstack_endpoint
 
-    unless obj.s3_use_iam_profile
-      opts[:access_key_id] = obj.s3_access_key_id
-      opts[:secret_access_key] = obj.s3_secret_access_key
-    end
+    creds = s3_credentials(obj)
+    opts[:credentials] = creds if creds
 
     opts
+  end
+
+  def self.s3_credentials(obj, stub_responses: false)
+    return nil if obj.s3_use_iam_profile
+
+    if obj.s3_role_arn.present?
+      # RoleSessionName max 64 chars: https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRole.html
+      session_name = obj.s3_role_session_name.presence || Discourse.os_hostname[0...64]
+      sts_client =
+        Aws::STS::Client.new(
+          region: obj.s3_region,
+          access_key_id: obj.s3_access_key_id,
+          secret_access_key: obj.s3_secret_access_key,
+          stub_responses: stub_responses,
+        )
+      Aws::AssumeRoleCredentials.new(
+        role_arn: obj.s3_role_arn,
+        role_session_name: session_name,
+        client: sts_client,
+      )
+    else
+      Aws::Credentials.new(obj.s3_access_key_id, obj.s3_secret_access_key)
+    end
   end
 
   def download_file(filename, destination_path, failure_message = nil)
@@ -420,12 +450,10 @@ class S3Helper
   end
 
   def fetch_bucket_cors_rules
-    begin
-      s3_resource.client.get_bucket_cors(bucket: @s3_bucket_name).cors_rules&.map(&:to_h) || []
-    rescue Aws::S3::Errors::NoSuchCORSConfiguration
-      # no rule
-      []
-    end
+    s3_resource.client.get_bucket_cors(bucket: @s3_bucket_name).cors_rules&.map(&:to_h) || []
+  rescue Aws::S3::Errors::NoSuchCORSConfiguration
+    # no rule
+    []
   end
 
   def default_s3_options
@@ -454,7 +482,7 @@ class S3Helper
   def multisite_upload_path
     path = File.join("uploads", RailsMultisite::ConnectionManagement.current_db, "/")
     return path if !Rails.env.test?
-    File.join(path, "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}", "/")
+    File.join(path, "test_#{Discourse.test_env_number}", "/")
   end
 
   def s3_resource

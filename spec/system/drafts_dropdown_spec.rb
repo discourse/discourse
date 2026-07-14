@@ -36,7 +36,7 @@ describe "Drafts dropdown" do
       )
 
       5.times do |i|
-        topic = Fabricate(:topic, user: user)
+        topic = Fabricate(:topic_with_op, user: user)
         Draft.set(user, topic.draft_key, 0, { reply: "test reply #{i}" }.to_json)
       end
     end

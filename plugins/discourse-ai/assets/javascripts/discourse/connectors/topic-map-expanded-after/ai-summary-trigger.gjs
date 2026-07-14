@@ -6,7 +6,8 @@ import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import DButton from "discourse/components/d-button";
+import EmbedMode from "discourse/lib/embed-mode";
+import DButton from "discourse/ui-kit/d-button";
 import AiSummaryModal from "../../components/modal/ai-summary-modal";
 
 export default class AiSummaryTrigger extends Component {
@@ -59,7 +60,7 @@ export default class AiSummaryTrigger extends Component {
     this.creditStatus = null;
     this.creditCheckComplete = false;
 
-    if (!this.currentUser) {
+    if (!this.currentUser || EmbedMode.enabled) {
       this.creditCheckComplete = true;
       return;
     }

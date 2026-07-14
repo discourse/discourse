@@ -51,7 +51,11 @@ module Chat
     end
 
     def can_create_thread_in_channel(guardian:, channel:)
-      guardian.can_create_channel_message?(channel)
+      if channel.direct_message_channel?
+        return Chat::Channel::Policy::MessageCreation.new(context).call
+      end
+
+      guardian.can_join_chat_channel?(channel) && guardian.can_create_channel_message?(channel)
     end
 
     def threading_enabled_for_channel(channel:)

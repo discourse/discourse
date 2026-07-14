@@ -38,6 +38,14 @@ ko:
             canned_reply:
               label: "댓글쓰기"
     discourse_ai:
+      ai_tool_approval:
+        loading: "로드 중..."
+        tool: "처리"
+        user: "사용자"
+        approve: "승인"
+        reject: "거부"
+        approved: "승인"
+        rejected: "거부됨"
       llm_selector:
         none: "없음"
       features:
@@ -50,6 +58,8 @@ ko:
         bot:
           setting_groups:
             settings: "기본 설정"
+        nav:
+          enabled: "활성화"
         filters:
           all: "모두"
           reset: "리셋"
@@ -58,6 +68,9 @@ ko:
             settings: "기본 설정"
         search:
           name: "검색"
+          setting_groups:
+            settings: "기본 설정"
+        admin_dashboard:
           setting_groups:
             settings: "기본 설정"
         discord:
@@ -75,6 +88,7 @@ ko:
         select_option: "옵션 선택..."
       translations:
         title: "번역"
+        category_scope: "카테고리"
         stats:
           eta_minutes:
             other: "%{count}분"
@@ -110,6 +124,12 @@ ko:
         enabled: "활성화?"
         allowed_groups: "허용 된 그룹"
         delete: "삭제"
+        thinking_effort_options:
+          none: "없음"
+          low: "낮음"
+          medium: "중간"
+          high: "높음"
+          max: "최대"
         response_format:
           open_modal: "편집"
           modal:
@@ -223,6 +243,7 @@ ko:
           today: "오늘"
           last_7_days: "지난 7일"
           last_30_days: "지난 30일"
+          scroll_to_bottom: "맨 아래로 스크롤"
       sentiments:
         sentiment_analysis:
           filter_types:

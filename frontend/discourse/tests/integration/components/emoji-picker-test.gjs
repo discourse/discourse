@@ -1,13 +1,13 @@
 import { click, fillIn, render, triggerKeyEvent } from "@ember/test-helpers";
 import { IMAGE_VERSION as v } from "pretty-text/emoji/version";
-import { module, skip, test } from "qunit";
+import { module, test } from "qunit";
 import Content from "discourse/components/emoji-picker/content";
 import emojisFixtures from "discourse/tests/fixtures/emojis-fixtures";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import emojiPicker from "discourse/tests/helpers/emoji-picker-helper";
 
-module("Integration | Component | emoji-picker-content", function (hooks) {
+module("Integration | Component | EmojiPickerContent", function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
@@ -118,8 +118,13 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
     assert.verifySteps(["grinning"]);
   });
 
-  skip("When navigating sections", async function (assert) {
+  test("When navigating sections", async function (assert) {
     await render(<template><Content /></template>);
+
+    // Force all sections to render
+    await click(`.emoji-picker__section-btn[data-section="objects"]`);
+
+    document.querySelector(".filter-input").focus();
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
 
     assert
@@ -160,9 +165,10 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
     assert.dom(document.activeElement).hasAttribute("data-emoji", "grinning");
   });
 
-  skip("When navigating filtered emojis", async function (assert) {
+  test("When navigating filtered emojis", async function (assert) {
     await render(<template><Content /></template>);
-    await fillIn(".filter-input", "man");
+
+    await fillIn(".filter-input", "_rowing_");
 
     await triggerKeyEvent(document.activeElement, "keydown", "ArrowDown");
     assert
@@ -178,7 +184,7 @@ module("Integration | Component | emoji-picker-content", function (hooks) {
       .dom(document.activeElement)
       .hasAttribute(
         "data-emoji",
-        "womans_clothes",
+        "person_rowing_boat",
         "ArrowRight focuses on the emoji at the right"
       );
 

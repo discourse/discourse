@@ -33,6 +33,9 @@ ur:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
+      event_description:
+        show_more: "مزید دکھائیں"
+        show_less: "کم دکھائیں"
       edit_reason: "ایونٹ اپ ڈیٹ"
       show_all: "تمام دکھائیں"
       add_to_calendar: "کیلنڈر میں شامل کریں"
@@ -46,6 +49,8 @@ ur:
         group_selector_placeholder: "ایک گروپ منتخب کریں..."
       upcoming_events:
         status: "سٹیٹس"
+      upcoming_events_list:
+        all_day: "سارا دن"
       models:
         event:
           expired: "میعاد ختم ہوگئی"
@@ -55,6 +60,21 @@ ur:
               title: "عوامی"
             private:
               title: "ذاتی"
+      composer:
+        reminder:
+          units:
+            minutes:
+              one: "منٹ"
+              other: "منٹ"
+            hours:
+              one: "گھنٹہ"
+              other: "گھنٹے"
+            days:
+              one: "دن"
+              other: "دن"
+            weeks:
+              one: "ہفتہ"
+              other: "ہفتے"
       builder_modal:
         custom_fields:
           placeholder: "اختیاری"
@@ -66,6 +86,8 @@ ur:
         timezone:
           label: خطہ کا وقت
           remove_timezone: کوئی خطہ کا وقت نہیں (UTC)
+        starts_at:
+          label: "تاریخِ آغاز"
         reminders:
           units:
             minutes: "منٹ"
@@ -79,21 +101,18 @@ ur:
           label: "تَقْلِید"
           none: "تَقْلِید نہیں"
           every_day: "ہر دن"
-          every_month: "ہر ماہ اس ہفتے کے دن"
           every_weekday: "ہر ہفتے کے دن"
-          every_week: "ہر ہفتے اس ہفتے کے دن"
-          every_two_weeks: "ہر دو ہفتے بعد اس ہفتے کے دن"
-          every_four_weeks: "ہر چار ہفتے بعد اس ہفتے کے دن"
+          ordinals:
+            last: "گزشتہ"
+        attendance:
+          none: "کوئی نہیں"
         allow_chat:
           label: "چیٹ انٹیگریشن"
-        url:
-          label: "URL"
-          placeholder: "اختیاری"
-        location:
-          label: "محل وقوع"
         description:
           label: "تفصیل"
-        status:
-          label: "سٹیٹس"
+        event_type:
+          public:
+            title: "عوامی"
       invite_user_or_group:
         invite: "بھیجیں"
+        success: "دعوت نامہ بھیج دیا گیا"

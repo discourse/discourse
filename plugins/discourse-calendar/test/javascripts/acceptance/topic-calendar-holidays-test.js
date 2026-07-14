@@ -4,7 +4,7 @@ import { cloneJSON } from "discourse/lib/object";
 import { acceptance, fakeTime } from "discourse/tests/helpers/qunit-helpers";
 import eventTopicFixture from "../helpers/event-topic-fixture";
 
-acceptance("Discourse Calendar - Topic Calendar Holidays", function (needs) {
+acceptance("Topic Calendar Holidays", function (needs) {
   needs.hooks.beforeEach(function () {
     this.clock = fakeTime("2023-12-10T00:00:00", "America/Los_Angeles", true);
   });

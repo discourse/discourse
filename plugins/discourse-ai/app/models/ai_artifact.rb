@@ -107,13 +107,13 @@ end
 # Table name: ai_artifacts
 #
 #  id         :bigint           not null, primary key
-#  user_id    :integer          not null
-#  post_id    :integer          not null
-#  name       :string(255)      not null
-#  html       :string(65535)
 #  css        :string(65535)
+#  html       :string(65535)
 #  js         :string(65535)
 #  metadata   :jsonb
+#  name       :string(255)      not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  post_id    :integer          not null
+#  user_id    :integer          not null
 #

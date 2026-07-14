@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Campaign Banner" do
+RSpec.describe "Campaign Banner", allow_network: ["js.stripe.com"] do
   fab!(:user)
   fab!(:contributor) { Fabricate(:user, username: "contributor1") }
 
@@ -18,7 +18,7 @@ RSpec.describe "Campaign Banner" do
     SiteSetting.discourse_subscriptions_campaign_product = "prod_campaign"
     SiteSetting.discourse_subscriptions_secret_key = "sk_test_51xuu"
     SiteSetting.discourse_subscriptions_public_key = "pk_test_51xuu"
-    SiteSetting.global_notice = nil
+    SiteSetting.global_notice = ""
   end
 
   context "when plugin is disabled" do

@@ -3,8 +3,23 @@
 require_dependency "reviewable"
 
 class ReviewableAiToolAction < Reviewable
+  def created_new!
+    super
+
+    self.topic ||= target_post&.topic
+    self.category_id ||= topic&.category_id
+  end
+
+  def target_post
+    return @target_post if defined?(@target_post)
+
+    post_id = target&.post_id
+    @target_post = post_id ? Post.find_by(id: post_id) : nil
+  end
+
   def build_actions(actions, guardian, args)
     return actions if !pending?
+    return actions if !Reviewable.viewable_by(guardian.user).exists?(id: id)
 
     approve =
       actions.add_bundle(
@@ -26,6 +41,38 @@ class ReviewableAiToolAction < Reviewable
   end
 
   def perform_approve(performed_by, args)
+    ensure_inline_post_matches_target!(args)
+    ensure_performed_by_is_a_real_person!(performed_by)
+
+    tool, tool_class, context = build_tool!
+    context.user = performed_by if tool_class.attribute_to_approver?
+
+    # Suppress automation re-triggers caused by the tool's side effects
+    # (e.g. edit_tags → topic_tags_changed → automation fires again → loop).
+    result =
+      if defined?(DiscourseAutomation)
+        DiscourseAutomation.suppress_triggers { tool.invoke }
+      else
+        tool.invoke
+      end
+
+    ensure_tool_succeeded!(result)
+
+    create_result(:success, :approved)
+  end
+
+  def perform_reject(performed_by, args)
+    ensure_inline_post_matches_target!(args)
+    ensure_performed_by_is_a_real_person!(performed_by)
+
+    create_result(:success, :rejected)
+  end
+
+  private
+
+  # Rebuilds the tool from the persisted action. Returns [tool, tool_class,
+  # context]; the caller sets context.user for audit attribution as needed.
+  def build_tool!
     tool_action = target
     if tool_action.blank?
       raise Discourse::InvalidAccess.new(
@@ -52,32 +99,61 @@ class ReviewableAiToolAction < Reviewable
             )
     end
 
+    context = DiscourseAi::Agents::BotContext.new(messages: [])
+    context.reviewable_id = id
+
     tool =
       tool_class.new(
         tool_action.tool_parameters.symbolize_keys,
         bot_user: bot_user,
         llm: nil,
-        context: DiscourseAi::Agents::BotContext.new(messages: []),
+        context: context,
       )
 
-    # Suppress automation re-triggers caused by the tool's side effects
-    # (e.g. edit_tags → topic_tags_changed → automation fires again → loop).
-    # Setting an active automation makes trigger!() return early.
-    begin
-      DiscourseAutomation.set_active_automation(id) if defined?(DiscourseAutomation)
-      tool.invoke
-    ensure
-      DiscourseAutomation.set_active_automation(nil) if defined?(DiscourseAutomation)
+    [tool, tool_class, context]
+  end
+
+  def ensure_inline_post_matches_target!(args)
+    inline_post_id = args[:post_id] || args["post_id"]
+    return if inline_post_id.blank?
+
+    expected_post_id = target&.post_id
+    if expected_post_id.blank? || inline_post_id.to_i != expected_post_id
+      raise Discourse::InvalidAccess.new(
+              I18n.t("discourse_ai.reviewables.ai_tool_action.post_mismatch"),
+            )
     end
-
-    create_result(:success, :approved)
   end
 
-  def perform_reject(performed_by, args)
-    create_result(:success, :rejected)
+  def ensure_performed_by_is_a_real_person!(performed_by)
+    if performed_by.blank? || performed_by.bot?
+      raise Discourse::InvalidAccess.new(
+              I18n.t("discourse_ai.reviewables.ai_tool_action.performer_not_human"),
+            )
+    end
   end
 
-  private
+  # The replayed tool reports precondition/service failures as an error hash
+  # (e.g. the approver lost permission, or the target was already actioned
+  # between enqueue and approval). Surface the reason to the moderator and let
+  # the surrounding transaction roll back so the reviewable stays pending,
+  # instead of recording a phantom approval for an action that never ran.
+  def ensure_tool_succeeded!(result)
+    return unless result.is_a?(Hash) && result[:status].to_s == "error"
+
+    error =
+      result[:error].to_s.presence ||
+        I18n.t("discourse_ai.reviewables.ai_tool_action.execution_error_unknown")
+
+    raise Discourse::InvalidAccess.new(
+            "ai_tool_action_execution_error",
+            nil,
+            custom_message: "discourse_ai.reviewables.ai_tool_action.execution_error",
+            custom_message_params: {
+              error: error,
+            },
+          )
+  end
 
   def build_action(actions, id, icon:, bundle: nil)
     actions.add(id, bundle: bundle) do |action|
@@ -92,26 +168,26 @@ end
 # Table name: reviewables
 #
 #  id                      :bigint           not null, primary key
-#  type                    :string           not null
-#  status                  :integer          default("pending"), not null
-#  created_by_id           :integer          not null
-#  reviewable_by_moderator :boolean          default(FALSE), not null
-#  category_id             :integer
-#  topic_id                :integer
-#  score                   :float            default(0.0), not null
-#  potential_spam          :boolean          default(FALSE), not null
-#  target_id               :integer
-#  target_type             :string
-#  target_created_by_id    :integer
-#  payload                 :json
-#  version                 :integer          default(0), not null
+#  force_review            :boolean          default(FALSE), not null
 #  latest_score            :datetime
+#  payload                 :json
+#  potential_spam          :boolean          default(FALSE), not null
+#  potentially_illegal     :boolean          default(FALSE)
+#  reject_reason           :text
+#  reviewable_by_moderator :boolean          default(FALSE), not null
+#  score                   :float            default(0.0), not null
+#  status                  :integer          default("pending"), not null
+#  target_type             :string
+#  type                    :string           not null
+#  type_source             :string           default("unknown"), not null
+#  version                 :integer          default(0), not null
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  force_review            :boolean          default(FALSE), not null
-#  reject_reason           :text
-#  potentially_illegal     :boolean          default(FALSE)
-#  type_source             :string           default("unknown"), not null
+#  category_id             :integer
+#  created_by_id           :integer          not null
+#  target_created_by_id    :integer
+#  target_id               :integer
+#  topic_id                :integer
 #
 # Indexes
 #

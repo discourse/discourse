@@ -14,6 +14,9 @@ hu:
       explorer:
         no_semicolons: "Pontosvesszők eltávolítása a lekérdezésből."
         dirty: "Futtatás előtt el kell mentenie a lekérdezést."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Nincs találat"
     explorer:
       default_query: "Alapértelmezett"
       default_query_notice: "Ez egy alapértelmezett lekérdezés, az SQL nem szerkeszthető. Az SQL szerkesztéséhez hozzon létre egy új lekérdezést."
@@ -28,6 +31,7 @@ hu:
       description_placeholder: "Adjon meg egy leírást"
       ai:
         generate: "Generálás"
+        optional: "nem kötelező"
       import:
         label: "Importálás"
         unparseable_json: "Nem értelmezhető JSON-fájl."
@@ -48,20 +52,16 @@ hu:
           yes: "Igen"
           no: "Nem"
           null_: "Null"
-      export: "Exportálás"
       view_json: "JSON megtekintése"
-      view: "Megtekintés"
       save: "Módosítások mentése"
       saverun: "Módosítások mentése és futtatása"
       run: "Futtatás"
       undo: "Változások elvetése"
-      edit: "Szerkesztés"
       delete: "Törlés"
       recover: "Lekérdezés törlésének visszavonása"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Tábla"
-      show_graph: "Grafikon"
+      chart:
+        form:
+          bar: "Oszlop"
       others_dirty: "A lekérdezés nem mentett módosításokat tartalmaz, amelyek elvesznek, ha elnavigál."
       run_time: "A lekérdezés %{value} ms alatt fejeződött be."
       result_count:
@@ -78,7 +78,6 @@ hu:
       query_time: "Utolsó futás"
       query_user: "Létrehozta:"
       column: "%{number}. oszlop"
-      explain_label: "Beleveszi a lekérdezési tervet?"
       save_params: "Beállítás alapértelmezettként"
       reset_params: "Alaphelyzetbe állítás"
       search_placeholder: "Keresés…"
@@ -98,6 +97,16 @@ hu:
           descriptions:
             data_explorer:
               run_queries: "Adatkezelő lekérdezések futtatása. Az API-kulcsot lekérdezések egy halmazára korlátozhatja lekérdezésazonosítók megadásával."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Adatfelfedező"
+      sql:
+        queries: "Lekérdezések"
+        query_id: "Lekérdezés"
+        param_value: "Érték"
+        output:
+          results: "Eredmények"
+          no_results: "Nincs találat"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

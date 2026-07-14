@@ -41,6 +41,11 @@ th:
               title: "สาธารณะ"
             private:
               title: "ส่วนตัว"
+      composer:
+        reminder:
+          units:
+            days:
+              other: "วัน"
       builder_modal:
         custom_fields:
           placeholder: "ทางเลือก"
@@ -58,14 +63,14 @@ th:
           label: "มีการเกิดขึ้นซ้ำ"
           none: "ไม่มีการเกิดขึ้นซ้ำ"
           every_day: "ทุกวัน"
-        url:
-          label: "URL"
-          placeholder: "ทางเลือก"
-        location:
-          label: "ที่อยู่"
+          ordinals:
+            last: "ล่าสุด"
+        attendance:
+          none: "ไม่มี"
         description:
           label: "รายละเอียด"
-        status:
-          label: "สถานะ"
+        event_type:
+          public:
+            title: "สาธารณะ"
       invite_user_or_group:
         invite: "ส่ง"

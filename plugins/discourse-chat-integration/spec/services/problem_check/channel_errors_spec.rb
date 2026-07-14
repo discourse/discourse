@@ -7,14 +7,16 @@ RSpec.describe ProblemCheck::ChannelErrors do
 
   let(:check) { described_class.new }
 
+  before { SiteSetting.dummy_provider_enabled = true }
+
   context "when chat integration is not enabled" do
-    before { SiteSetting.stubs(chat_integration_enabled: false) }
+    before { SiteSetting.chat_integration_enabled = false }
 
     it { expect(check).to be_chill_about_it }
   end
 
   context "when chat integration is enabled" do
-    before { SiteSetting.stubs(chat_integration_enabled: true) }
+    before { SiteSetting.chat_integration_enabled = true }
 
     context "when an enabled channel has errors" do
       before { Fabricate(:channel, provider: "dummy", error_key: "whoops") }

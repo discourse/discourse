@@ -4,15 +4,15 @@ import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import DModal from "discourse/components/d-modal";
 import DatePickerPast from "discourse/components/date-picker-past";
-import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { bind } from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { eq } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DModal from "discourse/ui-kit/d-modal";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class RecalculateScoresForm extends Component {
@@ -143,7 +143,7 @@ export default class RecalculateScoresForm extends Component {
           </div>
         {{else if (eq this.status "complete")}}
           <div class="recalculate-modal__status is-success">
-            {{icon "check"}}
+            {{dIcon "check"}}
             {{i18n "gamification.completed"}}
           </div>
         {{else}}

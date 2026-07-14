@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import BasicTopicList from "discourse/components/basic-topic-list";
-import icon from "discourse/helpers/d-icon";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const RelatedTopics = <template>
@@ -12,7 +12,7 @@ const RelatedTopics = <template>
     class="more-topics__list"
   >
     <h3 id="related-topics-title" class="more-topics__list-title">
-      {{icon "discourse-sparkles"}}{{i18n "discourse_ai.related_topics.title"}}
+      {{dIcon "discourse-sparkles"}}{{i18n "discourse_ai.related_topics.title"}}
     </h3>
     <div class="topics">
       <BasicTopicList @topics={{@topic.relatedTopics}} @listContext="related" />

@@ -10,6 +10,24 @@ ar:
       site_settings:
         categories:
           discourse_solved: "حل بواسطة Discourse"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "الحلول المقبولة"
+        sections:
+          support:
+            title: "الدعم"
+            filter:
+              all_categories: "كل الفئات"
+            answerers:
+              staff: "فريق العمل"
+              member: "الأعضاء"
+              basic: "أولي"
+            response_time:
+              buckets:
+                lt_1h: "< ساعة واحدة"
+                gt_24h: "> 24 ساعة"
   js:
     notifications:
       alt:
@@ -19,8 +37,10 @@ ar:
     solutions: "الحلول"
     solved:
       title: "تم الحل"
+      notify_on_solved: "إرسال إشعار عند حل موضوع تتم متابعته أو مراقبته. ينطبق ذلك فقط على الموضوعات ضمن الفئات التي تسمح بالحلول."
       allow_accepted_answers: "السماح لصاحب الموضوع وفريق العمل بوضع علامة على أحد الردود على أنه الحل"
       solved_topics_auto_close_hours: "إغلاق الموضوع تلقائيًا بعد مرور (n) من الساعات على آخر رد بمجرد وضع علامة على الموضوع على أنه محلول."
+      notify_on_staff_accept_solved: "إخطار منشئ الموضوع عندما يحدد فريق العمل حلاً"
       accept_answer: "التحديد إذا كان هذا الرد يحل المشكلة"
       accepted_description: "هذا هو الحل المقبول لهذا الموضوع"
       has_no_accepted_answer: "لا يوجد حل لهذا الموضوع"
@@ -34,7 +54,7 @@ ar:
         few: "حلول"
         many: "حلًا"
         other: "حل"
-      accepted_answer_solver_info: "تم الحل بواسطة %{user} في %{post}"
+      accepted_answer_solver_info: "بواسطة %{user} في %{post}"
       accepted_answer_post_number: "المنشور %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -44,7 +64,7 @@ ar:
       no_solved_topics_title: "لم تحل أي موضوعات بعد"
       no_solved_topics_title_others: "لم يحل %{username} أي موضوعات حتى الآن"
       no_solved_topics_body: "عندما تقدِّم ردًا مفيدًا على أحد الموضوعات، فقد يحدِّد مالك الموضوع أو فريق العمل ردك على أنه الحل."
-      marked_solved_by: "تم وضع علامة \"تم الحل\" بواسطة %{user}"
+      marked_solved_by: "تم قبوله من قبل %{user}"
       confirm_move_solution_title: "نقل حل المنشور"
       confirm_move_solution:
         zero: "تم وضع علامة على المنشور الذي حددته كحل لهذا الموضوع. إذا نقلته، فسيتم تحديث الموضوع إلى غير محلول."
@@ -66,12 +86,20 @@ ar:
       confirm_solved_removal: "سيؤدي هذا التغيير إلى تعطيل الحلول لهذا الموضوع وإزالة الحل المقبول."
       confirm_solved_removal_confirm: "تأكيد"
       confirm_solved_removal_cancel: "ألغِ"
+      shared_issue:
+        label_with_count: "‏%{label} ‏(%{count})"
       no_answer:
         title: هل تمت الإجابة على سؤالك؟
         description: "ميِّز الإجابة وساعد الآخرين عن طريق استخدام زر الحل أسفل الرد الصحيح."
       topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
       notification:
         title: "تم وضع علامة \"حل\" على منشورك"
+        topic_solved_title: "تم حل الموضوع"
+      topic_notifications:
+        tracking:
+          description: "ستتلقى إشعارًا عند ذكرك باستخدام @name أو الرد عليك أو عند حل الموضوع. سيظهر عدد الردود الجديدة لهذا الموضوع."
+        watching:
+          description: "ستتلقى إشعارًا بكل رد جديد في هذا الموضوع وعند حلّه. سيظهر عدد الردود الجديدة لهذا الموضوع."
       category_type_support:
         title: "الدعم"
     topic_statuses:

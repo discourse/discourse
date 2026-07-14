@@ -21,6 +21,13 @@ module("Unit | Utility | render-tag", function (hooks) {
     );
   });
 
+  test("defaultRenderTag encodes legacy tag links with periods", function (assert) {
+    assert.strictEqual(
+      renderTag("node.js"),
+      "<a href='/tag/node%2Ejs'  data-tag-name=node.js class='discourse-tag simple'>node.js</a>"
+    );
+  });
+
   test("renderTag with extraClass", function (assert) {
     const result = renderTag("foo", {
       extraClass: "ins del",

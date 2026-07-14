@@ -4,6 +4,17 @@
   --category-header-logo-size: 3rem;
   --category-description-width: 760px;
   --category-header-border: 1px solid var(--content-border-color);
+  --discovery-heading-description-color: var(--primary-800);
+}
+
+// shared banner treatment used above the discovery topic list
+// .category-heading, .tag-info
+.discovery-heading {
+  gap: 0 var(--space-4);
+  margin-bottom: var(--space-6);
+  padding: var(--space-4);
+  border: var(--category-header-border);
+  border-radius: var(--d-border-radius);
 }
 
 .category-heading {
@@ -11,11 +22,6 @@
 
   &.--has-logo {
     display: flex;
-    gap: var(--space-4);
-    margin-bottom: var(--space-6);
-    border: var(--category-header-border);
-    padding: var(--space-4);
-    border-radius: var(--d-border-radius);
   }
 
   &__logo.category-logo.aspect-image {
@@ -29,7 +35,7 @@
     margin: 0;
     line-height: var(--line-height-large);
     font-size: var(--font-0);
-    color: var(--category-boxes-description-text-color);
+    color: var(--discovery-heading-description-color);
     max-width: var(--category-description-width);
   }
 
@@ -320,7 +326,7 @@
     padding-right: var(--space-1);
   }
 
-  .num {
+  .topic-list-data.num {
     text-align: center;
     font-size: var(--d-topic-list-data-font-size);
 
@@ -332,7 +338,10 @@
       font-weight: 700;
       color: inherit;
       display: inline-block;
-      padding: 15px 5px;
+
+      @include viewport.from(sm) {
+        padding: var(--space-3) var(--space);
+      }
     }
   }
 
@@ -468,7 +477,8 @@
 }
 
 .table-heading {
-  border-bottom: 3px solid var(--primary-low);
+  border-bottom: var(--d-table-border-top-height) solid
+    var(--table-border-color);
 }
 
 // This is not what we want:
@@ -673,7 +683,7 @@
   padding: 0 var(--nav-horizontal-padding);
 
   @include viewport.until(sm) {
-    border-bottom: 0.15em solid var(--primary-low);
+    border-bottom: 1px solid var(--primary-low);
     width: 100%;
     display: flex;
     justify-content: center;
@@ -699,8 +709,8 @@
 
       @include viewport.until(sm) {
         &::after {
-          height: 0.15em;
-          bottom: -0.15em;
+          height: 1px;
+          bottom: -1px;
         }
       }
     }
@@ -754,7 +764,7 @@
     &-body {
       border-width: 1px;
 
-      body:has(.topic-replies-toggle-wrapper) & {
+      .topic-replies-toggle-wrapper ~ .topic-list & {
         border-width: 0;
       }
     }

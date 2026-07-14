@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import icon from "discourse/helpers/d-icon";
 import { gte } from "discourse/truth-helpers";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class UserFlagPercentage extends Component {
@@ -57,7 +57,7 @@ export default class UserFlagPercentage extends Component {
         <span
           class="percentage-label {{this.percentage.className}}"
         >{{this.percentage.label}}</span>
-        {{icon this.percentage.icon}}
+        {{dIcon this.percentage.icon}}
       </div>
     {{/if}}
   </template>

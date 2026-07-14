@@ -5,20 +5,32 @@
 # https://translate.discourse.org/
 
 de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_data_explorer: "Discourse Daten-Explorer"
   js:
     discourse_ai:
       features:
         data_explorer:
           name: "Daten-Explorer"
+          description: "KI-gestützte Abfrageerstellung für den Daten-Explorer"
+          query_generation: "Generierung von Abfragen"
     errors:
       explorer:
         no_semicolons: "Entferne die Semikolons aus der Anfrage."
         dirty: "Du musst die Anfrage vor der Ausführung speichern."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Keine Ergebnisse"
     explorer:
       default_query: "Standard"
       default_query_notice: "Dies ist eine Standardabfrage, deren SQL-Code nicht bearbeitet werden kann. Erstelle eine neue Abfrage, um den SQL-Code zu bearbeiten."
       queries: "Anfragen"
       query_created: "Anfrage erstellt!"
+      mode:
+        ai: "Mit KI generieren"
       or: "oder"
       admins_only: "Der Daten-Explorer ist nur für Administratoren verfügbar."
       allow_groups: "Gruppen erlauben, auf diese Anfrage zuzugreifen"
@@ -27,7 +39,17 @@ de:
       create_placeholder: "Name der Anfrage …"
       description_placeholder: "Hier bitte eine Beschreibung eingeben"
       ai:
+        description_title: "Mit KI generieren"
+        description_hint: "Beschreibe in einfachen Worten, was du möchtest. Wir erstellen dann die SQL-Anweisung, den Namen und die Beschreibung für dich."
+        description_placeholder: "z. B. Zeig mir die Registrierungen im Zeitverlauf"
         generate: "Erzeugen"
+        generating: "Abfrage wird mit KI generiert …"
+        generation_timeout: "Eine Zeitüberschreitung ist bei der Generierung der KI-Abfrage aufgetreten. Du kannst die SQL-Abfrage manuell eingeben."
+        generation_error: "Beim Erstellen der Abfrage ist etwas schiefgelaufen."
+        save_query: "Abfrage speichern"
+        write_manually: "SQL manuell eingeben"
+        sql_label: "SQL"
+        optional: "optional"
       import:
         label: "Importieren"
         unparseable_json: "JSON-Datei kann nicht verarbeitet werden."
@@ -48,22 +70,21 @@ de:
           yes: "Ja"
           no: "Nein"
           null_: "Null"
-      export: "Exportieren"
       view_json: "JSON anzeigen"
-      view: "Ansehen"
       save: "Änderungen speichern"
       saverun: "Änderungen speichern und ausführen"
       run: "Ausführen"
       undo: "Änderungen verwerfen"
-      edit: "Bearbeiten"
       delete: "Löschen"
       recover: "Anfrage wiederherstellen"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Tabelle"
-      show_graph: "Diagramm"
+      sql_label: "SQL"
+      chart:
+        form:
+          label: "Diagrammtyp"
+          bar: "Balken"
       others_dirty: "Eine Anfrage hat nicht gespeicherte Änderungen, die verloren gehen, wenn du woanders hin navigierst."
       run_time: "Anfrage in %{value} ms abgeschlossen."
+      cached_result_notice: "Zeigt zwischengespeicherte Ergebnisse von %{relative_time}."
       result_count:
         one: "%{count} Ergebnis."
         other: "%{count} Ergebnisse."
@@ -78,7 +99,6 @@ de:
       query_time: "Letzter Lauf"
       query_user: "Erstellt von"
       column: "Spalte %{number}"
-      explain_label: "Anfrageplan einbeziehen?"
       save_params: "Standards festlegen"
       reset_params: "Zurücksetzen"
       search_placeholder: "Suche …"
@@ -98,6 +118,17 @@ de:
           descriptions:
             data_explorer:
               run_queries: "Daten-Explorer-Anfragen ausführen. Schränke den API-Schlüssel auf eine Reihe von Anfragen ein, indem du Anfrage-IDs angibst."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Daten-Explorer"
+      sql:
+        queries: "Anfragen"
+        query_id: "Anfrage"
+        add_param: "Parameter hinzufügen"
+        param_value: "Wert"
+        output:
+          results: "Ergebnisse"
+          no_results: "Keine Ergebnisse"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

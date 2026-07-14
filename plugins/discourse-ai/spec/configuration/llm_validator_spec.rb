@@ -36,9 +36,45 @@ RSpec.describe DiscourseAi::Configuration::LlmValidator do
       SiteSetting.ai_helper_enabled = true
       SiteSetting.ai_summarization_enabled = true
 
-      DiscourseAi::Completions::Llm.with_prepared_responses([true]) do
+      DiscourseAi::Completions::Llm.with_prepared_responses(%w[ok ok]) do
         expect(validator.valid_value?(llm_model)).to eq(true)
       end
+    end
+  end
+
+  describe "#run_test" do
+    let(:validator) { described_class.new }
+    fab!(:llm_model)
+
+    it "exercises both non-streaming and streaming completions" do
+      prompts =
+        DiscourseAi::Completions::Llm.with_prepared_responses(%w[ok ok]) do |_, _, p|
+          validator.run_test(llm_model)
+          p
+        end
+
+      expect(prompts.length).to eq(2)
+      expect(validator.last_failed_mode).to be_nil
+    end
+
+    it "marks non-streaming failure when the first probe returns nothing" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(["", "ok"]) do
+        expect { validator.run_test(llm_model) }.to raise_error(
+          DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
+        )
+      end
+
+      expect(validator.last_failed_mode).to eq(:non_streaming)
+    end
+
+    it "marks streaming failure when the streaming probe returns nothing" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(["ok", ""]) do
+        expect { validator.run_test(llm_model) }.to raise_error(
+          DiscourseAi::Completions::Endpoints::Base::CompletionFailed,
+        )
+      end
+
+      expect(validator.last_failed_mode).to eq(:streaming)
     end
   end
 end

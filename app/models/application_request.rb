@@ -19,6 +19,11 @@ class ApplicationRequest < ActiveRecord::Base
          page_view_anon_browser_mobile: 14,
          page_view_logged_in_browser: 15,
          page_view_logged_in_browser_mobile: 16,
+         page_view_anon_browser_beacon: 17,
+         page_view_anon_browser_mobile_beacon: 18,
+         page_view_logged_in_browser_beacon: 19,
+         page_view_logged_in_browser_mobile_beacon: 20,
+         page_view_embed: 21,
        }
 
   include CachedCounting
@@ -50,8 +55,8 @@ class ApplicationRequest < ActiveRecord::Base
   def self.stats
     s = ActiveSupport::HashWithIndifferentAccess.new({})
 
-    self.req_types.each do |key, i|
-      query = self.where(req_type: i)
+    req_types.each do |key, i|
+      query = where(req_type: i)
       s["#{key}_total"] = query.sum(:count)
       s["#{key}_30_days"] = query.where("date > ?", 30.days.ago).sum(:count)
       s["#{key}_28_days"] = query.where("date > ?", 28.days.ago).sum(:count)
@@ -62,14 +67,14 @@ class ApplicationRequest < ActiveRecord::Base
   end
 
   def self.request_type_count_for_period(type, since)
-    id = self.req_types[type]
+    id = req_types[type]
     if !id
       raise ArgumentError.new(
               "unknown request type #{type.inspect} in ApplicationRequest.req_types",
             )
     end
 
-    self.where(req_type: id).where("date >= ?", since).sum(:count)
+    where(req_type: id).where("date >= ?", since).sum(:count)
   end
 end
 
@@ -78,9 +83,9 @@ end
 # Table name: application_requests
 #
 #  id       :integer          not null, primary key
+#  count    :integer          default(0), not null
 #  date     :date             not null
 #  req_type :integer          not null
-#  count    :integer          default(0), not null
 #
 # Indexes
 #

@@ -1,20 +1,20 @@
 import Component from "@glimmer/component";
-import { concat } from "@ember/helper";
+import { array, concat, hash } from "@ember/helper";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ItemRepliesCell from "discourse/components/topic-list/item/replies-cell";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import TopicStatus from "discourse/components/topic-status";
-import UserAvatarFlair from "discourse/components/user-avatar-flair";
-import UserLink from "discourse/components/user-link";
-import avatar from "discourse/helpers/avatar";
-import categoryLink from "discourse/helpers/category-link";
-import concatClass from "discourse/helpers/concat-class";
-import discourseTags from "discourse/helpers/discourse-tags";
-import formatDate from "discourse/helpers/format-date";
 import lazyHash from "discourse/helpers/lazy-hash";
 import topicFeaturedLink from "discourse/helpers/topic-featured-link";
-import topicLink from "discourse/helpers/topic-link";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import DUserAvatarFlair from "discourse/ui-kit/d-user-avatar-flair";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dAvatar from "discourse/ui-kit/helpers/d-avatar";
+import dCategoryLink from "discourse/ui-kit/helpers/d-category-link";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
+import dTopicLink from "discourse/ui-kit/helpers/d-topic-link";
 
 export default class LatestTopicListItem extends Component {
   get tagClassNames() {
@@ -33,7 +33,7 @@ export default class LatestTopicListItem extends Component {
   <template>
     <div
       data-topic-id={{@topic.id}}
-      class={{concatClass
+      class={{dConcatClass
         "latest-topic-list-item"
         this.tagClassNames
         (if @topic.category (concat "category-" @topic.category.fullSlug))
@@ -57,10 +57,10 @@ export default class LatestTopicListItem extends Component {
         @outletArgs={{lazyHash topic=@topic}}
       >
         <div class="topic-poster">
-          <UserLink @user={{@topic.lastPosterUser}}>
-            {{avatar @topic.lastPosterUser imageSize="large"}}
-          </UserLink>
-          <UserAvatarFlair @user={{@topic.lastPosterUser}} />
+          <DUserLink @user={{@topic.lastPosterUser}}>
+            {{dAvatar @topic.lastPosterUser imageSize="large"}}
+          </DUserLink>
+          <DUserAvatarFlair @user={{@topic.lastPosterUser}} />
         </div>
       </PluginOutlet>
 
@@ -72,7 +72,7 @@ export default class LatestTopicListItem extends Component {
           >
             <TopicStatus @topic={{@topic}} @context="topic-list" />
 
-            {{topicLink @topic}}
+            {{dTopicLink @topic}}
             {{~#if @topic.featured_link}}
               &nbsp;{{topicFeaturedLink @topic}}
             {{/if~}}
@@ -87,27 +87,35 @@ export default class LatestTopicListItem extends Component {
         <div class="bottom-row">
           <PluginOutlet
             @name="latest-topic-list-item-main-link-bottom-row"
+            @aliases={{array
+              (hash
+                name="below-latest-topic-list-item-bottom-row"
+                position="after"
+                connectorTagName="span"
+                deprecated=true
+                since="2026.3.0"
+              )
+            }}
             @outletArgs={{lazyHash topic=@topic}}
           >
-            {{categoryLink @topic.category~}}
-            {{~discourseTags @topic mode="list"}}
+            {{dCategoryLink @topic.category~}}
+            {{~dDiscourseTags @topic mode="list"}}
           </PluginOutlet>
-          <PluginOutlet
-            @name="below-latest-topic-list-item-bottom-row"
-            @connectorTagName="span"
-            @outletArgs={{lazyHash topic=@topic}}
-          />
         </div>
       </div>
 
       <div class="topic-stats">
         <PluginOutlet
-          @name="above-latest-topic-list-item-post-count"
-          @connectorTagName="div"
-          @outletArgs={{lazyHash topic=@topic}}
-        />
-        <PluginOutlet
           @name="latest-topic-list-item-topic-stats"
+          @aliases={{array
+            (hash
+              name="above-latest-topic-list-item-post-count"
+              position="before"
+              connectorTagName="div"
+              deprecated=true
+              since="2026.3.0"
+            )
+          }}
           @outletArgs={{lazyHash topic=@topic}}
         >
           <ItemRepliesCell @topic={{@topic}} @tagName="div" />
@@ -115,7 +123,7 @@ export default class LatestTopicListItem extends Component {
             <a
               href={{@topic.lastPostUrl}}
               title={{@topic.bumpedAtTitle}}
-            >{{formatDate @topic.bumpedAt format="tiny" noTitle="true"}}</a>
+            >{{dFormatDate @topic.bumpedAt format="tiny" noTitle="true"}}</a>
           </div>
         </PluginOutlet>
       </div>

@@ -171,6 +171,19 @@ RSpec.describe UserStatusController do
         expect(messages[0].data[user.id][:ends_at]).to eq(ends_at)
       end
 
+      it "doesn't publish hidden-profile statuses to the message bus" do
+        user.user_option.update!(hide_profile: true)
+
+        messages =
+          MessageBus.track_publish("/user-status") do
+            put "/user-status.json", params: { description: "off to dentist", emoji: "tooth" }
+          end
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["success"]).to eq("OK")
+        expect(messages).to be_empty
+      end
+
       it "only publishes to the silenced user and staff when silenced" do
         user.update!(silenced_till: 1.year.from_now)
 

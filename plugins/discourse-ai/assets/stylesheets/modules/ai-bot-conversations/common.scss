@@ -52,6 +52,11 @@ body.has-ai-conversations-sidebar {
     display: none;
   }
 
+  // "Powered by Discourse" is redundant chrome on the AI conversations surface
+  .powered-by-discourse {
+    display: none;
+  }
+
   // topic elements
   #topic-footer-button-share-and-invite,
   body:not(.staff) #topic-footer-button-archive,
@@ -90,17 +95,11 @@ body.has-ai-conversations-sidebar {
 
   #topic-title {
     display: flex;
-    justify-content: center;
 
     .title-wrapper {
       width: 100%;
       max-width: 960px;
     }
-  }
-
-  .small-action,
-  .onscreen-post .row {
-    justify-content: center;
   }
 
   #topic-footer-buttons {
@@ -115,6 +114,13 @@ body.has-ai-conversations-sidebar {
 
   #topic-progress-wrapper.docked {
     display: none;
+  }
+
+  @include viewport.until(lg) {
+    #topic-progress-wrapper,
+    .topic-navigation.with-topic-progress {
+      display: none;
+    }
   }
 
   @include viewport.until(lg) {
@@ -155,6 +161,7 @@ body.has-ai-conversations-sidebar {
         display: flex;
         flex-direction: column;
         min-width: 0;
+        gap: var(--space-2);
 
         @include viewport.until(sm) {
           .select-kit-header-wrapper {
@@ -165,8 +172,6 @@ body.has-ai-conversations-sidebar {
         label {
           font-size: var(--font-down-1);
           font-weight: 300;
-          margin-left: 1em;
-          margin-bottom: 0;
         }
 
         .name {
@@ -225,7 +230,7 @@ body.has-ai-conversations-sidebar {
     &__input-wrapper {
       --input-min-height: 2.5em;
       display: flex;
-      align-items: end;
+      align-items: center;
       width: 100%;
       border: 1px solid var(--primary-low);
       border-radius: var(--d-input-border-radius);
@@ -254,38 +259,6 @@ body.has-ai-conversations-sidebar {
         border-color: var(--tertiary);
       }
 
-      .ai-conversation-submit {
-        .d-icon {
-          color: var(--primary-medium);
-          padding: 0.5em;
-        }
-
-        &:hover,
-        &:focus-visible {
-          .d-icon {
-            color: var(--primary-medium);
-          }
-        }
-      }
-
-      .ai-bot-upload-btn {
-        min-height: var(--input-min-height);
-        border: none;
-
-        .d-icon {
-          background: var(--primary-low);
-          padding: 0.5em;
-          border-radius: 100%;
-        }
-
-        &:hover,
-        &:focus-visible {
-          .d-icon {
-            color: var(--primary);
-          }
-        }
-      }
-
       #ai-bot-conversations-input {
         --scrollbarBg: transparent;
         --scrollbarThumbBg: var(--primary-low);
@@ -296,10 +269,7 @@ body.has-ai-conversations-sidebar {
         resize: none;
         max-height: 30vh;
         min-height: var(--input-min-height);
-        border-radius: 0 var(--d-button-border-radius)
-          var(--d-button-border-radius) 0;
         border: none;
-        padding-block: 0.8em;
         padding-inline: 0;
         scrollbar-color: var(--scrollbarThumbBg) var(--scrollbarBg);
         scrollbar-width: thin;
@@ -370,10 +340,6 @@ body.has-ai-conversations-sidebar {
     .sidebar-footer-wrapper {
       display: flex;
 
-      .powered-by-discourse {
-        display: block;
-      }
-
       button {
         display: none;
       }
@@ -417,18 +383,6 @@ body.has-ai-conversations-sidebar {
     }
   }
 
-  @include viewport.until(sm) {
-    .share-ai-conversation-button {
-      .d-icon {
-        margin: 0;
-      }
-
-      .d-button-label {
-        display: none;
-      }
-    }
-  }
-
   // custom user card link
   .user-card-meta__profile-link {
     display: block;
@@ -445,22 +399,7 @@ body.has-ai-conversations-sidebar {
     display: none;
   }
 
-  .topic-footer-main-buttons {
-    button:not(
-      .create,
-      .share-ai-conversation-button,
-      .topic-admin-menu-trigger
-    ) {
-      display: none;
-    }
-  }
-
   .topic-map {
-    box-sizing: border-box;
-    width: 100%;
-    margin: 0 auto;
-    padding-block: 0.5em;
-
     .topic-map__views-trigger,
     .topic-map__likes-trigger,
     .summarization-button,
@@ -469,21 +408,10 @@ body.has-ai-conversations-sidebar {
       display: none;
     }
 
+    // The bottom topic map (participants + invite) is redundant on the AI
+    // conversation page — the docked composer sits where it would render.
     &.--bottom {
-      padding-top: 0;
-    }
-
-    section {
-      background: transparent;
-      border-block: 1px solid var(--primary-low);
-    }
-
-    &__contents {
-      padding: 0.5em 1.25em;
-
-      @include viewport.from(sm) {
-        padding: 0.5em 0.5em 0.5em 1.9em;
-      }
+      display: none;
     }
 
     &__stats {

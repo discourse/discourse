@@ -25,43 +25,43 @@ end
 # Table name: users
 #
 #  id                        :integer          not null, primary key
-#  username                  :string(60)       not null
-#  created_at                :datetime         not null
-#  updated_at                :datetime         not null
-#  name                      :string
-#  last_posted_at            :datetime
 #  active                    :boolean          default(FALSE), not null
-#  username_lower            :string(60)       not null
-#  last_seen_at              :datetime
 #  admin                     :boolean          default(FALSE), not null
-#  last_emailed_at           :datetime
-#  trust_level               :integer          not null
 #  approved                  :boolean          default(FALSE), not null
-#  approved_by_id            :integer
 #  approved_at               :datetime
+#  date_of_birth             :date
+#  first_seen_at             :datetime
+#  flag_level                :integer          default(0), not null
+#  group_locked_trust_level  :integer
+#  ip_address                :inet
+#  last_emailed_at           :datetime
+#  last_posted_at            :datetime
+#  last_seen_at              :datetime
+#  locale                    :string(10)
+#  manual_locked_trust_level :integer
+#  moderator                 :boolean          default(FALSE)
+#  name                      :string
 #  previous_visit_at         :datetime
+#  registration_ip_address   :inet
+#  required_fields_version   :integer
+#  secure_identifier         :string
+#  silenced_till             :datetime
+#  staged                    :boolean          default(FALSE), not null
 #  suspended_at              :datetime
 #  suspended_till            :datetime
-#  date_of_birth             :date
-#  views                     :integer          default(0), not null
-#  flag_level                :integer          default(0), not null
-#  ip_address                :inet
-#  moderator                 :boolean          default(FALSE)
 #  title                     :string
-#  uploaded_avatar_id        :integer
-#  locale                    :string(10)
-#  primary_group_id          :integer
-#  registration_ip_address   :inet
-#  staged                    :boolean          default(FALSE), not null
-#  first_seen_at             :datetime
-#  silenced_till             :datetime
-#  group_locked_trust_level  :integer
-#  manual_locked_trust_level :integer
-#  secure_identifier         :string
+#  trust_level               :integer          not null
+#  username                  :string(60)       not null
+#  username_lower            :string(60)       not null
+#  views                     :integer          default(0), not null
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  approved_by_id            :integer
 #  flair_group_id            :integer
 #  last_seen_reviewable_id   :integer
-#  required_fields_version   :integer
+#  primary_group_id          :integer
 #  seen_notification_id      :bigint           default(0), not null
+#  uploaded_avatar_id        :integer
 #
 # Indexes
 #

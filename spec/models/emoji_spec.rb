@@ -15,6 +15,56 @@ RSpec.describe Emoji do
       expect(emoji.name).to eq("test")
       expect(emoji.url).to be_nil
     end
+
+    it "caches the raw upload url, not the CDN-transformed one" do
+      upload = Fabricate(:upload, url: "//my-bucket.s3.amazonaws.com/images/my-emoji.png")
+      CustomEmoji.create!(name: "my_s3_emoji", upload: upload)
+
+      Emoji.clear_cache
+      emoji = Emoji.load_custom.find { |e| e.name == "my_s3_emoji" }
+
+      # The cached object must hold the raw url so that later CDN setting
+      # changes are reflected (CDN is applied lazily via #cdn_url).
+      expect(emoji.url).to eq(upload.url)
+    end
+  end
+
+  describe "#cdn_url" do
+    it "returns nil when there is no url" do
+      expect(Emoji.new.cdn_url).to be_nil
+    end
+
+    context "with a configured S3 store and CDN" do
+      before do
+        setup_s3
+        SiteSetting.s3_cdn_url = "https://cdn.example.com"
+      end
+
+      def custom_emoji_for(raw_url)
+        upload = Fabricate(:upload, url: raw_url)
+        CustomEmoji.create!(name: "my_s3_emoji", upload: upload)
+        Emoji.clear_cache
+        Emoji.load_custom.find { |e| e.name == "my_s3_emoji" }
+      end
+
+      it "rewrites a schemaless S3 bucket url to the configured s3_cdn_url" do
+        raw_url = "#{SiteSetting.Upload.absolute_base_url}/original/1X/my-emoji.png"
+        emoji = custom_emoji_for(raw_url)
+
+        # the cache still holds the raw bucket url...
+        expect(emoji.url).to eq(raw_url)
+        # ...and the CDN conversion happens lazily on read.
+        expect(emoji.cdn_url).to eq("https://cdn.example.com/original/1X/my-emoji.png")
+      end
+
+      it "does not leak the bucket subfolder into the rewritten url" do
+        SiteSetting.s3_upload_bucket = "s3-upload-bucket/emojis"
+        raw_url = "#{SiteSetting.Upload.absolute_base_url}/emojis/original/1X/my-emoji.png"
+        emoji = custom_emoji_for(raw_url)
+
+        expect(emoji.cdn_url).to eq("https://cdn.example.com/original/1X/my-emoji.png")
+      end
+    end
   end
 
   describe ".unicode_replacements" do
@@ -161,6 +211,32 @@ RSpec.describe Emoji do
       expect(replaced_str).to eq(<<~HTML.chomp)
         This is a good day <img src="/public/xxxxxx.png" title="xxxxxx" class="emoji" alt="xxxxxx" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/woman.png?v=#{Emoji::EMOJI_VERSION}" title="woman" class="emoji" alt="woman" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/man/4.png?v=#{Emoji::EMOJI_VERSION}" title="man:t4" class="emoji" alt="man:t4" loading="lazy" width="20" height="20">
       HTML
+    end
+
+    it "escapes non-emoji text" do
+      replaced_str = described_class.codes_to_img(%(This <img src=x onerror="alert('xss')"> :foo:))
+
+      expect(replaced_str).to eq(
+        "This &lt;img src=x onerror=&quot;alert(&#39;xss&#39;)&quot;&gt; :foo:",
+      )
+    end
+
+    it "doesn't double-escape text that already contains HTML entities" do
+      replaced_str = described_class.codes_to_img("Sam&rsquo;s :tada: A &amp; B")
+
+      expect(replaced_str).to eq(
+        %(Sam&rsquo;s <img src="/images/emoji/twitter/tada.png?v=#{Emoji::EMOJI_VERSION}" title="tada" class="emoji" alt="tada" loading="lazy" width="20" height="20"> A &amp; B),
+      )
+    end
+
+    it "escapes generated image attribute values" do
+      Plugin::CustomEmoji.register("xssxx", %q|" onerror="alert('xss')|)
+
+      replaced_str = described_class.codes_to_img(":xssxx:")
+
+      expect(replaced_str).to eq(
+        %(<img src="&quot; onerror=&quot;alert(&#39;xss&#39;)" title="xssxx" class="emoji" alt="xssxx" loading="lazy" width="20" height="20">),
+      )
     end
 
     it "doesn't replace non-existing codes" do

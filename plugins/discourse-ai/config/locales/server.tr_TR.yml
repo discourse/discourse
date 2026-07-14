@@ -36,10 +36,6 @@ tr_TR:
       llm_triage:
         title: YZ kullanarak gönderileri sınıflandırın
         description: "Büyük bir dil modeli kullanarak gönderileri sınıflandırın"
-        flagged_post: |
-          <div>Modelin yanıtı:</div>
-          <p>%{llm_response}</p>
-          <b><a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a> kuralı tarafından tetiklendi.</b>
         notify_author_pm:
           subject: "Gönderiniz inceleme için geçici olarak kaldırılmıştır."
           body: |
@@ -74,7 +70,6 @@ tr_TR:
     ai_sentiment_enabled: "Duyarlılık modülünü etkinleştirin."
     ai_sentiment_inference_service_api_endpoint: "Duyarlılık modülü için API'nin çalıştığı URL"
     ai_sentiment_inference_service_api_key: "Duyarlılık API'si için API anahtarı"
-    ai_sentiment_models: "Çıkarım için kullanılacak modeller. Duygu, gönderiyi pozitif/nötr/negatif alanda sınıflandırır. Duygu, öfke/iğrenme/korku/sevinç/nötr/üzüntü/şaşırma alanına göre sınıflandırır."
     ai_nsfw_detection_enabled: "NSFW modülünü etkinleştirin."
     ai_nsfw_inference_service_api_endpoint: "NSFW modülü için API'nin çalıştığı URL"
     ai_nsfw_inference_service_api_key: "NSFW API'si için API anahtarı"
@@ -135,7 +130,6 @@ tr_TR:
     ai_discord_search_agent: "Discord aramalarında kullanılacak aracı."
     ai_discord_allowed_guilds: "Botun arama yapmasına izin verilen Discord loncaları (sunucular)"
     ai_translation_enabled: "AI çeviri özelliğini etkinleştirin"
-    ai_translation_target_categories: "Yalnızca seçilen kategorilerdeki içerikler çevrilecektir. Alt kategoriler ayrı olarak eklenmelidir. Kategorilerdeki başlıkların çevrilmesini devre dışı bırakmak için bu alanı boş bırakın."
     ai_translation_personal_messages: "Hangi özel mesajların çevrileceğini belirler. 'none' seçeneği özel mesaj çevirisini devre dışı bırakır. 'group' seçeneği yalnızca grup özel mesajlarını çevirir. 'all' seçeneği tüm özel mesajları çevirir."
     ai_translation_include_bot_content: "Etkinleştirildiğinde, botlar tarafından yazılan içerikler (kullanıcı kimlikleri 0'ın altında) da çeviriye gönderilecektir."
     ai_translation_max_post_length: "Çevrilecek bir gönderinin maksimum karakter sayısı. Bu uzunluktan daha uzun gönderiler çevrilmeyecektir."
@@ -158,88 +152,88 @@ tr_TR:
       xaxis: "Pozitif(%)"
       yaxis: "Tarih"
     emotion_admiration:
-      title: "\U0001F929 Hayranlık"
+      title: "🤩 Hayranlık"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla hayranlık duygusu ile sınıflandırılan gönderiler."
     emotion_amusement:
-      title: "\U0001F604 Eğlenme"
+      title: "😄 Eğlenme"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla eğlenme duygusu ile sınıflandırılan gönderiler."
     emotion_anger:
-      title: "\U0001F620 Öfke"
+      title: "😠 Öfke"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla öfke duygusu ile sınıflandırılan gönderiler."
     emotion_annoyance:
-      title: "\U0001F612 Rahatsız olma"
+      title: "😒 Rahatsız olma"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla rahatsız olma duygusu ile sınıflandırılan gönderiler."
     emotion_approval:
-      title: "\U0001F44D Onaylama"
+      title: "👍 Onaylama"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla onaylama duygusu ile sınıflandırılan gönderiler."
     emotion_caring:
-      title: "\U0001F917 Önemseme"
+      title: "🤗 Önemseme"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla önemseme duygusu ile sınıflandırılan gönderiler."
     emotion_confusion:
-      title: "\U0001F615 Kafa karışıklığı"
+      title: "😕 Kafa karışıklığı"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla kafa karışıklığı duygusu ile sınıflandırılan gönderiler."
     emotion_curiosity:
-      title: "\U0001F914 Merak"
+      title: "🤔 Merak"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla merak duygusu ile sınıflandırılan gönderiler."
     emotion_desire:
-      title: "\U0001F60D Arzu"
+      title: "😍 Arzu"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla arzu duygusu ile sınıflandırılan gönderiler."
     emotion_disappointment:
-      title: "\U0001F61E Hayal kırıklığı"
+      title: "😞 Hayal kırıklığı"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla hayal kırıklığı duygusu ile sınıflandırılan gönderiler."
     emotion_disapproval:
-      title: "\U0001F44E Onaylamama"
+      title: "👎 Onaylamama"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla onaylamama duygusu ile sınıflandırılan gönderiler."
     emotion_disgust:
-      title: "\U0001F922 İğrenme"
+      title: "🤢 İğrenme"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla iğrenme duygusu ile sınıflandırılan gönderiler."
     emotion_embarrassment:
-      title: "\U0001F633 Utanma"
+      title: "😳 Utanma"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla utanma duygusu ile sınıflandırılan gönderiler."
     emotion_excitement:
-      title: "\U0001F92A Heyecan"
+      title: "🤪 Heyecan"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla heyecan duygusu ile sınıflandırılan gönderiler."
     emotion_fear:
-      title: "\U0001F628 Korku"
+      title: "😨 Korku"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla korku duygusu ile sınıflandırılan gönderiler."
     emotion_gratitude:
-      title: "\U0001F64F Minnettarlık"
+      title: "🙏 Minnettarlık"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla minnettarlık duygusu ile sınıflandırılan gönderiler."
     emotion_grief:
-      title: "\U0001F622 Keder"
+      title: "😢 Keder"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla keder duygusu ile sınıflandırılan gönderiler."
     emotion_joy:
-      title: "\U0001F60A Neşe"
+      title: "😊 Neşe"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla neşe duygusu ile sınıflandırılan gönderiler."
     emotion_love:
       title: '❤️ Sevgi'
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla sevgi duygusu ile sınıflandırılan gönderiler."
     emotion_nervousness:
-      title: "\U0001F630 Gerginlik"
+      title: "😰 Gerginlik"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla gerginlik duygusu ile sınıflandırılan gönderiler."
     emotion_neutral:
-      title: "\U0001F610 Nötr"
+      title: "😐 Nötr"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla nötr duygusu ile sınıflandırılan gönderiler."
     emotion_optimism:
-      title: "\U0001F31F İyimserlik"
+      title: "🌟 İyimserlik"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla iyimserlik duygusu ile sınıflandırılan gönderiler."
     emotion_pride:
-      title: "\U0001F981 Gurur"
+      title: "🦁 Gurur"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla gurur duygusu ile sınıflandırılan gönderiler."
     emotion_realization:
-      title: "\U0001F4A1 Farkına varma"
+      title: "💡 Farkına varma"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla farkına varma duygusu ile sınıflandırılan gönderiler."
     emotion_relief:
-      title: "\U0001F60C Rahatlama"
+      title: "😌 Rahatlama"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla rahatlama duygusu ile sınıflandırılan gönderiler."
     emotion_remorse:
-      title: "\U0001F614 Pişmanlık"
+      title: "😔 Pişmanlık"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla pişmanlık duygusu ile sınıflandırılan gönderiler."
     emotion_sadness:
-      title: "\U0001F62D Üzüntü"
+      title: "😭 Üzüntü"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla üzüntü duygusu ile sınıflandırılan gönderiler."
     emotion_surprise:
-      title: "\U0001F632 Şaşırma"
+      title: "😲 Şaşırma"
       description: "\"SamLowe/roberta-base-go_emotions\" modeli kullanılarak YZ aracılığıyla şaşırma duygusu ile sınıflandırılan gönderiler."
   discourse_ai:
     ai_artifact:
@@ -549,6 +543,8 @@ tr_TR:
         categories: "Kategorileri listele"
         flag_post: "Gönderiye bayrak ekle"
         close_topic: "Konuyu kapat"
+        suspend_user: "Kullanıcıyı askıya al"
+        silence_user: "Kullanıcıyı sustur"
         unlist_topic: "Konuyu listeden kaldır"
         lock_post: "Gönderiyi kilitle"
         delete_topic: "Konuyu sil"
@@ -705,6 +701,12 @@ tr_TR:
           not_allowed: "Bu konuyu kapatamaz veya açamazsınız."
           no_reason: "Bir konuyu kapatmak veya açmak için bir neden belirtilmesi gerekir."
         success: "Konu başarıyla güncellendi."
+      suspend_user:
+        errors:
+          not_found: "Kullanıcı bulunamadı."
+      silence_user:
+        errors:
+          not_found: "Kullanıcı bulunamadı."
       unlist_topic:
         errors:
           not_found: "Konu bulunamadı."
@@ -810,6 +812,10 @@ tr_TR:
           conflict: "Bu inceleme kuyruğundaki öğe başka biri tarafından güncellendi. Lütfen tekrar deneyin"
           action_failed: "İşlem gerçekleştirilemedi"
         success: "İnceleme kuyruğundaki %{reviewable_id} öğesi üzerinde '%{action}' işlemi başarıyla gerçekleştirildi"
+      add_reviewable_note:
+        errors:
+          not_allowed: "İnceleme kuyruğuna erişiminiz yok"
+          not_found: "İnceleme kuyruğundaki öğe bulunamadı"
     reviewables:
       ai_tool_action:
         title: "Yapay Zeka aracı eylemi"
@@ -821,6 +827,7 @@ tr_TR:
         tool_not_found: "'%{tool_name}' aracı artık kullanılamıyor."
         bot_user_missing: "Bu bot kullanıcısı artık mevcut değil."
         execution_error: "Araç çalıştırılamadı: %{error}"
+        execution_error_unknown: "beklenmedik bir hata oluştu"
     summarization:
       configuration_hint:
         one: "Önce `%{setting}` ayarını yapılandırın"
@@ -831,13 +838,13 @@ tr_TR:
       reports:
         overall_sentiment: "Genel duygu (Olumlu - Olumsuz)"
         post_emotion:
-          sadness: "Üzüntü \U0001F622"
-          surprise: "Şaşırma \U0001F631"
-          neutral: "Nötr \U0001F610"
-          fear: "Korku \U0001F628"
-          anger: "Öfke \U0001F621"
-          joy: "Neşe \U0001F600"
-          disgust: "İğrenme \U0001F922"
+          sadness: "Üzüntü 😢"
+          surprise: "Şaşırma 😱"
+          neutral: "Nötr 😐"
+          fear: "Korku 😨"
+          anger: "Öfke 😡"
+          joy: "Neşe 😀"
+          disgust: "İğrenme 🤢"
         sentiment_analysis:
           positive: "Pozitif"
           negative: "Negatif"
@@ -893,13 +900,10 @@ tr_TR:
       limit_exceeded_admin: "AI kredi limitinize ulaştınız. Lütfen %{reset_time} sonra tekrar deneyin."
     errors:
       quota_exceeded: "Bu model için kotayı aştınız. Lütfen %{relative_time} içinde tekrar deneyin."
-      quota_required: "Bu model için maksimum token veya kullanımları belirtmelisiniz"
       no_query_specified: Sorgu parametresi gerekli, lütfen belirtin.
       no_user_for_agent: Belirtilen ajanın ilişkili bir kullanıcısı yok.
-      agent_not_found: "Belirtilen aracı mevcut değil. agent_name veya agent_id parametrelerini kontrol edin (eski sürüm: agent_name veya agent_id)."
       no_user_specified: Kullanıcı adı veya user_unique_id parametresi gerekli, lütfen belirtin.
       user_not_found: Belirtilen kullanıcı mevcut değil. Kullanıcı adı parametresini kontrol edin.
-      agent_disabled: "Belirtilen aracı devre dışı bırakılmıştır. agent_name veya agent_id parametrelerini kontrol edin (eski sürüm: agent_name veya agent_id)."
       no_default_llm: Ajanın bir default_llm tanımı olması gerekir.
       user_not_allowed: Kullanıcının konuya katılmasına izin verilmiyor.
       invalid_stream_resume_token: resume_token geçersiz veya süresi dolmuş.

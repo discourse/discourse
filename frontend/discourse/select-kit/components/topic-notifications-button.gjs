@@ -13,7 +13,7 @@ const ParagraphWrapper = <template>
   <p class="reason">{{yield}}</p>
 </template>;
 const EmptyWrapper = <template>
-  {{! template-lint-disable no-yield-only}}{{yield}}
+  {{! eslint-disable ember/template-no-yield-only }}{{yield}}
 </template>;
 
 export default class TopicNotificationsButton extends Component {

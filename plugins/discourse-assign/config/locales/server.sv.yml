@@ -19,7 +19,6 @@ sv:
     remind_assigns: "Påminn användare om väntande tilldelningar."
     remind_assigns_frequency: "Hur ofta användare påminns om tilldelade ämnen."
     max_assigned_topics: "Maximalt antal ämnen som kan tilldelas en användare."
-    assign_allowed_on_groups: "Användare i dessa grupper får tilldela ämnen och kan tilldelas ämnen."
     enable_assign_status: "Lägg till ett anpassningsbart statusfält för varje uppgift."
     assign_statuses: "Lista över statusar som är tillgängliga för varje uppgift. Den första är standardstatusen för varje ny uppgift."
     errors:

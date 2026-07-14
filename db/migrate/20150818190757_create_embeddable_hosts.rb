@@ -19,10 +19,9 @@ class CreateEmbeddableHosts < ActiveRecord::Migration[4.2]
     category_id = category_row[0]["id"].to_i if category_row.cmd_tuples > 0
 
     if category_id == 0
-      category_id =
-        execute("SELECT value FROM site_settings WHERE name = 'uncategorized_category_id'")[0][
-          "value"
-        ].to_i
+      uncategorized =
+        execute("SELECT value FROM site_settings WHERE name = 'uncategorized_category_id'")
+      category_id = uncategorized[0]["value"].to_i if uncategorized.cmd_tuples > 0
     end
 
     embeddable_hosts = execute("SELECT value FROM site_settings WHERE name = 'embeddable_hosts'")

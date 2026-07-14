@@ -42,6 +42,14 @@ da:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Indlæser…"
+        tool: "Handling"
+        user: "Bruger"
+        approve: "Godkend"
+        reject: "Afvis"
+        approved: "Godkendt"
+        rejected: "Afvist"
       llm_selector:
         none: "Ingen"
       features:
@@ -54,6 +62,8 @@ da:
           one: "(%{count} mere)"
           other: "(%{count} mere)"
         collapse_list: "(vis mindre)"
+        nav:
+          enabled: "Aktiveret"
         filters:
           all: "Alle"
           reset: "Nulstil"
@@ -67,6 +77,7 @@ da:
         table: "Tabel"
       translations:
         title: "Oversættelser"
+        category_scope: "Kategorier"
         stats:
           eta_minutes:
             one: "%{count} minut"
@@ -111,6 +122,12 @@ da:
           clear_all: "Ryd alle"
         allowed_groups: "Tilladte grupper"
         delete: "Slet"
+        thinking_effort_options:
+          none: "Ingen"
+          low: "Lav"
+          medium: "Medium"
+          high: "Høj"
+          max: "Maks"
         response_format:
           open_modal: "Rediger"
           modal:

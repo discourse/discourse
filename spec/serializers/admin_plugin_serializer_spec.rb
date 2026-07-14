@@ -3,7 +3,9 @@
 RSpec.describe AdminPluginSerializer do
   subject(:serializer) { described_class.new(instance) }
 
-  let(:all_test_plugins) { Plugin::Instance.find_all("#{Rails.root}/spec/fixtures/plugins") }
+  let(:all_test_plugins) do
+    Plugin::Instance.find_all("#{Rails.root.join("spec/fixtures/plugins")}")
+  end
   let(:instance) { all_test_plugins.find { |plugin| plugin.name == "color_definition" } }
 
   describe "admin_route" do

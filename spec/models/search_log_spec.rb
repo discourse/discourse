@@ -227,6 +227,20 @@ RSpec.describe SearchLog, type: :model do
       expect(term_click_through_details[:period]).to eq("all")
       expect(term_click_through_details[:data][0][:y]).to eq(1)
     end
+
+    it "returns only non-staff users' searches with the non_staff_only search type" do
+      member = Fabricate(:user)
+      admin = Fabricate(:admin)
+      moderator = Fabricate(:moderator)
+      Fabricate(:search_log, term: "ruby", user: member)
+      Fabricate(:search_log, term: "ruby", user: admin)
+      Fabricate(:search_log, term: "ruby", user: moderator)
+      Fabricate(:search_log, term: "ruby", user: nil)
+
+      expect(
+        SearchLog.term_details("ruby", :weekly, :non_staff_only)[:data].sum { |point| point[:y] },
+      ).to eq(1)
+    end
   end
 
   describe "trending" do
@@ -258,6 +272,18 @@ RSpec.describe SearchLog, type: :model do
       SearchLog.where(term: "ruby", ip_address: "127.0.0.2").update_all(search_result_id: 24)
       top_trending = SearchLog.trending.first
       expect(top_trending.click_through).to eq(3)
+    end
+
+    it "returns only non-staff users' searches with the non_staff_only search type" do
+      admin = Fabricate(:admin)
+      moderator = Fabricate(:moderator)
+      Fabricate(:search_log, term: "admin-search", user: admin)
+      Fabricate(:search_log, term: "moderator-search", user: moderator)
+      Fabricate(:search_log, term: "anonymous-search", user: nil)
+
+      results = SearchLog.trending(:all, :non_staff_only).to_a
+
+      expect(results.map { |trend| [trend.term, trend.searches] }).to eq([["ruby", 1]])
     end
   end
 

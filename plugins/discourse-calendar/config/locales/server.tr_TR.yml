@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  category_types:
+    events:
+      name: "Olaylar"
+      title: "olaylar"
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "Takvim etkinlikleri akışını oku"
   reports:
     currently_away:
       title: Şu anda uzaktaki kullanıcılar
@@ -37,7 +44,6 @@ tr_TR:
     map_events_to_color: "Her etikete veya kategoriye bir renk atayın."
     map_events_title: "Her kategori için \"Yaklaşan Etkinlikler\" kenar çubuğu başlığındaki \"Etkinlikler\"in üzerine yazar."
     calendar_enabled: "discourse-calendar eklentisini etkinleştirin. Bu, bir konunun ilk gönderisine [calendar][/calendar] etiketi için destek ekleyecektir."
-    discourse_post_event_enabled: "Etkinlik özelliklerini etkinleştirir. Not: `takvim etkin` özelliğinin de etkinleştirilmesi gerekir."
     displayed_invitees_limit: "Bir etkinlikte gösterilen davetlilerin sayısını sınırlar."
     display_post_event_date_on_topic_title: "Konu başlığından sonra olayın tarihini gösterir."
     use_local_event_date: "Konu başlığından sonra göreli zaman yerine yerel tarih kullanın."
@@ -64,6 +70,15 @@ tr_TR:
     sidebar_show_upcoming_events: "Kenar çubuğunda 'Daha Fazla' altında yaklaşan etkinlikler bağlantısını gösterin."
     calendar_first_day_of_week: "Takvim görüntüsü için haftanın ilk gününü ayarlayın. Seçenekler Cumartesi, Pazar veya Pazartesi'dir."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Gün"
+        week: "Hafta"
+        month: "Ay"
+        year: "Yıl"
+    calendar_subscriptions:
+      all_events_feed_name: "%{site_title} - Tüm etkinlikler"
+      my_events_feed_name: "%{site_title} - Etkinliklerim"
     invite_user_notification: "%{username} sizi şuraya davet etti: %{description}"
     calendar_must_be_in_first_post: "Takvim etiketi, bir konunun yalnızca ilk gönderisinde kullanılabilir."
     more_than_one_calendar: "Bir gönderide birden fazla takviminiz olamaz."

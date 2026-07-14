@@ -53,12 +53,7 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
       plans_json =
         File.read(
           Rails.root.join(
-            "plugins",
-            "discourse-subscriptions",
-            "spec",
-            "fixtures",
-            "json",
-            "stripe-price-list.json",
+            "plugins/discourse-subscriptions/spec/fixtures/json/stripe-price-list.json",
           ),
         )
 
@@ -71,12 +66,7 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
         subscriptions_json =
           File.read(
             Rails.root.join(
-              "plugins",
-              "discourse-subscriptions",
-              "spec",
-              "fixtures",
-              "json",
-              "stripe-subscription-list.json",
+              "plugins/discourse-subscriptions/spec/fixtures/json/stripe-subscription-list.json",
             ),
           )
 

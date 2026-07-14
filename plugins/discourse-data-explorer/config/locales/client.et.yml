@@ -18,6 +18,7 @@ et:
       create_placeholder: "Päringu nimi..."
       ai:
         generate: "Genereeri"
+        optional: "valikuline"
       import:
         label: "Impordi"
       help:
@@ -30,13 +31,14 @@ et:
           yes: "Jah"
           no: "Ei"
           null_: "Nulli"
-      export: "Ekspordi"
       run: "Käivita"
-      edit: "Muuda"
       delete: "Kustuta"
-      download_json: "JSON"
-      download_csv: "CSV"
       query_groups: "Rühmad"
       query_description: "Kirjeldus"
       reset_params: "Nulli"
       search_placeholder: "Otsi..."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Andmete eksportija"
+      sql:
+        param_value: "Väärtus"

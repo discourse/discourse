@@ -92,6 +92,16 @@ el:
               label: "Περιεχόμενο ΠΜ"
               description: "Προαιρετικό προσαρμοσμένο μήνυμα για αποστολή στον συντάκτη"
     discourse_ai:
+      bot_chats:
+        tab_label: "Συνομιλίες bot"
+      ai_tool_approval:
+        loading: "Φόρτωση... "
+        tool: "Ενέργεια"
+        user: "Χρήστης"
+        approve: "Έγκριση"
+        reject: "Απόρριψη"
+        approved: "Εγκρίθηκε "
+        rejected: "Απορρίφθηκε"
       llm_selector:
         none: "Κανένα"
       features:
@@ -105,6 +115,9 @@ el:
           one: "(%{count} περισσότερο)"
           other: "(%{count} περισσότερα)"
         collapse_list: "(δείξε λιγότερα)"
+        nav:
+          enabled: "Ενεργοποιημένη"
+          not_enabled: "Μη ενεργοποιημένη"
         filters:
           all: "Όλα"
           no_results: "Καμία λειτουργία δεν αντιστοιχεί με τα φίλτρα σας."
@@ -112,6 +125,10 @@ el:
         no_automations: "Δεν υπάρχουν αυτοματισμοί ακόμη"
         search:
           name: "Αναζήτηση"
+        admin_dashboard:
+          highlights: "Σημαντικά σημεία"
+          setting_groups:
+            settings: "Βασικές ρυθμίσεις"
         ai_helper:
           setting_groups:
             access_permissions: "Πρόσβαση & Δικαιώματα"
@@ -124,6 +141,7 @@ el:
         select_option: "Διαλέξτε μία επιλογή..."
       translations:
         title: "Μεταφράσεις"
+        category_scope: "Κατηγορίες"
         admin_actions:
           localization_settings: "Ρυθμίσεις τοπικοποίησης"
         stats:
@@ -140,6 +158,9 @@ el:
           bar_done:
             one: "%{count} ανάρτηση"
             other: "%{count} αναρτήσεις"
+        theme_translations:
+          translate:
+            label: "Μετάφραση"
       spam:
         short_title: "Ανεπιθύμητα"
         last_seven_days: "Τελευταίες 7 ημέρες"
@@ -149,6 +170,8 @@ el:
         test_modal:
           result: "Αποτέλεσμα"
           spam: "Ανεπιθύμητα"
+        errors:
+          resolved: "Το σφάλμα έχει επιλυθεί!"
       usage:
         summary: "Περίληψη"
         model: "Μοντέλο"
@@ -159,6 +182,11 @@ el:
           last_day: "Τελευταίες 24 ώρες"
           custom: "Προσαρμοσμένο..."
       ai_agent:
+        mcp_server_enabled_tools:
+          one: "%{count} από %{total} εργαλείο ενεργοποιημένο"
+          other: "%{count} από %{total} εργαλεία ενεργοποιημένα"
+        mcp_server_choose_tools: "Επιλογή εργαλείων"
+        mcp_server_edit_tools: "Επεξεργασία εργαλείων"
         name: "Όνομα"
         edit: "Επεξεργασία"
         export: "Εξαγωγή"
@@ -176,17 +204,31 @@ el:
           clear_all: "Εκκαθάριση όλων"
         allowed_groups: "Επιτρεπόμενες ομάδες"
         delete: "Διαγραφή"
+        thinking_effort_options:
+          none: "Κανένα"
+          low: "Χαμηλή"
+          medium: "Μεσαία"
+          high: "Υψηλή"
+          max: "Μέγιστο"
         response_format:
           open_modal: "Επεξεργασία"
           modal:
+            root_title: "Δομή απόκρισης"
             key_title: "Κλειδί"
+        examples:
+          title: Παραδείγματα
+          remove: Διαγραφή παραδείγματος
         filters:
           reset: "Επαναφορά"
+        features_list:
+          one: "Λειτουργία:"
+          other: "Λειτουργίες:"
       rag:
         uploads:
           title: "Μεταφορτώσεις"
           uploading: "Επιφόρτωση..."
       tools:
+        back: "Πίσω στα εργαλεία"
         export: "Εξαγωγή"
         import: "Εισαγωγή"
         no_tools: "Δεν έχετε δημιουργήσει κανένα εργαλείο ακόμη"
@@ -204,6 +246,7 @@ el:
         short_title: "Διαπιστευτήρια"
         name: "Όνομα"
         secret: "Τιμή"
+        back: "Πίσω στα διαπιστευτήρια"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
         delete: "Διαγραφή"
@@ -214,22 +257,38 @@ el:
         url: "URL"
         auth_types:
           oauth: "OAuth"
+        secret: "Διαπιστευτήρια"
+        oauth_client_registration: "Εγγραφή πελάτη OAuth"
+        oauth_client_registration_types:
+          client_metadata_document: "Έγγραφο μεταδεδομένων πελάτη"
+        oauth_authorization_params: "Παράμετροι εξουσιοδότησης OAuth"
+        oauth_token_params: "Παράμετροι διακριτικού OAuth"
+        oauth_json_object_required: "Το %{field} πρέπει να είναι αντικείμενο JSON."
+        oauth_show_advanced_options: "Εμφάνιση προχωρημένων επιλογών"
+        oauth_hide_advanced_options: "Απόκρυψη προχωρημένων επιλογών"
         oauth_statuses:
           connected: "Συνδεδεμένος"
         oauth_connect: "Συνδεθείτε"
+        oauth_issuer: "Εκδότης"
+        oauth_show_details: "Εμφάνιση λεπτομερειών"
         oauth_hide_details: "Απόκρυψη λεπτομερειών"
         enabled: "Ενεργοποιημένα"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
         delete: "Διαγραφή"
+        test: "Δοκιμή σύνδεσης"
+        back: "Πίσω στα εργαλεία"
+        healthy: "Υγιής"
         tools_modal:
           required: "Απαιτείται"
+        test_result: "Αποτέλεσμα σύνδεσης"
       llms:
         no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"
-        attachment_types_placeholder: "Επιλέξτε ή πληκτρολογήστε επεκτάσεις (π.χ., pdf, txt, docx)"
+        attachment_types_placeholder: "Επιλέξτε ή πληκτρολογήστε επεκτάσεις (π.χ., pdf, txt, csv, docx, xlsx)"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
+        back: "Πίσω στα LLM"
         delete: Διαγραφή
         quotas:
           group: "Ομάδα"
@@ -269,7 +328,11 @@ el:
           try_again: "Δοκίμασε ξανά"
         image_caption:
           save_caption: "Αποθήκευση"
+      errors:
+        credit_limit_dialog:
+          message_user: "Αυτή η κοινότητα έχει φτάσει το όριο πίστωσης AI για σήμερα. Δοκιμάστε ξανά μετά από %{reset_time} ή επικοινωνήστε με τον διαχειριστή του ιστότοπού σας για περισσότερες πληροφορίες."
       embeddings:
+        back: "Πίσω στις ενσωματώσεις"
         save: "Αποθήκευση"
         delete: "Διαγραφή"
         edit: "Επεξεργασία"
@@ -290,14 +353,14 @@ el:
           title: "Προβολή αλληλεπίδρασης AI"
           copy_request: "Αντιγραφή αιτήματος"
           copy_response: "Αντιγραφή απάντησης"
-          request_tokens: "Διακριτικά αιτήματος:"
-          response_tokens: "Διακριτικά απάντησης:"
-          cache_read_tokens: "Διακριτικά ανάγνωσης προσωρινής μνήμης:"
-          cache_write_tokens: "Διακριτικά εγγραφής προσωρινής μνήμης:"
+          this_turn: "Αυτός ο γύρος:"
+          whole_conversation: "Συνομιλία:"
           request: "Αίτημα"
           response: "Απάντηση"
           next_log: "Επόμενο"
           previous_log: "Προηγούμενο"
+        share_full_topic_modal:
+          update: "Ενημέρωση και αντιγραφή συνδέσμου"
         invite_ai_conversation:
           button: "Πρόσκληση"
         share_modal:
@@ -305,9 +368,15 @@ el:
         conversations:
           placeholder: "Κάντε μια ερώτηση..."
           messages_sidebar_title: "Συζητήσεις"
+          open_conversation_menu: "Άνοιγμα μενού συζήτησης"
           today: "Σήμερα"
           last_7_days: "Τελευταίες 7 ημέρες"
           last_30_days: "Τελευταίες 30 ημέρες"
+          show_toolbar: "Εμφάνιση γραμμής εργαλείων μορφοποίησης"
+          hide_toolbar: "Απόκρυψη γραμμής εργαλείων μορφοποίησης"
+          scroll_to_bottom: "Κύλιση προς τα κάτω"
+          streaming_below: "Νέο περιεχόμενο παρακάτω"
+          editing_post: "Γίνεται επεξεργασία ανάρτησης"
       sentiments:
         sentiment_analysis:
           filter_types:
@@ -327,6 +396,11 @@ el:
           actions:
             disable: "Απενεργοποίηση"
     review:
+      statuses:
+        approved_tool_action:
+          title: "Εργαλείο εγκρίθηκε"
+        rejected_tool_action:
+          title: "Εργαλείο απορρίφθηκε"
       types:
         reviewable_ai_post:
           title: "Αναφερόμενη από AI ανάρτηση"

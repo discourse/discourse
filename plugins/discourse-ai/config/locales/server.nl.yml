@@ -8,21 +8,48 @@ nl:
   activerecord:
     attributes:
       llm_model:
+        name: "Model-ID"
         max_prompt_tokens: "Contextvenster"
+  dashboard:
+    problem:
+      ai_llm_status:
+        one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> vereist aandacht. In het afgelopen uur heeft het %{failed_calls} van de %{total_calls} keer niet geantwoord."
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> vereist aandacht. In de afgelopen %{count} uur heeft het %{failed_calls} van de %{total_calls} keer niet geantwoord."
+      ai_credit_soft_limit: "%{model_name} heeft nog maar %{percentage_remaining}% credits over. Credits worden gereset op %{reset_date}. <a href='%{url}'>AI-modellen bekijken</a>"
+      ai_credit_hard_limit: "Je AI-credits voor %{model_name} zijn op. AI-functies zijn niet beschikbaar tot %{reset_date}. <a href='%{url}'>AI-modellen bekijken</a>"
   discourse_automation:
     ai:
       flag_types:
         review: "Bericht toevoegen aan beoordelingswachtrij"
         review_hide: "Bericht toevoegen aan beoordelingswachtrij en bericht verbergen"
+        review_delete: "Bericht toevoegen aan beoordelingswachtrij en bericht verwijderen"
+        review_delete_silence: "Bericht toevoegen aan beoordelingswachtrij, bericht verwijderen en gebruiker dempen"
         spam: "Als spam markeren en bericht verbergen"
         spam_silence: "Als spam markeren, bericht verbergen en gebruiker dempen"
     scriptables:
+      ai_tool_action:
+        title: AI-toolactie
+        description: Voer een AI-tool uit wanneer de automatisering wordt geactiveerd
+      llm_agent_triage:
+        title: Berichten triageren met AI-agent
+        description: "Reageer op berichten met een specifieke AI-agent"
       llm_triage:
         title: Berichten triageren met AI
         description: "Triageer berichten met behulp van een groot taalmodel"
+        notify_author_pm:
+          subject: "Je bericht is tijdelijk verwijderd voor beoordeling."
+          body: |
+            Hallo @%{username},
+
+            Je bericht in '%{topic_title}' is tijdelijk verwijderd en in onze beoordelingswachtrij geplaatst zodat een moderator ernaar kan kijken. Als het wordt goedgekeurd, wordt het automatisch hersteld.
+
+            Referentie: %{post_url}
       llm_report:
         title: Periodiek rapport met AI
         description: "Periodiek rapport op basis van een groot taalmodel"
+      llm_tagger:
+        title: Topics taggen met AI
+        description: "Automatisch topics taggen met AI"
   site_settings:
     discourse_ai_enabled: "Schakel de Discourse-AI-plug-in in."
     ai_default_llm_model: "Het standaard LLM-model om te gebruiken voor alle AI-functies"
@@ -43,7 +70,6 @@ nl:
     ai_sentiment_enabled: "Schakel de sentimentmodule in."
     ai_sentiment_inference_service_api_endpoint: "URL waar de API wordt uitgevoerd voor de sentimentmodule"
     ai_sentiment_inference_service_api_key: "API-sleutel voor de sentiment-API"
-    ai_sentiment_models: "Te gebruiken model voor inferentie. Sentiment classificeert berichten in de ruimte positief/neutraal/negatief. Emotie classificeert berichten in de ruimte boosheid/afschuw/angst/vreugde/neutraal/verdriet/verrassing."
     ai_nsfw_detection_enabled: "Schakel de NVWW-module in."
     ai_nsfw_inference_service_api_endpoint: "URL waar de API wordt uitgevoerd voor de NVWW-module"
     ai_nsfw_inference_service_api_key: "API-sleutel voor de NVWW-API"
@@ -55,6 +81,8 @@ nl:
     ai_nsfw_flag_threshold_sexy: "Drempelwaarde voor een als sexy geclassificeerde afbeelding om als NVVW te worden beschouwd."
     ai_nsfw_models: "Te gebruiken modellen voor NVWW-inferentie."
     ai_spam_detection_enabled: "Schakel de AI-spamdetectiemodule in"
+    ai_spam_detection_max_post_count: "Maximaal aantal berichten dat een gebruiker kan hebben voordat ze niet meer worden gescand op spam"
+    ai_spam_detection_max_trust_level: "Maximaal vertrouwensniveau van gebruikers om te scannen op spam"
     ai_openai_api_key: "API-sleutel voor OpenAI-API. ALLEEN gebruikt voor het creëren en bewerken van afbeeldingen. Gebruik voor GPT het tabblad LLM-configuratie"
     ai_helper_enabled: "Schakel de AI-helper in."
     composer_ai_helper_allowed_groups: "Gebruikers in deze groepen zien de AI-hulpknop in de editor."
@@ -63,6 +91,8 @@ nl:
     ai_helper_automatic_chat_thread_title: "Stel automatisch de titel van chatthreads in op basis van de threadinhoud."
     ai_helper_enabled_features: "Selecteer de functies die je wilt inschakelen in de AI-helper."
     post_ai_helper_allowed_groups: "Gebruikersgroepen die toegang hebben tot AI-helperfuncties in berichten"
+    ai_helper_post_illustrator_agent: "De te gebruiken agent voor de berichtillustratiefunctie van de opstellings-AI-helper. Opmerking: je moet ook een hulpmiddel tool voor het genereren van afbeeldingen maken (Beheerde > Plug-ins > Discourse AI > Tools) om deze functie te laten werken."
+    ai_helper_chat_thread_title_agent: "De te gebruiken agent voor het genereren van chatthreadtitels."
     ai_embeddings_selected_model: "Gebruik het geselecteerde model voor het genereren van insluitingen."
     ai_embeddings_generate_for_pms: "Genereer insluitingen voor persoonlijke berichten."
     ai_embeddings_semantic_related_topics_enabled: "Gebruik semantisch zoeken voor gerelateerde topics."
@@ -72,24 +102,42 @@ nl:
     ai_embeddings_semantic_search_use_hyde: "Gebruik HyDE voor semantisch zoeken op volledige pagina's. Gebruikt een LLM om een hypothetisch bericht te creëren op basis van de zoekterm van de gebruiker om zo matches te vinden."
     ai_embeddings_semantic_quick_search_enabled: "Schakel de semantische zoekoptie in de zoekmenupop-up in."
     ai_embeddings_semantic_related_include_closed_topics: "Neem gesloten topics op in semantische zoekresultaten"
+    ai_embeddings_semantic_related_age_penalty: "Pas exponentiële ouderdomsstrafcorrectie toe op topics in semantische zoekresultaten. 0.0 = geen straf, 0.3 = lichte voorkeur voor recent actieve content, 1.0+ = sterke voorkeur voor recentheid."
+    ai_embeddings_semantic_related_age_time_scale: "Tijdschaal in dagen voor het berekenen van de ouderdomsstrafcorrectie. Topics die zoveel dagen inactief zijn krijgen ~50% straf met penalty=1.0. Gebruik 365 voor de jaarlijkse schaal, 90 voor de driemaandelijkse schaal."
     ai_embeddings_per_post_enabled: Insluitingen genereren voor elk bericht
     ai_summarization_enabled: "Schakel de samenvattingsfunctie in"
+    ai_summarization_agent: "De te gebruiken agent voor de samenvattingsfunctie"
     ai_pm_summarization_allowed_groups: "Groepen mogen samenvattingen maken en bekijken in PB's."
     ai_summary_gists_enabled: "Genereer automatisch korte samenvattingen van de nieuwste reacties in topics"
     ai_summary_backfill_maximum_topics_per_hour: "Aantal topicsamenvattingen om aan te vullen per uur."
     ai_bot_enabled: "Schakel de AI-botmodule in."
+    ai_bot_enabled_llms: "LLM's beschikbaar om te selecteren voor AI-botconversaties"
+    ai_bot_enable_chat_warning: "Geef een waarschuwing weer wanneer een privéchat wordt gestart. Kan worden genegeerd door de vertaling te bewerken: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Wanneer de GPT-bot toegang heeft tot het privébericht, zal deze reageren op leden van deze groepen."
     ai_bot_debugging_allowed_groups: "Geef deze groepen een debugknop bij berichten die het ruwe AI-verzoek en -antwoord weergeeft"
     ai_bot_public_sharing_allowed_groups: "Sta deze groepen toe persoonlijke AI-berichten met het publiek delen via een unieke, openbaar beschikbare link. Let op: als aanmelden vereist is op je site, is dat ook vereist voor delen."
+    ai_bot_add_to_header: "Geef een knop weer in de kop om een privéchat te starten met een AI-bot"
+    ai_bot_add_to_community_section: "Geef een link weer in de zijbalk van het communitygedeelte om een privéchat te starten met een AI-bot"
     ai_bot_github_access_token: "GitHub-toegangstoken voor gebruik met GitHub AI-tools (vereist voor zoekondersteuning)"
+    ai_discover_enabled: "De ontdekkingszoekfunctie inschakelen"
+    ai_discover_agent: "De te gebruiken agent voor de ontdekkingszoekfunctie"
     ai_google_custom_search_api_key: "API-sleutel voor de Google Custom Search-API zie: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX voor Google Custom Search-API"
     ai_discord_search_enabled: "Schakelt de Discord-zoekfunctie in"
     ai_discord_app_id: "De ID van de Discord-toepassing waarmee je de Discord-zoekfunctie wilt koppelen"
     ai_discord_app_public_key: "De openbare sleutel van de Discord-toepassing waarmee je de Discord-zoekfunctie wilt koppelen"
     ai_discord_search_mode: "Selecteer de zoekmodus die je wilt gebruiken voor de Discord-zoekfunctie"
+    ai_discord_search_agent: "De te gebruiken agent voor de Discord-zoekfunctie"
     ai_discord_allowed_guilds: "Discord-gilden (servers) waar de bot mag zoeken"
+    ai_translation_enabled: "De AI-vertaalfunctie inschakelen"
+    ai_translation_personal_messages: "Bepaalt welke persoonlijke berichten worden vertaald. 'none' schakelt het vertalen van PB's uit. 'group' vertaalt alleen groeps-PB's. 'all' vertaalt alle PB's."
+    ai_translation_include_bot_content: "Wanneer ingeschakeld, wordt content die is geschreven door bots (gebruikers-ID's lager dan 0) ook voor vertaling verzonden."
+    ai_translation_max_post_length: "Het maximale aantal tekens van een te vertalen bericht. Berichten langer dan dit worden niet vertaald."
     ai_translation_backfill_max_age_days: "De maximale leeftijd van een bericht en topic dat vertaald moet worden. Berichten en topics die ouder zijn dan dit worden niet vertaald. 0 schakelt het vertalen van eerdere berichten uit, maar niet van nieuwe berichten."
+    ai_translation_backfill_hourly_rate: "Het aantal te vertalen berichten en topics per uur tijdens aanvulbewerkingen. Stel in op 0 om automatisch aanvullen van vertalingen voor bestaande content uit te schakelen."
+    ai_translation_backfill_parallel_jobs: "Het aantal parallelle postlokalisatietaken dat wordt uitgevoerd per aanvulcyclus. Hogere waarden verhogen de doorvoer, maar verbruiken meer bronnen."
+    ai_usage_rollup_after_days: "Aantal dagen dat de AI-gebruiksstatistieken per verzoek worden bewaard voordat ze in de dagelijkse aggregaten worden opgenomen. Stel in op 0 om samentellen uit te schakelen."
+    ai_audit_logs_purge_after_days: "Verwijder AI-API-auditlogs ouder dan dit aantal dagen. Standaard ongeveer 6 maanden. Stel in op 0 om onbeperkt te bewaren."
   reviewables:
     reasons:
       flagged_by_toxicity: De AI-plug-in heeft dit gemarkeerd nadat het als toxisch was geclassificeerd.
@@ -104,88 +152,88 @@ nl:
       xaxis: "Positief (%)"
       yaxis: "Datum"
     emotion_admiration:
-      title: "\U0001F929 Bewondering"
+      title: "🤩 Bewondering"
       description: "Berichten geclassificeerd met de emotie bewondering via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_amusement:
-      title: "\U0001F604 Geamuseerd"
+      title: "😄 Geamuseerd"
       description: "Berichten geclassificeerd met de emotie geamuseerd via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_anger:
-      title: "\U0001F620 Boosheid"
+      title: "😠 Boosheid"
       description: "Berichten geclassificeerd met de emotie woede via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_annoyance:
-      title: "\U0001F612 Ergernis"
+      title: "😒 Ergernis"
       description: "Berichten geclassificeerd met de emotie ergernis via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_approval:
-      title: "\U0001F44D Goedkeuring"
+      title: "👍 Goedkeuring"
       description: "Berichten geclassificeerd met de emotie goedkeuring via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_caring:
-      title: "\U0001F917 Zorgzaam"
+      title: "🤗 Zorgzaam"
       description: "Berichten geclassificeerd met de emotie zorgzaam via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_confusion:
-      title: "\U0001F615 Verwarring"
+      title: "😕 Verwarring"
       description: "Berichten geclassificeerd met de emotie verwarring via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_curiosity:
-      title: "\U0001F914 Nieuwsgierigheid"
+      title: "🤔 Nieuwsgierigheid"
       description: "Berichten geclassificeerd met de emotie nieuwsgierigheid via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_desire:
-      title: "\U0001F60D Verlangen"
+      title: "😍 Verlangen"
       description: "Berichten geclassificeerd met de emotie verlangen via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_disappointment:
-      title: "\U0001F61E Teleurstelling"
+      title: "😞 Teleurstelling"
       description: "Berichten geclassificeerd met de emotie teleurstelling via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_disapproval:
-      title: "\U0001F44E Afkeuring"
+      title: "👎 Afkeuring"
       description: "Berichten geclassificeerd met de emotie afkeuring via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_disgust:
-      title: "\U0001F922 Afschuw"
+      title: "🤢 Afschuw"
       description: "Berichten geclassificeerd met de emotie afschuw via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_embarrassment:
-      title: "\U0001F633 Schaamte"
+      title: "😳 Schaamte"
       description: "Berichten geclassificeerd met de emotie schaamte via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_excitement:
-      title: "\U0001F92A Opwinding"
+      title: "🤪 Opwinding"
       description: "Berichten geclassificeerd met de emotie opwinding via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_fear:
-      title: "\U0001F628 Angst"
+      title: "😨 Angst"
       description: "Berichten geclassificeerd met de emotie angst via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_gratitude:
-      title: "\U0001F64F Dankbaarheid"
+      title: "🙏 Dankbaarheid"
       description: "Berichten geclassificeerd met de emotie dankbaarheid via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_grief:
-      title: "\U0001F622 Verdriet"
+      title: "😢 Verdriet"
       description: "Berichten geclassificeerd met de emotie verdriet via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_joy:
-      title: "\U0001F60A Vreugde"
+      title: "😊 Vreugde"
       description: "Berichten geclassificeerd met de emotie vreugde via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_love:
       title: '❤️ Liefde'
       description: "Berichten geclassificeerd met de emotie liefde via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_nervousness:
-      title: "\U0001F630 Nervositeit"
+      title: "😰 Nervositeit"
       description: "Berichten geclassificeerd met de emotie nervositeit via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_neutral:
-      title: "\U0001F610 Neutraal"
+      title: "😐 Neutraal"
       description: "Berichten geclassificeerd met de emotie neutraal via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_optimism:
-      title: "\U0001F31F Optimisme"
+      title: "🌟 Optimisme"
       description: "Berichten geclassificeerd met de emotie optimisme via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_pride:
-      title: "\U0001F981 Trots"
+      title: "🦁 Trots"
       description: "Berichten geclassificeerd met de emotie trots via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_realization:
-      title: "\U0001F4A1 Besef"
+      title: "💡 Besef"
       description: "Berichten geclassificeerd met de emotie besef via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_relief:
-      title: "\U0001F60C Opluchting"
+      title: "😌 Opluchting"
       description: "Berichten geclassificeerd met de emotie oplichting via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_remorse:
-      title: "\U0001F614 Spijt"
+      title: "😔 Spijt"
       description: "Berichten geclassificeerd met de emotie spijt via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_sadness:
-      title: "\U0001F62D Droefheid"
+      title: "😭 Droefheid"
       description: "Berichten geclassificeerd met de emotie droefheid via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
     emotion_surprise:
-      title: "\U0001F632 Verrassing"
+      title: "😲 Verrassing"
       description: "Berichten geclassificeerd met de emotie verrassing via AI, met behulp van het model 'SamLowe/roberta-base-go_emotions'."
   discourse_ai:
     ai_artifact:
@@ -209,17 +257,77 @@ nl:
           name: "Wisselkoers"
         stock_quote:
           name: "Aandelenkoers (AlphaVantage)"
+        image_generation_category:
+          name: "Afbeelding genereren..."
         image_generation_custom:
           name: "Aangepast"
         image_generation_openai:
           name: "OpenAI"
+        image_generation_gemini:
+          name: "Nano Banana"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "Vanaf blanco beginnen..."
       name:
         characters: "mag alleen cijfers, letters en onderstrepingstekens bevatten"
+      secret_contracts:
+        invalid_payload: "Geheime contracten moeten een array zijn."
+        invalid_contract: "Geheim contract op index %{index} is ongeldig."
+        alias_required: "Geheim contract op index %{index} moet een alias bevatten."
+        alias_too_long: "Geheime alias '%{alias}' is te lang."
+        alias_invalid: "Geheime alias '%{alias}' mag alleen cijfers, letters en onderstrepingstekens bevatten."
+        alias_not_unique: "Geheime alias '%{alias}' is gedupliceerd."
+      secret_bindings:
+        invalid_payload: "Geheime bindingen moeten een array zijn."
+        secret_not_found: "De geselecteerde aanmeldingsgegevens bestaan niet."
+        alias_not_declared: "Alias '%{alias}' is niet gedeclareerd in deze tool."
+      secret_runtime:
+        alias_not_declared: "Aanmeldgegevensalias '%{alias}' is niet gedeclareerd voor deze tool."
+        missing_binding: "De aanmeldingsgegevensalias '%{alias}' is vereist, maar niet gebonden."
+        missing_required_aliases: "Ontbrekende vereiste aanmeldingsgegevensbindingen voor aliassen: %{aliases}."
+        secret_not_found: "Aanmeldgegevensalias `%{alias}` is gebonden aan ontbrekende aanmeldingsgegevens."
+        unknown_error: "Kan de gevraagde aanmeldingsgegevens niet afhandelen."
+    mcp_servers:
+      secret_not_found: "De geselecteerde aanmeldingsgegevens bestaan niet."
+      invalid_url_not_https: "moet een geldige HTTPS-URL zijn"
+      invalid_url_not_reachable: "moet afhandelen naar een openbaar toegankelijk adres"
+      oauth_client_id_required: "OAuth-client-ID is vereist voor handmatige clientregistratie."
+      errors:
+        invalid_response: "De MCP-server heeft een ongeldig antwoord geretourneerd."
+        request_failed: "Het MCP-serververzoek is mislukt met de status %{status}."
+        session_expired: "De MCP-sessie is verlopen."
+        timeout: "Time-out MCP-serververzoek."
+        oauth_authorization_required: "Er is OAuth-autorisatie vereist voordat je deze MCP-server kunt gebruiken. Koppel het via de beheerders-UI met %{issuer}."
+        oauth_discovery_failed: "Kan de OAuth-autorisatiegegevens voor deze MCP-server niet ontdekken."
+        oauth_discovery_failed_with_status: "OAuth-ontdekking mislukt met status %{status}."
+        oauth_not_configured: "OAuth is niet geconfigureerd voor deze MCP-server."
+        oauth_refresh_token_missing: "Het OAuth-vernieuwingstoken ontbreekt. Maak opnieuw verbinding met deze MCP-server."
+        oauth_save_before_connect: "Sla de MCP-server op voordat je de OAuth-verbinding test."
+        oauth_state_invalid: "De OAuth-autorisatiestatus is ongeldig of verlopen. Start de verbinding opnieuw."
+        oauth_token_exchange_failed: "De OAuth-tokenuitwisseling is mislukt met status %{status}."
+        oauth_https_required: "OAuth vereist dat je site over HTTPS wordt aangeboden."
+        oauth_callback_failed: "OAuth-verbinding mislukt: %{message}"
+        oauth_refresh_token_required: "De OAuth-autorisatieserver heeft geen vernieuwingstoken geretourneerd. Pas de geavanceerde OAuth-opties aan en maak opnieuw verbinding met deze MCP-server."
+        oauth_client_metadata_public_https_required: "Voor de registratie van het clientmetadatadocument is een openbare HTTPS-site-URL vereist. Huidige clientmetadata-URL: %{url}"
+        oauth_registration_endpoint_missing: "De OAuth-autorisatieserver adverteert geen registratie-eindpunt."
+        oauth_manual_client_registration_required: "De OAuth-autorisatieserver %{issuer} adverteert geen dynamische cliëntregistratie. Schakel deze MCP-server in voor handmatige clientaanmeldingsgegevens en geef een geregistreerde OAuth-client-ID op."
+        oauth_client_secret_required: "De OAuth-autorisatieserver %{issuer} vereist clientverificatie (%{methods}) van tokeneindpunten. Configureer handmatige cliëntaanmeldingsgegevens met een cliëntgeheim."
+        oauth_token_endpoint_auth_method_unsupported: "De OAuth-autorisatieserver %{issuer} adverteert alleen niet-ondersteunde clientverificatiemethoden (%{methods}) voor tokeneindpunten. Deze MCP-server ondersteunt momenteel none, client_secret_basic en client_secret_post."
+        oauth_client_registration_failed: "Dynamische clientregistratie mislukt met status %{status}."
+        oauth_client_registration_failed_no_id: "Dynamische clientregistratie gelukt, maar er is geen client_id geretourneerd."
+      oauth_authorization_params_invalid: "De OAuth-autorisatieparameters moeten een JSON-object zijn."
+      oauth_token_params_invalid: "OAuth-tokenparameters moeten een JSON-object zijn."
     ai_helper:
       errors:
         completion_request_failed: "Er is iets misgegaan bij het geven van suggesties. Probeer het opnieuw."
+        no_illustrator_agent: "De post-illustratoragent is niet geconfigureerd. Controleer je site-instellingen."
+        no_image_generation_tool: "De post-illustratoragent moet een tool voor het genereren van afbeeldingen hebben. Configureer een tool voor het genereren van afbeeldingen voor deze agent in het beheerderspaneel."
+        no_image_generated: "Afbeelding genereren mislukt. Probeer het opnieuw of controleer je toolconfiguratie."
+        llm_model_not_configured: "Er is geen taalmodel geconfigureerd voor het genereren van afbeeldingen. Configureer een standaard taalmodel in je site-instellingen."
+        unknown_error: "Er is een onverwachte fout opgetreden tijdens het genereren van miniaturen. Probeer het opnieuw."
       prompts:
         translate: Vertalen naar %{language}
         generate_titles: Topictitels voorstellen
@@ -246,17 +354,22 @@ nl:
       flag_reason: "Gemarkeerd als spam door <a href='%{url}'>Discourse-AI</a>"
       silence_reason: "Gebruiker automatisch gedempt door <a href='%{url}'>Discourse-AI</a>"
       invalid_error_type: "Ongeldig fouttype opgegeven"
+      unexpected: "Er is een onverwachte fout opgetreden"
       bot_user_update_failed: "Bijwerken van gebruiker voor spamscanbot mislukt"
       configuration_missing: "De configuratie voor de AI-spamdetectie ontbreekt. Voeg de configuratie toe via 'Beheer > Plug-ins > Discourse AI > Spam' voordat u deze inschakelt."
       logging_subject: "Spamdetectie"
     ai_bot:
       reply_error: "Het lijkt erop dat ons systeem een onverwacht probleem heeft ondervonden terwijl het probeerde te antwoorden.\n\n[details='Error details']\n%{details}\n[/details]"
       default_pm_prefix: "[Ongetitelde PB van AI-bot]"
+      thinking: "Denken"
+      tool_pending_approval: "Deze actie vereist goedkeuring van een moderator voordat deze kan worden uitgevoerd."
       agents:
         default_llm_required: "Standaard LLM-model is vereist voordat Chat wordt ingeschakeld"
+        cannot_delete_system_agent: "Systeemagenten kunnen niet worden verwijderd. Schakel deze in plaats daarvan uit."
+        cannot_edit_system_agent: "Systeemagenten kunnen alleen worden hernoemd. Je kunt tools of systeemprompts niet bewerken. Je kunt ze wel uitschakelen en een kopie maken."
         cannot_have_duplicate_tools: "Mag geen dubbele tools hebben"
         github_helper:
-          name: "GitHub Helper"
+          name: "GitHub-helper"
           description: "AI-bot gespecialiseerd in het assisteren bij GitHub-gerelateerde taken en vragen"
         general:
           name: Forumhelper
@@ -286,15 +399,17 @@ nl:
           name: "DALL-E 3"
           description: "AI-bot gespecialiseerd in het genereren van afbeeldingen met DALL-E 3"
         discourse_helper:
-          name: "Discourse Helper"
+          name: "Discourse-helper"
           description: "AI-bot gespecialiseerd in het helpen bij Discourse-gerelateerde taken"
         web_artifact_creator:
           name: "Webartefactmaker"
           description: "AI-bot gespecialiseerd in het maken van interactieve webartefacten"
         summarizer:
           name: "Samenvatter"
+          description: "Standaardagenten die AI-samenvattingen te ondersteunen"
         short_summarizer:
           name: "Samenvatter (korte vorm)"
+          description: "Standaardagent die korte AI-samenvattingen voor items in topiclijsten ondersteunt"
         concept_finder:
           name: "Conceptzoeker"
           description: "AI-bot gespecialiseerd in het identificeren van concepten en thema's in content"
@@ -306,22 +421,31 @@ nl:
           description: "AI-bot gespecialiseerd in het dedupliceren van concepten"
         custom_prompt:
           name: "Aangepaste prompt"
+          description: "Standaardagent die de aangepaste promptfunctie van de Helper ondersteunt"
         smart_dates:
           name: "Slimme datums"
+          description: "Standaardagent die de slimme datumfunctie van de Helper ondersteunt"
         markdown_table_generator:
           name: "Markdown-tabelgenerator"
+          description: "Standaardagent die de Markdown-tabelfunctie van de Helper ondersteunt"
         post_illustrator:
           name: "Berichtillustrator"
+          description: "Genereert afbeeldingen om berichten te illustreren met behulp van beschikbare tools voor het genereren van afbeeldingen"
         proofreader:
           name: "Proeflezer"
+          description: "Standaardagent die de proefleesfunctie van de Helper ondersteunt"
         titles_generator:
           name: "Titelgenerator"
+          description: "Standaardagent die de Helper-functie voor het voorstellen van topictitels ondersteunt"
         tutor:
           name: "Mentor"
+          description: "Standaardagent die de uitlegfunctie van de Helper ondersteunt"
         translator:
           name: "Vertaler"
+          description: "Standaardagent die de vertaalfunctie van de Helper ondersteunt"
         image_captioner:
           name: "Afbeeldingsbijschriften"
+          description: "Standaardagent die de Helper-functie voor afbeeldingsbijschriften ondersteunt"
         locale_detector:
           name: "Taaldetector"
           description: "Ondersteunt de vertaalfunctie door de taal van een bepaalde tekst (berichten, titels enz.) te detecteren."
@@ -336,10 +460,19 @@ nl:
           description: "Ondersteunt de vertaalfunctie als een generieke tekstvertaler, gebruikt voor korte teksten zoals categorienamen of tags"
         spam_detector:
           name: "Spamdetector"
+          description: "Standaardagent die onze spamdetectiefunctie ondersteunt"
         content_creator:
           name: "Contentmaker"
+          description: "Standaardagent die de HyDE-zoekfunctie ondersteunt"
         report_runner:
           name: "Rapportenuitvoerder"
+          description: "Standaardagent gebruikt in het rapportautomatiseringsscript"
+        discover:
+          name: "Ontdekken"
+          description: "Standaardagent die wordt gebruikt in de ontdekkingsfunctie (aanvullende zoekopdracht)"
+        chat_thread_titler:
+          name: "Chatthreadtitelaar"
+          description: "Standaard agent die automatisch chatthreadtitels genereert"
       topic_not_found: "Samenvatting niet beschikbaar, topic niet gevonden!"
       summarizing: "Topic samenvatten"
       searching: "Zoeken naar: '%{query}'"
@@ -347,6 +480,7 @@ nl:
         researcher:
           researcher_llm:
             name: "LLM"
+            description: "Het taalmodel te gebruiken in onderzoek (standaard de LLM van de huidige agent)"
           max_tokens_per_batch:
             name: "Maximaal aantal tokens per batch"
             description: "Maximaal aantal tokens dat voor elke batch in het onderzoek mag worden gebruikt"
@@ -391,17 +525,40 @@ nl:
           base_query:
             name: "Basiszoekquery"
             description: "Basisquery om te gebruiken bij het zoeken. Voorbeeld: '#urgent' voegt '#urgent' toe aan de zoekquery en neemt alleen topics mee met de categorie of tag 'urgent'."
+        flag_post:
+          flag_type:
+            name: "Markeringstype"
+            description: "Bepaalt of het bericht wordt beoordeeld, verborgen, verwijderd of behandeld als spam."
       tool_summary:
         read_artifact: "Lees een webartefact"
+        search_uploaded_documents: "Geüploade documenten zoeken"
         update_artifact: "Werk een webartefact bij"
         create_artifact: "Webartefact maken"
         web_browser: "Web surfen"
         github_search_files: "GitHub-zoekbestanden"
         github_search_code: "GitHub-code zoeken"
         github_file_content: "GitHub-bestandsinhoud"
+        github_diff: "GitHub-diff"
         random_picker: "Willekeurige kiezer"
         categories: "Categorieën weergeven"
         flag_post: "Bericht markeren"
+        close_topic: "Topic sluiten"
+        suspend_user: "Gebruiker schorsen"
+        silence_user: "Gebruiker dempen"
+        unlist_topic: "Topic onzichtbaar maken"
+        lock_post: "Bericht vergrendelen"
+        delete_topic: "Topic verwijderen"
+        edit_post: "Bericht bewerken"
+        edit_tags: "Tags bewerken"
+        edit_category: "Categorie bewerken"
+        set_topic_timer: "Topictimer instellen"
+        set_slow_mode: "Langzame modus instellen"
+        move_posts: "Berichten verplaatsen"
+        grant_badge: "Badge toekennen"
+        list_reviewables: "Beoordelingswachtrij zichtbaar maken"
+        perform_reviewable_action: "Beoordelingswachtrijactie"
+        assign: "Topic toewijzen"
+        mark_as_solved: "Markeren als opgelost"
         search: "Zoeken"
         tags: "Tags weergeven"
         time: "Tijd"
@@ -421,15 +578,32 @@ nl:
         researcher_dry_run: "Onderzoek voorbereiden"
       tool_help:
         read_artifact: "Webartefact lezen met behulp van de AI-bot"
+        search_uploaded_documents: "Zoek documenten die naar deze agent zijn geüpload"
         update_artifact: "Werk een webartefact bij met behulp van de AI-bot"
         create_artifact: "Maak een webartefact met behulp van de AI-bot"
         web_browser: "Webpagina bekijken met behulp van de AI-bot"
         github_search_code: "Zoek code in een GitHub-repository"
         github_search_files: "Zoek bestanden in een GitHub-repository"
         github_file_content: "Haal de inhoud van bestanden op uit een GitHub-repository"
+        github_diff: "Haal een GitHub-pullverzoek of -commit-diff op"
         random_picker: "Kies een willekeurig getal of een willekeurig element uit een lijst"
         categories: "Geef een lijst weer van alle openbaar zichtbare categorieën op het forum"
+        flag_post: "Markeer het huidige bericht voor beoordeling door een medewerker"
+        close_topic: "Sluit of open een topic"
+        unlist_topic: "Een topic zichtbaar of onzichtbaar maken"
+        lock_post: "Vergrendel of ontgrendel een bericht"
         delete_topic: "Verwijder een topic"
+        edit_post: "Bewerk de inhoud van een bericht"
+        edit_tags: "Bewerk de tags van een topic"
+        edit_category: "Verplaats een topic naar een andere categorie"
+        set_topic_timer: "Stel een timer in voor een topic om het te sluiten, te openen, te verwijderen of omhoog te plaatsen"
+        set_slow_mode: "Langzame modus voor een topic in- of uitschakelen"
+        move_posts: "Verplaats berichten naar een nieuw of bestaand topic"
+        grant_badge: "Ken een badge toe aan een gebruiker"
+        list_reviewables: "Wachtende items in de beoordelingswachtrij zichtbaar maken met optionele filtering"
+        perform_reviewable_action: "Een actie uitvoeren op een item in de beoordelingswachtrij"
+        assign: "Wijs een topic toe aan of een gebruiker of groep of hef de toewijzing op"
+        mark_as_solved: "Markeer een bericht als de geaccepteerde oplossing of hef de markering op"
         search: "Doorzoek alle openbare topics op het forum"
         tags: "Geef een lijst weer van alle tags op het forum"
         time: "Zoek de tijd in verschillende tijdzones"
@@ -448,6 +622,9 @@ nl:
         researcher: "Foruminformatie onderzoeken met behulp van de AI-bot"
       tool_description:
         read_artifact: "Webartefact lezen met behulp van de AI-bot"
+        search_uploaded_documents:
+          one: "%{count} geüpload documentuittreksel gevonden voor '%{query}'"
+          other: "%{count} geüploade documentuittreksels gevonden voor '%{query}'"
         update_artifact: "Webartefact bijgewerkt met behulp van de AI-bot"
         create_artifact: "Webartefact gemaakt: %{name} - %{specification}"
         web_browser: "Lezen: <a href='%{url}'>%{url}</a>"
@@ -456,6 +633,22 @@ nl:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Inhoud van %{file_paths} opgehaald uit %{repo_name}@%{branch}"
         random_picker: "Kiezen uit %{options}, gekozen: %{result}"
+        flag_post: "Bericht %{post_id} markeren (flag_post: %{flag_post})"
+        close_topic: "Topic %{topic_id} sluiten (gesloten: %{closed})"
+        unlist_topic: "Topic %{topic_id} onzichtbaar maken (onzichtbaar gemaakt: %{unlisted})"
+        lock_post: "Bericht %{post_id} vergrendelen (vergrendeld: %{locked})"
+        delete_topic: "Topic %{topic_id} verwijderen (verwijderd: %{deleted})"
+        edit_post: "Bericht bewerken %{post_id}"
+        edit_tags: "Tags van topic %{topic_id} bewerken: %{tags}"
+        edit_category: "Topic %{topic_id} verplaatsen naar categorie %{category_id}"
+        set_topic_timer: "Timer %{timer_type} instellen voor topic %{topic_id} (%{duration_hours} u)"
+        set_slow_mode: "Langzame modus instellen voor topic %{topic_id} (%{slow_mode_seconds}s)"
+        move_posts: "Berichten %{post_ids} verplaatsen van topic %{topic_id}"
+        grant_badge: "Badge '%{badge_name}' toekennen aan %{username}"
+        list_reviewables: "Items in de beoordelingswachtrij zichtbaar maken (type: %{type})"
+        perform_reviewable_action: "%{action} uitvoeren op beoordeelbare %{reviewable_id}"
+        assign: "Topic %{topic_id} toewijzen (toegewezen: %{assigned})"
+        mark_as_solved: "Bericht %{post_id} markeren als opgelost (opgelost: %{solved})"
         read: "Lezen: <a href='%{url}'>%{title}</a>"
         time: "De tijd in %{timezone} is %{time}"
         summarize: "Samengevat: <a href='%{url}'>%{title}</a>"
@@ -493,40 +686,148 @@ nl:
         continue_conversation:
           title: "Ontdekkingsgesprek: zoek naar %{query}"
           raw: "Tijdens het zoeken naar %{query} heb je me de volgende informatie laten zien:\n\n%{context}\n\nLaten we het gesprek voortzetten."
+      flag_post:
+        errors:
+          no_context: "Geen berichtcontext beschikbaar om te markeren."
+          no_reason: "Er is een reden vereist om een bericht te markeren."
+          invalid_flag_type: "Ongeldig markeringstype."
+        skipped: "Uitspraak was vals, er is geen markering gemaakt."
+        already_flagged: "Het bericht is al gemarkeerd voor beoordeling."
+        flagged: "Bericht gemarkeerd voor beoordeling."
+        reason: "AI-bot heeft dit bericht gemarkeerd.\n\nReden: %{reason}"
       close_topic:
         errors:
           not_found: "Topic niet gevonden."
+          not_allowed: "Je mag dit topic niet sluiten of openen."
+          no_reason: "Er is een reden vereist om een topic te openen of sluiten"
+        success: "Topic bijgewerkt."
+      suspend_user:
+        errors:
+          not_found: "Gebruiker niet gevonden."
+      silence_user:
+        errors:
+          not_found: "Gebruiker niet gevonden."
       unlist_topic:
         errors:
           not_found: "Topic niet gevonden."
+          not_allowed: "Je mag dit topic niet onzichtbaar of zichtbaar maken."
+          no_reason: "Er is een reden vereist om een topic onzichtbaar of zichtbaar te maken."
+        success: "Topic bijgewerkt."
+      lock_post:
+        errors:
+          not_found: "Bericht niet gevonden."
+          not_allowed: "Je mag dit bericht niet vergrendelen of ontgrendelen."
+          no_reason: "Er is een reden vereist om een topic te grendelen of ontgrendelen"
+        success: "Bericht bijgewerkt."
       delete_topic:
         errors:
           not_found: "Topic niet gevonden."
+          not_allowed: "Je mag dit topic niet verwijderen of herstellen."
+          no_reason: "Er is een reden vereist om een topic te verwijderen of herstellen"
+        success: "Topic bijgewerkt."
+      edit_post:
+        errors:
+          not_found: "Bericht niet gevonden."
+          not_allowed: "Je mag dit bericht niet bewerken."
+          nothing_to_edit: "De onbewerkte tekst of de titel moet worden opgeven."
+          no_reason: "Een bewerkingsreden is vereist."
+          revision_failed: "Bericht herzien is mislukt."
+        success: "Bericht bewerkt."
       edit_tags:
         errors:
           not_found: "Topic niet gevonden."
+          not_allowed: "Je mag geen tags bewerken in dit topic."
+          no_reason: "Er is een reden vereist om tags te bewerken."
+          tagging_disabled: "Tagging is niet ingeschakeld op deze site."
+        success: "Tags bijgewerkt."
       edit_category:
         errors:
           not_found: "Topic niet gevonden."
+          not_allowed: "Je mag dit topic niet verplaatsen."
           category_not_found: "Categorie niet gevonden."
+          no_reason: "Er is een reden vereist om een topic te verplaatsen."
+          revision_failed: "Topic verplaatsen is mislukt."
+        success: "Topic verplaatst"
       set_topic_timer:
         errors:
           not_found: "Topic niet gevonden."
+          not_allowed: "Je mag geen timer instellen in dit topic."
+          no_reason: "Er is een reden vereist om een topictimer in te stellen."
+          invalid_timer_type: "Ongeldig timertype. Moet een van de volgende zijn: close, open, delete, silent_close, bump."
+        success: "Topictimer bijgewerkt"
       set_slow_mode:
         errors:
           not_found: "Topic niet gevonden."
+          not_allowed: "Je mag de langzame modus niet in instellen in dit topic."
+          no_reason: "Er is een reden vereist om de langzame modus in te stellen."
+        success: "Langzame modus bijgewerkt."
       move_posts:
         errors:
           not_found: "Topic niet gevonden."
+          not_allowed: "Je mag geen berichten in dit topic verplaatsen."
+          no_reason: "Er is een reden vereist om berichten te verplaatsen."
+          no_posts: "Geen bericht-ID's opgegeven."
+          no_destination: "Of destination_topic_id of new_title moet worden opgegeven."
+          move_failed: "Berichten verplaatsen is mislukt."
+        success: "Berichten verplaatst."
+      grant_badge:
+        errors:
+          user_not_found: "Gebruiker niet gevonden."
+          badge_not_found: "Badge niet gevonden."
+          not_allowed: "Je mag geen badges toekennen."
+          no_reason: "Er is een reden vereist om een badge toe te kennen."
+          badge_disabled: "Badge is niet ingeschakeld."
+          grant_failed: "Badge toekennen is mislukt."
+        success: "Badge toegekend."
       assign:
         errors:
+          plugin_not_installed: "De plug-in discourse-assign is niet geïnstalleerd."
           not_found: "Topic niet gevonden."
+          not_allowed: "Je mag dit topic niet toewijzen."
+          no_reason: "Er is een reden vereist om een topic toe te wijzen of de toewijzing op te heffen."
+          assignee_not_found: "Gebruiker of groep niet gevonden."
+          assign_failed: "Topic toewijzen is mislukt."
+        success: "Topictoewijzing bijgewerkt."
+      mark_as_solved:
+        errors:
+          plugin_not_installed: "De plug-in discourse-solved is niet geïnstalleerd."
+          no_reason: "Er is een reden vereist om een bericht te markeren of als opgelost of om de markering op te heffen."
+          action_failed: "Bijwerken oplossingsstatus is mislukt."
+        success: "Oplossingsstatus bijgewerkt."
+      list_reviewables:
+        errors:
+          not_allowed: "Je mag de beoordelingswachtrij niet bekijken."
+          invalid_type: "Ongeldig beoordeelbaar type"
+          invalid_status: "Ongeldige status. Moet een van de volgende zijn: in behandeling, goedgekeurd, afgekeurd, genegeerd, verwijderd, beoordeeld, alle."
+        empty: "Geen items in de beoordelingswachtrij gevonden die voldoen aan de opgegeven filters"
+        found:
+          one: "%{count} item in de beoordelingswachtrij gevonden"
+          other: "%{count} items in de beoordelingswachtrij gevonden"
+      perform_reviewable_action:
+        errors:
+          not_allowed: "Je hebt geen toegang tot de beoordelingswachtrij."
+          not_found: "Item in de beoordelingswachtrij niet gevonden"
+          no_reason: "Er is een reden vereist om een actie uit te voeren op een item in de beoordelingswachtrij"
+          invalid_action: "Ongeldige actie '%{action}'. Beschikbare acties: %{available}"
+          conflict: "Dit item in de beoordelingswachtrij is bijgewerkt door iemand anders. Probeer het opnieuw."
+          action_failed: "De actie uitvoeren is mislukt."
+        success: "'%{action}' uitgevoerd op item %{reviewable_id} in de beoordelingswachtrij"
+      add_reviewable_note:
+        errors:
+          not_allowed: "Je hebt geen toegang tot de beoordelingswachtrij."
+          not_found: "Item in de beoordelingswachtrij niet gevonden"
     reviewables:
       ai_tool_action:
+        title: "AI-toolactie"
         approve:
           title: "Goedkeuren"
         reject:
           title: "Weigeren"
+        target_missing: "Het toolactiedoel bestaat niet meer."
+        tool_not_found: "De tool '%{tool_name}' is niet meer beschikbaar."
+        bot_user_missing: "De botgebruiker bestaat niet meer."
+        execution_error: "Tooluitvoering mislukt: %{error}"
+        execution_error_unknown: "er is een onverwachte fout opgetreden"
     summarization:
       configuration_hint:
         one: "Configureer eerst de instelling '%{setting}'."
@@ -537,13 +838,13 @@ nl:
       reports:
         overall_sentiment: "Algeheel sentiment (positief - negatief)"
         post_emotion:
-          sadness: "Droefheid \U0001F622"
-          surprise: "Verrassing \U0001F631"
-          neutral: "Neutraal \U0001F610"
-          fear: "Angst \U0001F628"
-          anger: "Boosheid \U0001F621"
-          joy: "Vreugde \U0001F600"
-          disgust: "Afschuw \U0001F922"
+          sadness: "Droefheid 😢"
+          surprise: "Verrassing 😱"
+          neutral: "Neutraal 😐"
+          fear: "Angst 😨"
+          anger: "Boosheid 😡"
+          joy: "Vreugde 😀"
+          disgust: "Afschuw 🤢"
         sentiment_analysis:
           positive: "Positief"
           negative: "Negatief"
@@ -555,7 +856,9 @@ nl:
         set_llm_first: "Stel eerst %{setting} in"
         model_unreachable: "We konden geen antwoord krijgen van dit model. Controleer eerst je instellingen."
         invalid_seeded_model: "Je kunt dit model niet gebruiken met deze functie"
+        invalid_agent_response_format: "De geselecteerde agent moet een responsindeling hebben met een booleaans veld genaamd 'spam'"
         must_select_model: "Je moet eerst een LLM selecteren"
+        invalid_llm_id: "Het geselecteerde LLM-model is niet geldig"
       endpoints:
         not_configured: "%{display_name} (niet geconfigureerd)"
         configuration_hint:
@@ -570,24 +873,63 @@ nl:
     embeddings:
       delete_failed: "Dit model is momenteel in gebruik. Werk eerst 'ai embeddings selected model' bij."
       cannot_edit_builtin: "Je kunt een ingebouwd model niet bewerken."
+      secret_required: "Er moeten aanmeldingsgegevens worden geselecteerd"
+      secret_not_found: "De geselecteerde aanmeldingsgegevens bestaan niet"
       configuration:
         disable_embeddings: "Je moet 'ai embeddings enabled' eerst uitschakelen."
         choose_model: "Stel eerst 'ai embeddings selected model' in."
+        model_test_failed: "Het generen van een testinsluiting van dit model is mislukt. Controleer of het juist is geconfigureerd."
+    secrets:
+      delete_failed_in_use: "Deze aanmeldingsgegevens worden momenteel gebruikt door één of meer LLM's, insluitingen of tools en kunnen niet worden verwijderd."
     llm_models:
       missing_provider_param: "%{param} mag niet leeg zijn"
+      secret_required: "Er moeten aanmeldingsgegevens worden geselecteerd"
+      secret_not_found: "De geselecteerde aanmeldingsgegevens bestaan niet"
       bedrock_invalid_url: "Vul alle velden in om dit model te gebruiken."
+      bedrock_missing_auth: "AWS Bedrock vereist dat Toegangssleutel-ID of Rol ARN worden geconfigureerd."
     ai_staff_action_logger:
       updated: "bijgewerkt"
       set: "instellen"
       removed: "verwijderd"
+    translation:
+      errors:
+        disabled: "De AI-vertaalfunctie is niet volledig geconfigureerd."
+        all_posts_translated: "Alle berichten in dit topic zijn al vertaald."
+    llm_credit_allocation:
+      limit_exceeded_user: "Deze community heeft zijn AI-creditlimiet voor vandaag bereikt. Probeer het opnieuw na %{reset_time} of neem contact op met je sitebeheerder voor meer informatie."
+      limit_exceeded_admin: "Je hebt je AI-creditlimiet bereikt. Probeer het na %{reset_time} opnieuw."
     errors:
       quota_exceeded: "Je hebt het quotum voor dit model overschreden. Probeer het opnieuw over %{relative_time}."
-      quota_required: "Je moet het maximale aantal tokens of gebruiken opgeven voor dit model"
       no_query_specified: De queryparameter is verplicht. Geef deze op.
+      no_user_for_agent: Er is geen gebruiker gekoppeld aan de opgegeven agent.
       no_user_specified: De gebruikersnaam of de parameter user_unique_id is vereist. Geef deze op.
       user_not_found: De opgegeven gebruiker bestaat niet. Controleer de gebruikersnaamparameter.
+      no_default_llm: Er moet een default_llm zijn gedefinieerd voor de agent.
       user_not_allowed: De gebruiker mag niet deelnemen aan het topic.
+      invalid_stream_resume_token: Het resume_token is ongeldig of verlopen.
+      no_tool_results_specified: De parameter tool_results is vereist bij het hervatten van een stream.
+      invalid_custom_tools: "De parameter custom_tools is ongeldig: %{details}"
+      duplicate_custom_tools: "De parameter custom_tools bevat duplicate toolnamen: %{names}"
+      too_many_custom_tools: "De parameter custom_tools kan maximaal %{max} tools bevatten."
+      custom_tool_definition_too_large: "Elke aangepaste tooldefinitie mag maximaal %{max} bytes zijn."
+      invalid_stream_param: "De parameter %{key} is ongeldig: %{details}"
+      expected_array: "verwachtte een array"
+      expected_object: "verwachtte een object"
+      ambiguous_tool_results: "Specificeer tool_results of tool_result, niet beide."
+      invalid_tool_results: "De parameter tool_results is ongeldig: %{details}"
+      too_many_tool_results: "De parameter tool_results kan maximaal %{max} items bevatten."
+      no_pending_tool_calls: Er zijn geen openstaande toolaanroepen voor dit hervattingstoken.
+      missing_tool_results: "Ontbrekende toolresultaten voor tool_call_id(s): %{ids}"
+      unexpected_tool_results: "Onverwachte toolresultaten voor tool_call_id(s): %{ids}"
+      invalid_tool_result_content: "Het toolresultaat voor %{id} moet inhoud bevatten"
+      tool_result_content_too_large: "Elke payload van de inhoud van het toolresultaat mag maximaal %{max} bytes zijn."
+      stream_reply_max_resume_rounds_reached: Het maximale aantal hervattingsronden van aangepaste tools is bereikt (%{max}).
+      stream_reply_state_too_large: "De streamstatus is te groot om te behouden (max. %{max} bytes)."
+      stream_reply_unexpected_error: Er is een onverwachte fout opgetreden tijdens het streamen van het antwoord.
       prompt_message_length: Het bericht %{idx} is langer dan de limiet van 1000 tekens.
+      agent_already_exists: Agent met de naam %{name} bestaat al.
       custom_tool_exists:
         one: "Aangepaste tool met de naam %{names} bestaat al."
         other: "Aangepaste tools met de namen %{names} bestaan al."
+      mcp_server_missing: "De volgende MCP-servers zijn niet geconfigureerd op deze site: %{names}."
+      mcp_server_tools_not_found: "Er zijn geen overeenkomende tools van de MCP-server %{name} beschikbaar op deze site."

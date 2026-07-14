@@ -10,7 +10,11 @@ import { headerOffset } from "discourse/lib/offset-calculator";
 import DiscourseURL from "discourse/lib/url";
 import { escapeExpression } from "discourse/lib/utilities";
 
-const DEFAULT_SELECTORS = ["#main-outlet", "#d-menu-portals"];
+const DEFAULT_SELECTORS = [
+  "#main-outlet",
+  "#d-menu-portals",
+  ".modal-container",
+];
 const AVATAR_OVERFLOW_SIZE = 44;
 const MOBILE_SCROLL_EVENT = "scroll.mobile-card-cloak";
 

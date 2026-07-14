@@ -12,10 +12,10 @@ end
 # Table name: topic_allowed_users
 #
 #  id         :integer          not null, primary key
-#  user_id    :integer          not null
-#  topic_id   :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  topic_id   :integer          not null
+#  user_id    :integer          not null
 #
 # Indexes
 #

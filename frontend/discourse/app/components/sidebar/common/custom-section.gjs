@@ -1,11 +1,11 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import replaceEmoji from "discourse/helpers/replace-emoji";
 import CommonCommunitySection from "discourse/lib/sidebar/common/community-section/section";
 import Section from "discourse/lib/sidebar/section";
 import AdminCommunitySection from "discourse/lib/sidebar/user/community-section/admin-section";
 import { or } from "discourse/truth-helpers";
+import dReplaceEmoji from "discourse/ui-kit/helpers/d-replace-emoji";
 import MoreSectionLink from "../more-section-link";
 import MoreSectionLinks from "../more-section-links";
 import SectionComponent from "../section";
@@ -59,7 +59,7 @@ export default class SidebarCustomSection extends Component {
       {{#each this.section.links as |link|}}
         <SectionLink
           @badgeText={{link.badgeText}}
-          @content={{replaceEmoji link.text}}
+          @content={{dReplaceEmoji link.text}}
           @currentWhen={{link.currentWhen}}
           @href={{or link.value link.href}}
           @linkClass={{link.linkDragCss}}

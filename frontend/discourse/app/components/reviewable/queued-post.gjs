@@ -7,14 +7,19 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableCreatedBy from "discourse/components/reviewable/created-by";
 import ReviewableTopicLink from "discourse/components/reviewable/topic-link";
 import ReviewableTags from "discourse/components/reviewable-tags";
-import categoryBadge from "discourse/helpers/category-badge";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import highlightWatchedWords from "discourse/lib/highlight-watched-words";
+import dCategoryBadge from "discourse/ui-kit/helpers/d-category-badge";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewableQueuedPost extends Component {
   @service modal;
+  @service currentUser;
+
+  get canViewRawEmail() {
+    return this.currentUser?.can_view_raw_email;
+  }
 
   @action
   showRawEmail(event) {
@@ -35,12 +40,16 @@ export default class ReviewableQueuedPost extends Component {
           <div class="title-text">
             {{highlightWatchedWords @reviewable.fancy_title @reviewable}}
           </div>
-          {{categoryBadge @reviewable.category}}
+          {{dCategoryBadge @reviewable.category}}
           <ReviewableTags @tags={{@reviewable.payload.tags}} />
           {{#if @reviewable.payload.via_email}}
-            <a href {{on "click" this.showRawEmail}} class="show-raw-email">
-              {{icon "envelope" title="post.via_email"}}
-            </a>
+            {{#if this.canViewRawEmail}}
+              <a href {{on "click" this.showRawEmail}} class="show-raw-email">
+                {{dIcon "envelope" title="post.via_email"}}
+              </a>
+            {{else}}
+              {{dIcon "envelope" title="post.via_email"}}
+            {{/if}}
           {{/if}}
         </ReviewableTopicLink>
       </div>

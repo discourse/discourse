@@ -6,12 +6,12 @@ import { action, getProperties } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import Form from "discourse/components/form";
-import formatDate from "discourse/helpers/format-date";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { GROUP_SMTP_SSL_MODES } from "discourse/lib/constants";
 import emailProviderDefaultSettings from "discourse/lib/email-provider-default-settings";
 import { or } from "discourse/truth-helpers";
+import dFormatDate from "discourse/ui-kit/helpers/d-format-date";
 import { i18n } from "discourse-i18n";
 
 export default class GroupSmtpEmailSettings extends Component {
@@ -237,7 +237,7 @@ export default class GroupSmtpEmailSettings extends Component {
         <div class=".group-smtp-form__last-updated-details">
           <small>
             {{i18n "groups.manage.email.last_updated"}}
-            <strong>{{formatDate
+            <strong>{{dFormatDate
                 @group.smtp_updated_at
                 leaveAgo="true"
               }}</strong>

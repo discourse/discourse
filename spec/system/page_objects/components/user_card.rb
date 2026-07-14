@@ -37,6 +37,10 @@ module PageObjects
       def has_inactive_user?
         has_css?("#{USER_CARD_SELECTOR} .inactive-user", visible: true)
       end
+
+      def silence_reason_description
+        find("#{USER_CARD_SELECTOR} .silence-reason .silence-reason-description").text
+      end
     end
   end
 end

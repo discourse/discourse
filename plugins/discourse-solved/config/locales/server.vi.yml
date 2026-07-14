@@ -6,6 +6,10 @@
 
 vi:
   accepted_answer: "Câu trả lời được chấp nhận"
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Cho phép người tạo chủ đề và BQT đánh dấu câu trả lời là giải pháp"
   reports:
     accepted_solutions:
       xaxis: "Ngày"

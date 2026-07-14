@@ -396,17 +396,6 @@
     }
   }
 
-  .link-top-line .event-date {
-    margin-left: 0.5em;
-    font-size: var(--font-down-3);
-    white-space: nowrap;
-  }
-
-  .link-top-line .event-date-container {
-    top: -0.25rem;
-    line-height: normal;
-  }
-
   .topic-list-data {
     padding: 0;
   }
@@ -641,13 +630,25 @@
   }
 }
 
+// for both types of context cards
+.topic-list.--d-topic-cards {
+  .event-date {
+    margin-left: var(--space-2);
+    font-size: var(--font-down-3);
+    white-space: nowrap;
+    font-weight: normal;
+  }
+
+  .event-date-container {
+    display: inline-flex;
+    position: relative;
+    top: -0.15rem;
+    line-height: normal;
+  }
+}
+
 // bulk-select overrule for j/k nav
 .topic-list tr.selected td:first-of-type,
 .topic-list-item.selected td:first-of-type {
   box-shadow: none;
-}
-
-.event-date-container {
-  display: inline-flex;
-  position: relative;
 }

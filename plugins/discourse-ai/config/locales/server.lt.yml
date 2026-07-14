@@ -14,7 +14,7 @@ lt:
     overall_sentiment:
       yaxis: "Data"
     emotion_neutral:
-      title: "\U0001F610 Neutrali"
+      title: "😐 Neutrali"
   discourse_ai:
     tools:
       presets:
@@ -48,6 +48,8 @@ lt:
       tool_summary:
         github_diff: "GitHub skirtumas"
         flag_post: "Vėliavų stulpas"
+        suspend_user: "Sustabdyti naudotojo"
+        silence_user: "Nutildyti vartotoją"
         search: "Paieška"
         time: "Laikas"
         summarize: "Apibendrinti"
@@ -104,7 +106,7 @@ lt:
     sentiment:
       reports:
         post_emotion:
-          neutral: "Neutrali \U0001F610"
+          neutral: "Neutrali 😐"
         sentiment_analysis:
           neutral: "Neutrali"
     ai_staff_action_logger:

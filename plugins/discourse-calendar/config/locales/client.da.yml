@@ -295,6 +295,9 @@ da:
       notifications:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} har automatisk indstillet din deltagelse og inviteret dig til %{eventName}"
+      event_description:
+        show_more: "Vis mere"
+        show_less: "Vis mindre"
       edit_reason: "Begivenhed opdateret"
       topic_title:
         starts_at: "Begivenheden starter: %{date}"
@@ -342,9 +345,7 @@ da:
       models:
         invitee:
           status:
-            unknown: "Ikke interesseret"
             going: "Deltager"
-            not_going: "Deltager Ikke"
             interested: "Interesseret"
         event:
           expired: "Udløbet"
@@ -359,6 +360,24 @@ da:
             private:
               title: "Privat"
               description: "En privat begivenhed kan kun tilmeldes af inviterede brugere."
+      composer:
+        name_placeholder: "Navn på begivenhed"
+        event_title_placeholder: "Navn på begivenhed"
+        create_event_button: "Opret begivenhed"
+        reminder:
+          units:
+            minutes:
+              one: "minut"
+              other: "minutter"
+            hours:
+              one: "time"
+              other: "timer"
+            days:
+              one: "dag"
+              other: "dage"
+      composer_actions:
+        create_event:
+          label: "Opret begivenhed"
       builder_modal:
         custom_fields:
           label: "Brugerdefinerede Felter"
@@ -387,14 +406,11 @@ da:
           label: "Gentagelse"
           none: "Ingen gentagelse"
           every_day: "Hver dag"
-          every_month: "Hver måned på denne ugedag"
           every_weekday: "Hver ugedag"
-          every_week: "Hver uge på denne ugedag"
-        url:
-          label: "URL"
-          placeholder: "Valgfri"
-        location:
-          label: "Sted"
+          ordinals:
+            last: "sidste"
+        attendance:
+          none: "Ingen"
         description:
           label: "Beskrivelse"
         name:
@@ -402,8 +418,10 @@ da:
           placeholder: "Valgfri, standard er emnetitel"
         invitees:
           label: "Inviterede grupper"
-        status:
-          label: "Status"
+        event_type:
+          public:
+            title: "Offentlig"
       invite_user_or_group:
         title: "Underret bruger(e) eller gruppe(r)"
         invite: "Send"
+        success: "Invitation sendt"

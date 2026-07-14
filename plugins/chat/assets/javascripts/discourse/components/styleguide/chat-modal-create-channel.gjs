@@ -1,16 +1,14 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import { optionalRequire } from "discourse/lib/utilities";
+import DButton from "discourse/ui-kit/d-button";
 import ChatModalCreateChannel from "discourse/plugins/chat/discourse/components/chat/modal/create-channel";
-
-const Row = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide/controls/row"
-);
-const StyleguideExample = optionalRequire(
-  "discourse/plugins/styleguide/discourse/components/styleguide-example"
-);
+import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row" with {
+  discourseImport: "optional",
+};
+import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example" with {
+  discourseImport: "optional",
+};
 
 export default class ChatStyleguideChatModalCreateChannel extends Component {
   @service modal;

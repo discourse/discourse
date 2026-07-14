@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 
 require "zip"
+require "compression/safe_zip_reader"
 
 module Compression
   class Zip < Strategy
+    MAX_ZIP_ENTRIES = 10_000
+
     def extension
       ".zip"
     end
@@ -32,6 +35,7 @@ module Compression
 
     def get_compressed_file_stream(compressed_file_path)
       zip_file = ::Zip::File.open(compressed_file_path)
+      Compression::SafeZipReader.new(zip_file, max_entries: MAX_ZIP_ENTRIES).validate!
       yield(zip_file)
     end
 

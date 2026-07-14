@@ -12,9 +12,9 @@ RSpec.describe Themes::Create do
 
     fab!(:user)
     fab!(:admin)
-    fab!(:guardian) { admin.guardian }
     fab!(:color_scheme)
 
+    let(:guardian) { admin.guardian }
     let(:dependencies) { { guardian: } }
 
     let(:theme_params) do

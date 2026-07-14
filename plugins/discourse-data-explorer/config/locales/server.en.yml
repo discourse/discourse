@@ -9,19 +9,27 @@ en:
           name: "Data Explorer Query Generator"
           description: "Generates SQL queries for Data Explorer from natural language"
       tool_help:
-        validate_sql: "Validates a SQL query for use in Data Explorer"
+        find_queries: "Finds existing Data Explorer queries that may be useful examples"
         run_sql: "Runs a SQL query and returns results"
+        submit_query: "Submits the final generated query"
       tool_summary:
-        validate_sql: "Validating SQL query"
+        find_queries: "Finding example queries"
         run_sql: "Running SQL query"
+        submit_query: "Submitting generated query"
       tool_description:
-        validate_sql: "Validated SQL query"
+        find_queries: "Found example queries for %{search}"
         run_sql: "Ran SQL query"
+        submit_query: "Submitted generated query %{name}"
   discourse_data_explorer:
     ai:
-      generating_name: "Generating..."
       error_agent_not_configured: "AI agent is not configured. Please check the AI features settings."
       error_no_sql_returned: "AI did not return a valid SQL query. Please try again or write the query manually."
+    errors:
+      tool_not_allowed: "You are not allowed to use this tool"
+    discourse_workflows:
+      sql_action:
+        no_query_selected: "No query selected."
+        no_sql_provided: "No SQL query provided."
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:
@@ -32,6 +40,7 @@ en:
         title: Schedule a post in a topic with Data Explorer results
         description: Get scheduled reports posted to a specific topic
   data_explorer:
+    admin_dashboard_label: "Data Explorer"
     report_generator:
       private_message:
         title: "Scheduled report for %{query_name}"

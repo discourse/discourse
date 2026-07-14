@@ -6,9 +6,27 @@
 
 nl:
   accepted_answer: "Geaccepteerd antwoord"
+  category_types:
+    support:
+      name: "Steunen"
+      title: "steunen"
+      description: "Waar leden vragen kunnen stellen en antwoorden kunnen markeren als oplossingen."
+  discourse_solved:
+    category_type:
+      allow_accepted_answers:
+        label: "Topiceigenaar en medewerkers toestaan een antwoord als oplossing te markeren"
+      solved_topics_auto_close_hours:
+        label: "Automatisch opgeloste topics sluiten (uur)"
+        description: "Sluit een topic automatisch na zoveel uur als het gemarkeerd is als opgelost. Stel in op 0 om uit te schakelen."
+      notify_on_staff_accept_solved:
+        label: "Topiceigenaar informeren als medewerker een oplossing markeert"
+      solved_topics_auto_close_duration:
+        label: "Automatisch opgeloste topics sluiten"
+        description: "Sluit opgeloste topics automatisch na deze tijdsduur vanaf het laatste antwoord. Stel in op 0 om uit te schakelen."
   site_settings:
     solved_enabled: "Solved-plug-in inschakelen, gebruikers kunnen oplossingen voor topics selecteren"
     allow_solved_on_all_topics: "Sta gebruikers toe om oplossingen te selecteren voor alle topics (indien niet aangevinkt, kunnen oplossingen per categorie of tag worden ingeschakeld)"
+    allow_solved_in_groups: "Sta het markeren van oplossingen in groepsberichten toe voor deze groepen."
     accept_all_solutions_trust_level: "Minimaal vertrouwensniveau dat vereist is om oplossingen te accepteren bij een topic (ook indien niet de oorspronkelijke auteur)"
     accept_all_solutions_allowed_groups: "Groepen die oplossingen kunnen accepteren voor elk topic (ook als ze niet de oorspronkelijke plaatser zijn). Beheerders en moderators kunnen dit altijd."
     empty_box_on_unsolved: "Leeg vak weergeven naast onopgeloste topics"
@@ -27,6 +45,7 @@ nl:
   reports:
     accepted_solutions:
       title: "Geaccepteerde oplossingen"
+      description: "Hoeveel topics hadden een geaccepteerde oplossing per dag in een datumbereik, met optioneel categoriefilter en een vergelijkingstotaal van 30 dagen."
       xaxis: "Dag"
       yaxis: "Totaal"
   solved:

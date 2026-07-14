@@ -40,7 +40,7 @@ class POP3PollingEnabledSettingValidator
           password: SiteSetting.pop3_polling_password,
           openssl_verify: SiteSetting.pop3_polling_openssl_verify,
         )
-      rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS => err
+      rescue *EmailSettingsExceptionHandler::EXPECTED_EXCEPTIONS
         false
       else
         true

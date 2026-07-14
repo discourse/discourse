@@ -3,9 +3,9 @@ import EmberObject, { action } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import Form from "discourse/components/form";
 import Category from "discourse/models/category";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import { i18n } from "discourse-i18n";
 import BooleanThree from "./param-input/boolean-three";
 import CategoryIdInput from "./param-input/category-id-input";
@@ -48,6 +48,8 @@ export const ERRORS = {
   INVALID_DATE: (date) => i18n("explorer.form.errors.invalid_date", { date }),
   INVALID_TIME: (time) => i18n("explorer.form.errors.invalid_time", { time }),
 };
+
+const DATE_FORMATS = ["YYYY-MM-DD", "D MMM YYYY", "D MMMM YYYY"];
 
 function digitalizeCategoryId(value) {
   value = String(value || "");
@@ -248,41 +250,47 @@ export default class ParamInputForm extends Component {
         }
         return value;
       case "date":
-        try {
-          if (!value) {
-            return null;
-          }
-          return moment(value).format("YYYY-MM-DD");
-        } catch {
-          this.addError(info.identifier, ERRORS.INVALID_DATE(String(value)));
+        if (!value) {
           return null;
         }
+
+        const date = moment(value, DATE_FORMATS, true);
+        if (date.isValid()) {
+          return date.format("YYYY-MM-DD");
+        }
+
+        this.addError(info.identifier, ERRORS.INVALID_DATE(String(value)));
+        return null;
       case "time":
-        try {
-          if (!value) {
-            return null;
-          }
-          return moment(new Date(`1970/01/01 ${value}`).toISOString()).format(
-            "HH:mm"
-          );
-        } catch {
-          this.addError(info.identifier, ERRORS.INVALID_TIME(String(value)));
-          return null;
-        }
+        return this.formatMoment(
+          info,
+          value,
+          "HH:mm",
+          ERRORS.INVALID_TIME,
+          `1970/01/01 ${value}`
+        );
       case "datetime":
-        try {
-          if (!value) {
-            return null;
-          }
-          return moment(new Date(value).toISOString()).format(
-            "YYYY-MM-DD HH:mm"
-          );
-        } catch {
-          this.addError(info.identifier, ERRORS.INVALID_TIME(String(value)));
-          return null;
-        }
+        return this.formatMoment(
+          info,
+          value,
+          "YYYY-MM-DD HH:mm",
+          ERRORS.INVALID_TIME
+        );
       default:
         return value;
+    }
+  }
+
+  formatMoment(info, value, format, errorFn, parseInput = value) {
+    if (!value) {
+      return null;
+    }
+
+    try {
+      return moment(new Date(parseInput).toISOString()).format(format);
+    } catch {
+      this.addError(info.identifier, errorFn(String(value)));
+      return null;
     }
   }
 
@@ -479,7 +487,7 @@ export default class ParamInputForm extends Component {
                   @field={{field}}
                   @info={{info}}
                 />
-                <ConditionalLoadingSpinner
+                <DConditionalLoadingSpinner
                   @condition={{info.loading}}
                   @size="small"
                 />

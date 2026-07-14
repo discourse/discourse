@@ -133,7 +133,7 @@ pl_PL:
           Obecnie wiem, jak zrobić następujące rzeczy:
 
           `@%{discobot_username} %{reset_trigger} {name-of-tutorial}`
-          > Uruchamia interaktywny samouczek tylko dla Ciebie, w osobistej wiadomości. `{name-of-tutorial}` może być jednym z: `%{tracks}`.
+          > Uruchamia interaktywny samouczek tylko dla Ciebie, w prywatnej wiadomości. `{name-of-tutorial}` może być jednym z: `%{tracks}`.
         bot_actions: |-
           `@ %{discobot_username} %{dice_trigger} 2d6`
           > :game_die: 3, 6

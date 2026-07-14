@@ -1,8 +1,8 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
-import icon from "discourse/helpers/d-icon";
 import { relativeAge } from "discourse/lib/formatter";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const ON_VOTE = "on_vote";
@@ -149,12 +149,17 @@ export default class PollInfoComponent extends Component {
     return (
       this.showMultipleHelpText ||
       this.args.close ||
+      this.args.closedBy ||
       this.resultsOnVote ||
       this.resultsOnClose ||
       this.resultsStaffOnly ||
       this.publicTitle ||
       this.args.isDynamic
     );
+  }
+
+  get closedByLabel() {
+    return i18n("poll.closed_by", { username: this.args.closedBy.username });
   }
 
   <template>
@@ -175,50 +180,56 @@ export default class PollInfoComponent extends Component {
         <ul class="poll-info_instructions">
           {{#if (if @isDynamic true this.poll.dynamic)}}
             <li class="is-dynamic">
-              {{icon "shuffle"}}
+              {{dIcon "shuffle"}}
               <span>{{i18n "poll.dynamic.enabled_hint"}}</span>
             </li>
           {{/if}}
           {{#if this.showMultipleHelpText}}
             <li class="multiple-help-text">
-              {{icon "list-ul"}}
+              {{dIcon "list-ul"}}
               <span>{{this.multipleHelpText}}</span>
             </li>
           {{/if}}
           {{#if this.poll.close}}
             {{#if this.isAutomaticallyClosed}}
               <li title={{this.title}}>
-                {{icon "lock"}}
+                {{dIcon "lock"}}
                 <span>{{this.automaticCloseAgeLabel}}</span>
               </li>
             {{else}}
               <li title={{this.title}}>
-                {{icon "far-clock"}}
+                {{dIcon "far-clock"}}
                 <span>{{this.automaticCloseClosesInLabel}}</span>
               </li>
             {{/if}}
           {{/if}}
+          {{#if @closedBy}}
+            <li class="poll-info_closed-by">
+              {{dIcon "lock"}}
+              <span>{{this.closedByLabel}}</span>
+            </li>
+          {{/if}}
           {{#if this.resultsOnVote}}
             <li class="results-on-vote">
-              {{icon "check"}}
+              {{dIcon "check"}}
               <span>{{this.resultsOnVoteTitle}}</span>
             </li>
           {{/if}}
           {{#if this.resultsOnClose}}
             <li class="results-on-close">
-              {{icon "lock"}}
+              {{dIcon "lock"}}
               <span>{{this.resultsOnCloseTitle}}</span>
             </li>
           {{/if}}
           {{#if this.resultsStaffOnly}}
             <li class="results-staff-only">
-              {{icon "shield-halved"}}
+              {{dIcon "shield-halved"}}
               <span>{{this.resultsStaffOnlyTitle}}</span>
             </li>
           {{/if}}
           {{#if this.publicTitle}}
             <li class="is-public">
-              {{icon "far-eye"}}
+              {{dIcon "far-eye"}}
               <span>{{this.publicTitleLabel}}</span>
             </li>
           {{/if}}

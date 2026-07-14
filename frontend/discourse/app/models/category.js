@@ -248,7 +248,7 @@ export default class Category extends RestModel {
     if (this.slugEncoded()) {
       parts = parts.map((urlPart) => decodeURI(urlPart));
     }
-    let category = null;
+    let category;
 
     if (parts.length > 0 && parts[parts.length - 1].match(/^\d+$/)) {
       const id = parseInt(parts.pop(), 10);
@@ -494,6 +494,7 @@ export default class Category extends RestModel {
   init() {
     super.init(...arguments);
     this.setupGroupsAndPermissions();
+    this.setupCategoryTypes();
   }
 
   setupCategoryTypes() {
@@ -848,6 +849,7 @@ export default class Category extends RestModel {
         }),
         ...this._categoryTypeSaveProperties(id),
         ...this._pluginSaveProperties(),
+        category_types: this.category_types,
       }),
       type: id ? "PUT" : "POST",
     });
@@ -856,10 +858,14 @@ export default class Category extends RestModel {
   _categoryTypeSaveProperties(id) {
     const props = {
       category_type_site_settings: this.category_type_site_settings,
+      category_type_settings: this.category_type_settings,
     };
 
     if (!id && this.categoryTypes) {
-      props.category_type = Object.keys(this.categoryTypes)[0];
+      const primaryType = Object.keys(this.categoryTypes)[0];
+      if (this.category_types?.includes(primaryType)) {
+        props.category_type = primaryType;
+      }
     }
 
     return props;

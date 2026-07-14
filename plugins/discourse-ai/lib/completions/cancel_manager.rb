@@ -9,6 +9,7 @@ module DiscourseAi
 
       def initialize
         @cancelled = false
+        @cancel_event = Concurrent::Event.new
         @callbacks = Concurrent::Array.new
         @mutex = Mutex.new
         @monitor_thread = nil
@@ -28,28 +29,26 @@ module DiscourseAi
 
           @monitor_thread =
             Thread.new do
-              begin
-                loop do
-                  done = false
-                  @mutex.synchronize { done = true if @stop_monitor }
-                  break if done
-                  sleep delay
-                  @mutex.synchronize { done = true if @stop_monitor }
-                  @mutex.synchronize { done = true if cancelled? }
-                  break if done
+              loop do
+                done = false
+                @mutex.synchronize { done = true if @stop_monitor }
+                break if done
+                sleep delay
+                @mutex.synchronize { done = true if @stop_monitor }
+                @mutex.synchronize { done = true if cancelled? }
+                break if done
 
-                  should_cancel = false
-                  RailsMultisite::ConnectionManagement.with_connection(db) do
-                    should_cancel = block.call
-                  end
-
-                  @mutex.synchronize { cancel! if should_cancel }
-
-                  break if cancelled?
+                should_cancel = false
+                RailsMultisite::ConnectionManagement.with_connection(db) do
+                  should_cancel = block.call
                 end
-              ensure
-                @mutex.synchronize { @monitor_thread = nil }
+
+                @mutex.synchronize { cancel! if should_cancel }
+
+                break if cancelled?
               end
+            ensure
+              @mutex.synchronize { @monitor_thread = nil }
             end
         end
       end
@@ -81,12 +80,17 @@ module DiscourseAi
         @callbacks << cb
       end
 
+      def wait_for_cancel(timeout)
+        @cancel_event.wait(timeout)
+      end
+
       def remove_callback(cb)
         @callbacks.delete(cb)
       end
 
       def cancel!
         @cancelled = true
+        @cancel_event.set
         monitor_thread = @monitor_thread
         if monitor_thread && monitor_thread != Thread.current
           monitor_thread.wakeup
@@ -97,11 +101,9 @@ module DiscourseAi
           end
         end
         @callbacks.each do |cb|
-          begin
-            cb.call
-          rescue StandardError
-            # ignore cause this may have already been cancelled
-          end
+          cb.call
+        rescue StandardError
+          # ignore cause this may have already been cancelled
         end
       end
     end

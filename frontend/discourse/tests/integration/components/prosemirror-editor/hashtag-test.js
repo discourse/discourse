@@ -110,5 +110,32 @@ module(
         });
       }
     );
+
+    test("renders without crashing when the server returns a type that isn't registered on the client", async function (assert) {
+      // Can happen in safe mode: plugin Ruby still runs and resolves the
+      // hashtag, but the plugin JS that would register the "channel" type
+      // class isn't loaded.
+      pretender.get("/hashtags", () =>
+        response({
+          channels: [
+            {
+              type: "channel",
+              ref: "unknown-type-channel",
+              icon: "comment",
+              id: 1,
+            },
+          ],
+        })
+      );
+
+      this.siteSettings.rich_editor = true;
+
+      await testMarkdown(
+        assert,
+        "Hello #unknown-type-channel",
+        '<p>Hello <a class="hashtag-cooked" data-name="unknown-type-channel" data-processed="true" contenteditable="false" draggable="true">unknown-type-channel</a></p>',
+        "Hello #unknown-type-channel"
+      );
+    });
   }
 );

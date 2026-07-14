@@ -5,7 +5,7 @@ import {
   normalizeProviderParams,
 } from "discourse/plugins/discourse-ai/discourse/lib/llm-provider-param-helpers";
 
-module("Discourse AI | Unit | Lib | llm-provider-param-helpers", function () {
+module("Unit | Lib | llm-provider-param-helpers", function () {
   module("isParamActive", function () {
     test("returns false for null, undefined, and false", function (assert) {
       assert.false(isParamActive(null));
@@ -220,6 +220,45 @@ module("Discourse AI | Unit | Lib | llm-provider-param-helpers", function () {
         { id: "high", name: "high" },
         { id: "max", name: "max" },
       ]);
+    });
+
+    test("preserves shaped enum option labels", function (assert) {
+      const result = normalizeProviderParams({
+        thinking_override: {
+          type: "enum",
+          values: [
+            { id: "default", name: "Server default" },
+            { id: "on", name: "Force on" },
+          ],
+          default: "default",
+        },
+      });
+
+      assert.deepEqual(result.thinking_override.values, [
+        { id: "default", name: "Server default" },
+        { id: "on", name: "Force on" },
+      ]);
+    });
+
+    test("preserves tooltip and helpText metadata", function (assert) {
+      const result = normalizeProviderParams({
+        reasoning_parser: {
+          type: "enum",
+          values: ["default"],
+          tooltip: "discourse_ai.llms.provider_field_hints.reasoning_parser",
+          help_text:
+            "discourse_ai.llms.provider_field_hints.reasoning_parser_help",
+        },
+      });
+
+      assert.strictEqual(
+        result.reasoning_parser.tooltip,
+        "discourse_ai.llms.provider_field_hints.reasoning_parser"
+      );
+      assert.strictEqual(
+        result.reasoning_parser.helpText,
+        "discourse_ai.llms.provider_field_hints.reasoning_parser_help"
+      );
     });
 
     test("preserves depends_on and hidden_if metadata", function (assert) {

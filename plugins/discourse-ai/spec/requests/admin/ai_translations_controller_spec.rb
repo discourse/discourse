@@ -11,14 +11,187 @@ describe DiscourseAi::Admin::AiTranslationsController do
 
   describe "#show" do
     context "when logged in as admin" do
-      fab!(:target_category, :category)
+      fab!(:selected_category, :category)
 
       before do
         sign_in(admin)
         SiteSetting.discourse_ai_enabled = true
         SiteSetting.ai_translation_enabled = true
         SiteSetting.content_localization_supported_locales = "en|fr|es"
-        SiteSetting.ai_translation_target_categories = target_category.id.to_s
+        SiteSetting.ai_translation_category_scope = "include"
+        SiteSetting.ai_translation_categories = selected_category.id.to_s
+      end
+
+      it "returns base configuration data without progress" do
+        SiteSetting.ai_translation_backfill_max_age_days = 30
+        SiteSetting.ai_translation_backfill_hourly_rate = 100
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+
+        expect(json["translation_id"]).to eq(DiscourseAi::Configuration::Module::TRANSLATION_ID)
+        expect(json["enabled"]).to eq(true)
+        expect(json["translation_enabled"]).to eq(true)
+        expect(json["hourly_rate"]).to eq(100)
+        expect(json["backfill_enabled"]).to be_in([true, false])
+
+        expect(json).not_to have_key("translation_progress")
+        expect(json).not_to have_key("total")
+        expect(json).not_to have_key("posts_with_detected_locale")
+      end
+
+      it "returns no_locales_configured when no locales are supported" do
+        SiteSetting.content_localization_supported_locales = ""
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+
+        expect(json["no_locales_configured"]).to eq(true)
+      end
+
+      it "does not include no_locales_configured when locales are set" do
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+
+        expect(json).not_to have_key("no_locales_configured")
+      end
+
+      it "returns translation_enabled field" do
+        SiteSetting.ai_translation_backfill_max_age_days = 30
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+
+        expect(json["translation_enabled"]).to eq(true)
+
+        SiteSetting.ai_translation_enabled = false
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+
+        expect(json["translation_enabled"]).to eq(false)
+      end
+
+      it "correctly indicates if backfill is enabled" do
+        SiteSetting.ai_translation_backfill_hourly_rate = 30
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["backfill_enabled"]).to eq(true)
+
+        SiteSetting.ai_translation_backfill_hourly_rate = 0
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["backfill_enabled"]).to eq(false)
+      end
+
+      it "returns category scope settings" do
+        other_category = Fabricate(:category)
+        SiteSetting.ai_translation_category_scope = "include"
+        SiteSetting.ai_translation_categories = "#{selected_category.id}|#{other_category.id}"
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["category_scope"]).to eq("include")
+        expect(response.parsed_body["category_ids"]).to contain_exactly(
+          selected_category.id,
+          other_category.id,
+        )
+      end
+
+      it "returns an empty array when no categories are configured" do
+        SiteSetting.ai_translation_categories = ""
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["category_ids"]).to eq([])
+      end
+
+      it "correctly indicates if feature is enabled" do
+        SiteSetting.ai_translation_backfill_max_age_days = 30
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["enabled"]).to eq(true)
+
+        SiteSetting.ai_translation_backfill_max_age_days = 0
+
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["enabled"]).to eq(false)
+      end
+    end
+
+    context "when not logged in as admin" do
+      it "returns 404 for anonymous users" do
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+        expect(response.status).to eq(404)
+      end
+
+      it "returns 404 for regular users" do
+        sign_in(user)
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when plugin is disabled" do
+      before do
+        sign_in(admin)
+        SiteSetting.discourse_ai_enabled = false
+      end
+
+      it "returns 404" do
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when AI translation is disabled" do
+      before do
+        sign_in(admin)
+        SiteSetting.discourse_ai_enabled = true
+        SiteSetting.ai_translation_enabled = false
+      end
+
+      it "still returns data but with enabled flag set to false" do
+        get "/admin/plugins/discourse-ai/ai-translations.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["enabled"]).to eq(false)
+      end
+    end
+  end
+
+  describe "#progress" do
+    context "when logged in as admin" do
+      fab!(:target_category, :category)
+
+      before do
+        Discourse.cache.clear
+        sign_in(admin)
+        SiteSetting.discourse_ai_enabled = true
+        SiteSetting.ai_translation_enabled = true
+        SiteSetting.content_localization_supported_locales = "en|fr|es"
+        SiteSetting.ai_translation_category_scope = "all"
+        SiteSetting.ai_translation_categories = ""
       end
 
       it "returns translation progress data" do
@@ -46,25 +219,19 @@ describe DiscourseAi::Admin::AiTranslationsController do
           localizer_user_id: admin.id,
         )
 
-        get "/admin/plugins/discourse-ai/ai-translations.json"
+        get "/admin/plugins/discourse-ai/ai-translations/progress.json"
 
         expect(response.status).to eq(200)
         json = response.parsed_body
 
         expect(json["translation_progress"]).to be_an(Array)
         expect(json["translation_progress"].length).to eq(3)
-        expect(json["translation_id"]).to eq(DiscourseAi::Configuration::Module::TRANSLATION_ID)
-        expect(json["enabled"]).to be_in([true, false])
         expect(json["total"]).to eq(19)
         expect(json["posts_with_detected_locale"]).to eq(15)
-        expect(json["hourly_rate"]).to eq(100)
 
-        # Check structure of first locale data
         locale_data = json["translation_progress"].first
         expect(locale_data["locale"]).to eq("en")
-        # en is the default locale, so total should only be posts requiring translation (1 French post)
         expect(locale_data["total"]).to eq(1)
-        # done should be 1 because we translated the French post to English
         expect(locale_data["done"]).to eq(1)
       end
 
@@ -147,7 +314,7 @@ describe DiscourseAi::Admin::AiTranslationsController do
             )
           end
 
-        get "/admin/plugins/discourse-ai/ai-translations.json"
+        get "/admin/plugins/discourse-ai/ai-translations/progress.json"
 
         expect(response.status).to eq(200)
         json = response.parsed_body
@@ -157,26 +324,20 @@ describe DiscourseAi::Admin::AiTranslationsController do
         fr_data = progress.find { |p| p["locale"] == "fr" }
         es_data = progress.find { |p| p["locale"] == "es" }
 
-        # 15 non-English posts (10 fr + 5 es)
         expect(en_data["total"]).to eq(15)
-        # 11 translated to English (8 fr + 3 es)
         expect(en_data["done"]).to eq(11)
 
-        # 105 non-French posts (100 en + 5 es)
         expect(fr_data["total"]).to eq(105)
-        # 50 translated to French
         expect(fr_data["done"]).to eq(50)
 
-        # 110 non-Spanish posts (100 en + 10 fr)
         expect(es_data["total"]).to eq(110)
-        # 30 translated to Spanish
         expect(es_data["done"]).to eq(30)
       end
 
       it "returns empty when no locales are supported" do
         SiteSetting.content_localization_supported_locales = ""
 
-        get "/admin/plugins/discourse-ai/ai-translations.json"
+        get "/admin/plugins/discourse-ai/ai-translations/progress.json"
 
         expect(response.status).to eq(200)
         json = response.parsed_body
@@ -184,71 +345,18 @@ describe DiscourseAi::Admin::AiTranslationsController do
         expect(json["translation_progress"]).to eq([])
         expect(json["total"]).to eq(0)
         expect(json["posts_with_detected_locale"]).to eq(0)
-        expect(json["no_locales_configured"]).to eq(true)
-      end
-
-      it "returns translation_enabled field" do
-        SiteSetting.ai_translation_backfill_max_age_days = 30
-
-        get "/admin/plugins/discourse-ai/ai-translations.json"
-
-        expect(response.status).to eq(200)
-        json = response.parsed_body
-
-        expect(json["translation_enabled"]).to eq(true)
-
-        SiteSetting.ai_translation_enabled = false
-
-        get "/admin/plugins/discourse-ai/ai-translations.json"
-
-        expect(response.status).to eq(200)
-        json = response.parsed_body
-
-        expect(json["translation_enabled"]).to eq(false)
-      end
-
-      it "correctly indicates if backfill is enabled" do
-        SiteSetting.ai_translation_backfill_hourly_rate = 30
-
-        get "/admin/plugins/discourse-ai/ai-translations.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["backfill_enabled"]).to eq(true)
-
-        SiteSetting.ai_translation_backfill_hourly_rate = 0
-
-        get "/admin/plugins/discourse-ai/ai-translations.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["backfill_enabled"]).to eq(false)
-      end
-
-      it "correctly indicates if feature is enabled" do
-        SiteSetting.ai_translation_backfill_max_age_days = 30
-
-        get "/admin/plugins/discourse-ai/ai-translations.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["enabled"]).to eq(true)
-
-        SiteSetting.ai_translation_backfill_max_age_days = 0
-
-        get "/admin/plugins/discourse-ai/ai-translations.json"
-
-        expect(response.status).to eq(200)
-        expect(response.parsed_body["enabled"]).to eq(false)
       end
     end
 
     context "when not logged in as admin" do
       it "returns 404 for anonymous users" do
-        get "/admin/plugins/discourse-ai/ai-translations.json"
+        get "/admin/plugins/discourse-ai/ai-translations/progress.json"
         expect(response.status).to eq(404)
       end
 
       it "returns 404 for regular users" do
         sign_in(user)
-        get "/admin/plugins/discourse-ai/ai-translations.json"
+        get "/admin/plugins/discourse-ai/ai-translations/progress.json"
         expect(response.status).to eq(404)
       end
     end
@@ -260,23 +368,28 @@ describe DiscourseAi::Admin::AiTranslationsController do
       end
 
       it "returns 404" do
-        get "/admin/plugins/discourse-ai/ai-translations.json"
+        get "/admin/plugins/discourse-ai/ai-translations/progress.json"
         expect(response.status).to eq(404)
       end
     end
 
-    context "when AI translation is disabled" do
+    context "when translation is not fully enabled" do
       before do
         sign_in(admin)
         SiteSetting.discourse_ai_enabled = true
         SiteSetting.ai_translation_enabled = false
+        SiteSetting.content_localization_supported_locales = "en|fr"
       end
 
-      it "still returns data but with enabled flag set to false" do
-        get "/admin/plugins/discourse-ai/ai-translations.json"
+      it "returns empty progress" do
+        get "/admin/plugins/discourse-ai/ai-translations/progress.json"
 
         expect(response.status).to eq(200)
-        expect(response.parsed_body["enabled"]).to eq(false)
+        json = response.parsed_body
+
+        expect(json["translation_progress"]).to eq([])
+        expect(json["total"]).to eq(0)
+        expect(json["posts_with_detected_locale"]).to eq(0)
       end
     end
   end

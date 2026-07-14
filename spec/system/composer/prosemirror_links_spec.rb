@@ -21,6 +21,7 @@ describe "Composer - ProseMirror - Links" do
     composer.type_content("[Example](https://example.com)")
     composer.send_keys(:left, :left, :left)
     # Use Tab to navigate to the toolbar and Enter to activate edit
+    expect(page).to have_css("[data-identifier='composer-link-toolbar']")
     composer.send_keys(:tab, :enter)
     expect(upsert_hyperlink_modal).to be_open
     expect(upsert_hyperlink_modal.link_text_value).to eq("Example")
@@ -39,6 +40,7 @@ describe "Composer - ProseMirror - Links" do
     composer.type_content("[Example](https://example.com)")
     composer.send_keys(:left, :left, :left)
     # Use Tab to navigate to the toolbar and Enter to activate edit
+    expect(page).to have_css("[data-identifier='composer-link-toolbar']")
     composer.send_keys(:tab, :enter)
     expect(upsert_hyperlink_modal).to be_open
     expect(upsert_hyperlink_modal.link_text_value).to eq("Example")
@@ -166,6 +168,7 @@ describe "Composer - ProseMirror - Links" do
     composer.type_content("[Party :tada: Time](https://example.com)")
     composer.send_keys(:left, :left, :left)
     # Use Tab to navigate to the toolbar and Enter to activate edit
+    expect(page).to have_css("[data-identifier='composer-link-toolbar']")
     composer.send_keys(:tab, :enter)
     expect(upsert_hyperlink_modal).to be_open
     expect(upsert_hyperlink_modal.link_text_value).to eq("Party :tada: Time")
@@ -184,6 +187,7 @@ describe "Composer - ProseMirror - Links" do
     composer.type_content("[**Bold** and *italic* text](https://example.com)")
     composer.send_keys(:left, :left, :left)
     # Use Tab to navigate to the toolbar and Enter to activate edit
+    expect(page).to have_css("[data-identifier='composer-link-toolbar']")
     composer.send_keys(:tab, :enter)
     expect(upsert_hyperlink_modal).to be_open
     expect(upsert_hyperlink_modal.link_text_value).to eq("**Bold** and *italic* text")
@@ -198,6 +202,82 @@ describe "Composer - ProseMirror - Links" do
     expect(composer).to have_value(
       "[Updated **bold** and *italic* content](https://updated-example.com)",
     )
+  end
+
+  context "when inserting a link over an existing selection" do
+    it "only shows the URL field in the modal" do
+      open_composer
+      composer.type_content("some text")
+      composer.select_all
+      composer.click_toolbar_button("link")
+
+      expect(upsert_hyperlink_modal).to be_open
+      expect(upsert_hyperlink_modal).to have_no_link_text_field
+    end
+
+    it "wraps the selection with the link while preserving inline formatting" do
+      open_composer
+      composer.type_content("Example")
+      composer.select_all
+      composer.click_toolbar_button("bold")
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-2']").click
+      expect(rich).to have_css("h2 strong", text: "Example")
+
+      composer.select_all
+      composer.click_toolbar_button("link")
+      upsert_hyperlink_modal.fill_in_link_url("https://example.com")
+      upsert_hyperlink_modal.click_primary_button
+
+      expect(rich).to have_css("h2 strong a[href='https://example.com']", text: "Example")
+      composer.toggle_rich_editor
+      expect(composer).to have_value("## **[Example](https://example.com)**")
+    end
+
+    it "does not leak heading markdown into the resulting link" do
+      open_composer
+      composer.type_content("Example")
+      composer.select_all
+      heading_menu = composer.heading_menu
+      heading_menu.expand
+      heading_menu.option("[data-name='heading-2']").click
+      expect(rich).to have_css("h2", text: "Example")
+
+      composer.select_all
+      composer.click_toolbar_button("link")
+      upsert_hyperlink_modal.fill_in_link_url("https://example.com")
+      upsert_hyperlink_modal.click_primary_button
+
+      expect(rich).to have_css("h2 a[href='https://example.com']", text: "Example")
+      composer.toggle_rich_editor
+      expect(composer).to have_value("## [Example](https://example.com)")
+    end
+  end
+
+  context "in markdown mode, when inserting a link over an existing selection" do
+    it "only shows the URL field and wraps the selection as-is" do
+      open_composer
+      composer.toggle_rich_editor
+      composer.type_content("`code word`")
+      composer.select_all
+      composer.click_toolbar_button("link")
+
+      expect(upsert_hyperlink_modal).to be_open
+      expect(upsert_hyperlink_modal).to have_no_link_text_field
+      upsert_hyperlink_modal.fill_in_link_url("https://example.com")
+      upsert_hyperlink_modal.click_primary_button
+
+      expect(composer).to have_value("[`code word`](https://example.com)")
+    end
+  end
+
+  it "shows both fields when inserting a link without a selection" do
+    open_composer
+    composer.click_toolbar_button("link")
+
+    expect(upsert_hyperlink_modal).to be_open
+    expect(upsert_hyperlink_modal).to have_link_text_field
   end
 
   it "does not infinite loop on link rewrite" do

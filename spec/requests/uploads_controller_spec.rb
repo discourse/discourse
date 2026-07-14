@@ -18,7 +18,9 @@ RSpec.describe UploadsController do
 
       let(:logo) { Rack::Test::UploadedFile.new(logo_file) }
       let(:fake_jpg) { Rack::Test::UploadedFile.new(file_from_fixtures("fake.jpg")) }
-      let(:text_file) { Rack::Test::UploadedFile.new(File.new("#{Rails.root}/LICENSE.txt")) }
+      let(:text_file) do
+        Rack::Test::UploadedFile.new(File.new("#{Rails.root.join("LICENSE.txt")}"))
+      end
 
       context "when rate limited" do
         before { RateLimiter.enable }
@@ -277,7 +279,9 @@ RSpec.describe UploadsController do
     context "when system user is logged in" do
       before { sign_in(system_user) }
 
-      let(:text_file) { Rack::Test::UploadedFile.new(File.new("#{Rails.root}/LICENSE.txt")) }
+      let(:text_file) do
+        Rack::Test::UploadedFile.new(File.new("#{Rails.root.join("LICENSE.txt")}"))
+      end
 
       it "properly returns errors if system_user_max_attachment_size_kb is not set" do
         SiteSetting.authorized_extensions = "*"
@@ -1065,7 +1069,7 @@ RSpec.describe UploadsController do
       let(:mock_multipart_upload_id) do
         "ibZBv_75gd9r8lH_gqXatLdxMVpAlj6CFTR.OwyF3953YdwbcQnMA2BLGn8Lx12fQNICtMw5KyteFeHw.Sjng--"
       end
-      let(:test_bucket_prefix) { "test_#{ENV["TEST_ENV_NUMBER"].presence || "0"}" }
+      let(:test_bucket_prefix) { "test_#{Discourse.test_env_number}" }
 
       before do
         sign_in(user)
@@ -1142,6 +1146,37 @@ RSpec.describe UploadsController do
         ).to_return({ status: 200, body: create_multipart_result })
       end
 
+      def stub_create_multipart_backup_request
+        SiteSetting.s3_backup_bucket = "s3-backup-bucket"
+        SiteSetting.backup_location = BackupLocationSiteSetting::S3
+        BackupRestore::S3BackupStore
+          .any_instance
+          .stubs(:temporary_upload_path)
+          .returns(
+            "temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/test.tar.gz",
+          )
+        stub_request(
+          :head,
+          "https://s3-backup-bucket.s3.dualstack.us-west-1.amazonaws.com/",
+        ).to_return(status: 200, body: "", headers: {})
+        stub_request(
+          :head,
+          "https://s3-backup-bucket.s3.dualstack.us-west-1.amazonaws.com/default/test.tar.gz",
+        ).to_return(status: 404)
+        create_multipart_result = <<~XML
+        <?xml version=\"1.0\" encoding=\"UTF-8\"?>\n
+        <InitiateMultipartUploadResult>
+           <Bucket>s3-backup-bucket</Bucket>
+           <Key>temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/test.tar.gz</Key>
+           <UploadId>#{mock_multipart_upload_id}</UploadId>
+        </InitiateMultipartUploadResult>
+        XML
+        stub_request(
+          :post,
+          "https://s3-backup-bucket.s3.dualstack.us-west-1.amazonaws.com/temp/default/#{test_bucket_prefix}/28fccf8259bbe75b873a2bd2564b778c/test.tar.gz?uploads",
+        ).to_return({ status: 200, body: create_multipart_result })
+      end
+
       it "creates a multipart upload and creates an external upload stub that is marked as multipart" do
         stub_create_multipart_request
         post "/uploads/create-multipart.json",
@@ -1165,6 +1200,22 @@ RSpec.describe UploadsController do
         expect(result["key"]).to include(FileStore::S3Store::TEMPORARY_UPLOAD_PREFIX)
         expect(result["external_upload_identifier"]).to eq(mock_multipart_upload_id)
         expect(result["key"]).to eq(external_upload_stub.last.key)
+      end
+
+      it "does not allow backup multipart uploads through the public uploads endpoint" do
+        stub_create_multipart_backup_request
+
+        expect do
+          post "/uploads/create-multipart.json",
+               params: {
+                 file_name: "test.tar.gz",
+                 file_size: 1024,
+                 upload_type: "backup",
+               }
+        end.not_to change { ExternalUploadStub.count }
+
+        expect(response.status).to eq(403)
+        expect(response.body).to include(I18n.t("invalid_access"))
       end
 
       it "includes accepted metadata when calling the store to create_multipart, but only allowed keys" do

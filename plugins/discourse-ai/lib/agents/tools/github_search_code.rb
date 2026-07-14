@@ -75,53 +75,36 @@ module DiscourseAi
         def invoke
           api_url = build_url
 
-          response_code = "unknown error"
-          search_data = nil
-
-          send_http_request(
-            api_url,
-            headers: {
-              "Accept" => "application/vnd.github.v3.text-match+json",
-            },
-            authenticate_github: true,
-          ) do |response|
-            response_code = response.code
-            if response_code == "200"
-              begin
-                search_data = JSON.parse(read_response_body(response))
-              rescue JSON::ParserError
-                response_code = "500 - JSON parse error"
-              end
-            end
+          begin
+            search_data =
+              github_client.get(api_url, accept: "application/vnd.github.v3.text-match+json")
+          rescue Discourse::GithubApi::Error => e
+            return { error: "Failed to perform code search. #{e.message}" }
           end
 
-          if response_code == "200"
-            formatted_results = format_results(search_data["items"])
-            grouped = group_by_file(formatted_results)
-            trimmed = trim_results(grouped)
+          formatted_results = format_results(search_data["items"])
+          grouped = group_by_file(formatted_results)
+          trimmed = trim_results(grouped)
 
-            total_count = search_data["total_count"].to_i
-            total_pages =
-              if total_count <= 0
-                1
-              else
-                [((total_count.to_f / PER_PAGE).ceil), MAX_ALLOWED_PAGE].min
-              end
-
-            result = { search_results: trimmed }
-
-            result[:page] = page if page > 1
-            result[:total_results] = total_count
-            result[:next_page] = page + 1 if page < total_pages
-
-            if search_data["incomplete_results"]
-              result[:notes] = "GitHub marked the search results as incomplete."
+          total_count = search_data["total_count"].to_i
+          total_pages =
+            if total_count <= 0
+              1
+            else
+              [(total_count.to_f / PER_PAGE).ceil, MAX_ALLOWED_PAGE].min
             end
 
-            result
-          else
-            { error: "Failed to perform code search. Status code: #{response_code}" }
+          result = { search_results: trimmed }
+
+          result[:page] = page if page > 1
+          result[:total_results] = total_count
+          result[:next_page] = page + 1 if page < total_pages
+
+          if search_data["incomplete_results"]
+            result[:notes] = "GitHub marked the search results as incomplete."
           end
+
+          result
         end
 
         private
@@ -283,29 +266,11 @@ module DiscourseAi
               "https://api.github.com/repos/#{owner}/#{repo_name}/contents/#{path}?ref=#{actual_ref}"
             end
 
-          response_code = nil
-          body = nil
-
-          send_http_request(
-            url,
-            headers: {
-              "Accept" => "application/vnd.github.v3+json",
-            },
-            authenticate_github: true,
-          ) do |response|
-            response_code = response.code
-            body = read_response_body(response)
-          end
-
-          if response_code == "200"
-            begin
-              data = JSON.parse(body)
-              decoded = ensure_utf8(Base64.decode64(data["content"].to_s))
-              cache[cache_key] = { content: decoded, total_lines: count_lines(decoded) }
-            rescue JSON::ParserError
-              cache[cache_key] = nil
-            end
-          else
+          begin
+            data = github_client.get(url)
+            decoded = ensure_utf8(Base64.decode64(data["content"].to_s))
+            cache[cache_key] = { content: decoded, total_lines: count_lines(decoded) }
+          rescue Discourse::GithubApi::Error
             cache[cache_key] = nil
           end
 

@@ -3,12 +3,13 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
+import { buildLegendIcon } from "discourse/lib/chart-legend-icon";
+import loadChartJS from "discourse/lib/load-chart-js";
 import {
   applyHtmlDecorators,
   NON_STREAM_HTML_DECORATOR,
   NULL_HELPER,
-} from "discourse/components/decorated-html";
-import loadChartJS from "discourse/lib/load-chart-js";
+} from "discourse/ui-kit/d-decorated-html";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 
@@ -26,28 +27,24 @@ export default class PollResultsPieComponent extends Component {
 
       const items = chart.options.plugins.legend.labels.generateLabels(chart);
       items.forEach((item) => {
+        const isVisible = chart.getDataVisibility(item.index);
+
         const li = document.createElement("li");
         li.classList.add("legend");
+        li.style.opacity = isVisible ? 1.0 : 0.4;
         li.onclick = () => {
           chart.toggleDataVisibility(item.index);
           chart.update();
         };
 
-        const boxSpan = document.createElement("span");
-        boxSpan.classList.add("swatch");
-        boxSpan.style.background = item.fillStyle;
+        const icon = buildLegendIcon(item.fillStyle, isVisible);
+        icon.classList.add("swatch");
 
         const textContainer = document.createElement("span");
         textContainer.style.color = item.fontColor;
         textContainer.innerHTML = item.text;
 
-        if (!chart.getDataVisibility(item.index)) {
-          li.style.opacity = 0.2;
-        } else {
-          li.style.opacity = 1.0;
-        }
-
-        li.appendChild(boxSpan);
+        li.appendChild(icon);
         li.appendChild(textContainer);
 
         ul.appendChild(li);

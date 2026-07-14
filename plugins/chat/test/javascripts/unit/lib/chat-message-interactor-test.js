@@ -8,7 +8,7 @@ import {
 import ChatMessageInteractor from "discourse/plugins/chat/discourse/lib/chat-message-interactor";
 import ChatFabricators from "discourse/plugins/chat/discourse/lib/fabricators";
 
-module("Discourse Chat | Unit | chat-message-interactor", function (hooks) {
+module("Unit | chat-message-interactor", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {

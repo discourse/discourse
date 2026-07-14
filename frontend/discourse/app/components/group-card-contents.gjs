@@ -4,14 +4,14 @@ import { service } from "@ember/service";
 import { trustHTML } from "@ember/template";
 import { classNameBindings, classNames } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
-import AvatarFlair from "discourse/components/avatar-flair";
 import CardContentsBase from "discourse/components/card-contents-base";
-import DButton from "discourse/components/d-button";
 import GroupMembershipButton from "discourse/components/group-membership-button";
-import boundAvatar from "discourse/helpers/bound-avatar";
 import routeAction from "discourse/helpers/route-action";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { groupPath } from "discourse/lib/url";
+import DAvatarFlair from "discourse/ui-kit/d-avatar-flair";
+import DButton from "discourse/ui-kit/d-button";
+import dBoundAvatar from "discourse/ui-kit/helpers/d-bound-avatar";
 import { i18n } from "discourse-i18n";
 
 const maxMembersToDisplay = 10;
@@ -170,7 +170,7 @@ export default class GroupCardContents extends CardContentsBase {
                 href={{this.groupPath}}
                 class="card-huge-avatar"
               >
-                <AvatarFlair
+                <DAvatarFlair
                   @flairName={{this.group.name}}
                   @flairUrl={{this.group.flair_url}}
                   @flairBgColor={{this.group.flair_bg_color}}
@@ -234,7 +234,7 @@ export default class GroupCardContents extends CardContentsBase {
                     {{on "click" this.close}}
                     href={{user.path}}
                     class="card-tiny-avatar"
-                  >{{boundAvatar user "tiny"}}</a>
+                  >{{dBoundAvatar user "tiny"}}</a>
                 {{/each}}
                 {{#if this.showMoreMembers}}
                   <a

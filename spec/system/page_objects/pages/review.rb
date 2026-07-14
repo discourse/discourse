@@ -14,16 +14,15 @@ module PageObjects
 
       def select_bundled_action(reviewable, value, bundle_index: nil)
         within(reviewable_by_id(reviewable.id)) do
-          if bundle_index
-            dropdown =
+          dropdown =
+            if bundle_index
               PageObjects::Components::SelectKit.new(
                 "#{REVIEWABLE_ACTION_DROPDOWN}:nth-of-type(#{bundle_index})",
               )
-            dropdown.expand
-            dropdown.select_row_by_name(value)
-          else
-            reviewable_action_dropdown.select_row_by_value(value)
-          end
+            else
+              reviewable_action_dropdown
+            end
+          dropdown.select_row_by_value(value)
         end
       end
 
@@ -31,6 +30,10 @@ module PageObjects
         within(reviewable_by_id(reviewable.id)) do
           find(".reviewable-action.#{value.dasherize}").click
         end
+      end
+
+      def delete_user_from_reviewable(reviewable, action)
+        select_bundled_action(reviewable, action, bundle_index: 1)
       end
 
       def click_post_body_toggle
@@ -153,6 +156,12 @@ module PageObjects
         end
       end
 
+      def has_no_context_question?(reviewable, text)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_no_css?(".review-item__aside-title", text: text)
+        end
+      end
+
       def flag_reason_component
         PageObjects::Components::Review::FlagReason.new
       end
@@ -184,6 +193,12 @@ module PageObjects
 
       def click_insights_tab
         find(".action-list li.insights").click
+      end
+
+      def has_reviewable_with_status?(reviewable, status)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_css?(".review-item__status.--#{status}")
+        end
       end
 
       def has_reviewable_with_approved_status?(reviewable)

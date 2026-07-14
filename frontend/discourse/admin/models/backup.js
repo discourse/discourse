@@ -1,5 +1,4 @@
 import EmberObject from "@ember/object";
-import MessageBus from "message-bus-client";
 import { ajax } from "discourse/lib/ajax";
 
 export default class Backup extends EmberObject {
@@ -15,7 +14,7 @@ export default class Backup extends EmberObject {
       type: "POST",
       data: {
         with_uploads: withUploads,
-        client_id: MessageBus.clientId,
+        client_id: window.MessageBus.clientId,
       },
     });
   }
@@ -39,7 +38,7 @@ export default class Backup extends EmberObject {
   restore() {
     return ajax("/admin/backups/" + this.filename + "/restore", {
       type: "POST",
-      data: { client_id: MessageBus.clientId },
+      data: { client_id: window.MessageBus.clientId },
     });
   }
 }

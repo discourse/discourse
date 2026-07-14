@@ -34,6 +34,9 @@ export async function applyInlineOneboxes(inline, ajax, opts) {
           links.forEach((link) => {
             link.innerText = onebox.title;
             link.classList.add("inline-onebox");
+            if (onebox.css_class) {
+              link.classList.add(onebox.css_class);
+            }
             link.classList.remove("inline-onebox-loading");
           });
         }

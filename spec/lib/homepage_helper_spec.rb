@@ -8,11 +8,18 @@ RSpec.describe HomepageHelper do
       expect(HomepageHelper.resolve).to eq("latest")
     end
 
-    context "when theme has a custom homepage" do
-      before { ThemeModifierHelper.any_instance.expects(:custom_homepage).returns(true) }
+    context "when a theme has a custom homepage" do
+      before { ThemeModifierHelper.any_instance.stubs(:custom_homepage).returns(true) }
 
       it "returns custom" do
         expect(HomepageHelper.resolve).to eq("custom")
+      end
+
+      it "returns the configured crawler route for crawler requests" do
+        SiteSetting.custom_homepage_crawler_route = "categories"
+        request = ActionDispatch::TestRequest.create("HTTP_USER_AGENT" => "Googlebot")
+
+        expect(HomepageHelper.resolve(request)).to eq("categories")
       end
     end
 
@@ -39,7 +46,7 @@ RSpec.describe HomepageHelper do
     end
 
     context "when first item in top menu is not valid for anons" do
-      before { SiteSetting.top_menu = "new|top|latest|unread" }
+      before { SiteSetting.top_menu = "new|top|latest" }
 
       it "distinguishes between auth homepage and anon homepage" do
         expect(HomepageHelper.resolve(nil, user)).to eq("new")
@@ -52,7 +59,7 @@ RSpec.describe HomepageHelper do
     context "with login required" do
       before do
         SiteSetting.login_required = true
-        SiteSetting.top_menu = "new|top|latest|unread"
+        SiteSetting.top_menu = "new|top|latest"
       end
 
       it "returns a blank route for anon, first result from top menu for authenticated user" do

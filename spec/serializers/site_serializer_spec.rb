@@ -6,6 +6,16 @@ RSpec.describe SiteSerializer do
 
   after { Site.clear_cache }
 
+  describe "category_types" do
+    it "is included on each serialized category in the site payload" do
+      category
+      Site.clear_cache
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      c = serialized[:categories].find { |entry| entry[:id] == category.id }
+      expect(c).to have_key(:category_types)
+    end
+  end
+
   describe "#user_tips" do
     it "is included if enable_user_tips" do
       SiteSetting.enable_user_tips = true
@@ -19,6 +29,73 @@ RSpec.describe SiteSerializer do
 
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
       expect(serialized[:user_tips]).to eq(nil)
+    end
+  end
+
+  describe "#access_control" do
+    let(:target_class) do
+      Class.new(ActiveRecord::Base) do
+        include AclTarget
+
+        self.table_name = "posts"
+
+        def self.name
+          "SiteSerializerSpecTarget"
+        end
+
+        def self.mandatory_acl
+          [{ type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" }]
+        end
+
+        def self.banned_acl
+          [{ type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" }]
+        end
+      end
+    end
+
+    after { DiscoursePluginRegistry.reset_register!(:acl_target_classes) }
+
+    it "includes mandatory ACLs by target class" do
+      target_class
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized.dig(:access_control, :mandatory_acl)).to include(
+        "SiteSerializerSpecTarget" => [
+          { type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" },
+        ],
+      )
+    end
+
+    it "includes banned ACLs by target class" do
+      target_class
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized.dig(:access_control, :banned_acl)).to include(
+        "SiteSerializerSpecTarget" => [
+          { type: :group, id: Group::AUTO_GROUPS[:anonymous_users], permission: "edit" },
+        ],
+      )
+    end
+
+    it "includes plugin-registered target classes" do
+      Object.const_set(:SiteSerializerSpecTarget, target_class)
+      AclTarget.loaded_target_classes.delete(target_class)
+      DiscoursePluginRegistry.register_acl_target_class(
+        "SiteSerializerSpecTarget",
+        Plugin::Instance.new,
+      )
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+
+      expect(serialized.dig(:access_control, :mandatory_acl)).to include(
+        "SiteSerializerSpecTarget" => [
+          { type: :group, id: Group::AUTO_GROUPS[:admins], permission: "manage" },
+        ],
+      )
+    ensure
+      Object.send(:remove_const, :SiteSerializerSpecTarget) if defined?(SiteSerializerSpecTarget)
     end
   end
 
@@ -150,12 +227,12 @@ RSpec.describe SiteSerializer do
     fab!(:category)
     fab!(:sidebar) { Fabricate(:category_sidebar_section_link, linkable: category, user: user) }
 
-    before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
+    before { SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:logged_in_users]}" }
 
-    it "does not include any categories for anonymous users" do
+    it "includes categories for anonymous users" do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
-      expect(serialized[:categories]).to eq(nil)
+      expect(serialized[:categories].map { |category| category[:id] }).to include(category.id)
     end
 
     it "includes preloaded categories for logged in users" do
@@ -563,8 +640,85 @@ RSpec.describe SiteSerializer do
           :groups
         ]
 
-      expect(serialized_groups.find { |g| g["name"] == "everyone" }["automatic"]).to eq(true)
+      expect(serialized_groups.find { |g| g["name"] == "trust_level_1" }["automatic"]).to eq(true)
       expect(serialized_groups.find { |g| g["name"] == group.name }["automatic"]).to eq(false)
+    end
+  end
+
+  describe "#admin_config_login_routes" do
+    fab!(:admin)
+    fab!(:user)
+
+    before { DiscoursePluginRegistry.admin_config_login_routes << "plugin_login_route" }
+
+    after { DiscoursePluginRegistry.admin_config_login_routes.delete("plugin_login_route") }
+
+    it "is included for admin users" do
+      admin_guardian = Guardian.new(admin)
+      serialized =
+        described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
+      expect(serialized[:admin_config_login_routes]).to include("plugin_login_route")
+    end
+
+    it "is not included for anonymous users" do
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized).not_to have_key(:admin_config_login_routes)
+    end
+
+    it "is not included for non-admin users" do
+      user_guardian = Guardian.new(user)
+      serialized =
+        described_class.new(Site.new(user_guardian), scope: user_guardian, root: false).as_json
+      expect(serialized).not_to have_key(:admin_config_login_routes)
+    end
+  end
+
+  describe "#upcoming_changes_with_css" do
+    it "returns upcoming changes with body_class: true" do
+      mock_upcoming_change_metadata(
+        {
+          enable_upload_debug_mode: {
+            impact: "other,developers",
+            status: :beta,
+            impact_type: "other",
+            impact_role: "developers",
+            body_class: true,
+          },
+          enable_user_tips: {
+            impact: "feature,all_members",
+            status: :alpha,
+            impact_type: "feature",
+            impact_role: "all_members",
+            body_class: false,
+          },
+        },
+      )
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      expect(serialized[:upcoming_changes_with_css]).to include(:enable_upload_debug_mode)
+      expect(serialized[:upcoming_changes_with_css]).not_to include(:enable_user_tips)
+    end
+  end
+
+  describe "#permanent_upcoming_change_names" do
+    before do
+      UpcomingChanges.stubs(:permanent_upcoming_change_names).returns(%w[enable_permanent_feature])
+    end
+
+    it "returns the permanent change names for staff" do
+      admin = Fabricate(:admin)
+      admin_guardian = Guardian.new(admin)
+      serialized =
+        described_class.new(Site.new(admin_guardian), scope: admin_guardian, root: false).as_json
+      expect(serialized[:permanent_upcoming_change_names]).to eq(%w[enable_permanent_feature])
+    end
+
+    it "is not included for non-staff users" do
+      user = Fabricate(:user)
+      user_guardian = Guardian.new(user)
+      serialized =
+        described_class.new(Site.new(user_guardian), scope: user_guardian, root: false).as_json
+      expect(serialized).not_to have_key(:permanent_upcoming_change_names)
     end
   end
 end

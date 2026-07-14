@@ -35,6 +35,35 @@ RSpec.describe EmbedController do
           expect(response.parsed_body["post_id"]).to eq(topic_embed.post.id)
           expect(response.parsed_body["topic_slug"]).to eq(topic_embed.topic.slug)
         end
+
+        it "returns not found for topics the API user cannot see" do
+          user = Fabricate(:user)
+          api_key = Fabricate(:api_key, user: user)
+          restricted_category = Fabricate(:category)
+          restricted_category.set_permissions(staff: :full)
+          restricted_category.save!
+          restricted_topic = Fabricate(:topic, category: restricted_category, posts_count: 5)
+          restricted_topic_embed =
+            Fabricate(
+              :topic_embed,
+              post: Fabricate(:post, topic: restricted_topic),
+              topic: restricted_topic,
+              embed_url: "http://eviltrout.com/private-article",
+            )
+
+          get "/embed/info.json",
+              params: {
+                embed_url: restricted_topic_embed.embed_url,
+              },
+              headers: {
+                HTTP_API_KEY: api_key.key,
+                HTTP_API_USERNAME: user.username,
+              }
+
+          expect(response.status).to eq(404)
+          expect(response.parsed_body["error_type"]).to eq("not_found")
+          expect(response.body).not_to include(restricted_topic.slug)
+        end
       end
 
       context "without invalid embed url" do
@@ -217,6 +246,20 @@ RSpec.describe EmbedController do
             }
 
         expect(response).to redirect_to("#{topic.url}?embed_mode=true")
+      end
+
+      it "forwards class_name to the topic URL" do
+        get "/embed/comments",
+            params: {
+              topic_id: topic.id,
+              full_app: "true",
+              class_name: "lee-af",
+            },
+            headers: {
+              "REFERER" => "http://eviltrout.com/some-page",
+            }
+
+        expect(response).to redirect_to("#{topic.url}?class_name=lee-af&embed_mode=true")
       end
 
       it "redirects blank-slug topics to a slugless URL" do

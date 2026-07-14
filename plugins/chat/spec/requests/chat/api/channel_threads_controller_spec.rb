@@ -41,6 +41,21 @@ RSpec.describe Chat::Api::ChannelThreadsController do
         expect(response.parsed_body["thread"]["id"]).to eq(thread.id)
       end
 
+      context "as anonymous user" do
+        before do
+          sign_out
+          SiteSetting.chat_allowed_groups =
+            "#{Group::AUTO_GROUPS[:everyone]}|#{Group::AUTO_GROUPS[:anonymous_users]}"
+        end
+
+        it "returns a public category channel thread" do
+          get "/chat/api/channels/#{thread.channel_id}/threads/#{thread.id}"
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["thread"]["id"]).to eq(thread.id)
+        end
+      end
+
       context "with user status enabled" do
         before { SiteSetting.enable_user_status = true }
 
@@ -320,6 +335,27 @@ RSpec.describe Chat::Api::ChannelThreadsController do
 
       context "when user cannot view the channel" do
         let(:channel_id) { Fabricate(:private_category_channel).id }
+
+        it "returns 403" do
+          post "/chat/api/channels/#{channel_id}/threads", params: params
+
+          expect(response.status).to eq(403)
+        end
+      end
+
+      context "when user can only see a readonly category channel" do
+        fab!(:group) { Fabricate(:group, users: [current_user]) }
+        fab!(:category) do
+          Fabricate(
+            :private_category,
+            group: group,
+            permission_type: CategoryGroup.permission_types[:readonly],
+          )
+        end
+        fab!(:channel_1) do
+          Fabricate(:category_channel, chatable: category, threading_enabled: true)
+        end
+        fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
 
         it "returns 403" do
           post "/chat/api/channels/#{channel_id}/threads", params: params

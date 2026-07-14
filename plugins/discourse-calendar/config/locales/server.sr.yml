@@ -9,3 +9,10 @@ sr:
     currently_away:
       labels:
         username: Korisničko Ime
+  discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Dan"
+        week: "Nedelja"
+        month: "Mesec"
+        year: "Godina"

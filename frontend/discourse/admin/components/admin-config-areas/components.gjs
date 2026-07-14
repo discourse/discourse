@@ -10,15 +10,8 @@ import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-ar
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import InstallComponentModal from "discourse/admin/components/modal/install-theme";
 import { COMPONENTS } from "discourse/admin/models/theme";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DPageSubheader from "discourse/components/d-page-subheader";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
-import DropdownMenu from "discourse/components/dropdown-menu";
-import LoadMore from "discourse/components/load-more";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { extractErrorInfo } from "discourse/lib/ajax-error";
@@ -26,6 +19,14 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import { descriptionForRemoteUrl } from "discourse/lib/popular-themes";
+import { searchParamsFromPath } from "discourse/lib/url";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
+import DLoadMore from "discourse/ui-kit/d-load-more";
+import DPageSubheader from "discourse/ui-kit/d-page-subheader";
+import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 const STATUS_FILTER_OPTIONS = [
@@ -72,6 +73,26 @@ export default class AdminConfigAreasComponents extends Component {
 
   constructor() {
     super(...arguments);
+
+    const params = searchParamsFromPath(this.router.currentURL);
+    const name = params.get("filter");
+    const status = params.get("status");
+    if (name) {
+      this.nameFilter = name;
+    }
+    if (
+      status &&
+      status !== "all" &&
+      STATUS_FILTER_OPTIONS.some((option) => option.value === status)
+    ) {
+      this.statusFilter = status;
+    }
+    if (this.nameFilter || this.statusFilter) {
+      // a filtered first response can't tell us whether the site has any
+      // components at all, and the filter UI must render to be resettable
+      this.hasComponents = true;
+    }
+
     this.load();
   }
 
@@ -143,14 +164,26 @@ export default class AdminConfigAreasComponents extends Component {
 
   @action
   async load({ append = false } = {}) {
+    const nameFilter = this.nameFilter;
+    const statusFilter = this.statusFilter;
+    const page = this.page;
+
     try {
       const data = await ajax("/admin/config/customize/components", {
         data: {
-          name: this.nameFilter,
-          status: this.statusFilter,
-          page: this.page,
+          name: nameFilter,
+          status: statusFilter,
+          page,
         },
       });
+
+      if (
+        nameFilter !== this.nameFilter ||
+        statusFilter !== this.statusFilter ||
+        page !== this.page
+      ) {
+        return;
+      }
 
       if (append) {
         this.components = [...this.components, ...data.components];
@@ -159,11 +192,19 @@ export default class AdminConfigAreasComponents extends Component {
       }
       this.hasMore = data.has_more;
 
-      if (!this.hasComponents && !this.nameFilter && !this.statusFilter) {
+      if (!append && !nameFilter && !statusFilter) {
+        // an unfiltered fresh load is authoritative — it also corrects the
+        // optimistic value from a filtered deep link after a filter reset
         this.hasComponents = !!data.components.length;
       }
     } finally {
-      this.loading = false;
+      if (
+        nameFilter === this.nameFilter &&
+        statusFilter === this.statusFilter &&
+        page === this.page
+      ) {
+        this.loading = false;
+      }
     }
   }
 
@@ -223,6 +264,10 @@ export default class AdminConfigAreasComponents extends Component {
         <AdminFilterControls
           @array={{this.components}}
           @dropdownOptions={{STATUS_FILTER_OPTIONS}}
+          @initialTextFilter={{this.nameFilter}}
+          @dropdownValue={{this.statusFilter}}
+          @textFilterQueryParam="filter"
+          @dropdownFilterQueryParam="status"
           @inputPlaceholder={{i18n
             "admin.config_areas.themes_and_components.components.search_components"
           }}
@@ -235,7 +280,10 @@ export default class AdminConfigAreasComponents extends Component {
           @loading={{this.loading}}
         >
           <:content>
-            <LoadMore @action={{this.loadMore}} @rootMargin="0px 0px 250px 0px">
+            <DLoadMore
+              @action={{this.loadMore}}
+              @rootMargin="0px 0px 250px 0px"
+            >
               <PluginOutlet
                 @name="admin-config-area-components-above-table"
                 @outletArgs={{lazyHash components=this.components}}
@@ -264,12 +312,12 @@ export default class AdminConfigAreasComponents extends Component {
                   {{/each}}
                 </tbody>
               </table>
-              <ConditionalLoadingSpinner @condition={{this.loadingMore}} />
-            </LoadMore>
+              <DConditionalLoadingSpinner @condition={{this.loadingMore}} />
+            </DLoadMore>
           </:content>
         </AdminFilterControls>
       {{/if}}
-      <ConditionalLoadingSpinner @condition={{this.loading}}>
+      <DConditionalLoadingSpinner @condition={{this.loading}}>
         {{#unless this.hasComponents}}
           <AdminConfigAreaEmptyList
             @emptyLabel="admin.config_areas.themes_and_components.components.no_components"
@@ -279,7 +327,7 @@ export default class AdminConfigAreasComponents extends Component {
             />
           </AdminConfigAreaEmptyList>
         {{/unless}}
-      </ConditionalLoadingSpinner>
+      </DConditionalLoadingSpinner>
     </div>
   </template>
 }
@@ -490,7 +538,7 @@ class ComponentRow extends Component {
               <a href={{@component.remote_theme.about_url}}>{{i18n
                   "admin.config_areas.themes_and_components.components.learn_more"
                 }}
-                {{icon "up-right-from-square"}}
+                {{dIcon "up-right-from-square"}}
               </a>
             {{/if}}
           </div>
@@ -551,7 +599,7 @@ class ComponentRow extends Component {
             @triggerClass="btn-default"
           >
             <:content>
-              <DropdownMenu as |dropdown|>
+              <DDropdownMenu as |dropdown|>
                 <dropdown.item>
                   <DButton
                     class="btn-transparent admin-config-components__preview"
@@ -607,7 +655,7 @@ class ComponentRow extends Component {
                     @action={{this.delete}}
                   />
                 </dropdown.item>
-              </DropdownMenu>
+              </DDropdownMenu>
             </:content>
           </DMenu>
         </div>

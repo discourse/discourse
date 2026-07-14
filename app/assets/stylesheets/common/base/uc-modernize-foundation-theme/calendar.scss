@@ -1,0 +1,17 @@
+.uc-modernize-foundation-theme {
+  .fc .fc-button-primary {
+    --fc-button-bg-color: var(--secondary);
+    --fc-button-border-color: var(--primary-200);
+    --fc-button-active-bg-color: var(--primary-200);
+    --fc-button-hover-bg-color: var(--primary-100);
+  }
+
+  .fc-button-active {
+    color: var(--primary) !important;
+
+    &:focus {
+      background-color: var(--primary-200) !important;
+      color: var(--primary) !important;
+    }
+  }
+}

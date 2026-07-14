@@ -5,6 +5,25 @@
 # https://translate.discourse.org/
 
 ro:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Soluții acceptate"
+        sections:
+          support:
+            filter:
+              all_categories: "Toate categoriile"
+            answerers:
+              staff: "Echipa"
+              member: "Membri"
+              basic: "De bază"
+            response_time:
+              buckets:
+                lt_1h: "< o oră"
+                gt_24h: "> 24 ore"
   js:
     notifications:
       alt:
@@ -33,6 +52,8 @@ ro:
         unsolved: "nerezolvat"
       move_post_cancel: "Anulează"
       confirm_solved_removal_cancel: "Anulează"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       topic_solved_notification: "<p><span>%{username}</span> %{description}</p>"
     topic_statuses:
       solved:

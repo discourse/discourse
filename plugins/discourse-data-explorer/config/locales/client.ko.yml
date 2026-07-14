@@ -14,6 +14,9 @@ ko:
       explorer:
         no_semicolons: "쿼리에서 세미콜론을 제거하십시오."
         dirty: "실행하기 전에 쿼리를 저장해야합니다."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "결과 없음"
     explorer:
       default_query: "기본"
       or: "또는"
@@ -25,6 +28,7 @@ ko:
       description_placeholder: "여기에 설명을 입력하세요"
       ai:
         generate: "API 키 생성"
+        optional: "선택 사항"
       import:
         label: "가져오기"
       help:
@@ -38,12 +42,12 @@ ko:
           yes: "예"
           no: "아니오"
           null_: "없는"
-      export: "내보내기"
       run: "운영"
-      edit: "편집"
       delete: "삭제"
-      download_json: "JSON"
-      download_csv: "CSV"
+      chart:
+        form:
+          label: "차트 종류"
+          bar: "바"
       others_dirty: "검색어에 저장하지 않은 변경 사항이있어 이동하면 사라집니다."
       result_count:
         other: "%{count}개의 결과."
@@ -54,9 +58,17 @@ ko:
       query_description: "내용"
       query_time: "마지막 실행"
       query_user: "작성자"
-      explain_label: "쿼리 계획을 포함 하시겠습니까?"
       reset_params: "리셋"
       search_placeholder: "검색..."
       no_search_results: "죄송합니다. 귀하의 텍스트와 일치하는 결과를 찾을 수 없습니다."
     group:
       reports: "보고서"
+    discourse_workflows:
+      nodes:
+        "action:sql": "데이터 탐색기"
+      sql:
+        query_id: "쿼리"
+        param_value: "값"
+        output:
+          results: "검색 결과"
+          no_results: "결과 없음"

@@ -33,6 +33,7 @@ export default function buildOptions(state) {
     hashtagTypesInPriorityOrder,
     hashtagIcons,
     hashtagLookup,
+    allowedIframes,
   } = state;
 
   let features = {};
@@ -65,11 +66,14 @@ export default function buildOptions(state) {
     allowedHrefSchemes: siteSettings.allowed_href_schemes
       ? siteSettings.allowed_href_schemes.split("|")
       : null,
-    allowedIframes: siteSettings.allowed_iframes
-      ? siteSettings.allowed_iframes
-          .split("|")
-          .filter((str) => (str.match(/\//g) || []).length >= 3)
-      : [], // Only allow urls with at least 3 slashes. Ex: 'https://example.com/'.
+    // Server-side `pretty_text.rb` passes the modifier-applied list as `allowedIframes`;
+    // client-side composer preview falls back to deriving it from `siteSettings`.
+    // Only allow urls with at least 3 slashes. Ex: 'https://example.com/'.
+    allowedIframes: (
+      allowedIframes ??
+      siteSettings.allowed_iframes?.split("|") ??
+      []
+    ).filter((str) => (str.match(/\//g) || []).length >= 3),
     markdownIt: true,
     previewing,
     disableEmojis,

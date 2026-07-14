@@ -1,6 +1,6 @@
 import { tracked } from "@glimmer/tracking";
 import { click, render, settled, waitFor } from "@ember/test-helpers";
-import DEditor from "discourse/components/d-editor";
+import DEditor from "discourse/ui-kit/d-editor";
 
 export async function setupRichEditor(assert, markdown, multiToggle = false) {
   const self = new (class {

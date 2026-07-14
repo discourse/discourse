@@ -33,13 +33,11 @@ module ImportScripts::PhpBB3
 
     def profile_fields_query(profile_fields)
       @profile_fields_query ||=
-        begin
-          if profile_fields.present?
-            columns = profile_fields.map { |field| "pf_#{field[:phpbb_field_name]}" }
-            ", #{columns.join(", ")}"
-          else
-            ""
-          end
+        if profile_fields.present?
+          columns = profile_fields.map { |field| "pf_#{field[:phpbb_field_name]}" }
+          ", #{columns.join(", ")}"
+        else
+          ""
         end
     end
   end

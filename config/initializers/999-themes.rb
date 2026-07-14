@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
 Rails.application.config.after_initialize do |config|
-  if Rails.env.development?
+  if Rails.env.development? && !ENV["CI"]
     require "listen"
 
     class Watcher
       def watch
         listener =
-          Listen.to("#{Rails.root}/themes") do |modified, added, removed|
+          Listen.to("#{Rails.root.join("themes")}") do |modified, added, removed|
             filepath = modified.first || added.first || removed.first
-            theme_name = filepath.gsub("#{Rails.root}/themes/", "").split("/").first
+            theme_name = filepath.gsub("#{Rails.root.join("themes/")}", "").split("/").first
             theme = Theme.find(Theme::CORE_THEMES[theme_name])
 
             Rails.logger.info "Theme folder changed. Syncing #{theme_name}..."
@@ -38,7 +38,8 @@ Rails.application.config.after_initialize do |config|
         theme
           .theme_fields
           .where(
-            name: filepath.gsub("#{Rails.root}/themes/#{theme.name.downcase}/javascripts/", ""),
+            name:
+              filepath.gsub("#{Rails.root.join("themes/#{theme.name.downcase}/javascripts/")}", ""),
             type_id: ThemeField.types[:js],
           )
           .first

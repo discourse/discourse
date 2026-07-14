@@ -40,8 +40,13 @@ module DiscourseAi
               - keywords:word1,word2 - full-text search in post content
               - topic_keywords:word1,word2 - full-text search in topics (returns all posts from matching topics)
               - topic:123 or topics:123,456 - specific topics by ID
-              - category:name1 or categories:name1,name2 - posts in categories (by name/slug)
+              - category:name1 or categories:name1,name2 - posts in categories and subcategories (by name/slug/id)
+                Prefix a category with = to exclude subcategories, for example category:=bugs.
+                Prefix a category filter with - to exclude it, for example -category:staff or -=category:staff.
+                Use exclude_category:name or exclude_categories:name1,name2 as exclusion aliases.
+                Use parent/child for subcategories when a slug is ambiguous, for example category:support/bugs.
               - tag:tag1 or tags:tag1,tag2 - posts in topics with tags
+                Prefix with - or use exclude_tag:tag1 / exclude_tags:tag1,tag2 to exclude tags
               - after:YYYY-MM-DD, before:YYYY-MM-DD - filter by post creation date
               - topic_after:YYYY-MM-DD, topic_before:YYYY-MM-DD - filter by topic creation date
               - status:open|closed|archived|noreplies|single_user - topic status filters
@@ -53,18 +58,17 @@ module DiscourseAi
 
               Examples:
               - 'username:sam after:2023-01-01' - sam's posts after date
-              - 'max_results:50 category:bugs OR tag:urgent' - (≤50 bug posts) OR (all urgent posts)
+              - 'max_results:50 category:bugs OR tag:urgent' - (≤50 bug posts, including bug subcategories) OR (all urgent posts)
+              - 'category:=bugs' - posts directly in bugs, excluding bug subcategories
             TEXT
           end
 
           def assign_tip
-            if SiteSetting.respond_to?(:assign_enabled) && SiteSetting.assign_enabled
-              (<<~TEXT).strip
+            <<~TEXT.strip if SiteSetting.respond_to?(:assign_enabled) && SiteSetting.assign_enabled
                 assigned_to:username or assigned_to:username1,username2 - topics assigned to a specific user
                 assigned_to:* - topics assigned to any user
                 assigned_to:nobody - topics not assigned to any user
               TEXT
-            end
           end
 
           def name
@@ -99,12 +103,7 @@ module DiscourseAi
           guardian = nil
           guardian = Guardian.new(context.user) if options[:include_private]
 
-          filter =
-            DiscourseAi::Utils::Research::Filter.new(
-              @filter,
-              limit: max_results,
-              guardian: guardian,
-            )
+          filter = PostsFilter.new(@filter, limit: max_results, guardian: guardian)
 
           if filter.invalid_filters.present?
             return(
@@ -201,7 +200,7 @@ module DiscourseAi
             (
               options[:researcher_llm].present? &&
                 LlmModel.find_by(id: options[:researcher_llm].to_i)&.to_llm
-            ) || self.llm
+            ) || llm
         end
 
         def run_inference(chunk_text, goals, post, &blk)

@@ -1,6 +1,7 @@
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import Report from "discourse/admin/models/report";
 import { setPrefix } from "discourse/lib/get-url";
 
 function reportWithData(data) {
@@ -17,6 +18,85 @@ function reportWithData(data) {
 
 module("Unit | Model | report", function (hooks) {
   setupTest(hooks);
+
+  test("collapse groups by calendar period and clamps partial edge buckets", function (assert) {
+    assert.deepEqual(
+      Report.collapse(
+        { start_date: "2026-03-01", end_date: "2026-04-04" },
+        [
+          { x: "2026-03-01", y: 1 },
+          { x: "2026-03-07", y: 2 },
+          { x: "2026-03-08", y: 4 },
+          { x: "2026-04-04", y: 8 },
+        ],
+        "weekly"
+      ),
+      [
+        { x: "2026-03-01", y: 1, end_date: "2026-03-01" },
+        { x: "2026-03-02", y: 6, end_date: "2026-03-08" },
+        { x: "2026-03-09", y: 0, end_date: "2026-03-15" },
+        { x: "2026-03-16", y: 0, end_date: "2026-03-22" },
+        { x: "2026-03-23", y: 0, end_date: "2026-03-29" },
+        { x: "2026-03-30", y: 8, end_date: "2026-04-04" },
+      ]
+    );
+
+    assert.deepEqual(
+      Report.collapse(
+        { start_date: "2025-01-15", end_date: "2025-04-10" },
+        [
+          { x: "2025-01-15", y: 1 },
+          { x: "2025-01-31", y: 2 },
+          { x: "2025-02-01", y: 4 },
+          { x: "2025-04-10", y: 8 },
+        ],
+        "monthly"
+      ),
+      [
+        { x: "2025-01-15", y: 3, end_date: "2025-01-31" },
+        { x: "2025-02-01", y: 4, end_date: "2025-02-28" },
+        { x: "2025-03-01", y: 0, end_date: "2025-03-31" },
+        { x: "2025-04-01", y: 8, end_date: "2025-04-10" },
+      ]
+    );
+  });
+
+  test("collapse averages partial edge buckets over the displayed date range", function (assert) {
+    assert.deepEqual(
+      Report.collapse(
+        { start_date: "2026-03-01", end_date: "2026-03-08", average: true },
+        [
+          { x: "2026-03-01", y: 2 },
+          { x: "2026-03-02", y: 2 },
+          { x: "2026-03-08", y: 7 },
+        ],
+        "weekly"
+      ),
+      [
+        { x: "2026-03-01", y: 2, end_date: "2026-03-01" },
+        { x: "2026-03-02", y: 1.29, end_date: "2026-03-08" },
+      ]
+    );
+
+    assert.deepEqual(
+      Report.collapse(
+        { start_date: "2025-01-15", end_date: "2025-04-10", average: true },
+        [
+          { x: "2025-01-15", y: 17 },
+          { x: "2025-01-31", y: 17 },
+          { x: "2025-04-01", y: 10 },
+          { x: "2025-04-10", y: 10 },
+        ],
+        "monthly"
+      ),
+      [
+        { x: "2025-01-15", y: 2, end_date: "2025-01-31" },
+        { x: "2025-02-01", y: 0, end_date: "2025-02-28" },
+        { x: "2025-03-01", y: 0, end_date: "2025-03-31" },
+        { x: "2025-04-01", y: 2, end_date: "2025-04-10" },
+      ]
+    );
+  });
 
   test("counts", function (assert) {
     const report = reportWithData.call(

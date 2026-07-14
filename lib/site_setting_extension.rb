@@ -23,7 +23,7 @@ module SiteSettingExtension
   def default_locale=(val)
     val = val.to_s
     raise Discourse::InvalidParameters.new(:value) unless LocaleSiteSetting.valid_value?(val)
-    if val != self.default_locale
+    if val != default_locale
       add_override!(:default_locale, val)
       refresh!
       Discourse.request_refresh!
@@ -130,6 +130,10 @@ module SiteSettingExtension
     @themeable ||= {}
   end
 
+  def localizable_settings
+    @localizable_settings ||= {}
+  end
+
   def areas
     @areas ||= {}
   end
@@ -150,6 +154,14 @@ module SiteSettingExtension
     @requires_confirmation_settings ||= {}
   end
 
+  def dependency_values
+    @dependency_values ||= {}
+  end
+
+  def dependent_setting_display
+    @dependent_setting_display ||= {}
+  end
+
   # Valid upcoming change metadata looks like this
   # in site_settings.yml:
   #
@@ -161,12 +173,23 @@ module SiteSettingExtension
   #     status: "alpha" (see UpcomingChanges.statuses.keys)
   #     impact: "feature,staff" (feature|other for the first part, staff|admins|moderators|all_members|developers for the second part)
   #     learn_more_url: ""
+  #     allow_enabled_for: (optional) array restricting which "Enabled for" dropdown
+  #       options are shown. Valid values: everyone, staff, specific_groups. "No one"
+  #       is always present. If `everyone` is included it must be the only value.
+  #       Omit to allow all options (the default permissive behavior).
+  #     body_class: (optional) boolean to include CSS data-attrs for the upcoming change,
+  #       useful for scoping style changes related to the change.
+  #     hide_settings: (optional) array of other site setting names to hide from
+  #       admins while this change is enabled (manual opt-in or auto-promotion).
+  #       Use for legacy settings that stop making sense once the change is in
+  #       effect. Hiding is computed per request so it is multisite-safe and
+  #       tracks both opt-in paths live. See UpcomingChanges.settings_hidden_while_enabled.
   def upcoming_change_metadata
     @upcoming_change_metadata ||= {}
   end
 
   # Has a pointer from a site setting name to the upcoming change name
-  # and overriden default value. Looks like this in site_settings.yml:
+  # and overridden default value. Looks like this in site_settings.yml:
   #
   # setting_name:
   #   upcoming_change_default_override:
@@ -303,6 +326,11 @@ module SiteSettingExtension
           value = value.to_s
         elsif type == :uploaded_image_list && value.present?
           value = value.map(&:to_s).join("|")
+        elsif type == :objects && value.present?
+          type_hash = type_supervisor.type_hash(name)
+          if type_hash[:schema]
+            value = hydrate_objects_setting_value(name, value, type_hash:).to_json
+          end
         end
 
         [name, value]
@@ -317,26 +345,24 @@ module SiteSettingExtension
   end
 
   def theme_site_settings_json_uncached(theme_id)
-    begin
-      # There are a few legit scenarios where the current
-      # theme ID may be blank, such as safe mode. In this
-      # case it will be better to return default site setting
-      # values rather than to cause random/undefined behaviour
-      # in the UI.
-      if theme_id.blank?
-        MultiJson.dump(ThemeSiteSetting.generate_defaults_map)
-      else
-        MultiJson.dump(theme_site_settings[theme_id])
-      end
-    rescue => err
-      # If something goes wrong here we really need to be aware of it in tests.
-      raise err if Rails.env.test?
-
-      Rails.logger.error(
-        "Error while generating theme_site_settings_json_uncached for theme ID #{theme_id}: #{err.message}",
-      )
-      nil
+    # There are a few legit scenarios where the current
+    # theme ID may be blank, such as safe mode. In this
+    # case it will be better to return default site setting
+    # values rather than to cause random/undefined behaviour
+    # in the UI.
+    if theme_id.blank?
+      MultiJson.dump(ThemeSiteSetting.generate_defaults_map)
+    else
+      MultiJson.dump(theme_site_settings[theme_id])
     end
+  rescue => err
+    # If something goes wrong here we really need to be aware of it in tests.
+    raise err if Rails.env.test?
+
+    Rails.logger.error(
+      "Error while generating theme_site_settings_json_uncached for theme ID #{theme_id}: #{err.message}",
+    )
+    nil
   end
 
   def all_settings(
@@ -360,7 +386,7 @@ module SiteSettingExtension
       description: description(:default_locale),
       type: SiteSetting.types[SiteSetting.types[:locale_enum]],
       preview: nil,
-      value: self.default_locale,
+      value: default_locale,
       valid_values: LocaleSiteSetting.values,
       translate_names: LocaleSiteSetting.translate_names?,
     }
@@ -375,20 +401,20 @@ module SiteSettingExtension
     defaults
       .all(default_locale)
       .reject do |setting_name, _|
-        plugins[setting_name] && !Discourse.plugins_by_name[plugins[setting_name]].configurable?
+        plugin_name = plugins[setting_name]
+        next false if !plugin_name
+        next false if Discourse.plugins_by_name[plugin_name].configurable?
+
+        # Non-configurable plugin. Surface an upcoming change only when a
+        # :hidden_site_settings modifier has explicitly un-hidden it.
+        if only_upcoming_changes && UpcomingChanges.exists?(setting_name)
+          current_hidden_settings.include?(setting_name)
+        else
+          true
+        end
       end
       .select do |setting_name, _|
         is_hidden = current_hidden_settings.include?(setting_name)
-
-        if !is_hidden && type_supervisor.dependencies[setting_name].present? &&
-             type_supervisor.dependencies.behaviors[setting_name] == :hidden
-          # Hidden if any of the dependent settings are not true. Use the getter so upcoming
-          # change settings use their resolved value (promotion status, admin override, etc.).
-          is_hidden =
-            !type_supervisor.dependencies[setting_name].all? do |dependency|
-              respond_to?(dependency) && public_send(dependency)
-            end
-        end
 
         next true if !is_hidden
         next false if !include_hidden
@@ -463,8 +489,7 @@ module SiteSettingExtension
 
         # For uploads nested in objects type, hydrate upload IDs to URLs
         if type_hash[:type].to_s == "objects" && type_hash[:schema]
-          parsed_value = JSON.parse(value)
-          value = hydrate_uploads_in_objects(parsed_value, type_hash[:schema])
+          value = hydrate_objects_setting_value(s, value, type_hash:)
         end
 
         opts = {
@@ -496,8 +521,17 @@ module SiteSettingExtension
             requires_confirmation: requires_confirmation_settings[s],
             upcoming_change: only_upcoming_changes ? upcoming_change_metadata[s] : nil,
             themeable: themeable[s],
-            depends_on: type_supervisor.dependencies[s],
           }
+
+          if depends_on = type_supervisor.dependencies[s]
+            opts_data[:depends_on] = depends_on
+            opts_data[:depends_on_humanized_names] = depends_on.map { |dep| humanized_names(dep) }
+            opts_data[:depends_behavior] = type_supervisor.dependencies.behaviors[s]
+            opts_data[:depends_on_values] = dependency_values[s] if dependency_values[s]
+            if display = dependent_setting_display[s]
+              opts_data[:dependent_setting_display] = display
+            end
+          end
 
           if upcoming_change_default_override_metadata
             opts_data[
@@ -572,11 +606,23 @@ module SiteSettingExtension
         # store site settings. In this case, we should not consider this
         # setting to be modified.
         #
-        # The only exception is for upcoming changes, which have automatic
-        # promotion systems, and admins need to be able to manually opt out
-        # even if the default itself isn't changing.
+        # There are two exceptions, both tied to upcoming changes:
+        #
+        # 1. Upcoming change settings themselves — admins need to be able
+        #    to manually opt out of an auto-promoted change even when the
+        #    DB value matches the YAML default.
+        #
+        # 2. Target settings of an upcoming_change_default_override — the
+        #    "clean" defaults_view here is computed without overrides
+        #    applied, so it still reports the original YAML default.
+        #
+        #    When an override is active, the *effective* default is different,
+        #    and the admin's explicit DB value (even if it equals the
+        #    original default) is a deliberate opt-out that must survive
+        #    refresh!. Without this exception, the override loop below
+        #    would re-clobber the admin's choice.
         new_modified.reject! do |name, val|
-          if UpcomingChanges.exists?(name)
+          if UpcomingChanges.exists?(name) || upcoming_change_default_overrides.key?(name)
             false
           else
             val.to_s == defaults_view[name].to_s
@@ -667,12 +713,10 @@ module SiteSettingExtension
   end
 
   def process_message(message)
-    begin
-      MessageBus.on_connect.call(message.site_id)
-      refresh!
-    ensure
-      MessageBus.on_disconnect.call(message.site_id)
-    end
+    MessageBus.on_connect.call(message.site_id)
+    refresh!
+  ensure
+    MessageBus.on_disconnect.call(message.site_id)
   end
 
   def process_id
@@ -861,8 +905,7 @@ module SiteSettingExtension
       name: name,
       # default_locale is a special case, it is not themeable and we define
       # a custom getter for it, so we can just use the normal getter
-      value:
-        name.to_s == "default_locale" ? self.public_send(name) : self.public_send(name, scoped_to),
+      value: name.to_s == "default_locale" ? public_send(name) : public_send(name, scoped_to),
       scoped_to: scoped_to,
     )
   end
@@ -902,9 +945,9 @@ module SiteSettingExtension
 
       value = filter_value(name, value)
       if options
-        self.public_send("#{name}=", value, options)
+        public_send("#{name}=", value, options)
       else
-        self.public_send("#{name}=", value)
+        public_send("#{name}=", value)
       end
       Discourse.request_refresh! if requires_refresh?(name)
     else
@@ -950,10 +993,10 @@ module SiteSettingExtension
                   "#{name} requires a theme_id because it is themeable",
                 )
         else
-          self.public_send(name, scoped_to)
+          public_send(name, scoped_to)
         end
       else
-        self.public_send(name)
+        public_send(name)
       end
     else
       raise Discourse::InvalidParameters.new(
@@ -1121,9 +1164,31 @@ module SiteSettingExtension
     # Any group_list or category_list setting will have a getter defined with _map
     # on the end, e.g. personal_message_enabled_groups_map, to avoid having to
     # manually split and convert to integer for these settings.
-    if %i[group_list category_list].include?(type_supervisor.get_type(name))
+    #
+    # For group_list settings, while the granular_anonymous_and_logged_in_groups_permissions
+    # upcoming change is enabled, stored `0` (the `:everyone` pseudogroup) is swapped to
+    # `5` (the `:logged_in_users` pseudogroup) at read time. This preserves admins' intent
+    # ("allow everyone logged in") without mutating the stored value, so disabling the
+    # flag is a perfect revert. When the change graduates to stable, a data migration will
+    # rewrite stored values and this swap can be removed.
+    setting_type = type_supervisor.get_type(name)
+    if setting_type == :category_list
       define_singleton_method("#{clean_name}_map") do
-        self.public_send(clean_name).to_s.split("|").map(&:to_i)
+        public_send(clean_name).to_s.split("|").map(&:to_i)
+      end
+    elsif setting_type == :group_list
+      define_singleton_method("#{clean_name}_map") do
+        ids = public_send(clean_name).to_s.split("|").map(&:to_i)
+        if SiteSetting.granular_anonymous_and_logged_in_groups_permissions &&
+             ids.include?(Group::AUTO_GROUPS[:everyone])
+          ids =
+            ids
+              .map do |id|
+                id == Group::AUTO_GROUPS[:everyone] ? Group::AUTO_GROUPS[:logged_in_users] : id
+              end
+              .uniq
+        end
+        ids
       end
     end
 
@@ -1142,15 +1207,15 @@ module SiteSettingExtension
     if %i[list emoji_list tag_list].include?(type_supervisor.get_type(name))
       list_type = type_supervisor.get_list_type(name)
 
-      if %w[simple compact].include?(list_type) || list_type.nil?
+      if %w[simple compact locale].include?(list_type) || list_type.nil?
         define_singleton_method("#{clean_name}_map") do |scoped_to = nil|
-          self.public_send(clean_name, scoped_to).to_s.split("|")
+          public_send(clean_name, scoped_to).to_s.split("|")
         end
       end
     end
 
     define_singleton_method "#{clean_name}?" do |scoped_to = nil|
-      self.public_send(clean_name, scoped_to)
+      public_send(clean_name, scoped_to)
     end
 
     define_singleton_method "#{clean_name}=" do |val|
@@ -1188,7 +1253,7 @@ module SiteSettingExtension
   #
   # @example
   #   {
-  #     enable_mobile_theme: true,
+  #     enable_badges: true,
   #     topics_per_period_in_top_page: 50,
   #     title: "My awesome forum"
   #   }
@@ -1256,14 +1321,35 @@ module SiteSettingExtension
         end
       )
 
+      if opts[:depends_on_values]
+        dependency_values[name] = opts[:depends_on_values]
+          .transform_keys(&:to_sym)
+          .transform_values { |values| Array(values).map(&:to_s) }
+      else
+        dependency_values.delete(name)
+      end
+
+      if opts[:dependent_setting_display]
+        dependent_setting_display[name] = opts[:dependent_setting_display].to_s
+      else
+        dependent_setting_display.delete(name)
+      end
+
       if opts[:upcoming_change]
         upcoming_change_metadata[name] ||= {}
         impact_type, impact_role = opts[:upcoming_change][:impact].split(",")
+        allow_enabled_for = opts[:upcoming_change][:allow_enabled_for]
+        allow_enabled_for = Array(allow_enabled_for).map(&:to_sym) if allow_enabled_for
+        hide_settings = opts[:upcoming_change][:hide_settings]
+        hide_settings = Array(hide_settings).map(&:to_sym) if hide_settings
         upcoming_change_metadata[name].merge!(
-          **opts[:upcoming_change].except(:impact),
+          **opts[:upcoming_change].except(:impact, :allow_enabled_for, :hide_settings),
           impact_type: impact_type,
           impact_role: impact_role,
           status: opts[:upcoming_change][:status].to_sym,
+          allow_enabled_for: allow_enabled_for,
+          body_class: opts[:upcoming_change][:body_class],
+          hide_settings: hide_settings,
         )
       end
 
@@ -1278,6 +1364,19 @@ module SiteSettingExtension
       categories[name] = opts[:category] || :uncategorized
 
       themeable[name] = opts[:themeable] ? true : false
+
+      localizable_setting_name = name.to_s
+      if opts[:localizable]
+        localizable_settings[localizable_setting_name] = (
+          if opts[:localizable].is_a?(Hash)
+            opts[:localizable].symbolize_keys
+          else
+            {}
+          end
+        )
+      else
+        localizable_settings.delete(localizable_setting_name)
+      end
 
       if opts[:area]
         split_areas = opts[:area].split("|")
@@ -1324,9 +1423,10 @@ module SiteSettingExtension
   def default_uploads
     @default_uploads ||= {}
 
-    @default_uploads[provider.current_site] ||= begin
-      Upload.where("id < ?", Upload::SEEDED_ID_THRESHOLD).pluck(:id, :url).to_h
-    end
+    @default_uploads[provider.current_site] ||= Upload
+      .where("id < ?", Upload::SEEDED_ID_THRESHOLD)
+      .pluck(:id, :url)
+      .to_h
   end
 
   def uploads
@@ -1349,38 +1449,11 @@ module SiteSettingExtension
 
   private
 
-  def hydrate_uploads_in_objects(objects, schema)
-    return objects if objects.blank?
+  def hydrate_objects_setting_value(name, value, type_hash: nil)
+    type_hash ||= type_supervisor.type_hash(name)
+    return value if !type_hash[:schema] || value.blank?
 
-    upload_ids =
-      SchemaSettingsObjectValidator.property_values_of_type(
-        schema: schema,
-        objects: objects,
-        type: "upload",
-      )
-
-    uploads_by_id = Upload.where(id: upload_ids).index_by(&:id)
-    objects.map { |obj| hydrate_uploads_in_object(obj, schema[:properties], uploads_by_id) }
-  end
-
-  def hydrate_uploads_in_object(object, properties, uploads_by_id)
-    properties.each do |prop_key, prop_value|
-      case prop_value[:type]
-      when "upload"
-        key = prop_key.to_s
-        upload_id = object[key]
-        upload = uploads_by_id[upload_id]
-        object[key] = upload.url if upload
-      when "objects"
-        nested_objects = object[prop_key.to_s]
-        if nested_objects.is_a?(Array)
-          nested_objects.each do |nested_obj|
-            hydrate_uploads_in_object(nested_obj, prop_value[:schema][:properties], uploads_by_id)
-          end
-        end
-      end
-    end
-
-    object
+    objects = value.is_a?(String) ? JSON.parse(value) : value
+    SchemaSettingsObjectValidator.hydrate_uploads(objects:, schema: type_hash[:schema])
   end
 end

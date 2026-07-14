@@ -57,4 +57,31 @@ describe "Post replies" do
       expect(third_chained_reply).to have_no_parent_post_content("reply 3")
     end
   end
+
+  context "when editing a reply reached via expanded replies" do
+    fab!(:admin) { Fabricate(:admin, refresh_auto_groups: true) }
+    fab!(:reply_1) { Fabricate(:post, topic:, reply_to_post_number: post.post_number) }
+    fab!(:reply_2) { Fabricate(:post, topic:, reply_to_post_number: post.post_number) }
+
+    let(:composer) { PageObjects::Components::Composer.new }
+    let(:reply_1_post) { PageObjects::Components::Post.new(reply_1.post_number) }
+
+    before do
+      PostReply.create!(post:, reply: reply_1)
+      PostReply.create!(post:, reply: reply_2)
+      post.update!(reply_count: 2)
+    end
+
+    it "saves a no-op edit without errors" do
+      sign_in(admin)
+      visit(topic.url)
+
+      first_post.show_replies
+      first_post.jump_to_reply(reply_1)
+      reply_1_post.edit
+      composer.submit
+
+      expect(page).to have_no_css(".dialog-body")
+    end
+  end
 end

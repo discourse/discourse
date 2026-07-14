@@ -5,6 +5,25 @@
 # https://translate.discourse.org/
 
 ko:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "허용되는 솔루션"
+        sections:
+          support:
+            filter:
+              all_categories: "모든 카테고리"
+            answerers:
+              staff: "스태프"
+              member: "회원"
+              basic: "초보회원"
+            response_time:
+              buckets:
+                lt_1h: "< 1시간"
+                gt_24h: "> 24시간"
   js:
     notifications:
       alt:
@@ -30,6 +49,8 @@ ko:
       move_post_cancel: "취소"
       confirm_solved_removal_confirm: "확인"
       confirm_solved_removal_cancel: "취소"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
     topic_statuses:
       solved:
         help: "이 토픽에는 해결책이 있습니다"

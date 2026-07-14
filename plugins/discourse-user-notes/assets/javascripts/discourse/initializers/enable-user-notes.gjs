@@ -94,6 +94,7 @@ function customizePostMenu(api, container) {
     return {
       icon: "pen-to-square",
       label: "user_notes.attach",
+      title: "user_notes.attach_note_description",
       action: (post) => {
         showUserNotes(
           store,

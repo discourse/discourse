@@ -149,7 +149,7 @@ const InputTestCases = [
   },
 ];
 
-module("Data Explorer Plugin | Component | param-input", function (hooks) {
+module("Component | ParamInput", function (hooks) {
   setupRenderingTest(hooks);
 
   for (const testcase of InputTestCases) {
@@ -345,6 +345,38 @@ module("Data Explorer Plugin | Component | param-input", function (hooks) {
       .form()
       .field("group_id")
       .hasError(`${ERRORS.NO_SUCH_GROUP}: invalid_group_name`);
+  });
+
+  test("date initial values reject native-only formats", async function (assert) {
+    this.setProperties({
+      param_info: [
+        {
+          identifier: "date",
+          type: "date",
+          default: null,
+          nullable: false,
+        },
+      ],
+      initialValues: {
+        date: "01/19/2038",
+      },
+      onRegisterApi: ({ submit }) => {
+        this.submit = submit;
+      },
+    });
+
+    await render(
+      <template>
+        <ParamInputForm
+          @initialValues={{this.initialValues}}
+          @paramInfo={{this.param_info}}
+          @onRegisterApi={{this.onRegisterApi}}
+        />
+      </template>
+    );
+
+    assert.form().field("date").hasError(ERRORS.INVALID_DATE("01/19/2038"));
+    await assert.rejects(this.submit());
   });
 
   test("date, time, datetime with initial value in other formats", async function (assert) {

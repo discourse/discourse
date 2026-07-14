@@ -21,7 +21,7 @@ module DiscourseAi
         split = @buffer.scan(/.*\n?/)
         split.pop if split.last.blank?
 
-        @buffer = +(split.pop.to_s)
+        @buffer = +split.pop.to_s
 
         split.each do |line|
           matches = line.match(@line_regex)

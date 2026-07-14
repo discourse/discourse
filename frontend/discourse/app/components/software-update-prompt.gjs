@@ -3,11 +3,11 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import discourseLater from "discourse/lib/later";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import { i18n } from "discourse-i18n";
 
 export default class SoftwareUpdatePrompt extends Component {
@@ -78,7 +78,7 @@ export default class SoftwareUpdatePrompt extends Component {
   <template>
     {{#if this.showPrompt}}
       <div
-        class={{concatClass
+        class={{dConcatClass
           "software-update-prompt"
           (if this.animatePrompt "require-software-refresh")
         }}

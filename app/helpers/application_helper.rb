@@ -71,13 +71,22 @@ module ApplicationHelper
     ContentSecurityPolicy.nonce_placeholder(response.headers)
   end
 
+  def track_view_session_id_placeholder
+    response.headers[
+      ::Middleware::TrackViewSessionIdInjector::PLACEHOLDER_HEADER
+    ] ||= "[[track_view_session_id_placeholder_#{SecureRandom.hex}]]"
+  end
+
   def shared_session_key
     if SiteSetting.long_polling_base_url != "/" && current_user
       sk = "shared_session_key"
       return request.env[sk] if request.env[sk]
 
+      token = request.env[Auth::DefaultCurrentUserProvider::USER_TOKEN_KEY]
+      return if !token || token.user != current_user
+
       request.env[sk] = key = (session[sk] ||= SecureRandom.hex)
-      Discourse.redis.setex "#{sk}_#{key}", 7.days, current_user.id.to_s
+      Auth::DefaultCurrentUserProvider.store_shared_session_key(key, token.id.to_s)
       key
     end
   end
@@ -96,6 +105,24 @@ module ApplicationHelper
         .filter { it[:importmap_name] }
         .map { [it[:importmap_name], script_asset_path(it[:name])] }
         .to_h
+
+    available_plugins = plugin_assets.map { |a| a[:plugin].directory_name }
+    external_plugin_imports =
+      (
+        plugin_assets.flat_map { |a| a[:external_plugin_imports] || [] } +
+          theme_js_assets.flat_map { |a| a[:external_plugin_imports] }
+      ).uniq
+
+    external_plugin_imports.each do |plugin_name|
+      if available_plugins.include?(plugin_name)
+        imports["discourse/plugins/#{plugin_name}?"] = imports["discourse/plugins/#{plugin_name}"]
+      else
+        imports["discourse/plugins/#{plugin_name}?"] = Plugin::JsManager.optional_plugin_stub
+        imports["discourse/plugins/#{plugin_name}"] = Plugin::JsManager.required_plugin_stub(
+          plugin_name,
+        )
+      end
+    end
 
     JSON.pretty_generate({ imports: }).html_safe
   end
@@ -124,39 +151,30 @@ module ApplicationHelper
       end
 
       if is_brotli_req?
-        if path.include?("/assets/js/")
-          path = path.sub("/assets/js/", "/assets/br/")
-        else
-          path = path.sub(/\.([^.]+)\z/, '.br.\1')
-        end
+        path = path.sub("/assets/js/", "/assets/br/")
       elsif is_gzip_req?
-        if path.include?("/assets/js/")
-          path = path.sub("/assets/js/", "/assets/gz/")
-        else
-          path = path.sub(/\.([^.]+)\z/, '.gz.\1')
-        end
+        path = path.sub("/assets/js/", "/assets/gz/")
       end
     end
 
     path
   end
 
-  def preload_script(script, attrs: {})
-    scripts = []
+  def preload_script(script, type_module: false, attrs: {})
+    resolved_script = EmberAssets.script_chunks[script]&.first || script
+    path = script_asset_path(resolved_script)
+    preload_script_url(path, entrypoint: script, type_module:, attrs:).html_safe
+  end
 
-    if chunks = EmberCli.script_chunks[script]
-      scripts.push(*chunks)
-    else
-      scripts.push(script)
-    end
+  def module_preloads_for(*scripts)
+    resolved_preload_scripts =
+      scripts.compact.flat_map { |script| EmberAssets.script_chunks[script] }.compact.uniq
 
-    scripts
-      .map do |name|
-        path = script_asset_path(name)
-        preload_script_url(path, entrypoint: script, attrs: attrs)
-      end
-      .join("\n")
-      .html_safe
+    modulepreload_tags = resolved_preload_scripts.map { |script| <<~HTML }
+      <link rel="modulepreload" href="#{script_asset_path script}" nonce="#{csp_nonce_placeholder}">
+    HTML
+
+    modulepreload_tags.join("\n").html_safe
   end
 
   def preload_script_url(url, entrypoint: nil, type_module: false, attrs: nil)
@@ -190,13 +208,10 @@ module ApplicationHelper
 
   def html_classes
     list = []
-    unless SiteSetting.viewport_based_mobile_mode
-      list << (mobile_view? ? "mobile-view" : "desktop-view")
-      list << (mobile_device? ? "mobile-device" : "not-mobile-device")
-    end
     list << "rtl" if rtl?
     list << text_size_class
     list << "anon" unless current_user
+    list << @embed_class if @embed_class.present?
     list.join(" ")
   end
 
@@ -392,7 +407,7 @@ module ApplicationHelper
   end
 
   private def generate_twitter_card_metadata(result, opts)
-    img_url = (opts[:x_summary_large_image].presence || opts[:image])
+    img_url = opts[:x_summary_large_image].presence || opts[:image]
 
     # Twitter does not allow SVGs, see https://developer.twitter.com/en/docs/twitter-for-websites/cards/overview/markup
     if img_url.ends_with?(".svg")
@@ -427,11 +442,24 @@ module ApplicationHelper
     end
   end
 
-  def discourse_track_view_session_tag
-    return if !SiteSetting.trigger_browser_pageview_events
-    <<~HTML.html_safe
-      <meta name="discourse-track-view-session-id" content="#{SecureRandom.base64(32)}">
-    HTML
+  def discourse_pageview_tracking_meta_tags
+    if !SiteSetting.trigger_browser_pageview_events && !SiteSetting.persist_browser_pageview_events
+      return ""
+    end
+
+    tags = +""
+    tags << tag.meta(
+      name: "discourse-track-view-session-id",
+      content: track_view_session_id_placeholder,
+    )
+    if UpcomingChanges.enabled?(:dashboard_improvements)
+      tags << tag.meta(name: "discourse-beacon-pageview-enabled", content: "true")
+    end
+
+    if SiteSetting.persist_browser_pageview_events
+      tags << tag.meta(name: "discourse-engagement-tracking-enabled", content: "true")
+    end
+    tags.html_safe
   end
 
   def gsub_emoji_to_unicode(str)
@@ -440,32 +468,28 @@ module ApplicationHelper
 
   def application_logo_url
     @application_logo_url ||=
-      begin
-        if mobile_view?
-          if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
-            SiteSetting.site_mobile_logo_dark_url
-          elsif SiteSetting.site_mobile_logo_url.present?
-            SiteSetting.site_mobile_logo_url
-          end
+      if mobile_device?
+        if dark_color_scheme? && SiteSetting.site_mobile_logo_dark_url.present?
+          SiteSetting.site_mobile_logo_dark_url
+        elsif SiteSetting.site_mobile_logo_url.present?
+          SiteSetting.site_mobile_logo_url
+        end
+      else
+        if dark_color_scheme? && SiteSetting.site_logo_dark_url.present?
+          SiteSetting.site_logo_dark_url
         else
-          if dark_color_scheme? && SiteSetting.site_logo_dark_url.present?
-            SiteSetting.site_logo_dark_url
-          else
-            SiteSetting.site_logo_url
-          end
+          SiteSetting.site_logo_url
         end
       end
   end
 
   def application_logo_dark_url
     @application_logo_dark_url ||=
-      begin
-        if dark_scheme_id != -1
-          if mobile_view? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
-            SiteSetting.site_mobile_logo_dark_url
-          elsif !mobile_view? && SiteSetting.site_logo_dark_url != application_logo_url
-            SiteSetting.site_logo_dark_url
-          end
+      if dark_scheme_id != -1
+        if mobile_device? && SiteSetting.site_mobile_logo_dark_url != application_logo_url
+          SiteSetting.site_mobile_logo_dark_url
+        elsif !mobile_device? && SiteSetting.site_logo_dark_url != application_logo_url
+          SiteSetting.site_logo_dark_url
         end
       end
   end
@@ -478,8 +502,8 @@ module ApplicationHelper
     "#{Discourse.base_path}/login"
   end
 
-  def mobile_view?
-    MobileDetection.resolve_mobile_view!(request.user_agent, params, session)
+  def mobile_device?
+    MobileDetection.mobile_device?(request.user_agent)
   end
 
   def crawler_layout?
@@ -492,16 +516,12 @@ module ApplicationHelper
     else
       return false if !current_user && SiteSetting.login_required?
 
-      crawler_layout? || !mobile_view? || !modern_mobile_device?
+      crawler_layout? || !mobile_device? || !modern_mobile_device?
     end
   end
 
   def modern_mobile_device?
     MobileDetection.modern_mobile_device?(request.user_agent)
-  end
-
-  def mobile_device?
-    MobileDetection.mobile_device?(request.user_agent)
   end
 
   def customization_disabled?
@@ -521,17 +541,8 @@ module ApplicationHelper
     end
   end
 
-  def include_splash_screen?
-    # A bit basic for now but will be expanded later
-    SiteSetting.splash_screen
-  end
-
   def custom_splash_screen_enabled?
-    return @custom_splash_screen_enabled if defined?(@custom_splash_screen_enabled)
-
-    @custom_splash_screen_enabled =
-      UpcomingChanges.enabled_for_user?(:enable_custom_splash_screen, current_user) &&
-        SiteSetting.splash_screen_image.is_a?(Upload)
+    @custom_splash_screen_enabled ||= SiteSetting.splash_screen_image.is_a?(Upload)
   end
 
   def splash_screen_image_animated?
@@ -576,12 +587,10 @@ module ApplicationHelper
       Discourse
         .cache
         .fetch("splash_screen_svg_#{upload.id}_#{upload.sha1}", expires_in: 1.day) do
-          begin
-            upload.content.presence
-          rescue StandardError => e
-            Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
-            nil
-          end
+          upload.content.presence
+        rescue StandardError => e
+          Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
+          nil
         end
   end
 
@@ -657,14 +666,12 @@ module ApplicationHelper
   end
 
   def topic_featured_link_domain(link)
-    begin
-      uri = UrlHelper.encode_and_parse(link)
-      uri = URI.parse("http://#{uri}") if uri.scheme.nil?
-      host = uri.host.downcase
-      host.start_with?("www.") ? host[4..-1] : host
-    rescue StandardError
-      ""
-    end
+    uri = UrlHelper.encode_and_parse(link)
+    uri = URI.parse("http://#{uri}") if uri.scheme.nil?
+    host = uri.host.downcase
+    host.start_with?("www.") ? host[4..-1] : host
+  rescue StandardError
+    ""
   end
 
   def theme_id
@@ -683,7 +690,11 @@ module ApplicationHelper
   def user_scheme_id
     return @user_scheme_id if defined?(@user_scheme_id)
     scheme_id = cookies[:color_scheme_id] || current_user&.user_option&.color_scheme_id
-    @user_scheme_id = scheme_id if scheme_id && ColorScheme.find_by_id(scheme_id)
+    @user_scheme_id = scheme_id if scheme_id &&
+      (
+        ColorScheme.exists?(id: scheme_id, user_selectable: true) ||
+          theme&.color_scheme_id == scheme_id.to_i
+      )
   end
 
   def scheme_id
@@ -699,10 +710,18 @@ module ApplicationHelper
     @scheme_id = Theme.where(id: theme_id).pick(:color_scheme_id)
   end
 
+  def theme
+    @theme = theme_id ? Theme.find_by_id(theme_id) : Theme.find_default
+  end
+
   def user_dark_scheme_id
     return @user_dark_scheme_id if defined?(@user_dark_scheme_id)
     scheme_id = cookies[:dark_scheme_id] || current_user&.user_option&.dark_scheme_id
-    @user_dark_scheme_id = scheme_id if scheme_id && ColorScheme.find_by_id(scheme_id)
+    @user_dark_scheme_id = scheme_id if scheme_id &&
+      (
+        ColorScheme.exists?(id: scheme_id, user_selectable: true) ||
+          theme&.dark_color_scheme_id == scheme_id.to_i
+      )
   end
 
   def dark_scheme_id
@@ -750,20 +769,34 @@ module ApplicationHelper
     ).presence
   end
 
+  def crawler_post_schema_hash(post, topic)
+    @crawler_post_schema_hash ||= {}
+    @crawler_post_schema_hash[post.id] ||= begin
+      default = {
+        itemprop: "comment",
+        itemscope: true,
+        itemtype: "http://schema.org/Comment",
+      } unless post.is_first_post?
+      DiscoursePluginRegistry.apply_modifier(:topic_crawler_post_schema, default || {}, post, topic)
+    end
+  end
+
   def crawler_post_schema(post, topic)
-    default = {
-      itemprop: "comment",
-      itemscope: true,
-      itemtype: "http://schema.org/Comment",
-    } unless post.is_first_post?
-    tag.attributes(
-      DiscoursePluginRegistry.apply_modifier(
-        :topic_crawler_post_schema,
-        default || {},
-        post,
-        topic,
-      ),
-    )
+    tag.attributes(crawler_post_schema_hash(post, topic))
+  end
+
+  def crawler_post_schema_overridden?(post, topic)
+    hash = crawler_post_schema_hash(post, topic)
+    itemprop = hash[:itemprop]
+    (itemprop.present? && itemprop != "comment") || hash[:data].present?
+  end
+
+  def crawler_post_emits_microdata?(post, topic)
+    post.is_first_post? || crawler_post_schema_hash(post, topic)[:itemscope]
+  end
+
+  def crawler_post_schema_skip?(post, topic)
+    DiscoursePluginRegistry.apply_modifier(:topic_crawler_skip_post, false, post, topic)
   end
 
   # If there is plugin HTML return that, otherwise yield to the template
@@ -779,7 +812,7 @@ module ApplicationHelper
   def theme_lookup(name)
     Theme.lookup_field(
       theme_id,
-      mobile_view? ? :mobile : :desktop,
+      mobile_device? ? :mobile : :desktop,
       name,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
       csp_nonce: csp_nonce_placeholder,
@@ -796,13 +829,10 @@ module ApplicationHelper
     )
   end
 
-  def theme_js_lookup
-    Theme.lookup_field(
+  def theme_js_assets
+    Theme.js_asset_info(
       theme_id,
-      :extra_js,
-      nil,
       skip_transformation: request.env[:skip_theme_ids_transformation].present?,
-      csp_nonce: csp_nonce_placeholder,
     )
   end
 
@@ -827,11 +857,7 @@ module ApplicationHelper
 
     name = :"#{name}_rtl" if opts[:supports_rtl] && rtl?
 
-    manager.stylesheet_link_tag(
-      name,
-      opts[:media] || "all",
-      self.method(:add_resource_preload_list),
-    )
+    manager.stylesheet_link_tag(name, opts[:media] || "all", method(:add_resource_preload_list))
   end
 
   def discourse_preload_color_scheme_stylesheets
@@ -928,7 +954,7 @@ module ApplicationHelper
     cookie = cookies[:forced_color_mode]
     return cookie == "light" if cookie.present?
 
-    !!(current_user&.user_option&.light_mode_forced?)
+    !!current_user&.user_option&.light_mode_forced?
   end
 
   def forced_dark_mode?
@@ -937,7 +963,7 @@ module ApplicationHelper
     cookie = cookies[:forced_color_mode]
     return cookie == "dark" if cookie.present?
 
-    !!(current_user&.user_option&.dark_mode_forced?)
+    !!current_user&.user_option&.dark_mode_forced?
   end
 
   def light_color_hex_for_name(name)
@@ -990,14 +1016,11 @@ module ApplicationHelper
       disable_custom_css: loading_admin?,
       highlight_js_path: HighlightJs.path,
       svg_sprite_path: SvgSprite.path(theme_id),
-      media_optimization_bundle:
-        script_asset_path(
-          EmberCli.script_chunks["media-optimization-bundle"]&.first || "media-optimization-bundle",
-        ),
       enable_js_error_reporting: GlobalSetting.enable_js_error_reporting,
       color_scheme_is_dark: dark_color_scheme?,
       user_color_scheme_id: user_scheme_id || -1,
       user_dark_scheme_id: user_dark_scheme_id || -1,
+      is_staff: staff?,
     }
 
     if Rails.env.development?

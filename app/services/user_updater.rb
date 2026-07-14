@@ -40,6 +40,8 @@ class UserUpdater
     email_in_reply_to
     like_notification_frequency
     notify_on_linked_posts
+    push_notification_level
+    enable_upcoming_change_available_notifications
     include_tl0_in_digests
     theme_ids
     allow_private_messages
@@ -65,8 +67,8 @@ class UserUpdater
   NOTIFICATION_SCHEDULE_ATTRS = -> do
     attrs = [:enabled]
     7.times do |n|
-      attrs.push("day_#{n}_start_time".to_sym)
-      attrs.push("day_#{n}_end_time".to_sym)
+      attrs.push(:"day_#{n}_start_time")
+      attrs.push(:"day_#{n}_end_time")
     end
     { user_notification_schedule: attrs }
   end.call
@@ -251,7 +253,7 @@ class UserUpdater
           (user_notification_schedule.nil? || user_notification_schedule.save) &&
           user_profile.save && user.save
 
-      if saved && (name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0)
+      if saved && name_changed && old_user_name.casecmp(attributes.fetch(:name)) != 0
         StaffActionLogger.new(@actor).log_name_change(
           user.id,
           old_user_name,
@@ -259,7 +261,7 @@ class UserUpdater
         )
       end
       DiscourseEvent.trigger(:within_user_updater_transaction, user, attributes)
-    rescue Addressable::URI::InvalidURIError => e
+    rescue Addressable::URI::InvalidURIError
       # Prevent 500 for crazy url input
       return saved
     end

@@ -14,16 +14,21 @@ describe "script encoding" do
           origin_uri = URI(request.frame.url)
           request_uri = URI(request.url)
 
-          # We don't actually have .br.js files or a CDN, so invisibly
+          # We don't actually have assets/br/ files or a CDN, so invisibly
           # rewrite the request to the regular assets
           mocked_result =
             URI::HTTP.build(
               scheme: origin_uri.scheme,
               host: origin_uri.host,
               port: origin_uri.port,
-              path: request_uri.path.sub(".br.js", ".js"),
+              path: request_uri.path.sub("assets/br", "assets/js"),
             )
-          route.continue(url: mocked_result.to_s)
+
+          response = route.fetch(url: mocked_result.to_s)
+          route.fulfill(
+            response:,
+            headers: response.headers.merge({ "access-control-allow-origin" => "*" }),
+          )
         end,
       )
     end
@@ -38,11 +43,8 @@ describe "script encoding" do
 
       visit "/latest"
 
-      expect(page).to have_css("#site-logo")
-
       expect(js_cdn_requests.length).to be > 1
-      expect(js_cdn_requests.any? { |r| r.end_with?(".br.js") }).to eq(false)
-      expect(js_cdn_requests.all? { |r| r.end_with?(".js") }).to eq(true)
+      expect(js_cdn_requests.any? { |r| r.match?(%r{/br/.+\.js\Z}) }).to eq(false)
 
       js_cdn_requests.clear
 
@@ -52,8 +54,7 @@ describe "script encoding" do
       expect(page).to have_css(".d-editor-preview", text: "This is a test")
 
       expect(js_cdn_requests.length).to be > 1
-      expect(js_cdn_requests.any? { |r| r.end_with?(".br.js") }).to eq(false)
-      expect(js_cdn_requests.all? { |r| r.end_with?(".js") }).to eq(true)
+      expect(js_cdn_requests.any? { |r| r.match?(%r{/br/.+\.js\Z}) }).to eq(false)
     end
   end
 
@@ -66,16 +67,14 @@ describe "script encoding" do
       global_setting :s3_cdn_url, "http://cdn.example.com"
     end
 
-    it "loads JS chunks with the .br.js extension" do
+    it "loads JS chunks with the /br/ path" do
       user = Fabricate(:admin)
       sign_in user
 
       visit "/latest"
 
-      expect(page).to have_css("#site-logo")
-
       expect(js_cdn_requests.length).to be > 1
-      expect(js_cdn_requests.all? { |r| r.end_with?(".br.js") }).to eq(true)
+      expect(js_cdn_requests.all? { |r| r.match?(%r{/br/.+\.js\Z}) }).to eq(true)
 
       js_cdn_requests.clear
 
@@ -85,7 +84,7 @@ describe "script encoding" do
       expect(page).to have_css(".d-editor-preview", text: "This is a test")
 
       expect(js_cdn_requests.length).to be > 1
-      expect(js_cdn_requests.all? { |r| r.end_with?(".br.js") }).to eq(true)
+      expect(js_cdn_requests.all? { |r| r.match?(%r{/br/.+\.js\Z}) }).to eq(true)
     end
   end
 end

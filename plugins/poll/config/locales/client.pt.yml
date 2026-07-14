@@ -105,5 +105,3 @@ pt:
           add: Adicionar alternativa
         automatic_close:
           label: Fechar sondagem automaticamente
-        show_advanced: "Mostrar Opções Avançadas"
-        hide_advanced: "Ocultar Opções Avançadas"

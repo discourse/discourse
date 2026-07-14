@@ -120,6 +120,7 @@ class TopicTrackingState
 
   def self.publish_unread(post)
     return unless post.topic.regular?
+    return if post.small_action?
     # TODO at high scale we are going to have to defer this,
     #   perhaps cut down to users that are around in the last 7 days as well
 
@@ -227,9 +228,9 @@ class TopicTrackingState
   end
 
   def self.publish_read(topic_id, last_read_post_number, user, notification_level = nil)
-    self.publish_read_message(
+    publish_read_message(
       message_type: READ_MESSAGE_TYPE,
-      channel_name: self.unread_channel_key(user.id),
+      channel_name: unread_channel_key(user.id),
       topic_id: topic_id,
       user: user,
       last_read_post_number: last_read_post_number,
@@ -239,12 +240,12 @@ class TopicTrackingState
 
   def self.publish_dismiss_new(user_id, topic_ids: [])
     message = { message_type: DISMISS_NEW_MESSAGE_TYPE, payload: { topic_ids: topic_ids } }
-    MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
+    MessageBus.publish(unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end
 
   def self.publish_dismiss_new_posts(user_id, topic_ids: [])
     message = { message_type: DISMISS_NEW_POSTS_MESSAGE_TYPE, payload: { topic_ids: topic_ids } }
-    MessageBus.publish(self.unread_channel_key(user_id), message.as_json, user_ids: [user_id])
+    MessageBus.publish(unread_channel_key(user_id), message.as_json, user_ids: [user_id])
   end
 
   def self.new_filter_sql
@@ -354,7 +355,7 @@ class TopicTrackingState
           #{sql}
         )
         SELECT *, (
-          SELECT JSON_AGG(JSON_BUILD_OBJECT('id', tags.id, 'name', tags.name, 'slug', tags.slug))
+          SELECT JSON_AGG(JSON_BUILD_OBJECT('id', tags.id))
           FROM topic_tags
           JOIN tags ON tags.id = topic_tags.tag_id
           WHERE topic_id = tags_included_cte.topic_id
@@ -581,8 +582,8 @@ class TopicTrackingState
     groups.each do |group|
       member = group.members.include?(user_id)
 
-      member_writing = (write_event && member)
-      non_member_reading = (!write_event && !member)
+      member_writing = write_event && member
+      non_member_reading = !write_event && !member
       next if non_member_reading || member_writing
 
       groups_to_update << group
@@ -632,7 +633,7 @@ class TopicTrackingState
   end
 
   def self.report_totals(user)
-    if user.new_new_view_enabled?
+    if user.unified_new_enabled?
       { new: report(user).count }
     else
       new = report_count_by_type(user, type: "new")

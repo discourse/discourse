@@ -103,6 +103,11 @@ th:
       admins: "ผู้ดูแลระบบ"
       moderators: "ผู้ดูแล"
       staff: "ทีมงาน"
+    default_full_names:
+      everyone: "ทุกคน"
+      admins: "แอดมิน"
+      moderators: "ผู้ดูแลระบบ"
+      staff: "ทีมงาน"
   education:
     until_posts:
       other: "%{count} โพส"
@@ -200,6 +205,8 @@ th:
       confirm_title: ดำเนินการต่อไปยัง %{site_name}
       logging_in_as: กำลังเข้าสู่ระบบด้วย %{username}
       confirm_button: เสร็จสิ้นการเข้าสู่ระบบ
+    device:
+      continue: "ดำเนินการต่อ"
   reports:
     post_edits:
       labels:
@@ -219,6 +226,26 @@ th:
     visits:
       xaxis:
         mobile: "โทรศัพท์"
+    activity_by_category:
+      labels:
+        category: "หมวดหมู่"
+        topics: "หัวข้อ"
+        posts: "โพส"
+        share: "แบ่งปัน"
+    posters_by_member_type:
+      labels:
+        count: "โพส"
+        share: "แบ่งปัน"
+      types:
+        staff: "ทีมงาน"
+    trust_level_pipeline:
+      labels:
+        count: "สมาชิก"
+        share: "แบ่งปัน"
+      levels:
+        "0": "ใหม่"
+        "2": "สมาชิก"
+        "3": "ทั่วไป"
     consolidated_page_views:
       labels:
         post: โพส
@@ -226,6 +253,9 @@ th:
     consolidated_api_requests:
       xaxis:
         api: "API"
+    site_traffic:
+      xaxis:
+        page_view_anon_browser: "ไม่ระบุชื่อ"
     topics:
       title: "หัวข้อ"
     posts:
@@ -257,6 +287,12 @@ th:
       labels:
         user: "ผู้ใช้"
         num_topics: "หัวข้อ"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "เยี่ยมชม"
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "เยี่ยมชม"
     top_traffic_sources:
       xaxis: "โดเมน"
       num_topics: "หัวข้อ"
@@ -277,7 +313,7 @@ th:
       labels:
         user: ผู้ใช้
         location: ที่อยู่
-    staff_logins:
+    admin_logins:
       labels:
         user: ผู้ใช้
         location: ที่อยู่
@@ -309,6 +345,10 @@ th:
     types:
       category: "หมวดหมู่"
       user: "ผู้ใช้"
+  filter:
+    description:
+      status_noreplies: "แสดงหัวข้อที่ไม่มีการตอบกลับ"
+      status_single_user: "แสดงหัวข้อที่มีผู้เข้าร่วมเพียงคนเดียว"
   publish_page:
     slug_errors:
       invalid: "มีตัวอักษรที่ไม่สามารถใช้งานได้"
@@ -457,10 +497,13 @@ th:
     digest:
       liked_received: "ได้รับการชอบ"
       new_users: "ผู้ใช้งานใหม่"
+      subject_template_improved: "สรุป"
     forgot_password:
       title: "ลืมรหัสผ่าน"
     set_password:
       title: "ตั้งรหัสผ่าน"
+    admin_login:
+      subject_template_improved: "เข้าสู่ระบบ"
     post_approved:
       title: "โพสต์ของคุณได้รับการอนุมัติ"
   page_not_found:

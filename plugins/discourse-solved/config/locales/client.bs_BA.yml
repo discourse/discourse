@@ -5,6 +5,17 @@
 # https://translate.discourse.org/
 
 bs_BA:
+  admin_js:
+    admin:
+      dashboard:
+        sections:
+          support:
+            filter:
+              all_categories: "Sve kategorije"
+            answerers:
+              staff: "Staff"
+              member: "Članovi"
+              basic: "Osnovni"
   js:
     notifications:
       alt:
@@ -31,6 +42,8 @@ bs_BA:
         unsolved: "nije riješeno"
       move_post_cancel: "Odustani"
       confirm_solved_removal_cancel: "Odustani"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
     topic_statuses:
       solved:
         help: "Ova tema ima riješenje"

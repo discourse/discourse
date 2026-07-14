@@ -20,6 +20,13 @@ lv:
     popup:
       chat_mention:
         direct: '%{username} pieminēja jūs "%{channel}"'
+    actions:
+      chat_reply:
+        title: Atbilde
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Apstiprināt"
+      default_deny_label: "Atteikt"
   unsubscribe:
     chat_summary:
       never: Nekad

@@ -28,6 +28,7 @@ module SiteSettings
           fg
           ga
           gb
+          gif
           gpu
           gpt
           gtm
@@ -129,9 +130,47 @@ module SiteSettings
     HUMANIZED_MIXED_CASE_REGEX =
       HUMANIZED_MIXED_CASE.map { |key, value| [/\b#{Regexp.escape(key)}\b/i, value] }.freeze
 
+    SETTING_LINK_PATTERN = /\{\{setting:([a-z][a-z0-9_]*)\}\}/
+
     class << self
       def description(setting)
-        I18n.t("site_settings.#{setting}", base_path: Discourse.base_path, default: "")
+        desc = I18n.t("site_settings.#{setting}", base_path: Discourse.base_path, default: "")
+        expand_setting_links(desc)
+      end
+
+      def linkify(setting)
+        setting = setting.to_sym
+
+        # The href points at the generic "all settings" page as a fallback that
+        # works without JavaScript. In the admin UI the linkify-setting-links
+        # modifier rewrites it to the setting's actual config page, using the
+        # data attributes below so it doesn't have to look the metadata up.
+        attributes = {
+          "class" => "site-setting-link",
+          "href" =>
+            "#{Discourse.base_path}/admin/site_settings/category/all_results?filter=#{CGI.escape(setting.to_s)}",
+          "data-setting-name" => setting,
+        }
+
+        if (area = SiteSetting.areas[setting]&.first)
+          attributes["data-setting-area"] = area
+        end
+        if (category = SiteSetting.categories[setting])
+          attributes["data-setting-category"] = category
+        end
+        if (plugin = SiteSetting.plugins[setting])
+          attributes["data-setting-plugin"] = plugin
+        end
+
+        attribute_string =
+          attributes.map { |name, value| %(#{name}="#{CGI.escapeHTML(value.to_s)}") }.join(" ")
+
+        %(<a #{attribute_string}>#{CGI.escapeHTML(humanized_name(setting))}</a>).html_safe
+      end
+
+      def expand_setting_links(text)
+        return text if text.blank? || !text.include?("{{setting:")
+        text.gsub(SETTING_LINK_PATTERN) { linkify(Regexp.last_match(1)) }.html_safe
       end
 
       def humanized_name(setting)

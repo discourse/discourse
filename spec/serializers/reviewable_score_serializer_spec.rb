@@ -99,6 +99,22 @@ RSpec.describe ReviewableScoreSerializer do
         expect(queued_reviewable.payload["raw"]).to eq(raw)
       end
 
+      it "HTML-escapes matched words so angle brackets can't break the rendered reason" do
+        score =
+          ReviewableScore.new(
+            reviewable: reviewable,
+            reason: "watched_word",
+            context: "<notifications@example.discoursemail.com>,plain",
+          )
+        serialized = described_class.new(score, scope: Guardian.new(admin), root: nil)
+
+        expect(serialized.reason).to include(
+          "&lt;notifications@example.discoursemail.com&gt;",
+          "plain",
+        )
+        expect(serialized.reason).not_to include("<notifications@")
+      end
+
       it "uses the no-context message if the post has no watched words" do
         reviewable.target = Fabricate(:post, raw: "This post contains no bad words.")
 

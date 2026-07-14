@@ -11,11 +11,11 @@
  */
 import Component from "@glimmer/component";
 import curryComponent from "ember-curry-component";
-import concatClass from "discourse/helpers/concat-class";
 import cssIdentifier from "discourse/helpers/css-identifier";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 /**
- * @typedef {import("ember-curry-component").CurriedComponent} CurriedComponent
+ * @typedef {import("@glint/template").ComponentLike} CurriedComponent
  */
 
 /**
@@ -92,7 +92,7 @@ class WrappedBlockLayout extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         this.blockClassNames
         @decoratorClassNames
         @classNames

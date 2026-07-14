@@ -6,12 +6,16 @@
 
 hr:
   js:
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Nema rezultata"
     explorer:
       default_query: "Zadano"
       or: "ili"
       create: "Stvorite"
       ai:
         generate: "Generiraj"
+        optional: "neobvezno"
       help:
         label: "Pomoć"
       schema:
@@ -20,10 +24,12 @@ hr:
         bool:
           yes: "Da"
           no: "Ne"
-      export: "Izvoz"
       save: "Zabilježi promjene"
-      edit: "Uredi"
       delete: "Izbriši"
+      chart:
+        form:
+          label: "Vrsta grafikona"
+          bar: "Trakasti (Bar)"
       result_count:
         one: "%{count} rezultat."
         few: "%{count} rezultata."
@@ -35,3 +41,9 @@ hr:
       search_placeholder: "Pretraži..."
     group:
       reports: "Izvještaji"
+    discourse_workflows:
+      sql:
+        param_value: "Vrijednost"
+        output:
+          results: "Rezultati"
+          no_results: "Nema rezultata"

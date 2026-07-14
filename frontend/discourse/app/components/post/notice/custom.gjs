@@ -2,10 +2,10 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { trustHTML } from "@ember/template";
 import { modifier } from "ember-modifier";
-import ConditionalInElement from "discourse/components/conditional-in-element";
-import UserLink from "discourse/components/user-link";
-import icon from "discourse/helpers/d-icon";
 import { prioritizeNameInUx } from "discourse/lib/settings";
+import DConditionalInElement from "discourse/ui-kit/d-conditional-in-element";
+import DUserLink from "discourse/ui-kit/d-user-link";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class PostNoticeCustom extends Component {
@@ -26,7 +26,7 @@ export default class PostNoticeCustom extends Component {
   }
 
   <template>
-    {{icon "user-shield"}}
+    {{dIcon "user-shield"}}
     <div class="post-notice-message" {{this.registerCreatedByLink}}>
       {{trustHTML @notice.cooked}}
       {{#if this.createdByName}}
@@ -39,15 +39,15 @@ export default class PostNoticeCustom extends Component {
       {{/if}}
       {{! #in-element is used as an strategy to render the HTML content in the string from a real component
           instead defining it from a string }}
-      <ConditionalInElement @element={{this.createdByAnchorElement}}>
-        <UserLink
+      <DConditionalInElement @element={{this.createdByAnchorElement}}>
+        <DUserLink
           title={{this.createdByName}}
           @username={{@post.notice_created_by_user.username}}
           @ariaHidden={{false}}
         >
           {{this.createdByName}}
-        </UserLink>
-      </ConditionalInElement>
+        </DUserLink>
+      </DConditionalInElement>
     </div>
   </template>
 }

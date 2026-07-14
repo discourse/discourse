@@ -27,7 +27,6 @@ he:
     oauth2_json_email_verified_path: "נתיב למצב אימות כתובת הדוא״ל של המשתמש ב־JSON של ה־OAuth2 של המשתמש. למשל: user.email.verified.‏ oauth2_email_verified חייב להיות מושבת כדי שההגדרה הזו תהיה בתוקף"
     oauth2_json_avatar_path: "נתיב כתובת התמונה הייצוגית של המשתמש ב־JSON של ה־OAuth2 של המשתמש. למשל: user.avatar_url"
     oauth2_email_verified: "נא לבדוק אם אתר זה עם OAuth2 אימת את הדוא״ל"
-    oauth2_overrides_email: "לעקוף את הדוא״ל של Discourse בדוא״ל חיצוני בכל כניסה למערכת. עובד כמו ההגדרה `auth_overrides_email` (אימות עוקף דוא״ל), אך הוא משמש נקודתית לכניסה עם OAuth2."
     oauth2_send_auth_header: "שליחת פרטי גישה של לקוח בכותרת אימות (Authorization) של HTTP"
     oauth2_send_auth_body: "שליחת פרטי גישה של לקוח בגוף הבקשה"
     oauth2_debug_auth: "לכלול פירוט עשיר לטובת ניפוי שגיאות ביומנים שלך"

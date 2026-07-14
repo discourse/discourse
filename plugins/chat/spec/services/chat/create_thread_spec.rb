@@ -28,6 +28,12 @@ RSpec.describe Chat::CreateThread do
     let(:params) { { original_message_id: message_1.id, channel_id: channel_1.id, title: } }
     let(:dependencies) { { guardian: } }
 
+    before do
+      SiteSetting.chat_enabled = true
+      SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+      SiteSetting.direct_message_enabled_groups = Group::AUTO_GROUPS[:everyone]
+    end
+
     context "when all steps pass" do
       it { is_expected.to run_successfully }
 
@@ -104,6 +110,21 @@ RSpec.describe Chat::CreateThread do
       before { params[:channel_id] = private_channel_1.id }
 
       it { is_expected.to fail_a_policy(:can_view_channel) }
+    end
+
+    context "when user can only see a readonly category channel" do
+      fab!(:group) { Fabricate(:group, users: [current_user]) }
+      fab!(:category) do
+        Fabricate(
+          :private_category,
+          group: group,
+          permission_type: CategoryGroup.permission_types[:readonly],
+        )
+      end
+      fab!(:channel_1) { Fabricate(:category_channel, chatable: category, threading_enabled: true) }
+      fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1) }
+
+      it { is_expected.to fail_a_policy(:can_create_thread_in_channel) }
     end
 
     context "when channel is not open" do

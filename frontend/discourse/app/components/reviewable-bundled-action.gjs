@@ -3,10 +3,10 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
-import DButton from "discourse/components/d-button";
-import concatClass from "discourse/helpers/concat-class";
 import { isRTL } from "discourse/lib/text-direction";
 import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 export default class ReviewableBundledAction extends Component {
   @service site;
@@ -24,20 +24,6 @@ export default class ReviewableBundledAction extends Component {
     const horizontal = isRTL() ? "end" : "start";
 
     return `${vertical}-${horizontal}`;
-  }
-
-  get buttonClass() {
-    const buttonIdentifier = dasherize(
-      this.first.button_class || this.first.id
-    );
-
-    if (buttonIdentifier === "reject-post") {
-      return "btn-danger";
-    } else if (buttonIdentifier === "approve-post") {
-      return "btn-success";
-    } else {
-      return "btn-default";
-    }
   }
 
   @action
@@ -61,10 +47,8 @@ export default class ReviewableBundledAction extends Component {
           disabled=@reviewableUpdating
           placement=this.placement
           translatedNone=@bundle.label
-          customStyle=true
-          btnCustomClasses=this.buttonClass
         }}
-        class={{concatClass
+        class={{dConcatClass
           "reviewable-action-dropdown"
           "btn-icon-text"
           (dasherize this.first.id)
@@ -76,11 +60,11 @@ export default class ReviewableBundledAction extends Component {
         @action={{this.perform}}
         @translatedLabel={{this.first.label}}
         @disabled={{@reviewableUpdating}}
-        class={{concatClass
+        class={{dConcatClass
+          "btn-default"
           "reviewable-action"
           (dasherize this.first.id)
           this.first.button_class
-          this.buttonClass
         }}
       />
     {{/if}}

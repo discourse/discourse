@@ -19,7 +19,7 @@ class BaseTimer < ActiveRecord::Base
   end
 
   def enqueue_typed_job(time: nil)
-    self.send("schedule_auto_#{status_type_name}_job")
+    send("schedule_auto_#{status_type_name}_job")
   end
 
   def self.type_job_map
@@ -64,15 +64,15 @@ class BaseTimer < ActiveRecord::Base
   end
 
   def public_type?
-    !!self.class.public_types[self.status_type]
+    !!self.class.public_types[status_type]
   end
 
   def private_type?
-    !!self.class.private_types[self.status_type]
+    !!self.class.private_types[status_type]
   end
 
   def publishing_to_category?
-    self.status_type.to_i == TopicTimer.types[:publish_to_category]
+    status_type.to_i == TopicTimer.types[:publish_to_category]
   end
 
   private

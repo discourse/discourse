@@ -21,9 +21,10 @@ fi:
     remind_assigns_frequency: "Osoitettujen ketjujen muistutusten toistuvuus."
     pending_assign_reminder_threshold: "Odottavien osoitusten määrä, joka laukaisee muistutusilmoituksen."
     max_assigned_topics: "Käyttäjälle osoitettavien ketjujen enimmäismäärä."
-    assign_allowed_on_groups: "Näiden ryhmien käyttäjät voivat osoittaa aiheita, ja heille voidaan osoittaa aiheita."
     enable_assign_status: "Lisää mukautettava tilakenttä jokaiseen osoitukseen."
     assign_statuses: "Luettelo kullekin osoitukselle käytettävissä olevista tiloista. Ensimmäinen tila on oletustila, jota käytetään jokaiselle uudelle osoitukselle."
+    assignment_status_on_solve: "Kun ketju on ratkaistu, päivitä kaikki osoitukset tähän tilaan"
+    assignment_status_on_unsolve: "Kun ketju on ratkaisematon, päivitä kaikki osoitukset tähän tilaan"
     errors:
       assign_statuses:
         too_few: "Käytettävissä täytyy olla vähintään kaksi eri tilaa."

@@ -3,9 +3,12 @@ import { test } from "qunit";
 import sinon from "sinon";
 import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
-import { topicWithNoAnswer } from "../helpers/discourse-solved-helpers";
+import {
+  postStreamWithAcceptedAnswerExcerpt,
+  topicWithNoAnswer,
+} from "../helpers/discourse-solved-helpers";
 
-acceptance("Discourse Solved - No Answer Prompt", function (needs) {
+acceptance("No Answer Prompt", function (needs) {
   needs.user({ id: 1 });
   needs.settings({
     solved_enabled: true,
@@ -15,12 +18,20 @@ acceptance("Discourse Solved - No Answer Prompt", function (needs) {
   needs.hooks.beforeEach(function () {
     pretender.get("/t/100.json", () => response(topicWithNoAnswer(1)));
     pretender.post("/solution/accept", () =>
-      response({
-        success: "OK",
-        post_number: 2,
-        username: "helper",
-        excerpt: "<p>Here is a potential answer</p>",
-      })
+      response([
+        {
+          id: 2,
+          post_number: 2,
+          username: "helper",
+          cooked: "<p>Here is a potential answer</p>",
+        },
+      ])
+    );
+  });
+
+  needs.hooks.beforeEach(function () {
+    pretender.get("/t/23.json", () =>
+      response(postStreamWithAcceptedAnswerExcerpt("excerpt"))
     );
   });
 
@@ -36,6 +47,14 @@ acceptance("Discourse Solved - No Answer Prompt", function (needs) {
     assert
       .dom(".topic-navigation-popup")
       .doesNotExist("no answer prompt is hidden after accepting solution");
+  });
+
+  test("hides the no answer prompt when there's already a solution", async function (assert) {
+    await visit("/t/23");
+
+    assert
+      .dom(".topic-navigation-popup")
+      .doesNotExist("no answer prompt is not displayed");
   });
 
   test("shows confetti when accepting a solution", async function (assert) {

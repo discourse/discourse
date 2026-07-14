@@ -123,7 +123,6 @@ bg:
       invalid_choice:
         one: "„%{name}“ е невалиден избор."
         other: "'%{name}' са невалидни избори."
-      secure_uploads_requirements: "S3 качванията и S3 ACL трябва да бъдат активирани, преди да се активират защитени качвания."
   custom_fields:
     validations:
       max_items: "Достигнат е максималният брой персонализирани полета за този обект (%{max_items_number})"
@@ -145,7 +144,13 @@ bg:
   not_in_group:
     join_group: "Присъедини се към група"
   reading_time: "Време за четене"
+  reading_time_minutes:
+    one: "%{count} минута 🕑"
+    other: "%{count} минути 🕑"
   likes: "Харесвания"
+  likes_count:
+    one: "%{count} ❤"
+    other: "%{count} ❤"
   too_many_replies:
     one: "Съжаляваме, но новите потребители са временно са ограничени до %{count} отговор във същата публикация."
     other: "Съжаляваме, но новите потребители са временно са ограничени до %{count} отговори в същата публикация."
@@ -240,6 +245,11 @@ bg:
       trust_level_2: "trust_level_2 "
       trust_level_3: "trust_level_3 "
       trust_level_4: "trust_level_4 "
+    default_full_names:
+      everyone: "Всички"
+      admins: "Админи"
+      moderators: "Модератори"
+      staff: "Персонал"
   education:
     until_posts:
       one: "%{count} публикация"
@@ -489,6 +499,9 @@ bg:
       confirm_title: Продължете към %{site_name}
       logging_in_as: Влизане като %{username}
       confirm_button: Завършете влизането
+    device:
+      code: "Код"
+      continue: "Напред"
   reports:
     default:
       labels:
@@ -519,6 +532,28 @@ bg:
       xaxis: "Ден"
     new_contributors:
       xaxis: "Ден"
+    activity_by_category:
+      labels:
+        category: "Категория"
+        topics: "Теми"
+        posts: "Публикации"
+        share: "Споделяне"
+    posters_by_member_type:
+      labels:
+        count: "Публикации"
+        share: "Споделяне"
+      types:
+        staff: "Персонал"
+    trust_level_pipeline:
+      labels:
+        count: "Членове"
+        share: "Споделяне"
+      levels:
+        "0": "Нов"
+        "1": "Основно "
+        "2": "Член"
+        "3": "Редовен"
+        "4": "лидер "
     trust_level_growth:
       yaxis: "Ден"
     consolidated_page_views:
@@ -534,6 +569,8 @@ bg:
     consolidated_page_views_browser_detection:
       yaxis: "Ден"
     site_traffic:
+      xaxis:
+        page_view_anon_browser: "Анонимен"
       yaxis: "Ден"
     dau_by_mau:
       xaxis: "Ден"
@@ -616,6 +653,12 @@ bg:
         user: "Потребител"
         num_clicks: "Кликвания"
         num_topics: "Теми"
+    top_countries_by_browser_pageviews:
+      labels:
+        count: "Посещения "
+    top_referrers_by_browser_pageviews:
+      labels:
+        count: "Посещения "
     top_traffic_sources:
       title: "Топ източници на трафик "
       xaxis: "Домейн"
@@ -650,6 +693,8 @@ bg:
     page_view_anon_browser_reqs:
       xaxis: "Ден"
     page_view_logged_in_browser_reqs:
+      xaxis: "Ден"
+    page_view_embed_reqs:
       xaxis: "Ден"
     http_background_reqs:
       title: "Фон"
@@ -692,7 +737,7 @@ bg:
       labels:
         user: Потребител
         location: Локация
-    staff_logins:
+    admin_logins:
       labels:
         user: Потребител
         location: Локация
@@ -744,7 +789,6 @@ bg:
     edit_history_visible_to_public: "Позволи на всички потребители да видят предишните версии на публикацията. Ако е деактивитано, историята на публикациите ще бъде видима само за членовете на персонала. "
     delete_removed_posts_after: "Публикации, които са премахнати от автор ще бъдат автоматично изтрити след (n) часа. Ако е зададено 0, публикациите ще бъдат изтрити веднага."
     fixed_category_positions: "Ако е отметнато, ще можете да подредите категориите в определен ред. Ако не е, категориите ще бъдат подредени според нивото им на активност."
-    fixed_category_positions_on_create: "Ако е избрано, подредвата на категориите ще се запази и в диалоговия прозорец за създаване на тема (изисква fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Добави "rel nofollow" към всички връзки с изключение на вътрешните ( включително домейн майките). Промяната на тази настройка изисква актуализация на всички публикации със "rake posts:rebake"'
     post_excerpt_maxlength: "Максимална дължина на откъс / резюме от публикацията."
     post_onebox_maxlength: "Максимална дължина на oneboxed Discourse публикация в писмени знаци."
@@ -776,7 +820,6 @@ bg:
     email_token_valid_hours: "Забравена парола / символите за активиране на акаунта са валидни (n) часа."
     auto_approve_email_domains: "Потребителите с имейл адреси от този списък с домейни ще бъдат одобрени автоматично. Поддомейните се обработват автоматично за посочените домейни. Заместващи символи * и ? не се поддържат."
     log_out_strict: "При изход, да се прекратяват ВСИЧКИ сесии на този потребител на всички устройства "
-    new_version_emails: "Изпратете имейл до contact_email адрес когато има нова версия на Discourse."
     invite_expiry_days: "Колко дълго са валидни ключовете за покана, в дни"
     login_required: "Изисква разпознаване за прочит на съдържанието на сайта, не е разрешен анонимен достъп."
     block_common_passwords: "Не са разрешени паролите, които са в топ 10,000 от най-често използваните."
@@ -873,8 +916,6 @@ bg:
     pop3_polling_ssl: "Използвай SSL при свързване със сървъра POP3. (Препоръчително) "
     pop3_polling_username: "Потребителско име за POP3 акаунт за проверка на имейла."
     pop3_polling_password: "Парола за POP3 акаунт за проверка на имейла. "
-    email_prefix: " [label] се използва като тема на имейлите. Ако не бъде определено, ще бъде използвано \"заглавие\" по подразбиране."
-    email_site_title: "Заглавието на сайта се използва като подател на имейлите от сайта. Ако не бъде определено, ще бъде използвано \"заглавие\" по подразбиране. Ако вашето \"заглавие\" съдържа символи, които не са позволени, използвайте тази настройка."
     minimum_topics_similar: "Колко теми трябва да съществуват преди да бъдат представени подобни теми при създаването на нови."
     relative_date_duration: "Брой дни след публикацията, през които датата на публикуването ще бъде показвана като относителна ( 7д) вместо абсолютна ( 20 Фев.)."
     delete_user_max_post_age: "Забрани изтриване на потребители, чиято първа публикация е по-стара от (x) дни."
@@ -887,10 +928,8 @@ bg:
     anonymous_account_duration_minutes: "За да се защити анонимността създавай нови анонимни акаунти на всеки N минути за всеки потребител. Например: Ако е настроено на 600, означава, че 600 минути след последния пост на потребителя, след като той излезе, ще бъде създаден анонимен акаунт."
     allow_profile_backgrounds: "Позволи на потребителите да качват фонове на профилите си."
     dont_feed_the_trolls_threshold: "Брой сигнали от други потребители, преди да бъдат предупредени."
-    enable_mobile_theme: "Мобилните устройства използват адаптирана тема с възможност за преминаване към нормален изглед. Забранете тази настройка, ако искате да използвате свой собствен стил за мобилните устройства."
     dominating_topic_minimum_percent: "Какъв процент публикации може да направи един потребител преди да бъде предупреден за доминиране в тема."
     suppress_uncategorized_badge: "Не показвай значката в списъците с теми за тези, които не са категоризирани. "
-    disable_system_edit_notifications: "Забрани редактирането на уведомления от системните потребители когато 'download_remote_images_to_local' е активно."
     native_app_install_banner_ios: "Показва банер на приложението DiscourseHub на устройства с iOS на основни потребители (ниво на доверие 1) и нагоре."
     native_app_install_banner_android: "Показва банер на приложението DiscourseHub на устройства с Android на основни потребители (ниво на доверие 1) и нагоре."
     enable_names: "Покажи пълното име на потребителите на техните профили, потребителски карти, и имейли. Деактивирай за скриване на пълното име навсякъде."
@@ -931,6 +970,10 @@ bg:
       topic: "Резултати"
       user: "Потребители"
     results_page: "Резултати от търсенето на '%{term}'"
+  posts_filter:
+    description:
+      order_latest: "Последни публикации"
+      order_latest_topic: "Последни теми"
   original_poster: "Автор"
   most_recent_poster: "Последен Автор"
   frequent_poster: "Частен Автор"
@@ -1135,11 +1178,14 @@ bg:
       liked_received: "Получени харесвания"
       new_users: "Нови потребители"
       join_the_discussion: "Прочетете повече"
+      subject_template_improved: "Сумарно"
       click_here: "кликнете тук"
     forgot_password:
       title: "Забравена парола"
     set_password:
       title: "Задайте парола"
+    admin_login:
+      subject_template_improved: "Логване"
     signup_after_approval:
       subject_template: "Вие бяхте одобрени на %{site_name}!"
   page_not_found:
@@ -1591,6 +1637,8 @@ bg:
   onebox:
     discourse:
       user_joined_community: "Присъединен на %{date}"
+    google_meet:
+      meeting_code: "Код:"
     github:
       closed: "затворена"
       status_date:

@@ -15,6 +15,8 @@ describe Jobs::LocalizeCategories do
     SiteSetting.ai_translation_enabled = true
     SiteSetting.default_locale = "pt_BR"
     SiteSetting.content_localization_supported_locales = "pt_BR|zh_CN"
+    SiteSetting.ai_translation_category_scope = "all"
+    SiteSetting.ai_translation_categories = ""
 
     Jobs.run_immediately!
   end
@@ -66,7 +68,6 @@ describe Jobs::LocalizeCategories do
   end
 
   it "translates categories to the configured locales" do
-    SiteSetting.ai_translation_target_categories = Category.pluck(:id).join("|")
     Category.update_all(locale: "en")
     number_of_categories = Category.count
 
@@ -95,7 +96,6 @@ describe Jobs::LocalizeCategories do
     SiteSetting.content_localization_supported_locales = "pt"
 
     6.times { Fabricate(:category) }
-    SiteSetting.ai_translation_target_categories = Category.pluck(:id).join("|")
     Category.update_all(locale: "en")
 
     DiscourseAi::Translation::CategoryLocalizer
@@ -111,7 +111,6 @@ describe Jobs::LocalizeCategories do
   end
 
   it "skips categories that already have localizations" do
-    SiteSetting.ai_translation_target_categories = Category.pluck(:id).join("|")
     localize_all_categories("pt", "zh_CN")
 
     DiscourseAi::Translation::CategoryLocalizer
@@ -135,12 +134,9 @@ describe Jobs::LocalizeCategories do
   end
 
   it "handles translation errors gracefully" do
-    SiteSetting.ai_translation_target_categories = Category.pluck(:id).join("|")
     localize_all_categories("pt", "zh_CN")
 
     category1 = Fabricate(:category, name: "First", description: "First description", locale: "en")
-    SiteSetting.ai_translation_target_categories =
-      (SiteSetting.ai_translation_target_categories.split("|") + [category1.id.to_s]).join("|")
 
     DiscourseAi::Translation::CategoryLocalizer
       .expects(:localize)
@@ -163,25 +159,25 @@ describe Jobs::LocalizeCategories do
     expect { job.execute({ limit: 10 }) }.not_to raise_error
   end
 
-  it "only translates categories in target_categories" do
-    target = Fabricate(:category, locale: "en")
-    non_target = Fabricate(:category, locale: "en")
-    SiteSetting.ai_translation_target_categories = target.id.to_s
+  it "does not translate categories excluded by the category scope" do
+    included = Fabricate(:category, locale: "en")
+    excluded = Fabricate(:category, locale: "en")
+    SiteSetting.ai_translation_category_scope = "exclude"
+    SiteSetting.ai_translation_categories = excluded.id.to_s
 
     DiscourseAi::Translation::CategoryLocalizer
       .expects(:localize)
-      .with(target, any_parameters)
+      .with(included, any_parameters)
       .twice
     DiscourseAi::Translation::CategoryLocalizer
       .expects(:localize)
-      .with(non_target, any_parameters)
+      .with(excluded, any_parameters)
       .never
 
     job.execute({ limit: 10 })
   end
 
   it "skips creating localizations in the same language as the category's locale" do
-    SiteSetting.ai_translation_target_categories = Category.pluck(:id).join("|")
     Category.update_all(locale: "pt")
 
     DiscourseAi::Translation::CategoryLocalizer
@@ -205,7 +201,6 @@ describe Jobs::LocalizeCategories do
   end
 
   it "deletes existing localizations that match the category's locale" do
-    SiteSetting.ai_translation_target_categories = Category.pluck(:id).join("|")
     # update all categories to portuguese
     Category.update_all(locale: "pt")
 
@@ -219,7 +214,6 @@ describe Jobs::LocalizeCategories do
   it "doesn't process categories with nil locale" do
     # Add a category with nil locale
     nil_locale_category = Fabricate(:category, name: "No Locale", locale: nil)
-    SiteSetting.ai_translation_target_categories = nil_locale_category.id.to_s
 
     # Make sure our query for categories with non-null locales excludes it
     DiscourseAi::Translation::CategoryLocalizer

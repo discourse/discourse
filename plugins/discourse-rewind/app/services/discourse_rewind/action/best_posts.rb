@@ -38,6 +38,7 @@ module DiscourseRewind
         best_posts =
           Post
             .public_posts
+            .visible
             .joins(topic: :category)
             .where(user_id: user.id)
             .where(posts: { created_at: date, deleted_at: nil })

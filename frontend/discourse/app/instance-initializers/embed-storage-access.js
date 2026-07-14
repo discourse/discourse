@@ -9,6 +9,15 @@ export default {
       return;
     }
 
+    // The embed-auth-flow service handles storage access (and sign-in) when
+    // embed_full_app_signin_flow is enabled. Eagerly look it up so its
+    // post-reload state machine runs, then skip the legacy on-load prompt.
+    const siteSettings = owner.lookup("service:site-settings");
+    if (siteSettings.embed_full_app_signin_flow) {
+      owner.lookup("service:embed-auth-flow");
+      return;
+    }
+
     const capabilities = owner.lookup("service:capabilities");
 
     // Storage Access API is needed for Safari's ITP (Intelligent Tracking Prevention)

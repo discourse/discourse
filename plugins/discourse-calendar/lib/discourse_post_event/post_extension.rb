@@ -11,7 +11,7 @@ module DiscoursePostEvent
     end
 
     def valid_event
-      return unless self.raw_changed?
+      return unless raw_changed?
 
       validator = DiscoursePostEvent::EventValidator.new(self)
       validator.validate_event

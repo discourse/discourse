@@ -1,49 +1,55 @@
-/* eslint-disable ember/no-classic-components */
-import Component, { Input } from "@ember/component";
-import { tagName } from "@ember-decorators/component";
-import { or } from "discourse/truth-helpers";
+import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class ShowEventCategorySortingSettings extends Component {
-  <template>
-    {{#if
-      (or
-        this.siteSettings.sort_categories_by_event_start_date_enabled
-        this.siteSettings.disable_resorting_on_categories_enabled
-      )
-    }}
-      <section>
-        <h3>{{i18n
-            "discourse_post_event.category.settings_sections.event_sorting"
-          }}</h3>
+  @service siteSettings;
 
-        {{#if this.siteSettings.sort_categories_by_event_start_date_enabled}}
-          <section class="field show-subcategory-list-field">
-            <label>
-              <Input
-                @type="checkbox"
-                @checked={{this.category.custom_fields.sort_topics_by_event_start_date}}
-              />
-              {{i18n
+  get showSection() {
+    return (
+      this.siteSettings.sort_categories_by_event_start_date_enabled ||
+      this.siteSettings.disable_resorting_on_categories_enabled
+    );
+  }
+
+  <template>
+    {{#if this.showSection}}
+      <@outletArgs.form.Section
+        @title={{i18n
+          "discourse_post_event.category.settings_sections.event_sorting"
+        }}
+        class="category-custom-settings-outlet show-event-category-sorting-settings"
+      >
+        <@outletArgs.form.Object @name="custom_fields" as |object|>
+          {{#if this.siteSettings.sort_categories_by_event_start_date_enabled}}
+            <object.Field
+              @name="sort_topics_by_event_start_date"
+              @title={{i18n
                 "discourse_post_event.category.sort_topics_by_event_start_date"
               }}
-            </label>
-          </section>
-        {{/if}}
+              @format="max"
+              @type="checkbox"
+              as |field|
+            >
+              <field.Control />
+            </object.Field>
+          {{/if}}
 
-        {{#if this.siteSettings.disable_resorting_on_categories_enabled}}
-          <section class="field show-subcategory-list-field">
-            <label>
-              <Input
-                @type="checkbox"
-                @checked={{this.category.custom_fields.disable_topic_resorting}}
-              />
-              {{i18n "discourse_post_event.category.disable_topic_resorting"}}
-            </label>
-          </section>
-        {{/if}}
-      </section>
+          {{#if this.siteSettings.disable_resorting_on_categories_enabled}}
+            <object.Field
+              @name="disable_topic_resorting"
+              @title={{i18n
+                "discourse_post_event.category.disable_topic_resorting"
+              }}
+              @format="max"
+              @type="checkbox"
+              as |field|
+            >
+              <field.Control />
+            </object.Field>
+          {{/if}}
+        </@outletArgs.form.Object>
+      </@outletArgs.form.Section>
     {{/if}}
   </template>
 }

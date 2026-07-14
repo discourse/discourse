@@ -9,6 +9,7 @@ module PageObjects
 
       def expand
         trigger.click
+        self
       end
 
       def select_icon(icon_id)
@@ -20,7 +21,20 @@ module PageObjects
       end
 
       def filter(term)
-        find(".d-icon-grid-picker__filter .filter-input").fill_in(with: term)
+        filter_input.fill_in(with: term)
+      end
+
+      def type_filter(term)
+        filter_input.send_keys(term)
+        self
+      end
+
+      def filter_input
+        find(".d-icon-grid-picker__filter .filter-input")
+      end
+
+      def has_icon?(icon_id)
+        page.has_css?("[data-icon-id='#{icon_id}']")
       end
 
       def clear

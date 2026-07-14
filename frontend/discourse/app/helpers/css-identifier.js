@@ -1,4 +1,4 @@
-import dasherize from "discourse/helpers/dasherize";
+import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
 
 /**
  * Converts a string to a valid CSS identifier (class name, ID, etc.).
@@ -8,5 +8,5 @@ import dasherize from "discourse/helpers/dasherize";
  * @returns {string} A CSS-safe kebab-case identifier.
  */
 export default function cssIdentifier(name = "") {
-  return dasherize(name.replace(/:/g, "-"));
+  return dDasherize(name.replace(/:/g, "-"));
 }

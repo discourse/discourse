@@ -384,6 +384,49 @@ RSpec.describe ReviewablesController do
         expect(json["reviewables"].size).to eq(1)
       end
 
+      it "doesn't cause N+1 queries when flagged posts have localizations" do
+        SiteSetting.content_localization_enabled = true
+        admin.update!(locale: "ja")
+        reviewables =
+          2.times.map do
+            post = Fabricate(:post, raw: "Original post", locale: "en")
+            Fabricate(
+              :post_localization,
+              post: post,
+              cooked: "<p>Translated post</p>",
+              locale: "ja",
+            )
+
+            Fabricate(
+              :reviewable_flagged_post,
+              target: post,
+              target_created_by: post.user,
+              topic: post.topic,
+            )
+          end
+
+        I18n.with_locale(:ja) do
+          queries =
+            track_sql_queries do
+              get "/review.json"
+              expect(response.status).to eq(200)
+            end
+
+          post_localization_queries =
+            queries.select { |query| query.match?(/FROM "?post_localizations"?/) }
+
+          expect(post_localization_queries.size).to eq(1)
+          expect(
+            response.parsed_body["reviewables"].map { |reviewable| reviewable["id"] },
+          ).to include(*reviewables.map(&:id))
+          expect(
+            response.parsed_body["reviewables"]
+              .select { |reviewable| reviewables.map(&:id).include?(reviewable["id"]) }
+              .map { |reviewable| reviewable["cooked"] },
+          ).to all(eq("<p>Translated post</p>"))
+        end
+      end
+
       context "with reviewable notes" do
         fab!(:moderator)
         fab!(:reviewable)
@@ -561,6 +604,56 @@ RSpec.describe ReviewablesController do
           expect(reply["user_id"]).to eq(admin.id)
         end
       end
+
+      context "with an inaccessible conversation" do
+        it "does not serialize the conversation" do
+          SiteSetting.enable_category_group_moderation = true
+
+          category = Fabricate(:category)
+          group_user = Fabricate(:group_user)
+          Fabricate(:category_moderation_group, category: category, group: group_user.group)
+
+          flagger = Fabricate(:user, refresh_auto_groups: true)
+          topic = Fabricate(:topic, category: category)
+          post = Fabricate(:post, topic: topic)
+          meta_post =
+            PostCreator.create!(
+              flagger,
+              archetype: Archetype.private_message,
+              subtype: TopicSubtype.notify_moderators,
+              target_group_names: [Group[:moderators].name],
+              title: "A hidden flag conversation",
+              raw: "Sensitive flag reason for moderators only",
+            )
+          reviewable =
+            ReviewableFlaggedPost.needs_review!(
+              created_by: flagger,
+              target: post,
+              topic: topic,
+              reviewable_by_moderator: true,
+            )
+          reviewable_score =
+            reviewable.add_score(
+              flagger,
+              ReviewableScore.types[:notify_moderators],
+              meta_topic_id: meta_post.topic_id,
+            )
+
+          expect(Guardian.new(group_user.user).can_see?(meta_post.topic)).to eq(false)
+
+          sign_in(group_user.user)
+          get "/review/#{reviewable.id}.json"
+
+          expect(response.code).to eq("200")
+          json = response.parsed_body
+          score = json["reviewable_scores"].find { |item| item["id"] == reviewable_score.id }
+
+          expect(score).not_to have_key("reviewable_conversation_id")
+          expect(json["reviewable_conversations"]).to be_blank
+          expect(json["conversation_posts"]).to be_blank
+          expect(response.body).not_to include(meta_post.raw)
+        end
+      end
     end
 
     describe "#explain" do
@@ -588,6 +681,28 @@ RSpec.describe ReviewablesController do
     describe "#perform" do
       fab!(:reviewable)
       before { sign_in(Fabricate(:moderator)) }
+
+      it "includes the statuses of the other reviewables resolved by the action in the response" do
+        sign_in(Fabricate(:admin))
+        spammer = Fabricate(:user, refresh_auto_groups: true)
+        flagger = Fabricate(:user, refresh_auto_groups: true)
+        acted_flag = PostActionCreator.spam(flagger, Fabricate(:post, user: spammer)).reviewable
+        queued_post =
+          Fabricate(
+            :reviewable_queued_post,
+            created_by: Discourse.system_user,
+            target_created_by: spammer,
+          )
+
+        put "/review/#{acted_flag.id}/perform/delete_user_block.json?version=#{acted_flag.version}"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body.dig("reviewable_perform_result", "reviewable_updates")).to eq(
+          queued_post.id.to_s => {
+            "status" => Reviewable.statuses[:rejected],
+          },
+        )
+      end
 
       it "returns 404 when the reviewable does not exist" do
         put "/review/12345/perform/approve_user.json?version=0"
@@ -991,6 +1106,16 @@ RSpec.describe ReviewablesController do
         expect(queued_post.reload).to be_deleted
       end
 
+      it "returns 200 if the user can delete their queued topic" do
+        sign_in(user)
+        queued_topic = Fabricate(:reviewable_queued_post_topic, target_created_by: user)
+
+        delete "/review/#{queued_topic.id}.json"
+
+        expect(response.code).to eq("200")
+        expect(queued_topic.reload).to be_deleted
+      end
+
       it "denies attempts to destroy unowned reviewables" do
         sign_in(admin)
         queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
@@ -1000,62 +1125,78 @@ RSpec.describe ReviewablesController do
         expect(queued_post.reload).to be_present
       end
 
-      shared_examples "for a passed user" do
-        it "deletes reviewable" do
-          api_key = Fabricate(:api_key).key
-          queued_post = Fabricate(:reviewable_queued_post, target_created_by: recipient)
+      it "denies staff attempts to destroy another user's queued topic" do
+        sign_in(admin)
+        queued_topic = Fabricate(:reviewable_queued_post_topic, target_created_by: user)
+
+        delete "/review/#{queued_topic.id}.json"
+
+        expect(response.status).to eq(404)
+        expect(queued_topic.reload).to be_present
+      end
+
+      describe "via API" do
+        it "admin can target another user with `username` param" do
+          api_key = Fabricate(:api_key, user: admin).key
+          queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
+
           delete "/review/#{queued_post.id}.json",
                  params: {
-                   username: recipient.username,
+                   username: user.username,
                  },
                  headers: {
-                   HTTP_API_USERNAME: caller.username,
+                   HTTP_API_USERNAME: admin.username,
                    HTTP_API_KEY: api_key,
                  }
 
-          expect(response.status).to eq(response_code)
-
-          if reviewable_deleted
-            expect(queued_post.reload).to be_deleted
-          else
-            expect(queued_post.reload).to be_present
-          end
+          expect(response.status).to eq(200)
+          expect(queued_post.reload).to be_deleted
         end
-      end
 
-      describe "api called by admin" do
-        include_examples "for a passed user" do
-          let(:caller) { Fabricate(:admin) }
-          let(:recipient) { user }
-          let(:response_code) { 200 }
-          let(:reviewable_deleted) { true }
+        it "admin acts on self when `username` param is absent" do
+          api_key = Fabricate(:api_key, user: admin).key
+          queued_post = Fabricate(:reviewable_queued_post, target_created_by: admin)
+
+          delete "/review/#{queued_post.id}.json",
+                 headers: {
+                   HTTP_API_USERNAME: admin.username,
+                   HTTP_API_KEY: api_key,
+                 }
+
+          expect(response.status).to eq(200)
+          expect(queued_post.reload).to be_deleted
         end
-      end
 
-      describe "api called by tl4 user" do
-        include_examples "for a passed user" do
-          let(:caller) { Fabricate(:trust_level_4) }
-          let(:recipient) { user }
-          let(:response_code) { 403 }
-          let(:reviewable_deleted) { false }
+        it "non-admin gets 403 when passing `username` to target another user" do
+          other_user = Fabricate(:user)
+          api_key = Fabricate(:api_key, user: user).key
+          queued_post = Fabricate(:reviewable_queued_post, target_created_by: other_user)
+
+          delete "/review/#{queued_post.id}.json",
+                 params: {
+                   username: other_user.username,
+                 },
+                 headers: {
+                   HTTP_API_USERNAME: user.username,
+                   HTTP_API_KEY: api_key,
+                 }
+
+          expect(response.status).to eq(403)
+          expect(queued_post.reload).to be_present
         end
-      end
 
-      describe "api called by regular user" do
-        include_examples "for a passed user" do
-          let(:caller) { user }
-          let(:recipient) { Fabricate(:user) }
-          let(:response_code) { 403 }
-          let(:reviewable_deleted) { false }
-        end
-      end
+        it "non-admin acts on self when `username` param is absent" do
+          api_key = Fabricate(:api_key, user: user).key
+          queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
 
-      describe "api called by admin for another admin" do
-        include_examples "for a passed user" do
-          let(:caller) { Fabricate(:admin) }
-          let(:recipient) { Fabricate(:admin) }
-          let(:response_code) { 200 }
-          let(:reviewable_deleted) { true }
+          delete "/review/#{queued_post.id}.json",
+                 headers: {
+                   HTTP_API_USERNAME: user.username,
+                   HTTP_API_KEY: api_key,
+                 }
+
+          expect(response.status).to eq(200)
+          expect(queued_post.reload).to be_deleted
         end
       end
     end

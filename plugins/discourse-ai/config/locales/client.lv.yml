@@ -34,6 +34,14 @@ lv:
             canned_reply:
               label: "Atbilde"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Ielādē..."
+        tool: "Darbība"
+        user: "Lietotājs"
+        approve: "Apstiprināt"
+        reject: "Noraidīt"
+        approved: "Apstiprināt"
+        rejected: "Noraidīts"
       llm_selector:
         none: "Nav"
       features:
@@ -45,6 +53,8 @@ lv:
           zero: "(vēl %{count})"
           one: "(vēl %{count})"
           other: "(vēl %{count})"
+        nav:
+          enabled: "Ieslēgts"
         filters:
           all: "Visi"
           reset: "Atlikt"
@@ -55,6 +65,7 @@ lv:
       modals:
         select_option: "Izvēlieties opciju..."
       translations:
+        category_scope: "Sadaļas"
         stats:
           eta_hours:
             zero: "%{count} stundas"
@@ -91,6 +102,11 @@ lv:
         save: "Saglabāt"
         enabled: "Ieslēgts?"
         delete: "Dzēst"
+        thinking_effort_options:
+          none: "Nav"
+          low: "Zems"
+          medium: "Vidējs"
+          high: "Augsta"
         response_format:
           open_modal: "Labot"
         filters:

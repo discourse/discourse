@@ -125,7 +125,6 @@ ko:
       retry_staged_message:
         title: "네트워크 오류"
         action: "다시 보내시겠습니까?"
-      unreliable_network: "네트워크가 불안정하여 메시지 전송 및 초안 저장이 작동하지 않을 수 있음"
       bookmark_message: "북마크"
       bookmark_message_edit: "북마크 수정"
       save: "저장"
@@ -201,7 +200,6 @@ ko:
         title: 채널 수정
         input_placeholder: 이름 추가
         name: 채널명
-        slug: 채널 슬러그(선택)
       channel_edit_description_modal:
         title: 설명 수정
         input_placeholder: 설명 추가
@@ -219,9 +217,8 @@ ko:
           label: "카테고리 선택"
           none: "하나 선택..."
         create: "채널 만들기"
-        description: "설명 (선택 사항)"
+        description: "내용"
         name: "채널명"
-        slug: "채널 슬러그(선택)"
         title: "새 채널"
         type: "유형"
         types:
@@ -391,3 +388,14 @@ ko:
       panels:
         chat:
           label: "채팅"
+    discourse_workflows:
+      nodes:
+        "action:send_chat_message": "채팅 메시지 보내기"
+      chat_message_created:
+        channel_id: "채널"
+      send_chat_message:
+        channel_id: "채널"
+        message: "메시지 보내기"
+      chat_approval:
+        message: "메시지 보내기"
+        channel_id: "채널"

@@ -46,6 +46,13 @@ en:
             update_ai_spam_settings: "Update AI spam settings"
 
   js:
+    discourse_workflows:
+      node_unavailable:
+        requires_ai: "Requires the AI plugin to be enabled"
+      nodes:
+        "action:ai_agent": "AI Agent"
+      node_descriptions:
+        "action:ai_agent": "Run an AI agent to process data or generate content"
     discourse_automation:
       scriptables:
         llm_report:
@@ -225,6 +232,35 @@ en:
 
     discourse_ai:
       title: "AI"
+      discourse_workflows:
+        ai_agent:
+          agent_id: "Agent"
+          forced_llm_notice_description: "This agent is locked to its configured default LLM. The workflow cannot override it."
+          llm_model_id: "LLM model"
+          llm_model_default: "Use agent default"
+          llm_model_default_with_name: "Use agent default (%{value})"
+          prompt: "Prompt"
+          runner_username: "Run as"
+          runner_username_tooltip: "User whose permissions are used for upload visibility and AI agent tools. Use system for workflow-owned automation."
+          upload_ids: "Upload IDs"
+          upload_ids_tooltip: "Optional upload IDs to attach to the prompt. Image uploads are included when the agent has vision enabled; document uploads are included when the selected LLM supports their file type."
+          upload_ids_placeholder: "={{ $json.post.upload_ids }}"
+          select_agent: "Select an agent..."
+
+      bot_chats:
+        tab_label: "Bot chats"
+
+      ai_tool_approval:
+        loading: "Loading..."
+        load_error: "Couldn't load this pending action."
+        agent: "Agent"
+        tool: "Action"
+        user: "User"
+        approve: "Approve"
+        reject: "Reject"
+        approved: "Approved"
+        rejected: "Rejected"
+        awaiting_staff: "Awaiting staff approval"
 
       default_llm:
         title: "Default LLM model"
@@ -265,8 +301,8 @@ en:
             ui_settings: "UI Settings"
             integrations: "Integrations"
         nav:
-          configured: "Configured"
-          unconfigured: "Unconfigured"
+          enabled: "Enabled"
+          not_enabled: "Not enabled"
         filters:
           all: "All"
           text: "Search features, agents, LLMs, or groups..."
@@ -298,6 +334,12 @@ en:
             model_settings: "Model Settings"
             related_topics: "Related Topics"
             semantic_search: "Semantic Search"
+        admin_dashboard:
+          name: "Admin Dashboard"
+          description: "Helps community managers spot meaningful shifts and decide where to look next"
+          highlights: "Highlights"
+          setting_groups:
+            settings: "Basic Settings"
         discord:
           name: "Discord integration"
           description: "Adds the ability to search Discord channels"
@@ -381,6 +423,8 @@ en:
         description: "Automatically translate all content on your forum to the user's preferred language"
         supported_locales: "Supported languages"
         supported_locales_description: "This site setting also allows visitors to contribute post translations."
+        category_scope: "Categories"
+        category_scope_description: "Choose whether automatic translations use all categories, public categories, or selected categories."
         admin_actions:
           translation_settings: "Translation settings"
           localization_settings: "Localization settings"
@@ -405,6 +449,12 @@ en:
           bar_done:
             one: "%{count} post"
             other: "%{count} posts"
+        theme_translations:
+          translate:
+            label: "Translate"
+            title: "Translate to all supported languages using the selected language as the source"
+            queued: "Translation queued"
+            failed: "Failed to queue translation"
         translations_menu:
           translate:
             label: "Translate post"
@@ -428,6 +478,7 @@ en:
         spam_detected: "Spam detected"
         custom_instructions_placeholder: "Site-specific instructions for the AI to help identify spam more accurately"
         enable: "Enable"
+        enabled_locked_tip: "AI spam detection can't be disabled on this site."
         spam_tip: "AI spam detection will scan the first 3 posts by all new users on public topics. It will flag them for review and block users if they are likely spam."
         settings_saved: "Settings saved"
         spam_description: "Identifies potential spam using the selected LLM and flags it for site moderators to inspect in the review queue"
@@ -508,6 +559,7 @@ en:
 
       ai_agent:
         ai_tools: "Tools"
+        native_tools_help: "Provider-native tools, such as web search or page fetch, appear when \"Always use default language model\" is enabled and the selected default language model supports them."
         mcp_servers: "MCP servers"
         mcp_server_tools_help: "Selected MCP servers expose all of their tools by default. Narrow them per agent to reduce token usage and keep tool choice focused."
         mcp_server_tool_count:
@@ -545,12 +597,12 @@ en:
           default: "Default (Fixed Limits)"
           agentic: "Agentic (Token Budget)"
         max_turn_tokens: "Max Turn Tokens"
-        max_turn_tokens_help: "Maximum total tokens (input + output) consumed across all LLM calls during a single bot reply. When set, replaces the fixed completion/tool limits with a token budget, enabling more agentic behavior. Leave empty for default limits."
+        max_turn_tokens_help: "Maximum total tokens (input + output) consumed across all LLM calls during a single bot reply. When set, replaces the fixed completion/tool limits with a token budget, enabling more agentic behavior. Leave empty to default to half of the model's context window."
         compression_threshold: "Compression Threshold"
         compression_threshold_help: "Percentage of context usage (20–99) at which automatic compression kicks in. Lower values trigger compression earlier, preserving more headroom."
-        vision_enabled: Vision enabled
-        vision_enabled_help: If enabled, the AI will attempt to understand images users post in the topic, depends on the model being used supporting vision. Supported by latest models from Anthropic, Google, and OpenAI.
-        vision_max_pixels: Supported image size
+        vision_enabled: Include image uploads
+        vision_enabled_help: If enabled, this agent can include images from posts and chats when the selected model supports image input.
+        vision_max_pixels: Maximum image size
         vision_max_pixel_sizes:
           low: Low quality - cheapest (256x256)
           medium: Medium quality (512x512)
@@ -614,6 +666,7 @@ en:
         confirm_delete: "Are you sure you want to delete this agent?"
         new: "New agent"
         no_agents: "You have not created any agents yet"
+        manage_agents: "Manage agents"
         title: "Agents"
         short_title: "Agents"
         delete: "Delete"
@@ -621,6 +674,17 @@ en:
         temperature_help: "Temperature to use for the LLM. Increase to increase creativity (leave empty to use model default, generally a value from 0.0 to 2.0)"
         top_p: "Top P"
         top_p_help: "Top P to use for the LLM, increase to increase randomness (leave empty to use model default, generally a value from 0.0 to 1.0)"
+        thinking_effort: "Thinking effort"
+        thinking_effort_help: "How much reasoning-capable models should think before answering. Higher values may improve difficult tasks but can increase latency and cost. Unsupported providers ignore this setting."
+        thinking_effort_options:
+          default: "Model default"
+          none: "None"
+          minimal: "Minimal"
+          low: "Low"
+          medium: "Medium"
+          high: "High"
+          xhigh: "Extra high"
+          max: "Max"
         priority: "Priority"
         priority_help: "Priority agents are displayed to users at the top of the agent list. If multiple agents have priority, they will be sorted alphabetically."
         tool_options: "Tool options"
@@ -856,9 +920,9 @@ en:
         max_output_tokens: "Max output tokens"
         url: "URL of the service hosting the model"
         api_key: "API Key of the service hosting the model"
-        vision_enabled: "Vision enabled"
-        allowed_attachment_types: "Allowed attachments"
-        attachment_types_placeholder: "Select or type extensions (e.g., pdf, txt, docx)"
+        vision_enabled: "Supports image input"
+        allowed_attachment_types: "Allowed document attachments"
+        attachment_types_placeholder: "Select or type extensions (e.g., pdf, txt, csv, docx, xlsx)"
         ai_bot_user: "AI bot User"
         cost_input: "Input cost"
         cost_cached_input: "Cached input cost"
@@ -877,6 +941,7 @@ en:
           group: "Group"
           max_tokens: "Max tokens"
           max_usages: "Max uses"
+          max_cost: "Max cost"
           duration: "Duration"
           confirm_delete: "Are you sure you want to delete this quota?"
           add: "Add quota"
@@ -888,9 +953,11 @@ en:
             custom: "Custom..."
           hours: "hours"
           max_tokens_help: "Maximum number of tokens (words and characters) that each user in this group can use within the specified duration. Tokens are the units used by AI models to process text - roughly 1 token = 4 characters or 3/4 of a word."
-          max_tokens_required: "Must be set if max usages is not set"
+          max_tokens_required: "Must be set if max uses and max cost are not set"
           max_usages_help: "Maximum number of times each user in this group can use the AI model within the specified duration. This quota is tracked per individual user, not shared across the group."
-          max_usages_required: "Must be set if max tokens is not set"
+          max_usages_required: "Must be set if max tokens and max cost are not set"
+          max_cost_help: "Maximum estimated cost each user in this group can spend on this AI model within the specified duration. Cost is based on the model's configured input, output, cached input, and cache write prices."
+          max_cost_required: "Must be set if max tokens and max uses are not set"
         credit_allocation:
           credits_remaining: "%{remaining} of %{total} credits remaining (%{percentage}%)"
           soft_limit_warning: "This model has %{percentage}% of AI credits remaining today"
@@ -911,20 +978,20 @@ en:
 
         model_description:
           none: "General settings that work for most language models"
-          anthropic-claude-opus-4-6: "Anthropic's most intelligent model"
+          anthropic-claude-opus-4-7: "Anthropic's most intelligent model"
           anthropic-claude-sonnet-4-6: "Optimal balance of speed and cost"
           anthropic-claude-haiku-4-5: "Fast and cost-effective"
-          google-gemini-3-pro: "Google's most intelligent model"
+          google-gemini-3-1-pro: "Google's most intelligent model"
           google-gemini-3-flash: "Fast and cost-efficient with multimodal reasoning"
-          open_ai-gpt-5-2: "OpenAI's flagship model, well suited for problem solving across domains"
-          open_ai-gpt-5-mini: "Provides a balance between intelligence, speed, and cost"
-          open_ai-gpt-5-nano: "Fastest, most cost-effective GPT-5 model"
-          open_router-deepseek-deepseek-v3-2: "DeepSeek's latest high-performance model"
-          open_router-moonshotai-kimi-k2-5: "Moonshot's multimodal model with vision capabilities"
-          open_router-x-ai-grok-4-fast: "xAI's flagship model with vision"
-          open_router-minimax-minimax-m2-5: "MiniMax's multimodal model with large context"
-          open_router-z-ai-glm-5: "Z-AI's multimodal model with vision"
-          open_router-arcee-ai-trinity-large-preview-free: "Free open-source model from Arcee AI"
+          open_ai-gpt-5-5: "OpenAI's most capable model with extended context"
+          open_ai-gpt-5-4: "OpenAI's flagship model, well suited for problem solving across domains"
+          open_ai-gpt-5-4-nano: "Fastest, most cost-effective GPT-5 model"
+          open_router-moonshotai-kimi-k2-6: "Moonshot's multimodal model with vision capabilities"
+          open_router-deepseek-deepseek-v4-flash: "DeepSeek's latest high-performance model with 1M context"
+          open_router-minimax-minimax-m2-7: "MiniMax's model with large context"
+          open_router-x-ai-grok-4-1-fast: "xAI's fast multimodal model with very large context"
+          open_router-z-ai-glm-5-1: "Z-AI's reasoning-focused model"
+          open_router-qwen-qwen3-6-plus: "Qwen's multimodal model with 1M context"
 
         preseeded_model_description: "Pre-configured open-source model utilizing %{model}"
 
@@ -946,14 +1013,16 @@ en:
           success: "Success!"
           invalid_config: "Fix the following errors in your configuration first:"
           failure: "Trying to contact the model returned this error: %{error}"
+          failure_non_streaming: "Non-streaming request failed: %{error}"
+          failure_streaming: "Streaming request failed: %{error}"
 
         hints:
           max_prompt_tokens: "The maximum number of tokens the model can process in a single request"
           max_output_tokens: "The maximum number of tokens the model can generate in a single request"
           display_name: "The name used to reference this model across your site's interface."
           name: "We include this in the API call to specify which model we'll use"
-          vision_enabled: "If enabled, the AI will attempt to understand images. It depends on the model being used supporting vision. Supported by latest models from Anthropic, Google, and OpenAI."
-          allowed_attachment_types: "Choose which attachment types are forwarded to the model. Leave blank to disallow attachments. Images are controlled via vision."
+          vision_enabled: "Whether this model/provider can receive and understand images."
+          allowed_attachment_types: "Choose which document attachment types can be converted or forwarded. Leave blank to disallow document attachments. Images are controlled separately."
           cost_input: "The input cost per 1M tokens for this model"
           cost_cached_input: "The cached input cost per 1M tokens for this model (when reading from prompt cache)"
           cost_cache_write: "The cache write cost per 1M tokens for this model (when writing to prompt cache)"
@@ -992,6 +1061,9 @@ en:
           disable_streaming: "Disable streaming completions (convert streaming to non streaming requests)"
           reasoning_effort: "Reasoning effort (only applicable to reasoning models)"
           service_tier: "Service tier (flex = lower cost/higher latency, priority = faster processing)"
+          reasoning_parser: "vLLM reasoning parser"
+          thinking_override: "Thinking override"
+          thinking_token_budget: "Thinking token budget"
           enable_reasoning: "Enable reasoning (only applicable to reasoning models)"
           adaptive_thinking: "Enable adaptive thinking (recommended for Claude 4.6 models)"
           enable_thinking: "Enable thinking (Gemini 2.5 models - uses token budget)"
@@ -1006,6 +1078,12 @@ en:
           prompt_caching_always: "Always - Always use prompt caching"
           effort: "Effort level"
 
+        provider_field_hints:
+          reasoning_parser: "Must match the vLLM server --reasoning-parser setting. Discourse cannot switch parsers per request; it uses this to shape request options."
+          thinking_override: "Optionally force supported vLLM chat templates to enable or disable thinking for each request. Unsupported parsers keep the server default."
+          reasoning_effort: "Sends vLLM's reasoning_effort request option for parsers that support it."
+          thinking_token_budget: "Optional cap for reasoning tokens. Requires a vLLM reasoning parser and is ignored when reasoning effort is None."
+
       related_topics:
         title: "Related topics"
         pill: "Related"
@@ -1013,11 +1091,10 @@ en:
         title: "Suggest changes using AI"
         description: "Choose one of the options below, and the AI will suggest you a new version of the text."
         selection_hint: "Hint: You can also select a portion of the text before opening the helper to rewrite only that."
-        suggest: "Suggest with AI"
+        suggest: "Show AI suggestions"
+        choose: "Choose for me"
+        suggestions: "Suggestions"
         suggest_errors:
-          too_many_tags:
-            one: "You can only have up to %{count} tag"
-            other: "You can only have up to %{count} tags"
           no_suggestions: "No suggestions available"
         missing_content: "Please enter some content to generate suggestions."
         context_menu:
@@ -1171,10 +1248,12 @@ en:
           title: "View AI interaction"
           copy_request: "Copy request"
           copy_response: "Copy response"
-          request_tokens: "Request tokens:"
-          response_tokens: "Response tokens:"
-          cache_read_tokens: "Cache read tokens:"
-          cache_write_tokens: "Cache write tokens:"
+          this_turn: "This turn:"
+          whole_conversation: "Conversation:"
+          tokens_summary: "%{request_tokens} in → %{response_tokens} out"
+          cache_both: "(cache %{read} read, %{write} write)"
+          cache_read_only: "(cache %{read} read)"
+          cache_write_only: "(cache %{write} write)"
           request: "Request"
           response: "Response"
           next_log: "Next"
@@ -1229,11 +1308,20 @@ en:
             one: "Message must be %{count} character or longer"
             other: "Message must be %{count} characters or longer"
           messages_sidebar_title: "Conversations"
+          starred: "Starred"
+          star_conversation: "Star conversation"
+          unstar_conversation: "Unstar conversation"
+          open_conversation_menu: "Open conversation menu"
           today: "Today"
           last_7_days: "Last 7 days"
           last_30_days: "Last 30 days"
           upload_files: "Upload files"
           uploads_in_progress: "Cannot submit while uploads are in progress"
+          show_toolbar: "Show formatting toolbar"
+          hide_toolbar: "Hide formatting toolbar"
+          scroll_to_bottom: "Scroll to bottom"
+          streaming_below: "New content below"
+          editing_post: "Editing post"
       sentiments:
         dashboard:
           title: "Sentiment"

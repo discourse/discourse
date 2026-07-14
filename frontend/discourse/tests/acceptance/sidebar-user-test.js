@@ -1,6 +1,5 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
-import Sinon from "sinon";
 import {
   acceptance,
   updateCurrentUser,
@@ -155,31 +154,6 @@ acceptance(
       assert.dom(".sidebar-container").exists("displays the sidebar");
     });
 
-    test("button to toggle between legacy mobile and desktop view on touch devices", async function (assert) {
-      this.container.lookup(
-        "service:site-settings"
-      ).viewport_based_mobile_mode = false;
-
-      const capabilities = this.container.lookup("service:capabilities");
-      Sinon.stub(capabilities, "touch").value(true);
-
-      await visit("/");
-
-      assert
-        .dom(
-          `.sidebar-footer-actions-toggle-mobile-view[title="${i18n(
-            "mobile_view"
-          )}"]`
-        )
-        .exists("displays the right title for the button");
-
-      assert
-        .dom(
-          ".sidebar-footer-actions-toggle-mobile-view .d-icon-mobile-screen-button"
-        )
-        .exists("displays the mobile icon for the button");
-    });
-
     test("clean up topic tracking state state changed callbacks when sidebar is destroyed", async function (assert) {
       updateCurrentUser({ display_sidebar_tags: true });
 
@@ -228,6 +202,14 @@ acceptance(
       await visit("/");
 
       assert
+        .dom("nav#d-sidebar")
+        .hasAttribute(
+          "aria-label",
+          i18n("sidebar.title"),
+          "sidebar is exposed as a named navigation landmark"
+        );
+
+      assert
         .dom(
           ".btn-sidebar-toggle[aria-expanded='true'][aria-controls='d-sidebar']"
         )
@@ -260,6 +242,13 @@ acceptance(
           i18n("sidebar.title"),
           "has the right title attribute when sidebar is collapsed"
         );
+
+      await click(".btn-sidebar-toggle");
+
+      assert.true(
+        document.querySelector("#d-sidebar").contains(document.activeElement),
+        "focus moves into the sidebar when it is opened via the toggle"
+      );
     });
   }
 );

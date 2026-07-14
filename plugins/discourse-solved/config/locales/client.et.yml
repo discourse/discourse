@@ -5,6 +5,24 @@
 # https://translate.discourse.org/
 
 et:
+  admin_js:
+    admin:
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Aktsepteeritud lahendused"
+        sections:
+          support:
+            filter:
+              all_categories: "Kõik kategooriad"
+            answerers:
+              staff: "Meeskond"
+              member: "Liikmed"
+              basic: "Tavakasutaja"
+            response_time:
+              buckets:
+                lt_1h: "< 1 tund"
   js:
     notifications:
       alt:
@@ -25,6 +43,8 @@ et:
         solved: "lahendatud"
       move_post_cancel: "Loobu"
       confirm_solved_removal_cancel: "Loobu"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
     topic_statuses:
       solved:
         help: "ellel teemal on lahendus"

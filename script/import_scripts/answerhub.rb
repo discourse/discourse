@@ -232,20 +232,18 @@ class ImportScripts::AnswerHub < ImportScripts::Base
           created_at: p["c_creation_date"],
           post_create_action:
             proc do |post_info|
-              begin
-                if p["c_type"] == "answer" && p["c_marked"] == 1
-                  post = Post.find(post_info[:id])
-                  if post
-                    user_id =
-                      user_id_from_imported_user_id(p["c_author"]) || Discourse::SYSTEM_USER_ID
-                    current_user = User.find(user_id)
-                    solved = DiscourseSolved.accept_answer!(post, current_user)
-                    # puts "SOLVED: #{solved}"
-                  end
+              if p["c_type"] == "answer" && p["c_marked"] == 1
+                post = Post.find(post_info[:id])
+                if post
+                  user_id =
+                    user_id_from_imported_user_id(p["c_author"]) || Discourse::SYSTEM_USER_ID
+                  current_user = User.find(user_id)
+                  solved = DiscourseSolved.accept_answer!(post, current_user)
+                  # puts "SOLVED: #{solved}"
                 end
-              rescue ActiveRecord::RecordInvalid
-                puts "SOLVED: Skipped post_id: #{post.id} because invalid"
               end
+            rescue ActiveRecord::RecordInvalid
+              puts "SOLVED: Skipped post_id: #{post.id} because invalid"
             end,
         }
       end
@@ -356,38 +354,36 @@ class ImportScripts::AnswerHub < ImportScripts::Base
     avatars = @client.query(query)
 
     avatars.each do |a|
-      begin
-        user_id = user_id_from_imported_user_id(a["c_user"])
-        user = User.find(user_id)
-        if user
-          filename = "avatar-#{user_id}.png"
-          path = File.join(AVATAR_DIR, filename)
-          next if !File.exist?(path)
+      user_id = user_id_from_imported_user_id(a["c_user"])
+      user = User.find(user_id)
+      if user
+        filename = "avatar-#{user_id}.png"
+        path = File.join(AVATAR_DIR, filename)
+        next if !File.exist?(path)
 
-          # Scrape Avatars - Avatars are saved in the db, but it might be easier to just scrape them
-          if SCRAPE_AVATARS == 1
-            File.open(path, "wb") do |f|
-              f << open(
-                "https://#{ANSWERHUB_DOMAIN}/forums/users/#{a["c_user"]}/photo/view.html?s=240",
-              ).read
-            end
-          end
-
-          upload = @uploader.create_upload(user.id, path, filename)
-
-          if upload.persisted?
-            user.import_mode = false
-            user.create_user_avatar
-            user.import_mode = true
-            user.user_avatar.update(custom_upload_id: upload.id)
-            user.update(uploaded_avatar_id: upload.id)
-          else
-            Rails.logger.error("Could not persist avatar for user #{user.username}")
+        # Scrape Avatars - Avatars are saved in the db, but it might be easier to just scrape them
+        if SCRAPE_AVATARS == 1
+          File.open(path, "wb") do |f|
+            f << open(
+              "https://#{ANSWERHUB_DOMAIN}/forums/users/#{a["c_user"]}/photo/view.html?s=240",
+            ).read
           end
         end
-      rescue ActiveRecord::RecordNotFound
-        puts "Could not find User for user_id: #{a["c_user"]}"
+
+        upload = @uploader.create_upload(user.id, path, filename)
+
+        if upload.persisted?
+          user.import_mode = false
+          user.create_user_avatar
+          user.import_mode = true
+          user.user_avatar.update(custom_upload_id: upload.id)
+          user.update(uploaded_avatar_id: upload.id)
+        else
+          Rails.logger.error("Could not persist avatar for user #{user.username}")
+        end
       end
+    rescue ActiveRecord::RecordNotFound
+      puts "Could not find User for user_id: #{a["c_user"]}"
     end
   end
 

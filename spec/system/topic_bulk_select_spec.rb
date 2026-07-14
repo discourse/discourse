@@ -25,14 +25,16 @@ describe "Topic bulk select" do
     expect(topic_bulk_actions_modal).to be_open
   end
 
-  context "when dismissing unread topics" do
+  context "when dismissing new replies" do
     fab!(:topic) { Fabricate(:topic, user: admin) }
     fab!(:post1) { create_post(user: admin, topic: topic) }
     fab!(:post2) { create_post(topic: topic) }
 
+    before { SiteSetting.enable_unified_new = true }
+
     it "removes the topics from the list" do
       sign_in(admin)
-      visit("/unread")
+      visit("/new?subset=replies")
 
       topic_list_header.click_bulk_select_button
       expect(topic_list).to have_topic_checkbox(topic)
@@ -40,11 +42,9 @@ describe "Topic bulk select" do
       topic_list.click_topic_checkbox(topic)
 
       topic_list_header.click_bulk_select_topics_dropdown
-      topic_list_header.click_bulk_button("dismiss-unread")
+      topic_list_header.click_bulk_button("dismiss-new")
 
-      topic_bulk_actions_modal.click_dismiss_confirm
-
-      expect(page).to have_text(I18n.t("js.topics.none.education.unread"))
+      expect(topic_list).to have_no_topics
     end
 
     it "turns off bulk select after dismissing" do
@@ -53,15 +53,13 @@ describe "Topic bulk select" do
       create_post(topic: other_topic)
 
       sign_in(admin)
-      visit("/unread")
+      visit("/new?subset=replies")
 
       topic_list_header.click_bulk_select_button
       topic_list.click_topic_checkbox(topic)
 
       topic_list_header.click_bulk_select_topics_dropdown
-      topic_list_header.click_bulk_button("dismiss-unread")
-
-      topic_bulk_actions_modal.click_dismiss_confirm
+      topic_list_header.click_bulk_button("dismiss-new")
 
       expect(topic_list).to have_topic(other_topic)
       expect(topic_list).to have_no_topic_checkbox(other_topic)
@@ -73,6 +71,8 @@ describe "Topic bulk select" do
     fab!(:post1) { create_post(user:, topic:) }
 
     let(:topic_list_controls) { PageObjects::Components::TopicListControls.new }
+
+    before { SiteSetting.enable_unified_new = true }
 
     context "with the bulk actions dropdown" do
       it "removes the topics from the list" do
@@ -141,72 +141,87 @@ describe "Topic bulk select" do
     end
   end
 
-  context "when appending tags" do
+  context "when managing tags" do
     fab!(:tag1, :tag)
     fab!(:tag2, :tag)
     fab!(:tag3, :tag)
+    fab!(:topic) { Fabricate(:post).topic }
+    fab!(:topic_2) { Fabricate(:post).topic }
 
     before { SiteSetting.tagging_enabled = true }
 
-    def open_append_modal(topics_to_select = nil)
+    def open_manage_tags_modal(topics_to_select)
       sign_in(admin)
       visit("/latest")
 
-      open_bulk_actions_modal(topics_to_select, "append-tags")
+      open_bulk_actions_modal(topics_to_select, "manage-tags")
+      PageObjects::Modals::ManageTags.new
     end
 
     context "when in mobile", mobile: true do
       it "is working" do
         # behavior is already tested on desktop, we simply ensure
         # the general workflow is working on mobile
-        open_append_modal
+        open_manage_tags_modal([topic, topic_2])
       end
     end
 
-    it "appends tags to selected topics" do
-      open_append_modal
+    it "removes all tags when the toggle is enabled" do
+      topic.update!(tags: [tag1, tag2, tag3])
+      topic_2.update!(tags: [tag1, tag2])
 
-      topic_bulk_actions_modal.tag_selector.expand
-      topic_bulk_actions_modal.tag_selector.search(tag1.name)
-      topic_bulk_actions_modal.tag_selector.select_row_by_name(tag1.name)
-      topic_bulk_actions_modal.tag_selector.search(tag2.name)
-      topic_bulk_actions_modal.tag_selector.select_row_by_name(tag2.name)
+      modal = open_manage_tags_modal([topic, topic_2])
+      modal.toggle_remove_all
 
-      topic_bulk_actions_modal.click_bulk_topics_confirm
+      expect(modal).to have_remove_all_notice
+      expect(modal).to have_no_remove_tag_selector
 
-      expect(
-        find(topic_list.topic_list_item_class(topics.last)).find(".discourse-tags"),
-      ).to have_content(tag1.name)
-      expect(
-        find(topic_list.topic_list_item_class(topics.last)).find(".discourse-tags"),
-      ).to have_content(tag2.name)
+      modal.click_confirm
+
+      expect(topic_list).to have_no_topic_tags(topic)
+      expect(topic_list).to have_no_topic_tags(topic_2)
     end
 
-    context "when selecting topics in different categories" do
-      before do
-        topics
-          .last(2)
-          .each do |topic|
-            topic.update!(category: Fabricate(:category))
-            topic.update!(category: Fabricate(:category))
-          end
-      end
+    it "adds, removes, and replaces tags in a single submission" do
+      tag4 = Fabricate(:tag)
+      tag5 = Fabricate(:tag)
+      topic.update!(tags: [tag1, tag2])
+      topic_2.update!(tags: [tag1, tag3])
 
-      it "does not show an additional note about the category in the modal" do
-        open_append_modal(topics.last(2))
+      modal = open_manage_tags_modal([topic, topic_2])
+      expect(modal).to have_disabled_submit
 
-        expect(topic_bulk_actions_modal).to have_no_category_badge(topics.last.reload.category)
-      end
+      modal.select_replace_from(tag1.name)
+      modal.select_replace_to(tag5.name)
+
+      modal.add_tags(tag4.name)
+      modal.remove_tags(tag2.name)
+
+      modal.click_confirm
+
+      expect(topic_list).to have_topic_tags(topic, tags: [tag4, tag5])
+      expect(topic_list).to have_topic_tags(topic_2, tags: [tag3, tag4, tag5])
     end
 
     context "when selecting topics that are all in the same category" do
       fab!(:category)
 
-      before { topics.last.update!(category_id: category.id) }
+      before do
+        topic.update!(category_id: category.id)
+        topic_2.update!(category_id: category.id)
+      end
 
-      it "shows an additional note about the category in the modal" do
-        open_append_modal
-        expect(topic_bulk_actions_modal).to have_category_badge(category)
+      it "limits tag search to restricted tags when category does not allow global tags" do
+        restricted_tag_group = Fabricate(:tag_group)
+        restricted_tag = Fabricate(:tag)
+        TagGroupMembership.create!(tag: restricted_tag, tag_group: restricted_tag_group)
+        CategoryTagGroup.create!(category: category, tag_group: restricted_tag_group)
+
+        modal = open_manage_tags_modal([topic, topic_2])
+
+        modal.add_tag_selector.expand
+
+        expect(modal.add_tag_selector.option_names).to contain_exactly(restricted_tag.name)
       end
 
       it "allows for searching restricted tags for that category and other tags too if the category allows it" do
@@ -216,22 +231,83 @@ describe "Topic bulk select" do
         CategoryTagGroup.create!(category: category, tag_group: restricted_tag_group)
         category.update!(allow_global_tags: true)
 
-        open_append_modal
+        modal = open_manage_tags_modal([topic, topic_2])
 
-        topic_bulk_actions_modal.tag_selector.expand
-        topic_bulk_actions_modal.tag_selector.search(restricted_tag.name)
-        topic_bulk_actions_modal.tag_selector.select_row_by_name(restricted_tag.name)
-        topic_bulk_actions_modal.tag_selector.search(tag1.name)
-        topic_bulk_actions_modal.tag_selector.select_row_by_name(tag1.name)
+        modal.add_tags(restricted_tag.name, tag1.name)
 
-        topic_bulk_actions_modal.click_bulk_topics_confirm
+        modal.click_confirm
 
-        expect(
-          find(topic_list.topic_list_item_class(topics.last)).find(".discourse-tags"),
-        ).to have_content(restricted_tag.name)
-        expect(
-          find(topic_list.topic_list_item_class(topics.last)).find(".discourse-tags"),
-        ).to have_content(tag1.name)
+        expect(topic_list).to have_topic_tags(topic, tags: [restricted_tag, tag1])
+        expect(topic_list).to have_topic_tags(topic_2, tags: [restricted_tag, tag1])
+      end
+
+      it "can remove and replace-away a restricted tag" do
+        restricted_tag_group = Fabricate(:tag_group)
+        restricted_to_remove = Fabricate(:tag)
+        restricted_to_replace = Fabricate(:tag)
+        [restricted_to_remove, restricted_to_replace].each do |t|
+          TagGroupMembership.create!(tag: t, tag_group: restricted_tag_group)
+        end
+        CategoryTagGroup.create!(category: category, tag_group: restricted_tag_group)
+        category.update!(allow_global_tags: true)
+        topic.update!(tags: [restricted_to_remove, restricted_to_replace])
+
+        modal = open_manage_tags_modal([topic, topic_2])
+
+        modal.remove_tags(restricted_to_remove.name)
+        modal.select_replace_from(restricted_to_replace.name)
+        modal.select_replace_to(tag1.name)
+
+        modal.click_confirm
+
+        expect(topic_list).to have_topic_tags(topic, tags: [tag1])
+      end
+    end
+
+    context "when selecting topics across multiple categories" do
+      fab!(:category_a, :category)
+      fab!(:category_b, :category)
+      fab!(:restricted_tag_group, :tag_group)
+      fab!(:restricted_tag, :tag)
+
+      before do
+        topic.update!(category_id: category_a.id)
+        topic_2.update!(category_id: category_b.id)
+        TagGroupMembership.create!(tag: restricted_tag, tag_group: restricted_tag_group)
+      end
+
+      it "lets a restricted tag be added when every selected category allows it" do
+        CategoryTagGroup.create!(category: category_a, tag_group: restricted_tag_group)
+        CategoryTagGroup.create!(category: category_b, tag_group: restricted_tag_group)
+
+        modal = open_manage_tags_modal([topic, topic_2])
+        modal.add_tags(restricted_tag.name)
+        modal.click_confirm
+
+        expect(topic_list).to have_topic_tags(topic, tags: [restricted_tag])
+        expect(topic_list).to have_topic_tags(topic_2, tags: [restricted_tag])
+      end
+
+      it "reports an error for topics whose category forbids the tag" do
+        CategoryTagGroup.create!(category: category_a, tag_group: restricted_tag_group)
+
+        modal = open_manage_tags_modal([topic, topic_2])
+        modal.add_tags(restricted_tag.name)
+        modal.click_confirm
+
+        expect(topic_bulk_actions_modal).to have_errors
+        expect(page).to have_css(
+          ".topic-bulk-actions-modal__errors .badge-category",
+          text: category_b.name,
+        )
+        expect(page).to have_css(
+          ".topic-bulk-actions-modal__errors .discourse-tag",
+          text: restricted_tag.name,
+        )
+        expect(page).to have_css("#bulk-topics-close")
+        expect(page).to have_no_css("#bulk-topics-confirm")
+        expect(topic.reload.tags).to include(restricted_tag)
+        expect(topic_2.reload.tags).not_to include(restricted_tag)
       end
     end
   end
@@ -285,9 +361,10 @@ describe "Topic bulk select" do
         expect(topic_list).to have_closed_status(topics.third)
       end
 
-      # Check that the user did receive a new post notification badge
+      # The bulk close posts a small action, which no longer marks the topic
+      # unread, so the watching user does not get a new post notification badge.
       visit("/latest")
-      expect(topic_list).to have_unread_badge(topics.third)
+      expect(topic_list).to have_no_unread_badge(topics.third)
     end
 
     it "closes topics silently" do
@@ -337,10 +414,15 @@ describe "Topic bulk select" do
     end
 
     it "works with keyboard shortcuts" do
+      SiteSetting.enable_unified_new = true
+
       sign_in(admin)
       visit("/latest")
 
+      expect(page).to have_css("#site-logo")
+
       send_keys([:shift, "b"])
+      expect(topic_list).to have_bulk_select_enabled
       send_keys("j")
       send_keys("x") # toggle select
       expect(topic_list).to have_checkbox_selected_on_row(1)
@@ -348,22 +430,21 @@ describe "Topic bulk select" do
       send_keys("x") # toggle deselect
       expect(topic_list).to have_no_checkbox_selected_on_row(1)
 
-      # watch topic and add a reply so we have something in /unread
+      # watch topic and add a reply so we have something in /new?subset=replies
       topic = topics.first
       visit("/t/#{topic.slug}/#{topic.id}")
       topic_page.watch_topic
       expect(topic_page).to have_read_post(1)
       Fabricate(:post, topic: topic)
 
-      visit("/unread")
+      visit("/new?subset=replies")
       expect(topic_list).to have_topics
 
       send_keys([:shift, "b"])
+      expect(topic_list).to have_bulk_select_enabled
       send_keys("j")
       send_keys("x")
       send_keys([:shift, "d"])
-
-      click_button("dismiss-read-confirm")
 
       expect(topic_list).to have_no_topics
     end
@@ -532,7 +613,7 @@ describe "Topic bulk select" do
 
     it "shows errors in the modal when some topics cannot be moved due to tag restrictions" do
       original_category = topics.first.category
-      sign_in(admin)
+      sign_in(Fabricate(:moderator))
       visit("/latest")
 
       open_bulk_actions_modal([topics.first], "update-category")

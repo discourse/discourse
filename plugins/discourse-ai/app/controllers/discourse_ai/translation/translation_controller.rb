@@ -74,11 +74,9 @@ module DiscourseAi
       end
 
       def rate_limit!
-        begin
-          RateLimiter.new(current_user, "ai_translate_post", 3, 5.minutes).performed!
-        rescue RateLimiter::LimitExceeded
-          render_json_error(I18n.t("rate_limiter.slow_down"))
-        end
+        RateLimiter.new(current_user, "ai_translate_post", 3, 5.minutes).performed!
+      rescue RateLimiter::LimitExceeded
+        render_json_error(I18n.t("rate_limiter.slow_down"))
       end
 
       def find_untranslated_posts(topic, guardian)

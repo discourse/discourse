@@ -1,6 +1,6 @@
-import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
-import DPageHeader from "discourse/components/d-page-header";
-import NavItem from "discourse/components/nav-item";
+import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
+import DNavItem from "discourse/ui-kit/d-nav-item";
+import DPageHeader from "discourse/ui-kit/d-page-header";
 import { i18n } from "discourse-i18n";
 
 export default <template>
@@ -16,19 +16,19 @@ export default <template>
       />
     </:breadcrumbs>
     <:tabs>
-      <NavItem
+      <DNavItem
         @route="adminConfig.content.categoriesAndTags"
         @label="admin.config.content.sub_pages.categories_and_tags.title"
       />
-      <NavItem
+      <DNavItem
         @route="adminConfig.content.sharing"
         @label="admin.config.content.sub_pages.sharing.title"
       />
-      <NavItem
+      <DNavItem
         @route="adminConfig.content.postsAndTopics"
         @label="admin.config.content.sub_pages.posts_and_topics.title"
       />
-      <NavItem
+      <DNavItem
         @route="adminConfig.content.statsAndThresholds"
         @label="admin.config.content.sub_pages.stats_and_thresholds.title"
       />

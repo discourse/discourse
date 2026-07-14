@@ -8,8 +8,6 @@ ca:
   discourse_post_voting:
     reviewables:
       actions:
-        no_action_comment:
-          title: "Cap acció"
         agree_and_suspend:
           description: "D'acord amb la bandera i suspèn l'usuari. "
         agree_and_silence:

@@ -188,10 +188,17 @@ sq:
         direct: "%{username} ju përmendi në bisedë private"
       new_chat_message: '%{username} dërgoi një mesazh në "%{channel}"'
       new_direct_chat_message: "%{username} dërgoi një mesazh në bisedën personale."
+    actions:
+      chat_reply:
+        title: Përgjigju
   discourse_automation:
     scriptables:
       send_chat_message:
         title: Dërgoi një kanal mesazhi.
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Aprovo"
+      default_deny_label: "Mohoni"
   reviewable_score_types:
     needs_review:
       title: "Nevojë për Rishikim"

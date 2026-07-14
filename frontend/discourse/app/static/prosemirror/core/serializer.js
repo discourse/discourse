@@ -2,6 +2,7 @@ import {
   defaultMarkdownSerializer,
   MarkdownSerializerState,
 } from "prosemirror-markdown";
+import expelBoundaryPunctuation from "../lib/expel-boundary-punctuation";
 
 export default class Serializer {
   #afterSerializers;
@@ -11,6 +12,10 @@ export default class Serializer {
     this.nodes.hard_break = (state) =>
       state.write(state.inTable ? "<br>" : "\n");
 
+    this.nodes.text = (state, node) => {
+      state.text(node.text, !state.inAutolink);
+    };
+
     this.marks = includeDefault ? { ...defaultMarkdownSerializer.marks } : {};
 
     this.#extractNodeSerializers(extensions, pluginParams);
@@ -19,7 +24,7 @@ export default class Serializer {
 
   convert(doc) {
     const state = new MarkdownSerializerState(this.nodes, this.marks, {});
-    state.renderContent(doc.content);
+    state.renderContent(expelBoundaryPunctuation(doc).content);
 
     if (this.#afterSerializers) {
       for (const afterSerializer of this.#afterSerializers) {

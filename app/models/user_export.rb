@@ -9,7 +9,7 @@ class UserExport < ActiveRecord::Base
 
   after_save do
     if saved_change_to_upload_id?
-      UploadReference.ensure_exist!(upload_ids: [self.upload_id], target: self)
+      UploadReference.ensure_exist!(upload_ids: [upload_id], target: self)
     end
   end
 
@@ -20,14 +20,12 @@ class UserExport < ActiveRecord::Base
       .where("created_at < ?", DESTROY_CREATED_BEFORE.ago)
       .find_each do |user_export|
         UserExport.transaction do
-          begin
-            Post.where(topic_id: user_export.topic_id).find_each { |p| p.destroy! }
-            user_export.destroy!
-          rescue => e
-            Rails.logger.warn(
-              "Failed to remove user_export record with id #{user_export.id}: #{e.message}\n#{e.backtrace.join("\n")}",
-            )
-          end
+          Post.where(topic_id: user_export.topic_id).find_each { |p| p.destroy! }
+          user_export.destroy!
+        rescue => e
+          Rails.logger.warn(
+            "Failed to remove user_export record with id #{user_export.id}: #{e.message}\n#{e.backtrace.join("\n")}",
+          )
         end
       end
   end
@@ -37,13 +35,10 @@ class UserExport < ActiveRecord::Base
   end
 
   def self.base_directory
-    File.join(
-      Rails.root,
-      "public",
-      "uploads",
-      "csv_exports",
-      RailsMultisite::ConnectionManagement.current_db,
-    )
+    Rails
+      .public_path
+      .join("uploads", "csv_exports", RailsMultisite::ConnectionManagement.current_db)
+      .to_s
   end
 end
 
@@ -53,9 +48,9 @@ end
 #
 #  id         :integer          not null, primary key
 #  file_name  :string           not null
-#  user_id    :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
-#  upload_id  :integer
 #  topic_id   :integer
+#  upload_id  :integer
+#  user_id    :integer          not null
 #

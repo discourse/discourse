@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe Jobs::PublishTopicToCategory do
+  fab!(:admin)
   fab!(:category)
   fab!(:another_category, :category)
 
@@ -11,6 +12,7 @@ RSpec.describe Jobs::PublishTopicToCategory do
       :topic_timer,
       status_type: TopicTimer.types[:publish_to_category],
       category_id: another_category.id,
+      user: admin,
       topic: topic,
       execute_at: 1.minute.ago,
       created_at: 5.minutes.ago,
@@ -68,8 +70,6 @@ RSpec.describe Jobs::PublishTopicToCategory do
         }.to(true)
       end
 
-      topic.allowed_users << topic.public_topic_timer.user
-
       now = freeze_time
 
       messages =
@@ -83,6 +83,13 @@ RSpec.describe Jobs::PublishTopicToCategory do
       expect(topic.category).to eq(another_category)
       expect(topic.visible).to eq(true)
       expect(topic.private_message?).to eq(false)
+      expect(
+        UserHistory.exists?(
+          action: UserHistory.actions[:topic_published],
+          acting_user_id: admin.id,
+          topic_id: topic.id,
+        ),
+      ).to eq(true)
 
       %w[created_at bumped_at updated_at last_posted_at].each do |attribute|
         expect(topic.public_send(attribute)).to eq_time(now)
@@ -102,7 +109,7 @@ RSpec.describe Jobs::PublishTopicToCategory do
       expect(topic.category).not_to eq(another_category)
     end
 
-    it "works if the user can see the PM" do
+    it "does nothing if the user can't convert the PM" do
       tl4_user = Fabricate(:trust_level_4)
       topic.convert_to_private_message(Discourse.system_user)
 
@@ -114,8 +121,8 @@ RSpec.describe Jobs::PublishTopicToCategory do
       described_class.new.execute(topic_timer_id: topic.public_topic_timer.id)
 
       topic.reload
-      expect(topic.private_message?).to eq(false)
-      expect(topic.category).to eq(another_category)
+      expect(topic.private_message?).to eq(true)
+      expect(topic.category).not_to eq(another_category)
     end
   end
 

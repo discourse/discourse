@@ -13,8 +13,14 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
   fab!(:image_upload2) do
     Fabricate(:upload, user: user, original_filename: "image.png", extension: "png")
   end
+  let(:document_upload) do
+    Fabricate(:upload, user: user, original_filename: "notes.txt", extension: "txt")
+  end
 
-  before { enable_current_plugin }
+  before do
+    enable_current_plugin
+    SiteSetting.authorized_extensions = "*"
+  end
 
   it "correctly merges user messages with uploads" do
     builder.push(type: :user, content: "Hello", id: "Alice", upload_ids: [1])
@@ -142,7 +148,7 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
     end
 
     it "includes uploads from context posts when include_uploads is true" do
-      upload = Fabricate(:upload, user: user)
+      upload = Fabricate(:upload, user: user, original_filename: "image.png", extension: "png")
       UploadReference.create!(target: post1, upload: upload)
 
       context =
@@ -160,6 +166,43 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       upload_hashes = context.first[:content].select { |item| item.is_a?(Hash) && item[:upload_id] }
       expect(upload_hashes).to be_present
       expect(upload_hashes.first[:upload_id]).to eq(upload.id)
+    end
+
+    context "with a secure upload the chat guardian cannot see" do
+      fab!(:secure_upload) do
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        private_topic = Fabricate(:topic, category: private_category)
+        private_post = Fabricate(:post, topic: private_topic)
+        Fabricate(
+          :secure_upload,
+          original_filename: "secure.png",
+          extension: "png",
+          access_control_post: private_post,
+        )
+      end
+
+      it "drops the upload from the chat context" do
+        SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:everyone]
+
+        post_with_secure_upload =
+          create_post(
+            topic_id: topic.id,
+            user: user,
+            raw: "Look at this ![image](#{secure_upload.short_url})",
+          )
+
+        builder = described_class.new
+        builder.set_chat_context_posts(
+          [post_with_secure_upload.id],
+          Guardian.new(user),
+          include_image_uploads: true,
+          include_document_uploads: false,
+        )
+
+        upload_hashes =
+          builder.chat_context_posts.select { |item| item.is_a?(Hash) && item[:upload_id] }
+        expect(upload_hashes).to be_empty
+      end
     end
   end
 
@@ -273,6 +316,107 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       expect(message[:upload_ids]).to be_nil
     end
 
+    it "can include document uploads while excluding image uploads" do
+      message_with_mixed_uploads =
+        Fabricate(
+          :chat_message,
+          chat_channel: dm_channel,
+          user: user,
+          message: "Check these files",
+          upload_ids: [image_upload1.id, document_upload.id],
+        )
+
+      context =
+        described_class.messages_from_chat(
+          message_with_mixed_uploads,
+          channel: dm_channel,
+          context_post_ids: nil,
+          max_messages: 10,
+          include_image_uploads: false,
+          include_document_uploads: true,
+          allowed_attachment_types: ["txt"],
+          bot_user_ids: [bot_user.id],
+          instruction_message: nil,
+        )
+
+      expect(context.first[:content]).to eq(
+        [
+          "Check these files -- uploaded(#{image_upload1.short_url}, #{document_upload.short_url})",
+          { upload_id: document_upload.id },
+        ],
+      )
+    end
+
+    it "can include image uploads while excluding document uploads" do
+      message_with_mixed_uploads =
+        Fabricate(
+          :chat_message,
+          chat_channel: dm_channel,
+          user: user,
+          message: "Check these files",
+          upload_ids: [image_upload1.id, document_upload.id],
+        )
+
+      context =
+        described_class.messages_from_chat(
+          message_with_mixed_uploads,
+          channel: dm_channel,
+          context_post_ids: nil,
+          max_messages: 10,
+          include_image_uploads: true,
+          include_document_uploads: false,
+          bot_user_ids: [bot_user.id],
+          instruction_message: nil,
+        )
+
+      expect(context.first[:content]).to eq(
+        [
+          "Check these files -- uploaded(#{image_upload1.short_url}, #{document_upload.short_url})",
+          { upload_id: image_upload1.id },
+        ],
+      )
+    end
+
+    context "with a secure upload attached to a message the chat guardian cannot see" do
+      fab!(:secure_upload) do
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        private_topic = Fabricate(:topic, category: private_category)
+        private_post = Fabricate(:post, topic: private_topic)
+        Fabricate(
+          :secure_upload,
+          original_filename: "secure.png",
+          extension: "png",
+          access_control_post: private_post,
+        )
+      end
+      fab!(:message_with_secure_upload) do
+        Fabricate(
+          :chat_message,
+          chat_channel: dm_channel,
+          user: user,
+          message: "Look at this",
+          upload_ids: [secure_upload.id],
+        )
+      end
+
+      it "drops the upload from the prompt" do
+        context =
+          described_class.messages_from_chat(
+            message_with_secure_upload,
+            channel: dm_channel,
+            context_post_ids: nil,
+            max_messages: 10,
+            include_uploads: true,
+            bot_user_ids: [bot_user.id],
+            instruction_message: nil,
+          )
+
+        content = Array(context.first[:content])
+        upload_hashes = content.select { |item| item.is_a?(Hash) && item[:upload_id] }
+        expect(upload_hashes).to be_empty
+      end
+    end
+
     it "properly handles uploads in public channels with multiple users" do
       _first_message =
         Fabricate(:chat_message, chat_channel: public_channel, user: user, message: "First message")
@@ -373,6 +517,51 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       actual_upload_ids = upload_hashes.map { |h| h[:upload_id] }
       expect(actual_upload_ids).to match_array(expected_upload_ids)
     end
+
+    it "filters disallowed documents before applying upload limits" do
+      allowed_upload =
+        Fabricate(:upload, user: test_user, original_filename: "notes.txt", extension: "txt")
+      disallowed_uploads =
+        described_class::MAX_CHAT_UPLOADS.times.map do |i|
+          Fabricate(
+            :upload,
+            user: test_user,
+            original_filename: "archive#{i}.zip",
+            extension: "zip",
+          )
+        end
+      mixed_uploads = [allowed_upload, *disallowed_uploads]
+
+      messages =
+        mixed_uploads.map do |upload|
+          Fabricate(
+            :chat_message,
+            chat_channel: test_channel,
+            user: test_user,
+            message: "Message with upload #{upload.id}",
+          ).tap do |msg|
+            UploadReference.create!(target: msg, upload: upload)
+            msg.update!(upload_ids: [upload.id])
+          end
+        end
+
+      context =
+        described_class.messages_from_chat(
+          messages.last,
+          channel: test_channel,
+          context_post_ids: nil,
+          max_messages: messages.size,
+          include_image_uploads: false,
+          include_document_uploads: true,
+          allowed_attachment_types: ["txt"],
+          bot_user_ids: [],
+          instruction_message: nil,
+        )
+
+      upload_hashes = context.first[:content].select { |item| item.is_a?(Hash) && item[:upload_id] }
+
+      expect(upload_hashes).to eq([{ upload_id: allowed_upload.id }])
+    end
   end
 
   describe ".messages_from_post" do
@@ -437,6 +626,51 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
 
       # I am mixed on asserting everything cause the test
       # will be brittle, but open to changing this
+    end
+
+    it "includes document post uploads independently from image uploads" do
+      UploadReference.create!(target: third_post, upload: image_upload1)
+      UploadReference.create!(target: third_post, upload: document_upload)
+
+      context =
+        described_class.messages_from_post(
+          third_post,
+          max_posts: 1,
+          bot_usernames: [bot_user.username],
+          include_image_uploads: false,
+          include_document_uploads: true,
+          allowed_attachment_types: ["txt"],
+        )
+
+      expect(context).to contain_exactly(
+        {
+          type: :user,
+          id: user.username,
+          content: [third_post.raw, { upload_id: document_upload.id }],
+        },
+      )
+    end
+
+    it "includes image post uploads independently from document uploads" do
+      UploadReference.create!(target: third_post, upload: image_upload1)
+      UploadReference.create!(target: third_post, upload: document_upload)
+
+      context =
+        described_class.messages_from_post(
+          third_post,
+          max_posts: 1,
+          bot_usernames: [bot_user.username],
+          include_image_uploads: true,
+          include_document_uploads: false,
+        )
+
+      expect(context).to contain_exactly(
+        {
+          type: :user,
+          id: user.username,
+          content: [third_post.raw, { upload_id: image_upload1.id }],
+        },
+      )
     end
 
     it "handles uploads correctly in topic style messages (and times)" do
@@ -606,6 +840,44 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       )
     end
 
+    context "with a secure upload not visible to the triggering user" do
+      fab!(:secure_upload) do
+        private_category = Fabricate(:private_category, group: Fabricate(:group))
+        private_topic = Fabricate(:topic, category: private_category)
+        private_post = Fabricate(:post, topic: private_topic)
+        Fabricate(
+          :secure_upload,
+          original_filename: "secret.png",
+          extension: "png",
+          access_control_post: private_post,
+        )
+      end
+
+      before { SiteSetting.embedded_media_post_allowed_groups = Group::AUTO_GROUPS[:everyone] }
+
+      it "drops the upload from the prompt" do
+        post_with_secure_upload =
+          create_post(
+            topic_id: pm.id,
+            user: user,
+            raw: "Look at this ![image](#{secure_upload.short_url})",
+          )
+
+        context =
+          described_class.messages_from_post(
+            post_with_secure_upload,
+            max_posts: 1,
+            bot_usernames: [bot_user.username],
+            include_image_uploads: true,
+            include_document_uploads: false,
+          )
+
+        expect(context).to contain_exactly(
+          { type: :user, id: user.username, content: post_with_secure_upload.raw },
+        )
+      end
+    end
+
     context "with custom prompts" do
       it "When post custom prompt is present, we use that instead of the post content" do
         custom_prompt = [
@@ -640,6 +912,51 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
             { type: :model, content: custom_prompt.third.first },
             { type: :user, content: "This is a second reply by the user", id: user.username },
           ],
+        )
+      end
+      it "normalizes saved thinking provider info" do
+        custom_prompt = [
+          [
+            "Grounded answer",
+            bot_user.username,
+            nil,
+            nil,
+            {
+              "message" => "Web search: OpenAI news",
+              "provider_info" => {
+                "gemini" => {
+                  "grounding_metadata" => {
+                    "webSearchQueries" => ["OpenAI news"],
+                  },
+                },
+              },
+            },
+          ],
+        ]
+
+        PostCustomPrompt.create!(post: second_post, custom_prompt: custom_prompt)
+
+        context =
+          described_class.messages_from_post(
+            third_post,
+            max_posts: 10,
+            bot_usernames: [bot_user.username],
+            include_uploads: false,
+          )
+
+        expect(context).to include(
+          {
+            type: :model,
+            content: "Grounded answer",
+            thinking: "Web search: OpenAI news",
+            thinking_provider_info: {
+              gemini: {
+                grounding_metadata: {
+                  webSearchQueries: ["OpenAI news"],
+                },
+              },
+            },
+          },
         )
       end
     end

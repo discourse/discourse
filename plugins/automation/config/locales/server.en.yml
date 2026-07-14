@@ -1,6 +1,7 @@
 en:
   site_settings:
     discourse_automation_enabled: "Enable discourse-automation plugin"
+    discourse_automation_max_recursion_depth: "Maximum automation recursion depth"
   discourse_automation:
     staff_action_logs:
       empty_value: "(empty)"
@@ -39,6 +40,7 @@ en:
         description: When a category is created or edited the automation will be triggered
       recurring:
         title: Recurring
+        invalid_interval: The interval must be a positive number.
       point_in_time:
         title: Point in time
         description: When the date is reached the automation will be triggered

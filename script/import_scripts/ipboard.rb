@@ -308,7 +308,7 @@ class ImportScripts::IpboardSQL < ImportScripts::Base
     create_category(params, params[:id])
 
     create_categories(categories) do |category|
-      id = (category["id"]).to_s
+      id = category["id"].to_s
       name = CGI.unescapeHTML(cat_map[id])
       {
         id: id + "gal",

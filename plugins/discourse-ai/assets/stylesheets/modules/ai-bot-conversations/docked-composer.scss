@@ -1,0 +1,354 @@
+@use "lib/viewport";
+
+body.has-ai-bot-docked-composer {
+  --ai-bot-placeholder-height: 60vh;
+
+  // hide the floating composer on bot PMs — the docked composer has
+  // replaced it (including edits). Scoped to the body class, which is
+  // only present while the DockedComposer component is rendered (cleared
+  // on unmount), so navigating away restores the popup composer.
+  #reply-control {
+    display: none !important;
+  }
+
+  // hide reply-related affordances now that the docked composer covers them
+  .topic-footer-main-buttons .create,
+  .timeline-footer-controls .reply-to-post,
+  .topic-post nav.post-controls button.reply {
+    display: none;
+  }
+
+  // Belt-and-braces for the value-transformer in ai-bot-replies.js that
+  // suppresses the MoreTopics tabs on bot PMs — in case a connector or
+  // theme injects its own `.more-topics__container` we don't want the
+  // tabs reading as a partial topic footer.
+  .more-topics__container {
+    display: none;
+  }
+
+  // Lift the sticky topic-progress above the docked composer. No-op on
+  // desktop where .with-topic-progress is absent (timeline panel instead).
+  .with-topic-progress {
+    bottom: calc(
+      var(--ai-docked-composer-height, 0px) + env(safe-area-inset-bottom)
+    );
+  }
+}
+
+// AI-bot variant of the docked composer: align with the PM post body's
+// visible bordered box.
+.docked-composer.ai-bot-docked-composer {
+  --docked-composer-max-width: calc(
+    var(--topic-avatar-width) + var(--topic-body-width)
+  );
+  --docked-composer-content-offset: calc(
+    var(--topic-avatar-width) - var(--pm-padding, 1.25em)
+  );
+
+  // ~4 lines tall by default; still expands further with content
+  --docked-composer-input-min-height: 7em;
+  background: transparent;
+  padding: 0.75em 0 max(env(safe-area-inset-bottom), 0.5em);
+  margin-top: 0;
+
+  // Suppress the core ::before gradient.
+  &::before {
+    display: none;
+  }
+
+  @include viewport.until(sm) {
+    --docked-composer-content-offset: 0px;
+    --docked-composer-max-width: 100%;
+  }
+
+  @include viewport.from(sm) {
+    margin-left: calc(var(--topic-avatar-width) - var(--pm-padding));
+  }
+
+  &.docked-composer--keyboard-open {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: auto;
+    padding-bottom: 0;
+    margin-top: 0;
+    transition: none;
+
+    // cover the gap between the composer and the keyboard
+    &::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      height: 100vh;
+      background: var(--secondary);
+    }
+  }
+}
+
+// Remove default border from the column; the wrapper gets the border instead.
+.docked-composer.ai-bot-docked-composer .d-editor-textarea-column {
+  border: none;
+  background: none;
+  border-radius: 0;
+
+  &:focus-within {
+    outline: none !important;
+    border-color: transparent !important;
+  }
+}
+
+// The textarea-wrapper holds toolbar + input; flip order so input is on top,
+// toolbar below. This wrapper gets the border that wraps everything.
+.docked-composer.ai-bot-docked-composer .d-editor-textarea-wrapper {
+  display: flex;
+  flex-direction: column-reverse;
+  border: var(--d-input-border);
+  border-color: var(--content-border-color);
+  border-radius: var(--d-input-border-radius);
+
+  // Match the chat input's light grey, but composited over an opaque base so
+  // topic content doesn't show through the input while scrolling (the docked
+  // composer's container is transparent, unlike chat's opaque pane).
+  background-color: var(--secondary);
+  background-image: linear-gradient(
+    rgb(var(--primary-very-low-rgb), 0.5),
+    rgb(var(--primary-very-low-rgb), 0.5)
+  );
+  transition: border-color 0.15s ease-in-out;
+  position: relative;
+
+  &.in-focus {
+    border-color: var(--d-input-focused-color) !important;
+    outline: none !important;
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      z-index: 1;
+      border: 2px solid var(--d-input-focused-color);
+      border-radius: var(--d-input-border-radius);
+      pointer-events: none;
+    }
+  }
+}
+
+.docked-composer.ai-bot-docked-composer .d-editor-input {
+  padding-left: 0.75em;
+  padding-right: 3.5em;
+}
+
+// Toolbar: below input inside the bordered box, separated by a subtle line.
+// Edge-to-edge background with bottom corners matching the wrapper radius.
+// padding-right reserves space for the absolutely-positioned send button.
+.docked-composer.ai-bot-docked-composer .d-editor-button-bar__wrap {
+  overflow: hidden;
+  max-height: 4em;
+  opacity: 1;
+  margin: 0;
+  padding-right: 3em;
+  border-top: 1px solid var(--primary-low);
+  border-radius: 0 0 var(--d-input-border-radius) var(--d-input-border-radius);
+  background: var(--primary-very-low);
+  transition:
+    max-height 0.25s ease,
+    opacity 0.2s ease;
+}
+
+.docked-composer.ai-bot-docked-composer.docked-composer--toolbar-hidden
+  .d-editor-button-bar__wrap {
+  max-height: 0;
+  opacity: 0;
+  padding-bottom: 0;
+  border-top: none;
+  pointer-events: none;
+}
+
+// Toolbar toggle: top-right inside the bordered input area
+.ai-bot-docked-composer__toolbar-toggle.btn {
+  position: absolute;
+  right: 0.5em;
+  top: 0.5em;
+  left: auto;
+  bottom: auto;
+  z-index: 3;
+  min-width: auto;
+  min-height: auto;
+  padding: 0.35em 0.5em;
+  border-radius: var(--d-button-border-radius);
+  background: transparent !important;
+
+  .d-icon {
+    color: var(--primary-medium) !important;
+    font-size: var(--font-down-1);
+  }
+
+  &:hover:not(:disabled),
+  &:focus-visible {
+    background: var(--primary-very-low) !important;
+
+    .d-icon {
+      color: var(--primary-high) !important;
+    }
+  }
+}
+
+// Send button: smaller icon than core default (font-up-1 → font-down-1).
+.docked-composer.ai-bot-docked-composer .docked-composer__submit-btn.btn {
+  bottom: var(--space-2);
+
+  .d-icon {
+    font-size: var(--font-down-1) !important;
+  }
+}
+
+.docked-composer.ai-bot-docked-composer .ai-bot-docked-composer__editing {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5em 0.75em;
+  border-top: 1px solid var(--primary-low);
+  box-sizing: border-box;
+  font-size: var(--font-down-1);
+  color: var(--primary-medium);
+}
+
+.ai-bot-docked-composer__editing-text {
+  display: flex;
+  align-items: center;
+  gap: 0.35em;
+}
+
+.ai-bot-docked-composer__editing-dismiss {
+  padding: 0.25em;
+}
+
+// Floating scroll indicator: appears above the composer when content is below.
+// Shows animated dots while streaming, a chevron-down arrow otherwise.
+.ai-bot-scroll-indicator {
+  position: absolute;
+  bottom: calc(100% + 0.75em);
+  left: calc(50% + var(--docked-composer-content-offset) / 2);
+  transform: translateX(-50%);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4em 0.8em;
+  background: var(--secondary);
+  border: 1px solid var(--content-border-color);
+  border-radius: 2em;
+  cursor: pointer;
+
+  // reset native button styles
+  appearance: none;
+  font: inherit;
+
+  .d-icon {
+    width: 0.875em;
+    height: 0.875em;
+    color: var(--primary-medium);
+  }
+
+  &:hover {
+    border-color: var(--primary-medium);
+
+    .d-icon {
+      color: var(--primary);
+    }
+  }
+
+  &__dots {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding-block: 0.15em;
+  }
+
+  &__dot {
+    display: block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--primary-medium);
+    animation: ai-scroll-dot 1.4s ease-in-out infinite;
+
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+}
+
+@keyframes ai-scroll-dot {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+body.has-ai-bot-docked-composer
+  [data-user-id^="-"].ai-bot-streaming-placeholder {
+  animation: ai-bot-fade-in 0.3s ease-out;
+
+  .cooked {
+    min-height: var(--ai-bot-placeholder-height);
+  }
+}
+
+body.has-ai-bot-docked-composer [data-user-id^="-"] .cooked {
+  transition: min-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ai-bot-reply-placeholder {
+  --docked-composer-content-offset: 0px;
+  padding-left: var(--docked-composer-content-offset);
+  padding-bottom: 1em;
+  animation: ai-bot-fade-in 0.2s ease-out;
+
+  &__row {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--topic-avatar-width, 45px);
+  }
+
+  &__avatar {
+    flex-shrink: 0;
+  }
+
+  &__body {
+    flex: 1 1 auto;
+    min-height: var(--ai-bot-placeholder-height);
+    padding-top: 0.25em;
+  }
+
+  &__username {
+    font-weight: bold;
+    color: var(--primary-high);
+  }
+}
+
+@keyframes ai-bot-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

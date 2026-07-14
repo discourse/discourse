@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 ar:
+  category_types:
+    events:
+      name: "الأحداث"
+      title: "الأحداث"
+  user_api_key:
+    scopes:
+      "discourse-calendar:events_calendar": "قراءة خلاصة أحداث التقويم"
   reports:
     currently_away:
       title: المستخدمون الغائبون حاليًا
@@ -37,7 +44,6 @@ ar:
     map_events_to_color: "تعيين لون لكل وسم أو فئة."
     map_events_title: "يستبدل \"الأحداث\" في عنوان الشريط الجانبي \"الأحداث القادمة\" لكل فئة."
     calendar_enabled: "قم بتفعيل المكوِّن الإضافي لتقويم Discourse. سيضيف ذلك دعمًا لعلامة [calendar][/calendar] في أول منشور في الموضوع."
-    discourse_post_event_enabled: "يفعِّل ميزات الحدث. ملاحظة: يحتاج أيضًا إلى تفعيل `calendar enabled`."
     displayed_invitees_limit: "يحد من أعداد المدعوين المعروضة في حدث."
     display_post_event_date_on_topic_title: "يعرض تاريخ الحدث بعد عنوان الموضوع."
     use_local_event_date: "استخدام التاريخ المحلي بعد عنوان الموضوع بدلًا من الوقت النسبي."
@@ -64,6 +70,15 @@ ar:
     sidebar_show_upcoming_events: "عرض رابط الأحداث القادمة في الشريط الجانبي ضمن \"المزيد\"."
     calendar_first_day_of_week: "حدد اليوم الأول من الأسبوع لعرض التقويم. الخيارات المتاحة هي السبت، أو الأحد، أو الاثنين."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "اليوم"
+        week: "الأسبوع"
+        month: "الشهر"
+        year: "العام"
+    calendar_subscriptions:
+      all_events_feed_name: "%{site_title} - جميع الأحداث"
+      my_events_feed_name: "%{site_title} - أحداثي"
     invite_user_notification: "دعاك %{username} إلى: %{description}"
     calendar_must_be_in_first_post: "لا يمكن استخدام علامة التقويم إلا في المنشور الأول في الموضوع."
     more_than_one_calendar: "لا يمكن أن يكون لديك أكثر من تقويم واحد في المنشور."

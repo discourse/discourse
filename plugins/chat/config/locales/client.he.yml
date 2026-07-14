@@ -67,6 +67,14 @@ he:
       cancel: "ביטול"
       cancel_reply: "ביטול תגובה"
       chat_channels: "ערוצים"
+      pinned_messages:
+        title: "הודעות נעוצות"
+        close: "סגירת הודעות נעוצות"
+        pinned_by_you: "ננעץ על ידיך"
+        pinned_by_user: "ננעץ על ידי %{username}"
+      no_pinned_messages: "אין הודעות נעוצות בערוץ הזה."
+      pin_message: "נעיצת הודעה"
+      unpin_message: "שליפת הודעה"
       pinned: "נעוץ"
       browse_all_channels: "עיון בכל הערוצים"
       see_in: "לראות ב־"
@@ -88,6 +96,7 @@ he:
         title: "הגדרות ערוץ"
         edit: "עריכה"
         add: "הוספה"
+        star_channel: "סימון ערוץ בכוכב"
         close_channel: "סגירת ערוץ"
         open_channel: "פתיחת ערוץ"
         archive_channel: "העברת ערוץ לארכיון"
@@ -95,6 +104,7 @@ he:
         join_channel: "הצטרפות לערוץ"
         leave_channel: "יציאה מהערוץ"
         leave_groupchat_info: "יציאה מהצ׳אט הקבוצתי הזה תשלול את הגישה שלך אליו ולא תאפשר לך לקבל התראות שקשורות אליו. כדי להצטרף מחדש צריכה להישלח אליך הזמנה מאחד מהחברים בצ׳אט הקבוצתי הזה."
+        notification_settings: "הגדרות התראה"
         notification_settings_context: "התראות"
         join: "הצטרפות"
         leave: "עזוב"
@@ -295,7 +305,6 @@ he:
       retry_staged_message:
         title: "שגיאת רשת"
         action: "לשלוח שוב?"
-      unreliable_network: "הרשת אינה אמינה, ייתכן ששליחת הודעות ושמירת טיוטה לא תפעלנה"
       bookmark_message: "סימנייה"
       bookmark_message_edit: "עריכת סימנייה"
       restore: "שחזור הודעה שנמחקה"
@@ -315,8 +324,6 @@ he:
         title: "צליל התראת צ׳אט שולחן עבודה"
       sounds:
         none: "ללא"
-        bell: "פעמון"
-        ding: "דינג"
       title: "צ׳אט"
       title_capitalized: "צ׳אט"
       upload: "צירוף קובץ"
@@ -397,8 +404,6 @@ he:
         input_placeholder: הוספת שם
         slug_description: במזהה הייצוגי נעשה שימוש בכתובת במקום בשם הערוץ
         name: שם הערוץ
-        slug: מזהה ייצוגי של הערוץ (רשות)
-        emoji: אמוג׳י של הערוץ (רשות)
         reset_emoji: איפוס אמוג׳י
       channel_edit_description_modal:
         title: עריכת תיאור
@@ -466,16 +471,14 @@ he:
             many: 'למשתמשים ב־%{group} וב־%{count} קבוצות נוספות תהיה גישה לערוץ הזה בהתאם ל<a href="%{settingLink}" target="_blank">הגדרות האבטחה</a>'
             other: 'למשתמשים ב־%{group} וב־%{count} קבוצות נוספות תהיה גישה לערוץ הזה בהתאם ל<a href="%{settingLink}" target="_blank">הגדרות האבטחה</a>'
         create: "יצירת ערוץ"
-        description: "תיאור (רשות)"
+        description: "תיאור"
         name: "שם הערוץ"
-        slug: "מזהה ייצוגי של הערוץ (רשות)"
         title: "ערוץ חדש"
         type: "סוג"
         types:
           category: "קטגוריה"
           topic: "נושא"
         emoji:
-          label: "אמוג׳י של הערוץ (רשות)"
           reset: "איפוס אמוג׳י"
       reviewable:
         type: "הודעת צ׳אט"
@@ -814,3 +817,12 @@ he:
       panels:
         chat:
           label: "צ׳אט"
+    discourse_workflows:
+      chat_message_created:
+        channel_id: "ערוץ"
+      send_chat_message:
+        channel_id: "ערוץ"
+        message: "הודעה"
+      chat_approval:
+        message: "הודעה"
+        channel_id: "ערוץ"

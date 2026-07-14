@@ -1108,6 +1108,42 @@ RSpec.describe FileStore::S3Store do
     end
   end
 
+  describe ".content_disposition_for" do
+    it "returns a valid header for short filenames" do
+      header = described_class.content_disposition_for("logo.png")
+
+      expect(header).to include("logo.png")
+      expect(header).to start_with("inline")
+    end
+
+    it "returns empty string for blank filenames" do
+      expect(described_class.content_disposition_for("")).to eq("")
+      expect(described_class.content_disposition_for(nil)).to eq("")
+    end
+
+    it "uses the specified disposition" do
+      header = described_class.content_disposition_for("logo.png", disposition: "attachment")
+
+      expect(header).to start_with("attachment")
+    end
+
+    it "truncates a very long ASCII filename while preserving extension" do
+      long_name = "a" * 2000 + ".html"
+      header = described_class.content_disposition_for(long_name)
+
+      expect(header.bytesize).to be <= described_class::MAX_CONTENT_DISPOSITION_BYTES
+      expect(header).to include(".html")
+    end
+
+    it "truncates long non-ASCII filenames that expand when percent-encoded" do
+      long_name = "\u4e2d\u6587" * 400 + ".png"
+      header = described_class.content_disposition_for(long_name)
+
+      expect(header.bytesize).to be <= described_class::MAX_CONTENT_DISPOSITION_BYTES
+      expect(header).to include(".png")
+    end
+  end
+
   def prepare_fake_s3(upload_key, upload)
     @fake_s3 = FakeS3.create
     @fake_s3_bucket = @fake_s3.bucket(SiteSetting.s3_upload_bucket)

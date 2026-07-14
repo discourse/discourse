@@ -58,6 +58,10 @@ $solved-color: var(--success);
     .select-kit-header {
       color: var(--primary-high);
     }
+
+    .angle-icon {
+      color: currentcolor;
+    }
   }
 }
 
@@ -109,130 +113,41 @@ $solved-color: var(--success);
   }
 }
 
-.d-solved-answer {
-  border-radius: var(--d-border-radius-large);
-  background: var(--secondary);
+.accepted-answers {
+  &.d-post-accordion {
+    --d-post-accordion-header-color: var(--secondary);
+    --d-post-accordion-header-background: #{$solved-color};
+    --d-post-accordion-header-border-color: #{$solved-color};
+    padding-bottom: var(--space-4);
 
-  &__header {
-    display: flex;
-    align-items: center;
-    color: var(--secondary);
-    background-color: $solved-color;
-    padding-left: var(--space-3);
-    border-top-left-radius: var(--d-border-radius-large);
-    border-top-right-radius: var(--d-border-radius-large);
+    @include viewport.from(sm) {
+      padding: var(--space-1) var(--topic-body-width-padding) var(--space-4)
+        var(--topic-body-width-padding);
+    }
   }
 
   &__title {
     display: flex;
     align-items: center;
     gap: var(--space-2);
+    margin: 0;
     text-transform: uppercase;
-    font-size: var(--font-down-1);
     font-weight: normal;
-    margin: 0;
   }
 
-  &__controls {
-    margin-left: auto;
-  }
-
-  &__toggle,
-  &__jump {
-    .d-icon {
-      color: var(--secondary);
-      background: transparent;
-      font-size: var(--font-down-1-rem);
-    }
-
-    &:hover,
-    &:visited {
-      .discourse-no-touch &,
-      .discourse-touch & {
-        color: var(--secondary);
-        background: transparent;
-
-        .d-icon {
-          color: var(--secondary);
-          background: transparent;
-        }
-      }
-    }
-
-    &:hover {
-      background-color: rgba($solved-color, 0.15);
-    }
-  }
-
-  &__footer {
-    display: flex;
-    align-items: center;
-    gap: var(--space-1);
-    padding: var(--space-3);
+  &__solution-count {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
   }
+}
 
-  &__post-link {
-    font-weight: bold;
+.solved-shared-issue-row {
+  @include viewport.from(sm) {
+    padding-left: var(--topic-body-width-padding);
   }
+}
 
-  > blockquote {
-    position: relative;
-    background: var(--secondary);
-    border: 0;
-    padding: var(--space-3);
-    max-height: clamp(1px, 20vh, 20em);
-    overflow: hidden;
-    margin: 0;
-    border-left: 1px solid var(--primary-low);
-    border-right: 1px solid var(--primary-low);
-
-    * {
-      font-size: var(--font-down-1-rem) !important;
-    }
-
-    .cooked {
-      padding: 0 !important;
-    }
-
-    .anchor::before {
-      content: "" !important;
-      display: none;
-    }
-
-    &::after {
-      content: "";
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 3em;
-      background: linear-gradient(transparent, var(--secondary));
-      pointer-events: none;
-    }
-  }
-
-  &__footer {
-    border: 1px solid var(--primary-low);
-    white-space: nowrap;
-  }
-
-  &__solver,
-  &__accepter {
-    @include ellipsis;
-  }
-
-  &[data-expanded="true"] > blockquote {
-    max-height: none;
-    overflow: visible;
-
-    &::after {
-      display: none;
-    }
-  }
-
-  &:not(.accepted-answer--has-excerpt) > blockquote {
-    display: none;
+.solved-shared-issue-row .post-action-menu__solved-shared-issue {
+  &.has-shared-issue {
+    --d-button-default-icon-color: var(--tertiary);
   }
 }

@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import PinnedOptions from "discourse/components/pinned-options";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | pinned-options", function (hooks) {
+module("Integration | Component | PinnedOptions", function (hooks) {
   setupRenderingTest(hooks);
 
   test("unpinning", async function (assert) {

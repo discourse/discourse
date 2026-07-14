@@ -17,11 +17,11 @@ In your Discourse theme you'll need to setup the following directory structure:
 
 From here we're going to create an Ember component. You can find more about Ember components from their documentation: https://guides.emberjs.com/release/
 
-But for now this will be a simple component. The component will consist of two files, one containing the logic and another the template.
+But for now this will be a simple component, written as a single `.gjs` file containing both the logic and the template.
 
-:page_facing_up: `javascripts/discourse/components/custom-homepage-content.js`
+:page_facing_up: `javascripts/discourse/components/custom-homepage-content.gjs`
 
-```js
+```gjs
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import { defaultHomepage } from "discourse/lib/utilities";
@@ -33,22 +33,16 @@ export default class CustomHomepageContent extends Component {
     const { currentRouteName } = this.router;
     return currentRouteName === `discovery.${defaultHomepage()}`;
   }
+
+  <template>
+    {{#if this.isHomepage}}
+      <h1>This is my homepage HTML content</h1>
+    {{/if}}
+  </template>
 }
 ```
 
-This creates a `isHomepage` getter, which checks the router service for the `currentRouteName` — if the route name matches your homepage (as dictated by site settings) then it will return `true`
-
-Now we need our template
-
-:page_facing_up: `javascripts/discourse/components/custom-homepage-content.hbs`
-
-```hbs
-{{#if this.isHomepage}}
-  <h1>This is my homepage HTML content</h1>
-{{/if}}
-```
-
-The template checks the `isHomepage` getter, and will display your content if it's `true`. You can add any HTML you want between the `{{#if}}` blocks.
+This creates a `isHomepage` getter, which checks the router service for the `currentRouteName` — if the route name matches your homepage (as dictated by site settings) then it will return `true`. The template inside `<template>...</template>` checks that getter and only displays your content when it's `true`. You can add any HTML you want between the `{{#if}}` blocks.
 
 Now that our component is created, we need to add it to Discourse somewhere. For this step you'll need to decide which plugin outlet to utilize. These are areas throughout Discourse where we've added a little code for developers to hook into. You can [search Discourse for these on Github](https://github.com/search?q=repo%3Adiscourse%2Fdiscourse+%3CPluginOutlet&type=code), or browse for them using the https://meta.discourse.org/t/plugin-outlet-locations-theme-component/100673/1/.
 
@@ -56,10 +50,12 @@ For custom homepages, [above-main-container](https://github.com/discourse/discou
 
 We need to create our connector file in the correct directory:
 
-:page_facing_up: `javascripts/discourse/connectors/above-main-container/custom-homepage-connector.hbs`
+:page_facing_up: `javascripts/discourse/connectors/above-main-container/custom-homepage-connector.gjs`
 
-```hbs
-<CustomHomepageContent />
+```gjs
+import CustomHomepageContent from "../../components/custom-homepage-content";
+
+<template><CustomHomepageContent /></template>
 ```
 
 :point_up: and that's all, it just needs a single line calling for your component :tada:

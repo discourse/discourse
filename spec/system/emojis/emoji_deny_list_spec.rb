@@ -41,20 +41,20 @@ describe "Emoji deny list" do
     before do
       SiteSetting.enable_emoji = true
       SiteSetting.emoji_deny_list = "fu|poop"
-      Emoji.clear_cache && Discourse.request_refresh!
+      Emoji.clear_cache
     end
 
     fab!(:topic)
     fab!(:post) { Fabricate(:post, topic: topic) }
 
-    xit "should remove denied emojis from emoji picker" do
+    it "removes denied emojis from emoji picker" do
       topic_page.visit_topic_and_open_composer(topic)
       expect(composer).to be_opened
 
       composer.click_toolbar_button("insert-composer-emoji")
-      expect(composer.emoji_picker).to be_visible
 
-      expect(emoji_picker).to have_no_emoji("fu")
+      expect(emoji_picker).to have_emoji(":grinning_face:")
+      expect(emoji_picker).to have_no_emoji(":poop:")
     end
 
     it "should not show denied emojis and aliases in emoji autocomplete" do
@@ -86,7 +86,7 @@ describe "Emoji deny list" do
   describe "when using private messages" do
     before do
       SiteSetting.emoji_deny_list = "pancakes|monkey"
-      Emoji.clear_cache && Discourse.request_refresh!
+      Emoji.clear_cache
     end
 
     fab!(:topic) do

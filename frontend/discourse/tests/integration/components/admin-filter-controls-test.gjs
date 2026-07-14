@@ -1,4 +1,7 @@
-import { click, fillIn, render, select } from "@ember/test-helpers";
+import { tracked } from "@glimmer/tracking";
+import Evented from "@ember/object/evented";
+import Service from "@ember/service";
+import { click, fillIn, render, select, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import AdminFilterControls from "discourse/admin/components/admin-filter-controls";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -40,6 +43,15 @@ const SAMPLE_DROPDOWN_OPTIONS = [
     filterFn: (item) => item.category === "other",
   },
 ];
+
+class RouterStub extends Service.extend(Evented) {
+  @tracked currentURL = "/admin/example";
+
+  changeURL(url) {
+    this.currentURL = url;
+    this.trigger("routeDidChange");
+  }
+}
 
 module("Integration | Component | AdminFilterControls", function (hooks) {
   setupRenderingTest(hooks);
@@ -295,8 +307,8 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
 
     await fillIn(".filter-input", "first");
     assert
-      .dom(".admin-filter-controls__inputs .admin-filter-controls__reset")
-      .exists("shows reset button");
+      .dom(".admin-filter-controls > .admin-filter-controls__reset")
+      .exists("shows reset button after filter controls");
   });
 
   test("respects minItemsForFilter parameter", async function (assert) {
@@ -789,5 +801,119 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
     assert
       .dom(".item")
       .exists({ count: 3 }, "shows all items after changing filter");
+  });
+
+  test("query param sync args are inert without a live router", async function (assert) {
+    // outside a real route (router.currentURL is null, as in rendering
+    // tests) the query param args must neither crash nor affect filtering
+    this.set("data", SAMPLE_DATA);
+    this.set("searchableProps", ["name"]);
+    this.set("dropdownOptions", SAMPLE_DROPDOWN_OPTIONS);
+
+    await render(
+      <template>
+        <AdminFilterControls
+          @array={{this.data}}
+          @searchableProps={{this.searchableProps}}
+          @dropdownOptions={{this.dropdownOptions}}
+          @textFilterQueryParam="filter"
+          @dropdownFilterQueryParam="category"
+        >
+          <:content as |filteredData|>
+            <div class="results">
+              {{#each filteredData as |item|}}
+                <div class="item" data-id={{item.id}}>{{item.name}}</div>
+              {{/each}}
+            </div>
+          </:content>
+        </AdminFilterControls>
+      </template>
+    );
+
+    assert.dom(".item").exists({ count: 3 }, "renders all items");
+
+    await fillIn(".admin-filter-controls__input", "second");
+    assert.dom(".item").exists({ count: 1 }, "text filtering still works");
+
+    await select(".admin-filter-controls__dropdown", "feature");
+    assert
+      .dom(".item")
+      .doesNotExist("dropdown filtering still combines with text");
+
+    await click(".admin-filter-controls__reset");
+    assert.dom(".item").exists({ count: 3 }, "reset still works");
+  });
+
+  test("initialTextFilter still seeds when a query param arg is set", async function (assert) {
+    this.set("data", SAMPLE_DATA);
+    this.set("searchableProps", ["name"]);
+
+    await render(
+      <template>
+        <AdminFilterControls
+          @array={{this.data}}
+          @searchableProps={{this.searchableProps}}
+          @textFilterQueryParam="filter"
+          @initialTextFilter="third"
+        >
+          <:content as |filteredData|>
+            <div class="results">
+              {{#each filteredData as |item|}}
+                <div class="item" data-id={{item.id}}>{{item.name}}</div>
+              {{/each}}
+            </div>
+          </:content>
+        </AdminFilterControls>
+      </template>
+    );
+
+    assert.dom(".admin-filter-controls__input").hasValue("third");
+    assert.dom(".item").exists({ count: 1 }, "applies the seeded filter");
+  });
+
+  test("reveals a URL-owned dropdown activated by a route change", async function (assert) {
+    this.owner.unregister("service:router");
+    this.owner.register("service:router", RouterStub);
+
+    this.set("data", SAMPLE_DATA);
+    this.set("dropdownOptions", {
+      category: SAMPLE_DROPDOWN_OPTIONS,
+    });
+    this.set("dropdownFilterQueryParams", { category: "category" });
+
+    await render(
+      <template>
+        <AdminFilterControls
+          @array={{this.data}}
+          @dropdownOptions={{this.dropdownOptions}}
+          @dropdownFilterQueryParams={{this.dropdownFilterQueryParams}}
+          @filterDropdownsExpanded={{false}}
+        >
+          <:content as |filteredData|>
+            <div class="results">
+              {{#each filteredData as |item|}}
+                <div class="item" data-id={{item.id}}>{{item.name}}</div>
+              {{/each}}
+            </div>
+          </:content>
+        </AdminFilterControls>
+      </template>
+    );
+
+    assert
+      .dom(".admin-filter-controls__dropdown--category")
+      .doesNotExist("keeps inactive dropdown filters collapsed initially");
+
+    this.owner
+      .lookup("service:router")
+      .changeURL("/admin/example?category=feature");
+    await settled();
+
+    assert
+      .dom(".admin-filter-controls__dropdown--category")
+      .hasValue("feature", "reveals the URL-owned active dropdown");
+    assert
+      .dom(".item")
+      .exists({ count: 2 }, "applies the dropdown filter from the new URL");
   });
 });

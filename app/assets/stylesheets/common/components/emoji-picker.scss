@@ -15,8 +15,15 @@
 }
 
 .emoji-picker-trigger {
+  gap: var(--space-1);
+
   .d-icon + .d-button-label {
     margin-left: 0.25em;
+  }
+
+  .d-icon.emoji-picker__caret {
+    font-size: var(--font-down-2);
+    margin-left: 0;
   }
 }
 

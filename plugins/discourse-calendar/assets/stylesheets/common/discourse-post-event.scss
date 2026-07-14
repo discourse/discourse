@@ -12,12 +12,10 @@ $show-interested: inherit;
   .event__section {
     padding: 0.5em 0.75rem;
 
-    &:first-child {
-      border-top: 1px solid var(--primary-low);
-    }
-
     p {
       margin: 0;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
 
     > .d-icon {
@@ -29,6 +27,23 @@ $show-interested: inherit;
     }
   }
 
+  .event-image {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding: 1px;
+    aspect-ratio: 16 / 9;
+    box-sizing: border-box;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-top-left-radius: var(--d-border-radius);
+      border-top-right-radius: var(--d-border-radius);
+    }
+  }
+
   .discourse-post-event-widget {
     display: flex;
     background: var(--secondary);
@@ -36,6 +51,7 @@ $show-interested: inherit;
     flex: 1 0 auto;
     max-width: 100%;
     box-sizing: border-box;
+    overflow: hidden;
 
     .cooked & {
       box-shadow: 0 0 0 3px var(--primary-100);
@@ -85,7 +101,6 @@ $show-interested: inherit;
 
     .more-dropdown {
       margin-left: auto;
-      align-self: flex-start;
 
       &.has-no-actions {
         display: none;
@@ -110,6 +125,12 @@ $show-interested: inherit;
         }
       }
     }
+
+    &__controls {
+      display: flex;
+      gap: var(--space-2);
+      margin-left: auto;
+    }
   }
 
   .event-date {
@@ -127,7 +148,7 @@ $show-interested: inherit;
 
     .month {
       text-align: center;
-      color: red;
+      color: var(--primary);
       font-size: var(--font-down-2);
       font-weight: 400;
       text-transform: uppercase;
@@ -223,11 +244,20 @@ $show-interested: inherit;
         flex: 1;
       }
 
+      .going-button.d-combo-button {
+        flex: 1;
+
+        .d-combo-button-menu {
+          flex: 0 0 auto;
+        }
+      }
+
       .interested-button {
         display: $show-interested;
       }
 
-      &.status-going .going-button .d-icon {
+      &.status-going .going-button > .d-icon,
+      &.status-going .going-button .d-combo-button-button .d-icon {
         color: var(--success);
       }
 
@@ -325,7 +355,10 @@ $show-interested: inherit;
       .topic-invitee-avatar {
         position: relative;
         display: inline-block;
-        padding-right: 0.5em;
+
+        &:has(.avatar-flair) {
+          padding-right: var(--space-2);
+        }
 
         .avatar {
           width: 1.5rem;
@@ -388,10 +421,6 @@ $show-interested: inherit;
 
     > .d-icon {
       margin-top: 0.25em;
-    }
-
-    .event-description__text {
-      text-align: justify;
     }
 
     &.is-clamped .event-description__text {
@@ -475,6 +504,12 @@ $show-interested: inherit;
   }
 }
 
+.discourse-post-event-going-menu-content {
+  .--selected .d-icon {
+    color: var(--success);
+  }
+}
+
 .event-dates {
   // hardcoded as cooking date is async and will change height after initial rendering otherwise
   // not ideal but a decent low tech solution
@@ -495,5 +530,31 @@ $show-interested: inherit;
     color: var(--primary-high);
     margin: 0 0.5em;
     text-align: center;
+  }
+}
+
+.discourse-post-event {
+  .event__placeholder {
+    display: inline-block;
+    border-radius: var(--d-border-radius, 0.25em);
+    background-color: var(--primary-low);
+  }
+
+  .event__placeholder--text {
+    width: 8em;
+    height: 0.9em;
+    vertical-align: middle;
+  }
+
+  .event__placeholder--avatar {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+  }
+
+  .event__placeholder--button {
+    width: 5em;
+    height: 2em;
+    margin-right: 0.5em;
   }
 }

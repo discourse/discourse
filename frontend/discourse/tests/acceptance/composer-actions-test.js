@@ -3,6 +3,11 @@ import { test } from "qunit";
 import sinon from "sinon";
 import { cloneJSON } from "discourse/lib/object";
 import Draft from "discourse/models/draft";
+import {
+  _clearRegisteredActions,
+  registerComposerAction,
+} from "discourse/select-kit/components/composer-actions";
+import discoveryFixtures from "discourse/tests/fixtures/discovery-fixtures";
 import userFixtures from "discourse/tests/fixtures/user-fixtures";
 import {
   acceptance,
@@ -27,6 +32,13 @@ acceptance(`Composer Actions`, function (needs) {
     server.put("/u/kris.json", () => helper.response({ user: {} }));
     const cardResponse = cloneJSON(userFixtures["/u/shade/card.json"]);
     server.get("/u/shade/card.json", () => helper.response(cardResponse));
+    server.get("/c/shared-drafts/24/l/latest.json", () => {
+      const response = cloneJSON(discoveryFixtures["/c/bug/1/l/latest.json"]);
+      response.topic_list.can_create_topic = true;
+      response.topic_list.filter = "c/shared-drafts/24/l/latest";
+
+      return helper.response(response);
+    });
   });
 
   test("replying to post", async function (assert) {
@@ -88,7 +100,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".composer-actions svg.d-icon-far-eye-slash")
       .doesNotExist("whisper icon is not visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .exists("reply icon is visible");
 
     await composerActions.expand();
@@ -98,7 +110,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".composer-actions svg.d-icon-far-eye-slash")
       .exists("whisper icon is visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .doesNotExist("reply icon is not visible");
   });
 
@@ -223,6 +235,26 @@ acceptance(`Composer Actions`, function (needs) {
     assert.strictEqual(composerActions.rows().length, 5);
   });
 
+  test("new topic in shared drafts category opens shared draft composer", async function (assert) {
+    await visit("/c/shared-drafts/24");
+
+    assert.dom("#create-topic").hasText(i18n("topic.create_shared_draft"));
+
+    await click("#create-topic");
+
+    assert
+      .dom("#reply-control .btn-primary.create .d-button-label")
+      .hasText(i18n("composer.create_shared_draft"));
+    assert
+      .dom(".composer-actions svg.d-icon-far-clipboard")
+      .exists("shared draft icon is visible");
+    assert.strictEqual(
+      selectKit(".category-chooser").header().value(),
+      null,
+      "shared drafts category is not selected as the destination category"
+    );
+  });
+
   test("interactions - private message", async function (assert) {
     const composerActions = selectKit(".composer-actions");
 
@@ -246,7 +278,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".composer-actions svg.d-icon-anchor")
       .doesNotExist("no-bump icon is not visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .exists("reply icon is visible");
 
     await composerActions.expand();
@@ -256,7 +288,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".composer-actions svg.d-icon-anchor")
       .exists("no-bump icon is visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .doesNotExist("reply icon is not visible");
 
     await composerActions.expand();
@@ -266,7 +298,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".composer-actions svg.d-icon-anchor")
       .doesNotExist("no-bump icon is not visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .exists("reply icon is visible");
   });
 
@@ -283,7 +315,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".reply-details .whisper .d-icon-anchor")
       .doesNotExist("no-bump icon is not visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .exists("reply icon is visible");
 
     await composerActions.expand();
@@ -298,7 +330,7 @@ acceptance(`Composer Actions`, function (needs) {
       .dom(".reply-details .no-bump .d-icon-anchor")
       .exists("no-bump icon is visible");
     assert
-      .dom(".composer-actions svg.d-icon-share")
+      .dom(".composer-actions svg.d-icon-reply")
       .doesNotExist("reply icon is not visible");
   });
 
@@ -529,5 +561,110 @@ acceptance(`Prioritizing Name fall back`, function (needs) {
       .hasValue(
         '[quote="bianca, post:1, topic:130, full:true"]\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas a varius ipsum. Nunc euismod, metus non vulputate malesuada, ligula metus pharetra tortor, vel sodales arcu lacus sed mauris. Nam semper, orci vitae fringilla placerat, dui tellus convallis felis, ultricies laoreet sapien mi et metus. Mauris facilisis, mi fermentum rhoncus feugiat, dolor est vehicula leo, id porta leo ex non enim. In a ligula vel tellus commodo scelerisque non in ex. Pellentesque semper leo quam, nec varius est viverra eget. Donec vehicula sem et massa faucibus tempus.\n[/quote]\n\n'
       );
+  });
+});
+
+acceptance(`Composer Actions - plugin registration`, function (needs) {
+  needs.user();
+
+  let lastInvocation;
+  let showCustomAction;
+
+  needs.hooks.beforeEach(function () {
+    lastInvocation = null;
+    showCustomAction = true;
+    registerComposerAction({
+      id: "my_plugin_action",
+      label: "composer.composer_actions.create_topic.label",
+      description: "composer.composer_actions.create_topic.desc",
+      icon: "wand-magic-sparkles",
+      condition: () => showCustomAction,
+      action: (composer, component) => {
+        lastInvocation = { composer, component };
+      },
+    });
+  });
+
+  needs.hooks.afterEach(function () {
+    _clearRegisteredActions();
+  });
+
+  test("registered action appears in dropdown when condition is true", async function (assert) {
+    const composerActions = selectKit(".composer-actions");
+
+    await visit("/t/internationalization-localization/280");
+    await click("article#post_3 button.reply");
+    await composerActions.expand();
+
+    assert
+      .dom(`.composer-actions li[data-value="my_plugin_action"]`)
+      .exists("the registered action is rendered");
+  });
+
+  test("registered action is hidden when condition is false", async function (assert) {
+    showCustomAction = false;
+    const composerActions = selectKit(".composer-actions");
+
+    await visit("/t/internationalization-localization/280");
+    await click("article#post_3 button.reply");
+    await composerActions.expand();
+
+    assert
+      .dom(`.composer-actions li[data-value="my_plugin_action"]`)
+      .doesNotExist("the registered action is not rendered");
+  });
+
+  test("selecting the registered action invokes its callback", async function (assert) {
+    const composerActions = selectKit(".composer-actions");
+
+    await visit("/t/internationalization-localization/280");
+    await click("article#post_3 button.reply");
+    await composerActions.expand();
+    await composerActions.selectRowByValue("my_plugin_action");
+
+    assert.true(!!lastInvocation, "the registered action callback was invoked");
+    assert.strictEqual(
+      lastInvocation.composer.constructor.name,
+      "Composer",
+      "the callback receives the composer model"
+    );
+  });
+
+  test("a throwing condition logs an error once and hides the item", async function (assert) {
+    registerComposerAction({
+      id: "broken_action",
+      label: "composer.composer_actions.create_topic.label",
+      condition: () => {
+        throw new Error("boom");
+      },
+      action: () => {},
+    });
+
+    const errorStub = sinon.stub(console, "error");
+    try {
+      const composerActions = selectKit(".composer-actions");
+
+      await visit("/t/internationalization-localization/280");
+      await click("article#post_3 button.reply");
+      await composerActions.expand();
+      await composerActions.collapse();
+      await composerActions.expand();
+      await composerActions.collapse();
+      await composerActions.expand();
+
+      assert
+        .dom(`.composer-actions .select-kit-row[data-value="broken_action"]`)
+        .doesNotExist("broken action is hidden");
+      const calls = errorStub
+        .getCalls()
+        .filter((c) => String(c.args[0]).includes("broken_action"));
+      assert.strictEqual(
+        calls.length,
+        1,
+        "console.error fired exactly once across multiple dropdown opens"
+      );
+    } finally {
+      errorStub.restore();
+    }
   });
 });

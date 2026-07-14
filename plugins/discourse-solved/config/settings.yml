@@ -2,6 +2,10 @@ discourse_solved:
   solved_enabled:
     default: true
     client: true
+  solved_allow_multiple_solutions:
+    default: false
+    client: true 
+    hidden: true
   show_who_marked_solved:
     default: false
     client: true
@@ -30,8 +34,8 @@ discourse_solved:
     default: false
     hidden: true
   solved_quote_length:
-    default: 300
-    client: false
+    default: 700
+    client: true
   solved_topics_auto_close_hours:
     default: 0
     min: 0
@@ -63,7 +67,18 @@ discourse_solved:
     hidden: true
     client: true
     upcoming_change:
-      status: "experimental"
+      status: "permanent"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/398338"
+  enable_solved_shared_issues:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "beta"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/402498"
+  discourse_solved_admin_dashboard_seeded:
+    default: false
+    hidden: true
 

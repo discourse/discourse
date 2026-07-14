@@ -30,7 +30,6 @@ ug:
     chat_editing_grace_period_max_diff_low_trust: "سۆھبەتنى تەھرىرلەش سۈرۈك ۋاقتىدا ئۆزگەرتىشكە يول قويىدىغان ئەڭ كۆپ ھەرپ سانى، ئەگەر بۇ قىممەتتىن ئېشىپ كەتسە سۆھبەت يىنىدا (تەھرىرلەنگەن) بەلگە كۆرۈنىدۇ (ئىشەنچلىك دەرىجىسى 0 ۋە 1)."
     chat_editing_grace_period_max_diff_high_trust: "سۆھبەتنى تەھرىرلەش سۈرۈك ۋاقتىدا ئۆزگەرتىشكە يول قويىدىغان ئەڭ كۆپ ھەرپ سانى، ئەگەر بۇ قىممەتتىن ئېشىپ كەتسە سۆھبەت يىنىدا (تەھرىرلەنگەن) بەلگە كۆرۈنىدۇ (ئىشەنچلىك دەرىجىسى2 ۋە ئۇنىڭدىن يۇقىرى)."
     chat_preferred_index: "يۈكلىگەندىكى/سۆھبەتلەشكەندىكى ياقتۇرىدىغان بەتكۈچ."
-    allow_chat_in_anonymous_mode: "بۇ تەڭشەك قوزغىتىلسا تور بېكىتىڭىزنى نامسىز نامسىز زىيارەت قىلغان ئىشلەتكۈچى سۆھبەتلىشىشنى ئىشلىتەلەيدۇ. بۇ تەڭشەك «نامسىز ھالەتكە يول قوي» تەڭشىنىڭ قوزغىتىلىشىنى تەلەپ قىلىدۇ."
     errors:
       chat_default_channel: "سۈكۈتتىكى سۆھبەت قانىلى چوقۇم ئاممىۋى قانال بولۇشى كېرەك."
       direct_message_enabled_groups_invalid: "بۇ تەڭشەك ئۈچۈن كەم دېگەندە بىر گۇرۇپپىنى بەلگىلىشىڭىز كېرەك. ئەگەر باشقۇرغۇچىلاردىن باشقا ھېچكىمنىڭ بىۋاسىتە ئۇچۇر ئەۋەتىشىنى خالىمىسىڭىز، باشقۇرغۇچى گۇرۇپپىسىنى تاللاڭ."
@@ -213,10 +212,17 @@ ug:
         other_type: "%{username} شەخسىي سۆھبەتتە %{identifier} ئاتالدى"
       new_chat_message: '%{username}] «%{channel}» دا ئۇچۇر يوللىدى'
       new_direct_chat_message: "%{username} شەخسىي سۆھبەتتە ئۇچۇر يوللىدى"
+    actions:
+      chat_reply:
+        title: جاۋاب
   discourse_automation:
     scriptables:
       send_chat_message:
         title: سۆھبەت ئۇچۇرى يوللا
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "تەستىقلا"
+      default_deny_label: "رەت قىل"
   reviewable_score_types:
     needs_review:
       title: "تەستىقلاش كېرەك"

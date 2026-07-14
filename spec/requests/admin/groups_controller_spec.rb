@@ -98,6 +98,50 @@ RSpec.describe Admin::GroupsController do
           expect(Group.last.allow_unknown_sender_topic_replies).to eq(true)
         end
       end
+
+      context "with automatic membership email domains" do
+        it "normalizes a domain that includes '@' and creates the group" do
+          post "/admin/groups.json",
+               params: {
+                 group: {
+                   name: "harness-staff",
+                   automatic_membership_email_domains: "@harness.io",
+                 },
+               }
+
+          expect(response.status).to eq(200)
+          expect(Group.last.automatic_membership_email_domains).to eq("harness.io")
+        end
+
+        it "surfaces a clear validation error for a genuinely invalid domain" do
+          post "/admin/groups.json",
+               params: {
+                 group: {
+                   name: "harness-staff",
+                   automatic_membership_email_domains: "not a domain",
+                 },
+               }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(
+            I18n.t("groups.errors.invalid_domain", domain: "not a domain"),
+          )
+          expect(response.parsed_body["failed"]).to be_nil
+        end
+
+        it "creates the group when the domains are valid" do
+          post "/admin/groups.json",
+               params: {
+                 group: {
+                   name: "harness-staff",
+                   automatic_membership_email_domains: "harness.io",
+                 },
+               }
+
+          expect(response.status).to eq(200)
+          expect(Group.last.automatic_membership_email_domains).to eq("harness.io")
+        end
+      end
     end
 
     context "when logged in as a moderator" do
@@ -433,6 +477,14 @@ RSpec.describe Admin::GroupsController do
   end
 
   describe "#automatic_membership_count" do
+    def count_domains(domains)
+      put "/admin/groups/automatic_membership_count.json",
+          params: {
+            automatic_membership_email_domains: domains,
+            id: group.id,
+          }
+    end
+
     context "when logged in as admin" do
       before { sign_in(admin) }
 
@@ -440,49 +492,42 @@ RSpec.describe Admin::GroupsController do
         Fabricate(:user, email: "user1@somedomain.org")
         Fabricate(:user, email: "user1@somedomain.com")
         Fabricate(:user, email: "user1@notsomedomain.com")
-        group = Fabricate(:group)
 
-        put "/admin/groups/automatic_membership_count.json",
-            params: {
-              automatic_membership_email_domains: "somedomain.org|somedomain.com",
-              id: group.id,
-            }
+        count_domains("somedomain.org|somedomain.com")
+
         expect(response.status).to eq(200)
         expect(response.parsed_body["user_count"]).to eq(2)
       end
 
-      it "responds with a 400 for a long list of domains" do
-        put "/admin/groups/automatic_membership_count.json",
-            params: {
-              automatic_membership_email_domains: 1.upto(11).map { |n| "domain#{n}.com" }.join("|"),
-              id: group.id,
-            }
-        expect(response.status).to eq(400)
-        expect(response.parsed_body["errors"]).to contain_exactly(
-          "You supplied invalid parameters to the request: Maximum 10 email domains can be counted at once",
-        )
+      it "returns a null count for a long list of domains" do
+        count_domains(1.upto(11).map { |n| "domain#{n}.com" }.join("|"))
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user_count"]).to be_nil
       end
 
-      it "doesn't respond with 500 if domain is invalid" do
-        group = Fabricate(:group)
+      it "ignores invalid domains when counting the matches" do
+        Fabricate(:user, email: "user1@somedomain.org")
 
-        put "/admin/groups/automatic_membership_count.json",
-            params: {
-              automatic_membership_email_domains: "@somedomain.org|@somedomain.com",
-              id: group.id,
-            }
+        count_domains("somedomain.org|not a domain")
+
         expect(response.status).to eq(200)
-        expect(response.parsed_body["user_count"]).to eq(0)
+        expect(response.parsed_body["user_count"]).to eq(1)
+      end
+
+      it "normalizes domains that include '@' before counting" do
+        Fabricate(:user, email: "user1@somedomain.org")
+
+        count_domains("@somedomain.org")
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["user_count"]).to eq(1)
       end
     end
 
     shared_examples "automatic membership count inaccessible" do
       it "denies access with a 404 response" do
-        put "/admin/groups/automatic_membership_count.json",
-            params: {
-              automatic_membership_email_domains: "somedomain.org|somedomain.com",
-              id: group.id,
-            }
+        count_domains("somedomain.org|somedomain.com")
 
         expect(response.status).to eq(404)
         expect(response.parsed_body["errors"]).to include(I18n.t("not_found"))
@@ -495,13 +540,24 @@ RSpec.describe Admin::GroupsController do
       context "with moderators_manage_groups enabled" do
         before { SiteSetting.moderators_manage_groups = true }
 
-        include_examples "automatic membership count inaccessible"
+        it "returns count of users whose emails match the domain" do
+          Fabricate(:user, email: "user1@somedomain.org")
+
+          count_domains("somedomain.org")
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["user_count"]).to eq(1)
+        end
       end
 
       context "with moderators_manage_groups disabled" do
         before { SiteSetting.moderators_manage_groups = false }
 
-        include_examples "automatic membership count inaccessible"
+        it "denies access with a 403 response" do
+          count_domains("somedomain.org")
+
+          expect(response.status).to eq(403)
+        end
       end
     end
 

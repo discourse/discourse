@@ -7,46 +7,100 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
+import KeyValueStore from "discourse/lib/key-value-store";
 import { i18n } from "discourse-i18n";
 import QueryHelp from "discourse/plugins/discourse-data-explorer/discourse/components/modal/query-help";
 import { ParamValidationError } from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
+import { subscribeToAiGeneration } from "discourse/plugins/discourse-data-explorer/discourse/lib/ai-generation";
+import { defaultView } from "discourse/plugins/discourse-data-explorer/discourse/lib/chart-helpers";
 import Query from "discourse/plugins/discourse-data-explorer/discourse/models/query";
 
-const AI_GENERATION_CHANNEL_PREFIX =
-  "/discourse-data-explorer/queries/ai-generation";
-const AI_GENERATION_TIMEOUT_MS = 60000;
+const dataExplorerStore = new KeyValueStore("discourse_data_explorer_");
+const HIDE_SCHEMA_KEY = "hide_schema";
 
 export default class PluginsExplorerController extends Controller {
   @service modal;
   @service appEvents;
-  @service messageBus;
   @service siteSettings;
+  @service messageBus;
   @service toasts;
 
   @tracked params;
   @tracked editingName = false;
-  @tracked editingQuery = false;
   @tracked loading = false;
   @tracked showResults = false;
-  @tracked hideSchema = false;
   @tracked results = this.model.results;
   @tracked dirty = false;
-  @tracked aiGenerating = false;
   @tracked isCachedResult = false;
+  @tracked hideSchema = dataExplorerStore.get(HIDE_SCHEMA_KEY) === "true";
+  @tracked view = "table";
+  @tracked mode = "manual";
+  @tracked aiPrompt = "";
+  @tracked aiGenerating = false;
+  @tracked lastGeneratedPrompt = null;
 
   queryParams = ["params"];
-  explain = false;
   order = null;
   form = null;
   shouldAutoRun = false;
-  _aiGenerationTimer = null;
+  _pristine = null;
+  _teardownAiGeneration = null;
+  _aiGenerationToken = 0;
+
+  constructor() {
+    super(...arguments);
+    if (this.model?.results) {
+      this.initView();
+    }
+    if (this.model) {
+      this.snapshotPristine();
+    }
+  }
+
+  snapshotPristine() {
+    if (!this.model) {
+      return;
+    }
+    this._pristine = {
+      name: this.model.name ?? "",
+      description: this.model.description ?? "",
+      sql: this.model.sql ?? "",
+      group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
+    };
+    this.dirty = false;
+  }
+
+  recomputeDirty() {
+    if (!this._pristine) {
+      this.dirty = true;
+      return;
+    }
+    const current = {
+      name: this.model.name ?? "",
+      description: this.model.description ?? "",
+      sql: this.model.sql ?? "",
+      group_ids: [...(this.model.group_ids ?? [])].sort().join(","),
+    };
+    this.dirty =
+      current.name !== this._pristine.name ||
+      current.description !== this._pristine.description ||
+      current.sql !== this._pristine.sql ||
+      current.group_ids !== this._pristine.group_ids;
+  }
+
+  // While a query is running (or AI is generating) the actions in the action
+  // bar shouldn't be usable — the interstitial "Save changes and run" state
+  // is confusing otherwise.
+  get actionsBusy() {
+    return this.loading || this.aiGenerating;
+  }
 
   get saveDisabled() {
-    return this.aiGenerating || !this.dirty;
+    return !this.dirty || this.actionsBusy;
   }
 
   get runDisabled() {
-    return this.aiGenerating || this.dirty;
+    return this.model.destroyed || this.actionsBusy;
   }
 
   get parsedParams() {
@@ -61,65 +115,15 @@ export default class PluginsExplorerController extends Controller {
   }
 
   get editDisabled() {
-    return this.model.is_default || this.aiGenerating;
+    return this.model.is_default;
+  }
+
+  get editingQuery() {
+    return !this.editDisabled && !this.model.destroyed;
   }
 
   get editorDisabled() {
-    return this.model.destroyed || this.aiGenerating;
-  }
-
-  setupAiGeneration() {
-    if (
-      !this.siteSettings.data_explorer_ai_queries_enabled ||
-      !this.model.ai_generating
-    ) {
-      return;
-    }
-
-    this.aiGenerating = true;
-    this.editingQuery = true;
-    const channel = `${AI_GENERATION_CHANNEL_PREFIX}/${this.model.id}`;
-
-    this.messageBus.subscribe(channel, this._onAiGenerationMessage, -1);
-
-    this._aiGenerationTimer = setTimeout(() => {
-      this._stopAiGeneration();
-      this.toasts.error({
-        data: { message: i18n("explorer.ai.generation_timeout") },
-      });
-    }, AI_GENERATION_TIMEOUT_MS);
-  }
-
-  teardownAiGeneration() {
-    if (this.model?.id) {
-      const channel = `${AI_GENERATION_CHANNEL_PREFIX}/${this.model.id}`;
-      this.messageBus.unsubscribe(channel, this._onAiGenerationMessage);
-    }
-    if (this._aiGenerationTimer) {
-      clearTimeout(this._aiGenerationTimer);
-      this._aiGenerationTimer = null;
-    }
-  }
-
-  @bind
-  _onAiGenerationMessage(data) {
-    if (data.status === "complete") {
-      this.model.set("sql", data.sql);
-      this.model.set("name", data.name);
-      this.model.set("description", data.description);
-      this.dirty = false;
-      this._stopAiGeneration();
-    } else if (data.status === "error") {
-      this._stopAiGeneration();
-      this.toasts.error({
-        data: { message: data.error || i18n("explorer.ai.generation_error") },
-      });
-    }
-  }
-
-  _stopAiGeneration() {
-    this.aiGenerating = false;
-    this.teardownAiGeneration();
+    return this.model.destroyed;
   }
 
   get groupOptions() {
@@ -130,13 +134,167 @@ export default class PluginsExplorerController extends Controller {
       });
   }
 
+  get hasResults() {
+    return !!this.results?.rows?.length;
+  }
+
+  get runButtonLabel() {
+    return this.dirty ? "explorer.saverun" : "explorer.run";
+  }
+
+  get aiQueriesEnabled() {
+    return this.siteSettings.data_explorer_ai_queries_enabled;
+  }
+
+  get regenerateDisabled() {
+    const trimmed = this.aiPrompt.trim();
+    return (
+      this.aiGenerating || !trimmed || trimmed === this.lastGeneratedPrompt
+    );
+  }
+
+  get viewItems() {
+    const items = [
+      { value: "chart", icon: "signal" },
+      { value: "table", icon: "table" },
+    ];
+    if (this.mode === "ai") {
+      items.push({ value: "sql", icon: "code" });
+    }
+    return items;
+  }
+
+  initView() {
+    const queryId = this.model?.id;
+    const stored = queryId ? dataExplorerStore.get(`view_${queryId}`) : null;
+    const validViews =
+      this.mode === "ai" ? ["chart", "table", "sql"] : ["chart", "table"];
+    if (validViews.includes(stored)) {
+      this.view = stored;
+    } else if (this.mode === "ai" && !this.hasResults) {
+      this.view = "sql";
+    } else {
+      this.view = defaultView(this.results);
+    }
+  }
+
+  @action
+  setView(value) {
+    this.view = value;
+    const queryId = this.model?.id;
+    if (queryId) {
+      dataExplorerStore.set({ key: `view_${queryId}`, value });
+    }
+  }
+
+  @action
+  updateHideSchema(value) {
+    this.hideSchema = value;
+    dataExplorerStore.set({ key: HIDE_SCHEMA_KEY, value: value.toString() });
+  }
+
+  @action
+  setMode(value) {
+    this.mode = value;
+    if (value !== "ai") {
+      this._teardownAi();
+      this.aiPrompt = "";
+      this.lastGeneratedPrompt = null;
+    }
+  }
+
+  @action
+  updateAiPrompt(event) {
+    this.aiPrompt = event.target.value;
+  }
+
+  @action
+  async regenerate() {
+    if (this.regenerateDisabled) {
+      return;
+    }
+
+    this._teardownAi();
+    this.aiGenerating = true;
+    const token = this._aiGenerationToken;
+
+    try {
+      const response = await ajax(
+        "/admin/plugins/discourse-data-explorer/queries/generate.json",
+        {
+          type: "POST",
+          data: {
+            ai_description: this.aiPrompt.trim(),
+            existing_sql: this.model.sql || undefined,
+          },
+        }
+      );
+
+      if (token !== this._aiGenerationToken) {
+        return;
+      }
+
+      this._teardownAiGeneration = subscribeToAiGeneration({
+        messageBus: this.messageBus,
+        generationId: response.generation_id,
+        onComplete: (data) => {
+          if (token !== this._aiGenerationToken) {
+            return;
+          }
+          this.model.set("sql", data.sql);
+          this.recomputeDirty();
+          this.lastGeneratedPrompt = this.aiPrompt.trim();
+          this.aiGenerating = false;
+          if (this.view === "chart" || this.view === "table") {
+            this.run();
+          } else {
+            this.setView("sql");
+          }
+        },
+        onError: (data) => {
+          if (token !== this._aiGenerationToken) {
+            return;
+          }
+          this.aiGenerating = false;
+          this.toasts.error({
+            data: {
+              message: data.error || i18n("explorer.ai.generation_error"),
+            },
+          });
+        },
+        onTimeout: () => {
+          if (token !== this._aiGenerationToken) {
+            return;
+          }
+          this.aiGenerating = false;
+          this.toasts.error({
+            data: { message: i18n("explorer.ai.generation_timeout") },
+          });
+        },
+      });
+    } catch (error) {
+      if (token !== this._aiGenerationToken) {
+        return;
+      }
+      this.aiGenerating = false;
+      popupAjaxError(error);
+    }
+  }
+
+  _teardownAi() {
+    this._aiGenerationToken++;
+    this._teardownAiGeneration?.();
+    this._teardownAiGeneration = null;
+    this.aiGenerating = false;
+  }
+
   @action
   async save() {
     try {
       this.loading = true;
       await this.model.save();
 
-      this.dirty = false;
+      this.snapshotPristine();
       this.editingName = false;
     } catch (error) {
       popupAjaxError(error);
@@ -144,11 +302,6 @@ export default class PluginsExplorerController extends Controller {
     } finally {
       this.loading = false;
     }
-  }
-
-  @action
-  saveAndRun() {
-    this.save().then(() => this.run());
   }
 
   async _importQuery(file) {
@@ -183,18 +336,16 @@ export default class PluginsExplorerController extends Controller {
 
   @bind
   dragMove(e) {
-    if (!e.movementY && !e.movementX) {
+    if (!e.movementX) {
       return;
     }
 
     const editPane = document.querySelector(".query-editor");
     const target = editPane.querySelector(".panels-flex");
-    const grippie = editPane.querySelector(".grippie");
 
     // we need to get the initial height / width of edit pane
     // before we manipulate the size
     if (!this.initialPaneWidth && !this.originalPaneHeight) {
-      this.originalPaneWidth = target.clientWidth;
       this.originalPaneHeight = target.clientHeight;
     }
 
@@ -202,14 +353,9 @@ export default class PluginsExplorerController extends Controller {
       this.originalPaneHeight,
       target.clientHeight + e.movementY
     );
-    const newWidth = Math.max(
-      this.originalPaneWidth,
-      target.clientWidth + e.movementX
-    );
 
     target.style.height = newHeight + "px";
-    target.style.width = newWidth + "px";
-    grippie.style.width = newWidth + "px";
+
     this.appEvents.trigger("ace:resize");
   }
 
@@ -221,28 +367,13 @@ export default class PluginsExplorerController extends Controller {
 
   @action
   updateGroupIds(value) {
-    this.dirty = true;
     this.model.set("group_ids", value);
-  }
-
-  @action
-  updateHideSchema(value) {
-    this.hideSchema = value;
+    this.recomputeDirty();
   }
 
   @action
   editName() {
     this.editingName = true;
-  }
-
-  @action
-  editQuery() {
-    this.editingQuery = true;
-  }
-
-  @action
-  download() {
-    window.open(this.model.downloadUrl, "_blank");
   }
 
   @action
@@ -264,7 +395,7 @@ export default class PluginsExplorerController extends Controller {
       if (!this.model.group_ids || !Array.isArray(this.model.group_ids)) {
         this.model.set("group_ids", []);
       }
-      this.dirty = false;
+      this.snapshotPristine();
     } catch (error) {
       popupAjaxError(error);
     } finally {
@@ -307,7 +438,16 @@ export default class PluginsExplorerController extends Controller {
 
   @action
   setDirty() {
-    this.dirty = true;
+    this.recomputeDirty();
+  }
+
+  @action
+  updateSql(value) {
+    if (this.model.sql === value) {
+      return;
+    }
+    this.model.set("sql", value);
+    this.recomputeDirty();
   }
 
   @action
@@ -316,7 +456,19 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
-  async run() {
+  async run(explain = false) {
+    // catch any dirty state that onChange may not have flushed yet
+    this.recomputeDirty();
+
+    if (this.dirty) {
+      try {
+        await this.save();
+      } catch {
+        // save() already shows popupAjaxError
+        return;
+      }
+    }
+
     let params = null;
     if (this.model.hasParams) {
       try {
@@ -344,7 +496,7 @@ export default class PluginsExplorerController extends Controller {
         type: "POST",
         data: {
           params: JSON.stringify(params),
-          explain: this.explain,
+          explain,
         },
       }
     )
@@ -356,6 +508,13 @@ export default class PluginsExplorerController extends Controller {
           return;
         }
         this.showResults = true;
+        // After a successful run, jump out of the SQL view so the user sees
+        // the results they just asked for.
+        if (this.view === "sql") {
+          this.setView(defaultView(this.results));
+        } else {
+          this.initView();
+        }
       })
       .catch((err) => {
         this.showResults = false;

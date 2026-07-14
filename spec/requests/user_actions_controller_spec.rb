@@ -32,7 +32,7 @@ RSpec.describe UserActionsController do
       end
 
       it "returns categories when lazy load categories is enabled" do
-        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+        SiteSetting.lazy_load_categories_groups = "#{Group::AUTO_GROUPS[:anonymous_users]}"
         user_actions
         expect(response.status).to eq(200)
         category_ids = response.parsed_body["categories"].map { |category| category["id"] }
@@ -205,6 +205,115 @@ RSpec.describe UserActionsController do
       expect(parsed["excerpt"]).to eq(
         PrettyText.excerpt(target_post.cooked, 300, keep_emoji_images: true),
       )
+    end
+
+    it "returns 404 when the fallback first post is hidden" do
+      UserActionManager.enable
+      hidden_text = "hidden fallback excerpt token"
+      hidden_post = create_post(user: acting_user, raw: hidden_text)
+      hidden_post.update_columns(hidden: true)
+      user_action =
+        UserAction.find_by!(
+          user_id: acting_user.id,
+          action_type: UserAction::NEW_TOPIC,
+          target_topic_id: hidden_post.topic_id,
+        )
+
+      get "/user_actions/#{user_action.id}.json"
+
+      aggregate_failures do
+        expect(response).to have_http_status :not_found
+        expect(response.body).not_to include(hidden_text)
+      end
+    end
+
+    it "returns the action when the hidden fallback first post belongs to the viewer" do
+      UserActionManager.enable
+      hidden_text = "own hidden fallback excerpt token"
+      hidden_post = create_post(user: acting_user, raw: hidden_text)
+      hidden_post.update_columns(hidden: true)
+      user_action =
+        UserAction.find_by!(
+          user_id: acting_user.id,
+          action_type: UserAction::NEW_TOPIC,
+          target_topic_id: hidden_post.topic_id,
+        )
+
+      sign_in(acting_user)
+      get "/user_actions/#{user_action.id}.json"
+
+      parsed = response.parsed_body["user_action"]
+
+      aggregate_failures do
+        expect(response).to have_http_status :ok
+        expect(parsed["excerpt"]).to include(hidden_text)
+      end
+    end
+
+    it "returns 404 when a hidden target post has no owner" do
+      hidden_text = "hidden ownerless excerpt token"
+      hidden_reply = create_post(user: Fabricate(:user), topic: target_post.topic, raw: hidden_text)
+      hidden_reply.update_columns(hidden: true, user_id: nil)
+      user_action =
+        UserAction.create!(
+          action_type: UserAction::REPLY,
+          user_id: acting_user.id,
+          acting_user_id: acting_user.id,
+          target_topic_id: hidden_reply.topic_id,
+          target_post_id: hidden_reply.id,
+        )
+
+      sign_in(acting_user)
+      get "/user_actions/#{user_action.id}.json"
+
+      aggregate_failures do
+        expect(response).to have_http_status :not_found
+        expect(response.body).not_to include(hidden_text)
+      end
+    end
+
+    it "returns the action when the hidden target post belongs to the viewer" do
+      hidden_text = "own hidden target excerpt token"
+      hidden_reply = create_post(user: acting_user, topic: target_post.topic, raw: hidden_text)
+      hidden_reply.update_columns(hidden: true)
+      user_action =
+        UserAction.create!(
+          action_type: UserAction::REPLY,
+          user_id: acting_user.id,
+          acting_user_id: acting_user.id,
+          target_topic_id: hidden_reply.topic_id,
+          target_post_id: hidden_reply.id,
+        )
+
+      sign_in(acting_user)
+      get "/user_actions/#{user_action.id}.json"
+
+      parsed = response.parsed_body["user_action"]
+
+      aggregate_failures do
+        expect(response).to have_http_status :ok
+        expect(parsed["excerpt"]).to include(hidden_text)
+      end
+    end
+
+    it "returns 404 for an unlisted topic viewed anonymously" do
+      UserActionManager.enable
+      unlisted_text = "unlisted user action excerpt token"
+      unlisted_post = create_post(user: acting_user, raw: unlisted_text)
+      unlisted_post.topic.update!(visible: false)
+      user_action =
+        UserAction.find_by!(
+          user_id: acting_user.id,
+          action_type: UserAction::NEW_TOPIC,
+          target_topic_id: unlisted_post.topic_id,
+        )
+
+      get "/user_actions/#{user_action.id}.json"
+
+      aggregate_failures do
+        expect(response).to have_http_status :not_found
+        expect(response.body).not_to include(unlisted_text)
+      end
     end
 
     it "returns 404 for a non-existent action" do

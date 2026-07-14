@@ -191,6 +191,9 @@ RSpec.describe "Sidebar navigation menu" do
 
       before do
         other_user.username = "<script>alert('hello')</script>"
+        # Use an uploaded avatar to avoid a letter_avatar request with the
+        # malicious username (which contains `/` and breaks URL routing)
+        other_user.uploaded_avatar_id = Fabricate(:image_upload).id
         other_user.save!(validate: false)
       end
 

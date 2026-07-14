@@ -53,7 +53,7 @@ class ScreenedEmail < ActiveRecord::Base
 
   def self.levenshtein(first, second)
     matrix = [(0..first.length).to_a]
-    (1..second.length).each { |j| matrix << [j] + [0] * (first.length) }
+    (1..second.length).each { |j| matrix << [j] + [0] * first.length }
 
     (1..second.length).each do |i|
       (1..first.length).each do |j|
@@ -73,13 +73,13 @@ end
 # Table name: screened_emails
 #
 #  id            :integer          not null, primary key
-#  email         :string           not null
 #  action_type   :integer          not null
-#  match_count   :integer          default(0), not null
+#  email         :string           not null
+#  ip_address    :inet
 #  last_match_at :datetime
+#  match_count   :integer          default(0), not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
-#  ip_address    :inet
 #
 # Indexes
 #

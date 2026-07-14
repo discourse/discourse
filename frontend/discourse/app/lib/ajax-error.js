@@ -1,6 +1,4 @@
-/* eslint-disable ember/no-jquery */
 import { trustHTML } from "@ember/template";
-import $ from "jquery";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { i18n } from "discourse-i18n";
 
@@ -39,7 +37,7 @@ export function extractErrorInfo(
 
   if (!parsedJSON && error.responseText) {
     try {
-      parsedJSON = $.parseJSON(error.responseText);
+      parsedJSON = JSON.parse(error.responseText);
     } catch (ex) {
       // in case the JSON doesn't parse
       // eslint-disable-next-line no-console
@@ -80,6 +78,8 @@ export function extractErrorInfo(
   return {
     html,
     message: parsedError || defaultMessage || i18n("generic_error"),
+    errorKey: parsedJSON?.error_key ?? null,
+    status: error.status ?? null,
   };
 }
 

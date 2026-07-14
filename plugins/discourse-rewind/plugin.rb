@@ -28,16 +28,6 @@ module ::DiscourseRewind
     date ||= Time.zone.now
     date.month == 1 ? date.year - 1 : date.year
   end
-
-  def self.year_date_range(date_override = nil)
-    current_date = date_override.presence || Time.zone.now
-
-    # Outside December/January, only available in development
-    is_rewind_period = current_date.month == 1 || current_date.month == 12
-    return false if !is_rewind_period && !Rails.env.development?
-
-    Date.new(current_date.year).all_year
-  end
 end
 
 require_relative "lib/discourse_rewind/engine"
@@ -49,7 +39,7 @@ after_initialize do
   UserOption.ignored_columns += %i[discourse_rewind_disabled]
 
   add_to_class(:user, :discourse_rewind_and_profile_public?) do
-    self.user_option.discourse_rewind_share_publicly && !self.user_option.hide_profile
+    user_option.discourse_rewind_share_publicly && !user_option.hide_profile
   end
 
   # add_to_serializer(:current_user) / add_to_serializer(:current_user_option)

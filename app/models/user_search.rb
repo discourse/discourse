@@ -5,7 +5,8 @@ class UserSearch
 
   def initialize(term, opts = {})
     @term = term.downcase
-    @term_like = @term.gsub("_", "\\_") + "%"
+    # escape LIKE wildcards (`_`, `%`, `\`) so the term matches literally
+    @term_like = ActiveRecord::Base.sanitize_sql_like(@term) + "%"
     @topic_id = opts[:topic_id]
     @category_id = opts[:category_id]
     # prioritized_user_id is only used for ordering within the topic, it will prioritize this user
@@ -17,12 +18,13 @@ class UserSearch
     @limit = opts[:limit] || 20
     @groups = opts[:groups]
     @can_review = opts[:can_review] || false
+    @search_custom_fields = opts[:search_custom_fields] || false
 
     @topic = Topic.find(@topic_id) if @topic_id
     @category = Category.find(@category_id) if @category_id
 
     @guardian = Guardian.new(@searching_user)
-    @guardian.ensure_can_see_groups_members!(@groups) if @groups
+    @groups&.each { |group| @guardian.ensure_can_see_group_and_members!(group) }
     @guardian.ensure_can_see_category!(@category) if @category
     @guardian.ensure_can_see_topic!(@topic) if @topic
   end
@@ -65,15 +67,14 @@ class UserSearch
   def filtered_by_term_users
     if @term.blank?
       scoped_users
-    elsif SiteSetting.enable_names? && @term !~ /[_\.-]/
-      query = Search.ts_query(term: @term, ts_config: "simple")
-
-      scoped_users
-        .includes(:user_search_data)
-        .where("user_search_data.search_data @@ #{query}")
-        .order(DB.sql_fragment("CASE WHEN username_lower LIKE ? THEN 0 ELSE 1 END ASC", @term_like))
+    elsif @search_custom_fields
+      # Directory search: also match searchable custom field values, even with
+      # names disabled or `_`, `.`, `-` terms. See `tsvector_filtered_users`.
+      tsvector_filtered_users(weight_filter: SiteSetting.enable_names? ? nil : "AC")
+    elsif SiteSetting.enable_names? && @term !~ /[_.-]/
+      tsvector_filtered_users
     else
-      scoped_users.where("username_lower LIKE :term_like", term_like: @term_like)
+      scoped_users.where("username_lower LIKE ?", @term_like)
     end
   end
 
@@ -214,5 +215,23 @@ class UserSearch
     results = results.includes(:user_status) if SiteSetting.enable_user_status
 
     results
+  end
+
+  private
+
+  # Filters `scoped_users` by matching `@term` against the `user_search_data`
+  # tsvector (A = username, B = name, C = searchable custom fields). Pass
+  # `weight_filter: "AC"` to skip the name (B) weight when names are disabled,
+  # mirroring `Search#user_search`. Usernames match via the A weight; the
+  # `simple` config tokenises the query the same way it indexed the username, so
+  # no separate `username_lower LIKE` clause is needed (see `Search#user_search`).
+  def tsvector_filtered_users(weight_filter: nil)
+    query = Search.ts_query(term: @term, ts_config: "simple", weight_filter:)
+
+    scoped_users
+      .includes(:user_search_data)
+      .references(:user_search_data)
+      .where("user_search_data.search_data @@ #{query}")
+      .order(DB.sql_fragment("CASE WHEN username_lower LIKE ? THEN 0 ELSE 1 END ASC", @term_like))
   end
 end

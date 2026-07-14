@@ -2,11 +2,11 @@ import { registerDeprecationHandler } from "@ember/debug";
 import Service, { service } from "@ember/service";
 import { addGlobalNotice } from "discourse/components/global-notice";
 import DeprecationWorkflow from "discourse/deprecation-workflow";
-import dasherize from "discourse/helpers/dasherize";
 import { bind } from "discourse/lib/decorators";
 import { registerDeprecationHandler as registerDiscourseDeprecationHandler } from "discourse/lib/deprecated";
 import identifySource from "discourse/lib/source-identifier";
 import { escapeExpression } from "discourse/lib/utilities";
+import dDasherize from "discourse/ui-kit/helpers/d-dasherize";
 import { i18n } from "discourse-i18n";
 
 const REPLACEMENT_URLS = {};
@@ -106,7 +106,7 @@ export default class DeprecationWarningHandler extends Service {
       notice += " " + this.siteSettings.warn_critical_js_deprecations_message;
     }
 
-    addGlobalNotice(notice, `critical-deprecation--${dasherize(id)}`, {
+    addGlobalNotice(notice, `critical-deprecation--${dDasherize(id)}`, {
       dismissable: true,
       dismissDuration: moment.duration(1, "day"),
       level: "warn",

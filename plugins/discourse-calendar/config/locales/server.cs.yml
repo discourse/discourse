@@ -5,6 +5,10 @@
 # https://translate.discourse.org/
 
 cs:
+  category_types:
+    events:
+      name: "Události"
+      title: "události"
   reports:
     currently_away:
       title: Aktuálně nedostupní uživatelé
@@ -36,7 +40,6 @@ cs:
     map_events_to_color: "Každému štítku nebo kategorii přiřadit barvu."
     map_events_title: "Přepíše „Události“ v názvu postranního panelu „Nadcházející události“ podle kategorie."
     calendar_enabled: "Povolte plugin `discourse-calendar`. Přidá podporu pro značku `[calendar][/calendar]` v prvním příspěvku tématu."
-    discourse_post_event_enabled: "Aktivuje funkce událostí. Poznámka: Také je třeba povolit `kalendář povolen`."
     displayed_invitees_limit: "Omezuje, kolik pozvaných se u události zobrazí."
     display_post_event_date_on_topic_title: "Zobrazí datum události za názvem tématu."
     use_local_event_date: "Za názvem tématu použít místo relativního času místní datum."
@@ -63,6 +66,12 @@ cs:
     sidebar_show_upcoming_events: "Zobrazit odkaz na nadcházející události na postranním panelu pod položkou 'Více'."
     calendar_first_day_of_week: "Nastavte první den v týdnu pro zobrazení kalendáře. Možnosti jsou sobota, neděle nebo pondělí."
   discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Den"
+        week: "Týden"
+        month: "Měsíc"
+        year: "Rok"
     invite_user_notification: "%{username} vás zve do kalendáře: %{description}"
     calendar_must_be_in_first_post: "Značka pro kalendář se může vložit jen do prvního příspěvku tématu."
     more_than_one_calendar: "V jednom příspěvku nemůže být více než jeden kalendář."

@@ -7,26 +7,62 @@
 el:
   site_settings:
     chat_enabled: "Ενεργοποίηση συνομιλίας."
+    chat_pinned_messages: "Ενεργοποίηση καρφιτσωμένων μηνυμάτων στα κανάλια συνομιλίας."
     enable_public_channels: "Ενεργοποίηση δημόσιων καναλιών με βάση τις κατηγορίες."
     max_mentions_per_chat_message: "Μέγιστος αριθμός @ονομαστικών ειδοποιήσεων που ένας χρήστης μπορεί να χρησιμοποιήσει σε ένα μήνυμα συνομιλίας."
   system_messages:
     private_channel_title: "Κανάλι %{id}"
+    chat_channel_archive_complete:
+      title: "Η αρχειοθέτηση καναλιού συνομιλίας ολοκληρώθηκε"
+      subject_template: "Η αρχειοθέτηση του καναλιού συνομιλίας ολοκληρώθηκε με επιτυχία."
+    chat_channel_archive_failed:
+      title: "Η αρχειοθέτηση καναλιού συνομιλίας απέτυχε."
+      subject_template: "Η αρχειοθέτηση καναλιού συνομιλίας απέτυχε."
+    chat_channel_archive_failed_no_topic:
+      title: "Η αρχειοθέτηση καναλιού συνομιλίας απέτυχε."
+      subject_template: "Η αρχειοθέτηση καναλιού συνομιλίας απέτυχε."
   chat:
     deleted_chat_username: διεγράφη
     errors:
+      users_cant_be_added_to_channel: "Δεν είναι δυνατή η προσθήκη χρηστών σε αυτό το κανάλι."
+      user_cant_be_removed_from_channel: "Δεν είναι δυνατή η αφαίρεση του χρήστη από αυτό το κανάλι"
+      channel_exists_for_category: "Υπάρχει ήδη ένα κανάλι για αυτήν την κατηγορία και το όνομα"
       channel_new_message_disallowed:
         archived: "Το κανάλι είναι αρχειοθετημένο, δεν είναι δυνατή η αποστολή νέων μηνυμάτων"
+        closed: "Το κανάλι είναι κλειστό, δεν είναι δυνατή η αποστολή νέων μηνυμάτων"
+        read_only: "Το κανάλι είναι μόνο για ανάγνωση, δεν είναι δυνατή η αποστολή νέων μηνυμάτων"
       channel_modify_message_disallowed:
         archived: "Το κανάλι είναι αρχειοθετημένο, δεν είναι δυνατή η επεξεργασία ή διαγραφή μηνυμάτων"
+        closed: "Το κανάλι είναι κλειστό, δεν είναι δυνατή η επεξεργασία ή διαγραφή μηνυμάτων"
+        read_only: "Το κανάλι είναι μόνο για ανάγνωση, δεν είναι δυνατή η επεξεργασία ή διαγραφή μηνυμάτων"
+      user_cannot_send_message: "Δεν μπορείτε να στείλετε μηνύματα αυτήν τη στιγμή."
+      user_not_in_channel: "Πρέπει να είστε μέλος αυτού του καναλιού."
+      rate_limit_exceeded: "Έγινε υπέρβαση του ορίου μηνυμάτων συνομιλίας που μπορούν να σταλούν εντός 30 δευτερολέπτων"
+      auto_silence_from_flags: "Το μήνυμα συνομιλίας έχει αναφορά με αρκετά υψηλή βαθμολογία για να σιγήσει ο χρήστης."
       channel_cannot_be_archived: "Δεν είναι δυνατή η αρχειοθέτηση του καναλιού αυτήν τη στιγμή. Πρέπει να είναι είτε κλειστό είτε ανοιχτό για αρχειοθέτηση."
+      duplicate_message: "Δημοσιεύσατε ένα πανομοιότυπο μήνυμα πολύ πρόσφατα."
+      delete_channel_failed: "Η διαγραφή του καναλιού απέτυχε, δοκιμάστε ξανά."
+      minimum_length_not_met:
+        one: "Το μήνυμα είναι πολύ μικρό, πρέπει να έχει τουλάχιστον %{count} χαρακτήρα."
+        other: "Το μήνυμα είναι πολύ μικρό, πρέπει να έχει τουλάχιστον %{count} χαρακτήρες."
+      message_too_long:
+        one: "Το μήνυμα είναι πολύ μεγάλο, τα μηνύματα πρέπει να έχουν το πολύ %{count} χαρακτήρα."
+        other: "Το μήνυμα είναι πολύ μεγάλο, τα μηνύματα πρέπει να έχουν το πολύ %{count} χαρακτήρες."
       draft_too_long: "Το προσχέδιο είναι πολύ μεγάλο."
+      max_reactions_limit_reached: "Δεν επιτρέπονται νέες αντιδράσεις σε αυτό το μήνυμα."
       not_accepting_dms: "Λυπούμαστε, ο/η %{username} δεν δέχεται μηνύματα αυτή τη στιγμή."
+      not_reachable: "Λυπούμαστε, ο χρήστης %{username} δεν χρησιμοποιεί συνομιλία."
       user_cannot_send_direct_messages: "Λυπούμαστε, δεν μπορείτε να στείλετε άμεσα μηνύματα."
       over_chat_max_direct_message_users_allow_self: "Μπορείτε να δημιουργήσετε ένα άμεσο μήνυμα μόνο με τον εαυτό σας."
       over_chat_max_direct_message_users:
         one: "Δεν μπορείτε να δημιουργήσετε ένα άμεσο μήνυμα με περισσότερο από %{count} άλλον χρήστη."
         other: "Δεν μπορείτε να δημιουργήσετε ένα άμεσο μήνυμα με περισσότερους από %{count} άλλους χρήστες."
+      thread_invalid_for_channel: "Το νήμα δεν είναι μέρος του παρεχόμενου καναλιού."
+      thread_does_not_match_parent: "Το νήμα δεν αντιστοιχεί με το γονικό μήνυμα."
       invalid_direct_message: "Δεν επιτρέπεται να δημιουργήσετε αυτό το άμεσο μήνυμα."
+      pin_limit_reached: "Αυτό το κανάλι έχει φτάσει τον μέγιστο αριθμό καρφιτσωμένων μηνυμάτων (%{limit})."
+      message_already_pinned: "Αυτό το μήνυμα είναι ήδη καρφιτσωμένο."
+      message_not_pinned: "Αυτό το μήνυμα δεν είναι καρφιτσωμένο."
     reviewables:
       message_already_handled: "Ευχαριστούμε, αλλά έχουμε ήδη αναθεωρήσει αυτό το μήνυμα και έχουμε διαπιστώσει ότι δεν χρειάζεται να αναφερθεί ξανά."
       actions:
@@ -47,6 +83,7 @@ el:
           title: "Διατήρηση μηνύματος"
           description: "Συμφωνώ με την αναφορά και διατήρηση του μηνύματος χωρίς αλλαγή."
         agree_and_keep_deleted:
+          title: "Διατήρηση μηνύματος ως διαγραμμένου"
           description: "Συμφωνώ με την αναφορά και διατήρηση του μηνύματος ως διαγραμμένο."
         agree_and_suspend:
           title: "Αποβολή Χρήστη"
@@ -65,10 +102,13 @@ el:
           description: "Αγνοήστε την αναφορά αφαιρώντας την από την ουρά και διαγραφή του μηνύματος."
         disagree_and_restore:
           title: "Διαφωνώ και Επαναφορά Μηνύματος"
+          description: "Επαναφορά του μηνύματος ώστε όλοι οι χρήστες να μπορούν να το δουν."
         disagree:
+          title: "Διατήρηση μηνύματος"
           description: "Διαφωνώ με την αναφορά και διατήρηση του μηνύματος χωρίς αλλαγή."
         ignore:
           title: "Αγνόηση επισήμανσης"
+          description: "Αφαιρέστε το από την ουρά χωρίς να προβείτε σε κάποια ενέργεια."
       direct_messages:
         transcript_title: "Μεταγραφή προηγούμενων μηνυμάτων στο %{channel_name}"
         transcript_body: "Για να σας δώσουμε περισσότερες πληροφορίες, συμπεριλάβαμε μια μεταγραφή των προηγούμενων μηνυμάτων σε αυτήν τη συνομιλία (έως δέκα):\n\n%{transcript}"
@@ -78,13 +118,19 @@ el:
         other: "%{invited_users} έχουν προσκληθεί από %{inviting_user}."
       archive:
         first_post_raw: "Αυτό το θέμα είναι ένα αρχείο του καναλιού συνομιλίας [%{channel_name}](%{channel_url})."
+      messages_moved:
+        one: "Ο χρήστης @%{acting_username} μετακίνησε ένα μήνυμα στο κανάλι [%{channel_name}](%{first_moved_message_url})."
+        other: "Ο χρήστης @%{acting_username} μετακίνησε %{count} μηνύματα στο κανάλι [%{channel_name}](%{first_moved_message_url})."
       dm_title:
         single_user: "%{username}"
+        multi_user: "%{comma_separated_usernames}"
         multi_user_truncated:
           one: "%{comma_separated_usernames} και %{count} ακόμα"
           other: "%{comma_separated_usernames} και %{count} ακόμα"
     mention_warning:
       dismiss: "παράβλεψη"
+      cannot_see: "Ο χρήστης %{first_identifier} δεν έχει πρόσβαση σε αυτό το κανάλι και δεν ειδοποιήθηκε."
+      cannot_see_group: "Ορισμένα μέλη της ομάδας %{group_name} δεν έχουν πρόσβαση σε αυτό το κανάλι και δεν ειδοποιήθηκαν."
       invitations_sent:
         one: "Η πρόσκληση στάλθηκε"
         other: "Οι προσκλήσεις στάλθηκαν"
@@ -93,6 +139,11 @@ el:
       group_mentions_disabled_multiple:
         one: "%{first_identifier} και %{count} άλλη ομάδα δεν επιτρέπουν τις επισημάνσεις."
         other: "%{first_identifier} και %{count} άλλες ομάδες δεν επιτρέπουν τις επισημάνσεις."
+      global_mentions_disallowed: "Οι επισημάνσεις @here και @all είναι απενεργοποιημένες σε αυτό το κανάλι."
+      too_many_members: "%{first_identifier} έχει πάρα πολλά μέλη. Κανείς δεν ειδοποιήθηκε."
+      too_many_members_multiple:
+        one: "%{first_identifier} και %{count} άλλη ομάδα έχουν πάρα πολλά μέλη. Κανείς δεν ειδοποιήθηκε."
+        other: "%{first_identifier} και %{count} άλλες ομάδες έχουν πάρα πολλά μέλη. Κανείς δεν ειδοποιήθηκε."
     category_channel:
       errors:
         slug_contains_non_ascii_chars: "περιέχει χαρακτήρες που δεν είναι ascii"
@@ -102,6 +153,7 @@ el:
       notification_title_direct_message: "μήνυμα με %{channel_name}"
     personal_chat: "προσωπική συνομιλία"
     onebox:
+      inline_to_message: "Μήνυμα #%{message_id} από %{username} – #%{chat_channel}"
       inline_to_channel: "Συνομιλία #%{chat_channel}"
       inline_to_topic_channel: "Συνομιλία για το θέμα %{topic_title}"
       inline_to_thread: "%{thread_title} - #%{chat_channel}"
@@ -120,20 +172,45 @@ el:
     popup:
       chat_mention:
         direct: '%{username} σε ανέφερε στο "%{channel}"'
+        other_type: '%{username} επισήμανε %{identifier} στο "%{channel}"'
       direct_message_chat_mention:
         direct: "%{username} σας επισήμανε σε προσωπική συνομιλία"
         other_type: "%{username} επισήμανε %{identifier} σε προσωπική συνομιλία"
+      new_chat_message: '%{username} έστειλε ένα μήνυμα στο "%{channel}"'
       new_direct_chat_message: "%{username} έστειλε ένα μήνυμα σε προσωπική συνομιλία"
+    actions:
+      chat_reply:
+        title: Απάντηση
+        placeholder: Απαντήστε…
   discourse_automation:
     scriptables:
       send_chat_message:
         title: Αποστολή μηνύματος συνομιλίας
+  discourse_workflows:
+    chat_approval:
+      default_approve_label: "Έγκριση"
+      default_deny_label: "Άρνηση"
+    errors:
+      send_chat_message:
+        invalid_params: "Μη έγκυρες παράμετροι: %{errors}"
+        channel_not_found: "Δεν βρέθηκε το κανάλι: %{channel_id}"
+        failed: "Αποτυχία αποστολής μηνύματος συνομιλίας."
+      chat_approval:
+        channel_not_found: "Το μήνυμα συνομιλίας απέτυχε: το κανάλι %{channel_id} δεν βρέθηκε."
+        invalid_params: "Το μήνυμα συνομιλίας απέτυχε: %{errors}"
+        failed: "Το μήνυμα συνομιλίας απέτυχε: %{steps}"
   reviewable_score_types:
+    needs_review:
+      title: "Χρειάζεται έλεγχο"
     notify_user:
+      chat_pm_title: 'Το μήνυμα συνομιλίας σας στο "%{channel_name}"'
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
       chat_pm_title: 'Ένα μήνυμα συνομιλίας στο "%{channel_name}" χρειάζεται έλεγχο από το προσωπικό'
       chat_pm_body: "%{link}\n\n%{message}"
+  reviewables:
+    reasons:
+      chat_message_queued_by_staff: "Ένα μέλος του προσωπικού πιστεύει ότι αυτό το μήνυμα συνομιλίας χρειάζεται έλεγχο."
   user_notifications:
     chat_summary:
       deleted_user: "Διαγραμμένος χρήστης"
@@ -145,23 +222,43 @@ el:
         private_email:
           one: "[%{site_name}] Νέο μήνυμα"
           other: "[%{site_name}] Νέα μηνύματα"
+        private_email_improved:
+          one: "Νέο μήνυμα"
+          other: "Νέα μηνύματα"
         watched_thread:
           one: "[%{site_name}] Νέο μήνυμα νήματος στο %{channel}"
           other: "[%{site_name}] Νέα μηνύματα νήματος στο %{channel}"
+        watched_thread_improved:
+          one: "Νέο μήνυμα νήματος στο %{channel}"
+          other: "Νέα μηνύματα νήματος στο %{channel}"
         watched_threads:
           one: "[%{site_name}] Νέο μήνυμα νήματος στο %{channel} και %{count} άλλο κανάλι"
           other: "[%{site_name}] Νέα μηνύματα νήματος σε %{channel} και %{count} άλλα κανάλια"
+        watched_threads_improved:
+          one: "Νέο μήνυμα νήματος στο %{channel} και %{count} άλλο κανάλι"
+          other: "Νέα μηνύματα νήματος στο %{channel} και %{count} άλλα κανάλια"
         chat_dm_1:
           one: "[%{site_name}] Νέο μήνυμα από %{name}"
           other: "[%{site_name}] Νέα μηνύματα από %{name}"
+        chat_dm_1_improved:
+          one: "Νέο μήνυμα από %{name}"
+          other: "Νέα μηνύματα από %{name}"
         chat_dm_2: "[%{site_name}] Νέα μηνύματα από %{name_1} και %{name_2}"
+        chat_dm_2_improved: "Νέα μηνύματα από %{name_1} και %{name_2}"
         chat_dm_3_or_more: "[%{site_name}] Νέα μηνύματα από %{name} και %{count} άλλα κανάλια άμεσων μηνυμάτων"
+        chat_dm_3_or_more_improved: "Νέα μηνύματα από %{name} και %{count} άλλα κανάλια άμεσων μηνυμάτων"
         chat_channel_1:
           one: "[%{site_name}] Νέο μήνυμα στο %{channel}"
           other: "[%{site_name}] Νέα μηνύματα στο %{channel}"
+        chat_channel_1_improved:
+          one: "Νέο μήνυμα στο %{channel}"
+          other: "Νέα μηνύματα στο %{channel}"
         chat_channel_2: "[%{site_name}] Νέα μηνύματα στο %{channel_1} και στο %{channel_2}"
+        chat_channel_2_improved: "Νέα μηνύματα στα %{channel_1} και %{channel_2}"
         chat_channel_3_or_more: "[%{site_name}] Νέα μηνύματα στο %{channel} και %{count} άλλα κανάλια"
+        chat_channel_3_or_more_improved: "Νέα μηνύματα στο %{channel} και %{count} άλλα κανάλια"
         chat_channel_and_dm: "[%{site_name}] Νέα μηνύματα στο %{channel} και από %{name}"
+        chat_channel_and_dm_improved: "Νέα μηνύματα στο %{channel} και από %{name}"
       unsubscribe: "Αυτή η σύνοψη συνομιλίας αποστέλλεται από %{site_link} όταν είστε μακριά. Αλλάξτε την %{email_preferences_link}, ή %{unsubscribe_link} για να απεγγραφείτε."
       unsubscribe_no_link: "Αυτή η σύνοψη συνομιλίας αποστέλλεται από %{site_link} όταν είστε μακριά. Αλλάξτε την %{email_preferences_link}."
       view_messages:
@@ -176,3 +273,6 @@ el:
       select_title: "Ορίστε τα email σύνοψης συνομιλίας σε:"
       never: Ποτέ
       when_away: Μόνο όταν είμαι μακριά
+  category:
+    cannot_delete:
+      has_chat_channels: "Δεν είναι δυνατή η διαγραφή αυτής της κατηγορίας επειδή έχει κανάλια συνομιλίας."

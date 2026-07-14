@@ -35,6 +35,9 @@ vi:
     discourse_post_event:
       notifications:
         invite_user_notification: "%{username} %{description}"
+      event_description:
+        show_more: "Hiện thêm"
+        show_less: "Thu gọn"
       show_all: "Hiển thị tất cả"
       add_to_calendar: "Thêm vào lịch"
       created_by: "Tạo bởi"
@@ -58,9 +61,19 @@ vi:
               title: "Công khai"
             private:
               title: "Riêng tư"
+      composer:
+        reminder:
+          units:
+            minutes:
+              other: "phút"
+            hours:
+              other: "tiếng"
+            days:
+              other: "ngày"
       builder_modal:
         custom_fields:
           placeholder: "Tùy chọn"
+        advanced_settings_title: "Cài đặt nâng cao"
         create: "Tạo"
         update: "Lưu lại"
         timezone:
@@ -77,14 +90,14 @@ vi:
           label: "Tái diễn"
           none: "Không tái diễn"
           every_day: "Mỗi ngày"
-        url:
-          label: "URL"
-          placeholder: "Tùy chọn"
-        location:
-          label: "Vị trí"
+          ordinals:
+            last: "cuối cùng"
+        attendance:
+          none: "Không"
         description:
           label: "Mô tả"
-        status:
-          label: "Trạng thái"
+        event_type:
+          public:
+            title: "Công khai"
       invite_user_or_group:
         invite: "Gửi"

@@ -6,7 +6,7 @@ import AdminPlugin from "discourse/admin/models/admin-plugin";
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | admin-plugin-config-area", function (hooks) {
+module("Integration | Component | AdminPluginConfigArea", function (hooks) {
   setupRenderingTest(hooks);
 
   test("it renders the nav items along the top", async function (assert) {

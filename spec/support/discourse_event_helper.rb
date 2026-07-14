@@ -12,7 +12,7 @@ module DiscourseEvent::TestHelper
 
   def track_events(event_name = nil, args: nil)
     @events_trigger = events_trigger = []
-    yield
+    yield events_trigger
     @events_trigger = nil
 
     if event_name
@@ -34,3 +34,14 @@ module DiscourseEvent::TestHelper
 end
 
 DiscourseEvent.singleton_class.prepend DiscourseEvent::TestHelper
+
+# Fail any spec that registers a DiscourseEvent handler without cleaning it up.
+RSpec.configure do |config|
+  config.around :each do |example|
+    before_event_count = DiscourseEvent.events.values.sum(&:count)
+    example.run
+    after_event_count = DiscourseEvent.events.values.sum(&:count)
+    expect(before_event_count).to eq(after_event_count),
+    "DiscourseEvent registrations were not cleaned up"
+  end
+end

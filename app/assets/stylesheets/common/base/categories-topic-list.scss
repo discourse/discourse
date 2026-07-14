@@ -1,0 +1,83 @@
+@use "common/foundation/mixins";
+
+.latest-topic-list,
+.top-topic-list {
+  @include mixins.topic-list-icons;
+
+  .table-heading {
+    padding: var(--space-2) var(--space-1);
+    color: var(--d-topic-list-header-text-color);
+    font-size: var(--d-topic-list-data-font-size);
+  }
+
+  .no-topics,
+  .more-topics {
+    margin-top: 1em;
+  }
+
+  .posts-map {
+    font-size: var(--font-up-1);
+    font-weight: bold;
+    color: var(--primary-medium);
+  }
+}
+
+.latest-topic-list-item {
+  padding: 1em;
+  border-bottom: 1px solid var(--content-border-color);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+
+  .topic-poster {
+    position: relative;
+
+    .avatar-flair {
+      position: absolute;
+      bottom: 0;
+    }
+  }
+
+  .main-link {
+    flex: 0 1 auto;
+    max-width: 65%;
+    font-size: var(--font-0);
+
+    a.title {
+      padding: 15px 0;
+      word-break: break-word;
+      color: var(--primary);
+    }
+
+    .anon & {
+      a.title:visited:not(.badge-notification) {
+        color: var(--primary-medium);
+      }
+    }
+
+    a.title.visited:not(.badge-notification) {
+      color: var(--primary-medium);
+    }
+
+    .top-row {
+      margin-bottom: 0.1em;
+      font-size: var(--font-up-1);
+    }
+
+    .bottom-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0 0.5em;
+    }
+  }
+
+  .topic-stats {
+    flex: 1 0 0px;
+    text-align: right;
+    color: var(--primary-med-or-secondary-high);
+  }
+
+  .topic-last-activity a {
+    color: var(--primary-low-mid-or-secondary-high);
+  }
+}

@@ -23,6 +23,7 @@ nb_NO:
       create_placeholder: "Spørringsnavn…"
       ai:
         generate: "Generer API-nøkkel"
+        optional: "valgfritt"
       import:
         label: "Importer"
       help:
@@ -34,19 +35,24 @@ nb_NO:
           yes: "Ja"
           no: "Nei"
           null_: "Null"
-      export: "Eksporter"
-      edit: "Rediger"
       delete: "Slett"
-      download_json: "JSON"
-      download_csv: "CSV"
+      chart:
+        form:
+          bar: "Bar"
       others_dirty: "En spørring har ulagrede endringer, og vil gå tapt hvis du navigerer vekk."
       result_count:
         one: "%{count} resultat."
         other: "%{count} resultater."
       query_groups: "Grupper"
       query_description: "Beskrivelse"
-      explain_label: "Inkluder spørringsplan?"
       reset_params: "Tilbakestill"
       search_placeholder: "Søk…"
     group:
       reports: "Rapporter"
+    discourse_workflows:
+      nodes:
+        "action:sql": "Datautforsker"
+      sql:
+        param_value: "Verdi"
+        output:
+          results: "Resultater"

@@ -532,6 +532,46 @@ RSpec.describe PostGuardian do
       expect(guardian.can_edit_post?(post)).to eq(false)
     end
 
+    context "when category group moderation is enabled" do
+      before { SiteSetting.enable_category_group_moderation = true }
+
+      it "returns false for a category group moderator who cannot see the topic" do
+        mod_group = Fabricate(:group)
+        cat_mod_user = Fabricate(:user)
+        private_cat = Fabricate(:private_category, group: Fabricate(:group))
+        private_t = Fabricate(:topic, category: private_cat)
+        private_p = Fabricate(:post, topic: private_t)
+        Fabricate(:category_moderation_group, category: private_cat, group: mod_group)
+        mod_group.add(cat_mod_user)
+
+        expect(Guardian.new(cat_mod_user).can_edit_post?(private_p)).to eq(false)
+      end
+
+      it "returns true for a category group moderator who can see the topic" do
+        mod_group = Fabricate(:group)
+        cat_mod_user = Fabricate(:user)
+        private_cat = Fabricate(:private_category, group: mod_group)
+        private_t = Fabricate(:topic, category: private_cat)
+        private_p = Fabricate(:post, topic: private_t)
+        Fabricate(:category_moderation_group, category: private_cat, group: mod_group)
+        mod_group.add(cat_mod_user)
+
+        expect(Guardian.new(cat_mod_user).can_edit_post?(private_p)).to eq(true)
+      end
+    end
+
+    it "returns false for edit_all_post_groups user who cannot see the topic" do
+      edit_group = Fabricate(:group)
+      edit_user = Fabricate(:user)
+      private_cat = Fabricate(:private_category, group: Fabricate(:group))
+      private_t = Fabricate(:topic, category: private_cat)
+      private_p = Fabricate(:post, topic: private_t)
+      edit_group.add(edit_user)
+      SiteSetting.edit_all_post_groups = edit_group.id.to_s
+
+      expect(Guardian.new(edit_user).can_edit_post?(private_p)).to eq(false)
+    end
+
     it "returns true even if the topic is closed" do
       topic.update!(closed: true)
 
@@ -1116,6 +1156,77 @@ RSpec.describe PostGuardian do
     end
   end
 
+  describe "#filter_hidden_posts" do
+    before { SiteSetting.hidden_post_visible_groups = "" }
+
+    it "returns only visible posts for anonymous users" do
+      records = Post.where(id: [post.id, hidden_post.id])
+
+      expect(Guardian.new.filter_hidden_posts(records)).to contain_exactly(post)
+    end
+
+    it "returns visible posts and the user's hidden posts for regular users" do
+      own_hidden_post = Fabricate(:post, topic: topic, user: user, hidden: true)
+      records = Post.where(id: [post.id, hidden_post.id, own_hidden_post.id])
+
+      expect(Guardian.new(user).filter_hidden_posts(records)).to contain_exactly(
+        post,
+        own_hidden_post,
+      )
+    end
+
+    it "returns hidden posts for staff users" do
+      records = Post.where(id: [post.id, hidden_post.id])
+
+      expect(Guardian.new(moderator).filter_hidden_posts(records)).to contain_exactly(
+        post,
+        hidden_post,
+      )
+    end
+
+    it "returns hidden posts for members of hidden_post_visible_groups" do
+      SiteSetting.hidden_post_visible_groups = group.id.to_s
+      records = Post.where(id: [post.id, hidden_post.id])
+
+      expect(Guardian.new(user).filter_hidden_posts(records)).to contain_exactly(post, hidden_post)
+    end
+
+    it "does not return hidden posts for anonymous users configured via everyone" do
+      SiteSetting.hidden_post_visible_groups = Group::AUTO_GROUPS[:everyone].to_s
+      records = Post.where(id: [post.id, hidden_post.id])
+
+      expect(Guardian.new.filter_hidden_posts(records)).to contain_exactly(post)
+    end
+
+    it "returns hidden posts from moderated categories for category group moderators" do
+      SiteSetting.enable_category_group_moderation = true
+      Fabricate(:category_moderation_group, category: category, group: group)
+      unmoderated_visible_post = Fabricate(:post)
+      unmoderated_hidden_post =
+        Fabricate(:post, topic: unmoderated_visible_post.topic, hidden: true)
+      records =
+        Post.joins(:topic).where(
+          id: [post.id, hidden_post.id, unmoderated_visible_post.id, unmoderated_hidden_post.id],
+        )
+
+      expect(Guardian.new(user).filter_hidden_posts(records)).to contain_exactly(
+        post,
+        hidden_post,
+        unmoderated_visible_post,
+      )
+    end
+
+    it "returns hidden posts in the category for category group moderators" do
+      SiteSetting.enable_category_group_moderation = true
+      Fabricate(:category_moderation_group, category: category, group: group)
+      records = Post.where(id: [post.id, hidden_post.id])
+
+      expect(
+        Guardian.new(user).filter_hidden_posts(records, category: category),
+      ).to contain_exactly(post, hidden_post)
+    end
+  end
+
   describe "#can_see_hidden_post?" do
     context "when the hidden_post_visible_groups contains everyone" do
       before { SiteSetting.hidden_post_visible_groups = "#{Group::AUTO_GROUPS[:everyone]}" }
@@ -1292,6 +1403,26 @@ RSpec.describe PostGuardian do
       SiteSetting.view_raw_email_allowed_groups = "1|2|14"
 
       expect(Guardian.new(trust_level_0).can_view_raw_email?(post)).to be_falsey
+    end
+
+    it "returns false when the post is nil even for an allowed user" do
+      SiteSetting.view_raw_email_allowed_groups = "1|2|14"
+
+      expect(Guardian.new(trust_level_4).can_view_raw_email?(nil)).to be_falsey
+    end
+  end
+
+  describe "#can_view_raw_emails?" do
+    it "returns true for a user in an allowed group" do
+      SiteSetting.view_raw_email_allowed_groups = "1|2|14"
+
+      expect(Guardian.new(trust_level_4).can_view_raw_emails?).to be_truthy
+    end
+
+    it "returns false for a user not in an allowed group" do
+      SiteSetting.view_raw_email_allowed_groups = "1|2|14"
+
+      expect(Guardian.new(trust_level_0).can_view_raw_emails?).to be_falsey
     end
   end
 

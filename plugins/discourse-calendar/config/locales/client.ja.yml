@@ -329,6 +329,9 @@ ja:
         invite_user_notification: "%{username} %{description}"
         invite_user_predefined_attendance_notification: "%{username} はあなたの出席を自動的に設定して %{eventName} に招待しました"
         an_event: "イベント"
+      event_description:
+        show_more: "もっと表示"
+        show_less: "表示を減らす"
       edit_reason: "イベントが更新されました"
       edit_reason_closed: "イベント終了"
       edit_reason_opened: "イベント開始"
@@ -382,7 +385,6 @@ ja:
       upcoming_events_list:
         title: "今後のイベント"
         empty: "今後のイベントはありません"
-        all_day: "終日"
         error: "イベントの取得に失敗しました"
         try_again: "やり直す"
         view_all: "すべて表示"
@@ -396,10 +398,9 @@ ja:
       models:
         invitee:
           no_users: "ユーザーが見つかりません"
+          leave_event: "イベントから退出"
           status:
-            unknown: "興味なし"
             going: "出席"
-            not_going: "欠席"
             interested: "興味あり"
             going_count:
               other: "%{count} 出席"
@@ -424,11 +425,24 @@ ja:
               title: "非公開"
               description: "非公開イベントは招待されたユーザーのみが参加できます。"
       composer:
-        name_placeholder: "イベント"
-        end_date_placeholder: "終了日を設定"
+        name_placeholder: "イベント名"
         location_placeholder: "場所または URL を追加"
-        max_attendees_placeholder: "最大参加者数を設定"
         description_placeholder: "イベントの説明を追加"
+        event_title_placeholder: "イベント名"
+        create_event_button: "イベントを作成"
+        reminder:
+          units:
+            minutes:
+              other: "分"
+            hours:
+              other: "時間"
+            days:
+              other: "日"
+            weeks:
+              other: "週間"
+      composer_actions:
+        create_event:
+          label: "イベントを作成"
       builder_modal:
         custom_fields:
           label: "カスタムフィールド"
@@ -436,6 +450,7 @@ ja:
           description: "許可されるカスタムフィールドは、サイト設定に定義されています。カスタムフィールドは、他のプラグインにデータを送信するために使用されます。"
         create_event_title: "イベントを作成"
         update_event_title: "イベントを編集"
+        advanced_settings_title: "高度な設定"
         confirm_delete: "このイベントを削除してもよろしいですか？"
         confirm_close: "このイベントを終了してもよろしいですか？"
         confirm_open: "このイベント開いてもよろしいですか？"
@@ -449,11 +464,10 @@ ja:
         timezone:
           label: タイムゾーン
           remove_timezone: タイムゾーンなし (UTC)
+        starts_at:
+          label: "開始日"
         reminders:
           label: "リマインダー"
-          types:
-            bump_topic: "トピックの自動バンプ"
-            notification: "参加者に通知"
           units:
             minutes: "分"
             hours: "時間"
@@ -462,31 +476,22 @@ ja:
           periods:
             before: "前"
             after: "後"
-        recurrence_until:
-          label: "終了 (含む)"
         recurrence:
           label: "繰り返し"
           none: "繰り返しなし"
           every_day: "毎日"
-          every_month: "毎月この平日"
           every_weekday: "すべての平日"
-          every_week: "毎週この平日"
-          every_two_weeks: "隔週この平日"
-          every_four_weeks: "4 週間ごとのこの平日"
-        minimal:
-          label: "ミニマルイベント"
-          checkbox_label: "参加/不参加ボタンと招待者のステータスを非表示にする"
+          ordinals:
+            last: "最終"
         max_attendees:
           label: "最大参加者"
           placeholder: "制限なし"
+        attendance:
+          none: "なし"
         allow_chat:
           label: "チャットの統合"
           checkbox_label: "イベント専用のチャットチャンネルを作成して管理する"
-        url:
-          label: "URL"
-          placeholder: "オプション"
         location:
-          label: "場所"
           placeholder: "場所、リンクなどを追加します。"
         description:
           label: "説明"
@@ -496,8 +501,9 @@ ja:
           placeholder: "オプション、デフォルトはトピックタイトル"
         invitees:
           label: "招待されたグループ"
-        status:
-          label: "ステータス"
+        event_type:
+          public:
+            title: "公開"
         delete_confirmation_message: "このイベントを削除しますか？"
       invite_user_or_group:
         title: "ユーザーまたはグループに通知する"

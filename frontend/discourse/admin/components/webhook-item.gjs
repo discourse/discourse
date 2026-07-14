@@ -4,9 +4,9 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import WebhookStatus from "discourse/admin/components/webhook-status";
-import DButton from "discourse/components/d-button";
-import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
+import DButton from "discourse/ui-kit/d-button";
+import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
 import { i18n } from "discourse-i18n";
 
 export default class WebhookItem extends Component {
@@ -60,7 +60,7 @@ export default class WebhookItem extends Component {
             @onRegisterApi={{this.onRegisterApi}}
           >
             <:content>
-              <DropdownMenu as |dropdown|>
+              <DDropdownMenu as |dropdown|>
                 <dropdown.item>
                   <DButton
                     @action={{this.events}}
@@ -79,7 +79,7 @@ export default class WebhookItem extends Component {
                     class="btn-danger admin-web-hook__delete"
                   />
                 </dropdown.item>
-              </DropdownMenu>
+              </DDropdownMenu>
             </:content>
           </DMenu>
         </div>

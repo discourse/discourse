@@ -31,7 +31,6 @@ id:
     ai_sentiment_enabled: "Aktifkan modul sentiment."
     ai_sentiment_inference_service_api_endpoint: "URL tempat API berjalan untuk modul sentiment"
     ai_sentiment_inference_service_api_key: "Kunci API untuk API sentiment"
-    ai_sentiment_models: "Model yang digunakan untuk inferensi. Sentiment menglasifikasikan posting pada ruang positif/netral/negatif. Emosi dikelompokkan ke dalam ruang marah/jijik/takut/gembira/netral/sedih/kejutan."
     ai_nsfw_detection_enabled: "Aktifkan modul NSFW."
     ai_nsfw_inference_service_api_endpoint: "URL tempat API beroperasi untuk modul NSFW"
     ai_nsfw_inference_service_api_key: "Kunci API untuk API NSFW"
@@ -61,6 +60,8 @@ id:
             description: "Sertakan semua topik yang dapat diakses pengguna dalam hasil pencarian (secara bawaan hanya topik publik yang disertakan)"
       tool_summary:
         github_search_files: "File pencarian GitHub"
+        suspend_user: "Tangguhkan pengguna"
+        silence_user: "Senyapkan pengguna"
         search: "Cari"
         time: "Waktu"
         summarize: "Meringkas"

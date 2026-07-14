@@ -51,16 +51,16 @@ class Upload < ActiveRecord::Base
   validates_with UploadValidator
 
   before_destroy do
-    UserProfile.where(card_background_upload_id: self.id).update_all(card_background_upload_id: nil)
-    UserProfile.where(profile_background_upload_id: self.id).update_all(
+    UserProfile.where(card_background_upload_id: id).update_all(card_background_upload_id: nil)
+    UserProfile.where(profile_background_upload_id: id).update_all(
       profile_background_upload_id: nil,
     )
   end
 
   after_destroy do
-    User.where(uploaded_avatar_id: self.id).update_all(uploaded_avatar_id: nil)
-    UserAvatar.where(gravatar_upload_id: self.id).update_all(gravatar_upload_id: nil)
-    UserAvatar.where(custom_upload_id: self.id).update_all(custom_upload_id: nil)
+    User.where(uploaded_avatar_id: id).update_all(uploaded_avatar_id: nil)
+    UserAvatar.where(gravatar_upload_id: id).update_all(gravatar_upload_id: nil)
+    UserAvatar.where(custom_upload_id: id).update_all(custom_upload_id: nil)
   end
 
   scope :by_users, -> { where("uploads.id > ?", SEEDED_ID_THRESHOLD) }
@@ -118,7 +118,7 @@ class Upload < ActiveRecord::Base
   end
 
   def self.with_no_non_post_relations
-    self.joins(
+    joins(
       "LEFT JOIN upload_references ur ON ur.upload_id = uploads.id AND ur.target_type != 'Post'",
     ).where("ur.upload_id IS NULL")
   end
@@ -129,14 +129,14 @@ class Upload < ActiveRecord::Base
   end
 
   def to_s
-    self.url
+    url
   end
 
   def to_markdown
     UploadMarkdown.new(self).to_markdown
   end
 
-  def thumbnail(width = self.thumbnail_width, height = self.thumbnail_height)
+  def thumbnail(width = thumbnail_width, height = thumbnail_height)
     optimized_images.find_by(width: width, height: height)
   end
 
@@ -155,7 +155,7 @@ class Upload < ActiveRecord::Base
   def get_optimized_image(width, height, opts = nil)
     opts ||= {}
 
-    fix_image_extension if (!extension || extension.length == 0)
+    fix_image_extension if !extension || extension.length == 0
 
     opts = opts.merge(raise_on_error: true)
     begin
@@ -199,12 +199,12 @@ class Upload < ActiveRecord::Base
         end
       new_extension = image_info&.type&.to_s || "unknown"
 
-      if new_extension != self.extension
-        self.update_columns(extension: new_extension)
+      if new_extension != extension
+        update_columns(extension: new_extension)
         true
       end
     rescue StandardError
-      self.update_columns(extension: "unknown")
+      update_columns(extension: "unknown")
       true
     end
   end
@@ -234,7 +234,7 @@ class Upload < ActiveRecord::Base
   end
 
   def short_path
-    self.class.short_path(sha1: self.sha1, extension: self.extension)
+    self.class.short_path(sha1: sha1, extension: extension)
   end
 
   def self.consider_for_reuse(upload, post)
@@ -277,7 +277,7 @@ class Upload < ActiveRecord::Base
   def self.short_path(sha1:, extension:)
     @url_helpers ||= Rails.application.routes.url_helpers
 
-    @url_helpers.upload_short_path(base62: self.base62_sha1(sha1), extension: extension)
+    @url_helpers.upload_short_path(base62: base62_sha1(sha1), extension: extension)
   end
 
   def self.base62_sha1(sha1)
@@ -285,7 +285,7 @@ class Upload < ActiveRecord::Base
   end
 
   def base62_sha1
-    Upload.base62_sha1(self.sha1)
+    Upload.base62_sha1(sha1)
   end
 
   def local?
@@ -311,7 +311,7 @@ class Upload < ActiveRecord::Base
               "-ping",
               "-format",
               "%w %h",
-              path,
+              "MSVG:#{path}",
               timeout: MAX_IDENTIFY_SECONDS,
             ).split(" ")
           rescue StandardError
@@ -326,7 +326,7 @@ class Upload < ActiveRecord::Base
 
       self.thumbnail_width, self.thumbnail_height = ImageSizer.resize(w, h)
 
-      self.update_columns(
+      update_columns(
         width: width,
         height: height,
         thumbnail_width: thumbnail_width,
@@ -421,7 +421,7 @@ class Upload < ActiveRecord::Base
           raise "Calculated dominant color but unable to parse output:\n#{data}" if color.nil?
 
           color
-        rescue Discourse::Utils::CommandError => e
+        rescue Discourse::Utils::CommandError
           # Timeout or unable to parse image
           # This can happen due to bad user input - ignore and save
           # an empty string to prevent re-evaluation
@@ -430,7 +430,7 @@ class Upload < ActiveRecord::Base
     end
 
     if persisted?
-      self.update_column(:dominant_color, color)
+      update_column(:dominant_color, color)
     else
       self.dominant_color = color
     end
@@ -455,11 +455,11 @@ class Upload < ActiveRecord::Base
   end
 
   def self.sha1_from_short_path(path)
-    self.sha1_from_base62_encoded($2) if path =~ %r{(/uploads/short-url/)([a-zA-Z0-9]+)(\..*)?}
+    sha1_from_base62_encoded($2) if path =~ %r{(/uploads/short-url/)([a-zA-Z0-9]+)(\..*)?}
   end
 
   def self.sha1_from_short_url(url)
-    self.sha1_from_base62_encoded($2) if url =~ %r{(upload://)?([a-zA-Z0-9]+)(\..*)?}
+    sha1_from_base62_encoded($2) if url =~ %r{(upload://)?([a-zA-Z0-9]+)(\..*)?}
   end
 
   def self.sha1_from_long_url(url)
@@ -482,11 +482,11 @@ class Upload < ActiveRecord::Base
   end
 
   def human_filesize
-    number_to_human_size(self.filesize)
+    number_to_human_size(filesize)
   end
 
   def rebake_posts_on_old_scheme
-    self.posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
+    posts.where("cooked LIKE '%/_optimized/%'").find_each(&:rebake!)
   end
 
   def update_secure_status(source: "unknown", override: nil)
@@ -497,8 +497,8 @@ class Upload < ActiveRecord::Base
       reason = "manually overridden"
     end
 
-    secure_status_did_change = self.secure? != mark_secure
-    self.update(secure_params(mark_secure, reason, source))
+    secure_status_did_change = secure? != mark_secure
+    update(secure_params(mark_secure, reason, source))
 
     if secure_status_did_change && Discourse.store.external?
       Discourse.store.update_upload_access_control(self)
@@ -559,93 +559,87 @@ class Upload < ActiveRecord::Base
         remap_scope = nil
 
         scope.each do |upload|
-          begin
-            # keep track of the url
-            previous_url = upload.url.dup
-            # where is the file currently stored?
-            external = previous_url =~ %r{\A//}
-            # download if external
-            if external
-              url = SiteSetting.scheme + ":" + previous_url
+          # keep track of the url
+          previous_url = upload.url.dup
+          # where is the file currently stored?
+          external = previous_url =~ %r{\A//}
+          # download if external
+          if external
+            url = SiteSetting.scheme + ":" + previous_url
 
-              begin
-                retries ||= 0
+            begin
+              retries ||= 0
 
-                file =
-                  FileHelper.download(
-                    url,
-                    max_file_size: max_file_size_kb,
-                    tmp_file_name: "discourse",
-                    follow_redirect: true,
-                  )
-              rescue OpenURI::HTTPError
-                retry if (retries += 1) < 1
-                next
-              end
-
-              path = file.path
-            else
-              path = local_store.path_for(upload)
-            end
-            # compute SHA if missing
-            upload.sha1 = Upload.generate_digest(path) if upload.sha1.blank?
-
-            # store to new location & update the filesize
-            File.open(path) do |f|
-              upload.url = Discourse.store.store_upload(f, upload)
-              upload.filesize = f.size
-              upload.save!(validate: false)
-            end
-            # remap the URLs
-            DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external
-
-            DbHelper.remap(
-              previous_url,
-              upload.url,
-              excluded_tables: %w[
-                posts
-                post_search_data
-                incoming_emails
-                notifications
-                single_sign_on_records
-                stylesheet_cache
-                topic_search_data
-                users
-                user_emails
-                draft_sequences
-                optimized_images
-              ],
-            )
-
-            remap_scope ||=
-              begin
-                Post
-                  .with_deleted
-                  .where(
-                    "raw ~ '/uploads/#{db}/\\d+/' OR raw ~ '/uploads/#{db}/original/(\\d|[a-z])/'",
-                  )
-                  .select(:id, :raw, :cooked)
-                  .all
-              end
-
-            remap_scope.each do |post|
-              post.raw.gsub!(previous_url, upload.url)
-              post.cooked.gsub!(previous_url, upload.url)
-              if post.changed?
-                Post.with_deleted.where(id: post.id).update_all(raw: post.raw, cooked: post.cooked)
-              end
+              file =
+                FileHelper.download(
+                  url,
+                  max_file_size: max_file_size_kb,
+                  tmp_file_name: "discourse",
+                  follow_redirect: true,
+                )
+            rescue OpenURI::HTTPError
+              retry if (retries += 1) < 1
+              next
             end
 
-            upload.optimized_images.find_each(&:destroy!)
-            upload.rebake_posts_on_old_scheme
-            # remove the old file (when local)
-            FileUtils.rm(path, force: true) unless external
-          rescue => e
-            problems << { upload: upload, ex: e }
-          ensure
-            file&.unlink
-            file&.close
+            path = file.path
+          else
+            path = local_store.path_for(upload)
           end
+          # compute SHA if missing
+          upload.sha1 = Upload.generate_digest(path) if upload.sha1.blank?
+
+          # store to new location & update the filesize
+          File.open(path) do |f|
+            upload.url = Discourse.store.store_upload(f, upload)
+            upload.filesize = f.size
+            upload.save!(validate: false)
+          end
+          # remap the URLs
+          DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external
+
+          DbHelper.remap(
+            previous_url,
+            upload.url,
+            excluded_tables: %w[
+              posts
+              post_search_data
+              incoming_emails
+              notifications
+              single_sign_on_records
+              stylesheet_cache
+              topic_search_data
+              users
+              user_emails
+              draft_sequences
+              optimized_images
+            ],
+          )
+
+          remap_scope ||=
+            Post
+              .with_deleted
+              .where("raw ~ '/uploads/#{db}/\\d+/' OR raw ~ '/uploads/#{db}/original/(\\d|[a-z])/'")
+              .select(:id, :raw, :cooked)
+              .all
+
+          remap_scope.each do |post|
+            post.raw.gsub!(previous_url, upload.url)
+            post.cooked.gsub!(previous_url, upload.url)
+            if post.changed?
+              Post.with_deleted.where(id: post.id).update_all(raw: post.raw, cooked: post.cooked)
+            end
+          end
+
+          upload.optimized_images.find_each(&:destroy!)
+          upload.rebake_posts_on_old_scheme
+          # remove the old file (when local)
+          FileUtils.rm(path, force: true) unless external
+        rescue => e
+          problems << { upload: upload, ex: e }
+        ensure
+          file&.unlink
+          file&.close
         end
       end
     end
@@ -697,29 +691,29 @@ end
 # Table name: uploads
 #
 #  id                           :integer          not null, primary key
-#  user_id                      :integer          not null
-#  original_filename            :string           not null
-#  filesize                     :bigint           not null
-#  width                        :integer
-#  height                       :integer
-#  url                          :string           not null
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
-#  sha1                         :string(40)
-#  origin                       :string(2000)
-#  retain_hours                 :integer
-#  extension                    :string(10)
-#  thumbnail_width              :integer
-#  thumbnail_height             :integer
-#  etag                         :string
-#  secure                       :boolean          default(FALSE), not null
-#  access_control_post_id       :bigint
-#  original_sha1                :string
 #  animated                     :boolean
-#  verification_status          :integer          default(1), not null
+#  dominant_color               :text
+#  etag                         :string
+#  extension                    :string(10)
+#  filesize                     :bigint           not null
+#  height                       :integer
+#  origin                       :string(2000)
+#  original_filename            :string           not null
+#  original_sha1                :string
+#  retain_hours                 :integer
+#  secure                       :boolean          default(FALSE), not null
 #  security_last_changed_at     :datetime
 #  security_last_changed_reason :string
-#  dominant_color               :text
+#  sha1                         :string(40)
+#  thumbnail_height             :integer
+#  thumbnail_width              :integer
+#  url                          :string           not null
+#  verification_status          :integer          default(1), not null
+#  width                        :integer
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  access_control_post_id       :bigint
+#  user_id                      :integer          not null
 #
 # Indexes
 #

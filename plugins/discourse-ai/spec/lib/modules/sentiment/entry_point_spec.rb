@@ -7,6 +7,19 @@ RSpec.describe DiscourseAi::Sentiment::EntryPoint do
 
   before { enable_current_plugin }
 
+  describe "admin dashboard report registration" do
+    it "excludes the per-emotion reports while keeping the sentiment summaries" do
+      DiscourseAi::Sentiment::Emotions::LIST.each do |emotion|
+        expect(Report.dashboard_excluded_report_types).to include("emotion_#{emotion}")
+      end
+
+      expect(Report.dashboard_excluded_report_types).not_to include(
+        "overall_sentiment",
+        "sentiment_analysis",
+      )
+    end
+  end
+
   describe "registering event callbacks" do
     context "when editing a post" do
       fab!(:post) { Fabricate(:post, user: user) }

@@ -322,6 +322,12 @@ uk:
             tags:
               label: Теґи
               description: Список тегів для додавання до теми.
+            closed_automatically:
+              label: Автоматично закриті теми
+              description: Додайте теги до автоматично закритих тем.
+            closed_manually:
+              label: Теми, закриті вручну
+              description: Додайте теги до тем, закритих вручну.
         post:
           fields:
             creator:

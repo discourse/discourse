@@ -52,7 +52,7 @@ class Reviewable < ActiveRecord::Base
   after_commit(on: :create) { DiscourseEvent.trigger(:reviewable_created, self) }
 
   after_commit(on: %i[create update]) do
-    Jobs.enqueue(:notify_reviewable, reviewable_id: self.id) if pending?
+    Jobs.enqueue(:notify_reviewable, reviewable_id: id) if pending?
   end
 
   # Can be used if several actions are equivalent
@@ -83,7 +83,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.sti_names
-    self.types.map(&:sti_name)
+    types.map(&:sti_name)
   end
 
   def self.source_for(type)
@@ -228,7 +228,7 @@ class Reviewable < ActiveRecord::Base
     rs.save!
 
     update(
-      score: self.score + rs.score,
+      score: score + rs.score,
       latest_score: rs.created_at,
       force_review: self.force_review || force_review,
     )
@@ -333,7 +333,7 @@ class Reviewable < ActiveRecord::Base
   def update_fields(params, performed_by, version: nil)
     return true if params.blank?
 
-    (params[:payload] || {}).each { |k, v| self.payload[k] = v }
+    (params[:payload] || {}).each { |k, v| payload[k] = v }
     self.category_id = params[:category_id] if params.has_key?(:category_id)
 
     result = false
@@ -354,10 +354,13 @@ class Reviewable < ActiveRecord::Base
   # the result of the operation and whether the status of the reviewable changed.
   def perform(performed_by, action_id, args = nil)
     args ||= {}
-    perform_method = "perform_#{aliases[action_id] || action_id}".to_sym
+    perform_method = :"perform_#{aliases[action_id] || action_id}"
     guardian = args[:guardian] || Guardian.new(performed_by)
 
     validate_action!(guardian, action_id, perform_method, args)
+
+    affected_candidate_ids =
+      delete_user_action?(action_id) ? pending_reviewable_ids_for_target_user : []
 
     result = nil
     update_count = false
@@ -374,11 +377,15 @@ class Reviewable < ActiveRecord::Base
 
     result.after_commit.call if result && result.after_commit
 
+    if result&.success? && affected_candidate_ids.present?
+      result.affected_reviewable_ids |= resolved_reviewable_ids(affected_candidate_ids)
+    end
+
     unless status == :pending
       if update_count || result.remove_reviewable_ids.present?
         Jobs.enqueue(
           :notify_reviewable,
-          reviewable_id: self.id,
+          reviewable_id: id,
           performing_username: performed_by.username,
           updated_reviewable_ids: result.remove_reviewable_ids,
         )
@@ -390,10 +397,10 @@ class Reviewable < ActiveRecord::Base
     result
   end
 
-  # Override this in specific reviewable type to include scores for
-  # non-pending reviewables
+  # Includes pending scores plus disagreed ones, so re-approving a previously
+  # rejected reviewable correctly flips those scores back to "agreed".
   def updatable_reviewable_scores
-    reviewable_scores.pending
+    reviewable_scores.pending.or(reviewable_scores.disagreed)
   end
 
   def transition_to(status_symbol, performed_by)
@@ -427,20 +434,21 @@ class Reviewable < ActiveRecord::Base
     result = self.order(order || "reviewables.score desc, reviewables.created_at desc")
 
     if preload
+      target_associations = [
+        :user_stat,
+        :primary_email,
+        { topic: :category },
+        :user_histories,
+        :user_custom_fields,
+      ]
+      target_associations << :localizations if SiteSetting.content_localization_enabled
+
       result =
         result
           .includes(
             { created_by: :user_stat },
             :topic,
-            {
-              target: [
-                :user_stat,
-                :primary_email,
-                { topic: :category },
-                :user_histories,
-                :user_custom_fields,
-              ],
-            },
+            { target: target_associations },
             { target_created_by: [:user_custom_fields] },
             :reviewable_histories,
           )
@@ -470,7 +478,7 @@ class Reviewable < ActiveRecord::Base
   end
 
   def self.unseen_reviewable_count(user)
-    self.unseen_list_for(user).count
+    unseen_list_for(user).count
   end
 
   def self.list_for(
@@ -631,11 +639,11 @@ class Reviewable < ActiveRecord::Base
   end
 
   def basic_serializer
-    TYPE_TO_BASIC_SERIALIZER[self.type.to_sym] || BasicReviewableSerializer
+    TYPE_TO_BASIC_SERIALIZER[type.to_sym] || BasicReviewableSerializer
   end
 
   def type_class
-    Reviewable.sti_class_for(self.type)
+    Reviewable.sti_class_for(type)
   end
 
   def self.lookup_serializer_for(type)
@@ -728,7 +736,7 @@ class Reviewable < ActiveRecord::Base
     result =
       DB.query(
         sql,
-        id: self.id,
+        id: id,
         pending: ReviewableScore.statuses[:pending],
         agreed: ReviewableScore.statuses[:agreed],
       )
@@ -756,7 +764,7 @@ class Reviewable < ActiveRecord::Base
 
     DiscourseEvent.trigger(:reviewable_score_updated, self)
 
-    self.score
+    score
   end
 
   def delete_user_actions(actions, bundle = nil, require_reject_reason: false)
@@ -792,14 +800,14 @@ class Reviewable < ActiveRecord::Base
         DB.query_single(
           "UPDATE reviewables SET version = version + 1 WHERE id = :id AND version = :version RETURNING version",
           version: version,
-          id: self.id,
+          id: id,
         )
     else
       # We didn't supply a version to update safely, so just increase it
       version_result =
         DB.query_single(
           "UPDATE reviewables SET version = version + 1 WHERE id = :id RETURNING version",
-          id: self.id,
+          id: id,
         )
     end
 
@@ -845,6 +853,27 @@ class Reviewable < ActiveRecord::Base
 
   private
 
+  def delete_user_action?(action_id)
+    resolved_action = (aliases[action_id] || action_id).to_sym
+    %i[delete_user delete_and_block_user delete_user_block].include?(resolved_action)
+  end
+
+  def pending_reviewable_ids_for_target_user
+    user = target_created_by || (target if target_type == "User")
+    return [] if user.blank?
+
+    Reviewable
+      .pending
+      .where(target_created_by: user)
+      .or(Reviewable.pending.where(target: user))
+      .where.not(id: id)
+      .pluck(:id)
+  end
+
+  def resolved_reviewable_ids(candidate_ids)
+    candidate_ids - Reviewable.pending.where(id: candidate_ids).pluck(:id)
+  end
+
   def aliases
     self.class.action_aliases
   end
@@ -888,26 +917,26 @@ end
 # Table name: reviewables
 #
 #  id                      :bigint           not null, primary key
+#  force_review            :boolean          default(FALSE), not null
+#  latest_score            :datetime
+#  payload                 :json
+#  potential_spam          :boolean          default(FALSE), not null
+#  potentially_illegal     :boolean          default(FALSE)
+#  reject_reason           :text
+#  reviewable_by_moderator :boolean          default(FALSE), not null
+#  score                   :float            default(0.0), not null
+#  status                  :integer          default("pending"), not null
+#  target_type             :string
 #  type                    :string           not null
 #  type_source             :string           default("unknown"), not null
-#  status                  :integer          default("pending"), not null
-#  created_by_id           :integer          not null
-#  reviewable_by_moderator :boolean          default(FALSE), not null
-#  category_id             :integer
-#  topic_id                :integer
-#  score                   :float            default(0.0), not null
-#  potential_spam          :boolean          default(FALSE), not null
-#  target_id               :integer
-#  target_type             :string
-#  target_created_by_id    :integer
-#  payload                 :json
 #  version                 :integer          default(0), not null
-#  latest_score            :datetime
 #  created_at              :datetime         not null
 #  updated_at              :datetime         not null
-#  force_review            :boolean          default(FALSE), not null
-#  reject_reason           :text
-#  potentially_illegal     :boolean          default(FALSE)
+#  category_id             :integer
+#  created_by_id           :integer          not null
+#  target_created_by_id    :integer
+#  target_id               :integer
+#  topic_id                :integer
 #
 # Indexes
 #

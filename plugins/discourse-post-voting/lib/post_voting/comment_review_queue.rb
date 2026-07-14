@@ -43,15 +43,14 @@ module PostVoting
             payload: payload,
           )
         reviewable.update(target_created_by: comment.user)
-        score =
-          reviewable.add_score(
-            guardian.user,
-            flag_type_id,
-            meta_topic_id: post&.topic_id,
-            take_action: opts[:take_action],
-            reason: queued_for_review ? "post_voting_comment_queued_by_staff" : nil,
-            force_review: queued_for_review,
-          )
+        reviewable.add_score(
+          guardian.user,
+          flag_type_id,
+          meta_topic_id: post&.topic_id,
+          take_action: opts[:take_action],
+          reason: queued_for_review ? "post_voting_comment_queued_by_staff" : nil,
+          force_review: queued_for_review,
+        )
 
         if opts[:take_action]
           reviewable.perform(guardian.user, :agree_and_delete)
@@ -118,7 +117,14 @@ module PostVoting
         create_args[:is_warning] = opts[:is_warning] if flagger.staff?
       else
         create_args[:subtype] = TopicSubtype.notify_moderators
-        create_args[:target_group_names] = [Group[:moderators].name]
+        group_names = Set[Group[:moderators].name]
+
+        if SiteSetting.enable_category_group_moderation? &&
+             (category = comment.post.topic&.category)
+          group_names.merge(category.moderating_groups.pluck(:name))
+        end
+
+        create_args[:target_group_names] = group_names.to_a
       end
 
       PostCreator.new(flagger, create_args)

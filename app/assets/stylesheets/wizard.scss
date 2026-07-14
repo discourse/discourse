@@ -1,13 +1,17 @@
 @use "lib/viewport";
 
 :root {
-  --wizard-primary: #7b5fe2;
-  --wizard-primary-100: #f4f2fc;
-  --wizard-primary-300: #b8a4ff;
-  --wizard-primary-400: #8b6df8;
-  --wizard-primary-800: #3a275e;
-  --wizard-bg-color: light-dark(#f9f8fc, var(--background-color));
-  --wizard-bg-color-2: light-dark(#e1d5ff, var(--wizard-primary-800));
+  --wizard-primary: var(--tertiary);
+  --wizard-primary-100: var(--tertiary-low);
+  --wizard-primary-300: var(--tertiary-medium);
+  --wizard-primary-400: var(--tertiary-hover);
+  --wizard-primary-800: var(--tertiary-high);
+  --wizard-bg-color: light-dark(#{$discourse-bg-light}, #{$discourse-bg-dark});
+  --wizard-bg-color-2: light-dark(
+    #{$discourse-brand-light},
+    var(--wizard-primary-800)
+  );
+  --wizard-button-text-color: light-dark(var(--secondary), var(--primary));
   --wizard-input-radius: 8px;
   --wizard-button-radius: 6.25em;
 }
@@ -96,6 +100,43 @@ body.wizard {
     );
     z-index: z("base");
     pointer-events: none;
+  }
+
+  // Clean takeover when the skeleton is the backdrop.
+  &:has(.site-skeleton) {
+    &::before {
+      display: none;
+    }
+
+    .d-header-wrap {
+      display: none;
+    }
+
+    // Full-viewport flex container so the card centers; scrolls if a step is tall.
+    #wizard-main {
+      position: fixed;
+      inset: 0;
+      justify-content: safe center;
+      padding: 1.5rem;
+      overflow: auto;
+    }
+
+    #wizard-main::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      background: rgb(0 0 0 / 0.34);
+      pointer-events: none;
+    }
+
+    .wizard-container {
+      border: 1px solid light-dark(rgb(0, 0, 0, 0.08), var(--primary-low));
+      border-radius: 8px;
+      box-shadow:
+        0 34px 110px rgb(30, 36, 72, 0.34),
+        0 8px 24px rgb(30, 36, 72, 0.18);
+    }
   }
 }
 
@@ -217,9 +258,12 @@ body.wizard {
 
   &__button {
     --accent-color: var(--wizard-primary);
+    --d-button-primary-bg-color: var(--wizard-primary);
+    --d-button-primary-text-color: var(--wizard-button-text-color);
     width: 100%;
     padding: 0.75em 2em;
     font-weight: bold;
+    border-radius: var(--wizard-button-radius);
   }
 
   &__button.small {
@@ -345,7 +389,7 @@ body.wizard {
 
     &.--selected {
       .wizard-container__label {
-        background-color: light-dark(var(--wizard-primary-100), transparent);
+        background-color: var(--wizard-primary-100);
         border-color: var(--wizard-primary);
         border-width: 2px;
         margin: 0;

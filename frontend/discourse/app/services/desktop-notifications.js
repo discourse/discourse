@@ -14,6 +14,7 @@ import {
   unsubscribe as unsubscribePushNotification,
   userSubscriptionKey as pushNotificationUserSubscriptionKey,
 } from "discourse/lib/push-notifications";
+import { i18n } from "discourse-i18n";
 
 const keyValueStore = new KeyValueStore(context);
 const DISABLED = "disabled";
@@ -25,6 +26,7 @@ export default class DesktopNotificationsService extends Service {
   @service currentUser;
   @service site;
   @service siteSettings;
+  @service toasts;
 
   @tracked isEnabledBrowser = false;
   @tracked isEnabledPush = false;
@@ -127,11 +129,20 @@ export default class DesktopNotificationsService extends Service {
   @action
   async enable() {
     if (this.isPushNotificationsPreferred) {
-      await subscribePushNotification(() => {
+      const subscribed = await subscribePushNotification(() => {
         this.setIsEnabledPush(true);
       }, this.siteSettings.vapid_public_key_bytes);
 
-      return true;
+      if (!subscribed) {
+        this.toasts.error({
+          duration: "short",
+          data: {
+            message: i18n("user.desktop_notifications.enable_failed"),
+          },
+        });
+      }
+
+      return subscribed;
     } else {
       await Notification.requestPermission((permission) => {
         confirmNotification(this.siteSettings);

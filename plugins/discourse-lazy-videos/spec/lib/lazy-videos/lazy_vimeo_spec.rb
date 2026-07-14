@@ -2,7 +2,7 @@
 
 RSpec.describe Onebox::Engine::VimeoOnebox do
   def get_response(filename)
-    file = "#{Rails.root}/plugins/discourse-lazy-videos/spec/fixtures/#{filename}.response"
+    file = "#{Rails.root.join("plugins/discourse-lazy-videos/spec/fixtures/#{filename}.response")}"
     File.read(file)
   end
 

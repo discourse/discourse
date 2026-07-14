@@ -211,7 +211,7 @@ describe Chat::ThreadUnreadsQuery do
         let!(:message) { create_mention(message_1, channel_1, thread_1) }
 
         it "counts both unread messages and mentions separately" do
-          expect(query.map(&:to_h)).to eq(
+          expect(query.map(&:to_h)).to match_array(
             [
               {
                 channel_id: channel_1.id,
@@ -544,6 +544,57 @@ describe Chat::ThreadUnreadsQuery do
             watched_threads_unread_count: 3,
           },
         )
+      end
+    end
+  end
+
+  context "when the user has a thread membership but no channel membership" do
+    fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel_1, thread: thread_1) }
+    let(:channel_ids) { [channel_1.id] }
+
+    before do
+      create_mention(message_1, channel_1, thread_1)
+      thread_1.membership_for(current_user).update!(
+        notification_level: ::Chat::NotificationLevels.all[:watching],
+      )
+      channel_1.user_chat_channel_memberships.where(user_id: current_user.id).destroy_all
+    end
+
+    it "does not return unread, mention, or watched counts for the orphaned thread" do
+      expect(query.map(&:to_h)).to be_empty
+    end
+  end
+
+  describe "MAX_THREADS recency cap" do
+    it "still returns an explicitly requested thread_id older than the top MAX_THREADS" do
+      Fabricate(:chat_message, chat_channel: channel_1, thread: thread_2) # newer activity
+      old_message = Fabricate(:chat_message, chat_channel: channel_1, thread: thread_1)
+      thread_1.update!(last_message_id: old_message.id)
+      Fabricate(:chat_message, chat_channel: channel_1, thread: thread_2) # bump newer again
+
+      stub_const(Chat::ThreadUnreadsQuery, :MAX_THREADS, 1) do
+        result = Chat::ThreadUnreadsQuery.call(thread_ids: [thread_1.id], user_id: current_user.id)
+        expect(result.map(&:thread_id)).to contain_exactly(thread_1.id)
+      end
+    end
+
+    it "honors MAX_THREADS on the include_missing_memberships branch" do
+      # Make thread_1/2 missing-membership candidates in channel_1.
+      Chat::UserChatThreadMembership.where(
+        user_id: current_user.id,
+        thread_id: [thread_1.id, thread_2.id],
+      ).destroy_all
+
+      stub_const(Chat::ThreadUnreadsQuery, :MAX_THREADS, 1) do
+        result =
+          Chat::ThreadUnreadsQuery.call(
+            channel_ids: [channel_1.id],
+            user_id: current_user.id,
+            include_missing_memberships: true,
+          )
+        # Each branch (membership-driven SELECT + missing-memberships UNION)
+        # is independently capped, so we get at most 2 rows total.
+        expect(result.size).to be <= 2
       end
     end
   end

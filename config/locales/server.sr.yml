@@ -76,6 +76,7 @@ sr:
     site_settings:
       default_categories_already_selected: "Ne možete izabrati kategoriju koja se koristi u drugoj listi."
   invite:
+    existing_user_cannot_redeem: "Ova pozivnica nije dostupana za vašu email adresu. Prijavite se drugim nalogom ili zatražite novu pozivnicu."
     confirm_email: "<p>Skoro ste gotovi! Na vašu e-adresu poslali smo aktivacioni mail. Sledite uputstva u mailu da biste aktivirali svoj nalog.</p><p>Ako ne stigne, proverite spam folder.</p>"
   bulk_invite:
     file_should_be_csv: "Izabrani fajl bi trebalo biti u csv formatu."
@@ -89,7 +90,15 @@ sr:
   not_found: "Zatraženi URL ili resurs nije pronađen."
   read_only_mode_enabled: "Sajt je u čitaj samo modu. Interakcije su isključene."
   reading_time: "Vreme za čitanje"
+  reading_time_minutes:
+    one: "%{count} min 🕑"
+    few: "%{count} min 🕑"
+    other: "%{count} min 🕑"
   likes: "Lajkovi"
+  likes_count:
+    one: "%{count} ❤"
+    few: "%{count} ❤"
+    other: "%{count} ❤"
   embed:
     start_discussion: "Započnite diskusiju"
     continue: "Nastavite diskusiju"
@@ -133,8 +142,16 @@ sr:
       admins: "admini"
       moderators: "moderatori"
       staff: "osoblje"
+      logged_in_users: "prijavljeni_korisnici"
+    default_full_names:
+      everyone: "Svi"
+      admins: "Admini"
+      moderators: "Moderatori"
+      staff: "Osoblje"
     default_descriptions:
       staff: "Automatska grupa koja uključuje administratore i moderatore"
+      anonymous_users: "Automatska pseudogrupa koja predstavlja neautentifikovane posetioce"
+      logged_in_users: "Automatska pseudogrupa koja uključuje svakog prijavljenog korisnika"
       admins: "Odgovoran je za konfigurisanje i održavanje ovog sajta, sa pristupom svim podacima o članovima i aktivnostima"
       moderators: "Odgovoran je za odgovaranje na zastavice, moderiranje diskusija i pomaganje članovima sa njihovim nalozima"
       trust_level_0: "Novi članovi sa ograničenim sposobnostima, koji uče norme i funkcionalnost zajednice"
@@ -179,6 +196,9 @@ sr:
   trust_levels:
     admin: "Admin"
     staff: "Osoblje"
+  post:
+    errors:
+      invalid_reply_to: "Izabrana objava nije validna meta za odgovor. Mora biti ranija objava u istoj temi."
   rate_limiter:
     hours:
       one: "%{count} sat"
@@ -278,7 +298,10 @@ sr:
   user_api_key:
     deny: "Odustani"
     read: "pročitano"
+    write_scope_warning: "Zahtevan je pun pristup za pisanje — ova aplikacija će moći da objavljuje, uređuje i briše sadržaj. Nastavite samo ako joj potpuno verujete."
     copied: "Kopirano!"
+    device:
+      continue: "Nastavi"
   reports:
     default:
       labels:
@@ -298,6 +321,41 @@ sr:
     flags_status:
       labels:
         flag: Tip
+    activity_by_category:
+      title: "Aktivnost po kategoriji"
+      description: "Teme, postovi i učešće članova po kategoriji u odabranom periodu. Udeo je procenat svake kategorije u ukupnoj aktivnosti svih navedenih kategorija; Vs Prior je promena u udelu u odnosu na prethodni period iste dužine."
+      labels:
+        category: "Kategorija"
+        topics: "Teme"
+        posts: "Poruka"
+        page_views: "Pregledi stranice"
+        share: "Podeli"
+        vs_prior: "U odnosu na prethodni period"
+    posters_by_member_type:
+      title: "Ko objavljuje?"
+      description: 'Postovi objavljeni u odabranom periodu, podeljeni po tipu člana. "Novi članovi" su se registrovali tokom perioda, "Vraćajući" su se registrovali pre njega, a "Osoblje" su administratori ili moderatori.'
+      labels:
+        member_type: "Tip člana"
+        count: "Poruka"
+        share: "Podeli"
+      types:
+        new_members: "Novi članovi"
+        returning: "Vraćajući"
+        staff: "Osoblje"
+    trust_level_pipeline:
+      title: "Pipeline nivoa poverenja"
+      description_link: "https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/"
+      labels:
+        level: "Nivo poverenja"
+        count: "Članovi"
+        share: "Podeli"
+        signups: "Registracija"
+      levels:
+        "0": "Novo"
+        "1": "Osnovno"
+        "2": "Član"
+        "3": "Stalni član"
+        "4": "Vođa"
     consolidated_page_views:
       labels:
         post: Post
@@ -306,6 +364,12 @@ sr:
     consolidated_api_requests:
       xaxis:
         api: "API"
+    site_traffic:
+      xaxis:
+        page_view_anon_browser: "Anonimno"
+        page_view_logged_in_browser: "Prijavljen"
+        page_view_crawler: "Pretraživači"
+        page_view_embed: "Ugrađeni pregledi stranica"
     topics:
       title: "Teme"
     posts:
@@ -334,6 +398,18 @@ sr:
       labels:
         user: "Korisnik"
         num_topics: "Teme"
+    top_countries_by_browser_pageviews:
+      title: "Najpopularnije zemlje"
+      description: "Zemlje koje u odabranom periodu generišu najviše pregleda stranica vašeg foruma."
+      labels:
+        country_code: "Kod zemlje"
+        count: "Poseta"
+    top_referrers_by_browser_pageviews:
+      title: "Najveći upućivači"
+      description: "Spoljni sajtovi koji upućuju najviše pregleda stranica na vaš forum u izabranom periodu."
+      labels:
+        normalized_referrer: "Upućivač"
+        count: "Poseta"
     top_traffic_sources:
       xaxis: "Domen"
       num_topics: "Teme"
@@ -346,6 +422,11 @@ sr:
         topic: "Tema"
     page_view_anon_reqs:
       title: "Anonimno"
+    page_view_embed_reqs:
+      title: "Ugrađeni pregledi stranica"
+      xaxis: "Dan"
+      yaxis: "Ugrađeni pregledi stranica"
+      description: "Broj pregleda stranica isporučenih unutar iframe-a za potpuno ugrađivanje aplikacije."
     http_total_reqs:
       title: "Ukupno"
     topics_with_no_response:
@@ -354,10 +435,13 @@ sr:
       labels:
         user: Korisnik
         location: Lokacija
-    staff_logins:
+    admin_logins:
+      title: "Prijave administratora"
       labels:
         user: Korisnik
         location: Lokacija
+        login_at: Vreme prijave
+      description: "Lista vremena prijava administratora sa lokacijama."
     top_uploads:
       labels:
         filename: Ime datoteke
@@ -378,27 +462,41 @@ sr:
         topic: Tema
         anon_views: Anonimno
         total_views: Ukupno
+  dashboard:
+    problem:
+      email_sending_failures:
+        one: "Slanje e-pošte nije uspelo jednom u poslednja 24 časa. Proverite <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>logove preskočenih e-poruka</a> za detalje o SMTP greškama."
+        few: "Slanje e-pošte nije uspelo %{count} puta u poslednja 24 časa. Proverite <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>logove preskočenih e-poruka</a> za detalje o SMTP greškama."
+        other: "Slanje e-pošte nije uspelo %{count} puta u poslednja 24 časa. Proverite <a href='%{base_path}/admin/email-logs/skipped' target='_blank'>logove preskočenih e-poruka</a> za detalje o SMTP greškama."
   site_settings:
     min_topic_title_length: "Minimalna dozvoljena dužina naslova teme u znakovima"
     max_topic_title_length: "Maksimalna dozvoljena dužina naslova teme u znakovima"
     min_personal_message_title_length: "Minimalna dozvoljena dužina naslova poruke u znakovima"
     min_search_term_length: "Minimalna dozvoljena dužina termina za pretragu u znakovima"
-    max_replies_in_first_day: "Maksimalan broj odgovora koje korisnik može da kreira u prvih 24 sata nakon kreiranja svoje prve poruke."
+    email_subject: "Prilagodljiv format teme za standardne e-mailove. Pogledajte <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>Prilagođavanje specifičnih sistemskih e-mail šablona na Meta-i</a>."
     maximum_session_age: "Korisnik će ostati ulogovan n časova od prethodnog logovanja"
+    use_admin_ip_allowlist: "Administratori mogu da se prijave samo ako se nalaze na IP adresi definisanoj u <a href='%{base_path}/admin/logs/screened_ip_addresses'>listi proverenih IP adresa</a>."
     send_welcome_message: "Pošalji svim novim korisnicima poruku dobrodošlice sa kratkim uputstvom za početnike."
-    auth_skip_create_confirm: Kada se prijavljujete putem spoljne autorizacije, preskočite popup prozor za kreiranje računa. Najbolje se upotrebljava uz auth_overrides_email, auth_overrides_username i auth_overrides_name.
+    allow_passkeys_for_2fa: "Dozvoli korisnicima da koriste passkey za dvofaktorsku autentifikaciju prilikom potvrđivanja osetljive akcije."
+    google_oauth2_hd_groups: 'Preuzmi Google grupe korisnika sa hostovanog domena prilikom autentifikacije. Preuzete Google grupe mogu se koristiti za dodelu automatskog članstva u Discourse grupama (vidi podešavanja grupa). Za više informacija, pogledajte <a target="_blank" href="https://meta.discourse.org/t/226850">ovu Meta temu</a>.'
+    enable_direct_s3_uploads: 'Omogućava direktno višedelno otpremanje na Amazon S3, pogledajte <a target="_blank" href="https://meta.discourse.org/t/a-new-era-for-file-uploads-in-discourse/210469">ovu Meta temu</a> za više detalja.'
+    backup_location: "Lokacija gde se čuvaju rezervne kopije. VAŽNO: S3 zahteva važeće S3 kredencijale unete u <a href=\"%{base_path}/admin/site_settings/category/files\">Podešavanjima datoteka</a>. Kada ovo menjate sa Lokalno na S3, morate pokrenuti rake zadatak `s3:ensure_cors_rules`."
     purge_unactivated_users_grace_period_days: "Period odlaganja (u danima) pre brisanja korisnika koji nije aktivirao svoj nalog. Postavite na 0 da nikada ne brišete neaktivirane korisnike."
+    composer_media_optimization_image_convert_enabled: "Omogućava konverziju JXL, HEIC i animiranih GIF slika na strani klijenta pre otpremanja. JXL i HEIC se konvertuju u JPEG, a animirani GIF-ovi veći od praga se konvertuju u animirane WEBP."
+    composer_media_optimization_gif_conversion_threshold: "Minimalna veličina GIF datoteke u bajtovima za pokretanje konverzije na strani klijenta u animirani WEBP."
     dark_mode_none: "Ništa"
     topic_views_heat_low: "Nakon ovoliko pregleda, polje pregleda je blago označeno."
     topic_views_heat_medium: "Nakon ovoliko pregleda, polje pregleda je umereno označeno."
     topic_views_heat_high: "Nakon ovoliko pregleda, polje pregleda je jako označeno."
     num_hours_to_close_topic: "Broj sati za pauziranje teme radi intervencije."
+    auto_silence_first_post_regex: "Regularni izraz bez razlikovanja velikih i malih slova koji, ako se prosledi, izaziva utišavanje prve objave korisnika i njeno slanje u red za odobravanje. Primer: raging|a[bc]a, izazaće utišavanje svih objava koje sadrže raging ili aba ili aca pri prvoj objavi. Važi samo za prvu objavu. ZASTARELO: Umesto toga koristite <a href=\"%{base_path}/admin/customize/watched_words/action/silence\">Utišaj nadgledane reči</a>."
     delete_email_logs_after_days: "Obriši email logove posle (N) dana. Uneti 0 za neograničeno čuvanje."
     block_auto_generated_emails: "Blokiraj dolazne email poruke prepoznate kao automatski generisane."
     ignore_by_title: "Ignoriši dolazne email poruke na osnovu njihovog naslova"
     pop3_polling_ssl: "Koristi SSL pri povezivanju na POP3 server. (Preporučeno)"
     pop3_polling_username: "Korisničko ime POP3 naloga za proveru postojanja novih email poruka"
     pop3_polling_password: "Lozinka PO3 naloga za proveru postojanja novih email poruka"
+    email_in_authserv_id: "Identifikator servisa koji vrši proveru autentičnosti dolazećih e-mailova. Pogledajte <a href='https://meta.discourse.org/t/134358' target='_blank'>ovu Meta temu</a> za uputstva o tome kako da ovo konfigurišete."
     minimum_topics_similar: "Koliko teme mora da postoji da bi se prikazivale slične teme prilikom kreiranja novih"
     delete_user_max_post_age: "Ne dozvoli brisanje korisnika čije prve poruke su starije od (x) dana."
     delete_all_posts_max: "Maksimalan broj poruke koje mogu biti obrisane odjednom korišćenjem dugmeta Obriši sve poruke. Ako korisnik ima više poruka, poruke ne mogu biti obrisane odjednom i korisnik ne može biti obrisan."
@@ -411,17 +509,22 @@ sr:
     display_name_on_posts: "Prikaži puno ime korisnika na njihovim porukama kao dodatak na @korisnicko_ime"
     show_time_gap_days: "Ako su dve poruke poslate sa ovoliko dana razmaka, prikaži vremensku razliku u temi."
     embed_username_required: "Korisničko ime je obavezno za kreiranje teme."
+    enable_gifs: "Dodaje dugme za lako pretraživanje i ubacivanje GIF-ova u objave."
     auto_close_messages_post_count: "Maksimalan broj dozvoljenih poruka pre nego se tema automatski zatvori (0 da se isključi)"
-    auto_close_topics_create_linked_topic: "Kreirajte novu povezanu temu kada je tema automatski zatvorena na temelju postavke 'automatsko zatvaranje tema za postove'"
     default_email_mailing_list_mode: "Podrazumevano šalji email za svaku novu poruku"
     default_email_previous_replies: "Podrazumevano uključi prethodne odgovore u email poruku"
     default_other_external_links_in_new_tab: "Podrazumevano otvori spoljne veze u novoj kartici "
+    enable_new_defaults_for_trust_level_3_requirements: "Ažurirali smo podrazumevane zahteve za TL3 kako bi bili razumniji za članove velikih, aktivnih zajednica. Ako ste prethodno poništili ova podešavanja, ova predstojeća promena neće imati efekta."
+    enable_horizon_high_context_topic_cards: "Prikaži bogatije kartice tema u Horizon temi, uključujući izvode tema, oznake i informacije iz dodataka."
   search:
     within_post: "#%{post_number} od %{username}"
     types:
       category: "Kategorije"
       topic: "Rezultati"
       user: "Korisnici"
+  posts_filter:
+    description:
+      order_latest_topic: "Poslednje teme"
   publish_page:
     slug_errors:
       invalid: "sadrži nevažeće karaktere."
@@ -433,6 +536,35 @@ sr:
   admin:
     email:
       sent_test: "poslato!"
+  user:
+    destroy_reasons:
+      same_ip_address_user: "Ista IP adresa kao %{username}"
+  new_version_mailer:
+    text_body_template: |
+      Ura, nova verzija [Discourse](https://www.discourse.org) je dostupna!
+
+      Vaša verzija: %{installed_version}
+      Nova verzija: **%{new_version}**
+
+      - Ažurirajte korisnike pomoću našeg jednostavnog **[ažuriranja pregledača jednim klikom](%{base_url}/admin/update)**
+
+      - Pogledajte šta je novo u [beleškama o izdanju](https://releases.discourse.org/changelog/v%{new_version})
+
+      - Posetite [meta.discourse.org](https://meta.discourse.org) za vesti, diskusiju i podršku za Discourse
+  new_version_mailer_with_notes:
+    text_body_template: |
+      Ura, nova verzija [Discourse](https://www.discourse.org) je dostupna!
+
+      Vaša verzija: %{installed_version}
+      Nova verzija: **%{new_version}**
+
+      - Ažurirajte korisnike pomoću našeg jednostavnog **[ažuriranja pregledača jednim klikom](%{base_url}/admin/update)**
+
+      - Pogledajte šta je novo u [beleškama o izdanju](https://releases.discourse.org/changelog/v%{new_version})
+
+      - Posetite [meta.discourse.org](https://meta.discourse.org) za vesti, diskusiju i podršku za Discourse
+
+      ### Beleške o izdanju %{notes}
   system_messages:
     queued_by_staff:
       title: "Potrebno odobrenje"
@@ -447,16 +579,27 @@ sr:
     welcome_invite:
       preview: "Dobrodošli na %{site_name}!"
       subject_template: "Dobrodošao na %{site_name}!"
+    email_sending_failed: |
+      Slanje poruke na %{email} nije uspelo.
+
+      ### Detalji
+
+      ``` text
+      %{raw}
+      ```
   user_notifications:
     user_posted_pm_staged:
       subject_template: "%{optional_re}%{topic_title}"
     digest:
       liked_received: "Primljeno Lajkova"
       new_users: "Novi Korisnici"
+      subject_template_improved: "Rezime"
     forgot_password:
       title: "Zaboravio Šifru"
     set_password:
       title: "Postavi Šifru"
+    admin_login:
+      subject_template_improved: "Prijava"
   page_not_found:
     see_more: "Više"
     search_button: "Pretraži"
@@ -521,6 +664,10 @@ sr:
       name: Pročitao Smernice
     reader:
       name: Čitač
+  tags:
+    groups:
+      errors:
+        empty_permissions: "Grupa oznaka mora imati najmanje jedno ovlašćenje."
   wizard:
     step:
       setup:

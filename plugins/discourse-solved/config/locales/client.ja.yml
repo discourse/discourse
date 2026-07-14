@@ -10,6 +10,24 @@ ja:
       site_settings:
         categories:
           discourse_solved: "Discourse 解決済み"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "受け入れられた解決策"
+        sections:
+          support:
+            title: "支援する"
+            filter:
+              all_categories: "すべてのカテゴリ"
+            answerers:
+              staff: "スタッフ"
+              member: "メンバー"
+              basic: "ベーシック"
+            response_time:
+              buckets:
+                lt_1h: "< １時間"
+                gt_24h: "> 24 時間"
   js:
     notifications:
       alt:
@@ -29,7 +47,6 @@ ja:
       solution: "解決策"
       solution_summary:
         other: "解決策"
-      accepted_answer_solver_info: "%{user} が %{post} で解決済み"
       accepted_answer_post_number: "投稿 %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -39,10 +56,11 @@ ja:
       no_solved_topics_title: "まだトピックを解決していません。"
       no_solved_topics_title_others: "%{username} はまだトピックを解決していません"
       no_solved_topics_body: "トピックに有益な返信を提供すると、その返信がトピックオーナーまたはスタッフによって解決策として選択される場合があります。"
-      marked_solved_by: "%{user} が解決済みに指定"
       move_post_cancel: "キャンセル"
       confirm_solved_removal_confirm: "確認"
       confirm_solved_removal_cancel: "キャンセル"
+      shared_issue:
+        label_with_count: "%{label} (%{count})"
       no_answer:
         title: 質問の回答は得られましたか？
         description: "適切な返信の下にある解決策ボタンを使って回答をハイライトし、他のユーザーを助けましょう。"

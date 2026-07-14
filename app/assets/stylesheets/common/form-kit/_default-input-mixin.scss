@@ -3,7 +3,7 @@
 @mixin default-input {
   width: 100%;
   height: var(--space-9);
-  background: var(--secondary);
+  background: var(--token-color-background-input);
   border: 1px solid var(--primary-low-mid) !important;
   border-radius: var(--d-input-border-radius);
   padding: 0 0.5em !important;
@@ -23,10 +23,10 @@
   &:active {
     // these `!important` flags are another great case for having a button element without that pesky default styling
     &:not(:disabled) {
-      background-color: var(--secondary) !important;
+      background-color: var(--token-color-background-input) !important;
       color: var(--primary) !important;
-      border-color: var(--tertiary);
-      outline: 2px solid var(--tertiary);
+      border-color: var(--token-color-background-accent-bolder);
+      outline: 2px solid var(--token-color-background-accent-bolder);
       outline-offset: -2px;
 
       .d-icon {
@@ -37,9 +37,9 @@
 
   &:hover:not(:disabled) {
     .discourse-no-touch & {
-      background-color: var(--secondary);
+      background-color: var(--token-color-background-input);
       color: var(--primary);
-      border-color: var(--tertiary);
+      border-color: var(--token-color-background-accent-bolder);
 
       .d-icon {
         color: inherit;

@@ -136,8 +136,8 @@ ensure
   FileUtils.rm_rf(DOWNLOAD_EXTRACT_DIR) if File.exist?(DOWNLOAD_EXTRACT_DIR)
 end
 
-build_cmd = %w[pnpm ember build]
-build_env = { "CI" => "1" }
+build_cmd = %w[pnpm build]
+build_env = { "CI" => "1", "SKIP_DB_AND_REDIS" => "1" }
 
 if Etc.nprocessors > 2
   # Anything more than 2 doesn't seem to improve build times
@@ -151,48 +151,30 @@ if low_memory_environment?
   build_env["JOBS"] = "1"
 end
 
-build_cmd << "-prod" if resolved_ember_env == "production"
-
 core_build_reusable =
   existing_core_build_usable? || (download_prebuild_assets! && existing_core_build_usable?)
 
-if ENV["ROLLUP_PLUGIN_COMPILER"] != "0"
-  if core_build_reusable
-    log "Reusing existing core ember build. All done."
-  else
-    log "Running full core build..."
-    system(build_env, *build_cmd, exception: true, chdir: EMBER_APP_DIR)
-    File.write(BUILD_INFO_FILE, JSON.pretty_generate(build_info))
-  end
-  system("bin/rake", "assets:precompile:build_plugins", exception: true)
+if core_build_reusable
+  log "Reusing existing core ember build. All done."
 else
-  if core_build_reusable && ENV["LOAD_PLUGINS"] == "0"
-    log "Reusing existing core ember build. Plugins not loaded. All done."
-  elsif core_build_reusable
-    log "Reusing existing core ember build. Only building plugins..."
-    build_env["SKIP_CORE_BUILD"] = "1"
-    build_cmd << "-o" << "dist/_plugin_only_build"
-    begin
-      system(build_env, *build_cmd, exception: true, chdir: EMBER_APP_DIR)
-      FileUtils.rm_rf("#{EMBER_APP_DIR}/dist/assets/plugins")
-      FileUtils.mv(
-        "#{EMBER_APP_DIR}/dist/_plugin_only_build/assets/plugins",
-        "#{EMBER_APP_DIR}/dist/assets/plugins",
-      )
-    ensure
-      FileUtils.rm_rf("#{EMBER_APP_DIR}/dist/_plugin_only_build")
-    end
-
-    log "Plugin build successfully integrated into dist"
-  else
-    log "Running full core build..."
-    system(build_env, *build_cmd, exception: true, chdir: EMBER_APP_DIR)
-    File.write(BUILD_INFO_FILE, JSON.pretty_generate(build_info))
-  end
+  log "Running full core build..."
+  system(build_env, *build_cmd, exception: true, chdir: EMBER_APP_DIR)
+  File.write(BUILD_INFO_FILE, JSON.pretty_generate(build_info))
 end
 
+build_plugin_env = { "SKIP_DB_AND_REDIS" => "1" }
+
+# Plugin JS usually comes from a prebuilt bundle. When there's no bundle, e.g.
+# in a theme's CI running against a custom core ref, we build it here instead.
+build_plugin_env["LOAD_PLUGINS"] = ENV.fetch("LOAD_PLUGINS", "1")
+
+system(build_plugin_env, "bin/rake", "assets:precompile:build_plugins", exception: true)
+
 if ARGV.include?("--compress")
-  files = [*Dir.glob("#{EMBER_APP_DIR}/dist/**/*.js"), *Dir.glob("app/assets/generated/**/*.js")]
+  files = [
+    *Dir.glob("#{EMBER_APP_DIR}/dist/**/*.{js,wasm}"),
+    *Dir.glob("app/assets/generated/**/*.{js,wasm}"),
+  ]
   Parallel.map(files, in_threads: 4) do |file|
     next if File.exist?("#{file}.gz") && File.exist?("#{file}.br")
 

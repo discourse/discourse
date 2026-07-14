@@ -55,16 +55,30 @@ module DiscourseAi
         end
 
         def tools
-          return if prompt.tools.blank?
+          return if prompt.tools.blank? && prompt.native_tools.blank?
 
-          translated_tools =
-            prompt.tools.map do |t|
-              tool = { name: t.name, description: t.description }
-              tool[:parameters] = t.parameters_json_schema if t.parameters
-              tool
-            end
+          result = []
 
-          [{ function_declarations: translated_tools }]
+          if prompt.tools.present?
+            translated_tools =
+              prompt.tools.map do |t|
+                tool = { name: t.name, description: t.description }
+                tool[:parameters] = t.parameters_json_schema if t.parameters
+                tool
+              end
+
+            result << { function_declarations: translated_tools }
+          end
+
+          if prompt.native_tool?(DiscourseAi::Completions::NativeTools::WEB_SEARCH)
+            result << { google_search: {} }
+          end
+
+          if prompt.native_tool?(DiscourseAi::Completions::NativeTools::WEB_FETCH)
+            result << { url_context: {} }
+          end
+
+          result.presence
         end
 
         def max_prompt_tokens
@@ -121,6 +135,8 @@ module DiscourseAi
               upload_filter: ->(encoded) { document_allowed?(encoded) },
             )
 
+          apply_thought_signature_parts!(content_array, msg) if role == "model"
+
           if beta_api?
             { role:, parts: content_array }
           else
@@ -128,11 +144,66 @@ module DiscourseAi
           end
         end
 
+        def apply_thought_signature_parts!(content_array, message)
+          thought_signature_parts(message).each do |signature_part|
+            signature = signature_part[:thoughtSignature]
+            next if signature.blank?
+
+            signed_text = signature_part[:text].to_s
+            signed_part = { text: signed_text, thoughtSignature: signature }
+            signed_part[:thought] = signature_part[:thought] if signature_part.key?(:thought)
+
+            if signed_text.present?
+              attach_thought_signature_to_text_suffix!(content_array, signed_part)
+            else
+              insert_thought_signature_part!(content_array, signed_part)
+            end
+          end
+        end
+
+        def attach_thought_signature_to_text_suffix!(content_array, signed_part)
+          signed_text = signed_part[:text]
+          index = content_array.rindex { |part| part[:text].to_s.end_with?(signed_text) }
+
+          if index
+            text_part = content_array[index]
+            prefix = text_part[:text].delete_suffix(signed_text)
+            replacement = []
+            replacement << text_part.merge(text: prefix) if prefix.present?
+            replacement << signed_part
+            content_array[index, 1] = replacement
+          else
+            insert_thought_signature_part!(content_array, signed_part)
+          end
+        end
+
+        def insert_thought_signature_part!(content_array, signed_part)
+          if signed_part[:thought]
+            index = content_array.index { |part| !part[:thought] } || content_array.length
+            content_array.insert(index, signed_part)
+          else
+            content_array << signed_part
+          end
+        end
+
+        def thought_signature_parts(message)
+          Array(gemini_provider_info(message)&.dig(:thought_signature_parts))
+        end
+
+        def gemini_provider_info(message)
+          info = message[:thinking_provider_info]
+          return if info.blank?
+
+          info.deep_symbolize_keys[:gemini]
+        end
+
         def image_node(details)
           { inlineData: { mimeType: details[:mime_type], data: details[:base64] } }
         end
 
         def upload_node(details)
+          return { text: details[:text] } if details[:text].present?
+
           image_node(details)
         end
 

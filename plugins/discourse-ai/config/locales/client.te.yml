@@ -36,6 +36,14 @@ te:
             canned_reply:
               label: "ప్రత్యుత్తరం ఇవ్వండి"
     discourse_ai:
+      ai_tool_approval:
+        loading: "లోడవుతోంది..."
+        tool: "చర్య"
+        user: "సభ్యుడు"
+        approve: "ఆమోదించండి"
+        reject: "తిరస్కరించు"
+        approved: "ఆమోదించబడింది"
+        rejected: "తిరస్కరించబడినవి"
       llm_selector:
         none: "ఏదీ లేదు"
       features:
@@ -45,6 +53,8 @@ te:
         expand_list:
           one: "(మరో %{count})"
           other: "(మరో %{count})"
+        nav:
+          enabled: "ప్రారంభించబడింది"
         filters:
           all: "అన్నీ"
           reset: "రీసెట్ చేయండి"
@@ -54,6 +64,7 @@ te:
           name: "స్పామ్"
       translations:
         title: "అనువాదాలు"
+        category_scope: "వర్గాలు"
         stats:
           eta_minutes:
             one: "ఒక నిమిషం"
@@ -87,6 +98,11 @@ te:
         save: "సేవ్ చేయండి"
         enabled: "ప్రారంభించబడిందా?"
         delete: "తొలగించండి"
+        thinking_effort_options:
+          none: "ఏదీ లేదు"
+          low: "తక్కువ"
+          medium: "మధ్యస్థం"
+          high: "అధిక"
         response_format:
           open_modal: "సవరించండి"
           modal:

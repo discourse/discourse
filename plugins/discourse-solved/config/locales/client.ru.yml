@@ -10,6 +10,25 @@ ru:
       site_settings:
         categories:
           discourse_solved: "Плагин «Решённые» для Discourse"
+      dashboard:
+        highlights:
+          kpi:
+            accepted_solutions:
+              label: "Решённые вопросы"
+              tooltip: "Количество тем, в которых был опубликован пост, отмеченный как решение."
+        sections:
+          support:
+            title: "Поддержать"
+            filter:
+              all_categories: "Все категории"
+            answerers:
+              staff: "Персонал"
+              member: "Участники"
+              basic: "Обычный пользователь"
+            response_time:
+              buckets:
+                lt_1h: "< 1 час"
+                gt_24h: "> 24 часа"
   js:
     notifications:
       alt:
@@ -23,7 +42,6 @@ ru:
       allow_accepted_answers: "Разрешать автору темы и модераторам помечать ответ статусом 'Вопрос решён'"
       solved_topics_auto_close_hours: "Автоматически закрывать тему через указанное здесь количество часов после того, как тема была отмечена как решенная."
       notify_on_staff_accept_solved: "Уведомить создателя темы, когда сотрудники отметят решение."
-      empty_box_on_unsolved: "Отобразить пустой флажок рядом с нерешенными темами в списке тем."
       accept_answer: "Выберите, если этот ответ решает проблему"
       accepted_description: "Этот ответ решает вопрос, обсуждаемый в этой теме"
       has_no_accepted_answer: "Тема не содержит решения вопроса"
@@ -35,7 +53,6 @@ ru:
         few: "решения"
         many: "решения"
         other: "решения"
-      accepted_answer_solver_info: "Решено с помощью %{user} в %{post}"
       accepted_answer_post_number: "публикация %{post_number}"
       accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
@@ -45,7 +62,6 @@ ru:
       no_solved_topics_title: "У вас пока нет решённых тем"
       no_solved_topics_title_others: "У пользователя %{username} ещё нет тем, содержащих решённые вопросы"
       no_solved_topics_body: "Когда вы даете в теме полезный ответ, он может быть отмечен в качестве решения владельцем темы или сотрудниками."
-      marked_solved_by: "Отмечено как решенное пользователем %{user}"
       confirm_move_solution_title: "Переместить сообщение с решением"
       move_post_cancel: "Нет"
       dont_show_again: "Понял, больше мне это не показывайте."
@@ -53,6 +69,11 @@ ru:
       confirm_solved_removal: "Это изменение отключит решения по данной теме и удалит принятое решение."
       confirm_solved_removal_confirm: "Подтвердить"
       confirm_solved_removal_cancel: "Нет"
+      shared_issue:
+        label: "Я тоже"
+        label_with_count: "%{label} (%{count})"
+        title: "Я тоже столкнулся с этой проблемой."
+        author_title: "Вы начали эту тему."
       no_answer:
         title: Вопрос был решён?
         description: "Выделите ответ и помогите другим пользователям, нажав на кнопку 'Вопрос решён' под правильным ответом."
@@ -67,8 +88,6 @@ ru:
           description: "Вы будете получать уведомления о каждом новом ответе в этой теме, а также о завершении обсуждения. Будет отображаться количество новых ответов в этой теме."
       category_type_support:
         title: "Поддержать"
-        not_support_type: "Внимание! Вы отключили возможность отмечать сообщения как решения в этой категории. Чтобы включить эту функцию, найдите соответствующие настройки на вкладке «Настройки»."
-        confirm_remove_support_type: "Вы уверены, что хотите отключить возможность отмечать сообщения как решения в этой категории? Вы сможете включить её снова на вкладке «Настройки» позже."
     topic_statuses:
       solved:
         help: "Тема содержит решение вопроса"

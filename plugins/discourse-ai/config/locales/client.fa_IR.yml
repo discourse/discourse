@@ -60,6 +60,14 @@ fa_IR:
               label: "پاسخ کاربر"
     discourse_ai:
       title: "هوش مصنوعی"
+      ai_tool_approval:
+        loading: "بارگذاری..."
+        tool: "عمل"
+        user: "کاربر"
+        approve: "تایید"
+        reject: "رد کردن"
+        approved: "پذیرفته شده"
+        rejected: "رد شده"
       llm_selector:
         none: "هیچ‌کدام"
       features:
@@ -72,6 +80,8 @@ fa_IR:
           one: "(%{count} مورد دیگر)"
           other: "(%{count} مورد دیگر)"
         collapse_list: "(نمایش کمتر)"
+        nav:
+          enabled: "فعال شده"
         filters:
           all: "همه"
           reset: "بازنشانی"
@@ -86,6 +96,7 @@ fa_IR:
         select_option: "یک گزینه را انتخاب کنید..."
       translations:
         title: "ترجمه‌ها"
+        category_scope: "دسته‌بندی‌ها"
         stats:
           eta_minutes:
             one: "%{count} دقیقه"
@@ -130,6 +141,12 @@ fa_IR:
         mcp_tools_modal:
           clear_all: "پاکسازی همه"
         delete: "حذف"
+        thinking_effort_options:
+          none: "هیچ‌کدام"
+          low: "کم"
+          medium: "متوسط"
+          high: "بالا"
+          max: "بیشترین"
         response_format:
           open_modal: "ویرایش"
           modal:

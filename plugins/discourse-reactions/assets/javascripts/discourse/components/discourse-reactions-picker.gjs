@@ -3,13 +3,15 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import EmojiPicker from "discourse/components/emoji-picker";
-import concatClass from "discourse/helpers/concat-class";
-import emoji from "discourse/helpers/emoji";
+import DButton from "discourse/ui-kit/d-button";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
+import dEmoji from "discourse/ui-kit/helpers/d-emoji";
 import { i18n } from "discourse-i18n";
 
 export default class DiscourseReactionsPicker extends Component {
+  @service capabilities;
+  @service currentUser;
   @service siteSettings;
 
   emojiPickerIsOpen = false;
@@ -62,7 +64,12 @@ export default class DiscourseReactionsPicker extends Component {
         isUsed = currentUserReaction && currentUserReaction.id === reaction;
       }
 
-      if (currentUserReaction) {
+      if (!this.currentUser) {
+        // Anonymous users can pick a reaction — it gets deferred until login.
+        // Disallow on archived/closed topics where no one can react.
+        const topic = post.topic;
+        canUndo = !(topic?.archived || topic?.closed);
+      } else if (currentUserReaction) {
         canUndo = currentUserReaction.can_undo && post.likeAction?.canToggle;
       } else {
         canUndo = post.likeAction?.canToggle;
@@ -94,7 +101,8 @@ export default class DiscourseReactionsPicker extends Component {
     }
 
     let x;
-    const colsByRow = [5, 6, 7, 8];
+    // below the small breakpoint, 8 cols is slightly too wide, so cap at 7
+    const colsByRow = this.capabilities.viewport.sm ? [5, 6, 7, 8] : [5, 6, 7];
 
     // if small count, just use it
     if (count < colsByRow[0]) {
@@ -149,7 +157,7 @@ export default class DiscourseReactionsPicker extends Component {
 
   <template>
     <div
-      class={{concatClass
+      class={{dConcatClass
         "discourse-reactions-picker"
         (if @reactionsPickerExpanded "is-expanded")
       }}
@@ -162,7 +170,7 @@ export default class DiscourseReactionsPicker extends Component {
         >
           {{#each this.reactionInfo as |reaction|}}
             <DButton
-              class={{concatClass
+              class={{dConcatClass
                 "btn-flat"
                 "pickable-reaction"
                 reaction.id
@@ -178,13 +186,13 @@ export default class DiscourseReactionsPicker extends Component {
               }}
               @translatedTitle={{reaction.title}}
             >
-              {{emoji reaction.id}}
+              {{dEmoji reaction.id}}
             </DButton>
           {{/each}}
           {{#if this.siteSettings.discourse_reactions_allow_any_emoji}}
             <EmojiPicker
               ...attributes
-              @icon="far-face-smile"
+              @icon="discourse-emojis"
               @context="discourse-reactions"
               @didSelectEmoji={{this.onSelectEmoji}}
               @onShow={{this.preventCollapse}}

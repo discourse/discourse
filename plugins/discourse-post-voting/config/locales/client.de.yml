@@ -6,9 +6,10 @@
 
 de:
   admin_js:
-    site_settings:
-      categories:
-        post_voting: Beitragsabstimmung
+    admin:
+      site_settings:
+        categories:
+          discourse_post_voting: "Discourse Beitragsabstimmung"
   post_voting:
     reviewables:
       comment_already_handled: "Danke, aber wir haben diesen Kommentar bereits überprüft und festgestellt, dass er nicht erneut gemeldet werden muss."
@@ -39,6 +40,14 @@ de:
       already_voted: "Du kannst nur einmal pro Frage abstimmen."
       user_over_limit: "Du kannst nicht öfter abstimmen, als es deine Vertrauensstufe erlaubt."
       one_vote_per_post: "Du kannst nur einmal pro Beitrag abstimmen."
+      button:
+        upvote: "Positiv abstimmen"
+        remove_upvote: "Positive Stimme entfernen"
+        downvote: "Negativ abstimmen"
+        remove_downvote: "Negative Stimme entfernen"
+      toggle_voters: "Anzeigen, wer abgestimmt hat"
+      upvotes: "Positive Stimmen"
+      downvotes: "Negative Stimmen"
     last_answer_lowercase: letzte Antwort
     answer_lowercase:
       one: Antwort
@@ -60,6 +69,10 @@ de:
           edit: "bearbeiten"
           cancel: "abbrechen"
           add: "Kommentar hinzufügen"
+          actions:
+            edit: "Kommentar bearbeiten"
+            delete: "Kommentar löschen"
+            flag: "Kommentar melden"
           show:
             one: '%{count} weiteren Kommentar anzeigen'
             other: '%{count} weitere Kommentare anzeigen'

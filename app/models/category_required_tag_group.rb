@@ -14,12 +14,12 @@ end
 # Table name: category_required_tag_groups
 #
 #  id           :bigint           not null, primary key
-#  category_id  :bigint           not null
-#  tag_group_id :bigint           not null
 #  min_count    :integer          default(1), not null
 #  order        :integer          default(1), not null
 #  created_at   :datetime         not null
 #  updated_at   :datetime         not null
+#  category_id  :bigint           not null
+#  tag_group_id :bigint           not null
 #
 # Indexes
 #

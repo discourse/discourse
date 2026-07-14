@@ -23,14 +23,11 @@ module("Unit | Lib | markdown-image-builder", function () {
       assert.strictEqual(sanitizeAlt("   ", { fallback: "image" }), "image");
     });
 
-    test("escapes pipes for markdown", function (assert) {
+    test("escapes characters that would break markdown parsing", function (assert) {
       assert.strictEqual(
         sanitizeAlt("alt|text|with|pipes"),
         "alt&#124;text&#124;with&#124;pipes"
       );
-    });
-
-    test("escapes backslashes, brackets", function (assert) {
       assert.strictEqual(
         sanitizeAlt("text\\with\\slashes"),
         "text\\\\with\\\\slashes"

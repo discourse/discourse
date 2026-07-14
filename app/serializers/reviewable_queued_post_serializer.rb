@@ -20,6 +20,12 @@ class ReviewableQueuedPostSerializer < ReviewableSerializer
     :raw_email,
   )
 
+  def attributes
+    data = super
+    data[:payload]&.delete("raw_email") unless scope&.can_view_raw_emails?
+    data
+  end
+
   def fancy_title
     ERB::Util.html_escape(object.payload["title"]) if object.payload&.[]("title")
   end

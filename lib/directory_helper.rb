@@ -3,7 +3,7 @@
 module DirectoryHelper
   def tmp_directory(prefix)
     directory_cache[prefix] ||= begin
-      f = File.join(Rails.root, "tmp", Time.now.strftime("#{prefix}%Y%m%d%H%M%S"))
+      f = Rails.root.join("tmp", Time.now.strftime("#{prefix}%Y%m%d%H%M%S")).to_s
       FileUtils.mkdir_p(f) if Dir[f].blank?
       f
     end

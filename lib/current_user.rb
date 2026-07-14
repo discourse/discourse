@@ -14,13 +14,14 @@ module CurrentUser
     @current_user_provider = Discourse.current_user_provider.new({})
   end
 
-  def log_on_user(user, opts = {})
+  def log_on_user(user, opts = {}, replay_anonymous_action: false)
     current_user_provider.log_on_user(user, session, cookies, opts)
     user.logged_in
+    AnonymousAction.consume(user, cookies) if replay_anonymous_action
   end
 
-  def log_off_user
-    current_user_provider.log_off_user(session, cookies)
+  def log_off_user(push_subscription: nil)
+    current_user_provider.log_off_user(session, cookies, push_subscription:)
   end
 
   def start_impersonating_user(user)

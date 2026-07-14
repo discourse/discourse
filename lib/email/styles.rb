@@ -77,7 +77,7 @@ module Email
             img["width"] = img["height"] = 20
           else
             # use dimensions of original iPhone screen for 'too big, let device rescale'
-            if img["width"].to_i > (320) || img["height"].to_i > (480)
+            if img["width"].to_i > 320 || img["height"].to_i > 480
               img["width"] = img["height"] = "auto"
             end
           end
@@ -226,27 +226,24 @@ module Email
       @fragment
         .css("iframe")
         .each do |i|
-          begin
-            # sometimes, iframes are blocklisted...
-            if i["src"].blank?
-              i.remove
-              next
-            end
-
-            src_uri =
-              i["data-original-href"].present? ? URI(i["data-original-href"]) : URI(i["src"])
-            # If an iframe is protocol relative, use SSL when displaying it
-            display_src =
-              "#{src_uri.scheme || "https"}://#{src_uri.host}#{src_uri.path}#{src_uri.query.nil? ? "" : "?" + src_uri.query}#{src_uri.fragment.nil? ? "" : "#" + src_uri.fragment}"
-            i.replace(
-              Nokogiri::HTML5.fragment(
-                "<p><a href='#{src_uri}'>#{CGI.escapeHTML(display_src)}</a><p>",
-              ),
-            )
-          rescue URI::Error
-            # If the URL is weird, remove the iframe
+          # sometimes, iframes are blocklisted...
+          if i["src"].blank?
             i.remove
+            next
           end
+
+          src_uri = i["data-original-href"].present? ? URI(i["data-original-href"]) : URI(i["src"])
+          # If an iframe is protocol relative, use SSL when displaying it
+          display_src =
+            "#{src_uri.scheme || "https"}://#{src_uri.host}#{src_uri.path}#{src_uri.query.nil? ? "" : "?" + src_uri.query}#{src_uri.fragment.nil? ? "" : "#" + src_uri.fragment}"
+          i.replace(
+            Nokogiri::HTML5.fragment(
+              "<p><a href='#{src_uri}'>#{CGI.escapeHTML(display_src)}</a><p>",
+            ),
+          )
+        rescue URI::Error
+          # If the URL is weird, remove the iframe
+          i.remove
         end
     end
 
@@ -339,7 +336,12 @@ module Email
       plugin_styles
       dark_mode_styles
 
-      style(".post-excerpt img", "max-width: 50%; max-height: #{MAX_IMAGE_DIMENSION}px;")
+      style(
+        ".post-excerpt img:not(.emoji)",
+        "max-width: 50%; max-height: #{MAX_IMAGE_DIMENSION}px;",
+      )
+
+      style(".post-excerpt img.emoji", "max-height: 20px; vertical-align: middle;")
 
       format_custom
     end
@@ -481,11 +483,9 @@ module Email
       @fragment
         .css("a")
         .each do |link|
-          begin
-            link["href"] = "#{site_uri}#{link["href"]}" if URI(link["href"].to_s).host.blank?
-          rescue URI::Error
-            # leave it
-          end
+          link["href"] = "#{site_uri}#{link["href"]}" if URI(link["href"].to_s).host.blank?
+        rescue URI::Error
+          # leave it
         end
     end
 
@@ -569,7 +569,7 @@ module Email
             .css("a")
             .each do |inner|
               # we want the first footer link to be specially highlighted as IMPORTANT
-              if footernum == (0) && linknum == (0)
+              if footernum == 0 && linknum == 0
                 bg_color = SiteSetting.email_accent_bg_color
                 inner[
                   "style"

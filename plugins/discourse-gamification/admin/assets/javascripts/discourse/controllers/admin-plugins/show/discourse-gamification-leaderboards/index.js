@@ -1,7 +1,6 @@
 import Controller from "@ember/controller";
-import { action, computed } from "@ember/object";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { compare } from "@ember/utils";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
@@ -14,15 +13,6 @@ export default class AdminPluginsShowDiscourseGamificationLeaderboardsIndexContr
   @service toasts;
 
   creatingNew = false;
-
-  @computed("model.leaderboards.@each.updatedAt")
-  get sortedLeaderboards() {
-    return (
-      this.model?.leaderboards?.sort((a, b) =>
-        compare(b?.updatedAt, a?.updatedAt)
-      ) || []
-    );
-  }
 
   @action
   resetNewLeaderboard() {

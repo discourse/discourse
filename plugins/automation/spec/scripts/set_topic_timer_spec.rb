@@ -48,6 +48,32 @@ describe "SetTopicTimer" do
     end
   end
 
+  it "skips auto_close timer when topic is already closed" do
+    configure_automation("auto_close", 60)
+
+    post =
+      PostCreator.new(Fabricate(:admin), raw: "my new topic", title: "Test topic for timer").create!
+    post.topic.update_status("closed", true, Discourse.system_user)
+
+    expect { PostRevisor.new(post).revise!(post.user, raw: "an edit") }.not_to change {
+      post.topic.reload.topic_timers.count
+    }
+    expect(post.topic.reload.closed).to eq(true)
+  end
+
+  it "skips auto_close_after_last_post timer when topic is already closed" do
+    configure_automation("auto_close_after_last_post", 60)
+
+    post =
+      PostCreator.new(Fabricate(:admin), raw: "my new topic", title: "Test topic for timer").create!
+    post.topic.update_status("closed", true, Discourse.system_user)
+
+    expect { PostRevisor.new(post).revise!(post.user, raw: "an edit") }.not_to change {
+      post.topic.reload.topic_timers.count
+    }
+    expect(post.topic.reload.closed).to eq(true)
+  end
+
   it "handles auto_close_after_last_post timer" do
     configure_automation("auto_close_after_last_post", 60)
 

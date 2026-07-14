@@ -10,9 +10,15 @@ uk:
       site_settings:
         categories:
           poll: "Опитування Discourse"
+      logs:
+        staff_actions:
+          actions:
+            poll_closed: "Опитування закрито"
+            poll_opened: "Опитування відкрито"
   js:
     poll:
       title: "Опитування"
+      closed_by: "Закрито %{username}"
       dynamic:
         enabled_hint: "Опції можна додавати або видаляти."
       voters:
@@ -176,5 +182,3 @@ uk:
           add: Додати варіант
         automatic_close:
           label: Автоматично закрити опитування
-        show_advanced: "Показати додаткові параметри"
-        hide_advanced: "Сховати додаткові параметри"

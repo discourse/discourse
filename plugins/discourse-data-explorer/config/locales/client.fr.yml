@@ -14,6 +14,9 @@ fr:
       explorer:
         no_semicolons: "Supprimez les points-virgules de la requête."
         dirty: "Vous devez enregistrer la requête avant de l'exécuter."
+    data_explorer:
+      admin_dashboard_card:
+        no_results: "Aucun résultat"
     explorer:
       default_query: "Par défaut"
       or: "ou"
@@ -25,6 +28,7 @@ fr:
       description_placeholder: "Saisissez une description ici"
       ai:
         generate: "Générer"
+        optional: "facultatif"
       import:
         label: "Importer"
         unparseable_json: "Fichier JSON non analysable."
@@ -41,17 +45,15 @@ fr:
           yes: "Oui"
           no: "Non"
           null_: "Nul"
-      export: "Exporter"
       view_json: "Afficher JSON"
       save: "Enregistrer les modifications"
       run: "Exécuter"
       undo: "Annuler les modifications"
-      edit: "Modifier"
       delete: "Supprimer"
-      download_json: "JSON"
-      download_csv: "CSV"
-      show_table: "Tableau"
-      show_graph: "Graphique"
+      chart:
+        form:
+          label: "Type de graphique"
+          bar: "Barre"
       others_dirty: "Une requête comporte des modifications non enregistrées qui seront perdues si vous quittez la page"
       run_time: "Requête exécutée en %{value} millisecondes."
       result_count:
@@ -68,7 +70,6 @@ fr:
       query_time: "Dernière exécution"
       query_user: "Créé par "
       column: "Colonne %{number}"
-      explain_label: "Inclure le plan d'exécution ?"
       reset_params: "Réinitialiser"
       search_placeholder: "Recherche…"
       no_search_results: "Désolé, nous n'avons trouvé aucun résultat correspondant à votre texte."
@@ -85,6 +86,16 @@ fr:
           descriptions:
             data_explorer:
               run_queries: "Exécutez des requêtes de l'explorateur de données. Limitez la clé d'API à un ensemble de requêtes en spécifiant des ID de requêtes."
+    discourse_workflows:
+      nodes:
+        "action:sql": "Explorateur de données"
+      sql:
+        query_id: "Requête"
+        add_param: "Ajouter un paramètre"
+        param_value: "Valeur"
+        output:
+          results: "Résultats"
+          no_results: "Aucun résultat"
     discourse_automation:
       scriptables:
         recurring_data_explorer_result_pm:

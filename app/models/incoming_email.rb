@@ -28,7 +28,7 @@ class IncomingEmail < ActiveRecord::Base
       )
     SQL
 
-  scope :without_raw, -> { select(self.column_names - ["raw"]) }
+  scope :without_raw, -> { select(column_names - ["raw"]) }
 
   def self.created_via_types
     @types ||=
@@ -36,7 +36,7 @@ class IncomingEmail < ActiveRecord::Base
   end
 
   def as_mail_message
-    @mail_message ||= Mail.new(self.raw)
+    @mail_message ||= Mail.new(raw)
   end
 
   def raw_headers
@@ -48,11 +48,11 @@ class IncomingEmail < ActiveRecord::Base
   end
 
   def to_addresses_split
-    self.to_addresses&.split(";") || []
+    to_addresses&.split(";") || []
   end
 
   def cc_addresses_split
-    self.cc_addresses&.split(";") || []
+    cc_addresses&.split(";") || []
   end
 
   def to_addresses=(to)

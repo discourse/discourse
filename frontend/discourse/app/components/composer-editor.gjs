@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
@@ -11,13 +11,9 @@ import { service } from "@ember/service";
 import { classNameBindings } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import { BasePlugin } from "@uppy/core";
-import $ from "jquery";
 import { resolveAllShortUrls } from "pretty-text/upload-short-url";
-import DEditor from "discourse/components/d-editor";
 import DEditorPreview from "discourse/components/d-editor-preview";
-import { applyHtmlDecorators } from "discourse/components/decorated-html";
 import Wrapper from "discourse/components/form-template-field/wrapper";
-import PickFilesButton from "discourse/components/pick-files-button";
 import PostTranslationEditor from "discourse/components/post-translation-editor";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
@@ -47,6 +43,9 @@ import { formatUsername } from "discourse/lib/utilities";
 import Composer from "discourse/models/composer";
 import FormTemplateChooser from "discourse/select-kit/components/form-template-chooser";
 import { gt } from "discourse/truth-helpers";
+import { applyHtmlDecorators } from "discourse/ui-kit/d-decorated-html";
+import DEditor from "discourse/ui-kit/d-editor";
+import DPickFilesButton from "discourse/ui-kit/d-pick-files-button";
 import { i18n } from "discourse-i18n";
 
 let uploadHandlers = [];
@@ -109,8 +108,6 @@ export default class ComposerEditor extends Component {
   @tracked preview;
 
   composerEventPrefix = "composer";
-  shouldBuildScrollMap = true;
-  scrollMap = null;
 
   fileUploadElementId = "file-uploader";
 
@@ -127,6 +124,11 @@ export default class ComposerEditor extends Component {
       uploadHandlers,
       fileUploadElementId: this.fileUploadElementId,
     });
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+    this.uppyComposerUpload.teardown();
   }
 
   get topic() {
@@ -288,6 +290,13 @@ export default class ComposerEditor extends Component {
     }
   }
 
+  @action
+  _composerEditorInitFormTemplate(formEl) {
+    if (this.composer.allowUpload) {
+      this.uppyComposerUpload.setup(formEl);
+    }
+  }
+
   /**
    * Sets up the editor with the given text manipulation instance
    *
@@ -376,172 +385,33 @@ export default class ComposerEditor extends Component {
     );
   }
 
-  _resetShouldBuildScrollMap() {
-    this.set("shouldBuildScrollMap", true);
-  }
-
-  @bind
-  _handleInputInteraction(event) {
-    const preview = this.element.querySelector(".d-editor-preview-wrapper");
-
-    if (!$(preview).is(":visible")) {
-      return;
-    }
-
-    preview.removeEventListener("scroll", this._handleInputOrPreviewScroll);
-    event.target.addEventListener("scroll", this._handleInputOrPreviewScroll);
-  }
-
-  @bind
-  _handleInputOrPreviewScroll(event) {
-    this._syncScroll(
-      this._syncEditorAndPreviewScroll,
-      $(event.target),
-      $(this.element.querySelector(".d-editor-preview-wrapper"))
-    );
-  }
-
-  @bind
-  _handlePreviewInteraction(event) {
-    this.element
-      .querySelector(".d-editor-input")
-      ?.removeEventListener("scroll", this._handleInputOrPreviewScroll);
-
-    event.target?.addEventListener("scroll", this._handleInputOrPreviewScroll);
-  }
-
-  _syncScroll($callback, $input, $preview) {
-    if (!this.scrollMap || this.shouldBuildScrollMap) {
-      this.set("scrollMap", this._buildScrollMap($input, $preview));
-      this.set("shouldBuildScrollMap", false);
-    }
-
-    throttle(this, $callback, $input, $preview, this.scrollMap, 20);
-  }
-
-  // Adapted from https://github.com/markdown-it/markdown-it.github.io
-  _buildScrollMap($input, $preview) {
-    let sourceLikeDiv = $("<div />")
-      .css({
-        position: "absolute",
-        height: "auto",
-        visibility: "hidden",
-        width: $input[0].clientWidth,
-        "font-size": $input.css("font-size"),
-        "font-family": $input.css("font-family"),
-        "line-height": $input.css("line-height"),
-        "white-space": $input.css("white-space"),
-      })
-      .appendTo("body");
-
-    const linesMap = [];
-    let numberOfLines = 0;
-
-    $input
-      .val()
-      .split("\n")
-      .forEach((text) => {
-        linesMap.push(numberOfLines);
-
-        if (text.length === 0) {
-          numberOfLines++;
-        } else {
-          sourceLikeDiv.text(text);
-
-          let height;
-          let lineHeight;
-          height = parseFloat(sourceLikeDiv.css("height"));
-          lineHeight = parseFloat(sourceLikeDiv.css("line-height"));
-          numberOfLines += Math.round(height / lineHeight);
-        }
-      });
-
-    linesMap.push(numberOfLines);
-    sourceLikeDiv.remove();
-
-    const previewOffsetTop = $preview.offset().top;
-    const offset =
-      $preview.scrollTop() -
-      previewOffsetTop -
-      ($input.offset().top - previewOffsetTop);
-    const nonEmptyList = [];
-    const scrollMap = [];
-    for (let i = 0; i < numberOfLines; i++) {
-      scrollMap.push(-1);
-    }
-
-    nonEmptyList.push(0);
-    scrollMap[0] = 0;
-
-    $preview.find(".preview-sync-line").each((_, element) => {
-      let $element = $(element);
-      let lineNumber = $element.data("line-number");
-      let linesToTop = linesMap[lineNumber];
-      if (linesToTop !== 0) {
-        nonEmptyList.push(linesToTop);
-      }
-      scrollMap[linesToTop] = Math.round($element.offset().top + offset);
-    });
-
-    nonEmptyList.push(numberOfLines);
-    scrollMap[numberOfLines] = $preview[0].scrollHeight;
-
-    let position = 0;
-
-    for (let i = 1; i < numberOfLines; i++) {
-      if (scrollMap[i] !== -1) {
-        position++;
-        continue;
-      }
-
-      let top = nonEmptyList[position];
-      let bottom = nonEmptyList[position + 1];
-
-      scrollMap[i] = (
-        (scrollMap[bottom] * (i - top) + scrollMap[top] * (bottom - i)) /
-        (bottom - top)
-      ).toFixed(2);
-    }
-
-    return scrollMap;
-  }
-
   @bind
   _throttledSyncEditorAndPreviewScroll(event) {
-    const $preview = $(this.element.querySelector(".d-editor-preview-wrapper"));
-
-    throttle(
-      this,
-      this._syncEditorAndPreviewScroll,
-      $(event.target),
-      $preview,
-      20
-    );
+    const preview = this.element.querySelector(".d-editor-preview-wrapper");
+    throttle(this, this._syncEditorAndPreviewScroll, event.target, preview, 20);
   }
 
-  _syncEditorAndPreviewScroll($input, $preview) {
-    if (!$input) {
+  _syncEditorAndPreviewScroll(input, preview) {
+    if (!input || !preview) {
       return;
     }
 
-    if ($input.scrollTop() === 0) {
-      $preview.scrollTop(0);
+    if (input.scrollTop === 0) {
+      preview.scrollTop = 0;
       return;
     }
 
-    const inputHeight = $input[0].scrollHeight;
-    const previewHeight = $preview[0].scrollHeight;
+    const inputHeight = input.scrollHeight;
+    const previewHeight = preview.scrollHeight;
 
-    if ($input.height() + $input.scrollTop() + 100 > inputHeight) {
+    if (input.clientHeight + input.scrollTop + 100 > inputHeight) {
       // cheat, special case for bottom
-      $preview.scrollTop(previewHeight);
+      preview.scrollTop = previewHeight;
       return;
     }
 
-    const scrollPosition = $input.scrollTop();
     const factor = previewHeight / inputHeight;
-    const desired = scrollPosition * factor;
-    $preview.scrollTop(desired + 50);
+    preview.scrollTop = input.scrollTop * factor + 50;
   }
 
   _renderMentions(preview) {
@@ -960,59 +830,20 @@ export default class ComposerEditor extends Component {
   }
 
   @action
+  replyChanged() {
+    this.appEvents.trigger("composer:reply-changed", this.composer.model);
+  }
+
+  @action
   previewUpdated(preview, helper) {
     this._renderMentions(preview);
     this._renderHashtags(preview);
     this._refreshOneboxes(preview);
     this._expandShortUrls(preview);
 
-    // Only apply image size adjustments for form template previews
-    // Regular composer handles this through ProseMirror
-    if (this.composer.formTemplateIds?.length > 0) {
-      this._applyImageSizes(preview);
-    }
-
     this._decorateCookedElement(preview, helper);
 
     this.composer.afterRefresh(preview);
-  }
-
-  _applyImageSizes(preview) {
-    // Apply sizing to images to match regular composer behavior
-    // where percentage scales are relative to the max_image_width site setting
-    // not the original image dimensions
-    const maxImageWidth = this.siteSettings.max_image_width;
-
-    const images = preview.querySelectorAll("img.resizable[width][height]");
-
-    images.forEach((img) => {
-      const processImage = () => {
-        const width = parseInt(img.getAttribute("width"), 10);
-        const height = parseInt(img.getAttribute("height"), 10);
-        const naturalWidth = img.naturalWidth;
-
-        if (!naturalWidth || naturalWidth === 0) {
-          return;
-        }
-
-        if (width && height) {
-          const percentage = width / naturalWidth;
-
-          const constrainedBase = Math.min(naturalWidth, maxImageWidth);
-          const displayWidth = Math.round(constrainedBase * percentage);
-          const displayHeight = Math.round(height * (displayWidth / width));
-
-          img.setAttribute("width", displayWidth);
-          img.setAttribute("height", displayHeight);
-        }
-      };
-
-      if (img.complete && img.naturalWidth > 0) {
-        processImage();
-      } else {
-        img.addEventListener("load", processImage, { once: true });
-      }
-    });
   }
 
   @computed("composer.formTemplateIds")
@@ -1109,12 +940,16 @@ export default class ComposerEditor extends Component {
               class="composer-select-form-template"
             />
           {{/if}}
-          <form id="form-template-form">
+          <form
+            id="form-template-form"
+            {{didInsert this._composerEditorInitFormTemplate}}
+          >
             <Wrapper
               @id={{this.selectedFormTemplateId}}
               @initialValues={{this.composer.formTemplateInitialValues}}
               @onSelectFormTemplate={{this.composer.onSelectFormTemplate}}
               @onChange={{this.updateFormPreview}}
+              @uppyComposerUpload={{this.uppyComposerUpload}}
             />
           </form>
         </div>
@@ -1141,6 +976,7 @@ export default class ComposerEditor extends Component {
     {{else}}
       <DEditor
         @value={{this.composer.model.reply}}
+        @change={{this.replyChanged}}
         @placeholder={{this.replyPlaceholder}}
         @previewUpdated={{this.previewUpdated}}
         @markdownOptions={{this.markdownOptions}}
@@ -1174,7 +1010,7 @@ export default class ComposerEditor extends Component {
     {{/if}}
 
     {{#if this.composer.allowUpload}}
-      <PickFilesButton
+      <DPickFilesButton
         @fileInputId={{this.fileUploadElementId}}
         @allowMultiple={{true}}
         name="file-uploader"

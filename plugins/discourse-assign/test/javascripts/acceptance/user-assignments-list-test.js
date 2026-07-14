@@ -5,29 +5,26 @@ import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import AssignedTopics from "../fixtures/assigned-topics-fixtures";
 
-acceptance(
-  "Discourse Assign | Unassign/reassign from the topics list",
-  function (needs) {
-    needs.user();
-    needs.settings({ assign_enabled: true, assigns_user_url_path: "/" });
-    needs.pretender((server, helper) => {
-      const messagesPath = "/topics/messages-assigned/eviltrout.json";
-      server.get(messagesPath, () =>
-        helper.response(cloneJSON(AssignedTopics[messagesPath]))
-      );
-    });
+acceptance("Unassign/reassign from the topics list", function (needs) {
+  needs.user();
+  needs.settings({ assign_enabled: true, assigns_user_url_path: "/" });
+  needs.pretender((server, helper) => {
+    const messagesPath = "/topics/messages-assigned/eviltrout.json";
+    server.get(messagesPath, () =>
+      helper.response(cloneJSON(AssignedTopics[messagesPath]))
+    );
+  });
 
-    test("unassign/reassign options are visible", async function (assert) {
-      const options = selectKit(".assign-actions-dropdown");
+  test("unassign/reassign options are visible", async function (assert) {
+    const options = selectKit(".assign-actions-dropdown");
 
-      await visit("/u/eviltrout/activity/assigned");
-      await options.expand();
+    await visit("/u/eviltrout/activity/assigned");
+    await options.expand();
 
-      assert.dom("li[data-value='unassign']").exists({ count: 1 });
-      assert.dom("li[data-value='reassign']").exists({ count: 1 });
-    });
-  }
-);
+    assert.dom("li[data-value='unassign']").exists({ count: 1 });
+    assert.dom("li[data-value='reassign']").exists({ count: 1 });
+  });
+});
 
 acceptance(
   "Discourse Assign | A user doesn't have assignments",

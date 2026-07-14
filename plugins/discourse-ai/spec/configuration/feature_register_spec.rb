@@ -1,33 +1,18 @@
 # frozen_string_literal: true
 
-unless defined?(FakeExternalAgent)
-  class FakeExternalAgent < DiscourseAi::Agents::Agent
-    def tools
-      []
-    end
-
-    def system_prompt
-      "Test agent"
-    end
-  end
-end
-
 describe DiscourseAi::Configuration::Feature do
   fab!(:fake_plugin) do
     plugin = Plugin::Instance.new
-    plugin.path = "#{Rails.root}/spec/fixtures/plugins/my_plugin/plugin.rb"
+    plugin.path = "#{Rails.root.join("spec/fixtures/plugins/my_plugin/plugin.rb")}"
     plugin
   end
 
   before do
-    DiscoursePluginRegistry.register_external_ai_feature(
-      {
-        module_name: :test_plugin,
-        feature: :test_feature,
-        agent_klass: FakeExternalAgent,
-        enabled_by_setting: nil,
-      },
-      fake_plugin,
+    DiscourseAi.register_feature(
+      module_name: :test_plugin,
+      feature: :test_feature,
+      agent_klass: DiscourseAi::TestHelpers::FakeExternalAgent,
+      plugin: fake_plugin,
     )
   end
 

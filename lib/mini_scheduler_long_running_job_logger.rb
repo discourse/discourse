@@ -24,10 +24,8 @@ class MiniSchedulerLongRunningJobLogger
   def start
     @thread ||=
       Thread.new do
-        hostname = Discourse.os_hostname
-
         loop do
-          break if self.stop_requested?
+          break if stop_requested?
 
           current_long_running_jobs = Set.new
 
@@ -45,14 +43,12 @@ class MiniSchedulerLongRunningJobLogger
                 end
 
               warning_duration =
-                begin
-                  if job_frequency_minutes < 30.minutes
-                    30.minutes
-                  elsif job_frequency_minutes < 2.hours
-                    job_frequency_minutes
-                  else
-                    2.hours
-                  end
+                if job_frequency_minutes < 30.minutes
+                  30.minutes
+                elsif job_frequency_minutes < 2.hours
+                  job_frequency_minutes
+                else
+                  2.hours
                 end
 
               next if job_started_at >= (Time.zone.now - warning_duration)

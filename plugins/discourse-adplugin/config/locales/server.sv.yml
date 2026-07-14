@@ -15,7 +15,6 @@ sv:
     house_ads_after_nth_topic: 'Om egna annonser "Mellan ämnen" har definierats, visa en annons efter var N:e ämne, där N är detta värde.'
     house_ads_after_nth_post: 'Om egna annonser "Mellan inlägg" har definierats, visa en annons efter var N:e inlägg, där N är detta värde.'
     house_ads_frequency: "Hur ofta husannonser ska visas, uttryckt i procent, om andra annonsnätverk har konfigurerats för att visas på en annonsplats."
-    dfp_publisher_id: "Ange din nätverkskod för Google Ad Manager (tidigare kallad DFP), som du hittar under dina nätverksinställningar. NOTERA: Du behöver uppdatera inställningarna för 'content security policy script src'. Se <a href='https://meta.discourse.org/t/33734' target='_blank'>detta ämne</a> för de senaste instruktionerna."
     dfp_publisher_id_mobile: "(Valfritt) Om du vill använda ett annat utgivar-ID för Ad Manager för webbplatsens mobila version anger du det här. Lämna tomt om du vill använda dfp_publisher_id på mobilen."
     dfp_through_trust_level: "Visa dina annonser för användare baserat på förtroendenivå. Användare med en förtroendenivå som är högre än detta värde ser inga annonser."
     dfp_topic_list_top_code: "Ange den unika koden för annonsenheten för att visa ovanstående ämneslistor. Detta är den korta koden (max 100 tecken) som givits till annonsenheten när den skapades, inte JavaScript-koden."

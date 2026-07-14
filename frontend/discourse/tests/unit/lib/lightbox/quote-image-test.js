@@ -204,7 +204,7 @@ module("Unit | Lib | lightbox | quote image", function (hooks) {
   test("uses short upload:// URL with extension when data-base62-sha1 is present", async function (assert) {
     const { element, slideData } = buildLightbox(this, {
       base62SHA1: "a4bcwvmLAy8cGHKPUrK4G3AUbt9",
-      href: "//localhost:4200/uploads/default/original/1X/468eb8aa1f0126f1ce7e7ea7a2f64f25da0b58db.png",
+      href: "//localhost:3000/uploads/default/original/1X/468eb8aa1f0126f1ce7e7ea7a2f64f25da0b58db.png",
       origSrc: "",
     });
 

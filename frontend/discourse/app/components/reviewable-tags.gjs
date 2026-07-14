@@ -1,9 +1,9 @@
-import discourseTags from "discourse/helpers/discourse-tags";
+import dDiscourseTags from "discourse/ui-kit/helpers/d-discourse-tags";
 
 const ReviewableTags = <template>
   {{#if @tags}}
     <div class="list-tags">
-      {{discourseTags @topic tags=@tags}}
+      {{dDiscourseTags @topic tags=@tags}}
     </div>
   {{/if}}
 </template>;

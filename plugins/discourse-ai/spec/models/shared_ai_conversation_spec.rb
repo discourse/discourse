@@ -110,6 +110,37 @@ RSpec.describe SharedAiConversation, type: :model do
       expect(artifact.public?).to be_falsey
     end
 
+    it "does not share artifacts publicly when refreshing the share fails" do
+      SiteSetting.ai_artifact_security = "lax"
+
+      conversation = described_class.share_conversation(user, topic)
+      conversation.update_column(:share_key, "")
+
+      artifact =
+        Fabricate(
+          :ai_artifact,
+          post: post1,
+          user: user,
+          metadata: {
+            public: false,
+            something: "good",
+          },
+        )
+
+      Fabricate(
+        :post,
+        topic: topic,
+        post_number: 3,
+        raw: "Here's an artifact",
+        cooked: "<div class='ai-artifact' data-ai-artifact-id='#{artifact.id}'></div>",
+      )
+
+      described_class.share_conversation(user, topic)
+
+      expect(artifact.reload.metadata["something"]).to eq("good")
+      expect(artifact.public?).to be_falsey
+    end
+
     it "escapes HTML" do
       conversation = described_class.share_conversation(user, topic)
       onebox = conversation.onebox

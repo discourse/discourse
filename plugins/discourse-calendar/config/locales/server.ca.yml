@@ -9,6 +9,13 @@ ca:
     currently_away:
       labels:
         username: Nom d'usuari
+  discourse_calendar:
+    category_type:
+      default_calendar_view:
+        day: "Dia"
+        week: "Setmana"
+        month: "Mes"
+        year: "Any"
   discourse_post_event:
     errors:
       bulk_invite:

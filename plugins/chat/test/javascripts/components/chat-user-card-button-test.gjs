@@ -6,41 +6,38 @@ import CoreFabricators from "discourse/lib/fabricators";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 import DirectMessageButton from "discourse/plugins/chat/discourse/components/chat/direct-message-button";
 
-module(
-  "Discourse Chat | Component | <Chat::DirectMessageButton />",
-  function (hooks) {
-    setupRenderingTest(hooks);
+module("Component | <Chat::DirectMessageButton />", function (hooks) {
+  setupRenderingTest(hooks);
 
-    test("when current user can send direct messages", async function (assert) {
-      sinon
-        .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
-        .value(true);
-      this.user = new CoreFabricators(getOwner(this)).user();
+  test("when current user can send direct messages", async function (assert) {
+    sinon
+      .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
+      .value(true);
+    this.user = new CoreFabricators(getOwner(this)).user();
 
-      await render(
-        <template>
-          <DirectMessageButton @user={{this.user}} @modal={{true}} />
-        </template>
-      );
+    await render(
+      <template>
+        <DirectMessageButton @user={{this.user}} @modal={{true}} />
+      </template>
+    );
 
-      assert.dom(".chat-direct-message-btn").exists("it shows the chat button");
-    });
+    assert.dom(".chat-direct-message-btn").exists("it shows the chat button");
+  });
 
-    test("when current user can’t send direct messages", async function (assert) {
-      sinon
-        .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
-        .value(false);
-      this.user = new CoreFabricators(getOwner(this)).user();
+  test("when current user can’t send direct messages", async function (assert) {
+    sinon
+      .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
+      .value(false);
+    this.user = new CoreFabricators(getOwner(this)).user();
 
-      await render(
-        <template>
-          <DirectMessageButton @user={{this.user}} @modal={{true}} />
-        </template>
-      );
+    await render(
+      <template>
+        <DirectMessageButton @user={{this.user}} @modal={{true}} />
+      </template>
+    );
 
-      assert
-        .dom(".chat-direct-message-btn")
-        .doesNotExist("it doesn’t show the chat button");
-    });
-  }
-);
+    assert
+      .dom(".chat-direct-message-btn")
+      .doesNotExist("it doesn’t show the chat button");
+  });
+});

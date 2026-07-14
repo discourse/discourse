@@ -34,6 +34,14 @@ be:
             canned_reply:
               label: "Адказаць"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Загрузка ..."
+        tool: "Дзеянне"
+        user: "Карыстальнік"
+        approve: "Ухваліць"
+        reject: "адхіляць"
+        approved: "Ухвалены"
+        rejected: "Адхіленыя"
       llm_selector:
         none: "Няма"
       features:
@@ -48,6 +56,7 @@ be:
         spam:
           name: "Спам"
       translations:
+        category_scope: "катэгорыі"
         stats:
           eta_minutes:
             one: "%{count} хвіліну"
@@ -88,6 +97,8 @@ be:
         user: Карыстальнік
         save: "Захаваць"
         delete: "Выдаліць"
+        thinking_effort_options:
+          none: "Няма"
         response_format:
           open_modal: "Рэдагаваць"
         filters:
@@ -134,7 +145,7 @@ be:
         next:
           title: "Далей"
         tests:
-          success: "поспех!"
+          success: "Працуе!"
         providers:
           google: "Google"
       ai_helper:
@@ -153,7 +164,7 @@ be:
         delete: "Выдаліць"
         edit: "Рэдагаваць"
         tests:
-          success: "поспех!"
+          success: "Працуе!"
         display_name: "Імя"
         providers:
           google: "Google"

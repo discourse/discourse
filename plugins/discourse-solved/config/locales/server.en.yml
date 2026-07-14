@@ -17,13 +17,20 @@ en:
       notify_on_staff_accept_solved:
         label: "Notify topic creator when staff marks a solution"
       empty_box_on_unsolved:
-        label: "Display an empty checkbox next to unsolved topics in the topic list"
+        label: "Display unsolved topic state in the topic list for supported themes"
       solved_topics_auto_close_duration:
         label: "Auto close solved topics"
         description: "Automatically close solved topics after this duration from the last reply. Set to 0 to disable."
+      enable_shared_issues:
+        label: "Enable shared issues"
+        description: "Adds a button to unsolved topics in this category that members can use to signal they're experiencing the same issue and opt in to notifications about the solution."
+      shared_issue_label:
+        label: "Shared issue label"
+        description: "The label shown on the shared issue button."
 
   site_settings:
     solved_enabled: "Enable solved plugin, allow users to select solutions for topics"
+    solved_allow_multiple_solutions: "Allow multiple solutions to be accepted in each topic"
     allow_solved_on_all_topics: "Allow users to select solutions on all topics (when unchecked, solutions can be enabled per category or tag)"
     allow_solved_in_groups: "Allow marking solutions in group messages for these groups."
     accept_all_solutions_trust_level: "Minimum trust level required to accept solutions on any topic (even when not OP)"
@@ -38,7 +45,8 @@ en:
     solved_add_schema_markup: "Add QAPage schema markup to HTML."
     enable_solved_tags: "Tags that will allow users to select solutions."
     prioritize_solved_topics_in_search: "Prioritize solved topics in search results."
-    enable_support_category_type_setup: "Enables the Support category type option during category creation setup. Note that 'enable simplified category creation' must be enabled for this to take effect."
+    enable_support_category_type_setup: "Enables the Support category type option during category creation setup."
+    enable_solved_shared_issues: "Adds a “Me too” button to unsolved topics in support categories, letting members signal they’re experiencing the same issue and opt-in to notifications about the topic's solution."
     show_who_marked_solved: "Show who marked the topic as solved. This is indicated in the topic's first post, and the answer post in a tooltip."
 
     keywords:

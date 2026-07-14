@@ -18,14 +18,27 @@ def gh(*args, allow_failure: false)
   run("gh", *args, allow_failure: allow_failure)
 end
 
+# Quote a string as a single-line bash argument using ANSI-C ($'...') quoting,
+# so embedded newlines become a literal \n instead of wrapping the command.
+def bash_quote(str)
+  escaped = str.gsub(/\r\n?/, "\n").gsub(/[\\'\n]/, "\\" => "\\\\", "'" => "\\'", "\n" => "\\n")
+  "$'#{escaped}'"
+end
+
 pr_number = ENV.fetch("PR_NUMBER")
 
+# Resolve the repo so manual instructions target the same one this script runs against
+# (it runs in both discourse/discourse and discourse/discourse-private-mirror).
+repo = gh("repo", "view", "--json", "nameWithOwner", "-q", ".nameWithOwner").stdout.strip
+repo_url = "git@github.com:#{repo}"
+
 # Get PR details (title, body, base branch)
-pr = JSON.parse(gh("pr", "view", pr_number, "--json", "title,body,baseRefName").stdout)
+pr = JSON.parse(gh("pr", "view", pr_number, "--json", "title,body,baseRefName,mergeCommit").stdout)
 
 pr_title = pr["title"]
 pr_body = pr["body"] || ""
 base_branch = pr["baseRefName"]
+merge_commit = pr.dig("mergeCommit", "oid")
 
 puts "PR ##{pr_number}: #{pr_title}"
 puts "Base branch: #{base_branch}"
@@ -45,13 +58,37 @@ puts "Merge base: #{merge_base}"
 # Read versions.json from main branch to find backport targets
 versions = JSON.parse(run("git", "show", "origin/main:versions.json").stdout)
 
-# Find versions that are both supported and released
+# Optional target versions can be supplied, space- or comma-separated, each with
+# an optional "v" prefix: "@discoursebot backport 2026.5, v2026.4"
+target_versions =
+  ENV["COMMENT_BODY"].to_s[/@discoursebot\s+backport\b(.*)/i, 1]
+    .to_s
+    .split(/[\s,]+/)
+    .reject(&:empty?)
+    .map { |v| v.sub(/\Av/i, "") }
+
 backport_versions =
-  versions
-    .select { |version, info| info["supported"] == true && info["released"] == true }
-    .keys
-    .sort
-    .reverse
+  if target_versions.any?
+    unknown = target_versions.reject { |v| versions.key?(v) }
+    if unknown.any?
+      gh(
+        "pr",
+        "comment",
+        pr_number,
+        "--body",
+        "Unknown version(s): #{unknown.join(", ")}. Known versions: #{versions.keys.sort.reverse.join(", ")}.",
+      )
+      exit 0
+    end
+    target_versions.uniq.sort.reverse
+  else
+    # Find versions that are both supported and released
+    versions
+      .select { |version, info| info["supported"] == true && info["released"] == true }
+      .keys
+      .sort
+      .reverse
+  end
 
 puts "Will backport to versions: #{backport_versions.join(", ")}"
 
@@ -71,6 +108,14 @@ results = []
 backport_versions.each do |version|
   release_branch = "release/#{version}"
   backport_branch = "backport/#{version}/#{pr_number}"
+  backport_title = "#{pr_title} [backport #{version}]"
+  backport_body = <<~BODY
+    Backport of ##{pr_number} to #{release_branch}.
+
+    ---
+
+    #{pr_body}
+  BODY
 
   puts "\n--- Backporting to #{release_branch} ---"
 
@@ -88,7 +133,13 @@ backport_versions.each do |version|
   run("git", "checkout", "-B", backport_branch, "origin/#{release_branch}")
 
   # Cherry-pick the commits
-  cherry_pick_range = "#{merge_base}..#{pr_head}"
+  cherry_pick_range =
+    if merge_commit
+      merge_commit
+    else
+      "#{merge_base}..#{pr_head}"
+    end
+
   puts "Cherry-picking #{cherry_pick_range}..."
   result = run("git", "cherry-pick", cherry_pick_range, allow_failure: true)
 
@@ -101,6 +152,8 @@ backport_versions.each do |version|
       release_branch: release_branch,
       backport_branch: backport_branch,
       cherry_pick_range: cherry_pick_range,
+      backport_title: backport_title,
+      backport_body: backport_body,
     }
     run("git", "cherry-pick", "--abort", allow_failure: true)
     run("git", "checkout", "main", allow_failure: true)
@@ -111,15 +164,6 @@ backport_versions.each do |version|
   run("git", "push", "-f", "origin", backport_branch)
 
   # Create or update PR
-  backport_title = "#{pr_title} [backport #{version}]"
-  backport_body = <<~BODY
-    Backport of ##{pr_number} to #{release_branch}.
-
-    ---
-
-    #{pr_body}
-  BODY
-
   # Try to create the PR
   created =
     gh(
@@ -170,6 +214,10 @@ if failed.any?
   comment_lines << "### Failed backports"
   failed.each do |r|
     if r[:cherry_pick_range]
+      gh_create =
+        "gh pr create --repo #{repo} --base #{r[:release_branch]} --head #{r[:backport_branch]} " \
+          "--title #{bash_quote(r[:backport_title])} --body #{bash_quote(r[:backport_body])}"
+
       comment_lines << <<~MSG
         #### #{r[:version]}
         ```
@@ -178,8 +226,13 @@ if failed.any?
 
         To resolve manually:
         ```bash
-        git checkout -B #{r[:backport_branch]} origin/#{r[:release_branch]}
+        git fetch #{repo_url} #{r[:release_branch]}
+        git checkout -B #{r[:backport_branch]} FETCH_HEAD
         git cherry-pick #{r[:cherry_pick_range]}
+
+        # Resolve the conflicts, then push the branch and open the PR:
+        git push -f #{repo_url} #{r[:backport_branch]}:#{r[:backport_branch]}
+        #{gh_create}
         ```
       MSG
     else

@@ -1,6 +1,6 @@
 :root {
   --shadow-header: 0 2px 30px -1px rgba(0, 0, 0, 0.05);
-  --shadow-content: 0 10px 20px -1px rgba(0, 0, 0, 0.05);
+  --shadow-content: 0 12px 32px -28px rgba(0, 0, 0, 0.35);
 
   --primary: #333;
   --primary-50: #f7f8fa;
@@ -15,6 +15,7 @@
   --primary-900: #344252;
 
   --secondary: #fff;
+  --page-background: #fbfcfd;
 
   --tertiary: #08c;
 
@@ -33,6 +34,7 @@
     --primary-900: #c7c7c7;
 
     --secondary: #222222;
+    --page-background: #242424;
 
     --tertiary: #099dd7;
   }
@@ -65,7 +67,7 @@ body {
   font-size: 1.125em; /* root scale */
   line-height: 1.8;
   color: var(--primary);
-  background: var(--primary-50);
+  background: var(--page-background);
 }
 
 .site-header {
@@ -183,10 +185,12 @@ section {
   max-width: 900px;
   margin: 4em auto 8em;
   background-color: var(--secondary);
+  border: 1px solid var(--primary-200);
   border-radius: var(--border-radius-large);
   box-shadow: var(--shadow-content);
   @media screen and (max-width: 768px) {
     margin-top: 0;
+    border: 0;
     border-radius: 0;
     margin-bottom: 0;
     box-shadow: none;
@@ -225,22 +229,13 @@ section {
 }
 
 article.post {
-  border-top: 1px solid transparent;
-  border-bottom: 1px solid transparent;
+  border-top: 1px solid var(--primary-200);
   transition: border-color 0.25s ease-in-out;
-  @media screen and (max-width: 768px) {
-    border-top-color: var(--primary-100);
-    border-bottom-color: transparent;
-  }
 }
 
 @media screen and (min-width: 769px) {
   article.post:hover {
-    border-top-color: var(--primary-100);
-    border-bottom-color: var(--primary-100);
-  }
-  article.post:last-of-type:hover {
-    border-bottom-color: transparent;
+    border-top-color: var(--primary-300);
   }
 }
 
@@ -275,7 +270,7 @@ h1 h2 h3 h4 h5 h6 {
 }
 
 .post {
-  padding: 1.5em 3em 1.5em;
+  padding: 1.75em 3em;
   @media screen and (max-width: 768px) {
     padding: 1em;
   }
@@ -286,17 +281,20 @@ h1 h2 h3 h4 h5 h6 {
   flex-wrap: wrap;
   align-items: baseline;
   justify-content: start;
-  margin-bottom: 0.5em;
+  margin-bottom: 0.75em;
   gap: 0 0.5em;
+  color: var(--primary-600);
+  font-size: var(--font-down-1);
+  line-height: 1.3;
 }
 
 .post__user {
-  font-weight: bold;
-  color: var(--primary);
+  font-weight: 700;
+  color: var(--primary-900);
 }
 
 .post__date, .post__agent {
-  font-size: 0.8em;
+  font-size: var(--font-down-1);
 }
 
 .post__agent {
@@ -304,13 +302,74 @@ h1 h2 h3 h4 h5 h6 {
 }
 
 .post__content {
-  line-height: 1.4;
-  color: var(--primary-800);
+  line-height: 1.6;
+  color: var(--primary);
   overflow: hidden;
 }
 
 .post__content img {
   max-width: 100%;
+}
+
+.post__content h1,
+.post__content h2,
+.post__content h3,
+.post__content h4,
+.post__content h5,
+.post__content h6 {
+  margin: 1.4em 0 0.6em;
+  line-height: 1.25;
+  color: var(--primary);
+}
+
+.post__content > :first-child {
+  margin-top: 0;
+}
+
+.post__content > :last-child {
+  margin-bottom: 0;
+}
+
+.post__content .md-table {
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.post__content table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  line-height: 1.5;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.post__content th,
+.post__content td {
+  padding: 0.4em 0.75em 0.4em 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.post__content th {
+  padding-bottom: 0.35em;
+  border-bottom: 2px solid var(--primary-300);
+  color: var(--primary-900);
+  font-weight: 700;
+}
+
+.post__content td {
+  border-bottom: 1px solid var(--primary-200);
+}
+
+@media screen and (max-width: 500px) {
+  .post__content th,
+  .post__content td {
+    padding: 0.35em 0.6em 0.35em 0;
+  }
+}
+
+.post__content tbody tr:last-child td {
+  border-bottom: 0;
 }
 
 .post__content p:first-child {
@@ -637,4 +696,3 @@ aside.onebox h3 {
   display: flex;
   justify-content: space-between;
 }
-

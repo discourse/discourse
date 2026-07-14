@@ -1,0 +1,18 @@
+.uc-modernize-foundation-theme .welcome-banner {
+  padding-block: var(--d-main-content-gap);
+
+  &__wrap .search-menu {
+    align-items: center;
+    margin-inline: var(--welcome-banner-search-menu-margin-inline);
+  }
+
+  &__subheader {
+    font-size: var(--font-0-rem);
+  }
+
+  &__title {
+    font-size: var(--font-up-5);
+    font-weight: 500;
+    text-align: var(--welcome-banner-text-align);
+  }
+}

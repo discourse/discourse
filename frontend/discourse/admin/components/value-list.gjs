@@ -6,7 +6,6 @@ import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import DButton from "discourse/components/d-button";
 import {
   addUniqueValueToArray,
   removeValueFromArray,
@@ -15,6 +14,7 @@ import {
 import { makeArray } from "discourse/lib/helpers";
 import { autoTrackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import DButton from "discourse/ui-kit/d-button";
 
 @classNames("value-list")
 export default class ValueList extends Component {

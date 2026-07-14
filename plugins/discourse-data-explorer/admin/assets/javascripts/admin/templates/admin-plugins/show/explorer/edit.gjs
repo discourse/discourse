@@ -1,23 +1,27 @@
 import Component from "@glimmer/component";
-import { Input } from "@ember/component";
-import { fn, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import AceEditor from "discourse/components/ace-editor";
 import BackButton from "discourse/components/back-button";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
-import DTextarea from "discourse/components/d-textarea";
-import TextField from "discourse/components/text-field";
-import icon from "discourse/helpers/d-icon";
-import draggable from "discourse/modifiers/draggable";
+import DSegmentedControl from "discourse/components/d-segmented-control";
 import MultiSelect from "discourse/select-kit/components/multi-select";
+import { and, eq, notEq, or } from "discourse/truth-helpers";
+import DButton from "discourse/ui-kit/d-button";
+import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
+import DTextField from "discourse/ui-kit/d-text-field";
+import DTextarea from "discourse/ui-kit/d-textarea";
+import dIcon from "discourse/ui-kit/helpers/d-icon";
+import dDraggable from "discourse/ui-kit/modifiers/d-draggable";
 import { i18n } from "discourse-i18n";
 import CodeView from "discourse/plugins/discourse-data-explorer/discourse/components/code-view";
 import ExplorerSchema from "discourse/plugins/discourse-data-explorer/discourse/components/explorer-schema";
 import ParamInputForm from "discourse/plugins/discourse-data-explorer/discourse/components/param-input-form";
+import QueryAiPrompt from "discourse/plugins/discourse-data-explorer/discourse/components/query-ai-prompt";
+import QueryModeSwitch from "discourse/plugins/discourse-data-explorer/discourse/components/query-mode-switch";
 import QueryResultDownloadButtons from "discourse/plugins/discourse-data-explorer/discourse/components/query-result-download-buttons";
 import QueryResultsWrapper from "discourse/plugins/discourse-data-explorer/discourse/components/query-results-wrapper";
+import QueryRunSplitButton from "discourse/plugins/discourse-data-explorer/discourse/components/query-run-split-button";
 
 export default class QueriesEdit extends Component {
   get showDestroyQuery() {
@@ -29,10 +33,20 @@ export default class QueriesEdit extends Component {
       {{#if @controller.disallow}}
         <h1>{{i18n "explorer.admins_only"}}</h1>
       {{else}}
-        <BackButton
-          @route="adminPlugins.show.explorer.index"
-          @label="explorer.queries"
-        />
+        <div class="query-edit__top-bar">
+          <BackButton
+            @route="adminPlugins.show.explorer.index"
+            @label="explorer.queries"
+          />
+
+          {{#if @controller.aiQueriesEnabled}}
+            <QueryModeSwitch
+              @value={{@controller.mode}}
+              @onChange={{@controller.setMode}}
+              @editDisabled={{@controller.editDisabled}}
+            />
+          {{/if}}
+        </div>
 
         <div class="query-edit {{if @controller.editingName 'editing'}}">
           {{#if @controller.editingName}}
@@ -43,7 +57,7 @@ export default class QueriesEdit extends Component {
                 class="previous"
               />
               <div class="name-text-field">
-                <TextField
+                <DTextField
                   @value={{@controller.model.name}}
                   @onChange={{@controller.setDirty}}
                 />
@@ -71,9 +85,7 @@ export default class QueriesEdit extends Component {
               {{/unless}}
             </div>
 
-            <div class="desc">
-              {{@controller.model.description}}
-            </div>
+            <div class="desc">{{@controller.model.description}}</div>
           {{/if}}
 
           {{#unless @controller.model.destroyed}}
@@ -92,25 +104,166 @@ export default class QueriesEdit extends Component {
 
           <div class="clear"></div>
 
-          {{#if @controller.aiGenerating}}
-            <div class="query-ai-generating">
-              <ConditionalLoadingSpinner @condition={{true}} @size="small" />
-              <span>{{i18n "explorer.ai.generating"}}</span>
+          {{#if (eq @controller.mode "ai")}}
+            <QueryAiPrompt
+              @value={{@controller.aiPrompt}}
+              @onChange={{@controller.updateAiPrompt}}
+              @onRegenerate={{@controller.regenerate}}
+              @regenerateDisabled={{@controller.regenerateDisabled}}
+              @generating={{@controller.aiGenerating}}
+              @disabled={{@controller.aiGenerating}}
+            />
+          {{else}}
+            <div class="query-editor {{if @controller.hideSchema 'no-schema'}}">
+              <div class="query-editor__header">
+                <h3 class="query-editor__label">{{i18n
+                    "explorer.sql_label"
+                  }}</h3>
+              </div>
+
+              {{#if @controller.editingQuery}}
+                <div class="panels-flex">
+                  <div class="editor-panel">
+                    <AceEditor
+                      @content={{@controller.model.sql}}
+                      @onChange={{@controller.updateSql}}
+                      @mode="sql"
+                      @disabled={{@controller.editorDisabled}}
+                      @save={{@controller.save}}
+                      @submit={{@controller.run}}
+                    />
+                  </div>
+
+                  <div class="right-panel">
+                    <ExplorerSchema
+                      @schema={{@controller.schema}}
+                      @hideSchema={{@controller.hideSchema}}
+                      @updateHideSchema={{@controller.updateHideSchema}}
+                    />
+                  </div>
+                </div>
+
+                <div
+                  class="grippie"
+                  {{dDraggable
+                    didStartDrag=@controller.didStartDrag
+                    didEndDrag=@controller.didEndDrag
+                    dragMove=@controller.dragMove
+                  }}
+                >
+                </div>
+
+                <div class="clear"></div>
+              {{else}}
+                <div class="sql">
+                  <CodeView
+                    @value={{@controller.model.sql}}
+                    @codeClass="sql"
+                    @setDirty={{@controller.setDirty}}
+                  />
+                </div>
+              {{/if}}
             </div>
           {{/if}}
 
-          {{#if @controller.editingQuery}}
-            <div class="query-editor {{if @controller.hideSchema 'no-schema'}}">
+          {{#if @controller.model.is_default}}
+            <div class="default-query-notice alert alert-info">{{i18n
+                "explorer.default_query_notice"
+              }}</div>
+          {{/if}}
+        </div>
+
+        {{#if @controller.model.hasParams}}
+          <form class="query-params-block" {{on "submit" @controller.run}}>
+            <ParamInputForm
+              @initialValues={{@controller.parsedParams}}
+              @paramInfo={{@controller.model.param_info}}
+              @onRegisterApi={{@controller.onRegisterApi}}
+            />
+          </form>
+        {{/if}}
+
+        <div class="query-action-bar">
+          <div class="query-action-bar__left">
+            <QueryRunSplitButton
+              @onRun={{@controller.run}}
+              @disabled={{@controller.runDisabled}}
+              @label={{@controller.runButtonLabel}}
+            />
+            {{#if @controller.editingQuery}}
+              <DButton
+                @action={{@controller.discard}}
+                @icon="arrow-rotate-left"
+                @label="explorer.undo"
+                @disabled={{@controller.saveDisabled}}
+                class="btn-discard-query"
+              />
+              <DButton
+                @action={{@controller.showHelpModal}}
+                @label="explorer.help.label"
+                @icon="circle-question"
+                @disabled={{@controller.actionsBusy}}
+                class="btn-transparent query-action-bar__help"
+              />
+            {{/if}}
+          </div>
+
+          <div class="query-action-bar__right">
+            {{#if (or @controller.hasResults (eq @controller.mode "ai"))}}
+              <DSegmentedControl
+                @name="query-result-view"
+                @value={{@controller.view}}
+                @items={{@controller.viewItems}}
+                @onSelect={{@controller.setView}}
+                @translatedLabel={{i18n "explorer.view.label"}}
+                class="query-results-modes"
+              />
+            {{/if}}
+            <QueryResultDownloadButtons
+              @query={{@controller.model}}
+              @content={{@controller.results}}
+              @includeQueryExport={{true}}
+            />
+
+            {{#if @controller.model.destroyed}}
+              <DButton
+                @action={{@controller.recover}}
+                @icon="arrow-rotate-left"
+                @label="explorer.recover"
+                @disabled={{@controller.actionsBusy}}
+              />
+            {{else if this.showDestroyQuery}}
+              <DButton
+                @action={{@controller.destroyQuery}}
+                @icon="trash-can"
+                @label="explorer.delete"
+                @disabled={{@controller.actionsBusy}}
+                class="btn-danger"
+              />
+            {{/if}}
+          </div>
+        </div>
+
+        <div hidden {{didInsert @controller.runOnLoad}}></div>
+
+        <DConditionalLoadingSpinner @condition={{@controller.loading}} />
+
+        {{#if (and (eq @controller.mode "ai") (eq @controller.view "sql"))}}
+          <div class="query-editor {{if @controller.hideSchema 'no-schema'}}">
+            <div class="query-editor__header">
+              <h3 class="query-editor__label">{{i18n "explorer.sql_label"}}</h3>
+            </div>
+
+            {{#if @controller.editingQuery}}
               <div class="panels-flex">
                 <div class="editor-panel">
                   <AceEditor
-                    {{on "click" @controller.setDirty}}
                     @content={{@controller.model.sql}}
-                    @onChange={{fn (mut @controller.model.sql)}}
+                    @onChange={{@controller.updateSql}}
                     @mode="sql"
                     @disabled={{@controller.editorDisabled}}
                     @save={{@controller.save}}
-                    @submit={{@controller.saveAndRun}}
+                    @submit={{@controller.run}}
                   />
                 </div>
 
@@ -125,167 +278,41 @@ export default class QueriesEdit extends Component {
 
               <div
                 class="grippie"
-                {{draggable
+                {{dDraggable
                   didStartDrag=@controller.didStartDrag
                   didEndDrag=@controller.didEndDrag
                   dragMove=@controller.dragMove
                 }}
               >
-                {{icon "discourse-expand"}}
+                {{dIcon "discourse-expand"}}
               </div>
 
               <div class="clear"></div>
-            </div>
-          {{else}}
-            <div class="sql">
-              <CodeView
-                @value={{@controller.model.sql}}
-                @codeClass="sql"
-                @setDirty={{@controller.setDirty}}
-              />
-            </div>
-          {{/if}}
-
-          <div class="clear"></div>
-
-          {{#if @controller.model.is_default}}
-            <div class="default-query-notice alert alert-info">{{i18n
-                "explorer.default_query_notice"
-              }}</div>
-          {{/if}}
-        </div>
-
-        <form class="query-run" {{on "submit" @controller.run}}>
-          {{#if @controller.model.hasParams}}
-            <ParamInputForm
-              @initialValues={{@controller.parsedParams}}
-              @paramInfo={{@controller.model.param_info}}
-              @onRegisterApi={{@controller.onRegisterApi}}
-            />
-          {{/if}}
-
-          <div class="query-run-actions">
-            <div class="query-run-actions__left">
-              {{#if @controller.runDisabled}}
-                {{#if @controller.saveDisabled}}
-                  <DButton
-                    @label="explorer.run"
-                    @disabled="true"
-                    class="btn-primary query-run__submit"
-                  />
-                {{else}}
-                  <DButton
-                    @action={{@controller.saveAndRun}}
-                    @icon="play"
-                    @label="explorer.saverun"
-                    class="btn-primary query-run__save-and-run"
-                  />
-                {{/if}}
-              {{else}}
-                <DButton
-                  {{didInsert @controller.runOnLoad}}
-                  @action={{@controller.run}}
-                  @icon="play"
-                  @label="explorer.run"
-                  @disabled={{@controller.runDisabled}}
-                  @type="submit"
-                  class="btn-primary query-run__submit"
+            {{else}}
+              <div class="sql">
+                <CodeView
+                  @value={{@controller.model.sql}}
+                  @codeClass="sql"
+                  @setDirty={{@controller.setDirty}}
                 />
-              {{/if}}
-
-              {{#if @controller.editingQuery}}
-                <DButton
-                  class="btn-save-query"
-                  @action={{@controller.save}}
-                  @label="explorer.save"
-                  @disabled={{@controller.saveDisabled}}
-                />
-              {{else}}
-                {{#unless @controller.editDisabled}}
-                  <DButton
-                    class="btn-edit-query"
-                    @action={{@controller.editQuery}}
-                    @label="explorer.edit"
-                    @icon="pencil"
-                  />
-                {{/unless}}
-              {{/if}}
-
-              {{#if @controller.editingQuery}}
-                <DButton
-                  @action={{@controller.showHelpModal}}
-                  @label="explorer.help.label"
-                  @icon="circle-question"
-                />
-              {{/if}}
-
-              <label class="query-plan">
-                <Input
-                  @type="checkbox"
-                  @checked={{@controller.explain}}
-                  name="explain"
-                />
-                {{i18n "explorer.explain_label"}}
-              </label>
-            </div>
-
-            <div class="query-run-actions__right">
-              {{#if @controller.model.destroyed}}
-                <DButton
-                  @action={{@controller.recover}}
-                  @icon="arrow-rotate-left"
-                  @label="explorer.recover"
-                />
-              {{else}}
-                {{#if @controller.editingQuery}}
-                  <DButton
-                    @action={{@controller.discard}}
-                    @icon="arrow-rotate-left"
-                    @label="explorer.undo"
-                    @disabled={{@controller.saveDisabled}}
-                  />
-                {{/if}}
-
-                <DButton
-                  @action={{@controller.download}}
-                  @label="explorer.export"
-                  @disabled={{@controller.runDisabled}}
-                  @icon="download"
-                />
-
-                {{#if @controller.showResults}}
-                  <QueryResultDownloadButtons
-                    @query={{@controller.model}}
-                    @content={{@controller.results}}
-                    class="query-result-download-buttons--inline"
-                  />
-                {{/if}}
-
-                {{#if this.showDestroyQuery}}
-                  <DButton
-                    @action={{@controller.destroyQuery}}
-                    @icon="trash-can"
-                    @label="explorer.delete"
-                    @disabled={{@controller.aiGenerating}}
-                    class="btn-danger"
-                  />
-                {{/if}}
-              {{/if}}
-            </div>
+              </div>
+            {{/if}}
           </div>
-        </form>
-        <hr />
+        {{/if}}
 
-        <ConditionalLoadingSpinner @condition={{@controller.loading}} />
+        {{#if (notEq @controller.view "sql")}}
+          <QueryResultsWrapper
+            @results={{@controller.results}}
+            @showResults={{@controller.showResults}}
+            @query={{@controller.model}}
+            @content={{@controller.results}}
+            @cachedAt={{@controller.cachedAt}}
+            @view={{@controller.view}}
+            @onSetView={{@controller.setView}}
+            @hideHeaderActions={{true}}
+          />
+        {{/if}}
 
-        <QueryResultsWrapper
-          @results={{@controller.results}}
-          @showResults={{@controller.showResults}}
-          @query={{@controller.model}}
-          @content={{@controller.results}}
-          @cachedAt={{@controller.cachedAt}}
-          @showDownloads={{false}}
-        />
       {{/if}}
     </div>
   </template>

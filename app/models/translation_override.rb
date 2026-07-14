@@ -38,6 +38,7 @@ class TranslationOverride < ActiveRecord::Base
     ],
     %w[system_messages.welcome_user] => %w[username name name_or_username],
     %w[js.welcome_banner.header] => %w[site_name],
+    %w[email_from] => %w[site_name],
   }
 
   include HasSanitizableFields
@@ -190,7 +191,7 @@ class TranslationOverride < ActiveRecord::Base
 
     return if invalid_keys.blank?
 
-    self.errors.add(
+    errors.add(
       :base,
       I18n.t(
         "activerecord.errors.models.translation_overrides.attributes.value.invalid_interpolation_keys",
@@ -230,12 +231,12 @@ end
 #
 #  id                   :integer          not null, primary key
 #  locale               :string           not null
+#  original_translation :text
+#  status               :integer          default("up_to_date"), not null
 #  translation_key      :string           not null
 #  value                :string           not null
 #  created_at           :datetime         not null
 #  updated_at           :datetime         not null
-#  original_translation :text
-#  status               :integer          default("up_to_date"), not null
 #
 # Indexes
 #

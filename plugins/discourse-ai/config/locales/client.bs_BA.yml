@@ -34,6 +34,14 @@ bs_BA:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Obrađuje..."
+        tool: "Action"
+        user: "User"
+        approve: "Odobri"
+        reject: "Odbij"
+        approved: "Dozvojeno"
+        rejected: "Odbijeni"
       llm_selector:
         none: "Ništa"
       features:
@@ -45,6 +53,8 @@ bs_BA:
           one: "(još %{count})"
           few: "(još %{count})"
           other: "(još %{count})"
+        nav:
+          enabled: "Omogućen"
         filters:
           all: "Sve"
           reset: "Resetovati"
@@ -56,6 +66,7 @@ bs_BA:
         select_option: "Odaberi opciju..."
       translations:
         title: "Prevodi"
+        category_scope: "Kategorije"
         stats:
           eta_hours:
             one: "%{count} sat"
@@ -89,6 +100,12 @@ bs_BA:
         enabled: "Omogućen?"
         allowed_groups: "Dozvoljene grupe"
         delete: "Delete"
+        thinking_effort_options:
+          none: "Ništa"
+          low: "Nisko"
+          medium: "Srednije"
+          high: "Visoko"
+          max: "Maksimalno"
         response_format:
           open_modal: "Izmijeni"
           modal:

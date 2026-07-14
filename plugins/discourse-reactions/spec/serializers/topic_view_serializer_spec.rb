@@ -85,6 +85,95 @@ describe TopicViewSerializer do
     end
   end
 
+  context "with ignored users" do
+    fab!(:viewer, :user)
+    fab!(:other_user, :user)
+    fab!(:ignored, :user)
+    fab!(:another_ignored, :user)
+    fab!(:post_1, :post)
+    fab!(:post_2) { Fabricate(:post, topic: post_1.topic) }
+    fab!(:otter) { Fabricate(:reaction, post: post_1, reaction_value: "otter") }
+    fab!(:heart) { Fabricate(:reaction, post: post_1, reaction_value: "heart") }
+    fab!(:reaction_user_other) { Fabricate(:reaction_user, reaction: otter, user: other_user) }
+    fab!(:reaction_user_ignored) { Fabricate(:reaction_user, reaction: otter, user: ignored) }
+    fab!(:reaction_user_heart_ignored) do
+      Fabricate(:reaction_user, reaction: heart, user: another_ignored)
+    end
+    fab!(:like_other_post_2) do
+      Fabricate(
+        :post_action,
+        post: post_2,
+        user: other_user,
+        post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
+      )
+    end
+    fab!(:like_ignored_post_2) do
+      Fabricate(
+        :post_action,
+        post: post_2,
+        user: ignored,
+        post_action_type_id: PostActionType::LIKE_POST_ACTION_ID,
+      )
+    end
+
+    let(:topic) { post_1.topic }
+
+    before do
+      SiteSetting.discourse_reactions_like_icon = "heart"
+      SiteSetting.discourse_reactions_enabled_reactions = "otter|heart"
+      Fabricate(:ignored_user, user: viewer, ignored_user: ignored)
+      Fabricate(:ignored_user, user: viewer, ignored_user: another_ignored)
+    end
+
+    def serialize_for(user)
+      TopicViewSerializer.new(
+        TopicView.new(topic, user),
+        scope: Guardian.new(user),
+        root: false,
+      ).as_json
+    end
+
+    it "excludes ignored users from preloaded :reactions" do
+      json = serialize_for(viewer)
+
+      posts = json[:post_stream][:posts]
+      expect(posts[0][:reactions]).to contain_exactly({ id: "otter", type: :emoji, count: 1 })
+      expect(posts[1][:reactions]).to contain_exactly({ id: "heart", type: :emoji, count: 1 })
+    end
+
+    it "excludes ignored users from preloaded :reaction_users_count" do
+      json = serialize_for(viewer)
+
+      posts = json[:post_stream][:posts]
+      expect(posts[0][:reaction_users_count]).to eq(1)
+      expect(posts[1][:reaction_users_count]).to eq(1)
+    end
+
+    it "still shows global counts for anonymous viewers" do
+      json = TopicViewSerializer.new(TopicView.new(topic), scope: Guardian.new, root: false).as_json
+
+      posts = json[:post_stream][:posts]
+      expect(posts[0][:reactions]).to contain_exactly(
+        { id: "otter", type: :emoji, count: 2 },
+        { id: "heart", type: :emoji, count: 1 },
+      )
+      expect(posts[0][:reaction_users_count]).to eq(3)
+      expect(posts[1][:reaction_users_count]).to eq(2)
+    end
+
+    it "still shows global counts for viewers with no ignored users" do
+      json = serialize_for(other_user)
+
+      posts = json[:post_stream][:posts]
+      expect(posts[0][:reactions]).to contain_exactly(
+        { id: "otter", type: :emoji, count: 2 },
+        { id: "heart", type: :emoji, count: 1 },
+      )
+      expect(posts[0][:reaction_users_count]).to eq(3)
+      expect(posts[1][:reaction_users_count]).to eq(2)
+    end
+  end
+
   describe "only shadow like" do
     fab!(:user_1, :user)
     fab!(:post_1) { Fabricate(:post, user: user_1) }

@@ -5,6 +5,7 @@ import { compare, isEmpty } from "@ember/utils";
 import FeatureTopicOnProfileModal from "discourse/components/modal/feature-topic-on-profile";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import cookie, { removeCookie } from "discourse/lib/cookie";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
 
@@ -183,6 +184,12 @@ export default class ProfileController extends Controller {
         this.model.set("bio_cooked", user.bio_cooked);
         this.currentUser.set("needs_required_fields_check", false);
         this.set("saved", true);
+
+        const destinationUrl = cookie("destination_url");
+        if (destinationUrl) {
+          removeCookie("destination_url", { path: "/" });
+          window.location.href = destinationUrl;
+        }
       })
       .catch(popupAjaxError);
   }

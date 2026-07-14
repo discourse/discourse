@@ -170,14 +170,25 @@ RSpec.describe ExportCsvController do
         expect(response.status).to eq(422)
       end
 
-      it "does not allow moderators to export screened_email if they has no permission to view emails" do
+      it "does not allow moderators to export screened_email without permission to view emails" do
         SiteSetting.moderators_view_emails = false
         post "/export_csv/export_entity.json", params: { entity: "screened_email" }
         expect(response.status).to eq(422)
       end
 
-      it "allows moderator to export screened_email if they has permission to view emails" do
+      it "does not allow moderators to export screened_email without permission to view IPs" do
         SiteSetting.moderators_view_emails = true
+        SiteSetting.moderators_view_ips = false
+
+        post "/export_csv/export_entity.json", params: { entity: "screened_email" }
+
+        expect(response.status).to eq(422)
+        expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
+      end
+
+      it "allows moderators to export screened_email with permission to view emails and IPs" do
+        SiteSetting.moderators_view_emails = true
+        SiteSetting.moderators_view_ips = true
         post "/export_csv/export_entity.json", params: { entity: "screened_email" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["success"]).to eq("OK")
@@ -221,6 +232,41 @@ RSpec.describe ExportCsvController do
              }
         expect(response.status).to eq(422)
         expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
+      end
+
+      it "does not allow moderators to export the topic_view_stats report" do
+        post "/export_csv/export_entity.json",
+             params: {
+               entity: "report",
+               args: {
+                 name: "topic_view_stats",
+                 start_date: "2026-01-01",
+                 end_date: "2026-02-15",
+               },
+             }
+        expect(response.status).to eq(422)
+        expect(Jobs::ExportCsvFile.jobs.size).to eq(0)
+      end
+
+      it "allows moderators to export redacted suspicious login reports when IP viewing is disabled" do
+        SiteSetting.moderators_view_ips = false
+
+        post "/export_csv/export_entity.json",
+             params: {
+               entity: "report",
+               args: {
+                 name: "suspicious_logins",
+                 start_date: "2026-01-01",
+                 end_date: "2026-02-15",
+               },
+             }
+
+        expect(response.status).to eq(200)
+        expect(Jobs::ExportCsvFile.jobs.size).to eq(1)
+
+        job_data = Jobs::ExportCsvFile.jobs.first["args"].first
+        expect(job_data["entity"]).to eq("report")
+        expect(job_data.dig("args", "name")).to eq("suspicious_logins")
       end
 
       it "allows moderators to export non-hidden reports" do

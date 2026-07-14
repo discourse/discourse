@@ -1,9 +1,9 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
-import element from "discourse/helpers/element";
 import lazyHash from "discourse/helpers/lazy-hash";
-import number from "discourse/helpers/number";
+import dElement from "discourse/ui-kit/helpers/d-element";
+import dNumber from "discourse/ui-kit/helpers/d-number";
 import { i18n } from "discourse-i18n";
 
 export default class RepliesCell extends Component {
@@ -49,7 +49,7 @@ export default class RepliesCell extends Component {
   }
 
   get wrapperElement() {
-    return element(this.args.tagName ?? "td");
+    return dElement(this.args.tagName ?? "td");
   }
 
   <template>
@@ -65,7 +65,7 @@ export default class RepliesCell extends Component {
           @name="topic-list-before-reply-count"
           @outletArgs={{lazyHash topic=@topic}}
         />
-        {{number @topic.replyCount noTitle="true"}}
+        {{dNumber @topic.replyCount noTitle="true"}}
       </a>
     </this.wrapperElement>
   </template>

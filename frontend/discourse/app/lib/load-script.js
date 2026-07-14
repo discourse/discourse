@@ -17,6 +17,7 @@ function loadWithTag(path, cb, errorCb) {
 
   s.onerror = function () {
     s.onload = s.onreadystatechange = null;
+    s.remove();
     WAITER.endAsync(token);
     if (errorCb) {
       run(null, errorCb);

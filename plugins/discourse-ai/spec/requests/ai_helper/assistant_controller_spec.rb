@@ -3,6 +3,7 @@
 RSpec.describe DiscourseAi::AiHelper::AssistantController do
   fab!(:newuser)
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:restricted_group, :group)
 
   before do
     enable_current_plugin
@@ -18,6 +19,10 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
 
     it "returns 403 when user cannot see the post" do
       sign_in(user)
+
+      AiAgent.find_by(id: SiteSetting.ai_helper_custom_prompt_agent).update!(
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+      )
 
       group = Fabricate(:group)
       private_category = Fabricate(:private_category, group: group)
@@ -39,6 +44,10 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
 
     it "is able to stream suggestions to helper" do
       sign_in(user)
+
+      AiAgent.find_by(id: SiteSetting.ai_helper_custom_prompt_agent).update!(
+        allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+      )
 
       category = Fabricate(:category)
       category.set_permissions(everyone: :full)
@@ -79,6 +88,30 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
       expect(last_message.channel).to eq(channel)
       expect(last_message.data[:result]).to eq("hello world")
       expect(last_message.data[:done]).to eq(true)
+    end
+
+    context "when the user is not in the helper mode agent's allowed_group_ids" do
+      before { Jobs.run_later! }
+
+      it "returns a 403 before enqueuing the streamed suggestion" do
+        sign_in(user)
+
+        AiAgent.find_by(id: SiteSetting.ai_helper_custom_prompt_agent).update!(
+          allowed_group_ids: [restricted_group.id],
+        )
+
+        post "/discourse-ai/ai-helper/stream_suggestion.json",
+             params: {
+               text: "hello wrld",
+               location: "composer",
+               client_id: "1234",
+               custom_prompt: "Translate to Spanish",
+               mode: DiscourseAi::AiHelper::Assistant::CUSTOM_PROMPT,
+             }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to be_present
+      end
     end
 
     context "when mode is illustrate_post" do
@@ -140,6 +173,21 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
         expect(response.parsed_body["thumbnails"]).to be_present
         expect(response.parsed_body["thumbnails"].length).to eq(1)
         expect(response.parsed_body["thumbnails"].first["id"]).to eq(upload.id)
+      end
+
+      it "returns a 403 when the user cannot access the post illustrator agent" do
+        sign_in(user)
+        post_illustrator_agent.update!(allowed_group_ids: [restricted_group.id])
+
+        post "/discourse-ai/ai-helper/stream_suggestion.json",
+             params: {
+               text: "A beautiful sunset",
+               location: "composer",
+               mode: DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST,
+             }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["errors"]).to be_present
       end
     end
 
@@ -299,7 +347,6 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
     context "when logged in as an allowed user" do
       before do
         sign_in(user)
-        user.group_ids = [Group::AUTO_GROUPS[:trust_level_1]]
         SiteSetting.composer_ai_helper_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
       end
 
@@ -346,6 +393,10 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
       end
 
       it "uses custom instruction when using custom_prompt mode" do
+        AiAgent.find_by(id: SiteSetting.ai_helper_custom_prompt_agent).update!(
+          allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+        )
+
         translated_text = "Un usuario escribio esto"
         expected_diff =
           "<div class=\"inline-diff\"><p><ins>Un </ins><ins>usuario </ins><ins>escribio </ins><ins>esto</ins><del>A </del><del>user </del><del>wrote </del><del>this</del></p></div>"
@@ -361,6 +412,26 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
           expect(response.status).to eq(200)
           expect(response.parsed_body["suggestions"].first).to eq(translated_text)
           expect(response.parsed_body["diff"]).to eq(expected_diff)
+        end
+      end
+
+      context "when the user is not in the helper mode agent's allowed_group_ids" do
+        it "returns a 403 response" do
+          AiAgent.find_by(id: SiteSetting.ai_helper_custom_prompt_agent).update!(
+            allowed_group_ids: [restricted_group.id],
+          )
+
+          DiscourseAi::Completions::Llm.with_prepared_responses(["Un usuario escribio esto"]) do
+            post "/discourse-ai/ai-helper/suggest",
+                 params: {
+                   mode: DiscourseAi::AiHelper::Assistant::CUSTOM_PROMPT,
+                   text: "A user wrote this",
+                   custom_prompt: "Translate to Spanish",
+                 }
+          end
+
+          expect(response.status).to eq(403)
+          expect(response.parsed_body["errors"]).to be_present
         end
       end
 
@@ -503,7 +574,6 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
     context "when logged in as an allowed user" do
       before do
         sign_in(user)
-        user.group_ids = [Group::AUTO_GROUPS[:trust_level_1]]
         SiteSetting.composer_ai_helper_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
       end
 
@@ -609,6 +679,17 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
         request_caption({ image_url: image_url, image_url_type: "long_url" }) do |r|
           expect(r.status).to eq(200)
           expect(r.parsed_body["caption"]).to eq(caption_with_attrs)
+        end
+      end
+
+      it "returns a 403 when the user cannot access the image caption agent" do
+        AiAgent.find_by(id: SiteSetting.ai_helper_image_caption_agent).update!(
+          allowed_group_ids: [restricted_group.id],
+        )
+
+        request_caption({ image_url: image_url, image_url_type: "long_url" }) do |r|
+          expect(r.status).to eq(403)
+          expect(r.parsed_body["errors"]).to be_present
         end
       end
 
@@ -777,7 +858,6 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
 
     before do
       sign_in(user)
-      user.group_ids = [Group::AUTO_GROUPS[:trust_level_1]]
       SiteSetting.composer_ai_helper_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
       SiteSetting.ai_embeddings_selected_model = embedding_definition.id
       SiteSetting.ai_embeddings_enabled = true
@@ -792,6 +872,39 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
                }
 
           expect(response.status).to eq(403)
+        end
+      end
+
+      context "when the selected category restricts tags" do
+        fab!(:allowed_tag, :tag)
+        fab!(:restricted_tag, :tag)
+        fab!(:restricted_category) { Fabricate(:category, allowed_tags: [allowed_tag.name]) }
+        fab!(:topic)
+
+        before do
+          Fabricate(:topic_tag, topic:, tag: allowed_tag)
+          Fabricate(:topic_tag, topic:, tag: restricted_tag)
+
+          WebMock.stub_request(:post, embedding_definition.url).to_return(
+            status: 200,
+            body: JSON.dump([[0.0038493] * embedding_definition.dimensions]),
+          )
+
+          DiscourseAi::Embeddings::Vector.instance.generate_representation_from(topic)
+        end
+
+        it "does not suggest tags the category disallows" do
+          post "/discourse-ai/ai-helper/suggest_tags",
+               params: {
+                 text: "hello",
+                 category_id: restricted_category.id,
+               }
+
+          expect(response.status).to eq(200)
+
+          suggested = response.parsed_body["assistant"].map { |t| t["name"] }
+          expect(suggested).to include(allowed_tag.name)
+          expect(suggested).not_to include(restricted_tag.name)
         end
       end
     end

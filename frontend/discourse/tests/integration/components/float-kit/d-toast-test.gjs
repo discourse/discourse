@@ -23,7 +23,7 @@ function createCustomToastInstance(owner, options, newClose) {
   return new CustomToastInstance(owner, options);
 }
 
-module("Integration | Component | FloatKit | d-toast", function (hooks) {
+module("Integration | Component | FloatKit | DToast", function (hooks) {
   setupRenderingTest(hooks);
 
   test("swipe up to close", async function (assert) {

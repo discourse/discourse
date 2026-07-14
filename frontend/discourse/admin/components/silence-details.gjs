@@ -2,7 +2,7 @@
 import Component, { Textarea } from "@ember/component";
 import { trustHTML } from "@ember/template";
 import { tagName } from "@ember-decorators/component";
-import TextField from "discourse/components/text-field";
+import DTextField from "discourse/ui-kit/d-text-field";
 import { i18n } from "discourse-i18n";
 
 @tagName("")
@@ -14,7 +14,7 @@ export default class SilenceDetails extends Component {
           {{trustHTML (i18n "admin.user.silence_reason_label")}}
         </div>
       </label>
-      <TextField
+      <DTextField
         @value={{this.reason}}
         @placeholderKey="admin.user.silence_reason_placeholder"
         class="silence-reason"
