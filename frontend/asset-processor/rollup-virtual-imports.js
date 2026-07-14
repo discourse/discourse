@@ -19,8 +19,9 @@ const EAGER_MODULE_PATTERNS = [
   /(^|\/)initializers\//,
   /(^|\/)api-initializers\//,
   /(^|\/)instance-initializers\//,
-  // scanned out of `requirejs.entries` by `mapRoutes`
-  /(^|\/)route-map$/,
+  // scanned out of `requirejs.entries` by `mapRoutes`, which matches on the suffix alone —
+  // plugins name these `<something>-route-map`, not `route-map`.
+  /route-map$/,
   // resolved by name by the plugin outlet system
   /(^|\/)connectors\//,
   // resolved by name via the resolver's suffix trie

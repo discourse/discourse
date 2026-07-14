@@ -16,7 +16,7 @@ const MODULES = [
   "discourse/initializers/chat-setup.js",
   "discourse/api-initializers/chat.js",
   "discourse/pre-initializers/chat-early.js",
-  "discourse/route-map.js",
+  "discourse/chat-route-map.js",
   "discourse/connectors/user-menu/chat.gjs",
   "discourse/routes/chat/channel.js",
   "discourse/controllers/chat/channel.js",
@@ -79,7 +79,9 @@ describe("virtual:entrypoint", () => {
         "discourse/initializers/chat-setup",
         "discourse/api-initializers/chat",
         "discourse/pre-initializers/chat-early",
-        "discourse/route-map",
+        // Plugins name their route maps `<something>-route-map`, and `mapRoutes` matches on the
+        // suffix alone.
+        "discourse/chat-route-map",
         // `.gjs` connectors keep their path; only `.hbs` connectors are rewritten under
         // `templates/connectors/`.
         "discourse/connectors/user-menu/chat",
