@@ -1747,6 +1747,7 @@ en:
         perm_denied_expl: "You denied permission for notifications. Allow notifications via your browser settings."
         disable: "Disable notifications"
         enable: "Enable notifications"
+        enable_failed: "Could not enable notifications. Your browser blocked the request or its push service is unavailable."
         each_browser_note: "Note: You have to change this setting on every browser you use. All notifications will be disabled if you pause notifications from user menu, regardless of this setting."
         consent_prompt: "Do you want live notifications when people reply to your posts?"
       dismiss: "Dismiss"
