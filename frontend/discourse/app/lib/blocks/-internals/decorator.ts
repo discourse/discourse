@@ -16,7 +16,11 @@ import {
   getInternalComponentManager,
   setInternalComponentManager,
 } from "@glimmer/manager";
-import type { BlockMetadata, BlockOptions } from "discourse/blocks/types";
+import type {
+  ArgSchema,
+  BlockMetadata,
+  BlockOptions,
+} from "discourse/blocks/types";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import type { BlockClass } from "discourse/lib/blocks/-internals/types";
 import {
@@ -25,7 +29,11 @@ import {
 } from "discourse/lib/blocks/-internals/validation/block-args";
 import {
   validateAndParseBlockName,
+  validateBlockDataOption,
   validateBlockOptions,
+  validateBlockParts,
+  validateChildBlocks,
+  validateDisplayMetadata,
   validateOutletRestrictions,
 } from "discourse/lib/blocks/-internals/validation/block-decorator";
 import { validateConstraintsSchema } from "discourse/lib/blocks/-internals/validation/constraints";
@@ -158,6 +166,30 @@ const BlockComponentManager = new Proxy(baseManager, {
 });
 
 /**
+ * Deeply freezes a validated `parts` composition for storage on block metadata,
+ * so the code-defined defaults can't be mutated at runtime. Freezes the array,
+ * each part, and each part's `args` and `lock`.
+ *
+ * @param parts - The validated parts array.
+ * @returns The frozen parts.
+ */
+function freezeParts(
+  parts: NonNullable<BlockOptions["parts"]>
+): NonNullable<BlockMetadata["parts"]> {
+  return Object.freeze(
+    parts.map((part) =>
+      Object.freeze({
+        ...part,
+        args: part.args ? Object.freeze({ ...part.args }) : null,
+        lock: Array.isArray(part.lock)
+          ? Object.freeze([...part.lock])
+          : (part.lock ?? null),
+      })
+    )
+  );
+}
+
+/**
  * Decorator that transforms a Glimmer component into a block component.
  *
  * Block components have special authorization constraints:
@@ -193,19 +225,52 @@ export function block(
   const parsed = validateAndParseBlockName(name);
 
   const {
-    container: isContainer = false,
+    container: containerOption = false,
     classNames: decoratorClassNames = null,
     description = "",
     args: argsSchema = null,
     childArgs: childArgsSchema = null,
+    childBlocks = null,
     constraints = null,
     validate: validateFn = null,
     allowedOutlets = null,
     deniedOutlets = null,
+    displayName = null,
+    icon = null,
+    category = null,
+    previewArgs = null,
+    thumbnail = null,
+    paletteHidden = false,
+    transparent = false,
+    gridEditable = false,
+    data: dataDeclaration = null,
+    parts = null,
   } = options;
+
+  // A block that declares a `parts` composition renders inner blocks, so it
+  // behaves as a container (it yields children) regardless of the explicit
+  // `container` flag. When such an entry supplies its own `children` it is
+  // treated as a plain container instead (the composition is bypassed).
+  const isContainer = containerOption === true || parts != null;
+
+  // Validate the optional inner composition.
+  validateBlockParts(name, parts);
 
   // Validate arg schema structure and types.
   validateArgsSchema(argsSchema, name);
+
+  // Validate the optional coordinated data declaration.
+  validateBlockDataOption(name, dataDeclaration);
+
+  // `data` is a reserved arg name: the layout wrapper injects the block's
+  // resolved data as `@data`, so a same-named entry in the args schema would
+  // collide with it.
+  if (argsSchema && Object.prototype.hasOwnProperty.call(argsSchema, "data")) {
+    raiseBlockError(
+      `Block "${name}": "data" is a reserved arg name (the resolved data ` +
+        `dependency is injected as @data); rename the arg.`
+    );
+  }
 
   // childArgs is only allowed on container blocks.
   if (childArgsSchema && !isContainer) {
@@ -242,6 +307,12 @@ export function block(
   // Validate outlet restriction patterns.
   validateOutletRestrictions(name, allowedOutlets, deniedOutlets);
 
+  // Validate the optional child-block allow-list.
+  validateChildBlocks(name, childBlocks, isContainer);
+
+  // Shallow type-check the optional display-metadata fields.
+  validateDisplayMetadata(name, options);
+
   // A legacy class decorator that returns nothing keeps the class unchanged,
   // which is exactly what this decorator wants — it records metadata and
   // installs a component manager as side effects rather than replacing the
@@ -261,15 +332,26 @@ export function block(
         : null,
       args: argsSchema ? Object.freeze(argsSchema) : null,
       blockName: name,
+      category,
       childArgs: childArgsSchema ? Object.freeze(childArgsSchema) : null,
+      childBlocks: childBlocks ? Object.freeze([...childBlocks]) : null,
       constraints: constraints ? Object.freeze(constraints) : null,
+      data: dataDeclaration ? Object.freeze({ ...dataDeclaration }) : null,
       decoratorClassNames,
       deniedOutlets: deniedOutlets ? Object.freeze([...deniedOutlets]) : null,
       description,
+      displayName,
+      icon,
       isContainer,
+      gridEditable: gridEditable === true,
       namespace: parsed.namespace,
       namespaceType: parsed.type,
+      paletteHidden: paletteHidden === true,
+      parts: parts ? freezeParts(parts) : null,
+      previewArgs: previewArgs ? Object.freeze({ ...previewArgs }) : null,
       shortName: parsed.name,
+      thumbnail,
+      transparent: transparent === true,
       validate: validateFn,
     });
 
@@ -278,39 +360,85 @@ export function block(
 }
 
 /**
- * Creates the args object for a child block with reactive getters for context
- * args.
+ * Creates the args object for a child block with reactive getters for both the
+ * entry's args and the rendering context.
  *
- * This embeds the `AUTH_TOKEN` in the `__block$` property, which is how child
- * blocks are authorized to render. Context args are defined as getters rather
- * than direct properties so `curryComponent` can maintain a stable component
- * identity while still updating reactively when the getter values change.
- * Without getters, changing any arg would require a new curried component,
- * breaking Ember's identity-based rendering.
+ * This function embeds the `AUTH_TOKEN` in the `__block$` property, which is how
+ * child blocks are authorized to render. The token is not exposed - it's
+ * embedded in the returned object.
  *
- * @param entryArgs - User-provided args from the layout entry.
- * @param contextArgs - Rendering context to define as reactive getters.
+ * Args are defined as reactive getters that read from the LIVE `entry.args`
+ * (which is a tracked object after registration in the render pipeline).
+ * Combined with the compute-ref proxy `curryComponent` builds, this means
+ * mutating `entry.args.title = "new"` propagates to the rendered block without
+ * re-currying the component or replacing the layout — Glimmer's autotracking
+ * reaches in through the proxy to invalidate just the readers of that arg. This
+ * is what powers in-session arg editing.
+ *
+ * The set of arg KEYS is fixed at curry time (per `curryComponent`'s contract
+ * that keys must be static), so adding new args after curry requires a layout
+ * replacement. Only value mutations of existing keys propagate reactively.
+ *
+ * @param entry - The layout entry. Reads track `entry.args[key]`.
+ * @param ComponentClass - The block's component class. Used to look up schema
+ *   defaults for keys not present in `entry.args`.
+ * @param contextArgs - Rendering context (children, outletArgs, outletName,
+ *   __hierarchy) defined as static reactive getters.
  * @returns The merged args object ready for `curryComponent`.
  */
 export function createBlockArgsWithReactiveGetters(
-  entryArgs: Record<string, unknown>,
+  entry: { args?: Record<string, unknown>; __argKeys?: string[] },
+  ComponentClass: BlockClass,
   contextArgs: Record<string, unknown>
 ): Record<string, unknown> {
-  const blockArgs: Record<string, unknown> = {
-    ...entryArgs,
-    __block$: AUTH_TOKEN,
-  };
+  const blockArgs: Record<string, unknown> = { __block$: AUTH_TOKEN };
 
-  // Dynamically define reactive getters for each context arg.
+  const schema: Record<string, ArgSchema> =
+    blockMetadataMap.get(ComponentClass)?.args ?? {};
+
+  // Union of the entry's args and schema keys. The set is frozen at curry time;
+  // mutations to existing keys propagate reactively, but adding a new key not
+  // anticipated here requires a layout replacement.
+  //
+  // We deliberately read the cached `entry.__argKeys` (a snapshot taken when
+  // the args were wrapped in a tracked object) instead of calling
+  // `Object.keys(entry.args)`. Going through the Proxy's `ownKeys` trap
+  // consumes the tracked object's collection tag — which is dirtied on every
+  // `set` (not just add/delete) — and that would invalidate every container's
+  // processed-children computation on every keystroke, forcing the whole
+  // container subtree to re-curry. The cached snapshot gives us the same key
+  // set without opening that dependency.
+  const argKeys = new Set<string>([
+    ...(entry.__argKeys ?? Object.keys(entry.args ?? {})),
+    ...Object.keys(schema),
+  ]);
+
   const propertyDescriptors: PropertyDescriptorMap = {};
-  for (const [key, value] of Object.entries(contextArgs)) {
+  for (const key of argKeys) {
     propertyDescriptors[key] = {
       get() {
-        return value;
+        const live = entry.args?.[key];
+        return live !== undefined ? live : schema[key]?.default;
       },
       enumerable: true,
     };
   }
+
+  // Reactive getters for context args (children, outletArgs, etc.). A static
+  // value is returned as-is; a function value is used directly as the getter
+  // body. The function form lets a caller back a context arg with live state —
+  // e.g. a container's `children` reads from a tracked holder, so a cached
+  // (persisted) container observes freshly processed children without being
+  // re-curried. The getter must read tracked state for this to be reactive:
+  // the curry's compute-ref only re-pulls an arg when a tag read inside its
+  // getter dirties.
+  for (const [key, value] of Object.entries(contextArgs)) {
+    propertyDescriptors[key] = {
+      get: typeof value === "function" ? (value as () => unknown) : () => value,
+      enumerable: true,
+    };
+  }
+
   Object.defineProperties(blockArgs, propertyDescriptors);
 
   return blockArgs;

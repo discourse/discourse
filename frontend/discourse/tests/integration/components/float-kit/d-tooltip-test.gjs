@@ -5,6 +5,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import {
   click,
   render,
+  settled,
   triggerEvent,
   triggerKeyEvent,
 } from "@ember/test-helpers";
@@ -411,6 +412,119 @@ module("Integration | Component | FloatKit | DTooltip", function (hooks) {
         document.removeEventListener(name, listeners[name]);
       }
     }
+  });
+
+  test("@hoverGracePeriod keeps the tooltip open while the pointer crosses to the content", async function (assert) {
+    await render(
+      <template>
+        <DTooltip
+          @inline={{true}}
+          @label="label"
+          @hoverGracePeriod={{150}}
+        ><:content>content</:content></DTooltip>
+      </template>
+    );
+
+    await hover();
+    assert.dom(".fk-d-tooltip__content").exists();
+
+    const trigger = document.querySelector(".fk-d-tooltip__trigger");
+    const content = document.querySelector(".fk-d-tooltip__content");
+    // The two events must dispatch synchronously so the close timer
+    // started by pointerleave can be cancelled by pointerenter on the
+    // content before settled() advances the runloop.
+    trigger.dispatchEvent(new PointerEvent("pointerleave"));
+    content.dispatchEvent(new PointerEvent("pointerenter"));
+    await settled();
+
+    assert.dom(".fk-d-tooltip__content").exists();
+  });
+
+  test("@hoverGracePeriod closes after the grace period when the pointer leaves entirely", async function (assert) {
+    await render(
+      <template>
+        <DTooltip @inline={{true}} @label="label" @hoverGracePeriod={{150}} />
+      </template>
+    );
+
+    await hover();
+    await leave();
+
+    assert.dom(".fk-d-tooltip__content").doesNotExist();
+  });
+
+  test("@hoverGracePeriod cancels the pending close when re-entering the trigger", async function (assert) {
+    await render(
+      <template>
+        <DTooltip
+          @inline={{true}}
+          @label="label"
+          @hoverGracePeriod={{150}}
+        ><:content>content</:content></DTooltip>
+      </template>
+    );
+
+    await hover();
+
+    const trigger = document.querySelector(".fk-d-tooltip__trigger");
+    trigger.dispatchEvent(new PointerEvent("pointerleave"));
+    trigger.dispatchEvent(new PointerEvent("pointerenter"));
+    await settled();
+
+    assert.dom(".fk-d-tooltip__content").exists();
+  });
+
+  test("@hoverGracePeriod closes after the grace period when the pointer leaves the content", async function (assert) {
+    await render(
+      <template>
+        <DTooltip
+          @inline={{true}}
+          @label="label"
+          @hoverGracePeriod={{150}}
+        ><:content>content</:content></DTooltip>
+      </template>
+    );
+
+    await hover();
+    await triggerEvent(".fk-d-tooltip__content", "pointerleave");
+
+    assert.dom(".fk-d-tooltip__content").doesNotExist();
+  });
+
+  test("@hoverGracePeriod keeps the tooltip open while focus is inside the content", async function (assert) {
+    await render(
+      <template>
+        <DTooltip @inline={{true}} @label="label" @hoverGracePeriod={{150}}>
+          <:content>
+            <button type="button" class="focusable">click</button>
+          </:content>
+        </DTooltip>
+      </template>
+    );
+
+    await hover();
+    await triggerEvent(".focusable", "focusin");
+    await triggerEvent(".fk-d-tooltip__trigger", "pointerleave");
+
+    assert
+      .dom(".fk-d-tooltip__content")
+      .exists("stays open while focus is inside");
+
+    await triggerEvent(".focusable", "focusout");
+
+    assert
+      .dom(".fk-d-tooltip__content")
+      .doesNotExist("closes after focus leaves and grace elapses");
+  });
+
+  test("default hoverGracePeriod (0) keeps immediate close behavior", async function (assert) {
+    await render(
+      <template><DTooltip @inline={{true}} @label="label" /></template>
+    );
+    await hover();
+    assert.dom(".fk-d-tooltip__content").exists();
+    await leave();
+    assert.dom(".fk-d-tooltip__content").doesNotExist();
   });
 
   test("@portalOutletElement", async function (assert) {

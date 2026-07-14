@@ -9449,7 +9449,8 @@ CREATE TABLE public.theme_modifier_sets (
     theme_setting_modifiers jsonb,
     serialize_topic_op_likes_data boolean,
     serialize_topic_is_hot boolean,
-    only_theme_color_schemes boolean
+    only_theme_color_schemes boolean,
+    duplicable_theme boolean
 );
 
 
@@ -12226,6 +12227,73 @@ ALTER SEQUENCE public.web_hooks_id_seq OWNED BY public.web_hooks.id;
 
 
 --
+-- Name: wireframe_block_layout_companions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.wireframe_block_layout_companions (
+    id bigint NOT NULL,
+    parent_theme_id integer NOT NULL,
+    component_theme_id integer NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: wireframe_block_layout_companions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.wireframe_block_layout_companions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: wireframe_block_layout_companions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.wireframe_block_layout_companions_id_seq OWNED BY public.wireframe_block_layout_companions.id;
+
+
+--
+-- Name: wireframe_block_layout_drafts; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.wireframe_block_layout_drafts (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    theme_id integer NOT NULL,
+    outlet character varying NOT NULL,
+    data text NOT NULL,
+    base_version_token character varying,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: wireframe_block_layout_drafts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.wireframe_block_layout_drafts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: wireframe_block_layout_drafts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.wireframe_block_layout_drafts_id_seq OWNED BY public.wireframe_block_layout_drafts.id;
+
+
+--
 -- Name: access_control_lists id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -14421,6 +14489,20 @@ ALTER TABLE ONLY public.web_hook_events_daily_aggregates ALTER COLUMN id SET DEF
 --
 
 ALTER TABLE ONLY public.web_hooks ALTER COLUMN id SET DEFAULT nextval('public.web_hooks_id_seq'::regclass);
+
+
+--
+-- Name: wireframe_block_layout_companions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.wireframe_block_layout_companions ALTER COLUMN id SET DEFAULT nextval('public.wireframe_block_layout_companions_id_seq'::regclass);
+
+
+--
+-- Name: wireframe_block_layout_drafts id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.wireframe_block_layout_drafts ALTER COLUMN id SET DEFAULT nextval('public.wireframe_block_layout_drafts_id_seq'::regclass);
 
 
 --
@@ -17016,6 +17098,22 @@ ALTER TABLE ONLY public.web_hooks
 
 
 --
+-- Name: wireframe_block_layout_companions wireframe_block_layout_companions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.wireframe_block_layout_companions
+    ADD CONSTRAINT wireframe_block_layout_companions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: wireframe_block_layout_drafts wireframe_block_layout_drafts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.wireframe_block_layout_drafts
+    ADD CONSTRAINT wireframe_block_layout_drafts_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: associated_accounts_provider_uid; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -17881,6 +17979,13 @@ CREATE INDEX idx_users_moderator ON public.users USING btree (id) WHERE moderato
 --
 
 CREATE UNIQUE INDEX idx_web_hook_event_types_hooks_on_ids ON public.web_hook_event_types_hooks USING btree (web_hook_event_type_id, web_hook_id);
+
+
+--
+-- Name: idx_wireframe_block_layout_drafts_unique; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX idx_wireframe_block_layout_drafts_unique ON public.wireframe_block_layout_drafts USING btree (user_id, theme_id, outlet);
 
 
 --
@@ -22161,6 +22266,27 @@ CREATE INDEX index_web_hook_events_on_web_hook_id ON public.web_hook_events USIN
 
 
 --
+-- Name: index_wireframe_block_layout_companions_on_component_theme_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_wireframe_block_layout_companions_on_component_theme_id ON public.wireframe_block_layout_companions USING btree (component_theme_id);
+
+
+--
+-- Name: index_wireframe_block_layout_companions_on_parent_theme_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_wireframe_block_layout_companions_on_parent_theme_id ON public.wireframe_block_layout_companions USING btree (parent_theme_id);
+
+
+--
+-- Name: index_wireframe_block_layout_drafts_on_theme_id_and_outlet; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_wireframe_block_layout_drafts_on_theme_id_and_outlet ON public.wireframe_block_layout_drafts USING btree (theme_id, outlet);
+
+
+--
 -- Name: post_timings_unique; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -22596,12 +22722,15 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260629022603'),
 ('20260626055145'),
 ('20260624140945'),
+('20260624050813'),
 ('20260623201925'),
 ('20260623090824'),
 ('20260623052745'),
 ('20260622201006'),
 ('20260622201005'),
+('20260622153521'),
 ('20260622140747'),
+('20260619214923'),
 ('20260619085855'),
 ('20260617180115'),
 ('20260617104005'),

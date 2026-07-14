@@ -4,8 +4,17 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { block } from "discourse/blocks";
-import { _renderBlocks } from "discourse/blocks/block-outlet";
+import {
+  _clearLayoutLayer,
+  _getOutletLayouts,
+  _hasLayout,
+  _renderBlocks,
+  _resetOutletLayoutsForTesting,
+  _setLayoutLayer,
+  LAYOUT_LAYERS,
+} from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
+import HeadingThumbnail from "discourse/blocks/thumbnails/heading";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
@@ -89,6 +98,11 @@ module("Unit | Lib | block-outlet", function (hooks) {
       assert.strictEqual(meta.validate, null);
       assert.strictEqual(meta.allowedOutlets, null);
       assert.strictEqual(meta.deniedOutlets, null);
+      assert.strictEqual(meta.displayName, null);
+      assert.strictEqual(meta.icon, null);
+      assert.strictEqual(meta.category, null);
+      assert.strictEqual(meta.previewArgs, null);
+      assert.strictEqual(meta.thumbnail, null);
     });
 
     test("sets blockMetadata with description", function (assert) {
@@ -134,6 +148,104 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       assert.true(Object.isFrozen(getBlockMetadata(MetadataFrozenBlock)));
       assert.true(Object.isFrozen(getBlockMetadata(MetadataFrozenBlock).args));
+    });
+
+    test("stores displayName, icon, category, previewArgs, thumbnail", function (assert) {
+      @block("metadata-palette", {
+        displayName: "Hero Banner",
+        icon: "image",
+        category: "Content",
+        previewArgs: { title: "Sample title" },
+        thumbnail: "/uploads/preview.png",
+      })
+      class MetadataPaletteBlock extends Component {}
+
+      const meta = getBlockMetadata(MetadataPaletteBlock);
+      assert.strictEqual(meta.displayName, "Hero Banner");
+      assert.strictEqual(meta.icon, "image");
+      assert.strictEqual(meta.category, "Content");
+      assert.deepEqual(meta.previewArgs, { title: "Sample title" });
+      assert.strictEqual(meta.thumbnail, "/uploads/preview.png");
+    });
+
+    test("freezes previewArgs object", function (assert) {
+      @block("metadata-preview-frozen", {
+        previewArgs: { title: "Sample" },
+      })
+      class MetadataPreviewFrozenBlock extends Component {}
+
+      assert.true(
+        Object.isFrozen(
+          getBlockMetadata(MetadataPreviewFrozenBlock).previewArgs
+        )
+      );
+    });
+
+    test("throws for empty displayName", function (assert) {
+      assert.throws(() => {
+        @block("metadata-empty-display-name", { displayName: "  " })
+        class EmptyDisplayNameBlock extends Component {}
+
+        return EmptyDisplayNameBlock;
+      }, /"displayName" must be a non-empty string/);
+    });
+
+    test("throws for non-string icon", function (assert) {
+      assert.throws(() => {
+        @block("metadata-bad-icon", { icon: 42 })
+        class BadIconBlock extends Component {}
+
+        return BadIconBlock;
+      }, /"icon" must be a non-empty string/);
+    });
+
+    test("throws for non-object previewArgs", function (assert) {
+      assert.throws(() => {
+        @block("metadata-bad-preview", { previewArgs: "not-an-object" })
+        class BadPreviewBlock extends Component {}
+
+        return BadPreviewBlock;
+      }, /"previewArgs" must be a plain object/);
+    });
+
+    test("throws for array previewArgs", function (assert) {
+      assert.throws(() => {
+        @block("metadata-array-preview", { previewArgs: [1, 2, 3] })
+        class ArrayPreviewBlock extends Component {}
+
+        return ArrayPreviewBlock;
+      }, /"previewArgs" must be a plain object/);
+    });
+
+    test("throws for a thumbnail that is neither a URL string nor a component", function (assert) {
+      assert.throws(() => {
+        @block("metadata-bad-thumbnail", { thumbnail: 123 })
+        class BadThumbnailBlock extends Component {}
+
+        return BadThumbnailBlock;
+      }, /"thumbnail" must be a non-empty URL string/);
+    });
+
+    test("accepts a component thumbnail", function (assert) {
+      @block("metadata-component-thumbnail", { thumbnail: HeadingThumbnail })
+      class ComponentThumbnailBlock extends Component {}
+
+      assert.strictEqual(
+        getBlockMetadata(ComponentThumbnailBlock).thumbnail,
+        HeadingThumbnail
+      );
+    });
+
+    test("accepts a { light, dark } thumbnail pair", function (assert) {
+      const pair = { light: "/uploads/light.png", dark: "/uploads/dark.png" };
+
+      @block("metadata-lightdark-thumbnail", { thumbnail: pair })
+      class LightDarkThumbnailBlock extends Component {}
+
+      assert.strictEqual(
+        getBlockMetadata(LightDarkThumbnailBlock).thumbnail,
+        pair
+      );
     });
 
     test("sets blockMetadata with allowedOutlets", function (assert) {
@@ -926,6 +1038,511 @@ module("Unit | Lib | block-outlet", function (hooks) {
       const result = blocksService.evaluate({ any: [] });
 
       assert.false(result, "empty OR array returns false");
+    });
+  });
+
+  module("layout resolution chain", function (innerHooks) {
+    @block("resolution-chain-block", { args: { label: { type: "string" } } })
+    class ResolutionChainBlock extends Component {}
+
+    innerHooks.afterEach(function () {
+      _resetOutletLayoutsForTesting();
+    });
+
+    test("setLayoutLayer registers a code-default layout", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.CODE_DEFAULT,
+        [{ block: ResolutionChainBlock, args: { label: "code" } }],
+        owner
+      );
+
+      assert.true(_hasLayout("homepage-blocks"));
+      const resolved = _getOutletLayouts().get("homepage-blocks");
+      const layout = await resolved.validatedLayout;
+      assert.strictEqual(layout[0].args.label, "code");
+    });
+
+    test("theme layer overrides code-default", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.CODE_DEFAULT,
+        [{ block: ResolutionChainBlock, args: { label: "code" } }],
+        owner
+      );
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "theme" } }],
+        owner,
+        { themeId: 5 }
+      );
+
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "theme");
+    });
+
+    test("session-draft layer overrides theme", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "theme" } }],
+        owner,
+        { themeId: 5 }
+      );
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [{ block: ResolutionChainBlock, args: { label: "draft" } }],
+        owner
+      );
+
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "draft");
+    });
+
+    test("multiple themes — owner is the maximum stack rank", async function (assert) {
+      const owner = getOwner(this);
+      // themeId 3 is the parent (stack index 0); themeId 7 is a component
+      // further down the stack (index 1). The most-derived theme (the
+      // component) overrides the parent and owns the outlet.
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "first" } }],
+        owner,
+        { themeId: 3, themeStackIndex: 0 }
+      );
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "second" } }],
+        owner,
+        { themeId: 7, themeStackIndex: 1 }
+      );
+
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "second");
+    });
+
+    test("owner resolution is independent of registration order", async function (assert) {
+      const owner = getOwner(this);
+      // Register the higher-ranked component FIRST, then the parent. The
+      // component (maximum stack index) still owns the outlet — order doesn't
+      // matter, only the stack rank.
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "second" } }],
+        owner,
+        { themeId: 7, themeStackIndex: 1 }
+      );
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "first" } }],
+        owner,
+        { themeId: 3, themeStackIndex: 0 }
+      );
+
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "second");
+    });
+
+    test("re-registering a theme with the same themeId keeps its stack rank", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "a" } }],
+        owner,
+        { themeId: 3, themeStackIndex: 0 }
+      );
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "b" } }],
+        owner,
+        { themeId: 7, themeStackIndex: 1 }
+      );
+
+      // The component (theme 7, rank 1) owns. Re-register it with new content
+      // and WITHOUT a stack index. The originally-stamped rank (1) is preserved,
+      // so theme 7 stays the owner — a MessageBus update can't silently change
+      // ownership.
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "b-updated" } }],
+        owner,
+        { themeId: 7 }
+      );
+
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "b-updated");
+    });
+
+    test("clearing session-draft falls back to theme", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "theme" } }],
+        owner,
+        { themeId: 5 }
+      );
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [{ block: ResolutionChainBlock, args: { label: "draft" } }],
+        owner
+      );
+
+      _clearLayoutLayer("homepage-blocks", LAYOUT_LAYERS.SESSION_DRAFT);
+
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "theme");
+    });
+
+    test("clearing theme by themeId leaves other themes in place", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "first" } }],
+        owner,
+        { themeId: 3 }
+      );
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "second" } }],
+        owner,
+        { themeId: 7 }
+      );
+
+      _clearLayoutLayer("homepage-blocks", LAYOUT_LAYERS.THEME, {
+        themeId: 7,
+      });
+
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "first");
+    });
+
+    test("clearing all layers removes the outlet entirely", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.CODE_DEFAULT,
+        [{ block: ResolutionChainBlock, args: { label: "code" } }],
+        owner
+      );
+      assert.true(_hasLayout("homepage-blocks"));
+
+      _clearLayoutLayer("homepage-blocks", LAYOUT_LAYERS.CODE_DEFAULT);
+      assert.false(_hasLayout("homepage-blocks"));
+    });
+
+    test("setLayoutLayer rejects unknown layer names", function (assert) {
+      assert.throws(
+        () =>
+          _setLayoutLayer("homepage-blocks", "bogus-layer", [], getOwner(this)),
+        /Unknown layout layer/
+      );
+    });
+
+    test("setLayoutLayer requires themeId for the theme layer", function (assert) {
+      assert.throws(
+        () =>
+          _setLayoutLayer(
+            "homepage-blocks",
+            LAYOUT_LAYERS.THEME,
+            [],
+            getOwner(this)
+          ),
+        /requires options\.themeId/
+      );
+    });
+
+    test("renderBlocks does not throw when a theme layer is already set", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "theme" } }],
+        owner,
+        { themeId: 5 }
+      );
+
+      // Calling _renderBlocks (the code-default registration path) on an
+      // outlet that already has a theme layer should succeed — the duplicate
+      // guard is scoped to the code-default layer only.
+      await _renderBlocks(
+        "homepage-blocks",
+        [{ block: ResolutionChainBlock, args: { label: "code" } }],
+        owner
+      );
+
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "theme");
+    });
+
+    test("renderBlocks throws on a duplicate overridable (seed) registration", async function (assert) {
+      const owner = getOwner(this);
+      await _renderBlocks(
+        "homepage-blocks",
+        [{ block: ResolutionChainBlock, args: { label: "first" } }],
+        owner,
+        { sourceId: "plugin-a" }
+      );
+
+      assert.throws(
+        () =>
+          _renderBlocks(
+            "homepage-blocks",
+            [{ block: ResolutionChainBlock, args: { label: "second" } }],
+            owner,
+            { sourceId: "plugin-b" }
+          ),
+        /already has an overridable layout registered.*plugin-a.*plugin-b/
+      );
+    });
+
+    test("a locked code layout outranks theme and session-draft", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "theme" } }],
+        owner,
+        { themeId: 5, themeStackIndex: 0 }
+      );
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [{ block: ResolutionChainBlock, args: { label: "draft" } }],
+        owner
+      );
+      await _renderBlocks(
+        "homepage-blocks",
+        [{ block: ResolutionChainBlock, args: { label: "locked" } }],
+        owner,
+        { overridable: false }
+      );
+
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "locked");
+    });
+
+    test("an overridable seed is the fallback below theme", async function (assert) {
+      const owner = getOwner(this);
+      await _renderBlocks(
+        "homepage-blocks",
+        [{ block: ResolutionChainBlock, args: { label: "seed" } }],
+        owner
+      );
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "theme" } }],
+        owner,
+        { themeId: 5, themeStackIndex: 0 }
+      );
+
+      // The owner theme wins while present.
+      let resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "theme");
+
+      // Clear the theme and the seed resolves.
+      _clearLayoutLayer("homepage-blocks", LAYOUT_LAYERS.THEME);
+      resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "seed");
+    });
+
+    test("a locked layout and an overridable seed coexist (either arrival order)", async function (assert) {
+      const owner = getOwner(this);
+      // Seed first, then the lock arrives — no throw.
+      await _renderBlocks(
+        "homepage-blocks",
+        [{ block: ResolutionChainBlock, args: { label: "seed" } }],
+        owner
+      );
+      await _renderBlocks(
+        "homepage-blocks",
+        [{ block: ResolutionChainBlock, args: { label: "locked" } }],
+        owner,
+        { overridable: false }
+      );
+
+      // The lock wins while both are present.
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "locked");
+
+      // Clearing the public code layer removes BOTH slots — the seed does not
+      // survive a lock clear.
+      _clearLayoutLayer("homepage-blocks", LAYOUT_LAYERS.CODE_DEFAULT);
+      assert.false(_hasLayout("homepage-blocks"));
+    });
+
+    test("locked + locked is a conflict and throws", async function (assert) {
+      const owner = getOwner(this);
+      await _renderBlocks(
+        "homepage-blocks",
+        [{ block: ResolutionChainBlock, args: { label: "first" } }],
+        owner,
+        { overridable: false, sourceId: "plugin-a" }
+      );
+
+      assert.throws(
+        () =>
+          _renderBlocks(
+            "homepage-blocks",
+            [{ block: ResolutionChainBlock, args: { label: "second" } }],
+            owner,
+            { overridable: false, sourceId: "plugin-b" }
+          ),
+        /already has a locked layout registered.*plugin-a.*plugin-b/
+      );
+    });
+
+    test("stamps provenance on each resolved entry and keeps themeId", async function (assert) {
+      const owner = getOwner(this);
+      await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "theme" } }],
+        owner,
+        { themeId: 5, themeStackIndex: 2 }
+      );
+
+      const entry = _getOutletLayouts().get("homepage-blocks");
+      assert.strictEqual(entry.source, "theme", "stamps the source");
+      assert.strictEqual(entry.sourceId, 5, "stamps the source id (themeId)");
+      assert.strictEqual(entry.themeStackIndex, 2, "stamps the stack rank");
+      assert.strictEqual(
+        entry.themeId,
+        5,
+        "keeps themeId stamped (the i18n seam)"
+      );
+    });
+
+    test("lazy mode: setLayoutLayer returns undefined and defers validation", async function (assert) {
+      const result = _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "lazy" } }],
+        getOwner(this),
+        { themeId: 5, lazy: true }
+      );
+
+      assert.strictEqual(
+        result,
+        undefined,
+        "lazy mode returns nothing — caller doesn't trigger validation"
+      );
+
+      // The layer is published immediately, but validation only fires on
+      // the first read of `validatedLayout`. Reading it now returns the
+      // (now-memoized) Promise.
+      const resolved =
+        await _getOutletLayouts().get("homepage-blocks").validatedLayout;
+      assert.strictEqual(resolved[0].args.label, "lazy");
+    });
+
+    test("lazy mode: validation Promise is memoized across reads", async function (assert) {
+      _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.THEME,
+        [{ block: ResolutionChainBlock, args: { label: "memoised" } }],
+        getOwner(this),
+        { themeId: 5, lazy: true }
+      );
+
+      const record = _getOutletLayouts().get("homepage-blocks");
+      const firstRead = record.validatedLayout;
+      const secondRead = record.validatedLayout;
+
+      assert.strictEqual(
+        firstRead,
+        secondRead,
+        "subsequent reads return the same Promise reference"
+      );
+      await firstRead;
+    });
+
+    test("permissive mode: empty container resolves with warnings instead of rejecting", async function (assert) {
+      // Strict mode (no `permissive` flag) rejects with the existing
+      // BlockError — kept here as a regression check before switching modes.
+      await assert.rejects(
+        _setLayoutLayer(
+          "homepage-blocks",
+          LAYOUT_LAYERS.SESSION_DRAFT,
+          [{ block: BlockGroup }],
+          getOwner(this)
+        ),
+        /must have children/,
+        "strict mode still rejects"
+      );
+
+      _resetOutletLayoutsForTesting();
+
+      // Permissive mode: same invalid layout, but the layer accepts it,
+      // captures the validation message on `validationWarnings`, and
+      // resolves with the layout for the renderer.
+      const result = _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [{ block: BlockGroup }],
+        getOwner(this),
+        { permissive: true }
+      );
+
+      const resolved = await result;
+      assert.deepEqual(
+        resolved.map((e) => e.block),
+        [BlockGroup],
+        "permissive mode resolves with the layout"
+      );
+
+      const record = _getOutletLayouts().get("homepage-blocks");
+      assert.strictEqual(
+        record.validationWarnings.length,
+        1,
+        "warning captured on the layer entry"
+      );
+      assert.true(
+        /must have children/.test(record.validationWarnings[0].message),
+        "warning message describes the validation failure"
+      );
+    });
+
+    test("permissive mode: valid layout still resolves cleanly with no warnings", async function (assert) {
+      const resolved = await _setLayoutLayer(
+        "homepage-blocks",
+        LAYOUT_LAYERS.SESSION_DRAFT,
+        [{ block: ResolutionChainBlock, args: { label: "ok" } }],
+        getOwner(this),
+        { permissive: true }
+      );
+      assert.strictEqual(resolved[0].args.label, "ok");
+
+      const record = _getOutletLayouts().get("homepage-blocks");
+      assert.strictEqual(record.validationWarnings.length, 0);
     });
   });
 });

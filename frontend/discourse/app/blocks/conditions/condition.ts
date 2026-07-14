@@ -22,6 +22,37 @@ export type ConditionValidateFn = (
 ) => string | string[] | null | undefined;
 
 /**
+ * The viewport read-surface a `viewport` condition checks against: the live
+ * `capabilities` service, or a simulated payload of the same shape.
+ */
+export interface ViewportCapabilities {
+  /** Per-breakpoint booleans, `true` when the viewport is at least that size. */
+  viewport: Record<string, boolean>;
+
+  /** Whether the device is touch-capable. */
+  touch: boolean;
+}
+
+/**
+ * A simulated identity/environment supplied by a preview/simulation context,
+ * letting condition-gated visibility be evaluated under a hypothetical viewer
+ * or viewport instead of the real services.
+ */
+export interface ConditionSimulation {
+  /**
+   * Simulated user. `null` means "simulated as anonymous"; an absent key means
+   * the real `currentUser` service is used.
+   */
+  user?: unknown;
+
+  /**
+   * Simulated viewport capabilities. `null` or an absent key falls back to the
+   * real `capabilities` service.
+   */
+  viewport?: ViewportCapabilities | null;
+}
+
+/**
  * Evaluation context passed to `evaluate()`, `resolveSource()`, and
  * `getResolvedValueForLogging()`. Built by the block render pipeline (and,
  * for nested route params, by the route condition itself).
@@ -39,6 +70,13 @@ export interface ConditionContext {
   /** Logger interface for nested debug logging (used by the route condition
    *  to log its OR/NOT/param sub-checks). */
   logger?: DebugLoggerInterface | null;
+
+  /**
+   * Optional simulated identity/environment from a preview/simulation context,
+   * used to evaluate condition-gated visibility under a hypothetical viewer or
+   * viewport rather than the real services.
+   */
+  simulation?: ConditionSimulation;
 }
 
 /**
@@ -185,6 +223,49 @@ export class BlockCondition {
    * `sourceType !== "none"`.
    */
   declare static validArgKeys: readonly string[];
+
+  /**
+   * Namespace component parsed from `type`.
+   *
+   * - `null` for core conditions (e.g. `"route"`).
+   * - The plugin or theme namespace for namespaced conditions
+   *   (e.g. `"my-plugin"` for `"my-plugin:my-condition"`).
+   *
+   * This property is defined by the `@blockCondition` decorator and should not
+   * be overridden directly.
+   */
+  static namespace;
+
+  /**
+   * Namespace kind parsed from `type`.
+   *
+   * - `"core"` for core conditions.
+   * - `"plugin"` for `"plugin:condition-name"` types.
+   * - `"theme"` for `"theme:namespace:condition-name"` types.
+   *
+   * This property is defined by the `@blockCondition` decorator and should not
+   * be overridden directly.
+   */
+  static namespaceType;
+
+  /**
+   * Human-readable label for display purposes.
+   *
+   * This property is defined by the `@blockCondition` decorator and should not
+   * be overridden directly. Pass the `displayName` option to the decorator
+   * instead. Defaults to `null` so consumers can fall back to a titleCased
+   * `type`.
+   */
+  static displayName;
+
+  /**
+   * Short human-readable description.
+   *
+   * This property is defined by the `@blockCondition` decorator and should not
+   * be overridden directly. Pass the `description` option to the decorator
+   * instead. Defaults to `null` so consumers can omit the description.
+   */
+  static description;
 
   /**
    * Resolves the `source` parameter value based on the condition's `sourceType`.

@@ -334,6 +334,37 @@ export function _registerBlock(klass: BlockClass): void {
 }
 
 /**
+ * Idempotent name-only registration for class references encountered in a
+ * layout. Used by `assignStableKeys` to make sure every block class that
+ * appears in `api.renderBlocks(...)` (or any other layer publish) is also
+ * resolvable by its decorator-assigned name — without this, layouts that
+ * reach the server (via a save) would round-trip back as string refs that
+ * fail to resolve, even though the underlying class is imported and
+ * decorated.
+ *
+ * Bypasses `assertRegistryNotFrozen` because (a) the class is already
+ * decorated and validated at decoration time, (b) we're not introducing
+ * new classes here — the name → class mapping is the only thing being
+ * added, and (c) layouts are routinely published post-freeze (theme
+ * api-initializers, `session-draft` layer publishes).
+ *
+ * Skipped silently when the class isn't `@block`-decorated; layout
+ * validation will surface a clearer error in that case.
+ *
+ * @param BlockClass - The block class to auto-register if it isn't already.
+ */
+export function _registerLayoutBlockIfNeeded(BlockClass) {
+  const blockName = getBlockMetadata(BlockClass)?.blockName;
+  if (!blockName) {
+    return;
+  }
+  if (blockRegistry.has(blockName)) {
+    return;
+  }
+  blockRegistry.set(blockName, BlockClass);
+}
+
+/**
  * Registers a factory function for lazy loading a block.
  *
  * The factory will be called when the block is first needed. It must return

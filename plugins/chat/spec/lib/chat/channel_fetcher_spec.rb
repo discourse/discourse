@@ -229,6 +229,23 @@ describe Chat::ChannelFetcher do
       ).to match_array([category_channel.id])
     end
 
+    it "restricts the results to the given channel ids while keeping the guardian scope" do
+      other_channel = Fabricate(:category_channel, name: "other")
+      restricted_channel =
+        Fabricate(
+          :category_channel,
+          chatable: Fabricate(:private_category, group: Fabricate(:group)),
+        )
+
+      expect(
+        described_class.secured_public_channels(
+          guardian,
+          following: following,
+          ids: [category_channel.id, other_channel.id, restricted_channel.id],
+        ).map(&:id),
+      ).to match_array([category_channel.id, other_channel.id])
+    end
+
     context "with match_quality when filtering" do
       fab!(:exact_channel) { Fabricate(:category_channel, name: "dev") }
       fab!(:prefix_channel) { Fabricate(:category_channel, name: "devops") }

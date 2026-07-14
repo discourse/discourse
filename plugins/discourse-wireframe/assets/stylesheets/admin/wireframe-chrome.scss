@@ -1,0 +1,5383 @@
+/* Wireframe — editor chrome styles
+ *
+ * Organizational split from `../wireframe.scss`. Everything that's
+ * only meaningful when the editor is active belongs here: chrome
+ * wrappers, toolbar, palette, inspector, outline, drop preview, drag
+ * affordances, conditions panel, etc. Built-in block content styles
+ * (`.d-block-heading`, `.d-block-layout`, etc.) ship from core and
+ * render on published pages for every visitor.
+ *
+ * IMPORTANT — this file STILL SHIPS TO ALL USERS today. The
+ * `stylesheets/admin/` directory is a naming convention only; Discourse
+ * does not auto-gate plugin stylesheets by path. `register_asset` routes
+ * everything except `:mobile` / `:desktop` / `:color_definitions` flags
+ * into the universal plugin stylesheet bundle served via
+ * `Discourse.find_plugin_css_assets` (`lib/discourse.rb:432`), which
+ * filters by mobile/desktop only — not by user permission.
+ *
+ * Per-asset staff gating would require either a core change to the
+ * asset pipeline, or runtime JS injection of the chrome `<style>` on
+ * the editor service's `enter()` / `exit()` lifecycle. Tracked as a
+ * follow-up — see `plugins/discourse-wireframe/docs/REVISIT.md`.
+ *
+ * Color tokens are duplicated locally rather than reused from core's
+ * dev-tools overlay (frontend/discourse/app/static/dev-tools/styles.css),
+ * whose CSS loads dynamically — its variables aren't guaranteed present.
+ */
+
+:root {
+  --wf-accent: #d97706;
+  --wf-accent-rgb: 217, 119, 6;
+  --wf-accent-strong: #b45309;
+  --wf-outlet-accent: #f59e0b;
+  --wf-outlet-accent-rgb: 245, 158, 11;
+  --wf-on-accent: #fff;
+  --wireframe-block-color: var(--wf-accent);
+  --wireframe-block-hover-color: var(--wf-accent-strong);
+  --wireframe-block-outlet-color: var(--wf-outlet-accent);
+  --wireframe-block-outlet-hover-color: var(--wf-accent);
+  --wireframe-bg-opacity: 0.05;
+  --wireframe-badge-font-size: 0.75rem;
+  --wireframe-badge-padding: 2px 5px;
+  --wireframe-shadow: 1px 1px 2px rgb(0 0 0 / 0.5);
+  --wireframe-container-margin: 2px;
+  --wireframe-container-padding: 2px;
+  --wireframe-container-border-width: 1px;
+}
+
+.wireframe-pill {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: z("modal", "content") - 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 999px;
+  background: var(--primary);
+  color: var(--secondary);
+  border: 0;
+  font-size: var(--font-down-1);
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+
+  &:hover {
+    background: var(--primary-medium);
+  }
+}
+
+body.wireframe-active {
+  /* Block boundaries drawn via `outline` (not `border`) so toggling the ring
+     on hover / selection takes no layout space and can't shift the page. */
+
+  .wireframe-block-chrome {
+    position: relative;
+    margin: var(--wireframe-container-margin);
+    padding: var(--wireframe-container-padding);
+    transition:
+      outline-color 80ms ease-out,
+      background-color 80ms ease-out;
+    scroll-margin-top: calc(var(--wf-toolbar-height) + 2rem);
+
+    &.--empty-container {
+      min-height: 4rem;
+    }
+
+    /* Hover treatment on the innermost hovered chrome only: the trailing
+       `:has()` suppresses any ancestor that also contains a hovered chrome.
+       The leading `:not()` defers to chromes that already paint their own
+       state treatment. */
+
+    &:not(
+        .--selected,
+        .--ghost,
+        .--cell,
+        .--error,
+        .--overlapping,
+        .--outlet-root
+      ):hover:not(:has(.wireframe-block-chrome:hover)) {
+      outline: var(--wireframe-container-border-width) dotted
+        var(--wireframe-block-color);
+      background: rgb(var(--wf-accent-rgb), var(--wireframe-bg-opacity));
+    }
+
+    &.--selected {
+      outline: var(--wireframe-container-border-width) solid
+        var(--wireframe-block-hover-color);
+      background: rgb(var(--wf-accent-rgb), var(--wireframe-bg-opacity));
+    }
+
+    /* The chrome is itself keyboard-focusable (`role="button" tabindex="0"`) but
+       has carried no focus indicator. An inset ring reads as focus without being
+       mistaken for the selection outline (which sits on the edge, offset 0). */
+
+    &:focus-visible {
+      outline: 2px solid var(--wf-focus-ring);
+      outline-offset: -2px;
+    }
+
+    /* Composite part — a code-defined inner block, not a free reorderable
+       entry. */
+
+    &.--part.--selected {
+      outline-style: dashed;
+      outline-color: var(--wireframe-block-color);
+    }
+
+    &.--just-selected {
+      animation: wireframe-block-flash 1.1s ease-out;
+    }
+
+    &.--in-grid-slot {
+      margin: 0;
+      padding: 0;
+    }
+
+    &.--overlapping {
+      outline: var(--wireframe-container-border-width) solid var(--danger);
+      box-shadow: 0 0 0 1px var(--danger);
+      background: rgb(var(--danger-rgb), 0.18);
+    }
+
+    /* Reassert `pointer-events: auto` (the default) so an ancestor's inherited
+       `none` can't leak in and block selection clicks on the wrapper. */
+    pointer-events: auto;
+
+    /* While the editor is active, in-block interactive elements must not
+       respond to clicks — a click should select the block, not fire its
+       internal action. Disable pointer events on every direct child of the
+       chrome except its own structural pieces (handle, drag source, drop
+       zones, toolbar) and the empty-state placeholder, which needs its own
+       click to open the block picker. Slot chromes nest that placeholder one
+       level deeper in `__content`, so re-enable that case via `:has()`. Nested
+       child chromes stay interactive via the `pointer-events: auto` above. */
+
+    > .wireframe-block-chrome__content:has(.wireframe-empty-drop-placeholder) {
+      pointer-events: auto;
+    }
+
+    > *:not(
+        .wireframe-block-toolbar,
+        .wireframe-drop-zone,
+        .wireframe-block-chrome__resize-handle,
+        .wireframe-block-chrome__overlap-badge,
+        .wireframe-empty-drop-placeholder,
+        .wireframe-image-arg-overlay,
+        .wireframe-image-resize-overlay
+      ) {
+      pointer-events: none;
+
+      /* Wrapped block content is inert — a click selects the block (or routes
+         to an inline-edit target), never fires the button's action. Suppress
+         the DButton hover/focus visuals and reset the cursor so it reads as
+         non-clickable, by resolving core's `--d-button-*--hover` custom
+         properties back to their resting values. */
+
+      .btn {
+        cursor: default;
+
+        --d-button-default-bg-color--hover: var(--d-button-default-bg-color);
+        --d-button-default-text-color--hover: var(
+          --d-button-default-text-color
+        );
+        --d-button-default-icon-color--hover: var(
+          --d-button-default-icon-color
+        );
+        --d-button-default-border--hover: var(--d-button-default-border);
+        --d-button-primary-bg-color--hover: var(--d-button-primary-bg-color);
+        --d-button-primary-text-color--hover: var(
+          --d-button-primary-text-color
+        );
+        --d-button-primary-icon-color--hover: var(
+          --d-button-primary-icon-color
+        );
+        --d-button-primary-border--hover: var(--d-button-primary-border);
+        --d-button-danger-bg-color--hover: var(--d-button-danger-bg-color);
+        --d-button-danger-text-color--hover: var(--d-button-danger-text-color);
+        --d-button-danger-icon-color--hover: var(--d-button-danger-icon-color);
+        --d-button-danger-border--hover: var(--d-button-danger-border);
+      }
+    }
+
+    /* The tabs strip is editor navigation (switch panel, add a tab), not inert
+       content — re-enable the pointer events the inert rule above removed, so it
+       stays clickable even on an unselected tabs block. */
+
+    .d-block-tabs__tab,
+    .d-block-tabs__add-tab {
+      pointer-events: auto;
+    }
+
+    /* The carousel's prev/next/dot controls are editor navigation, not inert
+       content — re-enable pointer events so paging works even on an unselected
+       carousel. The chrome's `onClick` pages without re-selecting (it matches
+       their `data-wf-carousel-nav` marker). */
+
+    .d-block-carousel__nav,
+    .d-block-carousel__dot {
+      pointer-events: auto;
+    }
+
+    /* Horizontal scroll (`overflow-x: auto`) forces `overflow-y: auto`, which
+       would clip a selected slide's toolbar anchored above it. Reserve top
+       padding inside the scrollport so the toolbar stays visible. */
+
+    .d-block-carousel__viewport {
+      --wf-carousel-pad: 2rem;
+      padding-top: var(--wf-carousel-pad);
+      background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 5px,
+        var(--primary-low) 5px,
+        var(--primary-low) 6px
+      );
+      background-repeat: no-repeat;
+      background-size: 100% var(--wf-carousel-pad);
+      background-position: top left;
+    }
+  }
+
+  .wireframe-block-chrome__overlap-badge {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--wf-gap-tight);
+    padding: var(--wireframe-badge-padding);
+    background: var(--danger);
+
+    /* `--secondary` is core's readable text color on a `--danger` fill and
+       flips with the scheme, unlike a literal white (same-file precedent: the
+       activity-bar count badge). No text-shadow — it renders dark-on-dark in
+       dark schemes. */
+    color: var(--secondary);
+    font-size: var(--wireframe-badge-font-size);
+    font-weight: bold;
+    border-radius: 0 0 0 var(--wf-radius);
+    pointer-events: auto;
+    cursor: help;
+
+    .d-icon {
+      color: var(--secondary) !important;
+      font-size: var(--wireframe-badge-font-size) !important;
+      width: var(--wireframe-badge-font-size) !important;
+      filter: drop-shadow(var(--wireframe-shadow));
+    }
+
+    &--info {
+      background: var(--highlight);
+      color: var(--primary);
+      text-shadow: none;
+
+      .d-icon {
+        color: var(--primary) !important;
+        filter: none;
+      }
+    }
+  }
+
+  .wireframe-block-chrome.--unresolved-image {
+    min-height: 6rem;
+  }
+
+  /* Drop zones for drag-and-drop reordering. Always present in layout
+     while the editor is active so HTML5 drag-target hit testing reaches
+     them on the very first dragenter — toggling layout via display: none
+     happens too late and the first drop is missed.
+
+     Zones must NOT change size on hover: a layout shift bounces the
+     cursor out of the zone (dragleave fires, the user's release happens
+     mid-bounce, and no target is active at drop time). Hover/active
+     state is signalled only by background-color. */
+
+  .wireframe-drop-zone {
+    height: 0.5rem;
+    margin: 0;
+    border-radius: 1px;
+    pointer-events: auto;
+    background: transparent;
+    transition:
+      background-color 60ms ease-out,
+      box-shadow 60ms ease-out;
+    position: relative;
+
+    &.--active {
+      background: var(--tertiary-low);
+      box-shadow: 0 0 0 1px var(--tertiary);
+    }
+
+    &.--inside {
+      height: 1.75rem;
+      margin: 0.25rem;
+      border: 1px dashed transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &.--active {
+        border-color: var(--tertiary);
+        background: var(--tertiary-low);
+      }
+
+      &.--empty {
+        height: auto;
+        min-height: 3.5rem;
+        border-color: var(--primary-low-mid);
+        background: var(--primary-very-low);
+      }
+    }
+
+    &__label {
+      font-size: var(--font-down-2);
+      color: var(--primary-medium);
+      opacity: 0;
+      transition: opacity 80ms ease-out;
+    }
+
+    &.--inside.--active .wireframe-drop-zone__label {
+      opacity: 1;
+      color: var(--tertiary);
+    }
+
+    &.--inside.--empty .wireframe-drop-zone__label {
+      opacity: 1;
+      color: var(--primary-medium);
+    }
+  }
+
+  .wireframe-block-chrome-wrapper.--axis-horizontal {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
+    > .wireframe-block-chrome {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    > .wireframe-drop-zone.--before,
+    > .wireframe-drop-zone.--after {
+      height: auto;
+      width: 0.5rem;
+      align-self: stretch;
+    }
+  }
+
+  /* Grid cells: the chrome wrapper stretches to fill the `d-block-layout__cell`
+     grid item so its outline traces the whole cell regardless of the block's
+     align / justify. Each layer is a flex column so `__content` can claim the
+     height below the drag handle. Leaving each layer's `min-height` at its
+     `auto` default lets an `auto` grid track grow to the content's intrinsic
+     height instead of clamping it to the row's minmax floor. */
+
+  .d-block-layout__cell > .wireframe-block-chrome-wrapper {
+    align-self: stretch;
+    justify-self: stretch;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+
+    > .wireframe-block-chrome {
+      flex: 1 1 auto;
+      box-sizing: border-box;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+
+      > .wireframe-block-chrome__content {
+        flex: 1 1 auto;
+      }
+    }
+  }
+
+  .wireframe-block-chrome__content {
+    width: 100%;
+    min-width: 0;
+  }
+
+  /* Canvas-only overlay for image-typed args. `ImageArgOverlay` absolute-
+     positions it over the arg's marker via a JS-measured rect, so it tracks the
+     marker's geometry whatever its size, and hides it (inline `display: none`)
+     when the marker is hidden. */
+
+  .wireframe-image-arg-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+    color: var(--primary-medium);
+    transition:
+      background-color 150ms ease,
+      outline-color 150ms ease;
+
+    &--empty {
+      cursor: pointer;
+
+      &:hover {
+        color: var(--primary);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--tertiary);
+        outline-offset: -2px;
+      }
+    }
+
+    &--filled {
+      background: transparent;
+    }
+
+    /* Passive markers (a full-bleed background behind the block
+       content) are hint-only: click-through so the overlay never
+       swallows clicks meant for the content layered on top. Adding /
+       replacing the image runs through the chrome's click dispatch and
+       the inspector instead. */
+
+    &--passive {
+      pointer-events: none;
+    }
+
+    &--compact {
+      .wireframe-image-arg-overlay__content {
+        padding: 0;
+      }
+
+      .wireframe-image-arg-overlay__label {
+        display: none;
+      }
+
+      .d-icon {
+        font-size: var(--font-0);
+      }
+    }
+
+    &--drag-over {
+      outline: 2px dashed var(--tertiary);
+      outline-offset: -4px;
+      background: rgb(var(--tertiary-rgb), 0.25);
+      color: var(--primary);
+    }
+
+    &--uploading {
+      background: rgb(var(--tertiary-rgb), 0.25);
+      backdrop-filter: blur(2px);
+    }
+
+    &--error {
+      cursor: pointer;
+      color: var(--danger);
+      background: rgb(var(--danger-rgb), 0.1);
+
+      &:focus-visible {
+        outline: 2px solid var(--wf-focus-ring);
+        outline-offset: -2px;
+      }
+    }
+
+    &__content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--wf-gap);
+      padding: 1rem;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .d-icon {
+      font-size: var(--font-up-3);
+      opacity: 0.7;
+    }
+
+    &__label {
+      font-size: var(--font-down-1);
+    }
+
+    &__progress {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+      gap: 0.4rem;
+      width: 80%;
+      max-width: 16rem;
+      pointer-events: none;
+    }
+
+    &__progress-track {
+      height: 6px;
+      border-radius: var(--wf-radius);
+      background: var(--primary-low);
+      overflow: hidden;
+    }
+
+    &__progress-bar {
+      height: 100%;
+      border-radius: var(--wf-radius);
+      background: var(--tertiary);
+      transition: width 80ms linear;
+    }
+
+    &__progress-label {
+      font-size: var(--font-down-1);
+      text-align: center;
+      color: var(--primary);
+    }
+  }
+
+  /* Dark-variant drop popover content rendered via FloatKit's
+     `menu.show()` from `image-arg-overlay.gjs`. The FloatKit
+     wrapper handles positioning + the portal mount; this rule
+     just styles the inner drop target. `pointer-events: auto`
+     so file drags reach the popover's own Uppy DropTarget. */
+
+  .wireframe-image-variant-drop-popover {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.9rem;
+    font-size: var(--font-down-1);
+    color: var(--primary);
+    cursor: copy;
+    pointer-events: auto;
+    min-width: 180px;
+    transition: background 80ms ease-out;
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+
+    &--drag-over {
+      background: var(--tertiary-low);
+
+      .d-icon {
+        color: var(--tertiary);
+      }
+    }
+  }
+
+  /* Keep the bar in the DOM at idle (`opacity: 0`, not `display: none`) so the
+     drag-source modifier's registration stays stable across hover transitions. */
+
+  .wireframe-block-toolbar {
+    position: absolute;
+    bottom: 100%;
+    left: calc(-1 * var(--wireframe-container-border-width));
+    z-index: 1000;
+    opacity: 0;
+    display: inline-flex;
+    align-items: stretch;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--wf-radius) var(--wf-radius) 0 0;
+    box-shadow: var(--shadow-card);
+    pointer-events: none;
+    overflow: hidden; /* clip the handle's bg into the rounded corners */
+
+    /* Cap the bar to the block width so a wide selected bar can't spill past a
+       narrow block; the `d-fit`-driven tiers fold the actions into the
+       hamburger before it would clip. The bar is `position: absolute` (out of
+       flow) and MUST carry no margin — otherwise its size could feed back into
+       the chrome width the fit observer watches. */
+    max-width: 100%;
+    transition: opacity 80ms ease-out;
+
+    &__handle {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--wf-gap-tight);
+
+      /* Never shrink inside the width-capped bar — a shrunk handle wraps its
+         name/ordinal and, worse, makes the fit measurement under-report; the
+         tier collapse (not flex shrink) is what handles a narrow block. */
+      flex: none;
+      padding: var(--wireframe-badge-padding);
+      background: var(--wireframe-block-color);
+      color: var(--wf-on-accent);
+      font-size: var(--wireframe-badge-font-size);
+      font-weight: bold;
+      text-shadow: var(--wireframe-shadow);
+      cursor: grab;
+
+      &:hover {
+        background: var(--wireframe-block-hover-color);
+      }
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      .d-icon {
+        color: var(--wf-on-accent) !important;
+        font-size: var(--wireframe-badge-font-size) !important;
+        width: var(--wireframe-badge-font-size) !important;
+        filter: drop-shadow(var(--wireframe-shadow));
+      }
+    }
+
+    &__ordinal {
+      padding: 0 6px;
+      border-radius: 999px;
+      background: var(--wf-chip-scrim);
+      color: var(--wf-on-accent);
+      font-weight: normal;
+      text-shadow: none;
+      font-variant-numeric: tabular-nums;
+    }
+
+    &__btn {
+      color: var(--primary);
+      transition:
+        background-color 120ms ease,
+        color 120ms ease;
+
+      /* Core's `.btn-flat` zeroes the focus-visible outline, so these buttons
+         would show no keyboard focus. Roving navigation makes that focus the
+         only cue for which button is active — restore a ring. */
+
+      &:focus-visible {
+        outline: 2px solid var(--wf-focus-ring);
+        outline-offset: -2px;
+      }
+
+      &.btn.btn-icon {
+        min-width: 0;
+        min-height: 0;
+        width: auto;
+        height: auto;
+        padding: var(--wireframe-badge-padding);
+        line-height: 1;
+      }
+
+      .d-icon {
+        font-size: var(--wireframe-badge-font-size) !important;
+        width: var(--wireframe-badge-font-size) !important;
+      }
+
+      &.--active {
+        background: var(--d-selected);
+        color: var(--d-selected-text-color);
+
+        .d-icon {
+          color: var(--d-selected-text-color);
+        }
+      }
+
+      &--danger {
+        &:hover:not([disabled]),
+        &:focus-visible:not([disabled]) {
+          background: var(--danger-low);
+          color: var(--danger);
+
+          .d-icon {
+            color: var(--danger);
+          }
+        }
+      }
+    }
+
+    &__separator {
+      align-self: stretch;
+      width: 1px;
+      background: var(--primary-low);
+    }
+
+    &__url-input {
+      font-size: var(--wireframe-badge-font-size);
+      padding: var(--wireframe-badge-padding);
+      line-height: 1;
+      min-height: 0;
+    }
+
+    /* Collapsible structural-action row. Carries `width: max-content` so its
+       `offsetWidth` reports the true intrinsic width whether it's in flow (full
+       tier) or parked off-tier (narrow / narrower) — the toolbar's fit compute
+       reads it without ever toggling a style. */
+
+    &__actions {
+      display: inline-flex;
+      align-items: stretch;
+
+      /* Keep the intrinsic width (no flex shrink) so the fit measurement is
+         truthful and the buttons don't squeeze/wrap inside the capped bar. */
+      flex: none;
+      width: max-content;
+    }
+
+    &__more {
+      position: absolute;
+      visibility: hidden;
+      flex: none;
+      width: max-content;
+    }
+
+    /* Inline-format buttons stay inline whenever they show (they never collapse
+       into the hamburger — a menu can't preserve the ProseMirror selection). */
+
+    &__format {
+      display: inline-flex;
+      align-items: stretch;
+      flex: none;
+    }
+
+    /* The `max-width` cap keeps the measured handle width truthful (the fit
+       service reads the rendered, capped width) while letting an over-long name
+       ellipsize. */
+
+    &__handle
+      > span:not(
+        .wireframe-block-toolbar__ordinal,
+        .wireframe-block-toolbar__status
+      ) {
+      max-width: 16em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  /* Toolbar fit tiers, keyed off the attribute the toolbar's `d-fit` wiring
+     writes on the chrome. The off-tier element is absolutely positioned
+     + `visibility: hidden`: out of flow (so it can't widen the bar or force a
+     line break) and out of the a11y tree / tab order, yet still measurable at
+     `width: max-content`. Swapping tiers is therefore a single, flicker-free
+     style change with no measurement toggling. Default (no attribute) is the
+     full tier — actions inline, hamburger parked. */
+
+  .wireframe-block-chrome[data-wf-toolbar-fit="narrow"],
+  .wireframe-block-chrome[data-wf-toolbar-fit="narrower"] {
+    .wireframe-block-toolbar__actions {
+      position: absolute;
+      visibility: hidden;
+    }
+
+    .wireframe-block-toolbar__more {
+      position: static;
+      visibility: visible;
+    }
+  }
+
+  .wireframe-block-chrome[data-wf-toolbar-fit="narrower"] {
+    .wireframe-block-toolbar__handle
+      > span:not(
+        .wireframe-block-toolbar__ordinal,
+        .wireframe-block-toolbar__status
+      ),
+    .wireframe-block-toolbar__ordinal {
+      display: none;
+    }
+  }
+
+  .wireframe-block-chrome:hover:not(:has(.wireframe-block-chrome:hover))
+    > .wireframe-block-toolbar,
+  .wireframe-block-chrome.--selected > .wireframe-block-toolbar {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .block-debug-ghost {
+    opacity: 0.6;
+    filter: grayscale(1);
+  }
+
+  /* Outlet boundary — an invisible structural marker. Its `data-outlet-name`
+     is the DOM anchor for scroll/jump-to-outlet, but it draws nothing: the
+     outlet's frame + badge live on the implicit root layout's chrome
+     (`.--outlet-root`, below), so there's a single frame instead of a
+     box-in-box. `display: contents` keeps the marker in the DOM (still
+     queryable) while removing its box from layout. */
+
+  .wireframe-outlet-boundary {
+    display: contents;
+  }
+
+  .wireframe-block-chrome.--outlet-root {
+    outline: var(--wireframe-container-border-width) dashed
+      var(--wireframe-block-outlet-color);
+    background: rgb(var(--wf-outlet-accent-rgb), var(--wireframe-bg-opacity));
+
+    &:hover:not(:has(.wireframe-block-chrome:hover)),
+    &.--selected {
+      outline-style: solid;
+    }
+
+    > .wireframe-block-toolbar {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .wireframe-block-toolbar__handle {
+      background: var(--wireframe-block-outlet-color);
+      cursor: default;
+
+      &:hover {
+        background: var(--wireframe-block-outlet-hover-color);
+      }
+
+      .wireframe-block-toolbar__status {
+        padding: 0 6px;
+        background: var(--wf-chip-scrim);
+        color: var(--wf-on-accent);
+        font-weight: normal;
+        border-radius: 999px;
+        text-shadow: none;
+
+        &.--editing {
+          background: var(--tertiary);
+        }
+
+        &.--published {
+          background: var(--success);
+        }
+      }
+    }
+  }
+}
+
+.wireframe-shell {
+  --wf-selection-color: var(--tertiary);
+  --wf-hover-color: var(--primary-low-mid);
+  --wf-overlay-tint: rgb(0 0 0 / 0.04);
+  position: fixed;
+  inset: 0;
+  z-index: z("modal", "content") - 200;
+  display: grid;
+
+  /* Rail widths are shared custom properties with `body.wireframe-active`
+     (see below) so the grid columns and the live-page inset can never drift. */
+  grid-template-columns: var(--wf-activity-bar) var(--wf-left-panel) 1fr var(
+      --wf-right-rail
+    );
+  grid-template-rows: var(--wf-toolbar-height) auto 1fr;
+  pointer-events: none;
+
+  > * {
+    pointer-events: auto;
+  }
+}
+
+.wireframe-toolbar {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0 0.75rem;
+  background: var(--secondary);
+  border-bottom: 1px solid var(--primary-low);
+
+  .toolbar-left,
+  .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex: 0 0 auto;
+  }
+
+  .toolbar-center {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    justify-content: center;
+  }
+
+  .toolbar-title {
+    font-weight: 600;
+    margin-inline-end: 0.5rem;
+  }
+
+  .toolbar-left > .d-icon {
+    color: var(--primary-high);
+    margin-inline-end: 0.4rem;
+  }
+
+  .btn-flat {
+    color: var(--primary-medium);
+
+    &:hover,
+    &:focus {
+      color: var(--primary);
+    }
+  }
+}
+
+.wireframe-target-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+
+  .d-icon {
+    font-size: var(--font-down-2);
+  }
+
+  &__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &.--blocked {
+    color: var(--danger);
+
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+}
+
+.wireframe-view-toggle.--active {
+  color: rgb(var(--wf-accent-rgb));
+}
+
+.wireframe-view-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: z("modal", "popover");
+  width: 340px;
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  background: var(--secondary);
+  border-left: 1px solid var(--primary-low-mid);
+  box-shadow: var(--shadow-card);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  &__body {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  &__dim {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    width: 100%;
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__dim-description {
+    margin: 0;
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-large);
+    color: var(--primary-medium);
+  }
+}
+
+.wireframe-btn-save {
+  position: relative;
+
+  &[data-wf-save-state="unsaved"]::after,
+  &[data-wf-save-state="unpublished"]::after {
+    content: "";
+    position: absolute;
+    top: 0.2rem;
+    inset-inline-end: 0.2rem;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+  }
+
+  &[data-wf-save-state="unsaved"]::after {
+    background: var(--highlight);
+  }
+
+  &[data-wf-save-state="unpublished"]::after {
+    background: var(--secondary);
+  }
+}
+
+.wireframe-issues {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  font-size: var(--font-down-1);
+
+  &__outlet-header {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+    color: var(--wireframe-block-outlet-color);
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 0.25rem 0.5rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 3px;
+
+    &-icon .d-icon {
+      color: var(--danger);
+    }
+
+    &-block {
+      font-weight: 600;
+    }
+
+    &:not(.--static) {
+      cursor: pointer;
+
+      &:hover {
+        background: var(--primary-very-low);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--wf-focus-ring);
+        outline-offset: -2px;
+      }
+    }
+
+    &.--selected {
+      background: var(--tertiary-low);
+      box-shadow: inset 3px 0 0 var(--tertiary);
+    }
+  }
+
+  &__messages {
+    grid-column: 2;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--primary-high);
+
+    li {
+      padding: 0.1rem 0;
+    }
+  }
+}
+
+.wireframe-canvas {
+  grid-column: 3;
+  grid-row: 3;
+  pointer-events: none;
+  position: relative;
+}
+
+.wireframe-activity-bar {
+  grid-column: 1;
+  grid-row: 3;
+  display: flex;
+  flex-direction: column;
+  gap: var(--wf-gap-tight);
+  padding: var(--wf-gap-tight) 0;
+  background: var(--secondary);
+  border-right: 1px solid var(--primary-low);
+  overflow: hidden;
+
+  &__entry-wrap {
+    position: relative;
+    display: flex;
+
+    .wireframe-activity-bar__entry {
+      flex: 1;
+    }
+  }
+
+  &__badge {
+    position: absolute;
+    top: 4px;
+    inset-inline-end: 4px;
+    min-width: 1rem;
+    height: 1rem;
+    padding: 0 0.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    background: var(--danger);
+    color: var(--secondary);
+    font-size: var(--font-down-2);
+    font-weight: 700;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  &__entry {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.25rem;
+    border: none;
+    border-inline-start: 2px solid transparent;
+    background: transparent;
+    color: var(--primary-medium);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--primary);
+      background: var(--primary-very-low);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--wf-focus-ring);
+      outline-offset: -2px;
+    }
+
+    &.--active {
+      color: var(--primary);
+      background: var(--primary-very-low);
+      border-inline-start-color: var(--tertiary);
+    }
+
+    .d-icon {
+      font-size: var(--font-up-3);
+    }
+  }
+
+  &__collapse {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.25rem;
+    border: none;
+    border-top: 1px solid var(--primary-low);
+    background: transparent;
+    color: var(--primary-medium);
+    cursor: pointer;
+
+    &:hover {
+      color: var(--primary);
+      background: var(--primary-very-low);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--wf-focus-ring);
+      outline-offset: -2px;
+    }
+  }
+}
+
+.wireframe-activity-tooltip {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  max-width: 220px;
+
+  &__name {
+    font-weight: 600;
+  }
+
+  &__description {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+}
+
+.wireframe-breadcrumb {
+  position: fixed;
+  left: var(--wf-left-rail);
+  right: var(--wf-right-rail);
+  bottom: 0;
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  gap: var(--wf-gap-tight);
+  padding: 0.25rem 0.75rem;
+  background: var(--secondary);
+  border-top: 1px solid var(--primary-low);
+  font-size: var(--font-down-1);
+  pointer-events: auto;
+  overflow-x: auto;
+  white-space: nowrap;
+
+  &__segment {
+    background: transparent;
+    border: none;
+    color: var(--primary-medium);
+    padding: var(--space-half) var(--space-1);
+    cursor: pointer;
+    border-radius: var(--wf-radius);
+
+    &:hover {
+      background: var(--primary-very-low);
+      color: var(--primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--wf-focus-ring);
+      outline-offset: -2px;
+    }
+
+    &:last-child {
+      color: var(--primary);
+      font-weight: 600;
+    }
+  }
+
+  &__separator {
+    color: var(--primary-low-mid);
+    display: inline-flex;
+    align-items: center;
+
+    .d-icon {
+      /* Compounds with the breadcrumb's own `--font-down-1` to land near the
+         original 0.65rem while tracking the type scale. */
+      font-size: var(--font-down-2);
+    }
+  }
+}
+
+/* Rail resize separator: a thin grabbable strip straddling a rail's inner seam.
+   Mounted as a DIRECT child of the shell grid (so it inherits the shell's
+   `pointer-events: auto` re-enable and isn't clipped by the panel's
+   `overflow: hidden`), placed over the seam via `justify-self` + a negative
+   margin. It overlays the column edge without consuming a grid track. */
+
+.wireframe-rail-resizer {
+  grid-row: 3;
+  align-self: stretch;
+  position: relative;
+  width: 8px;
+  z-index: 5;
+  cursor: col-resize;
+
+  &--left {
+    grid-column: 2;
+    justify-self: end;
+    margin-right: -4px;
+  }
+
+  &--right {
+    grid-column: 4;
+    justify-self: start;
+    margin-left: -4px;
+  }
+
+  /* The pointer-drag target from DResizeHandles fills the strip; a wider
+     invisible ::before extends the hit area for touch/mouse without widening
+     the visible seam. */
+
+  &__grip {
+    position: absolute;
+    inset: 0;
+    cursor: col-resize;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0 -3px;
+    }
+
+    /* A hairline that only shows on hover / focus / drag, so the seam is
+       discoverable without adding visual noise at rest. */
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset-block: 0;
+      inset-inline-start: 50%;
+      width: 2px;
+      transform: translateX(-50%);
+      background: transparent;
+      transition: background 80ms ease-out;
+    }
+  }
+
+  &:hover .wireframe-rail-resizer__grip::after,
+  .wireframe-rail-resizer__grip.--dragging::after {
+    background: var(--wf-accent);
+  }
+
+  &:focus-visible {
+    outline: none;
+
+    .wireframe-rail-resizer__grip::after {
+      background: var(--wf-accent);
+      width: 3px;
+    }
+  }
+}
+
+.wireframe-panel {
+  background: var(--secondary);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  &.--left {
+    grid-column: 2;
+    grid-row: 3;
+    border-right: 1px solid var(--primary-low);
+  }
+
+  &.--right {
+    grid-column: 4;
+    grid-row: 3;
+    border-left: 1px solid var(--primary-low);
+  }
+
+  &.--collapsed {
+    overflow: hidden;
+
+    .panel-header {
+      padding: 0.5rem;
+      justify-content: center;
+      border-bottom: 0;
+    }
+  }
+
+  .panel-header {
+    padding: 0.75rem 1rem;
+    font-weight: 600;
+    border-bottom: 1px solid var(--primary-low);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .panel-collapse-toggle {
+    background: transparent;
+    border: none;
+    padding: 0.25rem;
+    cursor: pointer;
+    color: var(--primary-medium);
+    display: inline-flex;
+    align-items: center;
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+
+  /* `.panel-body` is the panel's scroll surface. The outer
+     `.wireframe-panel` is `overflow: hidden` + column flex (header
+     + body), so the header stays pinned and content scrolls inside the
+     body. Without `flex: 1 1 auto` the body collapses to its content
+     height and tall args forms push the tabs out of view. */
+
+  .panel-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+
+    /* Reserve the scrollbar's track even while it's hidden. Width-folding
+       controls inside the panel can change the content height right at the
+       scrollbar threshold; with classic (non-overlay) scrollbars the track
+       appearing/disappearing would change the available width and re-fold
+       them in a loop. */
+    scrollbar-gutter: stable;
+    padding: 0.75rem 1rem;
+  }
+
+  .panel-empty {
+    color: var(--primary-medium);
+    font-style: italic;
+  }
+}
+
+.wireframe-palette {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  &__search {
+    width: 100%;
+    margin: 0;
+  }
+
+  &__hint {
+    padding: 0.35rem 0.5rem;
+    border-radius: var(--d-border-radius);
+    background: var(--highlight-low);
+    color: var(--primary-high);
+    font-size: var(--font-down-1);
+  }
+
+  /* One grid holds every tile across all category sections, so a single
+     roving-focus container can navigate them in DOM order and derive its column
+     count from these tracks. Section headers are emitted as direct grid children
+     that span every column (no per-section wrapper), keeping the grid flat. */
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+  }
+
+  &__section-header {
+    grid-column: 1 / -1;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+    background: var(--secondary);
+    padding: 0.25rem 0.15rem;
+    font-size: var(--font-down-2);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--primary-medium);
+    font-weight: 600;
+    border-bottom: 1px solid var(--primary-low);
+  }
+}
+
+.wireframe-block-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  min-height: 44px;
+  padding: 0.5rem;
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+  background: var(--secondary);
+  cursor: pointer;
+  font-size: var(--font-down-2);
+  text-align: center;
+
+  &:hover {
+    background: var(--primary-very-low);
+    border-color: var(--primary-low-mid);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--wf-focus-ring);
+    outline-offset: 1px;
+  }
+
+  /* Keyboard cursor highlight for the inserter's active (aria-activedescendant)
+     mode, where DOM focus stays on the search input. */
+
+  &.--active {
+    background: var(--primary-very-low);
+    border-color: var(--wf-accent);
+  }
+
+  &.is-dragging {
+    opacity: 0.5;
+  }
+
+  &__thumbnail {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--d-border-radius);
+  }
+
+  &__label {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    max-width: 100%;
+    font-weight: 500;
+    overflow-wrap: break-word;
+  }
+}
+
+.wireframe-block-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-width: 240px;
+
+  &__thumbnail {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--d-border-radius);
+  }
+
+  &__name {
+    font-weight: 500;
+  }
+
+  &__description {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+}
+
+.wireframe-block-thumbnail-default {
+  position: relative;
+  display: block;
+  width: 100%;
+
+  &__frame {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  &__icon {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-medium);
+
+    .d-icon {
+      width: 1.5em;
+      height: 1.5em;
+      font-size: var(--font-up-2);
+    }
+  }
+}
+
+body.wireframe-active {
+  /* Rail widths are exposed as custom properties so the shell grid columns,
+     this body padding (which insets the live page under the canvas), and
+     fixed-position editor chrome (breadcrumb, future floating UI) all read one
+     source and can't drift.
+     The left side is two columns: a persistent `--wf-activity-bar` icon strip
+     plus the wide `--wf-left-panel`; `--wf-left-rail` is their sum, the value
+     the body padding and breadcrumb mirror. Collapsing the left flips only
+     `--wf-left-panel` to zero, so the activity bar stays. `--wf-rail-collapsed`
+     is the slim strip the RIGHT rail shrinks to when collapsed (the left
+     collapses to the activity bar instead). */
+  --wf-rail-collapsed: 40px;
+  --wf-activity-bar: 48px;
+  --wf-left-panel: 320px;
+  --wf-left-rail: calc(var(--wf-activity-bar) + var(--wf-left-panel));
+  --wf-right-rail: 300px;
+
+  /* Height of the fixed editor toolbar. Single source of truth: the shell's
+     grid row, this top padding, and the block scroll clearance all derive
+     from it. */
+  --wf-toolbar-height: 48px;
+  padding-top: var(--wf-toolbar-height);
+  padding-left: var(--wf-left-rail);
+  padding-right: var(--wf-right-rail);
+  box-sizing: border-box;
+
+  /* Shared shape + spacing scale for every editor chrome surface. This block is
+     an ancestor of the fixed shell, the on-canvas block chrome, and the
+     breadcrumb, so all three inherit one source and their radii / gaps can't
+     drift. Kept off `:root` so the scale exists only while the editor is
+     active. */
+  --wf-radius: var(--d-border-radius);
+  --wf-radius-lg: calc(var(--d-border-radius) * 1.5);
+  --wf-gap-tight: var(--space-1);
+  --wf-gap: var(--space-2);
+  --wf-gap-loose: var(--space-3);
+
+  /* Translucent dark wash behind an accent chip so its light text stays legible
+     over a variable block backdrop. */
+  --wf-chip-scrim: rgb(0 0 0 / 0.25);
+
+  /* Focus-ring color for all editor chrome. Indirection over `--wf-accent` so
+     the ring can be strengthened in one place if contrast review requires it. */
+  --wf-focus-ring: var(--wf-accent);
+
+  &.wireframe-active--left-collapsed {
+    --wf-left-panel: 0px;
+  }
+
+  &.wireframe-active--right-collapsed {
+    --wf-right-rail: var(--wf-rail-collapsed);
+  }
+}
+
+.wireframe-outline {
+  font-size: var(--font-down-1);
+
+  .outline-chip {
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    background: var(--primary-low);
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    font-weight: 500;
+  }
+
+  &__filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* The search box is core's DFilterInput (`.filter-input-container`), which
+     brings its own icon, clear button, and container-level focus ring — no
+     bespoke input styling needed here. */
+
+  &__chips {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.6rem;
+    border: 1px solid var(--primary-low);
+    background: var(--secondary);
+    border-radius: 999px;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    cursor: pointer;
+
+    &:hover {
+      border-color: var(--primary-low-mid);
+      color: var(--primary);
+    }
+
+    &.--active {
+      background: var(--primary-very-low);
+      border-color: var(--primary-low-mid);
+      color: var(--primary);
+    }
+
+    .d-icon {
+      font-size: 0.85em;
+    }
+  }
+
+  .outline-outlet {
+    margin-bottom: 0.75rem;
+
+    .outline-outlet__header {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.2rem 0 0.2rem 0.25rem;
+      margin-bottom: 0.25rem;
+      border-radius: 3px;
+      cursor: pointer;
+
+      &:hover:not(.--selected) {
+        background: var(--primary-very-low);
+      }
+
+      &.--selected {
+        background: var(--tertiary-low);
+        box-shadow: inset 3px 0 0 var(--tertiary);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--tertiary);
+        outline-offset: -2px;
+      }
+    }
+
+    .outline-outlet__toggle {
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      color: var(--wireframe-block-outlet-color);
+    }
+
+    .outline-outlet__label {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.25rem;
+      font-weight: 600;
+      color: var(--wireframe-block-outlet-color);
+      background: transparent;
+      border: none;
+      padding: 0;
+      flex: 1;
+      text-align: left;
+      cursor: pointer;
+      font-size: inherit;
+
+      &:hover {
+        color: var(--wireframe-block-outlet-hover-color);
+      }
+    }
+
+    .outline-outlet__mode {
+      margin-inline-start: auto;
+      text-transform: lowercase;
+    }
+
+    .outline-block {
+      // `position: relative` anchors the absolutely-positioned kebab and the
+      // leading drag grip. The right gutter for the kebab is only reserved
+      // while it's revealed (see the reveal rule below), so a resting row uses
+      // its full width; the padding transition keeps that shift smooth.
+      position: relative;
+      padding: 0.2rem 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-radius: 3px;
+      transition: padding-right 100ms;
+
+      &:hover {
+        background: var(--primary-very-low);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--tertiary);
+        outline-offset: -2px;
+      }
+
+      /* Selection — distinct from hover so the active row stands out even
+         while the pointer is elsewhere. Uses inset box-shadow (not a border)
+         for the left accent bar so it doesn't disturb the depth-based
+         `padding-left`. */
+
+      &.--selected {
+        background: var(--tertiary-low);
+        box-shadow: inset 3px 0 0 var(--tertiary);
+        font-weight: 600;
+      }
+
+      &.--error {
+        color: var(--danger);
+      }
+
+      &.--muted:not(:hover, .--selected) {
+        color: var(--primary-medium);
+        opacity: 0.85;
+      }
+
+      /* Composite part — a code-defined inner block, not a free entry. */
+      &.--part .outline-block__name {
+        font-style: italic;
+        color: var(--primary-medium);
+      }
+    }
+
+    .outline-block__toggle {
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      color: var(--primary-medium);
+      display: inline-flex;
+      align-items: center;
+      width: 1rem;
+
+      &:hover {
+        color: var(--primary);
+      }
+    }
+
+    .outline-block__leaf {
+      display: inline-flex;
+      align-items: center;
+      width: 1rem;
+      color: var(--primary-medium);
+    }
+
+    .outline-block__type {
+      display: inline-flex;
+      align-items: center;
+      color: var(--primary-medium);
+
+      .d-icon {
+        font-size: 0.9em;
+      }
+    }
+
+    .outline-block.--error .outline-block__type {
+      color: var(--danger);
+    }
+
+    .outline-block__name {
+      flex: 1;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .outline-block__id {
+      opacity: 0.65;
+      font-family: "Courier New", courier, "Lucida Console", monaco, monospace;
+      font-size: var(--font-down-2);
+    }
+
+    .outline-block__mode {
+      text-transform: lowercase;
+    }
+
+    .outline-block__ordinal {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .outline-block__child-count {
+      font-variant-numeric: tabular-nums;
+    }
+
+    .outline-block__status {
+      display: inline-flex;
+      align-items: center;
+      color: var(--primary-medium);
+      font-size: 0.85em;
+      cursor: help;
+    }
+
+    .outline-block.--error .outline-block__status {
+      color: var(--danger);
+    }
+
+    .outline-block__grip {
+      position: absolute;
+      left: 0.15rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: inline-flex;
+      align-items: center;
+      color: var(--primary-medium);
+      cursor: grab;
+      opacity: 0;
+      transition: opacity 100ms;
+      font-size: 0.85em;
+    }
+
+    .outline-block__actions {
+      position: absolute;
+      right: 0.1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 0.15rem 0.3rem;
+      color: var(--primary-medium);
+      opacity: 0;
+      transition: opacity 100ms;
+    }
+
+    .outline-block:hover,
+    .outline-block:focus-visible,
+    .outline-block:focus-within,
+    .outline-block.--selected {
+      padding-right: 1.75rem;
+
+      .outline-block__grip,
+      .outline-block__actions {
+        opacity: 1;
+      }
+    }
+
+    .outline-children {
+      padding-left: 1rem;
+      border-left: 1px dashed var(--primary-low);
+    }
+  }
+}
+
+.wireframe-inspector__tab.--has-errors {
+  color: var(--danger);
+
+  .d-icon {
+    color: var(--danger);
+  }
+}
+
+/* The fixed-width box constrains the thumbnail: an inline SVG only honors a
+   percentage width against a sized parent, and the explicit aspect ratio keeps
+   it from collapsing to zero height. */
+
+.wireframe-inspector__preview {
+  flex: none;
+  width: 48px;
+}
+
+.wireframe-inspector__thumbnail {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 120 / 80;
+}
+
+.wireframe-inspector__header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--primary-low);
+  margin-bottom: 0.5rem;
+}
+
+.wireframe-inspector__multi {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.wireframe-inspector__multi-count {
+  font-weight: 600;
+}
+
+.wireframe-inspector__multi-delete {
+  align-self: stretch;
+}
+
+.wireframe-inspector__block-name {
+  flex: 1;
+  min-width: 0;
+  font-weight: 600;
+}
+
+.wireframe-inspector__metadata-info {
+  color: var(--primary-medium);
+  cursor: help;
+  display: inline-flex;
+  align-items: center;
+  white-space: pre-line;
+}
+
+.wireframe-inspector__unregistered-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5em;
+  margin-bottom: 0.5rem;
+  font-size: var(--font-down-1);
+
+  // Only the alert's own leading icon — not icons nested inside the message
+  // (e.g. the remove button's) — gets aligned beside the text.
+  > .d-icon {
+    margin-top: 0.15em;
+    flex-shrink: 0;
+  }
+
+  .form-kit__alert-message {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15em;
+  }
+
+  .wireframe-inspector__unregistered-notice-action {
+    align-self: flex-start;
+    margin-top: 0.5em;
+
+    // A solid danger button colours its icon `--danger-low` by default, which
+    // washes out against the red fill; match it to the label instead.
+    .d-icon {
+      color: var(--secondary);
+    }
+  }
+}
+
+.wireframe-inspector__outlet {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.wireframe-inspector__outlet-state {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.wireframe-outlet-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: var(--font-down-2);
+  font-weight: bold;
+  background: var(--primary-low);
+  color: var(--primary-high);
+
+  &.--published {
+    background: var(--success-low);
+    color: var(--success);
+  }
+
+  &.--locked {
+    background: var(--primary-low);
+    color: var(--primary-medium);
+  }
+
+  &.--editing {
+    background: var(--tertiary-low);
+    color: var(--tertiary);
+  }
+}
+
+.wireframe-inspector__tabs {
+  display: flex;
+  gap: 0;
+  background: var(--primary-very-low);
+  border-radius: 4px;
+  padding: 2px;
+  margin-bottom: 0.5rem;
+}
+
+.wireframe-inspector__tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  padding: 0.3rem 0.5rem;
+  cursor: pointer;
+  color: var(--primary-medium);
+  border-radius: 3px;
+  font-size: var(--font-down-1);
+
+  &:hover {
+    color: var(--primary);
+  }
+
+  &.--active {
+    background: var(--secondary);
+    color: var(--primary);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.06);
+  }
+}
+
+.wireframe-inspector__body {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.wireframe-inspector-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+
+  /* FormKit sizes a field's content area to a fixed input-width token (see
+     `app/assets/stylesheets/common/form-kit/_variables.scss`); `.form-kit__
+     container-content` defaults to the medium token. In the narrow inspector
+     side-panel every field should simply fill the column, so collapse both
+     tokens to 100%. The large token also stops the textarea control (which
+     hard-codes `min-width: var(--form-kit-large-input)`) from overflowing;
+     the medium token is what keeps `custom`-slot controls (segmented enum
+     pickers, steppers) from rendering narrower than the full panel width. */
+
+  --form-kit-large-input: 100%;
+  --form-kit-medium-input: 100%;
+
+  .form-kit__section {
+    gap: 0.75rem;
+  }
+
+  .form-kit__section-header {
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    padding-bottom: 0.25rem;
+    border-top: 1px solid var(--primary-low);
+    border-bottom: 0;
+  }
+
+  > .form-kit__section:first-child .form-kit__section-header,
+  > * + .form-kit__section:first-of-type .form-kit__section-header {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .form-kit__container-optional {
+    display: none;
+  }
+
+  .form-kit__control-radio-group {
+    display: inline-flex;
+    flex-flow: row wrap;
+    gap: 0;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    background: var(--secondary);
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    max-width: 100%;
+
+    .form-kit__field-radio {
+      flex: 1 0 auto;
+      margin: 0;
+      padding: 0;
+      border-right: 1px solid var(--primary-low);
+
+      &:last-child {
+        border-right: 0;
+      }
+    }
+
+    /* The label is the visible "button". The actual radio input is
+       hidden in-DOM but stays focusable for keyboard users. */
+
+    .form-kit__control-radio-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      padding: 0.4rem 0.6rem;
+      margin: 0;
+      cursor: pointer;
+      color: var(--primary-medium);
+      font-weight: 500;
+      text-transform: capitalize;
+      user-select: none;
+      transition:
+        background 80ms ease-out,
+        color 80ms ease-out;
+
+      &:hover {
+        background: var(--primary-very-low);
+        color: var(--primary);
+      }
+
+      &:has(input:checked) {
+        background: var(--tertiary-low);
+        color: var(--tertiary);
+      }
+
+      &:has(input:focus-visible) {
+        outline: 2px solid var(--tertiary);
+        outline-offset: -2px;
+      }
+    }
+
+    .form-kit__control-radio {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .form-kit__control-radio-label.--icon-only .form-kit__control-radio-title {
+      display: none;
+    }
+
+    .form-kit__control-radio-label .d-icon {
+      font-size: var(--font-up-1);
+    }
+  }
+
+  /* The field root (`.form-kit__container.form-kit__field`) is a flex column
+     with no width of its own, so it shrinks to its content. Force it to fill
+     the panel; otherwise every inner width (container-content, the stretched
+     control) resolves against a content-width box and the control stays narrow. */
+
+  .form-kit__field {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  /* FormKit's field content is itself a flex column with `align-items:
+     flex-start`, so a custom-slot control (segmented / dimension / stepper
+     fields) collapses to its content width. Restore `align-items: stretch`
+     (the default the bespoke layout form's field wrappers rely on) so these
+     controls span the panel like FormKit's own controls do. Toggle fields are
+     excluded: they intentionally right-align their switch. */
+
+  .form-kit__field:not(.form-kit__field-toggle) .form-kit__container-content {
+    align-items: stretch;
+  }
+
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  &__advanced {
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--primary-low);
+    padding-top: 0.5rem;
+
+    > summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 0.25rem 0;
+      font-weight: 600;
+      color: var(--primary-medium);
+      user-select: none;
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+
+      &::before {
+        content: "▸";
+        display: inline-block;
+        width: 1em;
+        margin-right: 0.25rem;
+        font-size: 0.85em;
+        transition: transform 120ms ease;
+      }
+
+      &:hover {
+        color: var(--primary);
+      }
+    }
+
+    &[open] > summary::before {
+      transform: rotate(90deg);
+    }
+  }
+
+  &__advanced-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+  }
+}
+
+.wireframe-inspector-container-args > * + * {
+  margin-top: 1rem;
+}
+
+.wireframe-layout-form__legend,
+.wireframe-condition-editor__legend,
+.wireframe-inspector-form .form-kit__container-title,
+.wireframe-inspector-form .form-kit__section-title {
+  color: var(--primary-medium);
+  font-size: var(--font-down-2);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.wireframe-inspector-form {
+  .form-kit__container-title,
+  .form-kit__section-title {
+    margin: 0;
+  }
+}
+
+/* Transparent slot wrappers. The chrome's transparent branch renders a
+   positioned wrapper around the inner block so the wrapper becomes the
+   direct grid item — its `grid-column` / `grid-row` styles (read from the
+   slot's args) are honoured by CSS Grid regardless of how many Glimmer
+   component boundaries sit inside it. No visible decoration: the wrapper
+   exists purely for layout.
+
+   It renders ALWAYS, even when the editor is inactive, so the live page
+   lays out cells correctly. Only positioning rules go here; visible
+   decoration (border, background, handle suppression) is scoped to
+   `body.wireframe-active` below so the published page stays undecorated. */
+
+.wireframe-transparent-slot {
+  min-width: 0;
+  min-height: 0;
+  transition:
+    grid-column 140ms ease-out,
+    grid-row 140ms ease-out;
+}
+
+body.wireframe-active {
+  .wireframe-transparent-slot {
+    position: relative;
+
+    /* The slot wrapper IS the cell — outline lives here, not on the
+       inner block's chrome (which is content-height and would draw a
+       smaller ring than the cell rectangle). Same gating as the block
+       chrome: idle slots are invisible, outline + tint appear only on
+       hover (innermost slot only) or when selected. `outline` (vs
+       `border`) keeps everything layout-shift-free. */
+    border-radius: var(--wf-radius);
+    padding: var(--wireframe-container-padding);
+    pointer-events: auto;
+    transition:
+      grid-column 140ms ease-out,
+      grid-row 140ms ease-out,
+      outline-color 80ms ease-out,
+      background-color 80ms ease-out;
+
+    &:not(.--selected, .--overlapping, .--out-of-bounds):hover:not(
+        :has(.wireframe-transparent-slot:hover)
+      ) {
+      outline: var(--wireframe-container-border-width) dotted
+        var(--wireframe-block-color);
+      background: rgb(var(--wf-accent-rgb), var(--wireframe-bg-opacity));
+    }
+
+    &.--selected {
+      outline: var(--wireframe-container-border-width) solid
+        var(--wireframe-block-hover-color);
+      background: rgb(var(--wf-accent-rgb), var(--wireframe-bg-opacity));
+    }
+
+    /* Overlapping / out-of-bounds — always-on danger treatment, wins over
+       hover and selected via source order. `--overlapping`: free-grid
+       cell rectangle intersects a sibling. `--out-of-bounds`: placement
+       references column / row lines past the parent grid's
+       `columns` × `rows` and CSS Grid pushed the cell into an implicit
+       track. The badge text ("Overlap" vs "Out of bounds") carries the
+       differentiation; outline treatment is identical. */
+
+    &.--overlapping,
+    &.--out-of-bounds {
+      outline: var(--wireframe-container-border-width) solid var(--danger);
+      box-shadow: 0 0 0 1px var(--danger);
+      background: rgb(var(--danger-rgb), 0.18);
+    }
+
+    /* Per-zone drop feedback lives on the grid overlay, not the slot:
+       during a drag, `.wireframe-grid-drop-overlay` paints a single
+       rectangle / line at the cell or grid-gap position the cursor is
+       targeting, so the slot wrapper keeps its normal idle styling and
+       the active edge doesn't compete with the slot's own 4-side
+       outline.
+
+       The shared `dDragAndDropTarget` modifier still toggles
+       `is-drag-above`/`-below`/`-left`/`-right` classes whose default
+       foundation styling paints a line via `::before`/`::after`. Null out
+       those pseudo-elements here so the only drop indicator is the grid
+       overlay. */
+
+    &.is-drag-above::before,
+    &.is-drag-below::after,
+    &.is-drag-left::before,
+    &.is-drag-right::after {
+      content: none;
+    }
+
+    /* The inner block's chrome inside a slot must NOT add its own outline
+       decoration — the slot wrapper IS the visible cell outline. The inner
+       chrome's floating bar (`.wireframe-block-toolbar`) stays absolute-
+       positioned and still reveals on hover / selection, landing near the
+       slot's top-left corner (inside the slot's padding). */
+
+    .wireframe-block-chrome {
+      outline: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+  }
+}
+
+body.wireframe-active
+  .wireframe-block-chrome.--selected.--container
+  .wireframe-transparent-slot
+  .wireframe-block-chrome {
+  border-style: solid;
+  border-color: var(--primary-low);
+  background: transparent;
+}
+
+/* Grid editor affordances (cells / tiles / ghost). Rendered INTO the
+   selected grid layout's grid `<div>` via `{{#in-element}}` so
+   they share the layout's CSS Grid context — guaranteeing alignment
+   without a parallel grid container.
+
+   The marker `<span>` is a zero-sized sibling of the layout div that
+   only exists to give us a DOM hook from which to find the grid div
+   on insert. */
+
+.wireframe-grid-edit-marker {
+  display: none;
+}
+
+.wireframe-grid-cell {
+  /* Placement consumed from custom properties set by `cellStyle` in
+     `grid-overlay.gjs` — see the comment there for why the cell uses
+     property hand-off rather than concrete inline `grid-column`. */
+  grid-column: var(--wf-grid-cell-column, auto);
+  grid-row: var(--wf-grid-cell-row, auto);
+  position: relative;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed var(--wireframe-block-color);
+  border-radius: var(--wf-radius);
+  background: rgb(var(--wf-accent-rgb), 0.04);
+  min-height: 40px;
+  transition:
+    background 80ms ease-out,
+    border-color 80ms ease-out;
+
+  &:hover {
+    background: rgb(var(--wf-accent-rgb), 0.1);
+    border-color: var(--wireframe-block-hover-color);
+  }
+
+  &.--drag-target {
+    background: rgb(var(--wf-accent-rgb), 0.18);
+    border-style: solid;
+    border-color: var(--wireframe-block-hover-color);
+  }
+
+  /* Suppress the foundation `is-drag-*` pseudo-element indicators here too, so
+     the grid overlay stays the sole drop-feedback surface (see the same note on
+     `.wireframe-transparent-slot`). */
+
+  &.is-drag-above::before,
+  &.is-drag-below::after,
+  &.is-drag-left::before,
+  &.is-drag-right::after {
+    content: none;
+  }
+}
+
+/* FloatKit menu hosting Replace / Remove for a clicked image marker.
+   Mounts in `#d-menu-portals` at the body level (outside any wireframe
+   shell wrapper), so the selector is flat — scoping under
+   `body.wireframe-active` is unnecessary and would in fact prevent the
+   styling from applying when the menu's portal sits as a sibling of
+   the shell rather than a descendant. The `data-identifier` is the
+   `identifier` passed to `menu.show()`; FloatKit's `DHeadlessMenu`
+   doesn't apply an identifier-derived class on its own. */
+
+[data-identifier="wireframe-image-edit-menu"] {
+  .wireframe-image-edit-menu {
+    list-style: none;
+    margin: 0;
+    padding: 0.25rem 0;
+    display: flex;
+    flex-direction: column;
+    min-width: 12rem;
+  }
+
+  .wireframe-image-edit-menu__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    width: 100%;
+    justify-content: flex-start;
+    font-size: var(--font-down-1);
+
+    &--danger {
+      color: var(--danger);
+    }
+  }
+}
+
+.wireframe-outline-row-actions {
+  .wireframe-outline__row-action--danger {
+    color: var(--danger);
+  }
+}
+
+[data-identifier="wireframe-block-picker"] {
+  .wireframe-block-picker {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.4rem;
+    width: 260px;
+  }
+
+  .wireframe-block-picker__search {
+    width: 100%;
+    margin: 0;
+  }
+
+  .wireframe-block-picker__results {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
+    gap: 0.4rem;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+
+  .wireframe-block-picker__empty {
+    grid-column: 1 / -1;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    padding: 0.4rem 0.2rem;
+  }
+
+  .wireframe-block-picker__browse-all {
+    align-self: flex-start;
+  }
+}
+
+/* The narrow-width tooltip-host swap (below) relies on `display: none` — not
+   `visibility: hidden` — so its FloatKit listeners stay dormant until the host
+   is shown; that's what keeps the label and the tooltip from ever appearing
+   simultaneously. */
+
+/* While a block drag is in flight, the empty-state call to action stops
+   capturing pointer events so the drag's release lands on the container's drop
+   target underneath (which creates the first child) instead of being swallowed
+   by this button. Click-to-pick still works when no drag is in progress. */
+
+.wireframe-shell.--dragging .wireframe-empty-drop-placeholder {
+  pointer-events: none;
+}
+
+.wireframe-empty-drop-placeholder {
+  container-type: inline-size;
+  container-name: wireframe-empty;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--wf-gap);
+  width: 100%;
+  min-height: 4rem;
+  margin: 0.25rem;
+  padding: 1rem;
+  border: 0;
+  background: rgb(0 0 0 / 0.02);
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+  cursor: pointer;
+  transition:
+    background 80ms ease-out,
+    color 80ms ease-out;
+
+  &:hover {
+    background: rgb(var(--wf-accent-rgb), 0.08);
+    color: var(--wireframe-block-color);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--wf-focus-ring);
+    outline-offset: -2px;
+  }
+
+  &__icon {
+    display: inline-flex;
+    align-items: center;
+
+    .d-icon {
+      font-size: 1.25rem;
+    }
+  }
+
+  .wireframe-grid-cell > & {
+    align-self: stretch;
+    margin: 0;
+    min-height: 0;
+    padding: 0.35rem;
+  }
+}
+
+/* Below ~12rem the hint text would crowd the cell, so collapse to just the
+   centered `+`. The button keeps its `aria-label`, so it stays named. */
+@container wireframe-empty (max-width: 12rem) {
+  .wireframe-empty-drop-placeholder__hint {
+    display: none;
+  }
+}
+
+/* Covers an unconfigured block as a click target that selects it (opening the
+   inspector) so the user can fill in the missing arg. */
+
+.wireframe-empty-arg-prompt {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--wf-gap);
+  padding: 1rem;
+  border: 0;
+  background: rgb(0 0 0 / 0.02);
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+  text-align: center;
+  cursor: pointer;
+  transition:
+    background 80ms ease-out,
+    color 80ms ease-out;
+
+  &:hover {
+    background: rgb(var(--wf-accent-rgb), 0.08);
+    color: var(--wireframe-block-color);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--wf-focus-ring);
+    outline-offset: -2px;
+  }
+
+  &__icon .d-icon {
+    font-size: 1.5rem;
+  }
+}
+
+/* Editor-only empty-cell placeholders use a separate class
+   (`.wireframe-grid-cell`) and need their own copy of the
+   per-cell collapse override — the universal block in
+   `wireframe.scss` only covers `.d-block-layout__cell`. Same logic:
+   each placeholder spans all columns and auto-flows into its own row
+   so the stacked view shows them between slot chromes (sorted via
+   the `order:` declarations both cell types emit). */
+
+@container d-block-layout (max-width: 40rem) {
+  .d-block-layout--grid.d-block-layout--collapse-default
+    > .wireframe-grid-cell {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+}
+
+@container d-block-layout (max-width: 15rem) {
+  .d-block-layout--grid.d-block-layout--collapse-compact
+    > .wireframe-grid-cell {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+}
+
+/* "Expand for editing" override — the chrome wrapper carries
+   `--force-expanded` when the author has flipped the toolbar toggle
+   on a `wf:layout`. Restores each cell's per-author grid placement
+   (and each row child's natural flex basis) regardless of canvas
+   width, defeating the universal `@container` collapse rules for
+   that single layout via a more specific selector chain.
+   `overflow-x: auto` lets the author scroll horizontally when the
+   restored grid is wider than the canvas. */
+
+.wireframe-block-chrome-wrapper.--force-expanded {
+  overflow-x: auto;
+
+  .d-block-layout--grid.d-block-layout--collapse-default
+    > .d-block-layout__cell,
+  .d-block-layout--grid.d-block-layout--collapse-compact
+    > .d-block-layout__cell,
+  .d-block-layout--grid.d-block-layout--collapse-default > .wireframe-grid-cell,
+  .d-block-layout--grid.d-block-layout--collapse-compact
+    > .wireframe-grid-cell {
+    grid-column: var(--d-block-cell-column, var(--wf-grid-cell-column, auto));
+    grid-row: var(--d-block-cell-row, var(--wf-grid-cell-row, auto));
+  }
+
+  .d-block-layout--row.d-block-layout--collapse-default > .d-block-layout__flex,
+  .d-block-layout--row.d-block-layout--collapse-compact
+    > .d-block-layout__flex {
+    flex-wrap: var(--d-block-layout-wrap, wrap);
+  }
+
+  .d-block-layout--row.d-block-layout--collapse-default
+    > .d-block-layout__flex
+    > *,
+  .d-block-layout--row.d-block-layout--collapse-compact
+    > .d-block-layout__flex
+    > * {
+    flex-basis: auto;
+  }
+}
+
+@container d-block-layout (max-width: 40rem) {
+  .d-block-layout--grid.d-block-layout--collapse-default
+    .wireframe-block-chrome__resize-handle {
+    display: none;
+  }
+}
+
+@container d-block-layout (max-width: 15rem) {
+  .d-block-layout--grid.d-block-layout--collapse-compact
+    .wireframe-block-chrome__resize-handle {
+    display: none;
+  }
+}
+
+.wireframe-block-chrome-wrapper.--force-expanded
+  .wireframe-block-chrome__resize-handle {
+  display: block;
+}
+
+.wireframe-block-chrome__resize-handle {
+  position: absolute;
+  z-index: 3;
+  pointer-events: auto;
+  background: var(--wireframe-block-hover-color);
+  border-radius: 2px;
+  opacity: 0.85;
+  transition: opacity 80ms ease-out;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  &--n,
+  &--s {
+    left: 50%;
+    width: 24px;
+    height: 4px;
+    transform: translateX(-50%);
+    cursor: ns-resize;
+  }
+
+  &--e,
+  &--w {
+    top: 50%;
+    width: 4px;
+    height: 24px;
+    transform: translateY(-50%);
+    cursor: ew-resize;
+  }
+
+  &--n {
+    top: -2px;
+  }
+
+  &--s {
+    bottom: -2px;
+  }
+
+  &--e {
+    right: -2px;
+  }
+
+  &--w {
+    left: -2px;
+  }
+
+  &--ne,
+  &--nw,
+  &--se,
+  &--sw {
+    width: 8px;
+    height: 8px;
+  }
+
+  &--nw {
+    top: -3px;
+    left: -3px;
+    cursor: nwse-resize;
+  }
+
+  &--ne {
+    top: -3px;
+    right: -3px;
+    cursor: nesw-resize;
+  }
+
+  &--se {
+    bottom: -3px;
+    right: -3px;
+    cursor: nwse-resize;
+  }
+
+  &--sw {
+    bottom: -3px;
+    left: -3px;
+    cursor: nesw-resize;
+  }
+}
+
+.wireframe-grid-cell {
+  .wireframe-block-chrome__resize-handle {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &:hover,
+  &.--selected {
+    .wireframe-block-chrome__resize-handle {
+      opacity: 0.85;
+      pointer-events: auto;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.wireframe-block-chrome-wrapper.--in-grid-cell {
+  .wireframe-block-chrome__resize-handle {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &:hover:not(:has(.wireframe-block-chrome-wrapper:hover))
+    .wireframe-block-chrome__resize-handle,
+  .wireframe-block-chrome.--selected .wireframe-block-chrome__resize-handle {
+    opacity: 0.85;
+    pointer-events: auto;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+/* Image resize overlay — absolutely-positioned wrapper that tracks the
+   rendered image marker's bounding rect. Hosts the resize handles and the
+   marching-ants dashed selection ring. The component sets `position`, `top`,
+   `left`, `width`, `height` inline via JS based on the marker's measured
+   rect. */
+
+.wireframe-image-resize-overlay {
+  z-index: 4;
+
+  /* The container itself is `pointer-events: none` (set inline by JS)
+     so it doesn't intercept clicks on the underlying image. The
+     individual handles re-enable pointer events on themselves. */
+
+  &__ring {
+    position: absolute;
+    inset: -2px;
+    pointer-events: none;
+    background-image:
+      linear-gradient(90deg, var(--tertiary) 50%, transparent 50%),
+      linear-gradient(90deg, var(--tertiary) 50%, transparent 50%),
+      linear-gradient(0deg, var(--tertiary) 50%, transparent 50%),
+      linear-gradient(0deg, var(--tertiary) 50%, transparent 50%);
+    background-repeat: repeat-x, repeat-x, repeat-y, repeat-y;
+    background-size:
+      12px 2px,
+      12px 2px,
+      2px 12px,
+      2px 12px;
+    background-position:
+      0 0,
+      0 100%,
+      0 0,
+      100% 0;
+    animation: wireframe-marching-ants 0.6s linear infinite;
+  }
+
+  &__handle {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background: var(--tertiary);
+    border: 2px solid var(--secondary);
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+    pointer-events: auto;
+
+    &--nw {
+      top: -8px;
+      left: -8px;
+      cursor: nwse-resize;
+    }
+
+    &--ne {
+      top: -8px;
+      right: -8px;
+      cursor: nesw-resize;
+    }
+
+    &--sw {
+      bottom: -8px;
+      left: -8px;
+      cursor: nesw-resize;
+    }
+
+    &--se {
+      bottom: -8px;
+      right: -8px;
+      cursor: nwse-resize;
+    }
+
+    &--n {
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      cursor: ns-resize;
+    }
+
+    &--s {
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      cursor: ns-resize;
+    }
+
+    &--e {
+      top: 50%;
+      right: -8px;
+      transform: translateY(-50%);
+      cursor: ew-resize;
+    }
+
+    &--w {
+      top: 50%;
+      left: -8px;
+      transform: translateY(-50%);
+      cursor: ew-resize;
+    }
+  }
+}
+
+@keyframes wireframe-marching-ants {
+  to {
+    background-position:
+      12px 0,
+      -12px 100%,
+      0 -12px,
+      100% 12px;
+  }
+}
+
+@keyframes wireframe-block-flash {
+  from {
+    box-shadow: 0 0 0 16px rgb(var(--wf-accent-rgb), 0.55);
+  }
+
+  to {
+    box-shadow: 0 0 0 16px rgb(var(--wf-accent-rgb), 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.wireframe-active .wireframe-block-chrome.--just-selected {
+    animation: none;
+  }
+}
+
+.wireframe-grid-ghost {
+  pointer-events: none;
+  border: 1px dashed var(--wireframe-block-hover-color);
+  background: rgb(var(--wf-accent-rgb), 0.2);
+  border-radius: var(--wf-radius);
+  opacity: 0;
+  z-index: 3;
+  transition:
+    grid-column 120ms ease-out,
+    grid-row 120ms ease-out;
+
+  &.--visible {
+    opacity: 1;
+  }
+}
+
+/* `pointer-events: auto` opts back into interaction: the editor grid overlay
+   is `pointer-events: none` so stray clicks fall through to block selection,
+   and each interactive overlay piece (empty cells, these handles) re-enables
+   it individually. */
+
+.wireframe-grid-track-handle {
+  pointer-events: auto;
+  z-index: 6;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+
+  &::before {
+    content: "";
+    width: 2px;
+    background: var(--tertiary);
+    border-radius: 2px;
+    opacity: 0.4;
+    transition:
+      opacity 80ms ease-out,
+      width 80ms ease-out;
+  }
+
+  &:hover::before,
+  &.--dragging::before {
+    opacity: 1;
+    width: 4px;
+  }
+
+  &--column {
+    width: 12px;
+    justify-self: start;
+
+    // Placed at the start of column N (the right edge of the gutter);
+    // shift left by half the handle AND half the gap so the stroke sits
+    // in the centre of the gutter between the two columns.
+    transform: translateX(calc(-50% - var(--d-block-layout-gap, 0rem) / 2));
+    cursor: ew-resize;
+    touch-action: none;
+  }
+}
+
+.wireframe-grid-drop-overlay {
+  position: absolute;
+  pointer-events: none;
+  z-index: 4;
+  border-radius: var(--wf-radius);
+  opacity: 0;
+  transition:
+    top 120ms ease,
+    left 120ms ease,
+    width 120ms ease,
+    height 120ms ease,
+    opacity 120ms ease,
+    background-color 120ms ease,
+    border-color 120ms ease;
+
+  &.--rect-swap {
+    border: 2px solid var(--tertiary);
+    background: rgb(var(--tertiary-rgb), 0.08);
+  }
+
+  &.--rect-replace {
+    border: 2px solid var(--danger);
+    background: rgb(var(--danger-rgb), 0.08);
+  }
+
+  &.--rect-move {
+    border: 2px dashed var(--wireframe-block-hover-color);
+    background: rgb(var(--wf-accent-rgb), 0.08);
+  }
+
+  &.--rect-swap,
+  &.--rect-replace,
+  &.--rect-move {
+    transition:
+      width 120ms ease,
+      height 120ms ease;
+  }
+
+  &.--line-column,
+  &.--line-row {
+    background: var(--tertiary);
+    border-radius: 2px;
+  }
+
+  &.--line-column {
+    transition: width 120ms ease;
+  }
+
+  &.--line-row {
+    transition: height 120ms ease;
+  }
+}
+
+.wireframe-layout-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  font-size: var(--font-down-1);
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 100%;
+  }
+
+  &__warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.5rem 0.6rem;
+    border: 1px solid var(--danger);
+    border-radius: 4px;
+    background: rgb(var(--danger-rgb), 0.08);
+
+    .d-icon {
+      color: var(--danger);
+      flex-shrink: 0;
+      margin-top: 0.15rem;
+    }
+  }
+
+  &__warning-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-size: var(--font-down-1);
+
+    p {
+      margin: 0;
+      color: var(--primary);
+    }
+  }
+
+  /* Columns / rows sit on one row, each at its natural width, pushed to opposite
+     ends. The fields default to full width in the inspector, so reset them to
+     auto here or they'd each claim the whole row. */
+
+  &__pair {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    width: 100%;
+
+    .form-kit__field {
+      width: auto;
+    }
+  }
+
+  &__hint {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0.4rem 0.5rem;
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+    background: var(--primary-very-low);
+    border-radius: 4px;
+
+    .d-icon {
+      font-size: 0.85rem;
+      color: var(--primary-medium);
+      flex-shrink: 0;
+    }
+  }
+
+  &__source {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1px;
+    background: var(--primary-very-low);
+    border-radius: 4px;
+    padding: 2px;
+  }
+
+  &__source-option {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    background: transparent;
+    border: none;
+    padding: 0.45rem 0.6rem;
+    font-size: var(--font-down-2);
+    font-weight: 500;
+    color: var(--primary-medium);
+    border-radius: 3px;
+    cursor: pointer;
+
+    .d-icon {
+      font-size: 0.85rem;
+    }
+
+    &:hover:not(.--active) {
+      color: var(--primary);
+    }
+
+    &.--active {
+      background: var(--secondary);
+      color: var(--primary);
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+    }
+  }
+
+  &__template-dropdown {
+    justify-content: space-between;
+    flex-direction: row-reverse;
+  }
+
+  &__advanced {
+    summary {
+      cursor: pointer;
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 0.25rem 0;
+      list-style: none;
+
+      &::before {
+        content: "▸ ";
+      }
+    }
+
+    &[open] summary::before {
+      content: "▾ ";
+    }
+  }
+
+  &__template-row {
+    display: flex;
+    gap: 0.25rem;
+
+    input {
+      flex: 1 1 auto;
+      margin: 0;
+    }
+  }
+
+  &__preview {
+    width: 100%;
+    height: 100%;
+    background: var(--primary-very-low);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  &__preview-tile {
+    background: var(--tertiary);
+    border-radius: 1px;
+    min-width: 4px;
+    min-height: 4px;
+  }
+}
+
+.wireframe-dimension-field {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &--with-slider .wireframe-dimension-field__slider {
+    flex: 1 1 auto;
+    min-width: 0;
+    margin: 0;
+  }
+
+  &__entry {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex: 0 0 auto;
+  }
+
+  /* `[type="number"]` qualifier raises specificity above the global
+     `input[type=number]` rule so its `margin-bottom` doesn't offset the box. */
+
+  &__number[type="number"] {
+    width: 4rem;
+    margin: 0;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__suffix {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+  }
+
+  &__unit {
+    width: auto;
+    margin: 0;
+  }
+}
+
+.wireframe-stepper-field {
+  display: inline-flex;
+  align-items: stretch;
+  gap: 0.25rem;
+
+  &__number[type="number"] {
+    flex: 0 0 auto;
+    width: 3.5rem;
+    min-width: 0;
+    margin: 0;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    appearance: textfield;
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      appearance: none;
+      margin: 0;
+    }
+  }
+
+  &__btn.btn-flat {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0 0.6rem;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+    color: var(--primary-medium);
+    background: var(--secondary);
+
+    &:hover:not([disabled]) {
+      background: var(--primary-very-low);
+      color: var(--primary);
+    }
+  }
+}
+
+/* Core `DSegmentedControl` is tuned for the light admin surface; stretch it to
+   the panel width instead. `min-width: 0` on the segment label overrides
+   flexbox's default min-content floor — without it, a control with several
+   options (e.g. alignment) pushes the narrow panel into horizontal scroll. */
+
+.wireframe-layout-form,
+.wireframe-inspector-form {
+  .d-segmented-control {
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+
+    .d-segmented-control__label {
+      flex: 1 1 0;
+      min-width: 0;
+      padding-inline: var(--space-2);
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  .wireframe-segmented-field .d-segmented-control__text .d-icon {
+    font-size: var(--font-up-1);
+  }
+
+  .wireframe-segmented-field__dropdown {
+    width: 100%;
+  }
+}
+
+.wireframe-template-menu {
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+  padding: 0.25rem;
+
+  &__item {
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.35rem 0.5rem;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
+    text-align: left;
+    color: var(--primary);
+    font-size: var(--font-down-1);
+    cursor: pointer;
+
+    &:hover:not([disabled]) {
+      background: var(--primary-very-low);
+    }
+
+    &.--active {
+      background: var(--tertiary-low);
+    }
+
+    &.--disabled,
+    &[disabled] {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  &__preview {
+    width: 40px;
+    height: 28px;
+  }
+
+  &__label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__check {
+    color: var(--tertiary);
+  }
+}
+
+.wireframe-inspector-raw-json {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__textarea {
+    width: 100%;
+    min-height: 240px;
+    font-family: "Courier New", courier, monospace;
+    font-size: var(--font-down-2);
+    padding: 0.5rem;
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    background: var(--secondary);
+    resize: vertical;
+  }
+
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--danger-low);
+    color: var(--danger);
+    border-radius: 4px;
+    font-size: var(--font-down-1);
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.25rem;
+    flex-wrap: wrap;
+  }
+}
+
+.wireframe-inspector-section {
+  margin-bottom: 1rem;
+
+  .inspector-section__title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+    letter-spacing: 0.04em;
+  }
+
+  .inspector-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.25rem 0;
+    border-bottom: 1px dashed var(--primary-low);
+    font-size: var(--font-down-1);
+
+    .row-key {
+      color: var(--primary-medium);
+    }
+  }
+
+  pre {
+    background: var(--primary-very-low);
+    padding: 0.5rem;
+    overflow-x: auto;
+    font-size: var(--font-down-2);
+    font-family: "Courier New", courier, "Lucida Console", monaco, monospace;
+  }
+}
+
+body.wireframe-dragging {
+  .wireframe-drop-zone {
+    background: var(--primary-very-low);
+
+    &.--inside {
+      border-color: var(--primary-low);
+    }
+
+    .wireframe-drop-zone__label {
+      opacity: 0.65;
+    }
+
+    /* Only colors change here — resizing the zone on hover would bounce the
+       cursor out of the zone mid-drag and cancel the drop (see the note on
+       `.wireframe-drop-zone` above). */
+
+    &:hover,
+    &.--active {
+      background: var(--tertiary);
+
+      &.--inside {
+        border-color: var(--tertiary);
+        background: var(--tertiary-low);
+      }
+
+      .wireframe-drop-zone__label {
+        opacity: 1;
+        color: var(--tertiary);
+      }
+    }
+  }
+
+  .outline-block.--dragging {
+    opacity: 0.5;
+  }
+
+  /* During an active drag, fade the persistent `+` placeholders so
+     they don't compete with the single drop indicator the shell
+     paints. They STILL receive pointer events because each cell
+     carries its own grid-aware `dDragAndDropTarget` modifier —
+     drops onto a specific cell go through that modifier (it knows
+     about column/row coordinates), not the unified service
+     dispatch path. */
+
+  .wireframe-grid-cell {
+    opacity: 0.3;
+  }
+}
+
+.wireframe-block-chrome.--empty-container {
+  min-height: 4rem;
+}
+
+/* `position: relative` anchor for the absolute-positioned `GridOverlay`;
+   padding compensates for the chrome's own outer margin inside the layout. */
+
+body.wireframe-active {
+  .d-block-layout--grid {
+    position: relative;
+    padding: var(--wireframe-container-margin, 0);
+  }
+}
+
+.wireframe-simulation {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+
+  &__title {
+    margin: 0;
+    font-size: 1em;
+    font-weight: 700;
+  }
+
+  &__intro {
+    margin: 0;
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-large);
+    color: var(--primary-medium);
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+
+  &__label {
+    font-size: var(--font-down-1);
+    font-weight: 600;
+    color: var(--primary-high);
+  }
+
+  &__persona.select-kit {
+    width: 100%;
+  }
+
+  &__viewport.d-segmented-control {
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+
+    .d-segmented-control__label {
+      flex: 1 1 0;
+      min-width: 0;
+      justify-content: center;
+    }
+  }
+
+  &__status {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5em;
+
+    > .d-icon {
+      margin-top: 0.15em;
+      flex-shrink: 0;
+    }
+
+    .form-kit__alert-message {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
+  }
+
+  &__status-text {
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-large);
+    color: var(--primary-high);
+
+    strong {
+      display: block;
+      margin-bottom: var(--space-1);
+      font-size: var(--font-0);
+      font-weight: 700;
+      color: var(--primary);
+    }
+  }
+
+  &__clear {
+    background: var(--secondary);
+  }
+}
+
+.wireframe-inspector__conditions-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0.35rem;
+}
+
+.wireframe-inspector__detach-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 0.2rem 0.45rem;
+  color: var(--primary-medium);
+  font-size: var(--font-down-2);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--primary);
+    border-color: var(--primary-low-mid);
+    background: var(--primary-very-low);
+  }
+
+  .d-icon {
+    font-size: 0.75rem;
+  }
+}
+
+.wireframe-inspector__conditions-stub {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+  font-style: italic;
+  padding: 1rem 0.5rem;
+  margin: 0;
+  text-align: center;
+  background: var(--primary-very-low);
+  border: 1px dashed var(--primary-low-mid);
+  border-radius: 4px;
+}
+
+.wireframe-conditions-floating {
+  position: fixed;
+  z-index: z("modal", "popover");
+  min-width: 320px;
+  min-height: 280px;
+  background: var(--secondary);
+  border: 1px solid var(--primary-low-mid);
+  border-radius: 6px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  flex-direction: column;
+  resize: both;
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--primary-very-low);
+    border-bottom: 1px solid var(--primary-low);
+    cursor: move;
+    user-select: none;
+    flex: 0 0 auto;
+  }
+
+  &__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--primary);
+    font-weight: 600;
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      color: var(--primary-medium);
+      font-size: 0.85rem;
+    }
+  }
+
+  &__actions {
+    display: inline-flex;
+    gap: 0.25rem;
+  }
+
+  &__btn {
+    background: transparent;
+    border: none;
+    padding: 0.25rem 0.4rem;
+    color: var(--primary-medium);
+    cursor: pointer;
+    border-radius: 3px;
+
+    &:hover {
+      color: var(--primary);
+      background: var(--primary-low);
+    }
+  }
+
+  &__body {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 0.75rem;
+  }
+}
+
+.wireframe-blocked-callout {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: var(--tertiary-low);
+  border-bottom: 1px solid var(--tertiary);
+  font-size: var(--font-down-1);
+
+  &__icon .d-icon {
+    color: var(--tertiary);
+  }
+
+  &__message {
+    flex: 1;
+    overflow-wrap: anywhere;
+  }
+
+  &__setup,
+  &__dismiss {
+    flex-shrink: 0;
+  }
+}
+
+.wireframe-review {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: z("modal", "popover");
+  width: 420px;
+  max-width: 100vw;
+  display: flex;
+  flex-direction: column;
+  background: var(--secondary);
+  border-left: 1px solid var(--primary-low-mid);
+  box-shadow: var(--shadow-card);
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__title {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  &__tabs {
+    display: flex;
+    gap: 0;
+    padding: 0.5rem 1rem 0;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__tab {
+    border-radius: 0;
+    border-bottom: 2px solid transparent;
+
+    &.--active {
+      border-bottom-color: var(--tertiary);
+      color: var(--tertiary);
+    }
+  }
+
+  &__body {
+    flex: 1 1 auto;
+    overflow: auto;
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__empty {
+    margin: 1rem 0;
+    color: var(--primary-medium);
+    text-align: center;
+  }
+
+  &__escape {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.6rem;
+    border: 1px solid var(--tertiary);
+    border-radius: 4px;
+    background: var(--tertiary-low);
+  }
+
+  &__escape-notice {
+    margin: 0;
+    font-size: var(--font-down-1);
+    color: var(--primary-high);
+  }
+
+  &__escape-error {
+    margin: 0;
+    font-size: var(--font-down-1);
+    color: var(--danger);
+  }
+
+  &__group {
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  &__group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.6rem;
+    background: var(--primary-very-low);
+    font-weight: 600;
+  }
+
+  &__group-theme {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+
+    .d-icon {
+      color: var(--primary-medium);
+    }
+  }
+
+  &__group-status {
+    font-size: var(--font-down-1);
+    font-weight: normal;
+
+    &.--ok {
+      color: var(--success);
+    }
+
+    &.--blocked {
+      color: var(--danger);
+    }
+  }
+
+  &__outlets {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__outlet {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.4rem 0.6rem;
+    border-top: 1px solid var(--primary-low);
+  }
+
+  &__outlet-name {
+    color: var(--primary-high);
+    overflow-wrap: anywhere;
+  }
+
+  &__outlet-actions {
+    display: inline-flex;
+    gap: 0.25rem;
+    flex-shrink: 0;
+  }
+
+  &__change {
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    padding: 0.5rem 0.6rem;
+  }
+
+  &__change-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  &__change-counts {
+    display: inline-flex;
+    gap: 0.4rem;
+    flex: 1;
+    flex-wrap: wrap;
+  }
+
+  &__count {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+
+    &.--added {
+      color: var(--success);
+    }
+
+    &.--removed {
+      color: var(--danger);
+    }
+
+    &.--edited,
+    &.--moved {
+      color: var(--tertiary);
+    }
+  }
+
+  &__raw {
+    margin: 0.5rem 0 0;
+    max-height: 16rem;
+    overflow: auto;
+    padding: 0.5rem;
+    background: var(--primary-very-low);
+    border-radius: 4px;
+    font-size: var(--font-down-2);
+  }
+
+  &__error {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--danger-low);
+    color: var(--danger);
+    border-top: 1px solid var(--danger);
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      color: var(--danger);
+    }
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    border-top: 1px solid var(--primary-low);
+  }
+
+  &__discard {
+    margin-right: auto;
+  }
+}
+
+.wireframe-conditions-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__empty {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+  }
+
+  &__hint {
+    margin: 0;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    line-height: 1.4;
+  }
+
+  &__seed-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+  }
+
+  &__seed-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.6rem;
+    background: var(--primary-very-low);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--primary);
+    font-size: var(--font-down-1);
+    text-align: left;
+
+    &:hover {
+      background: var(--primary-low);
+      border-color: var(--primary-low-mid);
+    }
+
+    .d-icon {
+      color: var(--primary-medium);
+      font-size: 0.85rem;
+    }
+  }
+
+  &__leaf-root {
+    display: flex;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__clear {
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+
+    &:hover {
+      color: var(--danger);
+    }
+  }
+}
+
+.wireframe-condition-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  &:not(.--root) {
+    padding: 0.4rem 0 0.4rem 0.75rem;
+    border-left: 2px solid var(--primary-low);
+    margin-left: 0.25rem;
+  }
+
+  &.--and:not(.--root) {
+    border-left-color: var(--tertiary);
+  }
+
+  &.--or:not(.--root) {
+    border-left-color: var(--love);
+  }
+
+  &.--not:not(.--root) {
+    border-left-color: var(--primary-medium);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  &__combinator-toggle {
+    display: inline-flex;
+    background: var(--primary-very-low);
+    border-radius: 999px;
+    padding: 2px;
+    gap: 1px;
+  }
+
+  &__combinator-chip {
+    background: transparent;
+    border: none;
+    padding: 0.2rem 0.65rem;
+    font-size: var(--font-down-2);
+    font-weight: 600;
+    color: var(--primary-medium);
+    border-radius: 999px;
+    cursor: pointer;
+    line-height: 1.2;
+
+    &:hover:not(.--active) {
+      color: var(--primary);
+    }
+
+    &.--active {
+      background: var(--secondary);
+      color: var(--primary);
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+    }
+  }
+
+  &__remove {
+    background: transparent;
+    border: none;
+    padding: 0.15rem;
+    color: var(--primary-medium);
+    cursor: pointer;
+    border-radius: 3px;
+
+    &:hover {
+      color: var(--danger);
+      background: var(--primary-very-low);
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  &__empty-hint {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    margin: 0;
+    font-style: italic;
+    padding: 0.25rem 0;
+  }
+
+  &__add {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin-top: 0.15rem;
+  }
+
+  &__add-actions {
+    display: inline-flex;
+    gap: 0.35rem;
+  }
+
+  &__add-rule,
+  &__add-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: transparent;
+    border: 1px dashed var(--primary-low-mid);
+    border-radius: 4px;
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+
+    &:hover {
+      color: var(--primary);
+      border-color: var(--primary-medium);
+      background: var(--primary-very-low);
+    }
+
+    .d-icon {
+      font-size: 0.7rem;
+    }
+  }
+
+  &__add-rule.--active {
+    color: var(--tertiary);
+    border-color: var(--tertiary);
+    background: var(--tertiary-low);
+  }
+
+  &__type-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+    padding: 0.25rem;
+    background: var(--primary-very-low);
+    border-radius: 4px;
+  }
+
+  &__type-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    padding: 0.4rem 0.5rem;
+    cursor: pointer;
+    color: var(--primary);
+    font-size: var(--font-down-2);
+    text-align: left;
+
+    &:hover {
+      background: var(--primary-low);
+    }
+
+    .d-icon {
+      color: var(--primary-medium);
+      font-size: 0.8rem;
+    }
+  }
+}
+
+.wireframe-condition-rule {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "header remove"
+    "body body";
+  align-items: center;
+  border-radius: 4px;
+  background: var(--secondary);
+  border: 1px solid var(--primary-low);
+  transition: border-color 80ms ease-out;
+
+  &:hover {
+    border-color: var(--primary-low-mid);
+  }
+
+  &.--expanded {
+    background: var(--primary-very-low);
+    border-color: var(--primary-low-mid);
+  }
+
+  &__header {
+    grid-area: header;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--primary);
+    font-size: var(--font-down-1);
+    padding: 0.4rem 0.5rem;
+    min-width: 0;
+  }
+
+  &__chevron {
+    color: var(--primary-medium);
+    display: inline-flex;
+    align-items: center;
+    transition: transform 120ms ease-out;
+
+    .d-icon {
+      font-size: 0.7rem;
+    }
+  }
+
+  &.--expanded &__chevron {
+    transform: rotate(90deg);
+  }
+
+  &__icon {
+    color: var(--primary-medium);
+    display: inline-flex;
+    align-items: center;
+
+    .d-icon {
+      font-size: 0.85rem;
+    }
+  }
+
+  &__label {
+    font-weight: 600;
+    color: var(--primary);
+    flex: 0 0 auto;
+  }
+
+  &__sep {
+    color: var(--primary-medium);
+    flex: 0 0 auto;
+  }
+
+  &__summary {
+    color: var(--primary-medium);
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__remove {
+    grid-area: remove;
+    background: transparent;
+    border: none;
+    padding: 0.4rem 0.5rem;
+    color: var(--primary-medium);
+    cursor: pointer;
+    border-radius: 3px;
+    align-self: center;
+
+    &:hover {
+      color: var(--danger);
+    }
+  }
+
+  &__body {
+    grid-area: body;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem 0.6rem;
+    border-top: 1px solid var(--primary-low);
+  }
+
+  &__type-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: var(--font-down-1);
+
+    > span {
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    select {
+      margin: 0;
+    }
+  }
+}
+
+.wireframe-condition-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  font-size: var(--font-down-1);
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__segmented {
+    display: inline-flex;
+    background: var(--primary-very-low);
+    border-radius: 4px;
+    padding: 2px;
+    gap: 1px;
+    align-self: flex-start;
+  }
+
+  &__segment {
+    background: transparent;
+    border: none;
+    padding: 0.25rem 0.6rem;
+    font-size: var(--font-down-2);
+    font-weight: 500;
+    color: var(--primary-medium);
+    border-radius: 3px;
+    cursor: pointer;
+
+    &:hover:not(.--active) {
+      color: var(--primary);
+    }
+
+    &.--active {
+      background: var(--secondary);
+      color: var(--primary);
+      box-shadow: 0 1px 2px rgb(0 0 0 / 0.08);
+    }
+  }
+
+  &__check-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+  }
+
+  &__check {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    cursor: pointer;
+
+    input {
+      margin: 0;
+    }
+  }
+
+  &__pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  &__pair-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    font-size: var(--font-down-1);
+
+    > span {
+      color: var(--primary-medium);
+      font-size: var(--font-down-2);
+    }
+
+    select {
+      margin: 0;
+    }
+  }
+
+  &__chip-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.55rem;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: var(--font-down-1);
+    color: var(--primary);
+    text-align: left;
+
+    &:hover:not(.--active) {
+      background: var(--primary-very-low);
+      border-color: var(--primary-low-mid);
+    }
+
+    &.--active {
+      background: var(--tertiary-low);
+      border-color: var(--tertiary);
+      color: var(--tertiary);
+    }
+  }
+
+  &__textarea {
+    margin: 0;
+    font-size: var(--font-down-1);
+    line-height: 1.4;
+    resize: vertical;
+
+    &.--mono {
+      font-family: var(--d-font-family--monospace);
+      font-size: var(--font-down-2);
+    }
+  }
+
+  &__help {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    font-style: italic;
+  }
+
+  &__error {
+    color: var(--danger);
+    font-size: var(--font-down-2);
+    font-family: var(--d-font-family--monospace);
+  }
+
+  &__advanced-toggle {
+    align-self: flex-start;
+    background: transparent;
+    border: none;
+    padding: 0.25rem 0;
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+
+  &__viewport-chips {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.25rem;
+  }
+
+  &__viewport-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 0.55rem;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: var(--font-down-1);
+    color: var(--primary);
+    text-align: left;
+
+    &:hover:not(.--active) {
+      background: var(--primary-very-low);
+      border-color: var(--primary-low-mid);
+    }
+
+    &.--active {
+      background: var(--tertiary-low);
+      border-color: var(--tertiary);
+      color: var(--tertiary);
+    }
+
+    .d-icon {
+      font-size: 0.85rem;
+      color: inherit;
+    }
+  }
+}
+
+.wireframe-condition-leaf-args {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding-left: 0.5rem;
+
+  &__row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    font-size: var(--font-down-1);
+  }
+
+  &__name {
+    color: var(--primary-medium);
+  }
+
+  &__no-args {
+    color: var(--primary-medium);
+    font-style: italic;
+    font-size: var(--font-down-1);
+    margin: 0;
+  }
+}
+
+.wireframe-inspector-metadata {
+  margin-bottom: 1rem;
+  border: 1px solid var(--primary-low);
+  border-radius: 4px;
+  background: var(--primary-very-low);
+
+  &__summary {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.5rem;
+    cursor: pointer;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    user-select: none;
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+
+  &__body {
+    padding: 0.5rem;
+    border-top: 1px solid var(--primary-low);
+    background: var(--secondary);
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__label {
+    font-size: var(--font-down-1);
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  &__input {
+    padding: 0.3rem 0.5rem;
+    border: 1px solid var(--primary-low);
+    border-radius: 3px;
+    font-family: "Courier New", courier, "Lucida Console", monaco, monospace;
+    font-size: var(--font-down-1);
+    color: var(--primary);
+    background: var(--secondary);
+
+    &:focus {
+      outline: none;
+      border-color: var(--tertiary);
+      box-shadow: 0 0 0 2px rgb(var(--tertiary-rgb), 0.15);
+    }
+  }
+
+  &__help {
+    color: var(--primary-medium);
+    font-size: var(--font-down-2);
+  }
+
+  &__error {
+    color: var(--danger);
+    font-size: var(--font-down-2);
+  }
+}
+
+body.wireframe-active {
+  .wireframe-block-chrome.--ghost {
+    outline: var(--wireframe-container-border-width) dashed
+      var(--wireframe-block-color);
+    background: transparent;
+  }
+
+  .wireframe-block-chrome.--error,
+  .wireframe-block-chrome-wrapper.--error > .wireframe-block-chrome {
+    outline: var(--wireframe-container-border-width) solid var(--danger);
+    background: rgb(var(--danger-rgb), 0.06);
+  }
+
+  .wireframe-block-chrome.--cell {
+    outline: var(--wireframe-container-border-width) dashed
+      var(--wireframe-block-outlet-color);
+    background: rgb(var(--wf-outlet-accent-rgb), 0.06);
+
+    &:hover {
+      outline-color: var(--wireframe-block-outlet-hover-color);
+      background: rgb(var(--wf-outlet-accent-rgb), 0.12);
+    }
+  }
+
+  /* The cell's content area centers the placeholder. Override the
+     grid-cell `place-items` (set by the chrome's `contentStyle`
+     getter for align/justify) so the + button sits in the middle of
+     the cell rect regardless of the cell's stored alignment. */
+
+  .wireframe-block-chrome.--cell > .wireframe-block-chrome__content {
+    place-items: center;
+    min-height: 60px;
+  }
+}
+
+.wireframe-drop-preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: z("modal", "content");
+  border-radius: var(--wf-radius);
+  border: 2px solid var(--tertiary);
+  background: rgb(var(--tertiary-rgb), 0.18);
+
+  /* `transform` is composited (no layout, no paint) so position
+     updates per dragover stay cheap. `width` / `height` still go
+     through layout but change far less often than position during
+     a drag. `will-change: transform` hints the compositor to keep
+     this element on its own layer. */
+  will-change: transform;
+  transition:
+    transform 80ms ease-out,
+    width 80ms ease-out,
+    height 80ms ease-out;
+
+  &__label {
+    position: absolute;
+    top: -22px;
+    left: 0;
+    background: var(--tertiary);
+    color: var(--secondary);
+    font-size: var(--font-down-2);
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: var(--wf-radius) var(--wf-radius) var(--wf-radius) 0;
+    max-width: 320px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 18px;
+  }
+
+  &--insert,
+  &--inside,
+  &--occupy,
+  &--shift {
+    background: rgb(var(--tertiary-rgb), 0.12);
+  }
+
+  &--replace,
+  &--swap {
+    background: rgb(var(--tertiary-rgb), 0.22);
+  }
+
+  &--invalid {
+    border-color: var(--danger);
+    background: rgb(var(--danger-rgb), 0.15);
+
+    .wireframe-drop-preview__label {
+      background: var(--danger);
+    }
+  }
+}
+
+.wf-rich-text-editor {
+  &.ProseMirror {
+    padding: 0;
+    margin: 0;
+
+    /* `inline` so PM lays out in the exact same inline formatting context
+       as the rendered content it replaces — `.wf-rich-text__content`
+       is also `inline`, so the glyphs stay put when display→edit swaps one
+       for the other. An `inline-block` here is an atomic box positioned by
+       `vertical-align` (baseline), and its baseline is derived from its own
+       internal line box rather than flowing with the parent text; that
+       nudged the text a couple px on edit-start (a visible layout shift).
+       `inline` also keeps the editor on the same line as an adjacent inline
+       icon (e.g. `wf:heading`, `wf:callout`) rather than wrapping onto a new
+       line, since PM's default block `<div>` is overridden here regardless
+       of `inline` vs `inline-block`. */
+    display: inline;
+
+    /* Replaces the browser's default contenteditable focus ring. PM is only
+       mounted while the field is actively being edited, so this rule needs no
+       extra `--editing` gate — the ring only ever marks the active edit. */
+    outline: 2px solid var(--tertiary);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+.wf-rich-text {
+  /* Block is selected — re-enable pointer events on the renderer so the
+     "click-on-text → edit" gesture can read which region got clicked.
+     The chrome's outer rule
+     (`.wireframe-block-chrome > *:not(...) { pointer-events: none }`)
+     forces every first click to hit the chrome wrapper itself, so
+     selection fires reliably anywhere on the block. Once selected, we
+     want `event.target` on the next click to land inside the
+     `[data-wf-rich-text-arg]` region so `event.target.closest(...)`
+     can resolve it. Also show a text cursor so the affordance is
+     discoverable.
+
+     The inner `__content` span and its placeholder `::before` get
+     explicit `pointer-events: auto` too — browsers vary on whether a
+     descendant of a `pointer-events: none` parent picks up the default
+     `auto` (the inheritance interaction is ambiguous in the spec).
+     Without these, clicks on the empty placeholder text fall through
+     to the chrome wrapper and the edit gesture can't resolve which
+     field was clicked. */
+
+  .wireframe-block-chrome.--selected & {
+    pointer-events: auto;
+    cursor: text;
+
+    .wf-rich-text__content,
+    .wf-rich-text__content::before {
+      pointer-events: auto;
+    }
+
+    /* Suppressed while PM is mounted so this dashed hover ring doesn't double
+       up with the active-edit ring drawn on the PM editor div itself (see
+       `.wf-rich-text-editor.ProseMirror` above). */
+
+    &:hover:not(:has(.wf-rich-text-editor-mount)) {
+      outline: 1px dashed var(--tertiary);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+  }
+
+  /* The active tab's label is editable in place even though the TABS chrome
+     isn't the selected block (clicking a tab selects its panel layout, so the
+     `--selected` gate above never fires for tabs). Mirror that affordance for
+     the active tab's label, keyed off the `data-wf-container-arg-*` markers the
+     tabs block puts only on the active tab. */
+
+  .d-block-tabs__tab[data-wf-container-arg-key] & {
+    pointer-events: auto;
+    cursor: text;
+
+    .wf-rich-text__content,
+    .wf-rich-text__content::before {
+      pointer-events: auto;
+    }
+
+    &:hover:not(:has(.wf-rich-text-editor-mount)) {
+      outline: 1px dashed var(--tertiary);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+  }
+
+  /* When the TABS block ITSELF is selected, its strip labels must NOT read as
+     inline-editable: a tab name is edited via its active tab (with that tab's
+     panel selected), never by selecting the whole tabs block. The generic
+     selected-block rule above would otherwise light up every label, so override
+     it here for strip labels. Higher specificity + later source order than both
+     the generic rule and the active-tab rule above, so it wins while the tabs
+     chrome is selected; when it isn't, the active-tab rule drives the affordance
+     as normal. */
+
+  .wireframe-block-chrome.--selected .d-block-tabs__tab & {
+    cursor: default;
+
+    &:hover {
+      outline: none;
+    }
+  }
+}
+
+/* Image arg targets — explicit carve-out from the chrome's
+   `> *:not(...)` rule that sets `pointer-events: none` on every
+   direct child of `.wireframe-block-chrome` (see the top-of-file
+   rule). Without this re-enable, clicks on the rendered image never
+   target the `<img>` (its `event.target` becomes the chrome div),
+   so `closest("[data-block-arg]")` in `block-chrome.onClick` returns
+   `null` and the image kind dispatch never fires — the replace /
+   remove menu never opens. Same for drop events on the filled-state
+   overlay: with `pointer-events: none` the overlay's drag handlers
+   silently miss every drag.
+
+   Unlike the icon variant, image targets need to be reachable even
+   on an UNSELECTED block — drag-and-drop should work without first
+   clicking the block to select it — so the rule is unconditional
+   inside any chrome (no `--selected` gate). */
+
+img[data-block-arg],
+picture,
+.wireframe-image-arg-overlay,
+.wireframe-image-resize-overlay {
+  .wireframe-block-chrome & {
+    pointer-events: auto;
+  }
+}
+
+.d-block-inline-icon {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 2px;
+
+  /* Essential re-enable: the chrome's `pointer-events: none` rule on
+     non-structural children (see the top-of-file rule) would otherwise
+     suppress clicks here too. */
+
+  .wireframe-block-chrome.--selected & {
+    pointer-events: auto;
+    cursor: pointer;
+
+    &:hover {
+      outline: 1px dashed var(--tertiary);
+      outline-offset: 2px;
+    }
+  }
+
+  &--empty {
+    .wireframe-block-chrome.--selected & {
+      display: inline-block;
+      width: 1em;
+      height: 1em;
+      border: 1px dashed var(--primary-low);
+    }
+  }
+}
+
+/* The picker's grid layout depends on `--icon-grid-*` CSS variables
+   that core sets on `.fk-d-menu.d-icon-grid-picker-content`. That
+   class is only applied through the `<DMenu>` template path; when the
+   menu is opened programmatically via `menu.show(...)` the
+   identifier ends up as `data-identifier` only, no matching class.
+   Re-declare the variables here keyed on the data attribute so the
+   grid lays out correctly when opened from `iconEdit.start()`. (The
+   z-index bump above the chrome is handled by the generic `.fk-d-menu`
+   rule below.) */
+
+body.wireframe-active .fk-d-menu[data-identifier="d-icon-grid-picker"] {
+  --icon-grid-columns: 12;
+  --icon-grid-cell: 36px;
+  --icon-grid-gap: 2px;
+  --icon-grid-h-padding: 0.5rem;
+}
+
+/* Every FloatKit overlay (menu / tooltip) mounts in a body-level portal that
+   would otherwise sit beneath the wireframe chrome (toolbar, panels, shell).
+   Bump them all in one place so a newly added menu or tooltip can never
+   silently render behind the editor — no per-menu override needed. */
+
+body.wireframe-active {
+  .fk-d-menu,
+  .fk-d-tooltip {
+    z-index: 1500;
+
+    /* The default `--shadow-dropdown` (a 12px-blur, 0.25-alpha drop) reads heavy
+       over the dark editor canvas. Soften it here; overriding the token cascades
+       to the inner content that consumes it via `box-shadow: var(...)`. */
+    --shadow-dropdown: 0 2px 8px rgb(0 0 0 / 0.15);
+  }
+
+  .select-kit-body {
+    z-index: 1600;
+  }
+}
+
+/* Re-enables click handling that the chrome's `pointer-events: none` rule on
+   non-structural children (see the top-of-file rule) would otherwise
+   suppress, so `linkEdit.start()` can fire on click; the hover ring
+   telegraphs "click to edit URL." */
+
+body.wireframe-active .wireframe-block-chrome.--selected a[data-block-arg],
+body.wireframe-active
+  .wireframe-block-chrome.--selected
+  button[data-block-arg] {
+  pointer-events: auto;
+  cursor: pointer;
+
+  &:hover {
+    outline: 1px dashed var(--tertiary);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+}
+
+.wf-inplace-link-popover {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--wf-gap-tight);
+}
+
+.wf-inplace-link-popover__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.5rem;
+  background: var(--secondary);
+  color: var(--primary);
+  border: 1px solid var(--tertiary);
+  border-radius: 999px;
+  font-size: var(--font-down-1);
+  cursor: pointer;
+
+  &:hover {
+    background: var(--tertiary-low);
+  }
+}
+
+.wf-inplace-link-popover__input {
+  width: 220px;
+  height: 24px;
+  padding: 0 6px;
+  border: 1px solid var(--primary-low);
+  border-radius: var(--wf-radius);
+  font-size: var(--font-down-1);
+  color: var(--primary);
+  background: var(--secondary);
+  margin: 0 2px;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--tertiary);
+    box-shadow: 0 0 0 2px var(--tertiary-low);
+  }
+}
+
+/* Placeholder text for empty fields, shown only on the canvas. Triggered
+   by the renderer's explicit `--empty` modifier (set in JS from
+   `runs.length === 0`), not by the `:empty` CSS pseudo — Glimmer's
+   comment / whitespace text nodes inside the renderer span would
+   defeat `:empty`. */
+
+.wf-rich-text.--empty > .wf-rich-text__content[data-wf-placeholder]::before {
+  content: attr(data-wf-placeholder);
+  color: var(--primary-medium);
+  opacity: 0.55;
+  user-select: none;
+
+  /* No `pointer-events: none` here — without it, clicks on the
+     placeholder text fall through the empty element chain (the
+     `__content` span has no real content, just the pseudo's rendered
+     text) and the chrome wrapper ends up as the click target instead
+     of the renderer span. With `pointer-events: auto` (the default),
+     the click hits `__content`, bubbles to `.wf-rich-text`, and
+     `block-chrome.onClick`'s `closest("[data-wf-rich-text-arg]")`
+     finds the renderer span as expected. `user-select: none` still
+     keeps the placeholder text from being draggable / text-selectable. */
+}
+
+/* Active edit — ProseMirror is mounted inside the outer span as a
+   sibling of `__content`. Hide the rendered content so the user sees
+   only the editor. We gate the hide on the *mounted editor element*
+   (`.wf-rich-text-editor`, which ProseMirror creates inside the mount
+   span) rather than the `wf-rich-text-editor-mount` placeholder span
+   itself. Glimmer inserts that placeholder synchronously when the
+   session opens, but ProseMirror only renders into it after an async
+   module load — so keying on the placeholder hid `__content` during
+   that gap, collapsing the field to empty (a visible flash + layout
+   shift on every click-to-edit). Keying on the editor element keeps
+   the rendered text occupying layout until ProseMirror is ready, then
+   swaps seamlessly. No JS-side class toggle is needed — the cascade
+   reacts to ProseMirror's DOM lifecycle directly. Lives in admin
+   chrome SCSS so the live-site render path never evaluates the
+   `:has()` (no mount spans exist there). */
+
+.wf-rich-text:has(.wf-rich-text-editor-mount .wf-rich-text-editor)
+  > .wf-rich-text__content {
+  display: none;
+}
+
+/* Reveal empty inline-text wrappers when selected, so authors can click a
+   block-hidden `--empty` field to start editing (see e.g.
+   `d-block-cta-banner__title--empty`). `display: revert` (not `block`) falls
+   back to each wrapper's own user-agent default — `<h3>`, `<p>`, and `<a>`
+   wrappers each need a different display value restored. */
+
+.wireframe-block-chrome.--selected :has(> .wf-rich-text.--empty),
+.wireframe-block-chrome.--selected .wf-rich-text.--empty {
+  display: revert;
+}
+
+/* The media-card badge wraps its renderer one extra level deep (via
+   `__badge-label`), so the generic `:has(> .wf-rich-text.--empty)`
+   reveal above can't reach it — reveal the collapsed badge explicitly on
+   selection. Same for the card's empty avatar slot, so its "add image"
+   target has a box to measure while the card is selected. */
+
+.wireframe-block-chrome.--selected .d-block-media-card__badge--empty,
+.wireframe-block-chrome.--selected .d-block-media-card__avatar--empty {
+  display: revert;
+}
+
+/* Structural empty image marker (the image block paints nothing when
+   empty). Revealed on the canvas regardless of selection — unlike the
+   decorative slots above — so the block keeps a minimum height for its
+   whole-block "add image" overlay to fill. The marker itself stays
+   invisible; the overlay paints the affordance on top. */
+
+.wireframe-block-chrome .d-block-image--empty {
+  display: block;
+  min-height: 8rem;
+}
+
+.wireframe-inspector-rich-inline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.wireframe-inspector-rich-inline__summary {
+  font-family: monospace;
+  font-size: var(--font-down-1);
+  color: var(--primary);
+  background: var(--primary-very-low);
+  border: 1px solid var(--primary-low);
+  border-radius: 3px;
+  padding: 0.3rem 0.5rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.wireframe-inspector-rich-inline__hint {
+  font-size: var(--font-down-2);
+  color: var(--primary-medium);
+  font-style: italic;
+}
+
+.wireframe-inspector-rich-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  &__toolbar {
+    display: flex;
+    gap: 0.15rem;
+  }
+
+  &__btn {
+    padding: 0.25rem 0.4rem;
+    color: var(--primary-medium);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--d-border-radius);
+
+    &:hover {
+      color: var(--primary);
+      background: var(--primary-very-low);
+    }
+
+    &.--active {
+      color: var(--tertiary);
+      background: var(--tertiary-low);
+    }
+  }
+
+  &__link-input {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    input[type="url"] {
+      flex: 1 1 auto;
+      min-width: 0;
+      margin: 0;
+    }
+  }
+
+  &__editor {
+    padding: 0.4rem 0.5rem;
+    min-height: 2.5rem;
+    background: var(--secondary);
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius);
+
+    &:focus-within {
+      border-color: var(--tertiary);
+    }
+
+    .wf-rich-text-editor {
+      outline: none;
+      min-width: 0;
+      color: var(--primary);
+    }
+
+    /* Dimmed and inert rather than unmounted, so the same editor instance
+       keeps its formatting state and the canvas doesn't reflow when the
+       canvas-side edit finishes. */
+
+    &.--disabled {
+      opacity: 0.55;
+      pointer-events: none;
+
+      &:focus-within {
+        border-color: var(--primary-low);
+      }
+    }
+  }
+}
+
+.wireframe-block-toolbar__url-input {
+  width: 220px;
+  height: 24px;
+  padding: 0 6px;
+  border: 1px solid var(--primary-low);
+  border-radius: var(--wf-radius);
+  font-size: var(--font-down-1);
+  color: var(--primary);
+  background: var(--secondary);
+  margin: 0 2px;
+  transition:
+    border-color 120ms ease,
+    box-shadow 120ms ease;
+
+  &:focus {
+    outline: none;
+    border-color: var(--tertiary);
+    box-shadow: 0 0 0 2px var(--tertiary-low);
+  }
+}
+
+/* The dim system fades everything on the page except the editor's own chrome.
+   Chrome that mounts OUTSIDE `.wireframe-shell` (the docked drawers, and any
+   future floating overlay) carries the shared `.wireframe-editor-overlay` marker
+   so it's exempt from both the transition below and the dim opacity — add that
+   class to a new overlay instead of enumerating it here. The remaining entries
+   are non-wireframe global mounts (FloatKit portals, modal, dialog) we can't
+   class. NOTE: this blanket `transition` uses the shorthand, so any non-exempt
+   descendant loses its own transitions (e.g. a segmented control's slider) —
+   which is why chrome must be exempted, not just left undimmed. */
+
+body.wireframe-active
+  *:not(
+    :has(.wireframe-outlet-boundary) > *,
+    .wireframe-outlet-boundary,
+    .wireframe-outlet-boundary *,
+    :has(.wireframe-shell) > *,
+    .wireframe-shell,
+    .wireframe-shell *,
+    .wireframe-editor-overlay,
+    .wireframe-editor-overlay *,
+    #d-menu-portals,
+    #d-menu-portals *,
+    #d-tooltip-portals,
+    #d-tooltip-portals *,
+    .fk-d-toasts,
+    .fk-d-toasts *,
+    .modal-container,
+    .modal-container *,
+    #dialog-holder,
+    #dialog-holder *
+  ) {
+  transition: opacity 120ms ease;
+}
+
+body.wireframe-active--dim-non-editable
+  *:not(
+    :has(.wireframe-outlet-boundary) > *,
+    .wireframe-outlet-boundary,
+    .wireframe-outlet-boundary *,
+    :has(.wireframe-shell) > *,
+    .wireframe-shell,
+    .wireframe-shell *,
+    .wireframe-editor-overlay,
+    .wireframe-editor-overlay *,
+    #d-menu-portals,
+    #d-menu-portals *,
+    #d-tooltip-portals,
+    #d-tooltip-portals *,
+    .fk-d-toasts,
+    .fk-d-toasts *,
+    .modal-container,
+    .modal-container *,
+    #dialog-holder,
+    #dialog-holder *
+  ) {
+  opacity: 0.75;
+}
+
+.wireframe-image-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  &__variant {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__tabs {
+    display: flex;
+    gap: 0.25rem;
+    border-bottom: 1px solid var(--primary-low);
+  }
+
+  &__tab {
+    background: none;
+    border: 0;
+    padding: 0.35rem 0.6rem;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+
+    &:hover {
+      color: var(--primary);
+    }
+
+    &--active {
+      color: var(--primary);
+      border-bottom-color: var(--tertiary);
+    }
+  }
+
+  &__url-row {
+    display: flex;
+    gap: 0.4rem;
+    align-items: stretch;
+  }
+
+  &__url-input {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__warning {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 4px;
+    background: rgb(var(--highlight-rgb), 0.1);
+    border: 1px solid rgb(var(--highlight-rgb), 0.4);
+    color: var(--primary);
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      color: var(--highlight);
+      flex-shrink: 0;
+    }
+  }
+
+  &__info {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 4px;
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    color: var(--primary);
+    font-size: var(--font-down-1);
+
+    .d-icon {
+      color: var(--tertiary);
+      flex-shrink: 0;
+    }
+
+    > span {
+      flex: 1;
+    }
+  }
+
+  &__info-action {
+    flex-shrink: 0;
+  }
+
+  &__dark {
+    border-top: 1px dashed var(--primary-low);
+    padding-top: 0.6rem;
+
+    summary {
+      cursor: pointer;
+      font-size: var(--font-down-1);
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    &-help,
+    &-disabled {
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+      margin: 0.4rem 0;
+    }
+  }
+}
+
+.wireframe-repeatable {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  &__row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    padding: 0.5rem;
+    border: 1px solid var(--primary-low);
+    border-radius: var(--d-border-radius, 0.25rem);
+  }
+
+  &__fields {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-width: 0;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  &__field-label {
+    font-size: var(--font-down-2);
+    font-weight: 600;
+    color: var(--primary-medium);
+  }
+
+  &__row-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  &__import {
+    margin-top: 0.25rem;
+
+    summary {
+      cursor: pointer;
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+    }
+  }
+
+  &__import-input {
+    width: 100%;
+    margin-top: 0.4rem;
+    font-family: var(--d-font-family--monospace, monospace);
+    font-size: var(--font-down-2);
+  }
+
+  &__import-error {
+    color: var(--danger);
+    font-size: var(--font-down-1);
+    margin: 0.25rem 0;
+  }
+}

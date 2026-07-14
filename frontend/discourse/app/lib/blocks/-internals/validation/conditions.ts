@@ -320,7 +320,10 @@ function validateSingleCondition(
       // Point to the condition's `type` property so the error location isn't empty.
       // This tells users which condition has the constraint violation.
       const typePath = path ? `${path}.type` : "type";
-      throw new BlockError(constraintError, { path: typePath });
+      throw new BlockError(constraintError.message, {
+        path: typePath,
+        details: constraintError.details,
+      });
     }
   }
 

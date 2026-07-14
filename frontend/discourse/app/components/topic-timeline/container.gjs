@@ -366,7 +366,7 @@ export default class TopicTimelineScrollArea extends Component {
   updatePercentage(e) {
     e.preventDefault();
 
-    const currentCursorY = e.pageY || e.touches[0].pageY;
+    const currentCursorY = e.pageY;
 
     const desiredScrollerCentre = currentCursorY - this.dragOffset;
 
@@ -386,7 +386,7 @@ export default class TopicTimelineScrollArea extends Component {
 
   @bind
   didStartDrag(event) {
-    const y = event.pageY || event.touches[0].pageY;
+    const y = event.pageY;
 
     const scrollerCentre =
       domUtils.offset(this.scrollerElement).top +

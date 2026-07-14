@@ -1,0 +1,57 @@
+.d-block-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0;
+
+  img,
+  picture {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  &__caption {
+    margin-top: 0.5rem;
+    color: var(--primary-medium);
+    font-size: var(--font-down-1);
+    text-align: center;
+  }
+
+  /* Empty-state anchor. With no image the block paints nothing on the
+     reader page, so this marker stays collapsed there; edit tooling
+     reveals it (with height) so its "add image" target has a block to
+     fill. */
+
+  &--empty {
+    display: none;
+  }
+}
+
+/* The dark variant is rendered at the LIGHT variant's intrinsic
+   dimensions (see `darkVariantWithLightFrame` in the image block) so
+   both variants share one frame.
+
+   The img tag has `width` / `height` attributes from the light variant
+   (DCdnImg passes them through), but the catch-all `height: auto` rule
+   above clears the height attribute and lets the browser compute height
+   from the LOADED image's natural ratio — which would be the DARK
+   variant's ratio in dark mode, so the box stretches to dark's aspect
+   and no clipping happens.
+
+   Anchoring the box to the light variant's aspect via the
+   `--aspect-ratio` custom property (set inline by `DCdnImg`) makes
+   `height: auto` resolve to "light's frame height" instead of "dark's
+   natural height", so the dark image is clipped to the light frame via
+   `object-fit: cover`.
+
+   Targeted via `[data-block-arg="image"]` because the `.d-block-image`
+   class can land on the figure / anchor wrapper OR on the img itself
+   (per `DLightDarkImg`'s `...attributes` forwarding) — the data
+   attribute is the one reliable selector that always reaches the
+   rendered image element. */
+
+img[data-block-arg="image"] {
+  aspect-ratio: var(--aspect-ratio, auto);
+  object-fit: cover;
+}

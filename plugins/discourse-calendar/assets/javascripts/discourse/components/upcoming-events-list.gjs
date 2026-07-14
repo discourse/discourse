@@ -3,29 +3,27 @@ import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import PluginOutlet from "discourse/components/plugin-outlet";
-import { ajax } from "discourse/lib/ajax";
-import { applyValueTransformer } from "discourse/lib/transformer";
-import { or } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
-import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import { isNotFullDayEvent } from "../lib/guess-best-date-format";
+import {
+  fetchUpcomingEvents,
+  upcomingEventsListTitle,
+} from "../lib/upcoming-events";
+import UpcomingEventsListView from "./upcoming-events-list-view";
 
 export const DEFAULT_TIME_FORMAT = "LT";
 const DEFAULT_UPCOMING_DAYS = 180;
 const DEFAULT_COUNT = 8;
 
-function addToResult(date, item, result) {
-  const day = date.format("DD");
-  const monthKey = date.format("YYYY-MM");
-
-  result[monthKey] = result[monthKey] ?? {};
-  result[monthKey][day] = result[monthKey][day] ?? [];
-  result[monthKey][day].push(item);
-}
-
+/**
+ * Self-fetching upcoming-events widget for standalone use (e.g. the
+ * `discourse-right-sidebar-blocks` theme). It owns the loading / empty /
+ * error+retry states and refreshes on `page:changed`, then delegates the
+ * actual list rendering to the pure `UpcomingEventsListView`. The fetch and
+ * grouping live in the shared `lib/upcoming-events` module, which the block
+ * variant resolves through the blocks data layer instead.
+ */
 export default class UpcomingEventsList extends Component {
   @service appEvents;
   @service siteSettings;
@@ -41,13 +39,16 @@ export default class UpcomingEventsList extends Component {
   includeSubcategories = this.args.params?.includeSubcategories ?? false;
 
   emptyMessage = i18n("discourse_post_event.upcoming_events_list.empty");
-  allDayLabel = i18n("discourse_post_event.upcoming_events_list.all_day");
   errorMessage = i18n("discourse_post_event.upcoming_events_list.error");
   viewAllLabel = i18n("discourse_post_event.upcoming_events_list.view_all");
 
   constructor() {
     super(...arguments);
     this.appEvents.on("page:changed", this, this.updateEventsList);
+    // `page:changed` is the only refresh trigger, so consumers mounted outside
+    // a route transition (e.g. block-based renders on a frozen homepage) need
+    // an explicit initial fetch.
+    this.updateEventsList();
   }
 
   willDestroy() {
@@ -55,180 +56,62 @@ export default class UpcomingEventsList extends Component {
     this.appEvents.off("page:changed", this, this.updateEventsList);
   }
 
+  /**
+   * The category to scope the list to: the explicitly-passed param, otherwise
+   * the current route's category.
+   *
+   * @returns {number|undefined}
+   */
   get categoryId() {
-    return this.router.currentRoute.attributes?.category?.id;
-  }
-
-  get hasEmptyResponse() {
     return (
-      !this.isLoading &&
-      !this.hasError &&
-      Array.from(this.eventsByMonth.values()).length === 0
+      this.args.params?.categoryId ??
+      this.router.currentRoute.attributes?.category?.id
     );
   }
 
+  /**
+   * Whether the list resolved with no events to show.
+   *
+   * @returns {boolean}
+   */
+  get hasEmptyResponse() {
+    return !this.isLoading && !this.hasError && this.eventsByMonth.size === 0;
+  }
+
+  /**
+   * The heading text, honouring the `map_events_title` per-category setting.
+   *
+   * @returns {string}
+   */
   get title() {
-    const categorySlug = this.router.currentRoute.attributes?.category?.slug;
-    const titleSetting = this.siteSettings.map_events_title;
-
-    if (titleSetting === "") {
-      return i18n("discourse_post_event.upcoming_events_list.title");
-    }
-
-    const categories = JSON.parse(titleSetting).map(
-      ({ category_slug }) => category_slug
-    );
-
-    if (categories.includes(categorySlug)) {
-      const titleMap = JSON.parse(titleSetting);
-      const customTitleLookup = titleMap.find(
-        (o) => o.category_slug === categorySlug
-      );
-      return customTitleLookup?.custom_title;
-    } else {
-      return i18n("discourse_post_event.upcoming_events_list.title");
-    }
+    return upcomingEventsListTitle({
+      router: this.router,
+      siteSettings: this.siteSettings,
+    });
   }
 
-  get shouldShowCrossCategory() {
-    return applyValueTransformer(
-      "discourse-calendar-upcoming-events-show-cross-category",
-      false // default value
-    );
-  }
-
+  /**
+   * Fetches and groups the upcoming events, toggling the loading / error flags.
+   * Bound to `page:changed` and run once on insert.
+   */
   @action
   async updateEventsList() {
     this.isLoading = true;
     this.hasError = false;
 
-    const data = {
-      limit: this.count,
-      before: moment().add(this.upcomingDays, "days").toISOString(),
-      after: moment().toISOString(),
-      include_ongoing: true,
-    };
-
-    if (this.includeSubcategories) {
-      data.include_subcategories = true;
-    }
-
-    if (this.categoryId && !this.shouldShowCrossCategory) {
-      data.category_id = this.categoryId;
-    }
-
     try {
-      const { events } = await ajax("/discourse-post-event/events", {
-        data,
-      });
-
-      this.eventsByMonth = this.groupByMonthAndDay(events);
+      this.eventsByMonth =
+        (await fetchUpcomingEvents({
+          count: this.count,
+          upcomingDays: this.upcomingDays,
+          categoryId: this.categoryId,
+          includeSubcategories: this.includeSubcategories,
+        })) ?? new Map();
     } catch {
       this.hasError = true;
     } finally {
       this.isLoading = false;
     }
-  }
-
-  @action
-  formatTime(event) {
-    if (this.isMultiDayEvent(event)) {
-      return this.formatDateRange(event);
-    }
-
-    const startsAt = moment(event.starts_at);
-    const endsAt = event.ends_at ? moment(event.ends_at) : null;
-
-    return isNotFullDayEvent(startsAt, endsAt)
-      ? startsAt.format(this.timeFormat)
-      : this.allDayLabel;
-  }
-
-  @action
-  startsAtMonth(month, day) {
-    return moment(`${month}-${day}`).format("MMM");
-  }
-
-  @action
-  startsAtDay(month, day) {
-    return moment(`${month}-${day}`).format("D");
-  }
-
-  isMultiDayEvent(event) {
-    if (!event.ends_at) {
-      return false;
-    }
-    const startDate = moment(event.starts_at);
-    const endDate = moment(event.ends_at);
-    return !startDate.isSame(endDate, "day");
-  }
-
-  formatDateRange(event) {
-    // Date-only strings (all-day events) must be parsed as local dates;
-    // new Date("YYYY-MM-DD") treats them as UTC, shifting the day in western timezones
-    const start = event.all_day
-      ? new Date(event.starts_at + "T00:00:00")
-      : new Date(event.starts_at);
-    const end = event.all_day
-      ? new Date(event.ends_at + "T00:00:00")
-      : new Date(event.ends_at);
-    return new Intl.DateTimeFormat(moment.locale(), {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    }).formatRange(start, end);
-    // en-US: "June 5–10, 2025" or "June 5 – July 10, 2025"
-    // fr-FR: "5–10 juin 2025" or "5 juin – 10 juillet 2025"
-    // de-DE: "5.–10. Juni 2025"
-  }
-
-  groupByMonthAndDay(data) {
-    const today = moment();
-    let events = data.reduce((result, item) => {
-      const startDate = moment(item.starts_at);
-      const endDate = item.ends_at ? moment(item.ends_at) : null;
-
-      let displayDate;
-      if (!this.isMultiDayEvent(item)) {
-        // Single-day event
-        displayDate = startDate.clone();
-      } else {
-        // Multi-day event
-        if (startDate.isAfter(today, "day")) {
-          // Future event - show at start date
-          displayDate = startDate.clone();
-        } else if (today.isSameOrBefore(endDate, "day")) {
-          // Ongoing event - show at today's date
-          displayDate = today.clone();
-        } else {
-          // Past event - skip it
-          return result;
-        }
-      }
-
-      // Only add if display date is in the future or today
-      if (displayDate.isSameOrAfter(today, "day")) {
-        addToResult(displayDate, item, result);
-      }
-
-      return result;
-    }, {});
-
-    const sortedMonths = new Map(
-      Object.entries(events).sort(([a], [b]) => a.localeCompare(b))
-    );
-
-    const fullySorted = new Map();
-    for (const [month, days] of sortedMonths) {
-      const sortedDays = new Map(
-        Object.entries(days).sort(
-          ([a], [b]) => parseInt(a, 10) - parseInt(b, 10)
-        )
-      );
-      fullySorted.set(month, sortedDays);
-    }
-
-    return fullySorted;
   }
 
   <template>
@@ -258,39 +141,10 @@ export default class UpcomingEventsList extends Component {
         {{/if}}
 
         {{#unless this.isLoading}}
-          <PluginOutlet @name="upcoming-events-list-container">
-            {{#each-in this.eventsByMonth as |month monthData|}}
-              {{#each-in monthData as |day events|}}
-                {{#each events as |event|}}
-                  <a
-                    class="upcoming-events-list__event"
-                    href={{event.post.url}}
-                  >
-                    <div class="upcoming-events-list__event-date">
-                      <div class="month">{{this.startsAtMonth month day}}</div>
-                      <div class="day">{{this.startsAtDay month day}}</div>
-                    </div>
-                    <div class="upcoming-events-list__event-content">
-                      <span
-                        class="upcoming-events-list__event-name"
-                        title={{or event.name event.post.topic.title}}
-                      >
-                        {{#if event.recurrence}}
-                          {{dIcon "arrows-rotate"}}
-                        {{/if}}
-                        {{or event.name event.post.topic.title}}
-                      </span>
-                      {{#if this.timeFormat}}
-                        <span class="upcoming-events-list__event-time">
-                          {{this.formatTime event}}
-                        </span>
-                      {{/if}}
-                    </div>
-                  </a>
-                {{/each}}
-              {{/each-in}}
-            {{/each-in}}
-          </PluginOutlet>
+          <UpcomingEventsListView
+            @eventsByMonth={{this.eventsByMonth}}
+            @timeFormat={{this.timeFormat}}
+          />
         {{/unless}}
       </div>
 

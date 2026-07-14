@@ -95,6 +95,41 @@ module("Integration | Component | FormKit | Form", function (hooks) {
     });
   });
 
+  test("@validate - form-level error without a title", async function (assert) {
+    const validate = async (data, { addError }) => {
+      // A titled error is tied to a control and renders as a focus link.
+      addError("foo", { title: "Foo", message: "incorrect type" });
+      // A titleless error is form-level and renders as a bare message.
+      addError("_form:0", { message: "Pick at least one option." });
+    };
+
+    await render(
+      <template>
+        <Form @data={{hash foo=1}} @validate={{validate}} as |form|>
+          <form.Field @type="input" @name="foo" @title="Foo" />
+        </Form>
+      </template>
+    );
+
+    await formKit().submit();
+
+    const items = [
+      ...query(".form-kit__errors-summary-list").querySelectorAll("li"),
+    ];
+    assert.strictEqual(items.length, 2, "both errors are listed");
+
+    const titled = items.find((li) => li.querySelector("a"));
+    assert.dom(titled).hasText("Foo: incorrect type");
+
+    const formLevel = items.find((li) => !li.querySelector("a"));
+    assert
+      .dom(formLevel)
+      .hasText(
+        "Pick at least one option.",
+        "form-level error shows the message with no anchor or prefix"
+      );
+  });
+
   test("@validateOn", async function (assert) {
     const data = { foo: "test" };
 

@@ -1,0 +1,167 @@
+/* Layout container block.
+   Layout properties are read from CSS custom properties set inline by
+   the block's `containerStyle` / `cellStyle` so a parent `@container`
+   rule can override the actual `grid-template-columns` etc. at narrow
+   widths (an inline-style declaration would otherwise win over the
+   query rule). The defaults inside `var(..., default)` match what the
+   block emits by default, so the layout still renders even when the
+   custom property isn't set. */
+
+.d-block-layout {
+  /* Establish a container query context so the layout adapts to its
+     available width — not the viewport's. A layout inside a narrow
+     sidebar collapses the same way it would on a phone, and a wide
+     outlet keeps the author's full-width layout. `container-name`
+     lets the `@container` rules below target this element specifically,
+     without colliding with any outlet-level container context. */
+  container-type: inline-size;
+  container-name: d-block-layout;
+}
+
+/* Flex modes (stack / row) hold their children in an inner
+   `.d-block-layout__flex` wrapper. The flex declarations live on that wrapper
+   rather than on `.d-block-layout--*` so the responsive-collapse `@container`
+   rule can force `flex-wrap: wrap` on it — the query can restyle a descendant,
+   but never the container element itself (see the collapse block below). The
+   outer element is just a block box that establishes the container context.
+   `start` / `end` are CSS Box Alignment keywords (already relied on by
+   `align-items` here) — do not "fix" them to `flex-start` / `flex-end`. */
+
+.d-block-layout--stack > .d-block-layout__flex {
+  display: flex;
+  flex-direction: column;
+  gap: var(--d-block-layout-gap, 1rem);
+  align-items: var(--d-block-layout-align, stretch);
+  justify-content: var(--d-block-layout-justify-content, start);
+}
+
+.d-block-layout--row > .d-block-layout__flex {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: var(--d-block-layout-wrap, wrap);
+  gap: var(--d-block-layout-gap, 1rem);
+  align-items: var(--d-block-layout-align, stretch);
+  justify-content: var(--d-block-layout-justify-content, start);
+}
+
+.d-block-layout--grid {
+  display: grid;
+  grid-template-columns: var(--d-block-layout-cols, repeat(6, 1fr));
+  grid-template-rows: var(--d-block-layout-rows, repeat(2, minmax(80px, auto)));
+  gap: var(--d-block-layout-gap, 1rem);
+
+  /* `align-items` / `justify-items` position each cell within its track; the
+     per-cell `place-items` rule below positions the child within its cell — a
+     different level. `*-content` distributes the tracks when the grid is
+     smaller than the container. */
+  align-items: var(--d-block-layout-align, stretch);
+  justify-items: var(--d-block-layout-justify-items, stretch);
+  justify-content: var(--d-block-layout-justify-content, start);
+  align-content: var(--d-block-layout-align-content, stretch);
+  grid-auto-flow: var(--d-block-layout-auto-flow, row);
+  transition:
+    grid-template-columns 180ms ease,
+    grid-template-rows 180ms ease,
+    gap 180ms ease;
+}
+
+.d-block-layout--grid > .d-block-layout__cell {
+  grid-column: var(--d-block-cell-column, auto);
+  grid-row: var(--d-block-cell-row, auto);
+  display: grid;
+  place-items: var(--d-block-cell-align, stretch)
+    var(--d-block-cell-justify, stretch);
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Tiles mode: fit as many equal columns as the container width allows,
+   reflowing automatically. The `min(..., 100%)` guard keeps a single tile
+   from overflowing when the container is narrower than the min item width —
+   no `@container` collapse rule is needed because `auto-fit` already drops to
+   one column at narrow widths. Children carry no placement; each child's
+   wrapper is itself a grid item. */
+
+.d-block-layout--tiles {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(var(--d-block-layout-min-item-width, 16rem), 100%), 1fr)
+  );
+  gap: var(--d-block-layout-gap, 1rem);
+  align-items: var(--d-block-layout-align, stretch);
+  transition: gap 180ms ease;
+}
+
+/* Responsive collapse — at narrow widths, every grid cell takes the
+   full row and stacks vertically. Driven per-cell (not per-container)
+   because `@container` rules only style DESCENDANTS of the queried
+   container, never the container element itself (per the CSS
+   Containment spec). The grid element IS the container, so we can't
+   change its own `display` or `grid-template-*` from inside the query
+   — we instead make each child span all columns (`grid-column: 1 / -1`)
+   and auto-flow row (`grid-row: auto`), which produces a vertical stack
+   of full-width cells: the same visual effect as a real
+   `display: flex; flex-direction: column`.
+
+   Two threshold variants driven by the `autoCollapse` arg on the block
+   (which emits the `--collapse-{value}` class):
+   - `--collapse-default` collapses below 40rem (core's `sm`
+     breakpoint, see `app/assets/stylesheets/lib/viewport.scss`).
+     Cards, paragraphs, media — typical content.
+   - `--collapse-compact` collapses below 15rem (~240px). Dense content
+     (icon rows, small buttons, compact links) that should stay
+     multi-column at all typical phone widths and only collapse in
+     genuinely tiny contexts (watch faces, very narrow side panels).
+     15rem is well below the narrowest modern phones (iPhone SE =
+     23.4rem).
+   - `--collapse-never` has no matching `@container` rule — the layout
+     keeps its columns at every width.
+   Both thresholds are hardcoded literals: `@container` condition
+   expressions can't read `var()` or SCSS interpolation, so each variant
+   needs its own block.
+
+   Row mode: each child takes 100% width to stack, which only works if the
+   flex wrapper wraps. Because the author can set `nowrap`, the collapse must
+   force `flex-wrap: wrap` — and it can, because the flex container is now the
+   inner `.d-block-layout__flex` wrapper (a DESCENDANT of the queried container),
+   not the `.d-block-layout--row` element itself. So collapse always wins over a
+   `nowrap` setting at narrow widths. */
+
+@container d-block-layout (max-width: 40rem) {
+  .d-block-layout--grid.d-block-layout--collapse-default
+    > .d-block-layout__cell {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .d-block-layout--row.d-block-layout--collapse-default
+    > .d-block-layout__flex {
+    flex-wrap: wrap;
+  }
+
+  .d-block-layout--row.d-block-layout--collapse-default
+    > .d-block-layout__flex
+    > * {
+    flex-basis: 100%;
+  }
+}
+
+@container d-block-layout (max-width: 15rem) {
+  .d-block-layout--grid.d-block-layout--collapse-compact
+    > .d-block-layout__cell {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  .d-block-layout--row.d-block-layout--collapse-compact
+    > .d-block-layout__flex {
+    flex-wrap: wrap;
+  }
+
+  .d-block-layout--row.d-block-layout--collapse-compact
+    > .d-block-layout__flex
+    > * {
+    flex-basis: 100%;
+  }
+}

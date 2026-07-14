@@ -1,0 +1,81 @@
+/* Full-bleed section / hero block. The backdrop (image, gradient, or colour)
+   and the optional colour overlay sit behind the content. Custom properties
+   are set inline by the block's `backdropStyle`; the light/dark image variants
+   are swapped under `prefers-color-scheme`. */
+
+.d-block-section {
+  position: relative;
+  display: flex;
+  min-height: var(--d-block-section-min-height, auto);
+  padding: 2rem;
+  overflow: hidden;
+  background-color: var(--d-block-section-bg-color, transparent);
+  background-image: var(--d-block-section-bg-image-light, none);
+  background-size: cover;
+  background-position: center;
+
+  @media (prefers-color-scheme: dark) {
+    background-image: var(
+      --d-block-section-bg-image-dark,
+      var(--d-block-section-bg-image-light, none)
+    );
+  }
+}
+
+.d-block-section__backdrop {
+  /* Editing-only anchor for the background drop target; paints nothing on the
+     reader page (the section element itself carries the background). */
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.d-block-section__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.d-block-section__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Content horizontal alignment. */
+.d-block-section--align-start .d-block-section__content {
+  align-items: flex-start;
+  text-align: start;
+}
+
+.d-block-section--align-center .d-block-section__content {
+  align-items: center;
+  text-align: center;
+}
+
+.d-block-section--align-end .d-block-section__content {
+  align-items: flex-end;
+  text-align: end;
+}
+
+/* Content max-width. `contained` centres a readable column; `wide` allows a
+   broader band; `full` lets content span the section. */
+
+.d-block-section--width-contained .d-block-section__content {
+  max-width: 40rem;
+  margin-inline: auto;
+}
+
+.d-block-section--width-wide .d-block-section__content {
+  max-width: 64rem;
+  margin-inline: auto;
+}
+
+.d-block-section--width-full .d-block-section__content {
+  max-width: none;
+}

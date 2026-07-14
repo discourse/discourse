@@ -96,6 +96,8 @@ interface SettingConditionArgs {
  */
 @blockCondition({
   type: "setting",
+  displayName: "Setting",
+  description: "Match by a site setting or theme setting value.",
   sourceType: "object",
   args: {
     name: { type: "string", required: true },

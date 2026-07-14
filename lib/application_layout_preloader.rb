@@ -121,6 +121,8 @@ class ApplicationLayoutPreloader
     @preloaded["isReadOnly"] = @readonly_mode.to_json
     @preloaded["isStaffWritesOnly"] = @staff_writes_only_mode.to_json
     @preloaded["activatedThemes"] = activated_themes_json
+    @preloaded["themeBlockLayouts"] = theme_block_layouts_json
+    @preloaded["themeBlockLayoutMeta"] = theme_block_layout_meta_json
   end
 
   def preload_upcoming_change_data(user)
@@ -144,6 +146,92 @@ class ApplicationLayoutPreloader
         hash[theme.id] = { name: theme.name, settings: settings.except("theme_setting_type_info") }
       end
       .to_json
+  end
+
+  # Per-theme metadata for the active stack, keyed by theme id. The block-layout
+  # resolver picks each outlet's owner by the maximum `stack_index` (the theme's
+  # position in `Theme.transform_ids`, parent before components), so the
+  # most-derived theme owns; consumers also read `is_git` / `name` / `component`.
+  # Emitted separately because the site serializer's `user_themes` lacks
+  # `remote_theme_id` and lists only user-selectable themes.
+  #
+  # `is_git` is derived from the presence of a `remote_url`, matching
+  # `RemoteTheme#is_git?` — NOT merely from a non-nil `remote_theme_id`. A
+  # locally zip/dir-imported theme has a `remote_theme` record with a blank
+  # `remote_url`, which is editable (not Git-managed); keying on `remote_url`
+  # lets such a theme correctly report `is_git: false`.
+  def theme_block_layout_meta_json
+    id = @theme_id
+    return "{}" if id.blank?
+    ids = Theme.transform_ids(id)
+    return "{}" if ids.blank?
+
+    info_by_id =
+      Theme
+        .where(id: ids)
+        .joins("LEFT JOIN remote_themes ON remote_themes.id = themes.remote_theme_id")
+        .pluck(:id, :name, :component, "remote_themes.remote_url")
+        .to_h do |theme_id, name, component, remote_url|
+          [theme_id, { name: name, component: component, is_git: remote_url.present? }]
+        end
+
+    meta = {}
+    ids.each_with_index do |theme_id, index|
+      info = info_by_id[theme_id]
+      next if info.nil?
+      meta[theme_id] = info.merge(stack_index: index)
+    end
+    meta.to_json
+  end
+
+  # Returns a JSON-serialised flat list of block_layout entries for the active
+  # theme stack — one row per `(theme, outlet)` pair, ordered by
+  # `Theme.transform_ids` (theme stack order). A boot-time initializer iterates
+  # this list and calls `api.setLayoutLayer(outlet, "theme", layout, { themeId,
+  # themeStackIndex })` for each. An outlet's owner is the theme with the minimum
+  # stack index (the most ancestral theme — parent before components), resolved
+  # client-side from the per-theme `stack_index` in `theme_block_layout_meta_json`.
+  def theme_block_layouts_json
+    id = @theme_id
+    return "[]" if id.blank?
+    ids = Theme.transform_ids(id)
+    return "[]" if ids.blank?
+
+    layouts = []
+    fields =
+      ThemeField
+        .where(theme_id: ids, type_id: ThemeField.types[:block_layout])
+        .order(:theme_id, :name)
+        .pluck(:theme_id, :name, :value_baked, :error)
+
+    # Re-order fields so that themes flow in stack order; within a theme,
+    # fields stay alphabetical by outlet name (matters only for
+    # determinism — outlet-vs-outlet precedence is independent).
+    by_theme = fields.group_by { |row| row[0] }
+    ids.each do |theme_id|
+      next unless by_theme.key?(theme_id)
+      by_theme[theme_id].each do |_, outlet, value_baked, error|
+        # Skip fields that failed to bake — `value_baked` is nil and
+        # `error` carries the reason. An applied layout that failed to bake
+        # would render nothing for the outlet; better to fall through to
+        # the underlying layer.
+        next if value_baked.blank? || error.present?
+        begin
+          parsed = JSON.parse(value_baked)
+        rescue JSON::ParserError
+          next
+        end
+        layouts << {
+          theme_id: theme_id,
+          outlet: outlet,
+          schema_version: parsed["schema_version"],
+          layout: parsed["layout"],
+          version_token: Themes::BlockLayoutVersion.token_for(value_baked),
+        }
+      end
+    end
+
+    layouts.to_json
   end
 
   def load_font_map

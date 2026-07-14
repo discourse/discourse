@@ -1,0 +1,30 @@
+.d-block-inline-icon--empty {
+  display: none;
+}
+
+.d-block-heading,
+.d-block-paragraph {
+  &--align-left {
+    text-align: left;
+  }
+
+  &--align-center {
+    text-align: center;
+  }
+
+  &--align-right {
+    text-align: right;
+  }
+
+  /* Empty inline-text wrappers — block-author opt-in via the renderer's
+     yielded isEmpty flag. Collapse on the reader page; edit tooling
+     re-shows them so placeholders are clickable. */
+
+  &--empty {
+    display: none;
+  }
+}
+
+.d-block-heading .d-icon {
+  margin-right: 0.4em;
+}

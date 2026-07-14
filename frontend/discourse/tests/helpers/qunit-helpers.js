@@ -49,6 +49,7 @@ import deprecated from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
 import { visible as isVisible } from "discourse/lib/dom-utils";
 import { clearRegisteredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
+import { resetFitCoordinator } from "discourse/lib/fit-coordinator";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { restoreBaseUri } from "discourse/lib/get-url";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
@@ -94,6 +95,7 @@ import User from "discourse/models/user";
 import { clearResolverOptions } from "discourse/resolver";
 import { _clearSnapshots as _clearComposerActionsSnapshotsOld } from "discourse/select-kit/components/composer-actions";
 import { enableClearA11yAnnouncementsInTests } from "discourse/services/a11y";
+import { resetDragAndDropForTesting } from "discourse/services/drag-and-drop";
 import {
   clearDisabledDefaultKeyboardBindings,
   clearExtraKeyboardShortcutHelp,
@@ -262,6 +264,7 @@ export function testCleanup(container, app) {
   resetUserMenuTabs();
   resetLinkLookup();
   resetModelTransformers();
+  resetFitCoordinator();
   resetMentions();
   resetProsemirrorEngine();
   cleanupTemporaryModuleRegistrations();
@@ -286,6 +289,7 @@ export function testCleanup(container, app) {
   _resetOutletLayoutsForTesting();
   resetBlockRegistryForTesting();
   resetDebugCallbacks();
+  resetDragAndDropForTesting();
 }
 
 function cleanupCssGeneratorTags() {

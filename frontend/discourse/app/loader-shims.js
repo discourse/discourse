@@ -10,6 +10,9 @@ loaderShim("@ember-compat/tracked-built-ins", () =>
 loaderShim("@ember/-internals/metal", () =>
   importSync("@ember/-internals/metal")
 );
+loaderShim("@ember/object/internals", () =>
+  importSync("@ember/object/internals")
+);
 loaderShim("@ember/application", () => importSync("@ember/application"));
 loaderShim("@ember/application/instance", () =>
   importSync("@ember/application/instance")
@@ -63,6 +66,7 @@ loaderShim("@ember/template-factory", () =>
   importSync("@ember/template-factory")
 );
 loaderShim("@ember/template", () => importSync("@ember/template"));
+loaderShim("@ember/test-waiters", () => importSync("@ember/test-waiters"));
 loaderShim("@ember/utils", () => importSync("@ember/utils"));
 loaderShim("@floating-ui/dom", () => importSync("@floating-ui/dom"));
 loaderShim("@glimmer/component", () => importSync("@glimmer/component"));
@@ -74,6 +78,7 @@ loaderShim("@uppy/utils", () => importSync("@uppy/utils"));
 loaderShim("@uppy/xhr-upload", () => importSync("@uppy/xhr-upload"));
 loaderShim("a11y-dialog", () => importSync("a11y-dialog"));
 loaderShim("discourse-i18n", () => importSync("discourse-i18n"));
+loaderShim("ember-async-data", () => importSync("ember-async-data"));
 loaderShim("ember-curry-component", () => importSync("ember-curry-component"));
 loaderShim("ember-modifier", () => importSync("ember-modifier"));
 loaderShim("ember-route-template", () => importSync("ember-route-template"));

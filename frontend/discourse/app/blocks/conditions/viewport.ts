@@ -1,5 +1,9 @@
 import { service } from "@ember/service";
-import { BlockCondition } from "./condition";
+import {
+  BlockCondition,
+  type ConditionContext,
+  type ViewportCapabilities,
+} from "./condition";
 import { blockCondition } from "./decorator";
 
 /** A viewport breakpoint name, matching the breakpoints defined in
@@ -71,6 +75,8 @@ const BREAKPOINTS: readonly Breakpoint[] = Object.freeze([
  */
 @blockCondition({
   type: "viewport",
+  displayName: "Viewport",
+  description: "Match by screen-size breakpoint or touch capability.",
   args: {
     // `enum` widens to a mutable `unknown[]`; BREAKPOINTS stays a frozen,
     // precisely-typed `readonly Breakpoint[]` for use elsewhere in this file.
@@ -105,18 +111,48 @@ export default class BlockViewportCondition extends BlockCondition {
   declare capabilities: import("discourse/services/capabilities").Capabilities;
 
   /**
+   * Returns the boolean source object the condition checks against. By
+   * default this is the live `capabilities` service (so its
+   * `capabilities.viewport.{sm|md|lg|xl|2xl}` getters and `capabilities.touch`
+   * are read on every evaluation), but when `context.simulation.viewport` is
+   * set (a preview/simulation context), the simulated shape replaces the
+   * service entirely.
+   *
+   * The simulated payload is expected to expose the same surface
+   * (`{ viewport: {<breakpoint>: boolean, ...}, touch: boolean }`); we
+   * recommend deriving it from a single breakpoint pick via
+   * `buildSimulatedViewport()` below so the matrix stays self-consistent.
+   *
+   * @param context - Evaluation context.
+   * @returns The viewport read-surface to check against.
+   */
+  capabilitiesSource(context?: ConditionContext): ViewportCapabilities {
+    // Use `in` so an explicit `null` viewport (a sim slot the author may
+    // set to mean "fall back to real, but the simulation is still active")
+    // still falls back here cleanly.
+    if (context?.simulation && "viewport" in context.simulation) {
+      const sim = context.simulation.viewport;
+      if (sim) {
+        return sim;
+      }
+    }
+    return this.capabilities;
+  }
+
+  /**
    * Evaluates whether the viewport condition passes.
    */
-  evaluate(args: Record<string, unknown>): boolean {
+  evaluate(args: Record<string, unknown>, context?: ConditionContext): boolean {
     const { min, max, touch } = args as ViewportConditionArgs;
+    const caps = this.capabilitiesSource(context);
 
     // Check touch capability
-    if (touch !== undefined && touch !== this.capabilities.touch) {
+    if (touch !== undefined && touch !== caps.touch) {
       return false;
     }
 
     // Check minimum breakpoint (viewport must be at least this size)
-    if (min && !this.capabilities.viewport[min]) {
+    if (min && !caps.viewport[min]) {
       return false;
     }
 
@@ -129,11 +165,38 @@ export default class BlockViewportCondition extends BlockCondition {
       const maxIndex = BREAKPOINTS.indexOf(max);
       const nextBreakpoint = BREAKPOINTS[maxIndex + 1];
 
-      if (nextBreakpoint && this.capabilities.viewport[nextBreakpoint]) {
+      if (nextBreakpoint && caps.viewport[nextBreakpoint]) {
         return false;
       }
     }
 
     return true;
   }
+}
+
+/**
+ * Builds a `{viewport, touch}` payload suitable for
+ * `context.simulation.viewport`. Derives the per-breakpoint booleans
+ * from a single chosen breakpoint (the "current" simulated size) — every
+ * breakpoint at-or-below the chosen size resolves to `true`, every
+ * larger one to `false`. Keeps the simulated state self-consistent
+ * with the real `capabilities.viewport` semantics (which return `true`
+ * when the viewport is AT LEAST that size).
+ *
+ * @param pick - The simulated breakpoint and touch capability.
+ * @returns A viewport read-surface derived from the picked breakpoint.
+ */
+export function buildSimulatedViewport({
+  breakpoint,
+  touch = false,
+}: {
+  breakpoint: Breakpoint;
+  touch?: boolean;
+}): ViewportCapabilities {
+  const idx = BREAKPOINTS.indexOf(breakpoint);
+  const viewport: Record<string, boolean> = {};
+  BREAKPOINTS.forEach((bp, i) => {
+    viewport[bp] = i <= idx;
+  });
+  return { viewport, touch };
 }

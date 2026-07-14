@@ -722,4 +722,71 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
       minWidth: "200px",
     });
   });
+
+  test("@hoverGracePeriod keeps the menu open while the pointer crosses to the content", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @label="label"
+          @triggers={{array "hover"}}
+          @untriggers={{array "hover"}}
+          @hoverGracePeriod={{150}}
+          @content="content"
+        />
+      </template>
+    );
+
+    await triggerEvent(".fk-d-menu__trigger", "pointermove");
+    assert.dom(".fk-d-menu").exists();
+
+    const trigger = document.querySelector(".fk-d-menu__trigger");
+    const content = document.querySelector(".fk-d-menu");
+    trigger.dispatchEvent(new PointerEvent("pointerleave"));
+    content.dispatchEvent(new PointerEvent("pointerenter"));
+    await settled();
+
+    assert.dom(".fk-d-menu").exists();
+  });
+
+  test("@hoverGracePeriod closes the menu after the grace period when the pointer leaves entirely", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @label="label"
+          @triggers={{array "hover"}}
+          @untriggers={{array "hover"}}
+          @hoverGracePeriod={{150}}
+          @content="content"
+        />
+      </template>
+    );
+
+    await triggerEvent(".fk-d-menu__trigger", "pointermove");
+    await triggerEvent(".fk-d-menu__trigger", "pointerleave");
+
+    assert.dom(".fk-d-menu").doesNotExist();
+  });
+
+  test("default hoverGracePeriod (0) does not install hover-close on interactive menus", async function (assert) {
+    await render(
+      <template>
+        <DMenu
+          @inline={{true}}
+          @label="label"
+          @triggers={{array "hover"}}
+          @untriggers={{array "hover"}}
+          @content="content"
+        />
+      </template>
+    );
+
+    await triggerEvent(".fk-d-menu__trigger", "pointermove");
+    await triggerEvent(".fk-d-menu__trigger", "pointerleave");
+
+    assert
+      .dom(".fk-d-menu")
+      .exists("interactive menu stays open without grace period");
+  });
 });

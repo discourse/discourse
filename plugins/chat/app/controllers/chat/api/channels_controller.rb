@@ -14,6 +14,7 @@ class Chat::Api::ChannelsController < Chat::ApiController
         :chatable_id,
         :chatable_type,
         :include_subcategories,
+        channel_ids: [],
       )
 
     options = { filter: permitted[:filter], limit: (permitted[:limit] || 25).to_i }
@@ -21,6 +22,9 @@ class Chat::Api::ChannelsController < Chat::ApiController
     options[:status] = Chat::Channel.statuses[permitted[:status]] ? permitted[:status] : nil
     options[:chatable_id] = permitted[:chatable_id]
     options[:chatable_type] = permitted[:chatable_type]
+    # A curated set of channel ids (the featured-channels block); restricts the
+    # results to those channels while keeping the guardian's visibility scope.
+    options[:ids] = permitted[:channel_ids] if permitted[:channel_ids].present?
 
     if options[:chatable_type] == "Category"
       options[:include_subcategories] = ActiveModel::Type::Boolean.new.cast(

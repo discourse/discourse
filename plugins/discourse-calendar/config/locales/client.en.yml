@@ -402,6 +402,14 @@ en:
         error: "Failed to retrieve events"
         try_again: "Try again"
         view_all: "View all"
+        block:
+          count: "Events to show"
+          upcoming_days: "Days ahead"
+          upcoming_days_help: "How far into the future to look for events."
+          category_id: "Category"
+          include_subcategories: "Include subcategories"
+          time_format: "Time format"
+          time_format_help: "Moment.js format string (e.g. `LT` for short time)."
       category:
         sort_topics_by_event_start_date: "Sort topics by event start date."
         disable_topic_resorting: "Disable topic resorting."

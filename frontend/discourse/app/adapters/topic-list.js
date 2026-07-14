@@ -4,7 +4,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import Topic from "discourse/models/topic";
 
 export default class TopicListAdapter extends RestAdapter {
-  find(store, type, { filter, params }) {
+  find(store, type, { filter, params }, opts) {
     return PreloadStore.getAndRemove("topic_list", () => {
       let url = `/${filter}.json`;
 
@@ -32,7 +32,7 @@ export default class TopicListAdapter extends RestAdapter {
         }
       }
 
-      return ajax(url);
+      return ajax(url, { ignoreUnsent: opts?.ignoreUnsent });
     }).then((result) => {
       result.filter = filter;
       result.params = params;

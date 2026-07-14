@@ -38,6 +38,37 @@ export default class DFloatBody extends Component {
     };
   });
 
+  hoverGrace = modifierFn((element) => {
+    const instance = this.args.instance;
+
+    const onPointerEnter = () => instance.cancelHoverClose();
+    const onPointerLeave = () => instance.scheduleHoverClose();
+    const onFocusIn = () => instance.lockHoverCloseForFocus();
+    const onFocusOut = (event) => {
+      if (event.relatedTarget && element.contains(event.relatedTarget)) {
+        return;
+      }
+      instance.unlockHoverCloseForFocus();
+      instance.scheduleHoverClose();
+    };
+
+    element.addEventListener("pointerenter", onPointerEnter, { passive: true });
+    element.addEventListener("pointerleave", onPointerLeave, { passive: true });
+    element.addEventListener("focusin", onFocusIn, { passive: true });
+    element.addEventListener("focusout", onFocusOut, { passive: true });
+
+    return () => {
+      element.removeEventListener("pointerenter", onPointerEnter);
+      element.removeEventListener("pointerleave", onPointerLeave);
+      element.removeEventListener("focusin", onFocusIn);
+      element.removeEventListener("focusout", onFocusOut);
+    };
+  });
+
+  get supportsHoverGrace() {
+    return this.args.instance.expanded && this.options.hoverGracePeriod > 0;
+  }
+
   get supportsCloseOnClickOutside() {
     return this.options.closeOnClickOutside;
   }
@@ -104,6 +135,7 @@ export default class DFloatBody extends Component {
           (modifier FloatKitCloseOnEscape @instance.close)
         )}}
         {{(if this.supportsCloseOnScroll (modifier this.closeOnScroll))}}
+        {{(if this.supportsHoverGrace (modifier this.hoverGrace))}}
         style={{this.style}}
         ...attributes
       >

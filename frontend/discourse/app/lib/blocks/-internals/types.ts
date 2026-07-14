@@ -46,7 +46,13 @@ export interface BlockEntry {
   __visible: boolean;
 
   // Stable key assigned at registration time, preserved across renders.
-  __stableKey: number;
+  // Synthesized composite parts carry a string key, hence `number | string`.
+  __stableKey: number | string;
+
+  // Snapshots of the arg / container-arg key sets, taken when stable keys are
+  // assigned, so reactive per-arg getters know which keys to expose.
+  __argKeys?: string[];
+  __containerArgKeys?: string[];
 
   // Failure metadata, populated in debug mode only.
   __failureType?: string;
@@ -62,6 +68,9 @@ export interface ChildBlockResult {
   Component: BlockComponent;
   containerArgs?: Record<string, unknown>;
   key: string;
+
+  // The child's block name, so a parent container can identify it by kind.
+  blockName?: string;
 
   // True for a ghost placeholder rendered in debug mode.
   isGhost?: boolean;

@@ -71,14 +71,6 @@ module PageObjects
       def has_enabled_save?
         find_button("Save", disabled: false)
       end
-
-      def topics_link
-        find(".draggable[data-link-name='Topics']")
-      end
-
-      def review_link
-        find(".draggable[data-link-name='Review']")
-      end
     end
   end
 end

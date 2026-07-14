@@ -1,7 +1,9 @@
 import { getOwner, setOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import BlockViewportCondition from "discourse/blocks/conditions/viewport";
+import BlockViewportCondition, {
+  buildSimulatedViewport,
+} from "discourse/blocks/conditions/viewport";
 import { validateConditions } from "discourse/tests/helpers/block-testing";
 
 module("Unit | Blocks | Condition | viewport", function (hooks) {
@@ -196,6 +198,52 @@ module("Unit | Blocks | Condition | viewport", function (hooks) {
         error.message.includes("at least one of"),
         "error message mentions atLeastOne"
       );
+    });
+  });
+
+  module("simulation (context.simulation.viewport)", function (nestedHooks) {
+    nestedHooks.beforeEach(function () {
+      // Real capabilities: desktop, no touch. Sim should override.
+      this.condition.capabilities = {
+        touch: false,
+        viewport: { sm: true, md: true, lg: true, xl: true, "2xl": true },
+      };
+    });
+
+    test("simulated mobile (sm) fails min: md", function (assert) {
+      const sim = buildSimulatedViewport({ breakpoint: "sm", touch: true });
+      const context = { simulation: { viewport: sim } };
+      assert.false(this.condition.evaluate({ min: "md" }, context));
+    });
+
+    test("simulated mobile passes max: sm", function (assert) {
+      const sim = buildSimulatedViewport({ breakpoint: "sm", touch: true });
+      const context = { simulation: { viewport: sim } };
+      assert.true(this.condition.evaluate({ max: "sm" }, context));
+    });
+
+    test("simulated touch flag overrides real capabilities.touch", function (assert) {
+      const sim = buildSimulatedViewport({ breakpoint: "sm", touch: true });
+      const context = { simulation: { viewport: sim } };
+      assert.true(this.condition.evaluate({ touch: true }, context));
+    });
+
+    test("simulation without 'viewport' key falls through to real capabilities", function (assert) {
+      const context = { simulation: { user: { trust_level: 0 } } };
+      assert.true(
+        this.condition.evaluate({ min: "lg" }, context),
+        "real desktop capability wins when only user is simulated"
+      );
+    });
+
+    test("buildSimulatedViewport produces a self-consistent boolean map", function (assert) {
+      const sim = buildSimulatedViewport({ breakpoint: "md", touch: true });
+      assert.true(sim.viewport.sm);
+      assert.true(sim.viewport.md);
+      assert.false(sim.viewport.lg);
+      assert.false(sim.viewport.xl);
+      assert.false(sim.viewport["2xl"]);
+      assert.true(sim.touch);
     });
   });
 

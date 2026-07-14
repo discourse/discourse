@@ -120,9 +120,16 @@ export default class DMenuInstance extends FloatKitInstance {
 
   @action
   async onPointerLeave(event) {
-    if (this.untriggers.includes("hover")) {
-      await this.onUntrigger(event);
+    if (!this.untriggers.includes("hover")) {
+      return;
     }
+
+    if (this.hasHoverGracePeriod) {
+      this.scheduleHoverClose();
+      return;
+    }
+
+    await this.onUntrigger(event);
   }
 
   @action

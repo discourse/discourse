@@ -2,7 +2,12 @@
 import $ from "jquery";
 import { registerAdminDashboardReportRenderer } from "discourse/admin/lib/admin-dashboard-report-renderers";
 import { registerAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
-import { _renderBlocks } from "discourse/blocks/block-outlet";
+import {
+  _clearLayoutLayer,
+  _renderBlocks,
+  _setLayoutLayer,
+  LAYOUT_LAYERS,
+} from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -3473,11 +3478,18 @@ class _PluginApi {
    * Blocks can have conditions that determine when they render. Conditions support
    * AND logic (array), OR logic (`any`), and NOT logic (`not`).
    *
+   * By default a layout is an editable seed; pass `overridable: false` to ship a
+   * locked, authoritative layout that outranks theme edits. The flag — not the
+   * caller — decides, so plugins and theme JS use this same method.
+   *
    * @experimental This API is under active development and may change or be removed
    * in future releases without prior notice. Use with caution in production environments.
    *
    * @param {string} outletName - The block outlet identifier
    * @param {Array<import("discourse/blocks/types").LayoutEntry>} blocks - Array of layout entries
+   * @param {Object} [options] - Registration options
+   * @param {boolean} [options.overridable=true] - `true` ships an editable seed; `false` ships a locked, authoritative layout
+   * @param {string|number|null} [options.sourceId] - An opaque id for the registering source, recorded as provenance
    *
    * @example
    * ```javascript
@@ -3519,11 +3531,101 @@ class _PluginApi {
    * ]);
    * ```
    */
-  renderBlocks(outletName, blocks) {
+  renderBlocks(outletName, blocks, options = {}) {
     // Capture call site here, excluding this method, so the stack trace
     // points directly to the user's code that called api.renderBlocks().
     const callSiteError = captureCallSite(this.renderBlocks);
-    _renderBlocks(outletName, blocks, this.container, callSiteError);
+    _renderBlocks(outletName, blocks, this.container, {
+      ...options,
+      callSiteError,
+    });
+  }
+
+  /**
+   * Publishes a layout for a specific layer of a block outlet. The block
+   * resolution chain walks layers in fixed precedence order — `session-draft`
+   * first, then `theme` (last entry in the theme stack wins), then
+   * `code-default` — and renders the highest-priority layer that has a
+   * layout set.
+   *
+   * Use this for:
+   * - Hydrating theme-shipped layouts at boot from the active theme stack
+   *   (`layer: "theme"`, with the originating `themeId`).
+   * - Publishing in-progress edits as a session draft
+   *   (`layer: "session-draft"`).
+   *
+   * The existing `api.renderBlocks(...)` continues to write into the
+   * `code-default` layer and is the right call for plugins / core that want
+   * to ship a default layout.
+   *
+   * @experimental This API is under active development and may change or be
+   * removed in future releases without prior notice.
+   *
+   * @param {string} outletName - The block outlet identifier.
+   * @param {"session-draft"|"theme"} layer - The layer to publish to.
+   * @param {Array<import("discourse/blocks/block-outlet").LayoutEntry>} layout - The layout entries.
+   * @param {Object} [options]
+   * @param {number} [options.themeId] - Required when `layer === "theme"`. The
+   *   id of the theme this layout originated from.
+   * @param {boolean} [options.lazy=false] - When true, defers layout
+   *   validation until `BlockOutlet` first reads the entry at render
+   *   time. Use this for boot-time hydration paths where blocks
+   *   referenced by name may be registered later in the same tick by
+   *   other initializers — eager validation would race those
+   *   registrations and reject before the registry settled.
+   * @param {boolean} [options.permissive=false] - When true, validation
+   *   errors don't reject the resolved-layout Promise. The error is
+   *   captured on the layer entry's `validationWarnings` array and the
+   *   layout is returned as-is. Use this for layers fed by user
+   *   authoring (the `session-draft` layer, theme-
+   *   shipped block layouts that may contain typos, etc.) where a
+   *   structural failure shouldn't crash the page. Code-default layers
+   *   should generally stay strict — those are author-controlled and
+   *   strict validation surfaces install-time mistakes.
+   * @returns {Promise<Array<import("discourse/blocks/block-outlet").LayoutEntry>>|undefined}
+   *   The validated-layout Promise (eager mode) or `undefined` (lazy mode).
+   * @throws {Error} If the layer name is unknown, or `options.themeId` is
+   *   missing for the "theme" layer. (Validation errors surface
+   *   asynchronously via the returned Promise — or, in lazy mode, when
+   *   `BlockOutlet` first reads the entry.)
+   */
+  setLayoutLayer(outletName, layer, layout, options = {}) {
+    const callSiteError = captureCallSite(this.setLayoutLayer);
+    return _setLayoutLayer(outletName, layer, layout, this.container, {
+      ...options,
+      callSiteError,
+    });
+  }
+
+  /**
+   * Clears one layer's layout for an outlet. For the `theme` layer, an
+   * optional `options.themeId` targets a specific theme; omitting it clears
+   * every theme's layout for that outlet. If clearing leaves the outlet with
+   * no layouts at any layer, the outlet falls back to "no layout" (the
+   * `<:before>` and `<:after>` slots will yield `hasLayout` as `false`).
+   *
+   * @experimental This API is under active development and may change or be
+   * removed in future releases without prior notice.
+   *
+   * @param {string} outletName - The block outlet identifier.
+   * @param {"session-draft"|"theme"|"code-default"} layer - The layer to clear.
+   * @param {Object} [options]
+   * @param {number} [options.themeId] - When clearing the "theme" layer,
+   *   targets a specific theme. Omit to clear every theme's layout.
+   */
+  clearLayoutLayer(outletName, layer, options = {}) {
+    _clearLayoutLayer(outletName, layer, options);
+  }
+
+  /**
+   * The set of layer names accepted by `api.setLayoutLayer` /
+   * `api.clearLayoutLayer`, exposed as a constant for callers that want to
+   * avoid duplicating the string literals.
+   *
+   * @returns {Readonly<{SESSION_DRAFT: string, THEME: string, CODE_DEFAULT: string}>}
+   */
+  get LAYOUT_LAYERS() {
+    return LAYOUT_LAYERS;
   }
 
   /**
@@ -3591,13 +3693,20 @@ class _PluginApi {
    *
    * @param {string} outletName - The outlet name (must follow naming conventions).
    * @param {Object} [options] - Outlet configuration options.
-   * @param {string} [options.description] - Human-readable description of the outlet.
+   * @param {string} [options.displayName] - Human-readable label shown in
+   *   an outlet inventory surfaced to consumers. Defaults to the outlet name.
+   * @param {string} [options.description] - One-line summary of where the
+   *   outlet renders.
+   * @param {string} [options.category] - Optional free-form grouping label
+   *   for an outlet inventory surfaced to consumers (e.g. `"Layout"`).
    *
    * @example
    * ```javascript
    * // In a pre-initializer
    * api.registerBlockOutlet("chat:message-actions", {
+   *   displayName: "Chat message actions",
    *   description: "Actions displayed below chat messages",
+   *   category: "Chat",
    * });
    *
    * // Later, in an api-initializer

@@ -51,6 +51,7 @@ packages:
 - "plugins/discourse-templates"
 - "plugins/discourse-topic-voting"
 - "plugins/discourse-user-notes"
+- "plugins/discourse-wireframe"
 - "plugins/discourse-zendesk-plugin"
 - "plugins/footnote"
 - "plugins/poll"

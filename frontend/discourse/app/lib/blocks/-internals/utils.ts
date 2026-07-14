@@ -3,6 +3,7 @@
  */
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import type { BlockClass } from "discourse/lib/blocks/-internals/types";
+import type { ValidationErrorDetails } from "discourse/lib/blocks/-internals/validation/args";
 
 /**
  * Validation context passed through the layout validation pipeline for error
@@ -34,6 +35,8 @@ export interface ValidationContext {
   conditionsPath?: string;
   /** The conditions object for error display. */
   conditions?: unknown;
+  /** Structured payload preserved through re-throws for field-level errors. */
+  details?: ValidationErrorDetails | ValidationErrorDetails[] | null;
 }
 
 /**

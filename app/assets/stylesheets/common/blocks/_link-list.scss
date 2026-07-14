@@ -1,0 +1,31 @@
+/* Link list block — a vertical menu or a horizontal nav / button bar. */
+.d-block-link-list__items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--d-block-link-list-gap, 0.5rem);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.d-block-link-list--horizontal .d-block-link-list__items {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.d-block-link-list__link {
+  display: inline-flex;
+  gap: 0.5em;
+  align-items: center;
+}
+
+.d-block-link-list__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.d-block-link-list__description {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}

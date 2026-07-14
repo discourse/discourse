@@ -146,6 +146,7 @@ end
 #  id                            :bigint           not null, primary key
 #  csp_extensions                :string           is an Array
 #  custom_homepage               :boolean
+#  duplicable_theme              :boolean
 #  only_theme_color_schemes      :boolean
 #  serialize_post_user_badges    :string           is an Array
 #  serialize_topic_excerpts      :boolean

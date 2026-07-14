@@ -264,6 +264,11 @@ Discourse::Application.routes.draw do
           collection { get "preview" => "form_templates#preview" }
         end
 
+        post "block-layouts" => "block_layouts#publish"
+        delete "block-layouts" => "block_layouts#destroy"
+        post "block-layouts/export" => "block_layouts#export"
+        post "block-layouts/duplicate" => "block_layouts#duplicate"
+
         get "themes/:id/:target/:field_name/edit" => "themes#index"
         get "themes/:id" => "themes#index"
         get "components/:id" => "themes#index"
@@ -1343,6 +1348,7 @@ Discourse::Application.routes.draw do
     resources :badges, only: [:index]
     get "/badges/:id(/:slug)" => "badges#show", :constraints => { format: /(json|html|rss)/ }
     resources :user_badges, only: %i[index create destroy] do
+      collection { get "featured" => "user_badges#featured", :constraints => { format: :json } }
       put "toggle_favorite" => "user_badges#toggle_favorite", :constraints => { format: :json }
     end
 

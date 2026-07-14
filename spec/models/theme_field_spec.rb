@@ -745,6 +745,138 @@ RSpec.describe ThemeField do
     end
   end
 
+  describe "block_layout field" do
+    let(:valid_layout) do
+      {
+        schema_version: 1,
+        layout: [
+          { block: "hero-banner", args: { title: "Welcome" } },
+          {
+            block: "block-group",
+            args: {
+              direction: "row",
+            },
+            children: [{ block: "feature-card", args: { icon: "star" } }],
+          },
+        ],
+      }.to_json
+    end
+
+    it "registers block_layout as type_id 9" do
+      expect(ThemeField.types[:block_layout]).to eq(9)
+    end
+
+    it "bakes a valid layout into the canonical JSON form" do
+      field =
+        theme.set_field(
+          target: :common,
+          name: "homepage-blocks",
+          type: :block_layout,
+          value: valid_layout,
+        )
+      theme.save!
+
+      field.reload
+      expect(field.error).to be_nil
+      parsed = JSON.parse(field.value_baked)
+      expect(parsed["schema_version"]).to eq(1)
+      expect(parsed["layout"].length).to eq(2)
+    end
+
+    it "records an error when the JSON is malformed" do
+      field =
+        theme.set_field(
+          target: :common,
+          name: "homepage-blocks",
+          type: :block_layout,
+          value: "{not valid json",
+        )
+      theme.save!
+
+      field.reload
+      expect(field.error).to match(/Invalid block_layout JSON/)
+      expect(field.value_baked).to be_nil
+    end
+
+    it "records an error for an unsupported schema_version" do
+      field =
+        theme.set_field(
+          target: :common,
+          name: "homepage-blocks",
+          type: :block_layout,
+          value: { schema_version: 99, layout: [] }.to_json,
+        )
+      theme.save!
+
+      field.reload
+      expect(field.error).to match(/Unsupported block_layout schema_version/)
+    end
+
+    it "rejects a payload that's missing the layout array" do
+      field =
+        theme.set_field(
+          target: :common,
+          name: "homepage-blocks",
+          type: :block_layout,
+          value: { schema_version: 1 }.to_json,
+        )
+      theme.save!
+
+      field.reload
+      expect(field.error).to match(/requires a "layout" array/)
+    end
+
+    it "rejects an entry without a block reference" do
+      field =
+        theme.set_field(
+          target: :common,
+          name: "homepage-blocks",
+          type: :block_layout,
+          value: { schema_version: 1, layout: [{ args: { title: "x" } }] }.to_json,
+        )
+      theme.save!
+
+      field.reload
+      expect(field.error).to match(/non-empty "block" string/)
+    end
+
+    it "rejects nesting deeper than BLOCK_LAYOUT_MAX_DEPTH" do
+      # Build a chain of nested children one deeper than the limit.
+      max = ThemeField::BLOCK_LAYOUT_MAX_DEPTH
+      tail = { block: "leaf" }
+      (max + 1).times { tail = { block: "container", children: [tail] } }
+      field =
+        theme.set_field(
+          target: :common,
+          name: "homepage-blocks",
+          type: :block_layout,
+          value: { schema_version: 1, layout: [tail] }.to_json,
+        )
+      theme.save!
+
+      field.reload
+      expect(field.error).to match(/exceeds maximum nesting depth/)
+    end
+
+    it "exposes a file_path for Git export" do
+      field =
+        theme.set_field(
+          target: :common,
+          name: "homepage-blocks",
+          type: :block_layout,
+          value: valid_layout,
+        )
+      theme.save!
+
+      expect(field.file_path).to eq("block_layouts/homepage-blocks.json")
+    end
+
+    it "matches block_layouts/<name>.json on Git import" do
+      opts = ThemeField.opts_from_file_path("block_layouts/homepage-blocks.json")
+      expect(opts).to eq(name: "homepage-blocks", target: :common, type: :block_layout)
+    end
+  end
+
   describe "migration JavaScript field" do
     it "must match a specific format for filename" do
       field = Fabricate(:migration_theme_field, theme: theme)
@@ -805,6 +937,266 @@ RSpec.describe ThemeField do
 
         expect(field.valid?).to eq(true)
       end
+    end
+  end
+
+  describe "block_layout upload references" do
+    fab!(:upload_a, :upload)
+    fab!(:upload_b, :upload)
+
+    def save_layout(layout_hash)
+      theme.set_field(
+        target: :common,
+        name: "homepage-blocks",
+        type: :block_layout,
+        value: { "schema_version" => 1, "layout" => layout_hash }.to_json,
+      )
+      theme.save!
+      theme.theme_fields.find_by(
+        target_id: Theme.targets[:common],
+        type_id: ThemeField.types[:block_layout],
+        name: "homepage-blocks",
+      )
+    end
+
+    def image_arg(upload, **extras)
+      { "source" => "upload", "upload_id" => upload.id, "url" => upload.url, **extras }
+    end
+
+    it "creates an UploadReference for each embedded upload" do
+      field = save_layout([{ "args" => { "image" => image_arg(upload_a) } }])
+
+      expect(field.upload_references.pluck(:upload_id)).to contain_exactly(upload_a.id)
+      expect(field.upload_references.first.target_type).to eq("ThemeField")
+    end
+
+    it "creates no references when the layout has no images" do
+      field = save_layout([{ "block" => "wf:text", "args" => { "title" => "hi" } }])
+
+      expect(field.upload_references).to be_empty
+    end
+
+    it "prunes the reference when the image is removed from the layout" do
+      field = save_layout([{ "args" => { "image" => image_arg(upload_a) } }])
+      expect(field.upload_references.pluck(:upload_id)).to eq([upload_a.id])
+
+      save_layout([{ "block" => "wf:text", "args" => { "title" => "hi" } }])
+
+      expect(field.reload.upload_references).to be_empty
+    end
+
+    it "swings the reference when the image is replaced with a different upload" do
+      save_layout([{ "args" => { "image" => image_arg(upload_a) } }])
+      field = save_layout([{ "args" => { "image" => image_arg(upload_b) } }])
+
+      expect(field.upload_references.pluck(:upload_id)).to contain_exactly(upload_b.id)
+    end
+
+    it "is idempotent when re-saving the same layout" do
+      save_layout([{ "args" => { "image" => image_arg(upload_a) } }])
+      field = save_layout([{ "args" => { "image" => image_arg(upload_a) } }])
+
+      expect(field.upload_references.pluck(:upload_id)).to contain_exactly(upload_a.id)
+    end
+
+    it "claims both light and dark variants" do
+      field =
+        save_layout(
+          [{ "args" => { "image" => image_arg(upload_a, "dark" => image_arg(upload_b)) } }],
+        )
+
+      expect(field.upload_references.pluck(:upload_id)).to contain_exactly(upload_a.id, upload_b.id)
+    end
+
+    it "skips external URL images (source: url)" do
+      field =
+        save_layout(
+          [{ "args" => { "image" => { "source" => "url", "url" => "https://x/y.png" } } }],
+        )
+
+      expect(field.upload_references).to be_empty
+    end
+
+    it "does not create references for client-supplied upload_ids that don't exist" do
+      ghost_id = (Upload.maximum(:id) || 0) + 9999
+      field =
+        save_layout(
+          [
+            {
+              "args" => {
+                "image" => {
+                  "source" => "upload",
+                  "upload_id" => ghost_id,
+                  "url" => "/uploads/ghost.png",
+                },
+              },
+            },
+          ],
+        )
+
+      expect(field.upload_references).to be_empty
+    end
+
+    it "keeps the same upload referenced from two different block_layout fields independent" do
+      theme.set_field(
+        target: :common,
+        name: "homepage-blocks",
+        type: :block_layout,
+        value: { "layout" => [{ "args" => { "image" => image_arg(upload_a) } }] }.to_json,
+      )
+      theme.set_field(
+        target: :common,
+        name: "sidebar-blocks",
+        type: :block_layout,
+        value: { "layout" => [{ "args" => { "image" => image_arg(upload_a) } }] }.to_json,
+      )
+      theme.save!
+
+      homepage = theme.theme_fields.find_by(name: "homepage-blocks")
+      sidebar = theme.theme_fields.find_by(name: "sidebar-blocks")
+
+      expect(homepage.upload_references.pluck(:upload_id)).to eq([upload_a.id])
+      expect(sidebar.upload_references.pluck(:upload_id)).to eq([upload_a.id])
+
+      theme.set_field(
+        target: :common,
+        name: "homepage-blocks",
+        type: :block_layout,
+        value: { "layout" => [] }.to_json,
+      )
+      theme.save!
+
+      expect(homepage.reload.upload_references).to be_empty
+      expect(sidebar.reload.upload_references.pluck(:upload_id)).to eq([upload_a.id])
+    end
+
+    it "destroys its UploadReferences when the field is destroyed" do
+      field = save_layout([{ "args" => { "image" => image_arg(upload_a) } }])
+      ref_ids = field.upload_references.pluck(:id)
+      expect(ref_ids).not_to be_empty
+
+      field.destroy!
+
+      expect(UploadReference.where(id: ref_ids)).to be_empty
+    end
+
+    it "does not touch references for non-block_layout field types (regression guard)" do
+      # theme_upload_var still goes through its own (existing) branch and
+      # uses the dedicated `upload_id` column. SCSS-style names only.
+      field =
+        ThemeField.create!(
+          theme: theme,
+          target_id: 0,
+          name: "bg",
+          upload: upload_a,
+          value: upload_a.url,
+          type_id: ThemeField.types[:theme_upload_var],
+        )
+
+      expect(field.upload_references.pluck(:upload_id)).to eq([upload_a.id])
+    end
+  end
+
+  describe "block_layout cleanup safety" do
+    fab!(:upload) { Fabricate(:upload, created_at: 3.days.ago) }
+
+    before do
+      SiteSetting.clean_up_uploads = true
+      SiteSetting.clean_orphan_uploads_grace_period_hours = 1
+      Jobs::CleanUpUploads.new.reset_last_cleanup!
+    end
+
+    it "preserves an upload referenced by a saved block_layout field" do
+      theme.set_field(
+        target: :common,
+        name: "homepage-blocks",
+        type: :block_layout,
+        value: {
+          "layout" => [
+            {
+              "args" => {
+                "image" => {
+                  "source" => "upload",
+                  "upload_id" => upload.id,
+                  "url" => upload.url,
+                },
+              },
+            },
+          ],
+        }.to_json,
+      )
+      theme.save!
+
+      Jobs::CleanUpUploads.new.execute(nil)
+
+      expect(Upload.exists?(id: upload.id)).to eq(true)
+    end
+
+    it "lets the upload be reclaimed once the layout drops the reference" do
+      theme.set_field(
+        target: :common,
+        name: "homepage-blocks",
+        type: :block_layout,
+        value: {
+          "layout" => [
+            {
+              "args" => {
+                "image" => {
+                  "source" => "upload",
+                  "upload_id" => upload.id,
+                  "url" => upload.url,
+                },
+              },
+            },
+          ],
+        }.to_json,
+      )
+      theme.save!
+
+      theme.set_field(
+        target: :common,
+        name: "homepage-blocks",
+        type: :block_layout,
+        value: { "layout" => [] }.to_json,
+      )
+      theme.save!
+
+      Jobs::CleanUpUploads.new.execute(nil)
+
+      expect(Upload.exists?(id: upload.id)).to eq(false)
+    end
+
+    it "preserves both light and dark uploads from a single image arg" do
+      dark_upload = Fabricate(:upload, created_at: 3.days.ago)
+      theme.set_field(
+        target: :common,
+        name: "homepage-blocks",
+        type: :block_layout,
+        value: {
+          "layout" => [
+            {
+              "args" => {
+                "image" => {
+                  "source" => "upload",
+                  "upload_id" => upload.id,
+                  "url" => upload.url,
+                  "dark" => {
+                    "source" => "upload",
+                    "upload_id" => dark_upload.id,
+                    "url" => dark_upload.url,
+                  },
+                },
+              },
+            },
+          ],
+        }.to_json,
+      )
+      theme.save!
+
+      Jobs::CleanUpUploads.new.execute(nil)
+
+      expect(Upload.exists?(id: upload.id)).to eq(true)
+      expect(Upload.exists?(id: dark_upload.id)).to eq(true)
     end
   end
 end

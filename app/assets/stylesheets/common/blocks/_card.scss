@@ -1,0 +1,68 @@
+/* Content card block. Vertical (image on top) or horizontal (image beside the
+   text) variant. The whole card becomes a link via the stretched-link
+   affordance, so the card establishes a positioning context. */
+
+.d-block-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: var(--d-block-card-bg-color, var(--secondary));
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius, 0.5rem);
+}
+
+.d-block-card--horizontal {
+  flex-direction: row;
+}
+
+.d-block-card__image {
+  display: block;
+  width: 100%;
+  object-fit: cover;
+  aspect-ratio: 16 / 9;
+}
+
+.d-block-card--horizontal .d-block-card__image {
+  width: 40%;
+  aspect-ratio: auto;
+}
+
+/* Empty image slot — collapses on the reader page; the editor reveals it. */
+.d-block-card__image--empty {
+  display: none;
+}
+
+.d-block-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem;
+}
+
+.d-block-card__icon {
+  font-size: var(--font-up-2);
+  color: var(--tertiary);
+}
+
+.d-block-card__title {
+  margin: 0;
+}
+
+.d-block-card__meta {
+  color: var(--primary-medium);
+  font-size: var(--font-down-1);
+}
+
+.d-block-card__text {
+  margin: 0.25rem 0 0;
+}
+
+/* Empty copy fields collapse on the reader page; the editor reveals them for
+   inline editing. */
+
+.d-block-card__title--empty,
+.d-block-card__meta--empty,
+.d-block-card__text--empty {
+  display: none;
+}

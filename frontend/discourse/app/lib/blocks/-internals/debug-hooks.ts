@@ -39,6 +39,26 @@ export const DEBUG_CALLBACK = Object.freeze({
   END_GROUP: "endGroup",
   LOGGER_INTERFACE: "loggerInterface",
   GHOST_CHILDREN_CREATOR: "ghostChildrenCreator",
+  /**
+   * Returns an object whose fields are merged into the condition
+   * evaluator's per-block context. Lets external code (e.g. a user/viewport
+   * simulation) inject extra context without coupling the blocks service to
+   * those consumers. Read by the root
+   * container's preprocessor on every visibility evaluation, so a
+   * tracked source inside the callback propagates re-renders.
+   *
+   * Example payload: `{ simulation: { user, viewport } }`.
+   */
+  EVAL_CONTEXT: "evalContext",
+  /**
+   * Returns a boolean. When truthy, a container that normally reveals only
+   * part of its content at a time (a paged or collapsed presentation) should
+   * instead make ALL of its content reachable, and keep its navigation
+   * interactive, so each part can be manipulated directly. Read on the live
+   * render path, so a tracked source inside the callback propagates
+   * re-renders. Left unset, containers render their normal presentation.
+   */
+  EDIT_PRESENTATION: "editPresentation",
 });
 
 /**
@@ -169,6 +189,17 @@ class DebugHooks {
   }
 
   /**
+   * Returns whether content should be presented in its fully-revealed,
+   * directly-editable form (see `EDIT_PRESENTATION`). A paged/collapsing
+   * container reads this to expose all of its parts instead of one at a time.
+   *
+   * @returns Whether content should be presented fully revealed.
+   */
+  get isEditPresentation(): boolean {
+    return Boolean(this.#callbacks.get(DEBUG_CALLBACK.EDIT_PRESENTATION)?.());
+  }
+
+  /**
    * Returns the logger interface for conditions to use.
    * Convenience getter that invokes the loggerInterface callback.
    *
@@ -207,6 +238,9 @@ export interface DebugGhostBlockData {
   name: string;
   /** The block's unique ID (if set). */
   id?: string;
+  /** Stable unique key for this entry, forwarded into the debug payload so
+   *  consumers can wire the ghost back to its underlying layout entry. */
+  key?: string;
   /** Block arguments. */
   args?: Record<string, unknown>;
   /** Container arguments. */
@@ -280,6 +314,12 @@ export function handleOptionalMissingBlock({
       {
         name: blockName,
         id: entry.id,
+        // Forward the stable key into the BLOCK_DEBUG payload so consumers
+        // can wire the ghost back to its layout entry — see the matching
+        // note in `handleUnknownBlock`. The same `key` is also stamped on
+        // the returned ghostData below, which drives Glimmer's `{{#each}}`
+        // identity.
+        key,
         args: entry.args,
         conditions: entry.conditions,
         failureType: FAILURE_TYPE.OPTIONAL_MISSING,
@@ -290,6 +330,81 @@ export function handleOptionalMissingBlock({
   }
 
   return null;
+}
+
+/**
+ * Handles an unknown / unresolvable block reference (typo or
+ * not-yet-installed plugin block, NOT the `?` opt-in optional-missing
+ * case). In strict rendering this entry is silently skipped. When
+ * `showGhosts` is enabled (e.g. dev-tools' overlay is on, or any
+ * preview/edit context) the block renders as a labelled placeholder
+ * via the existing ghost-block component so the author can see the
+ * reference and replace it.
+ *
+ * @param options - The unknown-block descriptor. blockName is the string the
+ *   author typed (or "(unknown)" when the entry's block was a non-string
+ *   value); entry, hierarchy, and showGhosts describe the placeholder to
+ *   render; key is a stable unique key for the entry; owner, outletArgs,
+ *   isLoggingEnabled, containerPath, and resolveBlockFn are forwarded to the
+ *   ghost-children creator.
+ * @returns The ghost block data, or null when ghosts are disabled.
+ */
+export function handleUnknownBlock({
+  blockName,
+  entry,
+  hierarchy,
+  showGhosts,
+  key,
+  owner,
+  outletArgs,
+  isLoggingEnabled,
+  containerPath,
+  resolveBlockFn,
+}) {
+  if (!showGhosts) {
+    return null;
+  }
+
+  // An unknown block carries no metadata, so we can't tell whether it was a
+  // container. But if the saved layout gave it children it was authored as
+  // one — surface them as nested ghosts (same mechanism resolved containers
+  // use, see `createGhostBlock`) so the author can see and salvage the work
+  // before removing the broken parent.
+  let ghostChildren = null;
+  if (entry.children?.length) {
+    ghostChildren = debugHooks.getCallback(
+      DEBUG_CALLBACK.GHOST_CHILDREN_CREATOR
+    )?.(
+      entry.children,
+      owner,
+      containerPath,
+      outletArgs,
+      isLoggingEnabled,
+      resolveBlockFn
+    );
+  }
+
+  const ghostData = createDebugGhost(
+    {
+      name: blockName,
+      id: entry.id,
+      // Forward the stable key into the BLOCK_DEBUG payload so debug
+      // consumers can wire the ghost back to its underlying layout
+      // entry. The same `key`
+      // is also stamped on the returned ghostData below — the
+      // duplication is intentional: the outer key drives Glimmer's
+      // `{{#each}}` identity, the inner one drives `BLOCK_DEBUG`
+      // consumer logic.
+      key,
+      args: entry.args,
+      conditions: entry.conditions,
+      failureType: FAILURE_TYPE.UNKNOWN_BLOCK,
+      failureReason: `Block "${blockName}" is not registered.`,
+      children: ghostChildren,
+    },
+    { outletName: hierarchy }
+  );
+  return ghostData ? { ...ghostData, key } : null;
 }
 
 /**
@@ -430,6 +545,9 @@ export function createGhostBlock({
     {
       name: blockName,
       id: entry.id,
+      // Forward the stable key into the BLOCK_DEBUG payload — see the
+      // matching note in `handleUnknownBlock` for why this is needed.
+      key,
       args: entry.args,
       containerArgs: entry.containerArgs,
       conditions: entry.conditions,
