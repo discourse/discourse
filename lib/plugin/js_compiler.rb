@@ -7,7 +7,8 @@ class Plugin::JsCompiler
     tree: {},
     entrypoints: {},
     filename_prefix: nil,
-    filename_suffix: nil
+    filename_suffix: nil,
+    frontend: nil
   )
     @plugin_name = plugin_name
     @tree = tree
@@ -15,6 +16,7 @@ class Plugin::JsCompiler
     @minify = minify
     @filename_prefix = filename_prefix
     @filename_suffix = filename_suffix
+    @frontend = frontend
   end
 
   def compile!
@@ -26,6 +28,7 @@ class Plugin::JsCompiler
         entrypoints: @entrypoints,
         filenamePrefix: @filename_prefix,
         filenameSuffix: @filename_suffix,
+        frontend: @frontend,
       },
     )
   rescue AssetProcessor::TimeoutError => e

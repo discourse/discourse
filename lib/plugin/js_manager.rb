@@ -117,6 +117,8 @@ module Plugin
         end
       end
 
+      frontend_config = plugin.about_json_metadata&.dig("frontend")
+
       hex_digest =
         Digest::SHA1.hexdigest(
           [
@@ -126,6 +128,7 @@ module Plugin
             AssetProcessor.ember_version,
             minify?.to_s,
             plugin.name,
+            frontend_config.to_json,
           ].join,
         )
       base36_digest = hex_digest.to_i(16).to_s(36).first(8)
@@ -152,6 +155,7 @@ module Plugin
             entrypoints: entrypoints_config,
             filename_prefix:,
             filename_suffix:,
+            frontend: frontend_config,
           )
         result = compiler.compile!
 

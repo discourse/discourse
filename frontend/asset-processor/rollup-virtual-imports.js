@@ -9,83 +9,159 @@ const SUPPORTED_FILE_EXTENSIONS = [
 
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
-export default {
-  "virtual:entrypoint": (moduleFilenames, { themeId, pluginName }) => {
-    const label = pluginName ? `PLUGIN ${pluginName}` : `THEME ${themeId}`;
-    const imports = [];
-    const entries = [];
-    const warnings = [];
+// Modules Discourse still looks up by name at runtime, and which therefore have to be
+// registered with `define()` even when the rest of the bundle is reached through static
+// imports. Everything else — components, helpers, modifiers, lib, unshared models — is
+// imported from `.gjs` under `staticModules`, so it can be left to tree-shaking.
+const EAGER_MODULE_PATTERNS = [
+  // enumerated out of `requirejs.entries` by `loadInitializers`
+  /(^|\/)pre-initializers\//,
+  /(^|\/)initializers\//,
+  /(^|\/)api-initializers\//,
+  /(^|\/)instance-initializers\//,
+  // scanned out of `requirejs.entries` by `mapRoutes`
+  /(^|\/)route-map$/,
+  // resolved by name by the plugin outlet system
+  /(^|\/)connectors\//,
+  // resolved by name via the resolver's suffix trie
+  /(^|\/)services\//,
+  /(^|\/)models\//,
+  /(^|\/)adapters\//,
+  /(^|\/)routes\//,
+  /(^|\/)controllers\//,
+  /(^|\/)templates\//,
+];
 
-    const exportedModules = new Set();
+function isEagerModule(compatModuleName) {
+  return EAGER_MODULE_PATTERNS.some((pattern) =>
+    pattern.test(compatModuleName)
+  );
+}
 
-    let i = 1;
-    for (const moduleFilename of moduleFilenames) {
-      // Type-only declaration files have no runtime module to export.
-      if (moduleFilename.endsWith(".d.ts")) {
-        continue;
-      }
+function stripExtension(filename) {
+  return filename.replace(/\.[^\.]+(\.es6)?$/, "");
+}
 
-      if (
-        !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
-      ) {
-        // Unsupported file type. Log a warning and skip
-        warnings.push(
-          `console.warn("[${label}] Unsupported file type: ${moduleFilename}");`
-        );
-        continue;
-      }
+// Turns the raw file list into `{ importPath, compatModuleName }` records, dropping type-only
+// declarations and warning about file types we cannot compile.
+function normalizeModules(moduleFilenames, label) {
+  const records = [];
+  const warnings = [];
+  const seen = new Set();
 
-      const filenameWithoutExtension = moduleFilename.replace(
-        /\.[^\.]+(\.es6)?$/,
-        ""
-      );
-
-      let compatModuleName = filenameWithoutExtension;
-
-      if (moduleFilename.match(IS_CONNECTOR_REGEX)) {
-        const isTemplate = moduleFilename.endsWith(".hbs");
-        const isInTemplatesDirectory =
-          moduleFilename.match(/(^|\/)templates\//);
-
-        if (isTemplate && !isInTemplatesDirectory) {
-          compatModuleName = compatModuleName.replace(
-            IS_CONNECTOR_REGEX,
-            "$1templates/connectors/"
-          );
-        } else if (!isTemplate && isInTemplatesDirectory) {
-          compatModuleName = compatModuleName.replace(
-            /(^|\/)templates\//,
-            "$1"
-          );
-        }
-      }
-
-      const importPath = filenameWithoutExtension.match(IS_CONNECTOR_REGEX)
-        ? moduleFilename
-        : filenameWithoutExtension;
-
-      if (exportedModules.has(importPath)) {
-        continue;
-      }
-      exportedModules.add(importPath);
-
-      imports.push(`import * as Mod${i} from "./${importPath}";`);
-      entries.push(`  "${compatModuleName}": Mod${i},`);
-
-      i += 1;
+  for (const moduleFilename of moduleFilenames) {
+    // Type-only declaration files have no runtime module to export.
+    if (moduleFilename.endsWith(".d.ts")) {
+      continue;
     }
 
+    if (
+      !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
+    ) {
+      warnings.push(
+        `console.warn("[${label}] Unsupported file type: ${moduleFilename}");`
+      );
+      continue;
+    }
+
+    const filenameWithoutExtension = stripExtension(moduleFilename);
+
+    let compatModuleName = filenameWithoutExtension;
+
+    if (moduleFilename.match(IS_CONNECTOR_REGEX)) {
+      const isTemplate = moduleFilename.endsWith(".hbs");
+      const isInTemplatesDirectory = moduleFilename.match(/(^|\/)templates\//);
+
+      if (isTemplate && !isInTemplatesDirectory) {
+        compatModuleName = compatModuleName.replace(
+          IS_CONNECTOR_REGEX,
+          "$1templates/connectors/"
+        );
+      } else if (!isTemplate && isInTemplatesDirectory) {
+        compatModuleName = compatModuleName.replace(/(^|\/)templates\//, "$1");
+      }
+    }
+
+    const importPath = filenameWithoutExtension.match(IS_CONNECTOR_REGEX)
+      ? moduleFilename
+      : filenameWithoutExtension;
+
+    if (seen.has(importPath)) {
+      continue;
+    }
+    seen.add(importPath);
+
+    records.push({ importPath, compatModuleName });
+  }
+
+  return { records, warnings };
+}
+
+function renderMap(name, records, identifiers) {
+  return [
+    `const ${name} = {`,
+    ...records.map(
+      (record) => `  "${record.compatModuleName}": ${identifiers.get(record)},`
+    ),
+    "};",
+  ];
+}
+
+export default {
+  "virtual:entrypoint": (moduleFilenames, opts) => {
+    const { themeId, pluginName, frontend } = opts;
+    const label = pluginName ? `PLUGIN ${pluginName}` : `THEME ${themeId}`;
+
+    const { records, warnings } = normalizeModules(moduleFilenames, label);
+
+    // `compatModules` is what core registers with `define()`; the default export is the
+    // cross-bundle lookup table that `babel-resolve-plugin-imports` indexes into. Without
+    // `staticModules` they are the same object, and every module is eagerly imported.
+    if (!frontend?.staticModules) {
+      const identifiers = new Map(
+        records.map((record, i) => [record, `Mod${i + 1}`])
+      );
+
+      return [
+        ...records.map(
+          (record) =>
+            `import * as ${identifiers.get(record)} from "./${record.importPath}";`
+        ),
+        ...warnings,
+        ...renderMap("compatModules", records, identifiers),
+        "export { compatModules };",
+        "export default compatModules;",
+        "",
+      ].join("\n");
+    }
+
+    const sharedPaths = new Set(
+      (frontend.sharedModules ?? []).map(stripExtension)
+    );
+
+    const eager = records.filter((record) =>
+      isEagerModule(record.compatModuleName)
+    );
+    const shared = records.filter((record) =>
+      sharedPaths.has(stripExtension(record.importPath))
+    );
+
+    // A module can be both eager and shared, so import each at most once.
+    const imported = [...new Set([...eager, ...shared])];
+    const identifiers = new Map(
+      imported.map((record, i) => [record, `Mod${i + 1}`])
+    );
+
     return [
-      ...imports,
+      ...imported.map(
+        (record) =>
+          `import * as ${identifiers.get(record)} from "./${record.importPath}";`
+      ),
       ...warnings,
-      "const compatModules = {",
-      ...entries,
-      "};",
-      // `default` is the cross-bundle lookup table indexed by babel-resolve-plugin-imports.
-      // `compatModules` is the set core registers with `define()`. They are the same object
-      // today, but will diverge under `staticModules`.
+      ...renderMap("compatModules", eager, identifiers),
+      ...renderMap("sharedModules", shared, identifiers),
       "export { compatModules };",
-      "export default compatModules;",
+      "export default sharedModules;",
       "",
     ].join("\n");
   },
