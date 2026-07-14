@@ -404,10 +404,12 @@ module DiscourseAi
 
         candidates.reverse_each do |message|
           message_tokens = estimate_message_tokens(message, tokenizer)
-          if kept.empty? || used_tokens + message_tokens <= token_budget
-            kept << message
-            used_tokens += message_tokens
-          end
+          # stop at the first message that does not fit so kept history stays
+          # contiguous; always keep the latest message even when over budget
+          break if kept.present? && used_tokens + message_tokens > token_budget
+
+          kept << message
+          used_tokens += message_tokens
         end
 
         @raw_messages = checkpoint_messages + kept.reverse
@@ -431,6 +433,7 @@ module DiscourseAi
           raise ArgumentError, "provider_data must be a hash"
         end
 
+        content = normalize_content_uploads(content) if content.is_a?(Array)
         content = [content, *upload_ids.map { |upload_id| { upload_id: upload_id } }] if upload_ids
         message = { type: type, content: content }
         message[:name] = name.to_s if name
@@ -475,6 +478,19 @@ module DiscourseAi
       end
 
       private
+
+      # Custom prompts round-trip through JSON (post_custom_prompt), which
+      # turns {upload_id: 1} into {"upload_id" => 1}. Prompt#validate_message
+      # only accepts the symbol-keyed form, so normalize on the way in.
+      def normalize_content_uploads(content)
+        content.map do |part|
+          if part.is_a?(Hash) && (upload_id = part[:upload_id] || part["upload_id"])
+            { upload_id: upload_id }
+          else
+            part
+          end
+        end
+      end
 
       def estimate_message_tokens(message, tokenizer)
         text = message_text(message)

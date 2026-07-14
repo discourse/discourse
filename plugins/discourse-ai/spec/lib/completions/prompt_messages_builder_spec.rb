@@ -673,6 +673,31 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
       )
     end
 
+    it "restores upload references persisted in custom prompts" do
+      # compression tails can persist user messages with upload content into
+      # post_custom_prompt; the JSON round trip stringifies {upload_id: N} keys
+      PostCustomPrompt.create!(
+        post_id: second_post.id,
+        custom_prompt: [
+          [["look at this image", { upload_id: image_upload1.id }], user.username, "user"],
+        ],
+      )
+
+      context =
+        described_class.messages_from_post(
+          third_post,
+          max_posts: 10,
+          bot_usernames: [bot_user.username],
+          include_uploads: true,
+        )
+
+      flattened_content = context.flat_map { |message| Array(message[:content]) }
+      expect(flattened_content).to include({ upload_id: image_upload1.id })
+      expect {
+        DiscourseAi::Completions::Prompt.new("system", messages: context)
+      }.not_to raise_error
+    end
+
     it "handles uploads correctly in topic style messages (and times)" do
       freeze_time 32.days.ago
 
@@ -842,6 +867,25 @@ describe DiscourseAi::Completions::PromptMessagesBuilder do
         context = builder.to_a
         expect(context.length).to be < 10
         expect(context.last[:content]).to include("message 10")
+      end
+
+      it "keeps trimmed history contiguous when a middle message is oversized" do
+        oldest_content = "old tiny message"
+        oversized_content = "oversized response " * 100
+        latest_content = "latest request"
+
+        builder.push(type: :user, content: oldest_content, id: "alice")
+        builder.push(type: :model, content: oversized_content)
+        builder.push(type: :user, content: latest_content, id: "alice")
+
+        builder.trim_to_token_budget!(20, tokenizer: DiscourseAi::Tokenizer::OpenAiTokenizer)
+
+        content = builder.to_a.map { |message| message[:content] }.join("\n")
+        expect(content).to include(latest_content)
+        # trimming must stop at the first message over budget instead of
+        # skipping it and resurrecting older messages that still fit
+        expect(content).not_to include(oldest_content)
+        expect(content).not_to include(oversized_content)
       end
     end
 
