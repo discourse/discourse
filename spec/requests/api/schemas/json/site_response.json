@@ -288,6 +288,9 @@
           "full_name": {
             "type": "string"
           },
+          "display_name": {
+            "type": "string"
+          },
           "flair_url": {
             "type": [
               "string",
