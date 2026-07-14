@@ -7,7 +7,9 @@ import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import { ajax } from "discourse/lib/ajax";
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import { prioritizeNameFallback } from "discourse/lib/settings";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
+import { selectKitOptions } from "discourse/select-kit/components/select-kit";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -71,16 +73,33 @@ function groupGranteeResult(group) {
     id: group.name,
     aclId: group.id,
     aclType: "group",
-    name: group.full_name || group.name,
+    name: group.name,
     full_name: group.full_name,
+    display_name: group.display_name,
     automatic: group.automatic,
-    flair_url: group.flair_url,
-    flair_bg_color: group.flair_bg_color,
-    flair_color: group.flair_color,
     isGroup: true,
   };
 }
 
+function userGranteeResult(user) {
+  return {
+    value: granteeValue("user", user.id),
+    id: user.username,
+    aclId: user.id,
+    aclType: "user",
+    name: user.name,
+    username: user.username,
+    showUserStatus: false,
+    avatar_template: user.avatar_template,
+    isUser: true,
+  };
+}
+
+@selectKitOptions({
+  excludedGrantees: undefined,
+  onlyShowGroupName: true,
+  prioritizeUserNameOrdering: true,
+})
 class AccessControlGranteeChooser extends EmailGroupUserChooser {
   valueProperty = "value";
 
@@ -105,23 +124,8 @@ class AccessControlGranteeChooser extends EmailGroupUserChooser {
   normalizeGranteeResults(results) {
     return [
       ...(results?.groups || []).map(groupGranteeResult),
-      ...(results?.users || []).map((user) => this.userResult(user)),
+      ...(results?.users || []).map(userGranteeResult),
     ];
-  }
-
-  userResult(user) {
-    return {
-      value: granteeValue("user", user.id),
-      id: user.username,
-      aclId: user.id,
-      aclType: "user",
-      name: user.name,
-      username: user.username,
-      showUserStatus: this.showUserStatus,
-      status: user.status,
-      avatar_template: user.avatar_template,
-      isUser: true,
-    };
   }
 
   excludeSelectedGrantees(results) {
@@ -260,9 +264,6 @@ export default class DAccessControl extends Component {
             id: entry.id,
             name: group.name,
             display_name: group.full_name || group.name,
-            flair_url: group.flair_url,
-            flair_bg_color: group.flair_bg_color,
-            flair_color: group.flair_color,
             permission: entry.permission,
             metadata: {
               auto_group: group.automatic,
@@ -288,9 +289,6 @@ export default class DAccessControl extends Component {
         username: entry.username,
         name: entry.name,
         avatar_template: entry.avatar_template,
-        flair_url: entry.flair_url,
-        flair_bg_color: entry.flair_bg_color,
-        flair_color: entry.flair_color,
         type: entry.type,
         mandatory: entry.mandatory,
       }))
@@ -325,8 +323,6 @@ export default class DAccessControl extends Component {
 
     const newPermission = {
       id: selectedGrantee.aclId,
-      display_name:
-        selectedGrantee.name || selectedGrantee.full_name || selectedGrantee.id,
       type: selectedGrantee.aclType,
       permission: isReadOnlyDefaultGroup
         ? READ_ONLY_PERMISSION
@@ -335,9 +331,8 @@ export default class DAccessControl extends Component {
 
     if (selectedGrantee.aclType === "group") {
       newPermission.name = selectedGrantee.id;
-      newPermission.flair_url = selectedGrantee.flair_url;
-      newPermission.flair_bg_color = selectedGrantee.flair_bg_color;
-      newPermission.flair_color = selectedGrantee.flair_color;
+      newPermission.display_name =
+        selectedGrantee.full_name || selectedGrantee.id;
       newPermission.metadata = {
         auto_group: selectedGrantee.automatic,
       };
@@ -346,6 +341,10 @@ export default class DAccessControl extends Component {
     if (selectedGrantee.aclType === "user") {
       newPermission.username = selectedGrantee.username;
       newPermission.name = selectedGrantee.name;
+      newPermission.display_name = prioritizeNameFallback(
+        selectedGrantee.name,
+        selectedGrantee.username
+      );
       newPermission.avatar_template = selectedGrantee.avatar_template;
     }
 
@@ -471,7 +470,8 @@ export default class DAccessControl extends Component {
                     >
                       <:trigger>
                         <span class="d-access-control__tooltip">{{dIcon "lock"}}
-                          Automatic</span>
+                          {{i18n "access_control.manage.mandatory"}}
+                        </span>
                       </:trigger>
                     </DTooltip>
                   {{/if}}
