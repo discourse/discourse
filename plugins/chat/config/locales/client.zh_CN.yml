@@ -256,8 +256,6 @@ zh_CN:
       no_public_channels_cta: "浏览频道"
       kicked_from_channel: "您无法再访问此频道。"
       chat_notifications_title: "聊天通知"
-      only_chat_push_notifications:
-        title: "只发送聊天推送通知"
       personalization_title: "个性化"
       ignore_channel_wide_mention:
         title: "忽略频道范围内的提及"

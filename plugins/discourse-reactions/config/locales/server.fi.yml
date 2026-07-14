@@ -16,8 +16,6 @@ fi:
     first_reaction:
       name: Ensimmäinen reaktio
       description: Reagoi viestiin
-      long_description: |
-        Tämä kunniamerkki myönnetään, kun ensi kertaa reagoit viestiin. Viesteihin reagoiminen on hyvä tapa viestiä yhteisön toiselle jäsenelle, että hänen viestinsä oli kiintoisa, hyödyllinen, osuva tai hauska. Jaa reaktiosi!
   reports:
     reactions:
       title: "Reaktiot"

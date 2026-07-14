@@ -1562,6 +1562,9 @@ zh_CN:
       statistics: "统计信息"
       desktop_notifications:
         label: "实时通知"
+        push_level:
+          none: "已禁用"
+          all: "已启用"
         not_supported: "抱歉，此浏览器不支持通知。"
         perm_default: "启用通知"
         perm_denied_btn: "权限被拒绝"
@@ -3755,6 +3758,7 @@ zh_CN:
       read_more_in_category: "想阅读更多？请浏览%{categoryLink}中的其他话题或<a href='%{latestLink}'>查看最新话题</a>。"
       read_more: "想阅读更多？请<a href='%{categoryLink}'>浏览所有类别</a>或<a href='%{latestLink}'>查看最新话题</a>。"
       unread_indicator: "还没有成员读过此话题的最新帖子。"
+      sr_read: "阅读时间"
       participant_groups: "参与者群组"
       reply_count_link:
         other: "%{count} 条回复，跳转到第一个帖子"
@@ -5896,7 +5900,6 @@ zh_CN:
             apple_touch_icon:
               title: "Apple 触控图标"
               description: "用于 Apple 触控设备的图标。如果留空，将使用 large_icon。"
-              help_text: "建议尺寸为 180 x 180 像素。不建议使用透明背景。"
             digest_logo:
               title: "摘要徽标"
               description: "您的站点的电子邮件摘要顶部使用的备用徽标图片。如果留空，将使用 `logo` 设置中的图片。"

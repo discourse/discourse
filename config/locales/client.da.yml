@@ -1346,6 +1346,9 @@ da:
       notifications: "Notifikationer"
       statistics: "Statistik"
       desktop_notifications:
+        push_level:
+          none: "Deaktiveret"
+          all: "Aktiveret"
         not_supported: "Notifikationer understøttes ikke af denne browser. Beklager."
         perm_denied_expl: "Du nægtede adgang for notifikationer. Tillad notifikationer via indstillingerne i din browser."
         each_browser_note: "Bemærk: Du skal ændre denne indstilling på hver browser, du bruger. Alle notifikationer vil blive deaktiveret, hvis du pauserer notifikationer fra brugermenuen, uanset denne indstilling."
@@ -2907,6 +2910,7 @@ da:
       options: "Emneindstillinger"
       show_links: "vis links i dette emne"
       unread_indicator: "Intet medlem har læst det sidste indlæg i dette emne endnu."
+      sr_read: "læst"
       participant_groups: "Deltagergrupper"
       created_at: "Oprettet: %{date}"
       bumped_at: "Senest: %{date}"

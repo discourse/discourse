@@ -1588,6 +1588,9 @@ nl:
       notifications: "Meldingen"
       statistics: "Statistieken"
       desktop_notifications:
+        push_level:
+          none: "Uitgeschakeld"
+          all: "Ingeschakeld"
         not_supported: "Meldingen worden niet ondersteund in deze browser. Sorry."
         perm_denied_expl: "Je hebt toestemming voor meldingen geweigerd. Sta meldingen toe via je browserinstellingen."
         each_browser_note: "Opmerking: je moet deze instelling wijzigen in elke browser die je gebruikt. Alle meldingen worden uitgeschakeld als je meldingen onderbreekt vanuit het gebruikersmenu, ongeacht deze instelling."
@@ -3793,6 +3796,7 @@ nl:
       read_more_in_category: "Meer lezen? Blader door andere topics in %{categoryLink} of <a href='%{latestLink}'>bekijk de nieuwste topics</a>."
       read_more: "Meer lezen? <a href='%{categoryLink}'>Blader door alle categorieën</a> of <a href='%{latestLink}'>bekijk de nieuwste topics</a>."
       unread_indicator: "Laatste bericht van dit topic is nog niet gelezen door een lid gelezen."
+      sr_read: "lezen"
       participant_groups: "Deelnemersgroepen"
       reply_count_link:
         one: "%{count} antwoord, ga naar eerste bericht"
@@ -5933,7 +5937,6 @@ nl:
             apple_touch_icon:
               title: "Apple-touchpictogram"
               description: "Pictogram dat wordt gebruikt voor Apple-touchapparaten. Als dit leeg wordt gelaten, wordt large_icon gebruikt."
-              help_text: "De aanbevolen grootte is 180 x 180 pixels. Een transparante achtergrond wordt niet aanbevolen."
             digest_logo:
               title: "Digestlogo"
               description: "De alternatieve logoafbeelding bovenaan de e-mailsamenvatting van je website. Als dit leeg wordt laten, wordt de afbeelding van de 'logo'-instelling gebruikt."

@@ -2901,6 +2901,7 @@ en:
     enable_new_checkbox_style: "Enable the redesigned checkbox style for FormKit checkboxes."
     enable_new_post_reactions_menu: "Enable the redesigned post likes and reactions menu, with infinite scroll and a native mobile experience."
     enable_new_composer_actions: "Enable the redesigned composer actions menu and combo save button, with whisper, no-bump, and unlist toggles surfaced next to the save action."
+    prioritize_recently_used_tags: "When adding tags while creating or editing a topic, show the tags the member has recently used on their own topics at the top of the list, before the most popular tags of the forum."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
@@ -5341,7 +5342,7 @@ en:
 
       Your permission to use the forum is subject to the following conditions:
 
-      1. You must be at least thirteen years old.
+      1. You must be at least eighteen years old.
 
       2. You may no longer use the forum if the company contacts you directly to say that you may not.
 
@@ -5541,7 +5542,7 @@ en:
 
       ## [Children's Online Privacy Protection Act Compliance](#coppa)
 
-      Our site, products and services are all directed to people who are at least 13 years old or older. If this server is in the USA, and you are under the age of 13, per the requirements of COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), do not use this site.
+      Our site, products and services are all directed to people who are at least 18 years old or older. If this server is in the USA, and you are under the age of 18, per the requirements of COPPA ([Children's Online Privacy Protection Act](https://en.wikipedia.org/wiki/Children%27s_Online_Privacy_Protection_Act)), do not use this site.
 
       <a name="online"></a>
 

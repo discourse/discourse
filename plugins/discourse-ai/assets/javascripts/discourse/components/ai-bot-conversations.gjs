@@ -27,7 +27,7 @@ import {
   initUserStatusHtml,
   renderUserStatusHtml,
 } from "discourse/lib/user-status-on-autocomplete";
-import { clipboardHelpers } from "discourse/lib/utilities";
+import { clipboardHelpers, slugify } from "discourse/lib/utilities";
 import DButton from "discourse/ui-kit/d-button";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
@@ -208,6 +208,16 @@ export default class AiBotConversations extends Component {
       // Fail open - allow usage if credit check fails
       this.creditStatus = null;
     }
+  }
+
+  @action
+  onSelectionChanged({ agentName, llmName }) {
+    if (!this.controller) {
+      return;
+    }
+
+    this.controller.agent = agentName ? slugify(agentName) || agentName : null;
+    this.controller.llm = llmName ? slugify(llmName) || llmName : null;
   }
 
   @action

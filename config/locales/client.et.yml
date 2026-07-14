@@ -860,6 +860,9 @@ et:
       notifications: "Teavitused"
       statistics: "Statistika"
       desktop_notifications:
+        push_level:
+          none: "Välja lülitatud"
+          all: "Sisse lülitatud"
         not_supported: "See brauser ei toeta teavitusi. Kahju."
         perm_denied_expl: "Oled teavitused keelanud. Luba teavitused oma brauseri sätetes."
         consent_prompt: "Kas soovid reaalajas teavitusi, kui inimesed su postitustele vastavad?"
@@ -1791,6 +1794,7 @@ et:
       options: "Teema suvandid"
       show_links: "näita viiteid selles teemas"
       unread_indicator: "Ükski liige pole veel selle teema viimast postitust lugenud."
+      sr_read: "lugemine"
       deleted: "See teema on kustutatud"
       slow_mode_update:
         select: "Kasutajad saavad sellesse teemasse postitada ainult sagedusega:"

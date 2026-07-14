@@ -991,6 +991,9 @@ gl:
       notifications: "Notificacións"
       statistics: "Estatísticas"
       desktop_notifications:
+        push_level:
+          none: "Desactivado"
+          all: "Activado"
         not_supported: "Este navegador non admite notificacións. Desculpe."
         perm_denied_expl: "Denegou o permiso para recibir notificacións no navegador. Permita as notificacións na configuración do navegador."
         consent_prompt: "Quere recibir notificacións ao vivo cando a xente lea as súas publicacións?"
@@ -2235,6 +2238,7 @@ gl:
       options: "Opcións de temas"
       show_links: "amosar as ligazóns a este tema"
       unread_indicator: "Ningún membro leu aínda a última publicación neste tema."
+      sr_read: "lectura"
       bumped_at: "Últimas: %{date}"
       deleted: "Eliminouse o tema"
       slow_mode_update:

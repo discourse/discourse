@@ -363,6 +363,8 @@ de:
       default_pm_prefix: "[KI-Bot-PN ohne Titel]"
       thinking: "Ich denke"
       tool_pending_approval: "Diese Aktion erfordert die Zustimmung des Moderators, bevor sie ausgeführt werden kann."
+      chat_tool_approval:
+        unexpected_error: "ein unerwarteter Fehler ist aufgetreten"
       agents:
         default_llm_required: "Standard-LLM-Modell ist erforderlich, bevor der Chat aktiviert werden kann"
         cannot_delete_system_agent: "System-Agenten können nicht gelöscht werden, bitte deaktiviere ihn stattdessen"

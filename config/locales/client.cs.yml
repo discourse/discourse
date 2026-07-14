@@ -1679,6 +1679,9 @@ cs:
       notifications: "Upozornění"
       statistics: "Statistiky"
       desktop_notifications:
+        push_level:
+          none: "Vypnuto"
+          all: "Zapnuto"
         not_supported: "Tento prohlížeč nepodporuje upozornění. Omlouváme se."
         perm_denied_expl: "Máte zakázané upozornění. Povolte upozornění v nastavení vašeho prohlížeče."
         each_browser_note: "Poznámka: Toto nastavení musíte změnit v každém prohlížeči, který používáte. Všechna upozornění budou deaktivována, pokud vypnete upozornění z uživatelské nabídky."
@@ -3939,6 +3942,7 @@ cs:
       read_more_in_category: "Chcete si přečíst více? Projděte další témata v %{categoryLink} nebo <a href='%{latestLink}'>zobrazte nejnovější témata</a>."
       read_more: "Chcete si přečíst více? <a href='%{categoryLink}'>Projděte všechny kategorie</a> nebo <a href='%{latestLink}'>zobrazte nejnovější témata</a>."
       unread_indicator: "Žádný člen zatím nečetl poslední příspěvek tohoto tématu."
+      sr_read: "čtení"
       participant_groups: "Skupiny účastníků"
       reply_count_link:
         one: "%{count} odpověď, přejít na první příspěvek"
@@ -6170,7 +6174,6 @@ cs:
             apple_touch_icon:
               title: "Ikona Apple touch"
               description: "Ikona používaná pro dotyková zařízení Apple. Pokud zůstane prázdná, použije se large_icon."
-              help_text: "Doporučená velikost je 180 x 180 pixelů. Průhledné pozadí se nedoporučuje."
             digest_logo:
               title: "Logo e-mailového souhrnu"
               description: "Alternativní obrázek loga použitý v horní části e-mailového souhrnu vašeho webu. Pokud zůstane prázdný, použije se obrázek z nastavení `logo`."

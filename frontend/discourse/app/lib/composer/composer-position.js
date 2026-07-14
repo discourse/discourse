@@ -28,7 +28,7 @@ export function setupComposerPosition(editor) {
     return [
       editor,
       replyControl?.querySelector(".d-editor-preview-wrapper"),
-      replyControl?.querySelector(".d-editor-button-bar__wrap"),
+      replyControl?.querySelector(".d-editor-button-bar"),
     ].filter(Boolean);
   }
 

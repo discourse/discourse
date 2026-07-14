@@ -271,8 +271,6 @@ nl:
       no_public_channels_cta: "Kanalen bekijken"
       kicked_from_channel: "Je hebt geen toegang meer tot dit kanaal."
       chat_notifications_title: "Chatmeldingen"
-      only_chat_push_notifications:
-        title: "Alleen chatpushmeldingen sturen"
       personalization_title: "Personalisatie"
       ignore_channel_wide_mention:
         title: "Kanaalbrede vermeldingen negeren"
