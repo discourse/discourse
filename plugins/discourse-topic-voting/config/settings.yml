@@ -63,3 +63,4 @@ discourse_topic_voting:
     upcoming_change:
       status: "alpha"
       impact: "site_setting_default,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/401731"
