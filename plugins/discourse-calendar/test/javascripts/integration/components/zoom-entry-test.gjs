@@ -3,10 +3,11 @@ import { clearRender, click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import LivestreamZoomEntry, {
+import LivestreamZoomEntry from "../../discourse/components/livestream/zoom-entry";
+import ZoomMeetingSession, {
   MAX_RETRY_ATTEMPTS,
   RETRY_DELAY_SECONDS,
-} from "../../discourse/components/livestream/zoom-entry";
+} from "../../discourse/lib/zoom-meeting-session";
 
 const MEETING_NOT_STARTED = {
   errorCode: 3008,
@@ -24,16 +25,17 @@ const COUNTDOWN_TEXT = `The webinar hasn't started yet. Retrying join in ${RETRY
 const ERROR_TEXT =
   "You left the webinar or we are unable to load Zoom in this page.";
 
-// `joinZoom` guards against being called when the button is disabled, which a
-// test can never reach through a click. `syncZoomLayout` runs from the modifier
-// on insert, so stubbing it hands us the component instance before any join.
-function captureComponent() {
+// `join` guards against being called when the button is disabled, which a
+// test can never reach through a click. `registerRoot` runs from the modifier
+// on insert, so stubbing it hands us the session instance before any join.
+function captureSession() {
   const captured = {};
 
-  sinon
-    .stub(LivestreamZoomEntry.prototype, "syncZoomLayout")
-    .callsFake(function () {
-      captured.component = this;
+  const stub = sinon
+    .stub(ZoomMeetingSession.prototype, "registerRoot")
+    .callsFake(function (element) {
+      captured.session = this;
+      stub.wrappedMethod.call(this, element);
     });
 
   return captured;
@@ -228,7 +230,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
 
     innerHooks.beforeEach(function () {
       stubCapabilities(getOwner(this), { lg: true });
-      performJoin = sinon.stub(LivestreamZoomEntry.prototype, "performJoin");
+      performJoin = sinon.stub(ZoomMeetingSession.prototype, "performJoin");
       performJoin.resolves();
       appEvents = sinon.stub(
         getOwner(this).lookup("service:app-events"),
@@ -376,7 +378,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
 
     innerHooks.beforeEach(function () {
       stubCapabilities(getOwner(this), { lg: true });
-      performJoin = sinon.stub(LivestreamZoomEntry.prototype, "performJoin");
+      performJoin = sinon.stub(ZoomMeetingSession.prototype, "performJoin");
       sinon.stub(console, "error");
     });
 
@@ -418,7 +420,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
     test("does not join outside the event timeframe", async function (assert) {
       performJoin.resolves();
       this.event.currentlyWithinEventTimeframe = false;
-      const captured = captureComponent();
+      const captured = captureSession();
 
       await render(
         <template><LivestreamZoomEntry @event={{this.event}} /></template>
@@ -426,7 +428,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
 
       assert.dom(JOIN_BUTTON_SELECTOR).isDisabled();
 
-      await captured.component.joinZoom();
+      await captured.session.join();
 
       assert.false(performJoin.called, "the guard refuses the join");
       assert.dom(`${FRAME_SELECTOR}.--visible`).doesNotExist();
@@ -488,9 +490,9 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
     });
 
     test("hides the frame when the meeting closes", async function (assert) {
-      let component;
+      let session;
       performJoin.callsFake(function () {
-        component = this;
+        session = this;
         return Promise.resolve();
       });
 
@@ -503,7 +505,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
 
       // What the `connection-change` handler does when the host ends the
       // meeting while the user is still on the page.
-      component.leaveZoom();
+      session.leaveZoom();
       await settled();
 
       assert.dom(`${FRAME_SELECTOR}.--visible`).doesNotExist("hides the frame");
@@ -526,7 +528,7 @@ module("Integration | Component | LivestreamZoomEntry", function (hooks) {
       // Only the countdown timers are faked, so `settled()` still works.
       clock = sinon.useFakeTimers({ toFake: ["setInterval", "clearInterval"] });
 
-      performJoin = sinon.stub(LivestreamZoomEntry.prototype, "performJoin");
+      performJoin = sinon.stub(ZoomMeetingSession.prototype, "performJoin");
       performJoin.rejects(MEETING_NOT_STARTED);
 
       sinon.stub(console, "error");
