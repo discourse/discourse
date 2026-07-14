@@ -143,7 +143,6 @@ export default class UpcomingEventsBlock extends Component {
         </div>
 
         <div class="upcoming-events-list__footer">
-          {{! @glint-expect-error the temporary workspace discourse types snapshot does not brand LinkTo as glint-invokable; core uses the same import-and-invoke pattern and type-checks }}
           <LinkTo
             @route="discourse-post-event-upcoming-events"
             class="upcoming-events-list__view-all"

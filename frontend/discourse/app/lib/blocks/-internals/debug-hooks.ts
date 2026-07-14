@@ -193,10 +193,10 @@ class DebugHooks {
    * directly-editable form (see `EDIT_PRESENTATION`). A paged/collapsing
    * container reads this to expose all of its parts instead of one at a time.
    *
-   * @returns
+   * @returns Whether content should be presented fully revealed.
    */
-  get isEditPresentation() {
-    return this.#callbacks.get(DEBUG_CALLBACK.EDIT_PRESENTATION)?.() ?? false;
+  get isEditPresentation(): boolean {
+    return Boolean(this.#callbacks.get(DEBUG_CALLBACK.EDIT_PRESENTATION)?.());
   }
 
   /**
