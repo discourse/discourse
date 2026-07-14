@@ -3161,7 +3161,6 @@ ar:
     created: "تاريخ الإنشاء"
     created_lowercase: "تاريخ الإنشاء"
     trust_level: "مستوى الثقة"
-    search_hint: "اسم المستخدم أو البريد إلكتروني أو عنوان IP"
     create_account:
       header_title: "مرحبًا!"
       disclaimer: "يشير التسجيل إلى موافقتك على <a href='%{privacy_link}' target='blank'>سياسة الخصوصية</a> و<a href='%{tos_link}' target='blank'>شروط الخدمة</a>."
@@ -5618,7 +5617,6 @@ ar:
       unsaved_changes: "لديك تغييرات غير محفوظة"
       slug: "مسار الفئة"
       parent: "الفئة الرئيسية"
-      slug_placeholder: "(اختياري) كلمات مفصولة بشرطة لعنوان URL"
       creation_error: حدث خطأ في أثناء إنشاء الفئة.
       save_error: حدث خطأ في أثناء حفظ الفئة.
       errors:

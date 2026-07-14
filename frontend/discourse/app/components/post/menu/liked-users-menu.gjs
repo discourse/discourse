@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UsersPopup from "discourse/components/user/users-popup";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -9,6 +10,8 @@ import { i18n } from "discourse-i18n";
 const LIKE_ACTION = 2;
 
 export default class PostLikedUsersMenu extends Component {
+  @service router;
+
   fetchUsers = async (page, pageSize) => {
     const result = await ajax("/post_action_users", {
       data: {
@@ -24,6 +27,16 @@ export default class PostLikedUsersMenu extends Component {
       newUsers.length >= pageSize && !!result.total_rows_post_action_users;
     return { users: newUsers, canLoadMore };
   };
+
+  constructor() {
+    super(...arguments);
+    this.router.on("routeWillChange", this.args.close);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.router.off("routeWillChange", this.args.close);
+  }
 
   get post() {
     return this.args.data.post;

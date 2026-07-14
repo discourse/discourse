@@ -18,6 +18,23 @@ describe LocalizationAttributesReplacer do
       expect(subcategory.parent_category.description).to eq(ja_category.description)
     end
 
+    it "only uses the first paragraph of a localized description" do
+      ja_category.update!(description: "最初の段落\n\n二番目の段落")
+
+      LocalizationAttributesReplacer.replace_category_attributes(category, "ja")
+
+      expect(category.description).to eq("最初の段落")
+    end
+
+    it "keeps the untranslated description when the localized description has no paragraph" do
+      ja_category.update!(description: "- 一つ\n- 二つ")
+      original_description = category.description
+
+      LocalizationAttributesReplacer.replace_category_attributes(category, "ja")
+
+      expect(category.description).to eq(original_description)
+    end
+
     it "does not change the name if the locale is the same" do
       LocalizationAttributesReplacer.replace_category_attributes(category, "en")
 

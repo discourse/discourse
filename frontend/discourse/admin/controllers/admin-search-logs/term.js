@@ -13,8 +13,8 @@ export default class AdminSearchLogsTermController extends Controller {
       name: i18n("admin.logs.search_logs.types.all_search_types"),
     },
     {
-      id: "logged_in_only",
-      name: i18n("admin.logs.search_logs.types.logged_in_only"),
+      id: "non_staff_only",
+      name: i18n("admin.logs.search_logs.types.non_staff_only"),
     },
     { id: "header", name: i18n("admin.logs.search_logs.types.header") },
     {

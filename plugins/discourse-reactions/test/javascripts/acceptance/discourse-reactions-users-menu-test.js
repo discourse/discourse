@@ -96,6 +96,19 @@ acceptance(
       assert.dom(".users-popup__item").exists({ count: 5 });
     });
 
+    test("closes the users menu when navigating away", async function (assert) {
+      await visit("/t/topic_with_reactions_and_likes/374");
+      await click("#post_1 .discourse-reactions-counter");
+
+      assert.dom(".users-popup").exists("the reactions menu is open");
+
+      await visit("/");
+
+      assert
+        .dom(".users-popup")
+        .doesNotExist("the reactions menu closes when navigating away");
+    });
+
     test("emoji filters and list reactions show the emoji name in the title", async function (assert) {
       await visit("/t/topic_with_reactions_and_likes/374");
       await click("#post_1 .discourse-reactions-counter");

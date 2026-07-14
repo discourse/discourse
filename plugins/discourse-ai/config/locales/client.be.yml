@@ -34,6 +34,14 @@ be:
             canned_reply:
               label: "Адказаць"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Загрузка ..."
+        tool: "Дзеянне"
+        user: "Карыстальнік"
+        approve: "Ухваліць"
+        reject: "адхіляць"
+        approved: "Ухвалены"
+        rejected: "Адхіленыя"
       llm_selector:
         none: "Няма"
       features:
@@ -48,6 +56,7 @@ be:
         spam:
           name: "Спам"
       translations:
+        category_scope: "катэгорыі"
         stats:
           eta_minutes:
             one: "%{count} хвіліну"

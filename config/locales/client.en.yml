@@ -3229,6 +3229,7 @@ en:
     gifs:
       modal_title: "Search GIFs"
       composer_title: "Insert GIF"
+      placeholder: "Search KLIPY"
       powered_by: "Powered by Klipy"
       no_results: "Enter a keyword above to search for GIFs."
       browse_categories: "Browse by category"
@@ -4300,6 +4301,7 @@ en:
       read_more_in_category: "Want to read more? Browse other topics in %{categoryLink} or <a href='%{latestLink}'>view latest topics</a>."
       read_more: "Want to read more? <a href='%{categoryLink}'>Browse all categories</a> or <a href='%{latestLink}'>view latest topics</a>."
       unread_indicator: "No member has read the last post of this topic yet."
+      sr_read: "read"
       participant_groups: "Participant groups"
 
       # This string uses the ICU Message Format. See https://meta.discourse.org/t/7035 for translation guidelines.
@@ -6537,6 +6539,7 @@ en:
         enabled_for_throttle: "You have modified who this change is enabled for too quickly. Please wait a few seconds before trying again."
         change_enabled_for_success: "You have enabled this change for %{enabledFor}"
         change_disabled: "You have opted-out of this change"
+        depends_on_notice: "This change requires %{dependencyLinks} to be enabled."
         permanent_notice: "This change is now permanent and it will soon be removed. You are no longer able to opt-out."
         permanent_soon_notice: "This change will become permanent soon. You will no longer be able to opt-out."
         permanent_no_group_selection: "N/A, permanent changes apply to all groups."
@@ -6709,7 +6712,7 @@ en:
             apple_touch_icon:
               title: "Apple touch icon"
               description: "Icon used for Apple touch devices. If left blank, large_icon will be used."
-              help_text: "Recommended size is 180 x 180 pixels. A transparent background is not recommended."
+              help_text: "Recommended size is 180 x 180 pixels. Don't use an SVG image. A transparent background is not recommended."
             digest_logo:
               title: "Digest logo"
               description: "The alternate logo image used at the top of your site's email summary. If left blank, the image from the `logo` setting will be used."
@@ -8870,7 +8873,7 @@ en:
             header: "Header"
             full_page: "Full page"
             click_through_only: "All (click through only)"
-            logged_in_only: "Logged in only"
+            non_staff_only: "Non-staff users"
           header_search_results: "Header search results"
         logster:
           title: "Error logs"

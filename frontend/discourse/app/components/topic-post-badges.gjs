@@ -22,6 +22,7 @@ export default class TopicPostBadges extends Component {
         &nbsp;<a
           href={{@url}}
           title={{i18n "topic.unread_posts" count=this.displayUnreadPosts}}
+          aria-label={{i18n "topic.unread_posts" count=this.displayUnreadPosts}}
           class="badge badge-notification unread-posts"
         >{{this.displayUnreadPosts}}</a>
       {{~/if~}}
@@ -30,6 +31,7 @@ export default class TopicPostBadges extends Component {
         &nbsp;<a
           href={{@url}}
           title={{i18n "topic.new"}}
+          aria-label={{i18n "topic.new"}}
           class="badge badge-notification new-topic"
         >{{this.newDotText}}</a>
       {{~/if~}}

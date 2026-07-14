@@ -370,9 +370,31 @@ module DiscourseAi
           force_review: true,
         )
 
-        placeholder =
-          build_placeholder(tool.summary, I18n.t("discourse_ai.ai_bot.tool_pending_approval"))
-        update_blk.call(placeholder, nil, :thinking)
+        if context.channel_id.present?
+          # In chat the reply is rendered as interactive "blocks"; the chat
+          # reply handler turns this into an Approve/Reject block message.
+          update_blk.call(
+            { reviewable_id: reviewable.id, summary: tool.summary, details: tool.details },
+            nil,
+            :chat_approval,
+          )
+        else
+          # :custom_raw lands in the persisted reply as visible content —
+          # a :thinking emission would be dropped (or collapsed into the
+          # thinking details block) depending on the agent's show_thinking.
+          # This is an empty mount point (keyed by the reviewable id); the client
+          # decorator renders the AiToolApproval card component into it, so the
+          # `.ai-tool-approval` element exists only once, on the component itself.
+          approval_card = "<div data-ai-tool-approval-reviewable-id='#{reviewable.id}'></div>"
+
+          approval_content =
+            build_placeholder(
+              tool.summary,
+              I18n.t("discourse_ai.ai_bot.tool_pending_approval"),
+              custom_raw: approval_card,
+            )
+          update_blk.call(approval_content, nil, :custom_raw)
+        end
 
         { status: "pending_approval", message: I18n.t("discourse_ai.ai_bot.tool_pending_approval") }
       end
@@ -439,6 +461,9 @@ module DiscourseAi
 
       def invoke_tool(tool, context, &update_blk)
         if tool_requires_approval?(tool)
+          if (error = tool.validation_error)
+            return error
+          end
           return enqueue_tool_for_approval(tool, context, &update_blk)
         end
 

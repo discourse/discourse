@@ -20,6 +20,8 @@ module DiscourseWorkflows
          { pending: 0, running: 1, success: 2, error: 3, waiting: 4, rate_limited: 5, skipped: 6 }
     enum :execution_mode, { normal: 0, error_mode: 1, manual: 2 }
 
+    after_create { ExecutionStat.log(workflow_id) unless rate_limited? }
+
     scope :for_workflow, ->(workflow_id) { workflow_id ? where(workflow_id: workflow_id) : all }
     scope :recent, ->(period = 7.days) { where("created_at >= ?", period.ago) }
     scope :successful, -> { where(status: :success) }

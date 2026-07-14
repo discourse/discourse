@@ -60,6 +60,8 @@ id:
             description: "Sertakan semua topik yang dapat diakses pengguna dalam hasil pencarian (secara bawaan hanya topik publik yang disertakan)"
       tool_summary:
         github_search_files: "File pencarian GitHub"
+        suspend_user: "Tangguhkan pengguna"
+        silence_user: "Senyapkan pengguna"
         search: "Cari"
         time: "Waktu"
         summarize: "Meringkas"

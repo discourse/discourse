@@ -213,6 +213,8 @@ en:
         "trigger:topic_created": "Topic created"
         "trigger:topic_category_changed": "Topic category changed"
         "trigger:topic_tag_changed": "Topic tag changed"
+        "trigger:user_added_to_group": "User added to group"
+        "trigger:user_removed_from_group": "User removed from group"
         "trigger:reviewable_approved": "Approved reviewable"
         "trigger:user_search": "User search"
         "trigger:webhook": "Webhook"
@@ -257,6 +259,8 @@ en:
         "trigger:topic_created": "Fires when a new topic is created"
         "trigger:topic_category_changed": "Fires when a topic is moved to a different category"
         "trigger:topic_tag_changed": "Fires when tags are added to or removed from a topic"
+        "trigger:user_added_to_group": "Fires when a user is added to a selected group"
+        "trigger:user_removed_from_group": "Fires when a user is removed from a selected group"
         "trigger:reviewable_approved": "Fires when a reviewable is approved"
         "trigger:user_search": "Fires when a user searches the site"
         "trigger:webhook": "Fires when an external service sends a webhook request"
@@ -695,6 +699,14 @@ en:
       topic_tag_changed:
         category_id: "Category"
         category_id_description: "Only trigger for topics in this category"
+      user_added_to_group:
+        group_id: "Group"
+        group_id_description: "Only trigger when a user is added to this group"
+        group_id_placeholder: "Select a group"
+      user_removed_from_group:
+        group_id: "Group"
+        group_id_description: "Only trigger when a user is removed from this group"
+        group_id_placeholder: "Select a group"
       reviewable_approved:
         reviewable_types: "Reviewable types"
         reviewable_types_description: "Only trigger for these reviewable types"

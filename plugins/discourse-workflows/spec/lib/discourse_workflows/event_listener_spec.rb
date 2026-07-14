@@ -7,6 +7,8 @@ RSpec.describe DiscourseWorkflows::EventListener do
   fab!(:other_category, :category)
   fab!(:topic) { Fabricate(:topic, category: category) }
   fab!(:tag) { Fabricate(:tag, name: "matched") }
+  fab!(:membership_group) { Fabricate(:group, name: "workflow_helpers", full_name: "Helpers") }
+  fab!(:other_group) { Fabricate(:group, name: "workflow_others", full_name: "Others") }
 
   before do
     SiteSetting.tagging_enabled = true
@@ -27,7 +29,7 @@ RSpec.describe DiscourseWorkflows::EventListener do
   end
 
   it "does not enqueue when plugin is disabled" do
-    SiteSetting.discourse_workflows_enabled = false
+    SiteSetting.enable_discourse_workflows = false
 
     graph = build_workflow_graph { |g| g.node "trigger-1", "trigger:topic_closed" }
     workflow = Fabricate(:discourse_workflows_workflow, created_by: user, published: true, **graph)
@@ -236,6 +238,84 @@ RSpec.describe DiscourseWorkflows::EventListener do
     )
   end
 
+  it "only enqueues user added to group workflows matching the group" do
+    create_published_workflow(
+      "matching-add-trigger",
+      "trigger:user_added_to_group",
+      configuration: {
+        "group_id" => membership_group.id.to_s,
+      },
+    )
+    create_published_workflow(
+      "group-mismatch-add-trigger",
+      "trigger:user_added_to_group",
+      configuration: {
+        "group_id" => other_group.id.to_s,
+      },
+    )
+
+    membership_group.add(user, automatic: true)
+
+    expect(enqueued_trigger_node_ids).to include("matching-add-trigger")
+    expect(enqueued_trigger_node_ids).not_to include("group-mismatch-add-trigger")
+
+    trigger_data = trigger_data_for("matching-add-trigger")
+    expect(trigger_data).to include(
+      "user" => include("id" => user.id, "username" => user.username),
+      "group" =>
+        include(
+          "id" => membership_group.id,
+          "name" => membership_group.name,
+          "full_name" => membership_group.full_name,
+          "automatic" => false,
+        ),
+      "membership" => {
+        "action" => "added",
+        "automatic" => true,
+      },
+    )
+  end
+
+  it "only enqueues user removed from group workflows matching the group" do
+    Fabricate(:group_user, user: user, group: membership_group)
+
+    create_published_workflow(
+      "matching-remove-trigger",
+      "trigger:user_removed_from_group",
+      configuration: {
+        "group_id" => membership_group.id.to_s,
+      },
+    )
+    create_published_workflow(
+      "group-mismatch-remove-trigger",
+      "trigger:user_removed_from_group",
+      configuration: {
+        "group_id" => other_group.id.to_s,
+      },
+    )
+
+    membership_group.remove(user)
+
+    expect(enqueued_trigger_node_ids).to include("matching-remove-trigger")
+    expect(enqueued_trigger_node_ids).not_to include("group-mismatch-remove-trigger")
+
+    trigger_data = trigger_data_for("matching-remove-trigger")
+    expect(trigger_data).to include(
+      "user" => include("id" => user.id, "username" => user.username),
+      "group" =>
+        include(
+          "id" => membership_group.id,
+          "name" => membership_group.name,
+          "full_name" => membership_group.full_name,
+          "automatic" => false,
+        ),
+      "membership" => {
+        "action" => "removed",
+        "automatic" => nil,
+      },
+    )
+  end
+
   it "does not query the dependencies table when no live workflow uses the fired trigger type" do
     create_published_workflow("closed-trigger", "trigger:topic_closed")
     DiscourseWorkflows::WorkflowDependency.active_node_types # warm the cache
@@ -289,5 +369,13 @@ RSpec.describe DiscourseWorkflows::EventListener do
     Jobs::DiscourseWorkflows::ExecuteWorkflow.jobs.map do |job|
       job["args"].first["trigger_node_id"]
     end
+  end
+
+  def trigger_data_for(trigger_node_id)
+    Jobs::DiscourseWorkflows::ExecuteWorkflow
+      .jobs
+      .find { |job| job["args"].first["trigger_node_id"] == trigger_node_id }
+      .dig("args", 0, "trigger_data")
+      .deep_stringify_keys
   end
 end

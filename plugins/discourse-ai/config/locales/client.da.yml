@@ -42,6 +42,14 @@ da:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Indlæser…"
+        tool: "Handling"
+        user: "Bruger"
+        approve: "Godkend"
+        reject: "Afvis"
+        approved: "Godkendt"
+        rejected: "Afvist"
       llm_selector:
         none: "Ingen"
       features:
@@ -69,6 +77,7 @@ da:
         table: "Tabel"
       translations:
         title: "Oversættelser"
+        category_scope: "Kategorier"
         stats:
           eta_minutes:
             one: "%{count} minut"

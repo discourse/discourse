@@ -5,7 +5,10 @@ import { dragSource } from "./drag-source";
 import { parseReference, referenceLabel } from "./reference-label";
 import { propertyAccessor, referencePickerData } from "./reference-properties";
 
-// "value" means it resolves against authoring data, not a runtime guarantee.
+// Delay before a selected pill's second click opens the dropdown, so a
+// double-click (which edits) isn't misread as two single clicks.
+const PILL_OPEN_DELAY = 250;
+
 function referenceState(scope, inner) {
   const resolved = walkScope(scope, inner);
   if (resolved === undefined) {
@@ -50,9 +53,9 @@ export function buildReferencePills(
     return true;
   }
 
+  // Anchor to the pill, not the caret, for left-edge alignment.
   function selectedPillAnchor(view) {
-    const pill = view.dom.querySelector(".cm-wf-reference-pill.--selected");
-    return pill?.querySelector(".cm-wf-reference-pill__drill") || pill;
+    return view.dom.querySelector(".cm-wf-reference-pill.--selected");
   }
 
   function applyPickedProperty(view, range, baseExpr, name) {
@@ -156,6 +159,10 @@ export function buildReferencePills(
       );
     }
 
+    destroy() {
+      clearTimeout(this.openTimer);
+    }
+
     toDOM(view) {
       const pill = document.createElement("span");
       pill.className = `cm-wf-reference-pill --source-${this.label.sourceType} --${this.state}${
@@ -164,19 +171,29 @@ export function buildReferencePills(
       pill.title = this.raw;
 
       // "click" not "mousedown", so preventDefault doesn't cancel a drag.
+      // First click selects; second opens the dropdown on a timer, so a
+      // double-click (edit) isn't misread as two selects.
       pill.addEventListener("click", (event) => {
         event.preventDefault();
         const range = expressionRangeAt(view, view.posAtDOM(pill));
-        if (range) {
-          view.dispatch({
-            selection: { anchor: range.from, head: range.to },
-          });
+        if (!range) {
+          return;
+        }
+        if (rangeIsSelected(view.state.selection.main, range)) {
+          clearTimeout(this.openTimer);
+          this.openTimer = setTimeout(
+            () => openDropdown(view, range, pill),
+            PILL_OPEN_DELAY
+          );
+        } else {
+          view.dispatch({ selection: { anchor: range.from, head: range.to } });
           view.focus();
         }
       });
 
       pill.addEventListener("dblclick", (event) => {
         event.preventDefault();
+        clearTimeout(this.openTimer);
         const range = expressionRangeAt(view, view.posAtDOM(pill));
         if (range) {
           enterEditMode(view, range);
@@ -229,13 +246,12 @@ export function buildReferencePills(
         drill.title = i18n("discourse_workflows.reference_pill.pick_property");
         drill.innerHTML = iconHTML("angle-down");
         drill.addEventListener("mousedown", (event) => {
-          // mousedown, not click: the editor's selection handling would
-          // otherwise collapse the menu first.
+          // mousedown, not click — click lets the editor collapse the menu first.
           event.preventDefault();
           event.stopPropagation();
           const range = expressionRangeAt(view, view.posAtDOM(pill));
           if (range) {
-            openDropdown(view, range, drill);
+            openDropdown(view, range, pill);
           }
         });
         drill.addEventListener("click", (event) => event.stopPropagation());
@@ -315,8 +331,7 @@ export function buildReferencePills(
         this.view = view;
         this.decorations = buildDecorations(view);
 
-        // DModal and CodeMirror grab Escape on capture and stop propagation,
-        // so cancelling pill-edit mode has to happen on capture too.
+        // DModal and CodeMirror grab Escape on capture, so pill-edit cancel must too.
         this.handleEscape = (event) => {
           if (
             event.key !== "Escape" ||

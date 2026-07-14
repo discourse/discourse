@@ -15,6 +15,9 @@ RSpec.describe "Rss Polling - admin" do
   it "tests a feed and saves the configuration" do
     stub_request(:get, url).to_return(status: 200, body: file_from_fixtures("feed.rss", "feed"))
 
+    tag_group = Fabricate(:tag_group, tags: [tag_1])
+    CategoryRequiredTagGroup.create!(category: category_1, tag_group:, min_count: 1)
+
     visit("/admin/plugins/discourse-rss-polling/feeds")
 
     find(".rss-polling-feeds__add").click

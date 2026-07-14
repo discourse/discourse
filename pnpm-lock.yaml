@@ -319,8 +319,8 @@ importers:
         specifier: ^9.0.0
         version: 9.0.0
       ember-curry-component:
-        specifier: ^0.4.0
-        version: 0.4.0(@babel/core@7.29.7)
+        specifier: ^0.5.0
+        version: 0.5.0(@babel/core@7.29.7)(@glint/template@1.7.8)
       ember-resolver:
         specifier: ^13.2.0
         version: 13.2.0
@@ -595,6 +595,12 @@ importers:
       ember-template-imports:
         specifier: ^4.4.0
         version: 4.4.0
+      ember-truth-helpers:
+        specifier: ^5.0.0
+        version: 5.0.0
+      expect-type:
+        specifier: ^1.3.0
+        version: 1.3.0
       jquery:
         specifier: ^3.7.1
         version: 3.7.1
@@ -754,7 +760,7 @@ importers:
     dependencies:
       discourse:
         specifier: npm:@discourse/types@*
-        version: '@discourse/types@2026.6.0-06d03da3'
+        version: '@discourse/types@2026.7.0-ded677e0'
 
   plugins/discourse-chat-integration:
     dependencies:
@@ -1821,6 +1827,10 @@ packages:
 
   '@discourse/types@2026.6.0-06d03da3':
     resolution: {integrity: sha512-2ER4lt8lFtFNcuyj7Y0Ry8RMLFPBYDfix8TNCh4TKP3FKlCMv+FzvDJ6Ix+CFBTqvh4KJ4uR/oCGYR3Q45yQow==}
+    engines: {node: '>= 20', npm: please-use-pnpm, pnpm: ^10, yarn: please-use-pnpm}
+
+  '@discourse/types@2026.7.0-ded677e0':
+    resolution: {integrity: sha512-rN0+p2Hr4NkDyef60h0jmRHabUy354YFLsJgJjmcuUeDyQSJZ0GdKAfMUFTAc+LIli34MQRJjnk8vmnxW396Fg==}
     engines: {node: '>= 20', npm: please-use-pnpm, pnpm: ^10, yarn: please-use-pnpm}
 
   '@discourse/webp@1.5.0':
@@ -4362,8 +4372,13 @@ packages:
     resolution: {integrity: sha512-BtkjulweiXo9c3yVWrtexw2dTmBrvavD/xixNC6TKOBdrixUwU+6nuOO9dufDWsMxoid7MvtmDpzc9+mE8PdaA==}
     engines: {node: 10.* || >= 12.*}
 
-  ember-curry-component@0.4.0:
-    resolution: {integrity: sha512-mXtlgCA0eW5B4ZdIP4qqMeatFCxKni7uuLbo06UK1a9y/itL5nKQosHwbyx5N7TfXXQt8oQl0oXAliIvw2sdmA==}
+  ember-curry-component@0.5.0:
+    resolution: {integrity: sha512-8N1WWt1KuMntWvB+i9ShwXFMU0tliJO7XinLJB+fihSl/ip+72UWAW3UCRttpiirKuIXJPpwqt6VCmlKbL8C4A==}
+    peerDependencies:
+      '@glint/template': ^1.0.0
+    peerDependenciesMeta:
+      '@glint/template':
+        optional: true
 
   ember-eslint-parser@0.14.3:
     resolution: {integrity: sha512-jU1HtVHqlbzqRDMwS4lxggjIY7u/wr+lij4bEvyC1CpNd5YqHK7anK3ubmVZLiB19VrFO6tH2/iYUQ+drpSYuA==}
@@ -4434,6 +4449,9 @@ packages:
   ember-tracked-storage-polyfill@1.0.1:
     resolution: {integrity: sha512-lr66R+1H9qMXIUXxwzpixS/qTwsMEpJXS5s2nOdvQP9U/JYuZT9MexpvLktSUQ1uWEhGQA8DDeeVh4R1CvLDFQ==}
     engines: {node: 12.* || >= 14}
+
+  ember-truth-helpers@5.0.0:
+    resolution: {integrity: sha512-PnQd6D6hvlNC3k6gBu0SC2cvfXX6wH6W0nToomIIoxqyrD5cllk0zBh/j/1H0KsczVCWeuF9PWj5xJgL4jQAGg==}
 
   emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}
@@ -9546,6 +9564,8 @@ snapshots:
 
   '@discourse/types@2026.6.0-06d03da3': {}
 
+  '@discourse/types@2026.7.0-ded677e0': {}
+
   '@discourse/webp@1.5.0':
     dependencies:
       wasm-feature-detect: 1.8.0
@@ -12707,10 +12727,12 @@ snapshots:
       - '@babel/core'
       - supports-color
 
-  ember-curry-component@0.4.0(@babel/core@7.29.7):
+  ember-curry-component@0.5.0(@babel/core@7.29.7)(@glint/template@1.7.8):
     dependencies:
       '@embroider/addon-shim': 1.10.3
       decorator-transforms: 2.3.2(@babel/core@7.29.7)
+    optionalDependencies:
+      '@glint/template': 1.7.8
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -12881,6 +12903,12 @@ snapshots:
   ember-tracked-storage-polyfill@1.0.1:
     dependencies:
       ember-cli-babel: 7.26.11
+    transitivePeerDependencies:
+      - supports-color
+
+  ember-truth-helpers@5.0.0:
+    dependencies:
+      '@embroider/addon-shim': 1.10.3
     transitivePeerDependencies:
       - supports-color
 

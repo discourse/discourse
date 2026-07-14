@@ -405,6 +405,11 @@ en:
       default_pm_prefix: "[Untitled AI bot PM]"
       thinking: "Thinking"
       tool_pending_approval: "This action requires moderator approval before it can be executed."
+      chat_tool_approval:
+        approved: "Approved by @%{username}."
+        rejected: "Rejected by @%{username}."
+        failed: "Could not complete the action: %{error}"
+        unexpected_error: "an unexpected error occurred"
       agents:
         default_llm_required: "Default LLM model is required prior to enabling Chat"
         cannot_delete_system_agent: "System agents cannot be deleted, please disable it instead"
@@ -604,6 +609,8 @@ en:
         categories: "List categories"
         flag_post: "Flag post"
         close_topic: "Close topic"
+        suspend_user: "Suspend user"
+        silence_user: "Silence user"
         unlist_topic: "Unlist topic"
         lock_post: "Lock post"
         delete_topic: "Delete topic"
@@ -650,6 +657,8 @@ en:
         categories: "List all publicly visible categories on the forum"
         flag_post: "Flag the current post for staff review"
         close_topic: "Close or open a topic"
+        suspend_user: "Suspend (ban) a user, blocking them from logging in or posting"
+        silence_user: "Silence a user, blocking them from posting while they can still read"
         unlist_topic: "List or unlist a topic"
         lock_post: "Lock or unlock a post"
         delete_topic: "Delete a topic"
@@ -696,6 +705,8 @@ en:
         random_picker: "Picking from %{options}, picked: %{result}"
         flag_post: "Flagging post %{post_id} (flag_post: %{flag_post})"
         close_topic: "Closing topic %{topic_id} (closed: %{closed})"
+        suspend_user: "Suspending %{username} for %{duration_days} day(s)"
+        silence_user: "Silencing %{username} for %{duration_days} day(s)"
         unlist_topic: "Unlisting topic %{topic_id} (unlisted: %{unlisted})"
         lock_post: "Locking post %{post_id} (locked: %{locked})"
         delete_topic: "Deleting topic %{topic_id} (deleted: %{deleted})"
@@ -766,6 +777,24 @@ en:
           not_allowed: "You are not allowed to close or open this topic."
           no_reason: "A reason is required to close or open a topic."
         success: "Topic updated successfully."
+
+      suspend_user:
+        errors:
+          not_found: "User not found."
+          not_allowed: "You are not allowed to suspend this user."
+          no_reason: "A reason is required to suspend a user."
+          invalid_duration: "Duration must be a positive whole number of days, up to %{max}."
+          failed: "Failed to suspend user."
+        success: "User %{username} has been suspended."
+
+      silence_user:
+        errors:
+          not_found: "User not found."
+          not_allowed: "You are not allowed to silence this user."
+          no_reason: "A reason is required to silence a user."
+          invalid_duration: "Duration must be a positive whole number of days, up to %{max}."
+          failed: "Failed to silence user."
+        success: "User %{username} has been silenced."
 
       unlist_topic:
         errors:
@@ -904,7 +933,10 @@ en:
         target_missing: "The tool action target no longer exists."
         tool_not_found: "Tool '%{tool_name}' is no longer available."
         bot_user_missing: "The bot user no longer exists."
+        performer_not_human: "This action must be approved or rejected by a real person, not a bot."
+        post_mismatch: "This approval card does not belong to this post."
         execution_error: "Tool execution failed: %{error}"
+        execution_error_unknown: "an unexpected error occurred"
 
     summarization:
       configuration_hint:

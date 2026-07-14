@@ -60,6 +60,14 @@ fa_IR:
               label: "پاسخ کاربر"
     discourse_ai:
       title: "هوش مصنوعی"
+      ai_tool_approval:
+        loading: "بارگذاری..."
+        tool: "عمل"
+        user: "کاربر"
+        approve: "تایید"
+        reject: "رد کردن"
+        approved: "پذیرفته شده"
+        rejected: "رد شده"
       llm_selector:
         none: "هیچ‌کدام"
       features:
@@ -88,6 +96,7 @@ fa_IR:
         select_option: "یک گزینه را انتخاب کنید..."
       translations:
         title: "ترجمه‌ها"
+        category_scope: "دسته‌بندی‌ها"
         stats:
           eta_minutes:
             one: "%{count} دقیقه"

@@ -34,6 +34,14 @@ sr:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Učitavanje..."
+        tool: "Akcije"
+        user: "Korisnik"
+        approve: "Odobri"
+        reject: "Odbij"
+        approved: "Potvrđenji"
+        rejected: "Odbačen"
       llm_selector:
         none: "Ništa"
       features:
@@ -60,6 +68,7 @@ sr:
       modals:
         select_option: "Izaberi jednu od opcija..."
       translations:
+        category_scope: "Kategorije"
         stats:
           eta_hours:
             one: "%{count} сат"

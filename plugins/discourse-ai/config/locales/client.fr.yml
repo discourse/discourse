@@ -154,6 +154,14 @@ fr:
               description: "Lorsqu'il est spécifié, il fixe une limite supérieure au nombre maximum de jetons que le modèle peut générer. Cette valeur respecte la limite maximale de jetons de sortie du LLM"
     discourse_ai:
       title: "IA"
+      ai_tool_approval:
+        loading: "Chargement…"
+        tool: "Action"
+        user: "Utilisateur"
+        approve: "Approuver"
+        reject: "Rejeter"
+        approved: "Acceptés"
+        rejected: "Rejetés"
       default_llm:
         title: "Modèle LLM par défaut"
       llm_selector:
@@ -248,6 +256,7 @@ fr:
         card: "Carte"
       translations:
         title: "Traductions"
+        category_scope: "Catégories"
         stats:
           eta_minutes:
             one: "%{count} minute"

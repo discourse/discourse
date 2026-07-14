@@ -64,7 +64,7 @@ class SortedItems {
   @tracked
   itemsSorting = [
     "notification.read",
-    "notification.data.message:desc",
+    "notification.topic_bumped_at:desc",
     "notification.created_at:desc",
   ];
 

@@ -278,6 +278,10 @@ module DiscourseAi
           DiscourseAi::AiBot::Playground.schedule_chat_reply(chat_message, channel, user, context)
         end
 
+        plugin.on(:chat_message_interaction) do |interaction|
+          DiscourseAi::AiBot::ChatToolApproval.handle_interaction(interaction)
+        end
+
         plugin.register_editable_topic_custom_field(:ai_agent_id)
 
         plugin.add_api_key_scope(

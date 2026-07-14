@@ -1,11 +1,9 @@
-/* eslint-disable ember/no-jquery */
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
 import { trackedObject } from "@ember/reactive/collections";
 import { next, schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
-import $ from "jquery";
 import { caretCoordinates } from "discourse/lib/caret-position";
 import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
@@ -68,7 +66,6 @@ export default class TextareaTextManipulation {
 
   eventPrefix;
   textarea;
-  $textarea;
 
   autocompleteHandler;
   placeholder;
@@ -82,7 +79,6 @@ export default class TextareaTextManipulation {
 
     this.eventPrefix = eventPrefix;
     this.textarea = textarea;
-    this.$textarea = $(textarea);
 
     this.autocompleteHandler = new TextareaAutocompleteHandler(textarea);
 
@@ -785,12 +781,11 @@ export default class TextareaTextManipulation {
 
   @bind
   toggleDirection() {
-    let currentDir = this.$textarea.attr("dir")
-        ? this.$textarea.attr("dir")
-        : siteDir(),
-      newDir = currentDir === "ltr" ? "rtl" : "ltr";
+    const currentDir = this.textarea.getAttribute("dir") || siteDir();
+    const newDir = currentDir === "ltr" ? "rtl" : "ltr";
 
-    this.$textarea.attr("dir", newDir).focus();
+    this.textarea.setAttribute("dir", newDir);
+    this.textarea.focus();
   }
 
   @bind
@@ -1046,11 +1041,9 @@ function insertAtTextarea(
 /** @implements {AutocompleteHandler} */
 export class TextareaAutocompleteHandler {
   textarea;
-  $textarea;
 
   constructor(textarea) {
     this.textarea = textarea;
-    this.$textarea = $(textarea);
   }
 
   getValue() {
@@ -1073,10 +1066,7 @@ export class TextareaAutocompleteHandler {
   }
 
   async inCodeBlock() {
-    return await inCodeBlock(
-      this.textarea.value ?? this.$textarea.val(),
-      caretPosition(this.textarea)
-    );
+    return await inCodeBlock(this.textarea.value, caretPosition(this.textarea));
   }
 }
 

@@ -34,6 +34,14 @@ bs_BA:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Obrađuje..."
+        tool: "Action"
+        user: "User"
+        approve: "Odobri"
+        reject: "Odbij"
+        approved: "Dozvojeno"
+        rejected: "Odbijeni"
       llm_selector:
         none: "Ništa"
       features:
@@ -58,6 +66,7 @@ bs_BA:
         select_option: "Odaberi opciju..."
       translations:
         title: "Prevodi"
+        category_scope: "Kategorije"
         stats:
           eta_hours:
             one: "%{count} sat"

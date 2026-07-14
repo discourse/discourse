@@ -36,6 +36,14 @@ zh_TW:
             canned_reply:
               label: "回覆"
     discourse_ai:
+      ai_tool_approval:
+        loading: "載入中..."
+        tool: "動作"
+        user: "使用者"
+        approve: "批准"
+        reject: "拒絕"
+        approved: "已同意"
+        rejected: "拒絶"
       llm_selector:
         none: "無"
       features:
@@ -58,6 +66,7 @@ zh_TW:
           name: "垃圾內容"
       translations:
         title: "翻譯"
+        category_scope: "分類"
         stats:
           eta_minutes:
             other: "%{count} 分"

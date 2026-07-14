@@ -232,6 +232,15 @@ es:
       discourse_workflows:
         ai_agent:
           agent_id: "Agente"
+      ai_tool_approval:
+        loading: "Cargando..."
+        agent: "Agente"
+        tool: "Acción"
+        user: "Usuario"
+        approve: "Aprobar"
+        reject: "Rechazar"
+        approved: "Aprobado"
+        rejected: "Rechazados"
       default_llm:
         title: "Modelo LLM por defecto"
         description: "El modelo LLM por defecto que se utilizará para todas las características de IA. Se usará si no se especifica ningún LLM en la configuración de características o en el agente. Si no se especifica ningún LLM por defecto, se usará el último LLM creado."
@@ -377,6 +386,7 @@ es:
         description: "Traduce automáticamente todo el contenido de tu foro al idioma preferido del usuario"
         supported_locales: "Idiomas compatibles"
         supported_locales_description: "Este ajuste del sitio también permite a los visitantes contribuir con traducciones de las publicaciones."
+        category_scope: "Categorías"
         admin_actions:
           translation_settings: "Ajustes de traducción"
           localization_settings: "Ajustes de localización"

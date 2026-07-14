@@ -8,6 +8,8 @@ class SearchLog < ActiveRecord::Base
 
   belongs_to :user
 
+  scope :non_staff, -> { joins(:user).where(users: { admin: false, moderator: false }) }
+
   def ctr
     return 0 if click_through == 0 || searches == 0
 
@@ -86,8 +88,8 @@ class SearchLog < ActiveRecord::Base
     details = []
 
     result =
-      SearchLog.select("COUNT(*) AS count, created_at::date AS date").where(
-        "lower(term) = ? AND created_at > ?",
+      SearchLog.select("COUNT(*) AS count, search_logs.created_at::date AS date").where(
+        "lower(search_logs.term) = ? AND search_logs.created_at > ?",
         term.downcase,
         start_of(period),
       )
@@ -95,11 +97,11 @@ class SearchLog < ActiveRecord::Base
     result = result.where("search_type = ?", search_types[search_type]) if search_type == :header ||
       search_type == :full_page
     result = result.where.not(search_result_id: nil) if search_type == :click_through_only
-    result = result.where.not(user_id: nil) if search_type == :logged_in_only
+    result = result.non_staff if search_type == :non_staff_only
 
     result
       .order("date")
-      .group("date")
+      .group("search_logs.created_at::date")
       .each { |record| details << { x: Date.parse(record["date"].to_s), y: record["count"] } }
 
     {
@@ -130,12 +132,12 @@ class SearchLog < ActiveRecord::Base
            END) AS click_through
     SQL
 
-    result = SearchLog.select(select_sql).where("created_at > ?", start_date)
+    result = SearchLog.select(select_sql).where("search_logs.created_at > ?", start_date)
 
-    result = result.where("created_at < ?", end_date) if end_date
+    result = result.where("search_logs.created_at < ?", end_date) if end_date
 
-    if search_type == :logged_in_only
-      result = result.where.not(user_id: nil)
+    if search_type == :non_staff_only
+      result = result.non_staff
     elsif search_type != :all
       result = result.where("search_type = ?", search_types[search_type])
     end

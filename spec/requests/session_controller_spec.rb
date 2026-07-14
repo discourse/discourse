@@ -553,6 +553,16 @@ RSpec.describe SessionController do
       expect(response.status).to eq(404)
     end
 
+    it "allows requesting a code when the upcoming change is auto-promoted without the setting being toggled" do
+      SiteSetting.remove_override!(:enable_local_logins_via_code)
+      SiteSetting.promote_upcoming_changes_on_status = "alpha"
+
+      post "/session/login-code.json", params: honeypot_magic(email: user.email)
+
+      expect(response.status).to eq(200)
+      expect(EmailLoginCode.for_email(user.email).count).to eq(1)
+    end
+
     context "when local logins are disabled" do
       before { SiteSetting.enable_local_logins = false }
 

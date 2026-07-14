@@ -44,7 +44,11 @@ export default class AvatarSelectorModal extends Component {
   get selectableAvatars() {
     const mode = this.siteSettings.selectable_avatars_mode;
     const list = this.siteSettings.selectable_avatars;
-    return mode !== "disabled" ? (list ? list.split("|") : []) : null;
+    return mode !== "disabled"
+      ? Array.isArray(list)
+        ? list
+        : list?.split("|") || []
+      : null;
   }
 
   get showSelectableAvatars() {

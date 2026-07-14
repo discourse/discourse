@@ -105,17 +105,16 @@ class AdminDashboardSearch
   end
 
   def trending
-    rows = DB.query(<<~SQL, window_start: start_date, window_end: end_date, limit: TOP_TERMS_LIMIT)
-          SELECT lower(term) AS term,
-                 COUNT(*) AS searches,
-                 SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
-          FROM search_logs
-          WHERE created_at >= :window_start AND created_at <= :window_end
-            AND user_id IS NOT NULL
-          GROUP BY lower(term)
-          ORDER BY searches DESC, clicks DESC, term ASC
-          LIMIT :limit
+    rows =
+      non_staff_search_logs_in(window_start: start_date, window_end: end_date)
+        .select(<<~SQL)
+          lower(search_logs.term) AS term,
+          COUNT(*) AS searches,
+          SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
         SQL
+        .group("lower(search_logs.term)")
+        .order("searches DESC, clicks DESC, term ASC")
+        .limit(TOP_TERMS_LIMIT)
 
     rows.map { |row| { term: row.term, searches: row.searches } }
   end
@@ -130,51 +129,48 @@ class AdminDashboardSearch
 
   def content_gaps
     rows =
-      DB.query(
-        <<~SQL,
-          SELECT lower(term) AS term,
-                 COUNT(*) AS searches,
-                 SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
-          FROM search_logs
-          WHERE created_at >= :window_start AND created_at <= :window_end
-            AND user_id IS NOT NULL
-          GROUP BY lower(term)
-          HAVING SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) * 100 <=
-            COUNT(*) * :max_ctr_percent
-          ORDER BY searches DESC, term ASC
-          LIMIT :limit
+      non_staff_search_logs_in(window_start: start_date, window_end: end_date)
+        .select(<<~SQL)
+          lower(search_logs.term) AS term,
+          COUNT(*) AS searches,
+          SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
         SQL
-        window_start: start_date,
-        window_end: end_date,
-        max_ctr_percent: POOR_MATCH_MAX_CTR_PERCENT,
-        limit: TOP_TERMS_LIMIT,
-      )
+        .group("lower(search_logs.term)")
+        .having(<<~SQL, POOR_MATCH_MAX_CTR_PERCENT)
+          SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) * 100 <=
+            COUNT(*) * ?
+        SQL
+        .order("searches DESC, term ASC")
+        .limit(TOP_TERMS_LIMIT)
 
     rows.map do |row|
       {
         term: row.term,
         searches: row.searches,
-        status: row.clicks.zero? ? "no_match" : "poor_match",
+        status: row.clicks.to_i.zero? ? "no_match" : "poor_match",
       }
     end
   end
 
   def window_stats(window_start:, window_end:)
-    row = DB.query(<<~SQL, window_start: window_start, window_end: window_end).first
-      WITH term_stats AS (
-        SELECT COUNT(*) AS searches,
-               SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
-        FROM search_logs
-        WHERE created_at >= :window_start AND created_at <= :window_end
-          AND user_id IS NOT NULL
-        GROUP BY lower(term)
-      )
-      SELECT COALESCE(SUM(searches), 0)::bigint AS total,
-             COALESCE(SUM(CASE WHEN clicks = 0 THEN searches ELSE 0 END), 0)::bigint AS no_match
-      FROM term_stats
-    SQL
+    term_stats =
+      non_staff_search_logs_in(window_start: window_start, window_end: window_end).select(
+        <<~SQL,
+          COUNT(*) AS searches,
+          SUM(CASE WHEN search_result_id IS NOT NULL THEN 1 ELSE 0 END) AS clicks
+        SQL
+      ).group("lower(search_logs.term)")
+
+    row = SearchLog.from("(#{term_stats.to_sql}) term_stats").select(<<~SQL).take
+          COALESCE(SUM(searches), 0)::bigint AS total,
+          COALESCE(SUM(CASE WHEN clicks = 0 THEN searches ELSE 0 END), 0)::bigint AS no_match
+        SQL
 
     { total: row.total, no_match: row.no_match }
+  end
+
+  def non_staff_search_logs_in(window_start:, window_end:)
+    SearchLog.non_staff.where(created_at: window_start..window_end)
   end
 
   def parse_date(value)

@@ -232,6 +232,15 @@ nl:
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
+      ai_tool_approval:
+        loading: "Laden..."
+        agent: "Agent"
+        tool: "Actie"
+        user: "Gebruiker"
+        approve: "Goedkeuren"
+        reject: "Weigeren"
+        approved: "Goedgekeurd"
+        rejected: "Geweigerd"
       default_llm:
         title: "Standaard LLM-model"
         description: "Het standaard LLM-model dat voor alle AI-functies wordt gebruikt. Dit model wordt gebruikt als er geen LLM is opgegeven in de functieconfiguratie of agent. Als er geen standaard-LLM is opgegeven, wordt de laatst gemaakte LLM gebruikt."
@@ -377,6 +386,7 @@ nl:
         description: "Vertaal automatisch alle con tent op je forum naar de voorkeurstaal van de gebruiker"
         supported_locales: "Ondersteunde talen"
         supported_locales_description: "Met deze site-instelling kunnen bezoekers ook bijdragen aan vertalingen van berichten."
+        category_scope: "Categorieën"
         admin_actions:
           translation_settings: "Vertaalinstellingen"
           localization_settings: "Lokalisatie-instellingen"

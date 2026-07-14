@@ -17,6 +17,7 @@ zh_TW:
           name: "客製"
     ai_bot:
       tool_summary:
+        silence_user: "使用者靜音"
         search: "搜尋"
         time: "時間"
         summarize: "總結"

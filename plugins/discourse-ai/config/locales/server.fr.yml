@@ -401,6 +401,8 @@ fr:
         random_picker: "Sélecteur aléatoire"
         categories: "Répertorier les catégories"
         flag_post: "Signaler cette publication"
+        suspend_user: "Suspendre l'utilisateur"
+        silence_user: "Désactiver l'utilisateur"
         search: "Rechercher"
         tags: "Répertorier les étiquettes"
         time: "Heure"

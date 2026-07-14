@@ -2535,7 +2535,7 @@ zh_CN:
     created: "创建"
     created_lowercase: "创建"
     trust_level: "信任级别"
-    search_hint: "用户名、电子邮件或 IP 地址"
+    search_hint: "用户名或电子邮件地址（以逗号或空格分隔），或 IP 地址"
     create_account:
       header_title: "欢迎！"
       disclaimer: "注册，即表示您同意<a href='%{privacy_link}' target='blank'>隐私政策</a>和<a href='%{tos_link}' target='blank'>服务条款</a>。"
@@ -2850,6 +2850,7 @@ zh_CN:
       powered_by: "由 Klipy 提供支持"
       no_results: "在上方输入关键词搜索 GIF 动图。"
       browse_categories: "按类别浏览"
+      bad_api_key: "Klipy API 密钥缺失或无效。请检查 GIF API 密钥设置。"
     codemirror:
       expression:
         sections:
@@ -4420,6 +4421,7 @@ zh_CN:
       original_language: "此帖子最初使用%{language}编写"
       original_language_and_outdated: "此帖子最初使用%{language}编写。译文可能已过时"
       originally_written_in: "原始语言：%{language}"
+      tap_to_show_original: "点击此处查看原文"
       ai_translation_disclaimer: "AI 生成的译文可能不准确。"
     category:
       none: "（无类别）"
@@ -4487,7 +4489,7 @@ zh_CN:
       unsaved_changes: "您有未保存的更改"
       slug: "类别缩略名"
       parent: "父类别"
-      slug_placeholder: "（可选）用于 URL 以“-”分隔的字词"
+      slug_placeholder: "如果留空，则自动生成"
       creation_error: 创建类别时出错。
       save_error: 保存类别时出错。
       errors:
@@ -7831,6 +7833,7 @@ zh_CN:
             header: "标头"
             full_page: "完整页面"
             click_through_only: "全部（仅点击后到达）"
+            non_staff_only: "非工作人员用户"
           header_search_results: "标头搜索结果"
         logster:
           title: "错误日志"

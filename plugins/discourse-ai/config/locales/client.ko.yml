@@ -38,6 +38,14 @@ ko:
             canned_reply:
               label: "댓글쓰기"
     discourse_ai:
+      ai_tool_approval:
+        loading: "로드 중..."
+        tool: "처리"
+        user: "사용자"
+        approve: "승인"
+        reject: "거부"
+        approved: "승인"
+        rejected: "거부됨"
       llm_selector:
         none: "없음"
       features:
@@ -80,6 +88,7 @@ ko:
         select_option: "옵션 선택..."
       translations:
         title: "번역"
+        category_scope: "카테고리"
         stats:
           eta_minutes:
             other: "%{count}분"
