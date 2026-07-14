@@ -22,9 +22,13 @@ export interface DTooltipComponentArgs<Data = unknown> {
   data?: Data;
 }
 
-// The option-bag arguments, derived from `TooltipOptions` (the source of truth in
-// `constants.ts`) so the two lists can never drift. The generic fields are overridden
-// to carry the component's `Data` type and the concrete tooltip-instance type.
+// The subset of arguments that mirror a tooltip's option bag. Built as a
+// `Partial<Omit<…>>` over `TooltipOptions` (defined in `constants.ts`), so the
+// arguments track the options automatically: a field added there is accepted here
+// for free, with no second list to keep in sync. The three omitted fields are
+// re-declared to narrow their generic `TooltipOptions` types (`data: unknown`, a
+// `Data`-agnostic `component`, `onRegisterApi: FloatCallback | null`) to the
+// component's `Data` and the concrete `DTooltipInstance`.
 type DTooltipOptionArgs<Data> = Partial<
   Omit<TooltipOptions, "data" | "component" | "onRegisterApi">
 > & {

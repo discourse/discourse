@@ -28,9 +28,13 @@ export interface DMenuComponentArgs<Data = unknown> {
   data?: Data;
 }
 
-// The option-bag arguments, derived from `MenuOptions` (the source of truth in
-// `constants.ts`) so the two lists can never drift. The generic fields are overridden
-// to carry the component's `Data` type and the concrete menu-instance type.
+// The subset of arguments that mirror a menu's option bag. Built as a
+// `Partial<Omit<…>>` over `MenuOptions` (defined in `constants.ts`), so the
+// arguments track the options automatically: a field added there is accepted here
+// for free, with no second list to keep in sync. The three omitted fields are
+// re-declared to narrow their generic `MenuOptions` types (`data: unknown`, a
+// `Data`-agnostic `component`, `onRegisterApi: FloatCallback | null`) to the
+// component's `Data` and the concrete `DMenuInstance`.
 type DMenuOptionArgs<Data> = Partial<
   Omit<MenuOptions, "data" | "component" | "onRegisterApi">
 > & {
