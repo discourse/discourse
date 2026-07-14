@@ -77,6 +77,13 @@ export default class ChatChannel extends Component {
   jumpToPinnedMessage = (messageId) => {
     this.highlightOrFetchMessage(messageId, { position: "center" });
   };
+  // real user input flips this, so onScroll drops the pinned-bar tap override
+  // only on a scroll the user drove — not the programmatic jump that set it
+  #userScrolled = false;
+  #markUserScroll = () => {
+    this.#userScrolled = true;
+  };
+  #userScrollEvents = ["wheel", "touchmove", "pointerdown"];
   _mentionWarningsSeen = {};
   _unreachableGroupMentions = [];
   _overMembersLimitGroupMentions = [];
@@ -84,6 +91,9 @@ export default class ChatChannel extends Component {
   @action
   registerScroller(element) {
     this.scroller = element;
+    this.#userScrollEvents.forEach((event) =>
+      element.addEventListener(event, this.#markUserScroll, { passive: true })
+    );
   }
 
   @cached
@@ -117,6 +127,9 @@ export default class ChatChannel extends Component {
   @action
   teardown() {
     document.removeEventListener("keydown", this._autoFocus);
+    this.#userScrollEvents.forEach((event) =>
+      this.scroller?.removeEventListener(event, this.#markUserScroll)
+    );
     // cleared on teardown (not setup) so a pins-panel click can set it pre-mount
     this.args.channel.activePinnedMessageId = null;
     this.#cancelHandlers();
@@ -531,9 +544,14 @@ export default class ChatChannel extends Component {
         return;
       }
 
-      // a genuine scroll re-anchors the bar and drops any tap override
+      // re-anchor to the view; drop the tap override only on a user-driven
+      // scroll, not the programmatic jump that set it (which fires scroll events
+      // too — repeatedly on iOS smooth-scroll and via the fetch reflow)
       this.lastVisibleMessageId = firstVisibleMessageId(this.scroller);
-      this.args.channel.activePinnedMessageId = null;
+      if (this.#userScrolled) {
+        this.#userScrolled = false;
+        this.args.channel.activePinnedMessageId = null;
+      }
 
       DatesSeparatorsPositioner.apply(this.scroller);
       this.paneState.updatePendingContentFromScrollState({
