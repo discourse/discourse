@@ -194,7 +194,7 @@ module Plugin
               fileName: file_name,
               imports: info["imports"],
               externalPluginImports: info["externalPluginImports"],
-              routeBundles: route_bundles_for(info, result, frontend_config),
+              routeBundles: route_bundles_for(info, frontend_config),
             }
           end
         end
@@ -251,13 +251,8 @@ module Plugin
     # Maps each split route back to the user-facing URL glob it was declared under, so a direct
     # navigation to that URL can preload the chunk instead of waiting for the router to discover
     # it. Ordered by `about.json`, because URL globs are matched first-one-wins.
-    def route_bundles_for(entry, chunks, frontend_config)
-      chunk_by_route = {}
-
-      entry["dynamicImports"].to_a.each do |file_name|
-        route_name = chunks.dig(file_name, "routeName")
-        chunk_by_route[route_name] = file_name if route_name
-      end
+    def route_bundles_for(entry, frontend_config)
+      chunk_by_route = entry["routeBundles"] || {}
 
       urls_by_route(frontend_config).filter_map do |route_name, url|
         file_name = chunk_by_route[route_name]
