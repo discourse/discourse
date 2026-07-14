@@ -13,7 +13,9 @@
       "discourse/models/chat-channel"
     ],
     "splitAtRoutes": {
-      "chat/*": "chat.*"
+      "chat/*": "chat.*",
+      "u/*/preferences/chat": "preferences.chat",
+      "admin/plugins/chat/hooks/*": "admin-plugins.show.discourse-chat-incoming-webhooks.*"
     }
   }
 }
