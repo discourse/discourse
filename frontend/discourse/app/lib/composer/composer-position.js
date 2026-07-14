@@ -32,12 +32,25 @@ export function setupComposerPosition(editor) {
     ].filter(Boolean);
   }
 
+  function selectionTouchmoveGuard(event) {
+    if (editor.selectionStart !== editor.selectionEnd) {
+      event.stopImmediatePropagation();
+    }
+  }
+
   function refreshScrollLock() {
     if (shouldLockScroll() && !scrollLocked) {
       scrollLockTargets = getAllowedScrollTargets();
+      editor.addEventListener("touchmove", selectionTouchmoveGuard, {
+        capture: true,
+        passive: false,
+      });
       lock(scrollLockTargets);
       scrollLocked = true;
     } else if (!shouldLockScroll() && scrollLocked) {
+      editor.removeEventListener("touchmove", selectionTouchmoveGuard, {
+        capture: true,
+      });
       unlock(scrollLockTargets);
       scrollLockTargets = null;
       scrollLocked = false;
@@ -101,6 +114,9 @@ export function setupComposerPosition(editor) {
       editor.removeEventListener("blur", onBlur);
 
       if (scrollLocked) {
+        editor.removeEventListener("touchmove", selectionTouchmoveGuard, {
+          capture: true,
+        });
         unlock(scrollLockTargets);
         scrollLockTargets = null;
         scrollLocked = false;
