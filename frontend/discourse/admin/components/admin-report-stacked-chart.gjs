@@ -1,7 +1,9 @@
 import Component from "@glimmer/component";
 import Report from "discourse/admin/models/report";
+import { buildLegendIcon } from "discourse/lib/chart-legend-icon";
 import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
+import { remToPx } from "discourse/lib/rem-to-px";
 import I18n, { i18n } from "discourse-i18n";
 import Chart from "./chart";
 
@@ -141,9 +143,8 @@ export default class AdminReportStackedChart extends Component {
             },
             labels: {
               usePointStyle: true,
-              pointStyle: "rectRounded",
-              boxWidth: 10,
-              boxHeight: 10,
+              padding: remToPx(1),
+              font: { size: remToPx(0.75) },
               generateLabels: (chart) => {
                 const textColor = getCSSColor("--primary-high");
                 return chart.data.datasets.map((dataset, i) => {
@@ -151,12 +152,9 @@ export default class AdminReportStackedChart extends Component {
                   return {
                     text: dataset.label,
                     fontColor: textColor,
-                    fillStyle: isVisible ? dataset._baseColor : "transparent",
-                    strokeStyle: dataset._baseColor,
-                    lineWidth: 2,
                     hidden: false,
                     datasetIndex: i,
-                    pointStyle: "rectRounded",
+                    pointStyle: buildLegendIcon(dataset._baseColor, isVisible),
                   };
                 });
               },

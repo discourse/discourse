@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
 import Chart from "discourse/admin/components/chart";
+import { buildLegendIcon } from "discourse/lib/chart-legend-icon";
+import { remToPx } from "discourse/lib/rem-to-px";
 
 export default class DoughnutChart extends Component {
   get config() {
@@ -25,6 +27,28 @@ export default class DoughnutChart extends Component {
           legend: {
             display: this.args.displayLegend || false,
             position: "bottom",
+            labels: {
+              usePointStyle: true,
+              padding: remToPx(1),
+              font: { size: remToPx(0.75) },
+              generateLabels: (chart) => {
+                const textColor = getComputedStyle(document.documentElement)
+                  .getPropertyValue("--primary-high")
+                  .trim();
+                const backgroundColor =
+                  chart.data.datasets[0]?.backgroundColor || [];
+                return chart.data.labels.map((label, index) => ({
+                  text: label,
+                  fontColor: textColor,
+                  hidden: false,
+                  index,
+                  pointStyle: buildLegendIcon(
+                    backgroundColor[index],
+                    chart.getDataVisibility(index)
+                  ),
+                }));
+              },
+            },
           },
         },
       },
