@@ -386,12 +386,9 @@ RSpec.describe Admin::WebHooksController do
       expect(JSON.parse(parsed_event["headers"])).to eq({ "aa" => "1", "bb" => "2" })
       expect(parsed_event["payload"]).to eq("abc")
 
+      # http.rb returns exactly the response's headers (canonicalized).
       expect(JSON.parse(parsed_event["response_headers"])).to eq(
-        {
-          "content-type" => "application/json",
-          "user-agent" => Discourse.user_agent,
-          "yoo" => "man",
-        },
+        { "Content-Type" => "application/json", "Yoo" => "man" },
       )
       expect(parsed_event["response_body"]).to eq("efg")
     end

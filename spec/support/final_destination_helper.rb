@@ -19,11 +19,15 @@ WebMock::HttpLibAdapterRegistry.instance.register(
 
 module FinalDestination::TestHelper
   def self.stub_to_fail(&blk)
-    WebMock::HttpLibAdapterRegistry.instance.http_lib_adapters[:final_destination].disable!
+    adapters = WebMock::HttpLibAdapterRegistry.instance.http_lib_adapters
+    # Let real connections through so both the Net::HTTP and http.rb SSRF checks run.
+    adapters[:final_destination].disable!
+    adapters[:http_rb].disable!
     FinalDestination::SSRFDetector.stubs(:lookup_ips).returns(["0.0.0.0"])
     yield
   ensure
-    WebMock::HttpLibAdapterRegistry.instance.http_lib_adapters[:final_destination].enable!
+    adapters[:final_destination].enable!
+    adapters[:http_rb].enable!
     FinalDestination::SSRFDetector.unstub(:lookup_ips)
   end
 end

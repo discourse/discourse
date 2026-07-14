@@ -1,22 +1,21 @@
 # frozen_string_literal: true
 
+require "faraday/adapter/http"
+
 class FinalDestination
-  class FaradayAdapter < Faraday::Adapter::NetHttp
-    def net_http_connection(env)
-      proxy = env[:request][:proxy]
-      port = env[:url].port || (env[:url].scheme == "https" ? 443 : 80)
-      if proxy
-        FinalDestination::HTTP.new(
-          env[:url].hostname,
-          port,
-          proxy[:uri].hostname,
-          proxy[:uri].port,
-          proxy[:user],
-          proxy[:password],
-        )
-      else
-        FinalDestination::HTTP.new(env[:url].hostname, port, nil)
-      end
+  # Faraday adapter driving http.rb through FinalDestination::HTTPRb for SSRF-filtered,
+  # Happy-Eyeballs outbound requests.
+  class FaradayAdapter < Faraday::Adapter::HTTP
+    private
+
+    def setup_connection(env)
+      # A proxy resolves and dials onward itself (and may be internal), so SSRF filtering
+      # cannot apply; connect to it over plain http.rb.
+      return super if env[:request] && env[:request][:proxy]
+
+      conn = FinalDestination::HTTPRb
+      conn = request_config(conn, env[:request]) if env[:request]
+      conn.headers(env.request_headers)
     end
   end
 end

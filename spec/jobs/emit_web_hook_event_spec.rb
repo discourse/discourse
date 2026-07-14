@@ -317,7 +317,8 @@ RSpec.describe Jobs::EmitWebHookEvent do
       )
       expect(event.payload).to eq(MultiJson.dump(ping: "OK"))
       expect(event.status).to eq(200)
-      expect(MultiJson.load(event.response_headers)["test"]).to eq("string")
+      # http.rb canonicalizes response header names ("Test", not Net::HTTP's "test").
+      expect(MultiJson.load(event.response_headers)["Test"]).to eq("string")
       expect(event.response_body).to eq("OK")
     end
 

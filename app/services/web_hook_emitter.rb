@@ -42,13 +42,26 @@ class WebHookEmitter
       event_update_args[:status] = response.status
     else
       event_update_args[:status] = -1
-      if error.is_a?(Faraday::Error) &&
-           error.wrapped_exception.is_a?(FinalDestination::SSRFDetector::DisallowedIpError)
-        error = I18n.t("webhooks.payload_url.blocked_or_internal")
-      end
+      error = I18n.t("webhooks.payload_url.blocked_or_internal") if blocked_by_ssrf?(error)
       event_update_args[:response_headers] = MultiJson.dump(error: error)
     end
     @webhook_event.update!(**event_update_args)
     response
+  end
+
+  private
+
+  # The SSRF error reaches us wrapped (Faraday::ConnectionFailed -> HTTP::ConnectionError),
+  # so walk the wrapped/cause chain.
+  def blocked_by_ssrf?(error)
+    return false unless error.is_a?(Faraday::Error)
+
+    seen = {}
+    while error && !seen[error.object_id]
+      return true if error.is_a?(FinalDestination::SSRFDetector::DisallowedIpError)
+      seen[error.object_id] = true
+      error = error.is_a?(Faraday::Error) ? error.wrapped_exception : error.cause
+    end
+    false
   end
 end
