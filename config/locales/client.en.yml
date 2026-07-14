@@ -940,6 +940,7 @@ en:
         help: "Remove this claim"
       awaiting_approval: "Awaiting Approval"
       delete: "Delete"
+      delete_confirm: "Are you sure you want to delete this item from the review queue?"
       settings:
         saved: "Saved"
         save_changes: "Save Changes"
