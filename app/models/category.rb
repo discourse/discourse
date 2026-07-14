@@ -251,6 +251,44 @@ class Category < ActiveRecord::Base
     id IN (SELECT DISTINCT parent_category_id FROM categories WHERE id IN (:ids))
   SQL
 
+  scope :for_category_type,
+        ->(type_id, type = nil) do
+          if type_id == "all"
+            all
+          elsif type&.type_id == :discussion
+            where.not(id: Categories::TypeRegistry.non_discussion_category_ids)
+          else
+            where(id: type.find_matches.select(:id))
+          end
+        end
+
+  scope :matching_name_or_slug_ref,
+        ->(filter) do
+          filter = filter.to_s.strip.delete_prefix("#")
+          next all if filter.blank?
+
+          normalized_search =
+            filter.tr("/", SLUG_REF_SEPARATOR).gsub(
+              /#{Regexp.escape(SLUG_REF_SEPARATOR)}+/,
+              SLUG_REF_SEPARATOR,
+            )
+          normalized_filter = "%#{ActiveRecord::Base.sanitize_sql_like(normalized_search)}%"
+
+          where(
+            "#{normalize_sql("categories.name")} ILIKE #{normalize_sql("?")} OR " \
+              "#{normalize_sql("categories.slug")} ILIKE #{normalize_sql("?")} OR " \
+              "EXISTS (
+                SELECT 1
+                FROM categories parent_categories
+                WHERE parent_categories.id = categories.parent_category_id
+                  AND #{normalize_sql("parent_categories.slug || '#{SLUG_REF_SEPARATOR}' || categories.slug")} ILIKE #{normalize_sql("?")}
+              )",
+            normalized_filter,
+            normalized_filter,
+            normalized_filter,
+          )
+        end
+
   delegate :post_template, to: "self.class"
 
   # permission is just used by serialization

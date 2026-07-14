@@ -56,6 +56,7 @@ class SiteSerializer < ApplicationSerializer
     :upcoming_changes_with_css,
     :permanent_upcoming_change_names,
     :access_control,
+    :category_types,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -462,6 +463,14 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def include_permanent_upcoming_change_names?
+    scope.is_staff?
+  end
+
+  def category_types
+    Categories::TypeRegistry.list(only_visible: true, guardian: scope)
+  end
+
+  def include_category_types?
     scope.is_staff?
   end
 

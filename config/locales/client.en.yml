@@ -6929,6 +6929,31 @@ en:
               title: "Posts & topics"
             stats_and_thresholds:
               title: "Stats & thresholds"
+        category_management:
+          title: "Category management"
+          header_description: "Review category types, hierarchy, and the categories currently assigned to each type."
+          keywords: "categories|category types|discussion|category management"
+          tabs:
+            settings: "Settings"
+          types:
+            unavailable: "The category type %{categoryType} is not available."
+            all:
+              title: "All categories"
+              description: "All categories across every configured category type."
+          filter_placeholder: "Filter categories"
+          no_results: "No %{type} categories found."
+          open_settings: "Open settings"
+          table:
+            category: "Category"
+            visibility: "Visibility"
+            topics: "Topics"
+          visibility:
+            public: "Public"
+            restricted: "Restricted"
+          visibility_filter:
+            all: "All categories"
+            public: "Public categories"
+            restricted: "Restricted categories"
         permalinks:
           title: "Permalinks"
           header_description: "Redirections to apply for URLs not known by the forum"
