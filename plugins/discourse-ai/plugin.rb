@@ -11,6 +11,8 @@ require "tokenizers"
 require "tiktoken_ruby"
 require "discourse_ai/tokenizers"
 require "ed25519"
+require "smarter_json"
+require "json_completer"
 
 enabled_site_setting :discourse_ai_enabled
 
