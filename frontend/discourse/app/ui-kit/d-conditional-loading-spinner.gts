@@ -10,7 +10,6 @@ interface DConditionalLoadingSpinnerSignature {
     size?: string;
   };
 
-  // Root element type (enables ...attributes type checking)
   Element: HTMLDivElement;
 
   Blocks: {
