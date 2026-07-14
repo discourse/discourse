@@ -21,7 +21,7 @@
     "playwright": "1.59.1",
     "prettier": "3.8.1",
     "stylelint": "17.5.0",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "scripts": {
     "dev": "bin/dev",

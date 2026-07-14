@@ -130,7 +130,7 @@
     "@types/jquery": "^3.5.33",
     "@types/qunit": "^2.19.13",
     "@types/rsvp": "^4.0.9",
-    "@types/sinon": "^21.0.1",
+    "@types/sinon": "^22.0.0",
     "@uppy/aws-s3": "^5.1.0",
     "@uppy/core": "^5.2.0",
     "@uppy/drop-target": "^4.1.0",
@@ -165,7 +165,7 @@
     "rolldown": "1.1.2",
     "sinon": "^22.0.0",
     "testem": "^3.20.1",
-    "typescript": "^5.9.3",
+    "typescript": "^6.0.3",
     "util": "^0.12.5",
     "xss": "^1.0.15"
   },
