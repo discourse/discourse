@@ -135,5 +135,25 @@ module("Unit | Lib | SiteSettingMatcher", function (hooks) {
         new SiteSettingMatcher("s tle|foo", shortTitle).isFuzzyNameMatch
       );
     });
+
+    test("a filter of only pipes matches literally instead of matching nothing", function (assert) {
+      const pipeValue = SiteSetting.create({
+        setting: "some_list",
+        description: "x",
+        value: "jpg|png",
+      });
+
+      assert.true(new SiteSettingMatcher("|", pipeValue).isValueMatch);
+      assert.false(new SiteSettingMatcher("|", shortTitle).isValueMatch);
+    });
+
+    test("a trailing pipe keeps single-term semantics including fuzzy matching", function (assert) {
+      const matcher = new SiteSettingMatcher("s tle|", shortTitle);
+
+      assert.true(matcher.isFuzzyNameMatch);
+      assert.true(
+        new SiteSettingMatcher("short_title|", shortTitle).isNameMatch
+      );
+    });
   });
 });

@@ -6,7 +6,7 @@ class Admin::SiteSettingsController < Admin::AdminController
   end
 
   rescue_from Discourse::InvalidHTMLParameters do |e|
-    render_json_error e.message, html_message: true, status: 422
+    render_json_error e.html_message, html_message: true, status: 422
   end
 
   def index
@@ -48,13 +48,8 @@ class Admin::SiteSettingsController < Admin::AdminController
     ) do
       on_success { head :no_content }
       on_exceptions do |e|
-        raise(
-          if e.is_a?(Discourse::InvalidHTMLParameters)
-            e
-          else
-            Discourse::InvalidParameters.new(e.message)
-          end,
-        )
+        raise e if e.is_a?(Discourse::InvalidParameters)
+        raise Discourse::InvalidParameters, e.message
       end
       on_failed_policy(:settings_are_not_deprecated) do |policy|
         raise Discourse::InvalidParameters, policy.reason

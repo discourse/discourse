@@ -42,6 +42,8 @@ class LocaleFileValidator
       "The file is not a valid YAML format or does not contain a valid locale structure.",
     invalid_one_keys:
       "The following keys contain the number 1 instead of the interpolation key %{count}:",
+    invalid_setting_link_format:
+      "The following keys contain malformed setting link markers.\nUse {{setting:setting_name}} or {{settings:name_one,name_two|Link label}} (lowercase snake_case names, no spaces around commas):",
   }.merge(
     BANNED_PHRASES
       .map do |banned, recommendation|
@@ -52,6 +54,12 @@ class LocaleFileValidator
       end
       .to_h,
   )
+
+  # Must stay in sync with SETTING_LINK_PATTERN and SETTINGS_LINK_PATTERN in
+  # lib/site_settings/label_formatter.rb — markers that don't match there are
+  # rendered verbatim, so lint anything that only looks like one.
+  VALID_SETTING_LINK_REGEX =
+    /\A(?:\{\{setting:[a-z][a-z0-9_]*\}\}|\{\{settings:[a-z][a-z0-9_]*(?:,[a-z][a-z0-9_]*)*(?:\|[^{}|]+)?\}\})\z/
 
   PLURALIZATION_KEYS = %w[zero one two few many other]
   ENGLISH_KEYS = %w[one other]
@@ -112,9 +120,13 @@ class LocaleFileValidator
 
       @errors[:invalid_relative_image_sources] << key if value.match?(%r{src\s*=\s*["']/[^/]}i)
 
-      if value.match?(/{{(?!setting:).+?}}/)
+      if value.match?(/{{(?!settings?:).+?}}/)
         exempt = key.end_with?("_MF") || EXEMPTED_DOUBLE_CURLY_BRACKET_KEYS.include?(key)
         @errors[:invalid_interpolation_key_format] << key unless exempt
+      end
+
+      if value.scan(/{{settings?:.*?}}/).any? { |marker| !marker.match?(VALID_SETTING_LINK_REGEX) }
+        @errors[:invalid_setting_link_format] << key
       end
 
       BANNED_PHRASES.keys.each do |banned|

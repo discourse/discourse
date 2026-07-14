@@ -720,7 +720,7 @@ RSpec.describe Admin::SiteSettingsController do
         )
       end
 
-      it "returns html_message: true when a validator has an HTML error message" do
+      it "returns html_message: true with linkified errors when a validator message references settings" do
         SiteSetting.set_locale_from_cookie = false
 
         put "/admin/site_settings/content_localization_language_switcher.json",
@@ -730,7 +730,23 @@ RSpec.describe Admin::SiteSettingsController do
 
         expect(response.status).to eq(422)
         expect(response.parsed_body["html_message"]).to eq(true)
-        expect(response.parsed_body["errors"].first).to include("<a href=")
+        expect(response.parsed_body["errors"].first).to include(
+          'class="site-setting-link"',
+          ">All required settings</a>",
+        )
+        expect(response.parsed_body["errors"].first).not_to include("{{setting")
+      end
+
+      it "keeps the exception message plain text for non-admin-UI consumers" do
+        SiteSetting.set_locale_from_cookie = false
+
+        expect { SiteSetting.set("content_localization_language_switcher", "all") }.to raise_error(
+          Discourse::InvalidHTMLParameters,
+        ) do |error|
+          expect(error.message).to include("'Set locale from cookie'")
+          expect(error.message).not_to include("<a", "{{setting")
+          expect(error.html_message).to include('class="site-setting-link"')
+        end
       end
 
       context "with an plugin" do
