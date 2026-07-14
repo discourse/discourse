@@ -12,35 +12,77 @@ import type Site from "discourse/models/site";
  * start, move, and end callbacks.
  */
 export interface SwipeState {
+  /** The pointer coordinates where the gesture started. */
   startLocation: { x: number; y: number };
+
+  /** The current pointer coordinates. */
   center: { x: number; y: number };
+
+  /** The horizontal velocity, in pixels per millisecond. */
   velocityX: number;
+
+  /** The vertical velocity, in pixels per millisecond. */
   velocityY: number;
+
+  /** The horizontal displacement from `startLocation`, in pixels. */
   deltaX: number;
+
+  /** The vertical displacement from `startLocation`, in pixels. */
   deltaY: number;
+
+  /** Whether this is the first state of the gesture. */
   start: boolean;
+
+  /** When this state was produced, as an epoch timestamp in milliseconds. */
   timestamp: number;
+
+  /** The dominant direction of the gesture, fixed once first determined. */
   direction: "up" | "down" | "left" | "right";
+
+  /** The element the gesture is tracked on. */
   element: HTMLElement;
+
+  /** Returns whether the gesture direction is `"up"`. */
   goingUp: () => boolean;
+
+  /** Returns whether the gesture direction is `"down"`. */
   goingDown: () => boolean;
+
+  /** The underlying DOM event that produced this state. */
   originalEvent?: Event;
 }
 
 /** The detail reported when a gesture is cancelled. */
 export interface SwipeCancelDetail {
+  /** The underlying DOM event that triggered the cancellation. */
   originalEvent: Event;
 }
 
 interface DSwipeSignature {
+  /** The element the swipe listeners are attached to. */
   Element: HTMLElement;
   Args: {
     Named: {
+      /**
+       * Called when a gesture starts. Calling `preventDefault()` on the event
+       * cancels the gesture: the body is not locked and no further swipe events
+       * fire for it.
+       */
       onDidStartSwipe?: (state: SwipeState, event: Event) => void;
+
+      /** Called on each pointer move while the gesture is in progress. */
       onDidSwipe?: (state: SwipeState) => void;
+
+      /** Called when the gesture ends. */
       onDidEndSwipe?: (state: SwipeState) => void;
+
+      /** Called when the gesture is cancelled, e.g. by a second touch. */
       onDidCancelSwipe?: (detail: SwipeCancelDetail) => void;
+
+      /** Whether swipe handling is enabled. Defaults to `true`; always off on desktop. */
       enabled?: boolean;
+
+      /** Whether to lock body scrolling for the duration of the gesture. Defaults to `true`. */
       lockBody?: boolean;
     };
     Positional: [];
