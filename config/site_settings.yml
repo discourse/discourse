@@ -4542,6 +4542,14 @@ experimental:
       status: "beta"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403635"
+  prioritize_recently_used_tags:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "conceptual"
+      impact: "feature,all_members"
   rename_faq_to_guidelines:
     default: false
     hidden: true
