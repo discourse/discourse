@@ -9,10 +9,6 @@ module DiscourseWorkflows
       DiscourseAi::Agents::Tools::Time
     ].freeze
 
-    def self.execution_mode
-      "agentic"
-    end
-
     def self.max_turn_tokens
       100_000
     end
