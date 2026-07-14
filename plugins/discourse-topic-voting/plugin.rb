@@ -43,9 +43,6 @@ after_initialize do
     TopicQuery.prepend(DiscourseTopicVoting::TopicQueryExtension)
     User.prepend(DiscourseTopicVoting::UserExtension)
     WebHook.prepend(DiscourseTopicVoting::WebHookExtension)
-    ::UpcomingChanges::ConditionalDisplay.extend(
-      DiscourseTopicVoting::UpcomingChangesConditionalDisplayExtension,
-    )
   end
 
   add_to_serializer(:post, :can_vote, include_condition: -> { object.post_number == 1 }) do
@@ -228,6 +225,10 @@ after_initialize do
 
   on(:merging_users) do |source_user, target_user|
     DiscourseTopicVoting::UserMerger.merge(source_user, target_user)
+  end
+
+  register_upcoming_change_conditional_display(:enable_topic_voting_badges) do
+    SiteSetting.topic_voting_enabled
   end
 
   on(:upcoming_change_enabled) do |setting_name|

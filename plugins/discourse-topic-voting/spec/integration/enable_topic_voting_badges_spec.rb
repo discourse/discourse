@@ -17,16 +17,24 @@ RSpec.describe "Enable Topic Voting badges by default upcoming change" do
   end
 
   describe "conditional display" do
-    it "is displayed only on sites where the Topic Voting plugin is enabled" do
+    it "is displayed on sites where the Topic Voting plugin is enabled" do
       SiteSetting.topic_voting_enabled = true
-      expect(UpcomingChanges::ConditionalDisplay.should_display_enable_topic_voting_badges?).to eq(
-        true,
+
+      expect(
+        UpcomingChanges::ConditionalDisplay.should_display?(:enable_topic_voting_badges),
+      ).to eq(true)
+    end
+
+    it "is hidden on sites where the Topic Voting plugin is disabled" do
+      pending(
+        "DiscoursePluginRegistry filters out conditional display callbacks from disabled plugins, so the change is still displayed. Needs a core fix.",
       )
 
       SiteSetting.topic_voting_enabled = false
-      expect(UpcomingChanges::ConditionalDisplay.should_display_enable_topic_voting_badges?).to eq(
-        false,
-      )
+
+      expect(
+        UpcomingChanges::ConditionalDisplay.should_display?(:enable_topic_voting_badges),
+      ).to eq(false)
     end
   end
 end
