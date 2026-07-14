@@ -36,6 +36,14 @@ gl:
             canned_reply:
               label: "Responder"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Cargando..."
+        tool: "Acción"
+        user: "Usuario"
+        approve: "Aprobar"
+        reject: "Rexeitar"
+        approved: "Aprobado"
+        rejected: "Rexeitada"
       llm_selector:
         none: "Ningunha"
       features:
@@ -59,6 +67,7 @@ gl:
         select_option: "Seleccione unha opción..."
       translations:
         title: "Traducións"
+        category_scope: "Categorías"
         stats:
           eta_minutes:
             one: "%{count} minuto"

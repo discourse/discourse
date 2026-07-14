@@ -232,6 +232,15 @@ de:
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
+      ai_tool_approval:
+        loading: "Wird geladen …"
+        agent: "Agent"
+        tool: "Aktion"
+        user: "Nutzer"
+        approve: "Genehmigen"
+        reject: "Ablehnen"
+        approved: "Genehmigt"
+        rejected: "Abgelehnt"
       default_llm:
         title: "Standard-LLM-Modell"
         description: "Das Standard-LLM-Modell für alle KI-Funktionen. Dieses wird verwendet, wenn in der Funktionskonfiguration oder im Agent kein LLM angegeben ist. Wenn kein Standard-LLM angegeben ist, wird das zuletzt erstellte LLM verwendet."
@@ -377,6 +386,7 @@ de:
         description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
         supported_locales: "Unterstützte Sprachen"
         supported_locales_description: "Diese Website-Einstellung ermöglicht es auch Besuchern, Übersetzungen von Beiträgen beizutragen."
+        category_scope: "Kategorien"
         admin_actions:
           translation_settings: "Übersetzungseinstellungen"
           localization_settings: "Lokalisierungseinstellungen"

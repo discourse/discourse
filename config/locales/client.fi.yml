@@ -2414,7 +2414,6 @@ fi:
     created: "Luotu"
     created_lowercase: "luotu"
     trust_level: "Luottamustaso"
-    search_hint: "käyttäjätunnus, sähköposti tai IP-osoite"
     create_account:
       header_title: "Tervetuloa!"
       disclaimer: "Kun rekisteröidyt, hyväksyt <a href='%{privacy_link}' target='blank'>tietosuojaselosteen</a> ja <a href='%{tos_link}' target='blank'>käyttöehdot</a>."
@@ -4095,7 +4094,6 @@ fi:
       type_settings_schema:
         site_settings: "Sivustoasetukset"
       unsaved_changes: "Sinulla on tallentamattomia muutoksia"
-      slug_placeholder: "(Valinnainen) väliviivoilla erotettuja sanoja URL-osoitetta varten"
       creation_error: Alueen luonnissa tapahtui virhe.
       save_error: Alueen tallennuksessa tapahtui virhe.
       validations:
@@ -5156,6 +5154,7 @@ fi:
         title: "Saatavilla olevat raportit"
         sidebar_title: "Raportit"
         back: "Takaisin kaikkiin raportteihin"
+        all_groups: "Kaikki ryhmät"
         group_traffic: "Liikenne"
         group_members: "Jäsenet"
         group_other: "Muut"

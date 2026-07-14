@@ -13,7 +13,7 @@ const DOLLAR_VAR_DOCS = {
     detail: "object",
     infoKey: "discourse_workflows.expression_docs.vars.json",
   },
-  trigger: {
+  $trigger: {
     detail: "object",
     infoKey: "discourse_workflows.expression_docs.vars.trigger",
   },
@@ -46,7 +46,7 @@ export function lookupDollarVarDoc(name) {
 export function buildDollarVars(scope, sections) {
   const groups = [
     {
-      names: ["$input", "$json", "$itemIndex", "trigger"],
+      names: ["$input", "$json", "$itemIndex", "$trigger"],
       section: sections.recommended,
       boost: (name) => (name === "$json" ? 10 : 5),
     },

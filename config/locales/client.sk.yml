@@ -2571,7 +2571,6 @@ sk:
     created: "Vytvorené"
     created_lowercase: "vytvorené"
     trust_level: "Stupeň dôvery"
-    search_hint: "používateľské meno, email alebo IP adresa"
     create_account:
       header_title: "Vitajte!"
       disclaimer: "Registráciou súhlasíte s <a href='%{privacy_link}' target='blank'>zásadami ochrany osobných údajov</a> a <a href='%{tos_link}' target='blank'>zmluvnými podmienkami</a>."
@@ -4416,7 +4415,6 @@ sk:
       type_settings_schema:
         site_settings: "Nastavenia stránky"
       unsaved_changes: "Máte neuložené zmeny"
-      slug_placeholder: "(Voliteľné) pomlčkou-prerušované-slová pre url"
       creation_error: Nastala chyba počas vytvárania kategórie.
       save_error: Nastala chyba počas ukladania kategórie
       validations:
@@ -5561,6 +5559,7 @@ sk:
         title: "Zoznam dostupných prehľadov"
         sidebar_title: "Hlásenia"
         back: "Späť na všetky správy"
+        all_groups: "Všetky skupiny"
         group_traffic: "Vyťaženie"
         group_members: "Členovia"
         group_other: "Ostatné"

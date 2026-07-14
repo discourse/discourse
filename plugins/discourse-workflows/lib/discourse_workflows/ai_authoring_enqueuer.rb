@@ -3,7 +3,7 @@
 module DiscourseWorkflows
   class AiAuthoringEnqueuer
     def self.enabled?
-      SiteSetting.discourse_workflows_enabled &&
+      SiteSetting.enable_discourse_workflows &&
         SiteSetting.discourse_workflows_ai_authoring_enabled && defined?(DiscourseAi).present?
     end
 

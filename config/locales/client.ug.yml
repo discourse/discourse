@@ -2551,7 +2551,6 @@ ug:
     created: "قۇرغان ۋاقتى"
     created_lowercase: "قۇرغان ۋاقتى"
     trust_level: "ئىشەنچ دەرىجىسى"
-    search_hint: "ئىشلەتكۈچى ئاتى، ئېلخەت ياكى IP ئادرېسى"
     create_account:
       header_title: "خۇش كەپسىز!"
       disclaimer: "خەتلەتكىنىڭىز، <a href='%{privacy_link}' target='blank'>شەخسىيەت تۈزۈمى</a> ۋە <a href='%{tos_link}' target='blank'>مۇلازىمەت ماددىلىرى</a>غا قوشۇلغانلىقىڭىزنى بىلدۈرىدۇ."
@@ -4311,7 +4310,6 @@ ug:
       unsaved_changes: "ساقلانمىغان ئۆزگەرتىشلىرىڭىز بار"
       slug: "سەھىپە قىسقارتما"
       parent: "ئانا سەھىپە"
-      slug_placeholder: "(تاللاشچان) تور ئادرېسىغا ئىشلىتىلىدىغان سىزىقلىق سۆز"
       creation_error: سەھىپە قۇرۇۋاتقاندا خاتالىق كۆرۈلدى.
       save_error: سەھىپە ساقلاۋاتقاندا خاتالىق كۆرۈلگەن.
       validations:
@@ -5417,6 +5415,7 @@ ug:
         title: "مەۋجۇت دوكلات تىزىمى"
         sidebar_title: "دوكلات"
         back: "ھەممە دوكلاتقا قايت"
+        all_groups: "بارلىق گۇرۇپپىلار"
         group_traffic: "ئېقىم"
         group_members: "ئەزا"
         group_other: "باشقا"

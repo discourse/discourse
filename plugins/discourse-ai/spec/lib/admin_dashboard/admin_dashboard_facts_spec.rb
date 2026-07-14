@@ -105,6 +105,131 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
     )
   end
 
+  it "uses public categories for topic volume by default" do
+    start_date = Date.parse("2030-01-08")
+    end_date = Date.parse("2030-01-14")
+    private_category = Fabricate(:private_category, group: Fabricate(:group))
+
+    Fabricate(:topic, created_at: Date.parse("2030-01-01"))
+    Fabricate.times(6, :topic, category: private_category, created_at: start_date)
+    Fabricate.times(6, :private_message_topic, created_at: start_date)
+
+    topic_volume =
+      compute(start_date: start_date.to_s, end_date: end_date.to_s)
+        .fetch(:signals)
+        .find { |signal| signal[:key] == :topic_volume }
+
+    expect(topic_volume).to be_nil
+  end
+
+  it "uses all categories for topic volume when configured" do
+    start_date = Date.parse("2030-01-08")
+    end_date = Date.parse("2030-01-14")
+    private_category = Fabricate(:private_category, group: Fabricate(:group))
+    SiteSetting.ai_admin_dashboard_highlights_category_scope = "all"
+
+    Fabricate(:topic, created_at: Date.parse("2030-01-01"))
+    Fabricate.times(6, :topic, category: private_category, created_at: start_date)
+    Fabricate.times(6, :private_message_topic, created_at: start_date)
+
+    topic_volume =
+      compute(start_date: start_date.to_s, end_date: end_date.to_s)
+        .fetch(:signals)
+        .find { |signal| signal[:key] == :topic_volume }
+
+    expect(topic_volume).to include(
+      category: :participation,
+      headline: "New topics were up 500% versus the previous period",
+    )
+  end
+
+  it "includes subcategories in included topic volume" do
+    start_date = Date.parse("2030-01-08")
+    end_date = Date.parse("2030-01-14")
+    parent_category = Fabricate(:category)
+    subcategory = Fabricate(:category, parent_category: parent_category)
+    SiteSetting.ai_admin_dashboard_highlights_category_scope = "include"
+    SiteSetting.ai_admin_dashboard_highlights_categories = parent_category.id.to_s
+
+    Fabricate(:topic, category: subcategory, created_at: Date.parse("2030-01-01"))
+    Fabricate.times(6, :topic, category: subcategory, created_at: start_date)
+
+    topic_volume =
+      compute(start_date: start_date.to_s, end_date: end_date.to_s)
+        .fetch(:signals)
+        .find { |signal| signal[:key] == :topic_volume }
+
+    expect(topic_volume).to include(
+      category: :participation,
+      headline: "New topics were up 500% versus the previous period",
+    )
+  end
+
+  it "uses only included categories for strict topic volume" do
+    start_date = Date.parse("2030-01-08")
+    end_date = Date.parse("2030-01-14")
+    parent_category = Fabricate(:category)
+    subcategory = Fabricate(:category, parent_category: parent_category)
+    SiteSetting.ai_admin_dashboard_highlights_category_scope = "include_strict"
+    SiteSetting.ai_admin_dashboard_highlights_categories = parent_category.id.to_s
+
+    Fabricate(:topic, category: subcategory, created_at: Date.parse("2030-01-01"))
+    Fabricate.times(6, :topic, category: subcategory, created_at: start_date)
+
+    topic_volume =
+      compute(start_date: start_date.to_s, end_date: end_date.to_s)
+        .fetch(:signals)
+        .find { |signal| signal[:key] == :topic_volume }
+
+    expect(topic_volume).to be_nil
+  end
+
+  it "excludes categories and subcategories from all topic volume" do
+    start_date = Date.parse("2030-01-08")
+    end_date = Date.parse("2030-01-14")
+    parent_category = Fabricate(:category)
+    subcategory = Fabricate(:category, parent_category: parent_category)
+    private_category = Fabricate(:private_category, group: Fabricate(:group))
+    SiteSetting.ai_admin_dashboard_highlights_category_scope = "exclude"
+    SiteSetting.ai_admin_dashboard_highlights_categories = parent_category.id.to_s
+
+    Fabricate(:topic, created_at: Date.parse("2030-01-01"))
+    Fabricate.times(6, :topic, category: subcategory, created_at: start_date)
+    Fabricate.times(6, :topic, category: private_category, created_at: start_date)
+
+    topic_volume =
+      compute(start_date: start_date.to_s, end_date: end_date.to_s)
+        .fetch(:signals)
+        .find { |signal| signal[:key] == :topic_volume }
+
+    expect(topic_volume).to include(
+      category: :participation,
+      headline: "New topics were up 500% versus the previous period",
+    )
+  end
+
+  it "excludes only configured categories from strict topic volume" do
+    start_date = Date.parse("2030-01-08")
+    end_date = Date.parse("2030-01-14")
+    parent_category = Fabricate(:category)
+    subcategory = Fabricate(:category, parent_category: parent_category)
+    SiteSetting.ai_admin_dashboard_highlights_category_scope = "exclude_strict"
+    SiteSetting.ai_admin_dashboard_highlights_categories = parent_category.id.to_s
+
+    Fabricate(:topic, created_at: Date.parse("2030-01-01"))
+    Fabricate.times(6, :topic, category: subcategory, created_at: start_date)
+
+    topic_volume =
+      compute(start_date: start_date.to_s, end_date: end_date.to_s)
+        .fetch(:signals)
+        .find { |signal| signal[:key] == :topic_volume }
+
+    expect(topic_volume).to include(
+      category: :participation,
+      headline: "New topics were up 500% versus the previous period",
+    )
+  end
+
   it "skips the raw landing-topic scan for long date ranges" do
     queries =
       track_sql_queries do
@@ -135,6 +260,49 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
     )
   end
 
+  it "reports landing topics from included categories only" do
+    unselected_category = Fabricate(:category)
+    private_category = Fabricate(:private_category, group: Fabricate(:group))
+    selected_topic = Fabricate(:topic, title: "Selected landing topic")
+    unselected_topic =
+      Fabricate(:topic, category: unselected_category, title: "Unselected landing topic")
+    private_topic = Fabricate(:topic, category: private_category, title: "Private landing topic")
+    SiteSetting.ai_admin_dashboard_highlights_category_scope = "include"
+    SiteSetting.ai_admin_dashboard_highlights_categories = selected_topic.category_id.to_s
+
+    Fabricate.times(
+      50,
+      :browser_pageview_event,
+      topic_id: selected_topic.id,
+      normalized_referrer: "example.com",
+      created_at: 1.day.ago,
+    )
+    Fabricate.times(
+      55,
+      :browser_pageview_event,
+      topic_id: unselected_topic.id,
+      normalized_referrer: "example.com",
+      created_at: 1.day.ago,
+    )
+    Fabricate.times(
+      60,
+      :browser_pageview_event,
+      topic_id: private_topic.id,
+      normalized_referrer: "example.com",
+      created_at: 1.day.ago,
+    )
+
+    landing_topic =
+      compute(start_date: 3.months.ago.to_date.to_s, end_date: Date.current.to_s)
+        .fetch(:signals)
+        .find { |signal| signal[:key] == :landing_topic }
+
+    expect(landing_topic).to include(
+      category: :acquisition,
+      headline: 'External visitors mostly landed on "Selected landing topic" (50 visits)',
+    )
+  end
+
   it "skips the raw staff-ratio post scan for long date ranges" do
     queries =
       track_sql_queries do
@@ -159,6 +327,24 @@ RSpec.describe DiscourseAi::AdminDashboard::AdminDashboardFacts do
       category: :participation,
       headline: "Staff wrote 60% of posts this period",
     )
+  end
+
+  it "uses public categories for staff ratio by default" do
+    admin = Fabricate(:admin)
+    user = Fabricate(:user)
+    private_category = Fabricate(:private_category, group: Fabricate(:group))
+    private_topic = Fabricate(:topic, category: private_category)
+
+    Fabricate.times(6, :post, topic: private_topic, user: admin, created_at: 1.day.ago)
+    Fabricate.times(8, :post, topic: private_topic, user: user, created_at: 1.day.ago)
+    Fabricate.times(6, :private_message_post, user: admin, created_at: 1.day.ago)
+
+    staff_ratio =
+      compute(start_date: 3.months.ago.to_date.to_s, end_date: Date.current.to_s)
+        .fetch(:signals)
+        .find { |signal| signal[:key] == :staff_ratio }
+
+    expect(staff_ratio).to be_nil
   end
 
   it "reports a traffic spike WITHOUT a source when no referrer dominates" do

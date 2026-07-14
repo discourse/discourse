@@ -777,6 +777,31 @@ RSpec.describe SiteSettingExtension do
         end
       end
 
+      context "when the dependent setting declares depends_on_values" do
+        before do
+          settings.setting(:cool_thing_scope, "public")
+          settings.setting(
+            :cool_thing_categories,
+            "",
+            depends_on: [:cool_thing_scope],
+            depends_on_values: {
+              cool_thing_scope: %w[include exclude],
+            },
+            depends_behavior: :hidden,
+            dependent_setting_display: :inline,
+          )
+          settings.refresh!
+        end
+
+        it "serializes the values and display mode for the dependent setting" do
+          setting = settings.all_settings.find { |s| s[:setting] == :cool_thing_categories }
+
+          expect(setting[:depends_on]).to eq([:cool_thing_scope])
+          expect(setting[:depends_on_values]).to eq(cool_thing_scope: %w[include exclude])
+          expect(setting[:dependent_setting_display]).to eq("inline")
+        end
+      end
+
       context "when the depends_on setting is false" do
         before do
           settings.setting(:enable_cool_thing, false)
@@ -1063,6 +1088,28 @@ RSpec.describe SiteSettingExtension do
       expect(settings.send(:get_hostname, "discourse.org")).to eq("discourse.org")
       expect(settings.send(:get_hostname, "@discourse.org")).to eq("discourse.org")
       expect(settings.send(:get_hostname, "https://discourse.org")).to eq("discourse.org")
+    end
+  end
+
+  describe "upcoming changes owned by a non-configurable plugin" do
+    let(:setting_name) { :enable_experimental_sample_plugin_feature }
+
+    before do
+      SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:configurable?).returns(false)
+      SiteSetting.promote_upcoming_changes_on_status = :alpha
+    end
+
+    after do
+      SiteSetting.promote_upcoming_changes_on_status = :stable
+      UpcomingChanges.clear_caches!
+    end
+
+    it "reports the change as disabled even though it has been promoted" do
+      expect(UpcomingChanges.enabled?(setting_name)).to eq(false)
+    end
+
+    it "keeps the setting getter in agreement with UpcomingChanges.enabled?" do
+      expect(SiteSetting.public_send(setting_name)).to eq(UpcomingChanges.enabled?(setting_name))
     end
   end
 

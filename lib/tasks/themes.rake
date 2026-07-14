@@ -501,7 +501,7 @@ task "themes:qunit_all_official" => :environment do |task, args|
   ThemeMetadata::OFFICIAL_THEMES.each do |theme_name|
     path = Rails.root.join("tmp/themes/#{theme_name}").to_s
 
-    if Dir.glob("#{File.join(path, "test")}/**/*.{js,gjs}").any?
+    if Dir.glob("#{File.join(path, "test")}/**/*.{js,gjs,ts,gts}").any?
       theme = RemoteTheme.import_theme_from_directory(path)
       official_theme_ids_with_qunit_tests << theme.id
     else
@@ -514,7 +514,7 @@ task "themes:qunit_all_official" => :environment do |task, args|
   Theme::CORE_THEMES.each do |(theme_name, theme_id)|
     path = Rails.root.join("themes/#{theme_name}").to_s
 
-    if Dir.glob("#{File.join(path, "test")}/**/*.{js,gjs}").any?
+    if Dir.glob("#{File.join(path, "test")}/**/*.{js,gjs,ts,gts}").any?
       core_theme_ids_with_qunit_tests << theme_id
     else
       puts "Skipping #{theme_name} as no QUnit tests have been detected"

@@ -34,6 +34,14 @@ sw:
             canned_reply:
               label: "Jibu"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Inaandaa...."
+        tool: "Kitendo"
+        user: "Mtumiaji"
+        approve: "Imethibitishwa"
+        reject: "Kataa"
+        approved: "Wamekubaliwa"
+        rejected: "Imekataliwa"
       llm_selector:
         none: "Hakuna"
       features:
@@ -53,6 +61,7 @@ sw:
       modals:
         select_option: "Chagua chaguo moja..."
       translations:
+        category_scope: "Kategoria"
         stats:
           eta_hours:
             one: "saa %{count}"

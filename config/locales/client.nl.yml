@@ -2616,7 +2616,6 @@ nl:
     created: "Gemaakt"
     created_lowercase: "gemaakt"
     trust_level: "Vertrouwensniveau"
-    search_hint: "gebruikersnaam, e-mailadres of IP-adres"
     create_account:
       header_title: "Welkom!"
       disclaimer: "Door je te registreren, ga je akkoord met het <a href='%{privacy_link}' target='blank'>privacybeleid</a> en de <a href='%{tos_link}' target='blank'>gebruiksvoorwaarden</a>."
@@ -4557,7 +4556,6 @@ nl:
       unsaved_changes: "Je hebt niet-opgeslagen wijzigingen"
       slug: "Categorieslug"
       parent: "Bovenliggende categorie"
-      slug_placeholder: "(Optioneel) met streepjes verbonden woorden voor URL"
       creation_error: Er is een fout opgetreden bij het maken van de categorie.
       save_error: Er is een fout opgetreden bij het opslaan van de categorie.
       errors:
@@ -5720,6 +5718,7 @@ nl:
         title: "Lijst van beschikbare rapporten"
         sidebar_title: "Rapporten"
         back: "Terug naar alle rapporten"
+        all_groups: "Alle groepen"
         group_engagement: "Betrokkenheid"
         group_traffic: "Verkeer"
         group_members: "Leden"

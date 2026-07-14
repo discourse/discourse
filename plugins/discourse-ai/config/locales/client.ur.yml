@@ -59,6 +59,14 @@ ur:
             hide_topic:
               label: "موضوع چھپائیں"
     discourse_ai:
+      ai_tool_approval:
+        loading: "لوڈ ہو رہا ہے..."
+        tool: "عمل"
+        user: "رکن"
+        approve: "منظور"
+        reject: "مسترد کریں"
+        approved: "منظورشدہ"
+        rejected: "مسترد کر دیا"
       llm_selector:
         none: "کوئی نہیں"
       features:
@@ -89,6 +97,7 @@ ur:
         select_option: "ایک آپشن منتخب کریں..."
       translations:
         title: "ترجمہ"
+        category_scope: "زمرہ جات"
         stats:
           eta_minutes:
             one: "%{count} منٹ"

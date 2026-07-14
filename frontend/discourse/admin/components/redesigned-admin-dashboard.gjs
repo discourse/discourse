@@ -13,6 +13,7 @@ import DashboardTraffic from "discourse/admin/components/dashboard/traffic";
 import { lookupAdminDashboardSection } from "discourse/admin/lib/admin-dashboard-sections";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import DMenu from "discourse/float-kit/components/d-menu";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { eq } from "discourse/truth-helpers";
 import DBreadcrumbsItem from "discourse/ui-kit/d-breadcrumbs-item";
 import DPageHeader from "discourse/ui-kit/d-page-header";
@@ -71,8 +72,9 @@ export default class RedesignedAdminDashboard extends Component {
     </DPageHeader>
 
     <PluginOutlet
-      @name="redesigned-admin-dashboard-after-header"
+      @name="admin-dashboard-after-header"
       @connectorTagName="div"
+      @outletArgs={{lazyHash isNewDashboard=true}}
     />
 
     <div class="db-main">

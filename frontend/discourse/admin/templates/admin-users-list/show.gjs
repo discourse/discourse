@@ -53,6 +53,7 @@ export default <template>
         class="admin-filter__input"
         type="text"
         dir="auto"
+        value={{@controller.listFilter}}
         placeholder={{@controller.searchHint}}
         title={{@controller.searchHint}}
         {{on "input" @controller.onListFilterChange}}

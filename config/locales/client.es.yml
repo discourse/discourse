@@ -2614,7 +2614,6 @@ es:
     created: "Creado"
     created_lowercase: "creado"
     trust_level: "Nivel de confianza"
-    search_hint: "usuario, correo electrónico o dirección IP"
     create_account:
       header_title: "¡Hola!"
       disclaimer: "Al registrarte aceptas la <a href='%{privacy_link}' target='blank'>Política de privacidad</a> y los <a href='%{tos_link}' target='blank'>Términos de servicio</a>."
@@ -4502,7 +4501,6 @@ es:
       unsaved_changes: "Tienes cambios sin guardar"
       slug: "Slug de la categoría"
       parent: "Categoría principal"
-      slug_placeholder: "(Opcional) palabras-separadas-por-guiones para URL"
       creation_error: Se produjo un error al crear la categoría.
       save_error: Se produjo un error al guardar la categoría
       errors:
@@ -5661,6 +5659,7 @@ es:
         title: "Lista de informes disponibles"
         sidebar_title: "Informes"
         back: "Volver a todos los informes"
+        all_groups: "Todos los grupos"
         group_engagement: "Interacción"
         group_traffic: "Tráfico"
         group_members: "Miembros"

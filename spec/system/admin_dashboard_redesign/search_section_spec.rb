@@ -22,7 +22,7 @@ describe "Admin Dashboard Redesign | Search section" do
     sign_in(current_user)
   end
 
-  it "lets staff review logged-in search health, inspect tooltips, and drill into terms",
+  it "lets staff review non-staff search health, inspect tooltips, and drill into terms",
      time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
     Fabricate.times(
       15,
@@ -68,6 +68,15 @@ describe "Admin Dashboard Redesign | Search section" do
     )
     Fabricate.times(20, :search_log, term: "ruby", user: user, created_at: "2026-03-20 11:00")
 
+    Fabricate(:search_log, term: "admin-search", user: current_user, created_at: "2026-05-10 08:00")
+    Fabricate(:clicked_search_log, term: "ruby", user: moderator, created_at: "2026-05-10 08:30")
+    Fabricate(
+      :search_log,
+      term: "admin-prior-search",
+      user: current_user,
+      created_at: "2026-03-20 08:00",
+    )
+
     # Anonymous searches (likely crawlers) must be excluded from every metric. If they
     # were counted, "crawlerbot" would top trending and the no-result rate would spike.
     Fabricate.times(100, :search_log, term: "crawlerbot", created_at: "2026-05-10 09:00")
@@ -108,6 +117,7 @@ describe "Admin Dashboard Redesign | Search section" do
         { term: "discobot", searches: 2 },
       ],
     )
+    expect(search).to have_no_trending_term("admin-search")
     expect(search).to have_no_trending_term("crawlerbot")
 
     expect(search).to have_content_gap_rows(
@@ -141,7 +151,7 @@ describe "Admin Dashboard Redesign | Search section" do
 
     expect(page).to have_current_path("/admin/logs/search_logs/term", ignore_query: true)
     expect(Rack::Utils.parse_query(URI.parse(page.current_url).query)).to eq(
-      "searchType" => "logged_in_only",
+      "searchType" => "non_staff_only",
       "period" => "weekly",
       "term" => "ruby",
     )
@@ -182,8 +192,7 @@ describe "Admin Dashboard Redesign | Search section" do
     expect(search).to have_alert_no_result_rate_kpi("50%")
   end
 
-  it "shows staff a graceful empty state when no searches were logged",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+  it "shows staff a graceful empty state when no searches were logged" do
     dashboard.visit
     search = dashboard.search
 
@@ -198,8 +207,7 @@ describe "Admin Dashboard Redesign | Search section" do
     expect(search).to have_content_gaps_empty_state("No content gaps in this period.")
   end
 
-  it "tells staff when search logging is disabled instead of showing zeros",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+  it "tells staff when search logging is disabled instead of showing zeros" do
     SiteSetting.log_search_queries = false
 
     dashboard.visit
@@ -212,8 +220,7 @@ describe "Admin Dashboard Redesign | Search section" do
     expect(search).to have_no_kpis
   end
 
-  it "asks moderators to contact an admin when search logging is disabled",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+  it "asks moderators to contact an admin when search logging is disabled" do
     SiteSetting.log_search_queries = false
     sign_in(moderator)
 
@@ -225,8 +232,7 @@ describe "Admin Dashboard Redesign | Search section" do
     )
   end
 
-  it "shows staff search activity for a selected custom date range",
-     time: Time.zone.local(2026, 5, 14, 12, 0, 0) do
+  it "shows staff search activity for a selected custom date range" do
     Fabricate(:clicked_search_log, term: "ruby", user: user, created_at: "2026-05-02 10:00")
     Fabricate.times(2, :search_log, term: "ruby", user: user, created_at: "2026-05-02 11:00")
 
@@ -250,7 +256,7 @@ describe "Admin Dashboard Redesign | Search section" do
 
     expect(page).to have_current_path("/admin/logs/search_logs/term", ignore_query: true)
     expect(Rack::Utils.parse_query(URI.parse(page.current_url).query)).to eq(
-      "searchType" => "logged_in_only",
+      "searchType" => "non_staff_only",
       "period" => "all",
       "term" => "ruby",
     )

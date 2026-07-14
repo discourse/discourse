@@ -154,6 +154,14 @@ sk:
               description: "Ak je zadané, nastavuje hornú hranicu maximálneho počtu tokenov, ktoré môže model vygenerovať. Rešpektuje limit maximálneho počtu výstupných tokenov LLM."
     discourse_ai:
       title: "AI"
+      ai_tool_approval:
+        loading: "Prebieha načítavanie..."
+        tool: "Akcia"
+        user: "Používateľ"
+        approve: "Schváliť"
+        reject: "Zamietnuť"
+        approved: "Schválený"
+        rejected: "Zamietnuté"
       llm_selector:
         none: "Žiadny"
       features:
@@ -241,6 +249,7 @@ sk:
         card: "Karta"
       translations:
         title: "Preklady"
+        category_scope: "Kategórie"
         stats:
           eta_minutes:
             one: "%{count} minútu"

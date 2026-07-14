@@ -3,11 +3,12 @@
 module DiscourseWorkflows
   class InteractiveResume
     class Request
-      attr_reader :action
+      attr_reader :action, :target_user_id
 
-      def initialize(execution:, action:)
+      def initialize(execution:, action:, target_user_id: nil)
         @execution = execution
         @action = action
+        @target_user_id = target_user_id
       end
 
       def claim
@@ -35,11 +36,12 @@ module DiscourseWorkflows
       end
     end
 
-    def self.action_id(execution_id:, resume_token:, action:)
+    def self.action_id(execution_id:, resume_token:, action:, target_user_id: nil)
       DiscourseWorkflows::WaitingExecution.action_token(
         execution_id: execution_id,
         resume_token: resume_token,
         action: action,
+        target_user_id: target_user_id,
       )
     end
 
@@ -67,7 +69,11 @@ module DiscourseWorkflows
         )
       return if execution.blank?
 
-      Request.new(execution: execution, action: payload["action"])
+      Request.new(
+        execution: execution,
+        action: payload["action"],
+        target_user_id: payload["target_user_id"],
+      )
     end
   end
 end

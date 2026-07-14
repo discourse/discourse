@@ -65,6 +65,22 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "topic.closed" => "boolean",
       "topic.archived" => "boolean",
     )
+    {
+      "trigger:user_added_to_group" => "\"added\"",
+      "trigger:user_removed_from_group" => "\"removed\"",
+    }.each do |trigger_type, membership_action|
+      expect(nodes_by_type.dig(trigger_type, :output_schema)).to include(
+        "user.id" => "integer",
+        "user.username" => "string",
+        "user.trust_level" => "integer",
+        "group.id" => "integer",
+        "group.name" => "string",
+        "group.full_name" => "string|null",
+        "group.automatic" => "boolean",
+        "membership.action" => membership_action,
+        "membership.automatic" => "boolean|null",
+      )
+    end
     expect(nodes_by_type.dig("action:topic", :output_schema)).to include(
       "topic.id" => "integer",
       "topic.slug" => "string",
@@ -119,6 +135,8 @@ RSpec.describe DiscourseWorkflows::Ai::Tools::WorkflowNodeCatalog do
       "condition:filter",
       "action:group",
       "action:user",
+      "trigger:user_added_to_group",
+      "trigger:user_removed_from_group",
       "action:send_chat_message",
       "action:send_personal_message",
     )

@@ -2429,7 +2429,6 @@ fr:
     created: "Créé"
     created_lowercase: "créé"
     trust_level: "Niveau de confiance"
-    search_hint: "nom d'utilisateur, adresse e-mail ou adresse IP"
     create_account:
       header_title: "Bienvenue !"
       disclaimer: "En vous inscrivant, vous acceptez la <a href='%{privacy_link}' target='blank'>politique de confidentialité</a> et les <a href='%{tos_link}' target='blank'>conditions générales d'utilisation</a>."
@@ -4121,7 +4120,6 @@ fr:
       type_settings_schema:
         site_settings: "Paramètres du site"
       unsaved_changes: "Vous avez des modifications non enregistrées"
-      slug_placeholder: "(Facultatif) mots séparés par des tirets pour l'URL"
       creation_error: Une erreur s'est produite lors de la création de la catégorie.
       save_error: Une erreur s'est produite lors de l'enregistrement de la catégorie.
       validations:
@@ -5182,6 +5180,7 @@ fr:
         title: "Liste des rapports disponibles"
         sidebar_title: "Rapports"
         back: "Retour à tous les rapports"
+        all_groups: "Tous les groupes"
         group_traffic: "Trafic"
         group_members: "Membres"
         group_other: "Autre"

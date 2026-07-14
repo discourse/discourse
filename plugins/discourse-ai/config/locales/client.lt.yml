@@ -132,6 +132,14 @@ lt:
               label: "Slėpti temą"
     discourse_ai:
       title: "AI"
+      ai_tool_approval:
+        loading: "Kraunasi..."
+        tool: "Veiksmai"
+        user: "Narys"
+        approve: "Patvirtinti"
+        reject: "Atmesti"
+        approved: "Patvirtinta"
+        rejected: "Atmesta"
       llm_selector:
         none: "Nieko"
       features:
@@ -221,6 +229,7 @@ lt:
         card: "Kortelė"
       translations:
         title: "Vertimai"
+        category_scope: "Kategorijos"
         stats:
           eta_minutes:
             one: "%{count} minutė"

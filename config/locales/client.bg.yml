@@ -1848,7 +1848,6 @@ bg:
     created: "Създадено"
     created_lowercase: "създадено"
     trust_level: "Ниво на доверие"
-    search_hint: "потребителско име, имейл или IP адрес"
     create_account:
       header_title: "Добре дошли!"
       disclaimer: "С регистрацията си се съгласявате с <a href='%{privacy_link}' target='blank'>политиката за повелителност</a> и <a href='%{tos_link}' target='blank'>условията за ползване</a>."
@@ -2943,7 +2942,6 @@ bg:
         delete: "Изтрий"
       topic_featured_link_allowed: "Разрешаване на включени връзки в тази категория"
       create_long: "Създай нова категория"
-      slug_placeholder: "(Опционално) пунктирани думи за url "
       creation_error: Възникна грешка при създаването на категория.
       save_error: Възникна грешка при запазването на категорията.
       validations:
@@ -3460,6 +3458,7 @@ bg:
           always: "винаги"
           never: "никога"
       reports:
+        all_groups: "Всички групи"
         group_traffic: "Трафик"
         group_members: "Членове"
         group_other: "Други"

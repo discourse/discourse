@@ -34,6 +34,14 @@ hy:
             canned_reply:
               label: "Պատասխանել"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Բեռնվում է..."
+        tool: "Գործողություն"
+        user: "Օգտատեր"
+        approve: "Հաստատել"
+        reject: "Մերժել"
+        approved: "Հաստատված է"
+        rejected: "Մերժված է"
       llm_selector:
         none: "Ոչ մի"
       features:
@@ -56,6 +64,7 @@ hy:
         select_option: "Ընտրել..."
       translations:
         title: "Թարգմանություններ"
+        category_scope: "Կատեգորիաներ"
         stats:
           eta_minutes:
             one: "%{count} րոպե"

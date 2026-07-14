@@ -677,7 +677,7 @@ RSpec.describe DiscourseWorkflows::Executor do
 
       let(:plugin) do
         p = Plugin::Instance.new
-        p.enabled_site_setting(:discourse_workflows_enabled)
+        p.enabled_site_setting(:enable_discourse_workflows)
         p
       end
 

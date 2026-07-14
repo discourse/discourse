@@ -84,6 +84,14 @@ id:
               label: "Balas"
     discourse_ai:
       title: "AI"
+      ai_tool_approval:
+        loading: "Diproses..."
+        tool: "Aksi"
+        user: "Pengguna"
+        approve: "Terima"
+        reject: "Tolak"
+        approved: "Disetujui"
+        rejected: "Ditolak"
       llm_selector:
         none: "Tidak ada"
       features:
@@ -106,6 +114,7 @@ id:
       modals:
         select_option: "Memilih sebuah pilihan..."
       translations:
+        category_scope: "Kategori"
         stats:
           eta_minutes:
             other: "%{count} menit"

@@ -138,6 +138,8 @@ class DiscoursePluginRegistry
 
   define_filtered_register :flag_applies_to_types
 
+  define_filtered_register :upcoming_change_conditional_display_callbacks
+
   define_filtered_register :calendar_subscription_feeds
 
   define_filtered_register :custom_filter_mappings

@@ -7,7 +7,7 @@ export default function discourseFileSearch() {
         return null;
       }
 
-      for (const ext of ["", ".js", ".gjs", ".hbs"]) {
+      for (const ext of ["", ".js", ".gjs", ".ts", ".gts", ".hbs"]) {
         const resolved = await this.resolve(`${source}${ext}`, context, {
           attributes: options.attributes,
         });

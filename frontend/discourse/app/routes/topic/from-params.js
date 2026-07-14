@@ -175,6 +175,7 @@ export default class TopicFromParams extends DiscourseRoute {
     });
 
     this.appEvents.trigger("page:topic-loaded", topic);
+    this.#announceUnreadPosts(topic);
     topicController.subscribe();
     if (wasNestedView) {
       this.screenTrack.start(topic.id, topicController);
@@ -321,6 +322,10 @@ export default class TopicFromParams extends DiscourseRoute {
     return `nested-view-scroll:${cacheKey}`;
   }
 
+  #announceUnreadPosts(topic) {
+    getOwner(this).lookup("route:topic").announceUnreadPosts(topic);
+  }
+
   #loadScrollAnchor(cacheKey) {
     try {
       const value = sessionStorage.getItem(this.#scrollAnchorKey(cacheKey));
@@ -404,6 +409,7 @@ export default class TopicFromParams extends DiscourseRoute {
     }
 
     this.appEvents.trigger("page:topic-loaded", model.topic);
+    this.#announceUnreadPosts(model.topic);
     topicController.subscribe();
     nestedController.subscribe();
     this.screenTrack.start(model.topic.id, nestedController);

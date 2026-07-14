@@ -596,6 +596,8 @@ Discourse::Application.routes.draw do
     post "session/passkey/auth" => "session#passkey_login"
     get "session/scopes" => "session#scopes"
     get "composer/mentions" => "composer#mentions"
+    get "gifs/categories" => "gifs#categories"
+    get "gifs/search" => "gifs#search"
     get "composer_messages" => "composer_messages#index"
     get "composer_messages/user_not_seen_in_a_while" => "composer_messages#user_not_seen_in_a_while"
 

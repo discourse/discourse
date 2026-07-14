@@ -543,6 +543,8 @@ es:
         categories: "Lista de categorías"
         flag_post: "Denunciar publicación"
         close_topic: "Cerrar tema"
+        suspend_user: "Suspender al usuario"
+        silence_user: "Silenciar al usuario"
         unlist_topic: "Eliminar tema de la lista"
         lock_post: "Bloquear publicación"
         delete_topic: "Eliminar tema"
@@ -699,6 +701,12 @@ es:
           not_allowed: "No tienes permiso para abrir o cerrar este tema."
           no_reason: "Se requiere un motivo para abrir o cerrar un tema."
         success: "Tema actualizado correctamente."
+      suspend_user:
+        errors:
+          not_found: "Usuario no encontrado."
+      silence_user:
+        errors:
+          not_found: "Usuario no encontrado."
       unlist_topic:
         errors:
           not_found: "Tema no encontrado."
@@ -819,6 +827,7 @@ es:
         tool_not_found: "La herramienta «%{tool_name}» ya no está disponible."
         bot_user_missing: "El usuario bot ya no existe."
         execution_error: "Error al ejecutar la herramienta: %{error}"
+        execution_error_unknown: "se ha producido un error inesperado"
     summarization:
       configuration_hint:
         one: "Configura primero el ajuste «%{setting}»."

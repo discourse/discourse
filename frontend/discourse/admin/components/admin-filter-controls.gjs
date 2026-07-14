@@ -6,8 +6,14 @@ import { trackedObject } from "@ember/reactive/collections";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { schedule } from "@ember/runloop";
-import { isTesting } from "discourse/lib/environment";
+import { service } from "@ember/service";
+import discourseDebounce from "discourse/lib/debounce";
+import { INPUT_DELAY, isTesting } from "discourse/lib/environment";
 import { resettableTracked } from "discourse/lib/tracked-tools";
+import DiscourseURL, {
+  applyQueryParams,
+  searchParamsFromPath,
+} from "discourse/lib/url";
 import { and, not } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DFilterInput from "discourse/ui-kit/d-filter-input";
@@ -42,22 +48,72 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
  */
 
 export default class AdminFilterControls extends Component {
+  @service router;
+
   @tracked dropdownFilter = "all";
   @tracked
   showFilterDropdowns = this.args.filterDropdownsExpanded ?? isTesting();
-  @resettableTracked
-  textFilter = this.args.initialTextFilter?.replace(/,\s*/g, ", ") || "";
+  @resettableTracked textFilter = this.initialTextFilterValue;
 
   dropdownFilters = trackedObject();
 
   constructor() {
     super(...arguments);
 
-    if (this.hasMultipleDropdowns) {
-      Object.keys(this.dropdownOptions).forEach((key) => {
-        this.dropdownFilters[key] = this.dropdownValueFor(key);
-      });
+    this.applyDropdownValues();
+
+    if (this.hasUrlOwnedDropdowns) {
+      // keep URL-owned dropdowns in sync across real transitions (e.g. a
+      // same-route link with different params); our own replaceState writes
+      // don't fire this event, so user selections are never reverted
+      this.router.on("routeDidChange", this.applyDropdownsFromUrl);
     }
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    if (this.hasUrlOwnedDropdowns) {
+      this.router.off("routeDidChange", this.applyDropdownsFromUrl);
+    }
+  }
+
+  get initialTextFilterValue() {
+    // reading router.currentURL makes this getter re-evaluate on transitions,
+    // so same-route links carrying the query param re-seed the input
+    const fromUrl =
+      this.args.textFilterQueryParam && this.showFilters
+        ? this.currentSearchParams.get(this.args.textFilterQueryParam)
+        : null;
+
+    if (fromUrl !== null) {
+      // verbatim: this value round-trips through our own URL writes while the
+      // user is typing, so any normalization here would rewrite the input
+      // mid-edit and jump the caret
+      return fromUrl;
+    }
+
+    return this.args.initialTextFilter?.replace(/,\s*/g, ", ") || "";
+  }
+
+  get currentSearchParams() {
+    // router.currentURL, unlike window.location, is also correct under the
+    // test environment's mock location
+    return searchParamsFromPath(this.router.currentURL);
+  }
+
+  get hasUrlOwnedDropdowns() {
+    return (
+      (this.args.dropdownFilterQueryParam ||
+        this.args.dropdownFilterQueryParams) &&
+      !("dropdownValue" in this.args)
+    );
+  }
+
+  #validatedUrlValue(params, paramName, options) {
+    const value = params.get(paramName);
+    return value !== null && options.some((option) => option.value === value)
+      ? value
+      : null;
   }
 
   get array() {
@@ -72,19 +128,13 @@ export default class AdminFilterControls extends Component {
 
   get hasMultipleDropdowns() {
     return (
-      this.dropdownOptions &&
       !Array.isArray(this.dropdownOptions) &&
       typeof this.dropdownOptions === "object"
     );
   }
 
   get dropdownOptions() {
-    if (!this.args.dropdownOptions) {
-      return [];
-    }
-    return Array.isArray(this.args.dropdownOptions)
-      ? this.args.dropdownOptions
-      : this.args.dropdownOptions;
+    return this.args.dropdownOptions || [];
   }
 
   get showDropdownFilter() {
@@ -190,6 +240,39 @@ export default class AdminFilterControls extends Component {
     return defaults[key] || "all";
   }
 
+  @action
+  applyDropdownsFromUrl() {
+    if (!this.showFilters || !this.hasUrlOwnedDropdowns) {
+      return;
+    }
+
+    const params = this.currentSearchParams;
+
+    if (this.hasMultipleDropdowns) {
+      for (const [key, paramName] of Object.entries(
+        this.args.dropdownFilterQueryParams ?? {}
+      )) {
+        const defaultValue = this.defaultValue(key);
+        const value =
+          this.#validatedUrlValue(
+            params,
+            paramName,
+            this.dropdownOptions[key] ?? []
+          ) ?? defaultValue;
+
+        this.dropdownFilters[key] = value;
+        this.showFilterDropdowns ||= value !== defaultValue;
+      }
+    } else if (this.args.dropdownFilterQueryParam) {
+      this.dropdownFilter =
+        this.#validatedUrlValue(
+          params,
+          this.args.dropdownFilterQueryParam,
+          this.dropdownOptions
+        ) ?? this.defaultDropdownValue;
+    }
+  }
+
   dropdownValueFor(key) {
     const values =
       typeof this.dropdownValue === "object" ? this.dropdownValue : {};
@@ -197,7 +280,7 @@ export default class AdminFilterControls extends Component {
   }
 
   @action
-  setupComponent() {
+  applyDropdownValues() {
     if (this.hasMultipleDropdowns) {
       Object.keys(this.dropdownOptions).forEach((key) => {
         this.dropdownFilters[key] = this.dropdownValueFor(key);
@@ -207,21 +290,61 @@ export default class AdminFilterControls extends Component {
     }
   }
 
+  syncTextFilterQueryParam() {
+    this.updateQueryParams({
+      [this.args.textFilterQueryParam]: this.textFilter,
+    });
+  }
+
+  updateQueryParams(updates) {
+    // no currentURL means the router isn't live (e.g. rendering tests)
+    if (!this.showFilters || !this.router.currentURL) {
+      return;
+    }
+
+    DiscourseURL.replaceState(
+      applyQueryParams(this.router.currentURL, updates)
+    );
+  }
+
   @action
   onTextFilterChange(event) {
     this.textFilter = event.target?.value || "";
+
+    if (this.args.textFilterQueryParam) {
+      discourseDebounce(this, this.syncTextFilterQueryParam, INPUT_DELAY);
+    }
 
     this.args.onTextFilterChange?.(event);
   }
 
   @action
   onDropdownFilterChange(keyOrValue, value) {
-    if (this.hasMultipleDropdowns) {
+    const multiple = this.hasMultipleDropdowns;
+    const selectedValue = multiple ? value : keyOrValue;
+    const paramName = multiple
+      ? this.args.dropdownFilterQueryParams?.[keyOrValue]
+      : this.args.dropdownFilterQueryParam;
+    const defaultValue = multiple
+      ? this.defaultValue(keyOrValue)
+      : this.defaultDropdownValue;
+
+    if (multiple) {
       this.dropdownFilters[keyOrValue] = value;
+    } else {
+      this.dropdownFilter = keyOrValue;
+    }
+
+    if (paramName) {
+      this.updateQueryParams({
+        [paramName]: selectedValue === defaultValue ? null : selectedValue,
+      });
+    }
+
+    if (multiple) {
       this.args.onDropdownFilterChange?.(keyOrValue, value);
       this.args.onDropdownChange?.(keyOrValue, value);
     } else {
-      this.dropdownFilter = keyOrValue;
       this.args.onDropdownFilterChange?.(keyOrValue);
       this.args.onDropdownChange?.(keyOrValue);
     }
@@ -240,6 +363,17 @@ export default class AdminFilterControls extends Component {
     } else {
       this.dropdownFilter = this.defaultDropdownValue;
       this.args.onDropdownChange?.(this.defaultDropdownValue);
+    }
+
+    const queryParams = [
+      this.args.textFilterQueryParam,
+      this.args.dropdownFilterQueryParam,
+      ...Object.values(this.args.dropdownFilterQueryParams ?? {}),
+    ].filter(Boolean);
+    if (queryParams.length) {
+      this.updateQueryParams(
+        Object.fromEntries(queryParams.map((name) => [name, null]))
+      );
     }
 
     if (this.args.onResetFilters) {
@@ -265,9 +399,12 @@ export default class AdminFilterControls extends Component {
           "admin-filter-controls"
           (if this.hasMultipleDropdowns "--multiple-dropdowns")
         }}
-        {{didInsert this.setupComponent}}
-        {{didUpdate this.setupComponent @defaultDropdownValue}}
-        {{didUpdate this.setupComponent @dropdownValue}}
+        {{didInsert this.applyDropdownsFromUrl}}
+        {{didUpdate
+          this.applyDropdownValues
+          @defaultDropdownValue
+          @dropdownValue
+        }}
       >
         <div class="admin-filter-controls__inputs">
           <DFilterInput

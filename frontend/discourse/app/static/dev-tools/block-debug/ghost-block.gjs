@@ -21,7 +21,7 @@ import ConditionsTree from "./conditions-tree";
  * @property {Object} [Args.conditions] - Conditions that failed evaluation.
  * @property {string} [Args.failureType] - The failure type constant (FAILURE_TYPE value).
  * @property {string} [Args.failureReason] - Optional custom display message (overrides type-based default).
- * @property {Array<{Component: import("ember-curry-component").CurriedComponent}>} [Args.children] - Nested ghost children for containers.
+ * @property {Array<{Component: import("@glint/template").ComponentLike}>} [Args.children] - Nested ghost children for containers.
  */
 
 /**

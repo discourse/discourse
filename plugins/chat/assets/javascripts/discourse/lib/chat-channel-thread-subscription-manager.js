@@ -141,6 +141,7 @@ export default class ChatChannelThreadSubscriptionManager {
       message.uploads = cloneJSON(data.chat_message.uploads || []);
       message.edited = data.chat_message.edited;
       message.streaming = data.chat_message.streaming;
+      message.blocks = data.chat_message.blocks;
     }
   }
 

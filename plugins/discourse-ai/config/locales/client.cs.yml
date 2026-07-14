@@ -38,6 +38,14 @@ cs:
             canned_reply:
               label: "Odpověď"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Načítá se..."
+        tool: "Akce"
+        user: "Uživatel"
+        approve: "Schválení"
+        reject: "Odmítnout"
+        approved: "Schválen"
+        rejected: "Odmítnuto"
       llm_selector:
         none: "Žádný"
       features:
@@ -71,6 +79,7 @@ cs:
         select_option: "Vyberte možnost..."
       translations:
         title: "Překlady"
+        category_scope: "Kategorie"
         stats:
           eta_minutes:
             one: "%{count} minutu"

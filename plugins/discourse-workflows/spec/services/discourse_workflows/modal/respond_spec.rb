@@ -47,11 +47,12 @@ RSpec.describe DiscourseWorkflows::Modal::Respond do
       ).run
     end
 
-    def action_id(action)
+    def action_id(action, target_user_id: user.id)
       DiscourseWorkflows::InteractiveResume.action_id(
         execution_id: execution.id,
         resume_token: execution.resume_token,
         action: action,
+        target_user_id: target_user_id,
       )
     end
 
@@ -87,6 +88,20 @@ RSpec.describe DiscourseWorkflows::Modal::Respond do
       let(:params) { { action_id: action_id("delete") } }
 
       it { is_expected.to fail_to_find_a_model(:resume_request) }
+    end
+
+    context "when a user other than the modal target holds the token" do
+      fab!(:other_user, :user)
+
+      let(:dependencies) { { guardian: other_user.guardian } }
+
+      it { is_expected.to fail_to_find_a_model(:resume_request) }
+
+      it "leaves the execution waiting instead of resuming it" do
+        described_class.call(params:, **dependencies)
+
+        expect(execution.reload.status).to eq("waiting")
+      end
     end
 
     context "when the execution was already resumed" do

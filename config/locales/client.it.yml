@@ -2414,7 +2414,6 @@ it:
     created: "Creato"
     created_lowercase: "creato"
     trust_level: "Livello di attendibilità"
-    search_hint: "nome utente, email o indirizzo IP"
     create_account:
       header_title: "Benvenuti!"
       disclaimer: "Registrandoti accetti <a href='%{privacy_link}' target='blank'>Informativa sulla privacy</a> e <a href='%{tos_link}' target='blank'>termini del servizio</a>."
@@ -4092,7 +4091,6 @@ it:
       type_settings_schema:
         site_settings: "Impostazioni del sito"
       unsaved_changes: "Hai modifiche non salvate"
-      slug_placeholder: "(Facoltativo) parole-sillabate per URL"
       creation_error: Si è verificato un errore nella creazione della categoria.
       save_error: Si è verificato un errore durante il salvataggio della categoria.
       validations:
@@ -5153,6 +5151,7 @@ it:
         title: "Elenco dei rapporti disponibili"
         sidebar_title: "Report"
         back: "Torna a tutti i report"
+        all_groups: "Tutti i gruppi"
         group_traffic: "Traffico"
         group_members: "Membri"
         group_other: "Altri"

@@ -2535,7 +2535,7 @@ zh_CN:
     created: "创建"
     created_lowercase: "创建"
     trust_level: "信任级别"
-    search_hint: "用户名、电子邮件或 IP 地址"
+    search_hint: "用户名或电子邮件地址（以逗号或空格分隔），或 IP 地址"
     create_account:
       header_title: "欢迎！"
       disclaimer: "注册，即表示您同意<a href='%{privacy_link}' target='blank'>隐私政策</a>和<a href='%{tos_link}' target='blank'>服务条款</a>。"
@@ -2621,6 +2621,9 @@ zh_CN:
       security_key_description: "当您准备好实物安全密钥或兼容的移动设备后，请按下面的“使用安全密钥进行身份验证”按钮。"
       security_key_alternative: "尝试另一种方式"
       security_key_authenticate: "使用安全密钥进行身份验证"
+      passkey_2fa_description: "请使用您的通行密钥验证身份。"
+      use_passkey: "使用通行密钥"
+      use_security_key: "使用安全密钥"
       security_key_not_allowed_error: "安全密钥身份验证过程超时或被取消。"
       security_key_no_matching_credential_error: "在提供的安全密钥中找不到匹配的凭据。"
       security_key_support_missing_error: "您当前的设备或浏览器不支持使用安全密钥。请使用其他方法。"
@@ -2695,6 +2698,7 @@ zh_CN:
         totp: "改用身份验证器应用"
         backup_code: "改用备份代码"
         security_key: "改用安全密钥"
+        passkey: "改用通行密钥"
       no_login_methods:
         title: "没有登录方法"
         description: "未配置登录方法。管理员可访问 <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> 重新配置网站。"
@@ -2840,6 +2844,13 @@ zh_CN:
       publish: "发布共享草稿"
       confirm_publish: "确定要发布此草稿吗？"
       publishing: "正在发布话题…"
+    gifs:
+      modal_title: "搜索 GIF"
+      composer_title: "插入 GIF"
+      powered_by: "由 Klipy 提供支持"
+      no_results: "在上方输入关键词搜索 GIF 动图。"
+      browse_categories: "按类别浏览"
+      bad_api_key: "Klipy API 密钥缺失或无效。请检查 GIF API 密钥设置。"
     codemirror:
       expression:
         sections:
@@ -3668,6 +3679,11 @@ zh_CN:
       all_replies: "所有回复"
       category_settings:
         default_nested_view: "为此类别中的话题默认使用嵌套视图。"
+        convert_existing: "转换现有主题"
+        convert_existing_description: "此分类下的现有话题在转换之前不会使用嵌套回复。运行一次即可将其切换到嵌套视图。"
+        convert_existing_confirm: "将此类别中的所有现有话题转换为嵌套回复？"
+        convert_existing_complete: "现有话题已转换为嵌套回复。"
+        save_first: "在转换现有话题之前，请保存此类别设置。"
       no_replies: "暂无回复。"
       deleted_post_placeholder: "[已删除]"
       ignored_post_placeholder: "[已忽略]"
@@ -4405,6 +4421,7 @@ zh_CN:
       original_language: "此帖子最初使用%{language}编写"
       original_language_and_outdated: "此帖子最初使用%{language}编写。译文可能已过时"
       originally_written_in: "原始语言：%{language}"
+      tap_to_show_original: "点击此处查看原文"
       ai_translation_disclaimer: "AI 生成的译文可能不准确。"
     category:
       none: "（无类别）"
@@ -4472,7 +4489,7 @@ zh_CN:
       unsaved_changes: "您有未保存的更改"
       slug: "类别缩略名"
       parent: "父类别"
-      slug_placeholder: "（可选）用于 URL 以“-”分隔的字词"
+      slug_placeholder: "如果留空，则自动生成"
       creation_error: 创建类别时出错。
       save_error: 保存类别时出错。
       errors:
@@ -5663,6 +5680,7 @@ zh_CN:
         title: "可用报告列表"
         sidebar_title: "报告"
         back: "返回到所有报告"
+        all_groups: "所有群组"
         group_engagement: "参与度"
         group_traffic: "流量"
         group_members: "成员"
@@ -7815,6 +7833,7 @@ zh_CN:
             header: "标头"
             full_page: "完整页面"
             click_through_only: "全部（仅点击后到达）"
+            non_staff_only: "非工作人员用户"
           header_search_results: "标头搜索结果"
         logster:
           title: "错误日志"

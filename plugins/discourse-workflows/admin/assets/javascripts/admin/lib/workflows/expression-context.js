@@ -26,9 +26,11 @@ export function resolveVariableId(variable, itemPrefix = "$json") {
 }
 
 // Matches paths like $('Node Name').rest or $("Node Name").rest
-const NODE_REF_RE = /^\$\((?:"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)')\)/;
+export const NODE_REF_RE = /^\$\((?:"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)')\)/;
 const METHOD_CALL_RE = /^([A-Za-z_$][\w$]*)\((.*)\)$/;
 const METHOD_WITH_SUFFIX_RE = /^([A-Za-z_$][\w$]*)\((.*?)\)(.*)$/;
+// A property followed by one or more subscripts, e.g. `items[0]` or `map["k"]`.
+const PROP_WITH_SUFFIX_RE = /^([A-Za-z_$][\w$]*)(\[.+)$/;
 const BRACKET_SUFFIX_RE =
   /^\[((?:"(?:\\.|[^"\\])*")|(?:'(?:\\.|[^'\\])*')|[^\]]+)\](.*)$/;
 
@@ -58,7 +60,10 @@ export function walkScope(scope, path) {
   }
 
   const parts = path.split(".");
-  let target = scope[parts[0]];
+  const rootSuffix = PROP_WITH_SUFFIX_RE.exec(parts[0]);
+  let target = rootSuffix
+    ? resolveBracketSuffix(scope[rootSuffix[1]], rootSuffix[2], scope)
+    : scope[parts[0]];
   for (let i = 1; i < parts.length; i++) {
     if (target == null) {
       return undefined;
@@ -68,7 +73,12 @@ export function walkScope(scope, path) {
   return target;
 }
 
-function parseNodeReferenceName(nodeRef) {
+// Reverses the escaping in a single-quoted literal (\\ and \' only).
+function unescapeSingleQuoted(str) {
+  return str.replace(/\\([\\'])/g, "$1");
+}
+
+export function parseNodeReferenceName(nodeRef) {
   const doubleQuoted = nodeRef[1] !== undefined;
   const raw = doubleQuoted ? nodeRef[1] : nodeRef[2];
 
@@ -80,7 +90,7 @@ function parseNodeReferenceName(nodeRef) {
     }
   }
 
-  return raw.replace(/\\([\\'])/g, "$1");
+  return unescapeSingleQuoted(raw);
 }
 
 function resolvePathPart(target, part, scope) {
@@ -96,6 +106,15 @@ function resolvePathPart(target, part, scope) {
   const methodCall = METHOD_CALL_RE.exec(part);
   if (methodCall && typeof target[methodCall[1]] === "function") {
     return target[methodCall[1]](...parseMethodArgs(methodCall[2]));
+  }
+
+  const propWithSuffix = PROP_WITH_SUFFIX_RE.exec(part);
+  if (propWithSuffix) {
+    return resolveBracketSuffix(
+      target[propWithSuffix[1]],
+      propWithSuffix[2],
+      scope
+    );
   }
 
   return target[part];
@@ -134,7 +153,7 @@ function resolveBracketKey(source, scope) {
   }
 
   if (key.startsWith("'")) {
-    return key.slice(1, -1).replace(/\\([\\'])/g, "$1");
+    return unescapeSingleQuoted(key.slice(1, -1));
   }
 
   return walkScope(scope, key);
@@ -326,16 +345,21 @@ export function buildScope({
   const $input = buildInputScope($json);
 
   const nodeOutputs = Object.create(null);
+  let triggerJson = null;
   for (const ancestor of ancestorNodes) {
     const json = buildScopeFromFields(ancestor.fields);
     nodeOutputs[ancestor.node.name] = buildNodeOutput(json);
+    if (!triggerJson && ancestor.node.type?.startsWith("trigger:")) {
+      triggerJson = json;
+    }
   }
 
   return cleanObject({
     $input,
     $itemIndex: 0,
     $json,
-    trigger: $json,
+    // $trigger is the trigger node's output, distinct from $json.
+    $trigger: triggerJson || Object.create(null),
     $site_settings: buildSiteSettingsScope(siteSettings),
     $current_user: cleanObject({ id: 0, username: "" }),
     $vars: buildVarsScope(workflowVars),

@@ -457,6 +457,8 @@ ja:
         random_picker: "ランダムピッカー"
         categories: "カテゴリをリスト表示"
         flag_post: "投稿を通報"
+        suspend_user: "ユーザーを凍結する"
+        silence_user: "ユーザーを投稿禁止にする"
         edit_post: "投稿を編集する"
         search: "検索"
         tags: "タグをリスト"

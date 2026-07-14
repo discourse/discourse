@@ -228,15 +228,18 @@ RSpec.describe SearchLog, type: :model do
       expect(term_click_through_details[:data][0][:y]).to eq(1)
     end
 
-    it "counts only logged-in members' searches with the logged_in_only search type" do
+    it "returns only non-staff users' searches with the non_staff_only search type" do
       member = Fabricate(:user)
-      Fabricate.times(2, :search_log, term: "ruby", user: member)
-      Fabricate.times(3, :search_log, term: "ruby")
+      admin = Fabricate(:admin)
+      moderator = Fabricate(:moderator)
+      Fabricate(:search_log, term: "ruby", user: member)
+      Fabricate(:search_log, term: "ruby", user: admin)
+      Fabricate(:search_log, term: "ruby", user: moderator)
+      Fabricate(:search_log, term: "ruby", user: nil)
 
-      expect(SearchLog.term_details("ruby")[:data].sum { |point| point[:y] }).to eq(5)
       expect(
-        SearchLog.term_details("ruby", :weekly, :logged_in_only)[:data].sum { |point| point[:y] },
-      ).to eq(2)
+        SearchLog.term_details("ruby", :weekly, :non_staff_only)[:data].sum { |point| point[:y] },
+      ).to eq(1)
     end
   end
 
@@ -271,8 +274,14 @@ RSpec.describe SearchLog, type: :model do
       expect(top_trending.click_through).to eq(3)
     end
 
-    it "counts only logged-in members' searches with the logged_in_only search type" do
-      results = SearchLog.trending(:all, :logged_in_only).to_a
+    it "returns only non-staff users' searches with the non_staff_only search type" do
+      admin = Fabricate(:admin)
+      moderator = Fabricate(:moderator)
+      Fabricate(:search_log, term: "admin-search", user: admin)
+      Fabricate(:search_log, term: "moderator-search", user: moderator)
+      Fabricate(:search_log, term: "anonymous-search", user: nil)
+
+      results = SearchLog.trending(:all, :non_staff_only).to_a
 
       expect(results.map { |trend| [trend.term, trend.searches] }).to eq([["ruby", 1]])
     end
