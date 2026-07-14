@@ -23,9 +23,10 @@ class UserSearch
     @topic = Topic.find(@topic_id) if @topic_id
     @category = Category.find(@category_id) if @category_id
 
-    @groups&.each { |group| @searching_user.guardian.ensure_can_see_group_and_members!(group) }
-    @searching_user.guardian.ensure_can_see_category!(@category) if @category
-    @searching_user.guardian.ensure_can_see_topic!(@topic) if @topic
+    guardian = @searching_user&.guardian || Guardian.new
+    @groups&.each { |group| guardian.ensure_can_see_group_and_members!(group) }
+    guardian.ensure_can_see_category!(@category) if @category
+    guardian.ensure_can_see_topic!(@topic) if @topic
   end
 
   def scoped_users

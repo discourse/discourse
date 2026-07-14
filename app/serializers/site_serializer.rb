@@ -144,7 +144,7 @@ class SiteSerializer < ApplicationSerializer
           {
             id: g.id,
             name: g.name,
-            full_name: g.full_name,
+            full_name: g.full_name.presence || g.name,
             display_name: g.full_name.presence || g.name,
             flair_url: g.flair_url,
             flair_bg_color: g.flair_bg_color,

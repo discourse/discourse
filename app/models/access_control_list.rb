@@ -305,7 +305,7 @@ class AccessControlList < ActiveRecord::Base
         end
 
         access_control_list.allowed_user_ids.each do |user_id|
-          allowed_user = access_control_list.allowed_users.find { |au| au.id == user_id }
+          allowed_user = access_control_list.allowed_users_preloaded.find { |au| au.id == user_id }
 
           next if allowed_user.nil?
 

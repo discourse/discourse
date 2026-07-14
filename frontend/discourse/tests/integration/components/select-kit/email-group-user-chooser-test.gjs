@@ -80,7 +80,10 @@ module(
 
       assert
         .dom(".email-group-user-chooser--group")
-        .hasClass("--name-only", "applies the name-only group row style");
+        .hasClass(
+          "--full-name-only",
+          "applies the full-name-only group row style"
+        );
       assert
         .dom(".email-group-user-chooser--group .identifier")
         .doesNotExist("hides the group identifier");
