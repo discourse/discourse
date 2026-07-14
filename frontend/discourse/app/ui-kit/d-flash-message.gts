@@ -8,8 +8,10 @@ export type FlashType = (typeof FLASH_TYPES)[number];
 
 interface DFlashMessageSignature {
   Args: {
-    // Rendered as content, so it accepts a trusted/sanitized string too
+    /** The message to display. Accepts a plain string or trusted HTML. */
     flash?: string | TrustedHTML;
+
+    /** The severity of the message. */
     type?: FlashType;
   };
 

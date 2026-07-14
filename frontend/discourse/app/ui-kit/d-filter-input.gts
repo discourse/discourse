@@ -12,19 +12,32 @@ import { i18n } from "discourse-i18n";
 
 interface DFilterInputSignature {
   Args: {
+    /** The current input value. */
     value?: string;
+
+    /** Handler fired on each `input` event. */
     filterAction?: (event: Event) => void;
+
+    /** Handler fired when the clear button is clicked. */
     onClearInput?: (event: Event) => void;
+
+    /** Icons displayed inside the input. */
     icons?: {
+      /** ID of the icon displayed at the start of the input. */
       left?: string;
+
+      /** ID of the icon displayed at the end of the input. */
       right?: string;
     };
+
+    /** Extra class applied to the container wrapping the input. */
     containerClass?: string;
   };
 
   Element: HTMLInputElement;
 
   Blocks: {
+    /** Content rendered inside the container, after the input. */
     default: [];
   };
 }
