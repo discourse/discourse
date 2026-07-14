@@ -32,16 +32,10 @@ class AccessControlListsController < ApplicationController
   end
 
   def serialize_users(users)
-    ActiveModel::ArraySerializer.new(
-      users,
-      each_serializer: FoundUserSerializer,
-      include_status: true,
-    ).as_json
+    ActiveModel::ArraySerializer.new(users, each_serializer: FoundUserSerializer).as_json
   end
 
   def serialize_groups(groups)
-    groups.map do |group|
-      { id: group.id, name: group.name, full_name: group.full_name, automatic: group.automatic }
-    end
+    ActiveModel::ArraySerializer.new(groups, each_serializer: FoundGroupSerializer).as_json
   end
 end

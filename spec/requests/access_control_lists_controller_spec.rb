@@ -21,6 +21,7 @@ RSpec.describe AccessControlListsController do
           "id" => group.id,
           "name" => group.name,
           "full_name" => group.full_name,
+          "display_name" => group.full_name,
           "automatic" => false,
         },
       )

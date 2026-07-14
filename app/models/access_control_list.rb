@@ -213,6 +213,11 @@ class AccessControlList < ActiveRecord::Base
         display_name: build_display_name(type, allowed_object),
       }
 
+      if type == :user
+        list_entry[:avatar_template] = allowed_object.avatar_template
+        list_entry[:username] = allowed_object.username
+      end
+
       list_entry[:metadata] = { auto_group: allowed_object.automatic? } if type == :group
 
       if for_target.present?
