@@ -77,7 +77,7 @@ RSpec.describe DiscourseAi::Agents::Tools::ChangeSiteSetting do
     expect(SiteSetting.default_locale).not_to eq("zz_INVALID")
   end
 
-  it "refuses upload-backed settings" do
+  it "does not update upload-backed settings" do
     result =
       tool(setting_name: "logo", value: "https://example.com/logo.png", reason: "Test").invoke
 
