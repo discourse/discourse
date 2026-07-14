@@ -21,6 +21,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
   "post-menu-toggle-like-action",
   "post-stream-error-loading",
   "post-stream-update-from-json",
+  "select-on-change",
   "topic-controller:finished-editing",
   "topic-list-item-click",
 ]);
@@ -114,6 +115,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "preferences-save-attributes",
   "quote-params",
   "route-to-url",
+  "select-content",
   "sidebar-anonymous-default-categories",
   "small-user-attrs",
   "tag-separator",

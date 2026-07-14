@@ -1,0 +1,137 @@
+// Styles for the ui-kit DSelect combobox family. Uses the temporary `.d-combobox`
+// BEM root; this flips to `.d-select` when the family claims that name (after the
+// native `<select>` wrapper is renamed to `DNativeSelect`).
+.d-combobox__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  width: 100%;
+  justify-content: space-between;
+  background: var(--secondary);
+  color: var(--primary);
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-input-border-radius, 0.25em);
+}
+
+// Typeahead: the trigger is a composite [presentation] · [input] · [caret] box. The box
+// owns border/background/padding; the query input is transparent and grows to fill.
+.d-combobox__trigger.--typeahead {
+  padding: 0.25em 0.5em;
+  cursor: text;
+}
+
+.d-combobox__presentation {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.d-combobox__input {
+  flex: 1 1 4em;
+  min-width: 4em;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.d-combobox__placeholder {
+  color: var(--primary-medium);
+}
+
+.d-combobox__caret {
+  color: var(--primary-medium);
+  flex-shrink: 0;
+}
+
+.d-combobox__panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.d-combobox__filter {
+  width: 100%;
+}
+
+.d-combobox__listbox {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 20em;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.d-combobox__option {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em 0.75em;
+  cursor: pointer;
+
+  // The roving highlight (keyboard) and hover share one visual treatment.
+  &.--active,
+  .discourse-no-touch &:hover {
+    background: var(--primary-low);
+  }
+
+  &.--selected {
+    font-weight: 700;
+  }
+
+  &[aria-disabled="true"] {
+    color: var(--primary-medium);
+    cursor: not-allowed;
+  }
+
+  &.--create {
+    color: var(--tertiary);
+  }
+}
+
+.d-combobox__skeleton {
+  padding: 0.5em 0.75em;
+}
+
+.d-combobox__empty,
+.d-combobox__error {
+  padding: 0.75em;
+  color: var(--primary-medium);
+}
+
+// Multi-select chips (rendered in the trigger)
+.d-combobox__chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25em;
+  width: 100%;
+}
+
+.d-combobox__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  padding: 0.15em 0.4em;
+  background: var(--primary-low);
+  color: var(--primary);
+  border: none;
+  border-radius: var(--d-input-border-radius, 0.25em);
+  cursor: pointer;
+}
+
+.d-combobox__chip-remove {
+  color: var(--primary-medium);
+}
+
+.d-combobox__expand {
+  margin-inline-start: auto;
+}
