@@ -1949,14 +1949,14 @@ RSpec.describe SiteSettingExtension do
           label: "View related settings",
         )
       expect(result).to eq(
-        '<a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=title%7Clogo">View related settings</a>',
+        '<a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=any%3Atitle%7Clogo">View related settings</a>',
       )
       expect(result).to be_html_safe
     end
 
     it "falls back to the humanized names joined with commas when no label is given" do
       expect(SiteSettings::LabelFormatter.linkify_settings(%w[title opengraph_image])).to eq(
-        '<a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=title%7Copengraph_image">Title, OpenGraph image</a>',
+        '<a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=any%3Atitle%7Copengraph_image">Title, OpenGraph image</a>',
       )
     end
   end
@@ -1990,7 +1990,7 @@ RSpec.describe SiteSettingExtension do
           "Something went wrong. {{settings:title,logo|View related settings}}",
         )
       expect(expanded).to eq(
-        'Something went wrong. <a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=title%7Clogo">View related settings</a>',
+        'Something went wrong. <a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=any%3Atitle%7Clogo">View related settings</a>',
       )
       expect(expanded).to be_html_safe
     end
@@ -2022,7 +2022,7 @@ RSpec.describe SiteSettingExtension do
           escape_text: true,
         )
       expect(expanded).to eq(
-        '&lt;img src=x onerror=alert(1)&gt; <a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=title%7Clogo">View &amp; fix</a>',
+        '&lt;img src=x onerror=alert(1)&gt; <a class="site-setting-link" href="/admin/site_settings/category/all_results?filter=any%3Atitle%7Clogo">View &amp; fix</a>',
       )
     end
 

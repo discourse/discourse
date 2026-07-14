@@ -94,65 +94,76 @@ module("Unit | Lib | SiteSettingMatcher", function (hooks) {
     );
   });
 
-  module("OR filter (| separator)", function () {
+  module("OR filter (any: prefix)", function () {
     test("#isNameMatch returns true if any term matches", function (assert) {
       assert.true(
-        new SiteSettingMatcher("short_title|foo", shortTitle).isNameMatch
+        new SiteSettingMatcher("any:short_title|foo", shortTitle).isNameMatch
       );
       assert.true(
-        new SiteSettingMatcher("foo|short_title", shortTitle).isNameMatch
+        new SiteSettingMatcher("any:foo|short_title", shortTitle).isNameMatch
       );
-      assert.false(new SiteSettingMatcher("foo|bar", shortTitle).isNameMatch);
+      assert.false(
+        new SiteSettingMatcher("any:foo|bar", shortTitle).isNameMatch
+      );
     });
 
     test("#isKeywordMatch returns true if any term matches a keyword", function (assert) {
       assert.true(
-        new SiteSettingMatcher("intro|foo", shortTitle).isKeywordMatch
+        new SiteSettingMatcher("any:intro|foo", shortTitle).isKeywordMatch
       );
       assert.false(
-        new SiteSettingMatcher("foo|bar", shortTitle).isKeywordMatch
+        new SiteSettingMatcher("any:foo|bar", shortTitle).isKeywordMatch
       );
     });
 
     test("#isDescriptionMatch returns true if any term matches the description", function (assert) {
       assert.true(
-        new SiteSettingMatcher("launcher|foo", shortTitle).isDescriptionMatch
+        new SiteSettingMatcher("any:launcher|foo", shortTitle)
+          .isDescriptionMatch
       );
       assert.false(
-        new SiteSettingMatcher("foo|bar", shortTitle).isDescriptionMatch
+        new SiteSettingMatcher("any:foo|bar", shortTitle).isDescriptionMatch
       );
     });
 
     test("#isValueMatch returns true if any term matches the value", function (assert) {
       assert.true(
-        new SiteSettingMatcher("heckers|foo", shortTitle).isValueMatch
+        new SiteSettingMatcher("any:heckers|foo", shortTitle).isValueMatch
       );
-      assert.false(new SiteSettingMatcher("foo|bar", shortTitle).isValueMatch);
+      assert.false(
+        new SiteSettingMatcher("any:foo|bar", shortTitle).isValueMatch
+      );
     });
 
     test("#isFuzzyNameMatch always returns false in OR mode", function (assert) {
       assert.false(
-        new SiteSettingMatcher("s tle|foo", shortTitle).isFuzzyNameMatch
+        new SiteSettingMatcher("any:s tle|foo", shortTitle).isFuzzyNameMatch
       );
     });
 
-    test("a filter of only pipes matches literally instead of matching nothing", function (assert) {
+    test("pipes without the any: prefix are literal, so exact list values are searchable", function (assert) {
       const pipeValue = SiteSetting.create({
         setting: "some_list",
         description: "x",
         value: "jpg|png",
       });
+      const jpgOnly = SiteSetting.create({
+        setting: "other_list",
+        description: "x",
+        value: "jpg",
+      });
 
+      assert.true(new SiteSettingMatcher("jpg|png", pipeValue).isValueMatch);
+      assert.false(new SiteSettingMatcher("jpg|png", jpgOnly).isValueMatch);
       assert.true(new SiteSettingMatcher("|", pipeValue).isValueMatch);
-      assert.false(new SiteSettingMatcher("|", shortTitle).isValueMatch);
+      assert.false(
+        new SiteSettingMatcher("jpg|png", pipeValue).isFuzzyNameMatch
+      );
     });
 
     test("a trailing pipe keeps single-term semantics including fuzzy matching", function (assert) {
-      const matcher = new SiteSettingMatcher("s tle|", shortTitle);
-
-      assert.true(matcher.isFuzzyNameMatch);
       assert.true(
-        new SiteSettingMatcher("short_title|", shortTitle).isNameMatch
+        new SiteSettingMatcher("s tle|", shortTitle).isFuzzyNameMatch
       );
     });
   });

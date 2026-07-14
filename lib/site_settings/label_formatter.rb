@@ -174,12 +174,13 @@ module SiteSettings
       end
 
       # Links a group of settings as a single anchor pointing at the
-      # all-settings page filtered to every name at once (the filter supports
-      # `|` as an OR separator). Unlike #linkify there is no per-setting config
-      # page to rewrite the href to, so no data attributes are emitted for the
-      # linkify-setting-links modifier.
+      # all-settings page filtered to every name at once, via the explicit
+      # `any:one|two` OR filter syntax (unprefixed pipes stay literal so
+      # admins can search pipe-delimited list values exactly). Unlike #linkify
+      # there is no per-setting config page to rewrite the href to, so no data
+      # attributes are emitted for the linkify-setting-links modifier.
       def linkify_settings(settings, label: nil)
-        filter = settings.map(&:to_s).join("|")
+        filter = "any:#{settings.map(&:to_s).join("|")}"
         label ||= settings.map { |setting| humanized_name(setting) }.join(", ")
 
         %(<a class="site-setting-link" href="#{CGI.escapeHTML(settings_filter_href(filter))}">#{CGI.escapeHTML(label)}</a>).html_safe

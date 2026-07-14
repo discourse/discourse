@@ -3,20 +3,26 @@
 // appears as a contiguous block in the stripped name (see isFuzzyNameMatch).
 const MIN_FUZZY_NAME_MATCH_STRENGTH = -2;
 
+const OR_FILTER_PREFIX = "any:";
+
 export default class SiteSettingMatcher {
   constructor(filter, siteSetting) {
     this.filter = filter;
     this.siteSetting = siteSetting;
 
-    // `|` separates OR terms (used by machine-generated filter links). A
-    // filter without meaningful pipes — including a bare "|" or a trailing
-    // one — keeps single-term semantics, matching the raw string literally.
-    const terms = filter
-      .split("|")
-      .map((f) => f.trim())
-      .filter(Boolean);
-    this.isOrMode = terms.length > 1;
-    this.terms = terms.length ? terms : [filter];
+    // `any:one|two` matches settings hitting any of the pipe-separated terms
+    // — the syntax machine-generated "related settings" links use. Without
+    // the prefix, pipes are literal characters, so admins can still search
+    // pipe-delimited list values (e.g. `jpg|png`) exactly.
+    const orTerms = filter.startsWith(OR_FILTER_PREFIX)
+      ? filter
+          .slice(OR_FILTER_PREFIX.length)
+          .split("|")
+          .map((f) => f.trim())
+          .filter(Boolean)
+      : [];
+    this.isOrMode = orTerms.length > 0;
+    this.terms = this.isOrMode ? orTerms : [filter];
     this.spacedTerms = this.terms.map((term) => term.replace(/_/g, " "));
 
     this.strippedQuery = filter.replace(/[^a-z0-9]/gi, "");

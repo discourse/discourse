@@ -165,4 +165,4 @@ class LocaleFileValidator
   end
 end
 
-I18nLinter.new(ARGV).run
+I18nLinter.new(ARGV).run if $PROGRAM_NAME == __FILE__
