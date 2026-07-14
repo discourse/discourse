@@ -194,6 +194,12 @@ class User < ActiveRecord::Base
   after_update :trigger_user_automatic_group_refresh, if: :saved_change_to_staged?
   after_update :change_display_name, if: :saved_change_to_name?
 
+  after_destroy :clear_acls
+
+  def clear_acls
+    Jobs.enqueue(:cleanup_acls_for_deleted, user_id: id)
+  end
+
   after_save :expire_tokens_if_password_changed
   after_save :clear_global_notice_if_needed
   after_save :refresh_avatar

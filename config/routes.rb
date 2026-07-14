@@ -623,6 +623,7 @@ Discourse::Application.routes.draw do
     get "directory-columns" => "directory_columns#index", :format => :json
     get "edit-directory-columns" => "edit_directory_columns#index", :format => :json
     put "edit-directory-columns" => "edit_directory_columns#update", :format => :json
+    get "access-control/grantees/search" => "access_control_lists#search_grantees"
 
     %w[users u].each_with_index do |root_path, index|
       get "#{root_path}" => "users#index", :constraints => { format: "html" }

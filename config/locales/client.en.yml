@@ -55,9 +55,10 @@ en:
         access_permission_viewer: "Viewer"
         access_permission_viewer_description: "Can view content for this entity"
         access_permission_remove: "Remove"
-        access_permission_remove_description: "Remove permission for this group"
-        add_group: "Add group"
-        mandatory_acl_tooltip: "This permission is mandatory for this entity and cannot be removed"
+        access_permission_remove_description: "Remove permission for this grantee"
+        add_group: "Add user or group"
+        mandatory_acl_tooltip: "This permission is mandatory for %{name} and cannot be removed"
+        mandatory: "Mandatory"
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"
