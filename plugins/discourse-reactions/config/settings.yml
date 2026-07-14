@@ -42,6 +42,7 @@ discourse_reactions:
       status: "beta"
       impact: "site_setting_default,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/403795"
+      permanent_warning: false
   enable_new_post_reply_count_position:
     default: false
     client: true
