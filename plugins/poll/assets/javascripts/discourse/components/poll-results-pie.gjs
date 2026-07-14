@@ -31,6 +31,7 @@ export default class PollResultsPieComponent extends Component {
 
         const li = document.createElement("li");
         li.classList.add("legend");
+        li.style.opacity = isVisible ? 1.0 : 0.4;
         li.onclick = () => {
           chart.toggleDataVisibility(item.index);
           chart.update();

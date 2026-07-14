@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
-import { buildLegendIcon } from "discourse/lib/chart-legend-icon";
+import { buildLegendIcon, dimColor } from "discourse/lib/chart-legend-icon";
 import { bind } from "discourse/lib/decorators";
 import loadChartJS from "discourse/lib/load-chart-js";
 import { remToPx } from "discourse/lib/rem-to-px";
@@ -188,16 +188,16 @@ export default class DataExplorerChart extends Component {
               padding: remToPx(1),
               font: { size: remToPx(0.75) },
               generateLabels: (chart) =>
-                chart.data.datasets.map((dataset, i) => ({
-                  text: dataset.label,
-                  fontColor: labelColor,
-                  hidden: false,
-                  datasetIndex: i,
-                  pointStyle: buildLegendIcon(
-                    dataset.borderColor,
-                    chart.isDatasetVisible(i)
-                  ),
-                })),
+                chart.data.datasets.map((dataset, i) => {
+                  const isVisible = chart.isDatasetVisible(i);
+                  return {
+                    text: dataset.label,
+                    fontColor: isVisible ? labelColor : dimColor(labelColor),
+                    hidden: false,
+                    datasetIndex: i,
+                    pointStyle: buildLegendIcon(dataset.borderColor, isVisible),
+                  };
+                }),
             },
           },
           tooltip: this._multiSeriesTooltipOptions(stacked),

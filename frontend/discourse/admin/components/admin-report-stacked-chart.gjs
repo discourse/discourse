@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import Report from "discourse/admin/models/report";
-import { buildLegendIcon } from "discourse/lib/chart-legend-icon";
+import { buildLegendIcon, dimColor } from "discourse/lib/chart-legend-icon";
 import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
 import { remToPx } from "discourse/lib/rem-to-px";
@@ -151,7 +151,7 @@ export default class AdminReportStackedChart extends Component {
                   const isVisible = chart.isDatasetVisible(i);
                   return {
                     text: dataset.label,
-                    fontColor: textColor,
+                    fontColor: isVisible ? textColor : dimColor(textColor),
                     hidden: false,
                     datasetIndex: i,
                     pointStyle: buildLegendIcon(dataset._baseColor, isVisible),

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import Chart from "discourse/admin/components/chart";
-import { buildLegendIcon } from "discourse/lib/chart-legend-icon";
+import { buildLegendIcon, dimColor } from "discourse/lib/chart-legend-icon";
 import { remToPx } from "discourse/lib/rem-to-px";
 
 export default class DoughnutChart extends Component {
@@ -37,16 +37,19 @@ export default class DoughnutChart extends Component {
                   .trim();
                 const backgroundColor =
                   chart.data.datasets[0]?.backgroundColor || [];
-                return chart.data.labels.map((label, index) => ({
-                  text: label,
-                  fontColor: textColor,
-                  hidden: false,
-                  index,
-                  pointStyle: buildLegendIcon(
-                    backgroundColor[index],
-                    chart.getDataVisibility(index)
-                  ),
-                }));
+                return chart.data.labels.map((label, index) => {
+                  const isVisible = chart.getDataVisibility(index);
+                  return {
+                    text: label,
+                    fontColor: isVisible ? textColor : dimColor(textColor),
+                    hidden: false,
+                    index,
+                    pointStyle: buildLegendIcon(
+                      backgroundColor[index],
+                      isVisible
+                    ),
+                  };
+                });
               },
             },
           },
