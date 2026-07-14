@@ -613,13 +613,13 @@ class TopicsFilter
           .pluck(:id)
 
       if group_ids.empty?
-        @scope = @scope.none
+        @scope = @scope.none if prefix != "-"
         next
       end
 
       if require_all
         if group_ids.length < group_names.length
-          @scope = @scope.none
+          @scope = @scope.none if prefix != "-"
           next
         end
 

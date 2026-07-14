@@ -224,6 +224,24 @@ RSpec.describe TopicsFilter do
         expect(ids).to contain_exactly(topic_by_u1.id, topic_by_u2.id)
       end
 
+      it "-group:missing is a no-op when the group cannot be resolved" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-group:missing")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u1.id, topic_by_u2.id, topic_by_u1_and_u2.id)
+      end
+
+      it "-group:group1+missing is a no-op when any group cannot be resolved" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-group:group1+missing")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u1.id, topic_by_u2.id, topic_by_u1_and_u2.id)
+      end
+
       it "-group:group1 returns topics where the only post from a group member is deleted" do
         topic = Fabricate(:topic)
         Fabricate(:post, topic:, user: u1).update_column(:deleted_at, Time.zone.now)
