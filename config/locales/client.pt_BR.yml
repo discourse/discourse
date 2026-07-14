@@ -46,6 +46,8 @@ pt_BR:
       manage:
         access_permission_editor: "Editor(a)"
         access_permission_remove: "Remover"
+        add_group: "Adicionar grupo"
+        mandatory_acl_tooltip: "Essa permissão é obrigatória para esse recurso e não pode ser removida"
     carousel:
       go_to_slide: "Ir para o slide %{index}"
       previous: "Slide anterior"
@@ -185,9 +187,12 @@ pt_BR:
     date_range_picker:
       apply: "Aplicar"
       start_date: "Data de início"
+      end_date: "Data de término"
+      date_placeholder: "aaaa/mm/dd"
       presets:
         last_7_days: "Últimos sete dias"
         last_30_days: "Últimos 30 dias"
+        last_3_months: "Últimos 3 meses"
         last_6_months: "Últimos seis meses"
         last_year: "Ano passado"
     languages:
@@ -361,6 +366,9 @@ pt_BR:
       search_placeholder: "Pesquisar"
     impersonation:
       notice: "Você está personificando %{username}"
+      time_left:
+        one: "(%{count} minuto restante)"
+        other: "(%{count} minutos restantes)"
       stop: "Parar de personificar"
     themes:
       default_description: "Padrão"
@@ -388,6 +396,8 @@ pt_BR:
         visual_overlay: "Sobreposição visual"
         ghost_blocks: "Blocos fantasmas"
         condition_debugging: "Depuração de condições"
+      plugin_outlet_debug:
+        find_on_github: "Buscar no GitHub"
       toggle_safe_mode: "Alternar modo de segurança"
       toggle_verbose_localization: "Alternar localização detalhada"
       disable_dev_tools: "Desativar ferramentas de desenvolvimento"
@@ -620,6 +630,8 @@ pt_BR:
       edit: "Editar favorito"
       not_bookmarked: "marcar postagem como favorita"
       topic_bookmark: "Tópico"
+      post_bookmark: "Postagem #%{post_number}"
+      jump_to_post: "Ir para #%{post_number}"
       remove_reminder_keep_bookmark: "Remover lembrete e manter favorito"
       created_with_reminder: "Você marcou esta postagem com um lembrete em %{date}. %{name}"
       created_with_reminder_generic: "Você marcou isso como lembrete em %{date}. %{name}"
@@ -698,7 +710,10 @@ pt_BR:
       continue_as_guest: "Continuar como convidado"
       be_first_to_reply: "Seja o primeiro a responder!"
       editing_post: "Editando postagem"
+      reply_placeholder: "Escreva uma resposta..."
       signin_flow:
+        share_session_title: "Faça login no %{site_name}"
+        signin_required_title: "Faça login no %{site_name}"
         cancel: "Cancelar"
     topic_count_all:
       one: "Veja %{count} novo tópico"
@@ -2667,8 +2682,17 @@ pt_BR:
       email_label: "E-mail"
       continue_button: "Continuar"
       verify_button: "Continuar"
+      resend: "Reenviar código"
+      resend_countdown: "Reenviar código (%{count}s)"
+      code_resent: "Enviamos um novo código."
+      use_different_email: "Usar um endereço de e-mail diferente"
+      signup_title: "Ingressar nesta comunidade"
       account_ready_continue: "Continuar"
       username_label: "Nome de usuário(a)"
+      username_placeholder: "Escolha um nome de usuário"
+      change_avatar: "Mudar avatar"
+      username_taken: "Esse nome de usuário está em uso. Tente outro."
+      username_unavailable: "Esse nome de usuário não está disponível. Tente %{suggestion}."
     login:
       header_title: "Boas-vindas outra vez"
       title: "Entrar"
@@ -2687,6 +2711,9 @@ pt_BR:
       security_key_description: "Quando você tiver sua chave física de segurança ou dispositivo móvel compatível preparado, pressione o botão Autenticar com Chave de Segurança abaixo."
       security_key_alternative: "Tentar de outra maneira"
       security_key_authenticate: "Autenticar com chave de segurança"
+      passkey_2fa_description: "Verifique sua identidade com sua senha."
+      use_passkey: "Usar senha"
+      use_security_key: "Usar chave de acesso"
       security_key_not_allowed_error: "O processo de autenticação com chave de segurança atingiu o limite de tempo ou foi cancelado."
       security_key_no_matching_credential_error: "Nenhuma credencial correspondente pôde ser encontrada na chave de segurança informada."
       security_key_support_missing_error: "Seu dispositivo ou navegador atual não são compatíveis com o uso de chaves de segurança. Use um método diferente."
@@ -2761,6 +2788,7 @@ pt_BR:
         totp: "Use um aplicativo autenticador"
         backup_code: "Use um código de backup"
         security_key: "Em vez disso, utilizar uma chave de segurança"
+        passkey: "Use uma chave de acesso em vez disso."
       no_login_methods:
         title: "Nenhum método de entrada"
         description: "Nenhum método de entrada foi configurado. Os(as) administradores(as) podem acessar <a href='%{adminLoginPath}' target='_blank'>%{adminLoginPath}</a> para reconfigurar o site."
@@ -2858,7 +2886,10 @@ pt_BR:
         categories_admin_dropdown:
           title: "Gerenciar categorias"
         tag_category_admin_dropdown:
+          edit_category: "Editar categoria"
+          edit_category_description: "Ajustar configurações para %{badge}"
           edit_tag: "Editar tag"
+          edit_tag_description: "Ajustar configurações para %{badge}"
         bulk_select_topics_dropdown:
           title: "Ações em massa"
         bulk_select_bookmarks_dropdown:
@@ -2891,6 +2922,14 @@ pt_BR:
       default: Emojis personalizados
     filter_input:
       clear: "Limpar filtro"
+    d_icon_grid_picker:
+      select_icon: "Selecionar ícone"
+      search_placeholder: "Buscar ícones..."
+      no_results: "Nenhum ícone encontrado"
+      results_count:
+        one: "%{count} ícone encontrado"
+        other: "%{count} ícones encontrados"
+      favorites: "Favoritos"
     shared_drafts:
       title: "Rascunhos compartilhados"
       notice: "Este tópico está visível apenas para quem puder publicar rascunhos compartilhados."
