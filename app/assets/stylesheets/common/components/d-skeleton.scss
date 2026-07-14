@@ -1,0 +1,55 @@
+.d-skeleton {
+  --d-skeleton-fill: var(--primary-very-low);
+  --d-skeleton-shimmer: var(--primary-low);
+  --d-skeleton-radius: var(--d-border-radius, 0.25em);
+  --d-skeleton-gap: 0.5em;
+  --d-skeleton-duration: 2.5s;
+  display: flex;
+  flex-direction: column;
+  gap: var(--d-skeleton-gap);
+
+  &--text {
+    // a lone line matches the real element's line box
+    --d-skeleton-item-height: 1lh;
+    --d-skeleton-gap: calc(1lh - var(--d-skeleton-item-height));
+
+    // stacked lines use ink height so they separate; the derived gap above
+    // recomputes to one leading
+    &.d-skeleton--multiline {
+      --d-skeleton-item-height: 1em;
+    }
+  }
+
+  &--rect {
+    --d-skeleton-item-height: 2.5em;
+  }
+
+  &--circle {
+    --d-skeleton-item-height: 2em;
+    --d-skeleton-item-width: 2em;
+    --d-skeleton-radius: 50%;
+  }
+
+  &__item {
+    width: var(--d-skeleton-item-width, auto);
+    height: var(--d-skeleton-item-height, 1em);
+    background: var(--d-skeleton-fill);
+    border-radius: var(--d-skeleton-radius);
+
+    @media (prefers-reduced-motion: no-preference) {
+      &.placeholder-animation {
+        background-image: linear-gradient(
+          to right,
+          var(--d-skeleton-fill),
+          var(--d-skeleton-shimmer) 50%,
+          var(--d-skeleton-fill)
+        );
+
+        // fixed band matching the shared keyframe's 2100px travel, so the
+        // shimmer loops seamlessly at a width-independent speed
+        background-size: 2100px 100%;
+        animation-duration: var(--d-skeleton-duration);
+      }
+    }
+  }
+}

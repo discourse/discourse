@@ -370,6 +370,32 @@ module("Integration | Component | FloatKit | DMenu", function (hooks) {
     assert.dom(".fk-d-menu").doesNotExist();
   });
 
+  test("trigger expanded argument reflects the open state", async function (assert) {
+    await render(
+      <template>
+        <DMenu @inline={{true}}>
+          <:trigger as |args|>
+            <span class="expanded-flag">{{if
+                args.expanded
+                "open"
+                "closed"
+              }}</span>
+          </:trigger>
+          <:content>content</:content>
+        </DMenu>
+      </template>
+    );
+
+    assert
+      .dom(".expanded-flag")
+      .hasText("closed", "expanded is false when closed");
+
+    await open();
+    assert
+      .dom(".expanded-flag")
+      .hasText("open", "expanded flips to true on open");
+  });
+
   test("@autofocus", async function (assert) {
     await render(
       <template>

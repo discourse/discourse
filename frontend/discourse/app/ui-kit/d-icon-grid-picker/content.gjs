@@ -31,12 +31,15 @@ const unfilteredIconCache = new Map();
  *   current SVG sprite set. Defaults to true.
  */
 export default class DIconGridPickerContent extends Component {
+  /** @type {import("discourse/services/a11y").default} */
+  // @ts-ignore (incorrect no-initialization error)
+  @service a11y;
+
   /** @type {import("discourse/float-kit/services/tooltip").default} */
   // @ts-ignore (incorrect no-initialization error)
   @service tooltip;
 
   @tracked filter = "";
-  @tracked resultCount = null;
 
   /**
    * Modifier that measures the natural content width of the selected-chip element
@@ -244,15 +247,6 @@ export default class DIconGridPickerContent extends Component {
     )?.focus();
   }
 
-  get resultAnnouncement() {
-    if (this.resultCount === null) {
-      return "";
-    }
-    return i18n("d_icon_grid_picker.results_count", {
-      count: this.resultCount,
-    });
-  }
-
   /**
    * Fetches icons from the server, optionally filtered by a search term.
    * Used as the `@asyncData` callback for the `AsyncContent` loader.
@@ -266,7 +260,7 @@ export default class DIconGridPickerContent extends Component {
 
     if (!filter && unfilteredIconCache.has(onlyAvailable)) {
       const cached = unfilteredIconCache.get(onlyAvailable);
-      this.resultCount = cached.length;
+      this.#announceResults(cached.length);
       return cached;
     }
 
@@ -278,8 +272,17 @@ export default class DIconGridPickerContent extends Component {
       unfilteredIconCache.set(onlyAvailable, icons);
     }
 
-    this.resultCount = icons.length;
+    this.#announceResults(icons.length);
     return icons;
+  }
+
+  // Politely announces the result count via the shared a11y service (one app-wide
+  // live region) rather than a component-local aria-live element.
+  #announceResults(count) {
+    this.a11y.announce(
+      i18n("d_icon_grid_picker.results_count", { count }),
+      "polite"
+    );
   }
 
   <template>
@@ -395,9 +398,6 @@ export default class DIconGridPickerContent extends Component {
             </:empty>
           </DAsyncContent>
         </div>
-      </div>
-      <div class="sr-only" aria-live="polite" role="status">
-        {{this.resultAnnouncement}}
       </div>
     </div>
   </template>
