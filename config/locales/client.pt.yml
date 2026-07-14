@@ -1426,6 +1426,9 @@ pt:
       notifications: "Notificações"
       statistics: "Estatísticas"
       desktop_notifications:
+        push_level:
+          none: "Desativado"
+          all: "Ativado"
         not_supported: "Não são suportadas notificações neste navegador. Desculpe."
         perm_denied_expl: "Negou a permissão para as notificações. Autorize as notificações através das configurações do seu navegador."
         each_browser_note: "Nota: precisa de alterar esta configuração em todos os navegadores que utilizar. Todas as notificações serão desativadas se pausar as notificações no menu do utilizador, independentemente desta definição."
@@ -3296,6 +3299,7 @@ pt:
       collapse_details: "ocultar detalhes do tópico"
       expand_details: "expandir detalhes do tópico"
       unread_indicator: "Nenhum membro leu o último post deste tópico ainda."
+      sr_read: "ler"
       participant_groups: "Grupos participantes"
       created_at: "Criado: %{date}"
       bumped_at: "Mais recente: %{date}"

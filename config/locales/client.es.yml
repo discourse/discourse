@@ -1586,6 +1586,9 @@ es:
       notifications: "Notificaciones"
       statistics: "Estadísticas"
       desktop_notifications:
+        push_level:
+          none: "Desactivado"
+          all: "Activado"
         not_supported: "Las notificaciones no están disponibles en este navegador. Lo sentimos."
         perm_denied_expl: "Has denegado el permiso para las notificaciones. Configura tu navegador para permitir notificaciones. "
         each_browser_note: "Nota: Hay que cambiar esta configuración en cada navegador que utilices. Todas las notificaciones se desactivarán si pausas las notificaciones desde el menú de usuario, independientemente de este ajuste."
@@ -3749,6 +3752,7 @@ es:
       read_more_in_category: "¿Quieres leer más? Explora otros temas en %{categoryLink} o <a href='%{latestLink}'>consulta los últimos temas</a>."
       read_more: "¿Quieres leer más? <a href='%{categoryLink}'>Examina todas las categorías</a> o <a href='%{latestLink}'>consulta los últimos temas</a>."
       unread_indicator: "Ningún miembro ha leído todavía la última publicación de este tema."
+      sr_read: "leer"
       participant_groups: "Grupos participantes"
       reply_count_link:
         one: "%{count} respuesta, ve a la primera publicación"
@@ -5873,7 +5877,6 @@ es:
             apple_touch_icon:
               title: "Icono táctil de Apple"
               description: "Icono usado para dispositivos táctiles de Apple. Si se deja en blanco, se usará large_icon."
-              help_text: "El tamaño recomendado es de 180 x 180 píxeles. No se recomienda usar fondo transparente."
             digest_logo:
               title: "Logotipo de Digest"
               description: "La imagen de logotipo alternativa utilizada en la parte superior del resumen de correo electrónico de tu sitio. Si se deja en blanco, se utilizará la imagen del «logo»."

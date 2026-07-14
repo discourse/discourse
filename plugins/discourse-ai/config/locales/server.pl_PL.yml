@@ -394,6 +394,11 @@ pl_PL:
       default_pm_prefix: "[PW bota AI bez tytułu]"
       thinking: "Myślenie"
       tool_pending_approval: "Aby wykonać tę czynność, wymagana jest zgoda moderatora."
+      chat_tool_approval:
+        approved: "Zatwierdzone przez @%{username}."
+        rejected: "Odrzucone przez @%{username}."
+        failed: "Nie udało się wykonać tej czynności: %{error}"
+        unexpected_error: "wystąpił nieoczekiwany błąd"
       agents:
         default_llm_required: "Przed włączeniem czatu wymagany jest domyślny model LLM"
         cannot_delete_system_agent: "Nie można usunąć agentów systemowych, zamiast tego należy je wyłączyć"

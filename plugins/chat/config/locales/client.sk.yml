@@ -261,8 +261,6 @@ sk:
       no_public_channels_cta: "Prehľadávanie kanálov"
       kicked_from_channel: "K tomuto kanálu už nemáte prístup."
       chat_notifications_title: "Oznámenia chatu"
-      only_chat_push_notifications:
-        title: "Odosielajte iba upozornenia na chat"
       ignore_channel_wide_mention:
         title: "Ignorovať zmienky v rámci celého kanála"
       show_thread_title_prompts:

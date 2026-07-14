@@ -994,6 +994,9 @@ ca:
       notifications: "Notificacions"
       statistics: "Estats"
       desktop_notifications:
+        push_level:
+          none: "Desactivat"
+          all: "Activat"
         not_supported: "Aquest navegador no permet les notificacions. Ho sentim."
         perm_denied_expl: "Heu denegat el permís per a les notificacions. Les podeu permetre en les preferències del vostre navegador."
         consent_prompt: "Voleu notificacions en directe quan algú respon a les vostres publicacions?"
@@ -2073,6 +2076,7 @@ ca:
       options: "Opcions del tema"
       show_links: "mostra enllaços dins d'aquest tema"
       unread_indicator: "Cap membre encara no ha llegit la darrera publicació d'aquest tema."
+      sr_read: "llegeix"
       bumped_at: "Més recent: %{date}"
       deleted: "El tema ha estat suprimit"
       slow_mode_update:

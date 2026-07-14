@@ -189,8 +189,6 @@ el:
       no_public_channels_cta: "Περιήγηση καναλιών"
       kicked_from_channel: "Δεν έχετε πλέον πρόσβαση σε αυτό το κανάλι."
       chat_notifications_title: "Ειδοποιήσεις συνομιλίας"
-      only_chat_push_notifications:
-        title: "Αποστολή μόνο ειδοποιήσεων push συνομιλίας"
       personalization_title: "Εξατομίκευση"
       ignore_channel_wide_mention:
         title: "Αγνόηση επισημάνσεων σε όλο το κανάλι"

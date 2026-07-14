@@ -81,8 +81,6 @@ vi:
       no_direct_message_channels: "Bạn chưa nhắn riêng!"
       no_public_channels: "Bạn chưa tham gia kênh nào!"
       chat_notifications_title: "Thông báo chat"
-      only_chat_push_notifications:
-        title: "Chỉ gửi thông báo đẩy chat"
       personalization_title: "Cá nhân hóa"
       ignore_channel_wide_mention:
         title: "Bỏ qua các lượt nhắc trên toàn kênh"

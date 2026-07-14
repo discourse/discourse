@@ -307,8 +307,6 @@ ar:
       no_public_channels_cta: "تصفح القنوات"
       kicked_from_channel: "لم يعُد بإمكانك الوصول إلى هذه القناة."
       chat_notifications_title: "إشعارات الدردشة"
-      only_chat_push_notifications:
-        title: "إرسال الإشعارات الفورية للدردشة فقط"
       personalization_title: "التخصيص"
       ignore_channel_wide_mention:
         title: "تجاهل الإشارات على مستوى القناة"

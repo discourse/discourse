@@ -988,6 +988,7 @@ pl_PL:
         help: "Usuń to przejęcie"
       awaiting_approval: "Oczekuje na zatwierdzenie"
       delete: "Usuń"
+      delete_confirm: "Czy na pewno chcesz usunąć ten element z kolejki recenzji?"
       settings:
         saved: "Zapisano"
         save_changes: "Zapisz zmiany"
@@ -1822,12 +1823,18 @@ pl_PL:
       statistics: "Statystyki"
       desktop_notifications:
         label: "Powiadomienia na żywo"
+        push_level:
+          title: "Powiadomienia push są…"
+          none: "Wyłączone"
+          all: "Włączone"
+          chat_only: "Włączone tylko dla czatu"
         not_supported: "Powiadomienia nie są wspierane przez tę przeglądarkę. Przepraszamy."
         perm_default: "Włącz powiadomienia"
         perm_denied_btn: "Odmowa uprawnienia"
         perm_denied_expl: "Odmówiłeś/łaś dostępu dla powiadomień. Pozwól na powiadomienia w ustawieniach przeglądarki."
         disable: "Wyłącz powiadomienia"
         enable: "Włącz powiadomienia"
+        enable_failed: "Nie można włączyć powiadomień. Twoja przeglądarka zablokowała żądanie lub usługa push jest niedostępna."
         each_browser_note: "Uwaga: musisz zmienić to ustawienie w każdej używanej przeglądarce. Wszystkie powiadomienia zostaną wyłączone, jeśli wstrzymasz powiadomienia z menu użytkownika, niezależnie od tego ustawienia."
         consent_prompt: "Czy chcesz otrzymywać natychmiastowe powiadomienia, gdy ktoś odpowie na Twoje wpisy?"
       dismiss: "Odrzuć"
@@ -3292,6 +3299,7 @@ pl_PL:
     gifs:
       modal_title: "Wyszukaj GIF-y"
       composer_title: "Wstaw GIF"
+      placeholder: "Przeszukaj KLIPY"
       powered_by: "Obsługiwane przez Klipy"
       no_results: "Wprowadź słowo kluczowe powyżej, aby wyszukać pliki GIF."
       browse_categories: "Przeglądaj według kategorii"
@@ -4469,6 +4477,7 @@ pl_PL:
       read_more_in_category: "Chcesz przeczytać więcej? Przeglądaj inne tematy w %{categoryLink} lub <a href='%{latestLink}'>przeglądaj najnowsze tematy</a>."
       read_more: "Chcesz przeczytać więcej? <a href='%{categoryLink}'>Przeglądaj wszystkie kategorie</a> lub <a href='%{latestLink}'>przeglądaj najnowsze tematy</a>."
       unread_indicator: "Nikt jeszcze nie czytał ostatniego postu w tym temacie."
+      sr_read: "odczyt"
       participant_groups: "Grupy uczestników"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
@@ -6748,6 +6757,7 @@ pl_PL:
         enabled_for_throttle: "Zbyt szybko zmodyfikowano, dla kogo ta zmiana jest włączona. Odczekaj kilka sekund, zanim spróbujesz ponownie."
         change_enabled_for_success: "Włączono tę zmianę dla %{enabledFor}"
         change_disabled: "Zrezygnowałeś z tej zmiany"
+        depends_on_notice: "Aby wprowadzić tę zmianę, konieczne jest włączenie opcji %{dependencyLinks}."
         permanent_notice: "Ta zmiana jest teraz trwała i wkrótce zostanie usunięta. Nie możesz już zrezygnować."
         permanent_soon_notice: "Ta zmiana wkrótce stanie się trwała. Nie będzie już możliwości rezygnacji."
         permanent_no_group_selection: "Nie dotyczy, stałe zmiany dotyczą wszystkich grup."
@@ -6921,7 +6931,7 @@ pl_PL:
             apple_touch_icon:
               title: "Ikona Apple touch"
               description: "Ikona używana dla urządzeń dotykowych Apple. Jeśli pozostawisz puste, użyta zostanie ikona large_icon."
-              help_text: "Zalecany rozmiar to 180 x 180 pikseli. Przezroczyste tło nie jest zalecane."
+              help_text: "Zalecany rozmiar to 180 x 180 pikseli. Nie używaj obrazu SVG. Nie zaleca się stosowania przezroczystego tła."
             digest_logo:
               title: "Logo skrótu"
               description: "Alternatywny obraz logo używany w górnej części podsumowania wiadomości e-mail Twojej witryny. Jeśli pozostanie puste, użyty zostanie obraz z ustawienia `logo`."

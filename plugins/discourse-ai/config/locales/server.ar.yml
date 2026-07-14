@@ -372,6 +372,8 @@ ar:
       default_pm_prefix: "[رسالة خاصة دون عنوان من روبوت ذكاء اصطناعي]"
       thinking: "التفكير"
       tool_pending_approval: "يتطلب هذا الإجراء موافقة أحد المشرفين قبل تنفيذه."
+      chat_tool_approval:
+        unexpected_error: "حدث خطأ غير متوقع"
       agents:
         default_llm_required: "نموذج اللغة الكبير الافتراضي مطلوب قبل تفعيل الدردشة"
         cannot_delete_system_agent: "لا يمكن حذف وكلاء النظام، يُرجى تعطيلها بدلًا من ذلك"
