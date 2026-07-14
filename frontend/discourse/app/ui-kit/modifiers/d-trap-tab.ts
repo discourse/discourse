@@ -10,9 +10,16 @@ const FOCUSABLE_ELEMENTS =
   "details:not(.is-disabled) summary, [autofocus], a, input, select, textarea, summary";
 
 interface DTrapTabSignature {
+  /** The element the tab trap is attached to. */
   Element: HTMLElement;
   Args: {
-    Named: { preventScroll?: boolean; autofocus?: boolean };
+    Named: {
+      /** Whether focusing an element should prevent scrolling. Defaults to `true`. */
+      preventScroll?: boolean;
+
+      /** Whether to focus the first focusable element on setup. Defaults to `true`. */
+      autofocus?: boolean;
+    };
     Positional: [];
   };
 }

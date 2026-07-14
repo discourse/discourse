@@ -49,38 +49,101 @@ function dampenedOverdrag(distance: number) {
 type CloseModalCallback = (...args: any[]) => void;
 
 interface DModalSignature {
+  /** The wrapper element: a `div` or `form`, per `@tagName`. */
   Element: HTMLDivElement | HTMLFormElement;
   Args: {
+    /**
+     * Called to close the modal, receiving the reason it was initiated by.
+     * Providing it makes the modal dismissable by default.
+     */
     closeModal?: CloseModalCallback;
+
+    /**
+     * Called before the modal closes, receiving the initiating reason.
+     * Returning `false` cancels the close.
+     */
     beforeClose?: (args: {
       initiatedBy: string;
     }) => boolean | void | Promise<boolean | void>;
+
+    /**
+     * Whether the modal can be dismissed via the close button, Escape, a
+     * backdrop click, or a swipe down. Defaults to `true` when `@closeModal`
+     * is set.
+     */
     dismissable?: boolean;
+
+    /** Whether to focus the first focusable element on open. Defaults to `true`. */
     autofocus?: boolean;
+
+    /** Whether pressing Enter triggers the footer's primary action. Defaults to `true`. */
     submitOnEnter?: boolean;
+
+    /** Whether the modal is hidden; while hidden it ignores keyboard events. */
     hidden?: boolean;
+
+    /** Whether to render in place rather than in the modal container. */
     inline?: boolean;
+
+    /** The wrapper element tag. Defaults to `"div"`. */
     tagName?: "div" | "form";
+
+    /** The modal title. */
     title?: string;
+
+    /** The subtitle shown under the title. */
     subtitle?: string;
+
+    /** Whether to hide the header. */
     hideHeader?: boolean;
+
+    /** Whether to hide the footer. */
     hideFooter?: boolean;
+
+    /** Extra class applied to the header. */
     headerClass?: string;
+
+    /** Extra class applied to the body. */
     bodyClass?: string;
+
+    /** A flash message shown above the body. Accepts a plain string or trusted HTML. */
     flash?: string | TrustedHTML;
+
+    /** The severity of the `@flash` message. */
     flashType?: FlashType;
   };
   Blocks: {
+    /** The modal body, used when no `body` block is provided. */
     default: [];
+
+    /** Rendered at the top of the modal, above the header. */
     aboveHeader: [];
+
+    /** Rendered inside the header, above the title. */
     headerAboveTitle: [];
+
+    /** Rendered as the header's primary action, on mobile. */
     headerPrimaryAction: [];
+
+    /** Rendered below the title. */
     belowModalTitle: [];
+
+    /** Rendered inside the header, below the title. */
     headerBelowTitle: [];
+
+    /** Rendered below the header, before the flash and body. */
     belowHeader: [];
+
+    /** The modal body. Takes precedence over the default block. */
     body: [];
+
+    /** Rendered above the footer. */
     aboveFooter: [];
+
+    /** The footer content. */
     footer: [];
+
+    /** Rendered below the footer. */
     belowFooter: [];
   };
 }

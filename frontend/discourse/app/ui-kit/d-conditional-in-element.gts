@@ -2,11 +2,19 @@ import type { TemplateOnlyComponent } from "@ember/component/template-only";
 
 interface DConditionalInElementSignature {
   Args: {
+    /** The element to render the content into, when not inline. */
     element?: Element | null;
+
+    /** Whether to render in place instead of into `@element`. */
     inline?: boolean;
+
+    /** Whether to append to `@element` rather than replace its content. */
     append?: boolean;
   };
-  Blocks: { default: [] };
+  Blocks: {
+    /** The content to render into the target. */
+    default: [];
+  };
 }
 
 const DConditionalInElement: TemplateOnlyComponent<DConditionalInElementSignature> =
