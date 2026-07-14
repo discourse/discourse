@@ -176,12 +176,15 @@ const createChildBlock: CreateChildBlockFn = (entry, owner, debugContext) => {
   });
 
   // Curry the component with pre-bound args so it can be rendered
-  // without knowing its configuration details
-  const curried: BlockComponent = curryComponent(
+  // without knowing its configuration details. `curryComponent` only refines
+  // its return to a `ComponentLike` when the input class is glint-invokable;
+  // `ComponentClass` is the deliberately-opaque `BlockClass`, so the generic
+  // passes it through unchanged and we assert the known renderable result.
+  const curried = curryComponent(
     ComponentClass,
     blockArgs,
     owner
-  );
+  ) as unknown as BlockComponent;
 
   // All blocks are wrapped for consistent styling
   let wrappedComponent: BlockComponent = wrapBlockLayout(
