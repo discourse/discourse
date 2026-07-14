@@ -12,8 +12,6 @@ class AiAgent < ActiveRecord::Base
     execution_mode
   ]
 
-  attribute :compression_threshold, :integer, default: 80
-
   # Between the regular migration (which creates ai_agents as a VIEW over
   # ai_personas) and the post-migration (which does the actual rename_table),
   # PostgreSQL views don't expose primary-key metadata, causing

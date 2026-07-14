@@ -7,8 +7,12 @@ module DiscourseAi
 
       DEFAULT_MAX_TURN_TOKENS = 32_000
       CONTEXT_TOKEN_BUDGET_RATIO = 0.5
-      COMPRESSED_CONTEXT_PREFIX = "<compressed_context>"
-      COMPRESSED_CONTEXT_ACK = "Understood, I have the context."
+      COMPRESSED_CONTEXT_PREFIX =
+        DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_PREFIX
+      COMPRESSED_CONTEXT_SUFFIX =
+        DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_SUFFIX
+      COMPRESSED_CONTEXT_ACK =
+        DiscourseAi::Completions::PromptMessagesBuilder::COMPRESSED_CONTEXT_ACK
 
       BUDGET_EXHAUSTED_HINT = <<~TEXT.strip
         [Turn budget exhausted — you cannot call any more tools.]
@@ -531,17 +535,15 @@ module DiscourseAi
 
         while i >= 1
           msg = prompt.messages[i]
-          pair_start = i
-          pair_end = i
 
+          # scanning tail-first means a tool result is always visited before
+          # its tool_call, so keeping the pair together only needs to look back
+          pair_start = i
           if msg[:type] == :tool && i > 1 && prompt.messages[i - 1][:type] == :tool_call
             pair_start = i - 1
-          elsif msg[:type] == :tool_call && i + 1 < prompt.messages.length &&
-                prompt.messages[i + 1][:type] == :tool
-            pair_end = i + 1
           end
 
-          indexes = (pair_start..pair_end).to_a
+          indexes = (pair_start..i).to_a
           pair_tokens =
             indexes.sum do |index|
               tokenizer.size(
@@ -615,7 +617,7 @@ module DiscourseAi
         new_messages = [system_message]
         new_messages << {
           type: :user,
-          content: "#{COMPRESSED_CONTEXT_PREFIX}#{summary}</compressed_context>",
+          content: "#{COMPRESSED_CONTEXT_PREFIX}#{summary}#{COMPRESSED_CONTEXT_SUFFIX}",
         }
         new_messages << { type: :model, content: COMPRESSED_CONTEXT_ACK }
         new_messages.concat(tail_messages)
@@ -641,15 +643,9 @@ module DiscourseAi
       end
 
       def has_compressed_context_checkpoint?(messages)
-        (0...(messages.length - 1)).any? do |index|
-          message = messages[index]
-          next false if message[:type] != :user
-          next false if message[:id].present?
-          next false if !message[:content].to_s.start_with?(COMPRESSED_CONTEXT_PREFIX)
-
-          next_message = messages[index + 1]
-          next_message[:type] == :model && next_message[:content] == COMPRESSED_CONTEXT_ACK
-        end
+        DiscourseAi::Completions::PromptMessagesBuilder.compression_checkpoint_index(
+          messages,
+        ).present?
       end
 
       def messages_to_raw_context(messages)

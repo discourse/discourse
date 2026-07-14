@@ -7,6 +7,7 @@ module DiscourseAi
       MAX_TOPIC_UPLOADS = 5
       MAX_CONTEXT_MESSAGES = 1000
       COMPRESSED_CONTEXT_PREFIX = "<compressed_context>"
+      COMPRESSED_CONTEXT_SUFFIX = "</compressed_context>"
       COMPRESSED_CONTEXT_ACK = "Understood, I have the context."
       IMAGE_UPLOAD_EXTENSIONS = %w[jpg jpeg png gif webp].freeze
       attr_reader :chat_context_posts
@@ -42,6 +43,7 @@ module DiscourseAi
         elsif !channel.direct_message_channel? && !message.thread_id
           messages =
             Chat::Message
+              .includes(:user, :uploads, :thread)
               .joins("left join chat_threads on chat_threads.id = chat_messages.thread_id")
               .where(chat_channel_id: channel.id)
               .where(
@@ -215,6 +217,38 @@ module DiscourseAi
         builder.trim_to_token_budget!(context_token_budget, tokenizer:)
 
         builder.to_a(style: style || (post.topic.private_message? ? :bot : :topic))
+      end
+
+      def self.message_text(value)
+        case value
+        when Hash
+          message_text(value[:content] || value["content"])
+        when Array
+          value.map { |item| message_text(item) }.join
+        else
+          value.to_s
+        end
+      end
+
+      # Finds the last compression checkpoint: a bot-authored :user message
+      # (blank id) wrapped in the compressed context markers, acknowledged by
+      # the :model message that follows it.
+      def self.compression_checkpoint_index(messages)
+        (messages.length - 2).downto(0) do |index|
+          message = messages[index]
+          next if message[:type] != :user
+          next if message[:id].present?
+          next if !message_text(message).start_with?(COMPRESSED_CONTEXT_PREFIX)
+
+          next_message = messages[index + 1]
+          if next_message[:type] != :model || message_text(next_message) != COMPRESSED_CONTEXT_ACK
+            next
+          end
+
+          return index
+        end
+
+        nil
       end
 
       def self.normalize_upload_inclusion(
@@ -504,32 +538,11 @@ module DiscourseAi
       end
 
       def message_text(value)
-        case value
-        when Hash
-          message_text(value[:content] || value["content"])
-        when Array
-          value.map { |item| message_text(item) }.join
-        else
-          value.to_s
-        end
+        self.class.message_text(value)
       end
 
       def compression_checkpoint_index(messages)
-        (messages.length - 2).downto(0) do |index|
-          message = messages[index]
-          next if message[:type] != :user
-          next if message[:id].present?
-          next if !message_text(message).start_with?(COMPRESSED_CONTEXT_PREFIX)
-
-          next_message = messages[index + 1]
-          if next_message[:type] != :model || message_text(next_message) != COMPRESSED_CONTEXT_ACK
-            next
-          end
-
-          return index
-        end
-
-        nil
+        self.class.compression_checkpoint_index(messages)
       end
 
       def messages_after_last_compression(messages)

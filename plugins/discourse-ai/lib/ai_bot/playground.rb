@@ -368,6 +368,9 @@ module DiscourseAi
 
         reply = streamer.reply
         if new_prompts.length > 1 && reply
+          # Note: messages_from_chat does not read these back, so compressed
+          # context checkpoints only persist across turns for post-based
+          # replies; chat rebuilds context from the raw messages each turn.
           ChatMessageCustomPrompt.create!(message_id: reply.id, custom_prompt: new_prompts)
         end
 
