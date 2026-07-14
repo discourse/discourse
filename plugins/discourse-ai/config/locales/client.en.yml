@@ -1230,8 +1230,8 @@ en:
 
       ai_bot:
         title: "AI bot"
-        agent: "Agent"
-        llm: "Model"
+        agent: "Agent:"
+        llm: "Model:"
         pm_warning: "AI chatbot messages are monitored regularly by moderators."
         cancel_streaming: "Stop reply"
         try_again: "Try again"
