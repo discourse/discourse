@@ -13,6 +13,13 @@ import DToastInstance from "discourse/float-kit/lib/d-toast-instance";
 /** The options accepted by the themed convenience methods, which require `data`. */
 type ThemedToastOptions = Partial<ToastOptions> & { data: ToastData };
 
+/**
+ * The service that shows and dismisses toasts. Toasts are always created
+ * imperatively — there is no declarative component — so call `show` with a
+ * custom body component, or a themed helper such as `success`/`error` that
+ * renders the default body. It holds the list of active toasts that `DToasts`
+ * renders at the app root.
+ */
 export default class Toasts extends Service {
   @tracked activeToasts = trackedArray<DToastInstance>();
 

@@ -12,22 +12,28 @@ import {
 import FloatKitInstance from "discourse/float-kit/lib/float-kit-instance";
 import type TooltipService from "discourse/float-kit/services/tooltip";
 
+/**
+ * The concrete float instance backing a tooltip. It holds the tooltip's options,
+ * open/close state, and portal outlet, and implements the trigger and lifecycle
+ * hooks that `FloatKitInstance` orchestrates.
+ */
 export default class DTooltipInstance extends FloatKitInstance {
   @service declare tooltip: TooltipService;
 
-  /**
-   * Indicates whether the tooltip is expanded or not.
-   */
+  /** Whether the tooltip is currently open. */
   @tracked expanded = false;
 
   /**
-   * Specifies whether the trigger for opening/closing the tooltip is detached from the tooltip itself.
-   * This is the case when a tooltip is trigger programmatically instead of through the <DTooltip /> component.
+   * Whether the tooltip's trigger is managed outside the `<DTooltip />`
+   * component. It is set when the tooltip is created through the `tooltip`
+   * service, where the trigger and content live in separate parts of the DOM
+   * and are rendered by `DHeadlessTooltip` rather than by `DTooltip`.
    */
   @tracked detachedTrigger = false;
 
   /**
-   * Configuration options for the DTooltipInstance.
+   * The merged tooltip options: the defaults from `TOOLTIP.options` with the
+   * caller's overrides applied in the constructor.
    */
   @tracked options: TooltipOptions;
   @tracked portalOutletOverrideElement?: HTMLElement | null;

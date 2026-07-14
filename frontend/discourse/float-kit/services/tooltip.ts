@@ -9,6 +9,13 @@ import type {
 } from "discourse/float-kit/lib/constants";
 import DTooltipInstance from "discourse/float-kit/lib/d-tooltip-instance";
 
+/**
+ * The service that shows tooltips imperatively, outside the `<DTooltip />`
+ * component. It tracks every registered tooltip, enforces that only one tooltip
+ * per `identifier` is open at a time, and exposes the set that `DTooltips`
+ * renders at the app root. Prefer `<DTooltip />` when a template can own the
+ * trigger and content directly.
+ */
 export default class Tooltip extends Service {
   registeredTooltips = trackedSet<DTooltipInstance>();
 

@@ -9,6 +9,13 @@ import type {
 } from "discourse/float-kit/lib/constants";
 import DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 
+/**
+ * The service that shows menus imperatively, outside the `<DMenu />` component.
+ * It tracks every registered menu, enforces that only one menu per `identifier`
+ * or `groupIdentifier` is open at a time, and exposes the set that `DMenus`
+ * renders at the app root. Prefer `<DMenu />` when a template can own the trigger
+ * and content directly.
+ */
 export default class Menu extends Service {
   registeredMenus = trackedSet<DMenuInstance>();
 
@@ -78,6 +85,15 @@ export default class Menu extends Service {
     return instance;
   }
 
+  /**
+   * Creates a menu instance with a detached trigger, without showing it.
+   *
+   * @param trigger - the element the menu is anchored to (may also be an object
+   *   implementing `getBoundingClientRect`).
+   * @param options - the menu options; each field is documented on {@link MenuOptions}.
+   *
+   * @returns the created menu instance.
+   */
   newInstance(trigger: FloatKitTrigger, options?: Partial<MenuOptions>) {
     const instance = new DMenuInstance(getOwner(this)!, options);
     instance.trigger = trigger;

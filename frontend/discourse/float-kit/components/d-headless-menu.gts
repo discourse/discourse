@@ -12,6 +12,13 @@ interface DHeadlessMenuSignature {
   };
 }
 
+/**
+ * Renders a menu instance created through the `menu` service, whose trigger
+ * lives elsewhere in the DOM rather than being owned by this component. It is
+ * mounted once by `DMenus` at the app root, which iterates every registered
+ * menu with a detached trigger. Compare `DMenu`, the declarative component that
+ * owns both its trigger and its instance.
+ */
 const DHeadlessMenu: TemplateOnlyComponent<DHeadlessMenuSignature> = <template>
   <DInlineFloat
     @instance={{@menu}}

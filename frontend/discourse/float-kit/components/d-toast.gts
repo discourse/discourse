@@ -18,6 +18,13 @@ interface DToastSignature {
   };
 }
 
+/**
+ * Renders a single active toast instance and owns its interactive behavior:
+ * swipe-up to dismiss and, when the instance enables auto-close, a progress bar
+ * that counts down to closing. The visible body is the instance's configured
+ * component (`DDefaultToast` by default). It is mounted once per active toast by
+ * `DToasts`, which iterates the `toasts` service.
+ */
 export default class DToast extends Component<DToastSignature> {
   @tracked progressBar?: HTMLElement;
 

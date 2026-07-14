@@ -95,6 +95,14 @@ interface DMenuSignature<Data = unknown> {
   };
 }
 
+/**
+ * The declarative menu component: it renders a trigger (the default button, a
+ * supplied `triggerComponent`, or a `trigger` block) and, while open, the menu
+ * content in a positioned float. It creates and owns its own `DMenuInstance`,
+ * populating the instance options from its arguments, so a template can drop in
+ * a menu without touching the `menu` service. For a menu whose trigger is
+ * managed separately through that service, see `DHeadlessMenu`.
+ */
 export default class DMenu<Data = unknown> extends Component<
   DMenuSignature<Data>
 > {

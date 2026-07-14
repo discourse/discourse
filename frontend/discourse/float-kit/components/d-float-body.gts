@@ -39,11 +39,19 @@ interface DFloatBodySignature {
     portalOutletElement?: HTMLElement | null;
   };
   Blocks: {
-    /** The float content. */
+    /** The float content, rendered inside the positioned element. */
     default: [];
   };
 }
 
+/**
+ * The shared content body that both menus and tooltips render through. It
+ * portals the content (see `DFloatPortal`), positions it against the trigger
+ * with floating-ui, and wires the dismissal and focus behaviors the instance
+ * asks for in its options: close on click-outside, Escape, or scroll, and a Tab
+ * focus trap. It reads all of that from `@instance`, so callers only supply the
+ * instance plus a few presentational overrides.
+ */
 export default class DFloatBody extends Component<DFloatBodySignature> {
   closeOnScroll = modifierFn(() => {
     const firstScrollParent = getScrollParent(this.trigger)!;

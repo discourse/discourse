@@ -16,24 +16,32 @@ import { animateClosing } from "discourse/lib/animation-utils";
 import type Site from "discourse/models/site";
 import type ModalService from "discourse/services/modal";
 
+/**
+ * The concrete float instance backing a menu. It holds the menu's options,
+ * open/close state, and portal outlet, and implements the trigger and lifecycle
+ * hooks that `FloatKitInstance` orchestrates. A menu refocuses its trigger when
+ * it closes and, on mobile, closes through the modal service when it was shown
+ * as a modal.
+ */
 export default class DMenuInstance extends FloatKitInstance {
   @service declare menu: MenuService;
   @service declare site: Site;
   @service declare modal: ModalService;
 
-  /**
-   * Indicates whether the menu is expanded or not.
-   */
+  /** Whether the menu is currently open. */
   @tracked expanded = false;
 
   /**
-   * Specifies whether the trigger for opening/closing the menu is detached from the menu itself.
-   * This is the case when a menu is trigger programmatically instead of through the <DMenu /> component.
+   * Whether the menu's trigger is managed outside the `<DMenu />` component. It
+   * is set when the menu is created through the `menu` service, where the
+   * trigger and content live in separate parts of the DOM and are rendered by
+   * `DHeadlessMenu` rather than by `DMenu`.
    */
   @tracked detachedTrigger = false;
 
   /**
-   * Configuration options for the DMenuInstance.
+   * The merged menu options: the defaults from `MENU.options` with the caller's
+   * overrides applied in the constructor.
    */
   @tracked options: MenuOptions;
   @tracked portalOutletOverrideElement?: HTMLElement | null;

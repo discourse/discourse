@@ -30,6 +30,15 @@ interface DInlineFloatSignature {
   };
 }
 
+/**
+ * Renders an already-created float instance, choosing how to present it: a
+ * full-screen modal on mobile when the instance opts into `modalForMobile`, and
+ * otherwise the standard positioned body (see `DFloatBody`). It only renders
+ * while the instance is expanded. This is the render path for floats created
+ * through the service API, whose trigger lives elsewhere (see `DHeadlessMenu`
+ * and `DHeadlessTooltip`); the declarative components render their own body
+ * inline instead.
+ */
 export default class DInlineFloat extends Component<DInlineFloatSignature> {
   @service declare site: Site;
 

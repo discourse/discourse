@@ -13,6 +13,13 @@ interface DHeadlessTooltipSignature {
   };
 }
 
+/**
+ * Renders a tooltip instance created through the `tooltip` service, whose
+ * trigger lives elsewhere in the DOM rather than being owned by this component.
+ * It is mounted once by `DTooltips` at the app root, which iterates every
+ * registered tooltip with a detached trigger. Compare `DTooltip`, the
+ * declarative component that owns both its trigger and its instance.
+ */
 const DHeadlessTooltip: TemplateOnlyComponent<DHeadlessTooltipSignature> =
   <template>
     <DInlineFloat

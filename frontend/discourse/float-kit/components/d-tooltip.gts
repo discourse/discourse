@@ -69,6 +69,14 @@ interface DTooltipSignature<Data = unknown> {
   };
 }
 
+/**
+ * The declarative tooltip component: it renders a trigger (an icon and/or label
+ * by default, or a `trigger` block) and, while open, the tooltip content in a
+ * positioned float. It creates and owns its own `DTooltipInstance`, populating
+ * the instance options from its arguments, so a template can drop in a tooltip
+ * without touching the `tooltip` service. For a tooltip whose trigger is managed
+ * separately through that service, see `DHeadlessTooltip`.
+ */
 export default class DTooltip<Data = unknown> extends Component<
   DTooltipSignature<Data>
 > {

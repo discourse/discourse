@@ -11,6 +11,13 @@ interface DPopoverSignature {
   };
 }
 
+/**
+ * A legacy wrapper that turns its first child into a tooltip trigger and its
+ * second child into that tooltip's content, registering the pair through the
+ * `tooltip` service. It exists only for backwards compatibility.
+ *
+ * @deprecated Use `<DTooltip />` or the `tooltip` service instead.
+ */
 export default class DPopover extends Component<DPopoverSignature> {
   @service declare tooltip: TooltipService;
 

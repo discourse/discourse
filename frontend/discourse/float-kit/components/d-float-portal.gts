@@ -10,11 +10,18 @@ interface DFloatPortalSignature {
     portalOutletElement?: HTMLElement | null;
   };
   Blocks: {
-    /** The content to portal. */
+    /** The content to render in place or teleport into the portal outlet. */
     default: [];
   };
 }
 
+/**
+ * The lowest-level teleport primitive shared by every float. It either renders
+ * its content in place or moves it (via `{{in-element}}`) into a portal outlet
+ * mounted near the document root, so the content escapes any `overflow` clipping
+ * or stacking context of its trigger. Rendering is forced in place under tests,
+ * where there is no portal outlet to teleport into.
+ */
 export default class DFloatPortal extends Component<DFloatPortalSignature> {
   get inline() {
     return this.args.inline ?? isTesting();
