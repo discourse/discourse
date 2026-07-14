@@ -89,7 +89,7 @@ class TopicsFilter
       when "users"
         filter_users(values: key_prefixes.zip(filter_values))
       when "group"
-        filter_groups(values: filter_values)
+        filter_groups(values: key_prefixes.zip(filter_values))
       when "posts-min"
         filter_by_number_of_posts(min: filter_values)
       when "posts-max"
@@ -376,6 +376,7 @@ class TopicsFilter
         description: I18n.t("filter.description.group"),
         type: "group",
         priority: 1,
+        prefixes: [{ name: "-", description: I18n.t("filter.description.exclude_group") }],
         delimiters: [
           { name: ",", description: I18n.t("filter.description.groups_any") },
           { name: "+", description: I18n.t("filter.description.groups_all") },
@@ -593,8 +594,10 @@ class TopicsFilter
 
   # group:staff,moderators => any of the groups have participation
   # group:staff+moderators => both groups have participation
+  # -group:staff,moderators => none of the groups have participation
+  # -group:staff+moderators => at least one of the groups has no participation
   def filter_groups(values:)
-    values.each do |value|
+    values.each do |prefix, value|
       require_all, group_names = calculate_all_or_any(value)
 
       if group_names.empty?
@@ -620,7 +623,7 @@ class TopicsFilter
           next
         end
 
-        group_ids.each_with_index { |gid, idx| @scope = @scope.where(<<~SQL) }
+        exists_clauses = group_ids.each_with_index.map { |gid, idx| <<~SQL }
             EXISTS (
               SELECT 1
               FROM posts pg#{idx}
@@ -631,13 +634,21 @@ class TopicsFilter
               #{whisper_condition("pg#{idx}")}
             )
           SQL
+
+        if prefix == "-"
+          @scope = @scope.where("NOT (#{exists_clauses.join(" AND ")})")
+        else
+          exists_clauses.each { |exists_clause| @scope = @scope.where(exists_clause) }
+        end
       else
+        not_sql = prefix == "-" ? "NOT" : ""
         @scope = @scope.where(<<~SQL, group_ids:)
-              topics.id IN (
-                SELECT DISTINCT p.topic_id
+              #{not_sql} EXISTS (
+                SELECT 1
                 FROM posts p
                 JOIN group_users gu ON gu.user_id = p.user_id
-                WHERE gu.group_id IN (:group_ids)
+                WHERE p.topic_id = topics.id
+                AND gu.group_id IN (:group_ids)
                 AND p.deleted_at IS NULL
                 #{whisper_condition("p")}
               )

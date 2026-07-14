@@ -195,6 +195,47 @@ RSpec.describe TopicsFilter do
         expect(ids).to contain_exactly(topic_by_u1_and_u2.id)
       end
 
+      it "-group:group1 returns topics without participants from the group" do
+        topic_by_u3 = Fabricate(:post, user: u3).topic
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-group:group1")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u2.id, topic_by_u3.id)
+      end
+
+      it "-groups:group1,group2 returns topics with participants from neither group" do
+        topic_by_u3 = Fabricate(:post, user: u3).topic
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-groups:group1,group2")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u3.id)
+      end
+
+      it "-group:group1+group2 returns topics where both groups are not represented together" do
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-group:group1+group2")
+            .pluck(:id)
+        expect(ids).to contain_exactly(topic_by_u1.id, topic_by_u2.id)
+      end
+
+      it "-group:group1 returns topics where the only post from a group member is deleted" do
+        topic = Fabricate(:topic)
+        Fabricate(:post, topic:, user: u1).update_column(:deleted_at, Time.zone.now)
+
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("-group:group1")
+            .pluck(:id)
+        expect(ids).to include(topic.id)
+      end
+
       it "group:group1 should not return topics where the only post from a group member is deleted" do
         topic = Fabricate(:topic)
         post = Fabricate(:post, topic:, user: u1)
