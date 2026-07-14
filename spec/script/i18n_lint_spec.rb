@@ -35,6 +35,9 @@ RSpec.describe LocaleFileValidator do
       "{{settings:title,logo|la|bel}}", # pipe inside label
       "{{settings:title,logo|la{bel}}", # brace inside label
       "{{settings:,title}}", # leading comma
+      "{{setting:title}", # unclosed singular marker
+      "{{settings:title,logo|All}", # unclosed plural marker
+      "{{setting:title", # no closing braces at all
     ]
 
     VALID_MARKERS.each do |marker|

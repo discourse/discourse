@@ -59,7 +59,10 @@ class LocaleFileValidator
   # lib/site_settings/label_formatter.rb — markers that don't match there are
   # rendered verbatim, so lint anything that only looks like one.
   VALID_SETTING_LINK_REGEX =
-    /\A(?:\{\{setting:[a-z][a-z0-9_]*\}\}|\{\{settings:[a-z][a-z0-9_]*(?:,[a-z][a-z0-9_]*)*(?:\|[^{}|]+)?\}\})\z/
+    /\{\{setting:[a-z][a-z0-9_]*\}\}|\{\{settings:[a-z][a-z0-9_]*(?:,[a-z][a-z0-9_]*)*(?:\|[^{}|]+)?\}\}/
+
+  SETTING_LINK_START_REGEX = /{{settings?:/
+  VALID_SETTING_LINK_AT_START_REGEX = /\A(?:#{VALID_SETTING_LINK_REGEX})/
 
   PLURALIZATION_KEYS = %w[zero one two few many other]
   ENGLISH_KEYS = %w[one other]
@@ -125,7 +128,10 @@ class LocaleFileValidator
         @errors[:invalid_interpolation_key_format] << key unless exempt
       end
 
-      if value.scan(/{{settings?:.*?}}/).any? { |marker| !marker.match?(VALID_SETTING_LINK_REGEX) }
+      if value
+           .enum_for(:scan, SETTING_LINK_START_REGEX)
+           .map { Regexp.last_match.begin(0) }
+           .any? { |start| !value[start..].match?(VALID_SETTING_LINK_AT_START_REGEX) }
         @errors[:invalid_setting_link_format] << key
       end
 
