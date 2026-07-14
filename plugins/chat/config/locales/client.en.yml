@@ -286,8 +286,6 @@ en:
       no_public_channels_cta: "Browse channels"
       kicked_from_channel: "You can no longer access this channel."
       chat_notifications_title: "Chat notifications"
-      only_chat_push_notifications:
-        title: "Only send chat push notifications"
       personalization_title: "Personalization"
       accessibility_title: "Accessibility"
       ignore_channel_wide_mention:

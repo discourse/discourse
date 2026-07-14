@@ -11534,7 +11534,8 @@ CREATE TABLE public.user_options (
     show_original_content boolean DEFAULT false NOT NULL,
     enable_upcoming_change_available_notifications boolean DEFAULT true NOT NULL,
     chat_announce_new_messages boolean DEFAULT true NOT NULL,
-    chat_new_message_sound boolean DEFAULT false NOT NULL
+    chat_new_message_sound boolean DEFAULT false NOT NULL,
+    push_notification_level integer DEFAULT 1 NOT NULL
 );
 
 
@@ -22585,6 +22586,8 @@ INSERT INTO "schema_migrations" (version) VALUES
 ('20260713180615'),
 ('20260708095336'),
 ('20260708080308'),
+('20260707184150'),
+('20260707184146'),
 ('20260707013407'),
 ('20260703164430'),
 ('20260703163425'),
