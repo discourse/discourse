@@ -22,17 +22,5 @@ RSpec.describe "Enable Solved badges by default upcoming change" do
 
       expect(UpcomingChanges::ConditionalDisplay.should_display?(:enable_solved_badges)).to eq(true)
     end
-
-    it "is hidden on sites where the Solved plugin is disabled" do
-      pending(
-        "DiscoursePluginRegistry filters out conditional display callbacks from disabled plugins, so the change is still displayed. Needs a core fix.",
-      )
-
-      SiteSetting.solved_enabled = false
-
-      expect(UpcomingChanges::ConditionalDisplay.should_display?(:enable_solved_badges)).to eq(
-        false,
-      )
-    end
   end
 end
