@@ -57,6 +57,10 @@ RSpec.describe SiteSetting do
         )
       end
 
+      it "does not allow an empty menu" do
+        expect do SiteSetting.top_menu = "" end.to raise_error(Discourse::InvalidParameters)
+      end
+
       it "does not allow random text" do
         expect do SiteSetting.top_menu = "latest|random" end.to raise_error(
           Discourse::InvalidParameters,
