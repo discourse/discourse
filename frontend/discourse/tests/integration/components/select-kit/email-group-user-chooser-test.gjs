@@ -1,5 +1,5 @@
 import { hash } from "@ember/helper";
-import { fillIn, render } from "@ember/test-helpers";
+import { fillIn, find, findAll, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -14,6 +14,161 @@ module(
 
     hooks.beforeEach(function () {
       this.set("subject", selectKit());
+    });
+
+    test("renders group results with group name and full name", async function (assert) {
+      this.set("defaultSearchResults", [
+        {
+          name: "team_a",
+          full_name: "Team A",
+          isGroup: true,
+        },
+      ]);
+
+      await render(
+        <template>
+          <EmailGroupUserChooser
+            @options={{hash
+              customSearchOptions=(hash
+                defaultSearchResults=this.defaultSearchResults
+              )
+            }}
+          />
+        </template>
+      );
+
+      await this.subject.expand();
+
+      assert
+        .dom(".email-group-user-chooser--group")
+        .doesNotHaveClass("--name-only", "renders the default group row style");
+      assert
+        .dom(".email-group-user-chooser--group .identifier")
+        .hasText("team_a", "renders the group name as the identifier");
+      assert
+        .dom(".email-group-user-chooser--group .name")
+        .hasText("Team A", "renders the full group name as the label");
+    });
+
+    test("onlyShowGroupName renders only the group display name", async function (assert) {
+      this.set("defaultSearchResults", [
+        {
+          name: "team_a",
+          full_name: "Team A Full Name",
+          isGroup: true,
+        },
+        {
+          name: "team_b",
+          isGroup: true,
+        },
+      ]);
+
+      await render(
+        <template>
+          <EmailGroupUserChooser
+            @options={{hash
+              onlyShowGroupName=true
+              customSearchOptions=(hash
+                defaultSearchResults=this.defaultSearchResults
+              )
+            }}
+          />
+        </template>
+      );
+
+      await this.subject.expand();
+
+      assert
+        .dom(".email-group-user-chooser--group")
+        .hasClass("--name-only", "applies the name-only group row style");
+      assert
+        .dom(".email-group-user-chooser--group .identifier")
+        .doesNotExist("hides the group identifier");
+      assert.deepEqual(
+        findAll(".email-group-user-chooser--group .name").map((row) =>
+          row.textContent.trim()
+        ),
+        ["Team A Full Name", "team_b"],
+        "uses the full name when present and falls back to the group name"
+      );
+    });
+
+    test("prioritizeUserNameOrdering can render the name before username", async function (assert) {
+      this.siteSettings.prioritize_username_in_ux = false;
+      this.set("defaultSearchResults", [
+        {
+          username: "ada",
+          name: "Ada Lovelace",
+          isUser: true,
+        },
+      ]);
+
+      await render(
+        <template>
+          <EmailGroupUserChooser
+            @options={{hash
+              prioritizeUserNameOrdering=true
+              customSearchOptions=(hash
+                defaultSearchResults=this.defaultSearchResults
+              )
+            }}
+          />
+        </template>
+      );
+
+      await this.subject.expand();
+
+      const userRow = find(".email-group-user-chooser--user");
+
+      assert
+        .dom(userRow)
+        .hasClass("--name-first", "applies the name-first row style");
+      assert.deepEqual(
+        [...userRow.querySelectorAll("span")].map((row) =>
+          row.textContent.trim()
+        ),
+        ["Ada Lovelace", "ada"],
+        "renders name before username"
+      );
+    });
+
+    test("prioritize_username_in_ux keeps username first", async function (assert) {
+      this.siteSettings.prioritize_username_in_ux = true;
+      this.set("defaultSearchResults", [
+        {
+          username: "ada",
+          name: "Ada Lovelace",
+          isUser: true,
+        },
+      ]);
+
+      await render(
+        <template>
+          <EmailGroupUserChooser
+            @options={{hash
+              prioritizeUserNameOrdering=true
+              customSearchOptions=(hash
+                defaultSearchResults=this.defaultSearchResults
+              )
+            }}
+          />
+        </template>
+      );
+
+      await this.subject.expand();
+
+      const userRow = find(".email-group-user-chooser--user");
+
+      assert
+        .dom(userRow)
+        .hasClass("--username-first", "keeps the username-first row style");
+      assert.deepEqual(
+        [...userRow.querySelectorAll("span")].map((row) =>
+          row.textContent.trim()
+        ),
+        ["ada", "Ada Lovelace"],
+        "renders username before name"
+      );
     });
 
     test("pasting", async function (assert) {
