@@ -3283,6 +3283,17 @@ en:
       selected_icon: "Selected icon: %{iconName}"
       clear: "Clear icon"
 
+    d_select:
+      placeholder: "Select…"
+      search_placeholder: "Search…"
+      no_results: "No results found"
+      label: "Options"
+      remove: "Remove"
+      expand: "Show options"
+      results_count:
+        one: "%{count} result"
+        other: "%{count} results"
+
     shared_drafts:
       title: "Shared Drafts"
       notice: "This topic is only visible to those who can publish shared drafts."

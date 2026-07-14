@@ -31,6 +31,8 @@ export interface DMenuComponentArgs<Data = unknown> {
 
   /** The `@data` passed to the menu. */
   data?: Data;
+  /** Whether the menu is currently open — reflects the live instance state. */
+  expanded: boolean;
 }
 
 // The subset of arguments that mirror a menu's option bag. Built as a
@@ -168,10 +170,16 @@ export default class DMenu<Data = unknown> extends Component<
   }
 
   get componentArgs(): DMenuComponentArgs<Data> {
+    const instance = this.menuInstance;
     return {
-      close: this.menuInstance.close,
-      show: this.menuInstance.show,
+      close: instance.close,
+      show: instance.show,
       data: this.options.data as Data,
+      // A getter (not a snapshot) so a consumer reading `expanded` subscribes to the
+      // live tracked state and re-renders on open/close, without churning this object.
+      get expanded() {
+        return instance.expanded;
+      },
     };
   }
 
