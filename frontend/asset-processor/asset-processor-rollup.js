@@ -145,6 +145,8 @@ async function performRollup(modules, opts) {
     ),
   ];
 
+  const routeVirtualPrefix = `${basePath}virtual:route:`;
+
   const chunks = Object.fromEntries(
     bundle.output
       .filter((c) => c.code)
@@ -159,6 +161,12 @@ async function performRollup(modules, opts) {
             imports: chunk.imports.filter((i) =>
               bundle.output.find((c) => c.fileName === i)
             ),
+            // Lets Ruby tie a lazy route chunk back to the route it was split at, so it can be
+            // preloaded on a direct navigation to that route's URL.
+            dynamicImports: chunk.dynamicImports,
+            routeName: chunk.facadeModuleId?.startsWith(routeVirtualPrefix)
+              ? chunk.facadeModuleId.slice(routeVirtualPrefix.length)
+              : null,
             externalPluginImports,
           },
         ];

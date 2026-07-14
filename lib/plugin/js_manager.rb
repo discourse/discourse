@@ -59,6 +59,25 @@ module Plugin
       read_manifest(plugin_directory_name)[entrypoint_name]["externalPluginImports"]
     end
 
+    # The lazy route chunk to preload for `path`, if any. Globs allow a single trailing star, and
+    # the first match wins, so a specific glob must be declared before a wildcard covering it.
+    def self.route_bundle_for_path(plugin_directory_name, entrypoint_name, path)
+      bundles = read_manifest(plugin_directory_name).dig(entrypoint_name, "routeBundles")
+
+      bundle = bundles.to_a.find { |candidate| url_glob_matches?(candidate["url"], path) }
+
+      "js/plugins/#{bundle["fileName"].delete_suffix(".js")}" if bundle
+    end
+
+    def self.url_glob_matches?(glob, path)
+      return path == glob if !glob.end_with?("*")
+
+      prefix = glob.delete_suffix("*").delete_suffix("/")
+
+      path == prefix || path.start_with?("#{prefix}/")
+    end
+    private_class_method :url_glob_matches?
+
     def compile!
       log "Compiling #{Discourse.plugins.count} plugins..."
       start = Time.now
@@ -175,6 +194,7 @@ module Plugin
               fileName: file_name,
               imports: info["imports"],
               externalPluginImports: info["externalPluginImports"],
+              routeBundles: route_bundles_for(info, result, frontend_config),
             }
           end
         end
@@ -227,6 +247,35 @@ module Plugin
     end
 
     private
+
+    # Maps each split route back to the user-facing URL glob it was declared under, so a direct
+    # navigation to that URL can preload the chunk instead of waiting for the router to discover
+    # it. Ordered by `about.json`, because URL globs are matched first-one-wins.
+    def route_bundles_for(entry, chunks, frontend_config)
+      chunk_by_route = {}
+
+      entry["dynamicImports"].to_a.each do |file_name|
+        route_name = chunks.dig(file_name, "routeName")
+        chunk_by_route[route_name] = file_name if route_name
+      end
+
+      urls_by_route(frontend_config).filter_map do |route_name, url|
+        file_name = chunk_by_route[route_name]
+        { url: url, fileName: file_name } if file_name
+      end
+    end
+
+    # `splitAtRoutes` maps a URL glob to a route-name pattern. A trailing star means "and
+    # everything beneath", which is already implied by splitting a route, so the base route name
+    # is the pattern with any trailing star removed.
+    def urls_by_route(frontend_config)
+      split_at_routes = frontend_config&.dig("splitAtRoutes") || {}
+
+      split_at_routes.each_with_object({}) do |(url, pattern), result|
+        base = pattern.sub(/\.?\*\z/, "")
+        result[base] ||= url
+      end
+    end
 
     def minify?
       Rails.env.production?
