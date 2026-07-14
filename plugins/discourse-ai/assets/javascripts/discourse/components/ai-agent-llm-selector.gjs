@@ -219,7 +219,7 @@ export default class AiAgentLlmSelector extends Component {
       {{#if this.showAgentSelector}}
         <div class="agent-llm-selector__selection-wrapper gpt-agent">
           {{#if @showLabels}}
-            <label>{{i18n "discourse_ai.ai_bot.agent"}}</label>
+            <label>{{i18n "discourse_ai.ai_bot.agent"}}:</label>
           {{/if}}
           <DropdownSelectBox
             class="agent-llm-selector__agent-dropdown"
@@ -228,6 +228,7 @@ export default class AiAgentLlmSelector extends Component {
             @options={{hash
               icon=(if @showLabels "angle-down" "robot")
               filterable=this.filterable
+              customStyle=true
             }}
           />
         </div>
@@ -235,13 +236,16 @@ export default class AiAgentLlmSelector extends Component {
       {{#if this.showLLMSelector}}
         <div class="agent-llm-selector__selection-wrapper llm-selector">
           {{#if @showLabels}}
-            <label>{{i18n "discourse_ai.ai_bot.llm"}}</label>
+            <label>{{i18n "discourse_ai.ai_bot.llm"}}:</label>
           {{/if}}
           <DropdownSelectBox
             class="agent-llm-selector__llm-dropdown"
             @value={{this.currentLlm}}
             @content={{this.llmOptions}}
-            @options={{hash icon=(if @showLabels "angle-down" "globe")}}
+            @options={{hash
+              icon=(if @showLabels "angle-down" "globe")
+              customStyle=true
+            }}
           />
         </div>
       {{/if}}

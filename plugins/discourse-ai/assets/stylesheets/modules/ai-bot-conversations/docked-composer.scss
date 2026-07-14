@@ -112,12 +112,9 @@ body.has-ai-bot-docked-composer {
   // topic content doesn't show through the input while scrolling (the docked
   // composer's container is transparent, unlike chat's opaque pane).
   background-color: var(--secondary);
-  background-image: linear-gradient(
-    rgb(var(--primary-very-low-rgb), 0.5),
-    rgb(var(--primary-very-low-rgb), 0.5)
-  );
   transition: border-color 0.15s ease-in-out;
   position: relative;
+  box-shadow: var(--shadow-dropdown);
 
   &.in-focus {
     border-color: var(--d-input-focused-color) !important;
