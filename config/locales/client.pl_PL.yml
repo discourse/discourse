@@ -2955,7 +2955,7 @@ pl_PL:
     created: "Utworzono"
     created_lowercase: "utworzono"
     trust_level: "Poziom zaufania"
-    search_hint: "nazwa użytkownika, email lub IP"
+    search_hint: "nazwy użytkowników lub adresy e-mail (rozdzielone przecinkami lub spacjami) albo adres IP"
     create_account:
       header_title: "Witamy!"
       disclaimer: "Rejestrując się, wyrażasz zgodę na <a href='%{privacy_link}' target='blank'>politykę prywatności</a> i <a href='%{tos_link}' target='blank'>warunki korzystania z usługi</a>."
@@ -3163,6 +3163,13 @@ pl_PL:
       disabled: "Nie wyświetlaj"
       sidebar_footer: "Wyświetl w stopce paska bocznego"
       header: "Wyświetl w nagłówku"
+    category_scope:
+      all: "Wszystkie kategorie publiczne i prywatne"
+      public: "Kategorie publiczne"
+      include: "Uwzględnij wybrane kategorie (z podkategoriami)"
+      include_strict: "Uwzględnij wybrane kategorie (bez podkategorii)"
+      exclude: "Wyklucz wybrane kategorie (z podkategoriami)"
+      exclude_strict: "Wyklucz wybrane kategorie (bez podkategorii)"
     welcome_banner_location:
       above_topic_content: "Powyżej treści tematu"
       below_site_header: "Poniżej nagłówka witryny"
@@ -5365,7 +5372,7 @@ pl_PL:
       unsaved_changes: "Masz niezapisane zmiany"
       slug: "Slug kategorii"
       parent: "Kategoria nadrzędna"
-      slug_placeholder: "(opcjonalne) słowa-z-myślnikiem dla URLi"
+      slug_placeholder: "Wygenerowane automatycznie, jeśli pozostawione puste"
       creation_error: Podczas tworzenia tej kategorii wystąpił błąd.
       save_error: Podczas zapisywania tej kategorii wystąpił błąd.
       errors:
@@ -9120,7 +9127,7 @@ pl_PL:
             header: "Nagłówek"
             full_page: "Pełna strona"
             click_through_only: "wszystkie (tylko przeklikiwanie)"
-            logged_in_only: "Tylko zalogowani"
+            non_staff_only: "Użytkownicy spoza personelu"
           header_search_results: "Wyniki wyszukiwania w nagłówku"
         logster:
           title: "Dzienniki błędów"
@@ -9791,6 +9798,11 @@ pl_PL:
           few: "To ustawienie jest stosowane tylko wtedy, gdy włączono %{dependencyLinks}."
           many: "To ustawienie jest stosowane tylko wtedy, gdy włączono %{dependencyLinks}."
           other: "To ustawienie jest stosowane tylko wtedy, gdy włączono %{dependencyLinks}."
+        depends_on_values_notice:
+          one: "To ustawienie ma zastosowanie tylko wtedy, gdy %{dependencyLinks} jest ustawiony na zgodną wartość."
+          few: "To ustawienie ma zastosowanie tylko wtedy, gdy %{dependencyLinks} są ustawione na zgodną wartość."
+          many: "To ustawienie ma zastosowanie tylko wtedy, gdy %{dependencyLinks} są ustawione na zgodną wartość."
+          other: "To ustawienie ma zastosowanie tylko wtedy, gdy %{dependencyLinks} jest ustawionych na zgodną wartość."
         discard:
           one: "Odrzuć zmianę"
           few: "Odrzuć zmiany"

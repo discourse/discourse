@@ -401,6 +401,8 @@ it:
         random_picker: "Selettore casuale"
         categories: "Elenca le categorie"
         flag_post: "Segnala messaggio"
+        suspend_user: "Sospendi utente"
+        silence_user: "Silenzia utente"
         search: "Cerca"
         tags: "Elenca le etichette"
         time: "Ora"

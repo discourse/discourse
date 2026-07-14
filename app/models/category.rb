@@ -616,6 +616,12 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def self.first_paragraph_description(cooked)
+    doc = Nokogiri::HTML5.fragment(cooked)
+    doc.css("img").remove
+    doc.css("p").first&.inner_html&.strip
+  end
+
   def description_text
     return nil unless description
 

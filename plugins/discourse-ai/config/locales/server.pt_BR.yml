@@ -482,6 +482,8 @@ pt_BR:
         random_picker: "Seletor aleatório"
         categories: "Listar categorias"
         flag_post: "Denunciar postagem"
+        suspend_user: "Suspender usuário(a)"
+        silence_user: "Silenciar usuário(a)"
         edit_post: "Editar postagem"
         move_posts: "Mover postagens"
         search: "Pesquisar"
@@ -622,6 +624,7 @@ pt_BR:
           title: "Aprovar"
         reject:
           title: "Rejeitar"
+        execution_error_unknown: "ocorreu um erro inesperado."
     summarization:
       configuration_hint:
         one: "Defina a configuração \"%{setting}\" primeiro."

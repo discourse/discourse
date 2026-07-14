@@ -6,7 +6,10 @@ RSpec.describe AdminDashboardSearch do
   before { freeze_time(Time.zone.local(2026, 5, 14, 12, 0, 0)) }
 
   describe ".build" do
-    it "returns KPIs, trending terms, and content gaps for the selected dates, counting only logged-in members" do
+    it "returns KPIs, trending terms, and content gaps for the selected dates, counting only non-staff users" do
+      admin = Fabricate(:admin)
+      moderator = Fabricate(:moderator)
+
       Fabricate.times(
         3,
         :clicked_search_log,
@@ -60,6 +63,14 @@ RSpec.describe AdminDashboardSearch do
       Fabricate.times(10, :search_log, term: "ruby", created_at: "2026-05-02 09:00")
       Fabricate.times(20, :search_log, term: "crawler-bait", created_at: "2026-04-26 09:00")
 
+      Fabricate(:search_log, term: "admin-search", user: admin, created_at: "2026-05-05 12:00")
+      Fabricate(:clicked_search_log, term: "ruby", user: moderator, created_at: "2026-05-05 13:00")
+      Fabricate(
+        :search_log,
+        term: "moderator-prior-search",
+        user: moderator,
+        created_at: "2026-04-26 12:00",
+      )
       expect(described_class.build(start_date: "2026-05-01", end_date: "2026-05-07")).to eq(
         logging_enabled: true,
         headline_state: "content_gaps",

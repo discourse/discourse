@@ -46,6 +46,13 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
+      ai_tool_approval:
+        tool: "مەشغۇلات"
+        user: "ئىشلەتكۈچى"
+        approve: "تەستىقلا"
+        reject: "رەت قىل"
+        approved: "تەستىقلاندى"
+        rejected: "رەت قىلىندى"
       llm_selector:
         none: "يوق"
       features:
@@ -74,6 +81,7 @@ ug:
         select_option: "تاللانما تاللىنىدۇ..."
       translations:
         title: "تەرجىمە"
+        category_scope: "سەھىپە"
         stats:
           eta_minutes:
             one: "%{count} مىنۇت"

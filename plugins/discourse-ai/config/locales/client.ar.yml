@@ -232,6 +232,15 @@ ar:
       discourse_workflows:
         ai_agent:
           agent_id: "الوكيل"
+      ai_tool_approval:
+        loading: "جارٍ التحميل..."
+        agent: "الوكيل"
+        tool: "الإجراء"
+        user: "المستخدم"
+        approve: "الموافقة"
+        reject: "رفض"
+        approved: "تمت الموافقة"
+        rejected: "المرفوضة"
       default_llm:
         title: "نموذج اللغة الكبير الافتراضي"
         description: "نموذج اللغة الكبير الافتراضي المستخدم لجميع ميزات الذكاء الاصطناعي. سيتم استخدامه إذا لم يتم تحديد نموذج آخر في إعدادات الميزة أو الوكيل. وإذا لم يُحدد نموذج افتراضي، سيتم استخدام آخر نموذج تم إنشاؤه."
@@ -394,6 +403,7 @@ ar:
         description: "تمكين الترجمة التلقائية لجميع محتويات المنتدى وفقًا للغة المفضلة لدى كل مستخدم"
         supported_locales: "اللغات المدعومة"
         supported_locales_description: "يتيح هذا الإعداد أيضًا للزوار المساهمة بترجمة المنشورات."
+        category_scope: "الفئات"
         admin_actions:
           translation_settings: "إعدادات الترجمة"
           localization_settings: "إعدادات التوطين"

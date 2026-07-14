@@ -87,10 +87,6 @@ export default class AdminReports extends Component {
     return reports.filter((report) => !hiddenReports.includes(report.type));
   }
 
-  get requestedGroupKey() {
-    return this.args.group || "all";
-  }
-
   @bind
   groupReports(reports) {
     if (!reports) {
@@ -174,20 +170,6 @@ export default class AdminReports extends Component {
     ];
   }
 
-  @bind
-  selectedGroupKey(reports) {
-    const options = this.groupDropdownOptions(reports);
-
-    return options.some((option) => option.value === this.requestedGroupKey)
-      ? this.requestedGroupKey
-      : "all";
-  }
-
-  @bind
-  updateGroupFilter(groupKey) {
-    this.args.onGroupChange?.(groupKey);
-  }
-
   <template>
     <DAsyncContent @asyncData={{this.loadReports}}>
       <:content as |reports|>
@@ -195,10 +177,10 @@ export default class AdminReports extends Component {
           @array={{this.filterReports reports}}
           @searchableProps={{array "title" "description"}}
           @dropdownOptions={{this.groupDropdownOptions reports}}
-          @dropdownValue={{this.selectedGroupKey reports}}
+          @textFilterQueryParam="filter"
+          @dropdownFilterQueryParam="group"
           @inputPlaceholder={{i18n "admin.filter_reports"}}
           @noResultsMessage={{i18n "admin.filter_reports_no_results"}}
-          @onDropdownChange={{this.updateGroupFilter}}
         >
           <:content as |filteredReports|>
             {{#each (this.groupReports filteredReports) as |group|}}

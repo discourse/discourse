@@ -427,6 +427,15 @@ class Plugin::Instance
     DiscoursePluginRegistry.register_problem_check(klass, self)
   end
 
+  def register_upcoming_change_conditional_display(setting_name, &block)
+    raise ArgumentError, "block is required" if block.blank?
+
+    DiscoursePluginRegistry.register_upcoming_change_conditional_display_callback(
+      { setting_name: setting_name.to_sym, callback: block },
+      self,
+    )
+  end
+
   def custom_avatar_column(column)
     reloadable_patch do |plugin|
       UserLookup.lookup_columns << column
@@ -1229,7 +1238,11 @@ class Plugin::Instance
   # }
   def register_stat(name, expose_via_api: false, stat_type: nil, &block)
     # We do not want to register and display the same group multiple times.
-    return if DiscoursePluginRegistry.stats.any? { |stat| stat.name == name }
+    if DiscoursePluginRegistry.stats.any? { |stat|
+         stat.name == name && stat.stat_type == stat_type
+       }
+      return
+    end
 
     stat = Stat.new(name, expose_via_api: expose_via_api, stat_type: stat_type, &block)
     DiscoursePluginRegistry.register_stat(stat, self)

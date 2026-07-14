@@ -401,6 +401,8 @@ fi:
         random_picker: "Satunnainen valitsin"
         categories: "Listaa alueet"
         flag_post: "Liputa viesti"
+        suspend_user: "Jäädytä käyttäjä"
+        silence_user: "Hiljennä käyttäjä"
         search: "Hae"
         tags: "Listaa tunnisteet"
         time: "Aika"

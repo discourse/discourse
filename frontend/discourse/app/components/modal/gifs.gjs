@@ -260,6 +260,7 @@ export default class GifsModal extends Component {
             @type="text"
             @value={{this.query}}
             name="query"
+            placeholder={{i18n "gifs.placeholder"}}
             autofocus
           />
 

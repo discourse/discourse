@@ -699,6 +699,9 @@ login:
     hidden: true
     validator: "EnableLocalLoginsViaCodeValidator"
     area: "login"
+    depends_on:
+      - enable_local_logins
+      - enable_local_logins_via_email
     upcoming_change:
       status: "alpha"
       impact: "feature,all_members"

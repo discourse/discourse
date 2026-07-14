@@ -12,6 +12,10 @@ Much of this will be automatically consumed by IDEs with TypeScript/JavaScript s
 
 Core, themes and plugins can be authored directly in TypeScript. Use a `.ts` extension for plain modules, or `.gts` for Glimmer components with a `<template>` tag. Type syntax is stripped at build time, so no separate compilation step is required. Linting (`@discourse/lint-configs`) and type-checking (`pnpm lint:types`) both understand these files.
 
+## Type tests
+
+Types whose meaning a runtime test can't capture (a generic's resolved type, an overload pick, a return type derived from arguments) can be asserted at compile time with [`expect-type`](https://github.com/mmkal/expect-type), in `.ts`/`.gts` files under `frontend/discourse/type-tests/` (e.g. `type-tests/truth-helpers/`). They are checked by `pnpm lint:types` but kept out of the test and production bundles.
+
 ## Usage
 
 - **CLI**: Run `pnpm lint:types`

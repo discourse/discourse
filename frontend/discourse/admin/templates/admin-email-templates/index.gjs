@@ -12,6 +12,7 @@ export default <template>
     <AdminFilterControls
       @array={{@controller.shownTemplates}}
       @searchableProps={{array "title" "id"}}
+      @textFilterQueryParam="filter"
       @showDropdownFilter={{false}}
       @inputPlaceholder={{i18n
         "admin.customize.email_templates.search_templates"

@@ -69,6 +69,14 @@ after_initialize do
   add_to_serializer(:user, :reminders_frequency) { RemindAssignsFrequencySiteSettings.values }
 
   add_to_serializer(
+    :notification,
+    :topic_bumped_at,
+    include_condition: -> do
+      object.notification_type == Notification.types[:assigned] && object.topic.present?
+    end,
+  ) { object.topic.bumped_at }
+
+  add_to_serializer(
     :group_show,
     :assignment_count,
     include_condition: -> { scope.can_assign_globally? },

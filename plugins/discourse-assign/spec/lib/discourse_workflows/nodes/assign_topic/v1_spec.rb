@@ -11,7 +11,7 @@ RSpec.describe DiscourseWorkflows::Nodes::AssignTopic::V1 do
   after { sandbox.dispose }
 
   before do
-    SiteSetting.discourse_workflows_enabled = true
+    SiteSetting.enable_discourse_workflows = true
     SiteSetting.assign_enabled = true
   end
 

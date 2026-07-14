@@ -2428,7 +2428,6 @@ pt:
     created: "Criado"
     created_lowercase: "criado"
     trust_level: "Nível de Confiança"
-    search_hint: "nome de utilizador, e-mail ou endereço de IP"
     create_account:
       header_title: "Bem-vindo!"
       disclaimer: "Ao registar-se, concorda com a <a href='%{privacy_link}' target='blank'>política de privacidade</a> e os <a href='%{tos_link}' target='blank'>termos do serviço</a>."
@@ -3913,7 +3912,6 @@ pt:
         tag_group: "Grupo de tags"
       topic_featured_link_allowed: "Permitir hiperligações em destaque nesta categoria"
       create_long: "Criar uma nova categoria"
-      slug_placeholder: "(Opcional) palavras com travessão no URL"
       creation_error: Ocorreu um erro durante a criação da categoria.
       save_error: Ocorreu um erro ao guardar a categoria.
       validations:

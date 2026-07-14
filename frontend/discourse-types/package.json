@@ -36,6 +36,9 @@
     "./select-kit/*": {
       "types": "./declarations/select-kit/*.d.ts"
     },
+    "./truth-helpers": {
+      "types": "./declarations/truth-helpers/index.d.ts"
+    },
     "./truth-helpers/*": {
       "types": "./declarations/truth-helpers/*.d.ts"
     },

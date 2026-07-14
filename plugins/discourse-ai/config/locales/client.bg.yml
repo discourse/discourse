@@ -34,6 +34,14 @@ bg:
             canned_reply:
               label: "Отговорете"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Зарежда се..."
+        tool: "Действия"
+        user: "Потребител"
+        approve: "Одобри"
+        reject: "Отхвърли"
+        approved: "Одобрена"
+        rejected: "Отхвърлени"
       llm_selector:
         none: "Без"
       features:
@@ -58,6 +66,7 @@ bg:
       modals:
         select_option: "Изберете опция..."
       translations:
+        category_scope: "Категории"
         stats:
           eta_minutes:
             one: "%{count} минута"

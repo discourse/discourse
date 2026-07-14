@@ -19,6 +19,7 @@ import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import { descriptionForRemoteUrl } from "discourse/lib/popular-themes";
+import { searchParamsFromPath } from "discourse/lib/url";
 import DButton from "discourse/ui-kit/d-button";
 import DConditionalLoadingSpinner from "discourse/ui-kit/d-conditional-loading-spinner";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -72,6 +73,26 @@ export default class AdminConfigAreasComponents extends Component {
 
   constructor() {
     super(...arguments);
+
+    const params = searchParamsFromPath(this.router.currentURL);
+    const name = params.get("filter");
+    const status = params.get("status");
+    if (name) {
+      this.nameFilter = name;
+    }
+    if (
+      status &&
+      status !== "all" &&
+      STATUS_FILTER_OPTIONS.some((option) => option.value === status)
+    ) {
+      this.statusFilter = status;
+    }
+    if (this.nameFilter || this.statusFilter) {
+      // a filtered first response can't tell us whether the site has any
+      // components at all, and the filter UI must render to be resettable
+      this.hasComponents = true;
+    }
+
     this.load();
   }
 
@@ -143,14 +164,26 @@ export default class AdminConfigAreasComponents extends Component {
 
   @action
   async load({ append = false } = {}) {
+    const nameFilter = this.nameFilter;
+    const statusFilter = this.statusFilter;
+    const page = this.page;
+
     try {
       const data = await ajax("/admin/config/customize/components", {
         data: {
-          name: this.nameFilter,
-          status: this.statusFilter,
-          page: this.page,
+          name: nameFilter,
+          status: statusFilter,
+          page,
         },
       });
+
+      if (
+        nameFilter !== this.nameFilter ||
+        statusFilter !== this.statusFilter ||
+        page !== this.page
+      ) {
+        return;
+      }
 
       if (append) {
         this.components = [...this.components, ...data.components];
@@ -159,11 +192,19 @@ export default class AdminConfigAreasComponents extends Component {
       }
       this.hasMore = data.has_more;
 
-      if (!this.hasComponents && !this.nameFilter && !this.statusFilter) {
+      if (!append && !nameFilter && !statusFilter) {
+        // an unfiltered fresh load is authoritative — it also corrects the
+        // optimistic value from a filtered deep link after a filter reset
         this.hasComponents = !!data.components.length;
       }
     } finally {
-      this.loading = false;
+      if (
+        nameFilter === this.nameFilter &&
+        statusFilter === this.statusFilter &&
+        page === this.page
+      ) {
+        this.loading = false;
+      }
     }
   }
 
@@ -223,6 +264,10 @@ export default class AdminConfigAreasComponents extends Component {
         <AdminFilterControls
           @array={{this.components}}
           @dropdownOptions={{STATUS_FILTER_OPTIONS}}
+          @initialTextFilter={{this.nameFilter}}
+          @dropdownValue={{this.statusFilter}}
+          @textFilterQueryParam="filter"
+          @dropdownFilterQueryParam="status"
           @inputPlaceholder={{i18n
             "admin.config_areas.themes_and_components.components.search_components"
           }}

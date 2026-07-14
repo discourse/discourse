@@ -2587,7 +2587,6 @@ hu:
     created: "Létrehozva"
     created_lowercase: "létrehozva"
     trust_level: "Bizalmi szint"
-    search_hint: "felhasználónév, e-mail vagy IP-cím"
     create_account:
       header_title: "Üdvözöljük!"
       disclaimer: "Csak akkor regisztráljon, ha elfogadja az <a href='%{privacy_link}' target='blank'>adatvédelmi szabályzatot</a> és a <a href='%{tos_link}' target='blank'>szolgáltatási feltételeket</a>."
@@ -4393,7 +4392,6 @@ hu:
       unsaved_changes: "Nem mentett módosításai vannak"
       slug: "Kategória URL-végződés"
       parent: "Szülő kategória"
-      slug_placeholder: "(Nem kötelező) kötőjeles-szavak a webcímhez"
       creation_error: Hiba lépett fel a kategória létrehozása során!
       save_error: Hiba lépett fel a kategória mentése során!
       errors:

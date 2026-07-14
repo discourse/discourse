@@ -154,6 +154,14 @@ it:
               description: "Quando viene specificato un valore, imposta il limite massimo del numero di token generabili dal modello. Rispetta il limite massimo di token di output del LLM"
     discourse_ai:
       title: "IA"
+      ai_tool_approval:
+        loading: "In caricamento..."
+        tool: "Azione"
+        user: "Utente"
+        approve: "Approva"
+        reject: "Rifiuta"
+        approved: "Approvato"
+        rejected: "Rifiutata"
       default_llm:
         title: "Modello LLM predefinito"
       llm_selector:
@@ -248,6 +256,7 @@ it:
         card: "Scheda"
       translations:
         title: "Traduzioni"
+        category_scope: "Categorie"
         stats:
           eta_minutes:
             one: "%{count} minuto"

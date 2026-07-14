@@ -34,6 +34,14 @@ sq:
             canned_reply:
               label: "Përgjigju"
     discourse_ai:
+      ai_tool_approval:
+        loading: "Duke ngarkuar..."
+        tool: "Veprimi"
+        user: "User"
+        approve: "Aprovo"
+        reject: "Refuzo"
+        approved: "Aprovuar"
+        rejected: "Rejected"
       llm_selector:
         none: "Asnjë"
       features:
@@ -58,6 +66,7 @@ sq:
       modals:
         select_option: "Zgjidhni një opsion..."
       translations:
+        category_scope: "Categories"
         stats:
           eta_minutes:
             one: "%{count} minutë"

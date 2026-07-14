@@ -57,6 +57,8 @@ ug:
         github_file_content: "GitHub ھۆججەت مەزمۇنى"
         random_picker: "ئىختىيارىي تاللىغۇچ"
         categories: "سەھىپە تىزىمىنى كۆرسەت"
+        suspend_user: "ئىشلەتكۈچىنى توختات"
+        silence_user: "ئىشلەتكۈچىنى ئۈنسىزلە"
         edit_post: "يازما تەھرىر"
         search: "ئىزدە"
         tags: "بەلگە تىزىمىنى كۆرسىتىدۇ"

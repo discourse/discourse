@@ -123,6 +123,8 @@ pl_PL:
     ai_embeddings_per_post_enabled: Generuj osadzenia dla każdego wpisu
     ai_admin_dashboard_enabled: "Włącz funkcje AI w panelu administracyjnym."
     ai_admin_dashboard_highlights_agent: "Agent wyjaśniający istotne zmiany w społeczności w panelu administracyjnym."
+    ai_admin_dashboard_highlights_category_scope: "Wybierz kategorie, z których mogą korzystać wyróżnienia AI. Opcje uwzględnienia i wykluczenia użyj {{setting:ai_admin_dashboard_highlights_categories}}. Prywatne wiadomości są zawsze wykluczane."
+    ai_admin_dashboard_highlights_categories: "Kategorie używane, gdy zakres kategorii wyróżnień sztucznej inteligencji jest ustawiony na <strong>obejmują</strong> lub <strong>wykluczają</strong>."
     ai_summarization_enabled: "Włącz funkcję podsumowania"
     ai_summarization_agent: "Agent do wykorzystania w funkcji podsumowania"
     ai_pm_summarization_allowed_groups: "Grupy mogą tworzyć i przeglądać podsumowania w wiadomościach prywatnych."
@@ -149,7 +151,8 @@ pl_PL:
     ai_discord_search_agent: "Agent używany do wyszukiwania Discord."
     ai_discord_allowed_guilds: "Gildie (serwery) Discord, na których bot może wyszukiwać"
     ai_translation_enabled: "Włącz funkcję tłumaczenia AI"
-    ai_translation_excluded_categories: "Treści w tych kategoriach nie będą tłumaczone. Pozostaw puste, aby przetłumaczyć treści we wszystkich kategoriach, w tym w kategoriach prywatnych."
+    ai_translation_category_scope: "Wybierz kategorie, z których może korzystać tłumaczenie AI. Opcje uwzględnienia i wykluczenia użyj {{setting:ai_translation_categories}}. Prywatne wiadomości są kontrolowane przez {{setting:ai_translation_personal_messages}}."
+    ai_translation_categories: "Kategorie używane, gdy zakres kategorii tłumaczenia AI jest ustawiony na <strong>dołącz</strong> lub <strong>wyklucz</strong>."
     ai_translation_personal_messages: "Kontroluje, które prywatne wiadomości są tłumaczone. 'none' wyłącza tłumaczenie wiadomości prywatnych. 'group' tłumaczy tylko wiadomości prywatne grupy. 'all' tłumaczy wszystkie wiadomości prywatne."
     ai_translation_include_bot_content: "Po włączeniu tej opcji treści tworzone przez boty (identyfikatory użytkowników poniżej 0) będą również wysyłane do tłumaczenia."
     ai_translation_max_post_length: "Maksymalna liczba znaków w poście do przetłumaczenia. Posty dłuższe niż ta liczba nie będą tłumaczone."
@@ -589,6 +592,8 @@ pl_PL:
         categories: "Wymień kategorie"
         flag_post: "Oflaguj post"
         close_topic: "Zamknij temat"
+        suspend_user: "Zawieś użytkownika"
+        silence_user: "Wycisz użytkownika"
         unlist_topic: "Usuń temat z listy"
         lock_post: "Zablokuj wpis"
         delete_topic: "Usuń temat"
@@ -635,6 +640,8 @@ pl_PL:
         categories: "Wyświetl wszystkie publicznie widoczne kategorie na forum"
         flag_post: "Oflaguj bieżący wpis do sprawdzenia przez zespół"
         close_topic: "Zamknij lub otwórz temat"
+        suspend_user: "Zawieś (zablokuj) użytkownika, uniemożliwiając mu logowanie się lub publikowanie"
+        silence_user: "Ucisz użytkownika, blokując mu możliwość publikowania, dopóki może czytać"
         unlist_topic: "Wyświetlanie lub usuwanie tematu z listy"
         lock_post: "Zablokuj lub odblokuj wpis"
         delete_topic: "Usuń temat"
@@ -683,6 +690,8 @@ pl_PL:
         random_picker: "Wybieranie z %{options}, wybrane: %{result}"
         flag_post: "Flagowanie wpisu %{post_id} (flag_post: %{flag_post})"
         close_topic: "Zamykanie tematu %{topic_id} (zamknięto: %{closed})"
+        suspend_user: "Zawieszenie %{username} na %{duration_days} dni"
+        silence_user: "Wyciszanie %{username} na %{duration_days} dni"
         unlist_topic: "Usuwanie tematu z listy %{topic_id} (usunięto z listy: %{unlisted})"
         lock_post: "Blokowanie wpisu %{post_id} (zablokowano: %{locked})"
         delete_topic: "Usuwanie tematu %{topic_id} (usunięto: %{deleted})"
@@ -767,6 +776,22 @@ pl_PL:
           not_allowed: "Nie masz uprawnień do zamykania ani otwierania tego tematu."
           no_reason: "Aby zamknąć lub otworzyć temat, trzeba podać powód."
         success: "Temat zaktualizowano pomyślnie."
+      suspend_user:
+        errors:
+          not_found: "Użytkownik nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do zawieszenia tego użytkownika."
+          no_reason: "Aby zawiesić użytkownika, konieczne jest podanie przyczyny."
+          invalid_duration: "Czas trwania musi być dodatnią liczbą całkowitą dni, maksymalnie %{max}."
+          failed: "Nie udało się zawiesić użytkownika."
+        success: "Użytkownik %{username} został zawieszony."
+      silence_user:
+        errors:
+          not_found: "Użytkownik nie został znaleziony."
+          not_allowed: "Nie masz uprawnień do uciszania tego użytkownika."
+          no_reason: "Aby uciszyć użytkownika, trzeba podać powód."
+          invalid_duration: "Czas trwania musi być dodatnią liczbą całkowitą dni, maksymalnie %{max}."
+          failed: "Nie udało się uciszyć użytkownika."
+        success: "Użytkownik %{username} został uciszony."
       unlist_topic:
         errors:
           not_found: "Temat nie został znaleziony."
@@ -891,7 +916,10 @@ pl_PL:
         target_missing: "Cel działania narzędzia już nie istnieje."
         tool_not_found: "Narzędzie „%{tool_name}” nie jest już dostępne."
         bot_user_missing: "Użytkownik bota już nie istnieje."
+        performer_not_human: "To działanie musi zatwierdzić lub odrzucić prawdziwa osoba, a nie bot."
+        post_mismatch: "Ta karta zatwierdzenia nie dotyczy tego wpisu."
         execution_error: "Nie udało się wykonać narzędzia: %{error}"
+        execution_error_unknown: "wystąpił nieoczekiwany błąd"
     summarization:
       configuration_hint:
         one: "Najpierw skonfiguruj ustawienie `%{setting}`."

@@ -79,7 +79,6 @@ export default class SectionFormLink extends Component {
 
   <template>
     <div
-      {{on "dragstart" this.dragHasStarted}}
       {{on "dragover" this.dragOver}}
       {{on "dragenter" this.dragEnter}}
       {{on "dragleave" this.dragLeave}}
@@ -87,7 +86,6 @@ export default class SectionFormLink extends Component {
       {{on "drop" this.dropItem}}
       role="row"
       data-row-id={{@link.objectId}}
-      draggable="true"
       class={{dConcatClass
         "sidebar-section-form-link"
         "row-wrapper"
@@ -95,8 +93,13 @@ export default class SectionFormLink extends Component {
       }}
     >
       {{#if this.site.desktopView}}
-        <div class="draggable" data-link-name={{@link.name}}>
-          {{dIcon "grip-vertical"}}
+        <div
+          {{on "dragstart" this.dragHasStarted}}
+          class="draggable"
+          data-link-name={{@link.name}}
+          draggable="true"
+        >
+          {{dIcon "grip-lines"}}
         </div>
       {{/if}}
 
