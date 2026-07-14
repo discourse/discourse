@@ -1589,6 +1589,9 @@ de:
       notifications: "Benachrichtigungen"
       statistics: "Statistiken"
       desktop_notifications:
+        push_level:
+          none: "Deaktiviert"
+          all: "Aktiviert"
         not_supported: "Dieser Browser unterstützt leider keine Benachrichtigungen."
         perm_denied_expl: "Du hast das Anzeigen von Benachrichtigungen verboten. Aktiviere die Benachrichtigungen über deine Browser-Einstellungen."
         each_browser_note: "Hinweis: Du musst diese Einstellung in jedem Browser, den du verwendest, ändern. Alle Benachrichtigungen werden unabhängig von dieser Einstellung deaktiviert, wenn du die Benachrichtigungen im Benutzermenü pausierst."
@@ -3795,6 +3798,7 @@ de:
       read_more_in_category: "Willst du mehr lesen? Durchstöbere andere Themen in %{categoryLink} oder <a href='%{latestLink}'>sieh dir die aktuellen Themen an</a>."
       read_more: "Willst du mehr lesen? <a href='%{categoryLink}'>Durchstöbere alle Kategorien</a> oder <a href='%{latestLink}'>sieh dir die aktuellen Themen an</a>."
       unread_indicator: "Kein Mitglied hat den letzten Beitrag dieses Themas bisher gelesen."
+      sr_read: "lesen"
       participant_groups: "Teilnehmergruppen"
       reply_count_link:
         one: "%{count} Antwort, zum ersten Beitrag springen"
@@ -5935,7 +5939,6 @@ de:
             apple_touch_icon:
               title: "Apple-Touch-Symbol"
               description: "Dieses Symbol wird für Apple-Touch-Geräte verwendet. Wenn es leer bleibt, wird large_icon verwendet."
-              help_text: "Die empfohlene Größe ist 180 x 180 Pixel. Ein transparenter Hintergrund wird nicht empfohlen."
             digest_logo:
               title: "Digest-Logo"
               description: "Das alternative Logobild, das oben in der E-Mail-Zusammenfassung deiner Website verwendet wird. Wenn du nichts angibst, wird das Bild aus der Einstellung „Logo“ verwendet."

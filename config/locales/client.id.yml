@@ -1047,6 +1047,9 @@ id:
       notifications: "Pemberitahuan"
       statistics: "Statistik"
       desktop_notifications:
+        push_level:
+          none: "Dinonaktifkan"
+          all: "Diaktifkan"
         not_supported: "Pemberitahuan tidak didukung pada browser ini. Maaf."
         perm_denied_expl: "Anda menolak izin untuk pemberitahuan. Izinkan pemberitahuan melalui pengaturan browser anda."
       dismiss: "Bubar"
@@ -1858,6 +1861,7 @@ id:
       back_to_list: "Kembali ke Daftar Topik"
       options: "Opsi Topik"
       show_links: "tampilkan pranala dalam topik ini"
+      sr_read: "baca"
       participant_groups: "Kelompok peserta"
       slow_mode_update:
         enable: "Aktifkan"

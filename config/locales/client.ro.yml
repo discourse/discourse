@@ -1363,6 +1363,9 @@ ro:
       notifications: "Notificări"
       statistics: "Statistici"
       desktop_notifications:
+        push_level:
+          none: "Dezactivate"
+          all: "Activate"
         not_supported: "Acest browser nu suportă notificări. Ne pare rău."
         perm_denied_expl: "Ai blocat notificările. Activează notificările din setările browser-ului."
         consent_prompt: "Vrei să primești notificări atunci când cineva îți răspunde?"
@@ -2676,6 +2679,7 @@ ro:
       back_to_list: "Înapoi la lista de subiecte"
       options: "Opțiuni pentru subiect"
       show_links: "arată legăturile din acest subiect"
+      sr_read: "citire"
       reply_count_link:
         one: "%{count} răspuns, sari la prima postare"
         few: "%{count} răspunsuri, sari la prima postare"

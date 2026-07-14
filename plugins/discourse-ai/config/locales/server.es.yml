@@ -363,6 +363,8 @@ es:
       default_pm_prefix: "[MP de bot de IA sin título]"
       thinking: "Pensando"
       tool_pending_approval: "Esta acción requiere la aprobación del moderador antes de poder ejecutarse."
+      chat_tool_approval:
+        unexpected_error: "se ha producido un error inesperado"
       agents:
         default_llm_required: "Se requiere el modelo LLM predeterminado antes de activar el Chat"
         cannot_delete_system_agent: "Los agentes del sistema no se pueden eliminar, desactívalos en su lugar"

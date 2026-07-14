@@ -1486,6 +1486,9 @@ sk:
       notifications: "Upozornenia"
       statistics: "Štatistiky"
       desktop_notifications:
+        push_level:
+          none: "Vypnuté"
+          all: "Povolené"
         not_supported: "Ľutujeme, tento prehliadač nepodporuje upozornenia."
         perm_denied_expl: "Povolenie pre zobrazenie notifikácií ste zakázali. Notifikácie povolíte v nastaveniach vášho prehliadača."
         each_browser_note: "Poznámka: Toto nastavenie musíte zmeniť v každom prehliadači, ktorý používate. Všetky upozornenia budú zakázané, ak pozastavíte upozornenia z používateľskej ponuky, bez ohľadu na toto nastavenie."
@@ -3654,6 +3657,7 @@ sk:
       read_more_in_category: "Chcete si prečítať viac? Prezrite si ďalšie témy na %{categoryLink} alebo <a href='%{latestLink}'>si pozrite najnovšie témy</a>."
       read_more: "Chcete si prečítať viac? <a href='%{categoryLink}'>Prezrite si všetky kategórie</a> alebo <a href='%{latestLink}'>najnovšie témy</a>."
       unread_indicator: "Posledný príspevok v tejto téme si zatiaľ neprečítal žiadny člen."
+      sr_read: "čítať"
       participant_groups: "Skupiny účastníkov"
       reply_count_link:
         one: "%{count} odpoveď, skok na prvý príspevok"
@@ -5698,7 +5702,6 @@ sk:
             apple_touch_icon:
               title: "Ikona Apple touch"
               description: "Ikona používaná pre dotykové zariadenia Apple. Ak zostane prázdna, použije sa large_icon."
-              help_text: "Odporúčaná veľkosť je 180 x 180 pixelov. Priehľadné pozadie sa neodporúča."
             digest_logo:
               title: "Logo Digest"
               description: "Alternatívny obrázok loga, ktorý sa používa v hornej časti súhrnu e-mailu na vašej stránke. Ak zostane prázdny, použije sa obrázok z nastavenia `logo`."

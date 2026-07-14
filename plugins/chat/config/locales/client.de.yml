@@ -271,8 +271,6 @@ de:
       no_public_channels_cta: "Kanäle durchsuchen"
       kicked_from_channel: "Du kannst nicht mehr auf diesen Kanal zugreifen."
       chat_notifications_title: "Chat-Benachrichtigungen"
-      only_chat_push_notifications:
-        title: "Nur Chat-Push-Benachrichtigungen senden"
       personalization_title: "Personalisierung"
       ignore_channel_wide_mention:
         title: "Kanalweite Erwähnungen ignorieren"

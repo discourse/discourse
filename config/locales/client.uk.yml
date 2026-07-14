@@ -1826,6 +1826,9 @@ uk:
       statistics: "Статистика"
       desktop_notifications:
         label: "Живі сповіщення"
+        push_level:
+          none: "Вимкнено"
+          all: "Включено"
         not_supported: "Сповіщення не підтримуються у цьому оглядачі. Вибачте."
         perm_default: "Увімкнути сповіщення"
         perm_denied_btn: "Відмовлено у доступі"
@@ -3297,6 +3300,7 @@ uk:
     gifs:
       modal_title: "Пошук GIF-файлів"
       composer_title: "Вставити GIF-файл"
+      placeholder: "Пошук KLIPY"
       powered_by: "Працює на Klipy"
       no_results: "Введіть ключове слово для пошуку GIF."
       browse_categories: "Переглянути за категоріями"
@@ -4474,6 +4478,7 @@ uk:
       read_more_in_category: "Хочете прочитати більше? Перегляньте інші теми на %{categoryLink} або <a href='%{latestLink}'>перегляньте останні теми</a>."
       read_more: "Хочете прочитати більше? <a href='%{categoryLink}'>Перегляньте всі категорії</a> або <a href='%{latestLink}'>перегляньте останні теми</a>."
       unread_indicator: "Поки що ніхто з учасників не прочитав останній допис цієї теми."
+      sr_read: "читання"
       participant_groups: "Групи учасників"
       read_more_MF: |
         { HAS_UNREAD_AND_NEW, select,
@@ -6928,7 +6933,6 @@ uk:
             apple_touch_icon:
               title: "Піктограма Apple touch"
               description: "Іконка, що використовується для сенсорних пристроїв Apple. Якщо залишити пустим, буде використано large_icon."
-              help_text: "Рекомендований розмір 180 x 180 пікселів. Прозорий фон не рекомендується."
             digest_logo:
               title: "Логотип дайджесту"
               description: "Альтернативне зображення логотипу, яке використовується у верхній частині резюме вашого сайту електронною поштою. Якщо залишити порожнім, буде використано зображення з налаштування «логотип»."
