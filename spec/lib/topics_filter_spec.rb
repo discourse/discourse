@@ -29,6 +29,14 @@ RSpec.describe TopicsFilter do
       expect(tag_options).not_to be_nil
     end
 
+    it "should advertise the - prefix for the group: option" do
+      group_option = options.find { |o| o[:name] == "group:" }
+
+      expect(group_option[:prefixes]).to contain_exactly(
+        { name: "-", description: I18n.t("filter.description.exclude_group") },
+      )
+    end
+
     it "should not include user-specific options for anonymous users" do
       anon_options = TopicsFilter.option_info(Guardian.new)
       logged_in_options = TopicsFilter.option_info(user.guardian)
