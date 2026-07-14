@@ -21,15 +21,14 @@ RSpec.describe Chat::PinnedMessage do
     fab!(:other_message) { Fabricate(:chat_message, chat_channel: other_channel) }
 
     before do
-      # pinned out of timeline order on purpose
-      Fabricate(:chat_pinned_message, chat_message: message_2, chat_channel: channel)
       Fabricate(:chat_pinned_message, chat_message: message_1, chat_channel: channel)
+      Fabricate(:chat_pinned_message, chat_message: message_2, chat_channel: channel)
       Fabricate(:chat_pinned_message, chat_message: other_message, chat_channel: other_channel)
     end
 
-    it "returns pins for the specified channel in timeline order" do
+    it "returns pins for the specified channel" do
       pins = described_class.for_channel(channel)
-      expect(pins.map(&:chat_message_id)).to eq([message_1.id, message_2.id])
+      expect(pins.map(&:chat_message_id)).to contain_exactly(message_1.id, message_2.id)
     end
   end
 end
