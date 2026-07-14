@@ -945,5 +945,40 @@ RSpec.describe UpcomingChanges do
         end
       end
     end
+
+    describe ".should_display_enable_local_logins_via_code?" do
+      it "returns true when local logins via email are possible" do
+        expect(
+          UpcomingChanges::ConditionalDisplay.should_display?(:enable_local_logins_via_code),
+        ).to eq(true)
+      end
+
+      it "returns false when DiscourseConnect is enabled" do
+        SiteSetting.discourse_connect_url = "https://www.example.com/sso"
+        SiteSetting.discourse_connect_secret = "x" * 10
+        SiteSetting.enable_discourse_connect = true
+
+        expect(
+          UpcomingChanges::ConditionalDisplay.should_display?(:enable_local_logins_via_code),
+        ).to eq(false)
+      end
+
+      it "returns false when local logins via email are disabled" do
+        SiteSetting.enable_local_logins_via_email = false
+
+        expect(
+          UpcomingChanges::ConditionalDisplay.should_display?(:enable_local_logins_via_code),
+        ).to eq(false)
+      end
+
+      it "stays displayed when the change is already enabled even if email login is later disabled" do
+        SiteSetting.enable_local_logins_via_code = true
+        SiteSetting.enable_local_logins_via_email = false
+
+        expect(
+          UpcomingChanges::ConditionalDisplay.should_display?(:enable_local_logins_via_code),
+        ).to eq(true)
+      end
+    end
   end
 end
