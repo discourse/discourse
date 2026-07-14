@@ -4,7 +4,10 @@ import type DMenuInstance from "discourse/float-kit/lib/d-menu-instance";
 
 interface DHeadlessMenuSignature {
   Args: {
+    /** The menu instance to render. */
     menu: DMenuInstance;
+
+    /** Whether to render in place instead of into the portal outlet. */
     inline?: boolean | null;
   };
 }

@@ -5,7 +5,10 @@ import { and } from "discourse/truth-helpers";
 
 interface DHeadlessTooltipSignature {
   Args: {
+    /** The tooltip instance to render. */
     tooltip: DTooltipInstance;
+
+    /** Whether to render in place instead of into the portal outlet. */
     inline?: boolean | null;
   };
 }

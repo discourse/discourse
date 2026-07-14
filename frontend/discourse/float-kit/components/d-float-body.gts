@@ -14,16 +14,34 @@ import dTrapTab from "discourse/ui-kit/modifiers/d-trap-tab";
 interface DFloatBodySignature {
   Element: HTMLDivElement;
   Args: {
+    /** The float instance this body renders. */
     instance: FloatKitInstance;
+
+    /** Whether to render in place instead of into the portal outlet. */
     inline?: boolean | null;
+
+    /** A class added to the outer float element. */
     mainClass?: string;
+
+    /** A class added to the inner content element. */
     innerClass?: string;
+
+    /** The ARIA role for the content. */
     role?: string;
+
+    /** Whether to trap Tab focus within the content. */
     trapTab?: boolean;
-    // some callers forward this even though the body reads `@instance.portalOutletElement`.
+
+    /**
+     * The element to render into. Some callers forward this even though the body
+     * reads `@instance.portalOutletElement`.
+     */
     portalOutletElement?: HTMLElement | null;
   };
-  Blocks: { default: [] };
+  Blocks: {
+    /** The float content. */
+    default: [];
+  };
 }
 
 export default class DFloatBody extends Component<DFloatBodySignature> {

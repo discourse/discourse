@@ -5,7 +5,10 @@ import type TooltipService from "discourse/float-kit/services/tooltip";
 import deprecated from "discourse/lib/deprecated";
 
 interface DPopoverSignature {
-  Blocks: { default: [] };
+  Blocks: {
+    /** The trigger followed by the popover content. */
+    default: [];
+  };
 }
 
 export default class DPopover extends Component<DPopoverSignature> {

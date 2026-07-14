@@ -18,7 +18,10 @@ import dIcon from "discourse/ui-kit/helpers/d-icon";
 
 /** The object yielded to each of the tooltip's blocks. */
 export interface DTooltipComponentArgs<Data = unknown> {
+  /** Closes the tooltip. */
   close: FloatCallback;
+
+  /** The `@data` passed to the tooltip. */
   data?: Data;
 }
 
@@ -32,8 +35,13 @@ export interface DTooltipComponentArgs<Data = unknown> {
 type DTooltipOptionArgs<Data> = Partial<
   Omit<TooltipOptions, "data" | "component" | "onRegisterApi">
 > & {
+  /** The data passed to the content block and rendered component. */
   data?: Data;
+
+  /** A component rendered as the content; it receives the `@data` and `@close` arguments. */
   component?: ComponentLike<{ Args: { data?: Data; close?: FloatCallback } }>;
+
+  /** Called with the tooltip instance when it is created, so callers can control it programmatically. */
   onRegisterApi?: (instance: DTooltipInstance) => void;
 };
 
@@ -42,12 +50,21 @@ interface DTooltipSignature<Data = unknown> {
   Args: DTooltipOptionArgs<Data> & {
     // Arguments the component reads directly and forwards to the trigger button;
     // these are not keys of `TOOLTIP.options`.
+
+    /** The icon ID for the default trigger button. */
     icon?: string;
+
+    /** The label for the default trigger button. */
     label?: string;
   };
   Blocks: {
+    /** The tooltip content; takes precedence over the `content` block. Yields the tooltip api. */
     default: [DTooltipComponentArgs<Data>];
+
+    /** Rendered as the trigger, replacing the default button. Yields the tooltip api. */
     trigger: [DTooltipComponentArgs<Data>];
+
+    /** The tooltip content, used when no default block is given. Yields the tooltip api. */
     content: [DTooltipComponentArgs<Data>];
   };
 }

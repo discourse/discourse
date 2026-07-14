@@ -23,8 +23,13 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 /** The object yielded to each of the menu's blocks and passed to a rendered component. */
 export interface DMenuComponentArgs<Data = unknown> {
+  /** Closes the menu. */
   close: FloatCallback;
+
+  /** Opens the menu. */
   show: FloatCallback;
+
+  /** The `@data` passed to the menu. */
   data?: Data;
 }
 
@@ -38,8 +43,13 @@ export interface DMenuComponentArgs<Data = unknown> {
 type DMenuOptionArgs<Data> = Partial<
   Omit<MenuOptions, "data" | "component" | "onRegisterApi">
 > & {
+  /** The data passed to the content block and rendered component. */
   data?: Data;
+
+  /** A component rendered as the content; it receives the `@data` and `@close` arguments. */
   component?: ComponentLike<{ Args: { data?: Data; close?: FloatCallback } }>;
+
+  /** Called with the menu instance when it is created, so callers can control it programmatically. */
   onRegisterApi?: (instance: DMenuInstance) => void;
 };
 
@@ -48,18 +58,39 @@ interface DMenuSignature<Data = unknown> {
   Args: DMenuOptionArgs<Data> & {
     // Arguments the component reads directly and forwards to the trigger button;
     // these are not keys of `MENU.options`.
+
+    /** Called on keydown on the default trigger button. */
     onKeydown?: (event: KeyboardEvent) => unknown;
+
+    /** A component rendered as the trigger, instead of the default button. */
     triggerComponent?: ComponentLike;
+
+    /** The icon ID for the default trigger button. */
     icon?: string;
+
+    /** The label for the default trigger button. */
     label?: string;
+
+    /** The aria-label for the default trigger button. */
     ariaLabel?: string;
+
+    /** The title for the default trigger button. */
     title?: string;
+
+    /** Whether the default trigger button is disabled. */
     disabled?: boolean;
+
+    /** Whether the default trigger button shows a loading state. */
     isLoading?: boolean;
   };
   Blocks: {
+    /** The menu content; takes precedence over the `content` block. Yields the menu api. */
     default: [DMenuComponentArgs<Data>];
+
+    /** Rendered as the trigger, replacing the default button. Yields the menu api. */
     trigger: [DMenuComponentArgs<Data>];
+
+    /** The menu content, used when no default block is given. Yields the menu api. */
     content: [DMenuComponentArgs<Data>];
   };
 }

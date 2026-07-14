@@ -6,7 +6,10 @@ import { bind } from "discourse/lib/decorators";
 interface FloatKitCloseOnEscapeSignature {
   Element: HTMLElement;
   Args: {
-    Positional: [() => void];
+    Positional: [
+      /** Called when Escape is pressed. */
+      close: () => void,
+    ];
   };
 }
 

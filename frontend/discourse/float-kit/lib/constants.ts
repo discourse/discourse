@@ -70,6 +70,7 @@ export type FloatTriggers = string[] | { mobile: string[]; desktop: string[] };
  * instance because the defaults populate it.
  */
 export interface TooltipOptions {
+  /** Whether to animate the float as it opens and closes. */
   animated: boolean;
 
   /** Whether to render a directional arrow pointing at the trigger. */
@@ -81,9 +82,16 @@ export interface TooltipOptions {
   /** Read by the shared inline float to render as a modal on mobile; menus set it, tooltips leave it unset. */
   modalForMobile?: boolean;
 
+  /** Called just before the float is shown. */
   beforeTrigger: FloatCallback | null;
+
+  /** Whether a click outside the float closes it. */
   closeOnClickOutside: boolean;
+
+  /** Whether pressing Escape closes the float. */
   closeOnEscape: boolean;
+
+  /** Whether scrolling closes the float. */
   closeOnScroll: boolean;
 
   /** A component rendered as the content; it receives the `@data` and `@close` arguments. */
@@ -103,7 +111,10 @@ export interface TooltipOptions {
   /** Improves positioning for a trigger that spans multiple lines. */
   inline: boolean | null;
 
+  /** Whether the content stays open while the pointer moves into it, so it can be interacted with. */
   interactive: boolean;
+
+  /** Whether FloatKit attaches the trigger event listeners itself, rather than the caller driving it through the service API. */
   listeners: boolean;
 
   /** The maximum width of the content, in pixels. */
@@ -115,17 +126,40 @@ export interface TooltipOptions {
   /** Displaces the content from its trigger, in pixels. */
   offset: number;
 
+  /** The events that open the float. */
   triggers: FloatTriggers;
+
+  /** The events that close the float. */
   untriggers: FloatTriggers;
+
+  /** The preferred placement of the float relative to its trigger. */
   placement: FloatUiPlacement;
+
+  /** Whether to shift the float into view before running the visibility optimizer, rather than after. */
   shiftBeforeVisibilityOptimizer: boolean;
+
+  /** The strategy that keeps the float on screen when its preferred placement would overflow. */
   visibilityOptimizer: VisibilityOptimizer;
+
+  /** The placements to try, in order, when the preferred one does not fit. */
   fallbackPlacements: readonly FloatUiPlacement[];
+
+  /** Whether to reposition automatically as the trigger or viewport changes; an object passes floating-ui `autoUpdate` options. */
   autoUpdate: boolean | AutoUpdateOptions;
+
+  /** Whether to trap Tab focus within the content. */
   trapTab: boolean;
+
+  /** Called after the float closes. */
   onClose: FloatCallback | null;
+
+  /** Called after the float shows. */
   onShow: FloatCallback | null;
+
+  /** Called with the float instance when it is created, so callers can control it programmatically. */
   onRegisterApi: FloatCallback | null;
+
+  /** The element to render the content into, instead of the default portal outlet. */
   portalOutletElement: HTMLElement | null;
 }
 
@@ -135,25 +169,46 @@ export interface TooltipOptions {
  * the menu template forwards to its trigger and content).
  */
 export interface MenuOptions extends TooltipOptions {
+  /** Whether to focus the content when the menu opens. */
   autofocus: boolean;
+
+  /** Whether the menu renders as a modal on mobile. */
   modalForMobile: boolean;
 
   /** Only one menu per group identifier is open at a time. */
   groupIdentifier: string | null;
 
+  /** The identifier of the parent menu, for nested menus. */
   parentIdentifier: string | null;
+
+  /** A class added to the trigger. */
   triggerClass: string | null;
+
+  /** A class added to the content. */
   contentClass: string | null;
+
+  /** A class added to both the trigger and the content. */
   class: string | null;
+
+  /** Whether to set the content's min-width to the trigger's width. */
   matchTriggerMinWidth: boolean;
+
+  /** Whether to set the content's width to the trigger's width. */
   matchTriggerWidth: boolean;
 }
 
 /** One action button rendered by the default toast. */
 export interface ToastAction {
+  /** Called when the button is clicked, receiving the toast data and a close function. */
   action?: (args: { data?: ToastData; close?: FloatCallback }) => void;
+
+  /** The icon ID for the button. */
   icon?: string;
+
+  /** The label for the button. */
   label?: string;
+
+  /** A class added to the button. */
   class?: string;
 }
 
@@ -162,20 +217,39 @@ export interface ToastAction {
  * custom components may add their own (hence the index signature).
  */
 export interface ToastData {
+  /** A theme name applied to the toast (e.g. `"success"`, `"error"`). */
   theme?: string;
+
+  /** The icon ID shown in the toast. */
   icon?: string;
+
+  /** The toast title. */
   title?: string;
+
+  /** The toast message. */
   message?: string;
+
+  /** Whether `message` is trusted HTML rather than plain text. */
   isHtmlMessage?: boolean;
+
+  /** The action buttons shown in the toast. */
   actions?: ToastAction[];
+
   [key: string]: unknown;
 }
 
 /** The arguments a toast component receives (the default is `DDefaultToast`). */
 export interface ToastComponentArgs {
+  /** The data to render in the toast. */
   data?: ToastData;
+
+  /** Closes the toast. */
   close?: FloatCallback;
+
+  /** Whether to show a progress bar counting down to auto-close. */
   showProgressBar?: boolean;
+
+  /** Registers the progress-bar element so the auto-close modifier can animate it. */
   onRegisterProgressBar?: (element: HTMLElement) => void;
 }
 
@@ -187,11 +261,22 @@ export type ToastComponent = ComponentLike<{
 
 /** The options for a toast, after merging over the defaults below. */
 export interface ToastOptions {
+  /** Whether the toast closes automatically after `duration`. */
   autoClose: boolean;
+
+  /** Whether to reposition automatically; an object passes floating-ui `autoUpdate` options. */
   autoUpdate: boolean | AutoUpdateOptions;
+
+  /** How long the toast stays open: a preset (`"short"`/`"long"`) or a number of milliseconds. */
   duration: "short" | "long" | number;
+
+  /** The component rendered as the toast body. */
   component: ToastComponent;
+
+  /** Whether to show a progress bar counting down to auto-close. */
   showProgressBar: boolean;
+
+  /** The viewports the toast is shown on. */
   views: Array<"desktop" | "mobile">;
 
   /** The `@data` passed to the toast component. */

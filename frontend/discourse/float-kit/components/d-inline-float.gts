@@ -10,11 +10,22 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 
 interface DInlineFloatSignature {
   Args: {
+    /** The float instance to render. */
     instance: FloatKitInstance;
+
+    /** Whether to trap Tab focus within the content. */
     trapTab?: boolean;
+
+    /** A class added to the outer float element. */
     mainClass?: string;
+
+    /** A class added to the inner content element. */
     innerClass?: string;
+
+    /** The ARIA role for the content. */
     role?: string;
+
+    /** Whether to render in place instead of into the portal outlet. */
     inline?: boolean | null;
   };
 }

@@ -3,7 +3,10 @@ import type { TemplateOnlyComponent } from "@ember/component/template-only";
 interface DButtonTooltipSignature {
   Element: HTMLDivElement;
   Blocks: {
+    /** The button. */
     button: [];
+
+    /** The tooltip content shown for the button. */
     tooltip: [];
   };
 }

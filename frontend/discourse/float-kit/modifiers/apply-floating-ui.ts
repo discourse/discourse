@@ -14,9 +14,14 @@ interface FloatKitApplyFloatingUiSignature {
   Element: HTMLElement;
   Args: {
     Positional: [
-      FloatKitTrigger,
-      PositioningOptions | undefined,
-      FloatKitInstance,
+      /** The reference the float is anchored to. */
+      trigger: FloatKitTrigger,
+
+      /** The positioning options, or `undefined` to use the defaults. */
+      options: PositioningOptions | undefined,
+
+      /** The float instance being positioned. */
+      instance: FloatKitInstance,
     ];
   };
 }

@@ -12,9 +12,16 @@ interface AutoCloseToastSignature {
   Element: HTMLElement;
   Args: {
     Named: {
+      /** Closes the toast. */
       close: () => void;
+
+      /** How long the toast stays open before auto-closing, in milliseconds. */
       duration: number;
+
+      /** The progress-bar element to animate down over `duration`. */
       progressBar?: HTMLElement | null;
+
+      /** Whether auto-close is active. */
       enabled?: boolean;
     };
   };

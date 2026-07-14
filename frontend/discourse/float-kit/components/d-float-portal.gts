@@ -3,10 +3,16 @@ import { isTesting } from "discourse/lib/environment";
 
 interface DFloatPortalSignature {
   Args: {
+    /** Whether to render in place instead of into the portal outlet. */
     inline?: boolean | null;
+
+    /** The element to render into, instead of the default portal outlet. */
     portalOutletElement?: HTMLElement | null;
   };
-  Blocks: { default: [] };
+  Blocks: {
+    /** The content to portal. */
+    default: [];
+  };
 }
 
 export default class DFloatPortal extends Component<DFloatPortalSignature> {

@@ -13,6 +13,7 @@ const VELOCITY_THRESHOLD = -1.2;
 
 interface DToastSignature {
   Args: {
+    /** The toast instance to render. */
     toast: DToastInstance;
   };
 }
