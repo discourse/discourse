@@ -70,7 +70,11 @@ function permissionOptionDescription(permission) {
 
 function rowNames() {
   return findAll(".d-access-control__item-name").map((row) =>
-    row.textContent.replace("Automatic", "").trim()
+    [...row.childNodes]
+      .find(
+        (node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim()
+      )
+      .textContent.trim()
   );
 }
 
@@ -203,8 +207,8 @@ module("Integration | Component | DAccessControl", function (hooks) {
     assert.strictEqual(added.type, "user", "marks the entry as a user");
     assert.strictEqual(
       added.display_name,
-      "Ada Lovelace",
-      "sets the display name from the chosen user"
+      "ada",
+      "sets the display name from the site setting fallback"
     );
     assert.strictEqual(
       added.username,
@@ -226,6 +230,98 @@ module("Integration | Component | DAccessControl", function (hooks) {
       "edit",
       "applies the default edit permission for a user"
     );
+  });
+
+  test("sorts newly selected users by name while respecting the display name setting", async function (assert) {
+    const displayNameOnPosts = this.siteSettings.display_name_on_posts;
+    const prioritizeUsernameInUx = this.siteSettings.prioritize_username_in_ux;
+    this.siteSettings.display_name_on_posts = false;
+    this.siteSettings.prioritize_username_in_ux = true;
+
+    pretender.get("/access-control/grantees/search", () => {
+      return response({
+        users: [
+          {
+            id: 7,
+            username: "edgar",
+            name: "Edgar Allan Poe",
+            avatar_template: "/letter_avatar_proxy/v4/letter/e/{size}.png",
+          },
+        ],
+        groups: [],
+      });
+    });
+
+    try {
+      const state = controlledState([
+        {
+          type: "group",
+          id: 999,
+          permission: "edit",
+          display_name: "Staff",
+          mandatory: false,
+        },
+        {
+          type: "user",
+          id: 2,
+          permission: "edit",
+          display_name: "Aaron User",
+          mandatory: false,
+        },
+        {
+          type: "user",
+          id: 3,
+          permission: "edit",
+          display_name: "Marco Bianchi",
+          mandatory: false,
+        },
+        {
+          type: "user",
+          id: 4,
+          permission: "edit",
+          display_name: "Zoe User",
+          mandatory: false,
+        },
+      ]);
+
+      await render(
+        <template>
+          <DAccessControl
+            @groups={{GROUPS}}
+            @acl={{state.acl}}
+            @aclTarget="TestTarget"
+            @onChange={{state.onChange}}
+          />
+        </template>
+      );
+
+      const chooser = selectKit(".d-access-control__chooser");
+      await chooser.expand();
+      await chooser.fillInFilter("edgar");
+      await chooser.selectRowByValue("user:7");
+
+      const added = state.onChangeCalls[0].find(
+        (entry) => entry.type === "user" && entry.id === 7
+      );
+      assert.strictEqual(
+        added.display_name,
+        "edgar",
+        "uses the username as the display name when names are not prioritized"
+      );
+      assert.strictEqual(
+        added.sort_name,
+        "Edgar Allan Poe",
+        "keeps the user's name as the sort key"
+      );
+      assert.deepEqual(
+        rowNames(),
+        ["Staff", "Aaron User", "edgar", "Marco Bianchi", "Zoe User"],
+        "inserts the selected user according to the user's name"
+      );
+    } finally {
+      this.siteSettings.display_name_on_posts = displayNameOnPosts;
+      this.siteSettings.prioritize_username_in_ux = prioritizeUsernameInUx;
+    }
   });
 
   test("transformPermissionOptions can change descriptions and add options", async function (assert) {

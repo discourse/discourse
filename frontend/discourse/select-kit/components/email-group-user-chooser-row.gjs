@@ -54,14 +54,14 @@ export default class EmailGroupUserChooserRow extends SelectKitRowComponent {
       <div
         class={{dConcatClass
           "email-group-user-chooser--group"
-          (if this.selectKit.options.onlyShowGroupName "--name-only")
+          (if this.selectKit.options.onlyShowGroupFullName "--full-name-only")
         }}
       >
-        {{#unless this.selectKit.options.onlyShowGroupName}}
+        {{#unless this.selectKit.options.onlyShowGroupFullName}}
           <span class="identifier">{{this.item.id}}</span>
         {{/unless}}
         <span class="name">
-          {{#if this.selectKit.options.onlyShowGroupName}}
+          {{#if this.selectKit.options.onlyShowGroupFullName}}
             {{#if this.item.full_name}}
               {{this.item.full_name}}
             {{else}}

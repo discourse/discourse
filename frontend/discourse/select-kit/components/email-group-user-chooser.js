@@ -13,7 +13,7 @@ import EmailGroupUserChooserRow from "./email-group-user-chooser-row";
   filterComponent: EmailGroupUserChooserFilter,
   fullWidthWrap: false,
   autoWrap: false,
-  onlyShowGroupName: false,
+  onlyShowGroupFullName: false,
   prioritizeUserNameOrdering: false,
 })
 @pluginApiIdentifiers(["email-group-user-chooser"])

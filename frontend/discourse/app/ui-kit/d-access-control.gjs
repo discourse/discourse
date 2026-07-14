@@ -5,11 +5,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DMenu from "discourse/float-kit/components/d-menu";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
-import { ajax } from "discourse/lib/ajax";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { prioritizeNameFallback } from "discourse/lib/settings";
-import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
-import { selectKitOptions } from "discourse/select-kit/components/select-kit";
 import { eq } from "discourse/truth-helpers";
 import DButton from "discourse/ui-kit/d-button";
 import DDropdownMenu from "discourse/ui-kit/d-dropdown-menu";
@@ -17,8 +14,11 @@ import dAvatar from "discourse/ui-kit/helpers/d-avatar";
 import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dIcon from "discourse/ui-kit/helpers/d-icon";
 import { i18n } from "discourse-i18n";
+import DAccessControlGranteeChooser, {
+  granteeValue,
+  groupGranteeResult,
+} from "./d-access-control-grantee-chooser";
 
-const ACCESS_CONTROL_GRANTEE_SEARCH_URL = "/access-control/grantees/search";
 const EDIT_PERMISSION = "edit";
 const READ_ONLY_PERMISSION = "view";
 const READ_ONLY_DEFAULT_AUTO_GROUPS = [
@@ -59,84 +59,8 @@ function defaultPermissions() {
   ];
 }
 
-function granteeValue(type, id) {
-  return `${type}:${id}`;
-}
-
 function rowTypeSortOrder(type) {
   return ROW_TYPE_SORT_ORDER[type] ?? 2;
-}
-
-function groupGranteeResult(group) {
-  return {
-    value: granteeValue("group", group.id),
-    id: group.name,
-    aclId: group.id,
-    aclType: "group",
-    name: group.name,
-    full_name: group.full_name,
-    display_name: group.display_name,
-    automatic: group.automatic,
-    isGroup: true,
-  };
-}
-
-function userGranteeResult(user) {
-  return {
-    value: granteeValue("user", user.id),
-    id: user.username,
-    aclId: user.id,
-    aclType: "user",
-    name: user.name,
-    username: user.username,
-    showUserStatus: false,
-    avatar_template: user.avatar_template,
-    isUser: true,
-  };
-}
-
-@selectKitOptions({
-  excludedGrantees: undefined,
-  onlyShowGroupName: true,
-  prioritizeUserNameOrdering: true,
-})
-class AccessControlGranteeChooser extends EmailGroupUserChooser {
-  valueProperty = "value";
-
-  search(filter = "") {
-    if (!filter) {
-      return Promise.resolve(
-        this.selectKit.options.customSearchOptions?.defaultSearchResults || []
-      );
-    }
-
-    return ajax(ACCESS_CONTROL_GRANTEE_SEARCH_URL, {
-      data: {
-        term: filter,
-        acl_target: this.selectKit.options.aclTarget,
-      },
-    })
-      .then((results) => this.normalizeGranteeResults(results))
-      .then((results) => this.excludeSelectedGrantees(results))
-      .catch(() => []);
-  }
-
-  normalizeGranteeResults(results) {
-    return [
-      ...(results?.groups || []).map(groupGranteeResult),
-      ...(results?.users || []).map(userGranteeResult),
-    ];
-  }
-
-  excludeSelectedGrantees(results) {
-    const excludedGrantees = this.selectKit.options.excludedGrantees || [];
-
-    if (!excludedGrantees.length) {
-      return results;
-    }
-
-    return results.filter((result) => !excludedGrantees.includes(result.value));
-  }
 }
 
 const AccessControlPermissionTrigger = <template>
@@ -181,33 +105,6 @@ export default class DAccessControl extends Component {
     return [...permissions.sort((a, b) => a.level - b.level), REMOVE_ACTION];
   }
 
-  get availableGroups() {
-    const taken = new Set(this.selectedGroupIds);
-    return (this.args.groups || [])
-      .filter((group) => !taken.has(group.id))
-      .sort((a, b) => {
-        if (a.automatic !== b.automatic) {
-          return a.automatic ? -1 : 1;
-        }
-
-        return (a.full_name || a.name).localeCompare(b.full_name || b.name);
-      });
-  }
-
-  get availableGrantees() {
-    return this.availableGroups.map(groupGranteeResult);
-  }
-
-  get selectedGranteeValues() {
-    return this.acl.map((entry) => granteeValue(entry.type, entry.id));
-  }
-
-  get selectedGroupIds() {
-    return this.acl
-      .filter((entry) => entry.type === "group")
-      .map((entry) => entry.id);
-  }
-
   /**
    * Mandatory permissions are defined per-target server-side via a mandatory_acl
    * method, which is attached to the Site JSON. Any mandatory permissions will
@@ -249,17 +146,22 @@ export default class DAccessControl extends Component {
     }
 
     const mandatoryEntryKeys = new Set(
-      this.mandatoryAcl.map((entry) => `${entry.type}-${entry.id}`)
+      this.mandatoryAcl.map((entry) => granteeValue(entry.type, entry.id))
     );
-    const acl = (this.args.acl || []).filter(
-      (entry) => !mandatoryEntryKeys.has(`${entry.type}-${entry.id}`)
+
+    // The passed in ACL (if any) without the mandatory entries, which are
+    // added back in below.
+    const resolvedAcl = (this.args.acl || []).filter(
+      (entry) => !mandatoryEntryKeys.has(granteeValue(entry.type, entry.id))
     );
 
     this.mandatoryAcl.forEach((entry) => {
+      // NOTE (martin) This is groups only for now...not sure we will need mandatory
+      // user ACLs, but we can figure that out later.
       if (entry.type === "group") {
         const group = (this.args.groups || []).find((g) => g.id === entry.id);
         if (group) {
-          acl.push({
+          resolvedAcl.push({
             type: "group",
             id: entry.id,
             name: group.name,
@@ -274,45 +176,85 @@ export default class DAccessControl extends Component {
       }
     });
 
-    return acl;
+    return resolvedAcl;
   }
 
   // TODO (martin) How are we going to deal with users that have the Owner permission
   // here if we don't want to expose that in the UI?
   get rows() {
-    return this.acl
-      .map((entry) => ({
-        key: `${entry.type}-${entry.id}-${entry.permission}`,
-        id: entry.id,
-        permission: entry.permission,
-        display_name: entry.display_name,
-        username: entry.username,
-        name: entry.name,
-        avatar_template: entry.avatar_template,
-        type: entry.type,
-        mandatory: entry.mandatory,
-      }))
-      .sort((a, b) => {
-        if (a.mandatory !== b.mandatory) {
-          return a.mandatory ? -1 : 1;
-        }
+    const mappedAcl = this.acl.map((entry) => ({
+      key: `${granteeValue(entry.type, entry.id)}:${entry.permission}`,
+      id: entry.id,
+      permission: entry.permission,
+      display_name: entry.display_name,
+      sort_name: entry.sort_name || entry.name || entry.display_name,
+      username: entry.username,
+      name: entry.name,
+      avatar_template: entry.avatar_template,
+      type: entry.type,
+      mandatory: Boolean(entry.mandatory),
+    }));
 
-        const nameSort = (a.display_name || "").localeCompare(
-          b.display_name || ""
-        );
+    return mappedAcl.sort((a, b) => {
+      if (a.mandatory !== b.mandatory) {
+        return a.mandatory ? -1 : 1;
+      }
 
-        if (a.mandatory && b.mandatory) {
-          return nameSort;
-        }
+      const nameSort = (a.sort_name || "").localeCompare(b.sort_name || "");
 
-        if (a.type !== b.type) {
-          return rowTypeSortOrder(a.type) - rowTypeSortOrder(b.type);
-        }
-
+      if (a.mandatory && b.mandatory) {
         return nameSort;
+      }
+
+      if (a.type !== b.type) {
+        return rowTypeSortOrder(a.type) - rowTypeSortOrder(b.type);
+      }
+
+      return nameSort;
+    });
+  }
+
+  /**
+   * The default available grantees which are shown in the preloaded
+   * search results for DAccessControlGranteeChooser. This is used to show
+   * the available groups which can be added to the ACL, with users
+   * gated behind an async search request.
+   */
+  get defaultAvailableGrantees() {
+    return this.availableGroups.map(groupGranteeResult);
+  }
+
+  get availableGroups() {
+    const takenGroupIds = new Set(
+      this.acl
+        .filter((entry) => entry.type === "group")
+        .map((entry) => entry.id)
+    );
+
+    return (this.args.groups || [])
+      .filter((group) => !takenGroupIds.has(group.id))
+      .sort((a, b) => {
+        if (a.automatic !== b.automatic) {
+          return a.automatic ? -1 : 1;
+        }
+
+        return (a.full_name || a.name).localeCompare(b.full_name || b.name);
       });
   }
 
+  /**
+   * Grantees which should not show in the search results for
+   * DAccessControlGranteeChooser. This is used to prevent users from adding the
+   * same grantee (a user or group) multiple times.
+   */
+  get excludedGrantees() {
+    return this.acl.map((entry) => granteeValue(entry.type, entry.id));
+  }
+
+  /**
+   * Fired when a grantee is chosen from the DAccessControlGranteeChooser
+   * search results.
+   */
   @action
   onGranteeChosen(_value, selectedGrantees) {
     const selectedGrantee = selectedGrantees?.[0];
@@ -339,8 +281,15 @@ export default class DAccessControl extends Component {
     }
 
     if (selectedGrantee.aclType === "user") {
+      const sortName =
+        selectedGrantee.sort_name ||
+        selectedGrantee.name ||
+        selectedGrantee.display_name ||
+        selectedGrantee.username;
+
       newPermission.username = selectedGrantee.username;
       newPermission.name = selectedGrantee.name;
+      newPermission.sort_name = sortName;
       newPermission.display_name = prioritizeNameFallback(
         selectedGrantee.name,
         selectedGrantee.username
@@ -354,7 +303,9 @@ export default class DAccessControl extends Component {
   }
 
   @action
-  onPermissionChange(granteeType, granteeId, permission) {
+  onRowPermissionChange(close, granteeType, granteeId, permission) {
+    close?.();
+
     if (permission === REMOVE_ACTION.id) {
       this.args.onChange(
         this.acl.filter(
@@ -373,12 +324,10 @@ export default class DAccessControl extends Component {
     this.args.onChange(next);
   }
 
-  @action
-  selectPermission(close, granteeType, granteeId, permission) {
-    close?.();
-    this.onPermissionChange(granteeType, granteeId, permission);
-  }
-
+  /**
+   * Certain ACL permissions are banned so we need to filter these out
+   * based on grantee type and the available permissions for a row.
+   */
   @action
   excludeBannedPermissions(permissions, grantee) {
     if (!this.bannedAcl.length) {
@@ -395,25 +344,10 @@ export default class DAccessControl extends Component {
     });
   }
 
-  rowIsType(row, type) {
-    return row.type === type;
-  }
-
-  rowAsUser(row) {
-    return {
-      username: row.username,
-      id: row.id,
-      name: row.name || row.display_name,
-      avatar_template: row.avatar_template,
-    };
-  }
-
   @action
   permissionLabel(permissionId) {
-    return (
-      this.permissionOptions.find((option) => option.id === permissionId)
-        ?.name || permissionId
-    );
+    return this.permissionOptions.find((option) => option.id === permissionId)
+      .name;
   }
 
   // TODO (martin) How are we going to deal with users that have the Owner permission
@@ -421,8 +355,7 @@ export default class DAccessControl extends Component {
 
   <template>
     <div class="d-access-control">
-
-      <AccessControlGranteeChooser
+      <DAccessControlGranteeChooser
         class="d-access-control__chooser"
         @value={{null}}
         @onChange={{this.onGranteeChosen}}
@@ -430,8 +363,10 @@ export default class DAccessControl extends Component {
         @filterPlaceholder="access_control.manage.add_group"
         @options={{hash
           aclTarget=@aclTarget
-          customSearchOptions=(hash defaultSearchResults=this.availableGrantees)
-          excludedGrantees=this.selectedGranteeValues
+          customSearchOptions=(hash
+            defaultSearchResults=this.defaultAvailableGrantees
+          )
+          excludedGrantees=this.excludedGrantees
           filterable=true
           includeGroups=true
           maximum=1
@@ -452,10 +387,10 @@ export default class DAccessControl extends Component {
             >
               <span class="d-access-control__item">
                 <span class="d-access-control__item-icon">
-                  {{#if (this.rowIsType row "user")}}
-                    {{dAvatar (this.rowAsUser row) imageSize="small"}}
+                  {{#if (eq row.type "user")}}
+                    {{dAvatar row imageSize="small"}}
                   {{/if}}
-                  {{#if (this.rowIsType row "group")}}
+                  {{#if (eq row.type "group")}}
                     {{dIcon "user-group"}}
                   {{/if}}
                 </span>
@@ -508,7 +443,7 @@ export default class DAccessControl extends Component {
                           }}
                           data-permission-id={{option.id}}
                           @action={{fn
-                            this.selectPermission
+                            this.onRowPermissionChange
                             args.close
                             row.type
                             row.id

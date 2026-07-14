@@ -50,7 +50,7 @@ module(
         .hasText("Team A", "renders the full group name as the label");
     });
 
-    test("onlyShowGroupName renders only the group display name", async function (assert) {
+    test("onlyShowGroupFullName renders only the group display name", async function (assert) {
       this.set("defaultSearchResults", [
         {
           name: "team_a",
@@ -67,7 +67,7 @@ module(
         <template>
           <EmailGroupUserChooser
             @options={{hash
-              onlyShowGroupName=true
+              onlyShowGroupFullName=true
               customSearchOptions=(hash
                 defaultSearchResults=this.defaultSearchResults
               )
