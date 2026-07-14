@@ -68,6 +68,12 @@ module DiscourseAi
         # write time) so an unknown, hidden, or otherwise unchangeable setting
         # never creates a review item that could only fail on approval.
         def validation_error
+          if !guardian.is_admin?
+            return(
+              error_response(I18n.t("discourse_ai.ai_bot.change_site_setting.errors.not_allowed"))
+            )
+          end
+
           if reason.blank?
             return(
               error_response(I18n.t("discourse_ai.ai_bot.change_site_setting.errors.no_reason"))

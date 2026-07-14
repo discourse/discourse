@@ -746,6 +746,44 @@ RSpec.describe DiscourseAi::Agents::Bot do
       expect(ReviewableAiToolAction.count).to eq(1)
     end
 
+    it "rejects a site setting change requested by a moderator before queueing it" do
+      toggle_enabled_bots(bots: [fake])
+      Group.refresh_automatic_groups!
+      moderator = Fabricate(:moderator)
+
+      approval_agent =
+        AiAgent.create!(
+          name: "ModeratorApprovalAgent",
+          system_prompt: "test",
+          description: "test",
+          allowed_group_ids: [Group::AUTO_GROUPS[:trust_level_0]],
+          require_approval: true,
+          tools: [["ChangeSiteSetting", nil, false]],
+        )
+
+      agent_class = approval_agent.class_instance
+      test_bot_user = DiscourseAi::AiBot::EntryPoint.find_user_from_model(fake.name)
+      bot = described_class.as(test_bot_user, agent: agent_class.new)
+      tool =
+        DiscourseAi::Agents::Tools::ChangeSiteSetting.new(
+          { setting_name: "min_post_length", value: "42", reason: "Testing" },
+          bot_user: test_bot_user,
+          llm: bot.llm,
+          context: DiscourseAi::Agents::BotContext.new(user: moderator),
+        )
+
+      result = nil
+      expect { result = bot.send(:invoke_tool, tool, tool.context) { |*args| } }.not_to change {
+        [AiToolAction.count, ReviewableAiToolAction.count]
+      }
+
+      expect(result[:status]).to eq("error")
+      expect(result[:error]).to eq(
+        I18n.t("discourse_ai.ai_bot.change_site_setting.errors.not_allowed"),
+      )
+      expect(SiteSetting.min_post_length).not_to eq(42)
+    end
+
     it "executes immediately when require_approval is false" do
       toggle_enabled_bots(bots: [fake])
       Group.refresh_automatic_groups!
