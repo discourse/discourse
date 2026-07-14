@@ -8,6 +8,8 @@ class UserAuthToken < ActiveRecord::Base
   # overriding `#user` later in the class definition.
   alias_method :acting_user, :user
 
+  scope :unexpired, -> { where("rotated_at > ?", SiteSetting.maximum_session_age.hours.ago) }
+
   ROTATE_TIME_MINS = 10
   ROTATE_TIME = ROTATE_TIME_MINS.minutes
   # used when token did not arrive at client
@@ -141,15 +143,8 @@ class UserAuthToken < ActiveRecord::Base
     mark_seen = opts && opts[:seen]
 
     token = hash_token(unhashed_token)
-    expire_before = SiteSetting.maximum_session_age.hours.ago
 
-    user_token =
-      where(
-        "(auth_token = :token OR
-                          prev_auth_token = :token) AND rotated_at > :expire_before",
-        token: token,
-        expire_before: expire_before,
-      )
+    user_token = unexpired.where("auth_token = :token OR prev_auth_token = :token", token: token)
 
     if SiteSetting.verbose_auth_token_logging && path = opts.dig(:path)
       user_token = user_token.annotate("path:#{path}")
