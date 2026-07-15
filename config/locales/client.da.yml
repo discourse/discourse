@@ -4518,6 +4518,21 @@ da:
               title: "Deling"
             posts_and_topics:
               title: "Indlæg & emner"
+        category_management:
+          tabs:
+            settings: "Indstillinger"
+          types:
+            all:
+              title: "Alle kategorier"
+          filter_placeholder: "Filtrer kategorier"
+          table:
+            category: "Kategori"
+            visibility: "Synlighed"
+            topics: "Emner"
+          visibility:
+            public: "Offentlig"
+          visibility_filter:
+            all: "Alle kategorier"
         permalinks:
           title: "Permalinks"
           header_description: "Omdirigeringer der skal anvendes for URL'er der ikke er kendt af forummet"
@@ -4661,6 +4676,7 @@ da:
               searches: "søgninger"
               status: "Status"
         reports_section:
+          header_action: "Administrér"
           no_data: "Ingen data at vise"
           modal:
             enabled_heading: "Aktiveret"

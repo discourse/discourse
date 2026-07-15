@@ -229,6 +229,8 @@ de:
               description: "Erlaubte das Hinzufügen von Schlagwörter zu Beiträgen des Systembenutzers"
     discourse_ai:
       title: "KI"
+      post_image_descriptions:
+        description: "Beschreibung"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -341,7 +343,6 @@ de:
           translate: "Übersetzen"
           markdown_tables: "Markdown-Tabelle generieren"
           custom_prompt: "Benutzerdefinierte Eingabeaufforderung"
-          image_caption: "Bildbeschriftungen"
           translator: "Übersetzer"
           post_illustrator: "Beitragsillustrator"
           chat_thread_titles: "Titel von Chat-Threads"
@@ -546,16 +547,6 @@ de:
         description: "Beschreibung"
         no_llm_selected: "Kein Sprachmodell ausgewählt"
         use_parent_llm: "Sprachmodell des Agenten verwenden"
-        max_context_posts: "Max. Kontext-Beiträge"
-        max_context_posts_help: "Die maximale Anzahl von Beiträgen, die die KI als Kontext für die Antwort auf einen Benutzer verwenden soll (leer für Standardwert)."
-        execution_mode: "Ausführungsmodus"
-        execution_mode_help: "Steuert, wie der Agent die Toolausführung und den Gesprächskontext verwaltet. Standardmäßig werden feste Runden-/Tool-Limits verwendet. Agentic verwendet ein Token-Budget mit automatischer Kontextkomprimierung für längere, leistungsfähigere Tool-Nutzungssitzungen."
-        execution_mode_options:
-          default: "Standard (feste Limits)"
-          agentic: "Agentic (Token-Budget)"
-        max_turn_tokens: "Max. Runden-Token"
-        max_turn_tokens_help: "Maximale Gesamtzahl an Token (Input + Output), die während einer einzelnen Bot-Antwort über alle LLM-Aufrufe hinweg verbraucht werden. Wenn diese Option gesetzt ist, werden die festen Limits für den Abschluss und die Tools durch ein Token-Budget ersetzt, das ein agentenbasiertes Verhalten ermöglicht. Leer lassen für Standardgrenzen."
-        compression_threshold: "Kompressionsschwelle"
         compression_threshold_help: "Prozentualer Anteil der Kontextnutzung (20–99), bei dem die automatische Komprimierung einsetzt. Niedrigere Werte lösen die Komprimierung früher aus, sodass mehr Spielraum erhalten bleibt."
         vision_max_pixel_sizes:
           low: Niedrige Qualität – am günstigsten (256 x 256)
@@ -1028,11 +1019,6 @@ de:
           select: "Auswählen"
           selected: "Ausgewählt"
           try_again: "Erneut versuchen"
-        image_caption:
-          button_label: "Beschriftung mit KI"
-          generating: "Beschriftung wird generiert …"
-          credits: "Beschriftet durch KI"
-          save_caption: "Speichern"
         no_content_error: "Füge zuerst Inhalte hinzu, um KI-Aktionen darauf anzuwenden"
       errors:
         credit_limit_dialog:
@@ -1123,8 +1109,8 @@ de:
         click_to_run_label: "Artefakt ausführen"
       ai_bot:
         title: "KI-Bot"
-        agent: "Agent"
-        llm: "Modell"
+        agent: "Agent:"
+        llm: "Modell:"
         pm_warning: "KI-Chatbot-Nachrichten werden regelmäßig von Moderatoren überwacht."
         cancel_streaming: "Antwort abbrechen"
         try_again: "Erneut versuchen"

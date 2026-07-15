@@ -6061,6 +6061,21 @@ es:
               title: "Publicaciones y temas"
             stats_and_thresholds:
               title: "Estadísticas y umbrales"
+        category_management:
+          tabs:
+            settings: "Ajustes"
+          types:
+            all:
+              title: "Todas las categorías"
+          filter_placeholder: "Filtrar categorías"
+          table:
+            category: "Categoría"
+            visibility: "Visibilidad"
+            topics: "Temas"
+          visibility:
+            public: "Público"
+          visibility_filter:
+            all: "Todas las categorías"
         permalinks:
           title: "Enlaces permanentes"
           header_description: "Redirecciones para URL que no existan ya en el foro"
@@ -6283,6 +6298,7 @@ es:
               searches: "Búsquedas"
               status: "Estado"
         reports_section:
+          header_action: "Gestionar"
           no_data: "No hay datos que mostrar"
           modal:
             enabled_heading: "Activado"

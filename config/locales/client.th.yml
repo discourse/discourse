@@ -2726,6 +2726,19 @@ th:
               title: "การตั้งค่า"
         badges:
           title: "เหรียญ"
+        category_management:
+          tabs:
+            settings: "การตั้งค่า"
+          types:
+            all:
+              title: "หมวดหมู่ทั้งหมด"
+          table:
+            category: "หมวดหมู่"
+            topics: "หัวข้อ"
+          visibility:
+            public: "สาธารณะ"
+          visibility_filter:
+            all: "หมวดหมู่ทั้งหมด"
         permalinks:
           title: "ลิงค์ถาวร"
         emoji:
@@ -2803,6 +2816,7 @@ th:
               searches: "ค้นหา"
               status: "สถานะ"
         reports_section:
+          header_action: "จัดการ"
           modal:
             apply: "นำไปใช้"
         site_traffic:

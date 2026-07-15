@@ -58,9 +58,6 @@ uk:
         access_permission_viewer: "Переглядач"
         access_permission_viewer_description: "Може переглядати вміст для цього об'єкта"
         access_permission_remove: "Вилучити"
-        access_permission_remove_description: "Видалити дозвіл для цієї групи"
-        add_group: "Додати групу"
-        mandatory_acl_tooltip: "Цей дозвіл є обов’язковим для цього об’єкта і не може бути скасований"
     carousel:
       go_to_slide: "Перейти до слайда %{index}"
       previous: "Попередній слайд"
@@ -7142,6 +7139,22 @@ uk:
               title: "Повідомлення та теми"
             stats_and_thresholds:
               title: "Статистика та порогові значення"
+        category_management:
+          tabs:
+            settings: "Налаштування"
+          types:
+            all:
+              title: "Всі розділи"
+          filter_placeholder: "Фільтр категорій"
+          table:
+            category: "Категорія"
+            visibility: "Видимість"
+            topics: "Теми"
+          visibility:
+            public: "Публічні"
+          visibility_filter:
+            all: "Всі розділи"
+            public: "Загальнодоступні категорії"
         permalinks:
           title: "Постійні посилання"
           header_description: "Перенаправлення на URL-адреси, не відомі форуму"
@@ -7507,6 +7520,7 @@ uk:
                 poor_match: "Невідповідність"
                 poor_match_tooltip: "Пошукові терміни з коефіцієнтом кліків (CTR) від 1 до 20%."
         reports_section:
+          header_action: "Керувати"
           description: "Закріпити стандартні звіти або запити Data Explorer, щоб відстежувати, що має значення для вашої спільноти."
           add: "Додати звіт"
           remove: "Видалити звіт"

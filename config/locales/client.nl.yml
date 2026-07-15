@@ -6128,6 +6128,21 @@ nl:
               title: "Berichten en topics"
             stats_and_thresholds:
               title: "Statistieken en drempels"
+        category_management:
+          tabs:
+            settings: "Instellingen"
+          types:
+            all:
+              title: "Alle categorieën"
+          filter_placeholder: "Filter categorieën"
+          table:
+            category: "Categorie"
+            visibility: "Zichtbaarheid"
+            topics: "Topics"
+          visibility:
+            public: "Openbaar"
+          visibility_filter:
+            all: "Alle categorieën"
         permalinks:
           title: "Permalinks"
           header_description: "Toe te passen omleidingen voor URL's die onbekend zijn voor het forum"
@@ -6352,6 +6367,7 @@ nl:
               searches: "Zoekopdrachten"
               status: "Status"
         reports_section:
+          header_action: "Beheren"
           no_data: "Geen gegevens om weer te geven"
           modal:
             enabled_heading: "Ingeschakeld"

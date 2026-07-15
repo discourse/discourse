@@ -2850,6 +2850,20 @@ et:
               title: "Seaded"
         badges:
           title: "Märgised"
+        category_management:
+          tabs:
+            settings: "Seaded"
+          types:
+            all:
+              title: "Kõik foorumid"
+          table:
+            category: "Kategooriad"
+            visibility: "Nähtavus"
+            topics: "Teemasid"
+          visibility:
+            public: "Avalik"
+          visibility_filter:
+            all: "Kõik foorumid"
         permalinks:
           title: "Püsiviited"
         emoji:
@@ -2954,6 +2968,7 @@ et:
               searches: "Otsingud"
               status: "Staatus"
         reports_section:
+          header_action: "Halda"
           no_data: "Pole andmeid, mida näidata"
           modal:
             enabled_heading: "Sisse lülitatud"

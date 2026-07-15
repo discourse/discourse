@@ -58,9 +58,10 @@ pl_PL:
         access_permission_viewer: "Przeglądający"
         access_permission_viewer_description: "Może przeglądać treści związane z tym podmiotem"
         access_permission_remove: "Usuń"
-        access_permission_remove_description: "Usuń uprawnienia dla tej grupy"
-        add_group: "Dodaj grupę"
-        mandatory_acl_tooltip: "To uprawnienie jest obowiązkowe dla tego podmiotu i nie można go usunąć"
+        access_permission_remove_description: "Cofnij uprawnienia temu uprawnionemu"
+        add_group: "Dodaj użytkownika lub grupę"
+        mandatory_acl_tooltip: "To uprawnienie jest obowiązkowe dla %{name} i nie można go usunąć"
+        mandatory: "Obowiązkowe"
     carousel:
       go_to_slide: "Przejdź do slajdu %{index}"
       previous: "Poprzedni slajd"
@@ -7141,6 +7142,31 @@ pl_PL:
               title: "Wpisy i tematy"
             stats_and_thresholds:
               title: "Statystyki i progi"
+        category_management:
+          title: "Zarządzanie kategoriami"
+          header_description: "Przejrzyj typy kategorii, hierarchię i kategorie aktualnie przypisane do każdego typu."
+          keywords: "kategorie|typy kategorii|dyskusja|zarządzanie kategoriami"
+          tabs:
+            settings: "Ustawienia"
+          types:
+            unavailable: "Typ kategorii %{categoryType} jest niedostępny."
+            all:
+              title: "Wszystkie kategorie"
+              description: "Wszystkie kategorie w każdym skonfigurowanym typie kategorii."
+          filter_placeholder: "Filtruj kategorie"
+          no_results: "Nie znaleziono kategorii %{type}."
+          open_settings: "Otwórz ustawienia"
+          table:
+            category: "Kategoria"
+            visibility: "Widoczność"
+            topics: "Tematy"
+          visibility:
+            public: "Publiczny"
+            restricted: "Ograniczone"
+          visibility_filter:
+            all: "Wszystkie kategorie"
+            public: "Kategorie publiczne"
+            restricted: "Ograniczone kategorie"
         permalinks:
           title: "Permalinki"
           header_description: "Przekierowania ubiegania się o adresy URL nieznane na forum"
@@ -7506,6 +7532,7 @@ pl_PL:
                 poor_match: "Słabe dopasowanie"
                 poor_match_tooltip: "Hasła wyszukiwania ze współczynnikiem klikalności (CTR) wynoszącym od 1 do 20%."
         reports_section:
+          header_action: "Zarządzaj"
           description: "Przypinaj standardowe raporty lub zapytania Eksploratora danych, aby śledzić kwestie istotne dla Twojej społeczności."
           add: "Dodaj raport"
           remove: "Usuń raport"

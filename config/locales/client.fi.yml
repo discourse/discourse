@@ -5444,6 +5444,21 @@ fi:
               title: "Viestit ja ketjut"
             stats_and_thresholds:
               title: "Tilastot ja kynnysarvot"
+        category_management:
+          tabs:
+            settings: "Asetukset"
+          types:
+            all:
+              title: "Kaikki alueet"
+          filter_placeholder: "Suodata alueita"
+          table:
+            category: "Luokka"
+            visibility: "Näkyvyys"
+            topics: "Aiheet"
+          visibility:
+            public: "Julkinen"
+          visibility_filter:
+            all: "Kaikki alueet"
         permalinks:
           title: "Pysyvät linkit"
           header_description: "Aseta uudelleenohjauksia URL-osoitteille, joita foorumi ei tunne"
@@ -5658,6 +5673,7 @@ fi:
               searches: "Hakuja"
               status: "Tila"
         reports_section:
+          header_action: "Hallitse"
           modal:
             enabled_heading: "Käytössä"
             all_heading: "Kaikki raportit"

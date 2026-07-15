@@ -4484,6 +4484,21 @@ sv:
               title: "Inställningar"
         badges:
           title: "Utmärkelser"
+        category_management:
+          tabs:
+            settings: "Inställningar"
+          types:
+            all:
+              title: "Alla kategorier"
+          filter_placeholder: "Filterkategorier"
+          table:
+            category: "Kategori"
+            visibility: "Synlighet"
+            topics: "Ämnen"
+          visibility:
+            public: "Offentligt"
+          visibility_filter:
+            all: "Alla kategorier"
         permalinks:
           title: "Permalänkar"
           header_description: "Omdirigeringar att tillämpa för URL:er som inte är kända av forumet"
@@ -4611,6 +4626,7 @@ sv:
               searches: "Sökningar"
               status: "Status"
         reports_section:
+          header_action: "Hantera"
           no_data: "Ingen data att visa"
           modal:
             enabled_heading: "Aktiverad"

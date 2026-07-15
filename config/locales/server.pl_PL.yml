@@ -5063,26 +5063,26 @@ pl_PL:
     body: |
       <h2 id="heading--change-me"><a href="#heading--change-me">Zmień mnie</a></h2>
 
-      Administratorze forum, poniżej znajdziesz przykładowy szablon polityki prywatności, który powinieneś dostosować do potrzeb swojej strony.
+      Adminie forum, poniżej znajdziesz przykładowy szablon polityki prywatności, który powinieneś dostosować do potrzeb swojej strony.
 
-      Te warunki nie dotyczą, ale mogą kiedyś dotyczyć korzystania z forum internetowego pod adresem <%{base_url}>. W takim przypadku, aby korzystać z forum, musisz uzgodnić te warunki z firmą %{company_name}, która prowadzi forum.
+      Te warunki nie regulują obecnie korzystania z forum internetowego pod adresem <%{base_url}>, ale mogą to zrobić w przyszłości. W takim przypadku, żeby korzystać z forum, musisz zaakceptować te warunki w rozmowie z firmą %{company_name}, która prowadzi to forum.
 
-      Firma ta może oferować inne produkty i usługi, na innych warunkach. Te warunki dotyczą tylko korzystania z forum.
+      Firma może oferować inne produkty i usługi na innych warunkach. Te warunki dotyczą wyłącznie korzystania z forum.
 
       Przejdź do:
 
-      - Ważne warunki](#heading--important-terms)
-      - [Twoje pozwolenie na korzystanie z forum](#heading--permission)
+      - [Ważne warunki](#heading--important-terms)
+      - [Twoja zgoda na korzystanie z forum](#heading--permission)
       - [Warunki korzystania z forum](#heading--conditions)
-      - [Dopuszczalne użytkowanie](#heading--acceptable-use)
-      - [Standardy treści](#heading--content-standards)
-      - [Egzekwowanie](#heading--enforcement)
+      - [Dopuszczalne sposoby korzystania](#heading--acceptable-use)
+      - [Standardy dotyczące treści](#heading--content-standards)
+      - [Egzekwowanie zasad](#heading--enforcement)
       - [Twoje konto](#heading--your-account)
-      - [Twoja treść](#heading--your-content)
+      - [Twoje treści](#heading--your-content)
       - [Twoja odpowiedzialność](#heading--responsibility)
       - [Zastrzeżenia](#heading--disclaimers)
       - [Ograniczenia odpowiedzialności](#heading--liability)
-      - [Informacje zwrotne](#heading--feedback)
+      - [Opinie](#heading--feedback)
       - [Wypowiedzenie](#heading--termination)
       - [Spory](#heading--disputes)
       - [Warunki ogólne](#heading--general)
@@ -5091,151 +5091,151 @@ pl_PL:
 
       <h2 id="heading--important-terms"><a href="#heading--important-terms">Ważne warunki</a></h2>
 
-      ***Te warunki zawierają wiele ważnych postanowień, które wpływają na Twoje prawa i obowiązki, takich jak zastrzeżenia w [Zastrzeżenia](#heading--disclaimers), ograniczenia odpowiedzialności firmy wobec Ciebie w [Ograniczenia odpowiedzialności](#heading--liability), Twoja zgoda na pokrycie strat spowodowanych przez niewłaściwe korzystanie z forum w [Ograniczenia odpowiedzialności](#heading--responsibility) oraz umowa o arbitrażu sporów w [Spory](#heading--disputes).***
+      ***Te warunki zawierają kilka ważnych postanowień, które wpływają na twoje prawa i obowiązki, takie jak zastrzeżenia w sekcji [Zastrzeżenia](#heading--disclaimers), ograniczenia odpowiedzialności firmy wobec ciebie w sekcji [Ograniczenia odpowiedzialności](#heading--liability), Twoja zgoda na zwolnienie firmy z odpowiedzialności za szkody spowodowane niewłaściwym korzystaniem z forum w sekcji [Odpowiedzialność za korzystanie z forum](#heading--responsibility) oraz zgoda na rozstrzyganie sporów w drodze arbitrażu w sekcji [Spory](#heading--disputes).***
 
-      <h2 id="heading--permission"><a href="#heading--permission">Twoje pozwolenie na korzystanie z forum</a></h2>
+      <h2 id="heading--permission"><a href="#heading--permission">Twoje uprawnienie do korzystania z forum</a></h2>
 
-      Zgodnie z tymi warunkami firma udziela ci pozwolenia na korzystanie z forum. Każdy musi wyrazić zgodę na te warunki, aby móc korzystać z forum.
+      Zgodnie z niniejszymi warunkami firma udziela ci zgody na korzystanie z forum. Każdy, kto chce korzystać z forum, musi zaakceptować te warunki.
 
       <h2 id="heading--conditions"><a href="#heading--conditions">Warunki korzystania z forum</a></h2>
 
-      Twoje pozwolenie na korzystanie z forum podlega następującym warunkom:
+      Twoje uprawnienie do korzystania z forum podlega następującym warunkom:
 
-      1. Musisz mieć co najmniej trzynaście lat.
+      1. Musisz mieć co najmniej osiemnaście lat.
 
-      2. Nie możesz dłużej korzystać z forum, jeśli firma skontaktuje się z Tobą bezpośrednio i powie, że nie możesz.
+      2. Nie możesz już korzystać z forum, jeśli firma skontaktuje się z tobą bezpośrednio, informując, że nie wolno ci tego robić.
 
-      3. Musisz korzystać z forum zgodnie z zasadami [Dopuszczalne użytkowanie](#heading--acceptable-use) i [Standardy zawartości](#heading--content-standards).
+      3. Musisz korzystać z forum zgodnie z [Zasadami korzystania](#heading--acceptable-use) oraz [Standardami treści](#heading--content-standards).
 
-      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Dopuszczalne użytkowanie</a></h2>
+      <h2 id="heading--acceptable-use"><a href="#heading--acceptable-use">Zasady korzystania</a></h2>
 
-      1. Nie możesz łamać prawa używając forum.
+      1. Korzystając z forum, nie możesz łamać prawa.
 
-      2. Nie możesz używać lub próbować używać konta innej osoby na forum bez jej zgody.
+      2. Nie możesz korzystać ani próbować korzystać z konta innej osoby na forum bez jej wyraźnej zgody.
 
-      3. Nie możesz kupować, sprzedawać lub w inny sposób handlować nazwami użytkowników lub innymi unikalnymi identyfikatorami na forum.
+      3. Nie możesz kupować, sprzedawać ani w inny sposób handlować nazwami użytkowników lub innymi unikalnymi identyfikatorami na forum.
 
-      4. Nie wolno Ci wysyłać reklam, łańcuszków lub innych ogłoszeń za pośrednictwem forum, ani wykorzystywać forum do zbierania adresów lub innych danych osobowych do komercyjnych list mailingowych lub baz danych.
+      4. Nie wolno wysyłać reklam, łańcuszków ani innych ofert za pośrednictwem forum, ani wykorzystywać forum do zbierania adresów lub innych danych osobowych na potrzeby komercyjnych list mailingowych lub baz danych.
 
-      5. Nie możesz zautomatyzować dostępu do forum ani monitorować go, np. za pomocą przeglądarki internetowej, wtyczki lub dodatku do przeglądarki lub innego programu komputerowego, który nie jest przeglądarką internetową. Możesz przeszukiwać forum w celu indeksowania go w publicznie dostępnych wyszukiwarkach, jeśli taką prowadzisz.
+      5. Nie wolno automatyzować dostępu do forum ani monitorować go za pomocą np. robota indeksującego, wtyczki lub dodatku do przeglądarki ani innego programu komputerowego, który nie jest przeglądarką internetową. Możesz indeksować forum na potrzeby publicznie dostępnej wyszukiwarki, jeśli taką prowadzisz.
 
-      6. Nie możesz używać forum do wysyłania wiadomości na listy dystrybucyjne, grupy dyskusyjne lub aliasy grupowe.
+      6. Nie wolno ci używać forum do wysyłania e-maili na listy dystrybucyjne, do grup dyskusyjnych ani na aliasy grupowe.
 
-      7. Nie możesz fałszywie sugerować, że jesteś związany z firmą lub przez nią wspierany.
+      7. Nie wolno ci fałszywie sugerować, że jesteś powiązany z firmą lub że firma cię popiera.
 
-      8. Nie możesz umieszczać na innych stronach internetowych hiperłączy do obrazów lub innych niehipertekstowych treści na forum.
+      8. Nie wolno ci umieszczać hiperłączy do obrazów ani innych treści niebędących hipertekstem z forum na innych stronach internetowych.
 
-      9. Nie możesz usuwać żadnych znaków wskazujących na własność z materiałów pobranych z forum.
+      9. Nie wolno usuwać żadnych oznaczeń wskazujących na prawa własności z materiałów pobranych z forum.
 
-      10. Nie możesz pokazywać żadnej części forum na innych stronach internetowych przez tag `<iframe>`.
+      10. Nie wolno wyświetlać żadnej części forum na innych stronach internetowych za pomocą `<iframe>`.
 
-      11. Nie wolno Ci wyłączać, unikać lub obchodzić jakichkolwiek zabezpieczeń lub ograniczeń dostępu do forum.
+      11. Nie wolno wyłączać, omijać ani obchodzić żadnych zabezpieczeń ani ograniczeń dostępu do forum.
 
-      12. Nie możesz obciążać infrastruktury forum nadmierną ilością żądań lub żądań mających na celu nadmierne obciążenie systemów informatycznych, na których opiera się forum.
+      12. Nie wolno przeciążać infrastruktury forum nadmierną liczbą żądań ani żądaniami mającymi na celu wywarcie nadmiernego obciążenia na systemy informatyczne, na których opiera się forum.
 
-      13. Nie możesz podszywać się pod inne osoby za pośrednictwem forum.
+      13. Nie wolno podszywać się pod inne osoby na forum.
 
-      14. Nie możesz zachęcać ani pomagać nikomu w naruszeniu tych zasad.
+      14. Nie wolno zachęcać ani pomagać nikomu w naruszaniu niniejszych warunków.
 
       <h2 id="heading--content-standards"><a href="#heading--content-standards">Standardy dotyczące treści</a></h2>
 
-      1. Nie możesz umieszczać na forum treści nielegalnych, obraźliwych lub w inny sposób szkodliwych dla innych. Dotyczy to również treści nękających, nieodpowiednich, obraźliwych i nienawistnych.
+      1. Nie wolno publikować na forum treści, które są niezgodne z prawem, obraźliwe lub w inny sposób szkodliwe dla innych. Dotyczy to między innymi treści o charakterze nękającym, nieodpowiednim, obraźliwym lub podżegającym do nienawiści.
 
-      2. Nie możesz umieszczać na forum treści, które naruszają prawo, naruszają czyjeś prawa własności intelektualnej, naruszają czyjąś prywatność lub łamią umowy zawarte z innymi osobami.
+      2. Nie wolno publikować na forum treści, które naruszają prawo, prawa własności intelektualnej innych osób, prywatność innych osób lub umowy zawarte z innymi osobami.
 
-      3. Nie możesz umieszczać na forum treści zawierających złośliwy kod komputerowy, taki jak wirusy komputerowe lub oprogramowanie szpiegujące.
+      3. Nie wolno publikować na forum treści zawierających złośliwy kod komputerowy, taki jak wirusy komputerowe czy oprogramowanie szpiegujące.
 
-      4. Nie wolno Ci umieszczać na forum treści, które są jedynie miejscem przechowywania określonego adresu, nazwy użytkownika lub innego unikalnego identyfikatora.
+      4. Nie wolno publikować na forum treści wyłącznie w celu zarezerwowania konkretnego adresu, nazwy użytkownika lub innego unikalnego identyfikatora.
 
-      5. Nie możesz używać forum do ujawniania informacji, których nie masz prawa ujawniać, takich jak poufne lub osobiste informacje innych osób.
+      5. Nie wolno wykorzystywać forum do ujawniania informacji, do których nie masz prawa, takich jak poufne lub osobiste dane innych osób.
 
-      <h2 id="heading--enforcement"><a href="#heading--enforcement">Egzekwowanie prawa</a></h2>
+      <h2 id="heading--enforcement"><a href="#heading--enforcement">Egzekwowanie</a></h2>
 
-      Firma może badać i ścigać naruszenia tych warunków w pełnym zakresie prawnym. Spółka może powiadomić organy ścigania i współpracować z nimi w ściganiu naruszeń prawa i niniejszych warunków.
+      Firma może badać i ścigać naruszenia tych warunków w pełnym zakresie przewidzianym przez prawo. Firma może powiadamiać organy ścigania i współpracować z nimi w celu ścigania naruszeń prawa i tych warunków.
 
-      Firma zastrzega sobie prawo do zmiany, przeredagowania i usunięcia treści na forum z dowolnego powodu. Jeśli uważasz, że ktoś umieścił na forum treści naruszające te warunki, [skontaktuj się z nami natychmiast](#heading--contact).
+      Firma zastrzega sobie prawo do zmiany, redagowania i usuwania treści na forum z dowolnego powodu. Jeśli uważasz, że ktoś opublikował na forum treści naruszające te warunki, [skontaktuj się z nami natychmiast](#heading--contact).
 
       <h2 id="heading--your-account"><a href="#heading--your-account">Twoje konto</a></h2>
 
-      Aby korzystać z niektórych funkcji forum, musisz utworzyć i zalogować się na konto.
+      Aby korzystać z niektórych funkcji forum, musisz założyć konto i się na nie zalogować.
 
-      Aby utworzyć konto, musisz podać kilka informacji o sobie. Zakładając konto, zobowiązujesz się do podania co najmniej poprawnego adresu e-mail oraz do aktualizowania tego adresu. Możesz zamknąć swoje konto w dowolnym momencie, wysyłając e-mail na adres <%{contact_email}>.
+      Żeby założyć konto, musisz podać kilka informacji o sobie. Zakładając konto, zgadzasz się podać co najmniej prawidłowy adres e-mail i dbać o to, by był on aktualny. Możesz zamknąć swoje konto w dowolnym momencie, wysyłając e-mail na adres <%{contact_email}>.
 
-      Zgadzasz się ponosić odpowiedzialność za wszystkie działania podejmowane przy użyciu twojego konta, niezależnie od tego, czy zostały one przez ciebie autoryzowane, czy też nie, do momentu zamknięcia konta lub powiadomienia firmy o naruszeniu dostępu do konta. Zobowiązujesz się do natychmiastowego powiadomienia firmy, jeśli podejrzewasz, że dostęp do twojego konta został naruszony. Zgadzasz się wybrać bezpieczne hasło do swojego konta i zachować je w tajemnicy.
+      Zgadzasz się ponosić odpowiedzialność za wszystkie działania podejmowane przy użyciu Twojego konta, niezależnie od tego, czy zostały przez Ciebie autoryzowane, czy nie, dopóki nie zamkniesz konta lub nie poinformujesz firmy, że Twoje konto zostało przejęte. Zgadzasz się natychmiast powiadomić firmę, jeśli podejrzewasz, że Twoje konto zostało przejęte. Zgadzasz się wybrać bezpieczne hasło do swojego konta i zachować je w tajemnicy.
 
-      Firma może ograniczyć, zawiesić lub zamknąć Twoje konto na forum zgodnie z jej zasadami postępowania z prośbami o usunięcie treści związanych z prawami autorskimi lub jeśli firma ma podstawy sądzić, że złamano którąś z zasad zawartych w tym regulaminie.
+      Firma może ograniczyć, zawiesić lub zamknąć Twoje konto na forum zgodnie ze swoją polityką dotyczącą wniosków o usunięcie treści z powodu naruszenia praw autorskich lub jeśli firma ma uzasadnione podstawy, by sądzić, że złamałeś jakąkolwiek zasadę zawartą w niniejszych warunkach.
 
       <h2 id="heading--your-content"><a href="#heading--your-content">Twoje treści</a></h2>
 
-      Żaden z zapisów tego regulaminu nie daje firmie prawa własności do własności intelektualnej, którą dzielisz z forum, takiej jak informacje o Twoim koncie, posty lub inne treści, które przesyłasz na forum. Żaden z zapisów tego regulaminu nie daje Ci również żadnych praw własności do własności intelektualnej firmy.
+      Żadne z postanowień niniejszych warunków nie przyznaje firmie żadnych praw własności do własności intelektualnej, którą udostępniasz na forum, takiej jak informacje o koncie, posty lub inne treści, które zamieszczasz na forum. Żadne z postanowień niniejszych warunków nie przyznaje też tobie żadnych praw własności do własności intelektualnej firmy.
 
-      Ty i firma ponosicie wyłączną odpowiedzialność za treści umieszczane przez Ciebie na forum. Zgadzasz się nie sugerować, że treści zamieszczane na forum są sponsorowane lub zatwierdzone przez firmę. Niniejsze warunki nie zobowiązują firmy do przechowywania, utrzymywania lub dostarczania kopii treści przesłanych przez Ciebie oraz do ich zmiany zgodnie z tymi warunkami.
+      W relacji między tobą a firmą to ty ponosisz wyłączną odpowiedzialność za treści, które zamieszczasz na forum. Zgadzasz się nie sugerować w sposób wprowadzający w błąd, że treści, które zamieściłeś na forum, są sponsorowane lub zatwierdzone przez firmę. Niniejsze warunki nie zobowiązują firmy do przechowywania, utrzymywania ani udostępniania kopii treści, które zamieściłeś, ani do ich modyfikowania zgodnie z niniejszymi warunkami.
 
-      Treść, którą przesyłasz na forum, należy do Ciebie i to Ty decydujesz, jakie pozwolenie udzielisz innym na jej wykorzystanie. Jednak w minimalnym zakresie udzielasz firmie licencji na udostępnianie treści przesłanych przez Ciebie na forum innym użytkownikom forum. Ta specjalna licencja pozwala firmie na kopiowanie, publikowanie i analizowanie treści, które zamieszczasz na forum.
+      Treści, które wrzucasz na forum, należą do ciebie i to ty decydujesz, jakie uprawnienia przyznasz innym w odniesieniu do nich. Jednak co najmniej udzielasz firmie licencji na udostępnianie treści, które wrzucasz na forum, innym użytkownikom forum. Ta specjalna licencja pozwala firmie na kopiowanie, publikowanie i analizowanie treści, które wrzucasz na forum.
 
-      W momencie usunięcia treści z forum, czy to przez Ciebie, czy przez firmę, licencja specjalna firmy wygasa w momencie, gdy ostatnia kopia zniknie z kopii zapasowych, pamięci podręcznej i innych systemów firmy. Inne licencje, które stosujesz do przesyłanych przez siebie treści, takie jak licencje [Creative Commons](https://creativecommons.org), mogą obowiązywać również po ich usunięciu. Licencje te mogą dawać innym osobom lub samej firmie prawo do ponownego udostępniania Twoich treści na forum.
+      Gdy treści, które zamieściłeś, zostaną usunięte z forum – czy to przez ciebie, czy przez firmę – specjalna licencja firmy wygasa w momencie, gdy ostatnia kopia zniknie z kopii zapasowych, pamięci podręcznej i innych systemów firmy. Inne licencje, które zastosowałeś do zamieszczonych treści, takie jak licencje [Creative Commons](https://creativecommons.org), mogą nadal obowiązywać po usunięciu twoich treści. Licencje te mogą dawać innym osobom lub samej firmie prawo do ponownego udostępniania twoich treści na forum.
 
-      Inne osoby, które otrzymają treści przesłane przez Ciebie na forum, mogą naruszyć warunki, na jakich udzielasz licencji na swoje treści. Zgadzasz się, że firma nie będzie ponosić odpowiedzialności za takie naruszenia lub ich konsekwencje.
+      Inne osoby, które otrzymają treści, które zamieściłeś na forum, mogą naruszyć warunki, na jakich udzielasz licencji na swoje treści. Zgadzasz się, że firma nie ponosi wobec ciebie odpowiedzialności za te naruszenia ani ich konsekwencje.
 
       <h2 id="heading--responsibility"><a href="#heading--responsibility">Twoja odpowiedzialność</a></h2>
 
-      Zgadzasz się zabezpieczyć firmę przed roszczeniami prawnymi innych osób związanymi z naruszeniem przez Ciebie niniejszych warunków lub naruszeniem tych warunków przez inne osoby korzystające z Twojego konta na forum. Zarówno Ty, jak i firma zgadzacie się na jak najszybsze powiadomienie drugiej strony o wszelkich roszczeniach prawnych, w związku z którymi firma może być zmuszona do wypłaty odszkodowania. Jeśli firma nie powiadomi Cię o roszczeniach prawnych bezzwłocznie, nie będziesz musiał wypłacać firmie odszkodowania za szkody, przed którymi mógłbyś się bronić lub które mógłbyś ograniczyć, gdybyś został niezwłocznie powiadomiony. Zgadzasz się zezwolić firmie na kontrolowanie dochodzenia, obrony i rozstrzygania roszczeń prawnych, za które musiałbyś wypłacić odszkodowanie, oraz na współpracę przy tych działaniach. Firma zobowiązuje się nie zgadzać na żadne ugody, które przyznają się do winy lub nakładają na Ciebie zobowiązania bez Twojej wcześniejszej zgody.
+      Zgadzasz się zwolnić firmę z odpowiedzialności za roszczenia prawne innych osób związane z naruszeniem przez ciebie niniejszych warunków lub naruszeniem tych warunków przez inne osoby korzystające z twojego konta na forum. Zarówno ty, jak i firma zgadzacie się jak najszybciej powiadomić drugą stronę o wszelkich roszczeniach prawnych, w związku z którymi możesz być zobowiązany do zwolnienia firmy z odpowiedzialności. Jeśli firma nie powiadomi cię o roszczeniu prawnym w odpowiednim czasie, nie będziesz musiał zwracać firmie kosztów za szkody, przed którymi mógłbyś się obronić lub które mógłbyś złagodzić, gdybyś otrzymał powiadomienie na czas. Zgadzasz się, by firma kierowała dochodzeniem, obroną i ugodą w sprawach roszczeń prawnych, za które musiałbyś ją zabezpieczyć, oraz że będziesz współpracować w tych działaniach. Firma zobowiązuje się nie zgadzać na żadną ugodę, która przyznawałaby ci winę lub nakładała na ciebie obowiązki bez twojej wcześniejszej zgody.
 
       <h2 id="heading--disclaimers"><a href="#heading--disclaimers">Zastrzeżenia</a></h2>
 
-      ***Akceptujesz całe ryzyko związane z korzystaniem z forum i treści na nim zawartych. O ile pozwala na to prawo, firma i jej dostawcy dostarczają forum w takim stanie, w jakim jest, bez jakiejkolwiek gwarancji.***
+      ***Bierzesz na siebie całe ryzyko związane z korzystaniem z forum i treści na nim zamieszczonych. W zakresie dozwolonym przez prawo firma i jej dostawcy udostępniają forum w stanie, w jakim jest, bez żadnych gwarancji.***
 
-      Forum może zawierać hiperłącza i integrować fora i usługi prowadzone przez inne podmioty. Firma nie udziela żadnej gwarancji na usługi prowadzone przez inne podmioty ani na treści przez nie dostarczane. Korzystanie z serwisów prowadzonych przez inne podmioty może być regulowane przez inne warunki zawarte pomiędzy Tobą a podmiotem prowadzącym serwis.
+      Forum może zawierać hiperłącza do forów i usług prowadzonych przez inne podmioty oraz je integrować. Firma nie udziela żadnych gwarancji dotyczących usług prowadzonych przez inne podmioty ani treści, które mogą one udostępniać. Korzystanie z usług prowadzonych przez inne podmioty może podlegać innym warunkom uzgodnionym między tobą a podmiotem prowadzącym daną usługę.
 
       <h2 id="heading--liability"><a href="#heading--liability">Ograniczenia odpowiedzialności</a></h2>
 
-      ***Ani firma, ani jej dostawcy nie będą odpowiedzialni wobec Ciebie za szkody wynikające z naruszenia umowy, których ich personel nie mógł przewidzieć, gdy zgodziłeś się na te warunki.***
+      ***Ani firma, ani jej dostawcy nie ponoszą wobec ciebie odpowiedzialności za szkody wynikające z naruszenia umowy, których ich pracownicy nie mogli racjonalnie przewidzieć w momencie, gdy zgodziłeś się na te warunki.***
 
-      ***W zakresie, w jakim pozwala na to prawo, całkowita odpowiedzialność wobec Ciebie za wszelkiego rodzaju roszczenia związane z forum lub treściami na nim zamieszczonymi będzie ograniczona do 50 dolarów.***
+      ***W zakresie dozwolonym przez prawo całkowita odpowiedzialność wobec ciebie za wszelkiego rodzaju roszczenia związane z forum lub treściami na nim zamieszczonymi będzie ograniczona do 50 dolarów.***
 
-      <h2 id="heading--feedback"><a href="#heading--feedback">Informacje zwrotne</a></h2>
+      <h2 id="heading--feedback"><a href="#heading--feedback">Opinie</a></h2>
 
-      Firma z radością przyjmuje Twoje opinie i sugestie dotyczące forum. Zobacz sekcję [Kontakt](#heading--contact) poniżej, aby dowiedzieć się, jak się z nami skontaktować.
+      Firma chętnie przyjmuje Twoje opinie i sugestie dotyczące forum. Sprawdź sekcję [Kontakt](#heading--contact) poniżej, żeby dowiedzieć się, jak się z nami skontaktować.
 
-      Zgadzasz się, że firma będzie miała swobodę działania w oparciu o dostarczone przez Ciebie opinie i sugestie oraz że firma nie będzie musiała Cię informować o tym, że Twoje opinie zostały wykorzystane, uzyskiwać Twojej zgody na ich wykorzystanie ani płacić Ci za to. Zgadzasz się nie przesyłać opinii lub sugestii, które Twoim zdaniem mogą być poufne lub zastrzeżone dla Ciebie lub innych osób.
+      Zgadzasz się, że firma ma swobodę w podejmowaniu działań na podstawie przekazanych przez ciebie opinii i sugestii oraz że nie ma obowiązku powiadamiać cię o wykorzystaniu twojej opinii, uzyskiwać na to zgody ani ci za to płacić. Zgadzasz się nie przesyłać opinii ani sugestii, które twoim zdaniem mogą stanowić informacje poufne lub zastrzeżone – zarówno twoje, jak i innych osób.
 
       <h2 id="heading--termination"><a href="#heading--termination">Wypowiedzenie</a></h2>
 
-      Zarówno Ty, jak i spółka możecie w każdej chwili zakończyć umowę zawartą w niniejszym regulaminie. Kiedy nasza umowa wygasa, wygasa również Twoje pozwolenie na korzystanie z forum.
+      Zarówno ty, jak i firma możecie w dowolnym momencie wypowiedzieć umowę zawartą w niniejszych warunkach. Gdy nasza umowa wygaśnie, wygaśnie też twoje uprawnienie do korzystania z forum.
 
-      Następujące postanowienia pozostają w mocy po zakończeniu naszej umowy: [Twoja treść](#heading--your-content), [Feedback](#heading--feedback), [Twoja odpowiedzialność](#heading--responsibility), [Zastrzeżenia](#heading--disclaimers), [Ograniczenia odpowiedzialności](#heading--liability) oraz [Warunki ogólne](#heading--general).
+      Poniższe postanowienia pozostają w mocy po wygaśnięciu naszej umowy: [Twoje treści](#heading--your-content), [Opinie](#heading--feedback), [Twoja odpowiedzialność](#heading--responsibility), [Zastrzeżenia](#heading--disclaimers), [Ograniczenia odpowiedzialności](#heading--liability) oraz [Warunki ogólne](#heading--general).
 
       <h2 id="heading--disputes"><a href="#heading--disputes">Spory</a></h2>
 
-      %{governing_law} reguluje wszelkie spory związane z tymi warunkami lub korzystaniem z forum przez użytkownika.
+      %{governing_law} będą regulować wszelkie spory związane z tymi warunkami lub korzystaniem przez ciebie z forum.
 
-      Ty i firma zgadzacie się na dochodzenie nakazów sądowych związanych z tymi warunkami tylko w sądzie okręgowym lub rejonowym w %{city_for_disputes}. Ani Ty, ani firma nie będziecie sprzeciwiać się jurysdykcji, forum lub miejscu w tych sądach.
+      Ty i firma zgadzacie się ubiegać się o nakazy sądowe związane z tymi warunkami wyłącznie w sądzie stanowym lub federalnym w %{city_for_disputes}. Ani ty, ani firma nie będziecie zgłaszać sprzeciwu wobec jurysdykcji, właściwości lub miejsca postępowania w tych sądach.
 
-      ***Z wyjątkiem dochodzenia nakazu sądowego lub roszczeń wynikających z ustawy o oszustwach i nadużyciach komputerowych, użytkownik i spółka będą rozstrzygać wszelkie spory w drodze wiążącego arbitrażu. Arbitraż będzie przebiegał według zasad arbitrażu handlowego AAA oraz procedur uzupełniających dla sporów konsumenckich. Arbitraż odbędzie się w %{city_for_disputes}. Wszelkie spory będziesz rozstrzygać indywidualnie, a nie w ramach pozwu zbiorowego lub innego postępowania reprezentacyjnego, czy to jako powód, czy członek klasy. Żaden arbiter nie będzie łączył sporu z innym arbitrażem bez zgody firmy.***
+      ***Z wyjątkiem przypadków ubiegania się o nakaz sądowy lub roszczeń wynikających z ustawy o oszustwach komputerowych i nadużyciach (Computer Fraud and Abuse Act), ty i firma będziecie rozstrzygać wszelkie spory w drodze wiążącego arbitrażu prowadzonego przez Amerykańskie Stowarzyszenie Arbitrażowe (AAA). Arbitraż będzie przebiegał zgodnie z Regulaminem Arbitrażu Handlowego AAA oraz Procedurami Uzupełniającymi dotyczącymi sporów konsumenckich. Arbitraż odbędzie się w %{city_for_disputes}. Będziesz rozstrzygać wszelkie spory jako osoba fizyczna, a nie w ramach pozwu zbiorowego lub innego postępowania reprezentacyjnego, niezależnie od tego, czy występujesz jako powód, czy jako członek grupy. Żaden arbiter nie połączy żadnego sporu z innym postępowaniem arbitrażowym bez zgody firmy.***
 
-      Każde orzeczenie arbitrażowe będzie zawierało koszty arbitrażu, uzasadnione honoraria adwokackie oraz uzasadnione koszty świadków. Zarówno Ty, jak i spółka możecie wnieść orzeczenie arbitrażowe do dowolnego właściwego sądu.
+      Każdy wyrok arbitrażowy obejmie koszty postępowania arbitrażowego, uzasadnione honoraria adwokackie oraz uzasadnione koszty związane z przesłuchaniem świadków. Ty i firma możecie zgłosić wyrok arbitrażowy do dowolnego sądu właściwego.
 
-      <h2 id="heading--general"><a href="#heading--general">Warunki ogólne</a></h2>
+      <h2 id="heading--general"><a href="#heading--general">Postanowienia ogólne</a></h2>
 
-      Jeśli jakieś postanowienie niniejszych warunków jest niewykonalne w formie pisemnej, ale można je zmienić tak, aby było wykonalne, należy je zmodyfikować w minimalnym stopniu, aby było wykonalne. W przeciwnym razie postanowienie to powinno zostać usunięte.
+      Jeśli któreś z postanowień tych warunków jest w obecnej formie niewykonalne, ale można je zmienić tak, by stało się wykonalne, należy je zmodyfikować w minimalnym zakresie niezbędnym do zapewnienia jego wykonalności. W przeciwnym razie ten zapis powinien zostać usunięty.
 
-      Nie możesz przenieść swojej umowy z firmą. Firma może przenieść Twoją umowę na dowolny oddział firmy, dowolną inną firmę, która uzyska kontrolę nad firmą lub dowolną inną firmę, która kupi aktywa firmy związane z forum. Wszelkie próby cesji wbrew tym warunkom nie mają mocy prawnej.
+      Nie możesz scedować swojej umowy z firmą. Firma może scedować twoją umowę na dowolną spółkę powiązaną, inną firmę, która przejmie kontrolę nad firmą, albo na jakąkolwiek inną firmę, która kupi aktywa firmy związane z forum. Każda próba cesji niezgodna z tymi warunkami nie ma mocy prawnej.
 
-      Ani wykonanie jakiegokolwiek prawa wynikającego z niniejszej Umowy, ani zrzeczenie się jakiegokolwiek naruszenia niniejszej Umowy nie uchyla jakiegokolwiek innego naruszenia niniejszej Umowy.
+      Ani skorzystanie z jakiegokolwiek prawa wynikającego z niniejszej umowy, ani zrzeczenie się roszczeń z tytułu naruszenia niniejszej umowy nie oznacza zrzeczenia się roszczeń z tytułu innych naruszeń niniejszej umowy.
 
-      Niniejszy regulamin zawiera wszystkie warunki umowy pomiędzy Tobą a firmą dotyczące korzystania z forum. Niniejsze warunki całkowicie zastępują wszelkie inne umowy dotyczące korzystania z forum, pisemne lub nie.
+      Niniejsze warunki stanowią całość porozumienia między tobą a firmą w sprawie korzystania z forum. Niniejsze warunki całkowicie zastępują wszelkie inne umowy dotyczące korzystania z forum, zarówno pisemne, jak i niepisemne.
 
       <h2 id="heading--contact"><a href="#heading--contact">Kontakt</a></h2>
 
-      Możesz powiadomić firmę na mocy tych warunków i wysłać pytania do firmy na adres <%{contact_email}>.
+      Możesz powiadomić firmę zgodnie z tymi warunkami oraz wysłać pytania na adres <%{contact_email}>.
 
-      Firma może powiadomić Cię zgodnie z tymi warunkami używając adresu e-mail, który podałeś dla swojego konta na forum, lub umieszczając wiadomość na stronie głównej forum lub stronie Twojego konta.
+      Firma może powiadamiać cię zgodnie z tymi warunkami, korzystając z adresu e-mail podanego przy zakładaniu konta na forum lub poprzez opublikowanie wiadomości na stronie głównej forum lub na twojej stronie konta.
 
       <h2 id="heading--changes"><a href="#heading--changes">Zmiany</a></h2>
 
-      Firma ostatnio zaktualizowała te warunki w dniu [WSTAW TUTAJ DATĘ OSTATNIEJ AKTUALIZACJI] i może je ponownie zaktualizować. Firma będzie umieszczać wszystkie aktualizacje na forum. W przypadku aktualizacji zawierających istotne zmiany, firma zgodzi się wysłać do ciebie e-mail, jeśli założysz konto i podasz prawidłowy adres e-mail. Firma może również informować o aktualizacjach za pomocą specjalnych wiadomości lub alertów na forum.
+      Firma ostatnio zaktualizowała te warunki [WSTAW TUTAJ DATĘ OSTATNIEJ AKTUALIZACJI] i może je ponownie zaktualizować. Firma będzie publikować wszystkie aktualizacje na forum. W przypadku aktualizacji zawierających istotne zmiany firma zobowiązuje się wysłać Ci wiadomość e-mail, jeśli założyłeś konto i podałeś prawidłowy adres e-mail. Firma może również ogłaszać aktualizacje za pomocą specjalnych komunikatów lub powiadomień na forum.
 
-      Po otrzymaniu powiadomienia o aktualizacji warunków, musisz zgodzić się na nowe warunki, aby nadal korzystać z forum.
+      Po otrzymaniu powiadomienia o aktualizacji niniejszych warunków musisz zaakceptować nowe warunki, aby móc nadal korzystać z forum.
   privacy_topic:
     title: "Polityka prywatności"
     body: |

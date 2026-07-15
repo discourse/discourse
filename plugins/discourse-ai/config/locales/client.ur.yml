@@ -59,6 +59,8 @@ ur:
             hide_topic:
               label: "موضوع چھپائیں"
     discourse_ai:
+      post_image_descriptions:
+        description: "تفصیل"
       ai_tool_approval:
         loading: "لوڈ ہو رہا ہے..."
         tool: "عمل"
@@ -244,8 +246,6 @@ ur:
           cancel: "منسوخ"
         thumbnail_suggestions:
           try_again: "دوبارہ کوشش کریں"
-        image_caption:
-          save_caption: "محفوظ کریں"
       embeddings:
         save: "محفوظ کریں"
         delete: "مٹائیں"

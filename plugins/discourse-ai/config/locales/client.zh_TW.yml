@@ -36,6 +36,8 @@ zh_TW:
             canned_reply:
               label: "回覆"
     discourse_ai:
+      post_image_descriptions:
+        description: "描述"
       ai_tool_approval:
         loading: "載入中..."
         tool: "動作"
@@ -196,8 +198,6 @@ zh_TW:
           select: "選擇"
           selected: "已選"
           try_again: "請再試一次"
-        image_caption:
-          save_caption: "儲存"
       embeddings:
         save: "儲存"
         delete: "刪除"

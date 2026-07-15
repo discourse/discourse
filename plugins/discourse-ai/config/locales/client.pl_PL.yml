@@ -233,6 +233,8 @@ pl_PL:
               description: "Zezwól na tagowanie wpisów tworzonych przez użytkownika systemowego."
     discourse_ai:
       title: "AI"
+      post_image_descriptions:
+        description: "Opis"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -370,7 +372,6 @@ pl_PL:
           translate: "Przetłumacz"
           markdown_tables: "Wygeneruj tabelę Markdown"
           custom_prompt: "Niestandardowy prompt"
-          image_caption: "Obrazy z podpisami"
           translator: "Tłumacz"
           post_illustrator: "Ilustrator postów"
           chat_thread_titles: "Tytuły wątków czatu"
@@ -596,15 +597,8 @@ pl_PL:
         description: "Opis"
         no_llm_selected: "Nie wybrano modelu językowego"
         use_parent_llm: "Użyj modelu językowego agenta"
-        max_context_posts: "Maksymalny kontekst postów"
-        max_context_posts_help: "Maksymalna liczba postów do wykorzystania jako kontekst dla sztucznej inteligencji podczas odpowiadania użytkownikowi. (domyślnie puste)"
-        execution_mode: "Tryb wykonania"
-        execution_mode_help: "Kontroluje sposób, w jaki agent zarządza wykonywaniem narzędzi i kontekstem konwersacji. Domyślnie używane są stałe limity tur/narzędzi. Agentic korzysta z budżetu tokenów z automatyczną kompresją kontekstu, co zapewnia dłuższe i bardziej efektywne sesje korzystania z narzędzi."
-        execution_mode_options:
-          default: "Domyślne (stałe limity)"
-          agentic: "Agent (budżet tokenów)"
-        max_turn_tokens: "Maksymalna liczba żetonów tury"
-        max_turn_tokens_help: "Maksymalna łączna liczba tokenów (wejściowych i wyjściowych) zużytych we wszystkich wywołaniach LLM podczas jednej odpowiedzi bota. Po ustawieniu zastępuje stałe limity ukończenia/narzędzi budżetem tokenów, umożliwiając bardziej efektywne działanie agenta. Pozostaw puste, aby zachować domyślne limity."
+        max_turn_tokens: "Maksymalna liczba tokenów tury"
+        max_turn_tokens_help: "Maksymalna łączna liczba tokenów (wejściowych i wyjściowych) zużytych we wszystkich wywołaniach LLM podczas jednej odpowiedzi bota. Pozostaw puste, aby domyślnie wykorzystać połowę okna kontekstowego modelu."
         compression_threshold: "Próg kompresji"
         compression_threshold_help: "Procent wykorzystania kontekstu (20–99), przy którym włącza się automatyczna kompresja. Niższe wartości powodują szybsze uruchomienie kompresji, co pozwala zachować większy margines bezpieczeństwa."
         vision_enabled: Dołącz przesyłanie obrazów
@@ -1131,11 +1125,6 @@ pl_PL:
           select: "Wybierz"
           selected: "Wybrany"
           try_again: "Spróbuj ponownie"
-        image_caption:
-          button_label: "Napisy z AI"
-          generating: "Generowanie napisów..."
-          credits: "Napisy z AI"
-          save_caption: "Zapisz"
         no_content_error: "Najpierw dodaj zawartość, aby wykonać na niej działania AI."
       errors:
         credit_limit_dialog:
@@ -1228,8 +1217,8 @@ pl_PL:
         click_to_run_label: "Uruchom Artifact"
       ai_bot:
         title: "Bot AI"
-        agent: "Agent"
-        llm: "Model"
+        agent: "Agent:"
+        llm: "Model:"
         pm_warning: "Wiadomości wysyłane przez chatboty AI są regularnie monitorowane przez moderatorów."
         cancel_streaming: "Zatrzymaj odpowiedź"
         try_again: "Spróbuj ponownie"

@@ -3560,6 +3560,20 @@ bg:
               title: "Настройки"
         badges:
           title: "Значки"
+        category_management:
+          tabs:
+            settings: "Настройки"
+          types:
+            all:
+              title: "Всички категории"
+          table:
+            category: "Категория"
+            visibility: "Видимост"
+            topics: "Теми"
+          visibility:
+            public: "Публични"
+          visibility_filter:
+            all: "Всички категории"
         permalinks:
           title: "Постоянни адреси"
         emoji:
@@ -3648,6 +3662,7 @@ bg:
               searches: "Търсения"
               status: "Статус"
         reports_section:
+          header_action: "Управление"
           modal:
             enabled_heading: "Да е включен"
             apply: "Приложи"

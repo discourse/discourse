@@ -34,6 +34,8 @@ lv:
             canned_reply:
               label: "Atbilde"
     discourse_ai:
+      post_image_descriptions:
+        description: "Apraksts"
       ai_tool_approval:
         loading: "Ielādē..."
         tool: "Darbība"
@@ -173,8 +175,6 @@ lv:
           cancel: "Atcelt"
         thumbnail_suggestions:
           try_again: "Mēģināt vēlreiz"
-        image_caption:
-          save_caption: "Saglabāt"
       embeddings:
         save: "Saglabāt"
         delete: "Dzēst"

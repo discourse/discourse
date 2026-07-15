@@ -36,6 +36,8 @@ sv:
             canned_reply:
               label: "Svara"
     discourse_ai:
+      post_image_descriptions:
+        description: "Beskrivning"
       ai_tool_approval:
         loading: "Laddar..."
         tool: "Åtgärd"
@@ -205,8 +207,6 @@ sv:
           select: "Välj"
           selected: "Markerat"
           try_again: "Försök igen"
-        image_caption:
-          save_caption: "Spara"
       embeddings:
         save: "Spara"
         delete: "Ta bort"

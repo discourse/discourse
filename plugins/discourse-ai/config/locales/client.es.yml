@@ -229,6 +229,8 @@ es:
               description: "Permitir etiquetar publicaciones creadas por el usuario del sistema."
     discourse_ai:
       title: "IA"
+      post_image_descriptions:
+        description: "Descripción"
       discourse_workflows:
         ai_agent:
           agent_id: "Agente"
@@ -341,7 +343,6 @@ es:
           translate: "Traducir"
           markdown_tables: "Generar tabla Markdown"
           custom_prompt: "Instrucción personalizada"
-          image_caption: "Añadir pie de foto"
           translator: "Traductor"
           post_illustrator: "Ilustrador de publicaciones"
           chat_thread_titles: "Títulos de los hilos de chat"
@@ -543,16 +544,6 @@ es:
         description: "Descripción"
         no_llm_selected: "No se ha seleccionado ningún modelo de idioma"
         use_parent_llm: "Usar modelo de idioma del agente"
-        max_context_posts: "Número máximo de publicaciones contextuales"
-        max_context_posts_help: "El número máximo de mensajes que se utilizarán como contexto para la IA cuando responda a un usuario (vacío por defecto)."
-        execution_mode: "Modo de ejecución"
-        execution_mode_help: "Controla cómo gestiona el agente la ejecución de herramientas y el contexto de la conversación. Por defecto utiliza límites fijos de turnos/herramientas. Agentic utiliza un presupuesto de tokens con compresión automática del contexto para sesiones de uso de herramientas más largas y eficaces."
-        execution_mode_options:
-          default: "Por defecto (límites fijos)"
-          agentic: "Agéntico (presupuesto de tokens)"
-        max_turn_tokens: "Máximo de tokens de turno"
-        max_turn_tokens_help: "Máximo total de tokens (entrada + salida) consumidos en todas las llamadas LLM durante una única respuesta del bot. Cuando se establece, sustituye los límites fijos de finalización/herramienta por un presupuesto de tokens, permitiendo un comportamiento más agéntico. Déjalo vacío para que permanezcan los límites por defecto."
-        compression_threshold: "Umbral de compresión"
         compression_threshold_help: "Porcentaje de uso del contexto (20-99) a partir del cual se activa la compresión automática. Los valores más bajos activan la compresión antes, preservando más espacio libre."
         vision_max_pixel_sizes:
           low: 'Baja calidad: más barato (256x256)'
@@ -1025,11 +1016,6 @@ es:
           select: "Seleccionar"
           selected: "Seleccionado"
           try_again: "Intentar de nuevo"
-        image_caption:
-          button_label: "Subtítulo con IA"
-          generating: "Generando subtítulo..."
-          credits: "Subtitulado por IA"
-          save_caption: "Guardar"
         no_content_error: "Añade contenido primero para realizar acciones de IA sobre él"
       errors:
         credit_limit_dialog:
@@ -1120,8 +1106,8 @@ es:
         click_to_run_label: "Ejecutar Artefacto"
       ai_bot:
         title: "Bot de IA"
-        agent: "Agente"
-        llm: "Modelo"
+        agent: "Agente:"
+        llm: "Modelo:"
         pm_warning: "Los moderadores supervisan periódicamente los mensajes del chatbot de IA."
         cancel_streaming: "Detener respuesta"
         try_again: "Intentar de nuevo"

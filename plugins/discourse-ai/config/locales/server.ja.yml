@@ -275,8 +275,6 @@ ja:
         explain: "説明"
         illustrate_post: "イラスト投稿"
         replace_dates: "スマート日付"
-      image_caption:
-        attribution: "AI によるキャプション"
     share_ai:
       read_more: "トランスクリプト全文を読む"
       onebox_title: "%{llm_name} で AI 会話"

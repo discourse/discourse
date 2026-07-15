@@ -346,8 +346,6 @@ ar:
         explain: "الشرح"
         illustrate_post: "توضيح المنشور"
         replace_dates: "التواريخ الذكية"
-      image_caption:
-        attribution: "تم إنشاء التسمية التوضيحية بالذكاء الاصطناعي"
     share_ai:
       read_more: "قراءة النص الكامل"
       onebox_title: "محادثة الذكاء الاصطناعي مع %{llm_name}"

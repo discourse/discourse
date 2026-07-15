@@ -368,8 +368,6 @@ uk:
         explain: "Пояснити"
         illustrate_post: "Проілюструвати допис"
         replace_dates: "Розумні дати"
-      image_caption:
-        attribution: "Підпис від ШІ"
     share_ai:
       read_more: "Читати повний вміст"
       onebox_title: "Розмова ШІ з %{llm_name}"

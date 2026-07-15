@@ -36,6 +36,8 @@ gl:
             canned_reply:
               label: "Responder"
     discourse_ai:
+      post_image_descriptions:
+        description: "Descrición"
       ai_tool_approval:
         loading: "Cargando..."
         tool: "Acción"
@@ -190,8 +192,6 @@ gl:
           cancel: "Cancelar"
         thumbnail_suggestions:
           try_again: "Tentar de novo"
-        image_caption:
-          save_caption: "Gardar"
       embeddings:
         save: "Gardar"
         delete: "Eliminar"

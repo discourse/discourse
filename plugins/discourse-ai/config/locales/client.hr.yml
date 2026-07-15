@@ -36,6 +36,8 @@ hr:
             canned_reply:
               label: "Odgovor"
     discourse_ai:
+      post_image_descriptions:
+        description: "Opis"
       ai_tool_approval:
         loading: "Očitavanje..."
         tool: "Akcija"
@@ -205,8 +207,6 @@ hr:
           select: "Odaberite"
           selected: "Odabrano"
           try_again: "Pokušaj ponovno"
-        image_caption:
-          save_caption: "Spremi"
       embeddings:
         save: "Spremi"
         delete: "Izbriši"

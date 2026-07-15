@@ -228,8 +228,6 @@ fi:
         explain: "Selitä"
         illustrate_post: "Havainnollista viestiä"
         replace_dates: "Älykkäät päivämäärät"
-      image_caption:
-        attribution: "Tekoälyn laatima kuvateksti"
     share_ai:
       read_more: "Lue koko transkriptio"
       onebox_title: "Tekoälykeskustelu LLM:n %{llm_name} kanssa"

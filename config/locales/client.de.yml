@@ -6130,6 +6130,21 @@ de:
               title: "Beiträge und Themen"
             stats_and_thresholds:
               title: "Statistiken & Schwellenwerte"
+        category_management:
+          tabs:
+            settings: "Einstellungen"
+          types:
+            all:
+              title: "Alle Kategorien"
+          filter_placeholder: "Kategorien filtern"
+          table:
+            category: "Kategorie"
+            visibility: "Sichtbarkeit"
+            topics: "Themen"
+          visibility:
+            public: "Öffentlich"
+          visibility_filter:
+            all: "Alle Kategorien"
         permalinks:
           title: "Permalinks"
           header_description: "Weiterleitungen für URLs, die dem Forum nicht bekannt sind"
@@ -6354,6 +6369,7 @@ de:
               searches: "Suchen"
               status: "Status"
         reports_section:
+          header_action: "Verwalten"
           no_data: "Keine Daten anzuzeigen"
           modal:
             enabled_heading: "Aktiviert"

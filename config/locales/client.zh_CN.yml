@@ -58,9 +58,6 @@ zh_CN:
         access_permission_viewer: "查看器"
         access_permission_viewer_description: "可以查看此对象中的内容"
         access_permission_remove: "移除"
-        access_permission_remove_description: "移除该群组的权限"
-        add_group: "添加群组"
-        mandatory_acl_tooltip: "此权限对该对象而言是强制性的，无法移除。"
     carousel:
       go_to_slide: "转到幻灯片 %{index}"
       previous: "上一张幻灯片"
@@ -6090,6 +6087,21 @@ zh_CN:
               title: "帖子和话题"
             stats_and_thresholds:
               title: "统计数据和阈值"
+        category_management:
+          tabs:
+            settings: "设置"
+          types:
+            all:
+              title: "所有类别"
+          filter_placeholder: "筛选类别"
+          table:
+            category: "类别"
+            visibility: "公开范围"
+            topics: "话题"
+          visibility:
+            public: "公开"
+          visibility_filter:
+            all: "所有类别"
         permalinks:
           title: "永久链接"
           header_description: "为论坛无法识别的 URL 应用的重定向"
@@ -6346,6 +6358,7 @@ zh_CN:
               searches: "搜索"
               status: "状态"
         reports_section:
+          header_action: "管理"
           modal:
             enabled_heading: "已启用"
             all_heading: "所有报告"

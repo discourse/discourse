@@ -229,6 +229,8 @@ nl:
               description: "Taggen van berichten die zijn gemaakt door de systeemgebruiker toestaan."
     discourse_ai:
       title: "AI"
+      post_image_descriptions:
+        description: "Beschrijving"
       discourse_workflows:
         ai_agent:
           agent_id: "Agent"
@@ -341,7 +343,6 @@ nl:
           translate: "Vertalen"
           markdown_tables: "Markdowntabel genereren"
           custom_prompt: "Aangepaste prompt"
-          image_caption: "Afbeeldingen bijschriften geven"
           translator: "Vertaler"
           post_illustrator: "Berichtillustrator"
           chat_thread_titles: "Chatthreadtitels"
@@ -546,16 +547,6 @@ nl:
         description: "Beschrijving"
         no_llm_selected: "Geen taalmodel geselecteerd"
         use_parent_llm: "Taalmodel van agent gebruiken"
-        max_context_posts: "Maximaal aantal contextberichten"
-        max_context_posts_help: "Het maximale aantal berichten dat als context voor de AI kan worden gebruikt bij het reageren op een gebruiker. (Leeg voor standaardinstelling)"
-        execution_mode: "Uitvoeringsmodus"
-        execution_mode_help: "Bepaalt hoe de agent de tooluitvoering en conversatiecontext beheert. Standaard wordt gebruik gemaakt van vaste beurt/toollimieten. Agentic gebruikt een tokenbudget met automatische contextcompressie voor langere, capabelere sessies voor toolgebruik."
-        execution_mode_options:
-          default: "Standaard (vaste limieten)"
-          agentic: "Agentic (tokenbudget)"
-        max_turn_tokens: "Maximaal aantal beurttokens"
-        max_turn_tokens_help: "Maximaal totaal aantal tokens (invoer + uitvoer) verbruikt over alle LLM-aanroepen tijdens een enkele botantwoord. Als dit is ingesteld, worden de vaste voltooiing-/toollimieten vervangen door een tokenbudget, waardoor meer agentgedrag mogelijk is. Laat leeg voor standaard limieten."
-        compression_threshold: "Compressiedrempel"
         compression_threshold_help: "Percentage van contextgebruik (20-99) waarbij automatische compressie begint. Lagere waarden activeren compressie eerder, waardoor meer ruimte behouden blijft."
         vision_max_pixel_sizes:
           low: Lage kwaliteit - goedkoopst (256x256)
@@ -1028,11 +1019,6 @@ nl:
           select: "Selecteren"
           selected: "Geselecteerd"
           try_again: "Opnieuw proberen"
-        image_caption:
-          button_label: "Bijschrift met AI"
-          generating: "Bijschrift genereren..."
-          credits: "Bijschrift door AI"
-          save_caption: "Opslaan"
         no_content_error: "Voeg eerst inhoud toe om er AI-acties op uit te voeren"
       errors:
         credit_limit_dialog:
@@ -1123,8 +1109,8 @@ nl:
         click_to_run_label: "Artefact uitvoeren"
       ai_bot:
         title: "AI-bot"
-        agent: "Agent"
-        llm: "Model"
+        agent: "Agent:"
+        llm: "Model:"
         pm_warning: "AI-chatbotberichten worden regelmatig gecontroleerd door moderators."
         cancel_streaming: "Stoppen met antwoorden"
         try_again: "Opnieuw proberen"

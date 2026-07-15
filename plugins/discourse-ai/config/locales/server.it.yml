@@ -228,8 +228,6 @@ it:
         explain: "Spiega"
         illustrate_post: "Illustra messaggio"
         replace_dates: "Date smart"
-      image_caption:
-        attribution: "Didascalia da IA"
     share_ai:
       read_more: "Leggi la trascrizione completa"
       onebox_title: "Conversazione IA con %{llm_name}"

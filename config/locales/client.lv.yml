@@ -2986,6 +2986,19 @@ lv:
               title: "Iestatījumi"
         badges:
           title: "Žetoni"
+        category_management:
+          tabs:
+            settings: "Iestatījumi"
+          types:
+            all:
+              title: "Visas sadaļas"
+          table:
+            category: "Sadaļa"
+            topics: "Tēmas"
+          visibility:
+            public: "Publisks"
+          visibility_filter:
+            all: "Visas sadaļas"
         permalinks:
           title: "Patstāvīgā saite"
         emoji:
@@ -3077,6 +3090,7 @@ lv:
             table:
               status: "Statuss"
         reports_section:
+          header_action: "Pārvaldīt"
           modal:
             enabled_heading: "Ieslēgts"
             apply: "Pielietot"

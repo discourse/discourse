@@ -34,6 +34,8 @@ nb_NO:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      post_image_descriptions:
+        description: "Beskrivelse"
       ai_tool_approval:
         loading: "Laster…"
         tool: "Handling"
@@ -190,8 +192,6 @@ nb_NO:
         thumbnail_suggestions:
           select: "Velg"
           try_again: "Prøv igjen"
-        image_caption:
-          save_caption: "Lagre"
       embeddings:
         save: "Lagre"
         delete: "Slett"

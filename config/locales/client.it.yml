@@ -5441,6 +5441,21 @@ it:
               title: "Messaggi e argomenti"
             stats_and_thresholds:
               title: "Statistiche e soglie"
+        category_management:
+          tabs:
+            settings: "Impostazioni"
+          types:
+            all:
+              title: "Tutte le categorie"
+          filter_placeholder: "Filtra le categorie"
+          table:
+            category: "Categoria"
+            visibility: "Visibilità"
+            topics: "Argomenti"
+          visibility:
+            public: "Pubblico"
+          visibility_filter:
+            all: "Tutte le categorie"
         permalinks:
           title: "Permalink"
           header_description: "Reindirizzamenti da applicare per URL non conosciuti dal forum"
@@ -5655,6 +5670,7 @@ it:
               searches: "Ricerche"
               status: "Stato"
         reports_section:
+          header_action: "Gestisci"
           no_data: "Non ci sono dati da mostrare"
           modal:
             enabled_heading: "Abilitato"

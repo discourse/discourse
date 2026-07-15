@@ -34,6 +34,8 @@ sr:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      post_image_descriptions:
+        description: "Opis"
       ai_tool_approval:
         loading: "Učitavanje..."
         tool: "Akcije"
@@ -176,8 +178,6 @@ sr:
         thumbnail_suggestions:
           select: "Odaberite"
           try_again: "Pokušaj ponovno"
-        image_caption:
-          save_caption: "Sačuvaj"
       embeddings:
         save: "Sačuvaj"
         delete: "Obriši"

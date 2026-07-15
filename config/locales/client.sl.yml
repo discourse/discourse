@@ -3847,6 +3847,20 @@ sl:
               title: "Nastavitve"
         badges:
           title: "Značke"
+        category_management:
+          tabs:
+            settings: "Nastavitve"
+          types:
+            all:
+              title: "Vse kategorije"
+          table:
+            category: "Kategorija"
+            visibility: "Vidljivost"
+            topics: "Tem"
+          visibility:
+            public: "Javni"
+          visibility_filter:
+            all: "Vse kategorije"
         permalinks:
           title: "Trajne povezave"
         emoji:
@@ -3963,6 +3977,7 @@ sl:
               searches: "Iskanj"
               status: "Status"
         reports_section:
+          header_action: "Upravljaj"
           no_data: "Ni podatkov za prikaz"
           modal:
             enabled_heading: "Vključeno"

@@ -6153,6 +6153,21 @@ tr_TR:
               title: "Gönderiler ve konular"
             stats_and_thresholds:
               title: "İstatistikler ve eşikler"
+        category_management:
+          tabs:
+            settings: "Ayarlar"
+          types:
+            all:
+              title: "Tüm kategoriler"
+          filter_placeholder: "Kategorileri filtrele"
+          table:
+            category: "Kategori"
+            visibility: "Görünürlük"
+            topics: "Konular"
+          visibility:
+            public: "Genel"
+          visibility_filter:
+            all: "Tüm kategoriler"
         permalinks:
           title: "Kalıcı Bağlantılar"
           header_description: "Forum tarafından bilinmeyen URL'lere başvuruda bulunmak için yönlendirmeler"
@@ -6377,6 +6392,7 @@ tr_TR:
               searches: "Aramalar"
               status: "Durum"
         reports_section:
+          header_action: "Yönet"
           no_data: "Gösterilecek veri yok"
           modal:
             enabled_heading: "Etkin mi"

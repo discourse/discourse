@@ -337,8 +337,6 @@ es:
         explain: "Explicar"
         illustrate_post: "Ilustrar publicación"
         replace_dates: "Fechas inteligentes"
-      image_caption:
-        attribution: "Subtitulado por IA"
     share_ai:
       read_more: "Leer la transcripción completa"
       onebox_title: "Conversación de IA con %{llm_name}"

@@ -4863,6 +4863,21 @@ zh_TW:
           sub_pages:
             posts_and_topics:
               title: "貼文和主題"
+        category_management:
+          tabs:
+            settings: "設定"
+          types:
+            all:
+              title: "所有分類"
+          filter_placeholder: "篩選分類"
+          table:
+            category: "分類"
+            visibility: "能見度"
+            topics: "話題"
+          visibility:
+            public: "公開"
+          visibility_filter:
+            all: "所有分類"
         permalinks:
           title: "固定連結"
           header_description: "為論壇無法識別的 URL 應用的重新導向。"
@@ -5038,6 +5053,7 @@ zh_TW:
               searches: "搜尋結果"
               status: "狀態"
         reports_section:
+          header_action: "管理"
           modal:
             enabled_heading: "啟用"
             all_heading: "所有報告"

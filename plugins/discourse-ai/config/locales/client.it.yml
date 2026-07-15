@@ -154,6 +154,8 @@ it:
               description: "Quando viene specificato un valore, imposta il limite massimo del numero di token generabili dal modello. Rispetta il limite massimo di token di output del LLM"
     discourse_ai:
       title: "IA"
+      post_image_descriptions:
+        description: "Descrizione"
       ai_tool_approval:
         loading: "In caricamento..."
         tool: "Azione"
@@ -227,7 +229,6 @@ it:
           translate: "Traduci"
           markdown_tables: "Genera tabella di markdown"
           custom_prompt: "Comando personalizzato"
-          image_caption: "Didascalia immagini"
           translator: "Assistente traduzione"
           post_illustrator: "Assistente messaggi illustrati"
           setting_groups:
@@ -364,8 +365,6 @@ it:
         overwrite: "Sovrascrivi"
         description: "Descrizione"
         no_llm_selected: "Nessun modello linguistico selezionato"
-        max_context_posts: "Numero massimo di messaggi di contesto"
-        max_context_posts_help: "Il numero massimo di post da utilizzare come contesto per l'IA quando si risponde a un utente. (vuoto per impostazione predefinita)"
         vision_max_pixel_sizes:
           low: 'Bassa qualità: più veloce (256x256)'
           medium: Qualità media (512x512)
@@ -667,11 +666,6 @@ it:
           select: "Seleziona"
           selected: "Selezionato"
           try_again: "Riprova"
-        image_caption:
-          button_label: "Didascalia con IA"
-          generating: "Generazione didascalia in corso..."
-          credits: "Didascalia da IA"
-          save_caption: "Salva"
         no_content_error: "Aggiungi prima il contenuto per eseguire azioni IA su di esso"
       reviewables:
         model_used: "Modello utilizzato:"
@@ -743,7 +737,7 @@ it:
         click_to_run_label: "Esegui artefatto"
       ai_bot:
         title: "Bot IA"
-        llm: "Modello"
+        llm: "Modello:"
         pm_warning: "I messaggi del chatbot IA vengono controllati regolarmente dai moderatori."
         cancel_streaming: "Interrompi risposta"
         try_again: "Riprova"

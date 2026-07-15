@@ -337,8 +337,6 @@ tr_TR:
         explain: "Açıkla"
         illustrate_post: "Gönderiyi çiz"
         replace_dates: "Akıllı tarihler"
-      image_caption:
-        attribution: "Alt yazı YZ tarafından hazırlandı"
     share_ai:
       read_more: "Tam metni okuyun"
       onebox_title: "%{llm_name} ile YZ Konuşması"

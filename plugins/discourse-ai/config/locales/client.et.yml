@@ -34,6 +34,8 @@ et:
             canned_reply:
               label: "Vasta"
     discourse_ai:
+      post_image_descriptions:
+        description: "Kirjeldus"
       ai_tool_approval:
         loading: "Laadimine..."
         tool: "Tegevus"
@@ -175,8 +177,6 @@ et:
           cancel: "Loobu"
         thumbnail_suggestions:
           try_again: "Proovi uuesti"
-        image_caption:
-          save_caption: "Salvesta"
       embeddings:
         save: "Salvesta"
         delete: "Kustuta"

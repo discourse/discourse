@@ -5939,6 +5939,21 @@ hu:
               title: "Bejegyzések és témák"
             stats_and_thresholds:
               title: "Statisztikák és küszöbértékek"
+        category_management:
+          tabs:
+            settings: "Beállítások"
+          types:
+            all:
+              title: "Minden kategória"
+          filter_placeholder: "Kategóriák szűrése"
+          table:
+            category: "Kategória"
+            visibility: "Láthatóság"
+            topics: "Témák"
+          visibility:
+            public: "Nyilvános"
+          visibility_filter:
+            all: "Minden kategória"
         permalinks:
           title: "Közvetlen hivatkozások"
           header_description: "A fórum által nem ismert webcímekre történő átirányítás"
@@ -6161,6 +6176,7 @@ hu:
               searches: "Keresések"
               status: "Állapot"
         reports_section:
+          header_action: "Kezelés"
           no_data: "Nincs megjeleníthető adat"
           modal:
             enabled_heading: "Bekapcsolva"

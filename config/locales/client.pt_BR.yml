@@ -46,8 +46,6 @@ pt_BR:
       manage:
         access_permission_editor: "Editor(a)"
         access_permission_remove: "Remover"
-        add_group: "Adicionar grupo"
-        mandatory_acl_tooltip: "Essa permissão é obrigatória para esse recurso e não pode ser removida"
     carousel:
       go_to_slide: "Ir para o slide %{index}"
       previous: "Slide anterior"
@@ -6022,6 +6020,22 @@ pt_BR:
               title: "Postagens no tópico"
             stats_and_thresholds:
               title: "Limites e estatísticas"
+        category_management:
+          tabs:
+            settings: "Definições"
+          types:
+            all:
+              title: "Todas as categorias"
+          filter_placeholder: "Filtrar categorias"
+          table:
+            category: "Categoria"
+            visibility: "Visibilidade"
+            topics: "Tópicos"
+          visibility:
+            public: "Pública"
+          visibility_filter:
+            all: "Todas as categorias"
+            public: "Categorias públicas"
         permalinks:
           title: "Links permanentes"
           header_description: "Redirecionamentos para aplicar nas URLs que não são conhecidas pelo fórum"
@@ -6251,6 +6265,7 @@ pt_BR:
               searches: "Pesquisas"
               status: "Status"
         reports_section:
+          header_action: "Gerenciar"
           no_data: "Nenhum dado para exibir"
           modal:
             enabled_heading: "Ativados"

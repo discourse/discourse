@@ -34,6 +34,8 @@ th:
             canned_reply:
               label: "ตอบ"
     discourse_ai:
+      post_image_descriptions:
+        description: "รายละเอียด"
       ai_tool_approval:
         loading: "กำลังโหลด..."
         user: "ผู้ใช้"
@@ -153,8 +155,6 @@ th:
           cancel: "ยกเลิก"
         thumbnail_suggestions:
           try_again: "ลองอีกครั้ง"
-        image_caption:
-          save_caption: "บันทึก"
       embeddings:
         save: "บันทึก"
         delete: "ลบ"
