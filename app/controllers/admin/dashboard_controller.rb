@@ -4,7 +4,12 @@ class Admin::DashboardController < Admin::StaffController
   BULK_REPORTS_FILTER_KEYS = %i[start_date end_date].freeze
 
   before_action :ensure_admin,
-                only: %i[available_reports update_reports_section update_configuration]
+                only: %i[
+                  available_reports
+                  update_reports_section
+                  update_configuration
+                  update_section_settings
+                ]
 
   def index
     if dashboard_improvements?
@@ -23,6 +28,20 @@ class Admin::DashboardController < Admin::StaffController
   def update_configuration
     sections = params.permit(sections: %i[id visible])[:sections] || []
     AdminDashboardSectionConfiguration.update(sections, actor: current_user)
+    head :no_content
+  end
+
+  def update_section_settings
+    section_id = params.require(:section_id)
+    key = params.require(:setting_key)
+
+    definition = AdminDashboardSectionConfiguration.setting_definition(section_id, key)
+
+    AdminDashboardSectionConfiguration.update_setting(
+      section_id:,
+      key:,
+      attrs: params.permit(*(definition&.dig(:permit) || [])),
+    )
     head :no_content
   end
 

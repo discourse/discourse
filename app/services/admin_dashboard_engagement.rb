@@ -123,6 +123,13 @@ class AdminDashboardEngagement
   def build_activity_by_category
     args = { start_date: start_date, end_date: end_date, current_user: current_user }
 
+    category_ids =
+      AdminDashboardSectionConfiguration.settings_for("engagement").dig(
+        "activity_by_category",
+        "category_ids",
+      )
+    args[:filters] = { category_ids: } if category_ids.present?
+
     report = Report.find_cached("activity_by_category", args)
     if report.nil?
       report = Report.find("activity_by_category", args)
@@ -131,6 +138,10 @@ class AdminDashboardEngagement
 
     return nil if report.nil? || report_error?(report)
 
-    { rows: report_data(report), total: report.is_a?(Hash) ? report[:total] : report.total }
+    {
+      rows: report_data(report),
+      total: report.is_a?(Hash) ? report[:total] : report.total,
+      category_ids: category_ids,
+    }
   end
 end

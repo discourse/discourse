@@ -7203,6 +7203,7 @@ en:
               share: "Share"
               vs_prior: "Vs Prior"
               empty: "No activity in the selected period."
+              save_error: "Couldn't save your selection for next time."
             whos_posting:
               title: "Who's posting?"
               all_categories: "All categories"

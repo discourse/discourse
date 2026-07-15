@@ -210,6 +210,26 @@ describe AdminDashboardEngagement do
         ids = result[:activity_by_category][:rows].map { |r| r[:category_id] }
         expect(ids).to include(private_cat.id)
       end
+
+      it "restricts rows to the persisted category selection" do
+        selected = Fabricate(:category)
+        other = Fabricate(:category)
+        Fabricate(:topic, category: selected, created_at: Time.zone.local(2026, 4, 10))
+        Fabricate(:topic, category: other, created_at: Time.zone.local(2026, 4, 10))
+
+        AdminDashboardSectionConfiguration.update_setting(
+          section_id: "engagement",
+          key: "activity_by_category",
+          attrs: {
+            category_ids: [selected.id],
+          },
+        )
+
+        result = described_class.build(start_date: "2026-04-01", end_date: "2026-04-28")
+
+        ids = result[:activity_by_category][:rows].map { |r| r[:category_id] }
+        expect(ids).to contain_exactly(selected.id)
+      end
     end
 
     describe "trust_level_pipeline" do
