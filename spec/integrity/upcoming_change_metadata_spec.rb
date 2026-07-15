@@ -53,6 +53,7 @@ RSpec.describe "upcoming change metadata integrity checks" do
         body_class
         permanent_warning
         hide_settings
+        requires_plugin_enabled
       ]
       required_keys = %i[status impact]
       unsupported_keys = metadata.keys - allowed_keys
@@ -66,6 +67,8 @@ RSpec.describe "upcoming change metadata integrity checks" do
       body_class = metadata[:body_class]
       permanent_warning = metadata[:permanent_warning]
       hide_settings = metadata[:hide_settings]
+      requires_plugin_enabled = metadata[:requires_plugin_enabled]
+      owning_plugin = Discourse.plugins_by_name[SiteSetting.plugins[setting[:setting]]]
 
       aggregate_failures do
         expect(setting[:options][:hidden]).to eq(true), "#{label} must set `hidden: true`"
@@ -129,6 +132,19 @@ RSpec.describe "upcoming change metadata integrity checks" do
         unless permanent_warning.nil?
           expect([true, false]).to include(permanent_warning),
           "#{label} `upcoming_change.permanent_warning` must be a boolean"
+        end
+
+        unless requires_plugin_enabled.nil?
+          expect([true, false]).to include(requires_plugin_enabled),
+          "#{label} `upcoming_change.requires_plugin_enabled` must be a boolean"
+
+          expect(owning_plugin).to be_present,
+          "#{label} sets `upcoming_change.requires_plugin_enabled` but is not owned by a plugin"
+
+          if owning_plugin.present?
+            expect(owning_plugin.enabled_site_setting&.to_sym).not_to eq(setting[:setting]),
+            "#{label} may not set `upcoming_change.requires_plugin_enabled` on its own plugin's `enabled_site_setting` -- the change would gate itself"
+          end
         end
 
         if hide_settings.present?
