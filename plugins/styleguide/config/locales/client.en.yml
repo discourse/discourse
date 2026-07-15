@@ -28,6 +28,20 @@ en:
           title: "Menus"
         multi_select:
           title: "Multi select"
+        select:
+          title: "Select"
+          description: "Interactive examples of the current DSelect family for visual, responsive, keyboard, screen-reader, asynchronous-state, and theme testing."
+          mobile_guidance: "Resize to a mobile viewport to verify that the typeahead query input opens inside the modal."
+          default_example: "Default synchronous typeahead"
+          async_button_example: "Async button with loading state"
+          static_example: "Static select"
+          multi_example: "Phase 0 multi-select"
+          empty_example: "Async empty results"
+          error_example: "First-request error and retry"
+          placeholder: "Choose an option"
+          multi_placeholder: "Choose options"
+          empty_label: "No matching options"
+          request_error: "The first request failed."
         toasts:
           title: "Toasts"
         font_scale:
