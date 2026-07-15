@@ -39,6 +39,18 @@ def valid_upcoming_change_impact_roles
   %w[staff admins moderators all_members developers]
 end
 
+# Derived from the file path rather than Discourse.plugins_by_name, so the checks
+# hold regardless of which plugins happen to be loaded in the current test run.
+def upcoming_change_owning_plugin_dir(setting)
+  setting[:file][%r{plugins/([^/]+)/}, 1]
+end
+
+def upcoming_change_plugin_enabled_site_setting(plugin_dir)
+  plugin_rb = Rails.root.join("plugins", plugin_dir, "plugin.rb")
+  return nil unless File.exist?(plugin_rb)
+  File.read(plugin_rb)[/enabled_site_setting\s+:(\w+)/, 1]&.to_sym
+end
+
 RSpec.describe "upcoming change metadata integrity checks" do
   each_upcoming_change_setting do |setting|
     label = upcoming_change_setting_label(setting)
@@ -68,7 +80,11 @@ RSpec.describe "upcoming change metadata integrity checks" do
       permanent_warning = metadata[:permanent_warning]
       hide_settings = metadata[:hide_settings]
       requires_plugin_enabled = metadata[:requires_plugin_enabled]
-      owning_plugin = Discourse.plugins_by_name[SiteSetting.plugins[setting[:setting]]]
+      setting_name_sym = setting[:setting_name].to_sym
+      owning_plugin_dir = upcoming_change_owning_plugin_dir(setting)
+      is_own_enabled_site_setting =
+        owning_plugin_dir.present? &&
+          upcoming_change_plugin_enabled_site_setting(owning_plugin_dir) == setting_name_sym
 
       aggregate_failures do
         expect(setting[:options][:hidden]).to eq(true), "#{label} must set `hidden: true`"
@@ -138,13 +154,18 @@ RSpec.describe "upcoming change metadata integrity checks" do
           expect([true, false]).to include(requires_plugin_enabled),
           "#{label} `upcoming_change.requires_plugin_enabled` must be a boolean"
 
-          expect(owning_plugin).to be_present,
+          expect(owning_plugin_dir).to be_present,
           "#{label} sets `upcoming_change.requires_plugin_enabled` but is not owned by a plugin"
+        end
 
-          if owning_plugin.present?
-            expect(owning_plugin.enabled_site_setting&.to_sym).not_to eq(setting[:setting]),
-            "#{label} may not set `upcoming_change.requires_plugin_enabled` on its own plugin's `enabled_site_setting` -- the change would gate itself"
-          end
+        # Plugin-owned changes are gated on their plugin by default. A change that
+        # is its plugin's own `enabled_site_setting` must opt out with
+        # `requires_plugin_enabled: false`, otherwise the default gate would gate the
+        # change on itself and it could never be reached (enabling it is how admins
+        # turn the plugin on in the first place).
+        if is_own_enabled_site_setting
+          expect(requires_plugin_enabled).to eq(false),
+          "#{label} is its plugin's own `enabled_site_setting` and must set `upcoming_change.requires_plugin_enabled: false`, otherwise the change gates itself"
         end
 
         if hide_settings.present?

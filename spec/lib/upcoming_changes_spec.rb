@@ -3,9 +3,9 @@
 RSpec.describe UpcomingChanges do
   let(:setting_name) { :enable_upload_debug_mode }
 
-  # The sample plugin's change, opted in to the owning-plugin gate. Plugin changes
-  # are only gated on their plugin being enabled when they declare this.
-  def mock_requires_plugin_enabled_change(status: :alpha, **extra)
+  # The sample plugin's change. Plugin-owned changes are gated on their owning
+  # plugin being enabled by default, so this is gated unless it opts out below.
+  def mock_plugin_change(status: :alpha, **extra)
     mock_upcoming_change_metadata(
       {
         enable_experimental_sample_plugin_feature: {
@@ -13,11 +13,16 @@ RSpec.describe UpcomingChanges do
           status: status,
           impact_type: "feature",
           impact_role: "admins",
-          requires_plugin_enabled: true,
           **extra,
         },
       },
     )
+  end
+
+  # The same change, opted out of the owning-plugin gate with
+  # requires_plugin_enabled: false, so it stays usable while the plugin is disabled.
+  def mock_opted_out_plugin_change(status: :alpha, **extra)
+    mock_plugin_change(status: status, requires_plugin_enabled: false, **extra)
   end
 
   before do
@@ -445,21 +450,13 @@ RSpec.describe UpcomingChanges do
   describe ".owning_plugin_enabled?" do
     let(:plugin_setting_name) { :enable_experimental_sample_plugin_feature }
 
+    after { UpcomingChanges.clear_caches! }
+
     it "returns true for a core change with no owning plugin" do
       expect(described_class.owning_plugin_enabled?(setting_name)).to eq(true)
     end
 
-    it "returns true when the change has not opted in with requires_plugin_enabled" do
-      SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:enabled?).returns(false)
-
-      expect(described_class.owning_plugin_enabled?(plugin_setting_name)).to eq(true)
-    end
-
-    context "when the change opts in with requires_plugin_enabled" do
-      before { mock_requires_plugin_enabled_change }
-
-      after { UpcomingChanges.clear_caches! }
-
+    context "when the change is gated on its plugin by default" do
       it "returns true when the owning plugin is enabled" do
         SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:enabled?).returns(true)
 
@@ -479,12 +476,22 @@ RSpec.describe UpcomingChanges do
       end
     end
 
+    context "when the change opts out with requires_plugin_enabled: false" do
+      before { mock_opted_out_plugin_change }
+
+      it "returns true even when the owning plugin is disabled" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:enabled?).returns(false)
+
+        expect(described_class.owning_plugin_enabled?(plugin_setting_name)).to eq(true)
+      end
+    end
+
     context "when the change is the owning plugin's own enabled_site_setting" do
-      # The integrity spec rejects this combination, but Plugin::Instance#enabled?
-      # reads the setting back through .enabled?, so guard against the stack overflow
-      # anyway. #enabled? reads the ivar directly, hence setting it rather than stubbing.
+      # The integrity spec requires this change to opt out with
+      # requires_plugin_enabled: false, but Plugin::Instance#enabled? reads the setting
+      # back through .enabled?, so guard against the stack overflow even if it is left
+      # gated. #enabled? reads the ivar directly, hence setting it rather than stubbing.
       before do
-        mock_requires_plugin_enabled_change
         SiteSetting::SAMPLE_TEST_PLUGIN.instance_variable_set(
           :@enabled_site_setting,
           plugin_setting_name,
@@ -557,22 +564,10 @@ RSpec.describe UpcomingChanges do
         UpcomingChanges.clear_caches!
       end
 
-      before do
-        mock_requires_plugin_enabled_change
-        SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:enabled?).returns(false)
-      end
+      before { SiteSetting::SAMPLE_TEST_PLUGIN.stubs(:enabled?).returns(false) }
 
-      it "returns true when the change has not opted in with requires_plugin_enabled" do
-        mock_upcoming_change_metadata(
-          {
-            enable_experimental_sample_plugin_feature: {
-              impact: "feature,admins",
-              status: :alpha,
-              impact_type: "feature",
-              impact_role: "admins",
-            },
-          },
-        )
+      it "returns true when the change opts out with requires_plugin_enabled: false" do
+        mock_opted_out_plugin_change
         SiteSetting.enable_experimental_sample_plugin_feature = true
 
         expect(described_class.enabled?(plugin_setting_name)).to eq(true)
@@ -591,7 +586,7 @@ RSpec.describe UpcomingChanges do
       end
 
       it "returns false even when the change is permanent" do
-        mock_requires_plugin_enabled_change(status: :permanent)
+        mock_plugin_change(status: :permanent)
 
         expect(described_class.enabled?(plugin_setting_name)).to eq(false)
       end
@@ -857,7 +852,7 @@ RSpec.describe UpcomingChanges do
       let(:plugin_setting_name) { :enable_experimental_sample_plugin_feature }
 
       before do
-        mock_requires_plugin_enabled_change(hide_settings: hidden_setting_names)
+        mock_plugin_change(hide_settings: hidden_setting_names)
         SiteSetting.enable_experimental_sample_plugin_feature = true
       end
 
@@ -1226,26 +1221,28 @@ RSpec.describe UpcomingChanges do
 
       after { UpcomingChanges.clear_caches! }
 
-      it "still displays a change that has not opted in with requires_plugin_enabled" do
-        expect(UpcomingChanges::ConditionalDisplay.should_display?(plugin_setting_name)).to eq(true)
+      it "hides the change by default" do
+        expect(UpcomingChanges::ConditionalDisplay.should_display?(plugin_setting_name)).to eq(
+          false,
+        )
       end
 
-      context "when the change opts in with requires_plugin_enabled" do
-        before { mock_requires_plugin_enabled_change }
+      it "hides the change even when the plugin registered a conditional display callback" do
+        SiteSetting::SAMPLE_TEST_PLUGIN.register_upcoming_change_conditional_display(
+          plugin_setting_name,
+        ) { true }
 
-        it "returns false" do
+        expect(UpcomingChanges::ConditionalDisplay.should_display?(plugin_setting_name)).to eq(
+          false,
+        )
+      end
+
+      context "when the change opts out with requires_plugin_enabled: false" do
+        before { mock_opted_out_plugin_change }
+
+        it "still displays the change" do
           expect(UpcomingChanges::ConditionalDisplay.should_display?(plugin_setting_name)).to eq(
-            false,
-          )
-        end
-
-        it "returns false even when the plugin registered a conditional display callback" do
-          SiteSetting::SAMPLE_TEST_PLUGIN.register_upcoming_change_conditional_display(
-            plugin_setting_name,
-          ) { true }
-
-          expect(UpcomingChanges::ConditionalDisplay.should_display?(plugin_setting_name)).to eq(
-            false,
+            true,
           )
         end
       end

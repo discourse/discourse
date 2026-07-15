@@ -13,8 +13,9 @@ module UpcomingChanges
   # upcoming changes. If no conditional display rule is defined, the change will
   # always be displayed.
   #
-  # A change that declares `requires_plugin_enabled: true` is never displayed, and
-  # never takes effect, while its owning plugin is disabled -- see .owning_plugin_enabled?
+  # A plugin-owned change is hidden, and never takes effect, while its owning
+  # plugin is disabled -- unless it opts out with `requires_plugin_enabled: false`.
+  # See .owning_plugin_enabled?
   #
   # Keep in mind this is called from UpcomingChanges::List service,
   # which loops over every change in an N1 depending on the filters admins
@@ -198,22 +199,23 @@ module UpcomingChanges
     Discourse.plugins_by_name[plugin_name]&.configurable? != false
   end
 
-  # A change that gates a feature *inside* its plugin is not actionable while that
-  # plugin is disabled, so it should neither be displayed nor take effect. Such a
-  # change opts in with `requires_plugin_enabled: true`.
+  # Whether a plugin-owned change is gated on its owning plugin being enabled.
+  # This is the DEFAULT: a change that gates a feature *inside* its plugin is not
+  # actionable while that plugin is disabled, so by default it is neither displayed
+  # nor takes effect. A change opts OUT with `requires_plugin_enabled: false`.
   #
-  # It is opt-in because plenty of plugin changes are the opposite: they exist to
-  # get the plugin adopted, and only make sense while it is disabled. Category type
-  # setup changes offer a type that enables the plugin when chosen, reactions
-  # overrides the default of discourse_reactions_enabled, and enable_discourse_workflows
-  # *is* the plugin's enabled_site_setting. Gating those on the plugin being enabled
-  # would make them unreachable.
+  # The opt-out exists because plenty of plugin changes are the opposite: they
+  # exist to get the plugin adopted, and only make sense while it is disabled.
+  # Category type setup changes offer a type that enables the plugin when chosen,
+  # reactions overrides the default of discourse_reactions_enabled, and
+  # enable_discourse_workflows *is* the plugin's enabled_site_setting. Gating those
+  # on the plugin being enabled would make them unreachable.
   #
-  # Plugins cannot express this themselves via a conditional display callback, since
-  # DiscoursePluginRegistry filters those out while the owning plugin is disabled --
-  # exactly when the callback would be needed.
+  # Plugins cannot express the gate themselves via a conditional display callback,
+  # since DiscoursePluginRegistry filters those out while the owning plugin is
+  # disabled -- exactly when the callback would be needed.
   def self.requires_plugin_enabled?(change_setting_name)
-    !!change_metadata(change_setting_name)[:requires_plugin_enabled]
+    change_metadata(change_setting_name)[:requires_plugin_enabled] != false
   end
 
   # Both .enabled? and ConditionalDisplay.should_display? consult this.
@@ -227,10 +229,12 @@ module UpcomingChanges
     plugin = Discourse.plugins_by_name[plugin_name]
     return true if plugin.nil?
 
-    # A change must never declare requires_plugin_enabled on its own plugin's
-    # enabled_site_setting -- Plugin::Instance#enabled? reads that setting, which
-    # resolves back through .enabled? and recurses. The integrity spec rejects it;
-    # this keeps a stack overflow from being the way we find out.
+    # A change that is its own plugin's enabled_site_setting must opt out with
+    # requires_plugin_enabled: false, or the default gate would gate the change on
+    # itself. The integrity spec requires the opt-out; guard here anyway so a
+    # mistake surfaces as a hidden change rather than a stack overflow --
+    # Plugin::Instance#enabled? reads that setting, which resolves back through
+    # .enabled? and recurses.
     return true if plugin.enabled_site_setting&.to_sym == change_setting_name
 
     plugin.enabled? != false
