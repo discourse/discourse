@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
-import didUpdate from "@ember/render-modifiers/modifiers/did-update";
+import booleanString from "discourse/helpers/boolean-string";
 import type SelectEngine from "discourse/ui-kit/select/select-engine";
 
 interface ComboboxQueryInputSignature {
@@ -36,6 +36,12 @@ interface ComboboxQueryInputSignature {
     onBlur?: (event: FocusEvent) => void;
     /** Marks the first edit so the query replaces the selected label. */
     onEdit?: () => void;
+    /**
+     * Whether a focus should select the displayed label for overtype. Returns false for the
+     * programmatic focus fired while opening (so a pointer click keeps its caret position),
+     * true for a genuine keyboard focus. Defaults to selecting when not provided.
+     */
+    shouldSelectOnFocus?: () => boolean;
     /** Captures the input element (fed to `dRovingFocus` as the combobox controller). */
     registerInput: (element: HTMLElement) => void;
   };
@@ -61,6 +67,11 @@ interface ComboboxQueryInputSignature {
  * user can keep typing while navigating results.
  */
 export default class ComboboxQueryInput extends Component<ComboboxQueryInputSignature> {
+  // Set on `pointerdown` (which fires just before the native focus) so the focus handler
+  // knows this focus came from a pointer press and must leave the caret where the click
+  // put it, rather than selecting the whole label.
+  #pointerFocus = false;
+
   get value(): string {
     return this.args.editing
       ? this.args.engine.filter
@@ -95,8 +106,23 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
   }
 
   @action
+  handlePointerDown(): void {
+    this.#pointerFocus = true;
+  }
+
+  @action
   handleFocus(event: FocusEvent): void {
-    this.#selectDisplayValue(event.target as HTMLInputElement);
+    // A pointer press positions the caret at the click; the browser owns that, so don't
+    // select the label over it. Keyboard focus (no preceding pointerdown) still selects.
+    const pointerFocus = this.#pointerFocus;
+    this.#pointerFocus = false;
+    if (pointerFocus) {
+      return;
+    }
+
+    if (this.args.shouldSelectOnFocus?.() ?? true) {
+      this.#selectDisplayValue(event.target as HTMLInputElement);
+    }
   }
 
   @action
@@ -140,12 +166,10 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
 
   @action
   handleFocusout(event: FocusEvent): void {
+    // Clear a pointerdown that never produced a focus (e.g. clicking an already-focused
+    // input) so the next keyboard focus is not mistaken for a pointer focus.
+    this.#pointerFocus = false;
     this.args.onBlur?.(event);
-  }
-
-  @action
-  selectUpdatedDisplayValue(element: HTMLInputElement): void {
-    this.#selectDisplayValue(element);
   }
 
   #selectDisplayValue(element: HTMLInputElement): void {
@@ -175,7 +199,7 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
       aria-haspopup="listbox"
       autocomplete="off"
       aria-label={{@label}}
-      aria-expanded={{if @expanded "true" "false"}}
+      aria-expanded={{booleanString @expanded omitFalse=false}}
       aria-controls={{this.controlsId}}
       aria-owns={{this.ownsId}}
       placeholder={{@placeholder}}
@@ -183,10 +207,13 @@ export default class ComboboxQueryInput extends Component<ComboboxQueryInputSign
       {{on "input" this.handleInput}}
       {{on "compositionend" this.handleCompositionEnd}}
       {{on "keydown" this.handleKeydown}}
+      {{! pointerdown is required: it must flag the pointer press before the native focus
+        fires between pointerdown and pointerup, so the focus handler can skip the select. }}
+      {{! eslint-disable-next-line ember/template-no-pointer-down-event-binding }}
+      {{on "pointerdown" this.handlePointerDown}}
       {{on "focus" this.handleFocus}}
       {{on "focusout" this.handleFocusout}}
       {{didInsert @registerInput}}
-      {{didUpdate this.selectUpdatedDisplayValue @displayValue}}
       ...attributes
     />
   </template>

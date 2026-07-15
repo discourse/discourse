@@ -783,10 +783,10 @@ module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
     assert
       .dom(input)
       .hasValue("Banana", "the resolved fallback becomes the input value");
-    assert.deepEqual(
-      [input.selectionStart, input.selectionEnd],
-      [0, 6],
-      "the late label is selected for replacement"
+    assert.strictEqual(
+      input.selectionStart,
+      input.selectionEnd,
+      "a label arriving under an already-focused input is not auto-selected"
     );
   });
 
