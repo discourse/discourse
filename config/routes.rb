@@ -1293,10 +1293,12 @@ Discourse::Application.routes.draw do
     end
 
     get "/post_localizations/:id" => "post_localizations#show"
+    put "/post_localizations/:post_id/locale" => "post_localizations#update_locale"
     post "/post_localizations/create_or_update", to: "post_localizations#create_or_update"
     delete "/post_localizations/destroy", to: "post_localizations#destroy"
 
     get "topic_localizations/:topic_id/:locale" => "topic_localizations#show"
+    put "topic_localizations/:topic_id/locale" => "topic_localizations#update_locale"
     post "topic_localizations/create_or_update", to: "topic_localizations#create_or_update"
     delete "topic_localizations/destroy", to: "topic_localizations#destroy"
 
