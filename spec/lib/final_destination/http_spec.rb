@@ -153,9 +153,9 @@ describe FinalDestination::HTTP do
         # 192.0.2.1 (RFC 5737 TEST-NET-1) silently drops SYNs. Happy Eyeballs must
         # step past it to the reachable loopback address; the previous design pinned
         # the first address and would burn the whole open_timeout here.
-        FinalDestination::SSRFDetector
-          .stubs(:lookup_and_filter_ips)
-          .returns(%w[192.0.2.1 127.0.0.1])
+        FinalDestination::SSRFDetector.stubs(:lookup_and_filter_ips).returns(
+          %w[192.0.2.1 127.0.0.1],
+        )
 
         body = nil
         duration =

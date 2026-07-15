@@ -41,7 +41,13 @@ describe FinalDestination::Connector do
   it "ignores delimiters smuggled into the host" do
     vetted = %w[1.2.3.4 2400:c800::1]
 
-    ["evil|9.9.9.9", "evil|0.001|9.9.9.9", "a|b|c|d", "", "9.9.9.9,6.6.6.6"].each do |malicious_host|
+    [
+      "evil|9.9.9.9",
+      "evil|0.001|9.9.9.9",
+      "a|b|c|d",
+      "",
+      "9.9.9.9,6.6.6.6",
+    ].each do |malicious_host|
       token = described_class.encode(malicious_host, vetted)
 
       expect(described_class.addresses(token)).to eq(vetted)

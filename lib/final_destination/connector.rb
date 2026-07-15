@@ -2,7 +2,7 @@
 
 class FinalDestination
   # FinalDestination resolves hostnames to allowed IPs, then encodes them in a
-  # pipe-separated format to be read by our patched versions of TCPSocket and 
+  # pipe-separated format to be read by our patched versions of TCPSocket and
   # Addrinfo in `freedom_patches/final_destination_connect.rb`.
   # This module exists to encode/decode that format.
   module Connector
@@ -24,9 +24,12 @@ class FinalDestination
       def addresses_for_family(ips, family)
         wanted =
           case family
-          when Integer then family
-          when :ipv6, "ipv6", :INET6, "INET6", "AF_INET6" then Socket::AF_INET6
-          when :ipv4, "ipv4", :INET, "INET", "AF_INET" then Socket::AF_INET
+          when Integer
+            family
+          when :ipv6, "ipv6", :INET6, "INET6", "AF_INET6"
+            Socket::AF_INET6
+          when :ipv4, "ipv4", :INET, "INET", "AF_INET"
+            Socket::AF_INET
           end
         return ips unless wanted
         ips.select { |ip| Addrinfo.ip(ip).afamily == wanted }
