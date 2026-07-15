@@ -280,6 +280,10 @@
   }
 }
 
+.select-examples__control {
+  width: min(100%, 24rem);
+}
+
 .more-topics-examples {
   .more-topics__container {
     flex-grow: 1;
