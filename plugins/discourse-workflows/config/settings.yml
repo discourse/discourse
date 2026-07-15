@@ -9,8 +9,6 @@ plugins:
       learn_more_url: "https://meta.discourse.org/t/-/406990"
       allow_enabled_for:
         - everyone
-      # This change *is* the plugin's enabled_site_setting, so it must opt out --
-      # gating it on the plugin being enabled would gate the change on itself.
       requires_plugin_enabled: false
   discourse_workflows_ai_authoring_enabled:
     default: false

@@ -55,6 +55,4 @@ discourse_topic_voting:
       status: "stable"
       impact: "feature,staff"
       learn_more_url: "https://meta.discourse.org/t/-/399365"
-      # Offers a category type that enables the plugin when chosen, so it must stay
-      # usable while the plugin is disabled.
       requires_plugin_enabled: false
