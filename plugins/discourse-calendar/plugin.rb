@@ -76,6 +76,7 @@ module ::DiscourseCalendar
           chatable_id: topic.category.id,
           chatable_type: "Category",
           name: topic.title,
+          emoji: "spiral_calendar",
           status: Chat::Channel.statuses[:open],
           type: "CategoryChannel",
           allow_channel_wide_mentions: true,
@@ -83,6 +84,65 @@ module ::DiscourseCalendar
 
       DiscourseCalendar::Livestream::TopicChatChannel.create!(topic: topic, chat_channel: channel)
       channel.user_chat_channel_memberships.create!(user: topic.user, following: false)
+      pin_topic_reference_message(topic, channel)
+    end
+
+    def self.pin_topic_reference_message(topic, channel)
+      guardian = Discourse.system_user.guardian
+      message = nil
+
+      # escape markdown metacharacters so the title cannot break out of the
+      # [title](url) link and inject attacker-controlled markdown
+      escaped_title = topic.title.gsub(/([\\\[\]()])/) { "\\#{$1}" }
+
+      Chat::CreateMessage.call(
+        guardian:,
+        params: {
+          chat_channel_id: channel.id,
+          message:
+            I18n.t(
+              "discourse_calendar.livestream.chat.topic_reference_message",
+              title: escaped_title,
+              url: topic.relative_url,
+            ),
+        },
+        options: {
+          enforce_membership: true,
+        },
+      ) do |create_result|
+        on_success { |message_instance:| message = message_instance }
+        on_failure do
+          Rails.logger.warn(
+            "Failed to create livestream topic reference message for channel #{channel.id}: #{create_result.inspect_steps}",
+          )
+        end
+      end
+
+      return if message.blank?
+
+      DiscourseCalendar::Livestream::TopicChatChannel.where(chat_channel_id: channel.id).update_all(
+        reference_message_id: message.id,
+      )
+
+      return if !SiteSetting.chat_pinned_messages
+
+      Chat::PinMessage.call(
+        guardian:,
+        params: {
+          message_id: message.id,
+          channel_id: channel.id,
+        },
+      ) do |pin_result|
+        on_failure do
+          Rails.logger.warn(
+            "Failed to pin livestream topic reference message for channel #{channel.id}: #{pin_result.inspect_steps}",
+          )
+        end
+      end
+    rescue StandardError => e
+      Rails.logger.warn(
+        "Failed to post livestream topic reference message for channel #{channel.id}: #{e.message}",
+      )
     end
 
     def self.livestream_chat_status_channel(user_id)
@@ -799,11 +859,42 @@ after_initialize do
     :topic_view,
     :chat_channel_id,
     include_condition: -> do
-      object.topic.first_post&.event&.livestream? && object.topic.topic_chat_channel.present?
+      event = object.topic.first_post&.event
+      event&.livestream? && object.topic.topic_chat_channel.present? &&
+        (scope.is_admin? || event.can_access_livestream_chat?(scope.user))
     end,
   ) { object.topic.topic_chat_channel.chat_channel_id }
 
   add_to_serializer(:topic_view, :has_livestream) { object.topic.first_post&.event&.livestream? }
+
+  register_modifier(:chat_channel_fetcher_public_includes) do |includes|
+    includes + [{ livestream_topic_chat_channel: { topic: :first_post } }]
+  end
+
+  add_to_serializer(
+    "Chat::Channel",
+    :livestream_topic,
+    include_condition: -> { object.livestream_topic_chat_channel&.topic.present? },
+  ) do
+    topic = object.livestream_topic_chat_channel.topic
+    event = topic.first_post&.event
+    watching_invitee =
+      if scope.user && event
+        DiscoursePostEvent::Invitee.find_by(user_id: scope.user.id, post_id: event.id)
+      end
+
+    {
+      id: topic.id,
+      title: topic.title,
+      slug: topic.slug,
+      url: topic.relative_url,
+      event_id: topic.first_post&.id,
+      reference_message_id: object.livestream_topic_chat_channel.reference_message_id,
+      can_update_attendance: !!(scope.user && event&.can_user_update_attendance?(scope.user)),
+      watching_invitee_status:
+        watching_invitee && DiscoursePostEvent::Invitee.statuses[watching_invitee.status],
+    }
+  end
 
   on(:chat_channel_trashed) do |channel, user|
     # If the chat channel is deleted, delete the related TopicChatChannel record

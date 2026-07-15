@@ -813,7 +813,7 @@ export default class ChatChannel extends Component {
         />
       {{else}}
         {{#if (and (not @channel.isFollowing) @channel.isCategoryChannel)}}
-          <ChatChannelPreviewCard @channel={{@channel}} />
+          <ChatChannelPreviewCard @channel={{@channel}} @context={{@context}} />
         {{else}}
           <ChatComposerChannel
             @channel={{@channel}}

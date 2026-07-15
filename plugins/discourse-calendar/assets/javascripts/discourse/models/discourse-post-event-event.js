@@ -192,6 +192,7 @@ export default class DiscoursePostEventEvent {
     this.canActOnDiscoursePostEvent = event.canActOnDiscoursePostEvent;
     this.shouldDisplayInvitees = event.shouldDisplayInvitees;
     this.stats = event.stats;
+    this.watchingInvitee = event.watchingInvitee;
     this.sampleInvitees = event.sampleInvitees || [];
     this.reminders = event.reminders;
     this.imageUpload = event.imageUpload;

@@ -28,3 +28,14 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     width: 100%;
   }
 }
+
+.livestream-rsvp {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  p {
+    margin: 0;
+  }
+}

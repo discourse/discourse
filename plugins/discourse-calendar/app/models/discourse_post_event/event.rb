@@ -365,6 +365,15 @@ module DiscoursePostEvent
         end
     end
 
+    # unlike can_user_update_attendance?, this stays true after the event
+    # closes or expires so attendees keep access to the livestream chat
+    def can_access_livestream_chat?(user)
+      return true if !private?
+      return false if user.blank?
+
+      invitees.exists?(user_id: user.id) || user.groups.where(name: Array(raw_invitees)).exists?
+    end
+
     def can_user_update_attendance?(user)
       return false if closed || expired?
       return true if public?
