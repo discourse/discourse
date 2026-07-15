@@ -21,6 +21,7 @@ import {
   nodeTypeRunScopeLabelKey,
   nodeTypeStyle,
   resolveNodeTypeVersion,
+  typeVersionForNode,
 } from "../../../lib/workflows/node-types";
 import { nodeDescription, nodeLabel } from "../../../lib/workflows/node-utils";
 import CanvasHoverToolbar from "./hover-toolbar";
@@ -31,7 +32,7 @@ function resolveType(workflowsNodeTypes, node) {
     return null;
   }
 
-  return resolveNodeTypeVersion(nodeType, node.typeVersion);
+  return resolveNodeTypeVersion(nodeType, typeVersionForNode(node));
 }
 
 const highlightOnInsert = modifier((element) => {

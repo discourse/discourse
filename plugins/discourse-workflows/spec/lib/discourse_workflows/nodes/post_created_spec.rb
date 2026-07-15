@@ -55,7 +55,7 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
   end
 
   describe "#output" do
-    it "returns post and topic data" do
+    it "returns post and topic data", :aggregate_failures do
       upload = Fabricate(:image_upload)
       UploadReference.create!(target: reply, upload: upload)
 
@@ -83,6 +83,16 @@ RSpec.describe DiscourseWorkflows::Nodes::PostCreated::V1 do
       expect(output[:topic][:tags].map { |topic_tag| topic_tag[:name] }).to eq(["test-tag"])
       expect(output[:topic][:category_id]).to eq(topic.category_id)
       expect(output[:topic][:archetype]).to eq(topic.archetype)
+      expect(output).to match_node_output_schema(described_class)
+    end
+
+    it "returns personal message data without a category", :aggregate_failures do
+      personal_message_post = Fabricate(:post, topic: direct_pm_topic, user: reply_user)
+      output = described_class.new(personal_message_post).output
+
+      expect(output.dig(:post, :category_id)).to be_nil
+      expect(output.dig(:topic, :category_id)).to be_nil
+      expect(output).to match_node_output_schema(described_class)
     end
   end
 

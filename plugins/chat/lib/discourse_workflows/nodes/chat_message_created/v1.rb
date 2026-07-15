@@ -17,6 +17,67 @@ if defined?(DiscourseWorkflows)
             group: "discourse_triggers",
             available: -> { SiteSetting.chat_enabled },
             unavailable_reason_key: "discourse_workflows.node_unavailable.requires_chat",
+            output_contracts: [
+              {
+                schema: {
+                  "$schema" => DiscourseWorkflows::Schema::DRAFT_URI,
+                  "type" => "object",
+                  "properties" => {
+                    "message" => {
+                      "type" => "object",
+                      "properties" => {
+                        "id" => {
+                          "type" => "integer",
+                        },
+                        "message" => {
+                          "type" => "string",
+                        },
+                        "cooked" => {
+                          "type" => "string",
+                        },
+                        "excerpt" => {
+                          "type" => "string",
+                        },
+                        "created_at" => {
+                          "type" => "string",
+                          "format" => "date-time",
+                        },
+                        "thread_id" => {
+                          "type" => %w[integer null],
+                        },
+                        "chat_channel_id" => {
+                          "type" => "integer",
+                        },
+                      },
+                    },
+                    "channel" => {
+                      "type" => "object",
+                      "properties" => {
+                        "id" => {
+                          "type" => "integer",
+                        },
+                        "title" => {
+                          "type" => "string",
+                        },
+                        "slug" => {
+                          "type" => "string",
+                        },
+                        "chatable_type" => {
+                          "type" => "string",
+                        },
+                        "chatable_id" => {
+                          "type" => "integer",
+                        },
+                      },
+                    },
+                    "user" => {
+                      "type" => "object",
+                      "properties" => DiscourseWorkflows::Schema::BASIC_USER_PROPERTIES,
+                    },
+                  },
+                },
+              },
+            ],
             properties: {
               channel_id: {
                 type: :integer,

@@ -191,10 +191,11 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
         )
       end
 
-      it "does not serialize hidden loop node" do
+      it "serializes hidden executable node definitions outside the palette" do
         loop_node = result[:node_types].find { |nt| nt[:identifier] == "flow:loop_over_items" }
 
-        expect(loop_node).to be_nil
+        expect(loop_node[:palette_visible]).to eq(false)
+        expect(loop_node[:output_contracts].pluck(:mode)).to eq(%i[passthrough passthrough])
       end
 
       it "serializes ui palette group for trigger nodes" do
@@ -275,8 +276,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       expect(unavailable[:available]).to eq(false)
       expect(unavailable[:unavailable_reason_key]).to eq(reason_key)
     ensure
-      DiscoursePluginRegistry.discourse_workflows_nodes.delete(unavailable_class)
-      DiscourseWorkflows::Registry.reset_indexes!
+      unregister_workflow_nodes(unavailable_class)
     end
 
     it "serializes full descriptions for each registered node version" do
@@ -326,10 +326,7 @@ RSpec.describe DiscourseWorkflows::NodeType::List do
       expect(node_type).not_to have_key(:property_schema_versions)
       expect(node_type[:latest]).not_to have_key(:property_schema)
     ensure
-      DiscoursePluginRegistry._raw_discourse_workflows_nodes.reject! do |entry|
-        [v1, v2].include?(entry[:value])
-      end
-      DiscourseWorkflows::Registry.reset_indexes!
+      unregister_workflow_nodes(v1, v2)
     end
   end
 end

@@ -15,6 +15,16 @@ module DiscourseWorkflows
           },
           group: "discourse_triggers",
           events: [:post_edited],
+          output_contracts: [
+            {
+              schema:
+                Schema.merge(
+                  Schema::POST_SCHEMA,
+                  Schema::TOPIC_LIST_ITEM_SCHEMA,
+                  Schema::USER_SCHEMA,
+                ),
+            },
+          ],
           properties: {
             post_scope: {
               type: :options,

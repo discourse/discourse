@@ -14,6 +14,32 @@ module DiscourseWorkflows
             color: "salmon",
           },
           outputs: %w[main],
+          output_contracts: [
+            {
+              mode: :passthrough,
+              variants: [
+                {
+                  schema: Schema::WEBHOOK_REQUEST_SCHEMA,
+                  mode: :union,
+                  display_options: {
+                    show: {
+                      resume: ["webhook"],
+                      limit_wait_time: [true],
+                      timeout_amount: [{ condition: { exists: true } }],
+                    },
+                  },
+                },
+                {
+                  schema: Schema::WEBHOOK_REQUEST_SCHEMA,
+                  display_options: {
+                    show: {
+                      resume: ["webhook"],
+                    },
+                  },
+                },
+              ],
+            },
+          ],
           properties:
             lambda do
               webhook_fields =

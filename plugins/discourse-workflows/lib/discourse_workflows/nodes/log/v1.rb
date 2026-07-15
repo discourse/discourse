@@ -24,6 +24,7 @@ module DiscourseWorkflows
               },
             },
           },
+          output_contracts: [{ mode: :passthrough }],
           properties: {
             mode: {
               type: :options,
