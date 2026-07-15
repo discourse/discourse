@@ -102,6 +102,8 @@ class Category < ActiveRecord::Base
   validates :color, format: { with: /\A(\h{6}|\h{3})\z/ }
   validates :text_color, format: { with: /\A(\h{6}|\h{3})\z/ }
 
+  before_validation :normalize_default_top_period
+
   before_save :apply_permissions
   before_save :downcase_email
   before_save :downcase_name
@@ -1201,6 +1203,10 @@ class Category < ActiveRecord::Base
 
   def ensure_category_setting
     self.build_category_setting if self.category_setting.blank?
+  end
+
+  def normalize_default_top_period
+    self.default_top_period = nil if TopTopic.periods.exclude?(default_top_period&.to_sym)
   end
 
   def check_permissions_compatibility(parent_permissions, child_permissions)
