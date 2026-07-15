@@ -125,6 +125,10 @@ module DiscourseAi
         end
       end
 
+      def self.labels_for(classification_type)
+        classification_type.to_s == "sentiment" ? %w[negative neutral positive] : Emotions::LIST
+      end
+
       CONCURRENT_CLASSFICATIONS = 40
       CONCURRENT_AGENT_CLASSIFICATIONS = 5
 
@@ -362,7 +366,7 @@ module DiscourseAi
         transform_agent_result(
           structured_output,
           raw_result,
-          labels_for(classifier[:classification_type]),
+          self.class.labels_for(classifier[:classification_type]),
         )
       end
 
@@ -388,10 +392,6 @@ module DiscourseAi
         JSON.parse(raw_result)
       rescue JSON::ParserError
         {}
-      end
-
-      def labels_for(classification_type)
-        classification_type.to_s == "sentiment" ? %w[negative neutral positive] : Emotions::LIST
       end
 
       def store_classification(target, classification)

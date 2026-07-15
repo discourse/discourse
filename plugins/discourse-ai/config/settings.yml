@@ -35,6 +35,7 @@ discourse_ai:
     default: "-36"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
+    validator: "DiscourseAi::Configuration::SentimentAgentValidator"
   ai_sentiment_emotion_classification_strategy:
     default: "classification_model"
     type: enum
@@ -45,6 +46,7 @@ discourse_ai:
     default: "-37"
     type: enum
     enum: "DiscourseAi::Configuration::AgentEnumerator"
+    validator: "DiscourseAi::Configuration::EmotionAgentValidator"
   ai_sentiment_backfill_maximum_posts_per_hour:
     default: 2500
     min: 0

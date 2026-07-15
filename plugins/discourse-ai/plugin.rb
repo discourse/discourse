@@ -125,6 +125,7 @@ after_initialize do
   ].each { |a_module| a_module.inject_into(self) }
 
   register_problem_check ProblemCheck::AiLlmStatus
+  register_problem_check ProblemCheck::AiSentimentAgentConfiguration
   #register_problem_check ProblemCheck::AiCreditSoftLimit
   #register_problem_check ProblemCheck::AiCreditHardLimit
 
