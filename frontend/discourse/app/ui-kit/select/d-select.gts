@@ -627,9 +627,14 @@ export default class DSelect extends Component<DSelectSignature> {
               </div>
             </:empty>
 
-            <:error as |error inlineError|>
+            <:error as |error InlineError|>
               <div class="d-combobox__error">
-                <inlineError />
+                <InlineError />
+                <DButton
+                  class="d-combobox__retry btn-default"
+                  @action={{this.engine.reload}}
+                  @label="d_select.retry"
+                />
               </div>
             </:error>
           </DAsyncContent>

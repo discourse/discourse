@@ -14,7 +14,8 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
   match. **⚠ OPEN AFFORDANCE UNRESOLVED (pending its own deep-plan):** desktop opens only via the
   query input (label/caret inert); **mobile has no opener** (trigger holds no input). See the
   `skip`-ped test + the `TODO(select-kit-typeahead-open-affordance)` in `d-select.gts`, and the
-  next planning cycle. Deferred: visual/SR pixel review (needs a live consumer). Plan
+  next planning cycle. The permanent `/styleguide/molecules/select` harness now covers the
+  current variants and async states. Deferred: visual/SR pixel review. Plan
   `~/.claude/plans/vivid-drifting-puffin.md`. **Scope: single-select only** (multi = a later
   item; Decision-1b data model = below). **Overlay = reuse `DMenu`** (not `DInlineFloat` — Fork A
   chosen: `DMenu` honors a non-button `@triggerComponent`, and blocks can't cross a service-
@@ -36,7 +37,8 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     keep-open). The mobile arm + the open affordance are a `skip`-ped pending-design marker.
   - ☐ Open affordance decision (next cycle) — desktop click target + mobile opener + surface
     (DModal vs d-sheet); coordinate with RFC Decision 1/1b/3 and button/static/multi.
-  - ☐ Visual/SR pixel review (implementation-time; blocked on a live consumer to screenshot).
+  - ☑ Permanent Styleguide harness for variants, async states, retry, empty results, and multi.
+  - ☐ Visual/SR pixel review (implementation-time).
   - ☐ **Backlog (skipped review items)** — add tests when next editing these paths:
     `handleTriggerBlur` keep-open branch; auto-highlight skipping a disabled first item;
     `preventPointerBlur` static no-op; `legacy.getElement` host-DOM invariant (incl. mobile).

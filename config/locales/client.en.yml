@@ -3284,6 +3284,7 @@ en:
       label: "Options"
       remove: "Remove"
       expand: "Show options"
+      retry: "Retry"
       results_count:
         one: "%{count} result"
         other: "%{count} results"

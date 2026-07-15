@@ -107,6 +107,13 @@
   color: var(--primary-medium);
 }
 
+.d-combobox__error {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5em;
+}
+
 // Multi-select chips (rendered in the trigger)
 .d-combobox__chips {
   display: flex;

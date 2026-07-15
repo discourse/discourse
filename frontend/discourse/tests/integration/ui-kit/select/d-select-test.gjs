@@ -9,6 +9,7 @@ import {
   render,
   triggerEvent,
   triggerKeyEvent,
+  waitFor,
 } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { forceMobile } from "discourse/lib/mobile";
@@ -445,6 +446,61 @@ module("Integration | ui-kit | select | DSelect (multi)", function (hooks) {
 
     await click(".d-combobox__chip");
     assert.dom(".d-combobox__chip").exists({ count: 1 }, "one chip removed");
+  });
+});
+
+module("Integration | ui-kit | select | DSelect (async)", function (hooks) {
+  setupRenderingTest(hooks);
+
+  test("an error can be retried without changing the query", async function (assert) {
+    let requestCount = 0;
+    let retryFilter;
+    let resolveRetry;
+    const load = (filter) => {
+      requestCount++;
+
+      if (requestCount === 1) {
+        return Promise.reject(new Error("The first request failed"));
+      }
+
+      retryFilter = filter;
+      return new Promise((resolve) => {
+        resolveRetry = resolve;
+      });
+    };
+
+    await render(
+      <template>
+        <DSelect @load={{load}}>
+          <:selection as |item|>{{item.name}}</:selection>
+          <:item as |item|>{{item.name}}</:item>
+        </DSelect>
+      </template>
+    );
+    await fillIn("[role='combobox']", "ban");
+
+    assert
+      .dom(".d-combobox__error [role='alert']")
+      .exists("the first request displays the async error");
+    assert
+      .dom(".d-combobox__retry")
+      .hasText("Retry", "the error offers a recovery action");
+
+    const retryClick = click(".d-combobox__retry");
+    await waitFor(".d-combobox__skeleton");
+    assert
+      .dom(".d-combobox__skeleton")
+      .exists("retry transitions back through the loading state");
+    resolveRetry(ITEMS.filter((item) => item.name === "Banana"));
+    await retryClick;
+
+    assert.dom(".d-combobox__error").doesNotExist("the error is cleared");
+    assert.strictEqual(requestCount, 2, "retry makes one additional request");
+    assert.strictEqual(retryFilter, "ban", "retry preserves the current query");
+    assert
+      .dom("[role='option']")
+      .exists({ count: 1 }, "the successful retry displays its results")
+      .hasText("Banana");
   });
 });
 
