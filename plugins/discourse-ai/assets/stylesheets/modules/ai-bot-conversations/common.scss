@@ -48,6 +48,10 @@ body.has-ai-conversations-sidebar {
     display: none;
   }
 
+  .ai-conversation-sidebar__link {
+    font-size: var(--font-down-1);
+  }
+
   .sidebar-toggle-all-sections {
     display: none;
   }
@@ -147,7 +151,7 @@ body.has-ai-conversations-sidebar {
 
     .agent-llm-selector {
       display: flex;
-      gap: 0.5em;
+      gap: var(--space-4);
       justify-content: flex-start;
 
       .select-kit-body {
@@ -159,19 +163,21 @@ body.has-ai-conversations-sidebar {
 
       &__selection-wrapper {
         display: flex;
-        flex-direction: column;
-        min-width: 0;
-        gap: var(--space-2);
+        flex-direction: row;
+        align-items: center;
+        gap: var(--space-1);
 
-        @include viewport.until(sm) {
-          .select-kit-header-wrapper {
-            font-size: var(--font-down-1);
-          }
+        .select-kit-header-wrapper {
+          font-size: var(--font-down-1);
+          flex-direction: row-reverse;
+          gap: var(--space-1);
         }
 
         label {
-          font-size: var(--font-down-1);
-          font-weight: 300;
+          color: var(--primary-700);
+          font-size: var(--font-down-2);
+          font-weight: 500;
+          margin: 0;
         }
 
         .name {
@@ -186,6 +192,7 @@ body.has-ai-conversations-sidebar {
         justify-content: flex-start;
         background-color: transparent;
         font-weight: bold;
+        padding: 0;
       }
 
       .btn:hover,
@@ -207,7 +214,7 @@ body.has-ai-conversations-sidebar {
       align-items: center;
       justify-content: center;
       flex: 1 1 auto;
-      gap: 0.5em;
+      gap: var(--space-4);
 
       .loading-container {
         display: contents;
@@ -221,9 +228,28 @@ body.has-ai-conversations-sidebar {
       margin-bottom: 0.25em;
       line-height: var(--line-height-medium);
 
+      .d-icon-discobot {
+        height: 1em;
+        width: 1em;
+        margin-right: 0.15em;
+        vertical-align: -0.1em;
+      }
+
       // optical centering for layout balance
       @media screen and (height >= 600px) {
         margin-top: -6em;
+      }
+    }
+
+    &__input-container {
+      width: 80%;
+      max-width: var(--input-max-width);
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+
+      @include viewport.until(sm) {
+        width: 100%;
       }
     }
 
@@ -248,11 +274,6 @@ body.has-ai-conversations-sidebar {
         .btn {
           pointer-events: none;
         }
-      }
-
-      @include viewport.from(sm) {
-        width: 80%;
-        max-width: var(--input-max-width);
       }
 
       &:focus-within {
