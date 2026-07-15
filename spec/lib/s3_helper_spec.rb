@@ -137,10 +137,9 @@ RSpec.describe "S3Helper" do
       s3_helper.send(:s3_bucket).expects(:object).with(destination_key).returns(destination_stub)
 
       options = { multipart_copy: true, content_length: source_stub.size }
-      destination_stub
-        .expects(:copy_from)
-        .with(source_stub, options)
-        .returns(stub(data: stub(etag: '"etag"')))
+      destination_stub.expects(:copy_from).with(source_stub, options).returns(nil)
+      destination_stub.stubs(:reload).returns(destination_stub)
+      destination_stub.stubs(:etag).returns('"etag"')
 
       response = s3_helper.copy(source_key, destination_key)
       expect(response.first).to eq(destination_key)
@@ -161,7 +160,7 @@ RSpec.describe "S3Helper" do
       destination_stub
         .expects(:copy_from)
         .with(source_stub, options)
-        .returns(stub(data: stub(etag: '"etag"')))
+        .returns(stub(copy_object_result: stub(etag: '"etag"')))
 
       response =
         s3_helper.copy(
