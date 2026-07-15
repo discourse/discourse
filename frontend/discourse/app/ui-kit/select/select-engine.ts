@@ -47,6 +47,34 @@ export interface SelectItem {
   [key: string]: unknown;
 }
 
+/**
+ * The normalized render descriptor for one row, computed as the final step before render
+ * (see {@link SelectEngine#buildItems}). It carries a stable `key` (never an index; models
+ * need no `id`), the `value` (id) for selection, the untouched raw `item` yielded to
+ * `:item` / `:selection`, and the row `flags` so components read state from one place.
+ */
+export interface SelectDescriptor {
+  /** Stable `{{#each}}` key — the normalized value, or a synthetic key for a value-less row. */
+  key: string;
+  /** The row's id (raw, from `valueField`). */
+  value: SelectItemId;
+  /** The raw model, passed through untouched to consumer blocks. */
+  item: SelectItem;
+  /** Row state, centralized so the template and option component don't re-derive it. */
+  flags: {
+    /** Whether this row's value is part of the current selection. */
+    selected: boolean;
+    /** Whether the row cannot be activated (guards both pointer and keyboard). */
+    disabled: boolean;
+    /** Reserved for group headers (Decision 2); always false today. */
+    group: boolean;
+    /** Marks the synthetic create-on-the-fly row. */
+    __create: boolean;
+    /** Reserved for the unresolved-selection fallback; always false on list rows today. */
+    __unresolved: boolean;
+  };
+}
+
 export function selectItemLabel(
   item: SelectItem | null | undefined,
   labelField = "name"
@@ -417,10 +445,10 @@ export default class SelectEngine {
    * appends the create-on-the-fly item, and prepends any special items.
    *
    * @param rawItems - The items resolved by the source.
-   * @returns The frozen list to render.
+   * @returns The frozen list of normalized descriptors to render.
    */
   @bind
-  buildItems(rawItems: SelectItem[] = []): readonly SelectItem[] {
+  buildItems(rawItems: SelectItem[] = []): readonly SelectDescriptor[] {
     let items: SelectItem[] = this.#multiple
       ? (makeArray(rawItems) as SelectItem[]).filter(
           (item) => !this.isSelected(item)
@@ -444,7 +472,13 @@ export default class SelectEngine {
     }
 
     const special = this.#specialItems?.(this.#snapshot()) ?? [];
-    return Object.freeze([...(makeArray(special) as SelectItem[]), ...items]);
+    const finalItems = [...(makeArray(special) as SelectItem[]), ...items];
+
+    // Normalize as the final step: everything above operates on raw items (so the
+    // transformer / bridge / onSelect pipeline is unchanged); only the render array is wrapped.
+    return Object.freeze(
+      finalItems.map((item, index) => this.#normalize(item, index))
+    );
   }
 
   /**
@@ -731,6 +765,24 @@ export default class SelectEngine {
     if (key != null && item && this.#resolvedCache.get(key) !== item) {
       this.#resolvedCache.set(key, item);
     }
+  }
+
+  #normalize(item: SelectItem, index: number): SelectDescriptor {
+    const value = this.#itemValue(item);
+    return {
+      // A value-less synthetic row (e.g. a null-id special) has no natural key; fall back to
+      // its position, which is stable within the ordered special/create prefix.
+      key: this.#valueKey(value) ?? `__row:${index}`,
+      value,
+      item,
+      flags: {
+        selected: this.isSelected(item),
+        disabled: !!item.disabled,
+        group: false,
+        __create: !!item.__create,
+        __unresolved: false,
+      },
+    };
   }
 
   #itemValue(item: SelectItem | null | undefined): SelectItemId {
