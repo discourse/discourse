@@ -14,7 +14,6 @@ en:
       ai_image_caption_agent: "AI image captions are enabled, but the selected image caption agent is not ready: %{reason}. <a href='%{url}'>Review the image caption agent</a>."
       ai_image_caption_agent_reasons:
         agent_missing: "the selected agent does not exist"
-        disabled: "the agent is disabled"
         agent_vision_disabled: "the agent cannot include image uploads"
         llm_missing: "the agent does not resolve to an LLM"
         llm_vision_disabled: "the resolved LLM does not support image input"
@@ -394,7 +393,6 @@ en:
     image_caption:
       configuration:
         agent_missing: "Select an existing agent for AI image captions."
-        disabled: "The selected agent must first be enabled."
         agent_vision_disabled: "The AI image caption agent must have image uploads enabled."
         llm_missing: "The AI image caption agent must use an LLM."
         llm_vision_disabled: "The AI image caption agent must use a vision-capable LLM."

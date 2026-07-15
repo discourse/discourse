@@ -43,11 +43,8 @@ describe DiscourseAi::Configuration::ImageCaptionAgentValidator do
     )
   end
 
-  it "rejects a disabled agent" do
-    expect(validator.valid_value?(disabled_agent.id)).to eq(false)
-    expect(validator.error_message).to eq(
-      I18n.t("discourse_ai.image_caption.configuration.disabled"),
-    )
+  it "accepts an agent that is disabled for AI bot" do
+    expect(validator.valid_value?(disabled_agent.id)).to eq(true)
   end
 
   it "rejects an agent without vision enabled" do

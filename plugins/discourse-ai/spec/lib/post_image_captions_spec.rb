@@ -130,11 +130,18 @@ describe DiscourseAi::PostImageCaptions do
     end
   end
 
-  it "does not enqueue generation when the caption agent is disabled" do
+  it "enqueues generation when the caption agent is disabled for AI bot use" do
     AiAgent.find_by(id: SiteSetting.ai_image_caption_agent).update!(enabled: false)
 
-    expect(described_class.generation_enabled?).to eq(false)
-    expect_not_enqueued_with(job: :generate_post_image_captions) do
+    expect(described_class.generation_enabled?).to eq(true)
+    expect_enqueued_with(
+      job: :generate_post_image_captions,
+      args: {
+        post_id: post.id,
+        locale: SiteSetting.default_locale,
+        base62_sha1s: [upload.base62_sha1],
+      },
+    ) do
       described_class.process_cooked(
         Nokogiri::HTML5.fragment(post.cooked),
         post,

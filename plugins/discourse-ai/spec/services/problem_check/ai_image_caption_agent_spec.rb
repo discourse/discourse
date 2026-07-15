@@ -40,10 +40,10 @@ describe ProblemCheck::AiImageCaptionAgent do
     expect(check).to be_chill_about_it
   end
 
-  it "returns a problem when the selected caption agent is disabled" do
+  it "returns no problem when the selected caption agent is disabled for AI bot" do
     caption_agent.update!(enabled: false)
 
-    expect(check).to have_a_problem.with_priority("high").with_target(caption_agent.id)
+    expect(check).to be_chill_about_it
   end
 
   it "returns a problem when the selected caption agent cannot include images" do

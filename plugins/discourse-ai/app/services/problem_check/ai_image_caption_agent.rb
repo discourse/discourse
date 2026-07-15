@@ -10,7 +10,6 @@ class ProblemCheck::AiImageCaptionAgent < ProblemCheck
     agent_id = SiteSetting.ai_image_caption_agent.to_i
     agent = AiAgent.find_by(id: agent_id)
     return agent_problem(:agent_missing, agent_id: agent_id) if agent.blank?
-    return agent_problem(:disabled, agent_id: agent_id) if !agent.enabled?
 
     agent_class = agent.class_instance
     return agent_problem(:agent_vision_disabled, agent_id: agent_id) if !agent_class&.vision_enabled

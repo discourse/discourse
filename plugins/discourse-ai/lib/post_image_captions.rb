@@ -27,7 +27,7 @@ module DiscourseAi
       return false if !enabled?
 
       agent = image_caption_agent
-      return false if agent.blank? || !agent.enabled?
+      return false if agent.blank?
 
       llm_model = image_caption_llm_model(agent)
 

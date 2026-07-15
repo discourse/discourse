@@ -14,7 +14,6 @@ module DiscourseAi
 
         agent = AiAgent.find_by(id: val.to_i)
         return invalid(:agent_missing) if agent.blank?
-        return invalid(:disabled) if !agent.enabled?
 
         agent_class = agent.class_instance
         return invalid(:agent_vision_disabled) if !agent_class&.vision_enabled
