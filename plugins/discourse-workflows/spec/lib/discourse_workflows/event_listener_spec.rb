@@ -9,6 +9,8 @@ RSpec.describe DiscourseWorkflows::EventListener do
   fab!(:tag) { Fabricate(:tag, name: "matched") }
   fab!(:membership_group) { Fabricate(:group, name: "workflow_helpers", full_name: "Helpers") }
   fab!(:other_group) { Fabricate(:group, name: "workflow_others", full_name: "Others") }
+  fab!(:badge) { Fabricate(:badge, name: "Workflow badge") }
+  fab!(:other_badge) { Fabricate(:badge, name: "Other workflow badge") }
 
   before do
     SiteSetting.tagging_enabled = true
@@ -212,6 +214,35 @@ RSpec.describe DiscourseWorkflows::EventListener do
 
     expect(enqueued_trigger_node_ids).to include("matching-trigger")
     expect(enqueued_trigger_node_ids).not_to include("type-mismatch")
+  end
+
+  it "only enqueues badge granted workflows matching the badge" do
+    create_published_workflow(
+      "matching-badge-trigger",
+      "trigger:badge_granted",
+      configuration: {
+        "badge_id" => badge.id.to_s,
+      },
+    )
+    create_published_workflow(
+      "badge-mismatch-trigger",
+      "trigger:badge_granted",
+      configuration: {
+        "badge_id" => other_badge.id.to_s,
+      },
+    )
+    create_published_workflow("any-badge-trigger", "trigger:badge_granted")
+
+    BadgeGranter.grant(badge, user, granted_by: admin)
+
+    expect(enqueued_trigger_node_ids).to include("matching-badge-trigger", "any-badge-trigger")
+    expect(enqueued_trigger_node_ids).not_to include("badge-mismatch-trigger")
+
+    trigger_data = trigger_data_for("matching-badge-trigger")
+    expect(trigger_data).to include(
+      "user" => include("id" => user.id, "username" => user.username),
+      "badge" => include("id" => badge.id, "name" => badge.name),
+    )
   end
 
   it "does not enqueue post edited workflows for replies by default" do
