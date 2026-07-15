@@ -382,7 +382,7 @@ en:
         illustrate_post: "Illustrate Post"
         replace_dates: "Smart dates"
       image_caption:
-        attribution: "Captioned by AI"
+        aria_description: "%{description} (Captioned by AI)"
     post_image_descriptions:
       errors:
         description_blank: "Description can't be blank."

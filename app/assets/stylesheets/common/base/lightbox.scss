@@ -185,6 +185,20 @@
     transition: transform 0.4s ease;
   }
 
+  .pswp__caption-ai-description {
+    left: 50%;
+    bottom: 0;
+    color: var(--pswp-icon-color);
+    line-height: 1.35;
+    position: relative;
+    max-width: min(800px, calc(100% - 2rem));
+    padding: 0 1em 0.75em;
+    font-size: var(--font-down-1);
+    overflow-wrap: anywhere;
+    transform: translateX(-50%);
+    transition: transform 0.4s ease;
+  }
+
   .pswp__caption-details {
     position: relative;
     left: 50%;
@@ -203,6 +217,10 @@
 }
 
 .pswp--caption-expanded .pswp__caption-title {
+  transform: translate(-50%, -5px);
+}
+
+.pswp--caption-expanded .pswp__caption-ai-description {
   transform: translate(-50%, -5px);
 }
 

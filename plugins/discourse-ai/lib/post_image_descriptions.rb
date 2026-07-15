@@ -582,7 +582,7 @@ module DiscourseAi
 
     def aria_description(description, locale)
       I18n.with_locale(locale) do
-        "#{description} (#{I18n.t("discourse_ai.ai_helper.image_caption.attribution")})"
+        I18n.t("discourse_ai.ai_helper.image_caption.aria_description", description: description)
       end
     end
 
