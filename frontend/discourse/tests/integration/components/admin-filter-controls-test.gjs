@@ -916,4 +916,29 @@ module("Integration | Component | AdminFilterControls", function (hooks) {
       .dom(".item")
       .exists({ count: 2 }, "applies the dropdown filter from the new URL");
   });
+
+  test("shows a custom empty state in a yield when showEmptyState is true and the array is empty", async function (assert) {
+    this.set("data", []);
+
+    await render(
+      <template>
+        <AdminFilterControls
+          @array={{this.data}}
+          @showCustomEmptyState={{true}}
+          @minItemsForFilter={{1}}
+        >
+          <:content>
+            N/A
+          </:content>
+          <:customEmptyState>
+            <div class="custom-empty-state">Custom Empty State</div>
+          </:customEmptyState>
+        </AdminFilterControls>
+      </template>
+    );
+
+    assert
+      .dom(".custom-empty-state")
+      .exists("renders the custom empty state when array is empty");
+  });
 });

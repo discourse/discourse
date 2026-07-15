@@ -45,6 +45,8 @@ import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
  * @param {Function} [onDropdownChange] - Callback for dropdown selection changes
  * @param {Function} [onResetFilters] - Callback for reset action (server-side mode)
  * @param {String} [initialTextFilter] - Initial value to seed the text filter input on mount
+ * @param {Boolean} [showCustomEmptyState] - Whether to show a custom empty state when no results found,
+ *                                           if minItemsForFilter is set and the array is empty
  */
 
 export default class AdminFilterControls extends Component {
@@ -494,7 +496,11 @@ export default class AdminFilterControls extends Component {
         </div>
       {{/if}}
     {{else}}
-      {{yield this.array to="content"}}
+      {{#if @showCustomEmptyState}}
+        {{yield to="customEmptyState"}}
+      {{else}}
+        {{yield this.array to="content"}}
+      {{/if}}
     {{/if}}
   </template>
 }
