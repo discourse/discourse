@@ -1024,7 +1024,7 @@ TEXT
             end
           end
 
-          expect(partials.compact.length).to eq(128)
+          expect(partials.compact.length).to eq(134)
 
           params =
             partials
