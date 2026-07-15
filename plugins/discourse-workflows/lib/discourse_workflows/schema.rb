@@ -221,6 +221,32 @@ module DiscourseWorkflows
     USER_ADDED_TO_GROUP_SCHEMA = group_membership_event("added")
     USER_REMOVED_FROM_GROUP_SCHEMA = group_membership_event("removed")
 
+    USER_SEEN_SCHEMA =
+      document(
+        BASIC_USER_SCHEMA.fetch("properties").merge(
+          "seen" => {
+            "type" => "object",
+            "description" => "User seen event details",
+            "properties" => {
+              "first_seen" => {
+                "type" => "boolean",
+              },
+              "current_seen_at" => {
+                "type" => %w[string null],
+                "format" => "date-time",
+              },
+              "previous_seen_at" => {
+                "type" => %w[string null],
+                "format" => "date-time",
+              },
+              "seconds_since_previous_seen" => {
+                "type" => %w[integer null],
+              },
+            },
+          },
+        ),
+      )
+
     BADGE_PROPERTIES = JSON.parse(<<~JSON).freeze
       {
         "id": { "type": "integer" },
