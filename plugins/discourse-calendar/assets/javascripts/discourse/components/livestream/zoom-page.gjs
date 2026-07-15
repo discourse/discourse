@@ -1,12 +1,16 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { modifier } from "ember-modifier";
 import getURL from "discourse/lib/get-url";
+import { wantsNewWindow } from "discourse/lib/intercept-click";
 import { loadZoomMeetingSdk } from "discourse/lib/load-zoom-meeting-sdk";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
+import DiscoursePostEvent from "discourse/plugins/discourse-calendar/discourse/components/discourse-post-event";
+import DiscoursePostEventEvent from "discourse/plugins/discourse-calendar/discourse/models/discourse-post-event-event";
 import fetchZoomJoinPayload from "../../lib/fetch-zoom-join-payload";
 import { isWithinEventTimeframe } from "../../models/discourse-post-event-event";
 import MobileEmbeddableChatModal from "./modal/mobile-embeddable-chat-modal";
@@ -31,8 +35,16 @@ export default class LivestreamZoomPage extends Component {
     await this.loadZoom();
   });
 
+  get post() {
+    return this.args.topic?.postStream?.posts?.[0];
+  }
+
   get event() {
-    return this.args.topic?.postStream?.posts?.[0]?.event;
+    if (!this.post?.event) {
+      return null;
+    }
+
+    return DiscoursePostEventEvent.create(this.post.event);
   }
 
   // The join button on the topic page is disabled outside this window, but the
@@ -40,14 +52,18 @@ export default class LivestreamZoomPage extends Component {
   // here too. The server enforces the same window when issuing a signature.
   get canJoinNow() {
     return (
-      isWithinEventTimeframe(this.event?.starts_at, this.event?.ends_at) ||
+      isWithinEventTimeframe(
+        this.event?.allDay,
+        this.event?.startsAt,
+        this.event?.endsAt
+      ) ||
       // TODO (martin) showzoom is for testing only, remove before merge
       new URLSearchParams(window.location.search).get("showzoom")
     );
   }
 
   get zoomUrl() {
-    return this.event?.livestream_url;
+    return this.event?.livestreamUrl;
   }
 
   get mobileLeaveUrl() {
@@ -58,6 +74,12 @@ export default class LivestreamZoomPage extends Component {
 
   get retryZoomRoute() {
     return getURL(`/t/${this.args.topic.slug}/${this.args.topic.id}/zoom`);
+  }
+
+  get topicUrl() {
+    return getURL(
+      this.args.topic.url || `/t/${this.args.topic.slug}/${this.args.topic.id}`
+    );
   }
 
   get returnedFromZoom() {
@@ -121,6 +143,16 @@ export default class LivestreamZoomPage extends Component {
     window.location.assign(this.retryZoomRoute);
   }
 
+  @action
+  viewTopic(event) {
+    if (wantsNewWindow(event)) {
+      return;
+    }
+
+    event.preventDefault();
+    window.location.assign(this.topicUrl);
+  }
+
   <template>
     <div class="discourse-calendar-livestream-zoom-page">
       {{#if this.canJoinNow}}
@@ -150,9 +182,25 @@ export default class LivestreamZoomPage extends Component {
           {{this.setupZoom}}
         ></div>
       {{else}}
-        <p class="discourse-calendar-livestream-zoom-page__waiting">
-          {{i18n "discourse_calendar.livestream.zoom.too_early"}}
-        </p>
+        <div class="discourse-calendar-livestream-zoom-page__waiting-wrapper">
+          <p class="discourse-calendar-livestream-zoom-page__waiting">
+            {{i18n "discourse_calendar.livestream.zoom.too_early"}}
+            <a
+              href={{this.topicUrl}}
+              class="raw-link"
+              {{on "click" this.viewTopic}}
+            >
+              {{i18n "discourse_calendar.livestream.zoom.view_topic"}}
+            </a>
+          </p>
+
+          <DiscoursePostEvent
+            @event={{this.event}}
+            @post={{this.post}}
+            @hideLivestreamVideo={{true}}
+          />
+        </div>
+
       {{/if}}
 
       {{#if this.canOpenChat}}

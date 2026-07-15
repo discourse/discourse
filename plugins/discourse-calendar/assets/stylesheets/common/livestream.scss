@@ -100,6 +100,11 @@ body.chat-enabled.livestream-topic.confirmed-event-assistance {
     min-height: calc(100vh - var(--header-offset, 0px));
   }
 
+  &__waiting-wrapper {
+    border: 1px solid var(--primary-300);
+    border-radius: var(--d-border-radius);
+  }
+
   &__waiting {
     margin: 0;
     padding: 1rem;

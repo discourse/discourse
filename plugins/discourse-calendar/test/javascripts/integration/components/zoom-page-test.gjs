@@ -46,6 +46,8 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
         posts: [
           {
             event: {
+              id: 2,
+              creator: { id: 1, username: "test-user" },
               livestream_url: "https://us06web.zoom.us/j/123456789",
               starts_at: moment().subtract(5, "minutes").toISOString(),
               ends_at: moment().add(1, "hour").toISOString(),
@@ -85,7 +87,12 @@ module("Integration | Component | LivestreamZoomPage", function (hooks) {
     assert.dom(FRAME_SELECTOR).doesNotExist();
     assert
       .dom(WAITING_SELECTOR)
-      .hasText("You can join the webinar closer to the event start time");
+      .includesText("You can join the webinar closer to the event start time");
+    assert
+      .dom(`${WAITING_SELECTOR} a`)
+      .hasText("View topic for the event")
+      .hasAttribute("href", "/t/test-topic/1")
+      .hasClass("raw-link");
     assert.strictEqual(loadZoom.callCount, 0, "never sets the SDK up");
   });
 
