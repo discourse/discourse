@@ -17,8 +17,8 @@ module DiscourseAi
     module_function
 
     def enabled?
-      SiteSetting.discourse_ai_enabled && SiteSetting.ai_post_image_descriptions_enabled &&
-        SiteSetting.ai_helper_image_caption_agent.present?
+      SiteSetting.discourse_ai_enabled && SiteSetting.ai_post_image_captions_enabled &&
+        SiteSetting.ai_image_caption_agent.present?
     end
 
     def generation_enabled?
@@ -210,7 +210,7 @@ module DiscourseAi
     end
 
     def backfill_limit
-      hourly_rate = SiteSetting.ai_post_image_descriptions_backfill_hourly_rate.to_i
+      hourly_rate = SiteSetting.ai_post_image_captions_backfill_hourly_rate.to_i
       return 0 if hourly_rate <= 0
 
       used_budget = DB.query_single(<<~SQL, threshold: 1.hour.ago).first.to_i
@@ -234,7 +234,7 @@ module DiscourseAi
       connection = ActiveRecord::Base.connection
       default_locale = connection.quote(SiteSetting.default_locale)
       retry_after = connection.quote(RETRY_AFTER.ago)
-      max_age_days = SiteSetting.ai_post_image_descriptions_backfill_max_age_days.to_i
+      max_age_days = SiteSetting.ai_post_image_captions_backfill_max_age_days.to_i
       original_locale_sql = "COALESCE(NULLIF(posts.locale, ''), #{default_locale})"
       supported_extensions =
         SUPPORTED_EXTENSIONS.map { |extension| connection.quote(extension) }.join(", ")
@@ -370,7 +370,7 @@ module DiscourseAi
     end
 
     def capped_base62_sha1s(base62_sha1s)
-      base62_sha1s.first(SiteSetting.ai_post_image_descriptions_per_post_limit.to_i)
+      base62_sha1s.first(SiteSetting.ai_post_image_captions_per_post_limit.to_i)
     end
 
     def current_base62_sha1s(post)
@@ -560,7 +560,7 @@ module DiscourseAi
     end
 
     def image_caption_agent
-      AiAgent.find_by(id: SiteSetting.ai_helper_image_caption_agent.to_i)
+      AiAgent.find_by(id: SiteSetting.ai_image_caption_agent.to_i)
     end
 
     def image_caption_llm_model(agent = image_caption_agent)

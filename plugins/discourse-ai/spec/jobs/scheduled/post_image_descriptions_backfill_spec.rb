@@ -17,11 +17,11 @@ describe Jobs::PostImageDescriptionsBackfill do
     enable_current_plugin
     llm_model = assign_fake_provider_to(:ai_default_llm_model)
     llm_model.update!(vision_enabled: true)
-    AiAgent.find_by(id: SiteSetting.ai_helper_image_caption_agent).update!(
+    AiAgent.find_by(id: SiteSetting.ai_image_caption_agent).update!(
       enabled: true,
       vision_enabled: true,
     )
-    SiteSetting.ai_post_image_descriptions_enabled = true
+    SiteSetting.ai_post_image_captions_enabled = true
     SiteSetting.ai_helper_enabled = true
     post.update_column(:cooked, post.cook(post.raw, topic_id: post.topic_id))
     post.link_post_uploads
@@ -60,7 +60,7 @@ describe Jobs::PostImageDescriptionsBackfill do
   end
 
   it "does nothing when backfill is disabled" do
-    SiteSetting.ai_post_image_descriptions_backfill_hourly_rate = 0
+    SiteSetting.ai_post_image_captions_backfill_hourly_rate = 0
 
     expect_not_enqueued_with(job: :generate_post_image_descriptions) do
       described_class.new.execute({})
@@ -68,8 +68,8 @@ describe Jobs::PostImageDescriptionsBackfill do
   end
 
   it "does nothing when post image descriptions are disabled" do
-    SiteSetting.ai_post_image_descriptions_enabled = false
-    SiteSetting.ai_post_image_descriptions_backfill_hourly_rate = 4
+    SiteSetting.ai_post_image_captions_enabled = false
+    SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
 
     expect_not_enqueued_with(job: :generate_post_image_descriptions) do
       described_class.new.execute({})
@@ -77,7 +77,7 @@ describe Jobs::PostImageDescriptionsBackfill do
   end
 
   it "enqueues posts without existing descriptions" do
-    SiteSetting.ai_post_image_descriptions_backfill_hourly_rate = 4
+    SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
 
     expect_enqueued_with(
       job: :generate_post_image_descriptions,
@@ -89,7 +89,7 @@ describe Jobs::PostImageDescriptionsBackfill do
   end
 
   it "enqueues one post when a low hourly backfill budget is unused" do
-    SiteSetting.ai_post_image_descriptions_backfill_hourly_rate = 1
+    SiteSetting.ai_post_image_captions_backfill_hourly_rate = 1
 
     expect_enqueued_with(
       job: :generate_post_image_descriptions,
@@ -102,7 +102,7 @@ describe Jobs::PostImageDescriptionsBackfill do
 
   it "enqueues existing localized posts when localization is enabled" do
     SiteSetting.content_localization_enabled = true
-    SiteSetting.ai_post_image_descriptions_backfill_hourly_rate = 8
+    SiteSetting.ai_post_image_captions_backfill_hourly_rate = 8
     Fabricate(:post_localization, post: post, locale: "ja", raw: post.raw, cooked: post.cooked)
 
     described_class.new.execute({})
@@ -120,8 +120,8 @@ describe Jobs::PostImageDescriptionsBackfill do
   end
 
   it "does not enqueue posts older than the backfill max age" do
-    SiteSetting.ai_post_image_descriptions_backfill_hourly_rate = 4
-    SiteSetting.ai_post_image_descriptions_backfill_max_age_days = 30
+    SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
+    SiteSetting.ai_post_image_captions_backfill_max_age_days = 30
     post.update_column(:created_at, 31.days.ago)
 
     expect_not_enqueued_with(job: :generate_post_image_descriptions) do
@@ -130,7 +130,7 @@ describe Jobs::PostImageDescriptionsBackfill do
   end
 
   it "respects the hourly backfill budget" do
-    SiteSetting.ai_post_image_descriptions_backfill_hourly_rate = 1
+    SiteSetting.ai_post_image_captions_backfill_hourly_rate = 1
     store_attempt(created_at: 10.minutes.ago)
 
     expect_not_enqueued_with(job: :generate_post_image_descriptions) do
@@ -139,7 +139,7 @@ describe Jobs::PostImageDescriptionsBackfill do
   end
 
   it "counts recent retry attempts against the backfill budget" do
-    SiteSetting.ai_post_image_descriptions_backfill_hourly_rate = 1
+    SiteSetting.ai_post_image_captions_backfill_hourly_rate = 1
     store_attempt(created_at: 2.days.ago, last_attempted_at: 10.minutes.ago)
 
     expect_not_enqueued_with(job: :generate_post_image_descriptions) do
@@ -167,7 +167,7 @@ describe Jobs::PostImageDescriptionsBackfill do
     post.link_post_uploads
     store_description(upload)
 
-    SiteSetting.ai_post_image_descriptions_backfill_hourly_rate = 4
+    SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
 
     expect_not_enqueued_with(job: :generate_post_image_descriptions) do
       described_class.new.execute({})
@@ -176,7 +176,7 @@ describe Jobs::PostImageDescriptionsBackfill do
 
   it "does not enqueue posts with an original locale description" do
     store_description(upload)
-    SiteSetting.ai_post_image_descriptions_backfill_hourly_rate = 4
+    SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
 
     expect_not_enqueued_with(job: :generate_post_image_descriptions) do
       described_class.new.execute({})
@@ -200,7 +200,7 @@ describe Jobs::PostImageDescriptionsBackfill do
       unique_by: DiscourseAi::PostImageDescriptions::LOOKUP_INDEX,
     )
 
-    SiteSetting.ai_post_image_descriptions_backfill_hourly_rate = 4
+    SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
 
     expect_not_enqueued_with(job: :generate_post_image_descriptions) do
       described_class.new.execute({})
@@ -242,7 +242,7 @@ describe Jobs::PostImageDescriptionsBackfill do
       unique_by: DiscourseAi::PostImageDescriptions::LOOKUP_INDEX,
     )
 
-    SiteSetting.ai_post_image_descriptions_backfill_hourly_rate = 4
+    SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
 
     expect_enqueued_with(
       job: :generate_post_image_descriptions,
@@ -254,7 +254,7 @@ describe Jobs::PostImageDescriptionsBackfill do
   end
 
   it "does not enqueue when credits are unavailable" do
-    SiteSetting.ai_post_image_descriptions_backfill_hourly_rate = 4
+    SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
     LlmCreditAllocation.stubs(:credits_available?).returns(false)
 
     expect_not_enqueued_with(job: :generate_post_image_descriptions) do
@@ -263,7 +263,7 @@ describe Jobs::PostImageDescriptionsBackfill do
   end
 
   it "uses post image ids for backfill candidates" do
-    SiteSetting.ai_post_image_descriptions_backfill_hourly_rate = 4
+    SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
     post.update_column(:cooked, "<p>No upload marker</p>")
 
     expect_enqueued_with(
@@ -276,7 +276,7 @@ describe Jobs::PostImageDescriptionsBackfill do
   end
 
   it "does not enqueue attachment-only posts" do
-    SiteSetting.ai_post_image_descriptions_backfill_hourly_rate = 4
+    SiteSetting.ai_post_image_captions_backfill_hourly_rate = 4
     post.update_column(:image_upload_id, nil)
 
     expect_not_enqueued_with(job: :generate_post_image_descriptions) do

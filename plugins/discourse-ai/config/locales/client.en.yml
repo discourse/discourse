@@ -386,6 +386,13 @@ en:
             automation: "Automation"
             agents: "Agents"
 
+        image_caption:
+          name: "Image Caption"
+          description: "Generates AI captions for post images and makes them available to readers and assistive technology"
+          post_image_captions: "Post image captions"
+          setting_groups:
+            settings: "Settings"
+
         translation:
           name: "Translation"
           description: "Translates content into supported languages"
@@ -964,7 +971,7 @@ en:
         usage:
           ai_bot: "AI bot"
           ai_helper: "Helper (%{agent})"
-          ai_helper_image_caption: "Image caption"
+          ai_image_caption: "Image caption"
           ai_agent: "Agent (%{agent})"
           ai_summarization: "Summarize"
           ai_embeddings_semantic_search: "AI search"

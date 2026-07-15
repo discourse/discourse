@@ -73,7 +73,7 @@ describe "Edit AI post image descriptions" do
   before do
     enable_current_plugin
     SiteSetting.default_locale = "en"
-    SiteSetting.ai_post_image_descriptions_enabled = true
+    SiteSetting.ai_post_image_captions_enabled = true
     SearchIndexer.enable
 
     prepare_post(first_post)

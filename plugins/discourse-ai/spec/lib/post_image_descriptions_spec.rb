@@ -8,11 +8,11 @@ describe DiscourseAi::PostImageDescriptions do
     enable_current_plugin
     llm_model = assign_fake_provider_to(:ai_default_llm_model)
     llm_model.update!(vision_enabled: true)
-    AiAgent.find_by(id: SiteSetting.ai_helper_image_caption_agent).update!(
+    AiAgent.find_by(id: SiteSetting.ai_image_caption_agent).update!(
       enabled: true,
       vision_enabled: true,
     )
-    SiteSetting.ai_post_image_descriptions_enabled = true
+    SiteSetting.ai_post_image_captions_enabled = true
     SiteSetting.ai_helper_enabled = true
     post.update_column(:cooked, post.cook(post.raw, topic_id: post.topic_id))
     post.link_post_uploads
@@ -123,7 +123,7 @@ describe DiscourseAi::PostImageDescriptions do
   end
 
   it "does not run when post image descriptions are disabled" do
-    SiteSetting.ai_post_image_descriptions_enabled = false
+    SiteSetting.ai_post_image_captions_enabled = false
 
     expect_not_enqueued_with(job: :generate_post_image_descriptions) do
       described_class.process_cooked(Nokogiri::HTML5.fragment(post.cooked), post, locale: "en")
@@ -131,7 +131,7 @@ describe DiscourseAi::PostImageDescriptions do
   end
 
   it "does not enqueue generation when the caption agent is disabled" do
-    AiAgent.find_by(id: SiteSetting.ai_helper_image_caption_agent).update!(enabled: false)
+    AiAgent.find_by(id: SiteSetting.ai_image_caption_agent).update!(enabled: false)
 
     expect(described_class.generation_enabled?).to eq(false)
     expect_not_enqueued_with(job: :generate_post_image_descriptions) do
@@ -169,7 +169,7 @@ describe DiscourseAi::PostImageDescriptions do
   end
 
   it "preserves non-AI image aria descriptions when disabled", :aggregate_failures do
-    SiteSetting.ai_post_image_descriptions_enabled = false
+    SiteSetting.ai_post_image_captions_enabled = false
     doc =
       Nokogiri::HTML5.fragment(
         "<a class='lightbox' aria-description='custom lightbox'>" \
@@ -312,7 +312,7 @@ describe DiscourseAi::PostImageDescriptions do
 
   it "keeps stored descriptions when the feature is disabled" do
     store_description("A stored description")
-    SiteSetting.ai_post_image_descriptions_enabled = false
+    SiteSetting.ai_post_image_captions_enabled = false
 
     described_class.process_cooked(Nokogiri::HTML5.fragment("<p>No image</p>"), post, locale: "en")
 

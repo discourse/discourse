@@ -381,7 +381,7 @@ module DiscourseAi
         }
 
         if include_image_caption
-          image_caption_agent = SiteSetting.ai_helper_image_caption_agent.to_i
+          image_caption_agent = SiteSetting.ai_image_caption_agent.to_i
           map[image_caption_agent] = IMAGE_CAPTION if image_caption_agent
         end
 

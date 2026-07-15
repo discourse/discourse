@@ -17,7 +17,7 @@ export default class PostImageDescriptionEditor extends Service {
 
   get canEditCurrentComposer() {
     return Boolean(
-      this.siteSettings.ai_post_image_descriptions_enabled &&
+      this.siteSettings.ai_post_image_captions_enabled &&
       this.composer.model?.action === EDIT &&
       this.currentPostId
     );

@@ -16,7 +16,7 @@ describe "AI post image descriptions in RSS" do
 
   before do
     enable_current_plugin
-    SiteSetting.ai_post_image_descriptions_enabled = true
+    SiteSetting.ai_post_image_captions_enabled = true
     post.update_column(:cooked, post.cook(post.raw, topic_id: post.topic_id))
     post.link_post_uploads
   end

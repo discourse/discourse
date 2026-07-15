@@ -16,8 +16,7 @@ module("Unit | Service | post-image-description-editor", function (hooks) {
       post: { id: 42 },
     };
 
-    owner.lookup("service:site-settings").ai_post_image_descriptions_enabled =
-      true;
+    owner.lookup("service:site-settings").ai_post_image_captions_enabled = true;
 
     const service = owner.lookup("service:post-image-description-editor");
     service.descriptions = new Map();

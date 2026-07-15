@@ -17,11 +17,11 @@ describe Jobs::GeneratePostImageDescriptions do
     enable_current_plugin
     llm_model = assign_fake_provider_to(:ai_default_llm_model)
     llm_model.update!(vision_enabled: true)
-    AiAgent.find_by(id: SiteSetting.ai_helper_image_caption_agent).update!(
+    AiAgent.find_by(id: SiteSetting.ai_image_caption_agent).update!(
       enabled: true,
       vision_enabled: true,
     )
-    SiteSetting.ai_post_image_descriptions_enabled = true
+    SiteSetting.ai_post_image_captions_enabled = true
     SiteSetting.ai_helper_enabled = true
     SearchIndexer.enable
     post.update_column(:cooked, post.cook(post.raw, topic_id: post.topic_id))
@@ -236,7 +236,7 @@ describe Jobs::GeneratePostImageDescriptions do
         "second-image.png",
       ).create_for(Discourse.system_user.id)
 
-    SiteSetting.ai_post_image_descriptions_per_post_limit = 1
+    SiteSetting.ai_post_image_captions_per_post_limit = 1
     post.update!(
       raw:
         "![first image|200x200](#{upload.short_url})\n\n![second image|200x200](#{second_upload.short_url})",
