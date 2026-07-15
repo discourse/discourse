@@ -300,4 +300,83 @@ module("Unit | ui-kit | SelectEngine", function (hooks) {
       );
     });
   });
+
+  module("value equality (string vs number ids)", function () {
+    test("matches a string value against a numeric id and vice-versa", function (assert) {
+      const single = controlled({ value: "2" }).engine;
+      assert.true(
+        single.isSelected({ id: 2 }),
+        "string '2' matches numeric id 2"
+      );
+      assert.false(
+        single.isSelected({ id: 6 }),
+        "a different id is not selected"
+      );
+      assert.false(
+        controlled({ value: "5x" }).engine.isSelected({ id: 5 }),
+        "a non-numeric string does not over-match"
+      );
+
+      const reverse = controlled({ value: 2 }).engine;
+      assert.true(
+        reverse.isSelected({ id: "2" }),
+        "numeric 2 matches string id '2'"
+      );
+    });
+
+    test("matches mixed-type ids in multi-select and deselects by value", function (assert) {
+      const { engine, changes } = controlled({
+        multiple: true,
+        value: ["1", 2],
+      });
+      assert.true(
+        engine.isSelected({ id: 1 }),
+        "string '1' matches numeric id 1"
+      );
+      assert.true(
+        engine.isSelected({ id: 2 }),
+        "numeric 2 matches numeric id 2"
+      );
+
+      engine.deselect({ id: 1 });
+      assert.deepEqual(
+        changes.at(-1)[0],
+        [2],
+        "deselecting id 1 removes the '1' entry regardless of its type"
+      );
+    });
+
+    test("caches across string/number id forms without refetching", async function (assert) {
+      let calls = 0;
+      const engine = new SelectEngine({
+        resolveValue: () => {
+          calls++;
+          return Promise.resolve({ id: 5, name: "Five" });
+        },
+      });
+
+      const item = await engine.resolveSelection("5");
+      assert.strictEqual(item.name, "Five");
+      assert.strictEqual(
+        engine.resolveSelection(5),
+        item,
+        "the numeric form hits the cache populated by the string form"
+      );
+      assert.strictEqual(calls, 1, "resolveValue is not called a second time");
+    });
+
+    test("resolves a string value against a numeric client id", function (assert) {
+      const engine = new SelectEngine({
+        items: [
+          { id: 1, name: "Apple" },
+          { id: 2, name: "Banana" },
+        ],
+      });
+      assert.strictEqual(
+        engine.resolveSelection("2")?.name,
+        "Banana",
+        "a string value resolves the numeric-id item"
+      );
+    });
+  });
 });

@@ -262,6 +262,16 @@ module("Integration | ui-kit | select | DSelect (typeahead)", function (hooks) {
       .hasValue("Banana", "closing restores the selected label");
   });
 
+  test("selects a numeric-id item from a string-bound value", async function (assert) {
+    // A bound value often arrives as a string (site settings, query params) against
+    // numeric option ids; it must still resolve and display the selection.
+    await render(<template><DefaultHost @value="2" /></template>);
+
+    assert
+      .dom("[role='combobox']")
+      .hasValue("Banana", "the string value '2' selects the numeric-id item");
+  });
+
   test("custom blocks override label-field fallbacks independently", async function (assert) {
     const items = [
       { id: 1, title: "First" },

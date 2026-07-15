@@ -211,8 +211,11 @@ class SelectState {
 export default class SelectEngine {
   #state = new SelectState();
 
-  /** value → resolved item, so a re-render or reopen never re-fetches a label. */
-  #resolvedCache = trackedMap<SelectItemId, SelectItem>();
+  /**
+   * value → resolved item, so a re-render or reopen never re-fetches a label. Keyed by the
+   * normalized value (see `#valueKey`) so a string/number id mismatch is a cache hit.
+   */
+  #resolvedCache = trackedMap<string, SelectItem>();
 
   #multiple: boolean;
   #identifiers: string[];
@@ -383,8 +386,13 @@ export default class SelectEngine {
    */
   @bind
   isSelected(item: SelectItem): boolean {
-    const id = this.#itemValue(item);
-    return this.#multiple ? this.#valueArray.includes(id) : this.value === id;
+    const key = this.#valueKey(this.#itemValue(item));
+    if (key == null) {
+      return false;
+    }
+    return this.#multiple
+      ? this.#valueArray.some((v) => this.#valueKey(v) === key)
+      : this.#valueKey(this.value) === key;
   }
 
   /**
@@ -537,8 +545,8 @@ export default class SelectEngine {
       this.#emitChange(null);
       return;
     }
-    const id = this.#itemValue(item);
-    this.#emitChange(this.#valueArray.filter((v) => v !== id));
+    const key = this.#valueKey(this.#itemValue(item));
+    this.#emitChange(this.#valueArray.filter((v) => this.#valueKey(v) !== key));
   }
 
   /**
@@ -675,14 +683,18 @@ export default class SelectEngine {
 
   // Synchronous half of the resolution ladder: escape hatch → cache → client list.
   #resolveOneSync(value: SelectItemId): SelectItem | undefined {
+    const key = this.#valueKey(value);
+    if (key == null) {
+      return undefined;
+    }
     return (
       (makeArray(this.#selected) as SelectItem[]).find(
-        (i) => this.#itemValue(i) === value
+        (i) => this.#valueKey(this.#itemValue(i)) === key
       ) ??
-      (this.#resolvedCache.has(value)
-        ? this.#resolvedCache.get(value)
+      (this.#resolvedCache.has(key)
+        ? this.#resolvedCache.get(key)
         : undefined) ??
-      this.#localItems().find((i) => this.#itemValue(i) === value)
+      this.#localItems().find((i) => this.#valueKey(this.#itemValue(i)) === key)
     );
   }
 
@@ -715,13 +727,20 @@ export default class SelectEngine {
     value: SelectItemId,
     item: SelectItem | null | undefined
   ): void {
-    if (item && this.#resolvedCache.get(value) !== item) {
-      this.#resolvedCache.set(value, item);
+    const key = this.#valueKey(value);
+    if (key != null && item && this.#resolvedCache.get(key) !== item) {
+      this.#resolvedCache.set(key, item);
     }
   }
 
   #itemValue(item: SelectItem | null | undefined): SelectItemId {
     return item?.[this.#valueField];
+  }
+
+  // Two ids denote the same option iff their string forms match, so a bound "5" selects
+  // item id 5 (and vice-versa). Nullish never matches an id.
+  #valueKey(value: SelectItemId): string | null {
+    return value == null ? null : String(value);
   }
 
   #itemLabel(item: SelectItem | null | undefined): unknown {
