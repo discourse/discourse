@@ -688,9 +688,9 @@ export default class DSelect extends Component<DSelectSignature> {
                     autoActivateFirst=this.isTypeahead
                   }}
                 >
-                  {{#each items key="id" as |item|}}
+                  {{#each items key="key" as |descriptor|}}
                     <SelectItem
-                      @item={{item}}
+                      @descriptor={{descriptor}}
                       @engine={{this.engine}}
                       {{! Keep focus in the trigger input on pointer-select so the input
                         doesn't blur-close the menu before the click resolves (needed for
@@ -700,9 +700,9 @@ export default class DSelect extends Component<DSelectSignature> {
                       {{on "mousedown" this.preventPointerBlur}}
                     >
                       {{#if (has-block "item")}}
-                        {{yield item to="item"}}
+                        {{yield descriptor.item to="item"}}
                       {{else}}
-                        {{selectItemLabel item this.labelField}}
+                        {{selectItemLabel descriptor.item this.labelField}}
                       {{/if}}
                     </SelectItem>
                   {{/each}}

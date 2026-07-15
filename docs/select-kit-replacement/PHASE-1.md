@@ -53,9 +53,14 @@ See RFC: *Decision 1 / 1b / 2 / 5*, *API refinement › Folded into Phase 1*.
     `handleTriggerBlur` keep-open branch; auto-highlight skipping a disabled first item;
     `preventPointerBlur` static no-op; `legacy.getElement` host-DOM invariant (incl. mobile).
     Convention nit: unkeyed `{{#each}}` at `d-roving-focus-test.gjs:395` (pre-existing) → key it.
-- ☐ **Trigger & list state model** (Decision 1b): input-holds-only-query composite
-  trigger; the two async surfaces; skeleton taxonomy; batch `@resolveValues`; `__unresolved`
-  fallback items; item **normalization** (`{ key, value, item, flags }`, no `id` assumption).
+- ◐ **Trigger & list state model** (Decision 1b):
+  - ☑ Item **normalization** — `buildItems` returns `{ key, value, item, flags }` descriptors
+    (final render step; raw items unchanged upstream). The listbox keys on `descriptor.key`
+    (no `id` assumption; `key="id"` removed) and the option reads state from `flags`
+    (`selected`/`disabled`/`__create`); `group`/`__unresolved` flags reserved.
+  - ☐ Batch `@resolveValues` (drop the multi `Promise.all` fan-out); `__unresolved` synthetic
+    fallback + `:unresolved` render; skeleton taxonomy (`:loadingItem`/`:selectionLoading`);
+    the two async surfaces; input-holds-only-query composite trigger.
 - ☐ **`@multiple` + chips** (shadcn `ComboboxChips` model): chips-with-inline-input,
   keep-selected-with-checkmark (supersede Phase-0 remove-on-select + its test), backspace
   removal, clear-all; `@maximum`/`@minimum`; pipe-paste bulk-add; rewrite on-`main`
