@@ -183,6 +183,15 @@ RSpec.describe DiscourseAi::Utils::BestEffortJsonParser do
       it "casts values to numbers for integer schemas" do
         expect(described_class.extract_key('{"output": 42}', "integer", :output)).to eq(42)
       end
+
+      it "recovers when the model emits stray characters before the JSON object" do
+        content = "Olá a todos! 😊\nVeja \"aspas\" e `List<string>` aqui."
+        input = "{\"#{{ output: content }.to_json}"
+
+        result = described_class.extract_key(input, "string", :output)
+
+        expect(result).to eq(content)
+      end
     end
 
     context "when very broken JSON is entered" do

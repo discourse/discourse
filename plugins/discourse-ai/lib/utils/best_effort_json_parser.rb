@@ -31,7 +31,9 @@ module DiscourseAi
         #     unclosed structures and strings.
         #  2. JsonCompleter over a control-character-escaped copy: recovers
         #     values containing real newlines/tabs.
-        #  3. SmarterJSON: lenient parsing for single quotes, unquoted keys,
+        #  3. JsonCompleter from the object brace preceding the schema key:
+        #     recovers documents with stray characters before the real object.
+        #  4. SmarterJSON: lenient parsing for single quotes, unquoted keys,
         #     prose-wrapped JSON, and other LLM formatting quirks.
         #
         # A candidate wins if it holds the schema key; a parseable document
@@ -40,6 +42,7 @@ module DiscourseAi
           attempts = [
             -> { JsonCompleter.parse(cleaned) },
             -> { JsonCompleter.parse(escape_control_characters(cleaned)) },
+            -> { parse_from_key_object(cleaned, key) },
             -> { SmarterJSON.process_one(cleaned) },
           ]
 
@@ -58,6 +61,23 @@ module DiscourseAi
           end
 
           fallback
+        end
+
+        # Models occasionally emit stray characters before the real JSON
+        # object (observed: a duplicated opening brace-quote). Restart parsing
+        # from the object brace that precedes the schema key.
+        def parse_from_key_object(cleaned, key)
+          ["\"#{key}\"", "'#{key}'"].each do |quoted_key|
+            key_idx = cleaned.index(quoted_key)
+            next if key_idx.nil?
+
+            start = cleaned.rindex("{", key_idx)
+            next if start.nil? || start.zero?
+
+            return JsonCompleter.parse(escape_control_characters(cleaned[start..]))
+          end
+
+          nil
         end
 
         def remove_markdown_fences(text)
