@@ -1,4 +1,4 @@
-.uc-modernize-foundation-theme {
+:where(.uc-modernize-foundation-theme) {
   .select-kit .select-kit-header:not(.composer-actions-btn),
   .d-date-input .date-picker {
     height: var(--d-control-height);
