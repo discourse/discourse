@@ -286,8 +286,6 @@ after_initialize do
     scope.shared_issue_visible?(object.topic)
   end
 
-  register_upcoming_change_conditional_display(:enable_solved_badges) { SiteSetting.solved_enabled }
-
   on(:upcoming_change_enabled) do |setting_name|
     if setting_name == :enable_solved_badges
       DiscourseSolved::EnableSolvedBadgesToggled.call(enabled: true)

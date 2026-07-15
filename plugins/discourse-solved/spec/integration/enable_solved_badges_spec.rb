@@ -15,12 +15,4 @@ RSpec.describe "Enable Solved badges by default upcoming change" do
       expect(Badge.where(name: badge_names).pluck(:enabled)).to all(eq(true))
     end
   end
-
-  describe "conditional display" do
-    it "is displayed on sites where the Solved plugin is enabled" do
-      SiteSetting.solved_enabled = true
-
-      expect(UpcomingChanges::ConditionalDisplay.should_display?(:enable_solved_badges)).to eq(true)
-    end
-  end
 end
