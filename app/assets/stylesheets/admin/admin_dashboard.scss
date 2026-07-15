@@ -235,6 +235,7 @@ $db-bar-height: var(--space-2);
 
   &__header-row {
     display: flex;
+    justify-content: space-between;
     align-items: center;
   }
 

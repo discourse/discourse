@@ -127,6 +127,7 @@ export default class DashboardReports extends Component {
       @bordered={{false}}
       @layout="grid"
       @headerActionIcon={{if this.canEdit "gear"}}
+      @headerActionLabel="admin.dashboard.reports_section.header_action"
       @headerAction={{if this.canEdit this.openReportsConfig}}
       @startDate={{@startDate}}
       @endDate={{@endDate}}
